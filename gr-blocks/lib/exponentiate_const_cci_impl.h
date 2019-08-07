@@ -26,28 +26,27 @@
 #include <gnuradio/blocks/exponentiate_const_cci.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class exponentiate_const_cci_impl : public exponentiate_const_cci
-    {
-     private:
-      int d_exponent;
-      int d_vlen;
+class exponentiate_const_cci_impl : public exponentiate_const_cci
+{
+private:
+    int d_exponent;
+    int d_vlen;
 
-     public:
-      exponentiate_const_cci_impl(int exponent, size_t vlen);
-      ~exponentiate_const_cci_impl();
-      bool check_topology(int ninputs, int noutputs);
-      void set_exponent(int exponent);
+public:
+    exponentiate_const_cci_impl(int exponent, size_t vlen);
+    ~exponentiate_const_cci_impl();
+    bool check_topology(int ninputs, int noutputs);
+    void set_exponent(int exponent);
 
-      // Where all the action really happens
-      int work(int noutput_items,
-         gr_vector_const_void_star &input_items,
-         gr_vector_void_star &output_items);
-    };
+    // Where all the action really happens
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } // namespace blocks
+} // namespace blocks
 } // namespace gr
 
 #endif /* INCLUDED_BLOCKS_EXPONENTIATE_CONST_CCI_IMPL_H */
-

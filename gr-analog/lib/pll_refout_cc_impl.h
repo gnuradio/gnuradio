@@ -26,42 +26,42 @@
 #include <gnuradio/analog/pll_refout_cc.h>
 
 namespace gr {
-  namespace analog {
+namespace analog {
 
-    class pll_refout_cc_impl : public pll_refout_cc
-    {
-    private:
-      float mod_2pi (float in);
-      float phase_detector(gr_complex sample, float ref_phase);
+class pll_refout_cc_impl : public pll_refout_cc
+{
+private:
+    float mod_2pi(float in);
+    float phase_detector(gr_complex sample, float ref_phase);
 
-    public:
-      pll_refout_cc_impl(float loop_bw, float max_freq, float min_freq);
-      ~pll_refout_cc_impl();
+public:
+    pll_refout_cc_impl(float loop_bw, float max_freq, float min_freq);
+    ~pll_refout_cc_impl();
 
-      void set_loop_bandwidth(float bw);
-      void set_damping_factor(float df);
-      void set_alpha(float alpha);
-      void set_beta(float beta);
-      void set_frequency(float freq);
-      void set_phase(float phase);
-      void set_min_freq(float freq);
-      void set_max_freq(float freq);
+    void set_loop_bandwidth(float bw);
+    void set_damping_factor(float df);
+    void set_alpha(float alpha);
+    void set_beta(float beta);
+    void set_frequency(float freq);
+    void set_phase(float phase);
+    void set_min_freq(float freq);
+    void set_max_freq(float freq);
 
-      float get_loop_bandwidth() const;
-      float get_damping_factor() const;
-      float get_alpha() const;
-      float get_beta() const;
-      float get_frequency() const;
-      float get_phase() const;
-      float get_min_freq() const;
-      float get_max_freq() const;
+    float get_loop_bandwidth() const;
+    float get_damping_factor() const;
+    float get_alpha() const;
+    float get_beta() const;
+    float get_frequency() const;
+    float get_phase() const;
+    float get_min_freq() const;
+    float get_max_freq() const;
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace analog */
+} /* namespace analog */
 } /* namespace gr */
 
 #endif /* INCLUDED_ANALOG_PLL_REFOUT_CC_IMPL_H */

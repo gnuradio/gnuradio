@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_filter_EXPORTS
-#  define FILTER_API __GR_ATTR_EXPORT
+#define FILTER_API __GR_ATTR_EXPORT
 #else
-#  define FILTER_API __GR_ATTR_IMPORT
+#define FILTER_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_FILTER_API_H */

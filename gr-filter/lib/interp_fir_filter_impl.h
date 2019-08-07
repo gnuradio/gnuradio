@@ -21,7 +21,7 @@
  */
 
 #ifndef INTERP_FIR_FILTER_IMPL_H
-#define	INTERP_FIR_FILTER_IMPL_H
+#define INTERP_FIR_FILTER_IMPL_H
 
 #include <gnuradio/filter/api.h>
 #include <gnuradio/filter/fir_filter.h>
@@ -29,33 +29,32 @@
 #include <vector>
 
 namespace gr {
-  namespace filter {
+namespace filter {
 
-    template <class IN_T, class OUT_T, class TAP_T>
-    class FILTER_API interp_fir_filter_impl : public interp_fir_filter<IN_T,OUT_T,TAP_T>
-    {
-    private:
-      bool d_updated;
-      std::vector< kernel::fir_filter<IN_T,OUT_T,TAP_T> *> d_firs;
-      std::vector<TAP_T> d_new_taps;
+template <class IN_T, class OUT_T, class TAP_T>
+class FILTER_API interp_fir_filter_impl : public interp_fir_filter<IN_T, OUT_T, TAP_T>
+{
+private:
+    bool d_updated;
+    std::vector<kernel::fir_filter<IN_T, OUT_T, TAP_T>*> d_firs;
+    std::vector<TAP_T> d_new_taps;
 
-      void install_taps(const std::vector<TAP_T> &taps);
+    void install_taps(const std::vector<TAP_T>& taps);
 
-    public:
-      interp_fir_filter_impl(unsigned interpolation,
-		  const std::vector<TAP_T> &taps);
+public:
+    interp_fir_filter_impl(unsigned interpolation, const std::vector<TAP_T>& taps);
 
-      ~interp_fir_filter_impl();
+    ~interp_fir_filter_impl();
 
-      void set_taps(const std::vector<TAP_T> &taps);
-      std::vector<TAP_T> taps() const;
+    void set_taps(const std::vector<TAP_T>& taps);
+    std::vector<TAP_T> taps() const;
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace filter */
+} /* namespace filter */
 } /* namespace gr */
 
 #endif /* INTERP_FIR_FILTER_IMPL_H */

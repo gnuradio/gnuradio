@@ -27,23 +27,23 @@
 #include <gnuradio/blocks/add_blk.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-template<class T>
-class BLOCKS_API add_blk_impl  : public  add_blk<T>
-    {
-    private:
-      size_t d_vlen;
+template <class T>
+class BLOCKS_API add_blk_impl : public add_blk<T>
+{
+private:
+    size_t d_vlen;
 
-    public:
-      add_blk_impl (size_t vlen);
+public:
+    add_blk_impl(size_t vlen);
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* ADD_BLK_IMPL_H */

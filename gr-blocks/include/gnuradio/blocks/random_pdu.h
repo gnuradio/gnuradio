@@ -27,26 +27,27 @@
 #include <gnuradio/block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief Sends a random PDU at intervals
+ * \ingroup message_tools_blk
+ * \ingroup debug_tools_blk
+ */
+class BLOCKS_API random_pdu : virtual public block
+{
+public:
+    // gr::blocks::random_pdu::sptr
+    typedef boost::shared_ptr<random_pdu> sptr;
 
     /*!
-     * \brief Sends a random PDU at intervals
-     * \ingroup message_tools_blk
-     * \ingroup debug_tools_blk
+     * \brief Construct a random PDU generator
      */
-    class BLOCKS_API random_pdu : virtual public block
-    {
-    public:
-      // gr::blocks::random_pdu::sptr
-      typedef boost::shared_ptr<random_pdu> sptr;
+    static sptr
+    make(int mintime, int maxtime, unsigned char byte_mask = 0xFF, int length_modulo = 1);
+};
 
-      /*!
-       * \brief Construct a random PDU generator
-       */
-      static sptr make(int mintime, int maxtime, unsigned char byte_mask = 0xFF, int length_modulo = 1);
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_RANDOM_PDU_H */

@@ -29,40 +29,36 @@
 #include <volk/volk.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    magphase_to_complex::sptr
-    magphase_to_complex::make(size_t vlen)
-    {
-      return gnuradio::get_initial_sptr
-        (new magphase_to_complex_impl(vlen));
-    }
+magphase_to_complex::sptr magphase_to_complex::make(size_t vlen)
+{
+    return gnuradio::get_initial_sptr(new magphase_to_complex_impl(vlen));
+}
 
-    magphase_to_complex_impl::magphase_to_complex_impl(size_t vlen)
-      : sync_block("magphase_to_complex",
-                   io_signature::make(2, 2, sizeof(float)*vlen),
-                   io_signature::make(1, 1, sizeof(gr_complex)*vlen)),
-	d_vlen(vlen)
-    {
-      const int alignment_multiple =
-	volk_get_alignment() / sizeof(float);
-      set_alignment(std::max(1,alignment_multiple));
-    }
+magphase_to_complex_impl::magphase_to_complex_impl(size_t vlen)
+    : sync_block("magphase_to_complex",
+                 io_signature::make(2, 2, sizeof(float) * vlen),
+                 io_signature::make(1, 1, sizeof(gr_complex) * vlen)),
+      d_vlen(vlen)
+{
+    const int alignment_multiple = volk_get_alignment() / sizeof(float);
+    set_alignment(std::max(1, alignment_multiple));
+}
 
-    int
-    magphase_to_complex_impl::work(int noutput_items,
-				   gr_vector_const_void_star &input_items,
-				   gr_vector_void_star &output_items)
-    {
-      float        *mag = (float *)input_items[0];
-      float        *phase = (float *)input_items[1];
-      gr_complex *out = (gr_complex *) output_items[0];
+int magphase_to_complex_impl::work(int noutput_items,
+                                   gr_vector_const_void_star& input_items,
+                                   gr_vector_void_star& output_items)
+{
+    float* mag = (float*)input_items[0];
+    float* phase = (float*)input_items[1];
+    gr_complex* out = (gr_complex*)output_items[0];
 
-      for (size_t j = 0; j < noutput_items*d_vlen; j++)
-        out[j] = gr_complex (mag[j]*cos(phase[j]),mag[j]*sin(phase[j]));
-      
-      return noutput_items;
-    }
+    for (size_t j = 0; j < noutput_items * d_vlen; j++)
+        out[j] = gr_complex(mag[j] * cos(phase[j]), mag[j] * sin(phase[j]));
 
-  } /* namespace blocks */
-}/* namespace gr */
+    return noutput_items;
+}
+
+} /* namespace blocks */
+} /* namespace gr */

@@ -29,29 +29,28 @@
 #include <cstdint>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    /*!
-     * \brief output = input_0 ^ input_1 ^ , ... ^ input_N)
-     * \ingroup boolean_operators_blk
-     *
-     * Bitwise boolean xor across all input streams.
-     */
-template<class T>
-    class BLOCKS_API xor_blk : virtual public sync_block
-    {
-    public:
+/*!
+ * \brief output = input_0 ^ input_1 ^ , ... ^ input_N)
+ * \ingroup boolean_operators_blk
+ *
+ * Bitwise boolean xor across all input streams.
+ */
+template <class T>
+class BLOCKS_API xor_blk : virtual public sync_block
+{
+public:
+    // gr::blocks::xor::sptr
+    typedef boost::shared_ptr<xor_blk<T>> sptr;
 
-      // gr::blocks::xor::sptr
-      typedef boost::shared_ptr< xor_blk<T> > sptr;
-
-      static sptr make(size_t vlen=1);
-    };
+    static sptr make(size_t vlen = 1);
+};
 
 typedef xor_blk<std::uint8_t> xor_bb;
 typedef xor_blk<std::int16_t> xor_ss;
 typedef xor_blk<std::int32_t> xor_ii;
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* XOR_BLK_H */

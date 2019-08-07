@@ -33,8 +33,9 @@ namespace filter {
 namespace kernel {
 
 template <class IN_T, class OUT_T, class TAP_T>
-class FILTER_API fir_filter {
-    public:
+class FILTER_API fir_filter
+{
+public:
     fir_filter(int decimation, const std::vector<TAP_T>& taps);
     ~fir_filter();
 
@@ -45,9 +46,12 @@ class FILTER_API fir_filter {
 
     OUT_T filter(const IN_T input[]);
     void filterN(OUT_T output[], const IN_T input[], unsigned long n);
-    void filterNdec(OUT_T output[], const IN_T input[], unsigned long n, unsigned int decimate);
+    void filterNdec(OUT_T output[],
+                    const IN_T input[],
+                    unsigned long n,
+                    unsigned int decimate);
 
-    protected:
+protected:
     std::vector<TAP_T> d_taps;
     unsigned int d_ntaps;
     TAP_T** d_aligned_taps;

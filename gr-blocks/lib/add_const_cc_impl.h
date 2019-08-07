@@ -26,27 +26,27 @@
 #include <gnuradio/blocks/add_const_cc.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class BLOCKS_API add_const_cc_impl : public add_const_cc
-    {
-    private:
-      gr_complex d_k;
+class BLOCKS_API add_const_cc_impl : public add_const_cc
+{
+private:
+    gr_complex d_k;
 
-    public:
-      add_const_cc_impl(gr_complex k);
+public:
+    add_const_cc_impl(gr_complex k);
 
-      void setup_rpc();
+    void setup_rpc();
 
-      gr_complex k() const { return d_k; }
-      void set_k(gr_complex k) { d_k = k; }
+    gr_complex k() const { return d_k; }
+    void set_k(gr_complex k) { d_k = k; }
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* ADD_CONST_CC_IMPL */

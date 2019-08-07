@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_fec_EXPORTS
-#  define FEC_API __GR_ATTR_EXPORT
+#define FEC_API __GR_ATTR_EXPORT
 #else
-#  define FEC_API __GR_ATTR_IMPORT
+#define FEC_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_FEC_API_H */

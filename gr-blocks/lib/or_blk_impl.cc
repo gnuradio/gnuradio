@@ -30,28 +30,34 @@
 namespace gr {
 namespace blocks {
 
-template <class T> typename or_blk<T>::sptr or_blk<T>::make(size_t vlen) {
+template <class T>
+typename or_blk<T>::sptr or_blk<T>::make(size_t vlen)
+{
     return gnuradio::get_initial_sptr(new or_blk_impl<T>(vlen));
 }
 
 template <class T>
 or_blk_impl<T>::or_blk_impl(size_t vlen)
-    : sync_block("or_blk", io_signature::make(1, -1, sizeof(T) * vlen),
+    : sync_block("or_blk",
+                 io_signature::make(1, -1, sizeof(T) * vlen),
                  io_signature::make(1, 1, sizeof(T) * vlen)),
-      d_vlen(vlen) {}
+      d_vlen(vlen)
+{
+}
 
 template <class T>
 int or_blk_impl<T>::work(int noutput_items,
-                         gr_vector_const_void_star &input_items,
-                         gr_vector_void_star &output_items) {
-    T *optr = (T *)output_items[0];
+                         gr_vector_const_void_star& input_items,
+                         gr_vector_void_star& output_items)
+{
+    T* optr = (T*)output_items[0];
 
     int ninputs = input_items.size();
 
     for (size_t i = 0; i < noutput_items * d_vlen; i++) {
-        T acc = ((T *)input_items[0])[i];
+        T acc = ((T*)input_items[0])[i];
         for (int j = 1; j < ninputs; j++)
-            acc |= ((T *)input_items[j])[i];
+            acc |= ((T*)input_items[j])[i];
 
         *optr++ = (T)acc;
     }

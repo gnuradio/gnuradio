@@ -26,19 +26,19 @@
 #include <gnuradio/blocks/float_to_uchar.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class BLOCKS_API float_to_uchar_impl : public float_to_uchar
-    {
-    public:
-      float_to_uchar_impl();
+class BLOCKS_API float_to_uchar_impl : public float_to_uchar
+{
+public:
+    float_to_uchar_impl();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 

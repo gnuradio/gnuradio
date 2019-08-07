@@ -26,21 +26,21 @@
 #include <gnuradio/blocks/complex_to_mag_squared.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class BLOCKS_API complex_to_mag_squared_impl : public complex_to_mag_squared
-    {
-      size_t d_vlen;
+class BLOCKS_API complex_to_mag_squared_impl : public complex_to_mag_squared
+{
+    size_t d_vlen;
 
-    public:
-      complex_to_mag_squared_impl(size_t vlen);
+public:
+    complex_to_mag_squared_impl(size_t vlen);
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 

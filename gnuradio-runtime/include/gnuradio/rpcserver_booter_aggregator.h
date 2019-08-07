@@ -31,26 +31,25 @@
 
 class rpcserver_server;
 
-class GR_RUNTIME_API rpcserver_booter_aggregator :
-  public virtual rpcserver_booter_base
+class GR_RUNTIME_API rpcserver_booter_aggregator : public virtual rpcserver_booter_base
 {
- public:
-  rpcserver_booter_aggregator();
-  ~rpcserver_booter_aggregator();
+public:
+    rpcserver_booter_aggregator();
+    ~rpcserver_booter_aggregator();
 
-  rpcserver_base* i();
-  const std::string& type();
-  const std::vector<std::string> endpoints();
+    rpcserver_base* i();
+    const std::string& type();
+    const std::vector<std::string> endpoints();
 
-  const std::vector<std::string>& registeredServers();
+    const std::vector<std::string>& registeredServers();
 
- protected:
-  friend class rpcmanager;
-  rpcserver_aggregator* agg();
+protected:
+    friend class rpcmanager;
+    rpcserver_aggregator* agg();
 
 private:
-  std::string d_type;
-  boost::shared_ptr<rpcserver_aggregator> server;
+    std::string d_type;
+    boost::shared_ptr<rpcserver_aggregator> server;
 };
 
 #endif /* RPCSERVER_BOOTER_AGGREGATOR */

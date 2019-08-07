@@ -21,35 +21,32 @@
  */
 
 #ifndef INCLUDED_GR_ANNOTATOR_1TO1_IMPL_H
-#define	INCLUDED_GR_ANNOTATOR_1TO1_IMPL_H
+#define INCLUDED_GR_ANNOTATOR_1TO1_IMPL_H
 
 #include <gnuradio/blocks/annotator_1to1.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class annotator_1to1_impl : public annotator_1to1
-    {
-    private:
-      uint64_t d_when;
-      uint64_t d_tag_counter;
-      std::vector<tag_t> d_stored_tags;
+class annotator_1to1_impl : public annotator_1to1
+{
+private:
+    uint64_t d_when;
+    uint64_t d_tag_counter;
+    std::vector<tag_t> d_stored_tags;
 
-    public:
-      annotator_1to1_impl(int when, size_t sizeof_stream_item);
-      ~annotator_1to1_impl();
+public:
+    annotator_1to1_impl(int when, size_t sizeof_stream_item);
+    ~annotator_1to1_impl();
 
-      std::vector<tag_t> data() const
-      {
-        return d_stored_tags;
-      }
+    std::vector<tag_t> data() const { return d_stored_tags; }
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_ANNOTATOR_1TO1_IMPL_H */

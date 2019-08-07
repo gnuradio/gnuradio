@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_dtv_EXPORTS
-#  define DTV_API __GR_ATTR_EXPORT
+#define DTV_API __GR_ATTR_EXPORT
 #else
-#  define DTV_API __GR_ATTR_IMPORT
+#define DTV_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_DTV_API_H */

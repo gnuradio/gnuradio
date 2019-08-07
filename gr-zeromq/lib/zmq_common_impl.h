@@ -25,7 +25,8 @@
 
 #include <zmq.hpp>
 
-#if defined (CPPZMQ_VERSION) && defined (ZMQ_MAKE_VERSION) && CPPZMQ_VERSION >= ZMQ_MAKE_VERSION(4, 3, 1)
+#if defined(CPPZMQ_VERSION) && defined(ZMQ_MAKE_VERSION) && \
+    CPPZMQ_VERSION >= ZMQ_MAKE_VERSION(4, 3, 1)
 #define USE_NEW_CPPZMQ_SEND_RECV 1
 #else
 #define USE_NEW_CPPZMQ_SEND_RECV 0

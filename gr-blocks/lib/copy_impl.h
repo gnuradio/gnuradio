@@ -26,35 +26,35 @@
 #include <gnuradio/blocks/copy.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class copy_impl : public copy
-    {
-    private:
-      size_t d_itemsize;
-      bool d_enabled;
+class copy_impl : public copy
+{
+private:
+    size_t d_itemsize;
+    bool d_enabled;
 
-    public:
-      copy_impl(size_t itemsize);
-      ~copy_impl();
+public:
+    copy_impl(size_t itemsize);
+    ~copy_impl();
 
-      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
-      bool check_topology(int ninputs, int noutputs);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    bool check_topology(int ninputs, int noutputs);
 
-      void handle_enable(pmt::pmt_t msg);
+    void handle_enable(pmt::pmt_t msg);
 
-      void setup_rpc();
+    void setup_rpc();
 
-      void set_enabled(bool enable) { d_enabled = enable; }
-      bool enabled() const { return d_enabled;}
+    void set_enabled(bool enable) { d_enabled = enable; }
+    bool enabled() const { return d_enabled; }
 
-      int general_work(int noutput_items,
-                       gr_vector_int &ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items);
-    };
+    int general_work(int noutput_items,
+                     gr_vector_int& ninput_items,
+                     gr_vector_const_void_star& input_items,
+                     gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_COPY_IMPL_H */

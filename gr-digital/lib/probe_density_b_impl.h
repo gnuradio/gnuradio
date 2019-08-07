@@ -24,35 +24,35 @@
 #include <gnuradio/digital/probe_density_b.h>
 
 namespace gr {
-  namespace digital {
+namespace digital {
 
-    class probe_density_b_impl : public probe_density_b
-    {
-    private:
-      double d_alpha;
-      double d_beta;
-      double d_density;
+class probe_density_b_impl : public probe_density_b
+{
+private:
+    double d_alpha;
+    double d_beta;
+    double d_density;
 
-    public:
-      probe_density_b_impl(double alpha);
-      ~probe_density_b_impl();
+public:
+    probe_density_b_impl(double alpha);
+    ~probe_density_b_impl();
 
-      /*!
-       * \brief Returns the current density value
-       */
-      double density() const { return d_density; }
+    /*!
+     * \brief Returns the current density value
+     */
+    double density() const { return d_density; }
 
-      /*!
-       * \brief Set the average filter constant
-       */
-      void set_alpha(double alpha);
+    /*!
+     * \brief Set the average filter constant
+     */
+    void set_alpha(double alpha);
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace digital */
+} /* namespace digital */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_PROBE_DENSITY_B_IMPL_H */

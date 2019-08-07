@@ -34,19 +34,19 @@
 #include <cstdio>
 
 #define MAXCHUNKSIZE 4096
-#define MAXENCSIZE MAXCHUNKSIZE*16
+#define MAXENCSIZE MAXCHUNKSIZE * 16
 
 int main()
 {
-  unsigned char encoder_state = 0;
-  unsigned char data[MAXCHUNKSIZE];
-  unsigned char syms[MAXENCSIZE];
+    unsigned char encoder_state = 0;
+    unsigned char data[MAXCHUNKSIZE];
+    unsigned char syms[MAXENCSIZE];
 
-  while (!feof(stdin)) {
-    unsigned int n = fread(data, 1, MAXCHUNKSIZE, stdin);
-    encoder_state = gr::fec::encode(syms, data, n, encoder_state);
-    fwrite(syms, 1, n*16, stdout);
-  }
+    while (!feof(stdin)) {
+        unsigned int n = fread(data, 1, MAXCHUNKSIZE, stdin);
+        encoder_state = gr::fec::encode(syms, data, n, encoder_state);
+        fwrite(syms, 1, n * 16, stdout);
+    }
 
-  return 0;
+    return 0;
 }

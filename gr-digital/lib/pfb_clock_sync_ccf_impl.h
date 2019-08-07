@@ -21,107 +21,105 @@
  */
 
 #ifndef INCLUDED_DIGITAL_PFB_CLOCK_SYNC_CCF_IMPL_H
-#define	INCLUDED_DIGITAL_PFB_CLOCK_SYNC_CCF_IMPL_H
+#define INCLUDED_DIGITAL_PFB_CLOCK_SYNC_CCF_IMPL_H
 
 #include <gnuradio/digital/pfb_clock_sync_ccf.h>
 
 using namespace gr::filter;
 
 namespace gr {
-  namespace digital {
+namespace digital {
 
-    class pfb_clock_sync_ccf_impl : public pfb_clock_sync_ccf
-    {
-    private:
-      bool   d_updated;
-      double d_sps;
-      float  d_loop_bw;
-      float  d_damping;
-      float  d_alpha;
-      float  d_beta;
+class pfb_clock_sync_ccf_impl : public pfb_clock_sync_ccf
+{
+private:
+    bool d_updated;
+    double d_sps;
+    float d_loop_bw;
+    float d_damping;
+    float d_alpha;
+    float d_beta;
 
-      int                                  d_nfilters;
-      int                                  d_taps_per_filter;
-      std::vector<kernel::fir_filter_ccf*> d_filters;
-      std::vector<kernel::fir_filter_ccf*> d_diff_filters;
-      std::vector< std::vector<float> >    d_taps;
-      std::vector< std::vector<float> >    d_dtaps;
-      std::vector<float>                   d_updated_taps;
+    int d_nfilters;
+    int d_taps_per_filter;
+    std::vector<kernel::fir_filter_ccf*> d_filters;
+    std::vector<kernel::fir_filter_ccf*> d_diff_filters;
+    std::vector<std::vector<float>> d_taps;
+    std::vector<std::vector<float>> d_dtaps;
+    std::vector<float> d_updated_taps;
 
-      float d_k;
-      float d_rate;
-      float d_rate_i;
-      float d_rate_f;
-      float d_max_dev;
-      int   d_filtnum;
-      int   d_osps;
-      float d_error;
-      int   d_out_idx;
+    float d_k;
+    float d_rate;
+    float d_rate_i;
+    float d_rate_f;
+    float d_max_dev;
+    int d_filtnum;
+    int d_osps;
+    float d_error;
+    int d_out_idx;
 
-      uint64_t d_old_in, d_new_in, d_last_out;
+    uint64_t d_old_in, d_new_in, d_last_out;
 
-      void create_diff_taps(const std::vector<float> &newtaps,
-			    std::vector<float> &difftaps);
+    void create_diff_taps(const std::vector<float>& newtaps,
+                          std::vector<float>& difftaps);
 
-    public:
-      pfb_clock_sync_ccf_impl(double sps, float loop_bw,
-			      const std::vector<float> &taps,
-			      unsigned int filter_size=32,
-			      float init_phase=0,
-			      float max_rate_deviation=1.5,
-			      int osps=1);
-      ~pfb_clock_sync_ccf_impl();
+public:
+    pfb_clock_sync_ccf_impl(double sps,
+                            float loop_bw,
+                            const std::vector<float>& taps,
+                            unsigned int filter_size = 32,
+                            float init_phase = 0,
+                            float max_rate_deviation = 1.5,
+                            int osps = 1);
+    ~pfb_clock_sync_ccf_impl();
 
-      void setup_rpc();
+    void setup_rpc();
 
-      void update_gains();
+    void update_gains();
 
-      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
 
-      void update_taps(const std::vector<float> &taps);
+    void update_taps(const std::vector<float>& taps);
 
-      void set_taps(const std::vector<float> &taps,
-		    std::vector< std::vector<float> > &ourtaps,
-		    std::vector<kernel::fir_filter_ccf*> &ourfilter);
+    void set_taps(const std::vector<float>& taps,
+                  std::vector<std::vector<float>>& ourtaps,
+                  std::vector<kernel::fir_filter_ccf*>& ourfilter);
 
-      std::vector< std::vector<float> > taps() const;
-      std::vector< std::vector<float> > diff_taps() const;
-      std::vector<float> channel_taps(int channel) const;
-      std::vector<float> diff_channel_taps(int channel) const;
-      std::string taps_as_string() const;
-      std::string diff_taps_as_string() const;
+    std::vector<std::vector<float>> taps() const;
+    std::vector<std::vector<float>> diff_taps() const;
+    std::vector<float> channel_taps(int channel) const;
+    std::vector<float> diff_channel_taps(int channel) const;
+    std::string taps_as_string() const;
+    std::string diff_taps_as_string() const;
 
-      void set_loop_bandwidth(float bw);
-      void set_damping_factor(float df);
-      void set_alpha(float alpha);
-      void set_beta(float beta);
-      void set_max_rate_deviation(float m)
-      {
-	d_max_dev = m;
-      }
+    void set_loop_bandwidth(float bw);
+    void set_damping_factor(float df);
+    void set_alpha(float alpha);
+    void set_beta(float beta);
+    void set_max_rate_deviation(float m) { d_max_dev = m; }
 
-      float loop_bandwidth() const;
-      float damping_factor() const;
-      float alpha() const;
-      float beta() const;
-      float clock_rate() const;
+    float loop_bandwidth() const;
+    float damping_factor() const;
+    float alpha() const;
+    float beta() const;
+    float clock_rate() const;
 
-      float error() const;
-      float rate() const;
-      float phase() const;
+    float error() const;
+    float rate() const;
+    float phase() const;
 
-      /*******************************************************************
-       *******************************************************************/
+    /*******************************************************************
+     *******************************************************************/
 
-      bool check_topology(int ninputs, int noutputs);
+    bool check_topology(int ninputs, int noutputs);
 
-      int general_work(int noutput_items,
-		       gr_vector_int &ninput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items);
-    };
+    int general_work(int noutput_items,
+                     gr_vector_int& ninput_items,
+                     gr_vector_const_void_star& input_items,
+                     gr_vector_void_star& output_items);
+};
 
-  } /* namespace digital */
+} /* namespace digital */
 } /* namespace gr */
 
 #endif /* INCLUDED_DIGITAL_PFB_CLOCK_SYNC_CCF_IMPL_H */

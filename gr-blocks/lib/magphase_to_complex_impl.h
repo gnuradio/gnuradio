@@ -26,21 +26,21 @@
 #include <gnuradio/blocks/magphase_to_complex.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class BLOCKS_API magphase_to_complex_impl : public magphase_to_complex
-    {
-      size_t d_vlen;
+class BLOCKS_API magphase_to_complex_impl : public magphase_to_complex
+{
+    size_t d_vlen;
 
-    public:
-      magphase_to_complex_impl(size_t vlen);
+public:
+    magphase_to_complex_impl(size_t vlen);
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 

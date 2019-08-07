@@ -29,28 +29,27 @@
 #include <cstdint>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    /*!
-     * \brief Integrate successive samples and decimate
-     * \ingroup math_operators_blk
-     */
-template<class T>
-    class BLOCKS_API integrate : virtual public sync_decimator
-    {
-    public:
+/*!
+ * \brief Integrate successive samples and decimate
+ * \ingroup math_operators_blk
+ */
+template <class T>
+class BLOCKS_API integrate : virtual public sync_decimator
+{
+public:
+    // gr::blocks::integrate::sptr
+    typedef boost::shared_ptr<integrate<T>> sptr;
 
-      // gr::blocks::integrate::sptr
-      typedef boost::shared_ptr< integrate<T> > sptr;
-
-      static sptr make(int decim, unsigned int vlen = 1);
-    };
+    static sptr make(int decim, unsigned int vlen = 1);
+};
 
 typedef integrate<std::int16_t> integrate_ss;
 typedef integrate<std::int32_t> integrate_ii;
 typedef integrate<float> integrate_ff;
 typedef integrate<gr_complex> integrate_cc;
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INTEGRATE_H */

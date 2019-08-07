@@ -29,62 +29,55 @@
 #include <stdexcept>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    file_sink::sptr
-    file_sink::make(size_t itemsize, const char *filename, bool append)
-    {
-      return gnuradio::get_initial_sptr
-        (new file_sink_impl(itemsize, filename, append));
-    }
+file_sink::sptr file_sink::make(size_t itemsize, const char* filename, bool append)
+{
+    return gnuradio::get_initial_sptr(new file_sink_impl(itemsize, filename, append));
+}
 
-    file_sink_impl::file_sink_impl(size_t itemsize, const char *filename, bool append)
-      : sync_block("file_sink",
-                      io_signature::make(1, 1, itemsize),
-                      io_signature::make(0, 0, 0)),
-        file_sink_base(filename, true, append),
-        d_itemsize(itemsize)
-    {
-    }
+file_sink_impl::file_sink_impl(size_t itemsize, const char* filename, bool append)
+    : sync_block(
+          "file_sink", io_signature::make(1, 1, itemsize), io_signature::make(0, 0, 0)),
+      file_sink_base(filename, true, append),
+      d_itemsize(itemsize)
+{
+}
 
-    file_sink_impl::~file_sink_impl()
-    {
-    }
+file_sink_impl::~file_sink_impl() {}
 
-    int
-    file_sink_impl::work(int noutput_items,
-                         gr_vector_const_void_star &input_items,
-                         gr_vector_void_star &output_items)
-    {
-      char *inbuf = (char*)input_items[0];
-      int  nwritten = 0;
+int file_sink_impl::work(int noutput_items,
+                         gr_vector_const_void_star& input_items,
+                         gr_vector_void_star& output_items)
+{
+    char* inbuf = (char*)input_items[0];
+    int nwritten = 0;
 
-      do_update();                    // update d_fp is reqd
+    do_update(); // update d_fp is reqd
 
-      if(!d_fp)
-        return noutput_items;         // drop output on the floor
+    if (!d_fp)
+        return noutput_items; // drop output on the floor
 
-      while(nwritten < noutput_items) {
+    while (nwritten < noutput_items) {
         int count = fwrite(inbuf, d_itemsize, noutput_items - nwritten, d_fp);
-        if(count == 0) {
-          if(ferror(d_fp)) {
-            std::stringstream s;
-            s << "file_sink write failed with error " << fileno(d_fp) << std::endl;
-            throw std::runtime_error(s.str());
-          }
-          else { // is EOF
-            break;
-          }
+        if (count == 0) {
+            if (ferror(d_fp)) {
+                std::stringstream s;
+                s << "file_sink write failed with error " << fileno(d_fp) << std::endl;
+                throw std::runtime_error(s.str());
+            } else { // is EOF
+                break;
+            }
         }
         nwritten += count;
         inbuf += count * d_itemsize;
-      }
-
-      if(d_unbuffered)
-        fflush (d_fp);
-
-      return nwritten;
     }
 
-  } /* namespace blocks */
+    if (d_unbuffered)
+        fflush(d_fp);
+
+    return nwritten;
+}
+
+} /* namespace blocks */
 } /* namespace gr */

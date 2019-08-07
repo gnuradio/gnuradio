@@ -27,40 +27,40 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief complex in, magnitude out (float)
+ * \ingroup type_converters_blk
+ *
+ * \details
+ * Calculates the magnitude of the complex samples:
+ *
+ * \li output[0][m] = |input[0][m]|
+ *
+ * Or:
+ * \li output[0][m] = sqrt(Re{input[0][m]}^2 + Im{input[0][m]}^2)
+ *
+ * The input stream can be a vector of length \p vlen, and for
+ * each vector, each item is converted using the above
+ * function. So above, m is from 0 to noutput_items*vlen for each
+ * call to work.
+ */
+class BLOCKS_API complex_to_mag : virtual public sync_block
+{
+public:
+    // gr::blocks::complex_to_mag_ff::sptr
+    typedef boost::shared_ptr<complex_to_mag> sptr;
 
     /*!
-     * \brief complex in, magnitude out (float)
-     * \ingroup type_converters_blk
+     * Build a complex to magnitude block.
      *
-     * \details
-     * Calculates the magnitude of the complex samples:
-     *
-     * \li output[0][m] = |input[0][m]|
-     *
-     * Or:
-     * \li output[0][m] = sqrt(Re{input[0][m]}^2 + Im{input[0][m]}^2)
-     *
-     * The input stream can be a vector of length \p vlen, and for
-     * each vector, each item is converted using the above
-     * function. So above, m is from 0 to noutput_items*vlen for each
-     * call to work.
+     * \param vlen vector len (default 1)
      */
-    class BLOCKS_API complex_to_mag : virtual public sync_block
-    {
-    public:
-      // gr::blocks::complex_to_mag_ff::sptr
-      typedef boost::shared_ptr<complex_to_mag> sptr;
+    static sptr make(size_t vlen = 1);
+};
 
-      /*!
-       * Build a complex to magnitude block.
-       *
-       * \param vlen vector len (default 1)
-       */
-      static sptr make(size_t vlen=1);
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_COMPLEX_TO_MAG_H */

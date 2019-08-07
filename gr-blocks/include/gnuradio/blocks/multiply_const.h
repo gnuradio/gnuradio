@@ -29,44 +29,43 @@
 #include <cstdint>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief output = input * constant
+ * \ingroup math_operators_blk
+ */
+template <class T>
+class BLOCKS_API multiply_const : virtual public sync_block
+{
+
+public:
+    // gr::blocks::multiply_const::sptr
+    typedef boost::shared_ptr<multiply_const<T>> sptr;
 
     /*!
-     * \brief output = input * constant
-     * \ingroup math_operators_blk
+     * \brief Create an instance of multiply_const
+     * \param k multiplicative constant
+     * \param vlen number of items in vector
      */
-template<class T>
-    class BLOCKS_API multiply_const : virtual public sync_block
-    {
+    static sptr make(T k, size_t vlen = 1);
 
-    public:
+    /*!
+     * \brief Return multiplicative constant
+     */
+    virtual T k() const = 0;
 
-      // gr::blocks::multiply_const::sptr
-      typedef boost::shared_ptr< multiply_const<T> > sptr;
-
-      /*!
-       * \brief Create an instance of multiply_const
-       * \param k multiplicative constant
-       * \param vlen number of items in vector
-       */
-      static sptr make(T k, size_t vlen=1);
-
-      /*!
-       * \brief Return multiplicative constant
-       */
-      virtual T k() const = 0;
-
-      /*!
-       * \brief Set multiplicative constant
-       */
-      virtual void set_k(T k) = 0;
-    };
+    /*!
+     * \brief Set multiplicative constant
+     */
+    virtual void set_k(T k) = 0;
+};
 
 typedef multiply_const<std::int16_t> multiply_const_ss;
 typedef multiply_const<std::int32_t> multiply_const_ii;
 typedef multiply_const<float> multiply_const_ff;
 typedef multiply_const<gr_complex> multiply_const_cc;
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* MULTIPLY_CONST_H */

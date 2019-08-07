@@ -27,40 +27,39 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace fft {
+namespace fft {
+
+/*!
+ * \brief A ControlPort probe to export vectors of signals.
+ * \ingroup measurement_tools_blk
+ * \ingroup controlport_blk
+ *
+ * \details
+ * This block acts as a sink in the flowgraph but also exports
+ * vectors of complex samples over ControlPort. This block holds
+ * the latest \p len number of complex samples so that every query
+ * by a ControlPort client will get the same length vector.
+ */
+class FFT_API ctrlport_probe_psd : virtual public gr::sync_block
+{
+public:
+    typedef boost::shared_ptr<ctrlport_probe_psd> sptr;
 
     /*!
-     * \brief A ControlPort probe to export vectors of signals.
-     * \ingroup measurement_tools_blk
-     * \ingroup controlport_blk
-     *
-     * \details
-     * This block acts as a sink in the flowgraph but also exports
-     * vectors of complex samples over ControlPort. This block holds
-     * the latest \p len number of complex samples so that every query
-     * by a ControlPort client will get the same length vector.
+     * \brief Make a ControlPort probe block.
+     * \param id A string ID to name the probe over ControlPort.
+     * \param desc A string describing the probe.
+     * \param len Number of samples to transmit.
      */
-    class FFT_API ctrlport_probe_psd : virtual public gr::sync_block
-    {
-    public:
-      typedef boost::shared_ptr<ctrlport_probe_psd> sptr;
+    static sptr make(const std::string& id, const std::string& desc, int len);
 
-      /*!
-       * \brief Make a ControlPort probe block.
-       * \param id A string ID to name the probe over ControlPort.
-       * \param desc A string describing the probe.
-       * \param len Number of samples to transmit.
-       */
-      static sptr make(const std::string &id, const std::string &desc, int len);
+    virtual std::vector<gr_complex> get() = 0;
 
-      virtual std::vector<gr_complex> get() = 0;
+    virtual void set_length(int len) = 0;
+    virtual int length() const = 0;
+};
 
-      virtual void set_length(int len) = 0;
-      virtual int length() const = 0;
-    };
-
-  } /* namespace fft */
+} /* namespace fft */
 } /* namespace gr */
 
 #endif /* INCLUDED_CTRLPORT_PROBE_PSD_H */
-

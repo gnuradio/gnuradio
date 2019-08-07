@@ -21,37 +21,36 @@
  */
 
 #ifndef INCLUDED_IIR_FILTER_CCD_IMPL_H
-#define	INCLUDED_IIR_FILTER_CCD_IMPL_H
+#define INCLUDED_IIR_FILTER_CCD_IMPL_H
 
 #include <gnuradio/filter/iir_filter.h>
 #include <gnuradio/filter/iir_filter_ccd.h>
 
 namespace gr {
-  namespace filter {
+namespace filter {
 
-    class FILTER_API iir_filter_ccd_impl : public iir_filter_ccd
-    {
-    private:
-      bool d_updated;
-      kernel::iir_filter<gr_complex, gr_complex, double, gr_complexd> *d_iir;
-      std::vector<double> d_new_fftaps;
-      std::vector<double> d_new_fbtaps;
+class FILTER_API iir_filter_ccd_impl : public iir_filter_ccd
+{
+private:
+    bool d_updated;
+    kernel::iir_filter<gr_complex, gr_complex, double, gr_complexd>* d_iir;
+    std::vector<double> d_new_fftaps;
+    std::vector<double> d_new_fbtaps;
 
-    public:
-      iir_filter_ccd_impl(const std::vector<double> &fftaps,
-			  const std::vector<double> &fbtaps,
-			  bool oldstyle=true);
-      ~iir_filter_ccd_impl();
+public:
+    iir_filter_ccd_impl(const std::vector<double>& fftaps,
+                        const std::vector<double>& fbtaps,
+                        bool oldstyle = true);
+    ~iir_filter_ccd_impl();
 
-      void set_taps(const std::vector<double> &fftaps,
-		    const std::vector<double> &fbtaps);
+    void set_taps(const std::vector<double>& fftaps, const std::vector<double>& fbtaps);
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace filter */
+} /* namespace filter */
 } /* namespace gr */
 
 #endif /* INCLUDED_IIR_FILTER_CCD_IMPL_H */

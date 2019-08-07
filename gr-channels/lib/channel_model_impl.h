@@ -33,46 +33,46 @@
 #include <gnuradio/filter/fir_filter_blk.h>
 
 namespace gr {
-  namespace channels {
+namespace channels {
 
-    class CHANNELS_API channel_model_impl : public channel_model
-    {
-    private:
-      blocks::add_cc::sptr d_noise_adder;
-      blocks::multiply_cc::sptr d_mixer_offset;
+class CHANNELS_API channel_model_impl : public channel_model
+{
+private:
+    blocks::add_cc::sptr d_noise_adder;
+    blocks::multiply_cc::sptr d_mixer_offset;
 
-      analog::sig_source_c::sptr d_freq_offset;
-      analog::fastnoise_source_c::sptr d_noise;
+    analog::sig_source_c::sptr d_freq_offset;
+    analog::fastnoise_source_c::sptr d_noise;
 
-      filter::mmse_resampler_cc::sptr d_timing_offset;
-      filter::fir_filter_ccc::sptr d_multipath;
+    filter::mmse_resampler_cc::sptr d_timing_offset;
+    filter::fir_filter_ccc::sptr d_multipath;
 
-      std::vector<gr_complex> d_taps;
+    std::vector<gr_complex> d_taps;
 
-    public:
-      channel_model_impl(double noise_voltage,
-			 double frequency_offset,
-			 double epsilon,
-			 const std::vector<gr_complex> &taps,
-			 double noise_seed,
-			 bool block_tags);
+public:
+    channel_model_impl(double noise_voltage,
+                       double frequency_offset,
+                       double epsilon,
+                       const std::vector<gr_complex>& taps,
+                       double noise_seed,
+                       bool block_tags);
 
-      ~channel_model_impl();
+    ~channel_model_impl();
 
-      void setup_rpc();
+    void setup_rpc();
 
-      void set_noise_voltage(double noise_voltage);
-      void set_frequency_offset(double frequency_offset);
-      void set_taps(const std::vector<gr_complex> &taps);
-      void set_timing_offset(double epsilon);
+    void set_noise_voltage(double noise_voltage);
+    void set_frequency_offset(double frequency_offset);
+    void set_taps(const std::vector<gr_complex>& taps);
+    void set_timing_offset(double epsilon);
 
-      double noise_voltage() const;
-      double frequency_offset() const;
-      std::vector<gr_complex> taps() const;
-      double timing_offset() const;
-    };
+    double noise_voltage() const;
+    double frequency_offset() const;
+    std::vector<gr_complex> taps() const;
+    double timing_offset() const;
+};
 
-  } /* namespace channels */
+} /* namespace channels */
 } /* namespace gr */
 
 #endif /* INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H */

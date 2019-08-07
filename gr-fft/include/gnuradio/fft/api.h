@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_fft_EXPORTS
-#  define FFT_API __GR_ATTR_EXPORT
+#define FFT_API __GR_ATTR_EXPORT
 #else
-#  define FFT_API __GR_ATTR_IMPORT
+#define FFT_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_FFT_API_H */

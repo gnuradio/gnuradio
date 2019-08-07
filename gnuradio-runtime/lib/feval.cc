@@ -28,109 +28,59 @@
 
 namespace gr {
 
-  feval_dd::~feval_dd(){}
+feval_dd::~feval_dd() {}
 
-  double
-  feval_dd::eval(double x)
-  {
-    return 0;
-  }
+double feval_dd::eval(double x) { return 0; }
 
-  double
-  feval_dd::calleval(double x)
-  {
-    return eval(x);
-  }
+double feval_dd::calleval(double x) { return eval(x); }
 
-  // ----------------------------------------------------------------
+// ----------------------------------------------------------------
 
-  feval_cc::~feval_cc(){}
+feval_cc::~feval_cc() {}
 
-  gr_complex
-  feval_cc::eval(gr_complex x)
-  {
-    return 0;
-  }
+gr_complex feval_cc::eval(gr_complex x) { return 0; }
 
-  gr_complex
-  feval_cc::calleval(gr_complex x)
-  {
-    return eval(x);
-  }
+gr_complex feval_cc::calleval(gr_complex x) { return eval(x); }
 
-  // ----------------------------------------------------------------
+// ----------------------------------------------------------------
 
-  feval_ll::~feval_ll(){}
+feval_ll::~feval_ll() {}
 
-  long
-  feval_ll::eval(long x)
-  {
-    return 0;
-  }
+long feval_ll::eval(long x) { return 0; }
 
-  long
-  feval_ll::calleval(long x)
-  {
-    return eval(x);
-  }
+long feval_ll::calleval(long x) { return eval(x); }
 
-  // ----------------------------------------------------------------
+// ----------------------------------------------------------------
 
-  feval::~feval(){}
+feval::~feval() {}
 
-  void
-  feval::eval(void)
-  {
+void feval::eval(void)
+{
     // nop
-  }
+}
 
-  void
-  feval::calleval(void)
-  {
-    eval();
-  }
+void feval::calleval(void) { eval(); }
 
-  // ----------------------------------------------------------------
+// ----------------------------------------------------------------
 
-  feval_p::~feval_p(){}
+feval_p::~feval_p() {}
 
-  void
-  feval_p::eval(pmt::pmt_t x)
-  {
+void feval_p::eval(pmt::pmt_t x)
+{
     // nop
-  }
+}
 
-  void
-  feval_p::calleval(pmt::pmt_t x)
-  {
-    eval(x);
-  }
+void feval_p::calleval(pmt::pmt_t x) { eval(x); }
 
-  /*
-   * Trivial examples showing C++ (transparently) calling Python
-   */
-  double
-  feval_dd_example(feval_dd *f, double x)
-  {
-    return f->calleval(x);
-  }
+/*
+ * Trivial examples showing C++ (transparently) calling Python
+ */
+double feval_dd_example(feval_dd* f, double x) { return f->calleval(x); }
 
-  gr_complex
-  feval_cc_example(feval_cc *f, gr_complex x)
-  {
-    return f->calleval(x);
-  }
+gr_complex feval_cc_example(feval_cc* f, gr_complex x) { return f->calleval(x); }
 
-  long
-  feval_ll_example(feval_ll *f, long x)
-  {
-    return f->calleval(x);
-  }
+long feval_ll_example(feval_ll* f, long x) { return f->calleval(x); }
 
-  void
-  feval_example(feval *f)
-  {
-    f->calleval();
-  }
+void feval_example(feval* f) { f->calleval(); }
 
 } /* namespace gr */

@@ -28,10 +28,8 @@
 #include <assert.h>
 #include <volk/volk.h>
 
-void
-interleaved_short_array_to_complex (const short *in,
-				    gr_complex *out, int nsamples)
+void interleaved_short_array_to_complex(const short* in, gr_complex* out, int nsamples)
 {
-  assert (nsamples % 2 == 0);
-  volk_16i_s32f_convert_32f_u( (float*)out, (const int16_t*) in, 1, nsamples );
+    assert(nsamples % 2 == 0);
+    volk_16i_s32f_convert_32f_u((float*)out, (const int16_t*)in, 1, nsamples);
 }

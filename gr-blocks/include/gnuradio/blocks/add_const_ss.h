@@ -27,37 +27,36 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief output = input + constant
+ * \ingroup math_operators_blk
+ */
+class BLOCKS_API add_const_ss : virtual public sync_block
+{
+public:
+    // gr::blocks::add_const_ss::sptr
+    typedef boost::shared_ptr<add_const_ss> sptr;
 
     /*!
-     * \brief output = input + constant
-     * \ingroup math_operators_blk
+     * \brief Create an instance of add_const_ss
+     * \param k additive constant
      */
-    class BLOCKS_API add_const_ss : virtual public sync_block
-    {
-    public:
+    static sptr make(short k);
 
-      // gr::blocks::add_const_ss::sptr
-      typedef boost::shared_ptr<add_const_ss> sptr;
+    /*!
+     * \brief Return additive constant
+     */
+    virtual short k() const = 0;
 
-      /*!
-       * \brief Create an instance of add_const_ss
-       * \param k additive constant
-       */
-      static sptr make(short k);
+    /*!
+     * \brief Set additive constant
+     */
+    virtual void set_k(short k) = 0;
+};
 
-      /*!
-       * \brief Return additive constant
-       */
-      virtual short k() const = 0;
-
-      /*!
-       * \brief Set additive constant
-       */
-      virtual void set_k(short k) = 0;
-    };
-
-  }
-}
+} // namespace blocks
+} // namespace gr
 
 #endif /* ADD_CONST_SS */

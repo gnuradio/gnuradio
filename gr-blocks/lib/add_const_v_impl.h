@@ -26,25 +26,25 @@
 #include <gnuradio/blocks/add_const_v.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    template <class T>
-    class BLOCKS_API add_const_v_impl: public add_const_v<T>
-    {
-      std::vector<T> d_k;
+template <class T>
+class BLOCKS_API add_const_v_impl : public add_const_v<T>
+{
+    std::vector<T> d_k;
 
-    public:
-      add_const_v_impl(std::vector<T> k);
+public:
+    add_const_v_impl(std::vector<T> k);
 
-      std::vector<T> k() const { return d_k; }
-      void set_k(std::vector<T> k) { d_k = k; }
+    std::vector<T> k() const { return d_k; }
+    void set_k(std::vector<T> k) { d_k = k; }
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* ADD_CONST_V_IMPL_H */
