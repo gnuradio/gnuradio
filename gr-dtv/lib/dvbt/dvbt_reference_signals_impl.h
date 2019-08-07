@@ -21,10 +21,10 @@
 #ifndef INCLUDED_DTV_DVBT_REFERENCE_SIGNALS_IMPL_H
 #define INCLUDED_DTV_DVBT_REFERENCE_SIGNALS_IMPL_H
 
-#include <gnuradio/dtv/dvbt_reference_signals.h>
 #include "dvbt_configure.h"
-#include <vector>
+#include <gnuradio/dtv/dvbt_reference_signals.h>
 #include <deque>
+#include <vector>
 
 // This should eventually go into a const file
 const int SYMBOLS_PER_FRAME = 68;

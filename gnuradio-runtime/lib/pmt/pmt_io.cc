@@ -23,11 +23,11 @@
 #include <config.h>
 #endif
 
-#include <vector>
-#include <pmt/pmt.h>
 #include "pmt_int.h"
-#include <sstream>
+#include <pmt/pmt.h>
 #include <iostream>
+#include <sstream>
+#include <vector>
 
 namespace pmt {
 

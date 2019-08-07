@@ -20,10 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <pmt/api.h> //reason: suppress warnings
 #include <gnuradio/messages/msg_passing.h>
-#include <boost/test/unit_test.hpp>
+#include <pmt/api.h> //reason: suppress warnings
 #include <boost/format.hpp>
+#include <boost/test/unit_test.hpp>
 #include <cstdio>
 #include <cstring>
 #include <sstream>

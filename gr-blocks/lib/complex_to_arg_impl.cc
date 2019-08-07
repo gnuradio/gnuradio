@@ -26,8 +26,8 @@
 
 #include "complex_to_arg_impl.h"
 #include <gnuradio/io_signature.h>
-#include <volk/volk.h>
 #include <gnuradio/math.h>
+#include <volk/volk.h>
 
 namespace gr {
 namespace blocks {

@@ -22,9 +22,9 @@
 #ifndef INCLUDED_DIGITAL_PACKET_HEADER_OFDM_H
 #define INCLUDED_DIGITAL_PACKET_HEADER_OFDM_H
 
-#include <vector>
 #include <gnuradio/digital/api.h>
 #include <gnuradio/digital/packet_header_default.h>
+#include <vector>
 
 namespace gr {
 namespace digital {

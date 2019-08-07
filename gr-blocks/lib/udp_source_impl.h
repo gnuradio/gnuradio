@@ -24,9 +24,9 @@
 #define INCLUDED_GR_UDP_SOURCE_IMPL_H
 
 #include <gnuradio/blocks/udp_source.h>
+#include <gnuradio/thread/thread.h>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
-#include <gnuradio/thread/thread.h>
 
 namespace gr {
 namespace blocks {

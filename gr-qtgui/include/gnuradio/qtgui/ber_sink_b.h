@@ -27,8 +27,8 @@
 #include <Python.h>
 #endif
 
-#include <gnuradio/qtgui/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/qtgui/api.h>
 #include <qapplication.h>
 
 

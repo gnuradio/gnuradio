@@ -22,8 +22,8 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "catv_frame_sync_enc_bb_impl.h"
+#include <gnuradio/io_signature.h>
 
 namespace gr {
 namespace dtv {

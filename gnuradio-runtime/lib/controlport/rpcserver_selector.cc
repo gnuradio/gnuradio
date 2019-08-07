@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gnuradio/rpcserver_booter_aggregator.h>
 #include <gnuradio/rpcmanager.h>
+#include <gnuradio/rpcserver_booter_aggregator.h>
 #include <gnuradio/rpcserver_selector.h>
 
 bool rpcmanager::make_aggregator(false);

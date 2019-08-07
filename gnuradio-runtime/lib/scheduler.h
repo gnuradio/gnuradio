@@ -22,10 +22,10 @@
 #ifndef INCLUDED_GR_SCHEDULER_H
 #define INCLUDED_GR_SCHEDULER_H
 
-#include <gnuradio/api.h>
-#include <boost/utility.hpp>
-#include <gnuradio/block.h>
 #include "flat_flowgraph.h"
+#include <gnuradio/api.h>
+#include <gnuradio/block.h>
+#include <boost/utility.hpp>
 
 namespace gr {
 

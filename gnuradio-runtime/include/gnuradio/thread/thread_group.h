@@ -17,9 +17,9 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/thread/thread.h>
-#include <boost/utility.hpp>
-#include <boost/thread/shared_mutex.hpp>
 #include <boost/function.hpp>
+#include <boost/thread/shared_mutex.hpp>
+#include <boost/utility.hpp>
 
 namespace gr {
 namespace thread {

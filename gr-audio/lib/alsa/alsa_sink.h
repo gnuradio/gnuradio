@@ -29,8 +29,8 @@
 
 #include <gnuradio/audio/sink.h>
 #include <alsa/asoundlib.h>
-#include <string>
 #include <stdexcept>
+#include <string>
 
 namespace gr {
 namespace audio {

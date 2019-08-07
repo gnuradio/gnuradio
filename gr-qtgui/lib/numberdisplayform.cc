@@ -23,8 +23,8 @@
 #include <gnuradio/qtgui/numberdisplayform.h>
 
 #include <qwt_color_map.h>
-#include <QMessageBox>
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include <cmath>
 #include <iostream>

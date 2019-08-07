@@ -23,9 +23,9 @@
 #ifndef INCLUDED_GR_PY_FEVAL_H
 #define INCLUDED_GR_PY_FEVAL_H
 
+#include <gnuradio/feval.h>
 #include <Python.h>
 #include <pmt/pmt.h>
-#include <gnuradio/feval.h>
 
 class ensure_py_gil_state
 {

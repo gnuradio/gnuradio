@@ -23,8 +23,8 @@
 #ifndef INCLUDED_MMSE_RESAMPLER_FF_H
 #define INCLUDED_MMSE_RESAMPLER_FF_H
 
-#include <gnuradio/filter/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/filter/api.h>
 
 namespace gr {
 namespace filter {

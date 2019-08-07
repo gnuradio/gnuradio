@@ -23,9 +23,9 @@
 #ifndef INCLUDED_DTV_ATSC_DEINTERLEAVER_IMPL_H
 #define INCLUDED_DTV_ATSC_DEINTERLEAVER_IMPL_H
 
-#include <gnuradio/dtv/atsc_deinterleaver.h>
 #include "atsc_types.h"
 #include "interleaver_fifo.h"
+#include <gnuradio/dtv/atsc_deinterleaver.h>
 
 namespace gr {
 namespace dtv {

@@ -23,12 +23,12 @@
 #ifndef PCCC_ENCODER_H
 #define PCCC_ENCODER_H
 
+#include <gnuradio/sync_block.h>
 #include <gnuradio/trellis/api.h>
 #include <gnuradio/trellis/fsm.h>
 #include <gnuradio/trellis/interleaver.h>
-#include <gnuradio/sync_block.h>
-#include <vector>
 #include <cstdint>
+#include <vector>
 
 namespace gr {
 namespace trellis {

@@ -24,10 +24,10 @@
 #include <config.h>
 #endif
 
-#include <gnuradio/types.h>
-#include <gnuradio/filter/fir_filter_with_buffer.h>
 #include <gnuradio/fft/fft.h>
+#include <gnuradio/filter/fir_filter_with_buffer.h>
 #include <gnuradio/random.h>
+#include <gnuradio/types.h>
 #include <volk/volk.h>
 #include <boost/test/unit_test.hpp>
 #include <cmath>

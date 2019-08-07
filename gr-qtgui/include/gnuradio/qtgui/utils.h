@@ -23,12 +23,12 @@
 #ifndef INCLUDED_QTGUI_UTILS_H
 #define INCLUDED_QTGUI_UTILS_H
 
-#include <qevent.h>
 #include <gnuradio/qtgui/api.h>
-#include <qwt_plot_picker.h>
+#include <qevent.h>
 #include <qwt_picker_machine.h>
-#include <QString>
+#include <qwt_plot_picker.h>
 #include <QCoreApplication>
+#include <QString>
 
 /*!
  * From QSS file name, extracts the file contents and returns a

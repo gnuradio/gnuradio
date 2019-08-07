@@ -24,17 +24,17 @@
 #include "config.h"
 #endif
 
-#include <block_executor.h>
 #include <gnuradio/block.h>
 #include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/prefs.h>
-#include <boost/thread.hpp>
+#include <assert.h>
+#include <block_executor.h>
+#include <stdio.h>
 #include <boost/format.hpp>
+#include <boost/thread.hpp>
 #include <iostream>
 #include <limits>
-#include <assert.h>
-#include <stdio.h>
 
 namespace gr {
 

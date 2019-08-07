@@ -23,8 +23,8 @@
 #include <config.h>
 #endif
 
-#include <gnuradio/sptr_magic.h>
 #include <gnuradio/hier_block2.h>
+#include <gnuradio/sptr_magic.h>
 #include <map>
 #include <stdexcept>
 

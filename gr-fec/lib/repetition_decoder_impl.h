@@ -23,10 +23,10 @@
 #ifndef INCLUDED_FEC_REPETITION_DECODER_IMPL_H
 #define INCLUDED_FEC_REPETITION_DECODER_IMPL_H
 
-#include <vector>
+#include <gnuradio/fec/repetition_decoder.h>
 #include <algorithm>
 #include <string>
-#include <gnuradio/fec/repetition_decoder.h>
+#include <vector>
 
 namespace gr {
 namespace fec {

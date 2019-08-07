@@ -24,8 +24,8 @@
 #define INCLUDED_DIGITAL_CRC32_H
 
 #include <gnuradio/digital/api.h>
-#include <string>
 #include <gnuradio/types.h>
+#include <string>
 
 namespace gr {
 namespace digital {

@@ -25,8 +25,8 @@
 
 #include <gnuradio/dtv/atsc_consts.h>
 #include <gnuradio/dtv/atsc_sync.h>
-#include <gnuradio/filter/single_pole_iir.h>
 #include <gnuradio/filter/mmse_fir_interpolator_ff.h>
+#include <gnuradio/filter/single_pole_iir.h>
 
 namespace gr {
 namespace dtv {

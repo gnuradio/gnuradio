@@ -23,9 +23,9 @@
 #endif
 
 #include "dvbt_ofdm_sym_acquisition_impl.h"
+#include <gnuradio/expj.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
-#include <gnuradio/expj.h>
 #include <volk/volk.h>
 #include <complex>
 #include <limits>

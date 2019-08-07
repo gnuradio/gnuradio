@@ -22,9 +22,9 @@
 #define INCLUDED_PMT_POOL_H
 
 #include <pmt/api.h>
+#include <boost/thread.hpp>
 #include <cstddef>
 #include <vector>
-#include <boost/thread.hpp>
 
 namespace pmt {
 

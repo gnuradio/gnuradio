@@ -25,8 +25,8 @@
 #endif
 
 #include <gnuradio/blocks/pack_k_bits.h>
-#include <stdexcept>
 #include <iostream>
+#include <stdexcept>
 
 namespace gr {
 namespace blocks {

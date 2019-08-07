@@ -23,8 +23,8 @@
 #ifndef RATIONAL_RESAMPLER_BASE_H
 #define RATIONAL_RESAMPLER_BASE_H
 
-#include <gnuradio/filter/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/filter/api.h>
 
 
 namespace gr {

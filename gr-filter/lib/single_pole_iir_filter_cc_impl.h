@@ -25,8 +25,8 @@
 
 #include <gnuradio/filter/single_pole_iir.h>
 #include <gnuradio/filter/single_pole_iir_filter_cc.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/sync_block.h>
 #include <stdexcept>
 
 namespace gr {

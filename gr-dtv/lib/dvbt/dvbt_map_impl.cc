@@ -22,10 +22,10 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
-#include <complex>
 #include "dvbt_map_impl.h"
+#include <gnuradio/io_signature.h>
 #include <math.h>
+#include <complex>
 
 namespace gr {
 namespace dtv {

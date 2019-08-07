@@ -24,8 +24,8 @@
 #ifndef INCLUDED_DIGITAL_CRC32_ASYNC_BB_H
 #define INCLUDED_DIGITAL_CRC32_ASYNC_BB_H
 
-#include <gnuradio/digital/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/digital/api.h>
 
 namespace gr {
 namespace digital {

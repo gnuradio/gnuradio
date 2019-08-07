@@ -25,9 +25,9 @@
 #endif
 
 #include "constellation_receiver_cb_impl.h"
+#include <gnuradio/expj.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
-#include <gnuradio/expj.h>
 #include <gnuradio/tag_checker.h>
 #include <stdexcept>
 

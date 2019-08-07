@@ -23,10 +23,10 @@
 #include "config.h"
 #endif
 
+#include <gnuradio/digital/header_buffer.h>
+#include <gnuradio/digital/header_format_crc.h>
 #include <string.h>
 #include <volk/volk.h>
-#include <gnuradio/digital/header_format_crc.h>
-#include <gnuradio/digital/header_buffer.h>
 
 namespace gr {
 namespace digital {

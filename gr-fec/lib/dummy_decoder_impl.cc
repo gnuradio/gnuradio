@@ -26,10 +26,10 @@
 
 #include "dummy_decoder_impl.h"
 #include <math.h>
-#include <boost/assign/list_of.hpp>
-#include <volk/volk.h>
-#include <sstream>
 #include <stdio.h>
+#include <volk/volk.h>
+#include <boost/assign/list_of.hpp>
+#include <sstream>
 #include <vector>
 
 namespace gr {

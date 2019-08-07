@@ -20,10 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <iostream>
 #include <gnuradio/rpcregisterhelpers.h>
 #include <pythread.h>
 #include <boost/format.hpp>
+#include <iostream>
 
 enum pyport_t { PYPORT_STRING, PYPORT_FLOAT };
 

@@ -25,8 +25,8 @@
 #endif
 
 #include "../audio_registry.h"
-#include "jack_source.h"
 #include "jack_impl.h"
+#include "jack_source.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <stdio.h>

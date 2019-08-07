@@ -23,14 +23,14 @@
 #ifndef PCCC_DECODER_COMBINED_BLK_H
 #define PCCC_DECODER_COMBINED_BLK_H
 
+#include <gnuradio/block.h>
 #include <gnuradio/trellis/api.h>
+#include <gnuradio/trellis/calc_metric.h>
 #include <gnuradio/trellis/fsm.h>
 #include <gnuradio/trellis/interleaver.h>
-#include <gnuradio/trellis/calc_metric.h>
 #include <gnuradio/trellis/siso_type.h>
-#include <gnuradio/block.h>
-#include <vector>
 #include <cstdint>
+#include <vector>
 
 namespace gr {
 namespace trellis {

@@ -23,8 +23,8 @@
 #ifndef INCLUDED_BLOCKS_SOCKET_PDU_IMPL_H
 #define INCLUDED_BLOCKS_SOCKET_PDU_IMPL_H
 
-#include <gnuradio/blocks/socket_pdu.h>
 #include "tcp_connection.h"
+#include <gnuradio/blocks/socket_pdu.h>
 
 namespace gr {
 namespace blocks {

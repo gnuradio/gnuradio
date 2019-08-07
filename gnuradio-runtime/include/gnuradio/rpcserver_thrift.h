@@ -23,16 +23,16 @@
 #ifndef RPCSERVER_THRIFT_H
 #define RPCSERVER_THRIFT_H
 
-#include <gnuradio/rpcserver_base.h>
-#include <gnuradio/rpcpmtconverters_thrift.h>
-#include <string>
-#include <iostream>
-#include <sstream>
-#include <map>
 #include "thrift/ControlPort.h"
 #include "thrift/gnuradio_types.h"
+#include <gnuradio/rpcpmtconverters_thrift.h>
+#include <gnuradio/rpcserver_base.h>
 #include <boost/format.hpp>
 #include <boost/thread/mutex.hpp>
+#include <iostream>
+#include <map>
+#include <sstream>
+#include <string>
 
 #define S(x) #x
 #define S_(x) S(x)

@@ -22,8 +22,8 @@
 #define INCLUDED_DTV_DVBT_CONVOLUTIONAL_INTERLEAVER_IMPL_H
 
 #include <gnuradio/dtv/dvbt_convolutional_interleaver.h>
-#include <vector>
 #include <deque>
+#include <vector>
 
 namespace gr {
 namespace dtv {

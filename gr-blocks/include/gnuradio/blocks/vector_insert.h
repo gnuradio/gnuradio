@@ -24,8 +24,8 @@
 #ifndef VECTOR_INSERT_H
 #define VECTOR_INSERT_H
 
-#include <gnuradio/blocks/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/blocks/api.h>
 #include <cstdint>
 
 namespace gr {

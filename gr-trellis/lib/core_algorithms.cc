@@ -20,11 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cstring>
-#include <stdexcept>
-#include <iostream>
-#include <gnuradio/trellis/core_algorithms.h>
 #include <gnuradio/trellis/calc_metric.h>
+#include <gnuradio/trellis/core_algorithms.h>
+#include <cstring>
+#include <iostream>
+#include <stdexcept>
 
 namespace gr {
 namespace trellis {
@@ -511,8 +511,8 @@ void siso_algorithm(int I,
                     const float* priori,
                     const float* prioro,
                     float* post //,
-                    // std::vector<float> &alpha,
-                    // std::vector<float> &beta
+                                // std::vector<float> &alpha,
+                                // std::vector<float> &beta
 )
 {
     float norm, mm, minm;

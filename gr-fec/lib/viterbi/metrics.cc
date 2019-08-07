@@ -41,8 +41,8 @@
 
 #include <gnuradio/math.h>
 
-#include <cstdlib>
 #include <cmath>
+#include <cstdlib>
 
 /* Normal function integrated from -Inf to x. Range: 0-1 */
 #define normal(x) (0.5 + 0.5 * erf((x) / GR_M_SQRT2))

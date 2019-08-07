@@ -24,9 +24,9 @@
 #define INCLUDED_GR_PREFS_H
 
 #include <gnuradio/api.h>
-#include <string>
-#include <map>
 #include <gnuradio/thread/thread.h>
+#include <map>
+#include <string>
 
 namespace gr {
 

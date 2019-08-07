@@ -24,8 +24,8 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "ofdm_carrier_allocator_cvc_impl.h"
+#include <gnuradio/io_signature.h>
 
 namespace gr {
 namespace digital {

@@ -25,12 +25,12 @@
 
 #include <gnuradio/qtgui/edit_box_msg.h>
 
-#include <QGroupBox>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QLineEdit>
 #include <QComboBox>
+#include <QGroupBox>
+#include <QHBoxLayout>
 #include <QLabel>
+#include <QLineEdit>
+#include <QVBoxLayout>
 
 namespace gr {
 namespace qtgui {

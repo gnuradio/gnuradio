@@ -26,9 +26,9 @@
 typedef float INPUT_DATATYPE;
 typedef unsigned char OUTPUT_DATATYPE;
 
+#include <gnuradio/fec/decoder.h>
 #include <map>
 #include <string>
-#include <gnuradio/fec/decoder.h>
 #include <vector>
 
 namespace gr {

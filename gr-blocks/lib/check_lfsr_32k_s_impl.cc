@@ -26,8 +26,8 @@
 
 #include "check_lfsr_32k_s_impl.h"
 #include <gnuradio/io_signature.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 namespace gr {
 namespace blocks {

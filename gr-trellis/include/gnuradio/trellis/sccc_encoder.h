@@ -23,10 +23,10 @@
 #ifndef SCCC_ENCODER_H
 #define SCCC_ENCODER_H
 
+#include <gnuradio/sync_block.h>
 #include <gnuradio/trellis/api.h>
 #include <gnuradio/trellis/fsm.h>
 #include <gnuradio/trellis/interleaver.h>
-#include <gnuradio/sync_block.h>
 #include <vector>
 
 namespace gr {

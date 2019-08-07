@@ -29,8 +29,8 @@
 
 #include <gnuradio/audio/source.h>
 #include <alsa/asoundlib.h>
-#include <string>
 #include <stdexcept>
+#include <string>
 
 namespace gr {
 namespace audio {

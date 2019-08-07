@@ -25,18 +25,18 @@
 #endif
 
 #include "tuntap_pdu_impl.h"
-#include <gnuradio/io_signature.h>
 #include <gnuradio/blocks/pdu.h>
+#include <gnuradio/io_signature.h>
 #include <boost/format.hpp>
 
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #if (defined(linux) || defined(__linux) || defined(__linux__))
-#include <sys/ioctl.h>
 #include <arpa/inet.h>
 #include <linux/if.h>
+#include <sys/ioctl.h>
 #endif
 
 namespace gr {

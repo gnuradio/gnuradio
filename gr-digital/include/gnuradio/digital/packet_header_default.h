@@ -22,10 +22,10 @@
 #ifndef INCLUDED_DIGITAL_PACKET_HEADER_DEFAULT_H
 #define INCLUDED_DIGITAL_PACKET_HEADER_DEFAULT_H
 
-#include <gnuradio/tags.h>
 #include <gnuradio/digital/api.h>
-#include <boost/enable_shared_from_this.hpp>
+#include <gnuradio/tags.h>
 #include <boost/crc.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 namespace gr {
 namespace digital {

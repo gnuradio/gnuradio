@@ -23,8 +23,8 @@
 #endif
 
 #include "cpfsk_bc_impl.h"
-#include <gnuradio/io_signature.h>
 #include <gnuradio/expj.h>
+#include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 
 namespace gr {

@@ -25,8 +25,8 @@
 #endif
 
 #include "squash_ff_impl.h"
-#include <stdexcept>
 #include <gnuradio/io_signature.h>
+#include <stdexcept>
 
 // expect input vector of igrid.size y-values,
 // produce output vector of ogrid.size y-values

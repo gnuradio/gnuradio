@@ -25,10 +25,10 @@
 #endif
 
 
-#include <gnuradio/random.h>
 #include <gnuradio/buffer.h>
-#include <boost/test/unit_test.hpp>
+#include <gnuradio/random.h>
 #include <stdlib.h>
+#include <boost/test/unit_test.hpp>
 
 
 static void leak_check(void f())

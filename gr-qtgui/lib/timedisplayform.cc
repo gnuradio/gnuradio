@@ -23,9 +23,9 @@
 
 #include <gnuradio/qtgui/timedisplayform.h>
 
+#include <QGroupBox>
 #include <QMessageBox>
 #include <QSpacerItem>
-#include <QGroupBox>
 
 #include <cmath>
 #include <iostream>

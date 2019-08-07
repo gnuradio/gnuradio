@@ -20,13 +20,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "usrp_source_impl.h"
 #include "gr_uhd_common.h"
+#include "usrp_source_impl.h"
 #include <boost/format.hpp>
-#include <boost/thread/thread.hpp>
 #include <boost/make_shared.hpp>
-#include <stdexcept>
+#include <boost/thread/thread.hpp>
 #include <iostream>
+#include <stdexcept>
 
 namespace gr {
 namespace uhd {

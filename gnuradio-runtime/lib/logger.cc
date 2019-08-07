@@ -32,8 +32,8 @@
 
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
-#include <stdexcept>
 #include <algorithm>
+#include <stdexcept>
 
 namespace gr {
 

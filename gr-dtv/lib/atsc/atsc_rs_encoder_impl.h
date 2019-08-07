@@ -21,8 +21,8 @@
 #ifndef INCLUDED_DTV_ATSC_RS_ENCODER_IMPL_H
 #define INCLUDED_DTV_ATSC_RS_ENCODER_IMPL_H
 
-#include <gnuradio/dtv/atsc_rs_encoder.h>
 #include "atsc_types.h"
+#include <gnuradio/dtv/atsc_rs_encoder.h>
 
 extern "C" {
 #include <gnuradio/fec/rs.h>

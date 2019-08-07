@@ -26,8 +26,8 @@
 #include <gnuradio/qtgui/VectorDisplayPlot.h>
 
 #include <gnuradio/qtgui/qtgui_types.h>
-#include <qwt_scale_draw.h>
 #include <qwt_legend.h>
+#include <qwt_scale_draw.h>
 #include <QColor>
 #include <iostream>
 

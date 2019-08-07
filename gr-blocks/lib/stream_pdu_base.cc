@@ -32,9 +32,9 @@
 #include <winsock2.h>
 #endif
 
-#include <gnuradio/blocks/pdu.h>
-#include <gnuradio/basic_block.h>
 #include "stream_pdu_base.h"
+#include <gnuradio/basic_block.h>
+#include <gnuradio/blocks/pdu.h>
 #include <boost/format.hpp>
 
 static const long timeout_us = 100 * 1000; // 100ms

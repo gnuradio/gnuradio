@@ -23,11 +23,11 @@
 #include <config.h>
 #endif
 
-#include <vector>
-#include <limits>
-#include <pmt/pmt.h>
-#include "pmt_int.h"
 #include "pmt/pmt_serial_tags.h"
+#include "pmt_int.h"
+#include <pmt/pmt.h>
+#include <limits>
+#include <vector>
 
 namespace pmt {
 

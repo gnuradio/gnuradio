@@ -23,8 +23,8 @@
 #ifndef INCLUDED_BLOCKS_KEEP_ONE_IN_N_H
 #define INCLUDED_BLOCKS_KEEP_ONE_IN_N_H
 
-#include <gnuradio/blocks/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/blocks/api.h>
 
 namespace gr {
 namespace blocks {

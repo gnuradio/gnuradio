@@ -23,9 +23,9 @@
 #ifndef INCLUDED_CALC_METRIC_H
 #define INCLUDED_CALC_METRIC_H
 
-#include <vector>
-#include <gnuradio/gr_complex.h>
 #include <gnuradio/digital/metric_type.h>
+#include <gnuradio/gr_complex.h>
+#include <vector>
 
 namespace gr {
 namespace trellis {

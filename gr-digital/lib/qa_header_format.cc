@@ -25,14 +25,14 @@
 #endif
 
 #include <gnuradio/attributes.h>
+#include <gnuradio/blocks/unpack_k_bits.h>
 #include <gnuradio/digital/header_format_counter.h>
 #include <gnuradio/digital/header_format_default.h>
-#include <gnuradio/blocks/unpack_k_bits.h>
 #include <gnuradio/expj.h>
 #include <gnuradio/xoroshiro128p.h>
+#include <stdio.h>
 #include <volk/volk.h>
 #include <boost/test/unit_test.hpp>
-#include <stdio.h>
 #include <cmath>
 
 static void

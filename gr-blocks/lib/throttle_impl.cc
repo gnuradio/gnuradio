@@ -26,8 +26,8 @@
 
 #include "throttle_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cstring>
 #include <boost/thread/thread.hpp>
+#include <cstring>
 #include <limits>
 
 pmt::pmt_t throttle_rx_rate_pmt(pmt::intern("rx_rate"));

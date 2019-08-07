@@ -25,8 +25,8 @@
 #define SIG_SOURCE_IMPL_H
 
 #include <gnuradio/analog/sig_source.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/fxpt_nco.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
 namespace analog {

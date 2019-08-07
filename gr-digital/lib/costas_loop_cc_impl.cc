@@ -25,10 +25,10 @@
 #endif
 
 #include "costas_loop_cc_impl.h"
-#include <gnuradio/io_signature.h>
 #include <gnuradio/expj.h>
-#include <gnuradio/sincos.h>
+#include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
+#include <gnuradio/sincos.h>
 #include <boost/format.hpp>
 
 namespace gr {

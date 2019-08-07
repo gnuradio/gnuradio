@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_RUNTIME_TAG_CHECKER_H
 #define INCLUDED_GR_RUNTIME_TAG_CHECKER_H
 
-#include <vector>
 #include <gnuradio/tags.h>
+#include <vector>
 
 namespace gr {
 

@@ -24,8 +24,8 @@
 #ifndef INCLUDED_FILTER_FILTERBANK_CHANNELIZER_VCVCF_H
 #define INCLUDED_FILTER_FILTERBANK_CHANNELIZER_VCVCF_H
 
-#include <gnuradio/filter/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/filter/api.h>
 
 namespace gr {
 namespace filter {

@@ -23,9 +23,9 @@
 #ifndef INCLUDED_DIGITAL_TIMING_ERROR_DETECTOR_H
 #define INCLUDED_DIGITAL_TIMING_ERROR_DETECTOR_H
 
-#include <gnuradio/gr_complex.h>
-#include <gnuradio/digital/timing_error_detector_type.h>
 #include <gnuradio/digital/constellation.h>
+#include <gnuradio/digital/timing_error_detector_type.h>
+#include <gnuradio/gr_complex.h>
 #include <deque>
 
 namespace gr {

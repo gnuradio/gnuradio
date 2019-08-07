@@ -26,14 +26,14 @@
 
 #include "time_sink_f_impl.h"
 
-#include <gnuradio/io_signature.h>
 #include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
-#include <gnuradio/prefs.h>
 #include <gnuradio/fft/fft.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/prefs.h>
 
-#include <volk/volk.h>
 #include <qwt_symbol.h>
+#include <volk/volk.h>
 
 #include <string.h>
 

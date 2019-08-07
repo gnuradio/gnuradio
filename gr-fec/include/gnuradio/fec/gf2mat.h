@@ -22,9 +22,9 @@
 
 #ifndef GF2MAT_H
 #define GF2MAT_H
-#include <vector>
-#include "gf2vec.h"
 #include "alist.h"
+#include "gf2vec.h"
+#include <vector>
 
 class GF2Mat
 {

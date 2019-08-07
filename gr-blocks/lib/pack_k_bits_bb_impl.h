@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_PACK_K_BITS_BB_IMPL_H
 #define INCLUDED_GR_PACK_K_BITS_BB_IMPL_H
 
-#include <gnuradio/blocks/pack_k_bits_bb.h>
 #include <gnuradio/blocks/pack_k_bits.h>
+#include <gnuradio/blocks/pack_k_bits_bb.h>
 
 namespace gr {
 namespace blocks {

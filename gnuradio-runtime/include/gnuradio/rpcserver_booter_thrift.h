@@ -23,9 +23,9 @@
 #ifndef RPCSERVER_BOOTER_THRIFT_H
 #define RPCSERVER_BOOTER_THRIFT_H
 
+#include "thrift/ControlPort.h"
 #include <gnuradio/rpcserver_booter_base.h>
 #include <gnuradio/thrift_server_template.h>
-#include "thrift/ControlPort.h"
 
 class rpcserver_base;
 class rpcserver_thrift;

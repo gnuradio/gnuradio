@@ -25,14 +25,14 @@
 
 #include <gnuradio/qtgui/HistogramDisplayPlot.h>
 
-#include <qwt_scale_draw.h>
+#include <gnuradio/math.h>
 #include <qwt_legend.h>
+#include <qwt_scale_draw.h>
+#include <volk/volk.h>
+#include <boost/math/special_functions/round.hpp>
 #include <QColor>
 #include <cmath>
 #include <iostream>
-#include <volk/volk.h>
-#include <gnuradio/math.h>
-#include <boost/math/special_functions/round.hpp>
 
 #ifdef _MSC_VER
 #define copysign _copysign

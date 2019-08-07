@@ -20,19 +20,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gnuradio/fec/tpc_encoder.h>
-#include <gnuradio/fec/tpc_common.h>
 #include <gnuradio/fec/generic_encoder.h>
+#include <gnuradio/fec/tpc_common.h>
+#include <gnuradio/fec/tpc_encoder.h>
 
 #include <math.h>
-#include <boost/assign/list_of.hpp>
-#include <volk/volk.h>
-#include <sstream>
 #include <stdio.h>
+#include <volk/volk.h>
+#include <boost/assign/list_of.hpp>
+#include <sstream>
 #include <vector>
 
-#include <algorithm> // for std::reverse
 #include <string.h>  // for memcpy
+#include <algorithm> // for std::reverse
 
 namespace gr {
 namespace fec {

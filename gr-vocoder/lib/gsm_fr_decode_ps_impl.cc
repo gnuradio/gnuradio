@@ -27,8 +27,8 @@
 #define GSM_SAMPLES_PER_FRAME 160
 #include "gsm_fr_decode_ps_impl.h"
 #include <gnuradio/io_signature.h>
-#include <stdexcept>
 #include <assert.h>
+#include <stdexcept>
 
 namespace gr {
 namespace vocoder {

@@ -23,9 +23,9 @@ p * You should have received a copy of the GNU General Public License
 #ifndef INCLUDED_FEC_DUMMY_ENCODER_IMPL_H
 #define INCLUDED_FEC_DUMMY_ENCODER_IMPL_H
 
+#include <gnuradio/fec/dummy_encoder.h>
 #include <map>
 #include <string>
-#include <gnuradio/fec/dummy_encoder.h>
 
 namespace gr {
 namespace fec {

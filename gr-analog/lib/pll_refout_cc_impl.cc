@@ -26,9 +26,9 @@
 
 #include "pll_refout_cc_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 #include <gnuradio/sincos.h>
 #include <math.h>
-#include <gnuradio/math.h>
 
 namespace gr {
 namespace analog {

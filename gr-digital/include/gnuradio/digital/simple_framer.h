@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_SIMPLE_FRAMER_H
 #define INCLUDED_GR_SIMPLE_FRAMER_H
 
-#include <gnuradio/digital/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/digital/api.h>
 
 namespace gr {
 namespace digital {

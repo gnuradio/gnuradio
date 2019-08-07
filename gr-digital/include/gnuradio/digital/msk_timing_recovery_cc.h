@@ -23,8 +23,8 @@
 #ifndef INCLUDED_DIGITAL_MSK_TIMING_RECOVERY_CC_H
 #define INCLUDED_DIGITAL_MSK_TIMING_RECOVERY_CC_H
 
-#include <gnuradio/digital/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/digital/api.h>
 
 namespace gr {
 namespace digital {

@@ -24,10 +24,10 @@
 #include "config.h"
 #endif
 
-#include <volk/volk.h>
-#include <gnuradio/io_signature.h>
 #include "protocol_formatter_bb_impl.h"
+#include <gnuradio/io_signature.h>
 #include <stdio.h>
+#include <volk/volk.h>
 
 namespace gr {
 namespace digital {

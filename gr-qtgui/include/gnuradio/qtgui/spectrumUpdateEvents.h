@@ -23,14 +23,14 @@
 #ifndef SPECTRUM_UPDATE_EVENTS_H
 #define SPECTRUM_UPDATE_EVENTS_H
 
+#include <gnuradio/high_res_timer.h>
+#include <gnuradio/qtgui/api.h>
+#include <gnuradio/tags.h>
 #include <stdint.h>
 #include <QEvent>
 #include <QString>
 #include <complex>
 #include <vector>
-#include <gnuradio/high_res_timer.h>
-#include <gnuradio/qtgui/api.h>
-#include <gnuradio/tags.h>
 
 static const int SpectrumUpdateEventType = 10005;
 static const int SpectrumWindowCaptionEventType = 10008;

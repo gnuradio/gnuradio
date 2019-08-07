@@ -23,11 +23,11 @@
 #ifndef ZEROMQ_TAG_HEADERS_H
 #define ZEROMQ_TAG_HEADERS_H
 
-#include <gnuradio/io_signature.h>
 #include <gnuradio/block.h>
-#include <sstream>
-#include <cstring>
+#include <gnuradio/io_signature.h>
 #include <zmq.hpp>
+#include <cstring>
+#include <sstream>
 
 namespace gr {
 namespace zeromq {

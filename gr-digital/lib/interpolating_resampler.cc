@@ -26,8 +26,8 @@
 
 #include "interpolating_resampler.h"
 #include <gnuradio/math.h>
-#include <stdexcept>
 #include <deque>
+#include <stdexcept>
 
 namespace gr {
 namespace digital {
@@ -232,8 +232,8 @@ unsigned int interp_resampler_mmse_8tap_ff::ntaps() const { return d_interp->nta
 
 /*************************************************************************/
 
-#include "gnuradio/filter/interpolator_taps.h"
 #include "gnuradio/filter/interp_differentiator_taps.h"
+#include "gnuradio/filter/interpolator_taps.h"
 
 interp_resampler_pfb_no_mf_cc::interp_resampler_pfb_no_mf_cc(bool derivative, int nfilts)
     : interpolating_resampler_ccf(IR_PFB_NO_MF, derivative),

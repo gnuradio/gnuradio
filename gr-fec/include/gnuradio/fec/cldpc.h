@@ -26,9 +26,9 @@
 #include <iostream>
 #include <vector>
 
-#include "gnuradio/fec/gf2vec.h"
-#include "gnuradio/fec/gf2mat.h"
 #include "gnuradio/fec/alist.h"
+#include "gnuradio/fec/gf2mat.h"
+#include "gnuradio/fec/gf2vec.h"
 
 
 #include <gnuradio/fec/api.h>

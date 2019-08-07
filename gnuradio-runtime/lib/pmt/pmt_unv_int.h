@@ -25,8 +25,8 @@
 
 #include "pmt_int.h"
 
-#include <vector>
 #include <cstdint>
+#include <vector>
 
 namespace pmt {
 ////////////////////////////////////////////////////////////////////////////

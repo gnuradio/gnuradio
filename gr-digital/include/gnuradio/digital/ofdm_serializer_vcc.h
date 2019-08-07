@@ -23,8 +23,8 @@
 #define INCLUDED_DIGITAL_OFDM_SERIALIZER_VCC_H
 
 #include <gnuradio/digital/api.h>
-#include <gnuradio/tagged_stream_block.h>
 #include <gnuradio/digital/ofdm_carrier_allocator_cvc.h>
+#include <gnuradio/tagged_stream_block.h>
 
 namespace gr {
 namespace digital {

@@ -23,8 +23,8 @@
 #ifndef INCLUDED_STREAM_PDU_BASE_H
 #define INCLUDED_STREAM_PDU_BASE_H
 
-#include <gnuradio/thread/thread.h>
 #include <gnuradio/basic_block.h>
+#include <gnuradio/thread/thread.h>
 #include <pmt/pmt.h>
 
 class basic_block;

@@ -25,9 +25,9 @@
 
 #include <gnuradio/qtgui/number_sink.h>
 
-#include <gnuradio/qtgui/numberdisplayform.h>
 #include <gnuradio/filter/single_pole_iir.h>
 #include <gnuradio/high_res_timer.h>
+#include <gnuradio/qtgui/numberdisplayform.h>
 
 namespace gr {
 namespace qtgui {

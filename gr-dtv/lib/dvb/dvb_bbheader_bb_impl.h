@@ -21,8 +21,8 @@
 #ifndef INCLUDED_DTV_DVB_BBHEADER_BB_IMPL_H
 #define INCLUDED_DTV_DVB_BBHEADER_BB_IMPL_H
 
-#include <gnuradio/dtv/dvb_bbheader_bb.h>
 #include "dvb_defines.h"
+#include <gnuradio/dtv/dvb_bbheader_bb.h>
 
 typedef struct {
     int ts_gs;

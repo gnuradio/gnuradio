@@ -24,19 +24,19 @@
 #include <config.h>
 #endif
 
+#include <gnuradio/constants.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/sys_paths.h>
-#include <gnuradio/constants.h>
 
 #include <algorithm>
 #include <fstream>
 #include <iostream>
 
+#include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
-#include <boost/filesystem/fstream.hpp>
-#include <boost/program_options.hpp>
 #include <boost/foreach.hpp>
+#include <boost/program_options.hpp>
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 typedef std::ifstream::char_type char_t;

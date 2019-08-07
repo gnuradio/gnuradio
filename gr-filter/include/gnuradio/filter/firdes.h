@@ -23,11 +23,11 @@
 #ifndef _FILTER_FIRDES_H_
 #define _FILTER_FIRDES_H_
 
-#include <gnuradio/filter/api.h>
-#include <vector>
-#include <cmath>
-#include <gnuradio/gr_complex.h>
 #include <gnuradio/fft/window.h>
+#include <gnuradio/filter/api.h>
+#include <gnuradio/gr_complex.h>
+#include <cmath>
+#include <vector>
 
 namespace gr {
 namespace filter {

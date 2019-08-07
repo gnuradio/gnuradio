@@ -24,10 +24,10 @@
 #ifndef INCLUDED_FILTER_POLYPHASE_FILTERBANK_H
 #define INCLUDED_FILTER_POLYPHASE_FILTERBANK_H
 
-#include <gnuradio/filter/api.h>
-#include <gnuradio/filter/fir_filter.h>
-#include <gnuradio/filter/fft_filter.h>
 #include <gnuradio/fft/fft.h>
+#include <gnuradio/filter/api.h>
+#include <gnuradio/filter/fft_filter.h>
+#include <gnuradio/filter/fir_filter.h>
 
 namespace gr {
 namespace filter {

@@ -24,13 +24,13 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/fec/polar_decoder_sc_list.h>
 #include "scl_list.h"
+#include <gnuradio/fec/polar_decoder_sc_list.h>
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
-#include <cmath>
 #include <algorithm>
+#include <cmath>
 
 namespace gr {
 namespace fec {

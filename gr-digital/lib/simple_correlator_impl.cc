@@ -25,13 +25,13 @@
 #endif
 
 #include "simple_correlator_impl.h"
+#include <gnuradio/blocks/count_bits.h>
 #include <gnuradio/digital/simple_framer_sync.h>
 #include <gnuradio/io_signature.h>
-#include <gnuradio/blocks/count_bits.h>
 #include <assert.h>
-#include <stdexcept>
 #include <string.h>
 #include <cstdio>
+#include <stdexcept>
 
 namespace gr {
 namespace digital {

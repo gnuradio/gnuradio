@@ -22,10 +22,10 @@
 #ifndef RPCPMTCONVERTERS_THRIFT_H
 #define RPCPMTCONVERTERS_THRIFT_H
 
+#include "thrift/gnuradio_types.h"
 #include <pmt/pmt.h>
 #include <boost/noncopyable.hpp>
 #include <boost/ptr_container/ptr_map.hpp>
-#include "thrift/gnuradio_types.h"
 
 
 namespace rpcpmtconverter {

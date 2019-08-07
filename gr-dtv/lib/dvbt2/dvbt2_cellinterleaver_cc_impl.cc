@@ -22,8 +22,8 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "dvbt2_cellinterleaver_cc_impl.h"
+#include <gnuradio/io_signature.h>
 
 namespace gr {
 namespace dtv {

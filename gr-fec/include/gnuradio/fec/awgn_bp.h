@@ -36,12 +36,12 @@
 #ifndef AWGN_BP_H
 #define AWGN_BP_H
 
-#include <vector>
+#include "alist.h"
+#include "gf2mat.h"
+#include <gnuradio/fec/api.h>
 #include <cmath>
 #include <iostream>
-#include "gf2mat.h"
-#include "alist.h"
-#include <gnuradio/fec/api.h>
+#include <vector>
 
 class FEC_API awgn_bp
 {

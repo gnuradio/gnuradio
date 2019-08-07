@@ -27,8 +27,8 @@
 #include "fft_filter_fff_impl.h"
 #include <gnuradio/io_signature.h>
 
-#include <math.h>
 #include <assert.h>
+#include <math.h>
 #include <stdexcept>
 
 namespace gr {

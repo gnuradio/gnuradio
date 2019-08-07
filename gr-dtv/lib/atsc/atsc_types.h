@@ -24,8 +24,8 @@
 #define DTV_INCLUDED_ATSC_TYPES_H
 
 #include <gnuradio/dtv/atsc_consts.h>
-#include <cstring>
 #include <cassert>
+#include <cstring>
 
 namespace gr {
 namespace dtv {

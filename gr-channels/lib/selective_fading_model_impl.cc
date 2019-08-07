@@ -23,8 +23,8 @@
 #include "selective_fading_model_impl.h"
 #include "sincostable.h"
 
-#include <gnuradio/io_signature.h>
 #include <gnuradio/fxpt.h>
+#include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 
 #include <boost/format.hpp>

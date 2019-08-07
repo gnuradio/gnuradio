@@ -24,8 +24,8 @@
 #ifndef UNPACKED_TO_PACKED_H
 #define UNPACKED_TO_PACKED_H
 
-#include <gnuradio/blocks/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/blocks/api.h>
 #include <gnuradio/endianness.h>
 #include <cstdint>
 

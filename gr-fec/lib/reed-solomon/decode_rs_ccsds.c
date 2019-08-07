@@ -5,8 +5,8 @@
  * May be used under the terms of the GNU General Public License (GPL)
  */
 #define FIXED 1
-#include "fixed.h"
 #include "ccsds.h"
+#include "fixed.h"
 
 int decode_rs_ccsds(unsigned char* data, int* eras_pos, int no_eras)
 {

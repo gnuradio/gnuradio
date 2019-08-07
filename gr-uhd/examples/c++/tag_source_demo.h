@@ -19,12 +19,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gnuradio/sync_block.h>
 #include <gnuradio/io_signature.h>
+#include <gnuradio/sync_block.h>
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
-#include <iostream>
 #include <complex>
+#include <iostream>
 
 class tag_source_demo : public gr::sync_block
 {
@@ -116,8 +116,8 @@ public:
                 this->make_length_tag(this->nitems_written(0), _samps_left_in_burst);
 #else
                 // Test usrp_sink's ability to cancel remainder of burst if new length_tag
-                // is found early sets burst time to 10% greater than the cycle duration to
-                // guarantee early length_tag In a real implementation the user should
+                // is found early sets burst time to 10% greater than the cycle duration
+                // to guarantee early length_tag In a real implementation the user should
                 // guard against this so that the number of samples promised by the
                 // length_tag are actually processed by the usrp_sink.
                 this->make_length_tag(this->nitems_written(0),

@@ -23,8 +23,8 @@
 #define INCLUDED_DIGITAL_OFDM_EQUALIZER_BASE_H
 
 #include <gnuradio/digital/api.h>
-#include <gnuradio/tags.h>
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/tags.h>
 #include <boost/enable_shared_from_this.hpp>
 
 namespace gr {

@@ -21,8 +21,8 @@
 #ifndef INCLUDED_DTV_DVBT_REED_SOLOMON_DEC_H
 #define INCLUDED_DTV_DVBT_REED_SOLOMON_DEC_H
 
-#include <gnuradio/dtv/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/dtv/api.h>
 
 namespace gr {
 namespace dtv {

@@ -26,8 +26,8 @@
 #include <gnuradio/uhd/usrp_block.h>
 #include <pmt/pmt.h>
 #include <uhd/usrp/multi_usrp.hpp>
-#include <boost/dynamic_bitset.hpp>
 #include <boost/bind.hpp>
+#include <boost/dynamic_bitset.hpp>
 
 
 namespace gr {

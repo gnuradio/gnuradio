@@ -23,10 +23,10 @@
 #ifndef INCLUDED_TPC_ENCODER_H
 #define INCLUDED_TPC_ENCODER_H
 
-#include <map>
-#include <string>
 #include <gnuradio/fec/encoder.h>
 #include <gnuradio/fec/generic_encoder.h>
+#include <map>
+#include <string>
 #include <vector>
 
 

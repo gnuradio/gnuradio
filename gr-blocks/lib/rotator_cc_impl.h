@@ -23,8 +23,8 @@
 #ifndef INCLUDED_BLOCKS_ROTATOR_CC_IMPL_H
 #define INCLUDED_BLOCKS_ROTATOR_CC_IMPL_H
 
-#include <gnuradio/blocks/rotator_cc.h>
 #include <gnuradio/blocks/rotator.h>
+#include <gnuradio/blocks/rotator_cc.h>
 
 namespace gr {
 namespace blocks {

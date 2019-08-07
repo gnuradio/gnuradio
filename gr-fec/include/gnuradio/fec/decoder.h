@@ -23,12 +23,12 @@
 #ifndef INCLUDED_FEC_DECODER_H
 #define INCLUDED_FEC_DECODER_H
 
+#include <gnuradio/block.h>
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/generic_decoder.h>
-#include <gnuradio/block.h>
-#include <boost/shared_ptr.hpp>
-#include <boost/shared_array.hpp>
 #include <boost/format.hpp>
+#include <boost/shared_array.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace gr {
 namespace fec {

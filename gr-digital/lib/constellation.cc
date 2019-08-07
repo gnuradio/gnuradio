@@ -24,17 +24,17 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include <gnuradio/digital/constellation.h>
-#include <gnuradio/math.h>
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 
 #include <boost/format.hpp>
 
-#include <cstdlib>
 #include <cfloat>
-#include <stdexcept>
+#include <cstdlib>
 #include <iostream>
+#include <stdexcept>
 
 namespace gr {
 namespace digital {

@@ -24,9 +24,9 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "pub_msg_sink_impl.h"
 #include "tag_headers.h"
+#include <gnuradio/io_signature.h>
 
 namespace gr {
 namespace zeromq {

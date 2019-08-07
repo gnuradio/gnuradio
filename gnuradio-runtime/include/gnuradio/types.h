@@ -24,9 +24,9 @@
 #define INCLUDED_GR_TYPES_H
 
 #include <gnuradio/api.h>
+#include <stddef.h> // size_t
 #include <boost/shared_ptr.hpp>
 #include <vector>
-#include <stddef.h> // size_t
 
 #include <gnuradio/gr_complex.h>
 

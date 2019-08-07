@@ -22,13 +22,13 @@
 
 #include <gnuradio/qtgui/DisplayPlot.h>
 
-#include <qwt_scale_draw.h>
 #include <qwt_legend.h>
+#include <qwt_scale_draw.h>
 #include <QColor>
+#include <QDebug>
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
-#include <QDebug>
 
 DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
     : QwtPlot(parent), d_nplots(nplots), d_stop(false)

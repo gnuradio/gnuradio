@@ -27,13 +27,13 @@
 #include "wavfile_sink_impl.h"
 #include <gnuradio/blocks/wavfile.h>
 #include <gnuradio/io_signature.h>
-#include <stdexcept>
-#include <climits>
-#include <cstring>
-#include <cmath>
-#include <fcntl.h>
 #include <gnuradio/thread/thread.h>
+#include <fcntl.h>
 #include <boost/math/special_functions/round.hpp>
+#include <climits>
+#include <cmath>
+#include <cstring>
+#include <stdexcept>
 
 // win32 (mingw/msvc) specific
 #ifdef HAVE_IO_H

@@ -24,8 +24,8 @@
 #define RPCSERVER_BOOTER_AGGREGATOR
 
 #include <gnuradio/api.h>
-#include <gnuradio/rpcserver_booter_base.h>
 #include <gnuradio/rpcserver_aggregator.h>
+#include <gnuradio/rpcserver_booter_base.h>
 #include <boost/shared_ptr.hpp>
 #include <string>
 

@@ -22,9 +22,9 @@
 
 #include <gnuradio/qtgui/displayform.h>
 
-#include <iostream>
-#include <QPixmap>
 #include <QFileDialog>
+#include <QPixmap>
+#include <iostream>
 
 DisplayForm::DisplayForm(int nplots, QWidget* parent)
     : QWidget(parent), d_nplots(nplots), d_system_specified_flag(false)

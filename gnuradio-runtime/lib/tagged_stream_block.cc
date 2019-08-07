@@ -24,8 +24,8 @@
 #include "config.h"
 #endif
 
-#include <boost/format.hpp>
 #include <gnuradio/tagged_stream_block.h>
+#include <boost/format.hpp>
 
 namespace gr {
 

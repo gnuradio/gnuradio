@@ -23,8 +23,8 @@
 #ifndef NUMBER_DISPLAY_FORM_H
 #define NUMBER_DISPLAY_FORM_H
 
-#include <gnuradio/qtgui/spectrumUpdateEvents.h>
 #include <gnuradio/qtgui/form_menus.h>
+#include <gnuradio/qtgui/spectrumUpdateEvents.h>
 #include <QtGui/QtGui>
 #include <qwt_thermo.h>
 #include <vector>

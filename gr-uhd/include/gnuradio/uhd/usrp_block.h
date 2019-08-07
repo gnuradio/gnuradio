@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_UHD_USRP_BLOCK_H
 #define INCLUDED_GR_UHD_USRP_BLOCK_H
 
-#include <gnuradio/uhd/api.h>
 #include <gnuradio/sync_block.h>
+#include <gnuradio/uhd/api.h>
 #include <uhd/usrp/multi_usrp.hpp>
 
 namespace gr {

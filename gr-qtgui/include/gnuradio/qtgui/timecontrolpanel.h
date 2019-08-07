@@ -23,16 +23,16 @@
 #ifndef TIME_CONTROL_PANEL_H
 #define TIME_CONTROL_PANEL_H
 
-#include <QtGui/QtGui>
-#include <vector>
-#include <QSlider>
-#include <QComboBox>
-#include <QCheckBox>
-#include <QPushButton>
-#include <QLabel>
-#include <QHBoxLayout>
 #include <gnuradio/qtgui/displayform.h>
 #include <gnuradio/qtgui/timedisplayform.h>
+#include <QtGui/QtGui>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QSlider>
+#include <vector>
 
 class TimeControlPanel : public QVBoxLayout
 {

@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_GLFSR_SOURCE_F_IMPL_H
 #define INCLUDED_GR_GLFSR_SOURCE_F_IMPL_H
 
-#include <gnuradio/digital/glfsr_source_f.h>
 #include <gnuradio/digital/glfsr.h>
+#include <gnuradio/digital/glfsr_source_f.h>
 
 namespace gr {
 namespace digital {

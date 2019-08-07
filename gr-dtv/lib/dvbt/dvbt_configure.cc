@@ -22,8 +22,8 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "dvbt_configure.h"
+#include <gnuradio/io_signature.h>
 #include <iostream>
 
 namespace gr {

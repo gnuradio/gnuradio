@@ -26,11 +26,11 @@
 
 #include "correlate_access_code_bb_ts_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/format.hpp>
-#include <stdexcept>
 #include <volk/volk.h>
+#include <boost/format.hpp>
 #include <cstdio>
 #include <iostream>
+#include <stdexcept>
 
 namespace gr {
 namespace digital {

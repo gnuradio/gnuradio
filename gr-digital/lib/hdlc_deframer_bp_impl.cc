@@ -24,9 +24,9 @@
 #include "config.h"
 #endif
 
+#include "hdlc_deframer_bp_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/tags.h>
-#include "hdlc_deframer_bp_impl.h"
 
 namespace gr {
 namespace digital {

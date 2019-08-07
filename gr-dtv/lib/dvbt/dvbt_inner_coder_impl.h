@@ -21,8 +21,8 @@
 #ifndef INCLUDED_DTV_DVBT_INNER_CODER_IMPL_H
 #define INCLUDED_DTV_DVBT_INNER_CODER_IMPL_H
 
-#include <gnuradio/dtv/dvbt_inner_coder.h>
 #include "dvbt_configure.h"
+#include <gnuradio/dtv/dvbt_inner_coder.h>
 
 namespace gr {
 namespace dtv {

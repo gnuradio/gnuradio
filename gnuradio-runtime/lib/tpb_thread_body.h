@@ -21,11 +21,11 @@
 #ifndef INCLUDED_GR_TPB_THREAD_BODY_H
 #define INCLUDED_GR_TPB_THREAD_BODY_H
 
+#include "block_executor.h"
 #include <gnuradio/api.h>
 #include <gnuradio/block.h>
 #include <gnuradio/block_detail.h>
 #include <gnuradio/thread/thread.h>
-#include "block_executor.h"
 
 namespace gr {
 

@@ -23,8 +23,8 @@
 #ifndef INCLUDED_DIGITAL_CORRELATE_ACCESS_CODE_FF_TS_H
 #define INCLUDED_DIGITAL_CORRELATE_ACCESS_CODE_FF_TS_H
 
-#include <gnuradio/digital/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/digital/api.h>
 #include <string>
 
 namespace gr {

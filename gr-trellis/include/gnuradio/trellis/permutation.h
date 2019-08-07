@@ -23,9 +23,9 @@
 #ifndef INCLUDED_TRELLIS_PERMUTATION_H
 #define INCLUDED_TRELLIS_PERMUTATION_H
 
+#include <gnuradio/sync_block.h>
 #include <gnuradio/trellis/api.h>
 #include <vector>
-#include <gnuradio/sync_block.h>
 
 namespace gr {
 namespace trellis {

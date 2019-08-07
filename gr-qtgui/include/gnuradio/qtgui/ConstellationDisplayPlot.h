@@ -23,10 +23,10 @@
 #ifndef CONSTELLATION_DISPLAY_PLOT_H
 #define CONSTELLATION_DISPLAY_PLOT_H
 
+#include <gnuradio/qtgui/DisplayPlot.h>
 #include <stdint.h>
 #include <cstdio>
 #include <vector>
-#include <gnuradio/qtgui/DisplayPlot.h>
 
 /*!
  * \brief QWidget for displaying constellaton (I&Q) plots.

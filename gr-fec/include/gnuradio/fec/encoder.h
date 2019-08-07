@@ -23,9 +23,9 @@
 #ifndef INCLUDED_FEC_ENCODER_H
 #define INCLUDED_FEC_ENCODER_H
 
+#include <gnuradio/block.h>
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/generic_encoder.h>
-#include <gnuradio/block.h>
 #include <boost/shared_ptr.hpp>
 
 namespace gr {

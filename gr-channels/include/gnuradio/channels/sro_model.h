@@ -23,8 +23,8 @@
 #ifndef INCLUDED_CHANNELS_SRO_MODEL_H
 #define INCLUDED_CHANNELS_SRO_MODEL_H
 
-#include <gnuradio/channels/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/channels/api.h>
 #include <gnuradio/types.h>
 
 namespace gr {

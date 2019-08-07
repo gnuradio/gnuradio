@@ -20,10 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <gsl/gsl_integration.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 #define NSTEPS 10 // how many steps of mu are in the generated table
 #define MAX_NSTEPS 256

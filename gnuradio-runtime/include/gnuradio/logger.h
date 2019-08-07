@@ -37,18 +37,18 @@ typedef int mode_t;
 
 #include <gnuradio/api.h>
 #include <assert.h>
-#include <iostream>
-#include <time.h>
-#include <boost/filesystem.hpp>
-#include <boost/thread.hpp>
-#include <boost/format.hpp>
-#include <pmt/pmt.h>
 #include <log4cpp/Category.hh>
-#include <log4cpp/PropertyConfigurator.hh>
 #include <log4cpp/FileAppender.hh>
-#include <log4cpp/RollingFileAppender.hh>
 #include <log4cpp/OstreamAppender.hh>
 #include <log4cpp/PatternLayout.hh>
+#include <log4cpp/PropertyConfigurator.hh>
+#include <log4cpp/RollingFileAppender.hh>
+#include <pmt/pmt.h>
+#include <time.h>
+#include <boost/filesystem.hpp>
+#include <boost/format.hpp>
+#include <boost/thread.hpp>
+#include <iostream>
 
 namespace gr {
 

@@ -23,8 +23,8 @@
 #ifndef INCLUDED_VOCODER_GSM_FR_ENCODE_SP_H
 #define INCLUDED_VOCODER_GSM_FR_ENCODE_SP_H
 
-#include <gnuradio/vocoder/api.h>
 #include <gnuradio/sync_decimator.h>
+#include <gnuradio/vocoder/api.h>
 
 namespace gr {
 namespace vocoder {

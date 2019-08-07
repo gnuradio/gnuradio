@@ -19,15 +19,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "tag_source_demo.h"
 #include "tag_sink_demo.h"
+#include "tag_source_demo.h"
 #include <gnuradio/top_block.h>
-#include <gnuradio/uhd/usrp_source.h>
 #include <gnuradio/uhd/usrp_sink.h>
+#include <gnuradio/uhd/usrp_source.h>
 #include <uhd/utils/safe_main.hpp>
 #include <boost/make_shared.hpp>
-#include <boost/thread/thread.hpp> //sleep
 #include <boost/program_options.hpp>
+#include <boost/thread/thread.hpp> //sleep
 #include <csignal>
 #include <iostream>
 

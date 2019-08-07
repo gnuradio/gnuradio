@@ -26,11 +26,11 @@
 
 #include "number_sink_impl.h"
 
-#include <gnuradio/io_signature.h>
 #include <gnuradio/fft/fft.h>
+#include <gnuradio/io_signature.h>
 
-#include <volk/volk.h>
 #include <qwt_symbol.h>
+#include <volk/volk.h>
 
 #include <string.h>
 #include <cmath>
