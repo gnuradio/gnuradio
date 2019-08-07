@@ -20,9 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <gnuradio/trellis/calc_metric.h>
 #include <float.h>
 #include <stdexcept>
-#include <gnuradio/trellis/calc_metric.h>
 
 namespace gr {
 namespace trellis {

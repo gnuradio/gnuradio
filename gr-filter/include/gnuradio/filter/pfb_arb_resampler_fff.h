@@ -24,8 +24,8 @@
 #ifndef INCLUDED_PFB_ARB_RESAMPLER_FFF_H
 #define INCLUDED_PFB_ARB_RESAMPLER_FFF_H
 
-#include <gnuradio/filter/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/filter/api.h>
 
 namespace gr {
 namespace filter {

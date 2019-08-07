@@ -24,8 +24,8 @@
 #define INCLUDED_TRELLIS_FSM_H
 
 #include <gnuradio/trellis/api.h>
-#include <vector>
 #include <iosfwd>
+#include <vector>
 
 namespace gr {
 namespace trellis {

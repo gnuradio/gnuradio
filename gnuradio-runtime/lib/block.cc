@@ -25,12 +25,12 @@
 #endif
 
 #include <gnuradio/block.h>
-#include <gnuradio/block_registry.h>
 #include <gnuradio/block_detail.h>
+#include <gnuradio/block_registry.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/prefs.h>
-#include <stdexcept>
 #include <iostream>
+#include <stdexcept>
 
 namespace gr {
 

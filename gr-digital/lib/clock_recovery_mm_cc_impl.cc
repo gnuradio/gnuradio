@@ -26,11 +26,11 @@
 
 #include "clock_recovery_mm_cc_impl.h"
 #include <gnuradio/io_signature.h>
-#include <gnuradio/prefs.h>
 #include <gnuradio/math.h>
-#include <stdexcept>
-#include <sstream>
+#include <gnuradio/prefs.h>
 #include <iomanip>
+#include <sstream>
+#include <stdexcept>
 
 namespace gr {
 namespace digital {

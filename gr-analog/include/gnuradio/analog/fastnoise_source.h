@@ -27,8 +27,8 @@
 #include <gnuradio/analog/api.h>
 #include <gnuradio/analog/noise_type.h>
 #include <gnuradio/sync_block.h>
-#include <vector>
 #include <cstdint>
+#include <vector>
 
 namespace gr {
 namespace analog {

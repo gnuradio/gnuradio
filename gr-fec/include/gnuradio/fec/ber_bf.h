@@ -23,8 +23,8 @@
 #ifndef INCLUDED_FEC_BER_BF_H
 #define INCLUDED_FEC_BER_BF_H
 
-#include <gnuradio/fec/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/fec/api.h>
 
 namespace gr {
 namespace fec {

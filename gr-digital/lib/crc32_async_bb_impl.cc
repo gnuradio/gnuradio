@@ -24,9 +24,9 @@
 #include "config.h"
 #endif
 
+#include "crc32_async_bb_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
-#include "crc32_async_bb_impl.h"
 
 namespace gr {
 namespace digital {

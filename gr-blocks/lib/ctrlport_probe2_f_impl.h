@@ -24,8 +24,8 @@
 #define INCLUDED_CTRLPORT_PROBE2_F_IMPL_H
 
 #include <gnuradio/blocks/ctrlport_probe2_f.h>
-#include <gnuradio/rpcregisterhelpers.h>
 #include <gnuradio/rpcbufferedget.h>
+#include <gnuradio/rpcregisterhelpers.h>
 
 namespace gr {
 namespace blocks {

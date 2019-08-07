@@ -24,21 +24,21 @@
 #include "config.h"
 #endif
 
-#include <assert.h>
-#include <stdexcept>
-#include <stdio.h>
-#include <string.h>
-#include <vector>
-#include <boost/format.hpp>
+#include "local_sighandler.h"
 #include "vmcircbuf.h"
 #include "vmcircbuf_prefs.h"
-#include "local_sighandler.h"
+#include <assert.h>
+#include <stdio.h>
+#include <string.h>
+#include <boost/format.hpp>
+#include <stdexcept>
+#include <vector>
 
 // all the factories we know about
 #include "vmcircbuf_createfilemapping.h"
-#include "vmcircbuf_sysv_shm.h"
 #include "vmcircbuf_mmap_shm_open.h"
 #include "vmcircbuf_mmap_tmpfile.h"
+#include "vmcircbuf_sysv_shm.h"
 
 gr::thread::mutex s_vm_mutex;
 

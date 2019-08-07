@@ -23,9 +23,9 @@
 #ifndef INCLUDED_DIGITAL_CPMMOD_BC_IMPL_H
 #define INCLUDED_DIGITAL_CPMMOD_BC_IMPL_H
 
-#include <gnuradio/digital/cpmmod_bc.h>
-#include <gnuradio/blocks/char_to_float.h>
 #include <gnuradio/analog/frequency_modulator_fc.h>
+#include <gnuradio/blocks/char_to_float.h>
+#include <gnuradio/digital/cpmmod_bc.h>
 #include <gnuradio/filter/interp_fir_filter.h>
 
 namespace gr {

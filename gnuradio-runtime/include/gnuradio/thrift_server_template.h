@@ -23,18 +23,18 @@
 #ifndef THRIFT_SERVER_TEMPLATE_H
 #define THRIFT_SERVER_TEMPLATE_H
 
-#include <gnuradio/prefs.h>
 #include <gnuradio/logger.h>
+#include <gnuradio/prefs.h>
 #include <gnuradio/thrift_application_base.h>
 #include <iostream>
 
+#include "thrift/ControlPort.h"
+#include <thrift/concurrency/PlatformThreadFactory.h>
+#include <thrift/concurrency/ThreadManager.h>
 #include <thrift/server/TSimpleServer.h>
 #include <thrift/server/TThreadPoolServer.h>
-#include <thrift/concurrency/ThreadManager.h>
-#include <thrift/concurrency/PlatformThreadFactory.h>
-#include <thrift/transport/TServerSocket.h>
 #include <thrift/transport/TBufferTransports.h>
-#include "thrift/ControlPort.h"
+#include <thrift/transport/TServerSocket.h>
 
 using namespace apache;
 

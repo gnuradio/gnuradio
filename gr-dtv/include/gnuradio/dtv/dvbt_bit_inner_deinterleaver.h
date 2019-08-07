@@ -21,8 +21,8 @@
 #ifndef INCLUDED_DTV_DVBT_BIT_INNER_DEINTERLEVER_H
 #define INCLUDED_DTV_DVBT_BIT_INNER_DEINTERLEVER_H
 
-#include <gnuradio/dtv/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/dtv/api.h>
 #include <gnuradio/dtv/dvb_config.h>
 #include <gnuradio/dtv/dvbt_config.h>
 

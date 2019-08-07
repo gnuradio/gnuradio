@@ -23,8 +23,8 @@
 #ifndef INCLUDED_ANALOG_AGC_CC_H
 #define INCLUDED_ANALOG_AGC_CC_H
 
-#include <gnuradio/analog/api.h>
 #include <gnuradio/analog/agc.h>
+#include <gnuradio/analog/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {

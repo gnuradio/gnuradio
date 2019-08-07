@@ -39,8 +39,8 @@
 #include <config.h>
 #endif
 
-#include <gnuradio/random.h>
 #include <gnuradio/math.h>
+#include <gnuradio/random.h>
 
 #include <cmath>
 

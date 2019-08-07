@@ -28,10 +28,10 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 #include <gnuradio/prefs.h>
-#include <stdexcept>
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdexcept>
 
 namespace gr {
 namespace blocks {

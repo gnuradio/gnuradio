@@ -26,14 +26,14 @@
 
 #include "tcp_server_sink_impl.h"
 #include <gnuradio/io_signature.h>
-#include <algorithm>
+#include <gnuradio/thread/thread.h>
+#include <stdio.h>
+#include <string.h>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
-#include <gnuradio/thread/thread.h>
+#include <algorithm>
 #include <stdexcept>
-#include <stdio.h>
-#include <string.h>
 
 namespace gr {
 namespace blocks {

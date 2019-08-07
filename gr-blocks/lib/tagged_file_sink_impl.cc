@@ -27,11 +27,11 @@
 #include "tagged_file_sink_impl.h"
 #include <gnuradio/io_signature.h>
 #include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <stdexcept>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <iostream>
+#include <stdexcept>
 
 #ifdef HAVE_IO_H
 #include <io.h>

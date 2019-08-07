@@ -23,11 +23,11 @@
 #ifndef INCLUDED_CORE_ALGORITHMS_H
 #define INCLUDED_CORE_ALGORITHMS_H
 
-#include <cmath>
-#include <vector>
 #include <gnuradio/digital/metric_type.h>
 #include <gnuradio/trellis/fsm.h>
 #include <gnuradio/trellis/interleaver.h>
+#include <cmath>
+#include <vector>
 
 namespace gr {
 namespace trellis {

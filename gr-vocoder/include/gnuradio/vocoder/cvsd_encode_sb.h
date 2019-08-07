@@ -22,8 +22,8 @@
 #ifndef INCLUDED_VOCODER_CVSD_ENCODER_SB_H
 #define INCLUDED_VOCODER_CVSD_ENCODER_SB_H
 
-#include <gnuradio/vocoder/api.h>
 #include <gnuradio/sync_decimator.h>
+#include <gnuradio/vocoder/api.h>
 
 namespace gr {
 namespace vocoder {

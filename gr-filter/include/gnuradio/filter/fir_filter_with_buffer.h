@@ -24,8 +24,8 @@
 #define INCLUDED_FILTER_FIR_FILTER_WITH_BUFFER_H
 
 #include <gnuradio/filter/api.h>
-#include <vector>
 #include <gnuradio/gr_complex.h>
+#include <vector>
 
 namespace gr {
 namespace filter {

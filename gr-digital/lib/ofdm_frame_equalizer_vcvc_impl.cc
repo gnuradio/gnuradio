@@ -24,8 +24,8 @@
 #endif
 
 #include "ofdm_frame_equalizer_vcvc_impl.h"
-#include <gnuradio/io_signature.h>
 #include <gnuradio/expj.h>
+#include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 
 static const pmt::pmt_t CARR_OFFSET_KEY = pmt::mp("ofdm_sync_carr_offset");

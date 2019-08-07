@@ -24,15 +24,15 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/thread/thread.h>
 #include "file_source_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cstdio>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <gnuradio/thread/thread.h>
 #include <fcntl.h>
-#include <stdexcept>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <cstdio>
+#include <stdexcept>
 
 #ifdef _MSC_VER
 #define GR_FSEEK _fseeki64

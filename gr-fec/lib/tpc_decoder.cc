@@ -20,18 +20,18 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gnuradio/fec/tpc_decoder.h>
 #include <gnuradio/fec/tpc_common.h>
+#include <gnuradio/fec/tpc_decoder.h>
 #include <volk/volk.h>
 
 #include <math.h>
+#include <stdio.h>
 #include <boost/assign/list_of.hpp>
 #include <sstream>
-#include <stdio.h>
 #include <vector>
 
-#include <algorithm> // for std::reverse
 #include <string.h>  // for memcpy
+#include <algorithm> // for std::reverse
 
 #include <gnuradio/fec/maxstar.h>
 

@@ -24,9 +24,9 @@
 #define INCLUDED_CTRLPORT_PROBE_PSD_IMPL_H
 
 #include <gnuradio/fft/ctrlport_probe_psd.h>
+#include <gnuradio/fft/fft.h>
 #include <gnuradio/rpcregisterhelpers.h>
 #include <boost/thread/shared_mutex.hpp>
-#include <gnuradio/fft/fft.h>
 
 namespace gr {
 namespace fft {

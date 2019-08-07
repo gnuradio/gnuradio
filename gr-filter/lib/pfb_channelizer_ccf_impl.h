@@ -23,10 +23,10 @@
 #ifndef INCLUDED_FILTER_PFB_CHANNELIZER_CCF_IMPL_H
 #define INCLUDED_FILTER_PFB_CHANNELIZER_CCF_IMPL_H
 
+#include <gnuradio/fft/fft.h>
+#include <gnuradio/filter/fir_filter.h>
 #include <gnuradio/filter/pfb_channelizer_ccf.h>
 #include <gnuradio/filter/polyphase_filterbank.h>
-#include <gnuradio/filter/fir_filter.h>
-#include <gnuradio/fft/fft.h>
 #include <gnuradio/thread/thread.h>
 
 namespace gr {

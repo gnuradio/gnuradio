@@ -22,9 +22,9 @@
 
 #include "ber_sink_b_impl.h"
 
+#include <gnuradio/fft/fft.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
-#include <gnuradio/fft/fft.h>
 #include <volk/volk.h>
 #include <cmath>
 

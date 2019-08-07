@@ -23,8 +23,8 @@
 #ifndef GR_VMCIRCBUF_CREATEFILEMAPPING_H
 #define GR_VMCIRCBUF_CREATEFILEMAPPING_H
 
-#include <gnuradio/api.h>
 #include "vmcircbuf.h"
+#include <gnuradio/api.h>
 
 #ifdef HAVE_CREATEFILEMAPPING
 #include <windows.h>

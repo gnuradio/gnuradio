@@ -24,8 +24,8 @@
 #define INCLUDED_SINGLE_POLE_IIR_H
 
 #include <gnuradio/filter/api.h>
-#include <stdexcept>
 #include <gnuradio/gr_complex.h>
+#include <stdexcept>
 
 namespace gr {
 namespace filter {

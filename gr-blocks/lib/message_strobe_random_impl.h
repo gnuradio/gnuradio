@@ -24,11 +24,11 @@
 #define INCLUDED_GR_MESSAGE_STROBE_RANDOM_IMPL_H
 
 #include <gnuradio/blocks/message_strobe_random.h>
-#include <boost/random/variate_generator.hpp>
 #include <boost/random/mersenne_twister.hpp>
-#include <boost/random/poisson_distribution.hpp>
 #include <boost/random/normal_distribution.hpp>
+#include <boost/random/poisson_distribution.hpp>
 #include <boost/random/uniform_real.hpp>
+#include <boost/random/variate_generator.hpp>
 
 namespace gr {
 namespace blocks {

@@ -25,8 +25,8 @@
 #endif
 
 #include "atsc_equalizer_impl.h"
-#include "atsc_types.h"
 #include "atsc_pnXXX_impl.h"
+#include "atsc_types.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 

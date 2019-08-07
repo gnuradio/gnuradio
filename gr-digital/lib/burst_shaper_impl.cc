@@ -25,9 +25,9 @@
 #endif
 
 #include "burst_shaper_impl.h"
-#include <boost/format.hpp>
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
+#include <boost/format.hpp>
 
 namespace gr {
 namespace digital {

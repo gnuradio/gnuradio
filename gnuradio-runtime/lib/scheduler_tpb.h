@@ -22,9 +22,9 @@
 #ifndef INCLUDED_GR_SCHEDULER_TPB_H
 #define INCLUDED_GR_SCHEDULER_TPB_H
 
+#include "scheduler.h"
 #include <gnuradio/api.h>
 #include <gnuradio/thread/thread_group.h>
-#include "scheduler.h"
 
 namespace gr {
 

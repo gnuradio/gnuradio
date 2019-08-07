@@ -24,8 +24,8 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "sro_model_impl.h"
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 
 namespace gr {

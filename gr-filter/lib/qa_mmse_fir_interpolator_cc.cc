@@ -24,15 +24,15 @@
 #include <config.h>
 #endif
 
-#include <gnuradio/filter/mmse_fir_interpolator_cc.h>
 #include <gnuradio/fft/fft.h>
+#include <gnuradio/filter/mmse_fir_interpolator_cc.h>
 #include <gnuradio/math.h>
 #include <volk/volk.h>
 #include <boost/test/unit_test.hpp>
-#include <cstdio>
 #include <cmath>
-#include <stdexcept>
 #include <cstdint>
+#include <cstdio>
+#include <stdexcept>
 
 namespace gr {
 namespace filter {

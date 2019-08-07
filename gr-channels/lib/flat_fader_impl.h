@@ -24,14 +24,14 @@
 #define FLAT_FADER_IMPL_H
 
 #include <gnuradio/io_signature.h>
-#include <iostream>
 #include <stdint.h>
+#include <iostream>
 
 #include <boost/format.hpp>
 #include <boost/random.hpp>
 
-#include <gnuradio/fxpt.h>
 #include "sincostable.h"
+#include <gnuradio/fxpt.h>
 
 // FASTSINCOS:  0 = slow native,  1 = gr::fxpt impl,  2 = sincostable.h
 #define FASTSINCOS 2

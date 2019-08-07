@@ -24,8 +24,8 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "plateau_detector_fb_impl.h"
+#include <gnuradio/io_signature.h>
 
 namespace gr {
 namespace blocks {

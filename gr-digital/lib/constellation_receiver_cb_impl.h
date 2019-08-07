@@ -23,8 +23,8 @@
 #ifndef INCLUDED_DIGITAL_CONSTELLATION_RECEIVER_CB_IMPL_H
 #define INCLUDED_DIGITAL_CONSTELLATION_RECEIVER_CB_IMPL_H
 
-#include <gnuradio/digital/constellation_receiver_cb.h>
 #include <gnuradio/attributes.h>
+#include <gnuradio/digital/constellation_receiver_cb.h>
 #include <gnuradio/gr_complex.h>
 #include <gnuradio/math.h>
 

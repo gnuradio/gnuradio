@@ -23,10 +23,10 @@
 #ifndef INCLUDED_DIGITAL_SYMBOL_SYNC_FF_IMPL_H
 #define INCLUDED_DIGITAL_SYMBOL_SYNC_FF_IMPL_H
 
-#include <gnuradio/digital/symbol_sync_ff.h>
 #include "clock_tracking_loop.h"
-#include "timing_error_detector.h"
 #include "interpolating_resampler.h"
+#include "timing_error_detector.h"
+#include <gnuradio/digital/symbol_sync_ff.h>
 
 namespace gr {
 namespace digital {

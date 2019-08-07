@@ -26,8 +26,8 @@
 
 #include "unpack_k_bits_bb_impl.h"
 #include <gnuradio/io_signature.h>
-#include <stdexcept>
 #include <iostream>
+#include <stdexcept>
 
 namespace gr {
 namespace blocks {

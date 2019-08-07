@@ -20,11 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include "gr_uhd_common.h"
+#include "usrp_sink_impl.h"
+#include <gnuradio/io_signature.h>
 #include <climits>
 #include <stdexcept>
-#include "usrp_sink_impl.h"
-#include "gr_uhd_common.h"
-#include <gnuradio/io_signature.h>
 
 namespace gr {
 namespace uhd {

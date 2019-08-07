@@ -23,8 +23,8 @@
 #ifndef INCLUDED_DTV_ATSC_DERANDOMIZER_IMPL_H
 #define INCLUDED_DTV_ATSC_DERANDOMIZER_IMPL_H
 
-#include <gnuradio/dtv/atsc_derandomizer.h>
 #include "atsc_randomize.h"
+#include <gnuradio/dtv/atsc_derandomizer.h>
 
 namespace gr {
 namespace dtv {

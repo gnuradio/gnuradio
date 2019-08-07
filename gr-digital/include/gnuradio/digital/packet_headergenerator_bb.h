@@ -23,8 +23,8 @@
 #define INCLUDED_PACKET_HEADERGENERATOR_BB_H
 
 #include <gnuradio/digital/api.h>
-#include <gnuradio/tagged_stream_block.h>
 #include <gnuradio/digital/packet_header_default.h>
+#include <gnuradio/tagged_stream_block.h>
 
 namespace gr {
 namespace digital {

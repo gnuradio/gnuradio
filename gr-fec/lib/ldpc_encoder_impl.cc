@@ -21,12 +21,12 @@
  */
 
 #include "ldpc_encoder_impl.h"
-#include <boost/assign/list_of.hpp>
-#include <volk/volk.h>
-#include <sstream>
 #include <stdio.h>
+#include <string.h> // for memcpy
+#include <volk/volk.h>
+#include <boost/assign/list_of.hpp>
 #include <algorithm> // for std::reverse
-#include <string.h>  // for memcpy
+#include <sstream>
 
 namespace gr {
 namespace fec {

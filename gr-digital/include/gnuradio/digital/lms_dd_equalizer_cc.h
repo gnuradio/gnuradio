@@ -24,8 +24,8 @@
 #define INCLUDED_DIGITAL_LMS_DD_EQUALIZER_CC_H
 
 #include <gnuradio/digital/api.h>
-#include <gnuradio/sync_decimator.h>
 #include <gnuradio/digital/constellation.h>
+#include <gnuradio/sync_decimator.h>
 
 namespace gr {
 namespace digital {

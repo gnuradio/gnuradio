@@ -23,11 +23,11 @@
 #ifndef INCLUDED_GR_RUNTIME_BLOCK_H
 #define INCLUDED_GR_RUNTIME_BLOCK_H
 
-#include <gnuradio/config.h>
 #include <gnuradio/api.h>
 #include <gnuradio/basic_block.h>
-#include <gnuradio/tags.h>
+#include <gnuradio/config.h>
 #include <gnuradio/logger.h>
+#include <gnuradio/tags.h>
 #ifdef GR_MPLIB_MPIR
 #include <mpirxx.h>
 #else
@@ -169,8 +169,8 @@ public:
      * \param ninput_items	number of input items available on each input stream
      * \param input_items	vector of pointers to the input items, one entry per input
      * stream
-     * \param output_items	vector of pointers to the output items, one entry per output
-     * stream
+     * \param output_items	vector of pointers to the output items, one entry per
+     * output stream
      *
      * \returns number of items actually written to each output stream
      * or WORK_CALLED_PRODUCE or WORK_DONE.  It is OK to return a

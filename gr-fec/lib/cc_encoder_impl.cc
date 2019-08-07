@@ -25,15 +25,15 @@
 #endif
 
 #include "cc_encoder_impl.h"
-#include <math.h>
-#include <boost/assign/list_of.hpp>
-#include <volk/volk_typedefs.h>
-#include <volk/volk.h>
-#include <sstream>
-#include <stdio.h>
-#include <vector>
-#include <gnuradio/fec/generic_encoder.h>
 #include <gnuradio/fec/cc_common.h>
+#include <gnuradio/fec/generic_encoder.h>
+#include <math.h>
+#include <stdio.h>
+#include <volk/volk.h>
+#include <volk/volk_typedefs.h>
+#include <boost/assign/list_of.hpp>
+#include <sstream>
+#include <vector>
 
 namespace gr {
 namespace fec {

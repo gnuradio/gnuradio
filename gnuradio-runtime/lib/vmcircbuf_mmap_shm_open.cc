@@ -25,20 +25,20 @@
 #endif
 
 #include "vmcircbuf_mmap_shm_open.h"
-#include <stdexcept>
 #include <assert.h>
-#include <unistd.h>
 #include <fcntl.h>
+#include <unistd.h>
+#include <stdexcept>
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
 #ifdef HAVE_SYS_MMAN_H
 #include <sys/mman.h>
 #endif
-#include <errno.h>
-#include <stdio.h>
 #include "pagesize.h"
 #include <gnuradio/sys_paths.h>
+#include <errno.h>
+#include <stdio.h>
 
 namespace gr {
 

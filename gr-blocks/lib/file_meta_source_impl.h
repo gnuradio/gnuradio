@@ -25,8 +25,8 @@
 
 #include <gnuradio/blocks/file_meta_source.h>
 #include <gnuradio/tags.h>
-#include <pmt/pmt.h>
 #include <gnuradio/thread/thread.h>
+#include <pmt/pmt.h>
 
 #include <gnuradio/blocks/file_meta_sink.h>
 

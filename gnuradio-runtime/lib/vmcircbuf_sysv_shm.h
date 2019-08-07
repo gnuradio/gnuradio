@@ -23,8 +23,8 @@
 #ifndef GR_VMCIRCBUF_SYSV_SHM_H
 #define GR_VMCIRCBUF_SYSV_SHM_H
 
-#include <gnuradio/api.h>
 #include "vmcircbuf.h"
+#include <gnuradio/api.h>
 
 namespace gr {
 

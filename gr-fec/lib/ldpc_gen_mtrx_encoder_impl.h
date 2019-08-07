@@ -21,10 +21,10 @@
 #ifndef INCLUDED_FEC_LDPC_GEN_MTRX_ENCODER_IMPL_H
 #define INCLUDED_FEC_LDPC_GEN_MTRX_ENCODER_IMPL_H
 
+#include <gnuradio/fec/ldpc_G_matrix.h>
+#include <gnuradio/fec/ldpc_gen_mtrx_encoder.h>
 #include <map>
 #include <string>
-#include <gnuradio/fec/ldpc_gen_mtrx_encoder.h>
-#include <gnuradio/fec/ldpc_G_matrix.h>
 
 namespace gr {
 namespace fec {

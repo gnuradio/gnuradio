@@ -23,9 +23,9 @@
 #ifndef INCLUDED_FEC_DUMMY_DECODER_IMPL_H
 #define INCLUDED_FEC_DUMMY_DECODER_IMPL_H
 
+#include <gnuradio/fec/dummy_decoder.h>
 #include <map>
 #include <string>
-#include <gnuradio/fec/dummy_decoder.h>
 
 namespace gr {
 namespace fec {

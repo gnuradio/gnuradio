@@ -24,10 +24,10 @@
 
 #include <gnuradio/prefs.h>
 
+#include <qapplication.h>
+#include <QCoreApplication>
 #include <QDebug>
 #include <QFile>
-#include <QCoreApplication>
-#include <qapplication.h>
 
 QString get_qt_style_sheet(QString filename)
 {

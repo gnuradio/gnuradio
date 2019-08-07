@@ -27,9 +27,9 @@
 #include "freedv_tx_ss_impl.h"
 
 #include <gnuradio/io_signature.h>
-#include <stdexcept>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
+#include <stdexcept>
 
 extern "C" {
 char get_next_tx_char(void* callback_state)

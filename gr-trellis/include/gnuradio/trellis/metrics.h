@@ -24,9 +24,9 @@
 #ifndef METRICS_H
 #define METRICS_H
 
+#include <gnuradio/block.h>
 #include <gnuradio/trellis/api.h>
 #include <gnuradio/trellis/calc_metric.h>
-#include <gnuradio/block.h>
 #include <cstdint>
 
 namespace gr {

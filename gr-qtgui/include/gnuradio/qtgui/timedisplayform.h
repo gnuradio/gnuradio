@@ -23,9 +23,9 @@
 #ifndef TIME_DISPLAY_FORM_H
 #define TIME_DISPLAY_FORM_H
 
-#include <gnuradio/qtgui/spectrumUpdateEvents.h>
 #include <gnuradio/qtgui/TimeDomainDisplayPlot.h>
 #include <gnuradio/qtgui/displayform.h>
+#include <gnuradio/qtgui/spectrumUpdateEvents.h>
 #include <QtGui/QtGui>
 #include <vector>
 

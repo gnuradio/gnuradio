@@ -27,9 +27,9 @@
 #include <gnuradio/basic_block.h>
 #include <gnuradio/block_registry.h>
 #include <gnuradio/logger.h>
-#include <stdexcept>
-#include <sstream>
 #include <iostream>
+#include <sstream>
+#include <stdexcept>
 
 namespace gr {
 

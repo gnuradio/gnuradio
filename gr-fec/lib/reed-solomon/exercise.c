@@ -18,8 +18,8 @@
 #include "fixed.h"
 #define EXERCISE exercise_8
 #elif defined(CCSDS)
-#include "fixed.h"
 #include "ccsds.h"
+#include "fixed.h"
 #define EXERCISE exercise_ccsds
 #elif defined(BIGSYM)
 #include "int.h"

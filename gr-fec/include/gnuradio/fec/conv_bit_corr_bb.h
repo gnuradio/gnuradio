@@ -23,8 +23,8 @@
 #ifndef INCLUDED_FEC_CONV_BIT_CORR_BB_H
 #define INCLUDED_FEC_CONV_BIT_CORR_BB_H
 
-#include <gnuradio/fec/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/fec/api.h>
 #include <vector>
 
 namespace gr {

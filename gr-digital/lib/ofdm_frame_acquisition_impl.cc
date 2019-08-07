@@ -25,8 +25,8 @@
 #endif
 
 #include "ofdm_frame_acquisition_impl.h"
-#include <gnuradio/io_signature.h>
 #include <gnuradio/expj.h>
+#include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 #include <cstdio>
 

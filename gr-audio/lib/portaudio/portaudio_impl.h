@@ -23,8 +23,8 @@
 #ifndef INCLUDED_AUDIO_PORTAUDIO_IMPL_H
 #define INCLUDED_AUDIO_PORTAUDIO_IMPL_H
 
-#include <stdio.h>
 #include <portaudio.h>
+#include <stdio.h>
 
 namespace gr {
 namespace audio {

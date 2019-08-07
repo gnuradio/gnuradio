@@ -21,10 +21,10 @@
 #ifndef INCLUDED_DTV_DVBT2_MODULATOR_BC_H
 #define INCLUDED_DTV_DVBT2_MODULATOR_BC_H
 
+#include <gnuradio/block.h>
 #include <gnuradio/dtv/api.h>
 #include <gnuradio/dtv/dvb_config.h>
 #include <gnuradio/dtv/dvbt2_config.h>
-#include <gnuradio/block.h>
 
 namespace gr {
 namespace dtv {

@@ -22,8 +22,8 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "dvbt2_p1insertion_cc_impl.h"
+#include <gnuradio/io_signature.h>
 #include <stdio.h>
 #include <algorithm>
 

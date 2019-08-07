@@ -22,11 +22,11 @@
 #ifndef INCLUDED_DIGITAL_HEADER_FORMAT_DEFAULT_H
 #define INCLUDED_DIGITAL_HEADER_FORMAT_DEFAULT_H
 
-#include <pmt/pmt.h>
 #include <gnuradio/digital/api.h>
-#include <gnuradio/digital/header_format_base.h>
 #include <gnuradio/digital/header_buffer.h>
+#include <gnuradio/digital/header_format_base.h>
 #include <gnuradio/logger.h>
+#include <pmt/pmt.h>
 #include <boost/enable_shared_from_this.hpp>
 
 namespace gr {

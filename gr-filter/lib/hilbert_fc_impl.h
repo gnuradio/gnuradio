@@ -23,8 +23,8 @@
 #ifndef INCLUDED_FILTER_HILBERT_FC_IMPL_H
 #define INCLUDED_FILTER_HILBERT_FC_IMPL_H
 
-#include <gnuradio/filter/hilbert_fc.h>
 #include <gnuradio/filter/fir_filter.h>
+#include <gnuradio/filter/hilbert_fc.h>
 #include <gnuradio/types.h>
 
 namespace gr {

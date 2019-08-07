@@ -25,13 +25,13 @@
 #endif
 
 #include <gnuradio/blocks/file_sink_base.h>
-#include <cstdio>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdexcept>
-#include <stdio.h>
 #include <gnuradio/thread/thread.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <cstdio>
+#include <stdexcept>
 
 // win32 (mingw/msvc) specific
 #ifdef HAVE_IO_H

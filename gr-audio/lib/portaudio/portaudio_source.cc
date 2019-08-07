@@ -29,15 +29,15 @@
 #endif
 
 #include "../audio_registry.h"
-#include "portaudio_source.h"
 #include "portaudio_impl.h"
+#include "portaudio_source.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <stdio.h>
-#include <iostream>
-#include <unistd.h>
-#include <stdexcept>
 #include <string.h>
+#include <unistd.h>
+#include <iostream>
+#include <stdexcept>
 #ifdef _MSC_VER
 #include <io.h>
 #endif

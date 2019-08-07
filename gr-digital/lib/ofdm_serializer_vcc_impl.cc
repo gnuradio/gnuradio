@@ -23,8 +23,8 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "ofdm_serializer_vcc_impl.h"
+#include <gnuradio/io_signature.h>
 
 namespace gr {
 namespace digital {

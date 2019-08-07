@@ -24,8 +24,8 @@
 #include "config.h"
 #endif
 
-#include <cstdio>
 #include <cmath>
+#include <cstdio>
 
 #include "pfb_clock_sync_fff_impl.h"
 #include <gnuradio/io_signature.h>

@@ -26,8 +26,8 @@
 #endif
 
 #include "vector_source_impl.h"
-#include <algorithm>
 #include <gnuradio/io_signature.h>
+#include <algorithm>
 #include <stdexcept>
 
 namespace gr {

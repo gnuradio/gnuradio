@@ -24,10 +24,10 @@
 #include "config.h"
 #endif
 
+#include "hier_block2_detail.h"
+#include <gnuradio/flowgraph.h>
 #include <gnuradio/hier_block2.h>
 #include <gnuradio/io_signature.h>
-#include <gnuradio/flowgraph.h>
-#include "hier_block2_detail.h"
 #include <iostream>
 
 namespace gr {

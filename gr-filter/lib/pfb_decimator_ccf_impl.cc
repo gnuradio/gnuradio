@@ -25,8 +25,8 @@
 #endif
 
 #include "pfb_decimator_ccf_impl.h"
-#include <gnuradio/io_signature.h>
 #include <gnuradio/expj.h>
+#include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 #include <volk/volk.h>
 

@@ -21,10 +21,10 @@
  */
 
 #include "scl_list.h"
+#include <volk/volk.h>
+#include <algorithm>
 #include <cstring>
 #include <iostream>
-#include <algorithm>
-#include <volk/volk.h>
 
 namespace gr {
 namespace fec {

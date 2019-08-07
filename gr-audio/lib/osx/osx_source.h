@@ -25,8 +25,8 @@
 
 #include <gnuradio/audio/source.h>
 
-#include "osx_common.h"
 #include "circular_buffer.h"
+#include "osx_common.h"
 
 namespace gr {
 namespace audio {

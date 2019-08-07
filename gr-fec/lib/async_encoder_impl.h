@@ -23,9 +23,9 @@
 #ifndef INCLUDED_FEC_ASYNC_ENCODER_IMPL_H
 #define INCLUDED_FEC_ASYNC_ENCODER_IMPL_H
 
-#include <gnuradio/fec/async_encoder.h>
-#include <gnuradio/blocks/unpack_k_bits.h>
 #include <gnuradio/blocks/pack_k_bits.h>
+#include <gnuradio/blocks/unpack_k_bits.h>
+#include <gnuradio/fec/async_encoder.h>
 
 namespace gr {
 namespace fec {

@@ -24,8 +24,8 @@
 #ifndef PACKED_TO_UNPACKED_IMPL_H
 #define PACKED_TO_UNPACKED_IMPL_H
 
-#include <gnuradio/blocks/packed_to_unpacked.h>
 #include <gnuradio/blocks/log2_const.h>
+#include <gnuradio/blocks/packed_to_unpacked.h>
 
 namespace gr {
 namespace blocks {

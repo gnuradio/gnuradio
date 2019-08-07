@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_MESSAGE_DEBUG_H
 #define INCLUDED_GR_MESSAGE_DEBUG_H
 
-#include <gnuradio/blocks/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/blocks/api.h>
 
 namespace gr {
 namespace blocks {

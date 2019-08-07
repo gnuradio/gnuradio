@@ -23,13 +23,13 @@
 #ifndef PLOT_WATERFALL_H
 #define PLOT_WATERFALL_H
 
-#include <qglobal.h>
 #include <gnuradio/qtgui/waterfallGlobalData.h>
+#include <qglobal.h>
 #include <qwt_plot_rasteritem.h>
 
 #if QWT_VERSION >= 0x060000
-#include <qwt_point_3d.h> // doesn't seem necessary, but is...
 #include <qwt_compat.h>
+#include <qwt_point_3d.h> // doesn't seem necessary, but is...
 #endif
 
 class QwtColorMap;

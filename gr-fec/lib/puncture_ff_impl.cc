@@ -26,11 +26,11 @@
 
 #include "puncture_ff_impl.h"
 #include <gnuradio/io_signature.h>
+#include <pmt/pmt.h>
+#include <stdio.h>
 #include <volk/volk.h>
 #include <boost/bind.hpp>
-#include <pmt/pmt.h>
 #include <string>
-#include <stdio.h>
 
 namespace gr {
 namespace fec {

@@ -22,13 +22,13 @@
 
 #include "ldpc_par_mtrx_encoder_impl.h"
 #include <math.h>
-#include <boost/assign/list_of.hpp>
-#include <volk/volk.h>
-#include <sstream>
 #include <stdio.h>
-#include <vector>
+#include <string.h> // for memcpy
+#include <volk/volk.h>
+#include <boost/assign/list_of.hpp>
 #include <algorithm> // for std::reverse
-#include <string.h>  // for memcpy
+#include <sstream>
+#include <vector>
 
 namespace gr {
 namespace fec {

@@ -22,8 +22,8 @@
 #define INCLUDED_fec_mtrx_H
 
 #include <gnuradio/fec/api.h>
-#include <cstdlib>
 #include <boost/shared_ptr.hpp>
+#include <cstdlib>
 
 namespace gr {
 namespace fec {

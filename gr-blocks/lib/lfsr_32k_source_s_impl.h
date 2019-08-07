@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_LFSR_32K_SOURCE_S_IMPL_H
 #define INCLUDED_GR_LFSR_32K_SOURCE_S_IMPL_H
 
-#include <gnuradio/blocks/lfsr_32k_source_s.h>
 #include <gnuradio/blocks/lfsr_32k.h>
+#include <gnuradio/blocks/lfsr_32k_source_s.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {

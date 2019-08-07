@@ -218,10 +218,10 @@ void set_thread_name(gr_thread_t thread, std::string name)
 
 #else
 
-#include <sstream>
-#include <stdexcept>
 #include <pthread.h>
 #include <sys/prctl.h>
+#include <sstream>
+#include <stdexcept>
 
 namespace gr {
 namespace thread {

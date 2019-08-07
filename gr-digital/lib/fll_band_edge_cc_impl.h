@@ -23,8 +23,8 @@
 #ifndef INCLUDED_DIGITAL_FLL_BAND_EDGE_CC_IMPL_H
 #define INCLUDED_DIGITAL_FLL_BAND_EDGE_CC_IMPL_H
 
-#include <gnuradio/digital/fll_band_edge_cc.h>
 #include <gnuradio/blocks/control_loop.h>
+#include <gnuradio/digital/fll_band_edge_cc.h>
 #include <gnuradio/filter/fir_filter_with_buffer.h>
 
 namespace gr {

@@ -23,8 +23,8 @@
 #ifndef INCLUDED_TAGGED_STREAM_ALIGN_IMPL_H
 #define INCLUDED_TAGGED_STREAM_ALIGN_IMPL_H
 
-#include <vector>
 #include <gnuradio/blocks/tagged_stream_align.h>
+#include <vector>
 
 namespace gr {
 namespace blocks {

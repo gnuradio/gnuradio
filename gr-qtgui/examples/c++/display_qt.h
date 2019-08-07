@@ -21,21 +21,21 @@
 
 // Q_MOC_RUN is a workaround for a QT4 + Boost version issue
 #ifndef Q_MOC_RUN
-#include <gnuradio/top_block.h>
-#include <gnuradio/analog/sig_source.h>
 #include <gnuradio/analog/noise_source.h>
+#include <gnuradio/analog/sig_source.h>
 #include <gnuradio/blocks/add_blk.h>
 #include <gnuradio/blocks/throttle.h>
-#include <gnuradio/qtgui/time_sink_f.h>
-#include <gnuradio/qtgui/freq_sink_f.h>
-#include <gnuradio/qtgui/waterfall_sink_f.h>
-#include <gnuradio/qtgui/histogram_sink_f.h>
 #include <gnuradio/fft/window.h>
+#include <gnuradio/qtgui/freq_sink_f.h>
+#include <gnuradio/qtgui/histogram_sink_f.h>
+#include <gnuradio/qtgui/time_sink_f.h>
+#include <gnuradio/qtgui/waterfall_sink_f.h>
+#include <gnuradio/top_block.h>
 #endif
 
-#include <QWidget>
 #include <QHBoxLayout>
 #include <QTabWidget>
+#include <QWidget>
 
 using namespace gr;
 

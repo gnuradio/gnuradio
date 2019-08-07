@@ -23,9 +23,9 @@
 #ifndef INCLUDED_DTV_ATSC_EQUALIZER_IMPL_H
 #define INCLUDED_DTV_ATSC_EQUALIZER_IMPL_H
 
-#include <gnuradio/dtv/atsc_equalizer.h>
-#include <gnuradio/dtv/atsc_consts.h>
 #include "atsc_syminfo_impl.h"
+#include <gnuradio/dtv/atsc_consts.h>
+#include <gnuradio/dtv/atsc_equalizer.h>
 
 namespace gr {
 namespace dtv {

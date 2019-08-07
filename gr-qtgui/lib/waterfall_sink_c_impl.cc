@@ -29,11 +29,11 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 
-#include <volk/volk.h>
 #include <qwt_symbol.h>
+#include <volk/volk.h>
 
-#include <iostream>
 #include <string.h>
+#include <iostream>
 
 namespace gr {
 namespace qtgui {

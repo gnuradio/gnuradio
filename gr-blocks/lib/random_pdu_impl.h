@@ -24,8 +24,8 @@
 #define INCLUDED_BLOCKS_RANDOM_PDU_IMPL_H
 
 #include <gnuradio/blocks/random_pdu.h>
-#include <boost/random.hpp>
 #include <boost/generator_iterator.hpp>
+#include <boost/random.hpp>
 
 namespace gr {
 namespace blocks {

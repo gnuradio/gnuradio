@@ -26,8 +26,8 @@
 
 #include "pll_carriertracking_cc_impl.h"
 #include <gnuradio/io_signature.h>
-#include <gnuradio/sincos.h>
 #include <gnuradio/math.h>
+#include <gnuradio/sincos.h>
 
 #include <cmath>
 

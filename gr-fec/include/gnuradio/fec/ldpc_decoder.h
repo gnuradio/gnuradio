@@ -26,14 +26,14 @@
 typedef float INPUT_DATATYPE;
 typedef unsigned char OUTPUT_DATATYPE;
 
+#include <gnuradio/fec/decoder.h>
 #include <map>
 #include <string>
-#include <gnuradio/fec/decoder.h>
 #include <vector>
 
-#include <gnuradio/fec/cldpc.h>
 #include <gnuradio/fec/alist.h>
 #include <gnuradio/fec/awgn_bp.h>
+#include <gnuradio/fec/cldpc.h>
 
 namespace gr {
 namespace fec {

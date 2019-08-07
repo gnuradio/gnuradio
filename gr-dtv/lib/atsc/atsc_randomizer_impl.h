@@ -21,9 +21,9 @@
 #ifndef INCLUDED_DTV_ATSC_RANDOMIZER_IMPL_H
 #define INCLUDED_DTV_ATSC_RANDOMIZER_IMPL_H
 
-#include <gnuradio/dtv/atsc_randomizer.h>
 #include "atsc_randomize.h"
 #include "atsc_types.h"
+#include <gnuradio/dtv/atsc_randomizer.h>
 
 namespace gr {
 namespace dtv {

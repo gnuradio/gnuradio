@@ -27,8 +27,8 @@
  */
 
 #include <gnuradio/api.h>
-#include <pmt/pmt.h>
 #include <gnuradio/messages/msg_accepter.h>
+#include <pmt/pmt.h>
 
 namespace gr {
 namespace messages {

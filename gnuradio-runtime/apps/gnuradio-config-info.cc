@@ -25,10 +25,10 @@
 #endif
 
 #include <gnuradio/constants.h>
-#include <gnuradio/sys_paths.h>
 #include <gnuradio/prefs.h>
-#include <boost/program_options.hpp>
+#include <gnuradio/sys_paths.h>
 #include <boost/format.hpp>
+#include <boost/program_options.hpp>
 #include <iostream>
 
 namespace po = boost::program_options;

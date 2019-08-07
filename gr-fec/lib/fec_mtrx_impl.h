@@ -23,12 +23,12 @@
 
 #include <string>
 
-#include <gsl/gsl_matrix.h>
-#include <gsl/gsl_randist.h>
-#include <gsl/gsl_permutation.h>
-#include <gsl/gsl_linalg.h>
-#include <gsl/gsl_blas.h>
 #include <gnuradio/fec/fec_mtrx.h>
+#include <gsl/gsl_blas.h>
+#include <gsl/gsl_linalg.h>
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_permutation.h>
+#include <gsl/gsl_randist.h>
 
 namespace gr {
 namespace fec {

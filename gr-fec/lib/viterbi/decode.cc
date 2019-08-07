@@ -29,8 +29,8 @@
 
 #include <gnuradio/fec/viterbi.h>
 
-#include <cstdio>
 #include <cmath>
+#include <cstdio>
 
 #define MAXCHUNKSIZE 4096
 #define MAXENCSIZE MAXCHUNKSIZE * 16

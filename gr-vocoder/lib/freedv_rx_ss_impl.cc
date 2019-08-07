@@ -27,8 +27,8 @@
 #include "freedv_rx_ss_impl.h"
 
 #include <gnuradio/io_signature.h>
-#include <stdexcept>
 #include <assert.h>
+#include <stdexcept>
 
 extern "C" {
 void put_next_rx_char(void* callback_state, char c)

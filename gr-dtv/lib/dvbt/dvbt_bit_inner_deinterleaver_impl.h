@@ -21,8 +21,8 @@
 #ifndef INCLUDED_DTV_DVBT_BIT_INNER_DEINTERLEVER_IMPL_H
 #define INCLUDED_DTV_DVBT_BIT_INNER_DEINTERLEVER_IMPL_H
 
-#include <gnuradio/dtv/dvbt_bit_inner_deinterleaver.h>
 #include "dvbt_configure.h"
+#include <gnuradio/dtv/dvbt_bit_inner_deinterleaver.h>
 
 namespace gr {
 namespace dtv {

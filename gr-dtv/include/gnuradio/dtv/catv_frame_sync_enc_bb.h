@@ -21,8 +21,8 @@
 #ifndef INCLUDED_DTV_CATV_FRAME_SYNC_ENC_BB_H
 #define INCLUDED_DTV_CATV_FRAME_SYNC_ENC_BB_H
 
-#include <gnuradio/dtv/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/dtv/api.h>
 #include <gnuradio/dtv/catv_config.h>
 
 namespace gr {

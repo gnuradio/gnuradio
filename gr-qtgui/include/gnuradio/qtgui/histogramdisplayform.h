@@ -23,8 +23,8 @@
 #ifndef HISTOGRAM_DISPLAY_FORM_H
 #define HISTOGRAM_DISPLAY_FORM_H
 
-#include <gnuradio/qtgui/spectrumUpdateEvents.h>
 #include <gnuradio/qtgui/HistogramDisplayPlot.h>
+#include <gnuradio/qtgui/spectrumUpdateEvents.h>
 #include <QtGui/QtGui>
 #include <vector>
 

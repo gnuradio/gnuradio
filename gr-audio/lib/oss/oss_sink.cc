@@ -28,13 +28,13 @@
 #include "oss_sink.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <sys/soundcard.h>
-#include <sys/ioctl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <stdio.h>
+#include <sys/ioctl.h>
+#include <sys/soundcard.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <iostream>
 #include <stdexcept>
 

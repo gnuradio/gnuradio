@@ -19,12 +19,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gnuradio/sync_block.h>
 #include <gnuradio/io_signature.h>
+#include <gnuradio/sync_block.h>
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
-#include <iostream>
 #include <complex>
+#include <iostream>
 
 class tag_sink_demo : public gr::sync_block
 {

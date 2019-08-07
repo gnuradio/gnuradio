@@ -24,8 +24,8 @@
 #define INCLUDED_BLOCKS_REPACK_BITS_BB_H
 
 #include <gnuradio/blocks/api.h>
-#include <gnuradio/tagged_stream_block.h>
 #include <gnuradio/endianness.h>
+#include <gnuradio/tagged_stream_block.h>
 
 namespace gr {
 namespace blocks {

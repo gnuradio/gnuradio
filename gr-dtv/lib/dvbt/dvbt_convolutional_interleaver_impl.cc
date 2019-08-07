@@ -22,8 +22,8 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "dvbt_convolutional_interleaver_impl.h"
+#include <gnuradio/io_signature.h>
 #include <deque>
 
 namespace gr {

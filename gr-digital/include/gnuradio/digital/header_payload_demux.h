@@ -22,8 +22,8 @@
 #ifndef INCLUDED_DIGITAL_HEADER_PAYLOAD_DEMUX_H
 #define INCLUDED_DIGITAL_HEADER_PAYLOAD_DEMUX_H
 
-#include <gnuradio/digital/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/digital/api.h>
 
 namespace gr {
 namespace digital {

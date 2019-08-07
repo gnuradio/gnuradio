@@ -23,13 +23,13 @@
 #ifndef INCLUDED_DIGITAL_INTERPOLATING_RESAMPLER_H
 #define INCLUDED_DIGITAL_INTERPOLATING_RESAMPLER_H
 
-#include <gnuradio/gr_complex.h>
 #include <gnuradio/digital/interpolating_resampler_type.h>
-#include <vector>
 #include <gnuradio/filter/mmse_fir_interpolator_cc.h>
 #include <gnuradio/filter/mmse_fir_interpolator_ff.h>
 #include <gnuradio/filter/mmse_interp_differentiator_cc.h>
 #include <gnuradio/filter/mmse_interp_differentiator_ff.h>
+#include <gnuradio/gr_complex.h>
+#include <vector>
 
 namespace gr {
 namespace digital {

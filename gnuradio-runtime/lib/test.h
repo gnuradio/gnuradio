@@ -23,10 +23,10 @@
 #ifndef INCLUDED_GR_TEST_H
 #define INCLUDED_GR_TEST_H
 
+#include "test_types.h"
 #include <gnuradio/api.h>
 #include <gnuradio/block.h>
 #include <string>
-#include "test_types.h"
 
 namespace gr {
 

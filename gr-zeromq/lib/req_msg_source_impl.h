@@ -23,8 +23,8 @@
 #ifndef INCLUDED_ZEROMQ_REQ_MSG_SOURCE_IMPL_H
 #define INCLUDED_ZEROMQ_REQ_MSG_SOURCE_IMPL_H
 
-#include <gnuradio/zeromq/req_msg_source.h>
 #include "zmq_common_impl.h"
+#include <gnuradio/zeromq/req_msg_source.h>
 
 namespace gr {
 namespace zeromq {

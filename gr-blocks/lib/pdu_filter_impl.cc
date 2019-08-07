@@ -25,8 +25,8 @@
 #endif
 
 #include "pdu_filter_impl.h"
-#include <gnuradio/io_signature.h>
 #include <gnuradio/blocks/pdu.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
 namespace blocks {

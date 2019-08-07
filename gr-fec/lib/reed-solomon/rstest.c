@@ -9,10 +9,10 @@
 #include <config.h>
 #endif
 
+#include <gnuradio/fec/rs.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <gnuradio/fec/rs.h>
 
 int exercise_char(void*, int);
 

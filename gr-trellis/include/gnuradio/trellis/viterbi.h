@@ -24,10 +24,10 @@
 #ifndef VITERBI_H
 #define VITERBI_H
 
-#include <gnuradio/trellis/api.h>
-#include <gnuradio/trellis/fsm.h>
-#include <gnuradio/trellis/core_algorithms.h>
 #include <gnuradio/block.h>
+#include <gnuradio/trellis/api.h>
+#include <gnuradio/trellis/core_algorithms.h>
+#include <gnuradio/trellis/fsm.h>
 #include <cstdint>
 
 namespace gr {

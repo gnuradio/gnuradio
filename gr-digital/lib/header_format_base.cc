@@ -23,11 +23,11 @@
 #include "config.h"
 #endif
 
-#include <iostream>
-#include <string.h>
-#include <volk/volk.h>
 #include <gnuradio/digital/header_format_base.h>
 #include <gnuradio/math.h>
+#include <string.h>
+#include <volk/volk.h>
+#include <iostream>
 
 namespace gr {
 namespace digital {

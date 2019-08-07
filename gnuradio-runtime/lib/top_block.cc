@@ -25,10 +25,10 @@
 #endif
 
 #include "top_block_impl.h"
-#include <gnuradio/top_block.h>
+#include <gnuradio/high_res_timer.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <gnuradio/high_res_timer.h>
+#include <gnuradio/top_block.h>
 #include <unistd.h>
 #include <iostream>
 

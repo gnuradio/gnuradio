@@ -24,11 +24,11 @@
 #include <config.h>
 #endif
 
-#include <gnuradio/top_block.h>
 #include <gnuradio/blocks/head.h>
 #include <gnuradio/blocks/nop.h>
-#include <gnuradio/blocks/null_source.h>
 #include <gnuradio/blocks/null_sink.h>
+#include <gnuradio/blocks/null_source.h>
+#include <gnuradio/top_block.h>
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 

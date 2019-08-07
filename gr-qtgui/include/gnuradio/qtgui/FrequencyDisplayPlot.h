@@ -23,10 +23,10 @@
 #ifndef FREQUENCY_DISPLAY_PLOT_HPP
 #define FREQUENCY_DISPLAY_PLOT_HPP
 
+#include <gnuradio/qtgui/DisplayPlot.h>
 #include <stdint.h>
 #include <cstdio>
 #include <vector>
-#include <gnuradio/qtgui/DisplayPlot.h>
 
 /*!
  * \brief QWidget for displaying frequency domain (PSD) plots.

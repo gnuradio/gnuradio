@@ -23,8 +23,8 @@
 #ifndef INCLUDED_MMSE_RESAMPLER_FF_IMPL_H
 #define INCLUDED_MMSE_RESAMPLER_FF_IMPL_H
 
-#include <gnuradio/filter/mmse_resampler_ff.h>
 #include <gnuradio/filter/mmse_fir_interpolator_ff.h>
+#include <gnuradio/filter/mmse_resampler_ff.h>
 
 namespace gr {
 namespace filter {

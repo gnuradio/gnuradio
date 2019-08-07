@@ -24,8 +24,8 @@
 #define INCLUDED_FEC_CC_DECODER_H
 
 #include <gnuradio/fec/api.h>
-#include <gnuradio/fec/generic_decoder.h>
 #include <gnuradio/fec/cc_common.h>
+#include <gnuradio/fec/generic_decoder.h>
 #include <map>
 #include <string>
 

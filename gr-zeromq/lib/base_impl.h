@@ -23,8 +23,8 @@
 #ifndef INCLUDED_ZEROMQ_BASE_IMPL_H
 #define INCLUDED_ZEROMQ_BASE_IMPL_H
 
-#include <gnuradio/sync_block.h>
 #include "zmq_common_impl.h"
+#include <gnuradio/sync_block.h>
 
 namespace gr {
 namespace zeromq {

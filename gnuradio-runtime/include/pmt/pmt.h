@@ -24,14 +24,14 @@
 #define INCLUDED_PMT_H
 
 #include <pmt/api.h>
+#include <stdint.h>
+#include <boost/any.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/any.hpp>
 #include <complex>
-#include <string>
-#include <stdint.h>
 #include <iosfwd>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 namespace gr {

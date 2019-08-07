@@ -34,12 +34,12 @@
 #ifndef ALIST_H
 #define ALIST_H
 
-#include <iostream>
+#include <gnuradio/fec/api.h>
+#include <stdlib.h>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <vector>
-#include <stdlib.h>
-#include <gnuradio/fec/api.h>
 
 class FEC_API alist
 {

@@ -23,8 +23,8 @@
 #ifndef INCLUDED_DIGITAL_CLOCK_RECOVERY_MM_CC_H
 #define INCLUDED_DIGITAL_CLOCK_RECOVERY_MM_CC_H
 
-#include <gnuradio/digital/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/digital/api.h>
 
 namespace gr {
 namespace digital {

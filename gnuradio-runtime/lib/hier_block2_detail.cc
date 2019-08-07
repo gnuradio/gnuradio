@@ -27,9 +27,9 @@
 #include "hier_block2_detail.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <stdexcept>
-#include <sstream>
 #include <boost/format.hpp>
+#include <sstream>
+#include <stdexcept>
 
 namespace gr {
 

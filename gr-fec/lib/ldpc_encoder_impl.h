@@ -23,9 +23,9 @@
 #ifndef INCLUDED_LDPC_ENCODER_IMPL_H
 #define INCLUDED_LDPC_ENCODER_IMPL_H
 
-#include <gnuradio/fec/ldpc_encoder.h>
-#include <gnuradio/fec/cldpc.h>
 #include <gnuradio/fec/alist.h>
+#include <gnuradio/fec/cldpc.h>
+#include <gnuradio/fec/ldpc_encoder.h>
 #include <map>
 #include <string>
 #include <vector>

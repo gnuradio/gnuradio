@@ -23,8 +23,8 @@
 #ifndef VECTOR_DISPLAY_FORM_H
 #define VECTOR_DISPLAY_FORM_H
 
-#include <gnuradio/qtgui/spectrumUpdateEvents.h>
 #include <gnuradio/qtgui/VectorDisplayPlot.h>
+#include <gnuradio/qtgui/spectrumUpdateEvents.h>
 #include <QtGui/QtGui>
 #include <vector>
 

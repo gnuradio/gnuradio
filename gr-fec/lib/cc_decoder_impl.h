@@ -23,9 +23,9 @@
 #ifndef INCLUDED_FEC_CC_DECODER_IMPL_H
 #define INCLUDED_FEC_CC_DECODER_IMPL_H
 
+#include <gnuradio/fec/cc_decoder.h>
 #include <map>
 #include <string>
-#include <gnuradio/fec/cc_decoder.h>
 
 namespace gr {
 namespace fec {

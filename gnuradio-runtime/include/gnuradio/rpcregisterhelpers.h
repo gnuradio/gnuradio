@@ -23,13 +23,13 @@
 #ifndef RPCREGISTERHELPERS_H
 #define RPCREGISTERHELPERS_H
 
-#include <stdio.h>
-#include <sstream>
-#include <iostream>
-#include <gnuradio/rpcserver_booter_base.h>
 #include <gnuradio/rpcmanager.h>
-#include <gnuradio/rpcserver_selector.h>
 #include <gnuradio/rpcserver_base.h>
+#include <gnuradio/rpcserver_booter_base.h>
+#include <gnuradio/rpcserver_selector.h>
+#include <stdio.h>
+#include <iostream>
+#include <sstream>
 
 // Fixes circular dependency issue before including block_registry.h
 class rpcbasic_base;

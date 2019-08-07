@@ -25,11 +25,11 @@
 #endif
 
 #include "correlate_access_code_bb_impl.h"
-#include <gnuradio/io_signature.h>
 #include <gnuradio/blocks/count_bits.h>
+#include <gnuradio/io_signature.h>
 #include <boost/format.hpp>
-#include <stdexcept>
 #include <cstdio>
+#include <stdexcept>
 
 namespace gr {
 namespace digital {

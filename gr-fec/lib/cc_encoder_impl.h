@@ -23,9 +23,9 @@ p * You should have received a copy of the GNU General Public License
 #ifndef INCLUDED_FEC_CC_ENCODER_IMPL_H
 #define INCLUDED_FEC_CC_ENCODER_IMPL_H
 
+#include <gnuradio/fec/cc_encoder.h>
 #include <map>
 #include <string>
-#include <gnuradio/fec/cc_encoder.h>
 
 namespace gr {
 namespace fec {

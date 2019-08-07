@@ -24,10 +24,10 @@
 #define INCLUDED_TRELLIS_SISO_F_IMPL_H
 
 #include <gnuradio/trellis/api.h>
-#include <gnuradio/trellis/fsm.h>
-#include <gnuradio/trellis/siso_type.h>
 #include <gnuradio/trellis/core_algorithms.h>
+#include <gnuradio/trellis/fsm.h>
 #include <gnuradio/trellis/siso_f.h>
+#include <gnuradio/trellis/siso_type.h>
 
 namespace gr {
 namespace trellis {

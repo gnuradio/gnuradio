@@ -26,14 +26,14 @@
 
 #include "message_strobe_random_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cstdio>
 #include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <stdexcept>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <cstdio>
 #include <iostream>
+#include <stdexcept>
 
 namespace gr {
 namespace blocks {

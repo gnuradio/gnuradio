@@ -22,9 +22,9 @@
 #ifndef INCLUDED_DIGITAL_HEADER_FORMAT_COUNTER_H
 #define INCLUDED_DIGITAL_HEADER_FORMAT_COUNTER_H
 
-#include <pmt/pmt.h>
 #include <gnuradio/digital/api.h>
 #include <gnuradio/digital/header_format_default.h>
+#include <pmt/pmt.h>
 
 namespace gr {
 namespace digital {

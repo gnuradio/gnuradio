@@ -26,11 +26,11 @@
 #endif
 
 #include "vector_insert_impl.h"
-#include <algorithm>
-#include <gnuradio/io_signature.h>
 #include <gnuradio/block.h>
-#include <stdexcept>
+#include <gnuradio/io_signature.h>
 #include <stdio.h>
+#include <algorithm>
+#include <stdexcept>
 
 namespace gr {
 namespace blocks {

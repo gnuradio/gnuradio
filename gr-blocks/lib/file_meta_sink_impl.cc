@@ -26,12 +26,12 @@
 
 #include "file_meta_sink_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cstdio>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <stdexcept>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <cstdio>
+#include <stdexcept>
 
 // win32 (mingw/msvc) specific
 #ifdef HAVE_IO_H

@@ -24,9 +24,9 @@
 #include "config.h"
 #endif
 
+#include "multiply_matrix_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
-#include "multiply_matrix_impl.h"
 
 namespace gr {
 namespace blocks {

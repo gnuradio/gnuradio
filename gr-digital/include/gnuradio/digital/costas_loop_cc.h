@@ -23,8 +23,8 @@
 #ifndef INCLUDED_DIGITAL_COSTAS_LOOP_CC_H
 #define INCLUDED_DIGITAL_COSTAS_LOOP_CC_H
 
-#include <gnuradio/digital/api.h>
 #include <gnuradio/blocks/control_loop.h>
+#include <gnuradio/digital/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {

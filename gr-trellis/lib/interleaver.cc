@@ -20,16 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cstdlib>
-#include <cstdio>
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <stdexcept>
-#include <cmath>
-#include <gnuradio/trellis/quicksort_index.h>
 #include <gnuradio/trellis/interleaver.h>
+#include <gnuradio/trellis/quicksort_index.h>
 #include <gnuradio/xoroshiro128p.h>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <stdexcept>
+#include <string>
 
 namespace gr {
 namespace trellis {

@@ -23,9 +23,9 @@
 #ifndef CONSTELLATION_DISPLAY_FORM_H
 #define CONSTELLATION_DISPLAY_FORM_H
 
+#include <gnuradio/qtgui/ConstellationDisplayPlot.h>
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/qtgui/spectrumUpdateEvents.h>
-#include <gnuradio/qtgui/ConstellationDisplayPlot.h>
 #include <QtGui/QtGui>
 #include <vector>
 

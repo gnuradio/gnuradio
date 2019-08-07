@@ -25,9 +25,9 @@
 
 #include "tpb_thread_body.h"
 #include <gnuradio/prefs.h>
-#include <boost/thread.hpp>
-#include <boost/foreach.hpp>
 #include <pmt/pmt.h>
+#include <boost/foreach.hpp>
+#include <boost/thread.hpp>
 #include <iostream>
 
 namespace gr {

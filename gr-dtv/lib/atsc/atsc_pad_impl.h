@@ -21,8 +21,8 @@
 #ifndef INCLUDED_DTV_ATSC_PAD_IMPL_H
 #define INCLUDED_DTV_ATSC_PAD_IMPL_H
 
-#include <gnuradio/dtv/atsc_pad.h>
 #include "atsc_types.h"
+#include <gnuradio/dtv/atsc_pad.h>
 
 namespace gr {
 namespace dtv {

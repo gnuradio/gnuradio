@@ -22,9 +22,9 @@
 #ifndef INCLUDED_DTV_DVB_BCH_BB_H
 #define INCLUDED_DTV_DVB_BCH_BB_H
 
+#include <gnuradio/block.h>
 #include <gnuradio/dtv/api.h>
 #include <gnuradio/dtv/dvb_config.h>
-#include <gnuradio/block.h>
 
 namespace gr {
 namespace dtv {

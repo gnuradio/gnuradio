@@ -20,11 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gnuradio/io_signature.h>
 #include <gnuradio/block.h>
-#include <sstream>
-#include <cstring>
+#include <gnuradio/io_signature.h>
 #include <zmq.hpp>
+#include <cstring>
+#include <sstream>
 
 #define GR_HEADER_MAGIC 0x5FF0
 #define GR_HEADER_VERSION 0x01

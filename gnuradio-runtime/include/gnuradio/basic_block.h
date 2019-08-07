@@ -24,19 +24,19 @@
 #define INCLUDED_GR_BASIC_BLOCK_H
 
 #include <gnuradio/api.h>
-#include <gnuradio/sptr_magic.h>
+#include <gnuradio/io_signature.h>
 #include <gnuradio/msg_accepter.h>
 #include <gnuradio/runtime_types.h>
-#include <gnuradio/io_signature.h>
+#include <gnuradio/sptr_magic.h>
 #include <gnuradio/thread/thread.h>
 #include <boost/enable_shared_from_this.hpp>
-#include <boost/function.hpp>
 #include <boost/foreach.hpp>
+#include <boost/function.hpp>
 #include <boost/thread/condition_variable.hpp>
-#include <iostream>
-#include <string>
 #include <deque>
+#include <iostream>
 #include <map>
+#include <string>
 
 #ifdef GR_CTRLPORT
 #include <gnuradio/rpcregisterhelpers.h>

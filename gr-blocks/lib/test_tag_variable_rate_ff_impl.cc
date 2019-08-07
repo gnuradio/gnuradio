@@ -27,11 +27,11 @@
 #include "test_tag_variable_rate_ff_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/xoroshiro128p.h>
-#include <string.h>
-#include <iostream>
-#include <iomanip>
-#include <stdexcept>
 #include <stdint.h>
+#include <string.h>
+#include <iomanip>
+#include <iostream>
+#include <stdexcept>
 
 using namespace pmt;
 

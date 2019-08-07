@@ -25,9 +25,9 @@
 #endif
 
 #include "symbol_sync_cc_impl.h"
-#include <boost/math/common_factor.hpp>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
+#include <boost/math/common_factor.hpp>
 #include <stdexcept>
 
 namespace gr {

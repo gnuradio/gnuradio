@@ -24,11 +24,11 @@
 #include <config.h>
 #endif
 
-#include <boost/test/unit_test.hpp>
 #include <gnuradio/attributes.h>
 #include <gnuradio/blocks/rotator.h>
 #include <gnuradio/expj.h>
 #include <gnuradio/math.h>
+#include <boost/test/unit_test.hpp>
 
 #include <cmath>
 

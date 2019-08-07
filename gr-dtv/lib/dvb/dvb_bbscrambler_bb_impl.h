@@ -21,8 +21,8 @@
 #ifndef INCLUDED_DTV_DVB_BBSCRAMBLER_BB_IMPL_H
 #define INCLUDED_DTV_DVB_BBSCRAMBLER_BB_IMPL_H
 
-#include <gnuradio/dtv/dvb_bbscrambler_bb.h>
 #include "dvb_defines.h"
+#include <gnuradio/dtv/dvb_bbscrambler_bb.h>
 
 namespace gr {
 namespace dtv {

@@ -2,8 +2,8 @@
  * Copyright 2002 Phil Karn, KA9Q
  * May be used under the terms of the GNU General Public License (GPL)
  */
-#include <stdio.h>
 #include "char.h"
+#include <stdio.h>
 
 int main()
 {

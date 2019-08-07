@@ -25,8 +25,8 @@
 
 #include <gnuradio/qtgui/sink_c.h>
 
-#include <gnuradio/filter/firdes.h>
 #include <gnuradio/fft/fft.h>
+#include <gnuradio/filter/firdes.h>
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/qtgui/SpectrumGUIClass.h>
 

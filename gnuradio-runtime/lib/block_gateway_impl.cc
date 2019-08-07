@@ -21,8 +21,8 @@
 
 #include "block_gateway_impl.h"
 #include <gnuradio/io_signature.h>
-#include <iostream>
 #include <boost/bind.hpp>
+#include <iostream>
 
 namespace gr {
 

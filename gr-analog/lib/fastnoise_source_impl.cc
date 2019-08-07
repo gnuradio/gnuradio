@@ -26,8 +26,8 @@
 #endif
 
 #include "fastnoise_source_impl.h"
-#include <gnuradio/xoroshiro128p.h>
 #include <gnuradio/io_signature.h>
+#include <gnuradio/xoroshiro128p.h>
 #include <stdexcept>
 #include <vector>
 

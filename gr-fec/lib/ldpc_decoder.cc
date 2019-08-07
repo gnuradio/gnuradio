@@ -20,17 +20,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gnuradio/fec/ldpc_decoder.h>
-#include <math.h>
-#include <boost/assign/list_of.hpp>
-#include <volk/volk.h>
-#include <sstream>
-#include <stdio.h>
-#include <vector>
 #include <gnuradio/fec/decoder.h>
-#include <algorithm> // for std::reverse
-#include <string.h>  // for memcpy
+#include <gnuradio/fec/ldpc_decoder.h>
 #include <gnuradio/fec/maxstar.h>
+#include <math.h>
+#include <stdio.h>
+#include <string.h> // for memcpy
+#include <volk/volk.h>
+#include <boost/assign/list_of.hpp>
+#include <algorithm> // for std::reverse
+#include <sstream>
+#include <vector>
 
 
 namespace gr {

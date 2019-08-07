@@ -23,22 +23,22 @@
 #ifndef DOMAIN_DISPLAY_PLOT_H
 #define DOMAIN_DISPLAY_PLOT_H
 
+#include <gnuradio/qtgui/utils.h>
+#include <qwt_legend.h>
+#include <qwt_painter.h>
+#include <qwt_plot.h>
+#include <qwt_plot_canvas.h>
+#include <qwt_plot_curve.h>
+#include <qwt_plot_magnifier.h>
+#include <qwt_plot_marker.h>
+#include <qwt_plot_panner.h>
+#include <qwt_plot_zoomer.h>
+#include <qwt_scale_engine.h>
+#include <qwt_scale_widget.h>
+#include <qwt_symbol.h>
 #include <stdint.h>
 #include <cstdio>
 #include <vector>
-#include <qwt_plot.h>
-#include <qwt_painter.h>
-#include <qwt_plot_canvas.h>
-#include <qwt_plot_curve.h>
-#include <qwt_scale_engine.h>
-#include <qwt_scale_widget.h>
-#include <qwt_plot_zoomer.h>
-#include <qwt_plot_panner.h>
-#include <qwt_plot_magnifier.h>
-#include <qwt_plot_marker.h>
-#include <qwt_symbol.h>
-#include <qwt_legend.h>
-#include <gnuradio/qtgui/utils.h>
 
 #if QWT_VERSION >= 0x060000
 #include <qwt_compat.h>

@@ -23,10 +23,10 @@
 #ifndef FREQ_XLATING_FIR_FILTER_IMPL_H
 #define FREQ_XLATING_FIR_FILTER_IMPL_H
 
+#include <gnuradio/blocks/rotator.h>
 #include <gnuradio/filter/api.h>
 #include <gnuradio/filter/fir_filter.h>
 #include <gnuradio/filter/freq_xlating_fir_filter.h>
-#include <gnuradio/blocks/rotator.h>
 
 namespace gr {
 namespace filter {

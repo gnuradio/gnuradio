@@ -27,9 +27,9 @@
 #include <Python.h>
 #endif
 
-#include <gnuradio/qtgui/qtgui_types.h>
-#include <gnuradio/qtgui/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/qtgui/api.h>
+#include <gnuradio/qtgui/qtgui_types.h>
 #include <qapplication.h>
 
 namespace gr {

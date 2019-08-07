@@ -25,8 +25,8 @@
 #include <gnuradio/audio/source.h>
 #include <jack/jack.h>
 #include <jack/ringbuffer.h>
-#include <string>
 #include <stdexcept>
+#include <string>
 
 namespace gr {
 namespace audio {

@@ -24,8 +24,8 @@
 #define INCLUDED_CTRLPORT_PROBE_C_H
 
 #include <gnuradio/blocks/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/rpcregisterhelpers.h>
+#include <gnuradio/sync_block.h>
 #include <boost/thread/shared_mutex.hpp>
 
 namespace gr {

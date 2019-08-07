@@ -25,9 +25,9 @@
 #endif
 
 #include <gnuradio/blocks/wavfile.h>
-#include <cstring>
 #include <stdint.h>
 #include <boost/detail/endian.hpp> //BOOST_BIG_ENDIAN
+#include <cstring>
 
 namespace gr {
 namespace blocks {
