@@ -1,1 +1,1 @@
-extern unsigned char Taltab[],Tal1tab[];
+extern unsigned char Taltab[], Tal1tab[];

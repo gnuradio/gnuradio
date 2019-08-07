@@ -27,12 +27,12 @@
 #include <gnuradio/messages/msg_producer.h>
 
 namespace gr {
-  namespace messages {
+namespace messages {
 
-    msg_producer::~msg_producer()
-    {
-      // NOP, required as virtual destructor
-    }
+msg_producer::~msg_producer()
+{
+    // NOP, required as virtual destructor
+}
 
-  } /* namespace messages */
+} /* namespace messages */
 } /* namespace gr */

@@ -31,82 +31,91 @@
 #define MAX_PAPRTONES 288
 
 enum dvbt2_carrier_type_t {
-  DATA_CARRIER = 1,
-  P2PILOT_CARRIER,
-  P2PAPR_CARRIER,
-  TRPAPR_CARRIER,
-  SCATTERED_CARRIER,
-  CONTINUAL_CARRIER
+    DATA_CARRIER = 1,
+    P2PILOT_CARRIER,
+    P2PAPR_CARRIER,
+    TRPAPR_CARRIER,
+    SCATTERED_CARRIER,
+    CONTINUAL_CARRIER
 };
 
 namespace gr {
-  namespace dtv {
+namespace dtv {
 
-    class dvbt2_paprtr_cc_impl : public dvbt2_paprtr_cc
-    {
-     private:
-      int num_symbols;
-      int fft_size;
-      int left_nulls;
-      int right_nulls;
-      int pilot_pattern;
-      int carrier_mode;
-      int papr_mode;
-      int version_num;
-      double v_clip;
-      int num_iterations;
-      const int *papr_map;
-      const int *p2_papr_map;
-      const int *tr_papr_map;
-      int p2_carrier_map[MAX_CARRIERS];
-      int data_carrier_map[MAX_CARRIERS];
-      int fc_carrier_map[MAX_CARRIERS];
-      gr_complex *ones_freq;
-      gr_complex *ones_time;
-      gr_complex *c;
-      gr_complex *ctemp;
-      float *magnitude;
-      gr_complex *r;
-      gr_complex *rNew;
-      gr_complex *v;
-      float alphaLimit[MAX_PAPRTONES];
-      float alphaLimitMax[MAX_PAPRTONES];
-      int N_P2;
-      int N_FC;
-      int K_EXT;
-      int C_PS;
-      int N_TR;
-      int dx;
-      int dy;
-      int shift;
-      void init_pilots(int);
+class dvbt2_paprtr_cc_impl : public dvbt2_paprtr_cc
+{
+private:
+    int num_symbols;
+    int fft_size;
+    int left_nulls;
+    int right_nulls;
+    int pilot_pattern;
+    int carrier_mode;
+    int papr_mode;
+    int version_num;
+    double v_clip;
+    int num_iterations;
+    const int* papr_map;
+    const int* p2_papr_map;
+    const int* tr_papr_map;
+    int p2_carrier_map[MAX_CARRIERS];
+    int data_carrier_map[MAX_CARRIERS];
+    int fc_carrier_map[MAX_CARRIERS];
+    gr_complex* ones_freq;
+    gr_complex* ones_time;
+    gr_complex* c;
+    gr_complex* ctemp;
+    float* magnitude;
+    gr_complex* r;
+    gr_complex* rNew;
+    gr_complex* v;
+    float alphaLimit[MAX_PAPRTONES];
+    float alphaLimitMax[MAX_PAPRTONES];
+    int N_P2;
+    int N_FC;
+    int K_EXT;
+    int C_PS;
+    int N_TR;
+    int dx;
+    int dy;
+    int shift;
+    void init_pilots(int);
 
-      fft::fft_complex *papr_fft;
-      int papr_fft_size;
+    fft::fft_complex* papr_fft;
+    int papr_fft_size;
 
-      const static int p2_papr_map_1k[10];
-      const static int p2_papr_map_2k[18];
-      const static int p2_papr_map_4k[36];
-      const static int p2_papr_map_8k[72];
-      const static int p2_papr_map_16k[144];
-      const static int p2_papr_map_32k[288];
-      const static int tr_papr_map_1k[10];
-      const static int tr_papr_map_2k[18];
-      const static int tr_papr_map_4k[36];
-      const static int tr_papr_map_8k[72];
-      const static int tr_papr_map_16k[144];
-      const static int tr_papr_map_32k[288];
+    const static int p2_papr_map_1k[10];
+    const static int p2_papr_map_2k[18];
+    const static int p2_papr_map_4k[36];
+    const static int p2_papr_map_8k[72];
+    const static int p2_papr_map_16k[144];
+    const static int p2_papr_map_32k[288];
+    const static int tr_papr_map_1k[10];
+    const static int tr_papr_map_2k[18];
+    const static int tr_papr_map_4k[36];
+    const static int tr_papr_map_8k[72];
+    const static int tr_papr_map_16k[144];
+    const static int tr_papr_map_32k[288];
 
-     public:
-      dvbt2_paprtr_cc_impl(dvbt2_extended_carrier_t carriermode, dvbt2_fftsize_t fftsize, dvbt2_pilotpattern_t pilotpattern, dvb_guardinterval_t guardinterval, int numdatasyms, dvbt2_papr_t paprmode, dvbt2_version_t version, float vclip, int iterations, unsigned int vlength);
-      ~dvbt2_paprtr_cc_impl();
+public:
+    dvbt2_paprtr_cc_impl(dvbt2_extended_carrier_t carriermode,
+                         dvbt2_fftsize_t fftsize,
+                         dvbt2_pilotpattern_t pilotpattern,
+                         dvb_guardinterval_t guardinterval,
+                         int numdatasyms,
+                         dvbt2_papr_t paprmode,
+                         dvbt2_version_t version,
+                         float vclip,
+                         int iterations,
+                         unsigned int vlength);
+    ~dvbt2_paprtr_cc_impl();
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } // namespace dtv
+} // namespace dtv
 } // namespace gr
 
 #endif /* INCLUDED_DTV_DVBT2_PAPRTR_CC_IMPL_H */

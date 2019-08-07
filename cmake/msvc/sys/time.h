@@ -9,8 +9,8 @@
 
 #if _MSC_VER < 1900
 struct timespec {
-time_t tv_sec; /*! \brief Seconds since 00:00:00 GMT, 1 January 1970 */
-long tv_nsec; /*! \brief Additional nanoseconds since tv_sec */
+    time_t tv_sec; /*! \brief Seconds since 00:00:00 GMT, 1 January 1970 */
+    long tv_nsec;  /*! \brief Additional nanoseconds since tv_sec */
 };
 #endif
 

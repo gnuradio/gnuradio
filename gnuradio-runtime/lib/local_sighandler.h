@@ -32,42 +32,42 @@
 
 namespace gr {
 
-  /*!
-   * \brief Get and set signal handler.
-   *
-   * \ingroup internal
-   * Constructor installs new handler, destructor reinstalls
-   * original value.
-   */
-  class GR_RUNTIME_API local_sighandler
-  {
-  private:
+/*!
+ * \brief Get and set signal handler.
+ *
+ * \ingroup internal
+ * Constructor installs new handler, destructor reinstalls
+ * original value.
+ */
+class GR_RUNTIME_API local_sighandler
+{
+private:
     int d_signum;
 #ifdef HAVE_SIGACTION
     struct sigaction d_old_action;
 #endif
 
-  public:
+public:
     local_sighandler(int signum, void (*new_handler)(int));
     ~local_sighandler();
 
     /* throw gr_signal (signum) */
     static void throw_signal(int signum);
-  };
+};
 
-  /*!
-   * \brief Representation of signal.
-   */
-  class GR_RUNTIME_API signal
-  {
-  private:
+/*!
+ * \brief Representation of signal.
+ */
+class GR_RUNTIME_API signal
+{
+private:
     int d_signum;
 
-  public:
+public:
     signal(int signum) : d_signum(signum) {}
     int signum() const { return d_signum; }
     std::string name() const;
-  };
+};
 
 } /* namespace gr */
 

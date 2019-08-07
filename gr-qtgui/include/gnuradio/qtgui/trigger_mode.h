@@ -24,21 +24,21 @@
 #define INCLUDED_QTGUI_TRIGGER_MODE_H
 
 namespace gr {
-  namespace qtgui {
+namespace qtgui {
 
-    enum trigger_mode {
-      TRIG_MODE_FREE,
-      TRIG_MODE_AUTO,
-      TRIG_MODE_NORM,
-      TRIG_MODE_TAG,
-    };
+enum trigger_mode {
+    TRIG_MODE_FREE,
+    TRIG_MODE_AUTO,
+    TRIG_MODE_NORM,
+    TRIG_MODE_TAG,
+};
 
-    enum trigger_slope {
-      TRIG_SLOPE_POS,
-      TRIG_SLOPE_NEG,
-    };
+enum trigger_slope {
+    TRIG_SLOPE_POS,
+    TRIG_SLOPE_NEG,
+};
 
-  } /* namespace qtgui */
+} /* namespace qtgui */
 } /* namespace gr */
 
 #endif /* INCLUDED_QTGUI_TRIGGER_MODE_H */

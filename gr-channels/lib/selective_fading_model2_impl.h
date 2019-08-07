@@ -35,53 +35,69 @@
 #include "sincostable.h"
 
 namespace gr {
-  namespace channels {
+namespace channels {
 
-    class CHANNELS_API selective_fading_model2_impl : public selective_fading_model2
+class CHANNELS_API selective_fading_model2_impl : public selective_fading_model2
+{
+private:
+    std::vector<gr::channels::flat_fader_impl*> d_faders;
+    std::vector<float> d_delays;
+    std::vector<float> d_delays_orig;
+    std::vector<float> d_delays_std;
+    std::vector<float> d_delays_maxdev;
+    std::vector<float> d_mags;
+    sincostable d_sintable;
+
+    boost::mt19937 seed_1;
+    boost::normal_distribution<> dist_1; // U(-pi,pi)
+    boost::variate_generator<boost::mt19937&, boost::normal_distribution<>> rv_1;
+
+public:
+    selective_fading_model2_impl(unsigned int N,
+                                 float fDTs,
+                                 bool LOS,
+                                 float K,
+                                 int seed,
+                                 std::vector<float> delays,
+                                 std::vector<float> delay_std,
+                                 std::vector<float> delay_maxdev,
+                                 std::vector<float> mags,
+                                 int ntaps);
+    ~selective_fading_model2_impl();
+    void setup_rpc();
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+    std::vector<gr_complex> d_taps;
+
+    virtual float fDTs() { return d_faders[0]->d_fDTs; }
+    virtual float K() { return d_faders[0]->d_K; }
+    virtual float step() { return d_faders[0]->d_step; }
+
+    virtual void set_fDTs(float fDTs)
     {
-    private:
-      std::vector<gr::channels::flat_fader_impl*> d_faders;
-      std::vector<float> d_delays;
-      std::vector<float> d_delays_orig;
-      std::vector<float> d_delays_std;
-      std::vector<float> d_delays_maxdev;
-      std::vector<float> d_mags;
-      sincostable d_sintable;
+        BOOST_FOREACH (gr::channels::flat_fader_impl* fader, d_faders) {
+            fader->d_fDTs = fDTs;
+            fader->d_step = powf(0.00125 * fDTs, 1.1);
+        }
+    }
+    virtual void set_K(float K)
+    {
+        BOOST_FOREACH (gr::channels::flat_fader_impl* fader, d_faders) {
+            fader->d_K = K;
+            fader->scale_los = sqrtf(fader->d_K) / sqrtf(fader->d_K + 1);
+            fader->scale_nlos = (1 / sqrtf(fader->d_K + 1));
+        }
+    }
+    virtual void set_step(float step)
+    {
+        BOOST_FOREACH (gr::channels::flat_fader_impl* fader, d_faders) {
+            fader->d_step = step;
+        }
+    }
+};
 
-      boost::mt19937 seed_1;
-      boost::normal_distribution<> dist_1; // U(-pi,pi)
-      boost::variate_generator<boost::mt19937&, boost::normal_distribution<> > rv_1;
-
-    public:
-      selective_fading_model2_impl(unsigned int N, float fDTs, bool LOS, float K, int seed, std::vector<float> delays, std::vector<float> delay_std,
-                std::vector<float> delay_maxdev, std::vector<float> mags, int ntaps);
-      ~selective_fading_model2_impl();
-      void setup_rpc();
-      int work (int noutput_items,
-            gr_vector_const_void_star &input_items,
-            gr_vector_void_star &output_items);
-      std::vector<gr_complex> d_taps;
-
-      virtual float fDTs(){ return d_faders[0]->d_fDTs; }
-      virtual float K(){ return d_faders[0]->d_K; }
-      virtual float step(){ return d_faders[0]->d_step; }
-
-      virtual void set_fDTs(float fDTs){
-            BOOST_FOREACH( gr::channels::flat_fader_impl* fader, d_faders )
-            { fader->d_fDTs = fDTs;  fader->d_step = powf(0.00125*fDTs, 1.1); }
-            }
-      virtual void set_K(float K){
-            BOOST_FOREACH( gr::channels::flat_fader_impl* fader, d_faders )
-            { fader->d_K = K; fader->scale_los = sqrtf(fader->d_K)/sqrtf(fader->d_K+1); fader->scale_nlos = (1/sqrtf(fader->d_K+1)); }
-            }
-      virtual void set_step(float step){
-            BOOST_FOREACH( gr::channels::flat_fader_impl* fader, d_faders )
-            { fader->d_step = step; }
-            }
-
-    };
-
-  } /* namespace channels */
+} /* namespace channels */
 } /* namespace gr */
 
 #endif /* INCLUDED_CHANNELS_SELECTIVE_FADING_MODEL2_IMPL_H */

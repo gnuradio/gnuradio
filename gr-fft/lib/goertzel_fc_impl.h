@@ -27,34 +27,33 @@
 #include <gnuradio/fft/goertzel.h>
 
 namespace gr {
-  namespace fft {
+namespace fft {
 
-    class FFT_API goertzel_fc_impl : public goertzel_fc
-    {
-    private:
-      goertzel d_goertzel;
-      int      d_len;
-      float    d_freq;
-      int      d_rate;
+class FFT_API goertzel_fc_impl : public goertzel_fc
+{
+private:
+    goertzel d_goertzel;
+    int d_len;
+    float d_freq;
+    int d_rate;
 
-    public:
-      goertzel_fc_impl(int rate, int len, float freq);
+public:
+    goertzel_fc_impl(int rate, int len, float freq);
 
-      ~goertzel_fc_impl();
+    ~goertzel_fc_impl();
 
-      void  set_freq(float freq);
-      void  set_rate(int rate);
+    void set_freq(float freq);
+    void set_rate(int rate);
 
-      float freq() { return d_freq; }
-      int   rate() { return d_rate; }
+    float freq() { return d_freq; }
+    int rate() { return d_rate; }
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace fft */
+} /* namespace fft */
 } /* namespace gr */
 
 #endif /* INCLUDED_FFT_GOERTZEL_FC_IMPL_H */
-

@@ -25,28 +25,28 @@
 
 #include <gnuradio/vocoder/gsm_fr_decode_ps.h>
 
-extern "C"{
+extern "C" {
 #include "gsm.h"
 }
 
 namespace gr {
-  namespace vocoder {
+namespace vocoder {
 
-    class gsm_fr_decode_ps_impl : public gsm_fr_decode_ps
-    {
-    private:
-      struct gsm_state *d_gsm;
+class gsm_fr_decode_ps_impl : public gsm_fr_decode_ps
+{
+private:
+    struct gsm_state* d_gsm;
 
-    public:
-      gsm_fr_decode_ps_impl();
-      ~gsm_fr_decode_ps_impl();
+public:
+    gsm_fr_decode_ps_impl();
+    ~gsm_fr_decode_ps_impl();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace vocoder */
+} /* namespace vocoder */
 } /* namespace gr */
 
 #endif /* INCLUDED_VOCODER_GSM_FR_DECODE_PS_IMPL_H */

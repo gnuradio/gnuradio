@@ -27,36 +27,36 @@
 #include <gnuradio/blocks/vector_source.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-template<class T>
-    class vector_source_impl : public  vector_source<T>
-    {
-    private:
-      std::vector<T> d_data;
-      bool d_repeat;
-      unsigned int d_offset;
-      unsigned int d_vlen;
-      bool d_settags;
-      std::vector<tag_t> d_tags;
+template <class T>
+class vector_source_impl : public vector_source<T>
+{
+private:
+    std::vector<T> d_data;
+    bool d_repeat;
+    unsigned int d_offset;
+    unsigned int d_vlen;
+    bool d_settags;
+    std::vector<tag_t> d_tags;
 
-    public:
-      vector_source_impl (const std::vector<T> &data,
-                  bool repeat, unsigned int vlen,
-                  const std::vector<tag_t> &tags);
-      ~vector_source_impl ();
+public:
+    vector_source_impl(const std::vector<T>& data,
+                       bool repeat,
+                       unsigned int vlen,
+                       const std::vector<tag_t>& tags);
+    ~vector_source_impl();
 
-      void rewind() { d_offset=0; }
-      void set_data(const std::vector<T> &data,
-                    const std::vector<tag_t> &tags);
-      void set_repeat(bool repeat) { d_repeat=repeat; };
+    void rewind() { d_offset = 0; }
+    void set_data(const std::vector<T>& data, const std::vector<tag_t>& tags);
+    void set_repeat(bool repeat) { d_repeat = repeat; };
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* VECTOR_SOURCE_IMPL_H */

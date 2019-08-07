@@ -28,52 +28,52 @@
 #include <vector>
 
 namespace gr {
-  namespace filter {
+namespace filter {
+
+/*!
+ * \brief Compute intermediate samples between signal samples x(k*Ts)
+ * \ingroup filter_primitive
+ *
+ * \details
+ * This implements a Minimum Mean Squared Error interpolator with
+ * 8 taps. It is suitable for signals where the bandwidth of
+ * interest B = 1/(4*Ts) Where Ts is the time between samples.
+ *
+ * Although mu, the fractional delay, is specified as a float, it
+ * is actually quantized. 0.0 <= mu <= 1.0. That is, mu is
+ * quantized in the interpolate method to 32nd's of a sample.
+ *
+ * For more information, in the GNU Radio source code, see:
+ * \li gr-filter/lib/gen_interpolator_taps/README
+ * \li gr-filter/lib/gen_interpolator_taps/praxis.txt
+ */
+class FILTER_API mmse_fir_interpolator_cc
+{
+public:
+    mmse_fir_interpolator_cc();
+    ~mmse_fir_interpolator_cc();
+
+    unsigned ntaps() const;
+    unsigned nsteps() const;
 
     /*!
-     * \brief Compute intermediate samples between signal samples x(k*Ts)
-     * \ingroup filter_primitive
+     * \brief compute a single interpolated output value.
      *
-     * \details
-     * This implements a Minimum Mean Squared Error interpolator with
-     * 8 taps. It is suitable for signals where the bandwidth of
-     * interest B = 1/(4*Ts) Where Ts is the time between samples.
+     * \p input must have ntaps() valid entries and be 8-byte aligned.
+     * input[0] .. input[ntaps() - 1] are referenced to compute the output value.
+     * \throws std::invalid_argument if input is not 8-byte aligned.
      *
-     * Although mu, the fractional delay, is specified as a float, it
-     * is actually quantized. 0.0 <= mu <= 1.0. That is, mu is
-     * quantized in the interpolate method to 32nd's of a sample.
+     * \p mu must be in the range [0, 1] and specifies the fractional delay.
      *
-     * For more information, in the GNU Radio source code, see:
-     * \li gr-filter/lib/gen_interpolator_taps/README
-     * \li gr-filter/lib/gen_interpolator_taps/praxis.txt
+     * \returns the interpolated input value.
      */
-    class FILTER_API mmse_fir_interpolator_cc
-    {
-    public:
-      mmse_fir_interpolator_cc();
-      ~mmse_fir_interpolator_cc();
+    gr_complex interpolate(const gr_complex input[], float mu) const;
 
-      unsigned ntaps() const;
-      unsigned nsteps() const;
+protected:
+    std::vector<kernel::fir_filter_ccf*> filters;
+};
 
-      /*!
-       * \brief compute a single interpolated output value.
-       *
-       * \p input must have ntaps() valid entries and be 8-byte aligned.
-       * input[0] .. input[ntaps() - 1] are referenced to compute the output value.
-       * \throws std::invalid_argument if input is not 8-byte aligned.
-       *
-       * \p mu must be in the range [0, 1] and specifies the fractional delay.
-       *
-       * \returns the interpolated input value.
-       */
-      gr_complex interpolate(const gr_complex input[], float mu) const;
-
-    protected:
-      std::vector<kernel::fir_filter_ccf *> filters;
-    };
-
-  }  /* namespace filter */
-}  /* namespace gr */
+} /* namespace filter */
+} /* namespace gr */
 
 #endif /* _MMSE_FIR_INTERPOLATOR_CC_H_ */

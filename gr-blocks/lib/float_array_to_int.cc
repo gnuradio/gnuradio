@@ -34,18 +34,17 @@ using std::int64_t;
 #include <stdint.h>
 #endif
 
-static const int64_t MAX_INT =  INT32_MAX;
-static const int64_t MIN_INT =  INT32_MIN;
+static const int64_t MAX_INT = INT32_MAX;
+static const int64_t MIN_INT = INT32_MIN;
 
-void
-float_array_to_int(const float *in, int *out, float scale, int nsamples)
+void float_array_to_int(const float* in, int* out, float scale, int nsamples)
 {
-  for (int i = 0; i < nsamples; i++){
-    int64_t r = llrintf(scale * in[i]);
-    if (r < MIN_INT)
-      r = MIN_INT;
-    else if (r > MAX_INT)
-      r = MAX_INT;
-    out[i] = static_cast<int>(r);
-  }
+    for (int i = 0; i < nsamples; i++) {
+        int64_t r = llrintf(scale * in[i]);
+        if (r < MIN_INT)
+            r = MIN_INT;
+        else if (r > MAX_INT)
+            r = MAX_INT;
+        out[i] = static_cast<int>(r);
+    }
 }

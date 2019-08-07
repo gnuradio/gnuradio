@@ -44,49 +44,51 @@
 
 namespace gr {
 
-  /*!
-   * \brief The abstract base class for all signal processing blocks.
-   * \ingroup internal
-   *
-   * Basic blocks are the bare abstraction of an entity that has a
-   * name, a set of inputs and outputs, and a message queue.  These
-   * are never instantiated directly; rather, this is the abstract
-   * parent class of both gr_hier_block, which is a recursive
-   * container, and block, which implements actual signal
-   * processing functions.
-   */
-  class GR_RUNTIME_API basic_block : public msg_accepter,
-                                     public boost::enable_shared_from_this<basic_block>
-  {
+/*!
+ * \brief The abstract base class for all signal processing blocks.
+ * \ingroup internal
+ *
+ * Basic blocks are the bare abstraction of an entity that has a
+ * name, a set of inputs and outputs, and a message queue.  These
+ * are never instantiated directly; rather, this is the abstract
+ * parent class of both gr_hier_block, which is a recursive
+ * container, and block, which implements actual signal
+ * processing functions.
+ */
+class GR_RUNTIME_API basic_block : public msg_accepter,
+                                   public boost::enable_shared_from_this<basic_block>
+{
     typedef boost::function<void(pmt::pmt_t)> msg_handler_t;
 
-  private:
-    typedef std::map<pmt::pmt_t , msg_handler_t, pmt::comparator> d_msg_handlers_t;
+private:
+    typedef std::map<pmt::pmt_t, msg_handler_t, pmt::comparator> d_msg_handlers_t;
     d_msg_handlers_t d_msg_handlers;
 
     typedef std::deque<pmt::pmt_t> msg_queue_t;
     typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator> msg_queue_map_t;
-    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator>::iterator msg_queue_map_itr;
-    std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::comparator> msg_queue_ready;
+    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator>::iterator
+        msg_queue_map_itr;
+    std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::comparator>
+        msg_queue_ready;
 
-    gr::thread::mutex mutex;          //< protects all vars
+    gr::thread::mutex mutex; //< protects all vars
 
-  protected:
+protected:
     friend class flowgraph;
     friend class flat_flowgraph; // TODO: will be redundant
     friend class tpb_thread_body;
 
     enum vcolor { WHITE, GREY, BLACK };
 
-    std::string       d_name;
+    std::string d_name;
     gr::io_signature::sptr d_input_signature;
     gr::io_signature::sptr d_output_signature;
-    long              d_unique_id;
-    long              d_symbolic_id;
-    std::string       d_symbol_name;
-    std::string       d_symbol_alias;
-    vcolor            d_color;
-    bool              d_rpc_set;
+    long d_unique_id;
+    long d_symbolic_id;
+    std::string d_symbol_name;
+    std::string d_symbol_alias;
+    vcolor d_color;
+    bool d_rpc_set;
 
     msg_queue_map_t msg_queue;
     std::vector<boost::any> d_rpc_vars; // container for all RPC variables
@@ -94,18 +96,17 @@ namespace gr {
     basic_block(void) {} // allows pure virtual interface sub-classes
 
     //! Protected constructor prevents instantiation by non-derived classes
-    basic_block(const std::string &name,
+    basic_block(const std::string& name,
                 gr::io_signature::sptr input_signature,
                 gr::io_signature::sptr output_signature);
 
     //! may only be called during constructor
-    void set_input_signature(gr::io_signature::sptr iosig) {
-      d_input_signature = iosig;
-    }
+    void set_input_signature(gr::io_signature::sptr iosig) { d_input_signature = iosig; }
 
     //! may only be called during constructor
-    void set_output_signature(gr::io_signature::sptr iosig) {
-      d_output_signature = iosig;
+    void set_output_signature(gr::io_signature::sptr iosig)
+    {
+        d_output_signature = iosig;
     }
 
     /*!
@@ -117,8 +118,9 @@ namespace gr {
     /*!
      * \brief Tests if there is a handler attached to port \p which_port
      */
-    virtual bool has_msg_handler(pmt::pmt_t which_port) {
-      return (d_msg_handlers.find(which_port) != d_msg_handlers.end());
+    virtual bool has_msg_handler(pmt::pmt_t which_port)
+    {
+        return (d_msg_handlers.find(which_port) != d_msg_handlers.end());
     }
 
     /*
@@ -129,16 +131,16 @@ namespace gr {
      */
     virtual void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg)
     {
-      // AA Update this
-      if(has_msg_handler(which_port)) {  // Is there a handler?
-        d_msg_handlers[which_port](msg); // Yes, invoke it.
-      }
+        // AA Update this
+        if (has_msg_handler(which_port)) {   // Is there a handler?
+            d_msg_handlers[which_port](msg); // Yes, invoke it.
+        }
     }
 
     // Message passing interface
     pmt::pmt_t d_message_subscribers;
 
-  public:
+public:
     pmt::pmt_t message_subscribers(pmt::pmt_t port);
     virtual ~basic_block();
     long unique_id() const { return d_unique_id; }
@@ -153,9 +155,12 @@ namespace gr {
      * and never changes during the life of the block.
      */
     std::string symbol_name() const { return d_symbol_name; }
-    std::string identifier() const { return this->name() + "(" + std::to_string(this->unique_id()) + ")"; }
+    std::string identifier() const
+    {
+        return this->name() + "(" + std::to_string(this->unique_id()) + ")";
+    }
 
-    gr::io_signature::sptr input_signature() const  { return d_input_signature; }
+    gr::io_signature::sptr input_signature() const { return d_input_signature; }
     gr::io_signature::sptr output_signature() const { return d_output_signature; }
     basic_block_sptr to_basic_block(); // Needed for Python type coercion
 
@@ -167,7 +172,7 @@ namespace gr {
     /*!
      * Returns the block's alias as a string.
      */
-    std::string alias() const { return alias_set()?d_symbol_alias:symbol_name(); }
+    std::string alias() const { return alias_set() ? d_symbol_alias : symbol_name(); }
 
     /*!
      * Returns the block's alias as PMT.
@@ -188,9 +193,21 @@ namespace gr {
     void message_port_sub(pmt::pmt_t port_id, pmt::pmt_t target);
     void message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target);
 
-    virtual bool message_port_is_hier(pmt::pmt_t port_id) { (void) port_id; return false; }
-    virtual bool message_port_is_hier_in(pmt::pmt_t port_id) { (void) port_id; return false; }
-    virtual bool message_port_is_hier_out(pmt::pmt_t port_id) { (void) port_id; return false; }
+    virtual bool message_port_is_hier(pmt::pmt_t port_id)
+    {
+        (void)port_id;
+        return false;
+    }
+    virtual bool message_port_is_hier_in(pmt::pmt_t port_id)
+    {
+        (void)port_id;
+        return false;
+    }
+    virtual bool message_port_is_hier_out(pmt::pmt_t port_id)
+    {
+        (void)port_id;
+        return false;
+    }
 
     /*!
      * \brief Get input message port names.
@@ -214,66 +231,72 @@ namespace gr {
     void _post(pmt::pmt_t which_port, pmt::pmt_t msg);
 
     //! is the queue empty?
-    bool empty_p(pmt::pmt_t which_port) {
-      if(msg_queue.find(which_port) == msg_queue.end())
-        throw std::runtime_error("port does not exist!");
-      return msg_queue[which_port].empty();
+    bool empty_p(pmt::pmt_t which_port)
+    {
+        if (msg_queue.find(which_port) == msg_queue.end())
+            throw std::runtime_error("port does not exist!");
+        return msg_queue[which_port].empty();
     }
-    bool empty_p() {
-      bool rv = true;
-      BOOST_FOREACH(msg_queue_map_t::value_type &i, msg_queue) {
-        rv &= msg_queue[i.first].empty();
-      }
-      return rv;
+    bool empty_p()
+    {
+        bool rv = true;
+        BOOST_FOREACH (msg_queue_map_t::value_type& i, msg_queue) {
+            rv &= msg_queue[i.first].empty();
+        }
+        return rv;
     }
 
     //! are all msg ports with handlers empty?
-    bool empty_handled_p(pmt::pmt_t which_port){
+    bool empty_handled_p(pmt::pmt_t which_port)
+    {
         return (empty_p(which_port) || !has_msg_handler(which_port));
     }
-    bool empty_handled_p() {
-      bool rv = true;
-      BOOST_FOREACH(msg_queue_map_t::value_type &i, msg_queue) {
-        rv &= empty_handled_p(i.first);
-      }
-      return rv;
+    bool empty_handled_p()
+    {
+        bool rv = true;
+        BOOST_FOREACH (msg_queue_map_t::value_type& i, msg_queue) {
+            rv &= empty_handled_p(i.first);
+        }
+        return rv;
     }
 
     //! How many messages in the queue?
-    size_t nmsgs(pmt::pmt_t which_port) {
-      if(msg_queue.find(which_port) == msg_queue.end())
-        throw std::runtime_error("port does not exist!");
-      return msg_queue[which_port].size();
+    size_t nmsgs(pmt::pmt_t which_port)
+    {
+        if (msg_queue.find(which_port) == msg_queue.end())
+            throw std::runtime_error("port does not exist!");
+        return msg_queue[which_port].size();
     }
 
     //| Acquires and release the mutex
-    void insert_tail( pmt::pmt_t which_port, pmt::pmt_t msg);
+    void insert_tail(pmt::pmt_t which_port, pmt::pmt_t msg);
     /*!
      * \returns returns pmt at head of queue or pmt::pmt_t() if empty.
      */
-    pmt::pmt_t delete_head_nowait( pmt::pmt_t which_port);
+    pmt::pmt_t delete_head_nowait(pmt::pmt_t which_port);
 
-    msg_queue_t::iterator get_iterator(pmt::pmt_t which_port) {
-      return msg_queue[which_port].begin();
+    msg_queue_t::iterator get_iterator(pmt::pmt_t which_port)
+    {
+        return msg_queue[which_port].begin();
     }
 
-    void erase_msg(pmt::pmt_t which_port, msg_queue_t::iterator it) {
-      msg_queue[which_port].erase(it);
+    void erase_msg(pmt::pmt_t which_port, msg_queue_t::iterator it)
+    {
+        msg_queue[which_port].erase(it);
     }
 
-    virtual bool has_msg_port(pmt::pmt_t which_port) {
-      if(msg_queue.find(which_port) != msg_queue.end()) {
-        return true;
-      }
-      if(pmt::dict_has_key(d_message_subscribers, which_port)) {
-        return true;
-      }
-      return false;
+    virtual bool has_msg_port(pmt::pmt_t which_port)
+    {
+        if (msg_queue.find(which_port) != msg_queue.end()) {
+            return true;
+        }
+        if (pmt::dict_has_key(d_message_subscribers, which_port)) {
+            return true;
+        }
+        return false;
     }
 
-    const msg_queue_map_t& get_msg_map(void) const {
-      return msg_queue;
-    }
+    const msg_queue_map_t& get_msg_map(void) const { return msg_queue; }
 
 #ifdef GR_CTRLPORT
     /*!
@@ -288,10 +311,7 @@ namespace gr {
      *
      * \param s an rpcbasic_sptr of the new RPC variable register to store.
      */
-    void add_rpc_variable(rpcbasic_sptr s)
-    {
-      d_rpc_vars.push_back(s);
-    }
+    void add_rpc_variable(rpcbasic_sptr s) { d_rpc_vars.push_back(s); }
 #endif /* GR_CTRLPORT */
 
     /*!
@@ -302,7 +322,7 @@ namespace gr {
      * are created, which then get wrapped as shared pointers
      * (rpcbasic_sptr(...)) and stored using add_rpc_variable.
      */
-    virtual void setup_rpc() {};
+    virtual void setup_rpc(){};
 
     /*!
      * \brief Ask if this block has been registered to the RPC.
@@ -330,10 +350,11 @@ namespace gr {
      * This check is in addition to the constraints specified by the
      * input and output gr::io_signatures.
      */
-    virtual bool check_topology(int ninputs, int noutputs) {
-      (void)ninputs;
-      (void)noutputs;
-      return true;
+    virtual bool check_topology(int ninputs, int noutputs)
+    {
+        (void)ninputs;
+        (void)noutputs;
+        return true;
     }
 
     /*!
@@ -363,14 +384,17 @@ namespace gr {
      * If the block inherits from hier_block2, the runtime system
      * will ensure that no reentrant calls are made to msg_handler.
      */
-    template <typename T> void set_msg_handler(pmt::pmt_t which_port, T msg_handler) {
-      if(msg_queue.find(which_port) == msg_queue.end()) {
-        throw std::runtime_error("attempt to set_msg_handler() on bad input message port!");
-      }
-      d_msg_handlers[which_port] = msg_handler_t(msg_handler);
+    template <typename T>
+    void set_msg_handler(pmt::pmt_t which_port, T msg_handler)
+    {
+        if (msg_queue.find(which_port) == msg_queue.end()) {
+            throw std::runtime_error(
+                "attempt to set_msg_handler() on bad input message port!");
+        }
+        d_msg_handlers[which_port] = msg_handler_t(msg_handler);
     }
 
-    virtual void set_processor_affinity(const std::vector<int> &mask) = 0;
+    virtual void set_processor_affinity(const std::vector<int>& mask) = 0;
 
     virtual void unset_processor_affinity() = 0;
 
@@ -379,23 +403,23 @@ namespace gr {
     virtual void set_log_level(std::string level) = 0;
 
     virtual std::string log_level() = 0;
-  };
+};
 
-  inline bool operator<(basic_block_sptr lhs, basic_block_sptr rhs)
-  {
+inline bool operator<(basic_block_sptr lhs, basic_block_sptr rhs)
+{
     return lhs->unique_id() < rhs->unique_id();
-  }
+}
 
-  typedef std::vector<basic_block_sptr> basic_block_vector_t;
-  typedef std::vector<basic_block_sptr>::iterator basic_block_viter_t;
+typedef std::vector<basic_block_sptr> basic_block_vector_t;
+typedef std::vector<basic_block_sptr>::iterator basic_block_viter_t;
 
-  GR_RUNTIME_API long basic_block_ncurrently_allocated();
+GR_RUNTIME_API long basic_block_ncurrently_allocated();
 
-  inline std::ostream &operator << (std::ostream &os, basic_block_sptr basic_block)
-  {
+inline std::ostream& operator<<(std::ostream& os, basic_block_sptr basic_block)
+{
     os << basic_block->identifier();
     return os;
-  }
+}
 
 } /* namespace gr */
 

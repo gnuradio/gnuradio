@@ -26,24 +26,24 @@
 #include <gnuradio/blocks/argmax.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    template <class T>
-    class argmax_impl : public argmax<T>
-    {
-    private:
-      size_t d_vlen;
+template <class T>
+class argmax_impl : public argmax<T>
+{
+private:
+    size_t d_vlen;
 
-    public:
-      argmax_impl(size_t vlen);
-      ~argmax_impl();
+public:
+    argmax_impl(size_t vlen);
+    ~argmax_impl();
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* ARGMAX_IMPL_H */

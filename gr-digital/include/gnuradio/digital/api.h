@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_digital_EXPORTS
-#  define DIGITAL_API __GR_ATTR_EXPORT
+#define DIGITAL_API __GR_ATTR_EXPORT
 #else
-#  define DIGITAL_API __GR_ATTR_IMPORT
+#define DIGITAL_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_DIGITAL_API_H */

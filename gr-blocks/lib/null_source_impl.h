@@ -26,20 +26,20 @@
 #include <gnuradio/blocks/null_source.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class null_source_impl : public null_source
-    {
-    public:
-      null_source_impl(size_t sizeof_stream_item);
-      ~null_source_impl();
+class null_source_impl : public null_source
+{
+public:
+    null_source_impl(size_t sizeof_stream_item);
+    ~null_source_impl();
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_NULL_SOURCE_IMPL_H */

@@ -34,9 +34,9 @@
 #include <gnuradio/fec/api.h>
 class FEC_API cldpc
 {
-  public:
+public:
     //! Default constructor
-    cldpc() {};
+    cldpc(){};
 
     //! Constructs the LDPC class from given GF2mat X
     cldpc(const GF2Mat X);
@@ -89,7 +89,7 @@ class FEC_API cldpc
     //! Obtain systematic bits from "in"
     std::vector<char> get_systematic_bits(std::vector<char> in);
 
-  private:
+private:
     //! The parity check matrix
     GF2Mat H;
 

@@ -27,27 +27,27 @@
 #include <gnuradio/sync_decimator.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief Convert stream of interleaved shorts to a stream of complex
+ * \ingroup type_converters_blk
+ */
+class BLOCKS_API interleaved_short_to_complex : virtual public sync_decimator
+{
+public:
+    // gr::blocks::interleaved_short_to_complex::sptr
+    typedef boost::shared_ptr<interleaved_short_to_complex> sptr;
 
     /*!
-     * \brief Convert stream of interleaved shorts to a stream of complex
-     * \ingroup type_converters_blk
+     * Build an interleaved short to complex block.
      */
-    class BLOCKS_API interleaved_short_to_complex : virtual public sync_decimator
-    {
-    public:
-      // gr::blocks::interleaved_short_to_complex::sptr
-      typedef boost::shared_ptr<interleaved_short_to_complex> sptr;
+    static sptr make(bool vector_input = false, bool swap = false);
 
-      /*!
-       * Build an interleaved short to complex block.
-       */
-      static sptr make(bool vector_input=false, bool swap=false);
+    virtual void set_swap(bool swap) = 0;
+};
 
-      virtual void set_swap(bool swap)=0;
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_INTERLEAVED_SHORT_TO_COMPLEX_H */

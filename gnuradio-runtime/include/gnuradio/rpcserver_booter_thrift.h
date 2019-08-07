@@ -31,21 +31,21 @@ class rpcserver_base;
 class rpcserver_thrift;
 
 class rpcserver_booter_thrift
-  : public virtual rpcserver_booter_base,
-    public virtual thrift_server_template<rpcserver_base,
-                                          rpcserver_thrift,
-                                          rpcserver_booter_thrift>
+    : public virtual rpcserver_booter_base,
+      public virtual thrift_server_template<rpcserver_base,
+                                            rpcserver_thrift,
+                                            rpcserver_booter_thrift>
 {
- public:
-  rpcserver_booter_thrift();
-  ~rpcserver_booter_thrift();
+public:
+    rpcserver_booter_thrift();
+    ~rpcserver_booter_thrift();
 
-  rpcserver_base* i();
-  const std::string & type() {return d_type;}
-  const std::vector<std::string> endpoints();
+    rpcserver_base* i();
+    const std::string& type() { return d_type; }
+    const std::vector<std::string> endpoints();
 
- private:
-  std::string d_type;
+private:
+    std::string d_type;
 };
 
 #endif /* RPCSERVER_BOOTER_THRIFT_H */

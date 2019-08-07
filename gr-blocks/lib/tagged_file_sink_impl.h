@@ -24,37 +24,34 @@
 #define INCLUDED_GR_TAGGED_FILE_SINK_IMPL_H
 
 #include <gnuradio/blocks/tagged_file_sink.h>
-#include <cstdio>  // for FILE
+#include <cstdio> // for FILE
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class tagged_file_sink_impl : public tagged_file_sink
-    {
-    private:
-      enum {
-	NOT_IN_BURST = 0,
-	IN_BURST
-      };
+class tagged_file_sink_impl : public tagged_file_sink
+{
+private:
+    enum { NOT_IN_BURST = 0, IN_BURST };
 
-      size_t   d_itemsize;
-      int      d_state;
-      FILE    *d_handle;
-      int      d_n;
-      double   d_sample_rate;
-      uint64_t d_last_N;
-      double   d_timeval;
+    size_t d_itemsize;
+    int d_state;
+    FILE* d_handle;
+    int d_n;
+    double d_sample_rate;
+    uint64_t d_last_N;
+    double d_timeval;
 
-    public:
-      tagged_file_sink_impl(size_t itemsize, double samp_rate);
-      ~tagged_file_sink_impl();
+public:
+    tagged_file_sink_impl(size_t itemsize, double samp_rate);
+    ~tagged_file_sink_impl();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 

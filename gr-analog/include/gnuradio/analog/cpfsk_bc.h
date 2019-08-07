@@ -25,36 +25,36 @@
 #include <gnuradio/sync_interpolator.h>
 
 namespace gr {
-  namespace analog {
+namespace analog {
+
+/*!
+ * \brief Perform continuous phase 2-level frequency shift keying modulation
+ * on an input stream of unpacked bits.
+ * \ingroup modulators_blk
+ * \ingroup deprecated_blk
+ */
+class ANALOG_API cpfsk_bc : virtual public sync_interpolator
+{
+public:
+    // gr::analog::cpfsk_bc::sptr
+    typedef boost::shared_ptr<cpfsk_bc> sptr;
 
     /*!
-     * \brief Perform continuous phase 2-level frequency shift keying modulation
-     * on an input stream of unpacked bits.
-     * \ingroup modulators_blk
-     * \ingroup deprecated_blk
+     * \brief Make a CPFSK block.
+     *
+     * \param k modulation index
+     * \param ampl output amplitude
+     * \param samples_per_sym	number of output samples per input bit
      */
-    class ANALOG_API cpfsk_bc : virtual public sync_interpolator
-    {
-    public:
-      // gr::analog::cpfsk_bc::sptr
-      typedef boost::shared_ptr<cpfsk_bc> sptr;
+    static sptr make(float k, float ampl, int samples_per_sym);
 
-      /*!
-       * \brief Make a CPFSK block.
-       *
-       * \param k modulation index
-       * \param ampl output amplitude
-       * \param samples_per_sym	number of output samples per input bit
-       */
-      static sptr make(float k, float ampl, int samples_per_sym);
+    virtual void set_amplitude(float amplitude) = 0;
+    virtual float amplitude() = 0;
+    virtual float freq() = 0;
+    virtual float phase() = 0;
+};
 
-      virtual void set_amplitude(float amplitude) = 0;
-      virtual float amplitude() = 0;
-      virtual float freq() = 0;
-      virtual float phase() = 0;
-    };
-
-  } /* namespace analog */
+} /* namespace analog */
 } /* namespace gr */
 
 #endif /* INCLUDED_ANALOG_CPFSK_BC_H */

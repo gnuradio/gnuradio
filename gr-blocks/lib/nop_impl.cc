@@ -29,72 +29,71 @@
 #include <boost/bind.hpp>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    nop::sptr
-    nop::make(size_t sizeof_stream_item)
-    {
-      return gnuradio::get_initial_sptr
-        (new nop_impl(sizeof_stream_item));
-    }
+nop::sptr nop::make(size_t sizeof_stream_item)
+{
+    return gnuradio::get_initial_sptr(new nop_impl(sizeof_stream_item));
+}
 
-    nop_impl::nop_impl (size_t sizeof_stream_item)
-      : block("nop",
-                 io_signature::make(0, -1, sizeof_stream_item),
-                 io_signature::make(0, -1, sizeof_stream_item)),
-        d_nmsgs_recvd(0)
-    {
-      // Arrange to have count_received_msgs called when messages are received.
-      message_port_register_in(pmt::mp("port"));
-      set_msg_handler(pmt::mp("port"), boost::bind(&nop_impl::count_received_msgs, this, _1));
-    }
+nop_impl::nop_impl(size_t sizeof_stream_item)
+    : block("nop",
+            io_signature::make(0, -1, sizeof_stream_item),
+            io_signature::make(0, -1, sizeof_stream_item)),
+      d_nmsgs_recvd(0)
+{
+    // Arrange to have count_received_msgs called when messages are received.
+    message_port_register_in(pmt::mp("port"));
+    set_msg_handler(pmt::mp("port"),
+                    boost::bind(&nop_impl::count_received_msgs, this, _1));
+}
 
-    nop_impl::~nop_impl()
-    {
-    }
+nop_impl::~nop_impl() {}
 
-    // Trivial message handler that just counts them.
-    // (N.B., This feature is used in qa_set_msg_handler)
-    void
-    nop_impl::count_received_msgs(pmt::pmt_t msg)
-    {
-      d_nmsgs_recvd++;
-    }
+// Trivial message handler that just counts them.
+// (N.B., This feature is used in qa_set_msg_handler)
+void nop_impl::count_received_msgs(pmt::pmt_t msg) { d_nmsgs_recvd++; }
 
-    int
-    nop_impl::general_work(int noutput_items,
-                           gr_vector_int &ninput_items,
-                           gr_vector_const_void_star &input_items,
-                           gr_vector_void_star &output_items)
-    {
-      // eat any input that's available
-      for(unsigned i = 0; i < ninput_items.size (); i++)
+int nop_impl::general_work(int noutput_items,
+                           gr_vector_int& ninput_items,
+                           gr_vector_const_void_star& input_items,
+                           gr_vector_void_star& output_items)
+{
+    // eat any input that's available
+    for (unsigned i = 0; i < ninput_items.size(); i++)
         consume(i, ninput_items[i]);
 
-      return noutput_items;
-    }
+    return noutput_items;
+}
 
-    void
-    nop_impl::setup_rpc()
-    {
+void nop_impl::setup_rpc()
+{
 #ifdef GR_CTRLPORT
-      d_rpc_vars.push_back(
-        rpcbasic_sptr(new rpcbasic_register_get<nop, int>(
-          alias(), "test",
-          &nop::ctrlport_test,
-          pmt::mp(-256), pmt::mp(255), pmt::mp(0),
-          "", "Simple testing variable",
-          RPC_PRIVLVL_MIN, DISPNULL)));
+    d_rpc_vars.push_back(
+        rpcbasic_sptr(new rpcbasic_register_get<nop, int>(alias(),
+                                                          "test",
+                                                          &nop::ctrlport_test,
+                                                          pmt::mp(-256),
+                                                          pmt::mp(255),
+                                                          pmt::mp(0),
+                                                          "",
+                                                          "Simple testing variable",
+                                                          RPC_PRIVLVL_MIN,
+                                                          DISPNULL)));
 
-      d_rpc_vars.push_back(
-        rpcbasic_sptr(new rpcbasic_register_set<nop, int>(
-          alias(), "test",
-          &nop::set_ctrlport_test,
-          pmt::mp(-256), pmt::mp(255), pmt::mp(0),
-          "", "Simple testing variable",
-          RPC_PRIVLVL_MIN, DISPNULL)));
+    d_rpc_vars.push_back(
+        rpcbasic_sptr(new rpcbasic_register_set<nop, int>(alias(),
+                                                          "test",
+                                                          &nop::set_ctrlport_test,
+                                                          pmt::mp(-256),
+                                                          pmt::mp(255),
+                                                          pmt::mp(0),
+                                                          "",
+                                                          "Simple testing variable",
+                                                          RPC_PRIVLVL_MIN,
+                                                          DISPNULL)));
 #endif /* GR_CTRLPORT */
-    }
+}
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */

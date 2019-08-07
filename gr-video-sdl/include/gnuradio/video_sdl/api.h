@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_video_sdl_EXPORTS
-#  define VIDEO_SDL_API __GR_ATTR_EXPORT
+#define VIDEO_SDL_API __GR_ATTR_EXPORT
 #else
-#  define VIDEO_SDL_API __GR_ATTR_IMPORT
+#define VIDEO_SDL_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_VIDEO_SDL_API_H */

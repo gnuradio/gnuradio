@@ -26,14 +26,14 @@
 
 namespace gr {
 
-  //! directory to create temporary files
-  GR_RUNTIME_API const char *tmp_path();
+//! directory to create temporary files
+GR_RUNTIME_API const char* tmp_path();
 
-  //! directory to store application data
-  GR_RUNTIME_API const char *appdata_path();
+//! directory to store application data
+GR_RUNTIME_API const char* appdata_path();
 
-  //! directory to store user configuration
-  GR_RUNTIME_API const char *userconf_path();
+//! directory to store user configuration
+GR_RUNTIME_API const char* userconf_path();
 
 } /* namespace gr */
 

@@ -27,19 +27,19 @@
 #include "atsc_types.h"
 
 namespace gr {
-  namespace dtv {
+namespace dtv {
 
-    class atsc_depad_impl : public atsc_depad
-    {
-    public:
-      atsc_depad_impl();
+class atsc_depad_impl : public atsc_depad
+{
+public:
+    atsc_depad_impl();
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace dtv */
+} /* namespace dtv */
 } /* namespace gr */
 
 #endif /* INCLUDED_DTV_ATSC_DEPAD_IMPL_H */

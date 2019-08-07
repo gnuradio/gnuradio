@@ -29,30 +29,30 @@
 
 namespace gr {
 
-  /*!
-   * \brief thread-safe message queue
-   * \ingroup misc
-   */
-  class GR_RUNTIME_API msg_queue : public msg_handler
-  {
+/*!
+ * \brief thread-safe message queue
+ * \ingroup misc
+ */
+class GR_RUNTIME_API msg_queue : public msg_handler
+{
     gr::thread::mutex d_mutex;
     gr::thread::condition_variable d_not_empty;
     gr::thread::condition_variable d_not_full;
     message::sptr d_head;
     message::sptr d_tail;
-    unsigned int d_count;    // # of messages in queue.
-    unsigned int d_limit;    // max # of messages in queue.  0 -> unbounded
+    unsigned int d_count; // # of messages in queue.
+    unsigned int d_limit; // max # of messages in queue.  0 -> unbounded
 
-  public:
+public:
     typedef boost::shared_ptr<msg_queue> sptr;
 
-    static sptr make(unsigned int limit=0);
+    static sptr make(unsigned int limit = 0);
 
     msg_queue(unsigned int limit);
     ~msg_queue();
 
     //! Generic msg_handler method: insert the message.
-    void handle(message::sptr msg) { insert_tail (msg); }
+    void handle(message::sptr msg) { insert_tail(msg); }
 
     /*!
      * \brief Insert message at tail of queue.
@@ -88,7 +88,7 @@ namespace gr {
 
     //! return limit on number of message in queue.  0 -> unbounded
     unsigned int limit() const { return d_limit; }
-  };
+};
 
 } /* namespace gr */
 

@@ -29,36 +29,36 @@
 #include <gnuradio/types.h>
 
 namespace gr {
-  namespace filter {
+namespace filter {
+
+/*!
+ * \brief Hilbert transformer.
+ * \ingroup filter_blk
+ *
+ * \details
+ * real output is input appropriately delayed.
+ * imaginary output is hilbert filtered (90 degree phase shift)
+ * version of input.
+ */
+class FILTER_API hilbert_fc : virtual public sync_block
+{
+public:
+    // gr::filter::hilbert_fc::sptr
+    typedef boost::shared_ptr<hilbert_fc> sptr;
 
     /*!
-     * \brief Hilbert transformer.
-     * \ingroup filter_blk
+     * Build a Hilbert transformer filter block.
      *
-     * \details
-     * real output is input appropriately delayed.
-     * imaginary output is hilbert filtered (90 degree phase shift)
-     * version of input.
+     * \param ntaps The number of taps for the filter.
+     * \param window Window type (see firdes::win_type) to use.
+     * \param beta Beta value for a Kaiser window.
      */
-    class FILTER_API hilbert_fc : virtual public sync_block
-    {
-    public:
-      // gr::filter::hilbert_fc::sptr
-      typedef boost::shared_ptr<hilbert_fc> sptr;
+    static sptr make(unsigned int ntaps,
+                     firdes::win_type window = firdes::WIN_HAMMING,
+                     double beta = 6.76);
+};
 
-      /*!
-       * Build a Hilbert transformer filter block.
-       *
-       * \param ntaps The number of taps for the filter.
-       * \param window Window type (see firdes::win_type) to use.
-       * \param beta Beta value for a Kaiser window.
-       */
-      static sptr make(unsigned int ntaps,
-                       firdes::win_type window=firdes::WIN_HAMMING,
-                       double beta=6.76);
-    };
-
-  } /* namespace filter */
+} /* namespace filter */
 } /* namespace gr */
 
 #endif /* INCLUDED_FILTER_HILBERT_FC_H */

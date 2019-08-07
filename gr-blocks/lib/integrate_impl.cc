@@ -29,51 +29,50 @@
 #include <gnuradio/io_signature.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    template <class T>
-    typename integrate<T>::sptr integrate<T>::make(int decim, unsigned int vlen)
-    {
-      return gnuradio::get_initial_sptr(new integrate_impl<T> (decim, vlen));
-    }
+template <class T>
+typename integrate<T>::sptr integrate<T>::make(int decim, unsigned int vlen)
+{
+    return gnuradio::get_initial_sptr(new integrate_impl<T>(decim, vlen));
+}
 
-    template <class T>
-    integrate_impl<T> ::integrate_impl(int decim, unsigned int vlen)
-      : sync_decimator("integrate",
-			  io_signature::make(1, 1, sizeof (T) * vlen),
-			  io_signature::make(1, 1, sizeof (T) * vlen),
-			  decim),
+template <class T>
+integrate_impl<T>::integrate_impl(int decim, unsigned int vlen)
+    : sync_decimator("integrate",
+                     io_signature::make(1, 1, sizeof(T) * vlen),
+                     io_signature::make(1, 1, sizeof(T) * vlen),
+                     decim),
       d_decim(decim),
       d_vlen(vlen)
-    {
-    }
+{
+}
 
-    template <class T>
-    int
-    integrate_impl<T> ::work(int noutput_items,
-		      gr_vector_const_void_star &input_items,
-		      gr_vector_void_star &output_items)
-    {
-      const T *in = (const T *)input_items[0];
-      T *out = (T *)output_items[0];
+template <class T>
+int integrate_impl<T>::work(int noutput_items,
+                            gr_vector_const_void_star& input_items,
+                            gr_vector_void_star& output_items)
+{
+    const T* in = (const T*)input_items[0];
+    T* out = (T*)output_items[0];
 
-      for (int i = 0; i < noutput_items; i++) {
+    for (int i = 0; i < noutput_items; i++) {
         for (unsigned int j = 0; j < d_vlen; ++j) {
-          out[i*d_vlen + j] = (T)0;
+            out[i * d_vlen + j] = (T)0;
         }
         for (int j = 0; j < d_decim; j++) {
-          for (unsigned int k = 0; k < d_vlen; ++k) {
-            out[i*d_vlen + k] += in[i*d_decim*d_vlen + j*d_vlen + k];
-          }
+            for (unsigned int k = 0; k < d_vlen; ++k) {
+                out[i * d_vlen + k] += in[i * d_decim * d_vlen + j * d_vlen + k];
+            }
         }
-      }
-
-      return noutput_items;
     }
+
+    return noutput_items;
+}
 
 template class integrate<std::int16_t>;
 template class integrate<std::int32_t>;
 template class integrate<float>;
 template class integrate<gr_complex>;
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */

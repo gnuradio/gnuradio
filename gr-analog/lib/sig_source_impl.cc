@@ -37,29 +37,47 @@ namespace gr {
 namespace analog {
 
 template <class T>
-typename sig_source<T>::sptr sig_source<T>::make(
-    double sampling_freq, gr_waveform_t waveform, double frequency, double ampl, T offset, float phase) {
+typename sig_source<T>::sptr sig_source<T>::make(double sampling_freq,
+                                                 gr_waveform_t waveform,
+                                                 double frequency,
+                                                 double ampl,
+                                                 T offset,
+                                                 float phase)
+{
     return gnuradio::get_initial_sptr(
         new sig_source_impl<T>(sampling_freq, waveform, frequency, ampl, offset, phase));
 }
 
 template <class T>
-sig_source_impl<T>::sig_source_impl(
-    double sampling_freq, gr_waveform_t waveform, double frequency, double ampl, T offset, float phase)
-    : sync_block("sig_source", io_signature::make(0, 0, 0), io_signature::make(1, 1, sizeof(T))),
-      d_sampling_freq(sampling_freq), d_waveform(waveform), d_frequency(frequency), d_ampl(ampl),
-      d_offset(offset) {
+sig_source_impl<T>::sig_source_impl(double sampling_freq,
+                                    gr_waveform_t waveform,
+                                    double frequency,
+                                    double ampl,
+                                    T offset,
+                                    float phase)
+    : sync_block(
+          "sig_source", io_signature::make(0, 0, 0), io_signature::make(1, 1, sizeof(T))),
+      d_sampling_freq(sampling_freq),
+      d_waveform(waveform),
+      d_frequency(frequency),
+      d_ampl(ampl),
+      d_offset(offset)
+{
     this->set_frequency(frequency);
     this->set_phase(phase);
     this->message_port_register_in(pmt::mp("freq"));
-    this->set_msg_handler(pmt::mp("freq"), boost::bind(&sig_source_impl<T>::set_frequency_msg, this, _1));
+    this->set_msg_handler(pmt::mp("freq"),
+                          boost::bind(&sig_source_impl<T>::set_frequency_msg, this, _1));
 }
 
 template <class T>
-sig_source_impl<T>::~sig_source_impl() {}
+sig_source_impl<T>::~sig_source_impl()
+{
+}
 
 template <class T>
-void sig_source_impl<T>::set_frequency_msg(pmt::pmt_t msg) {
+void sig_source_impl<T>::set_frequency_msg(pmt::pmt_t msg)
+{
     // Accepts either a number that is assumed to be the new
     // frequency or a key:value pair message where the key must be
     // "freq" and the value is the new frequency.
@@ -89,7 +107,8 @@ void sig_source_impl<T>::set_frequency_msg(pmt::pmt_t msg) {
 template <class T>
 int sig_source_impl<T>::work(int noutput_items,
                              gr_vector_const_void_star& input_items,
-                             gr_vector_void_star& output_items) {
+                             gr_vector_void_star& output_items)
+{
     T* optr = (T*)output_items[0];
     T t;
     gr::thread::scoped_lock l(this->d_setlock);
@@ -147,7 +166,8 @@ int sig_source_impl<T>::work(int noutput_items,
         /* The saw tooth wave rises from -PI to PI. */
     case GR_SAW_WAVE:
         for (int i = 0; i < noutput_items; i++) {
-            t = static_cast<T>(d_ampl * d_nco.get_phase() / (2 * GR_M_PI) + d_ampl / 2 + d_offset);
+            t = static_cast<T>(d_ampl * d_nco.get_phase() / (2 * GR_M_PI) + d_ampl / 2 +
+                               d_offset);
             optr[i] = t;
             d_nco.step();
         }
@@ -163,7 +183,8 @@ int sig_source_impl<T>::work(int noutput_items,
 template <>
 int sig_source_impl<gr_complex>::work(int noutput_items,
                                       gr_vector_const_void_star& input_items,
-                                      gr_vector_void_star& output_items) {
+                                      gr_vector_void_star& output_items)
+{
     gr_complex* optr = (gr_complex*)output_items[0];
     gr_complex t;
     gr::thread::scoped_lock l(this->d_setlock);
@@ -209,9 +230,10 @@ int sig_source_impl<gr_complex>::work(int noutput_items,
     case GR_TRI_WAVE:
         for (int i = 0; i < noutput_items; i++) {
             if (d_nco.get_phase() < -1 * GR_M_PI / 2) {
-                optr[i] = gr_complex(d_ampl * d_nco.get_phase() / GR_M_PI + d_ampl,
-                                     -1 * d_ampl * d_nco.get_phase() / GR_M_PI - d_ampl / 2) +
-                          d_offset;
+                optr[i] =
+                    gr_complex(d_ampl * d_nco.get_phase() / GR_M_PI + d_ampl,
+                               -1 * d_ampl * d_nco.get_phase() / GR_M_PI - d_ampl / 2) +
+                    d_offset;
             } else if (d_nco.get_phase() < 0) {
                 optr[i] = gr_complex(d_ampl * d_nco.get_phase() / GR_M_PI + d_ampl,
                                      d_ampl * d_nco.get_phase() / GR_M_PI + d_ampl / 2) +
@@ -222,7 +244,8 @@ int sig_source_impl<gr_complex>::work(int noutput_items,
                           d_offset;
             } else {
                 optr[i] = gr_complex(-1 * d_ampl * d_nco.get_phase() / GR_M_PI + d_ampl,
-                                     -1 * d_ampl * d_nco.get_phase() / GR_M_PI + 3 * d_ampl / 2) +
+                                     -1 * d_ampl * d_nco.get_phase() / GR_M_PI +
+                                         3 * d_ampl / 2) +
                           d_offset;
             }
             d_nco.step();
@@ -235,13 +258,16 @@ int sig_source_impl<gr_complex>::work(int noutput_items,
     case GR_SAW_WAVE:
         for (int i = 0; i < noutput_items; i++) {
             if (d_nco.get_phase() < -1 * GR_M_PI / 2) {
-                optr[i] = gr_complex(d_ampl * d_nco.get_phase() / (2 * GR_M_PI) + d_ampl / 2,
-                                     d_ampl * d_nco.get_phase() / (2 * GR_M_PI) + 5 * d_ampl / 4) +
-                          d_offset;
+                optr[i] =
+                    gr_complex(d_ampl * d_nco.get_phase() / (2 * GR_M_PI) + d_ampl / 2,
+                               d_ampl * d_nco.get_phase() / (2 * GR_M_PI) +
+                                   5 * d_ampl / 4) +
+                    d_offset;
             } else {
-                optr[i] = gr_complex(d_ampl * d_nco.get_phase() / (2 * GR_M_PI) + d_ampl / 2,
-                                     d_ampl * d_nco.get_phase() / (2 * GR_M_PI) + d_ampl / 4) +
-                          d_offset;
+                optr[i] =
+                    gr_complex(d_ampl * d_nco.get_phase() / (2 * GR_M_PI) + d_ampl / 2,
+                               d_ampl * d_nco.get_phase() / (2 * GR_M_PI) + d_ampl / 4) +
+                    d_offset;
             }
             d_nco.step();
         }
@@ -255,34 +281,40 @@ int sig_source_impl<gr_complex>::work(int noutput_items,
 
 
 template <class T>
-void sig_source_impl<T>::set_sampling_freq(double sampling_freq) {
+void sig_source_impl<T>::set_sampling_freq(double sampling_freq)
+{
     d_sampling_freq = sampling_freq;
     d_nco.set_freq(2 * GR_M_PI * this->d_frequency / this->d_sampling_freq);
 }
 
 template <class T>
-void sig_source_impl<T>::set_waveform(gr_waveform_t waveform) {
+void sig_source_impl<T>::set_waveform(gr_waveform_t waveform)
+{
     d_waveform = waveform;
 }
 
 template <class T>
-void sig_source_impl<T>::set_frequency(double frequency) {
+void sig_source_impl<T>::set_frequency(double frequency)
+{
     d_frequency = frequency;
     d_nco.set_freq(2 * GR_M_PI * this->d_frequency / this->d_sampling_freq);
 }
 
 template <class T>
-void sig_source_impl<T>::set_amplitude(double ampl) {
+void sig_source_impl<T>::set_amplitude(double ampl)
+{
     d_ampl = ampl;
 }
 
 template <class T>
-void sig_source_impl<T>::set_offset(T offset) {
+void sig_source_impl<T>::set_offset(T offset)
+{
     d_offset = offset;
 }
 
 template <class T>
-void sig_source_impl<T>::set_phase(float phase) {
+void sig_source_impl<T>::set_phase(float phase)
+{
     gr::thread::scoped_lock l(this->d_setlock);
     d_nco.set_phase(phase);
 }

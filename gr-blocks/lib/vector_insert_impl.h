@@ -27,32 +27,34 @@
 #include <gnuradio/blocks/vector_insert.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-template<class T>
-    class vector_insert_impl : public  vector_insert<T>
+template <class T>
+class vector_insert_impl : public vector_insert<T>
+{
+private:
+    std::vector<T> d_data;
+    int d_offset;
+    int d_periodicity;
+
+public:
+    vector_insert_impl(const std::vector<T>& data, int periodicity, int offset);
+    ~vector_insert_impl();
+
+    void rewind() { d_offset = 0; }
+    void set_data(const std::vector<T>& data)
     {
-    private:
-      std::vector<T> d_data;
-      int d_offset;
-      int d_periodicity;
+        d_data = data;
+        rewind();
+    }
 
-    public:
-      vector_insert_impl (const std::vector<T> &data,
-                  int periodicity, int offset);
-      ~vector_insert_impl ();
+    int general_work(int noutput_items,
+                     gr_vector_int& ninput_items,
+                     gr_vector_const_void_star& input_items,
+                     gr_vector_void_star& output_items);
+};
 
-      void rewind() { d_offset=0; }
-      void set_data(const std::vector<T> &data) {
-        d_data = data; rewind(); }
-
-      int general_work(int noutput_items,
-                       gr_vector_int &ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items);
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* VECTOR_INSERT_IMPL_H */

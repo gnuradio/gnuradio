@@ -27,8 +27,9 @@
 #include "vmcircbuf.h"
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_CASE(test_all) {
-  int verbose = 1; // summary
+BOOST_AUTO_TEST_CASE(test_all)
+{
+    int verbose = 1; // summary
 
-  BOOST_REQUIRE(gr::vmcircbuf_sysconfig::test_all_factories(verbose));
+    BOOST_REQUIRE(gr::vmcircbuf_sysconfig::test_all_factories(verbose));
 }

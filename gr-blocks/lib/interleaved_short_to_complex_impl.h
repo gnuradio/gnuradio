@@ -26,23 +26,24 @@
 #include <gnuradio/blocks/interleaved_short_to_complex.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class BLOCKS_API interleaved_short_to_complex_impl : public interleaved_short_to_complex
-    {
-    private:
-      bool d_swap;
-    public:
-      interleaved_short_to_complex_impl(bool vector_input=false, bool swap=false);
+class BLOCKS_API interleaved_short_to_complex_impl : public interleaved_short_to_complex
+{
+private:
+    bool d_swap;
 
-      void set_swap(bool swap);
+public:
+    interleaved_short_to_complex_impl(bool vector_input = false, bool swap = false);
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    void set_swap(bool swap);
 
-  } /* namespace blocks */
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
+
+} /* namespace blocks */
 } /* namespace gr */
 
 
