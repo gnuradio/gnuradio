@@ -27,32 +27,31 @@
 #include <gnuradio/blocks/tsb_vector_sink.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-template<class T>
-    class tsb_vector_sink_impl : public  tsb_vector_sink<T>
-    {
-     private:
-      std::vector<std::vector<T> > d_data;
-      std::vector<tag_t> d_tags;
-      unsigned int d_vlen;
+template <class T>
+class tsb_vector_sink_impl : public tsb_vector_sink<T>
+{
+private:
+    std::vector<std::vector<T>> d_data;
+    std::vector<tag_t> d_tags;
+    unsigned int d_vlen;
 
-     public:
-      tsb_vector_sink_impl (unsigned int vlen, const std::string &tsb_key);
-      ~tsb_vector_sink_impl ();
+public:
+    tsb_vector_sink_impl(unsigned int vlen, const std::string& tsb_key);
+    ~tsb_vector_sink_impl();
 
-      void reset() { d_data.clear(); }
-      std::vector<std::vector<T> > data() const;
-      std::vector<tag_t> tags() const;
+    void reset() { d_data.clear(); }
+    std::vector<std::vector<T>> data() const;
+    std::vector<tag_t> tags() const;
 
-      int work(int noutput_items,
-		       gr_vector_int &ninput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_int& ninput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } // namespace blocks
+} // namespace blocks
 } // namespace gr
 
 #endif /* TSB_VECTOR_SINK_IMPL_H */
-

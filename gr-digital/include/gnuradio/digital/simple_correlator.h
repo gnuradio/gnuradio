@@ -27,23 +27,23 @@
 #include <gnuradio/block.h>
 
 namespace gr {
-  namespace digital {
-    
-    /*!
-     * \brief inverse of simple_framer (more or less)
-     * \ingroup packet_operators_blk
-     * \ingroup deprecated_blk
-     */
-    class DIGITAL_API simple_correlator : virtual public block
-    {
-    public:
-      // gr::digital::simple_correlator::sptr
-      typedef boost::shared_ptr<simple_correlator> sptr;
+namespace digital {
 
-      static sptr make(int payload_bytesize);
-    };
+/*!
+ * \brief inverse of simple_framer (more or less)
+ * \ingroup packet_operators_blk
+ * \ingroup deprecated_blk
+ */
+class DIGITAL_API simple_correlator : virtual public block
+{
+public:
+    // gr::digital::simple_correlator::sptr
+    typedef boost::shared_ptr<simple_correlator> sptr;
 
-  } /* namespace digital */
+    static sptr make(int payload_bytesize);
+};
+
+} /* namespace digital */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_SIMPLE_CORRELATOR_H */

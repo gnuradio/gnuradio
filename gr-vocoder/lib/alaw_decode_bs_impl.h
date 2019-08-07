@@ -26,20 +26,20 @@
 #include <gnuradio/vocoder/alaw_decode_bs.h>
 
 namespace gr {
-  namespace vocoder {
+namespace vocoder {
 
-    class alaw_decode_bs_impl : public alaw_decode_bs
-    {
-    public:
-      alaw_decode_bs_impl();
-      ~alaw_decode_bs_impl();
+class alaw_decode_bs_impl : public alaw_decode_bs
+{
+public:
+    alaw_decode_bs_impl();
+    ~alaw_decode_bs_impl();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace vocoder */
+} /* namespace vocoder */
 } /* namespace gr */
 
 #endif /* INCLUDED_VOCODER_ALAW_DECODE_BS_IMPL_H */

@@ -33,40 +33,57 @@ namespace gr {
 namespace analog {
 
 template <class T>
-typename noise_source<T>::sptr noise_source<T>::make(noise_type_t type, float ampl, long seed) {
+typename noise_source<T>::sptr
+noise_source<T>::make(noise_type_t type, float ampl, long seed)
+{
     return gnuradio::get_initial_sptr(new noise_source_impl<T>(type, ampl, seed));
 }
 
 template <class T>
 noise_source_impl<T>::noise_source_impl(noise_type_t type, float ampl, long seed)
-    : sync_block("noise_source", io_signature::make(0, 0, 0), io_signature::make(1, 1, sizeof(T))),
-      d_type(type), d_ampl(ampl), d_rng(seed) {}
+    : sync_block("noise_source",
+                 io_signature::make(0, 0, 0),
+                 io_signature::make(1, 1, sizeof(T))),
+      d_type(type),
+      d_ampl(ampl),
+      d_rng(seed)
+{
+}
 
 template <>
 noise_source_impl<gr_complex>::noise_source_impl(noise_type_t type, float ampl, long seed)
     : sync_block("noise_source",
                  io_signature::make(0, 0, 0),
                  io_signature::make(1, 1, sizeof(gr_complex))),
-      d_type(type), d_ampl(ampl / sqrtf(2.0f)), d_rng(seed) {}
+      d_type(type),
+      d_ampl(ampl / sqrtf(2.0f)),
+      d_rng(seed)
+{
+}
 
 
 template <class T>
-noise_source_impl<T>::~noise_source_impl<T>() {}
+noise_source_impl<T>::~noise_source_impl<T>()
+{
+}
 
 template <class T>
-void noise_source_impl<T>::set_type(noise_type_t type) {
+void noise_source_impl<T>::set_type(noise_type_t type)
+{
     gr::thread::scoped_lock l(this->d_setlock);
     d_type = type;
 }
 
 template <class T>
-void noise_source_impl<T>::set_amplitude(float ampl) {
+void noise_source_impl<T>::set_amplitude(float ampl)
+{
     gr::thread::scoped_lock l(this->d_setlock);
     d_ampl = ampl;
 }
 
 template <>
-void noise_source_impl<gr_complex>::set_amplitude(float ampl) {
+void noise_source_impl<gr_complex>::set_amplitude(float ampl)
+{
     gr::thread::scoped_lock l(this->d_setlock);
     d_ampl = ampl / sqrtf(2.0f);
 }
@@ -75,7 +92,8 @@ void noise_source_impl<gr_complex>::set_amplitude(float ampl) {
 template <class T>
 int noise_source_impl<T>::work(int noutput_items,
                                gr_vector_const_void_star& input_items,
-                               gr_vector_void_star& output_items) {
+                               gr_vector_void_star& output_items)
+{
     gr::thread::scoped_lock l(this->d_setlock);
 
     T* out = (T*)output_items[0];
@@ -114,7 +132,8 @@ int noise_source_impl<T>::work(int noutput_items,
 template <>
 int noise_source_impl<gr_complex>::work(int noutput_items,
                                         gr_vector_const_void_star& input_items,
-                                        gr_vector_void_star& output_items) {
+                                        gr_vector_void_star& output_items)
+{
     gr::thread::scoped_lock l(this->d_setlock);
 
     gr_complex* out = (gr_complex*)output_items[0];

@@ -28,7 +28,7 @@
 #include <qwt_plot_rasteritem.h>
 
 #if QWT_VERSION >= 0x060000
-#include <qwt_point_3d.h>  // doesn't seem necessary, but is...
+#include <qwt_point_3d.h> // doesn't seem necessary, but is...
 #include <qwt_compat.h>
 #endif
 
@@ -45,23 +45,23 @@ class QwtColorMap;
  *
  * \sa QwtRasterData, QwtColorMap
  */
-class PlotTimeRaster: public QwtPlotRasterItem
+class PlotTimeRaster : public QwtPlotRasterItem
 {
 public:
-    explicit PlotTimeRaster(const QString &title = QString::null);
+    explicit PlotTimeRaster(const QString& title = QString::null);
     virtual ~PlotTimeRaster();
 
-    const TimeRasterData* data()const;
+    const TimeRasterData* data() const;
 
-    void setData(TimeRasterData *data);
+    void setData(TimeRasterData* data);
 
-    void setColorMap(const QwtColorMap *map);
+    void setColorMap(const QwtColorMap* map);
 
-    const QwtColorMap &colorMap() const;
+    const QwtColorMap& colorMap() const;
 
 #if QWT_VERSION < 0x060000
     virtual QwtDoubleRect boundingRect() const;
-    virtual QSize rasterHint(const QwtDoubleRect &) const;
+    virtual QSize rasterHint(const QwtDoubleRect&) const;
     virtual QwtDoubleInterval interval(Qt::Axis ax) const;
 #else
     virtual QwtInterval interval(Qt::Axis ax) const;
@@ -69,26 +69,26 @@ public:
 
     virtual int rtti() const;
 
-    virtual void draw(QPainter *p,
-		      const QwtScaleMap &xMap,
-		      const QwtScaleMap &yMap,
-		      const QRect &rect) const;
+    virtual void draw(QPainter* p,
+                      const QwtScaleMap& xMap,
+                      const QwtScaleMap& yMap,
+                      const QRect& rect) const;
 
 protected:
 #if QWT_VERSION < 0x060000
-    QImage renderImage(const QwtScaleMap &xMap,
-		       const QwtScaleMap &yMap,
-		       const QwtDoubleRect &rect) const;
+    QImage renderImage(const QwtScaleMap& xMap,
+                       const QwtScaleMap& yMap,
+                       const QwtDoubleRect& rect) const;
 #else
-    QImage renderImage(const QwtScaleMap &xMap,
-		       const QwtScaleMap &yMap,
-		       const QRectF &rect,
-		       const QSize &size=QSize(0,0)) const;
+    QImage renderImage(const QwtScaleMap& xMap,
+                       const QwtScaleMap& yMap,
+                       const QRectF& rect,
+                       const QSize& size = QSize(0, 0)) const;
 #endif
 
 private:
     class PrivateData;
-    PrivateData *d_data;
+    PrivateData* d_data;
 };
 
 #endif

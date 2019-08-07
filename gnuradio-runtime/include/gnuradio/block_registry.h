@@ -30,13 +30,13 @@
 namespace gr {
 
 #ifndef GR_BASIC_BLOCK_H
-  class basic_block;
-  class block;
+class basic_block;
+class block;
 #endif
 
-  class GR_RUNTIME_API block_registry
-  {
-  public:
+class GR_RUNTIME_API block_registry
+{
+public:
     block_registry();
 
     long block_register(basic_block* block);
@@ -52,16 +52,16 @@ namespace gr {
     void unregister_primitive(std::string blk);
     void notify_blk(std::string blk);
 
-  private:
-    //typedef std::map< long, basic_block_sptr >   blocksubmap_t;
-    typedef std::map< long, basic_block* >   blocksubmap_t;
-    typedef std::map< std::string, blocksubmap_t >  blockmap_t;
+private:
+    // typedef std::map< long, basic_block_sptr >   blocksubmap_t;
+    typedef std::map<long, basic_block*> blocksubmap_t;
+    typedef std::map<std::string, blocksubmap_t> blockmap_t;
 
     blockmap_t d_map;
     pmt::pmt_t d_ref_map;
-    std::map< std::string, block*> primitive_map;
+    std::map<std::string, block*> primitive_map;
     gr::thread::mutex d_mutex;
-  };
+};
 
 } /* namespace gr */
 

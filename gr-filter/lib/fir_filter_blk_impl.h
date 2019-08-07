@@ -21,35 +21,35 @@
  */
 
 #ifndef FIR_FILTER_BLK_IMPL_H
-#define	FIR_FILTER_BLK_IMPL_H
+#define FIR_FILTER_BLK_IMPL_H
 
 #include <gnuradio/filter/fir_filter.h>
 #include <gnuradio/filter/fir_filter_blk.h>
 
 namespace gr {
-  namespace filter {
+namespace filter {
 
-    template <class IN_T, class OUT_T, class TAP_T>
-    class FILTER_API fir_filter_blk_impl : public fir_filter_blk<IN_T, OUT_T, TAP_T>
-    {
-    private:
-      kernel::fir_filter<IN_T, OUT_T, TAP_T> *d_fir;
-      bool d_updated;
+template <class IN_T, class OUT_T, class TAP_T>
+class FILTER_API fir_filter_blk_impl : public fir_filter_blk<IN_T, OUT_T, TAP_T>
+{
+private:
+    kernel::fir_filter<IN_T, OUT_T, TAP_T>* d_fir;
+    bool d_updated;
 
-    public:
-      fir_filter_blk_impl(int decimation, const std::vector<TAP_T> &taps);
+public:
+    fir_filter_blk_impl(int decimation, const std::vector<TAP_T>& taps);
 
-      ~fir_filter_blk_impl();
+    ~fir_filter_blk_impl();
 
-      void set_taps(const std::vector<TAP_T> &taps);
-      std::vector<TAP_T> taps() const;
+    void set_taps(const std::vector<TAP_T>& taps);
+    std::vector<TAP_T> taps() const;
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace filter */
+} /* namespace filter */
 } /* namespace gr */
 
 #endif /* FIR_FILTER_BLK_IMPL_H */

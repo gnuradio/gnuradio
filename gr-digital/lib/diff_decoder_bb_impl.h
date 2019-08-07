@@ -27,23 +27,23 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace digital {
+namespace digital {
 
-    class diff_decoder_bb_impl : public diff_decoder_bb
-    {
-    public:
-      diff_decoder_bb_impl(unsigned int modulus);
-      ~diff_decoder_bb_impl();
+class diff_decoder_bb_impl : public diff_decoder_bb
+{
+public:
+    diff_decoder_bb_impl(unsigned int modulus);
+    ~diff_decoder_bb_impl();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-    private:
-      unsigned int d_modulus;
-    };
+private:
+    unsigned int d_modulus;
+};
 
-  } /* namespace digital */
+} /* namespace digital */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_DIFF_DECODER_BB_IMPL_H */

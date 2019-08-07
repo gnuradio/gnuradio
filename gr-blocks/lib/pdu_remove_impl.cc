@@ -29,38 +29,35 @@
 #include <gnuradio/blocks/pdu.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    pdu_remove::sptr
-    pdu_remove::make(pmt::pmt_t k)
-    {
-      return gnuradio::get_initial_sptr(new pdu_remove_impl(k));
-    }
+pdu_remove::sptr pdu_remove::make(pmt::pmt_t k)
+{
+    return gnuradio::get_initial_sptr(new pdu_remove_impl(k));
+}
 
-    pdu_remove_impl::pdu_remove_impl(pmt::pmt_t k)
-      :	block("pdu_remove",
-		 io_signature::make (0, 0, 0),
-		 io_signature::make (0, 0, 0)),
-    d_k(k)
-    {
-      message_port_register_out(pdu::pdu_port_id());
-      message_port_register_in(pdu::pdu_port_id());
-      set_msg_handler(pdu::pdu_port_id(), boost::bind(&pdu_remove_impl::handle_msg, this, _1));
-    }
+pdu_remove_impl::pdu_remove_impl(pmt::pmt_t k)
+    : block("pdu_remove", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
+      d_k(k)
+{
+    message_port_register_out(pdu::pdu_port_id());
+    message_port_register_in(pdu::pdu_port_id());
+    set_msg_handler(pdu::pdu_port_id(),
+                    boost::bind(&pdu_remove_impl::handle_msg, this, _1));
+}
 
-    void
-    pdu_remove_impl::handle_msg(pmt::pmt_t pdu)
-    {
-      // add the field and publish
-      pmt::pmt_t meta = pmt::car(pdu);
-      if(pmt::is_null(meta)){
+void pdu_remove_impl::handle_msg(pmt::pmt_t pdu)
+{
+    // add the field and publish
+    pmt::pmt_t meta = pmt::car(pdu);
+    if (pmt::is_null(meta)) {
         meta = pmt::make_dict();
-        } else if(!pmt::is_dict(meta)){
+    } else if (!pmt::is_dict(meta)) {
         throw std::runtime_error("pdu_remove received non PDU input");
-        }
-      meta = pmt::dict_delete(meta, d_k);
-      message_port_pub(pdu::pdu_port_id(), pmt::cons(meta, pmt::cdr(pdu)));
     }
+    meta = pmt::dict_delete(meta, d_k);
+    message_port_pub(pdu::pdu_port_id(), pmt::cons(meta, pmt::cdr(pdu)));
+}
 
-  } /* namespace blocks */
-}/* namespace gr */
+} /* namespace blocks */
+} /* namespace gr */

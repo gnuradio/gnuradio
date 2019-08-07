@@ -27,26 +27,26 @@
 #include <gnuradio/blocks/keep_one_in_n.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class BLOCKS_API keep_one_in_n_impl : public keep_one_in_n
-    {
-      int   d_n;
-      int   d_count;
-      float d_decim_rate;
+class BLOCKS_API keep_one_in_n_impl : public keep_one_in_n
+{
+    int d_n;
+    int d_count;
+    float d_decim_rate;
 
-    public:
-      keep_one_in_n_impl(size_t itemsize,int n);
+public:
+    keep_one_in_n_impl(size_t itemsize, int n);
 
-      int general_work(int noutput_items,
-		       gr_vector_int &ninput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items);
+    int general_work(int noutput_items,
+                     gr_vector_int& ninput_items,
+                     gr_vector_const_void_star& input_items,
+                     gr_vector_void_star& output_items);
 
-      void set_n(int n);
-    };
+    void set_n(int n);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 

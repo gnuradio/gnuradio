@@ -28,8 +28,6 @@
 
 namespace gr {
 
-  msg_handler::~msg_handler()
-  {
-  }
+msg_handler::~msg_handler() {}
 
 } /* namespace gr */

@@ -26,20 +26,20 @@
 #include <gnuradio/vocoder/alaw_encode_sb.h>
 
 namespace gr {
-  namespace vocoder {
+namespace vocoder {
 
-    class alaw_encode_sb_impl : public alaw_encode_sb
-    {
-    public:
-      alaw_encode_sb_impl();
-      ~alaw_encode_sb_impl();
+class alaw_encode_sb_impl : public alaw_encode_sb
+{
+public:
+    alaw_encode_sb_impl();
+    ~alaw_encode_sb_impl();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace vocoder */
+} /* namespace vocoder */
 } /* namespace gr */
 
 #endif /* INCLUDED_VOCODER_ALAW_ENCODE_SB_IMPL_H */

@@ -26,27 +26,27 @@
 #include "atsc_types.h"
 
 namespace gr {
-  namespace dtv {
+namespace dtv {
 
-    class atsc_randomizer_impl : public atsc_randomizer
-    {
-    private:
-      atsc_randomize d_rand;
-      int d_segno;
-      bool d_field2;
+class atsc_randomizer_impl : public atsc_randomizer
+{
+private:
+    atsc_randomize d_rand;
+    int d_segno;
+    bool d_field2;
 
-      void reset(void);
+    void reset(void);
 
-    public:
-      atsc_randomizer_impl();
-      ~atsc_randomizer_impl();
+public:
+    atsc_randomizer_impl();
+    ~atsc_randomizer_impl();
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } // namespace dtv
+} // namespace dtv
 } // namespace gr
 
 #endif /* INCLUDED_DTV_ATSC_RANDOMIZER_IMPL_H */

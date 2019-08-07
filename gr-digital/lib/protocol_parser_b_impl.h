@@ -26,27 +26,27 @@
 #include <gnuradio/digital/protocol_parser_b.h>
 
 namespace gr {
-  namespace digital {
+namespace digital {
 
-    class protocol_parser_b_impl : public protocol_parser_b
-    {
-     private:
-      header_format_base::sptr d_format;
-      pmt::pmt_t d_out_port;
+class protocol_parser_b_impl : public protocol_parser_b
+{
+private:
+    header_format_base::sptr d_format;
+    pmt::pmt_t d_out_port;
 
-     public:
-      protocol_parser_b_impl(const header_format_base::sptr &format);
-      ~protocol_parser_b_impl();
+public:
+    protocol_parser_b_impl(const header_format_base::sptr& format);
+    ~protocol_parser_b_impl();
 
-      void set_threshold(unsigned int thresh);
-      unsigned int threshold() const;
+    void set_threshold(unsigned int thresh);
+    unsigned int threshold() const;
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } // namespace digital
+} // namespace digital
 } // namespace gr
 
 #endif /* INCLUDED_DIGITAL_PROTOCOL_PARSER_B_IMPL_H */

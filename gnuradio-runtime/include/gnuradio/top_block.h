@@ -28,26 +28,25 @@
 
 namespace gr {
 
-  class top_block_impl;
+class top_block_impl;
 
-  GR_RUNTIME_API top_block_sptr make_top_block(const std::string &name);
+GR_RUNTIME_API top_block_sptr make_top_block(const std::string& name);
 
-  /*!
-   *\brief Top-level hierarchical block representing a flowgraph
-   * \ingroup container_blk
-   */
-  class GR_RUNTIME_API top_block : public hier_block2
-  {
-  private:
-    friend GR_RUNTIME_API top_block_sptr
-      make_top_block(const std::string &name);
+/*!
+ *\brief Top-level hierarchical block representing a flowgraph
+ * \ingroup container_blk
+ */
+class GR_RUNTIME_API top_block : public hier_block2
+{
+private:
+    friend GR_RUNTIME_API top_block_sptr make_top_block(const std::string& name);
 
-    top_block_impl *d_impl;
+    top_block_impl* d_impl;
 
-  protected:
-    top_block(const std::string &name);
+protected:
+    top_block(const std::string& name);
 
-  public:
+public:
     ~top_block();
 
     /*!
@@ -60,7 +59,7 @@ namespace gr {
      * allowed for any block in the flowgraph. This passes through to
      * the start function; see that function for more details.
      */
-    void run(int max_noutput_items=100000000);
+    void run(int max_noutput_items = 100000000);
 
     /*!
      * Start the contained flowgraph. Creates one or more threads to
@@ -74,7 +73,7 @@ namespace gr {
      * maximum. Use this to adjust the maximum latency a flowgraph can
      * exhibit.
      */
-    void start(int max_noutput_items=100000000);
+    void start(int max_noutput_items = 100000000);
 
     /*!
      * Stop the running flowgraph. Notifies each thread created by the
@@ -141,12 +140,13 @@ namespace gr {
     top_block_sptr to_top_block(); // Needed for Python type coercion
 
     void setup_rpc();
-  };
+};
 
-  inline top_block_sptr cast_to_top_block_sptr(basic_block_sptr block) {
+inline top_block_sptr cast_to_top_block_sptr(basic_block_sptr block)
+{
     return boost::dynamic_pointer_cast<top_block, basic_block>(block);
-  }
+}
 
-} /* namespce gr */
+} // namespace gr
 
 #endif /* INCLUDED_GR_TOP_BLOCK_H */

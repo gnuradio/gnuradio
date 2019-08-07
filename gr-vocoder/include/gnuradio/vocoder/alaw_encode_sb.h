@@ -27,25 +27,25 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace vocoder {
+namespace vocoder {
+
+/*!
+ * \brief This block performs g.711 alaw audio encoding.
+ * \ingroup audio_blk
+ */
+class VOCODER_API alaw_encode_sb : virtual public sync_block
+{
+public:
+    // gr::vocoder::alaw_encode_sb::sptr
+    typedef boost::shared_ptr<alaw_encode_sb> sptr;
 
     /*!
-     * \brief This block performs g.711 alaw audio encoding.
-     * \ingroup audio_blk
+     * \brief Make alaw encoder block.
      */
-    class VOCODER_API alaw_encode_sb : virtual public sync_block
-    {
-    public:
-      // gr::vocoder::alaw_encode_sb::sptr
-      typedef boost::shared_ptr<alaw_encode_sb> sptr;
+    static sptr make();
+};
 
-      /*!
-       * \brief Make alaw encoder block.
-       */
-      static sptr make();
-    };
-
-  } /* namespace vocoder */
+} /* namespace vocoder */
 } /* namespace gr */
 
 #endif /* INCLUDED_VOCODER_ALAW_ENCODE_SB_H */

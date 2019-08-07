@@ -26,12 +26,11 @@
 #include <gnuradio/sincos.h>
 #include <gnuradio/types.h>
 
-static inline gr_complex
-gr_expj(float phase)
+static inline gr_complex gr_expj(float phase)
 {
-  float	t_imag, t_real;
-  gr::sincosf(phase, &t_imag, &t_real);
-  return gr_complex(t_real, t_imag);
+    float t_imag, t_real;
+    gr::sincosf(phase, &t_imag, &t_real);
+    return gr_complex(t_real, t_imag);
 }
 
 

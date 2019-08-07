@@ -27,27 +27,27 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief A source of zeros used mainly for testing.
+ * \ingroup misc_blk
+ */
+class BLOCKS_API null_source : virtual public sync_block
+{
+public:
+    // gr::blocks::null_source::sptr
+    typedef boost::shared_ptr<null_source> sptr;
 
     /*!
-     * \brief A source of zeros used mainly for testing.
-     * \ingroup misc_blk
+     * Build a null source block.
+     *
+     * \param sizeof_stream_item size of the stream items in bytes.
      */
-    class BLOCKS_API null_source : virtual public sync_block
-    {
-    public:
-      // gr::blocks::null_source::sptr
-      typedef boost::shared_ptr<null_source> sptr;
+    static sptr make(size_t sizeof_stream_item);
+};
 
-      /*!
-       * Build a null source block.
-       *
-       * \param sizeof_stream_item size of the stream items in bytes.
-       */
-      static sptr make(size_t sizeof_stream_item);
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_NULL_SOURCE_H */

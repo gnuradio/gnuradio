@@ -28,6 +28,6 @@
 /*!
  * convert array of floats to unsigned chars with rounding and saturation.
  */
-BLOCKS_API void float_array_to_uchar (const float *in, unsigned char *out, int nsamples);
+BLOCKS_API void float_array_to_uchar(const float* in, unsigned char* out, int nsamples);
 
 #endif /* INCLUDED_FLOAT_ARRAY_TO_UCHAR_H */

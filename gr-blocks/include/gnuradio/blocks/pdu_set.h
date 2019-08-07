@@ -27,28 +27,28 @@
 #include <gnuradio/block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief Set k=>v in pdu's meta field and pass on
+ * \ingroup message_tools_blk
+ * \ingroup debug_tools_blk
+ */
+class BLOCKS_API pdu_set : virtual public block
+{
+public:
+    // gr::blocks::pdu_set::sptr
+    typedef boost::shared_ptr<pdu_set> sptr;
 
     /*!
-     * \brief Set k=>v in pdu's meta field and pass on
-     * \ingroup message_tools_blk
-     * \ingroup debug_tools_blk
+     * \brief Construct a PDU meta set block
      */
-    class BLOCKS_API pdu_set : virtual public block
-    {
-    public:
-      // gr::blocks::pdu_set::sptr
-      typedef boost::shared_ptr<pdu_set> sptr;
+    static sptr make(pmt::pmt_t k, pmt::pmt_t v);
+    virtual void set_key(pmt::pmt_t key) = 0;
+    virtual void set_val(pmt::pmt_t val) = 0;
+};
 
-      /*!
-       * \brief Construct a PDU meta set block
-       */
-      static sptr make(pmt::pmt_t k, pmt::pmt_t v);
-      virtual void set_key(pmt::pmt_t key) = 0;
-      virtual void set_val(pmt::pmt_t val) = 0;
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_PDU_SET_H */

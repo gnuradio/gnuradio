@@ -28,35 +28,35 @@
 #include <gnuradio/io_signature.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    vector_to_stream::sptr vector_to_stream::make(size_t itemsize, size_t nitems_per_block)
-    {
-      return gnuradio::get_initial_sptr(new vector_to_stream_impl(itemsize, nitems_per_block));
-    }
+vector_to_stream::sptr vector_to_stream::make(size_t itemsize, size_t nitems_per_block)
+{
+    return gnuradio::get_initial_sptr(
+        new vector_to_stream_impl(itemsize, nitems_per_block));
+}
 
-    vector_to_stream_impl::vector_to_stream_impl(size_t itemsize, size_t nitems_per_block)
-      : sync_interpolator ("vector_to_stream",
-			      io_signature::make (1, 1, itemsize * nitems_per_block),
-			      io_signature::make (1, 1, itemsize),
-			      nitems_per_block)
-    {
-    }
+vector_to_stream_impl::vector_to_stream_impl(size_t itemsize, size_t nitems_per_block)
+    : sync_interpolator("vector_to_stream",
+                        io_signature::make(1, 1, itemsize * nitems_per_block),
+                        io_signature::make(1, 1, itemsize),
+                        nitems_per_block)
+{
+}
 
-    int
-    vector_to_stream_impl::work(int noutput_items,
-				gr_vector_const_void_star &input_items,
-				gr_vector_void_star &output_items)
-    {
-      size_t block_size = output_signature()->sizeof_stream_item (0);
+int vector_to_stream_impl::work(int noutput_items,
+                                gr_vector_const_void_star& input_items,
+                                gr_vector_void_star& output_items)
+{
+    size_t block_size = output_signature()->sizeof_stream_item(0);
 
-      const char *in = (const char *) input_items[0];
-      char *out = (char *) output_items[0];
+    const char* in = (const char*)input_items[0];
+    char* out = (char*)output_items[0];
 
-      memcpy (out, in, noutput_items * block_size);
+    memcpy(out, in, noutput_items * block_size);
 
-      return noutput_items;
-    }
+    return noutput_items;
+}
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */

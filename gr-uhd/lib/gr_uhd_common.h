@@ -29,25 +29,25 @@
 #include <stdexcept>
 
 namespace gr {
-  namespace uhd {
+namespace uhd {
 
-    static inline void check_abi(void)
-    {
+static inline void check_abi(void)
+{
 #ifdef UHD_VERSION_ABI_STRING
-      if(std::string(UHD_VERSION_ABI_STRING) == ::uhd::get_abi_string())
+    if (std::string(UHD_VERSION_ABI_STRING) == ::uhd::get_abi_string())
         return;
 
-      throw std::runtime_error(str(boost::format(
-        "\nGR-UHD detected ABI compatibility mismatch with UHD library.\n"
-        "GR-UHD was build against ABI: %s,\n"
-        "but UHD library reports ABI: %s\n"
-        "Suggestion: install an ABI compatible version of UHD,\n"
-        "or rebuild GR-UHD component against this ABI version.\n"
-      ) % UHD_VERSION_ABI_STRING % ::uhd::get_abi_string()));
+    throw std::runtime_error(str(
+        boost::format("\nGR-UHD detected ABI compatibility mismatch with UHD library.\n"
+                      "GR-UHD was build against ABI: %s,\n"
+                      "but UHD library reports ABI: %s\n"
+                      "Suggestion: install an ABI compatible version of UHD,\n"
+                      "or rebuild GR-UHD component against this ABI version.\n") %
+        UHD_VERSION_ABI_STRING % ::uhd::get_abi_string()));
 #endif
-    }
+}
 
-  } /* namespace uhd */
+} /* namespace uhd */
 } /* namespace gr */
 
 /*!
@@ -55,11 +55,10 @@ namespace gr {
  * We may extend this to handle more things in the future,
  * but ATM it ensures that the channels are initialized.
  */
-static inline uhd::stream_args_t stream_args_ensure(const uhd::stream_args_t &args)
+static inline uhd::stream_args_t stream_args_ensure(const uhd::stream_args_t& args)
 {
     uhd::stream_args_t sanitized = args;
-    if (sanitized.channels.empty())
-    {
+    if (sanitized.channels.empty()) {
         sanitized.channels.push_back(0);
     }
     return sanitized;

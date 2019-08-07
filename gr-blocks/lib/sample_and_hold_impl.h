@@ -27,24 +27,24 @@
 #include <gnuradio/blocks/sample_and_hold.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-template<class T>
-    class sample_and_hold_impl : public  sample_and_hold<T>
-    {
-    private:
-      T d_data;
+template <class T>
+class sample_and_hold_impl : public sample_and_hold<T>
+{
+private:
+    T d_data;
 
-    public:
-      sample_and_hold_impl ();
-      ~sample_and_hold_impl ();
+public:
+    sample_and_hold_impl();
+    ~sample_and_hold_impl();
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* SAMPLE_AND_HOLD_IMPL_H */

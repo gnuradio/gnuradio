@@ -28,11 +28,11 @@
 
 namespace gr {
 
-  /*!
-   * \brief If possible, enable high-priority "real time" scheduling.
-   * \ingroup misc
-   */
-  GR_RUNTIME_API rt_status_t enable_realtime_scheduling();
+/*!
+ * \brief If possible, enable high-priority "real time" scheduling.
+ * \ingroup misc
+ */
+GR_RUNTIME_API rt_status_t enable_realtime_scheduling();
 
 } /* namespace gr */
 

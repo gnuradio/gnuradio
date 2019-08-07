@@ -26,32 +26,32 @@
 #include <gnuradio/blocks/regenerate_bb.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class regenerate_bb_impl : public regenerate_bb
-    {
-    private:
-      int d_period;
-      int d_countdown;
-      unsigned int d_max_regen;
-      unsigned int d_regen_count;
+class regenerate_bb_impl : public regenerate_bb
+{
+private:
+    int d_period;
+    int d_countdown;
+    unsigned int d_max_regen;
+    unsigned int d_regen_count;
 
-    public:
-      regenerate_bb_impl(int period, unsigned int max_regen=500);
-      ~regenerate_bb_impl();
+public:
+    regenerate_bb_impl(int period, unsigned int max_regen = 500);
+    ~regenerate_bb_impl();
 
-      void set_max_regen(unsigned int regen);
-      void set_period(int period);
+    void set_max_regen(unsigned int regen);
+    void set_period(int period);
 
-      unsigned int max_regen() const { return d_max_regen; };
-      int period() const { return d_period; };
+    unsigned int max_regen() const { return d_max_regen; };
+    int period() const { return d_period; };
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_REGENERATE_BB_IMPL_H */

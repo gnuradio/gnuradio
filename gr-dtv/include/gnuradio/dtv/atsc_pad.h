@@ -25,25 +25,25 @@
 #include <gnuradio/sync_decimator.h>
 
 namespace gr {
-  namespace dtv {
+namespace dtv {
+
+/*!
+ * \brief <+description of block+>
+ * \ingroup dtv
+ *
+ */
+class DTV_API atsc_pad : virtual public gr::sync_decimator
+{
+public:
+    typedef boost::shared_ptr<atsc_pad> sptr;
 
     /*!
-     * \brief <+description of block+>
-     * \ingroup dtv
-     *
+     * \brief Return a shared_ptr to a new instance of dtv::atsc_pad.
      */
-    class DTV_API atsc_pad : virtual public gr::sync_decimator
-    {
-     public:
-      typedef boost::shared_ptr<atsc_pad> sptr;
+    static sptr make();
+};
 
-      /*!
-       * \brief Return a shared_ptr to a new instance of dtv::atsc_pad.
-       */
-      static sptr make();
-    };
-
-  } // namespace dtv
+} // namespace dtv
 } // namespace gr
 
 #endif /* INCLUDED_DTV_ATSC_PAD_H */

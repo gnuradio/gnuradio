@@ -31,7 +31,8 @@ namespace filter {
 namespace kernel {
 
 template <class IN_T, class OUT_T, class TAP_T>
-fir_filter<IN_T, OUT_T, TAP_T>::fir_filter(int decimation, const std::vector<TAP_T>& taps) {
+fir_filter<IN_T, OUT_T, TAP_T>::fir_filter(int decimation, const std::vector<TAP_T>& taps)
+{
     d_align = volk_get_alignment();
     d_naligned = std::max((size_t)1, d_align / sizeof(IN_T));
 
@@ -43,7 +44,8 @@ fir_filter<IN_T, OUT_T, TAP_T>::fir_filter(int decimation, const std::vector<TAP
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-fir_filter<IN_T, OUT_T, TAP_T>::~fir_filter() {
+fir_filter<IN_T, OUT_T, TAP_T>::~fir_filter()
+{
     // Free all aligned taps
     if (d_aligned_taps != NULL) {
         for (int i = 0; i < d_naligned; i++) {
@@ -58,7 +60,8 @@ fir_filter<IN_T, OUT_T, TAP_T>::~fir_filter() {
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-void fir_filter<IN_T, OUT_T, TAP_T>::set_taps(const std::vector<TAP_T>& taps) {
+void fir_filter<IN_T, OUT_T, TAP_T>::set_taps(const std::vector<TAP_T>& taps)
+{
     // Free the taps if already allocated
     if (d_aligned_taps != NULL) {
         for (int i = 0; i < d_naligned; i++) {
@@ -84,7 +87,8 @@ void fir_filter<IN_T, OUT_T, TAP_T>::set_taps(const std::vector<TAP_T>& taps) {
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-void fir_filter<IN_T, OUT_T, TAP_T>::update_tap(TAP_T t, unsigned int index) {
+void fir_filter<IN_T, OUT_T, TAP_T>::update_tap(TAP_T t, unsigned int index)
+{
     d_taps[index] = t;
     for (int i = 0; i < d_naligned; i++) {
         d_aligned_taps[i][i + index] = t;
@@ -92,29 +96,35 @@ void fir_filter<IN_T, OUT_T, TAP_T>::update_tap(TAP_T t, unsigned int index) {
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-std::vector<TAP_T> fir_filter<IN_T, OUT_T, TAP_T>::taps() const {
+std::vector<TAP_T> fir_filter<IN_T, OUT_T, TAP_T>::taps() const
+{
     std::vector<TAP_T> t = d_taps;
     std::reverse(t.begin(), t.end());
     return t;
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-unsigned int fir_filter<IN_T, OUT_T, TAP_T>::ntaps() const {
+unsigned int fir_filter<IN_T, OUT_T, TAP_T>::ntaps() const
+{
     return d_ntaps;
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-void fir_filter<IN_T, OUT_T, TAP_T>::filterN(OUT_T output[], const IN_T input[], unsigned long n) {
+void fir_filter<IN_T, OUT_T, TAP_T>::filterN(OUT_T output[],
+                                             const IN_T input[],
+                                             unsigned long n)
+{
     for (unsigned long i = 0; i < n; i++) {
         output[i] = filter(&input[i]);
     }
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-void fir_filter<IN_T,OUT_T,TAP_T>::filterNdec(OUT_T output[],
-                                const IN_T input[],
-                                unsigned long n,
-                                unsigned int decimate) {
+void fir_filter<IN_T, OUT_T, TAP_T>::filterNdec(OUT_T output[],
+                                                const IN_T input[],
+                                                unsigned long n,
+                                                unsigned int decimate)
+{
     unsigned long j = 0;
     for (unsigned long i = 0; i < n; i++) {
         output[i] = filter(&input[j]);
@@ -123,7 +133,8 @@ void fir_filter<IN_T,OUT_T,TAP_T>::filterNdec(OUT_T output[],
 }
 
 template <>
-float fir_filter<float, float, float>::filter(const float input[]) {
+float fir_filter<float, float, float>::filter(const float input[])
+{
     const float* ar = (float*)((size_t)input & ~(d_align - 1));
     unsigned al = input - ar;
 
@@ -132,7 +143,8 @@ float fir_filter<float, float, float>::filter(const float input[]) {
 }
 
 template <>
-gr_complex fir_filter<gr_complex, gr_complex, float>::filter(const gr_complex input[]) {
+gr_complex fir_filter<gr_complex, gr_complex, float>::filter(const gr_complex input[])
+{
     const gr_complex* ar = (gr_complex*)((size_t)input & ~(d_align - 1));
     unsigned al = input - ar;
 
@@ -141,7 +153,8 @@ gr_complex fir_filter<gr_complex, gr_complex, float>::filter(const gr_complex in
 }
 
 template <>
-gr_complex fir_filter<float, gr_complex, gr_complex>::filter(const float input[]) {
+gr_complex fir_filter<float, gr_complex, gr_complex>::filter(const float input[])
+{
     const float* ar = (float*)((size_t)input & ~(d_align - 1));
     unsigned al = input - ar;
 
@@ -150,7 +163,9 @@ gr_complex fir_filter<float, gr_complex, gr_complex>::filter(const float input[]
 }
 
 template <>
-gr_complex fir_filter<gr_complex, gr_complex, gr_complex>::filter(const gr_complex input[]) {
+gr_complex
+fir_filter<gr_complex, gr_complex, gr_complex>::filter(const gr_complex input[])
+{
     const gr_complex* ar = (gr_complex*)((size_t)input & ~(d_align - 1));
     unsigned al = input - ar;
 
@@ -159,7 +174,9 @@ gr_complex fir_filter<gr_complex, gr_complex, gr_complex>::filter(const gr_compl
 }
 
 template <>
-gr_complex fir_filter<std::int16_t, gr_complex, gr_complex>::filter(const std::int16_t input[]) {
+gr_complex
+fir_filter<std::int16_t, gr_complex, gr_complex>::filter(const std::int16_t input[])
+{
     const std::int16_t* ar = (std::int16_t*)((size_t)input & ~(d_align - 1));
     unsigned al = input - ar;
 
@@ -169,7 +186,8 @@ gr_complex fir_filter<std::int16_t, gr_complex, gr_complex>::filter(const std::i
 }
 
 template <>
-short fir_filter<float, std::int16_t, float>::filter(const float input[]) {
+short fir_filter<float, std::int16_t, float>::filter(const float input[])
+{
     const float* ar = (float*)((size_t)input & ~(d_align - 1));
     unsigned al = input - ar;
 
@@ -177,12 +195,12 @@ short fir_filter<float, std::int16_t, float>::filter(const float input[]) {
 
     return *d_output;
 }
-  template class fir_filter<float, float, float>;
-  template class fir_filter<gr_complex, gr_complex, float>;
-  template class fir_filter<float, gr_complex, gr_complex>;
-  template class fir_filter<gr_complex, gr_complex, gr_complex>;
-  template class fir_filter<std::int16_t, gr_complex, gr_complex>;
-  template class fir_filter<float, std::int16_t, float>;
+template class fir_filter<float, float, float>;
+template class fir_filter<gr_complex, gr_complex, float>;
+template class fir_filter<float, gr_complex, gr_complex>;
+template class fir_filter<gr_complex, gr_complex, gr_complex>;
+template class fir_filter<std::int16_t, gr_complex, gr_complex>;
+template class fir_filter<float, std::int16_t, float>;
 } /* namespace kernel */
 } /* namespace filter */
 } /* namespace gr */

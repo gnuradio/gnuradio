@@ -36,56 +36,56 @@
 
 namespace gr {
 
-  /*!
-   * \brief The abstract base class for all 'terminal' processing blocks.
-   * \ingroup base_blk
-   *
-   * A signal processing flow is constructed by creating a tree of
-   * hierarchical blocks, which at any level may also contain terminal
-   * nodes that actually implement signal processing functions. This
-   * is the base class for all such leaf nodes.
-   *
-   * Blocks have a set of input streams and output streams.  The
-   * input_signature and output_signature define the number of input
-   * streams and output streams respectively, and the type of the data
-   * items in each stream.
-   *
-   * Blocks report the number of items consumed on each input in
-   * general_work(), using consume() or consume_each().
-   *
-   * If the same number of items is produced on each output, the block
-   * returns that number from general_work(). Otherwise, the block
-   * calls produce() for each output, then returns
-   * WORK_CALLED_PRODUCE. The input and output rates are not required
-   * to be related.
-   *
-   * User derived blocks override two methods, forecast and
-   * general_work, to implement their signal processing
-   * behavior. forecast is called by the system scheduler to determine
-   * how many items are required on each input stream in order to
-   * produce a given number of output items.
-   *
-   * general_work is called to perform the signal processing in the
-   * block.  It reads the input items and writes the output items.
-   */
-  class GR_RUNTIME_API block : public basic_block
-  {
-  public:
-
+/*!
+ * \brief The abstract base class for all 'terminal' processing blocks.
+ * \ingroup base_blk
+ *
+ * A signal processing flow is constructed by creating a tree of
+ * hierarchical blocks, which at any level may also contain terminal
+ * nodes that actually implement signal processing functions. This
+ * is the base class for all such leaf nodes.
+ *
+ * Blocks have a set of input streams and output streams.  The
+ * input_signature and output_signature define the number of input
+ * streams and output streams respectively, and the type of the data
+ * items in each stream.
+ *
+ * Blocks report the number of items consumed on each input in
+ * general_work(), using consume() or consume_each().
+ *
+ * If the same number of items is produced on each output, the block
+ * returns that number from general_work(). Otherwise, the block
+ * calls produce() for each output, then returns
+ * WORK_CALLED_PRODUCE. The input and output rates are not required
+ * to be related.
+ *
+ * User derived blocks override two methods, forecast and
+ * general_work, to implement their signal processing
+ * behavior. forecast is called by the system scheduler to determine
+ * how many items are required on each input stream in order to
+ * produce a given number of output items.
+ *
+ * general_work is called to perform the signal processing in the
+ * block.  It reads the input items and writes the output items.
+ */
+class GR_RUNTIME_API block : public basic_block
+{
+public:
     //! Magic return values from general_work
-    enum {
-      WORK_CALLED_PRODUCE = -2,
-      WORK_DONE = -1
-    };
+    enum { WORK_CALLED_PRODUCE = -2, WORK_DONE = -1 };
 
     /*!
      * \brief enum to represent different tag propagation policies.
      */
     enum tag_propagation_policy_t {
-      TPP_DONT = 0, /*!< Scheduler doesn't propagate tags from in- to output. The block itself is free to insert tags as it wants. */
-      TPP_ALL_TO_ALL = 1, /*!< Propagate tags from all in- to all outputs. The scheduler takes care of that. */
-      TPP_ONE_TO_ONE = 2, /*!< Propagate tags from n. input to n. output. Requires same number of in- and outputs */
-      TPP_CUSTOM = 3 /*!< Like TPP_DONT, but signals the block it should implement application-specific forwarding behaviour. */
+        TPP_DONT = 0, /*!< Scheduler doesn't propagate tags from in- to output. The block
+                         itself is free to insert tags as it wants. */
+        TPP_ALL_TO_ALL = 1, /*!< Propagate tags from all in- to all outputs. The scheduler
+                               takes care of that. */
+        TPP_ONE_TO_ONE = 2, /*!< Propagate tags from n. input to n. output. Requires same
+                               number of in- and outputs */
+        TPP_CUSTOM = 3      /*!< Like TPP_DONT, but signals the block it should implement
+                               application-specific forwarding behaviour. */
     };
 
     virtual ~block();
@@ -100,7 +100,7 @@ namespace gr {
      * initialized with zeroes.
      */
     unsigned history() const;
-    void  set_history(unsigned history);
+    void set_history(unsigned history);
 
     /*!
      * Declares the block's delay in samples. Since the delay of
@@ -160,16 +160,17 @@ namespace gr {
      * number of data items required on each input stream.  The
      * estimate doesn't have to be exact, but should be close.
      */
-    virtual void forecast(int noutput_items,
-                          gr_vector_int &ninput_items_required);
+    virtual void forecast(int noutput_items, gr_vector_int& ninput_items_required);
 
     /*!
      * \brief compute output items from input items
      *
      * \param noutput_items	number of output items to write on each output stream
      * \param ninput_items	number of input items available on each input stream
-     * \param input_items	vector of pointers to the input items, one entry per input stream
-     * \param output_items	vector of pointers to the output items, one entry per output stream
+     * \param input_items	vector of pointers to the input items, one entry per input
+     * stream
+     * \param output_items	vector of pointers to the output items, one entry per output
+     * stream
      *
      * \returns number of items actually written to each output stream
      * or WORK_CALLED_PRODUCE or WORK_DONE.  It is OK to return a
@@ -185,9 +186,9 @@ namespace gr {
      * many items were consumed on each input stream.
      */
     virtual int general_work(int noutput_items,
-                             gr_vector_int &ninput_items,
-                             gr_vector_const_void_star &input_items,
-                             gr_vector_void_star &output_items);
+                             gr_vector_int& ninput_items,
+                             gr_vector_const_void_star& input_items,
+                             gr_vector_void_star& output_items);
 
     /*!
      * \brief Called to enable drivers, etc for i/o devices.
@@ -215,7 +216,7 @@ namespace gr {
      * output multiple is 1.
      */
     void set_output_multiple(int multiple);
-    int  output_multiple() const { return d_output_multiple; }
+    int output_multiple() const { return d_output_multiple; }
     bool output_multiple_set() const { return d_output_multiple_set; }
 
     /*!
@@ -236,10 +237,10 @@ namespace gr {
      * aligned calls can be performed again.
      */
     void set_alignment(int multiple);
-    int  alignment() const { return d_output_multiple; }
+    int alignment() const { return d_output_multiple; }
 
     void set_unaligned(int na);
-    int  unaligned() const { return d_unaligned; }
+    int unaligned() const { return d_unaligned; }
     void set_is_unaligned(bool u);
     bool is_unaligned() const { return d_is_unaligned; }
 
@@ -316,21 +317,25 @@ namespace gr {
      * \brief return the numerator, or interpolation rate, of the
      * approximate output rate / input rate
      */
-    uint64_t relative_rate_i() const {
-      return (uint64_t) d_mp_relative_rate.get_num().get_ui(); }
+    uint64_t relative_rate_i() const
+    {
+        return (uint64_t)d_mp_relative_rate.get_num().get_ui();
+    }
 
     /*!
      * \brief return the denominator, or decimation rate, of the
      * approximate output rate / input rate
      */
-    uint64_t relative_rate_d() const {
-      return (uint64_t) d_mp_relative_rate.get_den().get_ui(); }
+    uint64_t relative_rate_d() const
+    {
+        return (uint64_t)d_mp_relative_rate.get_den().get_ui();
+    }
 
     /*!
      * \brief return a reference to the multiple precision rational
      * represntation of the approximate output rate / input rate
      */
-    mpq_class &mp_relative_rate() { return d_mp_relative_rate; }
+    mpq_class& mp_relative_rate() { return d_mp_relative_rate; }
 
     /*
      * The following two methods provide special case info to the
@@ -347,9 +352,9 @@ namespace gr {
     virtual int fixed_rate_ninput_to_noutput(int ninput);
 
     /*!
-     * \brief Given noutput samples, return number of input samples required to produce noutput.
-     * N.B. this is only defined if fixed_rate returns true.
-     * Generally speaking, you don't need to override this.
+     * \brief Given noutput samples, return number of input samples required to produce
+     * noutput. N.B. this is only defined if fixed_rate returns true. Generally speaking,
+     * you don't need to override this.
      */
     virtual int fixed_rate_noutput_to_ninput(int noutput);
 
@@ -670,7 +675,7 @@ namespace gr {
      *
      * \param mask a vector of ints of the core numbers available to this block.
      */
-    void set_processor_affinity(const std::vector<int> &mask);
+    void set_processor_affinity(const std::vector<int>& mask);
 
     /*!
      * \brief Remove processor affinity to a specific core.
@@ -701,8 +706,8 @@ namespace gr {
 
     // ----------------------------------------------------------------------------
 
-	/*!
-	 * \brief the system message handler
+    /*!
+     * \brief the system message handler
      */
     void system_handler(pmt::pmt_t msg);
 
@@ -730,35 +735,36 @@ namespace gr {
      */
     std::string log_level();
 
-	/*!
+    /*!
      * \brief returns true when execution has completed due to a message connection
-    */
+     */
     bool finished();
 
-  private:
-    int                   d_output_multiple;
-    bool                  d_output_multiple_set;
-    int                   d_unaligned;
-    bool                  d_is_unaligned;
-    double                d_relative_rate;	// approx output_rate / input_rate
-    mpq_class             d_mp_relative_rate;
-    block_detail_sptr     d_detail;		// implementation details
-    unsigned              d_history;
-    unsigned              d_attr_delay;         // the block's sample delay
-    bool                  d_fixed_rate;
-    bool                  d_max_noutput_items_set;     // if d_max_noutput_items is valid
-    int                   d_max_noutput_items;         // value of max_noutput_items for this block
-    int                   d_min_noutput_items;
-    tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream
-    std::vector<int>      d_affinity;              // thread affinity proc. mask
-    int                   d_priority;              // thread priority level
-    bool                  d_pc_rpc_set;
-    bool                  d_update_rate;           // should sched update rel rate?
+private:
+    int d_output_multiple;
+    bool d_output_multiple_set;
+    int d_unaligned;
+    bool d_is_unaligned;
+    double d_relative_rate; // approx output_rate / input_rate
+    mpq_class d_mp_relative_rate;
+    block_detail_sptr d_detail; // implementation details
+    unsigned d_history;
+    unsigned d_attr_delay; // the block's sample delay
+    bool d_fixed_rate;
+    bool d_max_noutput_items_set; // if d_max_noutput_items is valid
+    int d_max_noutput_items;      // value of max_noutput_items for this block
+    int d_min_noutput_items;
+    tag_propagation_policy_t
+        d_tag_propagation_policy; // policy for moving tags downstream
+    std::vector<int> d_affinity;  // thread affinity proc. mask
+    int d_priority;               // thread priority level
+    bool d_pc_rpc_set;
+    bool d_update_rate; // should sched update rel rate?
     bool d_finished;    // true if msg ports think we are finished
 
-  protected:
+protected:
     block(void) {} // allows pure virtual interface sub-classes
-    block(const std::string &name,
+    block(const std::string& name,
           gr::io_signature::sptr input_signature,
           gr::io_signature::sptr output_signature);
 
@@ -776,16 +782,16 @@ namespace gr {
      */
     inline void add_item_tag(unsigned int which_output,
                              uint64_t abs_offset,
-                             const pmt::pmt_t &key,
-                             const pmt::pmt_t &value,
-                             const pmt::pmt_t &srcid=pmt::PMT_F)
+                             const pmt::pmt_t& key,
+                             const pmt::pmt_t& value,
+                             const pmt::pmt_t& srcid = pmt::PMT_F)
     {
-      tag_t tag;
-      tag.offset = abs_offset;
-      tag.key = key;
-      tag.value = value;
-      tag.srcid = srcid;
-      this->add_item_tag(which_output, tag);
+        tag_t tag;
+        tag.offset = abs_offset;
+        tag.key = key;
+        tag.value = value;
+        tag.srcid = srcid;
+        this->add_item_tag(which_output, tag);
     }
 
     /*!
@@ -794,7 +800,7 @@ namespace gr {
      * \param which_output an integer of which output stream to attach the tag
      * \param tag the tag object to add
      */
-    void add_item_tag(unsigned int which_output, const tag_t &tag);
+    void add_item_tag(unsigned int which_output, const tag_t& tag);
 
     /*!
      * \brief DEPRECATED. Will be removed in 3.8.
@@ -810,16 +816,16 @@ namespace gr {
      */
     inline void remove_item_tag(unsigned int which_input,
                                 uint64_t abs_offset,
-                                const pmt::pmt_t &key,
-                                const pmt::pmt_t &value,
-                                const pmt::pmt_t &srcid=pmt::PMT_F)
+                                const pmt::pmt_t& key,
+                                const pmt::pmt_t& value,
+                                const pmt::pmt_t& srcid = pmt::PMT_F)
     {
-      tag_t tag;
-      tag.offset = abs_offset;
-      tag.key = key;
-      tag.value = value;
-      tag.srcid = srcid;
-      this->remove_item_tag(which_input, tag);
+        tag_t tag;
+        tag.offset = abs_offset;
+        tag.key = key;
+        tag.value = value;
+        tag.srcid = srcid;
+        this->remove_item_tag(which_input, tag);
     }
 
     /*!
@@ -828,7 +834,7 @@ namespace gr {
      * \param which_input an integer of which input stream to remove the tag from
      * \param tag the tag object to remove
      */
-    void remove_item_tag(unsigned int which_input, const tag_t &tag);
+    void remove_item_tag(unsigned int which_input, const tag_t& tag);
 
     /*!
      * \brief Given a [start,end), returns a vector of all tags in the range.
@@ -843,7 +849,7 @@ namespace gr {
      * \param abs_start    a uint64 count of the start of the range of interest
      * \param abs_end      a uint64 count of the end of the range of interest
      */
-    void get_tags_in_range(std::vector<tag_t> &v,
+    void get_tags_in_range(std::vector<tag_t>& v,
                            unsigned int which_input,
                            uint64_t abs_start,
                            uint64_t abs_end);
@@ -863,11 +869,11 @@ namespace gr {
      * \param abs_end      a uint64 count of the end of the range of interest
      * \param key          a PMT symbol key to filter only tags of this key
      */
-    void get_tags_in_range(std::vector<tag_t> &v,
+    void get_tags_in_range(std::vector<tag_t>& v,
                            unsigned int which_input,
                            uint64_t abs_start,
                            uint64_t abs_end,
-                           const pmt::pmt_t &key);
+                           const pmt::pmt_t& key);
 
     /*!
      * \brief Gets all tags within the relative window of the current call to work.
@@ -890,7 +896,7 @@ namespace gr {
      * \param rel_start    a uint64 count of the start of the range of interest
      * \param rel_end      a uint64 count of the end of the range of interest
      */
-    void get_tags_in_window(std::vector<tag_t> &v,
+    void get_tags_in_window(std::vector<tag_t>& v,
                             unsigned int which_input,
                             uint64_t rel_start,
                             uint64_t rel_end);
@@ -907,11 +913,11 @@ namespace gr {
      * \param rel_end      a uint64 count of the end of the range of interest
      * \param key          a PMT symbol key to filter only tags of this key
      */
-    void get_tags_in_window(std::vector<tag_t> &v,
+    void get_tags_in_window(std::vector<tag_t>& v,
                             unsigned int which_input,
                             uint64_t rel_start,
                             uint64_t rel_end,
-                            const pmt::pmt_t &key);
+                            const pmt::pmt_t& key);
 
     void enable_update_rate(bool en);
 
@@ -941,32 +947,30 @@ namespace gr {
      */
     const pmt::pmt_t d_system_port;
 
-  public:
+public:
     block_detail_sptr detail() const { return d_detail; }
     void set_detail(block_detail_sptr detail) { d_detail = detail; }
 
-   /*! \brief Tell msg neighbors we are finished
-	*/
-   void notify_msg_neighbors();
+    /*! \brief Tell msg neighbors we are finished
+     */
+    void notify_msg_neighbors();
 
-   /*! \brief Make sure we don't think we are finished
-	*/
-   void clear_finished(){ d_finished = false; }
+    /*! \brief Make sure we don't think we are finished
+     */
+    void clear_finished() { d_finished = false; }
 
-   std::string identifier() const;
+    std::string identifier() const;
+};
 
-  };
+typedef std::vector<block_sptr> block_vector_t;
+typedef std::vector<block_sptr>::iterator block_viter_t;
 
-  typedef std::vector<block_sptr> block_vector_t;
-  typedef std::vector<block_sptr>::iterator block_viter_t;
-
-  inline block_sptr cast_to_block_sptr(basic_block_sptr p)
-  {
+inline block_sptr cast_to_block_sptr(basic_block_sptr p)
+{
     return boost::dynamic_pointer_cast<block, basic_block>(p);
-  }
+}
 
-  GR_RUNTIME_API std::ostream&
-  operator << (std::ostream& os, const block *m);
+GR_RUNTIME_API std::ostream& operator<<(std::ostream& os, const block* m);
 
 } /* namespace gr */
 

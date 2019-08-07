@@ -28,29 +28,32 @@
 #include <boost/generator_iterator.hpp>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class random_pdu_impl : public random_pdu
-    {
-    private:
-      boost::mt19937 d_rng;
-      boost::uniform_int<> d_urange;
-      boost::uniform_int<> d_brange;
-      boost::variate_generator< boost::mt19937, boost::uniform_int<> > d_rvar; // pdu length
-      boost::variate_generator< boost::mt19937, boost::uniform_int<> > d_bvar; // pdu contents
-      unsigned char d_mask;
-      int d_length_modulo;
+class random_pdu_impl : public random_pdu
+{
+private:
+    boost::mt19937 d_rng;
+    boost::uniform_int<> d_urange;
+    boost::uniform_int<> d_brange;
+    boost::variate_generator<boost::mt19937, boost::uniform_int<>> d_rvar; // pdu length
+    boost::variate_generator<boost::mt19937, boost::uniform_int<>> d_bvar; // pdu contents
+    unsigned char d_mask;
+    int d_length_modulo;
 
-    public:
-      random_pdu_impl(int min_items, int max_items, unsigned char byte_mask, int length_modulo);
+public:
+    random_pdu_impl(int min_items,
+                    int max_items,
+                    unsigned char byte_mask,
+                    int length_modulo);
 
-      bool start();
-      void output_random();
-      void generate_pdu(pmt::pmt_t msg) { output_random(); }
-      void generate_pdu() { output_random(); }
-    };
+    bool start();
+    void output_random();
+    void generate_pdu(pmt::pmt_t msg) { output_random(); }
+    void generate_pdu() { output_random(); }
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_RANDOM_PDU_IMPL_H */

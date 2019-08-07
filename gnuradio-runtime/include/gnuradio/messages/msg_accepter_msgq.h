@@ -27,27 +27,27 @@
 #include <gnuradio/messages/msg_queue.h>
 
 namespace gr {
-  namespace messages {
+namespace messages {
 
-    /*!
-     * \brief Concrete class that accepts messages and inserts them
-     * into a message queue.
-     */
-    class GR_RUNTIME_API msg_accepter_msgq : public msg_accepter
-    {
-    protected:
-      msg_queue_sptr d_msg_queue;
+/*!
+ * \brief Concrete class that accepts messages and inserts them
+ * into a message queue.
+ */
+class GR_RUNTIME_API msg_accepter_msgq : public msg_accepter
+{
+protected:
+    msg_queue_sptr d_msg_queue;
 
-    public:
-      msg_accepter_msgq(msg_queue_sptr msgq);
-      ~msg_accepter_msgq();
+public:
+    msg_accepter_msgq(msg_queue_sptr msgq);
+    ~msg_accepter_msgq();
 
-      virtual void post(pmt::pmt_t msg);
+    virtual void post(pmt::pmt_t msg);
 
-      msg_queue_sptr msg_queue() const { return d_msg_queue; }
-    };
+    msg_queue_sptr msg_queue() const { return d_msg_queue; }
+};
 
-  } /* namespace messages */
+} /* namespace messages */
 } /* namespace gr */
 
 #endif /* INCLUDED_MSG_ACCEPTER_MSGQ_H */

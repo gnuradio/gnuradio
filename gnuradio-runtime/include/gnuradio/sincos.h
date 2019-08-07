@@ -27,9 +27,9 @@
 
 namespace gr {
 
-  // compute sine and cosine at the same time
-  GR_RUNTIME_API void sincos (double x, double *sin, double *cos);
-  GR_RUNTIME_API void sincosf (float x, float *sin, float *cos);
-}
+// compute sine and cosine at the same time
+GR_RUNTIME_API void sincos(double x, double* sin, double* cos);
+GR_RUNTIME_API void sincosf(float x, float* sin, float* cos);
+} // namespace gr
 
 #endif /* INCLUDED_GR_SINCOS_H */

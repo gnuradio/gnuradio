@@ -29,21 +29,26 @@
 #include "base_impl.h"
 
 namespace gr {
-  namespace zeromq {
+namespace zeromq {
 
-    class push_sink_impl : public push_sink, public base_sink_impl
-    {
-    public:
-      push_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
+class push_sink_impl : public push_sink, public base_sink_impl
+{
+public:
+    push_sink_impl(size_t itemsize,
+                   size_t vlen,
+                   char* address,
+                   int timeout,
+                   bool pass_tags,
+                   int hwm);
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-      std::string last_endpoint() override {return base_sink_impl::last_endpoint();}
-    };
+    std::string last_endpoint() override { return base_sink_impl::last_endpoint(); }
+};
 
-  } // namespace zeromq
+} // namespace zeromq
 } // namespace gr
 
 #endif /* INCLUDED_ZEROMQ_ZMQ_PUSH_SINK_IMPL_H */

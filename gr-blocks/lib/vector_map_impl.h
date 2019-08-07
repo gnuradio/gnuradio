@@ -27,29 +27,30 @@
 #include <gnuradio/thread/thread.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class vector_map_impl : public vector_map
-    {
-    private:
-      size_t d_item_size;
-      std::vector<size_t> d_in_vlens;
-      std::vector< std::vector< std::vector<size_t> > > d_mapping;
-      gr::thread::mutex d_mutex; // mutex to protect set/work access
+class vector_map_impl : public vector_map
+{
+private:
+    size_t d_item_size;
+    std::vector<size_t> d_in_vlens;
+    std::vector<std::vector<std::vector<size_t>>> d_mapping;
+    gr::thread::mutex d_mutex; // mutex to protect set/work access
 
-    public:
-      vector_map_impl(size_t item_size, std::vector<size_t> in_vlens,
-                      std::vector< std::vector< std::vector<size_t> > > mapping);
-      ~vector_map_impl();
+public:
+    vector_map_impl(size_t item_size,
+                    std::vector<size_t> in_vlens,
+                    std::vector<std::vector<std::vector<size_t>>> mapping);
+    ~vector_map_impl();
 
-      void set_mapping(std::vector< std::vector< std::vector<size_t> > > mapping);
+    void set_mapping(std::vector<std::vector<std::vector<size_t>>> mapping);
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_VECTOR_MAP_IMPL_H */

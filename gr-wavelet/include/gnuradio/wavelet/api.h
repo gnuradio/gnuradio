@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_wavelet_EXPORTS
-#  define WAVELET_API __GR_ATTR_EXPORT
+#define WAVELET_API __GR_ATTR_EXPORT
 #else
-#  define WAVELET_API __GR_ATTR_IMPORT
+#define WAVELET_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_WAVELET_API_H */

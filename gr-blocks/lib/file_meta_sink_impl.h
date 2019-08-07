@@ -29,68 +29,63 @@
 using namespace pmt;
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class file_meta_sink_impl : public file_meta_sink
-    {
-    private:
-      enum meta_state_t {
-	STATE_INLINE=0,
-	STATE_DETACHED
-      };
+class file_meta_sink_impl : public file_meta_sink
+{
+private:
+    enum meta_state_t { STATE_INLINE = 0, STATE_DETACHED };
 
-      size_t d_itemsize;
-      double d_samp_rate;
-      double d_relative_rate;
-      size_t d_max_seg_size;
-      size_t d_total_seg_size;
-      pmt_t d_header;
-      pmt_t d_extra;
-      size_t d_extra_size;
-      bool d_updated;
-      bool d_unbuffered;
+    size_t d_itemsize;
+    double d_samp_rate;
+    double d_relative_rate;
+    size_t d_max_seg_size;
+    size_t d_total_seg_size;
+    pmt_t d_header;
+    pmt_t d_extra;
+    size_t d_extra_size;
+    bool d_updated;
+    bool d_unbuffered;
 
-      FILE *d_new_fp, *d_new_hdr_fp;
-      FILE *d_fp, *d_hdr_fp;
-      meta_state_t d_state;
+    FILE *d_new_fp, *d_new_hdr_fp;
+    FILE *d_fp, *d_hdr_fp;
+    meta_state_t d_state;
 
-    protected:
-      void write_header(FILE *fp, pmt_t header, pmt_t extra);
-      void update_header(pmt_t key, pmt_t value);
-      void update_last_header();
-      void update_last_header_inline();
-      void update_last_header_detached();
-      void write_and_update();
-      void update_rx_time();
+protected:
+    void write_header(FILE* fp, pmt_t header, pmt_t extra);
+    void update_header(pmt_t key, pmt_t value);
+    void update_last_header();
+    void update_last_header_inline();
+    void update_last_header_detached();
+    void write_and_update();
+    void update_rx_time();
 
-      bool _open(FILE **fp, const char *filename);
+    bool _open(FILE** fp, const char* filename);
 
-    public:
-            file_meta_sink_impl(size_t itemsize, const std::string &filename,
-                                double samp_rate=1,
-                                double relative_rate=1,
-                                gr_file_types type=GR_FILE_FLOAT,
-                                bool complex=true,
-                                size_t max_segment_size=1000000,
-                                pmt::pmt_t extra_dict=pmt::make_dict(),
-                                bool detached_header=false);
-      ~file_meta_sink_impl();
+public:
+    file_meta_sink_impl(size_t itemsize,
+                        const std::string& filename,
+                        double samp_rate = 1,
+                        double relative_rate = 1,
+                        gr_file_types type = GR_FILE_FLOAT,
+                        bool complex = true,
+                        size_t max_segment_size = 1000000,
+                        pmt::pmt_t extra_dict = pmt::make_dict(),
+                        bool detached_header = false);
+    ~file_meta_sink_impl();
 
-      bool open(const std::string &filename);
-      void close();
-      void do_update();
+    bool open(const std::string& filename);
+    void close();
+    void do_update();
 
-      void set_unbuffered(bool unbuffered)
-      {
-	d_unbuffered = unbuffered;
-      }
+    void set_unbuffered(bool unbuffered) { d_unbuffered = unbuffered; }
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_FILE_META_SINK_IMPL_H */

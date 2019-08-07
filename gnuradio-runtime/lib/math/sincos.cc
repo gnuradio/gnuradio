@@ -25,7 +25,7 @@
 #endif
 
 #ifndef _GNU_SOURCE
-#define _GNU_SOURCE		// ask for GNU extensions if available
+#define _GNU_SOURCE // ask for GNU extensions if available
 #endif
 
 #include <gnuradio/sincos.h>
@@ -33,52 +33,41 @@
 
 namespace gr {
 
-#if defined (HAVE_SINCOS)
+#if defined(HAVE_SINCOS)
 
-  void
-  sincos(double x, double *sinx, double *cosx)
-  {
-    ::sincos(x, sinx, cosx);
-  }
+void sincos(double x, double* sinx, double* cosx) { ::sincos(x, sinx, cosx); }
 
 #else
 
-  void
-  sincos(double x, double *sinx, double *cosx)
-  {
+void sincos(double x, double* sinx, double* cosx)
+{
     *sinx = ::sin(x);
     *cosx = ::cos(x);
-  }
+}
 
 #endif
 
-  // ----------------------------------------------------------------
+// ----------------------------------------------------------------
 
-#if defined (HAVE_SINCOSF)
+#if defined(HAVE_SINCOSF)
 
-  void
-  sincosf(float x, float *sinx, float *cosx)
-  {
-    ::sincosf(x, sinx, cosx);
-  }
+void sincosf(float x, float* sinx, float* cosx) { ::sincosf(x, sinx, cosx); }
 
-#elif defined (HAVE_SINF) && defined (HAVE_COSF)
+#elif defined(HAVE_SINF) && defined(HAVE_COSF)
 
-  void
-  sincosf(float x, float *sinx, float *cosx)
-  {
+void sincosf(float x, float* sinx, float* cosx)
+{
     *sinx = ::sinf(x);
     *cosx = ::cosf(x);
-  }
+}
 
 #else
 
-  void
-  sincosf(float x, float *sinx, float *cosx)
-  {
+void sincosf(float x, float* sinx, float* cosx)
+{
     *sinx = ::sin(x);
     *cosx = ::cos(x);
-  }
+}
 
 #endif
 

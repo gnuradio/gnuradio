@@ -30,41 +30,26 @@
 #include <gnuradio/math.h>
 
 namespace gr {
-  namespace digital {
+namespace digital {
 
-    header_format_base::header_format_base()
-    {
-      enter_search();
-      configure_default_loggers(d_logger, d_debug_logger, "packet formatter");
-    }
+header_format_base::header_format_base()
+{
+    enter_search();
+    configure_default_loggers(d_logger, d_debug_logger, "packet formatter");
+}
 
-    header_format_base::~header_format_base()
-    {
-    }
+header_format_base::~header_format_base() {}
 
-    size_t
-    header_format_base::header_nbytes() const
-    {
-      return header_nbits() / 8;
-    }
+size_t header_format_base::header_nbytes() const { return header_nbits() / 8; }
 
-    inline void
-    header_format_base::enter_search()
-    {
-      d_state = STATE_SYNC_SEARCH;
-    }
+inline void header_format_base::enter_search() { d_state = STATE_SYNC_SEARCH; }
 
-    inline void
-    header_format_base::enter_have_sync()
-    {
-      d_state = STATE_HAVE_SYNC;
-    }
+inline void header_format_base::enter_have_sync() { d_state = STATE_HAVE_SYNC; }
 
-    inline void
-    header_format_base::enter_have_header(int payload_len)
-    {
-      d_state = STATE_SYNC_SEARCH;
-    }
+inline void header_format_base::enter_have_header(int payload_len)
+{
+    d_state = STATE_SYNC_SEARCH;
+}
 
-  } /* namespace digital */
+} /* namespace digital */
 } /* namespace gr */
