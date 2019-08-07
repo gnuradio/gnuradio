@@ -27,23 +27,22 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    /*!
-     * \brief output = complex conjugate of input
-     * \ingroup math_operators_blk
-     */
-    class BLOCKS_API conjugate_cc : virtual public sync_block
-    {
-    public:
+/*!
+ * \brief output = complex conjugate of input
+ * \ingroup math_operators_blk
+ */
+class BLOCKS_API conjugate_cc : virtual public sync_block
+{
+public:
+    // gr::blocks::conjugate_cc_ff::sptr
+    typedef boost::shared_ptr<conjugate_cc> sptr;
 
-      // gr::blocks::conjugate_cc_ff::sptr
-      typedef boost::shared_ptr<conjugate_cc> sptr;
+    static sptr make();
+};
 
-      static sptr make();
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_CONJUGATE_CC_H */

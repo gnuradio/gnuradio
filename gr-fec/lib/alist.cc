@@ -22,49 +22,40 @@
 
 #include <gnuradio/fec/alist.h>
 
-alist::alist(const char * fname)
-    : data_ok(false) {
-    read(fname);
-}
+alist::alist(const char* fname) : data_ok(false) { read(fname); }
 
-std::vector<std::vector<char> > alist::get_matrix() {
-    std::vector<std::vector<char> > mat;
+std::vector<std::vector<char>> alist::get_matrix()
+{
+    std::vector<std::vector<char>> mat;
     mat.resize(M);
-    for ( int i = 0; i < M; i++ ) {
+    for (int i = 0; i < M; i++) {
         mat[i].resize(N);
-        for ( int j = 0; j < N; j++ ) {
+        for (int j = 0; j < N; j++) {
             mat[i][j] = char(0);
         }
-        for ( int k = 0; k < num_mlist[i]; k++ ) {
+        for (int k = 0; k < num_mlist[i]; k++) {
             mat[i][mlist[i][k] - 1] = char(1);
         }
     }
     return mat;
 }
 
-std::vector< std::vector<int> > alist::get_mlist() {
-    return mlist;
-}
+std::vector<std::vector<int>> alist::get_mlist() { return mlist; }
 
-std::vector< std::vector<int> > alist::get_nlist() {
-    return nlist;
-}
+std::vector<std::vector<int>> alist::get_nlist() { return nlist; }
 
-std::vector<int> alist::get_num_mlist() {
-    return num_mlist;
-}
+std::vector<int> alist::get_num_mlist() { return num_mlist; }
 
-std::vector<int> alist::get_num_nlist() {
-    return num_nlist;
-}
+std::vector<int> alist::get_num_nlist() { return num_nlist; }
 
-void alist::read(const char * fname) {
+void alist::read(const char* fname)
+{
     std::ifstream file;
     std::string line;
     std::stringstream ss;
-    
+
     file.open(fname);
-    if(!(file.is_open())) {
+    if (!(file.is_open())) {
         std::cout << "Could not open the file" << std::endl;
     }
 
@@ -89,7 +80,7 @@ void alist::read(const char * fname) {
     // Parse weight of each column n
     std::getline(file, line);
     ss << line;
-    for (int i = 0; i < N; i++ ) {
+    for (int i = 0; i < N; i++) {
         ss >> num_nlist[i];
         nlist[i].resize(num_nlist[i]);
     }
@@ -99,7 +90,7 @@ void alist::read(const char * fname) {
     // Parse weight of each row m
     std::getline(file, line);
     ss << line;
-    for (int i = 0; i < M; i++ ) { 
+    for (int i = 0; i < M; i++) {
         ss >> num_mlist[i];
         mlist[i].resize(num_mlist[i]);
     }
@@ -132,7 +123,7 @@ void alist::read(const char * fname) {
     data_ok = true;
 }
 
-void alist::write(const char * fname) const
+void alist::write(const char* fname) const
 {
     if (!data_ok) {
         std::cout << "Data not ok, exiting" << std::endl;
@@ -172,23 +163,16 @@ void alist::write(const char * fname) const
     file.close();
 }
 
-int alist::get_N() {
-    return N;
-}
+int alist::get_N() { return N; }
 
-int alist::get_M() {
-    return M;
-}
+int alist::get_M() { return M; }
 
-int alist::get_max_num_nlist() {
-    return max_num_nlist;
-}
+int alist::get_max_num_nlist() { return max_num_nlist; }
 
-int alist::get_max_num_mlist() {
-    return max_num_mlist;
-}
+int alist::get_max_num_mlist() { return max_num_mlist; }
 
-void alist::print_nlist_i(int column) {
+void alist::print_nlist_i(int column)
+{
     std::cout << "Indices in column " << column << std::endl;
     for (int i = 0; i < num_nlist[column] - 1; i++) {
         std::cout << nlist[column][i] << ", ";
@@ -196,7 +180,8 @@ void alist::print_nlist_i(int column) {
     std::cout << nlist[column][num_nlist[column] - 1] << std::endl;
 }
 
-void alist::print_mlist_i(int row) {
+void alist::print_mlist_i(int row)
+{
     std::cout << "Indices in row " << row << std::endl;
     for (int i = 0; i < num_mlist[row] - 1; i++) {
         std::cout << mlist[row][i] << ", ";

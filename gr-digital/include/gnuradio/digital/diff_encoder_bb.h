@@ -27,31 +27,31 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace digital {
+namespace digital {
+
+/*!
+ * \brief Differential decoder: y[0] = (x[0] + y[-1]) % M
+ * \ingroup symbol_coding_blk
+ *
+ * \details
+ * Uses current and previous symbols and the alphabet modulus to
+ * perform differential encoding.
+ */
+class DIGITAL_API diff_encoder_bb : virtual public sync_block
+{
+public:
+    // gr::digital::diff_encoder_bb::sptr
+    typedef boost::shared_ptr<diff_encoder_bb> sptr;
 
     /*!
-     * \brief Differential decoder: y[0] = (x[0] + y[-1]) % M
-     * \ingroup symbol_coding_blk
+     * Make a differential encoder block.
      *
-     * \details
-     * Uses current and previous symbols and the alphabet modulus to
-     * perform differential encoding.
+     * \param modulus Modulus of code's alphabet
      */
-    class DIGITAL_API diff_encoder_bb : virtual public sync_block
-    {
-    public:
-      // gr::digital::diff_encoder_bb::sptr
-      typedef boost::shared_ptr<diff_encoder_bb> sptr;
+    static sptr make(unsigned int modulus);
+};
 
-      /*!
-       * Make a differential encoder block.
-       *
-       * \param modulus Modulus of code's alphabet
-       */
-      static sptr make(unsigned int modulus);
-    };
-
-  } /* namespace digital */
+} /* namespace digital */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_DIFF_ENCODER_BB_H */

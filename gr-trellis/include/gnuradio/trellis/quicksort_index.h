@@ -26,16 +26,15 @@
 #include <vector>
 
 namespace gr {
-  namespace trellis {
+namespace trellis {
 
-    template <class T>
-    void SWAP(T &a, T &b);
+template <class T>
+void SWAP(T& a, T& b);
 
-    template <class T>
-    void quicksort_index(std::vector<T> &p, std::vector<int> &index,
-			 int left, int right);
+template <class T>
+void quicksort_index(std::vector<T>& p, std::vector<int>& index, int left, int right);
 
-  } /* namespace trellis */
+} /* namespace trellis */
 } /* namespace gr */
 
 #endif /* INCLUDED_QUICKSORT_INDEX_H */

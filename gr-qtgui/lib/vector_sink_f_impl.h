@@ -29,117 +29,113 @@
 #include <gnuradio/qtgui/vectordisplayform.h>
 
 namespace gr {
-  namespace qtgui {
+namespace qtgui {
 
-    class QTGUI_API vector_sink_f_impl : public vector_sink_f
-    {
-    private:
-      void initialize(
-          const std::string &name,
-          const std::string &x_axis_label,
-          const std::string &y_axis_label,
-          double x_start,
-          double x_step
-      );
+class QTGUI_API vector_sink_f_impl : public vector_sink_f
+{
+private:
+    void initialize(const std::string& name,
+                    const std::string& x_axis_label,
+                    const std::string& y_axis_label,
+                    double x_start,
+                    double x_step);
 
-      const unsigned int d_vlen; //!< Vector length at input
-      float d_vecavg;
+    const unsigned int d_vlen; //!< Vector length at input
+    float d_vecavg;
 
-      std::string d_name; //!< Initial title of the plot
-      int d_nconnections; //!< Number of connected streaming ports on input
+    std::string d_name; //!< Initial title of the plot
+    int d_nconnections; //!< Number of connected streaming ports on input
 
-      const pmt::pmt_t d_port;
-      const pmt::pmt_t d_msg; //< Key of outgoing messages
+    const pmt::pmt_t d_port;
+    const pmt::pmt_t d_msg; //< Key of outgoing messages
 
-      std::vector<double*> d_magbufs;
+    std::vector<double*> d_magbufs;
 
 
-      int d_argc;
-      char *d_argv;
-      QWidget *d_parent;
-      VectorDisplayForm *d_main_gui;
+    int d_argc;
+    char* d_argv;
+    QWidget* d_parent;
+    VectorDisplayForm* d_main_gui;
 
-      gr::high_res_timer_type d_update_time;
-      gr::high_res_timer_type d_last_time;
+    gr::high_res_timer_type d_update_time;
+    gr::high_res_timer_type d_last_time;
 
-      // TODO remove this?
-      void check_clicked();
+    // TODO remove this?
+    void check_clicked();
 
-      // Handles message input port for setting new center frequency.
-      // The message is a PMT pair (intern('freq'), double(frequency)).
-      void handle_set_freq(pmt::pmt_t msg);
+    // Handles message input port for setting new center frequency.
+    // The message is a PMT pair (intern('freq'), double(frequency)).
+    void handle_set_freq(pmt::pmt_t msg);
 
-    public:
-      vector_sink_f_impl(
-          unsigned int vlen,
-          double x_start,
-          double x_step,
-          const std::string &x_axis_label,
-          const std::string &y_axis_label,
-          const std::string &name,
-          int nconnections,
-          QWidget *parent=NULL
-      );
-      ~vector_sink_f_impl();
+public:
+    vector_sink_f_impl(unsigned int vlen,
+                       double x_start,
+                       double x_step,
+                       const std::string& x_axis_label,
+                       const std::string& y_axis_label,
+                       const std::string& name,
+                       int nconnections,
+                       QWidget* parent = NULL);
+    ~vector_sink_f_impl();
 
-      bool check_topology(int ninputs, int noutputs);
+    bool check_topology(int ninputs, int noutputs);
 
-      void exec_();
-      QWidget*  qwidget();
+    void exec_();
+    QWidget* qwidget();
 
 #ifdef ENABLE_PYTHON
-      PyObject* pyqwidget();
+    PyObject* pyqwidget();
 #else
-      void* pyqwidget();
+    void* pyqwidget();
 #endif
 
-      unsigned int vlen() const;
-      void set_vec_average(const float avg);
-      float vec_average() const;
+    unsigned int vlen() const;
+    void set_vec_average(const float avg);
+    float vec_average() const;
 
-      void set_frequency_range(const double centerfreq, const double bandwidth);
-      void set_x_axis(const double start, const double step);
-      void set_y_axis(double min, double max);
-      void set_ref_level(double ref_level);
+    void set_frequency_range(const double centerfreq, const double bandwidth);
+    void set_x_axis(const double start, const double step);
+    void set_y_axis(double min, double max);
+    void set_ref_level(double ref_level);
 
-      void set_x_axis_label(const std::string &label);
-      void set_y_axis_label(const std::string &label);
+    void set_x_axis_label(const std::string& label);
+    void set_y_axis_label(const std::string& label);
 
-      void set_x_axis_units(const std::string &units);
-      void set_y_axis_units(const std::string &units);
+    void set_x_axis_units(const std::string& units);
+    void set_y_axis_units(const std::string& units);
 
-      void set_update_time(double t);
-      void set_title(const std::string &title);
-      void set_line_label(unsigned int which, const std::string &label);
-      void set_line_color(unsigned int which, const std::string &color);
-      void set_line_width(unsigned int which, int width);
-      void set_line_style(unsigned int which, int style);
-      void set_line_marker(unsigned int which, int marker);
-      void set_line_alpha(unsigned int which, double alpha);
+    void set_update_time(double t);
+    void set_title(const std::string& title);
+    void set_line_label(unsigned int which, const std::string& label);
+    void set_line_color(unsigned int which, const std::string& color);
+    void set_line_width(unsigned int which, int width);
+    void set_line_style(unsigned int which, int style);
+    void set_line_marker(unsigned int which, int marker);
+    void set_line_alpha(unsigned int which, double alpha);
 
-      std::string title();
-      std::string line_label(unsigned int which);
-      std::string line_color(unsigned int which);
-      int line_width(unsigned int which);
-      int line_style(unsigned int which);
-      int line_marker(unsigned int which);
-      double line_alpha(unsigned int which);
+    std::string title();
+    std::string line_label(unsigned int which);
+    std::string line_color(unsigned int which);
+    int line_width(unsigned int which);
+    int line_style(unsigned int which);
+    int line_marker(unsigned int which);
+    double line_alpha(unsigned int which);
 
-      void set_size(int width, int height);
+    void set_size(int width, int height);
 
-      void enable_menu(bool en);
-      void enable_grid(bool en);
-      void enable_autoscale(bool en);
-      void clear_max_hold();
-      void clear_min_hold();
-      void reset();
+    void enable_menu(bool en);
+    void enable_grid(bool en);
+    void enable_autoscale(bool en);
+    void clear_max_hold();
+    void clear_min_hold();
+    void reset();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace qtgui */
+} /* namespace qtgui */
 } /* namespace gr */
 
 #endif /* INCLUDED_QTGUI_VECTOR_SINK_F_IMPL_H */

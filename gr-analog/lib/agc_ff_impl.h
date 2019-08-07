@@ -26,31 +26,30 @@
 #include <gnuradio/analog/agc_ff.h>
 
 namespace gr {
-  namespace analog {
+namespace analog {
 
-    class agc_ff_impl : public agc_ff, kernel::agc_ff
-    {
-    public:
-      agc_ff_impl(float rate = 1e-4, float reference = 1.0,
-		  float gain = 1.0);
-      ~agc_ff_impl();
+class agc_ff_impl : public agc_ff, kernel::agc_ff
+{
+public:
+    agc_ff_impl(float rate = 1e-4, float reference = 1.0, float gain = 1.0);
+    ~agc_ff_impl();
 
-      float rate() const { return kernel::agc_ff::rate(); }
-      float reference() const { return kernel::agc_ff::reference(); }
-      float gain() const { return kernel::agc_ff::gain(); }
-      float max_gain() const { return kernel::agc_ff::max_gain(); }
+    float rate() const { return kernel::agc_ff::rate(); }
+    float reference() const { return kernel::agc_ff::reference(); }
+    float gain() const { return kernel::agc_ff::gain(); }
+    float max_gain() const { return kernel::agc_ff::max_gain(); }
 
-      void set_rate(float rate) { kernel::agc_ff::set_rate(rate); }
-      void set_reference(float reference) { kernel::agc_ff::set_reference(reference); }
-      void set_gain(float gain) { kernel::agc_ff::set_gain(gain); }
-      void set_max_gain(float max_gain) { kernel::agc_ff::set_max_gain(max_gain); }
+    void set_rate(float rate) { kernel::agc_ff::set_rate(rate); }
+    void set_reference(float reference) { kernel::agc_ff::set_reference(reference); }
+    void set_gain(float gain) { kernel::agc_ff::set_gain(gain); }
+    void set_max_gain(float max_gain) { kernel::agc_ff::set_max_gain(max_gain); }
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace analog */
+} /* namespace analog */
 } /* namespace gr */
 
 #endif /* INCLUDED_ANALOG_AGC_FF_IMPL_H */

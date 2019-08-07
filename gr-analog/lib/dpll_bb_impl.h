@@ -26,33 +26,33 @@
 #include <gnuradio/analog/dpll_bb.h>
 
 namespace gr {
-  namespace analog {
+namespace analog {
 
-    class dpll_bb_impl : public dpll_bb
-    {
-    private:
-      unsigned char d_restart;
-      float d_pulse_phase, d_pulse_frequency;
-      float d_gain, d_decision_threshold;
+class dpll_bb_impl : public dpll_bb
+{
+private:
+    unsigned char d_restart;
+    float d_pulse_phase, d_pulse_frequency;
+    float d_gain, d_decision_threshold;
 
-    public:
-      dpll_bb_impl(float period, float gain);
-      ~dpll_bb_impl();
+public:
+    dpll_bb_impl(float period, float gain);
+    ~dpll_bb_impl();
 
-      void set_gain(float gain) { d_gain = gain; }
-      void set_decision_threshold(float thresh) { d_decision_threshold = thresh; }
+    void set_gain(float gain) { d_gain = gain; }
+    void set_decision_threshold(float thresh) { d_decision_threshold = thresh; }
 
-      float gain() const { return d_gain; }
-      float freq() const { return d_pulse_frequency; }
-      float phase() const { return d_pulse_phase; }
-      float decision_threshold() const { return d_decision_threshold; }
+    float gain() const { return d_gain; }
+    float freq() const { return d_pulse_frequency; }
+    float phase() const { return d_pulse_phase; }
+    float decision_threshold() const { return d_decision_threshold; }
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace analog */
+} /* namespace analog */
 } /* namespace gr */
 
 #endif /* INCLUDED_ANALOG_DPLL_BB_IMPL_H */

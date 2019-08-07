@@ -29,154 +29,127 @@
 #include <cstdio>
 
 namespace gr {
-  namespace filter {
+namespace filter {
 
-    pfb_arb_resampler_fff::sptr
-    pfb_arb_resampler_fff::make(float rate,
-                                const std::vector<float> &taps,
-                                unsigned int filter_size)
-    {
-      return gnuradio::get_initial_sptr(new pfb_arb_resampler_fff_impl(rate, taps, filter_size));
+pfb_arb_resampler_fff::sptr pfb_arb_resampler_fff::make(float rate,
+                                                        const std::vector<float>& taps,
+                                                        unsigned int filter_size)
+{
+    return gnuradio::get_initial_sptr(
+        new pfb_arb_resampler_fff_impl(rate, taps, filter_size));
+}
+
+
+pfb_arb_resampler_fff_impl::pfb_arb_resampler_fff_impl(float rate,
+                                                       const std::vector<float>& taps,
+                                                       unsigned int filter_size)
+    : block("pfb_arb_resampler_fff",
+            io_signature::make(1, 1, sizeof(float)),
+            io_signature::make(1, 1, sizeof(float)))
+{
+    d_updated = false;
+
+    d_resamp = new kernel::pfb_arb_resampler_fff(rate, taps, filter_size);
+    set_history(d_resamp->taps_per_filter());
+    set_relative_rate(rate);
+}
+
+pfb_arb_resampler_fff_impl::~pfb_arb_resampler_fff_impl() { delete d_resamp; }
+
+void pfb_arb_resampler_fff_impl::forecast(int noutput_items,
+                                          gr_vector_int& ninput_items_required)
+{
+    unsigned ninputs = ninput_items_required.size();
+    if (noutput_items / relative_rate() < 1) {
+        for (unsigned i = 0; i < ninputs; i++)
+            ninput_items_required[i] = relative_rate() + history() - 1;
+    } else {
+        for (unsigned i = 0; i < ninputs; i++)
+            ninput_items_required[i] = noutput_items / relative_rate() + history() - 1;
     }
+}
 
+void pfb_arb_resampler_fff_impl::set_taps(const std::vector<float>& taps)
+{
+    gr::thread::scoped_lock guard(d_mutex);
 
-    pfb_arb_resampler_fff_impl::pfb_arb_resampler_fff_impl(float rate,
-                                                           const std::vector<float> &taps,
-                                                           unsigned int filter_size)
-            : block("pfb_arb_resampler_fff",
-                    io_signature::make(1, 1, sizeof(float)),
-                    io_signature::make(1, 1, sizeof(float)))
-    {
-      d_updated = false;
+    d_resamp->set_taps(taps);
+    set_history(d_resamp->taps_per_filter());
+    d_updated = true;
+}
 
-      d_resamp = new kernel::pfb_arb_resampler_fff(rate, taps, filter_size);
-      set_history(d_resamp->taps_per_filter());
-      set_relative_rate(rate);
-    }
+std::vector<std::vector<float>> pfb_arb_resampler_fff_impl::taps() const
+{
+    return d_resamp->taps();
+}
 
-    pfb_arb_resampler_fff_impl::~pfb_arb_resampler_fff_impl()
-    {
-      delete d_resamp;
-    }
+void pfb_arb_resampler_fff_impl::print_taps() { d_resamp->print_taps(); }
 
-    void
-    pfb_arb_resampler_fff_impl::forecast(int noutput_items,
-                                         gr_vector_int &ninput_items_required)
-    {
-      unsigned ninputs = ninput_items_required.size();
-      if(noutput_items / relative_rate() < 1) {
-        for(unsigned i = 0; i < ninputs; i++)
-          ninput_items_required[i] = relative_rate() + history() - 1;
-      }
-      else {
-        for(unsigned i = 0; i < ninputs; i++)
-          ninput_items_required[i] = noutput_items/relative_rate() + history() - 1;
-      }
-    }
+void pfb_arb_resampler_fff_impl::set_rate(float rate)
+{
+    gr::thread::scoped_lock guard(d_mutex);
 
-    void
-    pfb_arb_resampler_fff_impl::set_taps(const std::vector<float> &taps)
-    {
-      gr::thread::scoped_lock guard(d_mutex);
+    d_resamp->set_rate(rate);
+    set_relative_rate(rate);
+}
 
-      d_resamp->set_taps(taps);
-      set_history(d_resamp->taps_per_filter());
-      d_updated = true;
-    }
+void pfb_arb_resampler_fff_impl::set_phase(float ph)
+{
+    gr::thread::scoped_lock guard(d_mutex);
+    d_resamp->set_phase(ph);
+}
 
-    std::vector<std::vector<float> >
-    pfb_arb_resampler_fff_impl::taps() const
-    {
-      return d_resamp->taps();
-    }
+float pfb_arb_resampler_fff_impl::phase() const { return d_resamp->phase(); }
 
-    void
-    pfb_arb_resampler_fff_impl::print_taps()
-    {
-      d_resamp->print_taps();
-    }
+unsigned int pfb_arb_resampler_fff_impl::interpolation_rate() const
+{
+    return d_resamp->interpolation_rate();
+}
 
-    void
-    pfb_arb_resampler_fff_impl::set_rate(float rate)
-    {
-      gr::thread::scoped_lock guard(d_mutex);
+unsigned int pfb_arb_resampler_fff_impl::decimation_rate() const
+{
+    return d_resamp->decimation_rate();
+}
 
-      d_resamp->set_rate(rate);
-      set_relative_rate(rate);
-    }
+float pfb_arb_resampler_fff_impl::fractional_rate() const
+{
+    return d_resamp->fractional_rate();
+}
 
-    void
-    pfb_arb_resampler_fff_impl::set_phase(float ph)
-    {
-      gr::thread::scoped_lock guard(d_mutex);
-      d_resamp->set_phase(ph);
-    }
+unsigned int pfb_arb_resampler_fff_impl::taps_per_filter() const
+{
+    return d_resamp->taps_per_filter();
+}
 
-    float
-    pfb_arb_resampler_fff_impl::phase() const
-    {
-      return d_resamp->phase();
-    }
+int pfb_arb_resampler_fff_impl::group_delay() const { return d_resamp->group_delay(); }
 
-    unsigned int
-    pfb_arb_resampler_fff_impl::interpolation_rate() const
-    {
-      return d_resamp->interpolation_rate();
-    }
+float pfb_arb_resampler_fff_impl::phase_offset(float freq, float fs)
+{
+    return d_resamp->phase_offset(freq, fs);
+}
 
-    unsigned int
-    pfb_arb_resampler_fff_impl::decimation_rate() const
-    {
-      return d_resamp->decimation_rate();
-    }
+int pfb_arb_resampler_fff_impl::general_work(int noutput_items,
+                                             gr_vector_int& ninput_items,
+                                             gr_vector_const_void_star& input_items,
+                                             gr_vector_void_star& output_items)
+{
+    gr::thread::scoped_lock guard(d_mutex);
 
-    float
-    pfb_arb_resampler_fff_impl::fractional_rate() const
-    {
-      return d_resamp->fractional_rate();
-    }
+    float* in = (float*)input_items[0];
+    float* out = (float*)output_items[0];
 
-    unsigned int
-    pfb_arb_resampler_fff_impl::taps_per_filter() const
-    {
-      return d_resamp->taps_per_filter();
-    }
-
-    int
-    pfb_arb_resampler_fff_impl::group_delay() const
-    {
-      return d_resamp->group_delay();
-    }
-
-    float
-    pfb_arb_resampler_fff_impl::phase_offset(float freq, float fs)
-    {
-      return d_resamp->phase_offset(freq, fs);
-    }
-
-    int
-    pfb_arb_resampler_fff_impl::general_work(int noutput_items,
-                                             gr_vector_int &ninput_items,
-                                             gr_vector_const_void_star &input_items,
-                                             gr_vector_void_star &output_items)
-    {
-      gr::thread::scoped_lock guard(d_mutex);
-
-      float *in = (float*)input_items[0];
-      float *out = (float*)output_items[0];
-
-      if(d_updated) {
+    if (d_updated) {
         d_updated = false;
-        return 0;     // history requirements may have changed.
-      }
-
-      int nitems_read;
-      int nitems = floorf((float)noutput_items / relative_rate());
-      int processed = d_resamp->filter(out, in, nitems, nitems_read);
-
-      consume_each(nitems_read);
-      return processed;
+        return 0; // history requirements may have changed.
     }
 
-  } /* namespace filter */
+    int nitems_read;
+    int nitems = floorf((float)noutput_items / relative_rate());
+    int processed = d_resamp->filter(out, in, nitems, nitems_read);
+
+    consume_each(nitems_read);
+    return processed;
+}
+
+} /* namespace filter */
 } /* namespace gr */

@@ -24,17 +24,17 @@
 #define INCLUDED_DIGITAL_INTERPOLATING_RESAMPLER_TYPE_H
 
 namespace gr {
-  namespace digital {
+namespace digital {
 
-    // Interpolating Resampler type
-    enum ir_type {
-      IR_NONE      = -1,
-      IR_MMSE_8TAP = 0,  // Valid for [-Fs/4, Fs/4] bandlimited input
-      IR_PFB_NO_MF = 1,  // No matched filtering, just interpolation
-      IR_PFB_MF    = 2,
-    };
+// Interpolating Resampler type
+enum ir_type {
+    IR_NONE = -1,
+    IR_MMSE_8TAP = 0, // Valid for [-Fs/4, Fs/4] bandlimited input
+    IR_PFB_NO_MF = 1, // No matched filtering, just interpolation
+    IR_PFB_MF = 2,
+};
 
-  } /* namespace digital */
+} /* namespace digital */
 } /* namespace gr */
 
 #endif /* INCLUDED_DIGITAL_INTERPOLATING_RESAMPLER_TYPE_H */

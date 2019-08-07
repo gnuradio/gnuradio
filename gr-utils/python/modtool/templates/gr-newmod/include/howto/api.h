@@ -26,9 +26,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_howto_EXPORTS
-#  define HOWTO_API __GR_ATTR_EXPORT
+#define HOWTO_API __GR_ATTR_EXPORT
 #else
-#  define HOWTO_API __GR_ATTR_IMPORT
+#define HOWTO_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_HOWTO_API_H */

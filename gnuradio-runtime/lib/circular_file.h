@@ -27,38 +27,38 @@
 
 namespace gr {
 
-  /*
-   * writes input data into a circular buffer on disk.
-   *
-   * the file contains a fixed header:
-   *   0x0000: int32 magic (0xEB021026)
-   *   0x0004: int32 size in bytes of header (constant 4096)
-   *   0x0008: int32 size in bytes of circular buffer (not including header)
-   *   0x000C: int32 file offset to beginning of circular buffer
-   *   0x0010: int32 byte offset from beginning of circular buffer to
-   *                 current start of data
-   */
-  class GR_RUNTIME_API circular_file
-  {
-  private:
-    int  d_fd;
-    int	*d_header;
-    unsigned char *d_buffer;
+/*
+ * writes input data into a circular buffer on disk.
+ *
+ * the file contains a fixed header:
+ *   0x0000: int32 magic (0xEB021026)
+ *   0x0004: int32 size in bytes of header (constant 4096)
+ *   0x0008: int32 size in bytes of circular buffer (not including header)
+ *   0x000C: int32 file offset to beginning of circular buffer
+ *   0x0010: int32 byte offset from beginning of circular buffer to
+ *                 current start of data
+ */
+class GR_RUNTIME_API circular_file
+{
+private:
+    int d_fd;
+    int* d_header;
+    unsigned char* d_buffer;
     int d_mapped_size;
     int d_bytes_read;
 
-  public:
-    circular_file(const char *filename, bool writable = false, int size = 0);
+public:
+    circular_file(const char* filename, bool writable = false, int size = 0);
     ~circular_file();
 
-    bool write(void *data, int nbytes);
+    bool write(void* data, int nbytes);
 
     // returns # of bytes actually read or 0 if end of buffer, or -1 on error.
-    int read(void *data, int nbytes);
+    int read(void* data, int nbytes);
 
     // reset read pointer to beginning of buffer.
     void reset_read_pointer();
-  };
+};
 
 } /* namespace gr */
 

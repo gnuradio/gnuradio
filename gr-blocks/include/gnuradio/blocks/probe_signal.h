@@ -29,30 +29,30 @@
 #include <cstdint>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    /*!
-     * \brief Sink that allows a sample to be grabbed from Python.
-     * \ingroup measurement_tools_blk
-     */
-template<class T>
-    class BLOCKS_API probe_signal : virtual public sync_block
-    {
-    public:
-      // gr::blocks::probe_signal::sptr
-      typedef boost::shared_ptr< probe_signal<T> > sptr;
+/*!
+ * \brief Sink that allows a sample to be grabbed from Python.
+ * \ingroup measurement_tools_blk
+ */
+template <class T>
+class BLOCKS_API probe_signal : virtual public sync_block
+{
+public:
+    // gr::blocks::probe_signal::sptr
+    typedef boost::shared_ptr<probe_signal<T>> sptr;
 
-      static sptr make();
+    static sptr make();
 
-      virtual T level() const = 0;
-    };
+    virtual T level() const = 0;
+};
 
 typedef probe_signal<std::uint8_t> probe_signal_b;
 typedef probe_signal<std::int16_t> probe_signal_s;
 typedef probe_signal<std::int32_t> probe_signal_i;
 typedef probe_signal<float> probe_signal_f;
 typedef probe_signal<gr_complex> probe_signal_c;
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* PROBE_SIGNAL_H */

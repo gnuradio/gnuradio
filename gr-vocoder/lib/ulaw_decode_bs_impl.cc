@@ -29,44 +29,39 @@
 #include <limits.h>
 
 namespace gr {
-  namespace vocoder {
+namespace vocoder {
 
 extern "C" {
 #include "g7xx/g72x.h"
 }
 
-    ulaw_decode_bs::sptr
-    ulaw_decode_bs::make()
-    {
-      return gnuradio::get_initial_sptr
-	(new ulaw_decode_bs_impl());
+ulaw_decode_bs::sptr ulaw_decode_bs::make()
+{
+    return gnuradio::get_initial_sptr(new ulaw_decode_bs_impl());
+}
+
+ulaw_decode_bs_impl::ulaw_decode_bs_impl()
+    : sync_block("vocoder_ulaw_decode_bs",
+                 io_signature::make(1, 1, sizeof(unsigned char)),
+                 io_signature::make(1, 1, sizeof(short)))
+{
+}
+
+ulaw_decode_bs_impl::~ulaw_decode_bs_impl() {}
+
+int ulaw_decode_bs_impl::work(int noutput_items,
+                              gr_vector_const_void_star& input_items,
+                              gr_vector_void_star& output_items)
+{
+    const unsigned char* in = (const unsigned char*)input_items[0];
+    short* out = (short*)output_items[0];
+
+    for (int i = 0; i < noutput_items; i++) {
+        out[i] = ulaw2linear(in[i]);
     }
 
-    ulaw_decode_bs_impl::ulaw_decode_bs_impl()
-      : sync_block("vocoder_ulaw_decode_bs",
-		      io_signature::make(1, 1, sizeof(unsigned char)),
-		      io_signature::make(1, 1, sizeof(short)))
-    {
-    }
+    return noutput_items;
+}
 
-    ulaw_decode_bs_impl::~ulaw_decode_bs_impl()
-    {
-    }
-
-    int
-    ulaw_decode_bs_impl::work(int noutput_items,
-			      gr_vector_const_void_star &input_items,
-			      gr_vector_void_star &output_items)
-    {
-      const unsigned char *in = (const unsigned char*)input_items[0];
-      short *out = (short*)output_items[0];
-
-      for(int i = 0; i < noutput_items; i++) {
-	out[i] = ulaw2linear(in[i]);
-      }
-
-      return noutput_items;
-    }
-
-  } /* namespace vocoder */
+} /* namespace vocoder */
 } /* namespace gr */

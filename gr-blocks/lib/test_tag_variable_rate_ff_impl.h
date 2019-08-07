@@ -26,32 +26,31 @@
 #include <gnuradio/blocks/test_tag_variable_rate_ff.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class test_tag_variable_rate_ff_impl : public test_tag_variable_rate_ff
-    {
-    protected:
-      bool d_update_once;
-      double d_update_step;
-      double d_accum;
-      double d_rrate;
-      uint64_t d_old_in, d_new_in, d_last_out;
-      uint64_t d_rng_state[2];
+class test_tag_variable_rate_ff_impl : public test_tag_variable_rate_ff
+{
+protected:
+    bool d_update_once;
+    double d_update_step;
+    double d_accum;
+    double d_rrate;
+    uint64_t d_old_in, d_new_in, d_last_out;
+    uint64_t d_rng_state[2];
 
-    public:
-      test_tag_variable_rate_ff_impl(bool update_once=false,
-                                     double update_step=0.001);
-      ~test_tag_variable_rate_ff_impl();
+public:
+    test_tag_variable_rate_ff_impl(bool update_once = false, double update_step = 0.001);
+    ~test_tag_variable_rate_ff_impl();
 
-      //void setup_rpc();
+    // void setup_rpc();
 
-      int general_work(int noutput_items,
-                       gr_vector_int &ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items);
-    };
+    int general_work(int noutput_items,
+                     gr_vector_int& ninput_items,
+                     gr_vector_const_void_star& input_items,
+                     gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_TEST_TAG_VARIABLE_RATE_FF_IMPL_H */

@@ -25,31 +25,31 @@
 
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/sync_block.h>
-#include <stddef.h>			// size_t
+#include <stddef.h> // size_t
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief Bit bucket. Use as a termination point when a sink is
+ * required and we don't want to do anything real.
+ * \ingroup misc_blk
+ */
+class BLOCKS_API null_sink : virtual public sync_block
+{
+public:
+    // gr::blocks::null_sink::sptr
+    typedef boost::shared_ptr<null_sink> sptr;
 
     /*!
-     * \brief Bit bucket. Use as a termination point when a sink is
-     * required and we don't want to do anything real.
-     * \ingroup misc_blk
+     * Build a null sink block.
+     *
+     * \param sizeof_stream_item size of the stream items in bytes.
      */
-    class BLOCKS_API null_sink : virtual public sync_block
-    {
-    public:
-      // gr::blocks::null_sink::sptr
-      typedef boost::shared_ptr<null_sink> sptr;
+    static sptr make(size_t sizeof_stream_item);
+};
 
-      /*!
-       * Build a null sink block.
-       *
-       * \param sizeof_stream_item size of the stream items in bytes.
-       */
-      static sptr make(size_t sizeof_stream_item);
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_NULL_SINK_H */

@@ -28,53 +28,51 @@
 #include <cmath>
 
 namespace gr {
-  namespace analog {
+namespace analog {
+
+/*!
+ * \brief gate or zero output when input power below threshold
+ * \ingroup level_controllers_blk
+ */
+class ANALOG_API pwr_squelch_ff : public squelch_base_ff, virtual public block
+{
+protected:
+    virtual void update_state(const float& in) = 0;
+    virtual bool mute() const = 0;
+
+public:
+    // gr::analog::pwr_squelch_ff::sptr
+    typedef boost::shared_ptr<pwr_squelch_ff> sptr;
 
     /*!
-     * \brief gate or zero output when input power below threshold
-     * \ingroup level_controllers_blk
+     * \brief Make power-based squelch block.
+     *
+     * \param db threshold (in dB) for power squelch
+     * \param alpha Gain of averaging filter. Defaults to 0.0001.
+     * \param ramp sets response characteristic. Defaults to 0.
+     * \param gate if true, no output if no squelch tone.
+     *             if false, output 0's if no squelch tone (default).
+     *
+     * The block will emit a tag with the key pmt::intern("squelch_sob")
+     * with the value of pmt::PMT_NIL on the first item it passes, and with
+     * the key pmt::intern("squelch:eob") on the last item it passes.
      */
-    class ANALOG_API pwr_squelch_ff :
-      public squelch_base_ff, virtual public block
-    {
-    protected:
-      virtual void update_state(const float &in) = 0;
-      virtual bool mute() const = 0;
+    static sptr make(double db, double alpha = 0.0001, int ramp = 0, bool gate = false);
 
-    public:
-      // gr::analog::pwr_squelch_ff::sptr
-      typedef boost::shared_ptr<pwr_squelch_ff> sptr;
+    virtual std::vector<float> squelch_range() const = 0;
 
-      /*!
-       * \brief Make power-based squelch block.
-       *
-       * \param db threshold (in dB) for power squelch
-       * \param alpha Gain of averaging filter. Defaults to 0.0001.
-       * \param ramp sets response characteristic. Defaults to 0.
-       * \param gate if true, no output if no squelch tone.
-       *             if false, output 0's if no squelch tone (default).
-       *
-       * The block will emit a tag with the key pmt::intern("squelch_sob")
-       * with the value of pmt::PMT_NIL on the first item it passes, and with
-       * the key pmt::intern("squelch:eob") on the last item it passes.
-       */
-      static sptr make(double db, double alpha=0.0001,
-		       int ramp=0, bool gate=false);
+    virtual double threshold() const = 0;
+    virtual void set_threshold(double db) = 0;
+    virtual void set_alpha(double alpha) = 0;
 
-      virtual std::vector<float> squelch_range() const = 0;
+    virtual int ramp() const = 0;
+    virtual void set_ramp(int ramp) = 0;
+    virtual bool gate() const = 0;
+    virtual void set_gate(bool gate) = 0;
+    virtual bool unmuted() const = 0;
+};
 
-      virtual double threshold() const = 0;
-      virtual void set_threshold(double db) = 0;
-      virtual void set_alpha(double alpha) = 0;
-
-      virtual int ramp() const = 0;
-      virtual void set_ramp(int ramp) = 0;
-      virtual bool gate() const = 0;
-      virtual void set_gate(bool gate) = 0;
-      virtual bool unmuted() const = 0;
-    };
-
-  } /* namespace analog */
+} /* namespace analog */
 } /* namespace gr */
 
 #endif /* INCLUDED_ANALOG_PWR_SQUELCH_FF_H */

@@ -32,29 +32,32 @@
 
 namespace gr {
 
-  /*!
-   * \brief pseudo random number generator
-   * \ingroup math_blk
-   */
-  class GR_RUNTIME_API random
-  {
-  protected:
+/*!
+ * \brief pseudo random number generator
+ * \ingroup math_blk
+ */
+class GR_RUNTIME_API random
+{
+protected:
     long d_seed;
     bool d_gauss_stored;
     float d_gauss_value;
 
-    boost::mt19937 *d_rng; // mersenne twister as random number generator
-    boost::uniform_real<float> *d_uniform; // choose uniform distribution, default is [0,1)
-    boost::uniform_int<> *d_integer_dis;
-    boost::variate_generator<boost::mt19937&, boost::uniform_real<float> > *d_generator;
-    boost::variate_generator<boost::mt19937&, boost::uniform_int<> > *d_integer_generator;
+    boost::mt19937* d_rng; // mersenne twister as random number generator
+    boost::uniform_real<float>*
+        d_uniform; // choose uniform distribution, default is [0,1)
+    boost::uniform_int<>* d_integer_dis;
+    boost::variate_generator<boost::mt19937&, boost::uniform_real<float>>* d_generator;
+    boost::variate_generator<boost::mt19937&, boost::uniform_int<>>* d_integer_generator;
 
-  public:
-    random(unsigned int seed=0, int min_integer = 0, int max_integer = 2);
+public:
+    random(unsigned int seed = 0, int min_integer = 0, int max_integer = 2);
     ~random();
 
     /*!
-     * \brief Change the seed for the initialized number generator. seed = 0 initializes the random number generator with the system time. Note that a fast initialization of various instances can result in the same seed.
+     * \brief Change the seed for the initialized number generator. seed = 0 initializes
+     * the random number generator with the system time. Note that a fast initialization
+     * of various instances can result in the same seed.
      */
     void reseed(unsigned int seed);
 
@@ -76,7 +79,8 @@ namespace gr {
     float ran1();
 
     /*!
-     * \brief Normally distributed random numbers (Gaussian distribution with zero mean and variance 1)
+     * \brief Normally distributed random numbers (Gaussian distribution with zero mean
+     * and variance 1)
      */
     float gasdev();
 
@@ -86,7 +90,8 @@ namespace gr {
     float laplacian();
 
     /*!
-     * \brief Rayleigh distributed random numbers (zero mean and variance 1 for the underlying Gaussian distributions)
+     * \brief Rayleigh distributed random numbers (zero mean and variance 1 for the
+     * underlying Gaussian distributions)
      */
     float rayleigh();
 
@@ -96,12 +101,13 @@ namespace gr {
     float impulse(float factor);
 
     /*!
-     * \brief Normally distributed random numbers with zero mean and variance 1 on real and imaginary part. This results in a Rayleigh distribution for the amplitude and an uniform distribution for the phase.
+     * \brief Normally distributed random numbers with zero mean and variance 1 on real
+     * and imaginary part. This results in a Rayleigh distribution for the amplitude and
+     * an uniform distribution for the phase.
      */
     gr_complex rayleigh_complex();
-  };
+};
 
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_RANDOM_H */
-

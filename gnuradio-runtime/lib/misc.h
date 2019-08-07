@@ -28,14 +28,13 @@
 
 namespace gr {
 
-  GR_RUNTIME_API unsigned int
-  rounduppow2(unsigned int n);
+GR_RUNTIME_API unsigned int rounduppow2(unsigned int n);
 
-  // FIXME should be template
-  GR_RUNTIME_API void zero_vector(std::vector<float> &v);
-  GR_RUNTIME_API void zero_vector(std::vector<double> &v);
-  GR_RUNTIME_API void zero_vector(std::vector<int> &v);
-  GR_RUNTIME_API void zero_vector(std::vector<gr_complex> &v);
+// FIXME should be template
+GR_RUNTIME_API void zero_vector(std::vector<float>& v);
+GR_RUNTIME_API void zero_vector(std::vector<double>& v);
+GR_RUNTIME_API void zero_vector(std::vector<int>& v);
+GR_RUNTIME_API void zero_vector(std::vector<gr_complex>& v);
 
 } /* namespace gr */
 

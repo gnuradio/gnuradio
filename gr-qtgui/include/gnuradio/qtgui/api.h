@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_qtgui_EXPORTS
-#  define QTGUI_API __GR_ATTR_EXPORT
+#define QTGUI_API __GR_ATTR_EXPORT
 #else
-#  define QTGUI_API __GR_ATTR_IMPORT
+#define QTGUI_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_QTGUI_API_H */

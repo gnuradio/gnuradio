@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_vocoder_EXPORTS
-#  define VOCODER_API __GR_ATTR_EXPORT
+#define VOCODER_API __GR_ATTR_EXPORT
 #else
-#  define VOCODER_API __GR_ATTR_IMPORT
+#define VOCODER_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_VOCODER_API_H */

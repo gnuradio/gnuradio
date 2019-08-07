@@ -35,42 +35,34 @@
 
 typedef QVector<QRgb> QwtColorTable;
 
-class PlotWaterfallImage: public QImage
+class PlotWaterfallImage : public QImage
 {
     // This class hides some Qt3/Qt4 API differences
 public:
-    PlotWaterfallImage(const QSize &size, QwtColorMap::Format format):
-      QImage(size, format == QwtColorMap::RGB
-	     ? QImage::Format_ARGB32 : QImage::Format_Indexed8 )
-  {
-  }
+    PlotWaterfallImage(const QSize& size, QwtColorMap::Format format)
+        : QImage(size,
+                 format == QwtColorMap::RGB ? QImage::Format_ARGB32
+                                            : QImage::Format_Indexed8)
+    {
+    }
 
-  PlotWaterfallImage(const QImage &other):
-    QImage(other)
-  {
-  }
+    PlotWaterfallImage(const QImage& other) : QImage(other) {}
 
-  void initColorTable(const QImage& other)
-  {
-    setColorTable(other.colorTable());
-  }
+    void initColorTable(const QImage& other) { setColorTable(other.colorTable()); }
 };
 
 class PlotWaterfall::PrivateData
 {
 public:
-  PrivateData()
-  {
-    data = NULL;
-    colorMap = new QwtLinearColorMap();
-  }
-  ~PrivateData()
-  {
-    delete colorMap;
-  }
+    PrivateData()
+    {
+        data = NULL;
+        colorMap = new QwtLinearColorMap();
+    }
+    ~PrivateData() { delete colorMap; }
 
-  WaterfallData *data;
-  QwtColorMap *colorMap;
+    WaterfallData* data;
+    QwtColorMap* colorMap;
 };
 
 /*!
@@ -84,13 +76,13 @@ public:
 
   \sa QwtPlotItem::setItemAttribute(), QwtPlotItem::setZ()
 */
-PlotWaterfall::PlotWaterfall(WaterfallData* data, const QString &title):
-    QwtPlotRasterItem(title)
+PlotWaterfall::PlotWaterfall(WaterfallData* data, const QString& title)
+    : QwtPlotRasterItem(title)
 {
     d_data = new PrivateData();
     d_data->data = data;
 
-//    setCachePolicy(QwtPlotRasterItem::PaintCache);
+    //    setCachePolicy(QwtPlotRasterItem::PaintCache);
 
     setItemAttribute(QwtPlotItem::AutoScale, true);
     setItemAttribute(QwtPlotItem::Legend, false);
@@ -99,20 +91,12 @@ PlotWaterfall::PlotWaterfall(WaterfallData* data, const QString &title):
 }
 
 //! Destructor
-PlotWaterfall::~PlotWaterfall()
-{
-    delete d_data;
-}
+PlotWaterfall::~PlotWaterfall() { delete d_data; }
 
-const WaterfallData* PlotWaterfall::data()const{
-    return d_data->data;
-}
+const WaterfallData* PlotWaterfall::data() const { return d_data->data; }
 
 //! \return QwtPlotItem::Rtti_PlotSpectrogram
-int PlotWaterfall::rtti() const
-{
-    return QwtPlotItem::Rtti_PlotSpectrogram;
-}
+int PlotWaterfall::rtti() const { return QwtPlotItem::Rtti_PlotSpectrogram; }
 
 /*!
   Change the color map
@@ -125,7 +109,7 @@ int PlotWaterfall::rtti() const
   \sa colorMap(), QwtScaleWidget::setColorBarEnabled(),
   QwtScaleWidget::setColorMap()
 */
-void PlotWaterfall::setColorMap(const QwtColorMap &colorMap)
+void PlotWaterfall::setColorMap(const QwtColorMap& colorMap)
 {
     delete d_data->colorMap;
 #if QWT_VERSION < 0x060000
@@ -140,20 +124,14 @@ void PlotWaterfall::setColorMap(const QwtColorMap &colorMap)
   \return Color Map used for mapping the intensity values to colors
   \sa setColorMap()
 */
-const QwtColorMap &PlotWaterfall::colorMap() const
-{
-  return *d_data->colorMap;
-}
+const QwtColorMap& PlotWaterfall::colorMap() const { return *d_data->colorMap; }
 
 /*!
   \return Bounding rect of the data
   \sa QwtRasterData::boundingRect
 */
 #if QWT_VERSION < 0x060000
-QwtDoubleRect PlotWaterfall::boundingRect() const
-{
-  return d_data->data->boundingRect();
-}
+QwtDoubleRect PlotWaterfall::boundingRect() const { return d_data->data->boundingRect(); }
 #endif
 
 /*!
@@ -166,9 +144,9 @@ QwtDoubleRect PlotWaterfall::boundingRect() const
   \return data().rasterHint(rect)
 */
 #if QWT_VERSION < 0x060000
-QSize PlotWaterfall::rasterHint(const QwtDoubleRect &rect) const
+QSize PlotWaterfall::rasterHint(const QwtDoubleRect& rect) const
 {
-  return d_data->data->rasterHint(rect);
+    return d_data->data->rasterHint(rect);
 }
 #endif
 
@@ -190,58 +168,57 @@ QSize PlotWaterfall::rasterHint(const QwtDoubleRect &rect) const
   QwtColorMap::colorIndex()
 */
 #if QWT_VERSION < 0x060000
-QImage PlotWaterfall::renderImage(const QwtScaleMap &xMap,
-				  const QwtScaleMap &yMap,
-				  const QwtDoubleRect &area) const
+QImage PlotWaterfall::renderImage(const QwtScaleMap& xMap,
+                                  const QwtScaleMap& yMap,
+                                  const QwtDoubleRect& area) const
 #else
-QImage PlotWaterfall::renderImage(const QwtScaleMap &xMap,
-				  const QwtScaleMap &yMap,
-				  const QRectF &area,
-				  const QSize &size) const
+QImage PlotWaterfall::renderImage(const QwtScaleMap& xMap,
+                                  const QwtScaleMap& yMap,
+                                  const QRectF& area,
+                                  const QSize& size) const
 #endif
 {
-    if ( area.isEmpty() )
+    if (area.isEmpty())
         return QImage();
 
 #if QWT_VERSION < 0x060000
     QRect rect = transform(xMap, yMap, area);
     const QSize res = d_data->data->rasterHint(area);
 #else
-    QRect rect(0,0,0,0);
-    const QSize res(0,0);
+    QRect rect(0, 0, 0, 0);
+    const QSize res(0, 0);
 #endif
 
     QwtScaleMap xxMap = xMap;
     QwtScaleMap yyMap = yMap;
 
-    if ( res.isValid() )
-    {
+    if (res.isValid()) {
         /*
           It is useless to render an image with a higher resolution
           than the data offers. Of course someone will have to
           scale this image later into the size of the given rect, but f.e.
           in case of postscript this will done on the printer.
-	*/
+        */
         rect.setSize(rect.size().boundedTo(res));
 
         int px1 = rect.x();
         int px2 = rect.x() + rect.width();
-        if ( xMap.p1() > xMap.p2() )
+        if (xMap.p1() > xMap.p2())
             qSwap(px1, px2);
 
         double sx1 = area.x();
         double sx2 = area.x() + area.width();
-        if ( xMap.s1() > xMap.s2() )
+        if (xMap.s1() > xMap.s2())
             qSwap(sx1, sx2);
 
         int py1 = rect.y();
         int py2 = rect.y() + rect.height();
-        if ( yMap.p1() > yMap.p2() )
+        if (yMap.p1() > yMap.p2())
             qSwap(py1, py2);
 
         double sy1 = area.y();
         double sy2 = area.y() + area.height();
-        if ( yMap.s1() > yMap.s2() )
+        if (yMap.s1() > yMap.s2())
             qSwap(sy1, sy2);
 
         xxMap.setPaintInterval(px1, px2);
@@ -257,42 +234,35 @@ QImage PlotWaterfall::renderImage(const QwtScaleMap &xMap,
 #else
     const QwtInterval intensityRange = d_data->data->interval(Qt::ZAxis);
 #endif
-    if ( !intensityRange.isValid() )
+    if (!intensityRange.isValid())
         return image;
 
     d_data->data->initRaster(area, rect.size());
 
-    if ( d_data->colorMap->format() == QwtColorMap::RGB )
-    {
-        for ( int y = rect.top(); y <= rect.bottom(); y++ )
-        {
+    if (d_data->colorMap->format() == QwtColorMap::RGB) {
+        for (int y = rect.top(); y <= rect.bottom(); y++) {
             const double ty = yyMap.invTransform(y);
 
-            QRgb *line = (QRgb *)image.scanLine(y - rect.top());
-            for ( int x = rect.left(); x <= rect.right(); x++ )
-            {
+            QRgb* line = (QRgb*)image.scanLine(y - rect.top());
+            for (int x = rect.left(); x <= rect.right(); x++) {
                 const double tx = xxMap.invTransform(x);
 
-                *line++ = d_data->colorMap->rgb(intensityRange,
-						d_data->data->value(tx, ty));
+                *line++ =
+                    d_data->colorMap->rgb(intensityRange, d_data->data->value(tx, ty));
             }
         }
-    }
-    else if ( d_data->colorMap->format() == QwtColorMap::Indexed )
-    {
+    } else if (d_data->colorMap->format() == QwtColorMap::Indexed) {
         image.setColorTable(d_data->colorMap->colorTable(intensityRange));
 
-        for ( int y = rect.top(); y <= rect.bottom(); y++ )
-        {
+        for (int y = rect.top(); y <= rect.bottom(); y++) {
             const double ty = yyMap.invTransform(y);
 
-            unsigned char *line = image.scanLine(y - rect.top());
-            for ( int x = rect.left(); x <= rect.right(); x++ )
-            {
+            unsigned char* line = image.scanLine(y - rect.top());
+            for (int x = rect.left(); x <= rect.right(); x++) {
                 const double tx = xxMap.invTransform(x);
 
                 *line++ = d_data->colorMap->colorIndex(intensityRange,
-						       d_data->data->value(tx, ty));
+                                                       d_data->data->value(tx, ty));
             }
         }
     }
@@ -303,9 +273,8 @@ QImage PlotWaterfall::renderImage(const QwtScaleMap &xMap,
 
     const bool hInvert = xxMap.p1() > xxMap.p2();
     const bool vInvert = yyMap.p1() < yyMap.p2();
-    if ( hInvert || vInvert )
-    {
-      image = image.mirrored(hInvert, vInvert);
+    if (hInvert || vInvert) {
+        image = image.mirrored(hInvert, vInvert);
     }
 
     return image;
@@ -323,11 +292,10 @@ QImage PlotWaterfall::renderImage(const QwtScaleMap &xMap,
   QwtPlotRasterItem::draw, drawContourLines
 */
 
-void PlotWaterfall::draw(QPainter *painter,
-			 const QwtScaleMap &xMap,
-			 const QwtScaleMap &yMap,
-			 const QRect &canvasRect) const
+void PlotWaterfall::draw(QPainter* painter,
+                         const QwtScaleMap& xMap,
+                         const QwtScaleMap& yMap,
+                         const QRect& canvasRect) const
 {
     QwtPlotRasterItem::draw(painter, xMap, yMap, canvasRect);
 }
-

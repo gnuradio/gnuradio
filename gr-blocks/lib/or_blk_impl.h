@@ -26,22 +26,22 @@
 #include <gnuradio/blocks/or_blk.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    template<class T>
-    class BLOCKS_API or_blk_impl : public or_blk<T>
-    {
-      size_t d_vlen;
+template <class T>
+class BLOCKS_API or_blk_impl : public or_blk<T>
+{
+    size_t d_vlen;
 
-    public:
-      or_blk_impl(size_t vlen);
+public:
+    or_blk_impl(size_t vlen);
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* OR_BLK_IMPL_H */

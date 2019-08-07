@@ -35,7 +35,7 @@ rpcmanager manager_instance;
 #endif
 
 #ifdef GR_RPCSERVER_ICE
-  #error TODO ICE
+#error TODO ICE
 #endif
 
 #ifdef GR_RPCSERVER_THRIFT
@@ -44,9 +44,9 @@ rpcmanager::rpcserver_booter_register_helper<rpcserver_booter_thrift> boot_thrif
 #endif
 
 #ifdef GR_RPCSERVER_ERLANG
-  #error TODO ERLANG
+#error TODO ERLANG
 #endif
 
 #ifdef GR_RPCSERVER_XMLRPC
-  #error TODO XMLRPC
+#error TODO XMLRPC
 #endif

@@ -27,24 +27,24 @@
 #include <gnuradio/blocks/max_blk.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-template<class T>
-    class max_blk_impl : public  max_blk<T>
-    {
-    private:
-      size_t d_vlen, d_vlen_out;
+template <class T>
+class max_blk_impl : public max_blk<T>
+{
+private:
+    size_t d_vlen, d_vlen_out;
 
-    public:
-      max_blk_impl (size_t vlen, size_t vlen_out);
-      ~max_blk_impl ();
+public:
+    max_blk_impl(size_t vlen, size_t vlen_out);
+    ~max_blk_impl();
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* MAX_BLK_IMPL_H */

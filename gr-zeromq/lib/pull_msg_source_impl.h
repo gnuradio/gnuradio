@@ -27,37 +27,38 @@
 #include "zmq_common_impl.h"
 
 namespace gr {
-  namespace zeromq {
+namespace zeromq {
 
-    class pull_msg_source_impl : public pull_msg_source
+class pull_msg_source_impl : public pull_msg_source
+{
+private:
+    int d_timeout; // microseconds, -1 is blocking
+    zmq::context_t* d_context;
+    zmq::socket_t* d_socket;
+    boost::thread* d_thread;
+    const pmt::pmt_t d_port;
+
+    void readloop();
+
+public:
+    bool d_finished;
+
+    pull_msg_source_impl(char* address, int timeout);
+    ~pull_msg_source_impl();
+
+    bool start();
+    bool stop();
+
+    std::string last_endpoint() override
     {
-    private:
-      int             d_timeout; // microseconds, -1 is blocking
-      zmq::context_t  *d_context;
-      zmq::socket_t   *d_socket;
-      boost::thread   *d_thread;
-      const pmt::pmt_t d_port;
-
-      void readloop();
-
-    public:
-      bool d_finished;
-
-      pull_msg_source_impl(char *address, int timeout);
-      ~pull_msg_source_impl();
-
-      bool start();
-      bool stop();
-
-      std::string last_endpoint() override {
         char addr[256];
         size_t addr_len = sizeof(addr);
         d_socket->getsockopt(ZMQ_LAST_ENDPOINT, addr, &addr_len);
-        return std::string(addr, addr_len-1);
-      }
-    };
+        return std::string(addr, addr_len - 1);
+    }
+};
 
-  } // namespace zeromq
+} // namespace zeromq
 } // namespace gr
 
 #endif /* INCLUDED_ZEROMQ_PULL_MSG_SOURCE_IMPL_H */

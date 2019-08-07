@@ -27,37 +27,38 @@
 #include "zmq_common_impl.h"
 
 namespace gr {
-  namespace zeromq {
+namespace zeromq {
 
-    class rep_msg_sink_impl : public rep_msg_sink
+class rep_msg_sink_impl : public rep_msg_sink
+{
+private:
+    int d_timeout;
+    zmq::context_t* d_context;
+    zmq::socket_t* d_socket;
+    boost::thread* d_thread;
+    bool d_finished;
+
+    const pmt::pmt_t d_port;
+
+    void readloop();
+
+public:
+    rep_msg_sink_impl(char* address, int timeout);
+    ~rep_msg_sink_impl();
+
+    bool start();
+    bool stop();
+
+    std::string last_endpoint() override
     {
-    private:
-      int             d_timeout;
-      zmq::context_t  *d_context;
-      zmq::socket_t   *d_socket;
-      boost::thread   *d_thread;
-      bool            d_finished;
-
-      const pmt::pmt_t d_port;
-
-      void            readloop();
-
-    public:
-      rep_msg_sink_impl(char *address, int timeout);
-      ~rep_msg_sink_impl();
-
-      bool start();
-      bool stop();
-
-      std::string last_endpoint() override {
         char addr[256];
         size_t addr_len = sizeof(addr);
         d_socket->getsockopt(ZMQ_LAST_ENDPOINT, addr, &addr_len);
-        return std::string(addr, addr_len-1);
-      }
-    };
+        return std::string(addr, addr_len - 1);
+    }
+};
 
-  } // namespace zeromq
+} // namespace zeromq
 } // namespace gr
 
 #endif /* INCLUDED_ZEROMQ_REP_MSG_SINK_IMPL_H */

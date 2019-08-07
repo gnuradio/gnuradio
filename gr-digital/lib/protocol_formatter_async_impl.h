@@ -26,25 +26,24 @@
 #include <gnuradio/digital/protocol_formatter_async.h>
 
 namespace gr {
-  namespace digital {
+namespace digital {
 
-    class protocol_formatter_async_impl
-      : public protocol_formatter_async
-    {
-     private:
-      header_format_base::sptr d_format;
+class protocol_formatter_async_impl : public protocol_formatter_async
+{
+private:
+    header_format_base::sptr d_format;
 
-      pmt::pmt_t d_in_port;
-      pmt::pmt_t d_hdr_port, d_pld_port;
+    pmt::pmt_t d_in_port;
+    pmt::pmt_t d_hdr_port, d_pld_port;
 
-      void append(pmt::pmt_t msg);
+    void append(pmt::pmt_t msg);
 
-     public:
-      protocol_formatter_async_impl(const header_format_base::sptr &format);
-      ~protocol_formatter_async_impl();
-    };
+public:
+    protocol_formatter_async_impl(const header_format_base::sptr& format);
+    ~protocol_formatter_async_impl();
+};
 
-  } // namespace digital
+} // namespace digital
 } // namespace gr
 
 #endif /* INCLUDED_DIGITAL_PROTOCOL_FORMATTER_ASYNC_IMPL_H */

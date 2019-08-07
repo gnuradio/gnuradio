@@ -28,60 +28,53 @@
 #include <gnuradio/io_signature.h>
 
 namespace gr {
-  namespace filter {
+namespace filter {
 
-    iir_filter_ffd::sptr
-    iir_filter_ffd::make(const std::vector<double> &fftaps,
-                         const std::vector<double> &fbtaps,
-                         bool oldstyle)
-    {
-      return gnuradio::get_initial_sptr
-        (new iir_filter_ffd_impl(fftaps, fbtaps, oldstyle));
-    }
+iir_filter_ffd::sptr iir_filter_ffd::make(const std::vector<double>& fftaps,
+                                          const std::vector<double>& fbtaps,
+                                          bool oldstyle)
+{
+    return gnuradio::get_initial_sptr(new iir_filter_ffd_impl(fftaps, fbtaps, oldstyle));
+}
 
-    iir_filter_ffd_impl::iir_filter_ffd_impl(const std::vector<double> &fftaps,
-                                             const std::vector<double> &fbtaps,
-                                             bool oldstyle)
+iir_filter_ffd_impl::iir_filter_ffd_impl(const std::vector<double>& fftaps,
+                                         const std::vector<double>& fbtaps,
+                                         bool oldstyle)
 
-      : sync_block("iir_filter_ffd",
-                   io_signature::make(1, 1, sizeof (float)),
-                   io_signature::make(1, 1, sizeof (float))),
-        d_updated(false)
-    {
-      d_iir = new kernel::iir_filter<float,float,double,double>(fftaps, fbtaps, oldstyle);
-    }
+    : sync_block("iir_filter_ffd",
+                 io_signature::make(1, 1, sizeof(float)),
+                 io_signature::make(1, 1, sizeof(float))),
+      d_updated(false)
+{
+    d_iir =
+        new kernel::iir_filter<float, float, double, double>(fftaps, fbtaps, oldstyle);
+}
 
-    iir_filter_ffd_impl::~iir_filter_ffd_impl()
-    {
-      delete d_iir;
-    }
+iir_filter_ffd_impl::~iir_filter_ffd_impl() { delete d_iir; }
 
-    void
-    iir_filter_ffd_impl::set_taps(const std::vector<double> &fftaps,
-                                  const std::vector<double> &fbtaps)
-    {
-      d_new_fftaps = fftaps;
-      d_new_fbtaps = fbtaps;
-      d_updated = true;
-    }
+void iir_filter_ffd_impl::set_taps(const std::vector<double>& fftaps,
+                                   const std::vector<double>& fbtaps)
+{
+    d_new_fftaps = fftaps;
+    d_new_fbtaps = fbtaps;
+    d_updated = true;
+}
 
-    int
-    iir_filter_ffd_impl::work(int noutput_items,
-                              gr_vector_const_void_star &input_items,
-                              gr_vector_void_star &output_items)
-    {
-      const float *in = (const float*)input_items[0];
-      float *out = (float*)output_items[0];
+int iir_filter_ffd_impl::work(int noutput_items,
+                              gr_vector_const_void_star& input_items,
+                              gr_vector_void_star& output_items)
+{
+    const float* in = (const float*)input_items[0];
+    float* out = (float*)output_items[0];
 
-      if(d_updated) {
+    if (d_updated) {
         d_iir->set_taps(d_new_fftaps, d_new_fbtaps);
         d_updated = false;
-      }
-
-      d_iir->filter_n(out, in, noutput_items);
-      return noutput_items;
     }
 
-  } /* namespace filter */
-} /* namespace gr */
+    d_iir->filter_n(out, in, noutput_items);
+    return noutput_items;
+}
 
+} /* namespace filter */
+} /* namespace gr */

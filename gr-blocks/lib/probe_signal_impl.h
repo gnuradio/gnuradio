@@ -27,26 +27,26 @@
 #include <gnuradio/blocks/probe_signal.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-template<class T>
-    class probe_signal_impl : public  probe_signal<T>
-    {
-    private:
-      T d_level;
+template <class T>
+class probe_signal_impl : public probe_signal<T>
+{
+private:
+    T d_level;
 
-    public:
-      probe_signal_impl ();
-      ~probe_signal_impl ();
+public:
+    probe_signal_impl();
+    ~probe_signal_impl();
 
-      T level() const { return d_level; }
+    T level() const { return d_level; }
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* PROBE_SIGNAL_IMPL_H */

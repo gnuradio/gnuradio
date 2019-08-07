@@ -27,26 +27,26 @@
 #include <boost/shared_ptr.hpp>
 
 namespace gr {
-  namespace messages {
+namespace messages {
+
+/*!
+ * \brief Virtual base class that produces messages
+ */
+class GR_RUNTIME_API msg_producer
+{
+public:
+    msg_producer() {}
+    virtual ~msg_producer();
 
     /*!
-     * \brief Virtual base class that produces messages
+     * \brief send \p msg to \p msg_producer
      */
-    class GR_RUNTIME_API msg_producer
-    {
-    public:
-      msg_producer() {}
-      virtual ~msg_producer();
+    virtual pmt::pmt_t retrieve() = 0;
+};
 
-      /*!
-       * \brief send \p msg to \p msg_producer
-       */
-      virtual pmt::pmt_t retrieve() = 0;
-    };
+typedef boost::shared_ptr<msg_producer> msg_producer_sptr;
 
-    typedef boost::shared_ptr<msg_producer> msg_producer_sptr;
-
-  } /* namespace messages */
+} /* namespace messages */
 } /* namespace gr */
 
 #endif /* INCLUDED_MSG_PRODUCER_H */
