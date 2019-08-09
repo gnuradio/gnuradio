@@ -78,10 +78,5 @@
 // Python 2/3 compatibility
 
 %begin %{
-#define SWIG_PYTHON_2_UNICODE
 #define SWIG_PYTHON_CAST_MODE
 %}
-
-#ifdef SWIGPYTHON
-%import py3compat.i
-#endif
