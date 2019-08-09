@@ -25,9 +25,9 @@ include(GrPython)
 message(STATUS "")
 
 GR_PYTHON_CHECK_MODULE_RAW(
-    "python2 >= 2.7.6 or python3 >= 3.6.5"
+    "python3 >= 3.6.5"
     "import sys; \
-     requirement = (3, 6, 5) if sys.version_info.major >= 3 else (2, 7, 6); \
+     requirement = (3, 6, 5); \
      assert sys.version_info[:3] >= requirement"
     PYTHON_MIN_VER_FOUND
 )
