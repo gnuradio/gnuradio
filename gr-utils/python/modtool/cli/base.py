@@ -73,8 +73,6 @@ class CommandCLI(click.Group):
         command is the priority over the same external plug-in command.
         """
         try:
-            if sys.version_info[0] == 2:
-                cmd_name = cmd_name.encode('ascii', 'replace')
             mod = import_module('gnuradio.modtool.cli.' + cmd_name)
         except ImportError:
             return self.commands.get(cmd_name)

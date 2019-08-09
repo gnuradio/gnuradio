@@ -31,10 +31,6 @@ namespace std {
   %template(x_vector_basic_block_sptr) vector<gr::basic_block_sptr>;
 };
 
-%begin %{
-#define SWIG_PYTHON_2_UNICODE
-%}
-
 namespace gr {
 
   class gr::basic_block
@@ -64,8 +60,6 @@ namespace gr {
 }
 
 #ifdef SWIGPYTHON
-%import py3compat.i
-
 %pythoncode %{
 basic_block_sptr.__repr__ = lambda self: "<basic_block %s (%d)>" % (self.name(), self.unique_id ())
 %}
