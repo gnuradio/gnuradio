@@ -3,6 +3,7 @@
 
 #include <gnuradio/math.h>
 #include <cmath>
+#include <vector>
 
 class sincostable
 {
