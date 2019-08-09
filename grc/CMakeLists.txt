@@ -25,10 +25,9 @@ include(GrPython)
 message(STATUS "")
 
 GR_PYTHON_CHECK_MODULE_RAW(
-    "python2 >= 2.7.6 or python3 >= 3.6.5"
+    "python3 >= ${GR_PYTHON_MIN_VERSION}"
     "import sys; \
-     requirement = (3, 6, 5) if sys.version_info.major >= 3 else (2, 7, 6); \
-     assert sys.version_info[:3] >= requirement"
+    assert '.'.join([str(x) for x in sys.version_info[:3]]) >= '${GR_PYTHON_MIN_VERSION}'"
     PYTHON_MIN_VER_FOUND
 )
 
@@ -39,8 +38,8 @@ GR_PYTHON_CHECK_MODULE_RAW(
 )
 
 GR_PYTHON_CHECK_MODULE_RAW(
-    "mako >= 0.9.1"
-    "import mako; assert mako.__version__ >= '0.9.1'"
+    "mako >= ${GR_MAKO_MIN_VERSION}"
+    "import mako; assert mako.__version__ >= '${GR_MAKO_MIN_VERSION}'"
     MAKO_FOUND
 )
 

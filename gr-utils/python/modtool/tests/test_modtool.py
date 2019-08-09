@@ -64,11 +64,7 @@ class TestModToolCore(unittest.TestCase):
     def setUp(self):
         """ create a new module and block before every test """
         try:
-            try:
-                warnings.simplefilter("ignore", ResourceWarning)
-            except (NameError):
-                # Python2 , Python3 < 3.2 don't know ResourceWarning
-                pass
+            warnings.simplefilter("ignore", ResourceWarning)
             args = {'module_name':'howto',
                     'directory': self.test_dir,
                     'srcdir': self.srcdir}
