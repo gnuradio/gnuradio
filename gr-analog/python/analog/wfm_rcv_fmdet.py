@@ -115,7 +115,7 @@ class wfm_rcv_fmdet(gr.hier_block2):
                                       stereo_carrier_filter_coeffs)
 
             # carrier is twice the picked off carrier so arrange to do
-            # a commplex multiply
+            # a complex multiply
             self.stereo_carrier_generator = blocks.multiply_cc();
 
             # Pick off the rds signal
