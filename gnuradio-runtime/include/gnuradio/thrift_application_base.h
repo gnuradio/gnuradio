@@ -53,13 +53,13 @@ class thrift_application_base_impl
 {
 public:
     thrift_application_base_impl()
-        : d_application_initilized(false), d_endpointStr(""), d_start_thrift_thread()
+        : d_application_initialized(false), d_endpointStr(""), d_start_thrift_thread()
     {
         ;
     }
 
     // Used to ensure the Thrift runtime is initialized on the first call to ::i().
-    bool d_application_initilized;
+    bool d_application_initialized;
     // Stores the generated endpoint string after the Thrift runtime has initialized.
     std::string d_endpointStr;
     // Thread to execute the Thrift runtime's blocking serve() function.
@@ -212,7 +212,7 @@ void thrift_application_base<TserverBase, TserverClass>::start_application()
         static_cast<unsigned int>(gr::prefs::singleton()->get_long(
             "thrift", "init_attempts", d_default_max_init_attempts));
 
-    if (!p_impl->d_application_initilized) {
+    if (!p_impl->d_application_initialized) {
         p_impl->d_start_thrift_thread.reset((new gr::thread::thread(
             boost::bind(&thrift_application_base::start_thrift, d_application))));
 
@@ -230,7 +230,7 @@ void thrift_application_base<TserverBase, TserverClass>::start_application()
                     "timeout waiting to port number might have failed?");
         }
 
-        p_impl->d_application_initilized = true;
+        p_impl->d_application_initialized = true;
     }
 }
 
@@ -254,7 +254,7 @@ void thrift_application_base<TserverBase, TserverClass>::set_endpoint(
 template <typename TserverBase, typename TserverClass>
 TserverBase* thrift_application_base<TserverBase, TserverClass>::i()
 {
-    if (!p_impl->d_application_initilized) {
+    if (!p_impl->d_application_initialized) {
         start_application();
     }
     return d_application->i_impl();
