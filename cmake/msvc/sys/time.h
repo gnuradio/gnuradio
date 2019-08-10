@@ -5,7 +5,7 @@
 #ifndef _MSC_SYS_TIME_H_
 #define _MSC_SYS_TIME_H_
 
-#include < time.h >
+#include <time.h>
 
 #if _MSC_VER < 1900
 struct timespec {
