@@ -409,7 +409,7 @@ int dvbt_ofdm_sym_acquisition_impl::general_work(int noutput_items,
             send_sync_start();
             d_initial_acquisition = 0;
 
-            // Restart wit a half number so that we'll not end up with the same situation
+            // Restart with a half number so that we'll not end up with the same situation
             // This will prevent peak_detect to not detect anything
             d_to_consume = d_to_consume / 2;
             d_consumed += d_to_consume;

@@ -83,7 +83,7 @@ void atsc_trellis_encoder_impl::encode(atsc_data_segment out[NCODERS],
     assert(sizeof(in_copy) == sizeof(in[0].data) * NCODERS);
     assert(sizeof(out_copy) == sizeof(out[0].data) * NCODERS);
 
-    // copy input into continguous temporary buffer
+    // copy input into contiguous temporary buffer
     for (int i = 0; i < NCODERS; i++) {
         assert(in[i].pli.regular_seg_p());
         plinfo::sanity_check(in[i].pli);
@@ -112,7 +112,7 @@ void atsc_trellis_encoder_impl::encode(atsc_data_segment out[NCODERS],
 }
 
 /*
- * This code expects contiguous arrrays. Use it as is, it computes
+ * This code expects contiguous arrays. Use it as is, it computes
  * the correct answer. Maybe someday, when we've run out of better
  * things to do, rework to avoid the copying in encode.
  */

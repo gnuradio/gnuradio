@@ -26,7 +26,7 @@ function v = write_complex_binary (data, filename)
   %%  open filename and write data to it
   %%  Format is interleaved float IQ e.g. each
   %%  I,Q 32-bit float IQIQIQ....
-  %%  This is compatabile with read_complex_binary()
+  %%  This is compatible with read_complex_binary()
   %%
 
   m = nargchk (2,2,nargin);

@@ -51,7 +51,7 @@ namespace fft {
  * \f$N-1\f$.
  *
  * \b Note, that due to the underlying FFTW library, the output of a FFT
- * followed by an IFFT (or the other way arround) will be scaled i.e.
+ * followed by an IFFT (or the other way around) will be scaled i.e.
  * \f$FFT\{ \, IFFT\{x\} \,\} =  N \cdot x \neq x\f$.
  *
  * \see http://www.fftw.org/faq/section3.html#whyscaled
