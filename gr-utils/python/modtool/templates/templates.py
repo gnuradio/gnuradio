@@ -453,11 +453,16 @@ ${str_to_fancyc_comment(license)}
 #include <gnuradio/attributes.h>
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_CASE(test_${blockname}_t1)
-{
-    // Put test here
-}
+namespace gr {
+  namespace ${modname} {
 
+    BOOST_AUTO_TEST_CASE(test_${blockname}_t1)
+    {
+      // Put test here
+    }
+
+  } /* namespace ${modname} */
+} /* namespace gr */
 '''
 
 # C++ file for QA
