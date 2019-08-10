@@ -45,7 +45,7 @@ namespace qtgui {
  * streams and plots them in the time domain. For each signal, both
  * the signal's I and Q parts are plotted, and they are all plotted
  * with a different color, and the \a set_title and \a set_color
- * functions can be used to change the lable and color for a given
+ * functions can be used to change the label and color for a given
  * input number.
  *
  * The sink supports plotting streaming complex data or
