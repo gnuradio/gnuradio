@@ -1,5 +1,5 @@
 #
-# Copyright 2013, 2018 Free Software Foundation, Inc.
+# Copyright 2013, 2018, 2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -78,12 +78,12 @@ class ModToolRemove(ModTool):
                                     r'\$\{CMAKE_CURRENT_SOURCE_DIR\}/%s' % filename,
                                     to_ignore_start='APPEND test_{}_sources'.format(self.info['modname']))
                     self.scm.mark_file_updated(ed.filename)
-            elif self._info['version'] == '38':
+            elif self.info['version'] == '38':
                 (base, ext) = os.path.splitext(filename)
                 if ext == '.cc':
                     ed.remove_value(
                         'list', filename,
-                        to_ignore_start='APPEND test_%s_sources' % self._info['modname'])
+                        to_ignore_start='APPEND test_{}_sources'.format(self.info['modname']))
                     self.scm.mark_file_updated(ed.filename)
             else:
                 filebase = os.path.splitext(filename)[0]

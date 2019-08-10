@@ -1,5 +1,5 @@
 #
-# Copyright 2013, 2018 Free Software Foundation, Inc.
+# Copyright 2013, 2018, 2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -82,7 +82,7 @@ class ModToolDisable(ModTool):
                 ed.write()
                 self.scm.mark_file_updated(self._file['qalib'])
             elif self.info['version'] == '38':
-                fname_qa_cc = 'qa_{}.cc'.format(self._info['blockname'])
+                fname_qa_cc = 'qa_{}.cc'.format(self.info['blockname'])
                 cmake.comment_out_lines(fname_qa_cc)
             elif self.info['version'] == '36':
                 cmake.comment_out_lines('add_executable.*'+fname)
