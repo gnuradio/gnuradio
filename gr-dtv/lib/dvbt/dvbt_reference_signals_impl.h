@@ -218,7 +218,7 @@ public:
      * TODO
      * ETSI EN 300 744 Clause 4.5. \n
      * Extract data from a set of carriers using pilot signals. \n
-     * This is doing frequency correcton, equalization. \n
+     * This is doing frequency correction, equalization. \n
      */
     int parse_input(const gr_complex* in,
                     gr_complex* out,

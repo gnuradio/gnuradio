@@ -106,7 +106,7 @@ class wfm_rcv_pll(gr.hier_block2):
             self.stereo_carrier_filter = \
                 filter.fir_filter_fcc(audio_decimation, stereo_carrier_filter_coeffs)
 
-            # carrier is twice the picked off carrier so arrange to do a commplex multiply
+            # carrier is twice the picked off carrier so arrange to do a complex multiply
 
             self.stereo_carrier_generator = blocks.multiply_cc();
 
