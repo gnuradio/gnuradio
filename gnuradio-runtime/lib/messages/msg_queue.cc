@@ -39,7 +39,7 @@ msg_queue::msg_queue(unsigned int limit) : d_limit(limit) {}
 
 msg_queue::~msg_queue() { flush(); }
 
-void msg_queue::insert_tail(pmt::pmt_t msg)
+void msg_queue::insert_tail(const pmt::pmt_t& msg)
 {
     gr::thread::scoped_lock guard(d_mutex);
 

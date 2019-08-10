@@ -134,16 +134,17 @@ public:
 };
 
 /*! see generic_encoder::get_output_size() */
-FEC_API int get_encoder_output_size(generic_encoder::sptr my_encoder);
+FEC_API int get_encoder_output_size(const generic_encoder::sptr& my_encoder);
 
 /*! see generic_encoder::get_input_size() */
-FEC_API int get_encoder_input_size(generic_encoder::sptr my_encoder);
+FEC_API int get_encoder_input_size(const generic_encoder::sptr& my_encoder);
 
 /*! see generic_encoder::get_input_conversion() */
-FEC_API const char* get_encoder_input_conversion(generic_encoder::sptr my_encoder);
+FEC_API const char* get_encoder_input_conversion(const generic_encoder::sptr& my_encoder);
 
 /*! see generic_encoder::get_output_conversion() */
-FEC_API const char* get_encoder_output_conversion(generic_encoder::sptr my_encoder);
+FEC_API const char*
+get_encoder_output_conversion(const generic_encoder::sptr& my_encoder);
 
 
 } /* namespace fec */

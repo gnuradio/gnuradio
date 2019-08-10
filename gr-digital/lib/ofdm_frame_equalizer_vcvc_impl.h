@@ -42,7 +42,7 @@ protected:
                            gr_vector_int& n_input_items_reqd);
 
 public:
-    ofdm_frame_equalizer_vcvc_impl(ofdm_equalizer_base::sptr equalizer,
+    ofdm_frame_equalizer_vcvc_impl(const ofdm_equalizer_base::sptr& equalizer,
                                    int cp_len,
                                    const std::string& len_tag_key,
                                    bool propagate_channel_state,

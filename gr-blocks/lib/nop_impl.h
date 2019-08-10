@@ -35,7 +35,7 @@ protected:
     int d_ctrlport_test;
 
     // Method that just counts any received messages.
-    void count_received_msgs(pmt::pmt_t msg);
+    void count_received_msgs(const pmt::pmt_t& msg);
 
 public:
     nop_impl(size_t sizeof_stream_item);

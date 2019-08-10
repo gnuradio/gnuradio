@@ -72,7 +72,7 @@ std::string block_registry::register_symbolic_name(basic_block* block)
     return ss.str();
 }
 
-void block_registry::register_symbolic_name(basic_block* block, std::string name)
+void block_registry::register_symbolic_name(basic_block* block, const std::string& name)
 {
     gr::thread::scoped_lock guard(d_mutex);
 
@@ -82,7 +82,7 @@ void block_registry::register_symbolic_name(basic_block* block, std::string name
     d_ref_map = pmt::dict_add(d_ref_map, pmt::intern(name), pmt::make_any(block));
 }
 
-void block_registry::update_symbolic_name(basic_block* block, std::string name)
+void block_registry::update_symbolic_name(basic_block* block, const std::string& name)
 {
     gr::thread::scoped_lock guard(d_mutex);
 
@@ -101,7 +101,7 @@ void block_registry::update_symbolic_name(basic_block* block, std::string name)
     d_ref_map = pmt::dict_add(d_ref_map, pmt::intern(name), pmt::make_any(block));
 }
 
-basic_block_sptr block_registry::block_lookup(pmt::pmt_t symbol)
+basic_block_sptr block_registry::block_lookup(const pmt::pmt_t& symbol)
 {
     gr::thread::scoped_lock guard(d_mutex);
 
@@ -113,21 +113,21 @@ basic_block_sptr block_registry::block_lookup(pmt::pmt_t symbol)
     return blk->shared_from_this();
 }
 
-void block_registry::register_primitive(std::string blk, block* ref)
+void block_registry::register_primitive(const std::string& blk, block* ref)
 {
     gr::thread::scoped_lock guard(d_mutex);
 
     primitive_map[blk] = ref;
 }
 
-void block_registry::unregister_primitive(std::string blk)
+void block_registry::unregister_primitive(const std::string& blk)
 {
     gr::thread::scoped_lock guard(d_mutex);
 
     primitive_map.erase(primitive_map.find(blk));
 }
 
-void block_registry::notify_blk(std::string blk)
+void block_registry::notify_blk(const std::string& blk)
 {
     gr::thread::scoped_lock guard(d_mutex);
 

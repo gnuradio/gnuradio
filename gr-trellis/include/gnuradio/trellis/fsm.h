@@ -189,14 +189,14 @@ public:
      * \param filename         filename
      * \param number_stages    ????
      */
-    void write_trellis_svg(std::string filename, int number_stages);
+    void write_trellis_svg(const std::string& filename, int number_stages);
 
     /*!
      * \brief Write the FSMS to a file.
      *
      * \param filename   filename
      */
-    void write_fsm_txt(std::string filename);
+    void write_fsm_txt(const std::string& filename);
 };
 
 } /* namespace trellis */

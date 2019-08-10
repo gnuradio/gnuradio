@@ -26,6 +26,7 @@
 #include <boost/atomic.hpp>
 #include <boost/utility.hpp>
 #include <boost/version.hpp>
+#include <utility>
 
 /*
  * EVERYTHING IN THIS FILE IS PRIVATE TO THE IMPLEMENTATION!
@@ -59,7 +60,7 @@ public:
     const std::string name() { return d_name; }
 
     pmt_t next() { return d_next; } // symbol table link
-    void set_next(pmt_t next) { d_next = next; }
+    void set_next(pmt_t next) { d_next = std::move(next); }
 };
 
 class pmt_integer : public pmt_base
@@ -136,8 +137,8 @@ public:
     pmt_t car() const { return d_car; }
     pmt_t cdr() const { return d_cdr; }
 
-    void set_car(pmt_t car) { d_car = car; }
-    void set_cdr(pmt_t cdr) { d_cdr = cdr; }
+    void set_car(pmt_t car) { d_car = std::move(car); }
+    void set_cdr(pmt_t cdr) { d_cdr = std::move(cdr); }
 };
 
 class pmt_vector : public pmt_base
@@ -145,13 +146,13 @@ class pmt_vector : public pmt_base
     std::vector<pmt_t> d_v;
 
 public:
-    pmt_vector(size_t len, pmt_t fill);
+    pmt_vector(size_t len, const pmt_t& fill);
     //~pmt_vector();
 
     bool is_vector() const { return true; }
     pmt_t ref(size_t k) const;
     void set(size_t k, pmt_t obj);
-    void fill(pmt_t fill);
+    void fill(const pmt_t& fill);
     size_t length() const { return d_v.size(); }
 
     pmt_t _ref(size_t k) const { return d_v[k]; }
@@ -170,7 +171,7 @@ public:
     size_t length() const { return d_v.size(); }
 
     pmt_t _ref(size_t k) const { return d_v[k]; }
-    void _set(size_t k, pmt_t v) { d_v[k] = v; }
+    void _set(size_t k, pmt_t v) { d_v[k] = std::move(v); }
 };
 
 class pmt_any : public pmt_base

@@ -112,21 +112,21 @@ public:
      * subscription
      */
     void msg_connect(basic_block_sptr src,
-                     pmt::pmt_t srcport,
+                     const pmt::pmt_t& srcport,
                      basic_block_sptr dst,
                      pmt::pmt_t dstport);
     void msg_connect(basic_block_sptr src,
-                     std::string srcport,
+                     const std::string& srcport,
                      basic_block_sptr dst,
-                     std::string dstport);
+                     const std::string& dstport);
     void msg_disconnect(basic_block_sptr src,
-                        pmt::pmt_t srcport,
+                        const pmt::pmt_t& srcport,
                         basic_block_sptr dst,
                         pmt::pmt_t dstport);
     void msg_disconnect(basic_block_sptr src,
-                        std::string srcport,
+                        const std::string& srcport,
                         basic_block_sptr dst,
-                        std::string dstport);
+                        const std::string& dstport);
 
     /*!
      * \brief Remove a gr-block or hierarchical block from the
@@ -237,7 +237,7 @@ public:
     pmt::pmt_t hier_message_ports_in;
     pmt::pmt_t hier_message_ports_out;
 
-    void message_port_register_hier_in(pmt::pmt_t port_id)
+    void message_port_register_hier_in(const pmt::pmt_t& port_id)
     {
         if (pmt::list_has(hier_message_ports_in, port_id))
             throw std::invalid_argument(
@@ -248,7 +248,7 @@ public:
         hier_message_ports_in = pmt::list_add(hier_message_ports_in, port_id);
     }
 
-    void message_port_register_hier_out(pmt::pmt_t port_id)
+    void message_port_register_hier_out(const pmt::pmt_t& port_id)
     {
         if (pmt::list_has(hier_message_ports_out, port_id))
             throw std::invalid_argument(
@@ -327,9 +327,9 @@ public:
 /*!
  * \brief Return hierarchical block's flow graph represented in dot language
  */
-GR_RUNTIME_API std::string dot_graph(hier_block2_sptr hierblock2);
+GR_RUNTIME_API std::string dot_graph(const hier_block2_sptr& hierblock2);
 
-inline hier_block2_sptr cast_to_hier_block2_sptr(basic_block_sptr block)
+inline hier_block2_sptr cast_to_hier_block2_sptr(const basic_block_sptr& block)
 {
     return boost::dynamic_pointer_cast<hier_block2, basic_block>(block);
 }

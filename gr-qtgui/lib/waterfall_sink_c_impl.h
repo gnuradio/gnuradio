@@ -80,14 +80,14 @@ private:
 
     // Handles message input port for setting new bandwidth
     // The message is a PMT pair (intern('bw'), double(bw))
-    void handle_set_bw(pmt::pmt_t msg);
+    void handle_set_bw(const pmt::pmt_t& msg);
 
     // Handles message input port for setting new center frequency.
     // The message is a PMT pair (intern('freq'), double(frequency)).
-    void handle_set_freq(pmt::pmt_t msg);
+    void handle_set_freq(const pmt::pmt_t& msg);
 
     // Handles message input port for displaying PDU samples.
-    void handle_pdus(pmt::pmt_t msg);
+    void handle_pdus(const pmt::pmt_t& msg);
 
 public:
     waterfall_sink_c_impl(int size,

@@ -22,6 +22,7 @@
 
 #include "usrp_block_impl.h"
 #include <boost/make_shared.hpp>
+#include <utility>
 
 using namespace gr::uhd;
 
@@ -33,7 +34,7 @@ const double usrp_block_impl::LOCK_TIMEOUT = 1.5;
 usrp_block::usrp_block(const std::string& name,
                        gr::io_signature::sptr input_signature,
                        gr::io_signature::sptr output_signature)
-    : sync_block(name, input_signature, output_signature)
+    : sync_block(name, std::move(input_signature), std::move(output_signature))
 {
     // nop
 }
@@ -179,7 +180,7 @@ void usrp_block_impl::_update_stream_args(const ::uhd::stream_args_t& stream_arg
 
 bool usrp_block_impl::_wait_for_locked_sensor(std::vector<std::string> sensor_names,
                                               const std::string& sensor_name,
-                                              get_sensor_fn_t get_sensor_fn)
+                                              const get_sensor_fn_t& get_sensor_fn)
 {
     if (std::find(sensor_names.begin(), sensor_names.end(), sensor_name) ==
         sensor_names.end())
@@ -274,7 +275,8 @@ bool usrp_block_impl::_check_mboard_sensors_locked()
     return clocks_locked;
 }
 
-void usrp_block_impl::_set_center_freq_from_internals_allchans(pmt::pmt_t direction)
+void usrp_block_impl::_set_center_freq_from_internals_allchans(
+    const pmt::pmt_t& direction)
 {
     while (_chans_to_tune.any()) {
         // This resets() bits, so this loop should not run indefinitely
@@ -562,7 +564,7 @@ void usrp_block_impl::dispatch_msg_cmd_handler(const pmt::pmt_t& cmd,
 void usrp_block_impl::register_msg_cmd_handler(const pmt::pmt_t& cmd,
                                                cmd_handler_t handler)
 {
-    _msg_cmd_handlers[cmd] = handler;
+    _msg_cmd_handlers[cmd] = std::move(handler);
 }
 
 void usrp_block_impl::_update_curr_tune_req(::uhd::tune_request_t& tune_req, int chan)

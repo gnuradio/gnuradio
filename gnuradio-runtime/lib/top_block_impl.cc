@@ -35,6 +35,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <stdexcept>
+#include <utility>
 
 namespace gr {
 
@@ -72,7 +73,7 @@ static scheduler_sptr make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_it
             }
         }
     }
-    return factory(ffg, max_noutput_items);
+    return factory(std::move(ffg), max_noutput_items);
 }
 
 top_block_impl::top_block_impl(top_block* owner)

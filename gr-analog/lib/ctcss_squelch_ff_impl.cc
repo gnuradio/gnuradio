@@ -26,6 +26,8 @@
 
 #include "ctcss_squelch_ff_impl.h"
 
+#include <cmath>
+
 namespace gr {
 namespace analog {
 
@@ -132,9 +134,9 @@ void ctcss_squelch_ff_impl::update_state(const float& in)
     float rounder = 100000;
     float d_out_l, d_out_c, d_out_r;
     if (d_goertzel_c->ready()) {
-        d_out_l = floor(rounder * abs(d_goertzel_l->output())) / rounder;
-        d_out_c = floor(rounder * abs(d_goertzel_c->output())) / rounder;
-        d_out_r = floor(rounder * abs(d_goertzel_r->output())) / rounder;
+        d_out_l = std::floor(rounder * abs(d_goertzel_l->output())) / rounder;
+        d_out_c = std::floor(rounder * abs(d_goertzel_c->output())) / rounder;
+        d_out_r = std::floor(rounder * abs(d_goertzel_r->output())) / rounder;
 
         // printf("d_out_l=%f d_out_c=%f d_out_r=%f\n", d_out_l, d_out_c, d_out_r);
         d_mute = (d_out_c < d_level || d_out_c < d_out_l || d_out_c < d_out_r);

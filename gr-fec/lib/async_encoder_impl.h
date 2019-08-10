@@ -49,8 +49,8 @@ private:
     uint8_t* d_bits_in;
     uint8_t* d_bits_out;
 
-    void encode_packed(pmt::pmt_t msg);
-    void encode_unpacked(pmt::pmt_t msg);
+    void encode_packed(const pmt::pmt_t& msg);
+    void encode_unpacked(const pmt::pmt_t& msg);
 
 public:
     async_encoder_impl(generic_encoder::sptr my_encoder,

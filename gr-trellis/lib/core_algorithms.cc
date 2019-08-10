@@ -22,6 +22,7 @@
 
 #include <gnuradio/trellis/calc_metric.h>
 #include <gnuradio/trellis/core_algorithms.h>
+#include <cmath>
 #include <cstring>
 #include <iostream>
 #include <stdexcept>
@@ -35,7 +36,7 @@ float min(float a, float b) { return a <= b ? a : b; }
 
 float min_star(float a, float b)
 {
-    return (a <= b ? a : b) - log(1 + exp(a <= b ? a - b : b - a));
+    return (a <= b ? a : b) - log(1 + std::exp(a <= b ? a - b : b - a));
 }
 
 template <class T>

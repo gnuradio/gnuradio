@@ -73,7 +73,7 @@ private:
 
     //! Message handler: Reads the result from the header demod and sets length tag (and
     //! other tags)
-    void parse_header_data_msg(pmt::pmt_t header_data);
+    void parse_header_data_msg(const pmt::pmt_t& header_data);
 
     //! Helper function that returns true if a trigger signal is detected.
     //  Searches input 1 (if active), then the tags. Returns the offset in the input

@@ -53,7 +53,7 @@ public:
      * \param G_obj The ldpc_G_matrix object to use for
      *              encoding.
      */
-    static generic_encoder::sptr make(const code::ldpc_G_matrix::sptr G_obj);
+    static generic_encoder::sptr make(const code::ldpc_G_matrix::sptr& G_obj);
 
     /*!
      * \brief  Sets the uncoded frame size to \p frame_size.

@@ -31,6 +31,7 @@
 #include <boost/random.hpp>
 
 #include <iostream>
+#include <utility>
 
 
 // FASTSINCOS:  0 = slow native,  1 = gr::fxpt impl,  2 = sincostable.h
@@ -49,8 +50,8 @@ selective_fading_model::sptr selective_fading_model::make(unsigned int N,
                                                           std::vector<float> mags,
                                                           int ntaps)
 {
-    return gnuradio::get_initial_sptr(
-        new selective_fading_model_impl(N, fDTs, LOS, K, seed, delays, mags, ntaps));
+    return gnuradio::get_initial_sptr(new selective_fading_model_impl(
+        N, fDTs, LOS, K, seed, std::move(delays), std::move(mags), ntaps));
 }
 
 // Block constructor
@@ -59,8 +60,8 @@ selective_fading_model_impl::selective_fading_model_impl(unsigned int N,
                                                          bool LOS,
                                                          float K,
                                                          int seed,
-                                                         std::vector<float> delays,
-                                                         std::vector<float> mags,
+                                                         const std::vector<float>& delays,
+                                                         const std::vector<float>& mags,
                                                          int ntaps)
     : sync_block("selective_fading_model",
                  io_signature::make(1, 1, sizeof(gr_complex)),

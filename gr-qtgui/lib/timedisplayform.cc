@@ -396,7 +396,7 @@ void TimeDisplayForm::setTriggerSlope(gr::qtgui::trigger_slope slope)
 
 gr::qtgui::trigger_slope TimeDisplayForm::getTriggerSlope() const { return d_trig_slope; }
 
-void TimeDisplayForm::setTriggerLevel(QString s)
+void TimeDisplayForm::setTriggerLevel(const QString& s)
 {
     d_trig_level = s.toFloat();
 
@@ -423,7 +423,7 @@ void TimeDisplayForm::setTriggerLevel(float level)
 
 float TimeDisplayForm::getTriggerLevel() const { return d_trig_level; }
 
-void TimeDisplayForm::setTriggerDelay(QString s)
+void TimeDisplayForm::setTriggerDelay(const QString& s)
 {
     d_trig_delay = s.toFloat();
 
@@ -460,7 +460,7 @@ void TimeDisplayForm::setTriggerChannel(int channel)
 
 int TimeDisplayForm::getTriggerChannel() const { return d_trig_channel; }
 
-void TimeDisplayForm::setTriggerTagKey(QString s)
+void TimeDisplayForm::setTriggerTagKey(const QString& s)
 {
     d_trig_tag_key = s.toStdString();
 

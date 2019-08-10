@@ -36,7 +36,7 @@ private:
     pmt::pmt_t d_in_port;
     pmt::pmt_t d_hdr_port, d_pld_port;
 
-    void append(pmt::pmt_t msg);
+    void append(const pmt::pmt_t& msg);
 
 public:
     protocol_formatter_async_impl(const header_format_base::sptr& format);

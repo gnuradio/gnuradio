@@ -174,7 +174,7 @@ bool file_meta_source_impl::read_header(pmt::pmt_t& hdr, pmt::pmt_t& extras)
     return true;
 }
 
-void file_meta_source_impl::parse_header(pmt::pmt_t hdr,
+void file_meta_source_impl::parse_header(const pmt::pmt_t& hdr,
                                          uint64_t offset,
                                          std::vector<tag_t>& tags)
 {
@@ -231,7 +231,7 @@ void file_meta_source_impl::parse_header(pmt::pmt_t hdr,
     }
 }
 
-void file_meta_source_impl::parse_extras(pmt::pmt_t extras,
+void file_meta_source_impl::parse_extras(const pmt::pmt_t& extras,
                                          uint64_t offset,
                                          std::vector<tag_t>& tags)
 {

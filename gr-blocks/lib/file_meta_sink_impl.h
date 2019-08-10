@@ -53,7 +53,7 @@ private:
 
 protected:
     void write_header(FILE* fp, pmt_t header, pmt_t extra);
-    void update_header(pmt_t key, pmt_t value);
+    void update_header(const pmt_t& key, pmt_t value);
     void update_last_header();
     void update_last_header_inline();
     void update_last_header_detached();
@@ -70,7 +70,7 @@ public:
                         gr_file_types type = GR_FILE_FLOAT,
                         bool complex = true,
                         size_t max_segment_size = 1000000,
-                        pmt::pmt_t extra_dict = pmt::make_dict(),
+                        const pmt::pmt_t& extra_dict = pmt::make_dict(),
                         bool detached_header = false);
     ~file_meta_sink_impl();
 

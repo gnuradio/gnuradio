@@ -33,6 +33,7 @@
 #include <volk/volk_typedefs.h>
 #include <boost/assign/list_of.hpp>
 #include <sstream>
+#include <utility>
 #include <vector>
 
 namespace gr {
@@ -47,8 +48,8 @@ generic_encoder::sptr cc_encoder::make(int frame_size,
                                        cc_mode_t mode,
                                        bool padded)
 {
-    return generic_encoder::sptr(
-        new cc_encoder_impl(frame_size, k, rate, polys, start_state, mode, padded));
+    return generic_encoder::sptr(new cc_encoder_impl(
+        frame_size, k, rate, std::move(polys), start_state, mode, padded));
 }
 
 cc_encoder_impl::cc_encoder_impl(int frame_size,
@@ -61,7 +62,7 @@ cc_encoder_impl::cc_encoder_impl(int frame_size,
     : generic_encoder("cc_encoder"),
       d_rate(rate),
       d_k(k),
-      d_polys(polys),
+      d_polys(std::move(polys)),
       d_start_state(start_state),
       d_mode(mode),
       d_padding(0)

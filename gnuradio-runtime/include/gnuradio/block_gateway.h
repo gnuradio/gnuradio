@@ -27,6 +27,8 @@
 #include <gnuradio/block.h>
 #include <gnuradio/feval.h>
 
+#include <utility>
+
 namespace gr {
 
 /*!
@@ -263,39 +265,39 @@ public:
     /* Message passing interface */
     void block__message_port_register_in(pmt::pmt_t port_id)
     {
-        gr::basic_block::message_port_register_in(port_id);
+        gr::basic_block::message_port_register_in(std::move(port_id));
     }
 
     void block__message_port_register_out(pmt::pmt_t port_id)
     {
-        gr::basic_block::message_port_register_out(port_id);
+        gr::basic_block::message_port_register_out(std::move(port_id));
     }
 
     void block__message_port_pub(pmt::pmt_t port_id, pmt::pmt_t msg)
     {
-        gr::basic_block::message_port_pub(port_id, msg);
+        gr::basic_block::message_port_pub(std::move(port_id), std::move(msg));
     }
 
     void block__message_port_sub(pmt::pmt_t port_id, pmt::pmt_t target)
     {
-        gr::basic_block::message_port_sub(port_id, target);
+        gr::basic_block::message_port_sub(std::move(port_id), std::move(target));
     }
 
     void block__message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target)
     {
-        gr::basic_block::message_port_unsub(port_id, target);
+        gr::basic_block::message_port_unsub(std::move(port_id), std::move(target));
     }
 
     pmt::pmt_t block__message_subscribers(pmt::pmt_t which_port)
     {
-        return gr::basic_block::message_subscribers(which_port);
+        return gr::basic_block::message_subscribers(std::move(which_port));
     }
 
     pmt::pmt_t block__message_ports_in() { return gr::basic_block::message_ports_in(); }
 
     pmt::pmt_t block__message_ports_out() { return gr::basic_block::message_ports_out(); }
 
-    void set_msg_handler_feval(pmt::pmt_t which_port, gr::feval_p* msg_handler)
+    void set_msg_handler_feval(const pmt::pmt_t& which_port, gr::feval_p* msg_handler)
     {
         if (msg_queue.find(which_port) == msg_queue.end()) {
             throw std::runtime_error(

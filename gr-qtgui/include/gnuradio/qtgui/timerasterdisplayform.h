@@ -64,8 +64,8 @@ public slots:
     void setNumRows(double rows);
     void setNumCols(double cols);
 
-    void setNumRows(QString rows);
-    void setNumCols(QString cols);
+    void setNumRows(const QString& rows);
+    void setNumCols(const QString& cols);
 
     void setSampleRate(const double samprate);
     void setSampleRate(const QString& rate);
@@ -76,8 +76,8 @@ public slots:
 
     void setColorMap(unsigned int which,
                      const int newType,
-                     const QColor lowColor = QColor("white"),
-                     const QColor highColor = QColor("white"));
+                     const QColor& lowColor = QColor("white"),
+                     const QColor& highColor = QColor("white"));
 
     void setAlpha(unsigned int which, unsigned int alpha);
 

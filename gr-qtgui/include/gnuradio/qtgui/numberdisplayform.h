@@ -62,13 +62,13 @@ public slots:
     void setStop();
     void setGraphType(const gr::qtgui::graph_t type);
     void setColor(unsigned int which, const QColor& min, const QColor& max);
-    void setColorMin(unsigned int which, QString min);
-    void setColorMax(unsigned int which, QString max);
+    void setColorMin(unsigned int which, const QString& min);
+    void setColorMax(unsigned int which, const QString& max);
     void setLabel(unsigned int which, const std::string& label);
-    void setLabel(unsigned int which, QString label);
+    void setLabel(unsigned int which, const QString& label);
     void setAverage(const float avg);
     void setUpdateTime(const float time);
-    void setUpdateTime(QString time);
+    void setUpdateTime(const QString& time);
     void saveFigure();
     void setScale(unsigned int which, int min, int max);
     void setScaleMin(unsigned int which, int min);

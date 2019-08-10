@@ -30,6 +30,7 @@
 #include <boost/assign/list_of.hpp>
 #include <algorithm> // for std::reverse
 #include <sstream>
+#include <utility>
 #include <vector>
 
 
@@ -39,7 +40,8 @@ namespace fec {
 generic_decoder::sptr
 ldpc_decoder::make(std::string alist_file, float sigma, int max_iterations)
 {
-    return generic_decoder::sptr(new ldpc_decoder(alist_file, sigma, max_iterations));
+    return generic_decoder::sptr(
+        new ldpc_decoder(std::move(alist_file), sigma, max_iterations));
 }
 
 ldpc_decoder::ldpc_decoder(std::string alist_file, float sigma, int max_iterations)

@@ -28,25 +28,27 @@
 #include <gnuradio/blocks/pdu.h>
 #include <gnuradio/io_signature.h>
 
+#include <utility>
+
 namespace gr {
 namespace blocks {
 
 pdu_set::sptr pdu_set::make(pmt::pmt_t k, pmt::pmt_t v)
 {
-    return gnuradio::get_initial_sptr(new pdu_set_impl(k, v));
+    return gnuradio::get_initial_sptr(new pdu_set_impl(std::move(k), std::move(v)));
 }
 
 pdu_set_impl::pdu_set_impl(pmt::pmt_t k, pmt::pmt_t v)
     : block("pdu_set", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
-      d_k(k),
-      d_v(v)
+      d_k(std::move(k)),
+      d_v(std::move(v))
 {
     message_port_register_out(pdu::pdu_port_id());
     message_port_register_in(pdu::pdu_port_id());
     set_msg_handler(pdu::pdu_port_id(), boost::bind(&pdu_set_impl::handle_msg, this, _1));
 }
 
-void pdu_set_impl::handle_msg(pmt::pmt_t pdu)
+void pdu_set_impl::handle_msg(const pmt::pmt_t& pdu)
 {
     // add the field and publish
     pmt::pmt_t meta = pmt::car(pdu);

@@ -28,7 +28,9 @@
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
+#include <cmath>
 #include <cstdio>
+#include <utility>
 
 namespace gr {
 namespace fec {
@@ -40,7 +42,10 @@ polar_decoder_common::polar_decoder_common(int block_size,
                                            int num_info_bits,
                                            std::vector<int> frozen_bit_positions,
                                            std::vector<char> frozen_bit_values)
-    : polar_common(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values),
+    : polar_common(block_size,
+                   num_info_bits,
+                   std::move(frozen_bit_positions),
+                   std::move(frozen_bit_values)),
       d_frozen_bit_counter(0)
 {
 }
@@ -59,7 +64,8 @@ void polar_decoder_common::initialize_decoder(unsigned char* u,
 
 float polar_decoder_common::llr_odd(const float la, const float lb) const
 {
-    return copysignf(1.0f, la) * copysignf(1.0f, lb) * std::min(fabs(la), fabs(lb));
+    return copysignf(1.0f, la) * copysignf(1.0f, lb) *
+           std::min(std::fabs(la), std::fabs(lb));
 }
 
 float polar_decoder_common::llr_even(const float la,

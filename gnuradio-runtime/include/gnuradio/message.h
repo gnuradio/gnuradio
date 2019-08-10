@@ -65,7 +65,7 @@ public:
      */
     static sptr make(long type = 0, double arg1 = 0, double arg2 = 0, size_t length = 0);
 
-    static sptr make_from_string(const std::string s,
+    static sptr make_from_string(const std::string& s,
                                  long type = 0,
                                  double arg1 = 0,
                                  double arg2 = 0);

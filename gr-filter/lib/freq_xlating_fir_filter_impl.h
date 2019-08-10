@@ -58,7 +58,7 @@ public:
     void set_taps(const std::vector<TAP_T>& taps);
     std::vector<TAP_T> taps() const;
 
-    void handle_set_center_freq(pmt::pmt_t msg);
+    void handle_set_center_freq(const pmt::pmt_t& msg);
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

@@ -26,6 +26,7 @@
 
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/math.h>
+#include <cmath>
 #include <stdexcept>
 
 using std::vector;
@@ -355,7 +356,7 @@ firdes::complex_band_pass_2(double gain,
         phase = -freq / 2.0 * ((1 + 2 * lptaps.size()) >> 1);
 
     for (unsigned int i = 0; i < lptaps.size(); i++) {
-        *optr++ = gr_complex(*iptr * cos(phase), *iptr * sin(phase));
+        *optr++ = gr_complex(*iptr * std::cos(phase), *iptr * std::sin(phase));
         iptr++, phase += freq;
     }
 
@@ -399,7 +400,7 @@ firdes::complex_band_pass(double gain,
         phase = -freq / 2.0 * ((1 + 2 * lptaps.size()) >> 1);
 
     for (unsigned int i = 0; i < lptaps.size(); i++) {
-        *optr++ = gr_complex(*iptr * cos(phase), *iptr * sin(phase));
+        *optr++ = gr_complex(*iptr * std::cos(phase), *iptr * std::sin(phase));
         iptr++, phase += freq;
     }
 
@@ -523,7 +524,7 @@ vector<float> firdes::hilbert(unsigned int ntaps, win_type windowtype, double be
             taps[h + i] = taps[h - i] = 0;
     }
 
-    gain = 2 * fabs(gain);
+    gain = 2 * std::fabs(gain);
     for (unsigned int i = 0; i < ntaps; i++)
         taps[i] /= gain;
     return taps;

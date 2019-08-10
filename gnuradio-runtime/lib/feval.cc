@@ -26,6 +26,8 @@
 
 #include <gnuradio/feval.h>
 
+#include <utility>
+
 namespace gr {
 
 feval_dd::~feval_dd() {}
@@ -70,7 +72,7 @@ void feval_p::eval(pmt::pmt_t x)
     // nop
 }
 
-void feval_p::calleval(pmt::pmt_t x) { eval(x); }
+void feval_p::calleval(pmt::pmt_t x) { eval(std::move(x)); }
 
 /*
  * Trivial examples showing C++ (transparently) calling Python

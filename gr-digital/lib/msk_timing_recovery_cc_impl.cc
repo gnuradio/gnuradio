@@ -29,6 +29,8 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 
+#include <cmath>
+
 namespace gr {
 namespace digital {
 
@@ -204,8 +206,8 @@ int msk_timing_recovery_cc_impl::general_work(int noutput_items,
 
         // update interpolator twice per symbol
         d_mu += d_omega;
-        iidx += (int)floor(d_mu);
-        d_mu -= floor(d_mu);
+        iidx += (int)std::floor(d_mu);
+        d_mu -= std::floor(d_mu);
     }
 
     consume_each(iidx);

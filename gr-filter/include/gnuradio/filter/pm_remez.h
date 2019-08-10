@@ -61,7 +61,7 @@ FILTER_API std::vector<double> pm_remez(int order,
                                         const std::vector<double>& bands,
                                         const std::vector<double>& ampl,
                                         const std::vector<double>& error_weight,
-                                        const std::string filter_type = "bandpass",
+                                        const std::string& filter_type = "bandpass",
                                         int grid_density = 16) noexcept(false);
 
 } /* namespace filter */

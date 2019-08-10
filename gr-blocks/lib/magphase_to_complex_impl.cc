@@ -28,6 +28,8 @@
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
+#include <cmath>
+
 namespace gr {
 namespace blocks {
 
@@ -55,7 +57,7 @@ int magphase_to_complex_impl::work(int noutput_items,
     gr_complex* out = (gr_complex*)output_items[0];
 
     for (size_t j = 0; j < noutput_items * d_vlen; j++)
-        out[j] = gr_complex(mag[j] * cos(phase[j]), mag[j] * sin(phase[j]));
+        out[j] = gr_complex(mag[j] * std::cos(phase[j]), mag[j] * std::sin(phase[j]));
 
     return noutput_items;
 }

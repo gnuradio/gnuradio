@@ -303,7 +303,7 @@ void sink_c_impl::check_clicked()
     }
 }
 
-void sink_c_impl::handle_set_freq(pmt::pmt_t msg)
+void sink_c_impl::handle_set_freq(const pmt::pmt_t& msg)
 {
     if (pmt::is_pair(msg)) {
         pmt::pmt_t x = pmt::cdr(msg);

@@ -27,12 +27,13 @@
 #include "timing_error_detector.h"
 #include <gnuradio/math.h>
 #include <stdexcept>
+#include <utility>
 
 namespace gr {
 namespace digital {
 
-timing_error_detector* timing_error_detector::make(enum ted_type type,
-                                                   constellation_sptr constellation)
+timing_error_detector*
+timing_error_detector::make(enum ted_type type, const constellation_sptr& constellation)
 {
     timing_error_detector* ret = NULL;
     switch (type) {
@@ -77,7 +78,7 @@ timing_error_detector::timing_error_detector(enum ted_type type,
                                              bool needs_lookahead,
                                              bool needs_derivative,
                                              constellation_sptr constellation)
-    : d_constellation(constellation),
+    : d_constellation(std::move(constellation)),
       d_error(0.0f),
       d_prev_error(0.0f),
       d_inputs_per_symbol(inputs_per_symbol),

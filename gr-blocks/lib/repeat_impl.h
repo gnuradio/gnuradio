@@ -45,7 +45,7 @@ public:
              gr_vector_void_star& output_items);
 
 private:
-    void msg_set_interpolation(pmt::pmt_t msg);
+    void msg_set_interpolation(const pmt::pmt_t& msg);
 };
 
 } /* namespace blocks */

@@ -27,6 +27,7 @@
 #include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
 #include <iostream>
+#include <utility>
 
 namespace gr {
 
@@ -75,7 +76,7 @@ void block_detail::set_input(unsigned int which, buffer_reader_sptr reader)
     if (which >= d_ninputs)
         throw std::invalid_argument("block_detail::set_input");
 
-    d_input[which] = reader;
+    d_input[which] = std::move(reader);
 }
 
 void block_detail::set_output(unsigned int which, buffer_sptr buffer)
@@ -83,7 +84,7 @@ void block_detail::set_output(unsigned int which, buffer_sptr buffer)
     if (which >= d_noutputs)
         throw std::invalid_argument("block_detail::set_output");
 
-    d_output[which] = buffer;
+    d_output[which] = std::move(buffer);
 }
 
 block_detail_sptr make_block_detail(unsigned int ninputs, unsigned int noutputs)

@@ -152,7 +152,7 @@ float costas_loop_cc_impl::phase_detector_snr_2(gr_complex sample) const
 
 float costas_loop_cc_impl::error() const { return d_error; }
 
-void costas_loop_cc_impl::handle_set_noise(pmt::pmt_t msg)
+void costas_loop_cc_impl::handle_set_noise(const pmt::pmt_t& msg)
 {
     if (pmt::is_real(msg)) {
         d_noise = pmt::to_double(msg);

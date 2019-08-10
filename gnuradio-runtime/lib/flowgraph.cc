@@ -28,6 +28,7 @@
 #include <iterator>
 #include <sstream>
 #include <stdexcept>
+#include <utility>
 
 namespace gr {
 
@@ -112,7 +113,7 @@ void flowgraph::clear()
     d_edges.clear();
 }
 
-void flowgraph::check_valid_port(gr::io_signature::sptr sig, int port)
+void flowgraph::check_valid_port(const gr::io_signature::sptr& sig, int port)
 {
     std::stringstream msg;
 
@@ -199,7 +200,7 @@ std::vector<int> flowgraph::calc_used_ports(basic_block_sptr block, bool check_i
     std::vector<int> tmp;
 
     // Collect all seen ports
-    edge_vector_t edges = calc_connections(block, check_inputs);
+    edge_vector_t edges = calc_connections(std::move(block), check_inputs);
     for (edge_viter_t p = edges.begin(); p != edges.end(); p++) {
         if (check_inputs == true)
             tmp.push_back(p->dst().port());
@@ -210,7 +211,8 @@ std::vector<int> flowgraph::calc_used_ports(basic_block_sptr block, bool check_i
     return unique_vector<int>(tmp);
 }
 
-edge_vector_t flowgraph::calc_connections(basic_block_sptr block, bool check_inputs)
+edge_vector_t flowgraph::calc_connections(const basic_block_sptr& block,
+                                          bool check_inputs)
 {
     edge_vector_t result;
 
@@ -227,7 +229,7 @@ edge_vector_t flowgraph::calc_connections(basic_block_sptr block, bool check_inp
     return result; // assumes no duplicates
 }
 
-void flowgraph::check_contiguity(basic_block_sptr block,
+void flowgraph::check_contiguity(const basic_block_sptr& block,
                                  const std::vector<int>& used_ports,
                                  bool check_inputs)
 {
@@ -268,7 +270,8 @@ void flowgraph::check_contiguity(basic_block_sptr block,
     }
 }
 
-basic_block_vector_t flowgraph::calc_downstream_blocks(basic_block_sptr block, int port)
+basic_block_vector_t flowgraph::calc_downstream_blocks(const basic_block_sptr& block,
+                                                       int port)
 {
     basic_block_vector_t tmp;
 
@@ -279,7 +282,7 @@ basic_block_vector_t flowgraph::calc_downstream_blocks(basic_block_sptr block, i
     return unique_vector<basic_block_sptr>(tmp);
 }
 
-basic_block_vector_t flowgraph::calc_downstream_blocks(basic_block_sptr block)
+basic_block_vector_t flowgraph::calc_downstream_blocks(const basic_block_sptr& block)
 {
     basic_block_vector_t tmp;
 
@@ -290,7 +293,7 @@ basic_block_vector_t flowgraph::calc_downstream_blocks(basic_block_sptr block)
     return unique_vector<basic_block_sptr>(tmp);
 }
 
-edge_vector_t flowgraph::calc_upstream_edges(basic_block_sptr block)
+edge_vector_t flowgraph::calc_upstream_edges(const basic_block_sptr& block)
 {
     edge_vector_t result;
 
@@ -301,14 +304,14 @@ edge_vector_t flowgraph::calc_upstream_edges(basic_block_sptr block)
     return result; // Assume no duplicates
 }
 
-bool flowgraph::has_block_p(basic_block_sptr block)
+bool flowgraph::has_block_p(const basic_block_sptr& block)
 {
     basic_block_viter_t result;
     result = std::find(d_blocks.begin(), d_blocks.end(), block);
     return (result != d_blocks.end());
 }
 
-edge flowgraph::calc_upstream_edge(basic_block_sptr block, int port)
+edge flowgraph::calc_upstream_edge(const basic_block_sptr& block, int port)
 {
     edge result;
 
@@ -350,7 +353,7 @@ basic_block_vector_t flowgraph::calc_reachable_blocks(basic_block_sptr block,
         (*p)->set_color(basic_block::WHITE);
 
     // Recursively mark all reachable blocks
-    reachable_dfs_visit(block, blocks);
+    reachable_dfs_visit(std::move(block), blocks);
 
     // Collect all the blocks that have been visited
     for (basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++)
@@ -361,7 +364,8 @@ basic_block_vector_t flowgraph::calc_reachable_blocks(basic_block_sptr block,
 }
 
 // Recursively mark all reachable blocks from given block and block list
-void flowgraph::reachable_dfs_visit(basic_block_sptr block, basic_block_vector_t& blocks)
+void flowgraph::reachable_dfs_visit(const basic_block_sptr& block,
+                                    basic_block_vector_t& blocks)
 {
     // Mark the current one as visited
     block->set_color(basic_block::BLACK);
@@ -375,7 +379,7 @@ void flowgraph::reachable_dfs_visit(basic_block_sptr block, basic_block_vector_t
 }
 
 // Return a list of block adjacent to a given block along any edge
-basic_block_vector_t flowgraph::calc_adjacent_blocks(basic_block_sptr block,
+basic_block_vector_t flowgraph::calc_adjacent_blocks(const basic_block_sptr& block,
                                                      basic_block_vector_t& blocks)
 {
     basic_block_vector_t tmp;
@@ -432,10 +436,10 @@ basic_block_vector_t flowgraph::sort_sources_first(basic_block_vector_t& blocks)
 
 bool flowgraph::source_p(basic_block_sptr block)
 {
-    return (calc_upstream_edges(block).size() == 0);
+    return (calc_upstream_edges(std::move(block)).size() == 0);
 }
 
-void flowgraph::topological_dfs_visit(basic_block_sptr block,
+void flowgraph::topological_dfs_visit(const basic_block_sptr& block,
                                       basic_block_vector_t& output)
 {
     block->set_color(basic_block::GREY);
@@ -487,7 +491,7 @@ void flowgraph::disconnect(const msg_endpoint& src, const msg_endpoint& dst)
     throw std::runtime_error("disconnect called on non-connected edge!");
 }
 
-std::string dot_graph_fg(flowgraph_sptr fg)
+std::string dot_graph_fg(const flowgraph_sptr& fg)
 {
     basic_block_vector_t blocks = fg->calc_used_blocks();
     edge_vector_t edges = fg->edges();

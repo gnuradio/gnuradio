@@ -28,6 +28,8 @@
 #include <gnuradio/io_signature.h>
 #include <stdio.h>
 
+#include <utility>
+
 namespace gr {
 namespace fec {
 
@@ -36,10 +38,10 @@ decoder::sptr decoder::make(generic_decoder::sptr my_decoder,
                             size_t output_item_size)
 {
     return gnuradio::get_initial_sptr(
-        new decoder_impl(my_decoder, input_item_size, output_item_size));
+        new decoder_impl(std::move(my_decoder), input_item_size, output_item_size));
 }
 
-decoder_impl::decoder_impl(generic_decoder::sptr my_decoder,
+decoder_impl::decoder_impl(const generic_decoder::sptr& my_decoder,
                            size_t input_item_size,
                            size_t output_item_size)
     : block("fec_decoder",

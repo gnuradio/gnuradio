@@ -60,7 +60,7 @@ protocol_formatter_async_impl::protocol_formatter_async_impl(
 
 protocol_formatter_async_impl::~protocol_formatter_async_impl() {}
 
-void protocol_formatter_async_impl::append(pmt::pmt_t msg)
+void protocol_formatter_async_impl::append(const pmt::pmt_t& msg)
 {
     // extract input pdu
     pmt::pmt_t meta(pmt::car(msg));

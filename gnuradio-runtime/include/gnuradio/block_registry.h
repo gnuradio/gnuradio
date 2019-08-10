@@ -43,14 +43,14 @@ public:
     void block_unregister(basic_block* block);
 
     std::string register_symbolic_name(basic_block* block);
-    void register_symbolic_name(basic_block* block, std::string name);
-    void update_symbolic_name(basic_block* block, std::string name);
+    void register_symbolic_name(basic_block* block, const std::string& name);
+    void update_symbolic_name(basic_block* block, const std::string& name);
 
-    basic_block_sptr block_lookup(pmt::pmt_t symbol);
+    basic_block_sptr block_lookup(const pmt::pmt_t& symbol);
 
-    void register_primitive(std::string blk, gr::block* ref);
-    void unregister_primitive(std::string blk);
-    void notify_blk(std::string blk);
+    void register_primitive(const std::string& blk, gr::block* ref);
+    void unregister_primitive(const std::string& blk);
+    void notify_blk(const std::string& blk);
 
 private:
     // typedef std::map< long, basic_block_sptr >   blocksubmap_t;

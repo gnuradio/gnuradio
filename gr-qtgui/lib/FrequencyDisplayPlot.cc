@@ -333,7 +333,7 @@ void FrequencyDisplayPlot::replot()
     QwtPlot::replot();
 }
 
-void FrequencyDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
+void FrequencyDisplayPlot::plotNewData(const std::vector<double*>& dataPoints,
                                        const int64_t numDataPoints,
                                        const double noiseFloorAmplitude,
                                        const double peakFrequency,
@@ -524,9 +524,12 @@ void FrequencyDisplayPlot::setUpperIntensityLevel(const double upperIntensityLev
     d_upper_intensity_marker->setYValue(upperIntensityLevel);
 }
 
-void FrequencyDisplayPlot::setTraceColour(QColor c) { d_plot_curve[0]->setPen(QPen(c)); }
+void FrequencyDisplayPlot::setTraceColour(const QColor& c)
+{
+    d_plot_curve[0]->setPen(QPen(c));
+}
 
-void FrequencyDisplayPlot::setBGColour(QColor c)
+void FrequencyDisplayPlot::setBGColour(const QColor& c)
 {
     QPalette palette;
     palette.setColor(canvas()->backgroundRole(), c);
@@ -567,14 +570,14 @@ void FrequencyDisplayPlot::setYLabel(const std::string& label, const std::string
     setAxisTitle(QwtPlot::yLeft, QString(l.c_str()));
 }
 
-void FrequencyDisplayPlot::setMinFFTColor(QColor c)
+void FrequencyDisplayPlot::setMinFFTColor(const QColor& c)
 {
     d_min_fft_color = c;
     d_min_fft_plot_curve->setPen(QPen(c));
 }
 const QColor FrequencyDisplayPlot::getMinFFTColor() const { return d_min_fft_color; }
 
-void FrequencyDisplayPlot::setMaxFFTColor(QColor c)
+void FrequencyDisplayPlot::setMaxFFTColor(const QColor& c)
 {
     d_max_fft_color = c;
     d_max_fft_plot_curve->setPen(QPen(c));
@@ -582,7 +585,7 @@ void FrequencyDisplayPlot::setMaxFFTColor(QColor c)
 
 const QColor FrequencyDisplayPlot::getMaxFFTColor() const { return d_max_fft_color; }
 
-void FrequencyDisplayPlot::setMarkerLowerIntensityColor(QColor c)
+void FrequencyDisplayPlot::setMarkerLowerIntensityColor(const QColor& c)
 {
     d_marker_lower_intensity_color = c;
     d_lower_intensity_marker->setLinePen(QPen(c));
@@ -605,7 +608,7 @@ const bool FrequencyDisplayPlot::getMarkerLowerIntensityVisible() const
     return d_marker_lower_intensity_visible;
 }
 
-void FrequencyDisplayPlot::setMarkerUpperIntensityColor(QColor c)
+void FrequencyDisplayPlot::setMarkerUpperIntensityColor(const QColor& c)
 {
     d_marker_upper_intensity_color = c;
     d_upper_intensity_marker->setLinePen(QPen(c, 0, Qt::DotLine));
@@ -630,7 +633,7 @@ const bool FrequencyDisplayPlot::getMarkerUpperIntensityVisible() const
     return d_marker_upper_intensity_visible;
 }
 
-void FrequencyDisplayPlot::setMarkerPeakAmplitudeColor(QColor c)
+void FrequencyDisplayPlot::setMarkerPeakAmplitudeColor(const QColor& c)
 {
     d_marker_peak_amplitude_color = c;
     d_marker_peak_amplitude->setLinePen(QPen(c));
@@ -650,7 +653,7 @@ const QColor FrequencyDisplayPlot::getMarkerPeakAmplitudeColor() const
     return d_marker_peak_amplitude_color;
 }
 
-void FrequencyDisplayPlot::setMarkerNoiseFloorAmplitudeColor(QColor c)
+void FrequencyDisplayPlot::setMarkerNoiseFloorAmplitudeColor(const QColor& c)
 {
     d_marker_noise_floor_amplitude_color = c;
     d_marker_noise_floor_amplitude->setLinePen(QPen(c, 0, Qt::DotLine));
@@ -675,7 +678,7 @@ const bool FrequencyDisplayPlot::getMarkerNoiseFloorAmplitudeVisible() const
     return d_marker_noise_floor_amplitude_visible;
 }
 
-void FrequencyDisplayPlot::setMarkerCFColor(QColor c)
+void FrequencyDisplayPlot::setMarkerCFColor(const QColor& c)
 {
     d_marker_cf_color = c;
     d_marker_cf->setLinePen(QPen(c, 0, Qt::DotLine));

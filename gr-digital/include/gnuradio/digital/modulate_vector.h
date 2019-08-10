@@ -59,9 +59,9 @@ namespace digital {
  * before using this function.
  *
  */
-DIGITAL_API std::vector<gr_complex> modulate_vector_bc(basic_block_sptr modulator,
-                                                       std::vector<uint8_t> data,
-                                                       std::vector<float> taps);
+DIGITAL_API std::vector<gr_complex> modulate_vector_bc(const basic_block_sptr& modulator,
+                                                       const std::vector<uint8_t>& data,
+                                                       const std::vector<float>& taps);
 
 } /* namespace digital */
 } /* namespace gr */

@@ -64,7 +64,7 @@ protected:
     UINT find_device(std::string szDeviceName);
 
 public:
-    windows_sink(int sampling_freq, const std::string device_name, bool ok_to_block);
+    windows_sink(int sampling_freq, const std::string& device_name, bool ok_to_block);
     ~windows_sink();
 
     int work(int noutput_items,

@@ -24,6 +24,7 @@
 #define INCLUDED_TAGGED_STREAM_MULTIPLY_LENGTH_IMPL_H
 
 #include <gnuradio/blocks/tagged_stream_multiply_length.h>
+#include <utility>
 #include <vector>
 
 namespace gr {
@@ -49,7 +50,7 @@ public:
 
     void set_scalar(double scalar) { d_scalar = scalar; }
 
-    void set_scalar_pmt(pmt::pmt_t msg) { set_scalar(pmt::to_double(msg)); }
+    void set_scalar_pmt(pmt::pmt_t msg) { set_scalar(pmt::to_double(std::move(msg))); }
 };
 
 } // namespace blocks

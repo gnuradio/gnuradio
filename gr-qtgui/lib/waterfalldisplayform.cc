@@ -235,8 +235,8 @@ void WaterfallDisplayForm::setFrequencyRange(const double centerfreq,
 
 void WaterfallDisplayForm::setColorMap(unsigned int which,
                                        const int newType,
-                                       const QColor lowColor,
-                                       const QColor highColor)
+                                       const QColor& lowColor,
+                                       const QColor& highColor)
 {
     getPlot()->setIntensityColorMapType(which, newType, lowColor, highColor);
     getPlot()->replot();
@@ -301,7 +301,7 @@ bool WaterfallDisplayForm::checkClicked()
     }
 }
 
-void WaterfallDisplayForm::setTimeTitle(const std::string title)
+void WaterfallDisplayForm::setTimeTitle(const std::string& title)
 {
     getPlot()->setAxisTitle(QwtPlot::yLeft, title.c_str());
 }

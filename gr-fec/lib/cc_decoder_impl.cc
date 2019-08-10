@@ -30,6 +30,7 @@
 #include <volk/volk.h>
 #include <boost/assign/list_of.hpp>
 #include <sstream>
+#include <utility>
 #include <vector>
 
 namespace gr {
@@ -46,7 +47,7 @@ generic_decoder::sptr cc_decoder::make(int frame_size,
                                        bool padded)
 {
     return generic_decoder::sptr(new cc_decoder_impl(
-        frame_size, k, rate, polys, start_state, end_state, mode, padded));
+        frame_size, k, rate, std::move(polys), start_state, end_state, mode, padded));
 }
 
 cc_decoder_impl::cc_decoder_impl(int frame_size,
@@ -60,7 +61,7 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
     : generic_decoder("cc_decoder"),
       d_k(k),
       d_rate(rate),
-      d_polys(polys),
+      d_polys(std::move(polys)),
       d_mode(mode),
       d_padding(0),
       d_start_state_chaining(start_state),

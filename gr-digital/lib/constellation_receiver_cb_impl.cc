@@ -30,6 +30,7 @@
 #include <gnuradio/math.h>
 #include <gnuradio/tag_checker.h>
 #include <stdexcept>
+#include <utility>
 
 namespace gr {
 namespace digital {
@@ -41,7 +42,7 @@ constellation_receiver_cb::sptr constellation_receiver_cb::make(
     constellation_sptr constell, float loop_bw, float fmin, float fmax)
 {
     return gnuradio::get_initial_sptr(
-        new constellation_receiver_cb_impl(constell, loop_bw, fmin, fmax));
+        new constellation_receiver_cb_impl(std::move(constell), loop_bw, fmin, fmax));
 }
 
 static int ios[] = {
@@ -54,7 +55,7 @@ constellation_receiver_cb_impl::constellation_receiver_cb_impl(
             io_signature::make(1, 1, sizeof(gr_complex)),
             io_signature::makev(1, 5, iosig)),
       blocks::control_loop(loop_bw, fmax, fmin),
-      d_constellation(constellation)
+      d_constellation(std::move(constellation))
 {
     if (d_constellation->dimensionality() != 1)
         throw std::runtime_error(
@@ -99,7 +100,7 @@ void constellation_receiver_cb_impl::set_phase_freq(float phase, float freq)
 }
 
 void constellation_receiver_cb_impl::handle_set_constellation(
-    pmt::pmt_t constellation_pmt)
+    const pmt::pmt_t& constellation_pmt)
 {
     if (pmt::is_any(constellation_pmt)) {
         boost::any constellation_any = pmt::any_ref(constellation_pmt);
@@ -109,7 +110,7 @@ void constellation_receiver_cb_impl::handle_set_constellation(
     }
 }
 
-void constellation_receiver_cb_impl::handle_rotate_phase(pmt::pmt_t rotation)
+void constellation_receiver_cb_impl::handle_rotate_phase(const pmt::pmt_t& rotation)
 {
     if (pmt::is_real(rotation)) {
         double phase = pmt::to_double(rotation);
@@ -119,7 +120,7 @@ void constellation_receiver_cb_impl::handle_rotate_phase(pmt::pmt_t rotation)
 
 void constellation_receiver_cb_impl::set_constellation(constellation_sptr constellation)
 {
-    d_constellation = constellation;
+    d_constellation = std::move(constellation);
 }
 
 int constellation_receiver_cb_impl::general_work(int noutput_items,

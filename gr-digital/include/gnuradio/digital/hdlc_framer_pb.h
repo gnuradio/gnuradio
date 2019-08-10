@@ -55,7 +55,7 @@ public:
      *
      * \param frame_tag_name: The tag to add to the first sample of each frame.
      */
-    static sptr make(const std::string frame_tag_name);
+    static sptr make(const std::string& frame_tag_name);
 };
 
 } // namespace digital

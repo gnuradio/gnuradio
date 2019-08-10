@@ -48,7 +48,7 @@ repeat_impl::repeat_impl(size_t itemsize, int interp)
                     boost::bind(&repeat_impl::msg_set_interpolation, this, _1));
 }
 
-void repeat_impl::msg_set_interpolation(pmt::pmt_t msg)
+void repeat_impl::msg_set_interpolation(const pmt::pmt_t& msg)
 {
     // Dynamization by Kevin McQuiggin:
     d_interp = pmt::to_long(pmt::cdr(msg));

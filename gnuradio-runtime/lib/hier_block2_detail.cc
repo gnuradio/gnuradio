@@ -64,7 +64,7 @@ hier_block2_detail::~hier_block2_detail()
     d_owner = 0; // Don't use delete, we didn't allocate
 }
 
-void hier_block2_detail::connect(basic_block_sptr block)
+void hier_block2_detail::connect(const basic_block_sptr& block)
 {
     std::stringstream msg;
 
@@ -93,9 +93,9 @@ void hier_block2_detail::connect(basic_block_sptr block)
     d_blocks.push_back(block);
 }
 
-void hier_block2_detail::connect(basic_block_sptr src,
+void hier_block2_detail::connect(const basic_block_sptr& src,
                                  int src_port,
-                                 basic_block_sptr dst,
+                                 const basic_block_sptr& dst,
                                  int dst_port)
 {
     std::stringstream msg;
@@ -257,7 +257,7 @@ void hier_block2_detail::msg_disconnect(basic_block_sptr src,
     src->message_port_unsub(srcport, pmt::cons(dst->alias_pmt(), dstport));
 }
 
-void hier_block2_detail::disconnect(basic_block_sptr block)
+void hier_block2_detail::disconnect(const basic_block_sptr& block)
 {
     // Check on singleton list
     for (basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
@@ -300,9 +300,9 @@ void hier_block2_detail::disconnect(basic_block_sptr block)
     }
 }
 
-void hier_block2_detail::disconnect(basic_block_sptr src,
+void hier_block2_detail::disconnect(const basic_block_sptr& src,
                                     int src_port,
-                                    basic_block_sptr dst,
+                                    const basic_block_sptr& dst,
                                     int dst_port)
 {
     if (HIER_BLOCK2_DETAIL_DEBUG)
@@ -367,7 +367,9 @@ void hier_block2_detail::refresh_io_signature()
     }
 }
 
-void hier_block2_detail::connect_input(int my_port, int port, basic_block_sptr block)
+void hier_block2_detail::connect_input(int my_port,
+                                       int port,
+                                       const basic_block_sptr& block)
 {
     std::stringstream msg;
 
@@ -390,7 +392,9 @@ void hier_block2_detail::connect_input(int my_port, int port, basic_block_sptr b
     endps.push_back(endp);
 }
 
-void hier_block2_detail::connect_output(int my_port, int port, basic_block_sptr block)
+void hier_block2_detail::connect_output(int my_port,
+                                        int port,
+                                        const basic_block_sptr& block)
 {
     std::stringstream msg;
 
@@ -410,7 +414,9 @@ void hier_block2_detail::connect_output(int my_port, int port, basic_block_sptr 
     d_outputs[my_port] = endpoint(block, port);
 }
 
-void hier_block2_detail::disconnect_input(int my_port, int port, basic_block_sptr block)
+void hier_block2_detail::disconnect_input(int my_port,
+                                          int port,
+                                          const basic_block_sptr& block)
 {
     std::stringstream msg;
 
@@ -433,7 +439,9 @@ void hier_block2_detail::disconnect_input(int my_port, int port, basic_block_spt
     endps.erase(p);
 }
 
-void hier_block2_detail::disconnect_output(int my_port, int port, basic_block_sptr block)
+void hier_block2_detail::disconnect_output(int my_port,
+                                           int port,
+                                           const basic_block_sptr& block)
 {
     std::stringstream msg;
 
@@ -549,7 +557,7 @@ endpoint_vector_t hier_block2_detail::resolve_endpoint(const endpoint& endp,
     throw std::runtime_error(msg.str());
 }
 
-void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
+void hier_block2_detail::flatten_aux(const flat_flowgraph_sptr& sfg) const
 {
     if (HIER_BLOCK2_DETAIL_DEBUG)
         std::cout << " ** Flattening " << d_owner->name()
@@ -936,7 +944,7 @@ std::vector<int> hier_block2_detail::processor_affinity()
     return tmp[0]->processor_affinity();
 }
 
-void hier_block2_detail::set_log_level(std::string level)
+void hier_block2_detail::set_log_level(const std::string& level)
 {
     basic_block_vector_t tmp = d_fg->calc_used_blocks();
     for (basic_block_viter_t p = tmp.begin(); p != tmp.end(); p++) {

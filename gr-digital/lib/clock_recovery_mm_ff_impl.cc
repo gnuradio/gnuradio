@@ -27,6 +27,7 @@
 #include "clock_recovery_mm_ff_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
+#include <cmath>
 #include <stdexcept>
 
 namespace gr {
@@ -69,7 +70,7 @@ void clock_recovery_mm_ff_impl::forecast(int noutput_items,
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++)
         ninput_items_required[i] =
-            (int)ceil((noutput_items * d_omega) + d_interp->ntaps());
+            (int)std::ceil((noutput_items * d_omega) + d_interp->ntaps());
 }
 
 static inline float slice(float x) { return x < 0 ? -1.0F : 1.0F; }
@@ -104,8 +105,8 @@ int clock_recovery_mm_ff_impl::general_work(int noutput_items,
         d_omega = d_omega_mid + gr::branchless_clip(d_omega - d_omega_mid, d_omega_lim);
         d_mu = d_mu + d_omega + d_gain_mu * mm_val;
 
-        ii += (int)floor(d_mu);
-        d_mu = d_mu - floor(d_mu);
+        ii += (int)std::floor(d_mu);
+        d_mu = d_mu - std::floor(d_mu);
         oo++;
     }
 

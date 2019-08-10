@@ -28,6 +28,7 @@
 #include <gnuradio/io_signature.h>
 #include <string.h>
 #include <stdexcept>
+#include <utility>
 
 namespace gr {
 namespace blocks {
@@ -53,7 +54,8 @@ selector_impl::selector_impl(size_t itemsize,
       d_num_outputs(0)
 {
     message_port_register_in(pmt::mp("en"));
-    set_msg_handler(pmt::mp("en"), [this](pmt::pmt_t msg) { this->handle_enable(msg); });
+    set_msg_handler(pmt::mp("en"),
+                    [this](pmt::pmt_t msg) { this->handle_enable(std::move(msg)); });
 
     // TODO: add message ports for input_index and output_index
 }
@@ -78,7 +80,7 @@ void selector_impl::set_output_index(unsigned int output_index)
         throw std::out_of_range("output_index must be < noutputs");
 }
 
-void selector_impl::handle_enable(pmt::pmt_t msg)
+void selector_impl::handle_enable(const pmt::pmt_t& msg)
 {
     if (pmt::is_bool(msg)) {
         bool en = pmt::to_bool(msg);

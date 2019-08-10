@@ -63,7 +63,7 @@ private:
      * constellation_pmt is a pmt_any; constellation objects have
      * an as_pmt function that can be used for this purpose.
      */
-    void handle_set_constellation(pmt::pmt_t constellation_pmt);
+    void handle_set_constellation(const pmt::pmt_t& constellation_pmt);
 
     /*!
      * Message handler port to update the phase of the rotator. The
@@ -71,7 +71,7 @@ private:
      * to the current phase. So we can rotate the constellation by
      * 90 degress by passing a value of pmt::from_double(GR_M_PI/2).
      */
-    void handle_rotate_phase(pmt::pmt_t rotation);
+    void handle_rotate_phase(const pmt::pmt_t& rotation);
 
     //! Set the constellation used.
     //! Typically used when we receive a tag with a value for this.

@@ -53,7 +53,7 @@ public:
      * \endxmlonly
      */
     static sptr
-    make(int sampling_rate, const std::string device_name = "", bool ok_to_block = true);
+    make(int sampling_rate, const std::string& device_name = "", bool ok_to_block = true);
 };
 
 } /* namespace audio */

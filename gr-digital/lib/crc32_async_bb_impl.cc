@@ -55,7 +55,7 @@ crc32_async_bb_impl::crc32_async_bb_impl(bool check)
 
 crc32_async_bb_impl::~crc32_async_bb_impl() {}
 
-void crc32_async_bb_impl::calc(pmt::pmt_t msg)
+void crc32_async_bb_impl::calc(const pmt::pmt_t& msg)
 {
     // extract input pdu
     pmt::pmt_t meta(pmt::car(msg));
@@ -83,7 +83,7 @@ void crc32_async_bb_impl::calc(pmt::pmt_t msg)
     volk_free(bytes_out);
 }
 
-void crc32_async_bb_impl::check(pmt::pmt_t msg)
+void crc32_async_bb_impl::check(const pmt::pmt_t& msg)
 {
     // extract input pdu
     pmt::pmt_t meta(pmt::car(msg));

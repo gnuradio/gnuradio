@@ -27,6 +27,8 @@
 #include "constellation_soft_decoder_cf_impl.h"
 #include <gnuradio/io_signature.h>
 
+#include <utility>
+
 namespace gr {
 namespace digital {
 
@@ -34,11 +36,11 @@ constellation_soft_decoder_cf::sptr
 constellation_soft_decoder_cf::make(constellation_sptr constellation)
 {
     return gnuradio::get_initial_sptr(
-        new constellation_soft_decoder_cf_impl(constellation));
+        new constellation_soft_decoder_cf_impl(std::move(constellation)));
 }
 
 constellation_soft_decoder_cf_impl::constellation_soft_decoder_cf_impl(
-    constellation_sptr constellation)
+    const constellation_sptr& constellation)
     : sync_interpolator("constellation_soft_decoder_cf",
                         io_signature::make(1, 1, sizeof(gr_complex)),
                         io_signature::make(1, 1, sizeof(float)),

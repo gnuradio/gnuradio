@@ -59,7 +59,7 @@ public:
 
     void setXAxisValues(const double start, const double step = 1.0);
 
-    void plotNewData(const std::vector<double*> dataPoints,
+    void plotNewData(const std::vector<double*>& dataPoints,
                      const int64_t numDataPoints,
                      const double refLevel,
                      const double timeInterval);
@@ -79,8 +79,8 @@ public:
     void setXAxisUnit(const QString& unit);
     void setYAxisUnit(const QString& unit);
 
-    void setTraceColour(QColor);
-    void setBGColour(QColor c);
+    void setTraceColour(const QColor&);
+    void setBGColour(const QColor& c);
 
     const bool getMaxVecVisible() const;
     const bool getMinVecVisible() const;
@@ -96,14 +96,14 @@ public:
 public slots:
     void setMaxVecVisible(const bool);
     void setMinVecVisible(const bool);
-    void setMinVecColor(QColor c);
-    void setMaxVecColor(QColor c);
-    void setMarkerLowerIntensityColor(QColor c);
+    void setMinVecColor(const QColor& c);
+    void setMaxVecColor(const QColor& c);
+    void setMarkerLowerIntensityColor(const QColor& c);
     void setMarkerLowerIntensityVisible(bool visible);
-    void setMarkerUpperIntensityColor(QColor c);
+    void setMarkerUpperIntensityColor(const QColor& c);
     void setMarkerUpperIntensityVisible(bool visible);
     void setMarkerRefLevelAmplitudeVisible(bool visible);
-    void setMarkerRefLevelAmplitudeColor(QColor c);
+    void setMarkerRefLevelAmplitudeColor(const QColor& c);
 
     void setLowerIntensityLevel(const double);
     void setUpperIntensityLevel(const double);

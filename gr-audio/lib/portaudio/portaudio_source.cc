@@ -138,7 +138,7 @@ int portaudio_source_callback(const void* inputBuffer,
 // ----------------------------------------------------------------
 
 portaudio_source::portaudio_source(int sampling_rate,
-                                   const std::string device_name,
+                                   const std::string& device_name,
                                    bool ok_to_block)
     : sync_block("audio_portaudio_source",
                  io_signature::make(0, 0, 0),

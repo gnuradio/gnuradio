@@ -28,12 +28,14 @@
 #include <gnuradio/prefs.h>
 #include <stdio.h>
 
+#include <utility>
+
 namespace gr {
 namespace fec {
 
 generic_encoder::generic_encoder(std::string name)
 {
-    d_name = name;
+    d_name = std::move(name);
     my_id = base_unique_id++;
 
     prefs* p = prefs::singleton();
@@ -70,22 +72,22 @@ int generic_encoder::unique_id() { return my_id; }
 /*******************************************************
  * Static functions
  ******************************************************/
-int get_encoder_output_size(generic_encoder::sptr my_encoder)
+int get_encoder_output_size(const generic_encoder::sptr& my_encoder)
 {
     return my_encoder->get_output_size();
 }
 
-int get_encoder_input_size(generic_encoder::sptr my_encoder)
+int get_encoder_input_size(const generic_encoder::sptr& my_encoder)
 {
     return my_encoder->get_input_size();
 }
 
-const char* get_encoder_input_conversion(generic_encoder::sptr my_encoder)
+const char* get_encoder_input_conversion(const generic_encoder::sptr& my_encoder)
 {
     return my_encoder->get_input_conversion();
 }
 
-const char* get_encoder_output_conversion(generic_encoder::sptr my_encoder)
+const char* get_encoder_output_conversion(const generic_encoder::sptr& my_encoder)
 {
     return my_encoder->get_output_conversion();
 }

@@ -38,7 +38,7 @@ private:
     unsigned int d_D;
 
 public:
-    constellation_metrics_cf_impl(digital::constellation_sptr constellation,
+    constellation_metrics_cf_impl(const digital::constellation_sptr& constellation,
                                   digital::trellis_metric_type_t TYPE);
     ~constellation_metrics_cf_impl();
 

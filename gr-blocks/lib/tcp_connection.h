@@ -55,9 +55,9 @@ public:
     boost::asio::ip::tcp::socket& socket() { return d_socket; };
 
     void start(gr::basic_block* block);
-    void send(pmt::pmt_t vector);
+    void send(const pmt::pmt_t& vector);
     void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
-    void handle_write(boost::shared_ptr<char[]> txbuf,
+    void handle_write(const boost::shared_ptr<char[]>& txbuf,
                       const boost::system::error_code& error,
                       size_t bytes_transferred)
     {

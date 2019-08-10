@@ -39,7 +39,7 @@ const pmt::pmt_t header_payload_demux_impl::msg_port_id()
 
 //! Returns a PMT time tuple (uint seconds, double fraction) as the sum of
 //  another PMT time tuple and a time diff in seconds.
-pmt::pmt_t _update_pmt_time(pmt::pmt_t old_time, double time_difference)
+pmt::pmt_t _update_pmt_time(const pmt::pmt_t& old_time, double time_difference)
 {
     double diff_seconds;
     double diff_frac = modf(time_difference, &diff_seconds);
@@ -404,7 +404,7 @@ int header_payload_demux_impl::find_trigger_signal(int skip_items,
 } /* find_trigger_signal() */
 
 
-void header_payload_demux_impl::parse_header_data_msg(pmt::pmt_t header_data)
+void header_payload_demux_impl::parse_header_data_msg(const pmt::pmt_t& header_data)
 {
     d_payload_tag_keys.clear();
     d_payload_tag_values.clear();

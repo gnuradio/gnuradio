@@ -432,7 +432,7 @@ void FreqDisplayForm::updateTrigger(gr::qtgui::trigger_mode mode)
 
 gr::qtgui::trigger_mode FreqDisplayForm::getTriggerMode() const { return d_trig_mode; }
 
-void FreqDisplayForm::setTriggerLevel(QString s)
+void FreqDisplayForm::setTriggerLevel(const QString& s)
 {
     d_trig_level = s.toFloat();
 
@@ -468,7 +468,10 @@ void FreqDisplayForm::setTriggerChannel(int channel)
 
 int FreqDisplayForm::getTriggerChannel() const { return d_trig_channel; }
 
-void FreqDisplayForm::setTriggerTagKey(QString s) { d_trig_tag_key = s.toStdString(); }
+void FreqDisplayForm::setTriggerTagKey(const QString& s)
+{
+    d_trig_tag_key = s.toStdString();
+}
 
 void FreqDisplayForm::setTriggerTagKey(const std::string& key)
 {

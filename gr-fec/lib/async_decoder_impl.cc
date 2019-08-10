@@ -29,6 +29,8 @@
 #include <stdio.h>
 #include <volk/volk.h>
 
+#include <utility>
+
 namespace gr {
 namespace fec {
 
@@ -36,7 +38,7 @@ async_decoder::sptr
 async_decoder::make(generic_decoder::sptr my_decoder, bool packed, bool rev_pack, int mtu)
 {
     return gnuradio::get_initial_sptr(
-        new async_decoder_impl(my_decoder, packed, rev_pack, mtu));
+        new async_decoder_impl(std::move(my_decoder), packed, rev_pack, mtu));
 }
 
 async_decoder_impl::async_decoder_impl(generic_decoder::sptr my_decoder,
@@ -48,7 +50,7 @@ async_decoder_impl::async_decoder_impl(generic_decoder::sptr my_decoder,
     d_in_port = pmt::mp("in");
     d_out_port = pmt::mp("out");
 
-    d_decoder = my_decoder;
+    d_decoder = std::move(my_decoder);
 
     if (d_decoder->get_history() > 0) {
         throw std::runtime_error("async_decoder deploment does not support decoders with "
@@ -101,7 +103,7 @@ async_decoder_impl::~async_decoder_impl()
     }
 }
 
-void async_decoder_impl::decode_unpacked(pmt::pmt_t msg)
+void async_decoder_impl::decode_unpacked(const pmt::pmt_t& msg)
 {
     // extract input pdu
     pmt::pmt_t meta(pmt::car(msg));
@@ -170,7 +172,7 @@ void async_decoder_impl::decode_unpacked(pmt::pmt_t msg)
     message_port_pub(d_out_port, pmt::cons(meta, outvec));
 }
 
-void async_decoder_impl::decode_packed(pmt::pmt_t msg)
+void async_decoder_impl::decode_packed(const pmt::pmt_t& msg)
 {
     // extract input pdu
     pmt::pmt_t meta(pmt::car(msg));

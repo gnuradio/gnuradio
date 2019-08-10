@@ -27,6 +27,7 @@
 #include "pmt_int.h"
 #include <pmt/pmt.h>
 #include <limits>
+#include <utility>
 #include <vector>
 
 namespace pmt {
@@ -743,7 +744,7 @@ error:
 std::string serialize_str(pmt_t obj)
 {
     std::stringbuf sb;
-    serialize(obj, sb);
+    serialize(std::move(obj), sb);
     return sb.str();
 }
 
@@ -751,7 +752,7 @@ std::string serialize_str(pmt_t obj)
 /*
  * provide a simple string accessor to the deserialized pmt form
  */
-pmt_t deserialize_str(std::string s)
+pmt_t deserialize_str(const std::string& s)
 {
     std::stringbuf sb(s);
     return deserialize(sb);

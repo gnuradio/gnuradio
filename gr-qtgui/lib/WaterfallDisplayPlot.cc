@@ -44,6 +44,7 @@
 namespace pt = boost::posix_time;
 
 #include <QDebug>
+#include <utility>
 
 /***********************************************************************
  * Text scale widget to provide Y (time) axis text
@@ -253,7 +254,7 @@ double WaterfallDisplayPlot::getStartFrequency() const { return d_start_frequenc
 
 double WaterfallDisplayPlot::getStopFrequency() const { return d_stop_frequency; }
 
-void WaterfallDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
+void WaterfallDisplayPlot::plotNewData(const std::vector<double*>& dataPoints,
                                        const int64_t numDataPoints,
                                        const double timePerFFT,
                                        const gr::high_res_timer_type timestamp,
@@ -443,8 +444,8 @@ int WaterfallDisplayPlot::getIntensityColorMapType(unsigned int which) const
 
 void WaterfallDisplayPlot::setIntensityColorMapType(const unsigned int which,
                                                     const int newType,
-                                                    const QColor lowColor,
-                                                    const QColor highColor)
+                                                    const QColor& lowColor,
+                                                    const QColor& highColor)
 {
     if ((d_intensity_color_map_type[which] != newType) ||
         ((newType == INTENSITY_COLOR_MAP_TYPE_USER_DEFINED) &&
@@ -546,7 +547,7 @@ int WaterfallDisplayPlot::getIntensityColorMapType1() const
 
 void WaterfallDisplayPlot::setUserDefinedLowIntensityColor(QColor c)
 {
-    d_user_defined_low_intensity_color = c;
+    d_user_defined_low_intensity_color = std::move(c);
 }
 
 const QColor WaterfallDisplayPlot::getUserDefinedLowIntensityColor() const
@@ -556,7 +557,7 @@ const QColor WaterfallDisplayPlot::getUserDefinedLowIntensityColor() const
 
 void WaterfallDisplayPlot::setUserDefinedHighIntensityColor(QColor c)
 {
-    d_user_defined_high_intensity_color = c;
+    d_user_defined_high_intensity_color = std::move(c);
 }
 
 const QColor WaterfallDisplayPlot::getUserDefinedHighIntensityColor() const

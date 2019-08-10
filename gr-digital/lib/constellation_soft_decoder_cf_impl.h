@@ -36,7 +36,7 @@ private:
     int d_bps;
 
 public:
-    constellation_soft_decoder_cf_impl(constellation_sptr constellation);
+    constellation_soft_decoder_cf_impl(const constellation_sptr& constellation);
     ~constellation_soft_decoder_cf_impl();
 
     int work(int noutput_items,

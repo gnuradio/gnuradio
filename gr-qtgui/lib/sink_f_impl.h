@@ -73,7 +73,7 @@ private:
 
     // Handles message input port for setting new center frequency.
     // The message is a PMT pair (intern('freq'), double(frequency)).
-    void handle_set_freq(pmt::pmt_t msg);
+    void handle_set_freq(const pmt::pmt_t& msg);
 
 public:
     sink_f_impl(int fftsize,

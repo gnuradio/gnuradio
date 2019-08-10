@@ -26,6 +26,7 @@
 
 #include "interpolating_resampler.h"
 #include <gnuradio/math.h>
+#include <cmath>
 #include <deque>
 #include <stdexcept>
 
@@ -295,7 +296,7 @@ interp_resampler_pfb_no_mf_cc::~interp_resampler_pfb_no_mf_cc()
 gr_complex interp_resampler_pfb_no_mf_cc::interpolate(const gr_complex input[],
                                                       float mu) const
 {
-    int arm = static_cast<int>(rint(mu * d_nfilters));
+    int arm = static_cast<int>(std::rint(mu * d_nfilters));
 
     if (arm < 0 || arm > d_nfilters)
         throw std::runtime_error("interp_resampler_pfb_no_mf_cc: mu is not "
@@ -307,7 +308,7 @@ gr_complex interp_resampler_pfb_no_mf_cc::interpolate(const gr_complex input[],
 gr_complex interp_resampler_pfb_no_mf_cc::differentiate(const gr_complex input[],
                                                         float mu) const
 {
-    int arm = static_cast<int>(rint(mu * d_nfilters));
+    int arm = static_cast<int>(std::rint(mu * d_nfilters));
 
     if (arm < 0 || arm > d_nfilters)
         throw std::runtime_error("interp_resampler_pfb_no_mf_cc: mu is not "
@@ -379,7 +380,7 @@ interp_resampler_pfb_no_mf_ff::~interp_resampler_pfb_no_mf_ff()
 
 float interp_resampler_pfb_no_mf_ff::interpolate(const float input[], float mu) const
 {
-    int arm = static_cast<int>(rint(mu * d_nfilters));
+    int arm = static_cast<int>(std::rint(mu * d_nfilters));
 
     if (arm < 0 || arm > d_nfilters)
         throw std::runtime_error("interp_resampler_pfb_no_mf_ff: mu is not "
@@ -390,7 +391,7 @@ float interp_resampler_pfb_no_mf_ff::interpolate(const float input[], float mu) 
 
 float interp_resampler_pfb_no_mf_ff::differentiate(const float input[], float mu) const
 {
-    int arm = static_cast<int>(rint(mu * d_nfilters));
+    int arm = static_cast<int>(std::rint(mu * d_nfilters));
 
     if (arm < 0 || arm > d_nfilters)
         throw std::runtime_error("interp_resampler_pfb_no_mf_ff: mu is not "
@@ -532,7 +533,7 @@ interp_resampler_pfb_mf_ccf::~interp_resampler_pfb_mf_ccf()
 gr_complex interp_resampler_pfb_mf_ccf::interpolate(const gr_complex input[],
                                                     float mu) const
 {
-    int arm = static_cast<int>(rint(mu * d_nfilters));
+    int arm = static_cast<int>(std::rint(mu * d_nfilters));
 
     if (arm < 0 || arm > d_nfilters)
         throw std::runtime_error("interp_resampler_pfb_mf_ccf: mu is not "
@@ -544,7 +545,7 @@ gr_complex interp_resampler_pfb_mf_ccf::interpolate(const gr_complex input[],
 gr_complex interp_resampler_pfb_mf_ccf::differentiate(const gr_complex input[],
                                                       float mu) const
 {
-    int arm = static_cast<int>(rint(mu * d_nfilters));
+    int arm = static_cast<int>(std::rint(mu * d_nfilters));
 
     if (arm < 0 || arm > d_nfilters)
         throw std::runtime_error("interp_resampler_pfb_mf_ccf: mu is not "
@@ -685,7 +686,7 @@ interp_resampler_pfb_mf_fff::~interp_resampler_pfb_mf_fff()
 
 float interp_resampler_pfb_mf_fff::interpolate(const float input[], float mu) const
 {
-    int arm = static_cast<int>(rint(mu * d_nfilters));
+    int arm = static_cast<int>(std::rint(mu * d_nfilters));
 
     if (arm < 0 || arm > d_nfilters)
         throw std::runtime_error("interp_resampler_pfb_mf_fff: mu is not "
@@ -696,7 +697,7 @@ float interp_resampler_pfb_mf_fff::interpolate(const float input[], float mu) co
 
 float interp_resampler_pfb_mf_fff::differentiate(const float input[], float mu) const
 {
-    int arm = static_cast<int>(rint(mu * d_nfilters));
+    int arm = static_cast<int>(std::rint(mu * d_nfilters));
 
     if (arm < 0 || arm > d_nfilters)
         throw std::runtime_error("interp_resampler_pfb_mf_fff: mu is not "

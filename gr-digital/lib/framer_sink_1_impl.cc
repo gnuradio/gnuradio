@@ -28,6 +28,7 @@
 #include <gnuradio/io_signature.h>
 #include <cstdio>
 #include <string>
+#include <utility>
 
 namespace gr {
 namespace digital {
@@ -70,14 +71,14 @@ inline void framer_sink_1_impl::enter_have_header(int payload_len, int whitener_
 
 framer_sink_1::sptr framer_sink_1::make(msg_queue::sptr target_queue)
 {
-    return gnuradio::get_initial_sptr(new framer_sink_1_impl(target_queue));
+    return gnuradio::get_initial_sptr(new framer_sink_1_impl(std::move(target_queue)));
 }
 
 framer_sink_1_impl::framer_sink_1_impl(msg_queue::sptr target_queue)
     : sync_block("framer_sink_1",
                  io_signature::make(1, 1, sizeof(unsigned char)),
                  io_signature::make(0, 0, 0)),
-      d_target_queue(target_queue)
+      d_target_queue(std::move(target_queue))
 {
     enter_search();
 }

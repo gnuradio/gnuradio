@@ -37,7 +37,10 @@
 
 namespace pmt {
 
-static pmt_u8vector* _u8vector(pmt_t x) { return dynamic_cast<pmt_u8vector*>(x.get()); }
+static pmt_u8vector* _u8vector(const pmt_t& x)
+{
+    return dynamic_cast<pmt_u8vector*>(x.get());
+}
 
 
 pmt_u8vector::pmt_u8vector(size_t k, uint8_t fill) : d_v(k)
@@ -90,7 +93,7 @@ void* pmt_u8vector::uniform_writable_elements(size_t& len)
     return len ? (&d_v[0]) : nullptr;
 }
 
-bool is_u8vector(pmt_t obj) { return obj->is_u8vector(); }
+bool is_u8vector(const pmt_t& obj) { return obj->is_u8vector(); }
 
 pmt_t make_u8vector(size_t k, uint8_t fill) { return pmt_t(new pmt_u8vector(k, fill)); }
 
@@ -108,28 +111,28 @@ pmt_t init_u8vector(size_t k, const std::vector<uint8_t>& data)
         new pmt_u8vector(k, static_cast<uint8_t>(0))); // fills an empty vector with 0
 }
 
-uint8_t u8vector_ref(pmt_t vector, size_t k)
+uint8_t u8vector_ref(const pmt_t& vector, size_t k)
 {
     if (!vector->is_u8vector())
         throw wrong_type("pmt_u8vector_ref", vector);
     return _u8vector(vector)->ref(k);
 }
 
-void u8vector_set(pmt_t vector, size_t k, uint8_t obj)
+void u8vector_set(const pmt_t& vector, size_t k, uint8_t obj)
 {
     if (!vector->is_u8vector())
         throw wrong_type("pmt_u8vector_set", vector);
     _u8vector(vector)->set(k, obj);
 }
 
-const uint8_t* u8vector_elements(pmt_t vector, size_t& len)
+const uint8_t* u8vector_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_u8vector())
         throw wrong_type("pmt_u8vector_elements", vector);
     return _u8vector(vector)->elements(len);
 }
 
-const std::vector<uint8_t> u8vector_elements(pmt_t vector)
+const std::vector<uint8_t> u8vector_elements(const pmt_t& vector)
 {
     if (!vector->is_u8vector())
         throw wrong_type("pmt_u8vector_elements", vector);
@@ -140,7 +143,7 @@ const std::vector<uint8_t> u8vector_elements(pmt_t vector)
 }
 
 
-uint8_t* u8vector_writable_elements(pmt_t vector, size_t& len)
+uint8_t* u8vector_writable_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_u8vector())
         throw wrong_type("pmt_u8vector_writable_elements", vector);
@@ -159,7 +162,10 @@ const std::string pmt_u8vector::string_ref(size_t k) const
 
 namespace pmt {
 
-static pmt_s8vector* _s8vector(pmt_t x) { return dynamic_cast<pmt_s8vector*>(x.get()); }
+static pmt_s8vector* _s8vector(const pmt_t& x)
+{
+    return dynamic_cast<pmt_s8vector*>(x.get());
+}
 
 
 pmt_s8vector::pmt_s8vector(size_t k, int8_t fill) : d_v(k)
@@ -212,7 +218,7 @@ void* pmt_s8vector::uniform_writable_elements(size_t& len)
     return len ? (&d_v[0]) : nullptr;
 }
 
-bool is_s8vector(pmt_t obj) { return obj->is_s8vector(); }
+bool is_s8vector(const pmt_t& obj) { return obj->is_s8vector(); }
 
 pmt_t make_s8vector(size_t k, int8_t fill) { return pmt_t(new pmt_s8vector(k, fill)); }
 
@@ -230,28 +236,28 @@ pmt_t init_s8vector(size_t k, const std::vector<int8_t>& data)
         new pmt_s8vector(k, static_cast<int8_t>(0))); // fills an empty vector with 0
 }
 
-int8_t s8vector_ref(pmt_t vector, size_t k)
+int8_t s8vector_ref(const pmt_t& vector, size_t k)
 {
     if (!vector->is_s8vector())
         throw wrong_type("pmt_s8vector_ref", vector);
     return _s8vector(vector)->ref(k);
 }
 
-void s8vector_set(pmt_t vector, size_t k, int8_t obj)
+void s8vector_set(const pmt_t& vector, size_t k, int8_t obj)
 {
     if (!vector->is_s8vector())
         throw wrong_type("pmt_s8vector_set", vector);
     _s8vector(vector)->set(k, obj);
 }
 
-const int8_t* s8vector_elements(pmt_t vector, size_t& len)
+const int8_t* s8vector_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_s8vector())
         throw wrong_type("pmt_s8vector_elements", vector);
     return _s8vector(vector)->elements(len);
 }
 
-const std::vector<int8_t> s8vector_elements(pmt_t vector)
+const std::vector<int8_t> s8vector_elements(const pmt_t& vector)
 {
     if (!vector->is_s8vector())
         throw wrong_type("pmt_s8vector_elements", vector);
@@ -262,7 +268,7 @@ const std::vector<int8_t> s8vector_elements(pmt_t vector)
 }
 
 
-int8_t* s8vector_writable_elements(pmt_t vector, size_t& len)
+int8_t* s8vector_writable_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_s8vector())
         throw wrong_type("pmt_s8vector_writable_elements", vector);
@@ -281,7 +287,7 @@ const std::string pmt_s8vector::string_ref(size_t k) const
 
 namespace pmt {
 
-static pmt_u16vector* _u16vector(pmt_t x)
+static pmt_u16vector* _u16vector(const pmt_t& x)
 {
     return dynamic_cast<pmt_u16vector*>(x.get());
 }
@@ -337,7 +343,7 @@ void* pmt_u16vector::uniform_writable_elements(size_t& len)
     return len ? (&d_v[0]) : nullptr;
 }
 
-bool is_u16vector(pmt_t obj) { return obj->is_u16vector(); }
+bool is_u16vector(const pmt_t& obj) { return obj->is_u16vector(); }
 
 pmt_t make_u16vector(size_t k, uint16_t fill)
 {
@@ -358,28 +364,28 @@ pmt_t init_u16vector(size_t k, const std::vector<uint16_t>& data)
         new pmt_u16vector(k, static_cast<uint16_t>(0))); // fills an empty vector with 0
 }
 
-uint16_t u16vector_ref(pmt_t vector, size_t k)
+uint16_t u16vector_ref(const pmt_t& vector, size_t k)
 {
     if (!vector->is_u16vector())
         throw wrong_type("pmt_u16vector_ref", vector);
     return _u16vector(vector)->ref(k);
 }
 
-void u16vector_set(pmt_t vector, size_t k, uint16_t obj)
+void u16vector_set(const pmt_t& vector, size_t k, uint16_t obj)
 {
     if (!vector->is_u16vector())
         throw wrong_type("pmt_u16vector_set", vector);
     _u16vector(vector)->set(k, obj);
 }
 
-const uint16_t* u16vector_elements(pmt_t vector, size_t& len)
+const uint16_t* u16vector_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_u16vector())
         throw wrong_type("pmt_u16vector_elements", vector);
     return _u16vector(vector)->elements(len);
 }
 
-const std::vector<uint16_t> u16vector_elements(pmt_t vector)
+const std::vector<uint16_t> u16vector_elements(const pmt_t& vector)
 {
     if (!vector->is_u16vector())
         throw wrong_type("pmt_u16vector_elements", vector);
@@ -390,7 +396,7 @@ const std::vector<uint16_t> u16vector_elements(pmt_t vector)
 }
 
 
-uint16_t* u16vector_writable_elements(pmt_t vector, size_t& len)
+uint16_t* u16vector_writable_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_u16vector())
         throw wrong_type("pmt_u16vector_writable_elements", vector);
@@ -409,7 +415,7 @@ const std::string pmt_u16vector::string_ref(size_t k) const
 
 namespace pmt {
 
-static pmt_s16vector* _s16vector(pmt_t x)
+static pmt_s16vector* _s16vector(const pmt_t& x)
 {
     return dynamic_cast<pmt_s16vector*>(x.get());
 }
@@ -465,7 +471,7 @@ void* pmt_s16vector::uniform_writable_elements(size_t& len)
     return len ? (&d_v[0]) : nullptr;
 }
 
-bool is_s16vector(pmt_t obj) { return obj->is_s16vector(); }
+bool is_s16vector(const pmt_t& obj) { return obj->is_s16vector(); }
 
 pmt_t make_s16vector(size_t k, int16_t fill) { return pmt_t(new pmt_s16vector(k, fill)); }
 
@@ -483,28 +489,28 @@ pmt_t init_s16vector(size_t k, const std::vector<int16_t>& data)
         new pmt_s16vector(k, static_cast<int16_t>(0))); // fills an empty vector with 0
 }
 
-int16_t s16vector_ref(pmt_t vector, size_t k)
+int16_t s16vector_ref(const pmt_t& vector, size_t k)
 {
     if (!vector->is_s16vector())
         throw wrong_type("pmt_s16vector_ref", vector);
     return _s16vector(vector)->ref(k);
 }
 
-void s16vector_set(pmt_t vector, size_t k, int16_t obj)
+void s16vector_set(const pmt_t& vector, size_t k, int16_t obj)
 {
     if (!vector->is_s16vector())
         throw wrong_type("pmt_s16vector_set", vector);
     _s16vector(vector)->set(k, obj);
 }
 
-const int16_t* s16vector_elements(pmt_t vector, size_t& len)
+const int16_t* s16vector_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_s16vector())
         throw wrong_type("pmt_s16vector_elements", vector);
     return _s16vector(vector)->elements(len);
 }
 
-const std::vector<int16_t> s16vector_elements(pmt_t vector)
+const std::vector<int16_t> s16vector_elements(const pmt_t& vector)
 {
     if (!vector->is_s16vector())
         throw wrong_type("pmt_s16vector_elements", vector);
@@ -515,7 +521,7 @@ const std::vector<int16_t> s16vector_elements(pmt_t vector)
 }
 
 
-int16_t* s16vector_writable_elements(pmt_t vector, size_t& len)
+int16_t* s16vector_writable_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_s16vector())
         throw wrong_type("pmt_s16vector_writable_elements", vector);
@@ -534,7 +540,7 @@ const std::string pmt_s16vector::string_ref(size_t k) const
 
 namespace pmt {
 
-static pmt_u32vector* _u32vector(pmt_t x)
+static pmt_u32vector* _u32vector(const pmt_t& x)
 {
     return dynamic_cast<pmt_u32vector*>(x.get());
 }
@@ -590,7 +596,7 @@ void* pmt_u32vector::uniform_writable_elements(size_t& len)
     return len ? (&d_v[0]) : nullptr;
 }
 
-bool is_u32vector(pmt_t obj) { return obj->is_u32vector(); }
+bool is_u32vector(const pmt_t& obj) { return obj->is_u32vector(); }
 
 pmt_t make_u32vector(size_t k, uint32_t fill)
 {
@@ -611,28 +617,28 @@ pmt_t init_u32vector(size_t k, const std::vector<uint32_t>& data)
         new pmt_u32vector(k, static_cast<uint32_t>(0))); // fills an empty vector with 0
 }
 
-uint32_t u32vector_ref(pmt_t vector, size_t k)
+uint32_t u32vector_ref(const pmt_t& vector, size_t k)
 {
     if (!vector->is_u32vector())
         throw wrong_type("pmt_u32vector_ref", vector);
     return _u32vector(vector)->ref(k);
 }
 
-void u32vector_set(pmt_t vector, size_t k, uint32_t obj)
+void u32vector_set(const pmt_t& vector, size_t k, uint32_t obj)
 {
     if (!vector->is_u32vector())
         throw wrong_type("pmt_u32vector_set", vector);
     _u32vector(vector)->set(k, obj);
 }
 
-const uint32_t* u32vector_elements(pmt_t vector, size_t& len)
+const uint32_t* u32vector_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_u32vector())
         throw wrong_type("pmt_u32vector_elements", vector);
     return _u32vector(vector)->elements(len);
 }
 
-const std::vector<uint32_t> u32vector_elements(pmt_t vector)
+const std::vector<uint32_t> u32vector_elements(const pmt_t& vector)
 {
     if (!vector->is_u32vector())
         throw wrong_type("pmt_u32vector_elements", vector);
@@ -643,7 +649,7 @@ const std::vector<uint32_t> u32vector_elements(pmt_t vector)
 }
 
 
-uint32_t* u32vector_writable_elements(pmt_t vector, size_t& len)
+uint32_t* u32vector_writable_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_u32vector())
         throw wrong_type("pmt_u32vector_writable_elements", vector);
@@ -662,7 +668,7 @@ const std::string pmt_u32vector::string_ref(size_t k) const
 
 namespace pmt {
 
-static pmt_s32vector* _s32vector(pmt_t x)
+static pmt_s32vector* _s32vector(const pmt_t& x)
 {
     return dynamic_cast<pmt_s32vector*>(x.get());
 }
@@ -718,7 +724,7 @@ void* pmt_s32vector::uniform_writable_elements(size_t& len)
     return len ? (&d_v[0]) : nullptr;
 }
 
-bool is_s32vector(pmt_t obj) { return obj->is_s32vector(); }
+bool is_s32vector(const pmt_t& obj) { return obj->is_s32vector(); }
 
 pmt_t make_s32vector(size_t k, int32_t fill) { return pmt_t(new pmt_s32vector(k, fill)); }
 
@@ -736,28 +742,28 @@ pmt_t init_s32vector(size_t k, const std::vector<int32_t>& data)
         new pmt_s32vector(k, static_cast<int32_t>(0))); // fills an empty vector with 0
 }
 
-int32_t s32vector_ref(pmt_t vector, size_t k)
+int32_t s32vector_ref(const pmt_t& vector, size_t k)
 {
     if (!vector->is_s32vector())
         throw wrong_type("pmt_s32vector_ref", vector);
     return _s32vector(vector)->ref(k);
 }
 
-void s32vector_set(pmt_t vector, size_t k, int32_t obj)
+void s32vector_set(const pmt_t& vector, size_t k, int32_t obj)
 {
     if (!vector->is_s32vector())
         throw wrong_type("pmt_s32vector_set", vector);
     _s32vector(vector)->set(k, obj);
 }
 
-const int32_t* s32vector_elements(pmt_t vector, size_t& len)
+const int32_t* s32vector_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_s32vector())
         throw wrong_type("pmt_s32vector_elements", vector);
     return _s32vector(vector)->elements(len);
 }
 
-const std::vector<int32_t> s32vector_elements(pmt_t vector)
+const std::vector<int32_t> s32vector_elements(const pmt_t& vector)
 {
     if (!vector->is_s32vector())
         throw wrong_type("pmt_s32vector_elements", vector);
@@ -768,7 +774,7 @@ const std::vector<int32_t> s32vector_elements(pmt_t vector)
 }
 
 
-int32_t* s32vector_writable_elements(pmt_t vector, size_t& len)
+int32_t* s32vector_writable_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_s32vector())
         throw wrong_type("pmt_s32vector_writable_elements", vector);
@@ -787,7 +793,7 @@ const std::string pmt_s32vector::string_ref(size_t k) const
 
 namespace pmt {
 
-static pmt_u64vector* _u64vector(pmt_t x)
+static pmt_u64vector* _u64vector(const pmt_t& x)
 {
     return dynamic_cast<pmt_u64vector*>(x.get());
 }
@@ -843,7 +849,7 @@ void* pmt_u64vector::uniform_writable_elements(size_t& len)
     return len ? (&d_v[0]) : nullptr;
 }
 
-bool is_u64vector(pmt_t obj) { return obj->is_u64vector(); }
+bool is_u64vector(const pmt_t& obj) { return obj->is_u64vector(); }
 
 pmt_t make_u64vector(size_t k, uint64_t fill)
 {
@@ -864,28 +870,28 @@ pmt_t init_u64vector(size_t k, const std::vector<uint64_t>& data)
         new pmt_u64vector(k, static_cast<uint64_t>(0))); // fills an empty vector with 0
 }
 
-uint64_t u64vector_ref(pmt_t vector, size_t k)
+uint64_t u64vector_ref(const pmt_t& vector, size_t k)
 {
     if (!vector->is_u64vector())
         throw wrong_type("pmt_u64vector_ref", vector);
     return _u64vector(vector)->ref(k);
 }
 
-void u64vector_set(pmt_t vector, size_t k, uint64_t obj)
+void u64vector_set(const pmt_t& vector, size_t k, uint64_t obj)
 {
     if (!vector->is_u64vector())
         throw wrong_type("pmt_u64vector_set", vector);
     _u64vector(vector)->set(k, obj);
 }
 
-const uint64_t* u64vector_elements(pmt_t vector, size_t& len)
+const uint64_t* u64vector_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_u64vector())
         throw wrong_type("pmt_u64vector_elements", vector);
     return _u64vector(vector)->elements(len);
 }
 
-const std::vector<uint64_t> u64vector_elements(pmt_t vector)
+const std::vector<uint64_t> u64vector_elements(const pmt_t& vector)
 {
     if (!vector->is_u64vector())
         throw wrong_type("pmt_u64vector_elements", vector);
@@ -896,7 +902,7 @@ const std::vector<uint64_t> u64vector_elements(pmt_t vector)
 }
 
 
-uint64_t* u64vector_writable_elements(pmt_t vector, size_t& len)
+uint64_t* u64vector_writable_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_u64vector())
         throw wrong_type("pmt_u64vector_writable_elements", vector);
@@ -915,7 +921,7 @@ const std::string pmt_u64vector::string_ref(size_t k) const
 
 namespace pmt {
 
-static pmt_s64vector* _s64vector(pmt_t x)
+static pmt_s64vector* _s64vector(const pmt_t& x)
 {
     return dynamic_cast<pmt_s64vector*>(x.get());
 }
@@ -971,7 +977,7 @@ void* pmt_s64vector::uniform_writable_elements(size_t& len)
     return len ? (&d_v[0]) : nullptr;
 }
 
-bool is_s64vector(pmt_t obj) { return obj->is_s64vector(); }
+bool is_s64vector(const pmt_t& obj) { return obj->is_s64vector(); }
 
 pmt_t make_s64vector(size_t k, int64_t fill) { return pmt_t(new pmt_s64vector(k, fill)); }
 
@@ -989,28 +995,28 @@ pmt_t init_s64vector(size_t k, const std::vector<int64_t>& data)
         new pmt_s64vector(k, static_cast<int64_t>(0))); // fills an empty vector with 0
 }
 
-int64_t s64vector_ref(pmt_t vector, size_t k)
+int64_t s64vector_ref(const pmt_t& vector, size_t k)
 {
     if (!vector->is_s64vector())
         throw wrong_type("pmt_s64vector_ref", vector);
     return _s64vector(vector)->ref(k);
 }
 
-void s64vector_set(pmt_t vector, size_t k, int64_t obj)
+void s64vector_set(const pmt_t& vector, size_t k, int64_t obj)
 {
     if (!vector->is_s64vector())
         throw wrong_type("pmt_s64vector_set", vector);
     _s64vector(vector)->set(k, obj);
 }
 
-const int64_t* s64vector_elements(pmt_t vector, size_t& len)
+const int64_t* s64vector_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_s64vector())
         throw wrong_type("pmt_s64vector_elements", vector);
     return _s64vector(vector)->elements(len);
 }
 
-const std::vector<int64_t> s64vector_elements(pmt_t vector)
+const std::vector<int64_t> s64vector_elements(const pmt_t& vector)
 {
     if (!vector->is_s64vector())
         throw wrong_type("pmt_s64vector_elements", vector);
@@ -1021,7 +1027,7 @@ const std::vector<int64_t> s64vector_elements(pmt_t vector)
 }
 
 
-int64_t* s64vector_writable_elements(pmt_t vector, size_t& len)
+int64_t* s64vector_writable_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_s64vector())
         throw wrong_type("pmt_s64vector_writable_elements", vector);
@@ -1040,7 +1046,7 @@ const std::string pmt_s64vector::string_ref(size_t k) const
 
 namespace pmt {
 
-static pmt_f32vector* _f32vector(pmt_t x)
+static pmt_f32vector* _f32vector(const pmt_t& x)
 {
     return dynamic_cast<pmt_f32vector*>(x.get());
 }
@@ -1096,7 +1102,7 @@ void* pmt_f32vector::uniform_writable_elements(size_t& len)
     return len ? (&d_v[0]) : nullptr;
 }
 
-bool is_f32vector(pmt_t obj) { return obj->is_f32vector(); }
+bool is_f32vector(const pmt_t& obj) { return obj->is_f32vector(); }
 
 pmt_t make_f32vector(size_t k, float fill) { return pmt_t(new pmt_f32vector(k, fill)); }
 
@@ -1114,28 +1120,28 @@ pmt_t init_f32vector(size_t k, const std::vector<float>& data)
         new pmt_f32vector(k, static_cast<float>(0))); // fills an empty vector with 0
 }
 
-float f32vector_ref(pmt_t vector, size_t k)
+float f32vector_ref(const pmt_t& vector, size_t k)
 {
     if (!vector->is_f32vector())
         throw wrong_type("pmt_f32vector_ref", vector);
     return _f32vector(vector)->ref(k);
 }
 
-void f32vector_set(pmt_t vector, size_t k, float obj)
+void f32vector_set(const pmt_t& vector, size_t k, float obj)
 {
     if (!vector->is_f32vector())
         throw wrong_type("pmt_f32vector_set", vector);
     _f32vector(vector)->set(k, obj);
 }
 
-const float* f32vector_elements(pmt_t vector, size_t& len)
+const float* f32vector_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_f32vector())
         throw wrong_type("pmt_f32vector_elements", vector);
     return _f32vector(vector)->elements(len);
 }
 
-const std::vector<float> f32vector_elements(pmt_t vector)
+const std::vector<float> f32vector_elements(const pmt_t& vector)
 {
     if (!vector->is_f32vector())
         throw wrong_type("pmt_f32vector_elements", vector);
@@ -1146,7 +1152,7 @@ const std::vector<float> f32vector_elements(pmt_t vector)
 }
 
 
-float* f32vector_writable_elements(pmt_t vector, size_t& len)
+float* f32vector_writable_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_f32vector())
         throw wrong_type("pmt_f32vector_writable_elements", vector);
@@ -1165,7 +1171,7 @@ const std::string pmt_f32vector::string_ref(size_t k) const
 
 namespace pmt {
 
-static pmt_f64vector* _f64vector(pmt_t x)
+static pmt_f64vector* _f64vector(const pmt_t& x)
 {
     return dynamic_cast<pmt_f64vector*>(x.get());
 }
@@ -1221,7 +1227,7 @@ void* pmt_f64vector::uniform_writable_elements(size_t& len)
     return len ? (&d_v[0]) : nullptr;
 }
 
-bool is_f64vector(pmt_t obj) { return obj->is_f64vector(); }
+bool is_f64vector(const pmt_t& obj) { return obj->is_f64vector(); }
 
 pmt_t make_f64vector(size_t k, double fill) { return pmt_t(new pmt_f64vector(k, fill)); }
 
@@ -1239,28 +1245,28 @@ pmt_t init_f64vector(size_t k, const std::vector<double>& data)
         new pmt_f64vector(k, static_cast<double>(0))); // fills an empty vector with 0
 }
 
-double f64vector_ref(pmt_t vector, size_t k)
+double f64vector_ref(const pmt_t& vector, size_t k)
 {
     if (!vector->is_f64vector())
         throw wrong_type("pmt_f64vector_ref", vector);
     return _f64vector(vector)->ref(k);
 }
 
-void f64vector_set(pmt_t vector, size_t k, double obj)
+void f64vector_set(const pmt_t& vector, size_t k, double obj)
 {
     if (!vector->is_f64vector())
         throw wrong_type("pmt_f64vector_set", vector);
     _f64vector(vector)->set(k, obj);
 }
 
-const double* f64vector_elements(pmt_t vector, size_t& len)
+const double* f64vector_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_f64vector())
         throw wrong_type("pmt_f64vector_elements", vector);
     return _f64vector(vector)->elements(len);
 }
 
-const std::vector<double> f64vector_elements(pmt_t vector)
+const std::vector<double> f64vector_elements(const pmt_t& vector)
 {
     if (!vector->is_f64vector())
         throw wrong_type("pmt_f64vector_elements", vector);
@@ -1271,7 +1277,7 @@ const std::vector<double> f64vector_elements(pmt_t vector)
 }
 
 
-double* f64vector_writable_elements(pmt_t vector, size_t& len)
+double* f64vector_writable_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_f64vector())
         throw wrong_type("pmt_f64vector_writable_elements", vector);
@@ -1290,7 +1296,7 @@ const std::string pmt_f64vector::string_ref(size_t k) const
 
 namespace pmt {
 
-static pmt_c32vector* _c32vector(pmt_t x)
+static pmt_c32vector* _c32vector(const pmt_t& x)
 {
     return dynamic_cast<pmt_c32vector*>(x.get());
 }
@@ -1346,7 +1352,7 @@ void* pmt_c32vector::uniform_writable_elements(size_t& len)
     return len ? (&d_v[0]) : nullptr;
 }
 
-bool is_c32vector(pmt_t obj) { return obj->is_c32vector(); }
+bool is_c32vector(const pmt_t& obj) { return obj->is_c32vector(); }
 
 pmt_t make_c32vector(size_t k, std::complex<float> fill)
 {
@@ -1367,28 +1373,28 @@ pmt_t init_c32vector(size_t k, const std::vector<std::complex<float>>& data)
         k, static_cast<std::complex<float>>(0))); // fills an empty vector with 0
 }
 
-std::complex<float> c32vector_ref(pmt_t vector, size_t k)
+std::complex<float> c32vector_ref(const pmt_t& vector, size_t k)
 {
     if (!vector->is_c32vector())
         throw wrong_type("pmt_c32vector_ref", vector);
     return _c32vector(vector)->ref(k);
 }
 
-void c32vector_set(pmt_t vector, size_t k, std::complex<float> obj)
+void c32vector_set(const pmt_t& vector, size_t k, std::complex<float> obj)
 {
     if (!vector->is_c32vector())
         throw wrong_type("pmt_c32vector_set", vector);
     _c32vector(vector)->set(k, obj);
 }
 
-const std::complex<float>* c32vector_elements(pmt_t vector, size_t& len)
+const std::complex<float>* c32vector_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_c32vector())
         throw wrong_type("pmt_c32vector_elements", vector);
     return _c32vector(vector)->elements(len);
 }
 
-const std::vector<std::complex<float>> c32vector_elements(pmt_t vector)
+const std::vector<std::complex<float>> c32vector_elements(const pmt_t& vector)
 {
     if (!vector->is_c32vector())
         throw wrong_type("pmt_c32vector_elements", vector);
@@ -1399,7 +1405,7 @@ const std::vector<std::complex<float>> c32vector_elements(pmt_t vector)
 }
 
 
-std::complex<float>* c32vector_writable_elements(pmt_t vector, size_t& len)
+std::complex<float>* c32vector_writable_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_c32vector())
         throw wrong_type("pmt_c32vector_writable_elements", vector);
@@ -1418,7 +1424,7 @@ const std::string pmt_c32vector::string_ref(size_t k) const
 
 namespace pmt {
 
-static pmt_c64vector* _c64vector(pmt_t x)
+static pmt_c64vector* _c64vector(const pmt_t& x)
 {
     return dynamic_cast<pmt_c64vector*>(x.get());
 }
@@ -1474,7 +1480,7 @@ void* pmt_c64vector::uniform_writable_elements(size_t& len)
     return len ? (&d_v[0]) : nullptr;
 }
 
-bool is_c64vector(pmt_t obj) { return obj->is_c64vector(); }
+bool is_c64vector(const pmt_t& obj) { return obj->is_c64vector(); }
 
 pmt_t make_c64vector(size_t k, std::complex<double> fill)
 {
@@ -1495,28 +1501,28 @@ pmt_t init_c64vector(size_t k, const std::vector<std::complex<double>>& data)
         k, static_cast<std::complex<double>>(0))); // fills an empty vector with 0
 }
 
-std::complex<double> c64vector_ref(pmt_t vector, size_t k)
+std::complex<double> c64vector_ref(const pmt_t& vector, size_t k)
 {
     if (!vector->is_c64vector())
         throw wrong_type("pmt_c64vector_ref", vector);
     return _c64vector(vector)->ref(k);
 }
 
-void c64vector_set(pmt_t vector, size_t k, std::complex<double> obj)
+void c64vector_set(const pmt_t& vector, size_t k, std::complex<double> obj)
 {
     if (!vector->is_c64vector())
         throw wrong_type("pmt_c64vector_set", vector);
     _c64vector(vector)->set(k, obj);
 }
 
-const std::complex<double>* c64vector_elements(pmt_t vector, size_t& len)
+const std::complex<double>* c64vector_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_c64vector())
         throw wrong_type("pmt_c64vector_elements", vector);
     return _c64vector(vector)->elements(len);
 }
 
-const std::vector<std::complex<double>> c64vector_elements(pmt_t vector)
+const std::vector<std::complex<double>> c64vector_elements(const pmt_t& vector)
 {
     if (!vector->is_c64vector())
         throw wrong_type("pmt_c64vector_elements", vector);
@@ -1527,7 +1533,7 @@ const std::vector<std::complex<double>> c64vector_elements(pmt_t vector)
 }
 
 
-std::complex<double>* c64vector_writable_elements(pmt_t vector, size_t& len)
+std::complex<double>* c64vector_writable_elements(const pmt_t& vector, size_t& len)
 {
     if (!vector->is_c64vector())
         throw wrong_type("pmt_c64vector_writable_elements", vector);

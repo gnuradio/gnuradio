@@ -27,17 +27,20 @@
 #include "patterned_interleaver_impl.h"
 #include <gnuradio/io_signature.h>
 
+#include <utility>
+
 namespace gr {
 namespace blocks {
 
 patterned_interleaver::sptr patterned_interleaver::make(size_t itemsize,
                                                         std::vector<int> pattern)
 {
-    return gnuradio::get_initial_sptr(new patterned_interleaver_impl(itemsize, pattern));
+    return gnuradio::get_initial_sptr(
+        new patterned_interleaver_impl(itemsize, std::move(pattern)));
 }
 
 patterned_interleaver_impl::patterned_interleaver_impl(size_t itemsize,
-                                                       std::vector<int> pattern)
+                                                       const std::vector<int>& pattern)
     : block("patterned_interleaver",
             io_signature::make(
                 pattern_max(pattern) + 1, pattern_max(pattern) + 1, itemsize),

@@ -94,7 +94,7 @@ public:
 
     float error() const;
 
-    void handle_set_noise(pmt::pmt_t msg);
+    void handle_set_noise(const pmt::pmt_t& msg);
 
     void setup_rpc();
 

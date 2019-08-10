@@ -40,7 +40,7 @@ public:
     mmse_resampler_cc_impl(float phase_shift, float resamp_ratio);
     ~mmse_resampler_cc_impl();
 
-    void handle_msg(pmt::pmt_t msg);
+    void handle_msg(const pmt::pmt_t& msg);
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required);
     int general_work(int noutput_items,

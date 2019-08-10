@@ -32,8 +32,8 @@
 
 namespace gr {
 
-tpb_thread_body::tpb_thread_body(block_sptr block,
-                                 gr::thread::barrier_sptr start_sync,
+tpb_thread_body::tpb_thread_body(const block_sptr& block,
+                                 const gr::thread::barrier_sptr& start_sync,
                                  int max_noutput_items)
     : d_exec(block, max_noutput_items)
 {

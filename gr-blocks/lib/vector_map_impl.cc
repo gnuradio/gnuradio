@@ -28,6 +28,8 @@
 #include <gnuradio/io_signature.h>
 #include <string.h>
 
+#include <utility>
+
 namespace gr {
 namespace blocks {
 
@@ -54,12 +56,14 @@ vector_map::sptr vector_map::make(size_t item_size,
                                   std::vector<size_t> in_vlens,
                                   std::vector<std::vector<std::vector<size_t>>> mapping)
 {
-    return gnuradio::get_initial_sptr(new vector_map_impl(item_size, in_vlens, mapping));
+    return gnuradio::get_initial_sptr(
+        new vector_map_impl(item_size, std::move(in_vlens), std::move(mapping)));
 }
 
-vector_map_impl::vector_map_impl(size_t item_size,
-                                 std::vector<size_t> in_vlens,
-                                 std::vector<std::vector<std::vector<size_t>>> mapping)
+vector_map_impl::vector_map_impl(
+    size_t item_size,
+    const std::vector<size_t>& in_vlens,
+    const std::vector<std::vector<std::vector<size_t>>>& mapping)
     : sync_block(
           "vector_map",
           io_signature::makev(

@@ -28,18 +28,21 @@
 #include <gnuradio/blocks/pdu.h>
 #include <gnuradio/io_signature.h>
 
+#include <utility>
+
 namespace gr {
 namespace blocks {
 
 pdu_filter::sptr pdu_filter::make(pmt::pmt_t k, pmt::pmt_t v, bool invert)
 {
-    return gnuradio::get_initial_sptr(new pdu_filter_impl(k, v, invert));
+    return gnuradio::get_initial_sptr(
+        new pdu_filter_impl(std::move(k), std::move(v), invert));
 }
 
 pdu_filter_impl::pdu_filter_impl(pmt::pmt_t k, pmt::pmt_t v, bool invert)
     : block("pdu_filter", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
-      d_k(k),
-      d_v(v),
+      d_k(std::move(k)),
+      d_v(std::move(v)),
       d_invert(invert)
 {
     message_port_register_out(pdu::pdu_port_id());
@@ -48,7 +51,7 @@ pdu_filter_impl::pdu_filter_impl(pmt::pmt_t k, pmt::pmt_t v, bool invert)
                     boost::bind(&pdu_filter_impl::handle_msg, this, _1));
 }
 
-void pdu_filter_impl::handle_msg(pmt::pmt_t pdu)
+void pdu_filter_impl::handle_msg(const pmt::pmt_t& pdu)
 {
     pmt::pmt_t meta = pmt::car(pdu);
     bool output = d_invert;

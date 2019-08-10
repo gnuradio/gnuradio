@@ -36,6 +36,7 @@
 #include <gnuradio/basic_block.h>
 #include <gnuradio/blocks/pdu.h>
 #include <boost/format.hpp>
+#include <utility>
 
 static const long timeout_us = 100 * 1000; // 100ms
 
@@ -53,7 +54,7 @@ stream_pdu_base::~stream_pdu_base() { stop_rxthread(); }
 void stream_pdu_base::start_rxthread(basic_block* blk, pmt::pmt_t port)
 {
     d_blk = blk;
-    d_port = port;
+    d_port = std::move(port);
     d_thread = gr::thread::thread(boost::bind(&stream_pdu_base::run, this));
     d_started = true;
 }
@@ -101,7 +102,7 @@ bool stream_pdu_base::wait_ready()
     return ::select(d_fd + 1, &rset, NULL, NULL, &tv) > 0;
 }
 
-void stream_pdu_base::send(pmt::pmt_t msg)
+void stream_pdu_base::send(const pmt::pmt_t& msg)
 {
     pmt::pmt_t vector = pmt::cdr(msg);
     size_t offset(0);

@@ -139,7 +139,7 @@ class FEC_API tpc_decoder : public generic_decoder
 
     // Computes the branch metric used for decoding, returning a metric between the
     // hypothetical symbol and received vector
-    float gamma(const std::vector<float> rec_array, const int symbol);
+    float gamma(const std::vector<float>& rec_array, const int symbol);
 
     float (tpc_decoder::*max_star)(const float, const float);
 

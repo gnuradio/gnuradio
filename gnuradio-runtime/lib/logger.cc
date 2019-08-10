@@ -34,6 +34,7 @@
 #include <gnuradio/prefs.h>
 #include <algorithm>
 #include <stdexcept>
+#include <utility>
 
 namespace gr {
 
@@ -96,7 +97,7 @@ void logger_config::load_config(std::string filename, unsigned int watch_period)
     logger_config& instance = get_instance();
     // Only reconfigure if filename or watch has changed
     if (!logger_configured) {
-        instance.filename = filename;
+        instance.filename = std::move(filename);
         instance.watch_period = watch_period;
         // Stop any file watching thread
         if (instance.watch_thread != NULL)
@@ -143,7 +144,7 @@ void logger_config::reset_config(void)
 
 /***************** Functions to call log4cpp methods *************************/
 
-logger_ptr logger_get_logger(std::string name)
+logger_ptr logger_get_logger(const std::string& name)
 {
     if (log4cpp::Category::exists(name)) {
         logger_ptr logger = &log4cpp::Category::getInstance(name);
@@ -233,8 +234,8 @@ void logger_get_level(logger_ptr logger, log4cpp::Priority::Value level)
 }
 
 void logger_add_console_appender(logger_ptr logger,
-                                 std::string target,
-                                 std::string pattern)
+                                 const std::string& target,
+                                 const std::string& pattern)
 {
     log4cpp::PatternLayout* layout = new log4cpp::PatternLayout();
     log4cpp::Appender* app;
@@ -253,13 +254,13 @@ void logger_set_console_appender(logger_ptr logger,
                                  std::string pattern)
 {
     logger->removeAllAppenders();
-    logger_add_console_appender(logger, target, pattern);
+    logger_add_console_appender(logger, std::move(target), std::move(pattern));
 }
 
 void logger_add_file_appender(logger_ptr logger,
-                              std::string filename,
+                              const std::string& filename,
                               bool append,
-                              std::string pattern)
+                              const std::string& pattern)
 {
     log4cpp::PatternLayout* layout = new log4cpp::PatternLayout();
     log4cpp::Appender* app =
@@ -275,16 +276,16 @@ void logger_set_file_appender(logger_ptr logger,
                               std::string pattern)
 {
     logger->removeAllAppenders();
-    logger_add_file_appender(logger, filename, append, pattern);
+    logger_add_file_appender(logger, std::move(filename), append, std::move(pattern));
 }
 
 void logger_add_rollingfile_appender(logger_ptr logger,
-                                     std::string filename,
+                                     const std::string& filename,
                                      size_t filesize,
                                      int bkup_index,
                                      bool append,
                                      mode_t mode,
-                                     std::string pattern)
+                                     const std::string& pattern)
 {
     log4cpp::PatternLayout* layout = new log4cpp::PatternLayout();
     log4cpp::Appender* app = new log4cpp::RollingFileAppender(
@@ -309,7 +310,7 @@ std::vector<std::string> logger_get_logger_names(void)
 } /* namespace gr */
 
 /****** Start Methods to provide Python the capabilities of the macros ********/
-void gr_logger_config(const std::string config_filename, unsigned int watch_period)
+void gr_logger_config(const std::string& config_filename, unsigned int watch_period)
 {
     GR_CONFIG_AND_WATCH_LOGGER(config_filename, watch_period);
 }
@@ -329,7 +330,7 @@ namespace gr {
 
 bool configure_default_loggers(gr::logger_ptr& l,
                                gr::logger_ptr& d,
-                               const std::string name)
+                               const std::string& name)
 {
     prefs* p = prefs::singleton();
     std::string config_file = p->get_string("LOG", "log_config", "");

@@ -43,11 +43,11 @@ namespace digital {
 DIGITAL_API unsigned int
 update_crc32(unsigned int crc, const unsigned char* buf, size_t len);
 
-DIGITAL_API unsigned int update_crc32(unsigned int crc, const std::string buf);
+DIGITAL_API unsigned int update_crc32(unsigned int crc, const std::string& buf);
 
 DIGITAL_API unsigned int crc32(const unsigned char* buf, size_t len);
 
-DIGITAL_API unsigned int crc32(const std::string buf);
+DIGITAL_API unsigned int crc32(const std::string& buf);
 
 } /* namespace digital */
 } /* namespace gr */

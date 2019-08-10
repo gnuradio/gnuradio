@@ -39,10 +39,10 @@ public:
     cldpc(){};
 
     //! Constructs the LDPC class from given GF2mat X
-    cldpc(const GF2Mat X);
+    cldpc(const GF2Mat& X);
 
     //! Constructs the class from the given alist _list
-    cldpc(const alist _list);
+    cldpc(const alist& _list);
 
     //! Prints the variable permute
     void print_permute();
@@ -78,13 +78,13 @@ public:
     int get_N();
 
     //! Returns the syndrome for a given vector "in"
-    std::vector<char> syndrome(const std::vector<char> in);
+    std::vector<char> syndrome(const std::vector<char>& in);
 
     //! Returns true if "in" is a codeword, else false
-    bool is_codeword(const std::vector<char> in);
+    bool is_codeword(const std::vector<char>& in);
 
     //! Set the variable _list
-    void set_alist(const alist _list);
+    void set_alist(const alist& _list);
 
     //! Obtain systematic bits from "in"
     std::vector<char> get_systematic_bits(std::vector<char> in);

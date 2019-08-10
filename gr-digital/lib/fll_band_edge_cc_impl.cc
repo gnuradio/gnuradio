@@ -27,6 +27,7 @@
 #include "fll_band_edge_cc_impl.h"
 #include <gnuradio/expj.h>
 #include <gnuradio/io_signature.h>
+#include <cmath>
 #include <cstdio>
 
 namespace gr {
@@ -144,7 +145,7 @@ void fll_band_edge_cc_impl::design_filter(float samps_per_sym,
                                           float rolloff,
                                           int filter_size)
 {
-    int M = rint(filter_size / samps_per_sym);
+    int M = std::rint(filter_size / samps_per_sym);
     float power = 0;
 
     // Create the baseband filter by adding two sincs together

@@ -30,6 +30,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <utility>
 
 namespace gr {
 
@@ -42,8 +43,8 @@ basic_block::basic_block(const std::string& name,
                          io_signature::sptr input_signature,
                          io_signature::sptr output_signature)
     : d_name(name),
-      d_input_signature(input_signature),
-      d_output_signature(output_signature),
+      d_input_signature(std::move(input_signature)),
+      d_output_signature(std::move(output_signature)),
       d_unique_id(s_next_id++),
       d_symbolic_id(global_block_registry.block_register(this)),
       d_symbol_name(global_block_registry.register_symbolic_name(this)),
@@ -62,7 +63,7 @@ basic_block::~basic_block()
 
 basic_block_sptr basic_block::to_basic_block() { return shared_from_this(); }
 
-void basic_block::set_block_alias(std::string name)
+void basic_block::set_block_alias(const std::string& name)
 {
     // Only keep one alias'd name around for each block. If we don't
     // have an alias, add it; if we do, update the entry in the
@@ -80,7 +81,7 @@ void basic_block::set_block_alias(std::string name)
 // ** Message passing interface **
 
 //  - register a new input message port
-void basic_block::message_port_register_in(pmt::pmt_t port_id)
+void basic_block::message_port_register_in(const pmt::pmt_t& port_id)
 {
     if (!pmt::is_symbol(port_id)) {
         throw std::runtime_error("message_port_register_in: bad port id");
@@ -102,7 +103,7 @@ pmt::pmt_t basic_block::message_ports_in()
 }
 
 //  - register a new output message port
-void basic_block::message_port_register_out(pmt::pmt_t port_id)
+void basic_block::message_port_register_out(const pmt::pmt_t& port_id)
 {
     if (!pmt::is_symbol(port_id)) {
         throw std::runtime_error("message_port_register_out: bad port id");
@@ -125,7 +126,7 @@ pmt::pmt_t basic_block::message_ports_out()
 }
 
 //  - publish a message on a message port
-void basic_block::message_port_pub(pmt::pmt_t port_id, pmt::pmt_t msg)
+void basic_block::message_port_pub(const pmt::pmt_t& port_id, const pmt::pmt_t& msg)
 {
     if (!pmt::dict_has_key(d_message_subscribers, port_id)) {
         throw std::runtime_error("port does not exist");
@@ -147,7 +148,7 @@ void basic_block::message_port_pub(pmt::pmt_t port_id, pmt::pmt_t msg)
 }
 
 //  - subscribe to a message port
-void basic_block::message_port_sub(pmt::pmt_t port_id, pmt::pmt_t target)
+void basic_block::message_port_sub(const pmt::pmt_t& port_id, const pmt::pmt_t& target)
 {
     if (!pmt::dict_has_key(d_message_subscribers, port_id)) {
         std::stringstream ss;
@@ -163,7 +164,7 @@ void basic_block::message_port_sub(pmt::pmt_t port_id, pmt::pmt_t target)
             d_message_subscribers, port_id, pmt::list_add(currlist, target));
 }
 
-void basic_block::message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target)
+void basic_block::message_port_unsub(const pmt::pmt_t& port_id, const pmt::pmt_t& target)
 {
     if (!pmt::dict_has_key(d_message_subscribers, port_id)) {
         std::stringstream ss;
@@ -180,10 +181,10 @@ void basic_block::message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target)
 
 void basic_block::_post(pmt::pmt_t which_port, pmt::pmt_t msg)
 {
-    insert_tail(which_port, msg);
+    insert_tail(std::move(which_port), std::move(msg));
 }
 
-void basic_block::insert_tail(pmt::pmt_t which_port, pmt::pmt_t msg)
+void basic_block::insert_tail(const pmt::pmt_t& which_port, const pmt::pmt_t& msg)
 {
     gr::thread::scoped_lock guard(mutex);
 
@@ -200,7 +201,7 @@ void basic_block::insert_tail(pmt::pmt_t which_port, pmt::pmt_t msg)
     global_block_registry.notify_blk(alias());
 }
 
-pmt::pmt_t basic_block::delete_head_nowait(pmt::pmt_t which_port)
+pmt::pmt_t basic_block::delete_head_nowait(const pmt::pmt_t& which_port)
 {
     gr::thread::scoped_lock guard(mutex);
 
@@ -214,7 +215,7 @@ pmt::pmt_t basic_block::delete_head_nowait(pmt::pmt_t which_port)
     return m;
 }
 
-pmt::pmt_t basic_block::message_subscribers(pmt::pmt_t port)
+pmt::pmt_t basic_block::message_subscribers(const pmt::pmt_t& port)
 {
     return pmt::dict_ref(d_message_subscribers, port, pmt::PMT_NIL);
 }

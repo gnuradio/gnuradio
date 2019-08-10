@@ -414,7 +414,7 @@ int time_raster_sink_f_impl::work(int noutput_items,
     return j;
 }
 
-void time_raster_sink_f_impl::handle_pdus(pmt::pmt_t msg)
+void time_raster_sink_f_impl::handle_pdus(const pmt::pmt_t& msg)
 {
     size_t len;
     pmt::pmt_t dict, samples;

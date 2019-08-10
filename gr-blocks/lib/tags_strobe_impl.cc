@@ -34,6 +34,7 @@
 #include <cstdio>
 #include <iostream>
 #include <stdexcept>
+#include <utility>
 
 namespace gr {
 namespace blocks {
@@ -43,8 +44,8 @@ tags_strobe::sptr tags_strobe::make(size_t sizeof_stream_item,
                                     uint64_t nsamps,
                                     pmt::pmt_t key)
 {
-    return gnuradio::get_initial_sptr(
-        new tags_strobe_impl(sizeof_stream_item, value, nsamps, key));
+    return gnuradio::get_initial_sptr(new tags_strobe_impl(
+        sizeof_stream_item, std::move(value), nsamps, std::move(key)));
 }
 
 tags_strobe_impl::tags_strobe_impl(size_t sizeof_stream_item,
@@ -59,8 +60,8 @@ tags_strobe_impl::tags_strobe_impl(size_t sizeof_stream_item,
     d_tag.offset = 0;
     d_tag.key = pmt::intern("strobe");
     d_tag.srcid = alias_pmt();
-    set_value(value);
-    set_key(key);
+    set_value(std::move(value));
+    set_key(std::move(key));
     set_nsamps(nsamps);
     d_offset = 0;
 }

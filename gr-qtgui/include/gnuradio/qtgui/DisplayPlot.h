@@ -261,8 +261,8 @@ public slots:
     void setMarkerAlpha8(int);
     void setMarkerAlpha9(int);
 
-    void setZoomerColor(QColor c);
-    void setPaletteColor(QColor c);
+    void setZoomerColor(const QColor& c);
+    void setPaletteColor(const QColor& c);
     void setAxisLabelFontSize(int axisId, int fs);
     void setYaxisLabelFontSize(int fs);
     void setXaxisLabelFontSize(int fs);

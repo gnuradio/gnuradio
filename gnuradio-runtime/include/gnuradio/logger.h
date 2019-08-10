@@ -361,7 +361,10 @@ private:
 
     std::string get_config4rpc() { return filename; }
 
-    void set_config4rpc(std::string set) { printf("Set string was:%s\n", set.c_str()); }
+    void set_config4rpc(const std::string& set)
+    {
+        printf("Set string was:%s\n", set.c_str());
+    }
 
     /*! \brief destructor stops watch thread before exits */
     ~logger_config() { stop_watch(); }
@@ -393,7 +396,7 @@ public:
  *
  * \param name Name of the logger for which a pointer is requested
  */
-GR_RUNTIME_API logger_ptr logger_get_logger(std::string name);
+GR_RUNTIME_API logger_ptr logger_get_logger(const std::string& name);
 
 /*!
  * \brief Load logger's configuration file.
@@ -530,8 +533,9 @@ GR_RUNTIME_API void logger_set_appender(logger_ptr logger, std::string appender)
  * \param target Std target to write 'cout' or 'cerr' (default is cout)
  * \param pattern Formatting pattern for log messages
  */
-GR_RUNTIME_API void
-logger_add_console_appender(logger_ptr logger, std::string target, std::string pattern);
+GR_RUNTIME_API void logger_add_console_appender(logger_ptr logger,
+                                                const std::string& target,
+                                                const std::string& pattern);
 
 /*!
  * \brief Sets a new console appender to a given logger after
@@ -556,9 +560,9 @@ logger_set_console_appender(logger_ptr logger, std::string target, std::string p
  * \param pattern Formatting pattern for log messages
  */
 GR_RUNTIME_API void logger_add_file_appender(logger_ptr logger,
-                                             std::string filename,
+                                             const std::string& filename,
                                              bool append,
-                                             std::string pattern);
+                                             const std::string& pattern);
 
 /*!
  * \brief Set a file appender to a given logger. To add another file
@@ -588,12 +592,12 @@ GR_RUNTIME_API void logger_set_file_appender(logger_ptr logger,
  * \param pattern Formatting pattern for log messages
  */
 GR_RUNTIME_API void logger_add_rollingfile_appender(logger_ptr logger,
-                                                    std::string filename,
+                                                    const std::string& filename,
                                                     size_t filesize,
                                                     int bkup_index,
                                                     bool append,
                                                     mode_t mode,
-                                                    std::string pattern);
+                                                    const std::string& pattern);
 
 /*!
  * \brief Add rolling file appender to a given logger
@@ -635,45 +639,51 @@ public:
 
     // Wrappers for logging macros
     /*! \brief inline function, wrapper to set the logger level */
-    void set_level(std::string level) { GR_LOG_SET_LEVEL(d_logger, level); }
+    void set_level(const std::string& level) { GR_LOG_SET_LEVEL(d_logger, level); }
 
     /*! \brief inline function, wrapper to get the logger level */
     void get_level(std::string& level) { GR_LOG_GET_LEVEL(d_logger, level); }
 
     /*! \brief inline function, wrapper for LOG4CPP_DEBUG for DEBUG message */
-    void debug(std::string msg) { GR_LOG_DEBUG(d_logger, msg); };
+    void debug(const std::string& msg) { GR_LOG_DEBUG(d_logger, msg); };
 
     /*! \brief inline function, wrapper for LOG4CPP_INFO for INFO message */
-    void info(std::string msg) { GR_LOG_INFO(d_logger, msg); }
+    void info(const std::string& msg) { GR_LOG_INFO(d_logger, msg); }
 
     /*! \brief inline function, wrapper for NOTICE message */
-    void notice(std::string msg) { GR_LOG_NOTICE(d_logger, msg); }
+    void notice(const std::string& msg) { GR_LOG_NOTICE(d_logger, msg); }
 
     /*! \brief inline function, wrapper for LOG4CPP_WARN for WARN message */
-    void warn(std::string msg) { GR_LOG_WARN(d_logger, msg); }
+    void warn(const std::string& msg) { GR_LOG_WARN(d_logger, msg); }
 
     /*! \brief inline function, wrapper for LOG4CPP_ERROR for ERROR message */
-    void error(std::string msg) { GR_LOG_ERROR(d_logger, msg); }
+    void error(const std::string& msg) { GR_LOG_ERROR(d_logger, msg); }
 
     /*! \brief inline function, wrapper for NOTICE message */
-    void crit(std::string msg) { GR_LOG_CRIT(d_logger, msg); }
+    void crit(const std::string& msg) { GR_LOG_CRIT(d_logger, msg); }
 
     /*! \brief inline function, wrapper for ALERT message */
-    void alert(std::string msg) { GR_LOG_ALERT(d_logger, msg); }
+    void alert(const std::string& msg) { GR_LOG_ALERT(d_logger, msg); }
 
     /*! \brief inline function, wrapper for FATAL message */
-    void fatal(std::string msg) { GR_LOG_FATAL(d_logger, msg); }
+    void fatal(const std::string& msg) { GR_LOG_FATAL(d_logger, msg); }
 
     /*! \brief inline function, wrapper for EMERG message */
-    void emerg(std::string msg) { GR_LOG_EMERG(d_logger, msg); }
+    void emerg(const std::string& msg) { GR_LOG_EMERG(d_logger, msg); }
 
     /*! \brief inline function, wrapper for LOG4CPP_ASSERT for conditional ERROR message
      */
-    void errorIF(bool cond, std::string msg) { GR_LOG_ERRORIF(d_logger, cond, msg); }
+    void errorIF(bool cond, const std::string& msg)
+    {
+        GR_LOG_ERRORIF(d_logger, cond, msg);
+    }
 
     /*! \brief inline function, wrapper for LOG4CPP_ASSERT for conditional ERROR message
      */
-    void log_assert(bool cond, std::string msg) { GR_LOG_ASSERT(d_logger, cond, msg); }
+    void log_assert(bool cond, const std::string& msg)
+    {
+        GR_LOG_ASSERT(d_logger, cond, msg);
+    }
 
     /*! \brief inline function, Method to add console appender to logger */
     void add_console_appender(std::string target, std::string pattern)
@@ -722,7 +732,7 @@ public:
  * \param watch_period Seconds to wait between checking for changes in conf file.
  *        Watch_period defaults to 0 in which case the file is not watched for changes
  */
-GR_RUNTIME_API void gr_logger_config(const std::string config_filename,
+GR_RUNTIME_API void gr_logger_config(const std::string& config_filename,
                                      unsigned int watch_period = 0);
 
 /*!
@@ -749,7 +759,7 @@ namespace gr {
  * automatically in gr::block.
  */
 GR_RUNTIME_API bool
-configure_default_loggers(gr::logger_ptr& l, gr::logger_ptr& d, const std::string name);
+configure_default_loggers(gr::logger_ptr& l, gr::logger_ptr& d, const std::string& name);
 
 GR_RUNTIME_API bool update_logger_alias(const std::string& name,
                                         const std::string& alias);

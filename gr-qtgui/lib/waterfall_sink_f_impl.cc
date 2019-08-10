@@ -425,7 +425,7 @@ void waterfall_sink_f_impl::check_clicked()
     }
 }
 
-void waterfall_sink_f_impl::handle_set_freq(pmt::pmt_t msg)
+void waterfall_sink_f_impl::handle_set_freq(const pmt::pmt_t& msg)
 {
     if (pmt::is_pair(msg)) {
         pmt::pmt_t x = pmt::cdr(msg);
@@ -437,7 +437,7 @@ void waterfall_sink_f_impl::handle_set_freq(pmt::pmt_t msg)
     }
 }
 
-void waterfall_sink_f_impl::handle_set_bw(pmt::pmt_t msg)
+void waterfall_sink_f_impl::handle_set_bw(const pmt::pmt_t& msg)
 {
     if (pmt::is_pair(msg)) {
         pmt::pmt_t x = pmt::cdr(msg);
@@ -507,7 +507,7 @@ int waterfall_sink_f_impl::work(int noutput_items,
     return j;
 }
 
-void waterfall_sink_f_impl::handle_pdus(pmt::pmt_t msg)
+void waterfall_sink_f_impl::handle_pdus(const pmt::pmt_t& msg)
 {
     size_t len;
     size_t start = 0;

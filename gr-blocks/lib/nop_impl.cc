@@ -52,7 +52,7 @@ nop_impl::~nop_impl() {}
 
 // Trivial message handler that just counts them.
 // (N.B., This feature is used in qa_set_msg_handler)
-void nop_impl::count_received_msgs(pmt::pmt_t msg) { d_nmsgs_recvd++; }
+void nop_impl::count_received_msgs(const pmt::pmt_t& msg) { d_nmsgs_recvd++; }
 
 int nop_impl::general_work(int noutput_items,
                            gr_vector_int& ninput_items,

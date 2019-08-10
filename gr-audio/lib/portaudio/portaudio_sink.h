@@ -71,7 +71,7 @@ class portaudio_sink : public sink
     void create_ringbuffer();
 
 public:
-    portaudio_sink(int sampling_rate, const std::string device_name, bool ok_to_block);
+    portaudio_sink(int sampling_rate, const std::string& device_name, bool ok_to_block);
 
     ~portaudio_sink();
 

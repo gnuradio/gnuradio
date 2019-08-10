@@ -296,7 +296,7 @@ void VectorDisplayPlot::replot()
     QwtPlot::replot();
 }
 
-void VectorDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
+void VectorDisplayPlot::plotNewData(const std::vector<double*>& dataPoints,
                                     const int64_t numDataPoints,
                                     const double refLevel,
                                     const double timeInterval)
@@ -438,9 +438,12 @@ void VectorDisplayPlot::setUpperIntensityLevel(const double upperIntensityLevel)
     d_upper_intensity_marker->setYValue(upperIntensityLevel);
 }
 
-void VectorDisplayPlot::setTraceColour(QColor c) { d_plot_curve[0]->setPen(QPen(c)); }
+void VectorDisplayPlot::setTraceColour(const QColor& c)
+{
+    d_plot_curve[0]->setPen(QPen(c));
+}
 
-void VectorDisplayPlot::setBGColour(QColor c)
+void VectorDisplayPlot::setBGColour(const QColor& c)
 {
     QPalette palette;
     palette.setColor(canvas()->backgroundRole(), c);
@@ -461,7 +464,7 @@ void VectorDisplayPlot::onPickerPointSelected6(const QPointF& p)
     emit plotPointSelected(point);
 }
 
-void VectorDisplayPlot::setMinVecColor(QColor c)
+void VectorDisplayPlot::setMinVecColor(const QColor& c)
 {
     d_min_vec_color = c;
     d_min_vec_plot_curve->setPen(QPen(c));
@@ -469,7 +472,7 @@ void VectorDisplayPlot::setMinVecColor(QColor c)
 
 const QColor VectorDisplayPlot::getMinVecColor() const { return d_min_vec_color; }
 
-void VectorDisplayPlot::setMaxVecColor(QColor c)
+void VectorDisplayPlot::setMaxVecColor(const QColor& c)
 {
     d_max_vec_color = c;
     d_max_vec_plot_curve->setPen(QPen(c));
@@ -477,7 +480,7 @@ void VectorDisplayPlot::setMaxVecColor(QColor c)
 
 const QColor VectorDisplayPlot::getMaxVecColor() const { return d_max_vec_color; }
 
-void VectorDisplayPlot::setMarkerLowerIntensityColor(QColor c)
+void VectorDisplayPlot::setMarkerLowerIntensityColor(const QColor& c)
 {
     d_marker_lower_intensity_color = c;
     d_lower_intensity_marker->setLinePen(QPen(c));
@@ -500,7 +503,7 @@ const bool VectorDisplayPlot::getMarkerLowerIntensityVisible() const
     return d_marker_lower_intensity_visible;
 }
 
-void VectorDisplayPlot::setMarkerUpperIntensityColor(QColor c)
+void VectorDisplayPlot::setMarkerUpperIntensityColor(const QColor& c)
 {
     d_marker_upper_intensity_color = c;
     d_upper_intensity_marker->setLinePen(QPen(c, 0, Qt::DotLine));
@@ -525,7 +528,7 @@ const bool VectorDisplayPlot::getMarkerUpperIntensityVisible() const
     return d_marker_upper_intensity_visible;
 }
 
-void VectorDisplayPlot::setMarkerRefLevelAmplitudeColor(QColor c)
+void VectorDisplayPlot::setMarkerRefLevelAmplitudeColor(const QColor& c)
 {
     d_marker_ref_level_color = c;
     d_marker_ref_level->setLinePen(QPen(c, 0, Qt::DotLine));

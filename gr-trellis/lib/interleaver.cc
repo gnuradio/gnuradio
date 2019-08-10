@@ -144,7 +144,7 @@ interleaver::interleaver(unsigned int K, int seed)
 //# list of space separated K integers from 0 to K-1 in appropriate order
 //# optional comments
 //######################################################################
-void interleaver::write_interleaver_txt(std::string filename)
+void interleaver::write_interleaver_txt(const std::string& filename)
 {
     std::ofstream interleaver_fname(filename.c_str());
     if (!interleaver_fname) {

@@ -34,20 +34,21 @@
 #include <cstdio>
 #include <iostream>
 #include <stdexcept>
+#include <utility>
 
 namespace gr {
 namespace blocks {
 
 message_strobe::sptr message_strobe::make(pmt::pmt_t msg, long period_ms)
 {
-    return gnuradio::get_initial_sptr(new message_strobe_impl(msg, period_ms));
+    return gnuradio::get_initial_sptr(new message_strobe_impl(std::move(msg), period_ms));
 }
 
 message_strobe_impl::message_strobe_impl(pmt::pmt_t msg, long period_ms)
     : block("message_strobe", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
       d_finished(false),
       d_period_ms(period_ms),
-      d_msg(msg),
+      d_msg(std::move(msg)),
       d_port(pmt::mp("strobe"))
 {
     message_port_register_out(d_port);

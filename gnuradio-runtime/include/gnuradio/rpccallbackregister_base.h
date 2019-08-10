@@ -71,9 +71,9 @@ struct callbackregister_base {
                         const std::string& units_,
                         const DisplayType display_,
                         const std::string& desc_,
-                        const pmt::pmt_t min_,
-                        const pmt::pmt_t max_,
-                        const pmt::pmt_t def)
+                        const pmt::pmt_t& min_,
+                        const pmt::pmt_t& max_,
+                        const pmt::pmt_t& def)
             : priv(priv_),
               units(units_),
               description(desc_),

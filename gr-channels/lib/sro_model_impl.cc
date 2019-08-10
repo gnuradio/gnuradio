@@ -26,6 +26,7 @@
 
 #include "sro_model_impl.h"
 #include <gnuradio/io_signature.h>
+#include <cmath>
 #include <stdexcept>
 
 namespace gr {
@@ -69,8 +70,8 @@ void sro_model_impl::forecast(int noutput_items, gr_vector_int& ninput_items_req
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++) {
         ninput_items_required[i] =
-            (int)ceil((noutput_items * (d_mu_inc + d_max_dev_hz / d_samp_rate)) +
-                      d_interp->ntaps());
+            (int)std::ceil((noutput_items * (d_mu_inc + d_max_dev_hz / d_samp_rate)) +
+                           d_interp->ntaps());
     }
 }
 

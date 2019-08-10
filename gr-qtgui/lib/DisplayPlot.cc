@@ -203,7 +203,7 @@ SETUPLINE(7, 6)
 SETUPLINE(8, 7)
 SETUPLINE(9, 8)
 
-void DisplayPlot::setZoomerColor(QColor c)
+void DisplayPlot::setZoomerColor(const QColor& c)
 {
     d_zoomer->setRubberBandPen(c);
     d_zoomer->setTrackerPen(c);
@@ -211,7 +211,7 @@ void DisplayPlot::setZoomerColor(QColor c)
 
 QColor DisplayPlot::getZoomerColor() const { return d_zoomer->rubberBandPen().color(); }
 
-void DisplayPlot::setPaletteColor(QColor c)
+void DisplayPlot::setPaletteColor(const QColor& c)
 {
     QPalette palette;
     palette.setColor(canvas()->backgroundRole(), c);

@@ -37,8 +37,8 @@ private:
     pmt::pmt_t d_in_port;
     pmt::pmt_t d_out_port;
 
-    void calc(pmt::pmt_t msg);
-    void check(pmt::pmt_t msg);
+    void calc(const pmt::pmt_t& msg);
+    void check(const pmt::pmt_t& msg);
 
 public:
     crc32_async_bb_impl(bool check);

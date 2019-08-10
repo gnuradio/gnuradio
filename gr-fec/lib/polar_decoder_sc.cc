@@ -30,6 +30,7 @@
 
 #include <cmath>
 #include <cstdio>
+#include <utility>
 
 namespace gr {
 namespace fec {
@@ -40,16 +41,20 @@ generic_decoder::sptr polar_decoder_sc::make(int block_size,
                                              std::vector<int> frozen_bit_positions,
                                              std::vector<char> frozen_bit_values)
 {
-    return generic_decoder::sptr(new polar_decoder_sc(
-        block_size, num_info_bits, frozen_bit_positions, frozen_bit_values));
+    return generic_decoder::sptr(new polar_decoder_sc(block_size,
+                                                      num_info_bits,
+                                                      std::move(frozen_bit_positions),
+                                                      std::move(frozen_bit_values)));
 }
 
 polar_decoder_sc::polar_decoder_sc(int block_size,
                                    int num_info_bits,
                                    std::vector<int> frozen_bit_positions,
                                    std::vector<char> frozen_bit_values)
-    : polar_decoder_common(
-          block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
+    : polar_decoder_common(block_size,
+                           num_info_bits,
+                           std::move(frozen_bit_positions),
+                           std::move(frozen_bit_values))
 {
     d_llr_vec = (float*)volk_malloc(sizeof(float) * block_size * (block_power() + 1),
                                     volk_get_alignment());

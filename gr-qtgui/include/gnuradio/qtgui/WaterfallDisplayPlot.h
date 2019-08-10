@@ -68,7 +68,7 @@ public:
     double getStartFrequency() const;
     double getStopFrequency() const;
 
-    void plotNewData(const std::vector<double*> dataPoints,
+    void plotNewData(const std::vector<double*>& dataPoints,
                      const int64_t numDataPoints,
                      const double timePerFFT,
                      const gr::high_res_timer_type timestamp,
@@ -101,7 +101,7 @@ public:
 
 public slots:
     void
-    setIntensityColorMapType(const unsigned int, const int, const QColor, const QColor);
+    setIntensityColorMapType(const unsigned int, const int, const QColor&, const QColor&);
     void setIntensityColorMapType1(int);
     void setColorMapTitleFontSize(int tfs);
     void setUserDefinedLowIntensityColor(QColor);

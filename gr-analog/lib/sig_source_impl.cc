@@ -76,7 +76,7 @@ sig_source_impl<T>::~sig_source_impl()
 }
 
 template <class T>
-void sig_source_impl<T>::set_frequency_msg(pmt::pmt_t msg)
+void sig_source_impl<T>::set_frequency_msg(const pmt::pmt_t& msg)
 {
     // Accepts either a number that is assumed to be the new
     // frequency or a key:value pair message where the key must be

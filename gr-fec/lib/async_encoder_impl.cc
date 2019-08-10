@@ -29,6 +29,8 @@
 #include <stdio.h>
 #include <volk/volk.h>
 
+#include <utility>
+
 namespace gr {
 namespace fec {
 
@@ -39,7 +41,7 @@ async_encoder::sptr async_encoder::make(generic_encoder::sptr my_encoder,
                                         int mtu)
 {
     return gnuradio::get_initial_sptr(
-        new async_encoder_impl(my_encoder, packed, rev_unpack, rev_pack, mtu));
+        new async_encoder_impl(std::move(my_encoder), packed, rev_unpack, rev_pack, mtu));
 }
 
 async_encoder_impl::async_encoder_impl(generic_encoder::sptr my_encoder,
@@ -52,7 +54,7 @@ async_encoder_impl::async_encoder_impl(generic_encoder::sptr my_encoder,
     d_in_port = pmt::mp("in");
     d_out_port = pmt::mp("out");
 
-    d_encoder = my_encoder;
+    d_encoder = std::move(my_encoder);
 
     d_packed = packed;
     d_rev_unpack = rev_unpack;
@@ -103,7 +105,7 @@ async_encoder_impl::~async_encoder_impl()
     }
 }
 
-void async_encoder_impl::encode_unpacked(pmt::pmt_t msg)
+void async_encoder_impl::encode_unpacked(const pmt::pmt_t& msg)
 {
     // extract input pdu
     pmt::pmt_t meta(pmt::car(msg));
@@ -153,7 +155,7 @@ void async_encoder_impl::encode_unpacked(pmt::pmt_t msg)
     message_port_pub(d_out_port, msg_pair);
 }
 
-void async_encoder_impl::encode_packed(pmt::pmt_t msg)
+void async_encoder_impl::encode_packed(const pmt::pmt_t& msg)
 {
     // extract input pdu
     pmt::pmt_t meta(pmt::car(msg));

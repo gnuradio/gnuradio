@@ -28,6 +28,7 @@
 #include <gnuradio/thread/thread_body_wrapper.h>
 #include <boost/make_shared.hpp>
 #include <sstream>
+#include <utility>
 
 namespace gr {
 
@@ -41,7 +42,9 @@ public:
     tpb_container(block_sptr block,
                   int max_noutput_items,
                   thread::barrier_sptr start_sync)
-        : d_block(block), d_max_noutput_items(max_noutput_items), d_start_sync(start_sync)
+        : d_block(std::move(block)),
+          d_max_noutput_items(max_noutput_items),
+          d_start_sync(std::move(start_sync))
     {
     }
 
@@ -53,10 +56,10 @@ public:
 
 scheduler_sptr scheduler_tpb::make(flat_flowgraph_sptr ffg, int max_noutput_items)
 {
-    return scheduler_sptr(new scheduler_tpb(ffg, max_noutput_items));
+    return scheduler_sptr(new scheduler_tpb(std::move(ffg), max_noutput_items));
 }
 
-scheduler_tpb::scheduler_tpb(flat_flowgraph_sptr ffg, int max_noutput_items)
+scheduler_tpb::scheduler_tpb(const flat_flowgraph_sptr& ffg, int max_noutput_items)
     : scheduler(ffg, max_noutput_items)
 {
     int block_max_noutput_items;

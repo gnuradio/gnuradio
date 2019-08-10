@@ -26,14 +26,15 @@
 
 #include <gnuradio/tagged_stream_block.h>
 #include <boost/format.hpp>
+#include <utility>
 
 namespace gr {
 
 tagged_stream_block::tagged_stream_block(const std::string& name,
-                                         io_signature::sptr input_signature,
+                                         const io_signature::sptr& input_signature,
                                          io_signature::sptr output_signature,
                                          const std::string& length_tag_key)
-    : block(name, input_signature, output_signature),
+    : block(name, input_signature, std::move(output_signature)),
       d_length_tag_key(pmt::string_to_symbol(length_tag_key)),
       d_n_input_items_reqd(input_signature->min_streams(), 0),
       d_length_tag_key_str(length_tag_key)

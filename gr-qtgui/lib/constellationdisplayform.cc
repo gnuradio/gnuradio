@@ -189,7 +189,10 @@ gr::qtgui::trigger_slope ConstellationDisplayForm::getTriggerSlope() const
     return d_trig_slope;
 }
 
-void ConstellationDisplayForm::setTriggerLevel(QString s) { d_trig_level = s.toFloat(); }
+void ConstellationDisplayForm::setTriggerLevel(const QString& s)
+{
+    d_trig_level = s.toFloat();
+}
 
 void ConstellationDisplayForm::setTriggerLevel(float level)
 {
@@ -207,7 +210,7 @@ void ConstellationDisplayForm::setTriggerChannel(int channel)
 
 int ConstellationDisplayForm::getTriggerChannel() const { return d_trig_channel; }
 
-void ConstellationDisplayForm::setTriggerTagKey(QString s)
+void ConstellationDisplayForm::setTriggerTagKey(const QString& s)
 {
     d_trig_tag_key = s.toStdString();
 }

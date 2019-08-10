@@ -94,7 +94,7 @@ int jack_sink_process(jack_nframes_t nframes, void* arg)
 
 // ----------------------------------------------------------------
 
-jack_sink::jack_sink(int sampling_rate, const std::string device_name, bool ok_to_block)
+jack_sink::jack_sink(int sampling_rate, const std::string& device_name, bool ok_to_block)
     : sync_block(
           "audio_jack_sink", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
       d_sampling_rate(sampling_rate),

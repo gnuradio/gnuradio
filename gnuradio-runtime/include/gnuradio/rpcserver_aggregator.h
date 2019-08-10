@@ -44,7 +44,7 @@ public:
     void registerHandlerCallback(const std::string& id, const handlerCallback_t callback);
     void unregisterHandlerCallback(const std::string& id);
 
-    void registerServer(rpcmanager_base::rpcserver_booter_base_sptr server);
+    void registerServer(const rpcmanager_base::rpcserver_booter_base_sptr& server);
 
     const std::string& type();
 

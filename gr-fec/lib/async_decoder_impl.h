@@ -48,8 +48,8 @@ private:
     int8_t* d_tmp_u8;
     uint8_t* d_bits_out;
 
-    void decode_packed(pmt::pmt_t msg);
-    void decode_unpacked(pmt::pmt_t msg);
+    void decode_packed(const pmt::pmt_t& msg);
+    void decode_unpacked(const pmt::pmt_t& msg);
 
 public:
     async_decoder_impl(generic_decoder::sptr my_decoder,

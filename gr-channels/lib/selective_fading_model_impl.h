@@ -51,8 +51,8 @@ public:
                                 bool LOS,
                                 float K,
                                 int seed,
-                                std::vector<float> delays,
-                                std::vector<float> mags,
+                                const std::vector<float>& delays,
+                                const std::vector<float>& mags,
                                 int ntaps);
     ~selective_fading_model_impl();
     void setup_rpc();

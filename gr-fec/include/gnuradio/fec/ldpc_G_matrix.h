@@ -68,7 +68,7 @@ public:
      *                 format is described at:
      *                 http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
      */
-    static sptr make(const std::string filename);
+    static sptr make(const std::string& filename);
 
     //! Encode \p inbuffer with LDPC H matrix into \p outbuffer.
     virtual void encode(unsigned char* outbuffer,

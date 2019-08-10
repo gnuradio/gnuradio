@@ -29,6 +29,8 @@
 
 #include <gnuradio/messages/msg_accepter.h>
 
+#include <utility>
+
 namespace pmt {
 
 //! Make pmt symbol
@@ -67,7 +69,7 @@ static inline pmt_t mp(std::complex<float> z)
 //! Make pmt msg_accepter
 static inline pmt_t mp(boost::shared_ptr<gr::messages::msg_accepter> ma)
 {
-    return make_msg_accepter(ma);
+    return make_msg_accepter(std::move(ma));
 }
 
 //! Make pmt Binary Large Object (BLOB)

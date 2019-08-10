@@ -63,7 +63,7 @@ private:
     struct CODEC2* d_c2;
 
 public:
-    freedv_tx_ss_impl(int mode, const std::string txt_msg, int interleave_frames);
+    freedv_tx_ss_impl(int mode, const std::string& txt_msg, int interleave_frames);
     ~freedv_tx_ss_impl();
 
     void set_clip(bool val);

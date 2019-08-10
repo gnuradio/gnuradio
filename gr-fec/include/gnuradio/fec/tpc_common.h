@@ -41,7 +41,7 @@ public:
                             std::vector<std::vector<int>>& nextStates);
     static void
     precomputeStateTransitionMatrix_RSCPoly(int numStates,
-                                            std::vector<int> g,
+                                            const std::vector<int>& g,
                                             int KK,
                                             int nn,
                                             std::vector<std::vector<int>>& output,

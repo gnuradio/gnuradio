@@ -27,17 +27,20 @@
 #include "constellation_decoder_cb_impl.h"
 #include <gnuradio/io_signature.h>
 
+#include <utility>
+
 namespace gr {
 namespace digital {
 
 constellation_decoder_cb::sptr
 constellation_decoder_cb::make(constellation_sptr constellation)
 {
-    return gnuradio::get_initial_sptr(new constellation_decoder_cb_impl(constellation));
+    return gnuradio::get_initial_sptr(
+        new constellation_decoder_cb_impl(std::move(constellation)));
 }
 
 constellation_decoder_cb_impl::constellation_decoder_cb_impl(
-    constellation_sptr constellation)
+    const constellation_sptr& constellation)
     : block("constellation_decoder_cb",
             io_signature::make(1, 1, sizeof(gr_complex)),
             io_signature::make(1, 1, sizeof(unsigned char))),

@@ -26,6 +26,7 @@
 
 #include "gnuradio/filter/interp_differentiator_taps.h"
 #include <gnuradio/filter/mmse_interp_differentiator_cc.h>
+#include <cmath>
 #include <stdexcept>
 
 namespace gr {
@@ -54,7 +55,7 @@ unsigned mmse_interp_differentiator_cc::nsteps() const { return DNSTEPS; }
 gr_complex mmse_interp_differentiator_cc::differentiate(const gr_complex input[],
                                                         float mu) const
 {
-    int imu = (int)rint(mu * DNSTEPS);
+    int imu = (int)std::rint(mu * DNSTEPS);
 
     if ((imu < 0) || (imu > DNSTEPS)) {
         throw std::runtime_error("mmse_interp_differentiator_cc: imu out of bounds.\n");

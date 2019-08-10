@@ -36,7 +36,7 @@
  * the qApplication. The QSS file is typically retrieved using the
  * [qtgui] qss=\<filename\> section of the preferences files.
  */
-QTGUI_API QString get_qt_style_sheet(QString filename);
+QTGUI_API QString get_qt_style_sheet(const QString& filename);
 
 class QTGUI_API QwtDblClickPlotPicker : public QwtPlotPicker
 {

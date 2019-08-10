@@ -163,8 +163,8 @@ void ConstellationDisplayPlot::set_pen_size(int size)
 void ConstellationDisplayPlot::replot() { QwtPlot::replot(); }
 
 
-void ConstellationDisplayPlot::plotNewData(const std::vector<double*> realDataPoints,
-                                           const std::vector<double*> imagDataPoints,
+void ConstellationDisplayPlot::plotNewData(const std::vector<double*>& realDataPoints,
+                                           const std::vector<double*>& imagDataPoints,
                                            const int64_t numDataPoints,
                                            const double timeInterval)
 {

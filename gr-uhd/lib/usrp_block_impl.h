@@ -153,7 +153,7 @@ protected:
      */
     bool _wait_for_locked_sensor(std::vector<std::string> sensor_names,
                                  const std::string& sensor_name,
-                                 get_sensor_fn_t get_sensor_fn);
+                                 const get_sensor_fn_t& get_sensor_fn);
 
     //! Helper function for msg_handler_command:
     // - Extracts command and the command value from the command PMT
@@ -205,7 +205,7 @@ protected:
     _set_center_freq_from_internals(size_t chan, pmt::pmt_t direction) = 0;
 
     //! Calls _set_center_freq_from_internals() on all channels
-    void _set_center_freq_from_internals_allchans(pmt::pmt_t direction);
+    void _set_center_freq_from_internals_allchans(const pmt::pmt_t& direction);
 
     /**********************************************************************
      * Members

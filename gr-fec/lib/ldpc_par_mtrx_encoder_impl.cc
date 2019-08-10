@@ -28,6 +28,7 @@
 #include <boost/assign/list_of.hpp>
 #include <algorithm> // for std::reverse
 #include <sstream>
+#include <utility>
 #include <vector>
 
 namespace gr {
@@ -37,17 +38,19 @@ namespace code {
 generic_encoder::sptr ldpc_par_mtrx_encoder::make(std::string alist_file,
                                                   unsigned int gap)
 {
-    code::ldpc_H_matrix::sptr H_obj = code::ldpc_H_matrix::make(alist_file, gap);
+    code::ldpc_H_matrix::sptr H_obj =
+        code::ldpc_H_matrix::make(std::move(alist_file), gap);
     return make_H(H_obj);
 }
 
-generic_encoder::sptr ldpc_par_mtrx_encoder::make_H(const code::ldpc_H_matrix::sptr H_obj)
+generic_encoder::sptr
+ldpc_par_mtrx_encoder::make_H(const code::ldpc_H_matrix::sptr& H_obj)
 {
     return generic_encoder::sptr(new ldpc_par_mtrx_encoder_impl(H_obj));
 }
 
 ldpc_par_mtrx_encoder_impl::ldpc_par_mtrx_encoder_impl(
-    const code::ldpc_H_matrix::sptr H_obj)
+    const code::ldpc_H_matrix::sptr& H_obj)
     : generic_encoder("ldpc_par_mtrx_encoder")
 {
     // LDPC parity check matrix to use for encoding

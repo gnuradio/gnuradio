@@ -29,6 +29,7 @@
 #include <gnuradio/hier_block2.h>
 #include <gnuradio/io_signature.h>
 #include <iostream>
+#include <utility>
 
 namespace gr {
 
@@ -39,13 +40,13 @@ hier_block2_sptr make_hier_block2(const std::string& name,
                                   gr::io_signature::sptr output_signature)
 {
     return gnuradio::get_initial_sptr(
-        new hier_block2(name, input_signature, output_signature));
+        new hier_block2(name, std::move(input_signature), std::move(output_signature)));
 }
 
 hier_block2::hier_block2(const std::string& name,
                          gr::io_signature::sptr input_signature,
                          gr::io_signature::sptr output_signature)
-    : basic_block(name, input_signature, output_signature),
+    : basic_block(name, std::move(input_signature), std::move(output_signature)),
       d_detail(new hier_block2_detail(this)),
       hier_message_ports_in(pmt::PMT_NIL),
       hier_message_ports_out(pmt::PMT_NIL)
@@ -68,62 +69,67 @@ hier_block2_sptr hier_block2::to_hier_block2()
     return cast_to_hier_block2_sptr(shared_from_this());
 }
 
-void hier_block2::connect(basic_block_sptr block) { d_detail->connect(block); }
+void hier_block2::connect(basic_block_sptr block) { d_detail->connect(std::move(block)); }
 
 void hier_block2::connect(basic_block_sptr src,
                           int src_port,
                           basic_block_sptr dst,
                           int dst_port)
 {
-    d_detail->connect(src, src_port, dst, dst_port);
+    d_detail->connect(std::move(src), src_port, std::move(dst), dst_port);
 }
 
 void hier_block2::msg_connect(basic_block_sptr src,
-                              pmt::pmt_t srcport,
+                              const pmt::pmt_t& srcport,
                               basic_block_sptr dst,
                               pmt::pmt_t dstport)
 {
     if (!pmt::is_symbol(srcport)) {
         throw std::runtime_error("bad port id");
     }
-    d_detail->msg_connect(src, srcport, dst, dstport);
+    d_detail->msg_connect(std::move(src), srcport, std::move(dst), std::move(dstport));
 }
 
 void hier_block2::msg_connect(basic_block_sptr src,
-                              std::string srcport,
+                              const std::string& srcport,
                               basic_block_sptr dst,
-                              std::string dstport)
+                              const std::string& dstport)
 {
-    d_detail->msg_connect(src, pmt::mp(srcport), dst, pmt::mp(dstport));
+    d_detail->msg_connect(
+        std::move(src), pmt::mp(srcport), std::move(dst), pmt::mp(dstport));
 }
 
 void hier_block2::msg_disconnect(basic_block_sptr src,
-                                 pmt::pmt_t srcport,
+                                 const pmt::pmt_t& srcport,
                                  basic_block_sptr dst,
                                  pmt::pmt_t dstport)
 {
     if (!pmt::is_symbol(srcport)) {
         throw std::runtime_error("bad port id");
     }
-    d_detail->msg_disconnect(src, srcport, dst, dstport);
+    d_detail->msg_disconnect(std::move(src), srcport, std::move(dst), std::move(dstport));
 }
 
 void hier_block2::msg_disconnect(basic_block_sptr src,
-                                 std::string srcport,
+                                 const std::string& srcport,
                                  basic_block_sptr dst,
-                                 std::string dstport)
+                                 const std::string& dstport)
 {
-    d_detail->msg_disconnect(src, pmt::mp(srcport), dst, pmt::mp(dstport));
+    d_detail->msg_disconnect(
+        std::move(src), pmt::mp(srcport), std::move(dst), pmt::mp(dstport));
 }
 
-void hier_block2::disconnect(basic_block_sptr block) { d_detail->disconnect(block); }
+void hier_block2::disconnect(basic_block_sptr block)
+{
+    d_detail->disconnect(std::move(block));
+}
 
 void hier_block2::disconnect(basic_block_sptr src,
                              int src_port,
                              basic_block_sptr dst,
                              int dst_port)
 {
-    d_detail->disconnect(src, src_port, dst, dst_port);
+    d_detail->disconnect(std::move(src), src_port, std::move(dst), dst_port);
 }
 
 void hier_block2::disconnect_all() { d_detail->disconnect_all(); }
@@ -155,7 +161,7 @@ void hier_block2::set_log_level(std::string level) { d_detail->set_log_level(lev
 
 std::string hier_block2::log_level() { return d_detail->log_level(); }
 
-std::string dot_graph(hier_block2_sptr hierblock2)
+std::string dot_graph(const hier_block2_sptr& hierblock2)
 {
     return dot_graph_fg(hierblock2->flatten());
 }

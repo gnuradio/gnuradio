@@ -151,7 +151,7 @@ static void do_arch_warning(const std::string& arch)
 }
 
 source::sptr
-source::make(int sampling_rate, const std::string device_name, bool ok_to_block)
+source::make(int sampling_rate, const std::string& device_name, bool ok_to_block)
 {
     gr::logger_ptr logger, debug_logger;
     configure_default_loggers(logger, debug_logger, "audio source");
@@ -175,7 +175,7 @@ source::make(int sampling_rate, const std::string device_name, bool ok_to_block)
     return entry.source(sampling_rate, device_name, ok_to_block);
 }
 
-sink::sptr sink::make(int sampling_rate, const std::string device_name, bool ok_to_block)
+sink::sptr sink::make(int sampling_rate, const std::string& device_name, bool ok_to_block)
 {
     gr::logger_ptr logger, debug_logger;
     configure_default_loggers(logger, debug_logger, "audio source");

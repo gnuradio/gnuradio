@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <boost/assign/list_of.hpp>
 #include <sstream>
+#include <utility>
 #include <vector>
 
 #include <string.h>  // for memcpy
@@ -47,8 +48,14 @@ generic_decoder::sptr tpc_decoder::make(std::vector<int> row_polys,
                                         int max_iter,
                                         int decoder_type)
 {
-    return generic_decoder::sptr(new tpc_decoder(
-        row_polys, col_polys, krow, kcol, bval, qval, max_iter, decoder_type));
+    return generic_decoder::sptr(new tpc_decoder(std::move(row_polys),
+                                                 std::move(col_polys),
+                                                 krow,
+                                                 kcol,
+                                                 bval,
+                                                 qval,
+                                                 max_iter,
+                                                 decoder_type));
 }
 
 tpc_decoder::tpc_decoder(std::vector<int> row_polys,
@@ -60,8 +67,8 @@ tpc_decoder::tpc_decoder(std::vector<int> row_polys,
                          int max_iter,
                          int decoder_type)
     : generic_decoder("tpc_decoder"),
-      d_rowpolys(row_polys),
-      d_colpolys(col_polys),
+      d_rowpolys(std::move(row_polys)),
+      d_colpolys(std::move(col_polys)),
       d_krow(krow),
       d_kcol(kcol),
       d_bval(bval),
@@ -790,7 +797,7 @@ float tpc_decoder::log_map_cfunction_correction(const float delta1, const float 
     }
 }
 
-float tpc_decoder::gamma(const std::vector<float> rx_array, const int symbol)
+float tpc_decoder::gamma(const std::vector<float>& rx_array, const int symbol)
 {
     float rm = 0;
     int ii;

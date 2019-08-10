@@ -28,6 +28,7 @@
 #include <gnuradio/io_signature.h>
 #include <cstdio>
 #include <iostream>
+#include <utility>
 
 namespace gr {
 namespace blocks {
@@ -40,17 +41,17 @@ message_debug::sptr message_debug::make()
 void message_debug_impl::print(pmt::pmt_t msg)
 {
     std::cout << "******* MESSAGE DEBUG PRINT ********\n";
-    pmt::print(msg);
+    pmt::print(std::move(msg));
     std::cout << "************************************\n";
 }
 
-void message_debug_impl::store(pmt::pmt_t msg)
+void message_debug_impl::store(const pmt::pmt_t& msg)
 {
     gr::thread::scoped_lock guard(d_mutex);
     d_messages.push_back(msg);
 }
 
-void message_debug_impl::print_pdu(pmt::pmt_t pdu)
+void message_debug_impl::print_pdu(const pmt::pmt_t& pdu)
 {
     pmt::pmt_t meta = pmt::car(pdu);
     pmt::pmt_t vector = pmt::cdr(pdu);

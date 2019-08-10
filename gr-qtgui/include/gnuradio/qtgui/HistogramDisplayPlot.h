@@ -40,7 +40,7 @@ public:
     HistogramDisplayPlot(unsigned int nplots, QWidget*);
     virtual ~HistogramDisplayPlot();
 
-    void plotNewData(const std::vector<double*> dataPoints,
+    void plotNewData(const std::vector<double*>& dataPoints,
                      const uint64_t numDataPoints,
                      const double timeInterval);
 

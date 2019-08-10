@@ -46,7 +46,7 @@ class oss_sink : public sink
 
 public:
     oss_sink(int sampling_rate,
-             const std::string device_name = "",
+             const std::string& device_name = "",
              bool ok_to_block = true);
     ~oss_sink();
 

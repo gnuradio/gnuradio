@@ -74,7 +74,7 @@ class alsa_sink : public sink
     void bail(const char* msg, int err);
 
 public:
-    alsa_sink(int sampling_rate, const std::string device_name, bool ok_to_block);
+    alsa_sink(int sampling_rate, const std::string& device_name, bool ok_to_block);
     ~alsa_sink();
 
     bool check_topology(int ninputs, int noutputs);

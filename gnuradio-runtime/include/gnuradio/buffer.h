@@ -154,7 +154,7 @@ private:
     friend GR_RUNTIME_API buffer_sptr make_buffer(int nitems,
                                                   size_t sizeof_item,
                                                   block_sptr link);
-    friend GR_RUNTIME_API buffer_reader_sptr buffer_add_reader(buffer_sptr buf,
+    friend GR_RUNTIME_API buffer_reader_sptr buffer_add_reader(const buffer_sptr& buf,
                                                                int nzero_preload,
                                                                block_sptr link,
                                                                int delay);
@@ -220,7 +220,7 @@ private:
      * dependent boundary.  This is typically the system page size, but
      * under MS windows is 64KB.
      */
-    buffer(int nitems, size_t sizeof_item, block_sptr link);
+    buffer(int nitems, size_t sizeof_item, const block_sptr& link);
 
     /*!
      * \brief disassociate \p reader from this buffer
@@ -235,7 +235,7 @@ private:
  * \param link is the block that reads from the buffer using this gr::buffer_reader.
  * \param delay Optional setting to declare the buffer's sample delay.
  */
-GR_RUNTIME_API buffer_reader_sptr buffer_add_reader(buffer_sptr buf,
+GR_RUNTIME_API buffer_reader_sptr buffer_add_reader(const buffer_sptr& buf,
                                                     int nzero_preload,
                                                     block_sptr link = block_sptr(),
                                                     int delay = 0);
@@ -339,7 +339,7 @@ public:
 
 private:
     friend class buffer;
-    friend GR_RUNTIME_API buffer_reader_sptr buffer_add_reader(buffer_sptr buf,
+    friend GR_RUNTIME_API buffer_reader_sptr buffer_add_reader(const buffer_sptr& buf,
                                                                int nzero_preload,
                                                                block_sptr link,
                                                                int delay);
@@ -351,7 +351,9 @@ private:
     unsigned d_attr_delay;         // sample delay attribute for tag propagation
 
     //! constructor is private.  Use gr::buffer::add_reader to create instances
-    buffer_reader(buffer_sptr buffer, unsigned int read_index, block_sptr link);
+    buffer_reader(const buffer_sptr& buffer,
+                  unsigned int read_index,
+                  const block_sptr& link);
 };
 
 //! returns # of buffer_readers currently allocated

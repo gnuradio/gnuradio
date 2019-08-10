@@ -69,7 +69,7 @@ private:
     bool _test_trigger_slope(const gr_complex* in) const;
 
     // Handles message input port for displaying PDU samples.
-    void handle_pdus(pmt::pmt_t msg);
+    void handle_pdus(const pmt::pmt_t& msg);
 
 public:
     const_sink_c_impl(int size,

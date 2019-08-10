@@ -45,7 +45,8 @@ private:
     unsigned int d_max_iterations;
 
 public:
-    ldpc_bit_flip_decoder_impl(const fec_mtrx_sptr mtrx_obj, unsigned int max_iter = 100);
+    ldpc_bit_flip_decoder_impl(const fec_mtrx_sptr& mtrx_obj,
+                               unsigned int max_iter = 100);
     ~ldpc_bit_flip_decoder_impl();
 
     void generic_work(void* inbuffer, void* outbuffer);

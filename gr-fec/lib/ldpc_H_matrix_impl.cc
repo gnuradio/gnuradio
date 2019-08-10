@@ -33,12 +33,12 @@ namespace gr {
 namespace fec {
 namespace code {
 
-ldpc_H_matrix::sptr ldpc_H_matrix::make(const std::string filename, unsigned int gap)
+ldpc_H_matrix::sptr ldpc_H_matrix::make(const std::string& filename, unsigned int gap)
 {
     return ldpc_H_matrix::sptr(new ldpc_H_matrix_impl(filename, gap));
 }
 
-ldpc_H_matrix_impl::ldpc_H_matrix_impl(const std::string filename, unsigned int gap)
+ldpc_H_matrix_impl::ldpc_H_matrix_impl(const std::string& filename, unsigned int gap)
     : fec_mtrx_impl()
 {
     matrix_sptr x = read_matrix_from_file(filename);

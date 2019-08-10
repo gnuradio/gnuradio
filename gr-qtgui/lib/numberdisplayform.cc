@@ -323,12 +323,12 @@ void NumberDisplayForm::setColor(unsigned int which, const QColor& min, const QC
 #endif /* QWT_VERSION < 0x060000 */
 }
 
-void NumberDisplayForm::setColorMin(unsigned int which, QString min)
+void NumberDisplayForm::setColorMin(unsigned int which, const QString& min)
 {
     setColor(which, QColor(min), colorMax(which));
 }
 
-void NumberDisplayForm::setColorMax(unsigned int which, QString max)
+void NumberDisplayForm::setColorMax(unsigned int which, const QString& max)
 {
     setColor(which, colorMin(which), QColor(max));
 }
@@ -338,7 +338,7 @@ void NumberDisplayForm::setLabel(unsigned int which, const std::string& label)
     d_label[which]->setText(label.c_str());
 }
 
-void NumberDisplayForm::setLabel(unsigned int which, QString label)
+void NumberDisplayForm::setLabel(unsigned int which, const QString& label)
 {
     d_label[which]->setText(label);
 }
@@ -347,7 +347,10 @@ void NumberDisplayForm::setAverage(const float avg) { d_avg = avg; }
 
 void NumberDisplayForm::setUpdateTime(const float time) { d_update_time = time; }
 
-void NumberDisplayForm::setUpdateTime(QString time) { setUpdateTime(time.toFloat()); }
+void NumberDisplayForm::setUpdateTime(const QString& time)
+{
+    setUpdateTime(time.toFloat());
+}
 
 void NumberDisplayForm::setScale(unsigned int which, int min, int max)
 {

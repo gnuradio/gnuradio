@@ -27,6 +27,7 @@
 #include <pmt/pmt.h>
 #include <iostream>
 #include <sstream>
+#include <utility>
 #include <vector>
 
 namespace pmt {
@@ -49,7 +50,7 @@ static void write_list_tail(pmt_t obj, std::ostream& port)
     }
 }
 
-void write(pmt_t obj, std::ostream& port)
+void write(const pmt_t& obj, std::ostream& port)
 {
     if (is_bool(obj)) {
         if (is_true(obj))
@@ -117,14 +118,14 @@ void write(pmt_t obj, std::ostream& port)
 
 std::ostream& operator<<(std::ostream& os, pmt_t obj)
 {
-    write(obj, os);
+    write(std::move(obj), os);
     return os;
 }
 
 std::string write_string(pmt_t obj)
 {
     std::ostringstream s;
-    s << obj;
+    s << std::move(obj);
     return s.str();
 }
 
@@ -135,7 +136,7 @@ pmt_t read(std::istream& port)
 
 void serialize(pmt_t obj, std::ostream& sink)
 {
-    throw notimplemented("notimplemented: pmt::serialize", obj);
+    throw notimplemented("notimplemented: pmt::serialize", std::move(obj));
 }
 
 /*!
@@ -149,4 +150,4 @@ pmt_t deserialize(std::istream& source)
 } /* namespace pmt */
 
 
-void pmt::print(pmt_t v) { std::cout << write_string(v) << std::endl; }
+void pmt::print(pmt_t v) { std::cout << write_string(std::move(v)) << std::endl; }

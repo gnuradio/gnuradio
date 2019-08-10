@@ -26,12 +26,14 @@
 
 #include <gnuradio/sync_block.h>
 
+#include <utility>
+
 namespace gr {
 
 sync_block::sync_block(const std::string& name,
                        io_signature::sptr input_signature,
                        io_signature::sptr output_signature)
-    : block(name, input_signature, output_signature)
+    : block(name, std::move(input_signature), std::move(output_signature))
 {
     set_fixed_rate(true);
 }

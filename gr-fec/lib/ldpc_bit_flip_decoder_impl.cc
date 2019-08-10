@@ -34,13 +34,13 @@ namespace gr {
 namespace fec {
 namespace code {
 
-generic_decoder::sptr ldpc_bit_flip_decoder::make(const fec_mtrx_sptr mtrx_obj,
+generic_decoder::sptr ldpc_bit_flip_decoder::make(const fec_mtrx_sptr& mtrx_obj,
                                                   unsigned int max_iter)
 {
     return generic_decoder::sptr(new ldpc_bit_flip_decoder_impl(mtrx_obj, max_iter));
 }
 
-ldpc_bit_flip_decoder_impl::ldpc_bit_flip_decoder_impl(const fec_mtrx_sptr mtrx_obj,
+ldpc_bit_flip_decoder_impl::ldpc_bit_flip_decoder_impl(const fec_mtrx_sptr& mtrx_obj,
                                                        unsigned int max_iter)
     : generic_decoder("ldpc_bit_flip_decoder")
 {

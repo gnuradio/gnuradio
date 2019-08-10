@@ -50,7 +50,7 @@ size_t itemsize(vector_type type)
     }
 }
 
-bool type_matches(vector_type type, pmt::pmt_t v)
+bool type_matches(vector_type type, const pmt::pmt_t& v)
 {
     switch (type) {
     case byte_t:
@@ -78,7 +78,7 @@ pmt::pmt_t make_pdu_vector(vector_type type, const uint8_t* buf, size_t items)
     }
 }
 
-vector_type type_from_pmt(pmt::pmt_t vector)
+vector_type type_from_pmt(const pmt::pmt_t& vector)
 {
     if (pmt::is_u8vector(vector))
         return byte_t;

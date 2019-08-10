@@ -31,13 +31,14 @@
 #include <gnuradio/prefs.h>
 #include <iostream>
 #include <stdexcept>
+#include <utility>
 
 namespace gr {
 
 block::block(const std::string& name,
              io_signature::sptr input_signature,
-             io_signature::sptr output_signature)
-    : basic_block(name, input_signature, output_signature),
+             const io_signature::sptr& output_signature)
+    : basic_block(name, std::move(input_signature), output_signature),
       d_output_multiple(1),
       d_output_multiple_set(false),
       d_unaligned(0),
@@ -606,7 +607,7 @@ void block::reset_perf_counters()
 }
 
 
-void block::system_handler(pmt::pmt_t msg)
+void block::system_handler(const pmt::pmt_t& msg)
 {
     // std::cout << "system_handler " << msg << "\n";
     pmt::pmt_t op = pmt::car(msg);

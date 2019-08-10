@@ -59,7 +59,7 @@ public:
                             const bool waterfall = true,
                             const bool time = true,
                             const bool constellation = true);
-    void setDisplayTitle(const std::string);
+    void setDisplayTitle(const std::string&);
 
     bool getWindowOpenFlag();
     void setWindowOpenFlag(const bool);

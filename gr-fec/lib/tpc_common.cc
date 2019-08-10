@@ -69,7 +69,7 @@ void tpc_common::rsc_enc_bit(int input,
 
 void tpc_common::precomputeStateTransitionMatrix_RSCPoly(
     int numStates,
-    std::vector<int> g,
+    const std::vector<int>& g,
     int KK,
     int nn,
     std::vector<std::vector<int>>& output,

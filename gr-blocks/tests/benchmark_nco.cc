@@ -114,12 +114,12 @@ void basic_sincos_vec(float* x, float* y)
 {
     gr::blocks::nco<float, float> nco;
 
-    nco.set_freq(2 * GR_M_PI / FREQ);
+    gr::nco.set_freq(2 * GR_M_PI / FREQ);
 
     for (int i = 0; i < ITERATIONS / BLOCK_SIZE; i++) {
         for (int j = 0; j < BLOCK_SIZE; j++) {
-            nco.sincos(&x[2 * j + 1], &x[2 * j]);
-            nco.step();
+            gr::nco.sincos(&x[2 * j + 1], &x[2 * j]);
+            gr::nco.step();
         }
     }
 }
@@ -128,7 +128,7 @@ void native_sincos_vec(float* x, float* y)
 {
     gr::blocks::nco<float, float> nco;
 
-    nco.set_freq(2 * GR_M_PI / FREQ);
+    gr::nco.set_freq(2 * GR_M_PI / FREQ);
 
     for (int i = 0; i < ITERATIONS / BLOCK_SIZE; i++) {
         nco.sincos((gr_complex*)x, BLOCK_SIZE);

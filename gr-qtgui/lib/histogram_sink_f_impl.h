@@ -56,7 +56,7 @@ private:
     void npoints_resize();
 
     // Handles message input port for displaying PDU samples.
-    void handle_pdus(pmt::pmt_t msg);
+    void handle_pdus(const pmt::pmt_t& msg);
 
 public:
     histogram_sink_f_impl(int size,

@@ -91,7 +91,7 @@ unsigned int update_crc32(unsigned int crc, const unsigned char* data, size_t le
     return crc;
 }
 
-unsigned int update_crc32(unsigned int crc, const std::string s)
+unsigned int update_crc32(unsigned int crc, const std::string& s)
 {
     return update_crc32(crc, (const unsigned char*)s.data(), s.size());
 }
@@ -101,7 +101,7 @@ unsigned int crc32(const unsigned char* buf, size_t len)
     return update_crc32(0xffffffff, buf, len) ^ 0xffffffff;
 }
 
-unsigned int crc32(const std::string s)
+unsigned int crc32(const std::string& s)
 {
     return crc32((const unsigned char*)s.data(), s.size());
 }

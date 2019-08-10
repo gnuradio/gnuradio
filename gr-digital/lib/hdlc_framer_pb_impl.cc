@@ -32,7 +32,7 @@
 namespace gr {
 namespace digital {
 
-hdlc_framer_pb::sptr hdlc_framer_pb::make(const std::string frame_tag_name)
+hdlc_framer_pb::sptr hdlc_framer_pb::make(const std::string& frame_tag_name)
 {
     return gnuradio::get_initial_sptr(new hdlc_framer_pb_impl(frame_tag_name));
 }
@@ -40,7 +40,7 @@ hdlc_framer_pb::sptr hdlc_framer_pb::make(const std::string frame_tag_name)
 /*
  * The private constructor
  */
-hdlc_framer_pb_impl::hdlc_framer_pb_impl(const std::string frame_tag_name)
+hdlc_framer_pb_impl::hdlc_framer_pb_impl(const std::string& frame_tag_name)
     : gr::sync_block("hdlc_framer_pb",
                      gr::io_signature::make(0, 0, 0),
                      gr::io_signature::make(1, 1, sizeof(unsigned char))),

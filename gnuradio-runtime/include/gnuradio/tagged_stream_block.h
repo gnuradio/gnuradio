@@ -46,7 +46,7 @@ protected:
     std::string d_length_tag_key_str;
     tagged_stream_block(void) {} // allows pure virtual interface sub-classes
     tagged_stream_block(const std::string& name,
-                        gr::io_signature::sptr input_signature,
+                        const gr::io_signature::sptr& input_signature,
                         gr::io_signature::sptr output_signature,
                         const std::string& length_tag_key);
 

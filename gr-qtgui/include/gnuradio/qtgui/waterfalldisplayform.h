@@ -65,7 +65,7 @@ public:
 
 public slots:
     void customEvent(QEvent* e);
-    void setTimeTitle(const std::string);
+    void setTimeTitle(const std::string&);
     void setSampleRate(const QString& samprate);
     void setFFTSize(const int);
     void setFFTAverage(const float);
@@ -81,8 +81,8 @@ public slots:
 
     void setColorMap(unsigned int which,
                      const int newType,
-                     const QColor lowColor = QColor("white"),
-                     const QColor highColor = QColor("white"));
+                     const QColor& lowColor = QColor("white"),
+                     const QColor& highColor = QColor("white"));
 
     void autoScale(bool en = false);
     void setPlotPosHalf(bool half);

@@ -29,6 +29,7 @@
 #include <volk/volk.h>
 #include <boost/assign/list_of.hpp>
 #include <sstream>
+#include <utility>
 #include <vector>
 
 #include <string.h>  // for memcpy
@@ -43,8 +44,8 @@ generic_encoder::sptr tpc_encoder::make(std::vector<int> row_polys,
                                         int bval,
                                         int qval)
 {
-    return generic_encoder::sptr(
-        new tpc_encoder(row_polys, col_polys, krow, kcol, bval, qval));
+    return generic_encoder::sptr(new tpc_encoder(
+        std::move(row_polys), std::move(col_polys), krow, kcol, bval, qval));
 }
 
 tpc_encoder::tpc_encoder(std::vector<int> row_polys,
@@ -53,8 +54,8 @@ tpc_encoder::tpc_encoder(std::vector<int> row_polys,
                          int kcol,
                          int bval,
                          int qval)
-    : d_rowpolys(row_polys),
-      d_colpolys(col_polys),
+    : d_rowpolys(std::move(row_polys)),
+      d_colpolys(std::move(col_polys)),
       d_krow(krow),
       d_kcol(kcol),
       d_bval(bval),

@@ -31,6 +31,7 @@
 #include <QColor>
 #include <cmath>
 #include <iostream>
+#include <utility>
 
 class TimePrecisionClass
 {
@@ -212,7 +213,7 @@ TimeDomainDisplayPlot::~TimeDomainDisplayPlot()
 
 void TimeDomainDisplayPlot::replot() { QwtPlot::replot(); }
 
-void TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
+void TimeDomainDisplayPlot::plotNewData(const std::vector<double*>& dataPoints,
                                         const int64_t numDataPoints,
                                         const double timeInterval,
                                         const std::vector<std::vector<gr::tag_t>>& tags)
@@ -582,11 +583,11 @@ const Qt::BrushStyle TimeDomainDisplayPlot::getTagBackgroundStyle()
     return d_tag_background_style;
 }
 
-void TimeDomainDisplayPlot::setTagTextColor(QColor c) { d_tag_text_color = c; }
+void TimeDomainDisplayPlot::setTagTextColor(QColor c) { d_tag_text_color = std::move(c); }
 
 void TimeDomainDisplayPlot::setTagBackgroundColor(QColor c)
 {
-    d_tag_background_color = c;
+    d_tag_background_color = std::move(c);
 }
 
 void TimeDomainDisplayPlot::setTagBackgroundStyle(Qt::BrushStyle b)

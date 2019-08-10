@@ -29,6 +29,7 @@
 #include <assert.h>
 #include <iostream>
 #include <stdexcept>
+#include <utility>
 
 namespace gr {
 namespace trellis {
@@ -38,11 +39,11 @@ constellation_metrics_cf::make(digital::constellation_sptr constellation,
                                digital::trellis_metric_type_t TYPE)
 {
     return gnuradio::get_initial_sptr(
-        new constellation_metrics_cf_impl(constellation, TYPE));
+        new constellation_metrics_cf_impl(std::move(constellation), TYPE));
 }
 
 constellation_metrics_cf_impl::constellation_metrics_cf_impl(
-    digital::constellation_sptr constellation, digital::trellis_metric_type_t TYPE)
+    const digital::constellation_sptr& constellation, digital::trellis_metric_type_t TYPE)
     : block("constellation_metrics_cf",
             io_signature::make(1, -1, sizeof(gr_complex)),
             io_signature::make(1, -1, sizeof(float))),

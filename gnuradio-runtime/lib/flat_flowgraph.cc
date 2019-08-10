@@ -81,7 +81,7 @@ void flat_flowgraph::setup_connections()
     }
 }
 
-block_detail_sptr flat_flowgraph::allocate_block_detail(basic_block_sptr block)
+block_detail_sptr flat_flowgraph::allocate_block_detail(const basic_block_sptr& block)
 {
     int ninputs = calc_used_ports(block, true).size();
     int noutputs = calc_used_ports(block, false).size();
@@ -119,7 +119,7 @@ block_detail_sptr flat_flowgraph::allocate_block_detail(basic_block_sptr block)
     return detail;
 }
 
-buffer_sptr flat_flowgraph::allocate_buffer(basic_block_sptr block, int port)
+buffer_sptr flat_flowgraph::allocate_buffer(const basic_block_sptr& block, int port)
 {
     block_sptr grblock = cast_to_block_sptr(block);
     if (!grblock)
@@ -188,7 +188,7 @@ buffer_sptr flat_flowgraph::allocate_buffer(basic_block_sptr block, int port)
     return b;
 }
 
-void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
+void flat_flowgraph::connect_block_inputs(const basic_block_sptr& block)
 {
     block_sptr grblock = cast_to_block_sptr(block);
     if (!grblock)
@@ -223,7 +223,7 @@ void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
     }
 }
 
-void flat_flowgraph::merge_connections(flat_flowgraph_sptr old_ffg)
+void flat_flowgraph::merge_connections(const flat_flowgraph_sptr& old_ffg)
 {
     // Allocate block details if needed.  Only new blocks that aren't pruned out
     // by flattening will need one; existing blocks still in the new flowgraph will
@@ -335,7 +335,7 @@ void flat_flowgraph::merge_connections(flat_flowgraph_sptr old_ffg)
     }
 }
 
-void flat_flowgraph::setup_buffer_alignment(block_sptr block)
+void flat_flowgraph::setup_buffer_alignment(const block_sptr& block)
 {
     const int alignment = volk_get_alignment();
     for (int i = 0; i < block->detail()->ninputs(); i++) {

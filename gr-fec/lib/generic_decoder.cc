@@ -28,12 +28,14 @@
 #include <gnuradio/prefs.h>
 #include <stdio.h>
 
+#include <utility>
+
 namespace gr {
 namespace fec {
 
 generic_decoder::generic_decoder(std::string name)
 {
-    d_name = name;
+    d_name = std::move(name);
     my_id = base_unique_id++;
 
     prefs* p = prefs::singleton();
@@ -78,36 +80,42 @@ int generic_decoder::unique_id() { return my_id; }
 /*******************************************************
  * Static functions
  ******************************************************/
-int get_decoder_output_size(generic_decoder::sptr my_decoder)
+int get_decoder_output_size(const generic_decoder::sptr& my_decoder)
 {
     return my_decoder->get_output_size();
 }
 
-int get_history(generic_decoder::sptr my_decoder) { return my_decoder->get_history(); }
+int get_history(const generic_decoder::sptr& my_decoder)
+{
+    return my_decoder->get_history();
+}
 
-int get_decoder_input_size(generic_decoder::sptr my_decoder)
+int get_decoder_input_size(const generic_decoder::sptr& my_decoder)
 {
     return my_decoder->get_input_size();
 }
 
-int get_decoder_output_item_size(generic_decoder::sptr my_decoder)
+int get_decoder_output_item_size(const generic_decoder::sptr& my_decoder)
 {
     return my_decoder->get_output_item_size();
 }
 
-int get_decoder_input_item_size(generic_decoder::sptr my_decoder)
+int get_decoder_input_item_size(const generic_decoder::sptr& my_decoder)
 {
     return my_decoder->get_input_item_size();
 }
 
-float get_shift(generic_decoder::sptr my_decoder) { return my_decoder->get_shift(); }
+float get_shift(const generic_decoder::sptr& my_decoder)
+{
+    return my_decoder->get_shift();
+}
 
-const char* get_decoder_input_conversion(generic_decoder::sptr my_decoder)
+const char* get_decoder_input_conversion(const generic_decoder::sptr& my_decoder)
 {
     return my_decoder->get_input_conversion();
 }
 
-const char* get_decoder_output_conversion(generic_decoder::sptr my_decoder)
+const char* get_decoder_output_conversion(const generic_decoder::sptr& my_decoder)
 {
     return my_decoder->get_output_conversion();
 }

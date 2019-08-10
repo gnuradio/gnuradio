@@ -50,7 +50,7 @@ public:
     awgn_bp(){};
 
     //! A constructor for given GF2Mat and sigma
-    awgn_bp(const GF2Mat X, float sgma);
+    awgn_bp(const GF2Mat& X, float sgma);
 
     //! A constructor for given alist and sigma
     awgn_bp(alist _list, float sgma);
@@ -125,7 +125,7 @@ public:
      * \param niterations The number of message passing iterations
      *        done to decode this codeword.
      */
-    std::vector<char> decode(std::vector<float> rx_word, int* niterations);
+    std::vector<char> decode(const std::vector<float>& rx_word, int* niterations);
 
 private:
     //! The number of check nodes in the tanner-graph

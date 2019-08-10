@@ -52,7 +52,7 @@ tcp_connection::tcp_connection(boost::asio::io_service& io_service,
     }
 }
 
-void tcp_connection::send(pmt::pmt_t vector)
+void tcp_connection::send(const pmt::pmt_t& vector)
 {
     size_t len = pmt::blob_length(vector);
 

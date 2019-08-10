@@ -479,7 +479,7 @@ int const_sink_c_impl::work(int noutput_items,
     return nitems;
 }
 
-void const_sink_c_impl::handle_pdus(pmt::pmt_t msg)
+void const_sink_c_impl::handle_pdus(const pmt::pmt_t& msg)
 {
     size_t len = 0;
     pmt::pmt_t dict, samples;

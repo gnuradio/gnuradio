@@ -64,7 +64,7 @@ private:
     void _ncols_resize();
 
     // Handles message input port for displaying PDU samples.
-    void handle_pdus(pmt::pmt_t msg);
+    void handle_pdus(const pmt::pmt_t& msg);
 
 public:
     time_raster_sink_b_impl(double samp_rate,

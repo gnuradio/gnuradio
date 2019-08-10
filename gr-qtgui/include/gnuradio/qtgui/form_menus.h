@@ -506,7 +506,7 @@ public:
 
     void setValidator(QValidator* v) { d_text->setValidator(v); }
 
-    void setDiagText(QString text) { d_text->setText(text); }
+    void setDiagText(const QString& text) { d_text->setText(text); }
 
 signals:
     void whichTrigger(const QString& text);
@@ -534,7 +534,7 @@ class OtherDualAction : public QAction
     Q_OBJECT
 
 public:
-    OtherDualAction(QString label0, QString label1, QWidget* parent)
+    OtherDualAction(const QString& label0, const QString& label1, QWidget* parent)
         : QAction("Other", parent)
     {
         d_diag = new QDialog(parent);
@@ -1444,7 +1444,7 @@ class PopupMenu : public QAction
     Q_OBJECT
 
 public:
-    PopupMenu(QString desc, QWidget* parent) : QAction(desc, parent)
+    PopupMenu(const QString& desc, QWidget* parent) : QAction(desc, parent)
     {
         d_diag = new QDialog(parent);
         d_diag->setWindowTitle(desc);
@@ -1468,7 +1468,7 @@ public:
 
     ~PopupMenu() {}
 
-    void setText(QString s) { d_text->setText(s); }
+    void setText(const QString& s) { d_text->setText(s); }
 
 signals:
     void whichTrigger(const QString data);
@@ -1497,7 +1497,7 @@ class ItemFloatAct : public QAction
     Q_OBJECT
 
 public:
-    ItemFloatAct(unsigned int which, QString title, QWidget* parent)
+    ItemFloatAct(unsigned int which, const QString& title, QWidget* parent)
         : QAction(title, parent), d_which(which)
     {
         d_diag = new QDialog(parent);

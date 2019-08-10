@@ -50,7 +50,7 @@ private:
     ldpc_G_matrix::sptr d_G;
 
 public:
-    ldpc_gen_mtrx_encoder_impl(const ldpc_G_matrix::sptr G_obj);
+    ldpc_gen_mtrx_encoder_impl(const ldpc_G_matrix::sptr& G_obj);
     ~ldpc_gen_mtrx_encoder_impl();
 
     bool set_frame_size(unsigned int frame_size);

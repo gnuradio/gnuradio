@@ -194,7 +194,7 @@ void TimeRasterDisplayForm::setNumRows(double rows)
     getPlot()->replot();
 }
 
-void TimeRasterDisplayForm::setNumRows(QString rows)
+void TimeRasterDisplayForm::setNumRows(const QString& rows)
 {
     getPlot()->setNumRows(rows.toDouble());
     getPlot()->replot();
@@ -206,7 +206,7 @@ void TimeRasterDisplayForm::setNumCols(double cols)
     getPlot()->replot();
 }
 
-void TimeRasterDisplayForm::setNumCols(QString cols)
+void TimeRasterDisplayForm::setNumCols(const QString& cols)
 {
     getPlot()->setNumCols(cols.toDouble());
     getPlot()->replot();
@@ -226,8 +226,8 @@ void TimeRasterDisplayForm::setSampleRate(const QString& rate)
 
 void TimeRasterDisplayForm::setColorMap(unsigned int which,
                                         const int newType,
-                                        const QColor lowColor,
-                                        const QColor highColor)
+                                        const QColor& lowColor,
+                                        const QColor& highColor)
 {
     getPlot()->setIntensityColorMapType(which, newType, lowColor, highColor);
     getPlot()->replot();

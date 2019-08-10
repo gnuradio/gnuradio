@@ -36,7 +36,7 @@ private:
     size_t d_output_item_size;
 
 public:
-    decoder_impl(generic_decoder::sptr my_decoder,
+    decoder_impl(const generic_decoder::sptr& my_decoder,
                  size_t input_item_size,
                  size_t output_item_size);
 

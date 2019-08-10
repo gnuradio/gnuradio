@@ -63,7 +63,7 @@ class DIGITAL_API constellation : public boost::enable_shared_from_this<constell
 {
 public:
     constellation(std::vector<gr_complex> constell,
-                  std::vector<int> pre_diff_code,
+                  const std::vector<int>& pre_diff_code,
                   unsigned int rotational_symmetry,
                   unsigned int dimensionality,
                   bool normalize_points = true);
@@ -470,7 +470,7 @@ protected:
 
     unsigned int calc_sector_value(unsigned int sector);
 
-    constellation_psk(std::vector<gr_complex> constell,
+    constellation_psk(const std::vector<gr_complex>& constell,
                       std::vector<int> pre_diff_code,
                       unsigned int n_sectors);
 };

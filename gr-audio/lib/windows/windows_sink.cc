@@ -69,7 +69,7 @@ static std::string default_device_name()
 }
 
 windows_sink::windows_sink(int sampling_freq,
-                           const std::string device_name,
+                           const std::string& device_name,
                            bool ok_to_block)
     : sync_block("audio_windows_sink",
                  io_signature::make(1, 2, sizeof(float)),

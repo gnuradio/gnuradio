@@ -65,7 +65,7 @@ public:
      *        testing. May be increased for possibly better
      *        performance, but may slow things down.
      */
-    static generic_decoder::sptr make(const fec_mtrx_sptr mtrx_obj,
+    static generic_decoder::sptr make(const fec_mtrx_sptr& mtrx_obj,
                                       unsigned int max_iter = 100);
 
     /*!

@@ -70,7 +70,7 @@ class portaudio_source : public source
     void create_ringbuffer();
 
 public:
-    portaudio_source(int sampling_rate, const std::string device_name, bool ok_to_block);
+    portaudio_source(int sampling_rate, const std::string& device_name, bool ok_to_block);
 
     ~portaudio_source();
 

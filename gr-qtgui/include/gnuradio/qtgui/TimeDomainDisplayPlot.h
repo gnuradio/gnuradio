@@ -47,7 +47,7 @@ public:
     TimeDomainDisplayPlot(int nplots, QWidget*);
     virtual ~TimeDomainDisplayPlot();
 
-    void plotNewData(const std::vector<double*> dataPoints,
+    void plotNewData(const std::vector<double*>& dataPoints,
                      const int64_t numDataPoints,
                      const double timeInterval,
                      const std::vector<std::vector<gr::tag_t>>& tags =

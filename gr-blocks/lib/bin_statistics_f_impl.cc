@@ -28,6 +28,8 @@
 #include <gnuradio/io_signature.h>
 #include <string.h>
 
+#include <utility>
+
 namespace gr {
 namespace blocks {
 
@@ -38,7 +40,7 @@ bin_statistics_f::sptr bin_statistics_f::make(unsigned int vlen,
                                               size_t dwell_delay)
 {
     return gnuradio::get_initial_sptr(
-        new bin_statistics_f_impl(vlen, msgq, tune, tune_delay, dwell_delay));
+        new bin_statistics_f_impl(vlen, std::move(msgq), tune, tune_delay, dwell_delay));
 }
 
 bin_statistics_f_impl::bin_statistics_f_impl(unsigned int vlen,
@@ -50,7 +52,7 @@ bin_statistics_f_impl::bin_statistics_f_impl(unsigned int vlen,
                  io_signature::make(1, 1, sizeof(float) * vlen),
                  io_signature::make(0, 0, 0)),
       d_vlen(vlen),
-      d_msgq(msgq),
+      d_msgq(std::move(msgq)),
       d_tune(tune),
       d_tune_delay(tune_delay),
       d_dwell_delay(dwell_delay),

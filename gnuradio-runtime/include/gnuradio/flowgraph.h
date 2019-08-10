@@ -27,6 +27,7 @@
 #include <gnuradio/basic_block.h>
 #include <gnuradio/io_signature.h>
 #include <iostream>
+#include <utility>
 
 namespace gr {
 
@@ -44,7 +45,7 @@ public:
     endpoint() : d_basic_block(), d_port(0) {}
     endpoint(basic_block_sptr block, int port)
     {
-        d_basic_block = block;
+        d_basic_block = std::move(block);
         d_port = port;
     }
     basic_block_sptr block() const { return d_basic_block; }
@@ -73,8 +74,8 @@ public:
     msg_endpoint() : d_basic_block(), d_port(pmt::PMT_NIL) {}
     msg_endpoint(basic_block_sptr block, pmt::pmt_t port, bool is_hier = false)
     {
-        d_basic_block = block;
-        d_port = port;
+        d_basic_block = std::move(block);
+        d_port = std::move(port);
         d_is_hier = is_hier;
     }
     basic_block_sptr block() const { return d_basic_block; }
@@ -267,31 +268,32 @@ protected:
 
     flowgraph();
     std::vector<int> calc_used_ports(basic_block_sptr block, bool check_inputs);
-    basic_block_vector_t calc_downstream_blocks(basic_block_sptr block, int port);
-    edge_vector_t calc_upstream_edges(basic_block_sptr block);
-    bool has_block_p(basic_block_sptr block);
-    edge calc_upstream_edge(basic_block_sptr block, int port);
+    basic_block_vector_t calc_downstream_blocks(const basic_block_sptr& block, int port);
+    edge_vector_t calc_upstream_edges(const basic_block_sptr& block);
+    bool has_block_p(const basic_block_sptr& block);
+    edge calc_upstream_edge(const basic_block_sptr& block, int port);
 
 private:
-    void check_valid_port(gr::io_signature::sptr sig, int port);
+    void check_valid_port(const gr::io_signature::sptr& sig, int port);
     void check_valid_port(const msg_endpoint& e);
     void check_dst_not_used(const endpoint& dst);
     void check_type_match(const endpoint& src, const endpoint& dst);
-    edge_vector_t calc_connections(basic_block_sptr block,
+    edge_vector_t calc_connections(const basic_block_sptr& block,
                                    bool check_inputs); // false=use outputs
-    void check_contiguity(basic_block_sptr block,
+    void check_contiguity(const basic_block_sptr& block,
                           const std::vector<int>& used_ports,
                           bool check_inputs);
 
-    basic_block_vector_t calc_downstream_blocks(basic_block_sptr block);
+    basic_block_vector_t calc_downstream_blocks(const basic_block_sptr& block);
     basic_block_vector_t calc_reachable_blocks(basic_block_sptr block,
                                                basic_block_vector_t& blocks);
-    void reachable_dfs_visit(basic_block_sptr block, basic_block_vector_t& blocks);
-    basic_block_vector_t calc_adjacent_blocks(basic_block_sptr block,
+    void reachable_dfs_visit(const basic_block_sptr& block, basic_block_vector_t& blocks);
+    basic_block_vector_t calc_adjacent_blocks(const basic_block_sptr& block,
                                               basic_block_vector_t& blocks);
     basic_block_vector_t sort_sources_first(basic_block_vector_t& blocks);
     bool source_p(basic_block_sptr block);
-    void topological_dfs_visit(basic_block_sptr block, basic_block_vector_t& output);
+    void topological_dfs_visit(const basic_block_sptr& block,
+                               basic_block_vector_t& output);
 };
 
 // Convenience functions
@@ -300,7 +302,8 @@ inline void flowgraph::connect(basic_block_sptr src_block,
                                basic_block_sptr dst_block,
                                int dst_port)
 {
-    connect(endpoint(src_block, src_port), endpoint(dst_block, dst_port));
+    connect(endpoint(std::move(src_block), src_port),
+            endpoint(std::move(dst_block), dst_port));
 }
 
 inline void flowgraph::disconnect(basic_block_sptr src_block,
@@ -308,34 +311,35 @@ inline void flowgraph::disconnect(basic_block_sptr src_block,
                                   basic_block_sptr dst_block,
                                   int dst_port)
 {
-    disconnect(endpoint(src_block, src_port), endpoint(dst_block, dst_port));
+    disconnect(endpoint(std::move(src_block), src_port),
+               endpoint(std::move(dst_block), dst_port));
 }
 
-inline std::ostream& operator<<(std::ostream& os, const endpoint endp)
+inline std::ostream& operator<<(std::ostream& os, const endpoint& endp)
 {
     os << endp.identifier();
     return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const edge edge)
+inline std::ostream& operator<<(std::ostream& os, const edge& edge)
 {
     os << edge.identifier();
     return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const msg_endpoint endp)
+inline std::ostream& operator<<(std::ostream& os, const msg_endpoint& endp)
 {
     os << endp.identifier();
     return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const msg_edge edge)
+inline std::ostream& operator<<(std::ostream& os, const msg_edge& edge)
 {
     os << edge.identifier();
     return os;
 }
 
-std::string dot_graph_fg(flowgraph_sptr fg);
+std::string dot_graph_fg(const flowgraph_sptr& fg);
 
 } /* namespace gr */
 

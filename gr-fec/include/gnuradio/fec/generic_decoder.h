@@ -222,28 +222,29 @@ public:
 };
 
 /*! see generic_decoder::get_output_size() */
-FEC_API int get_decoder_output_size(generic_decoder::sptr my_decoder);
+FEC_API int get_decoder_output_size(const generic_decoder::sptr& my_decoder);
 
 /*! see generic_decoder::get_input_size() */
-FEC_API int get_decoder_input_size(generic_decoder::sptr my_decoder);
+FEC_API int get_decoder_input_size(const generic_decoder::sptr& my_decoder);
 
 /*! see generic_decoder::get_shift() */
-FEC_API float get_shift(generic_decoder::sptr my_decoder);
+FEC_API float get_shift(const generic_decoder::sptr& my_decoder);
 
 /*! see generic_decoder::get_history() */
-FEC_API int get_history(generic_decoder::sptr my_decoder);
+FEC_API int get_history(const generic_decoder::sptr& my_decoder);
 
 /*! see generic_decoder::get_input_item_size() */
-FEC_API int get_decoder_input_item_size(generic_decoder::sptr my_decoder);
+FEC_API int get_decoder_input_item_size(const generic_decoder::sptr& my_decoder);
 
 /*! see generic_decoder::get_output_item_size() */
-FEC_API int get_decoder_output_item_size(generic_decoder::sptr my_decoder);
+FEC_API int get_decoder_output_item_size(const generic_decoder::sptr& my_decoder);
 
 /*! see generic_decoder::get_input_conversion() */
-FEC_API const char* get_decoder_input_conversion(generic_decoder::sptr my_decoder);
+FEC_API const char* get_decoder_input_conversion(const generic_decoder::sptr& my_decoder);
 
 /*! see generic_decoder::get_output_conversion() */
-FEC_API const char* get_decoder_output_conversion(generic_decoder::sptr my_decoder);
+FEC_API const char*
+get_decoder_output_conversion(const generic_decoder::sptr& my_decoder);
 
 } /* namespace fec */
 } /* namespace gr */

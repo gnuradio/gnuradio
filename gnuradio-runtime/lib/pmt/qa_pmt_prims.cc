@@ -218,7 +218,7 @@ BOOST_AUTO_TEST_CASE(test_vectors)
         BOOST_CHECK_EQUAL(s0, pmt::vector_ref(v1, i));
 }
 
-static void check_tuple(size_t len, const std::vector<pmt::pmt_t>& s, pmt::pmt_t t)
+static void check_tuple(size_t len, const std::vector<pmt::pmt_t>& s, const pmt::pmt_t& t)
 {
     BOOST_CHECK_EQUAL(true, pmt::is_tuple(t));
     BOOST_CHECK_EQUAL(len, pmt::length(t));

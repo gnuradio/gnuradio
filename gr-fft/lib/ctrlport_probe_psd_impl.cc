@@ -27,6 +27,8 @@
 #include "ctrlport_probe_psd_impl.h"
 #include <gnuradio/io_signature.h>
 
+#include <cmath>
+
 namespace gr {
 namespace fft {
 
@@ -86,7 +88,8 @@ std::vector<gr_complex> ctrlport_probe_psd_impl::get()
     for (size_t i = 0; i < d_len; i++) {
         size_t idx = (i + d_len / 2) % d_len;
         float x = i / (d_len - 1.0f) - 0.5;
-        buf_copy[i] = gr_complex(x, 10 * log10((out[idx] * std::conj(out[idx])).real()));
+        buf_copy[i] =
+            gr_complex(x, 10 * std::log10((out[idx] * std::conj(out[idx])).real()));
     }
     mutex_buffer.unlock();
     return buf_copy;

@@ -23,6 +23,7 @@
 #include <gnuradio/io_signature.h>
 #include <boost/bind.hpp>
 #include <iostream>
+#include <utility>
 
 namespace gr {
 
@@ -46,8 +47,8 @@ block_gateway::sptr block_gateway::make(feval_ll* handler,
                                         const block_gw_work_type work_type,
                                         const unsigned factor)
 {
-    return block_gateway::sptr(
-        new block_gateway_impl(handler, name, in_sig, out_sig, work_type, factor));
+    return block_gateway::sptr(new block_gateway_impl(
+        handler, name, std::move(in_sig), std::move(out_sig), work_type, factor));
 }
 
 block_gateway_impl::block_gateway_impl(feval_ll* handler,
@@ -56,7 +57,9 @@ block_gateway_impl::block_gateway_impl(feval_ll* handler,
                                        gr::io_signature::sptr out_sig,
                                        const block_gw_work_type work_type,
                                        const unsigned factor)
-    : block(name, in_sig, out_sig), _handler(handler), _work_type(work_type)
+    : block(name, std::move(in_sig), std::move(out_sig)),
+      _handler(handler),
+      _work_type(work_type)
 {
     switch (_work_type) {
     case GR_BLOCK_GW_WORK_GENERAL:

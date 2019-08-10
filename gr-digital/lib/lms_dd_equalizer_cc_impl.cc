@@ -29,6 +29,8 @@
 #include <gnuradio/misc.h>
 #include <volk/volk.h>
 
+#include <utility>
+
 namespace gr {
 namespace digital {
 
@@ -38,7 +40,7 @@ lms_dd_equalizer_cc::sptr
 lms_dd_equalizer_cc::make(int num_taps, float mu, int sps, constellation_sptr cnst)
 {
     return gnuradio::get_initial_sptr(
-        new lms_dd_equalizer_cc_impl(num_taps, mu, sps, cnst));
+        new lms_dd_equalizer_cc_impl(num_taps, mu, sps, std::move(cnst)));
 }
 
 lms_dd_equalizer_cc_impl::lms_dd_equalizer_cc_impl(int num_taps,
@@ -52,7 +54,7 @@ lms_dd_equalizer_cc_impl::lms_dd_equalizer_cc_impl(int num_taps,
       fir_filter_ccc(sps, std::vector<gr_complex>(num_taps, gr_complex(0, 0))),
       d_new_taps(num_taps, gr_complex(0, 0)),
       d_updated(false),
-      d_cnst(cnst)
+      d_cnst(std::move(cnst))
 {
     set_gain(mu);
     if (num_taps > 0)

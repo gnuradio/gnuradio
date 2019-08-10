@@ -29,7 +29,7 @@
 #include <QDebug>
 #include <QFile>
 
-QString get_qt_style_sheet(QString filename)
+QString get_qt_style_sheet(const QString& filename)
 {
     QString sstext;
     QFile ss(filename);

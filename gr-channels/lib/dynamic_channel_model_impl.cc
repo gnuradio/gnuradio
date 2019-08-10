@@ -23,6 +23,7 @@
 #include "dynamic_channel_model_impl.h"
 #include <gnuradio/io_signature.h>
 #include <iostream>
+#include <utility>
 
 namespace gr {
 namespace channels {
@@ -51,8 +52,8 @@ dynamic_channel_model::sptr dynamic_channel_model::make(double samp_rate,
                                                                      doppler_freq,
                                                                      LOS_model,
                                                                      K,
-                                                                     delays,
-                                                                     mags,
+                                                                     std::move(delays),
+                                                                     std::move(mags),
                                                                      ntaps_mpath,
                                                                      noise_amp,
                                                                      noise_seed));
@@ -84,8 +85,14 @@ dynamic_channel_model_impl::dynamic_channel_model_impl(double samp_rate,
         channels::sro_model::make(samp_rate, sro_std_dev, sro_max_dev, noise_seed);
     d_cfo_model =
         channels::cfo_model::make(samp_rate, cfo_std_dev, cfo_max_dev, noise_seed);
-    d_fader = channels::selective_fading_model::make(
-        N, doppler_freq / samp_rate, LOS_model, K, noise_seed, delays, mags, ntaps_mpath);
+    d_fader = channels::selective_fading_model::make(N,
+                                                     doppler_freq / samp_rate,
+                                                     LOS_model,
+                                                     K,
+                                                     noise_seed,
+                                                     std::move(delays),
+                                                     std::move(mags),
+                                                     ntaps_mpath);
 
     connect(self(), 0, d_sro_model, 0);
     connect(d_sro_model, 0, d_cfo_model, 0);

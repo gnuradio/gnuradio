@@ -775,7 +775,7 @@ static int remez(double h[],
 //
 //////////////////////////////////////////////////////////////////////////////
 
-static void punt(const std::string msg)
+static void punt(const std::string& msg)
 {
     std::cerr << msg << '\n';
     throw std::runtime_error(msg);
@@ -785,7 +785,7 @@ std::vector<double> pm_remez(int order,
                              const std::vector<double>& arg_bands,
                              const std::vector<double>& arg_response,
                              const std::vector<double>& arg_weight,
-                             const std::string filter_type,
+                             const std::string& filter_type,
                              int grid_density) noexcept(false)
 {
     int numtaps = order + 1;

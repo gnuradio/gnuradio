@@ -49,7 +49,7 @@ copy_impl::copy_impl(size_t itemsize)
 
 copy_impl::~copy_impl() {}
 
-void copy_impl::handle_enable(pmt::pmt_t msg)
+void copy_impl::handle_enable(const pmt::pmt_t& msg)
 {
     if (pmt::is_bool(msg)) {
         bool en = pmt::to_bool(msg);

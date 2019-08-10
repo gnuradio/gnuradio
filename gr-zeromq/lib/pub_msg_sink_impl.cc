@@ -28,6 +28,8 @@
 #include "tag_headers.h"
 #include <gnuradio/io_signature.h>
 
+#include <utility>
+
 namespace gr {
 namespace zeromq {
 
@@ -68,7 +70,7 @@ pub_msg_sink_impl::~pub_msg_sink_impl()
 void pub_msg_sink_impl::handler(pmt::pmt_t msg)
 {
     std::stringbuf sb("");
-    pmt::serialize(msg, sb);
+    pmt::serialize(std::move(msg), sb);
     std::string s = sb.str();
     zmq::message_t zmsg(s.size());
 

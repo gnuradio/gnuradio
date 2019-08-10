@@ -25,6 +25,8 @@
 #include "dvbt2_cellinterleaver_cc_impl.h"
 #include <gnuradio/io_signature.h>
 
+#include <cmath>
+
 namespace gr {
 namespace dtv {
 
@@ -170,8 +172,8 @@ dvbt2_cellinterleaver_cc_impl::dvbt2_cellinterleaver_cc_impl(
         numBigTIBlocks = 0;
         numSmallTIBlocks = fecblocks;
     } else {
-        FECBlocksPerSmallTIBlock = floor(((float)fecblocks) / ((float)tiblocks));
-        FECBlocksPerBigTIBlock = ceil(((float)fecblocks) / ((float)tiblocks));
+        FECBlocksPerSmallTIBlock = std::floor(((float)fecblocks) / ((float)tiblocks));
+        FECBlocksPerBigTIBlock = std::ceil(((float)fecblocks) / ((float)tiblocks));
         numBigTIBlocks = fecblocks % tiblocks;
         numSmallTIBlocks = tiblocks - numBigTIBlocks;
     }

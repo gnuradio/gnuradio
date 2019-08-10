@@ -208,7 +208,10 @@ public:
 class ColorMap_UserDefined : public QwtLinearColorMap
 {
 public:
-    ColorMap_UserDefined(QColor low, QColor high) : QwtLinearColorMap(low, high) {}
+    ColorMap_UserDefined(const QColor& low, const QColor& high)
+        : QwtLinearColorMap(low, high)
+    {
+    }
 };
 
 #endif // QTGUI_TYPES_H

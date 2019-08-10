@@ -29,6 +29,8 @@
 #include <gnuradio/messages/msg_passing.h>
 #include <stdio.h>
 
+#include <utility>
+
 namespace gr {
 namespace fec {
 
@@ -39,8 +41,8 @@ conv_bit_corr_bb::sptr conv_bit_corr_bb::make(std::vector<unsigned long long> co
                                               int flush,
                                               float thresh)
 {
-    return gnuradio::get_initial_sptr(
-        new conv_bit_corr_bb_impl(correlator, corr_sym, corr_len, cut, flush, thresh));
+    return gnuradio::get_initial_sptr(new conv_bit_corr_bb_impl(
+        std::move(correlator), corr_sym, corr_len, cut, flush, thresh));
 }
 
 conv_bit_corr_bb_impl::conv_bit_corr_bb_impl(std::vector<unsigned long long> correlator,
@@ -116,7 +118,7 @@ conv_bit_corr_bb_impl::conv_bit_corr_bb_impl(std::vector<unsigned long long> cor
 
 conv_bit_corr_bb_impl::~conv_bit_corr_bb_impl() {}
 
-void conv_bit_corr_bb_impl::catch_msg(pmt::pmt_t msg)
+void conv_bit_corr_bb_impl::catch_msg(const pmt::pmt_t& msg)
 {
     // stub code
     d_msgrecv++;

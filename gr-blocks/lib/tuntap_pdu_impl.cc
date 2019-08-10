@@ -28,6 +28,7 @@
 #include <gnuradio/blocks/pdu.h>
 #include <gnuradio/io_signature.h>
 #include <boost/format.hpp>
+#include <utility>
 
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -45,7 +46,8 @@ namespace blocks {
 tuntap_pdu::sptr tuntap_pdu::make(std::string dev, int MTU, bool istunflag)
 {
 #if (defined(linux) || defined(__linux) || defined(__linux__))
-    return gnuradio::get_initial_sptr(new tuntap_pdu_impl(dev, MTU, istunflag));
+    return gnuradio::get_initial_sptr(
+        new tuntap_pdu_impl(std::move(dev), MTU, istunflag));
 #else
     throw std::runtime_error("tuntap_pdu not implemented on this platform");
 #endif

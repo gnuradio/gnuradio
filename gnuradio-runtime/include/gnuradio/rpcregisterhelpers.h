@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <sstream>
+#include <utility>
 
 // Fixes circular dependency issue before including block_registry.h
 class rpcbasic_base;
@@ -217,7 +218,7 @@ public:
         ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(const pmt::pmt_t& which_port, const pmt::pmt_t& msg)
     {
         (void)which_port;
         (void)msg;
@@ -238,11 +239,11 @@ public:
         ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(const pmt::pmt_t& which_port, pmt::pmt_t msg)
     {
         (void)which_port;
         (rpcextractor_base<T, char>::_source->*rpcextractor_base<T, char>::_func)(
-            static_cast<char>(pmt::to_long(msg)));
+            static_cast<char>(pmt::to_long(std::move(msg))));
     }
 };
 
@@ -259,11 +260,11 @@ public:
         ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(const pmt::pmt_t& which_port, pmt::pmt_t msg)
     {
         (void)which_port;
         (rpcextractor_base<T, short>::_source->*rpcextractor_base<T, short>::_func)(
-            static_cast<short>(pmt::to_long(msg)));
+            static_cast<short>(pmt::to_long(std::move(msg))));
     }
 };
 
@@ -280,11 +281,11 @@ public:
         ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(const pmt::pmt_t& which_port, pmt::pmt_t msg)
     {
         (void)which_port;
         (rpcextractor_base<T, double>::_source->*rpcextractor_base<T, double>::_func)(
-            pmt::to_double(msg));
+            pmt::to_double(std::move(msg)));
     }
 };
 
@@ -301,11 +302,11 @@ public:
         ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(const pmt::pmt_t& which_port, pmt::pmt_t msg)
     {
         (void)which_port;
         (rpcextractor_base<T, float>::_source->*rpcextractor_base<T, float>::_func)(
-            pmt::to_double(msg));
+            pmt::to_double(std::move(msg)));
     }
 };
 
@@ -322,11 +323,11 @@ public:
         ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(const pmt::pmt_t& which_port, pmt::pmt_t msg)
     {
         (void)which_port;
         (rpcextractor_base<T, long>::_source->*rpcextractor_base<T, long>::_func)(
-            pmt::to_long(msg));
+            pmt::to_long(std::move(msg)));
     }
 };
 
@@ -343,11 +344,11 @@ public:
         ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(const pmt::pmt_t& which_port, pmt::pmt_t msg)
     {
         (void)which_port;
         (rpcextractor_base<T, int>::_source->*rpcextractor_base<T, int>::_func)(
-            pmt::to_long(msg));
+            pmt::to_long(std::move(msg)));
     }
 };
 
@@ -364,11 +365,11 @@ public:
         ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(const pmt::pmt_t& which_port, pmt::pmt_t msg)
     {
         (void)which_port;
         (rpcextractor_base<T, bool>::_source->*rpcextractor_base<T, bool>::_func)(
-            pmt::to_bool(msg));
+            pmt::to_bool(std::move(msg)));
     }
 };
 
@@ -386,10 +387,11 @@ public:
         ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(const pmt::pmt_t& which_port, pmt::pmt_t msg)
     {
         (void)which_port;
-        std::complex<float> k = static_cast<std::complex<float>>(pmt::to_complex(msg));
+        std::complex<float> k =
+            static_cast<std::complex<float>>(pmt::to_complex(std::move(msg)));
         (rpcextractor_base<T, std::complex<float>>::_source
              ->*rpcextractor_base<T, std::complex<float>>::_func)(k);
     }
@@ -409,11 +411,12 @@ public:
         ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(const pmt::pmt_t& which_port, pmt::pmt_t msg)
     {
         (void)which_port;
         (rpcextractor_base<T, std::complex<double>>::_source
-             ->*rpcextractor_base<T, std::complex<double>>::_func)(pmt::to_complex(msg));
+             ->*rpcextractor_base<T, std::complex<double>>::_func)(
+            pmt::to_complex(std::move(msg)));
     }
 };
 
@@ -431,7 +434,7 @@ public:
         ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(const pmt::pmt_t& which_port, const pmt::pmt_t& msg)
     {
         (void)which_port;
         (rpcextractor_base<T, std::string>::_source
@@ -927,11 +930,11 @@ struct rpcbasic_register_set : public rpcbasic_base {
     priv_lvl_t privilege_level() const { return d_minpriv; }
     DisplayType default_display() const { return d_display; }
 
-    void set_min(pmt::pmt_t p) { d_min = p; }
-    void set_max(pmt::pmt_t p) { d_max = p; }
-    void set_def(pmt::pmt_t p) { d_def = p; }
-    void units(std::string u) { d_units = u; }
-    void description(std::string d) { d_desc = d; }
+    void set_min(const pmt::pmt_t& p) { d_min = p; }
+    void set_max(const pmt::pmt_t& p) { d_max = p; }
+    void set_def(const pmt::pmt_t& p) { d_def = p; }
+    void units(const std::string& u) { d_units = u; }
+    void description(const std::string& d) { d_desc = d; }
     void privilege_level(priv_lvl_t p) { d_minpriv = p; }
     void default_display(DisplayType d) { d_display = d; }
 
@@ -1067,7 +1070,7 @@ struct rpcbasic_register_trigger : public rpcbasic_base {
     std::string description() const { return d_desc; }
     priv_lvl_t privilege_level() const { return d_minpriv; }
 
-    void description(std::string d) { d_desc = d; }
+    void description(const std::string& d) { d_desc = d; }
     void privilege_level(priv_lvl_t p) { d_minpriv = p; }
 
 private:
@@ -1346,11 +1349,11 @@ public:
     priv_lvl_t privilege_level() const { return d_minpriv; }
     DisplayType default_display() const { return d_display; }
 
-    void set_min(pmt::pmt_t p) { d_min = p; }
-    void set_max(pmt::pmt_t p) { d_max = p; }
-    void set_def(pmt::pmt_t p) { d_def = p; }
-    void units(std::string u) { d_units = u; }
-    void description(std::string d) { d_desc = d; }
+    void set_min(const pmt::pmt_t& p) { d_min = p; }
+    void set_max(const pmt::pmt_t& p) { d_max = p; }
+    void set_def(const pmt::pmt_t& p) { d_def = p; }
+    void units(const std::string& u) { d_units = u; }
+    void description(const std::string& d) { d_desc = d; }
     void privilege_level(priv_lvl_t p) { d_minpriv = p; }
     void default_display(DisplayType d) { d_display = d; }
 
@@ -1665,8 +1668,8 @@ public:
     priv_lvl_t privilege_level() const { return d_minpriv; }
     DisplayType default_display() const { return d_display; }
 
-    void units(std::string u) { d_units = u; }
-    void description(std::string d) { d_desc = d; }
+    void units(const std::string& u) { d_units = u; }
+    void description(const std::string& d) { d_desc = d; }
     void privilege_level(priv_lvl_t p) { d_minpriv = p; }
     void default_display(DisplayType d) { d_display = d; }
 

@@ -48,7 +48,7 @@ public:
     int size();
 
     //! Resets the vector with the given input
-    void set_vec(const std::vector<char>);
+    void set_vec(const std::vector<char>&);
 
     //! Access the ith element
     char& operator[](int i);

@@ -95,7 +95,7 @@ int jack_source_process(jack_nframes_t nframes, void* arg)
 // ----------------------------------------------------------------
 
 jack_source::jack_source(int sampling_rate,
-                         const std::string device_name,
+                         const std::string& device_name,
                          bool ok_to_block)
     : sync_block(
           "audio_jack_source", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),

@@ -48,7 +48,7 @@ private:
     code::ldpc_H_matrix::sptr d_H;
 
 public:
-    ldpc_par_mtrx_encoder_impl(const code::ldpc_H_matrix::sptr H_obj);
+    ldpc_par_mtrx_encoder_impl(const code::ldpc_H_matrix::sptr& H_obj);
     ~ldpc_par_mtrx_encoder_impl();
 
     double rate();

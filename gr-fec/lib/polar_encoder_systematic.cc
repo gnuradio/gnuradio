@@ -28,6 +28,8 @@
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
+#include <utility>
+
 namespace gr {
 namespace fec {
 namespace code {
@@ -35,14 +37,15 @@ namespace code {
 generic_encoder::sptr polar_encoder_systematic::make(
     int block_size, int num_info_bits, std::vector<int> frozen_bit_positions)
 {
-    return generic_encoder::sptr(
-        new polar_encoder_systematic(block_size, num_info_bits, frozen_bit_positions));
+    return generic_encoder::sptr(new polar_encoder_systematic(
+        block_size, num_info_bits, std::move(frozen_bit_positions)));
 }
 
 polar_encoder_systematic::polar_encoder_systematic(int block_size,
                                                    int num_info_bits,
                                                    std::vector<int> frozen_bit_positions)
-    : polar_common(block_size, num_info_bits, frozen_bit_positions, std::vector<char>())
+    : polar_common(
+          block_size, num_info_bits, std::move(frozen_bit_positions), std::vector<char>())
 {
     d_volk_syst_intermediate = (unsigned char*)volk_malloc(
         sizeof(unsigned char) * block_size, volk_get_alignment());

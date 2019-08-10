@@ -60,7 +60,7 @@ public:
      *
      * Block if queue if full.
      */
-    void insert_tail(message::sptr msg);
+    void insert_tail(const message::sptr& msg);
 
     /*!
      * \brief Delete message from head of queue and return it.

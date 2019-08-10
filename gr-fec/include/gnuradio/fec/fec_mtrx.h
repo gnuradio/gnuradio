@@ -64,8 +64,8 @@ typedef boost::shared_ptr<fec_mtrx> fec_mtrx_sptr;
  *                 format is described at:
  *                 http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
  */
-FEC_API matrix_sptr read_matrix_from_file(const std::string filename);
-FEC_API void write_matrix_to_file(const std::string filename, matrix_sptr M);
+FEC_API matrix_sptr read_matrix_from_file(const std::string& filename);
+FEC_API void write_matrix_to_file(const std::string& filename, const matrix_sptr& M);
 
 /*!
  * \brief Takes a parity check matrix (H) and returns the
@@ -80,7 +80,7 @@ FEC_API void write_matrix_to_file(const std::string filename, matrix_sptr M);
  *              using read_matrix_from_file with a given alist
  *              file format.
  */
-FEC_API matrix_sptr generate_G_transpose(matrix_sptr H_obj);
+FEC_API matrix_sptr generate_G_transpose(const matrix_sptr& H_obj);
 
 /*!
  * \brief Takes a parity check matrix (H) and returns the
@@ -95,7 +95,7 @@ FEC_API matrix_sptr generate_G_transpose(matrix_sptr H_obj);
  *              using read_matrix_from_file with a given alist
  *              file format.
  */
-FEC_API matrix_sptr generate_G(matrix_sptr H_obj);
+FEC_API matrix_sptr generate_G(const matrix_sptr& H_obj);
 
 /*!
  * \brief Takes a generator matrix (G) and returns the
@@ -105,7 +105,7 @@ FEC_API matrix_sptr generate_G(matrix_sptr H_obj);
  *              using read_matrix_from_file with a given alist
  *              file format.
  */
-FEC_API matrix_sptr generate_H(matrix_sptr G_obj);
+FEC_API matrix_sptr generate_H(const matrix_sptr& G_obj);
 
 /*!
  * \brief Takes a matrix and prints it to screen.
@@ -115,7 +115,7 @@ FEC_API matrix_sptr generate_H(matrix_sptr G_obj);
  *        copy-and-pasted directly into a numpy.matrix(~) call
  *        in Python.
  */
-FEC_API void print_matrix(const matrix_sptr M, bool numpy = false);
+FEC_API void print_matrix(const matrix_sptr& M, bool numpy = false);
 
 /*!
  * \brief Base class for FEC matrix objects.

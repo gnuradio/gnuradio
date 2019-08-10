@@ -41,8 +41,8 @@ class GR_RUNTIME_API tpb_thread_body
     block_executor d_exec;
 
 public:
-    tpb_thread_body(block_sptr block,
-                    thread::barrier_sptr start_sync,
+    tpb_thread_body(const block_sptr& block,
+                    const thread::barrier_sptr& start_sync,
                     int max_noutput_items = 100000);
     ~tpb_thread_body();
 };

@@ -33,6 +33,7 @@
 #include <gnuradio/blocks/null_source.h>
 #include <gnuradio/top_block.h>
 #include <boost/test/unit_test.hpp>
+#include <utility>
 
 
 // ----------------------------------------------------------------
@@ -50,9 +51,9 @@ gr::tag_t make_tag(uint64_t offset, pmt::pmt_t key, pmt::pmt_t value, pmt::pmt_t
 {
     gr::tag_t result;
     result.offset = offset;
-    result.key = key;
-    result.value = value;
-    result.srcid = srcid;
+    result.key = std::move(key);
+    result.value = std::move(value);
+    result.srcid = std::move(srcid);
     return result;
 }
 

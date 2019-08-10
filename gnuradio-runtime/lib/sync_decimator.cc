@@ -26,13 +26,15 @@
 
 #include <gnuradio/sync_decimator.h>
 
+#include <utility>
+
 namespace gr {
 
 sync_decimator::sync_decimator(const std::string& name,
                                io_signature::sptr input_signature,
                                io_signature::sptr output_signature,
                                unsigned decimation)
-    : sync_block(name, input_signature, output_signature)
+    : sync_block(name, std::move(input_signature), std::move(output_signature))
 {
     set_decimation(decimation);
 }

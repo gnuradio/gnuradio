@@ -34,6 +34,7 @@
 #include <sys/types.h>
 #include <cstdio>
 #include <stdexcept>
+#include <utility>
 
 namespace gr {
 namespace digital {
@@ -79,7 +80,7 @@ packet_sink::sptr packet_sink::make(const std::vector<unsigned char>& sync_vecto
                                     int threshold)
 {
     return gnuradio::get_initial_sptr(
-        new packet_sink_impl(sync_vector, target_queue, threshold));
+        new packet_sink_impl(sync_vector, std::move(target_queue), threshold));
 }
 
 packet_sink_impl::packet_sink_impl(const std::vector<unsigned char>& sync_vector,
@@ -88,7 +89,7 @@ packet_sink_impl::packet_sink_impl(const std::vector<unsigned char>& sync_vector
     : sync_block("packet_sink",
                  io_signature::make(1, 1, sizeof(float)),
                  io_signature::make(0, 0, 0)),
-      d_target_queue(target_queue),
+      d_target_queue(std::move(target_queue)),
       d_threshold(threshold == -1 ? DEFAULT_THRESHOLD : threshold)
 {
     d_sync_vector = 0;

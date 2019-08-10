@@ -56,8 +56,8 @@ private:
 protected:
     bool _open(FILE** fp, const char* filename);
     bool read_header(pmt_t& hdr, pmt_t& extras);
-    void parse_header(pmt_t hdr, uint64_t offset, std::vector<tag_t>& tags);
-    void parse_extras(pmt_t extras, uint64_t offset, std::vector<tag_t>& tags);
+    void parse_header(const pmt_t& hdr, uint64_t offset, std::vector<tag_t>& tags);
+    void parse_extras(const pmt_t& extras, uint64_t offset, std::vector<tag_t>& tags);
 
 public:
     file_meta_source_impl(const std::string& filename,

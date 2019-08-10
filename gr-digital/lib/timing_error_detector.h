@@ -27,6 +27,7 @@
 #include <gnuradio/digital/timing_error_detector_type.h>
 #include <gnuradio/gr_complex.h>
 #include <deque>
+#include <utility>
 
 namespace gr {
 namespace digital {
@@ -63,7 +64,8 @@ public:
      *                      algorithms
      */
     static timing_error_detector*
-    make(enum ted_type type, constellation_sptr constellation = constellation_sptr());
+    make(enum ted_type type,
+         const constellation_sptr& constellation = constellation_sptr());
 
     virtual ~timing_error_detector(){};
 
@@ -241,7 +243,8 @@ public:
      * \param constellation A constellation to be used as a decision slicer
      */
     ted_mueller_and_muller(constellation_sptr constellation)
-        : timing_error_detector(TED_MUELLER_AND_MULLER, 1, 2, false, false, constellation)
+        : timing_error_detector(
+              TED_MUELLER_AND_MULLER, 1, 2, false, false, std::move(constellation))
     {
     }
     ~ted_mueller_and_muller(){};
@@ -279,7 +282,7 @@ public:
      */
     ted_mod_mueller_and_muller(constellation_sptr constellation)
         : timing_error_detector(
-              TED_MOD_MUELLER_AND_MULLER, 1, 3, false, false, constellation)
+              TED_MOD_MUELLER_AND_MULLER, 1, 3, false, false, std::move(constellation))
     {
     }
     ~ted_mod_mueller_and_muller(){};
@@ -306,7 +309,8 @@ public:
      * \param constellation A constellation to be used as a decision slicer
      */
     ted_zero_crossing(constellation_sptr constellation)
-        : timing_error_detector(TED_ZERO_CROSSING, 2, 3, false, false, constellation)
+        : timing_error_detector(
+              TED_ZERO_CROSSING, 2, 3, false, false, std::move(constellation))
     {
     }
     ~ted_zero_crossing(){};

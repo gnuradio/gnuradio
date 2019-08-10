@@ -49,7 +49,7 @@ protected:
     basic_block* d_blk;
 
     void run();
-    void send(pmt::pmt_t msg);
+    void send(const pmt::pmt_t& msg);
     bool wait_ready();
     void start_rxthread(basic_block* blk, pmt::pmt_t rxport);
     void stop_rxthread();

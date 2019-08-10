@@ -28,17 +28,19 @@
 #include <gnuradio/blocks/pdu.h>
 #include <gnuradio/io_signature.h>
 
+#include <utility>
+
 namespace gr {
 namespace blocks {
 
 pdu_remove::sptr pdu_remove::make(pmt::pmt_t k)
 {
-    return gnuradio::get_initial_sptr(new pdu_remove_impl(k));
+    return gnuradio::get_initial_sptr(new pdu_remove_impl(std::move(k)));
 }
 
 pdu_remove_impl::pdu_remove_impl(pmt::pmt_t k)
     : block("pdu_remove", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
-      d_k(k)
+      d_k(std::move(k))
 {
     message_port_register_out(pdu::pdu_port_id());
     message_port_register_in(pdu::pdu_port_id());
@@ -46,7 +48,7 @@ pdu_remove_impl::pdu_remove_impl(pmt::pmt_t k)
                     boost::bind(&pdu_remove_impl::handle_msg, this, _1));
 }
 
-void pdu_remove_impl::handle_msg(pmt::pmt_t pdu)
+void pdu_remove_impl::handle_msg(const pmt::pmt_t& pdu)
 {
     // add the field and publish
     pmt::pmt_t meta = pmt::car(pdu);

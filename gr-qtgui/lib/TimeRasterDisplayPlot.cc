@@ -340,7 +340,7 @@ void TimeRasterDisplayPlot::setPlotDimensions(const double rows,
     }
 }
 
-void TimeRasterDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
+void TimeRasterDisplayPlot::plotNewData(const std::vector<double*>& dataPoints,
                                         const uint64_t numDataPoints)
 {
     if (!d_stop) {
@@ -450,8 +450,8 @@ void TimeRasterDisplayPlot::setColorMapTitleFontSize(int tfs)
 
 void TimeRasterDisplayPlot::setIntensityColorMapType(const unsigned int which,
                                                      const int newType,
-                                                     const QColor lowColor,
-                                                     const QColor highColor)
+                                                     const QColor& lowColor,
+                                                     const QColor& highColor)
 {
     if (which >= d_color_map_type.size())
         throw std::runtime_error(

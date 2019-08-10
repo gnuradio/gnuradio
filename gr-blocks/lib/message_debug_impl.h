@@ -56,7 +56,7 @@ private:
      *
      * \param pdu A PDU message passed from the scheduler's message handling.
      */
-    void print_pdu(pmt::pmt_t pdu);
+    void print_pdu(const pmt::pmt_t& pdu);
 
     /*!
      * \brief Messages received in this port are stored in a vector.
@@ -69,7 +69,7 @@ private:
      *
      * \param msg A pmt message passed from the scheduler's message handling.
      */
-    void store(pmt::pmt_t msg);
+    void store(const pmt::pmt_t& msg);
 
     gr::thread::mutex d_mutex;
     std::vector<pmt::pmt_t> d_messages;

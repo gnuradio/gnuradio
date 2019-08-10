@@ -39,6 +39,7 @@
 #include <boost/math/common_factor_rt.hpp>
 #else
 #include <boost/integer/common_factor_rt.hpp>
+#include <utility>
 #endif
 
 namespace gr {
@@ -90,7 +91,7 @@ static long minimum_buffer_items(long type_size, long page_size)
 }
 
 
-buffer::buffer(int nitems, size_t sizeof_item, block_sptr link)
+buffer::buffer(int nitems, size_t sizeof_item, const block_sptr& link)
     : d_base(0),
       d_bufsize(0),
       d_max_reader_delay(0),
@@ -110,7 +111,7 @@ buffer::buffer(int nitems, size_t sizeof_item, block_sptr link)
 
 buffer_sptr make_buffer(int nitems, size_t sizeof_item, block_sptr link)
 {
-    return buffer_sptr(new buffer(nitems, sizeof_item, link));
+    return buffer_sptr(new buffer(nitems, sizeof_item, std::move(link)));
 }
 
 buffer::~buffer()
@@ -204,13 +205,13 @@ void buffer::set_done(bool done)
 }
 
 buffer_reader_sptr
-buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay)
+buffer_add_reader(const buffer_sptr& buf, int nzero_preload, block_sptr link, int delay)
 {
     if (nzero_preload < 0)
         throw std::invalid_argument("buffer_add_reader: nzero_preload must be >= 0");
 
-    buffer_reader_sptr r(
-        new buffer_reader(buf, buf->index_sub(buf->d_write_index, nzero_preload), link));
+    buffer_reader_sptr r(new buffer_reader(
+        buf, buf->index_sub(buf->d_write_index, nzero_preload), std::move(link)));
     r->declare_sample_delay(delay);
     buf->d_readers.push_back(r.get());
 
@@ -290,7 +291,9 @@ long buffer_ncurrently_allocated() { return s_buffer_count; }
 
 // ----------------------------------------------------------------------------
 
-buffer_reader::buffer_reader(buffer_sptr buffer, unsigned int read_index, block_sptr link)
+buffer_reader::buffer_reader(const buffer_sptr& buffer,
+                             unsigned int read_index,
+                             const block_sptr& link)
     : d_buffer(buffer),
       d_read_index(read_index),
       d_abs_read_offset(0),

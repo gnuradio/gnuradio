@@ -37,6 +37,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <utility>
 
 #ifdef GR_CTRLPORT
 #include <gnuradio/rpcregisterhelpers.h>
@@ -101,12 +102,15 @@ protected:
                 gr::io_signature::sptr output_signature);
 
     //! may only be called during constructor
-    void set_input_signature(gr::io_signature::sptr iosig) { d_input_signature = iosig; }
+    void set_input_signature(gr::io_signature::sptr iosig)
+    {
+        d_input_signature = std::move(iosig);
+    }
 
     //! may only be called during constructor
     void set_output_signature(gr::io_signature::sptr iosig)
     {
-        d_output_signature = iosig;
+        d_output_signature = std::move(iosig);
     }
 
     /*!
@@ -132,8 +136,8 @@ protected:
     virtual void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg)
     {
         // AA Update this
-        if (has_msg_handler(which_port)) {   // Is there a handler?
-            d_msg_handlers[which_port](msg); // Yes, invoke it.
+        if (has_msg_handler(which_port)) {              // Is there a handler?
+            d_msg_handlers[which_port](std::move(msg)); // Yes, invoke it.
         }
     }
 
@@ -141,7 +145,7 @@ protected:
     pmt::pmt_t d_message_subscribers;
 
 public:
-    pmt::pmt_t message_subscribers(pmt::pmt_t port);
+    pmt::pmt_t message_subscribers(const pmt::pmt_t& port);
     virtual ~basic_block();
     long unique_id() const { return d_unique_id; }
     long symbolic_id() const { return d_symbolic_id; }
@@ -184,14 +188,14 @@ public:
      * block_registry to get the block using either the alias or the
      * original symbol name.
      */
-    void set_block_alias(std::string name);
+    void set_block_alias(const std::string& name);
 
     // ** Message passing interface **
-    void message_port_register_in(pmt::pmt_t port_id);
-    void message_port_register_out(pmt::pmt_t port_id);
-    void message_port_pub(pmt::pmt_t port_id, pmt::pmt_t msg);
-    void message_port_sub(pmt::pmt_t port_id, pmt::pmt_t target);
-    void message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target);
+    void message_port_register_in(const pmt::pmt_t& port_id);
+    void message_port_register_out(const pmt::pmt_t& port_id);
+    void message_port_pub(const pmt::pmt_t& port_id, const pmt::pmt_t& msg);
+    void message_port_sub(const pmt::pmt_t& port_id, const pmt::pmt_t& target);
+    void message_port_unsub(const pmt::pmt_t& port_id, const pmt::pmt_t& target);
 
     virtual bool message_port_is_hier(pmt::pmt_t port_id)
     {
@@ -231,7 +235,7 @@ public:
     void _post(pmt::pmt_t which_port, pmt::pmt_t msg);
 
     //! is the queue empty?
-    bool empty_p(pmt::pmt_t which_port)
+    bool empty_p(const pmt::pmt_t& which_port)
     {
         if (msg_queue.find(which_port) == msg_queue.end())
             throw std::runtime_error("port does not exist!");
@@ -247,7 +251,7 @@ public:
     }
 
     //! are all msg ports with handlers empty?
-    bool empty_handled_p(pmt::pmt_t which_port)
+    bool empty_handled_p(const pmt::pmt_t& which_port)
     {
         return (empty_p(which_port) || !has_msg_handler(which_port));
     }
@@ -261,7 +265,7 @@ public:
     }
 
     //! How many messages in the queue?
-    size_t nmsgs(pmt::pmt_t which_port)
+    size_t nmsgs(const pmt::pmt_t& which_port)
     {
         if (msg_queue.find(which_port) == msg_queue.end())
             throw std::runtime_error("port does not exist!");
@@ -269,18 +273,18 @@ public:
     }
 
     //| Acquires and release the mutex
-    void insert_tail(pmt::pmt_t which_port, pmt::pmt_t msg);
+    void insert_tail(const pmt::pmt_t& which_port, const pmt::pmt_t& msg);
     /*!
      * \returns returns pmt at head of queue or pmt::pmt_t() if empty.
      */
-    pmt::pmt_t delete_head_nowait(pmt::pmt_t which_port);
+    pmt::pmt_t delete_head_nowait(const pmt::pmt_t& which_port);
 
-    msg_queue_t::iterator get_iterator(pmt::pmt_t which_port)
+    msg_queue_t::iterator get_iterator(const pmt::pmt_t& which_port)
     {
         return msg_queue[which_port].begin();
     }
 
-    void erase_msg(pmt::pmt_t which_port, msg_queue_t::iterator it)
+    void erase_msg(const pmt::pmt_t& which_port, msg_queue_t::iterator it)
     {
         msg_queue[which_port].erase(it);
     }
@@ -311,7 +315,7 @@ public:
      *
      * \param s an rpcbasic_sptr of the new RPC variable register to store.
      */
-    void add_rpc_variable(rpcbasic_sptr s) { d_rpc_vars.push_back(s); }
+    void add_rpc_variable(const rpcbasic_sptr& s) { d_rpc_vars.push_back(s); }
 #endif /* GR_CTRLPORT */
 
     /*!
@@ -385,7 +389,7 @@ public:
      * will ensure that no reentrant calls are made to msg_handler.
      */
     template <typename T>
-    void set_msg_handler(pmt::pmt_t which_port, T msg_handler)
+    void set_msg_handler(const pmt::pmt_t& which_port, T msg_handler)
     {
         if (msg_queue.find(which_port) == msg_queue.end()) {
             throw std::runtime_error(
@@ -405,7 +409,7 @@ public:
     virtual std::string log_level() = 0;
 };
 
-inline bool operator<(basic_block_sptr lhs, basic_block_sptr rhs)
+inline bool operator<(const basic_block_sptr& lhs, const basic_block_sptr& rhs)
 {
     return lhs->unique_id() < rhs->unique_id();
 }
@@ -415,7 +419,7 @@ typedef std::vector<basic_block_sptr>::iterator basic_block_viter_t;
 
 GR_RUNTIME_API long basic_block_ncurrently_allocated();
 
-inline std::ostream& operator<<(std::ostream& os, basic_block_sptr basic_block)
+inline std::ostream& operator<<(std::ostream& os, const basic_block_sptr& basic_block)
 {
     os << basic_block->identifier();
     return os;

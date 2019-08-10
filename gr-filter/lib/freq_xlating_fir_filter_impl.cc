@@ -132,7 +132,7 @@ std::vector<TAP_T> freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::taps() cons
 
 template <class IN_T, class OUT_T, class TAP_T>
 void freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::handle_set_center_freq(
-    pmt::pmt_t msg)
+    const pmt::pmt_t& msg)
 {
     if (pmt::is_dict(msg) && pmt::dict_has_key(msg, pmt::intern("freq"))) {
         pmt::pmt_t x = pmt::dict_ref(msg, pmt::intern("freq"), pmt::PMT_NIL);

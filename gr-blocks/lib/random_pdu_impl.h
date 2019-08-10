@@ -49,7 +49,7 @@ public:
 
     bool start();
     void output_random();
-    void generate_pdu(pmt::pmt_t msg) { output_random(); }
+    void generate_pdu(const pmt::pmt_t& msg) { output_random(); }
     void generate_pdu() { output_random(); }
 };
 

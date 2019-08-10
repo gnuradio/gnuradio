@@ -38,7 +38,7 @@ message::sptr message::make(long type, double arg1, double arg2, size_t length)
 }
 
 message::sptr
-message::make_from_string(const std::string s, long type, double arg1, double arg2)
+message::make_from_string(const std::string& s, long type, double arg1, double arg2)
 {
     message::sptr m = message::make(type, arg1, arg2, s.size());
     memcpy(m->msg(), s.data(), s.size());

@@ -70,7 +70,7 @@ class jack_sink : public sink
     void bail(const char* msg, int err);
 
 public:
-    jack_sink(int sampling_rate, const std::string device_name, bool ok_to_block);
+    jack_sink(int sampling_rate, const std::string& device_name, bool ok_to_block);
     ~jack_sink();
 
     bool check_topology(int ninputs, int noutputs);

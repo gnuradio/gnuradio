@@ -40,7 +40,7 @@ namespace code {
 void matrix_free(matrix* x) { gsl_matrix_free((gsl_matrix*)x); }
 
 
-matrix_sptr read_matrix_from_file(const std::string filename)
+matrix_sptr read_matrix_from_file(const std::string& filename)
 {
     std::ifstream inputFile;
     unsigned int ncols, nrows;
@@ -96,7 +96,7 @@ matrix_sptr read_matrix_from_file(const std::string filename)
     return H;
 }
 
-void write_matrix_to_file(const std::string filename, matrix_sptr M)
+void write_matrix_to_file(const std::string& filename, const matrix_sptr& M)
 {
     std::ofstream outputfile;
 
@@ -158,7 +158,7 @@ void write_matrix_to_file(const std::string filename, matrix_sptr M)
     outputfile.close();
 }
 
-matrix_sptr generate_G_transpose(matrix_sptr H_obj)
+matrix_sptr generate_G_transpose(const matrix_sptr& H_obj)
 {
     unsigned int k = H_obj->size1;
     unsigned int n = H_obj->size2;
@@ -197,7 +197,7 @@ matrix_sptr generate_G_transpose(matrix_sptr H_obj)
     return G;
 }
 
-matrix_sptr generate_G(matrix_sptr H_obj)
+matrix_sptr generate_G(const matrix_sptr& H_obj)
 {
     matrix_sptr G_trans = generate_G_transpose(H_obj);
 
@@ -211,7 +211,7 @@ matrix_sptr generate_G(matrix_sptr H_obj)
     return Gret;
 }
 
-matrix_sptr generate_H(matrix_sptr G_obj)
+matrix_sptr generate_H(const matrix_sptr& G_obj)
 {
     unsigned int row_index, col_index;
 
@@ -258,7 +258,7 @@ matrix_sptr generate_H(matrix_sptr G_obj)
 }
 
 
-void print_matrix(const matrix_sptr M, bool numpy)
+void print_matrix(const matrix_sptr& M, bool numpy)
 {
     if (!numpy) {
         for (size_t i = 0; i < M->size1; i++) {

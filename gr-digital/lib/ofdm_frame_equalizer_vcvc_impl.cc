@@ -28,6 +28,8 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 
+#include <utility>
+
 static const pmt::pmt_t CARR_OFFSET_KEY = pmt::mp("ofdm_sync_carr_offset");
 static const pmt::pmt_t CHAN_TAPS_KEY = pmt::mp("ofdm_sync_chan_taps");
 
@@ -42,11 +44,11 @@ ofdm_frame_equalizer_vcvc::make(ofdm_equalizer_base::sptr equalizer,
                                 int fixed_frame_len)
 {
     return gnuradio::get_initial_sptr(new ofdm_frame_equalizer_vcvc_impl(
-        equalizer, cp_len, tsb_key, propagate_channel_state, fixed_frame_len));
+        std::move(equalizer), cp_len, tsb_key, propagate_channel_state, fixed_frame_len));
 }
 
 ofdm_frame_equalizer_vcvc_impl::ofdm_frame_equalizer_vcvc_impl(
-    ofdm_equalizer_base::sptr equalizer,
+    const ofdm_equalizer_base::sptr& equalizer,
     int cp_len,
     const std::string& tsb_key,
     bool propagate_channel_state,

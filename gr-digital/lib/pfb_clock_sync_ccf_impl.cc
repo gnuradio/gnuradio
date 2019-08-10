@@ -335,6 +335,7 @@ std::vector<std::vector<float>> pfb_clock_sync_ccf_impl::diff_taps() const
 std::vector<float> pfb_clock_sync_ccf_impl::channel_taps(int channel) const
 {
     std::vector<float> taps;
+    taps.reserve(d_taps_per_filter);
     for (int i = 0; i < d_taps_per_filter; i++) {
         taps.push_back(d_taps[channel][i]);
     }
@@ -344,6 +345,7 @@ std::vector<float> pfb_clock_sync_ccf_impl::channel_taps(int channel) const
 std::vector<float> pfb_clock_sync_ccf_impl::diff_channel_taps(int channel) const
 {
     std::vector<float> taps;
+    taps.reserve(d_taps_per_filter);
     for (int i = 0; i < d_taps_per_filter; i++) {
         taps.push_back(d_dtaps[channel][i]);
     }

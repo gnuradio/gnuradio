@@ -41,7 +41,7 @@ private:
     const pmt::pmt_t d_port;
 
 public:
-    hdlc_framer_pb_impl(const std::string frame_tag_name);
+    hdlc_framer_pb_impl(const std::string& frame_tag_name);
     ~hdlc_framer_pb_impl();
 
     // Where all the action really happens

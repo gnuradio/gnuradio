@@ -57,7 +57,7 @@ public:
      * Convert a raw asynchronous message to an asynchronous metadata object.
      * \return The asynchronous metadata object.
      */
-    static ::uhd::async_metadata_t msg_to_async_metadata_t(const message::sptr msg);
+    static ::uhd::async_metadata_t msg_to_async_metadata_t(const message::sptr& msg);
 };
 
 } /* namespace uhd */

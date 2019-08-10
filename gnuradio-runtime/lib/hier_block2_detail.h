@@ -39,8 +39,11 @@ public:
     hier_block2_detail(hier_block2* owner);
     ~hier_block2_detail();
 
-    void connect(basic_block_sptr block);
-    void connect(basic_block_sptr src, int src_port, basic_block_sptr dst, int dst_port);
+    void connect(const basic_block_sptr& block);
+    void connect(const basic_block_sptr& src,
+                 int src_port,
+                 const basic_block_sptr& dst,
+                 int dst_port);
     void msg_connect(basic_block_sptr src,
                      pmt::pmt_t srcport,
                      basic_block_sptr dst,
@@ -49,18 +52,21 @@ public:
                         pmt::pmt_t srcport,
                         basic_block_sptr dst,
                         pmt::pmt_t dstport);
-    void disconnect(basic_block_sptr block);
-    void disconnect(basic_block_sptr, int src_port, basic_block_sptr, int dst_port);
+    void disconnect(const basic_block_sptr& block);
+    void disconnect(const basic_block_sptr&,
+                    int src_port,
+                    const basic_block_sptr&,
+                    int dst_port);
     void disconnect_all();
     void lock();
     void unlock();
-    void flatten_aux(flat_flowgraph_sptr sfg) const;
+    void flatten_aux(const flat_flowgraph_sptr& sfg) const;
 
     void set_processor_affinity(const std::vector<int>& mask);
     void unset_processor_affinity();
     std::vector<int> processor_affinity();
 
-    void set_log_level(std::string level);
+    void set_log_level(const std::string& level);
     std::string log_level();
 
     // Track output buffer min/max settings
@@ -78,10 +84,10 @@ private:
     basic_block_vector_t d_blocks;
 
     void refresh_io_signature();
-    void connect_input(int my_port, int port, basic_block_sptr block);
-    void connect_output(int my_port, int port, basic_block_sptr block);
-    void disconnect_input(int my_port, int port, basic_block_sptr block);
-    void disconnect_output(int my_port, int port, basic_block_sptr block);
+    void connect_input(int my_port, int port, const basic_block_sptr& block);
+    void connect_output(int my_port, int port, const basic_block_sptr& block);
+    void disconnect_input(int my_port, int port, const basic_block_sptr& block);
+    void disconnect_output(int my_port, int port, const basic_block_sptr& block);
 
     endpoint_vector_t resolve_port(int port, bool is_input);
     endpoint_vector_t resolve_endpoint(const endpoint& endp, bool is_input) const;

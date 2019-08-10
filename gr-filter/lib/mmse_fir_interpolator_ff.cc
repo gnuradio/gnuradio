@@ -26,6 +26,7 @@
 
 #include <gnuradio/filter/interpolator_taps.h>
 #include <gnuradio/filter/mmse_fir_interpolator_ff.h>
+#include <cmath>
 #include <stdexcept>
 
 namespace gr {
@@ -53,7 +54,7 @@ unsigned mmse_fir_interpolator_ff::nsteps() const { return NSTEPS; }
 
 float mmse_fir_interpolator_ff::interpolate(const float input[], float mu) const
 {
-    int imu = (int)rint(mu * NSTEPS);
+    int imu = (int)std::rint(mu * NSTEPS);
 
     if ((imu < 0) || (imu > NSTEPS)) {
         throw std::runtime_error("mmse_fir_interpolator_ff: imu out of bounds.\n");

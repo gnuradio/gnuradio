@@ -22,7 +22,11 @@
 
 #include <gnuradio/fec/awgn_bp.h>
 
-awgn_bp::awgn_bp(const GF2Mat X, float sgma)
+#include <cmath>
+
+#include <utility>
+
+awgn_bp::awgn_bp(const GF2Mat& X, float sgma)
 {
     H = X;
     M = H.get_M();
@@ -90,7 +94,7 @@ void awgn_bp::rx_lr_calc(std::vector<float> codeword)
     float y;
     for (int i = 0; i < N; i++) {
         y = codeword[i];
-        rx_lr[i] = exp((-1 * y) / (2 * sigma * sigma));
+        rx_lr[i] = std::exp((-1 * y) / (2 * sigma * sigma));
     }
 }
 
@@ -177,7 +181,7 @@ std::vector<char> awgn_bp::get_syndrome(std::vector<char> codeword)
     std::vector<char> synd;
     synd.resize(N - K);
     GF2Vec in_bvec;
-    in_bvec.set_vec(codeword);
+    in_bvec.set_vec(std::move(codeword));
     for (int i = 0; i < N - K; i++) {
         synd[i] = H[i] * in_bvec;
     }
@@ -199,7 +203,7 @@ std::vector<char> awgn_bp::get_syndrome()
 bool awgn_bp::is_codeword(std::vector<char> codeword)
 {
     std::vector<char> synd;
-    synd = get_syndrome(codeword);
+    synd = get_syndrome(std::move(codeword));
     bool is_code;
     is_code = true;
     for (int i = 0; i < N - K; i++) {
@@ -228,7 +232,7 @@ void awgn_bp::set_max_iterations(int k) { max_iterations = k; }
 
 int awgn_bp::get_max_iterations() { return max_iterations; }
 
-std::vector<char> awgn_bp::decode(std::vector<float> rx_word, int* niteration)
+std::vector<char> awgn_bp::decode(const std::vector<float>& rx_word, int* niteration)
 {
     *niteration = 0;
     compute_init_estimate(rx_word);

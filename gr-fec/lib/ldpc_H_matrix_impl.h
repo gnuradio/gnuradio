@@ -85,7 +85,7 @@ public:
      *            algorithm. It is equal to the number of rows in
      *            submatrices E, C and D.
      */
-    ldpc_H_matrix_impl(const std::string filename, unsigned int gap);
+    ldpc_H_matrix_impl(const std::string& filename, unsigned int gap);
 
     //! Encode \p inbuffer with LDPC H matrix into \p outbuffer.
     void encode(unsigned char* outbuffer, const unsigned char* inbuffer) const;

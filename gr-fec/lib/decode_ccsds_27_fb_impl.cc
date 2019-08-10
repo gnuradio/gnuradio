@@ -27,6 +27,8 @@
 #include "decode_ccsds_27_fb_impl.h"
 #include <gnuradio/io_signature.h>
 
+#include <cmath>
+
 namespace gr {
 namespace fec {
 
@@ -65,7 +67,7 @@ int decode_ccsds_27_fb_impl::work(int noutput_items,
             sample = 255.0;
         else if (sample < 0.0)
             sample = 0.0;
-        unsigned char sym = (unsigned char)(floor(sample));
+        unsigned char sym = (unsigned char)(std::floor(sample));
 
         d_viterbi_in[d_count % 4] = sym;
         if ((d_count % 4) == 3) {

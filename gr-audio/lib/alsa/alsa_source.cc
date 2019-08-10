@@ -72,7 +72,7 @@ static int default_nperiods()
 // ----------------------------------------------------------------
 
 alsa_source::alsa_source(int sampling_rate,
-                         const std::string device_name,
+                         const std::string& device_name,
                          bool ok_to_block)
     : sync_block(
           "audio_alsa_source", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),

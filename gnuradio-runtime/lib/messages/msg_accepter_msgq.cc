@@ -25,17 +25,21 @@
 
 #include <gnuradio/messages/msg_accepter_msgq.h>
 
+#include <utility>
+
 namespace gr {
 namespace messages {
 
-msg_accepter_msgq::msg_accepter_msgq(msg_queue_sptr msgq) : d_msg_queue(msgq) {}
+msg_accepter_msgq::msg_accepter_msgq(msg_queue_sptr msgq) : d_msg_queue(std::move(msgq))
+{
+}
 
 msg_accepter_msgq::~msg_accepter_msgq()
 {
     // NOP, required as virtual destructor
 }
 
-void msg_accepter_msgq::post(pmt::pmt_t msg) { d_msg_queue->insert_tail(msg); }
+void msg_accepter_msgq::post(pmt::pmt_t msg) { d_msg_queue->insert_tail(std::move(msg)); }
 
 } /* namespace messages */
 } /* namespace gr */

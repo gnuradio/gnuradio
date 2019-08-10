@@ -48,13 +48,13 @@ private:
     // TCP server specific
     boost::shared_ptr<boost::asio::ip::tcp::acceptor> d_acceptor_tcp;
     void start_tcp_accept();
-    void tcp_server_send(pmt::pmt_t msg);
-    void handle_tcp_accept(tcp_connection::sptr new_connection,
+    void tcp_server_send(const pmt::pmt_t& msg);
+    void handle_tcp_accept(const tcp_connection::sptr& new_connection,
                            const boost::system::error_code& error);
 
     // TCP client specific
     boost::shared_ptr<boost::asio::ip::tcp::socket> d_tcp_socket;
-    void tcp_client_send(pmt::pmt_t msg);
+    void tcp_client_send(const pmt::pmt_t& msg);
 
     // UDP specific
     boost::asio::ip::udp::endpoint d_udp_endpoint;
@@ -62,12 +62,12 @@ private:
     boost::shared_ptr<boost::asio::ip::udp::socket> d_udp_socket;
     void handle_udp_read(const boost::system::error_code& error,
                          size_t bytes_transferred);
-    void udp_send(pmt::pmt_t msg);
+    void udp_send(const pmt::pmt_t& msg);
 
 public:
-    socket_pdu_impl(std::string type,
-                    std::string addr,
-                    std::string port,
+    socket_pdu_impl(const std::string& type,
+                    const std::string& addr,
+                    const std::string& port,
                     int MTU = 10000,
                     bool tcp_no_delay = false);
     ~socket_pdu_impl();

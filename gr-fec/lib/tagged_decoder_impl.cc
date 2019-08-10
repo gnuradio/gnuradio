@@ -28,6 +28,8 @@
 #include <gnuradio/io_signature.h>
 #include <stdio.h>
 
+#include <utility>
+
 namespace gr {
 namespace fec {
 
@@ -38,7 +40,7 @@ tagged_decoder::sptr tagged_decoder::make(generic_decoder::sptr my_decoder,
                                           int mtu)
 {
     return gnuradio::get_initial_sptr(new tagged_decoder_impl(
-        my_decoder, input_item_size, output_item_size, lengthtagname, mtu));
+        std::move(my_decoder), input_item_size, output_item_size, lengthtagname, mtu));
 }
 
 tagged_decoder_impl::tagged_decoder_impl(generic_decoder::sptr my_decoder,
@@ -52,7 +54,7 @@ tagged_decoder_impl::tagged_decoder_impl(generic_decoder::sptr my_decoder,
                           lengthtagname),
       d_mtu(mtu)
 {
-    d_decoder = my_decoder;
+    d_decoder = std::move(my_decoder);
     d_decoder->set_frame_size(d_mtu * 8);
 
     set_relative_rate(d_decoder->rate());

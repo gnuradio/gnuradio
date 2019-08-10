@@ -70,7 +70,7 @@ static std::string default_device_name()
     return (default_device == "default" ? "WAVE_MAPPER" : default_device);
 }
 
-windows_source::windows_source(int sampling_freq, const std::string device_name)
+windows_source::windows_source(int sampling_freq, const std::string& device_name)
     : sync_block("audio_windows_source",
                  io_signature::make(0, 0, 0),
                  io_signature::make(1, 1, sizeof(float))),

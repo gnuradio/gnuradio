@@ -77,7 +77,7 @@ class alsa_source : public source
     void bail(const char* msg, int err);
 
 public:
-    alsa_source(int sampling_rate, const std::string device_name, bool ok_to_block);
+    alsa_source(int sampling_rate, const std::string& device_name, bool ok_to_block);
     ~alsa_source();
 
     bool check_topology(int ninputs, int noutputs);

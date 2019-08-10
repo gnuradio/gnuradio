@@ -64,7 +64,7 @@ public:
      *            algorithm. It is equal to the number of rows in
      *            submatrices E, C and D.
      */
-    static sptr make(const std::string filename, unsigned int gap);
+    static sptr make(const std::string& filename, unsigned int gap);
 
     //! Encode \p inbuffer with LDPC H matrix into \p outbuffer.
     virtual void encode(unsigned char* outbuffer,

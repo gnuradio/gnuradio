@@ -25,6 +25,7 @@
 #include "dvbt2_framemapper_cc_impl.h"
 #include <gnuradio/io_signature.h>
 #include <algorithm>
+#include <cmath>
 
 namespace gr {
 namespace dtv {
@@ -872,10 +873,10 @@ dvbt2_framemapper_cc_impl::dvbt2_framemapper_cc_impl(
     N_punc_temp = (6 * (KBCH_1_2 - KSIG_POST)) / 5;
     N_post_temp = KSIG_POST + NBCH_PARITY + 9000 - N_punc_temp;
     if (N_P2 == 1) {
-        N_post = ceil((float)N_post_temp / (2 * (float)eta_mod)) * 2 * eta_mod;
+        N_post = std::ceil((float)N_post_temp / (2 * (float)eta_mod)) * 2 * eta_mod;
     } else {
-        N_post =
-            ceil((float)N_post_temp / ((float)eta_mod * (float)N_P2)) * eta_mod * N_P2;
+        N_post = std::ceil((float)N_post_temp / ((float)eta_mod * (float)N_P2)) *
+                 eta_mod * N_P2;
     }
     N_punc = N_punc_temp - (N_post - N_post_temp);
     l1preinit->l1_post_size = N_post / eta_mod;

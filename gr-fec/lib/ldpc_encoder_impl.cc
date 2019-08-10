@@ -27,13 +27,14 @@
 #include <boost/assign/list_of.hpp>
 #include <algorithm> // for std::reverse
 #include <sstream>
+#include <utility>
 
 namespace gr {
 namespace fec {
 
 generic_encoder::sptr ldpc_encoder::make(std::string alist_file)
 {
-    return generic_encoder::sptr(new ldpc_encoder_impl(alist_file));
+    return generic_encoder::sptr(new ldpc_encoder_impl(std::move(alist_file)));
 }
 
 ldpc_encoder_impl::ldpc_encoder_impl(std::string alist_file)

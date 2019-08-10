@@ -69,7 +69,7 @@ public:
     double getStartFrequency() const;
     double getStopFrequency() const;
 
-    void plotNewData(const std::vector<double*> dataPoints,
+    void plotNewData(const std::vector<double*>& dataPoints,
                      const int64_t numDataPoints,
                      const double noiseFloorAmplitude,
                      const double peakFrequency,
@@ -90,8 +90,8 @@ public:
     double getYMin() const;
     double getYMax() const;
 
-    void setTraceColour(QColor);
-    void setBGColour(QColor c);
+    void setTraceColour(const QColor&);
+    void setBGColour(const QColor& c);
     void showCFMarker(const bool);
 
     const bool getMaxFFTVisible() const;
@@ -110,16 +110,16 @@ public:
 public slots:
     void setMaxFFTVisible(const bool);
     void setMinFFTVisible(const bool);
-    void setMinFFTColor(QColor c);
-    void setMaxFFTColor(QColor c);
-    void setMarkerLowerIntensityColor(QColor c);
+    void setMinFFTColor(const QColor& c);
+    void setMaxFFTColor(const QColor& c);
+    void setMarkerLowerIntensityColor(const QColor& c);
     void setMarkerLowerIntensityVisible(bool visible);
-    void setMarkerUpperIntensityColor(QColor c);
+    void setMarkerUpperIntensityColor(const QColor& c);
     void setMarkerUpperIntensityVisible(bool visible);
-    void setMarkerPeakAmplitudeColor(QColor c);
+    void setMarkerPeakAmplitudeColor(const QColor& c);
     void setMarkerNoiseFloorAmplitudeVisible(bool visible);
-    void setMarkerNoiseFloorAmplitudeColor(QColor c);
-    void setMarkerCFColor(QColor c);
+    void setMarkerNoiseFloorAmplitudeColor(const QColor& c);
+    void setMarkerCFColor(const QColor& c);
 
     void setLowerIntensityLevel(const double);
     void setUpperIntensityLevel(const double);

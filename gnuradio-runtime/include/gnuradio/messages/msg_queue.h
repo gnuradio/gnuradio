@@ -59,7 +59,7 @@ public:
      *
      * Block if queue if full.
      */
-    void insert_tail(pmt::pmt_t msg);
+    void insert_tail(const pmt::pmt_t& msg);
 
     /*!
      * \brief Delete message from head of queue and return it.

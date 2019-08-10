@@ -70,7 +70,7 @@ private:
     gr::logger_ptr d_debug_logger;
 
 public:
-    ldpc_G_matrix_impl(const std::string filename);
+    ldpc_G_matrix_impl(const std::string& filename);
 
     void encode(unsigned char* outbuffer, const unsigned char* inbuffer) const;
 

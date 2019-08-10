@@ -64,7 +64,7 @@ protected:
     boost::lockfree::spsc_queue<LPWAVEHDR> buffer_queue{ 100 };
 
 public:
-    windows_source(int sampling_freq, const std::string device_name = "");
+    windows_source(int sampling_freq, const std::string& device_name = "");
     ~windows_source();
 
     int work(int noutput_items,

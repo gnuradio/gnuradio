@@ -52,7 +52,7 @@ public:
      * \param interleave_frames FreeDV 700D mode number of frames to average error
      */
     static sptr make(int mode = freedv_api::MODE_1600,
-                     const std::string msg_txt = "GNU Radio",
+                     const std::string& msg_txt = "GNU Radio",
                      int interleave_frames = 1);
 };
 

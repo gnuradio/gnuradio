@@ -26,6 +26,8 @@
 
 #include <gnuradio/blocks/mute.h>
 
+#include <utility>
+
 namespace gr {
 namespace blocks {
 
@@ -41,7 +43,7 @@ public:
 
     bool mute() const { return d_mute; }
     void set_mute(bool mute) { d_mute = mute; }
-    void set_mute_pmt(pmt::pmt_t msg) { set_mute(pmt::to_bool(msg)); }
+    void set_mute_pmt(pmt::pmt_t msg) { set_mute(pmt::to_bool(std::move(msg))); }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

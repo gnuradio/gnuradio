@@ -153,7 +153,7 @@ void SpectrumGUIClass::reset()
     // ResetPendingGUIUpdateEvents();
 }
 
-void SpectrumGUIClass::setDisplayTitle(const std::string newString)
+void SpectrumGUIClass::setDisplayTitle(const std::string& newString)
 {
     _title.assign(newString);
 

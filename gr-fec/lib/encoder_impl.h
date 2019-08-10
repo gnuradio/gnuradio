@@ -38,7 +38,7 @@ private:
     size_t d_output_size;
 
 public:
-    encoder_impl(generic_encoder::sptr my_encoder,
+    encoder_impl(const generic_encoder::sptr& my_encoder,
                  size_t input_item_size,
                  size_t output_item_size);
     ~encoder_impl();

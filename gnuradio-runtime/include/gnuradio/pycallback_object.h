@@ -24,6 +24,7 @@
 #include <pythread.h>
 #include <boost/format.hpp>
 #include <iostream>
+#include <utility>
 
 enum pyport_t { PYPORT_STRING, PYPORT_FLOAT };
 
@@ -63,21 +64,21 @@ public:
                       myType deflt,
                       DisplayType dtype)
         : d_callback(NULL),
-          d_functionbase(functionbase),
-          d_units(units),
-          d_desc(desc),
+          d_functionbase(std::move(functionbase)),
+          d_units(std::move(units)),
+          d_desc(std::move(desc)),
           d_min(min),
           d_max(max),
           d_deflt(deflt),
           d_dtype(dtype),
-          d_name(name),
+          d_name(std::move(name)),
           d_id(pycallback_object_count++)
     {
         d_callback = NULL;
         setup_rpc();
     }
 
-    void add_rpc_variable(rpcbasic_sptr s) { d_rpc_vars.push_back(s); }
+    void add_rpc_variable(const rpcbasic_sptr& s) { d_rpc_vars.push_back(s); }
 
     myType get()
     {

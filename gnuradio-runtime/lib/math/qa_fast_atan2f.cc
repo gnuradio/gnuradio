@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(t1)
         for (float j = -N / 2; i < N / 2; i++) {
             float x = i / 10.0;
             float y = j / 10.0;
-            c_atan2 = atan2(y, x);
+            c_atan2 = std::atan2(y, x);
 
             gr_atan2f = gr::fast_atan2f(y, x);
 
@@ -66,13 +66,13 @@ BOOST_AUTO_TEST_CASE(t2)
     /* Test x as INF */
     x = inf;
     y = 0;
-    c_atan2 = atan2(y, x);
+    c_atan2 = std::atan2(y, x);
     gr_atan2f = gr::fast_atan2f(y, x);
     BOOST_CHECK_CLOSE(c_atan2, gr_atan2f, 0.0);
 
     x = -inf;
     y = 0;
-    c_atan2 = atan2(y, x);
+    c_atan2 = std::atan2(y, x);
     gr_atan2f = gr::fast_atan2f(y, x);
     BOOST_CHECK_CLOSE(c_atan2, gr_atan2f, 0.0);
 
@@ -80,13 +80,13 @@ BOOST_AUTO_TEST_CASE(t2)
     /* Test y as INF */
     x = 0;
     y = inf;
-    c_atan2 = atan2(y, x);
+    c_atan2 = std::atan2(y, x);
     gr_atan2f = gr::fast_atan2f(y, x);
     BOOST_CHECK_CLOSE(c_atan2, gr_atan2f, 0.0);
 
     x = 0;
     y = -inf;
-    c_atan2 = atan2(y, x);
+    c_atan2 = std::atan2(y, x);
     gr_atan2f = gr::fast_atan2f(y, x);
     BOOST_CHECK_CLOSE(c_atan2, gr_atan2f, 0.0);
 

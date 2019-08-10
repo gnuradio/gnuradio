@@ -93,7 +93,7 @@ void prefs::_read_files(const std::vector<std::string>& filenames)
                     po::parse_config_file(infile, po::options_description(), true);
                 BOOST_FOREACH (po::basic_option<char_t> o, (parsed.options)) {
                     std::string okey = o.string_key;
-                    size_t pos = okey.find(".");
+                    size_t pos = okey.find('.');
                     std::string section, key;
                     if (pos != std::string::npos) {
                         section = okey.substr(0, pos);

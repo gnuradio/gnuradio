@@ -44,7 +44,7 @@ msg_queue::msg_queue(unsigned int limit)
 
 msg_queue::~msg_queue() { flush(); }
 
-void msg_queue::insert_tail(message::sptr msg)
+void msg_queue::insert_tail(const message::sptr& msg)
 {
     if (msg->d_next)
         throw std::invalid_argument("gr::msg_queue::insert_tail: msg already in queue");

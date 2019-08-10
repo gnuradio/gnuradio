@@ -51,7 +51,7 @@ public:
     void setup_connections();
 
     // Merge applicable connections from existing flat flowgraph
-    void merge_connections(flat_flowgraph_sptr sfg);
+    void merge_connections(const flat_flowgraph_sptr& sfg);
 
     // Return a string list of edges
     std::string edge_list();
@@ -90,9 +90,9 @@ public:
 private:
     flat_flowgraph();
 
-    block_detail_sptr allocate_block_detail(basic_block_sptr block);
-    buffer_sptr allocate_buffer(basic_block_sptr block, int port);
-    void connect_block_inputs(basic_block_sptr block);
+    block_detail_sptr allocate_block_detail(const basic_block_sptr& block);
+    buffer_sptr allocate_buffer(const basic_block_sptr& block, int port);
+    void connect_block_inputs(const basic_block_sptr& block);
 
     /* When reusing a flowgraph's blocks, this call makes sure all of
      * the buffer's are aligned at the machine's alignment boundary
@@ -101,7 +101,7 @@ private:
      * Called from both setup_connections and merge_connections for
      * start and restarts.
      */
-    void setup_buffer_alignment(block_sptr block);
+    void setup_buffer_alignment(const block_sptr& block);
 
     gr::logger_ptr d_logger;
     gr::logger_ptr d_debug_logger;

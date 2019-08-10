@@ -32,12 +32,12 @@ namespace gr {
 namespace fec {
 namespace code {
 
-ldpc_G_matrix::sptr ldpc_G_matrix::make(const std::string filename)
+ldpc_G_matrix::sptr ldpc_G_matrix::make(const std::string& filename)
 {
     return ldpc_G_matrix::sptr(new ldpc_G_matrix_impl(filename));
 }
 
-ldpc_G_matrix_impl::ldpc_G_matrix_impl(const std::string filename) : fec_mtrx_impl()
+ldpc_G_matrix_impl::ldpc_G_matrix_impl(const std::string& filename) : fec_mtrx_impl()
 {
     configure_default_loggers(d_logger, d_debug_logger, "ldpc_G_matrix");
 

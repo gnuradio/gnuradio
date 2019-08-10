@@ -32,6 +32,8 @@
 #include <mpirxx.h>
 #else
 #include <gmpxx.h>
+
+#include <utility>
 #endif
 
 namespace gr {
@@ -709,7 +711,7 @@ public:
     /*!
      * \brief the system message handler
      */
-    void system_handler(pmt::pmt_t msg);
+    void system_handler(const pmt::pmt_t& msg);
 
     /*!
      * \brief Set the logger's output level.
@@ -766,7 +768,7 @@ protected:
     block(void) {} // allows pure virtual interface sub-classes
     block(const std::string& name,
           gr::io_signature::sptr input_signature,
-          gr::io_signature::sptr output_signature);
+          const gr::io_signature::sptr& output_signature);
 
     void set_fixed_rate(bool fixed_rate) { d_fixed_rate = fixed_rate; }
 
@@ -949,7 +951,7 @@ protected:
 
 public:
     block_detail_sptr detail() const { return d_detail; }
-    void set_detail(block_detail_sptr detail) { d_detail = detail; }
+    void set_detail(block_detail_sptr detail) { d_detail = std::move(detail); }
 
     /*! \brief Tell msg neighbors we are finished
      */
@@ -965,7 +967,7 @@ public:
 typedef std::vector<block_sptr> block_vector_t;
 typedef std::vector<block_sptr>::iterator block_viter_t;
 
-inline block_sptr cast_to_block_sptr(basic_block_sptr p)
+inline block_sptr cast_to_block_sptr(const basic_block_sptr& p)
 {
     return boost::dynamic_pointer_cast<block, basic_block>(p);
 }

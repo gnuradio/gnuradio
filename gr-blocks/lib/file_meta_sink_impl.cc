@@ -32,6 +32,7 @@
 #include <sys/types.h>
 #include <cstdio>
 #include <stdexcept>
+#include <utility>
 
 // win32 (mingw/msvc) specific
 #ifdef HAVE_IO_H
@@ -72,7 +73,7 @@ file_meta_sink::sptr file_meta_sink::make(size_t itemsize,
                                                               type,
                                                               complex,
                                                               max_segment_size,
-                                                              extra_dict,
+                                                              std::move(extra_dict),
                                                               detached_header));
 }
 
@@ -83,7 +84,7 @@ file_meta_sink_impl::file_meta_sink_impl(size_t itemsize,
                                          gr_file_types type,
                                          bool complex,
                                          size_t max_segment_size,
-                                         pmt::pmt_t extra_dict,
+                                         const pmt::pmt_t& extra_dict,
                                          bool detached_header)
     : sync_block("file_meta_sink",
                  io_signature::make(1, 1, itemsize),
@@ -239,8 +240,8 @@ void file_meta_sink_impl::do_update()
 
 void file_meta_sink_impl::write_header(FILE* fp, pmt::pmt_t header, pmt::pmt_t extra)
 {
-    std::string header_str = pmt::serialize_str(header);
-    std::string extra_str = pmt::serialize_str(extra);
+    std::string header_str = pmt::serialize_str(std::move(header));
+    std::string extra_str = pmt::serialize_str(std::move(extra));
 
     if ((header_str.size() != METADATA_HEADER_SIZE) && (extra_str.size() != d_extra_size))
         throw std::runtime_error("file_meta_sink: header or extra_dict is wrong size.\n");
@@ -270,7 +271,7 @@ void file_meta_sink_impl::write_header(FILE* fp, pmt::pmt_t header, pmt::pmt_t e
     fflush(fp);
 }
 
-void file_meta_sink_impl::update_header(pmt::pmt_t key, pmt::pmt_t value)
+void file_meta_sink_impl::update_header(const pmt::pmt_t& key, pmt::pmt_t value)
 {
     // Special handling caveat to transform rate from radio source into
     // the rate at this sink.

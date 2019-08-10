@@ -71,7 +71,7 @@ static int default_nperiods()
 
 // ----------------------------------------------------------------
 
-alsa_sink::alsa_sink(int sampling_rate, const std::string device_name, bool ok_to_block)
+alsa_sink::alsa_sink(int sampling_rate, const std::string& device_name, bool ok_to_block)
     : sync_block(
           "audio_alsa_sink", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
       d_sampling_rate(sampling_rate),

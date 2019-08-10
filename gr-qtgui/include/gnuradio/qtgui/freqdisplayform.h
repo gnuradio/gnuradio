@@ -86,10 +86,10 @@ public slots:
     // Trigger slots
     void updateTrigger(gr::qtgui::trigger_mode mode);
     void setTriggerMode(gr::qtgui::trigger_mode mode);
-    void setTriggerLevel(QString s);
+    void setTriggerLevel(const QString& s);
     void setTriggerLevel(float level);
     void setTriggerChannel(int chan);
-    void setTriggerTagKey(QString s);
+    void setTriggerTagKey(const QString& s);
     void setTriggerTagKey(const std::string& s);
 
     void setupControlPanel(bool en);

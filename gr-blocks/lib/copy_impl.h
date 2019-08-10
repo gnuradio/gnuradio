@@ -41,7 +41,7 @@ public:
     void forecast(int noutput_items, gr_vector_int& ninput_items_required);
     bool check_topology(int ninputs, int noutputs);
 
-    void handle_enable(pmt::pmt_t msg);
+    void handle_enable(const pmt::pmt_t& msg);
 
     void setup_rpc();
 

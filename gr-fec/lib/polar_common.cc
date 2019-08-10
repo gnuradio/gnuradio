@@ -34,6 +34,7 @@
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 namespace gr {
@@ -44,10 +45,10 @@ polar_common::polar_common(int block_size,
                            int num_info_bits,
                            std::vector<int> frozen_bit_positions,
                            std::vector<char> frozen_bit_values)
-    : d_frozen_bit_positions(frozen_bit_positions),
-      d_frozen_bit_values(frozen_bit_values),
+    : d_frozen_bit_positions(std::move(frozen_bit_positions)),
+      d_frozen_bit_values(std::move(frozen_bit_values)),
       d_block_size(block_size),
-      d_block_power((int)log2(float(block_size))),
+      d_block_power((int)std::log2(float(block_size))),
       d_num_info_bits(num_info_bits)
 {
     if (pow(2, d_block_power) != d_block_size) {

@@ -85,7 +85,7 @@ public:
                           float thresh);
     ~conv_bit_corr_bb_impl();
 
-    void catch_msg(pmt::pmt_t msg);
+    void catch_msg(const pmt::pmt_t& msg);
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,

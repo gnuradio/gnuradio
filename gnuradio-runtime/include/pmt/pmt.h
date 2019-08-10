@@ -147,20 +147,20 @@ PMT_API pmt_t get_PMT_EOF();
  */
 
 //! Return true if obj is \#t or \#f, else return false.
-PMT_API bool is_bool(pmt_t obj);
+PMT_API bool is_bool(const pmt_t& obj);
 
 //! Return false if obj is \#f, else return true.
-PMT_API bool is_true(pmt_t obj);
+PMT_API bool is_true(const pmt_t& obj);
 
 //! Return true if obj is \#f, else return true.
-PMT_API bool is_false(pmt_t obj);
+PMT_API bool is_false(const pmt_t& obj);
 
 //! Return \#f is val is false, else return \#t.
 PMT_API pmt_t from_bool(bool val);
 
 //! Return true if val is pmt::True, return false when val is pmt::PMT_F,
 // else raise wrong_type exception.
-PMT_API bool to_bool(pmt_t val);
+PMT_API bool to_bool(const pmt_t& val);
 
 /*
  * ------------------------------------------------------------------------
@@ -191,7 +191,7 @@ PMT_API const std::string symbol_to_string(const pmt_t& sym);
  */
 
 //! Return true if obj is any kind of number, else false.
-PMT_API bool is_number(pmt_t obj);
+PMT_API bool is_number(const pmt_t& obj);
 
 /*
  * ------------------------------------------------------------------------
@@ -200,7 +200,7 @@ PMT_API bool is_number(pmt_t obj);
  */
 
 //! Return true if \p x is an integer number, else false
-PMT_API bool is_integer(pmt_t x);
+PMT_API bool is_integer(const pmt_t& x);
 
 //! Return the pmt value that represents the integer \p x.
 PMT_API pmt_t from_long(long x);
@@ -212,7 +212,7 @@ PMT_API pmt_t from_long(long x);
  * return that integer.  Else raise an exception, either wrong_type
  * when x is not an exact integer, or out_of_range when it doesn't fit.
  */
-PMT_API long to_long(pmt_t x);
+PMT_API long to_long(const pmt_t& x);
 
 /*
  * ------------------------------------------------------------------------
@@ -221,7 +221,7 @@ PMT_API long to_long(pmt_t x);
  */
 
 //! Return true if \p x is an uint64 number, else false
-PMT_API bool is_uint64(pmt_t x);
+PMT_API bool is_uint64(const pmt_t& x);
 
 //! Return the pmt value that represents the uint64 \p x.
 PMT_API pmt_t from_uint64(uint64_t x);
@@ -233,7 +233,7 @@ PMT_API pmt_t from_uint64(uint64_t x);
  * return that uint64.  Else raise an exception, either wrong_type
  * when x is not an exact uint64, or out_of_range when it doesn't fit.
  */
-PMT_API uint64_t to_uint64(pmt_t x);
+PMT_API uint64_t to_uint64(const pmt_t& x);
 
 /*
  * ------------------------------------------------------------------------
@@ -244,7 +244,7 @@ PMT_API uint64_t to_uint64(pmt_t x);
 /*
  * \brief Return true if \p obj is a real number, else false.
  */
-PMT_API bool is_real(pmt_t obj);
+PMT_API bool is_real(const pmt_t& obj);
 
 //! Return the pmt value that represents double \p x.
 PMT_API pmt_t from_double(double x);
@@ -257,7 +257,7 @@ PMT_API pmt_t from_float(float x);
  * as a double.  The argument \p val must be a real or integer, otherwise
  * a wrong_type exception is raised.
  */
-PMT_API double to_double(pmt_t x);
+PMT_API double to_double(const pmt_t& x);
 
 /*!
  * \brief Convert pmt to float if possible.
@@ -277,7 +277,7 @@ PMT_API float to_float(pmt_t x);
 /*!
  * \brief return true if \p obj is a complex number, false otherwise.
  */
-PMT_API bool is_complex(pmt_t obj);
+PMT_API bool is_complex(const pmt_t& obj);
 
 //! Return a complex number constructed of the given real and imaginary parts.
 PMT_API pmt_t make_rectangular(double re, double im);
@@ -298,7 +298,7 @@ PMT_API pmt_t pmt_from_complex(const std::complex<double>& z);
  * If \p z is complex, real or integer, return the closest complex<double>.
  * Otherwise, raise the wrong_type exception.
  */
-PMT_API std::complex<double> to_complex(pmt_t z);
+PMT_API std::complex<double> to_complex(const pmt_t& z);
 
 /*
  * ------------------------------------------------------------------------
@@ -322,17 +322,17 @@ PMT_API pmt_t car(const pmt_t& pair);
 PMT_API pmt_t cdr(const pmt_t& pair);
 
 //! Stores \p value in the car field of \p pair.
-PMT_API void set_car(pmt_t pair, pmt_t value);
+PMT_API void set_car(const pmt_t& pair, pmt_t value);
 
 //! Stores \p value in the cdr field of \p pair.
-PMT_API void set_cdr(pmt_t pair, pmt_t value);
+PMT_API void set_cdr(const pmt_t& pair, pmt_t value);
 
-PMT_API pmt_t caar(pmt_t pair);
-PMT_API pmt_t cadr(pmt_t pair);
-PMT_API pmt_t cdar(pmt_t pair);
-PMT_API pmt_t cddr(pmt_t pair);
-PMT_API pmt_t caddr(pmt_t pair);
-PMT_API pmt_t cadddr(pmt_t pair);
+PMT_API pmt_t caar(const pmt_t& pair);
+PMT_API pmt_t cadr(const pmt_t& pair);
+PMT_API pmt_t cdar(const pmt_t& pair);
+PMT_API pmt_t cddr(const pmt_t& pair);
+PMT_API pmt_t caddr(const pmt_t& pair);
+PMT_API pmt_t cadddr(const pmt_t& pair);
 
 /*
  * ------------------------------------------------------------------------
@@ -345,7 +345,7 @@ PMT_API pmt_t cadddr(pmt_t pair);
  */
 
 //! Return true if \p x is a tuple, otherwise false.
-PMT_API bool is_tuple(pmt_t x);
+PMT_API bool is_tuple(const pmt_t& x);
 
 PMT_API pmt_t make_tuple();
 PMT_API pmt_t make_tuple(const pmt_t& e0);
@@ -418,7 +418,7 @@ PMT_API pmt_t tuple_ref(const pmt_t& tuple, size_t k);
  */
 
 //! Return true if \p x is a vector, otherwise false.
-PMT_API bool is_vector(pmt_t x);
+PMT_API bool is_vector(const pmt_t& x);
 
 //! Make a vector of length \p k, with initial values set to \p fill
 PMT_API pmt_t make_vector(size_t k, pmt_t fill);
@@ -427,13 +427,13 @@ PMT_API pmt_t make_vector(size_t k, pmt_t fill);
  * Return the contents of position \p k of \p vector.
  * \p k must be a valid index of \p vector.
  */
-PMT_API pmt_t vector_ref(pmt_t vector, size_t k);
+PMT_API pmt_t vector_ref(const pmt_t& vector, size_t k);
 
 //! Store \p obj in position \p k.
-PMT_API void vector_set(pmt_t vector, size_t k, pmt_t obj);
+PMT_API void vector_set(const pmt_t& vector, size_t k, pmt_t obj);
 
 //! Store \p fill in every position of \p vector
-PMT_API void vector_fill(pmt_t vector, pmt_t fill);
+PMT_API void vector_fill(const pmt_t& vector, pmt_t fill);
 
 /*
  * ------------------------------------------------------------------------
@@ -490,23 +490,23 @@ PMT_API size_t blob_length(pmt_t blob);
  */
 
 //! true if \p x is any kind of uniform numeric vector
-PMT_API bool is_uniform_vector(pmt_t x);
+PMT_API bool is_uniform_vector(const pmt_t& x);
 
-PMT_API bool is_u8vector(pmt_t x);
-PMT_API bool is_s8vector(pmt_t x);
-PMT_API bool is_u16vector(pmt_t x);
-PMT_API bool is_s16vector(pmt_t x);
-PMT_API bool is_u32vector(pmt_t x);
-PMT_API bool is_s32vector(pmt_t x);
-PMT_API bool is_u64vector(pmt_t x);
-PMT_API bool is_s64vector(pmt_t x);
-PMT_API bool is_f32vector(pmt_t x);
-PMT_API bool is_f64vector(pmt_t x);
-PMT_API bool is_c32vector(pmt_t x);
-PMT_API bool is_c64vector(pmt_t x);
+PMT_API bool is_u8vector(const pmt_t& x);
+PMT_API bool is_s8vector(const pmt_t& x);
+PMT_API bool is_u16vector(const pmt_t& x);
+PMT_API bool is_s16vector(const pmt_t& x);
+PMT_API bool is_u32vector(const pmt_t& x);
+PMT_API bool is_s32vector(const pmt_t& x);
+PMT_API bool is_u64vector(const pmt_t& x);
+PMT_API bool is_s64vector(const pmt_t& x);
+PMT_API bool is_f32vector(const pmt_t& x);
+PMT_API bool is_f64vector(const pmt_t& x);
+PMT_API bool is_c32vector(const pmt_t& x);
+PMT_API bool is_c64vector(const pmt_t& x);
 
 //! item size in bytes if \p x is any kind of uniform numeric vector
-PMT_API size_t uniform_vector_itemsize(pmt_t x);
+PMT_API size_t uniform_vector_itemsize(const pmt_t& x);
 
 PMT_API pmt_t make_u8vector(size_t k, uint8_t fill);
 PMT_API pmt_t make_s8vector(size_t k, int8_t fill);
@@ -546,65 +546,75 @@ PMT_API pmt_t init_c32vector(size_t k, const std::vector<std::complex<float>>& d
 PMT_API pmt_t init_c64vector(size_t k, const std::complex<double>* data);
 PMT_API pmt_t init_c64vector(size_t k, const std::vector<std::complex<double>>& data);
 
-PMT_API uint8_t u8vector_ref(pmt_t v, size_t k);
-PMT_API int8_t s8vector_ref(pmt_t v, size_t k);
-PMT_API uint16_t u16vector_ref(pmt_t v, size_t k);
-PMT_API int16_t s16vector_ref(pmt_t v, size_t k);
-PMT_API uint32_t u32vector_ref(pmt_t v, size_t k);
-PMT_API int32_t s32vector_ref(pmt_t v, size_t k);
-PMT_API uint64_t u64vector_ref(pmt_t v, size_t k);
-PMT_API int64_t s64vector_ref(pmt_t v, size_t k);
-PMT_API float f32vector_ref(pmt_t v, size_t k);
-PMT_API double f64vector_ref(pmt_t v, size_t k);
-PMT_API std::complex<float> c32vector_ref(pmt_t v, size_t k);
-PMT_API std::complex<double> c64vector_ref(pmt_t v, size_t k);
+PMT_API uint8_t u8vector_ref(const pmt_t& v, size_t k);
+PMT_API int8_t s8vector_ref(const pmt_t& v, size_t k);
+PMT_API uint16_t u16vector_ref(const pmt_t& v, size_t k);
+PMT_API int16_t s16vector_ref(const pmt_t& v, size_t k);
+PMT_API uint32_t u32vector_ref(const pmt_t& v, size_t k);
+PMT_API int32_t s32vector_ref(const pmt_t& v, size_t k);
+PMT_API uint64_t u64vector_ref(const pmt_t& v, size_t k);
+PMT_API int64_t s64vector_ref(const pmt_t& v, size_t k);
+PMT_API float f32vector_ref(const pmt_t& v, size_t k);
+PMT_API double f64vector_ref(const pmt_t& v, size_t k);
+PMT_API std::complex<float> c32vector_ref(const pmt_t& v, size_t k);
+PMT_API std::complex<double> c64vector_ref(const pmt_t& v, size_t k);
 
-PMT_API void u8vector_set(pmt_t v, size_t k, uint8_t x); //< v[k] = x
-PMT_API void s8vector_set(pmt_t v, size_t k, int8_t x);
-PMT_API void u16vector_set(pmt_t v, size_t k, uint16_t x);
-PMT_API void s16vector_set(pmt_t v, size_t k, int16_t x);
-PMT_API void u32vector_set(pmt_t v, size_t k, uint32_t x);
-PMT_API void s32vector_set(pmt_t v, size_t k, int32_t x);
-PMT_API void u64vector_set(pmt_t v, size_t k, uint64_t x);
-PMT_API void s64vector_set(pmt_t v, size_t k, int64_t x);
-PMT_API void f32vector_set(pmt_t v, size_t k, float x);
-PMT_API void f64vector_set(pmt_t v, size_t k, double x);
-PMT_API void c32vector_set(pmt_t v, size_t k, std::complex<float> x);
-PMT_API void c64vector_set(pmt_t v, size_t k, std::complex<double> x);
+PMT_API void u8vector_set(const pmt_t& v, size_t k, uint8_t x); //< v[k] = x
+PMT_API void s8vector_set(const pmt_t& v, size_t k, int8_t x);
+PMT_API void u16vector_set(const pmt_t& v, size_t k, uint16_t x);
+PMT_API void s16vector_set(const pmt_t& v, size_t k, int16_t x);
+PMT_API void u32vector_set(const pmt_t& v, size_t k, uint32_t x);
+PMT_API void s32vector_set(const pmt_t& v, size_t k, int32_t x);
+PMT_API void u64vector_set(const pmt_t& v, size_t k, uint64_t x);
+PMT_API void s64vector_set(const pmt_t& v, size_t k, int64_t x);
+PMT_API void f32vector_set(const pmt_t& v, size_t k, float x);
+PMT_API void f64vector_set(const pmt_t& v, size_t k, double x);
+PMT_API void c32vector_set(const pmt_t& v, size_t k, std::complex<float> x);
+PMT_API void c64vector_set(const pmt_t& v, size_t k, std::complex<double> x);
 
 // Return const pointers to the elements
 
 PMT_API const void*
-uniform_vector_elements(pmt_t v, size_t& len); //< works with any; len is in bytes
+uniform_vector_elements(const pmt_t& v, size_t& len); //< works with any; len is in bytes
 
-PMT_API const uint8_t* u8vector_elements(pmt_t v, size_t& len);   //< len is in elements
-PMT_API const int8_t* s8vector_elements(pmt_t v, size_t& len);    //< len is in elements
-PMT_API const uint16_t* u16vector_elements(pmt_t v, size_t& len); //< len is in elements
-PMT_API const int16_t* s16vector_elements(pmt_t v, size_t& len);  //< len is in elements
-PMT_API const uint32_t* u32vector_elements(pmt_t v, size_t& len); //< len is in elements
-PMT_API const int32_t* s32vector_elements(pmt_t v, size_t& len);  //< len is in elements
-PMT_API const uint64_t* u64vector_elements(pmt_t v, size_t& len); //< len is in elements
-PMT_API const int64_t* s64vector_elements(pmt_t v, size_t& len);  //< len is in elements
-PMT_API const float* f32vector_elements(pmt_t v, size_t& len);    //< len is in elements
-PMT_API const double* f64vector_elements(pmt_t v, size_t& len);   //< len is in elements
-PMT_API const std::complex<float>* c32vector_elements(pmt_t v,
+PMT_API const uint8_t* u8vector_elements(const pmt_t& v,
+                                         size_t& len); //< len is in elements
+PMT_API const int8_t* s8vector_elements(const pmt_t& v,
+                                        size_t& len); //< len is in elements
+PMT_API const uint16_t* u16vector_elements(const pmt_t& v,
+                                           size_t& len); //< len is in elements
+PMT_API const int16_t* s16vector_elements(const pmt_t& v,
+                                          size_t& len); //< len is in elements
+PMT_API const uint32_t* u32vector_elements(const pmt_t& v,
+                                           size_t& len); //< len is in elements
+PMT_API const int32_t* s32vector_elements(const pmt_t& v,
+                                          size_t& len); //< len is in elements
+PMT_API const uint64_t* u64vector_elements(const pmt_t& v,
+                                           size_t& len); //< len is in elements
+PMT_API const int64_t* s64vector_elements(const pmt_t& v,
+                                          size_t& len); //< len is in elements
+PMT_API const float* f32vector_elements(const pmt_t& v,
+                                        size_t& len); //< len is in elements
+PMT_API const double* f64vector_elements(const pmt_t& v,
+                                         size_t& len); //< len is in elements
+PMT_API const std::complex<float>* c32vector_elements(const pmt_t& v,
                                                       size_t& len); //< len is in elements
 PMT_API const std::complex<double>*
-c64vector_elements(pmt_t v, size_t& len); //< len is in elements
+c64vector_elements(const pmt_t& v, size_t& len); //< len is in elements
 
 // len is in elements
-PMT_API const std::vector<uint8_t> u8vector_elements(pmt_t v);
-PMT_API const std::vector<int8_t> s8vector_elements(pmt_t v);
-PMT_API const std::vector<uint16_t> u16vector_elements(pmt_t v);
-PMT_API const std::vector<int16_t> s16vector_elements(pmt_t v);
-PMT_API const std::vector<uint32_t> u32vector_elements(pmt_t v);
-PMT_API const std::vector<int32_t> s32vector_elements(pmt_t v);
-PMT_API const std::vector<uint64_t> u64vector_elements(pmt_t v);
-PMT_API const std::vector<int64_t> s64vector_elements(pmt_t v);
-PMT_API const std::vector<float> f32vector_elements(pmt_t v);
-PMT_API const std::vector<double> f64vector_elements(pmt_t v);
-PMT_API const std::vector<std::complex<float>> c32vector_elements(pmt_t v);
-PMT_API const std::vector<std::complex<double>> c64vector_elements(pmt_t v);
+PMT_API const std::vector<uint8_t> u8vector_elements(const pmt_t& v);
+PMT_API const std::vector<int8_t> s8vector_elements(const pmt_t& v);
+PMT_API const std::vector<uint16_t> u16vector_elements(const pmt_t& v);
+PMT_API const std::vector<int16_t> s16vector_elements(const pmt_t& v);
+PMT_API const std::vector<uint32_t> u32vector_elements(const pmt_t& v);
+PMT_API const std::vector<int32_t> s32vector_elements(const pmt_t& v);
+PMT_API const std::vector<uint64_t> u64vector_elements(const pmt_t& v);
+PMT_API const std::vector<int64_t> s64vector_elements(const pmt_t& v);
+PMT_API const std::vector<float> f32vector_elements(const pmt_t& v);
+PMT_API const std::vector<double> f64vector_elements(const pmt_t& v);
+PMT_API const std::vector<std::complex<float>> c32vector_elements(const pmt_t& v);
+PMT_API const std::vector<std::complex<double>> c64vector_elements(const pmt_t& v);
 
 // len is in elements
 PMT_API const std::vector<uint8_t> pmt_u8vector_elements(pmt_t v);
@@ -623,26 +633,33 @@ PMT_API const std::vector<std::complex<double>> pmt_c64vector_elements(pmt_t v);
 // Return non-const pointers to the elements
 
 PMT_API void*
-uniform_vector_writable_elements(pmt_t v,
+uniform_vector_writable_elements(const pmt_t& v,
                                  size_t& len); //< works with any; len is in bytes
 
-PMT_API uint8_t* u8vector_writable_elements(pmt_t v, size_t& len); //< len is in elements
-PMT_API int8_t* s8vector_writable_elements(pmt_t v, size_t& len);  //< len is in elements
-PMT_API uint16_t* u16vector_writable_elements(pmt_t v,
-                                              size_t& len);         //< len is in elements
-PMT_API int16_t* s16vector_writable_elements(pmt_t v, size_t& len); //< len is in elements
-PMT_API uint32_t* u32vector_writable_elements(pmt_t v,
-                                              size_t& len);         //< len is in elements
-PMT_API int32_t* s32vector_writable_elements(pmt_t v, size_t& len); //< len is in elements
-PMT_API uint64_t* u64vector_writable_elements(pmt_t v,
-                                              size_t& len);         //< len is in elements
-PMT_API int64_t* s64vector_writable_elements(pmt_t v, size_t& len); //< len is in elements
-PMT_API float* f32vector_writable_elements(pmt_t v, size_t& len);   //< len is in elements
-PMT_API double* f64vector_writable_elements(pmt_t v, size_t& len);  //< len is in elements
+PMT_API uint8_t* u8vector_writable_elements(const pmt_t& v,
+                                            size_t& len); //< len is in elements
+PMT_API int8_t* s8vector_writable_elements(const pmt_t& v,
+                                           size_t& len); //< len is in elements
+PMT_API uint16_t* u16vector_writable_elements(const pmt_t& v,
+                                              size_t& len); //< len is in elements
+PMT_API int16_t* s16vector_writable_elements(const pmt_t& v,
+                                             size_t& len); //< len is in elements
+PMT_API uint32_t* u32vector_writable_elements(const pmt_t& v,
+                                              size_t& len); //< len is in elements
+PMT_API int32_t* s32vector_writable_elements(const pmt_t& v,
+                                             size_t& len); //< len is in elements
+PMT_API uint64_t* u64vector_writable_elements(const pmt_t& v,
+                                              size_t& len); //< len is in elements
+PMT_API int64_t* s64vector_writable_elements(const pmt_t& v,
+                                             size_t& len); //< len is in elements
+PMT_API float* f32vector_writable_elements(const pmt_t& v,
+                                           size_t& len); //< len is in elements
+PMT_API double* f64vector_writable_elements(const pmt_t& v,
+                                            size_t& len); //< len is in elements
 PMT_API std::complex<float>*
-c32vector_writable_elements(pmt_t v, size_t& len); //< len is in elements
+c32vector_writable_elements(const pmt_t& v, size_t& len); //< len is in elements
 PMT_API std::complex<double>*
-c64vector_writable_elements(pmt_t v, size_t& len); //< len is in elements
+c64vector_writable_elements(const pmt_t& v, size_t& len); //< len is in elements
 
 /*
  * ------------------------------------------------------------------------
@@ -676,13 +693,13 @@ PMT_API pmt_t dict_ref(const pmt_t& dict, const pmt_t& key, const pmt_t& not_fou
 PMT_API pmt_t dict_items(pmt_t dict);
 
 //! Return list of keys
-PMT_API pmt_t dict_keys(pmt_t dict);
+PMT_API pmt_t dict_keys(const pmt_t& dict);
 
 //! Return a new dictionary \p dict1 with k=>v pairs from \p dict2 added.
 PMT_API pmt_t dict_update(const pmt_t& dict1, const pmt_t& dict2);
 
 //! Return list of values
-PMT_API pmt_t dict_values(pmt_t dict);
+PMT_API pmt_t dict_values(const pmt_t& dict);
 
 /*
  * ------------------------------------------------------------------------
@@ -694,16 +711,16 @@ PMT_API pmt_t dict_values(pmt_t dict);
  */
 
 //! Return true if \p obj is an any
-PMT_API bool is_any(pmt_t obj);
+PMT_API bool is_any(const pmt_t& obj);
 
 //! make an any
 PMT_API pmt_t make_any(const boost::any& any);
 
 //! Return underlying boost::any
-PMT_API boost::any any_ref(pmt_t obj);
+PMT_API boost::any any_ref(const pmt_t& obj);
 
 //! Store \p any in \p obj
-PMT_API void any_set(pmt_t obj, const boost::any& any);
+PMT_API void any_set(const pmt_t& obj, const boost::any& any);
 
 
 /*
@@ -715,7 +732,7 @@ PMT_API void any_set(pmt_t obj, const boost::any& any);
 PMT_API bool is_msg_accepter(const pmt_t& obj);
 
 //! make a msg_accepter
-PMT_API pmt_t make_msg_accepter(boost::shared_ptr<gr::messages::msg_accepter> ma);
+PMT_API pmt_t make_msg_accepter(const boost::shared_ptr<gr::messages::msg_accepter>& ma);
 
 //! Return underlying msg_accepter
 PMT_API boost::shared_ptr<gr::messages::msg_accepter> msg_accepter_ref(const pmt_t& obj);
@@ -765,7 +782,7 @@ PMT_API size_t length(const pmt_t& v);
  * in \p alist has \p obj as its car then \#f is returned.
  * Uses pmt::eq to compare \p obj with car fields of the pairs in \p alist.
  */
-PMT_API pmt_t assq(pmt_t obj, pmt_t alist);
+PMT_API pmt_t assq(const pmt_t& obj, pmt_t alist);
 
 /*!
  * \brief Find the first pair in \p alist whose car field is \p obj
@@ -775,7 +792,7 @@ PMT_API pmt_t assq(pmt_t obj, pmt_t alist);
  * in \p alist has \p obj as its car then \#f is returned.
  * Uses pmt::eqv to compare \p obj with car fields of the pairs in \p alist.
  */
-PMT_API pmt_t assv(pmt_t obj, pmt_t alist);
+PMT_API pmt_t assv(const pmt_t& obj, pmt_t alist);
 
 /*!
  * \brief Find the first pair in \p alist whose car field is \p obj
@@ -785,7 +802,7 @@ PMT_API pmt_t assv(pmt_t obj, pmt_t alist);
  * in \p alist has \p obj as its car then \#f is returned.
  * Uses pmt::equal to compare \p obj with car fields of the pairs in \p alist.
  */
-PMT_API pmt_t assoc(pmt_t obj, pmt_t alist);
+PMT_API pmt_t assoc(const pmt_t& obj, pmt_t alist);
 
 /*!
  * \brief Apply \p proc element-wise to the elements of list and returns
@@ -801,7 +818,7 @@ PMT_API pmt_t map(pmt_t proc(const pmt_t&), pmt_t list);
  *
  * \p list must be a proper list.
  */
-PMT_API pmt_t reverse(pmt_t list);
+PMT_API pmt_t reverse(const pmt_t& list);
 
 /*!
  * \brief destructively reverse \p list.
@@ -813,7 +830,10 @@ PMT_API pmt_t reverse_x(pmt_t list);
 /*!
  * \brief (acons x y a) == (cons (cons x y) a)
  */
-inline static pmt_t acons(pmt_t x, pmt_t y, pmt_t a) { return cons(cons(x, y), a); }
+inline static pmt_t acons(const pmt_t& x, const pmt_t& y, const pmt_t& a)
+{
+    return cons(cons(x, y), a);
+}
 
 /*!
  * \brief locates \p nth element of \n list where the car is the 'zeroth' element.
@@ -831,27 +851,27 @@ PMT_API pmt_t nthcdr(size_t n, pmt_t list);
  * If \p obj does not occur in \p list, then \#f is returned.
  * pmt::memq use pmt::eq to compare \p obj with the elements of \p list.
  */
-PMT_API pmt_t memq(pmt_t obj, pmt_t list);
+PMT_API pmt_t memq(const pmt_t& obj, pmt_t list);
 
 /*!
  * \brief Return the first sublist of \p list whose car is \p obj.
  * If \p obj does not occur in \p list, then \#f is returned.
  * pmt::memv use pmt::eqv to compare \p obj with the elements of \p list.
  */
-PMT_API pmt_t memv(pmt_t obj, pmt_t list);
+PMT_API pmt_t memv(const pmt_t& obj, pmt_t list);
 
 /*!
  * \brief Return the first sublist of \p list whose car is \p obj.
  * If \p obj does not occur in \p list, then \#f is returned.
  * pmt::member use pmt::equal to compare \p obj with the elements of \p list.
  */
-PMT_API pmt_t member(pmt_t obj, pmt_t list);
+PMT_API pmt_t member(const pmt_t& obj, pmt_t list);
 
 /*!
  * \brief Return true if every element of \p list1 appears in \p list2, and false
  * otherwise. Comparisons are done with pmt::eqv.
  */
-PMT_API bool subsetp(pmt_t list1, pmt_t list2);
+PMT_API bool subsetp(pmt_t list1, const pmt_t& list2);
 
 /*!
  * \brief Return a list of length 1 containing \p x1
@@ -903,7 +923,7 @@ PMT_API pmt_t list_rm(pmt_t list, const pmt_t& item);
 /*!
  * \brief Return bool of \p list contains \p item
  */
-PMT_API bool list_has(pmt_t list, const pmt_t& item);
+PMT_API bool list_has(const pmt_t& list, const pmt_t& item);
 
 
 /*
@@ -913,7 +933,7 @@ PMT_API bool list_has(pmt_t list, const pmt_t& item);
  */
 
 //! return true if obj is the EOF object, otherwise return false.
-PMT_API bool is_eof_object(pmt_t obj);
+PMT_API bool is_eof_object(const pmt_t& obj);
 
 /*!
  * read converts external representations of pmt objects into the
@@ -935,7 +955,7 @@ PMT_API pmt_t read(std::istream& port);
 /*!
  * Write a written representation of \p obj to the given \p port.
  */
-PMT_API void write(pmt_t obj, std::ostream& port);
+PMT_API void write(const pmt_t& obj, std::ostream& port);
 
 /*!
  * Return a string representation of \p obj.
@@ -978,7 +998,7 @@ PMT_API std::string serialize_str(pmt_t obj);
 /*!
  * \brief Provide a simple string generating interface to pmt's deserialize function
  */
-PMT_API pmt_t deserialize_str(std::string str);
+PMT_API pmt_t deserialize_str(const std::string& str);
 
 /*!
  * \brief Provide a comparator function object to allow pmt use in stl types

@@ -32,7 +32,7 @@ namespace blocks {
 class BLOCKS_API patterned_interleaver_impl : public patterned_interleaver
 {
 public:
-    patterned_interleaver_impl(size_t itemsize, std::vector<int> pattern);
+    patterned_interleaver_impl(size_t itemsize, const std::vector<int>& pattern);
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

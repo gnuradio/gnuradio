@@ -484,7 +484,7 @@ bool fsm::find_es(int es)
 //######################################################################
 //#  generate trellis representation of FSM as an SVG file
 //######################################################################
-void fsm::write_trellis_svg(std::string filename, int number_stages)
+void fsm::write_trellis_svg(const std::string& filename, int number_stages)
 {
     std::ofstream trellis_fname(filename.c_str());
     if (!trellis_fname) {
@@ -574,7 +574,7 @@ void fsm::write_trellis_svg(std::string filename, int number_stages)
 //# Write trellis specification to a text file,
 //# in the same format used when reading FSM files
 //######################################################################
-void fsm::write_fsm_txt(std::string filename)
+void fsm::write_fsm_txt(const std::string& filename)
 {
     std::ofstream trellis_fname(filename.c_str());
     if (!trellis_fname) {

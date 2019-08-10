@@ -39,8 +39,8 @@ private:
 
 public:
     vector_map_impl(size_t item_size,
-                    std::vector<size_t> in_vlens,
-                    std::vector<std::vector<std::vector<size_t>>> mapping);
+                    const std::vector<size_t>& in_vlens,
+                    const std::vector<std::vector<std::vector<size_t>>>& mapping);
     ~vector_map_impl();
 
     void set_mapping(std::vector<std::vector<std::vector<size_t>>> mapping);

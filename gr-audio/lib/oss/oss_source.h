@@ -46,7 +46,7 @@ class oss_source : public source
 
 public:
     oss_source(int sampling_rate,
-               const std::string device_name = "",
+               const std::string& device_name = "",
                bool ok_to_block = true);
 
     ~oss_source();

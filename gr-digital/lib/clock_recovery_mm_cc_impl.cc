@@ -28,6 +28,7 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 #include <gnuradio/prefs.h>
+#include <cmath>
 #include <iomanip>
 #include <sstream>
 #include <stdexcept>
@@ -83,7 +84,7 @@ void clock_recovery_mm_cc_impl::forecast(int noutput_items,
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++)
         ninput_items_required[i] =
-            (int)ceil((noutput_items * d_omega) + d_interp->ntaps()) + FUDGE;
+            (int)std::ceil((noutput_items * d_omega) + d_interp->ntaps()) + FUDGE;
 }
 
 gr_complex clock_recovery_mm_cc_impl::slicer_0deg(gr_complex sample)
@@ -160,8 +161,8 @@ int clock_recovery_mm_cc_impl::general_work(int noutput_items,
                 d_omega_mid + gr::branchless_clip(d_omega - d_omega_mid, d_omega_lim);
 
             d_mu = d_mu + d_omega + d_gain_mu * mm_val;
-            ii += (int)floor(d_mu);
-            d_mu -= floor(d_mu);
+            ii += (int)std::floor(d_mu);
+            d_mu -= std::floor(d_mu);
 
             // write the error signal to the second output
             foptr[oo - 1] = mm_val;
@@ -195,8 +196,8 @@ int clock_recovery_mm_cc_impl::general_work(int noutput_items,
                 d_omega_mid + gr::branchless_clip(d_omega - d_omega_mid, d_omega_lim);
 
             d_mu = d_mu + d_omega + d_gain_mu * mm_val;
-            ii += (int)floor(d_mu);
-            d_mu -= floor(d_mu);
+            ii += (int)std::floor(d_mu);
+            d_mu -= std::floor(d_mu);
 
             if (d_verbose) {
                 std::stringstream tmp;

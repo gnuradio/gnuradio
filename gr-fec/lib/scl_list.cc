@@ -23,6 +23,7 @@
 #include "scl_list.h"
 #include <volk/volk.h>
 #include <algorithm>
+#include <cmath>
 #include <cstring>
 #include <iostream>
 
@@ -158,7 +159,7 @@ float scl_list::update_path_metric(const float last_pm,
         //        if(ui == (unsigned char) (0.5 * 1 - copysignf(1.0f, llr))){
         return last_pm;
     }
-    return last_pm + fabs(llr);
+    return last_pm + std::fabs(llr);
 }
 
 void scl_list::set_frozen_bit(const unsigned char frozen_bit, const int bit_pos)

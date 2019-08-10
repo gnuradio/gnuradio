@@ -121,9 +121,9 @@ private:
 class TimeUpdateEvent : public QEvent
 {
 public:
-    TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
+    TimeUpdateEvent(const std::vector<double*>& timeDomainPoints,
                     const uint64_t numTimeDomainDataPoints,
-                    const std::vector<std::vector<gr::tag_t>> tags);
+                    const std::vector<std::vector<gr::tag_t>>& tags);
 
     ~TimeUpdateEvent();
 
@@ -151,7 +151,7 @@ private:
 class FreqUpdateEvent : public QEvent
 {
 public:
-    FreqUpdateEvent(const std::vector<double*> dataPoints, const uint64_t numDataPoints);
+    FreqUpdateEvent(const std::vector<double*>& dataPoints, const uint64_t numDataPoints);
 
     ~FreqUpdateEvent();
 
@@ -190,8 +190,8 @@ private:
 class QTGUI_API ConstUpdateEvent : public QEvent
 {
 public:
-    ConstUpdateEvent(const std::vector<double*> realDataPoints,
-                     const std::vector<double*> imagDataPoints,
+    ConstUpdateEvent(const std::vector<double*>& realDataPoints,
+                     const std::vector<double*>& imagDataPoints,
                      const uint64_t numDataPoints);
 
     ~ConstUpdateEvent();
@@ -219,7 +219,7 @@ private:
 class WaterfallUpdateEvent : public QEvent
 {
 public:
-    WaterfallUpdateEvent(const std::vector<double*> dataPoints,
+    WaterfallUpdateEvent(const std::vector<double*>& dataPoints,
                          const uint64_t numDataPoints,
                          const gr::high_res_timer_type dataTimestamp);
 
@@ -250,7 +250,7 @@ private:
 class TimeRasterUpdateEvent : public QEvent
 {
 public:
-    TimeRasterUpdateEvent(const std::vector<double*> dataPoints,
+    TimeRasterUpdateEvent(const std::vector<double*>& dataPoints,
                           const uint64_t numDataPoints);
     ~TimeRasterUpdateEvent();
 
@@ -292,7 +292,7 @@ private:
 class HistogramUpdateEvent : public QEvent
 {
 public:
-    HistogramUpdateEvent(const std::vector<double*> points, const uint64_t npoints);
+    HistogramUpdateEvent(const std::vector<double*>& points, const uint64_t npoints);
 
     ~HistogramUpdateEvent();
 
@@ -342,7 +342,7 @@ public:
 class NumberUpdateEvent : public QEvent
 {
 public:
-    NumberUpdateEvent(const std::vector<float> samples);
+    NumberUpdateEvent(const std::vector<float>& samples);
     ~NumberUpdateEvent();
 
     int which() const;

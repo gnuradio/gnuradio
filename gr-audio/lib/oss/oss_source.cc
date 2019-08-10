@@ -53,7 +53,9 @@ static std::string default_device_name()
         "audio_oss", "default_input_device", "/dev/dsp");
 }
 
-oss_source::oss_source(int sampling_rate, const std::string device_name, bool ok_to_block)
+oss_source::oss_source(int sampling_rate,
+                       const std::string& device_name,
+                       bool ok_to_block)
     : sync_block("audio_oss_source",
                  io_signature::make(0, 0, 0),
                  io_signature::make(1, 2, sizeof(float))),

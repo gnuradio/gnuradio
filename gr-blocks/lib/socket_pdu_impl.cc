@@ -29,6 +29,8 @@
 #include <gnuradio/blocks/pdu.h>
 #include <gnuradio/io_signature.h>
 
+#include <utility>
+
 namespace gr {
 namespace blocks {
 
@@ -38,13 +40,13 @@ socket_pdu::sptr socket_pdu::make(std::string type,
                                   int MTU /*= 10000*/,
                                   bool tcp_no_delay /*= false*/)
 {
-    return gnuradio::get_initial_sptr(
-        new socket_pdu_impl(type, addr, port, MTU, tcp_no_delay));
+    return gnuradio::get_initial_sptr(new socket_pdu_impl(
+        std::move(type), std::move(addr), std::move(port), MTU, tcp_no_delay));
 }
 
-socket_pdu_impl::socket_pdu_impl(std::string type,
-                                 std::string addr,
-                                 std::string port,
+socket_pdu_impl::socket_pdu_impl(const std::string& type,
+                                 const std::string& addr,
+                                 const std::string& port,
                                  int MTU /*= 10000*/,
                                  bool tcp_no_delay /*= false*/)
     : block("socket_pdu", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
@@ -201,14 +203,14 @@ void socket_pdu_impl::start_tcp_accept()
                                              boost::asio::placeholders::error));
 }
 
-void socket_pdu_impl::tcp_server_send(pmt::pmt_t msg)
+void socket_pdu_impl::tcp_server_send(const pmt::pmt_t& msg)
 {
     pmt::pmt_t vector = pmt::cdr(msg);
     for (size_t i = 0; i < d_tcp_connections.size(); i++)
         d_tcp_connections[i]->send(vector);
 }
 
-void socket_pdu_impl::handle_tcp_accept(tcp_connection::sptr new_connection,
+void socket_pdu_impl::handle_tcp_accept(const tcp_connection::sptr& new_connection,
                                         const boost::system::error_code& error)
 {
     if (!error) {
@@ -228,7 +230,7 @@ void socket_pdu_impl::handle_tcp_accept(tcp_connection::sptr new_connection,
         std::cout << error << std::endl;
 }
 
-void socket_pdu_impl::tcp_client_send(pmt::pmt_t msg)
+void socket_pdu_impl::tcp_client_send(const pmt::pmt_t& msg)
 {
     pmt::pmt_t vector = pmt::cdr(msg);
     size_t len = pmt::blob_length(vector);
@@ -242,7 +244,7 @@ void socket_pdu_impl::tcp_client_send(pmt::pmt_t msg)
     }
 }
 
-void socket_pdu_impl::udp_send(pmt::pmt_t msg)
+void socket_pdu_impl::udp_send(const pmt::pmt_t& msg)
 {
     if (d_udp_endpoint_other.address().to_string() == "0.0.0.0")
         return;

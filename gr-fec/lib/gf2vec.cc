@@ -25,7 +25,7 @@
 
 GF2Vec::GF2Vec(int size) { vec.resize(size); }
 
-void GF2Vec::set_vec(const std::vector<char> in) { vec = in; }
+void GF2Vec::set_vec(const std::vector<char>& in) { vec = in; }
 
 std::vector<char> GF2Vec::get_vec() { return vec; }
 

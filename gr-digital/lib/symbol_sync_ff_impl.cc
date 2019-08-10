@@ -29,6 +29,7 @@
 #include <gnuradio/math.h>
 #include <boost/math/common_factor.hpp>
 #include <stdexcept>
+#include <utility>
 
 namespace gr {
 namespace digital {
@@ -52,7 +53,7 @@ symbol_sync_ff::sptr symbol_sync_ff::make(enum ted_type detector_type,
                                                               ted_gain,
                                                               max_deviation,
                                                               osps,
-                                                              slicer,
+                                                              std::move(slicer),
                                                               interp_type,
                                                               n_filters,
                                                               taps));
@@ -105,7 +106,7 @@ symbol_sync_ff_impl::symbol_sync_ff_impl(enum ted_type detector_type,
         throw std::out_of_range("output samples per symbol must be > 0");
 
     // Timing Error Detector
-    d_ted = timing_error_detector::make(detector_type, slicer);
+    d_ted = timing_error_detector::make(detector_type, std::move(slicer));
     if (d_ted == NULL)
         throw std::runtime_error("unable to create timing_error_detector");
 

@@ -85,9 +85,9 @@ pfb_clock_sync_fff_impl::pfb_clock_sync_fff_impl(double sps,
     // set it here to the fractional difference based on the initial phaes
     d_k = init_phase;
     d_rate = (sps - floor(sps)) * (double)d_nfilters;
-    d_rate_i = (int)floor(d_rate);
+    d_rate_i = (int)std::floor(d_rate);
     d_rate_f = d_rate - (float)d_rate_i;
-    d_filtnum = (int)floor(d_k);
+    d_filtnum = (int)std::floor(d_k);
 
     d_filters = std::vector<kernel::fir_filter_fff*>(d_nfilters);
     d_diff_filters = std::vector<kernel::fir_filter_fff*>(d_nfilters);
@@ -320,6 +320,7 @@ std::vector<std::vector<float>> pfb_clock_sync_fff_impl::diff_taps() const
 std::vector<float> pfb_clock_sync_fff_impl::channel_taps(int channel) const
 {
     std::vector<float> taps;
+    taps.reserve(d_taps_per_filter);
     for (int i = 0; i < d_taps_per_filter; i++) {
         taps.push_back(d_taps[channel][i]);
     }
@@ -329,6 +330,7 @@ std::vector<float> pfb_clock_sync_fff_impl::channel_taps(int channel) const
 std::vector<float> pfb_clock_sync_fff_impl::diff_channel_taps(int channel) const
 {
     std::vector<float> taps;
+    taps.reserve(d_taps_per_filter);
     for (int i = 0; i < d_taps_per_filter; i++) {
         taps.push_back(d_dtaps[channel][i]);
     }
@@ -364,7 +366,7 @@ int pfb_clock_sync_fff_impl::general_work(int noutput_items,
     // produce output as long as we can and there are enough input samples
     while (i < noutput_items) {
         while (d_out_idx < d_osps) {
-            d_filtnum = (int)floor(d_k);
+            d_filtnum = (int)std::floor(d_k);
 
             // Keep the current filter number in [0, d_nfilters]
             // If we've run beyond the last filter, wrap around and go to next sample

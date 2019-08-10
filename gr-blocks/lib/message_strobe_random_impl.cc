@@ -34,6 +34,7 @@
 #include <cstdio>
 #include <iostream>
 #include <stdexcept>
+#include <utility>
 
 namespace gr {
 namespace blocks {
@@ -45,7 +46,7 @@ message_strobe_random::make(pmt::pmt_t msg,
                             float std_ms)
 {
     return gnuradio::get_initial_sptr(
-        new message_strobe_random_impl(msg, dist, mean_ms, std_ms));
+        new message_strobe_random_impl(std::move(msg), dist, mean_ms, std_ms));
 }
 
 
@@ -61,7 +62,7 @@ message_strobe_random_impl::message_strobe_random_impl(
       d_mean_ms(mean_ms),
       d_std_ms(std_ms),
       d_dist(dist),
-      d_msg(msg),
+      d_msg(std::move(msg)),
       d_rng(),
       d_port(pmt::mp("strobe"))
 {
