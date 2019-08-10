@@ -175,7 +175,7 @@ class ModToolRename(ModTool):
         if not os.path.isfile(filename):
             return False
         else:
-            logger.info("In '{}' renaming occurences of '{}' to '{}'".format(filename, old, new))
+            logger.info("In '{}' renaming occurrences of '{}' to '{}'".format(filename, old, new))
 
         with open(filename) as f:
             cfile = f.read()
