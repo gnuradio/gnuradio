@@ -94,7 +94,7 @@ public:
 
     virtual void set_update_time(double t) = 0;
     virtual void set_title(const std::string& title) = 0;
-    virtual void set_line_label(unsigned int which, const std::string& lable) = 0;
+    virtual void set_line_label(unsigned int which, const std::string& label) = 0;
     virtual void set_line_color(unsigned int which, const std::string& color) = 0;
     virtual void set_line_width(unsigned int which, int width) = 0;
     virtual void set_line_style(unsigned int which, Qt::PenStyle style) = 0;

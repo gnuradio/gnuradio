@@ -45,7 +45,7 @@ namespace qtgui {
  * This is a QT-based graphical sink the takes set of a floating
  * point streams and plots the PSD. Each signal is plotted with a
  * different color, and the \a set_title and \a set_color
- * functions can be used to change the lable and color for a given
+ * functions can be used to change the label and color for a given
  * input number.
  *
  * The sink supports plotting streaming float data or
