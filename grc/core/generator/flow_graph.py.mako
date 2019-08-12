@@ -209,13 +209,13 @@ gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}])\
 ##########################################################
 % if generate_options == 'bokeh_gui':
         if self.widget_lst:
-            input_t = bokehgui.BokehLayout.widgetbox(self.widget_lst)
-            widgetbox = bokehgui.BokehLayout.WidgetLayout(input_t)
+            input_t = bokehgui.bokeh_layout.widgetbox(self.widget_lst)
+            widgetbox = bokehgui.bokeh_layout.WidgetLayout(input_t)
             widgetbox.set_layout(*(${flow_graph.get_option('placement')}))
             list_obj = [widgetbox] + self.plot_lst
         else:
             list_obj = self.plot_lst
-        layout_t = bokehgui.BokehLayout.create_layout(list_obj, "${flow_graph.get_option('sizing_mode')}")
+        layout_t = bokehgui.bokeh_layout.create_layout(list_obj, "${flow_graph.get_option('sizing_mode')}")
         self.doc.add_root(layout_t)
 % endif
 
