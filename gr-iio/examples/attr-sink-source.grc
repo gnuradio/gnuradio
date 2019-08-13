@@ -1,0 +1,310 @@
+options:
+  parameters:
+    author: Travis Collins <travis.collins@analog.com>
+    category: '[GRC Hier Blocks]'
+    copyright: Analog Devices, Inc.
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: attribute_sink_source
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    title: Attribute Sink Source Example
+  states:
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: rf_bandwidth_range
+  id: variable_qtgui_range
+  parameters:
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: int
+    start: '200000'
+    step: '100000'
+    stop: '1000000'
+    value: '300000'
+    widget: counter_slider
+  states:
+    coordinate: [418, 12]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: variable
+  parameters:
+    value: '2084000'
+  states:
+    coordinate: [184, 12]
+    rotation: 0
+    state: enabled
+- name: uri
+  id: variable
+  parameters:
+    value: '''ip:192.168.2.1'''
+  states:
+    coordinate: [284, 12]
+    rotation: 0
+    state: enabled
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters: {}
+  states:
+    coordinate: [976, 71]
+    rotation: 0
+    state: true
+- name: iio_attr_sink_0
+  id: iio_attr_sink
+  parameters:
+    attr_type: '0'
+    channel: voltage0
+    device: ad9361-phy
+    output: 'False'
+    required_enable: 'False'
+    uri: uri
+  states:
+    coordinate: [920, 202]
+    rotation: 0
+    state: enabled
+- name: iio_attr_source_0
+  id: iio_attr_source
+  parameters:
+    address: int("0x123",0)
+    attr_type: '0'
+    attribute: hardwaregain
+    channel: voltage0
+    device: ad9361-phy
+    output: 'False'
+    required_enable: 'False'
+    samples_per_update: '1024'
+    type: '1'
+    update_interval_ms: '1'
+    uri: uri
+  states:
+    coordinate: [620, 323]
+    rotation: 0
+    state: true
+- name: iio_attr_source_1
+  id: iio_attr_source
+  parameters:
+    address: int("0x123",0)
+    attr_type: '0'
+    attribute: rf_bandwidth
+    channel: voltage0
+    device: ad9361-phy
+    output: 'False'
+    required_enable: 'False'
+    samples_per_update: '1024'
+    type: '1'
+    update_interval_ms: '1'
+    uri: uri
+  states:
+    coordinate: [617, 477]
+    rotation: 0
+    state: true
+- name: iio_attr_updater_0
+  id: iio_attr_updater
+  parameters:
+    attr: rf_bandwidth
+    update_interval_ms: '1000'
+    value: str(rf_bandwidth_range)
+  states:
+    coordinate: [521, 167]
+    rotation: 0
+    state: true
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: blue
+    color2: green
+    color3: black
+    color4: cyan
+    color5: magenta
+    color6: yellow
+    color7: dark red
+    color8: dark green
+    color9: Dark Blue
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'True'
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '1'
+    marker10: '1'
+    marker2: '1'
+    marker3: '1'
+    marker4: '1'
+    marker5: '1'
+    marker6: '1'
+    marker7: '1'
+    marker8: '1'
+    marker9: '1'
+    name: '""'
+    nconnections: '1'
+    size: '1024'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    coordinate: [926, 356]
+    rotation: 0
+    state: true
+- name: qtgui_time_sink_x_1
+  id: qtgui_time_sink_x
+  parameters:
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: blue
+    color2: green
+    color3: black
+    color4: cyan
+    color5: magenta
+    color6: yellow
+    color7: dark red
+    color8: dark green
+    color9: Dark Blue
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'True'
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '1'
+    marker10: '1'
+    marker2: '1'
+    marker3: '1'
+    marker4: '1'
+    marker5: '1'
+    marker6: '1'
+    marker7: '1'
+    marker8: '1'
+    marker9: '1'
+    name: '""'
+    nconnections: '1'
+    size: '1024'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    coordinate: [923, 510]
+    rotation: 0
+    state: true
+
+connections:
+- [iio_attr_source_0, '0', qtgui_time_sink_x_0, '0']
+- [iio_attr_source_1, '0', qtgui_time_sink_x_1, '0']
+- [iio_attr_updater_0, out, blocks_message_debug_0, print]
+- [iio_attr_updater_0, out, iio_attr_sink_0, attr]
+
+metadata:
+  file_format: 1

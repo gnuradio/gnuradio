@@ -1,0 +1,51 @@
+id: iio_device_source
+label: IIO Device Source
+flags: [ python ]
+
+parameters:
+-   id: uri
+    label: IIO context URI
+    dtype: string
+    default: 'local:'
+
+-   id: device
+    label: Device Name/ID
+    dtype: string
+
+-   id: device_phy
+    label: PHY Device Name/ID
+    dtype: string
+
+-   id: channels
+    label: Channels
+    dtype: raw
+    default: []
+
+-   id: buffer_size
+    label: Buffer size
+    dtype: int
+    default: 0x8000
+
+-   id: decimation
+    label: Decimation
+    dtype: int
+    default: 1
+
+-   id: params
+    label: Parameters
+    dtype: raw
+    default: []
+
+outputs:
+-   domain: stream
+    dtype: short
+    multiplicity: ${ len(channels) }
+-   domain: message
+    id: msg
+    optional: true
+
+templates:
+    imports: from gnuradio import iio
+    make: iio.device_source(${uri}, ${device}, ${channels}, ${device_phy}, ${params}, ${buffer_size}, ${decimation} - 1)
+
+file_format: 1

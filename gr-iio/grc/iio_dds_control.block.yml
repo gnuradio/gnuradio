@@ -1,0 +1,212 @@
+id: iio_dds_control
+label: DDS Control
+
+parameters:
+-   id: uri
+    label: IIO context URI
+    dtype: string
+    default: ip:analog
+
+-   id: enabled_dds1
+    label: Enabled DDSs (TX1)
+    category: TX1
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+
+-   id: freq_t1
+    label: Channel I Freq (Tone 1)
+    category: TX1
+    dtype: int
+    default: '100000'
+    hide: ${ ('none' if enabled_dds1 == 'True' else 'all') }
+
+-   id: phase_t1
+    label: Channel I Phase (Tone 1)
+    category: TX1
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds1 == 'True' else 'all') }
+
+-   id: scale_t1
+    label: Channel I Scale (Tone 1)
+    category: TX1
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds1 == 'True' else 'all') }
+
+-   id: freq_t2
+    label: Channel I Freq (Tone 2)
+    category: TX1
+    dtype: int
+    default: '100000'
+    hide: ${ ('none' if enabled_dds1 == 'True' else 'all') }
+
+-   id: phase_t2
+    label: Channel I Phase (Tone 2)
+    category: TX1
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds1 == 'True' else 'all') }
+
+-   id: scale_t2
+    label: Channel I Scale (Tone 2)
+    category: TX1
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds1 == 'True' else 'all') }
+
+-   id: freq_t1_q
+    label: Channel Q Freq (Tone 1)
+    category: TX1
+    dtype: int
+    default: '100000'
+    hide: ${ ('none' if enabled_dds1 == 'True' else 'all') }
+
+-   id: phase_t1_q
+    label: Channel Q Phase (Tone 1)
+    category: TX1
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds1 == 'True' else 'all') }
+
+-   id: scale_t1_q
+    label: Channel Q Scale (Tone 1)
+    category: TX1
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds1 == 'True' else 'all') }
+
+-   id: freq_t2_q
+    label: Channel Q Freq (Tone 2)
+    category: TX1
+    dtype: int
+    default: '100000'
+    hide: ${ ('none' if enabled_dds1 == 'True' else 'all') }
+
+-   id: phase_t2_q
+    label: Channel Q Phase (Tone 2)
+    category: TX1
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds1 == 'True' else 'all') }
+
+-   id: scale_t2_q
+    label: Channel Q Scale (Tone 2)
+    category: TX1
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds1 == 'True' else 'all') }
+
+-   id: enabled_dds2
+    label: Enabled DDSs (TX2)
+    category: TX2
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+-   id: freq_t1_b
+    label: Channel I Freq (Tone 1)
+    category: TX2
+    dtype: int
+    default: '100000'
+    hide: ${ ('none' if enabled_dds2 == 'True' else 'all') }
+
+-   id: phase_t1_b
+    label: Channel I Phase (Tone 1)
+    category: TX2
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds2 == 'True' else 'all') }
+
+-   id: scale_t1_b
+    label: Channel I Scale (Tone 1)
+    category: TX2
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds2 == 'True' else 'all') }
+
+-   id: freq_t2_b
+    label: Channel I Freq (Tone 2)
+    category: TX2
+    dtype: int
+    default: '100000'
+    hide: ${ ('none' if enabled_dds2 == 'True' else 'all') }
+
+-   id: phase_t2_b
+    label: Channel I Phase (Tone 2)
+    category: TX2
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds2 == 'True' else 'all') }
+
+-   id: scale_t2_b
+    label: Channel I Scale (Tone 2)
+    category: TX2
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds2 == 'True' else 'all') }
+
+-   id: freq_t1_b_q
+    label: Channel Q Freq (Tone 1)
+    category: TX2
+    dtype: int
+    default: '100000'
+    hide: ${ ('none' if enabled_dds2 == 'True' else 'all') }
+
+-   id: phase_t1_b_q
+    label: Channel Q Phase (Tone 1)
+    category: TX2
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds2 == 'True' else 'all') }
+
+-   id: scale_t1_b_q
+    label: Channel Q Scale (Tone 1)
+    category: TX2
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds2 == 'True' else 'all') }
+
+-   id: freq_t2_b_q
+    label: Channel Q Freq (Tone 2)
+    category: TX2
+    dtype: int
+    default: '100000'
+    hide: ${ ('none' if enabled_dds2 == 'True' else 'all') }
+
+-   id: phase_t2_b_q
+    label: Channel Q Phase (Tone 2)
+    category: TX2
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds2 == 'True' else 'all') }
+
+-   id: scale_t2_b_q
+    label: Channel Q Scale (Tone 2)
+    category: TX2
+    dtype: float
+    default: '0'
+    hide: ${ ('none' if enabled_dds2 == 'True' else 'all') }
+
+templates:
+    imports: from gnuradio import iio
+    make: |-
+        iio.dds_control(${uri}, [int(${enabled_dds1}),int(${enabled_dds2})],\
+             [${freq_t1}, ${freq_t2}, ${freq_t1_q}, ${freq_t2_q},   ${freq_t1_b}, ${freq_t2_b}, ${freq_t1_b_q}, ${freq_t2_b_q}], \
+             [${phase_t1},${phase_t1},${phase_t1_q},${phase_t1_q},  ${phase_t1_b},${phase_t2_b},${phase_t1_b_q},${phase_t2_b_q}], \
+             [${scale_t1},${scale_t2},${scale_t1_q},${scale_t2_q},  ${scale_t1_b},${scale_t2_b},${scale_t1_b_q},${scale_t2_b_q}])
+    callbacks:
+    - "set_dds_confg([${freq_t1}, ${freq_t2}, ${freq_t1_q}, ${freq_t2_q},   ${freq_t1_b},\
+        \ ${freq_t2_b}, ${freq_t1_b_q}, ${freq_t2_b_q}], \\\n    [${phase_t1},${phase_t1},${phase_t1_q},${phase_t1_q},\
+        \  ${phase_t1_b},${phase_t2_b},${phase_t1_b_q},${phase_t2_b_q}], \\\n    [${scale_t1},${scale_t2},${scale_t1_q},${scale_t2_q},\
+        \  ${scale_t1_b},${scale_t2_b},${scale_t1_b_q},${scale_t2_b_q}])"
+
+documentation: |-
+    Transmitter blocks cannot be run simultaneously with this block for the same device
+
+    DDS units and ranges:
+     - Frequency: [0 samp_rate/2] Hz
+     - Phase: [0 360] Degress
+     - Scale: [0 1] Fullscale=1
+
+file_format: 1

@@ -1,0 +1,161 @@
+id: iio_fmcomms5_sink
+label: FMComms5 Sink
+flags: [ python ]
+
+parameters:
+-   id: uri
+    label: IIO context URI
+    dtype: string
+    default: 'local:'
+
+-   id: frequency1
+    label: LO Frequency (RX1/RX2)
+    dtype: int
+    default: 2400000000
+
+-   id: frequency2
+    label: LO Frequency (RX3/RX4)
+    dtype: int
+    default: 2400000000
+
+-   id: samplerate
+    label: Sample Rate
+    dtype: int
+    default: 2084000
+
+-   id: bandwidth
+    label: RF Bandwidth
+    dtype: int
+    default: 20000000
+
+-   id: buffer_size
+    label: Buffer size
+    dtype: int
+    default: 0x8000
+
+-   id: tx1_en
+    label: TX1 Enabled
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: tx2_en
+    label: TX2 Enabled
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: tx3_en
+    label: TX3 Enabled
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: tx4_en
+    label: TX4 Enabled
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: cyclic
+    label: Cyclic
+    dtype: bool
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: rf_port_select
+    label: RF Port Select
+    dtype: enum
+    default: "'A'"
+    options: ["'A'", "'B'"]
+    option_labels: ['A', 'B']
+
+-   id: attenuation1
+    label: Attenuation TX1 (dB)
+    dtype: float
+    default: 10.0
+    hide: ${ ('part' if tx1_en else 'all') }
+
+-   id: attenuation2
+    label: Attenuation TX2 (dB)
+    dtype: float
+    default: 10.0
+    hide: ${ ('part' if tx2_en else 'all') }
+
+-   id: attenuation3
+    label: Attenuation TX3 (dB)
+    dtype: float
+    default: 10.0
+    hide: ${ ('part' if tx3_en else 'all') }
+
+-   id: attenuation4
+    label: Attenuation TX4 (dB)
+    dtype: float
+    default: 10.0
+    hide: ${ ('part' if tx4_en else 'all') }
+
+-   id: filter_source
+    category: Filter
+    label: Filter Configuration
+    dtype: enum
+    default: "'Auto'"
+    options: ["'Off'", "'Auto'", "'File'", "'Design'"]
+    option_labels: ['Off', 'Auto', 'File', 'Design']
+
+-   id: filter
+    category: Filter
+    label: Filter
+    dtype: file_open
+    default: ''
+    hide: ${ ('none' if filter_source == "'File'" else 'all') }
+
+-   id: fpass
+    category: Filter
+    label: Fpass (Hz)
+    dtype: float
+    default: samp_rate/4
+    hide: ${ ('none' if filter_source == "'Design'" else 'all') }
+
+-   id: fstop
+    category: Filter
+    label: Fstop (Hz)
+    dtype: float
+    default: samp_rate/3
+    hide: ${ ('none' if filter_source == "'Design'" else 'all') }
+
+-   id: bandwidth
+    category: Filter
+    label: RF Bandwidth (Hz)
+    dtype: int
+    default: 20000000
+    hide: ${ ('all' if filter_source == "'File'" else 'none') }
+
+inputs:
+-   domain: stream
+    dtype: complex
+    multiplicity: ${ sum([tx1_en, tx2_en, tx3_en, tx4_en]) }
+
+asserts:
+- ${ sum([tx1_en, tx2_en, tx3_en, tx4_en]) > 0 }
+- ${ ((samplerate>=2084000) or (filter_source!="'Off'")) }
+- ${ ((filter_source!="'File'") or (len(filter)>0)) }
+- ${ ((samplerate<=61440000) and (samplerate>=520833)) }
+- ${ ((bandwidth<=52000000) and (bandwidth>=200000)) }
+- ${ ((frequency1<=6000000000) and (frequency1>=47000000)) }
+- ${ ((frequency2<=6000000000) and (frequency2>=47000000)) }
+- ${ ((filter_source!="'Design'")  or (fpass<=samplerate)) }
+- ${ ((filter_source!="'Design'")  or (fstop<=samplerate)) }
+- ${ ((filter_source!="'Design'")  or (fstop>fpass)) }
+
+templates:
+    imports: from gnuradio import iio
+    make: iio.fmcomms5_sink_f32c(${uri}, ${frequency1}, ${frequency2}, ${samplerate}, ${bandwidth}, ${tx1_en}, ${tx2_en}, ${tx3_en}, ${tx4_en}, ${buffer_size}, ${cyclic}, ${rf_port_select}, ${attenuation1}, ${attenuation2}, ${attenuation3}, ${attenuation4}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
+    callbacks:
+    - set_params(${frequency1}, ${frequency2}, ${samplerate}, ${bandwidth}, ${tx1_en}, ${tx2_en}, ${tx3_en}, ${tx4_en}, ${buffer_size}, ${cyclic}, ${rf_port_select}, ${attenuation1}, ${attenuation2}, ${attenuation3}, ${attenuation4}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
+
+file_format: 1

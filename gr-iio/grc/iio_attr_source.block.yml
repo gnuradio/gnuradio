@@ -1,0 +1,85 @@
+id: iio_attr_source
+label: IIO Attribute Source
+flags: [ python ]
+
+parameters:
+-   id: uri
+    label: IIO context URI
+    dtype: string
+    default: 'local:'
+
+-   id: device
+    label: Device Name/ID
+    dtype: string
+
+-   id: attr_type
+    label: Attribute Type
+    dtype: enum
+    default: "'Channel'"
+    options: ['0', '1', '2', '3']
+    option_labels: ['Channel', 'Device', 'Device Debug', 'Register']
+
+-   id: output
+    label: Input/Output
+    dtype: enum
+    default: "'Input'"
+    options: ['False', 'True']
+    option_labels: ['Input', 'Output']
+    hide: ${ ('part' if (attr_type == '0') else 'all') }
+
+-   id: channel
+    label: Channel Name
+    dtype: string
+    default: ""
+    hide: ${ ('none' if attr_type == '0' else 'all') }
+
+-   id: attribute
+    label: Attribute Name
+    dtype: string
+    default: ""
+    hide: ${ ('none' if attr_type != '3' else 'all') }
+
+-   id: address
+    label: Register Address
+    dtype: int
+    default: int("0x123",0)
+    hide: ${ ('none' if attr_type == '3' else 'all') }
+
+-   id: required_enable
+    label: Required Enable
+    dtype: bool
+    default: False
+    options: ['False', 'True']
+    hide: ${ ('part' if (attr_type == '3') else 'all') }
+
+-   id: type
+    label: Data Type
+    dtype: enum
+    default: "'Input'"
+    options: ['0', '1', '2', '3', '4']
+    option_labels: ['Double', 'Float (casted from double)', 'Long Long', 'Long (casted from long long)', 'Bool']
+    option_attributes:
+      fcn: [f64, f32, s64, s32, s8]
+    hide: ${ ('part' if (attr_type != '3') else 'all') }
+
+-   id: update_interval_ms
+    label: Update Interval (ms)
+    dtype: int
+    default: 1
+
+-   id: samples_per_update
+    label: Samples Per Update
+    dtype: int
+    default: 1024
+
+outputs:
+-   domain: stream
+    dtype: ${ type.fcn }
+
+templates:
+    imports: from gnuradio import iio
+    make: iio.attr_source(${uri}, ${device}, ${channel}, ${attribute}, ${update_interval_ms}, ${samples_per_update}, ${type}, ${attr_type}, ${output}, ${address}, ${required_enable})
+
+documentation: https://wiki.analog.com/resources/tools-software/linux-software/gnuradio
+
+file_format: 1
