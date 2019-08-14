@@ -310,7 +310,11 @@ protected:
 
     bool has_msg_handler(pmt::pmt_t which_port)
     {
-        return (d_msg_handlers_feval.find(which_port) != d_msg_handlers_feval.end());
+        if (d_msg_handlers_feval.find(which_port) != d_msg_handlers_feval.end()) {
+            return true;
+        } else {
+            return gr::basic_block::has_msg_handler(which_port);
+        }
     }
 
     void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg)
