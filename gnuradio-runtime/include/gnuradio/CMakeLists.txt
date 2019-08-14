@@ -1,4 +1,4 @@
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -72,6 +72,7 @@ install(FILES
   types.h
   sys_pri.h
   unittests.h
+  rpc_shared_ptr_selection.h
   rpccallbackregister_base.h
   rpcmanager_base.h
   rpcmanager.h

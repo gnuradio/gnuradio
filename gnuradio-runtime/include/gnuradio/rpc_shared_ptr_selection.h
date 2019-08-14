@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012,2019 Free Software Foundation, Inc.
+ * Copyright 2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,27 +20,25 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef RPCMANAGER_BASE_H
-#define RPCMANAGER_BASE_H
+#ifndef RPC_SHARED_PTR_SELECTION_H
+#define RPC_SHARED_PTR_SELECTION_H
 
-#include <gnuradio/rpc_shared_ptr_selection.h>
+// select a "shared_ptr" type to use: std:: or boost:: . The selection
+// will happen in gnuradio-runtime/lib/controlport/CMakeLists.txt .
+// CTRLPORT_USE_STD_SHARED_PTR will be defined here to 0 or 1.
 
-class rpcserver_booter_base;
-//class rpcserver_booter_aggregator;
+#if CTRLPORT_USE_STD_SHARED_PTR
 
-class rpcmanager_base
-{
- public:
-  typedef GR_RPC_SHARED_PTR<rpcserver_booter_base> rpcserver_booter_base_sptr;
+// c++11 std::shared_ptr
+#include <memory>
+#define GR_RPC_SHARED_PTR std::shared_ptr
 
-  rpcmanager_base() {;}
-  ~rpcmanager_base() {;}
+#else /* !CTRLPORT_USE_STD_SHARED_PTR */
 
-  //static rpcserver_booter_base* get();
+// boost::shared_ptr
+#include <gnuradio/types.h>
+#define GR_RPC_SHARED_PTR boost::shared_ptr
 
-  //static void register_booter(rpcserver_booter_base_sptr booter);
+#endif /* CTRLPORT_USE_STD_SHARED_PTR */
 
-private:
-};
-
-#endif /* RPCMANAGER_BASE_H */
+#endif /* RPC_SHARED_PTR_SELECTION_H */
