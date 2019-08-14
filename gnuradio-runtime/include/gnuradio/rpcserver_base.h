@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -23,6 +23,7 @@
 #ifndef RPCSERVER_BASE_H
 #define RPCSERVER_BASE_H
 
+#include <gnuradio/rpc_shared_ptr_selection.h>
 #include <gnuradio/rpccallbackregister_base.h>
 
 class rpcserver_base : public virtual callbackregister_base
@@ -45,7 +46,7 @@ public:
 
     virtual void setCurPrivLevel(const priv_lvl_t priv) { cur_priv = priv; }
 
-    typedef boost::shared_ptr<rpcserver_base> rpcserver_base_sptr;
+    typedef GR_RPC_SHARED_PTR<rpcserver_base> rpcserver_base_sptr;
 
 protected:
     priv_lvl_t cur_priv;
