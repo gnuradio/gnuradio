@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,9 +24,9 @@
 #define RPCSERVER_BOOTER_AGGREGATOR
 
 #include <gnuradio/api.h>
+#include <gnuradio/rpc_shared_ptr_selection.h>
 #include <gnuradio/rpcserver_aggregator.h>
 #include <gnuradio/rpcserver_booter_base.h>
-#include <boost/shared_ptr.hpp>
 #include <string>
 
 class rpcserver_server;
@@ -49,7 +49,7 @@ protected:
 
 private:
     std::string d_type;
-    boost::shared_ptr<rpcserver_aggregator> server;
+    GR_RPC_SHARED_PTR<rpcserver_aggregator> server;
 };
 
 #endif /* RPCSERVER_BOOTER_AGGREGATOR */
