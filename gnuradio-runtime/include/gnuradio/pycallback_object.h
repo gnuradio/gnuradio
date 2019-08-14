@@ -161,7 +161,11 @@ private:
 template <>
 std::string pycallback_object<std::string>::pyCast(PyObject* obj)
 {
+#if PY_MAJOR_VERSION >= 3
+    return std::string(PyUnicode_AsUTF8(obj));
+#else
     return std::string(PyString_AsString(obj));
+#endif
 }
 
 template <>
