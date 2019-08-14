@@ -238,7 +238,7 @@ bool usrp_block_impl::_unpack_chan_command(std::string& command,
         } else {
             return false;
         }
-    } catch (pmt::wrong_type w) {
+    } catch (pmt::wrong_type& w) {
         return false;
     }
     return true;
