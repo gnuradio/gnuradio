@@ -24,9 +24,9 @@
 #define RPCSERVER_BOOTER_AGGREGATOR
 
 #include <gnuradio/api.h>
+#include <gnuradio/rpc_shared_ptr_selection.h>
 #include <gnuradio/rpcserver_aggregator.h>
 #include <gnuradio/rpcserver_booter_base.h>
-#include <boost/shared_ptr.hpp>
 #include <string>
 
 class rpcserver_server;
@@ -49,7 +49,7 @@ protected:
 
 private:
     std::string d_type;
-    boost::shared_ptr<rpcserver_aggregator> server;
+    gr::rpc_sptr<rpcserver_aggregator>::t server;
 };
 
 #endif /* RPCSERVER_BOOTER_AGGREGATOR */

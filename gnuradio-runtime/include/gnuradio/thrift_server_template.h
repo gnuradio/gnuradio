@@ -25,6 +25,7 @@
 
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
+#include <gnuradio/rpc_shared_ptr_selection.h>
 #include <gnuradio/thrift_application_base.h>
 #include <iostream>
 
@@ -50,11 +51,12 @@ protected:
     friend class thrift_application_base<TserverBase, TImplClass>;
 
 private:
-    boost::shared_ptr<TserverClass> d_handler;
-    boost::shared_ptr<thrift::TProcessor> d_processor;
-    boost::shared_ptr<thrift::transport::TServerTransport> d_serverTransport;
-    boost::shared_ptr<thrift::transport::TTransportFactory> d_transportFactory;
-    boost::shared_ptr<thrift::protocol::TProtocolFactory> d_protocolFactory;
+    // typename necessary in C++11 for dependent types:
+    typename gr::rpc_sptr<TserverClass>::t d_handler;
+    gr::rpc_sptr<thrift::TProcessor>::t d_processor;
+    gr::rpc_sptr<thrift::transport::TServerTransport>::t d_serverTransport;
+    gr::rpc_sptr<thrift::transport::TTransportFactory>::t d_transportFactory;
+    gr::rpc_sptr<thrift::protocol::TProtocolFactory>::t d_protocolFactory;
     /**
      * Custom TransportFactory that allows you to override the default Thrift buffer size
      * of 512 bytes.
@@ -71,10 +73,10 @@ private:
 
         virtual ~TBufferedTransportFactory() {}
 
-        virtual boost::shared_ptr<thrift::transport::TTransport>
-        getTransport(boost::shared_ptr<thrift::transport::TTransport> trans)
+        virtual gr::rpc_sptr<thrift::transport::TTransport>::t
+        getTransport(gr::rpc_sptr<thrift::transport::TTransport>::t trans)
         {
-            return boost::shared_ptr<thrift::transport::TTransport>(
+            return gr::rpc_sptr<thrift::transport::TTransport>::t(
                 new thrift::transport::TBufferedTransport(trans, bufferSize));
         }
 
@@ -133,11 +135,11 @@ thrift_server_template<TserverBase, TserverClass, TImplClass>::thrift_server_tem
                 d_processor, d_serverTransport, d_transportFactory, d_protocolFactory));
     } else {
         // std::cout << "Thrift Multi-threaded server : " << d_nthreads << std::endl;
-        boost::shared_ptr<thrift::concurrency::ThreadManager> threadManager(
+        gr::rpc_sptr<thrift::concurrency::ThreadManager>::t threadManager(
             thrift::concurrency::ThreadManager::newSimpleThreadManager(nthreads));
 
         threadManager->threadFactory(
-            boost::shared_ptr<thrift::concurrency::PlatformThreadFactory>(
+            gr::rpc_sptr<thrift::concurrency::PlatformThreadFactory>::t(
                 new thrift::concurrency::PlatformThreadFactory()));
 
         threadManager->start();
