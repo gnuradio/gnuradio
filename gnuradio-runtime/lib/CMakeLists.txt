@@ -142,8 +142,36 @@ if(ENABLE_CTRLPORT_THRIFT)
 FIND_PACKAGE(THRIFT)
 
 if(THRIFT_FOUND)
+
 list(APPEND EXTRA_DEPS "THRIFT")
 MATH(EXPR CTRLPORT_BACKENDS "${CTRLPORT_BACKENDS} + 1")
+
+# Thrift was found! Make sure the selected c++ standard is
+# compatible: Thrift <= 0.10 requires using boost:shared_ptr, which
+# will work with any c++ standard. Thrift >= 0.11.0 requires using
+# std::shared_ptr, which requires c++11 or later.
+
+if(${THRIFT_VERSION} VERSION_GREATER_EQUAL 0.11.0)
+  if(CMAKE_CXX_STANDARD)
+    if(${CMAKE_CXX_STANDARD} VERSION_LESS 11)
+      message(WARNING "\nWarning: Thrift version is ${THRIFT_VERSION}, which requires C++11 for building. The current c++ standard to use is C++${CMAKE_CXX_STANDARD}, which will not work with this Thrift version. Trying to set CMake internally to use C++11 ...")
+      set(CMAKE_CXX_STANDARD 11)
+    endif()
+  else()
+    message(WARNING "\nWarning: Thrift version is ${THRIFT_VERSION}, which requires C++11 for building. The c++ standard to use is not currently set. Trying to set CMake internally to use C++11 ...")
+    set(CMAKE_CXX_STANDARD 11)
+  endif()
+endif()
+
+# Add a macro for whether to require using std::shared_ptr.
+# depends on the version of Thrift.
+if(${THRIFT_VERSION} VERSION_LESS_EQUAL 0.10.0)
+  # old version that uses boost::shared_ptr
+  add_definitions("-DCTRLPORT_USE_STD_SHARED_PTR=0")
+else()
+  # new version that uses c++11 std::shared_ptr
+  add_definitions("-DCTRLPORT_USE_STD_SHARED_PTR=1")
+endif()
 
 # Indicate thrift as an installed backend in the cmake summary.
 message(STATUS "Found and enabling Thrift backend to ControlPort")
@@ -184,6 +212,22 @@ install(
   FILES ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/thrift.conf.example
   DESTINATION ${GR_PKG_DOC_DIR}/config
 )
+
+else(THRIFT_FOUND)
+
+# building CTRLPORT, but not using Thrift. CTRLPORT does not require
+# std::shared_ptr, can use either std::shared_ptr or
+# boost::shared_ptr. If using c++11 or later, choose the former,
+# else choose the latter.
+if(CMAKE_CXX_STANDARD)
+  if(${CMAKE_CXX_STANDARD} VERSION_GREATER_EQUAL 11)
+    add_definitions("-DCTRLPORT_USE_STD_SHARED_PTR=1")
+  else()
+    add_definitions("-DCTRLPORT_USE_STD_SHARED_PTR=0")
+  endif()
+else()
+  add_definitions("-DCTRLPORT_USE_STD_SHARED_PTR=0")
+endif()
 
 endif(THRIFT_FOUND)
 endif(ENABLE_CTRLPORT_THRIFT)
