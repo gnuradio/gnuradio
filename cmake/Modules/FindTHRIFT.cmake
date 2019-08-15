@@ -91,3 +91,9 @@ if (THRIFT_FOUND AND NOT TARGET Thrift::thrift)
     INTERFACE_LINK_LIBRARIES "${THRIFT_LIBRARIES}"
     )
 endif()
+
+# set version to be useable by calling script
+
+IF(THRIFT_FOUND)
+  set(THRIFT_VERSION ${PC_THRIFT_VERSION} CACHE INTERNAL "Thrift Version" FORCE)
+ENDIF()

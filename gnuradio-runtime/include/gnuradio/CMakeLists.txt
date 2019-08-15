@@ -72,6 +72,7 @@ install(FILES
   tag_checker.h
   types.h
   unittests.h
+  rpc_shared_ptr_selection.h
   rpccallbackregister_base.h
   rpcmanager_base.h
   rpcmanager.h
