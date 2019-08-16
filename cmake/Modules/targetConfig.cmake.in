@@ -21,6 +21,6 @@ include(CMakeFindDependencyMacro)
 
 set(target_deps "@TARGET_DEPENDENCIES@")
 foreach(dep IN LISTS target_deps)
-    find_dependency(${dep})
+    find_package(${dep})
 endforeach()
 include("${CMAKE_CURRENT_LIST_DIR}/@TARGET@Targets.cmake")
