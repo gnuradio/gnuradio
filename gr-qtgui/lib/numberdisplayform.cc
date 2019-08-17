@@ -40,7 +40,7 @@ NumberDisplayForm::NumberDisplayForm(int nplots, gr::qtgui::graph_t type, QWidge
         d_min.push_back(+1e32);
         d_max.push_back(-1e32);
         d_label.push_back(new QLabel(QString("Data %1").arg(i)));
-        d_unit.push_back("");
+        d_unit.emplace_back("");
         d_factor.push_back(1);
         d_text_box.push_back(new QLabel(QString("0")));
 
