@@ -157,7 +157,7 @@ logger_ptr logger_get_logger(std::string name)
 
 bool logger_load_config(const std::string& config_filename)
 {
-    if (config_filename.size() != 0) {
+    if (!config_filename.empty()) {
         try {
             log4cpp::PropertyConfigurator::configure(config_filename);
             return true;
@@ -343,7 +343,7 @@ bool configure_default_loggers(gr::logger_ptr& l,
     GR_LOG_GETLOGGER(LOG, "gr_log." + name);
     GR_LOG_SET_LEVEL(LOG, log_level);
 
-    if (log_file.size() > 0) {
+    if (!log_file.empty()) {
         if (log_file == "stdout") {
             GR_LOG_SET_CONSOLE_APPENDER(LOG, "stdout", "gr::log :%p: %c{1} - %m%n");
         } else if (log_file == "stderr") {
@@ -356,7 +356,7 @@ bool configure_default_loggers(gr::logger_ptr& l,
 
     GR_LOG_GETLOGGER(DLOG, "gr_log_debug." + name);
     GR_LOG_SET_LEVEL(DLOG, debug_level);
-    if (debug_file.size() > 0) {
+    if (!debug_file.empty()) {
         if (debug_file == "stdout") {
             GR_LOG_SET_CONSOLE_APPENDER(DLOG, "stdout", "gr::debug :%p: %c{1} - %m%n");
         } else if (debug_file == "stderr") {
@@ -376,7 +376,7 @@ bool update_logger_alias(const std::string& name, const std::string& alias)
     std::string debug_file = p->get_string("LOG", "debug_file", "");
 
     GR_LOG_GETLOGGER(LOG, "gr_log." + name);
-    if (log_file.size() > 0) {
+    if (!log_file.empty()) {
         if (log_file == "stdout") {
             boost::format str("gr::log :%%p: %1% - %%m%%n");
             GR_LOG_SET_CONSOLE_APPENDER(LOG, "stdout", boost::str(str % alias));

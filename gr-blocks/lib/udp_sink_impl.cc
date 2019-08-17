@@ -70,7 +70,7 @@ void udp_sink_impl::connect(const std::string& host, int port)
         disconnect();
 
     std::string s_port = (boost::format("%d") % port).str();
-    if (host.size() > 0) {
+    if (!host.empty()) {
         boost::asio::ip::udp::resolver resolver(d_io_service);
         boost::asio::ip::udp::resolver::query query(
             host, s_port, boost::asio::ip::resolver_query_base::passive);

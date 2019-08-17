@@ -62,7 +62,7 @@ int fft_vfc_fftw::nthreads() const { return d_fft->nthreads(); }
 
 bool fft_vfc_fftw::set_window(const std::vector<float>& window)
 {
-    if (window.size() == 0 || window.size() == d_fft_size) {
+    if (window.empty() || window.size() == d_fft_size) {
         d_window = window;
         return true;
     } else
@@ -83,7 +83,7 @@ int fft_vfc_fftw::work(int noutput_items,
     while (count++ < noutput_items) {
 
         // copy input into optimally aligned buffer
-        if (d_window.size()) {
+        if (!d_window.empty()) {
             gr_complex* dst = d_fft->get_inbuf();
             for (unsigned int i = 0; i < d_fft_size; i++) // apply window
                 dst[i] = in[i] * d_window[i];

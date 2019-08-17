@@ -114,7 +114,7 @@ int hdlc_framer_pb_impl::work(int noutput_items,
     // partial packets., but if we're to preserve tag boundaries
     // this is much, much simpler.
     int oidx = 0;
-    while (d_leftovers.size() > 0) {
+    while (!d_leftovers.empty()) {
         if ((size_t)noutput_items < (oidx + d_leftovers[0].size()))
             return oidx;
         memcpy(out + oidx, &d_leftovers[0][0], d_leftovers[0].size());

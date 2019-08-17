@@ -168,7 +168,7 @@ int fft_filter_fff::filter(int nitems, const float* input, float* output)
         dec_ctr = (j - d_nsamples);
 
         // stash the tail
-        if (d_tail.size()) {
+        if (!d_tail.empty()) {
             memcpy(&d_tail[0],
                    d_invfft->get_outbuf() + d_nsamples,
                    tailsize() * sizeof(float));
@@ -315,7 +315,7 @@ int fft_filter_ccc::filter(int nitems, const gr_complex* input, gr_complex* outp
         dec_ctr = (j - d_nsamples);
 
         // stash the tail
-        if (d_tail.size()) {
+        if (!d_tail.empty()) {
             memcpy(&d_tail[0],
                    d_invfft->get_outbuf() + d_nsamples,
                    tailsize() * sizeof(gr_complex));
@@ -464,7 +464,7 @@ int fft_filter_ccf::filter(int nitems, const gr_complex* input, gr_complex* outp
         dec_ctr = (j - d_nsamples);
 
         // stash the tail
-        if (d_tail.size()) {
+        if (!d_tail.empty()) {
             memcpy(&d_tail[0],
                    d_invfft->get_outbuf() + d_nsamples,
                    tailsize() * sizeof(gr_complex));

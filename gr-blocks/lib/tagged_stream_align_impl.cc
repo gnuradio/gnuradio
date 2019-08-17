@@ -72,7 +72,7 @@ int tagged_stream_align_impl::general_work(int noutput_items,
     } else {
         get_tags_in_range(
             tags, 0, nitems_read(0), nitems_read(0) + ninput_items[0], d_lengthtag);
-        if (tags.size() > 0) {
+        if (!tags.empty()) {
             d_have_sync = true;
             consume_each(tags[0].offset - nitems_read(0));
         } else {

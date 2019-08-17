@@ -64,7 +64,7 @@ void tag_gate_impl::set_propagation(bool propagate_tags)
 
 void tag_gate_impl::set_single_key(const std::string& single_key)
 {
-    if (single_key == "") {
+    if (single_key.empty()) {
         d_single_key = pmt::PMT_NIL;
         d_single_key_set = false;
     } else {

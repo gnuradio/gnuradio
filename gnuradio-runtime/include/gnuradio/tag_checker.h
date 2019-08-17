@@ -41,7 +41,7 @@ public:
     {
         d_tags = tags;
         std::sort(d_tags.begin(), d_tags.end(), &gr::tag_t::offset_compare);
-        if (d_tags.size() > 0) {
+        if (!d_tags.empty()) {
             d_has_next_tag = true;
             d_next_tag = tags[0];
         }

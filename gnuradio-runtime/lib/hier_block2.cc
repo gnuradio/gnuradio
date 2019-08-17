@@ -171,9 +171,10 @@ int hier_block2::max_output_buffer(size_t port)
 void hier_block2::set_max_output_buffer(int max_output_buffer)
 {
     if (output_signature()->max_streams() > 0) {
-        if (d_detail->d_max_output_buffer.size() == 0)
+        if (d_detail->d_max_output_buffer.empty()) {
             throw std::length_error("hier_block2::set_max_output_buffer(int): out_sig "
                                     "greater than zero, buff_vect isn't");
+        }
         for (int idx = 0; idx < output_signature()->max_streams(); idx++) {
             d_detail->d_max_output_buffer[idx] = max_output_buffer;
         }
@@ -182,10 +183,10 @@ void hier_block2::set_max_output_buffer(int max_output_buffer)
 
 void hier_block2::set_max_output_buffer(size_t port, int max_output_buffer)
 {
-    if (port >= d_detail->d_max_output_buffer.size())
+    if (port >= d_detail->d_max_output_buffer.size()) {
         throw std::invalid_argument(
             "hier_block2::set_max_output_buffer(size_t,int): port out of range.");
-    else {
+    } else {
         d_detail->d_max_output_buffer[port] = max_output_buffer;
     }
 }
@@ -201,9 +202,10 @@ int hier_block2::min_output_buffer(size_t port)
 void hier_block2::set_min_output_buffer(int min_output_buffer)
 {
     if (output_signature()->max_streams() > 0) {
-        if (d_detail->d_min_output_buffer.size() == 0)
+        if (d_detail->d_min_output_buffer.empty()) {
             throw std::length_error("hier_block2::set_min_output_buffer(int): out_sig "
                                     "greater than zero, buff_vect isn't");
+        }
         for (int idx = 0; idx < output_signature()->max_streams(); idx++) {
             d_detail->d_min_output_buffer[idx] = min_output_buffer;
         }
@@ -222,8 +224,9 @@ void hier_block2::set_min_output_buffer(size_t port, int min_output_buffer)
 
 bool hier_block2::all_min_output_buffer_p(void)
 {
-    if (!d_detail->d_min_output_buffer.size())
+    if (d_detail->d_min_output_buffer.empty()) {
         return false;
+    }
     for (size_t idx = 1; idx < d_detail->d_min_output_buffer.size(); idx++) {
         if (d_detail->d_min_output_buffer[0] != d_detail->d_min_output_buffer[idx])
             return false;
@@ -232,7 +235,7 @@ bool hier_block2::all_min_output_buffer_p(void)
 }
 bool hier_block2::all_max_output_buffer_p(void)
 {
-    if (!d_detail->d_max_output_buffer.size())
+    if (d_detail->d_max_output_buffer.empty())
         return false;
     for (size_t idx = 1; idx < d_detail->d_max_output_buffer.size(); idx++) {
         if (d_detail->d_max_output_buffer[0] != d_detail->d_max_output_buffer[idx])

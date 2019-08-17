@@ -328,7 +328,7 @@ std::vector<basic_block_vector_t> flowgraph::partition()
     basic_block_vector_t blocks = calc_used_blocks();
     basic_block_vector_t graph;
 
-    while (blocks.size() > 0) {
+    while (!blocks.empty()) {
         graph = calc_reachable_blocks(blocks[0], blocks);
         assert(graph.size());
         result.push_back(topological_sort(graph));
@@ -432,7 +432,7 @@ basic_block_vector_t flowgraph::sort_sources_first(basic_block_vector_t& blocks)
 
 bool flowgraph::source_p(basic_block_sptr block)
 {
-    return (calc_upstream_edges(block).size() == 0);
+    return calc_upstream_edges(block).empty();
 }
 
 void flowgraph::topological_dfs_visit(basic_block_sptr block,

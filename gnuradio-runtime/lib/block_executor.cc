@@ -124,10 +124,11 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
             d->get_tags_in_range(
                 rtags, i, start_nitems_read[i], d->nitems_read(i), block_id);
 
-            if (rtags.size() == 0)
+            if (rtags.empty()) {
                 continue;
+            }
 
-            if (out_buf.size() == 0) {
+            if (out_buf.empty()) {
                 out_buf.reserve(d->noutputs());
                 for (int o = 0; o < d->noutputs(); o++)
                     out_buf.push_back(d->output(o));
@@ -176,8 +177,9 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
                 d->get_tags_in_range(
                     rtags, i, start_nitems_read[i], d->nitems_read(i), block_id);
 
-                if (rtags.size() == 0)
+                if (rtags.empty()) {
                     continue;
+                }
 
                 out_buf = d->output(i);
 

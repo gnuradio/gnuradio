@@ -288,7 +288,7 @@ void hier_block2_detail::disconnect(basic_block_sptr block)
         }
     }
 
-    if (edges.size() == 0) {
+    if (edges.empty()) {
         std::stringstream msg;
         msg << "cannot disconnect block " << block << ", not found";
         throw std::invalid_argument(msg.str());
@@ -784,7 +784,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
     // Now add the list of connected input blocks
     std::stringstream msg;
     for (unsigned int i = 0; i < d_inputs.size(); i++) {
-        if (d_inputs[i].size() == 0) {
+        if (d_inputs[i].empty()) {
             msg << "In hierarchical block " << d_owner->name() << ", input " << i
                 << " is not connected internally";
             throw std::runtime_error(msg.str());

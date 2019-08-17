@@ -212,7 +212,7 @@ typename multiply_matrix<T>::sptr
 multiply_matrix<T>::make(std::vector<std::vector<T>> A,
                          gr::block::tag_propagation_policy_t tag_propagation_policy)
 {
-    if (A.empty() || A[0].size() == 0) {
+    if (A.empty() || A[0].empty()) {
         throw std::invalid_argument("matrix A has invalid dimensions.");
     }
     return gnuradio::get_initial_sptr(

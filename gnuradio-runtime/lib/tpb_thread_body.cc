@@ -68,7 +68,7 @@ tpb_thread_body::tpb_thread_body(block_sptr block,
     GR_LOG_GETLOGGER(LOG, "gr_log.tpb_thread_body");
     GR_LOG_SET_LEVEL(LOG, log_level);
     GR_CONFIG_LOGGER(config_file);
-    if (log_file.size() > 0) {
+    if (!log_file.empty()) {
         if (log_file == "stdout") {
             GR_LOG_SET_CONSOLE_APPENDER(LOG, "stdout", "gr::log :%p: %c{1} - %m%n");
         } else if (log_file == "stderr") {
@@ -79,7 +79,7 @@ tpb_thread_body::tpb_thread_body(block_sptr block,
     }
 
     // Set thread affinity if it was set before fg was started.
-    if (block->processor_affinity().size() > 0) {
+    if (!block->processor_affinity().empty()) {
         gr::thread::thread_bind_to_processor(d->thread, block->processor_affinity());
     }
 

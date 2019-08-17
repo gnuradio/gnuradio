@@ -133,7 +133,7 @@ int msk_timing_recovery_cc_impl::general_work(int noutput_items,
 
     while (oidx < noutput_items && iidx < ninp) {
         // check to see if there's a tag to reset the timing estimate
-        if (tags.size() > 0) {
+        if (!tags.empty()) {
             int offset = tags[0].offset - nitems_read(0);
             if ((offset >= iidx) && (offset < (iidx + d_sps))) {
                 float center = (float)pmt::to_double(tags[0].value);
