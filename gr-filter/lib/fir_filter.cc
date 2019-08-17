@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010,2012,2018 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2012,2018,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -80,7 +80,7 @@ void fir_filter<IN_T, OUT_T, TAP_T>::set_taps(const std::vector<TAP_T>& taps)
     for (int i = 0; i < d_naligned; i++) {
         d_aligned_taps[i] =
             (TAP_T*)volk_malloc((d_ntaps + d_naligned - 1) * sizeof(TAP_T), d_align);
-        memset(d_aligned_taps[i], 0, sizeof(TAP_T) * (d_ntaps + d_naligned - 1));
+        std::fill_n(d_aligned_taps[i], d_ntaps + d_naligned - 1, 0);
         for (unsigned int j = 0; j < d_ntaps; j++)
             d_aligned_taps[i][i + j] = d_taps[j];
     }

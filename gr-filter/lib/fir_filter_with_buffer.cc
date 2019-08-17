@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010,2012 Free Software Foundation, Inc.
+ * Copyright 2010,2012,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -242,7 +242,7 @@ void fir_filter_with_buffer_ccc::set_taps(const std::vector<gr_complex>& taps)
     // allocated space.
     d_buffer_ptr = (gr_complex*)volk_malloc(
         (2 * (d_ntaps + d_naligned)) * sizeof(gr_complex), d_align);
-    memset(d_buffer_ptr, 0, 2 * (d_ntaps + d_naligned) * sizeof(gr_complex));
+    std::fill_n(d_buffer_ptr, 2 * (d_ntaps + d_naligned), 0);
     d_buffer = d_buffer_ptr + d_naligned;
 
     // Allocate aligned taps
@@ -250,7 +250,7 @@ void fir_filter_with_buffer_ccc::set_taps(const std::vector<gr_complex>& taps)
     for (int i = 0; i < d_naligned; i++) {
         d_aligned_taps[i] = (gr_complex*)volk_malloc(
             (d_ntaps + d_naligned - 1) * sizeof(gr_complex), d_align);
-        memset(d_aligned_taps[i], 0, sizeof(gr_complex) * (d_ntaps + d_naligned - 1));
+        std::fill_n(d_aligned_taps[i], d_ntaps + d_naligned - 1, 0);
         for (unsigned int j = 0; j < d_ntaps; j++)
             d_aligned_taps[i][i + j] = d_taps[j];
     }
@@ -386,7 +386,7 @@ void fir_filter_with_buffer_ccf::set_taps(const std::vector<float>& taps)
     // allocated space.
     d_buffer_ptr = (gr_complex*)volk_malloc(
         (2 * (d_ntaps + d_naligned)) * sizeof(gr_complex), d_align);
-    memset(d_buffer_ptr, 0, 2 * (d_ntaps + d_naligned) * sizeof(gr_complex));
+    std::fill_n(d_buffer_ptr, 2 * (d_ntaps + d_naligned), 0);
     d_buffer = d_buffer_ptr + d_naligned;
 
     // Allocate aligned taps
