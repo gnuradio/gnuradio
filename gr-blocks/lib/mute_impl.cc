@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010,2013,2018 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2013,2018,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -28,6 +28,7 @@
 #include "mute_impl.h"
 #include <gnuradio/io_signature.h>
 #include <string.h>
+#include <algorithm>
 
 namespace gr {
 namespace blocks {
@@ -66,7 +67,7 @@ int mute_impl<T>::work(int noutput_items,
     int size = noutput_items;
 
     if (d_mute) {
-        memset(optr, 0, noutput_items * sizeof(T));
+        std::fill_n(optr, noutput_items, 0);
     } else {
         while (size >= 8) {
             *optr++ = *iptr++;

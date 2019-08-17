@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2015,2018 Free Software Foundation, Inc.
+ * Copyright 2015,2018,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -28,6 +28,7 @@
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 #include <boost/format.hpp>
+#include <algorithm>
 
 namespace gr {
 namespace digital {
@@ -220,7 +221,7 @@ template <class T>
 void burst_shaper_impl<T>::write_padding(T*& dst, int& nwritten, int nspace)
 {
     int nprocess = std::min(d_limit - d_index, nspace);
-    std::memset(dst, 0x00, nprocess * sizeof(T));
+    std::fill_n(dst, nprocess, 0x00);
     dst += nprocess;
     nwritten += nprocess;
     d_index += nprocess;
