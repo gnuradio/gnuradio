@@ -232,11 +232,9 @@ void timing_error_detector::sync_reset()
     d_input_derivative.assign(d_error_depth, gr_complex(0.0f, 0.0f));
 
     if (d_constellation) {
-        std::deque<gr_complex>::iterator it;
-        d_decision.clear();
-        for (it = d_input.begin(); it != d_input.end(); ++it)
-            d_decision.push_back(gr_complex(0.0f, 0.0f));
-        // d_decision.push_back(slice(*it));
+        d_decision.assign(d_input.size(), gr_complex(0.0f, 0.0f));
+        // for (it = d_input.begin(); it != d_input.end(); ++it)
+        //   d_decision.push_back(slice(*it));
     }
 
     sync_reset_input_clock();

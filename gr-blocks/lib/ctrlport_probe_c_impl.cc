@@ -81,7 +81,7 @@ int ctrlport_probe_c_impl::work(int noutput_items,
 void ctrlport_probe_c_impl::setup_rpc()
 {
 #ifdef GR_CTRLPORT
-    d_rpc_vars.push_back(rpcbasic_sptr(
+    d_rpc_vars.emplace_back(
         new rpcbasic_register_get<ctrlport_probe_c, std::vector<std::complex<float>>>(
             alias(),
             d_id.c_str(),
@@ -92,7 +92,7 @@ void ctrlport_probe_c_impl::setup_rpc()
             "volts",
             d_desc.c_str(),
             RPC_PRIVLVL_MIN,
-            DISPXY | DISPOPTSCATTER)));
+            DISPXY | DISPOPTSCATTER));
 #endif /* GR_CTRLPORT */
 }
 
