@@ -137,7 +137,7 @@ void ctrlport_probe_psd_impl::setup_rpc()
 {
 #ifdef GR_CTRLPORT
     int len = static_cast<int>(d_len);
-    d_rpc_vars.push_back(rpcbasic_sptr(
+    d_rpc_vars.emplace_back(
         new rpcbasic_register_get<ctrlport_probe_psd, std::vector<std::complex<float>>>(
             alias(),
             d_id.c_str(),
@@ -148,9 +148,9 @@ void ctrlport_probe_psd_impl::setup_rpc()
             "dB",
             d_desc.c_str(),
             RPC_PRIVLVL_MIN,
-            DISPXY | DISPOPTSCATTER)));
+            DISPXY | DISPOPTSCATTER));
 
-    d_rpc_vars.push_back(rpcbasic_sptr(
+    d_rpc_vars.emplace_back(
         new rpcbasic_register_get<ctrlport_probe_psd, int>(alias(),
                                                            "length",
                                                            &ctrlport_probe_psd::length,
@@ -160,13 +160,13 @@ void ctrlport_probe_psd_impl::setup_rpc()
                                                            "samples",
                                                            "get vector length",
                                                            RPC_PRIVLVL_MIN,
-                                                           DISPNULL)));
+                                                           DISPNULL));
 
-//      d_rpc_vars.push_back(
-//        rpcbasic_sptr(new rpcbasic_register_set<ctrlport_probe_psd, int>(
+//      d_rpc_vars.emplace_back(
+//        new rpcbasic_register_set<ctrlport_probe_psd, int>(
 //          alias(), "length", &ctrlport_probe_psd::set_length,
 //          pmt::mp(1), pmt::mp(10*len), pmt::mp(len),
-//          "samples", "set vector length", RPC_PRIVLVL_MIN, DISPNULL)));
+//          "samples", "set vector length", RPC_PRIVLVL_MIN, DISPNULL));
 #endif /* GR_CTRLPORT */
 }
 
