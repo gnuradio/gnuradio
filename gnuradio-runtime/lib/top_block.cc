@@ -109,14 +109,14 @@ void top_block::setup_rpc()
         return;
 
     // Triggers
-    d_rpc_vars.push_back(rpcbasic_sptr(new rpcbasic_register_trigger<top_block>(
-        alias(), "stop", &top_block::stop, "Stop the flowgraph", RPC_PRIVLVL_MIN)));
+    d_rpc_vars.emplace_back(new rpcbasic_register_trigger<top_block>(
+        alias(), "stop", &top_block::stop, "Stop the flowgraph", RPC_PRIVLVL_MIN));
 
-    d_rpc_vars.push_back(rpcbasic_sptr(new rpcbasic_register_trigger<top_block>(
-        alias(), "lock", &top_block::lock, "Lock the flowgraph", RPC_PRIVLVL_MIN)));
+    d_rpc_vars.emplace_back(new rpcbasic_register_trigger<top_block>(
+        alias(), "lock", &top_block::lock, "Lock the flowgraph", RPC_PRIVLVL_MIN));
 
-    d_rpc_vars.push_back(rpcbasic_sptr(new rpcbasic_register_trigger<top_block>(
-        alias(), "unlock", &top_block::unlock, "Unock the flowgraph", RPC_PRIVLVL_MIN)));
+    d_rpc_vars.emplace_back(new rpcbasic_register_trigger<top_block>(
+        alias(), "unlock", &top_block::unlock, "Unock the flowgraph", RPC_PRIVLVL_MIN));
 
     // Getters
     add_rpc_variable(rpcbasic_sptr(

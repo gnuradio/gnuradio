@@ -492,7 +492,7 @@ void edit_box_msg_impl::edit_finished()
             if (conv_ok) {
                 if (even) {
                     im = t;
-                    xv.push_back(gr_complex(re, im));
+                    xv.emplace_back(re, im);
                     even = false;
                 } else {
                     re = t;

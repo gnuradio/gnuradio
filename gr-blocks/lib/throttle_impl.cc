@@ -116,7 +116,7 @@ int throttle_impl::work(int noutput_items,
 void throttle_impl::setup_rpc()
 {
 #ifdef GR_CTRLPORT
-    d_rpc_vars.push_back(rpcbasic_sptr(
+    d_rpc_vars.emplace_back(
         new rpcbasic_register_get<throttle, double>(alias(),
                                                     "sample_rate",
                                                     &throttle::sample_rate,
@@ -126,9 +126,9 @@ void throttle_impl::setup_rpc()
                                                     "Hz",
                                                     "Sample Rate",
                                                     RPC_PRIVLVL_MIN,
-                                                    DISPTIME | DISPOPTSTRIP)));
+                                                    DISPTIME | DISPOPTSTRIP));
 
-    d_rpc_vars.push_back(rpcbasic_sptr(
+    d_rpc_vars.emplace_back(
         new rpcbasic_register_set<throttle, double>(alias(),
                                                     "sample_rate",
                                                     &throttle::set_sample_rate,
@@ -138,7 +138,7 @@ void throttle_impl::setup_rpc()
                                                     "Hz",
                                                     "Sample Rate",
                                                     RPC_PRIVLVL_MIN,
-                                                    DISPTIME | DISPOPTSTRIP)));
+                                                    DISPTIME | DISPOPTSTRIP));
 #endif /* GR_CTRLPORT */
 }
 

@@ -116,7 +116,7 @@ void ctrlport_probe2_b_impl::setup_rpc()
 {
 #ifdef GR_CTRLPORT
     int len = static_cast<int>(d_len);
-    d_rpc_vars.push_back(rpcbasic_sptr(
+    d_rpc_vars.emplace_back(
         new rpcbasic_register_get<ctrlport_probe2_b, std::vector<signed char>>(
             alias(),
             d_id.c_str(),
@@ -127,9 +127,9 @@ void ctrlport_probe2_b_impl::setup_rpc()
             "volts",
             d_desc.c_str(),
             RPC_PRIVLVL_MIN,
-            d_disp_mask)));
+            d_disp_mask));
 
-    d_rpc_vars.push_back(rpcbasic_sptr(
+    d_rpc_vars.emplace_back(
         new rpcbasic_register_get<ctrlport_probe2_b, int>(alias(),
                                                           "length",
                                                           &ctrlport_probe2_b::length,
@@ -139,9 +139,9 @@ void ctrlport_probe2_b_impl::setup_rpc()
                                                           "samples",
                                                           "get vector length",
                                                           RPC_PRIVLVL_MIN,
-                                                          DISPNULL)));
+                                                          DISPNULL));
 
-    d_rpc_vars.push_back(rpcbasic_sptr(
+    d_rpc_vars.emplace_back(
         new rpcbasic_register_set<ctrlport_probe2_b, int>(alias(),
                                                           "length",
                                                           &ctrlport_probe2_b::set_length,
@@ -151,7 +151,7 @@ void ctrlport_probe2_b_impl::setup_rpc()
                                                           "samples",
                                                           "set vector length",
                                                           RPC_PRIVLVL_MIN,
-                                                          DISPNULL)));
+                                                          DISPNULL));
 #endif /* GR_CTRLPORT */
 }
 
