@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010,2012,2014 Free Software Foundation, Inc.
+ * Copyright 2010,2012,2014,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,6 +27,7 @@
 #include "pfb_synthesizer_ccf_impl.h"
 #include <gnuradio/io_signature.h>
 #include <cstdio>
+#include <algorithm>
 
 namespace gr {
 namespace filter {
@@ -72,7 +73,7 @@ pfb_synthesizer_ccf_impl::pfb_synthesizer_ccf_impl(unsigned int numchans,
 
     // Create the IFFT to handle the input channel rotations
     d_fft = new fft::fft_complex(d_twox * d_numchans, false);
-    memset(d_fft->get_inbuf(), 0, d_twox * d_numchans * sizeof(gr_complex));
+    std::fill_n(d_fft->get_inbuf(), d_twox * d_numchans, 0);
 
     set_output_multiple(d_numchans);
 }
@@ -223,7 +224,7 @@ void pfb_synthesizer_ccf_impl::set_channel_map(const std::vector<int>& map)
         d_channel_map = map;
 
         // Zero out fft buffer so that unused channels are always 0
-        memset(d_fft->get_inbuf(), 0, d_twox * d_numchans * sizeof(gr_complex));
+        std::fill_n(d_fft->get_inbuf(), d_twox * d_numchans, 0);
     }
 }
 

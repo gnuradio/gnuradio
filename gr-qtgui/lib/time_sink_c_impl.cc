@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011-2013,2015 Free Software Foundation, Inc.
+ * Copyright 2011-2013,2015,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -34,6 +34,7 @@
 #include <volk/volk.h>
 
 #include <string.h>
+#include <algorithm>
 
 namespace gr {
 namespace qtgui {
@@ -92,7 +93,7 @@ time_sink_c_impl::time_sink_c_impl(int size,
     for (unsigned int n = 0; n < d_nconnections / 2; n++) {
         d_cbuffers.push_back((gr_complex*)volk_malloc(d_buffer_size * sizeof(gr_complex),
                                                       volk_get_alignment()));
-        memset(d_cbuffers[n], 0, d_buffer_size * sizeof(gr_complex));
+        std::fill_n(d_cbuffers[n], d_buffer_size, 0);
     }
 
     // Set alignment properties for VOLK
@@ -323,7 +324,7 @@ void time_sink_c_impl::set_nsamps(const int newsize)
             volk_free(d_cbuffers[n]);
             d_cbuffers[n] = (gr_complex*)volk_malloc(d_buffer_size * sizeof(gr_complex),
                                                      volk_get_alignment());
-            memset(d_cbuffers[n], 0, d_buffer_size * sizeof(gr_complex));
+            std::fill_n(d_cbuffers[n], d_buffer_size, 0);
         }
 
         // If delay was set beyond the new boundary, pull it back.

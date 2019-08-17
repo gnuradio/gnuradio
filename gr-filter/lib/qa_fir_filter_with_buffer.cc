@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010,2012 Free Software Foundation, Inc.
+ * Copyright 2010,2012,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -32,6 +32,7 @@
 #include <boost/test/unit_test.hpp>
 #include <cmath>
 #include <cstring>
+#include <algorithm>
 
 using std::vector;
 
@@ -201,7 +202,7 @@ void test_decimate(unsigned int decimate)
         (gr_complex*)volk_malloc(OUTPUT_LEN * sizeof(gr_complex), align);
     tap_type* taps = (gr_complex*)volk_malloc(MAX_TAPS * sizeof(gr_complex), align);
 
-    memset(dline, 0, INPUT_LEN * sizeof(i_type));
+    std::fill_n(dline, INPUT_LEN, 0);
 
     for (int n = 0; n <= MAX_TAPS; n++) {
         for (int ol = 0; ol <= OUTPUT_LEN; ol++) {
@@ -211,7 +212,7 @@ void test_decimate(unsigned int decimate)
             random_complex(taps, MAX_TAPS);
 
             // compute expected output values
-            memset(dline, 0, INPUT_LEN * sizeof(i_type));
+            std::fill_n(dline, INPUT_LEN, 0);
             for (int o = 0; o < (int)(ol / decimate); o++) {
                 // use an actual delay line for this test
                 for (int dd = 0; dd < (int)decimate; dd++) {
@@ -228,7 +229,7 @@ void test_decimate(unsigned int decimate)
                 new kernel::fir_filter_with_buffer_ccc(f1_taps);
 
             // zero the output, then do the filtering
-            memset(actual_output, 0, OUTPUT_LEN * sizeof(o_type));
+            std::fill_n(actual_output, OUTPUT_LEN, 0);
             f1->filterNdec(actual_output, input, ol / decimate, decimate);
 
             // check results
@@ -302,7 +303,7 @@ void test_decimate(unsigned int decimate)
         (gr_complex*)volk_malloc(OUTPUT_LEN * sizeof(gr_complex), align);
     tap_type* taps = (float*)volk_malloc(MAX_TAPS * sizeof(float), align);
 
-    memset(dline, 0, INPUT_LEN * sizeof(i_type));
+    std::fill_n(dline, INPUT_LEN, 0);
 
     for (int n = 0; n <= MAX_TAPS; n++) {
         for (int ol = 0; ol <= OUTPUT_LEN; ol++) {
@@ -312,7 +313,7 @@ void test_decimate(unsigned int decimate)
             random_floats(taps, MAX_TAPS);
 
             // compute expected output values
-            memset(dline, 0, INPUT_LEN * sizeof(i_type));
+            std::fill_n(dline, INPUT_LEN, 0);
             for (int o = 0; o < (int)(ol / decimate); o++) {
                 // use an actual delay line for this test
                 for (int dd = 0; dd < (int)decimate; dd++) {
@@ -329,7 +330,7 @@ void test_decimate(unsigned int decimate)
                 new kernel::fir_filter_with_buffer_ccf(f1_taps);
 
             // zero the output, then do the filtering
-            memset(actual_output, 0, OUTPUT_LEN * sizeof(gr_complex));
+            std::fill_n(actual_output, OUTPUT_LEN, 0);
             f1->filterNdec(actual_output, input, ol / decimate, decimate);
 
             // check results

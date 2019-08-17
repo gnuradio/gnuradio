@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012,2014-2015 Free Software Foundation, Inc.
+ * Copyright 2012,2014-2015,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -33,6 +33,7 @@
 #include <volk/volk.h>
 
 #include <string.h>
+#include <algorithm>
 
 namespace gr {
 namespace qtgui {
@@ -111,7 +112,7 @@ freq_sink_c_impl::freq_sink_c_impl(int fftsize,
         d_magbufs.push_back(
             (double*)volk_malloc(d_fftsize * sizeof(double), volk_get_alignment()));
 
-        memset(d_residbufs[i], 0, d_fftsize * sizeof(gr_complex));
+        std::fill_n(d_residbufs[i], d_fftsize, 0);
         memset(d_magbufs[i], 0, d_fftsize * sizeof(double));
     }
 
@@ -119,7 +120,7 @@ freq_sink_c_impl::freq_sink_c_impl(int fftsize,
         (gr_complex*)volk_malloc(d_fftsize * sizeof(gr_complex), volk_get_alignment()));
     d_pdu_magbuf = (double*)volk_malloc(d_fftsize * sizeof(double), volk_get_alignment());
     d_magbufs.push_back(d_pdu_magbuf);
-    memset(d_residbufs[d_nconnections], 0, d_fftsize * sizeof(gr_complex));
+    std::fill_n(d_residbufs[d_nconnections], d_fftsize, 0);
     memset(d_pdu_magbuf, 0, d_fftsize * sizeof(double));
 
     buildwindow();
@@ -442,7 +443,7 @@ bool freq_sink_c_impl::fftresize()
             d_magbufs[i] =
                 (double*)volk_malloc(newfftsize * sizeof(double), volk_get_alignment());
 
-            memset(d_residbufs[i], 0, newfftsize * sizeof(gr_complex));
+            std::fill_n(d_residbufs[i], newfftsize, 0);
             memset(d_magbufs[i], 0, newfftsize * sizeof(double));
         }
 
@@ -672,7 +673,7 @@ void freq_sink_c_impl::handle_pdus(pmt::pmt_t msg)
         size_t max = std::min(d_fftsize, static_cast<int>(len));
         for (int n = 0; n < nffts; n++) {
             // Clear in case (max-min) < d_fftsize
-            memset(d_residbufs[d_nconnections], 0x00, sizeof(gr_complex) * d_fftsize);
+            std::fill_n(d_residbufs[d_nconnections], d_fftsize, 0x00);
 
             // Copy in as much of the input samples as we can
             memcpy(
