@@ -1,7 +1,8 @@
 ---
-Checks:          '-*,misc-throw-by-value-catch-by-reference,'
+Checks:          '-*,misc-throw-by-value-catch-by-reference,misc-static-assert'
+# Not in here: modernize-use-emplace, since that basically broke all things it touched
 WarningsAsErrors: ''
-HeaderFilterRegex: ''
+HeaderFilterRegex: '\.(cc|c|cpp|h|hpp)$'
 AnalyzeTemporaryDtors: false
 FormatStyle:     file
 CheckOptions:
