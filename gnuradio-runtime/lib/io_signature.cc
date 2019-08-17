@@ -79,8 +79,9 @@ io_signature::io_signature(int min_streams,
     if (min_streams < 0 || (max_streams != IO_INFINITE && max_streams < min_streams))
         throw std::invalid_argument("gr::io_signature(1)");
 
-    if (sizeof_stream_items.size() < 1)
+    if (sizeof_stream_items.empty()) {
         throw std::invalid_argument("gr::io_signature(2)");
+    }
 
     for (size_t i = 0; i < sizeof_stream_items.size(); i++) {
         if (max_streams != 0 && sizeof_stream_items[i] < 1)

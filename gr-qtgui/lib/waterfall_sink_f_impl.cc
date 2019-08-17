@@ -181,7 +181,7 @@ void waterfall_sink_f_impl::initialize()
     set_fft_size(d_fftsize);
     set_frequency_range(d_center_freq, d_bandwidth);
 
-    if (d_name.size() > 0)
+    if (!d_name.empty())
         set_title(d_name);
 
     // initialize update time to 10 times a second
@@ -327,7 +327,7 @@ void waterfall_sink_f_impl::fft(float* data_out, const float* data_in, int size)
     for (int i = 0; i < size; i++)
         dst[i] = data_in[i];
 
-    if (d_window.size()) {
+    if (!d_window.empty()) {
         volk_32fc_32f_multiply_32fc(d_fft->get_inbuf(), dst, &d_window.front(), size);
     }
 

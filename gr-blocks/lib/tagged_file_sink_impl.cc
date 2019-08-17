@@ -94,7 +94,7 @@ int tagged_file_sink_impl::work(int noutput_items,
     // Look for a time tag and initialize d_timeval.
     std::vector<tag_t> time_tags_outer;
     get_tags_in_range(time_tags_outer, 0, start_N, end_N, tkey);
-    if (time_tags_outer.size() > 0) {
+    if (!time_tags_outer.empty()) {
         const tag_t tag = time_tags_outer[0];
         uint64_t offset = tag.offset;
         pmt::pmt_t time = tag.value;
@@ -122,7 +122,7 @@ int tagged_file_sink_impl::work(int noutput_items,
                     std::vector<tag_t> time_tags;
                     // get_tags_in_range(time_tags, 0, d_last_N, N, gr_tags::key_time);
                     get_tags_in_range(time_tags, 0, d_last_N, N, tkey);
-                    if (time_tags.size() > 0) {
+                    if (!time_tags.empty()) {
                         const tag_t tag = time_tags[time_tags.size() - 1];
 
                         uint64_t time_nitems = tag.offset;

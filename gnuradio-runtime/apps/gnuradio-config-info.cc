@@ -61,7 +61,7 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    if (vm.size() == 0 || vm.count("help")) {
+    if (vm.empty() || vm.count("help")) {
         std::cout << desc << std::endl;
         return 1;
     }

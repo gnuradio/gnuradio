@@ -644,7 +644,7 @@ int dvbt_viterbi_decoder_impl::general_work(int noutput_items,
                                 nread + (nblocks * d_nsymbols),
                                 pmt::string_to_symbol("superframe_start"));
 
-        if (tags.size()) {
+        if (!tags.empty()) {
             d_init = 0;
 
 #ifdef DTV_SSE2

@@ -182,7 +182,7 @@ void waterfall_sink_c_impl::initialize()
     set_fft_size(d_fftsize);
     set_frequency_range(d_center_freq, d_bandwidth);
 
-    if (d_name.size() > 0)
+    if (!d_name.empty())
         set_title(d_name);
 
     // initialize update time to 10 times a second
@@ -318,7 +318,7 @@ void waterfall_sink_c_impl::disable_legend() { d_main_gui->disableLegend(); }
 
 void waterfall_sink_c_impl::fft(float* data_out, const gr_complex* data_in, int size)
 {
-    if (d_window.size()) {
+    if (!d_window.empty()) {
         volk_32fc_32f_multiply_32fc(d_fft->get_inbuf(), data_in, &d_window.front(), size);
     } else {
         memcpy(d_fft->get_inbuf(), data_in, sizeof(gr_complex) * size);

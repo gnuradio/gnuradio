@@ -84,7 +84,7 @@ void udp_source_impl::connect(const std::string& host, int port)
     std::string s_port;
     s_port = (boost::format("%d") % d_port).str();
 
-    if (host.size() > 0) {
+    if (!host.empty()) {
         boost::asio::ip::udp::resolver resolver(d_io_service);
         boost::asio::ip::udp::resolver::query query(
             d_host, s_port, boost::asio::ip::resolver_query_base::passive);

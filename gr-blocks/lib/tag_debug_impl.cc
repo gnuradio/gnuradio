@@ -71,7 +71,7 @@ void tag_debug_impl::set_display(bool d) { d_display = d; }
 
 void tag_debug_impl::set_key_filter(const std::string& key_filter)
 {
-    if (key_filter == "")
+    if (key_filter.empty())
         d_filter = pmt::PMT_NIL;
     else
         d_filter = pmt::intern(key_filter);
@@ -104,7 +104,7 @@ int tag_debug_impl::work(int noutput_items,
         else
             get_tags_in_range(d_tags, i, abs_N, end_N, d_filter);
 
-        if (d_tags.size() > 0) {
+        if (!d_tags.empty()) {
             toprint = true;
         }
 

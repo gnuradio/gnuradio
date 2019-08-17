@@ -151,7 +151,7 @@ void time_sink_c_impl::initialize()
     d_main_gui->setNPoints(d_size);
     d_main_gui->setSampleRate(d_samp_rate);
 
-    if (d_name.size() > 0)
+    if (!d_name.empty())
         set_title(d_name);
 
     // initialize update time to 10 times a second
@@ -496,7 +496,7 @@ void time_sink_c_impl::_test_trigger_tags(int nitems)
     std::vector<gr::tag_t> tags;
     get_tags_in_range(
         tags, d_trigger_channel / 2, nr, nr + nitems + 1, d_trigger_tag_key);
-    if (tags.size() > 0) {
+    if (!tags.empty()) {
         trigger_index = tags[0].offset - nr;
         int start = d_index + trigger_index - d_trigger_delay - 1;
         if (start >= 0) {

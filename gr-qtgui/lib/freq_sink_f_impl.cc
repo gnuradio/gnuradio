@@ -172,7 +172,7 @@ void freq_sink_f_impl::initialize()
     set_fft_size(d_fftsize);
     set_frequency_range(d_center_freq, d_bandwidth);
 
-    if (d_name.size() > 0)
+    if (!d_name.empty())
         set_title(d_name);
 
     set_output_multiple(d_fftsize);
@@ -394,7 +394,7 @@ void freq_sink_f_impl::fft(float* data_out, const float* data_in, int size)
     for (int i = 0; i < size; i++)
         dst[i] = data_in[i];
 
-    if (d_window.size()) {
+    if (!d_window.empty()) {
         volk_32fc_32f_multiply_32fc(d_fft->get_inbuf(), dst, &d_window.front(), size);
     }
 
@@ -533,7 +533,7 @@ void freq_sink_f_impl::_test_trigger_tags(int start, int nitems)
     std::vector<gr::tag_t> tags;
     get_tags_in_range(
         tags, d_trigger_channel, nr + start, nr + start + nitems, d_trigger_tag_key);
-    if (tags.size() > 0) {
+    if (!tags.empty()) {
         d_triggered = true;
         d_index = tags[0].offset - nr;
         d_trigger_count = 0;

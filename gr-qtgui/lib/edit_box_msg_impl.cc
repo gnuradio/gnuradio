@@ -106,7 +106,7 @@ edit_box_msg_impl::edit_box_msg_impl(data_type_t type,
             d_key->setFixedWidth(width);
 
             // Verify that a default key has been set or emit an error
-            if (key.size() == 0) {
+            if (key.empty()) {
                 throw std::runtime_error(
                     "When using static + pair mode, please set a default key.");
             }
@@ -118,7 +118,7 @@ edit_box_msg_impl::edit_box_msg_impl(data_type_t type,
     }
 
     d_label = NULL;
-    if (label != "") {
+    if (!label.empty()) {
         d_label = new QLabel(QString(label.c_str()));
         d_vlayout->addWidget(d_label);
     }

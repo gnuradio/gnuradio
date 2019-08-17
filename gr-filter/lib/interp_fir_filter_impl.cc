@@ -55,7 +55,7 @@ interp_fir_filter_impl<IN_T, OUT_T, TAP_T>::interp_fir_filter_impl(
         throw std::out_of_range("interp_fir_filter_impl: interpolation must be > 0\n");
     }
 
-    if (taps.size() == 0) {
+    if (taps.empty()) {
         throw std::runtime_error("interp_fir_filter_impl: no filter taps provided.\n");
     }
 

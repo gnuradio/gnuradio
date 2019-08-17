@@ -68,7 +68,7 @@ pfb_clock_sync_ccf_impl::pfb_clock_sync_ccf_impl(double sps,
       d_error(0),
       d_out_idx(0)
 {
-    if (taps.size() == 0)
+    if (taps.empty())
         throw std::runtime_error("pfb_clock_sync_ccf: please specify a filter.\n");
 
     // Let scheduler adjust our relative_rate.
@@ -382,7 +382,7 @@ int pfb_clock_sync_ccf_impl::general_work(int noutput_items,
 
     // produce output as long as we can and there are enough input samples
     while (i < noutput_items) {
-        if (tags.size() > 0) {
+        if (!tags.empty()) {
             size_t offset = tags[0].offset - nitems_read(0);
             if ((offset >= (size_t)count) && (offset < (size_t)(count + d_sps))) {
                 float center = (float)pmt::to_double(tags[0].value);

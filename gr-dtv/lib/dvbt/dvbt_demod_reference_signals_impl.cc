@@ -116,7 +116,7 @@ int dvbt_demod_reference_signals_impl::is_sync_start(int nitems)
     this->get_tags_in_range(
         tags, 0, nread, nread + nitems, pmt::string_to_symbol("sync_start"));
 
-    return tags.size() ? 1 : 0;
+    return !tags.empty() ? 1 : 0;
 }
 
 int dvbt_demod_reference_signals_impl::general_work(
