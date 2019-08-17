@@ -376,7 +376,7 @@ void TimeDisplayForm::updateTrigger(gr::qtgui::trigger_mode mode)
     }
 
     // if tag mode, popup tag key box to set
-    if ((d_trig_tag_key == "") && (d_trig_mode == gr::qtgui::TRIG_MODE_TAG))
+    if ((d_trig_tag_key.empty()) && (d_trig_mode == gr::qtgui::TRIG_MODE_TAG))
         d_tr_tag_key_act->activate(QAction::Trigger);
 
     emit signalReplot();

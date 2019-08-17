@@ -138,7 +138,7 @@ void const_sink_c_impl::initialize()
     d_main_gui = new ConstellationDisplayForm(numplots, d_parent);
     d_main_gui->setNPoints(d_size);
 
-    if (d_name.size() > 0)
+    if (!d_name.empty())
         set_title(d_name);
 
     // initialize update time to 10 times a second
@@ -364,7 +364,7 @@ void const_sink_c_impl::_test_trigger_tags(int nitems)
     uint64_t nr = nitems_read(d_trigger_channel);
     std::vector<gr::tag_t> tags;
     get_tags_in_range(tags, d_trigger_channel, nr, nr + nitems, d_trigger_tag_key);
-    if (tags.size() > 0) {
+    if (!tags.empty()) {
         d_triggered = true;
         trigger_index = tags[0].offset - nr;
         d_start = d_index + trigger_index;

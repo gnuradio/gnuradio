@@ -144,7 +144,7 @@ void time_raster_sink_f_impl::initialize()
     d_main_gui =
         new TimeRasterDisplayForm(numplots, d_samp_rate, d_rows, d_cols, 1, d_parent);
 
-    if (d_name.size() > 0)
+    if (!d_name.empty())
         set_title(d_name);
 
     // initialize update time to 10 times a second
@@ -300,7 +300,7 @@ double time_raster_sink_f_impl::num_cols() { return d_main_gui->numCols(); }
 
 void time_raster_sink_f_impl::set_multiplier(const std::vector<float>& mult)
 {
-    if (mult.size() == 0) {
+    if (mult.empty()) {
         for (int i = 0; i < d_nconnections; i++) {
             d_mult[i] = 1.0f;
         }
@@ -316,7 +316,7 @@ void time_raster_sink_f_impl::set_multiplier(const std::vector<float>& mult)
 
 void time_raster_sink_f_impl::set_offset(const std::vector<float>& offset)
 {
-    if (offset.size() == 0) {
+    if (offset.empty()) {
         for (int i = 0; i < d_nconnections; i++) {
             d_offset[i] = 0.0f;
         }
