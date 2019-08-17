@@ -1,0 +1,9 @@
+---
+Checks:          '-*,misc-throw-by-value-catch-by-reference,'
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+AnalyzeTemporaryDtors: false
+FormatStyle:     file
+CheckOptions:
+...
+
