@@ -69,7 +69,7 @@ constellation::constellation(std::vector<gr_complex> constell,
             d_constellation[i] = d_constellation[i] * d_scalefactor;
         }
     }
-    if (pre_diff_code.size() == 0)
+    if (pre_diff_code.empty())
         d_apply_pre_diff_code = false;
     else if (pre_diff_code.size() != constsize)
         throw std::runtime_error(
@@ -307,7 +307,7 @@ void constellation::set_soft_dec_lut(const std::vector<std::vector<float>>& soft
     d_lut_scale = powf(2.0, static_cast<float>(precision));
 }
 
-bool constellation::has_soft_dec_lut() { return d_soft_dec_lut.size() > 0; }
+bool constellation::has_soft_dec_lut() { return !d_soft_dec_lut.empty(); }
 
 std::vector<std::vector<float>> constellation::soft_dec_lut() { return d_soft_dec_lut; }
 

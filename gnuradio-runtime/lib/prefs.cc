@@ -243,7 +243,7 @@ bool prefs::get_bool(const std::string& section,
 {
     if (has_option(section, option)) {
         std::string str = get_string(section, option, "");
-        if (str == "") {
+        if (str.empty()) {
             return default_val;
         }
         std::transform(str.begin(), str.end(), str.begin(), ::tolower);
@@ -281,7 +281,7 @@ long prefs::get_long(const std::string& section,
 {
     if (has_option(section, option)) {
         std::string str = get_string(section, option, "");
-        if (str == "") {
+        if (str.empty()) {
             return default_val;
         }
         std::stringstream sstr(str);
@@ -316,7 +316,7 @@ double prefs::get_double(const std::string& section,
 {
     if (has_option(section, option)) {
         std::string str = get_string(section, option, "");
-        if (str == "") {
+        if (str.empty()) {
             return default_val;
         }
         std::stringstream sstr(str);

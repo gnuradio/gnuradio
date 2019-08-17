@@ -238,7 +238,7 @@ void sink_c_impl::set_update_time(double t)
 
 void sink_c_impl::fft(float* data_out, const gr_complex* data_in, int size)
 {
-    if (d_window.size()) {
+    if (!d_window.empty()) {
         volk_32fc_32f_multiply_32fc(d_fft->get_inbuf(), data_in, &d_window.front(), size);
     } else {
         memcpy(d_fft->get_inbuf(), data_in, sizeof(gr_complex) * size);

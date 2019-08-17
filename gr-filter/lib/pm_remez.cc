@@ -821,7 +821,7 @@ std::vector<double> pm_remez(int order,
     for (int i = 0; i < numbands; i++)
         weight[i] = 1.0;
 
-    if (arg_weight.size() != 0) {
+    if (!arg_weight.empty()) {
         if ((int)arg_weight.size() != numbands)
             punt("gr_remez: need one weight for each band [=length(band)/2]");
         for (int i = 0; i < numbands; i++)

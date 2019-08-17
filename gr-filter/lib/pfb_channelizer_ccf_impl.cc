@@ -125,7 +125,7 @@ void pfb_channelizer_ccf_impl::set_channel_map(const std::vector<int>& map)
 {
     gr::thread::scoped_lock guard(d_mutex);
 
-    if (map.size() > 0) {
+    if (!map.empty()) {
         unsigned int max = (unsigned int)*std::max_element(map.begin(), map.end());
         if (max >= d_nfilts) {
             throw std::invalid_argument(

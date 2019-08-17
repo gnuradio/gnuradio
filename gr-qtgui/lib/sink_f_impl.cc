@@ -228,7 +228,7 @@ void sink_f_impl::set_update_time(double t)
 
 void sink_f_impl::fft(float* data_out, const float* data_in, int size)
 {
-    if (d_window.size()) {
+    if (!d_window.empty()) {
         gr_complex* dst = d_fft->get_inbuf();
         for (int i = 0; i < size; i++) // apply window
             dst[i] = data_in[i] * d_window[i];

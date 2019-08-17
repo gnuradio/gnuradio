@@ -180,7 +180,7 @@ int costas_loop_cc_impl::work(int noutput_items,
                       pmt::intern("phase_est"));
 
     for (int i = 0; i < noutput_items; i++) {
-        if (tags.size() > 0) {
+        if (!tags.empty()) {
             if (tags[0].offset - nitems_read(0) == (size_t)i) {
                 d_phase = (float)pmt::to_double(tags[0].value);
                 tags.erase(tags.begin());

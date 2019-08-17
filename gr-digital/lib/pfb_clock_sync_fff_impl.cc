@@ -65,7 +65,7 @@ pfb_clock_sync_fff_impl::pfb_clock_sync_fff_impl(double sps,
       d_error(0),
       d_out_idx(0)
 {
-    if (taps.size() == 0)
+    if (taps.empty())
         throw std::runtime_error("pfb_clock_sync_fff: please specify a filter.\n");
 
     // Let scheduler adjust our relative_rate.

@@ -213,7 +213,7 @@ void pfb_synthesizer_ccf_impl::set_channel_map(const std::vector<int>& map)
 {
     gr::thread::scoped_lock guard(d_mutex);
 
-    if (map.size() > 0) {
+    if (!map.empty()) {
         int max = *std::max_element(map.begin(), map.end());
         int min = *std::min_element(map.begin(), map.end());
         if ((max >= static_cast<int>(d_twox * d_numchans)) || (min < 0)) {

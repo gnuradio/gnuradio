@@ -258,7 +258,7 @@ bool file_meta_source_impl::open(const std::string& filename,
     bool ret = true;
     if (d_state == STATE_DETACHED) {
         std::string s;
-        if (hdr_filename == "")
+        if (hdr_filename.empty())
             s = filename + ".hdr";
         else
             s = hdr_filename;

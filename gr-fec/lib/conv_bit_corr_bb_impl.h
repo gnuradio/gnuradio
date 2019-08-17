@@ -64,7 +64,7 @@ private:
     std::vector<int> get_corr()
     {
         std::vector<int> bits;
-        if (d_correlator.size() < 1) {
+        if (d_correlator.empty()) {
             return bits;
         }
         for (size_t i = 0; i < d_correlator[0].size(); i++) {

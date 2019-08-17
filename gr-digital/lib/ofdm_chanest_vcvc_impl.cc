@@ -60,8 +60,8 @@ ofdm_chanest_vcvc_impl::ofdm_chanest_vcvc_impl(
       d_n_data_syms(n_data_symbols),
       d_n_sync_syms(1),
       d_eq_noise_red_len(eq_noise_red_len),
-      d_ref_sym((sync_symbol2.size() && !force_one_sync_symbol) ? sync_symbol2
-                                                                : sync_symbol1),
+      d_ref_sym((!sync_symbol2.empty() && !force_one_sync_symbol) ? sync_symbol2
+                                                                  : sync_symbol1),
       d_corr_v(sync_symbol2),
       d_known_symbol_diffs(0, 0),
       d_new_symbol_diffs(0, 0),
@@ -84,7 +84,7 @@ ofdm_chanest_vcvc_impl::ofdm_chanest_vcvc_impl(
     }
 
     // Sanity checks
-    if (sync_symbol2.size()) {
+    if (!sync_symbol2.empty()) {
         if (sync_symbol1.size() != sync_symbol2.size()) {
             throw std::invalid_argument("sync symbols must have equal length.");
         }
@@ -149,7 +149,7 @@ int ofdm_chanest_vcvc_impl::get_carr_offset(const gr_complex* sync_sym1,
                                             const gr_complex* sync_sym2)
 {
     int carr_offset = 0;
-    if (d_corr_v.size()) {
+    if (!d_corr_v.empty()) {
         // Use Schmidl & Cox method
         float Bg_max = 0;
         // g here is 2g in the paper

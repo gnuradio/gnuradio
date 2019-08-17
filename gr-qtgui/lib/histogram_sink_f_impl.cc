@@ -137,7 +137,7 @@ void histogram_sink_f_impl::initialize()
     d_main_gui->setNPoints(d_size);
     d_main_gui->setXaxis(d_xmin, d_xmax);
 
-    if (d_name.size() > 0)
+    if (!d_name.empty())
         set_title(d_name);
 
     // initialize update time to 10 times a second

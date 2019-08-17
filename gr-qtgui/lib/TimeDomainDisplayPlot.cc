@@ -260,7 +260,7 @@ void TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
             // Plot and attach any new tags found.
             // First test if this was a complex input where real/imag get
             // split here into two stream.
-            if (tags.size() > 0) {
+            if (!tags.empty()) {
                 bool cmplx = false;
                 unsigned int mult = d_nplots / tags.size();
                 if (mult == 2)

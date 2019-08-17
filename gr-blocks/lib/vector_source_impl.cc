@@ -57,7 +57,7 @@ vector_source_impl<T>::vector_source_impl(const std::vector<T>& data,
       d_vlen(vlen),
       d_tags(tags)
 {
-    if (tags.size() == 0) {
+    if (tags.empty()) {
         d_settags = 0;
     } else {
         d_settags = 1;
@@ -79,7 +79,7 @@ void vector_source_impl<T>::set_data(const std::vector<T>& data,
     d_data = data;
     d_tags = tags;
     rewind();
-    if (tags.size() == 0) {
+    if (tags.empty()) {
         d_settags = false;
     } else {
         d_settags = true;

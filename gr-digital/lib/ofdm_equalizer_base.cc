@@ -57,7 +57,7 @@ ofdm_equalizer_1d_pilots::ofdm_equalizer_1d_pilots(
     if (input_is_shifted) {
         fft_shift_width = fft_len / 2;
     }
-    if (!occupied_carriers.size()) {
+    if (occupied_carriers.empty()) {
         std::fill(d_occupied_carriers.begin(), d_occupied_carriers.end(), true);
     } else {
         for (unsigned i = 0; i < occupied_carriers.size(); i++) {
@@ -73,7 +73,7 @@ ofdm_equalizer_1d_pilots::ofdm_equalizer_1d_pilots(
             }
         }
     }
-    if (pilot_carriers.size()) {
+    if (!pilot_carriers.empty()) {
         for (unsigned i = 0; i < pilot_carriers.size(); i++) {
             if (pilot_carriers[i].size() != pilot_symbols[i].size()) {
                 throw std::invalid_argument("pilot carriers and -symbols do not match.");

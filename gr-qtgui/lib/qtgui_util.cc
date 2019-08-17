@@ -104,7 +104,7 @@ QwtPickerMachine* QwtDblClickPlotPicker::stateMachine(int n) const
 void check_set_qss(QApplication* app)
 {
     std::string qssfile = gr::prefs::singleton()->get_string("qtgui", "qss", "");
-    if (qssfile.size() > 0) {
+    if (!qssfile.empty()) {
         QString sstext = get_qt_style_sheet(QString(qssfile.c_str()));
         app->setStyleSheet(sstext);
     }

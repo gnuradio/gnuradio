@@ -269,8 +269,8 @@ BOOST_AUTO_TEST_CASE(t15_clear)
 
     fg->clear();
 
-    BOOST_REQUIRE(fg->edges().size() == 0);
-    BOOST_REQUIRE(fg->calc_used_blocks().size() == 0);
+    BOOST_REQUIRE(fg->edges().empty());
+    BOOST_REQUIRE(fg->calc_used_blocks().empty());
 }
 
 BOOST_AUTO_TEST_CASE(t16_partition)

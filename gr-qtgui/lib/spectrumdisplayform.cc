@@ -484,7 +484,7 @@ void SpectrumDisplayForm::setAverageCount(const int newCount)
 void SpectrumDisplayForm::_averageHistory(const double* newBuffer)
 {
     if (_numRealDataPoints > 0) {
-        if (_historyVector->size() > 0) {
+        if (!_historyVector->empty()) {
             memcpy(_historyVector->operator[](_historyEntry),
                    newBuffer,
                    _numRealDataPoints * sizeof(double));

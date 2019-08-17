@@ -109,7 +109,7 @@ ber_sink_b_impl::ber_sink_b_impl(std::vector<float> esnos,
 
     if (curvenames.size() == (unsigned int)curves) {
         for (int j = 0; j < curves; j++) {
-            if (curvenames[j] != "") {
+            if (!curvenames[j].empty()) {
                 set_line_label(j, curvenames[j]);
             }
         }

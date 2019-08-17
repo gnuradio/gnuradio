@@ -45,7 +45,7 @@ generic_decoder::generic_decoder(std::string name)
 
     GR_LOG_GETLOGGER(LOG, "gr_log." + alias());
     GR_LOG_SET_LEVEL(LOG, log_level);
-    if (log_file.size() > 0) {
+    if (!log_file.empty()) {
         if (log_file == "stdout") {
             GR_LOG_SET_CONSOLE_APPENDER(LOG, "stdout", "gr::log :%p: %c{1} - %m%n");
         } else if (log_file == "stderr") {
