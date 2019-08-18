@@ -255,7 +255,7 @@ class ModToolAdd(ModTool):
         if re.search('#include', oldfile):
             append_re_line_sequence(self._file['swig'], '^#include.*\n', include_str)
         else: # I.e., if the swig file is empty
-            regexp = re.compile('^%\{\n', re.MULTILINE)
+            regexp = re.compile(r'^%\{\n', re.MULTILINE)
             oldfile = regexp.sub('%%{\n%s\n' % include_str, oldfile, count=1)
             with open(self._file['swig'], 'w') as f:
                 f.write(oldfile)

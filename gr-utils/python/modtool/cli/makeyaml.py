@@ -27,18 +27,19 @@ from __future__ import unicode_literals
 import os
 import click
 
-from ..core import get_block_candidates, ModToolMakeYAML
+from gnuradio.blocktool import BlockHeaderParser
+from gnuradio.blocktool.core.base import BlockToolException
+
+from ..core import get_block_candidates, ModToolMakeYAML, yaml_generator
 from ..tools import SequenceCompleter
 from .base import common_params, block_name, run, cli_input
-
-from gnuradio.blocktool import BlockHeaderParser
-from gnuradio.blocktool.cli.base import BlockToolException, run_blocktool
-from gnuradio.blocktool.cli.parseheader import yaml_generator, parse_directory
 
 
 @click.command('makeyaml', short_help=ModToolMakeYAML.description)
 @click.option('-b', '--blocktool', is_flag=True,
-              help='Use blocktool support to generate YAML files. FILE PATH mandatory if used.')
+              help='Use blocktool support to print yaml output. FILE PATH mandatory if used.')
+@click.option('-o', '--output', is_flag=True,
+              help='If given, a file with desired output format will be generated')
 @common_params
 @block_name
 def cli(**kwargs):
@@ -55,16 +56,13 @@ def cli(**kwargs):
             raise BlockToolException('Missing argument FILE PATH with blocktool flag')
         kwargs['file_path'] = os.path.abspath(kwargs['blockname'])
         if os.path.isfile(kwargs['file_path']):
-            self = BlockHeaderParser(**kwargs)
-            self.cli = True
-            run_blocktool(self)
-            click.secho('Header file: {}'.format(self.filename), fg='green')
-            self.yaml_confirm = True
-            yaml_generator(self)
-        elif os.path.isdir(kwargs['file_path']):
-            parse_directory(**kwargs)
+            parse_yml = BlockHeaderParser(**kwargs)
+            parse_yml.run_blocktool()
+            parse_yml.cli = True
+            parse_yml.yaml_confirm = True
+            yaml_generator(parse_yml, **kwargs)
         else:
-            raise BlockToolException('Invalid file or directory path.')
+            raise BlockToolException('Invalid file path.')
     else:
         self = ModToolMakeYAML(**kwargs)
         click.secho("GNU Radio module name identified: " + self.info['modname'], fg='green')

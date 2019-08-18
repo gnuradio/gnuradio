@@ -51,7 +51,7 @@ class BlockHeaderParser(BlockTool):
     name = 'Block Parse Header'
     description = 'Create a parsed output from a block header file'
 
-    def __init__(self, file_path=None, blocktool_comments = False, **kwargs):
+    def __init__(self, file_path=None, blocktool_comments=False, **kwargs):
         """ __init__ """
         BlockTool.__init__(self, **kwargs)
         self.parsed_data = {}

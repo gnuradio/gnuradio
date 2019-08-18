@@ -34,7 +34,7 @@ from click import ClickException
 
 from gnuradio.modtool.core import yaml_generator
 
-from ..core.parseheader import BlockHeaderParser
+from .core.parseheader import BlockHeaderParser
 
 LOGGER = logging.getLogger(__name__)
 

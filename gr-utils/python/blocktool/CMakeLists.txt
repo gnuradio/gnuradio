@@ -22,7 +22,7 @@ include(GrPython)
 GR_PYTHON_INSTALL(FILES
     __init__.py
     __main__.py
-    main.py
+    cli.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/blocktool
 )
 
@@ -30,4 +30,3 @@ GR_PYTHON_INSTALL(FILES
 # Add subdirectories
 ########################################################################
 add_subdirectory(core)
-add_subdirectory(cli)

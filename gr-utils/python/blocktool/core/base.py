@@ -24,13 +24,15 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+from abc import ABC, abstractmethod
+
 
 class BlockToolException(Exception):
     """ Standard exception for blocktool classes. """
     pass
 
 
-class BlockTool(object):
+class BlockTool(ABC):
     """ Base class for all blocktool command classes. """
     name = 'base'
     description = None
@@ -45,6 +47,7 @@ class BlockTool(object):
         """ Validates the arguments """
         pass
 
-    def run(self):
+    @abstractmethod
+    def run_blocktool(self):
         """ Override this. """
-        raise NotImplementedError('Module implementation missing')
+        pass
