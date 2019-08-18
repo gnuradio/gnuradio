@@ -1,6 +1,5 @@
-#!/usr/bin/env python3
 #
-# Copyright 2012, 2018 Free Software Foundation, Inc.
+# Copyright 2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,14 +18,12 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
-""" A tool for editing GNU Radio out-of-tree modules. """
+""" A tool to parse the blocktool header files. """
+
+import sys
+from .cli.cli import cli
 
 
-from gnuradio.blocktool.cli.base import cli
-
-
-if __name__ == '__main__':
-    try:
-        cli()
-    except KeyboardInterrupt:
-        pass
+def main():
+    """ Call the main function """
+    sys.exit(cli())

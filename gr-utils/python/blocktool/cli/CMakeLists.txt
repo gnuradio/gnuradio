@@ -21,7 +21,6 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(FILES
     __init__.py
-    base.py
-    parseheader.py
+    cli.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/blocktool/cli
 )
