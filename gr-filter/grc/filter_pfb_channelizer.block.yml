@@ -53,7 +53,8 @@ templates:
             ${taps},
             ${osr},
             ${atten})
-        self.${id}.set_channel_map(${ch_map})\nself.${id}.declare_sample_delay(${samp_delay})
+        self.${id}.set_channel_map(${ch_map})
+        self.${id}.declare_sample_delay(${samp_delay})
     callbacks:
     - set_taps(${taps})
     - set_channel_map(${ch_map})
