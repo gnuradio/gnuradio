@@ -755,8 +755,6 @@ class FlowGraph(CoreFlowgraph, Drawable):
 
     def _handle_mouse_motion_move(self, coordinate):
         # only continue if mouse-over stuff is enabled (just the auto-hide port label stuff for now)
-        if not Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active():
-            return
         redraw = False
         for element in self._elements_to_draw:
             over_element = element.what_is_selected(coordinate)
@@ -772,6 +770,8 @@ class FlowGraph(CoreFlowgraph, Drawable):
             if self.element_under_mouse:
                 redraw |= self.element_under_mouse.mouse_out() or False
                 self.element_under_mouse = None
+        if not Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active():
+            return
         if redraw:
             # self.create_labels()
             self.create_shapes()
