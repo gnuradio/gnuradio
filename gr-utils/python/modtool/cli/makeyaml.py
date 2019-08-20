@@ -27,8 +27,13 @@ from __future__ import unicode_literals
 import os
 import click
 
-from gnuradio.blocktool import BlockHeaderParser
-from gnuradio.blocktool.core.base import BlockToolException
+try:
+    from gnuradio.blocktool import BlockHeaderParser
+    from gnuradio.blocktool.core.base import BlockToolException
+except ImportError:
+    have_blocktool = False
+else:
+    have_blocktool = True
 
 from ..core import get_block_candidates, ModToolMakeYAML, yaml_generator
 from ..tools import SequenceCompleter
@@ -59,7 +64,7 @@ def cli(**kwargs):
             parse_yml = BlockHeaderParser(**kwargs)
             parse_yml.run_blocktool()
             parse_yml.cli = True
-            parse_yml.yaml_confirm = True
+            parse_yml.yaml = True
             yaml_generator(parse_yml, **kwargs)
         else:
             raise BlockToolException('Invalid file path.')

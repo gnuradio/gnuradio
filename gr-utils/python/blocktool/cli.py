@@ -60,7 +60,7 @@ def run_blocktool(module):
 @click.command('parseheader',
                short_help='Generate the parsed output for the header file or directory in a specified format')
 @click.argument('file-path', nargs=1)
-@click.option('-yaml', '--yaml-confirm', is_flag=True,
+@click.option('--yaml', is_flag=True,
               help='If given, a YAML response will be printed, else default json will be printed')
 @click.option('-c', '--blocktool-comments', is_flag=True,
               help='blocktool helper comments will be added in the header file')
@@ -73,10 +73,9 @@ def cli(**kwargs):
     kwargs['modtool'] = False
     if os.path.isfile(kwargs['file_path']):
         parser = BlockHeaderParser(**kwargs)
-        parser.cli = True
         run_blocktool(parser)
-        if kwargs['yaml_confirm']:
-            parser.yaml_confirm = True
+        if kwargs['yaml']:
+            parser.yaml = True
             yaml_generator(parser, **kwargs)
         else:
             parser.json_confirm = True
@@ -120,8 +119,8 @@ def parse_directory(**kwargs):
             header = os.path.basename(header_path)
             try:
                 parse_dir = BlockHeaderParser(**kwargs)
-                parse_dir.yaml_confirm = True
-                parse_dir.json_confirm = True
+                parse_dir.yaml = True
+                parse_dir.json = True
                 run_blocktool(parse_dir)
                 yaml_generator(parse_dir, **kwargs)
                 if not kwargs['modtool']:

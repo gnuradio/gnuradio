@@ -37,7 +37,12 @@ try:
 except:
     from yaml import Loader, Dumper
 
-from gnuradio.blocktool.core import Constants
+try:
+    from gnuradio.blocktool.core import Constants
+except ImportError:
+    have_blocktool = False
+else:
+    have_blocktool = True
 
 from ..tools import ParserCCBlock, CMakeFileEditor, ask_yes_no, GRCYAMLGenerator
 from .base import ModTool, ModToolException
