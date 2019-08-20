@@ -69,6 +69,9 @@ def run_blocktool(module):
 def cli(**kwargs):
     """
     Block header parsing tool.
+    \b
+    A tool that can be used to automatically parse the headers in GNU Radio project
+    or the OOT modules
     """
     kwargs['modtool'] = False
     if os.path.isfile(kwargs['file_path']):

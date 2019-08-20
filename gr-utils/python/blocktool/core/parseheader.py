@@ -93,10 +93,10 @@ class BlockHeaderParser(BlockTool):
         """
         PyGCCXML header code parser
         magic happens here!
-        # : returns the parsed header data in python dict
-        # : return dict keys: namespace, class, io_signature, make,
-        #                properties, methods
-        # : Can be used as an CLI command or an extenal API
+        : returns the parsed header data in python dict
+        : return dict keys: namespace, class, io_signature, make,
+                       properties, methods
+        : Can be used as an CLI command or an extenal API
         """
         gr = self.modname.split('-')[0]
         module = self.modname.split('-')[-1]

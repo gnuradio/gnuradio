@@ -161,7 +161,7 @@ class ModToolAdd(ModTool):
             return
         try:
             append_re_line_sequence(self._file['cmlib'],
-                                    'list\(APPEND test_{}_sources.*\n'.format(self.info['modname']),
+                                    r'list\(APPEND test_{}_sources.*\n'.format(self.info['modname']),
                                     'qa_{}.cc'.format(self.info['blockname']))
             append_re_line_sequence(self._file['qalib'],
                                     '#include.*\n',
@@ -183,7 +183,7 @@ class ModToolAdd(ModTool):
             return
         try:
             append_re_line_sequence(self._file['cmlib'],
-                                    'list\(APPEND test_{}_sources.*\n'.format(self.info['modname']),
+                                   r'list\(APPEND test_{}_sources.*\n'.format(self.info['modname']),
                                     'qa_{}.cc'.format(self.info['blockname']))
             self.scm.mark_files_updated((self._file['cmlib'],))
         except IOError:
