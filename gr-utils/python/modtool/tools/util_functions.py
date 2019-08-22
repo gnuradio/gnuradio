@@ -143,8 +143,12 @@ def is_number(s):
 def ask_yes_no(question, default):
     """ Asks a binary question. Returns True for yes, False for no.
     default is given as a boolean. """
+    if sys.version_info[0] < 3:
+        in_func = raw_input
+    else:
+        in_func = input
     question += {True: ' [Y/n] ', False: ' [y/N] '}[default]
-    if input(question).lower() != {True: 'n', False: 'y'}[default]:
+    if in_func(question).lower() != {True: 'n', False: 'y'}[default]:
         return default
     else:
         return not default

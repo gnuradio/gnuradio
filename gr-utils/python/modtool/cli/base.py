@@ -122,7 +122,11 @@ def setup_cli_logger(logger):
 
 def cli_input(msg):
     """ Returns enhanced input """
-    return input(click.style(msg, fg='cyan'))
+    if sys.version_info[0] < 3:
+        in_func = raw_input
+    else:
+        in_func = input
+    return in_func(click.style(msg, fg='cyan'))
 
 
 def common_params(func):
