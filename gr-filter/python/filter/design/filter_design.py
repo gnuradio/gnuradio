@@ -33,7 +33,11 @@ from optparse import OptionParser
 from gnuradio import filter
 
 try:
-    import numpy
+    import numpy as np
+except ImportError:
+    raise SystemExit('Please install NumPy to run this script (https://www.np.org/)')
+
+try:
     from numpy.fft import fftpack as fft_detail
 except ImportError:
 
@@ -49,11 +53,6 @@ try:
     from scipy import poly1d, signal
 except ImportError:
     raise SystemExit('Please install SciPy to run this script (https://www.scipy.org)')
-
-try:
-    import numpy as np
-except ImportError:
-    raise SystemExit('Please install NumPy to run this script (https://www.numpy.org/)')
 
 try:
     from PyQt5 import Qt, QtCore, QtWidgets
@@ -961,10 +960,10 @@ class gr_plot_filter(QtGui.QMainWindow):
     def iir_plot_all(self,z,p,k):
         self.b,self.a = signal.zpk2tf(z,p,k)
         w,h = signal.freqz(self.b,self.a)
-        self.fftdB = 20 * numpy.log10 (abs(h))
+        self.fftdB = 20 * np.log10 (abs(h))
         self.freq = w / max(w)
-        self.fftDeg = numpy.unwrap(numpy.arctan2(numpy.imag(h),numpy.real(h)))
-        self.groupDelay = -numpy.diff(self.fftDeg)
+        self.fftDeg = np.unwrap(np.arctan2(np.imag(h),np.real(h)))
+        self.groupDelay = -np.diff(self.fftDeg)
         self.phaseDelay = -self.fftDeg[1:] / self.freq[1:]
         if self.gridview:
             self.set_mfmagresponse()
@@ -997,16 +996,16 @@ class gr_plot_filter(QtGui.QMainWindow):
     def get_fft(self, fs, taps, Npts):
         Ts = 1.0 / fs
         fftpts = fft_detail.fft(taps, Npts)
-        self.freq = numpy.arange(0, fs, 1.0 / (Npts*Ts))
+        self.freq = np.arange(0, fs, 1.0 / (Npts*Ts))
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            self.fftdB = 20.0*numpy.log10(abs(fftpts))
+            self.fftdB = 20.0*np.log10(abs(fftpts))
             if any(self.fftdB == float('-inf')):
                 sys.stderr.write('Filter design failed (taking log10 of 0).\n')
-                self.fftdB = numpy.zeros([len(fftpts)])
+                self.fftdB = np.zeros([len(fftpts)])
 
-        self.fftDeg = numpy.unwrap(numpy.angle(fftpts))
-        self.groupDelay = -numpy.diff(self.fftDeg)
+        self.fftDeg = np.unwrap(np.angle(fftpts))
+        self.groupDelay = -np.diff(self.fftDeg)
         self.phaseDelay = -self.fftDeg[1:] / self.freq[1:]
 
     def update_time_curves(self):
@@ -1025,14 +1024,14 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         if self.mttaps:
             if(type(self.taps[0]) == scipy.complex128):
-                self.mtimecurve_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+                self.mtimecurve_stems.setData(np.repeat(np.arange(ntaps), 2),
                                                 np.dstack((np.zeros(self.taps.real.shape[0], dtype=int),
                                                         self.taps.real)).flatten())
 
-                self.mtimecurve.setData(numpy.arange(ntaps), self.taps.real)
+                self.mtimecurve.setData(np.arange(ntaps), self.taps.real)
 
 
-                self.mtimecurve_i_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+                self.mtimecurve_i_stems.setData(np.repeat(np.arange(ntaps), 2),
                                                 np.dstack((np.zeros(self.taps.imag.shape[0], dtype=int),
                                                             self.taps.imag)).flatten())
 
@@ -1073,15 +1072,15 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             stepres = self.step_response(self.taps)
 
-        if(type(stepres[0]) == numpy.complex128):
-            self.steprescurve_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+        if(type(stepres[0]) == np.complex128):
+            self.steprescurve_stems.setData(np.repeat(np.arange(ntaps), 2),
                                             np.dstack((np.zeros(stepres.real.shape[0], dtype=int),
                                                        stepres.real)).flatten())
 
-            self.steprescurve.setData(numpy.arange(ntaps), stepres.real)
+            self.steprescurve.setData(np.arange(ntaps), stepres.real)
 
 
-            self.steprescurve_i_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+            self.steprescurve_i_stems.setData(np.repeat(np.arange(ntaps), 2),
                                               np.dstack((np.zeros(stepres.imag.shape[0], dtype=int),
                                                          stepres.imag)).flatten())
 
@@ -1096,15 +1095,15 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.steprescurve_i.setData([],[])
 
         if self.mtstep:
-            if(type(stepres[0]) == numpy.complex128):
-                self.mtimecurve_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+            if(type(stepres[0]) == np.complex128):
+                self.mtimecurve_stems.setData(np.repeat(np.arange(ntaps), 2),
                                                 np.dstack((np.zeros(stepres.real.shape[0], dtype=int),
                                                         stepres.real)).flatten())
 
-                self.mtimecurve.setData(numpy.arange(ntaps), stepres.real)
+                self.mtimecurve.setData(np.arange(ntaps), stepres.real)
 
 
-                self.mtimecurve_i_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+                self.mtimecurve_i_stems.setData(np.repeat(np.arange(ntaps), 2),
                                                 np.dstack((np.zeros(stepres.imag.shape[0], dtype=int),
                                                             stepres.imag)).flatten())
 
@@ -1142,15 +1141,15 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             impres = self.impulse_response(self.taps)
 
-        if(type(impres[0]) == numpy.complex128):
-            self.imprescurve_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+        if(type(impres[0]) == np.complex128):
+            self.imprescurve_stems.setData(np.repeat(np.arange(ntaps), 2),
                                            np.dstack((np.zeros(impres.real.shape[0], dtype=int),
                                                       impres.real)).flatten())
 
-            self.imprescurve.setData(numpy.arange(ntaps), impres.real)
+            self.imprescurve.setData(np.arange(ntaps), impres.real)
 
 
-            self.imprescurve_i_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+            self.imprescurve_i_stems.setData(np.repeat(np.arange(ntaps), 2),
                                              np.dstack((np.zeros(impres.imag.shape[0], dtype=int),
                                                         impres.imag)).flatten())
 
@@ -1161,15 +1160,15 @@ class gr_plot_filter(QtGui.QMainWindow):
                                                       impres)).flatten())
 
         if self.mtimpulse:
-            if(type(impres[0]) == numpy.complex128):
-                self.mtimecurve_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+            if(type(impres[0]) == np.complex128):
+                self.mtimecurve_stems.setData(np.repeat(np.arange(ntaps), 2),
                                             np.dstack((np.zeros(impres.real.shape[0], dtype=int),
                                                         impres.real)).flatten())
 
-                self.mtimecurve.setData(numpy.arange(ntaps), impres.real)
+                self.mtimecurve.setData(np.arange(ntaps), impres.real)
 
 
-                self.mtimecurve_i_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+                self.mtimecurve_i_stems.setData(np.repeat(np.arange(ntaps), 2),
                                                 np.dstack((np.zeros(impres.imag.shape[0], dtype=int),
                                                             impres.imag)).flatten())
 
@@ -1650,7 +1649,7 @@ class gr_plot_filter(QtGui.QMainWindow):
 
     def update_fft(self, taps, params):
         self.params = params
-        self.taps = numpy.array(taps)
+        self.taps = np.array(taps)
         self.get_fft(self.params["fs"], self.taps, self.nfftpts)
 
     def set_mfoverlay(self):
@@ -1953,9 +1952,9 @@ class gr_plot_filter(QtGui.QMainWindow):
         length = len(b)
         if self.iir:
             length = 50
-        impulse = numpy.repeat(0., length)
+        impulse = np.repeat(0., length)
         impulse[0] = 1.
-        x = numpy.arange(0, length)
+        x = np.arange(0, length)
         response = signal.lfilter(b, a, impulse)
         return response
 
@@ -1963,11 +1962,11 @@ class gr_plot_filter(QtGui.QMainWindow):
         length = len(b)
         if self.iir:
             length = 50
-        impulse = numpy.repeat(0., length)
+        impulse = np.repeat(0., length)
         impulse[0] = 1.
-        x = numpy.arange(0, length)
+        x = np.arange(0, length)
         response = signal.lfilter(b, a, impulse)
-        step = numpy.cumsum(response)
+        step = np.cumsum(response)
         return step
 
     def update_fcoeff(self):
@@ -2203,7 +2202,7 @@ class gr_plot_filter(QtGui.QMainWindow):
 
     def draw_plots(self, taps, params):
         self.params = params
-        self.taps = numpy.array(taps)
+        self.taps = np.array(taps)
         if self.params:
             self.get_fft(self.params["fs"], self.taps, self.nfftpts)
             self.update_time_curves()
