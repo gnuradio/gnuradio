@@ -34,7 +34,18 @@ from gnuradio import filter
 
 try:
     import numpy
-    from numpy.fft import fftpack
+    from numpy.fft import fftpack as fft_detail
+except ImportError:
+
+    print('Could not import fftpack, trying pocketfft')
+    # Numpy changed fft implementation in version 1.17
+    # from fftpack to pocketfft
+    try:
+        from numpy.fft import pocketfft as fft_detail
+    except ImportError:
+        raise SystemExit('Could not import fft implementation of numpy')
+    
+try:
     from scipy import poly1d, signal
 except ImportError:
     raise SystemExit('Please install SciPy to run this script (https://www.scipy.org)')
@@ -985,7 +996,7 @@ class gr_plot_filter(QtGui.QMainWindow):
 
     def get_fft(self, fs, taps, Npts):
         Ts = 1.0 / fs
-        fftpts = fftpack.fft(taps, Npts)
+        fftpts = fft_detail.fft(taps, Npts)
         self.freq = numpy.arange(0, fs, 1.0 / (Npts*Ts))
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
