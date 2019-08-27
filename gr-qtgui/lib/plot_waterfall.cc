@@ -280,22 +280,3 @@ QImage PlotWaterfall::renderImage(const QwtScaleMap& xMap,
     return std::move(image);
 }
 
-/*!
-  \brief Draw the spectrogram
-
-  \param painter Painter
-  \param xMap Maps x-values into pixel coordinates.
-  \param yMap Maps y-values into pixel coordinates.
-  \param canvasRect Contents rect of the canvas in painter coordinates
-
-  \sa setDisplayMode, renderImage,
-  QwtPlotRasterItem::draw, drawContourLines
-*/
-
-void PlotWaterfall::draw(QPainter* painter,
-                         const QwtScaleMap& xMap,
-                         const QwtScaleMap& yMap,
-                         const QRect& canvasRect) const
-{
-    QwtPlotRasterItem::draw(painter, xMap, yMap, canvasRect);
-}
