@@ -700,7 +700,6 @@ public slots:
 
 private:
     QList<QAction*> d_act;
-    OtherAction* d_other;
     QActionGroup* d_grp;
 };
 
@@ -807,7 +806,6 @@ public slots:
 
 private:
     QList<QAction*> d_act;
-    OtherAction* d_other;
     QActionGroup* d_grp;
     float d_off, d_high, d_medium, d_low;
 };
@@ -929,7 +927,6 @@ public slots:
 private:
     QList<QAction*> d_act;
     QActionGroup* d_grp;
-    int d_which;
 };
 
 
@@ -1078,7 +1075,6 @@ public slots:
 private:
     QActionGroup* d_grp;
     QList<QAction*> d_act;
-    OtherDualAction* d_other;
     QColor d_max_value, d_min_value;
     int d_which;
 };

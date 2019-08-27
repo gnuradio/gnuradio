@@ -34,9 +34,6 @@ static const int DIBITS_PER_BYTE = 4;
 #define SEGOF(x) ((x) / ((SEGMENT_SIZE + 1) * DIBITS_PER_BYTE))
 #define SYMOF(x) (((x) % ((SEGMENT_SIZE + 1) * DIBITS_PER_BYTE)) - 4)
 
-/* How many separate Trellis encoders / Viterbi decoders run in parallel */
-static const int NCODERS = 12;
-
 #define ENCODER_SEG_BUMP 4
 
 /* A Segment sync symbol is an 8VSB +5,-5,-5,+5 sequence that occurs at
