@@ -64,11 +64,6 @@ public:
 
     virtual int rtti() const;
 
-    virtual void draw(QPainter* p,
-                      const QwtScaleMap& xMap,
-                      const QwtScaleMap& yMap,
-                      const QRect& rect) const;
-
 protected:
 #if QWT_VERSION < 0x060000
     QImage renderImage(const QwtScaleMap& xMap,
