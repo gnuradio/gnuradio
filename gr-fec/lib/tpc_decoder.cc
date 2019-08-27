@@ -703,7 +703,7 @@ float tpc_decoder::constant_log_map(const float delta1, const float delta2)
 {
     // Return maximum of delta1 and delta2
     // and in correction value if |delta1-delta2| < TVALUE
-    register float diff;
+    float diff;
     diff = delta2 - delta1;
 
     if (diff > TVALUE)
