@@ -299,22 +299,3 @@ QwtInterval PlotTimeRaster::interval(Qt::Axis ax) const
 }
 #endif
 
-/*!
-  \brief Draw the raster
-
-  \param painter Painter
-  \param xMap Maps x-values into pixel coordinates.
-  \param yMap Maps y-values into pixel coordinates.
-  \param canvasRect Contents rect of the canvas in painter coordinates
-
-  \sa setDisplayMode, renderImage,
-  QwtPlotRasterItem::draw, drawContourLines
-*/
-
-void PlotTimeRaster::draw(QPainter* painter,
-                          const QwtScaleMap& xMap,
-                          const QwtScaleMap& yMap,
-                          const QRect& canvasRect) const
-{
-    QwtPlotRasterItem::draw(painter, xMap, yMap, canvasRect);
-}
