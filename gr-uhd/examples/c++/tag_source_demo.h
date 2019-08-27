@@ -109,10 +109,11 @@ public:
             _do_new_burst = false;
             _samps_left_in_burst = _samps_per_burst;
 
-            if (pmt::is_null(_length_tag_key))
+            if (pmt::is_null(_length_tag_key)) {
                 this->make_sob_tag(this->nitems_written(0));
-            else
+            } else {
 #if 1
+                (void)_samp_rate; // avoid unused variable warning
                 this->make_length_tag(this->nitems_written(0), _samps_left_in_burst);
 #else
                 // Test usrp_sink's ability to cancel remainder of burst if new length_tag
@@ -123,6 +124,7 @@ public:
                 this->make_length_tag(this->nitems_written(0),
                                       uint64_t(1.1 * _samp_rate * _cycle_duration));
 #endif
+            }
             this->make_time_tag(this->nitems_written(0));
 
             _time_fracs += _cycle_duration;

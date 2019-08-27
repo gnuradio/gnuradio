@@ -33,6 +33,7 @@ class atsc_trellis_encoder_impl : public atsc_trellis_encoder
 private:
     bool debug;
 
+    /* How many separate Trellis encoders / Viterbi decoders run in parallel */
     static const int NCODERS = 12;
     static const int SEGMENT_SIZE = ATSC_MPEG_RS_ENCODED_LENGTH;
     static const int INPUT_SIZE = (SEGMENT_SIZE * 12);

@@ -29,8 +29,6 @@
 namespace gr {
 namespace dtv {
 
-static const int N_SAVED_SYMBOLS = 12;
-
 atsc_field_sync_mux::sptr atsc_field_sync_mux::make()
 {
     return gnuradio::get_initial_sptr(new atsc_field_sync_mux_impl());

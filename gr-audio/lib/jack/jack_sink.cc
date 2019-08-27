@@ -99,7 +99,6 @@ jack_sink::jack_sink(int sampling_rate, const std::string device_name, bool ok_t
           "audio_jack_sink", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
       d_sampling_rate(sampling_rate),
       d_device_name(device_name.empty() ? default_device_name() : device_name),
-      d_ok_to_block(ok_to_block),
       d_jack_client(0),
       d_portcount(0),
       d_jack_output_port(),
