@@ -560,7 +560,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
     edge_vector_t edges = d_fg->edges();
     msg_edge_vector_t msg_edges = d_fg->msg_edges();
     edge_viter_t p;
-    msg_edge_viter_t q, u;
+    msg_edge_viter_t q;
 
     // Only run setup_rpc if ControlPort config param is enabled.
     bool ctrlport_on = prefs::singleton()->get_bool("ControlPort", "on", false);
