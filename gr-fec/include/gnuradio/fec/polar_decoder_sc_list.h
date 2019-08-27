@@ -33,7 +33,6 @@ namespace code {
 
 namespace polar {
 class scl_list;
-class path;
 } // namespace polar
 
 /*!
