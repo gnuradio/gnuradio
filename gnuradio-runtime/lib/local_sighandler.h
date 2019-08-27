@@ -49,7 +49,7 @@ private:
 
 public:
     local_sighandler(int signum, void (*new_handler)(int));
-    ~local_sighandler();
+    ~local_sighandler() noexcept(false);
 
     /* throw gr_signal (signum) */
     static void throw_signal(int signum);
