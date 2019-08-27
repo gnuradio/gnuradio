@@ -60,8 +60,8 @@ private:
         }
 
         void operator()(T& x) { x->i()->registerConfigureCallback(id, callback); }
-        const std::string& id;
-        const Tcallback& callback;
+        const std::string id;
+        const Tcallback callback;
     };
 
     template <class T, typename Tcallback>
@@ -69,7 +69,7 @@ private:
         unregisterConfigureCallback_f(const std::string& _id) : id(_id) { ; }
 
         void operator()(T& x) { x->i()->unregisterConfigureCallback(id); }
-        const std::string& id;
+        const std::string id;
     };
 
     template <class T, typename Tcallback>
@@ -81,8 +81,8 @@ private:
         }
 
         void operator()(T& x) { x->i()->registerQueryCallback(id, callback); }
-        const std::string& id;
-        const Tcallback& callback;
+        const std::string id;
+        const Tcallback callback;
     };
 
     template <class T, typename Tcallback>
@@ -90,7 +90,7 @@ private:
         unregisterQueryCallback_f(const std::string& _id) : id(_id) { ; }
 
         void operator()(T& x) { x->i()->unregisterQueryCallback(id); }
-        const std::string& id;
+        const std::string id;
     };
 
 
@@ -103,8 +103,8 @@ private:
         }
 
         void operator()(T& x) { x->i()->registerHandlerCallback(id, callback); }
-        const std::string& id;
-        const Tcallback& callback;
+        const std::string id;
+        const Tcallback callback;
     };
 
     template <class T, typename Tcallback>
@@ -112,7 +112,7 @@ private:
         unregisterHandlerCallback_f(const std::string& _id) : id(_id) { ; }
 
         void operator()(T& x) { x->i()->unregisterHandlerCallback(id); }
-        const std::string& id;
+        const std::string id;
     };
 
 
