@@ -238,7 +238,7 @@ QImage PlotTimeRaster::renderImage(const QwtScaleMap& xMap,
     const QwtInterval intensityRange = d_data->data->interval(Qt::ZAxis);
 #endif
     if (!intensityRange.isValid())
-        return image;
+        return std::move(image);
 
     d_data->data->initRaster(area, rect.size());
 
@@ -282,7 +282,7 @@ QImage PlotTimeRaster::renderImage(const QwtScaleMap& xMap,
         image = image.mirrored(hInvert, vInvert);
     }
 
-    return image;
+    return std::move(image);
 }
 
 #if QWT_VERSION < 0x060000
