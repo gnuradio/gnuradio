@@ -150,7 +150,7 @@ private:
         return (dummy);
     };
 
-    std::vector<boost::any> d_rpc_vars; // container for all RPC variables
+    std::vector<rpcbasic_sptr> d_rpc_vars; // container for all RPC variables
     std::string d_name;
     int d_id;
 };
