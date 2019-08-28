@@ -91,7 +91,7 @@ protected:
     bool d_rpc_set;
 
     msg_queue_map_t msg_queue;
-    std::vector<boost::any> d_rpc_vars; // container for all RPC variables
+    std::vector<rpcbasic_sptr> d_rpc_vars; // container for all RPC variables
 
     basic_block(void) {} // allows pure virtual interface sub-classes
 
