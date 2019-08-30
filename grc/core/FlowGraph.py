@@ -92,6 +92,15 @@ class FlowGraph(Element):
         parameters = [b for b in self.iter_enabled_blocks() if b.key == 'parameter']
         return parameters
 
+    def get_snippets(self):
+        """
+        Get a set of all code snippets (Python) in this flow graph namespace.
+
+        Returns:
+            a list of code snippets
+        """
+        return [b for b in self.iter_enabled_blocks() if b.key == 'snippet']
+
     def get_monitors(self):
         """
         Get a list of all ControlPort monitors

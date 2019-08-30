@@ -101,6 +101,7 @@ class TopBlockGenerator(object):
         variables = fg.get_variables()
         parameters = fg.get_parameters()
         monitors = fg.get_monitors()
+        snippets = self._snippets()
 
         for block in fg.iter_enabled_blocks():
             key = block.key
@@ -115,6 +116,7 @@ class TopBlockGenerator(object):
         self.namespace = {
             'flow_graph': fg,
             'variables': variables,
+            'snippets': snippets,
             'parameters': parameters,
             'monitors': monitors,
             'generate_options': self._generate_options,
@@ -174,6 +176,23 @@ class TopBlockGenerator(object):
 
         return output
 
+    def _snippets(self):
+        fg = self._flow_graph
+        snippets = fg.get_snippets()
+        if not snippets:
+            return None
+
+        output = []
+        for snip in snippets:
+            d ={}
+            d['section'] = snip.params['section'].value
+            d['position'] = snip.params['position'].value
+
+            d['lines'] = snip.params['code'].value.splitlines()
+            output.append(d)
+
+        return output
+
     def _blocks(self):
         fg = self._flow_graph
         parameters = fg.get_parameters()
@@ -190,7 +209,7 @@ class TopBlockGenerator(object):
 
         blocks = [
             b for b in fg.blocks
-            if b.enabled and not (b.get_bypassed() or b.is_import or b in parameters or b.key == 'options')
+            if b.enabled and not (b.get_bypassed() or b.is_import or b.is_snippet or b in parameters or b.key == 'options')
         ]
 
         blocks = expr_utils.sort_objects(blocks, operator.attrgetter('name'), _get_block_sort_text)

@@ -1,0 +1,37 @@
+id: snippet
+label: Python Snippet
+flags: [ python ]
+
+parameters:
+-   id: section
+    label: Section of Flowgraph
+    dtype: string
+    options: ['top', 'imports', 'variables', 'blocks','connections','callbacks','main' ]
+    option_labels: ['Top', 'Imports', 'Variables', 'Blocks','Connections','Callbacks','Main']
+-   id: position
+    label: Position in Section
+    dtype: string
+    options: ['beginning','end']
+    option_labels: ['Beginning','End']
+    hide: ${ ('part' if (
+            (section == "main") )
+        else 'all')
+        }
+-   id: code
+    label: Code Snippet
+    dtype: _multiline
+
+templates:
+    var_make: ${code}
+
+documentation: |-
+    Insert a snippet of Python code directly into the flowgraph at the end of the specified section 
+
+    Indents will be handled upon insertion into the python flowgraph
+
+    Examples:
+    print("This is my flowgraph")
+
+    Will place the print statement in the generated .py file
+
+file_format: 1
