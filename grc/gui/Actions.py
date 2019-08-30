@@ -400,6 +400,12 @@ TOGGLE_HIDE_VARIABLES = actions.register("win.hide_variables",
     preference_name='hide_variables',
     default=False,
 )
+TOGGLE_SHOW_BLOCK_IDS = actions.register("win.show_block_ids",
+    label='Show All Block IDs',
+    tooltip='Show all the block IDs',
+    preference_name='show_block_ids',
+    default=False,
+)
 TOGGLE_FLOW_GRAPH_VAR_EDITOR = actions.register("win.toggle_variable_editor",
     label='Show _Variable Editor',
     tooltip='Show the variable editor. Modify variables and imports in this flow graph',
