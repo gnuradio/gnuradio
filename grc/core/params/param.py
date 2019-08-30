@@ -245,9 +245,13 @@ class Param(Element):
         elif dtype in ('string', 'file_open', 'file_save', '_multiline', '_multiline_python_external'):
             # Do not check if file/directory exists, that is a runtime issue
             try:
-                value = self.parent_flowgraph.evaluate(expr)
-                if not isinstance(value, str):
-                    raise Exception()
+                # Do not evaluate multiline strings (code snippets or comments)
+                if dtype not in ['_multiline','_multiline_python_external']:
+                    value = self.parent_flowgraph.evaluate(expr)
+                    if not isinstance(value, str):
+                        raise Exception()
+                else:
+                    value = str(expr)
             except Exception:
                 self._stringify_flag = True
                 value = str(expr)

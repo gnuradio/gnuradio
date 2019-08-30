@@ -191,7 +191,7 @@ class TopBlockGenerator(object):
 
         blocks = [
             b for b in fg.blocks
-            if b.enabled and not (b.get_bypassed() or b.is_import or b in parameters or b.key == 'options')
+            if b.enabled and not (b.get_bypassed() or b.is_import or b.is_snippet or b in parameters or b.key == 'options')
         ]
 
         blocks = expr_utils.sort_objects(blocks, operator.attrgetter('name'), _get_block_sort_text)
