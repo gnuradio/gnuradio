@@ -31,6 +31,10 @@ parameters:
     label: Vec Length
     dtype: int
     default: '1'
+-   id: udpbufsize
+    label: udp receive buffer size
+    dtype: int
+    default: '1048576'
     hide: ${ 'part' if vlen == 1 else 'none' }
 
 outputs:
@@ -43,12 +47,12 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.udp_source(${type.size}*${vlen}, ${ipaddr}, ${port}, ${psize}, ${eof})
+    make: blocks.udp_source(${type.size}*${vlen}, ${ipaddr}, ${port}, ${psize}, ${eof},${udpbufsize})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/udp_source.h>']
     declarations: 'blocks::udp_source::sptr ${id};'
-    make: 'this->${id} = blocks::udp_source::make(${type.size}*${vlen}, ${ipaddr}, ${port}, ${psize}, ${eof});'
+    make: 'this->${id} = blocks::udp_source::make(${type.size}*${vlen}, ${ipaddr}, ${port}, ${psize}, ${eof},${udpbufsize});'
     translations:
         gr.sizeof_: 'sizeof('
         'True': 'true'

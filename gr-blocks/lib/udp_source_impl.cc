@@ -40,14 +40,14 @@ const int udp_source_impl::BUF_SIZE_PAYLOADS =
     gr::prefs::singleton()->get_long("udp_blocks", "buf_size_payloads", 50);
 
 udp_source::sptr udp_source::make(
-    size_t itemsize, const std::string& ipaddr, int port, int payload_size, bool eof)
+    size_t itemsize, const std::string& ipaddr, int port, int payload_size, bool eof,int udp_recv_buf_size)
 {
     return gnuradio::get_initial_sptr(
-        new udp_source_impl(itemsize, ipaddr, port, payload_size, eof));
+        new udp_source_impl(itemsize, ipaddr, port, payload_size, eof,udp_recv_buf_size));
 }
 
 udp_source_impl::udp_source_impl(
-    size_t itemsize, const std::string& host, int port, int payload_size, bool eof)
+    size_t itemsize, const std::string& host, int port, int payload_size, bool eof,int udp_recv_buf_size)
     : sync_block(
           "udp_source", io_signature::make(0, 0, 0), io_signature::make(1, 1, itemsize)),
       d_itemsize(itemsize),
@@ -55,7 +55,8 @@ udp_source_impl::udp_source_impl(
       d_eof(eof),
       d_connected(false),
       d_residual(0),
-      d_sent(0)
+      d_sent(0),
+      d_recvbuf_size(udp_recv_buf_size)
 {
     // Give us some more room to play.
     d_rxbuf = new char[4 * d_payload_size];
@@ -96,6 +97,8 @@ void udp_source_impl::connect(const std::string& host, int port)
         boost::asio::socket_base::reuse_address roption(true);
         d_socket->set_option(roption);
 
+        boost::asio::socket_base::receive_buffer_size recv_option(d_recvbuf_size);
+        d_socket->set_option(recv_option);
         d_socket->bind(d_endpoint);
 
         start_receive();

@@ -42,21 +42,23 @@ public:
     /*!
      * \brief UDP Source Constructor
      *
-     * \param itemsize     The size (in bytes) of the item datatype
-     * \param host         The name or IP address of the transmitting host; can be
-     *                     NULL, None, or "0.0.0.0" to allow reading from any
-     *                     interface on the host
-     * \param port         The port number on which to receive data; use 0 to
-     *                     have the system assign an unused port number
-     * \param payload_size UDP payload size by default set to 1472 =
-     *                     (1500 MTU - (8 byte UDP header) - (20 byte IP header))
-     * \param eof          Interpret zero-length packet as EOF (default: true)
+     * \param itemsize           The size (in bytes) of the item datatype
+     * \param host               The name or IP address of the transmitting host; can be
+     *                           NULL, None, or "0.0.0.0" to allow reading from any
+     *                           interface on the host
+     * \param port               The port number on which to receive data; use 0 to
+     *                           have the system assign an unused port number
+     * \param payload_size       UDP payload size by default set to 1472 =
+     *                           (1500 MTU - (8 byte UDP header) - (20 byte IP header))
+     * \param eof                Interpret zero-length packet as EOF (default: true)
+     * \param udp_recv_buf_size  set upd receive buffer size by default set to 1024*1024, unit:byte
      */
     static sptr make(size_t itemsize,
                      const std::string& host,
                      int port,
                      int payload_size = 1472,
-                     bool eof = true);
+                     bool eof = true,
+                     int udp_recv_buf_size = 1048576);
 
     /*! \brief Change the connection to a new destination
      *

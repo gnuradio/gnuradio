@@ -42,7 +42,7 @@ private:
     char* d_residbuf;   // hold buffer between calls
     ssize_t d_residual; // hold information about number of bytes stored in residbuf
     ssize_t d_sent;     // track how much of d_residbuf we've outputted
-
+    int  d_recvbuf_size;//  UDP receive buffer size, unit:byte
     static const int
         BUF_SIZE_PAYLOADS; //!< The d_residbuf size in multiples of d_payload_size
 
@@ -63,8 +63,7 @@ private:
     void run_io_service() { d_io_service.run(); }
 
 public:
-    udp_source_impl(
-        size_t itemsize, const std::string& host, int port, int payload_size, bool eof);
+    udp_source_impl(size_t itemsize, const std::string& host, int port, int payload_size, bool eof, int udp_recv_buf_size);
     ~udp_source_impl();
 
     void connect(const std::string& host, int port);
