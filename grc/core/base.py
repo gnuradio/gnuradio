@@ -139,6 +139,7 @@ class Element(object):
     is_param = False
     is_variable = False
     is_import = False
+    is_snippet = False
 
     def get_raw(self, name):
         descriptor = getattr(self.__class__, name, None)
