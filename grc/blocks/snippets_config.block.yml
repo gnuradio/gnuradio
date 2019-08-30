@@ -1,0 +1,57 @@
+id: snippets_config
+label: Python Snippets
+flags: [ python ]
+
+parameters:
+-   id: snippet_editor
+    label: Editor
+    dtype: enum
+    options: ['Dialog','External']
+    hide: 'part'
+-   id: snippet_top
+    label: Top
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    hide: 'part'
+-   id: snippet_imports
+    label: Imports
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    hide: 'part'
+-   id: snippet_variables
+    label: Variables
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    hide: 'part'
+-   id: snippet_blocks
+    label: Blocks
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    hide: 'part'
+-   id: snippet_connections
+    label: Connections
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    hide: 'part'
+-   id: snippet_callbacks
+    label: Callbacks
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    hide: 'part'
+-   id: snippet_main_beginning
+    label: Main (Beginning)
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    hide: 'part'
+-   id: snippet_main_end
+    label: Main (End)
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    hide: 'part'
+
+templates:
+    var_make: ${code}
+
+documentation: |-
+    Insert snippets of Python code directly into the flowgraph at the end of the specified section 
+
+    Indents will be handled upon insertion into the python flowgraph
+
+    Examples:
+    print("This is my flowgraph")
+
+    Will place the print statement in the generated .py file
+
+file_format: 1

@@ -251,9 +251,19 @@ class Param(Element):
                 value = [value]
             return value
         #########################
+        # Multiline String Types
+        #########################
+        elif dtype in ('_multiline', '_multiline_python_external'):
+            # Since multiline parameters are used for code, don't evaluate
+            self._stringify_flag = True
+            value = str(expr)
+            if dtype == '_multiline_python_external':
+                ast.parse(value)  # Raises SyntaxError
+            return value
+        #########################
         # String Types
         #########################
-        elif dtype in ('string', 'file_open', 'file_save', '_multiline', '_multiline_python_external'):
+        elif dtype in ('string', 'file_open', 'file_save'):
             # Do not check if file/directory exists, that is a runtime issue
             try:
                 value = self.parent_flowgraph.evaluate(expr)
@@ -262,8 +272,6 @@ class Param(Element):
             except Exception:
                 self._stringify_flag = True
                 value = str(expr)
-            if dtype == '_multiline_python_external':
-                ast.parse(value)  # Raises SyntaxError
             return value
         #########################
         # GUI Position/Hint

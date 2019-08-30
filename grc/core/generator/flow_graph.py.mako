@@ -30,6 +30,16 @@ python_version = version_info.major
 # GNU Radio version: ${version}
 ##################################################
 
+% if snippets:
+% for snip in snippets:
+% if snip["section"] == 'top':
+% for line in snip["lines"]:
+${indent(line)}
+% endfor
+% endif
+% endfor
+% endif
+
 % if generate_options == 'qt_gui':
 from distutils.version import StrictVersion
 
@@ -51,6 +61,17 @@ if __name__ == '__main__':
 ##${imp.replace("  # grc-generated hier_block", "")}
 ${imp}
 % endfor
+% if snippets:
+
+% for snip in snippets:
+% if snip["section"] == 'imports':
+% for line in snip["lines"]:
+${indent(line)}
+% endfor
+% endif
+% endfor
+% endif
+
 ########################################################
 ##Create Class
 ##  Write the class declaration for a top or hier block.
@@ -180,6 +201,16 @@ gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}])\
 % for var in variables:
         ${indent(var.templates.render('var_make'))}
 % endfor
+% if snippets:
+
+% for snip in snippets:
+% if snip["section"] == 'variables':
+% for line in snip["lines"]:
+        ${indent(line)}
+% endfor
+% endif
+% endfor
+% endif
         % if blocks:
 
         ${'##################################################'}
@@ -203,6 +234,16 @@ gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}])\
 ##         (self.${blk.name}).set_max_output_buffer(${blk.params['maxoutbuf'].get_evaluated()})
 ##         % endif
         % endfor
+% if snippets:
+
+% for snip in snippets:
+% if snip["section"] == 'blocks':
+% for line in snip["lines"]:
+        ${indent(line)}
+% endfor
+% endif
+% endfor
+% endif
 
 ##########################################################
 ## Create a layout entry if not manually done for BokehGUI
@@ -228,6 +269,17 @@ gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}])\
         ${ connection.rstrip() }
         % endfor
         % endif
+% if snippets:
+
+% for snip in snippets:
+% if snip["section"] == 'connections':
+% for line in snip["lines"]:
+        ${indent(line)}
+% endfor
+% endif
+% endfor
+
+% endif
 ########################################################
 ## QT sink close method reimplementation
 ########################################################
@@ -275,6 +327,17 @@ gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}])\
         % endfor
         % endif
     % endfor
+% if snippets:
+
+% for snip in snippets:
+% if snip["section"] == 'callbacks':
+% for line in snip["lines"]:
+    ${indent(line)}
+% endfor
+% endif
+% endfor
+
+% endif
 ########################################################
 ##Create Main
 ##  For top block code, generate a main routine.
@@ -328,6 +391,16 @@ def argument_parser():
 
 
 def main(top_block_cls=${class_name}, options=None):
+% if snippets:
+
+% for snip in snippets:
+% if snip["section"] == 'main' and snip["position"] == 'beginning':
+% for line in snip["lines"]:
+    ${indent(line)}
+% endfor
+% endif
+% endfor
+% endif
     % if parameters:
     if options is None:
         options = argument_parser().parse_args()
@@ -446,6 +519,16 @@ def main(top_block_cls=${class_name}, options=None):
     % endif
     % endfor
     % endif
+% if snippets:
+
+% for snip in snippets:
+% if snip["section"] == 'main' and snip["position"] == 'end':
+% for line in snip["lines"]:
+    ${indent(line)}
+% endfor
+% endif
+% endfor
+% endif
 
 
 if __name__ == '__main__':

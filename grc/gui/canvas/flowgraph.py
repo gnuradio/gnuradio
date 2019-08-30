@@ -162,6 +162,12 @@ class FlowGraph(CoreFlowgraph, Drawable):
             key: the block key
             coor: an optional coordinate or None for random
         """
+        # Snippets should be singleton
+        # TODO: Add singleton pattern into .yml?
+        if key == 'snippets_config':
+            if key in (blk.key for blk in self.blocks):
+                return None
+
         id = self._get_unique_id(key)
         scroll_pane = self.drawing_area.get_parent().get_parent()
         # calculate the position coordinate
@@ -280,6 +286,11 @@ class FlowGraph(CoreFlowgraph, Drawable):
             block_key = block_n.get('id')
             if block_key == 'options':
                 continue
+            
+            # Don't paste in another snippets block
+            if block_key == 'snippets_config':
+                if block_key in (blk.key for blk in self.blocks):
+                    continue
 
             block_name = block_n.get('name')
             # Verify whether a block with this name exists before adding it

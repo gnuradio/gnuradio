@@ -303,6 +303,10 @@ class Block(Element):
     def is_import(self):
         return self.key == 'import'
 
+    @lazy_property
+    def is_snippets_config(self):
+        return self.key == 'snippets_config'
+
     @property
     def comment(self):
         return self.params['comment'].value
