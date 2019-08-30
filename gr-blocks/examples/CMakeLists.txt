@@ -9,6 +9,7 @@ install(
   FILES
   matrix_multiplexer.grc
   peak_detector2.grc
+  py_snippets_demo.grc
   selector.grc
   test_stream_mux_tags.grc
   vector_source_with_tags.grc

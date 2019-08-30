@@ -81,6 +81,47 @@ class FlowGraph(Element):
         parameters = [b for b in self.iter_enabled_blocks() if b.key == 'parameter']
         return parameters
 
+    def get_snippets(self):
+        """
+        Get a set of all code snippets (Python) in this flow graph namespace.
+
+        Returns:
+            a list of code snippets
+        """
+        return [b for b in self.iter_enabled_blocks() if b.key == 'snippet']
+
+    def get_snippets_dict(self, section=None):
+        """
+        Get a dictionary of code snippet information for a particular section.
+
+        Args:
+            section: string specifier of section of snippets to return, section=None returns all
+
+        Returns:
+            a list of code snippets dicts
+        """
+        snippets = self.get_snippets()
+        if not snippets:
+            return []
+
+        output = []
+        for snip in snippets:
+            d ={}
+            sect = snip.params['section'].value
+            d['section'] = sect
+            d['priority'] = snip.params['priority'].value
+            d['lines'] = snip.params['code'].value.splitlines()
+            d['def'] = 'def snipfcn_{}(self):'.format(snip.name)
+            d['call'] = 'snipfcn_{}(tb)'.format(snip.name)
+            if not section or sect == section:
+                output.append(d)
+
+        # Sort by descending priority 
+        if section:
+            output = sorted(output, key=lambda x: x['priority'], reverse=True)
+
+        return output
+
     def get_monitors(self):
         """
         Get a list of all ControlPort monitors
