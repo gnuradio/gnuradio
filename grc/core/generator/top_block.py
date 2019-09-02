@@ -176,18 +176,51 @@ class TopBlockGenerator(object):
 
         return output
 
+    # def _snippets(self):
+    #     fg = self._flow_graph
+    #     snippets = fg.get_snippets()
+    #     if not snippets:
+    #         return None
+
+    #     output = []
+    #     for snip in snippets:
+    #         d ={}
+    #         d['section'] = snip.params['section'].value
+    #         d['position'] = snip.params['position'].value
+
+    #         d['lines'] = snip.params['code'].value.splitlines()
+    #         output.append(d)
+
+        return output
+
     def _snippets(self):
         fg = self._flow_graph
-        snippets = fg.get_snippets()
-        if not snippets:
-            return None
 
+        # Snippets from the Options Block
         output = []
+        d ={'section': 'top', 'lines': fg.get_option('snippet_top').splitlines()}
+        output.append(d)
+        d ={'section': 'imports', 'lines': fg.get_option('snippet_imports').splitlines()}
+        output.append(d)
+        d ={'section': 'variables', 'lines': fg.get_option('snippet_variables').splitlines()}
+        output.append(d)
+        d ={'section': 'blocks', 'lines': fg.get_option('snippet_blocks').splitlines()}
+        output.append(d)
+        d ={'section': 'connections', 'lines': fg.get_option('snippet_connections').splitlines()}
+        output.append(d)      
+        d ={'section': 'callbacks', 'lines': fg.get_option('snippet_callbacks').splitlines()}
+        output.append(d)
+        d ={'section': 'main', 'position': 'beginning', 'lines': fg.get_option('snippet_main_beginning').splitlines()}
+        output.append(d)
+        d ={'section': 'main', 'position': 'end', 'lines': fg.get_option('snippet_main_end').splitlines()}
+        output.append(d)  
+
+        # Snippets from Individual Snippet Blocks
+        snippets = fg.get_snippets()
         for snip in snippets:
             d ={}
             d['section'] = snip.params['section'].value
             d['position'] = snip.params['position'].value
-
             d['lines'] = snip.params['code'].value.splitlines()
             output.append(d)
 

@@ -1,6 +1,6 @@
 id: snippet
 label: Python Snippet
-flags: [ python ]
+flags: [ python, show_id ]
 
 parameters:
 -   id: section
@@ -17,9 +17,17 @@ parameters:
             (section == "main") )
         else 'all')
         }
+-   id: snippet_editor
+    label: Editor
+    dtype: enum
+    options: ['Dialog','External']
+    hide: part
 -   id: code
     label: Code Snippet
-    dtype: _multiline
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    default: |-
+        # Insert Python Code here
+        # Will be inserted at the end of the specified section in the generated flowgraph
 
 templates:
     var_make: ${code}

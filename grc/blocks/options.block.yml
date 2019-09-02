@@ -123,6 +123,53 @@ parameters:
     default: '.:'
     hide: part
 
+-   id: snippet_editor
+    label: Editor
+    dtype: enum
+    category: Code Snippets
+    options: ['Dialog','External']
+    hide: ${'part' if output_language == 'python' else 'all'}
+
+-   id: snippet_top
+    label: Top
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    category: Code Snippets
+    hide: ${'part' if output_language == 'python' else 'all'}
+-   id: snippet_imports
+    label: Imports
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    category: Code Snippets
+    hide: ${'part' if output_language == 'python' else 'all'}
+-   id: snippet_variables
+    label: Variables
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    category: Code Snippets
+    hide: ${'part' if output_language == 'python' else 'all'}
+-   id: snippet_blocks
+    label: Blocks
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    category: Code Snippets
+    hide: ${'part' if output_language == 'python' else 'all'}
+-   id: snippet_connections
+    label: Connections
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    category: Code Snippets
+    hide: ${'part' if output_language == 'python' else 'all'}
+-   id: snippet_callbacks
+    label: Callbacks
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    category: Code Snippets
+    hide: ${'part' if output_language == 'python' else 'all'}
+-   id: snippet_main_beginning
+    label: Main (Beginning)
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    category: Code Snippets
+    hide: ${'part' if output_language == 'python' else 'all'}
+-   id: snippet_main_end
+    label: Main (End)
+    dtype: ${'_multiline_python_external' if snippet_editor == 'External' else '_multiline'}
+    category: Code Snippets
+    hide: ${'part' if output_language == 'python' else 'all'}
 asserts:
 - ${ not window_size or len(window_size) == 2 }
 - ${ not window_size or 300 <= window_size[0] <= 4096 }
@@ -175,4 +222,5 @@ documentation: |-
 
     The Max Number of Output is the maximum number of output items allowed for any block in the flowgraph; to disable this set the max_nouts equal to 0.Use this to adjust the maximum latency a flowgraph can exhibit.
 
+    The Code Snippets tap allows small sections of code to be inserted into the generated python flowgraph at the end of the specified section.  Note, this is an advanced feature and can lead to invalid generated flowgraphs.  Indents will be handled upon insertion into the python flowgraph.
 file_format: 1
