@@ -112,7 +112,10 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "
 import os
 import sys
 if os.name == 'posix':
-    print(os.path.join('lib', 'python' + sys.version[:3], 'dist-packages'))
+    if sys.platform == 'linux':
+        print(os.path.join('lib', 'python' + sys.version[:3], 'dist-packages'))
+    else:
+        print(os.path.join('lib', 'python' + sys.version[:3], 'site-packages'))
 if os.name == 'nt':
     print(os.path.join('Lib', 'site-packages'))
 " OUTPUT_VARIABLE GR_PYTHON_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
