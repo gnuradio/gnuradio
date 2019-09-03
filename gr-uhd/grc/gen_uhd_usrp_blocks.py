@@ -23,7 +23,7 @@ import sys
 MAIN_TMPL = """\
 id: uhd_usrp_${sourk}
 label: 'UHD: USRP ${sourk.title()}'
-flags: throttle
+flags: [python, cpp, throttle]
 
 parameters:
 -   id: type
@@ -59,7 +59,6 @@ parameters:
 -   id: dev_args
     label: Device Arguments
     dtype: string
-    default: '""'
     hide: ${'$'}{ 'none' if dev_args else 'part'}
 -   id: sync
     label: Sync
@@ -233,6 +232,90 @@ templates:
     -   set_bandwidth(${'$'}{${'bw' + str(n)}}, ${n})
     % endfor
 
+cpp_templates:
+    includes: [ '#include <gnuradio/uhd/usrp_${sourk}.h>' ]
+    declarations: 'gr::uhd::usrp_${sourk}::sptr ${'$'}{id};'
+    make: |
+      this->${'$'}{id} = gr::uhd::usrp_${sourk}::make(
+         ::uhd::device_addr_t("${'$'}{",".join((str(dev_addr).strip('"\\''), str(dev_args).strip('"\\''))) if len(str(dev_args).strip('"\\'')) > 0 else dev_addr.strip('"\\'')}"),
+         ::uhd::stream_args_t("${'$'}{type}", "${'$'}{otw}"));
+      % for m in range(max_mboards):
+      ${'%'} if context.get('num_mboards')() > ${m}:
+      ${'%'} if context.get('sd_spec${m}')():
+      this->${'$'}{id}->set_subdev_spec(${'$'}{${'sd_spec' + str(m)}}, ${m});
+      ${'%'} endif
+      ${'%'} if context.get('time_source${m}')():
+      this->${'$'}{id}->set_time_source(${'$'}{${'time_source' + str(m)}}, ${m});
+      ${'%'} endif
+      ${'%'} if context.get('clock_source${m}')():
+      this->${'$'}{id}->set_clock_source("${'$'}{${'clock_source' + str(m)}.strip('\\'')}", ${m});
+      ${'%'} endif
+      ${'%'} endif
+      % endfor
+      % for n in range(max_nchan):
+      ${'%'} if context.get('nchan')() > ${n}:
+      this->${'$'}{id}->set_center_freq(${'$'}{${'center_freq' + str(n)}}, ${n});
+      % if sourk == 'source':
+      ${'%'} if context.get('rx_agc${n}')() == 'Enabled':
+      this->${'$'}{id}->set_rx_agc(True, ${n});
+      ${'%'} elif context.get('rx_agc${n}')() == 'Disabled':
+      this->${'$'}{id}->set_rx_agc(False, ${n});
+      ${'%'} endif
+      ${'%'} if context.get('rx_agc${n}')() != 'Enabled':
+      ${'%'} if bool(eval(context.get('norm_gain' + '${n}')())):
+      this->${'$'}{id}->set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n});
+      ${'%'} else:
+      this->${'$'}{id}->set_gain(${'$'}{${'gain' + str(n)}}, ${n});
+      ${'%'} endif
+      ${'%'} endif
+      % else:
+      ${'%'} if bool(eval(context.get('norm_gain' + '${n}')())):
+      this->${'$'}{id}->set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n});
+      ${'%'} else:
+      this->${'$'}{id}->set_gain(${'$'}{${'gain' + str(n)}}, ${n});
+      ${'%'} endif
+      % endif
+      ${'%'} if context.get('ant${n}')():
+      this->${'$'}{id}->set_antenna(${'$'}{${'ant' + str(n)}}, ${n});
+      ${'%'} endif
+      ${'%'} if context.get('bw${n}')():
+      this->${'$'}{id}->set_bandwidth(${'$'}{${'bw' + str(n)}}, ${n});
+      ${'%'} endif
+      ${'%'} if context.get('show_lo_controls')():
+      this->${'$'}{id}->set_lo_source(${'$'}{${'lo_source' + str(n)}}, ::uhd::usrp::multi_usrp::ALL_LOS, ${n});
+      this->${'$'}{id}->set_lo_export_enabled(${'$'}{${'lo_export' + str(n)}}, ::uhd::usrp::multi_usrp::ALL_LOS, ${n});
+      ${'%'} endif
+      ${'%'} endif
+      % endfor
+      ${'%'} if clock_rate():
+      this->${'$'}{id}->set_clock_rate(${'$'}{clock_rate}, ::uhd::usrp::multi_usrp::ALL_MBOARDS);
+      ${'%'} endif
+      this->${'$'}{id}->set_samp_rate(${'$'}{samp_rate});
+      ${'%'} if sync == 'sync':
+      this->${'$'}{id}->set_time_unknown_pps(::uhd::time_spec_t());
+      ${'%'} elif sync == 'pc_clock':
+      this->${'$'}{id}->set_time_now(::uhd::time_spec_t(time(NULL)), ::uhd::usrp::multi_usrp::ALL_MBOARDS);
+      ${'%'} else:
+      // No synchronization enforced.
+      ${'%'} endif
+    link: ['gnuradio-uhd uhd']      
+    callbacks:
+    - set_samp_rate(${'$'}{samp_rate})
+    % for n in range(max_nchan):
+    -   set_center_freq(${'$'}{${'center_freq' + str(n)}}, ${n})
+    % if sourk == 'source':
+    -   ${'$'}{'set_rx_agc(True, ${n})' if context.get('rx_agc${n}')() == 'Enabled' else ''}
+    -   ${'$'}{'set_rx_agc(False, ${n})' if context.get('rx_agc${n}')() == 'Disabled' else ''}
+    -   ${'$'}{'set_gain(${'$'}{${'gain' + str(n)}}, ${n})' if not bool(eval(context.get('norm_gain${n}')())) and context.get('rx_agc${n}')() != 'Enabled' else ''}
+    -   ${'$'}{'set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})' if bool(eval(context.get('norm_gain${n}')())) and context.get('rx_agc${n}')() != 'Enabled' else ''}
+    % else:
+    -   this->${'$'}{id}->set_${'$'}{'normalized_' if bool(eval(context.get('norm_gain${n}')())) else ''}gain(${'$'}{${'gain' + str(n)}}, ${n});
+    % endif
+    -   ${'$'}{'set_lo_source(' + lo_source${n} + ', ::uhd::usrp::multi_usrp::ALL_LOS, ${n})' if show_lo_controls else ''}
+    -   ${'$'}{'set_lo_export_enabled(' + lo_export${n} + ', ::uhd::usrp::multi_usrp::ALL_LOS, ${n})' if show_lo_controls else ''}
+    -   set_antenna(${'$'}{${'ant' + str(n)}}, ${n})
+    -   set_bandwidth(${'$'}{${'bw' + str(n)}}, ${n})
+    % endfor
 
 documentation: |-
     The UHD USRP ${sourk.title()} Block:
@@ -357,11 +440,11 @@ PARAMS_TMPL = """
     category: RF Options
     dtype: string
 % if sourk == 'source':
-    options: [TX/RX, RX2, RX1]
+    options: ['"TX/RX"', '"RX2"', '"RX1"']
     option_labels: [TX/RX, RX2, RX1]
-    default: RX2
+    default: '"RX2"'
 % else:
-    options: [TX/RX]
+    options: ['"TX/RX"']
     option_labels: [TX/RX]
 % endif
     hide: ${'$'}{ 'all' if not nchan > ${n} else ('none' if eval('ant' + str(${n})) else 'part')}
@@ -414,6 +497,7 @@ TSBTAG_PARAM = """
 -   id: len_tag_name
     label: TSB tag name
     dtype: string
+    default: '""'
     hide: ${ 'none' if len(str(len_tag_name)) else 'part'}
 """
 
