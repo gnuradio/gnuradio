@@ -542,9 +542,9 @@ PMT_API pmt_t init_f32vector(size_t k, const std::vector<float>& data);
 PMT_API pmt_t init_f64vector(size_t k, const double* data);
 PMT_API pmt_t init_f64vector(size_t k, const std::vector<double>& data);
 PMT_API pmt_t init_c32vector(size_t k, const std::complex<float>* data);
-PMT_API pmt_t init_c32vector(size_t k, const std::vector<std::complex<float>>& data);
+PMT_API pmt_t init_c32vector(size_t k, const std::vector<std::complex<float> >& data);
 PMT_API pmt_t init_c64vector(size_t k, const std::complex<double>* data);
-PMT_API pmt_t init_c64vector(size_t k, const std::vector<std::complex<double>>& data);
+PMT_API pmt_t init_c64vector(size_t k, const std::vector<std::complex<double> >& data);
 
 PMT_API uint8_t u8vector_ref(pmt_t v, size_t k);
 PMT_API int8_t s8vector_ref(pmt_t v, size_t k);
@@ -603,8 +603,8 @@ PMT_API const std::vector<uint64_t> u64vector_elements(pmt_t v);
 PMT_API const std::vector<int64_t> s64vector_elements(pmt_t v);
 PMT_API const std::vector<float> f32vector_elements(pmt_t v);
 PMT_API const std::vector<double> f64vector_elements(pmt_t v);
-PMT_API const std::vector<std::complex<float>> c32vector_elements(pmt_t v);
-PMT_API const std::vector<std::complex<double>> c64vector_elements(pmt_t v);
+PMT_API const std::vector<std::complex<float> > c32vector_elements(pmt_t v);
+PMT_API const std::vector<std::complex<double> > c64vector_elements(pmt_t v);
 
 // len is in elements
 PMT_API const std::vector<uint8_t> pmt_u8vector_elements(pmt_t v);
@@ -617,8 +617,8 @@ PMT_API const std::vector<uint64_t> pmt_u64vector_elements(pmt_t v);
 PMT_API const std::vector<int64_t> pmt_s64vector_elements(pmt_t v);
 PMT_API const std::vector<float> pmt_f32vector_elements(pmt_t v);
 PMT_API const std::vector<double> pmt_f64vector_elements(pmt_t v);
-PMT_API const std::vector<std::complex<float>> pmt_c32vector_elements(pmt_t v);
-PMT_API const std::vector<std::complex<double>> pmt_c64vector_elements(pmt_t v);
+PMT_API const std::vector<std::complex<float> > pmt_c32vector_elements(pmt_t v);
+PMT_API const std::vector<std::complex<double> > pmt_c64vector_elements(pmt_t v);
 
 // Return non-const pointers to the elements
 

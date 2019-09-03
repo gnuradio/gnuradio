@@ -269,7 +269,7 @@ public:
      * \param nsamps the number of samples
      * \return a vector of complex float samples
      */
-    virtual std::vector<std::complex<float>> finite_acquisition(const size_t nsamps) = 0;
+    virtual std::vector<std::complex<float> > finite_acquisition(const size_t nsamps) = 0;
 
     /*!
      * Convenience function for finite data acquisition. This is the
@@ -280,7 +280,7 @@ public:
      * \param nsamps the number of samples per channel
      * \return a vector of buffers, where each buffer represents a channel
      */
-    virtual std::vector<std::vector<std::complex<float>>>
+    virtual std::vector<std::vector<std::complex<float> > >
     finite_acquisition_v(const size_t nsamps) = 0;
 };
 
