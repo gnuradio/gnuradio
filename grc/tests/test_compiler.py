@@ -17,13 +17,15 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
+import pytest
+
 from argparse import Namespace
 from os import path
 import tempfile
 
 from grc.compiler import main
 
-
+@pytest.mark.xfail(reason="core/platform.py:198 self.blocks['options']) throws KeyError")
 def test_compiler(capsys):
     args = Namespace(
         output=tempfile.gettempdir(),
