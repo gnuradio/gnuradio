@@ -20,8 +20,16 @@
 include(GrPython)
 
 if(ENABLE_TESTING)
-    add_test (NAME grc_tests
-        COMMAND ${QA_PYTHON_EXECUTABLE} -m pytest
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        )
+    GR_PYTHON_CHECK_MODULE_RAW(
+        "pytest"
+        "import pytest"
+        PYTEST_FOUND
+    )
+
+    if(PYTEST_FOUND)
+        add_test (NAME grc_tests
+            COMMAND ${QA_PYTHON_EXECUTABLE} -m pytest
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            )
+    endif()
 endif(ENABLE_TESTING)
