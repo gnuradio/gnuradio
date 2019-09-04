@@ -26,6 +26,7 @@
 #include <gnuradio/api.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/msg_accepter.h>
+#include <gnuradio/rpcregisterhelpers.h>
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/sptr_magic.h>
 #include <gnuradio/thread/thread.h>
@@ -38,9 +39,6 @@
 #include <map>
 #include <string>
 
-#ifdef GR_CTRLPORT
-#include <gnuradio/rpcregisterhelpers.h>
-#endif
 
 namespace gr {
 
