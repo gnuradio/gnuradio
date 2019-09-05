@@ -31,17 +31,17 @@
 #include <sys/mman.h>
 #endif
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#include <assert.h>
 #include <fcntl.h>
 #include <stdio.h>
-#include <assert.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-#include <algorithm>
 #include <stdio.h>
 #include <string.h>
+#include <algorithm>
 
 #ifdef HAVE_IO_H
 #include <io.h>
@@ -49,64 +49,62 @@
 
 namespace gr {
 
-  static const int HEADER_SIZE = 4096;
-  static const int HEADER_MAGIC = 0xEB021026;
+static const int HEADER_SIZE = 4096;
+static const int HEADER_MAGIC = 0xEB021026;
 
-  static const int HD_MAGIC = 0;
-  static const int HD_HEADER_SIZE = 1;	// integer offsets into header
-  static const int HD_BUFFER_SIZE = 2;
-  static const int HD_BUFFER_BASE = 3;
-  static const int HD_BUFFER_CURRENT = 4;
+static const int HD_MAGIC = 0;
+static const int HD_HEADER_SIZE = 1; // integer offsets into header
+static const int HD_BUFFER_SIZE = 2;
+static const int HD_BUFFER_BASE = 3;
+static const int HD_BUFFER_CURRENT = 4;
 
-  circular_file::circular_file(const char *filename,
-                               bool writable, int size)
+circular_file::circular_file(const char* filename, bool writable, int size)
     : d_fd(-1), d_header(0), d_buffer(0), d_mapped_size(0), d_bytes_read(0)
-  {
+{
     int mm_prot;
-    if(writable) {
+    if (writable) {
 #ifdef HAVE_MMAP
-      mm_prot = PROT_READ | PROT_WRITE;
+        mm_prot = PROT_READ | PROT_WRITE;
 #endif
-      d_fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0664);
-      if(d_fd < 0) {
-        perror(filename);
-        exit(1);
-      }
-#ifdef HAVE_MMAP	/* FIXME */
-      if(ftruncate(d_fd, size + HEADER_SIZE) != 0) {
-        perror(filename);
-        exit(1);
-      }
+        d_fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0664);
+        if (d_fd < 0) {
+            perror(filename);
+            exit(1);
+        }
+#ifdef HAVE_MMAP /* FIXME */
+        if (ftruncate(d_fd, size + HEADER_SIZE) != 0) {
+            perror(filename);
+            exit(1);
+        }
 #endif
-    }
-    else {
+    } else {
 #ifdef HAVE_MMAP
-      mm_prot = PROT_READ;
+        mm_prot = PROT_READ;
 #endif
-      d_fd = open (filename, O_RDONLY);
-      if(d_fd < 0) {
-        perror(filename);
-        exit(1);
-      }
+        d_fd = open(filename, O_RDONLY);
+        if (d_fd < 0) {
+            perror(filename);
+            exit(1);
+        }
     }
 
     struct stat statbuf;
-    if(fstat (d_fd, &statbuf) < 0) {
-      perror(filename);
-      exit(1);
+    if (fstat(d_fd, &statbuf) < 0) {
+        perror(filename);
+        exit(1);
     }
 
-    if(statbuf.st_size < HEADER_SIZE) {
-      fprintf(stderr, "%s: file too small to be circular buffer\n", filename);
-      exit(1);
+    if (statbuf.st_size < HEADER_SIZE) {
+        fprintf(stderr, "%s: file too small to be circular buffer\n", filename);
+        exit(1);
     }
 
     d_mapped_size = statbuf.st_size;
 #ifdef HAVE_MMAP
-    void *p = mmap (0, d_mapped_size, mm_prot, MAP_SHARED, d_fd, 0);
-    if(p == MAP_FAILED) {
-      perror("gr::circular_file: mmap failed");
-      exit(1);
+    void* p = mmap(0, d_mapped_size, mm_prot, MAP_SHARED, d_fd, 0);
+    if (p == MAP_FAILED) {
+        perror("gr::circular_file: mmap failed");
+        exit(1);
     }
 
     d_header = (int*)p;
@@ -115,18 +113,18 @@ namespace gr {
     exit(1);
 #endif
 
-    if(writable) {    // init header
+    if (writable) { // init header
 
-      if(size < 0) {
-        fprintf(stderr, "gr::circular_buffer: size must be > 0 when writable\n");
-        exit(1);
-      }
+        if (size < 0) {
+            fprintf(stderr, "gr::circular_buffer: size must be > 0 when writable\n");
+            exit(1);
+        }
 
-      d_header[HD_MAGIC] = HEADER_MAGIC;
-      d_header[HD_HEADER_SIZE] = HEADER_SIZE;
-      d_header[HD_BUFFER_SIZE] = size;
-      d_header[HD_BUFFER_BASE] = HEADER_SIZE;    // right after header
-      d_header[HD_BUFFER_CURRENT] = 0;
+        d_header[HD_MAGIC] = HEADER_MAGIC;
+        d_header[HD_HEADER_SIZE] = HEADER_SIZE;
+        d_header[HD_BUFFER_SIZE] = size;
+        d_header[HD_BUFFER_BASE] = HEADER_SIZE; // right after header
+        d_header[HD_BUFFER_CURRENT] = 0;
     }
 
     // sanity check (the asserts are a bit unforgiving...)
@@ -137,72 +135,66 @@ namespace gr {
     assert(d_header[HD_BUFFER_BASE] >= d_header[HD_HEADER_SIZE]);
     assert(d_header[HD_BUFFER_BASE] + d_header[HD_BUFFER_SIZE] <= d_mapped_size);
     assert(d_header[HD_BUFFER_CURRENT] >= 0 &&
-            d_header[HD_BUFFER_CURRENT] < d_header[HD_BUFFER_SIZE]);
+           d_header[HD_BUFFER_CURRENT] < d_header[HD_BUFFER_SIZE]);
 
     d_bytes_read = 0;
     d_buffer = (unsigned char*)d_header + d_header[HD_BUFFER_BASE];
-  }
+}
 
-  circular_file::~circular_file()
-  {
+circular_file::~circular_file()
+{
 #ifdef HAVE_MMAP
-    if(munmap ((char *) d_header, d_mapped_size) < 0) {
-      perror("gr::circular_file: munmap");
-      exit(1);
+    if (munmap((char*)d_header, d_mapped_size) < 0) {
+        perror("gr::circular_file: munmap");
+        exit(1);
     }
 #endif
     close(d_fd);
-  }
+}
 
-  bool
-  circular_file::write(void *vdata, int nbytes)
-  {
-    unsigned char *data = (unsigned char*)vdata;
+bool circular_file::write(void* vdata, int nbytes)
+{
+    unsigned char* data = (unsigned char*)vdata;
     int buffer_size = d_header[HD_BUFFER_SIZE];
     int buffer_current = d_header[HD_BUFFER_CURRENT];
 
-    while(nbytes > 0) {
-      int n = std::min(nbytes, buffer_size - buffer_current);
-      memcpy(d_buffer + buffer_current, data, n);
+    while (nbytes > 0) {
+        int n = std::min(nbytes, buffer_size - buffer_current);
+        memcpy(d_buffer + buffer_current, data, n);
 
-      buffer_current += n;
-      if(buffer_current >= buffer_size)
-        buffer_current = 0;
+        buffer_current += n;
+        if (buffer_current >= buffer_size)
+            buffer_current = 0;
 
-      data += n;
-      nbytes -= n;
+        data += n;
+        nbytes -= n;
     }
 
     d_header[HD_BUFFER_CURRENT] = buffer_current;
     return true;
-  }
+}
 
-  int
-  circular_file::read(void *vdata, int nbytes)
-  {
-    unsigned char *data = (unsigned char *) vdata;
+int circular_file::read(void* vdata, int nbytes)
+{
+    unsigned char* data = (unsigned char*)vdata;
     int buffer_current = d_header[HD_BUFFER_CURRENT];
     int buffer_size = d_header[HD_BUFFER_SIZE];
     int total = 0;
 
     nbytes = std::min(nbytes, buffer_size - d_bytes_read);
 
-    while(nbytes > 0) {
-      int offset = (buffer_current + d_bytes_read) % buffer_size;
-      int n = std::min (nbytes, buffer_size - offset);
-      memcpy(data, d_buffer + offset, n);
-      data += n;
-      d_bytes_read += n;
-      total += n;
-      nbytes -= n;
+    while (nbytes > 0) {
+        int offset = (buffer_current + d_bytes_read) % buffer_size;
+        int n = std::min(nbytes, buffer_size - offset);
+        memcpy(data, d_buffer + offset, n);
+        data += n;
+        d_bytes_read += n;
+        total += n;
+        nbytes -= n;
     }
     return total;
-  }
+}
 
-  void
-  circular_file::reset_read_pointer()
-  {
-    d_bytes_read = 0;
-  }
+void circular_file::reset_read_pointer() { d_bytes_read = 0; }
 
 } /* namespace gr */

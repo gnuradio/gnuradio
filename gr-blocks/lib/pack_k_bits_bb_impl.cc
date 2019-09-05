@@ -26,45 +26,39 @@
 
 #include "pack_k_bits_bb_impl.h"
 #include <gnuradio/io_signature.h>
-#include <stdexcept>
 #include <iostream>
+#include <stdexcept>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    pack_k_bits_bb::sptr
-    pack_k_bits_bb::make(unsigned k)
-    {
-      return gnuradio::get_initial_sptr
-        (new pack_k_bits_bb_impl(k));
-    }
+pack_k_bits_bb::sptr pack_k_bits_bb::make(unsigned k)
+{
+    return gnuradio::get_initial_sptr(new pack_k_bits_bb_impl(k));
+}
 
-    pack_k_bits_bb_impl::pack_k_bits_bb_impl(unsigned k)
-      : sync_decimator("pack_k_bits_bb",
-                          io_signature::make(1, 1, sizeof(unsigned char)),
-                          io_signature::make(1, 1, sizeof(unsigned char)),
-                          k)
-    {
-      d_pack = new kernel::pack_k_bits(k);
-    }
+pack_k_bits_bb_impl::pack_k_bits_bb_impl(unsigned k)
+    : sync_decimator("pack_k_bits_bb",
+                     io_signature::make(1, 1, sizeof(unsigned char)),
+                     io_signature::make(1, 1, sizeof(unsigned char)),
+                     k)
+{
+    d_pack = new kernel::pack_k_bits(k);
+}
 
-    pack_k_bits_bb_impl::~pack_k_bits_bb_impl()
-    {
-      delete d_pack;
-    }
+pack_k_bits_bb_impl::~pack_k_bits_bb_impl() { delete d_pack; }
 
-    int
-    pack_k_bits_bb_impl::work(int noutput_items,
-                              gr_vector_const_void_star &input_items,
-                              gr_vector_void_star &output_items)
-    {
-      const unsigned char *in = (const unsigned char *)input_items[0];
-      unsigned char *out = (unsigned char *)output_items[0];
+int pack_k_bits_bb_impl::work(int noutput_items,
+                              gr_vector_const_void_star& input_items,
+                              gr_vector_void_star& output_items)
+{
+    const unsigned char* in = (const unsigned char*)input_items[0];
+    unsigned char* out = (unsigned char*)output_items[0];
 
-      d_pack->pack(out, in, noutput_items);
+    d_pack->pack(out, in, noutput_items);
 
-      return noutput_items;
-    }
+    return noutput_items;
+}
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */

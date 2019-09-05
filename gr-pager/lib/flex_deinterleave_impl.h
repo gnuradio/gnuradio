@@ -27,28 +27,28 @@
 #include <gnuradio/sync_decimator.h>
 
 namespace gr {
-  namespace pager {
+namespace pager {
 
-    /*!
-     * \brief flex deinterleave description
-     * \ingroup pager_blk
-     */
-    class flex_deinterleave_impl : public flex_deinterleave
-    {
-    private:
-      // One FLEX block of deinterleaved data
-      int d_codewords[8];
+/*!
+ * \brief flex deinterleave description
+ * \ingroup pager_blk
+ */
+class flex_deinterleave_impl : public flex_deinterleave
+{
+private:
+    // One FLEX block of deinterleaved data
+    int d_codewords[8];
 
-    public:
-      flex_deinterleave_impl();
-      ~flex_deinterleave_impl();
+public:
+    flex_deinterleave_impl();
+    ~flex_deinterleave_impl();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace pager */
+} /* namespace pager */
 } /* namespace gr */
 
 #endif /* INCLUDED_PAGER_FLEX_DEINTERLEAVE_IMPL_H */

@@ -23,29 +23,28 @@
 #ifndef _QA_ATSC_FAKE_SINGLE_VITERBI_H
 #define _QA_ATSC_FAKE_SINGLE_VITERBI_H
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
-#include <gnuradio/atsc/fake_single_viterbi_impl.h>
 #include <gnuradio/atsc/basic_trellis_encoder_impl.h>
+#include <gnuradio/atsc/fake_single_viterbi_impl.h>
 
-class qa_atsci_fake_single_viterbi : public CppUnit::TestCase {
- private:
-  atsci_fake_single_viterbi	decoder;
-  atsci_basic_trellis_encoder 	encoder;
+class qa_atsci_fake_single_viterbi : public CppUnit::TestCase
+{
+private:
+    atsci_fake_single_viterbi decoder;
+    atsci_basic_trellis_encoder encoder;
 
-  CPPUNIT_TEST_SUITE (qa_atsci_fake_single_viterbi);
-  CPPUNIT_TEST (t0);
-  CPPUNIT_TEST_SUITE_END ();
+    CPPUNIT_TEST_SUITE(qa_atsci_fake_single_viterbi);
+    CPPUNIT_TEST(t0);
+    CPPUNIT_TEST_SUITE_END();
 
- private:
+private:
+    void t0();
 
-  void t0 ();
-
-  void encode_block(unsigned char *out, unsigned char *in, unsigned n);
-  void decode_block(unsigned char *out, unsigned char *in, unsigned n);
-  float noise ();
-
+    void encode_block(unsigned char* out, unsigned char* in, unsigned n);
+    void decode_block(unsigned char* out, unsigned char* in, unsigned n);
+    float noise();
 };
 
 #endif /* _QA_ATSC_FAKE_SINGLE_VITERBI_H_ */

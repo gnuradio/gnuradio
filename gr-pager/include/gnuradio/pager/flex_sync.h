@@ -23,27 +23,26 @@
 #ifndef INCLUDED_PAGER_FLEX_SYNC_H
 #define INCLUDED_PAGER_FLEX_SYNC_H
 
-#include <gnuradio/pager/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/pager/api.h>
 
 namespace gr {
-  namespace pager {
+namespace pager {
 
-    /*!
-     * \brief flex sync description
-     * \ingroup pager_blk
-     */
-    class PAGER_API flex_sync : virtual public block
-    {
-    public:
-      // gr::pager::flex_sync::sptr
-      typedef boost::shared_ptr<flex_sync> sptr;
+/*!
+ * \brief flex sync description
+ * \ingroup pager_blk
+ */
+class PAGER_API flex_sync : virtual public block
+{
+public:
+    // gr::pager::flex_sync::sptr
+    typedef boost::shared_ptr<flex_sync> sptr;
 
-      static sptr make();
+    static sptr make();
+};
 
-    };
-
-  } /* namespace pager */
+} /* namespace pager */
 } /* namespace gr */
 
 #endif /* INCLUDED_PAGER_FLEX_SYNC_H */

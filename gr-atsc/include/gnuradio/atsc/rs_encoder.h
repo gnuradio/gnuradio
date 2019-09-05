@@ -24,8 +24,8 @@
 #define INCLUDED_ATSC_RS_ENCODER_H
 
 #include <gnuradio/atsc/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/atsc/reed_solomon_impl.h>
+#include <gnuradio/sync_block.h>
 
 class atsc_rs_encoder;
 typedef boost::shared_ptr<atsc_rs_encoder> atsc_rs_encoder_sptr;
@@ -40,18 +40,20 @@ ATSC_API atsc_rs_encoder_sptr atsc_make_rs_encoder();
  */
 class ATSC_API atsc_rs_encoder : public gr::sync_block
 {
-  friend ATSC_API atsc_rs_encoder_sptr atsc_make_rs_encoder();
+    friend ATSC_API atsc_rs_encoder_sptr atsc_make_rs_encoder();
 
-  atsci_reed_solomon	d_rs_encoder;
+    atsci_reed_solomon d_rs_encoder;
 
-  atsc_rs_encoder();
+    atsc_rs_encoder();
 
 public:
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-  void reset() { /* nop */ }
+    void reset()
+    { /* nop */
+    }
 };
 
 

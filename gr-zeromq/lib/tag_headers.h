@@ -23,19 +23,21 @@
 #ifndef ZEROMQ_TAG_HEADERS_H
 #define ZEROMQ_TAG_HEADERS_H
 
-#include <gnuradio/io_signature.h>
 #include <gnuradio/block.h>
-#include <sstream>
-#include <cstring>
+#include <gnuradio/io_signature.h>
 #include <zmq.hpp>
+#include <cstring>
+#include <sstream>
 
 namespace gr {
-  namespace zeromq {
+namespace zeromq {
 
-    std::string gen_tag_header(uint64_t offset, std::vector<gr::tag_t> &tags);
-    size_t parse_tag_header(zmq::message_t &msg, uint64_t &offset_out, std::vector<gr::tag_t> &tags_out);
-    
-  } /* namespace zeromq */
+std::string gen_tag_header(uint64_t offset, std::vector<gr::tag_t>& tags);
+size_t parse_tag_header(zmq::message_t& msg,
+                        uint64_t& offset_out,
+                        std::vector<gr::tag_t>& tags_out);
+
+} /* namespace zeromq */
 } /* namespace gr */
 
 #endif /* ZEROMQ_TAG_HEADERS_H */

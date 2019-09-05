@@ -29,29 +29,24 @@
 
 namespace gr {
 
-  class sts_container
-  {
+class sts_container
+{
     block_vector_t d_blocks;
 
-  public:
-    sts_container(block_vector_t blocks)
-      : d_blocks(blocks) {}
+public:
+    sts_container(block_vector_t blocks) : d_blocks(blocks) {}
 
-    void operator()()
-    {
-      make_single_threaded_scheduler(d_blocks)->run();
-    }
-  };
+    void operator()() { make_single_threaded_scheduler(d_blocks)->run(); }
+};
 
-  scheduler_sptr
-  scheduler_sts::make(flat_flowgraph_sptr ffg, int max_noutput_items)
-  {
+scheduler_sptr scheduler_sts::make(flat_flowgraph_sptr ffg, int max_noutput_items)
+{
     return scheduler_sptr(new scheduler_sts(ffg, max_noutput_items));
-  }
+}
 
-  scheduler_sts::scheduler_sts(flat_flowgraph_sptr ffg, int max_noutput_items)
+scheduler_sts::scheduler_sts(flat_flowgraph_sptr ffg, int max_noutput_items)
     : scheduler(ffg, max_noutput_items)
-  {
+{
     // Split the flattened flow graph into discrete partitions, each
     // of which is topologically sorted.
 
@@ -60,31 +55,20 @@ namespace gr {
     // For each partition, create a thread to evaluate it using
     // an instance of the gr_single_threaded_scheduler
 
-    for(std::vector<basic_block_vector_t>::iterator p = graphs.begin();
-        p != graphs.end(); p++) {
+    for (std::vector<basic_block_vector_t>::iterator p = graphs.begin();
+         p != graphs.end();
+         p++) {
 
-      block_vector_t blocks = flat_flowgraph::make_block_vector(*p);
-      d_threads.create_thread(
-        gr::thread::thread_body_wrapper<sts_container>(sts_container(blocks),
-						  "single-threaded-scheduler"));
+        block_vector_t blocks = flat_flowgraph::make_block_vector(*p);
+        d_threads.create_thread(gr::thread::thread_body_wrapper<sts_container>(
+            sts_container(blocks), "single-threaded-scheduler"));
     }
-  }
+}
 
-  scheduler_sts::~scheduler_sts()
-  {
-    stop();
-  }
+scheduler_sts::~scheduler_sts() { stop(); }
 
-  void
-  scheduler_sts::stop()
-  {
-    d_threads.interrupt_all();
-  }
+void scheduler_sts::stop() { d_threads.interrupt_all(); }
 
-  void
-  scheduler_sts::wait()
-  {
-    d_threads.join_all();
-  }
+void scheduler_sts::wait() { d_threads.join_all(); }
 
 } /* namespace gr */

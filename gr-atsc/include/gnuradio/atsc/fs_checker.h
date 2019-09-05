@@ -42,22 +42,23 @@ ATSC_API atsc_fs_checker_sptr atsc_make_fs_checker();
 
 class ATSC_API atsc_fs_checker : public gr::sync_block
 {
-  friend ATSC_API atsc_fs_checker_sptr atsc_make_fs_checker();
+    friend ATSC_API atsc_fs_checker_sptr atsc_make_fs_checker();
 
-  atsc_fs_checker();
+    atsc_fs_checker();
 
 public:
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-  void reset() { /* nop */ }
+    void reset()
+    { /* nop */
+    }
 
-  ~atsc_fs_checker ();
+    ~atsc_fs_checker();
 
 protected:
-  atsci_fs_checker	*d_fsc;
-
+    atsci_fs_checker* d_fsc;
 };
 
 

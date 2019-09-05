@@ -27,21 +27,20 @@
 
 /* Globals used in encoder and decoder */
 
-extern int frames;	/* number of frames processed so far */
-extern float Sn[];	/* float input speech samples */
-extern MODEL model;	/* model parameters for the current frame */
-extern int Nw;		/* number of samples in analysis window */
-extern float sig;	/* energy of current frame */
+extern int frames;  /* number of frames processed so far */
+extern float Sn[];  /* float input speech samples */
+extern MODEL model; /* model parameters for the current frame */
+extern int Nw;      /* number of samples in analysis window */
+extern float sig;   /* energy of current frame */
 
 /* Globals used in encoder */
 
-extern float w[];	/* time domain hamming window */
-extern COMP W[];	/* frequency domain hamming window */
-extern COMP Sw[];	/* DFT of current frame */
-extern COMP Sw_[];	/* DFT of all voiced synthesised signal */
+extern float w[];  /* time domain hamming window */
+extern COMP W[];   /* frequency domain hamming window */
+extern COMP Sw[];  /* DFT of current frame */
+extern COMP Sw_[]; /* DFT of all voiced synthesised signal */
 
 /* Globals used in decoder */
 
-extern float Sn_[];	/* output synthesised speech samples */
-extern float Pn[];	/* time domain Parzen (trapezoidal) window */
-
+extern float Sn_[]; /* output synthesised speech samples */
+extern float Pn[];  /* time domain Parzen (trapezoidal) window */

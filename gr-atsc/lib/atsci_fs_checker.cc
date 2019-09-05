@@ -23,11 +23,7 @@
 #include <gnuradio/atsc/fs_checker_impl.h>
 
 // empty constructor
-atsci_fs_checker::atsci_fs_checker ()
-{
-}
+atsci_fs_checker::atsci_fs_checker() {}
 
 // empty virtual destructor
-atsci_fs_checker::~atsci_fs_checker ()
-{
-}
+atsci_fs_checker::~atsci_fs_checker() {}

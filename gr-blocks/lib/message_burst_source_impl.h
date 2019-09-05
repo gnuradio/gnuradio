@@ -27,32 +27,32 @@
 #include <gnuradio/message.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class message_burst_source_impl : public message_burst_source
-    {
-    private:
-      size_t	 	d_itemsize;
-      msg_queue::sptr	d_msgq;
-      message::sptr	d_msg;
-      unsigned		d_msg_offset;
-      bool		d_eof;
+class message_burst_source_impl : public message_burst_source
+{
+private:
+    size_t d_itemsize;
+    msg_queue::sptr d_msgq;
+    message::sptr d_msg;
+    unsigned d_msg_offset;
+    bool d_eof;
 
-      pmt::pmt_t d_me;
+    pmt::pmt_t d_me;
 
-    public:
-      message_burst_source_impl(size_t itemsize, int msgq_limit);
-      message_burst_source_impl(size_t itemsize, msg_queue::sptr msgq);
-      ~message_burst_source_impl();
+public:
+    message_burst_source_impl(size_t itemsize, int msgq_limit);
+    message_burst_source_impl(size_t itemsize, msg_queue::sptr msgq);
+    ~message_burst_source_impl();
 
-      msg_queue::sptr msgq() const { return d_msgq; }
+    msg_queue::sptr msgq() const { return d_msgq; }
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_MESSAGE_BURST_SOURCE_IMPL_H */

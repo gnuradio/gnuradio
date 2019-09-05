@@ -27,13 +27,8 @@
 
 namespace gr {
 
-  scheduler::scheduler(flat_flowgraph_sptr ffg,
-                       int max_noutput_items)
-  {
-  }
+scheduler::scheduler(flat_flowgraph_sptr ffg, int max_noutput_items) {}
 
-  scheduler::~scheduler()
-  {
-  }
+scheduler::~scheduler() {}
 
 } /* namespace gr */

@@ -20,15 +20,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc_consts.h>
 #include <gnuradio/atsc/exp2_lp_impl.h>
-#include <stdexcept>
+#include <atsc_consts.h>
 #include <cmath>
 #include <iostream>
+#include <stdexcept>
 
-using std::vector;
 using std::cerr;
 using std::endl;
+using std::vector;
 
 /*
  * FILTER SPECIFICATION FILE
@@ -57,28 +57,26 @@ static const float atsci_exp2_lp20[] = {
 };
 
 
-#define NELEM(x) (sizeof (x) / sizeof ((x)[0]))
+#define NELEM(x) (sizeof(x) / sizeof((x)[0]))
 
 // is A within 5% of TARGET?
 
-static bool
-close_enough_p (double a, double target)
+static bool close_enough_p(double a, double target)
 {
-  double delta = fabs (target * 0.05);	//  5 percent
+    double delta = fabs(target * 0.05); //  5 percent
 
-  return fabs (target - a) <= delta;
+    return fabs(target - a) <= delta;
 }
 
-vector<float>
-atsci_exp2_lp::taps (double sampling_freq)
+vector<float> atsci_exp2_lp::taps(double sampling_freq)
 {
-  if (close_enough_p (sampling_freq, 20e6)){
-    return vector<float>(&atsci_exp2_lp20[0], &atsci_exp2_lp20[NELEM(atsci_exp2_lp20)]);
-  }
-  if (close_enough_p (sampling_freq, 2 * ATSC_SYMBOL_RATE)){
-    return vector<float>(&atsci_exp2_lp2x[0], &atsci_exp2_lp2x[NELEM(atsci_exp2_lp2x)]);
-  }
-  else
-    throw std::out_of_range (
-     "atsci_exp2_lp: no pre-designed filter close enough");
+    if (close_enough_p(sampling_freq, 20e6)) {
+        return vector<float>(&atsci_exp2_lp20[0],
+                             &atsci_exp2_lp20[NELEM(atsci_exp2_lp20)]);
+    }
+    if (close_enough_p(sampling_freq, 2 * ATSC_SYMBOL_RATE)) {
+        return vector<float>(&atsci_exp2_lp2x[0],
+                             &atsci_exp2_lp2x[NELEM(atsci_exp2_lp2x)]);
+    } else
+        throw std::out_of_range("atsci_exp2_lp: no pre-designed filter close enough");
 }

@@ -27,22 +27,22 @@
 #include <boost/shared_ptr.hpp>
 
 namespace gr {
-  namespace pager {
+namespace pager {
 
-    /*!
-     * \brief flex_frame.
-     * \ingroup pager_blk
-     */
-    class PAGER_API flex_frame
-    {
-    public:
-      // gr::pager::flex_frame::sptr
-      typedef boost::shared_ptr<flex_frame> sptr;
+/*!
+ * \brief flex_frame.
+ * \ingroup pager_blk
+ */
+class PAGER_API flex_frame
+{
+public:
+    // gr::pager::flex_frame::sptr
+    typedef boost::shared_ptr<flex_frame> sptr;
 
-      static sptr make();
-    };
+    static sptr make();
+};
 
-  } /* namespace pager */
+} /* namespace pager */
 } /* namespace gr */
 
 #endif /* INCLUDED_PAGER_FLEX_FRAME_H */

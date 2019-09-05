@@ -23,31 +23,29 @@
 #ifndef INCLUDED_GR_OSCOPE_SINK_F_H
 #define INCLUDED_GR_OSCOPE_SINK_F_H
 
+#include <gnuradio/msg_queue.h>
 #include <gnuradio/wxgui/api.h>
 #include <gnuradio/wxgui/oscope_sink_x.h>
-#include <gnuradio/msg_queue.h>
 
 namespace gr {
-  namespace wxgui {
+namespace wxgui {
 
-    /*!
-     * \brief Building block for python oscilloscope module.
-     * \ingroup sink_blk
-     *
-     * Accepts multiple float streams.
-     */
-    class WXGUI_API oscope_sink_f
-      : virtual public oscope_sink_x
-    {
-    public:
-      // gr::blocks::oscope_sink_f::sptr
-      typedef boost::shared_ptr<oscope_sink_f> sptr;
+/*!
+ * \brief Building block for python oscilloscope module.
+ * \ingroup sink_blk
+ *
+ * Accepts multiple float streams.
+ */
+class WXGUI_API oscope_sink_f : virtual public oscope_sink_x
+{
+public:
+    // gr::blocks::oscope_sink_f::sptr
+    typedef boost::shared_ptr<oscope_sink_f> sptr;
 
-      static sptr make(double sampling_rate, msg_queue::sptr msgq);
-    };
+    static sptr make(double sampling_rate, msg_queue::sptr msgq);
+};
 
-  } /* namespace wxgui */
+} /* namespace wxgui */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_OSCOPE_SINK_F_H */
-

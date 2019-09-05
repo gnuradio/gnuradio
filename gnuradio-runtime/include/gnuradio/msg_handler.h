@@ -28,21 +28,21 @@
 
 namespace gr {
 
-  class msg_handler;
-  typedef boost::shared_ptr<msg_handler> msg_handler_sptr;
+class msg_handler;
+typedef boost::shared_ptr<msg_handler> msg_handler_sptr;
 
-  /*!
-   * \brief abstract class of message handlers
-   * \ingroup base
-   */
-  class GR_RUNTIME_API msg_handler
-  {
-  public:
+/*!
+ * \brief abstract class of message handlers
+ * \ingroup base
+ */
+class GR_RUNTIME_API msg_handler
+{
+public:
     virtual ~msg_handler();
 
     //! handle \p msg
     virtual void handle(message::sptr msg) = 0;
-  };
+};
 
 } /* namespace gr */
 

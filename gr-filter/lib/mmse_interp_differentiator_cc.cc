@@ -24,55 +24,45 @@
 #include <config.h>
 #endif
 
-#include <gnuradio/filter/mmse_interp_differentiator_cc.h>
 #include "gnuradio/filter/interp_differentiator_taps.h"
+#include <gnuradio/filter/mmse_interp_differentiator_cc.h>
 #include <stdexcept>
 
 namespace gr {
-  namespace filter {
+namespace filter {
 
-    mmse_interp_differentiator_cc::mmse_interp_differentiator_cc()
-    {
-      filters.resize (DNSTEPS + 1);
+mmse_interp_differentiator_cc::mmse_interp_differentiator_cc()
+{
+    filters.resize(DNSTEPS + 1);
 
-      for(int i = 0; i < DNSTEPS + 1; i++) {
-	std::vector<float> t (&Dtaps[i][0], &Dtaps[i][DNTAPS]);
-	filters[i] = new kernel::fir_filter_ccf(1, t);
-      }
+    for (int i = 0; i < DNSTEPS + 1; i++) {
+        std::vector<float> t(&Dtaps[i][0], &Dtaps[i][DNTAPS]);
+        filters[i] = new kernel::fir_filter_ccf(1, t);
+    }
+}
+
+mmse_interp_differentiator_cc::~mmse_interp_differentiator_cc()
+{
+    for (int i = 0; i < DNSTEPS + 1; i++)
+        delete filters[i];
+}
+
+unsigned mmse_interp_differentiator_cc::ntaps() const { return DNTAPS; }
+
+unsigned mmse_interp_differentiator_cc::nsteps() const { return DNSTEPS; }
+
+gr_complex mmse_interp_differentiator_cc::differentiate(const gr_complex input[],
+                                                        float mu) const
+{
+    int imu = (int)rint(mu * DNSTEPS);
+
+    if ((imu < 0) || (imu > DNSTEPS)) {
+        throw std::runtime_error("mmse_interp_differentiator_cc: imu out of bounds.\n");
     }
 
-    mmse_interp_differentiator_cc::~mmse_interp_differentiator_cc()
-    {
-      for(int i = 0; i < DNSTEPS + 1; i++)
-	delete filters[i];
-    }
+    gr_complex r = filters[imu]->filter(input);
+    return r;
+}
 
-    unsigned
-    mmse_interp_differentiator_cc::ntaps() const
-    {
-      return DNTAPS;
-    }
-
-    unsigned
-    mmse_interp_differentiator_cc::nsteps() const
-    {
-      return DNSTEPS;
-    }
-
-    gr_complex
-    mmse_interp_differentiator_cc::differentiate(const gr_complex input[],
-					         float mu) const
-    {
-      int imu = (int)rint(mu * DNSTEPS);
-
-      if((imu < 0) || (imu > DNSTEPS)) {
-	throw std::runtime_error(
-                         "mmse_interp_differentiator_cc: imu out of bounds.\n");
-      }
-
-      gr_complex r = filters[imu]->filter(input);
-      return r;
-    }
-
-  }  /* namespace filter */
-}  /* namespace gr */
+} /* namespace filter */
+} /* namespace gr */

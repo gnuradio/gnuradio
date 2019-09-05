@@ -27,33 +27,33 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief VCO - Voltage controlled oscillator
+ * \ingroup modulators_blk
+ * \ingroup waveform_generators_blk
+ *
+ * \details
+ * input: float stream of control voltages; output: float oscillator output
+ */
+class BLOCKS_API vco_f : virtual public sync_block
+{
+public:
+    // gr::blocks::vco_f::sptr
+    typedef boost::shared_ptr<vco_f> sptr;
 
     /*!
      * \brief VCO - Voltage controlled oscillator
-     * \ingroup modulators_blk
-     * \ingroup waveform_generators_blk
      *
-     * \details
-     * input: float stream of control voltages; output: float oscillator output
+     * \param sampling_rate sampling rate (Hz)
+     * \param sensitivity units are radians/sec/volt
+     * \param amplitude output amplitude
      */
-    class BLOCKS_API vco_f : virtual public sync_block
-    {
-    public:
-      // gr::blocks::vco_f::sptr
-      typedef boost::shared_ptr<vco_f> sptr;
+    static sptr make(double sampling_rate, double sensitivity, double amplitude);
+};
 
-      /*!
-       * \brief VCO - Voltage controlled oscillator
-       *
-       * \param sampling_rate sampling rate (Hz)
-       * \param sensitivity units are radians/sec/volt
-       * \param amplitude output amplitude
-       */
-      static sptr make(double sampling_rate, double sensitivity, double amplitude);
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_VCO_F_H */

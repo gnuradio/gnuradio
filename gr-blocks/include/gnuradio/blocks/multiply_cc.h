@@ -27,31 +27,30 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief output = prod (input_0, input_1, ...)
+ * \ingroup math_operators_blk
+ *
+ * \details
+ * Multiply across all input streams.
+ */
+class BLOCKS_API multiply_cc : virtual public sync_block
+{
+public:
+    // gr::blocks::multiply_cc::sptr
+    typedef boost::shared_ptr<multiply_cc> sptr;
 
     /*!
-     * \brief output = prod (input_0, input_1, ...)
-     * \ingroup math_operators_blk
-     *
-     * \details
-     * Multiply across all input streams.
+     * \brief Multiply streams of complex values
+     * \param vlen Vector length
+     * \ingroup math_blk
      */
-    class BLOCKS_API multiply_cc : virtual public sync_block
-    {
-    public:
+    static sptr make(size_t vlen = 1);
+};
 
-      // gr::blocks::multiply_cc::sptr
-      typedef boost::shared_ptr<multiply_cc> sptr;
-
-      /*!
-       * \brief Multiply streams of complex values
-       * \param vlen Vector length
-       * \ingroup math_blk
-       */
-      static sptr make(size_t vlen=1);
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_MULTIPLY_CC_H */

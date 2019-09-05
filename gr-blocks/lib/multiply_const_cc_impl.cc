@@ -24,68 +24,72 @@
 #include "config.h"
 #endif
 
-#include <multiply_const_cc_impl.h>
 #include <gnuradio/io_signature.h>
+#include <multiply_const_cc_impl.h>
 #include <volk/volk.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    multiply_const_cc::sptr multiply_const_cc::make(gr_complex k, size_t vlen)
-    {
-      return gnuradio::get_initial_sptr(new multiply_const_cc_impl(k, vlen));
-    }
+multiply_const_cc::sptr multiply_const_cc::make(gr_complex k, size_t vlen)
+{
+    return gnuradio::get_initial_sptr(new multiply_const_cc_impl(k, vlen));
+}
 
-    multiply_const_cc_impl::multiply_const_cc_impl(gr_complex k, size_t vlen)
-      : sync_block ("multiply_const_cc",
-		       io_signature::make (1, 1, sizeof (gr_complex)*vlen),
-		       io_signature::make (1, 1, sizeof (gr_complex)*vlen)),
-	d_k(k), d_vlen(vlen)
-    {
-      const int alignment_multiple =
-	volk_get_alignment() / sizeof(gr_complex);
-      set_alignment(std::max(1,alignment_multiple));
-    }
+multiply_const_cc_impl::multiply_const_cc_impl(gr_complex k, size_t vlen)
+    : sync_block("multiply_const_cc",
+                 io_signature::make(1, 1, sizeof(gr_complex) * vlen),
+                 io_signature::make(1, 1, sizeof(gr_complex) * vlen)),
+      d_k(k),
+      d_vlen(vlen)
+{
+    const int alignment_multiple = volk_get_alignment() / sizeof(gr_complex);
+    set_alignment(std::max(1, alignment_multiple));
+}
 
-    int
-    multiply_const_cc_impl::work(int noutput_items,
-				 gr_vector_const_void_star &input_items,
-				 gr_vector_void_star &output_items)
-    {
-      const gr_complex *in = (const gr_complex *) input_items[0];
-      gr_complex *out = (gr_complex *) output_items[0];
-      int noi = d_vlen*noutput_items;
+int multiply_const_cc_impl::work(int noutput_items,
+                                 gr_vector_const_void_star& input_items,
+                                 gr_vector_void_star& output_items)
+{
+    const gr_complex* in = (const gr_complex*)input_items[0];
+    gr_complex* out = (gr_complex*)output_items[0];
+    int noi = d_vlen * noutput_items;
 
-      volk_32fc_s32fc_multiply_32fc(out, in, d_k, noi);
+    volk_32fc_s32fc_multiply_32fc(out, in, d_k, noi);
 
-      return noutput_items;
-    }
+    return noutput_items;
+}
 
-    void
-    multiply_const_cc_impl::setup_rpc()
-    {
+void multiply_const_cc_impl::setup_rpc()
+{
 #ifdef GR_CTRLPORT
-      add_rpc_variable(
+    add_rpc_variable(
         rpcbasic_sptr(new rpcbasic_register_get<multiply_const_cc, gr_complex>(
-	  alias(), "Constant",
-	  &multiply_const_cc::k,
-	  pmt::from_complex(-1024.0f, 0.0f),
-          pmt::from_complex(1024.0f, 0.0f),
-          pmt::from_complex(0.0f, 0.0f),
-	  "", "Constant to multiply", RPC_PRIVLVL_MIN,
-          DISPTIME | DISPOPTCPLX | DISPOPTSTRIP)));
+            alias(),
+            "Constant",
+            &multiply_const_cc::k,
+            pmt::from_complex(-1024.0f, 0.0f),
+            pmt::from_complex(1024.0f, 0.0f),
+            pmt::from_complex(0.0f, 0.0f),
+            "",
+            "Constant to multiply",
+            RPC_PRIVLVL_MIN,
+            DISPTIME | DISPOPTCPLX | DISPOPTSTRIP)));
 
-      add_rpc_variable(
+    add_rpc_variable(
         rpcbasic_sptr(new rpcbasic_register_set<multiply_const_cc, gr_complex>(
-	  alias(), "Constant",
-	  &multiply_const_cc::set_k,
-	  pmt::from_complex(-1024.0f, 0.0f),
-          pmt::from_complex(1024.0f, 0.0f),
-          pmt::from_complex(0.0f, 0.0f),
-	  "", "Constant to multiply",
-	  RPC_PRIVLVL_MIN, DISPNULL)));
+            alias(),
+            "Constant",
+            &multiply_const_cc::set_k,
+            pmt::from_complex(-1024.0f, 0.0f),
+            pmt::from_complex(1024.0f, 0.0f),
+            pmt::from_complex(0.0f, 0.0f),
+            "",
+            "Constant to multiply",
+            RPC_PRIVLVL_MIN,
+            DISPNULL)));
 #endif /* GR_CTRLPORT */
-    }
+}
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */

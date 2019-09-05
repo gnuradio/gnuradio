@@ -24,56 +24,50 @@
 #include <config.h>
 #endif
 
+#include <gnuradio/atsc/consts.h>
 #include <gnuradio/atsc/derandomizer.h>
 #include <gnuradio/io_signature.h>
-#include <gnuradio/atsc/consts.h>
 
 
-atsc_derandomizer_sptr
-atsc_make_derandomizer()
+atsc_derandomizer_sptr atsc_make_derandomizer()
 {
-  return gnuradio::get_initial_sptr(new atsc_derandomizer());
+    return gnuradio::get_initial_sptr(new atsc_derandomizer());
 }
 
 atsc_derandomizer::atsc_derandomizer()
-  : gr::sync_block("atsc_derandomizer",
-		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_no_sync)),
-		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet)))
+    : gr::sync_block("atsc_derandomizer",
+                     gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_no_sync)),
+                     gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet)))
 {
-  reset();
+    reset();
 }
 
-void
-atsc_derandomizer::reset()
+void atsc_derandomizer::reset() { d_rand.reset(); }
+
+int atsc_derandomizer::work(int noutput_items,
+                            gr_vector_const_void_star& input_items,
+                            gr_vector_void_star& output_items)
 {
-  d_rand.reset();
-}
+    const atsc_mpeg_packet_no_sync* in = (const atsc_mpeg_packet_no_sync*)input_items[0];
+    atsc_mpeg_packet* out = (atsc_mpeg_packet*)output_items[0];
 
-int
-atsc_derandomizer::work (int noutput_items,
-			 gr_vector_const_void_star &input_items,
-			 gr_vector_void_star &output_items)
-{
-  const atsc_mpeg_packet_no_sync *in = (const atsc_mpeg_packet_no_sync *) input_items[0];
-  atsc_mpeg_packet *out = (atsc_mpeg_packet *) output_items[0];
+    for (int i = 0; i < noutput_items; i++) {
 
-  for (int i = 0; i < noutput_items; i++){
+        assert(in[i].pli.regular_seg_p());
 
-    assert(in[i].pli.regular_seg_p());
+        if (in[i].pli.first_regular_seg_p())
+            d_rand.reset();
 
-    if (in[i].pli.first_regular_seg_p())
-      d_rand.reset();
+        d_rand.derandomize(out[i], in[i]);
 
-    d_rand.derandomize(out[i], in[i]);
+        // Check the pipeline info for error status and and set the
+        // corresponding bit in transport packet header.
 
-    // Check the pipeline info for error status and and set the
-    // corresponding bit in transport packet header.
+        if (in[i].pli.transport_error_p())
+            out[i].data[1] |= MPEG_TRANSPORT_ERROR_BIT;
+        else
+            out[i].data[1] &= ~MPEG_TRANSPORT_ERROR_BIT;
+    }
 
-    if (in[i].pli.transport_error_p())
-      out[i].data[1] |= MPEG_TRANSPORT_ERROR_BIT;
-    else
-      out[i].data[1] &= ~MPEG_TRANSPORT_ERROR_BIT;
-  }
-
-  return noutput_items;
+    return noutput_items;
 }

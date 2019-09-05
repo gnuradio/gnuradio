@@ -23,8 +23,8 @@
 #define INCLUDED_ATSC_TRELLIS_ENCODER_H
 
 #include <gnuradio/atsc/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/atsc/trellis_encoder_impl.h>
+#include <gnuradio/sync_block.h>
 
 class atsc_trellis_encoder;
 typedef boost::shared_ptr<atsc_trellis_encoder> atsc_trellis_encoder_sptr;
@@ -32,25 +32,27 @@ typedef boost::shared_ptr<atsc_trellis_encoder> atsc_trellis_encoder_sptr;
 ATSC_API atsc_trellis_encoder_sptr atsc_make_trellis_encoder();
 
 /*!
- * \brief ATSC 12-way interleaved trellis encoder (atsc_mpeg_packet_rs_encoded --> atsc_data_segment)
- * \ingroup atsc
+ * \brief ATSC 12-way interleaved trellis encoder (atsc_mpeg_packet_rs_encoded -->
+ * atsc_data_segment) \ingroup atsc
  *
  * input: atsc_mpeg_packet_rs_encoded; output: atsc_data_segment
  */
 class ATSC_API atsc_trellis_encoder : public gr::sync_block
 {
-  friend ATSC_API atsc_trellis_encoder_sptr atsc_make_trellis_encoder();
+    friend ATSC_API atsc_trellis_encoder_sptr atsc_make_trellis_encoder();
 
-  atsci_trellis_encoder	d_trellis_encoder;
+    atsci_trellis_encoder d_trellis_encoder;
 
-  atsc_trellis_encoder();
+    atsc_trellis_encoder();
 
 public:
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-  void reset() { /* nop */ }
+    void reset()
+    { /* nop */
+    }
 };
 
 

@@ -24,17 +24,16 @@
 #include <config.h>
 #endif
 
-#include <qa_vmcircbuf.h>
-#include <cppunit/TestAssert.h>
 #include "vmcircbuf.h"
+#include <cppunit/TestAssert.h>
+#include <qa_vmcircbuf.h>
 #include <stdio.h>
 
-void
-qa_vmcircbuf::test_all()
+void qa_vmcircbuf::test_all()
 {
-  int verbose = 1; // summary
+    int verbose = 1; // summary
 
-  bool ok = gr::vmcircbuf_sysconfig::test_all_factories(verbose);
+    bool ok = gr::vmcircbuf_sysconfig::test_all_factories(verbose);
 
-  CPPUNIT_ASSERT_EQUAL(true, ok);
+    CPPUNIT_ASSERT_EQUAL(true, ok);
 }

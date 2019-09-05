@@ -25,42 +25,41 @@
 #include "config.h"
 #endif
 
+#include <gnuradio/io_signature.h>
 #include <divide_cc_impl.h>
 #include <volk/volk.h>
-#include <gnuradio/io_signature.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    divide_cc::sptr divide_cc::make(size_t vlen)
-    {
-      return gnuradio::get_initial_sptr(new divide_cc_impl(vlen));
-    }
+divide_cc::sptr divide_cc::make(size_t vlen)
+{
+    return gnuradio::get_initial_sptr(new divide_cc_impl(vlen));
+}
 
-    divide_cc_impl::divide_cc_impl(size_t vlen)
-      : sync_block ("divide_cc",
-		       io_signature::make (2, -1, sizeof (gr_complex)*vlen),
-		       io_signature::make (1,  1, sizeof (gr_complex)*vlen)),
+divide_cc_impl::divide_cc_impl(size_t vlen)
+    : sync_block("divide_cc",
+                 io_signature::make(2, -1, sizeof(gr_complex) * vlen),
+                 io_signature::make(1, 1, sizeof(gr_complex) * vlen)),
       d_vlen(vlen)
-    {
-    }
+{
+}
 
-    int
-    divide_cc_impl::work(int noutput_items,
-		      gr_vector_const_void_star &input_items,
-		      gr_vector_void_star &output_items)
-    {
-      gr_complex *optr = (gr_complex *) output_items[0];
-      size_t ninputs = input_items.size ();
-      gr_complex *numerator = (gr_complex *) input_items[0];
-      for(size_t inp = 1; inp < ninputs; ++inp)
-      {
-        volk_32fc_x2_divide_32fc(optr, numerator, (gr_complex*) input_items[inp], noutput_items * d_vlen);
+int divide_cc_impl::work(int noutput_items,
+                         gr_vector_const_void_star& input_items,
+                         gr_vector_void_star& output_items)
+{
+    gr_complex* optr = (gr_complex*)output_items[0];
+    size_t ninputs = input_items.size();
+    gr_complex* numerator = (gr_complex*)input_items[0];
+    for (size_t inp = 1; inp < ninputs; ++inp) {
+        volk_32fc_x2_divide_32fc(
+            optr, numerator, (gr_complex*)input_items[inp], noutput_items * d_vlen);
         numerator = optr;
-      }
-
-      return noutput_items;
     }
 
-  } /* namespace blocks */
+    return noutput_items;
+}
+
+} /* namespace blocks */
 } /* namespace gr */

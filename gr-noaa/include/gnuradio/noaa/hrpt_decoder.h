@@ -27,25 +27,25 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace noaa {
+namespace noaa {
+
+/*!
+ * \brief NOAA HRPT Decoder
+ * \ingroup noaa_blk
+ */
+class NOAA_API hrpt_decoder : virtual public sync_block
+{
+public:
+    // gr::noaa::hrpt_decoder::sptr
+    typedef boost::shared_ptr<hrpt_decoder> sptr;
 
     /*!
-     * \brief NOAA HRPT Decoder
-     * \ingroup noaa_blk
+     * \brief Make NOAA HRPT Decoder
      */
-    class NOAA_API hrpt_decoder : virtual public sync_block
-    {
-    public:
-      // gr::noaa::hrpt_decoder::sptr
-      typedef boost::shared_ptr<hrpt_decoder> sptr;
+    static sptr make(bool verbose, bool output_files);
+};
 
-      /*!
-       * \brief Make NOAA HRPT Decoder
-       */
-      static sptr make(bool verbose, bool output_files);
-    };
-
-  } /* namespace noaa */
+} /* namespace noaa */
 } /* namespace gr */
 
 #endif /* INCLUDED_NOAA_HRPT_DECODER_H */

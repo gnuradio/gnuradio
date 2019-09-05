@@ -26,38 +26,38 @@
 #include <gnuradio/wxgui/histo_sink_f.h>
 
 namespace gr {
-  namespace wxgui {
+namespace wxgui {
 
-    class histo_sink_f_impl : public histo_sink_f
-    {
-    private:
-      msg_queue::sptr d_msgq;
-      unsigned int d_num_bins;
-      unsigned int d_frame_size;
-      unsigned int d_sample_count;
-      unsigned int *d_bins;
-      float *d_samps;
-      gr::thread::mutex d_mutex;
+class histo_sink_f_impl : public histo_sink_f
+{
+private:
+    msg_queue::sptr d_msgq;
+    unsigned int d_num_bins;
+    unsigned int d_frame_size;
+    unsigned int d_sample_count;
+    unsigned int* d_bins;
+    float* d_samps;
+    gr::thread::mutex d_mutex;
 
-      void send_frame(void);
-      void clear(void);
+    void send_frame(void);
+    void clear(void);
 
-    public:
-      histo_sink_f_impl(msg_queue::sptr msgq);
-      ~histo_sink_f_impl(void);
+public:
+    histo_sink_f_impl(msg_queue::sptr msgq);
+    ~histo_sink_f_impl(void);
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-      unsigned int get_frame_size(void);
-      unsigned int get_num_bins(void);
+    unsigned int get_frame_size(void);
+    unsigned int get_num_bins(void);
 
-      void set_frame_size(unsigned int frame_size);
-      void set_num_bins(unsigned int num_bins);
-    };
+    void set_frame_size(unsigned int frame_size);
+    void set_num_bins(unsigned int num_bins);
+};
 
-  } /* namespace wxgui */
+} /* namespace wxgui */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_HISTO_SINK_F_IMPL_H */

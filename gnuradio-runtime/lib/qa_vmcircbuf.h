@@ -23,17 +23,17 @@
 #ifndef QA_GR_VMCIRCBUF_H
 #define QA_GR_VMCIRCBUF_H
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 class qa_vmcircbuf : public CppUnit::TestCase
 {
-  CPPUNIT_TEST_SUITE(qa_vmcircbuf);
-  CPPUNIT_TEST(test_all);
-  CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE(qa_vmcircbuf);
+    CPPUNIT_TEST(test_all);
+    CPPUNIT_TEST_SUITE_END();
 
 private:
-  void test_all();
+    void test_all();
 };
 
 #endif /* QA_GR_VMCIRCBUF_H */

@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_atsc_EXPORTS
-#  define ATSC_API __GR_ATTR_EXPORT
+#define ATSC_API __GR_ATTR_EXPORT
 #else
-#  define ATSC_API __GR_ATTR_IMPORT
+#define ATSC_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_ATSC_API_H */

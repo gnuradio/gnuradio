@@ -35,80 +35,79 @@
 
 /* emulate posix_memalign functionality, to some degree */
 
-#include <errno.h>
 #include "pagesize.h"
+#include <errno.h>
 
-int posix_memalign
-(void **memptr, size_t alignment, size_t size)
+int posix_memalign(void** memptr, size_t alignment, size_t size)
 {
-  /* emulate posix_memalign functionality, to some degree */
+    /* emulate posix_memalign functionality, to some degree */
 
-  /* make sure the return handle is valid; return "bad address" if not valid */
-  if (memptr == 0)
-    return (EFAULT);
-  *memptr = (void*) 0;
+    /* make sure the return handle is valid; return "bad address" if not valid */
+    if (memptr == 0)
+        return (EFAULT);
+    *memptr = (void*)0;
 
-  /* make sure 'alignment' is a power of 2
-   * and multiple of sizeof (void*)
-   */
+    /* make sure 'alignment' is a power of 2
+     * and multiple of sizeof (void*)
+     */
 
-  /* make sure 'alignment' is a multiple of sizeof (void*) */
-  if ((alignment % sizeof (void*)) != 0)
-    return (EINVAL);
+    /* make sure 'alignment' is a multiple of sizeof (void*) */
+    if ((alignment % sizeof(void*)) != 0)
+        return (EINVAL);
 
-  /* make sure 'alignment' is a power of 2 */
-  if ((alignment & (alignment - 1)) != 0)
-    return (EINVAL);
+    /* make sure 'alignment' is a power of 2 */
+    if ((alignment & (alignment - 1)) != 0)
+        return (EINVAL);
 
-  /* good alignment */
+        /* good alignment */
 
 #if (ALIGNED_MALLOC != 0)
 
-  /* if 'malloc' is known to be aligned, and the desired 'alignment'
-   * matches is <= that provided by 'malloc', then use 'malloc'.  This
-   * works on, e.g., Darwin for which malloc is 16-byte aligned.
-   */
-  size_t am = (size_t) ALIGNED_MALLOC;
-  if (alignment <= am) {
-    /* make sure ALIGNED_MALLOC is a power of 2, to guarantee that the
-     * alignment is correct (since 'alignment' must be a power of 2).
+    /* if 'malloc' is known to be aligned, and the desired 'alignment'
+     * matches is <= that provided by 'malloc', then use 'malloc'.  This
+     * works on, e.g., Darwin for which malloc is 16-byte aligned.
      */
-    if ((am & (am - 1)) != 0)
-      return (EINVAL);
-    /* good malloc alignment */
-    *memptr = malloc (size);
-  }
+    size_t am = (size_t)ALIGNED_MALLOC;
+    if (alignment <= am) {
+        /* make sure ALIGNED_MALLOC is a power of 2, to guarantee that the
+         * alignment is correct (since 'alignment' must be a power of 2).
+         */
+        if ((am & (am - 1)) != 0)
+            return (EINVAL);
+        /* good malloc alignment */
+        *memptr = malloc(size);
+    }
 
 #endif /* (ALIGNED_MALLOC != 0) */
 #ifdef HAVE_VALLOC
 
-  if (*memptr == (void*) 0) {
-    /* try valloc if it exists */
-    /* cheap and easy way to make sure alignment is met, so long as it
-     * is <= pagesize () */
-    if (alignment <= (size_t) gr::pagesize ()) {
-      *memptr = valloc (size);
+    if (*memptr == (void*)0) {
+        /* try valloc if it exists */
+        /* cheap and easy way to make sure alignment is met, so long as it
+         * is <= pagesize () */
+        if (alignment <= (size_t)gr::pagesize()) {
+            *memptr = valloc(size);
+        }
     }
-  }
 
 #endif /* HAVE_VALLOC */
 
-#if (ALIGNED_MALLOC == 0) && !defined (HAVE_VALLOC)
-  /* no posix_memalign, valloc, and malloc isn't known to be aligned
-   * (enough for the input arguments); no idea what to do.
-   */
+#if (ALIGNED_MALLOC == 0) && !defined(HAVE_VALLOC)
+    /* no posix_memalign, valloc, and malloc isn't known to be aligned
+     * (enough for the input arguments); no idea what to do.
+     */
 
 #error gnuradio-runtime/lib/posix_memalign.cc: Cannot find a way to alloc aligned memory.
 
 #endif
 
-  /* if the pointer wasn't allocated properly, return that there was
-   * not enough memory to allocate; otherwise, return OK (0).
-   */
-  if (*memptr == (void*) 0)
-    return (ENOMEM);
-  else
-    return (0);
+    /* if the pointer wasn't allocated properly, return that there was
+     * not enough memory to allocate; otherwise, return OK (0).
+     */
+    if (*memptr == (void*)0)
+        return (ENOMEM);
+    else
+        return (0);
 };
 
 #endif /* ! HAVE_POSIX_MEMALIGN */

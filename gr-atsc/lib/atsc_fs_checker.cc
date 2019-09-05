@@ -24,52 +24,50 @@
 #include <config.h>
 #endif
 
-#include <gnuradio/atsc/fs_checker.h>
-#include <gnuradio/atsc/create_atsci_fs_checker.h>
-#include <gnuradio/atsc/fs_checker_impl.h>
-#include <gnuradio/io_signature.h>
 #include <gnuradio/atsc/consts.h>
+#include <gnuradio/atsc/create_atsci_fs_checker.h>
+#include <gnuradio/atsc/fs_checker.h>
+#include <gnuradio/atsc/fs_checker_impl.h>
 #include <gnuradio/atsc/syminfo_impl.h>
+#include <gnuradio/io_signature.h>
 
 
-atsc_fs_checker_sptr
-atsc_make_fs_checker()
+atsc_fs_checker_sptr atsc_make_fs_checker()
 {
-  return gnuradio::get_initial_sptr(new atsc_fs_checker());
+    return gnuradio::get_initial_sptr(new atsc_fs_checker());
 }
 
 atsc_fs_checker::atsc_fs_checker()
-  : gr::sync_block("atsc_fs_checker",
-		  gr::io_signature::make(2, 2, sizeof(float)),
-		  gr::io_signature::make(2, 2, sizeof(float)))
+    : gr::sync_block("atsc_fs_checker",
+                     gr::io_signature::make(2, 2, sizeof(float)),
+                     gr::io_signature::make(2, 2, sizeof(float)))
 {
-  d_fsc = create_atsci_fs_checker();
+    d_fsc = create_atsci_fs_checker();
 }
 
 
-atsc_fs_checker::~atsc_fs_checker ()
+atsc_fs_checker::~atsc_fs_checker()
 {
-  // Anything that isn't automatically cleaned up...
+    // Anything that isn't automatically cleaned up...
 
-  delete d_fsc;
+    delete d_fsc;
 }
 
 
-int
-atsc_fs_checker::work (int noutput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items)
+int atsc_fs_checker::work(int noutput_items,
+                          gr_vector_const_void_star& input_items,
+                          gr_vector_void_star& output_items)
 {
-  const float *in = (const float *) input_items[0];
-  const atsc::syminfo *tag_in = (const atsc::syminfo *) input_items[1];
-  float *out = (float *) output_items[0];
-  atsc::syminfo *tag_out = (atsc::syminfo *) output_items[1];
+    const float* in = (const float*)input_items[0];
+    const atsc::syminfo* tag_in = (const atsc::syminfo*)input_items[1];
+    float* out = (float*)output_items[0];
+    atsc::syminfo* tag_out = (atsc::syminfo*)output_items[1];
 
-  assert(sizeof(float) == sizeof(atsc::syminfo));
+    assert(sizeof(float) == sizeof(atsc::syminfo));
 
 
-  for (int i = 0; i < noutput_items; i++)
-    d_fsc->filter (in[i], tag_in[i], &out[i], &tag_out[i]);
+    for (int i = 0; i < noutput_items; i++)
+        d_fsc->filter(in[i], tag_in[i], &out[i], &tag_out[i]);
 
-  return noutput_items;
+    return noutput_items;
 }

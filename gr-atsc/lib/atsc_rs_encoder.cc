@@ -24,39 +24,37 @@
 #include <config.h>
 #endif
 
+#include <gnuradio/atsc/consts.h>
 #include <gnuradio/atsc/rs_encoder.h>
 #include <gnuradio/io_signature.h>
-#include <gnuradio/atsc/consts.h>
 
 
-atsc_rs_encoder_sptr
-atsc_make_rs_encoder()
+atsc_rs_encoder_sptr atsc_make_rs_encoder()
 {
-  return gnuradio::get_initial_sptr(new atsc_rs_encoder());
+    return gnuradio::get_initial_sptr(new atsc_rs_encoder());
 }
 
 atsc_rs_encoder::atsc_rs_encoder()
-  : gr::sync_block("atsc_rs_encoder",
-		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_no_sync)),
-		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)))
+    : gr::sync_block("atsc_rs_encoder",
+                     gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_no_sync)),
+                     gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)))
 {
-  reset();
+    reset();
 }
 
-int
-atsc_rs_encoder::work (int noutput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items)
+int atsc_rs_encoder::work(int noutput_items,
+                          gr_vector_const_void_star& input_items,
+                          gr_vector_void_star& output_items)
 {
-  const atsc_mpeg_packet_no_sync *in = (const atsc_mpeg_packet_no_sync *) input_items[0];
-  atsc_mpeg_packet_rs_encoded *out = (atsc_mpeg_packet_rs_encoded *) output_items[0];
+    const atsc_mpeg_packet_no_sync* in = (const atsc_mpeg_packet_no_sync*)input_items[0];
+    atsc_mpeg_packet_rs_encoded* out = (atsc_mpeg_packet_rs_encoded*)output_items[0];
 
-  for (int i = 0; i < noutput_items; i++){
+    for (int i = 0; i < noutput_items; i++) {
 
-    assert(in[i].pli.regular_seg_p());
-    out[i].pli = in[i].pli;			// copy pipeline info...
-    d_rs_encoder.encode(out[i], in[i]);
-  }
+        assert(in[i].pli.regular_seg_p());
+        out[i].pli = in[i].pli; // copy pipeline info...
+        d_rs_encoder.encode(out[i], in[i]);
+    }
 
-  return noutput_items;
+    return noutput_items;
 }

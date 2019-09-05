@@ -23,37 +23,34 @@
 #include <gnuradio/atsc/types.h>
 #include <assert.h>
 
-void
-plinfo::delay (plinfo &out, const plinfo &in, int nsegs_of_delay)
+void plinfo::delay(plinfo& out, const plinfo& in, int nsegs_of_delay)
 {
-  assert (in.regular_seg_p ());
-  assert (nsegs_of_delay >= 0);
+    assert(in.regular_seg_p());
+    assert(nsegs_of_delay >= 0);
 
-  int	s = in.segno ();
-  if (in.in_field2_p ())
-    s += ATSC_DSEGS_PER_FIELD;
+    int s = in.segno();
+    if (in.in_field2_p())
+        s += ATSC_DSEGS_PER_FIELD;
 
-  s -= nsegs_of_delay;
-  if (s < 0)
-    s += 2 * ATSC_DSEGS_PER_FIELD;
+    s -= nsegs_of_delay;
+    if (s < 0)
+        s += 2 * ATSC_DSEGS_PER_FIELD;
 
-  assert (0 <= s && s < 2 * ATSC_DSEGS_PER_FIELD);
+    assert(0 <= s && s < 2 * ATSC_DSEGS_PER_FIELD);
 
-  if (s < ATSC_DSEGS_PER_FIELD)
-    out.set_regular_seg (false, s);				// field 1
-  else
-    out.set_regular_seg (true, s - ATSC_DSEGS_PER_FIELD);	// field 2
+    if (s < ATSC_DSEGS_PER_FIELD)
+        out.set_regular_seg(false, s); // field 1
+    else
+        out.set_regular_seg(true, s - ATSC_DSEGS_PER_FIELD); // field 2
 }
 
-void
-plinfo::sanity_check (const plinfo &x)
+void plinfo::sanity_check(const plinfo& x)
 {
-  // basic sanity checks...
-  assert (x.segno () >= 0);
-  assert (x.segno () < (unsigned) ATSC_DSEGS_PER_FIELD);
-  assert ((x.flags () & ~0x3f) == 0);
+    // basic sanity checks...
+    assert(x.segno() >= 0);
+    assert(x.segno() < (unsigned)ATSC_DSEGS_PER_FIELD);
+    assert((x.flags() & ~0x3f) == 0);
 
-  assert (x.regular_seg_p () ^ x.field_sync_p ());
-  assert ((x.segno () != 0) ^ x.first_regular_seg_p ());
+    assert(x.regular_seg_p() ^ x.field_sync_p());
+    assert((x.segno() != 0) ^ x.first_regular_seg_p());
 }
-

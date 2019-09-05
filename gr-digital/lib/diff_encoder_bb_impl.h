@@ -26,24 +26,24 @@
 #include <gnuradio/digital/diff_encoder_bb.h>
 
 namespace gr {
-  namespace digital {
+namespace digital {
 
-    class diff_encoder_bb_impl : public diff_encoder_bb
-    {
-    public:
-      diff_encoder_bb_impl(unsigned int modulus);
-      ~diff_encoder_bb_impl();
+class diff_encoder_bb_impl : public diff_encoder_bb
+{
+public:
+    diff_encoder_bb_impl(unsigned int modulus);
+    ~diff_encoder_bb_impl();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-    private:
-      unsigned int d_last_out;
-      unsigned int d_modulus;
-    };
+private:
+    unsigned int d_last_out;
+    unsigned int d_modulus;
+};
 
-  } /* namespace digital */
+} /* namespace digital */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_DIFF_ENCODER_BB_IMPL_H */

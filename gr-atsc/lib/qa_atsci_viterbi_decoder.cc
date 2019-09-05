@@ -24,15 +24,15 @@
 #include <config.h>
 #endif
 
-#include <cppunit/TestAssert.h>
-#include "qa_atsci_viterbi_decoder.h"
 #include "qa_atsci_trellis_encoder.h"
-#include <cstdio>
-#include <string.h>
+#include "qa_atsci_viterbi_decoder.h"
+#include <cppunit/TestAssert.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
+#include <cstdio>
 
-#define	NELEM(x) (sizeof (x) / sizeof (x[0]))
+#define NELEM(x) (sizeof(x) / sizeof(x[0]))
 
 
 static const int NCODERS = atsci_viterbi_decoder::NCODERS;
@@ -48,23 +48,21 @@ map_to_soft_symbols (atsc_soft_data_segment &out,
 }
 #endif
 
-static void
-pad_decoder_input (atsc_soft_data_segment out[NCODERS])
+static void pad_decoder_input(atsc_soft_data_segment out[NCODERS])
 {
-  memset(out,  0, sizeof(*out)*NCODERS);
+    memset(out, 0, sizeof(*out) * NCODERS);
 
-  // add data segment sync
-  for (int i = 0; i < NCODERS; i++){
-    out[i].data[0] =  5;
-    out[i].data[1] = -5;
-    out[i].data[2] = -5;
-    out[i].data[3] =  5;
-    out[i].pli.set_regular_seg (false, i);
-  }
+    // add data segment sync
+    for (int i = 0; i < NCODERS; i++) {
+        out[i].data[0] = 5;
+        out[i].data[1] = -5;
+        out[i].data[2] = -5;
+        out[i].data[3] = 5;
+        out[i].pli.set_regular_seg(false, i);
+    }
 }
 
-void
-qa_atsci_viterbi_decoder::t0 ()
+void qa_atsci_viterbi_decoder::t0()
 {
 #if 0
   atsci_trellis_encoder		enc;
@@ -129,50 +127,49 @@ qa_atsci_viterbi_decoder::t0 ()
 #endif
 }
 
-void
-qa_atsci_viterbi_decoder::t1 ()
+void qa_atsci_viterbi_decoder::t1()
 {
-  atsc_soft_data_segment	decoder_in[NCODERS];
-  atsc_soft_data_segment	decoder_in_pad[NCODERS];
-  atsc_mpeg_packet_rs_encoded	decoder_out[NCODERS];
-  atsc_mpeg_packet_rs_encoded	decoder_out_pad[NCODERS];
-  atsc_mpeg_packet_rs_encoded	expected_out[NCODERS];
-  static const float 		raw_input[NCODERS * NELEM (decoder_in[0].data)] = {
+    atsc_soft_data_segment decoder_in[NCODERS];
+    atsc_soft_data_segment decoder_in_pad[NCODERS];
+    atsc_mpeg_packet_rs_encoded decoder_out[NCODERS];
+    atsc_mpeg_packet_rs_encoded decoder_out_pad[NCODERS];
+    atsc_mpeg_packet_rs_encoded expected_out[NCODERS];
+    static const float raw_input[NCODERS * NELEM(decoder_in[0].data)] = {
 #include "qa_atsci_viterbi_decoder_t1_input.dat"
-  };
-  static const unsigned char	raw_output[NCODERS * NELEM (expected_out[0].data)] = {
+    };
+    static const unsigned char raw_output[NCODERS * NELEM(expected_out[0].data)] = {
 #include "qa_atsci_viterbi_decoder_t1_output.dat"
-  };
+    };
 
 
-  // load up input
-  const float *ri = &raw_input[0];
-  for (int i = 0; i < NCODERS; i++){
-    for (unsigned int j = 0; j < NELEM (decoder_in[i].data); j++){
-      decoder_in[i].data[j] = *ri++;
+    // load up input
+    const float* ri = &raw_input[0];
+    for (int i = 0; i < NCODERS; i++) {
+        for (unsigned int j = 0; j < NELEM(decoder_in[i].data); j++) {
+            decoder_in[i].data[j] = *ri++;
+        }
+        decoder_in[i].pli.set_regular_seg(false, i);
     }
-    decoder_in[i].pli.set_regular_seg (false, i);
-  }
 
-  // load up expected output
-  const unsigned char *ro = &raw_output[0];
-  for (int i = 0; i < NCODERS; i++){
-    for (unsigned int j = 0; j < NELEM (expected_out[i].data); j++){
-      expected_out[i].data[j] = *ro++;
+    // load up expected output
+    const unsigned char* ro = &raw_output[0];
+    for (int i = 0; i < NCODERS; i++) {
+        for (unsigned int j = 0; j < NELEM(expected_out[i].data); j++) {
+            expected_out[i].data[j] = *ro++;
+        }
+        expected_out[i].pli.set_regular_seg(false, i);
     }
-    expected_out[i].pli.set_regular_seg (false, i);
-  }
 
-  viterbi.reset ();
+    viterbi.reset();
 
-  // this has only the previous (non-existant) output
-  viterbi.decode (decoder_out_pad, decoder_in);
+    // this has only the previous (non-existant) output
+    viterbi.decode(decoder_out_pad, decoder_in);
 
-  // now we'll see the real output
-  pad_decoder_input (decoder_in_pad);
-  viterbi.decode (decoder_out, decoder_in_pad);
+    // now we'll see the real output
+    pad_decoder_input(decoder_in_pad);
+    viterbi.decode(decoder_out, decoder_in_pad);
 
-  for (int i = 0; i < NCODERS; i++){			// check the result
-    CPPUNIT_ASSERT (expected_out[i] == decoder_out[i]);
-  }
+    for (int i = 0; i < NCODERS; i++) { // check the result
+        CPPUNIT_ASSERT(expected_out[i] == decoder_out[i]);
+    }
 }

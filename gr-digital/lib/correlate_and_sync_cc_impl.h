@@ -29,34 +29,35 @@
 using namespace gr::filter;
 
 namespace gr {
-  namespace digital {
+namespace digital {
 
-    class correlate_and_sync_cc_impl : public correlate_and_sync_cc
-    {
-    private:
-      std::vector<gr_complex> d_symbols;
-      unsigned int d_sps;
-      float d_center_first_symbol;
-      float d_thresh;
-      kernel::fft_filter_ccc  *d_filter;
+class correlate_and_sync_cc_impl : public correlate_and_sync_cc
+{
+private:
+    std::vector<gr_complex> d_symbols;
+    unsigned int d_sps;
+    float d_center_first_symbol;
+    float d_thresh;
+    kernel::fft_filter_ccc* d_filter;
 
-      int d_last_index;
+    int d_last_index;
 
-    public:
-      correlate_and_sync_cc_impl(const std::vector<gr_complex> &symbols,
-                                 const std::vector<float> &filter,
-                                 unsigned int sps, unsigned int nfilts=32);
-      ~correlate_and_sync_cc_impl();
+public:
+    correlate_and_sync_cc_impl(const std::vector<gr_complex>& symbols,
+                               const std::vector<float>& filter,
+                               unsigned int sps,
+                               unsigned int nfilts = 32);
+    ~correlate_and_sync_cc_impl();
 
-      std::vector<gr_complex> symbols() const;
-      void set_symbols(const std::vector<gr_complex> &symbols);
+    std::vector<gr_complex> symbols() const;
+    void set_symbols(const std::vector<gr_complex>& symbols);
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } // namespace digital
+} // namespace digital
 } // namespace gr
 
 #endif /* INCLUDED_DIGITAL_CORRELATE_AND_SYNC_CC_IMPL_H */

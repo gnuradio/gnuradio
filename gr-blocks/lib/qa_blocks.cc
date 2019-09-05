@@ -25,22 +25,21 @@
  * add them here.
  */
 
-#include <qa_blocks.h>
 #include <qa_block_tags.h>
-#include <qa_rotator.h>
+#include <qa_blocks.h>
 #include <qa_gr_block.h>
 #include <qa_gr_flowgraph.h>
+#include <qa_rotator.h>
 #include <qa_set_msg_handler.h>
 
-CppUnit::TestSuite *
-qa_blocks::suite()
+CppUnit::TestSuite* qa_blocks::suite()
 {
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("gr-blocks");
+    CppUnit::TestSuite* s = new CppUnit::TestSuite("gr-blocks");
 
-  s->addTest(qa_block_tags::suite());
-  s->addTest(qa_rotator::suite());
-  s->addTest(qa_gr_block::suite());
-  s->addTest(qa_gr_flowgraph::suite());
-  s->addTest(qa_set_msg_handler::suite());
-  return s;
+    s->addTest(qa_block_tags::suite());
+    s->addTest(qa_rotator::suite());
+    s->addTest(qa_gr_block::suite());
+    s->addTest(qa_gr_flowgraph::suite());
+    s->addTest(qa_set_msg_handler::suite());
+    return s;
 }

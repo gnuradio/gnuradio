@@ -25,54 +25,48 @@
 
 #include <gnuradio/atsc/api.h>
 #include <gnuradio/atsc/equalizer_impl.h>
-#include <vector>
 #include <stdio.h>
+#include <vector>
 
 class ATSC_API atsci_equalizer_lms : public atsci_equalizer
 {
 public:
-  atsci_equalizer_lms ();
-  virtual ~atsci_equalizer_lms ();
+    atsci_equalizer_lms();
+    virtual ~atsci_equalizer_lms();
 
-  virtual void reset ();
-  virtual int ntaps () const;
-  virtual int npretaps () const;
-  std::vector<double> taps () {
-    return d_taps;
-  }
+    virtual void reset();
+    virtual int ntaps() const;
+    virtual int npretaps() const;
+    std::vector<double> taps() { return d_taps; }
 
 protected:
-  FILE *trainingfile;
-  virtual void filter_normal (const float *input_samples,
-			      float *output_samples,
-			      int   nsamples);
+    FILE* trainingfile;
+    virtual void
+    filter_normal(const float* input_samples, float* output_samples, int nsamples);
 
-  virtual void filter_data_seg_sync (const float *input_samples,
-				     float *output_samples,
-				     int   nsamples,
-				     int   offset);
+    virtual void filter_data_seg_sync(const float* input_samples,
+                                      float* output_samples,
+                                      int nsamples,
+                                      int offset);
 
-  virtual void filter_field_sync (const float *input_samples,
-				  float *output_samples,
-				  int   nsamples,
-				  int   offset,
-				  int	which_field);
+    virtual void filter_field_sync(const float* input_samples,
+                                   float* output_samples,
+                                   int nsamples,
+                                   int offset,
+                                   int which_field);
 
 private:
-  std::vector<double>	d_taps;
+    std::vector<double> d_taps;
 
-  void filterN (const float *input_samples,
-		float *output_samples,
-		int nsamples);
+    void filterN(const float* input_samples, float* output_samples, int nsamples);
 
-  void adaptN (const float *input_samples,
-	       const float *training_pattern,
-	       float *output_samples,
-	       int    nsamples);
+    void adaptN(const float* input_samples,
+                const float* training_pattern,
+                float* output_samples,
+                int nsamples);
 
-  float filter1 (const float input[]);
-  float adapt1 (const float input[], float ideal_output);
-
+    float filter1(const float input[]);
+    float adapt1(const float input[], float ideal_output);
 };
 
 

@@ -26,24 +26,24 @@
 #include <gnuradio/blocks/file_descriptor_sink.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class file_descriptor_sink_impl : public file_descriptor_sink
-    {
-    private:
-      size_t d_itemsize;
-      int d_fd;
+class file_descriptor_sink_impl : public file_descriptor_sink
+{
+private:
+    size_t d_itemsize;
+    int d_fd;
 
-    public:
-      file_descriptor_sink_impl(size_t itemsize, int fd);
-      ~file_descriptor_sink_impl();
+public:
+    file_descriptor_sink_impl(size_t itemsize, int fd);
+    ~file_descriptor_sink_impl();
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_FILE_DESCRIPTOR_SINK_IMPL_H */

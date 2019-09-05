@@ -22,73 +22,73 @@
 #ifndef _QA_FIR_FILTER_WITH_BUFFER_H_
 #define _QA_FIR_FILTER_WITH_BUFFER_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 namespace gr {
-  namespace filter {
+namespace filter {
 
-    namespace fff {
+namespace fff {
 
-      class qa_fir_filter_with_buffer_fff : public CppUnit::TestCase
-      {
-	CPPUNIT_TEST_SUITE(qa_fir_filter_with_buffer_fff);
-	CPPUNIT_TEST(t1);
-	CPPUNIT_TEST(t2);
-	CPPUNIT_TEST(t3);
-	CPPUNIT_TEST_SUITE_END();
+class qa_fir_filter_with_buffer_fff : public CppUnit::TestCase
+{
+    CPPUNIT_TEST_SUITE(qa_fir_filter_with_buffer_fff);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST(t2);
+    CPPUNIT_TEST(t3);
+    CPPUNIT_TEST_SUITE_END();
 
-      private:
-	void test_decimate(unsigned int decimate);
+private:
+    void test_decimate(unsigned int decimate);
 
-	void t1();
-	void t2();
-	void t3();
-      };
+    void t1();
+    void t2();
+    void t3();
+};
 
-    } /* namespace fff */
+} /* namespace fff */
 
-    namespace ccc {
+namespace ccc {
 
-      class qa_fir_filter_with_buffer_ccc : public CppUnit::TestCase
-      {
-	CPPUNIT_TEST_SUITE(qa_fir_filter_with_buffer_ccc);
-	CPPUNIT_TEST(t1);
-	CPPUNIT_TEST(t2);
-	CPPUNIT_TEST(t3);
-	CPPUNIT_TEST_SUITE_END();
+class qa_fir_filter_with_buffer_ccc : public CppUnit::TestCase
+{
+    CPPUNIT_TEST_SUITE(qa_fir_filter_with_buffer_ccc);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST(t2);
+    CPPUNIT_TEST(t3);
+    CPPUNIT_TEST_SUITE_END();
 
-      private:
-	void test_decimate(unsigned int decimate);
+private:
+    void test_decimate(unsigned int decimate);
 
-	void t1();
-	void t2();
-	void t3();
-      };
+    void t1();
+    void t2();
+    void t3();
+};
 
-    } /* namespace ccc */
+} /* namespace ccc */
 
-    namespace ccf {
+namespace ccf {
 
-      class qa_fir_filter_with_buffer_ccf : public CppUnit::TestCase
-      {
-	CPPUNIT_TEST_SUITE(qa_fir_filter_with_buffer_ccf);
-	CPPUNIT_TEST(t1);
-	CPPUNIT_TEST(t2);
-	CPPUNIT_TEST(t3);
-	CPPUNIT_TEST_SUITE_END();
+class qa_fir_filter_with_buffer_ccf : public CppUnit::TestCase
+{
+    CPPUNIT_TEST_SUITE(qa_fir_filter_with_buffer_ccf);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST(t2);
+    CPPUNIT_TEST(t3);
+    CPPUNIT_TEST_SUITE_END();
 
-      private:
-	void test_decimate(unsigned int decimate);
+private:
+    void test_decimate(unsigned int decimate);
 
-	void t1();
-	void t2();
-	void t3();
-      };
+    void t1();
+    void t2();
+    void t3();
+};
 
-    } /* namespace ccf */
+} /* namespace ccf */
 
-  } /* namespace filter */
+} /* namespace filter */
 } /* namespace gr */
 
 #endif /* _QA_FIR_FILTER_WITH_BUFFER_H_ */

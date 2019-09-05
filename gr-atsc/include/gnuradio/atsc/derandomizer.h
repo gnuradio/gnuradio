@@ -23,8 +23,8 @@
 #define INCLUDED_ATSC_DERANDOMIZER_H
 
 #include <gnuradio/atsc/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/atsc/randomizer_impl.h>
+#include <gnuradio/sync_block.h>
 
 class atsc_derandomizer;
 typedef boost::shared_ptr<atsc_derandomizer> atsc_derandomizer_sptr;
@@ -39,18 +39,18 @@ ATSC_API atsc_derandomizer_sptr atsc_make_derandomizer();
  */
 class ATSC_API atsc_derandomizer : public gr::sync_block
 {
-  friend ATSC_API atsc_derandomizer_sptr atsc_make_derandomizer();
+    friend ATSC_API atsc_derandomizer_sptr atsc_make_derandomizer();
 
-  atsci_randomizer	d_rand;
+    atsci_randomizer d_rand;
 
-  atsc_derandomizer();
+    atsc_derandomizer();
 
 public:
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-  void reset();
+    void reset();
 };
 
 

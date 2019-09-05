@@ -28,10 +28,11 @@
 
 //! collect all the tests for the gr-analog directory
 
-class __GR_ATTR_EXPORT qa_gr_analog {
- public:
-  //! return suite of tests for all of gr-analog directory
-  static CppUnit::TestSuite *suite();
+class __GR_ATTR_EXPORT qa_gr_analog
+{
+public:
+    //! return suite of tests for all of gr-analog directory
+    static CppUnit::TestSuite* suite();
 };
 
 

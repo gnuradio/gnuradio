@@ -22,5 +22,5 @@
 
 class GrAtscSegSymSync;
 
-GrAtscSegSymSync *create_GrAtscSegSymSyncImpl (
-       double nominal_ratio_of_rx_clock_to_symbol_freq);
+GrAtscSegSymSync*
+create_GrAtscSegSymSyncImpl(double nominal_ratio_of_rx_clock_to_symbol_freq);

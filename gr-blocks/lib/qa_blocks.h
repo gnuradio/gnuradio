@@ -30,9 +30,9 @@
 
 class __GR_ATTR_EXPORT qa_blocks
 {
- public:
-  //! return suite of tests for all of gr-blocks directory
-  static CppUnit::TestSuite *suite();
+public:
+    //! return suite of tests for all of gr-blocks directory
+    static CppUnit::TestSuite* suite();
 };
 
 #endif /* _QA_GR_BLOCKS_H_ */

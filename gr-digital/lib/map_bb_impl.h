@@ -27,27 +27,27 @@
 #include <gnuradio/thread/thread.h>
 
 namespace gr {
-  namespace digital {
+namespace digital {
 
-    class map_bb_impl : public map_bb
-    {
-    private:
-      unsigned char d_map[0x100];
-      gr::thread::mutex d_mutex;
+class map_bb_impl : public map_bb
+{
+private:
+    unsigned char d_map[0x100];
+    gr::thread::mutex d_mutex;
 
-    public:
-      map_bb_impl(const std::vector<int> &map);
-      ~map_bb_impl();
+public:
+    map_bb_impl(const std::vector<int>& map);
+    ~map_bb_impl();
 
-      void set_map(const std::vector<int> &map);
-      std::vector<int> map() const;
+    void set_map(const std::vector<int>& map);
+    std::vector<int> map() const;
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace digital */
+} /* namespace digital */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_MAP_BB_IMPL_H */

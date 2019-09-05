@@ -24,36 +24,35 @@
 #include <config.h>
 #endif
 
+#include <gnuradio/atsc/consts.h>
 #include <gnuradio/atsc/interleaver.h>
 #include <gnuradio/io_signature.h>
-#include <gnuradio/atsc/consts.h>
 
 
-atsc_interleaver_sptr
-atsc_make_interleaver()
+atsc_interleaver_sptr atsc_make_interleaver()
 {
-  return gnuradio::get_initial_sptr(new atsc_interleaver());
+    return gnuradio::get_initial_sptr(new atsc_interleaver());
 }
 
 atsc_interleaver::atsc_interleaver()
-  : gr::sync_block("atsc_interleaver",
-                   gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)),
-                   gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)))
+    : gr::sync_block("atsc_interleaver",
+                     gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)),
+                     gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)))
 {
-  reset();
+    reset();
 }
 
-int
-atsc_interleaver::work (int noutput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items)
+int atsc_interleaver::work(int noutput_items,
+                           gr_vector_const_void_star& input_items,
+                           gr_vector_void_star& output_items)
 {
-  const atsc_mpeg_packet_rs_encoded *in = (const atsc_mpeg_packet_rs_encoded *) input_items[0];
-  atsc_mpeg_packet_rs_encoded *out = (atsc_mpeg_packet_rs_encoded *) output_items[0];
+    const atsc_mpeg_packet_rs_encoded* in =
+        (const atsc_mpeg_packet_rs_encoded*)input_items[0];
+    atsc_mpeg_packet_rs_encoded* out = (atsc_mpeg_packet_rs_encoded*)output_items[0];
 
-  for (int i = 0; i < noutput_items; i++){
-    d_interleaver.interleave (out[i], in[i]);
-  }
+    for (int i = 0; i < noutput_items; i++) {
+        d_interleaver.interleave(out[i], in[i]);
+    }
 
-  return noutput_items;
+    return noutput_items;
 }

@@ -23,28 +23,28 @@
 #ifndef INCLUDED_QA_BLOCK_TAGS_H
 #define INCLUDED_QA_BLOCK_TAGS_H
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <stdexcept>
 
 class qa_block_tags : public CppUnit::TestCase
 {
-  CPPUNIT_TEST_SUITE(qa_block_tags);
-  CPPUNIT_TEST(t0);
-  CPPUNIT_TEST(t1);
-  CPPUNIT_TEST(t2);
-  CPPUNIT_TEST(t3);
-  CPPUNIT_TEST(t4);
-  CPPUNIT_TEST(t5);
-  CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE(qa_block_tags);
+    CPPUNIT_TEST(t0);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST(t2);
+    CPPUNIT_TEST(t3);
+    CPPUNIT_TEST(t4);
+    CPPUNIT_TEST(t5);
+    CPPUNIT_TEST_SUITE_END();
 
- private:
-  void t0();
-  void t1();
-  void t2();
-  void t3();
-  void t4();
-  void t5();
+private:
+    void t0();
+    void t1();
+    void t2();
+    void t3();
+    void t4();
+    void t5();
 };
 
 #endif /* INCLUDED_QA_BLOCK_TAGS_H */

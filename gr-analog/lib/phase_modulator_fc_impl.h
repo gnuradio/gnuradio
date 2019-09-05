@@ -26,30 +26,30 @@
 #include <gnuradio/analog/phase_modulator_fc.h>
 
 namespace gr {
-  namespace analog {
+namespace analog {
 
-    class phase_modulator_fc_impl : public phase_modulator_fc
-    {
-    private:
-      double d_sensitivity;
-      double d_phase;
+class phase_modulator_fc_impl : public phase_modulator_fc
+{
+private:
+    double d_sensitivity;
+    double d_phase;
 
-    public:
-      phase_modulator_fc_impl(double sensitivity);
-      ~phase_modulator_fc_impl();
+public:
+    phase_modulator_fc_impl(double sensitivity);
+    ~phase_modulator_fc_impl();
 
-      double sensitivity() const { return d_sensitivity; }
-      double phase() const { return d_phase; }
+    double sensitivity() const { return d_sensitivity; }
+    double phase() const { return d_phase; }
 
-      void set_sensitivity(double s) { d_sensitivity = s; }
-      void set_phase(double p) { d_phase = p; }
+    void set_sensitivity(double s) { d_sensitivity = s; }
+    void set_phase(double p) { d_phase = p; }
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace analog */
+} /* namespace analog */
 } /* namespace gr */
 
 #endif /* INCLUDED_ANALOG_PHASE_MODULATOR_FC_IMPL_H */

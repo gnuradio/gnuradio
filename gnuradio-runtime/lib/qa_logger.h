@@ -23,20 +23,20 @@
 #ifndef INCLUDED_QA_GR_LOG_H
 #define INCLUDED_QA_GR_LOG_H
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestSuite.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 //! collect all the tests for the example directory
 
 class qa_logger : public CppUnit::TestCase
 {
 public:
-  CPPUNIT_TEST_SUITE(qa_logger);
-  CPPUNIT_TEST(t1);
-  CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE(qa_logger);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST_SUITE_END();
 
- private:
-  void t1();
+private:
+    void t1();
 };
 
 #endif /* INCLUDED_QA_GR_LOG_H */

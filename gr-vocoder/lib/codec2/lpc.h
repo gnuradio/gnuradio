@@ -30,14 +30,14 @@
 
 #define LPC_MAX_ORDER 20
 
-void pre_emp(float Sn_pre[], float Sn[], float *mem, int Nsam);
-void de_emp(float Sn_se[], float Sn[], float *mem, int Nsam);
-void hanning_window(float Sn[],	float Wn[], int Nsam);
+void pre_emp(float Sn_pre[], float Sn[], float* mem, int Nsam);
+void de_emp(float Sn_se[], float Sn[], float* mem, int Nsam);
+void hanning_window(float Sn[], float Wn[], int Nsam);
 void autocorrelate(float Sn[], float Rn[], int Nsam, int order);
-void levinson_durbin(float R[],	float lpcs[], int order);
+void levinson_durbin(float R[], float lpcs[], int order);
 void inverse_filter(float Sn[], float a[], int Nsam, float res[], int order);
-void synthesis_filter(float res[], float a[], int Nsam,	int order, float Sn_[]);
-void find_aks(float Sn[], float a[], int Nsam, int order, float *E);
-void weight(float ak[],	float gamma, int order,	float akw[]);
+void synthesis_filter(float res[], float a[], int Nsam, int order, float Sn_[]);
+void find_aks(float Sn[], float a[], int Nsam, int order, float* E);
+void weight(float ak[], float gamma, int order, float akw[]);
 
 #endif

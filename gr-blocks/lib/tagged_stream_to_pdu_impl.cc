@@ -29,52 +29,50 @@
 #include <gnuradio/io_signature.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    tagged_stream_to_pdu::sptr
-    tagged_stream_to_pdu::make(pdu::vector_type type, const std::string& lengthtagname)
-    {
-      return gnuradio::get_initial_sptr(new tagged_stream_to_pdu_impl(type, lengthtagname));
+tagged_stream_to_pdu::sptr tagged_stream_to_pdu::make(pdu::vector_type type,
+                                                      const std::string& lengthtagname)
+{
+    return gnuradio::get_initial_sptr(new tagged_stream_to_pdu_impl(type, lengthtagname));
+}
+
+tagged_stream_to_pdu_impl::tagged_stream_to_pdu_impl(pdu::vector_type type,
+                                                     const std::string& lengthtagname)
+    : tagged_stream_block("tagged_stream_to_pdu",
+                          io_signature::make(1, 1, pdu::itemsize(type)),
+                          io_signature::make(0, 0, 0),
+                          lengthtagname),
+      d_type(type),
+      d_pdu_meta(pmt::PMT_NIL),
+      d_pdu_vector(pmt::PMT_NIL)
+{
+    message_port_register_out(pdu::pdu_port_id());
+}
+
+int tagged_stream_to_pdu_impl::work(int noutput_items,
+                                    gr_vector_int& ninput_items,
+                                    gr_vector_const_void_star& input_items,
+                                    gr_vector_void_star& output_items)
+{
+    const uint8_t* in = (const uint8_t*)input_items[0];
+
+    // Grab tags, throw them into dict
+    get_tags_in_range(d_tags, 0, nitems_read(0), nitems_read(0) + ninput_items[0]);
+    d_pdu_meta = pmt::make_dict();
+    for (d_tags_itr = d_tags.begin(); d_tags_itr != d_tags.end(); d_tags_itr++) {
+        d_pdu_meta = dict_add(d_pdu_meta, (*d_tags_itr).key, (*d_tags_itr).value);
     }
 
-    tagged_stream_to_pdu_impl::tagged_stream_to_pdu_impl(pdu::vector_type type, const std::string& lengthtagname)
-      : tagged_stream_block("tagged_stream_to_pdu",
-		      io_signature::make(1, 1, pdu::itemsize(type)),
-		      io_signature::make(0, 0, 0), lengthtagname),
-	d_type(type),
-	d_pdu_meta(pmt::PMT_NIL),
-	d_pdu_vector(pmt::PMT_NIL)
-    {
-      message_port_register_out(pdu::pdu_port_id());
-    }
+    // Grab data, throw into vector
+    d_pdu_vector = pdu::make_pdu_vector(d_type, in, ninput_items[0]);
 
-    int
-    tagged_stream_to_pdu_impl::work (int noutput_items,
-                       gr_vector_int &ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items)
-    {
-      const uint8_t *in = (const uint8_t*) input_items[0];
+    // Send msg
+    pmt::pmt_t msg = pmt::cons(d_pdu_meta, d_pdu_vector);
+    message_port_pub(pdu::pdu_port_id(), msg);
 
-      // Grab tags, throw them into dict
-      get_tags_in_range(d_tags, 0,
-	  nitems_read(0),
-	  nitems_read(0) + ninput_items[0]
-      );
-      d_pdu_meta = pmt::make_dict();
-      for (d_tags_itr = d_tags.begin(); d_tags_itr != d_tags.end(); d_tags_itr++) {
-	  d_pdu_meta = dict_add(d_pdu_meta, (*d_tags_itr).key, (*d_tags_itr).value);
-      }
+    return ninput_items[0];
+}
 
-      // Grab data, throw into vector
-      d_pdu_vector = pdu::make_pdu_vector(d_type, in, ninput_items[0]);
-
-      // Send msg
-      pmt::pmt_t msg = pmt::cons(d_pdu_meta, d_pdu_vector);
-      message_port_pub(pdu::pdu_port_id(), msg);
-
-      return ninput_items[0];
-    }
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */

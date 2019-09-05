@@ -23,35 +23,34 @@
 #ifndef INCLUDED_GR_GLFSR_SOURCE_F_IMPL_H
 #define INCLUDED_GR_GLFSR_SOURCE_F_IMPL_H
 
-#include <gnuradio/digital/glfsr_source_f.h>
 #include <gnuradio/digital/glfsr.h>
+#include <gnuradio/digital/glfsr_source_f.h>
 
 namespace gr {
-  namespace digital {
+namespace digital {
 
-    class glfsr_source_f_impl : public glfsr_source_f
-    {
-    private:
-      glfsr *d_glfsr;
+class glfsr_source_f_impl : public glfsr_source_f
+{
+private:
+    glfsr* d_glfsr;
 
-      bool d_repeat;
-      unsigned int d_index;
-      unsigned int d_length;
+    bool d_repeat;
+    unsigned int d_index;
+    unsigned int d_length;
 
-    public:
-      glfsr_source_f_impl(int degree, bool repeat=true,
-			 int mask=0, int seed=1);
-      ~glfsr_source_f_impl();
+public:
+    glfsr_source_f_impl(int degree, bool repeat = true, int mask = 0, int seed = 1);
+    ~glfsr_source_f_impl();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-      unsigned int period() const { return d_length; }
-      int mask() const;
-    };
+    unsigned int period() const { return d_length; }
+    int mask() const;
+};
 
-  } /* namespace digital */
+} /* namespace digital */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_GLFSR_SOURCE_F_IMPL_H */

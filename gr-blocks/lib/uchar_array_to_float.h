@@ -28,7 +28,7 @@
 /*
  * convert array of unsigned chars to floats
  */
-BLOCKS_API void uchar_array_to_float (const unsigned char *in, float *out, int nsamples);
+BLOCKS_API void uchar_array_to_float(const unsigned char* in, float* out, int nsamples);
 
 
 #endif /* INCLUDED_UCHAR_ARRAY_TO_FLOAT_H */

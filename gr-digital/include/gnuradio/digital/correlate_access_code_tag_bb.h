@@ -28,46 +28,45 @@
 #include <string>
 
 namespace gr {
-  namespace digital {
+namespace digital {
+
+/*!
+ * \brief Examine input for specified access code, one bit at a time.
+ * \ingroup packet_operators_blk
+ *
+ * \details
+ * input:  stream of bits, 1 bit per input byte (data in LSB)
+ * output: unaltered stream of bits (plus tags)
+ *
+ * This block annotates the input stream with tags. The tags have
+ * key name [tag_name], specified in the constructor. Used for
+ * searching an input data stream for preambles, etc.
+ */
+class DIGITAL_API correlate_access_code_tag_bb : virtual public sync_block
+{
+public:
+    // gr::digital::correlate_access_code_tag_bb::sptr
+    typedef boost::shared_ptr<correlate_access_code_tag_bb> sptr;
 
     /*!
-     * \brief Examine input for specified access code, one bit at a time.
-     * \ingroup packet_operators_blk
-     *
-     * \details
-     * input:  stream of bits, 1 bit per input byte (data in LSB)
-     * output: unaltered stream of bits (plus tags)
-     *
-     * This block annotates the input stream with tags. The tags have
-     * key name [tag_name], specified in the constructor. Used for
-     * searching an input data stream for preambles, etc.
+     * \param access_code is represented with 1 byte per bit,
+     *                    e.g., "010101010111000100"
+     * \param threshold maximum number of bits that may be wrong
+     * \param tag_name key of the tag inserted into the tag stream
      */
-    class DIGITAL_API correlate_access_code_tag_bb : virtual public sync_block
-    {
-    public:
-      // gr::digital::correlate_access_code_tag_bb::sptr
-      typedef boost::shared_ptr<correlate_access_code_tag_bb> sptr;
+    static sptr
+    make(const std::string& access_code, int threshold, const std::string& tag_name);
 
-      /*!
-       * \param access_code is represented with 1 byte per bit,
-       *                    e.g., "010101010111000100"
-       * \param threshold maximum number of bits that may be wrong
-       * \param tag_name key of the tag inserted into the tag stream
-       */
-      static sptr make(const std::string &access_code,
-		       int threshold,
-		       const std::string &tag_name);
-      
-      /*!
-       * \param access_code is represented with 1 byte per bit,
-       *                    e.g., "010101010111000100"
-       */
-      virtual bool set_access_code(const std::string &access_code) = 0;
-      virtual void set_threshold(int threshold) = 0;
-      virtual void set_tagname(const std::string &tagname) = 0;
-    };
+    /*!
+     * \param access_code is represented with 1 byte per bit,
+     *                    e.g., "010101010111000100"
+     */
+    virtual bool set_access_code(const std::string& access_code) = 0;
+    virtual void set_threshold(int threshold) = 0;
+    virtual void set_tagname(const std::string& tagname) = 0;
+};
 
-  } /* namespace digital */
+} /* namespace digital */
 } /* namespace gr */
 
 #endif /* INCLUDED_DIGITAL_CORRELATE_ACCESS_CODE_TAG_BB_H */

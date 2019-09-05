@@ -26,50 +26,50 @@
 #include <gnuradio/noaa/hrpt_decoder.h>
 
 namespace gr {
-  namespace noaa {
+namespace noaa {
 
-    class hrpt_decoder_impl : public hrpt_decoder
-    {
-    private:
-      // Configuration
-      bool d_verbose;
-      bool d_output_files;
+class hrpt_decoder_impl : public hrpt_decoder
+{
+private:
+    // Configuration
+    bool d_verbose;
+    bool d_output_files;
 
-      // Frame-level state
-      unsigned short d_current_word;
-      unsigned int   d_word_num;
-      int            d_frames_seen;
+    // Frame-level state
+    unsigned short d_current_word;
+    unsigned int d_word_num;
+    int d_frames_seen;
 
-      // Minor frame number
-      int d_current_mfnum;
-      int d_expected_mfnum;
-      int d_seq_errs;
+    // Minor frame number
+    int d_current_mfnum;
+    int d_expected_mfnum;
+    int d_seq_errs;
 
-      // Spacecraft address
-      int d_address;
+    // Spacecraft address
+    int d_address;
 
-      // Minor frame timestamp
-      int d_day_of_year;
-      int d_milliseconds;
-      int d_last_time;
+    // Minor frame timestamp
+    int d_day_of_year;
+    int d_milliseconds;
+    int d_last_time;
 
-      void process_mfnum();
-      void process_address();
-      void process_day_of_year();
-      void process_milli1();
-      void process_milli2();
-      void process_milli3();
+    void process_mfnum();
+    void process_address();
+    void process_day_of_year();
+    void process_milli1();
+    void process_milli2();
+    void process_milli3();
 
-    public:
-      hrpt_decoder_impl(bool verbose, bool output_files);
-      ~hrpt_decoder_impl();
+public:
+    hrpt_decoder_impl(bool verbose, bool output_files);
+    ~hrpt_decoder_impl();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace noaa */
+} /* namespace noaa */
 } /* namespace gr */
 
 #endif /* INCLUDED_NOAA_HRPT_DECODER_IMPL_H */

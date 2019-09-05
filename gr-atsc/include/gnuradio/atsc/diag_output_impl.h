@@ -24,6 +24,6 @@
  * single place to control all compile time diagnostic output options
  */
 
-#define _BT_DIAG_OUTPUT_	0
-#define	_FPLL_DIAG_OUTPUT_	0
-#define	_SSSR_DIAG_OUTPUT_	0
+#define _BT_DIAG_OUTPUT_ 0
+#define _FPLL_DIAG_OUTPUT_ 0
+#define _SSSR_DIAG_OUTPUT_ 0

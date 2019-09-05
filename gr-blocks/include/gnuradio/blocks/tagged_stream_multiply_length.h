@@ -26,35 +26,34 @@
 #include <gnuradio/tagged_stream_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief Allows scaling of a tagged stream length tag
+ * \ingroup stream_operators_blk
+ *
+ * \details
+ * Searches for a specific tagged stream length tag and multiplies
+ * that length by a constant - for constant rate change blocks
+ * in a tagged stream
+ */
+class BLOCKS_API tagged_stream_multiply_length : virtual public block
+{
+public:
+    typedef boost::shared_ptr<tagged_stream_multiply_length> sptr;
+    virtual void set_scalar(double scalar) = 0;
 
     /*!
-     * \brief Allows scaling of a tagged stream length tag
-     * \ingroup stream_operators_blk
+     * Make a tagged stream multiply_length block.
      *
-     * \details
-     * Searches for a specific tagged stream length tag and multiplies
-     * that length by a constant - for constant rate change blocks
-     * in a tagged stream
+     * \param itemsize Items size (number of bytes per item)
+     * \param lengthtagname Length tag key
+     * \param scalar value to scale length tag values by
      */
-    class BLOCKS_API tagged_stream_multiply_length : virtual public block
-    {
-     public:
-      typedef boost::shared_ptr<tagged_stream_multiply_length> sptr;
-      virtual void set_scalar(double scalar) = 0;
+    static sptr make(size_t itemsize, const std::string& lengthtagname, double scalar);
+};
 
-      /*!
-       * Make a tagged stream multiply_length block.
-       *
-       * \param itemsize Items size (number of bytes per item)
-       * \param lengthtagname Length tag key
-       * \param scalar value to scale length tag values by
-       */
-      static sptr make(size_t itemsize, const std::string &lengthtagname, double scalar);
-    };
-
-  } // namespace blocks
+} // namespace blocks
 } // namespace gr
 
 #endif /* INCLUDED_TAGGED_STREAM_MULTIPLY_LENGTH_H */
-

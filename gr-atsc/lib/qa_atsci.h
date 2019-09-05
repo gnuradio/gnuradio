@@ -27,10 +27,11 @@
 
 //! collect all the tests for the dtv directory
 
-class qa_atsc {
- public:
-  //! return suite of tests for all of dtv directory
-  static CppUnit::TestSuite *suite ();
+class qa_atsc
+{
+public:
+    //! return suite of tests for all of dtv directory
+    static CppUnit::TestSuite* suite();
 };
 
 

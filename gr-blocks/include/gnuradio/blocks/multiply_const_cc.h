@@ -27,39 +27,38 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief output = input * complex constant
+ * \ingroup math_operators_blk
+ */
+class BLOCKS_API multiply_const_cc : virtual public sync_block
+{
+
+public:
+    // gr::blocks::multiply_const_cc::sptr
+    typedef boost::shared_ptr<multiply_const_cc> sptr;
 
     /*!
-     * \brief output = input * complex constant
-     * \ingroup math_operators_blk
+     * \brief Create an instance of multiply_const_cc
+     * \param k complex multiplicative constant
+     * \param vlen Vector length of incoming stream
      */
-    class BLOCKS_API multiply_const_cc : virtual public sync_block
-    {
+    static sptr make(gr_complex k, size_t vlen = 1);
 
-    public:
+    /*!
+     * \brief Return complex multiplicative constant
+     */
+    virtual gr_complex k() const = 0;
 
-      // gr::blocks::multiply_const_cc::sptr
-      typedef boost::shared_ptr<multiply_const_cc> sptr;
+    /*!
+     * \brief Set complex multiplicative constant
+     */
+    virtual void set_k(gr_complex k) = 0;
+};
 
-      /*!
-       * \brief Create an instance of multiply_const_cc
-       * \param k complex multiplicative constant
-       * \param vlen Vector length of incoming stream
-       */
-      static sptr make(gr_complex k, size_t vlen=1);
-
-      /*!
-       * \brief Return complex multiplicative constant
-       */
-      virtual gr_complex k() const = 0;
-
-      /*!
-       * \brief Set complex multiplicative constant
-       */
-      virtual void set_k(gr_complex k) = 0;
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_MULTIPLY_CONST_CC_H */

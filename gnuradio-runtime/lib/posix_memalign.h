@@ -27,13 +27,13 @@
 
 #ifndef HAVE_POSIX_MEMALIGN
 
-#ifdef	__cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int posix_memalign (void** memptr, size_t alignment, size_t size);
+extern int posix_memalign(void** memptr, size_t alignment, size_t size);
 
-#ifdef	__cplusplus
+#ifdef __cplusplus
 };
 #endif
 

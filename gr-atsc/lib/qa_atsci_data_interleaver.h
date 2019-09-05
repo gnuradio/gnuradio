@@ -23,37 +23,41 @@
 #ifndef _QA_ATSC_DATA_INTERLEAVER_H_
 #define _QA_ATSC_DATA_INTERLEAVER_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <stdio.h>
 
 #include <gnuradio/atsc/data_interleaver_impl.h>
 
-class qa_atsci_data_interleaver : public CppUnit::TestCase {
- public:
+class qa_atsci_data_interleaver : public CppUnit::TestCase
+{
+public:
+    void setUp()
+    {
+        outbound.reset();
+        inbound.reset();
+    }
 
-  void setUp (){
-    outbound.reset ();
-    inbound.reset ();
-  }
+    CPPUNIT_TEST_SUITE(qa_atsci_data_interleaver);
+    CPPUNIT_TEST(t0);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST_SUITE_END();
 
-  CPPUNIT_TEST_SUITE (qa_atsci_data_interleaver);
-  CPPUNIT_TEST (t0);
-  CPPUNIT_TEST (t1);
-  CPPUNIT_TEST_SUITE_END ();
+private:
+    atsci_data_interleaver outbound;
+    atsci_data_deinterleaver inbound;
 
- private:
-  atsci_data_interleaver		outbound;
-  atsci_data_deinterleaver	inbound;
+    void t0();
+    void t1();
 
-  void t0 ();
-  void t1 ();
-
-  void init_test_packet (int counter, atsc_mpeg_packet_rs_encoded &out);
-  void print_packet (FILE *fp, int frame_number, int field_number, int segment_number,
-		     const atsc_mpeg_packet_rs_encoded &in);
-  void chk_assert (const atsc_mpeg_packet_rs_encoded &expected,
-		   const atsc_mpeg_packet_rs_encoded &actual);
+    void init_test_packet(int counter, atsc_mpeg_packet_rs_encoded& out);
+    void print_packet(FILE* fp,
+                      int frame_number,
+                      int field_number,
+                      int segment_number,
+                      const atsc_mpeg_packet_rs_encoded& in);
+    void chk_assert(const atsc_mpeg_packet_rs_encoded& expected,
+                    const atsc_mpeg_packet_rs_encoded& actual);
 };
 
 

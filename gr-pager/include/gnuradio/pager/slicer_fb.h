@@ -27,27 +27,27 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace pager {
+namespace pager {
+
+/*!
+ * \brief slicer description
+ * \ingroup pager_blk
+ */
+class PAGER_API slicer_fb : virtual public sync_block
+{
+public:
+    // gr::pager::slicer_fb::sptr
+    typedef boost::shared_ptr<slicer_fb> sptr;
 
     /*!
-     * \brief slicer description
-     * \ingroup pager_blk
+     * \brief Make a pager slicer
      */
-    class PAGER_API slicer_fb : virtual public sync_block
-    {
-    public:
-      // gr::pager::slicer_fb::sptr
-      typedef boost::shared_ptr<slicer_fb> sptr;
+    static sptr make(float alpha);
 
-      /*!
-       * \brief Make a pager slicer
-       */
-      static sptr make(float alpha);
+    virtual float dc_offset() const = 0;
+};
 
-      virtual float dc_offset() const = 0;
-    };
-
-  } /* namespace pager */
+} /* namespace pager */
 } /* namespace gr */
 
 #endif /* INCLUDED_PAGER_SLICER_FB_H */

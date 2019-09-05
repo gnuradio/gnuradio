@@ -26,35 +26,35 @@
 #include <gnuradio/blocks/throttle.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class throttle_impl : public throttle
-    {
-    private:
-      boost::system_time d_start;
-      size_t d_itemsize;
-      uint64_t d_total_samples;
-      double d_samps_per_tick, d_samps_per_us;
-      bool d_ignore_tags;
+class throttle_impl : public throttle
+{
+private:
+    boost::system_time d_start;
+    size_t d_itemsize;
+    uint64_t d_total_samples;
+    double d_samps_per_tick, d_samps_per_us;
+    bool d_ignore_tags;
 
-    public:
-      throttle_impl(size_t itemsize, double samples_per_sec, bool ignore_tags=true);
-      ~throttle_impl();
+public:
+    throttle_impl(size_t itemsize, double samples_per_sec, bool ignore_tags = true);
+    ~throttle_impl();
 
-      // Overloading gr::block::start to reset timer
-      bool start();
+    // Overloading gr::block::start to reset timer
+    bool start();
 
-      void setup_rpc();
+    void setup_rpc();
 
-      void set_sample_rate(double rate);
-      double sample_rate() const;
+    void set_sample_rate(double rate);
+    double sample_rate() const;
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_THROTTLE_IMPL_H */

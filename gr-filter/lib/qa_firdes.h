@@ -22,35 +22,36 @@
 #ifndef _QA_FILTER_FIRDES_H_
 #define _QA_FILTER_FIRDES_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 namespace gr {
-  namespace filter {
+namespace filter {
 
-    class qa_firdes : public CppUnit::TestCase {
+class qa_firdes : public CppUnit::TestCase
+{
 
-      CPPUNIT_TEST_SUITE(qa_firdes);
-      CPPUNIT_TEST(t1);
-      CPPUNIT_TEST(t2);
-      CPPUNIT_TEST(t3);
-      CPPUNIT_TEST(t4);
-      CPPUNIT_TEST(t5);
-      CPPUNIT_TEST(t6);
-      CPPUNIT_TEST(t7);
-      CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE(qa_firdes);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST(t2);
+    CPPUNIT_TEST(t3);
+    CPPUNIT_TEST(t4);
+    CPPUNIT_TEST(t5);
+    CPPUNIT_TEST(t6);
+    CPPUNIT_TEST(t7);
+    CPPUNIT_TEST_SUITE_END();
 
-    private:
-      void t1();
-      void t2();
-      void t3();
-      void t4();
-      void t5();
-      void t6();
-      void t7();
-    };
+private:
+    void t1();
+    void t2();
+    void t3();
+    void t4();
+    void t5();
+    void t6();
+    void t7();
+};
 
-  } /* namespace filter */
+} /* namespace filter */
 } /* namespace gr */
 
 #endif /* _QA_FILTER_FIRDES_H_ */

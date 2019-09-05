@@ -24,8 +24,8 @@
 #define INCLUDED_ATSC_FIELD_SYNC_MUX_H
 
 #include <gnuradio/atsc/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/atsc/types.h>
+#include <gnuradio/sync_block.h>
 
 class atsc_field_sync_mux;
 typedef boost::shared_ptr<atsc_field_sync_mux> atsc_field_sync_mux_sptr;
@@ -40,28 +40,25 @@ ATSC_API atsc_field_sync_mux_sptr atsc_make_field_sync_mux();
  */
 class ATSC_API atsc_field_sync_mux : public gr::block
 {
-  friend ATSC_API atsc_field_sync_mux_sptr atsc_make_field_sync_mux();
+    friend ATSC_API atsc_field_sync_mux_sptr atsc_make_field_sync_mux();
 
-  atsc_field_sync_mux();
+    atsc_field_sync_mux();
 
 public:
-  void forecast (int noutput_items, gr_vector_int &ninput_items_required);
-  int general_work (int noutput_items,
-	    gr_vector_int &ninput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    int general_work(int noutput_items,
+                     gr_vector_int& ninput_items,
+                     gr_vector_const_void_star& input_items,
+                     gr_vector_void_star& output_items);
 
 
-  static const int      N_SAVED_SYMBOLS = 12;
+    static const int N_SAVED_SYMBOLS = 12;
 
-  void reset()
-  {
-    d_already_output_field_sync = false;
-  }
+    void reset() { d_already_output_field_sync = false; }
 
 protected:
-  bool                  d_already_output_field_sync;
-  unsigned char         d_saved_symbols[N_SAVED_SYMBOLS];
+    bool d_already_output_field_sync;
+    unsigned char d_saved_symbols[N_SAVED_SYMBOLS];
 };
 
 

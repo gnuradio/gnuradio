@@ -24,33 +24,35 @@
 #define INCLUDED_ATSC_INTERLEAVER_H
 
 #include <gnuradio/atsc/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/atsc/data_interleaver_impl.h>
+#include <gnuradio/sync_block.h>
 
 class atsc_interleaver;
 typedef boost::shared_ptr<atsc_interleaver> atsc_interleaver_sptr;
 
 ATSC_API atsc_interleaver_sptr atsc_make_interleaver();
 
-/*!  \brief Interleave RS encoded ATSC data ( atsc_mpeg_packet_rs_encoded --> atsc_mpeg_packet_rs_encoded)*
- *   \ingroup atsc
+/*!  \brief Interleave RS encoded ATSC data ( atsc_mpeg_packet_rs_encoded -->
+ * atsc_mpeg_packet_rs_encoded)* \ingroup atsc
  *
  * input: atsc_mpeg_packet_rs_encoded; output: atsc_mpeg_packet_rs_encoded
  */
 class ATSC_API atsc_interleaver : public gr::sync_block
 {
-  friend ATSC_API atsc_interleaver_sptr atsc_make_interleaver();
+    friend ATSC_API atsc_interleaver_sptr atsc_make_interleaver();
 
-  atsci_data_interleaver	d_interleaver;
+    atsci_data_interleaver d_interleaver;
 
-  atsc_interleaver();
+    atsc_interleaver();
 
 public:
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-  void reset() { /* nop */ }
+    void reset()
+    { /* nop */
+    }
 };
 
 

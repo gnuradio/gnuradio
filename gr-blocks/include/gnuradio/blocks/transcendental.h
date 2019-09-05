@@ -28,31 +28,30 @@
 #include <string>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    /*!
-     * \brief A block that performs various transcendental math operations.
-     * \ingroup math_operators_blk
-     *
-     * \details
-     * Possible function names can be found in the cmath library. IO
-     * may be either complex or real, double or single precision.
-     *
-     * Possible type strings: float, double, complex_float, complex_double
-     *
-     * output[i] = trans_fcn(input[i])
-     */
-    class BLOCKS_API transcendental : virtual public sync_block
-    {
-    public:
-      // gr::blocks::transcendental::sptr
-      typedef boost::shared_ptr<transcendental> sptr;
+/*!
+ * \brief A block that performs various transcendental math operations.
+ * \ingroup math_operators_blk
+ *
+ * \details
+ * Possible function names can be found in the cmath library. IO
+ * may be either complex or real, double or single precision.
+ *
+ * Possible type strings: float, double, complex_float, complex_double
+ *
+ * output[i] = trans_fcn(input[i])
+ */
+class BLOCKS_API transcendental : virtual public sync_block
+{
+public:
+    // gr::blocks::transcendental::sptr
+    typedef boost::shared_ptr<transcendental> sptr;
 
-      static sptr make(const std::string &name,
-                       const std::string &type="float");
-    };
+    static sptr make(const std::string& name, const std::string& type = "float");
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_TRANSCENDENTAL_H */

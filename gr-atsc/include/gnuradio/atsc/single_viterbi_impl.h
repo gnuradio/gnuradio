@@ -32,27 +32,27 @@ class ATSC_API atsci_single_viterbi
 {
 
 public:
-  atsci_single_viterbi ();
+    atsci_single_viterbi();
 
-  static const unsigned int TB_LEN = 32;
+    static const unsigned int TB_LEN = 32;
 
-  /*!
-   * \p INPUT ideally takes on the values +/- 1,3,5,7
-   * return is decoded dibit in the range [0, 3]
-   */
-  char decode (float input);
+    /*!
+     * \p INPUT ideally takes on the values +/- 1,3,5,7
+     * return is decoded dibit in the range [0, 3]
+     */
+    char decode(float input);
 
-  void reset ();
+    void reset();
 
-  //! internal delay of decoder
-  int delay () { return TB_LEN - 1; }
+    //! internal delay of decoder
+    int delay() { return TB_LEN - 1; }
 
 protected:
-  static const int transition_table[32];
-  static const float was_sent[32];
-  float path_metrics [2][8];
-  unsigned long long traceback [2][8];
-  unsigned char phase;
+    static const int transition_table[32];
+    static const float was_sent[32];
+    float path_metrics[2][8];
+    unsigned long long traceback[2][8];
+    unsigned char phase;
 };
 
 #endif

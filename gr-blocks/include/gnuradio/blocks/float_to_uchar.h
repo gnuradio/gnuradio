@@ -27,26 +27,25 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief Convert stream of floats to a stream of unsigned chars
+ * \ingroup type_converters_blk
+ */
+class BLOCKS_API float_to_uchar : virtual public sync_block
+{
+public:
+    // gr::blocks::float_to_uchar_ff::sptr
+    typedef boost::shared_ptr<float_to_uchar> sptr;
 
     /*!
-     * \brief Convert stream of floats to a stream of unsigned chars
-     * \ingroup type_converters_blk
+     * Build a float to uchar block.
      */
-    class BLOCKS_API float_to_uchar : virtual public sync_block
-    {
-    public:
+    static sptr make();
+};
 
-      // gr::blocks::float_to_uchar_ff::sptr
-      typedef boost::shared_ptr<float_to_uchar> sptr;
-
-      /*!
-       * Build a float to uchar block.
-       */
-      static sptr make();
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_FLOAT_TO_UCHAR_H */

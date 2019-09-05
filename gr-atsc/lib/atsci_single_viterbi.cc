@@ -20,81 +20,68 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <math.h>
 #include <gnuradio/atsc/single_viterbi_impl.h>
+#include <math.h>
 #include <iostream>
 
 using std::cerr;
 using std::cout;
 
-const float atsci_single_viterbi::was_sent[32] = {
-  -7,-3,-7,-3,-7,-3,-7,-3,
-  -5,-1,-5,-1,-5,-1,-5,-1,
-  1,5,1,5,1,5,1,5,
-  3,7,3,7,3,7,3,7
-};
+const float atsci_single_viterbi::was_sent[32] = { -7, -3, -7, -3, -7, -3, -7, -3,
+                                                   -5, -1, -5, -1, -5, -1, -5, -1,
+                                                   1,  5,  1,  5,  1,  5,  1,  5,
+                                                   3,  7,  3,  7,  3,  7,  3,  7 };
 
-const int atsci_single_viterbi::transition_table[32] = {
-  0,2,4,6,
-  2,0,6,4,
-  1,3,5,7,
-  3,1,7,5,
-  4,6,0,2,
-  6,4,2,0,
-  5,7,1,3,
-  7,5,3,1
-};
+const int atsci_single_viterbi::transition_table[32] = { 0, 2, 4, 6, 2, 0, 6, 4, 1, 3, 5,
+                                                         7, 3, 1, 7, 5, 4, 6, 0, 2, 6, 4,
+                                                         2, 0, 5, 7, 1, 3, 7, 5, 3, 1 };
 
-void
-atsci_single_viterbi::reset()
+void atsci_single_viterbi::reset()
 {
-  for (unsigned int i = 0; i<2; i++)
-    for (unsigned int j = 0; j<8; j++) {
-      path_metrics[i][j] = 0;
-      traceback[i][j] = 0;
-    }
-  phase = 0;
+    for (unsigned int i = 0; i < 2; i++)
+        for (unsigned int j = 0; j < 8; j++) {
+            path_metrics[i][j] = 0;
+            traceback[i][j] = 0;
+        }
+    phase = 0;
 }
 
-atsci_single_viterbi::atsci_single_viterbi()
+atsci_single_viterbi::atsci_single_viterbi() { reset(); }
+
+char atsci_single_viterbi::decode(float input)
 {
-  reset();
-}
+    for (unsigned int next_state = 0; next_state < 8; next_state++) {
+        unsigned int index = next_state << 2;
+        int min_metric_symb = 0;
+        float min_metric = fabs(input - was_sent[index + 0]) +
+                           path_metrics[phase][transition_table[index + 0]];
 
-char
-atsci_single_viterbi::decode(float input)
-{
-  for (unsigned int next_state = 0; next_state < 8; next_state++) {
-    unsigned int index = next_state << 2;
-    int min_metric_symb = 0;
-    float min_metric = fabs(input - was_sent[index + 0]) +
-      path_metrics[phase][transition_table[index + 0]];
+        for (unsigned int symbol_sent = 1; symbol_sent < 4; symbol_sent++)
+            if ((fabs(input - was_sent[index + symbol_sent]) +
+                 path_metrics[phase][transition_table[index + symbol_sent]]) <
+                min_metric) {
+                min_metric = fabs(input - was_sent[index + symbol_sent]) +
+                             path_metrics[phase][transition_table[index + symbol_sent]];
+                min_metric_symb = symbol_sent;
+            }
 
-    for (unsigned int symbol_sent = 1; symbol_sent < 4; symbol_sent++)
-      if( (fabs(input-was_sent[index+symbol_sent]) +
-	   path_metrics[phase][transition_table[index+symbol_sent]])
-	  < min_metric) {
-	min_metric = fabs(input-was_sent[index+symbol_sent]) +
-	  path_metrics[phase][transition_table[index+symbol_sent]];
-	min_metric_symb = symbol_sent;
-      }
-
-    path_metrics[phase^1][next_state] = min_metric;
-    traceback[phase^1][next_state] = (((unsigned long long)min_metric_symb) << 62) |
-      (traceback[phase][transition_table[index+min_metric_symb]] >> 2);
-  }
-  unsigned int best_state = 0;
-  float best_state_metric = path_metrics[phase^1][0];
-  for (unsigned int state = 1; state < 8; state++)
-    if(path_metrics[phase^1][state] < best_state_metric) {
-      best_state = state;
-      best_state_metric = path_metrics[phase^1][state];
+        path_metrics[phase ^ 1][next_state] = min_metric;
+        traceback[phase ^ 1][next_state] =
+            (((unsigned long long)min_metric_symb) << 62) |
+            (traceback[phase][transition_table[index + min_metric_symb]] >> 2);
     }
-  if(best_state_metric > 10000) {
-    for(unsigned int state = 0; state < 8; state++)
-      path_metrics[phase^1][state] -= best_state_metric;
-    // cerr << "Resetting Path Metrics from " << best_state_metric << " to 0\n";
-  }
-  phase ^= 1;
-  return (0x3 & traceback[phase][best_state]);
+    unsigned int best_state = 0;
+    float best_state_metric = path_metrics[phase ^ 1][0];
+    for (unsigned int state = 1; state < 8; state++)
+        if (path_metrics[phase ^ 1][state] < best_state_metric) {
+            best_state = state;
+            best_state_metric = path_metrics[phase ^ 1][state];
+        }
+    if (best_state_metric > 10000) {
+        for (unsigned int state = 0; state < 8; state++)
+            path_metrics[phase ^ 1][state] -= best_state_metric;
+        // cerr << "Resetting Path Metrics from " << best_state_metric << " to 0\n";
+    }
+    phase ^= 1;
+    return (0x3 & traceback[phase][best_state]);
 }

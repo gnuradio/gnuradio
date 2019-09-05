@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_wxgui_EXPORTS
-#  define WXGUI_API __GR_ATTR_EXPORT
+#define WXGUI_API __GR_ATTR_EXPORT
 #else
-#  define WXGUI_API __GR_ATTR_IMPORT
+#define WXGUI_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_WXGUI_API_H */

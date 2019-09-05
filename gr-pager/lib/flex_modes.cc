@@ -23,44 +23,29 @@
 #include "flex_modes.h"
 
 namespace gr {
-  namespace pager {
+namespace pager {
 
-    const flex_mode_t
-    flex_modes[] =
-      {
-	{ (int32_t) 0x870C78F3, 1600, 2 },
-	{ (int32_t) 0xB0684F97, 1600, 4 },
-	{ (int32_t) 0x7B1884E7, 3200, 2 },
-	{ (int32_t) 0xDEA0215F, 3200, 4 },
-	{ (int32_t) 0x4C7CB383, 3200, 4 }
-      };
+const flex_mode_t flex_modes[] = { { (int32_t)0x870C78F3, 1600, 2 },
+                                   { (int32_t)0xB0684F97, 1600, 4 },
+                                   { (int32_t)0x7B1884E7, 3200, 2 },
+                                   { (int32_t)0xDEA0215F, 3200, 4 },
+                                   { (int32_t)0x4C7CB383, 3200, 4 } };
 
-    const int num_flex_modes = sizeof(flex_modes)/sizeof(flex_modes[0]);
+const int num_flex_modes = sizeof(flex_modes) / sizeof(flex_modes[0]);
 
-    unsigned char flex_bcd[17] = "0123456789 U -][";
+unsigned char flex_bcd[17] = "0123456789 U -][";
 
-    const char *flex_page_desc[] =
-      {
-	"ENC",
-	"UNK",
-	"TON",
-	"NUM",
-	"SPN",
-	"ALN",
-	"BIN",
-	"NNM"
-      };
+const char* flex_page_desc[] = { "ENC", "UNK", "TON", "NUM", "SPN", "ALN", "BIN", "NNM" };
 
-    int
-    find_flex_mode(int32_t sync_code)
-    {
-      for(int i = 0; i < num_flex_modes; i++)
-	if(flex_modes[i].sync == sync_code)
-	  return i;
+int find_flex_mode(int32_t sync_code)
+{
+    for (int i = 0; i < num_flex_modes; i++)
+        if (flex_modes[i].sync == sync_code)
+            return i;
 
-      // Not found
-      return -1;
-    }
+    // Not found
+    return -1;
+}
 
-  } /* namespace pager */
+} /* namespace pager */
 } /* namespace gr */

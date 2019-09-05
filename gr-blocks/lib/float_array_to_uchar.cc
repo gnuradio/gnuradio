@@ -29,17 +29,16 @@
 #include <math.h>
 
 static const int MIN_UCHAR = 0;
-static const int MAX_UCHAR =  255;
+static const int MAX_UCHAR = 255;
 
-void
-float_array_to_uchar(const float *in, unsigned char *out, int nsamples)
+void float_array_to_uchar(const float* in, unsigned char* out, int nsamples)
 {
-  for (int i = 0; i < nsamples; i++){
-    long int r = (long int) rint (in[i]);
-    if (r < MIN_UCHAR)
-      r = MIN_UCHAR;
-    else if (r > MAX_UCHAR)
-      r = MAX_UCHAR;
-    out[i] = r;
-  }
+    for (int i = 0; i < nsamples; i++) {
+        long int r = (long int)rint(in[i]);
+        if (r < MIN_UCHAR)
+            r = MIN_UCHAR;
+        else if (r > MAX_UCHAR)
+            r = MAX_UCHAR;
+        out[i] = r;
+    }
 }

@@ -26,33 +26,35 @@
 #include <gnuradio/analog/agc2_cc.h>
 
 namespace gr {
-  namespace analog {
+namespace analog {
 
-    class agc2_cc_impl : public agc2_cc, kernel::agc2_cc
-    {
-    public:
-      agc2_cc_impl(float attack_rate = 1e-1, float decay_rate = 1e-2,
-                   float reference = 1.0, float gain = 1.0);
-      ~agc2_cc_impl();
+class agc2_cc_impl : public agc2_cc, kernel::agc2_cc
+{
+public:
+    agc2_cc_impl(float attack_rate = 1e-1,
+                 float decay_rate = 1e-2,
+                 float reference = 1.0,
+                 float gain = 1.0);
+    ~agc2_cc_impl();
 
-      float attack_rate() const { return kernel::agc2_cc::attack_rate(); }
-      float decay_rate() const  { return kernel::agc2_cc::decay_rate(); }
-      float reference() const { return kernel::agc2_cc::reference(); }
-      float gain() const { return kernel::agc2_cc::gain(); }
-      float max_gain() const { return kernel::agc2_cc::max_gain(); }
+    float attack_rate() const { return kernel::agc2_cc::attack_rate(); }
+    float decay_rate() const { return kernel::agc2_cc::decay_rate(); }
+    float reference() const { return kernel::agc2_cc::reference(); }
+    float gain() const { return kernel::agc2_cc::gain(); }
+    float max_gain() const { return kernel::agc2_cc::max_gain(); }
 
-      void set_attack_rate(float rate) { kernel::agc2_cc::set_attack_rate(rate); }
-      void set_decay_rate(float rate) { kernel::agc2_cc::set_decay_rate(rate); }
-      void set_reference(float reference) { kernel::agc2_cc::set_reference(reference); }
-      void set_gain(float gain) { kernel::agc2_cc::set_gain(gain); }
-      void set_max_gain(float max_gain) { kernel::agc2_cc::set_max_gain(max_gain); }
+    void set_attack_rate(float rate) { kernel::agc2_cc::set_attack_rate(rate); }
+    void set_decay_rate(float rate) { kernel::agc2_cc::set_decay_rate(rate); }
+    void set_reference(float reference) { kernel::agc2_cc::set_reference(reference); }
+    void set_gain(float gain) { kernel::agc2_cc::set_gain(gain); }
+    void set_max_gain(float max_gain) { kernel::agc2_cc::set_max_gain(max_gain); }
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace analog */
+} /* namespace analog */
 } /* namespace gr */
 
 #endif /* INCLUDED_ANALOG_AGC2_CC_IMPL_H */

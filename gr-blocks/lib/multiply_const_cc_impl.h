@@ -26,27 +26,27 @@
 #include <gnuradio/blocks/multiply_const_cc.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class BLOCKS_API multiply_const_cc_impl : public multiply_const_cc
-    {
-      gr_complex d_k;
-      size_t d_vlen;
+class BLOCKS_API multiply_const_cc_impl : public multiply_const_cc
+{
+    gr_complex d_k;
+    size_t d_vlen;
 
-    public:
-      multiply_const_cc_impl(gr_complex k, size_t vlen);
+public:
+    multiply_const_cc_impl(gr_complex k, size_t vlen);
 
-      void setup_rpc();
+    void setup_rpc();
 
-      gr_complex k() const { return d_k; }
-      void set_k(gr_complex k) { d_k = k; }
+    gr_complex k() const { return d_k; }
+    void set_k(gr_complex k) { d_k = k; }
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_MULTIPLY_CONST_CC_IMPL_H */

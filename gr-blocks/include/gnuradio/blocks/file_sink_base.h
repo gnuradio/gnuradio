@@ -28,54 +28,54 @@
 #include <cstdio>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief Common base class for file sinks
+ */
+class BLOCKS_API file_sink_base
+{
+protected:
+    FILE* d_fp;     // current FILE pointer
+    FILE* d_new_fp; // new FILE pointer
+    bool d_updated; // is there a new FILE pointer?
+    bool d_is_binary;
+    boost::mutex d_mutex;
+    bool d_unbuffered;
+    bool d_append;
+
+protected:
+    file_sink_base(const char* filename, bool is_binary, bool append);
+
+public:
+    file_sink_base() {}
+    ~file_sink_base();
 
     /*!
-     * \brief Common base class for file sinks
+     * \brief Open filename and begin output to it.
      */
-    class BLOCKS_API file_sink_base
-    {
-    protected:
-      FILE        *d_fp;        // current FILE pointer
-      FILE        *d_new_fp;    // new FILE pointer
-      bool         d_updated;   // is there a new FILE pointer?
-      bool         d_is_binary;
-      boost::mutex d_mutex;
-      bool         d_unbuffered;
-      bool         d_append;
+    bool open(const char* filename);
 
-    protected:
-      file_sink_base(const char *filename, bool is_binary, bool append);
+    /*!
+     * \brief Close current output file.
+     *
+     * Closes current output file and ignores any output until
+     * open is called to connect to another file.
+     */
+    void close();
 
-    public:
-      file_sink_base() {}
-      ~file_sink_base();
+    /*!
+     * \brief if we've had an update, do it now.
+     */
+    void do_update();
 
-      /*!
-       * \brief Open filename and begin output to it.
-       */
-      bool open(const char *filename);
+    /*!
+     * \brief turn on unbuffered writes for slower outputs
+     */
+    void set_unbuffered(bool unbuffered);
+};
 
-      /*!
-       * \brief Close current output file.
-       *
-       * Closes current output file and ignores any output until
-       * open is called to connect to another file.
-       */
-      void close();
-
-      /*!
-       * \brief if we've had an update, do it now.
-       */
-      void do_update();
-
-      /*!
-       * \brief turn on unbuffered writes for slower outputs
-       */
-      void set_unbuffered(bool unbuffered);
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_FILE_SINK_BASE_H */

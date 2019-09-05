@@ -24,29 +24,29 @@
 #define INCLUDED_GR_MESSAGE_BURST_SOURCE_H
 
 #include <gnuradio/blocks/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/msg_queue.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    /*!
-     * \brief Turn received messages into a stream and tag them for UHD to send.
-     * \ingroup deprecated_blk
-     */
-    class BLOCKS_API message_burst_source : virtual public sync_block
-    {
-    public:
-      // gr::blocks::message_source::sptr
-      typedef boost::shared_ptr<message_burst_source> sptr;
+/*!
+ * \brief Turn received messages into a stream and tag them for UHD to send.
+ * \ingroup deprecated_blk
+ */
+class BLOCKS_API message_burst_source : virtual public sync_block
+{
+public:
+    // gr::blocks::message_source::sptr
+    typedef boost::shared_ptr<message_burst_source> sptr;
 
-      static sptr make(size_t itemsize, int msgq_limit);
-      static sptr make(size_t itemsize, gr::msg_queue::sptr msgq);
+    static sptr make(size_t itemsize, int msgq_limit);
+    static sptr make(size_t itemsize, gr::msg_queue::sptr msgq);
 
-      virtual gr::msg_queue::sptr msgq() const = 0;
-    };
+    virtual gr::msg_queue::sptr msgq() const = 0;
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_MESSAGE_BURST_SOURCE_H */

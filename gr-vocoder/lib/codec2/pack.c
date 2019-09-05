@@ -21,13 +21,13 @@
 
 /* Compile-time constants */
 /* Size of unsigned char in bits. Assumes 8 bits-per-char. */
-static const unsigned int	WordSize = 8;
+static const unsigned int WordSize = 8;
 
 /* Mask to pick the bit component out of bitIndex. */
-static const unsigned int	IndexMask = 0x7;
+static const unsigned int IndexMask = 0x7;
 
 /* Used to pick the word component out of bitIndex. */
-static const unsigned int	ShiftRight = 3;
+static const unsigned int ShiftRight = 3;
 
 /** Pack a bit field into a bit string, encoding the field in Gray code.
  *
@@ -44,56 +44,49 @@ static const unsigned int	ShiftRight = 3;
  * compatibility with the rest of the code, indices are always expected to
  * be >= 0.
  */
-void
-pack(
- unsigned char *	bitArray, /* The output bit string. */
- unsigned int *		bitIndex, /* Index into the string in BITS, not bytes.*/
- int			field,	  /* The bit field to be packed. */
- unsigned int		fieldWidth/* Width of the field in BITS, not bytes. */
- )
+void pack(unsigned char* bitArray, /* The output bit string. */
+          unsigned int* bitIndex,  /* Index into the string in BITS, not bytes.*/
+          int field,               /* The bit field to be packed. */
+          unsigned int fieldWidth  /* Width of the field in BITS, not bytes. */
+)
 {
     pack_natural_or_gray(bitArray, bitIndex, field, fieldWidth, 1);
 }
 
-void
-pack_natural_or_gray(
- unsigned char *	bitArray,  /* The output bit string. */
- unsigned int *		bitIndex,  /* Index into the string in BITS, not bytes.*/
- int			field,	   /* The bit field to be packed. */
- unsigned int		fieldWidth,/* Width of the field in BITS, not bytes. */
- unsigned int           gray       /* non-zero for gray coding */
- )
+void pack_natural_or_gray(
+    unsigned char* bitArray, /* The output bit string. */
+    unsigned int* bitIndex,  /* Index into the string in BITS, not bytes.*/
+    int field,               /* The bit field to be packed. */
+    unsigned int fieldWidth, /* Width of the field in BITS, not bytes. */
+    unsigned int gray        /* non-zero for gray coding */
+)
 {
-  if (gray) {
-    /* Convert the field to Gray code */
-    field = (field >> 1) ^ field;
-  }
+    if (gray) {
+        /* Convert the field to Gray code */
+        field = (field >> 1) ^ field;
+    }
 
-  do {
-    unsigned int  	bI = *bitIndex;
-    unsigned int	bitsLeft = WordSize - (bI & IndexMask);
-    unsigned int	sliceWidth =
-			 bitsLeft < fieldWidth ? bitsLeft : fieldWidth;
-    unsigned int	wordIndex = bI >> ShiftRight;
+    do {
+        unsigned int bI = *bitIndex;
+        unsigned int bitsLeft = WordSize - (bI & IndexMask);
+        unsigned int sliceWidth = bitsLeft < fieldWidth ? bitsLeft : fieldWidth;
+        unsigned int wordIndex = bI >> ShiftRight;
 
-    bitArray[wordIndex] |=
-     ((unsigned char)((field >> (fieldWidth - sliceWidth))
-     << (bitsLeft - sliceWidth)));
+        bitArray[wordIndex] |= ((unsigned char)((field >> (fieldWidth - sliceWidth))
+                                                << (bitsLeft - sliceWidth)));
 
-    *bitIndex = bI + sliceWidth;
-    fieldWidth -= sliceWidth;
-  } while ( fieldWidth != 0 );
+        *bitIndex = bI + sliceWidth;
+        fieldWidth -= sliceWidth;
+    } while (fieldWidth != 0);
 }
 
 /** Unpack a field from a bit string, converting from Gray code to binary.
  *
  */
-int
-unpack(
- const unsigned char *	bitArray, /* The input bit string. */
- unsigned int *		bitIndex, /* Index into the string in BITS, not bytes.*/
- unsigned int		fieldWidth/* Width of the field in BITS, not bytes. */
- )
+int unpack(const unsigned char* bitArray, /* The input bit string. */
+           unsigned int* bitIndex,        /* Index into the string in BITS, not bytes.*/
+           unsigned int fieldWidth        /* Width of the field in BITS, not bytes. */
+)
 {
     return unpack_natural_or_gray(bitArray, bitIndex, fieldWidth, 1);
 }
@@ -102,39 +95,38 @@ unpack(
  * natural or Gray code.
  *
  */
-int
-unpack_natural_or_gray(
- const unsigned char *	bitArray,  /* The input bit string. */
- unsigned int *		bitIndex,  /* Index into the string in BITS, not bytes.*/
- unsigned int		fieldWidth,/* Width of the field in BITS, not bytes. */
- unsigned int           gray       /* non-zero for Gray coding */
- )
+int unpack_natural_or_gray(
+    const unsigned char* bitArray, /* The input bit string. */
+    unsigned int* bitIndex,        /* Index into the string in BITS, not bytes.*/
+    unsigned int fieldWidth,       /* Width of the field in BITS, not bytes. */
+    unsigned int gray              /* non-zero for Gray coding */
+)
 {
-  unsigned int	field = 0;
-  unsigned int	t;
+    unsigned int field = 0;
+    unsigned int t;
 
-  do {
-    unsigned int  	bI = *bitIndex;
-    unsigned int	bitsLeft = WordSize - (bI & IndexMask);
-    unsigned int	sliceWidth =
-			 bitsLeft < fieldWidth ? bitsLeft : fieldWidth;
+    do {
+        unsigned int bI = *bitIndex;
+        unsigned int bitsLeft = WordSize - (bI & IndexMask);
+        unsigned int sliceWidth = bitsLeft < fieldWidth ? bitsLeft : fieldWidth;
 
-    field |= (((bitArray[bI >> ShiftRight] >> (bitsLeft - sliceWidth)) & ((1 << sliceWidth) - 1)) << (fieldWidth - sliceWidth));
+        field |= (((bitArray[bI >> ShiftRight] >> (bitsLeft - sliceWidth)) &
+                   ((1 << sliceWidth) - 1))
+                  << (fieldWidth - sliceWidth));
 
-    *bitIndex = bI + sliceWidth;
-    fieldWidth -= sliceWidth;
-  } while ( fieldWidth != 0 );
+        *bitIndex = bI + sliceWidth;
+        fieldWidth -= sliceWidth;
+    } while (fieldWidth != 0);
 
-  if (gray) {
-    /* Convert from Gray code to binary. Works for maximum 8-bit fields. */
-    t = field ^ (field >> 8);
-    t ^= (t >> 4);
-    t ^= (t >> 2);
-    t ^= (t >> 1);
-  }
-  else {
-    t = field;
-  }
+    if (gray) {
+        /* Convert from Gray code to binary. Works for maximum 8-bit fields. */
+        t = field ^ (field >> 8);
+        t ^= (t >> 4);
+        t ^= (t >> 2);
+        t ^= (t >> 1);
+    } else {
+        t = field;
+    }
 
-  return t;
+    return t;
 }

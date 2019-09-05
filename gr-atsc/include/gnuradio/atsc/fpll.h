@@ -23,13 +23,13 @@
 #ifndef INCLUDED_ATSC_FPLL_H
 #define INCLUDED_ATSC_FPLL_H
 
-#include <gnuradio/atsc/api.h>
-#include <gnuradio/sync_block.h>
-#include <gnuradio/nco.h>
-#include <gnuradio/filter/single_pole_iir.h>
 #include <gnuradio/analog/agc.h>
-#include <stdio.h>
+#include <gnuradio/atsc/api.h>
 #include <gnuradio/atsc/diag_output_impl.h>
+#include <gnuradio/filter/single_pole_iir.h>
+#include <gnuradio/nco.h>
+#include <gnuradio/sync_block.h>
+#include <stdio.h>
 
 using namespace gr;
 
@@ -51,31 +51,29 @@ ATSC_API atsc_fpll_sptr atsc_make_fpll();
 
 class ATSC_API atsc_fpll : public gr::sync_block
 {
-  friend ATSC_API atsc_fpll_sptr atsc_make_fpll();
+    friend ATSC_API atsc_fpll_sptr atsc_make_fpll();
 
-  atsc_fpll();
+    atsc_fpll();
 
 public:
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    void reset()
+    { /* nop */
+    }
 
-  void reset() { /* nop */ }
+    void initialize();
 
-  void initialize () ;
-
- protected:
-
-  double                        initial_freq;
-  double                        initial_phase;
-  bool                          debug_no_update;
-  gr::nco<float,float>          nco;
-  analog::kernel::agc_ff        agc;    // automatic gain control
-  filter::single_pole_iir<float,float,float> afci;
-  filter::single_pole_iir<float,float,float> afcq;
-
-
+protected:
+    double initial_freq;
+    double initial_phase;
+    bool debug_no_update;
+    gr::nco<float, float> nco;
+    analog::kernel::agc_ff agc; // automatic gain control
+    filter::single_pole_iir<float, float, float> afci;
+    filter::single_pole_iir<float, float, float> afcq;
 };
 
 

@@ -24,8 +24,8 @@
 #define INCLUDED_ATSC_RANDOMIZER_H
 
 #include <gnuradio/atsc/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/atsc/randomizer_impl.h>
+#include <gnuradio/sync_block.h>
 
 class atsc_randomizer;
 typedef boost::shared_ptr<atsc_randomizer> atsc_randomizer_sptr;
@@ -40,20 +40,20 @@ ATSC_API atsc_randomizer_sptr atsc_make_randomizer();
  */
 class ATSC_API atsc_randomizer : public gr::sync_block
 {
-  friend ATSC_API atsc_randomizer_sptr atsc_make_randomizer();
+    friend ATSC_API atsc_randomizer_sptr atsc_make_randomizer();
 
-  atsci_randomizer	d_rand;
-  bool			d_field2;	// user to init plinfo in output
-  int			d_segno;	// likewise
+    atsci_randomizer d_rand;
+    bool d_field2; // user to init plinfo in output
+    int d_segno;   // likewise
 
-  atsc_randomizer();
+    atsc_randomizer();
 
 public:
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-  void reset();
+    void reset();
 };
 
 

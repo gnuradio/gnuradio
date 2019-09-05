@@ -20,12 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cppunit/TestAssert.h>
 #include "qa_atsci_sliding_correlator.h"
+#include <cppunit/TestAssert.h>
 #include <cstdio>
 
-void
-qa_atsci_sliding_correlator::t0 ()
+void qa_atsci_sliding_correlator::t0()
 {
 
 #if 0
@@ -47,5 +46,4 @@ qa_atsci_sliding_correlator::t0 ()
     printf ("%6d: %3d\n", count++,
 	    corr.input_bit (atsc_pn511[i] ^ atsc_pn511[i+31]));
 #endif
-
 }

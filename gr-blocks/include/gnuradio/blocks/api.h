@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_blocks_EXPORTS
-#  define BLOCKS_API __GR_ATTR_EXPORT
+#define BLOCKS_API __GR_ATTR_EXPORT
 #else
-#  define BLOCKS_API __GR_ATTR_IMPORT
+#define BLOCKS_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_BLOCKS_API_H */

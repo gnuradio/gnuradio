@@ -26,29 +26,29 @@
 #include <gnuradio/pager/slicer_fb.h>
 
 namespace gr {
-  namespace pager {
+namespace pager {
 
-    class slicer_fb_impl : public slicer_fb
-    {
-    private:
-      unsigned char slice(float sample);
+class slicer_fb_impl : public slicer_fb
+{
+private:
+    unsigned char slice(float sample);
 
-      float d_alpha;    // DC removal time constant
-      float d_beta;	// 1.0-d_alpha
-      float d_avg;      // Average value for DC offset subtraction
+    float d_alpha; // DC removal time constant
+    float d_beta;  // 1.0-d_alpha
+    float d_avg;   // Average value for DC offset subtraction
 
-    public:
-      slicer_fb_impl(float alpha);
-      ~slicer_fb_impl();
+public:
+    slicer_fb_impl(float alpha);
+    ~slicer_fb_impl();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-      float dc_offset() const { return d_avg; }
-    };
+    float dc_offset() const { return d_avg; }
+};
 
-  } /* namespace pager */
+} /* namespace pager */
 } /* namespace gr */
 
 #endif /* INCLUDED_PAGER_SLICER_FB_IMPL_H */

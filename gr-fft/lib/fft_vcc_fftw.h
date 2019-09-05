@@ -23,38 +23,40 @@
 #ifndef INCLUDED_FFT_FFT_VCC_FFTW_IMPL_H
 #define INCLUDED_FFT_FFT_VCC_FFTW_IMPL_H
 
-#include <gnuradio/fft/fft_vcc.h>
 #include <gnuradio/fft/fft.h>
+#include <gnuradio/fft/fft_vcc.h>
 
 namespace gr {
-  namespace fft {
+namespace fft {
 
-    class FFT_API fft_vcc_fftw : public fft_vcc
-    {
-    private:
-      fft_complex          *d_fft;
-      unsigned int          d_fft_size;
-      std::vector<float>    d_window;
-      bool                  d_forward;
-      bool                  d_shift;
+class FFT_API fft_vcc_fftw : public fft_vcc
+{
+private:
+    fft_complex* d_fft;
+    unsigned int d_fft_size;
+    std::vector<float> d_window;
+    bool d_forward;
+    bool d_shift;
 
-    public:
-      fft_vcc_fftw(int fft_size, bool forward,
-           const std::vector<float> &window,
-           bool shift, int nthreads=1);
+public:
+    fft_vcc_fftw(int fft_size,
+                 bool forward,
+                 const std::vector<float>& window,
+                 bool shift,
+                 int nthreads = 1);
 
-      ~fft_vcc_fftw();
+    ~fft_vcc_fftw();
 
-      void set_nthreads(int n);
-      int nthreads() const;
-      bool set_window(const std::vector<float> &window);
+    void set_nthreads(int n);
+    int nthreads() const;
+    bool set_window(const std::vector<float>& window);
 
-      int work(int noutput_items,
-           gr_vector_const_void_star &input_items,
-           gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace fft */
+} /* namespace fft */
 } /* namespace gr */
 
 #endif /* INCLUDED_FFT_FFT_VCC_FFTW_IMPL_H */

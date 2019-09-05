@@ -22,34 +22,34 @@
 #ifndef INCLUDED_TAGGED_STREAM_ALIGN_H
 #define INCLUDED_TAGGED_STREAM_ALIGN_H
 
-#include <gnuradio/blocks/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/blocks/api.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief Align a stream to a tagged stream item
+ * \ingroup stream_operators_blk
+ *
+ * \details
+ * Takes an unaligned stream of tagged stream items and aligns to the first item
+ */
+class BLOCKS_API tagged_stream_align : virtual public block
+{
+public:
+    typedef boost::shared_ptr<tagged_stream_align> sptr;
 
     /*!
-     * \brief Align a stream to a tagged stream item
-     * \ingroup stream_operators_blk
+     * Make a tagged stream align
      *
-     * \details
-     * Takes an unaligned stream of tagged stream items and aligns to the first item
+     * \param itemsize The size (in bytes) of the item datatype.
+     * \param lengthtagname Name of the TSB's length tag key.
      */
-    class BLOCKS_API tagged_stream_align : virtual public block
-    {
-     public:
-      typedef boost::shared_ptr<tagged_stream_align> sptr;
+    static sptr make(size_t itemsize, const std::string& lengthtagname);
+};
 
-      /*!
-       * Make a tagged stream align
-       *
-       * \param itemsize The size (in bytes) of the item datatype.
-       * \param lengthtagname Name of the TSB's length tag key.
-       */
-      static sptr make(size_t itemsize, const std::string &lengthtagname);
-    };
-
-  } // namespace blocks
+} // namespace blocks
 } // namespace gr
 
 #endif /* INCLUDED_TAGGED_STREAM_ALIGN_H */

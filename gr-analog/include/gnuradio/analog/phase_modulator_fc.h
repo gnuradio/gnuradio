@@ -27,38 +27,38 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace analog {
+namespace analog {
 
-    /*!
-     * \brief Phase modulator block
-     * \ingroup modulators_blk
+/*!
+ * \brief Phase modulator block
+ * \ingroup modulators_blk
+ *
+ * \details
+ * output = complex(cos(in*sensitivity), sin(in*sensitivity))
+ *
+ * Input stream 0: floats
+ * Output stream 0: complex
+ */
+class ANALOG_API phase_modulator_fc : virtual public sync_block
+{
+public:
+    // gr::analog::phase_modulator_fc::sptr
+    typedef boost::shared_ptr<phase_modulator_fc> sptr;
+
+    /* \brief Make a phase modulator block.
      *
-     * \details
-     * output = complex(cos(in*sensitivity), sin(in*sensitivity))
-     *
-     * Input stream 0: floats
-     * Output stream 0: complex
+     * \param sensitivity Phase change sensitivity of input amplitude.
      */
-    class ANALOG_API phase_modulator_fc : virtual public sync_block
-    {
-    public:
-      // gr::analog::phase_modulator_fc::sptr
-      typedef boost::shared_ptr<phase_modulator_fc> sptr;
+    static sptr make(double sensitivity);
 
-      /* \brief Make a phase modulator block.
-       *
-       * \param sensitivity Phase change sensitivity of input amplitude.
-       */
-      static sptr make(double sensitivity);
+    virtual double sensitivity() const = 0;
+    virtual double phase() const = 0;
 
-      virtual double sensitivity() const = 0;
-      virtual double phase() const = 0;
+    virtual void set_sensitivity(double s) = 0;
+    virtual void set_phase(double p) = 0;
+};
 
-      virtual void set_sensitivity(double s) = 0;
-      virtual void set_phase(double p) = 0;
-    };
-
-  } /* namespace analog */
+} /* namespace analog */
 } /* namespace gr */
 
 #endif /* INCLUDED_ANALOG_PHASE_MODULATOR_FC_H */

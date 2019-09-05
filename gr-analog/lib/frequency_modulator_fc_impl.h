@@ -26,29 +26,29 @@
 #include <gnuradio/analog/frequency_modulator_fc.h>
 
 namespace gr {
-  namespace analog {
+namespace analog {
 
-    class frequency_modulator_fc_impl : public frequency_modulator_fc
-    {
-    private:
-      float d_sensitivity;
-      float d_phase;
+class frequency_modulator_fc_impl : public frequency_modulator_fc
+{
+private:
+    float d_sensitivity;
+    float d_phase;
 
-    public:
-      frequency_modulator_fc_impl(float sensitivity);
-      ~frequency_modulator_fc_impl();
+public:
+    frequency_modulator_fc_impl(float sensitivity);
+    ~frequency_modulator_fc_impl();
 
-      void set_sensitivity(float sens) { d_sensitivity = sens; }
-      float sensitivity() const { return d_sensitivity; }
+    void set_sensitivity(float sens) { d_sensitivity = sens; }
+    float sensitivity() const { return d_sensitivity; }
 
-      void setup_rpc();
+    void setup_rpc();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace analog */
+} /* namespace analog */
 } /* namespace gr */
 
 #endif /* INCLUDED_ANALOG_FREQUENCY_MODULATOR_FC_IMPL_H */

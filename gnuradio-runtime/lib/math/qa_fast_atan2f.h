@@ -23,19 +23,19 @@
 #ifndef _QA_FAST_ATAN2F_H_
 #define _QA_FAST_ATAN2F_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 class qa_fast_atan2f : public CppUnit::TestCase
 {
-  CPPUNIT_TEST_SUITE(qa_fast_atan2f);
-  CPPUNIT_TEST(t1);
-  CPPUNIT_TEST(t2);
-  CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE(qa_fast_atan2f);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST(t2);
+    CPPUNIT_TEST_SUITE_END();
 
 private:
-  void t1();
-  void t2();
+    void t1();
+    void t2();
 };
 
 #endif /* _QA_FAST_ATAN2F_H_ */

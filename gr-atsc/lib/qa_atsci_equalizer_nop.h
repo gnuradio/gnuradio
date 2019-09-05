@@ -23,29 +23,28 @@
 #ifndef _QA_ATSC_EQUALIZER_NOP_H_
 #define _QA_ATSC_EQUALIZER_NOP_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 class atsci_equalizer;
 
-class qa_atsci_equalizer_nop : public CppUnit::TestCase {
+class qa_atsci_equalizer_nop : public CppUnit::TestCase
+{
 private:
-  atsci_equalizer	*eq;
+    atsci_equalizer* eq;
 
 public:
-  void setUp ();
-  void tearDown ();
+    void setUp();
+    void tearDown();
 
-  CPPUNIT_TEST_SUITE (qa_atsci_equalizer_nop);
-  CPPUNIT_TEST (t0);
-  CPPUNIT_TEST (t1);
-  CPPUNIT_TEST_SUITE_END ();
+    CPPUNIT_TEST_SUITE(qa_atsci_equalizer_nop);
+    CPPUNIT_TEST(t0);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST_SUITE_END();
 
 private:
-
-  void t0 ();
-  void t1 ();
-
+    void t0();
+    void t1();
 };
 
 #endif /* _QA_ATSC_EQUALIZER_NOP_H_ */

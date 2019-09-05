@@ -31,23 +31,72 @@
 #include <assert.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    template<unsigned int k> static inline int log2_const() { assert(0); return 0; }
+template <unsigned int k>
+static inline int log2_const()
+{
+    assert(0);
+    return 0;
+}
 
-    template<> inline int log2_const<1>()   { return 0; }
-    template<> inline int log2_const<2>()   { return 1; }
-    template<> inline int log2_const<4>()   { return 2; }
-    template<> inline int log2_const<8>()   { return 3; }
-    template<> inline int log2_const<16>()  { return 4; }
-    template<> inline int log2_const<32>()  { return 5; }
-    template<> inline int log2_const<64>()  { return 6; }
-    template<> inline int log2_const<128>() { return 7; }
-    template<> inline int log2_const<256>() { return 8; }
-    template<> inline int log2_const<512>() { return 9; }
-    template<> inline int log2_const<1024>(){ return 10; }
+template <>
+inline int log2_const<1>()
+{
+    return 0;
+}
+template <>
+inline int log2_const<2>()
+{
+    return 1;
+}
+template <>
+inline int log2_const<4>()
+{
+    return 2;
+}
+template <>
+inline int log2_const<8>()
+{
+    return 3;
+}
+template <>
+inline int log2_const<16>()
+{
+    return 4;
+}
+template <>
+inline int log2_const<32>()
+{
+    return 5;
+}
+template <>
+inline int log2_const<64>()
+{
+    return 6;
+}
+template <>
+inline int log2_const<128>()
+{
+    return 7;
+}
+template <>
+inline int log2_const<256>()
+{
+    return 8;
+}
+template <>
+inline int log2_const<512>()
+{
+    return 9;
+}
+template <>
+inline int log2_const<1024>()
+{
+    return 10;
+}
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_LOG2_CONST_H */

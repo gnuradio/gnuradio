@@ -27,26 +27,26 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace noaa {
+namespace noaa {
 
-    /*!
-     * \brief NOAA HRPT PLL
-     * \ingroup noaa_blk
-     */
-    class NOAA_API hrpt_pll_cf : virtual public sync_block
-    {
-    public:
-      // gr::noaa::hrpt_pll_cf::sptr
-      typedef boost::shared_ptr<hrpt_pll_cf> sptr;
+/*!
+ * \brief NOAA HRPT PLL
+ * \ingroup noaa_blk
+ */
+class NOAA_API hrpt_pll_cf : virtual public sync_block
+{
+public:
+    // gr::noaa::hrpt_pll_cf::sptr
+    typedef boost::shared_ptr<hrpt_pll_cf> sptr;
 
-      static sptr make(float alpha, float beta, float max_offset);
+    static sptr make(float alpha, float beta, float max_offset);
 
-      virtual void set_alpha(float alpha) = 0;
-      virtual void set_beta(float beta) = 0;
-      virtual void set_max_offset(float max_offset) = 0;
-    };
+    virtual void set_alpha(float alpha) = 0;
+    virtual void set_beta(float beta) = 0;
+    virtual void set_max_offset(float max_offset) = 0;
+};
 
-  } /* namespace noaa */
+} /* namespace noaa */
 } /* namespace gr */
 
 #endif /* INCLUDED_NOAA_HRPT_PLL_CF_H */

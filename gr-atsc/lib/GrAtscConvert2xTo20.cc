@@ -25,82 +25,79 @@
 #include <cmath>
 #include <cstdio>
 
-static const int    N_OUTPUTS = 1;
-static const double DEC_RATIO = (2.0 * ATSC_SYMBOL_RATE) / 20e6;	// ~ 1.076
+static const int N_OUTPUTS = 1;
+static const double DEC_RATIO = (2.0 * ATSC_SYMBOL_RATE) / 20e6; // ~ 1.076
 
-GrAtscConvert2xTo20::GrAtscConvert2xTo20 ()
-  : VrDecimatingSigProc<float,float> (N_OUTPUTS, (int) rint (DEC_RATIO))
+GrAtscConvert2xTo20::GrAtscConvert2xTo20()
+    : VrDecimatingSigProc<float, float>(N_OUTPUTS, (int)rint(DEC_RATIO))
 {
-  d_next_input = 0;
-  d_frac_part = 0;
-  history = 2 * d_interp.ntaps ();	// some slack
+    d_next_input = 0;
+    d_frac_part = 0;
+    history = 2 * d_interp.ntaps(); // some slack
 }
 
-GrAtscConvert2xTo20::~GrAtscConvert2xTo20 ()
+GrAtscConvert2xTo20::~GrAtscConvert2xTo20()
 {
-  // Nop
+    // Nop
 }
 
-void
-GrAtscConvert2xTo20::pre_initialize ()
+void GrAtscConvert2xTo20::pre_initialize()
 {
-  fprintf (stderr,
-	   "GrAtscConvert2xTo20: input freq = %g\n", getInputSamplingFrequencyN(0));
-  fprintf (stderr,
-	   "GrAtscConvert2xTo20: DEC_RATIO = %g\n", DEC_RATIO);
-  fprintf (stderr,
-	   "GrAtscConvert2xTo20: argument to setSamplingFrequency = %g\n",
-	   getInputSamplingFrequencyN(0) / DEC_RATIO);
+    fprintf(
+        stderr, "GrAtscConvert2xTo20: input freq = %g\n", getInputSamplingFrequencyN(0));
+    fprintf(stderr, "GrAtscConvert2xTo20: DEC_RATIO = %g\n", DEC_RATIO);
+    fprintf(stderr,
+            "GrAtscConvert2xTo20: argument to setSamplingFrequency = %g\n",
+            getInputSamplingFrequencyN(0) / DEC_RATIO);
 
-  int	r;
-  r = setSamplingFrequency (getInputSamplingFrequencyN (0) / DEC_RATIO);
+    int r;
+    r = setSamplingFrequency(getInputSamplingFrequencyN(0) / DEC_RATIO);
 
-  fprintf (stderr, "GrAtscConvert2xTo20: result = %d\n", r);
+    fprintf(stderr, "GrAtscConvert2xTo20: result = %d\n", r);
 
-  fprintf (stderr, "GrAtscConvert2xTo20: getSamplingFrequency = %g\n",
-	   getSamplingFrequency ());
+    fprintf(stderr,
+            "GrAtscConvert2xTo20: getSamplingFrequency = %g\n",
+            getSamplingFrequency());
 }
 
 
-int
-GrAtscConvert2xTo20::forecast (VrSampleRange output,
-			       VrSampleRange inputs[])
+int GrAtscConvert2xTo20::forecast(VrSampleRange output, VrSampleRange inputs[])
 {
-  assert (numberInputs == 1);	// I hate these free references to
-				// superclass's instance variables...
+    assert(numberInputs == 1); // I hate these free references to
+                               // superclass's instance variables...
 
-  inputs[0].index = d_next_input;
-  inputs[0].size =
-    ((long unsigned int) (output.size * DEC_RATIO) + history - 1);
+    inputs[0].index = d_next_input;
+    inputs[0].size = ((long unsigned int)(output.size * DEC_RATIO) + history - 1);
 
-  return 0;
+    return 0;
 }
 
-int
-GrAtscConvert2xTo20::work (VrSampleRange output, void *ao[],
-			   VrSampleRange inputs[], void *ai[])
+int GrAtscConvert2xTo20::work(VrSampleRange output,
+                              void* ao[],
+                              VrSampleRange inputs[],
+                              void* ai[])
 {
-  float	*in = ((float **) ai)[0];
-  float *out = ((float **) ao)[0];
+    float* in = ((float**)ai)[0];
+    float* out = ((float**)ao)[0];
 
-  sync (output.index);
+    sync(output.index);
 
-  unsigned long  si = 0;		// source index
-  unsigned long	 oi = 0;		// output index
-  double frac_part = d_frac_part;
+    unsigned long si = 0; // source index
+    unsigned long oi = 0; // output index
+    double frac_part = d_frac_part;
 
-  for (oi = 0; oi < output.size; oi++){
-    assert (si + d_interp.ntaps () < inputs[0].size);
-    out[oi] = d_interp.interpolate (&in[si], (1. - frac_part));
+    for (oi = 0; oi < output.size; oi++) {
+        assert(si + d_interp.ntaps() < inputs[0].size);
+        out[oi] = d_interp.interpolate(&in[si], (1. - frac_part));
 
-    double s = frac_part + DEC_RATIO;
-    double float_incr = floor (s);
-    frac_part = s - float_incr;
-    int incr = (int) float_incr;
-    si += incr;
-  }
+        double s = frac_part + DEC_RATIO;
+        double float_incr = floor(s);
+        frac_part = s - float_incr;
+        int incr = (int)float_incr;
+        si += incr;
+    }
 
-  d_next_input += si;
-  d_frac_part = frac_part;
-  return output.size;
+    d_next_input += si;
+    d_frac_part = frac_part;
+    return output.size;
 }

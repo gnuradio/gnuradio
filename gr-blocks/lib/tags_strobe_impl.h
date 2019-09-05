@@ -26,37 +26,38 @@
 #include <gnuradio/blocks/tags_strobe.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class BLOCKS_API tags_strobe_impl : public tags_strobe
-    {
-    private:
-      size_t d_itemsize;
-      uint64_t d_nsamps;
-      tag_t d_tag;
-      uint64_t d_offset;
+class BLOCKS_API tags_strobe_impl : public tags_strobe
+{
+private:
+    size_t d_itemsize;
+    uint64_t d_nsamps;
+    tag_t d_tag;
+    uint64_t d_offset;
 
-      void run();
+    void run();
 
-    public:
-      tags_strobe_impl(size_t sizeof_stream_item,
-                       pmt::pmt_t value, uint64_t nsamps,
-                       pmt::pmt_t key);
-      ~tags_strobe_impl();
+public:
+    tags_strobe_impl(size_t sizeof_stream_item,
+                     pmt::pmt_t value,
+                     uint64_t nsamps,
+                     pmt::pmt_t key);
+    ~tags_strobe_impl();
 
-      void set_value(pmt::pmt_t value);
-      void set_key(pmt::pmt_t key);
-      pmt::pmt_t value() const { return d_tag.value; }
-      pmt::pmt_t key() const { return d_tag.key; }
-      void set_nsamps(uint64_t nsamps);
-      uint64_t nsamps() const { return d_nsamps; }
+    void set_value(pmt::pmt_t value);
+    void set_key(pmt::pmt_t key);
+    pmt::pmt_t value() const { return d_tag.value; }
+    pmt::pmt_t key() const { return d_tag.key; }
+    void set_nsamps(uint64_t nsamps);
+    uint64_t nsamps() const { return d_nsamps; }
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_TAGS_STROBE_IMPL_H */

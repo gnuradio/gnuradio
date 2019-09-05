@@ -21,61 +21,49 @@
  */
 
 #include <gnuradio/atsc/equalizer_lms_impl.h>
+#include <gnuradio/atsc/pnXXX_impl.h>
 #include <assert.h>
 #include <algorithm>
-#include <gnuradio/atsc/pnXXX_impl.h>
 
 #include <stdio.h>
 
-using std::min;
 using std::max;
+using std::min;
 
-static const int	NTAPS = 256;
-static const int	NPRETAPS = (int) (NTAPS * 0.8);	// probably should be either .2 or .8
+static const int NTAPS = 256;
+static const int NPRETAPS = (int)(NTAPS * 0.8); // probably should be either .2 or .8
 
 
 // the length of the field sync pattern that we know unequivocally
 static const int KNOWN_FIELD_SYNC_LENGTH = 4 + 511 + 3 * 63;
 
 // static const float *get_data_seg_sync_training_sequence (int offset);
-static int          get_field_sync_training_sequence_length (int offset);
-static const float *get_field_sync_training_sequence (int which_field, int offset);
+static int get_field_sync_training_sequence_length(int offset);
+static const float* get_field_sync_training_sequence(int which_field, int offset);
 
 
-atsci_equalizer_lms::atsci_equalizer_lms () : d_taps (NTAPS)
+atsci_equalizer_lms::atsci_equalizer_lms() : d_taps(NTAPS)
 {
-  for (int i = 0; i < NTAPS; i++) {
-    d_taps[i] = 0.0;
-  }
-  trainingfile=fopen("taps.txt","w");
+    for (int i = 0; i < NTAPS; i++) {
+        d_taps[i] = 0.0;
+    }
+    trainingfile = fopen("taps.txt", "w");
 }
 
-atsci_equalizer_lms::~atsci_equalizer_lms ()
+atsci_equalizer_lms::~atsci_equalizer_lms() { fclose(trainingfile); }
+
+void atsci_equalizer_lms::reset()
 {
-  fclose(trainingfile);
+    atsci_equalizer::reset(); // invoke superclass
+
+    for (int i = 0; i < NTAPS; i++) {
+        d_taps[i] = 0.0;
+    }
 }
 
-void
-atsci_equalizer_lms::reset ()
-{
-  atsci_equalizer::reset ();		// invoke superclass
+int atsci_equalizer_lms::ntaps() const { return NTAPS; }
 
-  for (int i = 0; i < NTAPS; i++) {
-    d_taps[i] = 0.0;
-  }
-}
-
-int
-atsci_equalizer_lms::ntaps () const
-{
-  return NTAPS;
-}
-
-int
-atsci_equalizer_lms::npretaps () const
-{
-  return NPRETAPS;
-}
+int atsci_equalizer_lms::npretaps() const { return NPRETAPS; }
 
 /*!
  * Input range is known NOT TO CONTAIN data segment syncs
@@ -87,13 +75,12 @@ atsci_equalizer_lms::npretaps () const
  * input_samples[0] .. input_samples[nsamples - 1 + ntaps() - 1] may be
  * referenced to compute the output values.
  */
-void
-atsci_equalizer_lms::filter_normal (const float *input_samples,
-				   float *output_samples,
-				   int   nsamples)
+void atsci_equalizer_lms::filter_normal(const float* input_samples,
+                                        float* output_samples,
+                                        int nsamples)
 {
-  // handle data
-  filterN (input_samples, output_samples, nsamples);
+    // handle data
+    filterN(input_samples, output_samples, nsamples);
 }
 
 
@@ -107,20 +94,20 @@ atsci_equalizer_lms::filter_normal (const float *input_samples,
  * input_samples[0] .. input_samples[nsamples - 1 + ntaps() - 1] may be
  * referenced to compute the output values.
  */
-void
-atsci_equalizer_lms::filter_data_seg_sync (const float *input_samples,
-					  float *output_samples,
-					  int   nsamples,
-					  int   offset)
+void atsci_equalizer_lms::filter_data_seg_sync(const float* input_samples,
+                                               float* output_samples,
+                                               int nsamples,
+                                               int offset)
 {
-  // handle data
-  //  adaptN (input_samples, get_data_seg_sync_training_sequence (offset),
-  //	  output_samples, nsamples);
- filterN (input_samples, output_samples, nsamples);
+    // handle data
+    //  adaptN (input_samples, get_data_seg_sync_training_sequence (offset),
+    //	  output_samples, nsamples);
+    filterN(input_samples, output_samples, nsamples);
 
- //  cerr << "Seg Sync: offset " << offset << "\tnsamples\t" << nsamples << "\t pre, 5 -5 -5 5\t" <<
- // output_samples[0] << "\t" << output_samples[1] << "\t" << output_samples[2] << "\t" << output_samples[3] << endl;
-
+    //  cerr << "Seg Sync: offset " << offset << "\tnsamples\t" << nsamples << "\t pre, 5
+    //  -5 -5 5\t" <<
+    // output_samples[0] << "\t" << output_samples[1] << "\t" << output_samples[2] << "\t"
+    // << output_samples[3] << endl;
 }
 
 
@@ -137,34 +124,34 @@ atsci_equalizer_lms::filter_data_seg_sync (const float *input_samples,
  * input_samples[0] .. input_samples[nsamples - 1 + ntaps() - 1] may be
  * referenced to compute the output values.
  */
-void
-atsci_equalizer_lms::filter_field_sync (const float *input_samples,
-				       float *output_samples,
-				       int   nsamples,
-				       int   offset,
-				       int   which_field)
+void atsci_equalizer_lms::filter_field_sync(const float* input_samples,
+                                            float* output_samples,
+                                            int nsamples,
+                                            int offset,
+                                            int which_field)
 {
-  // Only the first 4 + 511 + 3 * 63 symbols are completely defined.
-  // Those after that the symbols are bilevel, so we could use decision feedback and use
-  // that to train, but for now, don't train on them.
+    // Only the first 4 + 511 + 3 * 63 symbols are completely defined.
+    // Those after that the symbols are bilevel, so we could use decision feedback and use
+    // that to train, but for now, don't train on them.
 
-  int	n = min (nsamples, get_field_sync_training_sequence_length (offset));
+    int n = min(nsamples, get_field_sync_training_sequence_length(offset));
 
-  // handle known training sequence
-  adaptN (input_samples, get_field_sync_training_sequence (which_field, offset),
-		    output_samples, n);
+    // handle known training sequence
+    adaptN(input_samples,
+           get_field_sync_training_sequence(which_field, offset),
+           output_samples,
+           n);
 
-  // just filter any unknown portion
-  if (nsamples > n)
-    filterN (&input_samples[n], &output_samples[n], nsamples - n);
+    // just filter any unknown portion
+    if (nsamples > n)
+        filterN(&input_samples[n], &output_samples[n], nsamples - n);
 
-  if (offset == 0 && nsamples > 0){
-    for (int i = 0; i < NTAPS; i++)
-      fprintf(trainingfile,"%f ",d_taps[i]);
+    if (offset == 0 && nsamples > 0) {
+        for (int i = 0; i < NTAPS; i++)
+            fprintf(trainingfile, "%f ", d_taps[i]);
 
-    fprintf (trainingfile,"\n");
-  }
-
+        fprintf(trainingfile, "\n");
+    }
 }
 
 // ----------------------------------------------------------------
@@ -172,105 +159,96 @@ atsci_equalizer_lms::filter_field_sync (const float *input_samples,
 //
 // filter a single output
 //
-float
-atsci_equalizer_lms::filter1 (const float input[])
+float atsci_equalizer_lms::filter1(const float input[])
 {
-  static const int N_UNROLL = 4;
+    static const int N_UNROLL = 4;
 
-  float	acc0 = 0;
-  float	acc1 = 0;
-  float	acc2 = 0;
-  float	acc3 = 0;
+    float acc0 = 0;
+    float acc1 = 0;
+    float acc2 = 0;
+    float acc3 = 0;
 
 
-  unsigned	i = 0;
-  unsigned	n = (NTAPS / N_UNROLL) * N_UNROLL;
+    unsigned i = 0;
+    unsigned n = (NTAPS / N_UNROLL) * N_UNROLL;
 
-  for (i = 0; i < n; i += N_UNROLL){
-    acc0 += d_taps[i + 0] * input[i + 0];
-    acc1 += d_taps[i + 1] * input[i + 1];
-    acc2 += d_taps[i + 2] * input[i + 2];
-    acc3 += d_taps[i + 3] * input[i + 3];
-  }
+    for (i = 0; i < n; i += N_UNROLL) {
+        acc0 += d_taps[i + 0] * input[i + 0];
+        acc1 += d_taps[i + 1] * input[i + 1];
+        acc2 += d_taps[i + 2] * input[i + 2];
+        acc3 += d_taps[i + 3] * input[i + 3];
+    }
 
-  for (; i < (unsigned) NTAPS; i++)
-    acc0 += d_taps[i] * input[i];
+    for (; i < (unsigned)NTAPS; i++)
+        acc0 += d_taps[i] * input[i];
 
-  return (acc0 + acc1 + acc2 + acc3);
+    return (acc0 + acc1 + acc2 + acc3);
 }
 
 //
 // filter and adapt a single output
 //
-float
-atsci_equalizer_lms::adapt1 (const float input[], float ideal_output)
+float atsci_equalizer_lms::adapt1(const float input[], float ideal_output)
 {
-  static const double BETA = 0.00005;	// FIXME figure out what this ought to be
-					// FIXME add gear-shifting
+    static const double BETA = 0.00005; // FIXME figure out what this ought to be
+                                        // FIXME add gear-shifting
 
-  double y = filter1 (input);
-  double e = y - ideal_output;
+    double y = filter1(input);
+    double e = y - ideal_output;
 
-  // update taps...
-  for (int i = 0; i < NTAPS; i++){
-    d_taps[i] = d_taps[i] - BETA * e * (double)(input[i]);
-  }
+    // update taps...
+    for (int i = 0; i < NTAPS; i++) {
+        d_taps[i] = d_taps[i] - BETA * e * (double)(input[i]);
+    }
 
-  return y;
+    return y;
 }
 
-void
-atsci_equalizer_lms::filterN (const float *input_samples,
-			     float *output_samples,
-			     int nsamples)
+void atsci_equalizer_lms::filterN(const float* input_samples,
+                                  float* output_samples,
+                                  int nsamples)
 {
-  for (int i = 0; i < nsamples; i++)
-    output_samples[i] = filter1 (&input_samples[i]);
+    for (int i = 0; i < nsamples; i++)
+        output_samples[i] = filter1(&input_samples[i]);
 }
 
 
-void
-atsci_equalizer_lms::adaptN (const float *input_samples,
-			    const float *training_pattern,
-			    float *output_samples,
-			    int    nsamples)
+void atsci_equalizer_lms::adaptN(const float* input_samples,
+                                 const float* training_pattern,
+                                 float* output_samples,
+                                 int nsamples)
 {
-  for (int i = 0; i < nsamples; i++)
-    output_samples[i] = adapt1 (&input_samples[i], training_pattern[i]);
+    for (int i = 0; i < nsamples; i++)
+        output_samples[i] = adapt1(&input_samples[i], training_pattern[i]);
 }
 
 // ----------------------------------------------------------------
 
-static float
-bin_map (int bit)
-{
-  return bit ? +5 : -5;
-}
+static float bin_map(int bit) { return bit ? +5 : -5; }
 
-static void
-init_field_sync_common (float *p, int mask)
+static void init_field_sync_common(float* p, int mask)
 
 {
-  int  i = 0;
+    int i = 0;
 
-  p[i++] = bin_map (1);			// data segment sync pulse
-  p[i++] = bin_map (0);
-  p[i++] = bin_map (0);
-  p[i++] = bin_map (1);
+    p[i++] = bin_map(1); // data segment sync pulse
+    p[i++] = bin_map(0);
+    p[i++] = bin_map(0);
+    p[i++] = bin_map(1);
 
-  for (int j = 0; j < 511; j++)		// PN511
-    p[i++] = bin_map (atsc_pn511[j]);
+    for (int j = 0; j < 511; j++) // PN511
+        p[i++] = bin_map(atsc_pn511[j]);
 
-  for (int j = 0; j < 63; j++)		// PN63
-    p[i++] = bin_map (atsc_pn63[j]);
+    for (int j = 0; j < 63; j++) // PN63
+        p[i++] = bin_map(atsc_pn63[j]);
 
-  for (int j = 0; j < 63; j++)		// PN63, toggled on field 2
-    p[i++] = bin_map (atsc_pn63[j] ^ mask);
+    for (int j = 0; j < 63; j++) // PN63, toggled on field 2
+        p[i++] = bin_map(atsc_pn63[j] ^ mask);
 
-  for (int j = 0; j < 63; j++)		// PN63
-    p[i++] = bin_map (atsc_pn63[j]);
+    for (int j = 0; j < 63; j++) // PN63
+        p[i++] = bin_map(atsc_pn63[j]);
 
-  assert (i == KNOWN_FIELD_SYNC_LENGTH);
+    assert(i == KNOWN_FIELD_SYNC_LENGTH);
 }
 
 #if 0
@@ -282,27 +260,25 @@ get_data_seg_sync_training_sequence (int offset)
 }
 #endif
 
-static int
-get_field_sync_training_sequence_length (int offset)
+static int get_field_sync_training_sequence_length(int offset)
 {
-  return max (0, KNOWN_FIELD_SYNC_LENGTH - offset);
+    return max(0, KNOWN_FIELD_SYNC_LENGTH - offset);
 }
 
-static const float *
-get_field_sync_training_sequence (int which_field, int offset)
+static const float* get_field_sync_training_sequence(int which_field, int offset)
 {
-  static float *field_1 = 0;
-  static float *field_2 = 0;
+    static float* field_1 = 0;
+    static float* field_2 = 0;
 
-  if (field_1 == 0){
-    field_1 = new float[KNOWN_FIELD_SYNC_LENGTH];
-    field_2 = new float[KNOWN_FIELD_SYNC_LENGTH];
-    init_field_sync_common (field_1, 0);
-    init_field_sync_common (field_2, 1);
-  }
+    if (field_1 == 0) {
+        field_1 = new float[KNOWN_FIELD_SYNC_LENGTH];
+        field_2 = new float[KNOWN_FIELD_SYNC_LENGTH];
+        init_field_sync_common(field_1, 0);
+        init_field_sync_common(field_2, 1);
+    }
 
-  if (which_field == 0)
-    return &field_1[offset];
-  else
-    return &field_2[offset];
+    if (which_field == 0)
+        return &field_1[offset];
+    else
+        return &field_2[offset];
 }

@@ -24,64 +24,61 @@
 #include <config.h>
 #endif
 
+#include <gnuradio/atsc/consts.h>
 #include <gnuradio/atsc/randomizer.h>
 #include <gnuradio/io_signature.h>
-#include <gnuradio/atsc/consts.h>
 
 
-atsc_randomizer_sptr
-atsc_make_randomizer()
+atsc_randomizer_sptr atsc_make_randomizer()
 {
-  return gnuradio::get_initial_sptr(new atsc_randomizer());
+    return gnuradio::get_initial_sptr(new atsc_randomizer());
 }
 
 atsc_randomizer::atsc_randomizer()
-  : gr::sync_block("atsc_randomizer",
-		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet)),
-		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_no_sync)))
+    : gr::sync_block("atsc_randomizer",
+                     gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet)),
+                     gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_no_sync)))
 {
-  reset();
+    reset();
 }
 
-void
-atsc_randomizer::reset()
+void atsc_randomizer::reset()
 {
-  d_rand.reset();
-  d_field2 = false;
-  d_segno = 0;
+    d_rand.reset();
+    d_field2 = false;
+    d_segno = 0;
 }
 
-int
-atsc_randomizer::work (int noutput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items)
+int atsc_randomizer::work(int noutput_items,
+                          gr_vector_const_void_star& input_items,
+                          gr_vector_void_star& output_items)
 {
-  const atsc_mpeg_packet *in = (const atsc_mpeg_packet *) input_items[0];
-  atsc_mpeg_packet_no_sync *out = (atsc_mpeg_packet_no_sync *) output_items[0];
+    const atsc_mpeg_packet* in = (const atsc_mpeg_packet*)input_items[0];
+    atsc_mpeg_packet_no_sync* out = (atsc_mpeg_packet_no_sync*)output_items[0];
 
-  for (int i = 0; i < noutput_items; i++){
+    for (int i = 0; i < noutput_items; i++) {
 
-    // sanity check incoming data.
-    assert((in[i].data[0] == MPEG_SYNC_BYTE));
-    assert((in[i].data[1] & MPEG_TRANSPORT_ERROR_BIT) == 0);
+        // sanity check incoming data.
+        assert((in[i].data[0] == MPEG_SYNC_BYTE));
+        assert((in[i].data[1] & MPEG_TRANSPORT_ERROR_BIT) == 0);
 
-    // initialize plinfo for downstream
-    //
-    // We do this here because the randomizer is effectively
-    // the head of the tx processing chain
-    //
-    out[i].pli.set_regular_seg(d_field2, d_segno);
-    d_segno++;
-    if (d_segno == 312){
-      d_segno = 0;
-      d_field2 = !d_field2;
+        // initialize plinfo for downstream
+        //
+        // We do this here because the randomizer is effectively
+        // the head of the tx processing chain
+        //
+        out[i].pli.set_regular_seg(d_field2, d_segno);
+        d_segno++;
+        if (d_segno == 312) {
+            d_segno = 0;
+            d_field2 = !d_field2;
+        }
+
+        if (out[i].pli.first_regular_seg_p())
+            d_rand.reset();
+
+        d_rand.randomize(out[i], in[i]);
     }
 
-    if (out[i].pli.first_regular_seg_p())
-      d_rand.reset();
-
-    d_rand.randomize(out[i], in[i]);
-  }
-
-  return noutput_items;
+    return noutput_items;
 }

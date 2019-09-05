@@ -34,30 +34,30 @@
  */
 
 namespace gr {
-  namespace dtv {
+namespace dtv {
 
-    class atsc_basic_trellis_encoder
-    {
-    private:
-      int state;    // two bit state;
+class atsc_basic_trellis_encoder
+{
+private:
+    int state; // two bit state;
 
-    public:
-      atsc_basic_trellis_encoder() : state(0) {}
+public:
+    atsc_basic_trellis_encoder() : state(0) {}
 
-      /*!
-       * Encode two bit INPUT into 3 bit return value. Domain is [0,3],
-       * Range is [0,7]. The mapping to bipolar levels is not done.
-       */
-      int encode(unsigned int input);
+    /*!
+     * Encode two bit INPUT into 3 bit return value. Domain is [0,3],
+     * Range is [0,7]. The mapping to bipolar levels is not done.
+     */
+    int encode(unsigned int input);
 
-      //! reset encoder state
-      void reset() {state = 0;}
+    //! reset encoder state
+    void reset() { state = 0; }
 
-      static const unsigned char next_state[32];
-      static const unsigned char out_symbol[32];
-    };
+    static const unsigned char next_state[32];
+    static const unsigned char out_symbol[32];
+};
 
-  } /* namespace dtv */
+} /* namespace dtv */
 } /* namespace gr */
 
 #endif /* INCLUDED_ATSC_TRELLIS_ENCODER_H */

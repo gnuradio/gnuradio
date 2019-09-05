@@ -23,8 +23,4 @@
 #include <gnuradio/atsc/create_atsci_fs_checker.h>
 #include <gnuradio/atsc/fs_checker_naive_impl.h>
 
-atsci_fs_checker *
-create_atsci_fs_checker ()
-{
-  return new atsci_fs_checker_naive ();
-}
+atsci_fs_checker* create_atsci_fs_checker() { return new atsci_fs_checker_naive(); }

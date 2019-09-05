@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_analog_EXPORTS
-#  define ANALOG_API __GR_ATTR_EXPORT
+#define ANALOG_API __GR_ATTR_EXPORT
 #else
-#  define ANALOG_API __GR_ATTR_IMPORT
+#define ANALOG_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_ANALOG_API_H */

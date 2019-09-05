@@ -24,8 +24,8 @@
 #define INCLUDED_ATSC_DS_TO_SOFTDS_H
 
 #include <gnuradio/atsc/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/atsc/types.h>
+#include <gnuradio/sync_block.h>
 
 class atsc_ds_to_softds;
 typedef boost::shared_ptr<atsc_ds_to_softds> atsc_ds_to_softds_sptr;
@@ -40,20 +40,21 @@ ATSC_API atsc_ds_to_softds_sptr atsc_make_ds_to_softds();
  */
 class ATSC_API atsc_ds_to_softds : public gr::sync_block
 {
-  friend ATSC_API atsc_ds_to_softds_sptr atsc_make_ds_to_softds();
+    friend ATSC_API atsc_ds_to_softds_sptr atsc_make_ds_to_softds();
 
-  atsc_ds_to_softds();
+    atsc_ds_to_softds();
 
 public:
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-  void map_to_soft_symbols (atsc_soft_data_segment &out,
-                     const atsc_data_segment &in);
+    void map_to_soft_symbols(atsc_soft_data_segment& out, const atsc_data_segment& in);
 
 
-  void reset() { /* nop */ }
+    void reset()
+    { /* nop */
+    }
 };
 
 

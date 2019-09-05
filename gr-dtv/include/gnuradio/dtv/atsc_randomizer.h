@@ -26,25 +26,25 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace dtv {
+namespace dtv {
+
+/*!
+ * \brief <+description of block+>
+ * \ingroup dtv
+ *
+ */
+class DTV_API atsc_randomizer : virtual public gr::sync_block
+{
+public:
+    typedef boost::shared_ptr<atsc_randomizer> sptr;
 
     /*!
-     * \brief <+description of block+>
-     * \ingroup dtv
-     *
+     * \brief Return a shared_ptr to a new instance of dtv::atsc_randomizer.
      */
-    class DTV_API atsc_randomizer : virtual public gr::sync_block
-    {
-     public:
-      typedef boost::shared_ptr<atsc_randomizer> sptr;
+    static sptr make();
+};
 
-      /*!
-       * \brief Return a shared_ptr to a new instance of dtv::atsc_randomizer.
-       */
-      static sptr make();
-    };
-
-  } // namespace dtv
+} // namespace dtv
 } // namespace gr
 
 #endif /* INCLUDED_DTV_ATSC_RANDOMIZER_H */

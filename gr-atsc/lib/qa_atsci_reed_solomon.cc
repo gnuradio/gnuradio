@@ -24,94 +24,99 @@
 #include <config.h>
 #endif
 
-#include <cppunit/TestAssert.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include "qa_atsci_reed_solomon.h"
 #include <gnuradio/atsc/reed_solomon_impl.h>
 #include <gnuradio/random.h>
-#include "qa_atsci_reed_solomon.h"
+#include <cppunit/TestAssert.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 
-static const int NROOTS      =   20;
-static const int NTRIALS     =  100;
-static const int NN	     = ATSC_MPEG_RS_ENCODED_LENGTH;
+static const int NROOTS = 20;
+static const int NTRIALS = 100;
+static const int NN = ATSC_MPEG_RS_ENCODED_LENGTH;
 
-void
-qa_atsci_reed_solomon::t0_reed_solomon ()
+void qa_atsci_reed_solomon::t0_reed_solomon()
 {
-  atsc_mpeg_packet_no_sync	in;
-  atsc_mpeg_packet_rs_encoded  	enc;
-  atsc_mpeg_packet_no_sync	out;
-  gr::random rnd_byte(3311823649, 0, 256);
-  gr::random rnd_err(1594472664, 1, 256); // Error must not be 0.
-  gr::random rnd_err_loc(957498807, 0, NN);
-  int			  derrors;
-  int			  errlocs[NN];
-  int			  errval;
-  int			  errloc;
-  int			  decoder_errors = 0;
+    atsc_mpeg_packet_no_sync in;
+    atsc_mpeg_packet_rs_encoded enc;
+    atsc_mpeg_packet_no_sync out;
+    gr::random rnd_byte(3311823649, 0, 256);
+    gr::random rnd_err(1594472664, 1, 256); // Error must not be 0.
+    gr::random rnd_err_loc(957498807, 0, NN);
+    int derrors;
+    int errlocs[NN];
+    int errval;
+    int errloc;
+    int decoder_errors = 0;
 
-  for (int nt = 0; nt < NTRIALS; nt++){
+    for (int nt = 0; nt < NTRIALS; nt++) {
 
-    // test up to the error correction capacity of the code
-    for (int errors = 0; errors <= NROOTS*2; errors++){
+        // test up to the error correction capacity of the code
+        for (int errors = 0; errors <= NROOTS * 2; errors++) {
 
-      // load block with random data and encode
+            // load block with random data and encode
 
-      for (int i = 0; i < ATSC_MPEG_DATA_LENGTH; i++)
-	in.data[i] = rnd_byte.ran_int();
+            for (int i = 0; i < ATSC_MPEG_DATA_LENGTH; i++)
+                in.data[i] = rnd_byte.ran_int();
 
-      rs.encode (enc, in);
+            rs.encode(enc, in);
 
-      memset (errlocs, 0, sizeof (errlocs));
+            memset(errlocs, 0, sizeof(errlocs));
 
-      for (int i = 0; i < errors; i++){
+            for (int i = 0; i < errors; i++) {
 
-	  errval = rnd_err.ran_int();
+                errval = rnd_err.ran_int();
 
-	do {
-	  errloc = rnd_err_loc.ran_int();
-	} while (errlocs[errloc] != 0);		// must not choose the same location twice
+                do {
+                    errloc = rnd_err_loc.ran_int();
+                } while (errlocs[errloc] != 0); // must not choose the same location twice
 
-	errlocs[errloc] = 1;
+                errlocs[errloc] = 1;
 
-	enc.data[errloc] ^= errval;		// cause the error
-      }
+                enc.data[errloc] ^= errval; // cause the error
+            }
 
-      // decode the errored block
-      derrors = rs.decode (out, enc);
+            // decode the errored block
+            derrors = rs.decode(out, enc);
 
-      if (errors <= NROOTS/2) {
-	// We should have handled all these errors and corrected them.
-	if (derrors != errors){
-	  fprintf (stderr, "  decoder says %d errors, true number is %d\n", derrors, errors);
-	  decoder_errors++;
-	}
+            if (errors <= NROOTS / 2) {
+                // We should have handled all these errors and corrected them.
+                if (derrors != errors) {
+                    fprintf(stderr,
+                            "  decoder says %d errors, true number is %d\n",
+                            derrors,
+                            errors);
+                    decoder_errors++;
+                }
 
-	if (in != out){
-	  fprintf (stderr, "  uncorrected errors!\n");
-	  decoder_errors++;
-	}
-      } else {
-	// We have been given more errors than we could cope with.  Make
-	// sure that we detect these errors.  Complain if we get incorrect
-	// block but don't say it's incorrect.
-	bool differs = (in != out);
+                if (in != out) {
+                    fprintf(stderr, "  uncorrected errors!\n");
+                    decoder_errors++;
+                }
+            } else {
+                // We have been given more errors than we could cope with.  Make
+                // sure that we detect these errors.  Complain if we get incorrect
+                // block but don't say it's incorrect.
+                bool differs = (in != out);
 
-	if (differs && (derrors < 0)) {
-	  // Reported uncorrectable error accurately
-	} else if (differs) {
-	  fprintf (stderr,
-		   "  decoder found %d of %d errors, but incorrect block\n",
-		   derrors, errors);
-	} else {
-	  fprintf (stderr, "  decoder corrected %d of %d errors unexpectedly\n",
-		   derrors, errors);
-	}
-      }
+                if (differs && (derrors < 0)) {
+                    // Reported uncorrectable error accurately
+                } else if (differs) {
+                    fprintf(stderr,
+                            "  decoder found %d of %d errors, but incorrect block\n",
+                            derrors,
+                            errors);
+                } else {
+                    fprintf(stderr,
+                            "  decoder corrected %d of %d errors unexpectedly\n",
+                            derrors,
+                            errors);
+                }
+            }
+        }
     }
-  }
 
-  CPPUNIT_ASSERT (decoder_errors == 0);
+    CPPUNIT_ASSERT(decoder_errors == 0);
 }

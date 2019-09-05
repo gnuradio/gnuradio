@@ -23,25 +23,25 @@
 #ifndef _QA_DIGITAL_HEADER_FORMAT_H_
 #define _QA_DIGITAL_HEADER_FORMAT_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 class qa_header_format : public CppUnit::TestCase
 {
-  CPPUNIT_TEST_SUITE(qa_header_format);
-  CPPUNIT_TEST(test_default_format);
-  CPPUNIT_TEST(test_default_parse);
-  CPPUNIT_TEST(test_counter_format);
-  CPPUNIT_TEST(test_counter_parse);
-  CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE(qa_header_format);
+    CPPUNIT_TEST(test_default_format);
+    CPPUNIT_TEST(test_default_parse);
+    CPPUNIT_TEST(test_counter_format);
+    CPPUNIT_TEST(test_counter_parse);
+    CPPUNIT_TEST_SUITE_END();
 
- private:
-  void test_default_format();
-  void test_default_parse();
-  void test_default_parse_soft();
-  void test_counter_format();
-  void test_counter_parse();
-  void test_counter_parse_soft();
+private:
+    void test_default_format();
+    void test_default_parse();
+    void test_default_parse_soft();
+    void test_counter_format();
+    void test_counter_parse();
+    void test_counter_parse_soft();
 };
 
 #endif /* _QA_DIGITAL_HEADER_FORMAT_H_ */

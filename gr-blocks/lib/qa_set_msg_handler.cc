@@ -24,15 +24,15 @@
 #include <config.h>
 #endif
 
-#include <qa_set_msg_handler.h>
-#include <gnuradio/top_block.h>
 #include <gnuradio/blocks/head.h>
-#include <gnuradio/blocks/null_source.h>
-#include <gnuradio/blocks/null_sink.h>
 #include <gnuradio/blocks/nop.h>
+#include <gnuradio/blocks/null_sink.h>
+#include <gnuradio/blocks/null_source.h>
 #include <gnuradio/messages/msg_passing.h>
-#include <iostream>
+#include <gnuradio/top_block.h>
+#include <qa_set_msg_handler.h>
 #include <boost/thread/thread.hpp>
+#include <iostream>
 
 /*
  * The gr::block::nop block has been instrumented so that it counts
@@ -42,31 +42,31 @@
 
 void qa_set_msg_handler::t0()
 {
-  static const int NMSGS = 10;
+    static const int NMSGS = 10;
 
-  gr::top_block_sptr tb = gr::make_top_block("top");
-  gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
-  gr::blocks::nop::sptr nop = gr::blocks::nop::make(sizeof(int));
-  gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+    gr::top_block_sptr tb = gr::make_top_block("top");
+    gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
+    gr::blocks::nop::sptr nop = gr::blocks::nop::make(sizeof(int));
+    gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
-  tb->connect(src, 0, nop, 0);
-  tb->connect(nop, 0, dst, 0);
+    tb->connect(src, 0, nop, 0);
+    tb->connect(nop, 0, dst, 0);
 
-  // Must start graph before sending messages
-  tb->start();
+    // Must start graph before sending messages
+    tb->start();
 
-  // Send them...
-  pmt::pmt_t port(pmt::intern("port"));
-  for (int i = 0; i < NMSGS; i++){
-    send(nop, port, pmt::mp(pmt::mp("example-msg"), pmt::mp(i)));
-  }
+    // Send them...
+    pmt::pmt_t port(pmt::intern("port"));
+    for (int i = 0; i < NMSGS; i++) {
+        send(nop, port, pmt::mp(pmt::mp("example-msg"), pmt::mp(i)));
+    }
 
-  // Give the messages a chance to be processed
-  boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+    // Give the messages a chance to be processed
+    boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 
-  tb->stop();
-  tb->wait();
+    tb->stop();
+    tb->wait();
 
-  // Confirm that the nop block received the right number of messages.
-  CPPUNIT_ASSERT_EQUAL(NMSGS, nop->nmsgs_received());
+    // Confirm that the nop block received the right number of messages.
+    CPPUNIT_ASSERT_EQUAL(NMSGS, nop->nmsgs_received());
 }

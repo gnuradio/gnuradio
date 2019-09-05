@@ -27,31 +27,29 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace fft {
+namespace fft {
 
-    /*!
-     * \brief Compute forward or reverse FFT. float vector in / complex vector out.
-     * \ingroup fourier_analysis_blk
-     */
-    class FFT_API fft_vfc : virtual public sync_block
-    {
-    public:
+/*!
+ * \brief Compute forward or reverse FFT. float vector in / complex vector out.
+ * \ingroup fourier_analysis_blk
+ */
+class FFT_API fft_vfc : virtual public sync_block
+{
+public:
+    // gr::fft::fft_vfc::sptr
+    typedef boost::shared_ptr<fft_vfc> sptr;
 
-      // gr::fft::fft_vfc::sptr
-      typedef boost::shared_ptr<fft_vfc> sptr;
+    static sptr
+    make(int fft_size, bool forward, const std::vector<float>& window, int nthreads = 1);
 
-      static sptr make(int fft_size, bool forward,
-			       const std::vector<float> &window,
-			       int nthreads=1);
+    virtual void set_nthreads(int n) = 0;
 
-      virtual void set_nthreads(int n) = 0;
+    virtual int nthreads() const = 0;
 
-      virtual int nthreads() const = 0;
+    virtual bool set_window(const std::vector<float>& window) = 0;
+};
 
-      virtual bool set_window(const std::vector<float> &window) = 0;
-    };
-
-  } /* namespace fft */
+} /* namespace fft */
 } /* namespace gr */
 
 #endif /* INCLUDED_FFT_FFT_VFC_H */

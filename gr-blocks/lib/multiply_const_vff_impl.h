@@ -26,27 +26,27 @@
 #include <gnuradio/blocks/multiply_const_vff.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class BLOCKS_API multiply_const_vff_impl : public multiply_const_vff
-    {
-    private:
-      std::vector<float> d_k;
+class BLOCKS_API multiply_const_vff_impl : public multiply_const_vff
+{
+private:
+    std::vector<float> d_k;
 
-    public:
-      multiply_const_vff_impl(std::vector<float> k);
+public:
+    multiply_const_vff_impl(std::vector<float> k);
 
-      void setup_rpc();
+    void setup_rpc();
 
-      std::vector<float> k() const { return d_k; }
-      void set_k(std::vector<float> k) { d_k = k; }
+    std::vector<float> k() const { return d_k; }
+    void set_k(std::vector<float> k) { d_k = k; }
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_MULTIPLY_CONST_VFF_IMPL_H */

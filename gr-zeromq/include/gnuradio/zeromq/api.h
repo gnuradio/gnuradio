@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_zeromq_EXPORTS
-#  define ZEROMQ_API __GR_ATTR_EXPORT
+#define ZEROMQ_API __GR_ATTR_EXPORT
 #else
-#  define ZEROMQ_API __GR_ATTR_IMPORT
+#define ZEROMQ_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_ZEROMQ_API_H */

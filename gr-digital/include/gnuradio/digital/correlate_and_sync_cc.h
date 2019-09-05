@@ -28,63 +28,64 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace digital {
+namespace digital {
+
+/*!
+ * \brief Correlate to a preamble and send time/phase sync info
+ * \ingroup deprecated_blk
+ *
+ * \details
+ * Input:
+ * \li Stream of complex samples.
+ *
+ * Output:
+ * \li Output stream that just passes the input complex samples
+ * \li tag 'phase_est': estimate of phase offset
+ * \li tag 'timing_est': estimate of symbol timing offset
+ * \li tag 'corr_est': the correlation value of the estimates
+ *
+ * This block is designed to search for a preamble by correlation
+ * and uses the results of the correlation to get a time and phase
+ * offset estimate. These estimates are passed downstream as
+ * stream tags for use by follow-on synchronization blocks.
+ *
+ * The preamble is provided as a set of symbols along with a
+ * baseband matched filter which we use to create the filtered and
+ * upsampled symbol that we will receive over-the-air.
+ *
+ * The phase_est tag is used to adjust the phase estimation of any
+ * downstream synchronization blocks and is currently used by the
+ * gr::digital::costas_loop_cc block.
+ *
+ * The time_est tag is used to adjust the sampling timing
+ * estimation of any downstream synchronization blocks and is
+ * currently used by the gr::digital::pfb_clock_sync_ccf block.
+ */
+class DIGITAL_API correlate_and_sync_cc : virtual public sync_block
+{
+public:
+    typedef boost::shared_ptr<correlate_and_sync_cc> sptr;
 
     /*!
-     * \brief Correlate to a preamble and send time/phase sync info
-     * \ingroup deprecated_blk
+     * Make a block that correlates against the \p symbols vector
+     * and outputs a phase and symbol timing estimate.
      *
-     * \details
-     * Input:
-     * \li Stream of complex samples.
-     *
-     * Output:
-     * \li Output stream that just passes the input complex samples
-     * \li tag 'phase_est': estimate of phase offset
-     * \li tag 'timing_est': estimate of symbol timing offset
-     * \li tag 'corr_est': the correlation value of the estimates
-     *
-     * This block is designed to search for a preamble by correlation
-     * and uses the results of the correlation to get a time and phase
-     * offset estimate. These estimates are passed downstream as
-     * stream tags for use by follow-on synchronization blocks.
-     *
-     * The preamble is provided as a set of symbols along with a
-     * baseband matched filter which we use to create the filtered and
-     * upsampled symbol that we will receive over-the-air.
-     *
-     * The phase_est tag is used to adjust the phase estimation of any
-     * downstream synchronization blocks and is currently used by the
-     * gr::digital::costas_loop_cc block.
-     *
-     * The time_est tag is used to adjust the sampling timing
-     * estimation of any downstream synchronization blocks and is
-     * currently used by the gr::digital::pfb_clock_sync_ccf block.
+     * \param symbols Set of symbols to correlate against (e.g., a
+     *                preamble).
+     * \param filter  Baseband matched filter (e.g., RRC)
+     * \param sps     Samples per symbol
+     * \param nfilts  Number of filters in the internal PFB
      */
-    class DIGITAL_API correlate_and_sync_cc : virtual public sync_block
-    {
-     public:
-      typedef boost::shared_ptr<correlate_and_sync_cc> sptr;
+    static sptr make(const std::vector<gr_complex>& symbols,
+                     const std::vector<float>& filter,
+                     unsigned int sps,
+                     unsigned int nfilts = 32);
 
-      /*!
-       * Make a block that correlates against the \p symbols vector
-       * and outputs a phase and symbol timing estimate.
-       *
-       * \param symbols Set of symbols to correlate against (e.g., a
-       *                preamble).
-       * \param filter  Baseband matched filter (e.g., RRC)
-       * \param sps     Samples per symbol
-       * \param nfilts  Number of filters in the internal PFB
-       */
-      static sptr make(const std::vector<gr_complex> &symbols,
-                       const std::vector<float> &filter,
-                       unsigned int sps, unsigned int nfilts=32);
+    virtual std::vector<gr_complex> symbols() const = 0;
+    virtual void set_symbols(const std::vector<gr_complex>& symbols) = 0;
+};
 
-      virtual std::vector<gr_complex> symbols() const = 0;
-      virtual void set_symbols(const std::vector<gr_complex> &symbols) = 0;
-    };
-
-  } // namespace digital
+} // namespace digital
 } // namespace gr
 
 #endif /* INCLUDED_DIGITAL_CORRELATE_AND_SYNC_CC_H */

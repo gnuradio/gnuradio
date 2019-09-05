@@ -24,8 +24,8 @@
 #define INCLUDED_ATSC_EQUALIZER_H
 
 #include <gnuradio/atsc/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/atsc/equalizer_impl.h>
+#include <gnuradio/sync_block.h>
 #include <vector>
 
 class atsc_equalizer;
@@ -42,29 +42,28 @@ atsc_equalizer_sptr ATSC_API atsc_make_equalizer();
  */
 class ATSC_API atsc_equalizer : public gr::sync_block
 {
-  friend ATSC_API atsc_equalizer_sptr atsc_make_equalizer();
+    friend ATSC_API atsc_equalizer_sptr atsc_make_equalizer();
 
-  atsc_equalizer();
+    atsc_equalizer();
 
 public:
-  void forecast (int noutput_items, gr_vector_int &ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
 
-  std::vector<double> taps() {
-    return d_equalizer->taps();
-  }
+    std::vector<double> taps() { return d_equalizer->taps(); }
 
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-  void reset() { /* nop */ }
+    void reset()
+    { /* nop */
+    }
 
-  ~atsc_equalizer ();
+    ~atsc_equalizer();
 
 
 protected:
-  atsci_equalizer	*d_equalizer;
-
+    atsci_equalizer* d_equalizer;
 };
 
 

@@ -22,54 +22,50 @@
 
 #include <gnuradio/atsc/GrAtscSegSymSyncImpl.h>
 #include <gnuradio/atsc/GrAtscSegSymSyncImpl_export.h>
-#include <cmath>
 #include <assert.h>
+#include <cmath>
 
-GrAtscSegSymSyncImpl::GrAtscSegSymSyncImpl (
+GrAtscSegSymSyncImpl::GrAtscSegSymSyncImpl(
     double nominal_ratio_of_rx_clock_to_symbol_freq)
-  : d_interp (nominal_ratio_of_rx_clock_to_symbol_freq)
+    : d_interp(nominal_ratio_of_rx_clock_to_symbol_freq)
 {
-  // set approximate decimation rate for superclass's benefit
-  decimation = (int) rint (nominal_ratio_of_rx_clock_to_symbol_freq);
+    // set approximate decimation rate for superclass's benefit
+    decimation = (int)rint(nominal_ratio_of_rx_clock_to_symbol_freq);
 
-  history = 1500;  	// spare input samples in case we need them.
+    history = 1500; // spare input samples in case we need them.
 
-  d_sssr.reset ();
-  d_interp.reset ();
-  d_next_input = 0;
-  d_rx_clock_to_symbol_freq = nominal_ratio_of_rx_clock_to_symbol_freq;
+    d_sssr.reset();
+    d_interp.reset();
+    d_next_input = 0;
+    d_rx_clock_to_symbol_freq = nominal_ratio_of_rx_clock_to_symbol_freq;
 }
 
-GrAtscSegSymSyncImpl::~GrAtscSegSymSyncImpl ()
+GrAtscSegSymSyncImpl::~GrAtscSegSymSyncImpl()
 {
-  // Nop
+    // Nop
 }
 
-void
-GrAtscSegSymSyncImpl::pre_initialize ()
+void GrAtscSegSymSyncImpl::pre_initialize()
 {
-  setSamplingFrequency (
-     getInputSamplingFrequencyN (0) / d_rx_clock_to_symbol_freq);
+    setSamplingFrequency(getInputSamplingFrequencyN(0) / d_rx_clock_to_symbol_freq);
 }
 
-int
-GrAtscSegSymSyncImpl::forecast (VrSampleRange output,
-				VrSampleRange inputs[])
+int GrAtscSegSymSyncImpl::forecast(VrSampleRange output, VrSampleRange inputs[])
 {
-  assert (numberInputs == 1);	// I hate these free references to
-				// superclass's instance variables...
+    assert(numberInputs == 1); // I hate these free references to
+                               // superclass's instance variables...
 
-  inputs[0].index = d_next_input;
-  inputs[0].size =
-    ((long unsigned int) (output.size * d_rx_clock_to_symbol_freq)
-     + history - 1);
+    inputs[0].index = d_next_input;
+    inputs[0].size =
+        ((long unsigned int)(output.size * d_rx_clock_to_symbol_freq) + history - 1);
 
-  return 0;
+    return 0;
 }
 
-int
-GrAtscSegSymSyncImpl::work (VrSampleRange output, void *ao[],
-			    VrSampleRange inputs[], void *ai[])
+int GrAtscSegSymSyncImpl::work(VrSampleRange output,
+                               void* ao[],
+                               VrSampleRange inputs[],
+                               void* ai[])
 {
 #if 0
   float	        *input_samples  = ((float **) ai)[0];
@@ -78,16 +74,15 @@ GrAtscSegSymSyncImpl::work (VrSampleRange output, void *ao[],
 
   // FIXME finish...
 #endif
-  assert (0);
+    assert(0);
 
-  return output.size;
+    return output.size;
 }
 
-void
-GrAtscSegSymSyncImpl::reset ()
+void GrAtscSegSymSyncImpl::reset()
 {
-  d_sssr.reset ();
-  d_interp.reset ();
+    d_sssr.reset();
+    d_interp.reset();
 }
 
 
@@ -96,8 +91,8 @@ GrAtscSegSymSyncImpl::reset ()
  * Doesn't expose any of the internals or our compile time dependencies.
  */
 
-GrAtscSegSymSync *
-create_GrAtscSegSymSyncImpl (double nominal_ratio_of_rx_clock_to_symbol_freq)
+GrAtscSegSymSync*
+create_GrAtscSegSymSyncImpl(double nominal_ratio_of_rx_clock_to_symbol_freq)
 {
-  return new GrAtscSegSymSyncImpl (nominal_ratio_of_rx_clock_to_symbol_freq);
+    return new GrAtscSegSymSyncImpl(nominal_ratio_of_rx_clock_to_symbol_freq);
 }

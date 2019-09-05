@@ -26,30 +26,29 @@
 #include <gnuradio/blocks/rms_cf.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    /*!
-     * \brief RMS average power
-     * \ingroup math_blk
-     */
-    class rms_cf_impl : public rms_cf
-    {
-    private:
-      double d_alpha, d_beta, d_avg;
+/*!
+ * \brief RMS average power
+ * \ingroup math_blk
+ */
+class rms_cf_impl : public rms_cf
+{
+private:
+    double d_alpha, d_beta, d_avg;
 
-    public:
-      rms_cf_impl(double alpha = 0.0001);
-      ~rms_cf_impl();
+public:
+    rms_cf_impl(double alpha = 0.0001);
+    ~rms_cf_impl();
 
-      void set_alpha(double alpha);
+    void set_alpha(double alpha);
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_RMS_CF_IMPL_H */

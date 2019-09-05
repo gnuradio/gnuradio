@@ -29,45 +29,46 @@
 /*!
  * \brief Naive concrete implementation of field sync checker
  */
-class ATSC_API atsci_fs_checker_naive : public atsci_fs_checker {
+class ATSC_API atsci_fs_checker_naive : public atsci_fs_checker
+{
 
- private:
-  static const int	SRSIZE = 1024;		// must be power of two
-  int			d_index;		// points at oldest sample
-  float			d_sample_sr[SRSIZE];	// sample shift register
-  atsc::syminfo		d_tag_sr[SRSIZE];	// tag shift register
-  unsigned char		d_bit_sr[SRSIZE];	// binary decision shift register
-  int			d_field_num;
-  int			d_segment_num;
+private:
+    static const int SRSIZE = 1024; // must be power of two
+    int d_index;                    // points at oldest sample
+    float d_sample_sr[SRSIZE];      // sample shift register
+    atsc::syminfo d_tag_sr[SRSIZE]; // tag shift register
+    unsigned char d_bit_sr[SRSIZE]; // binary decision shift register
+    int d_field_num;
+    int d_segment_num;
 
-  static const int	OFFSET_511 = 0;		// offset to PN 511 pattern
-  static const int	LENGTH_511 = 511 + 4;	// length of PN 511 pattern (+ 4 seg sync)
-  static const int	OFFSET_2ND_63 = 578;	// offset to second PN 63 pattern
-  static const int	LENGTH_2ND_63 = 63;	// length of PN 63 pattern
+    static const int OFFSET_511 = 0;       // offset to PN 511 pattern
+    static const int LENGTH_511 = 511 + 4; // length of PN 511 pattern (+ 4 seg sync)
+    static const int OFFSET_2ND_63 = 578;  // offset to second PN 63 pattern
+    static const int LENGTH_2ND_63 = 63;   // length of PN 63 pattern
 
-  static unsigned char	s_511[LENGTH_511];	// PN 511 pattern
-  static unsigned char	s_63[LENGTH_2ND_63];	// PN 63 pattern
+    static unsigned char s_511[LENGTH_511];   // PN 511 pattern
+    static unsigned char s_63[LENGTH_2ND_63]; // PN 63 pattern
 
-  inline static int wrap (int index){ return index & (SRSIZE - 1); }
-  inline static int incr (int index){ return wrap (index + 1); }
-  inline static int decr (int index){ return wrap (index - 1); }
+    inline static int wrap(int index) { return index & (SRSIZE - 1); }
+    inline static int incr(int index) { return wrap(index + 1); }
+    inline static int decr(int index) { return wrap(index - 1); }
 
- public:
+public:
+    // CREATORS
+    atsci_fs_checker_naive();
+    ~atsci_fs_checker_naive();
 
-  // CREATORS
-  atsci_fs_checker_naive ();
-  ~atsci_fs_checker_naive ();
+    // MANIPULATORS
+    virtual void reset();
+    void filter(float input_sample,
+                atsc::syminfo input_tag,
+                float* output_sample,
+                atsc::syminfo* output_tag);
 
-  // MANIPULATORS
-  virtual void reset ();
-  void filter (float input_sample, atsc::syminfo input_tag,
-	       float *output_sample, atsc::syminfo *output_tag);
+    // ACCESSORS
 
-  // ACCESSORS
-
-  //! return delay in samples from input to output
-  int delay () const;
-
+    //! return delay in samples from input to output
+    int delay() const;
 };
 
 

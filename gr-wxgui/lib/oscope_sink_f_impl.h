@@ -26,26 +26,25 @@
 #include <gnuradio/wxgui/oscope_sink_f.h>
 
 namespace gr {
-  namespace wxgui {
+namespace wxgui {
 
-    class oscope_sink_f_impl : public oscope_sink_f
-    {
-    private:
-      msg_queue::sptr d_msgq;
+class oscope_sink_f_impl : public oscope_sink_f
+{
+private:
+    msg_queue::sptr d_msgq;
 
-    public:
-      oscope_sink_f_impl(double sampling_rate, msg_queue::sptr msgq);
-      ~oscope_sink_f_impl();
+public:
+    oscope_sink_f_impl(double sampling_rate, msg_queue::sptr msgq);
+    ~oscope_sink_f_impl();
 
-      bool check_topology(int ninputs, int noutputs);
+    bool check_topology(int ninputs, int noutputs);
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace wxgui */
+} /* namespace wxgui */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_OSCOPE_SINK_F_IMPL_H */
-

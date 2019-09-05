@@ -23,34 +23,31 @@
 #ifndef INCLUDED_WAVELET_WAVELET_FF_H
 #define INCLUDED_WAVELET_WAVELET_FF_H
 
-#include <gnuradio/wavelet/api.h>
 #include <gnuradio/sync_block.h>
+#include <gnuradio/wavelet/api.h>
 
 namespace gr {
-  namespace wavelet {
+namespace wavelet {
+
+/*!
+ * \brief Compute wavelet transform using gsl routines.
+ * \ingroup wavelet_blk
+ */
+class WAVELET_API wavelet_ff : virtual public sync_block
+{
+public:
+    // gr::wavelet::wavelet_ff:sptr
+    typedef boost::shared_ptr<wavelet_ff> sptr;
 
     /*!
-     * \brief Compute wavelet transform using gsl routines.
-     * \ingroup wavelet_blk
+     * \param size
+     * \param order
+     * \param forward
      */
-    class WAVELET_API wavelet_ff : virtual public sync_block
-    {
-    public:
+    static sptr make(int size = 1024, int order = 20, bool forward = true);
+};
 
-      // gr::wavelet::wavelet_ff:sptr
-      typedef boost::shared_ptr<wavelet_ff> sptr;
-
-      /*!
-       * \param size
-       * \param order
-       * \param forward
-       */
-      static sptr make(int size = 1024,
-                       int order = 20,
-                       bool forward = true);
-    };
-
-  } /* namespace wavelet */
+} /* namespace wavelet */
 } /* namespace gr */
 
 #endif /* INCLUDED_WAVELET_WAVELET_FF_H */

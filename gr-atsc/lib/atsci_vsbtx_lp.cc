@@ -22,38 +22,35 @@
 
 #include <gnuradio/atsc/consts.h>
 #include <gnuradio/atsc/vsbtx_lp_impl.h>
-#include <stdexcept>
 #include <cmath>
 #include <iostream>
+#include <stdexcept>
 
-using std::vector;
 using std::cerr;
 using std::endl;
+using std::vector;
 
 // atsc root raised cosine filter, sampling rate = 21.52 MHz
 static const float atsc_vsbtx_lp2x[] = {
 #include "atsc_vsbtx_lp.dat"
 };
 
-#define NELEM(x) (sizeof (x) / sizeof ((x)[0]))
+#define NELEM(x) (sizeof(x) / sizeof((x)[0]))
 
 // is a within 5% of target?
 
-static bool
-close_enough_p (double a, double target)
+static bool close_enough_p(double a, double target)
 {
-  double delta = fabs (target * 0.05);	//  5 percent
+    double delta = fabs(target * 0.05); //  5 percent
 
-  return fabs (target - a) <= delta;
+    return fabs(target - a) <= delta;
 }
 
-vector<float>
-atsc_vsbtx_lp::taps (double sampling_freq)
+vector<float> atsc_vsbtx_lp::taps(double sampling_freq)
 {
-  if (close_enough_p (sampling_freq, 2 * ATSC_SYMBOL_RATE)){
-    return vector<float>(&atsc_vsbtx_lp2x[0], &atsc_vsbtx_lp2x[NELEM(atsc_vsbtx_lp2x)]);
-  }
-  else
-    throw std::out_of_range (
-     "atsc_vsbtx_lp: no pre-designed filter close enough");
+    if (close_enough_p(sampling_freq, 2 * ATSC_SYMBOL_RATE)) {
+        return vector<float>(&atsc_vsbtx_lp2x[0],
+                             &atsc_vsbtx_lp2x[NELEM(atsc_vsbtx_lp2x)]);
+    } else
+        throw std::out_of_range("atsc_vsbtx_lp: no pre-designed filter close enough");
 }

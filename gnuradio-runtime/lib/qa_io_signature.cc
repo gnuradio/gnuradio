@@ -24,42 +24,34 @@
 #include <config.h>
 #endif
 
-#include <qa_io_signature.h>
 #include <gnuradio/io_signature.h>
+#include <qa_io_signature.h>
 
-void
-qa_io_signature::t0()
+void qa_io_signature::t0() { gr::io_signature::make(1, 1, sizeof(int)); }
+
+void qa_io_signature::t1()
 {
-  gr::io_signature::make(1, 1, sizeof(int));
+    gr::io_signature::make(3, 1, sizeof(int)); // throws std::invalid_argument
 }
 
-void
-qa_io_signature::t1()
+void qa_io_signature::t2()
 {
-  gr::io_signature::make(3, 1, sizeof(int));  // throws std::invalid_argument
+    gr::io_signature::sptr p =
+        gr::io_signature::make(3, gr::io_signature::IO_INFINITE, sizeof(int));
+
+    CPPUNIT_ASSERT_EQUAL(p->min_streams(), 3);
+    CPPUNIT_ASSERT_EQUAL(p->sizeof_stream_item(0), (int)sizeof(int));
 }
 
-void
-qa_io_signature::t2()
+void qa_io_signature::t3()
 {
-  gr::io_signature::sptr p =
-    gr::io_signature::make(3, gr::io_signature::IO_INFINITE, sizeof(int));
+    gr::io_signature::sptr p = gr::io_signature::make3(0, 5, 1, 2, 3);
 
-  CPPUNIT_ASSERT_EQUAL(p->min_streams(), 3);
-  CPPUNIT_ASSERT_EQUAL(p->sizeof_stream_item(0), (int)sizeof(int));
-}
-
-void
-qa_io_signature::t3()
-{
-  gr::io_signature::sptr p =
-    gr::io_signature::make3(0, 5, 1, 2, 3);
-
-  CPPUNIT_ASSERT_EQUAL(p->min_streams(), 0);
-  CPPUNIT_ASSERT_EQUAL(p->max_streams(), 5);
-  CPPUNIT_ASSERT_EQUAL(p->sizeof_stream_item(0), 1);
-  CPPUNIT_ASSERT_EQUAL(p->sizeof_stream_item(1), 2);
-  CPPUNIT_ASSERT_EQUAL(p->sizeof_stream_item(2), 3);
-  CPPUNIT_ASSERT_EQUAL(p->sizeof_stream_item(3), 3);
-  CPPUNIT_ASSERT_EQUAL(p->sizeof_stream_item(4), 3);
+    CPPUNIT_ASSERT_EQUAL(p->min_streams(), 0);
+    CPPUNIT_ASSERT_EQUAL(p->max_streams(), 5);
+    CPPUNIT_ASSERT_EQUAL(p->sizeof_stream_item(0), 1);
+    CPPUNIT_ASSERT_EQUAL(p->sizeof_stream_item(1), 2);
+    CPPUNIT_ASSERT_EQUAL(p->sizeof_stream_item(2), 3);
+    CPPUNIT_ASSERT_EQUAL(p->sizeof_stream_item(3), 3);
+    CPPUNIT_ASSERT_EQUAL(p->sizeof_stream_item(4), 3);
 }

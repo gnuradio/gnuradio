@@ -26,26 +26,25 @@
  */
 
 #include <qa_filter.h>
-#include <qa_firdes.h>
 #include <qa_fir_filter_with_buffer.h>
+#include <qa_firdes.h>
 #include <qa_mmse_fir_interpolator_cc.h>
 #include <qa_mmse_fir_interpolator_ff.h>
 #include <qa_mmse_interp_differentiator_cc.h>
 #include <qa_mmse_interp_differentiator_ff.h>
 
-CppUnit::TestSuite *
-qa_gr_filter::suite ()
+CppUnit::TestSuite* qa_gr_filter::suite()
 {
-  CppUnit::TestSuite *s = new CppUnit::TestSuite ("gr-filter");
+    CppUnit::TestSuite* s = new CppUnit::TestSuite("gr-filter");
 
-  s->addTest(gr::filter::qa_firdes::suite());
-  s->addTest(gr::filter::fff::qa_fir_filter_with_buffer_fff::suite());
-  s->addTest(gr::filter::ccc::qa_fir_filter_with_buffer_ccc::suite());
-  s->addTest(gr::filter::ccf::qa_fir_filter_with_buffer_ccf::suite());
-  s->addTest(gr::filter::qa_mmse_fir_interpolator_cc::suite());
-  s->addTest(gr::filter::qa_mmse_fir_interpolator_ff::suite());
-  s->addTest(gr::filter::qa_mmse_interp_differentiator_cc::suite());
-  s->addTest(gr::filter::qa_mmse_interp_differentiator_ff::suite());
+    s->addTest(gr::filter::qa_firdes::suite());
+    s->addTest(gr::filter::fff::qa_fir_filter_with_buffer_fff::suite());
+    s->addTest(gr::filter::ccc::qa_fir_filter_with_buffer_ccc::suite());
+    s->addTest(gr::filter::ccf::qa_fir_filter_with_buffer_ccf::suite());
+    s->addTest(gr::filter::qa_mmse_fir_interpolator_cc::suite());
+    s->addTest(gr::filter::qa_mmse_fir_interpolator_ff::suite());
+    s->addTest(gr::filter::qa_mmse_interp_differentiator_cc::suite());
+    s->addTest(gr::filter::qa_mmse_interp_differentiator_ff::suite());
 
-  return s;
+    return s;
 }

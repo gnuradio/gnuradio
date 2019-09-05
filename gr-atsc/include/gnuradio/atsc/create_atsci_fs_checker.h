@@ -30,7 +30,7 @@ class atsci_fs_checker;
 /*!
  * Factory that creates appropriate atsci_fs_checker
  */
-ATSC_API atsci_fs_checker *create_atsci_fs_checker ();
+ATSC_API atsci_fs_checker* create_atsci_fs_checker();
 
 
 #endif /* _CREATE_ATSC_FS_CHECKER_H_ */

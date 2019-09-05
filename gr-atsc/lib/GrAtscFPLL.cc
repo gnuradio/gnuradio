@@ -20,9 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include "fpll_btloop_coupling.h"
 #include <gnuradio/atsc/GrAtscFPLL.h>
 #include <algorithm>
-#include "fpll_btloop_coupling.h"
 
 /*
  * I strongly suggest that you not mess with these...
@@ -35,92 +35,88 @@ static const float FPLL_AGC_REFERENCE = 2.5 * FPLL_BTLOOP_COUPLING_CONST;
 static const float FPLL_AGC_RATE = 0.25e-6;
 
 
-GrAtscFPLL::GrAtscFPLL (double a_initial_freq)
-  : VrSigProc (1, sizeof (iType), sizeof (oType)),
-    initial_phase(0), debug_no_update(false)
+GrAtscFPLL::GrAtscFPLL(double a_initial_freq)
+    : VrSigProc(1, sizeof(iType), sizeof(oType)), initial_phase(0), debug_no_update(false)
 {
-  initial_freq = a_initial_freq;
-  agc.set_rate (FPLL_AGC_RATE);
-  agc.set_reference (FPLL_AGC_REFERENCE);
+    initial_freq = a_initial_freq;
+    agc.set_rate(FPLL_AGC_RATE);
+    agc.set_reference(FPLL_AGC_REFERENCE);
 
-  if (_FPLL_DIAG_OUTPUT_){
-    fp = fopen ("fpll.out", "w");
-    if (fp == 0){
-      perror ("fpll.out");
-      exit (1);
+    if (_FPLL_DIAG_OUTPUT_) {
+        fp = fopen("fpll.out", "w");
+        if (fp == 0) {
+            perror("fpll.out");
+            exit(1);
+        }
     }
-  }
-
 }
 
-void
-GrAtscFPLL::initialize ()
+void GrAtscFPLL::initialize()
 {
-  float Fs = getInputSamplingFrequencyN (0);
+    float Fs = getInputSamplingFrequencyN(0);
 
-  float alpha = 1 - exp(-1.0 / Fs / 5e-6);
+    float alpha = 1 - exp(-1.0 / Fs / 5e-6);
 
-  afci.set_taps (alpha);
-  afcq.set_taps (alpha);
+    afci.set_taps(alpha);
+    afcq.set_taps(alpha);
 
-  nco.set_freq (initial_freq / Fs * 2 * M_PI);
-  nco.set_phase (initial_phase);
+    nco.set_freq(initial_freq / Fs * 2 * M_PI);
+    nco.set_phase(initial_phase);
 }
 
-int
-GrAtscFPLL::work (VrSampleRange output, void *ao[],
-		  VrSampleRange inputs[], void *ai[])
+int GrAtscFPLL::work(VrSampleRange output, void* ao[], VrSampleRange inputs[], void* ai[])
 {
-  iType	 *in = ((iType **)ai)[0];
-  oType  *out = ((oType **)ao)[0];
+    iType* in = ((iType**)ai)[0];
+    oType* out = ((oType**)ao)[0];
 
-  unsigned int	k;
+    unsigned int k;
 
-  for (k = 0; k < output.size; k++){
+    for (k = 0; k < output.size; k++) {
 
-    float a_cos, a_sin;
+        float a_cos, a_sin;
 
-    float input = agc.scale (in[k]);
+        float input = agc.scale(in[k]);
 
-    nco.step ();		// increment phase
-    nco.sincos (a_sin, a_cos);	// compute cos and sin
+        nco.step();               // increment phase
+        nco.sincos(a_sin, a_cos); // compute cos and sin
 
-    float I = input * a_sin;
-    float Q = input * a_cos;
+        float I = input * a_sin;
+        float Q = input * a_cos;
 
-    out[k] = I;
+        out[k] = I;
 
-    float filtered_I = afci.filter (I);
-    float filtered_Q = afcq.filter (Q);
+        float filtered_I = afci.filter(I);
+        float filtered_Q = afcq.filter(Q);
 
-    // phase detector
+        // phase detector
 
-    float x = atan2 (filtered_Q, filtered_I);
+        float x = atan2(filtered_Q, filtered_I);
 
-    // avoid slamming filter with big transitions
+        // avoid slamming filter with big transitions
 
-    static const float limit = M_PI / 2;
+        static const float limit = M_PI / 2;
 
-    if (x > limit)
-      x = limit;
-    else if (x < -limit)
-      x = -limit;
+        if (x > limit)
+            x = limit;
+        else if (x < -limit)
+            x = -limit;
 
-    // static const float alpha = 0.037;   // Max value
-    // static const float alpha = 0.005;   // takes about 5k samples to pull in, stddev = 323
-    // static const float alpha = 0.002;   // takes about 15k samples to pull in, stddev =  69
-				           //  or about 120k samples on noisy data,
-    static const float alpha = 0.001;
-    static const float beta = alpha * alpha / 4;
+        // static const float alpha = 0.037;   // Max value
+        // static const float alpha = 0.005;   // takes about 5k samples to pull in,
+        // stddev = 323 static const float alpha = 0.002;   // takes about 15k samples to
+        // pull in, stddev =  69
+        //  or about 120k samples on noisy data,
+        static const float alpha = 0.001;
+        static const float beta = alpha * alpha / 4;
 
 
-    if (!debug_no_update){
-      nco.adjust_phase (alpha * x);
-      nco.adjust_freq (beta * x);
-    }
+        if (!debug_no_update) {
+            nco.adjust_phase(alpha * x);
+            nco.adjust_freq(beta * x);
+        }
 
-    if (_FPLL_DIAG_OUTPUT_){
-#if 0	// lots of data...
+        if (_FPLL_DIAG_OUTPUT_) {
+#if 0 // lots of data...
       float	iodata[8];
       iodata[0] = nco.get_freq () * getSamplingFrequency () * (1.0 / (2 * M_PI));
       iodata[1] = in[k];
@@ -134,17 +130,16 @@ GrAtscFPLL::work (VrSampleRange output, void *ao[],
 	perror ("fwrite: fpll");
 	exit (1);
       }
-#else	// just the frequency
-      float	iodata[1];
-      iodata[0] = nco.get_freq () * getSamplingFrequency () * (1.0 / (2 * M_PI));
-      if (fwrite (iodata, sizeof (iodata), 1, fp) != 1){
-	perror ("fwrite: fpll");
-	exit (1);
-      }
+#else // just the frequency
+            float iodata[1];
+            iodata[0] = nco.get_freq() * getSamplingFrequency() * (1.0 / (2 * M_PI));
+            if (fwrite(iodata, sizeof(iodata), 1, fp) != 1) {
+                perror("fwrite: fpll");
+                exit(1);
+            }
 #endif
+        }
     }
-  }
 
-  return output.size;
+    return output.size;
 }
-

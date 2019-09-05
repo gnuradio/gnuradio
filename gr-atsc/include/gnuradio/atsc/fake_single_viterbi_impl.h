@@ -32,21 +32,21 @@ class ATSC_API atsci_fake_single_viterbi
 {
 
 public:
-  atsci_fake_single_viterbi ();
+    atsci_fake_single_viterbi();
 
-  /*!
-   * \p INPUT ideally takes on the values +/- 1,3,5,7
-   * return is decoded dibit in the range [0, 3]
-   */
-  char decode (float input);
+    /*!
+     * \p INPUT ideally takes on the values +/- 1,3,5,7
+     * return is decoded dibit in the range [0, 3]
+     */
+    char decode(float input);
 
-  void reset ();
+    void reset();
 
-  //! internal delay of decoder
-  int delay () { return 0; }
+    //! internal delay of decoder
+    int delay() { return 0; }
 
 protected:
-  int	post_coder_state;
+    int post_coder_state;
 };
 
 #endif

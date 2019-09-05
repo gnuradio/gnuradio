@@ -26,25 +26,25 @@
 #include <gnuradio/blocks/float_to_short.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class BLOCKS_API float_to_short_impl : public float_to_short
-    {
-      size_t d_vlen;
-      float d_scale;
+class BLOCKS_API float_to_short_impl : public float_to_short
+{
+    size_t d_vlen;
+    float d_scale;
 
-    public:
-      float_to_short_impl(size_t vlen, float scale);
+public:
+    float_to_short_impl(size_t vlen, float scale);
 
-      virtual float scale() const { return d_scale; }
-      virtual void set_scale(float scale) { d_scale = scale; }
+    virtual float scale() const { return d_scale; }
+    virtual void set_scale(float scale) { d_scale = scale; }
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 
