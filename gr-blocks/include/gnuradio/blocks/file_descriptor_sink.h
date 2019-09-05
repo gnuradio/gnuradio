@@ -27,29 +27,29 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief Write stream to file descriptor.
+ * \ingroup file_operators_blk
+ */
+class BLOCKS_API file_descriptor_sink : virtual public sync_block
+{
+public:
+    // gr::blocks::file_descriptor_sink::sptr
+    typedef boost::shared_ptr<file_descriptor_sink> sptr;
 
     /*!
-     * \brief Write stream to file descriptor.
-     * \ingroup file_operators_blk
+     * Build a file descriptor sink block. The provided file descriptor will
+     * be closed when the sink is destroyed.
+     *
+     * \param itemsize item size of the incoming data stream.
+     * \param fd file descriptor (as an integer).
      */
-    class BLOCKS_API file_descriptor_sink : virtual public sync_block
-    {
-    public:
-      // gr::blocks::file_descriptor_sink::sptr
-      typedef boost::shared_ptr<file_descriptor_sink> sptr;
+    static sptr make(size_t itemsize, int fd);
+};
 
-      /*!
-       * Build a file descriptor sink block. The provided file descriptor will
-       * be closed when the sink is destroyed.
-       *
-       * \param itemsize item size of the incoming data stream.
-       * \param fd file descriptor (as an integer).
-       */
-      static sptr make(size_t itemsize, int fd);
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_FILE_DESCRIPTOR_SINK_H */

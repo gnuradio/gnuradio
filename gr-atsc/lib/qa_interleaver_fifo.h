@@ -23,34 +23,33 @@
 #ifndef _QA_INTERLEAVER_FIFO_H_
 #define _QA_INTERLEAVER_FIFO_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 #include <gnuradio/atsc/interleaver_fifo.h>
 
-class qa_interleaver_fifo : public CppUnit::TestCase {
- private:
-  interleaver_fifo<int>	*fifo;
+class qa_interleaver_fifo : public CppUnit::TestCase
+{
+private:
+    interleaver_fifo<int>* fifo;
 
- public:
+public:
+    void tearDown()
+    {
+        delete fifo;
+        fifo = 0;
+    }
 
-  void tearDown (){
-    delete fifo;
-    fifo = 0;
-  }
+    CPPUNIT_TEST_SUITE(qa_interleaver_fifo);
+    CPPUNIT_TEST(t0);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST(t2);
+    CPPUNIT_TEST_SUITE_END();
 
-  CPPUNIT_TEST_SUITE (qa_interleaver_fifo);
-  CPPUNIT_TEST (t0);
-  CPPUNIT_TEST (t1);
-  CPPUNIT_TEST (t2);
-  CPPUNIT_TEST_SUITE_END ();
-
- private:
-
-  void t0 ();
-  void t1 ();
-  void t2 ();
-
+private:
+    void t0();
+    void t1();
+    void t2();
 };
 
 

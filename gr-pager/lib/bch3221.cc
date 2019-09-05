@@ -27,17 +27,14 @@
 #include "bch3221.h"
 
 namespace gr {
-  namespace pager {
+namespace pager {
 
-    // Corrects supplied data word according to BCH3221 encoding and
-    // returns the number of errors detected/corrected.
-    //
-    // Not implemented yet
+// Corrects supplied data word according to BCH3221 encoding and
+// returns the number of errors detected/corrected.
+//
+// Not implemented yet
 
-    int bch3221(int &data)
-    {
-      return 0;
-    }
+int bch3221(int& data) { return 0; }
 
-  } /* namespace pager */
+} /* namespace pager */
 } /* namespace gr */

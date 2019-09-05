@@ -24,23 +24,21 @@
 #include <config.h>
 #endif
 
-#include <cppunit/TestAssert.h>
 #include "qa_atsci_trellis_encoder.h"
-#include <cstdio>
-#include <string.h>
+#include <cppunit/TestAssert.h>
 #include <stdlib.h>
-#include <time.h>
 #include <string.h>
+#include <time.h>
+#include <cstdio>
 
-#define	NELEM(x) (sizeof (x) / sizeof (x[0]))
+#define NELEM(x) (sizeof(x) / sizeof(x[0]))
 
 
 static const int NCODERS = atsci_trellis_encoder::NCODERS;
 
-void
-qa_atsci_trellis_encoder::t0 ()
+void qa_atsci_trellis_encoder::t0()
 {
-#if 0		// generate i/o test data for t1
+#if 0 // generate i/o test data for t1
 
   atsc_mpeg_packet_rs_encoded	in[NCODERS];
   atsc_data_segment		out[NCODERS];
@@ -72,45 +70,44 @@ qa_atsci_trellis_encoder::t0 ()
 #endif
 }
 
-void
-qa_atsci_trellis_encoder::t1 ()
+void qa_atsci_trellis_encoder::t1()
 {
-  atsc_mpeg_packet_rs_encoded	in[NCODERS];
-  atsc_data_segment		expected_out[NCODERS];
-  atsc_data_segment		actual_out[NCODERS];
-  static const unsigned char 	raw_input[NCODERS * NELEM (in[0].data)] = {
+    atsc_mpeg_packet_rs_encoded in[NCODERS];
+    atsc_data_segment expected_out[NCODERS];
+    atsc_data_segment actual_out[NCODERS];
+    static const unsigned char raw_input[NCODERS * NELEM(in[0].data)] = {
 #include "qa_atsci_trellis_encoder_t1_input.dat"
-  };
-  static const unsigned char	raw_output[NCODERS * NELEM (expected_out[0].data)] = {
+    };
+    static const unsigned char raw_output[NCODERS * NELEM(expected_out[0].data)] = {
 #include "qa_atsci_trellis_encoder_t1_output.dat"
-  };
+    };
 
 
-  // load up input
-  const unsigned char *r = &raw_input[0];
-  for (int i = 0; i < NCODERS; i++){
-    in[i].pli.set_regular_seg (false, i);
-    for (unsigned int j = 0; j < NELEM (in[i].data); j++){
-      in[i].data[j] = *r++;
+    // load up input
+    const unsigned char* r = &raw_input[0];
+    for (int i = 0; i < NCODERS; i++) {
+        in[i].pli.set_regular_seg(false, i);
+        for (unsigned int j = 0; j < NELEM(in[i].data); j++) {
+            in[i].data[j] = *r++;
+        }
     }
-  }
 
-  // load up expected output
-  r = &raw_output[0];
-  for (int i = 0; i < NCODERS; i++){
-    expected_out[i].pli.set_regular_seg (false, i);
-    for (unsigned int j = 0; j < NELEM (expected_out[i].data); j++){
-      expected_out[i].data[j] = *r++;
+    // load up expected output
+    r = &raw_output[0];
+    for (int i = 0; i < NCODERS; i++) {
+        expected_out[i].pli.set_regular_seg(false, i);
+        for (unsigned int j = 0; j < NELEM(expected_out[i].data); j++) {
+            expected_out[i].data[j] = *r++;
+        }
     }
-  }
 
-  memset (&actual_out, 0, sizeof (actual_out));		// ensure zero
+    memset(&actual_out, 0, sizeof(actual_out)); // ensure zero
 
-  enc.reset ();
-  enc.encode (actual_out, in);				// trellis code test data
+    enc.reset();
+    enc.encode(actual_out, in); // trellis code test data
 
-  for (int i = 0; i < NCODERS; i++){			// check the result
-    CPPUNIT_ASSERT (expected_out[i] == actual_out[i]);
-    CPPUNIT_ASSERT (expected_out[i].pli == actual_out[i].pli);
-  }
+    for (int i = 0; i < NCODERS; i++) { // check the result
+        CPPUNIT_ASSERT(expected_out[i] == actual_out[i]);
+        CPPUNIT_ASSERT(expected_out[i].pli == actual_out[i].pli);
+    }
 }

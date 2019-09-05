@@ -24,8 +24,8 @@
 #define INCLUDED_ATSC_RS_DECODER_H
 
 #include <gnuradio/atsc/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/atsc/reed_solomon_impl.h>
+#include <gnuradio/sync_block.h>
 
 class atsc_rs_decoder;
 typedef boost::shared_ptr<atsc_rs_decoder> atsc_rs_decoder_sptr;
@@ -40,18 +40,20 @@ ATSC_API atsc_rs_decoder_sptr atsc_make_rs_decoder();
  */
 class ATSC_API atsc_rs_decoder : public gr::sync_block
 {
-  friend ATSC_API atsc_rs_decoder_sptr atsc_make_rs_decoder();
+    friend ATSC_API atsc_rs_decoder_sptr atsc_make_rs_decoder();
 
-  atsci_reed_solomon	d_rs_decoder;
+    atsci_reed_solomon d_rs_decoder;
 
-  atsc_rs_decoder();
+    atsc_rs_decoder();
 
 public:
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-  void reset() { /* nop */ }
+    void reset()
+    { /* nop */
+    }
 };
 
 

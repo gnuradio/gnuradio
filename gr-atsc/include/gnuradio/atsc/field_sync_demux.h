@@ -23,8 +23,8 @@
 #define INCLUDED_ATSC_FIELD_SYNC_DEMUX_H
 
 #include <gnuradio/atsc/api.h>
-#include <gnuradio/block.h>
 #include <gnuradio/atsc/types.h>
+#include <gnuradio/block.h>
 
 class atsc_field_sync_demux;
 typedef boost::shared_ptr<atsc_field_sync_demux> atsc_field_sync_demux_sptr;
@@ -34,42 +34,43 @@ ATSC_API atsc_field_sync_demux_sptr atsc_make_field_sync_demux();
 /*!
  * \brief ATSC Field Sync Demux
  *
- * This class accepts 1 stream of floats (data), and 1 stream of tags (syminfo). * It outputs one stream of atsc_soft_data_segment packets
- * \ingroup atsc
+ * This class accepts 1 stream of floats (data), and 1 stream of tags (syminfo). * It
+ * outputs one stream of atsc_soft_data_segment packets \ingroup atsc
  *
  */
 class ATSC_API atsc_field_sync_demux : public gr::block
 {
-  friend ATSC_API atsc_field_sync_demux_sptr atsc_make_field_sync_demux();
+    friend ATSC_API atsc_field_sync_demux_sptr atsc_make_field_sync_demux();
 
-  atsc_field_sync_demux();
+    atsc_field_sync_demux();
 
 public:
-  void forecast (int noutput_items, gr_vector_int &ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
 
-  int  general_work (int noutput_items,
-                     gr_vector_int &ninput_items,
-                     gr_vector_const_void_star &input_items,
-                     gr_vector_void_star &output_items);
+    int general_work(int noutput_items,
+                     gr_vector_int& ninput_items,
+                     gr_vector_const_void_star& input_items,
+                     gr_vector_void_star& output_items);
 
 
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-  void reset() { /* nop */ }
+    void reset()
+    { /* nop */
+    }
 
 protected:
-  bool            d_locked;
-  bool            d_in_field2;
-  int             d_segment_number;
-  uint64_t        d_next_input;
-  uint64_t        d_lost_index;         // diagnostic fluff
+    bool d_locked;
+    bool d_in_field2;
+    int d_segment_number;
+    uint64_t d_next_input;
+    uint64_t d_lost_index; // diagnostic fluff
 
-  unsigned long long d_inputs0_index;	// for inputs[0].index
-  unsigned long	  d_inputs0_size;		// for inputs[0].size
-  int		  d_consume;
-
+    unsigned long long d_inputs0_index; // for inputs[0].index
+    unsigned long d_inputs0_size;       // for inputs[0].size
+    int d_consume;
 };
 
 

@@ -28,9 +28,9 @@ extern "C" {
 
 #include <stdlib.h>
 
-GR_RUNTIME_API void *malloc16Align(int size);
-GR_RUNTIME_API void *calloc16Align(size_t nmemb,size_t size);
-GR_RUNTIME_API void free16Align(void *p);
+GR_RUNTIME_API void* malloc16Align(int size);
+GR_RUNTIME_API void* calloc16Align(size_t nmemb, size_t size);
+GR_RUNTIME_API void free16Align(void* p);
 
 #ifdef __cplusplus
 }

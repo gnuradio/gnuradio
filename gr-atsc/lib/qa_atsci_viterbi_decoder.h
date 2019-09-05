@@ -23,31 +23,28 @@
 #ifndef _QA_ATSC_VITERBI_DECODER_H_
 #define _QA_ATSC_VITERBI_DECODER_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
-#include <stdio.h>
 #include <gnuradio/atsc/viterbi_decoder_impl.h>
+#include <stdio.h>
 
-class qa_atsci_viterbi_decoder : public CppUnit::TestCase {
+class qa_atsci_viterbi_decoder : public CppUnit::TestCase
+{
 
- public:
+public:
+    void setUp(void) { viterbi.reset(); }
 
-  void setUp (void)
-  {
-    viterbi.reset ();
-  }
+    CPPUNIT_TEST_SUITE(qa_atsci_viterbi_decoder);
+    CPPUNIT_TEST(t0);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST_SUITE_END();
 
-  CPPUNIT_TEST_SUITE (qa_atsci_viterbi_decoder);
-  CPPUNIT_TEST (t0);
-  CPPUNIT_TEST (t1);
-  CPPUNIT_TEST_SUITE_END ();
+private:
+    atsci_viterbi_decoder viterbi;
 
- private:
-  atsci_viterbi_decoder	viterbi;
-
-  void t0 ();
-  void t1 ();
+    void t0();
+    void t1();
 };
 
 

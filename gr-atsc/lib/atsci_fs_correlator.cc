@@ -23,11 +23,7 @@
 #include <gnuradio/atsc/fs_correlator_impl.h>
 
 // empty constructor
-atsci_fs_correlator::atsci_fs_correlator ()
-{
-}
+atsci_fs_correlator::atsci_fs_correlator() {}
 
 // empty virtual destructor
-atsci_fs_correlator::~atsci_fs_correlator ()
-{
-}
+atsci_fs_correlator::~atsci_fs_correlator() {}

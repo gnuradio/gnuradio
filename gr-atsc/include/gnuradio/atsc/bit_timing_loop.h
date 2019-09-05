@@ -24,11 +24,11 @@
 #define INCLUDED_ATSC_BIT_TIMING_LOOP_H
 
 #include <gnuradio/atsc/api.h>
-#include <cstdio>
-#include <gnuradio/block.h>
 #include <gnuradio/atsc/diag_output_impl.h>
 #include <gnuradio/atsc/sssr_impl.h>
 #include <gnuradio/atsc/syminfo_impl.h>
+#include <gnuradio/block.h>
+#include <cstdio>
 
 class atsc_bit_timing_loop;
 typedef boost::shared_ptr<atsc_bit_timing_loop> atsc_bit_timing_loop_sptr;
@@ -44,46 +44,42 @@ ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
  */
 class ATSC_API atsc_bit_timing_loop : public gr::block
 {
-  friend ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
+    friend ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
 
-  atsc_bit_timing_loop();
+    atsc_bit_timing_loop();
 
 public:
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-  void reset() { /* nop */ }
+    void reset()
+    { /* nop */
+    }
 
-  ~atsc_bit_timing_loop () { };
+    ~atsc_bit_timing_loop(){};
 
-  void forecast (int noutput_items, gr_vector_int &ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
 
-  int  general_work (int noutput_items,
-                     gr_vector_int &ninput_items,
-                     gr_vector_const_void_star &input_items,
-                     gr_vector_void_star &output_items);
-
-
-  // debug (NOPs)
-  void set_mu (double a_mu) {  }
-  void set_no_update (bool a_no_update) {  }
-  void set_loop_filter_tap (double tap)  { }
-  void set_timing_rate (double rate)     { }
+    int general_work(int noutput_items,
+                     gr_vector_int& ninput_items,
+                     gr_vector_const_void_star& input_items,
+                     gr_vector_void_star& output_items);
 
 
- protected:
-
-  atsci_sssr                    d_sssr;
-  atsci_interpolator            d_interp;
-  unsigned long long            d_next_input;
-  double                        d_rx_clock_to_symbol_freq;
-  int				d_si;
+    // debug (NOPs)
+    void set_mu(double a_mu) {}
+    void set_no_update(bool a_no_update) {}
+    void set_loop_filter_tap(double tap) {}
+    void set_timing_rate(double rate) {}
 
 
+protected:
+    atsci_sssr d_sssr;
+    atsci_interpolator d_interp;
+    unsigned long long d_next_input;
+    double d_rx_clock_to_symbol_freq;
+    int d_si;
 };
 
 #endif /* INCLUDED_ATSC_BIT_TIMING_LOOP_H */
-
-
-

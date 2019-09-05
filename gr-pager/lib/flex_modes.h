@@ -26,54 +26,48 @@
 #include <stdint.h>
 
 namespace gr {
-  namespace pager {
+namespace pager {
 
 #define FLEX_SYNC_MARKER 0xA6C6AAAA
 
-    typedef struct flex_mode
-    {
-      int32_t     sync;          // Outer synchronization code
-      unsigned int baud;          // Baudrate of SYNC2 and DATA
-      unsigned int levels;        // FSK encoding of SYNC2 and DATA
-    } flex_mode_t;
+typedef struct flex_mode {
+    int32_t sync;        // Outer synchronization code
+    unsigned int baud;   // Baudrate of SYNC2 and DATA
+    unsigned int levels; // FSK encoding of SYNC2 and DATA
+} flex_mode_t;
 
-    extern const flex_mode_t flex_modes[];
-    extern const char *flex_page_desc[];
-    extern const int num_flex_modes;
-    int find_flex_mode(int32_t sync_code);
-    extern unsigned char flex_bcd[];
+extern const flex_mode_t flex_modes[];
+extern const char* flex_page_desc[];
+extern const int num_flex_modes;
+int find_flex_mode(int32_t sync_code);
+extern unsigned char flex_bcd[];
 
-    typedef enum {
-      FLEX_SECURE,
-      FLEX_UNKNOWN,
-      FLEX_TONE,
-      FLEX_STANDARD_NUMERIC,
-      FLEX_SPECIAL_NUMERIC,
-      FLEX_ALPHANUMERIC,
-      FLEX_BINARY,
-      FLEX_NUMBERED_NUMERIC,
-      NUM_FLEX_PAGE_TYPES
-    } page_type_t;
+typedef enum {
+    FLEX_SECURE,
+    FLEX_UNKNOWN,
+    FLEX_TONE,
+    FLEX_STANDARD_NUMERIC,
+    FLEX_SPECIAL_NUMERIC,
+    FLEX_ALPHANUMERIC,
+    FLEX_BINARY,
+    FLEX_NUMBERED_NUMERIC,
+    NUM_FLEX_PAGE_TYPES
+} page_type_t;
 
-    inline bool is_alphanumeric_page(page_type_t type)
-    {
-      return (type == FLEX_ALPHANUMERIC ||
-	      type == FLEX_SECURE);
-    }
+inline bool is_alphanumeric_page(page_type_t type)
+{
+    return (type == FLEX_ALPHANUMERIC || type == FLEX_SECURE);
+}
 
-    inline bool is_numeric_page(page_type_t type)
-    {
-      return (type == FLEX_STANDARD_NUMERIC ||
-	      type == FLEX_SPECIAL_NUMERIC  ||
-	      type == FLEX_NUMBERED_NUMERIC);
-    }
+inline bool is_numeric_page(page_type_t type)
+{
+    return (type == FLEX_STANDARD_NUMERIC || type == FLEX_SPECIAL_NUMERIC ||
+            type == FLEX_NUMBERED_NUMERIC);
+}
 
-    inline bool is_tone_page(page_type_t type)
-    {
-      return (type == FLEX_TONE);
-    }
+inline bool is_tone_page(page_type_t type) { return (type == FLEX_TONE); }
 
-  } /* namespace pager */
+} /* namespace pager */
 } /* namespace gr */
 
 #endif // INCLUDED_PAGER_FLEX_MODES_H

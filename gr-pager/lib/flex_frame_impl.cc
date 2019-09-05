@@ -27,22 +27,13 @@
 #include "flex_frame_impl.h"
 
 namespace gr {
-  namespace pager {
+namespace pager {
 
-    flex_frame::sptr
-    flex_frame::make()
-    {
-      return flex_frame::sptr
-	(new flex_frame_impl());
-    }
+flex_frame::sptr flex_frame::make() { return flex_frame::sptr(new flex_frame_impl()); }
 
-    flex_frame_impl::flex_frame_impl()
-    {
-    }
+flex_frame_impl::flex_frame_impl() {}
 
-    flex_frame_impl::~flex_frame_impl()
-    {
-    }
+flex_frame_impl::~flex_frame_impl() {}
 
-  } /* namespace pager */
+} /* namespace pager */
 } /* namespace gr */

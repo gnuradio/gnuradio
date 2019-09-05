@@ -31,8 +31,8 @@
 /* Complex number */
 
 typedef struct {
-  float real;
-  float imag;
+    float real;
+    float imag;
 } COMP;
 
 #endif

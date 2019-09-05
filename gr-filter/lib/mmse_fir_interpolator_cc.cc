@@ -24,54 +24,44 @@
 #include <config.h>
 #endif
 
-#include <gnuradio/filter/mmse_fir_interpolator_cc.h>
 #include <gnuradio/filter/interpolator_taps.h>
+#include <gnuradio/filter/mmse_fir_interpolator_cc.h>
 #include <stdexcept>
 
 namespace gr {
-  namespace filter {
+namespace filter {
 
-    mmse_fir_interpolator_cc::mmse_fir_interpolator_cc()
-    {
-      filters.resize (NSTEPS + 1);
+mmse_fir_interpolator_cc::mmse_fir_interpolator_cc()
+{
+    filters.resize(NSTEPS + 1);
 
-      for(int i = 0; i < NSTEPS + 1; i++) {
-	std::vector<float> t (&taps[i][0], &taps[i][NTAPS]);
-	filters[i] = new kernel::fir_filter_ccf(1, t);
-      }
+    for (int i = 0; i < NSTEPS + 1; i++) {
+        std::vector<float> t(&taps[i][0], &taps[i][NTAPS]);
+        filters[i] = new kernel::fir_filter_ccf(1, t);
+    }
+}
+
+mmse_fir_interpolator_cc::~mmse_fir_interpolator_cc()
+{
+    for (int i = 0; i < NSTEPS + 1; i++)
+        delete filters[i];
+}
+
+unsigned mmse_fir_interpolator_cc::ntaps() const { return NTAPS; }
+
+unsigned mmse_fir_interpolator_cc::nsteps() const { return NSTEPS; }
+
+gr_complex mmse_fir_interpolator_cc::interpolate(const gr_complex input[], float mu) const
+{
+    int imu = (int)rint(mu * NSTEPS);
+
+    if ((imu < 0) || (imu > NSTEPS)) {
+        throw std::runtime_error("mmse_fir_interpolator_cc: imu out of bounds.\n");
     }
 
-    mmse_fir_interpolator_cc::~mmse_fir_interpolator_cc()
-    {
-      for(int i = 0; i < NSTEPS + 1; i++)
-	delete filters[i];
-    }
+    gr_complex r = filters[imu]->filter(input);
+    return r;
+}
 
-    unsigned
-    mmse_fir_interpolator_cc::ntaps() const
-    {
-      return NTAPS;
-    }
-
-    unsigned
-    mmse_fir_interpolator_cc::nsteps() const
-    {
-      return NSTEPS;
-    }
-
-    gr_complex
-    mmse_fir_interpolator_cc::interpolate(const gr_complex input[],
-					  float mu) const
-    {
-      int imu = (int)rint(mu * NSTEPS);
-
-      if((imu < 0) || (imu > NSTEPS)) {
-	throw std::runtime_error("mmse_fir_interpolator_cc: imu out of bounds.\n");
-      }
-
-      gr_complex r = filters[imu]->filter(input);
-      return r;
-    }
-
-  }  /* namespace filter */
-}  /* namespace gr */
+} /* namespace filter */
+} /* namespace gr */

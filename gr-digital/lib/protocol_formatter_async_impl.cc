@@ -24,71 +24,68 @@
 #include "config.h"
 #endif
 
-#include <volk/volk.h>
-#include <gnuradio/io_signature.h>
 #include "protocol_formatter_async_impl.h"
+#include <gnuradio/io_signature.h>
 #include <stdio.h>
+#include <volk/volk.h>
 
 namespace gr {
-  namespace digital {
+namespace digital {
 
-    protocol_formatter_async::sptr
-    protocol_formatter_async::make(const header_format_base::sptr &format)
-    {
-      return gnuradio::get_initial_sptr
-        (new protocol_formatter_async_impl(format));
-    }
+protocol_formatter_async::sptr
+protocol_formatter_async::make(const header_format_base::sptr& format)
+{
+    return gnuradio::get_initial_sptr(new protocol_formatter_async_impl(format));
+}
 
-    protocol_formatter_async_impl::protocol_formatter_async_impl(const header_format_base::sptr &format)
-      : block("protocol_formatter_async",
-              io_signature::make(0, 0, 0),
-              io_signature::make(0, 0, 0))
-    {
-      d_format = format;
+protocol_formatter_async_impl::protocol_formatter_async_impl(
+    const header_format_base::sptr& format)
+    : block("protocol_formatter_async",
+            io_signature::make(0, 0, 0),
+            io_signature::make(0, 0, 0))
+{
+    d_format = format;
 
-      d_in_port = pmt::mp("in");
-      d_hdr_port = pmt::mp("header");
-      d_pld_port = pmt::mp("payload");
+    d_in_port = pmt::mp("in");
+    d_hdr_port = pmt::mp("header");
+    d_pld_port = pmt::mp("payload");
 
-      message_port_register_in(d_in_port);
-      message_port_register_out(d_hdr_port);
-      message_port_register_out(d_pld_port);
+    message_port_register_in(d_in_port);
+    message_port_register_out(d_hdr_port);
+    message_port_register_out(d_pld_port);
 
-      set_msg_handler(d_in_port,
-                      boost::bind(&protocol_formatter_async_impl::append, this ,_1) );
-    }
+    set_msg_handler(d_in_port,
+                    boost::bind(&protocol_formatter_async_impl::append, this, _1));
+}
 
-    protocol_formatter_async_impl::~protocol_formatter_async_impl()
-    {
-    }
+protocol_formatter_async_impl::~protocol_formatter_async_impl() {}
 
-    void
-    protocol_formatter_async_impl::append(pmt::pmt_t msg)
-    {
-      // extract input pdu
-      pmt::pmt_t meta(pmt::car(msg));
-      pmt::pmt_t input(pmt::cdr(msg));
-      pmt::pmt_t header, output;
+void protocol_formatter_async_impl::append(pmt::pmt_t msg)
+{
+    // extract input pdu
+    pmt::pmt_t meta(pmt::car(msg));
+    pmt::pmt_t input(pmt::cdr(msg));
+    pmt::pmt_t header, output;
 
-      size_t pkt_len = 0;
-      const uint8_t* bytes_in = pmt::u8vector_elements(input, pkt_len);
+    size_t pkt_len = 0;
+    const uint8_t* bytes_in = pmt::u8vector_elements(input, pkt_len);
 
-      // Pad the payload with 0's
-      uint8_t* payload = (uint8_t*)volk_malloc(pkt_len*sizeof(uint8_t),
-                                               volk_get_alignment());
-      memcpy(payload, bytes_in, pkt_len*sizeof(uint8_t));
-      output = pmt::init_u8vector(pkt_len, payload);
-      volk_free(payload);
+    // Pad the payload with 0's
+    uint8_t* payload =
+        (uint8_t*)volk_malloc(pkt_len * sizeof(uint8_t), volk_get_alignment());
+    memcpy(payload, bytes_in, pkt_len * sizeof(uint8_t));
+    output = pmt::init_u8vector(pkt_len, payload);
+    volk_free(payload);
 
-      // Build the header from the input, metadata, and format
-      d_format->format(pkt_len, bytes_in, header, meta);
+    // Build the header from the input, metadata, and format
+    d_format->format(pkt_len, bytes_in, header, meta);
 
-      // Package and publish
-      pmt::pmt_t hdr_pdu = pmt::cons(meta, header);
-      pmt::pmt_t pld_pdu = pmt::cons(meta, output);
-      message_port_pub(d_hdr_port, hdr_pdu);
-      message_port_pub(d_pld_port, pld_pdu);
-    }
+    // Package and publish
+    pmt::pmt_t hdr_pdu = pmt::cons(meta, header);
+    pmt::pmt_t pld_pdu = pmt::cons(meta, output);
+    message_port_pub(d_hdr_port, hdr_pdu);
+    message_port_pub(d_pld_port, pld_pdu);
+}
 
-  } /* namespace digital */
+} /* namespace digital */
 } /* namespace gr */

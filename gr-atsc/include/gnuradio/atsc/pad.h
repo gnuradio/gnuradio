@@ -40,17 +40,19 @@ ATSC_API atsc_pad_sptr atsc_make_pad();
  */
 class ATSC_API atsc_pad : public gr::sync_decimator
 {
-  friend ATSC_API atsc_pad_sptr atsc_make_pad();
+    friend ATSC_API atsc_pad_sptr atsc_make_pad();
 
-  atsc_pad();
+    atsc_pad();
 
 public:
-  void forecast (int noutput_items, gr_vector_int &ninput_items_required);
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-  void reset() { /* nop */ }
+    void reset()
+    { /* nop */
+    }
 };
 
 

@@ -22,41 +22,42 @@
 #ifndef _QA_ATSC_RANDOMIZER_H_
 #define _QA_ATSC_RANDOMIZER_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 #include <gnuradio/atsc/randomizer_impl.h>
 
-class qa_atsci_randomizer : public CppUnit::TestCase {
- private:
-  atsci_randomizer	randomizer;
+class qa_atsci_randomizer : public CppUnit::TestCase
+{
+private:
+    atsci_randomizer randomizer;
 
- public:
+public:
+    void setUp()
+    {
+        // nop
+    }
 
-  void setUp (){
-    // nop
-  }
+    void tearDown()
+    {
+        // nop
+    }
 
-  void tearDown (){
-    // nop
-  }
-
-  CPPUNIT_TEST_SUITE (qa_atsci_randomizer);
-  CPPUNIT_TEST (t0_compare_output_maps);
-  CPPUNIT_TEST (t1_initial_states);
-  CPPUNIT_TEST (t2_initial_values);
-  CPPUNIT_TEST (t3_reset);
-  CPPUNIT_TEST (t4_high_level);
-  CPPUNIT_TEST_SUITE_END ();
+    CPPUNIT_TEST_SUITE(qa_atsci_randomizer);
+    CPPUNIT_TEST(t0_compare_output_maps);
+    CPPUNIT_TEST(t1_initial_states);
+    CPPUNIT_TEST(t2_initial_values);
+    CPPUNIT_TEST(t3_reset);
+    CPPUNIT_TEST(t4_high_level);
+    CPPUNIT_TEST_SUITE_END();
 
 
- private:
-  void t0_compare_output_maps ();
-  void t1_initial_states ();
-  void t2_initial_values ();
-  void t3_reset ();
-  void t4_high_level ();
-
+private:
+    void t0_compare_output_maps();
+    void t1_initial_states();
+    void t2_initial_values();
+    void t3_reset();
+    void t4_high_level();
 };
 
 #endif /* _QA_ATSC_RANDOMIZER_H_ */

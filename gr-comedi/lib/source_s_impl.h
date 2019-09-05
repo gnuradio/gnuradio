@@ -24,50 +24,50 @@
 #define INCLUDED_COMEDI_SOURCE_S_IMPL_H
 
 #include <gnuradio/comedi/source_s.h>
-#include <string>
 #include <comedilib.h>
 #include <stdexcept>
+#include <string>
 
 namespace gr {
-  namespace comedi {
+namespace comedi {
 
-    class source_s_impl : public source_s
-    {
-    private:
-      // typedef for pointer to class work method
-      typedef int(source_s::*work_t)(int noutput_items,
-				     gr_vector_const_void_star &input_items,
-				     gr_vector_void_star &output_items);
+class source_s_impl : public source_s
+{
+private:
+    // typedef for pointer to class work method
+    typedef int (source_s::*work_t)(int noutput_items,
+                                    gr_vector_const_void_star& input_items,
+                                    gr_vector_void_star& output_items);
 
-      unsigned int d_sampling_freq;
-      std::string  d_device_name;
+    unsigned int d_sampling_freq;
+    std::string d_device_name;
 
-      comedi_t *d_dev;
-      int       d_subdevice;
-      int       d_n_chan;
-      void     *d_map;
-      int       d_buffer_size;
-      unsigned  d_buf_front;
-      unsigned  d_buf_back;
+    comedi_t* d_dev;
+    int d_subdevice;
+    int d_n_chan;
+    void* d_map;
+    int d_buffer_size;
+    unsigned d_buf_front;
+    unsigned d_buf_back;
 
-      // random stats
-      int d_noverruns;		// count of overruns
+    // random stats
+    int d_noverruns; // count of overruns
 
-      void output_error_msg(const char *msg, int err);
-      void bail(const char *msg, int err) throw (std::runtime_error);
+    void output_error_msg(const char* msg, int err);
+    void bail(const char* msg, int err) throw(std::runtime_error);
 
-    public:
-      source_s_impl(int sampling_freq, const std::string device_name);
-      ~source_s_impl();
+public:
+    source_s_impl(int sampling_freq, const std::string device_name);
+    ~source_s_impl();
 
-      bool check_topology(int ninputs, int noutputs);
+    bool check_topology(int ninputs, int noutputs);
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace comedi */
+} /* namespace comedi */
 } /* namespace gr */
 
 #endif /* INCLUDED_COMEDI_SOURCE_S_IMPL_H */

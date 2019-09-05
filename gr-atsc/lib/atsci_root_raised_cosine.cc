@@ -24,13 +24,14 @@
 #include <gnuradio/atsc/root_raised_cosine_impl.h>
 #include <gnuradio/filter/firdes.h>
 
-vector<float>
-atsc_root_raised_cosine::taps (double sampling_rate)
+vector<float> atsc_root_raised_cosine::taps(double sampling_rate)
 {
-  static const double symbol_rate = ATSC_SYMBOL_RATE/2;	// 1/2 as wide because we're designing lp filter
-  // static const int    NTAPS = 93;			// good number
-  // static const int    NTAPS = 745;			// better number
-  static const int    NTAPS = 279;			// better number
+    static const double symbol_rate =
+        ATSC_SYMBOL_RATE / 2; // 1/2 as wide because we're designing lp filter
+    // static const int    NTAPS = 93;			// good number
+    // static const int    NTAPS = 745;			// better number
+    static const int NTAPS = 279; // better number
 
-  return gr::filter::firdes::root_raised_cosine(1.0, sampling_rate, symbol_rate, .115, NTAPS);
+    return gr::filter::firdes::root_raised_cosine(
+        1.0, sampling_rate, symbol_rate, .115, NTAPS);
 }

@@ -27,30 +27,30 @@
 #include <gnuradio/block.h>
 
 namespace gr {
-  namespace analog {
+namespace analog {
 
-    /*!
-     * \brief basic squelch block; to be subclassed for other squelches.
-     * \ingroup level_blk
-     */
-    class ANALOG_API squelch_base_cc : virtual public block
-    {
-    protected:
-      virtual void update_state(const gr_complex &sample) = 0;
-      virtual bool mute() const = 0;
+/*!
+ * \brief basic squelch block; to be subclassed for other squelches.
+ * \ingroup level_blk
+ */
+class ANALOG_API squelch_base_cc : virtual public block
+{
+protected:
+    virtual void update_state(const gr_complex& sample) = 0;
+    virtual bool mute() const = 0;
 
-    public:
-      squelch_base_cc() {};
-      virtual int ramp() const = 0;
-      virtual void set_ramp(int ramp) = 0;
-      virtual bool gate() const = 0;
-      virtual void set_gate(bool gate) = 0;
-      virtual bool unmuted() const = 0;
+public:
+    squelch_base_cc(){};
+    virtual int ramp() const = 0;
+    virtual void set_ramp(int ramp) = 0;
+    virtual bool gate() const = 0;
+    virtual void set_gate(bool gate) = 0;
+    virtual bool unmuted() const = 0;
 
-      virtual std::vector<float> squelch_range() const = 0;
-    };
+    virtual std::vector<float> squelch_range() const = 0;
+};
 
-  } /* namespace analog */
+} /* namespace analog */
 } /* namespace gr */
 
 #endif /* INCLUDED_ANALOG_SQUELCH_BASE_CC_H */

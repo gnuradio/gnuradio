@@ -24,46 +24,45 @@
 #define INCLUDED_CTRLPORT_PROBE_PSD_IMPL_H
 
 #include <gnuradio/fft/ctrlport_probe_psd.h>
+#include <gnuradio/fft/fft.h>
 #include <gnuradio/rpcregisterhelpers.h>
 #include <boost/thread/shared_mutex.hpp>
-#include <gnuradio/fft/fft.h>
 
 namespace gr {
-  namespace fft {
+namespace fft {
 
-    class ctrlport_probe_psd_impl : public ctrlport_probe_psd
-    {
-    private:
-      std::string d_id;
-      std::string d_desc;
-      size_t d_len;
-      boost::shared_mutex mutex_buffer;
-      mutable boost::mutex mutex_notify;
-      boost::condition_variable condition_buffer_ready;
+class ctrlport_probe_psd_impl : public ctrlport_probe_psd
+{
+private:
+    std::string d_id;
+    std::string d_desc;
+    size_t d_len;
+    boost::shared_mutex mutex_buffer;
+    mutable boost::mutex mutex_notify;
+    boost::condition_variable condition_buffer_ready;
 
-      std::vector<gr_complex> d_buffer;
-      gr::fft::fft_complex d_fft;
+    std::vector<gr_complex> d_buffer;
+    gr::fft::fft_complex d_fft;
 
-    public:
-      ctrlport_probe_psd_impl(const std::string &id, const std::string &desc, int len);
-      ~ctrlport_probe_psd_impl();
+public:
+    ctrlport_probe_psd_impl(const std::string& id, const std::string& desc, int len);
+    ~ctrlport_probe_psd_impl();
 
-      void setup_rpc();
+    void setup_rpc();
 
-      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
 
-      std::vector<gr_complex> get();
+    std::vector<gr_complex> get();
 
-      void set_length(int len);
-      int length() const;
+    void set_length(int len);
+    int length() const;
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} // namespace fft
 } /* namespace gr */
 
 #endif /* INCLUDED_CTRLPORT_PROBE_PSD_IMPL_H */
-

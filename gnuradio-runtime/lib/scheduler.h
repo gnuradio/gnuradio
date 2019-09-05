@@ -22,26 +22,26 @@
 #ifndef INCLUDED_GR_SCHEDULER_H
 #define INCLUDED_GR_SCHEDULER_H
 
-#include <gnuradio/api.h>
-#include <boost/utility.hpp>
-#include <gnuradio/block.h>
 #include "flat_flowgraph.h"
+#include <gnuradio/api.h>
+#include <gnuradio/block.h>
+#include <boost/utility.hpp>
 
 namespace gr {
 
-  class scheduler;
-  typedef boost::shared_ptr<scheduler> scheduler_sptr;
+class scheduler;
+typedef boost::shared_ptr<scheduler> scheduler_sptr;
 
-  /*!
-   * \brief Abstract scheduler that takes a flattened flow graph and
-   * runs it.
-   *
-   * Preconditions: details, buffers and buffer readers have been
-   * assigned.
-   */
-  class GR_RUNTIME_API scheduler : boost::noncopyable
-  {
-  public:
+/*!
+ * \brief Abstract scheduler that takes a flattened flow graph and
+ * runs it.
+ *
+ * Preconditions: details, buffers and buffer readers have been
+ * assigned.
+ */
+class GR_RUNTIME_API scheduler : boost::noncopyable
+{
+public:
     /*!
      * \brief Construct a scheduler and begin evaluating the graph.
      *
@@ -61,7 +61,7 @@ namespace gr {
      * \brief Block until the graph is done.
      */
     virtual void wait() = 0;
-  };
+};
 
 } /* namespace gr */
 

@@ -29,39 +29,38 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief output = input * real constant
+ * \ingroup math_operators_blk
+ */
+class BLOCKS_API multiply_const_ff : virtual public sync_block
+{
+
+public:
+    // gr::blocks::multiply_const_ff::sptr
+    typedef boost::shared_ptr<multiply_const_ff> sptr;
 
     /*!
-     * \brief output = input * real constant
-     * \ingroup math_operators_blk
+     * \brief Create an instance of multiply_const_ff
+     * \param k real multiplicative constant
+     * \param vlen Vector length of incoming stream
      */
-    class BLOCKS_API multiply_const_ff : virtual public sync_block
-    {
+    static sptr make(float k, size_t vlen = 1);
 
-    public:
+    /*!
+     * \brief Return real multiplicative constant
+     */
+    virtual float k() const = 0;
 
-      // gr::blocks::multiply_const_ff::sptr
-      typedef boost::shared_ptr<multiply_const_ff> sptr;
+    /*!
+     * \brief Set real multiplicative constant
+     */
+    virtual void set_k(float k) = 0;
+};
 
-      /*!
-       * \brief Create an instance of multiply_const_ff
-       * \param k real multiplicative constant
-       * \param vlen Vector length of incoming stream
-       */
-      static sptr make(float k, size_t vlen=1);
-
-      /*!
-       * \brief Return real multiplicative constant
-       */
-      virtual float k() const = 0;
-
-      /*!
-       * \brief Set real multiplicative constant
-       */
-      virtual void set_k(float k) = 0;
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_MULTIPLY_CONST_FF_H */

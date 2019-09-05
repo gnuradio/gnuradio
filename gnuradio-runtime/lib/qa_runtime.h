@@ -28,10 +28,11 @@
 
 //! collect all the tests for the runtime directory
 
-class __GR_ATTR_EXPORT qa_runtime {
- public:
-  //! return suite of tests for all of runtime directory
-  static CppUnit::TestSuite *suite ();
+class __GR_ATTR_EXPORT qa_runtime
+{
+public:
+    //! return suite of tests for all of runtime directory
+    static CppUnit::TestSuite* suite();
 };
 
 

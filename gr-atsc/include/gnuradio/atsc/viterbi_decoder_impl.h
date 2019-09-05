@@ -23,62 +23,59 @@
 #ifndef _ATSC_VITERBI_DECODER_H_
 #define _ATSC_VITERBI_DECODER_H_
 
-#define	USE_SIMPLE_SLICER  0
+#define USE_SIMPLE_SLICER 0
 
 #include <gnuradio/atsc/api.h>
-#include <gnuradio/atsc/types.h>
 #include <gnuradio/atsc/interleaver_fifo.h>
+#include <gnuradio/atsc/types.h>
 
 #if (USE_SIMPLE_SLICER)
 #include <gnuradio/atsc/fake_single_viterbi_impl.h>
-typedef atsci_fake_single_viterbi	single_viterbi_t;
+typedef atsci_fake_single_viterbi single_viterbi_t;
 #else
 #include <gnuradio/atsc/single_viterbi_impl.h>
-typedef atsci_single_viterbi		single_viterbi_t;
+typedef atsci_single_viterbi single_viterbi_t;
 #endif
 
 /*!
  * \brief fancy, schmancy 12-way interleaved viterbi decoder for ATSC
  */
 
-class ATSC_API atsci_viterbi_decoder {
+class ATSC_API atsci_viterbi_decoder
+{
 public:
-  static const int	NCODERS = 12;
+    static const int NCODERS = 12;
 
-  atsci_viterbi_decoder ();
-  ~atsci_viterbi_decoder ();
+    atsci_viterbi_decoder();
+    ~atsci_viterbi_decoder();
 
-  //! reset all decoder states
-  void reset ();
+    //! reset all decoder states
+    void reset();
 
-  /*!
-   * Take 12 data segments of soft decisions (floats) and
-   * produce 12 RS encoded data segments.  We work in groups of 12
-   * because that's the smallest number of segments that composes a
-   * single full cycle of the decoder mux.
-   */
-  void decode (atsc_mpeg_packet_rs_encoded out[NCODERS],
-	       const atsc_soft_data_segment in[NCODERS]);
-
-
-
- protected:
-  typedef interleaver_fifo<unsigned char>	fifo_t;
-
-  static const int SEGMENT_SIZE = ATSC_MPEG_RS_ENCODED_LENGTH;	// 207
-  static const int OUTPUT_SIZE = (SEGMENT_SIZE * 12);
-  static const int INPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
-
-  void decode_helper (unsigned char out[OUTPUT_SIZE],
-		      const float in[INPUT_SIZE]);
+    /*!
+     * Take 12 data segments of soft decisions (floats) and
+     * produce 12 RS encoded data segments.  We work in groups of 12
+     * because that's the smallest number of segments that composes a
+     * single full cycle of the decoder mux.
+     */
+    void decode(atsc_mpeg_packet_rs_encoded out[NCODERS],
+                const atsc_soft_data_segment in[NCODERS]);
 
 
-  single_viterbi_t	viterbi[NCODERS];
-  fifo_t		*fifo[NCODERS];
-  bool			debug;
+protected:
+    typedef interleaver_fifo<unsigned char> fifo_t;
 
+    static const int SEGMENT_SIZE = ATSC_MPEG_RS_ENCODED_LENGTH; // 207
+    static const int OUTPUT_SIZE = (SEGMENT_SIZE * 12);
+    static const int INPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
+
+    void decode_helper(unsigned char out[OUTPUT_SIZE], const float in[INPUT_SIZE]);
+
+
+    single_viterbi_t viterbi[NCODERS];
+    fifo_t* fifo[NCODERS];
+    bool debug;
 };
-
 
 
 #endif /* _ATSC_VITERBI_DECODER_H_ */

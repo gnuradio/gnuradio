@@ -23,21 +23,22 @@
 #ifndef _QA_ATSC_REED_SOLOMON_H_
 #define _QA_ATSC_REED_SOLOMON_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 #include <gnuradio/atsc/reed_solomon_impl.h>
 
-class qa_atsci_reed_solomon : public CppUnit::TestCase {
+class qa_atsci_reed_solomon : public CppUnit::TestCase
+{
 
-  CPPUNIT_TEST_SUITE (qa_atsci_reed_solomon);
-  CPPUNIT_TEST (t0_reed_solomon);
-  CPPUNIT_TEST_SUITE_END ();
+    CPPUNIT_TEST_SUITE(qa_atsci_reed_solomon);
+    CPPUNIT_TEST(t0_reed_solomon);
+    CPPUNIT_TEST_SUITE_END();
 
- private:
-  atsci_reed_solomon	rs;
+private:
+    atsci_reed_solomon rs;
 
-  void t0_reed_solomon ();
+    void t0_reed_solomon();
 };
 
 #endif /* _QA_ATSC_REED_SOLOMON_H_ */

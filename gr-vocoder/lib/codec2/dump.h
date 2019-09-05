@@ -26,10 +26,10 @@
 #ifndef __DUMP__
 #define __DUMP__
 
-#include "defines.h"
-#include "comp.h"
-#include "kiss_fft.h"
 #include "codec2_internal.h"
+#include "comp.h"
+#include "defines.h"
+#include "kiss_fft.h"
 
 void dump_on(char filename_prefix[]);
 void dump_off();
@@ -41,8 +41,8 @@ void dump_Ew(COMP Ew[]);
 
 /* amplitude modelling */
 
-void dump_model(MODEL *m);
-void dump_quantised_model(MODEL *m);
+void dump_model(MODEL* m);
+void dump_quantised_model(MODEL* m);
 void dump_Pwn(COMP Pw[]);
 void dump_Pw(COMP Pw[]);
 void dump_Rw(float Rw[]);

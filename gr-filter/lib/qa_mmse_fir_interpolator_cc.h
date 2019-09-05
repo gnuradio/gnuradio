@@ -23,26 +23,26 @@
 #ifndef _QA_MMSE_FIR_INTERPOLATOR_CC_H_
 #define _QA_MMSE_FIR_INTERPOLATOR_CC_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 namespace gr {
-  namespace filter {
+namespace filter {
 
-    class qa_mmse_fir_interpolator_cc : public CppUnit::TestCase
-    {
-      CPPUNIT_TEST_SUITE(qa_mmse_fir_interpolator_cc);
-      CPPUNIT_TEST(t1);
-      // CPPUNIT_TEST(t2);
-      CPPUNIT_TEST_SUITE_END();
+class qa_mmse_fir_interpolator_cc : public CppUnit::TestCase
+{
+    CPPUNIT_TEST_SUITE(qa_mmse_fir_interpolator_cc);
+    CPPUNIT_TEST(t1);
+    // CPPUNIT_TEST(t2);
+    CPPUNIT_TEST_SUITE_END();
 
-    private:
-      void t1();
-      void t2();
-      void t2_body();
-    };
+private:
+    void t1();
+    void t2();
+    void t2_body();
+};
 
-  } /* namespace filter */
+} /* namespace filter */
 } /* namespace gr */
 
 #endif /* _QA_MMSE_FIR_INTERPOLATOR_CC_H_ */

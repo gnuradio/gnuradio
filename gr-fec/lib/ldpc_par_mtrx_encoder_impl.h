@@ -26,39 +26,39 @@
 #include <gnuradio/fec/ldpc_par_mtrx_encoder.h>
 
 namespace gr {
-  namespace fec {
-    namespace code {
+namespace fec {
+namespace code {
 
-      class ldpc_par_mtrx_encoder_impl : public ldpc_par_mtrx_encoder
-      {
-      private:
-        // plug into the generic fec api
-        void generic_work(void *inbuffer, void *outbuffer);
+class ldpc_par_mtrx_encoder_impl : public ldpc_par_mtrx_encoder
+{
+private:
+    // plug into the generic fec api
+    void generic_work(void* inbuffer, void* outbuffer);
 
-        // Number of bits in the frame to be encoded
-        unsigned int d_frame_size;
+    // Number of bits in the frame to be encoded
+    unsigned int d_frame_size;
 
-        // Number of output bits after coding
-        int d_output_size;
+    // Number of output bits after coding
+    int d_output_size;
 
-        // Rate of the code, n/k
-        double d_rate;
+    // Rate of the code, n/k
+    double d_rate;
 
-        // LDPC parity check matrix object
-        code::ldpc_H_matrix::sptr d_H;
+    // LDPC parity check matrix object
+    code::ldpc_H_matrix::sptr d_H;
 
-      public:
-        ldpc_par_mtrx_encoder_impl(const code::ldpc_H_matrix::sptr H_obj);
-        ~ldpc_par_mtrx_encoder_impl();
+public:
+    ldpc_par_mtrx_encoder_impl(const code::ldpc_H_matrix::sptr H_obj);
+    ~ldpc_par_mtrx_encoder_impl();
 
-        double rate();
-        bool set_frame_size(unsigned int frame_size);
-        int get_output_size();
-        int get_input_size();
-      };
+    double rate();
+    bool set_frame_size(unsigned int frame_size);
+    int get_output_size();
+    int get_input_size();
+};
 
-    } /* namespace code */
-  } /* namespace fec */
+} /* namespace code */
+} /* namespace fec */
 } /* namespace gr */
 
 #endif /* INCLUDED_LDPC_PAR_MTRX_ENCODER_IMPL_H */

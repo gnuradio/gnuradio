@@ -24,8 +24,8 @@
 #define INCLUDED_ATSC_VITERBI_DECODER_H
 
 #include <gnuradio/atsc/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/atsc/viterbi_decoder_impl.h>
+#include <gnuradio/sync_block.h>
 
 class atsc_viterbi_decoder;
 typedef boost::shared_ptr<atsc_viterbi_decoder> atsc_viterbi_decoder_sptr;
@@ -33,29 +33,30 @@ typedef boost::shared_ptr<atsc_viterbi_decoder> atsc_viterbi_decoder_sptr;
 ATSC_API atsc_viterbi_decoder_sptr atsc_make_viterbi_decoder();
 
 /*!
- * \brief ATSC 12-way interleaved viterbi decoder (atsc_soft_data_segment --> atsc_mpeg_packet_rs_encoded)
- * \ingroup atsc
+ * \brief ATSC 12-way interleaved viterbi decoder (atsc_soft_data_segment -->
+ * atsc_mpeg_packet_rs_encoded) \ingroup atsc
  *
  * input: atsc_soft_data_segment; output: atsc_mpeg_packet_rs_encoded
  */
 class ATSC_API atsc_viterbi_decoder : public gr::sync_block
 {
-  friend ATSC_API atsc_viterbi_decoder_sptr atsc_make_viterbi_decoder();
+    friend ATSC_API atsc_viterbi_decoder_sptr atsc_make_viterbi_decoder();
 
-  atsci_viterbi_decoder	d_viterbi_decoder;
+    atsci_viterbi_decoder d_viterbi_decoder;
 
-  atsc_viterbi_decoder();
+    atsc_viterbi_decoder();
 
 public:
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-  void reset() { /* nop */ }
+    void reset()
+    { /* nop */
+    }
 
 protected:
-  int	    last_start;
-
+    int last_start;
 };
 
 

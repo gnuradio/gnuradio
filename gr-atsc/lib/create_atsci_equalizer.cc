@@ -21,24 +21,12 @@
  */
 
 #include <gnuradio/atsc/create_atsci_equalizer.h>
-#include <gnuradio/atsc/equalizer_nop_impl.h>
-#include <gnuradio/atsc/equalizer_lms_impl.h>
 #include <gnuradio/atsc/equalizer_lms2_impl.h>
+#include <gnuradio/atsc/equalizer_lms_impl.h>
+#include <gnuradio/atsc/equalizer_nop_impl.h>
 
-atsci_equalizer *
-create_atsci_equalizer_nop ()
-{
-  return new atsci_equalizer_nop ();
-}
+atsci_equalizer* create_atsci_equalizer_nop() { return new atsci_equalizer_nop(); }
 
-atsci_equalizer *
-create_atsci_equalizer_lms ()
-{
-  return new atsci_equalizer_lms ();
-}
+atsci_equalizer* create_atsci_equalizer_lms() { return new atsci_equalizer_lms(); }
 
-atsci_equalizer *
-create_atsci_equalizer_lms2 ()
-{
-  return new atsci_equalizer_lms2 ();
-}
+atsci_equalizer* create_atsci_equalizer_lms2() { return new atsci_equalizer_lms2(); }

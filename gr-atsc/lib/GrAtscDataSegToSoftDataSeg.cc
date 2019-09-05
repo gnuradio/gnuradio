@@ -24,39 +24,37 @@
 
 // typedefs for fundamental i/o types
 
-typedef atsc_data_segment		iType;
-typedef atsc_soft_data_segment		oType;
+typedef atsc_data_segment iType;
+typedef atsc_soft_data_segment oType;
 
-static const int NUMBER_OF_OUTPUTS = 1;	// # of output streams (almost always one)
+static const int NUMBER_OF_OUTPUTS = 1; // # of output streams (almost always one)
 
 
-#define	NELEM(x) (sizeof (x) / sizeof (x[0]))
+#define NELEM(x) (sizeof(x) / sizeof(x[0]))
 
-static void
-map_to_soft_symbols (atsc_soft_data_segment &out,
-		     const atsc_data_segment &in)
+static void map_to_soft_symbols(atsc_soft_data_segment& out, const atsc_data_segment& in)
 {
-  for (unsigned int i = 0; i < NELEM (in.data); i++){
-    out.data[i] = in.data[i] * 2 - 7;
-  }
+    for (unsigned int i = 0; i < NELEM(in.data); i++) {
+        out.data[i] = in.data[i] * 2 - 7;
+    }
 }
 
 
-GrAtscDataSegToSoftDataSeg::GrAtscDataSegToSoftDataSeg ()
-  : VrHistoryProc<iType,oType> (NUMBER_OF_OUTPUTS)
+GrAtscDataSegToSoftDataSeg::GrAtscDataSegToSoftDataSeg()
+    : VrHistoryProc<iType, oType>(NUMBER_OF_OUTPUTS)
 {
-  // 1 + number of extra input elements at which we look.  This is
-  // used by the superclass's forecast routine to get us the correct
-  // range on our inputs.
-  // We're one-to-one input-to-output so set it to 1.
-  history = 1;
+    // 1 + number of extra input elements at which we look.  This is
+    // used by the superclass's forecast routine to get us the correct
+    // range on our inputs.
+    // We're one-to-one input-to-output so set it to 1.
+    history = 1;
 
-  // any other init here.
+    // any other init here.
 }
 
-GrAtscDataSegToSoftDataSeg::~GrAtscDataSegToSoftDataSeg ()
+GrAtscDataSegToSoftDataSeg::~GrAtscDataSegToSoftDataSeg()
 {
-  // Anything that isn't automatically cleaned up...
+    // Anything that isn't automatically cleaned up...
 }
 
 /*
@@ -65,37 +63,38 @@ GrAtscDataSegToSoftDataSeg::~GrAtscDataSegToSoftDataSeg ()
  * use a single input and output stream.
  */
 
-int
-GrAtscDataSegToSoftDataSeg::work (VrSampleRange output, void *ao[],
-				  VrSampleRange inputs[], void *ai[])
+int GrAtscDataSegToSoftDataSeg::work(VrSampleRange output,
+                                     void* ao[],
+                                     VrSampleRange inputs[],
+                                     void* ai[])
 {
-  // If we have state that persists across invocations (e.g., we have
-  // instance variables that we modify), we must use the sync method
-  // to indicate to the scheduler that our output must be computed in
-  // order.  This doesn't keep other things from being run in
-  // parallel, it just means that at any given time, there is only a
-  // single thread working this code, and that the scheduler will
-  // ensure that we are asked to produce output that is contiguous and
-  // that will be presented to us in order of increasing time.
+    // If we have state that persists across invocations (e.g., we have
+    // instance variables that we modify), we must use the sync method
+    // to indicate to the scheduler that our output must be computed in
+    // order.  This doesn't keep other things from being run in
+    // parallel, it just means that at any given time, there is only a
+    // single thread working this code, and that the scheduler will
+    // ensure that we are asked to produce output that is contiguous and
+    // that will be presented to us in order of increasing time.
 
-  // sync (output.index);
+    // sync (output.index);
 
-  // construct some nicer i/o pointers to work with.
+    // construct some nicer i/o pointers to work with.
 
-  iType *in  = ((iType **) ai)[0];
-  oType *out = ((oType **) ao)[0];
+    iType* in = ((iType**)ai)[0];
+    oType* out = ((oType**)ao)[0];
 
 
-  // We must produce output.size units of output.
+    // We must produce output.size units of output.
 
-  for (unsigned int i = 0; i < output.size; i++){
-    map_to_soft_symbols (out[i], in[i]);
-    out[i].pli = in[i].pli;
-  }
+    for (unsigned int i = 0; i < output.size; i++) {
+        map_to_soft_symbols(out[i], in[i]);
+        out[i].pli = in[i].pli;
+    }
 
-  // Return the number of units we produced.
-  // Note that for all intents and purposes, it is an error to
-  // produce less than you are asked for.
+    // Return the number of units we produced.
+    // Note that for all intents and purposes, it is an error to
+    // produce less than you are asked for.
 
-  return output.size;
+    return output.size;
 }

@@ -23,46 +23,46 @@
 #ifndef _QA_CONVOLUTIONAL_INTERLEAVER_H_
 #define _QA_CONVOLUTIONAL_INTERLEAVER_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 #include <gnuradio/atsc/convolutional_interleaver.h>
 
-class qa_convolutional_interleaver : public CppUnit::TestCase {
- private:
-  convolutional_interleaver<int>	*intl;
-  convolutional_interleaver<int>	*deintl;
+class qa_convolutional_interleaver : public CppUnit::TestCase
+{
+private:
+    convolutional_interleaver<int>* intl;
+    convolutional_interleaver<int>* deintl;
 
-  CPPUNIT_TEST_SUITE (qa_convolutional_interleaver);
-  CPPUNIT_TEST (t0);
-  CPPUNIT_TEST (t1);
-  CPPUNIT_TEST (t2);
-  CPPUNIT_TEST (t3);
-  CPPUNIT_TEST (t4);
-  CPPUNIT_TEST_SUITE_END ();
+    CPPUNIT_TEST_SUITE(qa_convolutional_interleaver);
+    CPPUNIT_TEST(t0);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST(t2);
+    CPPUNIT_TEST(t3);
+    CPPUNIT_TEST(t4);
+    CPPUNIT_TEST_SUITE_END();
 
- public:
+public:
+    void setUp()
+    {
+        intl = 0;
+        deintl = 0;
+    }
 
-  void setUp (){
-    intl = 0;
-    deintl = 0;
-  }
+    void tearDown()
+    {
+        delete intl;
+        intl = 0;
+        delete deintl;
+        deintl = 0;
+    }
 
-  void tearDown (){
-    delete intl;
-    intl = 0;
-    delete deintl;
-    deintl = 0;
-  }
-
- private:
-
-  void t0 ();
-  void t1 ();
-  void t2 ();
-  void t3 ();
-  void t4 ();
-
+private:
+    void t0();
+    void t1();
+    void t2();
+    void t3();
+    void t4();
 };
 
 

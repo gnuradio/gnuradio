@@ -37,20 +37,20 @@
 
 namespace atsc_sync_tag {
 
-  // Nothing special
-  static const float NORMAL = 0.0;
+// Nothing special
+static const float NORMAL = 0.0;
 
-  // The corresponding symbol is the first symbol of the
-  // data segment sync sequence { +5, -5, -5, +5 }
-  static const float START_SEG_SYNC = 1.0;
+// The corresponding symbol is the first symbol of the
+// data segment sync sequence { +5, -5, -5, +5 }
+static const float START_SEG_SYNC = 1.0;
 
-  // The corresponding symbol is the first symbol of the
-  // field sync 1 PN511 pattern.
-  static const float START_FIELD_SYNC_1 = 2.0;
+// The corresponding symbol is the first symbol of the
+// field sync 1 PN511 pattern.
+static const float START_FIELD_SYNC_1 = 2.0;
 
-  // The corresponding symbol is the first symbol of the
-  // field sync 2 PN511 pattern.
-  static const float START_FIELD_SYNC_2 = 3.0;
-};
+// The corresponding symbol is the first symbol of the
+// field sync 2 PN511 pattern.
+static const float START_FIELD_SYNC_2 = 3.0;
+}; // namespace atsc_sync_tag
 
 #endif /* _ATSC_SYNC_TAG_H_ */

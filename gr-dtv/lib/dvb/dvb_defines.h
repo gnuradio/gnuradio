@@ -1,17 +1,17 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2015,2016 Free Software Foundation, Inc.
- * 
+ *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -46,10 +46,10 @@
 
 #define FRAME_SIZE_NORMAL 64800
 #define FRAME_SIZE_MEDIUM 32400
-#define FRAME_SIZE_SHORT  16200
+#define FRAME_SIZE_SHORT 16200
 
 // BCH Code
-#define BCH_CODE_N8  0
+#define BCH_CODE_N8 0
 #define BCH_CODE_N10 1
 #define BCH_CODE_N12 2
 #define BCH_CODE_S12 3
@@ -70,4 +70,3 @@
 #define EXTRA_PILOT_SYMBOLS_SET2 ((9 * 32) + 36)
 
 #endif /* INCLUDED_DTV_DVB_DEFINES_H */
-

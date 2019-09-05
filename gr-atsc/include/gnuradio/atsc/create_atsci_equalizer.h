@@ -27,8 +27,8 @@
 
 class atsci_equalizer;
 
-ATSC_API atsci_equalizer *create_atsci_equalizer_nop ();
-ATSC_API atsci_equalizer *create_atsci_equalizer_lms ();
-ATSC_API atsci_equalizer *create_atsci_equalizer_lms2 ();
+ATSC_API atsci_equalizer* create_atsci_equalizer_nop();
+ATSC_API atsci_equalizer* create_atsci_equalizer_lms();
+ATSC_API atsci_equalizer* create_atsci_equalizer_lms2();
 
 #endif /* _CREATE_ATSC_EQUALIZER_H_ */

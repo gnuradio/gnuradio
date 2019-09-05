@@ -28,20 +28,20 @@
 #include <vector>
 
 namespace gr {
-  namespace fec {
+namespace fec {
 
-    class FEC_API ldpc_encoder : virtual public generic_encoder
-    {
-    public:
-      static generic_encoder::sptr make (std::string alist_file);
+class FEC_API ldpc_encoder : virtual public generic_encoder
+{
+public:
+    static generic_encoder::sptr make(std::string alist_file);
 
-      virtual double rate() = 0;
-      virtual bool set_frame_size(unsigned int frame_size) = 0;
-      virtual int get_output_size() = 0;
-      virtual int get_input_size() = 0;
-    };
+    virtual double rate() = 0;
+    virtual bool set_frame_size(unsigned int frame_size) = 0;
+    virtual int get_output_size() = 0;
+    virtual int get_input_size() = 0;
+};
 
-  }
-}
+} // namespace fec
+} // namespace gr
 
 #endif /* INCLUDED_LDPC_ENCODER_H */

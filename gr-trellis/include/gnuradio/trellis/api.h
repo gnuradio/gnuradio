@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_trellis_EXPORTS
-#  define TRELLIS_API __GR_ATTR_EXPORT
+#define TRELLIS_API __GR_ATTR_EXPORT
 #else
-#  define TRELLIS_API __GR_ATTR_IMPORT
+#define TRELLIS_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_TRELLIS_API_H */

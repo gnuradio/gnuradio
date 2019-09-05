@@ -24,40 +24,36 @@
 #include <iostream>
 #include <stdexcept>
 
-rpcmanager::rpcmanager() {;}
+rpcmanager::rpcmanager() { ; }
 
-rpcmanager::~rpcmanager() {;}
+rpcmanager::~rpcmanager() { ; }
 
-rpcserver_booter_base*
-rpcmanager::get()
+rpcserver_booter_base* rpcmanager::get()
 {
-  if(aggregator_registered) {
-    return aggregator.get();
-  }
-  else if(booter_registered) {
+    if (aggregator_registered) {
+        return aggregator.get();
+    } else if (booter_registered) {
+        return boot.get();
+    }
+    assert(booter_registered || aggregator_registered);
     return boot.get();
-  }
-  assert(booter_registered || aggregator_registered);
-  return boot.get();
 }
 
-void
-rpcmanager::register_booter(rpcserver_booter_base* booter)
+void rpcmanager::register_booter(rpcserver_booter_base* booter)
 {
-  if(make_aggregator && !aggregator_registered) {
-    aggregator.reset(new rpcserver_booter_aggregator());
-    aggregator_registered = true;
-  }
+    if (make_aggregator && !aggregator_registered) {
+        aggregator.reset(new rpcserver_booter_aggregator());
+        aggregator_registered = true;
+    }
 
-  if(aggregator_registered) {
-    rpcmanager::rpcserver_booter_base_sptr bootreg(booter);
-    aggregator->agg()->registerServer(bootreg);
-  }
-  else if(!booter_registered) {
-    boot.reset(booter);
-    booter_registered = true;
-  }
-  else {
-    throw std::runtime_error("rpcmanager: Aggregator not in use, and a rpc booter is already registered\n");
-  }
+    if (aggregator_registered) {
+        rpcmanager::rpcserver_booter_base_sptr bootreg(booter);
+        aggregator->agg()->registerServer(bootreg);
+    } else if (!booter_registered) {
+        boot.reset(booter);
+        booter_registered = true;
+    } else {
+        throw std::runtime_error("rpcmanager: Aggregator not in use, and a rpc booter is "
+                                 "already registered\n");
+    }
 }

@@ -24,205 +24,187 @@
 #define INCLUDED_FILTER_FIR_FILTER_H
 
 #include <gnuradio/filter/api.h>
-#include <vector>
 #include <gnuradio/gr_complex.h>
+#include <vector>
 
 namespace gr {
-  namespace filter {
-    namespace kernel {
+namespace filter {
+namespace kernel {
 
-      class FILTER_API fir_filter_fff
-      {
-      public:
-	fir_filter_fff(int decimation,
-		       const std::vector<float> &taps);
-	~fir_filter_fff();
+class FILTER_API fir_filter_fff
+{
+public:
+    fir_filter_fff(int decimation, const std::vector<float>& taps);
+    ~fir_filter_fff();
 
-	void set_taps(const std::vector<float> &taps);
-	void update_tap(float t, unsigned int index);
-	std::vector<float> taps() const;
-	unsigned int ntaps() const;
+    void set_taps(const std::vector<float>& taps);
+    void update_tap(float t, unsigned int index);
+    std::vector<float> taps() const;
+    unsigned int ntaps() const;
 
-	float filter(const float input[]);
-	void  filterN(float output[],
-		      const float input[],
-		      unsigned long n);
-	void  filterNdec(float output[],
-			 const float input[],
-			 unsigned long n,
-			 unsigned int decimate);
+    float filter(const float input[]);
+    void filterN(float output[], const float input[], unsigned long n);
+    void filterNdec(float output[],
+                    const float input[],
+                    unsigned long n,
+                    unsigned int decimate);
 
-      protected:
-	std::vector<float> d_taps;
-	unsigned int  d_ntaps;
-	float       **d_aligned_taps;
-	float        *d_output;
-	int           d_align;
-	int           d_naligned;
-      };
+protected:
+    std::vector<float> d_taps;
+    unsigned int d_ntaps;
+    float** d_aligned_taps;
+    float* d_output;
+    int d_align;
+    int d_naligned;
+};
 
-      /**************************************************************/
+/**************************************************************/
 
-      class FILTER_API fir_filter_ccf
-      {
-      public:
-	fir_filter_ccf(int decimation,
-		       const std::vector<float> &taps);
-	~fir_filter_ccf();
+class FILTER_API fir_filter_ccf
+{
+public:
+    fir_filter_ccf(int decimation, const std::vector<float>& taps);
+    ~fir_filter_ccf();
 
-	void set_taps(const std::vector<float> &taps);
-	void update_tap(float t, unsigned int index);
-	std::vector<float> taps() const;
-	unsigned int ntaps() const;
+    void set_taps(const std::vector<float>& taps);
+    void update_tap(float t, unsigned int index);
+    std::vector<float> taps() const;
+    unsigned int ntaps() const;
 
-	gr_complex filter(const gr_complex input[]);
-	void filterN(gr_complex output[],
-		     const gr_complex input[],
-		     unsigned long n);
-	void filterNdec(gr_complex output[],
-			const gr_complex input[],
-			unsigned long n,
-			unsigned int decimate);
+    gr_complex filter(const gr_complex input[]);
+    void filterN(gr_complex output[], const gr_complex input[], unsigned long n);
+    void filterNdec(gr_complex output[],
+                    const gr_complex input[],
+                    unsigned long n,
+                    unsigned int decimate);
 
-      protected:
-	std::vector<float> d_taps;
-	unsigned int d_ntaps;
-	float      **d_aligned_taps;
-	gr_complex  *d_output;
-	int          d_align;
-	int          d_naligned;
-      };
+protected:
+    std::vector<float> d_taps;
+    unsigned int d_ntaps;
+    float** d_aligned_taps;
+    gr_complex* d_output;
+    int d_align;
+    int d_naligned;
+};
 
-      /**************************************************************/
+/**************************************************************/
 
-      class FILTER_API fir_filter_fcc
-      {
-      public:
-	fir_filter_fcc(int decimation,
-		       const std::vector<gr_complex> &taps);
-	~fir_filter_fcc();
+class FILTER_API fir_filter_fcc
+{
+public:
+    fir_filter_fcc(int decimation, const std::vector<gr_complex>& taps);
+    ~fir_filter_fcc();
 
-	void set_taps(const std::vector<gr_complex> &taps);
-	void update_tap(gr_complex t, unsigned int index);
-	std::vector<gr_complex> taps() const;
-	unsigned int ntaps() const;
+    void set_taps(const std::vector<gr_complex>& taps);
+    void update_tap(gr_complex t, unsigned int index);
+    std::vector<gr_complex> taps() const;
+    unsigned int ntaps() const;
 
-	gr_complex filter(const float input[]);
-	void filterN(gr_complex output[],
-		     const float input[],
-		     unsigned long n);
-	void filterNdec(gr_complex output[],
-			const float input[],
-			unsigned long n,
-			unsigned int decimate);
+    gr_complex filter(const float input[]);
+    void filterN(gr_complex output[], const float input[], unsigned long n);
+    void filterNdec(gr_complex output[],
+                    const float input[],
+                    unsigned long n,
+                    unsigned int decimate);
 
-      protected:
-	std::vector<gr_complex> d_taps;
-	unsigned int d_ntaps;
-	gr_complex **d_aligned_taps;
-	gr_complex  *d_output;
-	int          d_align;
-	int          d_naligned;
-      };
+protected:
+    std::vector<gr_complex> d_taps;
+    unsigned int d_ntaps;
+    gr_complex** d_aligned_taps;
+    gr_complex* d_output;
+    int d_align;
+    int d_naligned;
+};
 
-      /**************************************************************/
+/**************************************************************/
 
-      class FILTER_API fir_filter_ccc
-      {
-      public:
-	fir_filter_ccc(int decimation,
-		       const std::vector<gr_complex> &taps);
-	~fir_filter_ccc();
+class FILTER_API fir_filter_ccc
+{
+public:
+    fir_filter_ccc(int decimation, const std::vector<gr_complex>& taps);
+    ~fir_filter_ccc();
 
-	void set_taps(const std::vector<gr_complex> &taps);
-	void update_tap(gr_complex t, unsigned int index);
-	std::vector<gr_complex> taps() const;
-	unsigned int ntaps() const;
+    void set_taps(const std::vector<gr_complex>& taps);
+    void update_tap(gr_complex t, unsigned int index);
+    std::vector<gr_complex> taps() const;
+    unsigned int ntaps() const;
 
-	gr_complex filter(const gr_complex input[]);
-	void filterN(gr_complex output[],
-		     const gr_complex input[],
-		     unsigned long n);
-	void filterNdec(gr_complex output[],
-			const gr_complex input[],
-			unsigned long n,
-			unsigned int decimate);
+    gr_complex filter(const gr_complex input[]);
+    void filterN(gr_complex output[], const gr_complex input[], unsigned long n);
+    void filterNdec(gr_complex output[],
+                    const gr_complex input[],
+                    unsigned long n,
+                    unsigned int decimate);
 
-      protected:
-	std::vector<gr_complex> d_taps;
-	unsigned int d_ntaps;
-	gr_complex **d_aligned_taps;
-	gr_complex  *d_output;
-	int          d_align;
-	int          d_naligned;
-      };
+protected:
+    std::vector<gr_complex> d_taps;
+    unsigned int d_ntaps;
+    gr_complex** d_aligned_taps;
+    gr_complex* d_output;
+    int d_align;
+    int d_naligned;
+};
 
-      /**************************************************************/
+/**************************************************************/
 
-      class FILTER_API fir_filter_scc
-      {
-      public:
-	fir_filter_scc(int decimation,
-		       const std::vector<gr_complex> &taps);
-	~fir_filter_scc();
+class FILTER_API fir_filter_scc
+{
+public:
+    fir_filter_scc(int decimation, const std::vector<gr_complex>& taps);
+    ~fir_filter_scc();
 
-	void set_taps(const std::vector<gr_complex> &taps);
-	void update_tap(gr_complex t, unsigned int index);
-	std::vector<gr_complex> taps() const;
-	unsigned int ntaps() const;
+    void set_taps(const std::vector<gr_complex>& taps);
+    void update_tap(gr_complex t, unsigned int index);
+    std::vector<gr_complex> taps() const;
+    unsigned int ntaps() const;
 
-	gr_complex filter(const short input[]);
-	void filterN(gr_complex output[],
-		     const short input[],
-		     unsigned long n);
-	void filterNdec(gr_complex output[],
-			const short input[],
-			unsigned long n,
-			unsigned int decimate);
+    gr_complex filter(const short input[]);
+    void filterN(gr_complex output[], const short input[], unsigned long n);
+    void filterNdec(gr_complex output[],
+                    const short input[],
+                    unsigned long n,
+                    unsigned int decimate);
 
-      protected:
-	std::vector<gr_complex> d_taps;
-	unsigned int d_ntaps;
-	gr_complex **d_aligned_taps;
-	gr_complex  *d_output;
-	int          d_align;
-	int          d_naligned;
-      };
+protected:
+    std::vector<gr_complex> d_taps;
+    unsigned int d_ntaps;
+    gr_complex** d_aligned_taps;
+    gr_complex* d_output;
+    int d_align;
+    int d_naligned;
+};
 
-      /**************************************************************/
+/**************************************************************/
 
-      class FILTER_API fir_filter_fsf
-      {
-      public:
-	fir_filter_fsf(int decimation,
-		       const std::vector<float> &taps);
-	~fir_filter_fsf();
+class FILTER_API fir_filter_fsf
+{
+public:
+    fir_filter_fsf(int decimation, const std::vector<float>& taps);
+    ~fir_filter_fsf();
 
-	void set_taps(const std::vector<float> &taps);
-	void update_tap(float t, unsigned int index);
-	std::vector<float> taps() const;
-	unsigned int ntaps() const;
+    void set_taps(const std::vector<float>& taps);
+    void update_tap(float t, unsigned int index);
+    std::vector<float> taps() const;
+    unsigned int ntaps() const;
 
-	short filter(const float input[]);
-	void filterN(short output[],
-		     const float input[],
-		     unsigned long n);
-	void filterNdec(short output[],
-			const float input[],
-			unsigned long n,
-			unsigned int decimate);
+    short filter(const float input[]);
+    void filterN(short output[], const float input[], unsigned long n);
+    void filterNdec(short output[],
+                    const float input[],
+                    unsigned long n,
+                    unsigned int decimate);
 
-      protected:
-	std::vector<float> d_taps;
-	unsigned int d_ntaps;
-	float      **d_aligned_taps;
-	short       *d_output;
-	int          d_align;
-	int          d_naligned;
-      };
+protected:
+    std::vector<float> d_taps;
+    unsigned int d_ntaps;
+    float** d_aligned_taps;
+    short* d_output;
+    int d_align;
+    int d_naligned;
+};
 
-    } /* namespace kernel */
-  } /* namespace filter */
+} /* namespace kernel */
+} /* namespace filter */
 } /* namespace gr */
 
 #endif /* INCLUDED_FILTER_FIR_FILTER_H */

@@ -25,54 +25,43 @@
 #endif
 
 #include <gnuradio/atsc/pad.h>
-#include <gnuradio/io_signature.h>
 #include <gnuradio/atsc/types.h>
+#include <gnuradio/io_signature.h>
 
 static const int INTR = ATSC_MPEG_PKT_LENGTH;
 
-atsc_pad_sptr
-atsc_make_pad()
-{
-  return gnuradio::get_initial_sptr(new atsc_pad());
-}
+atsc_pad_sptr atsc_make_pad() { return gnuradio::get_initial_sptr(new atsc_pad()); }
 
 atsc_pad::atsc_pad()
-  : gr::sync_decimator("atsc_pad",
-                       gr::io_signature::make(1, 1, sizeof(unsigned char)),
-                       gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet)),
-                       INTR)
+    : gr::sync_decimator("atsc_pad",
+                         gr::io_signature::make(1, 1, sizeof(unsigned char)),
+                         gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet)),
+                         INTR)
 {
-  reset();
+    reset();
 }
 
-void
-atsc_pad::forecast (int noutput_items, gr_vector_int &ninput_items_required)
+void atsc_pad::forecast(int noutput_items, gr_vector_int& ninput_items_required)
 {
-  unsigned ninputs = ninput_items_required.size();
-  for (unsigned i = 0; i < ninputs; i++)
-    ninput_items_required[i] = noutput_items * ATSC_MPEG_PKT_LENGTH;
-}
-
-
-int
-atsc_pad::work (int noutput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items)
-{
-  const unsigned char *in = (const unsigned char *) input_items[0];
-  atsc_mpeg_packet *out = (atsc_mpeg_packet *) output_items[0];
-
-  int i;
-
-  for (i = 0; i < noutput_items; i++){
-    for (int j = 0; j < ATSC_MPEG_PKT_LENGTH; j++)
-	out[i].data[j] = in[i * ATSC_MPEG_PKT_LENGTH + j];
-
-  }
-
-  return noutput_items;
+    unsigned ninputs = ninput_items_required.size();
+    for (unsigned i = 0; i < ninputs; i++)
+        ninput_items_required[i] = noutput_items * ATSC_MPEG_PKT_LENGTH;
 }
 
 
+int atsc_pad::work(int noutput_items,
+                   gr_vector_const_void_star& input_items,
+                   gr_vector_void_star& output_items)
+{
+    const unsigned char* in = (const unsigned char*)input_items[0];
+    atsc_mpeg_packet* out = (atsc_mpeg_packet*)output_items[0];
 
+    int i;
 
+    for (i = 0; i < noutput_items; i++) {
+        for (int j = 0; j < ATSC_MPEG_PKT_LENGTH; j++)
+            out[i].data[j] = in[i * ATSC_MPEG_PKT_LENGTH + j];
+    }
+
+    return noutput_items;
+}

@@ -27,7 +27,7 @@
 
 #ifdef FCD
 #define EXTERN
-#define ASSIGN (x) =x
+#define ASSIGN (x) = x
 #else
 #define EXTERN extern
 #define ASSIGN(x)
@@ -37,10 +37,11 @@
 
 /** \brief FCD mode enumeration. */
 typedef enum {
-    FCD_MODE_NONE,  /*!< No FCD detected. */
-    FCD_MODE_BL,    /*!< FCD present in bootloader mode. */
-    FCD_MODE_APP    /*!< FCD present in aplpication mode. */
-} FCD_MODE_ENUM; // The current mode of the FCD: none inserted, in bootloader mode or in normal application mode
+    FCD_MODE_NONE, /*!< No FCD detected. */
+    FCD_MODE_BL,   /*!< FCD present in bootloader mode. */
+    FCD_MODE_APP   /*!< FCD present in aplpication mode. */
+} FCD_MODE_ENUM;   // The current mode of the FCD: none inserted, in bootloader mode or in
+                   // normal application mode
 
 /** \brief FCD capabilities that depend on both hardware and firmware. */
 typedef struct {
@@ -54,22 +55,26 @@ extern "C" {
 
 /* Application functions */
 EXTERN FCD_API FCD_MODE_ENUM fcdGetMode(void);
-EXTERN FCD_API FCD_MODE_ENUM fcdGetFwVerStr(char *str);
-EXTERN FCD_API FCD_MODE_ENUM fcdGetCaps(FCD_CAPS_STRUCT *fcd_caps);
-EXTERN FCD_API FCD_MODE_ENUM fcdGetCapsStr(char *caps_str);
+EXTERN FCD_API FCD_MODE_ENUM fcdGetFwVerStr(char* str);
+EXTERN FCD_API FCD_MODE_ENUM fcdGetCaps(FCD_CAPS_STRUCT* fcd_caps);
+EXTERN FCD_API FCD_MODE_ENUM fcdGetCapsStr(char* caps_str);
 EXTERN FCD_API FCD_MODE_ENUM fcdAppReset(void);
 EXTERN FCD_API FCD_MODE_ENUM fcdAppSetFreqkHz(int nFreq);
 EXTERN FCD_API FCD_MODE_ENUM fcdAppSetFreq(int nFreq);
 
-EXTERN FCD_API FCD_MODE_ENUM fcdAppSetParam(uint8_t u8Cmd, uint8_t *pu8Data, uint8_t u8len);
-EXTERN FCD_API FCD_MODE_ENUM fcdAppGetParam(uint8_t u8Cmd, uint8_t *pu8Data, uint8_t u8len);
+EXTERN FCD_API FCD_MODE_ENUM fcdAppSetParam(uint8_t u8Cmd,
+                                            uint8_t* pu8Data,
+                                            uint8_t u8len);
+EXTERN FCD_API FCD_MODE_ENUM fcdAppGetParam(uint8_t u8Cmd,
+                                            uint8_t* pu8Data,
+                                            uint8_t u8len);
 
 
 /* Bootloader functions */
 EXTERN FCD_API FCD_MODE_ENUM fcdBlReset(void);
 EXTERN FCD_API FCD_MODE_ENUM fcdBlErase(void);
-EXTERN FCD_API FCD_MODE_ENUM fcdBlWriteFirmware(char *pc, int64_t n64Size);
-EXTERN FCD_API FCD_MODE_ENUM fcdBlVerifyFirmware(char *pc, int64_t n64Size);
+EXTERN FCD_API FCD_MODE_ENUM fcdBlWriteFirmware(char* pc, int64_t n64Size);
+EXTERN FCD_API FCD_MODE_ENUM fcdBlVerifyFirmware(char* pc, int64_t n64Size);
 
 
 #ifdef __cplusplus

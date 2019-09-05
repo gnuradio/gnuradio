@@ -24,21 +24,21 @@
 #define INCLUDED_GR_TRIGGER_MODE_H
 
 namespace gr {
-  namespace wxgui {
+namespace wxgui {
 
-    enum trigger_mode {
-      TRIG_MODE_FREE,
-      TRIG_MODE_AUTO,
-      TRIG_MODE_NORM,
-      TRIG_MODE_STRIPCHART,
-    };
+enum trigger_mode {
+    TRIG_MODE_FREE,
+    TRIG_MODE_AUTO,
+    TRIG_MODE_NORM,
+    TRIG_MODE_STRIPCHART,
+};
 
-    enum trigger_slope {
-      TRIG_SLOPE_POS,
-      TRIG_SLOPE_NEG,
-    };
+enum trigger_slope {
+    TRIG_SLOPE_POS,
+    TRIG_SLOPE_NEG,
+};
 
-  } /* namespace wxgui */
+} /* namespace wxgui */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_TRIGGER_MODE_H */

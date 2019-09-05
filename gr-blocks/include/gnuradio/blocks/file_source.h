@@ -27,64 +27,63 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief Read stream from file
+ * \ingroup file_operators_blk
+ */
+class BLOCKS_API file_source : virtual public sync_block
+{
+public:
+    // gr::blocks::file_source::sptr
+    typedef boost::shared_ptr<file_source> sptr;
 
     /*!
-     * \brief Read stream from file
-     * \ingroup file_operators_blk
+     * \brief Create a file source.
+     *
+     * Opens \p filename as a source of items into a flowgraph. The
+     * data is expected to be in binary format, item after item. The
+     * \p itemsize of the block determines the conversion from bits
+     * to items.
+     *
+     * If \p repeat is turned on, the file will repeat the file after
+     * it's reached the end.
+     *
+     * \param itemsize	the size of each item in the file, in bytes
+     * \param filename	name of the file to source from
+     * \param repeat	repeat file from start
      */
-    class BLOCKS_API file_source : virtual public sync_block
-    {
-    public:
+    static sptr make(size_t itemsize, const char* filename, bool repeat = false);
 
-      // gr::blocks::file_source::sptr
-      typedef boost::shared_ptr<file_source> sptr;
+    /*!
+     * \brief seek file to \p seek_point relative to \p whence
+     *
+     * \param seek_point	sample offset in file
+     * \param whence	one of SEEK_SET, SEEK_CUR, SEEK_END (man fseek)
+     */
+    virtual bool seek(long seek_point, int whence) = 0;
 
-      /*!
-       * \brief Create a file source.
-       *
-       * Opens \p filename as a source of items into a flowgraph. The
-       * data is expected to be in binary format, item after item. The
-       * \p itemsize of the block determines the conversion from bits
-       * to items.
-       *
-       * If \p repeat is turned on, the file will repeat the file after
-       * it's reached the end.
-       *
-       * \param itemsize	the size of each item in the file, in bytes
-       * \param filename	name of the file to source from
-       * \param repeat	repeat file from start
-       */
-      static sptr make(size_t itemsize, const char *filename, bool repeat = false);
+    /*!
+     * \brief Opens a new file.
+     *
+     * \param filename	name of the file to source from
+     * \param repeat	repeat file from start
+     */
+    virtual void open(const char* filename, bool repeat) = 0;
 
-      /*!
-       * \brief seek file to \p seek_point relative to \p whence
-       *
-       * \param seek_point	sample offset in file
-       * \param whence	one of SEEK_SET, SEEK_CUR, SEEK_END (man fseek)
-       */
-      virtual bool seek(long seek_point, int whence) = 0;
+    /*!
+     * \brief Close the file handle.
+     */
+    virtual void close() = 0;
 
-      /*!
-       * \brief Opens a new file.
-       *
-       * \param filename	name of the file to source from
-       * \param repeat	repeat file from start
-       */
-      virtual void open(const char *filename, bool repeat) = 0;
+    /*!
+     * \brief Add a stream tag to the first sample of the file if true
+     */
+    virtual void set_begin_tag(pmt::pmt_t val) = 0;
+};
 
-      /*!
-       * \brief Close the file handle.
-       */
-      virtual void close() = 0;
-
-      /*!
-       * \brief Add a stream tag to the first sample of the file if true
-       */
-      virtual void set_begin_tag(pmt::pmt_t val) = 0;
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_FILE_SOURCE_H */

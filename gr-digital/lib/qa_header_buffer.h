@@ -23,37 +23,37 @@
 #ifndef _QA_DIGITAL_HEADER_BUFFER_H_
 #define _QA_DIGITAL_HEADER_BUFFER_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 class qa_header_buffer : public CppUnit::TestCase
 {
-  CPPUNIT_TEST_SUITE(qa_header_buffer);
-  CPPUNIT_TEST(test_add8);
-  CPPUNIT_TEST(test_add16);
-  CPPUNIT_TEST(test_add32);
-  CPPUNIT_TEST(test_add64);
-  CPPUNIT_TEST(test_add_many);
+    CPPUNIT_TEST_SUITE(qa_header_buffer);
+    CPPUNIT_TEST(test_add8);
+    CPPUNIT_TEST(test_add16);
+    CPPUNIT_TEST(test_add32);
+    CPPUNIT_TEST(test_add64);
+    CPPUNIT_TEST(test_add_many);
 
-  CPPUNIT_TEST(test_extract8);
-  CPPUNIT_TEST(test_extract16);
-  CPPUNIT_TEST(test_extract32);
-  CPPUNIT_TEST(test_extract64);
-  CPPUNIT_TEST(test_extract_many);
-  CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST(test_extract8);
+    CPPUNIT_TEST(test_extract16);
+    CPPUNIT_TEST(test_extract32);
+    CPPUNIT_TEST(test_extract64);
+    CPPUNIT_TEST(test_extract_many);
+    CPPUNIT_TEST_SUITE_END();
 
- private:
-  void test_add8();
-  void test_add16();
-  void test_add32();
-  void test_add64();
-  void test_add_many();
+private:
+    void test_add8();
+    void test_add16();
+    void test_add32();
+    void test_add64();
+    void test_add_many();
 
-  void test_extract8();
-  void test_extract16();
-  void test_extract32();
-  void test_extract64();
-  void test_extract_many();
+    void test_extract8();
+    void test_extract16();
+    void test_extract32();
+    void test_extract64();
+    void test_extract_many();
 };
 
 #endif /* _QA_DIGITAL_HEADER_BUFFER_H_ */

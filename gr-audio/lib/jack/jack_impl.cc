@@ -26,5 +26,3 @@
 
 #include <jack_impl.h>
 #include <algorithm>
-
-

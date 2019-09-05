@@ -22,40 +22,37 @@
 
 #include <gnuradio/atsc/data_interleaver_impl.h>
 
-void
-atsci_data_interleaver::interleave (atsc_mpeg_packet_rs_encoded &out,
-				   const atsc_mpeg_packet_rs_encoded &in)
+void atsci_data_interleaver::interleave(atsc_mpeg_packet_rs_encoded& out,
+                                        const atsc_mpeg_packet_rs_encoded& in)
 {
-  assert (in.pli.regular_seg_p ());
-  plinfo::sanity_check (in.pli);
+    assert(in.pli.regular_seg_p());
+    plinfo::sanity_check(in.pli);
 
-  out.pli = in.pli;			// copy pipeline info
-  if (in.pli.first_regular_seg_p ())	// reset commutator if required
-    sync ();
+    out.pli = in.pli;                 // copy pipeline info
+    if (in.pli.first_regular_seg_p()) // reset commutator if required
+        sync();
 
-  transform (out.data, in.data, sizeof (in.data));
+    transform(out.data, in.data, sizeof(in.data));
 }
 
 
-void
-atsci_data_deinterleaver::deinterleave (atsc_mpeg_packet_rs_encoded &out,
-				       const atsc_mpeg_packet_rs_encoded &in)
+void atsci_data_deinterleaver::deinterleave(atsc_mpeg_packet_rs_encoded& out,
+                                            const atsc_mpeg_packet_rs_encoded& in)
 {
-  assert (in.pli.regular_seg_p ());
-  plinfo::sanity_check (in.pli);
+    assert(in.pli.regular_seg_p());
+    plinfo::sanity_check(in.pli);
 
-  // reset commutator if required using INPUT pipeline info
-  if (in.pli.first_regular_seg_p ())
-    sync ();
+    // reset commutator if required using INPUT pipeline info
+    if (in.pli.first_regular_seg_p())
+        sync();
 
-  // remap OUTPUT pipeline info to reflect 52 data segment end-to-end delay
+    // remap OUTPUT pipeline info to reflect 52 data segment end-to-end delay
 
-  plinfo::delay (out.pli, in.pli, 52);
+    plinfo::delay(out.pli, in.pli, 52);
 
-  // now do the actual deinterleaving
+    // now do the actual deinterleaving
 
-  for (unsigned int i = 0; i < sizeof (in.data); i++){
-    out.data[i] = alignment_fifo.stuff (transform (in.data[i]));
-  }
+    for (unsigned int i = 0; i < sizeof(in.data); i++) {
+        out.data[i] = alignment_fifo.stuff(transform(in.data[i]));
+    }
 }
-

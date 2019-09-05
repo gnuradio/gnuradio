@@ -48,23 +48,25 @@
  * occur every 832 samples assuming everything is working.
  */
 
-class ATSC_API atsci_fs_checker {
+class ATSC_API atsci_fs_checker
+{
 
 public:
+    // CREATORS
+    atsci_fs_checker();
+    virtual ~atsci_fs_checker() = 0;
 
-  // CREATORS
-  atsci_fs_checker ();
-  virtual ~atsci_fs_checker () = 0;
+    // MANIPULATORS
+    virtual void reset() = 0;
+    virtual void filter(float input_sample,
+                        atsc::syminfo input_tag,
+                        float* output_sample,
+                        atsc::syminfo* output_tag) = 0;
 
-  // MANIPULATORS
-  virtual void reset () = 0;
-  virtual void filter (float input_sample, atsc::syminfo input_tag,
-		       float *output_sample, atsc::syminfo *output_tag) = 0;
+    // ACCESSORS
 
-  // ACCESSORS
-
-  //! return delay in samples from input to output
-  virtual int delay () const = 0;
+    //! return delay in samples from input to output
+    virtual int delay() const = 0;
 };
 
 #endif /* _ATSC_FS_CHECKER_H_ */

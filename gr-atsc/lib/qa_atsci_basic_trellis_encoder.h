@@ -22,23 +22,24 @@
 #ifndef _QA_ATSC_BASIC_TRELLIS_ENCODER_H_
 #define _QA_ATSC_BASIC_TRELLIS_ENCODER_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 #include <gnuradio/atsc/basic_trellis_encoder_impl.h>
 
-class qa_atsci_basic_trellis_encoder : public CppUnit::TestCase {
+class qa_atsci_basic_trellis_encoder : public CppUnit::TestCase
+{
 
-  CPPUNIT_TEST_SUITE (qa_atsci_basic_trellis_encoder);
-  CPPUNIT_TEST (t0);
-  CPPUNIT_TEST (t1);
-  CPPUNIT_TEST_SUITE_END ();
+    CPPUNIT_TEST_SUITE(qa_atsci_basic_trellis_encoder);
+    CPPUNIT_TEST(t0);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST_SUITE_END();
 
- private:
-  atsci_basic_trellis_encoder	enc;
+private:
+    atsci_basic_trellis_encoder enc;
 
-  void t0 ();
-  void t1 ();
+    void t0();
+    void t1();
 };
 
 #endif /* _QA_ATSC_BASIC_TRELLIS_ENCODER_H_ */

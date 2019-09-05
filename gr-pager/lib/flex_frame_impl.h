@@ -26,16 +26,16 @@
 #include <gnuradio/pager/flex_frame.h>
 
 namespace gr {
-  namespace pager {
+namespace pager {
 
-    class flex_frame_impl : public flex_frame
-    {
-    public:
-      flex_frame_impl();
-      ~flex_frame_impl();
-    };
+class flex_frame_impl : public flex_frame
+{
+public:
+    flex_frame_impl();
+    ~flex_frame_impl();
+};
 
-  } /* namespace pager */
+} /* namespace pager */
 } /* namespace gr */
 
 #endif /* INCLUDED_PAGER_FLEX_FRAME_IMPL_H */

@@ -27,25 +27,25 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    /*!
-     * \brief output = input_0 -  input_1 - ...)
-     * \ingroup math_operators_blk
-     *
-     * \details
-     * Subtract across all input streams.
-     */
-    class BLOCKS_API sub_ff : virtual public sync_block
-    {
-    public:
-      // gr::blocks::sub_ff::sptr
-      typedef boost::shared_ptr<sub_ff> sptr;
+/*!
+ * \brief output = input_0 -  input_1 - ...)
+ * \ingroup math_operators_blk
+ *
+ * \details
+ * Subtract across all input streams.
+ */
+class BLOCKS_API sub_ff : virtual public sync_block
+{
+public:
+    // gr::blocks::sub_ff::sptr
+    typedef boost::shared_ptr<sub_ff> sptr;
 
-      static sptr make(size_t vlen=1);
-    };
+    static sptr make(size_t vlen = 1);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_SUB_FF_H */

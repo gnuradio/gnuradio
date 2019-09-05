@@ -26,12 +26,12 @@
 unsigned char atsci_randomizer::s_output_map[1 << 14];
 bool atsci_randomizer::s_output_map_initialized_p = false;
 
-atsci_randomizer::atsci_randomizer ()
+atsci_randomizer::atsci_randomizer()
 {
-  d_state = PRELOAD_VALUE;
+    d_state = PRELOAD_VALUE;
 
-  if (!s_output_map_initialized_p)
-    initialize_output_map ();
+    if (!s_output_map_initialized_p)
+        initialize_output_map();
 }
 
 /*!
@@ -44,69 +44,63 @@ atsci_randomizer::atsci_randomizer ()
  * function.  By shifting right those two bits we shrink the table,
  * and also get better cache line utilization.
  */
-void
-atsci_randomizer::initialize_output_map ()
+void atsci_randomizer::initialize_output_map()
 {
-  s_output_map_initialized_p = true;
+    s_output_map_initialized_p = true;
 
-  for (int i = 0; i < (1 << 14); i++)
-    s_output_map[i] = slow_output_map (i << 2);
+    for (int i = 0; i < (1 << 14); i++)
+        s_output_map[i] = slow_output_map(i << 2);
 }
 
 
-void
-atsci_randomizer::reset ()
+void atsci_randomizer::reset() { d_state = PRELOAD_VALUE; }
+
+void atsci_randomizer::randomize(atsc_mpeg_packet_no_sync& out,
+                                 const atsc_mpeg_packet& in)
 {
-  d_state = PRELOAD_VALUE;
+    assert(in.data[0] == MPEG_SYNC_BYTE); // confirm it's there, then drop
+
+    for (int i = 0; i < ATSC_MPEG_DATA_LENGTH; i++)
+        out.data[i] = in.data[i + 1] ^ output_and_clk();
 }
 
-void
-atsci_randomizer::randomize (atsc_mpeg_packet_no_sync &out, const atsc_mpeg_packet &in)
+void atsci_randomizer::derandomize(atsc_mpeg_packet& out,
+                                   const atsc_mpeg_packet_no_sync& in)
 {
-  assert (in.data[0] == MPEG_SYNC_BYTE);	// confirm it's there, then drop
+    out.data[0] = MPEG_SYNC_BYTE; // add sync byte to beginning of packet
 
-  for (int i = 0; i < ATSC_MPEG_DATA_LENGTH; i++)
-    out.data[i] = in.data[i + 1] ^ output_and_clk ();
-}
-
-void
-atsci_randomizer::derandomize (atsc_mpeg_packet &out, const atsc_mpeg_packet_no_sync &in)
-{
-  out.data[0] = MPEG_SYNC_BYTE;		// add sync byte to beginning of packet
-
-  for (int i = 0; i < ATSC_MPEG_DATA_LENGTH; i++)
-    out.data[i + 1] = in.data[i] ^ output_and_clk ();
+    for (int i = 0; i < ATSC_MPEG_DATA_LENGTH; i++)
+        out.data[i + 1] = in.data[i] ^ output_and_clk();
 }
 
 
-unsigned char
-atsci_randomizer::slow_output_map (int st)
+unsigned char atsci_randomizer::slow_output_map(int st)
 {
-  int	output = 0;
+    int output = 0;
 
-  if (st & 0x8000)
-    output |= 0x01;
+    if (st & 0x8000)
+        output |= 0x01;
 
-  if (st & 0x2000)
-    output |= 0x02;
+    if (st & 0x2000)
+        output |= 0x02;
 
-  if (st & 0x1000)
-    output |= 0x04;
+    if (st & 0x1000)
+        output |= 0x04;
 
-  if (st & 0x0200)
-    output |= 0x08;
+    if (st & 0x0200)
+        output |= 0x08;
 
-  if (st & 0x0020)
-    output |= 0x10;
+    if (st & 0x0020)
+        output |= 0x10;
 
-  if (st & 0x0010)
-    output |= 0x20;
+    if (st & 0x0010)
+        output |= 0x20;
 
-  if (st & 0x0008)
-    output |= 0x40;
+    if (st & 0x0008)
+        output |= 0x40;
 
-  if (st & 0x0004)
-    output |= 0x80;
+    if (st & 0x0004)
+        output |= 0x80;
 
-  return output;
+    return output;
 }

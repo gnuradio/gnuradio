@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_runtime_EXPORTS
-#  define GR_RUNTIME_API __GR_ATTR_EXPORT
+#define GR_RUNTIME_API __GR_ATTR_EXPORT
 #else
-#  define GR_RUNTIME_API __GR_ATTR_IMPORT
+#define GR_RUNTIME_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_GR_RUNTIME_RUNTIME_API_H */

@@ -27,30 +27,30 @@
 #include <zmq.hpp>
 
 namespace gr {
-  namespace zeromq {
+namespace zeromq {
 
-    class pull_msg_source_impl : public pull_msg_source
-    {
-    private:
-      int             d_timeout; // microseconds, -1 is blocking
-      zmq::context_t  *d_context;
-      zmq::socket_t   *d_socket;
-      boost::thread   *d_thread;
-      const pmt::pmt_t d_port;
+class pull_msg_source_impl : public pull_msg_source
+{
+private:
+    int d_timeout; // microseconds, -1 is blocking
+    zmq::context_t* d_context;
+    zmq::socket_t* d_socket;
+    boost::thread* d_thread;
+    const pmt::pmt_t d_port;
 
-      void readloop();
+    void readloop();
 
-    public:
-      bool d_finished;
+public:
+    bool d_finished;
 
-      pull_msg_source_impl(char *address, int timeout);
-      ~pull_msg_source_impl();
+    pull_msg_source_impl(char* address, int timeout);
+    ~pull_msg_source_impl();
 
-      bool start();
-      bool stop();
-    };
+    bool start();
+    bool stop();
+};
 
-  } // namespace zeromq
+} // namespace zeromq
 } // namespace gr
 
 #endif /* INCLUDED_ZEROMQ_PULL_MSG_SOURCE_IMPL_H */

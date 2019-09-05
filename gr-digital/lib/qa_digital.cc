@@ -26,16 +26,15 @@
  */
 
 #include "qa_digital.h"
-#include "qa_header_format.h"
 #include "qa_header_buffer.h"
+#include "qa_header_format.h"
 
-CppUnit::TestSuite *
-qa_digital::suite()
+CppUnit::TestSuite* qa_digital::suite()
 {
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("gr-digital");
+    CppUnit::TestSuite* s = new CppUnit::TestSuite("gr-digital");
 
-  s->addTest(qa_header_format::suite());
-  s->addTest(qa_header_buffer::suite());
+    s->addTest(qa_header_format::suite());
+    s->addTest(qa_header_buffer::suite());
 
-  return s;
+    return s;
 }

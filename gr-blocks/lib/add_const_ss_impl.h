@@ -26,28 +26,28 @@
 #include <gnuradio/blocks/add_const_ss.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class BLOCKS_API add_const_ss_impl : public add_const_ss
-    {
-    private:
-      short d_k;
+class BLOCKS_API add_const_ss_impl : public add_const_ss
+{
+private:
+    short d_k;
 
-    public:
-      add_const_ss_impl(short k);
-      ~add_const_ss_impl();
+public:
+    add_const_ss_impl(short k);
+    ~add_const_ss_impl();
 
-      void setup_rpc();
+    void setup_rpc();
 
-      short k() const { return d_k; }
-      void set_k(short k) { d_k = k; }
+    short k() const { return d_k; }
+    void set_k(short k) { d_k = k; }
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* ADD_CONST_SS_IMPL */

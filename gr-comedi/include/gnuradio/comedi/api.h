@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_comedi_EXPORTS
-#  define COMEDI_API __GR_ATTR_EXPORT
+#define COMEDI_API __GR_ATTR_EXPORT
 #else
-#  define COMEDI_API __GR_ATTR_IMPORT
+#define COMEDI_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_COMEDI_API_H */

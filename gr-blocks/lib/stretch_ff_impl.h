@@ -26,28 +26,28 @@
 #include <gnuradio/blocks/stretch_ff.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class stretch_ff_impl : public stretch_ff
-    {
-    private:
-      float d_lo;     // the constant
-      size_t d_vlen;
+class stretch_ff_impl : public stretch_ff
+{
+private:
+    float d_lo; // the constant
+    size_t d_vlen;
 
-    public:
-      stretch_ff_impl(float lo, size_t vlen);
-      ~stretch_ff_impl();
+public:
+    stretch_ff_impl(float lo, size_t vlen);
+    ~stretch_ff_impl();
 
-      float lo() const { return d_lo; }
-      void set_lo(float lo) { d_lo = lo; }
-      size_t vlen() const { return d_vlen; }
+    float lo() const { return d_lo; }
+    void set_lo(float lo) { d_lo = lo; }
+    size_t vlen() const { return d_vlen; }
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_STRETCH_FF_IMPL_H */

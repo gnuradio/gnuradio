@@ -4,25 +4,25 @@
  * details.  THERE IS ABSOLUTELY NO WARRANTY FOR THIS SOFTWARE.
  */
 
-static char const	ident[] = "$Header$";
+static char const ident[] = "$Header$";
 
-#include	"config.h"
+#include "config.h"
 
-#ifdef	HAS_STRING_H
-#include	<string.h>
+#ifdef HAS_STRING_H
+#include <string.h>
 #else
-#	include "proto.h"
-	extern char	* memset P((char *, int, int));
+#include "proto.h"
+extern char* memset P((char*, int, int));
 #endif
 
-#ifdef	HAS_STDLIB_H
-#	include	<stdlib.h>
+#ifdef HAS_STDLIB_H
+#include <stdlib.h>
 #else
-#	ifdef	HAS_MALLOC_H
-#		include 	<malloc.h>
-#	else
-		extern char * malloc();
-#	endif
+#ifdef HAS_MALLOC_H
+#include <malloc.h>
+#else
+extern char* malloc();
+#endif
 #endif
 
 #include <stdio.h>
@@ -33,13 +33,14 @@ static char const	ident[] = "$Header$";
 
 gsm gsm_create P0()
 {
-	gsm  r;
+    gsm r;
 
-	r = (gsm)malloc(sizeof(struct gsm_state));
-	if (!r) return r;
+    r = (gsm)malloc(sizeof(struct gsm_state));
+    if (!r)
+        return r;
 
-	memset((char *)r, 0, sizeof(*r));
-	r->nrp = 40;
+    memset((char*)r, 0, sizeof(*r));
+    r->nrp = 40;
 
-	return r;
+    return r;
 }

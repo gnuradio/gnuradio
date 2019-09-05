@@ -27,32 +27,31 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace comedi {
+namespace comedi {
+
+/*!
+ * \brief source using COMEDI
+ *
+ * The source has one to many input stream of signed short integers.
+ *
+ * Output samples will be in the range [-32768,32767].
+ */
+class COMEDI_API source_s : virtual public sync_block
+{
+public:
+    // gr::comedi::source_s::sptr
+    typedef boost::shared_ptr<source_s> sptr;
 
     /*!
-     * \brief source using COMEDI
+     * \brief make a COMEDI source.
      *
-     * The source has one to many input stream of signed short integers.
-     *
-     * Output samples will be in the range [-32768,32767].
+     * \param sampling_freq sampling rate in Hz
+     * \param dev COMEDI device name, e.g., "/dev/comedi0"
      */
-    class COMEDI_API source_s : virtual public sync_block
-    {
-    public:
-      // gr::comedi::source_s::sptr
-      typedef boost::shared_ptr<source_s> sptr;
+    static sptr make(int sampling_freq, const std::string dev = "/dev/comedi0");
+};
 
-      /*!
-       * \brief make a COMEDI source.
-       *
-       * \param sampling_freq sampling rate in Hz
-       * \param dev COMEDI device name, e.g., "/dev/comedi0"
-       */
-      static sptr make(int sampling_freq,
-		       const std::string dev = "/dev/comedi0");
-    };
-
-  } /* namespace comedi */
+} /* namespace comedi */
 } /* namespace gr */
 
 #endif /* INCLUDED_COMEDI_SOURCE_S_H */

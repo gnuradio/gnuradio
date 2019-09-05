@@ -76,7 +76,7 @@ void selector_impl::set_input_index(unsigned int input_index)
 void selector_impl::set_output_index(unsigned int output_index)
 {
     gr::thread::scoped_lock l(d_mutex);
-    
+
     if (output_index < 0)
         throw std::out_of_range("input_index must be >= 0");
 

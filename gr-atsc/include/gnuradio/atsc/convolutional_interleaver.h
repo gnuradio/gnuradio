@@ -23,104 +23,105 @@
 #ifndef _CONVOLUTIONAL_INTERLEAVER_H_
 #define _CONVOLUTIONAL_INTERLEAVER_H_
 
-#include <vector>
 #include <gnuradio/atsc/interleaver_fifo.h>
 #include <assert.h>
+#include <vector>
 
 /*!
  * \brief template class for generic convolutional interleaver
  */
 
-template<class symbol_type>
-class convolutional_interleaver {
- public:
+template <class symbol_type>
+class convolutional_interleaver
+{
+public:
+    convolutional_interleaver(bool interleave_p, int nbanks, int fifo_size_incr);
+    virtual ~convolutional_interleaver();
 
-  convolutional_interleaver (bool interleave_p, int nbanks, int fifo_size_incr);
-  virtual ~convolutional_interleaver ();
+    //! reset interleaver (flushes contents and resets commutator)
+    void reset();
 
-  //! reset interleaver (flushes contents and resets commutator)
-  void reset ();
+    //! sync interleaver (resets commutator, but doesn't flush fifos)
+    void sync() { m_commutator = 0; }
 
-  //! sync interleaver (resets commutator, but doesn't flush fifos)
-  void sync () { m_commutator = 0; }
+    //! return end to end delay in symbols (delay through concatenated interleaver /
+    //! deinterleaver)
+    int end_to_end_delay();
 
-  //! return end to end delay in symbols (delay through concatenated interleaver / deinterleaver)
-  int end_to_end_delay ();
+    //! transform a single symbol
+    symbol_type transform(symbol_type input)
+    {
+        symbol_type retval = m_fifo[m_commutator]->stuff(input);
+        m_commutator++;
+        if (m_commutator >= m_nbanks)
+            m_commutator = 0;
+        return retval;
+    }
 
-  //! transform a single symbol
-  symbol_type transform (symbol_type input){
-    symbol_type retval = m_fifo[m_commutator]->stuff (input);
-    m_commutator++;
-    if (m_commutator >= m_nbanks)
-      m_commutator = 0;
-    return retval;
-  }
-
-  //! transform a bunch of symbols
-  void transform (symbol_type *out, const symbol_type *in, int nsymbols);
+    //! transform a bunch of symbols
+    void transform(symbol_type* out, const symbol_type* in, int nsymbols);
 
 protected:
-  int	m_commutator;
-  int	m_nbanks;
-  int	m_fifo_size_incr;
-  std::vector<interleaver_fifo<symbol_type> *> m_fifo;
+    int m_commutator;
+    int m_nbanks;
+    int m_fifo_size_incr;
+    std::vector<interleaver_fifo<symbol_type>*> m_fifo;
 };
 
-template<class symbol_type>
-convolutional_interleaver<symbol_type>::convolutional_interleaver (
-					   bool interleave_p,
-					   int nbanks,
-					   int fifo_size_incr)
+template <class symbol_type>
+convolutional_interleaver<symbol_type>::convolutional_interleaver(bool interleave_p,
+                                                                  int nbanks,
+                                                                  int fifo_size_incr)
 {
-  assert (nbanks >= 1);
-  assert (fifo_size_incr >= 1);
+    assert(nbanks >= 1);
+    assert(fifo_size_incr >= 1);
 
-  m_nbanks = nbanks;
-  m_fifo_size_incr = fifo_size_incr;
+    m_nbanks = nbanks;
+    m_fifo_size_incr = fifo_size_incr;
 
-  m_fifo.resize (nbanks);
+    m_fifo.resize(nbanks);
 
-  if (interleave_p){	// configure as interleaver
-    for (int i = 0; i < nbanks; i++)
-      m_fifo[i] = new interleaver_fifo<symbol_type>(i * fifo_size_incr);
-  }
-  else {		// configure as de-interleaver
-    for (int i = 0; i < nbanks; i++)
-      m_fifo[nbanks - 1 - i] = new interleaver_fifo<symbol_type>(i * fifo_size_incr);
-  }
-  sync ();
+    if (interleave_p) { // configure as interleaver
+        for (int i = 0; i < nbanks; i++)
+            m_fifo[i] = new interleaver_fifo<symbol_type>(i * fifo_size_incr);
+    } else { // configure as de-interleaver
+        for (int i = 0; i < nbanks; i++)
+            m_fifo[nbanks - 1 - i] =
+                new interleaver_fifo<symbol_type>(i * fifo_size_incr);
+    }
+    sync();
 }
 
-template<class symbol_type>
-convolutional_interleaver<symbol_type>::~convolutional_interleaver ()
+template <class symbol_type>
+convolutional_interleaver<symbol_type>::~convolutional_interleaver()
 {
-  for (int i = 0; i < m_nbanks; i++)
-    delete m_fifo[i];
+    for (int i = 0; i < m_nbanks; i++)
+        delete m_fifo[i];
 }
 
-template<class symbol_type> void
-convolutional_interleaver<symbol_type>::reset ()
+template <class symbol_type>
+void convolutional_interleaver<symbol_type>::reset()
 {
-  sync ();
-  for (int i = 0; i < m_nbanks; i++)
-    m_fifo[i]->reset ();
+    sync();
+    for (int i = 0; i < m_nbanks; i++)
+        m_fifo[i]->reset();
 }
 
-template<class symbol_type> int
-convolutional_interleaver<symbol_type>::end_to_end_delay ()
+template <class symbol_type>
+int convolutional_interleaver<symbol_type>::end_to_end_delay()
 {
-  int m = m_nbanks * m_fifo_size_incr;
-  return m * (m_nbanks - 1);
+    int m = m_nbanks * m_fifo_size_incr;
+    return m * (m_nbanks - 1);
 }
 
-template<class symbol_type> void
-convolutional_interleaver<symbol_type>::transform (symbol_type *out,
-						   const symbol_type *in,
-						   int nsymbols)
+template <class symbol_type>
+void convolutional_interleaver<symbol_type>::transform(symbol_type* out,
+                                                       const symbol_type* in,
+                                                       int nsymbols)
 {
-  // we may want to unroll this a couple of times...
-  for (int i = 0; i < nsymbols; i++)
-    out[i] = transform (in[i]);
+    // we may want to unroll this a couple of times...
+    for (int i = 0; i < nsymbols; i++)
+        out[i] = transform(in[i]);
 }
 
 #endif /* _CONVOLUTIONAL_INTERLEAVER_H_ */

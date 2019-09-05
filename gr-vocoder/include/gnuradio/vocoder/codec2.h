@@ -30,25 +30,24 @@ extern "C" {
 }
 
 namespace gr {
-  namespace vocoder {
+namespace vocoder {
 
-    class VOCODER_API codec2 {
-    public:
-
-      enum bit_rate {
-	MODE_3200 = CODEC2_MODE_3200,
-	MODE_2400 = CODEC2_MODE_2400,
-	MODE_1600 = CODEC2_MODE_1600,
-	MODE_1400 = CODEC2_MODE_1400,
-	MODE_1300 = CODEC2_MODE_1300,
-	MODE_1200 = CODEC2_MODE_1200,
-      };
-
-    private:
-
+class VOCODER_API codec2
+{
+public:
+    enum bit_rate {
+        MODE_3200 = CODEC2_MODE_3200,
+        MODE_2400 = CODEC2_MODE_2400,
+        MODE_1600 = CODEC2_MODE_1600,
+        MODE_1400 = CODEC2_MODE_1400,
+        MODE_1300 = CODEC2_MODE_1300,
+        MODE_1200 = CODEC2_MODE_1200,
     };
 
-  } /* namespace vocoder */
+private:
+};
+
+} /* namespace vocoder */
 } /* namespace gr */
 
 #endif /* _VOCODER_CODEC2_H_ */

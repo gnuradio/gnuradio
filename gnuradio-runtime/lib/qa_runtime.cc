@@ -29,35 +29,34 @@
 #include "config.h"
 #endif
 
-#include <qa_runtime.h>
 #include <qa_buffer.h>
-#include <qa_io_signature.h>
 #include <qa_circular_file.h>
+#include <qa_fast_atan2f.h>
 #include <qa_fxpt.h>
 #include <qa_fxpt_nco.h>
 #include <qa_fxpt_vco.h>
+#include <qa_io_signature.h>
 #include <qa_logger.h>
 #include <qa_math.h>
-#include <qa_vmcircbuf.h>
+#include <qa_runtime.h>
 #include <qa_sincos.h>
-#include <qa_fast_atan2f.h>
+#include <qa_vmcircbuf.h>
 
-CppUnit::TestSuite *
-qa_runtime::suite()
+CppUnit::TestSuite* qa_runtime::suite()
 {
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("runtime");
+    CppUnit::TestSuite* s = new CppUnit::TestSuite("runtime");
 
-  s->addTest(qa_buffer::suite());
-  s->addTest(qa_io_signature::suite());
-  s->addTest(qa_circular_file::suite());
-  s->addTest(qa_fxpt::suite());
-  s->addTest(qa_fxpt_nco::suite());
-  s->addTest(qa_fxpt_vco::suite());
-  s->addTest(qa_logger::suite());
-  s->addTest(qa_math::suite());
-  s->addTest(qa_vmcircbuf::suite());
-  s->addTest(qa_sincos::suite());
-  s->addTest(qa_fast_atan2f::suite());
+    s->addTest(qa_buffer::suite());
+    s->addTest(qa_io_signature::suite());
+    s->addTest(qa_circular_file::suite());
+    s->addTest(qa_fxpt::suite());
+    s->addTest(qa_fxpt_nco::suite());
+    s->addTest(qa_fxpt_vco::suite());
+    s->addTest(qa_logger::suite());
+    s->addTest(qa_math::suite());
+    s->addTest(qa_vmcircbuf::suite());
+    s->addTest(qa_sincos::suite());
+    s->addTest(qa_fast_atan2f::suite());
 
-  return s;
+    return s;
 }

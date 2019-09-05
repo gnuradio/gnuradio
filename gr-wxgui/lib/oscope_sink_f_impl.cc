@@ -25,59 +25,52 @@
 #endif
 
 #include "oscope_sink_f_impl.h"
-#include <gnuradio/wxgui/oscope_sink_x.h>
-#include <gnuradio/wxgui/oscope_guts.h>
 #include <gnuradio/io_signature.h>
+#include <gnuradio/wxgui/oscope_guts.h>
+#include <gnuradio/wxgui/oscope_sink_x.h>
 
 namespace gr {
-  namespace wxgui {
+namespace wxgui {
 
-    oscope_sink_f::sptr
-    oscope_sink_f::make(double sampling_rate, msg_queue::sptr msgq)
-    {
-      return gnuradio::get_initial_sptr
-        (new oscope_sink_f_impl(sampling_rate, msgq));
-    }
+oscope_sink_f::sptr oscope_sink_f::make(double sampling_rate, msg_queue::sptr msgq)
+{
+    return gnuradio::get_initial_sptr(new oscope_sink_f_impl(sampling_rate, msgq));
+}
 
-    oscope_sink_f_impl::oscope_sink_f_impl(double sampling_rate, msg_queue::sptr msgq)
-      : oscope_sink_x("oscope_sink_f",
-                      io_signature::make(1, oscope_guts::MAX_CHANNELS,
-                                           sizeof(float)),
-                      sampling_rate),
-        d_msgq(msgq)
-    {
-      d_guts = new oscope_guts(d_sampling_rate, d_msgq);
-    }
+oscope_sink_f_impl::oscope_sink_f_impl(double sampling_rate, msg_queue::sptr msgq)
+    : oscope_sink_x("oscope_sink_f",
+                    io_signature::make(1, oscope_guts::MAX_CHANNELS, sizeof(float)),
+                    sampling_rate),
+      d_msgq(msgq)
+{
+    d_guts = new oscope_guts(d_sampling_rate, d_msgq);
+}
 
-    oscope_sink_f_impl::~oscope_sink_f_impl()
-    {
-    }
+oscope_sink_f_impl::~oscope_sink_f_impl() {}
 
-    bool
-    oscope_sink_f_impl::check_topology(int ninputs, int noutputs)
-    {
-      return d_guts->set_num_channels(ninputs);
-    }
+bool oscope_sink_f_impl::check_topology(int ninputs, int noutputs)
+{
+    return d_guts->set_num_channels(ninputs);
+}
 
-    int
-    oscope_sink_f_impl::work(int noutput_items,
-                             gr_vector_const_void_star &input_items,
-                             gr_vector_void_star &output_items)
-    {
-      int ni = input_items.size();
-      float tmp[oscope_guts::MAX_CHANNELS];
+int oscope_sink_f_impl::work(int noutput_items,
+                             gr_vector_const_void_star& input_items,
+                             gr_vector_void_star& output_items)
+{
+    int ni = input_items.size();
+    float tmp[oscope_guts::MAX_CHANNELS];
 
-      for(int i = 0; i < noutput_items; i++) {
+    for (int i = 0; i < noutput_items; i++) {
 
         // FIXME for now, copy the data.  Fix later if reqd
-        for(int ch = 0; ch < ni; ch++)
-          tmp[ch] = ((const float*)input_items[ch])[i];
+        for (int ch = 0; ch < ni; ch++)
+            tmp[ch] = ((const float*)input_items[ch])[i];
 
         d_guts->process_sample(tmp);
-      }
-
-      return noutput_items;
     }
 
-  } /* namespace wxgui */
+    return noutput_items;
+}
+
+} /* namespace wxgui */
 } /* namespace gr */

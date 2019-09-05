@@ -23,29 +23,26 @@
 #ifndef _QA_ATSC_SLIDING_CORRELATOR_H_
 #define _QA_ATSC_SLIDING_CORRELATOR_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <stdio.h>
 
 #include <gnuradio/atsc/sliding_correlator_impl.h>
 
-class qa_atsci_sliding_correlator : public CppUnit::TestCase {
+class qa_atsci_sliding_correlator : public CppUnit::TestCase
+{
 
- public:
+public:
+    void setUp(void) { corr.reset(); }
 
-  void setUp (void)
-  {
-    corr.reset ();
-  }
+    CPPUNIT_TEST_SUITE(qa_atsci_sliding_correlator);
+    CPPUNIT_TEST(t0);
+    CPPUNIT_TEST_SUITE_END();
 
-  CPPUNIT_TEST_SUITE (qa_atsci_sliding_correlator);
-  CPPUNIT_TEST (t0);
-  CPPUNIT_TEST_SUITE_END ();
+private:
+    atsci_sliding_correlator corr;
 
- private:
-  atsci_sliding_correlator	corr;
-
-  void t0 ();
+    void t0();
 };
 
 

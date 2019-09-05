@@ -23,17 +23,17 @@
 #ifndef QA_GR_CIRCULAR_FILE_H
 #define QA_GR_CIRCULAR_FILE_H
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 class qa_circular_file : public CppUnit::TestCase
 {
-  CPPUNIT_TEST_SUITE(qa_circular_file);
-  CPPUNIT_TEST(t1);
-  CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE(qa_circular_file);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST_SUITE_END();
 
 private:
-  void t1();
+    void t1();
 };
 
 #endif /* QA_GR_CIRCULAR_FILE_H */

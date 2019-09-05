@@ -25,12 +25,12 @@
 #include <pmt/pmt.h>
 #include <boost/utility.hpp>
 #include <boost/version.hpp>
-#if ((BOOST_VERSION / 100000 >= 1) && (BOOST_VERSION / 100 % 1000 >= 53)) 
-  #include <boost/atomic.hpp>
+#if ((BOOST_VERSION / 100000 >= 1) && (BOOST_VERSION / 100 % 1000 >= 53))
+#include <boost/atomic.hpp>
 #else
-  // boost::atomic not available before 1.53
-  // This section will be removed when support for boost 1.48 ceases
-  #include <boost/detail/atomic_count.hpp>
+// boost::atomic not available before 1.53
+// This section will be removed when support for boost 1.48 ceases
+#include <boost/detail/atomic_count.hpp>
 #endif
 
 /*
@@ -39,227 +39,231 @@
  * See pmt.h for the public interface
  */
 
-#define PMT_LOCAL_ALLOCATOR 0		// define to 0 or 1
+#define PMT_LOCAL_ALLOCATOR 0 // define to 0 or 1
 namespace pmt {
 
-class PMT_API pmt_base : boost::noncopyable {
+class PMT_API pmt_base : boost::noncopyable
+{
 
-#if ((BOOST_VERSION / 100000 >= 1) && (BOOST_VERSION / 100 % 1000 >= 53)) 
-  mutable boost::atomic<int> refcount_;
+#if ((BOOST_VERSION / 100000 >= 1) && (BOOST_VERSION / 100 % 1000 >= 53))
+    mutable boost::atomic<int> refcount_;
 #else
-  // boost::atomic not available before 1.53
-  // This section will be removed when support for boost 1.48 ceases
-  mutable boost::detail::atomic_count count_;
+    // boost::atomic not available before 1.53
+    // This section will be removed when support for boost 1.48 ceases
+    mutable boost::detail::atomic_count count_;
 #endif
 
 protected:
-#if ((BOOST_VERSION / 100000 >= 1) && (BOOST_VERSION / 100 % 1000 >= 53)) 
-  pmt_base() : refcount_(0) {};
+#if ((BOOST_VERSION / 100000 >= 1) && (BOOST_VERSION / 100 % 1000 >= 53))
+    pmt_base() : refcount_(0){};
 #else
-  // boost::atomic not available before 1.53
-  // This section will be removed when support for boost 1.48 ceases
-  pmt_base() : count_(0) {};
+    // boost::atomic not available before 1.53
+    // This section will be removed when support for boost 1.48 ceases
+    pmt_base() : count_(0){};
 #endif
-  virtual ~pmt_base();
+    virtual ~pmt_base();
 
 public:
-  virtual bool is_bool()    const { return false; }
-  virtual bool is_symbol()  const { return false; }
-  virtual bool is_number()  const { return false; }
-  virtual bool is_integer() const { return false; }
-  virtual bool is_uint64()  const { return false; }
-  virtual bool is_real()    const { return false; }
-  virtual bool is_complex() const { return false; }
-  virtual bool is_null()    const { return false; }
-  virtual bool is_pair()    const { return false; }
-  virtual bool is_tuple()   const { return false; }
-  virtual bool is_vector()  const { return false; }
-  virtual bool is_dict()    const { return false; }
-  virtual bool is_any()     const { return false; }
+    virtual bool is_bool() const { return false; }
+    virtual bool is_symbol() const { return false; }
+    virtual bool is_number() const { return false; }
+    virtual bool is_integer() const { return false; }
+    virtual bool is_uint64() const { return false; }
+    virtual bool is_real() const { return false; }
+    virtual bool is_complex() const { return false; }
+    virtual bool is_null() const { return false; }
+    virtual bool is_pair() const { return false; }
+    virtual bool is_tuple() const { return false; }
+    virtual bool is_vector() const { return false; }
+    virtual bool is_dict() const { return false; }
+    virtual bool is_any() const { return false; }
 
-  virtual bool is_uniform_vector() const { return false; }
-  virtual bool is_u8vector()  const { return false; }
-  virtual bool is_s8vector()  const { return false; }
-  virtual bool is_u16vector() const { return false; }
-  virtual bool is_s16vector() const { return false; }
-  virtual bool is_u32vector() const { return false; }
-  virtual bool is_s32vector() const { return false; }
-  virtual bool is_u64vector() const { return false; }
-  virtual bool is_s64vector() const { return false; }
-  virtual bool is_f32vector() const { return false; }
-  virtual bool is_f64vector() const { return false; }
-  virtual bool is_c32vector() const { return false; }
-  virtual bool is_c64vector() const { return false; }
+    virtual bool is_uniform_vector() const { return false; }
+    virtual bool is_u8vector() const { return false; }
+    virtual bool is_s8vector() const { return false; }
+    virtual bool is_u16vector() const { return false; }
+    virtual bool is_s16vector() const { return false; }
+    virtual bool is_u32vector() const { return false; }
+    virtual bool is_s32vector() const { return false; }
+    virtual bool is_u64vector() const { return false; }
+    virtual bool is_s64vector() const { return false; }
+    virtual bool is_f32vector() const { return false; }
+    virtual bool is_f64vector() const { return false; }
+    virtual bool is_c32vector() const { return false; }
+    virtual bool is_c64vector() const { return false; }
 
-  friend void intrusive_ptr_add_ref(pmt_base* p);
-  friend void intrusive_ptr_release(pmt_base* p);
+    friend void intrusive_ptr_add_ref(pmt_base* p);
+    friend void intrusive_ptr_release(pmt_base* p);
 
-# if (PMT_LOCAL_ALLOCATOR)
-  void *operator new(size_t);
-  void operator delete(void *, size_t);
+#if (PMT_LOCAL_ALLOCATOR)
+    void* operator new(size_t);
+    void operator delete(void*, size_t);
 #endif
 };
 
 class pmt_bool : public pmt_base
 {
 public:
-  pmt_bool();
-  //~pmt_bool(){}
+    pmt_bool();
+    //~pmt_bool(){}
 
-  bool is_bool() const { return true; }
+    bool is_bool() const { return true; }
 };
 
 
 class pmt_symbol : public pmt_base
 {
-  std::string	d_name;
-  pmt_t		d_next;
+    std::string d_name;
+    pmt_t d_next;
 
 public:
-  pmt_symbol(const std::string &name);
-  //~pmt_symbol(){}
+    pmt_symbol(const std::string& name);
+    //~pmt_symbol(){}
 
-  bool is_symbol() const { return true; }
-  const std::string name() { return d_name; }
+    bool is_symbol() const { return true; }
+    const std::string name() { return d_name; }
 
-  pmt_t next() { return d_next; }		// symbol table link
-  void set_next(pmt_t next) { d_next = next; }
+    pmt_t next() { return d_next; } // symbol table link
+    void set_next(pmt_t next) { d_next = next; }
 };
 
 class pmt_integer : public pmt_base
 {
 public:
-  long		d_value;
+    long d_value;
 
-  pmt_integer(long value);
-  //~pmt_integer(){}
+    pmt_integer(long value);
+    //~pmt_integer(){}
 
-  bool is_number()  const { return true; }
-  bool is_integer() const { return true; }
-  long value() const { return d_value; }
+    bool is_number() const { return true; }
+    bool is_integer() const { return true; }
+    long value() const { return d_value; }
 };
 
 class pmt_uint64 : public pmt_base
 {
 public:
-  uint64_t		d_value;
+    uint64_t d_value;
 
-  pmt_uint64(uint64_t value);
-  //~pmt_uint64(){}
+    pmt_uint64(uint64_t value);
+    //~pmt_uint64(){}
 
-  bool is_number()  const { return true; }
-  bool is_uint64() const { return true; }
-  uint64_t value() const { return d_value; }
+    bool is_number() const { return true; }
+    bool is_uint64() const { return true; }
+    uint64_t value() const { return d_value; }
 };
 
 class pmt_real : public pmt_base
 {
 public:
-  double	d_value;
+    double d_value;
 
-  pmt_real(double value);
-  //~pmt_real(){}
+    pmt_real(double value);
+    //~pmt_real(){}
 
-  bool is_number()  const { return true; }
-  bool is_real() const { return true; }
-  double value() const { return d_value; }
+    bool is_number() const { return true; }
+    bool is_real() const { return true; }
+    double value() const { return d_value; }
 };
 
 class pmt_complex : public pmt_base
 {
 public:
-  std::complex<double>	d_value;
+    std::complex<double> d_value;
 
-  pmt_complex(std::complex<double> value);
-  //~pmt_complex(){}
+    pmt_complex(std::complex<double> value);
+    //~pmt_complex(){}
 
-  bool is_number()  const { return true; }
-  bool is_complex() const { return true; }
-  std::complex<double> value() const { return d_value; }
+    bool is_number() const { return true; }
+    bool is_complex() const { return true; }
+    std::complex<double> value() const { return d_value; }
 };
 
-class pmt_null  : public pmt_base
+class pmt_null : public pmt_base
 {
 public:
-  pmt_null();
-  //~pmt_null(){}
+    pmt_null();
+    //~pmt_null(){}
 
-  bool is_null() const { return true; }
+    bool is_null() const { return true; }
 };
 
 class pmt_pair : public pmt_base
 {
 public:
-  pmt_t		d_car;
-  pmt_t		d_cdr;
+    pmt_t d_car;
+    pmt_t d_cdr;
 
-  pmt_pair(const pmt_t& car, const pmt_t& cdr);
-  //~pmt_pair(){};
+    pmt_pair(const pmt_t& car, const pmt_t& cdr);
+    //~pmt_pair(){};
 
-  bool is_pair() const { return true; }
-  pmt_t car() const { return d_car; }
-  pmt_t cdr() const { return d_cdr; }
+    bool is_pair() const { return true; }
+    pmt_t car() const { return d_car; }
+    pmt_t cdr() const { return d_cdr; }
 
-  void set_car(pmt_t car) { d_car = car; }
-  void set_cdr(pmt_t cdr) { d_cdr = cdr; }
+    void set_car(pmt_t car) { d_car = car; }
+    void set_cdr(pmt_t cdr) { d_cdr = cdr; }
 };
 
 class pmt_vector : public pmt_base
 {
-  std::vector<pmt_t>	d_v;
+    std::vector<pmt_t> d_v;
 
 public:
-  pmt_vector(size_t len, pmt_t fill);
-  //~pmt_vector();
+    pmt_vector(size_t len, pmt_t fill);
+    //~pmt_vector();
 
-  bool is_vector() const { return true; }
-  pmt_t ref(size_t k) const;
-  void  set(size_t k, pmt_t obj);
-  void  fill(pmt_t fill);
-  size_t length() const { return d_v.size(); }
+    bool is_vector() const { return true; }
+    pmt_t ref(size_t k) const;
+    void set(size_t k, pmt_t obj);
+    void fill(pmt_t fill);
+    size_t length() const { return d_v.size(); }
 
-  pmt_t _ref(size_t k) const { return d_v[k]; }
+    pmt_t _ref(size_t k) const { return d_v[k]; }
 };
 
 class pmt_tuple : public pmt_base
 {
-  std::vector<pmt_t>	d_v;
+    std::vector<pmt_t> d_v;
 
 public:
-  pmt_tuple(size_t len);
-  //~pmt_tuple();
+    pmt_tuple(size_t len);
+    //~pmt_tuple();
 
-  bool is_tuple() const { return true; }
-  pmt_t ref(size_t k) const;
-  size_t length() const { return d_v.size(); }
+    bool is_tuple() const { return true; }
+    pmt_t ref(size_t k) const;
+    size_t length() const { return d_v.size(); }
 
-  pmt_t _ref(size_t k) const { return d_v[k]; }
-  void _set(size_t k, pmt_t v) { d_v[k] = v; }
+    pmt_t _ref(size_t k) const { return d_v[k]; }
+    void _set(size_t k, pmt_t v) { d_v[k] = v; }
 };
 
 class pmt_any : public pmt_base
 {
-  boost::any	d_any;
+    boost::any d_any;
 
 public:
-  pmt_any(const boost::any &any);
-  //~pmt_any();
+    pmt_any(const boost::any& any);
+    //~pmt_any();
 
-  bool is_any() const { return true; }
-  const boost::any &ref() const { return d_any; }
-  void  set(const boost::any &any) { d_any = any; }
+    bool is_any() const { return true; }
+    const boost::any& ref() const { return d_any; }
+    void set(const boost::any& any) { d_any = any; }
 };
 
 
 class pmt_uniform_vector : public pmt_base
 {
 public:
-  bool is_uniform_vector() const { return true; }
-  virtual const void *uniform_elements(size_t &len) = 0;
-  virtual void *uniform_writable_elements(size_t &len) = 0;
-  virtual size_t length() const = 0;
-  virtual size_t itemsize() const = 0;
-  virtual const std::string string_ref(size_t k) const { return std::string("not implemented"); }
+    bool is_uniform_vector() const { return true; }
+    virtual const void* uniform_elements(size_t& len) = 0;
+    virtual void* uniform_writable_elements(size_t& len) = 0;
+    virtual size_t length() const = 0;
+    virtual size_t itemsize() const = 0;
+    virtual const std::string string_ref(size_t k) const
+    {
+        return std::string("not implemented");
+    }
 };
 
 #include "pmt_unv_int.h"

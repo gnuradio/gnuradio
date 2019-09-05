@@ -29,34 +29,33 @@
 class ATSC_API atsci_equalizer_nop : public atsci_equalizer
 {
 private:
-  float scale (float input) { return input; }
+    float scale(float input) { return input; }
 
-  float scale_and_train (float input);
+    float scale_and_train(float input);
 
 
 public:
-  atsci_equalizer_nop ();
-  virtual ~atsci_equalizer_nop ();
+    atsci_equalizer_nop();
+    virtual ~atsci_equalizer_nop();
 
-  virtual void reset ();
-  virtual int ntaps () const;
-  virtual int npretaps () const;
+    virtual void reset();
+    virtual int ntaps() const;
+    virtual int npretaps() const;
 
 protected:
-  virtual void filter_normal (const float   *input_samples,
-			      float *output_samples,
-			      int   nsamples);
+    virtual void
+    filter_normal(const float* input_samples, float* output_samples, int nsamples);
 
-  virtual void filter_data_seg_sync (const float *input_samples,
-				     float *output_samples,
-				     int   nsamples,
-				     int   offset);
+    virtual void filter_data_seg_sync(const float* input_samples,
+                                      float* output_samples,
+                                      int nsamples,
+                                      int offset);
 
-  virtual void filter_field_sync (const float *input_samples,
-				  float *output_samples,
-				  int   nsamples,
-				  int   offset,
-				  int	which_field);
+    virtual void filter_field_sync(const float* input_samples,
+                                   float* output_samples,
+                                   int nsamples,
+                                   int offset,
+                                   int which_field);
 };
 
 

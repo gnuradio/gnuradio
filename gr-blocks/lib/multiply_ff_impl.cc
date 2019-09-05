@@ -24,43 +24,41 @@
 #include "config.h"
 #endif
 
-#include <multiply_ff_impl.h>
 #include <gnuradio/io_signature.h>
+#include <multiply_ff_impl.h>
 #include <volk/volk.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    multiply_ff::sptr multiply_ff::make(size_t vlen)
-    {
-      return gnuradio::get_initial_sptr(new multiply_ff_impl(vlen));
-    }
+multiply_ff::sptr multiply_ff::make(size_t vlen)
+{
+    return gnuradio::get_initial_sptr(new multiply_ff_impl(vlen));
+}
 
-    multiply_ff_impl::multiply_ff_impl(size_t vlen)
-      : sync_block("multiply_ff",
-		      io_signature::make (1, -1, sizeof(float)*vlen),
-		      io_signature::make (1,  1, sizeof(float)*vlen)),
-	d_vlen(vlen)
-    {
-      const int alignment_multiple =
-	volk_get_alignment() / sizeof(float);
-      set_alignment(std::max(1, alignment_multiple));
-    }
+multiply_ff_impl::multiply_ff_impl(size_t vlen)
+    : sync_block("multiply_ff",
+                 io_signature::make(1, -1, sizeof(float) * vlen),
+                 io_signature::make(1, 1, sizeof(float) * vlen)),
+      d_vlen(vlen)
+{
+    const int alignment_multiple = volk_get_alignment() / sizeof(float);
+    set_alignment(std::max(1, alignment_multiple));
+}
 
-    int
-    multiply_ff_impl::work(int noutput_items,
-			   gr_vector_const_void_star &input_items,
-			   gr_vector_void_star &output_items)
-    {
-      float *out = (float *) output_items[0];
-      int noi = d_vlen*noutput_items;
+int multiply_ff_impl::work(int noutput_items,
+                           gr_vector_const_void_star& input_items,
+                           gr_vector_void_star& output_items)
+{
+    float* out = (float*)output_items[0];
+    int noi = d_vlen * noutput_items;
 
-      memcpy(out, input_items[0], noi*sizeof(float));
-      for(size_t i = 1; i < input_items.size(); i++)
+    memcpy(out, input_items[0], noi * sizeof(float));
+    for (size_t i = 1; i < input_items.size(); i++)
         volk_32f_x2_multiply_32f(out, out, (float*)input_items[i], noi);
 
-      return noutput_items;
-    }
+    return noutput_items;
+}
 
-  } /* namespace blocks */
-}/* namespace gr */
+} /* namespace blocks */
+} /* namespace gr */

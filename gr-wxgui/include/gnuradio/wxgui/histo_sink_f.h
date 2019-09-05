@@ -23,33 +23,33 @@
 #ifndef INCLUDED_GR_HISTO_SINK_F_H
 #define INCLUDED_GR_HISTO_SINK_F_H
 
-#include <gnuradio/wxgui/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/msg_queue.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/wxgui/api.h>
 
 namespace gr {
-  namespace wxgui {
+namespace wxgui {
 
-    /*!
-     * \brief Histogram module.
-     * \ingroup sink_blk
-     */
-    class WXGUI_API histo_sink_f : virtual public sync_block
-    {
-    public:
-      // gr::blocks::histo_sink_f::sptr
-      typedef boost::shared_ptr<histo_sink_f> sptr;
+/*!
+ * \brief Histogram module.
+ * \ingroup sink_blk
+ */
+class WXGUI_API histo_sink_f : virtual public sync_block
+{
+public:
+    // gr::blocks::histo_sink_f::sptr
+    typedef boost::shared_ptr<histo_sink_f> sptr;
 
-      static sptr make(msg_queue::sptr msgq);
+    static sptr make(msg_queue::sptr msgq);
 
-      virtual unsigned int get_frame_size(void) = 0;
-      virtual unsigned int get_num_bins(void) = 0;
+    virtual unsigned int get_frame_size(void) = 0;
+    virtual unsigned int get_num_bins(void) = 0;
 
-      virtual void set_frame_size(unsigned int frame_size) = 0;
-      virtual void set_num_bins(unsigned int num_bins) = 0;
-    };
+    virtual void set_frame_size(unsigned int frame_size) = 0;
+    virtual void set_num_bins(unsigned int num_bins) = 0;
+};
 
-  } /* namespace wxgui */
+} /* namespace wxgui */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_HISTO_SINK_F_H */

@@ -24,27 +24,26 @@
 
 // typedefs for fundamental i/o types
 
-typedef atsc_mpeg_packet_no_sync	iType;
-typedef atsc_mpeg_packet_rs_encoded	oType;
+typedef atsc_mpeg_packet_no_sync iType;
+typedef atsc_mpeg_packet_rs_encoded oType;
 
-static const int NUMBER_OF_OUTPUTS = 1;	// # of output streams (almost always one)
+static const int NUMBER_OF_OUTPUTS = 1; // # of output streams (almost always one)
 
 
-GrAtscRSEncoder::GrAtscRSEncoder ()
-  : VrHistoryProc<iType,oType> (NUMBER_OF_OUTPUTS)
+GrAtscRSEncoder::GrAtscRSEncoder() : VrHistoryProc<iType, oType>(NUMBER_OF_OUTPUTS)
 {
-  // 1 + number of extra input elements at which we look.  This is
-  // used by the superclass's forecast routine to get us the correct
-  // range on our inputs.
-  // We're one-to-one input-to-output so set it to 1.
-  history = 1;
+    // 1 + number of extra input elements at which we look.  This is
+    // used by the superclass's forecast routine to get us the correct
+    // range on our inputs.
+    // We're one-to-one input-to-output so set it to 1.
+    history = 1;
 
-  // any other init here.
+    // any other init here.
 }
 
-GrAtscRSEncoder::~GrAtscRSEncoder ()
+GrAtscRSEncoder::~GrAtscRSEncoder()
 {
-  // Anything that isn't automatically cleaned up...
+    // Anything that isn't automatically cleaned up...
 }
 
 /*
@@ -53,32 +52,33 @@ GrAtscRSEncoder::~GrAtscRSEncoder ()
  * use a single input and output stream.
  */
 
-int
-GrAtscRSEncoder::work (VrSampleRange output, void *ao[],
-			VrSampleRange inputs[], void *ai[])
+int GrAtscRSEncoder::work(VrSampleRange output,
+                          void* ao[],
+                          VrSampleRange inputs[],
+                          void* ai[])
 {
-  // construct some nicer i/o pointers to work with.
+    // construct some nicer i/o pointers to work with.
 
-  iType *in  = ((iType **) ai)[0];
-  oType *out = ((oType **) ao)[0];
+    iType* in = ((iType**)ai)[0];
+    oType* out = ((oType**)ao)[0];
 
 
-  // We must produce output.size units of output.
+    // We must produce output.size units of output.
 
-  for (unsigned int i = 0; i < output.size; i++){
+    for (unsigned int i = 0; i < output.size; i++) {
 
-    // ensure that on the way in, the error bit is clear
-    // [assertion is not valid, because the randomizer has already scrambled the bits]
-    // assert ((in[i].data[0] & MPEG_TRANSPORT_ERROR_BIT) == 0);
+        // ensure that on the way in, the error bit is clear
+        // [assertion is not valid, because the randomizer has already scrambled the bits]
+        // assert ((in[i].data[0] & MPEG_TRANSPORT_ERROR_BIT) == 0);
 
-    assert (in[i].pli.regular_seg_p ());
-    out[i].pli = in[i].pli;			// copy pipeline info...
-    rs_encoder.encode (out[i], in[i]);
-  }
+        assert(in[i].pli.regular_seg_p());
+        out[i].pli = in[i].pli; // copy pipeline info...
+        rs_encoder.encode(out[i], in[i]);
+    }
 
-  // Return the number of units we produced.
-  // Note that for all intents and purposes, it is an error to
-  // produce less than you are asked for.
+    // Return the number of units we produced.
+    // Note that for all intents and purposes, it is an error to
+    // produce less than you are asked for.
 
-  return output.size;
+    return output.size;
 }

@@ -26,27 +26,27 @@
 #include <gnuradio/blocks/head.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class head_impl : public head
-    {
-    private:
-      uint64_t d_nitems;
-      uint64_t d_ncopied_items;
+class head_impl : public head
+{
+private:
+    uint64_t d_nitems;
+    uint64_t d_ncopied_items;
 
-    public:
-      head_impl(size_t sizeof_stream_item, uint64_t nitems);
-      ~head_impl();
+public:
+    head_impl(size_t sizeof_stream_item, uint64_t nitems);
+    ~head_impl();
 
-      void reset() { d_ncopied_items = 0; }
-      void set_length(uint64_t nitems) { d_nitems = nitems; }
+    void reset() { d_ncopied_items = 0; }
+    void set_length(uint64_t nitems) { d_nitems = nitems; }
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_HEAD_IMPL_H */

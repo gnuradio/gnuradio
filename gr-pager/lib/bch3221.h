@@ -24,13 +24,13 @@
 #define INCLUDED_PAGER_BCH3221_H
 
 namespace gr {
-  namespace pager {
+namespace pager {
 
-    // Perform BCH (32,21) error correction on supplied data
-    // Return number of errors found/corrected (0, 1, or 2)
-    int bch3221(int &data);
+// Perform BCH (32,21) error correction on supplied data
+// Return number of errors found/corrected (0, 1, or 2)
+int bch3221(int& data);
 
-  } /* namespace pager */
+} /* namespace pager */
 } /* namespace gr */
 
 #endif /* INCLUDED_PAGER_BCH3221_H */

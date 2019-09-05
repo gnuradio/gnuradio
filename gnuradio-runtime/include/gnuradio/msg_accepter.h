@@ -28,18 +28,18 @@
 
 namespace gr {
 
-  /*!
-   * \brief Accepts messages and inserts them into a message queue,
-   * then notifies subclass gr::basic_block there is a message pending.
-   */
-  class GR_RUNTIME_API msg_accepter : public gr::messages::msg_accepter
-  {
-  public:
+/*!
+ * \brief Accepts messages and inserts them into a message queue,
+ * then notifies subclass gr::basic_block there is a message pending.
+ */
+class GR_RUNTIME_API msg_accepter : public gr::messages::msg_accepter
+{
+public:
     msg_accepter();
     ~msg_accepter();
 
     void post(pmt::pmt_t which_port, pmt::pmt_t msg);
-  };
+};
 
 } /* namespace gr */
 

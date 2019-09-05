@@ -23,25 +23,25 @@
 #ifndef INCLUDED_QA_GR_BLOCK_H
 #define INCLUDED_QA_GR_BLOCK_H
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <stdexcept>
 
-class qa_gr_block : public CppUnit::TestCase {
+class qa_gr_block : public CppUnit::TestCase
+{
 
-  CPPUNIT_TEST_SUITE (qa_gr_block);
-  CPPUNIT_TEST (t0);
-  CPPUNIT_TEST (t1);
-  CPPUNIT_TEST (t2);
-  CPPUNIT_TEST (t3);
-  CPPUNIT_TEST_SUITE_END ();
+    CPPUNIT_TEST_SUITE(qa_gr_block);
+    CPPUNIT_TEST(t0);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST(t2);
+    CPPUNIT_TEST(t3);
+    CPPUNIT_TEST_SUITE_END();
 
- private:
-  void t0 ();
-  void t1 ();
-  void t2 ();
-  void t3 ();
-
+private:
+    void t0();
+    void t1();
+    void t2();
+    void t3();
 };
 
 

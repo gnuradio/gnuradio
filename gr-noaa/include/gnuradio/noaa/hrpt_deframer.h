@@ -23,29 +23,29 @@
 #ifndef INCLUDED_NOAA_HRPT_DEFRAMER_H
 #define INCLUDED_NOAA_HRPT_DEFRAMER_H
 
-#include <gnuradio/noaa/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/noaa/api.h>
 
 namespace gr {
-  namespace noaa {
+namespace noaa {
+
+/*!
+ * \brief NOAA HRPT Deframer
+ * \ingroup noaa_blk
+ */
+class NOAA_API hrpt_deframer : virtual public block
+{
+public:
+    // gr::noaa::hrpt_deframer::sptr
+    typedef boost::shared_ptr<hrpt_deframer> sptr;
 
     /*!
-     * \brief NOAA HRPT Deframer
-     * \ingroup noaa_blk
+     * \brief Make NOAA HRPT Deframer
      */
-    class NOAA_API hrpt_deframer : virtual public block
-    {
-    public:
-      // gr::noaa::hrpt_deframer::sptr
-      typedef boost::shared_ptr<hrpt_deframer> sptr;
+    static sptr make();
+};
 
-      /*!
-       * \brief Make NOAA HRPT Deframer
-       */
-      static sptr make();
-    };
-
-  } /* namespace noaa */
+} /* namespace noaa */
 } /* namespace gr */
 
 #endif /* INCLUDED_NOAA_HRPT_DEFRAMER_H */

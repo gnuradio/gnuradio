@@ -24,8 +24,8 @@
 #define _ATSC_SLICER_AGC_H_
 
 #include <gnuradio/atsc/api.h>
-#include <math.h>
 #include <gnuradio/filter/single_pole_iir.h>
+#include <math.h>
 
 /*!
  * \brief Automatic Gain Control class for atsc slicer
@@ -33,37 +33,40 @@
  * Given perfect data, output values will be +/- {7, 5, 3, 1}
  */
 
-class ATSC_API atsci_slicer_agc {
+class ATSC_API atsci_slicer_agc
+{
 
- public:
-  atsci_slicer_agc () : _gain(1), dc(0.0025) {};
+public:
+    atsci_slicer_agc() : _gain(1), dc(0.0025){};
 
 
-  float gain () { return _gain; }
+    float gain() { return _gain; }
 
 #if 1
-  float scale (float input){
-    float t = input * _gain;
-    float output = t - REFERENCE;
-    float error = REFERENCE - dc.filter (t);
-    _gain += error * RATE;
-    return output;
-  }
+    float scale(float input)
+    {
+        float t = input * _gain;
+        float output = t - REFERENCE;
+        float error = REFERENCE - dc.filter(t);
+        _gain += error * RATE;
+        return output;
+    }
 #else
-  float scale(float input){
-    float avg = dc.filter(input);
-    if(fabs(avg)<.1)avg=.1;
-    _gain += _gain*.99 + .01* REFERENCE/avg;
-    return input*_gain - REFERENCE;
-  }
+    float scale(float input)
+    {
+        float avg = dc.filter(input);
+        if (fabs(avg) < .1)
+            avg = .1;
+        _gain += _gain * .99 + .01 * REFERENCE / avg;
+        return input * _gain - REFERENCE;
+    }
 #endif
 
- protected:
-
-  static const float			REFERENCE = 1.25;	// pilot reference value
-  static const float 			RATE = 1.0e-5;		// adjustment rate
-  float					_gain;			// current gain
-  gr::filter::single_pole_iir<float,float,float>	dc;
+protected:
+    static const float REFERENCE = 1.25; // pilot reference value
+    static const float RATE = 1.0e-5;    // adjustment rate
+    float _gain;                         // current gain
+    gr::filter::single_pole_iir<float, float, float> dc;
 };
 
 #endif /* _ATSC_SLICER_AGC_H_ */

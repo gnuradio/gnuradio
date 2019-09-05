@@ -26,35 +26,35 @@
 #include <gnuradio/blocks/nop.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class nop_impl : public nop
-    {
-    protected:
-      int d_nmsgs_recvd;
-      int d_ctrlport_test;
+class nop_impl : public nop
+{
+protected:
+    int d_nmsgs_recvd;
+    int d_ctrlport_test;
 
-      // Method that just counts any received messages.
-      void count_received_msgs(pmt::pmt_t msg);
+    // Method that just counts any received messages.
+    void count_received_msgs(pmt::pmt_t msg);
 
-    public:
-      nop_impl(size_t sizeof_stream_item);
-      ~nop_impl();
+public:
+    nop_impl(size_t sizeof_stream_item);
+    ~nop_impl();
 
-      void setup_rpc();
+    void setup_rpc();
 
-      int nmsgs_received() const { return d_nmsgs_recvd; }
+    int nmsgs_received() const { return d_nmsgs_recvd; }
 
-      int  ctrlport_test() const { return d_ctrlport_test; }
-      void set_ctrlport_test(int x) { d_ctrlport_test = x; }
+    int ctrlport_test() const { return d_ctrlport_test; }
+    void set_ctrlport_test(int x) { d_ctrlport_test = x; }
 
-      int general_work(int noutput_items,
-                       gr_vector_int &ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items);
-    };
+    int general_work(int noutput_items,
+                     gr_vector_int& ninput_items,
+                     gr_vector_const_void_star& input_items,
+                     gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_NOP_IMPL_H */

@@ -27,37 +27,33 @@
 
 namespace gr {
 
-  /*
-   * These may need per-OS tweaking.
-   *
-   * Under linux virtual_pri ->	system_pri
-   *   0 ->   0
-   *   1 ->   5
-   *   2 ->  10
-   *   3 ->  15
-   *   4 ->  20		// typically used by jack and pulse audio
-   *   5 ->  25
-   *   6 ->  30
-   *   7 ->  35
-   *   8 ->  40
-   *   9 ->  45
-   *  10 ->  50
-   *  11 ->  54
-   *  12 ->  59
-   *  13 ->  64
-   *  14 ->  69
-   *  15 ->  74
-   */
-  rt_sched_param
-  sys_pri::python()		{ return rt_sched_param(0, RT_SCHED_RR); }
+/*
+ * These may need per-OS tweaking.
+ *
+ * Under linux virtual_pri ->	system_pri
+ *   0 ->   0
+ *   1 ->   5
+ *   2 ->  10
+ *   3 ->  15
+ *   4 ->  20		// typically used by jack and pulse audio
+ *   5 ->  25
+ *   6 ->  30
+ *   7 ->  35
+ *   8 ->  40
+ *   9 ->  45
+ *  10 ->  50
+ *  11 ->  54
+ *  12 ->  59
+ *  13 ->  64
+ *  14 ->  69
+ *  15 ->  74
+ */
+rt_sched_param sys_pri::python() { return rt_sched_param(0, RT_SCHED_RR); }
 
-  rt_sched_param
-  sys_pri::normal()		{ return rt_sched_param(2, RT_SCHED_RR); }
+rt_sched_param sys_pri::normal() { return rt_sched_param(2, RT_SCHED_RR); }
 
-  rt_sched_param
-  sys_pri::gcell_event_handler(){ return rt_sched_param(5, RT_SCHED_FIFO); }
+rt_sched_param sys_pri::gcell_event_handler() { return rt_sched_param(5, RT_SCHED_FIFO); }
 
-  rt_sched_param
-  sys_pri::usrp2_backend()	{ return rt_sched_param(6, RT_SCHED_FIFO); }
+rt_sched_param sys_pri::usrp2_backend() { return rt_sched_param(6, RT_SCHED_FIFO); }
 
 } /* namespace gr */

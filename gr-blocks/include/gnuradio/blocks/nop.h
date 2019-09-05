@@ -23,37 +23,37 @@
 #ifndef INCLUDED_GR_NOP_H
 #define INCLUDED_GR_NOP_H
 
-#include <gnuradio/blocks/api.h>
 #include <gnuradio/block.h>
-#include <stddef.h>			// size_t
+#include <gnuradio/blocks/api.h>
+#include <stddef.h> // size_t
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief Does nothing. Used for testing only.
+ * \ingroup misc_blk
+ */
+class BLOCKS_API nop : virtual public block
+{
+public:
+    // gr::blocks::nop::sptr
+    typedef boost::shared_ptr<nop> sptr;
 
     /*!
-     * \brief Does nothing. Used for testing only.
-     * \ingroup misc_blk
+     * Build a nop block.
+     *
+     * \param sizeof_stream_item size of the stream items in bytes.
      */
-    class BLOCKS_API nop : virtual public block
-    {
-    public:
-      // gr::blocks::nop::sptr
-      typedef boost::shared_ptr<nop> sptr;
+    static sptr make(size_t sizeof_stream_item);
 
-      /*!
-       * Build a nop block.
-       *
-       * \param sizeof_stream_item size of the stream items in bytes.
-       */
-      static sptr make(size_t sizeof_stream_item);
+    virtual int nmsgs_received() const = 0;
 
-      virtual int nmsgs_received() const = 0;
+    virtual int ctrlport_test() const = 0;
+    virtual void set_ctrlport_test(int x) = 0;
+};
 
-      virtual int  ctrlport_test() const = 0;
-      virtual void set_ctrlport_test(int x) = 0;
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_NOP_H */

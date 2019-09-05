@@ -25,37 +25,32 @@
 #endif
 
 #include <gnuradio/atsc/depad.h>
-#include <gnuradio/io_signature.h>
 #include <gnuradio/atsc/types.h>
+#include <gnuradio/io_signature.h>
 
-atsc_depad_sptr
-atsc_make_depad()
-{
-  return gnuradio::get_initial_sptr(new atsc_depad());
-}
+atsc_depad_sptr atsc_make_depad() { return gnuradio::get_initial_sptr(new atsc_depad()); }
 
 atsc_depad::atsc_depad()
-  : gr::sync_interpolator("atsc_depad",
-                          gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet)),
-                          gr::io_signature::make(1, 1, sizeof(unsigned char)),
-                          ATSC_MPEG_PKT_LENGTH)
+    : gr::sync_interpolator("atsc_depad",
+                            gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet)),
+                            gr::io_signature::make(1, 1, sizeof(unsigned char)),
+                            ATSC_MPEG_PKT_LENGTH)
 {
-  reset();
+    reset();
 }
 
-int
-atsc_depad::work (int noutput_items,
-		  gr_vector_const_void_star &input_items,
-		  gr_vector_void_star &output_items)
+int atsc_depad::work(int noutput_items,
+                     gr_vector_const_void_star& input_items,
+                     gr_vector_void_star& output_items)
 {
-  const atsc_mpeg_packet *in = (const atsc_mpeg_packet *) input_items[0];
-  unsigned char *out = (unsigned char *) output_items[0];
+    const atsc_mpeg_packet* in = (const atsc_mpeg_packet*)input_items[0];
+    unsigned char* out = (unsigned char*)output_items[0];
 
-  int i;
+    int i;
 
-  for (i = 0; i < noutput_items/ATSC_MPEG_PKT_LENGTH; i++){
-    memcpy(&out[i * ATSC_MPEG_PKT_LENGTH], in[i].data, ATSC_MPEG_PKT_LENGTH);
-  }
+    for (i = 0; i < noutput_items / ATSC_MPEG_PKT_LENGTH; i++) {
+        memcpy(&out[i * ATSC_MPEG_PKT_LENGTH], in[i].data, ATSC_MPEG_PKT_LENGTH);
+    }
 
-  return i * ATSC_MPEG_PKT_LENGTH;
+    return i * ATSC_MPEG_PKT_LENGTH;
 }

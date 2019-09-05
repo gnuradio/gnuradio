@@ -24,35 +24,36 @@
 #define INCLUDED_TRELLIS_INTERLEAVER_H
 
 #include <gnuradio/trellis/api.h>
+#include <string>
 #include <vector>
 
 namespace gr {
-  namespace trellis {
+namespace trellis {
 
-    /*!
-     * \brief  INTERLEAVER class
-     * \ingroup trellis_coding_blk
-     */
-    class TRELLIS_API interleaver
-    {
-    private:
-      int d_K;
-      std::vector<int> d_INTER;
-      std::vector<int> d_DEINTER;
+/*!
+ * \brief  INTERLEAVER class
+ * \ingroup trellis_coding_blk
+ */
+class TRELLIS_API interleaver
+{
+private:
+    int d_K;
+    std::vector<int> d_INTER;
+    std::vector<int> d_DEINTER;
 
-    public:
-      interleaver();
-      interleaver(const interleaver & INTERLEAVER);
-      interleaver(int K, const std::vector<int> & INTER);
-      interleaver(const char *name);
-      interleaver(int K, int seed);
-      int K () const { return d_K; }
-      const std::vector<int> & INTER() const { return d_INTER; }
-      const std::vector<int> & DEINTER() const { return d_DEINTER; }
-      void write_interleaver_txt(std::string filename);
-    };
+public:
+    interleaver();
+    interleaver(const interleaver& INTERLEAVER);
+    interleaver(int K, const std::vector<int>& INTER);
+    interleaver(const char* name);
+    interleaver(int K, int seed);
+    int K() const { return d_K; }
+    const std::vector<int>& INTER() const { return d_INTER; }
+    const std::vector<int>& DEINTER() const { return d_DEINTER; }
+    void write_interleaver_txt(std::string filename);
+};
 
-  } /* namespace trellis */
+} /* namespace trellis */
 } /* namespace gr */
 
 #endif /* INCLUDED_TRELLIS_INTERLEAVER_H */

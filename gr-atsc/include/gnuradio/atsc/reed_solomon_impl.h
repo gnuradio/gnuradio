@@ -33,25 +33,26 @@
  * See figure D5 on page 55.
  */
 
-class ATSC_API atsci_reed_solomon {
+class ATSC_API atsci_reed_solomon
+{
 
- public:
-  atsci_reed_solomon();
-  ~atsci_reed_solomon();
+public:
+    atsci_reed_solomon();
+    ~atsci_reed_solomon();
 
-  /*!
-   * \brief Add RS error correction encoding
-   */
-  void encode (atsc_mpeg_packet_rs_encoded &out, const atsc_mpeg_packet_no_sync &in);
+    /*!
+     * \brief Add RS error correction encoding
+     */
+    void encode(atsc_mpeg_packet_rs_encoded& out, const atsc_mpeg_packet_no_sync& in);
 
-  /*!
-   * Decode RS encoded packet.
-   * \returns a count of corrected symbols, or -1 if the block was uncorrectible.
-   */
-  int decode (atsc_mpeg_packet_no_sync &out, const atsc_mpeg_packet_rs_encoded &in);
+    /*!
+     * Decode RS encoded packet.
+     * \returns a count of corrected symbols, or -1 if the block was uncorrectible.
+     */
+    int decode(atsc_mpeg_packet_no_sync& out, const atsc_mpeg_packet_rs_encoded& in);
 
- private:
-  void	*d_rs;
+private:
+    void* d_rs;
 };
 
 #endif /* _ATSC_REED_SOLOMON_H_ */

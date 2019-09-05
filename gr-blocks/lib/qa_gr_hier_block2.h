@@ -23,8 +23,8 @@
 #ifndef INCLUDED_QA_GR_HIER_BLOCK2_H
 #define INCLUDED_QA_GR_HIER_BLOCK2_H
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <stdexcept>
 
 class qa_hier_block2 : public CppUnit::TestCase

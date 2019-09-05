@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_pager_EXPORTS
-#  define PAGER_API __GR_ATTR_EXPORT
+#define PAGER_API __GR_ATTR_EXPORT
 #else
-#  define PAGER_API __GR_ATTR_IMPORT
+#define PAGER_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_PAGER_API_H */

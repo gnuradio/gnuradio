@@ -31,12 +31,12 @@ class rpcserver_base;
 class rpcserver_booter_base
 {
 public:
-  rpcserver_booter_base() {;}
-  virtual ~rpcserver_booter_base() {;}
+    rpcserver_booter_base() { ; }
+    virtual ~rpcserver_booter_base() { ; }
 
-  virtual rpcserver_base* i()=0;
-  virtual const std::vector<std::string> endpoints()=0;
-  virtual const std::string& type()=0;
+    virtual rpcserver_base* i() = 0;
+    virtual const std::vector<std::string> endpoints() = 0;
+    virtual const std::string& type() = 0;
 
 private:
 };

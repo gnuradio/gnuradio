@@ -24,31 +24,18 @@
 #include <gnuradio/atsc/sync_tag_impl.h>
 #include <assert.h>
 
-atsci_equalizer_nop::atsci_equalizer_nop ()
+atsci_equalizer_nop::atsci_equalizer_nop() {}
+
+atsci_equalizer_nop::~atsci_equalizer_nop() {}
+
+void atsci_equalizer_nop::reset()
 {
+    atsci_equalizer::reset(); // invoke superclass
 }
 
-atsci_equalizer_nop::~atsci_equalizer_nop ()
-{
-}
+int atsci_equalizer_nop::ntaps() const { return 1; }
 
-void
-atsci_equalizer_nop::reset ()
-{
-  atsci_equalizer::reset ();	// invoke superclass
-}
-
-int
-atsci_equalizer_nop::ntaps () const
-{
-  return 1;
-}
-
-int
-atsci_equalizer_nop::npretaps () const
-{
-  return 0;
-}
+int atsci_equalizer_nop::npretaps() const { return 0; }
 
 /*!
  * Input range is known NOT TO CONTAIN data segment syncs
@@ -60,14 +47,13 @@ atsci_equalizer_nop::npretaps () const
  * input_samples[0] .. input_samples[nsamples - 1 + ntaps() - 1] may be
  * referenced to compute the output values.
  */
-void
-atsci_equalizer_nop::filter_normal (const float *input_samples,
-				   float *output_samples,
-				   int   nsamples)
+void atsci_equalizer_nop::filter_normal(const float* input_samples,
+                                        float* output_samples,
+                                        int nsamples)
 {
-  for (int i = 0; i < nsamples; i++){
-    output_samples[i] = scale (input_samples[i]);
-  }
+    for (int i = 0; i < nsamples; i++) {
+        output_samples[i] = scale(input_samples[i]);
+    }
 }
 
 
@@ -81,15 +67,14 @@ atsci_equalizer_nop::filter_normal (const float *input_samples,
  * input_samples[0] .. input_samples[nsamples - 1 + ntaps() - 1] may be
  * referenced to compute the output values.
  */
-void
-atsci_equalizer_nop::filter_data_seg_sync (const float *input_samples,
-					  float *output_samples,
-					  int   nsamples,
-					  int   offset)
+void atsci_equalizer_nop::filter_data_seg_sync(const float* input_samples,
+                                               float* output_samples,
+                                               int nsamples,
+                                               int offset)
 {
-  for (int i = 0; i < nsamples; i++){
-    output_samples[i] = scale_and_train (input_samples[i]);
-  }
+    for (int i = 0; i < nsamples; i++) {
+        output_samples[i] = scale_and_train(input_samples[i]);
+    }
 }
 
 
@@ -106,28 +91,23 @@ atsci_equalizer_nop::filter_data_seg_sync (const float *input_samples,
  * input_samples[0] .. input_samples[nsamples - 1 + ntaps() - 1] may be
  * referenced to compute the output values.
  */
-void
-atsci_equalizer_nop::filter_field_sync (const float *input_samples,
-				       float *output_samples,
-				       int   nsamples,
-				       int   offset,
-				       int   which_field)
+void atsci_equalizer_nop::filter_field_sync(const float* input_samples,
+                                            float* output_samples,
+                                            int nsamples,
+                                            int offset,
+                                            int which_field)
 {
-  int	i = 0;
+    int i = 0;
 
-  if (offset == 0 && nsamples > 0){
-    output_samples[0] = scale_and_train (input_samples[0]);
-    i++;
-  }
+    if (offset == 0 && nsamples > 0) {
+        output_samples[0] = scale_and_train(input_samples[0]);
+        i++;
+    }
 
-  for (; i < nsamples; i++){
-    output_samples[i] = scale_and_train (input_samples[i]);
-  }
+    for (; i < nsamples; i++) {
+        output_samples[i] = scale_and_train(input_samples[i]);
+    }
 }
 
 
-float
-atsci_equalizer_nop::scale_and_train (float input)
-{
-  return input;
-}
+float atsci_equalizer_nop::scale_and_train(float input) { return input; }

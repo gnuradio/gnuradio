@@ -29,36 +29,36 @@
 
 namespace gr {
 
-  class single_threaded_scheduler;
-  typedef boost::shared_ptr<single_threaded_scheduler> single_threaded_scheduler_sptr;
+class single_threaded_scheduler;
+typedef boost::shared_ptr<single_threaded_scheduler> single_threaded_scheduler_sptr;
 
-  /*!
-   * \brief Simple scheduler for stream computations.
-   * \ingroup internal
-   */
-  class GR_RUNTIME_API single_threaded_scheduler
-  {
-  public:
+/*!
+ * \brief Simple scheduler for stream computations.
+ * \ingroup internal
+ */
+class GR_RUNTIME_API single_threaded_scheduler
+{
+public:
     ~single_threaded_scheduler();
 
     void run();
     void stop();
 
-  private:
+private:
     const std::vector<block_sptr> d_blocks;
     volatile bool d_enabled;
-    std::ofstream *d_log;
+    std::ofstream* d_log;
 
-    single_threaded_scheduler(const std::vector<block_sptr> &blocks);
+    single_threaded_scheduler(const std::vector<block_sptr>& blocks);
 
     void main_loop();
 
     friend GR_RUNTIME_API single_threaded_scheduler_sptr
-      make_single_threaded_scheduler(const std::vector<block_sptr> &blocks);
-  };
+    make_single_threaded_scheduler(const std::vector<block_sptr>& blocks);
+};
 
-  GR_RUNTIME_API single_threaded_scheduler_sptr
-  make_single_threaded_scheduler(const std::vector<block_sptr> &blocks);
+GR_RUNTIME_API single_threaded_scheduler_sptr
+make_single_threaded_scheduler(const std::vector<block_sptr>& blocks);
 
 } /* namespace gr */
 

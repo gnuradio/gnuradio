@@ -30,23 +30,23 @@ extern "C" {
 }
 
 namespace gr {
-  namespace vocoder {
+namespace vocoder {
 
-    class g723_40_encode_sb_impl : public g723_40_encode_sb
-    {
-    private:
-      g72x_state d_state;
+class g723_40_encode_sb_impl : public g723_40_encode_sb
+{
+private:
+    g72x_state d_state;
 
-    public:
-      g723_40_encode_sb_impl();
-      ~g723_40_encode_sb_impl();
+public:
+    g723_40_encode_sb_impl();
+    ~g723_40_encode_sb_impl();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace vocoder */
+} /* namespace vocoder */
 } /* namespace gr */
 
 #endif /* INCLUDED_VOCODER_G723_40_ENCODE_SB_IMPL_H */

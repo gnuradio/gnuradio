@@ -26,40 +26,44 @@
 #include <gnuradio/digital/api.h>
 
 namespace gr {
-  namespace digital {
+namespace digital {
 
-    /*!
-     * \brief Galois Linear Feedback Shift Register using specified polynomial mask
-     * \ingroup waveform_generators_blk
-     *
-     * \details
-     * Generates a maximal length pseudo-random sequence of length 2^degree-1
-     */
-    class DIGITAL_API glfsr
+/*!
+ * \brief Galois Linear Feedback Shift Register using specified polynomial mask
+ * \ingroup waveform_generators_blk
+ *
+ * \details
+ * Generates a maximal length pseudo-random sequence of length 2^degree-1
+ */
+class DIGITAL_API glfsr
+{
+private:
+    int d_shift_register;
+    int d_mask;
+
+public:
+    glfsr(int mask, int seed)
     {
-    private:
-      int d_shift_register;
-      int d_mask;
+        d_shift_register = seed;
+        d_mask = mask;
+    }
+    ~glfsr();
 
-    public:
-      glfsr(int mask, int seed) { d_shift_register = seed; d_mask = mask; }
-      ~glfsr();
+    static int glfsr_mask(int degree);
 
-      static int glfsr_mask(int degree);
+    unsigned char next_bit()
+    {
+        unsigned char bit = d_shift_register & 1;
+        d_shift_register >>= 1;
+        if (bit)
+            d_shift_register ^= d_mask;
+        return bit;
+    }
 
-      unsigned char next_bit()
-      {
-	unsigned char bit = d_shift_register & 1;
-	d_shift_register >>= 1;
-	if(bit)
-	  d_shift_register ^= d_mask;
-	return bit;
-      }
+    int mask() const { return d_mask; }
+};
 
-      int mask() const { return d_mask; }
-    };
-
-  } /* namespace digital */
+} /* namespace digital */
 } /* namespace gr */
 
 #endif /* INCLUDED_DIGITAL_GLFSR_H */

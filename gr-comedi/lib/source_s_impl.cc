@@ -28,209 +28,199 @@
 
 #include "source_s_impl.h"
 #include <gnuradio/io_signature.h>
-#include <stdio.h>
 #include <errno.h>
+#include <stdio.h>
 #include <iostream>
 #include <stdexcept>
 
 // FIXME these should query some kind of user preference
 
 namespace gr {
-  namespace comedi {
+namespace comedi {
 
-    static std::string
-    default_device_name()
-    {
-      return "/dev/comedi0";
+static std::string default_device_name() { return "/dev/comedi0"; }
+
+// ----------------------------------------------------------------
+
+source_s::sptr source_s::make(int sampling_freq, const std::string dev)
+{
+    return gnuradio::get_initial_sptr(new source_s_impl(sampling_freq, dev));
+}
+
+source_s_impl::source_s_impl(int sampling_freq, const std::string device_name)
+    : sync_block(
+          "comedi_source_s", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
+      d_sampling_freq(sampling_freq),
+      d_device_name(device_name.empty() ? default_device_name() : device_name),
+      d_dev(0),
+      d_subdevice(0 /*COMEDI_SUBD_AI*/),
+      d_n_chan(1), // number of input channels
+      d_map(0),
+      d_buffer_size(0),
+      d_buf_front(0),
+      d_buf_back(0)
+{
+    int aref = AREF_GROUND;
+    int range = 0;
+
+    d_dev = comedi_open(d_device_name.c_str());
+    if (d_dev == 0) {
+        comedi_perror(d_device_name.c_str());
+        throw std::runtime_error("source_s_impl");
     }
 
-    // ----------------------------------------------------------------
+    unsigned int chanlist[256];
 
-    source_s::sptr
-    source_s::make(int sampling_freq, const std::string dev)
-    {
-      return gnuradio::get_initial_sptr
-	(new source_s_impl(sampling_freq, dev));
+    for (int i = 0; i < d_n_chan; i++) {
+        chanlist[i] = CR_PACK(i, range, aref);
     }
 
-    source_s_impl::source_s_impl(int sampling_freq,
-				 const std::string device_name)
-      : sync_block("comedi_source_s",
-		      io_signature::make(0, 0, 0),
-		      io_signature::make(0, 0, 0)),
-	d_sampling_freq(sampling_freq),
-	d_device_name(device_name.empty() ? default_device_name() : device_name),
-	d_dev(0),
-	d_subdevice(0/*COMEDI_SUBD_AI*/),
-	d_n_chan(1),	// number of input channels
-	d_map(0),
-	d_buffer_size(0),
-	d_buf_front(0),
-	d_buf_back(0)
-    {
-      int aref = AREF_GROUND;
-      int range = 0;
+    comedi_cmd cmd;
+    int ret;
 
-      d_dev = comedi_open(d_device_name.c_str());
-      if(d_dev == 0) {
-	comedi_perror(d_device_name.c_str());
-	throw std::runtime_error("source_s_impl");
-      }
+    ret = comedi_get_cmd_generic_timed(
+        d_dev, d_subdevice, &cmd, d_n_chan, (unsigned int)(1e9 / sampling_freq));
+    if (ret < 0)
+        bail("comedi_get_cmd_generic_timed", comedi_errno());
 
-      unsigned int chanlist[256];
+    // TODO: check period_ns is not to far off sampling_freq
 
-      for(int i=0; i<d_n_chan; i++) {
-	chanlist[i] = CR_PACK(i,range,aref);
-      }
+    d_buffer_size = comedi_get_buffer_size(d_dev, d_subdevice);
+    if (d_buffer_size <= 0)
+        bail("comedi_get_buffer_size", comedi_errno());
 
-      comedi_cmd cmd;
-      int ret;
+    d_map = mmap(NULL, d_buffer_size, PROT_READ, MAP_SHARED, comedi_fileno(d_dev), 0);
+    if (d_map == MAP_FAILED)
+        bail("mmap", errno);
 
-      ret = comedi_get_cmd_generic_timed(d_dev, d_subdevice,
-					 &cmd, d_n_chan,
-					 (unsigned int)(1e9/sampling_freq));
-      if(ret < 0)
-	bail("comedi_get_cmd_generic_timed", comedi_errno());
+    cmd.chanlist = chanlist;
+    cmd.chanlist_len = d_n_chan;
+    cmd.scan_end_arg = d_n_chan;
 
-      // TODO: check period_ns is not to far off sampling_freq
+    cmd.stop_src = TRIG_NONE;
+    cmd.stop_arg = 0;
 
-      d_buffer_size = comedi_get_buffer_size(d_dev, d_subdevice);
-      if(d_buffer_size <= 0)
-	bail("comedi_get_buffer_size", comedi_errno());
+    /* comedi_command_test() tests a command to see if the trigger
+     * sources and arguments are valid for the subdevice.  If a
+     * trigger source is invalid, it will be logically ANDed with
+     * valid values (trigger sources are actually bitmasks), which
+     * may or may not result in a valid trigger source.  If an
+     * argument is invalid, it will be adjusted to the nearest valid
+     * value.  In this way, for many commands, you can test it
+     * multiple times until it passes.  Typically, if you can't get
+     * a valid command in two tests, the original command wasn't
+     * specified very well. */
+    ret = comedi_command_test(d_dev, &cmd);
 
-      d_map = mmap(NULL, d_buffer_size, PROT_READ,
-		   MAP_SHARED, comedi_fileno(d_dev),0);
-      if(d_map == MAP_FAILED)
-	bail("mmap", errno);
+    if (ret < 0)
+        bail("comedi_command_test", comedi_errno());
 
-      cmd.chanlist = chanlist;
-      cmd.chanlist_len = d_n_chan;
-      cmd.scan_end_arg = d_n_chan;
+    ret = comedi_command_test(d_dev, &cmd);
 
-      cmd.stop_src = TRIG_NONE;
-      cmd.stop_arg = 0;
+    if (ret < 0)
+        bail("comedi_command_test", comedi_errno());
 
-      /* comedi_command_test() tests a command to see if the trigger
-       * sources and arguments are valid for the subdevice.  If a
-       * trigger source is invalid, it will be logically ANDed with
-       * valid values (trigger sources are actually bitmasks), which
-       * may or may not result in a valid trigger source.  If an
-       * argument is invalid, it will be adjusted to the nearest valid
-       * value.  In this way, for many commands, you can test it
-       * multiple times until it passes.  Typically, if you can't get
-       * a valid command in two tests, the original command wasn't
-       * specified very well. */
-      ret = comedi_command_test(d_dev,&cmd);
+    /* start the command */
+    ret = comedi_command(d_dev, &cmd);
 
-      if(ret < 0)
-	bail("comedi_command_test", comedi_errno());
+    if (ret < 0)
+        bail("comedi_command", comedi_errno());
 
-      ret = comedi_command_test(d_dev,&cmd);
+    set_output_multiple(d_n_chan * sizeof(sampl_t));
 
-      if(ret < 0)
-	bail("comedi_command_test", comedi_errno());
+    assert(sizeof(sampl_t) == sizeof(short));
+    set_output_signature(io_signature::make(1, 1, sizeof(sampl_t)));
+}
 
-      /* start the command */
-      ret = comedi_command(d_dev,&cmd);
+bool source_s_impl::check_topology(int ninputs, int noutputs)
+{
+    if (noutputs > d_n_chan)
+        throw std::runtime_error("source_s_impl");
 
-      if(ret < 0)
-	bail("comedi_command", comedi_errno());
+    return true;
+}
 
-      set_output_multiple(d_n_chan*sizeof(sampl_t));
-
-      assert(sizeof(sampl_t) == sizeof(short));
-      set_output_signature(io_signature::make(1, 1, sizeof(sampl_t)));
+source_s_impl::~source_s_impl()
+{
+    if (d_map) {
+        munmap(d_map, d_buffer_size);
+        d_map = 0;
     }
 
-    bool
-    source_s_impl::check_topology(int ninputs, int noutputs)
-    {
-      if(noutputs > d_n_chan)
-	throw std::runtime_error("source_s_impl");
+    comedi_close(d_dev);
+}
 
-      return true;
-    }
+int source_s_impl::work(int noutput_items,
+                        gr_vector_const_void_star& input_items,
+                        gr_vector_void_star& output_items)
+{
+    int ret;
 
-    source_s_impl::~source_s_impl()
-    {
-      if(d_map) {
-	munmap(d_map, d_buffer_size);
-	d_map = 0;
-      }
+    int work_left = noutput_items * sizeof(sampl_t) * d_n_chan;
+    sampl_t* pbuf = (sampl_t*)d_map;
 
-      comedi_close(d_dev);
-    }
+    do {
+        do {
+            ret = comedi_get_buffer_contents(d_dev, d_subdevice);
+            if (ret < 0)
+                bail("comedi_get_buffer_contents", comedi_errno());
 
-    int
-    source_s_impl::work(int noutput_items,
-			gr_vector_const_void_star &input_items,
-			gr_vector_void_star &output_items)
-    {
-      int ret;
+            assert(ret % sizeof(sampl_t) == 0);
+            assert(work_left % sizeof(sampl_t) == 0);
 
-      int work_left = noutput_items * sizeof(sampl_t) * d_n_chan;
-      sampl_t *pbuf = (sampl_t*)d_map;
+            ret = std::min(ret, work_left);
+            d_buf_front += ret;
 
-      do {
-	do {
-	  ret = comedi_get_buffer_contents(d_dev, d_subdevice);
-	  if(ret < 0)
-	    bail("comedi_get_buffer_contents", comedi_errno());
+            assert(d_buffer_size % d_n_chan == 0);
+            if (d_buf_front - d_buf_back > (unsigned)d_buffer_size) {
+                d_buf_front += d_buffer_size;
+                d_buf_back += d_buffer_size;
+            }
 
-	  assert(ret % sizeof(sampl_t) == 0);
-	  assert(work_left % sizeof(sampl_t) == 0);
+            if (d_buf_front == d_buf_back) {
+                usleep(1000000 * std::min(work_left, d_buffer_size / 2) /
+                       (d_sampling_freq * sizeof(sampl_t) * d_n_chan));
+                continue;
+            }
+        } while (d_buf_front == d_buf_back);
 
-	  ret = std::min(ret, work_left);
-	  d_buf_front += ret;
+        for (unsigned i = d_buf_back / sizeof(sampl_t); i < d_buf_front / sizeof(sampl_t);
+             i++) {
+            int chan = i % d_n_chan;
+            int o_idx = noutput_items - work_left / d_n_chan / sizeof(sampl_t) +
+                        (i - d_buf_back / sizeof(sampl_t)) / d_n_chan;
 
-	  assert(d_buffer_size%d_n_chan == 0);
-	  if(d_buf_front-d_buf_back > (unsigned)d_buffer_size) {
-	    d_buf_front+=d_buffer_size;
-	    d_buf_back +=d_buffer_size;
-	  }
+            if (output_items[chan])
+                ((short*)(output_items[chan]))[o_idx] =
+                    (int)pbuf[i % (d_buffer_size / sizeof(sampl_t))] - 32767;
+        }
 
-	  if(d_buf_front==d_buf_back) {
-	    usleep(1000000*std::min(work_left,
-				    d_buffer_size/2)/(d_sampling_freq*sizeof(sampl_t)*d_n_chan));
-	    continue;
-	  }
-	} while(d_buf_front == d_buf_back);
+        ret = comedi_mark_buffer_read(d_dev, d_subdevice, d_buf_front - d_buf_back);
+        if (ret < 0)
+            bail("comedi_mark_buffer_read", comedi_errno());
 
-	for(unsigned i=d_buf_back/sizeof(sampl_t); i < d_buf_front/sizeof(sampl_t); i++) {
-	  int chan = i%d_n_chan;
-	  int o_idx = noutput_items-work_left/d_n_chan/sizeof(sampl_t) + \
-	    (i-d_buf_back/sizeof(sampl_t))/d_n_chan;
+        work_left -= d_buf_front - d_buf_back;
 
-	  if(output_items[chan])
-	    ((short*)(output_items[chan]))[o_idx] =
-	      (int)pbuf[i%(d_buffer_size/sizeof(sampl_t))] - 32767;
-	}
+        d_buf_back = d_buf_front;
+    } while (work_left > 0);
 
-	ret = comedi_mark_buffer_read(d_dev,d_subdevice, d_buf_front-d_buf_back);
-	if(ret < 0)
-	  bail("comedi_mark_buffer_read", comedi_errno());
+    return noutput_items;
+}
 
-	work_left -= d_buf_front-d_buf_back;
+void source_s_impl::output_error_msg(const char* msg, int err)
+{
+    fprintf(stderr,
+            "source_s_impl[%s]: %s: %s\n",
+            d_device_name.c_str(),
+            msg,
+            comedi_strerror(err));
+}
 
-	d_buf_back = d_buf_front;
-      } while(work_left > 0);
+void source_s_impl::bail(const char* msg, int err) throw(std::runtime_error)
+{
+    output_error_msg(msg, err);
+    throw std::runtime_error("source_s_impl");
+}
 
-      return noutput_items;
-    }
-
-    void
-    source_s_impl::output_error_msg(const char *msg, int err)
-    {
-      fprintf(stderr, "source_s_impl[%s]: %s: %s\n",
-	      d_device_name.c_str(), msg,  comedi_strerror(err));
-    }
-
-    void
-    source_s_impl::bail(const char *msg, int err) throw (std::runtime_error)
-    {
-      output_error_msg(msg, err);
-      throw std::runtime_error("source_s_impl");
-    }
-
-  } /* namespace comedi */
+} /* namespace comedi */
 } /* namespace gr */

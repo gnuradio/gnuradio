@@ -24,38 +24,33 @@
 #include <config.h>
 #endif
 
-#include <cppunit/TestAssert.h>
 #include "qa_atsci_basic_trellis_encoder.h"
-#include <stdlib.h>
+#include <cppunit/TestAssert.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-void
-qa_atsci_basic_trellis_encoder::t0 ()
+void qa_atsci_basic_trellis_encoder::t0()
 {
-  const static unsigned char in[14] = {
-    0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 2, 3
-  };
+    const static unsigned char in[14] = { 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 2, 3 };
 
-  const static unsigned char expected_out[14] = {
-    0, 2, 3, 1, 1, 3, 0, 1, 2, 0, 0, 2, 5, 2
-  };
+    const static unsigned char expected_out[14] = { 0, 2, 3, 1, 1, 3, 0,
+                                                    1, 2, 0, 0, 2, 5, 2 };
 
-  for (unsigned i = 0; i < sizeof (in); i++)
-    CPPUNIT_ASSERT_EQUAL ((int) expected_out[i], enc.encode (in[i]));
+    for (unsigned i = 0; i < sizeof(in); i++)
+        CPPUNIT_ASSERT_EQUAL((int)expected_out[i], enc.encode(in[i]));
 
-  // reset encoder and test again.
+    // reset encoder and test again.
 
-  enc.reset ();
-  for (unsigned i = 0; i < sizeof (in); i++)
-    CPPUNIT_ASSERT_EQUAL ((int) expected_out[i], enc.encode (in[i]));
+    enc.reset();
+    for (unsigned i = 0; i < sizeof(in); i++)
+        CPPUNIT_ASSERT_EQUAL((int)expected_out[i], enc.encode(in[i]));
 }
 
 
-void
-qa_atsci_basic_trellis_encoder::t1 ()
+void qa_atsci_basic_trellis_encoder::t1()
 {
-  // Print data to externally check distribution.
-  // looks OK.
+    // Print data to externally check distribution.
+    // looks OK.
 #if 0
   srandom (27);
 

@@ -30,9 +30,9 @@
 
 class __GR_ATTR_EXPORT qa_digital
 {
- public:
-  //! return suite of tests for all of gr-digital directory
-  static CppUnit::TestSuite *suite();
+public:
+    //! return suite of tests for all of gr-digital directory
+    static CppUnit::TestSuite* suite();
 };
 
 #endif /* _QA_GR_DIGITAL_H_ */

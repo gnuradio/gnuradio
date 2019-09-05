@@ -22,37 +22,36 @@
 #ifndef _QA_ATSC_FS_CORRELATOR_H_
 #define _QA_ATSC_FS_CORRELATOR_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 class atsci_fs_correlator;
 
-class qa_atsci_fs_correlator : public CppUnit::TestCase {
+class qa_atsci_fs_correlator : public CppUnit::TestCase
+{
 private:
-  atsci_fs_correlator	*fsc;
+    atsci_fs_correlator* fsc;
 
- public:
+public:
+    void setUp();
+    void tearDown();
 
-  void setUp ();
-  void tearDown ();
+    CPPUNIT_TEST_SUITE(qa_atsci_fs_correlator);
+    CPPUNIT_TEST(t0);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST(t2);
+    CPPUNIT_TEST(t3);
+    CPPUNIT_TEST(t4);
+    CPPUNIT_TEST_SUITE_END();
 
-  CPPUNIT_TEST_SUITE (qa_atsci_fs_correlator);
-  CPPUNIT_TEST (t0);
-  CPPUNIT_TEST (t1);
-  CPPUNIT_TEST (t2);
-  CPPUNIT_TEST (t3);
-  CPPUNIT_TEST (t4);
-  CPPUNIT_TEST_SUITE_END ();
+private:
+    void util(int which_field, int nerr1, int nerr2);
 
- private:
-
-  void util (int which_field, int nerr1, int nerr2);
-
-  void t0 ();
-  void t1 ();
-  void t2 ();
-  void t3 ();
-  void t4 ();
+    void t0();
+    void t1();
+    void t2();
+    void t3();
+    void t4();
 };
 
 #endif /* _QA_ATSC_FS_CORRELATOR_H_ */

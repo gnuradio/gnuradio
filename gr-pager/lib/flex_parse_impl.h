@@ -23,48 +23,48 @@
 #ifndef INCLUDED_PAGER_FLEX_PARSE_IMPL_H
 #define INCLUDED_PAGER_FLEX_PARSE_IMPL_H
 
+#include "flex_modes.h"
+#include <gnuradio/msg_queue.h>
 #include <gnuradio/pager/flex_parse.h>
 #include <gnuradio/sync_block.h>
-#include <gnuradio/msg_queue.h>
-#include "flex_modes.h"
 #include <sstream>
 
 namespace gr {
-  namespace pager {
+namespace pager {
 
 #define FIELD_DELIM ((unsigned char)128)
 
-    class flex_parse_impl : public flex_parse
-    {
-    private:
-      std::ostringstream d_payload;
-      msg_queue::sptr d_queue;		  // Destination for decoded pages
+class flex_parse_impl : public flex_parse
+{
+private:
+    std::ostringstream d_payload;
+    msg_queue::sptr d_queue; // Destination for decoded pages
 
-      int d_count;	                  // Count of received codewords
-      int d_datawords[88];                // 11 blocks of 8 32-bit words
+    int d_count;         // Count of received codewords
+    int d_datawords[88]; // 11 blocks of 8 32-bit words
 
-      page_type_t d_type;	  	  // Current page type
-      int d_capcode;	                  // Current page destination address
-      bool d_laddr;	                  // Current page has long address
-      float d_freq;			  // Channel frequency
+    page_type_t d_type; // Current page type
+    int d_capcode;      // Current page destination address
+    bool d_laddr;       // Current page has long address
+    float d_freq;       // Channel frequency
 
-      void parse_data();	    	  // Handle a frame's worth of data
-      void parse_capcode(int32_t aw1, int32_t aw2);
-      void parse_alphanumeric(int mw1, int mw2, int j);
-      void parse_numeric(int mw1, int mw2, int j);
-      void parse_tone_only();
-      void parse_unknown(int mw1, int mw2);
+    void parse_data(); // Handle a frame's worth of data
+    void parse_capcode(int32_t aw1, int32_t aw2);
+    void parse_alphanumeric(int mw1, int mw2, int j);
+    void parse_numeric(int mw1, int mw2, int j);
+    void parse_tone_only();
+    void parse_unknown(int mw1, int mw2);
 
-    public:
-      flex_parse_impl(msg_queue::sptr queue, float freq);
-      ~flex_parse_impl();
+public:
+    flex_parse_impl(msg_queue::sptr queue, float freq);
+    ~flex_parse_impl();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace pager */
+} /* namespace pager */
 } /* namespace gr */
 
 #endif /* INCLUDED_PAGER_FLEX_PARSE_IMPL_H */

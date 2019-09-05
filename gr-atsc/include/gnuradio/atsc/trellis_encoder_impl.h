@@ -31,36 +31,37 @@
  * \brief fancy, schmancy 12-way interleaved trellis encoder for ATSC
  */
 
-class ATSC_API atsci_trellis_encoder {
- public:
-  static const int	NCODERS = 12;
+class ATSC_API atsci_trellis_encoder
+{
+public:
+    static const int NCODERS = 12;
 
-  atsci_trellis_encoder ();
-  ~atsci_trellis_encoder ();
+    atsci_trellis_encoder();
+    ~atsci_trellis_encoder();
 
-  //! reset all encoder states
-  void reset ();
+    //! reset all encoder states
+    void reset();
 
-  /*!
-   * Take 12 RS encoded, convolutionally interleaved segments and
-   * produce 12 trellis coded data segments.  We work in groups of 12
-   * because that's the smallest number of segments that composes a
-   * single full cycle of the encoder mux.
-   */
-  void encode (atsc_data_segment out[NCODERS],
-	       const atsc_mpeg_packet_rs_encoded in[NCODERS]);
+    /*!
+     * Take 12 RS encoded, convolutionally interleaved segments and
+     * produce 12 trellis coded data segments.  We work in groups of 12
+     * because that's the smallest number of segments that composes a
+     * single full cycle of the encoder mux.
+     */
+    void encode(atsc_data_segment out[NCODERS],
+                const atsc_mpeg_packet_rs_encoded in[NCODERS]);
 
 
- protected:
-  static const int SEGMENT_SIZE = ATSC_MPEG_RS_ENCODED_LENGTH;	// 207
-  static const int INPUT_SIZE = (SEGMENT_SIZE * 12);
-  static const int OUTPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
+protected:
+    static const int SEGMENT_SIZE = ATSC_MPEG_RS_ENCODED_LENGTH; // 207
+    static const int INPUT_SIZE = (SEGMENT_SIZE * 12);
+    static const int OUTPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
 
-  void encode_helper (unsigned char out[OUTPUT_SIZE],
-		      const unsigned char in[INPUT_SIZE]);
+    void encode_helper(unsigned char out[OUTPUT_SIZE],
+                       const unsigned char in[INPUT_SIZE]);
 
-  atsci_basic_trellis_encoder	enc[NCODERS];
-  bool				debug;
+    atsci_basic_trellis_encoder enc[NCODERS];
+    bool debug;
 };
 
 

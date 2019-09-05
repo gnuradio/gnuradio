@@ -23,34 +23,34 @@
 #ifndef GR_VMCIRCBUF_MMAP_TMPFILE_H
 #define GR_VMCIRCBUF_MMAP_TMPFILE_H
 
-#include <gnuradio/api.h>
 #include "vmcircbuf.h"
+#include <gnuradio/api.h>
 
 namespace gr {
 
-  /*!
-   * \brief concrete class to implement circular buffers with mmap and shm_open
-   * \ingroup internal
-   */
-  class GR_RUNTIME_API vmcircbuf_mmap_tmpfile : public gr::vmcircbuf
-  {
-  public:
+/*!
+ * \brief concrete class to implement circular buffers with mmap and shm_open
+ * \ingroup internal
+ */
+class GR_RUNTIME_API vmcircbuf_mmap_tmpfile : public gr::vmcircbuf
+{
+public:
     vmcircbuf_mmap_tmpfile(int size);
     virtual ~vmcircbuf_mmap_tmpfile();
-  };
+};
 
-  /*!
-   * \brief concrete factory for circular buffers built using mmap and shm_open
-   */
-  class GR_RUNTIME_API vmcircbuf_mmap_tmpfile_factory : public gr::vmcircbuf_factory
-  {
-  private:
-    static gr::vmcircbuf_factory *s_the_factory;
+/*!
+ * \brief concrete factory for circular buffers built using mmap and shm_open
+ */
+class GR_RUNTIME_API vmcircbuf_mmap_tmpfile_factory : public gr::vmcircbuf_factory
+{
+private:
+    static gr::vmcircbuf_factory* s_the_factory;
 
-  public:
-    static gr::vmcircbuf_factory *singleton();
+public:
+    static gr::vmcircbuf_factory* singleton();
 
-    virtual const char *name() const { return "gr::vmcircbuf_mmap_tmpfile_factory"; }
+    virtual const char* name() const { return "gr::vmcircbuf_mmap_tmpfile_factory"; }
 
     /*!
      * \brief return granularity of mapping, typically equal to page size
@@ -62,8 +62,8 @@ namespace gr {
      *
      * Call this to create a doubly mapped circular buffer.
      */
-    virtual gr::vmcircbuf *make(int size);
-  };
+    virtual gr::vmcircbuf* make(int size);
+};
 
 } /* namespace gr */
 

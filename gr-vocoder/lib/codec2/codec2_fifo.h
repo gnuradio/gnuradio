@@ -38,11 +38,11 @@ extern "C" {
 
 struct FIFO;
 
-struct FIFO *fifo_create(int nshort);
-void fifo_destroy(struct FIFO *fifo);
-int fifo_write(struct FIFO *fifo, short data[], int n);
-int fifo_read(struct FIFO *fifo, short data[], int n);
-int fifo_used(struct FIFO *fifo);
+struct FIFO* fifo_create(int nshort);
+void fifo_destroy(struct FIFO* fifo);
+int fifo_write(struct FIFO* fifo, short data[], int n);
+int fifo_read(struct FIFO* fifo, short data[], int n);
+int fifo_used(struct FIFO* fifo);
 
 #ifdef __cplusplus
 }

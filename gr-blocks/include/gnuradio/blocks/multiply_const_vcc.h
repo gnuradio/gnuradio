@@ -27,36 +27,36 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief output = input * constant vector (element-wise)
+ * \ingroup math_operators_blk
+ */
+class BLOCKS_API multiply_const_vcc : virtual public sync_block
+{
+public:
+    // gr::blocks::multiply_const_vcc::sptr
+    typedef boost::shared_ptr<multiply_const_vcc> sptr;
 
     /*!
-     * \brief output = input * constant vector (element-wise)
-     * \ingroup math_operators_blk
+     * \brief Create an instance of multiply_const_vcc
+     * \param k multiplicative constant vector
      */
-    class BLOCKS_API multiply_const_vcc : virtual public sync_block
-    {
-    public:
-      // gr::blocks::multiply_const_vcc::sptr
-      typedef boost::shared_ptr<multiply_const_vcc> sptr;
+    static sptr make(std::vector<gr_complex> k);
 
-      /*!
-       * \brief Create an instance of multiply_const_vcc
-       * \param k multiplicative constant vector
-       */
-      static sptr make(std::vector<gr_complex> k);
+    /*!
+     * \brief Return multiplicative constant vector
+     */
+    virtual std::vector<gr_complex> k() const = 0;
 
-      /*!
-       * \brief Return multiplicative constant vector
-       */
-      virtual std::vector<gr_complex> k() const = 0;
+    /*!
+     * \brief Set multiplicative constant vector
+     */
+    virtual void set_k(std::vector<gr_complex> k) = 0;
+};
 
-      /*!
-       * \brief Set multiplicative constant vector
-       */
-      virtual void set_k(std::vector<gr_complex> k) = 0;
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_MULTIPLY_CONST_VCC_H */

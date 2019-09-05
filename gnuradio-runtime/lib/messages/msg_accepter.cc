@@ -27,12 +27,12 @@
 #include <gnuradio/messages/msg_accepter.h>
 
 namespace gr {
-  namespace messages {
+namespace messages {
 
-    msg_accepter::~msg_accepter()
-    {
-      // NOP, required as virtual destructor
-    }
+msg_accepter::~msg_accepter()
+{
+    // NOP, required as virtual destructor
+}
 
-  } /* namespace messages */
+} /* namespace messages */
 } /* namespace gr */

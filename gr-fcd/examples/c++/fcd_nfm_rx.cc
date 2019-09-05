@@ -32,45 +32,45 @@
 #endif
 
 // Include header files for each block used in flowgraph
-#include <gnuradio/top_block.h>
-#include <gnuradio/filter/firdes.h>
-#include <gnuradio/filter/fir_filter_ccf.h>
 #include <gnuradio/analog/quadrature_demod_cf.h>
 #include <gnuradio/audio/sink.h>
 #include <gnuradio/fcd/source_c.h>
+#include <gnuradio/filter/fir_filter_ccf.h>
+#include <gnuradio/filter/firdes.h>
+#include <gnuradio/top_block.h>
 
 // other includes
-#include <iostream>
 #include <boost/program_options.hpp>
+#include <iostream>
 
 using namespace gr;
 namespace po = boost::program_options;
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
-    int rate = 48000;		// Audio card sample rate
+    int rate = 48000; // Audio card sample rate
     float pi = 3.141592654;
 
 
-    //variables to be set by po
+    // variables to be set by po
     std::string device;
     int freq;
     float gain;
 
-    //setup the program options
+    // setup the program options
     po::options_description desc("Command line options");
-    desc.add_options()
-        ("help", "This help message")
-        ("device", po::value<std::string>(&device)->default_value("hw:1"), "Audio input device")
-        ("freq", po::value<int>(&freq)->default_value(145500), "RF frequency in kHz")
-        ("gain", po::value<float>(&gain)->default_value(20.0), "LNA gain in dB")
-    ;
+    desc.add_options()("help", "This help message")(
+        "device",
+        po::value<std::string>(&device)->default_value("hw:1"),
+        "Audio input device")(
+        "freq", po::value<int>(&freq)->default_value(145500), "RF frequency in kHz")(
+        "gain", po::value<float>(&gain)->default_value(20.0), "LNA gain in dB");
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
     po::notify(vm);
 
-    //print the help message
-    if (vm.count("help")){
+    // print the help message
+    if (vm.count("help")) {
         std::cout << "Narrow band FM receiver example" << std::endl << desc << std::endl;
         return ~0;
     }
@@ -86,12 +86,12 @@ int main(int argc, char **argv)
 
     // Low pass filter
     std::vector<float> taps = filter::firdes::low_pass(1.0, 96000, 5000.0, 1000.0);
-    filter::fir_filter_ccf::sptr filter = filter::fir_filter_ccf::make (2, taps);
+    filter::fir_filter_ccf::sptr filter = filter::fir_filter_ccf::make(2, taps);
 
     // FM demodulator
     // gain = sample_rate / (2*pi*max_dev)
-    analog::quadrature_demod_cf::sptr demod = \
-      analog::quadrature_demod_cf::make(rate/(2.0*pi*5000.0));
+    analog::quadrature_demod_cf::sptr demod =
+        analog::quadrature_demod_cf::make(rate / (2.0 * pi * 5000.0));
 
     // Audio sink
     audio::sink::sptr sink = audio::sink::make(rate);

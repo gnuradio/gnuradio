@@ -23,21 +23,20 @@
 #ifndef INCLUDED_QA_SET_MSG_HANDLER_H
 #define INCLUDED_QA_SET_MSG_HANDLER_H
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <stdexcept>
 
 class qa_set_msg_handler : public CppUnit::TestCase
 {
-  CPPUNIT_TEST_SUITE(qa_set_msg_handler);
+    CPPUNIT_TEST_SUITE(qa_set_msg_handler);
 
-  CPPUNIT_TEST(t0);
+    CPPUNIT_TEST(t0);
 
-  CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE_END();
 
 private:
-
-  void t0();
+    void t0();
 };
 
 #endif /* INCLUDED_QA_SET_MSG_HANDLER_H */

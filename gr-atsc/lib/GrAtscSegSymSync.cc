@@ -22,29 +22,29 @@
 
 #include <gnuradio/atsc/GrAtscSegSymSync.h>
 #include <gnuradio/atsc/GrAtscSegSymSyncImpl_export.h>
-#include <iostream>
 #include <assert.h>
+#include <iostream>
 
-static const int DECIMATION = 2;	// close enough for super class's use
+static const int DECIMATION = 2; // close enough for super class's use
 static const int N_OUTPUTS = 2;
 
-GrAtscSegSymSync::GrAtscSegSymSync ()
-  : VrDecimatingSigProc<float,float> (N_OUTPUTS, DECIMATION)
+GrAtscSegSymSync::GrAtscSegSymSync()
+    : VrDecimatingSigProc<float, float>(N_OUTPUTS, DECIMATION)
 {
-  if (sizeof (float) != sizeof (atsc::syminfo)){
-    cerr << "GrAtscSegSymSync: sizeof (float) != sizeof (atsc::syminfo)\n";
-    assert (0);
-  }
+    if (sizeof(float) != sizeof(atsc::syminfo)) {
+        cerr << "GrAtscSegSymSync: sizeof (float) != sizeof (atsc::syminfo)\n";
+        assert(0);
+    }
 }
 
-GrAtscSegSymSync::~GrAtscSegSymSync ()
+GrAtscSegSymSync::~GrAtscSegSymSync()
 {
-  // Nop
+    // Nop
 }
 
 
-GrAtscSegSymSync *
-GrAtscSegSymSync::create (double nominal_ratio_of_rx_clock_to_symbol_freq)
+GrAtscSegSymSync*
+GrAtscSegSymSync::create(double nominal_ratio_of_rx_clock_to_symbol_freq)
 {
-  return create_GrAtscSegSymSyncImpl (nominal_ratio_of_rx_clock_to_symbol_freq);
+    return create_GrAtscSegSymSyncImpl(nominal_ratio_of_rx_clock_to_symbol_freq);
 }

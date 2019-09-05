@@ -21,31 +21,30 @@
  */
 
 #include <gnuradio/atsc/root_raised_cosine_bandpass_impl.h>
-#include <iostream>
 #include <cmath>
+#include <iostream>
 
-using std::vector;
 using std::cerr;
 using std::endl;
+using std::vector;
 
 
-vector<float>
-atsc_root_raised_cosine_bandpass::taps (double sampling_freq)
+vector<float> atsc_root_raised_cosine_bandpass::taps(double sampling_freq)
 {
 
-  vector<float> t = atsc_root_raised_cosine::taps (sampling_freq);
+    vector<float> t = atsc_root_raised_cosine::taps(sampling_freq);
 
-  cerr << "atsc_root_raised_cosine_bandpass::taps -- " << t.size () << endl;
+    cerr << "atsc_root_raised_cosine_bandpass::taps -- " << t.size() << endl;
 
-  // heterodyne the low pass coefficients up to the specified bandpass
-  // center frequency.  Note that when we do this, the filter bandwidth
-  // is effectively twice the low pass (2.69 * 2 = 5.38) and hence
-  // matches the diagram in the ATSC spec.
+    // heterodyne the low pass coefficients up to the specified bandpass
+    // center frequency.  Note that when we do this, the filter bandwidth
+    // is effectively twice the low pass (2.69 * 2 = 5.38) and hence
+    // matches the diagram in the ATSC spec.
 
-  double arg = 2 * M_PI * _center_freq / sampling_freq;
-  for (unsigned int i = 0; i < t.size (); i++)
-    // the factor of 2 keeps the gain of the passband normalized to 1
-    t[i] *= 2 * cos (arg * (double) i);
+    double arg = 2 * M_PI * _center_freq / sampling_freq;
+    for (unsigned int i = 0; i < t.size(); i++)
+        // the factor of 2 keeps the gain of the passband normalized to 1
+        t[i] *= 2 * cos(arg * (double)i);
 
-  return t;
+    return t;
 }

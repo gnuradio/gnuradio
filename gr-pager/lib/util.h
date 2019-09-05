@@ -26,12 +26,12 @@
 #include <stdint.h>
 
 namespace gr {
-  namespace pager {
+namespace pager {
 
-    unsigned char reverse_bits8(unsigned char val);
-    int32_t reverse_bits32(int32_t val);
+unsigned char reverse_bits8(unsigned char val);
+int32_t reverse_bits32(int32_t val);
 
-  } /* namespace pager */
+} /* namespace pager */
 } /* namespace gr */
 
 #endif /* INCLUDED_PAGER_UTIL_H */

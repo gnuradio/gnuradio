@@ -23,8 +23,7 @@
 #include <gnuradio/atsc/create_atsci_fs_correlator.h>
 #include <gnuradio/atsc/fs_correlator_naive_impl.h>
 
-atsci_fs_correlator *
-create_atsci_fs_correlator ()
+atsci_fs_correlator* create_atsci_fs_correlator()
 {
-  return new atsci_fs_correlator_naive ();
+    return new atsci_fs_correlator_naive();
 }

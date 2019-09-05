@@ -23,19 +23,19 @@
 #ifndef INCLUDED_QA_GR_HIER_BLOCK2_DERIVED_H
 #define INCLUDED_QA_GR_HIER_BLOCK2_DERIVED_H
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <stdexcept>
 
 // Declare a QA test case
 class qa_hier_block2_derived : public CppUnit::TestCase
 {
-  CPPUNIT_TEST_SUITE(qa_hier_block2_derived);
-  CPPUNIT_TEST(test_1);
-  CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE(qa_hier_block2_derived);
+    CPPUNIT_TEST(test_1);
+    CPPUNIT_TEST_SUITE_END();
 
 private:
-  void test_1();
+    void test_1();
 };
 
 #endif /* INCLUDED_QA_GR_HIER_BLOCK2_DERIVED_H */

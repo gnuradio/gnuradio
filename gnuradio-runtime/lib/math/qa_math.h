@@ -22,21 +22,21 @@
 #ifndef _QA_GR_MATH_H_
 #define _QA_GR_MATH_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 class qa_math : public CppUnit::TestCase
 {
-  CPPUNIT_TEST_SUITE(qa_math);
-  CPPUNIT_TEST(test_binary_slicer1);
-  CPPUNIT_TEST(test_quad_0deg_slicer1);
-  CPPUNIT_TEST(test_quad_45deg_slicer1);
-  CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE(qa_math);
+    CPPUNIT_TEST(test_binary_slicer1);
+    CPPUNIT_TEST(test_quad_0deg_slicer1);
+    CPPUNIT_TEST(test_quad_45deg_slicer1);
+    CPPUNIT_TEST_SUITE_END();
 
- private:
-  void test_binary_slicer1();
-  void test_quad_0deg_slicer1();
-  void test_quad_45deg_slicer1();
+private:
+    void test_binary_slicer1();
+    void test_quad_0deg_slicer1();
+    void test_quad_45deg_slicer1();
 };
 
 #endif /* _QA_GR_MATH_H_ */

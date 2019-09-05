@@ -23,25 +23,23 @@
 #ifndef INCLUDED_QA_GR_FXPT_H
 #define INCLUDED_QA_GR_FXPT_H
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 class qa_fxpt : public CppUnit::TestCase
 {
-  CPPUNIT_TEST_SUITE(qa_fxpt);
-  CPPUNIT_TEST(t0);
-  CPPUNIT_TEST(t1);
-  CPPUNIT_TEST(t2);
-  CPPUNIT_TEST(t3);
-  CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE(qa_fxpt);
+    CPPUNIT_TEST(t0);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST(t2);
+    CPPUNIT_TEST(t3);
+    CPPUNIT_TEST_SUITE_END();
 
- private:
-  void t0();
-  void t1();
-  void t2();
-  void t3();
+private:
+    void t0();
+    void t1();
+    void t2();
+    void t3();
 };
 
 #endif /* INCLUDED_QA_GR_FXPT_H */
-
-

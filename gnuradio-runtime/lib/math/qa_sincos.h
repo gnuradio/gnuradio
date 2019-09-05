@@ -23,19 +23,19 @@
 #ifndef _QA_SINCOS_H_
 #define _QA_SINCOS_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 class qa_sincos : public CppUnit::TestCase
 {
-  CPPUNIT_TEST_SUITE(qa_sincos);
-  CPPUNIT_TEST(t1);
-  CPPUNIT_TEST(t2);
-  CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE(qa_sincos);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST(t2);
+    CPPUNIT_TEST_SUITE_END();
 
 private:
-  void t1();
-  void t2();
+    void t1();
+    void t2();
 };
 
 #endif /* _QA_SINCOS_H_ */

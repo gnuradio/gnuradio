@@ -28,10 +28,9 @@
 
 #include "qa_howto.h"
 
-CppUnit::TestSuite *
-qa_howto::suite()
+CppUnit::TestSuite* qa_howto::suite()
 {
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("howto");
+    CppUnit::TestSuite* s = new CppUnit::TestSuite("howto");
 
-  return s;
+    return s;
 }

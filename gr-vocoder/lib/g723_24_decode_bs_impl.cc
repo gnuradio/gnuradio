@@ -29,40 +29,35 @@
 #include <limits.h>
 
 namespace gr {
-  namespace vocoder {
+namespace vocoder {
 
-    g723_24_decode_bs::sptr
-    g723_24_decode_bs::make()
-    {
-      return gnuradio::get_initial_sptr
-	(new g723_24_decode_bs_impl());
-    }
+g723_24_decode_bs::sptr g723_24_decode_bs::make()
+{
+    return gnuradio::get_initial_sptr(new g723_24_decode_bs_impl());
+}
 
-    g723_24_decode_bs_impl::g723_24_decode_bs_impl()
-      : sync_block("vocoder_g723_24_decode_bs",
-		      io_signature::make(1, 1, sizeof(unsigned char)),
-		      io_signature::make(1, 1, sizeof(short)))
-    {
-      g72x_init_state(&d_state);
-    }
+g723_24_decode_bs_impl::g723_24_decode_bs_impl()
+    : sync_block("vocoder_g723_24_decode_bs",
+                 io_signature::make(1, 1, sizeof(unsigned char)),
+                 io_signature::make(1, 1, sizeof(short)))
+{
+    g72x_init_state(&d_state);
+}
 
-    g723_24_decode_bs_impl::~g723_24_decode_bs_impl()
-    {
-    }
+g723_24_decode_bs_impl::~g723_24_decode_bs_impl() {}
 
-    int
-    g723_24_decode_bs_impl::work(int noutput_items,
-				 gr_vector_const_void_star &input_items,
-				 gr_vector_void_star &output_items)
-    {
-      const unsigned char *in = (const unsigned char*)input_items[0];
-      short *out = (short*)output_items[0];
+int g723_24_decode_bs_impl::work(int noutput_items,
+                                 gr_vector_const_void_star& input_items,
+                                 gr_vector_void_star& output_items)
+{
+    const unsigned char* in = (const unsigned char*)input_items[0];
+    short* out = (short*)output_items[0];
 
-      for(int i = 0; i < noutput_items; i++)
-	out[i] = g723_24_decoder(in[i], AUDIO_ENCODING_LINEAR, &d_state);
+    for (int i = 0; i < noutput_items; i++)
+        out[i] = g723_24_decoder(in[i], AUDIO_ENCODING_LINEAR, &d_state);
 
-      return noutput_items;
-    }
+    return noutput_items;
+}
 
-  } /* namespace vocoder */
+} /* namespace vocoder */
 } /* namespace gr */

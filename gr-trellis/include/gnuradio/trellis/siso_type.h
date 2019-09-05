@@ -24,14 +24,11 @@
 #define INCLUDED_TRELLIS_SISO_TYPE_H
 
 namespace gr {
-  namespace trellis {
+namespace trellis {
 
-    typedef enum {
-      TRELLIS_MIN_SUM = 200,
-      TRELLIS_SUM_PRODUCT
-    } siso_type_t;
+typedef enum { TRELLIS_MIN_SUM = 200, TRELLIS_SUM_PRODUCT } siso_type_t;
 
-  } /* namespace trellis */
+} /* namespace trellis */
 } /* namespace gr */
 
 #endif /* INCLUDED_TRELLIS_SISO_TYPE_H */

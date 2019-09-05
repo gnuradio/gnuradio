@@ -23,23 +23,23 @@
 #ifndef _QA_MMSE_INTERP_DIFFERENTIATOR_FF_H_
 #define _QA_MMSE_INTERP_DIFFERENTIATOR_FF_H_
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 namespace gr {
-  namespace filter {
+namespace filter {
 
-    class qa_mmse_interp_differentiator_ff : public CppUnit::TestCase
-    {
-      CPPUNIT_TEST_SUITE(qa_mmse_interp_differentiator_ff);
-      CPPUNIT_TEST(t1);
-      CPPUNIT_TEST_SUITE_END();
+class qa_mmse_interp_differentiator_ff : public CppUnit::TestCase
+{
+    CPPUNIT_TEST_SUITE(qa_mmse_interp_differentiator_ff);
+    CPPUNIT_TEST(t1);
+    CPPUNIT_TEST_SUITE_END();
 
-    private:
-      void t1();
-    };
+private:
+    void t1();
+};
 
-  } /* namespace filter */
+} /* namespace filter */
 } /* namespace gr */
 
 #endif /* _QA_MMSE_INTERP_DIFFERENTIATOR_FF_H_ */

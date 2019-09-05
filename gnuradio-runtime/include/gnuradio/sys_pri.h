@@ -30,12 +30,13 @@
  */
 namespace gr {
 
-  struct GR_RUNTIME_API sys_pri {
-    static struct GR_RUNTIME_API rt_sched_param python();		  // python code
-    static struct GR_RUNTIME_API rt_sched_param normal();		  // normal blocks
+struct GR_RUNTIME_API sys_pri {
+    static struct GR_RUNTIME_API rt_sched_param python(); // python code
+    static struct GR_RUNTIME_API rt_sched_param normal(); // normal blocks
     static struct GR_RUNTIME_API rt_sched_param gcell_event_handler();
-    static struct GR_RUNTIME_API rt_sched_param usrp2_backend();	  // thread that services the ethernet
-  };
+    static struct GR_RUNTIME_API rt_sched_param
+    usrp2_backend(); // thread that services the ethernet
+};
 
 } /* namespace gr */
 

@@ -31,9 +31,9 @@
 
 class __GR_ATTR_EXPORT qa_howto
 {
- public:
-  //! return suite of tests for all of gr-filter directory
-  static CppUnit::TestSuite *suite();
+public:
+    //! return suite of tests for all of gr-filter directory
+    static CppUnit::TestSuite* suite();
 };
 
 #endif /* _QA_HOWTO_H_ */
