@@ -177,7 +177,7 @@ public:
     static std::vector<float> blackman_harris(int ntaps, int atten = 92);
 
     /*!
-     * Alias to gr::fft::window::blakcman_harris.
+     * Alias to gr::fft::window::blackman_harris.
      */
     static std::vector<float> blackmanharris(int ntaps, int atten = 92);
 
