@@ -53,7 +53,7 @@ def build(id, label='', category='', flags='', documentation='',
 
     cpp_templates = cpp_templates or {}
     cls.cpp_templates = MakoTemplates(
-        includes=cpp_templates.get('includes', ''),
+        includes=cpp_templates.get('includes', []),
         make=cpp_templates.get('make', ''),
         callbacks=cpp_templates.get('callbacks', []),
         var_make=cpp_templates.get('var_make', ''),

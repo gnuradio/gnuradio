@@ -8,3 +8,5 @@ multiple_connections_per_output: true
 templates:
 -   type: [message, message]
     connect: self.msg_connect(${ make_port_sig(source) }, ${ make_port_sig(sink) })
+    cpp_connect: hier_block2::msg_connect(${ make_port_sig(source) }, ${ make_port_sig(sink) })
+

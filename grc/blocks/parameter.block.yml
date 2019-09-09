@@ -39,7 +39,7 @@ templates:
     make: ${value}
 
 cpp_templates:
-    var_make: ${type.type} ${id} = ${id};
+    var_make: ${id} = ${value};
     make: ${value}
 
 documentation: |-

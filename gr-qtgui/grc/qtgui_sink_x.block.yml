@@ -1,6 +1,6 @@
 id: qtgui_sink_x
 label: QT GUI Sink
-flags: [ python ]
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -128,6 +128,32 @@ templates:
         self.${id}.enable_rf_freq(${showrf})
 
         ${gui_hint() % win}
+
+
+cpp_templates:
+  includes: ['#include <gnuradio/qtgui/${type.fcn}.h>', '#include <gnuradio/filter/firdes.h>']
+  declarations: gr::qtgui::${type.fcn}::sptr ${id};
+  make: |-
+    ${id} = gr::qtgui::${type.fcn}::make(
+            ${fftsize}, //fftsize
+            gr::filter::${wintype.replace('.', '::win_type::')}, //wintype
+            ${fc}, //fc
+            ${bw}, //bw
+            ${name}, //name
+            ${plotfreq}, //plotfreq
+            ${plotwaterfall}, //plotwaterfall
+            ${plottime}, //plottime
+            ${plotconst} //plotconst
+        );
+    ${id}->set_update_time(1.0/${rate});   
+    ${id}->enable_rf_freq(${showrf});
+    ## Attempt to replicate logic of Python gui_hint() method
+    this->top_grid_layout->addWidget(${id + '->qwidget()' + (', ' + str(gui_hint)[1:-1] if len(gui_hint) > 2 else '')});
+
+  link: ['gnuradio-qtgui', 'Qt5Widgets', 'Qt5Core']
+  translations:
+    'True': 'true'
+    'False': 'false'
 
 documentation: |-
     The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.

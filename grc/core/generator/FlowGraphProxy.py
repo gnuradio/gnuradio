@@ -140,7 +140,7 @@ class FlowGraphProxy(object):  # TODO: move this in a refactored Generator
         Returns:
             a list of #include statements
         """
-        return [block.cpp_templates.render('includes') for block in self.iter_enabled_blocks()]
+        return [block.cpp_templates.render('includes') for block in self.iter_enabled_blocks() if not (block.is_virtual_sink() or block.is_virtual_source())]
 
     def links(self):
         """
@@ -149,7 +149,7 @@ class FlowGraphProxy(object):  # TODO: move this in a refactored Generator
         Returns:
             a list of GNU Radio modules
         """
-        return [block.cpp_templates.render('link') for block in self.iter_enabled_blocks()]
+        return [block.cpp_templates.render('link') for block in self.iter_enabled_blocks() if not (block.is_virtual_sink() or block.is_virtual_source())]
 
 def get_hier_block_io(flow_graph, direction, domain=None):
     """

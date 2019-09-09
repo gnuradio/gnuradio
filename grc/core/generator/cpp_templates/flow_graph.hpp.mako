@@ -77,7 +77,7 @@ ${indent(declarations)}
 % if parameters:
 // Parameters:
 % for param in parameters:
-    ${param.get_cpp_var_make()}
+    ${param.vtype} ${param.cpp_templates.render('var_make')}
 % endfor
 % endif
 

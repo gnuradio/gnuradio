@@ -18,10 +18,12 @@ class VirtualSink(Block):
 
     key = 'virtual_sink'
     label = 'Virtual Sink'
+    flags = Block.flags
+    flags.set('cpp')
 
     parameters_data = build_params(
         params_raw=[dict(label='Stream ID', id='stream_id', dtype='stream_id')],
-        have_inputs=False, have_outputs=False, flags=Block.flags, block_id=key
+        have_inputs=False, have_outputs=False, flags=flags, block_id=key
     )
     inputs_data = [dict(domain='stream', dtype='', direction='sink', id="0")]
 
@@ -40,10 +42,12 @@ class VirtualSource(Block):
 
     key = 'virtual_source'
     label = 'Virtual Source'
+    flags = Block.flags
+    flags.set('cpp')
 
     parameters_data = build_params(
         params_raw=[dict(label='Stream ID', id='stream_id', dtype='stream_id')],
-        have_inputs=False, have_outputs=False, flags=Block.flags, block_id=key
+        have_inputs=False, have_outputs=False, flags=flags, block_id=key
     )
     outputs_data = [dict(domain='stream', dtype='', direction='source', id="0")]
 
