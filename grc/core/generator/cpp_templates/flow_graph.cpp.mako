@@ -140,7 +140,7 @@ int main (int argc, char **argv) {
     % endif
 
     % if generate_options == 'no_gui':
-    ${class_name}* top_block = new ${class_name}();
+    ${class_name}* top_block = new ${class_name}(${param_str_without_types});
     ## TODO: params
     % if flow_graph.get_option('run_options') == 'prompt':
     top_block->tb->start();

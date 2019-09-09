@@ -271,7 +271,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
         parameters = fg.get_parameters()
 
         for param in parameters:
-            type_translation = {'eng_float' : 'double', 'intx' : 'int', 'std' : 'std::string'};
+            type_translation = {'eng_float' : 'double', 'intx' : 'int', 'str' : 'std::string'};
             param.vtype = type_translation[param.params['type'].value]
 
     def _callbacks(self):
