@@ -45,7 +45,7 @@ templates:
 cpp_templates:
     includes: ['#include <gnuradio/blocks/socket_pdu.h>']
     declarations: 'blocks::socket_pdu::sptr ${id};'
-    make: 'this->${id} = blocks::socket_pdu::make(${type}, ${host}, ${port}, ${mtu}, ${tcp_no_delay});'
+    make: 'this->${id} = blocks::socket_pdu::make("${type}", ${host}, ${port}, ${mtu}, ${tcp_no_delay});'
     translations:
         'True': 'true'
         'False': 'false'

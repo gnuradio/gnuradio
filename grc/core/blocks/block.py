@@ -77,7 +77,7 @@ class Block(Element):
 
         self.states = {'state': True, 'bus_source': False, 'bus_sink': False, 'bus_structure': None}
 
-        if 'cpp' in self.flags:
+        if 'cpp' in self.flags and not (self.is_virtual_source() or self.is_virtual_sink()):
             self.orig_cpp_templates = self.cpp_templates # The original template, in case we have to edit it when transpiling to C++         
 
         self.current_bus_structure = {'source': None, 'sink': None}
@@ -400,7 +400,7 @@ class Block(Element):
 
         return [make_callback(c) for c in self.cpp_templates.render('callbacks')]
 
-    def decide_type(self):
+    def format_expr(self, py_type):
         """
         Evaluate the value of the variable block and decide its type.
 
@@ -410,60 +410,112 @@ class Block(Element):
         value = self.params['value'].value
         self.cpp_templates = copy.copy(self.orig_cpp_templates)
 
-        def get_type(element):
+        # Determine the lvalue type
+        def get_type(element, _vtype):
+            evaluated = None
             try:
                 evaluated = ast.literal_eval(element)
+                if _vtype == None:
+                    _vtype = type(evaluated)
+            except ValueError or SyntaxError as excp:
+                    if _vtype == None:
+                        print(excp)
 
-            except ValueError or SyntaxError:
-                if re.match(r'^(numpy|np|scipy|sp)\.pi$', value):
-                    return 'pi'
+            if _vtype in [int, float, bool, list, dict, str, complex]:
+                if _vtype == (int or long):
+                    return 'int'
+
+                if _vtype == float:
+                    return 'double'
+
+                if _vtype == bool:
+                    return 'bool'
+             
+                if _vtype == complex:
+                    return 'gr_complex'
+
+                if _vtype == list:
+                    try:
+                        # For container types we must also determine the type of the template parameter(s)
+                        return 'std::vector<' + get_type(str(evaluated[0]), type(evaluated[0])) + '>'
+
+                    except IndexError: # empty list
+                        return 'std::vector<std::string>'
+
+                if _vtype == dict:
+                    try:
+                        # For container types we must also determine the type of the template parameter(s)
+                        key = list(evaluated)[0]
+                        val = list(evaluated.values())[0]
+                        return 'std::map<' + get_type(str(key), type(key)) + ', ' + get_type(str(val), type(val)) +'>'
+
+                    except IndexError: # empty dict
+                        return 'std::map<std::string, std::string>'
+
                 else:
                     return 'std::string'
 
-            else:
-                _vtype = type(evaluated)
-                if _vtype in [int, float, bool, list]:
-                    if _vtype == (int or long):
-                        return 'int'
-
-                    if _vtype == float:
-                        return 'double'
-
-                    if _vtype == bool:
-                        return 'bool'
-
-                    if _vtype == list:
-                        try:
-                            first_element_type = type(evaluated[0])
-                            if first_element_type != str:
-                                list_type = get_type(str(evaluated[0]))
-                            else:
-                                list_type = get_type(evaluated[0])
-
-                        except IndexError: # empty list
-                            return 'std::vector<std::string>'
-
-                        else:
-                            return 'std::vector<' + list_type + '>'
-
-                else:
-                    return 'std::string'
-
-        self.vtype = get_type(value)
-        if self.vtype == 'bool':
-            self.cpp_templates['var_make'] = self.cpp_templates['var_make'].replace('${value}', (value[0].lower() + value[1:]))
-
-        elif self.vtype == 'pi':
-            self.vtype = 'double'
-            self.cpp_templates['var_make'] = self.cpp_templates['var_make'].replace('${value}', 'boost::math::constants::pi<double>()')
-            self.cpp_templates['includes'].append('#include <boost/math/constants/constants.hpp>')
-
-        elif 'std::vector' in self.vtype:
-            self.cpp_templates['includes'].append('#include <vector>')
-            self.cpp_templates['var_make'] = self.cpp_templates['var_make'].replace('${value}', '{' + value[1:-1] + '}')
+        # Get the lvalue type
+        self.vtype = get_type(value, py_type)
+    
+        # The r-value for these types must be transformed to create legal C++ syntax.
+        if self.vtype in ['bool', 'gr_complex'] or 'std::map' in self.vtype or 'std::vector' in self.vtype:
+            evaluated = ast.literal_eval(value)
+            self.cpp_templates['var_make'] = self.cpp_templates['var_make'].replace('${value}', self.get_cpp_value(evaluated)) 
 
         if 'string' in self.vtype:
             self.cpp_templates['includes'].append('#include <string>')
+
+
+    def get_cpp_value(self, pyval):
+
+        if type(pyval) == int or type(pyval) == float:
+            val_str = str(pyval)
+
+            # Check for PI and replace with C++ constant
+            pi_re = r'^(math|numpy|np|scipy|sp)\.pi$'
+            if re.match(pi_re, str(pyval)):
+                val_str = re.sub(pi_re, 'boost::math::constants::pi<double>()', val_str)
+                self.cpp_templates['includes'].append('#include <boost/math/constants/constants.hpp>')
+                
+            return str(pyval)
+
+        elif type(pyval) == bool:
+            return str(pyval)[0].lower() + str(pyval)[1:]
+
+        elif type(pyval) == complex:
+            self.cpp_templates['includes'].append('#include <gnuradio/gr_complex.h>')
+            evaluated = ast.literal_eval(str(pyval).strip())
+            return '{' + str(evaluated.real) + ', ' + str(evaluated.imag) + '}'
+
+        elif type(pyval) == list:
+            self.cpp_templates['includes'].append('#include <vector>')
+            val_str = '{'
+            for element in pyval:
+                val_str += self.get_cpp_value(element) + ', '
+
+            if len(val_str) > 1:
+              # truncate to trim superfluous ', ' from the end
+              val_str = val_str[0:-2]
+ 
+            return val_str + '}'
+
+        elif type(pyval) == dict:
+            self.cpp_templates['includes'].append('#include <map>')
+            val_str = '{'
+            for key in pyval:
+                val_str += '{' + self.get_cpp_value(key) + ', ' + self.get_cpp_value(pyval[key]) + '}, '
+
+            if len(val_str) > 1:
+              # truncate to trim superfluous ', ' from the end
+              val_str = val_str[0:-2]
+
+            return val_str + '}'
+
+        if type(self.vtype) == str:
+            self.cpp_templates['includes'].append('#include <string>')
+            return '"' + pyval + '"'    
+
 
     def is_virtual_sink(self):
         return self.key == 'virtual_sink'
