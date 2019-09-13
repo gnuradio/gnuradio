@@ -113,7 +113,7 @@ void ${class_name}::set_${var.name} (${var.vtype} ${var.name}) {
 int main (int argc, char **argv) {
     % if parameters:
     % for parameter in parameters:
-    ${parameter.vtype} ${parameter.name};
+    ${parameter.vtype} ${parameter.name} = ${parameter.cpp_templates.render('make')};
     % endfor
 
     po::options_description desc("Options");
