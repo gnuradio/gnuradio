@@ -25,24 +25,25 @@
   along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "sine.h" /* global defines for coder */
+#include "sine.h"	/* global defines for coder */
 
 /* Globals used in encoder and decoder */
 
-int frames;  /* number of frames processed so far */
-float Sn[M]; /* float input speech samples */
-MODEL model; /* model parameters for the current frame */
-int Nw;      /* number of samples in analysis window */
-float sig;   /* energy of current frame */
+int frames;		/* number of frames processed so far */
+float Sn[M];	        /* float input speech samples */
+MODEL model;		/* model parameters for the current frame */
+int Nw;			/* number of samples in analysis window */
+float sig;		/* energy of current frame */
 
 /* Globals used in encoder */
 
-float w[M];       /* time domain hamming window */
-COMP W[FFT_ENC];  /* DFT of w[] */
-COMP Sw[FFT_ENC]; /* DFT of current frame */
+float w[M];	        /* time domain hamming window */
+COMP W[FFT_ENC];	/* DFT of w[] */
+COMP Sw[FFT_ENC];	/* DFT of current frame */
 
 /* Globals used in decoder */
 
-COMP Sw_[FFT_ENC]; /* DFT of all voiced synthesised signal */
-float Sn_[AW_DEC]; /* synthesised speech */
-float Pn[AW_DEC];  /* time domain Parzen (trapezoidal) window */
+COMP Sw_[FFT_ENC];	/* DFT of all voiced synthesised signal */
+float Sn_[AW_DEC];	/* synthesised speech */
+float Pn[AW_DEC];	/* time domain Parzen (trapezoidal) window */
+

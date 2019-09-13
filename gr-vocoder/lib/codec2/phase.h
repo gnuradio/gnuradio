@@ -30,7 +30,10 @@
 
 #include "kiss_fft.h"
 
-void phase_synth_zero_order(
-    kiss_fft_cfg fft_dec_cfg, MODEL* model, float aks[], float* ex_phase, int order);
+void phase_synth_zero_order(kiss_fft_cfg fft_dec_cfg,
+			    MODEL *model,
+			    float aks[],
+                            float *ex_phase,
+			    int order);
 
 #endif

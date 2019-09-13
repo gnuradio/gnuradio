@@ -42,10 +42,10 @@
 #define TIMER_SAMPLE_AND_LOG2(prev_timestamp, label)
 #endif
 
-void machdep_timer_init(void);
-void machdep_timer_reset(void);
+void         machdep_timer_init(void);
+void         machdep_timer_reset(void);
 unsigned int machdep_timer_sample(void);
 unsigned int machdep_timer_sample_and_log(unsigned int start, char s[]);
-void machdep_timer_print_logged_samples(void);
+void         machdep_timer_print_logged_samples(void);
 
 #endif
