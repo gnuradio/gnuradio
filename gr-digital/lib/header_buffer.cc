@@ -48,7 +48,7 @@ void header_buffer::clear()
         d_input.clear();
 }
 
-size_t header_buffer::length() const
+std::size_t header_buffer::length() const
 {
     if (d_buffer) // TX mode
         return d_offset;

@@ -24,6 +24,7 @@
 
 #include <gnuradio/digital/api.h>
 #include <stdint.h>
+#include <cstddef>
 #include <vector>
 
 namespace gr {
@@ -167,7 +168,7 @@ namespace digital {
 class DIGITAL_API header_buffer
 {
 private:
-    size_t d_offset;
+    std::size_t d_offset;
     uint8_t* d_buffer;
 
     std::vector<bool> d_input;
@@ -209,7 +210,7 @@ public:
      * In receiving mode, this returns the current length in bits of
      * the received header.
      */
-    size_t length() const;
+     std::size_t length() const;
 
     /*!
      * Returns a constant pointer to the buffer.
