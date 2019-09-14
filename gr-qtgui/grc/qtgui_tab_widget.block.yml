@@ -1,6 +1,6 @@
 id: qtgui_tab_widget
 label: QT GUI Tab Widget
-flags: [ python ]
+flags: [show_id, python ]
 
 parameters:
 -   id: num_tabs
