@@ -41,7 +41,10 @@
 #include <vector>
 
 #if QWT_VERSION >= 0x060000
+// clang-format off
+#include <qwt_point_3d.h> // doesn't seem necessary, but is...
 #include <qwt_compat.h>
+// clang-format on
 #endif
 
 typedef QList<QColor> QColorList;
