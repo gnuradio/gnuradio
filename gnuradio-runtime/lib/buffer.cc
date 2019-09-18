@@ -340,11 +340,20 @@ void buffer_reader::get_tags_in_range(std::vector<tag_t>& v,
 {
     gr::thread::scoped_lock guard(*mutex());
 
+    uint64_t lower_bound = abs_start - d_attr_delay;
+    // check for underflow and if so saturate at 0
+    if (lower_bound > abs_start)
+      lower_bound = 0;
+    uint64_t upper_bound = abs_end - d_attr_delay;
+    // check for underflow and if so saturate at 0
+    if (upper_bound > abs_end)
+      upper_bound = 0;
+
     v.clear();
     std::multimap<uint64_t, tag_t>::iterator itr =
-        d_buffer->get_tags_lower_bound(std::min(abs_start, abs_start - d_attr_delay));
+        d_buffer->get_tags_lower_bound(lower_bound);
     std::multimap<uint64_t, tag_t>::iterator itr_end =
-        d_buffer->get_tags_upper_bound(std::min(abs_end, abs_end - d_attr_delay));
+        d_buffer->get_tags_upper_bound(upper_bound);
 
     uint64_t item_time;
     while (itr != itr_end) {
