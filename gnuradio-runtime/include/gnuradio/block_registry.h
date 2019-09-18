@@ -25,6 +25,7 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/basic_block.h>
+#include <gnuradio/thread/thread.h>
 #include <map>
 
 namespace gr {
