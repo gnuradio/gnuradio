@@ -428,7 +428,7 @@ class Block(Element):
 
             else:
                 _vtype = type(evaluated)
-                if _vtype in [int, float, bool, list]:
+                if _vtype in [int, float, bool, list, dict]:
                     if _vtype == (int or long):
                         return 'int'
 
@@ -452,6 +452,27 @@ class Block(Element):
                         else:
                             return 'std::vector<' + list_type + '>'
 
+                    if _vtype == dict:
+                        try:
+                            key_element_type = type(list(evaluated)[0])
+                            if key_element_type != str:
+                                key_type = get_type(str(list(evaluated)[0]))
+                            else:
+                                key_type = get_type(list(evaluated)[0])
+
+                            val_element_type = type(list(evaluated.values())[0])
+                            if val_element_type != str:
+                                val_type = get_type(str(list(evaluated.values())[0]))
+                            else:
+                                val_type = get_type(list(evaluated.values())[0])
+
+
+                        except IndexError: # empty dict
+                            return 'std::map<std::string, std::string>'
+
+                        else:
+                            return 'std::map<' + key_type + ', ' + val_type +'>'
+
                 else:
                     return 'std::string'
 
@@ -467,6 +488,23 @@ class Block(Element):
         elif 'std::vector' in self.vtype:
             self.cpp_templates['includes'].append('#include <vector>')
             self.cpp_templates['var_make'] = self.cpp_templates['var_make'].replace('${value}', '{' + value[1:-1] + '}')
+
+        elif 'std::map' in self.vtype:
+            self.cpp_templates['includes'].append('#include <map>')
+
+            # TODO need special handling for key/value strings w/ embedded ',' or  ':'	                
+            val_str = str(value)[1:-1]
+            vals = val_str.split(',');
+            val_str = '';         
+            for val in vals:
+                val_str += '{' + re.sub(' *:', ',', val) + '}, '            
+                
+            if len(val_str) > 0:
+              # truncate to trim superfluous ', ' from the end
+              val_str = val_str[0:-2]
+
+            self.cpp_templates['var_make'] = self.cpp_templates['var_make'].replace('${value}', '{' + val_str + '}') 
+
 
         if 'string' in self.vtype:
             self.cpp_templates['includes'].append('#include <string>')

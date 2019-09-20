@@ -51,7 +51,7 @@ parameters:
 -   id: cmake_opt
     label: CMake options
     dtype: string
-    default: ''
+    default: '-DCMAKE_CXX_STANDARD=11'
     hide: ${ ('part' if output_language == 'cpp' else 'all') }
 -   id: category
     label: Category

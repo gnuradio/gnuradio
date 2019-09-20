@@ -13,6 +13,10 @@ GNU Radio version: ${version}
 ********************/
 
 #include "${flow_graph.get_option('id')}.hpp"
+% if flow_graph.get_option('realtime_scheduling'):
+#include <gnuradio/realtime.h>
+% endif
+
 % if parameters:
 
 namespace po = boost::program_options;
@@ -113,7 +117,7 @@ void ${class_name}::set_${var.name} (${var.vtype} ${var.name}) {
 int main (int argc, char **argv) {
     % if parameters:
     % for parameter in parameters:
-    ${parameter.vtype} ${parameter.name};
+    ${parameter.vtype} ${parameter.name} = ${parameter.cpp_templates.render('make')};
     % endfor
 
     po::options_description desc("Options");
