@@ -59,7 +59,6 @@ parameters:
 -   id: dev_args
     label: Device Arguments
     dtype: string
-    default: '""'
     hide: ${'$'}{ 'none' if dev_args else 'part'}
 -   id: sync
     label: Sync
@@ -235,7 +234,9 @@ cpp_templates:
     includes: [ '#include <gnuradio/uhd/usrp_${sourk}.h>' ]
     declarations: 'gr::uhd::usrp_${sourk}::sptr ${'$'}{id};'
     make: |
-      this->${'$'}{id} = gr::uhd::usrp_${sourk}::make(::uhd::device_addr_t(${'$'}{dev_addr}), ::uhd::stream_args_t(${'$'}{dev_args}));
+      this->${'$'}{id} = gr::uhd::usrp_${sourk}::make(
+         ::uhd::device_addr_t("${'$'}{",".join((str(dev_addr).strip('"\\''), str(dev_args).strip('"\\''))) if len(str(dev_args).strip('"\\'')) > 0 else dev_addr.strip('"\\'')}"),
+         ::uhd::stream_args_t("${'$'}{type}", "${'$'}{otw}"));
       % for m in range(max_mboards):
       ${'%'} if context.get('num_mboards')() > ${m}:
       ${'%'} if context.get('sd_spec${m}')():
@@ -245,7 +246,7 @@ cpp_templates:
       this->${'$'}{id}->set_time_source(${'$'}{${'time_source' + str(m)}}, ${m});
       ${'%'} endif
       ${'%'} if context.get('clock_source${m}')():
-      this->${'$'}{id}->set_clock_source(${'$'}{${'clock_source' + str(m)}}, ${m});
+      this->${'$'}{id}->set_clock_source("${'$'}{${'clock_source' + str(m)}.strip('\\'')}", ${m});
       ${'%'} endif
       ${'%'} endif
       % endfor
@@ -296,9 +297,6 @@ cpp_templates:
       // No synchronization enforced.
       ${'%'} endif
     link: ['gnuradio-uhd uhd']      
-    translations:
-      'True': 'true'
-      'False': 'false'
     callbacks:
     - set_samp_rate(${'$'}{samp_rate})
     % for n in range(max_nchan):
@@ -440,11 +438,11 @@ PARAMS_TMPL = """
     category: RF Options
     dtype: string
 % if sourk == 'source':
-    options: [TX/RX, RX2, RX1]
+    options: ['"TX/RX"', '"RX2"', '"RX1"']
     option_labels: [TX/RX, RX2, RX1]
-    default: RX2
+    default: '"RX2"'
 % else:
-    options: [TX/RX]
+    options: ['"TX/RX"']
     option_labels: [TX/RX]
 % endif
     hide: ${'$'}{ 'all' if not nchan > ${n} else ('none' if eval('ant' + str(${n})) else 'part')}
@@ -497,6 +495,7 @@ TSBTAG_PARAM = """
 -   id: len_tag_name
     label: TSB tag name
     dtype: string
+    default: '""'
     hide: ${ 'none' if len(str(len_tag_name)) else 'part'}
 """
 
