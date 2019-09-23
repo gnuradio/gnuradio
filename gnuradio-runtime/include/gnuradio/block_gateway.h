@@ -150,6 +150,18 @@ public:
         return gr::block::set_min_output_buffer(size);
     }
 
+    long block__max_output_buffer(size_t i) {
+        return gr::block::max_output_buffer(i);
+    }
+
+    void block__set_max_output_buffer(long max_output_buffer) {
+        gr::block::set_max_output_buffer(max_output_buffer);
+    }
+
+    void block__set_max_output_buffer(int port, long max_output_buffer) {
+        gr::block::set_max_output_buffer(port, max_output_buffer);
+    }
+
     int block__output_multiple(void) const { return gr::block::output_multiple(); }
 
     void block__consume(int which_input, int how_many_items)
