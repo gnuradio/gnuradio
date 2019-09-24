@@ -24,6 +24,9 @@
 #include "config.h"
 #endif
 
+#include <gnuradio/logger.h>
+#include <gnuradio/prefs.h>
+
 #include "pagesize.h"
 #include <stdio.h>
 #include <unistd.h>
@@ -48,7 +51,9 @@ int pagesize()
             s_pagesize = 4096;
         }
 #else
-        fprintf(stderr, "gr::pagesize: no info; setting pagesize = 4096\n");
+        gr::logger_ptr logger, debug_logger;
+        gr::configure_default_loggers(logger, debug_logger, "pagesize");
+        GR_LOG_ERROR(debug_logger, boost::format("ERROR no info; setting pagesize = 4096\n"));
         s_pagesize = 4096;
 #endif
     }

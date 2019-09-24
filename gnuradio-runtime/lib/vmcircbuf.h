@@ -25,6 +25,8 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/thread/thread.h>
+#include <gnuradio/logger.h>
+#include <gnuradio/prefs.h>
 #include <vector>
 
 extern gr::thread::mutex s_vm_mutex;
@@ -40,9 +42,13 @@ class GR_RUNTIME_API vmcircbuf
 protected:
     int d_size;
     char* d_base;
+    logger_ptr d_logger;
+    logger_ptr d_debug_logger;
 
     // CREATORS
-    vmcircbuf(int size) : d_size(size), d_base(0){};
+    vmcircbuf(int size) : d_size(size), d_base(0){
+        gr::configure_default_loggers(d_logger, d_debug_logger, "gr::vmcircbuf");
+    };
 
 public:
     virtual ~vmcircbuf();
