@@ -39,7 +39,7 @@ parameters:
     hide: part
 
 asserts:
-- ${(is_pair and is_static and len(key) > 0) or not (is_pair and is_static)}
+- ${(len(key) > 0) or not ((is_pair == 'True') and (is_static == 'True'))}
 
 inputs:
 -   domain: message
