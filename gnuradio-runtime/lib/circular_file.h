@@ -24,6 +24,8 @@
 #define GR_CIRCULAR_FILE_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/logger.h>
+#include <gnuradio/prefs.h>
 
 namespace gr {
 
@@ -46,6 +48,9 @@ private:
     unsigned char* d_buffer;
     int d_mapped_size;
     int d_bytes_read;
+    prefs *d_prefs;
+    logger_ptr d_logger;
+    logger_ptr d_debug_logger;
 
 public:
     circular_file(const char* filename, bool writable = false, int size = 0);

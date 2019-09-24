@@ -61,6 +61,8 @@ static const int HD_BUFFER_CURRENT = 4;
 circular_file::circular_file(const char* filename, bool writable, int size)
     : d_fd(-1), d_header(0), d_buffer(0), d_mapped_size(0), d_bytes_read(0)
 {
+    gr::configure_default_loggers(d_logger, d_debug_logger, "circular_file");
+
     int mm_prot;
     if (writable) {
 #ifdef HAVE_MMAP
@@ -68,12 +70,12 @@ circular_file::circular_file(const char* filename, bool writable, int size)
 #endif
         d_fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0664);
         if (d_fd < 0) {
-            perror(filename);
+            GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s\n") % filename);
             exit(1);
         }
 #ifdef HAVE_MMAP /* FIXME */
         if (ftruncate(d_fd, size + HEADER_SIZE) != 0) {
-            perror(filename);
+            GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s\n") % filename);
             exit(1);
         }
 #endif
@@ -83,19 +85,19 @@ circular_file::circular_file(const char* filename, bool writable, int size)
 #endif
         d_fd = open(filename, O_RDONLY);
         if (d_fd < 0) {
-            perror(filename);
+            GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s\n") % filename);
             exit(1);
         }
     }
 
     struct stat statbuf;
     if (fstat(d_fd, &statbuf) < 0) {
-        perror(filename);
+        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s\n") % filename);
         exit(1);
     }
 
     if (statbuf.st_size < HEADER_SIZE) {
-        fprintf(stderr, "%s: file too small to be circular buffer\n", filename);
+        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s file too small to be circular buffer\n") % filename);
         exit(1);
     }
 
@@ -103,20 +105,20 @@ circular_file::circular_file(const char* filename, bool writable, int size)
 #ifdef HAVE_MMAP
     void* p = mmap(0, d_mapped_size, mm_prot, MAP_SHARED, d_fd, 0);
     if (p == MAP_FAILED) {
-        perror("gr::circular_file: mmap failed");
+        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR mmap failed.\n") );
         exit(1);
     }
 
     d_header = (int*)p;
 #else
-    perror("gr::circular_file: mmap unsupported by this system");
+    GR_LOG_ERROR(d_debug_logger, boost::format("ERROR mmap unsupported by this system\n"));
     exit(1);
 #endif
 
     if (writable) { // init header
 
         if (size < 0) {
-            fprintf(stderr, "gr::circular_buffer: size must be > 0 when writable\n");
+            GR_LOG_ERROR(d_debug_logger, boost::format("ERROR mmap failed.\n"));
             exit(1);
         }
 
@@ -145,7 +147,7 @@ circular_file::~circular_file()
 {
 #ifdef HAVE_MMAP
     if (munmap((char*)d_header, d_mapped_size) < 0) {
-        perror("gr::circular_file: munmap");
+        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR munmap failed.\n"));
         exit(1);
     }
 #endif

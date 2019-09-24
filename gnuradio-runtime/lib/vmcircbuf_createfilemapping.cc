@@ -48,6 +48,9 @@ static void werror(char* where, DWORD last_error)
 {
     char buf[1024];
 
+    logger_ptr logger, debug_logger;
+    gr::configure_default_loggers(logger, debug_logger, "werror");
+
     FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,
                   NULL,
                   last_error,
@@ -55,7 +58,7 @@ static void werror(char* where, DWORD last_error)
                   buf,
                   sizeof(buf) / sizeof(TCHAR), // buffer size
                   NULL);
-    fprintf(stderr, "%s: Error %d: %s", where, last_error, buf);
+    GR_LOG_ERROR(debug_logger, boost::format("ERROR %s: Error %d: %s" % where % last_error % buf));
     return;
 }
 #endif
@@ -64,7 +67,9 @@ static void werror(char* where, DWORD last_error)
 vmcircbuf_createfilemapping::vmcircbuf_createfilemapping(int size) : gr::vmcircbuf(size)
 {
 #if !defined(HAVE_CREATEFILEMAPPING)
-    fprintf(stderr, "%s: createfilemapping is not available\n", __FUNCTION__);
+    std::stringstream error_msg;
+    error_msg << "ERROR " << __FUNCTION__ << ": createfilemapping is not available" << std::endl;
+    GR_LOG_ERROR(d_debug_logger, error_msg.str());
     throw std::runtime_error("gr::vmcircbuf_createfilemapping");
 #else
     gr::thread::scoped_lock guard(s_vm_mutex);
@@ -72,7 +77,9 @@ vmcircbuf_createfilemapping::vmcircbuf_createfilemapping(int size) : gr::vmcircb
     static int s_seg_counter = 0;
 
     if (size <= 0 || (size % gr::pagesize()) != 0) {
-        fprintf(stderr, "gr::vmcircbuf_createfilemapping: invalid size = %d\n", size);
+        std::stringstream error_msg;
+        error_msg << "ERROR invalid size = " << size << std::endl;
+        GR_LOG_ERROR(d_debug_logger, error_msg.str());
         throw std::runtime_error("gr::vmcircbuf_createfilemapping");
     }
 
@@ -141,12 +148,11 @@ vmcircbuf_createfilemapping::vmcircbuf_createfilemapping(int size) : gr::vmcircb
     }
 
 #ifdef DEBUG
-    fprintf(stderr,
-            "gr::vmcircbuf_mmap_createfilemapping: contiguous? mmap %p %p %p %p\n",
-            (char*)d_first_copy,
-            (char*)d_second_copy,
-            size,
-            (char*)d_first_copy + size);
+    std::stringstream info_msg;
+    info_msg << "contiguous? mmap " << (char*)d_first_copy;
+    info_msg << (char*)d_second_copy << size;
+    info_msg << (char*)d_first_copy + size;
+    GR_LOG_INFO(d_debug_logger, info_msg.str());
 #endif
 
     // Now remember the important stuff
