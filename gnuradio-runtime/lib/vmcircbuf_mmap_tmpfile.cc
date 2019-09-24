@@ -36,13 +36,17 @@ namespace gr {
 vmcircbuf_mmap_tmpfile::vmcircbuf_mmap_tmpfile(int size) : gr::vmcircbuf(size)
 {
 #if !defined(HAVE_MMAP)
-    fprintf(stderr, "gr::vmcircbuf_mmap_tmpfile: mmap or mkstemp is not available\n");
+    std::stringstream error_msg;
+    error_msg << "ERROR mmap or mkstemp is not available" << std::endl;
+    GR_LOG_ERROR(d_debug_logger, error_msg.str());
     throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
 #else
     gr::thread::scoped_lock guard(s_vm_mutex);
 
     if (size <= 0 || (size % gr::pagesize()) != 0) {
-        fprintf(stderr, "gr::vmcircbuf_mmap_tmpfile: invalid size = %d\n", size);
+        std::stringstream error_msg;
+        error_msg << "ERROR invalid size = " << size << std::endl;
+        GR_LOG_ERROR(d_debug_logger, error_msg.str());
         throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
     }
 
@@ -64,14 +68,14 @@ vmcircbuf_mmap_tmpfile::vmcircbuf_mmap_tmpfile(int size) : gr::vmcircbuf(size)
 
             static std::string msg =
                 str(boost::format("gr::vmcircbuf_mmap_tmpfile: open [%s]") % seg_name);
-            perror(msg.c_str());
+            GR_LOG_ERROR(d_debug_logger, msg.c_str());
             throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
         }
         break;
     }
 
     if (unlink(seg_name.c_str()) == -1) {
-        perror("gr::vmcircbuf_mmap_tmpfile: unlink");
+        GR_LOG_ERROR(d_debug_logger, "gr::vmcircbuf_mmap_tmpfile: unlink");
         throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
     }
 
@@ -79,7 +83,9 @@ vmcircbuf_mmap_tmpfile::vmcircbuf_mmap_tmpfile(int size) : gr::vmcircbuf(size)
     // Now set it's length to 2x what we really want and mmap it in.
     if (ftruncate(seg_fd, (off_t)2 * size) == -1) {
         close(seg_fd); // cleanup
-        perror("gr::vmcircbuf_mmap_tmpfile: ftruncate (1)");
+        std::stringstream error_msg;
+        error_msg << "ERROR ftruncate (1)" << std::endl;
+        GR_LOG_ERROR(d_debug_logger, error_msg.str());
         throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
     }
 
@@ -88,14 +94,18 @@ vmcircbuf_mmap_tmpfile::vmcircbuf_mmap_tmpfile(int size) : gr::vmcircbuf(size)
 
     if (first_copy == MAP_FAILED) {
         close(seg_fd); // cleanup
-        perror("gr::vmcircbuf_mmap_tmpfile: mmap (1)");
+        std::stringstream error_msg;
+        error_msg << "ERROR mmap (1)" << std::endl;
+        GR_LOG_ERROR(d_debug_logger, error_msg.str());
         throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
     }
 
     // unmap the 2nd half
     if (munmap((char*)first_copy + size, size) == -1) {
         close(seg_fd); // cleanup
-        perror("gr::vmcircbuf_mmap_tmpfile: munmap (1)");
+        std::stringstream error_msg;
+        error_msg << "ERROR munmap (1)" << std::endl;
+        GR_LOG_ERROR(d_debug_logger, error_msg.str());
         throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
     }
 
@@ -111,7 +121,9 @@ vmcircbuf_mmap_tmpfile::vmcircbuf_mmap_tmpfile(int size) : gr::vmcircbuf(size)
     if (second_copy == MAP_FAILED) {
         munmap(first_copy, size); // cleanup
         close(seg_fd);
-        perror("gr::vmcircbuf_mmap_tmpfile: mmap(2)");
+        std::stringstream error_msg;
+        error_msg << "ERROR mmap(2)" << std::endl;
+        GR_LOG_ERROR(d_debug_logger, error_msg.str());
         throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
     }
 
@@ -120,7 +132,9 @@ vmcircbuf_mmap_tmpfile::vmcircbuf_mmap_tmpfile(int size) : gr::vmcircbuf(size)
         munmap(first_copy, size); // cleanup
         munmap(second_copy, size);
         close(seg_fd);
-        perror("gr::vmcircbuf_mmap_tmpfile: non-contiguous second copy");
+        std::stringstream error_msg;
+        error_msg << "ERROR non-contiguous second copy" << std::endl;
+        GR_LOG_ERROR(d_debug_logger, error_msg.str());
         throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
     }
 
@@ -129,7 +143,9 @@ vmcircbuf_mmap_tmpfile::vmcircbuf_mmap_tmpfile(int size) : gr::vmcircbuf(size)
         munmap(first_copy, size); // cleanup
         munmap(second_copy, size);
         close(seg_fd);
-        perror("gr::vmcircbuf_mmap_tmpfile: ftruncate (2)");
+        std::stringstream error_msg;
+        error_msg << "ERROR ftruncate (2)" << std::endl;
+        GR_LOG_ERROR(d_debug_logger, error_msg.str());
         throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
     }
 
@@ -148,7 +164,9 @@ vmcircbuf_mmap_tmpfile::~vmcircbuf_mmap_tmpfile()
     gr::thread::scoped_lock guard(s_vm_mutex);
 
     if (munmap(d_base, 2 * d_size) == -1) {
-        perror("gr::vmcircbuf_mmap_tmpfile: munmap(2)");
+        std::stringstream error_msg;
+        error_msg << "ERROR munmap(2)" << std::endl;
+        GR_LOG_ERROR(d_debug_logger, error_msg.str());
     }
 #endif
 }
