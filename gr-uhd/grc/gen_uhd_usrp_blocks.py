@@ -144,10 +144,10 @@ templates:
                 ${'%'} if stream_args:
                 args=${'$'}{stream_args},
                 ${'%'} endif
-                ${'%'} if stream_chans:
+                ${'%'} if eval(stream_chans):
                 channels=${'$'}{stream_chans},
                 ${'%'} else:
-                channels=range(${'$'}{nchan}),
+                channels=list(range(0,${'$'}{nchan})),
                 ${'%'} endif
             ),
             ${'%'} if len_tag_name:
