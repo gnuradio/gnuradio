@@ -403,11 +403,10 @@ void time_sink_f_impl::_reset()
             // Also move the offsets of any tags that occur in the tail
             // section so they would be plotted again, too.
             std::vector<gr::tag_t> tmp_tags;
-            for (size_t t = 0; t < d_tags[n].size(); t++) {
-                if (d_tags[n][t].offset > (uint64_t)(d_size - d_trigger_delay)) {
-                    d_tags[n][t].offset =
-                        d_tags[n][t].offset - (d_size - d_trigger_delay);
-                    tmp_tags.push_back(d_tags[n][t]);
+            for (auto& t : d_tags[n]) {
+                if (t.offset > (uint64_t)(d_size - d_trigger_delay)) {
+                    t.offset = t.offset - (d_size - d_trigger_delay);
+                    tmp_tags.push_back(t);
                 }
             }
             d_tags[n] = tmp_tags;
@@ -443,9 +442,9 @@ void time_sink_f_impl::_npoints_resize()
 
 void time_sink_f_impl::_adjust_tags(int adj)
 {
-    for (size_t n = 0; n < d_tags.size(); n++) {
-        for (size_t t = 0; t < d_tags[n].size(); t++) {
-            d_tags[n][t].offset += adj;
+    for (auto& d_tag : d_tags) {
+        for (size_t t = 0; t < d_tag.size(); t++) {
+            d_tag[t].offset += adj;
         }
     }
 }
@@ -505,7 +504,7 @@ void time_sink_f_impl::_test_trigger_tags(int nitems)
 void time_sink_f_impl::_test_trigger_norm(int nitems, gr_vector_const_void_star inputs)
 {
     int trigger_index;
-    const float* in = (const float*)inputs[d_trigger_channel];
+    const auto* in = (const float*)inputs[d_trigger_channel];
     for (trigger_index = 0; trigger_index < nitems; trigger_index++) {
         d_trigger_count++;
 
@@ -578,8 +577,8 @@ int time_sink_f_impl::work(int noutput_items,
         uint64_t nr = nitems_read(idx);
         std::vector<gr::tag_t> tags;
         get_tags_in_range(tags, idx, nr, nr + nitems);
-        for (size_t t = 0; t < tags.size(); t++) {
-            tags[t].offset = tags[t].offset - nr + (d_index - d_start - 1);
+        for (auto& tag : tags) {
+            tag.offset = tag.offset - nr + (d_index - d_start - 1);
         }
         d_tags[idx].insert(d_tags[idx].end(), tags.begin(), tags.end());
         idx++;

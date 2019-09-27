@@ -60,7 +60,7 @@ void detail::sptr_magic::create_and_stash_initial_sptr(gr::hier_block2* p)
 void detail::sptr_magic::cancel_initial_sptr(gr::hier_block2* p)
 {
     gr::thread::scoped_lock guard(s_mutex);
-    sptr_map::iterator pos = s_map.find(static_cast<gr::basic_block*>(p));
+    auto pos = s_map.find(static_cast<gr::basic_block*>(p));
     if (pos == s_map.end())
         return; /* Not in the map, nothing to do */
     gr::basic_block_sptr sptr = pos->second;
@@ -74,7 +74,7 @@ gr::basic_block_sptr detail::sptr_magic::fetch_initial_sptr(gr::basic_block* p)
      * If p isn't a subclass of gr::hier_block2, just create the
      * shared ptr and return it.
      */
-    gr::hier_block2* hb2 = dynamic_cast<gr::hier_block2*>(p);
+    auto* hb2 = dynamic_cast<gr::hier_block2*>(p);
     if (!hb2) {
         return gr::basic_block_sptr(p);
     }
@@ -84,7 +84,7 @@ gr::basic_block_sptr detail::sptr_magic::fetch_initial_sptr(gr::basic_block* p)
      * and stashed it away.  Fish it out and return it.
      */
     gr::thread::scoped_lock guard(s_mutex);
-    sptr_map::iterator pos = s_map.find(static_cast<gr::basic_block*>(p));
+    auto pos = s_map.find(static_cast<gr::basic_block*>(p));
     if (pos == s_map.end())
         throw std::invalid_argument("sptr_magic: invalid pointer!");
 

@@ -241,7 +241,7 @@ TimeDomainDisplayPlot* TimeDisplayForm::getPlot()
 
 void TimeDisplayForm::newData(const QEvent* updateEvent)
 {
-    TimeUpdateEvent* tevent = (TimeUpdateEvent*)updateEvent;
+    auto* tevent = (TimeUpdateEvent*)updateEvent;
     const std::vector<double*> dataPoints = tevent->getTimeDomainPoints();
     const uint64_t numDataPoints = tevent->getNumTimeDomainDataPoints();
     const std::vector<std::vector<gr::tag_t>> tags = tevent->getTags();

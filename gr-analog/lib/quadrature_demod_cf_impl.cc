@@ -55,8 +55,8 @@ int quadrature_demod_cf_impl::work(int noutput_items,
                                    gr_vector_const_void_star& input_items,
                                    gr_vector_void_star& output_items)
 {
-    gr_complex* in = (gr_complex*)input_items[0];
-    float* out = (float*)output_items[0];
+    auto* in = (gr_complex*)input_items[0];
+    auto* out = (float*)output_items[0];
 
     std::vector<gr_complex> tmp(noutput_items);
     volk_32fc_x2_multiply_conjugate_32fc(&tmp[0], &in[1], &in[0], noutput_items);

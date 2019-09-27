@@ -65,9 +65,9 @@ vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
 
     char name[1024];
     if (gr::vmcircbuf_prefs::get(FACTORY_PREF_KEY, name, sizeof(name)) >= 0) {
-        for (unsigned int i = 0; i < all.size(); i++) {
-            if (strncmp(name, all[i]->name(), strlen(all[i]->name())) == 0) {
-                s_default_factory = all[i];
+        for (auto& i : all) {
+            if (strncmp(name, i->name(), strlen(i->name())) == 0) {
+                s_default_factory = i;
                 if (verbose)
                     fprintf(stderr,
                             "gr::vmcircbuf_sysconfig: using %s\n",
@@ -83,9 +83,9 @@ vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
     if (verbose)
         fprintf(stderr, "gr::vmcircbuf_sysconfig: finding a working factory...\n");
 
-    for (unsigned int i = 0; i < all.size(); i++) {
-        if (test_factory(all[i], verbose)) {
-            set_default_factory(all[i]);
+    for (auto& i : all) {
+        if (test_factory(i, verbose)) {
+            set_default_factory(i);
             return s_default_factory;
         }
     }
@@ -122,7 +122,7 @@ void vmcircbuf_sysconfig::set_default_factory(vmcircbuf_factory* f)
 
 static void init_buffer(vmcircbuf* c, int counter, int size)
 {
-    unsigned int* p = (unsigned int*)c->pointer_to_first_copy();
+    auto* p = (unsigned int*)c->pointer_to_first_copy();
     for (unsigned int i = 0; i < size / sizeof(int); i++)
         p[i] = counter + i;
 }
@@ -135,8 +135,8 @@ check_mapping(vmcircbuf* c, int counter, int size, const char* msg, bool verbose
     if (verbose)
         fprintf(stderr, "... %s", msg);
 
-    unsigned int* p1 = (unsigned int*)c->pointer_to_first_copy();
-    unsigned int* p2 = (unsigned int*)c->pointer_to_second_copy();
+    auto* p1 = (unsigned int*)c->pointer_to_first_copy();
+    auto* p2 = (unsigned int*)c->pointer_to_second_copy();
 
     // fprintf(stderr, "p1 = %p, p2 = %p\n", p1, p2);
 
@@ -283,8 +283,8 @@ bool vmcircbuf_sysconfig::test_all_factories(int verbose)
 
     std::vector<vmcircbuf_factory*> all = all_factories();
 
-    for (unsigned int i = 0; i < all.size(); i++)
-        ok |= test_factory(all[i], verbose);
+    for (auto& i : all)
+        ok |= test_factory(i, verbose);
 
     return ok;
 }

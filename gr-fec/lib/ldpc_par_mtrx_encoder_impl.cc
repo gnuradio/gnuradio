@@ -99,8 +99,8 @@ double ldpc_par_mtrx_encoder_impl::rate() { return d_rate; }
 void ldpc_par_mtrx_encoder_impl::generic_work(void* inbuffer, void* outbuffer)
 {
     // Populate the information word
-    const unsigned char* in = (const unsigned char*)inbuffer;
-    unsigned char* out = (unsigned char*)outbuffer;
+    const auto* in = (const unsigned char*)inbuffer;
+    auto* out = (unsigned char*)outbuffer;
 
     int j = 0;
     for (int i = 0; i < get_input_size(); i += d_H->k()) {

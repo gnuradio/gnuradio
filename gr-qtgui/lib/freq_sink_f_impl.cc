@@ -542,7 +542,7 @@ void freq_sink_f_impl::_test_trigger_tags(int start, int nitems)
 
 void freq_sink_f_impl::_test_trigger_norm(int nitems, std::vector<double*> inputs)
 {
-    const double* in = (const double*)inputs[d_trigger_channel];
+    const auto* in = (const double*)inputs[d_trigger_channel];
     for (int i = 0; i < nitems; i++) {
         d_trigger_count++;
 
@@ -567,7 +567,7 @@ int freq_sink_f_impl::work(int noutput_items,
                            gr_vector_const_void_star& input_items,
                            gr_vector_void_star& output_items)
 {
-    const float* in = (const float*)input_items[0];
+    const auto* in = (const float*)input_items[0];
 
     // Update the FFT size from the application
     bool updated = false;

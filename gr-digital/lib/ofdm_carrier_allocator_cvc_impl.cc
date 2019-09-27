@@ -93,16 +93,16 @@ ofdm_carrier_allocator_cvc_impl::ofdm_carrier_allocator_cvc_impl(
         throw std::invalid_argument(
             "Pilot carriers must be of type vector of vector i.e. ((),).");
     }
-    for (unsigned i = 0; i < d_pilot_carriers.size(); i++) {
-        for (unsigned j = 0; j < d_pilot_carriers[i].size(); j++) {
-            if (d_pilot_carriers[i][j] < 0) {
-                d_pilot_carriers[i][j] += d_fft_len;
+    for (auto& d_pilot_carrier : d_pilot_carriers) {
+        for (unsigned j = 0; j < d_pilot_carrier.size(); j++) {
+            if (d_pilot_carrier[j] < 0) {
+                d_pilot_carrier[j] += d_fft_len;
             }
-            if (d_pilot_carriers[i][j] > d_fft_len || d_pilot_carriers[i][j] < 0) {
+            if (d_pilot_carrier[j] > d_fft_len || d_pilot_carrier[j] < 0) {
                 throw std::invalid_argument("pilot carrier index out of bounds");
             }
             if (d_output_is_shifted) {
-                d_pilot_carriers[i][j] = (d_pilot_carriers[i][j] + fft_len / 2) % fft_len;
+                d_pilot_carrier[j] = (d_pilot_carrier[j] + fft_len / 2) % fft_len;
             }
         }
     }
@@ -117,14 +117,14 @@ ofdm_carrier_allocator_cvc_impl::ofdm_carrier_allocator_cvc_impl(
             throw std::invalid_argument("pilot_carriers do not match pilot_symbols");
         }
     }
-    for (unsigned i = 0; i < d_sync_words.size(); i++) {
-        if (d_sync_words[i].size() != (unsigned)d_fft_len) {
+    for (const auto& d_sync_word : d_sync_words) {
+        if (d_sync_word.size() != (unsigned)d_fft_len) {
             throw std::invalid_argument("sync words must be fft length");
         }
     }
 
-    for (unsigned i = 0; i < d_occupied_carriers.size(); i++) {
-        d_symbols_per_set += d_occupied_carriers[i].size();
+    for (auto& d_occupied_carrier : d_occupied_carriers) {
+        d_symbols_per_set += d_occupied_carrier.size();
     }
     set_tag_propagation_policy(TPP_DONT);
     set_relative_rate((uint64_t)d_symbols_per_set, (uint64_t)d_occupied_carriers.size());
@@ -150,14 +150,14 @@ int ofdm_carrier_allocator_cvc_impl::work(int noutput_items,
                                           gr_vector_const_void_star& input_items,
                                           gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
     std::vector<tag_t> tags;
 
     memset((void*)out, 0x00, sizeof(gr_complex) * d_fft_len * noutput_items);
     // Copy Sync word
-    for (unsigned i = 0; i < d_sync_words.size(); i++) {
-        memcpy((void*)out, (void*)&d_sync_words[i][0], sizeof(gr_complex) * d_fft_len);
+    for (const auto& d_sync_word : d_sync_words) {
+        memcpy((void*)out, (void*)&d_sync_word[0], sizeof(gr_complex) * d_fft_len);
         out += d_fft_len;
     }
 
@@ -174,12 +174,12 @@ int ofdm_carrier_allocator_cvc_impl::work(int noutput_items,
                 0,
                 nitems_read(0) + i,
                 nitems_read(0) + std::min(i + symbols_to_allocate, (int)ninput_items[0]));
-            for (unsigned t = 0; t < tags.size(); t++) {
+            for (auto& tag : tags) {
                 add_item_tag(0,
                              nitems_written(0) + n_ofdm_symbols +
                                  (n_ofdm_symbols == 0 ? 0 : d_sync_words.size()),
-                             tags[t].key,
-                             tags[t].value);
+                             tag.key,
+                             tag.value);
             }
             n_ofdm_symbols++;
         }

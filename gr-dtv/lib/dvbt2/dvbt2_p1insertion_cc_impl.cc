@@ -58,8 +58,8 @@ dvbt2_p1insertion_cc_impl::dvbt2_p1insertion_cc_impl(dvbt2_extended_carrier_t ca
                 gr::io_signature::make(1, 1, sizeof(gr_complex)))
 {
     int s1, s2, index = 0;
-    const gr_complex* in = (const gr_complex*)p1_freq;
-    gr_complex* out = (gr_complex*)p1_time;
+    const auto* in = (const gr_complex*)p1_freq;
+    auto* out = (gr_complex*)p1_time;
     s1 = preamble;
     switch (fftsize) {
     case FFTSIZE_1K:
@@ -155,8 +155,8 @@ dvbt2_p1insertion_cc_impl::dvbt2_p1insertion_cc_impl(dvbt2_extended_carrier_t ca
     memcpy(&dst[0], &in[p1_fft_size / 2], sizeof(gr_complex) * p1_fft_size / 2);
     p1_fft->execute();
     memcpy(out, p1_fft->get_outbuf(), sizeof(gr_complex) * p1_fft_size);
-    for (int i = 0; i < 1024; i++) {
-        p1_time[i] /= std::sqrt(384.0);
+    for (auto& i : p1_time) {
+        i /= std::sqrt(384.0);
     }
     for (int i = 0; i < 1023; i++) {
         p1_freqshft[i + 1] = p1_freq[i];
@@ -169,8 +169,8 @@ dvbt2_p1insertion_cc_impl::dvbt2_p1insertion_cc_impl(dvbt2_extended_carrier_t ca
     memcpy(&dst[0], &in[p1_fft_size / 2], sizeof(gr_complex) * p1_fft_size / 2);
     p1_fft->execute();
     memcpy(out, p1_fft->get_outbuf(), sizeof(gr_complex) * p1_fft_size);
-    for (int i = 0; i < 1024; i++) {
-        p1_timeshft[i] /= std::sqrt(384.0);
+    for (auto& i : p1_timeshft) {
+        i /= std::sqrt(384.0);
     }
     frame_items =
         ((numdatasyms + N_P2) * fft_size) + ((numdatasyms + N_P2) * guard_interval);
@@ -194,12 +194,12 @@ dvbt2_p1insertion_cc_impl::dvbt2_p1insertion_cc_impl(dvbt2_extended_carrier_t ca
 void dvbt2_p1insertion_cc_impl::init_p1_randomizer(void)
 {
     int sr = 0x4e46;
-    for (int i = 0; i < 384; i++) {
+    for (int& i : p1_randomize) {
         int b = ((sr) ^ (sr >> 1)) & 1;
         if (b == 0) {
-            p1_randomize[i] = 1;
+            i = 1;
         } else {
-            p1_randomize[i] = -1;
+            i = -1;
         }
         sr >>= 1;
         if (b)
@@ -223,8 +223,8 @@ int dvbt2_p1insertion_cc_impl::general_work(int noutput_items,
                                             gr_vector_const_void_star& input_items,
                                             gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
     gr_complex* level;
 
     for (int i = 0; i < noutput_items; i += insertion_items) {
@@ -232,8 +232,8 @@ int dvbt2_p1insertion_cc_impl::general_work(int noutput_items,
         for (int j = 0; j < 542; j++) {
             *out++ = p1_timeshft[j];
         }
-        for (int j = 0; j < 1024; j++) {
-            *out++ = p1_time[j];
+        for (auto j : p1_time) {
+            *out++ = j;
         }
         for (int j = 542; j < 1024; j++) {
             *out++ = p1_timeshft[j];

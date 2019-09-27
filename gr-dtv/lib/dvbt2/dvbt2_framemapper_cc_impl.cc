@@ -1066,10 +1066,10 @@ void dvbt2_framemapper_cc_impl::l1pre_ldpc_lookup_generate(void)
     pbits = FRAME_SIZE_SHORT - NBCH_1_4; // number of parity bits
     q = 36;
 
-    for (int row = 0; row < 9; row++) {
+    for (const auto& row : ldpc_tab_1_4S) {
         for (int n = 0; n < 360; n++) {
-            for (int col = 1; col <= ldpc_tab_1_4S[row][0]; col++) {
-                l1pre_ldpc_encode.p[index] = (ldpc_tab_1_4S[row][col] + (n * q)) % pbits;
+            for (int col = 1; col <= row[0]; col++) {
+                l1pre_ldpc_encode.p[index] = (row[col] + (n * q)) % pbits;
                 l1pre_ldpc_encode.d[index] = im;
                 index++;
             }
@@ -1091,10 +1091,10 @@ void dvbt2_framemapper_cc_impl::l1post_ldpc_lookup_generate(void)
     pbits = FRAME_SIZE_SHORT - NBCH_1_2; // number of parity bits
     q = 25;
 
-    for (int row = 0; row < 20; row++) {
+    for (const auto& row : ldpc_tab_1_2S) {
         for (int n = 0; n < 360; n++) {
-            for (int col = 1; col <= ldpc_tab_1_2S[row][0]; col++) {
-                l1post_ldpc_encode.p[index] = (ldpc_tab_1_2S[row][col] + (n * q)) % pbits;
+            for (int col = 1; col <= row[0]; col++) {
+                l1post_ldpc_encode.p[index] = (row[col] + (n * q)) % pbits;
                 l1post_ldpc_encode.d[index] = im;
                 index++;
             }
@@ -1661,9 +1661,9 @@ void dvbt2_framemapper_cc_impl::init_dummy_randomizer(void)
 void dvbt2_framemapper_cc_impl::init_l1_randomizer(void)
 {
     int sr = 0x4A80;
-    for (int i = 0; i < KBCH_1_2; i++) {
+    for (unsigned char& i : l1_randomize) {
         int b = ((sr) ^ (sr >> 1)) & 1;
-        l1_randomize[i] = b;
+        i = b;
         sr >>= 1;
         if (b) {
             sr |= 0x4000;
@@ -1676,8 +1676,8 @@ int dvbt2_framemapper_cc_impl::general_work(int noutput_items,
                                             gr_vector_const_void_star& input_items,
                                             gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
     int index = 0;
     int read, save, count = 0;
     gr_complex* interleave = zigzag_interleave;

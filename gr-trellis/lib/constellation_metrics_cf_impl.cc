@@ -77,7 +77,7 @@ int constellation_metrics_cf_impl::general_work(int noutput_items,
 
     for (unsigned int m = 0; m < nstreams; m++) {
         const gr_complex* in = (gr_complex*)input_items[m];
-        float* out = (float*)output_items[m];
+        auto* out = (float*)output_items[m];
 
         for (unsigned int i = 0; i < noutput_items / d_O; i++) {
             d_constellation->calc_metric(&(in[i * d_D]), &(out[i * d_O]), d_TYPE);

@@ -149,7 +149,7 @@ int pfb_decimator_ccf_impl::work_fir_exp(int noutput_items,
                                          gr_vector_void_star& output_items)
 {
     gr_complex* in;
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     int i;
     for (i = 0; i < noutput_items; i++) {
@@ -170,7 +170,7 @@ int pfb_decimator_ccf_impl::work_fir_fft(int noutput_items,
                                          gr_vector_void_star& output_items)
 {
     gr_complex* in;
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     int i;
     for (i = 0; i < noutput_items; i++) {
@@ -197,7 +197,7 @@ int pfb_decimator_ccf_impl::work_fft_exp(int noutput_items,
                                          gr_vector_void_star& output_items)
 {
     gr_complex* in;
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     int i;
 
@@ -227,7 +227,7 @@ int pfb_decimator_ccf_impl::work_fft_fft(int noutput_items,
                                          gr_vector_void_star& output_items)
 {
     gr_complex* in;
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     int i;
 

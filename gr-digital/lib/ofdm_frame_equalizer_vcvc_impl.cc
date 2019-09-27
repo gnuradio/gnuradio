@@ -85,9 +85,9 @@ void ofdm_frame_equalizer_vcvc_impl::parse_length_tags(
     if (d_fixed_frame_len) {
         n_input_items_reqd[0] = d_fixed_frame_len;
     } else {
-        for (unsigned k = 0; k < tags[0].size(); k++) {
-            if (tags[0][k].key == pmt::string_to_symbol(d_length_tag_key_str)) {
-                n_input_items_reqd[0] = pmt::to_long(tags[0][k].value);
+        for (const auto& k : tags[0]) {
+            if (k.key == pmt::string_to_symbol(d_length_tag_key_str)) {
+                n_input_items_reqd[0] = pmt::to_long(k.value);
             }
         }
     }
@@ -99,8 +99,8 @@ int ofdm_frame_equalizer_vcvc_impl::work(int noutput_items,
                                          gr_vector_const_void_star& input_items,
                                          gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
     int carrier_offset = 0;
     int frame_len = 0;
     if (d_fixed_frame_len) {
@@ -111,12 +111,12 @@ int ofdm_frame_equalizer_vcvc_impl::work(int noutput_items,
 
     std::vector<tag_t> tags;
     get_tags_in_window(tags, 0, 0, 1);
-    for (unsigned i = 0; i < tags.size(); i++) {
-        if (pmt::symbol_to_string(tags[i].key) == "ofdm_sync_chan_taps") {
-            d_channel_state = pmt::c32vector_elements(tags[i].value);
+    for (auto& tag : tags) {
+        if (pmt::symbol_to_string(tag.key) == "ofdm_sync_chan_taps") {
+            d_channel_state = pmt::c32vector_elements(tag.value);
         }
-        if (pmt::symbol_to_string(tags[i].key) == "ofdm_sync_carr_offset") {
-            carrier_offset = pmt::to_long(tags[i].value);
+        if (pmt::symbol_to_string(tag.key) == "ofdm_sync_carr_offset") {
+            carrier_offset = pmt::to_long(tag.value);
         }
     }
 
@@ -160,10 +160,9 @@ int ofdm_frame_equalizer_vcvc_impl::work(int noutput_items,
 
     // Propagate tags (except for the channel state and the TSB tag)
     get_tags_in_window(tags, 0, 0, frame_len);
-    for (size_t i = 0; i < tags.size(); i++) {
-        if (tags[i].key != CHAN_TAPS_KEY &&
-            tags[i].key != pmt::mp(d_length_tag_key_str)) {
-            add_item_tag(0, tags[i]);
+    for (auto& tag : tags) {
+        if (tag.key != CHAN_TAPS_KEY && tag.key != pmt::mp(d_length_tag_key_str)) {
+            add_item_tag(0, tag);
         }
     }
 

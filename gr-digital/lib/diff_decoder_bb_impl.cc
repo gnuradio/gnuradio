@@ -49,8 +49,8 @@ int diff_decoder_bb_impl::work(int noutput_items,
                                gr_vector_const_void_star& input_items,
                                gr_vector_void_star& output_items)
 {
-    const unsigned char* in = (const unsigned char*)input_items[0];
-    unsigned char* out = (unsigned char*)output_items[0];
+    const auto* in = (const unsigned char*)input_items[0];
+    auto* out = (unsigned char*)output_items[0];
     in += 1; // ensure that in[-1] is valid
 
     unsigned modulus = d_modulus;

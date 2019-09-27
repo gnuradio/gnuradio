@@ -93,11 +93,11 @@ void test_decimate(unsigned int decimate)
     size_t align = volk_get_alignment();
 
     // Mem aligned buffer not really necessary, but why not?
-    i_type* input = (float*)volk_malloc(INPUT_LEN * sizeof(float), align);
-    i_type* dline = (float*)volk_malloc(INPUT_LEN * sizeof(float), align);
-    o_type* expected_output = (float*)volk_malloc(OUTPUT_LEN * sizeof(float), align);
-    o_type* actual_output = (float*)volk_malloc(OUTPUT_LEN * sizeof(float), align);
-    tap_type* taps = (float*)volk_malloc(MAX_TAPS * sizeof(float), align);
+    auto* input = (float*)volk_malloc(INPUT_LEN * sizeof(float), align);
+    auto* dline = (float*)volk_malloc(INPUT_LEN * sizeof(float), align);
+    auto* expected_output = (float*)volk_malloc(OUTPUT_LEN * sizeof(float), align);
+    auto* actual_output = (float*)volk_malloc(OUTPUT_LEN * sizeof(float), align);
+    auto* taps = (float*)volk_malloc(MAX_TAPS * sizeof(float), align);
 
     memset(dline, 0, INPUT_LEN * sizeof(i_type));
 
@@ -122,8 +122,7 @@ void test_decimate(unsigned int decimate)
 
             // build filter
             vector<tap_type> f1_taps(&taps[0], &taps[n]);
-            kernel::fir_filter_with_buffer_fff* f1 =
-                new kernel::fir_filter_with_buffer_fff(f1_taps);
+            auto* f1 = new kernel::fir_filter_with_buffer_fff(f1_taps);
 
             // zero the output, then do the filtering
             memset(actual_output, 0, OUTPUT_LEN * sizeof(o_type));
@@ -194,13 +193,13 @@ void test_decimate(unsigned int decimate)
     size_t align = volk_get_alignment();
 
     // Mem aligned buffer not really necessary, but why not?
-    i_type* input = (gr_complex*)volk_malloc(INPUT_LEN * sizeof(gr_complex), align);
-    i_type* dline = (gr_complex*)volk_malloc(INPUT_LEN * sizeof(gr_complex), align);
-    o_type* expected_output =
+    auto* input = (gr_complex*)volk_malloc(INPUT_LEN * sizeof(gr_complex), align);
+    auto* dline = (gr_complex*)volk_malloc(INPUT_LEN * sizeof(gr_complex), align);
+    auto* expected_output =
         (gr_complex*)volk_malloc(OUTPUT_LEN * sizeof(gr_complex), align);
-    o_type* actual_output =
+    auto* actual_output =
         (gr_complex*)volk_malloc(OUTPUT_LEN * sizeof(gr_complex), align);
-    tap_type* taps = (gr_complex*)volk_malloc(MAX_TAPS * sizeof(gr_complex), align);
+    auto* taps = (gr_complex*)volk_malloc(MAX_TAPS * sizeof(gr_complex), align);
 
     std::fill_n(dline, INPUT_LEN, 0);
 
@@ -225,8 +224,7 @@ void test_decimate(unsigned int decimate)
 
             // build filter
             vector<tap_type> f1_taps(&taps[0], &taps[n]);
-            kernel::fir_filter_with_buffer_ccc* f1 =
-                new kernel::fir_filter_with_buffer_ccc(f1_taps);
+            auto* f1 = new kernel::fir_filter_with_buffer_ccc(f1_taps);
 
             // zero the output, then do the filtering
             std::fill_n(actual_output, OUTPUT_LEN, 0);
@@ -295,13 +293,13 @@ void test_decimate(unsigned int decimate)
     size_t align = volk_get_alignment();
 
     // Mem aligned buffer not really necessary, but why not?
-    i_type* input = (gr_complex*)volk_malloc(INPUT_LEN * sizeof(gr_complex), align);
-    i_type* dline = (gr_complex*)volk_malloc(INPUT_LEN * sizeof(gr_complex), align);
-    o_type* expected_output =
+    auto* input = (gr_complex*)volk_malloc(INPUT_LEN * sizeof(gr_complex), align);
+    auto* dline = (gr_complex*)volk_malloc(INPUT_LEN * sizeof(gr_complex), align);
+    auto* expected_output =
         (gr_complex*)volk_malloc(OUTPUT_LEN * sizeof(gr_complex), align);
-    o_type* actual_output =
+    auto* actual_output =
         (gr_complex*)volk_malloc(OUTPUT_LEN * sizeof(gr_complex), align);
-    tap_type* taps = (float*)volk_malloc(MAX_TAPS * sizeof(float), align);
+    auto* taps = (float*)volk_malloc(MAX_TAPS * sizeof(float), align);
 
     std::fill_n(dline, INPUT_LEN, 0);
 
@@ -326,8 +324,7 @@ void test_decimate(unsigned int decimate)
 
             // build filter
             vector<tap_type> f1_taps(&taps[0], &taps[n]);
-            kernel::fir_filter_with_buffer_ccf* f1 =
-                new kernel::fir_filter_with_buffer_ccf(f1_taps);
+            auto* f1 = new kernel::fir_filter_with_buffer_ccf(f1_taps);
 
             // zero the output, then do the filtering
             std::fill_n(actual_output, OUTPUT_LEN, 0);

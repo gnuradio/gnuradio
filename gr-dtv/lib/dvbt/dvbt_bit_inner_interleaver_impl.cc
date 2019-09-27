@@ -110,9 +110,9 @@ int dvbt_bit_inner_interleaver_impl::general_work(int noutput_items,
                                                   gr_vector_const_void_star& input_items,
                                                   gr_vector_void_star& output_items)
 {
-    const unsigned char* inh = (const unsigned char*)input_items[0];
-    const unsigned char* inl = (const unsigned char*)input_items[1];
-    unsigned char* out = (unsigned char*)output_items[0];
+    const auto* inh = (const unsigned char*)input_items[0];
+    const auto* inl = (const unsigned char*)input_items[1];
+    auto* out = (unsigned char*)output_items[0];
 
     int bmax = noutput_items * d_nsize / d_bsize;
 

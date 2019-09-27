@@ -140,7 +140,7 @@ QwtRasterData* TimeRasterData::copy() const
 #if QWT_VERSION < 0x060000
     TimeRasterData* returnData = new TimeRasterData(d_cols, d_rows);
 #else
-    TimeRasterData* returnData = new TimeRasterData(d_cols, d_rows);
+    auto* returnData = new TimeRasterData(d_cols, d_rows);
 #endif
 
     returnData->copy(this);

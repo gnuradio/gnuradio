@@ -290,8 +290,8 @@ void edit_box_msg_impl::set_value(pmt::pmt_t val)
         if (pmt::is_s32vector(val)) {
             QStringList text_list;
             const std::vector<int32_t> xv = pmt::s32vector_elements(val);
-            for (size_t i = 0; i < xv.size(); i++) {
-                text_list.append(QString::number(xv[i]));
+            for (int i : xv) {
+                text_list.append(QString::number(i));
             }
             d_val->setText(text_list.join(", "));
         } else {
@@ -312,8 +312,8 @@ void edit_box_msg_impl::set_value(pmt::pmt_t val)
         if (pmt::is_f32vector(val)) {
             QStringList text_list;
             const std::vector<float> xv = pmt::f32vector_elements(val);
-            for (size_t i = 0; i < xv.size(); i++) {
-                text_list.append(QString::number(xv[i]));
+            for (float i : xv) {
+                text_list.append(QString::number(i));
             }
             d_val->setText(text_list.join(", "));
         } else {
@@ -334,8 +334,8 @@ void edit_box_msg_impl::set_value(pmt::pmt_t val)
         if (pmt::is_f64vector(val)) {
             QStringList text_list;
             const std::vector<double> xv = pmt::f64vector_elements(val);
-            for (size_t i = 0; i < xv.size(); i++) {
-                text_list.append(QString::number(xv[i]));
+            for (double i : xv) {
+                text_list.append(QString::number(i));
             }
             d_val->setText(text_list.join(", "));
         } else {
@@ -356,8 +356,8 @@ void edit_box_msg_impl::set_value(pmt::pmt_t val)
         if (pmt::is_c32vector(val)) {
             QStringList text_list;
             const std::vector<gr_complex> xv = pmt::c32vector_elements(val);
-            for (size_t i = 0; i < xv.size(); i++) {
-                text_list.append(QString("(%1,%2)").arg(xv[i].real()).arg(xv[i].imag()));
+            for (auto i : xv) {
+                text_list.append(QString("(%1,%2)").arg(i.real()).arg(i.imag()));
             }
             d_val->setText(text_list.join(", "));
         } else {

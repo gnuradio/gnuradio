@@ -116,7 +116,7 @@ int sccc_decoder_blk_impl<T>::general_work(int noutput_items,
     else if (d_SISO_TYPE == TRELLIS_SUM_PRODUCT)
         p2min = &min_star;
 
-    const float* in = (const float*)input_items[0];
+    const auto* in = (const float*)input_items[0];
     T* out = (T*)output_items[0];
 
     for (int n = 0; n < nblocks; n++) {

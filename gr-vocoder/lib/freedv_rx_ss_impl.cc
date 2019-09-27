@@ -115,8 +115,8 @@ int freedv_rx_ss_impl::general_work(int noutput_items,
                                     gr_vector_const_void_star& input_items,
                                     gr_vector_void_star& output_items)
 {
-    short* in = (short*)input_items[0];
-    short* out = (short*)output_items[0];
+    auto* in = (short*)input_items[0];
+    auto* out = (short*)output_items[0];
 
     int in_offset = 0, out_offset = 0;
 

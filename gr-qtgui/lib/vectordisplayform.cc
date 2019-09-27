@@ -89,7 +89,7 @@ VectorDisplayPlot* VectorDisplayForm::getPlot()
 
 void VectorDisplayForm::newData(const QEvent* updateEvent)
 {
-    FreqUpdateEvent* fevent = (FreqUpdateEvent*)updateEvent;
+    auto* fevent = (FreqUpdateEvent*)updateEvent;
     const std::vector<double*> dataPoints = fevent->getPoints();
     const uint64_t numDataPoints = fevent->getNumDataPoints();
 

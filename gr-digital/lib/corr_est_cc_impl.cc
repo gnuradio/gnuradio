@@ -70,8 +70,8 @@ corr_est_cc_impl::corr_est_cc_impl(const std::vector<gr_complex>& symbols,
 
     // Create time-reversed conjugate of symbols
     d_symbols = symbols;
-    for (size_t i = 0; i < d_symbols.size(); i++) {
-        d_symbols[i] = conj(d_symbols[i]);
+    for (auto& d_symbol : d_symbols) {
+        d_symbol = conj(d_symbol);
     }
     std::reverse(d_symbols.begin(), d_symbols.end());
 
@@ -193,8 +193,8 @@ void corr_est_cc_impl::_set_threshold(float threshold)
         // Compute the value of the discrete autocorrelation of the matched
         // filter with offset 0 (aka the autocorrelation peak).
         float corr = 0;
-        for (size_t i = 0; i < d_symbols.size(); i++)
-            corr += abs(d_symbols[i] * conj(d_symbols[i]));
+        for (auto d_symbol : d_symbols)
+            corr += abs(d_symbol * conj(d_symbol));
         d_thresh = threshold * corr * corr;
         break;
     }
@@ -213,7 +213,7 @@ int corr_est_cc_impl::work(int noutput_items,
     gr::thread::scoped_lock lock(d_setlock);
 
     const gr_complex* in = (gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto* out = (gr_complex*)output_items[0];
     gr_complex* corr;
     if (output_items.size() > 1)
         corr = (gr_complex*)output_items[1];

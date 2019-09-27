@@ -71,7 +71,7 @@ int pll_refout_cc_impl::work(int noutput_items,
                              gr_vector_void_star& output_items)
 {
     const gr_complex* iptr = (gr_complex*)input_items[0];
-    gr_complex* optr = (gr_complex*)output_items[0];
+    auto* optr = (gr_complex*)output_items[0];
 
     float error;
     float t_imag, t_real;

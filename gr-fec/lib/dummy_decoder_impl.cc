@@ -83,8 +83,8 @@ double dummy_decoder_impl::rate() { return 1.0; }
 
 void dummy_decoder_impl::generic_work(void* inbuffer, void* outbuffer)
 {
-    const float* in = (const float*)inbuffer;
-    int8_t* out = (int8_t*)outbuffer;
+    const auto* in = (const float*)inbuffer;
+    auto* out = (int8_t*)outbuffer;
 
     // memcpy(out, in, d_frame_size*sizeof(char));
     volk_32f_binary_slicer_8i(out, in, d_frame_size);

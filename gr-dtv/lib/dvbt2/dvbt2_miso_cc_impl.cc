@@ -569,9 +569,9 @@ int dvbt2_miso_cc_impl::work(int noutput_items,
                              gr_vector_const_void_star& input_items,
                              gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out1 = (gr_complex*)output_items[0];
-    gr_complex* out2 = (gr_complex*)output_items[1];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out1 = (gr_complex*)output_items[0];
+    auto* out2 = (gr_complex*)output_items[1];
     gr_complex temp1, temp2;
 
     for (int i = 0; i < noutput_items; i += miso_items) {

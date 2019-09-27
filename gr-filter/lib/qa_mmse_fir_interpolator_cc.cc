@@ -58,7 +58,7 @@ static gr_complex test_fcn(double index)
 BOOST_AUTO_TEST_CASE(t1)
 {
     static const unsigned N = 100;
-    gr_complex* input =
+    auto* input =
         (gr_complex*)volk_malloc((N + 10) * sizeof(gr_complex), volk_get_alignment());
 
     for (unsigned i = 0; i < N + 10; i++)

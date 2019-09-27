@@ -107,7 +107,7 @@ int moving_average_impl<T>::work(int noutput_items,
     const T* in = (const T*)input_items[0];
     T* out = (T*)output_items[0];
 
-    unsigned int num_iter =
+    auto num_iter =
         (unsigned int)((noutput_items > d_max_iter) ? d_max_iter : noutput_items);
     if (d_vlen == 1) {
         T sum = in[0];

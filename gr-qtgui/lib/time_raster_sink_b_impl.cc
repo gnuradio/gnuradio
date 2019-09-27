@@ -364,7 +364,7 @@ int time_raster_sink_b_impl::work(int noutput_items,
                                   gr_vector_void_star& output_items)
 {
     int n = 0, j = 0, idx = 0;
-    const int8_t* in = (const int8_t*)input_items[0];
+    const auto* in = (const int8_t*)input_items[0];
 
     _ncols_resize();
 

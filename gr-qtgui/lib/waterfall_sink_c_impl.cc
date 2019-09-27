@@ -450,7 +450,7 @@ int waterfall_sink_c_impl::work(int noutput_items,
                                 gr_vector_void_star& output_items)
 {
     int j = 0;
-    const gr_complex* in = (const gr_complex*)input_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
 
     // Update the FFT size from the application
     fftresize();

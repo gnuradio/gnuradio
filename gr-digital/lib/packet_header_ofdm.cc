@@ -114,14 +114,14 @@ bool packet_header_ofdm::header_parser(const unsigned char* in, std::vector<tag_
         return false;
     }
     int packet_len = 0; // # of complex symbols in this frame
-    for (size_t i = 0; i < tags.size(); i++) {
-        if (pmt::equal(tags[i].key, d_len_tag_key)) {
+    for (auto& tag : tags) {
+        if (pmt::equal(tag.key, d_len_tag_key)) {
             // Convert bytes to complex symbols:
-            packet_len = pmt::to_long(tags[i].value) * 8 / d_bits_per_payload_sym;
-            if (pmt::to_long(tags[i].value) * 8 % d_bits_per_payload_sym) {
+            packet_len = pmt::to_long(tag.value) * 8 / d_bits_per_payload_sym;
+            if (pmt::to_long(tag.value) * 8 % d_bits_per_payload_sym) {
                 packet_len++;
             }
-            tags[i].value = pmt::from_long(packet_len);
+            tag.value = pmt::from_long(packet_len);
             break;
         }
     }

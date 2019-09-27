@@ -52,15 +52,15 @@ BOOST_AUTO_TEST_CASE(t0)
         input[i] = sin(double(i));
     }
 
-    for (int i = 0; i < SIN_COS_BLOCK_SIZE; i++) {
+    for (float i : input) {
         float ref_cos = ref_vco.cos();
         float new_cos = new_vco.cos();
         BOOST_CHECK(std::abs(ref_cos - new_cos) <= SIN_COS_TOLERANCE);
 
         max_error = max_d(max_error, ref_cos - new_cos);
 
-        ref_vco.adjust_phase(input[i]);
-        new_vco.adjust_phase(input[i]);
+        ref_vco.adjust_phase(i);
+        new_vco.adjust_phase(i);
 
         BOOST_CHECK(std::abs(ref_vco.get_phase() - new_vco.get_phase()) <=
                     SIN_COS_TOLERANCE);
@@ -76,9 +76,9 @@ BOOST_AUTO_TEST_CASE(t1)
 {
     gr::vco<float, float> ref_vco;
     gr::fxpt_vco new_vco;
-    float* ref_block = new float[SIN_COS_BLOCK_SIZE];
-    float* new_block = new float[SIN_COS_BLOCK_SIZE];
-    float* input = new float[SIN_COS_BLOCK_SIZE];
+    auto* ref_block = new float[SIN_COS_BLOCK_SIZE];
+    auto* new_block = new float[SIN_COS_BLOCK_SIZE];
+    auto* input = new float[SIN_COS_BLOCK_SIZE];
     double max_error = 0;
 
     for (int i = 0; i < SIN_COS_BLOCK_SIZE; i++) {
@@ -105,9 +105,9 @@ BOOST_AUTO_TEST_CASE(t2)
 {
     gr::vco<gr_complex, float> ref_vco;
     gr::fxpt_vco new_vco;
-    gr_complex* ref_block = new gr_complex[SIN_COS_BLOCK_SIZE];
-    gr_complex* new_block = new gr_complex[SIN_COS_BLOCK_SIZE];
-    float* input = new float[SIN_COS_BLOCK_SIZE];
+    auto* ref_block = new gr_complex[SIN_COS_BLOCK_SIZE];
+    auto* new_block = new gr_complex[SIN_COS_BLOCK_SIZE];
+    auto* input = new float[SIN_COS_BLOCK_SIZE];
     double max_error = 0;
 
     for (int i = 0; i < SIN_COS_BLOCK_SIZE; i++) {

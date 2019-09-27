@@ -439,8 +439,8 @@ double cc_decoder_impl::rate() { return 1.0 / static_cast<double>(d_rate); }
 
 void cc_decoder_impl::generic_work(void* inbuffer, void* outbuffer)
 {
-    const unsigned char* in = (const unsigned char*)inbuffer;
-    unsigned char* out = (unsigned char*)outbuffer;
+    const auto* in = (const unsigned char*)inbuffer;
+    auto* out = (unsigned char*)outbuffer;
 
     switch (d_mode) {
 

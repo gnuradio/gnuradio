@@ -54,13 +54,13 @@ int interleaved_short_to_complex_impl::work(int noutput_items,
                                             gr_vector_const_void_star& input_items,
                                             gr_vector_void_star& output_items)
 {
-    const short* in = (const short*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const short*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     interleaved_short_array_to_complex(in, out, 2 * noutput_items);
 
     if (d_swap) {
-        float* p = (float*)output_items[0];
+        auto* p = (float*)output_items[0];
         for (int i = 0; i < noutput_items; ++i) {
             float f = p[2 * i + 1];
             p[2 * i + 1] = p[2 * i + 0];

@@ -65,7 +65,7 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
 
     // Now create our own menus
     for (int i = 0; i < nplots; i++) {
-        ColorMapMenu* colormap = new ColorMapMenu(i, this);
+        auto* colormap = new ColorMapMenu(i, this);
         connect(
             colormap,
             SIGNAL(whichTrigger(unsigned int, const int, const QColor&, const QColor&)),
@@ -133,16 +133,14 @@ WaterfallDisplayPlot* WaterfallDisplayForm::getPlot()
 
 void WaterfallDisplayForm::newData(const QEvent* updateEvent)
 {
-    WaterfallUpdateEvent* event = (WaterfallUpdateEvent*)updateEvent;
+    auto* event = (WaterfallUpdateEvent*)updateEvent;
     const std::vector<double*> dataPoints = event->getPoints();
     const uint64_t numDataPoints = event->getNumDataPoints();
     const gr::high_res_timer_type dataTimestamp = event->getDataTimestamp();
 
-    for (size_t i = 0; i < dataPoints.size(); i++) {
-        double* min_val =
-            std::min_element(&dataPoints[i][0], &dataPoints[i][numDataPoints - 1]);
-        double* max_val =
-            std::max_element(&dataPoints[i][0], &dataPoints[i][numDataPoints - 1]);
+    for (auto dataPoint : dataPoints) {
+        double* min_val = std::min_element(&dataPoint[0], &dataPoint[numDataPoints - 1]);
+        double* max_val = std::max_element(&dataPoint[0], &dataPoint[numDataPoints - 1]);
         if (*min_val < d_min_val)
             d_min_val = *min_val;
         if (*max_val > d_max_val)
@@ -157,7 +155,7 @@ void WaterfallDisplayForm::customEvent(QEvent* e)
     if (e->type() == WaterfallUpdateEvent::Type()) {
         newData(e);
     } else if (e->type() == SpectrumFrequencyRangeEventType) {
-        SetFreqEvent* fevent = (SetFreqEvent*)e;
+        auto* fevent = (SetFreqEvent*)e;
         setFrequencyRange(fevent->getCenterFrequency(), fevent->getBandwidth());
     }
 }

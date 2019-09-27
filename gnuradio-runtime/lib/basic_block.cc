@@ -93,7 +93,7 @@ void basic_block::message_port_register_in(pmt::pmt_t port_id)
 pmt::pmt_t basic_block::message_ports_in()
 {
     pmt::pmt_t port_names = pmt::make_vector(msg_queue.size(), pmt::PMT_NIL);
-    msg_queue_map_itr itr = msg_queue.begin();
+    auto itr = msg_queue.begin();
     for (size_t i = 0; i < msg_queue.size(); i++) {
         pmt::vector_set(port_names, i, (*itr).first);
         itr++;

@@ -73,8 +73,8 @@ int exponentiate_const_cci_impl::work(int noutput_items,
     gr::thread::scoped_lock guard(d_setlock);
 
     for (unsigned int i = 0; i < input_items.size(); i++) {
-        const gr_complex* in = (const gr_complex*)input_items[i];
-        gr_complex* out = (gr_complex*)output_items[i];
+        const auto* in = (const gr_complex*)input_items[i];
+        auto* out = (gr_complex*)output_items[i];
 
         if (d_exponent > 1) {
             volk_32fc_x2_multiply_32fc(out, in, in, noutput_items * d_vlen);

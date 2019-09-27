@@ -46,8 +46,8 @@ private:
 
     gr_complex sign(gr_complex x)
     {
-        float re = (float)(x.real() >= 0.0f);
-        float im = (float)(x.imag() >= 0.0f);
+        auto re = (float)(x.real() >= 0.0f);
+        auto im = (float)(x.imag() >= 0.0f);
         return gr_complex(re, im);
     }
 

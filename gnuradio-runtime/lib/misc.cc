@@ -40,26 +40,26 @@ unsigned int rounduppow2(unsigned int n)
 
 void zero_vector(std::vector<float>& v)
 {
-    for (unsigned int i = 0; i < v.size(); i++)
-        v[i] = 0;
+    for (float& i : v)
+        i = 0;
 }
 
 void zero_vector(std::vector<double>& v)
 {
-    for (unsigned int i = 0; i < v.size(); i++)
-        v[i] = 0;
+    for (double& i : v)
+        i = 0;
 }
 
 void zero_vector(std::vector<int>& v)
 {
-    for (unsigned int i = 0; i < v.size(); i++)
-        v[i] = 0;
+    for (int& i : v)
+        i = 0;
 }
 
 void zero_vector(std::vector<gr_complex>& v)
 {
-    for (unsigned int i = 0; i < v.size(); i++)
-        v[i] = 0;
+    for (auto& i : v)
+        i = 0;
 }
 
 } /* namespace gr */

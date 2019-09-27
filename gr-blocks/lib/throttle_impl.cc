@@ -92,7 +92,7 @@ int throttle_impl::work(int noutput_items,
     // calculate the expected number of samples to have passed through
     boost::system_time now = boost::get_system_time();
     boost::int64_t ticks = (now - d_start).ticks();
-    uint64_t expected_samps = uint64_t(d_samps_per_tick * ticks);
+    auto expected_samps = uint64_t(d_samps_per_tick * ticks);
 
     // if the expected samples was less, we need to throttle back
     if (d_total_samples > expected_samps) {

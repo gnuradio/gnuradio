@@ -120,8 +120,8 @@ int oss_source::work(int noutput_items,
                      gr_vector_const_void_star& input_items,
                      gr_vector_void_star& output_items)
 {
-    float* f0 = (float*)output_items[0];
-    float* f1 = (float*)output_items[1]; // will be invalid if this is mono output
+    auto* f0 = (float*)output_items[0];
+    auto* f1 = (float*)output_items[1]; // will be invalid if this is mono output
 
     const int shorts_per_item = 2; // L + R
     const int bytes_per_item = shorts_per_item * sizeof(short);

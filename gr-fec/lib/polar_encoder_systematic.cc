@@ -55,8 +55,8 @@ polar_encoder_systematic::~polar_encoder_systematic()
 
 void polar_encoder_systematic::generic_work(void* in_buffer, void* out_buffer)
 {
-    const unsigned char* in = (const unsigned char*)in_buffer;
-    unsigned char* out = (unsigned char*)out_buffer;
+    const auto* in = (const unsigned char*)in_buffer;
+    auto* out = (unsigned char*)out_buffer;
 
     volk_encode(out, in);
     bit_reverse_and_reset_frozen_bits(d_volk_syst_intermediate, out);

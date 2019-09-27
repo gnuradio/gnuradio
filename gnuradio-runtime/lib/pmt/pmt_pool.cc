@@ -49,8 +49,8 @@ pmt_pool::pmt_pool(size_t itemsize,
 
 pmt_pool::~pmt_pool()
 {
-    for (unsigned int i = 0; i < d_allocations.size(); i++) {
-        delete[] d_allocations[i];
+    for (auto& d_allocation : d_allocations) {
+        delete[] d_allocation;
     }
 }
 

@@ -76,7 +76,7 @@ void block::declare_sample_delay(unsigned delay)
 {
     d_attr_delay = delay;
     if (d_detail) {
-        unsigned int nins = static_cast<unsigned int>(d_detail->ninputs());
+        auto nins = static_cast<unsigned int>(d_detail->ninputs());
         for (unsigned int n = 0; n < nins; n++) {
             d_detail->input(n)->declare_sample_delay(d_attr_delay);
         }

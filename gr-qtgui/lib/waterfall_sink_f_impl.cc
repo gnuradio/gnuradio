@@ -456,7 +456,7 @@ int waterfall_sink_f_impl::work(int noutput_items,
                                 gr_vector_void_star& output_items)
 {
     int j = 0;
-    const float* in = (const float*)input_items[0];
+    const auto* in = (const float*)input_items[0];
 
     // Update the FFT size from the application
     fftresize();

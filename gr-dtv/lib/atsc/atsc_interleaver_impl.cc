@@ -69,9 +69,8 @@ int atsc_interleaver_impl::work(int noutput_items,
                                 gr_vector_const_void_star& input_items,
                                 gr_vector_void_star& output_items)
 {
-    const atsc_mpeg_packet_rs_encoded* in =
-        (const atsc_mpeg_packet_rs_encoded*)input_items[0];
-    atsc_mpeg_packet_rs_encoded* out = (atsc_mpeg_packet_rs_encoded*)output_items[0];
+    const auto* in = (const atsc_mpeg_packet_rs_encoded*)input_items[0];
+    auto* out = (atsc_mpeg_packet_rs_encoded*)output_items[0];
     int p, n = ATSC_MPEG_RS_ENCODED_LENGTH;
 
     for (int i = 0; i < noutput_items; i++) {

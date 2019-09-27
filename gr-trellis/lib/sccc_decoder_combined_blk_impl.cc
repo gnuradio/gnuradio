@@ -143,7 +143,7 @@ int sccc_decoder_combined_blk_impl<IN_T, OUT_T>::general_work(
         p2min = &min_star;
 
     const IN_T* in = (const IN_T*)input_items[0];
-    OUT_T* out = (OUT_T*)output_items[0];
+    auto* out = (OUT_T*)output_items[0];
 
     for (int n = 0; n < nblocks; n++) {
         sccc_decoder_combined(d_FSMo,

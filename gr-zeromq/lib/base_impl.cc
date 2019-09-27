@@ -161,10 +161,10 @@ int base_source_impl::flush_pending(void* out_buf,
     memcpy(out_buf, (uint8_t*)d_msg.data() + d_consumed_bytes, to_copy_bytes);
 
     /* Add tags matching this segment of samples */
-    for (unsigned int i = 0; i < d_tags.size(); i++) {
-        if ((d_tags[i].offset >= (uint64_t)d_consumed_items) &&
-            (d_tags[i].offset < (uint64_t)d_consumed_items + to_copy_items)) {
-            gr::tag_t nt = d_tags[i];
+    for (auto& d_tag : d_tags) {
+        if ((d_tag.offset >= (uint64_t)d_consumed_items) &&
+            (d_tag.offset < (uint64_t)d_consumed_items + to_copy_items)) {
+            gr::tag_t nt = d_tag;
             nt.offset += out_offset - d_consumed_items;
             add_item_tag(0, nt);
         }
@@ -212,8 +212,8 @@ bool base_source_impl::load_message(bool wait)
         d_consumed_bytes = parse_tag_header(d_msg, rcv_offset, d_tags);
 
         /* Fixup the tags offset to be relative to the start of this message */
-        for (unsigned int i = 0; i < d_tags.size(); i++) {
-            d_tags[i].offset -= rcv_offset;
+        for (auto& d_tag : d_tags) {
+            d_tag.offset -= rcv_offset;
         }
     }
 

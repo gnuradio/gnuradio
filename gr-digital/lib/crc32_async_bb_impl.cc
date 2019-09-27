@@ -64,7 +64,7 @@ void crc32_async_bb_impl::calc(pmt::pmt_t msg)
     unsigned int crc;
     size_t pkt_len(0);
     const uint8_t* bytes_in = pmt::u8vector_elements(bytes, pkt_len);
-    uint8_t* bytes_out =
+    auto* bytes_out =
         (uint8_t*)volk_malloc(4 + pkt_len * sizeof(uint8_t), volk_get_alignment());
 
     d_crc_impl.reset();

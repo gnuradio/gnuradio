@@ -57,8 +57,8 @@ scl_list::scl_list(const unsigned int size,
 
 scl_list::~scl_list()
 {
-    for (unsigned int i = 0; i < d_path_list.size(); i++) {
-        delete d_path_list[i];
+    for (auto& i : d_path_list) {
+        delete i;
     }
 }
 

@@ -250,7 +250,7 @@ FrequencyDisplayPlot* FreqDisplayForm::getPlot()
 
 void FreqDisplayForm::newData(const QEvent* updateEvent)
 {
-    FreqUpdateEvent* fevent = (FreqUpdateEvent*)updateEvent;
+    auto* fevent = (FreqUpdateEvent*)updateEvent;
     const std::vector<double*> dataPoints = fevent->getPoints();
     const uint64_t numDataPoints = fevent->getNumDataPoints();
 
@@ -262,7 +262,7 @@ void FreqDisplayForm::customEvent(QEvent* e)
     if (e->type() == FreqUpdateEvent::Type()) {
         newData(e);
     } else if (e->type() == SpectrumFrequencyRangeEventType) {
-        SetFreqEvent* fevent = (SetFreqEvent*)e;
+        auto* fevent = (SetFreqEvent*)e;
         setFrequencyRange(fevent->getCenterFrequency(), fevent->getBandwidth());
     }
 }

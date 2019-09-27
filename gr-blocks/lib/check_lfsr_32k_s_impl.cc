@@ -50,8 +50,8 @@ check_lfsr_32k_s_impl::check_lfsr_32k_s_impl()
 {
     lfsr_32k lfsr;
 
-    for (int i = 0; i < BUFSIZE; i++)
-        d_buffer[i] = lfsr.next_short();
+    for (unsigned short& i : d_buffer)
+        i = lfsr.next_short();
 
     enter_SEARCHING();
 }
@@ -62,7 +62,7 @@ int check_lfsr_32k_s_impl::work(int noutput_items,
                                 gr_vector_const_void_star& input_items,
                                 gr_vector_void_star& output_items)
 {
-    unsigned short* in = (unsigned short*)input_items[0];
+    auto* in = (unsigned short*)input_items[0];
 
     for (int i = 0; i < noutput_items; i++) {
         unsigned short x = in[i];

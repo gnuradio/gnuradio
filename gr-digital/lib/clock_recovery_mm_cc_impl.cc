@@ -119,8 +119,8 @@ int clock_recovery_mm_cc_impl::general_work(int noutput_items,
                                             gr_vector_const_void_star& input_items,
                                             gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     bool write_foptr = output_items.size() >= 2;
 
@@ -137,7 +137,7 @@ int clock_recovery_mm_cc_impl::general_work(int noutput_items,
 
     // This loop writes the error to the second output, if it exists
     if (write_foptr) {
-        float* foptr = (float*)output_items[1];
+        auto* foptr = (float*)output_items[1];
         while (oo < noutput_items && ii < ni) {
             d_p_2T = d_p_1T;
             d_p_1T = d_p_0T;

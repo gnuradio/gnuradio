@@ -91,8 +91,8 @@ int crc32_bb_impl::work(int noutput_items,
                         gr_vector_const_void_star& input_items,
                         gr_vector_void_star& output_items)
 {
-    const unsigned char* in = (const unsigned char*)input_items[0];
-    unsigned char* out = (unsigned char*)output_items[0];
+    const auto* in = (const unsigned char*)input_items[0];
+    auto* out = (unsigned char*)output_items[0];
     size_t packet_length = ninput_items[0];
     int packet_size_diff = d_check ? -d_crc_length : d_crc_length;
     unsigned int crc;
@@ -135,13 +135,12 @@ int crc32_bb_impl::work(int noutput_items,
 
     std::vector<tag_t> tags;
     get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + packet_length);
-    for (size_t i = 0; i < tags.size(); i++) {
-        tags[i].offset -= nitems_read(0);
-        if (d_check &&
-            tags[i].offset > (unsigned int)(packet_length + packet_size_diff)) {
-            tags[i].offset = packet_length - d_crc_length - 1;
+    for (auto& tag : tags) {
+        tag.offset -= nitems_read(0);
+        if (d_check && tag.offset > (unsigned int)(packet_length + packet_size_diff)) {
+            tag.offset = packet_length - d_crc_length - 1;
         }
-        add_item_tag(0, nitems_written(0) + tags[i].offset, tags[i].key, tags[i].value);
+        add_item_tag(0, nitems_written(0) + tag.offset, tag.key, tag.value);
     }
 
     return packet_length + packet_size_diff;

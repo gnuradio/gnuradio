@@ -47,8 +47,8 @@ int add_const_ff_impl::work(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
 {
-    const float* iptr = (const float*)input_items[0];
-    float* optr = (float*)output_items[0];
+    const auto* iptr = (const float*)input_items[0];
+    auto* optr = (float*)output_items[0];
 
     int size = noutput_items;
 

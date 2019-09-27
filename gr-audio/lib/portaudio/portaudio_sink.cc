@@ -95,7 +95,7 @@ int portaudio_sink_callback(const void* inputBuffer,
                             PaStreamCallbackFlags statusFlags,
                             void* arg)
 {
-    portaudio_sink* self = (portaudio_sink*)arg;
+    auto* self = (portaudio_sink*)arg;
     int nreqd_samples = framesPerBuffer * self->d_output_parameters.channelCount;
 
     int navail_samples = self->d_reader->items_available();
@@ -312,7 +312,7 @@ int portaudio_sink::work(int noutput_items,
                          gr_vector_const_void_star& input_items,
                          gr_vector_void_star& output_items)
 {
-    const float** in = (const float**)&input_items[0];
+    const auto** in = (const float**)&input_items[0];
     const unsigned nchan =
         d_output_parameters.channelCount; // # of channels == samples/frame
 
@@ -342,7 +342,7 @@ int portaudio_sink::work(int noutput_items,
             gr::thread::scoped_lock guard(d_ringbuffer_mutex);
 
             int nf = std::min(noutput_items - k, nframes);
-            float* p = (float*)d_writer->write_pointer();
+            auto* p = (float*)d_writer->write_pointer();
 
             for (int i = 0; i < nf; i++) {
                 for (unsigned int c = 0; c < nchan; c++) {

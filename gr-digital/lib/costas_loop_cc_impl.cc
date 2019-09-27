@@ -165,7 +165,7 @@ int costas_loop_cc_impl::work(int noutput_items,
                               gr_vector_void_star& output_items)
 {
     const gr_complex* iptr = (gr_complex*)input_items[0];
-    gr_complex* optr = (gr_complex*)output_items[0];
+    auto* optr = (gr_complex*)output_items[0];
     float* freq_optr = output_items.size() >= 2 ? (float*)output_items[1] : NULL;
     float* phase_optr = output_items.size() >= 3 ? (float*)output_items[2] : NULL;
     float* error_optr = output_items.size() >= 4 ? (float*)output_items[3] : NULL;

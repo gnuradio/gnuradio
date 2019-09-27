@@ -165,8 +165,8 @@ static unsigned int hash_string(const std::string& s)
     unsigned int h = 0;
     unsigned int g = 0;
 
-    for (std::string::const_iterator p = s.begin(); p != s.end(); ++p) {
-        h = (h << 4) + (*p & 0xff);
+    for (char p : s) {
+        h = (h << 4) + (p & 0xff);
         g = h & 0xf0000000;
         if (g) {
             h = h ^ (g >> 24);
@@ -236,7 +236,7 @@ pmt_t from_long(long x) { return pmt_t(new pmt_integer(x)); }
 
 long to_long(pmt_t x)
 {
-    pmt_integer* i = dynamic_cast<pmt_integer*>(x.get());
+    auto* i = dynamic_cast<pmt_integer*>(x.get());
     if (i)
         return i->value();
 
@@ -337,7 +337,7 @@ pmt_t cons(const pmt_t& x, const pmt_t& y) { return pmt_t(new pmt_pair(x, y)); }
 
 pmt_t car(const pmt_t& pair)
 {
-    pmt_pair* p = dynamic_cast<pmt_pair*>(pair.get());
+    auto* p = dynamic_cast<pmt_pair*>(pair.get());
     if (p)
         return p->car();
 
@@ -346,7 +346,7 @@ pmt_t car(const pmt_t& pair)
 
 pmt_t cdr(const pmt_t& pair)
 {
-    pmt_pair* p = dynamic_cast<pmt_pair*>(pair.get());
+    auto* p = dynamic_cast<pmt_pair*>(pair.get());
     if (p)
         return p->cdr();
 
@@ -453,14 +453,14 @@ pmt_t make_tuple() { return pmt_t(new pmt_tuple(0)); }
 
 pmt_t make_tuple(const pmt_t& e0)
 {
-    pmt_tuple* t = new pmt_tuple(1);
+    auto* t = new pmt_tuple(1);
     t->_set(0, e0);
     return pmt_t(t);
 }
 
 pmt_t make_tuple(const pmt_t& e0, const pmt_t& e1)
 {
-    pmt_tuple* t = new pmt_tuple(2);
+    auto* t = new pmt_tuple(2);
     t->_set(0, e0);
     t->_set(1, e1);
     return pmt_t(t);
@@ -468,7 +468,7 @@ pmt_t make_tuple(const pmt_t& e0, const pmt_t& e1)
 
 pmt_t make_tuple(const pmt_t& e0, const pmt_t& e1, const pmt_t& e2)
 {
-    pmt_tuple* t = new pmt_tuple(3);
+    auto* t = new pmt_tuple(3);
     t->_set(0, e0);
     t->_set(1, e1);
     t->_set(2, e2);
@@ -477,7 +477,7 @@ pmt_t make_tuple(const pmt_t& e0, const pmt_t& e1, const pmt_t& e2)
 
 pmt_t make_tuple(const pmt_t& e0, const pmt_t& e1, const pmt_t& e2, const pmt_t& e3)
 {
-    pmt_tuple* t = new pmt_tuple(4);
+    auto* t = new pmt_tuple(4);
     t->_set(0, e0);
     t->_set(1, e1);
     t->_set(2, e2);
@@ -488,7 +488,7 @@ pmt_t make_tuple(const pmt_t& e0, const pmt_t& e1, const pmt_t& e2, const pmt_t&
 pmt_t make_tuple(
     const pmt_t& e0, const pmt_t& e1, const pmt_t& e2, const pmt_t& e3, const pmt_t& e4)
 {
-    pmt_tuple* t = new pmt_tuple(5);
+    auto* t = new pmt_tuple(5);
     t->_set(0, e0);
     t->_set(1, e1);
     t->_set(2, e2);
@@ -504,7 +504,7 @@ pmt_t make_tuple(const pmt_t& e0,
                  const pmt_t& e4,
                  const pmt_t& e5)
 {
-    pmt_tuple* t = new pmt_tuple(6);
+    auto* t = new pmt_tuple(6);
     t->_set(0, e0);
     t->_set(1, e1);
     t->_set(2, e2);
@@ -522,7 +522,7 @@ pmt_t make_tuple(const pmt_t& e0,
                  const pmt_t& e5,
                  const pmt_t& e6)
 {
-    pmt_tuple* t = new pmt_tuple(7);
+    auto* t = new pmt_tuple(7);
     t->_set(0, e0);
     t->_set(1, e1);
     t->_set(2, e2);
@@ -542,7 +542,7 @@ pmt_t make_tuple(const pmt_t& e0,
                  const pmt_t& e6,
                  const pmt_t& e7)
 {
-    pmt_tuple* t = new pmt_tuple(8);
+    auto* t = new pmt_tuple(8);
     t->_set(0, e0);
     t->_set(1, e1);
     t->_set(2, e2);
@@ -564,7 +564,7 @@ pmt_t make_tuple(const pmt_t& e0,
                  const pmt_t& e7,
                  const pmt_t& e8)
 {
-    pmt_tuple* t = new pmt_tuple(9);
+    auto* t = new pmt_tuple(9);
     t->_set(0, e0);
     t->_set(1, e1);
     t->_set(2, e2);
@@ -588,7 +588,7 @@ pmt_t make_tuple(const pmt_t& e0,
                  const pmt_t& e8,
                  const pmt_t& e9)
 {
-    pmt_tuple* t = new pmt_tuple(10);
+    auto* t = new pmt_tuple(10);
     t->_set(0, e0);
     t->_set(1, e1);
     t->_set(2, e2);
@@ -608,7 +608,7 @@ pmt_t to_tuple(const pmt_t& x)
         return x;
 
     size_t len = length(x);
-    pmt_tuple* t = new pmt_tuple(len);
+    auto* t = new pmt_tuple(len);
     pmt_t r = pmt_t(t);
 
     if (x->is_vector()) {

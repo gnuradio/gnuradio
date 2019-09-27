@@ -63,7 +63,7 @@ int float_to_int_impl::work(int noutput_items,
 
       volk_32f_s32f_convert_32i(out, in, d_scale, d_vlen*noutput_items);
 #else
-    const float* in = (const float*)input_items[0];
+    const auto* in = (const float*)input_items[0];
     int* out = (int*)output_items[0];
 
     float_array_to_int(in, out, d_scale, d_vlen * noutput_items);

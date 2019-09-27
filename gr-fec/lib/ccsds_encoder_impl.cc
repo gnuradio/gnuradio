@@ -89,8 +89,8 @@ double ccsds_encoder_impl::rate() { return 0.5; }
 
 void ccsds_encoder_impl::generic_work(void* in_buffer, void* out_buffer)
 {
-    unsigned char* in = (unsigned char*)in_buffer;
-    unsigned char* out = (unsigned char*)out_buffer;
+    auto* in = (unsigned char*)in_buffer;
+    auto* out = (unsigned char*)out_buffer;
 
     unsigned char my_state = d_start_state;
 

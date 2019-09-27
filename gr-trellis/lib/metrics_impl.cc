@@ -117,7 +117,7 @@ int metrics_impl<T>::general_work(int noutput_items,
 
     for (int m = 0; m < nstreams; m++) {
         const T* in = (T*)input_items[m];
-        float* out = (float*)output_items[m];
+        auto* out = (float*)output_items[m];
 
         for (int i = 0; i < noutput_items / d_O; i++) {
             calc_metric(d_O, d_D, d_TABLE, &(in[i * d_D]), &(out[i * d_O]), d_TYPE);

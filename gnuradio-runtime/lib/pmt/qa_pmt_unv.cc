@@ -36,9 +36,9 @@ BOOST_AUTO_TEST_CASE(test_u8vector)
     static const size_t N = 3;
     pmt::pmt_t v1 = pmt::make_u8vector(N, 0);
     BOOST_CHECK_EQUAL(N, pmt::length(v1));
-    uint8_t s0 = uint8_t(10);
-    uint8_t s1 = uint8_t(20);
-    uint8_t s2 = uint8_t(30);
+    auto s0 = uint8_t(10);
+    auto s1 = uint8_t(20);
+    auto s2 = uint8_t(30);
 
     pmt::u8vector_set(v1, 0, s0);
     pmt::u8vector_set(v1, 1, s1);
@@ -70,9 +70,9 @@ BOOST_AUTO_TEST_CASE(test_s8vector)
     static const size_t N = 3;
     pmt::pmt_t v1 = pmt::make_s8vector(N, 0);
     BOOST_CHECK_EQUAL(N, pmt::length(v1));
-    int8_t s0 = int8_t(10);
-    int8_t s1 = int8_t(20);
-    int8_t s2 = int8_t(30);
+    auto s0 = int8_t(10);
+    auto s1 = int8_t(20);
+    auto s2 = int8_t(30);
 
     pmt::s8vector_set(v1, 0, s0);
     pmt::s8vector_set(v1, 1, s1);
@@ -104,9 +104,9 @@ BOOST_AUTO_TEST_CASE(test_u16vector)
     static const size_t N = 3;
     pmt::pmt_t v1 = pmt::make_u16vector(N, 0);
     BOOST_CHECK_EQUAL(N, pmt::length(v1));
-    uint16_t s0 = uint16_t(10);
-    uint16_t s1 = uint16_t(20);
-    uint16_t s2 = uint16_t(30);
+    auto s0 = uint16_t(10);
+    auto s1 = uint16_t(20);
+    auto s2 = uint16_t(30);
 
     pmt::u16vector_set(v1, 0, s0);
     pmt::u16vector_set(v1, 1, s1);
@@ -138,9 +138,9 @@ BOOST_AUTO_TEST_CASE(test_s16vector)
     static const size_t N = 3;
     pmt::pmt_t v1 = pmt::make_s16vector(N, 0);
     BOOST_CHECK_EQUAL(N, pmt::length(v1));
-    int16_t s0 = int16_t(10);
-    int16_t s1 = int16_t(20);
-    int16_t s2 = int16_t(30);
+    auto s0 = int16_t(10);
+    auto s1 = int16_t(20);
+    auto s2 = int16_t(30);
 
     pmt::s16vector_set(v1, 0, s0);
     pmt::s16vector_set(v1, 1, s1);
@@ -172,9 +172,9 @@ BOOST_AUTO_TEST_CASE(test_u32vector)
     static const size_t N = 3;
     pmt::pmt_t v1 = pmt::make_u32vector(N, 0);
     BOOST_CHECK_EQUAL(N, pmt::length(v1));
-    uint32_t s0 = uint32_t(10);
-    uint32_t s1 = uint32_t(20);
-    uint32_t s2 = uint32_t(30);
+    auto s0 = uint32_t(10);
+    auto s1 = uint32_t(20);
+    auto s2 = uint32_t(30);
 
     pmt::u32vector_set(v1, 0, s0);
     pmt::u32vector_set(v1, 1, s1);
@@ -206,9 +206,9 @@ BOOST_AUTO_TEST_CASE(test_s32vector)
     static const size_t N = 3;
     pmt::pmt_t v1 = pmt::make_s32vector(N, 0);
     BOOST_CHECK_EQUAL(N, pmt::length(v1));
-    int32_t s0 = int32_t(10);
-    int32_t s1 = int32_t(20);
-    int32_t s2 = int32_t(30);
+    auto s0 = int32_t(10);
+    auto s1 = int32_t(20);
+    auto s2 = int32_t(30);
 
     pmt::s32vector_set(v1, 0, s0);
     pmt::s32vector_set(v1, 1, s1);
@@ -240,9 +240,9 @@ BOOST_AUTO_TEST_CASE(test_u64vector)
     static const size_t N = 3;
     pmt::pmt_t v1 = pmt::make_u64vector(N, 0);
     BOOST_CHECK_EQUAL(N, pmt::length(v1));
-    uint64_t s0 = uint64_t(10);
-    uint64_t s1 = uint64_t(20);
-    uint64_t s2 = uint64_t(30);
+    auto s0 = uint64_t(10);
+    auto s1 = uint64_t(20);
+    auto s2 = uint64_t(30);
 
     pmt::u64vector_set(v1, 0, s0);
     pmt::u64vector_set(v1, 1, s1);
@@ -274,9 +274,9 @@ BOOST_AUTO_TEST_CASE(test_s64vector)
     static const size_t N = 3;
     pmt::pmt_t v1 = pmt::make_s64vector(N, 0);
     BOOST_CHECK_EQUAL(N, pmt::length(v1));
-    int64_t s0 = int64_t(10);
-    int64_t s1 = int64_t(20);
-    int64_t s2 = int64_t(30);
+    auto s0 = int64_t(10);
+    auto s1 = int64_t(20);
+    auto s2 = int64_t(30);
 
     pmt::s64vector_set(v1, 0, s0);
     pmt::s64vector_set(v1, 1, s1);
@@ -308,9 +308,9 @@ BOOST_AUTO_TEST_CASE(test_f32vector)
     static const size_t N = 3;
     pmt::pmt_t v1 = pmt::make_f32vector(N, 0);
     BOOST_CHECK_EQUAL(N, pmt::length(v1));
-    float s0 = float(10);
-    float s1 = float(20);
-    float s2 = float(30);
+    auto s0 = float(10);
+    auto s1 = float(20);
+    auto s2 = float(30);
 
     pmt::f32vector_set(v1, 0, s0);
     pmt::f32vector_set(v1, 1, s1);
@@ -342,9 +342,9 @@ BOOST_AUTO_TEST_CASE(test_f64vector)
     static const size_t N = 3;
     pmt::pmt_t v1 = pmt::make_f64vector(N, 0);
     BOOST_CHECK_EQUAL(N, pmt::length(v1));
-    double s0 = double(10);
-    double s1 = double(20);
-    double s2 = double(30);
+    auto s0 = double(10);
+    auto s1 = double(20);
+    auto s2 = double(30);
 
     pmt::f64vector_set(v1, 0, s0);
     pmt::f64vector_set(v1, 1, s1);

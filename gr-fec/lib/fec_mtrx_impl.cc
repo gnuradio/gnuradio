@@ -218,7 +218,7 @@ matrix_sptr generate_H(matrix_sptr G_obj)
     unsigned int n = G_obj->size2;
     unsigned int k = G_obj->size1;
 
-    gsl_matrix* G_ptr = (gsl_matrix*)(G_obj.get());
+    auto* G_ptr = (gsl_matrix*)(G_obj.get());
     gsl_matrix* H_ptr = gsl_matrix_alloc(n - k, n);
 
     // Grab P matrix

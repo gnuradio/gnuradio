@@ -363,7 +363,7 @@ void file_meta_sink_impl::update_rx_time()
     // std::cerr << "diff:      " << diff << std::endl;
 
     fracs += diff;
-    uint64_t new_secs = static_cast<uint64_t>(fracs);
+    auto new_secs = static_cast<uint64_t>(fracs);
     secs += new_secs;
     fracs -= new_secs;
 

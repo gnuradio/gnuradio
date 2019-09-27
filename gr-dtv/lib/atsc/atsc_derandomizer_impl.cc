@@ -48,8 +48,8 @@ int atsc_derandomizer_impl::work(int noutput_items,
                                  gr_vector_const_void_star& input_items,
                                  gr_vector_void_star& output_items)
 {
-    const atsc_mpeg_packet_no_sync* in = (const atsc_mpeg_packet_no_sync*)input_items[0];
-    atsc_mpeg_packet* out = (atsc_mpeg_packet*)output_items[0];
+    const auto* in = (const atsc_mpeg_packet_no_sync*)input_items[0];
+    auto* out = (atsc_mpeg_packet*)output_items[0];
 
     for (int i = 0; i < noutput_items; i++) {
 

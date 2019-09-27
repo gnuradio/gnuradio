@@ -109,7 +109,7 @@ basic_block_sptr block_registry::block_lookup(pmt::pmt_t symbol)
     if (pmt::eq(ref, pmt::PMT_NIL)) {
         throw std::runtime_error("block lookup failed! block not found!");
     }
-    basic_block* blk = boost::any_cast<basic_block*>(pmt::any_ref(ref));
+    auto* blk = boost::any_cast<basic_block*>(pmt::any_ref(ref));
     return blk->shared_from_this();
 }
 

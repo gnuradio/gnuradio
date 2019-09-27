@@ -71,7 +71,7 @@ void protocol_formatter_async_impl::append(pmt::pmt_t msg)
     const uint8_t* bytes_in = pmt::u8vector_elements(input, pkt_len);
 
     // Pad the payload with 0's
-    uint8_t* payload =
+    auto* payload =
         (uint8_t*)volk_malloc(pkt_len * sizeof(uint8_t), volk_get_alignment());
     memcpy(payload, bytes_in, pkt_len * sizeof(uint8_t));
     output = pmt::init_u8vector(pkt_len, payload);

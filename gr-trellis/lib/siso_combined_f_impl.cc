@@ -229,9 +229,9 @@ int siso_combined_f_impl::general_work(int noutput_items,
         p2min = &min_star;
 
     for (int m = 0; m < nstreams; m++) {
-        const float* in1 = (const float*)input_items[2 * m];
-        const float* in2 = (const float*)input_items[2 * m + 1];
-        float* out = (float*)output_items[m];
+        const auto* in1 = (const float*)input_items[2 * m];
+        const auto* in2 = (const float*)input_items[2 * m + 1];
+        auto* out = (float*)output_items[m];
         for (int n = 0; n < nblocks; n++) {
             siso_algorithm_combined(d_FSM.I(),
                                     d_FSM.S(),

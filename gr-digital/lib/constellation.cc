@@ -352,16 +352,16 @@ void constellation::max_min_axes()
     d_im_min = 1e20;
     d_re_max = -1e20;
     d_im_max = -1e20;
-    for (size_t i = 0; i < d_constellation.size(); i++) {
-        if (d_constellation[i].real() > d_re_max)
-            d_re_max = d_constellation[i].real();
-        if (d_constellation[i].imag() > d_im_max)
-            d_im_max = d_constellation[i].imag();
+    for (auto& i : d_constellation) {
+        if (i.real() > d_re_max)
+            d_re_max = i.real();
+        if (i.imag() > d_im_max)
+            d_im_max = i.imag();
 
-        if (d_constellation[i].real() < d_re_min)
-            d_re_min = d_constellation[i].real();
-        if (d_constellation[i].imag() < d_im_min)
-            d_im_min = d_constellation[i].imag();
+        if (i.real() < d_re_min)
+            d_re_min = i.real();
+        if (i.imag() < d_im_min)
+            d_im_min = i.imag();
     }
     if (d_im_min == 0)
         d_im_min = d_re_min;

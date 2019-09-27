@@ -33,7 +33,7 @@
 BOOST_AUTO_TEST_CASE(test_add8)
 {
     size_t len = sizeof(uint8_t);
-    uint8_t* buf = (uint8_t*)volk_malloc(len, volk_get_alignment());
+    auto* buf = (uint8_t*)volk_malloc(len, volk_get_alignment());
 
     gr::digital::header_buffer header(buf);
     header.add_field8(0xAF);
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(test_add8)
 BOOST_AUTO_TEST_CASE(test_add16)
 {
     size_t len = sizeof(uint16_t);
-    uint8_t* buf = (uint8_t*)volk_malloc(len, volk_get_alignment());
+    auto* buf = (uint8_t*)volk_malloc(len, volk_get_alignment());
 
     uint16_t data = 0xAF5C;
 
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(test_add16)
 BOOST_AUTO_TEST_CASE(test_add32)
 {
     size_t len = sizeof(uint32_t);
-    uint8_t* buf = (uint8_t*)volk_malloc(len, volk_get_alignment());
+    auto* buf = (uint8_t*)volk_malloc(len, volk_get_alignment());
 
     uint32_t data = 0xAF5C7654;
 
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE(test_add32)
 BOOST_AUTO_TEST_CASE(test_add64)
 {
     size_t len = sizeof(uint64_t);
-    uint8_t* buf = (uint8_t*)volk_malloc(len, volk_get_alignment());
+    auto* buf = (uint8_t*)volk_malloc(len, volk_get_alignment());
 
     uint64_t data = 0xAF5C765432104567;
 
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(test_add64)
 BOOST_AUTO_TEST_CASE(test_add_many)
 {
     size_t len = (32 + 64 + 8 + 16 + 32) / 8;
-    uint8_t* buf = (uint8_t*)volk_malloc(len, volk_get_alignment());
+    auto* buf = (uint8_t*)volk_malloc(len, volk_get_alignment());
 
     gr::digital::header_buffer header(buf);
     header.add_field32(0x01234567);

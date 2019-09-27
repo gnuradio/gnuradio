@@ -96,8 +96,7 @@ public:
              gr_vector_void_star& output_items)
     {
         // load the output with a constant
-        std::complex<float>* output =
-            reinterpret_cast<std::complex<float>*>(output_items[0]);
+        auto* output = reinterpret_cast<std::complex<float>*>(output_items[0]);
         for (size_t i = 0; i < size_t(noutput_items); i++) {
             output[i] = std::complex<float>(0.7, 0.7);
         }

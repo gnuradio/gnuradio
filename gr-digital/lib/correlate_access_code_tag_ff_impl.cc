@@ -95,8 +95,8 @@ int correlate_access_code_tag_ff_impl::work(int noutput_items,
 {
     gr::thread::scoped_lock l(d_mutex_access_code);
 
-    const float* in = (const float*)input_items[0];
-    float* out = (float*)output_items[0];
+    const auto* in = (const float*)input_items[0];
+    auto* out = (float*)output_items[0];
 
     uint64_t abs_out_sample_cnt = nitems_written(0);
 

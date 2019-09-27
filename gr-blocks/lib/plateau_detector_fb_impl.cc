@@ -59,8 +59,8 @@ int plateau_detector_fb_impl::general_work(int noutput_items,
     // thread-safe protection from ::set_threshold
     gr::thread::scoped_lock l(d_setlock);
 
-    const float* in = (const float*)input_items[0];
-    unsigned char* out = (unsigned char*)output_items[0];
+    const auto* in = (const float*)input_items[0];
+    auto* out = (unsigned char*)output_items[0];
     int flank_start;
     noutput_items = std::min(noutput_items, ninput_items[0]);
     memset((void*)out, 0x00, noutput_items);

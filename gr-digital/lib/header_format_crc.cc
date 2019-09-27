@@ -52,7 +52,7 @@ bool header_format_crc::format(int nbytes_in,
                                pmt::pmt_t& output,
                                pmt::pmt_t& info)
 {
-    uint8_t* bytes_out = (uint8_t*)volk_malloc(header_nbytes(), volk_get_alignment());
+    auto* bytes_out = (uint8_t*)volk_malloc(header_nbytes(), volk_get_alignment());
     memset(bytes_out, 0, header_nbytes());
 
     // Should this throw instead of mask if the payload is too big
@@ -115,8 +115,8 @@ size_t header_format_crc::header_nbits() const { return 32; }
 bool header_format_crc::header_ok()
 {
     uint32_t pkt = d_hdr_reg.extract_field32(0, 24, true);
-    uint16_t pktlen = static_cast<uint16_t>((pkt >> 8) & 0x0fff);
-    uint16_t pktnum = static_cast<uint16_t>((pkt >> 20) & 0x0fff);
+    auto pktlen = static_cast<uint16_t>((pkt >> 8) & 0x0fff);
+    auto pktnum = static_cast<uint16_t>((pkt >> 20) & 0x0fff);
     uint8_t crc_rcvd = d_hdr_reg.extract_field8(24);
 
     // Check CRC8
@@ -131,8 +131,8 @@ bool header_format_crc::header_ok()
 int header_format_crc::header_payload()
 {
     uint32_t pkt = d_hdr_reg.extract_field32(0, 24, true);
-    uint16_t pktlen = static_cast<uint16_t>((pkt >> 8) & 0x0fff);
-    uint16_t pktnum = static_cast<uint16_t>((pkt >> 20) & 0x0fff);
+    auto pktlen = static_cast<uint16_t>((pkt >> 8) & 0x0fff);
+    auto pktnum = static_cast<uint16_t>((pkt >> 20) & 0x0fff);
 
     d_info = pmt::make_dict();
     d_info = pmt::dict_add(d_info, d_len_key_name, pmt::from_long(8 * pktlen));

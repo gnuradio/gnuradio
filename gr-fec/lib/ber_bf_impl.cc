@@ -74,9 +74,9 @@ int ber_bf_impl::general_work(int noutput_items,
                               gr_vector_const_void_star& input_items,
                               gr_vector_void_star& output_items)
 {
-    unsigned char* inbuffer0 = (unsigned char*)input_items[0];
-    unsigned char* inbuffer1 = (unsigned char*)input_items[1];
-    float* outbuffer = (float*)output_items[0];
+    auto* inbuffer0 = (unsigned char*)input_items[0];
+    auto* inbuffer1 = (unsigned char*)input_items[1];
+    auto* outbuffer = (float*)output_items[0];
 
     int items = ninput_items[0] <= ninput_items[1] ? ninput_items[0] : ninput_items[1];
 

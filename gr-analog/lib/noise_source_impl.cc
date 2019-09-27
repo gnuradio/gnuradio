@@ -136,7 +136,7 @@ int noise_source_impl<gr_complex>::work(int noutput_items,
 {
     gr::thread::scoped_lock l(this->d_setlock);
 
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     switch (d_type) {
 

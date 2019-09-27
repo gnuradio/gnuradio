@@ -59,13 +59,13 @@ int multiply_by_tag_value_cc_impl::work(int noutput_items,
                                         gr_vector_const_void_star& input_items,
                                         gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     std::vector<tag_t> tags;
     get_tags_in_window(tags, 0, 0, noutput_items, d_tag_key);
 
-    std::vector<tag_t>::iterator itag = tags.begin();
+    auto itag = tags.begin();
 
     int start = 0, end;
     while (itag != tags.end()) {

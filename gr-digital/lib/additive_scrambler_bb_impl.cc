@@ -85,8 +85,8 @@ int additive_scrambler_bb_impl::_get_next_reset_index(int noutput_items,
         std::vector<gr::tag_t> tags;
         get_tags_in_range(
             tags, 0, nitems_read(0), nitems_read(0) + noutput_items, d_reset_tag_key);
-        for (unsigned i = 0; i < tags.size(); i++) {
-            int reset_pos = tags[i].offset - nitems_read(0);
+        for (auto& tag : tags) {
+            int reset_pos = tag.offset - nitems_read(0);
             if (reset_pos < reset_index && reset_pos > last_reset_index) {
                 reset_index = reset_pos;
             }
@@ -105,8 +105,8 @@ int additive_scrambler_bb_impl::work(int noutput_items,
                                      gr_vector_const_void_star& input_items,
                                      gr_vector_void_star& output_items)
 {
-    const unsigned char* in = (const unsigned char*)input_items[0];
-    unsigned char* out = (unsigned char*)output_items[0];
+    const auto* in = (const unsigned char*)input_items[0];
+    auto* out = (unsigned char*)output_items[0];
     int reset_index = _get_next_reset_index(noutput_items);
 
     if (d_count >= 0) {

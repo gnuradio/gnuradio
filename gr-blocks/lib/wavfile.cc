@@ -192,8 +192,8 @@ bool wavheader_write(FILE* fp, unsigned int sample_rate, int nchans, int bytes_p
     const int header_len = 44;
     char wav_hdr[header_len] =
         "RIFF\0\0\0\0WAVEfmt \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0data\0\0\0";
-    uint16_t nchans_f = (uint16_t)nchans;
-    uint32_t sample_rate_f = (uint32_t)sample_rate;
+    auto nchans_f = (uint16_t)nchans;
+    auto sample_rate_f = (uint32_t)sample_rate;
     uint16_t block_align = bytes_per_sample * nchans;
     uint32_t avg_bytes = sample_rate * block_align;
     uint16_t bits_per_sample = bytes_per_sample * 8;
@@ -241,7 +241,7 @@ void wav_write_sample(FILE* fp, short int sample, int bytes_per_sample)
 
 bool wavheader_complete(FILE* fp, unsigned int byte_count)
 {
-    uint32_t chunk_size = (uint32_t)byte_count;
+    auto chunk_size = (uint32_t)byte_count;
     chunk_size = host_to_wav(chunk_size);
 
     if (fseek(fp, 40, SEEK_SET) != 0) {

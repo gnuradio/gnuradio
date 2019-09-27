@@ -67,7 +67,7 @@ int glfsr_source_f_impl::work(int noutput_items,
                               gr_vector_const_void_star& input_items,
                               gr_vector_void_star& output_items)
 {
-    float* out = (float*)output_items[0];
+    auto* out = (float*)output_items[0];
     if ((d_index > d_length) && d_repeat == false)
         return WORK_DONE; /* once through the sequence */
 

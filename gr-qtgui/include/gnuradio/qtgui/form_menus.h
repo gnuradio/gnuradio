@@ -435,7 +435,7 @@ public:
 
         d_text = new QLineEdit();
 
-        QGridLayout* layout = new QGridLayout(d_diag);
+        auto* layout = new QGridLayout(d_diag);
         QPushButton* btn_ok = new QPushButton(tr("OK"));
         QPushButton* btn_cancel = new QPushButton(tr("Cancel"));
 
@@ -488,7 +488,7 @@ public:
 
         d_text = new QLineEdit();
 
-        QGridLayout* layout = new QGridLayout(d_diag);
+        auto* layout = new QGridLayout(d_diag);
         QPushButton* btn_ok = new QPushButton(tr("OK"));
         QPushButton* btn_cancel = new QPushButton(tr("Cancel"));
 
@@ -547,7 +547,7 @@ public:
         QLabel* _label0 = new QLabel(label0);
         QLabel* _label1 = new QLabel(label1);
 
-        QGridLayout* layout = new QGridLayout(d_diag);
+        auto* layout = new QGridLayout(d_diag);
         QPushButton* btn_ok = new QPushButton(tr("OK"));
         QPushButton* btn_cancel = new QPushButton(tr("Cancel"));
 
@@ -613,12 +613,12 @@ public:
         d_act.push_back(new OtherAction(this));
 
         d_grp = new QActionGroup(this);
-        for (int t = 0; t < d_act.size(); t++) {
-            d_act[t]->setCheckable(true);
-            d_act[t]->setActionGroup(d_grp);
+        for (auto& t : d_act) {
+            t->setCheckable(true);
+            t->setActionGroup(d_grp);
         }
 
-        QIntValidator* valid = new QIntValidator(32, 4096, this);
+        auto* valid = new QIntValidator(32, 4096, this);
         ((OtherAction*)d_act[d_act.size() - 1])->setValidator(valid);
 
         connect(d_act[0], SIGNAL(triggered()), this, SLOT(get05()));
@@ -727,13 +727,13 @@ public:
         d_act.push_back(new OtherAction(this));
 
         d_grp = new QActionGroup(this);
-        for (int t = 0; t < d_act.size(); t++) {
-            d_act[t]->setCheckable(true);
-            d_act[t]->setActionGroup(d_grp);
+        for (auto& t : d_act) {
+            t->setCheckable(true);
+            t->setActionGroup(d_grp);
         }
         d_act[0]->setChecked(true);
 
-        QDoubleValidator* valid = new QDoubleValidator(0.0, 1.0, 3, this);
+        auto* valid = new QDoubleValidator(0.0, 1.0, 3, this);
         ((OtherAction*)d_act[d_act.size() - 1])->setValidator(valid);
 
         connect(d_act[0], SIGNAL(triggered()), this, SLOT(getOff()));
@@ -843,9 +843,9 @@ public:
         d_act.push_back(new QAction("Flat-top", this));
 
         d_grp = new QActionGroup(this);
-        for (int t = 0; t < d_act.size(); t++) {
-            d_act[t]->setCheckable(true);
-            d_act[t]->setActionGroup(d_grp);
+        for (auto& t : d_act) {
+            t->setCheckable(true);
+            t->setActionGroup(d_grp);
         }
 
         connect(d_act[0], SIGNAL(triggered()), this, SLOT(getNone()));
@@ -946,7 +946,7 @@ public:
 
         d_text = new QLineEdit();
 
-        QGridLayout* layout = new QGridLayout(d_diag);
+        auto* layout = new QGridLayout(d_diag);
         QPushButton* btn_ok = new QPushButton(tr("OK"));
         QPushButton* btn_cancel = new QPushButton(tr("Cancel"));
 
@@ -1448,7 +1448,7 @@ public:
 
         d_text = new QLineEdit();
 
-        QGridLayout* layout = new QGridLayout(d_diag);
+        auto* layout = new QGridLayout(d_diag);
         QPushButton* btn_ok = new QPushButton(tr("OK"));
         QPushButton* btn_cancel = new QPushButton(tr("Cancel"));
 
@@ -1502,7 +1502,7 @@ public:
 
         d_text = new QLineEdit();
 
-        QGridLayout* layout = new QGridLayout(d_diag);
+        auto* layout = new QGridLayout(d_diag);
         QPushButton* btn_ok = new QPushButton(tr("OK"));
         QPushButton* btn_cancel = new QPushButton(tr("Cancel"));
 

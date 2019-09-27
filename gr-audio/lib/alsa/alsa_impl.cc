@@ -85,8 +85,7 @@ void gri_alsa_dump_hw_params(snd_pcm_t* pcm, snd_pcm_hw_params_t* hwparams, FILE
     fprintf(fp, "PCM name: %s\n", snd_pcm_name(pcm));
 
     fprintf(fp, "Access types:\n");
-    for (unsigned i = 0; i < NELEMS(access_types); i++) {
-        snd_pcm_access_t at = access_types[i];
+    for (auto at : access_types) {
         fprintf(fp,
                 "    %-20s %s\n",
                 snd_pcm_access_name(at),
@@ -94,8 +93,7 @@ void gri_alsa_dump_hw_params(snd_pcm_t* pcm, snd_pcm_hw_params_t* hwparams, FILE
     }
 
     fprintf(fp, "Formats:\n");
-    for (unsigned i = 0; i < NELEMS(format_types); i++) {
-        snd_pcm_format_t ft = format_types[i];
+    for (auto ft : format_types) {
         if (0)
             fprintf(fp,
                     "    %-20s %s\n",
@@ -130,8 +128,7 @@ void gri_alsa_dump_hw_params(snd_pcm_t* pcm, snd_pcm_hw_params_t* hwparams, FILE
     snd_pcm_hw_params_get_rate_max(hwparams, &max_rate, &max_dir);
     fprintf(fp, "    min rate: %7d (dir = %d)\n", min_rate, min_dir);
     fprintf(fp, "    max rate: %7d (dir = %d)\n", max_rate, max_dir);
-    for (unsigned i = 0; i < NELEMS(test_rates); i++) {
-        unsigned int rate = test_rates[i];
+    for (unsigned int rate : test_rates) {
         fprintf(fp,
                 "    %6u  %s\n",
                 rate,

@@ -56,8 +56,8 @@ int ldpc_encoder_impl::get_input_size() { return inputSize; }
 
 void ldpc_encoder_impl::generic_work(void* inBuffer, void* outBuffer)
 {
-    const unsigned char* in = (const unsigned char*)inBuffer;
-    unsigned char* out = (unsigned char*)outBuffer;
+    const auto* in = (const unsigned char*)inBuffer;
+    auto* out = (unsigned char*)outBuffer;
     std::vector<char> inbuf(inputSize);
     memcpy(&inbuf[0], in, inputSize);
     std::vector<char> coded(d_code.encode(inbuf));

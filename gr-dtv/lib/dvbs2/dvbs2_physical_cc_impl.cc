@@ -778,7 +778,7 @@ void dvbs2_physical_cc_impl::build_symbol_scrambler_table(void)
         }
     }
 
-    for (int i = 0; i < FRAME_SIZE_NORMAL; i++) {
+    for (int& i : m_cscram) {
         xa = parity_chk(x, 0x8050);
         xb = parity_chk(x, 0x0081);
         xc = x & 1;
@@ -800,7 +800,7 @@ void dvbs2_physical_cc_impl::build_symbol_scrambler_table(void)
         zna = xc ^ yc;
         znb = xa ^ yb;
         rn = (znb << 1) + zna;
-        m_cscram[i] = rn;
+        i = rn;
     }
 }
 
@@ -809,8 +809,8 @@ int dvbs2_physical_cc_impl::general_work(int noutput_items,
                                          gr_vector_const_void_star& input_items,
                                          gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
     int consumed = 0;
     int produced = 0;
     int slot_count, n;
@@ -822,8 +822,8 @@ int dvbs2_physical_cc_impl::general_work(int noutput_items,
              i += (((slots * 90) + 90) + pilot_symbols)) {
             n = 0;
             slot_count = 0;
-            for (int plh = 0; plh < 90; plh++) {
-                out[produced++] = m_pl[plh];
+            for (auto plh : m_pl) {
+                out[produced++] = plh;
                 out[produced++] = m_zero;
             }
             for (int j = 0; j < slots; j++) {
@@ -880,12 +880,12 @@ int dvbs2_physical_cc_impl::general_work(int noutput_items,
             slot_count = 10;
             group = 0;
             symbols = 0;
-            for (int plh = 0; plh < 90; plh++) {
-                out[produced++] = m_pl[plh];
+            for (auto plh : m_pl) {
+                out[produced++] = plh;
                 out[produced++] = m_zero;
             }
-            for (int vlh = 0; vlh < VLSNR_HEADER_LENGTH; vlh++) {
-                out[produced++] = m_vlsnr_header[vlh];
+            for (auto vlh : m_vlsnr_header) {
+                out[produced++] = vlh;
                 out[produced++] = m_zero;
             }
             for (int j = 0; j < slots; j++) {
@@ -1083,12 +1083,12 @@ int dvbs2_physical_cc_impl::general_work(int noutput_items,
             slot_count = 10;
             group = 0;
             symbols = 0;
-            for (int plh = 0; plh < 90; plh++) {
-                out[produced++] = m_pl[plh];
+            for (auto plh : m_pl) {
+                out[produced++] = plh;
                 out[produced++] = m_zero;
             }
-            for (int vlh = 0; vlh < VLSNR_HEADER_LENGTH; vlh++) {
-                out[produced++] = m_vlsnr_header[vlh];
+            for (auto vlh : m_vlsnr_header) {
+                out[produced++] = vlh;
                 out[produced++] = m_zero;
             }
             for (int j = 0; j < slots; j++) {

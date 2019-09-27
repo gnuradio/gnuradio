@@ -67,8 +67,8 @@ int atsc_fs_checker_impl::general_work(int noutput_items,
                                        gr_vector_const_void_star& input_items,
                                        gr_vector_void_star& output_items)
 {
-    const atsc_soft_data_segment* in = (const atsc_soft_data_segment*)input_items[0];
-    atsc_soft_data_segment* out = (atsc_soft_data_segment*)output_items[0];
+    const auto* in = (const atsc_soft_data_segment*)input_items[0];
+    auto* out = (atsc_soft_data_segment*)output_items[0];
 
     int output_produced = 0;
 

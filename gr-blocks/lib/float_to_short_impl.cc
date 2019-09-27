@@ -51,8 +51,8 @@ int float_to_short_impl::work(int noutput_items,
                               gr_vector_const_void_star& input_items,
                               gr_vector_void_star& output_items)
 {
-    const float* in = (const float*)input_items[0];
-    short* out = (short*)output_items[0];
+    const auto* in = (const float*)input_items[0];
+    auto* out = (short*)output_items[0];
 
     volk_32f_s32f_convert_16i(out, in, d_scale, d_vlen * noutput_items);
 

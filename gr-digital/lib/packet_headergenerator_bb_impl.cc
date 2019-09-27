@@ -78,7 +78,7 @@ int packet_headergenerator_bb_impl::work(int noutput_items,
                                          gr_vector_void_star& output_items)
 {
     gr::thread::scoped_lock guard(d_setlock);
-    unsigned char* out = (unsigned char*)output_items[0];
+    auto* out = (unsigned char*)output_items[0];
 
     std::vector<tag_t> tags;
     get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + ninput_items[0]);

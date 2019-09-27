@@ -50,9 +50,9 @@ int multiply_conjugate_cc_impl::work(int noutput_items,
                                      gr_vector_const_void_star& input_items,
                                      gr_vector_void_star& output_items)
 {
-    gr_complex* in0 = (gr_complex*)input_items[0];
-    gr_complex* in1 = (gr_complex*)input_items[1];
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto* in0 = (gr_complex*)input_items[0];
+    auto* in1 = (gr_complex*)input_items[1];
+    auto* out = (gr_complex*)output_items[0];
     int noi = d_vlen * noutput_items;
 
     volk_32fc_x2_multiply_conjugate_32fc(out, in0, in1, noi);

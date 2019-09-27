@@ -119,10 +119,8 @@ tcp_server_sink_impl::~tcp_server_sink_impl()
         d_writing_cond.wait(guard);
     }
 
-    for (std::set<boost::asio::ip::tcp::socket*>::iterator i = d_sockets.begin();
-         i != d_sockets.end();
-         ++i) {
-        delete *i;
+    for (auto d_socket : d_sockets) {
+        delete d_socket;
     }
     d_sockets.clear();
 
@@ -145,9 +143,7 @@ int tcp_server_sink_impl::work(int noutput_items,
     size_t data_len = std::min(size_t(BUF_SIZE), noutput_items * d_itemsize);
     data_len -= data_len % d_itemsize;
     memcpy(d_buf.get(), in, data_len);
-    for (std::set<boost::asio::ip::tcp::socket*>::iterator i = d_sockets.begin();
-         i != d_sockets.end();
-         ++i) {
+    for (auto i = d_sockets.begin(); i != d_sockets.end(); ++i) {
         boost::asio::async_write(**i,
                                  boost::asio::buffer(d_buf.get(), data_len),
                                  boost::bind(&tcp_server_sink_impl::do_write,

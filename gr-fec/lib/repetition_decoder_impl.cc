@@ -96,8 +96,8 @@ double repetition_decoder_impl::rate() { return 1.0 / static_cast<double>(d_rep)
 
 void repetition_decoder_impl::generic_work(void* inbuffer, void* outbuffer)
 {
-    const float* in = (const float*)inbuffer;
-    unsigned char* out = (unsigned char*)outbuffer;
+    const auto* in = (const float*)inbuffer;
+    auto* out = (unsigned char*)outbuffer;
 
     for (unsigned int i = 0; i < d_frame_size; i++) {
         for (unsigned int r = 0; r < d_rep; r++) {

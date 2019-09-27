@@ -54,8 +54,8 @@ int probe_avg_mag_sqrd_cf_impl::work(int noutput_items,
                                      gr_vector_const_void_star& input_items,
                                      gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    float* out = (float*)output_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out = (float*)output_items[0];
 
     for (int i = 0; i < noutput_items; i++) {
         out[i] = d_iir.prev_output();

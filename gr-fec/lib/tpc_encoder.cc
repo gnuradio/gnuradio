@@ -183,8 +183,8 @@ void tpc_encoder::block_conv_encode(std::vector<uint8_t>& output,
 
 void tpc_encoder::generic_work(void* inBuffer, void* outBuffer)
 {
-    const uint8_t* in = (const uint8_t*)inBuffer;
-    uint8_t* out = (uint8_t*)outBuffer;
+    const auto* in = (const uint8_t*)inBuffer;
+    auto* out = (uint8_t*)outBuffer;
 
     size_t ii, jj; // indexing var
 

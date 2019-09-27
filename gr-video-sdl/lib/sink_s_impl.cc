@@ -197,10 +197,10 @@ int sink_s_impl::copy_plane_to_surface(int plane,
     const int second_dst_plane = (12 == plane || 1122 == plane) ? 2 : plane;
     int current_line = (0 == plane) ? d_current_line : d_current_line / 2;
 
-    unsigned char* dst_pixels = (unsigned char*)d_image->pixels[first_dst_plane];
+    auto* dst_pixels = (unsigned char*)d_image->pixels[first_dst_plane];
     dst_pixels = &dst_pixels[current_line * d_image->pitches[first_dst_plane]];
 
-    unsigned char* dst_pixels_2 = (unsigned char*)d_image->pixels[second_dst_plane];
+    auto* dst_pixels_2 = (unsigned char*)d_image->pixels[second_dst_plane];
     dst_pixels_2 = &dst_pixels_2[current_line * d_image->pitches[second_dst_plane]];
 
     int src_width = (0 == plane || 12 == plane || 1122 == plane) ? d_width : d_width / 2;

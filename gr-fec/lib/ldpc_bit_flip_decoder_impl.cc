@@ -85,8 +85,8 @@ double ldpc_bit_flip_decoder_impl::rate() { return d_rate; }
 void ldpc_bit_flip_decoder_impl::generic_work(void* inbuffer, void* outbuffer)
 {
     // Populate the information word
-    const float* in = (const float*)inbuffer;
-    unsigned char* out = (unsigned char*)outbuffer;
+    const auto* in = (const float*)inbuffer;
+    auto* out = (unsigned char*)outbuffer;
 
     int j = 0;
     for (int i = 0; i < d_input_size; i += d_mtrx->n()) {

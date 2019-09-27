@@ -88,15 +88,15 @@ int vector_insert_impl<T>::general_work(int noutput_items,
             std::vector<tag_t> tags;
             this->get_tags_in_range(
                 tags, 0, this->nitems_read(0) + ii, this->nitems_read(0) + max_copy + ii);
-            for (unsigned i = 0; i < tags.size(); i++) {
+            for (auto& tag : tags) {
                 // printf("copy tag from in@%d to out@%d\n", int(tags[i].offset),
                 // int(nitems_written(0) + oo + (tags[i].offset-nitems_read(0)-ii)));
                 this->add_item_tag(0,
                                    this->nitems_written(0) + oo +
-                                       (tags[i].offset - this->nitems_read(0) - ii),
-                                   tags[i].key,
-                                   tags[i].value,
-                                   tags[i].srcid);
+                                       (tag.offset - this->nitems_read(0) - ii),
+                                   tag.key,
+                                   tag.value,
+                                   tag.srcid);
             }
             // printf("copy %d from input\n", max_copy);
             memcpy(&out[oo], &in[ii], sizeof(T) * max_copy);

@@ -492,7 +492,7 @@ interp_resampler_pfb_mf_ccf::interp_resampler_pfb_mf_ccf(const std::vector<float
     n = diff_taps.size();
     d_taps.resize(d_nfilters + 1);
     d_diff_taps.resize(d_nfilters + 1);
-    signed int taps_per_filter = static_cast<signed int>(d_taps_per_filter);
+    auto taps_per_filter = static_cast<signed int>(d_taps_per_filter);
 
     for (i = 0; i <= d_nfilters; i++) {
         d_taps[i] = std::vector<float>(d_taps_per_filter, 0.0f);
@@ -646,7 +646,7 @@ interp_resampler_pfb_mf_fff::interp_resampler_pfb_mf_fff(const std::vector<float
     n = diff_taps.size();
     d_taps.resize(d_nfilters + 1);
     d_diff_taps.resize(d_nfilters + 1);
-    signed int taps_per_filter = static_cast<signed int>(d_taps_per_filter);
+    auto taps_per_filter = static_cast<signed int>(d_taps_per_filter);
 
     for (i = 0; i <= d_nfilters; i++) {
         d_taps[i] = std::vector<float>(d_taps_per_filter, 0.0f);

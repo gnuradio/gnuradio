@@ -57,7 +57,7 @@ public:
 
     virtual QwtText label(double value) const
     {
-        double secs = double(value * getSecondsPerLine());
+        auto secs = double(value * getSecondsPerLine());
         return QwtText(QString("").sprintf("%.2e", secs));
     }
 
@@ -103,7 +103,7 @@ protected:
     virtual QwtText trackerText(QPoint const& p) const
     {
         QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
-        double secs = double(dp.y() * getSecondsPerLine());
+        auto secs = double(dp.y() * getSecondsPerLine());
         QwtText t(QString("%1 %2, %3 s")
                       .arg(dp.x(), 0, 'f', getFrequencyPrecision())
                       .arg(d_unitType.c_str())
@@ -295,8 +295,7 @@ void WaterfallDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                 }
             }
 
-            QwtTimeScaleDraw* timeScale =
-                (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
+            auto* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
             timeScale->setSecondsPerLine(timePerFFT);
             timeScale->setZeroTime(timestamp);
             timeScale->initiateUpdate();
@@ -321,8 +320,7 @@ void WaterfallDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                 }
             }
 
-            QwtTimeScaleDraw* timeScale =
-                (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
+            auto* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
             timeScale->setSecondsPerLine(timePerFFT);
             timeScale->setZeroTime(timestamp);
 
@@ -404,11 +402,10 @@ void WaterfallDisplayPlot::setColorMapTitleFontSize(int tfs)
 
 void WaterfallDisplayPlot::replot()
 {
-    QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
+    auto* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
     timeScale->initiateUpdate();
 
-    FreqDisplayScaleDraw* freqScale =
-        (FreqDisplayScaleDraw*)axisScaleDraw(QwtPlot::xBottom);
+    auto* freqScale = (FreqDisplayScaleDraw*)axisScaleDraw(QwtPlot::xBottom);
     freqScale->initiateUpdate();
 
     // Update the time axis display

@@ -307,8 +307,8 @@ int alsa_source::work_s16(int noutput_items,
     static const float scale_factor = 1.0 / std::pow(2.0f, 16 - 1);
 
     unsigned int nchan = output_items.size();
-    float** out = (float**)&output_items[0];
-    sample_t* buf = (sample_t*)d_buffer;
+    auto** out = (float**)&output_items[0];
+    auto* buf = (sample_t*)d_buffer;
     int bi;
 
     unsigned int sizeof_frame = d_hw_nchan * sizeof(sample_t);
@@ -343,8 +343,8 @@ int alsa_source::work_s16_2x1(int noutput_items,
     typedef int16_t sample_t; // the type of samples we're creating
     static const float scale_factor = 1.0 / std::pow(2.0f, 16 - 1);
 
-    float** out = (float**)&output_items[0];
-    sample_t* buf = (sample_t*)d_buffer;
+    auto** out = (float**)&output_items[0];
+    auto* buf = (sample_t*)d_buffer;
     int bi;
 
     assert(output_items.size() == 1);
@@ -380,8 +380,8 @@ int alsa_source::work_s32(int noutput_items,
     static const float scale_factor = 1.0 / std::pow(2.0f, 32 - 1);
 
     unsigned int nchan = output_items.size();
-    float** out = (float**)&output_items[0];
-    sample_t* buf = (sample_t*)d_buffer;
+    auto** out = (float**)&output_items[0];
+    auto* buf = (sample_t*)d_buffer;
     int bi;
 
     unsigned int sizeof_frame = d_hw_nchan * sizeof(sample_t);
@@ -416,8 +416,8 @@ int alsa_source::work_s32_2x1(int noutput_items,
     typedef int32_t sample_t; // the type of samples we're creating
     static const float scale_factor = 1.0 / std::pow(2.0f, 32 - 1);
 
-    float** out = (float**)&output_items[0];
-    sample_t* buf = (sample_t*)d_buffer;
+    auto** out = (float**)&output_items[0];
+    auto* buf = (sample_t*)d_buffer;
     int bi;
 
     assert(output_items.size() == 1);
@@ -445,7 +445,7 @@ int alsa_source::work_s32_2x1(int noutput_items,
 
 bool alsa_source::read_buffer(void* vbuffer, unsigned nframes, unsigned sizeof_frame)
 {
-    unsigned char* buffer = (unsigned char*)vbuffer;
+    auto* buffer = (unsigned char*)vbuffer;
 
     while (nframes > 0) {
         int r = snd_pcm_readi(d_pcm_handle, buffer, nframes);

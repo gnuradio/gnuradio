@@ -276,9 +276,9 @@ void pfb_clock_sync_ccf_impl::create_diff_taps(const std::vector<float>& newtaps
     difftaps.push_back(0);
 
     // Normalize the taps
-    for (unsigned int i = 0; i < difftaps.size(); i++) {
-        difftaps[i] *= d_nfilters / pwr;
-        if (difftaps[i] != difftaps[i]) {
+    for (float& difftap : difftaps) {
+        difftap *= d_nfilters / pwr;
+        if (difftap != difftap) {
             throw std::runtime_error(
                 "pfb_clock_sync_ccf::create_diff_taps produced NaN.");
         }
@@ -355,8 +355,8 @@ int pfb_clock_sync_ccf_impl::general_work(int noutput_items,
                                           gr_vector_const_void_star& input_items,
                                           gr_vector_void_star& output_items)
 {
-    gr_complex* in = (gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto* in = (gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     if (d_updated) {
         std::vector<float> dtaps;

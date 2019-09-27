@@ -64,8 +64,8 @@ std::vector<char> cldpc::get_systematic_bits(std::vector<char> in)
 
 void cldpc::print_permute()
 {
-    for (size_t i = 0; i < permute.size(); i++) {
-        std::cout << permute[i] << ", ";
+    for (int i : permute) {
+        std::cout << i << ", ";
     }
     std::cout << "\n";
 }

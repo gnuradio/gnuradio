@@ -105,7 +105,7 @@ int cvsd_decode_bs_impl::cvsd_round(double input)
 
 unsigned int cvsd_decode_bs_impl::cvsd_pow(short radix, short power)
 {
-    double d_radix = (double)radix;
+    auto d_radix = (double)radix;
     int i_power = (int)power;
     double output;
 
@@ -117,8 +117,8 @@ int cvsd_decode_bs_impl::work(int noutput_items,
                               gr_vector_const_void_star& input_items,
                               gr_vector_void_star& output_items)
 {
-    const unsigned char* in = (const unsigned char*)input_items[0];
-    short* out = (short*)output_items[0];
+    const auto* in = (const unsigned char*)input_items[0];
+    auto* out = (short*)output_items[0];
 
     int i = 0;
     short output_short = 0;       // 2 bytes 0 .. 65,535

@@ -77,7 +77,7 @@ int interleave_impl::general_work(int noutput_items,
                                   gr_vector_const_void_star& input_items,
                                   gr_vector_void_star& output_items)
 {
-    size_t noutput_blocks = (size_t)(noutput_items / d_blocksize);
+    auto noutput_blocks = (size_t)(noutput_items / d_blocksize);
     const char** in = (const char**)&input_items[0];
     char* out = (char*)output_items[0];
 

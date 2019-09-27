@@ -136,7 +136,7 @@ int interp_fir_filter_impl<IN_T, OUT_T, TAP_T>::work(
     gr_vector_void_star& output_items)
 {
     const IN_T* in = (const IN_T*)input_items[0];
-    OUT_T* out = (OUT_T*)output_items[0];
+    auto* out = (OUT_T*)output_items[0];
 
     if (d_updated) {
         install_taps(d_new_taps);

@@ -52,7 +52,7 @@ int pull_source_impl::work(int noutput_items,
                            gr_vector_const_void_star& input_items,
                            gr_vector_void_star& output_items)
 {
-    uint8_t* out = (uint8_t*)output_items[0];
+    auto* out = (uint8_t*)output_items[0];
     bool first = true;
     int done = 0;
 

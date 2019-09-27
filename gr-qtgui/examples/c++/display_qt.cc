@@ -103,7 +103,7 @@ int main(int argc, char** argv)
     // The global QT application
     QApplication app(argc, argv);
 
-    mywindow* w = new mywindow();
+    auto* w = new mywindow();
 
     QObject::connect(&app, SIGNAL(aboutToQuit()), w, SLOT(quitting()));
 

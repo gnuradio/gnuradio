@@ -135,8 +135,8 @@ int conv_bit_corr_bb_impl::general_work(int noutput_items,
         return 0;
     }
 
-    const uint8_t* in = (const uint8_t*)input_items[0];
-    uint8_t* score_in = (uint8_t*)input_items[0];
+    const auto* in = (const uint8_t*)input_items[0];
+    auto* score_in = (uint8_t*)input_items[0];
 
     // counting on  1:1 forecast + history to provide enough ninput_items... may need to
     // insert check printf("%d, %d, %d\n", ninput_items[0], noutput_items, d_counter);
@@ -228,7 +228,7 @@ int conv_bit_corr_bb_impl::general_work(int noutput_items,
 
     if (d_produce) {
         // printf("producing\n");
-        unsigned char* out = (unsigned char*)output_items[0];
+        auto* out = (unsigned char*)output_items[0];
         memcpy(out,
                &(in[d_acquire]),
                correlation_cycles * d_corr_sym * sizeof(unsigned char));

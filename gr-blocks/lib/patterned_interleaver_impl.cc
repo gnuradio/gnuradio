@@ -60,17 +60,17 @@ int patterned_interleaver_impl::general_work(int noutput_items,
     size_t nblks = noutput_items / d_pattern.size();
 
     std::vector<const char*> ii;
-    for (size_t i = 0; i < input_items.size(); i++) {
-        ii.push_back((const char*)input_items[i]);
+    for (auto& input_item : input_items) {
+        ii.push_back((const char*)input_item);
     }
 
     char* oo = (char*)output_items[0];
 
     for (size_t i = 0; i < nblks; i++) {
-        for (size_t j = 0; j < d_pattern.size(); j++) {
-            memcpy(oo, ii[d_pattern[j]], d_itemsize);
+        for (int j : d_pattern) {
+            memcpy(oo, ii[j], d_itemsize);
             oo += d_itemsize;
-            ii[d_pattern[j]] += d_itemsize;
+            ii[j] += d_itemsize;
         }
     }
 

@@ -123,8 +123,8 @@ int fading_model_impl::work(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
     std::vector<gr_complex> ftaps;
     d_fader.next_samples(ftaps, noutput_items);
     for (int i = 0; i < noutput_items; i++) {

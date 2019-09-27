@@ -72,8 +72,8 @@ header_format_ofdm::header_format_ofdm(
     }
 
     d_syms_per_set = 0;
-    for (unsigned i = 0; i < d_occupied_carriers.size(); i++) {
-        d_syms_per_set += d_occupied_carriers[i].size();
+    for (const auto& d_occupied_carrier : d_occupied_carriers) {
+        d_syms_per_set += d_occupied_carrier.size();
     }
 
     // Init scrambler mask
@@ -138,8 +138,8 @@ size_t header_format_ofdm::header_nbits() const { return d_header_len; }
 int header_format_ofdm::header_payload()
 {
     uint32_t pkt = d_hdr_reg.extract_field32(0, 24, true);
-    uint16_t pktlen = static_cast<uint16_t>((pkt >> 8) & 0x0fff);
-    uint16_t pktnum = static_cast<uint16_t>((pkt >> 20) & 0x0fff);
+    auto pktlen = static_cast<uint16_t>((pkt >> 8) & 0x0fff);
+    auto pktnum = static_cast<uint16_t>((pkt >> 20) & 0x0fff);
 
     // Convert num bytes to num complex symbols in payload
     pktlen *= 8;

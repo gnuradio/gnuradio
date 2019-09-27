@@ -86,18 +86,17 @@ int tag_gate_impl::work(int noutput_items,
                         gr_vector_const_void_star& input_items,
                         gr_vector_void_star& output_items)
 {
-    const unsigned char* in = (const unsigned char*)input_items[0];
-    unsigned char* out = (unsigned char*)output_items[0];
+    const auto* in = (const unsigned char*)input_items[0];
+    auto* out = (unsigned char*)output_items[0];
     std::vector<tag_t> tags;
 
     memcpy((void*)out, (void*)in, d_item_size * noutput_items);
 
     if (d_single_key_set && (!d_propagate_tags)) {
         get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + noutput_items);
-        for (unsigned int i = 0; i < tags.size(); i++) {
-            if (!pmt::equal(tags[i].key, d_single_key))
-                add_item_tag(
-                    0, tags[i].offset, tags[i].key, tags[i].value, tags[i].srcid);
+        for (auto& tag : tags) {
+            if (!pmt::equal(tag.key, d_single_key))
+                add_item_tag(0, tag.offset, tag.key, tag.value, tag.srcid);
         }
     }
 

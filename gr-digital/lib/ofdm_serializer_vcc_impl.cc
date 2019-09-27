@@ -86,27 +86,27 @@ ofdm_serializer_vcc_impl::ofdm_serializer_vcc_impl(
       d_curr_set(symbols_skipped % occupied_carriers.size()),
       d_symbols_per_set(0)
 {
-    for (unsigned i = 0; i < d_occupied_carriers.size(); i++) {
-        for (unsigned k = 0; k < d_occupied_carriers[i].size(); k++) {
+    for (auto& d_occupied_carrier : d_occupied_carriers) {
+        for (unsigned k = 0; k < d_occupied_carrier.size(); k++) {
             if (input_is_shifted) {
-                d_occupied_carriers[i][k] += fft_len / 2;
-                if (d_occupied_carriers[i][k] > fft_len) {
-                    d_occupied_carriers[i][k] -= fft_len;
+                d_occupied_carrier[k] += fft_len / 2;
+                if (d_occupied_carrier[k] > fft_len) {
+                    d_occupied_carrier[k] -= fft_len;
                 }
             } else {
-                if (d_occupied_carriers[i][k] < 0) {
-                    d_occupied_carriers[i][k] += fft_len;
+                if (d_occupied_carrier[k] < 0) {
+                    d_occupied_carrier[k] += fft_len;
                 }
             }
-            if (d_occupied_carriers[i][k] >= fft_len || d_occupied_carriers[i][k] < 0) {
+            if (d_occupied_carrier[k] >= fft_len || d_occupied_carrier[k] < 0) {
                 throw std::invalid_argument("ofdm_serializer_vcc: trying to occupy a "
                                             "carrier outside the fft length.");
             }
         }
     }
 
-    for (unsigned i = 0; i < d_occupied_carriers.size(); i++) {
-        d_symbols_per_set += d_occupied_carriers[i].size();
+    for (auto& d_occupied_carrier : d_occupied_carriers) {
+        d_symbols_per_set += d_occupied_carrier.size();
     }
     set_relative_rate((uint64_t)d_symbols_per_set, (uint64_t)d_occupied_carriers.size());
     set_tag_propagation_policy(TPP_DONT);
@@ -134,8 +134,8 @@ int ofdm_serializer_vcc_impl::work(int noutput_items,
                                    gr_vector_const_void_star& input_items,
                                    gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
     long frame_length = ninput_items[0]; // Input frame
     long packet_length = 0;              // Output frame
     int carr_offset = 0;
@@ -144,12 +144,12 @@ int ofdm_serializer_vcc_impl::work(int noutput_items,
     // Packet mode
     if (!d_length_tag_key_str.empty()) {
         get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + 1);
-        for (unsigned i = 0; i < tags.size(); i++) {
-            if (tags[i].key == d_carr_offset_key) {
-                carr_offset = pmt::to_long(tags[i].value);
+        for (auto& tag : tags) {
+            if (tag.key == d_carr_offset_key) {
+                carr_offset = pmt::to_long(tag.value);
             }
-            if (tags[i].key == d_packet_len_tag_key) {
-                packet_length = pmt::to_long(tags[i].value);
+            if (tag.key == d_packet_len_tag_key) {
+                packet_length = pmt::to_long(tag.value);
             }
         }
     } else {
@@ -172,16 +172,14 @@ int ofdm_serializer_vcc_impl::work(int noutput_items,
         // Copy all tags associated with this input OFDM symbol onto the first output
         // symbol
         get_tags_in_range(tags, 0, nitems_read(0) + i, nitems_read(0) + i + 1);
-        for (size_t t = 0; t < tags.size(); t++) {
+        for (auto& tag : tags) {
             // The packet length tag is not propagated
-            if (tags[t].key != d_packet_len_tag_key) {
-                add_item_tag(
-                    0, nitems_written(0) + n_out_symbols, tags[t].key, tags[t].value);
+            if (tag.key != d_packet_len_tag_key) {
+                add_item_tag(0, nitems_written(0) + n_out_symbols, tag.key, tag.value);
             }
         }
-        for (unsigned k = 0; k < d_occupied_carriers[d_curr_set].size(); k++) {
-            out[n_out_symbols++] =
-                in[i * d_fft_len + d_occupied_carriers[d_curr_set][k] + carr_offset];
+        for (int k : d_occupied_carriers[d_curr_set]) {
+            out[n_out_symbols++] = in[i * d_fft_len + k + carr_offset];
         }
         if (packet_length && n_out_symbols > packet_length) {
             n_out_symbols = packet_length;

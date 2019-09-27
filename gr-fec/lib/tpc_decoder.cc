@@ -818,8 +818,8 @@ int tpc_decoder::sgn(T val)
 
 void tpc_decoder::generic_work(void* inBuffer, void* outBuffer)
 {
-    const float* inPtr = (const float*)inBuffer;
-    unsigned char* out = (unsigned char*)outBuffer;
+    const auto* inPtr = (const float*)inBuffer;
+    auto* out = (unsigned char*)outBuffer;
 
     unsigned int m, n, ii;
     int iter;

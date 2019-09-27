@@ -234,7 +234,7 @@ void NumberDisplayForm::saveFigure()
 void NumberDisplayForm::newData(const QEvent* updateEvent)
 {
     if (!d_stop_state) {
-        NumberUpdateEvent* tevent = (NumberUpdateEvent*)updateEvent;
+        auto* tevent = (NumberUpdateEvent*)updateEvent;
         const std::vector<float> samples = tevent->getSamples();
 
         for (unsigned int i = 0; i < d_nplots; ++i) {
@@ -313,7 +313,7 @@ void NumberDisplayForm::setGraphType(const gr::qtgui::graph_t type)
 
 void NumberDisplayForm::setColor(unsigned int which, const QColor& min, const QColor& max)
 {
-    QwtLinearColorMap* map = new QwtLinearColorMap();
+    auto* map = new QwtLinearColorMap();
     map->setColorInterval(min, max);
 
 #if QWT_VERSION < 0x060000
@@ -376,8 +376,7 @@ QColor NumberDisplayForm::colorMin(unsigned int which) const
 #if QWT_VERSION < 0x060000
     return d_indicator[which]->fillColor();
 #else
-    QwtLinearColorMap* map =
-        static_cast<QwtLinearColorMap*>(d_indicator[which]->colorMap());
+    auto* map = static_cast<QwtLinearColorMap*>(d_indicator[which]->colorMap());
     return map->color1();
 #endif /* QWT_VERSION < 0x060000 */
 }
@@ -387,8 +386,7 @@ QColor NumberDisplayForm::colorMax(unsigned int which) const
 #if QWT_VERSION < 0x060000
     return d_indicator[which]->fillColor();
 #else
-    QwtLinearColorMap* map =
-        static_cast<QwtLinearColorMap*>(d_indicator[which]->colorMap());
+    auto* map = static_cast<QwtLinearColorMap*>(d_indicator[which]->colorMap());
     return map->color2();
 #endif /* QWT_VERSION < 0x060000 */
 }

@@ -113,14 +113,14 @@ interleaver::interleaver(unsigned int K, int seed)
     uint64_t rng_state[2];
     xoroshiro128p_seed(rng_state, seed);
     std::vector<int> tmp(d_K);
-    unsigned char* bytes = reinterpret_cast<unsigned char*>(&tmp[0]);
+    auto* bytes = reinterpret_cast<unsigned char*>(&tmp[0]);
 
     for (unsigned int i = 0; i < d_K; i += 8) {
         *(reinterpret_cast<uint64_t*>(bytes + i)) = xoroshiro128p_next(rng_state);
     }
     if (d_K % 8) {
         uint64_t randval = xoroshiro128p_next(rng_state);
-        unsigned char* valptr = reinterpret_cast<unsigned char*>(&randval);
+        auto* valptr = reinterpret_cast<unsigned char*>(&randval);
         for (unsigned int idx = (d_K / 8) * 8; idx < d_K; ++idx) {
             bytes[idx] = *valptr++;
         }

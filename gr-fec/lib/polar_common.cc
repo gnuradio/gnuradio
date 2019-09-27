@@ -94,9 +94,9 @@ void polar_common::initialize_info_bit_position_vector()
 
 void polar_common::setup_info_bit_positions_reversed()
 {
-    for (unsigned int i = 0; i < d_info_bit_positions.size(); i++) {
+    for (int d_info_bit_position : d_info_bit_positions) {
         d_info_bit_positions_reversed.push_back(
-            (int)bit_reverse((long)d_info_bit_positions.at(i), block_power()));
+            (int)bit_reverse((long)d_info_bit_position, block_power()));
     }
 
     if ((int)d_info_bit_positions_reversed.size() != num_info_bits()) {
@@ -168,7 +168,7 @@ void polar_common::print_packed_bit_array(const unsigned char* printed_array,
                                           const int num_bytes) const
 {
     int num_bits = num_bytes << 3;
-    unsigned char* temp = new unsigned char[num_bits];
+    auto* temp = new unsigned char[num_bits];
     d_unpacker->unpack(temp, printed_array, num_bytes);
 
     std::cout << "[";

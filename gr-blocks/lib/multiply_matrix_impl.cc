@@ -45,8 +45,8 @@ void multiply_matrix_impl<gr_complex>::propagate_tags_by_A(int noutput_items,
             if (d_A[out_idx][in_idx] == std::complex<float>(0, 0)) {
                 continue;
             }
-            for (size_t i = 0; i < tags.size(); i++) {
-                this->add_item_tag(out_idx, tags[i]);
+            for (const auto& tag : tags) {
+                this->add_item_tag(out_idx, tag);
             }
         }
     }
@@ -133,8 +133,8 @@ void multiply_matrix_impl<float>::propagate_tags_by_A(int noutput_items,
             if (d_A[out_idx][in_idx] == 0) {
                 continue;
             }
-            for (size_t i = 0; i < tags.size(); i++) {
-                add_item_tag(out_idx, tags[i]);
+            for (const auto& tag : tags) {
+                add_item_tag(out_idx, tag);
             }
         }
     }
@@ -272,9 +272,9 @@ int multiply_matrix_impl<gr_complex>::work(int noutput_items,
                                            gr_vector_void_star& output_items)
 {
     for (size_t out_idx = 0; out_idx < output_items.size(); out_idx++) {
-        gr_complex* out = reinterpret_cast<gr_complex*>(output_items[out_idx]);
+        auto* out = reinterpret_cast<gr_complex*>(output_items[out_idx]);
         // Do input 0 first, this saves a memset
-        const gr_complex* in = reinterpret_cast<const gr_complex*>(input_items[0]);
+        const auto* in = reinterpret_cast<const gr_complex*>(input_items[0]);
         volk_32fc_s32fc_multiply_32fc(out, in, d_A[out_idx][0], noutput_items);
         // Then do inputs 1 through N
         for (size_t in_idx = 1; in_idx < input_items.size(); in_idx++) {
@@ -297,9 +297,9 @@ int multiply_matrix_impl<float>::work(int noutput_items,
                                       gr_vector_void_star& output_items)
 {
     for (size_t out_idx = 0; out_idx < output_items.size(); out_idx++) {
-        float* out = reinterpret_cast<float*>(output_items[out_idx]);
+        auto* out = reinterpret_cast<float*>(output_items[out_idx]);
         // Do input 0 first, this saves a memset
-        const float* in = reinterpret_cast<const float*>(input_items[0]);
+        const auto* in = reinterpret_cast<const float*>(input_items[0]);
         volk_32f_s32f_multiply_32f(out, in, d_A[out_idx][0], noutput_items);
         // Then do inputs 1 through N
         for (size_t in_idx = 1; in_idx < input_items.size(); in_idx++) {

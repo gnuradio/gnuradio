@@ -241,7 +241,7 @@ void ldpc_H_matrix_impl::encode(unsigned char* outbuffer,
     unsigned int index, k = d_k;
     s = gsl_matrix_alloc(k, 1);
     for (index = 0; index < k; index++) {
-        double value = static_cast<double>(inbuffer[index]);
+        auto value = static_cast<double>(inbuffer[index]);
         gsl_matrix_set(s, index, 0, value);
     }
 

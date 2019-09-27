@@ -71,17 +71,17 @@ int tagged_stream_multiply_length_impl::general_work(
     // move and update tags
     std::vector<tag_t> tags;
     get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + noutput_items);
-    for (size_t i = 0; i < tags.size(); i++) {
-        if (pmt::eqv(tags[i].key, d_lengthtag)) {
+    for (auto& tag : tags) {
+        if (pmt::eqv(tag.key, d_lengthtag)) {
             // propagate with value update (scaled)
             add_item_tag(0,
-                         tags[i].offset,
-                         tags[i].key,
-                         pmt::from_long(pmt::to_long(tags[i].value) * d_scalar),
-                         tags[i].srcid);
+                         tag.offset,
+                         tag.key,
+                         pmt::from_long(pmt::to_long(tag.value) * d_scalar),
+                         tag.srcid);
         } else {
             // propagate unmodified
-            add_item_tag(0, tags[i].offset, tags[i].key, tags[i].value, tags[i].srcid);
+            add_item_tag(0, tag.offset, tag.key, tag.value, tag.srcid);
         }
     }
 

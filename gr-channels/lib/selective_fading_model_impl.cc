@@ -87,8 +87,8 @@ selective_fading_model_impl::selective_fading_model_impl(unsigned int N,
 
 selective_fading_model_impl::~selective_fading_model_impl()
 {
-    for (size_t i = 0; i < d_faders.size(); i++) {
-        delete d_faders[i];
+    for (auto& d_fader : d_faders) {
+        delete d_fader;
     }
 }
 
@@ -96,8 +96,8 @@ int selective_fading_model_impl::work(int noutput_items,
                                       gr_vector_const_void_star& input_items,
                                       gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     // pregenerate fading components
     std::vector<std::vector<gr_complex>> fading_taps;
@@ -110,8 +110,8 @@ int selective_fading_model_impl::work(int noutput_items,
     for (int i = 0; i < noutput_items; i++) {
 
         // clear the current values in each tap
-        for (size_t j = 0; j < d_taps.size(); j++) {
-            d_taps[j] = gr_complex(0, 0);
+        for (auto& d_tap : d_taps) {
+            d_tap = gr_complex(0, 0);
         }
 
         // add each flat fading component to the taps

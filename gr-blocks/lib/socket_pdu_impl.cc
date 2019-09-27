@@ -204,8 +204,8 @@ void socket_pdu_impl::start_tcp_accept()
 void socket_pdu_impl::tcp_server_send(pmt::pmt_t msg)
 {
     pmt::pmt_t vector = pmt::cdr(msg);
-    for (size_t i = 0; i < d_tcp_connections.size(); i++)
-        d_tcp_connections[i]->send(vector);
+    for (auto& d_tcp_connection : d_tcp_connections)
+        d_tcp_connection->send(vector);
 }
 
 void socket_pdu_impl::handle_tcp_accept(tcp_connection::sptr new_connection,
@@ -213,7 +213,7 @@ void socket_pdu_impl::handle_tcp_accept(tcp_connection::sptr new_connection,
 {
     if (!error) {
         // Garbage collect closed sockets
-        std::vector<tcp_connection::sptr>::iterator it = d_tcp_connections.begin();
+        auto it = d_tcp_connections.begin();
         while (it != d_tcp_connections.end()) {
             if (!(**it).socket().is_open())
                 it = d_tcp_connections.erase(it);

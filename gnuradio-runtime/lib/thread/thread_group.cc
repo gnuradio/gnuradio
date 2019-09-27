@@ -25,10 +25,8 @@ thread_group::~thread_group()
     // object from another thread while we're deleting it in the
     // current thread is going to lead to undefined behavior any
     // way.
-    for (std::list<boost::thread*>::iterator it = m_threads.begin();
-         it != m_threads.end();
-         ++it) {
-        delete (*it);
+    for (auto& m_thread : m_threads) {
+        delete m_thread;
     }
 }
 
@@ -48,8 +46,7 @@ void thread_group::add_thread(boost::thread* thrd)
     // For now we'll simply ignore requests to add a thread object
     // multiple times. Should we consider this an error and either
     // throw or return an error value?
-    std::list<boost::thread*>::iterator it =
-        std::find(m_threads.begin(), m_threads.end(), thrd);
+    auto it = std::find(m_threads.begin(), m_threads.end(), thrd);
     BOOST_ASSERT(it == m_threads.end());
     if (it == m_threads.end())
         m_threads.push_back(thrd);
@@ -62,8 +59,7 @@ void thread_group::remove_thread(boost::thread* thrd)
     // For now we'll simply ignore requests to remove a thread
     // object that's not in the group. Should we consider this an
     // error and either throw or return an error value?
-    std::list<boost::thread*>::iterator it =
-        std::find(m_threads.begin(), m_threads.end(), thrd);
+    auto it = std::find(m_threads.begin(), m_threads.end(), thrd);
     BOOST_ASSERT(it != m_threads.end());
     if (it != m_threads.end())
         m_threads.erase(it);
@@ -72,21 +68,16 @@ void thread_group::remove_thread(boost::thread* thrd)
 void thread_group::join_all()
 {
     boost::shared_lock<boost::shared_mutex> guard(m_mutex);
-    for (std::list<boost::thread*>::iterator it = m_threads.begin();
-         it != m_threads.end();
-         ++it) {
-        (*it)->join();
+    for (auto& m_thread : m_threads) {
+        m_thread->join();
     }
 }
 
 void thread_group::interrupt_all()
 {
     boost::shared_lock<boost::shared_mutex> guard(m_mutex);
-    for (std::list<boost::thread*>::iterator it = m_threads.begin(),
-                                             end = m_threads.end();
-         it != end;
-         ++it) {
-        (*it)->interrupt();
+    for (auto& m_thread : m_threads) {
+        m_thread->interrupt();
     }
 }
 

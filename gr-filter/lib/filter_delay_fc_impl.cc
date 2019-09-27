@@ -65,9 +65,9 @@ int filter_delay_fc_impl::work(int noutput_items,
                                gr_vector_const_void_star& input_items,
                                gr_vector_void_star& output_items)
 {
-    float* in0 = (float*)input_items[0];
+    auto* in0 = (float*)input_items[0];
     float* in1;
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     if (d_update) {
         d_fir->set_taps(d_taps);

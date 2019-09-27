@@ -56,22 +56,22 @@ atsc_viterbi_decoder_impl::atsc_viterbi_decoder_impl()
 
     // the -4 is for the 4 sync symbols
     int fifo_size = ATSC_DATA_SEGMENT_LENGTH - 4 - viterbi[0].delay();
-    for (int i = 0; i < NCODERS; i++)
-        fifo[i] = new fifo_t(fifo_size);
+    for (auto& i : fifo)
+        i = new fifo_t(fifo_size);
 
     reset();
 }
 
 atsc_viterbi_decoder_impl::~atsc_viterbi_decoder_impl()
 {
-    for (int i = 0; i < NCODERS; i++)
-        delete fifo[i];
+    for (auto& i : fifo)
+        delete i;
 }
 
 void atsc_viterbi_decoder_impl::reset()
 {
-    for (int i = 0; i < NCODERS; i++)
-        fifo[i]->reset();
+    for (auto& i : fifo)
+        i->reset();
 }
 
 std::vector<float> atsc_viterbi_decoder_impl::decoder_metrics() const
@@ -86,8 +86,8 @@ int atsc_viterbi_decoder_impl::work(int noutput_items,
                                     gr_vector_const_void_star& input_items,
                                     gr_vector_void_star& output_items)
 {
-    const atsc_soft_data_segment* in = (const atsc_soft_data_segment*)input_items[0];
-    atsc_mpeg_packet_rs_encoded* out = (atsc_mpeg_packet_rs_encoded*)output_items[0];
+    const auto* in = (const atsc_soft_data_segment*)input_items[0];
+    auto* out = (atsc_mpeg_packet_rs_encoded*)output_items[0];
 
     // The way the fs_checker works ensures we start getting packets
     // starting with a field sync, and out input multiple is set to

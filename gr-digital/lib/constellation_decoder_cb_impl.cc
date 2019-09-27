@@ -64,8 +64,8 @@ int constellation_decoder_cb_impl::general_work(int noutput_items,
                                                 gr_vector_const_void_star& input_items,
                                                 gr_vector_void_star& output_items)
 {
-    gr_complex const* in = (const gr_complex*)input_items[0];
-    unsigned char* out = (unsigned char*)output_items[0];
+    auto const* in = (const gr_complex*)input_items[0];
+    auto* out = (unsigned char*)output_items[0];
 
     for (int i = 0; i < noutput_items; i++) {
         out[i] = d_constellation->decision_maker(&(in[i * d_dim]));

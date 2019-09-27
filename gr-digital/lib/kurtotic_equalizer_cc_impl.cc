@@ -69,8 +69,8 @@ int kurtotic_equalizer_cc_impl::work(int noutput_items,
                                      gr_vector_const_void_star& input_items,
                                      gr_vector_void_star& output_items)
 {
-    gr_complex* in = (gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto* in = (gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     int j = 0, k, l = d_taps.size();
     for (int i = 0; i < noutput_items; i++) {

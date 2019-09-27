@@ -76,7 +76,7 @@ int mpsk_snr_est_cc_impl::work(int noutput_items,
     // This is a pass-through block; copy input to output
     memcpy(output_items[0], input_items[0], noutput_items * sizeof(gr_complex));
 
-    const gr_complex* in = (const gr_complex*)input_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
 
     // Update, calculate, and issue an SNR tag every d_nsamples
     int index = 0, x = 0;

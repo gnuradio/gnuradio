@@ -85,7 +85,7 @@ DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
     QwtScaleDraw* sd = axisScaleDraw(QwtPlot::yLeft);
     sd->setMinimumExtent(fm.width("100.00"));
 
-    QwtLegend* legendDisplay = new QwtLegend(this);
+    auto* legendDisplay = new QwtLegend(this);
 
 #if QWT_VERSION < 0x060100
     legendDisplay->setItemMode(QwtLegend::CheckableItem);
@@ -156,7 +156,7 @@ void DisplayPlot::setLineColor(unsigned int which, QColor color)
         QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
         setLineMarker(which, sym.style());
 #else
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
+        auto* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);
@@ -288,7 +288,7 @@ void DisplayPlot::setLineWidth(unsigned int which, int width)
         sym.setSize(7 + 10 * log10(1.0 * width), 7 + 10 * log10(1.0 * width));
         d_plot_curve[which]->setSymbol(sym);
 #else
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
+        auto* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
         if (sym) {
             sym->setSize(7 + 10 * log10(1.0 * width), 7 + 10 * log10(1.0 * width));
             d_plot_curve[which]->setSymbol(sym);
@@ -336,7 +336,7 @@ void DisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
         sym.setBrush(brush);
         d_plot_curve[which]->setSymbol(sym);
 #else
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
+        auto* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
         if (sym) {
             sym->setStyle(marker);
             d_plot_curve[which]->setSymbol(sym);
@@ -352,7 +352,7 @@ const QwtSymbol::Style DisplayPlot::getLineMarker(unsigned int which) const
         QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
         return sym.style();
 #else
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
+        auto* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
         return sym->style();
 #endif
     } else {
@@ -377,7 +377,7 @@ void DisplayPlot::setMarkerAlpha(unsigned int which, int alpha)
         QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
         setLineMarker(which, sym.style());
 #else
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
+        auto* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);

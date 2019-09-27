@@ -219,8 +219,7 @@ buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay
 
 void buffer::drop_reader(buffer_reader* reader)
 {
-    std::vector<buffer_reader*>::iterator result =
-        std::find(d_readers.begin(), d_readers.end(), reader);
+    auto result = std::find(d_readers.begin(), d_readers.end(), reader);
 
     if (result == d_readers.end())
         throw std::invalid_argument("buffer::drop_reader"); // we didn't find it...
@@ -237,8 +236,7 @@ void buffer::add_item_tag(const tag_t& tag)
 void buffer::remove_item_tag(const tag_t& tag, long id)
 {
     gr::thread::scoped_lock guard(*mutex());
-    for (std::multimap<uint64_t, tag_t>::iterator it =
-             d_item_tags.lower_bound(tag.offset);
+    for (auto it = d_item_tags.lower_bound(tag.offset);
          it != d_item_tags.upper_bound(tag.offset);
          ++it) {
         if ((*it).second == tag) {
@@ -341,9 +339,9 @@ void buffer_reader::get_tags_in_range(std::vector<tag_t>& v,
     gr::thread::scoped_lock guard(*mutex());
 
     v.clear();
-    std::multimap<uint64_t, tag_t>::iterator itr =
+    auto itr =
         d_buffer->get_tags_lower_bound(std::min(abs_start, abs_start - d_attr_delay));
-    std::multimap<uint64_t, tag_t>::iterator itr_end =
+    auto itr_end =
         d_buffer->get_tags_upper_bound(std::min(abs_end, abs_end - d_attr_delay));
 
     uint64_t item_time;

@@ -170,7 +170,7 @@ void viterbi_algorithm_combined(int I,
 {
     std::vector<int> trace(S * K);
     std::vector<float> alpha(S * 2);
-    float* metric = new float[O];
+    auto* metric = new float[O];
     int alphai;
     float norm, mm, minm;
     int minmi;
@@ -678,7 +678,7 @@ void siso_algorithm_combined(int I,
     float norm, mm, minm;
     std::vector<float> alpha(S * (K + 1));
     std::vector<float> beta(S * (K + 1));
-    float* prioro = new float[O * K];
+    auto* prioro = new float[O * K];
 
     if (S0 < 0) { // initial state not specified
         for (int i = 0; i < S; i++)

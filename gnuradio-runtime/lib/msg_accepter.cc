@@ -41,13 +41,13 @@ msg_accepter::~msg_accepter()
 void msg_accepter::post(pmt::pmt_t which_port, pmt::pmt_t msg)
 {
     // Notify derived class, handled case by case
-    block* p = dynamic_cast<block*>(this);
+    auto* p = dynamic_cast<block*>(this);
     if (p) {
         p->_post(which_port, msg);
         return;
     }
 
-    hier_block2* p2 = dynamic_cast<hier_block2*>(this);
+    auto* p2 = dynamic_cast<hier_block2*>(this);
     if (p2) {
         // FIXME do the right thing
         return;

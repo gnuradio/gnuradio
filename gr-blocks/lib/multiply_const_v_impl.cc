@@ -53,8 +53,8 @@ int multiply_const_v_impl<float>::work(int noutput_items,
                                        gr_vector_const_void_star& input_items,
                                        gr_vector_void_star& output_items)
 {
-    float* iptr = (float*)input_items[0];
-    float* optr = (float*)output_items[0];
+    auto* iptr = (float*)input_items[0];
+    auto* optr = (float*)output_items[0];
 
     int nitems_per_block =
         this->output_signature()->sizeof_stream_item(0) / sizeof(float);
@@ -84,8 +84,8 @@ int multiply_const_v_impl<gr_complex>::work(int noutput_items,
                                             gr_vector_const_void_star& input_items,
                                             gr_vector_void_star& output_items)
 {
-    gr_complex* iptr = (gr_complex*)input_items[0];
-    gr_complex* optr = (gr_complex*)output_items[0];
+    auto* iptr = (gr_complex*)input_items[0];
+    auto* optr = (gr_complex*)output_items[0];
 
     int nitems_per_block =
         this->output_signature()->sizeof_stream_item(0) / sizeof(gr_complex);

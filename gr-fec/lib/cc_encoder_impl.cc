@@ -154,8 +154,8 @@ void cc_encoder_impl::partab_init(void)
 
 void cc_encoder_impl::generic_work(void* in_buffer, void* out_buffer)
 {
-    const unsigned char* in = (const unsigned char*)in_buffer;
-    unsigned char* out = (unsigned char*)out_buffer;
+    const auto* in = (const unsigned char*)in_buffer;
+    auto* out = (unsigned char*)out_buffer;
 
     unsigned char my_state = d_start_state;
 

@@ -95,7 +95,7 @@ double window::max_attenuation(win_type type, double beta)
 std::vector<float> window::coswindow(int ntaps, float c0, float c1, float c2)
 {
     std::vector<float> taps(ntaps);
-    float M = static_cast<float>(ntaps - 1);
+    auto M = static_cast<float>(ntaps - 1);
 
     for (int n = 0; n < ntaps; n++)
         taps[n] = c0 - c1 * cosf((2.0f * GR_M_PI * n) / M) +
@@ -106,7 +106,7 @@ std::vector<float> window::coswindow(int ntaps, float c0, float c1, float c2)
 std::vector<float> window::coswindow(int ntaps, float c0, float c1, float c2, float c3)
 {
     std::vector<float> taps(ntaps);
-    float M = static_cast<float>(ntaps - 1);
+    auto M = static_cast<float>(ntaps - 1);
 
     for (int n = 0; n < ntaps; n++)
         taps[n] = c0 - c1 * cosf((2.0f * GR_M_PI * n) / M) +
@@ -119,7 +119,7 @@ std::vector<float>
 window::coswindow(int ntaps, float c0, float c1, float c2, float c3, float c4)
 {
     std::vector<float> taps(ntaps);
-    float M = static_cast<float>(ntaps - 1);
+    auto M = static_cast<float>(ntaps - 1);
 
     for (int n = 0; n < ntaps; n++)
         taps[n] = c0 - c1 * cosf((2.0f * GR_M_PI * n) / M) +
@@ -140,7 +140,7 @@ std::vector<float> window::rectangular(int ntaps)
 std::vector<float> window::hamming(int ntaps)
 {
     std::vector<float> taps(ntaps);
-    float M = static_cast<float>(ntaps - 1);
+    auto M = static_cast<float>(ntaps - 1);
 
     for (int n = 0; n < ntaps; n++)
         taps[n] = 0.54 - 0.46 * cos((2 * GR_M_PI * n) / M);
@@ -150,7 +150,7 @@ std::vector<float> window::hamming(int ntaps)
 std::vector<float> window::hann(int ntaps)
 {
     std::vector<float> taps(ntaps);
-    float M = static_cast<float>(ntaps - 1);
+    auto M = static_cast<float>(ntaps - 1);
 
     for (int n = 0; n < ntaps; n++)
         taps[n] = 0.5 - 0.5 * cos((2 * GR_M_PI * n) / M);
@@ -256,7 +256,7 @@ std::vector<float> window::kaiser(int ntaps, double beta)
 std::vector<float> window::bartlett(int ntaps)
 {
     std::vector<float> taps(ntaps);
-    float M = static_cast<float>(ntaps - 1);
+    auto M = static_cast<float>(ntaps - 1);
 
     for (int n = 0; n < ntaps / 2; n++)
         taps[n] = 2 * n / M;

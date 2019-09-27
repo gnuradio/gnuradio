@@ -111,7 +111,7 @@ wavfile_source_impl::~wavfile_source_impl() { fclose(d_fp); }
 
 float wavfile_source_impl::convert_to_float(short int sample)
 {
-    float sample_out = (float)sample;
+    auto sample_out = (float)sample;
     sample_out /= d_normalize_fac;
     sample_out -= d_normalize_shift;
     return sample_out;
@@ -121,7 +121,7 @@ int wavfile_source_impl::work(int noutput_items,
                               gr_vector_const_void_star& input_items,
                               gr_vector_void_star& output_items)
 {
-    float** out = (float**)&output_items[0];
+    auto** out = (float**)&output_items[0];
     int n_out_chans = output_items.size();
 
     int i;

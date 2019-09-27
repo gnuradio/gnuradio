@@ -420,8 +420,8 @@ int symbol_sync_cc_impl::general_work(int noutput_items,
     if (ni <= 0)
         return 0;
 
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     setup_optional_outputs(output_items);
 

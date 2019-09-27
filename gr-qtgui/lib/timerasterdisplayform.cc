@@ -71,7 +71,7 @@ TimeRasterDisplayForm::TimeRasterDisplayForm(
                 SLOT(setLineLabel(unsigned int, const QString&)));
         d_lines_menu[i]->addAction(d_line_title_act[i]);
 
-        ColorMapMenu* colormap = new ColorMapMenu(i, this);
+        auto* colormap = new ColorMapMenu(i, this);
         connect(
             colormap,
             SIGNAL(whichTrigger(unsigned int, const int, const QColor&, const QColor&)),
@@ -157,15 +157,13 @@ double TimeRasterDisplayForm::getMaxIntensity(unsigned int which)
 
 void TimeRasterDisplayForm::newData(const QEvent* updateEvent)
 {
-    TimeRasterUpdateEvent* event = (TimeRasterUpdateEvent*)updateEvent;
+    auto* event = (TimeRasterUpdateEvent*)updateEvent;
     const std::vector<double*> dataPoints = event->getPoints();
     const uint64_t numDataPoints = event->getNumDataPoints();
 
-    for (size_t i = 0; i < dataPoints.size(); i++) {
-        double* min_val =
-            std::min_element(&dataPoints[i][0], &dataPoints[i][numDataPoints - 1]);
-        double* max_val =
-            std::max_element(&dataPoints[i][0], &dataPoints[i][numDataPoints - 1]);
+    for (auto dataPoint : dataPoints) {
+        double* min_val = std::min_element(&dataPoint[0], &dataPoint[numDataPoints - 1]);
+        double* max_val = std::max_element(&dataPoint[0], &dataPoint[numDataPoints - 1]);
         if (*min_val < d_min_val)
             d_min_val = *min_val;
         if (*max_val > d_max_val)

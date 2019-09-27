@@ -55,8 +55,8 @@ int constellation_soft_decoder_cf_impl::work(int noutput_items,
                                              gr_vector_const_void_star& input_items,
                                              gr_vector_void_star& output_items)
 {
-    gr_complex const* in = (const gr_complex*)input_items[0];
-    float* out = (float*)output_items[0];
+    auto const* in = (const gr_complex*)input_items[0];
+    auto* out = (float*)output_items[0];
 
     std::vector<float> bits;
 

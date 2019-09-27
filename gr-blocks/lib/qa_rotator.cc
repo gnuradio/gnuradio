@@ -71,8 +71,8 @@ BOOST_AUTO_TEST_CASE(t2)
     static const unsigned int N = 100000;
 
     gr::blocks::rotator r;
-    gr_complex* input = new gr_complex[N];
-    gr_complex* output = new gr_complex[N];
+    auto* input = new gr_complex[N];
+    auto* output = new gr_complex[N];
 
     double phase_incr = 2 * GR_M_PI / 1003;
     double phase = 0;

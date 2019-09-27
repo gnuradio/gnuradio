@@ -84,8 +84,8 @@ BOOST_AUTO_TEST_CASE(t1)
 {
     gr::nco<float, float> ref_nco;
     gr::fxpt_nco new_nco;
-    gr_complex* ref_block = new gr_complex[SIN_COS_BLOCK_SIZE];
-    gr_complex* new_block = new gr_complex[SIN_COS_BLOCK_SIZE];
+    auto* ref_block = new gr_complex[SIN_COS_BLOCK_SIZE];
+    auto* new_block = new gr_complex[SIN_COS_BLOCK_SIZE];
     double max_error = 0;
 
     ref_nco.set_freq((float)(2 * GR_M_PI / SIN_COS_FREQ));

@@ -376,7 +376,7 @@ void const_sink_c_impl::_test_trigger_tags(int nitems)
 void const_sink_c_impl::_test_trigger_norm(int nitems, gr_vector_const_void_star inputs)
 {
     int trigger_index;
-    const gr_complex* in = (const gr_complex*)inputs[d_trigger_channel];
+    const auto* in = (const gr_complex*)inputs[d_trigger_channel];
     for (trigger_index = 0; trigger_index < nitems - 1; trigger_index++) {
         d_trigger_count++;
 

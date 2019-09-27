@@ -190,7 +190,7 @@ bool prefs::has_option(const std::string& section, const std::string& option)
         std::string o = option;
         std::transform(option.begin(), option.end(), o.begin(), ::tolower);
 
-        config_map_itr sec = d_config_map.find(s);
+        auto sec = d_config_map.find(s);
         return sec->second.count(o) > 0;
     } else {
         return false;
@@ -212,8 +212,8 @@ const std::string prefs::get_string(const std::string& section,
         std::string o = option;
         std::transform(option.begin(), option.end(), o.begin(), ::tolower);
 
-        config_map_itr sec = d_config_map.find(s);
-        config_map_elem_itr opt = sec->second.find(o);
+        auto sec = d_config_map.find(s);
+        auto opt = sec->second.find(o);
         return opt->second;
     } else {
         return default_val;

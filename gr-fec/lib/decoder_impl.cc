@@ -82,7 +82,7 @@ int decoder_impl::general_work(int noutput_items,
                                gr_vector_void_star& output_items)
 {
     const unsigned char* in = (unsigned char*)input_items[0];
-    unsigned char* out = (unsigned char*)output_items[0];
+    auto* out = (unsigned char*)output_items[0];
 
     int outnum = (int)(((1.0 / relative_rate()) * noutput_items) + 0.5);
     int innum =

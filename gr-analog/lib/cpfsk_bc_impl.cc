@@ -54,7 +54,7 @@ int cpfsk_bc_impl::work(int noutput_items,
                         gr_vector_void_star& output_items)
 {
     const char* in = (const char*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     for (int i = 0; i < noutput_items / d_samples_per_sym; i++) {
         for (int j = 0; j < d_samples_per_sym; j++) {

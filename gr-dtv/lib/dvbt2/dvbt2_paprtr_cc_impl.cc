@@ -433,27 +433,27 @@ dvbt2_paprtr_cc_impl::dvbt2_paprtr_cc_impl(dvbt2_extended_carrier_t carriermode,
     }
     switch (fftsize) {
     case FFTSIZE_1K:
-        for (int i = 0; i < 10; i++) {
-            p2_carrier_map[p2_papr_map_1k[i]] = P2PAPR_CARRIER;
-            fc_carrier_map[p2_papr_map_1k[i]] = TRPAPR_CARRIER;
+        for (int i : p2_papr_map_1k) {
+            p2_carrier_map[i] = P2PAPR_CARRIER;
+            fc_carrier_map[i] = TRPAPR_CARRIER;
         }
         N_TR = 10;
         p2_papr_map = p2_papr_map_1k;
         tr_papr_map = tr_papr_map_1k;
         break;
     case FFTSIZE_2K:
-        for (int i = 0; i < 18; i++) {
-            p2_carrier_map[p2_papr_map_2k[i]] = P2PAPR_CARRIER;
-            fc_carrier_map[p2_papr_map_2k[i]] = TRPAPR_CARRIER;
+        for (int i : p2_papr_map_2k) {
+            p2_carrier_map[i] = P2PAPR_CARRIER;
+            fc_carrier_map[i] = TRPAPR_CARRIER;
         }
         N_TR = 18;
         p2_papr_map = p2_papr_map_2k;
         tr_papr_map = tr_papr_map_2k;
         break;
     case FFTSIZE_4K:
-        for (int i = 0; i < 36; i++) {
-            p2_carrier_map[p2_papr_map_4k[i]] = P2PAPR_CARRIER;
-            fc_carrier_map[p2_papr_map_4k[i]] = TRPAPR_CARRIER;
+        for (int i : p2_papr_map_4k) {
+            p2_carrier_map[i] = P2PAPR_CARRIER;
+            fc_carrier_map[i] = TRPAPR_CARRIER;
         }
         N_TR = 36;
         p2_papr_map = p2_papr_map_4k;
@@ -461,9 +461,9 @@ dvbt2_paprtr_cc_impl::dvbt2_paprtr_cc_impl(dvbt2_extended_carrier_t carriermode,
         break;
     case FFTSIZE_8K:
     case FFTSIZE_8K_T2GI:
-        for (int i = 0; i < 72; i++) {
-            p2_carrier_map[p2_papr_map_8k[i] + K_EXT] = P2PAPR_CARRIER;
-            fc_carrier_map[p2_papr_map_8k[i] + K_EXT] = TRPAPR_CARRIER;
+        for (int i : p2_papr_map_8k) {
+            p2_carrier_map[i + K_EXT] = P2PAPR_CARRIER;
+            fc_carrier_map[i + K_EXT] = TRPAPR_CARRIER;
         }
         N_TR = 72;
         p2_papr_map = p2_papr_map_8k;
@@ -471,9 +471,9 @@ dvbt2_paprtr_cc_impl::dvbt2_paprtr_cc_impl(dvbt2_extended_carrier_t carriermode,
         break;
     case FFTSIZE_16K:
     case FFTSIZE_16K_T2GI:
-        for (int i = 0; i < 144; i++) {
-            p2_carrier_map[p2_papr_map_16k[i] + K_EXT] = P2PAPR_CARRIER;
-            fc_carrier_map[p2_papr_map_16k[i] + K_EXT] = TRPAPR_CARRIER;
+        for (int i : p2_papr_map_16k) {
+            p2_carrier_map[i + K_EXT] = P2PAPR_CARRIER;
+            fc_carrier_map[i + K_EXT] = TRPAPR_CARRIER;
         }
         N_TR = 144;
         p2_papr_map = p2_papr_map_16k;
@@ -481,9 +481,9 @@ dvbt2_paprtr_cc_impl::dvbt2_paprtr_cc_impl(dvbt2_extended_carrier_t carriermode,
         break;
     case FFTSIZE_32K:
     case FFTSIZE_32K_T2GI:
-        for (int i = 0; i < 288; i++) {
-            p2_carrier_map[p2_papr_map_32k[i] + K_EXT] = P2PAPR_CARRIER;
-            fc_carrier_map[p2_papr_map_32k[i] + K_EXT] = TRPAPR_CARRIER;
+        for (int i : p2_papr_map_32k) {
+            p2_carrier_map[i + K_EXT] = P2PAPR_CARRIER;
+            fc_carrier_map[i + K_EXT] = TRPAPR_CARRIER;
         }
         N_TR = 288;
         p2_papr_map = p2_papr_map_32k;
@@ -663,36 +663,36 @@ void dvbt2_paprtr_cc_impl::init_pilots(int symbol)
     }
     switch (fft_size) {
     case FFTSIZE_1K:
-        for (int i = 0; i < 10; i++) {
-            data_carrier_map[tr_papr_map_1k[i] + shift] = TRPAPR_CARRIER;
+        for (int i : tr_papr_map_1k) {
+            data_carrier_map[i + shift] = TRPAPR_CARRIER;
         }
         break;
     case FFTSIZE_2K:
-        for (int i = 0; i < 18; i++) {
-            data_carrier_map[tr_papr_map_2k[i] + shift] = TRPAPR_CARRIER;
+        for (int i : tr_papr_map_2k) {
+            data_carrier_map[i + shift] = TRPAPR_CARRIER;
         }
         break;
     case FFTSIZE_4K:
-        for (int i = 0; i < 36; i++) {
-            data_carrier_map[tr_papr_map_4k[i] + shift] = TRPAPR_CARRIER;
+        for (int i : tr_papr_map_4k) {
+            data_carrier_map[i + shift] = TRPAPR_CARRIER;
         }
         break;
     case FFTSIZE_8K:
     case FFTSIZE_8K_T2GI:
-        for (int i = 0; i < 72; i++) {
-            data_carrier_map[tr_papr_map_8k[i] + shift] = TRPAPR_CARRIER;
+        for (int i : tr_papr_map_8k) {
+            data_carrier_map[i + shift] = TRPAPR_CARRIER;
         }
         break;
     case FFTSIZE_16K:
     case FFTSIZE_16K_T2GI:
-        for (int i = 0; i < 144; i++) {
-            data_carrier_map[tr_papr_map_16k[i] + shift] = TRPAPR_CARRIER;
+        for (int i : tr_papr_map_16k) {
+            data_carrier_map[i + shift] = TRPAPR_CARRIER;
         }
         break;
     case FFTSIZE_32K:
     case FFTSIZE_32K_T2GI:
-        for (int i = 0; i < 288; i++) {
-            data_carrier_map[tr_papr_map_32k[i] + shift] = TRPAPR_CARRIER;
+        for (int i : tr_papr_map_32k) {
+            data_carrier_map[i + shift] = TRPAPR_CARRIER;
         }
         break;
     }
@@ -702,8 +702,8 @@ int dvbt2_paprtr_cc_impl::work(int noutput_items,
                                gr_vector_const_void_star& input_items,
                                gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
     const gr_complex one(1.0, 0.0);
     const gr_complex zero(0.0, 0.0);
     const float normalization = 1.0 / N_TR;

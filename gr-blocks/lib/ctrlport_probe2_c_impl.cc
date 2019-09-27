@@ -90,7 +90,7 @@ int ctrlport_probe2_c_impl::work(int noutput_items,
                                  gr_vector_const_void_star& input_items,
                                  gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
 
     gr::thread::scoped_lock guard(d_setlock);
 

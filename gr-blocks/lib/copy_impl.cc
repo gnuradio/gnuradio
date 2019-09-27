@@ -71,8 +71,8 @@ int copy_impl::general_work(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
 {
-    const uint8_t** in = (const uint8_t**)&input_items[0];
-    uint8_t** out = (uint8_t**)&output_items[0];
+    const auto** in = (const uint8_t**)&input_items[0];
+    auto** out = (uint8_t**)&output_items[0];
 
     int n = 0;
     if (d_enabled) {

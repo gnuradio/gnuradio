@@ -95,7 +95,7 @@ int portaudio_source_callback(const void* inputBuffer,
                               PaStreamCallbackFlags statusFlags,
                               void* arg)
 {
-    portaudio_source* self = (portaudio_source*)arg;
+    auto* self = (portaudio_source*)arg;
     int nchan = self->d_input_parameters.channelCount;
     int nframes_to_copy = framesPerBuffer;
     int nframes_room = self->d_writer->space_available() / nchan;
@@ -303,7 +303,7 @@ int portaudio_source::work(int noutput_items,
                            gr_vector_const_void_star& input_items,
                            gr_vector_void_star& output_items)
 {
-    float** out = (float**)&output_items[0];
+    auto** out = (float**)&output_items[0];
     const unsigned nchan =
         d_input_parameters.channelCount; // # of channels == samples/frame
 
@@ -355,7 +355,7 @@ int portaudio_source::work(int noutput_items,
 
             int nf = std::min(noutput_items - k, nframes);
 
-            const float* p = (const float*)d_reader->read_pointer();
+            const auto* p = (const float*)d_reader->read_pointer();
             for (int i = 0; i < nf; i++) {
                 for (unsigned int c = 0; c < nchan; c++) {
                     out[c][k + i] = *p++;

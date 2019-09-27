@@ -100,8 +100,8 @@ int keep_m_in_n_impl::general_work(int noutput_items,
                                    gr_vector_const_void_star& input_items,
                                    gr_vector_void_star& output_items)
 {
-    uint8_t* out = (uint8_t*)output_items[0];
-    const uint8_t* in = (const uint8_t*)input_items[0];
+    auto* out = (uint8_t*)output_items[0];
+    const auto* in = (const uint8_t*)input_items[0];
 
     // iterate over data blocks of size {n, input : m, output}
     int blks = std::min(noutput_items / d_m, ninput_items[0] / d_n);

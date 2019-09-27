@@ -57,8 +57,8 @@ int argmax_impl<T>::work(int noutput_items,
 {
     int ninputs = input_items.size();
 
-    std::int16_t* x_optr = (std::int16_t*)output_items[0];
-    std::int16_t* y_optr = (std::int16_t*)output_items[1];
+    auto* x_optr = (std::int16_t*)output_items[0];
+    auto* y_optr = (std::int16_t*)output_items[1];
 
     for (int i = 0; i < noutput_items; i++) {
         T max = ((T*)input_items[0])[i * d_vlen];

@@ -49,8 +49,8 @@ int conjugate_cc_impl::work(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
 {
-    gr_complex* iptr = (gr_complex*)input_items[0];
-    gr_complex* optr = (gr_complex*)output_items[0];
+    auto* iptr = (gr_complex*)input_items[0];
+    auto* optr = (gr_complex*)output_items[0];
 
     volk_32fc_conjugate_32fc(optr, iptr, noutput_items);
 

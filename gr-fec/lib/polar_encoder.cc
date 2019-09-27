@@ -66,7 +66,7 @@ void polar_encoder::setup_frozen_bit_inserter()
 
     for (unsigned int i = 0; i < d_frozen_bit_positions.size(); i++) {
         int rev_pos = (int)bit_reverse((long)d_frozen_bit_positions.at(i), block_power());
-        unsigned char frozen_bit = (unsigned char)d_frozen_bit_values.at(i);
+        auto frozen_bit = (unsigned char)d_frozen_bit_values.at(i);
         insert_unpacked_bit_into_packed_array_at_position(
             d_frozen_bit_prototype, frozen_bit, rev_pos);
     }
@@ -76,8 +76,8 @@ polar_encoder::~polar_encoder() { volk_free(d_frozen_bit_prototype); }
 
 void polar_encoder::generic_work(void* in_buffer, void* out_buffer)
 {
-    const unsigned char* in = (const unsigned char*)in_buffer;
-    unsigned char* out = (unsigned char*)out_buffer;
+    const auto* in = (const unsigned char*)in_buffer;
+    auto* out = (unsigned char*)out_buffer;
 
     if (d_is_packed) {
         insert_packed_frozen_bits_and_reverse(out, in);

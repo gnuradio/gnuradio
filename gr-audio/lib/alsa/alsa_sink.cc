@@ -328,8 +328,8 @@ int alsa_sink::work_s16(int noutput_items,
     static const float scale_factor = std::pow(2.0f, 16 - 1) - 1;
 
     unsigned int nchan = input_items.size();
-    const float** in = (const float**)&input_items[0];
-    sample_t* buf = (sample_t*)d_buffer;
+    const auto** in = (const float**)&input_items[0];
+    auto* buf = (sample_t*)d_buffer;
     int bi;
     int n;
 
@@ -367,8 +367,8 @@ int alsa_sink::work_s32(int noutput_items,
     static const float scale_factor = std::pow(2.0f, 32 - 1) - 1;
 
     unsigned int nchan = input_items.size();
-    const float** in = (const float**)&input_items[0];
-    sample_t* buf = (sample_t*)d_buffer;
+    const auto** in = (const float**)&input_items[0];
+    auto* buf = (sample_t*)d_buffer;
     int bi;
     int n;
 
@@ -408,8 +408,8 @@ int alsa_sink::work_s16_1x2(int noutput_items,
 
     assert(input_items.size() == 1);
     static const unsigned int nchan = 2;
-    const float** in = (const float**)&input_items[0];
-    sample_t* buf = (sample_t*)d_buffer;
+    const auto** in = (const float**)&input_items[0];
+    auto* buf = (sample_t*)d_buffer;
     int bi;
     int n;
 
@@ -420,7 +420,7 @@ int alsa_sink::work_s16_1x2(int noutput_items,
         // process one period of data
         bi = 0;
         for (unsigned int i = 0; i < d_period_size; i++) {
-            sample_t t = (sample_t)(in[0][i] * scale_factor);
+            auto t = (sample_t)(in[0][i] * scale_factor);
             buf[bi++] = t;
             buf[bi++] = t;
         }
@@ -448,8 +448,8 @@ int alsa_sink::work_s32_1x2(int noutput_items,
 
     assert(input_items.size() == 1);
     static unsigned int nchan = 2;
-    const float** in = (const float**)&input_items[0];
-    sample_t* buf = (sample_t*)d_buffer;
+    const auto** in = (const float**)&input_items[0];
+    auto* buf = (sample_t*)d_buffer;
     int bi;
     int n;
 
@@ -460,7 +460,7 @@ int alsa_sink::work_s32_1x2(int noutput_items,
         // process one period of data
         bi = 0;
         for (unsigned int i = 0; i < d_period_size; i++) {
-            sample_t t = (sample_t)(in[0][i] * scale_factor);
+            auto t = (sample_t)(in[0][i] * scale_factor);
             buf[bi++] = t;
             buf[bi++] = t;
         }
@@ -477,7 +477,7 @@ int alsa_sink::work_s32_1x2(int noutput_items,
 
 bool alsa_sink::write_buffer(const void* vbuffer, unsigned nframes, unsigned sizeof_frame)
 {
-    const unsigned char* buffer = (const unsigned char*)vbuffer;
+    const auto* buffer = (const unsigned char*)vbuffer;
 
     while (nframes > 0) {
         int r = snd_pcm_writei(d_pcm_handle, buffer, nframes);

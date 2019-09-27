@@ -66,8 +66,8 @@ atsc_trellis_encoder_impl::~atsc_trellis_encoder_impl() {}
 
 void atsc_trellis_encoder_impl::reset()
 {
-    for (int i = 0; i < NCODERS; i++) {
-        enc[i].reset();
+    for (auto& i : enc) {
+        i.reset();
     }
 }
 
@@ -228,9 +228,8 @@ int atsc_trellis_encoder_impl::work(int noutput_items,
                                     gr_vector_const_void_star& input_items,
                                     gr_vector_void_star& output_items)
 {
-    const atsc_mpeg_packet_rs_encoded* in =
-        (const atsc_mpeg_packet_rs_encoded*)input_items[0];
-    atsc_data_segment* out = (atsc_data_segment*)output_items[0];
+    const auto* in = (const atsc_mpeg_packet_rs_encoded*)input_items[0];
+    auto* out = (atsc_data_segment*)output_items[0];
 
     for (int i = 0; i < noutput_items; i += NCODERS) {
         encode(&out[i], &in[i]);

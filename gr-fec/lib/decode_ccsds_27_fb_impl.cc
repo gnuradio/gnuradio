@@ -55,8 +55,8 @@ int decode_ccsds_27_fb_impl::work(int noutput_items,
                                   gr_vector_const_void_star& input_items,
                                   gr_vector_void_star& output_items)
 {
-    const float* in = (const float*)input_items[0];
-    unsigned char* out = (unsigned char*)output_items[0];
+    const auto* in = (const float*)input_items[0];
+    auto* out = (unsigned char*)output_items[0];
 
     for (int i = 0; i < noutput_items * 16; i++) {
         // Translate and clip [-1.0..1.0] to [28..228]
@@ -65,7 +65,7 @@ int decode_ccsds_27_fb_impl::work(int noutput_items,
             sample = 255.0;
         else if (sample < 0.0)
             sample = 0.0;
-        unsigned char sym = (unsigned char)(floor(sample));
+        auto sym = (unsigned char)(floor(sample));
 
         d_viterbi_in[d_count % 4] = sym;
         if ((d_count % 4) == 3) {

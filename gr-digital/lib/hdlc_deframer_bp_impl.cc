@@ -80,7 +80,7 @@ int hdlc_deframer_bp_impl::work(int noutput_items,
                                 gr_vector_const_void_star& input_items,
                                 gr_vector_void_star& output_items)
 {
-    const unsigned char* in = (const unsigned char*)input_items[0];
+    const auto* in = (const unsigned char*)input_items[0];
     unsigned char bit;
     int n = 0;
     while (n < noutput_items) {

@@ -63,8 +63,8 @@ polar_decoder_sc_systematic::~polar_decoder_sc_systematic()
 
 void polar_decoder_sc_systematic::generic_work(void* in_buffer, void* out_buffer)
 {
-    const float* in = (const float*)in_buffer;
-    unsigned char* out = (unsigned char*)out_buffer;
+    const auto* in = (const float*)in_buffer;
+    auto* out = (unsigned char*)out_buffer;
 
     initialize_decoder(d_u_hat_vec, d_llr_vec, in);
     sc_decode(d_llr_vec, d_u_hat_vec);

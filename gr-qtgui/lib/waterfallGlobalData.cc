@@ -140,10 +140,10 @@ QwtRasterData* WaterfallData::copy() const
     WaterfallData* returnData = new WaterfallData(
         boundingRect().left(), boundingRect().right(), _fftPoints, _historyLength);
 #else
-    WaterfallData* returnData = new WaterfallData(interval(Qt::XAxis).minValue(),
-                                                  interval(Qt::XAxis).maxValue(),
-                                                  _fftPoints,
-                                                  _historyLength);
+    auto* returnData = new WaterfallData(interval(Qt::XAxis).minValue(),
+                                         interval(Qt::XAxis).maxValue(),
+                                         _fftPoints,
+                                         _historyLength);
 #endif
 
     returnData->copy(this);
@@ -177,10 +177,10 @@ double WaterfallData::value(double x, double y) const
     double height = interval(Qt::YAxis).maxValue();
     double left = interval(Qt::XAxis).minValue();
     double right = interval(Qt::XAxis).maxValue();
-    double ylen = static_cast<double>(_historyLength - 1);
-    double xlen = static_cast<double>(_fftPoints - 1);
-    const unsigned int intY = static_cast<unsigned int>((1.0 - y / height) * ylen);
-    const unsigned int intX =
+    auto ylen = static_cast<double>(_historyLength - 1);
+    auto xlen = static_cast<double>(_fftPoints - 1);
+    const auto intY = static_cast<unsigned int>((1.0 - y / height) * ylen);
+    const auto intX =
         static_cast<unsigned int>((((x - left) / (right - left)) * xlen) + 0.5);
 #endif
 

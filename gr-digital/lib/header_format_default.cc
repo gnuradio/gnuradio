@@ -97,7 +97,7 @@ bool header_format_default::format(int nbytes_in,
                                    pmt::pmt_t& output,
                                    pmt::pmt_t& info)
 {
-    uint8_t* bytes_out = (uint8_t*)volk_malloc(header_nbytes(), volk_get_alignment());
+    auto* bytes_out = (uint8_t*)volk_malloc(header_nbytes(), volk_get_alignment());
 
     header_buffer header(bytes_out);
     header.add_field64(d_access_code, d_access_code_len);

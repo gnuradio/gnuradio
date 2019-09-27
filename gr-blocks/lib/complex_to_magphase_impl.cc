@@ -51,9 +51,9 @@ int complex_to_magphase_impl::work(int noutput_items,
                                    gr_vector_const_void_star& input_items,
                                    gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    float* out0 = (float*)output_items[0];
-    float* out1 = (float*)output_items[1];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out0 = (float*)output_items[0];
+    auto* out1 = (float*)output_items[1];
     int noi = noutput_items * d_vlen;
 
     volk_32fc_magnitude_32f_u(out0, in, noi);

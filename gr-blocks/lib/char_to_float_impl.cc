@@ -51,8 +51,8 @@ int char_to_float_impl::work(int noutput_items,
                              gr_vector_const_void_star& input_items,
                              gr_vector_void_star& output_items)
 {
-    const int8_t* in = (const int8_t*)input_items[0];
-    float* out = (float*)output_items[0];
+    const auto* in = (const int8_t*)input_items[0];
+    auto* out = (float*)output_items[0];
 
     // Note: the unaligned benchmarked much faster than the aligned
     volk_8i_s32f_convert_32f_u(out, in, d_scale, d_vlen * noutput_items);

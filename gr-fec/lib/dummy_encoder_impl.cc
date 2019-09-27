@@ -83,8 +83,8 @@ double dummy_encoder_impl::rate() { return 1.0; }
 
 void dummy_encoder_impl::generic_work(void* inbuffer, void* outbuffer)
 {
-    const unsigned char* in = (const unsigned char*)inbuffer;
-    unsigned char* out = (unsigned char*)outbuffer;
+    const auto* in = (const unsigned char*)inbuffer;
+    auto* out = (unsigned char*)outbuffer;
 
     memcpy(out, in, d_frame_size * sizeof(char));
 }

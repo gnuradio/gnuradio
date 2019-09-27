@@ -55,7 +55,7 @@ int req_source_impl::work(int noutput_items,
 {
 #if 0
 #endif
-    uint8_t* out = (uint8_t*)output_items[0];
+    auto* out = (uint8_t*)output_items[0];
     bool first = true;
     int done = 0;
 

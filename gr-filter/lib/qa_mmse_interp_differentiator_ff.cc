@@ -70,7 +70,7 @@ static float test_fcn_d(double index)
 BOOST_AUTO_TEST_CASE(t1)
 {
     static const unsigned N = 100;
-    float* input = (float*)volk_malloc((N + 10) * sizeof(float), volk_get_alignment());
+    auto* input = (float*)volk_malloc((N + 10) * sizeof(float), volk_get_alignment());
 
     for (unsigned i = 0; i < N + 10; i++)
         input[i] = test_fcn((double)i);

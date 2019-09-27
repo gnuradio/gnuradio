@@ -47,8 +47,8 @@ int add_const_cc_impl::work(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
 {
-    const gr_complex* iptr = (const gr_complex*)input_items[0];
-    gr_complex* optr = (gr_complex*)output_items[0];
+    const auto* iptr = (const gr_complex*)input_items[0];
+    auto* optr = (gr_complex*)output_items[0];
 
     int size = noutput_items;
 

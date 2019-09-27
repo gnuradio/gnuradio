@@ -82,7 +82,7 @@ int burst_tagger_impl::work(int noutput_items,
                             gr_vector_void_star& output_items)
 {
     const char* signal = (const char*)input_items[0];
-    const short* trigger = (const short*)input_items[1];
+    const auto* trigger = (const short*)input_items[1];
     char* out = (char*)output_items[0];
 
     memcpy(out, signal, noutput_items * d_itemsize);

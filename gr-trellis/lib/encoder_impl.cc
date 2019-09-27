@@ -93,7 +93,7 @@ int encoder_impl<IN_T, OUT_T>::work(int noutput_items,
     if (d_B) { // blockwise operation
         int nblocks = noutput_items / d_K;
         const IN_T* in = (const IN_T*)input_items[0];
-        OUT_T* out = (OUT_T*)output_items[0];
+        auto* out = (OUT_T*)output_items[0];
         for (int n = 0; n < nblocks; n++) {
             ST_tmp = d_ST;
             for (int i = 0; i < d_K; i++) {
@@ -106,7 +106,7 @@ int encoder_impl<IN_T, OUT_T>::work(int noutput_items,
     }      // end blockwise operation
     else { // streaming operation
         const IN_T* in = (const IN_T*)input_items[0];
-        OUT_T* out = (OUT_T*)output_items[0];
+        auto* out = (OUT_T*)output_items[0];
         ST_tmp = d_ST;
         for (int i = 0; i < noutput_items; i++) {
             out[i] = (OUT_T)d_FSM.OS()[ST_tmp * d_FSM.I() + in[i]];

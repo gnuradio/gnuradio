@@ -228,9 +228,9 @@ void SpectrumDisplayForm::newFrequencyData(const SpectrumUpdateEvent* spectrumUp
         spectrumUpdateEvent->getLastOfMultipleUpdateFlag();
     const gr::high_res_timer_type generatedTimestamp =
         spectrumUpdateEvent->getEventGeneratedTimestamp();
-    double* realTimeDomainDataPoints =
+    auto* realTimeDomainDataPoints =
         (double*)spectrumUpdateEvent->getRealTimeDomainPoints();
-    double* imagTimeDomainDataPoints =
+    auto* imagTimeDomainDataPoints =
         (double*)spectrumUpdateEvent->getImagTimeDomainPoints();
 
     std::vector<double*> timeDomainDataPoints;
@@ -359,7 +359,7 @@ void SpectrumDisplayForm::customEvent(QEvent* e)
         // Clear any previous display
         reset();
     } else if (e->type() == SpectrumUpdateEventType) {
-        SpectrumUpdateEvent* spectrumUpdateEvent = (SpectrumUpdateEvent*)e;
+        auto* spectrumUpdateEvent = (SpectrumUpdateEvent*)e;
         newFrequencyData(spectrumUpdateEvent);
     } else if (e->type() == SpectrumWindowCaptionEventType) {
         setWindowTitle(((SpectrumWindowCaptionEvent*)e)->getLabel());

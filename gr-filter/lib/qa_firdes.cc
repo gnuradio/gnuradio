@@ -38,8 +38,8 @@ using std::vector;
 void print_taps(std::ostream& s, vector<float>& v)
 {
     std::streamsize tmp = s.precision(9);
-    for (unsigned int i = 0; i < v.size(); i++) {
-        s << v[i] << ", ";
+    for (float i : v) {
+        s << i << ", ";
     }
     s << std::endl;
     s.precision(tmp);

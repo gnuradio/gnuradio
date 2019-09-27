@@ -87,7 +87,7 @@ int annotator_raw_impl::work(int noutput_items,
     uint64_t end_N = start_N + (uint64_t)(noutput_items);
 
     // locate queued tags that fall in this range and insert them when appropriate
-    std::vector<tag_t>::iterator i = d_queued_tags.begin();
+    auto i = d_queued_tags.begin();
     while (i != d_queued_tags.end()) {
         if ((*i).offset >= start_N && (*i).offset < end_N) {
             add_item_tag(0, (*i).offset, (*i).key, (*i).value, (*i).srcid);

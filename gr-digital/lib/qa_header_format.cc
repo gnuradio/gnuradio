@@ -40,14 +40,14 @@ xoroshiro_fill_buffer(uint8_t* buffer, unsigned int length, uint64_t seed = 42)
 {
     uint64_t rng_state[2];
     xoroshiro128p_seed(rng_state, seed);
-    uint64_t* data_ptr = reinterpret_cast<uint64_t*>(buffer);
+    auto* data_ptr = reinterpret_cast<uint64_t*>(buffer);
     for (unsigned int i = 0; i < length / 8; ++i) {
         *data_ptr = xoroshiro128p_next(rng_state);
         data_ptr++;
     }
     if (length % 8) {
         uint64_t tmp = xoroshiro128p_next(rng_state);
-        uint8_t* tmpptr = reinterpret_cast<uint8_t*>(&tmp);
+        auto* tmpptr = reinterpret_cast<uint8_t*>(&tmp);
         for (unsigned int counter = length - length % 8; counter < length; ++counter) {
             buffer[counter] = *tmpptr;
             ++tmpptr;
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(test_default_format)
     int lower8 = N & 0xFF;
 
     std::string ac = "1010101010101010"; // 0xAAAA
-    unsigned char* data =
+    auto* data =
         (unsigned char*)volk_malloc(N * sizeof(unsigned char), volk_get_alignment());
     xoroshiro_fill_buffer(data, N);
     gr::digital::header_format_default::sptr hdr_format;
@@ -102,9 +102,9 @@ BOOST_AUTO_TEST_CASE(test_default_parse)
 {
     static const int nbytes = 106;
     static const int nbits = 8 * nbytes;
-    unsigned char* bytes =
+    auto* bytes =
         (unsigned char*)volk_malloc(nbytes * sizeof(unsigned char), volk_get_alignment());
-    unsigned char* bits =
+    auto* bits =
         (unsigned char*)volk_malloc(nbits * sizeof(unsigned char), volk_get_alignment());
 
     xoroshiro_fill_buffer(bytes, nbytes);
@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE(test_counter_format)
     int lower8 = N & 0xFF;
 
     std::string ac = "1010101010101010"; // 0xAAAA
-    unsigned char* data =
+    auto* data =
         (unsigned char*)volk_malloc(N * sizeof(unsigned char), volk_get_alignment());
     xoroshiro_fill_buffer(data, N);
 
@@ -209,9 +209,9 @@ BOOST_AUTO_TEST_CASE(test_counter_parse)
 {
     static const int nbytes = 110;
     static const int nbits = 8 * nbytes;
-    unsigned char* bytes =
+    auto* bytes =
         (unsigned char*)volk_malloc(nbytes * sizeof(unsigned char), volk_get_alignment());
-    unsigned char* bits =
+    auto* bits =
         (unsigned char*)volk_malloc(nbits * sizeof(unsigned char), volk_get_alignment());
     xoroshiro_fill_buffer(bytes, nbytes);
     int index = 0;

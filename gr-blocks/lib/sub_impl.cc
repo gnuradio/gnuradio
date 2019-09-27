@@ -54,12 +54,12 @@ int sub_impl<float>::work(int noutput_items,
                           gr_vector_const_void_star& input_items,
                           gr_vector_void_star& output_items)
 {
-    float* out = (float*)output_items[0];
+    auto* out = (float*)output_items[0];
 
     int ninputs = input_items.size();
     int noi = noutput_items * d_vlen;
 
-    const float* in = (const float*)input_items[0];
+    const auto* in = (const float*)input_items[0];
     memcpy(out, in, noi * sizeof(float));
     for (int i = 1; i < ninputs; i++) {
         in = (const float*)input_items[i];

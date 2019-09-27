@@ -94,7 +94,7 @@ void rpcserver_aggregator::unregisterHandlerCallback(const std::string& id)
 void rpcserver_aggregator::registerServer(
     rpcmanager_base::rpcserver_booter_base_sptr server)
 {
-    std::vector<std::string>::iterator it(std::find(
+    auto it(std::find(
         d_registeredServers.begin(), d_registeredServers.end(), server->type()));
     if (it != d_registeredServers.end()) {
         d_serverlist.push_back(server);

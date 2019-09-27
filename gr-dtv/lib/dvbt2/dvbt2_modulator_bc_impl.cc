@@ -104,8 +104,8 @@ dvbt2_modulator_bc_impl::dvbt2_modulator_bc_impl(dvb_framesize_t framesize,
             cyclic_delay = TRUE;
             rotation_angle = (2.0 * GR_M_PI * 29.0) / 360.0;
             temp = std::exp(gr_complexd(0.0, rotation_angle));
-            for (int i = 0; i < 4; i++) {
-                m_qpsk[i] *= temp;
+            for (auto& i : m_qpsk) {
+                i *= temp;
             }
         }
         break;
@@ -121,8 +121,8 @@ dvbt2_modulator_bc_impl::dvbt2_modulator_bc_impl(dvb_framesize_t framesize,
             cyclic_delay = TRUE;
             rotation_angle = (2.0 * GR_M_PI * 16.8) / 360.0;
             temp = std::exp(gr_complexd(0.0, rotation_angle));
-            for (int i = 0; i < 16; i++) {
-                m_16qam[i] *= temp;
+            for (auto& i : m_16qam) {
+                i *= temp;
             }
         }
         break;
@@ -138,8 +138,8 @@ dvbt2_modulator_bc_impl::dvbt2_modulator_bc_impl(dvb_framesize_t framesize,
             cyclic_delay = TRUE;
             rotation_angle = (2.0 * GR_M_PI * 8.6) / 360.0;
             temp = std::exp(gr_complexd(0.0, rotation_angle));
-            for (int i = 0; i < 64; i++) {
-                m_64qam[i] *= temp;
+            for (auto& i : m_64qam) {
+                i *= temp;
             }
         }
         break;
@@ -157,8 +157,8 @@ dvbt2_modulator_bc_impl::dvbt2_modulator_bc_impl(dvb_framesize_t framesize,
             cyclic_delay = TRUE;
             rotation_angle = (2.0 * GR_M_PI * 3.576334375) / 360.0;
             temp = std::exp(gr_complexd(0.0, rotation_angle));
-            for (int i = 0; i < 256; i++) {
-                m_256qam[i] *= temp;
+            for (auto& i : m_256qam) {
+                i *= temp;
             }
         }
         break;
@@ -172,8 +172,8 @@ dvbt2_modulator_bc_impl::dvbt2_modulator_bc_impl(dvb_framesize_t framesize,
             cyclic_delay = TRUE;
             rotation_angle = (2.0 * GR_M_PI * 29.0) / 360.0;
             temp = std::exp(gr_complexd(0.0, rotation_angle));
-            for (int i = 0; i < 4; i++) {
-                m_qpsk[i] *= temp;
+            for (auto& i : m_qpsk) {
+                i *= temp;
             }
         }
         break;
@@ -198,8 +198,8 @@ int dvbt2_modulator_bc_impl::general_work(int noutput_items,
                                           gr_vector_const_void_star& input_items,
                                           gr_vector_void_star& output_items)
 {
-    const unsigned char* in = (const unsigned char*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const unsigned char*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
     const unsigned char* in_delay;
     int index, index_delay;
 

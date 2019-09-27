@@ -49,8 +49,8 @@ int add_const_ss_impl::work(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
 {
-    const short* iptr = (const short*)input_items[0];
-    short* optr = (short*)output_items[0];
+    const auto* iptr = (const short*)input_items[0];
+    auto* optr = (short*)output_items[0];
 
     int size = noutput_items;
 

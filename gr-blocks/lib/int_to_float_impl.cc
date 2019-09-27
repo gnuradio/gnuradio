@@ -51,8 +51,8 @@ int int_to_float_impl::work(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
 {
-    const int32_t* in = (const int32_t*)input_items[0];
-    float* out = (float*)output_items[0];
+    const auto* in = (const int32_t*)input_items[0];
+    auto* out = (float*)output_items[0];
 
     volk_32i_s32f_convert_32f(out, in, d_scale, d_vlen * noutput_items);
 

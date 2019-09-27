@@ -78,8 +78,8 @@ int fft_vcc_fftw::work(int noutput_items,
                        gr_vector_const_void_star& input_items,
                        gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     unsigned int input_data_size = input_signature()->sizeof_stream_item(0);
     unsigned int output_data_size = output_signature()->sizeof_stream_item(0);
@@ -104,8 +104,8 @@ int fft_vcc_fftw::work(int noutput_items,
         } else {
             if (!d_forward && d_shift) { // apply an ifft shift on the data
                 gr_complex* dst = d_fft->get_inbuf();
-                unsigned int len = (unsigned int)(floor(
-                    d_fft_size / 2.0)); // half length of complex array
+                auto len = (unsigned int)(floor(d_fft_size /
+                                                2.0)); // half length of complex array
                 memcpy(&dst[0], &in[len], sizeof(gr_complex) * (d_fft_size - len));
                 memcpy(&dst[d_fft_size - len], &in[0], sizeof(gr_complex) * len);
             } else {
@@ -118,7 +118,7 @@ int fft_vcc_fftw::work(int noutput_items,
 
         // copy result to our output
         if (d_forward && d_shift) { // apply a fft shift on the data
-            unsigned int len = (unsigned int)(ceil(d_fft_size / 2.0));
+            auto len = (unsigned int)(ceil(d_fft_size / 2.0));
             memcpy(&out[0],
                    &d_fft->get_outbuf()[len],
                    sizeof(gr_complex) * (d_fft_size - len));

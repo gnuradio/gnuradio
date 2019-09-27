@@ -71,8 +71,8 @@ int test_tag_variable_rate_ff_impl::general_work(int noutput_items,
                                                  gr_vector_const_void_star& input_items,
                                                  gr_vector_void_star& output_items)
 {
-    const float* in = (const float*)input_items[0];
-    float* out = (float*)output_items[0];
+    const auto* in = (const float*)input_items[0];
+    auto* out = (float*)output_items[0];
 
     GR_LOG_DEBUG(d_logger, "\n");
     GR_LOG_DEBUG(d_logger, boost::format("ninput_items:  %1%") % ninput_items[0]);

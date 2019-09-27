@@ -136,7 +136,7 @@ std::vector<float> generate_cpm_tfm_taps(unsigned sps, unsigned L)
 
     double sum = 0;
     for (unsigned i = 0; i < sps * L; i++) {
-        double k = (double)(((int)i) - ((int)causal_shift)); // Causal to acausal
+        auto k = (double)(((int)i) - ((int)causal_shift)); // Causal to acausal
 
         taps_d[i] = tfm_g0(k - sps, sps) + 2 * tfm_g0(k, sps) + tfm_g0(k + sps, sps);
         sum += taps_d[i];

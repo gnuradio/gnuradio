@@ -628,8 +628,8 @@ int dvbt_viterbi_decoder_impl::general_work(int noutput_items,
     int out_count = 0;
 
     for (int m = 0; m < nstreams; m++) {
-        const unsigned char* in = (const unsigned char*)input_items[m];
-        unsigned char* out = (unsigned char*)output_items[m];
+        const auto* in = (const unsigned char*)input_items[m];
+        auto* out = (unsigned char*)output_items[m];
 
         /*
          * Look for a tag that signals superframe_start and consume all input items

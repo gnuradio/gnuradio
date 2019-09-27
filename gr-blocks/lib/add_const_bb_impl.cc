@@ -49,8 +49,8 @@ int add_const_bb_impl::work(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
 {
-    const unsigned char* iptr = (const unsigned char*)input_items[0];
-    unsigned char* optr = (unsigned char*)output_items[0];
+    const auto* iptr = (const unsigned char*)input_items[0];
+    auto* optr = (unsigned char*)output_items[0];
 
     int size = noutput_items;
 

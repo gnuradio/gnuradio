@@ -50,8 +50,8 @@ int float_to_complex_impl::work(int noutput_items,
                                 gr_vector_const_void_star& input_items,
                                 gr_vector_void_star& output_items)
 {
-    float* r = (float*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto* r = (float*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     switch (input_items.size()) {
     case 1:
@@ -62,7 +62,7 @@ int float_to_complex_impl::work(int noutput_items,
     case 2: {
         // for (size_t j = 0; j < noutput_items*d_vlen; j++)
         //  out[j] = gr_complex (r[j], i[j]);
-        float* i = (float*)input_items[1];
+        auto* i = (float*)input_items[1];
         volk_32f_x2_interleave_32fc(out, r, i, noutput_items * d_vlen);
         break;
     }

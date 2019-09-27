@@ -84,7 +84,7 @@ int fir_filter_blk_impl<IN_T, OUT_T, TAP_T>::work(int noutput_items,
     gr::thread::scoped_lock l(this->d_setlock);
 
     const IN_T* in = (const IN_T*)input_items[0];
-    OUT_T* out = (OUT_T*)output_items[0];
+    auto* out = (OUT_T*)output_items[0];
 
     if (d_updated) {
         this->set_history(d_fir->ntaps());

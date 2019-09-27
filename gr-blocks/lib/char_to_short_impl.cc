@@ -50,8 +50,8 @@ int char_to_short_impl::work(int noutput_items,
                              gr_vector_const_void_star& input_items,
                              gr_vector_void_star& output_items)
 {
-    const int8_t* in = (const int8_t*)input_items[0];
-    int16_t* out = (int16_t*)output_items[0];
+    const auto* in = (const int8_t*)input_items[0];
+    auto* out = (int16_t*)output_items[0];
 
     volk_8i_convert_16i(out, in, d_vlen * noutput_items);
 

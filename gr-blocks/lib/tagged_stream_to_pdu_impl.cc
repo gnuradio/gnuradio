@@ -55,7 +55,7 @@ int tagged_stream_to_pdu_impl::work(int noutput_items,
                                     gr_vector_const_void_star& input_items,
                                     gr_vector_void_star& output_items)
 {
-    const uint8_t* in = (const uint8_t*)input_items[0];
+    const auto* in = (const uint8_t*)input_items[0];
 
     // Grab tags, throw them into dict
     get_tags_in_range(d_tags, 0, nitems_read(0), nitems_read(0) + ninput_items[0]);

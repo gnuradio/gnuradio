@@ -109,7 +109,7 @@ int viterbi_impl<T>::general_work(int noutput_items,
     int nblocks = noutput_items / d_K;
 
     for (int m = 0; m < nstreams; m++) {
-        const float* in = (const float*)input_items[m];
+        const auto* in = (const float*)input_items[m];
         T* out = (T*)output_items[m];
 
         for (int n = 0; n < nblocks; n++) {

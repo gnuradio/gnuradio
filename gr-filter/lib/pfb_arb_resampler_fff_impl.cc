@@ -135,8 +135,8 @@ int pfb_arb_resampler_fff_impl::general_work(int noutput_items,
 {
     gr::thread::scoped_lock guard(d_mutex);
 
-    float* in = (float*)input_items[0];
-    float* out = (float*)output_items[0];
+    auto* in = (float*)input_items[0];
+    auto* out = (float*)output_items[0];
 
     if (d_updated) {
         d_updated = false;

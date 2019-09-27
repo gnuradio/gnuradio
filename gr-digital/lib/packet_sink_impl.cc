@@ -106,7 +106,7 @@ int packet_sink_impl::work(int noutput_items,
                            gr_vector_const_void_star& input_items,
                            gr_vector_void_star& output_items)
 {
-    float* inbuf = (float*)input_items[0];
+    auto* inbuf = (float*)input_items[0];
     int count = 0;
 
     if (VERBOSE)

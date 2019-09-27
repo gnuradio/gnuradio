@@ -41,9 +41,9 @@ void tpb_detail::notify_upstream(block_detail* d)
     // consumed some input, and that he most likely has more output
     // buffer space available.
 
-    for (size_t i = 0; i < d->d_input.size(); i++) {
+    for (auto& i : d->d_input) {
         // Can you say, "pointer chasing?"
-        d->d_input[i]->buffer()->link()->detail()->d_tpb.set_output_changed();
+        i->buffer()->link()->detail()->d_tpb.set_output_changed();
     }
 }
 
@@ -52,8 +52,7 @@ void tpb_detail::notify_downstream(block_detail* d)
     // For each of our outputs, tell the guys downstream that they
     // have new input available.
 
-    for (size_t i = 0; i < d->d_output.size(); i++) {
-        buffer_sptr buf = d->d_output[i];
+    for (auto buf : d->d_output) {
         for (size_t j = 0, k = buf->nreaders(); j < k; j++)
             buf->reader(j)->link()->detail()->d_tpb.set_input_changed();
     }

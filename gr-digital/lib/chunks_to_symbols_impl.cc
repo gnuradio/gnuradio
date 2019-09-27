@@ -109,7 +109,7 @@ int chunks_to_symbols_impl<IN_T, OUT_T>::work(int noutput_items,
 
     for (int m = 0; m < nstreams; m++) {
         const IN_T* in = (IN_T*)input_items[m];
-        OUT_T* out = (OUT_T*)output_items[m];
+        auto* out = (OUT_T*)output_items[m];
 
         std::vector<tag_t> tags;
         this->get_tags_in_range(
@@ -121,8 +121,7 @@ int chunks_to_symbols_impl<IN_T, OUT_T>::work(int noutput_items,
 
             std::vector<tag_t> tags_now;
             tchecker.get_tags(tags_now, i + this->nitems_read(m));
-            for (unsigned int j = 0; j < tags_now.size(); j++) {
-                tag_t tag = tags_now[j];
+            for (auto tag : tags_now) {
                 this->dispatch_msg(tag.key, tag.value);
             }
             assert(((unsigned int)in[i] * d_D + d_D) <= d_symbol_table.size());

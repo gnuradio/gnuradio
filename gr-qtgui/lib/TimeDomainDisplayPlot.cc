@@ -250,9 +250,9 @@ void TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 
             // Detach and delete any tags that were plotted last time
             for (unsigned int n = 0; n < d_nplots; ++n) {
-                for (size_t i = 0; i < d_tag_markers[n].size(); i++) {
-                    d_tag_markers[n][i]->detach();
-                    delete d_tag_markers[n][i];
+                for (auto& i : d_tag_markers[n]) {
+                    i->detach();
+                    delete i;
                 }
                 d_tag_markers[n].clear();
             }
@@ -266,7 +266,7 @@ void TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                 if (mult == 2)
                     cmplx = true;
 
-                std::vector<std::vector<gr::tag_t>>::const_iterator tag = tags.begin();
+                auto tag = tags.begin();
                 for (unsigned int i = 0; i < d_nplots; i += mult) {
                     std::vector<gr::tag_t>::const_iterator t;
                     for (t = tag->begin(); t != tag->end(); t++) {

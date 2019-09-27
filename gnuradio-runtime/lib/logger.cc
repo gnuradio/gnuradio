@@ -131,7 +131,7 @@ void logger_config::reset_config(void)
     logger_config& instance = get_instance();
     stop_watch();
     std::vector<log4cpp::Category*>* loggers = log4cpp::Category::getCurrentCategories();
-    std::vector<log4cpp::Category*>::iterator logger = loggers->begin();
+    auto logger = loggers->begin();
     // We can't destroy categories but we can neuter them by removing all appenders.
     for (; logger != loggers->end(); logger++) {
         (*logger)->removeAllAppenders();
@@ -236,7 +236,7 @@ void logger_add_console_appender(logger_ptr logger,
                                  std::string target,
                                  std::string pattern)
 {
-    log4cpp::PatternLayout* layout = new log4cpp::PatternLayout();
+    auto* layout = new log4cpp::PatternLayout();
     log4cpp::Appender* app;
     if (target == "stdout")
         app = new log4cpp::OstreamAppender("ConsoleAppender::", &std::cout);
@@ -261,7 +261,7 @@ void logger_add_file_appender(logger_ptr logger,
                               bool append,
                               std::string pattern)
 {
-    log4cpp::PatternLayout* layout = new log4cpp::PatternLayout();
+    auto* layout = new log4cpp::PatternLayout();
     log4cpp::Appender* app =
         new log4cpp::FileAppender("FileAppender::" + filename, filename);
     layout->setConversionPattern(pattern);
@@ -286,7 +286,7 @@ void logger_add_rollingfile_appender(logger_ptr logger,
                                      mode_t mode,
                                      std::string pattern)
 {
-    log4cpp::PatternLayout* layout = new log4cpp::PatternLayout();
+    auto* layout = new log4cpp::PatternLayout();
     log4cpp::Appender* app = new log4cpp::RollingFileAppender(
         "RollFileAppender::" + filename, filename, filesize, bkup_index, append, mode);
     layout->setConversionPattern(pattern);
@@ -298,7 +298,7 @@ std::vector<std::string> logger_get_logger_names(void)
 {
     std::vector<std::string> names;
     std::vector<log4cpp::Category*>* loggers = log4cpp::Category::getCurrentCategories();
-    std::vector<log4cpp::Category*>::iterator logger = loggers->begin();
+    auto logger = loggers->begin();
 
     for (; logger != loggers->end(); logger++) {
         names.push_back((*logger)->getName());

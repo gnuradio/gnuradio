@@ -49,17 +49,17 @@ static void init_field_sync_common(float* p, int mask)
     p[i++] = bin_map(0);
     p[i++] = bin_map(1);
 
-    for (int j = 0; j < 511; j++) // PN511
-        p[i++] = bin_map(atsc_pn511[j]);
+    for (unsigned char j : atsc_pn511) // PN511
+        p[i++] = bin_map(j);
 
-    for (int j = 0; j < 63; j++) // PN63
-        p[i++] = bin_map(atsc_pn63[j]);
+    for (unsigned char j : atsc_pn63) // PN63
+        p[i++] = bin_map(j);
 
-    for (int j = 0; j < 63; j++) // PN63, toggled on field 2
-        p[i++] = bin_map(atsc_pn63[j] ^ mask);
+    for (unsigned char j : atsc_pn63) // PN63, toggled on field 2
+        p[i++] = bin_map(j ^ mask);
 
-    for (int j = 0; j < 63; j++) // PN63
-        p[i++] = bin_map(atsc_pn63[j]);
+    for (unsigned char j : atsc_pn63) // PN63
+        p[i++] = bin_map(j);
 }
 
 atsc_equalizer_impl::atsc_equalizer_impl()
@@ -126,8 +126,8 @@ int atsc_equalizer_impl::general_work(int noutput_items,
                                       gr_vector_const_void_star& input_items,
                                       gr_vector_void_star& output_items)
 {
-    const atsc_soft_data_segment* in = (const atsc_soft_data_segment*)input_items[0];
-    atsc_soft_data_segment* out = (atsc_soft_data_segment*)output_items[0];
+    const auto* in = (const atsc_soft_data_segment*)input_items[0];
+    auto* out = (atsc_soft_data_segment*)output_items[0];
 
     int output_produced = 0;
     int i = 0;

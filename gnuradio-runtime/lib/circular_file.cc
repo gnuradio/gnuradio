@@ -154,7 +154,7 @@ circular_file::~circular_file()
 
 bool circular_file::write(void* vdata, int nbytes)
 {
-    unsigned char* data = (unsigned char*)vdata;
+    auto* data = (unsigned char*)vdata;
     int buffer_size = d_header[HD_BUFFER_SIZE];
     int buffer_current = d_header[HD_BUFFER_CURRENT];
 
@@ -176,7 +176,7 @@ bool circular_file::write(void* vdata, int nbytes)
 
 int circular_file::read(void* vdata, int nbytes)
 {
-    unsigned char* data = (unsigned char*)vdata;
+    auto* data = (unsigned char*)vdata;
     int buffer_current = d_header[HD_BUFFER_CURRENT];
     int buffer_size = d_header[HD_BUFFER_SIZE];
     int total = 0;

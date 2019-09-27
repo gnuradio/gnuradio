@@ -109,8 +109,8 @@ int ofdm_cyclic_prefixer_impl::work(int noutput_items,
                                     gr_vector_const_void_star& input_items,
                                     gr_vector_void_star& output_items)
 {
-    gr_complex* in = (gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto* in = (gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
     int symbols_to_read = 0;
 
     // 1) Figure out if we're in freewheeling or packet mode
@@ -143,17 +143,17 @@ int ofdm_cyclic_prefixer_impl::work(int noutput_items,
     //    - Propagate tags
     if (!d_length_tag_key_str.empty()) {
         if (d_rolloff_len) {
-            for (unsigned i = 0; i < d_delay_line.size(); i++) {
-                *out++ = d_delay_line[i];
+            for (auto i : d_delay_line) {
+                *out++ = i;
             }
             d_delay_line.assign(d_delay_line.size(), 0);
         }
         std::vector<tag_t> tags;
         get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + symbols_to_read);
-        for (unsigned i = 0; i < tags.size(); i++) {
-            tags[i].offset =
-                ((tags[i].offset - nitems_read(0)) * d_output_size) + nitems_written(0);
-            add_item_tag(0, tags[i].offset, tags[i].key, tags[i].value);
+        for (auto& tag : tags) {
+            tag.offset =
+                ((tag.offset - nitems_read(0)) * d_output_size) + nitems_written(0);
+            add_item_tag(0, tag.offset, tag.key, tag.value);
         }
     } else {
         consume_each(symbols_to_read);

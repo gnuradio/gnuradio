@@ -49,8 +49,8 @@ int diff_phasor_cc_impl::work(int noutput_items,
                               gr_vector_const_void_star& input_items,
                               gr_vector_void_star& output_items)
 {
-    gr_complex const* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto const* in = (const gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
     in += 1; // ensure that i - 1 is valid.
 
     for (int i = 0; i < noutput_items; i++) {

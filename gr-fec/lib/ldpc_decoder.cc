@@ -85,8 +85,8 @@ bool ldpc_decoder::set_frame_size(unsigned int frame_size)
 
 void ldpc_decoder::generic_work(void* inBuffer, void* outBuffer)
 {
-    const float* in = (const float*)inBuffer;
-    unsigned char* out = (unsigned char*)outBuffer;
+    const auto* in = (const float*)inBuffer;
+    auto* out = (unsigned char*)outBuffer;
 
     int j = 0;
     std::vector<float> rx(d_code.get_N());

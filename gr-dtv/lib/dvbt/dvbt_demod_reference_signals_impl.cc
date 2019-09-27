@@ -125,8 +125,8 @@ int dvbt_demod_reference_signals_impl::general_work(
     gr_vector_const_void_star& input_items,
     gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const auto* in = (const gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     int symbol_index = 0;
     int frame_index = 0;

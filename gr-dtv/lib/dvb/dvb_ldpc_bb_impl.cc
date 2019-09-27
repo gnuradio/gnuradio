@@ -583,11 +583,11 @@ int dvb_ldpc_bb_impl::general_work(int noutput_items,
                                    gr_vector_const_void_star& input_items,
                                    gr_vector_void_star& output_items)
 {
-    const unsigned char* in = (const unsigned char*)input_items[0];
-    unsigned char* out = (unsigned char*)output_items[0];
+    const auto* in = (const unsigned char*)input_items[0];
+    auto* out = (unsigned char*)output_items[0];
     const unsigned char* d;
     unsigned char* p;
-    unsigned char* b = (unsigned char*)output_items[0];
+    auto* b = (unsigned char*)output_items[0];
     unsigned char* s;
     // Calculate the number of parity bits
     int plen = (frame_size_real + Xp) - nbch;

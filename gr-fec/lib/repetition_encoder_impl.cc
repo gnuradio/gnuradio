@@ -76,8 +76,8 @@ double repetition_encoder_impl::rate() { return static_cast<double>(d_rep); }
 
 void repetition_encoder_impl::generic_work(void* inbuffer, void* outbuffer)
 {
-    const unsigned char* in = (const unsigned char*)inbuffer;
-    unsigned char* out = (unsigned char*)outbuffer;
+    const auto* in = (const unsigned char*)inbuffer;
+    auto* out = (unsigned char*)outbuffer;
 
     for (unsigned int i = 0; i < d_frame_size; i++) {
         for (unsigned int r = 0; r < d_rep; r++) {

@@ -104,8 +104,8 @@ int dc_blocker_ff_impl::work(int noutput_items,
                              gr_vector_const_void_star& input_items,
                              gr_vector_void_star& output_items)
 {
-    const float* in = (const float*)input_items[0];
-    float* out = (float*)output_items[0];
+    const auto* in = (const float*)input_items[0];
+    auto* out = (float*)output_items[0];
 
     if (d_long_form) {
         float y1, y2, y3, y4, d;

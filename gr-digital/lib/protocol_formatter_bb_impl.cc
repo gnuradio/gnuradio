@@ -69,8 +69,8 @@ int protocol_formatter_bb_impl::work(int noutput_items,
                                      gr_vector_void_star& output_items)
 {
     gr::thread::scoped_lock guard(d_setlock);
-    unsigned char* out = (unsigned char*)output_items[0];
-    const unsigned char* in = (const unsigned char*)input_items[0];
+    auto* out = (unsigned char*)output_items[0];
+    const auto* in = (const unsigned char*)input_items[0];
 
     // Not really sure what to do with these tags; extract them and
     // plug them into the info dictionary?

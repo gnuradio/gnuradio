@@ -420,8 +420,8 @@ int symbol_sync_ff_impl::general_work(int noutput_items,
     if (ni <= 0)
         return 0;
 
-    const float* in = (const float*)input_items[0];
-    float* out = (float*)output_items[0];
+    const auto* in = (const float*)input_items[0];
+    auto* out = (float*)output_items[0];
 
     setup_optional_outputs(output_items);
 

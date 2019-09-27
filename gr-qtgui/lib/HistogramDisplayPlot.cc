@@ -366,7 +366,7 @@ void HistogramDisplayPlot::setMarkerAlpha(unsigned int which, int alpha)
         QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
         setLineMarker(which, sym.style());
 #else
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
+        auto* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);
@@ -407,7 +407,7 @@ void HistogramDisplayPlot::setLineColor(unsigned int which, QColor color)
         QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
         setLineMarker(which, sym.style());
 #else
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
+        auto* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);

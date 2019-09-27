@@ -83,8 +83,8 @@ io_signature::io_signature(int min_streams,
         throw std::invalid_argument("gr::io_signature(2)");
     }
 
-    for (size_t i = 0; i < sizeof_stream_items.size(); i++) {
-        if (max_streams != 0 && sizeof_stream_items[i] < 1)
+    for (int sizeof_stream_item : sizeof_stream_items) {
+        if (max_streams != 0 && sizeof_stream_item < 1)
             throw std::invalid_argument("gr::io_signature(3)");
     }
 

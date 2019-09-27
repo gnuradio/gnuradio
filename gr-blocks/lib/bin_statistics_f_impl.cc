@@ -89,7 +89,7 @@ int bin_statistics_f_impl::work(int noutput_items,
                                 gr_vector_const_void_star& input_items,
                                 gr_vector_void_star& output_items)
 {
-    const float* input = (const float*)input_items[0];
+    const auto* input = (const float*)input_items[0];
     size_t vlen = d_max.size();
 
     int n = 0;

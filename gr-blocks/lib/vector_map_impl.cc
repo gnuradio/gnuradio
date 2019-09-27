@@ -34,8 +34,8 @@ namespace blocks {
 std::vector<int> get_in_sizeofs(size_t item_size, std::vector<size_t> in_vlens)
 {
     std::vector<int> in_sizeofs;
-    for (unsigned int i = 0; i < in_vlens.size(); i++) {
-        in_sizeofs.push_back(in_vlens[i] * item_size);
+    for (unsigned long in_vlen : in_vlens) {
+        in_sizeofs.push_back(in_vlen * item_size);
     }
     return in_sizeofs;
 }
@@ -44,8 +44,8 @@ std::vector<int> get_out_sizeofs(size_t item_size,
                                  std::vector<std::vector<std::vector<size_t>>> mapping)
 {
     std::vector<int> out_sizeofs;
-    for (unsigned int i = 0; i < mapping.size(); i++) {
-        out_sizeofs.push_back(mapping[i].size() * item_size);
+    for (auto& i : mapping) {
+        out_sizeofs.push_back(i.size() * item_size);
     }
     return out_sizeofs;
 }
@@ -77,9 +77,9 @@ vector_map_impl::~vector_map_impl() {}
 void vector_map_impl::set_mapping(std::vector<std::vector<std::vector<size_t>>> mapping)
 {
     // Make sure the contents of the mapping vectors are possible.
-    for (unsigned int i = 0; i < mapping.size(); i++) {
-        for (unsigned int j = 0; j < mapping[i].size(); j++) {
-            if (mapping[i][j].size() != 2) {
+    for (auto& i : mapping) {
+        for (unsigned int j = 0; j < i.size(); j++) {
+            if (i[j].size() != 2) {
                 throw std::runtime_error(
                     "Mapping must be of the form (out_mapping_stream1, "
                     "out_mapping_stream2, ...), where out_mapping_stream1 is of the form "
@@ -87,8 +87,8 @@ void vector_map_impl::set_mapping(std::vector<std::vector<std::vector<size_t>>> 
                     "is of the form (input_stream, input_element).  This error is raised "
                     "because a mapping_element vector does not contain exactly 2 items.");
             }
-            unsigned int s = mapping[i][j][0];
-            unsigned int index = mapping[i][j][1];
+            unsigned int s = i[j][0];
+            unsigned int index = i[j][1];
             if (s >= d_in_vlens.size()) {
                 throw std::runtime_error("Stream numbers in mapping must be less than "
                                          "the number of input streams.");

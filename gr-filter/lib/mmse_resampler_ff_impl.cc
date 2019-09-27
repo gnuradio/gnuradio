@@ -89,8 +89,8 @@ int mmse_resampler_ff_impl::general_work(int noutput_items,
                                          gr_vector_const_void_star& input_items,
                                          gr_vector_void_star& output_items)
 {
-    const float* in = (const float*)input_items[0];
-    float* out = (float*)output_items[0];
+    const auto* in = (const float*)input_items[0];
+    auto* out = (float*)output_items[0];
 
     int ii = 0; // input index
     int oo = 0; // output index
@@ -109,7 +109,7 @@ int mmse_resampler_ff_impl::general_work(int noutput_items,
         consume_each(ii);
         return noutput_items;
     } else {
-        const float* rr = (const float*)input_items[1];
+        const auto* rr = (const float*)input_items[1];
         while (oo < noutput_items) {
             out[oo++] = d_resamp->interpolate(&in[ii], static_cast<float>(d_mu));
             d_mu_inc = static_cast<double>(rr[ii]);

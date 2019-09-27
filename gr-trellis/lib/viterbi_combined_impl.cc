@@ -150,7 +150,7 @@ int viterbi_combined_impl<IN_T, OUT_T>::general_work(
 
     for (int m = 0; m < nstreams; m++) {
         const IN_T* in = (const IN_T*)input_items[m];
-        OUT_T* out = (OUT_T*)output_items[m];
+        auto* out = (OUT_T*)output_items[m];
 
         for (int n = 0; n < nblocks; n++) {
             viterbi_algorithm_combined(d_FSM.I(),

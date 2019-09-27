@@ -153,8 +153,8 @@ header_payload_demux_impl::header_payload_demux_impl(
     set_msg_handler(
         msg_port_id(),
         boost::bind(&header_payload_demux_impl::parse_header_data_msg, this, _1));
-    for (size_t i = 0; i < special_tags.size(); i++) {
-        d_special_tags.push_back(pmt::string_to_symbol(special_tags[i]));
+    for (const auto& special_tag : special_tags) {
+        d_special_tags.push_back(pmt::string_to_symbol(special_tag));
         d_special_tags_last_value.push_back(pmt::PMT_NIL);
     }
 }
@@ -183,8 +183,8 @@ void header_payload_demux_impl::forecast(int noutput_items,
         }
     }
 
-    for (unsigned i = 0; i < ninput_items_required.size(); i++) {
-        ninput_items_required[i] = n_items_reqd;
+    for (int& i : ninput_items_required) {
+        i = n_items_reqd;
     }
 }
 
@@ -225,9 +225,9 @@ int header_payload_demux_impl::general_work(int noutput_items,
                                             gr_vector_const_void_star& input_items,
                                             gr_vector_void_star& output_items)
 {
-    const unsigned char* in = (const unsigned char*)input_items[PORT_INPUTDATA];
-    unsigned char* out_header = (unsigned char*)output_items[PORT_HEADER];
-    unsigned char* out_payload = (unsigned char*)output_items[PORT_PAYLOAD];
+    const auto* in = (const unsigned char*)input_items[PORT_INPUTDATA];
+    auto* out_header = (unsigned char*)output_items[PORT_HEADER];
+    auto* out_payload = (unsigned char*)output_items[PORT_PAYLOAD];
 
     const int n_input_items = (ninput_items.size() == 2)
                                   ? std::min(ninput_items[0], ninput_items[1])
@@ -503,12 +503,12 @@ void header_payload_demux_impl::copy_n_symbols(const unsigned char* in,
                       n_items_read_base,
                       n_items_read_base + n_symbols * (d_items_per_symbol + d_gi) +
                           n_padding_items);
-    for (size_t t = 0; t < tags.size(); t++) {
+    for (auto& tag : tags) {
         // The trigger tag is *not* propagated
-        if (tags[t].key == d_trigger_tag_key) {
+        if (tag.key == d_trigger_tag_key) {
             continue;
         }
-        int new_offset = tags[t].offset - n_items_read_base;
+        int new_offset = tag.offset - n_items_read_base;
         if (d_output_symbols) {
             new_offset /= (d_items_per_symbol + d_gi);
         } else if (d_gi) {
@@ -518,7 +518,7 @@ void header_payload_demux_impl::copy_n_symbols(const unsigned char* in,
             }
             new_offset = (new_offset / (d_items_per_symbol + d_gi)) + pos_on_symbol;
         }
-        add_item_tag(port, nitems_written(port) + new_offset, tags[t].key, tags[t].value);
+        add_item_tag(port, nitems_written(port) + new_offset, tag.key, tag.value);
     }
     // Advance write pointers
     // Items to produce might actually be symbols
@@ -550,8 +550,8 @@ void header_payload_demux_impl::update_special_tags(uint64_t range_start,
                           range_end,
                           d_special_tags[i]);
         std::sort(tags.begin(), tags.end(), tag_t::offset_compare);
-        for (size_t t = 0; t < tags.size(); t++) {
-            d_special_tags_last_value[i] = tags[t].value;
+        for (auto& tag : tags) {
+            d_special_tags_last_value[i] = tag.value;
         }
     }
 } /* update_special_tags() */

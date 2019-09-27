@@ -56,15 +56,15 @@ int protocol_parser_b_impl::work(int noutput_items,
                                  gr_vector_const_void_star& input_items,
                                  gr_vector_void_star& output_items)
 {
-    const unsigned char* in = (const unsigned char*)input_items[0];
+    const auto* in = (const unsigned char*)input_items[0];
 
     int count = 0;
     std::vector<pmt::pmt_t> info;
     bool ret = d_format->parse(noutput_items, in, info, count);
 
     if (ret) {
-        for (size_t i = 0; i < info.size(); i++) {
-            message_port_pub(d_out_port, info[i]);
+        for (const auto& i : info) {
+            message_port_pub(d_out_port, i);
         }
     } else {
         message_port_pub(d_out_port, pmt::PMT_F);

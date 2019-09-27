@@ -73,8 +73,8 @@ int stream_to_tagged_stream_impl::work(int noutput_items,
                                        gr_vector_void_star& output_items)
 {
     gr::thread::scoped_lock guard(d_setlock);
-    const unsigned char* in = (const unsigned char*)input_items[0];
-    unsigned char* out = (unsigned char*)output_items[0];
+    const auto* in = (const unsigned char*)input_items[0];
+    auto* out = (unsigned char*)output_items[0];
     // Copy data
     memcpy(out, in, noutput_items * d_itemsize);
     // Add tags every d_packet_len

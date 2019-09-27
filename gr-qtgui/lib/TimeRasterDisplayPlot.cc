@@ -57,7 +57,7 @@ public:
 
     virtual QwtText label(double value) const
     {
-        double secs = double(value * getSecondsPerLine());
+        auto secs = double(value * getSecondsPerLine());
         return QwtText(QString("").sprintf("%.2f", secs));
     }
 
@@ -260,10 +260,10 @@ void TimeRasterDisplayPlot::reset()
 
     double sec_per_samp = units / d_samp_rate;
 
-    QwtYScaleDraw* yScale = (QwtYScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
+    auto* yScale = (QwtYScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
     yScale->setRows(d_rows);
 
-    QwtXScaleDraw* xScale = (QwtXScaleDraw*)axisScaleDraw(QwtPlot::xBottom);
+    auto* xScale = (QwtXScaleDraw*)axisScaleDraw(QwtPlot::xBottom);
     xScale->setSecondsPerLine(sec_per_samp);
     setAxisTitle(QwtPlot::xBottom, QString("Time (%1)").arg(strunits[iunit].c_str()));
     xScale->initiateUpdate();

@@ -50,8 +50,8 @@ int g723_24_encode_sb_impl::work(int noutput_items,
                                  gr_vector_const_void_star& input_items,
                                  gr_vector_void_star& output_items)
 {
-    const short* in = (const short*)input_items[0];
-    unsigned char* out = (unsigned char*)output_items[0];
+    const auto* in = (const short*)input_items[0];
+    auto* out = (unsigned char*)output_items[0];
 
     for (int i = 0; i < noutput_items; i++)
         out[i] = g723_24_encoder(in[i], AUDIO_ENCODING_LINEAR, &d_state);

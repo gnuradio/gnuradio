@@ -50,8 +50,8 @@ int encode_ccsds_27_bb_impl::work(int noutput_items,
                                   gr_vector_const_void_star& input_items,
                                   gr_vector_void_star& output_items)
 {
-    unsigned char* in = (unsigned char*)input_items[0];
-    unsigned char* out = (unsigned char*)output_items[0];
+    auto* in = (unsigned char*)input_items[0];
+    auto* out = (unsigned char*)output_items[0];
 
     d_encstate = encode(out, in, noutput_items / 16, d_encstate);
 

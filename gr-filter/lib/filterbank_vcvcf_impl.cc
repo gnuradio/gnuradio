@@ -70,8 +70,8 @@ int filterbank_vcvcf_impl::general_work(int noutput_items,
 {
     gr::thread::scoped_lock guard(d_mutex);
 
-    gr_complex* in = (gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    auto* in = (gr_complex*)input_items[0];
+    auto* out = (gr_complex*)output_items[0];
 
     if (d_updated) {
         d_updated = false;

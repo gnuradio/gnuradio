@@ -315,7 +315,7 @@ int histogram_sink_f_impl::work(int noutput_items,
                                 gr_vector_void_star& output_items)
 {
     int n = 0, j = 0, idx = 0;
-    const float* in = (const float*)input_items[idx];
+    const auto* in = (const float*)input_items[idx];
 
     npoints_resize();
 

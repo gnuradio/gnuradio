@@ -60,8 +60,7 @@ int tagged_stream_align_impl::general_work(int noutput_items,
     if (d_have_sync) {
         int ncp = std::min(noutput_items, ninput_items[0]);
         get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + noutput_items);
-        for (size_t i = 0; i < tags.size(); i++) {
-            gr::tag_t t = tags[i];
+        for (auto t : tags) {
             int offset = (nitems_read(0) - nitems_written(0));
             t.offset -= offset;
             add_item_tag(0, t);
