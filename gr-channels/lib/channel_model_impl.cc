@@ -51,7 +51,7 @@ channel_model_impl::channel_model_impl(double noise_voltage,
 {
     d_taps = taps;
     while (d_taps.size() < 2) {
-        d_taps.push_back(0);
+        d_taps.emplace_back(0);
     }
 
     d_timing_offset = filter::mmse_resampler_cc::make(0, epsilon);
@@ -94,7 +94,7 @@ void channel_model_impl::set_taps(const std::vector<gr_complex>& taps)
 {
     d_taps = taps;
     while (d_taps.size() < 2) {
-        d_taps.push_back(0);
+        d_taps.emplace_back(0);
     }
     d_multipath->set_taps(d_taps);
 }

@@ -37,7 +37,7 @@ const std::string& rpcserver_booter_aggregator::type() { return d_type; }
 const std::vector<std::string> rpcserver_booter_aggregator::endpoints()
 {
     std::vector<std::string> ep;
-    ep.push_back(std::string("TODO"));
+    ep.emplace_back("TODO");
     return ep;
 }
 

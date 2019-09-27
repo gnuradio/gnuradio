@@ -732,13 +732,13 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
             if (HIER_BLOCK2_DETAIL_DEBUG)
                 std::cout << "hier incoming port: " << q->src() << std::endl;
             sfg->replace_endpoint(q->src(), q->dst(), false);
-            resolved_endpoints.push_back(std::pair<msg_endpoint, bool>(q->src(), false));
+            resolved_endpoints.emplace_back(q->src(), false);
         } else if (q->dst().is_hier() && q->dst().block().get() == d_owner) {
             // connection out of this block
             if (HIER_BLOCK2_DETAIL_DEBUG)
                 std::cout << "hier outgoing port: " << q->dst() << std::endl;
             sfg->replace_endpoint(q->dst(), q->src(), true);
-            resolved_endpoints.push_back(std::pair<msg_endpoint, bool>(q->dst(), true));
+            resolved_endpoints.emplace_back(q->dst(), true);
         } else {
             // internal connection only
             if (HIER_BLOCK2_DETAIL_DEBUG)

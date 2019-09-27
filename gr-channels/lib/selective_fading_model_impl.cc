@@ -102,7 +102,7 @@ int selective_fading_model_impl::work(int noutput_items,
     // pregenerate fading components
     std::vector<std::vector<gr_complex>> fading_taps;
     for (size_t j = 0; j < d_faders.size(); j++) {
-        fading_taps.push_back(std::vector<gr_complex>());
+        fading_taps.emplace_back();
         d_faders[j]->next_samples(fading_taps[j], noutput_items);
     }
 

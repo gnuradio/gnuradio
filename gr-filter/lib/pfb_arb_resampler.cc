@@ -309,7 +309,7 @@ void pfb_arb_resampler_ccc::create_taps(const std::vector<gr_complex>& newtaps,
     std::vector<gr_complex> tmp_taps;
     tmp_taps = newtaps;
     while ((float)(tmp_taps.size()) < d_int_rate * d_taps_per_filter) {
-        tmp_taps.push_back(0.0);
+        tmp_taps.emplace_back(0.0);
     }
 
     for (unsigned int i = 0; i < d_int_rate; i++) {
@@ -339,7 +339,7 @@ void pfb_arb_resampler_ccc::create_diff_taps(const std::vector<gr_complex>& newt
         }
         difftaps.push_back(tap);
     }
-    difftaps.push_back(0);
+    difftaps.emplace_back(0);
 }
 
 void pfb_arb_resampler_ccc::set_taps(const std::vector<gr_complex>& taps)
