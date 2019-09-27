@@ -36,8 +36,8 @@
 		<value>5500</value>
 		<type>real</type>
 	</param>
-	<check>($audio_pass)&gt;0</check>
-	<check>($audio_pass)&lt;($audio_stop)</check>
+	<check>$audio_pass &gt; 0</check>
+	<check>$audio_pass &lt; $audio_stop</check>
 	<sink>
 		<name>in</name>
 		<type>complex</type>
