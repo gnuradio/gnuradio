@@ -70,6 +70,7 @@ static inline void xoroshiro128p_jump(uint64_t* state)
 
     uint64_t s0 = 0;
     uint64_t s1 = 0;
+    // NOLINTNEXTLINE: clang-tidy shouldn't try to improve the C++ of this C code
     for (unsigned int i = 0; i < sizeof(JUMP) / sizeof(*JUMP); ++i) {
         for (unsigned int b = 0; b < 64; ++b) {
             if (JUMP[i] & UINT64_C(1) << b) {
