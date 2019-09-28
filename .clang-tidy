@@ -1,5 +1,5 @@
 ---
-Checks:          '-*,misc-throw-by-value-catch-by-reference,misc-static-assert,readability-container-size-empty,modernize-use-emplace,modernize-use-auto,modernize-loop-convert,modernize-use-nullptr'
+Checks:          '-*,misc-throw-by-value-catch-by-reference,misc-static-assert,readability-container-size-empty,modernize-use-emplace,modernize-use-auto,modernize-loop-convert,modernize-use-nullptr,misc-redundant-expression'
 WarningsAsErrors: ''
 HeaderFilterRegex: '\.(cc|c|cpp|h|hpp)$'
 AnalyzeTemporaryDtors: false
