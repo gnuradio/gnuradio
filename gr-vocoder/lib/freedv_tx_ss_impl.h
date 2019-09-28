@@ -64,7 +64,7 @@ private:
 
 public:
     freedv_tx_ss_impl(int mode, const std::string txt_msg, int interleave_frames);
-    ~freedv_tx_ss_impl();
+    ~freedv_tx_ss_impl() override;
 
     void set_clip(bool val);
     void set_clip(int val);
@@ -74,7 +74,7 @@ public:
     // Where all the action really happens
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace vocoder */

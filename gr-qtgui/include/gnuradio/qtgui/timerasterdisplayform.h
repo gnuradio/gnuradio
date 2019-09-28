@@ -46,9 +46,9 @@ public:
                           double cols = 1,
                           double zmax = 1,
                           QWidget* parent = nullptr);
-    ~TimeRasterDisplayForm();
+    ~TimeRasterDisplayForm() override;
 
-    TimeRasterDisplayPlot* getPlot();
+    TimeRasterDisplayPlot* getPlot() override;
 
     double numRows();
     double numCols();
@@ -59,7 +59,7 @@ public:
     double getMaxIntensity(unsigned int which);
 
 public slots:
-    void customEvent(QEvent* e);
+    void customEvent(QEvent* e) override;
 
     void setNumRows(double rows);
     void setNumCols(double cols);
@@ -68,7 +68,7 @@ public slots:
     void setNumCols(QString cols);
 
     void setSampleRate(const double samprate);
-    void setSampleRate(const QString& rate);
+    void setSampleRate(const QString& rate) override;
 
     void setIntensityRange(const double minIntensity, const double maxIntensity);
     void setMaxIntensity(const QString& m);
@@ -81,10 +81,10 @@ public slots:
 
     void setAlpha(unsigned int which, unsigned int alpha);
 
-    void autoScale(bool en = false);
+    void autoScale(bool en = false) override;
 
 private slots:
-    void newData(const QEvent* updateEvent);
+    void newData(const QEvent* updateEvent) override;
 
 private:
     double d_min_val, d_cur_min_val;

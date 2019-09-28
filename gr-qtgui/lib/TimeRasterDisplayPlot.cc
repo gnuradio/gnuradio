@@ -53,9 +53,9 @@ class QwtXScaleDraw : public QwtScaleDraw, public TimeScaleData
 public:
     QwtXScaleDraw() : QwtScaleDraw(), TimeScaleData() {}
 
-    virtual ~QwtXScaleDraw() {}
+    ~QwtXScaleDraw() override {}
 
-    virtual QwtText label(double value) const
+    QwtText label(double value) const override
     {
         auto secs = double(value * getSecondsPerLine());
         return QwtText(QString("").sprintf("%.2f", secs));
@@ -77,9 +77,9 @@ class QwtYScaleDraw : public QwtScaleDraw
 public:
     QwtYScaleDraw() : QwtScaleDraw(), d_rows(0) {}
 
-    virtual ~QwtYScaleDraw() {}
+    ~QwtYScaleDraw() override {}
 
-    virtual QwtText label(double value) const
+    QwtText label(double value) const override
     {
         if (d_rows > 0)
             value = d_rows - value;
@@ -145,7 +145,7 @@ public:
         setTrackerMode(QwtPicker::AlwaysOn);
     }
 
-    virtual ~TimeRasterZoomer() {}
+    ~TimeRasterZoomer() override {}
 
     virtual void updateTrackerText() { updateDisplay(); }
 
@@ -157,7 +157,7 @@ public:
 
 protected:
     using QwtPlotZoomer::trackerText;
-    virtual QwtText trackerText(QPoint const& p) const
+    QwtText trackerText(QPoint const& p) const override
     {
         QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
         double x = dp.x() * getSecondsPerLine();

@@ -244,11 +244,11 @@ public:
         : timing_error_detector(TED_MUELLER_AND_MULLER, 1, 2, false, false, constellation)
     {
     }
-    ~ted_mueller_and_muller(){};
+    ~ted_mueller_and_muller() override{};
 
 private:
-    float compute_error_cf();
-    float compute_error_ff();
+    float compute_error_cf() override;
+    float compute_error_ff() override;
 };
 
 /*!
@@ -282,11 +282,11 @@ public:
               TED_MOD_MUELLER_AND_MULLER, 1, 3, false, false, constellation)
     {
     }
-    ~ted_mod_mueller_and_muller(){};
+    ~ted_mod_mueller_and_muller() override{};
 
 private:
-    float compute_error_cf();
-    float compute_error_ff();
+    float compute_error_cf() override;
+    float compute_error_ff() override;
 };
 
 /*!
@@ -309,11 +309,11 @@ public:
         : timing_error_detector(TED_ZERO_CROSSING, 2, 3, false, false, constellation)
     {
     }
-    ~ted_zero_crossing(){};
+    ~ted_zero_crossing() override{};
 
 private:
-    float compute_error_cf();
-    float compute_error_ff();
+    float compute_error_cf() override;
+    float compute_error_ff() override;
 };
 
 /*!
@@ -337,11 +337,11 @@ public:
         : timing_error_detector(TED_GARDNER, 2, 3, false, false, constellation_sptr())
     {
     }
-    ~ted_gardner(){};
+    ~ted_gardner() override{};
 
 private:
-    float compute_error_cf();
-    float compute_error_ff();
+    float compute_error_cf() override;
+    float compute_error_ff() override;
 };
 
 /*!
@@ -363,11 +363,11 @@ public:
         : timing_error_detector(TED_EARLY_LATE, 2, 2, true, false, constellation_sptr())
     {
     }
-    ~ted_early_late(){};
+    ~ted_early_late() override{};
 
 private:
-    float compute_error_cf();
-    float compute_error_ff();
+    float compute_error_cf() override;
+    float compute_error_ff() override;
 };
 
 /*!
@@ -394,11 +394,11 @@ public:
               TED_DANDREA_AND_MENGALI_GEN_MSK, 2, 4, false, false, constellation_sptr())
     {
     }
-    ~ted_generalized_msk(){};
+    ~ted_generalized_msk() override{};
 
 private:
-    float compute_error_cf();
-    float compute_error_ff();
+    float compute_error_cf() override;
+    float compute_error_ff() override;
 };
 
 /*!
@@ -424,11 +424,11 @@ public:
               TED_MENGALI_AND_DANDREA_GMSK, 2, 4, false, false, constellation_sptr())
     {
     }
-    ~ted_gaussian_msk(){};
+    ~ted_gaussian_msk() override{};
 
 private:
-    float compute_error_cf();
-    float compute_error_ff();
+    float compute_error_cf() override;
+    float compute_error_ff() override;
 };
 
 /*!
@@ -459,11 +459,11 @@ public:
               TED_SIGNAL_TIMES_SLOPE_ML, 1, 1, false, true, constellation_sptr())
     {
     }
-    ~ted_signal_times_slope_ml(){};
+    ~ted_signal_times_slope_ml() override{};
 
 private:
-    float compute_error_cf();
-    float compute_error_ff();
+    float compute_error_cf() override;
+    float compute_error_ff() override;
 };
 
 /*!
@@ -494,11 +494,11 @@ public:
               TED_SIGNUM_TIMES_SLOPE_ML, 1, 1, false, true, constellation_sptr())
     {
     }
-    ~ted_signum_times_slope_ml(){};
+    ~ted_signum_times_slope_ml() override{};
 
 private:
-    float compute_error_cf();
-    float compute_error_ff();
+    float compute_error_cf() override;
+    float compute_error_ff() override;
 };
 
 } /* namespace digital */

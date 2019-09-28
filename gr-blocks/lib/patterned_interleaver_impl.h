@@ -37,7 +37,7 @@ public:
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 
     int pattern_max(std::vector<int> pattern)
     {
@@ -48,7 +48,7 @@ public:
         return mval;
     }
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     std::vector<int> d_pattern;
     std::vector<int> d_counts;

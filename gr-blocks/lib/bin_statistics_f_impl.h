@@ -54,13 +54,13 @@ private:
 protected:
     std::vector<float> d_max; // per bin maxima
 
-    size_t vlen() const { return d_vlen; }
-    double center_freq() const { return d_center_freq; }
-    msg_queue::sptr msgq() const { return d_msgq; }
+    size_t vlen() const override { return d_vlen; }
+    double center_freq() const override { return d_center_freq; }
+    msg_queue::sptr msgq() const override { return d_msgq; }
 
-    virtual void reset_stats();
-    virtual void accrue_stats(const float* input);
-    virtual void send_stats();
+    void reset_stats() override;
+    void accrue_stats(const float* input) override;
+    void send_stats() override;
 
 public:
     bin_statistics_f_impl(unsigned int vlen,
@@ -68,11 +68,11 @@ public:
                           feval_dd* tune,
                           size_t tune_delay,
                           size_t dwell_delay);
-    ~bin_statistics_f_impl();
+    ~bin_statistics_f_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

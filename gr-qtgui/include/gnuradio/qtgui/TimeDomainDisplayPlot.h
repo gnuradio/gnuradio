@@ -45,7 +45,7 @@ class TimeDomainDisplayPlot : public DisplayPlot
 
 public:
     TimeDomainDisplayPlot(int nplots, QWidget*);
-    virtual ~TimeDomainDisplayPlot();
+    ~TimeDomainDisplayPlot() override;
 
     void plotNewData(const std::vector<double*> dataPoints,
                      const int64_t numDataPoints,
@@ -53,7 +53,7 @@ public:
                      const std::vector<std::vector<gr::tag_t>>& tags =
                          std::vector<std::vector<gr::tag_t>>());
 
-    void replot();
+    void replot() override;
 
     void stemPlot(bool en);
 
@@ -71,8 +71,8 @@ public slots:
     void setSemilogx(bool en);
     void setSemilogy(bool en);
 
-    void legendEntryChecked(QwtPlotItem* plotItem, bool on);
-    void legendEntryChecked(const QVariant& plotItem, bool on, int index);
+    void legendEntryChecked(QwtPlotItem* plotItem, bool on) override;
+    void legendEntryChecked(const QVariant& plotItem, bool on, int index) override;
 
     void enableTagMarker(unsigned int which, bool en);
 

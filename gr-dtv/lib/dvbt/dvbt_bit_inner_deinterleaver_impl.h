@@ -50,14 +50,14 @@ public:
                                       dvb_constellation_t constellation,
                                       dvbt_hierarchy_t hierarchy,
                                       dvbt_transmission_mode_t transmission);
-    ~dvbt_bit_inner_deinterleaver_impl();
+    ~dvbt_bit_inner_deinterleaver_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } // namespace dtv

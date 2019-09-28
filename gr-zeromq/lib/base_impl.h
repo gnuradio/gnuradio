@@ -33,7 +33,7 @@ class base_impl : public virtual gr::sync_block
 {
 public:
     base_impl(int type, size_t itemsize, size_t vlen, int timeout, bool pass_tags);
-    virtual ~base_impl();
+    ~base_impl() override;
 
 protected:
     std::string last_endpoint();

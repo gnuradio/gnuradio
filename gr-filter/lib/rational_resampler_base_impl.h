@@ -49,22 +49,22 @@ public:
                                  unsigned decimation,
                                  const std::vector<TAP_T>& taps);
 
-    ~rational_resampler_base_impl();
+    ~rational_resampler_base_impl() override;
 
     unsigned history() const { return d_history; }
     void set_history(unsigned history) { d_history = history; }
 
-    unsigned interpolation() const { return d_interpolation; }
-    unsigned decimation() const { return d_decimation; }
+    unsigned interpolation() const override { return d_interpolation; }
+    unsigned decimation() const override { return d_decimation; }
 
-    void set_taps(const std::vector<TAP_T>& taps);
-    std::vector<TAP_T> taps() const;
+    void set_taps(const std::vector<TAP_T>& taps) override;
+    std::vector<TAP_T> taps() const override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

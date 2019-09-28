@@ -41,9 +41,9 @@ class QTGUI_API ConstellationDisplayForm : public DisplayForm
 
 public:
     ConstellationDisplayForm(int nplots = 1, QWidget* parent = nullptr);
-    ~ConstellationDisplayForm();
+    ~ConstellationDisplayForm() override;
 
-    ConstellationDisplayPlot* getPlot();
+    ConstellationDisplayPlot* getPlot() override;
 
     int getNPoints() const;
     gr::qtgui::trigger_mode getTriggerMode() const;
@@ -53,13 +53,13 @@ public:
     std::string getTriggerTagKey() const;
 
 public slots:
-    void customEvent(QEvent* e);
+    void customEvent(QEvent* e) override;
     void setNPoints(const int);
 
-    void setSampleRate(const QString& samprate);
+    void setSampleRate(const QString& samprate) override;
     void setYaxis(double min, double max);
     void setXaxis(double min, double max);
-    void autoScale(bool en);
+    void autoScale(bool en) override;
 
     void updateTrigger(gr::qtgui::trigger_mode mode);
     void setTriggerMode(gr::qtgui::trigger_mode mode);
@@ -71,7 +71,7 @@ public slots:
     void setTriggerTagKey(const std::string& s);
 
 private slots:
-    void newData(const QEvent*);
+    void newData(const QEvent*) override;
 
 private:
     QIntValidator* d_int_validator;

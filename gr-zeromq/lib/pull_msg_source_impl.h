@@ -44,7 +44,7 @@ public:
     bool d_finished;
 
     pull_msg_source_impl(char* address, int timeout);
-    ~pull_msg_source_impl();
+    ~pull_msg_source_impl() override;
 
     bool start() override;
     bool stop() override;

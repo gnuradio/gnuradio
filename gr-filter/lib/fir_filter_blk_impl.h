@@ -39,14 +39,14 @@ private:
 public:
     fir_filter_blk_impl(int decimation, const std::vector<TAP_T>& taps);
 
-    ~fir_filter_blk_impl();
+    ~fir_filter_blk_impl() override;
 
-    void set_taps(const std::vector<TAP_T>& taps);
-    std::vector<TAP_T> taps() const;
+    void set_taps(const std::vector<TAP_T>& taps) override;
+    std::vector<TAP_T> taps() const override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

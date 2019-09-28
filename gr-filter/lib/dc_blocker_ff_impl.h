@@ -59,15 +59,15 @@ private:
 public:
     dc_blocker_ff_impl(int D, bool long_form);
 
-    ~dc_blocker_ff_impl();
+    ~dc_blocker_ff_impl() override;
 
-    int group_delay();
+    int group_delay() override;
 
     // int set_length(int D);
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

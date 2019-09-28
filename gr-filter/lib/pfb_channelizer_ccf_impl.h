@@ -49,19 +49,19 @@ public:
                              const std::vector<float>& taps,
                              float oversample_rate);
 
-    ~pfb_channelizer_ccf_impl();
+    ~pfb_channelizer_ccf_impl() override;
 
-    void set_taps(const std::vector<float>& taps);
-    void print_taps();
-    std::vector<std::vector<float>> taps() const;
+    void set_taps(const std::vector<float>& taps) override;
+    void print_taps() override;
+    std::vector<std::vector<float>> taps() const override;
 
-    void set_channel_map(const std::vector<int>& map);
-    std::vector<int> channel_map() const;
+    void set_channel_map(const std::vector<int>& map) override;
+    std::vector<int> channel_map() const override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

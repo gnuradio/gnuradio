@@ -43,9 +43,9 @@ class FreqDisplayForm : public DisplayForm
 
 public:
     FreqDisplayForm(int nplots = 1, QWidget* parent = nullptr);
-    ~FreqDisplayForm();
+    ~FreqDisplayForm() override;
 
-    FrequencyDisplayPlot* getPlot();
+    FrequencyDisplayPlot* getPlot() override;
 
     int getFFTSize() const;
     float getFFTAverage() const;
@@ -65,9 +65,9 @@ public:
     bool checkClicked();
 
 public slots:
-    void customEvent(QEvent* e);
+    void customEvent(QEvent* e) override;
 
-    void setSampleRate(const QString& samprate);
+    void setSampleRate(const QString& samprate) override;
     void setFFTSize(const int);
     void setFFTAverage(const float);
     void setFFTWindowType(const gr::filter::firdes::win_type);
@@ -77,7 +77,7 @@ public slots:
     void setYLabel(const std::string& label, const std::string& unit = "");
     void setYMax(const QString& m);
     void setYMin(const QString& m);
-    void autoScale(bool en);
+    void autoScale(bool en) override;
     void autoScaleShot();
     void setPlotPosHalf(bool half);
     void clearMaxHold();
@@ -121,8 +121,8 @@ signals:
 
 
 private slots:
-    void newData(const QEvent* updateEvent);
-    void onPlotPointSelected(const QPointF p);
+    void newData(const QEvent* updateEvent) override;
+    void onPlotPointSelected(const QPointF p) override;
 
 private:
     uint64_t d_num_real_data_points;

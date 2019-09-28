@@ -44,7 +44,7 @@ public:
     bool d_finished;
 
     req_msg_source_impl(char* address, int timeout);
-    ~req_msg_source_impl();
+    ~req_msg_source_impl() override;
 
     bool start() override;
     bool stop() override;

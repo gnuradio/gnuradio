@@ -40,17 +40,17 @@ private:
 public:
     goertzel_fc_impl(int rate, int len, float freq);
 
-    ~goertzel_fc_impl();
+    ~goertzel_fc_impl() override;
 
-    void set_freq(float freq);
-    void set_rate(int rate);
+    void set_freq(float freq) override;
+    void set_rate(int rate) override;
 
-    float freq() { return d_freq; }
-    int rate() { return d_rate; }
+    float freq() override { return d_freq; }
+    int rate() override { return d_rate; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace fft */

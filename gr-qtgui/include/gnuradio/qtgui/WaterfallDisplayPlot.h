@@ -57,7 +57,7 @@ class WaterfallDisplayPlot : public DisplayPlot
 
 public:
     WaterfallDisplayPlot(int nplots, QWidget*);
-    virtual ~WaterfallDisplayPlot();
+    ~WaterfallDisplayPlot() override;
 
     void resetAxis();
 
@@ -85,7 +85,7 @@ public:
     double getMinIntensity(unsigned int which) const;
     double getMaxIntensity(unsigned int which) const;
 
-    void replot(void);
+    void replot(void) override;
     void clearData();
 
     int getIntensityColorMapType(unsigned int) const;
@@ -107,7 +107,7 @@ public slots:
     void setUserDefinedLowIntensityColor(QColor);
     void setUserDefinedHighIntensityColor(QColor);
     void setPlotPosHalf(bool half);
-    void disableLegend();
+    void disableLegend() override;
     void enableLegend();
     void enableLegend(bool en);
     void setNumRows(int nrows);

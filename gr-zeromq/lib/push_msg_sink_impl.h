@@ -38,7 +38,7 @@ private:
 
 public:
     push_msg_sink_impl(char* address, int timeout);
-    ~push_msg_sink_impl();
+    ~push_msg_sink_impl() override;
 
     void handler(pmt::pmt_t msg);
     std::string last_endpoint() override

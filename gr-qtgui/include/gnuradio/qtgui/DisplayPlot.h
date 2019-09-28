@@ -126,9 +126,9 @@ class DisplayPlot : public QwtPlot
 
 public:
     DisplayPlot(int nplots, QWidget*);
-    virtual ~DisplayPlot();
+    ~DisplayPlot() override;
 
-    virtual void replot() = 0;
+    void replot() override = 0;
 
     const QColor getLineColor1() const;
     const QColor getLineColor2() const;

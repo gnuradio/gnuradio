@@ -44,7 +44,7 @@ class QTGUI_API DisplayForm : public QWidget
 
 public:
     DisplayForm(int nplots = 1, QWidget* parent = nullptr);
-    ~DisplayForm();
+    ~DisplayForm() override;
 
     virtual DisplayPlot* getPlot() = 0;
     void Reset();
@@ -53,11 +53,11 @@ public:
     void enableMenu(bool en = true);
 
 public slots:
-    void resizeEvent(QResizeEvent* e);
-    void mousePressEvent(QMouseEvent* e);
-    virtual void customEvent(QEvent* e) = 0;
+    void resizeEvent(QResizeEvent* e) override;
+    void mousePressEvent(QMouseEvent* e) override;
+    void customEvent(QEvent* e) override = 0;
 
-    void closeEvent(QCloseEvent* e);
+    void closeEvent(QCloseEvent* e) override;
 
     void setUpdateTime(double t);
 

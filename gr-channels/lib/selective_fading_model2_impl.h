@@ -63,25 +63,25 @@ public:
                                  std::vector<float> delay_maxdev,
                                  std::vector<float> mags,
                                  int ntaps);
-    ~selective_fading_model2_impl();
-    void setup_rpc();
+    ~selective_fading_model2_impl() override;
+    void setup_rpc() override;
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
     std::vector<gr_complex> d_taps;
 
-    virtual float fDTs() { return d_faders[0]->d_fDTs; }
-    virtual float K() { return d_faders[0]->d_K; }
-    virtual float step() { return d_faders[0]->d_step; }
+    float fDTs() override { return d_faders[0]->d_fDTs; }
+    float K() override { return d_faders[0]->d_K; }
+    float step() override { return d_faders[0]->d_step; }
 
-    virtual void set_fDTs(float fDTs)
+    void set_fDTs(float fDTs) override
     {
         BOOST_FOREACH (gr::channels::flat_fader_impl* fader, d_faders) {
             fader->d_fDTs = fDTs;
             fader->d_step = powf(0.00125 * fDTs, 1.1);
         }
     }
-    virtual void set_K(float K)
+    void set_K(float K) override
     {
         BOOST_FOREACH (gr::channels::flat_fader_impl* fader, d_faders) {
             fader->d_K = K;
@@ -89,7 +89,7 @@ public:
             fader->scale_nlos = (1 / sqrtf(fader->d_K + 1));
         }
     }
-    virtual void set_step(float step)
+    void set_step(float step) override
     {
         BOOST_FOREACH (gr::channels::flat_fader_impl* fader, d_faders) {
             fader->d_step = step;

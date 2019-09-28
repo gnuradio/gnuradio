@@ -41,7 +41,7 @@ public:
     NumberDisplayForm(int nplots = 1,
                       gr::qtgui::graph_t type = gr::qtgui::NUM_GRAPH_HORIZ,
                       QWidget* parent = nullptr);
-    ~NumberDisplayForm();
+    ~NumberDisplayForm() override;
 
     gr::qtgui::graph_t graphType() const;
     QColor colorMin(unsigned int which) const;
@@ -56,8 +56,8 @@ public:
     float factor(unsigned int which) const;
 
 public slots:
-    void mousePressEvent(QMouseEvent* e);
-    void customEvent(QEvent* e);
+    void mousePressEvent(QMouseEvent* e) override;
+    void customEvent(QEvent* e) override;
     void setStop(bool on);
     void setStop();
     void setGraphType(const gr::qtgui::graph_t type);

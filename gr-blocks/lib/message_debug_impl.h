@@ -76,10 +76,10 @@ private:
 
 public:
     message_debug_impl();
-    ~message_debug_impl();
+    ~message_debug_impl() override;
 
-    int num_messages();
-    pmt::pmt_t get_message(int i);
+    int num_messages() override;
+    pmt::pmt_t get_message(int i) override;
 };
 
 } /* namespace blocks */

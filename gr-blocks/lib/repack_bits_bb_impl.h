@@ -41,7 +41,7 @@ private:
     endianness_t d_endianness;
 
 protected:
-    int calculate_output_stream_length(const gr_vector_int& ninput_items);
+    int calculate_output_stream_length(const gr_vector_int& ninput_items) override;
 
 public:
     repack_bits_bb_impl(int k,
@@ -49,14 +49,14 @@ public:
                         const std::string& len_tag_key,
                         bool align_output,
                         endianness_t endianness = GR_LSB_FIRST);
-    ~repack_bits_bb_impl();
-    void set_k_and_l(
-        int k,
-        int l); // callback function for bits per input byte k and bits per output byte l
+    ~repack_bits_bb_impl() override;
+    void set_k_and_l(int k,
+                     int l) override; // callback function for bits per input byte k and
+                                      // bits per output byte l
     int work(int noutput_items,
              gr_vector_int& ninput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace blocks

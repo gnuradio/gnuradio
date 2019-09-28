@@ -36,11 +36,11 @@ private:
 
 public:
     pack_k_bits_bb_impl(unsigned k);
-    ~pack_k_bits_bb_impl();
+    ~pack_k_bits_bb_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

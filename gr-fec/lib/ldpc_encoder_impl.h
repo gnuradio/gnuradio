@@ -37,7 +37,7 @@ class ldpc_encoder_impl : public ldpc_encoder
 {
 private:
     // plug into the generic fec api
-    void generic_work(void* inBuffer, void* outbuffer);
+    void generic_work(void* inBuffer, void* outbuffer) override;
 
     // memory allocated for processing
     int outputSize;
@@ -47,12 +47,12 @@ private:
 
 public:
     ldpc_encoder_impl(std::string alist_file);
-    ~ldpc_encoder_impl();
+    ~ldpc_encoder_impl() override;
 
-    double rate() { return (1.0 * get_input_size() / get_output_size()); }
-    bool set_frame_size(unsigned int frame_size) { return false; }
-    int get_output_size();
-    int get_input_size();
+    double rate() override { return (1.0 * get_input_size() / get_output_size()); }
+    bool set_frame_size(unsigned int frame_size) override { return false; }
+    int get_output_size() override;
+    int get_input_size() override;
 };
 
 } // namespace fec

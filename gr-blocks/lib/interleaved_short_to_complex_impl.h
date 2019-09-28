@@ -36,11 +36,11 @@ private:
 public:
     interleaved_short_to_complex_impl(bool vector_input = false, bool swap = false);
 
-    void set_swap(bool swap);
+    void set_swap(bool swap) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

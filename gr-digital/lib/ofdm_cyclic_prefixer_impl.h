@@ -46,19 +46,19 @@ private:
                                           // zeroes (i.e. no history!)
 
 protected:
-    int calculate_output_stream_length(const gr_vector_int& ninput_items);
+    int calculate_output_stream_length(const gr_vector_int& ninput_items) override;
 
 public:
     ofdm_cyclic_prefixer_impl(size_t input_size,
                               size_t output_size,
                               int rolloff_len,
                               const std::string& len_tag_key);
-    ~ofdm_cyclic_prefixer_impl();
+    ~ofdm_cyclic_prefixer_impl() override;
 
     int work(int noutput_items,
              gr_vector_int& ninput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace digital
