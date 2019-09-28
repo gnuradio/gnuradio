@@ -208,9 +208,9 @@ int fll_band_edge_cc_impl::work(int noutput_items,
     const auto* in = (const gr_complex*)input_items[0];
     auto* out = (gr_complex*)output_items[0];
 
-    float* frq = NULL;
-    float* phs = NULL;
-    float* err = NULL;
+    float* frq = nullptr;
+    float* phs = nullptr;
+    float* err = nullptr;
     if (output_items.size() == 4) {
         frq = (float*)output_items[1];
         phs = (float*)output_items[2];

@@ -62,7 +62,7 @@ codec2_encode_sp_impl::codec2_encode_sp_impl(int mode,
                      samples_per_frame),
       d_frame_buf((bits_per_frame + 7) / 8, 0)
 {
-    if ((d_codec2 = codec2_create(mode)) == 0)
+    if ((d_codec2 = codec2_create(mode)) == nullptr)
         throw std::runtime_error("codec2_encode_sp_impl: codec2_create failed");
     d_samples_per_frame = samples_per_frame;
     d_bits_per_frame = bits_per_frame;

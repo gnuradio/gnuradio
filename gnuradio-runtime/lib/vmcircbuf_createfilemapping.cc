@@ -178,7 +178,7 @@ vmcircbuf_createfilemapping::~vmcircbuf_createfilemapping()
 //      The factory interface
 // ----------------------------------------------------------------
 
-gr::vmcircbuf_factory* vmcircbuf_createfilemapping_factory::s_the_factory = 0;
+gr::vmcircbuf_factory* vmcircbuf_createfilemapping_factory::s_the_factory = nullptr;
 
 gr::vmcircbuf_factory* vmcircbuf_createfilemapping_factory::singleton()
 {
@@ -207,7 +207,7 @@ gr::vmcircbuf* vmcircbuf_createfilemapping_factory::make(int size)
     try {
         return new vmcircbuf_createfilemapping(size);
     } catch (...) {
-        return 0;
+        return nullptr;
     }
 }
 

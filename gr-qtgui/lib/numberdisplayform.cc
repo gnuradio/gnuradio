@@ -207,7 +207,7 @@ void NumberDisplayForm::saveFigure()
                                "(*.png);;Bitmap file (*.bmp);;TIFF file (*.tiff)"));
 
     QString filename, filetype;
-    QFileDialog* filebox = new QFileDialog(0, "Save Image", "./", types);
+    QFileDialog* filebox = new QFileDialog(nullptr, "Save Image", "./", types);
     filebox->setViewMode(QFileDialog::Detail);
     if (filebox->exec()) {
         filename = filebox->selectedFiles()[0];
@@ -265,7 +265,7 @@ void NumberDisplayForm::setGraphType(const gr::qtgui::graph_t type)
 
     // Remove all widgets from the layout
     QLayoutItem* item;
-    while ((item = d_layout->takeAt(0)) != NULL) {
+    while ((item = d_layout->takeAt(0)) != nullptr) {
         d_layout->removeItem(item);
     }
 

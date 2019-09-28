@@ -72,7 +72,7 @@ interleaver::interleaver(const char* name)
 {
     FILE* interleaverfile;
 
-    if ((interleaverfile = fopen(name, "r")) == NULL)
+    if ((interleaverfile = fopen(name, "r")) == nullptr)
         throw std::runtime_error("file open error in interleaver()");
     // printf("file open error in interleaver()\n");
 

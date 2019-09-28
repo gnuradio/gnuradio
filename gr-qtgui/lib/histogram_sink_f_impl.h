@@ -65,7 +65,7 @@ public:
                           double xmax,
                           const std::string& name,
                           int nconnections,
-                          QWidget* parent = NULL);
+                          QWidget* parent = nullptr);
     ~histogram_sink_f_impl();
 
     bool check_topology(int ninputs, int noutputs);

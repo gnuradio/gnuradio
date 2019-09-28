@@ -54,7 +54,7 @@ void msg_queue::insert_tail(message::sptr msg)
     while (full_p())
         d_not_full.wait(guard);
 
-    if (d_tail == 0) {
+    if (d_tail == nullptr) {
         d_tail = d_head = msg;
         // msg->d_next = 0;
         msg->d_next.reset();
@@ -73,11 +73,11 @@ message::sptr msg_queue::delete_head()
     gr::thread::scoped_lock guard(d_mutex);
     message::sptr m;
 
-    while ((m = d_head) == 0)
+    while ((m = d_head) == nullptr)
         d_not_empty.wait(guard);
 
     d_head = m->d_next;
-    if (d_head == 0) {
+    if (d_head == nullptr) {
         // d_tail = 0;
         d_tail.reset();
     }
@@ -94,13 +94,13 @@ message::sptr msg_queue::delete_head_nowait()
     gr::thread::scoped_lock guard(d_mutex);
     message::sptr m;
 
-    if ((m = d_head) == 0) {
+    if ((m = d_head) == nullptr) {
         // return 0;
         return message::sptr();
     }
 
     d_head = m->d_next;
-    if (d_head == 0) {
+    if (d_head == nullptr) {
         // d_tail = 0;
         d_tail.reset();
     }
@@ -116,7 +116,7 @@ void msg_queue::flush()
 {
     message::sptr m;
 
-    while ((m = delete_head_nowait()) != 0)
+    while ((m = delete_head_nowait()) != nullptr)
         ;
 }
 

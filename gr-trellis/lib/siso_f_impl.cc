@@ -180,7 +180,7 @@ int siso_f_impl::general_work(int noutput_items,
     // for(int i=0;i<ninput_items.size();i++)
     // printf("general_work:Input items available:  %d\n",ninput_items[i]);
 
-    float (*p2min)(float, float) = NULL;
+    float (*p2min)(float, float) = nullptr;
     if (d_SISO_TYPE == TRELLIS_MIN_SUM)
         p2min = &min;
     else if (d_SISO_TYPE == TRELLIS_SUM_PRODUCT)

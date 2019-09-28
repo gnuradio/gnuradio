@@ -71,7 +71,7 @@ dvbt_demap_impl::dvbt_demap_impl(int nsize,
 
     d_constellation_points = (gr_complex*)volk_malloc(
         sizeof(gr_complex) * d_constellation_size, volk_get_alignment());
-    if (d_constellation_points == NULL) {
+    if (d_constellation_points == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "DVB-T Demap, cannot allocate memory for d_constellation_points.");
         throw std::bad_alloc();
@@ -79,7 +79,7 @@ dvbt_demap_impl::dvbt_demap_impl(int nsize,
 
     d_sq_dist =
         (float*)volk_malloc(sizeof(float) * d_constellation_size, volk_get_alignment());
-    if (d_sq_dist == NULL) {
+    if (d_sq_dist == nullptr) {
         GR_LOG_FATAL(d_logger, "DVB-T Demap, cannot allocate memory for d_sq_dist.");
         volk_free(d_constellation_points);
         throw std::bad_alloc();

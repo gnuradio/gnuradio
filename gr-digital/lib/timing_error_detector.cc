@@ -34,7 +34,7 @@ namespace digital {
 timing_error_detector* timing_error_detector::make(enum ted_type type,
                                                    constellation_sptr constellation)
 {
-    timing_error_detector* ret = NULL;
+    timing_error_detector* ret = nullptr;
     switch (type) {
     case TED_NONE:
         break;

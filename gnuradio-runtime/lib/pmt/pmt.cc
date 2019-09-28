@@ -780,7 +780,7 @@ bool is_msg_accepter(const pmt_t& obj)
         return false;
 
     boost::any r = any_ref(obj);
-    return boost::any_cast<gr::messages::msg_accepter_sptr>(&r) != 0;
+    return boost::any_cast<gr::messages::msg_accepter_sptr>(&r) != nullptr;
 }
 
 //! make a msg_accepter

@@ -137,7 +137,7 @@ int pccc_decoder_combined_blk_impl<IN_T, OUT_T>::general_work(
     gr::thread::scoped_lock guard(this->d_setlock);
     int nblocks = noutput_items / d_blocklength;
 
-    float (*p2min)(float, float) = NULL;
+    float (*p2min)(float, float) = nullptr;
     if (d_SISO_TYPE == TRELLIS_MIN_SUM)
         p2min = &min;
     else if (d_SISO_TYPE == TRELLIS_SUM_PRODUCT)

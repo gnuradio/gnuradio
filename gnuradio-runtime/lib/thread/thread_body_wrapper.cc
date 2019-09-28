@@ -73,7 +73,7 @@ void mask_signals()
 #ifdef SIGXFSZ
     sigaddset(&new_set, SIGXFSZ);
 #endif
-    r = pthread_sigmask(SIG_BLOCK, &new_set, 0);
+    r = pthread_sigmask(SIG_BLOCK, &new_set, nullptr);
     if (r != 0)
         perror("pthread_sigmask");
 }

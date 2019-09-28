@@ -66,7 +66,7 @@ edit_box_msg_impl::edit_box_msg_impl(data_type_t type,
     d_argv = new char;
     d_argv[0] = '\0';
 
-    if (qApp != NULL) {
+    if (qApp != nullptr) {
         d_qApplication = qApp;
     } else {
         d_qApplication = new QApplication(d_argc, &d_argv);
@@ -117,7 +117,7 @@ edit_box_msg_impl::edit_box_msg_impl(data_type_t type,
         }
     }
 
-    d_label = NULL;
+    d_label = nullptr;
     if (!label.empty()) {
         d_label = new QLabel(QString(label.c_str()));
         d_vlayout->addWidget(d_label);

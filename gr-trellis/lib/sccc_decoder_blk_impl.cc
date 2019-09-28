@@ -109,7 +109,7 @@ int sccc_decoder_blk_impl<T>::general_work(int noutput_items,
                                            gr_vector_void_star& output_items)
 {
     int nblocks = noutput_items / d_blocklength;
-    float (*p2min)(float, float) = NULL;
+    float (*p2min)(float, float) = nullptr;
 
     if (d_SISO_TYPE == TRELLIS_MIN_SUM)
         p2min = &min;

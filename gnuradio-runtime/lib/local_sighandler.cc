@@ -53,7 +53,7 @@ local_sighandler::local_sighandler(int signum, void (*new_handler)(int))
 local_sighandler::~local_sighandler() noexcept(false)
 {
 #ifdef HAVE_SIGACTION
-    if (sigaction(d_signum, &d_old_action, 0) < 0) {
+    if (sigaction(d_signum, &d_old_action, nullptr) < 0) {
         perror("sigaction (restore old)");
         throw std::runtime_error("sigaction");
     }

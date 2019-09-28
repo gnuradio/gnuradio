@@ -41,7 +41,7 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
     d_layout->setColumnStretch(0, 1);
     setLayout(d_layout);
 
-    d_controlpanel = NULL;
+    d_controlpanel = nullptr;
 
     d_num_real_data_points = 1024;
     d_fftsize = 1024;
@@ -238,7 +238,7 @@ void FreqDisplayForm::teardownControlPanel()
     if (d_controlpanel) {
         d_layout->removeItem(d_controlpanel);
         delete d_controlpanel;
-        d_controlpanel = NULL;
+        d_controlpanel = nullptr;
     }
     d_controlpanelmenu->setChecked(false);
 }

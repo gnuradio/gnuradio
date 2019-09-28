@@ -42,7 +42,7 @@ class SpectrumDisplayForm : public QWidget, public Ui::SpectrumDisplayForm
     Q_OBJECT
 
 public:
-    SpectrumDisplayForm(QWidget* parent = 0);
+    SpectrumDisplayForm(QWidget* parent = nullptr);
     ~SpectrumDisplayForm();
 
     void setSystem(SpectrumGUIClass* newSystem,

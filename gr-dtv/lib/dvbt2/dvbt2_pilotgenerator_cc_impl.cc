@@ -1144,7 +1144,7 @@ dvbt2_pilotgenerator_cc_impl::dvbt2_pilotgenerator_cc_impl(
     equalization_enable = equalization;
     ofdm_fft_size = vlength;
     ofdm_fft = new (std::nothrow) fft::fft_complex(ofdm_fft_size, false, 1);
-    if (ofdm_fft == NULL) {
+    if (ofdm_fft == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "Pilot Generator and IFFT, cannot allocate memory for ofdm_fft.");
         throw std::bad_alloc();

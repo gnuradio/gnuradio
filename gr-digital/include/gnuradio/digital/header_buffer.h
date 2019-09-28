@@ -47,9 +47,9 @@ namespace digital {
  * This page describes how to work with the different modes,
  * transmit or receive. The class is instructed as to which mode
  * it is in by how the constructor is called. If the constructor
- * is passed a valid array (non NULL), then it is in transmit mode
+ * is passed a valid array (non-nullptr), then it is in transmit mode
  * and will pack this buffer with the header fields. If that
- * buffer is NULL, the object is in receive mode.
+ * buffer is a null-pointer, the object is in receive mode.
  *
  * \section header_buffer_tx Transmit Mode
  *
@@ -178,12 +178,12 @@ public:
      * Create a header buffer object with a pre-allocated buffer, \p
      * buffer, to hold the formatted header data.
      *
-     * If \p buffer is set to NULL, then this object is in receive
+     * If \p buffer is set to nullptr, then this object is in receive
      * mode meant to receive bits from an incoming data stream and
      * provide the ability to extract fields. In this mode, calls to
      * add_field are invalid and will be nops.
      */
-    header_buffer(uint8_t* buffer = NULL);
+    header_buffer(uint8_t* buffer = nullptr);
 
     /*!
      * Class destructor.

@@ -45,7 +45,7 @@ probe_mpsk_snr_est_c_impl::probe_mpsk_snr_est_c_impl(snr_est_type_t type,
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::make(0, 0, 0))
 {
-    d_snr_est = NULL;
+    d_snr_est = nullptr;
 
     d_type = type;
     d_nsamples = msg_nsamples;

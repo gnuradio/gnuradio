@@ -131,7 +131,7 @@ public:
                      bool is_pair = true,
                      bool is_static = true,
                      const std::string& key = "",
-                     QWidget* parent = NULL);
+                     QWidget* parent = nullptr);
 
     virtual void exec_() = 0;
     virtual QWidget* qwidget() = 0;

@@ -76,7 +76,7 @@ time_sink_f_impl::time_sink_f_impl(int size,
     d_argv = new char;
     d_argv[0] = '\0';
 
-    d_main_gui = NULL;
+    d_main_gui = nullptr;
 
     // setup PDU handling input port
     message_port_register_in(pmt::mp("in"));
@@ -129,7 +129,7 @@ bool time_sink_f_impl::check_topology(int ninputs, int noutputs)
 
 void time_sink_f_impl::initialize()
 {
-    if (qApp != NULL) {
+    if (qApp != nullptr) {
         d_qApplication = qApp;
     } else {
 #if QT_VERSION >= 0x040500 && QT_VERSION < 0x050000
@@ -443,8 +443,8 @@ void time_sink_f_impl::_npoints_resize()
 void time_sink_f_impl::_adjust_tags(int adj)
 {
     for (auto& d_tag : d_tags) {
-        for (size_t t = 0; t < d_tag.size(); t++) {
-            d_tag[t].offset += adj;
+        for (auto& t : d_tag) {
+            t.offset += adj;
         }
     }
 }

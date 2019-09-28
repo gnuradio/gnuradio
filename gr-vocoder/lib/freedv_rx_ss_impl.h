@@ -62,7 +62,7 @@ private:
 #ifdef FREEDV_MODE_700D
     struct freedv_advanced d_adv;
 #endif
-    struct CODEC2* d_c2 = NULL;
+    struct CODEC2* d_c2 = nullptr;
 
 public:
     freedv_rx_ss_impl(int mode, float squelch_thresh, int interleave_frames);

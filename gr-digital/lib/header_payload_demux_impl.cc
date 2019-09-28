@@ -273,7 +273,7 @@ int header_payload_demux_impl::general_work(int noutput_items,
             n_items_read_base + n_items_read,
             (input_items.size() == 2)
                 ? ((const unsigned char*)input_items[PORT_TRIGGER]) + n_items_read
-                : NULL);
+                : nullptr);
         if (trigger_offset < max_rel_offset) {
             d_state = STATE_HEADER;
         }

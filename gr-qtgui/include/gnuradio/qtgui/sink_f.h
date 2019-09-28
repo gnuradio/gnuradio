@@ -96,7 +96,7 @@ public:
                      bool plotwaterfall,
                      bool plottime,
                      bool plotconst,
-                     QWidget* parent = NULL);
+                     QWidget* parent = nullptr);
 
     virtual void exec_() = 0;
     virtual QWidget* qwidget() = 0;

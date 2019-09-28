@@ -155,7 +155,7 @@ void SpectrumDisplayForm::setSystem(SpectrumGUIClass* newSystem,
 {
     resizeBuffers(numFFTDataPoints, numTimeDomainDataPoints);
 
-    if (newSystem != NULL) {
+    if (newSystem != nullptr) {
         _system = newSystem;
         _systemSpecifiedFlag = true;
     } else {
@@ -424,7 +424,7 @@ void SpectrumDisplayForm::maxHoldResetBtn_clicked()
 void SpectrumDisplayForm::tabChanged(int index)
 {
     // This might be dangerous to call this with NULL
-    resizeEvent(NULL);
+    resizeEvent(nullptr);
 }
 
 void SpectrumDisplayForm::setFrequencyRange(const double newCenterFrequency,

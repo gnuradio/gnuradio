@@ -130,7 +130,7 @@ int hdlc_framer_pb_impl::work(int noutput_items,
 
     // get PDU
     pmt::pmt_t msg(delete_head_nowait(d_port));
-    if (msg.get() == NULL)
+    if (msg.get() == nullptr)
         return oidx;
 
     pmt::pmt_t len(pmt::car(msg)); // TODO for non-mult-8 nbits

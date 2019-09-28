@@ -75,7 +75,7 @@ public:
     const_sink_c_impl(int size,
                       const std::string& name,
                       int nconnections,
-                      QWidget* parent = NULL);
+                      QWidget* parent = nullptr);
     ~const_sink_c_impl();
 
     bool check_topology(int ninputs, int noutputs);

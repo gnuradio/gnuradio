@@ -79,27 +79,27 @@ vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size) : gr::vmcircbuf(size)
         if ((shmid2 = shmget(IPC_PRIVATE, 2 * size + 2 * pagesize, IPC_CREAT | 0700)) ==
             -1) {
             perror("gr::vmcircbuf_sysv_shm: shmget (1)");
-            shmctl(shmid_guard, IPC_RMID, 0);
+            shmctl(shmid_guard, IPC_RMID, nullptr);
             continue;
         }
 
         if ((shmid1 = shmget(IPC_PRIVATE, size, IPC_CREAT | 0700)) == -1) {
             perror("gr::vmcircbuf_sysv_shm: shmget (2)");
-            shmctl(shmid_guard, IPC_RMID, 0);
-            shmctl(shmid2, IPC_RMID, 0);
+            shmctl(shmid_guard, IPC_RMID, nullptr);
+            shmctl(shmid2, IPC_RMID, nullptr);
             continue;
         }
 
-        void* first_copy = shmat(shmid2, 0, 0);
+        void* first_copy = shmat(shmid2, nullptr, 0);
         if (first_copy == (void*)-1) {
             perror("gr::vmcircbuf_sysv_shm: shmat (1)");
-            shmctl(shmid_guard, IPC_RMID, 0);
-            shmctl(shmid2, IPC_RMID, 0);
-            shmctl(shmid1, IPC_RMID, 0);
+            shmctl(shmid_guard, IPC_RMID, nullptr);
+            shmctl(shmid2, IPC_RMID, nullptr);
+            shmctl(shmid1, IPC_RMID, nullptr);
             continue;
         }
 
-        shmctl(shmid2, IPC_RMID, 0);
+        shmctl(shmid2, IPC_RMID, nullptr);
 
         // There may be a race between our detach and attach.
         //
@@ -113,16 +113,16 @@ vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size) : gr::vmcircbuf(size)
         // first read-only guard page
         if (shmat(shmid_guard, first_copy, SHM_RDONLY) == (void*)-1) {
             perror("gr::vmcircbuf_sysv_shm: shmat (2)");
-            shmctl(shmid_guard, IPC_RMID, 0);
-            shmctl(shmid1, IPC_RMID, 0);
+            shmctl(shmid_guard, IPC_RMID, nullptr);
+            shmctl(shmid1, IPC_RMID, nullptr);
             continue;
         }
 
         // first copy
         if (shmat(shmid1, (char*)first_copy + pagesize, 0) == (void*)-1) {
             perror("gr::vmcircbuf_sysv_shm: shmat (3)");
-            shmctl(shmid_guard, IPC_RMID, 0);
-            shmctl(shmid1, IPC_RMID, 0);
+            shmctl(shmid_guard, IPC_RMID, nullptr);
+            shmctl(shmid1, IPC_RMID, nullptr);
             shmdt(first_copy);
             continue;
         }
@@ -130,8 +130,8 @@ vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size) : gr::vmcircbuf(size)
         // second copy
         if (shmat(shmid1, (char*)first_copy + pagesize + size, 0) == (void*)-1) {
             perror("gr::vmcircbuf_sysv_shm: shmat (4)");
-            shmctl(shmid_guard, IPC_RMID, 0);
-            shmctl(shmid1, IPC_RMID, 0);
+            shmctl(shmid_guard, IPC_RMID, nullptr);
+            shmctl(shmid1, IPC_RMID, nullptr);
             shmdt((char*)first_copy + pagesize);
             continue;
         }
@@ -140,16 +140,16 @@ vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size) : gr::vmcircbuf(size)
         if (shmat(shmid_guard, (char*)first_copy + pagesize + 2 * size, SHM_RDONLY) ==
             (void*)-1) {
             perror("gr::vmcircbuf_sysv_shm: shmat (5)");
-            shmctl(shmid_guard, IPC_RMID, 0);
-            shmctl(shmid1, IPC_RMID, 0);
+            shmctl(shmid_guard, IPC_RMID, nullptr);
+            shmctl(shmid1, IPC_RMID, nullptr);
             shmdt(first_copy);
             shmdt((char*)first_copy + pagesize);
             shmdt((char*)first_copy + pagesize + size);
             continue;
         }
 
-        shmctl(shmid1, IPC_RMID, 0);
-        shmctl(shmid_guard, IPC_RMID, 0);
+        shmctl(shmid1, IPC_RMID, nullptr);
+        shmctl(shmid_guard, IPC_RMID, nullptr);
 
         // Now remember the important stuff
         d_base = (char*)first_copy + pagesize;
@@ -178,7 +178,7 @@ vmcircbuf_sysv_shm::~vmcircbuf_sysv_shm()
 //			The factory interface
 // ----------------------------------------------------------------
 
-gr::vmcircbuf_factory* vmcircbuf_sysv_shm_factory::s_the_factory = 0;
+gr::vmcircbuf_factory* vmcircbuf_sysv_shm_factory::s_the_factory = nullptr;
 
 gr::vmcircbuf_factory* vmcircbuf_sysv_shm_factory::singleton()
 {
@@ -196,7 +196,7 @@ gr::vmcircbuf* vmcircbuf_sysv_shm_factory::make(int size)
     try {
         return new vmcircbuf_sysv_shm(size);
     } catch (...) {
-        return 0;
+        return nullptr;
     }
 }
 

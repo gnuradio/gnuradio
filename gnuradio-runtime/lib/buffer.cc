@@ -91,10 +91,10 @@ static long minimum_buffer_items(long type_size, long page_size)
 
 
 buffer::buffer(int nitems, size_t sizeof_item, block_sptr link)
-    : d_base(0),
+    : d_base(nullptr),
       d_bufsize(0),
       d_max_reader_delay(0),
-      d_vmcircbuf(0),
+      d_vmcircbuf(nullptr),
       d_sizeof_item(sizeof_item),
       d_link(link),
       d_write_index(0),
@@ -152,7 +152,7 @@ bool buffer::allocate_buffer(int nitems, size_t sizeof_item)
 
     d_bufsize = nitems;
     d_vmcircbuf = gr::vmcircbuf_sysconfig::make(d_bufsize * d_sizeof_item);
-    if (d_vmcircbuf == 0) {
+    if (d_vmcircbuf == nullptr) {
         std::cerr << "gr::buffer::allocate_buffer: failed to allocate buffer of size "
                   << d_bufsize * d_sizeof_item / 1024 << " KB\n";
         return false;

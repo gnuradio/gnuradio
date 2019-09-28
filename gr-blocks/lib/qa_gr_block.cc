@@ -91,8 +91,8 @@ BOOST_AUTO_TEST_CASE(t2)
     const char* ibuf = nop->detail()->input(0)->buffer()->base();
     int ibsize = nop->detail()->input(0)->buffer()->bufsize();
 
-    BOOST_REQUIRE(obuf != NULL);
-    BOOST_REQUIRE(ibuf != NULL);
+    BOOST_REQUIRE(obuf != nullptr);
+    BOOST_REQUIRE(ibuf != nullptr);
     BOOST_REQUIRE(obsize > 0);
     BOOST_REQUIRE(ibsize > 0);
 

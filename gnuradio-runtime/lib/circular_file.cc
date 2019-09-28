@@ -59,7 +59,7 @@ static const int HD_BUFFER_BASE = 3;
 static const int HD_BUFFER_CURRENT = 4;
 
 circular_file::circular_file(const char* filename, bool writable, int size)
-    : d_fd(-1), d_header(0), d_buffer(0), d_mapped_size(0), d_bytes_read(0)
+    : d_fd(-1), d_header(nullptr), d_buffer(nullptr), d_mapped_size(0), d_bytes_read(0)
 {
     int mm_prot;
     if (writable) {
@@ -101,7 +101,7 @@ circular_file::circular_file(const char* filename, bool writable, int size)
 
     d_mapped_size = statbuf.st_size;
 #ifdef HAVE_MMAP
-    void* p = mmap(0, d_mapped_size, mm_prot, MAP_SHARED, d_fd, 0);
+    void* p = mmap(nullptr, d_mapped_size, mm_prot, MAP_SHARED, d_fd, 0);
     if (p == MAP_FAILED) {
         perror("gr::circular_file: mmap failed");
         exit(1);

@@ -585,7 +585,7 @@ dvbt_viterbi_decoder_impl::dvbt_viterbi_decoder_impl(dvb_constellation_t constel
 
     // Allocate the buffer for the bits
     d_inbits = new (std::nothrow) unsigned char[d_nbits];
-    if (d_inbits == NULL) {
+    if (d_inbits == nullptr) {
         GR_LOG_FATAL(d_logger, "Viterbi Decoder, cannot allocate memory for d_inbits.");
         throw std::bad_alloc();
     }

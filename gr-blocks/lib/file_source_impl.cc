@@ -72,8 +72,8 @@ file_source_impl::file_source_impl(size_t itemsize,
       d_itemsize(itemsize),
       d_start_offset_items(start_offset_items),
       d_length_items(length_items),
-      d_fp(0),
-      d_new_fp(0),
+      d_fp(nullptr),
+      d_new_fp(nullptr),
       d_repeat(repeat),
       d_updated(false),
       d_file_begin(true),
@@ -138,10 +138,10 @@ void file_source_impl::open(const char* filename,
 
     if (d_new_fp) {
         fclose(d_new_fp);
-        d_new_fp = 0;
+        d_new_fp = nullptr;
     }
 
-    if ((d_new_fp = fopen(filename, "rb")) == NULL) {
+    if ((d_new_fp = fopen(filename, "rb")) == nullptr) {
         GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
         throw std::runtime_error("can't open file");
     }
@@ -213,9 +213,9 @@ void file_source_impl::close()
     // obtain exclusive access for duration of this function
     gr::thread::scoped_lock lock(fp_mutex);
 
-    if (d_new_fp != NULL) {
+    if (d_new_fp != nullptr) {
         fclose(d_new_fp);
-        d_new_fp = NULL;
+        d_new_fp = nullptr;
     }
     d_updated = true;
 }
@@ -229,7 +229,7 @@ void file_source_impl::do_update()
             fclose(d_fp);
 
         d_fp = d_new_fp; // install new file pointer
-        d_new_fp = 0;
+        d_new_fp = nullptr;
         d_updated = false;
         d_file_begin = true;
     }
@@ -245,7 +245,7 @@ int file_source_impl::work(int noutput_items,
     uint64_t size = noutput_items;
 
     do_update(); // update d_fp is reqd
-    if (d_fp == NULL)
+    if (d_fp == nullptr)
         throw std::runtime_error("work with file not open");
 
     gr::thread::scoped_lock lock(fp_mutex); // hold for the rest of this function

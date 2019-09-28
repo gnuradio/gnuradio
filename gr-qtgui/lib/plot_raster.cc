@@ -58,7 +58,7 @@ class PlotTimeRaster::PrivateData
 public:
     PrivateData()
     {
-        data = NULL;
+        data = nullptr;
         colorMap = new QwtLinearColorMap();
     }
 

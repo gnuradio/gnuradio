@@ -80,7 +80,7 @@ waterfall_sink_f_impl::waterfall_sink_f_impl(int fftsize,
     d_argv = new char;
     d_argv[0] = '\0';
 
-    d_main_gui = NULL;
+    d_main_gui = nullptr;
 
     // Perform fftshift operation;
     // this is usually desired when plotting
@@ -162,7 +162,7 @@ void waterfall_sink_f_impl::forecast(int noutput_items,
 
 void waterfall_sink_f_impl::initialize()
 {
-    if (qApp != NULL) {
+    if (qApp != nullptr) {
         d_qApplication = qApp;
     } else {
 #if QT_VERSION >= 0x040500 && QT_VERSION < 0x050000

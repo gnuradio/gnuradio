@@ -90,7 +90,7 @@ tpc_decoder::tpc_decoder(std::vector<int> row_polys,
                 d_bval;
     outputSize = (d_krow * d_kcol - (d_bval + d_qval));
 
-    fp = NULL;
+    fp = nullptr;
     // DEBUG_PRINT("inputSize=%d outputSize=%d\n", inputSize, outputSize);
     // fp = fopen("c_decoder_output.txt", "w");
 

@@ -182,7 +182,7 @@ TimeRasterDisplayPlot::TimeRasterDisplayPlot(
     int nplots, double samp_rate, double rows, double cols, QWidget* parent)
     : DisplayPlot(nplots, parent)
 {
-    d_zoomer = NULL; // need this for proper init
+    d_zoomer = nullptr; // need this for proper init
 
     resize(parent->width(), parent->height());
 
@@ -333,7 +333,7 @@ void TimeRasterDisplayPlot::setPlotDimensions(const double rows,
     d_rows = rows;
     d_cols = cols;
 
-    if ((axisScaleDraw(QwtPlot::xBottom) != NULL) && (d_zoomer != NULL)) {
+    if ((axisScaleDraw(QwtPlot::xBottom) != nullptr) && (d_zoomer != nullptr)) {
         if (rst) {
             reset();
         }
@@ -406,16 +406,16 @@ double TimeRasterDisplayPlot::getMaxIntensity(unsigned int which) const
 void TimeRasterDisplayPlot::replot()
 {
     // Update the x-axis display
-    if (axisWidget(QwtPlot::yLeft) != NULL) {
+    if (axisWidget(QwtPlot::yLeft) != nullptr) {
         axisWidget(QwtPlot::yLeft)->update();
     }
 
     // Update the y-axis display
-    if (axisWidget(QwtPlot::xBottom) != NULL) {
+    if (axisWidget(QwtPlot::xBottom) != nullptr) {
         axisWidget(QwtPlot::xBottom)->update();
     }
 
-    if (d_zoomer != NULL) {
+    if (d_zoomer != nullptr) {
         ((TimeRasterZoomer*)d_zoomer)->updateTrackerText();
     }
 

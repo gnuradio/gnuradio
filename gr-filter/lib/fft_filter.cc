@@ -40,10 +40,10 @@ fft_filter_fff::fft_filter_fff(int decimation,
                                int nthreads)
     : d_fftsize(-1),
       d_decimation(decimation),
-      d_fwdfft(NULL),
-      d_invfft(NULL),
+      d_fwdfft(nullptr),
+      d_invfft(nullptr),
       d_nthreads(nthreads),
-      d_xformed_taps(NULL)
+      d_xformed_taps(nullptr)
 {
     set_taps(taps);
 }
@@ -52,7 +52,7 @@ fft_filter_fff::~fft_filter_fff()
 {
     delete d_fwdfft;
     delete d_invfft;
-    if (d_xformed_taps != NULL)
+    if (d_xformed_taps != nullptr)
         volk_free(d_xformed_taps);
 }
 
@@ -108,7 +108,7 @@ void fft_filter_fff::compute_sizes(int ntaps)
     if (d_fftsize != old_fftsize) {
         delete d_fwdfft;
         delete d_invfft;
-        if (d_xformed_taps != NULL)
+        if (d_xformed_taps != nullptr)
             volk_free(d_xformed_taps);
         d_fwdfft = new fft::fft_real_fwd(d_fftsize);
         d_invfft = new fft::fft_real_rev(d_fftsize);
@@ -187,10 +187,10 @@ fft_filter_ccc::fft_filter_ccc(int decimation,
                                int nthreads)
     : d_fftsize(-1),
       d_decimation(decimation),
-      d_fwdfft(NULL),
-      d_invfft(NULL),
+      d_fwdfft(nullptr),
+      d_invfft(nullptr),
       d_nthreads(nthreads),
-      d_xformed_taps(NULL)
+      d_xformed_taps(nullptr)
 {
     set_taps(taps);
 }
@@ -199,7 +199,7 @@ fft_filter_ccc::~fft_filter_ccc()
 {
     delete d_fwdfft;
     delete d_invfft;
-    if (d_xformed_taps != NULL)
+    if (d_xformed_taps != nullptr)
         volk_free(d_xformed_taps);
 }
 
@@ -255,7 +255,7 @@ void fft_filter_ccc::compute_sizes(int ntaps)
     if (d_fftsize != old_fftsize) {
         delete d_fwdfft;
         delete d_invfft;
-        if (d_xformed_taps != NULL)
+        if (d_xformed_taps != nullptr)
             volk_free(d_xformed_taps);
         d_fwdfft = new fft::fft_complex(d_fftsize, true, d_nthreads);
         d_invfft = new fft::fft_complex(d_fftsize, false, d_nthreads);
@@ -334,10 +334,10 @@ fft_filter_ccf::fft_filter_ccf(int decimation,
                                int nthreads)
     : d_fftsize(-1),
       d_decimation(decimation),
-      d_fwdfft(NULL),
-      d_invfft(NULL),
+      d_fwdfft(nullptr),
+      d_invfft(nullptr),
       d_nthreads(nthreads),
-      d_xformed_taps(NULL)
+      d_xformed_taps(nullptr)
 {
     set_taps(taps);
 }
@@ -346,7 +346,7 @@ fft_filter_ccf::~fft_filter_ccf()
 {
     delete d_fwdfft;
     delete d_invfft;
-    if (d_xformed_taps != NULL)
+    if (d_xformed_taps != nullptr)
         volk_free(d_xformed_taps);
 }
 
@@ -402,7 +402,7 @@ void fft_filter_ccf::compute_sizes(int ntaps)
     if (d_fftsize != old_fftsize) {
         delete d_fwdfft;
         delete d_invfft;
-        if (d_xformed_taps != NULL)
+        if (d_xformed_taps != nullptr)
             volk_free(d_xformed_taps);
         d_fwdfft = new fft::fft_complex(d_fftsize, true, d_nthreads);
         d_invfft = new fft::fft_complex(d_fftsize, false, d_nthreads);

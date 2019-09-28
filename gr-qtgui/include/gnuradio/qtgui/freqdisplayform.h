@@ -42,7 +42,7 @@ class FreqDisplayForm : public DisplayForm
     Q_OBJECT
 
 public:
-    FreqDisplayForm(int nplots = 1, QWidget* parent = 0);
+    FreqDisplayForm(int nplots = 1, QWidget* parent = nullptr);
     ~FreqDisplayForm();
 
     FrequencyDisplayPlot* getPlot();

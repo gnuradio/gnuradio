@@ -98,7 +98,7 @@ sink_c_impl::sink_c_impl(int fftsize,
     message_port_register_in(d_port);
     set_msg_handler(d_port, boost::bind(&sink_c_impl::handle_set_freq, this, _1));
 
-    d_main_gui = NULL;
+    d_main_gui = nullptr;
 
     // Perform fftshift operation;
     // this is usually desired when plotting
@@ -137,7 +137,7 @@ void sink_c_impl::forecast(int noutput_items, gr_vector_int& ninput_items_requir
 
 void sink_c_impl::initialize()
 {
-    if (qApp != NULL) {
+    if (qApp != nullptr) {
         d_qApplication = qApp;
     } else {
 #if QT_VERSION >= 0x040500 && QT_VERSION < 0x050000
@@ -354,7 +354,7 @@ int sink_c_impl::general_work(int noutput_items,
             d_main_gui->updateWindow(true,
                                      d_magbuf,
                                      d_fftsize,
-                                     NULL,
+                                     nullptr,
                                      0,
                                      (float*)d_residbuf,
                                      d_fftsize,

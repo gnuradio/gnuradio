@@ -43,7 +43,7 @@ pmt_pool::pmt_pool(size_t itemsize,
       d_allocation_size(std::max(allocation_size, 16 * itemsize)),
       d_max_items(max_items),
       d_n_items(0),
-      d_freelist(0)
+      d_freelist(nullptr)
 {
 }
 

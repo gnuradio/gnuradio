@@ -94,7 +94,7 @@ freq_sink_f_impl::freq_sink_f_impl(int fftsize,
     message_port_register_in(pmt::mp("in"));
     set_msg_handler(pmt::mp("in"), boost::bind(&freq_sink_f_impl::handle_pdus, this, _1));
 
-    d_main_gui = NULL;
+    d_main_gui = nullptr;
 
     // Perform fftshift operation;
     // this is usually desired when plotting
@@ -153,7 +153,7 @@ bool freq_sink_f_impl::check_topology(int ninputs, int noutputs)
 
 void freq_sink_f_impl::initialize()
 {
-    if (qApp != NULL) {
+    if (qApp != nullptr) {
         d_qApplication = qApp;
     } else {
 #if QT_VERSION >= 0x040500 && QT_VERSION < 0x050000

@@ -93,7 +93,7 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
         d_managed_in = (unsigned char*)volk_malloc(
             d_veclen * d_rate * sizeof(unsigned char), volk_get_alignment());
         d_managed_in_size = d_veclen * d_rate;
-        if (d_managed_in == NULL) {
+        if (d_managed_in == nullptr) {
             throw std::runtime_error("cc_decoder: bad alloc for d_managed_in\n");
         }
         break;
@@ -120,7 +120,7 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
 
     d_vp->metrics = (unsigned char*)volk_malloc(2 * sizeof(unsigned char) * d_numstates,
                                                 volk_get_alignment());
-    if (d_vp->metrics == NULL) {
+    if (d_vp->metrics == nullptr) {
         throw std::runtime_error("bad alloc for d_vp->metrics!\n");
     }
 
@@ -129,13 +129,13 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
 
     d_vp->decisions = (unsigned char*)volk_malloc(
         sizeof(unsigned char) * d_veclen * d_decision_t_size, volk_get_alignment());
-    if (d_vp->decisions == NULL) {
+    if (d_vp->decisions == nullptr) {
         throw std::runtime_error("bad alloc for d_vp->decisions!\n");
     }
 
     Branchtab = (unsigned char*)volk_malloc(
         sizeof(unsigned char) * d_numstates / 2 * rate, volk_get_alignment());
-    if (Branchtab == NULL) {
+    if (Branchtab == nullptr) {
         throw std::runtime_error("bad alloc for d_vp->decisions!\n");
     }
 
@@ -162,7 +162,7 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
     kerneltype << k_ << d_k << r_ << d_rate;
 
     d_kernel = yp_kernel[kerneltype.str()];
-    if (d_kernel == NULL) {
+    if (d_kernel == nullptr) {
         throw std::runtime_error("cc_decoder: parameters not supported");
     }
 }
@@ -276,7 +276,7 @@ int cc_decoder_impl::init_viterbi(struct v* vp, int starting_state)
 {
     int i;
 
-    if (vp == NULL)
+    if (vp == nullptr)
         return -1;
     for (i = 0; i < d_numstates; i++) {
         vp->metrics1.t[i] = 63;
@@ -293,7 +293,7 @@ int cc_decoder_impl::init_viterbi_unbiased(struct v* vp)
 {
     int i;
 
-    if (vp == NULL)
+    if (vp == nullptr)
         return -1;
     for (i = 0; i < d_numstates; i++)
         vp->metrics1.t[i] = 31;

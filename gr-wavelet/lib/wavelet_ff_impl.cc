@@ -50,13 +50,13 @@ wavelet_ff_impl::wavelet_ff_impl(int size, int order, bool forward)
       d_forward(forward)
 {
     d_wavelet = gsl_wavelet_alloc(gsl_wavelet_daubechies, d_order);
-    if (d_wavelet == NULL)
+    if (d_wavelet == nullptr)
         throw std::runtime_error("can't allocate wavelet");
     d_workspace = gsl_wavelet_workspace_alloc(d_size);
-    if (d_workspace == NULL)
+    if (d_workspace == nullptr)
         throw std::runtime_error("can't allocate wavelet workspace");
     d_temp = (double*)malloc(d_size * sizeof(double));
-    if (d_workspace == NULL)
+    if (d_workspace == nullptr)
         throw std::runtime_error("can't allocate wavelet double conversion temp");
 }
 

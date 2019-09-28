@@ -68,7 +68,7 @@ public:
                      float average = 0,
                      graph_t graph_type = NUM_GRAPH_HORIZ,
                      int nconnections = 1,
-                     QWidget* parent = NULL);
+                     QWidget* parent = nullptr);
     ~number_sink_impl();
 
     bool check_topology(int ninputs, int noutputs);

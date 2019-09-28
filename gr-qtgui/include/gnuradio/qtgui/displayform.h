@@ -43,7 +43,7 @@ class QTGUI_API DisplayForm : public QWidget
     Q_OBJECT
 
 public:
-    DisplayForm(int nplots = 1, QWidget* parent = 0);
+    DisplayForm(int nplots = 1, QWidget* parent = nullptr);
     ~DisplayForm();
 
     virtual DisplayPlot* getPlot() = 0;

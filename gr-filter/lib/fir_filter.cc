@@ -36,7 +36,7 @@ fir_filter<IN_T, OUT_T, TAP_T>::fir_filter(int decimation, const std::vector<TAP
     d_align = volk_get_alignment();
     d_naligned = std::max((size_t)1, d_align / sizeof(IN_T));
 
-    d_aligned_taps = NULL;
+    d_aligned_taps = nullptr;
     set_taps(taps);
 
     // Make sure the output sample is always aligned, too.
@@ -47,12 +47,12 @@ template <class IN_T, class OUT_T, class TAP_T>
 fir_filter<IN_T, OUT_T, TAP_T>::~fir_filter()
 {
     // Free all aligned taps
-    if (d_aligned_taps != NULL) {
+    if (d_aligned_taps != nullptr) {
         for (int i = 0; i < d_naligned; i++) {
             volk_free(d_aligned_taps[i]);
         }
         ::free(d_aligned_taps);
-        d_aligned_taps = NULL;
+        d_aligned_taps = nullptr;
     }
 
     // Free output sample
@@ -63,12 +63,12 @@ template <class IN_T, class OUT_T, class TAP_T>
 void fir_filter<IN_T, OUT_T, TAP_T>::set_taps(const std::vector<TAP_T>& taps)
 {
     // Free the taps if already allocated
-    if (d_aligned_taps != NULL) {
+    if (d_aligned_taps != nullptr) {
         for (int i = 0; i < d_naligned; i++) {
             volk_free(d_aligned_taps[i]);
         }
         ::free(d_aligned_taps);
-        d_aligned_taps = NULL;
+        d_aligned_taps = nullptr;
     }
 
     d_ntaps = (int)taps.size();

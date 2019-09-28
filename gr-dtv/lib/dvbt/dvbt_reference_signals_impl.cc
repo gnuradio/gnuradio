@@ -150,7 +150,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
 
     // allocate PRBS buffer
     d_wk = new char[d_Kmax - d_Kmin + 1];
-    if (d_wk == NULL) {
+    if (d_wk == nullptr) {
         std::cerr << "Reference Signals, cannot allocate memory for d_wk." << std::endl;
         throw std::bad_alloc();
     }
@@ -159,7 +159,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
 
     // allocate buffer for scattered pilots
     d_spilot_carriers_val = new (std::nothrow) gr_complex[d_Kmax - d_Kmin + 1];
-    if (d_spilot_carriers_val == NULL) {
+    if (d_spilot_carriers_val == nullptr) {
         std::cerr
             << "Reference Signals, cannot allocate memory for d_spilot_carriers_val."
             << std::endl;
@@ -169,7 +169,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
 
     // allocate buffer for channel gains (for each useful carrier)
     d_channel_gain = new (std::nothrow) gr_complex[d_Kmax - d_Kmin + 1];
-    if (d_channel_gain == NULL) {
+    if (d_channel_gain == nullptr) {
         std::cerr << "Reference Signals, cannot allocate memory for d_channel_gain."
                   << std::endl;
         delete[] d_spilot_carriers_val;
@@ -179,7 +179,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
 
     // Allocate buffer for continual pilots phase diffs
     d_known_phase_diff = new (std::nothrow) float[d_cpilot_carriers_size - 1];
-    if (d_known_phase_diff == NULL) {
+    if (d_known_phase_diff == nullptr) {
         std::cerr << "Reference Signals, cannot allocate memory for d_known_phase_diff."
                   << std::endl;
         delete[] d_channel_gain;
@@ -195,7 +195,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
     }
 
     d_cpilot_phase_diff = new (std::nothrow) float[d_cpilot_carriers_size - 1];
-    if (d_cpilot_phase_diff == NULL) {
+    if (d_cpilot_phase_diff == nullptr) {
         std::cerr << "Reference Signals, cannot allocate memory for d_cpilot_phase_diff."
                   << std::endl;
         delete[] d_known_phase_diff;
@@ -207,7 +207,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
 
     // Allocate buffer for derotated input symbol
     d_derot_in = new (std::nothrow) gr_complex[d_fft_length];
-    if (d_derot_in == NULL) {
+    if (d_derot_in == nullptr) {
         std::cerr << "Reference Signals, cannot allocate memory for d_derot_in."
                   << std::endl;
         delete[] d_cpilot_phase_diff;
@@ -220,7 +220,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
 
     // allocate buffer for first tps symbol constellation
     d_tps_carriers_val = new (std::nothrow) gr_complex[d_tps_carriers_size];
-    if (d_tps_carriers_val == NULL) {
+    if (d_tps_carriers_val == nullptr) {
         std::cerr << "Reference Signals, cannot allocate memory for d_tps_carriers_val."
                   << std::endl;
         delete[] d_derot_in;
@@ -234,7 +234,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
 
     // allocate tps data buffer
     d_tps_data = new (std::nothrow) unsigned char[d_symbols_per_frame];
-    if (d_tps_data == NULL) {
+    if (d_tps_data == nullptr) {
         std::cerr << "Reference Signals, cannot allocate memory for d_tps_data."
                   << std::endl;
         delete[] d_tps_carriers_val;
@@ -248,7 +248,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
     }
 
     d_prev_tps_symbol = new (std::nothrow) gr_complex[d_tps_carriers_size];
-    if (d_prev_tps_symbol == NULL) {
+    if (d_prev_tps_symbol == nullptr) {
         std::cerr << "Reference Signals, cannot allocate memory for d_prev_tps_symbol."
                   << std::endl;
         delete[] d_tps_data;
@@ -264,7 +264,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
     std::fill_n(d_prev_tps_symbol, d_tps_carriers_size, 0);
 
     d_tps_symbol = new (std::nothrow) gr_complex[d_tps_carriers_size];
-    if (d_tps_symbol == NULL) {
+    if (d_tps_symbol == nullptr) {
         std::cerr << "Reference Signals, cannot allocate memory for d_tps_symbol."
                   << std::endl;
         delete[] d_prev_tps_symbol;
@@ -293,7 +293,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
 
     // Allocate buffer for channel estimation carriers
     d_chanestim_carriers = new (std::nothrow) int[d_Kmax - d_Kmin + 1];
-    if (d_chanestim_carriers == NULL) {
+    if (d_chanestim_carriers == nullptr) {
         std::cerr << "Reference Signals, cannot allocate memory for d_chanestim_carriers."
                   << std::endl;
         delete[] d_tps_symbol;
@@ -311,7 +311,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
 
     // Allocate buffer for payload carriers
     d_payload_carriers = new (std::nothrow) int[d_Kmax - d_Kmin + 1];
-    if (d_payload_carriers == NULL) {
+    if (d_payload_carriers == nullptr) {
         std::cerr << "Reference Signals, cannot allocate memory for d_payload_carriers."
                   << std::endl;
         delete[] d_chanestim_carriers;

@@ -63,7 +63,7 @@ ber_sink_b_impl::ber_sink_b_impl(std::vector<float> esnos,
       d_nconnections(esnos.size()),
       d_last_time(0)
 {
-    d_main_gui = NULL;
+    d_main_gui = nullptr;
 
     // Enough curves for the input streams plus the BPSK AWGN curve.
     d_curves = curves;
@@ -140,11 +140,11 @@ bool ber_sink_b_impl::check_topology(int ninputs, int noutputs)
 
 void ber_sink_b_impl::initialize()
 {
-    if (qApp != NULL) {
+    if (qApp != nullptr) {
         d_qApplication = qApp;
     } else {
         int argc = 0;
-        char** argv = NULL;
+        char** argv = nullptr;
         d_qApplication = new QApplication(argc, argv);
     }
 

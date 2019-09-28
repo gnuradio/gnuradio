@@ -73,7 +73,7 @@ public:
                             const std::vector<float>& offset,
                             const std::string& name,
                             int nconnections,
-                            QWidget* parent = NULL);
+                            QWidget* parent = nullptr);
     ~time_raster_sink_f_impl();
 
     bool check_topology(int ninputs, int noutputs);

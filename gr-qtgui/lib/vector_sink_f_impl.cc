@@ -83,7 +83,7 @@ vector_sink_f_impl::vector_sink_f_impl(unsigned int vlen,
     // double-clicked
     message_port_register_out(d_port);
 
-    d_main_gui = NULL;
+    d_main_gui = nullptr;
 
     for (int i = 0; i < d_nconnections; i++) {
         d_magbufs.push_back(
@@ -118,7 +118,7 @@ void vector_sink_f_impl::initialize(const std::string& name,
                                     double x_start,
                                     double x_step)
 {
-    if (qApp != NULL) {
+    if (qApp != nullptr) {
         d_qApplication = qApp;
     } else {
 #if QT_VERSION >= 0x040500 && QT_VERSION < 0x050000

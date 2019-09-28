@@ -60,7 +60,7 @@ atsc_rs_encoder_impl::~atsc_rs_encoder_impl()
         free_rs_char(d_rs);
     }
 
-    d_rs = 0;
+    d_rs = nullptr;
 }
 
 void atsc_rs_encoder_impl::encode(atsc_mpeg_packet_rs_encoded& out,

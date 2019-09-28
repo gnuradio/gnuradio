@@ -176,14 +176,14 @@ dvbt2_cellinterleaver_cc_impl::dvbt2_cellinterleaver_cc_impl(
         numSmallTIBlocks = tiblocks - numBigTIBlocks;
     }
     time_interleave = (gr_complex*)malloc(sizeof(gr_complex) * cell_size * fecblocks);
-    if (time_interleave == NULL) {
+    if (time_interleave == nullptr) {
         GR_LOG_FATAL(
             d_logger,
             "Cell/Time Interleaver, cannot allocate memory for time_interleave.");
         throw std::bad_alloc();
     }
     cols = (gr_complex**)malloc(sizeof(gr_complex*) * FECBlocksPerBigTIBlock * 5);
-    if (cols == NULL) {
+    if (cols == nullptr) {
         free(time_interleave);
         GR_LOG_FATAL(d_logger, "Cell/Time Interleaver, cannot allocate memory for cols.");
         throw std::bad_alloc();

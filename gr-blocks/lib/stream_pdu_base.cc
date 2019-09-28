@@ -98,7 +98,7 @@ bool stream_pdu_base::wait_ready()
     FD_SET(d_fd, &rset);
 
     // call select with timeout on receive socket
-    return ::select(d_fd + 1, &rset, NULL, NULL, &tv) > 0;
+    return ::select(d_fd + 1, &rset, nullptr, nullptr, &tv) > 0;
 }
 
 void stream_pdu_base::send(pmt::pmt_t msg)

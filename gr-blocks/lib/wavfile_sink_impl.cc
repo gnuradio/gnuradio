@@ -73,8 +73,8 @@ wavfile_sink_impl::wavfile_sink_impl(const char* filename,
                  io_signature::make(0, 0, 0)),
       d_sample_rate(sample_rate),
       d_nchans(n_channels),
-      d_fp(0),
-      d_new_fp(0),
+      d_fp(nullptr),
+      d_new_fp(nullptr),
       d_updated(false)
 {
     if (bits_per_sample != 8 && bits_per_sample != 16) {
@@ -115,10 +115,10 @@ bool wavfile_sink_impl::open(const char* filename)
 
     if (d_new_fp) { // if we've already got a new one open, close it
         fclose(d_new_fp);
-        d_new_fp = 0;
+        d_new_fp = nullptr;
     }
 
-    if ((d_new_fp = fdopen(fd, "wb")) == NULL) {
+    if ((d_new_fp = fdopen(fd, "wb")) == nullptr) {
         perror(filename);
         ::close(fd); // don't leak file descriptor if fdopen fails.
         return false;
@@ -150,7 +150,7 @@ void wavfile_sink_impl::close_wav()
     wavheader_complete(d_fp, byte_count);
 
     fclose(d_fp);
-    d_fp = NULL;
+    d_fp = nullptr;
 }
 
 wavfile_sink_impl::~wavfile_sink_impl() { stop(); }
@@ -159,7 +159,7 @@ bool wavfile_sink_impl::stop()
 {
     if (d_new_fp) {
         fclose(d_new_fp);
-        d_new_fp = NULL;
+        d_new_fp = nullptr;
     }
 
     close();
@@ -249,7 +249,7 @@ void wavfile_sink_impl::do_update()
     }
 
     d_fp = d_new_fp; // install new file pointer
-    d_new_fp = 0;
+    d_new_fp = nullptr;
     d_sample_count = 0;
     d_bytes_per_sample = d_bytes_per_sample_new;
 

@@ -125,7 +125,7 @@ dvbt_symbol_inner_interleaver_impl::dvbt_symbol_inner_interleaver_impl(
 
     // Allocate memory for h vector
     d_h = new (std::nothrow) int[d_fft_length];
-    if (d_h == NULL) {
+    if (d_h == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "Symbol Inner Interleaver, cannot allocate memory for d_h.");
         throw std::bad_alloc();

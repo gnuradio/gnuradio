@@ -45,7 +45,7 @@ public:
                           double rows = 1,
                           double cols = 1,
                           double zmax = 1,
-                          QWidget* parent = 0);
+                          QWidget* parent = nullptr);
     ~TimeRasterDisplayForm();
 
     TimeRasterDisplayPlot* getPlot();

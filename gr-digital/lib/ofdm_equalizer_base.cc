@@ -61,9 +61,9 @@ ofdm_equalizer_1d_pilots::ofdm_equalizer_1d_pilots(
         std::fill(d_occupied_carriers.begin(), d_occupied_carriers.end(), true);
     } else {
         for (const auto& occupied_carrier : occupied_carriers) {
-            for (unsigned k = 0; k < occupied_carrier.size(); k++) {
-                int carr_index = occupied_carrier[k];
-                if (occupied_carrier[k] < 0) {
+            for (int k : occupied_carrier) {
+                int carr_index = k;
+                if (k < 0) {
                     carr_index += fft_len;
                 }
                 if (carr_index >= fft_len || carr_index < 0) {

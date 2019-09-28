@@ -542,14 +542,14 @@ dvbt2_paprtr_cc_impl::dvbt2_paprtr_cc_impl(dvbt2_extended_carrier_t carriermode,
     right_nulls = (vlength - C_PS) / 2;
     papr_fft_size = vlength;
     papr_fft = new (std::nothrow) fft::fft_complex(papr_fft_size, false, 1);
-    if (papr_fft == NULL) {
+    if (papr_fft == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "Tone Reservation PAPR, cannot allocate memory for papr_fft.");
         throw std::bad_alloc();
     }
     ones_freq = (gr_complex*)volk_malloc(sizeof(gr_complex) * papr_fft_size,
                                          volk_get_alignment());
-    if (ones_freq == NULL) {
+    if (ones_freq == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "Tone Reservation PAPR, cannot allocate memory for ones_freq.");
         delete papr_fft;
@@ -557,7 +557,7 @@ dvbt2_paprtr_cc_impl::dvbt2_paprtr_cc_impl(dvbt2_extended_carrier_t carriermode,
     }
     ones_time = (gr_complex*)volk_malloc(sizeof(gr_complex) * papr_fft_size,
                                          volk_get_alignment());
-    if (ones_time == NULL) {
+    if (ones_time == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "Tone Reservation PAPR, cannot allocate memory for ones_time.");
         volk_free(ones_freq);
@@ -566,7 +566,7 @@ dvbt2_paprtr_cc_impl::dvbt2_paprtr_cc_impl(dvbt2_extended_carrier_t carriermode,
     }
     c = (gr_complex*)volk_malloc(sizeof(gr_complex) * papr_fft_size,
                                  volk_get_alignment());
-    if (c == NULL) {
+    if (c == nullptr) {
         GR_LOG_FATAL(d_logger, "Tone Reservation PAPR, cannot allocate memory for c.");
         volk_free(ones_time);
         volk_free(ones_freq);
@@ -575,7 +575,7 @@ dvbt2_paprtr_cc_impl::dvbt2_paprtr_cc_impl(dvbt2_extended_carrier_t carriermode,
     }
     ctemp = (gr_complex*)volk_malloc(sizeof(gr_complex) * papr_fft_size,
                                      volk_get_alignment());
-    if (ctemp == NULL) {
+    if (ctemp == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "Tone Reservation PAPR, cannot allocate memory for ctemp.");
         volk_free(c);
@@ -585,7 +585,7 @@ dvbt2_paprtr_cc_impl::dvbt2_paprtr_cc_impl(dvbt2_extended_carrier_t carriermode,
         throw std::bad_alloc();
     }
     magnitude = (float*)volk_malloc(sizeof(float) * papr_fft_size, volk_get_alignment());
-    if (magnitude == NULL) {
+    if (magnitude == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "Tone Reservation PAPR, cannot allocate memory for magnitude.");
         volk_free(ctemp);
@@ -596,7 +596,7 @@ dvbt2_paprtr_cc_impl::dvbt2_paprtr_cc_impl(dvbt2_extended_carrier_t carriermode,
         throw std::bad_alloc();
     }
     r = (gr_complex*)volk_malloc(sizeof(gr_complex) * N_TR, volk_get_alignment());
-    if (r == NULL) {
+    if (r == nullptr) {
         GR_LOG_FATAL(d_logger, "Tone Reservation PAPR, cannot allocate memory for r.");
         volk_free(magnitude);
         volk_free(ctemp);
@@ -607,7 +607,7 @@ dvbt2_paprtr_cc_impl::dvbt2_paprtr_cc_impl(dvbt2_extended_carrier_t carriermode,
         throw std::bad_alloc();
     }
     rNew = (gr_complex*)volk_malloc(sizeof(gr_complex) * N_TR, volk_get_alignment());
-    if (rNew == NULL) {
+    if (rNew == nullptr) {
         GR_LOG_FATAL(d_logger, "Tone Reservation PAPR, cannot allocate memory for rNew.");
         volk_free(r);
         volk_free(magnitude);
@@ -619,7 +619,7 @@ dvbt2_paprtr_cc_impl::dvbt2_paprtr_cc_impl(dvbt2_extended_carrier_t carriermode,
         throw std::bad_alloc();
     }
     v = (gr_complex*)volk_malloc(sizeof(gr_complex) * N_TR, volk_get_alignment());
-    if (v == NULL) {
+    if (v == nullptr) {
         GR_LOG_FATAL(d_logger, "Tone Reservation PAPR, cannot allocate memory for v.");
         volk_free(rNew);
         volk_free(r);

@@ -59,7 +59,7 @@ wavfile_source_impl::wavfile_source_impl(const char* filename, bool repeat)
     : sync_block("wavfile_source",
                  io_signature::make(0, 0, 0),
                  io_signature::make(1, 2, sizeof(float))),
-      d_fp(NULL),
+      d_fp(nullptr),
       d_repeat(repeat),
       d_sample_rate(1),
       d_nchans(1),
@@ -76,7 +76,7 @@ wavfile_source_impl::wavfile_source_impl(const char* filename, bool repeat)
         throw std::runtime_error("can't open file");
     }
 
-    if ((d_fp = fdopen(fd, "rb")) == NULL) {
+    if ((d_fp = fdopen(fd, "rb")) == nullptr) {
         perror(filename);
         throw std::runtime_error("can't open file");
     }

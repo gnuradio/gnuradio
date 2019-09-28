@@ -80,7 +80,7 @@ public:
                      double samp_rate,
                      const std::string& name,
                      unsigned int nconnections,
-                     QWidget* parent = NULL);
+                     QWidget* parent = nullptr);
     ~time_sink_f_impl();
 
     bool check_topology(int ninputs, int noutputs);

@@ -72,8 +72,8 @@ symbol_sync_ff_impl::symbol_sync_ff_impl(enum ted_type detector_type,
     : block("symbol_sync_ff",
             io_signature::make(1, 1, sizeof(float)),
             io_signature::makev(1, 4, std::vector<int>(4, sizeof(float)))),
-      d_ted(NULL),
-      d_interp(NULL),
+      d_ted(nullptr),
+      d_interp(nullptr),
       d_inst_output_period(sps / static_cast<float>(osps)),
       d_inst_clock_period(sps),
       d_avg_clock_period(sps),
@@ -84,9 +84,9 @@ symbol_sync_ff_impl::symbol_sync_ff_impl(enum ted_type detector_type,
       d_time_est_key(pmt::intern("time_est")),
       d_clock_est_key(pmt::intern("clock_est")),
       d_noutputs(1),
-      d_out_error(NULL),
-      d_out_instantaneous_clock_period(NULL),
-      d_out_average_clock_period(NULL)
+      d_out_error(nullptr),
+      d_out_instantaneous_clock_period(nullptr),
+      d_out_average_clock_period(nullptr)
 {
     // Brute force fix of the output io_signature, because I can't get
     // an anonymous std::vector<int>() rvalue, with a const expression
@@ -106,13 +106,13 @@ symbol_sync_ff_impl::symbol_sync_ff_impl(enum ted_type detector_type,
 
     // Timing Error Detector
     d_ted = timing_error_detector::make(detector_type, slicer);
-    if (d_ted == NULL)
+    if (d_ted == nullptr)
         throw std::runtime_error("unable to create timing_error_detector");
 
     // Interpolating Resampler
     d_interp = interpolating_resampler_fff::make(
         interp_type, d_ted->needs_derivative(), n_filters, taps);
-    if (d_interp == NULL)
+    if (d_interp == nullptr)
         throw std::runtime_error("unable to create interpolating_resampler_fff");
 
     // Block Internal Clocks
@@ -355,9 +355,9 @@ void symbol_sync_ff_impl::save_expiring_tags(uint64_t nitems_rd, int consumed)
 void symbol_sync_ff_impl::setup_optional_outputs(gr_vector_void_star& output_items)
 {
     d_noutputs = output_items.size();
-    d_out_error = NULL;
-    d_out_instantaneous_clock_period = NULL;
-    d_out_average_clock_period = NULL;
+    d_out_error = nullptr;
+    d_out_instantaneous_clock_period = nullptr;
+    d_out_average_clock_period = nullptr;
 
     if (d_noutputs < 2)
         return;

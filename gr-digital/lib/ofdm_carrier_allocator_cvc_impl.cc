@@ -94,15 +94,15 @@ ofdm_carrier_allocator_cvc_impl::ofdm_carrier_allocator_cvc_impl(
             "Pilot carriers must be of type vector of vector i.e. ((),).");
     }
     for (auto& d_pilot_carrier : d_pilot_carriers) {
-        for (unsigned j = 0; j < d_pilot_carrier.size(); j++) {
-            if (d_pilot_carrier[j] < 0) {
-                d_pilot_carrier[j] += d_fft_len;
+        for (int& j : d_pilot_carrier) {
+            if (j < 0) {
+                j += d_fft_len;
             }
-            if (d_pilot_carrier[j] > d_fft_len || d_pilot_carrier[j] < 0) {
+            if (j > d_fft_len || j < 0) {
                 throw std::invalid_argument("pilot carrier index out of bounds");
             }
             if (d_output_is_shifted) {
-                d_pilot_carrier[j] = (d_pilot_carrier[j] + fft_len / 2) % fft_len;
+                j = (j + fft_len / 2) % fft_len;
             }
         }
     }

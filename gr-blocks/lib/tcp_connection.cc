@@ -41,7 +41,7 @@ tcp_connection::sptr tcp_connection::make(boost::asio::io_service& io_service,
 tcp_connection::tcp_connection(boost::asio::io_service& io_service,
                                int MTU /*= 10000*/,
                                bool no_delay /*=false*/)
-    : d_socket(io_service), d_block(NULL), d_no_delay(no_delay)
+    : d_socket(io_service), d_block(nullptr), d_no_delay(no_delay)
 {
     d_buf.resize(MTU);
     try {

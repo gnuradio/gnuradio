@@ -34,7 +34,7 @@ namespace gr {
   {
     //Use "GR_PREFIX" environment variable when specified
     const char *prefix = getenv("GR_PREFIX");
-    if (prefix != NULL) return prefix;
+    if (prefix != nullptr) return prefix;
 
     return "@prefix@";
   }
@@ -44,7 +44,7 @@ namespace gr {
   {
     //Provide the sysconfdir in terms of prefix()
     //when the "GR_PREFIX" environment var is specified.
-    if (getenv("GR_PREFIX") != NULL)
+    if (getenv("GR_PREFIX") != nullptr)
     {
       return prefix() + "/@GR_CONF_DIR@";
     }
@@ -57,7 +57,7 @@ namespace gr {
   {
     //Provide the prefsdir in terms of sysconfdir()
     //when the "GR_PREFIX" environment var is specified.
-    if (getenv("GR_PREFIX") != NULL)
+    if (getenv("GR_PREFIX") != nullptr)
     {
       return sysconfdir() + "/@CMAKE_PROJECT_NAME@/conf.d";
     }

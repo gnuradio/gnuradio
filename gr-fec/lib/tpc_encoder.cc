@@ -81,7 +81,7 @@ tpc_encoder::tpc_encoder(std::vector<int> row_polys,
                      ((d_kcol + colEncoder_m) * colEncoder_n) -
                  d_bval;
 
-    fp = NULL;
+    fp = nullptr;
     // DEBUG_PRINT("inputSize=%d outputSize=%d\n", inputSize, outputSize);
     // fp = fopen("c_encoder_output.txt", "w");
 

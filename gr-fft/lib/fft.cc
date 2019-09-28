@@ -128,7 +128,7 @@ static void import_wisdom()
 {
     const std::string filename = wisdom_filename();
     FILE* fp = fopen(filename.c_str(), "r");
-    if (fp != 0) {
+    if (fp != nullptr) {
         int r = fftwf_import_wisdom_from_file(fp);
         fclose(fp);
         if (!r) {
@@ -155,7 +155,7 @@ static void export_wisdom()
 {
     const std::string filename = wisdom_filename();
     FILE* fp = fopen(filename.c_str(), "w");
-    if (fp != 0) {
+    if (fp != nullptr) {
         fftwf_export_wisdom_to_file(fp);
         fclose(fp);
     } else {
@@ -180,12 +180,12 @@ fft_complex::fft_complex(int fft_size, bool forward, int nthreads)
     d_fft_size = fft_size;
     d_inbuf = (gr_complex*)volk_malloc(sizeof(gr_complex) * inbuf_length(),
                                        volk_get_alignment());
-    if (d_inbuf == 0) {
+    if (d_inbuf == nullptr) {
         throw std::runtime_error("volk_malloc");
     }
     d_outbuf = (gr_complex*)volk_malloc(sizeof(gr_complex) * outbuf_length(),
                                         volk_get_alignment());
-    if (d_outbuf == 0) {
+    if (d_outbuf == nullptr) {
         volk_free(d_inbuf);
         throw std::runtime_error("volk_malloc");
     }
@@ -201,7 +201,7 @@ fft_complex::fft_complex(int fft_size, bool forward, int nthreads)
                                forward ? FFTW_FORWARD : FFTW_BACKWARD,
                                FFTW_MEASURE);
 
-    if (d_plan == NULL) {
+    if (d_plan == nullptr) {
         fprintf(stderr, "gr::fft: error creating plan\n");
         throw std::runtime_error("fftwf_plan_dft_1d failed");
     }
@@ -248,13 +248,13 @@ fft_real_fwd::fft_real_fwd(int fft_size, int nthreads)
 
     d_fft_size = fft_size;
     d_inbuf = (float*)volk_malloc(sizeof(float) * inbuf_length(), volk_get_alignment());
-    if (d_inbuf == 0) {
+    if (d_inbuf == nullptr) {
         throw std::runtime_error("volk_malloc");
     }
 
     d_outbuf = (gr_complex*)volk_malloc(sizeof(gr_complex) * outbuf_length(),
                                         volk_get_alignment());
-    if (d_outbuf == 0) {
+    if (d_outbuf == nullptr) {
         volk_free(d_inbuf);
         throw std::runtime_error("volk_malloc");
     }
@@ -267,7 +267,7 @@ fft_real_fwd::fft_real_fwd(int fft_size, int nthreads)
     d_plan = fftwf_plan_dft_r2c_1d(
         fft_size, d_inbuf, reinterpret_cast<fftwf_complex*>(d_outbuf), FFTW_MEASURE);
 
-    if (d_plan == NULL) {
+    if (d_plan == nullptr) {
         fprintf(stderr, "gr::fft::fft_real_fwd: error creating plan\n");
         throw std::runtime_error("fftwf_plan_dft_r2c_1d failed");
     }
@@ -316,12 +316,12 @@ fft_real_rev::fft_real_rev(int fft_size, int nthreads)
     d_fft_size = fft_size;
     d_inbuf = (gr_complex*)volk_malloc(sizeof(gr_complex) * inbuf_length(),
                                        volk_get_alignment());
-    if (d_inbuf == 0) {
+    if (d_inbuf == nullptr) {
         throw std::runtime_error("volk_malloc");
     }
 
     d_outbuf = (float*)volk_malloc(sizeof(float) * outbuf_length(), volk_get_alignment());
-    if (d_outbuf == 0) {
+    if (d_outbuf == nullptr) {
         volk_free(d_inbuf);
         throw std::runtime_error("volk_malloc");
     }
@@ -337,7 +337,7 @@ fft_real_rev::fft_real_rev(int fft_size, int nthreads)
     d_plan = fftwf_plan_dft_c2r_1d(
         fft_size, reinterpret_cast<fftwf_complex*>(d_inbuf), d_outbuf, FFTW_MEASURE);
 
-    if (d_plan == NULL) {
+    if (d_plan == nullptr) {
         fprintf(stderr, "gr::fft::fft_real_rev: error creating plan\n");
         throw std::runtime_error("fftwf_plan_dft_c2r_1d failed");
     }

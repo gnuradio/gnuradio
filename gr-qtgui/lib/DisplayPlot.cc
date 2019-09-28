@@ -112,7 +112,7 @@ DisplayPlot::~DisplayPlot()
 void DisplayPlot::disableLegend()
 {
     // Haven't found a good way to toggle it on/off
-    insertLegend(NULL);
+    insertLegend(nullptr);
 }
 
 void DisplayPlot::setYaxis(double min, double max)

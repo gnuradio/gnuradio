@@ -76,10 +76,10 @@ file_meta_source_impl::file_meta_source_impl(const std::string& filename,
       d_updated(false),
       d_repeat(repeat)
 {
-    d_fp = 0;
-    d_new_fp = 0;
-    d_hdr_fp = 0;
-    d_new_hdr_fp = 0;
+    d_fp = nullptr;
+    d_new_fp = nullptr;
+    d_hdr_fp = nullptr;
+    d_new_hdr_fp = nullptr;
 
     if (detached_header == true) {
         d_state = STATE_DETACHED;
@@ -284,15 +284,15 @@ bool file_meta_source_impl::_open(FILE** fp, const char* filename)
 
     if (*fp) { // if we've already got a new one open, close it
         fclose(*fp);
-        fp = 0;
+        fp = nullptr;
     }
 
-    if ((*fp = fdopen(fd, "rb")) == NULL) {
+    if ((*fp = fdopen(fd, "rb")) == nullptr) {
         perror(filename);
         ::close(fd); // don't leak file descriptor if fdopen fails.
     }
 
-    ret = fp != 0;
+    ret = fp != nullptr;
 
     return ret;
 }
@@ -303,25 +303,25 @@ void file_meta_source_impl::close()
     if (d_state == STATE_DETACHED) {
         if (d_new_hdr_fp) {
             fclose(d_new_hdr_fp);
-            d_new_hdr_fp = 0;
+            d_new_hdr_fp = nullptr;
         }
     }
 
     if (d_new_fp) {
         fclose(d_new_fp);
-        d_new_fp = 0;
+        d_new_fp = nullptr;
     }
     d_updated = true;
 
     if (d_fp) {
         fclose(d_fp);
-        d_fp = 0;
+        d_fp = nullptr;
     }
 
     if (d_state == STATE_DETACHED) {
         if (d_hdr_fp) {
             fclose(d_hdr_fp);
-            d_hdr_fp = 0;
+            d_hdr_fp = nullptr;
         }
     }
 }
@@ -334,13 +334,13 @@ void file_meta_source_impl::do_update()
             if (d_hdr_fp)
                 fclose(d_hdr_fp);
             d_hdr_fp = d_new_hdr_fp; // install new file pointer
-            d_new_hdr_fp = 0;
+            d_new_hdr_fp = nullptr;
         }
 
         if (d_fp)
             fclose(d_fp);
         d_fp = d_new_fp; // install new file pointer
-        d_new_fp = 0;
+        d_new_fp = nullptr;
 
         d_updated = false;
     }
@@ -377,7 +377,7 @@ int file_meta_source_impl::work(int noutput_items,
     int size = seg_size;
 
     do_update(); // update d_fp is reqd
-    if (d_fp == NULL)
+    if (d_fp == nullptr)
         throw std::runtime_error("work with file not open");
 
     // Push all tags onto the stream and remove them from the vector

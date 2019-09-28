@@ -40,7 +40,7 @@ class NumberDisplayForm : public QWidget
 public:
     NumberDisplayForm(int nplots = 1,
                       gr::qtgui::graph_t type = gr::qtgui::NUM_GRAPH_HORIZ,
-                      QWidget* parent = 0);
+                      QWidget* parent = nullptr);
     ~NumberDisplayForm();
 
     gr::qtgui::graph_t graphType() const;

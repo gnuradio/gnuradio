@@ -126,7 +126,8 @@ void SpectrumGUIClass::openSpectrumWindow(QWidget* parent,
     _lastGUIUpdateTime = 0;
 
     // Draw Blank Display
-    updateWindow(false, NULL, 0, NULL, 0, NULL, 0, gr::high_res_timer_now(), true);
+    updateWindow(
+        false, nullptr, 0, nullptr, 0, nullptr, 0, gr::high_res_timer_now(), true);
 
     // Set up the initial frequency axis settings
     setFrequencyRange(_centerFrequency, _startFrequency, _stopFrequency);
@@ -236,14 +237,14 @@ void SpectrumGUIClass::updateWindow(const bool updateDisplayFlag,
     int64_t timeDomainBufferSize = 0;
 
     if (updateDisplayFlag) {
-        if ((fftBuffer != NULL) && (bufferSize > 0)) {
+        if ((fftBuffer != nullptr) && (bufferSize > 0)) {
             memcpy(_fftPoints, fftBuffer, bufferSize * sizeof(float));
         }
 
         // ALL OF THIS SHIT SHOULD BE COMBINED WITH THE FFTSHIFT
         // USE VOLK_32FC_DEINTERLEAVE_64F_X2_A TO GET REAL/IMAG FROM COMPLEX32
         // Can't do a memcpy since this is going from float to double data type
-        if ((realTimeDomainData != NULL) && (realTimeDomainDataSize > 0)) {
+        if ((realTimeDomainData != nullptr) && (realTimeDomainDataSize > 0)) {
             const float* realTimeDomainDataPtr = realTimeDomainData;
 
             double* realTimeDomainPointsPtr = _realTimeDomainPoints;
@@ -255,7 +256,7 @@ void SpectrumGUIClass::updateWindow(const bool updateDisplayFlag,
             }
         }
 
-        if ((complexTimeDomainData != NULL) && (complexTimeDomainDataSize > 0)) {
+        if ((complexTimeDomainData != nullptr) && (complexTimeDomainDataSize > 0)) {
             volk_32fc_deinterleave_64f_x2(_realTimeDomainPoints,
                                           _imagTimeDomainPoints,
                                           (const lv_32fc_t*)complexTimeDomainData,

@@ -75,7 +75,7 @@ public:
                        const std::string& y_axis_label,
                        const std::string& name,
                        int nconnections,
-                       QWidget* parent = NULL);
+                       QWidget* parent = nullptr);
     ~vector_sink_f_impl();
 
     bool check_topology(int ninputs, int noutputs);

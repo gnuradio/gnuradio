@@ -71,7 +71,7 @@ dvbt_map_impl::dvbt_map_impl(int nsize,
     d_gain = gain * config.d_norm;
 
     d_constellation_points = new (std::nothrow) gr_complex[d_constellation_size];
-    if (d_constellation_points == NULL) {
+    if (d_constellation_points == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "DVB-T Map, cannot allocate memory for d_constellation_points.");
         throw std::bad_alloc();

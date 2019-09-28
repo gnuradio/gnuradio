@@ -898,7 +898,7 @@ dvbt2_framemapper_cc_impl::dvbt2_framemapper_cc_impl(
                            (N_FC - C_FC); /* avoid segfault */
         }
         zigzag_interleave = (gr_complex*)malloc(sizeof(gr_complex) * mapped_items);
-        if (zigzag_interleave == NULL) {
+        if (zigzag_interleave == nullptr) {
             GR_LOG_FATAL(d_logger,
                          "Frame Mapper, cannot allocate memory for zigzag_interleave.");
             throw std::bad_alloc();
@@ -912,7 +912,7 @@ dvbt2_framemapper_cc_impl::dvbt2_framemapper_cc_impl(
                            (N_FC - C_FC); /* avoid segfault */
         }
         zigzag_interleave = (gr_complex*)malloc(sizeof(gr_complex) * mapped_items);
-        if (zigzag_interleave == NULL) {
+        if (zigzag_interleave == nullptr) {
             GR_LOG_FATAL(d_logger,
                          "Frame Mapper, cannot allocate memory for zigzag_interleave.");
             throw std::bad_alloc();
@@ -921,7 +921,7 @@ dvbt2_framemapper_cc_impl::dvbt2_framemapper_cc_impl(
     dummy_randomize =
         (gr_complex*)malloc(sizeof(gr_complex) * mapped_items - stream_items - 1840 -
                             (N_post / eta_mod) - (N_FC - C_FC));
-    if (dummy_randomize == NULL) {
+    if (dummy_randomize == nullptr) {
         free(zigzag_interleave);
         GR_LOG_FATAL(d_logger,
                      "Frame Mapper, cannot allocate memory for dummy_randomize.");

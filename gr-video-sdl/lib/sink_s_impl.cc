@@ -69,8 +69,8 @@ sink_s_impl::sink_s_impl(double framerate,
       d_dst_height(dst_height),
       d_format(format),
       d_current_line(0),
-      d_screen(NULL),
-      d_image(NULL),
+      d_screen(nullptr),
+      d_image(nullptr),
       d_avg_delay(0.0),
       d_wanted_ticks(0)
 {
@@ -101,7 +101,7 @@ sink_s_impl::sink_s_impl(double framerate,
         SDL_SWSURFACE | SDL_RESIZABLE |
             SDL_ANYFORMAT); // SDL_DOUBLEBUF |SDL_SWSURFACE| SDL_HWSURFACE||SDL_FULLSCREEN
 
-    if (d_screen == NULL) {
+    if (d_screen == nullptr) {
         std::cerr << "Unable to set SDL video mode: " << SDL_GetError()
                   << "\n SDL_SetVideoMode() Failed \n";
         exit(1);

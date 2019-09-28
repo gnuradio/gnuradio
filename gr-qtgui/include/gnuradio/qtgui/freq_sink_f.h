@@ -111,7 +111,7 @@ public:
                      double bw,
                      const std::string& name,
                      int nconnections = 1,
-                     QWidget* parent = NULL);
+                     QWidget* parent = nullptr);
 
     virtual void exec_() = 0;
     virtual QWidget* qwidget() = 0;

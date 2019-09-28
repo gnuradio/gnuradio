@@ -78,15 +78,15 @@ alsa_source::alsa_source(int sampling_rate,
           "audio_alsa_source", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
       d_sampling_rate(sampling_rate),
       d_device_name(device_name.empty() ? default_device_name() : device_name),
-      d_pcm_handle(0),
+      d_pcm_handle(nullptr),
       d_hw_params((snd_pcm_hw_params_t*)(new char[snd_pcm_hw_params_sizeof()])),
       d_sw_params((snd_pcm_sw_params_t*)(new char[snd_pcm_sw_params_sizeof()])),
       d_nperiods(default_nperiods()),
       d_period_time_us((unsigned int)(default_period_time() * 1e6)),
       d_period_size(0),
       d_buffer_size_bytes(0),
-      d_buffer(0),
-      d_worker(0),
+      d_buffer(nullptr),
+      d_worker(nullptr),
       d_hw_nchan(0),
       d_special_case_stereo_to_mono(false),
       d_noverruns(0),
@@ -160,7 +160,7 @@ alsa_source::alsa_source(int sampling_rate,
     // sampling rate
     unsigned int orig_sampling_rate = d_sampling_rate;
     if ((error = snd_pcm_hw_params_set_rate_near(
-             d_pcm_handle, d_hw_params, &d_sampling_rate, 0)) < 0)
+             d_pcm_handle, d_hw_params, &d_sampling_rate, nullptr)) < 0)
         bail("failed to set rate near", error);
 
     if (orig_sampling_rate != d_sampling_rate) {

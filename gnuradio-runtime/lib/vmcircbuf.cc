@@ -52,7 +52,7 @@ vmcircbuf_factory::~vmcircbuf_factory() {}
 
 // ----------------------------------------------------------------
 
-static vmcircbuf_factory* s_default_factory = 0;
+static vmcircbuf_factory* s_default_factory = nullptr;
 
 vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
 {
@@ -185,7 +185,7 @@ test_a_bunch(vmcircbuf_factory* factory, int n, int size, int* start_ptr, bool v
     for (int i = 0; i < n; i++) {
         counter[i] = *start_ptr;
         *start_ptr += size;
-        if ((c[i] = factory->make(size)) == 0) {
+        if ((c[i] = factory->make(size)) == nullptr) {
             if (verbose)
                 fprintf(
                     stderr,
@@ -207,7 +207,7 @@ test_a_bunch(vmcircbuf_factory* factory, int n, int size, int* start_ptr, bool v
 
     for (int i = 0; i < n; i++) {
         delete c[i];
-        c[i] = 0;
+        c[i] = nullptr;
     }
 
     return ok;

@@ -63,7 +63,7 @@ const_sink_c_impl::const_sink_c_impl(int size,
     d_argv = new char;
     d_argv[0] = '\0';
 
-    d_main_gui = NULL;
+    d_main_gui = nullptr;
 
     d_index = 0;
 
@@ -121,7 +121,7 @@ bool const_sink_c_impl::check_topology(int ninputs, int noutputs)
 
 void const_sink_c_impl::initialize()
 {
-    if (qApp != NULL) {
+    if (qApp != nullptr) {
         d_qApplication = qApp;
     } else {
 #if QT_VERSION >= 0x040500 && QT_VERSION < 0x050000

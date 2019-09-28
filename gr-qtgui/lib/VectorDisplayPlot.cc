@@ -280,7 +280,7 @@ void VectorDisplayPlot::setXAxisValues(const double start, const double step)
     d_x_axis_start = start;
     d_x_axis_step = step;
 
-    if ((axisScaleDraw(QwtPlot::xBottom) != NULL) && (d_zoomer != NULL)) {
+    if ((axisScaleDraw(QwtPlot::xBottom) != nullptr) && (d_zoomer != nullptr)) {
         setAxisTitle(QwtPlot::xBottom, d_x_axis_label);
         if (reset) {
             _resetXAxisPoints();

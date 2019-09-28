@@ -74,8 +74,8 @@ dc_blocker_ff_impl::dc_blocker_ff_impl(int D, bool long_form)
     } else {
         d_ma_0 = new moving_averager_f(D);
         d_ma_1 = new moving_averager_f(D);
-        d_ma_2 = NULL;
-        d_ma_3 = NULL;
+        d_ma_2 = nullptr;
+        d_ma_3 = nullptr;
     }
 }
 

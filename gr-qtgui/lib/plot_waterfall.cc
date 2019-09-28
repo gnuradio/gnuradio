@@ -56,7 +56,7 @@ class PlotWaterfall::PrivateData
 public:
     PrivateData()
     {
-        data = NULL;
+        data = nullptr;
         colorMap = new QwtLinearColorMap();
     }
     ~PrivateData() { delete colorMap; }

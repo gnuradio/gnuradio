@@ -53,14 +53,14 @@ dvbt_reed_solomon_enc_impl::dvbt_reed_solomon_enc_impl(
       d_blocks(blocks)
 {
     d_rs = init_rs_char(rs_init_symsize, gfpoly, rs_init_fcr, rs_init_prim, (n - k));
-    if (d_rs == NULL) {
+    if (d_rs == nullptr) {
         GR_LOG_FATAL(d_logger, "Reed-Solomon Encoder, cannot allocate memory for d_rs.");
         throw std::bad_alloc();
     }
     // The full input frame size (d_k) (no need to add in d_s, as the block input is the
     // pre-shortedned K)
     d_data = (unsigned char*)malloc(sizeof(unsigned char) * (d_k));
-    if (d_data == NULL) {
+    if (d_data == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "Reed-Solomon Encoder, cannot allocate memory for d_data.");
         free_rs_char(d_rs);

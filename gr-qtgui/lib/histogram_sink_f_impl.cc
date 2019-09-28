@@ -75,7 +75,7 @@ histogram_sink_f_impl::histogram_sink_f_impl(int size,
     d_argv = new char;
     d_argv[0] = '\0';
 
-    d_main_gui = NULL;
+    d_main_gui = nullptr;
 
     d_index = 0;
 
@@ -118,7 +118,7 @@ bool histogram_sink_f_impl::check_topology(int ninputs, int noutputs)
 
 void histogram_sink_f_impl::initialize()
 {
-    if (qApp != NULL) {
+    if (qApp != nullptr) {
         d_qApplication = qApp;
     } else {
 #if QT_VERSION >= 0x040500 && QT_VERSION < 0x050000

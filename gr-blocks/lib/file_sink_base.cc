@@ -54,7 +54,11 @@ namespace gr {
 namespace blocks {
 
 file_sink_base::file_sink_base(const char* filename, bool is_binary, bool append)
-    : d_fp(0), d_new_fp(0), d_updated(false), d_is_binary(is_binary), d_append(append)
+    : d_fp(nullptr),
+      d_new_fp(nullptr),
+      d_updated(false),
+      d_is_binary(is_binary),
+      d_append(append)
 {
     if (!open(filename))
         throw std::runtime_error("can't open file");
@@ -65,7 +69,7 @@ file_sink_base::~file_sink_base()
     close();
     if (d_fp) {
         fclose(d_fp);
-        d_fp = 0;
+        d_fp = nullptr;
     }
 }
 
@@ -87,16 +91,16 @@ bool file_sink_base::open(const char* filename)
     }
     if (d_new_fp) { // if we've already got a new one open, close it
         fclose(d_new_fp);
-        d_new_fp = 0;
+        d_new_fp = nullptr;
     }
 
-    if ((d_new_fp = fdopen(fd, d_is_binary ? "wb" : "w")) == NULL) {
+    if ((d_new_fp = fdopen(fd, d_is_binary ? "wb" : "w")) == nullptr) {
         perror(filename);
         ::close(fd); // don't leak file descriptor if fdopen fails.
     }
 
     d_updated = true;
-    return d_new_fp != 0;
+    return d_new_fp != nullptr;
 }
 
 void file_sink_base::close()
@@ -105,7 +109,7 @@ void file_sink_base::close()
 
     if (d_new_fp) {
         fclose(d_new_fp);
-        d_new_fp = 0;
+        d_new_fp = nullptr;
     }
     d_updated = true;
 }
@@ -117,7 +121,7 @@ void file_sink_base::do_update()
         if (d_fp)
             fclose(d_fp);
         d_fp = d_new_fp; // install new file pointer
-        d_new_fp = 0;
+        d_new_fp = nullptr;
         d_updated = false;
     }
 }

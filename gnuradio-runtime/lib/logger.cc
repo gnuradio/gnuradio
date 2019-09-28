@@ -99,7 +99,7 @@ void logger_config::load_config(std::string filename, unsigned int watch_period)
         instance.filename = filename;
         instance.watch_period = watch_period;
         // Stop any file watching thread
-        if (instance.watch_thread != NULL)
+        if (instance.watch_thread != nullptr)
             stop_watch();
         // Load configuration
         // std::cout<<"GNURadio Loading logger
@@ -121,7 +121,7 @@ void logger_config::stop_watch()
         instance.watch_thread->interrupt();
         instance.watch_thread->join();
         delete (instance.watch_thread);
-        instance.watch_thread = NULL;
+        instance.watch_thread = nullptr;
     }
 }
 

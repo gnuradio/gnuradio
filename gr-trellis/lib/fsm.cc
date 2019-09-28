@@ -85,7 +85,7 @@ fsm::fsm(const char* name)
 {
     FILE* fsmfile;
 
-    if ((fsmfile = fopen(name, "r")) == NULL)
+    if ((fsmfile = fopen(name, "r")) == nullptr)
         throw std::runtime_error("fsm::fsm(const char *name): file open error\n");
     // printf("file open error in fsm()\n");
 

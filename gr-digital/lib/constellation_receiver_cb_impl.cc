@@ -136,7 +136,7 @@ int constellation_receiver_cb_impl::general_work(int noutput_items,
     unsigned int sym_value;
     gr_complex sample, nco;
 
-    float *out_err = 0, *out_phase = 0, *out_freq = 0;
+    float *out_err = nullptr, *out_phase = nullptr, *out_freq = nullptr;
     gr_complex* out_symbol;
     if (output_items.size() == 5) {
         out_err = (float*)output_items[1];

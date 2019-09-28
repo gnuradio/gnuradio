@@ -51,9 +51,9 @@ static struct scheduler_table {
 
 static scheduler_sptr make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_items)
 {
-    static scheduler_maker factory = 0;
+    static scheduler_maker factory = nullptr;
 
-    if (factory == 0) {
+    if (factory == nullptr) {
         char* v = getenv("GR_SCHEDULER");
         if (!v)
             factory = scheduler_table[0].f; // use default
@@ -64,7 +64,7 @@ static scheduler_sptr make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_it
                     break;
                 }
             }
-            if (factory == 0) {
+            if (factory == nullptr) {
                 std::cerr << "warning: Invalid GR_SCHEDULER environment variable value \""
                           << v << "\".  Using \"" << scheduler_table[0].name << "\"\n";
                 factory = scheduler_table[0].f;
@@ -84,7 +84,7 @@ top_block_impl::~top_block_impl()
     if (d_lock_count) {
         std::cerr << "error: destroying locked block." << std::endl;
     }
-    d_owner = 0;
+    d_owner = nullptr;
 }
 
 void top_block_impl::start(int max_noutput_items)

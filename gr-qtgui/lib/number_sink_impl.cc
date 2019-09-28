@@ -80,7 +80,7 @@ number_sink_impl::number_sink_impl(
     d_argv = new char;
     d_argv[0] = '\0';
 
-    d_main_gui = NULL;
+    d_main_gui = nullptr;
 
     // Set alignment properties for VOLK
     const int alignment_multiple = volk_get_alignment() / d_itemsize;
@@ -104,7 +104,7 @@ bool number_sink_impl::check_topology(int ninputs, int noutputs)
 
 void number_sink_impl::initialize()
 {
-    if (qApp != NULL) {
+    if (qApp != nullptr) {
         d_qApplication = qApp;
     } else {
         d_qApplication = new QApplication(d_argc, &d_argv);

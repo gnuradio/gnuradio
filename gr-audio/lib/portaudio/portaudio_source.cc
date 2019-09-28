@@ -148,7 +148,7 @@ portaudio_source::portaudio_source(int sampling_rate,
       d_ok_to_block(ok_to_block),
       d_verbose(prefs::singleton()->get_bool("audio_portaudio", "verbose", false)),
       d_portaudio_buffer_size_frames(0),
-      d_stream(0),
+      d_stream(nullptr),
       d_ringbuffer_mutex(),
       d_ringbuffer_cond(),
       d_ringbuffer_ready(false),
@@ -161,7 +161,7 @@ portaudio_source::portaudio_source(int sampling_rate,
     PaError err;
     int i, numDevices;
     PaDeviceIndex device = 0;
-    const PaDeviceInfo* deviceInfo = NULL;
+    const PaDeviceInfo* deviceInfo = nullptr;
 
     err = Pa_Initialize();
     if (err != paNoError) {
@@ -219,7 +219,7 @@ portaudio_source::portaudio_source(int sampling_rate,
     d_input_parameters.channelCount = deviceInfo->maxInputChannels;
     d_input_parameters.sampleFormat = SAMPLE_FORMAT;
     d_input_parameters.suggestedLatency = deviceInfo->defaultLowInputLatency;
-    d_input_parameters.hostApiSpecificStreamInfo = NULL;
+    d_input_parameters.hostApiSpecificStreamInfo = nullptr;
 
     // We fill in the real channelCount in check_topology when we know
     // how many inputs are connected to us.
@@ -238,7 +238,7 @@ bool portaudio_source::check_topology(int ninputs, int noutputs)
 
     if (Pa_IsStreamActive(d_stream)) {
         Pa_CloseStream(d_stream);
-        d_stream = 0;
+        d_stream = nullptr;
         d_reader.reset(); // boost::shared_ptr for d_reader = 0
         d_writer.reset(); // boost::shared_ptr for d_write = 0
     }
@@ -256,7 +256,7 @@ bool portaudio_source::check_topology(int ninputs, int noutputs)
 #endif
     err = Pa_OpenStream(&d_stream,
                         &d_input_parameters,
-                        NULL, // No output
+                        nullptr, // No output
                         d_sampling_rate,
                         d_portaudio_buffer_size_frames,
                         paClipOff,

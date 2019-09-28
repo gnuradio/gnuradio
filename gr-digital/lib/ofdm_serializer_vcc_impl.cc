@@ -87,18 +87,18 @@ ofdm_serializer_vcc_impl::ofdm_serializer_vcc_impl(
       d_symbols_per_set(0)
 {
     for (auto& d_occupied_carrier : d_occupied_carriers) {
-        for (unsigned k = 0; k < d_occupied_carrier.size(); k++) {
+        for (int& k : d_occupied_carrier) {
             if (input_is_shifted) {
-                d_occupied_carrier[k] += fft_len / 2;
-                if (d_occupied_carrier[k] > fft_len) {
-                    d_occupied_carrier[k] -= fft_len;
+                k += fft_len / 2;
+                if (k > fft_len) {
+                    k -= fft_len;
                 }
             } else {
-                if (d_occupied_carrier[k] < 0) {
-                    d_occupied_carrier[k] += fft_len;
+                if (k < 0) {
+                    k += fft_len;
                 }
             }
-            if (d_occupied_carrier[k] >= fft_len || d_occupied_carrier[k] < 0) {
+            if (k >= fft_len || k < 0) {
                 throw std::invalid_argument("ofdm_serializer_vcc: trying to occupy a "
                                             "carrier outside the fft length.");
             }

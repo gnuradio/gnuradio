@@ -60,7 +60,7 @@ oss_sink::oss_sink(int sampling_rate, const std::string device_name, bool ok_to_
       d_sampling_rate(sampling_rate),
       d_device_name(device_name.empty() ? default_device_name() : device_name),
       d_fd(-1),
-      d_buffer(0),
+      d_buffer(nullptr),
       d_chunk_size(0)
 {
     if ((d_fd = open(d_device_name.c_str(), O_WRONLY)) < 0) {

@@ -42,7 +42,7 @@ protected:
     char* d_base;
 
     // CREATORS
-    vmcircbuf(int size) : d_size(size), d_base(0){};
+    vmcircbuf(int size) : d_size(size), d_base(nullptr){};
 
 public:
     virtual ~vmcircbuf();

@@ -58,7 +58,7 @@ public:
                     int ber_min_errors = 100,
                     float ber_limit = -7.0,
                     std::vector<std::string> curvenames = std::vector<std::string>(),
-                    QWidget* parent = NULL);
+                    QWidget* parent = nullptr);
     ~ber_sink_b_impl();
 
     bool check_topology(int ninputs, int noutputs);

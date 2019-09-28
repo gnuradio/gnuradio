@@ -36,7 +36,7 @@ void put_next_rx_char(void* callback_state, char c)
     struct freedv_rx_callback_state* pstate;
 
     pstate = (struct freedv_rx_callback_state*)callback_state;
-    if (pstate->ftxt != NULL) {
+    if (pstate->ftxt != nullptr) {
         // fprintf(pstate->ftxt, "%c\n", c);
     }
     return;
@@ -67,10 +67,10 @@ freedv_rx_ss_impl::freedv_rx_ss_impl(int mode,
 #ifdef FREEDV_MODE_700D
     if (mode == FREEDV_MODE_700D) {
         d_adv.interleave_frames = interleave_frames;
-        if ((d_freedv = freedv_open_advanced(mode, &d_adv)) == NULL)
+        if ((d_freedv = freedv_open_advanced(mode, &d_adv)) == nullptr)
             throw std::runtime_error("freedv_tx_ss_impl: freedv_open_advanced failed");
     } else {
-        if ((d_freedv = freedv_open(mode)) == NULL)
+        if ((d_freedv = freedv_open(mode)) == nullptr)
             throw std::runtime_error("freedv_tx_ss_impl: freedv_open failed");
     }
 #else
@@ -79,7 +79,7 @@ freedv_rx_ss_impl::freedv_rx_ss_impl(int mode,
 #endif
     freedv_set_snr_squelch_thresh(d_freedv, d_squelch_thresh);
     freedv_set_squelch_en(d_freedv, 0);
-    freedv_set_callback_txt(d_freedv, put_next_rx_char, NULL, (void*)&d_cb_state);
+    freedv_set_callback_txt(d_freedv, put_next_rx_char, nullptr, (void*)&d_cb_state);
     d_speech_samples = freedv_get_n_speech_samples(d_freedv);
     d_max_modem_samples = freedv_get_n_max_modem_samples(d_freedv);
     d_nin = freedv_nin(d_freedv);

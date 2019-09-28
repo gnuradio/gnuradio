@@ -40,7 +40,7 @@ class QTGUI_API ConstellationDisplayForm : public DisplayForm
     Q_OBJECT
 
 public:
-    ConstellationDisplayForm(int nplots = 1, QWidget* parent = 0);
+    ConstellationDisplayForm(int nplots = 1, QWidget* parent = nullptr);
     ~ConstellationDisplayForm();
 
     ConstellationDisplayPlot* getPlot();

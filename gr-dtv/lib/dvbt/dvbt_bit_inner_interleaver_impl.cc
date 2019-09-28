@@ -68,7 +68,7 @@ dvbt_bit_inner_interleaver_impl::dvbt_bit_inner_interleaver_impl(
     d_hierarchy = config.d_hierarchy;
 
     d_perm = (unsigned char*)new (std::nothrow) unsigned char[d_v * d_bsize];
-    if (d_perm == NULL) {
+    if (d_perm == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "Bit Inner Interleaver, cannot allocate memory for d_perm.");
         throw std::bad_alloc();

@@ -67,7 +67,7 @@ static void t0_body()
         last_sa = sa;
 
         int* p = (int*)buf->write_pointer();
-        BOOST_CHECK(p != 0);
+        BOOST_CHECK(p != nullptr);
 
         for (int j = 0; j < sa; j++)
             *p++ = counter++;
@@ -97,7 +97,7 @@ static void t1_body()
     BOOST_CHECK(sa > 0);
 
     int* p = (int*)buf->write_pointer();
-    BOOST_CHECK(p != 0);
+    BOOST_CHECK(p != nullptr);
 
     for (int j = 0; j < sa / 3; j++) {
         *p++ = write_counter++;
@@ -110,7 +110,7 @@ static void t1_body()
     BOOST_CHECK(sa > 0);
 
     p = (int*)buf->write_pointer();
-    BOOST_CHECK(p != 0);
+    BOOST_CHECK(p != nullptr);
 
     for (int j = 0; j < sa / 2; j++) {
         *p++ = write_counter++;
@@ -123,7 +123,7 @@ static void t1_body()
     BOOST_CHECK_EQUAL(write_counter, ia);
 
     int* rp = (int*)r1->read_pointer();
-    BOOST_CHECK(rp != 0);
+    BOOST_CHECK(rp != nullptr);
 
     for (int i = 0; i < ia / 2; i++) {
         BOOST_CHECK_EQUAL(read_counter, *rp);
@@ -136,7 +136,7 @@ static void t1_body()
 
     ia = r1->items_available();
     rp = (int*)r1->read_pointer();
-    BOOST_CHECK(rp != 0);
+    BOOST_CHECK(rp != nullptr);
 
     for (int i = 0; i < ia; i++) {
         BOOST_CHECK_EQUAL(read_counter, *rp);
@@ -163,8 +163,8 @@ static void t2_body()
     int read_counter = 0;
     int write_counter = 0;
     int n;
-    int* wp = 0;
-    int* rp = 0;
+    int* wp = nullptr;
+    int* rp = nullptr;
 
     // Write 3/4 of buffer
 

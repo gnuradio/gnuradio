@@ -172,7 +172,11 @@ void scl_list::set_frozen_bit(const unsigned char frozen_bit, const int bit_pos)
 }
 
 path::path()
-    : path_metric(0.0f), owns_vectors(false), is_active(false), llr_vec(NULL), u_vec(NULL)
+    : path_metric(0.0f),
+      owns_vectors(false),
+      is_active(false),
+      llr_vec(nullptr),
+      u_vec(nullptr)
 {
 }
 

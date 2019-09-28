@@ -71,7 +71,7 @@ public:
      * \param parent a QWidget parent object, if any
      */
     static sptr
-    make(int size, const std::string& name, int nconnections = 1, QWidget* parent = NULL);
+    make(int size, const std::string& name, int nconnections = 1, QWidget* parent = nullptr);
 
     virtual void exec_() = 0;
     virtual QWidget* qwidget() = 0;

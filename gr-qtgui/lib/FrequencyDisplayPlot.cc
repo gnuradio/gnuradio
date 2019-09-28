@@ -292,7 +292,7 @@ void FrequencyDisplayPlot::setFrequencyRange(const double centerfreq,
         d_stop_frequency = stopFreq;
         d_center_frequency = centerfreq / units;
 
-        if ((axisScaleDraw(QwtPlot::xBottom) != NULL) && (d_zoomer != NULL)) {
+        if ((axisScaleDraw(QwtPlot::xBottom) != nullptr) && (d_zoomer != nullptr)) {
             double display_units = ceil(log10(units) / 2.0);
             setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(display_units));
             setAxisTitle(QwtPlot::xBottom,

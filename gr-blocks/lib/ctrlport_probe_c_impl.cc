@@ -43,7 +43,7 @@ ctrlport_probe_c_impl::ctrlport_probe_c_impl(const std::string& id,
                  io_signature::make(0, 0, 0)),
       d_id(id),
       d_desc(desc),
-      d_ptr(NULL),
+      d_ptr(nullptr),
       d_ptrLen(0)
 {
 }
@@ -52,7 +52,7 @@ ctrlport_probe_c_impl::~ctrlport_probe_c_impl() {}
 
 std::vector<gr_complex> ctrlport_probe_c_impl::get()
 {
-    if (d_ptr != NULL && d_ptrLen > 0) {
+    if (d_ptr != nullptr && d_ptrLen > 0) {
         ptrlock.lock();
         std::vector<gr_complex> vec(d_ptr, d_ptr + d_ptrLen);
         ptrlock.unlock();

@@ -352,7 +352,7 @@ int pfb_clock_sync_fff_impl::general_work(int noutput_items,
         return 0; // history requirements may have changed.
     }
 
-    float *err = NULL, *outrate = NULL, *outk = NULL;
+    float *err = nullptr, *outrate = nullptr, *outk = nullptr;
     if (output_items.size() == 4) {
         err = (float*)output_items[1];
         outrate = (float*)output_items[2];

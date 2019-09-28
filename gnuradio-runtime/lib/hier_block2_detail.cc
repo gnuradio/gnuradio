@@ -36,7 +36,7 @@ namespace gr {
 #define HIER_BLOCK2_DETAIL_DEBUG 0
 
 hier_block2_detail::hier_block2_detail(hier_block2* owner)
-    : d_owner(owner), d_parent_detail(0), d_fg(make_flowgraph())
+    : d_owner(owner), d_parent_detail(nullptr), d_fg(make_flowgraph())
 {
     int min_inputs = owner->input_signature()->min_streams();
     int max_inputs = owner->input_signature()->max_streams();
@@ -61,7 +61,7 @@ hier_block2_detail::hier_block2_detail(hier_block2* owner)
 
 hier_block2_detail::~hier_block2_detail()
 {
-    d_owner = 0; // Don't use delete, we didn't allocate
+    d_owner = nullptr; // Don't use delete, we didn't allocate
 }
 
 void hier_block2_detail::connect(basic_block_sptr block)
@@ -269,7 +269,7 @@ void hier_block2_detail::disconnect(basic_block_sptr block)
                 if (HIER_BLOCK2_DETAIL_DEBUG)
                     std::cout << "disconnect: block is hierarchical, clearing parent"
                               << std::endl;
-                hblock->d_detail->d_parent_detail = 0;
+                hblock->d_detail->d_parent_detail = nullptr;
             }
 
             return;
@@ -319,13 +319,13 @@ void hier_block2_detail::disconnect(basic_block_sptr src,
     if (src_block && src.get() != d_owner) {
         if (HIER_BLOCK2_DETAIL_DEBUG)
             std::cout << "disconnect: src is hierarchical, clearing parent" << std::endl;
-        src_block->d_detail->d_parent_detail = 0;
+        src_block->d_detail->d_parent_detail = nullptr;
     }
 
     if (dst_block && dst.get() != d_owner) {
         if (HIER_BLOCK2_DETAIL_DEBUG)
             std::cout << "disconnect: dst is hierarchical, clearing parent" << std::endl;
-        dst_block->d_detail->d_parent_detail = 0;
+        dst_block->d_detail->d_parent_detail = nullptr;
     }
 
     if (src.get() == d_owner)
@@ -554,7 +554,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
     if (HIER_BLOCK2_DETAIL_DEBUG)
         std::cout << " ** Flattening " << d_owner->name()
                   << " parent: " << d_parent_detail << std::endl;
-    bool is_top_block = (d_parent_detail == NULL);
+    bool is_top_block = (d_parent_detail == nullptr);
 
     // Add my edges to the flow graph, resolving references to actual endpoints
     edge_vector_t edges = d_fg->edges();
@@ -594,7 +594,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
             // sets the min buff for every block within hier_block2
             if (min_buff != 0) {
                 block_sptr bb = boost::dynamic_pointer_cast<block>(b);
-                if (bb != 0) {
+                if (bb != nullptr) {
                     if (bb->min_output_buffer(0) != min_buff) {
                         if (HIER_BLOCK2_DETAIL_DEBUG)
                             std::cout << "Block (" << (bb->alias()).c_str()
@@ -603,7 +603,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
                     }
                 } else {
                     hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
-                    if (hh != 0) {
+                    if (hh != nullptr) {
                         if (hh->min_output_buffer(0) != min_buff) {
                             if (HIER_BLOCK2_DETAIL_DEBUG)
                                 std::cout << "HBlock (" << (hh->alias()).c_str()
@@ -619,7 +619,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
             // sets the max buff for every block within hier_block2
             if (max_buff != 0) {
                 block_sptr bb = boost::dynamic_pointer_cast<block>(b);
-                if (bb != 0) {
+                if (bb != nullptr) {
                     if (bb->max_output_buffer(0) != max_buff) {
                         if (HIER_BLOCK2_DETAIL_DEBUG)
                             std::cout << "Block (" << (bb->alias()).c_str()
@@ -628,7 +628,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
                     }
                 } else {
                     hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
-                    if (hh != 0) {
+                    if (hh != nullptr) {
                         if (hh->max_output_buffer(0) != max_buff) {
                             if (HIER_BLOCK2_DETAIL_DEBUG)
                                 std::cout << "HBlock (" << (hh->alias()).c_str()
@@ -646,7 +646,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
             // sets the min buff for every block within hier_block2
             if (min_buff != 0) {
                 block_sptr bb = boost::dynamic_pointer_cast<block>(b);
-                if (bb != 0) {
+                if (bb != nullptr) {
                     if (bb->min_output_buffer(0) != min_buff) {
                         if (HIER_BLOCK2_DETAIL_DEBUG)
                             std::cout << "Block (" << (bb->alias()).c_str()
@@ -655,7 +655,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
                     }
                 } else {
                     hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
-                    if (hh != 0) {
+                    if (hh != nullptr) {
                         if (hh->min_output_buffer(0) != min_buff) {
                             if (HIER_BLOCK2_DETAIL_DEBUG)
                                 std::cout << "HBlock (" << (hh->alias()).c_str()
@@ -671,7 +671,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
             // sets the max buff for every block within hier_block2
             if (max_buff != 0) {
                 block_sptr bb = boost::dynamic_pointer_cast<block>(b);
-                if (bb != 0) {
+                if (bb != nullptr) {
                     if (bb->max_output_buffer(0) != max_buff) {
                         if (HIER_BLOCK2_DETAIL_DEBUG)
                             std::cout << "Block (" << (bb->alias()).c_str()
@@ -680,7 +680,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
                     }
                 } else {
                     hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
-                    if (hh != 0) {
+                    if (hh != nullptr) {
                         if (hh->max_output_buffer(0) != max_buff) {
                             if (HIER_BLOCK2_DETAIL_DEBUG)
                                 std::cout << "HBlock (" << (hh->alias()).c_str()
@@ -803,7 +803,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
             min_buff = d_owner->min_output_buffer(i);
             if (min_buff != 0) {
                 block_sptr bb = boost::dynamic_pointer_cast<block>(blk);
-                if (bb != 0) {
+                if (bb != nullptr) {
                     int bb_src_port = d_outputs[i].port();
                     if (HIER_BLOCK2_DETAIL_DEBUG)
                         std::cout << "Block (" << (bb->alias()).c_str() << ") Port ("
@@ -812,7 +812,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
                     bb->set_min_output_buffer(bb_src_port, min_buff);
                 } else {
                     hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(blk);
-                    if (hh != 0) {
+                    if (hh != nullptr) {
                         int hh_src_port = d_outputs[i].port();
                         if (HIER_BLOCK2_DETAIL_DEBUG)
                             std::cout << "HBlock (" << (hh->alias()).c_str() << ") Port ("
@@ -827,7 +827,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
             max_buff = d_owner->max_output_buffer(i);
             if (max_buff != 0) {
                 block_sptr bb = boost::dynamic_pointer_cast<block>(blk);
-                if (bb != 0) {
+                if (bb != nullptr) {
                     int bb_src_port = d_outputs[i].port();
                     if (HIER_BLOCK2_DETAIL_DEBUG)
                         std::cout << "Block (" << (bb->alias()).c_str() << ") Port ("
@@ -836,7 +836,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
                     bb->set_max_output_buffer(bb_src_port, max_buff);
                 } else {
                     hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(blk);
-                    if (hh != 0) {
+                    if (hh != nullptr) {
                         int hh_src_port = d_outputs[i].port();
                         if (HIER_BLOCK2_DETAIL_DEBUG)
                             std::cout << "HBlock (" << (hh->alias()).c_str() << ") Port ("

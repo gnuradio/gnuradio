@@ -40,7 +40,7 @@ class WaterfallDisplayForm : public DisplayForm
     Q_OBJECT
 
 public:
-    WaterfallDisplayForm(int nplots = 1, QWidget* parent = 0);
+    WaterfallDisplayForm(int nplots = 1, QWidget* parent = nullptr);
     ~WaterfallDisplayForm();
 
     WaterfallDisplayPlot* getPlot();

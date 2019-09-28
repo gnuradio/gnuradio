@@ -40,8 +40,8 @@ fir_filter_with_buffer_fff::fir_filter_with_buffer_fff(const std::vector<float>&
     d_align = volk_get_alignment();
     d_naligned = std::max((size_t)1, d_align / sizeof(float));
 
-    d_buffer_ptr = NULL;
-    d_aligned_taps = NULL;
+    d_buffer_ptr = nullptr;
+    d_aligned_taps = nullptr;
     set_taps(taps);
 
     // Make sure the output sample is always aligned, too.
@@ -50,18 +50,18 @@ fir_filter_with_buffer_fff::fir_filter_with_buffer_fff(const std::vector<float>&
 
 fir_filter_with_buffer_fff::~fir_filter_with_buffer_fff()
 {
-    if (d_buffer_ptr != NULL) {
+    if (d_buffer_ptr != nullptr) {
         volk_free(d_buffer_ptr);
-        d_buffer_ptr = NULL;
+        d_buffer_ptr = nullptr;
     }
 
     // Free aligned taps
-    if (d_aligned_taps != NULL) {
+    if (d_aligned_taps != nullptr) {
         for (int i = 0; i < d_naligned; i++) {
             volk_free(d_aligned_taps[i]);
         }
         ::free(d_aligned_taps);
-        d_aligned_taps = NULL;
+        d_aligned_taps = nullptr;
     }
 
     // Free output sample
@@ -70,18 +70,18 @@ fir_filter_with_buffer_fff::~fir_filter_with_buffer_fff()
 
 void fir_filter_with_buffer_fff::set_taps(const std::vector<float>& taps)
 {
-    if (d_buffer_ptr != NULL) {
+    if (d_buffer_ptr != nullptr) {
         volk_free(d_buffer_ptr);
-        d_buffer_ptr = NULL;
+        d_buffer_ptr = nullptr;
     }
 
     // Free the taps if already allocated
-    if (d_aligned_taps != NULL) {
+    if (d_aligned_taps != nullptr) {
         for (int i = 0; i < d_naligned; i++) {
             volk_free(d_aligned_taps[i]);
         }
         ::free(d_aligned_taps);
-        d_aligned_taps = NULL;
+        d_aligned_taps = nullptr;
     }
 
     d_ntaps = (int)taps.size();
@@ -186,8 +186,8 @@ fir_filter_with_buffer_ccc::fir_filter_with_buffer_ccc(
     d_align = volk_get_alignment();
     d_naligned = std::max((size_t)1, d_align / sizeof(gr_complex));
 
-    d_buffer_ptr = NULL;
-    d_aligned_taps = NULL;
+    d_buffer_ptr = nullptr;
+    d_aligned_taps = nullptr;
     set_taps(taps);
 
     // Make sure the output sample is always aligned, too.
@@ -196,18 +196,18 @@ fir_filter_with_buffer_ccc::fir_filter_with_buffer_ccc(
 
 fir_filter_with_buffer_ccc::~fir_filter_with_buffer_ccc()
 {
-    if (d_buffer_ptr != NULL) {
+    if (d_buffer_ptr != nullptr) {
         volk_free(d_buffer_ptr);
-        d_buffer_ptr = NULL;
+        d_buffer_ptr = nullptr;
     }
 
     // Free aligned taps
-    if (d_aligned_taps != NULL) {
+    if (d_aligned_taps != nullptr) {
         for (int i = 0; i < d_naligned; i++) {
             volk_free(d_aligned_taps[i]);
         }
         ::free(d_aligned_taps);
-        d_aligned_taps = NULL;
+        d_aligned_taps = nullptr;
     }
 
     // Free output sample
@@ -216,18 +216,18 @@ fir_filter_with_buffer_ccc::~fir_filter_with_buffer_ccc()
 
 void fir_filter_with_buffer_ccc::set_taps(const std::vector<gr_complex>& taps)
 {
-    if (d_buffer_ptr != NULL) {
+    if (d_buffer_ptr != nullptr) {
         volk_free(d_buffer_ptr);
-        d_buffer_ptr = NULL;
+        d_buffer_ptr = nullptr;
     }
 
     // Free the taps if already allocated
-    if (d_aligned_taps != NULL) {
+    if (d_aligned_taps != nullptr) {
         for (int i = 0; i < d_naligned; i++) {
             volk_free(d_aligned_taps[i]);
         }
         ::free(d_aligned_taps);
-        d_aligned_taps = NULL;
+        d_aligned_taps = nullptr;
     }
 
     d_ntaps = (int)taps.size();
@@ -330,8 +330,8 @@ fir_filter_with_buffer_ccf::fir_filter_with_buffer_ccf(const std::vector<float>&
     d_align = volk_get_alignment();
     d_naligned = std::max((size_t)1, d_align / sizeof(gr_complex));
 
-    d_buffer_ptr = NULL;
-    d_aligned_taps = NULL;
+    d_buffer_ptr = nullptr;
+    d_aligned_taps = nullptr;
     set_taps(taps);
 
     // Make sure the output sample is always aligned, too.
@@ -340,18 +340,18 @@ fir_filter_with_buffer_ccf::fir_filter_with_buffer_ccf(const std::vector<float>&
 
 fir_filter_with_buffer_ccf::~fir_filter_with_buffer_ccf()
 {
-    if (d_buffer_ptr != NULL) {
+    if (d_buffer_ptr != nullptr) {
         volk_free(d_buffer_ptr);
-        d_buffer_ptr = NULL;
+        d_buffer_ptr = nullptr;
     }
 
     // Free aligned taps
-    if (d_aligned_taps != NULL) {
+    if (d_aligned_taps != nullptr) {
         for (int i = 0; i < d_naligned; i++) {
             volk_free(d_aligned_taps[i]);
         }
         ::free(d_aligned_taps);
-        d_aligned_taps = NULL;
+        d_aligned_taps = nullptr;
     }
 
     // Free output sample
@@ -360,18 +360,18 @@ fir_filter_with_buffer_ccf::~fir_filter_with_buffer_ccf()
 
 void fir_filter_with_buffer_ccf::set_taps(const std::vector<float>& taps)
 {
-    if (d_buffer_ptr != NULL) {
+    if (d_buffer_ptr != nullptr) {
         volk_free(d_buffer_ptr);
-        d_buffer_ptr = NULL;
+        d_buffer_ptr = nullptr;
     }
 
     // Free the taps if already allocated
-    if (d_aligned_taps != NULL) {
+    if (d_aligned_taps != nullptr) {
         for (int i = 0; i < d_naligned; i++) {
             volk_free(d_aligned_taps[i]);
         }
         ::free(d_aligned_taps);
-        d_aligned_taps = NULL;
+        d_aligned_taps = nullptr;
     }
 
     d_ntaps = (int)taps.size();

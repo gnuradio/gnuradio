@@ -41,13 +41,13 @@ atsc_interleaver_impl::atsc_interleaver_impl()
     I = 52; /* ATSC interleaver */
     J = 4;
     registers = (unsigned char*)malloc(sizeof(unsigned char) * I * ((I - 1) * J));
-    if (registers == NULL) {
+    if (registers == nullptr) {
         GR_LOG_FATAL(d_logger, "ATSC Interleaver, cannot allocate memory for registers.");
         throw std::bad_alloc();
     }
 
     pointers = (int*)malloc(sizeof(int) * I);
-    if (pointers == NULL) {
+    if (pointers == nullptr) {
         free(registers);
         GR_LOG_FATAL(d_logger, "ATSC Interleaver, cannot allocate memory for pointers");
         throw std::bad_alloc();

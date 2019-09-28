@@ -99,7 +99,7 @@ vmcircbuf_mmap_tmpfile::vmcircbuf_mmap_tmpfile(int size) : gr::vmcircbuf(size)
     }
 
     void* first_copy =
-        mmap(0, 2 * size, PROT_READ | PROT_WRITE, MAP_SHARED, seg_fd, (off_t)0);
+        mmap(nullptr, 2 * size, PROT_READ | PROT_WRITE, MAP_SHARED, seg_fd, (off_t)0);
 
     if (first_copy == MAP_FAILED) {
         close(seg_fd); // cleanup
@@ -172,7 +172,7 @@ vmcircbuf_mmap_tmpfile::~vmcircbuf_mmap_tmpfile()
 //			The factory interface
 // ----------------------------------------------------------------
 
-gr::vmcircbuf_factory* vmcircbuf_mmap_tmpfile_factory::s_the_factory = 0;
+gr::vmcircbuf_factory* vmcircbuf_mmap_tmpfile_factory::s_the_factory = nullptr;
 
 gr::vmcircbuf_factory* vmcircbuf_mmap_tmpfile_factory::singleton()
 {
@@ -190,7 +190,7 @@ gr::vmcircbuf* vmcircbuf_mmap_tmpfile_factory::make(int size)
     try {
         return new vmcircbuf_mmap_tmpfile(size);
     } catch (...) {
-        return 0;
+        return nullptr;
     }
 }
 

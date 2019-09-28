@@ -52,7 +52,7 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
     d_layout = new QGridLayout(this);
     d_display_plot = new TimeDomainDisplayPlot(nplots, this);
 
-    d_controlpanel = NULL;
+    d_controlpanel = nullptr;
 
     // Setup the layout of the display
     d_layout->addWidget(d_display_plot, 0, 0);
@@ -229,7 +229,7 @@ void TimeDisplayForm::teardownControlPanel()
     if (d_controlpanel) {
         d_layout->removeItem(d_controlpanel);
         delete d_controlpanel;
-        d_controlpanel = NULL;
+        d_controlpanel = nullptr;
     }
     d_controlpanelmenu->setChecked(false);
 }

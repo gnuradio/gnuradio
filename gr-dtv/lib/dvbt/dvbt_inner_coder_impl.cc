@@ -177,13 +177,13 @@ dvbt_inner_coder_impl::dvbt_inner_coder_impl(int ninput,
 
     // allocate bit buffers
     d_in_buff = new (std::nothrow) unsigned char[8 * d_in_bs];
-    if (d_in_buff == NULL) {
+    if (d_in_buff == nullptr) {
         GR_LOG_FATAL(d_logger, "Inner Coder, cannot allocate memory for d_in_buff.");
         throw std::bad_alloc();
     }
 
     d_out_buff = new (std::nothrow) unsigned char[8 * d_in_bs * d_n / d_k];
-    if (d_out_buff == NULL) {
+    if (d_out_buff == nullptr) {
         GR_LOG_FATAL(d_logger, "Inner Coder, cannot allocate memory for d_out_buff.");
         delete[] d_in_buff;
         throw std::bad_alloc();

@@ -72,10 +72,10 @@ freedv_tx_ss_impl::freedv_tx_ss_impl(int mode,
 #ifdef FREEDV_MODE_700D
     if (mode == FREEDV_MODE_700D) {
         d_adv.interleave_frames = interleave_frames;
-        if ((d_freedv = freedv_open_advanced(mode, &d_adv)) == NULL)
+        if ((d_freedv = freedv_open_advanced(mode, &d_adv)) == nullptr)
             throw std::runtime_error("freedv_tx_ss_impl: freedv_open_advanced failed");
     } else {
-        if ((d_freedv = freedv_open(mode)) == NULL)
+        if ((d_freedv = freedv_open(mode)) == nullptr)
             throw std::runtime_error("freedv_tx_ss_impl: freedv_open failed");
     }
 #else
@@ -84,7 +84,7 @@ freedv_tx_ss_impl::freedv_tx_ss_impl(int mode,
 #endif
     snprintf(d_cb_state.tx_str, 79, "%s", d_msg_text.c_str());
     d_cb_state.ptx_str = d_cb_state.tx_str;
-    freedv_set_callback_txt(d_freedv, NULL, get_next_tx_char, (void*)&d_cb_state);
+    freedv_set_callback_txt(d_freedv, nullptr, get_next_tx_char, (void*)&d_cb_state);
     d_nom_modem_samples = freedv_get_n_nom_modem_samples(d_freedv);
     set_output_multiple(d_nom_modem_samples);
 }

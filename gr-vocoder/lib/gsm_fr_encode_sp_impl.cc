@@ -43,7 +43,7 @@ gsm_fr_encode_sp_impl::gsm_fr_encode_sp_impl()
                      io_signature::make(1, 1, sizeof(gsm_frame)),
                      GSM_SAMPLES_PER_FRAME)
 {
-    if ((d_gsm = gsm_create()) == 0)
+    if ((d_gsm = gsm_create()) == nullptr)
         throw std::runtime_error("gsm_fr_encode_sp_impl: gsm_create failed");
 }
 

@@ -96,10 +96,10 @@ file_meta_sink_impl::file_meta_sink_impl(size_t itemsize,
       d_updated(false),
       d_unbuffered(false)
 {
-    d_fp = 0;
-    d_new_fp = 0;
-    d_hdr_fp = 0;
-    d_new_hdr_fp = 0;
+    d_fp = nullptr;
+    d_new_fp = nullptr;
+    d_hdr_fp = nullptr;
+    d_new_hdr_fp = nullptr;
 
     if (detached_header == true)
         d_state = STATE_DETACHED;
@@ -173,15 +173,15 @@ bool file_meta_sink_impl::_open(FILE** fp, const char* filename)
 
     if (*fp) { // if we've already got a new one open, close it
         fclose(*fp);
-        fp = 0;
+        fp = nullptr;
     }
 
-    if ((*fp = fdopen(fd, "wb")) == NULL) {
+    if ((*fp = fdopen(fd, "wb")) == nullptr) {
         perror(filename);
         ::close(fd); // don't leak file descriptor if fdopen fails.
     }
 
-    ret = fp != 0;
+    ret = fp != nullptr;
 
     return ret;
 }
@@ -194,25 +194,25 @@ void file_meta_sink_impl::close()
     if (d_state == STATE_DETACHED) {
         if (d_new_hdr_fp) {
             fclose(d_new_hdr_fp);
-            d_new_hdr_fp = 0;
+            d_new_hdr_fp = nullptr;
         }
     }
 
     if (d_new_fp) {
         fclose(d_new_fp);
-        d_new_fp = 0;
+        d_new_fp = nullptr;
     }
     d_updated = true;
 
     if (d_fp) {
         fclose(d_fp);
-        d_fp = 0;
+        d_fp = nullptr;
     }
 
     if (d_state == STATE_DETACHED) {
         if (d_hdr_fp) {
             fclose(d_hdr_fp);
-            d_hdr_fp = 0;
+            d_hdr_fp = nullptr;
         }
     }
 }
@@ -225,13 +225,13 @@ void file_meta_sink_impl::do_update()
             if (d_hdr_fp)
                 fclose(d_hdr_fp);
             d_hdr_fp = d_new_hdr_fp; // install new file pointer
-            d_new_hdr_fp = 0;
+            d_new_hdr_fp = nullptr;
         }
 
         if (d_fp)
             fclose(d_fp);
         d_fp = d_new_fp; // install new file pointer
-        d_new_fp = 0;
+        d_new_fp = nullptr;
 
         d_updated = false;
     }

@@ -39,7 +39,7 @@ class VectorDisplayForm : public DisplayForm
     Q_OBJECT
 
 public:
-    VectorDisplayForm(int nplots = 1, QWidget* parent = 0);
+    VectorDisplayForm(int nplots = 1, QWidget* parent = nullptr);
     ~VectorDisplayForm();
 
     VectorDisplayPlot* getPlot();

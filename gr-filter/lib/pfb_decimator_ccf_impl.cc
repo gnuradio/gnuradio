@@ -73,7 +73,7 @@ pfb_decimator_ccf_impl::pfb_decimator_ccf_impl(unsigned int decim,
         set_history(d_taps_per_filter);
     }
 
-    d_tmp = NULL;
+    d_tmp = nullptr;
 }
 
 bool pfb_decimator_ccf_impl::start()

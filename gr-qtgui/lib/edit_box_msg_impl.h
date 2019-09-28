@@ -64,7 +64,7 @@ public:
                       bool is_pair = false,
                       bool is_static = true,
                       const std::string& key = "",
-                      QWidget* parent = 0);
+                      QWidget* parent = nullptr);
     ~edit_box_msg_impl();
 
     // Overload the start method of gr::block to emit a message if a

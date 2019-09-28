@@ -54,7 +54,7 @@ dvbt_reed_solomon_dec_impl::dvbt_reed_solomon_dec_impl(
       d_blocks(blocks)
 {
     d_rs = init_rs_char(rs_init_symsize, gfpoly, rs_init_fcr, rs_init_prim, (n - k));
-    if (d_rs == NULL) {
+    if (d_rs == nullptr) {
         GR_LOG_FATAL(d_logger, "Reed-Solomon Decoder, cannot allocate memory for d_rs.");
         throw std::bad_alloc();
     }
@@ -84,7 +84,7 @@ int dvbt_reed_solomon_dec_impl::decode(unsigned char& out, const unsigned char& 
     memcpy(&tmp[d_s], &in, (d_n - d_s));
 
     // correct message...
-    ncorrections = decode_rs_char(d_rs, tmp, 0, 0);
+    ncorrections = decode_rs_char(d_rs, tmp, nullptr, 0);
 
     // copy corrected message to output, skipping prefix zero padding
     memcpy(&out, &tmp[d_s], (d_k - d_s));

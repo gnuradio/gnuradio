@@ -121,7 +121,7 @@ private:
 WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
     : DisplayPlot(nplots, parent)
 {
-    d_zoomer = NULL; // need this for proper init
+    d_zoomer = nullptr; // need this for proper init
     d_start_frequency = -1;
     d_stop_frequency = 1;
 
@@ -232,7 +232,7 @@ void WaterfallDisplayPlot::setFrequencyRange(const double centerfreq,
         d_stop_frequency = stopFreq;
         d_center_frequency = centerfreq / units;
 
-        if ((axisScaleDraw(QwtPlot::xBottom) != NULL) && (d_zoomer != NULL)) {
+        if ((axisScaleDraw(QwtPlot::xBottom) != nullptr) && (d_zoomer != nullptr)) {
             double display_units = ceil(log10(units) / 2.0);
             setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(display_units));
             setAxisTitle(QwtPlot::xBottom,
@@ -409,16 +409,16 @@ void WaterfallDisplayPlot::replot()
     freqScale->initiateUpdate();
 
     // Update the time axis display
-    if (axisWidget(QwtPlot::yLeft) != NULL) {
+    if (axisWidget(QwtPlot::yLeft) != nullptr) {
         axisWidget(QwtPlot::yLeft)->update();
     }
 
     // Update the Frequency Offset Display
-    if (axisWidget(QwtPlot::xBottom) != NULL) {
+    if (axisWidget(QwtPlot::xBottom) != nullptr) {
         axisWidget(QwtPlot::xBottom)->update();
     }
 
-    if (d_zoomer != NULL) {
+    if (d_zoomer != nullptr) {
         ((WaterfallZoomer*)d_zoomer)->updateTrackerText();
     }
 

@@ -50,7 +50,7 @@ costas_loop_cc_impl::costas_loop_cc_impl(float loop_bw, int order, bool use_snr)
       d_order(order),
       d_error(0),
       d_noise(1.0),
-      d_phase_detector(NULL)
+      d_phase_detector(nullptr)
 {
     // Set up the phase detector to use based on the constellation order
     switch (d_order) {
@@ -166,9 +166,9 @@ int costas_loop_cc_impl::work(int noutput_items,
 {
     const gr_complex* iptr = (gr_complex*)input_items[0];
     auto* optr = (gr_complex*)output_items[0];
-    float* freq_optr = output_items.size() >= 2 ? (float*)output_items[1] : NULL;
-    float* phase_optr = output_items.size() >= 3 ? (float*)output_items[2] : NULL;
-    float* error_optr = output_items.size() >= 4 ? (float*)output_items[3] : NULL;
+    float* freq_optr = output_items.size() >= 2 ? (float*)output_items[1] : nullptr;
+    float* phase_optr = output_items.size() >= 3 ? (float*)output_items[2] : nullptr;
+    float* error_optr = output_items.size() >= 4 ? (float*)output_items[3] : nullptr;
 
     gr_complex nco_out;
 
@@ -197,11 +197,11 @@ int costas_loop_cc_impl::work(int noutput_items,
         phase_wrap();
         frequency_limit();
 
-        if (freq_optr != NULL)
+        if (freq_optr != nullptr)
             freq_optr[i] = d_freq;
-        if (phase_optr != NULL)
+        if (phase_optr != nullptr)
             phase_optr[i] = d_phase;
-        if (error_optr != NULL)
+        if (error_optr != nullptr)
             error_optr[i] = d_error;
     }
 

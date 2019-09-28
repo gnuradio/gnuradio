@@ -40,7 +40,7 @@ class TimeDisplayForm : public DisplayForm
     Q_OBJECT
 
 public:
-    TimeDisplayForm(int nplots = 1, QWidget* parent = 0);
+    TimeDisplayForm(int nplots = 1, QWidget* parent = nullptr);
     ~TimeDisplayForm();
 
     TimeDomainDisplayPlot* getPlot();

@@ -81,7 +81,7 @@ public:
                      float average = 0,
                      graph_t graph_type = NUM_GRAPH_HORIZ,
                      int nconnections = 1,
-                     QWidget* parent = NULL);
+                     QWidget* parent = nullptr);
 
     virtual void exec_() = 0;
     virtual QWidget* qwidget() = 0;

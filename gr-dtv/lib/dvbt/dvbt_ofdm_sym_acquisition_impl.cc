@@ -262,14 +262,14 @@ dvbt_ofdm_sym_acquisition_impl::dvbt_ofdm_sym_acquisition_impl(
 
     d_gamma =
         (gr_complex*)volk_malloc(sizeof(gr_complex) * d_fft_length, volk_get_alignment());
-    if (d_gamma == NULL) {
+    if (d_gamma == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "OFDM Symbol Acquisition, cannot allocate memory for d_gamma.");
         throw std::bad_alloc();
     }
 
     d_lambda = (float*)volk_malloc(sizeof(float) * d_fft_length, volk_get_alignment());
-    if (d_lambda == NULL) {
+    if (d_lambda == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "OFDM Symbol Acquisition, cannot allocate memory for d_lambda.");
         volk_free(d_gamma);
@@ -278,7 +278,7 @@ dvbt_ofdm_sym_acquisition_impl::dvbt_ofdm_sym_acquisition_impl(
 
     d_derot = (gr_complex*)volk_malloc(sizeof(gr_complex) * (d_fft_length + d_cp_length),
                                        volk_get_alignment());
-    if (d_derot == NULL) {
+    if (d_derot == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "OFDM Symbol Acquisition, cannot allocate memory for d_derot.");
         volk_free(d_lambda);
@@ -288,7 +288,7 @@ dvbt_ofdm_sym_acquisition_impl::dvbt_ofdm_sym_acquisition_impl(
 
     d_conj = (gr_complex*)volk_malloc(
         sizeof(gr_complex) * (2 * d_fft_length + d_cp_length), volk_get_alignment());
-    if (d_conj == NULL) {
+    if (d_conj == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "OFDM Symbol Acquisition, cannot allocate memory for d_conj.");
         volk_free(d_derot);
@@ -299,7 +299,7 @@ dvbt_ofdm_sym_acquisition_impl::dvbt_ofdm_sym_acquisition_impl(
 
     d_norm = (float*)volk_malloc(sizeof(float) * (2 * d_fft_length + d_cp_length),
                                  volk_get_alignment());
-    if (d_norm == NULL) {
+    if (d_norm == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "OFDM Symbol Acquisition, cannot allocate memory for d_norm.");
         volk_free(d_conj);
@@ -311,7 +311,7 @@ dvbt_ofdm_sym_acquisition_impl::dvbt_ofdm_sym_acquisition_impl(
 
     d_corr = (gr_complex*)volk_malloc(
         sizeof(gr_complex) * (2 * d_fft_length + d_cp_length), volk_get_alignment());
-    if (d_corr == NULL) {
+    if (d_corr == nullptr) {
         GR_LOG_FATAL(d_logger,
                      "OFDM Symbol Acquisition, cannot allocate memory for d_corr.");
         volk_free(d_norm);

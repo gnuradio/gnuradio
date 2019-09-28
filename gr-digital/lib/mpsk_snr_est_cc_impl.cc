@@ -45,7 +45,7 @@ mpsk_snr_est_cc_impl::mpsk_snr_est_cc_impl(snr_est_type_t type,
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::make(1, 1, sizeof(gr_complex)))
 {
-    d_snr_est = NULL;
+    d_snr_est = nullptr;
 
     d_type = type;
     d_nsamples = tag_nsamples;

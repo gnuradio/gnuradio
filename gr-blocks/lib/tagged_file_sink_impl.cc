@@ -170,7 +170,7 @@ int tagged_file_sink_impl::work(int noutput_items,
 
                     // FIXME:
                     // if((d_handle = fdopen (fd, d_is_binary ? "wb" : "w")) == NULL) {
-                    if ((d_handle = fdopen(fd, "wb")) == NULL) {
+                    if ((d_handle = fdopen(fd, "wb")) == nullptr) {
                         perror(filename.str().c_str());
                         ::close(fd); // don't leak file descriptor if fdopen fails.
                     }

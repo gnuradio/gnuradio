@@ -46,7 +46,7 @@ public:
                      int berminerrors = 100,
                      float berLimit = -7.0,
                      std::vector<std::string> curvenames = std::vector<std::string>(),
-                     QWidget* parent = NULL);
+                     QWidget* parent = nullptr);
 
     virtual void exec_() = 0;
 

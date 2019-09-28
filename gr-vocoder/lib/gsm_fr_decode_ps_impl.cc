@@ -44,7 +44,7 @@ gsm_fr_decode_ps_impl::gsm_fr_decode_ps_impl()
                         io_signature::make(1, 1, sizeof(short)),
                         GSM_SAMPLES_PER_FRAME)
 {
-    if ((d_gsm = gsm_create()) == 0)
+    if ((d_gsm = gsm_create()) == nullptr)
         throw std::runtime_error("gsm_fr_decode_ps_impl: gsm_create failed");
 }
 

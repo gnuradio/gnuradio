@@ -39,7 +39,7 @@ class HistogramDisplayForm : public DisplayForm
     Q_OBJECT
 
 public:
-    HistogramDisplayForm(int nplots = 1, QWidget* parent = 0);
+    HistogramDisplayForm(int nplots = 1, QWidget* parent = nullptr);
     ~HistogramDisplayForm();
 
     HistogramDisplayPlot* getPlot();

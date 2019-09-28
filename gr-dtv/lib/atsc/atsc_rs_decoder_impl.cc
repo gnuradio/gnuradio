@@ -72,7 +72,7 @@ int atsc_rs_decoder_impl::decode(atsc_mpeg_packet_no_sync& out,
     memcpy(&tmp[amount_of_pad], in.data, sizeof(in.data));
 
     // correct message...
-    ncorrections = decode_rs_char(d_rs, tmp, 0, 0);
+    ncorrections = decode_rs_char(d_rs, tmp, nullptr, 0);
 
     // copy corrected message to output, skipping prefix zero padding
     memcpy(out.data, &tmp[amount_of_pad], sizeof(out.data));
@@ -84,7 +84,7 @@ atsc_rs_decoder_impl::~atsc_rs_decoder_impl()
 {
     if (d_rs)
         free_rs_char(d_rs);
-    d_rs = 0;
+    d_rs = nullptr;
 }
 
 int atsc_rs_decoder_impl::num_errors_corrected() const

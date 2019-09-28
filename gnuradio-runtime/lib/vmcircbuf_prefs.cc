@@ -68,7 +68,7 @@ int vmcircbuf_prefs::get(const char* key, char* value, int value_size)
     gr::thread::scoped_lock guard(s_vm_mutex);
 
     FILE* fp = fopen(pathname(key).c_str(), "r");
-    if (fp == 0) {
+    if (fp == nullptr) {
         perror(pathname(key).c_str());
         return 0;
     }
@@ -93,7 +93,7 @@ void vmcircbuf_prefs::set(const char* key, const char* value)
     ensure_dir_path();
 
     FILE* fp = fopen(pathname(key).c_str(), "w");
-    if (fp == 0) {
+    if (fp == nullptr) {
         perror(pathname(key).c_str());
         return;
     }

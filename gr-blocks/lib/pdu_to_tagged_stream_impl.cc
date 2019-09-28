@@ -53,7 +53,7 @@ int pdu_to_tagged_stream_impl::calculate_output_stream_length(const gr_vector_in
 {
     if (d_curr_len == 0) {
         pmt::pmt_t msg(delete_head_nowait(pdu::pdu_port_id()));
-        if (msg.get() == NULL) {
+        if (msg.get() == nullptr) {
             return 0;
         }
 
