@@ -47,17 +47,17 @@ protected:
 public:
     static scheduler_sptr make(flat_flowgraph_sptr ffg, int max_noutput_items = 100000);
 
-    ~scheduler_tpb();
+    ~scheduler_tpb() override;
 
     /*!
      * \brief Tell the scheduler to stop executing.
      */
-    void stop();
+    void stop() override;
 
     /*!
      * \brief Block until the graph is done.
      */
-    void wait();
+    void wait() override;
 };
 
 } /* namespace gr */

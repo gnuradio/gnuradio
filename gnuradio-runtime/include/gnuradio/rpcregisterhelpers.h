@@ -50,13 +50,10 @@ template <typename T, typename Tto>
 class rpcextractor_base : public virtual gr::messages::msg_accepter
 {
 public:
-    rpcextractor_base(T* source, void (T::*func)(Tto)) : _source(source), _func(func)
-    {
-        ;
-    }
-    ~rpcextractor_base() { ; }
+    rpcextractor_base(T* source, void (T::*func)(Tto)) : _source(source), _func(func) {}
+    ~rpcextractor_base() override {}
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         (void)which_port;
         (void)msg;
@@ -73,10 +70,10 @@ template <typename T>
 class rpcextractor_base<T, void> : public virtual gr::messages::msg_accepter
 {
 public:
-    rpcextractor_base(T* source, void (T::*func)()) : _source(source), _func(func) { ; }
-    ~rpcextractor_base() { ; }
+    rpcextractor_base(T* source, void (T::*func)()) : _source(source), _func(func) {}
+    ~rpcextractor_base() override {}
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         (void)which_port;
         (void)msg;
@@ -99,7 +96,6 @@ public:
     rpcbasic_extractor(T* source, void (T::*func)(Tto))
         : rpcextractor_base<T, Tto>(source, func)
     {
-        ;
     }
 };
 
@@ -116,10 +112,10 @@ template <typename T, typename Tfrom>
 class rpcinserter_base : public virtual gr::messages::msg_producer
 {
 public:
-    rpcinserter_base(T* source, Tfrom (T::*func)()) : _source(source), _func(func) { ; }
-    rpcinserter_base() { ; }
+    rpcinserter_base(T* source, Tfrom (T::*func)()) : _source(source), _func(func) {}
+    rpcinserter_base() {}
 
-    pmt::pmt_t retrieve()
+    pmt::pmt_t retrieve() override
     {
         assert(0);
         return pmt::pmt_t();
@@ -142,13 +138,11 @@ public:
     rpcbasic_inserter(T* source, Tfrom (T::*func)() const)
         : rpcinserter_base<T, Tfrom>(source, func)
     {
-        ;
     }
 
     rpcbasic_inserter(T* source, Tfrom (T::*func)())
         : rpcinserter_base<T, Tfrom>(source, func)
     {
-        ;
     }
 
     pmt::pmt_t retrieve()
@@ -173,11 +167,13 @@ class rpchandler_base : public virtual gr::messages::msg_accepter
 public:
     rpchandler_base(T* source, const char* handler) : _source(source), _handler(handler)
     {
-        ;
     }
-    ~rpchandler_base() { ; }
+    ~rpchandler_base() override {}
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg) { _source->post(which_port, msg); }
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
+    {
+        _source->post(which_port, msg);
+    }
 
 protected:
     T* _source;
@@ -194,7 +190,6 @@ class rpcbasic_handler : public virtual rpchandler_base<T>
 public:
     rpcbasic_handler(T* source, const char* handler) : rpchandler_base<T>(source, handler)
     {
-        ;
     }
 };
 
@@ -214,10 +209,9 @@ public:
     rpcbasic_extractor(T* source, void (T::*func)())
         : rpcextractor_base<T, void>(source, func)
     {
-        ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         (void)which_port;
         (void)msg;
@@ -235,10 +229,9 @@ public:
     rpcbasic_extractor(T* source, void (T::*func)(char))
         : rpcextractor_base<T, char>(source, func)
     {
-        ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         (void)which_port;
         (rpcextractor_base<T, char>::_source->*rpcextractor_base<T, char>::_func)(
@@ -256,10 +249,9 @@ public:
     rpcbasic_extractor(T* source, void (T::*func)(short))
         : rpcextractor_base<T, short>(source, func)
     {
-        ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         (void)which_port;
         (rpcextractor_base<T, short>::_source->*rpcextractor_base<T, short>::_func)(
@@ -277,10 +269,9 @@ public:
     rpcbasic_extractor(T* source, void (T::*func)(double))
         : rpcextractor_base<T, double>(source, func)
     {
-        ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         (void)which_port;
         (rpcextractor_base<T, double>::_source->*rpcextractor_base<T, double>::_func)(
@@ -298,10 +289,9 @@ public:
     rpcbasic_extractor(T* source, void (T::*func)(float))
         : rpcextractor_base<T, float>(source, func)
     {
-        ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         (void)which_port;
         (rpcextractor_base<T, float>::_source->*rpcextractor_base<T, float>::_func)(
@@ -319,10 +309,9 @@ public:
     rpcbasic_extractor(T* source, void (T::*func)(long))
         : rpcextractor_base<T, long>(source, func)
     {
-        ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         (void)which_port;
         (rpcextractor_base<T, long>::_source->*rpcextractor_base<T, long>::_func)(
@@ -340,10 +329,9 @@ public:
     rpcbasic_extractor(T* source, void (T::*func)(int))
         : rpcextractor_base<T, int>(source, func)
     {
-        ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         (void)which_port;
         (rpcextractor_base<T, int>::_source->*rpcextractor_base<T, int>::_func)(
@@ -361,10 +349,9 @@ public:
     rpcbasic_extractor(T* source, void (T::*func)(bool))
         : rpcextractor_base<T, bool>(source, func)
     {
-        ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         (void)which_port;
         (rpcextractor_base<T, bool>::_source->*rpcextractor_base<T, bool>::_func)(
@@ -383,10 +370,9 @@ public:
     rpcbasic_extractor(T* source, void (T::*func)(std::complex<float>))
         : rpcextractor_base<T, std::complex<float>>(source, func)
     {
-        ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         (void)which_port;
         std::complex<float> k = static_cast<std::complex<float>>(pmt::to_complex(msg));
@@ -406,10 +392,9 @@ public:
     rpcbasic_extractor(T* source, void (T::*func)(std::complex<double>))
         : rpcextractor_base<T, std::complex<double>>(source, func)
     {
-        ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         (void)which_port;
         (rpcextractor_base<T, std::complex<double>>::_source
@@ -428,10 +413,9 @@ public:
     rpcbasic_extractor(T* source, void (T::*func)(std::string))
         : rpcextractor_base<T, std::string>(source, func)
     {
-        ;
     }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         (void)which_port;
         (rpcextractor_base<T, std::string>::_source
@@ -454,13 +438,11 @@ public:
     rpcbasic_inserter(T* source, uint64_t (T::*func)() const)
         : rpcinserter_base<T, uint64_t>(source, func)
     {
-        ;
     }
 
     rpcbasic_inserter(T* source, uint64_t (T::*func)())
         : rpcinserter_base<T, uint64_t>(source, func)
     {
-        ;
     }
 
     pmt::pmt_t retrieve()
@@ -481,13 +463,11 @@ public:
     rpcbasic_inserter(T* source, std::vector<signed char> (T::*func)() const)
         : rpcinserter_base<T, std::vector<signed char>>(source, func)
     {
-        ;
     }
 
     rpcbasic_inserter(T* source, std::vector<signed char> (T::*func)())
         : rpcinserter_base<T, std::vector<signed char>>(source, func)
     {
-        ;
     }
 
     pmt::pmt_t retrieve()
@@ -510,13 +490,11 @@ public:
     rpcbasic_inserter(T* source, std::vector<short> (T::*func)() const)
         : rpcinserter_base<T, std::vector<short>>(source, func)
     {
-        ;
     }
 
     rpcbasic_inserter(T* source, std::vector<short> (T::*func)())
         : rpcinserter_base<T, std::vector<short>>(source, func)
     {
-        ;
     }
 
     pmt::pmt_t retrieve()
@@ -538,13 +516,11 @@ public:
     rpcbasic_inserter(T* source, std::vector<int> (T::*func)() const)
         : rpcinserter_base<T, std::vector<int>>(source, func)
     {
-        ;
     }
 
     rpcbasic_inserter(T* source, std::vector<int> (T::*func)())
         : rpcinserter_base<T, std::vector<int>>(source, func)
     {
-        ;
     }
 
     pmt::pmt_t retrieve()
@@ -566,13 +542,11 @@ public:
     rpcbasic_inserter(T* source, std::vector<int64_t> (T::*func)() const)
         : rpcinserter_base<T, std::vector<int64_t>>(source, func)
     {
-        ;
     }
 
     rpcbasic_inserter(T* source, std::vector<int64_t> (T::*func)())
         : rpcinserter_base<T, std::vector<int64_t>>(source, func)
     {
-        ;
     }
 
     pmt::pmt_t retrieve()
@@ -595,13 +569,11 @@ public:
     rpcbasic_inserter(T* source, std::vector<std::complex<float>> (T::*func)() const)
         : rpcinserter_base<T, std::vector<std::complex<float>>>(source, func)
     {
-        ;
     }
 
     rpcbasic_inserter(T* source, std::vector<std::complex<float>> (T::*func)())
         : rpcinserter_base<T, std::vector<std::complex<float>>>(source, func)
     {
-        ;
     }
 
     pmt::pmt_t retrieve()
@@ -624,13 +596,11 @@ public:
     rpcbasic_inserter(T* source, std::vector<float> (T::*func)() const)
         : rpcinserter_base<T, std::vector<float>>(source, func)
     {
-        ;
     }
 
     rpcbasic_inserter(T* source, std::vector<float> (T::*func)())
         : rpcinserter_base<T, std::vector<float>>(source, func)
     {
-        ;
     }
 
     pmt::pmt_t retrieve()
@@ -652,13 +622,11 @@ public:
     rpcbasic_inserter(T* source, std::vector<uint8_t> (T::*func)() const)
         : rpcinserter_base<T, std::vector<uint8_t>>(source, func)
     {
-        ;
     }
 
     rpcbasic_inserter(T* source, std::vector<uint8_t> (T::*func)())
         : rpcinserter_base<T, std::vector<uint8_t>>(source, func)
     {
-        ;
     }
 
     pmt::pmt_t retrieve()
@@ -681,13 +649,11 @@ public:
     rpcbasic_inserter(T* source, std::complex<float> (T::*func)() const)
         : rpcinserter_base<T, std::complex<float>>(source, func)
     {
-        ;
     }
 
     rpcbasic_inserter(T* source, std::complex<float> (T::*func)())
         : rpcinserter_base<T, std::complex<float>>(source, func)
     {
-        ;
     }
 
     pmt::pmt_t retrieve()
@@ -709,13 +675,11 @@ public:
     rpcbasic_inserter(T* source, std::complex<double> (T::*func)() const)
         : rpcinserter_base<T, std::complex<double>>(source, func)
     {
-        ;
     }
 
     rpcbasic_inserter(T* source, std::complex<double> (T::*func)())
         : rpcinserter_base<T, std::complex<double>>(source, func)
     {
-        ;
     }
 
     pmt::pmt_t retrieve()
@@ -911,7 +875,7 @@ struct rpcbasic_register_set : public rpcbasic_base {
 #endif
     }
 
-    ~rpcbasic_register_set()
+    ~rpcbasic_register_set() override
     {
 #ifdef GR_RPCSERVER_ENABLED
         rpcmanager::get()->i()->unregisterConfigureCallback(d_id);
@@ -1056,7 +1020,7 @@ struct rpcbasic_register_trigger : public rpcbasic_base {
 #endif
     }
 
-    ~rpcbasic_register_trigger()
+    ~rpcbasic_register_trigger() override
     {
 #ifdef GR_RPCSERVER_ENABLED
         rpcmanager::get()->i()->unregisterConfigureCallback(d_id);
@@ -1331,7 +1295,7 @@ public:
 #endif
     }
 
-    ~rpcbasic_register_get()
+    ~rpcbasic_register_get() override
     {
 #ifdef GR_RPCSERVER_ENABLED
         rpcmanager::get()->i()->unregisterQueryCallback(d_id);
@@ -1653,7 +1617,7 @@ public:
 #endif
     }
 
-    ~rpcbasic_register_handler()
+    ~rpcbasic_register_handler() override
     {
 #ifdef GR_RPCSERVER_ENABLED
         rpcmanager::get()->i()->unregisterHandlerCallback(d_id);

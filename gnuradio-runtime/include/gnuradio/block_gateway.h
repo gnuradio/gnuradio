@@ -320,7 +320,7 @@ protected:
     typedef std::map<pmt::pmt_t, feval_p*, pmt::comparator> msg_handlers_feval_t;
     msg_handlers_feval_t d_msg_handlers_feval;
 
-    bool has_msg_handler(pmt::pmt_t which_port)
+    bool has_msg_handler(pmt::pmt_t which_port) override
     {
         if (d_msg_handlers_feval.find(which_port) != d_msg_handlers_feval.end()) {
             return true;
@@ -329,7 +329,7 @@ protected:
         }
     }
 
-    void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         // Is there a handler?
         if (d_msg_handlers_feval.find(which_port) != d_msg_handlers_feval.end()) {

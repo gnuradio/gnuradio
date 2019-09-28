@@ -43,24 +43,24 @@ public:
     /*******************************************************************
      * Overloads for various scheduler-called functions
      ******************************************************************/
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
              gr_vector_void_star& output_items);
 
-    int fixed_rate_noutput_to_ninput(int noutput_items);
-    int fixed_rate_ninput_to_noutput(int ninput_items);
+    int fixed_rate_noutput_to_ninput(int noutput_items) override;
+    int fixed_rate_ninput_to_noutput(int ninput_items) override;
 
-    bool start(void);
-    bool stop(void);
+    bool start(void) override;
+    bool stop(void) override;
 
-    block_gw_message_type& block_message(void);
+    block_gw_message_type& block_message(void) override;
 
 private:
     feval_ll* _handler;

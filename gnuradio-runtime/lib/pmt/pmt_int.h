@@ -42,7 +42,7 @@ public:
     pmt_bool();
     //~pmt_bool(){}
 
-    bool is_bool() const { return true; }
+    bool is_bool() const override { return true; }
 };
 
 
@@ -55,7 +55,7 @@ public:
     pmt_symbol(const std::string& name);
     //~pmt_symbol(){}
 
-    bool is_symbol() const { return true; }
+    bool is_symbol() const override { return true; }
     const std::string name() { return d_name; }
 
     pmt_t next() { return d_next; } // symbol table link
@@ -70,8 +70,8 @@ public:
     pmt_integer(long value);
     //~pmt_integer(){}
 
-    bool is_number() const { return true; }
-    bool is_integer() const { return true; }
+    bool is_number() const override { return true; }
+    bool is_integer() const override { return true; }
     long value() const { return d_value; }
 };
 
@@ -83,8 +83,8 @@ public:
     pmt_uint64(uint64_t value);
     //~pmt_uint64(){}
 
-    bool is_number() const { return true; }
-    bool is_uint64() const { return true; }
+    bool is_number() const override { return true; }
+    bool is_uint64() const override { return true; }
     uint64_t value() const { return d_value; }
 };
 
@@ -96,8 +96,8 @@ public:
     pmt_real(double value);
     //~pmt_real(){}
 
-    bool is_number() const { return true; }
-    bool is_real() const { return true; }
+    bool is_number() const override { return true; }
+    bool is_real() const override { return true; }
     double value() const { return d_value; }
 };
 
@@ -109,8 +109,8 @@ public:
     pmt_complex(std::complex<double> value);
     //~pmt_complex(){}
 
-    bool is_number() const { return true; }
-    bool is_complex() const { return true; }
+    bool is_number() const override { return true; }
+    bool is_complex() const override { return true; }
     std::complex<double> value() const { return d_value; }
 };
 
@@ -120,7 +120,7 @@ public:
     pmt_null();
     //~pmt_null(){}
 
-    bool is_null() const { return true; }
+    bool is_null() const override { return true; }
 };
 
 class pmt_pair : public pmt_base
@@ -132,7 +132,7 @@ public:
     pmt_pair(const pmt_t& car, const pmt_t& cdr);
     //~pmt_pair(){};
 
-    bool is_pair() const { return true; }
+    bool is_pair() const override { return true; }
     pmt_t car() const { return d_car; }
     pmt_t cdr() const { return d_cdr; }
 
@@ -148,7 +148,7 @@ public:
     pmt_vector(size_t len, pmt_t fill);
     //~pmt_vector();
 
-    bool is_vector() const { return true; }
+    bool is_vector() const override { return true; }
     pmt_t ref(size_t k) const;
     void set(size_t k, pmt_t obj);
     void fill(pmt_t fill);
@@ -165,7 +165,7 @@ public:
     pmt_tuple(size_t len);
     //~pmt_tuple();
 
-    bool is_tuple() const { return true; }
+    bool is_tuple() const override { return true; }
     pmt_t ref(size_t k) const;
     size_t length() const { return d_v.size(); }
 
@@ -181,7 +181,7 @@ public:
     pmt_any(const boost::any& any);
     //~pmt_any();
 
-    bool is_any() const { return true; }
+    bool is_any() const override { return true; }
     const boost::any& ref() const { return d_any; }
     void set(const boost::any& any) { d_any = any; }
 };
@@ -190,7 +190,7 @@ public:
 class pmt_uniform_vector : public pmt_base
 {
 public:
-    bool is_uniform_vector() const { return true; }
+    bool is_uniform_vector() const override { return true; }
     virtual const void* uniform_elements(size_t& len) = 0;
     virtual void* uniform_writable_elements(size_t& len) = 0;
     virtual size_t length() const = 0;

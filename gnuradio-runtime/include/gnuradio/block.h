@@ -88,7 +88,7 @@ public:
                                application-specific forwarding behaviour. */
     };
 
-    virtual ~block();
+    ~block() override;
 
     /*!
      * Assume block computes y_i = f(x_i, x_i-1, x_i-2, x_i-3...)
@@ -675,17 +675,17 @@ public:
      *
      * \param mask a vector of ints of the core numbers available to this block.
      */
-    void set_processor_affinity(const std::vector<int>& mask);
+    void set_processor_affinity(const std::vector<int>& mask) override;
 
     /*!
      * \brief Remove processor affinity to a specific core.
      */
-    void unset_processor_affinity();
+    void unset_processor_affinity() override;
 
     /*!
      * \brief Get the current processor affinity.
      */
-    std::vector<int> processor_affinity() { return d_affinity; }
+    std::vector<int> processor_affinity() override { return d_affinity; }
 
     /*!
      * \brief Get the current thread priority in use
@@ -728,12 +728,12 @@ public:
      * \li fatal
      * \li emerg
      */
-    void set_log_level(std::string level);
+    void set_log_level(std::string level) override;
 
     /*!
      * \brief Get the logger's output level
      */
-    std::string log_level();
+    std::string log_level() override;
 
     /*!
      * \brief returns true when execution has completed due to a message connection
