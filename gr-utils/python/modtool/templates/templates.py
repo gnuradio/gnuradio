@@ -92,7 +92,7 @@ namespace gr {
 % endif
      public:
       ${blockname}_impl(${strip_default_values(arglist)});
-      ~${blockname}_impl();
+      ~${blockname}_impl() override;
 
       // Where all the action really happens
 % if blocktype == 'general':
@@ -101,7 +101,7 @@ namespace gr {
       int general_work(int noutput_items,
            gr_vector_int &ninput_items,
            gr_vector_const_void_star &input_items,
-           gr_vector_void_star &output_items);
+           gr_vector_void_star &output_items) override;
 
 % elif blocktype == 'tagged_stream':
       int work(
@@ -109,14 +109,14 @@ namespace gr {
               gr_vector_int &ninput_items,
               gr_vector_const_void_star &input_items,
               gr_vector_void_star &output_items
-      );
+      ) override;
 % elif blocktype == 'hier':
 % else:
       int work(
               int noutput_items,
               gr_vector_const_void_star &input_items,
               gr_vector_void_star &output_items
-      );
+      ) override;
 % endif
     };
 
@@ -218,8 +218,8 @@ namespace gr {
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
-      const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
-      <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+      auto *in = (const <+ITYPE+> *) input_items[0];
+      auto *out = (<+OTYPE+> *) output_items[0];
 
       // Do <+signal processing+>
       // Tell runtime system how many input items we consumed on
@@ -243,8 +243,8 @@ namespace gr {
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
-      const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
-      <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+      auto *in = (const <+ITYPE+> *) input_items[0];
+      auto *out = (<+OTYPE+> *) output_items[0];
 
       // Do <+signal processing+>
 
@@ -259,10 +259,10 @@ namespace gr {
         gr_vector_void_star &output_items)
     {
     % if blocktype != 'source':
-      const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
+      auto *in = (const <+ITYPE+> *) input_items[0];
     % endif
     % if blocktype != 'sink':
-      <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+      auto *out = (<+OTYPE+> *) output_items[0];
     % endif
 
       // Do <+signal processing+>
@@ -472,7 +472,7 @@ namespace gr {
   namespace ${modname} {
 
     void
-    qa_${blockname}::t1()
+    qa_${blockname}::t1_descriptive_test_name()
     {
       // Put test here
     }
@@ -498,11 +498,11 @@ namespace gr {
     {
     public:
       CPPUNIT_TEST_SUITE(qa_${blockname});
-      CPPUNIT_TEST(t1);
+      CPPUNIT_TEST(t1_descriptive_test_name);
       CPPUNIT_TEST_SUITE_END();
 
     private:
-      void t1();
+      void t1_descriptive_test_name();
     };
 
   } /* namespace ${modname} */
@@ -532,7 +532,7 @@ class qa_${blockname}(gr_unittest.TestCase):
     def tearDown(self):
         self.tb = None
 
-    def test_001_t(self):
+    def test_001_descriptive_test_name(self):
         # set up fg
         self.tb.run()
         # check data
