@@ -12,6 +12,8 @@
 #include "config.h"
 #endif
 
+#include <gnuradio/logger.h>
+
 #include "alsa_impl.h"
 #include <algorithm>
 
@@ -138,17 +140,18 @@ bool gri_alsa_pick_acceptable_format(snd_pcm_t* pcm,
                                      bool verbose)
 {
     int err;
+    gr::logger_ptr logger, debug_logger;
+    gr::configure_default_loggers(logger, debug_logger, "gri_alsa_pick_acceptable_format");
 
     // pick a format that we like...
     for (unsigned i = 0; i < nacceptable_formats; i++) {
         if (snd_pcm_hw_params_test_format(pcm, hwparams, acceptable_formats[i]) == 0) {
             err = snd_pcm_hw_params_set_format(pcm, hwparams, acceptable_formats[i]);
             if (err < 0) {
-                fprintf(stderr,
-                        "%s[%s]: failed to set format: %s\n",
-                        error_msg_tag,
-                        snd_pcm_name(pcm),
-                        snd_strerror(err));
+                GR_LOG_ERROR(
+                    debug_logger,
+                    boost::format("ERROR %s[%s]: failed to set format: %s\n") % error_msg_tag % snd_pcm_name(pcm) % snd_strerror(err)
+                );
                 return false;
             }
             if (verbose)
@@ -162,9 +165,9 @@ bool gri_alsa_pick_acceptable_format(snd_pcm_t* pcm,
         }
     }
 
-    fprintf(stderr,
-            "%s[%s]: failed to find acceptable format",
-            error_msg_tag,
-            snd_pcm_name(pcm));
+    GR_LOG_ERROR(
+        debug_logger,
+        boost::format("ERROR %s[%s]: failed to find acceptable format\n") % error_msg_tag % snd_pcm_name(pcm)
+    );
     return false;
 }

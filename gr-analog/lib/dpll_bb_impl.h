@@ -12,6 +12,7 @@
 #define INCLUDED_ANALOG_DPLL_BB_IMPL_H
 
 #include <gnuradio/analog/dpll_bb.h>
+#include <gnuradio/logger.h>
 
 namespace gr {
 namespace analog {
@@ -22,6 +23,8 @@ private:
     unsigned char d_restart;
     float d_pulse_phase, d_pulse_frequency;
     float d_gain, d_decision_threshold;
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
 public:
     dpll_bb_impl(float period, float gain);

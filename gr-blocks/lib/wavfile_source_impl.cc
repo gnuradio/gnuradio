@@ -123,7 +123,10 @@ int wavfile_source_impl::work(int noutput_items,
             }
 
             if (fseek(d_fp, d_first_sample_pos, SEEK_SET) == -1) {
-                fprintf(stderr, "[%s] fseek failed\n", __FILE__);
+                GR_LOG_ERROR(
+                    d_debug_logger,
+                    boost::format("ERROR [%s] fseek failed %s\n") % __FILE__ % strerror(errno)
+                );
                 exit(-1);
             }
 
@@ -145,9 +148,10 @@ int wavfile_source_impl::work(int noutput_items,
         // trouble they won't be processed. Serves them bloody right.
         if (feof(d_fp) || ferror(d_fp)) {
             if (i == 0) {
-                fprintf(stderr,
-                        "[%s] WAV file has corrupted header or i/o error\n",
-                        __FILE__);
+                GR_LOG_ERROR(
+                    d_debug_logger,
+                    boost::format("ERROR [%s] WAV file has corrupted header or i/o error\n") % __FILE__ % strerror(errno)
+                );
                 return -1;
             }
             return i;

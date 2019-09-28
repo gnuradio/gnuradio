@@ -243,7 +243,7 @@ float conv_bit_corr_bb_impl::data_garble_rate(int taps, float target)
     answer = 0.5 * (1 - pow(base, expo));
 
     if ((errno == EDOM) || (errno == ERANGE)) {
-        fprintf(stderr, "Out of range errors while computing garble rate.\n");
+        GR_LOG_ERROR(d_debug_logger, "Out of range errors while computing garble rate.\n");
         exit(-1);
     }
     return answer;

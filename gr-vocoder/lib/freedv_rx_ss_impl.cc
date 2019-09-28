@@ -82,11 +82,13 @@ freedv_rx_ss_impl::~freedv_rx_ss_impl()
     if (freedv_get_test_frames(d_freedv)) {
         total_bits = freedv_get_total_bits(d_freedv);
         total_bit_errors = freedv_get_total_bit_errors(d_freedv);
-        fprintf(stderr,
-                "bits: %d errors: %d BER: %3.2f\n",
-                total_bits,
-                total_bit_errors,
-                (1.0 * total_bit_errors) / total_bits);
+        GR_LOG_ERROR(
+            d_debug_logger,
+            boost::format("bits: %d errors: %d BER: %3.2f\n")
+            % total_bits
+            % total_bit_errors
+            % (1.0 * total_bit_errors) / total_bits
+        );
     }
     freedv_close(d_freedv);
 }
