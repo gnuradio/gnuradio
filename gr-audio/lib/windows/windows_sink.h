@@ -30,6 +30,7 @@
 #include <windows.h>
 
 #include <gnuradio/audio/sink.h>
+#include <gnuradio/logger.h>
 #include <string>
 
 namespace gr {

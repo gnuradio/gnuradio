@@ -70,11 +70,12 @@ void portaudio_sink::create_ringbuffer(void)
     int bufsize_samples =
         d_portaudio_buffer_size_frames * d_output_parameters.channelCount;
 
-    if (d_verbose) {
-        fprintf(stderr,
-                "ring buffer size  = %d frames\n",
-                N_BUFFERS * bufsize_samples / d_output_parameters.channelCount);
-    }
+    if (d_verbose) 
+        GR_LOG_INFO(
+            d_debug_logger,
+            boost::format("INFO ring buffer size  = %d frames\n") 
+            % N_BUFFERS * bufsize_samples / d_input_parameters.channelCount
+        );
 
     // FYI, the buffer indices are in units of samples.
     d_writer = gr::make_buffer(N_BUFFERS * bufsize_samples, sizeof(sample_t));
@@ -155,8 +156,6 @@ portaudio_sink::portaudio_sink(int sampling_rate,
       d_nunderuns(0)
 {
     memset(&d_output_parameters, 0, sizeof(d_output_parameters));
-    // if(LOGGING)
-    //  d_log = gri_logger::singleton();
 
     PaError err;
     int i, numDevices;
@@ -179,38 +178,43 @@ portaudio_sink::portaudio_sink(int sampling_rate,
 
     if (d_device_name.empty()) {
         // FIXME Get smarter about picking something
-        fprintf(stderr, "\nUsing Default Device\n");
+        GR_LOG_INFO(d_debug_logger, "Using Default Device\n");
         device = Pa_GetDefaultOutputDevice();
         deviceInfo = Pa_GetDeviceInfo(device);
-        fprintf(stderr,
-                "%s is the chosen device using %s as the host\n",
-                deviceInfo->name,
-                Pa_GetHostApiInfo(deviceInfo->hostApi)->name);
+        GR_LOG_ERROR(
+            d_debug_logger,
+            boost::format("ERROR %s is the chosen device using %s as the host\n") 
+            % deviceInfo->name
+            % Pa_GetHostApiInfo(deviceInfo->hostApi)->name)
+        );
     } else {
         bool found = false;
-        fprintf(stderr, "\nTest Devices\n");
+        GR_LOG_INFO(d_debug_logger, "\nTest Devices\n");
         for (i = 0; i < numDevices; i++) {
             deviceInfo = Pa_GetDeviceInfo(i);
-            fprintf(stderr, "Testing device name: %s", deviceInfo->name);
-
+            GR_LOG_INFO(
+                d_debug_logger,
+                boost::format("INFO Testing device name: %s...") % deviceInfo->name
+            );
             if (deviceInfo->maxOutputChannels <= 0) {
-                fprintf(stderr, "\n");
+                GR_LOG_INFO(d_debug_logger, "\n");
                 continue;
             }
 
             if (strstr(deviceInfo->name, d_device_name.c_str())) {
-                fprintf(stderr, "  Chosen!\n");
+                GR_LOG_INFO(d_debug_logger, "  Chosen!\n");
                 device = i;
-                fprintf(stderr,
-                        "%s using %s as the host\n",
-                        d_device_name.c_str(),
-                        Pa_GetHostApiInfo(deviceInfo->hostApi)->name),
-                    fflush(stderr);
+                GR_LOG_INFO(
+                    d_debug_logger,
+                    boost::format("%s using %s as the host\n") 
+                    % d_device_name.c_str()
+                    % Pa_GetHostApiInfo(deviceInfo->hostApi)->name
+                );
                 found = true;
                 deviceInfo = Pa_GetDeviceInfo(device);
                 i = numDevices; // force loop exit
             } else
-                fprintf(stderr, "\n"), fflush(stderr);
+                GR_LOG_INFO(d_debug_logger, "\n");
         }
 
         if (!found) {
@@ -252,11 +256,12 @@ bool portaudio_sink::check_topology(int ninputs, int noutputs)
 #if 1
     d_portaudio_buffer_size_frames =
         (int)(0.0213333333 * d_sampling_rate + 0.5); // Force 1024 frame buffers at 48000
-    fprintf(stderr,
-            "Latency = %8.5f, requested sampling_rate = %g\n", // Force latency
-                                                               // to 21.3333333.. ms
-            0.0213333333,
-            (double)d_sampling_rate);
+    GR_LOG_ERROR(
+        d_debug_logger, 
+        boost::format("ERROR Latency = %8.5f, requested sampling_rate = %g\n") 
+        % 0.0213333333
+        % (double)d_sampling_rate
+    );
 #endif
     err = Pa_OpenStream(&d_stream,
                         NULL, // No input
@@ -273,15 +278,20 @@ bool portaudio_sink::check_topology(int ninputs, int noutputs)
     }
 
 #if 0
-      const PaStreamInfo *psi = Pa_GetStreamInfo(d_stream);
+        const PaStreamInfo *psi = Pa_GetStreamInfo(d_stream);
 
-      d_portaudio_buffer_size_frames = (int)(d_output_parameters.suggestedLatency  * psi->sampleRate);
-      fprintf(stderr, "Latency = %7.4f, psi->sampleRate = %g\n",
-              d_output_parameters.suggestedLatency, psi->sampleRate);
+        d_portaudio_buffer_size_frames = (int)(d_output_parameters.suggestedLatency  * psi->sampleRate);
+        GR_LOG_ERROR(
+            d_debug_logger, 
+            boost::format("ERROR Latency = %7.4f, psi->sampleRate = %g\n") 
+            % d_input_parameters.suggestedLatency
+            % psi->sampleRate
+        );
 #endif
-
-    fprintf(
-        stderr, "d_portaudio_buffer_size_frames = %d\n", d_portaudio_buffer_size_frames);
+    GR_LOG_ERROR(
+        d_debug_logger, 
+        boost::format("ERROR d_portaudio_buffer_size_frames = %d\n")  % d_portaudio_buffer_size_frames
+    );
 
     assert(d_portaudio_buffer_size_frames != 0);
 
@@ -362,11 +372,7 @@ int portaudio_sink::work(int noutput_items,
 
 void portaudio_sink::output_error_msg(const char* msg, int err)
 {
-    fprintf(stderr,
-            "audio_portaudio_sink[%s]: %s: %s\n",
-            d_device_name.c_str(),
-            msg,
-            Pa_GetErrorText(err));
+    GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s: %s %s") % d_device_name.c_str() % msg % Pa_GetErrorText(err));
 }
 
 void portaudio_sink::bail(const char* msg, int err)

@@ -163,24 +163,26 @@ void ofdm_frame_acquisition_impl::calculate_equalizer(const gr_complex* symbol,
     }
 
     if (VERBOSE) {
-        fprintf(stderr, "Equalizer setting:\n");
+        GR_LOG_INFO(d_debug_logger, "INFO Equalizer setting:");
+
         for (i = 0; i < d_occupied_carriers; i++) {
             gr_complex sym = coarse_freq_comp(d_coarse_freq, 1) *
                              symbol[i + zeros_on_left + d_coarse_freq];
             gr_complex output = sym * d_hestimate[i];
-            fprintf(stderr,
-                    "sym: %+.4f + j%+.4f  ks: %+.4f + j%+.4f  eq: %+.4f + j%+.4f  ==>  "
-                    "%+.4f + j%+.4f\n",
-                    sym.real(),
-                    sym.imag(),
-                    d_known_symbol[i].real(),
-                    d_known_symbol[i].imag(),
-                    d_hestimate[i].real(),
-                    d_hestimate[i].imag(),
-                    output.real(),
-                    output.imag());
+            GR_LOG_INFO(
+                d_debug_logger, 
+                boost::format("sym: %+.4f + j%+.4f  ks: %+.4f + j%+.4f  eq: %+.4f + j%+.4f  ==> %+.4f + j%+.4f\n")
+                % sym.real()
+                % sym.imag()
+                % d_known_symbol[i].real()
+                % d_known_symbol[i].imag()
+                % d_hestimate[i].real()
+                % d_hestimate[i].imag()
+                % output.real()
+                % output.imag()
+            )
         }
-        fprintf(stderr, "\n");
+        GR_LOG_INFO(d_debug_logger, "\n"); 
     }
 }
 

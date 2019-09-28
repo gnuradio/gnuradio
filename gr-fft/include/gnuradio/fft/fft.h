@@ -29,6 +29,7 @@
 
 #include <gnuradio/fft/api.h>
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/logger.h>
 #include <boost/thread.hpp>
 
 namespace gr {
@@ -76,6 +77,8 @@ class FFT_API fft_complex
     gr_complex* d_inbuf;
     gr_complex* d_outbuf;
     void* d_plan;
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
 public:
     fft_complex(int fft_size, bool forward = true, int nthreads = 1);
@@ -120,6 +123,8 @@ class FFT_API fft_real_fwd
     float* d_inbuf;
     gr_complex* d_outbuf;
     void* d_plan;
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
 public:
     fft_real_fwd(int fft_size, int nthreads = 1);
@@ -164,7 +169,9 @@ class FFT_API fft_real_rev
     gr_complex* d_inbuf;
     float* d_outbuf;
     void* d_plan;
-
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
+    
 public:
     fft_real_rev(int fft_size, int nthreads = 1);
     virtual ~fft_real_rev();
