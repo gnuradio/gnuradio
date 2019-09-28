@@ -376,53 +376,6 @@ void dvb_ldpc_bb_impl::forecast(int noutput_items, gr_vector_int& ninput_items_r
     ninput_items_required[0] = (noutput_items / frame_size) * nbch;
 }
 
-#define LDPC_BF(TABLE_NAME, ROWS)                                                                \
-    for (int row = 0; row < ROWS; row++) { /* count the entries in the table */                  \
-        max_lut_arraysize += TABLE_NAME[row][0];                                                 \
-    }                                                                                            \
-    max_lut_arraysize *= 360;   /* 360 bits per table entry */                                   \
-    max_lut_arraysize /= pbits; /* spread over all parity bits */                                \
-    for (int i = 0; i < FRAME_SIZE_NORMAL; i++) {                                                \
-        ldpc_lut_index[i] = 1;                                                                   \
-    }                                                                                            \
-    for (int row = 0; row < ROWS; row++) {                                                       \
-        for (int n = 0; n < 360; n++) {                                                          \
-            for (int col = 1; col <= TABLE_NAME[row][0]; col++) {                                \
-                int current_pbit = (TABLE_NAME[row][col] + (n * q)) % pbits;                     \
-                ldpc_lut_index[current_pbit]++;                                                  \
-                if (ldpc_lut_index[current_pbit] > max_index) {                                  \
-                    max_index = ldpc_lut_index[current_pbit];                                    \
-                }                                                                                \
-            }                                                                                    \
-        }                                                                                        \
-    }                                                                                            \
-    max_lut_arraysize +=                                                                         \
-        1 +                                                                                      \
-        (max_index - max_lut_arraysize); /* 1 for the size at the start of the array */          \
-                                                                                                 \
-    /* Allocate a 2D Array with pbits * max_lut_arraysize                                        \
-     * while preserving two-subscript access                                                     \
-     * see                                                                                       \
-     * https://stackoverflow.com/questions/29375797/copy-2d-array-using-memcpy/29375830#29375830 \
-     */                                                                                          \
-    ldpc_lut = new int*[pbits];                                                                  \
-    ldpc_lut[0] = new int[pbits * max_lut_arraysize];                                            \
-    ldpc_lut[0][0] = 1;                                                                          \
-    for (int i = 1; i < pbits; i++) {                                                            \
-        ldpc_lut[i] = ldpc_lut[i - 1] + max_lut_arraysize;                                       \
-        ldpc_lut[i][0] = 1;                                                                      \
-    }                                                                                            \
-    for (int row = 0; row < ROWS; row++) {                                                       \
-        for (int n = 0; n < 360; n++) {                                                          \
-            for (int col = 1; col <= TABLE_NAME[row][0]; col++) {                                \
-                int current_pbit = (TABLE_NAME[row][col] + (n * q)) % pbits;                     \
-                ldpc_lut[current_pbit][ldpc_lut[current_pbit][0]] = im;                          \
-                ldpc_lut[current_pbit][0]++;                                                     \
-            }                                                                                    \
-            im++;                                                                                \
-        }                                                                                        \
-    }
-
 /*
  * fill the lookup table, for each paritybit it contains
  * {number of infobits, infobit1, infobit2, ... ]
@@ -431,202 +384,196 @@ void dvb_ldpc_bb_impl::forecast(int noutput_items, gr_vector_int& ninput_items_r
  */
 void dvb_ldpc_bb_impl::ldpc_lookup_generate(void)
 {
-    int im = 0;
-    int pbits = (frame_size_real + Xp) - nbch; // number of parity bits
-    int q = q_val;
-    int max_lut_arraysize = 0;
-    int max_index = 0;
-
     if (frame_size_type == FECFRAME_NORMAL) {
         if (code_rate == C1_4) {
-            LDPC_BF(ldpc_tab_1_4N, 45);
+            ldpc_bf(ldpc_tab_1_4N);
         }
         if (code_rate == C1_3) {
-            LDPC_BF(ldpc_tab_1_3N, 60);
+            ldpc_bf(ldpc_tab_1_3N);
         }
         if (code_rate == C2_5) {
-            LDPC_BF(ldpc_tab_2_5N, 72);
+            ldpc_bf(ldpc_tab_2_5N);
         }
         if (code_rate == C1_2) {
-            LDPC_BF(ldpc_tab_1_2N, 90);
+            ldpc_bf(ldpc_tab_1_2N);
         }
         if (code_rate == C3_5) {
-            LDPC_BF(ldpc_tab_3_5N, 108);
+            ldpc_bf(ldpc_tab_3_5N);
         }
         if (code_rate == C2_3) {
             if (dvb_standard == STANDARD_DVBT2) {
-                LDPC_BF(ldpc_tab_2_3N_DVBT2, 120);
+                ldpc_bf(ldpc_tab_2_3N_DVBT2);
             } else {
-                LDPC_BF(ldpc_tab_2_3N_DVBS2, 120);
+                ldpc_bf(ldpc_tab_2_3N_DVBS2);
             }
         }
         if (code_rate == C3_4) {
-            LDPC_BF(ldpc_tab_3_4N, 135);
+            ldpc_bf(ldpc_tab_3_4N);
         }
         if (code_rate == C4_5) {
-            LDPC_BF(ldpc_tab_4_5N, 144);
+            ldpc_bf(ldpc_tab_4_5N);
         }
         if (code_rate == C5_6) {
-            LDPC_BF(ldpc_tab_5_6N, 150);
+            ldpc_bf(ldpc_tab_5_6N);
         }
         if (code_rate == C8_9) {
-            LDPC_BF(ldpc_tab_8_9N, 160);
+            ldpc_bf(ldpc_tab_8_9N);
         }
         if (code_rate == C9_10) {
-            LDPC_BF(ldpc_tab_9_10N, 162);
+            ldpc_bf(ldpc_tab_9_10N);
         }
         if (code_rate == C2_9_VLSNR) {
-            LDPC_BF(ldpc_tab_2_9N, 40);
+            ldpc_bf(ldpc_tab_2_9N);
         }
         if (code_rate == C13_45) {
-            LDPC_BF(ldpc_tab_13_45N, 52);
+            ldpc_bf(ldpc_tab_13_45N);
         }
         if (code_rate == C9_20) {
-            LDPC_BF(ldpc_tab_9_20N, 81);
+            ldpc_bf(ldpc_tab_9_20N);
         }
         if (code_rate == C90_180) {
-            LDPC_BF(ldpc_tab_90_180N, 90);
+            ldpc_bf(ldpc_tab_90_180N);
         }
         if (code_rate == C96_180) {
-            LDPC_BF(ldpc_tab_96_180N, 96);
+            ldpc_bf(ldpc_tab_96_180N);
         }
         if (code_rate == C11_20) {
-            LDPC_BF(ldpc_tab_11_20N, 99);
+            ldpc_bf(ldpc_tab_11_20N);
         }
         if (code_rate == C100_180) {
-            LDPC_BF(ldpc_tab_100_180N, 100);
+            ldpc_bf(ldpc_tab_100_180N);
         }
         if (code_rate == C104_180) {
-            LDPC_BF(ldpc_tab_104_180N, 104);
+            ldpc_bf(ldpc_tab_104_180N);
         }
         if (code_rate == C26_45) {
-            LDPC_BF(ldpc_tab_26_45N, 104);
+            ldpc_bf(ldpc_tab_26_45N);
         }
         if (code_rate == C18_30) {
-            LDPC_BF(ldpc_tab_18_30N, 108);
+            ldpc_bf(ldpc_tab_18_30N);
         }
         if (code_rate == C28_45) {
-            LDPC_BF(ldpc_tab_28_45N, 112);
+            ldpc_bf(ldpc_tab_28_45N);
         }
         if (code_rate == C23_36) {
-            LDPC_BF(ldpc_tab_23_36N, 115);
+            ldpc_bf(ldpc_tab_23_36N);
         }
         if (code_rate == C116_180) {
-            LDPC_BF(ldpc_tab_116_180N, 116);
+            ldpc_bf(ldpc_tab_116_180N);
         }
         if (code_rate == C20_30) {
-            LDPC_BF(ldpc_tab_20_30N, 120);
+            ldpc_bf(ldpc_tab_20_30N);
         }
         if (code_rate == C124_180) {
-            LDPC_BF(ldpc_tab_124_180N, 124);
+            ldpc_bf(ldpc_tab_124_180N);
         }
         if (code_rate == C25_36) {
-            LDPC_BF(ldpc_tab_25_36N, 125);
+            ldpc_bf(ldpc_tab_25_36N);
         }
         if (code_rate == C128_180) {
-            LDPC_BF(ldpc_tab_128_180N, 128);
+            ldpc_bf(ldpc_tab_128_180N);
         }
         if (code_rate == C13_18) {
-            LDPC_BF(ldpc_tab_13_18N, 130);
+            ldpc_bf(ldpc_tab_13_18N);
         }
         if (code_rate == C132_180) {
-            LDPC_BF(ldpc_tab_132_180N, 132);
+            ldpc_bf(ldpc_tab_132_180N);
         }
         if (code_rate == C22_30) {
-            LDPC_BF(ldpc_tab_22_30N, 132);
+            ldpc_bf(ldpc_tab_22_30N);
         }
         if (code_rate == C135_180) {
-            LDPC_BF(ldpc_tab_135_180N, 135);
+            ldpc_bf(ldpc_tab_135_180N);
         }
         if (code_rate == C140_180) {
-            LDPC_BF(ldpc_tab_140_180N, 140);
+            ldpc_bf(ldpc_tab_140_180N);
         }
         if (code_rate == C7_9) {
-            LDPC_BF(ldpc_tab_7_9N, 140);
+            ldpc_bf(ldpc_tab_7_9N);
         }
         if (code_rate == C154_180) {
-            LDPC_BF(ldpc_tab_154_180N, 154);
+            ldpc_bf(ldpc_tab_154_180N);
         }
     } else if (frame_size_type == FECFRAME_SHORT) {
         if (code_rate == C1_4) {
-            LDPC_BF(ldpc_tab_1_4S, 9);
+            ldpc_bf(ldpc_tab_1_4S);
         }
         if (code_rate == C1_3) {
-            LDPC_BF(ldpc_tab_1_3S, 15);
+            ldpc_bf(ldpc_tab_1_3S);
         }
         if (code_rate == C2_5) {
-            LDPC_BF(ldpc_tab_2_5S, 18);
+            ldpc_bf(ldpc_tab_2_5S);
         }
         if (code_rate == C1_2) {
-            LDPC_BF(ldpc_tab_1_2S, 20);
+            ldpc_bf(ldpc_tab_1_2S);
         }
         if (code_rate == C3_5) {
             if (dvb_standard == STANDARD_DVBT2) {
-                LDPC_BF(ldpc_tab_3_5S_DVBT2, 27);
+                ldpc_bf(ldpc_tab_3_5S_DVBT2);
             } else {
-                LDPC_BF(ldpc_tab_3_5S_DVBS2, 27);
+                ldpc_bf(ldpc_tab_3_5S_DVBS2);
             }
         }
         if (code_rate == C2_3) {
-            LDPC_BF(ldpc_tab_2_3S, 30);
+            ldpc_bf(ldpc_tab_2_3S);
         }
         if (code_rate == C3_4) {
-            LDPC_BF(ldpc_tab_3_4S, 33);
+            ldpc_bf(ldpc_tab_3_4S);
         }
         if (code_rate == C4_5) {
-            LDPC_BF(ldpc_tab_4_5S, 35);
+            ldpc_bf(ldpc_tab_4_5S);
         }
         if (code_rate == C5_6) {
-            LDPC_BF(ldpc_tab_5_6S, 37);
+            ldpc_bf(ldpc_tab_5_6S);
         }
         if (code_rate == C8_9) {
-            LDPC_BF(ldpc_tab_8_9S, 40);
+            ldpc_bf(ldpc_tab_8_9S);
         }
         if (code_rate == C11_45) {
-            LDPC_BF(ldpc_tab_11_45S, 11);
+            ldpc_bf(ldpc_tab_11_45S);
         }
         if (code_rate == C4_15) {
-            LDPC_BF(ldpc_tab_4_15S, 12);
+            ldpc_bf(ldpc_tab_4_15S);
         }
         if (code_rate == C14_45) {
-            LDPC_BF(ldpc_tab_14_45S, 14);
+            ldpc_bf(ldpc_tab_14_45S);
         }
         if (code_rate == C7_15) {
-            LDPC_BF(ldpc_tab_7_15S, 21);
+            ldpc_bf(ldpc_tab_7_15S);
         }
         if (code_rate == C8_15) {
-            LDPC_BF(ldpc_tab_8_15S, 24);
+            ldpc_bf(ldpc_tab_8_15S);
         }
         if (code_rate == C26_45) {
-            LDPC_BF(ldpc_tab_26_45S, 26);
+            ldpc_bf(ldpc_tab_26_45S);
         }
         if (code_rate == C32_45) {
-            LDPC_BF(ldpc_tab_32_45S, 32);
+            ldpc_bf(ldpc_tab_32_45S);
         }
         if (code_rate == C1_5_VLSNR_SF2) {
-            LDPC_BF(ldpc_tab_1_4S, 9);
+            ldpc_bf(ldpc_tab_1_4S);
         }
         if (code_rate == C11_45_VLSNR_SF2) {
-            LDPC_BF(ldpc_tab_11_45S, 11);
+            ldpc_bf(ldpc_tab_11_45S);
         }
         if (code_rate == C1_5_VLSNR) {
-            LDPC_BF(ldpc_tab_1_4S, 9);
+            ldpc_bf(ldpc_tab_1_4S);
         }
         if (code_rate == C4_15_VLSNR) {
-            LDPC_BF(ldpc_tab_4_15S, 12);
+            ldpc_bf(ldpc_tab_4_15S);
         }
         if (code_rate == C1_3_VLSNR) {
-            LDPC_BF(ldpc_tab_1_3S, 15);
+            ldpc_bf(ldpc_tab_1_3S);
         }
     } else {
         if (code_rate == C1_5_MEDIUM) {
-            LDPC_BF(ldpc_tab_1_5M, 18);
+            ldpc_bf(ldpc_tab_1_5M);
         }
         if (code_rate == C11_45_MEDIUM) {
-            LDPC_BF(ldpc_tab_11_45M, 22);
+            ldpc_bf(ldpc_tab_11_45M);
         }
         if (code_rate == C1_3_MEDIUM) {
-            LDPC_BF(ldpc_tab_1_3M, 30);
+            ldpc_bf(ldpc_tab_1_3M);
         }
     }
 }
@@ -713,7 +660,7 @@ int dvb_ldpc_bb_impl::general_work(int noutput_items,
     return noutput_items;
 }
 
-const int dvb_ldpc_bb_impl::ldpc_tab_1_4N[45][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_1_4N[45][13] = {
     { 12,
       23606,
       36098,
@@ -941,7 +888,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_1_4N[45][13] = {
     { 3, 46685, 20622, 32806, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_1_3N[60][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_1_3N[60][13] = {
     { 12,
       34903,
       20927,
@@ -1232,7 +1179,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_1_3N[60][13] = {
     { 3, 25353, 4122, 39751, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_2_5N[72][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_2_5N[72][13] = {
     { 12, 31413, 18834, 28884, 947, 23050, 14484, 14809, 4968, 455, 33659, 16666, 19008 },
     { 12,
       13172,
@@ -1559,7 +1506,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_2_5N[72][13] = {
     { 3, 30672, 16927, 14800, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_1_2N[90][9] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_1_2N[90][9] = {
     { 8, 54, 9318, 14392, 27561, 26909, 10219, 2534, 8597 },
     { 8, 55, 7263, 4635, 2530, 28130, 3033, 23830, 3651 },
     { 8, 56, 24731, 23583, 26036, 17299, 5750, 792, 9169 },
@@ -1652,7 +1599,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_1_2N[90][9] = {
     { 3, 53, 19267, 20113, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_3_5N[108][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_3_5N[108][13] = {
     { 12, 22422, 10282, 11626, 19997, 11161, 2922, 3122, 99, 5625, 17064, 8270, 179 },
     { 12,
       25087,
@@ -1955,7 +1902,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_3_5N[108][13] = {
     { 3, 71, 3434, 7769, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_2_3N_DVBT2[120][14] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_2_3N_DVBT2[120][14] = {
     { 13,
       317,
       2255,
@@ -2234,7 +2181,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_2_3N_DVBT2[120][14] = {
     { 3, 13115, 17259, 17332, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_2_3N_DVBS2[120][14] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_2_3N_DVBS2[120][14] = {
     { 13, 0, 10491, 16043, 506, 12826, 8065, 8226, 2767, 240, 18673, 9279, 10579, 20928 },
     { 13,
       1,
@@ -2487,7 +2434,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_2_3N_DVBS2[120][14] = {
     { 3, 59, 3589, 14630, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_3_4N[135][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_3_4N[135][13] = {
     { 12, 0, 6385, 7901, 14611, 13389, 11200, 3252, 5243, 2504, 2722, 821, 7374 },
     { 12, 1, 11359, 2698, 357, 13824, 12772, 7244, 6752, 15310, 852, 2001, 11417 },
     { 12, 2, 7862, 7977, 6321, 13612, 12197, 14449, 15137, 13860, 1708, 6399, 13444 },
@@ -2625,7 +2572,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_3_4N[135][13] = {
     { 3, 44, 2883, 14521, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_4_5N[144][12] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_4_5N[144][12] = {
     { 11, 0, 149, 11212, 5575, 6360, 12559, 8108, 8505, 408, 10026, 12828 },
     { 11, 1, 5237, 490, 10677, 4998, 3869, 3734, 3092, 3509, 7703, 10305 },
     { 11, 2, 8742, 5553, 2820, 7085, 12116, 10485, 564, 7795, 2972, 2157 },
@@ -2772,7 +2719,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_4_5N[144][12] = {
     { 3, 35, 7108, 5553, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_5_6N[150][14] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_5_6N[150][14] = {
     { 13, 0, 4362, 416, 8909, 4156, 3216, 3112, 2560, 2912, 6405, 8593, 4969, 6723 },
     { 13, 1, 2479, 1786, 8978, 3011, 4339, 9313, 6397, 2957, 7288, 5484, 6031, 10217 },
     { 13, 2, 10175, 9009, 9889, 3091, 4985, 7267, 4092, 8874, 5671, 2777, 2189, 8716 },
@@ -2925,7 +2872,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_5_6N[150][14] = {
     { 3, 29, 7347, 8027, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_8_9N[160][5] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_8_9N[160][5] = {
     { 4, 0, 6235, 2848, 3222 },  { 4, 1, 5800, 3492, 5348 },  { 4, 2, 2757, 927, 90 },
     { 4, 3, 6961, 4516, 4739 },  { 4, 4, 1172, 3237, 6264 },  { 4, 5, 1927, 2425, 3683 },
     { 4, 6, 3714, 6309, 2495 },  { 4, 7, 3070, 6342, 7154 },  { 4, 8, 2428, 613, 3761 },
@@ -2982,7 +2929,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_8_9N[160][5] = {
     { 3, 19, 1696, 1459, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_9_10N[162][5] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_9_10N[162][5] = {
     { 4, 0, 5611, 2563, 2900 },  { 4, 1, 5220, 3143, 4813 },  { 4, 2, 2481, 834, 81 },
     { 4, 3, 6265, 4064, 4265 },  { 4, 4, 1055, 2914, 5638 },  { 4, 5, 1734, 2182, 3315 },
     { 4, 6, 3342, 5678, 2246 },  { 4, 7, 2185, 552, 3385 },   { 4, 8, 2615, 236, 5334 },
@@ -3039,7 +2986,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_9_10N[162][5] = {
     { 3, 15, 5078, 2687, 0 },    { 3, 16, 316, 1755, 0 },     { 3, 17, 3392, 1991, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_2_9N[40][12] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_2_9N[40][12] = {
     { 11, 5332, 8018, 35444, 13098, 9655, 41945, 44273, 22741, 9371, 8727, 43219 },
     { 11, 41410, 43593, 14611, 46707, 16041, 1459, 29246, 12748, 32996, 676, 46909 },
     { 11, 9340, 35072, 35640, 17537, 10512, 44339, 30965, 25175, 9918, 21079, 29835 },
@@ -3082,7 +3029,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_2_9N[40][12] = {
     { 3, 41497, 32023, 28688, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_13_45N[52][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_13_45N[52][13] = {
     { 12,
       15210,
       4519,
@@ -3353,7 +3300,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_13_45N[52][13] = {
     { 3, 30362, 35769, 42608, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_9_20N[81][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_9_20N[81][13] = {
     { 12,
       30649,
       35117,
@@ -3701,7 +3648,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_9_20N[81][13] = {
     { 3, 30507, 33307, 30783, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_11_20N[99][14] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_11_20N[99][14] = {
     { 13,
       20834,
       22335,
@@ -4154,7 +4101,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_11_20N[99][14] = {
     { 3, 3821, 18349, 13846, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_26_45N[104][14] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_26_45N[104][14] = {
     { 13,
       12918,
       15296,
@@ -4651,7 +4598,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_26_45N[104][14] = {
     { 3, 5794, 1239, 9934, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_28_45N[112][12] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_28_45N[112][12] = {
     { 11, 24402, 4786, 12678, 6376, 23965, 10003, 15376, 15164, 21366, 24252, 3353 },
     { 11, 8189, 3297, 18493, 17994, 16296, 11970, 16168, 15911, 20683, 11930, 3119 },
     { 11, 22463, 11744, 13833, 8279, 21652, 14679, 23663, 4389, 15110, 17254, 17498 },
@@ -4766,7 +4713,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_28_45N[112][12] = {
     { 3, 1253, 12068, 18813, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_23_36N[115][12] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_23_36N[115][12] = {
     { 11, 2475, 3722, 16456, 6081, 4483, 19474, 20555, 10558, 4351, 4052, 20066 },
     { 11, 1547, 5612, 22269, 11685, 23297, 19891, 18996, 21694, 7927, 19412, 15951 },
     { 11, 288, 15139, 7767, 3059, 1455, 12056, 12721, 7938, 19334, 3233, 5711 },
@@ -4884,7 +4831,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_23_36N[115][12] = {
     { 3, 18539, 26, 21487, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_25_36N[125][12] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_25_36N[125][12] = {
     { 11, 11863, 9493, 4143, 12695, 8706, 170, 4967, 798, 9856, 6015, 5125 },
     { 11, 12288, 19567, 18233, 15430, 1671, 3787, 10133, 15709, 7883, 14260, 17039 },
     { 11, 2066, 12269, 14620, 7577, 11525, 19519, 6181, 3850, 8893, 272, 12473 },
@@ -5012,7 +4959,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_25_36N[125][12] = {
     { 3, 15963, 6733, 11048, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_13_18N[130][11] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_13_18N[130][11] = {
     { 10, 2510, 12817, 11890, 13009, 5343, 1775, 10496, 13302, 13348, 17880 },
     { 10, 6766, 16330, 2412, 7944, 2483, 7602, 12482, 6942, 3070, 9231 },
     { 10, 16410, 1766, 1240, 10046, 12091, 14475, 7003, 202, 7733, 11237 },
@@ -5145,7 +5092,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_13_18N[130][11] = {
     { 3, 8814, 7277, 2678, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_7_9N[140][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_7_9N[140][13] = {
     { 12, 13057, 12620, 2789, 3553, 6763, 8329, 3333, 7822, 10490, 13943, 4101, 2556 },
     { 12, 658, 11386, 2242, 7249, 5935, 2148, 5291, 11992, 3222, 2957, 6454, 3343 },
     { 12, 93, 1205, 12706, 11406, 9017, 7834, 5358, 13700, 14295, 4152, 6287, 4249 },
@@ -5288,7 +5235,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_7_9N[140][13] = {
     { 3, 7220, 1062, 6871, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_90_180N[90][19] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_90_180N[90][19] = {
     { 18,
       708,
       1132,
@@ -5723,7 +5670,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_90_180N[90][19] = {
     { 6, 1597, 1691, 10499, 13815, 18943, 27396, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_96_180N[96][21] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_96_180N[96][21] = {
     { 20,   551,   1039,  1564,  1910,  3126,  4986,  5636,  5661,  7079, 9384,
       9971, 10460, 11259, 14150, 14389, 14568, 14681, 21772, 27818, 28671 },
     { 20,    384,   1734,  1993,  3890,  4594,  6655,  7483,  8508,  8573, 8720,
@@ -5842,7 +5789,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_96_180N[96][21] = {
     { 3, 9046, 16513, 22243, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_100_180N[100][17] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_100_180N[100][17] = {
     { 16,
       690,
       1366,
@@ -6265,7 +6212,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_100_180N[100][17] = {
     { 3, 6605, 12623, 26774, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_104_180N[104][19] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_104_180N[104][19] = {
     { 18,
       2087,
       6318,
@@ -6750,7 +6697,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_104_180N[104][19] = {
     { 3, 4120, 19101, 23719, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_116_180N[116][19] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_116_180N[116][19] = {
     { 18,
       3880,
       4377,
@@ -7319,7 +7266,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_116_180N[116][19] = {
     { 3, 710, 4696, 18127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_124_180N[124][17] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_124_180N[124][17] = {
     { 16,
       1083,
       2862,
@@ -7846,7 +7793,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_124_180N[124][17] = {
     { 3, 7791, 7800, 7809, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_128_180N[128][16] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_128_180N[128][16] = {
     { 15,
       790,
       1010,
@@ -8352,7 +8299,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_128_180N[128][16] = {
     { 3, 1476, 8123, 8946, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_132_180N[132][16] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_132_180N[132][16] = {
     { 15,
       214,
       632,
@@ -8862,7 +8809,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_132_180N[132][16] = {
     { 3, 1174, 8836, 13549, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_135_180N[135][15] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_135_180N[135][15] = {
     { 14,
       15,
       865,
@@ -9210,7 +9157,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_135_180N[135][15] = {
     { 3, 9407, 12341, 16040, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_140_180N[140][16] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_140_180N[140][16] = {
     { 15,
       66,
       862,
@@ -9728,7 +9675,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_140_180N[140][16] = {
     { 3, 6409, 9498, 10387, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_154_180N[154][14] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_154_180N[154][14] = {
     { 13, 726, 794, 1587, 2475, 3114, 3917, 4471, 6207, 7451, 8203, 8218, 8583, 8941 },
     { 13, 418, 480, 1320, 1357, 1481, 2323, 3677, 5112, 7038, 7198, 8066, 9260, 9282 },
     { 13, 1506, 2585, 3336, 4543, 4828, 5571, 5954, 6047, 6081, 7691, 8090, 8824, 9153 },
@@ -9885,7 +9832,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_154_180N[154][14] = {
     { 3, 6523, 6531, 9063, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_18_30N[108][20] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_18_30N[108][20] = {
     { 19,    113,   1557,  3316,  5680,  6241,  10407, 13404, 13947, 14040,
       14353, 15522, 15698, 16079, 17363, 19374, 19543, 20530, 22833, 24339 },
     { 19,    271,   1361,  6236,  7006,  7307,  7333,  12768, 15441, 15568,
@@ -10015,7 +9962,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_18_30N[108][20] = {
     { 3, 19202, 22406, 24609, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_20_30N[120][17] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_20_30N[120][17] = {
     { 16,
       692,
       1779,
@@ -10506,7 +10453,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_20_30N[120][17] = {
     { 3, 9689, 15537, 19733, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_22_30N[132][16] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_22_30N[132][16] = {
     { 15,
       696,
       989,
@@ -10986,7 +10933,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_22_30N[132][16] = {
     { 3, 11514, 16605, 17255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_1_4S[9][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_1_4S[9][13] = {
     { 12, 6295, 9626, 304, 7695, 4839, 4936, 1660, 144, 11203, 5567, 6347, 12557 },
     { 12, 10691, 4988, 3859, 3734, 3071, 3494, 7687, 10313, 5964, 8069, 8296, 11090 },
     { 12, 10774, 3613, 5208, 11177, 7676, 3549, 8746, 6583, 7239, 12265, 2674, 4292 },
@@ -10998,7 +10945,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_1_4S[9][13] = {
     { 3, 9840, 12726, 4977, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_1_3S[15][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_1_3S[15][13] = {
     { 12, 416, 8909, 4156, 3216, 3112, 2560, 2912, 6405, 8593, 4969, 6723, 6912 },
     { 12, 8978, 3011, 4339, 9312, 6396, 2957, 7288, 5485, 6031, 10218, 2226, 3575 },
     { 12, 3383, 10059, 1114, 10008, 10147, 9384, 4290, 434, 5139, 3536, 1965, 2291 },
@@ -11016,7 +10963,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_1_3S[15][13] = {
     { 3, 10127, 3334, 8267, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_2_5S[18][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_2_5S[18][13] = {
     { 12, 5650, 4143, 8750, 583, 6720, 8071, 635, 1767, 1344, 6922, 738, 6658 },
     { 12, 5696, 1685, 3207, 415, 7019, 5023, 5608, 2605, 857, 6915, 1770, 8016 },
     { 12, 3992, 771, 2190, 7258, 8970, 7792, 1802, 1866, 6137, 8841, 886, 1931 },
@@ -11037,7 +10984,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_2_5S[18][13] = {
     { 3, 1387, 8910, 2660, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_1_2S[20][9] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_1_2S[20][9] = {
     { 8, 20, 712, 2386, 6354, 4061, 1062, 5045, 5158 },
     { 8, 21, 2543, 5748, 4822, 2348, 3089, 6328, 5876 },
     { 8, 22, 926, 5701, 269, 3693, 2438, 3190, 3507 },
@@ -11060,7 +11007,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_1_2S[20][9] = {
     { 3, 14, 7411, 3450, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_3_5S_DVBT2[27][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_3_5S_DVBT2[27][13] = {
     { 12, 71, 1478, 1901, 2240, 2649, 2725, 3592, 3708, 3965, 4080, 5733, 6198 },
     { 12, 393, 1384, 1435, 1878, 2773, 3182, 3586, 5465, 6091, 6110, 6114, 6327 },
     { 12, 160, 1149, 1281, 1526, 1566, 2129, 2929, 3095, 3223, 4250, 4276, 4612 },
@@ -11090,7 +11037,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_3_5S_DVBT2[27][13] = {
     { 3, 1005, 1675, 2062, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_3_5S_DVBS2[27][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_3_5S_DVBS2[27][13] = {
     { 12, 2765, 5713, 6426, 3596, 1374, 4811, 2182, 544, 3394, 2840, 4310, 771 },
     { 12, 4951, 211, 2208, 723, 1246, 2928, 398, 5739, 265, 5601, 5993, 2615 },
     { 12, 210, 4730, 5777, 3096, 4282, 6238, 4939, 1119, 6463, 5298, 6320, 4016 },
@@ -11120,7 +11067,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_3_5S_DVBS2[27][13] = {
     { 3, 17, 4908, 4177, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_2_3S[30][14] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_2_3S[30][14] = {
     { 13, 0, 2084, 1613, 1548, 1286, 1460, 3196, 4297, 2481, 3369, 3451, 4620, 2622 },
     { 13, 1, 122, 1516, 3448, 2880, 1407, 1847, 3799, 3529, 373, 971, 4358, 3108 },
     { 13, 2, 259, 3399, 929, 2650, 864, 3996, 3833, 107, 5287, 164, 3125, 2350 },
@@ -11153,7 +11100,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_2_3S[30][14] = {
     { 3, 14, 1129, 3894, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_3_4S[33][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_3_4S[33][13] = {
     { 12, 3, 3198, 478, 4207, 1481, 1009, 2616, 1924, 3437, 554, 683, 1801 },
     { 3, 4, 2681, 2135, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 3, 5, 3107, 4027, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -11189,7 +11136,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_3_4S[33][13] = {
     { 3, 11, 1415, 2808, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_4_5S[35][4] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_4_5S[35][4] = {
     { 3, 5, 896, 1565 },  { 3, 6, 2493, 184 },  { 3, 7, 212, 3210 },
     { 3, 8, 727, 1339 },  { 3, 9, 3428, 612 },  { 3, 0, 2663, 1947 },
     { 3, 1, 230, 2695 },  { 3, 2, 2025, 2794 }, { 3, 3, 3039, 283 },
@@ -11204,7 +11151,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_4_5S[35][4] = {
     { 3, 8, 566, 1427 },  { 3, 9, 3545, 1168 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_5_6S[37][14] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_5_6S[37][14] = {
     { 13, 3, 2409, 499, 1481, 908, 559, 716, 1270, 333, 2508, 2264, 1702, 2805 },
     { 3, 4, 2447, 1926, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 3, 5, 414, 1224, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -11244,7 +11191,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_5_6S[37][14] = {
     { 3, 7, 2644, 1704, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_8_9S[40][5] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_8_9S[40][5] = {
     { 4, 0, 1558, 712, 805 }, { 4, 1, 1450, 873, 1337 }, { 4, 2, 1741, 1129, 1184 },
     { 4, 3, 294, 806, 1566 }, { 4, 4, 482, 605, 923 },   { 3, 0, 926, 1578, 0 },
     { 3, 1, 777, 1374, 0 },   { 3, 2, 608, 151, 0 },     { 3, 3, 1195, 210, 0 },
@@ -11261,7 +11208,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_8_9S[40][5] = {
     { 3, 4, 1104, 1172, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_11_45S[11][11] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_11_45S[11][11] = {
     { 10, 9054, 9186, 12155, 1000, 7383, 6459, 2992, 4723, 8135, 11250 },
     { 10, 2624, 9237, 7139, 12238, 11962, 4361, 5292, 10967, 11036, 8105 },
     { 10, 2044, 11996, 5654, 7568, 7002, 3549, 4767, 8767, 2872, 8345 },
@@ -11275,7 +11222,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_11_45S[11][11] = {
     { 3, 1873, 5634, 6383, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_4_15S[12][22] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_4_15S[12][22] = {
     { 21,   1953, 2331, 2545, 2623, 4653, 5012, 5700, 6458,  6875,  7605,
       7694, 7881, 8416, 8758, 9181, 9555, 9578, 9932, 10068, 11479, 11699 },
     { 21,   514,  784,  2059, 2129, 2386,  2454,  3396,  5184,  6624,  6825,
@@ -11293,7 +11240,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_4_15S[12][22] = {
     { 3, 3131, 9964, 10480, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_14_45S[14][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_14_45S[14][13] = {
     { 12, 1606, 3617, 7973, 6737, 9495, 4209, 9209, 4565, 4250, 7823, 9384, 400 },
     { 12, 4105, 991, 923, 3562, 3892, 10993, 5640, 8196, 6652, 4653, 9116, 7677 },
     { 12, 6348, 1341, 5445, 1494, 7799, 831, 4952, 5106, 3011, 9921, 6537, 8476 },
@@ -11310,7 +11257,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_14_45S[14][13] = {
     { 3, 3260, 7897, 3809, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_7_15S
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_7_15S
     [21][25] = { { 24,   3,    137,  314,  327,  983,  1597, 2028, 3043,
                    3217, 4109, 6020, 6178, 6535, 6560, 7146, 7180, 7408,
                    7790, 7893, 8123, 8313, 8526, 8616, 8638 },
@@ -11358,7 +11305,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_7_15S
                  { 3, 976, 2001, 5005, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                    0, 0,   0,    0,    0, 0, 0, 0, 0, 0, 0, 0 } };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_8_15S[24][22] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_8_15S[24][22] = {
     { 21,   32,   384,  430,  591,  1296, 1976, 1999, 2137, 2175, 3638,
       4214, 4304, 4486, 4662, 4999, 5174, 5700, 6969, 7115, 7138, 7189 },
     { 21,   1788, 1881, 1910, 2724, 4504, 4928, 4973, 5616, 5686, 5718,
@@ -11390,7 +11337,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_8_15S[24][22] = {
     { 3, 272, 1015, 7464, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_26_45S[26][14] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_26_45S[26][14] = {
     { 13, 6106, 5389, 698, 6749, 6294, 1653, 1984, 2167, 6139, 6095, 3832, 2468, 6115 },
     { 13, 4202, 2362, 1852, 1264, 3564, 6345, 498, 6137, 3908, 3302, 527, 2767, 6667 },
     { 12, 3422, 1242, 1377, 2238, 2899, 1974, 1957, 261, 3463, 4994, 215, 2338, 0 },
@@ -11419,7 +11366,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_26_45S[26][14] = {
     { 3, 959, 5337, 2735, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_32_45S[32][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_32_45S[32][13] = {
     { 12, 2686, 655, 2308, 1603, 336, 1743, 2778, 1263, 3555, 185, 4212, 621 },
     { 12, 286, 2994, 2599, 2265, 126, 314, 3992, 4560, 2845, 2764, 2540, 1476 },
     { 12, 2670, 3599, 2900, 2281, 3597, 2768, 4423, 2805, 836, 130, 1204, 4162 },
@@ -11454,7 +11401,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_32_45S[32][13] = {
     { 3, 1523, 3311, 389, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_1_5M[18][14] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_1_5M[18][14] = {
     { 13,
       18222,
       6715,
@@ -11592,7 +11539,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_1_5M[18][14] = {
     { 3, 22623, 8408, 17849, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_11_45M[22][11] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_11_45M[22][11] = {
     { 10, 20617, 6867, 14845, 11974, 22563, 190, 17207, 4052, 7406, 16007 },
     { 10, 21448, 14846, 2543, 23380, 16633, 20365, 16869, 13411, 19853, 795 },
     { 10, 5200, 2330, 2775, 23620, 20643, 10745, 14742, 6493, 14222, 20939 },
@@ -11617,7 +11564,7 @@ const int dvb_ldpc_bb_impl::ldpc_tab_11_45M[22][11] = {
     { 3, 3944, 13063, 5656, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-const int dvb_ldpc_bb_impl::ldpc_tab_1_3M[30][13] = {
+const uint16_t dvb_ldpc_bb_impl::ldpc_tab_1_3M[30][13] = {
     { 12, 7416, 4093, 16722, 1023, 20586, 12219, 9175, 16284, 1554, 10113, 19849, 17545 },
     { 12, 13140, 3257, 2110, 13888, 3023, 1537, 1598, 15018, 18931, 13905, 10617, 1014 },
     { 12, 339, 14366, 3309, 15360, 18358, 3196, 4412, 6023, 7070, 17380, 2777, 6691 },
