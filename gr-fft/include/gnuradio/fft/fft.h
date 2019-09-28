@@ -29,6 +29,7 @@
 
 #include <gnuradio/fft/api.h>
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/logger.h>
 #include <volk/volk_alloc.hh>
 #include <boost/thread.hpp>
 
@@ -71,6 +72,8 @@ class FFT_API fft_complex
     volk::vector<gr_complex> d_inbuf;
     volk::vector<gr_complex> d_outbuf;
     void* d_plan;
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
 public:
     fft_complex(int fft_size, bool forward = true, int nthreads = 1);
@@ -118,6 +121,8 @@ class FFT_API fft_real_fwd
     volk::vector<float> d_inbuf;
     volk::vector<gr_complex> d_outbuf;
     void* d_plan;
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
 public:
     fft_real_fwd(int fft_size, int nthreads = 1);
@@ -165,7 +170,9 @@ class FFT_API fft_real_rev
     volk::vector<gr_complex> d_inbuf;
     volk::vector<float> d_outbuf;
     void* d_plan;
-
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
+    
 public:
     fft_real_rev(int fft_size, int nthreads = 1);
     // Copy disabled due to d_plan.
