@@ -114,6 +114,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
       d_prev_mod_symbol_index(0),
       d_mod_symbol_index(0)
 {
+    
     gr::configure_default_loggers(d_logger, d_debug_logger, "dvbt_pilot_gen");
     // Determine parameters from config file
     d_Kmin = config.d_Kmin;
