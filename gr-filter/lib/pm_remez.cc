@@ -30,6 +30,7 @@
 #endif
 
 #include <gnuradio/filter/pm_remez.h>
+#include <gnuradio/logger.h>
 #include <assert.h>
 #include <cmath>
 #include <iostream>
@@ -765,7 +766,9 @@ static int remez(double h[],
 
 static void punt(const std::string msg)
 {
-    std::cerr << msg << '\n';
+    gr::logger_ptr logger, debug_logger;
+    gr::configure_default_loggers(logger, debug_logger, "pm_remez");
+    GR_LOG_ERROR(debug_logger, msg + "\n");
     throw std::runtime_error(msg);
 }
 

@@ -76,8 +76,10 @@ sink_s_impl::sink_s_impl(double framerate,
 
     atexit(SDL_Quit); // check if this is the way to do this
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cerr << "video_sdl::sink_s: Couldn't initialize SDL:" << SDL_GetError()
+        std::ostringstream msg;
+        msg << "ERROR Couldn't initialize SDL:" << SDL_GetError()
                   << " \n SDL_Init(SDL_INIT_VIDEO) failed\n";
+        GR_LOG_ERROR(d_debug_logger, msg.str());
         throw std::runtime_error("video_sdl::sink_s");
     };
 
@@ -90,8 +92,10 @@ sink_s_impl::sink_s_impl(double framerate,
             SDL_ANYFORMAT); // SDL_DOUBLEBUF |SDL_SWSURFACE| SDL_HWSURFACE||SDL_FULLSCREEN
 
     if (d_screen == NULL) {
-        std::cerr << "Unable to set SDL video mode: " << SDL_GetError()
+        std::ostringstream msg;
+        msg << "ERROR Unable to set SDL video mode: " << SDL_GetError()
                   << "\n SDL_SetVideoMode() Failed \n";
+        GR_LOG_ERROR(d_debug_logger, msg.str());
         exit(1);
     }
     if (d_image) {
@@ -101,7 +105,9 @@ sink_s_impl::sink_s_impl(double framerate,
     /* Initialize and create the YUV Overlay used for video out */
     if (!(d_image =
               SDL_CreateYUVOverlay(d_width, d_height, SDL_YV12_OVERLAY, d_screen))) {
-        std::cerr << "SDL: Couldn't create a YUV overlay: \n" << SDL_GetError() << "\n";
+        std::ostringstream msg;
+        msg << "ERROR SDL: Couldn't create a YUV overlay: \n" << SDL_GetError() << "\n";
+        GR_LOG_ERROR(d_debug_logger, msg.str());
         throw std::runtime_error("video_sdl::sink_s");
     }
 
@@ -121,7 +127,9 @@ sink_s_impl::sink_s_impl(double framerate,
     // clear the surface to grey
 
     if (SDL_LockYUVOverlay(d_image)) {
-        std::cerr << "SDL: Couldn't lock YUV overlay: \n" << SDL_GetError() << "\n";
+        std::ostringstream msg;
+        msg << "ERROR SDL: Couldn't lock a YUV overlay: \n" << SDL_GetError() << "\n";
+        GR_LOG_ERROR(d_debug_logger, msg.str());
         throw std::runtime_error("video_sdl::sink_s");
     }
 
@@ -307,10 +315,11 @@ int sink_s_impl::work(int noutput_items,
         }
         break;
     default: // 0 or more then 3 channels
-        std::cerr << "video_sdl::sink_s: Wrong number of channels: ";
-        std::cerr
-            << "1, 2 or 3 channels are supported.\n  Requested number of channels is "
+        std::ostringstream msg;
+        msg << "ERROR Wrong number of channels:";
+        msg << "1, 2 or 3 channels are supported.\n  Requested number of channels is "
             << input_items.size() << "\n";
+        GR_LOG_ERROR(d_debug_logger, msg.str());
         throw std::runtime_error("video_sdl::sink_s");
     }
 

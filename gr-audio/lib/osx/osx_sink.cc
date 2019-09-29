@@ -17,6 +17,7 @@
 
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
+#include <gnuradio/logger.h>
 #include <stdexcept>
 
 namespace gr {
@@ -198,9 +199,11 @@ void osx_sink::setup()
         (d_input_sample_rate < 50000.0 ? 50000 : (UInt32)d_input_sample_rate);
 
 #if _OSX_AU_DEBUG_
-    std::cerr << ((void*)(pthread_self()))
+    std::ostringstream msg;
+    msg << "INFO " << ((void*)(pthread_self()))
               << " : audio_osx_sink: max # samples = " << d_buffer_size_samples
               << std::endl;
+    GR_LOG_INFO(d_debug_logger, msg.str());
 #endif
 
     // create the default AudioUnit for output:
@@ -385,18 +388,22 @@ void osx_sink::setup()
 
 
 #if _OSX_AU_DEBUG_
-    std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink Parameters:" << std::endl
+    std::ostringstream msg;
+    msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink Parameters:" << std::endl
               << "  Sample Rate is " << d_input_sample_rate << std::endl
               << "  Max # samples to store per channel is " << d_buffer_size_samples
               << std::endl;
+    GR_LOG_INFO(debug_logger, msg.str());
 #endif
 }
 
 void osx_sink::teardown()
 {
 #if _OSX_AU_DEBUG_
-    std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::teardown: starting"
+    std::ostringstream msg;
+    msg << "INFO " << ((void*)(pthread_self())) << " : starting"
               << std::endl;
+    GR_LOG_INFO(d_debug_logger, msg.str());
 #endif
 
     OSStatus err = noErr;
@@ -463,8 +470,10 @@ void osx_sink::teardown()
     d_output_ad_id = 0;
 
 #if _OSX_AU_DEBUG_
-    std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::teardown: finished"
+    std::ostringstream msg;
+    msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink::teardown: finished"
               << std::endl;
+    GR_LOG_INFO(debug_logger, msg.str());
 #endif
 }
 
@@ -516,8 +525,10 @@ bool osx_sink::check_topology(int ninputs, int noutputs)
     d_n_user_channels = ninputs;
 
 #if _OSX_AU_DEBUG_
-    std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::check_topology: "
+    std::ostringstream msg;
+    msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink::check_topology: "
               << "Actual # user input channels = " << d_n_user_channels << std::endl;
+    GR_LOG_INFO(d_debug_logger, msg.str());
 #endif
 
     return (true);
@@ -607,8 +618,10 @@ bool osx_sink::start()
     if (!is_running() && d_output_au) {
 
 #if _OSX_AU_DEBUG_
-        std::cerr << ((void*)(pthread_self()))
+    std::ostringstream msg;
+    msg << "INFO " << ((void*)(pthread_self()))
                   << " : audio_osx_sink::start: starting Output AudioUnit." << std::endl;
+    GR_LOG_INFO(d_debug_logger, msg.str());
 #endif
 
         // check channels, (re)allocate and reset buffers if/as necessary
@@ -623,8 +636,10 @@ bool osx_sink::start()
 
 #if _OSX_AU_DEBUG_
     else {
-        std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::start: "
+        std::ostringstream msg;
+        msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink::start: "
                   << "already running." << std::endl;
+        GR_LOG_INFO(d_debug_logger, msg.str());
     }
 #endif
 
@@ -636,15 +651,19 @@ bool osx_sink::stop()
     if (is_running()) {
 
 #if _OSX_AU_DEBUG_
-        std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::stop: "
-                  << "stopping Output AudioUnit." << std::endl;
+    std::ostringstream msg;
+    msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink::stop: "
+                << "stopping Output AudioUnit." << std::endl;
+    GR_LOG_INFO(d_debug_logger, msg.str());
 #endif
 
         // if waiting in ::work, signal to wake up
         if (d_waiting_for_data) {
 #if _OSX_AU_DEBUG_
-            std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::stop: "
+    std::ostringstream msg;
+    msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink::stop: "
                       << "signaling waiting condition" << std::endl;
+    GR_LOG_INFO(d_debug_logger, msg.str());
 #endif
             d_cond_data.notify_one();
         }
@@ -668,8 +687,10 @@ bool osx_sink::stop()
     }
 #if _OSX_AU_DEBUG_
     else {
-        std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::stop: "
+        std::ostringstream msg;
+        msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink::stop: "
                   << "already stopped." << std::endl;
+        GR_LOG_INFO(d_debug_logger, msg.str());
     }
 #endif
 
@@ -683,9 +704,11 @@ int osx_sink::work(int noutput_items,
 #if _OSX_AU_DEBUG_RENDER_
     {
         gr::thread::scoped_lock l(d_internal);
-        std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
+        std::ostringstream msg;
+        msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
                   << "Starting: #OI = " << noutput_items
                   << ", reset = " << (d_do_reset ? "true" : "false") << std::endl;
+        GR_LOG_INFO(d_debug_logger, msg.str());
     }
 #endif
     if (d_do_reset) {
@@ -715,8 +738,10 @@ int osx_sink::work(int noutput_items,
 #if _OSX_AU_DEBUG_RENDER_
             {
                 gr::thread::scoped_lock l(d_internal);
-                std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
+                std::ostringstream msg;
+                msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
                           << "doing reset." << std::endl;
+                GR_LOG_INFO(d_debug_logger, msg.str());
             }
 #endif
 
@@ -737,8 +762,10 @@ int osx_sink::work(int noutput_items,
             start();
 
 #if _OSX_AU_DEBUG_RENDER_
-            std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink: "
+            std::ostringstream msg;
+            msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink: "
                       << "returning 0 after reset." << std::endl;
+            GR_LOG_INFO(d_debug_logger, msg.str());
 #endif
             return (0);
         }
@@ -764,10 +791,12 @@ int osx_sink::work(int noutput_items,
     }
 
 #if _OSX_AU_DEBUG_RENDER_
-    std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
+    std::ostringstream msg;
+    msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
               << "qSC = " << d_queue_sample_count << ", lMC = " << l_max_count
               << ", dBSC = " << d_buffer_size_samples << ", #OI = " << noutput_items
               << std::endl;
+    GR_LOG_INFO(d_debug_logger, msg.str());
 #endif
 
     if (d_queue_sample_count > l_max_count) {
@@ -783,15 +812,19 @@ int osx_sink::work(int noutput_items,
                 // release control so-as to allow data to be retrieved;
                 // block until there is data to return
 #if _OSX_AU_DEBUG_RENDER_
-                std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
+                std::ostringstream msg;
+                msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
                           << "waiting." << std::endl;
+                GR_LOG_INFO(d_debug_logger, msg.str());
 #endif
                 d_waiting_for_data = true;
                 d_cond_data.wait(l);
                 d_waiting_for_data = false;
 #if _OSX_AU_DEBUG_RENDER_
-                std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
+                std::ostringstream msg;
+                msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
                           << "done waiting." << std::endl;
+                GR_LOG_INFO(d_debug_logger, msg.str());
 #endif
                 // the condition's 'notify' was called; acquire control to
                 // keep thread safe
@@ -800,8 +833,10 @@ int osx_sink::work(int noutput_items,
                 // up the next time this method is called.
                 if (d_do_reset) {
 #if _OSX_AU_DEBUG_RENDER_
-                    std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
+                std::ostringstream msg;
+                msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
                               << "returning 0 for reset." << std::endl;
+                GR_LOG_INFO(d_debug_logger, msg.str());
 #endif
                     return (0);
                 }
@@ -847,10 +882,12 @@ int osx_sink::work(int noutput_items,
     }
 
 #if _OSX_AU_DEBUG_RENDER_
-    std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
+    std::ostringstream msg;
+    msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
               << "returning: #OI = " << noutput_items
               << ", qSC = " << d_queue_sample_count << ", bSS = " << d_buffer_size_samples
               << std::endl;
+    GR_LOG_INFO(d_debug_logger, msg.str());
 #endif
 
     return (noutput_items);
@@ -873,10 +910,12 @@ OSStatus osx_sink::au_output_callback(void* in_ref_con,
     gr::thread::scoped_lock l(This->d_internal);
 
 #if _OSX_AU_DEBUG_RENDER_
-    std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::au_output_callback: "
+    std::ostringstream msg;
+    msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink::au_output_callback: "
               << "starting: qSC = " << This->d_queue_sample_count
               << ", in#F = " << in_number_frames << ", in#C = " << This->d_n_user_channels
               << std::endl;
+    GR_LOG_INFO(d_debug_logger, msg.str());
 #endif
 
     if (This->d_queue_sample_count < in_number_frames) {
@@ -898,11 +937,12 @@ OSStatus osx_sink::au_output_callback(void* in_ref_con,
             int rv = This->d_buffers[nn]->dequeue(out_buffer, &t_n_output_items);
 
             if ((rv != 1) || (t_n_output_items != in_number_frames)) {
-
-                std::cerr << "audio_osx_sink::au_output_callback: "
+                std::ostringstream msg;
+                msg << "ERROR " << "audio_osx_sink::au_output_callback: "
                           << "number of available items changing "
                           << "unexpectedly (should never happen): was "
                           << in_number_frames << " now " << t_n_output_items << std::endl;
+                GR_LOG_ERROR(d_debug_logger, msg.str());
                 err = kAudioUnitErr_TooManyFramesToProcess;
             }
         }
@@ -914,17 +954,21 @@ OSStatus osx_sink::au_output_callback(void* in_ref_con,
 
     if (This->d_waiting_for_data) {
 #if _OSX_AU_DEBUG_RENDER_
-        std::cerr << ((void*)(pthread_self()))
+        std::ostringstream msg;
+        msg << "INFO " << ((void*)(pthread_self()))
                   << " : audio_osx_sink::au_output_callback: "
                   << "signaling waiting condition" << std::endl;
+        GR_LOG_INFO(d_debug_logger, msg.str());
 #endif
         This->d_cond_data.notify_one();
     }
 
 #if _OSX_AU_DEBUG_RENDER_
-    std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::au_output_callback: "
+        std::ostringstream msg;
+        msg << "INFO " << ((void*)(pthread_self())) << " : audio_osx_sink::au_output_callback: "
               << "returning: qSC = " << This->d_queue_sample_count << ", err = " << err
               << std::endl;
+        GR_LOG_INFO(d_debug_logger, msg.str());
 #endif
 
     return (err);

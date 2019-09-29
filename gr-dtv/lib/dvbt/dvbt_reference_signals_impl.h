@@ -12,6 +12,7 @@
 #include "dvbt_configure.h"
 #include <gnuradio/dtv/dvbt_reference_signals.h>
 #include <gnuradio/fft/fft.h>
+#include <gnuradio/logger.h>
 #include <deque>
 #include <vector>
 
@@ -233,6 +234,8 @@ private:
     float normalization;
 
 public:
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
     dvbt_reference_signals_impl(int itemsize,
                                 int ninput,
                                 int noutput,
