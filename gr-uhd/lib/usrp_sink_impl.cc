@@ -400,7 +400,7 @@ int usrp_sink_impl::work(int noutput_items,
             // There is a tag gap since no length_tag was found immediately following
             // the last sample of the previous burst. Drop samples until the next
             // length_tag is found. Notify the user of the tag gap.
-            std::cerr << "tG" << std::flush;
+            GR_LOG_ERROR(d_debug_logger, "tG");
             // increment the timespec by the number of samples dropped
             _metadata.time_spec += ::uhd::time_spec_t(0, ninput_items, _sample_rate);
             return ninput_items;
@@ -516,7 +516,7 @@ void usrp_sink_impl::tag_work(int& ninput_items)
             // preempted. Set the items remaining counter to the new burst length. Notify
             // the user of the tag preemption.
             else if (_nitems_to_send > 0) {
-                std::cerr << "tP" << std::flush;
+                GR_LOG_ERROR(d_debug_logger, "tP");
             }
             _nitems_to_send = pmt::to_long(value);
             _metadata.start_of_burst = true;

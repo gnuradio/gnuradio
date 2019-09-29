@@ -25,6 +25,7 @@
 #endif
 
 #include <gnuradio/filter/fft_filter.h>
+#include <gnuradio/logger.h>
 #include <volk/volk.h>
 #include <cstring>
 #include <iostream>
@@ -100,8 +101,12 @@ void fft_filter_fff::compute_sizes(int ntaps)
     d_nsamples = d_fftsize - d_ntaps + 1;
 
     if (VERBOSE) {
-        std::cerr << "fft_filter_fff: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
+        gr::logger_ptr logger, debug_logger;
+        gr::configure_default_loggers(logger, debug_logger, "fft_filter_fff");
+        std::ostringstream msg;
+        msg << "fft_filter_fff: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
                   << " nsamples = " << d_nsamples << std::endl;
+        GR_LOG_ERROR(debug_logger, msg.str());
     }
 
     // compute new plans
@@ -247,8 +252,12 @@ void fft_filter_ccc::compute_sizes(int ntaps)
     d_nsamples = d_fftsize - d_ntaps + 1;
 
     if (VERBOSE) {
-        std::cerr << "fft_filter_ccc: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
+        gr::logger_ptr logger, debug_logger;
+        gr::configure_default_loggers(logger, debug_logger, "fft_filter_ccc");
+        std::ostringstream msg;
+        msg << "fft_filter_ccc: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
                   << " nsamples = " << d_nsamples << std::endl;
+        GR_LOG_ERROR(debug_logger, msg.str());
     }
 
     // compute new plans
@@ -394,8 +403,12 @@ void fft_filter_ccf::compute_sizes(int ntaps)
     d_nsamples = d_fftsize - d_ntaps + 1;
 
     if (VERBOSE) {
-        std::cerr << "fft_filter_ccf: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
+        gr::logger_ptr logger, debug_logger;
+        gr::configure_default_loggers(logger, debug_logger, "fft_filter_ccf");
+        std::ostringstream msg;
+        msg << "fft_filter_ccf: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
                   << " nsamples = " << d_nsamples << std::endl;
+        GR_LOG_ERROR(debug_logger, msg.str());
     }
 
     // compute new plans
