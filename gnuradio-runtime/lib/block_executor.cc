@@ -15,6 +15,7 @@
 #include <gnuradio/block.h>
 #include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
 #include <assert.h>
 #include <block_executor.h>
@@ -40,8 +41,6 @@ namespace gr {
         ;      \
     } while (0)
 #endif
-
-static int which_scheduler = 0;
 
 inline static unsigned int round_up(unsigned int n, unsigned int multiple)
 {
@@ -200,9 +199,12 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
                 }
             }
         } else {
-            std::cerr << "Error: block_executor: propagation_policy 'ONE-TO-ONE' "
-                         "requires ninputs == noutputs"
-                      << std::endl;
+            gr::logger_ptr logger, debug_logger;
+            gr::configure_default_loggers(logger, debug_logger, "propagate_tags");
+            std::ostringstream msg;
+            msg << "ERROR block_executor: propagation_policy 'ONE-TO-ONE'";
+            msg << " requires ninputs == noutputs" << std::endl;
+            GR_LOG_ERROR(debug_logger, msg.str());
             return false;
         }
         break;
@@ -213,14 +215,9 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
 }
 
 block_executor::block_executor(block_sptr block, int max_noutput_items)
-    : d_block(block), d_log(0), d_max_noutput_items(max_noutput_items)
+    : d_block(block), d_max_noutput_items(max_noutput_items)
 {
-    if (ENABLE_LOGGING) {
-        std::string name = str(boost::format("sst-%03d.log") % which_scheduler++);
-        d_log = new std::ofstream(name.c_str());
-        std::unitbuf(*d_log); // make it unbuffered...
-        *d_log << "block_executor: " << d_block << std::endl;
-    }
+    gr::configure_default_loggers(d_logger, d_debug_logger, "block_executor");
 
 #ifdef GR_PERFORMANCE_COUNTERS
     prefs* prefs = prefs::singleton();
@@ -232,9 +229,6 @@ block_executor::block_executor(block_sptr block, int max_noutput_items)
 
 block_executor::~block_executor()
 {
-    if (ENABLE_LOGGING)
-        delete d_log;
-
     d_block->stop(); // stop any drivers, etc.
 }
 
@@ -249,7 +243,11 @@ block_executor::state block_executor::run_one_iteration()
     block* m = d_block.get();
     block_detail* d = m->detail().get();
 
-    LOG(*d_log << std::endl << m);
+    LOG(
+        std::ostringstream msg;
+        msg << std::endl << m;
+        GR_LOG_INFO(d_debug_logger, msg.str());
+    );
 
     max_noutput_items = round_down(d_max_noutput_items, m->output_multiple());
 
@@ -270,12 +268,17 @@ block_executor::state block_executor::run_one_iteration()
         noutput_items =
             min_available_space(d, m->output_multiple(), m->min_noutput_items());
         noutput_items = std::min(noutput_items, max_noutput_items);
-        LOG(*d_log << " source\n  noutput_items = " << noutput_items << std::endl);
+        LOG(
+            std::ostringstream msg;
+            msg << " source\n  noutput_items = " << noutput_items << std::endl;
+            GR_LOG_INFO(d_debug_logger, msg.str());
+        );
         if (noutput_items == -1) // we're done
             goto were_done;
 
         if (noutput_items == 0) { // we're output blocked
-            LOG(*d_log << "  BLKD_OUT\n");
+            LOG(GR_LOG_INFO(d_debug_logger, "INFO BLKD_OUT\n"););
+
             return BLKD_OUT;
         }
 
@@ -289,7 +292,7 @@ block_executor::state block_executor::run_one_iteration()
         d_input_done.resize(d->ninputs());
         d_output_items.resize(0);
         d_start_nitems_read.resize(d->ninputs());
-        LOG(*d_log << " sink\n");
+        LOG(GR_LOG_INFO(d_debug_logger, "  sink\n"););
 
         max_items_avail = 0;
         for (int i = 0; i < d->ninputs(); i++) {
@@ -303,10 +306,18 @@ block_executor::state block_executor::run_one_iteration()
                 d_input_done[i] = in_buf->done();
             }
 
-            LOG(*d_log << "  d_ninput_items[" << i << "] = " << d_ninput_items[i]
-                       << std::endl);
-            LOG(*d_log << "  d_input_done[" << i << "] = " << d_input_done[i]
-                       << std::endl);
+            LOG(
+                std::ostringstream msg;
+                msg << "INFO d_ninput_items[" << i << "] = " << d_ninput_items[i]
+                       << std::endl;
+                GR_LOG_INFO(d_debug_logger, msg.str());
+            );
+            LOG(
+                std::ostringstream msg;
+                msg << "INFO d_input_done[" << i << "] = " << d_input_done[i]
+                       << std::endl;
+                GR_LOG_INFO(d_debug_logger, msg.str());
+            );
 
             if (d_ninput_items[i] < m->output_multiple() && d_input_done[i])
                 goto were_done;
@@ -318,11 +329,19 @@ block_executor::state block_executor::run_one_iteration()
         noutput_items = (int)(max_items_avail * m->relative_rate());
         noutput_items = round_down(noutput_items, m->output_multiple());
         noutput_items = std::min(noutput_items, max_noutput_items);
-        LOG(*d_log << "  max_items_avail = " << max_items_avail << std::endl);
-        LOG(*d_log << "  noutput_items = " << noutput_items << std::endl);
+        LOG(
+            std::ostringstream msg;
+            msg << "INFO max_items_avail = " << max_items_avail << std::endl;
+            GR_LOG_INFO(d_debug_logger, msg.str());
+        );
+        LOG(
+            std::ostringstream msg;
+            msg << "INFO noutput_items = " << noutput_items << std::endl;
+            GR_LOG_INFO(d_debug_logger, msg.str());
+        );
 
         if (noutput_items == 0) { // we're blocked on input
-            LOG(*d_log << "  BLKD_IN\n");
+            LOG(GR_LOG_INFO(d_debug_logger, "INFO BLKD_IN\n"););
             return BLKD_IN;
         }
 
@@ -356,16 +375,18 @@ block_executor::state block_executor::run_one_iteration()
         noutput_items =
             min_available_space(d, m->output_multiple(), m->min_noutput_items());
         if (ENABLE_LOGGING) {
-            *d_log << " regular ";
-            *d_log << m->relative_rate_i() << ":" << m->relative_rate_d() << std::endl;
-            *d_log << "  max_items_avail = " << max_items_avail << std::endl;
-            *d_log << "  noutput_items = " << noutput_items << std::endl;
+            std::ostringstream msg;
+            msg << "INFO regular ";
+            msg << m->relative_rate_i() << ":" << m->relative_rate_d() << std::endl;
+            msg << "  max_items_avail = " << max_items_avail << std::endl;
+            msg << "  noutput_items = " << noutput_items << std::endl;
+            GR_LOG_INFO(d_debug_logger, msg.str());
         }
         if (noutput_items == -1) // we're done
             goto were_done;
 
         if (noutput_items == 0) { // we're output blocked
-            LOG(*d_log << "  BLKD_OUT\n");
+            LOG(GR_LOG_INFO(d_debug_logger, "INFO BLKD_OUT\n"););
             return BLKD_OUT;
         }
 
@@ -430,12 +451,14 @@ block_executor::state block_executor::run_one_iteration()
                 break;
 
             if (d_ninput_items_required[i] < 0) {
-                std::cerr << "\nsched: <block " << m->name() << " (" << m->unique_id()
+                std::ostringstream msg;
+                msg << "ERROR sched: <block " << m->name() << " (" << m->unique_id()
                           << ")>"
                           << " thinks its ninput_items required is "
                           << d_ninput_items_required[i] << " and cannot be negative.\n"
                           << "Some parameterization is wrong. "
                           << "Too large a decimation value?\n\n";
+                GR_LOG_ERROR(d_debug_logger, msg.str());
                 goto were_done;
             }
         }
@@ -449,7 +472,7 @@ block_executor::state block_executor::run_one_iteration()
             }
 
             // We're blocked on input
-            LOG(*d_log << "  BLKD_IN\n");
+            LOG(GR_LOG_INFO(d_debug_logger, "INFO BLKD_IN\n"););
             if (d_input_done[i]) // If the upstream block is done, we're done
                 goto were_done;
 
@@ -457,14 +480,15 @@ block_executor::state block_executor::run_one_iteration()
             buffer_reader_sptr in_buf = d->input(i);
             if (d_ninput_items_required[i] > in_buf->max_possible_items_available()) {
                 // Nope, never going to happen...
-                std::cerr
-                    << "\nsched: <block " << m->name() << " (" << m->unique_id() << ")>"
+                std::ostringstream msg;
+                msg << "ERROR sched: <block " << m->name() << " (" << m->unique_id() << ")>"
                     << " is requesting more input data\n"
                     << "  than we can provide.\n"
                     << "  ninput_items_required = " << d_ninput_items_required[i] << "\n"
                     << "  max_possible_items_available = "
                     << in_buf->max_possible_items_available() << "\n"
                     << "  If this is a filter, consider reducing the number of taps.\n";
+                GR_LOG_ERROR(d_debug_logger, msg.str());                    
                 goto were_done;
             }
 
@@ -506,8 +530,12 @@ block_executor::state block_executor::run_one_iteration()
             d->stop_perf_counters(noutput_items, n);
 #endif /* GR_PERFORMANCE_COUNTERS */
 
-        LOG(*d_log << "  general_work: noutput_items = " << noutput_items
-                   << " result = " << n << std::endl);
+        LOG(
+            std::ostringstream msg;
+            msg << << "INFO general_work: noutput_items = " << noutput_items
+                   << " result = " << n << std::endl
+            GR_LOG_INFO(d_debug_logger, msg.str());
+        );
 
         // Adjust number of unaligned items left to process
         if (m->is_unaligned()) {
@@ -566,7 +594,7 @@ block_executor::state block_executor::run_one_iteration()
     assert(0);
 
 were_done:
-    LOG(*d_log << "  were_done\n");
+    LOG(GR_LOG_INFO(d_debug_logger, "INFO we're done\n"););
     d->set_done(true);
     return DONE;
 }
