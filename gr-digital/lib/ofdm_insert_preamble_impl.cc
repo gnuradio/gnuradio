@@ -157,8 +157,9 @@ int ofdm_insert_preamble_impl::general_work(int noutput_items,
             break;
 
         default:
-            std::cerr
-                << "ofdm_insert_preamble_impl: (can't happen) invalid state, resetting\n";
+            std::ostringstream msg;
+            msg << "ofdm_insert_preamble_impl: (can't happen) invalid state, resetting\n";
+            GR_LOG_ERROR(d_debug_logger, msg.str());
             enter_idle();
         }
     }

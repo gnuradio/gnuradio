@@ -75,12 +75,15 @@ tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU, bool istunflag)
             "gr::tuntap_pdu::make: tun_alloc failed (are you running as root?)");
 
     int err = set_mtu(dev_cstr, MTU);
-    if (err < 0)
-        std::cerr << boost::format("gr::tuntap_pdu: failed to set MTU to %d.\n"
-                                   "You should use ifconfig to set the MTU. E.g.,\n"
-                                   "  $ sudo ifconfig %s mtu %d\n") %
-                         MTU % dev % MTU
-                  << std::endl;
+    if (err < 0){
+        std::ostringstream msg;
+        msg << boost::format("ERROR tuntap_pdu: failed to set MTU to %d.\n"
+                            "You should use ifconfig to set the MTU. E.g.,\n"
+                            "  $ sudo ifconfig %s mtu %d\n") % MTU % dev % MTU;
+        msg << std::endl;
+        GR_LOG_ERROR(d_debug_logger, msg.str());
+    }
+
 
     std::cout << boost::format("Allocated virtual ethernet interface: %s\n"
                                "You must now use ifconfig to set its IP address. E.g.,\n"
