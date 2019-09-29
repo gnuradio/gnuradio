@@ -98,8 +98,10 @@ int atsc_fs_checker_impl::general_work(int noutput_items,
                 d_segment_num = -1; // This is the first segment
             } else {
                 // should be extremely rare.
-                std::cerr << "!!! atsc_fs_checker: PN63 error count = " << errors
+                std::ostringstream msg;
+                msg << "!!! atsc_fs_checker: PN63 error count = " << errors
                           << std::endl;
+                GR_LOG_ERROR(d_debug_logger, msg.str());
             }
         }
 
