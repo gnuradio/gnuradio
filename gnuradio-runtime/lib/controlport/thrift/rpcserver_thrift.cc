@@ -37,6 +37,7 @@ using namespace rpcpmtconverter;
 
 rpcserver_thrift::rpcserver_thrift()
 {
+    gr::configure_default_loggers(logger, debug_logger, "rpcserver_thrift");
     // std::cerr << "rpcserver_thrift::ctor" << std::endl;
 }
 
@@ -61,7 +62,9 @@ void rpcserver_thrift::registerConfigureCallback(const std::string& id,
     }
 
     if (DEBUG) {
-        std::cerr << "rpcserver_thrift registering set: " << id << std::endl;
+        std::ostringstream msg;
+        msg << "INFO registering set: " << id << std::endl;
+        GR_LOG_INFO(d_debug_logger, msg.str());
     }
     d_setcallbackmap.insert(ConfigureCallbackMap_t::value_type(id, callback));
 }
@@ -78,8 +81,11 @@ void rpcserver_thrift::unregisterConfigureCallback(const std::string& id)
         throw std::runtime_error(s.str().c_str());
     }
 
-    if (DEBUG)
-        std::cerr << "rpcserver_thrift unregistering set: " << id << std::endl;
+    if (DEBUG){
+        std::ostringstream msg;
+        msg << "INFO unregistering set: " << id << std::endl;
+        GR_LOG_INFO(d_debug_logger, msg.str());
+    }
 
     d_setcallbackmap.erase(iter);
 }
@@ -100,7 +106,9 @@ void rpcserver_thrift::registerQueryCallback(const std::string& id,
     }
 
     if (DEBUG) {
-        std::cerr << "rpcserver_thrift registering get: " << id << std::endl;
+        std::ostringstream msg;
+        msg << "INFO registering get: " << id << std::endl;
+        GR_LOG_INFO(d_debug_logger, msg.str());
     }
     d_getcallbackmap.insert(QueryCallbackMap_t::value_type(id, callback));
 }
@@ -117,7 +125,9 @@ void rpcserver_thrift::unregisterQueryCallback(const std::string& id)
     }
 
     if (DEBUG) {
-        std::cerr << "rpcserver_thrift unregistering get: " << id << std::endl;
+        std::ostringstream msg;
+        msg << "INFO unregistering get: " << id << std::endl;
+        GR_LOG_INFO(d_debug_logger, msg.str());
     }
 
     d_getcallbackmap.erase(iter);
@@ -140,7 +150,9 @@ void rpcserver_thrift::registerHandlerCallback(const std::string& id,
     }
 
     if (DEBUG) {
-        std::cerr << "rpcserver_thrift registering handler: " << id << std::endl;
+        std::ostringstream msg;
+        msg << "INFO registering handler: " << id << std::endl;
+        GR_LOG_INFO(d_debug_logger, msg.str());
     }
     d_handlercallbackmap.insert(HandlerCallbackMap_t::value_type(id, callback));
 }
@@ -158,7 +170,9 @@ void rpcserver_thrift::unregisterHandlerCallback(const std::string& id)
     }
 
     if (DEBUG) {
-        std::cerr << "rpcserver_thrift unregistering handler: " << id << std::endl;
+        std::ostringstream msg;
+        msg << "INFO unregistering handler: " << id << std::endl;
+        GR_LOG_INFO(d_debug_logger, msg.str());
     }
 
     d_handlercallbackmap.erase(iter);
@@ -270,6 +284,8 @@ void rpcserver_thrift::postMessage(const std::string& alias,
 void rpcserver_thrift::shutdown()
 {
     if (DEBUG) {
-        std::cerr << "Shutting down..." << std::endl;
+        std::ostringstream msg;
+        msg << "INFO shutting down... " << id << std::endl;
+        GR_LOG_INFO(d_debug_logger, msg.str());
     }
 }

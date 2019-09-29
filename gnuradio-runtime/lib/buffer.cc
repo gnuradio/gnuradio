@@ -106,6 +106,7 @@ buffer::buffer(int nitems, size_t sizeof_item, block_sptr link)
         throw std::bad_alloc();
 
     s_buffer_count++;
+    gr::configure_default_loggers(d_logger, d_debug_logger, "buffer");
 }
 
 buffer_sptr make_buffer(int nitems, size_t sizeof_item, block_sptr link)
@@ -140,7 +141,8 @@ bool buffer::allocate_buffer(int nitems, size_t sizeof_item)
     // This only happens if sizeof_item is not a power of two.
 
     if (nitems > 2 * orig_nitems && nitems * (int)sizeof_item > granularity) {
-        std::cerr << "gr::buffer::allocate_buffer: warning: tried to allocate\n"
+        std::ostringstream msg;
+        msg << "WARNING allocate_buffer: tried to allocate\n"
                   << "   " << orig_nitems << " items of size " << sizeof_item
                   << ". Due to alignment requirements\n"
                   << "   " << nitems
@@ -148,13 +150,16 @@ bool buffer::allocate_buffer(int nitems, size_t sizeof_item)
                   << "   your structure to a power-of-two bytes.\n"
                   << "   On this platform, our allocation granularity is " << granularity
                   << " bytes.\n";
+        GR_LOG_WARN(d_debug_logger, msg.str());
     }
 
     d_bufsize = nitems;
     d_vmcircbuf = gr::vmcircbuf_sysconfig::make(d_bufsize * d_sizeof_item);
     if (d_vmcircbuf == 0) {
-        std::cerr << "gr::buffer::allocate_buffer: failed to allocate buffer of size "
+        std::ostringstream msg;
+        msg << "gr::buffer::allocate_buffer: failed to allocate buffer of size "
                   << d_bufsize * d_sizeof_item / 1024 << " KB\n";
+        GR_LOG_ERROR(d_debug_logger, msg.str());
         return false;
     }
 

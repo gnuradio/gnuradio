@@ -74,7 +74,7 @@ void portaudio_sink::create_ringbuffer(void)
         GR_LOG_INFO(
             d_debug_logger,
             boost::format("INFO ring buffer size  = %d frames\n") 
-            % N_BUFFERS * bufsize_samples / d_input_parameters.channelCount
+            % (N_BUFFERS * bufsize_samples / d_input_parameters.channelCount)
         );
 
     // FYI, the buffer indices are in units of samples.
