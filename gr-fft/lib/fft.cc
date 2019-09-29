@@ -120,8 +120,11 @@ static void import_wisdom()
     if (fp != 0) {
         int r = fftwf_import_wisdom_from_file(fp);
         fclose(fp);
-        if (!r) 
-            GR_LOG_ERROR(d_debug_logger, boost::format("can't import wisdom from %s\n") % filename.c_str());
+        if (!r){
+            gr::logger_ptr logger, debug_logger;
+            gr::configure_default_loggers(logger, debug_logger, "fft::import_wisdom");
+            GR_LOG_ERROR(debug_logger, boost::format("can't import wisdom from %s\n") % filename.c_str());
+        }
     }
 }
 
@@ -147,8 +150,10 @@ static void export_wisdom()
         fftwf_export_wisdom_to_file(fp);
         fclose(fp);
     } else {
+        gr::logger_ptr logger, debug_logger;
+        gr::configure_default_loggers(logger, debug_logger, "fft::export_wisdom");
         GR_LOG_ERROR(
-            d_debug_logger, 
+            debug_logger, 
             boost::format("ERROR fft_impl_fftw %s: %s\n") % filename.c_str() % strerror(errno)
         );
     }
