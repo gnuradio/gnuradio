@@ -15,6 +15,7 @@
 #include <gnuradio/constants.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/sys_paths.h>
+#include <gnuradio/logger.h>
 #include <boost/format.hpp>
 #include <boost/program_options.hpp>
 #include <iostream>
@@ -44,8 +45,12 @@ int main(int argc, char** argv)
         po::store(po::parse_command_line(argc, argv, desc), vm);
         po::notify(vm);
     } catch (po::error& error) {
-        std::cerr << "Error: " << error.what() << std::endl << std::endl;
-        std::cerr << desc << std::endl;
+        gr::logger_ptr logger, debug_logger;
+        gr::configure_default_loggers(logger, debug_logger, "gnuradio-config-info.cc");
+        GR_LOG_ERROR(
+            debug_logger,
+            boost::format("ERROR %s %s") % error.what() % desc
+        );
         return 1;
     }
 
