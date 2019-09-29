@@ -132,16 +132,20 @@ static void do_arch_warning(const std::string& arch)
 {
     if (arch == "auto")
         return; // no warning when arch not specified
-    std::cerr << "Could not find audio architecture \"" << arch << "\" in registry."
-              << std::endl;
-    std::cerr << "    Defaulting to the first available architecture..." << std::endl;
+
+    gr::logger_ptr logger, debug_logger;
+    gr::configure_default_loggers(logger, debug_logger, "audio_registry::do_arch_warning");
+    std::ostringstream msg;
+    msg << "ERROR Could not find audio architecture \"" << arch << "\" in registry." << std::endl;
+    msg << "    Defaulting to the first available architecture..." << std::endl;
+    GR_LOG_ERROR(debug_logger, msg.str());
 }
 
 source::sptr
 source::make(int sampling_rate, const std::string device_name, bool ok_to_block)
 {
     gr::logger_ptr logger, debug_logger;
-    configure_default_loggers(logger, debug_logger, "audio source");
+    configure_default_loggers(logger, debug_logger, "audio_source");
 
     if (get_source_registry().empty()) {
         throw std::runtime_error("no available audio source factories");

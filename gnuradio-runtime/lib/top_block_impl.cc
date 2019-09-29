@@ -17,6 +17,7 @@
 #include "top_block_impl.h"
 #include <gnuradio/prefs.h>
 #include <gnuradio/top_block.h>
+#include <gnuradio/logger.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -57,8 +58,12 @@ make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_except
                 }
             }
             if (factory == 0) {
-                std::cerr << "warning: Invalid GR_SCHEDULER environment variable value \""
+                gr::logger_ptr logger, debug_logger;
+                gr::configure_default_loggers(logger, debug_logger, "make_scheduler");
+                std::ostringstream msg;
+                msg << "WARNING Invalid GR_SCHEDULER environment variable value \""
                           << v << "\".  Using \"" << scheduler_table[0].name << "\"\n";
+                GR_LOG_WARN(debug_logger, msg.str());
                 factory = scheduler_table[0].f;
             }
         }
@@ -79,7 +84,11 @@ top_block_impl::top_block_impl(top_block* owner, bool catch_exceptions = true)
 top_block_impl::~top_block_impl()
 {
     if (d_lock_count) {
-        std::cerr << "error: destroying locked block." << std::endl;
+        gr::logger_ptr logger, debug_logger;
+        gr::configure_default_loggers(logger, debug_logger, "top_block_impl");
+        std::ostringstream msg;
+        msg << "ERROR destroying locked block." << std::endl;
+        GR_LOG_ERROR(debug_logger, msg.str());
     }
     d_owner = 0;
 }

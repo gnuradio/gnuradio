@@ -62,7 +62,7 @@ void portaudio_sink::create_ringbuffer(void)
         GR_LOG_INFO(
             d_debug_logger,
             boost::format("INFO ring buffer size  = %d frames\n") 
-            % (N_BUFFERS * bufsize_samples / d_input_parameters.channelCount)
+            % (N_BUFFERS * bufsize_samples / d_output_parameters.channelCount)
         );
 
     // FYI, the buffer indices are in units of samples.
@@ -172,8 +172,8 @@ portaudio_sink::portaudio_sink(int sampling_rate,
         GR_LOG_ERROR(
             d_debug_logger,
             boost::format("ERROR %s is the chosen device using %s as the host\n") 
-            % deviceInfo->name
-            % Pa_GetHostApiInfo(deviceInfo->hostApi)->name)
+            % deviceInfo->name 
+            % Pa_GetHostApiInfo(deviceInfo->hostApi)->name
         );
     } else {
         bool found = false;
