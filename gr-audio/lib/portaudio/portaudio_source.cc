@@ -113,8 +113,11 @@ int portaudio_source_callback(const void* inputBuffer,
     else { // overrun
         self->d_noverruns++;
         ssize_t r = ::write(2, "aO", 2); // FIXME change to non-blocking call
-        if (r == -1)
-            GR_LOG_ERROR(d_debug_logger, boost::format("ERROR write error: %s\n") % strerror(errno));
+        if (r == -1){
+            gr::logger_ptr logger, debug_logger;
+            gr::configure_default_loggers(logger, debug_logger, "portaudio_source_callback");
+            GR_LOG_ERROR(debug_logger, boost::format("ERROR write error: %s\n") % strerror(errno));
+        }
 
         self->d_ringbuffer_ready = false;
         self->d_ringbuffer_cond.notify_one(); // Tell the sink to get going!
@@ -170,7 +173,7 @@ portaudio_source::portaudio_source(int sampling_rate,
             d_debug_logger,
             boost::format("ERROR %s is the chosen device using %s as the host\n") 
             % deviceInfo->name
-            % Pa_GetHostApiInfo(deviceInfo->hostApi)->name)
+            % Pa_GetHostApiInfo(deviceInfo->hostApi)->name
         );
     } else {
         bool found = false;
