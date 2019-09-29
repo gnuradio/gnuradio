@@ -195,6 +195,8 @@ private:
     void process_payload_data(const gr_complex* in, gr_complex* out);
 
 public:
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
     dvbt_pilot_gen(const dvbt_configure& config);
     ~dvbt_pilot_gen();
 
@@ -234,8 +236,6 @@ private:
     float normalization;
 
 public:
-    gr::logger_ptr d_logger;
-    gr::logger_ptr d_debug_logger;
     dvbt_reference_signals_impl(int itemsize,
                                 int ninput,
                                 int noutput,
