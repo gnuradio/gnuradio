@@ -44,7 +44,8 @@ namespace digital {
 constellation::constellation(std::vector<gr_complex> constell,
                              std::vector<int> pre_diff_code,
                              unsigned int rotational_symmetry,
-                             unsigned int dimensionality)
+                             unsigned int dimensionality,
+                             bool normalize_points)
     : d_constellation(constell),
       d_pre_diff_code(pre_diff_code),
       d_rotational_symmetry(rotational_symmetry),
@@ -56,16 +57,18 @@ constellation::constellation(std::vector<gr_complex> constell,
       d_lut_precision(0),
       d_lut_scale(0)
 {
-    // Scale constellation points so that average magnitude is 1.
-    float summed_mag = 0;
     unsigned int constsize = d_constellation.size();
-    for (unsigned int i = 0; i < constsize; i++) {
-        gr_complex c = d_constellation[i];
-        summed_mag += sqrt(c.real() * c.real() + c.imag() * c.imag());
-    }
-    d_scalefactor = constsize / summed_mag;
-    for (unsigned int i = 0; i < constsize; i++) {
-        d_constellation[i] = d_constellation[i] * d_scalefactor;
+    if (normalize_points) {
+        // Scale constellation points so that average magnitude is 1.
+        float summed_mag = 0;
+        for (unsigned int i = 0; i < constsize; i++) {
+            gr_complex c = d_constellation[i];
+            summed_mag += sqrt(c.real() * c.real() + c.imag() * c.imag());
+        }
+        d_scalefactor = constsize / summed_mag;
+        for (unsigned int i = 0; i < constsize; i++) {
+            d_constellation[i] = d_constellation[i] * d_scalefactor;
+        }
     }
     if (pre_diff_code.size() == 0)
         d_apply_pre_diff_code = false;
@@ -378,17 +381,20 @@ constellation_calcdist::sptr
 constellation_calcdist::make(std::vector<gr_complex> constell,
                              std::vector<int> pre_diff_code,
                              unsigned int rotational_symmetry,
-                             unsigned int dimensionality)
+                             unsigned int dimensionality,
+                             bool normalize_points)
 {
     return constellation_calcdist::sptr(new constellation_calcdist(
-        constell, pre_diff_code, rotational_symmetry, dimensionality));
+        constell, pre_diff_code, rotational_symmetry, dimensionality, normalize_points));
 }
 
 constellation_calcdist::constellation_calcdist(std::vector<gr_complex> constell,
                                                std::vector<int> pre_diff_code,
                                                unsigned int rotational_symmetry,
-                                               unsigned int dimensionality)
-    : constellation(constell, pre_diff_code, rotational_symmetry, dimensionality)
+                                               unsigned int dimensionality,
+                                               bool normalize_points)
+    : constellation(
+          constell, pre_diff_code, rotational_symmetry, dimensionality, normalize_points)
 {
 }
 
