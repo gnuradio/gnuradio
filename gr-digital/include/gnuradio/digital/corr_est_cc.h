@@ -82,15 +82,14 @@ namespace digital {
  * _on_Signal_Processing_, Volume 47, No. 9, September 1999
  *
  */
-class DIGITAL_API corr_est_cc : virtual public sync_block
-{
-public:
-    typedef boost::shared_ptr<corr_est_cc> sptr;
+typedef enum {
+    THRESHOLD_DYNAMIC,
+    THRESHOLD_ABSOLUTE,
+} tm_type;
 
-    enum tm_type {
-        THRESHOLD_DYNAMIC,
-        THRESHOLD_ABSOLUTE,
-    };
+class DIGITAL_API corr_est_cc : virtual public sync_block {
+    public:
+    typedef boost::shared_ptr<corr_est_cc> sptr;
 
     /*!
      * Make a block that correlates against the \p symbols vector

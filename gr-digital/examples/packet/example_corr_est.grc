@@ -1152,6 +1152,10 @@
       <key>threshold</key>
       <value>0.999</value>
     </param>
+    <param>
+      <key>threshold_method</key>
+      <value>digital.THRESHOLD_ABSOLUTE</value>
+    </param>
   </block>
   <block>
     <key>fir_filter_xxx</key>
