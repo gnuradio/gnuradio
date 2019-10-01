@@ -26,6 +26,7 @@ outputs single precision complex float values or complex short values
 (interleaved 16 bit signed short integers).
 """
 
+from __future__ import print_function
 import sys
 import os
 import pmt
@@ -179,13 +180,13 @@ class rx_cfile_block(gr.top_block):
                     rx_serial = info["rx_serial"]
                 rx_antenna = info["rx_antenna"]
                 rx_subdev_spec = info["rx_subdev_spec"]
-                print "[UHD_RX] Motherboard: %s (%s)" % (mboard_id, mboard_serial)
+                print("[UHD_RX] Motherboard: %s (%s)" % (mboard_id, mboard_serial))
                 if "B200" in mboard_id or "B210" in mboard_id or "E310" in mboard_id:
-                    print "[UHD_RX] Daughterboard: %s (%s, %s)" % (mboard_id, rx_antenna, rx_subdev_spec)
+                    print("[UHD_RX] Daughterboard: %s (%s, %s)" % (mboard_id, rx_antenna, rx_subdev_spec))
                 else:
-                    print "[UHD_RX] Daughterboard: %s (%s, %s, %s)" % (rx_id, rx_serial, rx_antenna, rx_subdev_spec)
+                    print("[UHD_RX] Daughterboard: %s (%s, %s, %s)" % (rx_id, rx_serial, rx_antenna, rx_subdev_spec))
             except KeyError:
-                print "[UHD_RX] Args: ", options.args
+                print("[UHD_RX] Args: ", options.args)
             print("[UHD_RX] Receiving on {} channels.".format(len(self.channels)))
             print("[UHD_RX] Rx gain:               {gain}".format(gain=gain))
             print("[UHD_RX] Rx frequency:          {freq}".format(freq=freq))
