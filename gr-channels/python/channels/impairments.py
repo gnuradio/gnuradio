@@ -16,10 +16,10 @@ from gnuradio.filter import firdes
 import math
 
 #Import locally
-from .phase_noise_gen import *
-from .iqbal_gen import *
-from .distortion_2_gen import *
-from .distortion_3_gen import *
+from .phase_noise_gen import phase_noise_gen
+from .iqbal_gen import iqbal_gen
+from .distortion_2_gen import distortion_2_gen
+from .distortion_3_gen import distortion_3_gen
 
 class impairments(gr.hier_block2):
 
