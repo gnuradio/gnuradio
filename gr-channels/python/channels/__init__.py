@@ -35,12 +35,12 @@ except ImportError:
     from .channels_swig import *
 
 # Blocks for Hardware Impairments
-from .amp_bal import *
-from .conj_fs_iqcorr import *
-from .distortion_2_gen import *
-from .distortion_3_gen import *
-from .iqbal_gen import *
-from .impairments import *
-from .phase_bal import *
-from .phase_noise_gen import *
-from .quantizer import *
+from .amp_bal import amp_bal
+from .conj_fs_iqcorr import conj_fs_iqcorr
+from .distortion_2_gen import distortion_2_gen
+from .distortion_3_gen import distortion_3_gen
+from .impairments import impairments
+from .iqbal_gen import iqbal_gen
+from .phase_bal import phase_bal
+from .phase_noise_gen import phase_noise_gen
+from .quantizer import quantizer
