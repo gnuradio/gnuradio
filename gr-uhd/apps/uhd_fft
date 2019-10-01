@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #
 # Copyright 2015-2016,2018 Free Software Foundation, Inc.
 #
@@ -34,6 +34,8 @@ UHD FFT: Simple Spectrum Analyzer for UHD.
 # Note this is a heavily modified version of a
 # the uhd_fft.grc example.
 
+from __future__ import print_function
+from __future__ import division
 import ctypes
 import sys
 import sip
@@ -244,9 +246,9 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
         self.qtgui_time_sink_x_0.disable_legend()
         for i in range(2*len(self.channels)):
             if(i % 2 == 0):
-                self.qtgui_time_sink_x_0.set_line_label(i, "Re{{Channel {0}}}".format(i/2))
+                self.qtgui_time_sink_x_0.set_line_label(i, "Re{{Channel {0}}}".format(i//2))
             else:
-                self.qtgui_time_sink_x_0.set_line_label(i, "Im{{Channel {0}}}".format(i/2))
+                self.qtgui_time_sink_x_0.set_line_label(i, "Im{{Channel {0}}}".format(i//2))
             self.qtgui_time_sink_x_0.set_line_width(i, widths[i])
             self.qtgui_time_sink_x_0.set_line_color(i, colors[i])
             self.qtgui_time_sink_x_0.set_line_style(i, styles[i])
@@ -510,4 +512,3 @@ if __name__ == '__main__':
         except:
             print("Warning: failed to XInitThreads()")
     main()
-
