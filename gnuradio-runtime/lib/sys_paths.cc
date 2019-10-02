@@ -66,8 +66,19 @@ const char* appdata_path()
 
 std::string __userconf_path()
 {
-    boost::filesystem::path p(appdata_path());
-    p = p / ".gnuradio";
+    const char* path;
+
+    // First determine if there is an environment variable specifying the prefs path
+    path = getenv("GR_PREFS_PATH");
+    boost::filesystem::path p;
+    if (path) {
+        p = path;
+    }
+    else {
+        p = appdata_path();
+        p = p / ".gnuradio";
+    }
+   
     return p.string();
 }
 
