@@ -30,7 +30,7 @@ from six.moves import configparser
 HEADER = """\
 # This contains only GUI settings for GRC and is not meant for users to edit.
 #
-# GRC settings not accessible through the GUI are in gnuradio.conf under
+# GRC settings not accessible through the GUI are in config.conf under
 # section [grc].
 
 """
