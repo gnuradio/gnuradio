@@ -58,8 +58,9 @@ parameters:
     default: '6.76'
 
 asserts:
--   ${ low_cutoff_freq > 0 }
--   ${ high_cutoff_freq >= low_cutoff_freq }
+-   ${ low_cutoff_freq }
+-   ${ high_cutoff_freq }
+-   ${ low_cutoff_freq <= high_cutoff_freq }
 -   ${ width > 0 }
 
 inputs:
