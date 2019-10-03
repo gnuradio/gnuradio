@@ -693,6 +693,7 @@ class Application(Gtk.Application):
             # Import the old data and mark the current as not saved
             new_flow_graph.import_data(previous.export_data())
             flow_graph_update(new_flow_graph)
+            page.state_cache.save_new_state(new_flow_graph.export_data())
             page.saved = False
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
             file_path, background_transparent = FileDialogs.SaveScreenShot(main, page.file_path).run()
