@@ -226,7 +226,6 @@ int fll_band_edge_cc_impl::work(int noutput_items,
     float error;
     gr_complex nco_out;
     gr_complex out_upper, out_lower;
-    gr_complex out_uppersse, out_lowersse;
 
     for (i = 0; i < noutput_items; i++) {
         nco_out = gr_expj(d_phase);

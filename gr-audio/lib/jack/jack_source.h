@@ -52,7 +52,6 @@ class jack_source : public source
 
     unsigned int d_sampling_rate;
     std::string d_device_name;
-    bool d_ok_to_block;
 
     jack_client_t* d_jack_client;
     static const int MAX_PORTS = 10;

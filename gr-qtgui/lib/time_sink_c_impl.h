@@ -65,7 +65,6 @@ private:
     pmt::pmt_t d_trigger_tag_key;
     bool d_triggered;
     int d_trigger_count;
-    int d_initial_delay; // used for limiting d_trigger_delay
 
     void _reset();
     void _npoints_resize();

@@ -481,7 +481,6 @@ void edit_box_msg_impl::edit_finished()
         std::vector<gr_complex> xv;
         QStringList text_list = text.split(",");
         bool even = false;
-        gr_complex c;
         float re, im;
         for (int i = 0; i < text_list.size(); ++i) {
             QString s = text_list.at(i);

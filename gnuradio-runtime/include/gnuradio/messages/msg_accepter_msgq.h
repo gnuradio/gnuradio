@@ -33,7 +33,7 @@ namespace messages {
  * \brief Concrete class that accepts messages and inserts them
  * into a message queue.
  */
-class GR_RUNTIME_API msg_accepter_msgq : public msg_accepter
+class GR_RUNTIME_API msg_accepter_msgq
 {
 protected:
     msg_queue_sptr d_msg_queue;

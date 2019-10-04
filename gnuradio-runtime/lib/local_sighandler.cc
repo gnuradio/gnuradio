@@ -49,7 +49,7 @@ local_sighandler::local_sighandler(int signum, void (*new_handler)(int))
 #endif
 }
 
-local_sighandler::~local_sighandler()
+local_sighandler::~local_sighandler() noexcept(false)
 {
 #ifdef HAVE_SIGACTION
     if (sigaction(d_signum, &d_old_action, 0) < 0) {
