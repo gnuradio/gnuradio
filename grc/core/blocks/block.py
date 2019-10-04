@@ -407,7 +407,7 @@ class Block(Element):
 
         return [make_callback(c) for c in self.cpp_templates.render('callbacks')]
 
-    def decide_type(self):
+    def format_expr(self, py_type):
         """
         Evaluate the value of the variable block and decide its type.
 
@@ -417,67 +417,65 @@ class Block(Element):
         value = self.params['value'].value
         self.cpp_templates = copy.copy(self.orig_cpp_templates)
 
-        def get_type(element):
+        def get_type(element, _vtype):
+            evaluated = None
             try:
                 evaluated = ast.literal_eval(element)
+                if _vtype == None:
+                    _vtype = type(evaluated)
+            except ValueError or SyntaxError as excp:
+                # TODO PI doesn't seem to be supported as a flowgraph variable value
+                return 'pi'
 
-            except ValueError or SyntaxError:
-                if re.match(r'^(numpy|np|scipy|sp)\.pi$', value):
-                    return 'pi'
+            if _vtype in [int, float, bool, list, dict, str]:
+                if _vtype == (int or long):
+                    return 'int'
+
+                if _vtype == float:
+                    return 'double'
+
+                if _vtype == bool:
+                    return 'bool'
+
+                if _vtype == list:
+                    try:
+                        first_element_type = type(evaluated[0])
+                        if first_element_type != str:
+                            list_type = get_type(str(evaluated[0]), None)
+                        else:
+                            list_type = get_type(evaluated[0], None)
+
+                    except IndexError: # empty list
+                        return 'std::vector<std::string>'
+
+                    else:
+                        return 'std::vector<' + list_type + '>'
+
+                if _vtype == dict:
+                    try:
+                        key_element_type = type(list(evaluated)[0])
+                        if key_element_type != str:
+                            key_type = get_type(str(list(evaluated)[0]), None)
+                        else:
+                            key_type = get_type(list(evaluated)[0], None)
+
+                        val_element_type = type(list(evaluated.values())[0])
+                        if val_element_type != str:
+                            val_type = get_type(str(list(evaluated.values())[0]), None)
+                        else:
+                            val_type = get_type(list(evaluated.values())[0], None)
+
+
+                    except IndexError: # empty dict
+                        return 'std::map<std::string, std::string>'
+
+                    else:
+                        return 'std::map<' + key_type + ', ' + val_type +'>'
+
                 else:
                     return 'std::string'
 
-            else:
-                _vtype = type(evaluated)
-                if _vtype in [int, float, bool, list, dict]:
-                    if _vtype == (int or long):
-                        return 'int'
-
-                    if _vtype == float:
-                        return 'double'
-
-                    if _vtype == bool:
-                        return 'bool'
-
-                    if _vtype == list:
-                        try:
-                            first_element_type = type(evaluated[0])
-                            if first_element_type != str:
-                                list_type = get_type(str(evaluated[0]))
-                            else:
-                                list_type = get_type(evaluated[0])
-
-                        except IndexError: # empty list
-                            return 'std::vector<std::string>'
-
-                        else:
-                            return 'std::vector<' + list_type + '>'
-
-                    if _vtype == dict:
-                        try:
-                            key_element_type = type(list(evaluated)[0])
-                            if key_element_type != str:
-                                key_type = get_type(str(list(evaluated)[0]))
-                            else:
-                                key_type = get_type(list(evaluated)[0])
-
-                            val_element_type = type(list(evaluated.values())[0])
-                            if val_element_type != str:
-                                val_type = get_type(str(list(evaluated.values())[0]))
-                            else:
-                                val_type = get_type(list(evaluated.values())[0])
-
-
-                        except IndexError: # empty dict
-                            return 'std::map<std::string, std::string>'
-
-                        else:
-                            return 'std::map<' + key_type + ', ' + val_type +'>'
-
-                else:
-                    return 'std::string'
-
-        self.vtype = get_type(value)
+        self.vtype = get_type(value, py_type)
         if self.vtype == 'bool':
             self.cpp_templates['var_make'] = self.cpp_templates['var_make'].replace('${value}', (value[0].lower() + value[1:]))
 

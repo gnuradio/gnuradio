@@ -263,8 +263,30 @@ class CppTopBlockGenerator(TopBlockGenerator):
         fg = self._flow_graph
         variables = fg.get_cpp_variables()
 
+        # Create an executable fragment of code containing all variables in 
+        # order to infer the lvalue types
+        prog = 'def get_decl_types():\n'
+        prog += '\tvar_types = {}\n'
         for var in variables:
-            var.decide_type()
+            prog += '\t' + str(var.params['id'].value) + '=' + str(var.params['value'].value) + '\n'
+        prog += '\tvar_types = {}\n';
+        for var in variables:
+          prog += '\tvar_types[\'' +  str(var.params['id'].value) + '\'] = type(' + str(var.params['id'].value) + ')\n'
+        prog += '\treturn var_types'
+
+        # Execute the code fragment in a separate namesapce and retrive the lvalue types
+        var_types = {}
+        namespace = {}
+        try:
+          exec(prog, namespace)
+          var_types = namespace['get_decl_types']()
+        except Exception as excp:
+          print('Failed to get parameter lvalue types: %s' %(excp))
+        
+
+        # Format the rvalue of each variable expression
+        for var in variables:
+            var.format_expr(var_types[str(var.params['id'].value)])
 
     def _parameter_types(self):
         fg = self._flow_graph
