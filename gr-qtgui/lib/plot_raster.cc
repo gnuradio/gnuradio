@@ -238,7 +238,7 @@ QImage PlotTimeRaster::renderImage(const QwtScaleMap& xMap,
     const QwtInterval intensityRange = d_data->data->interval(Qt::ZAxis);
 #endif
     if (!intensityRange.isValid())
-        return image;
+        return std::move(image);
 
     d_data->data->initRaster(area, rect.size());
 
@@ -282,7 +282,7 @@ QImage PlotTimeRaster::renderImage(const QwtScaleMap& xMap,
         image = image.mirrored(hInvert, vInvert);
     }
 
-    return image;
+    return std::move(image);
 }
 
 #if QWT_VERSION < 0x060000
@@ -299,22 +299,3 @@ QwtInterval PlotTimeRaster::interval(Qt::Axis ax) const
 }
 #endif
 
-/*!
-  \brief Draw the raster
-
-  \param painter Painter
-  \param xMap Maps x-values into pixel coordinates.
-  \param yMap Maps y-values into pixel coordinates.
-  \param canvasRect Contents rect of the canvas in painter coordinates
-
-  \sa setDisplayMode, renderImage,
-  QwtPlotRasterItem::draw, drawContourLines
-*/
-
-void PlotTimeRaster::draw(QPainter* painter,
-                          const QwtScaleMap& xMap,
-                          const QwtScaleMap& yMap,
-                          const QRect& canvasRect) const
-{
-    QwtPlotRasterItem::draw(painter, xMap, yMap, canvasRect);
-}

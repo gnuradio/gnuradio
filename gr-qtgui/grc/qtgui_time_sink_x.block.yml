@@ -159,7 +159,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 1
             or (type == "complex" and int(nconnections) >= 1)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 1 <= 1) 
+            or (type == "msg_float" and 1 <= 1))
         else 'all')
         }
     category: Config
@@ -169,7 +170,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 1
             or (type == "complex" and int(nconnections) >= 1)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 1 <= 1) 
+            or (type == "msg_float" and 1 <= 1))
         else 'all')
         }
     category: Config
@@ -182,7 +184,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 1
             or (type == "complex" and int(nconnections) >= 1)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 1 <= 1) 
+            or (type == "msg_float" and 1 <= 1))
         else 'all')
         }
     category: Config
@@ -195,7 +198,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 1
             or (type == "complex" and int(nconnections) >= 1)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 1 <= 1) 
+            or (type == "msg_float" and 1 <= 1))
         else 'all')
         }
     category: Config
@@ -208,7 +212,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 1
             or (type == "complex" and int(nconnections) >= 1)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 1 <= 1) 
+            or (type == "msg_float" and 1 <= 1))
         else 'all')
         }
     category: Config
@@ -219,7 +224,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 1
             or (type == "complex" and int(nconnections) >= 1)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 1 <= 1) 
+            or (type == "msg_float" and 1 <= 1))
         else 'all')
         }
     category: Config
@@ -232,7 +238,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 2
             or (type == "complex" and int(nconnections) >= 1)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 1 <= 1) 
+            or (type == "msg_float" and 2 <= 1))
         else 'all')
         }
     category: Config
@@ -243,7 +250,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 2
             or (type == "complex" and int(nconnections) >= 1)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 1 <= 1) 
+            or (type == "msg_float" and 2 <= 1))
         else 'all')
         }
     category: Config
@@ -257,7 +265,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 2
             or (type == "complex" and int(nconnections) >= 1)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 1 <= 1) 
+            or (type == "msg_float" and 2 <= 1))
         else 'all')
         }
     category: Config
@@ -271,7 +280,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 2
             or (type == "complex" and int(nconnections) >= 1)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 1 <= 1) 
+            or (type == "msg_float" and 2 <= 1))
         else 'all')
         }
     category: Config
@@ -285,7 +295,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 2
             or (type == "complex" and int(nconnections) >= 1)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 1 <= 1) 
+            or (type == "msg_float" and 2 <= 1))
         else 'all')
         }
     category: Config
@@ -297,7 +308,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 2
             or (type == "complex" and int(nconnections) >= 1)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 1 <= 1) 
+            or (type == "msg_float" and 2 <= 1))
         else 'all')
         }
     category: Config
@@ -310,7 +322,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 3
             or (type == "complex" and int(nconnections) >= 2)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 2 <= 1) 
+            or (type == "msg_float" and 3 <= 1))
         else 'all')
         }
     category: Config
@@ -321,7 +334,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 3
             or (type == "complex" and int(nconnections) >= 2)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 2 <= 1) 
+            or (type == "msg_float" and 3 <= 1))
         else 'all')
         }
     category: Config
@@ -335,7 +349,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 3
             or (type == "complex" and int(nconnections) >= 2)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 2 <= 1) 
+            or (type == "msg_float" and 3 <= 1))
         else 'all')
         }
     category: Config
@@ -349,7 +364,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 3
             or (type == "complex" and int(nconnections) >= 2)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 2 <= 1) 
+            or (type == "msg_float" and 3 <= 1))
         else 'all')
         }
     category: Config
@@ -363,7 +379,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 3
             or (type == "complex" and int(nconnections) >= 2)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 2 <= 1) 
+            or (type == "msg_float" and 3 <= 1))
         else 'all')
         }
     category: Config
@@ -375,7 +392,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 3
             or (type == "complex" and int(nconnections) >= 2)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 2 <= 1) 
+            or (type == "msg_float" and 3 <= 1))
         else 'all')
         }
     category: Config
@@ -388,7 +406,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 4
             or (type == "complex" and int(nconnections) >= 2)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 2 <= 1) 
+            or (type == "msg_float" and 4 <= 1))
         else 'all')
         }
     category: Config
@@ -399,7 +418,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 4
             or (type == "complex" and int(nconnections) >= 2)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 2 <= 1) 
+            or (type == "msg_float" and 4 <= 1))
         else 'all')
         }
     category: Config
@@ -413,7 +433,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 4
             or (type == "complex" and int(nconnections) >= 2)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 2 <= 1) 
+            or (type == "msg_float" and 4 <= 1))
         else 'all')
         }
     category: Config
@@ -427,7 +448,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 4
             or (type == "complex" and int(nconnections) >= 2)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 2 <= 1) 
+            or (type == "msg_float" and 4 <= 1))
         else 'all')
         }
     category: Config
@@ -441,7 +463,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 4
             or (type == "complex" and int(nconnections) >= 2)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 2 <= 1) 
+            or (type == "msg_float" and 4 <= 1))
         else 'all')
         }
     category: Config
@@ -453,7 +476,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 4
             or (type == "complex" and int(nconnections) >= 2)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 2 <= 1) 
+            or (type == "msg_float" and 4 <= 1))
         else 'all')
         }
     category: Config
@@ -466,7 +490,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 5
             or (type == "complex" and int(nconnections) >= 3)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 3 <= 1) 
+            or (type == "msg_float" and 5 <= 1))
         else 'all')
         }
     category: Config
@@ -477,7 +502,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 5
             or (type == "complex" and int(nconnections) >= 3)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 3 <= 1) 
+            or (type == "msg_float" and 5 <= 1))
         else 'all')
         }
     category: Config
@@ -491,7 +517,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 5
             or (type == "complex" and int(nconnections) >= 3)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 3 <= 1) 
+            or (type == "msg_float" and 5 <= 1))
         else 'all')
         }
     category: Config
@@ -505,7 +532,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 5
             or (type == "complex" and int(nconnections) >= 3)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 3 <= 1) 
+            or (type == "msg_float" and 5 <= 1))
         else 'all')
         }
     category: Config
@@ -519,7 +547,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 5
             or (type == "complex" and int(nconnections) >= 3)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 3 <= 1) 
+            or (type == "msg_float" and 5 <= 1))
         else 'all')
         }
     category: Config
@@ -531,7 +560,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 5
             or (type == "complex" and int(nconnections) >= 3)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 3 <= 1) 
+            or (type == "msg_float" and 5 <= 1))
         else 'all')
         }
     category: Config
@@ -544,7 +574,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 6
             or (type == "complex" and int(nconnections) >= 3)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 3 <= 1) 
+            or (type == "msg_float" and 6 <= 1))
         else 'all')
         }
     category: Config
@@ -555,7 +586,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 6
             or (type == "complex" and int(nconnections) >= 3)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 3 <= 1) 
+            or (type == "msg_float" and 6 <= 1))
         else 'all')
         }
     category: Config
@@ -569,7 +601,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 6
             or (type == "complex" and int(nconnections) >= 3)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 3 <= 1) 
+            or (type == "msg_float" and 6 <= 1))
         else 'all')
         }
     category: Config
@@ -583,7 +616,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 6
             or (type == "complex" and int(nconnections) >= 3)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 3 <= 1) 
+            or (type == "msg_float" and 6 <= 1))
         else 'all')
         }
     category: Config
@@ -597,7 +631,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 6
             or (type == "complex" and int(nconnections) >= 3)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 3 <= 1) 
+            or (type == "msg_float" and 6 <= 1))
         else 'all')
         }
     category: Config
@@ -609,7 +644,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 6
             or (type == "complex" and int(nconnections) >= 3)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 3 <= 1) 
+            or (type == "msg_float" and 6 <= 1))
         else 'all')
         }
     category: Config
@@ -622,7 +658,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 7
             or (type == "complex" and int(nconnections) >= 4)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 4 <= 1) 
+            or (type == "msg_float" and 7 <= 1))
         else 'all')
         }
     category: Config
@@ -633,7 +670,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 7
             or (type == "complex" and int(nconnections) >= 4)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 4 <= 1) 
+            or (type == "msg_float" and 7 <= 1))
         else 'all')
         }
     category: Config
@@ -647,7 +685,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 7
             or (type == "complex" and int(nconnections) >= 4)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 4 <= 1) 
+            or (type == "msg_float" and 7 <= 1))
         else 'all')
         }
     category: Config
@@ -661,7 +700,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 7
             or (type == "complex" and int(nconnections) >= 4)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 4 <= 1) 
+            or (type == "msg_float" and 7 <= 1))
         else 'all')
         }
     category: Config
@@ -675,7 +715,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 7
             or (type == "complex" and int(nconnections) >= 4)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 4 <= 1) 
+            or (type == "msg_float" and 7 <= 1))
         else 'all')
         }
     category: Config
@@ -687,7 +728,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 7
             or (type == "complex" and int(nconnections) >= 4)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 4 <= 1) 
+            or (type == "msg_float" and 7 <= 1))
         else 'all')
         }
     category: Config
@@ -700,7 +742,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 8
             or (type == "complex" and int(nconnections) >= 4)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 4 <= 1) 
+            or (type == "msg_float" and 8 <= 1))
         else 'all')
         }
     category: Config
@@ -711,7 +754,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 8
             or (type == "complex" and int(nconnections) >= 4)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 4 <= 1) 
+            or (type == "msg_float" and 8 <= 1))
         else 'all')
         }
     category: Config
@@ -725,7 +769,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 8
             or (type == "complex" and int(nconnections) >= 4)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 4 <= 1) 
+            or (type == "msg_float" and 8 <= 1))
         else 'all')
         }
     category: Config
@@ -739,7 +784,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 8
             or (type == "complex" and int(nconnections) >= 4)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 4 <= 1) 
+            or (type == "msg_float" and 8 <= 1))
         else 'all')
         }
     category: Config
@@ -753,7 +799,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 8
             or (type == "complex" and int(nconnections) >= 4)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 4 <= 1) 
+            or (type == "msg_float" and 8 <= 1))
         else 'all')
         }
     category: Config
@@ -765,7 +812,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 8
             or (type == "complex" and int(nconnections) >= 4)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 4 <= 1) 
+            or (type == "msg_float" and 8 <= 1))
         else 'all')
         }
     category: Config
@@ -778,7 +826,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 9
             or (type == "complex" and int(nconnections) >= 5)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 5 <= 1) 
+            or (type == "msg_float" and 9 <= 1))
         else 'all')
         }
     category: Config
@@ -789,7 +838,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 9
             or (type == "complex" and int(nconnections) >= 5)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 5 <= 1) 
+            or (type == "msg_float" and 9 <= 1))
         else 'all')
         }
     category: Config
@@ -803,7 +853,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 9
             or (type == "complex" and int(nconnections) >= 5)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 5 <= 1) 
+            or (type == "msg_float" and 9 <= 1))
         else 'all')
         }
     category: Config
@@ -817,7 +868,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 9
             or (type == "complex" and int(nconnections) >= 5)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 5 <= 1) 
+            or (type == "msg_float" and 9 <= 1))
         else 'all')
         }
     category: Config
@@ -831,7 +883,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 9
             or (type == "complex" and int(nconnections) >= 5)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 5 <= 1) 
+            or (type == "msg_float" and 9 <= 1))
         else 'all')
         }
     category: Config
@@ -843,7 +896,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 9
             or (type == "complex" and int(nconnections) >= 5)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 5 <= 1) 
+            or (type == "msg_float" and 9 <= 1))
         else 'all')
         }
     category: Config
@@ -856,7 +910,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 10
             or (type == "complex" and int(nconnections) >= 5)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 5 <= 1) 
+            or (type == "msg_float" and 10 <= 1))
         else 'all')
         }
     category: Config
@@ -867,7 +922,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 10
             or (type == "complex" and int(nconnections) >= 5)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 5 <= 1) 
+            or (type == "msg_float" and 10 <= 1))
         else 'all')
         }
     category: Config
@@ -881,7 +937,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 10
             or (type == "complex" and int(nconnections) >= 5)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 5 <= 1) 
+            or (type == "msg_float" and 10 <= 1))
         else 'all')
         }
     category: Config
@@ -895,7 +952,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 10
             or (type == "complex" and int(nconnections) >= 5)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 5 <= 1) 
+            or (type == "msg_float" and 10 <= 1))
         else 'all')
         }
     category: Config
@@ -909,7 +967,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 10
             or (type == "complex" and int(nconnections) >= 5)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 5 <= 1) 
+            or (type == "msg_float" and 10 <= 1))
         else 'all')
         }
     category: Config
@@ -921,7 +980,8 @@ parameters:
     hide: ${ ('part' if (
             int(nconnections) >= 10
             or (type == "complex" and int(nconnections) >= 5)
-            or (type == "msg_complex")) and (not type == "msg_float")
+            or (type == "msg_complex" and 5 <= 1) 
+            or (type == "msg_float" and 10 <= 1))
         else 'all')
         }
     category: Config

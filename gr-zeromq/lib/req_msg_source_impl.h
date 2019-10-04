@@ -46,8 +46,8 @@ public:
     req_msg_source_impl(char* address, int timeout);
     ~req_msg_source_impl();
 
-    bool start();
-    bool stop();
+    bool start() override;
+    bool stop() override;
 
     std::string last_endpoint() override
     {

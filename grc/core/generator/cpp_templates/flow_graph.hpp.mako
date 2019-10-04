@@ -92,8 +92,8 @@ public:
 % if not generate_options.startswith('hb'):
     top_block_sptr tb;
 % endif
-	${class_name}(${param_str});
-	~${class_name}();
+    ${class_name}(${param_str});
+    ~${class_name}();
 
 % for var in parameters + variables:
     ${var.vtype} get_${var.name} () const;

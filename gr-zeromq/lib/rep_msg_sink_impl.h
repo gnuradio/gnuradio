@@ -46,8 +46,8 @@ public:
     rep_msg_sink_impl(char* address, int timeout);
     ~rep_msg_sink_impl();
 
-    bool start();
-    bool stop();
+    bool start() override;
+    bool stop() override;
 
     std::string last_endpoint() override
     {
