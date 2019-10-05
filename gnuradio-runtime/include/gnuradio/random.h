@@ -27,8 +27,8 @@
 #include <gnuradio/gr_complex.h>
 
 #include <stdlib.h>
-#include <boost/random.hpp>
 #include <ctime>
+#include <random>
 
 namespace gr {
 
@@ -43,12 +43,10 @@ protected:
     bool d_gauss_stored;
     float d_gauss_value;
 
-    boost::mt19937* d_rng; // mersenne twister as random number generator
-    boost::uniform_real<float>*
+    std::mt19937 d_rng; // mersenne twister as random number generator
+    std::uniform_real_distribution<float>
         d_uniform; // choose uniform distribution, default is [0,1)
-    boost::uniform_int<>* d_integer_dis;
-    boost::variate_generator<boost::mt19937&, boost::uniform_real<float>>* d_generator;
-    boost::variate_generator<boost::mt19937&, boost::uniform_int<>>* d_integer_generator;
+    std::uniform_int_distribution<> d_integer_dis;
 
 public:
     random(unsigned int seed = 0, int min_integer = 0, int max_integer = 2);
