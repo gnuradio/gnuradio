@@ -66,12 +66,12 @@ public:
                      float fDTs,
                      bool LOS,
                      float K,
-                     int seed,
+                     uint32_t seed,
                      std::vector<float> delays,
-                     std::vector<float> delay_std,
-                     std::vector<float> delay_maxdev,
+                     std::vector<float> delays_std,
+                     std::vector<float> delays_maxdev,
                      std::vector<float> mags,
-                     int ntaps);
+                     unsigned int ntaps);
 
     virtual float fDTs() = 0;
     virtual float K() = 0;

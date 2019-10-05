@@ -27,10 +27,6 @@
 #include <gnuradio/channels/selective_fading_model2.h>
 #include <gnuradio/sync_block.h>
 
-//#include <iostream>
-#include <boost/format.hpp>
-#include <boost/random.hpp>
-
 #include "sincostable.h"
 #include <gnuradio/fxpt.h>
 
@@ -48,21 +44,20 @@ private:
     std::vector<float> d_mags;
     sincostable d_sintable;
 
-    boost::mt19937 seed_1;
-    boost::normal_distribution<> dist_1; // U(-pi,pi)
-    boost::variate_generator<boost::mt19937&, boost::normal_distribution<>> rv_1;
+    std::mt19937 rng_1;
+    std::normal_distribution<> dist_1; // U(-pi,pi)
 
 public:
     selective_fading_model2_impl(unsigned int N,
                                  float fDTs,
                                  bool LOS,
                                  float K,
-                                 int seed,
+                                 uint32_t seed,
                                  std::vector<float> delays,
-                                 std::vector<float> delay_std,
-                                 std::vector<float> delay_maxdev,
+                                 std::vector<float> delays_std,
+                                 std::vector<float> delays_maxdev,
                                  std::vector<float> mags,
-                                 int ntaps);
+                                 unsigned int ntaps);
     ~selective_fading_model2_impl();
     void setup_rpc();
     int work(int noutput_items,

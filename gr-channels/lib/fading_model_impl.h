@@ -27,10 +27,6 @@
 #include <gnuradio/channels/fading_model.h>
 #include <gnuradio/sync_block.h>
 
-//#include <iostream>
-#include <boost/format.hpp>
-#include <boost/random.hpp>
-
 #include "sincostable.h"
 #include <gnuradio/fxpt.h>
 
@@ -43,7 +39,7 @@ private:
     gr::channels::flat_fader_impl d_fader;
 
 public:
-    fading_model_impl(unsigned int N, float fDTs, bool LOS, float K, int seed);
+    fading_model_impl(unsigned int N, float fDTs, bool LOS, float K, uint32_t seed);
     ~fading_model_impl();
     void setup_rpc();
     int work(int noutput_items,
