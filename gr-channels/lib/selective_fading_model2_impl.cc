@@ -27,12 +27,6 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 
-#include <boost/format.hpp>
-#include <boost/random.hpp>
-
-#include <iostream>
-
-
 // FASTSINCOS:  0 = slow native,  1 = gr::fxpt impl,  2 = sincostable.h
 #define FASTSINCOS 2
 
@@ -45,12 +39,12 @@ selective_fading_model2::make(unsigned int N,
                               float fDTs,
                               bool LOS,
                               float K,
-                              int seed,
+                              uint32_t seed,
                               std::vector<float> delays,
                               std::vector<float> delays_std,
                               std::vector<float> delays_maxdev,
                               std::vector<float> mags,
-                              int ntaps)
+                              unsigned int ntaps)
 {
     return gnuradio::get_initial_sptr(new selective_fading_model2_impl(
         N, fDTs, LOS, K, seed, delays, delays_std, delays_maxdev, mags, ntaps));
@@ -62,12 +56,12 @@ selective_fading_model2_impl::selective_fading_model2_impl(
     float fDTs,
     bool LOS,
     float K,
-    int seed,
+    uint32_t seed,
     std::vector<float> delays,
     std::vector<float> delays_std,
     std::vector<float> delays_maxdev,
     std::vector<float> mags,
-    int ntaps)
+    unsigned int ntaps)
     : sync_block("selective_fading_model2",
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::make(1, 1, sizeof(gr_complex))),
@@ -77,9 +71,8 @@ selective_fading_model2_impl::selective_fading_model2_impl(
       d_delays_maxdev(delays_maxdev),
       d_mags(mags),
       d_sintable(1024),
-      seed_1(0),
-      dist_1(0, 1),
-      rv_1(seed_1, dist_1)
+      rng_1(0),
+      dist_1(0, 1)
 {
     if (mags.size() != delays.size())
         throw std::runtime_error("magnitude and delay vectors must be the same length!");
@@ -94,9 +87,6 @@ selective_fading_model2_impl::selective_fading_model2_impl(
     }
 
     // set up tap history
-    if (ntaps < 1) {
-        throw std::runtime_error("ntaps must be >= 1");
-    }
     set_history(ntaps);
     d_taps.resize(ntaps, gr_complex(0, 0));
 
@@ -130,7 +120,7 @@ int selective_fading_model2_impl::work(int noutput_items,
 
         // move the tap delays around (random walk + clipping)
         for (size_t j = 0; j < d_faders.size(); j++) {
-            float tmp = d_delays[j] + rv_1() * d_delays_std[j];
+            float tmp = d_delays[j] + dist_1(rng_1) * d_delays_std[j];
             d_delays[j] = std::max(std::min(tmp, d_delays_orig[j] + d_delays_maxdev[j]),
                                    d_delays_orig[j] - d_delays_maxdev[j]);
         }
