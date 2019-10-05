@@ -33,6 +33,8 @@ target_link_libraries(gnuradio-iio PUBLIC
   gnuradio-runtime
   ${IIO_LIBRARIES}
   ${GR_VOLK_LIB}
+  PRIVATE
+  gnuradio-blocks
 )
 
 target_include_directories(gnuradio-iio
