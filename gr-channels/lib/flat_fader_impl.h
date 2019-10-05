@@ -23,15 +23,12 @@
 #ifndef FLAT_FADER_IMPL_H
 #define FLAT_FADER_IMPL_H
 
-#include <gnuradio/io_signature.h>
-#include <stdint.h>
-#include <iostream>
-
-#include <boost/format.hpp>
-#include <boost/random.hpp>
-
 #include "sincostable.h"
 #include <gnuradio/fxpt.h>
+#include <gnuradio/io_signature.h>
+
+#include <stdint.h>
+#include <random>
 
 // FASTSINCOS:  0 = slow native,  1 = gr::fxpt impl,  2 = sincostable.h
 #define FASTSINCOS 2
@@ -43,14 +40,12 @@ class flat_fader_impl
 {
 private:
     // initial theta variate generator
-    boost::mt19937 seed_1;
-    boost::uniform_real<> dist_1; // U(-pi,pi)
-    boost::variate_generator<boost::mt19937&, boost::uniform_real<>> rv_1;
+    std::mt19937 rng_1;
+    std::uniform_real_distribution<double> dist_1; // U(-pi,pi)
 
     // random walk variate
-    boost::mt19937 seed_2;
-    boost::uniform_real<> dist_2; // U(0,1)
-    boost::variate_generator<boost::mt19937&, boost::uniform_real<>> rv_2;
+    std::mt19937 rng_2;
+    std::uniform_real_distribution<double> dist_2; // U(0,1)
 
 public:
     int d_N;        // number of sinusoids
@@ -74,7 +69,7 @@ public:
 
     void update_theta();
 
-    flat_fader_impl(unsigned int N, float fDTs, bool LOS, float K, int seed);
+    flat_fader_impl(uint32_t N, float fDTs, bool LOS, float K, uint32_t seed);
     gr_complex next_sample();
     void next_samples(std::vector<gr_complex>& HVec, int n_samples);
 

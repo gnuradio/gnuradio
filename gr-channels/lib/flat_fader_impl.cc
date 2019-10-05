@@ -26,19 +26,16 @@
 namespace gr {
 namespace channels {
 
-flat_fader_impl::flat_fader_impl(unsigned int N, float fDTs, bool LOS, float K, int seed)
-    : seed_1((int)seed),
+flat_fader_impl::flat_fader_impl(uint32_t N, float fDTs, bool LOS, float K, uint32_t seed)
+    : rng_1(seed),
       dist_1(-GR_M_PI, GR_M_PI),
-      rv_1(seed_1, dist_1), // U(-pi,pi)
-
-      seed_2((int)seed + 1),
+      rng_2(seed + 1),
       dist_2(0, 1),
-      rv_2(seed_2, dist_2), // U(0,1)
 
       d_N(N),
       d_fDTs(fDTs),
-      d_theta(rv_1()),
-      d_theta_los(rv_1()),
+      d_theta(dist_1(rng_1)),
+      d_theta_los(dist_1(rng_1)),
       d_step(powf(0.00125 * fDTs, 1.1)), // max step size approximated from Table 2
       d_m(0),
       d_K(K),
@@ -55,8 +52,8 @@ flat_fader_impl::flat_fader_impl(unsigned int N, float fDTs, bool LOS, float K, 
 {
     // generate initial phase values
     for (int i = 0; i < d_N + 1; i++) {
-        d_psi[i] = rv_1();
-        d_phi[i] = rv_1();
+        d_psi[i] = dist_1(rng_1);
+        d_phi[i] = dist_1(rng_1);
     }
 }
 
@@ -109,7 +106,7 @@ gr_complex flat_fader_impl::next_sample()
 
 void flat_fader_impl::update_theta()
 {
-    d_theta += (d_step * rv_2());
+    d_theta += (d_step * dist_2(rng_2));
     if (d_theta > GR_M_PI) {
         d_theta = GR_M_PI;
         d_step = -d_step;
