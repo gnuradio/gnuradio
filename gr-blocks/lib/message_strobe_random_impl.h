@@ -24,11 +24,8 @@
 #define INCLUDED_GR_MESSAGE_STROBE_RANDOM_IMPL_H
 
 #include <gnuradio/blocks/message_strobe_random.h>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/normal_distribution.hpp>
-#include <boost/random/poisson_distribution.hpp>
-#include <boost/random/uniform_real.hpp>
-#include <boost/random/variate_generator.hpp>
+
+#include <random>
 
 namespace gr {
 namespace blocks {
@@ -36,28 +33,20 @@ namespace blocks {
 class BLOCKS_API message_strobe_random_impl : public message_strobe_random
 {
 private:
-    boost::shared_ptr<gr::thread::thread> d_thread;
-    bool d_finished;
+    std::mt19937 d_rng;
     float d_mean_ms;
     float d_std_ms;
     message_strobe_random_distribution_t d_dist;
+    std::poisson_distribution<> pd;      //(d_mean_ms);
+    std::normal_distribution<> nd;       //(d_mean_ms, d_std_ms);
+    std::uniform_real_distribution<> ud; //(d_mean_ms - d_std_ms, d_mean_ms + d_std_ms);
+    boost::shared_ptr<gr::thread::thread> d_thread;
+    bool d_finished;
     pmt::pmt_t d_msg;
-    void run();
-    long next_delay();
-
-    boost::mt19937 d_rng;
-    boost::shared_ptr<
-        boost::variate_generator<boost::mt19937, boost::poisson_distribution<>>>
-        d_variate_poisson;
-    boost::shared_ptr<
-        boost::variate_generator<boost::mt19937, boost::normal_distribution<>>>
-        d_variate_normal;
-    boost::shared_ptr<boost::variate_generator<boost::mt19937, boost::uniform_real<>>>
-        d_variate_uniform;
-
     const pmt::pmt_t d_port;
 
-    void update_dist();
+    void run();
+    long next_delay();
 
 public:
     message_strobe_random_impl(pmt::pmt_t msg,
@@ -68,17 +57,9 @@ public:
 
     void set_msg(pmt::pmt_t msg) { d_msg = msg; }
     pmt::pmt_t msg() const { return d_msg; }
-    void set_mean(float mean_ms)
-    {
-        d_mean_ms = mean_ms;
-        update_dist();
-    }
-    float mean() const { return d_mean_ms; }
-    void set_std(float std_ms)
-    {
-        d_std_ms = std_ms;
-        update_dist();
-    }
+    void set_mean(float mean_ms);
+    float mean() const;
+    void set_std(float std_ms);
     float std() const { return d_std_ms; }
     void set_dist(message_strobe_random_distribution_t dist) { d_dist = dist; }
     message_strobe_random_distribution_t dist() const { return d_dist; }
