@@ -73,19 +73,16 @@ vmcircbuf_mmap_tmpfile::vmcircbuf_mmap_tmpfile(int size) : gr::vmcircbuf(size)
                  "%s/gnuradio-%d-%d-XXXXXX",
                  gr::tmp_path(),
                  getpid(),
-                 s_seg_counter);
+                 s_seg_counter);        
         s_seg_counter++;
 
         seg_fd = open(seg_name, O_RDWR | O_CREAT | O_EXCL, 0600);
         if (seg_fd == -1) {
             if (errno == EEXIST) // File already exists (shouldn't happen).  Try again
                 continue;
-
-            char msg[1024];
-            snprintf(msg, sizeof(msg), "ERROR gr::vmcircbuf_mmap_tmpfile: open [%s]", seg_name);
-            std::stringstream error_msg;
-            error_msg << "ERROR " << msg << std::endl;
-            GR_LOG_ERROR(d_debug_logger, error_msg.str());
+            std::stringstream msg;
+            msg << "ERROR open [" <<  seg_name << "]: " << strerror(errno) << std::endl;
+            GR_LOG_ERROR(d_debug_logger, msg.str());
             throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
         }
         break;
