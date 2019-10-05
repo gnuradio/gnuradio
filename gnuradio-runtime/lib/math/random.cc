@@ -47,28 +47,16 @@
 namespace gr {
 
 random::random(unsigned int seed, int min_integer, int max_integer)
+    : d_rng(), d_integer_dis(0, 1)
 {
     d_gauss_stored = false; // set gasdev (gauss distributed numbers) on calculation state
 
     // Setup random number generators
-    d_rng = new boost::mt19937;                     // random numbers are generated here.
-    d_uniform = new boost::uniform_real<float>;     // map random number to distribution
-    d_integer_dis = new boost::uniform_int<>(0, 1); // another "mapper"
-    d_generator = NULL; // MUST be reinstantiated on every call to reseed.
-    d_integer_generator =
-        NULL; // MUST be reinstantiated on everytime d_rng or d_integer_dis is changed.
     reseed(seed); // set seed for random number generator
     set_integer_limits(min_integer, max_integer);
 }
 
-random::~random()
-{
-    delete d_rng;
-    delete d_uniform;
-    delete d_integer_dis;
-    delete d_generator;
-    delete d_integer_generator;
-}
+random::~random() {}
 
 /*
  * Seed is initialized with time if the given seed is 0. Otherwise the seed is taken
@@ -78,43 +66,29 @@ void random::reseed(unsigned int seed)
 {
     d_seed = seed;
     if (d_seed == 0) {
-        d_rng->seed();
+        d_rng.seed();
     } else {
-        d_rng->seed(d_seed);
+        d_rng.seed(d_seed);
     }
-    // reinstantiate generators. Otherwise reseed doesn't take effect.
-    delete d_generator;
-    d_generator =
-        new boost::variate_generator<boost::mt19937&, boost::uniform_real<float>>(
-            *d_rng, *d_uniform); // create number generator in [0,1) from boost.random
-    delete d_integer_generator;
-    d_integer_generator =
-        new boost::variate_generator<boost::mt19937&, boost::uniform_int<>>(
-            *d_rng, *d_integer_dis);
 }
 
 void random::set_integer_limits(const int minimum, const int maximum)
 {
     // boost expects integer limits defined as [minimum, maximum] which is unintuitive.
     // use the expected half open interval behavior! [minimum, maximum)!
-    delete d_integer_generator;
-    delete d_integer_dis;
-    d_integer_dis = new boost::uniform_int<>(minimum, maximum - 1);
-    d_integer_generator =
-        new boost::variate_generator<boost::mt19937&, boost::uniform_int<>>(
-            *d_rng, *d_integer_dis);
+    d_integer_dis = std::uniform_int_distribution<>(minimum, maximum - 1);
 }
 
 /*!
  * Uniform random integers in the range set by 'set_integer_limits' [min, max).
  */
-int random::ran_int() { return (*d_integer_generator)(); }
+int random::ran_int() { return d_integer_dis(d_rng); }
 
 /*
  * Returns uniformly distributed numbers in [0,1) taken from boost.random using a Mersenne
  * twister
  */
-float random::ran1() { return (*d_generator)(); }
+float random::ran1() { return d_uniform(d_rng); }
 
 /*
  * Returns a normally distributed deviate with zero mean and variance 1.
