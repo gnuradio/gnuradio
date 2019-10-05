@@ -27,12 +27,6 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 
-#include <boost/format.hpp>
-#include <boost/random.hpp>
-
-#include <iostream>
-
-
 // FASTSINCOS:  0 = slow native,  1 = gr::fxpt impl,  2 = sincostable.h
 #define FASTSINCOS 2
 
