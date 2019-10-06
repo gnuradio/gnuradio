@@ -53,7 +53,6 @@ int pagesize()
             s_pagesize = 4096;
         }
 #else
-
         GR_LOG_ERROR(debug_logger, boost::format("ERROR no info; setting pagesize = 4096\n"));
         s_pagesize = 4096;
 #endif
