@@ -13,6 +13,7 @@
 #endif
 
 #include <gnuradio/thread/thread_body_wrapper.h>
+#include <gnuradio/logger.h>
 
 #ifdef HAVE_SIGNAL_H
 #include <signal.h>
@@ -63,8 +64,11 @@ void mask_signals()
     sigaddset(&new_set, SIGXFSZ);
 #endif
     r = pthread_sigmask(SIG_BLOCK, &new_set, 0);
-    if (r != 0)
-        perror("pthread_sigmask");
+    if (r != 0){
+        gr::logger_ptr logger, debug_logger;
+        gr::configure_default_loggers(logger, debug_logger, "thread_body_wrapper::mask_signals");
+        GR_LOG_ERROR(debug_logger, boost::format("pthread_sigmask: %s") % strerror(errno));
+    }
 }
 
 #else
