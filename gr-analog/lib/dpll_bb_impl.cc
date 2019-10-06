@@ -50,7 +50,7 @@ dpll_bb_impl::dpll_bb_impl(float period, float gain)
 #if 0
     GR_LOG_ERROR(
         d_debug_logger, 
-        boost::format("ERROR frequency = %f period = %f gain = %f threshold = %f\n)  
+        boost::format("ERROR frequency = %f period = %f gain = %f threshold = %f\n")  
         % d_pulse_frequency
         % period
         % d_gain

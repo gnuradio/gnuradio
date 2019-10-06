@@ -123,7 +123,7 @@ int file_descriptor_source_impl::work(int noutput_items,
             if (errno == EINTR)
                 continue;
             else {
-                GR_LOG_ERROR(d_debug_logger, boost::format("ERROR file_descriptor_source[read]: %s" % strerror(errno)));
+                GR_LOG_ERROR(d_debug_logger, boost::format("ERROR file_descriptor_source[read]: %s") % strerror(errno));
                 return -1;
             }
         } else if (r == 0) { // end of file
@@ -132,7 +132,7 @@ int file_descriptor_source_impl::work(int noutput_items,
             else {
                 flush_residue();
                 if (lseek(d_fd, 0, SEEK_SET) == -1) {
-                    GR_LOG_ERROR(d_debug_logger, boost::format("ERROR file_descriptor_source[lseek]: %s" % strerror(errno)));
+                    GR_LOG_ERROR(d_debug_logger, boost::format("ERROR file_descriptor_source[lseek]: %s") % strerror(errno));
                     return -1;
                 }
             }
