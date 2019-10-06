@@ -300,7 +300,10 @@ UINT windows_sink::find_device(std::string szDeviceName)
             }
         }
     } else {
-        perror("Error: No WaveOut devices present or accessible");
+        GR_LOG_ERROR(
+            d_debug_logger,
+            boost::format("ERROR No WaveOut devices present or accessible: %s") % strerror(errno)
+        );
     }
     return result;
 }

@@ -28,6 +28,7 @@
 #endif
 
 #include <gnuradio/api.h>
+#include <gnuradio/logger.h>
 #include <string>
 
 namespace gr {
@@ -48,6 +49,8 @@ private:
 #endif
 
 public:
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
     local_sighandler(int signum, void (*new_handler)(int));
     ~local_sighandler() noexcept(false);
 
