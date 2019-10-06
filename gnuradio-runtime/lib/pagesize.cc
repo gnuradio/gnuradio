@@ -28,6 +28,8 @@ extern "C" size_t getpagesize(void);
 int pagesize()
 {
     static int s_pagesize = -1;
+    gr::logger_ptr logger, debug_logger;
+    gr::configure_default_loggers(logger, debug_logger, "pagesize");
 
     if (s_pagesize == -1) {
 #if defined(HAVE_GETPAGESIZE)
@@ -35,12 +37,11 @@ int pagesize()
 #elif defined(HAVE_SYSCONF)
         s_pagesize = sysconf(_SC_PAGESIZE);
         if (s_pagesize == -1) {
-            perror("_SC_PAGESIZE");
+            GR_LOG_ERROR(debug_logger, boost::format("ERROR _SC_PAGESIZE: %s\n") % strerror(errno));
             s_pagesize = 4096;
         }
 #else
-        gr::logger_ptr logger, debug_logger;
-        gr::configure_default_loggers(logger, debug_logger, "pagesize");
+
         GR_LOG_ERROR(debug_logger, boost::format("ERROR no info; setting pagesize = 4096\n"));
         s_pagesize = 4096;
 #endif

@@ -60,12 +60,12 @@ wavfile_source_impl::wavfile_source_impl(const char* filename, bool repeat)
 
     int fd;
     if ((fd = open(filename, O_RDONLY | OUR_O_LARGEFILE | OUR_O_BINARY)) < 0) {
-        perror(filename);
+        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s: %s") % filename % strerror(errno));
         throw std::runtime_error("can't open file");
     }
 
     if ((d_fp = fdopen(fd, "rb")) == NULL) {
-        perror(filename);
+        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s: %s") % filename % strerror(errno));
         throw std::runtime_error("can't open file");
     }
 

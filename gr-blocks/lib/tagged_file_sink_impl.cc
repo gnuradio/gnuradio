@@ -153,14 +153,14 @@ int tagged_file_sink_impl::work(int noutput_items,
                                      O_WRONLY | O_CREAT | O_TRUNC | OUR_O_LARGEFILE |
                                          OUR_O_BINARY,
                                      0664)) < 0) {
-                        perror(filename.str().c_str());
+                        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s: %s") % filename.str() % strerror(errno));
                         return -1;
                     }
 
                     // FIXME:
                     // if((d_handle = fdopen (fd, d_is_binary ? "wb" : "w")) == NULL) {
                     if ((d_handle = fdopen(fd, "wb")) == NULL) {
-                        perror(filename.str().c_str());
+                        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s: %s") % filename.str() % strerror(errno));
                         ::close(fd); // don't leak file descriptor if fdopen fails.
                     }
 
@@ -187,7 +187,7 @@ int tagged_file_sink_impl::work(int noutput_items,
                         &inbuf[d_itemsize * idx], d_itemsize, idx_stop - idx, d_handle);
                     if (count == 0) {
                         if (ferror(d_handle)) {
-                            perror("tagged_file_sink: error writing file");
+                            GR_LOG_ERROR(d_debug_logger, boost::format("ERROR writing file: %s") % strerror(errno));
                         }
                     }
                     idx = idx_stop;
@@ -204,7 +204,7 @@ int tagged_file_sink_impl::work(int noutput_items,
                     &inbuf[d_itemsize * idx], d_itemsize, noutput_items - idx, d_handle);
                 if (count == 0) {
                     if (ferror(d_handle)) {
-                        perror("tagged_file_sink: error writing file");
+                        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR writing file: %s") % strerror(errno));
                     }
                 }
                 idx = noutput_items;

@@ -14,6 +14,7 @@
 
 #include <gnuradio/blocks/file_sink_base.h>
 #include <gnuradio/thread/thread.h>
+#include <gnuradio/logger.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -64,13 +65,16 @@ bool file_sink_base::open(const char* filename)
     // we use the open system call to get access to the O_LARGEFILE flag.
     int fd;
     int flags;
+    gr::logger_ptr logger, debug_logger;
+    gr::configure_default_loggers(logger, debug_logger, "pagesize");
+
     if (d_append) {
         flags = O_WRONLY | O_CREAT | O_APPEND | OUR_O_LARGEFILE | OUR_O_BINARY;
     } else {
         flags = O_WRONLY | O_CREAT | O_TRUNC | OUR_O_LARGEFILE | OUR_O_BINARY;
     }
     if ((fd = ::open(filename, flags, 0664)) < 0) {
-        perror(filename);
+        GR_LOG_ERROR(debug_logger, boost::format("ERROR %s: %s") % filename % strerror(errno));
         return false;
     }
     if (d_new_fp) { // if we've already got a new one open, close it
@@ -79,7 +83,7 @@ bool file_sink_base::open(const char* filename)
     }
 
     if ((d_new_fp = fdopen(fd, d_is_binary ? "wb" : "w")) == NULL) {
-        perror(filename);
+        GR_LOG_ERROR(debug_logger, boost::format("ERROR %s: %s") % filename % strerror(errno));
         ::close(fd); // don't leak file descriptor if fdopen fails.
     }
 

@@ -97,7 +97,7 @@ bool wavfile_sink_impl::open(const char* filename)
     if ((fd = ::open(filename,
                      O_WRONLY | O_CREAT | O_TRUNC | OUR_O_LARGEFILE | OUR_O_BINARY,
                      0664)) < 0) {
-        perror(filename);
+        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s: %s") % filename % strerror(errno));
         return false;
     }
 
@@ -107,7 +107,7 @@ bool wavfile_sink_impl::open(const char* filename)
     }
 
     if ((d_new_fp = fdopen(fd, "wb")) == NULL) {
-        perror(filename);
+        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s: %s") % filename % strerror(errno));
         ::close(fd); // don't leak file descriptor if fdopen fails.
         return false;
     }
