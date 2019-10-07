@@ -115,3 +115,10 @@ def validate_vector(param):
     if not all(isinstance(item, valid_types) for item in param.get_evaluated()):
         raise ValidateError('Expression {!r} is invalid for type {!r}.'.format(
             param.get_evaluated(), param.dtype))
+
+@validates('gui_hint')
+def validate_gui_hint(param):
+    try:
+        param.parse_gui_hint(param.value)
+    except Exception as e:
+        raise ValidateError(str(e))
