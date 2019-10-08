@@ -226,6 +226,7 @@ class FlowGraph(Element):
                 variable_block.rewrite()
                 value = eval(variable_block.value, namespace, variable_block.namespace)
                 namespace[variable_block.name] = value
+                self.namespace.update(namespace) # rewrite on subsequent blocks depends on an updated self.namespace 
             except TypeError: #Type Errors may happen, but that desn't matter as they are displayed in the gui
                 pass
             except Exception:
@@ -381,8 +382,7 @@ class FlowGraph(Element):
 
             block.import_data(**block_data)
 
-        self.rewrite()  # TODO: Figure out why this has to be called twice to populate bus ports correctly
-        self.rewrite()  # evaluate stuff like nports before adding connections
+        self.rewrite() 
 
         # build the connections
         def verify_and_get_port(key, block, dir):
