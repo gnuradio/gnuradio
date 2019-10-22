@@ -62,12 +62,12 @@ encoder_impl::~encoder_impl() {}
 
 int encoder_impl::fixed_rate_ninput_to_noutput(int ninput)
 {
-    return (int)(0.5 + ninput * relative_rate());
+    return std::lround(ninput * relative_rate());
 }
 
 int encoder_impl::fixed_rate_noutput_to_ninput(int noutput)
 {
-    return (int)(0.5 + noutput / relative_rate());
+    return std::lround(noutput / relative_rate());
 }
 
 void encoder_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
