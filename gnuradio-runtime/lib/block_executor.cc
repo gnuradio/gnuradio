@@ -143,7 +143,7 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
             } else if (use_fp_rrate) {
                 for (t = rtags.begin(); t != rtags.end(); t++) {
                     tag_t new_tag = *t;
-                    new_tag.offset = ((double)new_tag.offset * rrate) + 0.5;
+                    new_tag.offset = std::llround((double)new_tag.offset * rrate);
                     for (int o = 0; o < d->noutputs(); o++)
                         out_buf[o]->add_item_tag(new_tag);
                 }
@@ -191,7 +191,7 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
                 } else if (use_fp_rrate) {
                     for (t = rtags.begin(); t != rtags.end(); t++) {
                         tag_t new_tag = *t;
-                        new_tag.offset = ((double)new_tag.offset * rrate) + 0.5;
+                        new_tag.offset = std::llround((double)new_tag.offset * rrate);
                         out_buf->add_item_tag(new_tag);
                     }
                 } else {
