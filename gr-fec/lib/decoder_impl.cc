@@ -63,17 +63,17 @@ decoder_impl::decoder_impl(generic_decoder::sptr my_decoder,
 
 int decoder_impl::fixed_rate_ninput_to_noutput(int ninput)
 {
-    return (int)(0.5 + ninput * relative_rate());
+    return std::lround(ninput * relative_rate());
 }
 
 int decoder_impl::fixed_rate_noutput_to_ninput(int noutput)
 {
-    return (int)(0.5 + noutput / relative_rate());
+    return std::lround(noutput / relative_rate());
 }
 
 void decoder_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
 {
-    ninput_items_required[0] = 0.5 + fixed_rate_noutput_to_ninput(noutput_items);
+    ninput_items_required[0] = std::lround(fixed_rate_noutput_to_ninput(noutput_items));
 }
 
 int decoder_impl::general_work(int noutput_items,
@@ -84,9 +84,9 @@ int decoder_impl::general_work(int noutput_items,
     const unsigned char* in = (unsigned char*)input_items[0];
     unsigned char* out = (unsigned char*)output_items[0];
 
-    int outnum = (int)(((1.0 / relative_rate()) * noutput_items) + 0.5);
+    int outnum = std::lround((1.0 / relative_rate()) * noutput_items);
     int innum =
-        (int)(relative_rate() * (ninput_items[0] - d_decoder->get_history()) + 0.5) /
+        std::lround(relative_rate() * (ninput_items[0] - d_decoder->get_history())) /
         (output_multiple() - d_decoder->get_history());
 
     int items = (outnum <= ninput_items[0] - d_decoder->get_history())
@@ -106,8 +106,8 @@ int decoder_impl::general_work(int noutput_items,
                      pmt::intern(alias()));
     }
 
-    int consumed = static_cast<int>(
-        items / relative_rate() * (output_multiple() - d_decoder->get_history()) + 0.5);
+    int consumed = std::lround(
+        items / relative_rate() * (output_multiple() - d_decoder->get_history()));
     int returned = items * (output_multiple() - d_decoder->get_history());
 
     consume_each(consumed);
