@@ -6,7 +6,7 @@ parameters:
 -   id: type
     label: Type
     dtype: enum
-    options: [complex_double, float]
+    options: [complex_float, float]
     option_labels: [Complex, Float]
     option_attributes:
         type: [complex, float]
