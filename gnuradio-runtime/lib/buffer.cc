@@ -298,8 +298,6 @@ buffer_reader::buffer_reader(buffer_sptr buffer, unsigned int read_index, block_
       d_attr_delay(0)
 {
     s_buffer_reader_count++;
-
-    buffer->d_max_reader_delay = 0;
 }
 
 buffer_reader::~buffer_reader()
