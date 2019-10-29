@@ -75,7 +75,11 @@ void push_msg_sink_impl::handler(pmt::pmt_t msg)
     zmq::message_t zmsg(s.size());
 
     memcpy(zmsg.data(), s.c_str(), s.size());
+#if USE_NEW_CPPZMQ_SEND_RECV
+    d_socket->send(zmsg, zmq::send_flags::none);
+#else
     d_socket->send(zmsg);
+#endif
 }
 
 } /* namespace zeromq */
