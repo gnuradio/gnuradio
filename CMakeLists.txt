@@ -357,7 +357,6 @@ include(GrBoost)
 # Enable python component
 ########################################################################
 include(GrPython)
-find_package(PythonLibs ${GR_PYTHON_MIN_VERSION})
 GR_PYTHON_CHECK_MODULE("six - python 2 and 3 compatibility library" six "True" SIX_FOUND)
 find_package(SWIG)
 
