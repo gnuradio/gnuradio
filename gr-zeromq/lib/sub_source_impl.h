@@ -24,7 +24,6 @@
 #define INCLUDED_ZEROMQ_SUB_SOURCE_IMPL_H
 
 #include <gnuradio/zeromq/sub_source.h>
-#include <zmq.hpp>
 
 #include "base_impl.h"
 

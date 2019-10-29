@@ -24,7 +24,6 @@
 #define INCLUDED_ZEROMQ_PUB_SINK_IMPL_H
 
 #include <gnuradio/zeromq/pub_sink.h>
-#include <zmq.hpp>
 
 #include "base_impl.h"
 
