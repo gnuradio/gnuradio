@@ -22,8 +22,6 @@
 ########################################################################
 include(GrBoost)
 
-find_package(PythonLibs 2)
-
 include(GrPython)
 
 # Note: gr-qtgui requires Qt5.
