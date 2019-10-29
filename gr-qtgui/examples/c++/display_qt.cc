@@ -30,11 +30,11 @@ mywindow::mywindow() : QWidget()
     tab0 = new QTabWidget();
     tab1 = new QTabWidget();
 
-    // Add the tab widgets to the layou
+    // Add the tab widgets to the layout
     layout->addWidget(tab0);
     layout->addWidget(tab1);
 
-    // Set the layout as the main widget's layou
+    // Set the layout as the main widget's layout
     setLayout(layout);
 
     // Simple resizing of the app
