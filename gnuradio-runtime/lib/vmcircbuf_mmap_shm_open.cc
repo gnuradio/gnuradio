@@ -39,6 +39,7 @@
 #include <gnuradio/sys_paths.h>
 #include <errno.h>
 #include <stdio.h>
+#include <boost/format.hpp>
 
 namespace gr {
 
@@ -58,7 +59,7 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(int size) : gr::vmcircbuf(size)
     }
 
     int shm_fd = -1;
-    char seg_name[1024];
+    std::string seg_name;
     static bool portable_format = true;
 
     // open a new named shared memory segment
@@ -67,23 +68,17 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(int size) : gr::vmcircbuf(size)
 
             // This is the POSIX recommended "portable format".
             // Of course the "portable format" doesn't work on some systems...
-
-            snprintf(
-                seg_name, sizeof(seg_name), "/gnuradio-%d-%d", getpid(), s_seg_counter);
+            seg_name = str(boost::format("/gnuradio-%d-%d") % getpid() % s_seg_counter);
         } else {
 
             // Where the "portable format" doesn't work, we try building
             // a full filesystem pathname pointing into a suitable temporary directory.
 
-            snprintf(seg_name,
-                     sizeof(seg_name),
-                     "%s/gnuradio-%d-%d",
-                     gr::tmp_path(),
-                     getpid(),
-                     s_seg_counter);
+            seg_name = str(boost::format("%s/gnuradio-%d-%d") %
+                           gr::tmp_path() % getpid() % s_seg_counter);
         }
 
-        shm_fd = shm_open(seg_name, O_RDWR | O_CREAT | O_EXCL, 0600);
+        shm_fd = shm_open(seg_name.c_str(), O_RDWR | O_CREAT | O_EXCL, 0600);
         if (shm_fd == -1 && errno == EACCES && portable_format) {
             portable_format = false;
             continue; // try again using "non-portable format"
@@ -96,10 +91,10 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(int size) : gr::vmcircbuf(size)
                 EEXIST) // Named segment already exists (shouldn't happen).  Try again
                 continue;
 
-            char msg[1024];
-            snprintf(
-                msg, sizeof(msg), "gr::vmcircbuf_mmap_shm_open: shm_open [%s]", seg_name);
-            perror(msg);
+            static std::string msg =
+                str(boost::format("gr::vmcircbuf_mmap_shm_open: shm_open [%s]") %
+                    seg_name);
+            perror(msg.c_str());
             throw std::runtime_error("gr::vmcircbuf_mmap_shm_open");
         }
         break;
@@ -156,7 +151,7 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(int size) : gr::vmcircbuf(size)
 
     close(shm_fd); // fd no longer needed.  The mapping is retained.
 
-    if (shm_unlink(seg_name) == -1) { // unlink the seg_name.
+    if (shm_unlink(seg_name.c_str()) == -1) { // unlink the seg_name.
         perror("gr::vmcircbuf_mmap_shm_open: shm_unlink");
         throw std::runtime_error("gr::vmcircbuf_mmap_shm_open");
     }
