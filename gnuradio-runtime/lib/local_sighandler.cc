@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdexcept>
+#include <boost/format.hpp>
 
 namespace gr {
 
@@ -70,7 +71,7 @@ void local_sighandler::throw_signal(int signum) { throw signal(signum); }
 
 std::string signal::name() const
 {
-    char tmp[128];
+    std::string tmp;
 
     switch (signum()) {
 #ifdef SIGHUP
@@ -167,18 +168,14 @@ std::string signal::name() const
         SIGNAME(SIGSYS);
 #endif
     default:
-#if defined(HAVE_SNPRINTF)
 #if defined(SIGRTMIN) && defined(SIGRTMAX)
         if (signum() >= SIGRTMIN && signum() <= SIGRTMAX) {
-            snprintf(tmp, sizeof(tmp), "SIGRTMIN + %d", signum());
+            tmp = str(boost::format("SIGRTMIN + %d") % signum());
             return tmp;
         }
 #endif
-        snprintf(tmp, sizeof(tmp), "SIGNAL %d", signum());
+        tmp = str(boost::format("SIGNAL %d") % signum());
         return tmp;
-#else
-        return "Unknown signal";
-#endif
     }
 }
 
