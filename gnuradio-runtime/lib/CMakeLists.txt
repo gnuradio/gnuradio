@@ -59,7 +59,6 @@ add_library(gnuradio-runtime
   block_gateway_impl.cc
   block_registry.cc
   buffer.cc
-  circular_file.cc
   feval.cc
   flat_flowgraph.cc
   flowgraph.cc
@@ -298,7 +297,6 @@ if(ENABLE_TESTING)
   list(APPEND test_gnuradio_runtime_sources
     qa_buffer.cc
     qa_io_signature.cc
-    qa_circular_file.cc
     qa_logger.cc
     qa_vmcircbuf.cc
   )
