@@ -27,9 +27,6 @@ if(ENABLE_TESTING)
     )
 
     if(PYTEST_FOUND)
-        add_test (NAME grc_tests
-            COMMAND ${QA_PYTHON_EXECUTABLE} -m pytest
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            )
+        GR_ADD_TEST(grc_tests ${QA_PYTHON_EXECUTABLE} -B -m pytest ${CMAKE_CURRENT_SOURCE_DIR})
     endif()
 endif(ENABLE_TESTING)
