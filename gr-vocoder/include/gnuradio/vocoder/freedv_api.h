@@ -27,14 +27,13 @@
 
 // version >=0.9.1 contains fixes that doesn't require "extern C"
 // between 0.8.1 and 0.9.1 the build fail
-#include <codec2/version.h>
-#if CODEC2_VERSION_MAJOR == 0 && CODEC2_VERSION_MINOR < 9
+#ifdef CODEC2_LEGACY
 extern "C" {
 #endif
 #include <codec2/codec2.h>
 #include <codec2/freedv_api.h>
 #include <codec2/modem_stats.h>
-#if CODEC2_VERSION_MAJOR == 0 && CODEC2_VERSION_MINOR < 9
+#ifdef CODEC2_LEGACY
 }
 #endif
 
