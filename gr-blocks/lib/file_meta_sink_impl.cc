@@ -391,9 +391,8 @@ int file_meta_sink_impl::work(int noutput_items,
     std::vector<tag_t> all_tags;
     get_tags_in_range(all_tags, 0, abs_N, end_N);
 
-    std::vector<tag_t>::iterator itr;
-    for (itr = all_tags.begin(); itr != all_tags.end(); itr++) {
-        int item_offset = (int)(itr->offset - abs_N);
+    for (const auto& tag : all_tags) {
+        int item_offset = (int)(tag.offset - abs_N);
 
         // Write date to file up to the next tag location
         while (nwritten < item_offset) {
@@ -419,11 +418,11 @@ int file_meta_sink_impl::work(int noutput_items,
 
         if (d_total_seg_size > 0) {
             update_last_header();
-            update_header(itr->key, itr->value);
+            update_header(tag.key, tag.value);
             write_and_update();
             d_total_seg_size = 0;
         } else {
-            update_header(itr->key, itr->value);
+            update_header(tag.key, tag.value);
             update_last_header();
         }
     }

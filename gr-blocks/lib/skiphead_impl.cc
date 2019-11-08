@@ -76,10 +76,9 @@ int skiphead_impl::general_work(int noutput_items,
         else { // nothing left to skip. copy away
             // Grab all tags in the window and shift their offsets appropriately
             get_tags_in_window(d_tags, 0, ii, ninput_items);
-            for (std::vector<tag_t>::iterator it = d_tags.begin(); it != d_tags.end();
-                 it++) {
-                (*it).offset -= d_nitems_to_skip;
-                add_item_tag(0, *it);
+            for (auto& tag : d_tags) {
+                tag.offset -= d_nitems_to_skip;
+                add_item_tag(0, tag);
             }
             int n_to_copy = ninput_items - ii;
             if (n_to_copy > 0) {
