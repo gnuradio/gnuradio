@@ -45,7 +45,7 @@ private:
     std::vector<float> d_window;
     double d_center_freq;
     double d_bandwidth;
-    std::string d_name;
+    const std::string d_name;
     gr::high_res_timer_type d_last_update;
     bool d_update_active;
 
