@@ -141,14 +141,13 @@ void write_matrix_to_file(const std::string filename, matrix_sptr M)
     outputfile << (*std::max_element(colweights.begin(), colweights.end())) << " "
                << (*std::max_element(rowweights.begin(), rowweights.end())) << std::endl;
 
-    std::vector<unsigned int>::iterator itr;
-    for (itr = colweights.begin(); itr != colweights.end(); itr++) {
-        outputfile << (*itr) << " ";
+    for (const auto& weight : colweights) {
+        outputfile << weight << " ";
     }
     outputfile << std::endl;
 
-    for (itr = rowweights.begin(); itr != rowweights.end(); itr++) {
-        outputfile << (*itr) << " ";
+    for (const auto& weight : rowweights) {
+        outputfile << weight << " ";
     }
     outputfile << std::endl;
 

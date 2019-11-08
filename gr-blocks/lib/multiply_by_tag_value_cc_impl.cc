@@ -65,11 +65,9 @@ int multiply_by_tag_value_cc_impl::work(int noutput_items,
     std::vector<tag_t> tags;
     get_tags_in_window(tags, 0, 0, noutput_items, d_tag_key);
 
-    std::vector<tag_t>::iterator itag = tags.begin();
-
     int start = 0, end;
-    while (itag != tags.end()) {
-        end = itag->offset - nitems_read(0);
+    for (const auto& tag : tags) {
+        end = tag.offset - nitems_read(0);
         end *= d_vlen;
 
         // Multiply based on the current value of k from 'start' to 'end'
@@ -77,7 +75,7 @@ int multiply_by_tag_value_cc_impl::work(int noutput_items,
         start = end;
 
         // Extract new value of k
-        pmt::pmt_t k = itag->value;
+        pmt::pmt_t k = tag.value;
         if (pmt::is_complex(k)) {
             d_k = pmt::to_complex(k);
         } else if (pmt::is_number(k)) {
@@ -87,8 +85,6 @@ int multiply_by_tag_value_cc_impl::work(int noutput_items,
                         boost::format("Got key '%1%' with incompatible value of '%2%'") %
                             pmt::write_string(d_tag_key) % pmt::write_string(k));
         }
-
-        itag++;
     }
 
     volk_32fc_s32fc_multiply_32fc(

@@ -111,15 +111,15 @@ int tag_debug_impl::work(int noutput_items,
         if (d_display) {
             sout << "Input Stream: " << std::setw(2) << std::setfill('0') << i
                  << std::setfill(' ') << std::endl;
-            for (d_tags_itr = d_tags.begin(); d_tags_itr != d_tags.end(); d_tags_itr++) {
-                sout << std::setw(10) << "Offset: " << d_tags_itr->offset << std::setw(10)
+            for (const auto& tag : d_tags) {
+                sout << std::setw(10) << "Offset: " << tag.offset << std::setw(10)
                      << "Source: "
-                     << (pmt::is_symbol(d_tags_itr->srcid)
-                             ? pmt::symbol_to_string(d_tags_itr->srcid)
+                     << (pmt::is_symbol(tag.srcid)
+                             ? pmt::symbol_to_string(tag.srcid)
                              : "n/a")
-                     << std::setw(10) << "Key: " << pmt::symbol_to_string(d_tags_itr->key)
+                     << std::setw(10) << "Key: " << pmt::symbol_to_string(tag.key)
                      << std::setw(10) << "Value: ";
-                sout << d_tags_itr->value << std::endl;
+                sout << tag.value << std::endl;
             }
         }
     }
