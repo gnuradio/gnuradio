@@ -70,11 +70,7 @@ int annotator_alltoall_impl::work(int noutput_items,
 
         std::vector<tag_t> all_tags;
         get_tags_in_range(all_tags, i, abs_N, end_N);
-
-        std::vector<tag_t>::iterator itr;
-        for (itr = all_tags.begin(); itr != all_tags.end(); itr++) {
-            d_stored_tags.push_back(*itr);
-        }
+        d_stored_tags.insert(d_stored_tags.end(), all_tags.begin(), all_tags.end());
     }
 
     // Source ID and key for any tag that might get applied from this block

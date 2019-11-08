@@ -69,11 +69,7 @@ int annotator_1to1_impl::work(int noutput_items,
 
         std::vector<tag_t> all_tags;
         get_tags_in_range(all_tags, i, abs_N, abs_N + noutput_items);
-
-        std::vector<tag_t>::iterator itr;
-        for (itr = all_tags.begin(); itr != all_tags.end(); itr++) {
-            d_stored_tags.push_back(*itr);
-        }
+        d_stored_tags.insert(d_stored_tags.end(), all_tags.begin(), all_tags.end());
     }
 
     // Storing the current noutput_items as the value to the "noutput_items" key

@@ -89,7 +89,6 @@ int test_tag_variable_rate_ff_impl::general_work(int noutput_items,
     }
 
     std::vector<tag_t> tags;
-    std::vector<tag_t>::iterator itags;
 
     int i = 0, j = 0;
     while (i < ninput_items[0]) {
@@ -111,8 +110,8 @@ int test_tag_variable_rate_ff_impl::general_work(int noutput_items,
             // Manage Tags
             d_new_in = nitems_read(0) + i;
             get_tags_in_range(tags, 0, d_old_in, d_new_in);
-            for (itags = tags.begin(); itags != tags.end(); itags++) {
-                tag_t new_tag = *itags;
+            for (const auto& tag : tags) {
+                tag_t new_tag = tag;
                 new_tag.offset = d_last_out;
                 add_item_tag(0, new_tag);
             }
