@@ -38,7 +38,7 @@ private:
 
     int d_size, d_buffer_size;
     double d_samp_rate;
-    std::string d_name;
+    const std::string d_name;
     unsigned int d_nconnections;
 
     const pmt::pmt_t d_tag_key;

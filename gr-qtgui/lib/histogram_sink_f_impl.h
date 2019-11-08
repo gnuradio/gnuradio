@@ -39,7 +39,7 @@ private:
     int d_size;
     int d_bins;
     double d_xmin, d_xmax;
-    std::string d_name;
+    const std::string d_name;
     int d_nconnections;
 
     int d_index;
