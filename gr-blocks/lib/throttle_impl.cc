@@ -80,10 +80,9 @@ int throttle_impl::work(int noutput_items,
         uint64_t abs_N = nitems_read(0);
         std::vector<tag_t> all_tags;
         get_tags_in_range(all_tags, 0, abs_N, abs_N + noutput_items);
-        std::vector<tag_t>::iterator itr;
-        for (itr = all_tags.begin(); itr != all_tags.end(); itr++) {
-            if (pmt::eq((*itr).key, throttle_rx_rate_pmt)) {
-                double new_rate = pmt::to_double((*itr).value);
+        for (const auto& tag : all_tags) {
+            if (pmt::eq(tag.key, throttle_rx_rate_pmt)) {
+                double new_rate = pmt::to_double(tag.value);
                 set_sample_rate(new_rate);
             }
         }
