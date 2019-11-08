@@ -46,7 +46,7 @@ private:
     std::vector<float> d_window;
     double d_center_freq;
     double d_bandwidth;
-    std::string d_name;
+    const std::string d_name;
     int d_nconnections;
 
     const pmt::pmt_t d_port;
