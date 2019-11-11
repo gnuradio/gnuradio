@@ -69,7 +69,7 @@ class test_sig_source(gr_unittest.TestCase):
         tb.run()
         dst_data = dst1.data()
         self.assertEqual(expected_result, dst_data)
-        
+
     def test_sine_f(self):
         tb = self.tb
         sqrt2 = math.sqrt(2) / 2
@@ -97,7 +97,9 @@ class test_sig_source(gr_unittest.TestCase):
         tb.connect(op, dst1)
         tb.run()
         dst_data = dst1.data()
-        self.assertFloatTuplesAlmostEqual(expected_result, dst_data)        
+        # Let the python know we are dealing with signed int behind scenes
+        dst_data_signed = [b if b < 127 else (256 - b) * -1 for b in dst_data]
+        self.assertFloatTuplesAlmostEqual(expected_result, dst_data_signed)
 
     def test_cosine_f(self):
         tb = self.tb
