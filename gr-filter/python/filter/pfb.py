@@ -38,23 +38,7 @@ class channelizer_ccf(gr.hier_block2):
         if (taps is not None) and (len(taps) > 0):
             self._taps = taps
         else:
-            # Create a filter that covers the full bandwidth of the input signal
-            bw = 0.4
-            tb = 0.2
-            ripple = 0.1
-            made = False
-            while not made:
-                try:
-                    self._taps = optfir.low_pass(1, self._nchans, bw, bw+tb, ripple, atten)
-                    made = True
-                except RuntimeError:
-                    ripple += 0.01
-                    made = False
-                    print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
-
-                    # Build in an exit strategy; if we've come this far, it ain't working.
-                    if(ripple >= 1.0):
-                        raise RuntimeError("optfir could not generate an appropriate filter.")
+            self._taps = self.create_taps(self._nchans, atten)
 
         self.s2ss = blocks.stream_to_streams(gr.sizeof_gr_complex, self._nchans)
         self.pfb = filter.pfb_channelizer_ccf(self._nchans, self._taps,
@@ -76,6 +60,24 @@ class channelizer_ccf(gr.hier_block2):
 
     def declare_sample_delay(self, delay):
         self.pfb.declare_sample_delay(delay)
+    
+    @staticmethod
+    def create_taps(numchans, atten=100):
+        # Create a filter that covers the full bandwidth of the input signal
+        bw = 0.4
+        tb = 0.2
+        ripple = 0.1
+        while True:
+            try:
+                taps = optfir.low_pass(1, self._nchans, bw, bw+tb, ripple, atten)
+                return taps
+            except RuntimeError:
+                ripple += 0.01
+                print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
+
+                # Build in an exit strategy; if we've come this far, it ain't working.
+                if(ripple >= 1.0):
+                    raise RuntimeError("optfir could not generate an appropriate filter.")
 
 
 class interpolator_ccf(gr.hier_block2):
@@ -98,23 +100,7 @@ class interpolator_ccf(gr.hier_block2):
         if (taps is not None) and (len(taps) > 0):
             self._taps = taps
         else:
-            # Create a filter that covers the full bandwidth of the input signal
-            bw = 0.4
-            tb = 0.2
-            ripple = 0.99
-            made = False
-            while not made:
-                try:
-                    self._taps = optfir.low_pass(self._interp, self._interp, bw, bw+tb, ripple, atten)
-                    made = True
-                except RuntimeError:
-                    ripple += 0.01
-                    made = False
-                    print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
-
-                    # Build in an exit strategy; if we've come this far, it ain't working.
-                    if(ripple >= 1.0):
-                        raise RuntimeError("optfir could not generate an appropriate filter.")
+            self._taps = self.create_taps(self._interp, atten)
 
         self.pfb = filter.pfb_interpolator_ccf(self._interp, self._taps)
 
@@ -126,6 +112,25 @@ class interpolator_ccf(gr.hier_block2):
 
     def declare_sample_delay(self, delay):
         self.pfb.declare_sample_delay(delay)
+
+    @staticmethod
+    def create_taps(interp, atten):
+        # Create a filter that covers the full bandwidth of the input signal
+        bw = 0.4
+        tb = 0.2
+        ripple = 0.99
+        while True:
+            try:
+                taps = optfir.low_pass(interp, interp, bw, bw+tb, ripple, atten)
+                return taps
+            except RuntimeError:
+                ripple += 0.01
+                print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
+
+                # Build in an exit strategy; if we've come this far, it ain't working.
+                if(ripple >= 1.0):
+                    raise RuntimeError("optfir could not generate an appropriate filter.")
+
 
 
 class decimator_ccf(gr.hier_block2):
@@ -147,23 +152,7 @@ class decimator_ccf(gr.hier_block2):
         if (taps is not None) and (len(taps) > 0):
             self._taps = taps
         else:
-            # Create a filter that covers the full bandwidth of the input signal
-            bw = 0.4
-            tb = 0.2
-            ripple = 0.1
-            made = False
-            while not made:
-                try:
-                    self._taps = optfir.low_pass(1, self._decim, bw, bw+tb, ripple, atten)
-                    made = True
-                except RuntimeError:
-                    ripple += 0.01
-                    made = False
-                    print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
-
-                    # Build in an exit strategy; if we've come this far, it ain't working.
-                    if(ripple >= 1.0):
-                        raise RuntimeError("optfir could not generate an appropriate filter.")
+            self._taps = self.create_taps(self._decim, atten)
 
         self.s2ss = blocks.stream_to_streams(gr.sizeof_gr_complex, self._decim)
         self.pfb = filter.pfb_decimator_ccf(self._decim, self._taps, self._channel,
@@ -184,6 +173,24 @@ class decimator_ccf(gr.hier_block2):
 
     def declare_sample_delay(self, delay):
         self.pfb.declare_sample_delay(delay)
+    
+    @staticmethod
+    def create_taps(decim, atten=100):
+        # Create a filter that covers the full bandwidth of the input signal
+        bw = 0.4
+        tb = 0.2
+        ripple = 0.1
+        while True:
+            try:
+                taps = optfir.low_pass(1, decim, bw, bw+tb, ripple, atten)
+                return taps
+            except RuntimeError:
+                ripple += 0.01
+                print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
+
+                # Build in an exit strategy; if we've come this far, it ain't working.
+                if(ripple >= 1.0):
+                    raise RuntimeError("optfir could not generate an appropriate filter.")
 
 
 class arb_resampler_ccf(gr.hier_block2):
@@ -206,43 +213,7 @@ class arb_resampler_ccf(gr.hier_block2):
         if (taps is not None) and (len(taps) > 0):
             self._taps = taps
         else:
-            # Create a filter that covers the full bandwidth of the output signal
-
-            # If rate >= 1, we need to prevent images in the output,
-            # so we have to filter it to less than half the channel
-            # width of 0.5.  If rate < 1, we need to filter to less
-            # than half the output signal's bw to avoid aliasing, so
-            # the half-band here is 0.5*rate.
-            percent = 0.80
-            if(self._rate < 1):
-                halfband = 0.5*self._rate
-                bw = percent*halfband
-                tb = (percent / 2.0)*halfband
-                ripple = 0.1
-
-                # As we drop the bw factor, the optfir filter has a harder time converging;
-                # using the firdes method here for better results.
-                self._taps = filter.firdes.low_pass_2(self._size, self._size, bw, tb, atten,
-                                                      filter.firdes.WIN_BLACKMAN_HARRIS)
-            else:
-                halfband = 0.5
-                bw = percent*halfband
-                tb = (percent / 2.0)*halfband
-                ripple = 0.1
-
-                made = False
-                while not made:
-                    try:
-                        self._taps = optfir.low_pass(self._size, self._size, bw, bw+tb, ripple, atten)
-                        made = True
-                    except RuntimeError:
-                        ripple += 0.01
-                        made = False
-                        print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
-
-                        # Build in an exit strategy; if we've come this far, it ain't working.
-                        if(ripple >= 1.0):
-                            raise RuntimeError("optfir could not generate an appropriate filter.")
+            self._taps = self.create_taps(self._rate, self._size, atten);
 
         self.pfb = filter.pfb_arb_resampler_ccf(self._rate, self._taps, self._size)
         #print("PFB has %d taps\n" % (len(self._taps),))
@@ -259,6 +230,46 @@ class arb_resampler_ccf(gr.hier_block2):
 
     def declare_sample_delay(self, delay):
         self.pfb.declare_sample_delay(delay)
+
+    @staticmethod
+    def create_taps(rate, flt_size=32, atten=100):
+        # Create a filter that covers the full bandwidth of the output signal
+
+        # If rate >= 1, we need to prevent images in the output,
+        # so we have to filter it to less than half the channel
+        # width of 0.5.  If rate < 1, we need to filter to less
+        # than half the output signal's bw to avoid aliasing, so
+        # the half-band here is 0.5*rate.
+        percent = 0.80
+        if(rate < 1):
+            halfband = 0.5*rate
+            bw = percent*halfband
+            tb = (percent / 2.0)*halfband
+            ripple = 0.1
+
+            # As we drop the bw factor, the optfir filter has a harder time converging;
+            # using the firdes method here for better results.
+            return filter.firdes.low_pass_2(flt_size, flt_size, bw, tb, atten,
+                                                  filter.firdes.WIN_BLACKMAN_HARRIS)
+        else:
+            halfband = 0.5
+            bw = percent*halfband
+            tb = (percent / 2.0)*halfband
+            ripple = 0.1
+            taps = None
+
+            while True:
+                try:
+                    taps = optfir.low_pass(flt_size, flt_size, bw, bw+tb, ripple, atten)
+                    return taps
+                except RuntimeError:
+                    ripple += 0.01
+                    print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
+
+                    # Build in an exit strategy; if we've come this far, it ain't working.
+                    if(ripple >= 1.0):
+                        raise RuntimeError("optfir could not generate an appropriate filter.")
+        
 
 class arb_resampler_fff(gr.hier_block2):
     '''
@@ -280,43 +291,7 @@ class arb_resampler_fff(gr.hier_block2):
         if (taps is not None) and (len(taps) > 0):
             self._taps = taps
         else:
-            # Create a filter that covers the full bandwidth of the input signal
-
-            # If rate >= 1, we need to prevent images in the output,
-            # so we have to filter it to less than half the channel
-            # width of 0.5.  If rate < 1, we need to filter to less
-            # than half the output signal's bw to avoid aliasing, so
-            # the half-band here is 0.5*rate.
-            percent = 0.80
-            if(self._rate < 1):
-                halfband = 0.5*self._rate
-                bw = percent*halfband
-                tb = (percent / 2.0)*halfband
-                ripple = 0.1
-
-                # As we drop the bw factor, the optfir filter has a harder time converging;
-                # using the firdes method here for better results.
-                self._taps = filter.firdes.low_pass_2(self._size, self._size, bw, tb, atten,
-                                                      filter.firdes.WIN_BLACKMAN_HARRIS)
-            else:
-                halfband = 0.5
-                bw = percent*halfband
-                tb = (percent / 2.0)*halfband
-                ripple = 0.1
-
-                made = False
-                while not made:
-                    try:
-                        self._taps = optfir.low_pass(self._size, self._size, bw, bw+tb, ripple, atten)
-                        made = True
-                    except RuntimeError:
-                        ripple += 0.01
-                        made = False
-                        print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
-
-                        # Build in an exit strategy; if we've come this far, it ain't working.
-                        if(ripple >= 1.0):
-                            raise RuntimeError("optfir could not generate an appropriate filter.")
+            self._taps = self.create_taps(self._rate, self._size, atten)
 
         self.pfb = filter.pfb_arb_resampler_fff(self._rate, self._taps, self._size)
         #print "PFB has %d taps\n" % (len(self._taps),)
@@ -333,6 +308,44 @@ class arb_resampler_fff(gr.hier_block2):
 
     def declare_sample_delay(self, delay):
         self.pfb.declare_sample_delay(delay)
+
+    @staticmethod
+    def create_taps(rate, flt_size=32, atten=100):
+        # Create a filter that covers the full bandwidth of the input signal
+
+        # If rate >= 1, we need to prevent images in the output,
+        # so we have to filter it to less than half the channel
+        # width of 0.5.  If rate < 1, we need to filter to less
+        # than half the output signal's bw to avoid aliasing, so
+        # the half-band here is 0.5*rate.
+        percent = 0.80
+        if(rate < 1):
+            halfband = 0.5*rate
+            bw = percent*halfband
+            tb = (percent / 2.0)*halfband
+            ripple = 0.1
+
+            # As we drop the bw factor, the optfir filter has a harder time converging;
+            # using the firdes method here for better results.
+            return filter.firdes.low_pass_2(flt_size, flt_size, bw, tb, atten,
+                                                  filter.firdes.WIN_BLACKMAN_HARRIS)
+        else:
+            halfband = 0.5
+            bw = percent*halfband
+            tb = (percent / 2.0)*halfband
+            ripple = 0.1
+
+            while True:
+                try:
+                    taps = optfir.low_pass(flt_size, flt_size, bw, bw+tb, ripple, atten)
+                    return taps
+                except RuntimeError:
+                    ripple += 0.01
+                    print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
+
+                    # Build in an exit strategy; if we've come this far, it ain't working.
+                    if(ripple >= 1.0):
+                        raise RuntimeError("optfir could not generate an appropriate filter.")
 
 class arb_resampler_ccc(gr.hier_block2):
     '''
@@ -354,24 +367,7 @@ class arb_resampler_ccc(gr.hier_block2):
         if (taps is not None) and (len(taps) > 0):
             self._taps = taps
         else:
-            # Create a filter that covers the full bandwidth of the input signal
-            bw = 0.4
-            tb = 0.2
-            ripple = 0.1
-            #self._taps = filter.firdes.low_pass_2(self._size, self._size, bw, tb, atten)
-            made = False
-            while not made:
-                try:
-                    self._taps = optfir.low_pass(self._size, self._size, bw, bw+tb, ripple, atten)
-                    made = True
-                except RuntimeError:
-                    ripple += 0.01
-                    made = False
-                    print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
-
-                    # Build in an exit strategy; if we've come this far, it ain't working.
-                    if(ripple >= 1.0):
-                        raise RuntimeError("optfir could not generate an appropriate filter.")
+            self._taps = self.create_taps(self._rate, self._size, atten)
 
         self.pfb = filter.pfb_arb_resampler_ccc(self._rate, self._taps, self._size)
         #print "PFB has %d taps\n" % (len(self._taps),)
@@ -389,6 +385,23 @@ class arb_resampler_ccc(gr.hier_block2):
     def declare_sample_delay(self, delay):
         self.pfb.declare_sample_delay(delay)
 
+    @staticmethod
+    def create_taps(rate, flt_size=32, atten=100):
+        # Create a filter that covers the full bandwidth of the input signal
+        bw = 0.4
+        tb = 0.2
+        ripple = 0.1
+        while True:
+            try:
+                taps = optfir.low_pass(flt_size, flt_size, bw, bw+tb, ripple, atten)
+                return taps
+            except RuntimeError:
+                ripple += 0.01
+                print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
+
+                # Build in an exit strategy; if we've come this far, it ain't working.
+                if(ripple >= 1.0):
+                    raise RuntimeError("optfir could not generate an appropriate filter.")
 
 class channelizer_hier_ccf(gr.hier_block2):
     """
@@ -416,7 +429,7 @@ class channelizer_hier_ccf(gr.hier_block2):
             gr.io_signature(1, 1, gr.sizeof_gr_complex),
             gr.io_signature(len(outchans), len(outchans), gr.sizeof_gr_complex))
         if taps is None:
-            taps = optfir.low_pass(1, n_chans, bw, bw+tb, ripple, atten)
+            taps = self.create_taps(n_chans, atten=100, bw=1.0, tb=0.2, ripple=0.1)
         taps = list(taps)
         extra_taps = int(math.ceil(1.0*len(taps)/n_chans)*n_chans - len(taps))
         taps = taps + [0] * extra_taps
@@ -465,3 +478,8 @@ class channelizer_hier_ccf(gr.hier_block2):
             self.connect(self.fft, self.v2ss)
         for i in range(0, len(outchans)):
             self.connect((self.v2ss, i), (self, i))
+
+    @staticmethod
+    def create_taps(n_chans, atten=100, bw=1.0, tb=0.2, ripple=0.1):
+        return optfir.low_pass(1, n_chans, bw, bw+tb, ripple, atten)
+

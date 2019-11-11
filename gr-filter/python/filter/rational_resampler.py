@@ -136,3 +136,14 @@ class rational_resampler_ccc(_rational_resampler_base):
         """
         _rational_resampler_base.__init__(self, filter.rational_resampler_base_ccc,
                                           interpolation, decimation, taps, fractional_bw)
+
+class rational_resampler_fcc(_rational_resampler_base):
+    def __init__(self, interpolation, decimation, taps=None, fractional_bw=None):
+        """
+        Rational resampling polyphase FIR filter with
+        float input, complex output and complex taps.
+        """
+        _rational_resampler_base.__init__(self, filter.rational_resampler_base_fcc,
+                                          interpolation, decimation, taps, fractional_bw)
+
+
