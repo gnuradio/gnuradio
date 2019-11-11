@@ -82,10 +82,10 @@ class TestCase(unittest.TestCase):
         places.0
         """
         self.assertEqual(len(a), len(b))
-        return all((
+        return all([
             self.assertComplexAlmostEqual(x, y, places, msg)
             for (x, y) in zip(a, b)
-        ))
+        ])
 
 
     def assertComplexTuplesAlmostEqual2(self, a, b,
@@ -95,10 +95,10 @@ class TestCase(unittest.TestCase):
         Approximate equality is determined by calling assertComplexAlmostEqual().
         """
         self.assertEqual(len(a), len(b))
-        return all((
+        return all([
             self.assertComplexAlmostEqual2(x, y, abs_eps, rel_eps, msg)
             for (x, y) in zip(a, b)
-        ))
+        ])
 
 
     def assertFloatTuplesAlmostEqual(self, a, b, places=7, msg=None):
@@ -108,19 +108,19 @@ class TestCase(unittest.TestCase):
         places.
         """
         self.assertEqual(len(a), len(b))
-        return all((
+        return all([
             self.assertAlmostEqual(x, y, places, msg)
             for (x, y) in zip(a, b)
-        ))
+        ])
 
 
     def assertFloatTuplesAlmostEqual2(self, a, b,
                                       abs_eps=1e-12, rel_eps=1e-6, msg=None):
         self.assertEqual(len(a), len(b))
-        return all((
+        return all([
             self.assertComplexAlmostEqual2(x, y, abs_eps, rel_eps, msg)
             for (x, y) in zip(a, b)
-        ))
+        ])
 
 TestResult = unittest.TestResult
 TestSuite = unittest.TestSuite
