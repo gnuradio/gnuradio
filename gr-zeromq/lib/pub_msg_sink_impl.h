@@ -23,8 +23,8 @@
 #ifndef INCLUDED_ZEROMQ_PUB_MSG_SINK_IMPL_H
 #define INCLUDED_ZEROMQ_PUB_MSG_SINK_IMPL_H
 
+#include "zmq_common_impl.h"
 #include <gnuradio/zeromq/pub_msg_sink.h>
-#include <zmq.hpp>
 
 namespace gr {
 namespace zeromq {

@@ -46,9 +46,6 @@ class Param(CoreParam):
         elif dtype == 'enum':
             input_widget_cls = ParamWidgets.EnumParam
 
-        elif dtype == 'bool':
-            input_widget_cls = ParamWidgets.BoolParam
-
         elif self.options:
             input_widget_cls = ParamWidgets.EnumEntryParam
 

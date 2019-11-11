@@ -34,8 +34,8 @@ parameters:
 value: ${ value }
 
 templates:
-    imports: import ConfigParser
-    var_make: 'self._${id}_config = ConfigParser.ConfigParser()
+    imports: import configparser
+    var_make: 'self._${id}_config = configparser.ConfigParser()
 
         self._${id}_config.read(${config_file})
 
@@ -46,7 +46,7 @@ templates:
         self.${id} = ${id}'
     callbacks:
     - self.set_${id}(${value})
-    - "self._${id}_config = ConfigParser.ConfigParser()\nself._${id}_config.read(${config_file})\n\
+    - "self._${id}_config = configparser.ConfigParser()\nself._${id}_config.read(${config_file})\n\
         if not self._${id}_config.has_section(${section}):\n\tself._${id}_config.add_section(${section})\n\
         self._${id}_config.set(${section}, ${option}, str(${writeback}))\nself._${id}_config.write(open(${config_file},\
         \ 'w'))"

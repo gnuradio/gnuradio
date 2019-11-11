@@ -25,11 +25,17 @@
 
 #include <gnuradio/vocoder/api.h>
 
+// version >=0.9.1 contains fixes that doesn't require "extern C"
+// between 0.8.1 and 0.9.1 the build fail
+#ifdef CODEC2_LEGACY
 extern "C" {
+#endif
 #include <codec2/codec2.h>
 #include <codec2/freedv_api.h>
 #include <codec2/modem_stats.h>
+#ifdef CODEC2_LEGACY
 }
+#endif
 
 namespace gr {
 namespace vocoder {

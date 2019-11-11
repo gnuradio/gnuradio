@@ -32,7 +32,7 @@ RFSQL - RF squelch zeroing output when input power below threshold
 AGC   - Automatic gain control leveling signal at [-1.0, +1.0]
 DEMOD - Demodulation block appropriate to selected signal type.
         This converts the complex baseband to real audio frequencies,
-	and applies an appropriate low pass decimating filter.
+        and applies an appropriate low pass decimating filter.
 CTCSS - Optional tone squelch zeroing output when tone is not present.
 RSAMP - Resampler block to convert audio sample rate to user specified
         sound card output rate.
@@ -40,8 +40,8 @@ AUDIO - Audio sink for playing final output to speakers.
 
 The following are required command line parameters:
 
--f FREQ		USRP receive frequency
--m MOD		Modulation type, select from AM, FM, or WFM
+-f FREQ         USRP receive frequency
+-m MOD          Modulation type, select from AM, FM, or WFM
 
 The following are optional command line parameters:
 
@@ -51,8 +51,8 @@ The following are optional command line parameters:
 -g GAIN         Daughterboard gain setting. Defaults to mid-range.
 -o RATE         Sound card output rate. Defaults to 32000. Useful if
                 your sound card only accepts particular sample rates.
--r RFSQL	RF squelch in db. Defaults to -50.0.
--p FREQ		CTCSS frequency.  Opens squelch when tone is present.
+-r RFSQL        RF squelch in db. Defaults to -50.0.
+-p FREQ         CTCSS frequency.  Opens squelch when tone is present.
 
 Once the program is running, ctrl-break (Ctrl-C) stops operation.
 
@@ -61,6 +61,7 @@ blocks.
 """
 
 from __future__ import print_function
+from __future__ import division
 import sys
 from argparse import ArgumentParser
 from gnuradio import gr, gru, uhd, audio
@@ -72,10 +73,10 @@ from gnuradio.eng_option import eng_option
 
 # (device_rate, channel_rate, audio_rate, channel_pass, channel_stop, demod)
 DEMOD_PARAMS = {
-		'AM'  : (256e3,  16e3, 16e3,  5000,   8000, analog.demod_10k0a3e_cf),
-		'FM'  : (256e3,  32e3,  8e3,  8000,   9000, analog.demod_20k0f3e_cf),
-		'WFM' : (320e3, 320e3, 32e3, 80000, 115000, analog.demod_200kf3e_cf)
-	       }
+                'AM'  : (256e3,  16e3, 16e3,  5000,   8000, analog.demod_10k0a3e_cf),
+                'FM'  : (256e3,  32e3,  8e3,  8000,   9000, analog.demod_20k0f3e_cf),
+                'WFM' : (320e3, 320e3, 32e3, 80000, 115000, analog.demod_200kf3e_cf)
+               }
 
 class uhd_src(gr.hier_block2):
     """
@@ -140,37 +141,37 @@ class app_top_block(gr.top_block):
         dev = uhd_src(options.args,             # UHD device address
                       options.spec,             # device subdev spec
                       options.antenna,          # device antenna
-                      dev_rate,         	# device sample rate
-                      options.gain, 	    	# Receiver gain
+                      dev_rate,                 # device sample rate
+                      options.gain,             # Receiver gain
                       options.calibration)      # Frequency offset
         dev.tune(options.frequency)
 
         if_rate = dev.rate()
-        channel_decim = int(if_rate // channel_rate)
-        audio_decim = int(channel_rate // audio_rate)
+        channel_decim = if_rate // channel_rate
+        audio_decim = channel_rate // audio_rate
 
         chan_taps = filter.optfir.low_pass(1.0,          # Filter gain
-                                           if_rate, 	 # Sample rate
+                                           if_rate,      # Sample rate
                                            channel_pass, # One sided modulation bandwidth
                                            channel_stop, # One sided channel bandwidth
-                                           0.1, 	 # Passband ripple
-                                           60) 	         # Stopband attenuation
+                                           0.1,          # Passband ripple
+                                           60)           # Stopband attenuation
 
         chan = filter.freq_xlating_fir_filter_ccf(
             channel_decim, # Decimation rate
             chan_taps,     # Filter taps
-            0.0, 	   # Offset frequency
+            0.0,           # Offset frequency
             if_rate)       # Sample rate
 
         rfsql = analog.pwr_squelch_cc(
             options.rf_squelch,    # Power threshold
             125.0/channel_rate,    # Time constant
             int(channel_rate/20),  # 50ms rise/fall
-            False)		   # Zero, not gate output
+            False)                 # Zero, not gate output
 
         agc = analog.agc_cc(1.0/channel_rate,  # Time constant
-                            1.0,     	       # Reference power
-                            1.0)	       # Gain
+                            1.0,               # Reference power
+                            1.0)               # Gain
 
         demod = demod(channel_rate, audio_decim)
 
@@ -188,8 +189,8 @@ class app_top_block(gr.top_block):
 
         if options.output_rate != audio_rate:
             out_lcm = gru.lcm(audio_rate, options.output_rate)
-            out_interp = int(out_lcm // audio_rate)
-            out_decim = int(out_lcm // options.output_rate)
+            out_interp = out_lcm // audio_rate
+            out_decim = out_lcm // options.output_rate
             rsamp = filter.rational_resampler_fff(out_interp, out_decim)
             self.connect(tail, rsamp)
             tail = rsamp

@@ -110,5 +110,4 @@ class demod_200kf3e_cf(fm_demod_cf):
         fm_demod_cf.__init__(self, channel_rate, audio_decim,
                              75000,  # Deviation
                              15000,  # Audio passband
-                             16000,  # Audio stopband
-                             20.0)   # Audio gain
+                             16000)  # Audio stopband
