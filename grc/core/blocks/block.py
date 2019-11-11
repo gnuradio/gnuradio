@@ -424,8 +424,11 @@ class Block(Element):
                 if _vtype == None:
                     _vtype = type(evaluated)
             except ValueError or SyntaxError as excp:
-                # TODO PI doesn't seem to be supported as a flowgraph variable value
-                return 'pi'
+                      if _vtype != None:
+                        pass
+                    print(excp)
+                    # TODO Perform PI replacement if it is used in a numerical expression
+                    #return 'pi'
 
             if _vtype in [int, float, bool, list, dict, str]:
                 if _vtype == (int or long):

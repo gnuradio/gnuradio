@@ -335,7 +335,13 @@ class CppTopBlockGenerator(TopBlockGenerator):
                 key = port.key
 
             if not key.isdigit():
-                key = re.findall(r'\d+', key)[0]
+                # TODO What use case is this supporting?
+                toks = re.findall(r'\d+', key)
+                if len(toks) > 0:
+                    key = toks[0]
+                else:
+                    # Assume key is a string
+                    key = '"' + key + '"'
 
             return '{block}, {key}'.format(block=block, key=key)
 

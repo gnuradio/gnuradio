@@ -38,11 +38,9 @@ if len(initializer_str) > 0:
   initializer_str = '\n: ' + initializer_str
 %>\
 
-% if generate_options == 'no_gui':
 ${class_name}::${class_name} (${param_str}) ${initializer_str} {
-% elif generate_options == 'qt_gui':
-${class_name}::${class_name} (${param_str}) : ${initializer_str} { 
 
+% if generate_options == 'qt_gui':
     this->setWindowTitle("${title}");
     // check_set_qss
     // set icon

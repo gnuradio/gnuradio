@@ -42,7 +42,7 @@ templates:
 cpp_templates:
     includes: ['#include <gnuradio/blocks/repeat.h>']
     declarations: 'blocks::repeat::sptr ${id};'
-    make: 'this->${id} = blocks::repeat::make(${type.size}*${vlen}, ${interp});'
+    make: 'this->${id} = blocks::repeat::make(${type.size})*${vlen}, ${interp});'
     callbacks:
     - set_interpolation(${interp})
     translations:
