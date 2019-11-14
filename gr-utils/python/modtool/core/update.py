@@ -52,9 +52,10 @@ class ModToolUpdate(ModTool):
     name = 'update'
     description = 'Update the grc bindings for a block'
 
-    def __init__(self, blockname=None, complete=False, **kwargs):
+    def __init__(self, blockname=None, complete=False, include_blacklisted=False, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
         self.info['complete'] = complete
+        self.info['include_blacklisted'] = include_blacklisted
 
 
     def validate(self):
@@ -86,7 +87,8 @@ class ModToolUpdate(ModTool):
         for blockname in blocks:
             xml_file = "{}_{}.xml".format(module_name, blockname)
             yml_file = "{}_{}.block.yml".format(module_name, blockname)
-            conv.load_block_xml(path+xml_file)
+            if not conv.load_block_xml(path+xml_file, self.info["include_blacklisted"]):
+                continue
             logger.info("Converted {} to {}".format(xml_file, yml_file))
             os.remove(path+xml_file)
             nsubs = self._run_cmakelists(xml_file, yml_file)
