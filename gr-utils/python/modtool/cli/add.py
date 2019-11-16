@@ -101,15 +101,15 @@ def get_lang(self):
 
 def get_blockname(self):
     """ Get the blockname"""
-    if self.info['blockname'] is None:
+    if not self.info['blockname'] or self.info['blockname'].isspace():
         while not self.info['blockname'] or self.info['blockname'].isspace():
             self.info['blockname'] = cli_input("Enter name of block/code (without module name prefix): ")
-    if not re.match('[a-zA-Z0-9_]+', self.info['blockname']):
+    if not re.match('^[a-zA-Z0-9_]+$', self.info['blockname']):
         raise ModToolException('Invalid block name.')
 
 def get_copyrightholder(self):
     """ Get the copyrightholder of the block to be added """
-    if self.info['copyrightholder'] is None:
+    if not self.info['copyrightholder'] or self.info['copyrightholder'].isspace():
         user = getpass.getuser()
         git_user = self.scm.get_gituser()
         if git_user:
@@ -133,7 +133,6 @@ def get_arglist(self):
                                             prompt_suffix='',
                                             default='',
                                             show_default=False)
-
 
 def get_py_qa(self):
     """ Get a boolean value for addition of py_qa """
