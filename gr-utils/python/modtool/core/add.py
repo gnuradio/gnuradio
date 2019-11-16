@@ -69,7 +69,7 @@ class ModToolAdd(ModTool):
             raise ModToolException('Invalid programming language.')
         if self.info['blockname'] is None:
             raise ModToolException('Blockname not specified.')
-        if not re.match('[a-zA-Z0-9_]+', self.info['blockname']):
+        if not re.match('^[a-zA-Z0-9_]+$', self.info['blockname']):
             raise ModToolException('Invalid block name.')
         if not isinstance(self.add_py_qa, bool):
             raise ModToolException('Expected a boolean value for add_python_qa.')
