@@ -52,6 +52,15 @@ class channelizer_ccf(gr.hier_block2):
         else:
             self._taps = self.create_taps(self._nchans, atten)
 
+        self.s2ss = blocks.stream_to_streams(gr.sizeof_gr_complex, self._nchans)
+        self.pfb = filter.pfb_channelizer_ccf(self._nchans, self._taps,
+                                              self._oversample_rate)
+        self.connect(self, self.s2ss)
+
+        for i in range(self._nchans):
+            self.connect((self.s2ss,i), (self.pfb,i))
+            self.connect((self.pfb,i), (self,i))
+
     def set_channel_map(self, newmap):
         self.pfb.set_channel_map(newmap)
 
