@@ -198,7 +198,7 @@ class SubprocessLoader(object):
         """ Receive response from worker's stdout """
         for line in iter(self._worker.stdout.readline, ''):
             try:
-                key, cmd, args = json.loads(line.decode('utf-8'), encoding='utf-8')
+                key, cmd, args = json.loads(line.decode('utf-8'))
                 if key != self.AUTH_CODE:
                     raise ValueError('Got wrong auth code')
                 return cmd, args
@@ -268,7 +268,7 @@ def worker_main():
     # flush out to signal the main process we are ready for new commands
     sys.stdout.flush()
     for line in iter(sys.stdin.readline, ''):
-        code, cmd, args = json.loads(line, encoding='utf-8')
+        code, cmd, args = json.loads(line)
         try:
             if cmd == 'query':
                 key, imports, make = args
