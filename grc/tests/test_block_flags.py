@@ -26,4 +26,4 @@ def test_extend():
     f.set(u'b')
     assert isinstance(f, Flags)
 
-    assert str(f) == 'a, b'
+    assert f.data == {'a', 'b'}

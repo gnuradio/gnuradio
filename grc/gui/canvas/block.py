@@ -329,6 +329,17 @@ class Block(CoreBlock, Drawable):
             ))
         return tuple(extent)
 
+    def get_extents_comment(self):
+        x, y = self.coordinate
+        if not self._comment_layout:
+            return x, y, x, y
+        if self.is_horizontal():
+            y += self.height + BLOCK_LABEL_PADDING
+        else:
+            x += self.height + BLOCK_LABEL_PADDING
+        w, h = self._comment_layout.get_pixel_size()
+        return x, y, x + w, y + h
+
     ##############################################
     # Controller Modify
     ##############################################

@@ -144,10 +144,10 @@ templates:
                 ${'%'} if stream_args:
                 args=${'$'}{stream_args},
                 ${'%'} endif
-                ${'%'} if stream_chans:
+                ${'%'} if eval(stream_chans):
                 channels=${'$'}{stream_chans},
                 ${'%'} else:
-                channels=range(${'$'}{nchan}),
+                channels=list(range(0,${'$'}{nchan})),
                 ${'%'} endif
             ),
             ${'%'} if len_tag_name:
@@ -220,8 +220,10 @@ templates:
     % if sourk == 'source':
     -   ${'$'}{'set_rx_agc(True, ${n})' if context.get('rx_agc${n}')() == 'Enabled' else ''}
     -   ${'$'}{'set_rx_agc(False, ${n})' if context.get('rx_agc${n}')() == 'Disabled' else ''}
-    -   ${'$'}{'set_gain(${'$'}{${'gain' + str(n)}}, ${n})' if not bool(eval(context.get('norm_gain${n}')())) and context.get('rx_agc${n}')() != 'Enabled' else ''}
-    -   ${'$'}{'set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})' if bool(eval(context.get('norm_gain${n}')())) and context.get('rx_agc${n}')() != 'Enabled' else ''}
+    -   |
+        ${'%'} if context.get('rx_agc${n}')() != 'Enabled':
+        self.${'$'}{id}.set_${'$'}{'normalized_' if bool(eval(context.get('norm_gain${n}')())) else ''}gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} endif
     % else:
     -   self.${'$'}{id}.set_${'$'}{'normalized_' if bool(eval(context.get('norm_gain${n}')())) else ''}gain(${'$'}{${'gain' + str(n)}}, ${n})
     % endif

@@ -20,9 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include "zmq_common_impl.h"
 #include <gnuradio/block.h>
 #include <gnuradio/io_signature.h>
-#include <zmq.hpp>
 #include <cstring>
 #include <sstream>
 

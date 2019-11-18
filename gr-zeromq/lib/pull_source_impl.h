@@ -24,7 +24,6 @@
 #define INCLUDED_ZEROMQ_PULL_SOURCE_IMPL_H
 
 #include <gnuradio/zeromq/pull_source.h>
-#include <zmq.hpp>
 
 #include "base_impl.h"
 
