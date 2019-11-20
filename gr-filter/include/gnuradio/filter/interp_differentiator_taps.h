@@ -23,11 +23,11 @@
  * DO NOT EDIT BY HAND.
  */
 
-static const int DNTAPS = 8;
-static const int DNSTEPS = 128;
-static const double DBANDWIDTH = 0.25;
+static constexpr int DNTAPS = 8;
+static constexpr int DNSTEPS = 128;
+static constexpr double DBANDWIDTH = 0.25;
 
-static const float Dtaps[DNSTEPS + 1][DNTAPS] = {
+static constexpr float Dtaps[DNSTEPS + 1][DNTAPS] = {
     //    -4            -3            -2            -1             0             1 2 3 mu
     { -1.97975e-02,
       1.09180e-01,

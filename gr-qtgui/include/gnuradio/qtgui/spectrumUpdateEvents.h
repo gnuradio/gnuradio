@@ -32,10 +32,10 @@
 #include <complex>
 #include <vector>
 
-static const int SpectrumUpdateEventType = 10005;
-static const int SpectrumWindowCaptionEventType = 10008;
-static const int SpectrumWindowResetEventType = 10009;
-static const int SpectrumFrequencyRangeEventType = 10010;
+static constexpr int SpectrumUpdateEventType = 10005;
+static constexpr int SpectrumWindowCaptionEventType = 10008;
+static constexpr int SpectrumWindowResetEventType = 10009;
+static constexpr int SpectrumFrequencyRangeEventType = 10010;
 
 class SpectrumUpdateEvent : public QEvent
 {

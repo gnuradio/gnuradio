@@ -26,8 +26,8 @@ namespace gr {
 namespace dtv {
 namespace atsc {
 
-static const unsigned int SI_SEGMENT_NUM_MASK = 0x1ff;
-static const unsigned int SI_FIELD_SYNC_SEGMENT_NUM =
+static constexpr unsigned int SI_SEGMENT_NUM_MASK = 0x1ff;
+static constexpr unsigned int SI_FIELD_SYNC_SEGMENT_NUM =
     SI_SEGMENT_NUM_MASK; // conceptually -1
 
 struct syminfo {

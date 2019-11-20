@@ -47,7 +47,7 @@ private:
     long d_nright;    // # of correct shorts
     long d_runlength; // # of correct shorts in a row
 
-    static const int BUFSIZE = 2048 - 1; // ensure pattern isn't packet aligned
+    static constexpr int BUFSIZE = 2048 - 1; // ensure pattern isn't packet aligned
     int d_index;
     unsigned short d_buffer[BUFSIZE];
 
