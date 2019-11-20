@@ -45,7 +45,7 @@ class GR_RUNTIME_API io_signature
 public:
     typedef boost::shared_ptr<io_signature> sptr;
 
-    static const int IO_INFINITE = -1;
+    static constexpr int IO_INFINITE = -1;
 
     ~io_signature();
 
