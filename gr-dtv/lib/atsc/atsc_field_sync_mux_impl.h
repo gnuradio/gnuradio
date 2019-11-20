@@ -31,7 +31,7 @@ namespace dtv {
 class atsc_field_sync_mux_impl : public atsc_field_sync_mux
 {
 private:
-    static const int N_SAVED_SYMBOLS = 12;
+    static constexpr int N_SAVED_SYMBOLS = 12;
     bool d_already_output_field_sync;
     unsigned char d_saved_symbols[N_SAVED_SYMBOLS];
 

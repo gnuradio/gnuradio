@@ -78,7 +78,7 @@ private:
     void set_constellation(constellation_sptr constellation);
 
     //! delay line length.
-    static const unsigned int DLLEN = 8;
+    static constexpr unsigned int DLLEN = 8;
 
     //! delay line plus some length for overflow protection
     __GR_ATTR_ALIGNED(8) gr_complex d_dl[2 * DLLEN];

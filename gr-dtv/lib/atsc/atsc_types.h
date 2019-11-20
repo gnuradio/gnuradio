@@ -149,33 +149,33 @@ public:
 protected:
     // these three are mutually exclusive
     //     This is a regular data segment.
-    static const int fl_regular_seg = 0x0001;
+    static constexpr int fl_regular_seg = 0x0001;
     //	 This is a field sync segment, for 1st half of a field.
-    static const int fl_field_sync1 = 0x0002;
+    static constexpr int fl_field_sync1 = 0x0002;
     //	 This is a field sync segment, for 2nd half of a field.
-    static const int fl_field_sync2 = 0x0004;
+    static constexpr int fl_field_sync2 = 0x0004;
 
     // This bit is on ONLY when fl_regular_seg is set AND when this is
     // the first regular data segment AFTER a field sync segment.  This
     // segment causes various processing modules to reset.
-    static const int fl_first_regular_seg = 0x0008;
+    static constexpr int fl_first_regular_seg = 0x0008;
 
     // which field are we in?
-    static const int fl_field2 = 0x0010; // else field 1
+    static constexpr int fl_field2 = 0x0010; // else field 1
 
     // This bit is set when Reed-Solomon decoding detects an error that it
     // can't correct.  Note that other error detection (e.g. Viterbi) do not
     // set it, since Reed-Solomon will correct many of those.  This bit is
     // then copied into the final Transport Stream packet so that MPEG
     // software can see that the 188-byte data segment has been corrupted.
-    static const int fl_transport_error = 0x0020;
+    static constexpr int fl_transport_error = 0x0020;
 };
 
 
 class atsc_mpeg_packet
 {
 public:
-    static const int NPAD = 68;
+    static constexpr int NPAD = 68;
     unsigned char data[ATSC_MPEG_DATA_LENGTH + 1]; // first byte is sync
     unsigned char _pad_[NPAD];                     // pad to power of 2 (256)
 
@@ -194,7 +194,7 @@ public:
 class atsc_mpeg_packet_no_sync
 {
 public:
-    static const int NPAD = 65;
+    static constexpr int NPAD = 65;
     plinfo pli;
     unsigned char data[ATSC_MPEG_DATA_LENGTH];
     unsigned char _pad_[NPAD]; // pad to power of 2 (256)
@@ -214,7 +214,7 @@ public:
 class atsc_mpeg_packet_rs_encoded
 {
 public:
-    static const int NPAD = 45;
+    static constexpr int NPAD = 45;
     plinfo pli;
     unsigned char data[ATSC_MPEG_RS_ENCODED_LENGTH];
     unsigned char _pad_[NPAD]; // pad to power of 2 (256)
@@ -237,7 +237,7 @@ public:
 class atsc_data_segment
 {
 public:
-    static const int NPAD = 188;
+    static constexpr int NPAD = 188;
     plinfo pli;
     unsigned char data[ATSC_DATA_SEGMENT_LENGTH];
     unsigned char _pad_[NPAD]; // pad to power of 2 (1024)
@@ -263,7 +263,7 @@ public:
 class atsc_soft_data_segment
 {
 public:
-    static const int NPAD = 764;
+    static constexpr int NPAD = 764;
     plinfo pli;
     float data[ATSC_DATA_SEGMENT_LENGTH];
     unsigned char _pad_[NPAD]; // pad to power of 2 (4096)
