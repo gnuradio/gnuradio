@@ -33,7 +33,7 @@ namespace digital {
 class simple_correlator_impl : public simple_correlator
 {
 private:
-    static const int OVERSAMPLE = 8;
+    static constexpr int OVERSAMPLE = 8;
     enum state_t { ST_LOOKING, ST_UNDER_THRESHOLD, ST_LOCKED };
 
     int d_payload_bytesize;

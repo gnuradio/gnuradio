@@ -33,7 +33,7 @@
 namespace {
 // Time, in milliseconds, to wait between checks to the Thrift runtime to see if
 // it has fully initialized.
-static const unsigned int THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS(200);
+static constexpr unsigned int THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS(200);
 }; // namespace
 
 namespace apache {

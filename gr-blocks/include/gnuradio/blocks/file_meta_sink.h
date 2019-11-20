@@ -29,8 +29,8 @@
 namespace gr {
 namespace blocks {
 
-const char METADATA_VERSION = 0;
-const size_t METADATA_HEADER_SIZE = 149;
+constexpr char METADATA_VERSION = 0;
+constexpr size_t METADATA_HEADER_SIZE = 149;
 
 enum gr_file_types {
     GR_FILE_BYTE = 0,
