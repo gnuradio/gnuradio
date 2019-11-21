@@ -28,102 +28,18 @@ the mailing list and post your new questions there.
 
 ## How to Build GNU Radio
 
+The recommended way to install GNU Radio on most platforms is using already available binary package distributions. See [Installing from Binaries](https://wiki.gnuradio.org/index.php/InstallingGR#From_Binaries)
+
 ### PyBOMBS
-PyBOMBS (Python Build Overlay Managed Bundle System) is the recommended 
-method for building and installing GNU Radio. Please see 
-https://github.com/gnuradio/pybombs for detailed instructions. Abbreviated 
-instructions are duplicated below.
 
-1. Install PyBOMBS:
-    ```
-    $ [sudo] pip install PyBOMBS
-    ```
-    or
-    ```
-    $ git clone https://github.com/gnuradio/pybombs.git
-    $ cd pybombs
-    $ sudo python setup.py install
-    ```
+PyBOMBS is good at building GNU Radio, UHD, and various Out of Tree (OOT) modules from source and then installing into a specified user directory rather than in the system files. PyBOMBS detects the user's Operating System and loads all of the prerequisites in the first stage of the build.
 
-2. Add PyBOMBS recipes:
-    ```
-    $ pybombs recipes add gr-recipes git+https://github.com/gnuradio/gr-recipes.git  
-    $ pybombs recipes add gr-etcetera git+https://github.com/gnuradio/gr-etcetera.git
-    ```
+The PyBOMBS instructions are in the [PyBOMBS README](https://github.com/gnuradio/pybombs#pybombs).
 
-3. Configure an installation prefix:
-    ```
-    $ pybombs prefix init ~/prefix/default/
-    ```
+### Build from Source
 
-4. Install GNU Radio:
-    ```
-    $ pybombs install gnuradio
-    ```
-
-5. Run GNU Radio Companion from your new prefix:
-    ```
-    $ source ~/prefix/default/setup_env.sh
-    $ gnuradio-companion
-    ```
-    or execute it without changing the current environment
-    ```
-    $ pybombs run gnuradio-companion
-    ```
-
-### Manual Source Build
-Complete build instructions are detailed in the 
-[GNU Radio Build Guide](https://www.gnuradio.org/doc/doxygen/build_guide.html). 
-Abbreviated instructions are duplicated below.
-
-1. Ensure that you have satisfied the external dependencies, see 
-[GNU Radio Dependencies](https://www.gnuradio.org/doc/doxygen/build_guide.html).
-
-2. Checkout the latest code:
-    ```
-    $ git clone --recursive https://github.com/gnuradio/gnuradio.git
-    ```
-
-3. Build with CMake:
-    ```
-    $ cd gnuradio
-    $ mkdir build
-    $ cd build
-    $ cmake [OPTIONS] ../
-    $ make
-    $ make test
-    $ sudo make install
-    ```
-    Useful `[OPTIONS]` include setting the install prefix 
-    `-DCMAKE_INSTALL_PREFIX=<directory to install to>` and the build type 
-    `-DCMAKE_BUILD_TYPE=<type>`. Currently, GNU Radio has a `"Debug"` type 
-    that builds with `-g -O2` which is useful for debugging the software, 
-    and a `"Release"` type that builds with `-O3`, which is the default.
-
-
-### PyBOMBS with support of python 3.x
-PyBOMBS currently builds GNU Radio with support of python 2.7, so to make it work with python 3.x, instructions are given below.
-
-1. Change the PYTHONPATH line in setup_env.sh, to just 3.x paths.
-
-
-2.  Find the PyBOMBS recipe "gnuradio.lwr" in .pybombs directory, check this for reference
-    ```
-    https://github.com/gnuradio/gr-recipes/blob/master/gnuradio.lwr
-    ```
-
-
-3. Change the "gitbranch" to "master".
-
-
-4. In gnuradio.lwr recipe file, add "-DENABLE_CTRLPORT_THRIFT=OFF" in "config_opt".
-
-
-5. Clear out your prior GR PyBOMBS build(s) and tell PyBOMBS to install via this recipe.
-    ```
-    pybombs install gnuradio
-    ```
-
+Complete instructions for building Gnuradio from source code are detailed in 
+[Installing GR From Source](https://wiki.gnuradio.org/index.php/InstallingGR#From_Source). 
 
 ## Legal Matters
 
