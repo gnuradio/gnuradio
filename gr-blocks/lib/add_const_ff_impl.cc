@@ -26,6 +26,7 @@
 
 #include "add_const_ff_impl.h"
 #include <gnuradio/io_signature.h>
+#include <volk/volk.h>
 
 namespace gr {
 namespace blocks {
@@ -52,22 +53,16 @@ int add_const_ff_impl::work(int noutput_items,
 
     int size = noutput_items;
 
-    while (size >= 8) {
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        size -= 8;
+    // build column vec. d_k * ones(size, 1) for volk addition
+    unsigned int alignment = volk_get_alignment();
+    float * k_copy_vec = (float*)volk_malloc(sizeof(float)*size, alignment);
+    for(int ii = 0; ii < size; ii++) {
+        k_copy_vec[ii] = d_k;
     }
 
-    while (size-- > 0) {
-        *optr++ = *iptr++ + d_k;
-    }
+    volk_32f_x2_add_32f(optr, iptr, k_copy_vec, size);
 
+    volk_free(k_copy_vec);
     return noutput_items;
 }
 
