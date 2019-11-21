@@ -43,6 +43,13 @@ add_const_ff_impl::add_const_ff_impl(float k)
 {
 }
 
+void add_const_ff_impl::set_k(float k)
+{
+    gr::thread::scoped_lock guard(d_setlock);
+    d_k = k;
+    std::fill(d_k_copy.begin(), d_k_copy.end(), d_k);
+}
+
 int add_const_ff_impl::work(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
@@ -50,23 +57,14 @@ int add_const_ff_impl::work(int noutput_items,
     const float* iptr = (const float*)input_items[0];
     float* optr = (float*)output_items[0];
 
-    int size = noutput_items;
+    unsigned long input_size = static_cast<unsigned long>(noutput_items);
 
-    while (size >= 8) {
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        size -= 8;
+    gr::thread::scoped_lock guard(d_setlock);
+    if (d_k_copy.size() < input_size) {
+        d_k_copy.resize(input_size, d_k);
     }
 
-    while (size-- > 0) {
-        *optr++ = *iptr++ + d_k;
-    }
+    volk_32f_x2_add_32f(optr, iptr, d_k_copy.data(), noutput_items);
 
     return noutput_items;
 }

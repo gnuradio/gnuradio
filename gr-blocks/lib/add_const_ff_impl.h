@@ -32,6 +32,7 @@ class BLOCKS_API add_const_ff_impl : public add_const_ff
 {
 private:
     float d_k;
+    volk::vector<float> d_k_copy;
 
 public:
     add_const_ff_impl(float k);
@@ -39,7 +40,8 @@ public:
     void setup_rpc();
 
     float k() const { return d_k; }
-    void set_k(float k) { d_k = k; }
+
+    void set_k(float k);
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

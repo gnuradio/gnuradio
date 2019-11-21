@@ -32,6 +32,7 @@ class BLOCKS_API add_const_cc_impl : public add_const_cc
 {
 private:
     gr_complex d_k;
+    volk::vector<gr_complex> d_k_copy;
 
 public:
     add_const_cc_impl(gr_complex k);
@@ -39,7 +40,8 @@ public:
     void setup_rpc();
 
     gr_complex k() const { return d_k; }
-    void set_k(gr_complex k) { d_k = k; }
+
+    void set_k(gr_complex k);
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

@@ -25,6 +25,7 @@
 
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/sync_block.h>
+#include <volk/volk_alloc.hh>
 
 namespace gr {
 namespace blocks {
