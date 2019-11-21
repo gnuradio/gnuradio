@@ -43,6 +43,13 @@ add_const_cc_impl::add_const_cc_impl(gr_complex k)
 {
 }
 
+void add_const_cc_impl::set_k(gr_complex k)
+{
+    gr::thread::scoped_lock guard(d_setlock);
+    d_k = k;
+    std::fill(d_k_copy.begin(), d_k_copy.end(), d_k);
+}
+
 int add_const_cc_impl::work(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
@@ -50,23 +57,14 @@ int add_const_cc_impl::work(int noutput_items,
     const gr_complex* iptr = (const gr_complex*)input_items[0];
     gr_complex* optr = (gr_complex*)output_items[0];
 
-    int size = noutput_items;
+    unsigned long input_size = static_cast<unsigned long>(noutput_items);
 
-    while (size >= 8) {
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        *optr++ = *iptr++ + d_k;
-        size -= 8;
+    gr::thread::scoped_lock guard(d_setlock);
+    if (d_k_copy.size() < input_size) {
+        d_k_copy.resize(input_size, d_k);
     }
 
-    while (size-- > 0) {
-        *optr++ = *iptr++ + d_k;
-    }
+    volk_32fc_x2_add_32fc(optr, iptr, d_k_copy.data(), noutput_items);
 
     return noutput_items;
 }
