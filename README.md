@@ -30,7 +30,7 @@ the mailing list and post your new questions there.
 
 The recommended way to install GNU Radio on most platforms is using available binary package distributions. 
 
-The following command is for Debian, Ubuntu, and derivatives. 
+The following command is for Debian, Ubuntu, and derivatives. It will install Release 3.7 with Python2. 
 
     sudo apt install gnuradio
 
@@ -40,7 +40,7 @@ For other operating systems, see [Installing from Binaries](https://wiki.gnuradi
 
 PyBOMBS is good at building GNU Radio, UHD, and various Out of Tree (OOT) modules from source and then installing into a specified user directory rather than in the system files. PyBOMBS detects the user's Operating System and loads all of the prerequisites in the first stage of the build.
 
-For a quick start, open a terminal window and enter the following commands:
+For a quick start, open a terminal window and enter the following commands. This will install Release 3.8 with Python3.
 
     sudo -H pip3 install PyBOMBS
     pybombs auto-config
@@ -49,10 +49,9 @@ For a quick start, open a terminal window and enter the following commands:
 
 <b>Wait</b>. The terminal will show the progress.
 
-Then to run GNU Radio Companion from your new folder:
+To run GNU Radio Companion, enter:
 
-        source ~/gnuradio/setup_env.sh
-        gnuradio-companion
+        pybombs run gnuradio-companion
 
 Complete PyBOMBS instructions are in the [PyBOMBS README](https://github.com/gnuradio/pybombs#pybombs).
 
