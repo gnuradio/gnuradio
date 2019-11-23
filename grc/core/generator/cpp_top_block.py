@@ -5,6 +5,7 @@ import os
 import tempfile
 import textwrap
 import re
+import ast
 
 from mako.template import Template
 
@@ -232,7 +233,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
 
         blocks = [
             b for b in fg.blocks
-            if b.enabled and not (b.get_bypassed() or b.is_import or b in parameters or b.key == 'options')
+            if b.enabled and not (b.get_bypassed() or b.is_import or b in parameters or b.key == 'options' or b.is_virtual_source() or b.is_virtual_sink())
         ]
 
         blocks = expr_utils.sort_objects(blocks, operator.attrgetter('name'), _get_block_sort_text)
@@ -263,15 +264,27 @@ class CppTopBlockGenerator(TopBlockGenerator):
         fg = self._flow_graph
         variables = fg.get_cpp_variables()
 
-        # Create an executable fragment of code containing all variables in 
-        # order to infer the lvalue types
+        type_translation = {'complex': 'gr_complex', 'real': 'double', 'float': 'float', 'int': 'int', 'complex_vector': 'std::vector<gr_complex>', 'real_vector': 'std::vector<double>', 'float_vector': 'std::vector<float>', 'int_vector': 'std::vector<int>', 'string': 'std::string', 'bool': 'bool'}
+        # If the type is explcitly specified, translate to the corresponding C++ type
+        for var in list(variables):
+            if var.params['value'].dtype != 'raw':
+                var.vtype = type_translation[var.params['value'].dtype]
+                variables.remove(var)
+
+        # If the type is 'raw', we'll need to evaluate the variable to infer the type.
+        # Create an executable fragment of code containing all 'raw' variables in 
+        # order to infer the lvalue types.
+        #
+        # Note that this differs from using ast.literal_eval() as literal_eval evaluates one 
+        # variable at a time. The code fragment below evaluates all varaibles together which 
+        # allows the variables to reference each other (i.e. a = b * c).
         prog = 'def get_decl_types():\n'
         prog += '\tvar_types = {}\n'
         for var in variables:
             prog += '\t' + str(var.params['id'].value) + '=' + str(var.params['value'].value) + '\n'
         prog += '\tvar_types = {}\n';
         for var in variables:
-          prog += '\tvar_types[\'' +  str(var.params['id'].value) + '\'] = type(' + str(var.params['id'].value) + ')\n'
+            prog += '\tvar_types[\'' +  str(var.params['id'].value) + '\'] = type(' + str(var.params['id'].value) + ')\n'
         prog += '\treturn var_types'
 
         # Execute the code fragment in a separate namesapce and retrive the lvalue types
@@ -282,7 +295,6 @@ class CppTopBlockGenerator(TopBlockGenerator):
           var_types = namespace['get_decl_types']()
         except Exception as excp:
           print('Failed to get parameter lvalue types: %s' %(excp))
-        
 
         # Format the rvalue of each variable expression
         for var in variables:
@@ -293,8 +305,19 @@ class CppTopBlockGenerator(TopBlockGenerator):
         parameters = fg.get_parameters()
 
         for param in parameters:
-            type_translation = {'eng_float' : 'double', 'intx' : 'int', 'str' : 'std::string'};
+            type_translation = {'eng_float' : 'double', 'intx' : 'int', 'str' : 'std::string', 'complex': 'gr_complex'};
             param.vtype = type_translation[param.params['type'].value]
+
+            if param.vtype == 'gr_complex':
+                evaluated = ast.literal_eval(param.params['value'].value.strip())
+                cpp_cmplx = '{' + str(evaluated.real) + ', ' + str(evaluated.imag) + '}'
+
+                # Update the 'var_make' entry in the cpp_templates dictionary
+                d = param.cpp_templates
+                cpp_expr = d['var_make'].replace('${value}', cpp_cmplx) 
+                d.update({'var_make':cpp_expr})
+                param.cpp_templates = d
+
 
     def _callbacks(self):
         fg = self._flow_graph
@@ -308,7 +331,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
 
         callbacks_all = []
         for block in fg.iter_enabled_blocks():
-            callbacks_all.extend(expr_utils.expr_replace(cb, replace_dict) for cb in block.get_cpp_callbacks())
+            if not (block.is_virtual_sink() or block.is_virtual_source()):
+            	callbacks_all.extend(expr_utils.expr_replace(cb, replace_dict) for cb in block.get_cpp_callbacks())
 
         # Map var id to callbacks
         def uses_var_id(callback):
@@ -356,6 +380,11 @@ class CppTopBlockGenerator(TopBlockGenerator):
                 resolved = connection_factory(fg.orignal_flowgraph, source, sink)
                 connections.append(resolved)
             # Remove the virtual connection
+            connections.remove(connection)
+
+        # Remove virtual sink connections too
+        virtual = [c for c in connections if isinstance(c.sink_block, blocks.VirtualSink)]
+        for connection in virtual:
             connections.remove(connection)
 
         # Bypassing blocks: Need to find all the enabled connections for the block using
