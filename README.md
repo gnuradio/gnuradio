@@ -26,7 +26,9 @@ as many questions have already been asked and answered. Please also
 the mailing list and post your new questions there.
 
 
-## How to Build GNU Radio
+## How to Install GNU Radio
+
+### Prebuilt Binaries
 
 The recommended way to install GNU Radio on most platforms is using available binary package distributions. 
 
@@ -55,7 +57,7 @@ To run GNU Radio Companion, enter:
 
 Complete PyBOMBS instructions are in the [PyBOMBS README](https://github.com/gnuradio/pybombs#pybombs).
 
-### Build from Source
+### From Source
 
 Complete instructions for building Gnuradio from source code are detailed in 
 [Installing GR From Source](https://wiki.gnuradio.org/index.php/InstallingGR#From_Source). 
