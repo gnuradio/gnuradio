@@ -33,8 +33,11 @@ set(BOOST_REQUIRED_COMPONENTS
     system
     regex
     thread
-    unit_test_framework
 )
+
+if(ENABLE_TESTING)
+    list(APPEND BOOST_REQUIRED_COMPONENTS unit_test_framework)
+endif(ENABLE_TESTING)
 
 if(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
     list(APPEND BOOST_LIBRARYDIR "/usr/lib64") #fedora 64-bit fix
