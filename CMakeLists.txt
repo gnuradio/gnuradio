@@ -32,6 +32,8 @@ project(gnuradio CXX C)
 enable_testing()
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
+OPTION(ENABLE_TESTING "Enable testing support" ON)
+
 # Make sure our local CMake Modules path comes first
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
