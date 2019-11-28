@@ -287,7 +287,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
             prog += '\tvar_types[\'' +  str(var.params['id'].value) + '\'] = type(' + str(var.params['id'].value) + ')\n'
         prog += '\treturn var_types'
 
-        # Execute the code fragment in a separate namesapce and retrive the lvalue types
+        # Execute the code fragment in a separate namespace and retrieve the lvalue types
         var_types = {}
         namespace = {}
         try:
