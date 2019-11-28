@@ -23,6 +23,7 @@ templates:
 
 cpp_templates:
     includes: ['#include <gnuradio/analog/frequency_modulator_fc.h>']
+    declarations: 'gr::analog::frequency_modulator_fc::sptr ${id};'
     make: 'this->${id} = analog::frequency_modulator_fc::make(${sensitivity});'
     callbacks:
     - set_sensitivity(${sensitivity})
