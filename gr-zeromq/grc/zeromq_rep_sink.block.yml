@@ -52,7 +52,8 @@ cpp_templates:
     declarations: gr::zeromq::rep_sink::sptr ${id};
     make: this->${id} = gr::zeromq::rep_sink::make(${type.itemsize}, 
         ${vlen}, 
-        const_cast<char *>(${address}${'.c_str())' if str(address)[0] not in '"\'' else ')'},         ${timeout}, 
+        const_cast<char *>(${address}${'.c_str())' if str(address)[0] not in '"\'' else ')'},
+        ${timeout}, 
         ${pass_tags}, 
         ${hwm});
     link: ['gnuradio-zeromq']      

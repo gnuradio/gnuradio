@@ -49,7 +49,12 @@ templates:
 cpp_templates:
     includes: [ '#include <gnuradio/zeromq/pull_source.h>' ]
     declarations: gr::zeromq::pull_source::sptr ${id};
-    make: this->${id} = gr::zeromq::pull_source::make(${type.itemsize}, ${vlen}, const_cast<char *>(${address}${'.c_str())' if str(address)[0] not in '"\''else ')'}, ${timeout}, ${pass_tags}, ${hwm});
+    make: this->${id} = gr::zeromq::pull_source::make(${type.itemsize}, 
+              ${vlen}, 
+              const_cast<char *>(${address}${'.c_str())' if str(address)[0] not in '"\''else ')'}, 
+              ${timeout}, 
+              ${pass_tags}, 
+              ${hwm});
     link: ['gnuradio-zeromq']      
     translations:
       'True': 'true'
