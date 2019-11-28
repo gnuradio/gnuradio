@@ -1,6 +1,7 @@
 id: zeromq_pull_source
 label: ZMQ PULL Source
 category: '[Core]/ZeroMQ Interfaces'
+flags: [python, cpp]
 
 parameters:
 -   id: type
@@ -44,5 +45,20 @@ templates:
     imports: from gnuradio import zeromq
     make: zeromq.pull_source(${type.itemsize}, ${vlen}, ${address}, ${timeout}, ${pass_tags},
         ${hwm})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/zeromq/pull_source.h>' ]
+    declarations: gr::zeromq::pull_source::sptr ${id};
+    make: this->${id} = gr::zeromq::pull_source::make(${type.itemsize}, 
+              ${vlen}, 
+              const_cast<char *>(${address}${'.c_str())' if str(address)[0] not in '"\''else ')'}, 
+              ${timeout}, 
+              ${pass_tags}, 
+              ${hwm});
+    link: ['gnuradio-zeromq']      
+    translations:
+      'True': 'true'
+      'False': 'false'
+
 
 file_format: 1
