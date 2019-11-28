@@ -96,7 +96,9 @@ public:
     float rayleigh();
 
     /*!
-     * \brief FIXME: add description
+     * \brief Exponentially distributed random numbers with values less than or equal
+     * to factor replaced with zero. The underlying exponential distribution has
+     * mean sqrt(2) and variance 2.
      */
     float impulse(float factor);
 

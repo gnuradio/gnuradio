@@ -79,18 +79,18 @@ puncture_bb_impl::~puncture_bb_impl() {}
 
 int puncture_bb_impl::fixed_rate_ninput_to_noutput(int ninput)
 {
-    return (int)((((d_puncsize - d_puncholes) / (double)(d_puncsize)) * ninput) + .5);
+    return std::lround(((d_puncsize - d_puncholes) / (double)(d_puncsize)) * ninput);
 }
 
 int puncture_bb_impl::fixed_rate_noutput_to_ninput(int noutput)
 {
-    return (int)(((d_puncsize / (double)(d_puncsize - d_puncholes)) * noutput) + .5);
+    return std::lround((d_puncsize / (double)(d_puncsize - d_puncholes)) * noutput);
 }
 
 void puncture_bb_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
 {
     ninput_items_required[0] =
-        (int)(((d_puncsize / (double)(d_puncsize - d_puncholes)) * noutput_items) + .5);
+        std::lround((d_puncsize / (double)(d_puncsize - d_puncholes)) * noutput_items);
 }
 
 /*
@@ -138,7 +138,7 @@ int puncture_bb_impl::general_work(int noutput_items,
                  % ((int)(((1.0/relative_rate()) * noutput_items) + .5)));
     */
 
-    consume_each((int)(((1.0 / relative_rate()) * noutput_items) + .5));
+    consume_each(std::lround((1.0 / relative_rate()) * noutput_items));
     return noutput_items;
 }
 
