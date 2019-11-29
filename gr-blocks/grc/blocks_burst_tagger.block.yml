@@ -55,13 +55,12 @@ templates:
 cpp_templates:
     includes: ['#include <gnuradio/blocks/burst_tagger.h>']
     declarations: 'blocks::burst_tagger::sptr ${id};'
-    make: "this->${id} = blocks::burst_tagger::make(${type.size});\nthis->${id}.set_true_tag(${true_key},${true_value});\n\
+    make: "this->${id} = blocks::burst_tagger::make(${type.size};\nthis->${id}.set_true_tag(${true_key},${true_value});\n\
         this->${id}.set_false_tag(${false_key},${false_value});\n\t"
     callbacks:
     - set_true_tag(${true_key},${true_value})
     - set_false_tag(${false_key},${false_value})
     translations:
-        gr.sizeof_: 'sizeof('
         'True': 'true'
         'False': 'false'
 
