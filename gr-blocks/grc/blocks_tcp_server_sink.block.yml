@@ -45,7 +45,6 @@ cpp_templates:
     declarations: 'blocks::tcp_server_sink::sptr ${id};'
     make: 'this->${id} = blocks::tcp_server_sink::make(${type.size}*${vlen}, ${ipaddr}, ${port}, ${noblock});'
     translations:
-        gr.sizeof_: 'sizeof('
         'True': 'true'
         'False': 'false'
 

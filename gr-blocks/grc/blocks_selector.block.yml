@@ -86,7 +86,6 @@ cpp_templates:
     - set_input_index(${input_index})
     - set_output_index(${output_index})
     translations:
-        gr.sizeof_: 'sizeof('
         'True': 'true'
         'False': 'false'
 

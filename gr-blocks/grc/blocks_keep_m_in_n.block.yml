@@ -57,7 +57,5 @@ cpp_templates:
     - set_offset(${offset})
     - set_m(${m})
     - set_n(${n})
-    translations:
-        gr.sizeof_: 'sizeof('
 
 file_format: 1
