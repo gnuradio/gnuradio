@@ -40,8 +40,6 @@ templates:
 cpp_templates:
     includes: ['#include <gnuradio/blocks/null_source.h>']
     declarations: 'blocks::null_source::sptr ${id};'
-    make: 'this->${id} = blocks::null_source::make(${type.size})*${vlen});'
-    translations:
-        gr.sizeof_: 'sizeof('
+    make: 'this->${id} = blocks::null_source::make(${type.size}*${vlen});'
 
 file_format: 1

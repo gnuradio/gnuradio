@@ -54,7 +54,5 @@ cpp_templates:
     make: 'this->${id} = blocks::delay::make(${type.size}*${vlen}, ${delay});'
     callbacks:
     - set_dly(${delay})
-    translations:
-        gr.sizeof_: 'sizeof('
 
 file_format: 1
