@@ -50,7 +50,5 @@ cpp_templates:
     includes: ['#include <gnuradio/blocks/deinterleave.h>']
     declarations: 'blocks::deinterleave::sptr ${id};'
     make: 'this->${id} = blocks::deinterleave::make(${type.size}*${vlen}, ${blocksize});'
-    translations:
-        gr.sizeof_: 'sizeof('
 
 file_format: 1

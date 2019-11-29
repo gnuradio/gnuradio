@@ -50,7 +50,5 @@ cpp_templates:
     includes: ['#include <gnuradio/blocks/tag_share.h>']
     declarations: 'blocks::tag_share::sptr ${id};'
     make: 'this->${id} = blocks::tag_share::make(${io_type.size}, ${share_type.size}, ${vlen});'
-    translations:
-        gr.sizeof_: 'sizeof('
 
 file_format: 1

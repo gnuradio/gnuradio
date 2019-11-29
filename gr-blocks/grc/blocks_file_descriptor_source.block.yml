@@ -40,7 +40,6 @@ cpp_templates:
     declarations: 'blocks::file_descriptor_source::sptr ${id};'
     make: 'this->${id} = blocks::file_descriptor_source::make(${type.size}*${vlen}, ${fd}, ${repeat});'
     translations:
-        gr.sizeof_: 'sizeof('
         'True': 'true'
         'False': 'false'
 

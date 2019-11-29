@@ -45,7 +45,5 @@ cpp_templates:
     includes: ['#include <gnuradio/blocks/stream_to_streams.h>']
     declarations: 'blocks::stream_to_streams::sptr ${id};'
     make: 'this->${id} = blocks::stream_to_streams::make(${type.size}*${vlen}, ${num_streams});'
-    translations:
-        gr.sizeof_: 'sizeof('
 
 file_format: 1

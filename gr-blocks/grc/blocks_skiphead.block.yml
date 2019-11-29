@@ -42,7 +42,5 @@ cpp_templates:
     includes: ['#include <gnuradio/blocks/skiphead.h>']
     declarations: 'blocks::skiphead::sptr ${id};'
     make: 'this->${id} = blocks::skiphead::make(${type.size}*${vlen}, ${num_items});'
-    translations:
-        gr.sizeof_: 'sizeof('
 
 file_format: 1

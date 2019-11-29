@@ -52,12 +52,11 @@ templates:
 cpp_templates:
     includes: ['#include <gnuradio/blocks/file_sink.h>']
     declarations: 'blocks::file_sink::sptr ${id};'
-    make: 'this->${id} = blocks::file_sink::make(${type.size})*${vlen}, ${file}, ${append});'
+    make: 'this->${id} = blocks::file_sink::make(${type.size}*${vlen}, ${file}, ${append});'
     callbacks:
     - open(${file})
     translations:
         'True': 'true'
         'False': 'false'
-        gr.sizeof_: 'sizeof('
 
 file_format: 1

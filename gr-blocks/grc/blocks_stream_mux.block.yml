@@ -50,7 +50,5 @@ cpp_templates:
     includes: ['#include <gnuradio/blocks/stream_mux.h>']
     declarations: 'blocks::stream_mux::sptr ${id};'
     make: 'this->${id} = blocks::stream_mux::make(${type.size}*${vlen}, ${lengths});'
-    translations:
-        gr.sizeof_: 'sizeof('
 
 file_format: 1
