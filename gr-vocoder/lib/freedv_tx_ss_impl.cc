@@ -42,7 +42,6 @@ char get_next_tx_char(void* callback_state)
 
     if (*pstate->ptx_str == 0) {
         pstate->ptx_str = pstate->tx_str;
-        c = 0x0d; // FreeDV uses Carriage Return termination
     }
 
     return c;
@@ -82,7 +81,7 @@ freedv_tx_ss_impl::freedv_tx_ss_impl(int mode,
     if ((d_freedv = freedv_open(mode)) == NULL)
         throw std::runtime_error("freedv_tx_ss_impl: freedv_open failed");
 #endif
-    snprintf(d_cb_state.tx_str, 79, "%s", d_msg_text.c_str());
+    snprintf(d_cb_state.tx_str, 80, "%s\r", d_msg_text.c_str());
     d_cb_state.ptx_str = d_cb_state.tx_str;
     freedv_set_callback_txt(d_freedv, NULL, get_next_tx_char, (void*)&d_cb_state);
     d_nom_modem_samples = freedv_get_n_nom_modem_samples(d_freedv);
