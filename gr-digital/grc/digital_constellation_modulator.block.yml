@@ -34,7 +34,13 @@ parameters:
     options: ['True', 'False']
     option_labels: ['On', 'Off']
     hide: ${ ('part' if str(log) == 'False' else 'none') }
-
+-   id: truncate
+    label: Truncate Filter Transient
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: ${ ('part' if str(truncate) == 'False' else 'none') }
 inputs:
 -   domain: stream
     dtype: byte
@@ -53,6 +59,7 @@ templates:
             pre_diff_code=True,
             excess_bw=${excess_bw},
             verbose=${verbose},
-            log=${log})
+            log=${log},
+            truncate=${truncate})
 
 file_format: 1
