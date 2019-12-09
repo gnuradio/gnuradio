@@ -34,7 +34,9 @@ set(BOOST_REQUIRED_COMPONENTS
     thread
 )
 
-set(ENABLE_TESTING @ENABLE_TESTING@ CACHE BOOL "Enable testing support")
+if (NOT ENABLE_TESTING)
+  set(ENABLE_TESTING @ENABLE_TESTING@ CACHE BOOL "Enable testing support")
+endif()
 
 if(ENABLE_TESTING)
   list(APPEND BOOST_REQUIRED_COMPONENTS unit_test_framework)
