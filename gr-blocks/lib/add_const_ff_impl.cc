@@ -45,7 +45,7 @@ add_const_ff_impl::add_const_ff_impl(float k)
 
 void add_const_ff_impl::set_k(float k)
 {
-    gr::thread::scoped_lock gaurd(d_setlock);
+    gr::thread::scoped_lock guard(d_setlock);
     d_k = k;
     std::fill(d_k_copy.begin(), d_k_copy.end(), d_k);
 }
@@ -59,7 +59,7 @@ int add_const_ff_impl::work(int noutput_items,
 
     unsigned long input_size = static_cast<unsigned long> (noutput_items);
 
-    gr::thread::scoped_lock gaurd(d_setlock);
+    gr::thread::scoped_lock guard(d_setlock);
     if(d_k_copy.size() < input_size) {
         d_k_copy.resize(input_size, d_k);
     }
