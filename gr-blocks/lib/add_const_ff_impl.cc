@@ -26,7 +26,6 @@
 
 #include "add_const_ff_impl.h"
 #include <gnuradio/io_signature.h>
-#include <volk/volk.h>
 
 namespace gr {
 namespace blocks {
@@ -44,6 +43,12 @@ add_const_ff_impl::add_const_ff_impl(float k)
 {
 }
 
+void add_const_ff_impl::set_k(float k)
+{
+    d_k = k;
+    std::fill(d_k_copy.begin(), d_k_copy.end(), d_k);
+}
+
 int add_const_ff_impl::work(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
@@ -51,18 +56,14 @@ int add_const_ff_impl::work(int noutput_items,
     const float* iptr = (const float*)input_items[0];
     float* optr = (float*)output_items[0];
 
-    int size = noutput_items;
+    unsigned long input_size = (unsigned long)noutput_items;
 
-    // build column vec. d_k * ones(size, 1) for volk addition
-    unsigned int alignment = volk_get_alignment();
-    float * k_copy_vec = (float*)volk_malloc(sizeof(float)*size, alignment);
-    for(int ii = 0; ii < size; ii++) {
-        k_copy_vec[ii] = d_k;
+    if(d_k_copy.size() < input_size) {
+        d_k_copy.resize(noutput_items, d_k);
     }
 
-    volk_32f_x2_add_32f(optr, iptr, k_copy_vec, size);
+    volk_32f_x2_add_32f(optr, iptr, &d_k_copy[0], noutput_items);
 
-    volk_free(k_copy_vec);
     return noutput_items;
 }
 
