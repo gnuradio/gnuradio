@@ -20,7 +20,7 @@ find_path(LOG4CPP_INCLUDE_DIR log4cpp/Category.hh
 set(LOG4CPP_NAMES log4cpp)
 find_library(LOG4CPP_LIBRARY
   NAMES ${LOG4CPP_NAMES}
-  PATHS /usr/lib /usr/lib64 /usr/local/lib  /usr/local/lib64 /opt/local/lib /opt/local/lib64
+  PATHS /usr/include /usr/lib /usr/lib64 /usr/local/lib  /usr/local/lib64 /opt/local/lib /opt/local/lib64
 )
 
 
