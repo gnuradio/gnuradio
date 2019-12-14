@@ -110,6 +110,7 @@ class Platform(Element):
                 raise Exception('Not a hier block')
         except Exception as e:
             Messages.send('>>> Load Error: {}: {}\n'.format(file_path, str(e)))
+            self._flowgraph_error_report(flow_graph)
             return None, None
         finally:
             self._auto_hier_block_generate_chain.discard(file_path)
@@ -391,6 +392,19 @@ class Platform(Element):
         output_language_default = param.get('default')
         return [(value, name, value == output_language_default)
                 for value, name in zip(param['options'], param['option_labels'])]
+
+    def _flowgraph_error_report(self, flowgraph):
+        """ verbose error report upon loading exception """
+        error_list = flowgraph.get_error_messages()
+        if not error_list:
+            return
+
+        Messages.send('*' * 50 + '\n')
+        summary_msg = '{} errors from flowgraph:\n'.format(len(error_list))
+        Messages.send(summary_msg)
+        for err in error_list:
+            Messages.send(err)
+        Messages.send('\n' + '*' * 50 + '\n')
 
     ##############################################
     # Factories
