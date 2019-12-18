@@ -143,3 +143,17 @@ def send_fail_save_preferences(prefs_file_path):
 
 def send_warning(warning):
     send('>>> Warning: %s\n' % warning)
+
+
+def send_flowgraph_error_report(flowgraph):
+    """ verbose error report for flowgraphs """
+    error_list = flowgraph.get_error_messages()
+    if not error_list:
+        return
+
+    send('*' * 50 + '\n')
+    summary_msg = '{} errors from flowgraph:\n'.format(len(error_list))
+    send(summary_msg)
+    for err in error_list:
+        send(err)
+    send('\n' + '*' * 50 + '\n')
