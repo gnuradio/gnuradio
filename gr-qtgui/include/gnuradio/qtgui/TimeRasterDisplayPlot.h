@@ -42,7 +42,7 @@
  * \brief QWidget for time raster (time vs. time) plots.
  * \ingroup qtgui_blk
  */
-class TimeRasterDisplayPlot : public DisplayPlot
+class QTGUI_API TimeRasterDisplayPlot : public DisplayPlot
 {
     Q_OBJECT
 

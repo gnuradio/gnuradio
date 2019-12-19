@@ -20,30 +20,31 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef TIME_DISPLAY_FORM_H
-#define TIME_DISPLAY_FORM_H
+#ifndef EYE_DISPLAY_FORM_H
+#define EYE_DISPLAY_FORM_H
 
-#include <gnuradio/qtgui/TimeDomainDisplayPlot.h>
-#include <gnuradio/qtgui/displayform.h>
+#include <gnuradio/qtgui/EyeDisplayPlot.h>
+#include <gnuradio/qtgui/displaysform.h>
 #include <gnuradio/qtgui/spectrumUpdateEvents.h>
 #include <QtGui/QtGui>
 #include <vector>
 
-class TimeControlPanel;
+class EyeControlPanel;
 
 /*!
- * \brief DisplayForm child for managing time domain plots.
+ * \brief DisplaysForm child for managing time domain plots.
  * \ingroup qtgui_blk
  */
-class QTGUI_API TimeDisplayForm : public DisplayForm
+class EyeDisplayForm : public DisplaysForm
 {
     Q_OBJECT
 
 public:
-    TimeDisplayForm(int nplots = 1, QWidget* parent = 0);
-    ~TimeDisplayForm();
+    EyeDisplayForm(int nplots = 1, QWidget* parent = 0);
+    ~EyeDisplayForm();
 
-    TimeDomainDisplayPlot* getPlot();
+    EyeDisplayPlot* getPlot();
+    EyeDisplayPlot* getSinglePlot(unsigned int);
 
     int getNPoints() const;
     gr::qtgui::trigger_mode getTriggerMode() const;
@@ -61,11 +62,8 @@ public slots:
     void setYaxis(double min, double max);
     void setYLabel(const std::string& label, const std::string& unit = "");
     void setNPoints(const int);
-    void setStem(bool en);
     void autoScale(bool en);
     void autoScaleShot();
-    void setSemilogx(bool en);
-    void setSemilogy(bool en);
     void tagMenuSlot(bool en);
     void setTagMenu(unsigned int which, bool en);
 
@@ -113,17 +111,10 @@ private:
     double d_start_frequency;
     double d_stop_frequency;
     double d_current_units;
-
     int d_npoints;
 
-    bool d_stem;
-    bool d_semilogx;
-    bool d_semilogy;
-
     NPointsMenu* d_nptsmenu;
-    QAction* d_stemmenu;
-    QAction* d_semilogxmenu;
-    QAction* d_semilogymenu;
+
     QAction* d_controlpanelmenu;
     std::vector<QAction*> d_tagsmenu;
 
@@ -142,7 +133,10 @@ private:
     int d_trig_channel;
     std::string d_trig_tag_key;
 
-    TimeControlPanel* d_controlpanel;
+    EyeControlPanel* d_controlpanel;
+
+protected:
+	std::vector<QwtPlotCurve*> d_plot_curves;
 };
 
-#endif /* TIME_DISPLAY_FORM_H */
+#endif /* EYE_DISPLAY_FORM_H */

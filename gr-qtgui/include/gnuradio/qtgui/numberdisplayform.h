@@ -33,7 +33,7 @@
  * \brief DisplayForm child for managing number sink plots.
  * \ingroup qtgui_blk
  */
-class NumberDisplayForm : public QWidget
+class QTGUI_API NumberDisplayForm : public QWidget
 {
     Q_OBJECT
 

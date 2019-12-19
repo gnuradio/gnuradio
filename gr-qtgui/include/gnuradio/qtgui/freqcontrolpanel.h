@@ -34,7 +34,7 @@
 #include <QSlider>
 #include <vector>
 
-class FreqControlPanel : public QVBoxLayout
+class QTGUI_API FreqControlPanel : public QVBoxLayout
 {
     Q_OBJECT
 

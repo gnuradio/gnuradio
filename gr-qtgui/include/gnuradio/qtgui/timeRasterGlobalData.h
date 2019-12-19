@@ -23,6 +23,7 @@
 #ifndef TIMERASTER_GLOBAL_DATA_HPP
 #define TIMERASTER_GLOBAL_DATA_HPP
 
+#include <gnuradio/qtgui/api.h>
 #include <inttypes.h>
 #include <qwt_raster_data.h>
 
@@ -31,7 +32,7 @@
 #include <qwt_point_3d.h> // doesn't seem necessary, but is...
 #endif
 
-class TimeRasterData : public QwtRasterData
+class QTGUI_API TimeRasterData : public QwtRasterData
 {
 public:
     TimeRasterData(const double rows, const double cols);

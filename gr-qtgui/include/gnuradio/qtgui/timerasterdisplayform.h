@@ -35,7 +35,7 @@
  * \brief DisplayForm child for managing time raster plots.
  * \ingroup qtgui_blk
  */
-class TimeRasterDisplayForm : public DisplayForm
+class QTGUI_API TimeRasterDisplayForm : public DisplayForm
 {
     Q_OBJECT
 

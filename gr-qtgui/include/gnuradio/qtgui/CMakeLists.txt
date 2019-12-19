@@ -24,21 +24,24 @@ install(FILES
   api.h
   ber_sink_b.h
   CMakeLists.txt
+  const_sink_c.h
   constellationdisplayform.h
   ConstellationDisplayPlot.h
-  const_sink_c.h
   displayform.h
   DisplayPlot.h
+  displaysform.h
+  edit_box_msg.h
   form_menus.h
-  freqdisplayform.h
-  freqcontrolpanel.h
+  eye_sink_c.h
+  eye_sink_f.h
   freq_sink_c.h
   freq_sink_f.h
+  freqdisplayform.h
+  freqcontrolpanel.h
   FrequencyDisplayPlot.h
   histogram_sink_f.h
   histogramdisplayform.h
   HistogramDisplayPlot.h
-  edit_box_msg.h
   number_sink.h
   numberdisplayform.h
   plot_raster.h
@@ -47,25 +50,34 @@ install(FILES
   sink_c.h
   sink_f.h
   spectrumUpdateEvents.h
-  timedisplayform.h
-  timecontrolpanel.h
-  TimeDomainDisplayPlot.h
-  timerasterdisplayform.h
-  TimeRasterDisplayPlot.h
-  timeRasterGlobalData.h
   time_raster_sink_b.h
   time_raster_sink_f.h
   time_sink_c.h
   time_sink_f.h
+  timecontrolpanel.h
+  eyecontrolpanel.h
+  eyedisplayform.h
+  EyeDisplayPlot.h
+  timedisplayform.h
+  TimeDomainDisplayPlot.h
+  timerasterdisplayform.h
+  TimeRasterDisplayPlot.h
+  timeRasterGlobalData.h
   trigger_mode.h
   utils.h
+  vector_sink_f.h
+  vectordisplayform.h
+  VectorDisplayPlot.h
+  waterfall_sink_c.h
+  waterfall_sink_f.h
   waterfalldisplayform.h
   WaterfallDisplayPlot.h
   waterfallGlobalData.h
-  waterfall_sink_c.h
-  waterfall_sink_f.h
-  vectordisplayform.h
-  VectorDisplayPlot.h
-  vector_sink_f.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/qtgui
 )
+
+# NOTE: The following are private, not installed, and their symbols
+# are unavailable for external API use.
+
+# spectrumdisplayform.h
+# SpectrumGUIClass.h

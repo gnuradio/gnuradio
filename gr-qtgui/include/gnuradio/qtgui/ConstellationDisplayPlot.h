@@ -32,7 +32,7 @@
  * \brief QWidget for displaying constellaton (I&Q) plots.
  * \ingroup qtgui_blk
  */
-class ConstellationDisplayPlot : public DisplayPlot
+class QTGUI_API ConstellationDisplayPlot : public DisplayPlot
 {
     Q_OBJECT
 

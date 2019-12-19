@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef TIME_DOMAIN_DISPLAY_PLOT_H
-#define TIME_DOMAIN_DISPLAY_PLOT_H
+#ifndef EYE_DISPLAY_PLOT_H
+#define EYE_DISPLAY_PLOT_H
 
 #include <gnuradio/qtgui/DisplayPlot.h>
 #include <gnuradio/tags.h>
@@ -33,7 +33,7 @@
  * \brief QWidget for displaying time domain plots.
  * \ingroup qtgui_blk
  */
-class QTGUI_API TimeDomainDisplayPlot : public DisplayPlot
+class EyeDisplayPlot : public DisplayPlot
 {
     Q_OBJECT
 
@@ -44,8 +44,9 @@ class QTGUI_API TimeDomainDisplayPlot : public DisplayPlot
                    setTagBackgroundStyle)
 
 public:
-    TimeDomainDisplayPlot(int nplots, QWidget*);
-    virtual ~TimeDomainDisplayPlot();
+
+	EyeDisplayPlot(int nplots, int ncurves, unsigned int curve_index, QWidget*);
+    virtual ~EyeDisplayPlot();
 
     void plotNewData(const std::vector<double*> dataPoints,
                      const int64_t numDataPoints,
@@ -85,17 +86,24 @@ public slots:
     void setTagBackgroundColor(QColor c);
     void setTagBackgroundStyle(Qt::BrushStyle b);
 
+    void setLineLabel(unsigned int which, QString label);
+    QString getLineLabel(unsigned int which);
+
 private:
     void _resetXAxisPoints();
     void _autoScale(double bottom, double top);
 
     std::vector<double*> d_ydata;
+
     double* d_xdata;
 
     double d_sample_rate;
 
-    bool d_semilogx;
-    bool d_semilogy;
+    unsigned int d_curve_index;
+    unsigned int d_sps;
+    unsigned int d_numPointsPerPeriod;
+    unsigned int d_numPeriods;
+
     bool d_autoscale_shot;
 
     std::vector<std::vector<QwtPlotMarker*>> d_tag_markers;
@@ -106,6 +114,8 @@ private:
     Qt::BrushStyle d_tag_background_style;
 
     QwtPlotMarker* d_trigger_lines[2];
+
+
 };
 
-#endif /* TIME_DOMAIN_DISPLAY_PLOT_H */
+#endif /* EYE_DISPLAY_PLOT_H */

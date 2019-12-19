@@ -2,3 +2,8 @@
 *.pyc
 *.pyo
 build*/
+.gitignore 
+.cproject
+.project
+.settings/
+

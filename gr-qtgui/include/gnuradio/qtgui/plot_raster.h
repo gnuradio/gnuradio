@@ -45,7 +45,7 @@ class QwtColorMap;
  *
  * \sa QwtRasterData, QwtColorMap
  */
-class PlotTimeRaster : public QwtPlotRasterItem
+class QTGUI_API PlotTimeRaster : public QwtPlotRasterItem
 {
 public:
     explicit PlotTimeRaster(const QString& title = QString::null);

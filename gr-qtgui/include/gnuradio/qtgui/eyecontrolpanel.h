@@ -20,11 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef TIME_CONTROL_PANEL_H
-#define TIME_CONTROL_PANEL_H
+#ifndef EYE_CONTROL_PANEL_H
+#define EYE_CONTROL_PANEL_H
 
-#include <gnuradio/qtgui/displayform.h>
-#include <gnuradio/qtgui/timedisplayform.h>
+#include <gnuradio/qtgui/displaysform.h>
+#include <gnuradio/qtgui/eyedisplayform.h>
 #include <QtGui/QtGui>
 #include <QCheckBox>
 #include <QComboBox>
@@ -34,13 +34,13 @@
 #include <QSlider>
 #include <vector>
 
-class QTGUI_API TimeControlPanel : public QVBoxLayout
+class EyeControlPanel : public QVBoxLayout
 {
     Q_OBJECT
 
 public:
-    TimeControlPanel(TimeDisplayForm* form);
-    ~TimeControlPanel();
+    EyeControlPanel(EyeDisplayForm* form);
+    ~EyeControlPanel();
 
 public slots:
     void toggleAutoScale(bool en);
@@ -53,7 +53,7 @@ signals:
     void signalToggleStopButton();
 
 private:
-    TimeDisplayForm* d_parent;
+    EyeDisplayForm* d_parent;
     QGroupBox* d_axes_box;
     QGroupBox* d_trigger_box;
     QGroupBox* d_extras_box;
@@ -88,4 +88,4 @@ private:
     QPushButton* d_stop_button;
 };
 
-#endif /* TIME_CONTROL_PANEL_H */
+#endif /* EYE_CONTROL_PANEL_H */
