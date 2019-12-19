@@ -1,5 +1,4 @@
-#
-# Copyright 2013-2014, 2018 Free Software Foundation, Inc.
+# Copyright 2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,18 +16,17 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-#
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import unicode_literals
+include(GrPython)
 
-from .base import ModTool, ModToolException, get_block_candidates
-from .add import ModToolAdd
-from .disable import ModToolDisable
-from .info import ModToolInfo
-from .makeyaml import ModToolMakeYAML, yaml_generator
-from .newmod import ModToolNewModule
-from .rm import ModToolRemove
-from .rename import ModToolRename
-from .update import ModToolUpdate, get_xml_candidates
+GR_PYTHON_INSTALL(FILES
+    __init__.py
+    __main__.py
+    cli.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/blocktool
+)
+
+########################################################################
+# Add subdirectories
+########################################################################
+add_subdirectory(core)

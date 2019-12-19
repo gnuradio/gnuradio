@@ -36,6 +36,12 @@ GR_PYTHON_CHECK_MODULE_RAW(
   CLICK_PLUGINS_FOUND
   )
 
+ GR_PYTHON_CHECK_MODULE_RAW(
+   "pygccxml"
+   "import pygccxml"
+   PYGCCXML_FOUND
+   )
+
 ########################################################################
 # Register component
 ########################################################################
@@ -44,10 +50,14 @@ if(NOT CMAKE_CROSSCOMPILING)
     set(utils_python_deps
         MAKO_FOUND
     )
-    
+
     set(utils_modtool_deps
       CLICK_FOUND
       CLICK_PLUGINS_FOUND
+    )
+
+    set(utils_blocktool_deps
+        PYGCCXML_FOUND
     )
 endif(NOT CMAKE_CROSSCOMPILING)
 
@@ -63,6 +73,13 @@ GR_REGISTER_COMPONENT("gr_modtool" ENABLE_GR_MODTOOL
     ${utils_modtool_deps}
 )
 
+ GR_REGISTER_COMPONENT("gr_blocktool" ENABLE_GR_BLOCKTOOL
+     ENABLE_GNURADIO_RUNTIME
+     ENABLE_PYTHON
+     ${utils_blocktool_deps}
+ )
+
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################
@@ -72,6 +89,10 @@ if(ENABLE_GR_UTILS)
 # Add subdirectories
 ########################################################################
 add_subdirectory(python/utils)
+
+if(ENABLE_GR_BLOCKTOOL)
+add_subdirectory(python/blocktool)
+endif(ENABLE_GR_BLOCKTOOL)
 
 if(ENABLE_GR_MODTOOL)
 add_subdirectory(python/modtool)

@@ -95,7 +95,7 @@ class ModToolDisable(ModTool):
             as well as the block magic """
             with open(self._file['swig']) as f:
                 swigfile = f.read()
-            (swigfile, nsubs) = re.subn('(.include\s+"({}/)?{}")'.format(
+            (swigfile, nsubs) = re.subn(r'(.include\s+"({}/)?{}")'.format(
                                         self.info['modname'], fname),
                                         r'//\1', swigfile)
             if nsubs > 0:
