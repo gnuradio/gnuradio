@@ -198,7 +198,7 @@ class ModTool(object):
         for f in files:
             if os.path.isfile(f) and f == 'CMakeLists.txt':
                 with open(f) as filetext:
-                    if re.search('find_package\(Gnuradio', filetext.read()) is not None:
+                    if re.search(r'find_package\(Gnuradio', filetext.read()) is not None:
                         self.info['version'] = '36' # Might be 37, check that later
                         has_makefile = True
                     elif re.search('GR_REGISTER_COMPONENT', filetext.read()) is not None:
