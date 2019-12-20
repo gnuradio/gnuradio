@@ -70,10 +70,12 @@ def validate_block_id(param):
 
 @validates('name')
 def validate_name(param):
-    # Name of a function that will be generated literally not as a string
+    # Name of a function or other block that will be generated literally not as a string
     value = param.value
+
+    # Allow blank to pass validation
     # Can python use this as a variable?
-    if not re.match(r'^[a-z|A-Z]\w*$', value):
+    if not re.match(r'^([a-z|A-Z]\w*)?$', value):
         raise ValidateError('ID "{}" must begin with a letter and may contain letters, numbers, '
                             'and underscores.'.format(value))
     return value
