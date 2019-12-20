@@ -5,7 +5,7 @@ flags: [ show_id, python ]
 parameters:
 -   id: block_id
     label: Block ID
-    dtype: id
+    dtype: name
     default: my_block_0
 -   id: function_name
     label: Function Name
