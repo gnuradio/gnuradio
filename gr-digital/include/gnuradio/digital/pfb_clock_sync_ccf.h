@@ -202,7 +202,7 @@ public:
     virtual void
     set_taps(const std::vector<float>& taps,
              std::vector<std::vector<float>>& ourtaps,
-             std::vector<gr::filter::kernel::fir_filter_ccf*>& ourfilter) = 0;
+             std::vector<std::unique_ptr<gr::filter::kernel::fir_filter_ccf>>& ourfilter) = 0;
 
     /*!
      * Returns all of the taps of the matched filter
