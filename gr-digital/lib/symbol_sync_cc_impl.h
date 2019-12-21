@@ -103,15 +103,15 @@ private:
     float d_avg_clock_period;
 
     // Block output
-    float d_osps;
-    int d_osps_n;
+    const float d_osps;
+    const int d_osps_n;
 
     // Tag Propagation and Symbol Clock Tracking Reset/Resync
     uint64_t d_filter_delay; // interpolator filter delay
     std::vector<tag_t> d_tags;
     std::vector<tag_t> d_new_tags;
-    pmt::pmt_t d_time_est_key;
-    pmt::pmt_t d_clock_est_key;
+    const pmt::pmt_t d_time_est_key;
+    const pmt::pmt_t d_clock_est_key;
 
     // Optional Diagnostic Outputs
     int d_noutputs;
