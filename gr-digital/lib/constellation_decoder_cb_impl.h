@@ -32,7 +32,7 @@ class constellation_decoder_cb_impl : public constellation_decoder_cb
 {
 private:
     constellation_sptr d_constellation;
-    unsigned int d_dim;
+    const unsigned int d_dim;
 
 public:
     constellation_decoder_cb_impl(constellation_sptr constellation);
