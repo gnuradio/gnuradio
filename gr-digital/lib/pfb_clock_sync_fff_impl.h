@@ -40,7 +40,7 @@ private:
     float d_alpha;
     float d_beta;
 
-    int d_nfilters;
+    const int d_nfilters;
     int d_taps_per_filter;
     std::vector<kernel::fir_filter_fff*> d_filters;
     std::vector<kernel::fir_filter_fff*> d_diff_filters;

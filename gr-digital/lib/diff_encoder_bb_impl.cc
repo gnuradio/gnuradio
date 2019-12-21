@@ -54,10 +54,9 @@ int diff_encoder_bb_impl::work(int noutput_items,
     unsigned char* out = (unsigned char*)output_items[0];
 
     unsigned last_out = d_last_out;
-    unsigned modulus = d_modulus;
 
     for (int i = 0; i < noutput_items; i++) {
-        out[i] = (in[i] + last_out) % modulus;
+        out[i] = (in[i] + last_out) % d_modulus;
         last_out = out[i];
     }
 

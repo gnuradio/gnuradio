@@ -40,7 +40,7 @@ public:
 
 private:
     unsigned int d_last_out;
-    unsigned int d_modulus;
+    const unsigned int d_modulus;
 };
 
 } /* namespace digital */
