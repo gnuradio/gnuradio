@@ -57,7 +57,7 @@ gr_complex mmse_interp_differentiator_cc::differentiate(const gr_complex input[]
     int imu = (int)rint(mu * DNSTEPS);
 
     if ((imu < 0) || (imu > DNSTEPS)) {
-        throw std::runtime_error("mmse_interp_differentiator_cc: imu out of bounds.\n");
+        throw std::runtime_error("mmse_interp_differentiator_cc: imu out of bounds.");
     }
 
     gr_complex r = filters[imu]->filter(input);

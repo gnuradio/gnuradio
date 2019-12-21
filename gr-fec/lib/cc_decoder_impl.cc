@@ -94,7 +94,7 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
             d_veclen * d_rate * sizeof(unsigned char), volk_get_alignment());
         d_managed_in_size = d_veclen * d_rate;
         if (d_managed_in == NULL) {
-            throw std::runtime_error("cc_decoder: bad alloc for d_managed_in\n");
+            throw std::runtime_error("cc_decoder: bad alloc for d_managed_in");
         }
         break;
 
@@ -121,7 +121,7 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
     d_vp->metrics = (unsigned char*)volk_malloc(2 * sizeof(unsigned char) * d_numstates,
                                                 volk_get_alignment());
     if (d_vp->metrics == NULL) {
-        throw std::runtime_error("bad alloc for d_vp->metrics!\n");
+        throw std::runtime_error("bad alloc for d_vp->metrics!");
     }
 
     d_vp->metrics1.t = d_vp->metrics;
@@ -130,13 +130,13 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
     d_vp->decisions = (unsigned char*)volk_malloc(
         sizeof(unsigned char) * d_veclen * d_decision_t_size, volk_get_alignment());
     if (d_vp->decisions == NULL) {
-        throw std::runtime_error("bad alloc for d_vp->decisions!\n");
+        throw std::runtime_error("bad alloc for d_vp->decisions!");
     }
 
     Branchtab = (unsigned char*)volk_malloc(
         sizeof(unsigned char) * d_numstates / 2 * rate, volk_get_alignment());
     if (Branchtab == NULL) {
-        throw std::runtime_error("bad alloc for d_vp->decisions!\n");
+        throw std::runtime_error("bad alloc for d_vp->decisions!");
     }
 
     create_viterbi();
@@ -409,7 +409,7 @@ bool cc_decoder_impl::set_frame_size(unsigned int frame_size)
         d_veclen = d_frame_size + (6 * (d_k - 1));
         if (d_veclen * d_rate > d_managed_in_size) {
             throw std::runtime_error(
-                "cc_decoder: attempt to resize beyond d_managed_in buffer size!\n");
+                "cc_decoder: attempt to resize beyond d_managed_in buffer size!");
         }
         break;
 

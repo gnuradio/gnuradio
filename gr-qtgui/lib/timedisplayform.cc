@@ -274,7 +274,7 @@ void TimeDisplayForm::setSampleRate(const double samprate)
 
         getPlot()->setSampleRate(samprate, units, strtime[iunit]);
     } else {
-        throw std::runtime_error("TimeDisplayForm: samprate must be > 0.\n");
+        throw std::runtime_error("TimeDisplayForm: samprate must be > 0.");
     }
 }
 

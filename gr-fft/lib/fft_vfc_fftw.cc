@@ -51,7 +51,7 @@ fft_vfc_fftw::fft_vfc_fftw(int fft_size,
 {
     d_fft = new fft_complex(d_fft_size, d_forward, nthreads);
     if (!set_window(window))
-        throw std::runtime_error("fft_vfc: window not the same length as fft_size\n");
+        throw std::runtime_error("fft_vfc: window not the same length as fft_size");
 }
 
 fft_vfc_fftw::~fft_vfc_fftw() { delete d_fft; }

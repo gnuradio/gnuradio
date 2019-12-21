@@ -427,7 +427,7 @@ void TimeDomainDisplayPlot::legendEntryChecked(const QVariant& plotItem,
 {
 #if QWT_VERSION < 0x060100
     std::runtime_error("TimeDomainDisplayPlot::legendEntryChecked with QVariant not "
-                       "enabled in this version of QWT.\n");
+                       "enabled in this version of QWT.");
 #else
     QwtPlotItem* p = infoToItem(plotItem);
     legendEntryChecked(p, on);
@@ -567,7 +567,7 @@ void TimeDomainDisplayPlot::enableTagMarker(unsigned int which, bool en)
         d_tag_markers_en[which] = en;
     else
         throw std::runtime_error(
-            "TimeDomainDisplayPlot: enabled tag marker does not exist.\n");
+            "TimeDomainDisplayPlot: enabled tag marker does not exist.");
 }
 
 const QColor TimeDomainDisplayPlot::getTagTextColor() { return d_tag_text_color; }

@@ -92,7 +92,7 @@ public:
         if (which < static_cast<unsigned int>(d_act.size()))
             return d_act[which];
         else
-            throw std::runtime_error("LineColorMenu::getAction: which out of range.\n");
+            throw std::runtime_error("LineColorMenu::getAction: which out of range.");
     }
 
 signals:
@@ -172,7 +172,7 @@ public:
         if (which < static_cast<unsigned int>(d_act.size()))
             return d_act[which];
         else
-            throw std::runtime_error("LineWidthMenu::getAction: which out of range.\n");
+            throw std::runtime_error("LineWidthMenu::getAction: which out of range.");
     }
 
 signals:
@@ -242,7 +242,7 @@ public:
         if (which < static_cast<unsigned int>(d_act.size()))
             return d_act[which];
         else
-            throw std::runtime_error("LineStyleMenu::getAction: which out of range.\n");
+            throw std::runtime_error("LineStyleMenu::getAction: which out of range.");
     }
 
 signals:
@@ -326,7 +326,7 @@ public:
         if (which < static_cast<unsigned int>(d_act.size()))
             return d_act[which];
         else
-            throw std::runtime_error("LineMarkerMenu::getAction: which out of range.\n");
+            throw std::runtime_error("LineMarkerMenu::getAction: which out of range.");
     }
 
 signals:
@@ -399,7 +399,7 @@ public:
         if (which < static_cast<unsigned int>(d_act.size()))
             return d_act[which];
         else
-            throw std::runtime_error("MarkerAlphaMenu::getAction: which out of range.\n");
+            throw std::runtime_error("MarkerAlphaMenu::getAction: which out of range.");
     }
 
 signals:
@@ -655,7 +655,7 @@ public:
         if (which < static_cast<unsigned int>(d_act.size()))
             return d_act[which];
         else
-            throw std::runtime_error("FFTSizeMenu::getAction: which out of range.\n");
+            throw std::runtime_error("FFTSizeMenu::getAction: which out of range.");
     }
 
     QAction* getActionFromSize(int size)
@@ -668,7 +668,7 @@ public:
                 return d_act[static_cast<int>(which)];
             else
                 throw std::runtime_error(
-                    "FFTSizeMenu::getActionFromString: which out of range.\n");
+                    "FFTSizeMenu::getActionFromString: which out of range.");
         }
         // Or a non-predefined value, return Other
         else {
@@ -763,7 +763,7 @@ public:
         if (which < static_cast<unsigned int>(d_act.size()))
             return d_act[which];
         else
-            throw std::runtime_error("FFTSizeMenu::getAction: which out of range.\n");
+            throw std::runtime_error("FFTSizeMenu::getAction: which out of range.");
     }
 
     QAction* getActionFromAvg(float avg)
@@ -873,7 +873,7 @@ public:
         if (which < static_cast<unsigned int>(d_act.size()))
             return d_act[which];
         else
-            throw std::runtime_error("FFTWindowMenu::getAction: which out of range.\n");
+            throw std::runtime_error("FFTWindowMenu::getAction: which out of range.");
     }
 
     QAction* getActionFromWindow(gr::filter::firdes::win_type type)
@@ -1035,7 +1035,7 @@ public:
         if (which < static_cast<unsigned int>(d_act.size()))
             return d_act[which];
         else
-            throw std::runtime_error("ColorMapMenu::getAction: which out of range.\n");
+            throw std::runtime_error("ColorMapMenu::getAction: which out of range.");
     }
 
 signals:
@@ -1119,7 +1119,7 @@ public:
         if (which < static_cast<unsigned int>(d_act.size()))
             return d_act[which];
         else
-            throw std::runtime_error("TriggerModeMenu::getAction: which out of range.\n");
+            throw std::runtime_error("TriggerModeMenu::getAction: which out of range.");
     }
 
     QAction* getAction(gr::qtgui::trigger_mode mode)
@@ -1139,7 +1139,7 @@ public:
             break;
         default:
             throw std::runtime_error(
-                "TriggerModeMenu::getAction: unknown trigger mode.\n");
+                "TriggerModeMenu::getAction: unknown trigger mode.");
         }
     }
 
@@ -1194,7 +1194,7 @@ public:
             return d_act[which];
         else
             throw std::runtime_error(
-                "TriggerSlopeMenu::getAction: which out of range.\n");
+                "TriggerSlopeMenu::getAction: which out of range.");
     }
 
     QAction* getAction(gr::qtgui::trigger_slope slope)
@@ -1208,7 +1208,7 @@ public:
             break;
         default:
             throw std::runtime_error(
-                "TriggerSlopeMenu::getAction: unknown trigger slope.\n");
+                "TriggerSlopeMenu::getAction: unknown trigger slope.");
         }
     }
 
@@ -1256,7 +1256,7 @@ public:
             return d_act[which];
         else
             throw std::runtime_error(
-                "TriggerChannelMenu::getAction: which out of range.\n");
+                "TriggerChannelMenu::getAction: which out of range.");
     }
 
 
@@ -1315,7 +1315,7 @@ public:
             return d_act[which];
         else
             throw std::runtime_error(
-                "NumberLayoutMenu::getAction: which out of range.\n");
+                "NumberLayoutMenu::getAction: which out of range.");
     }
 
     QAction* getAction(gr::qtgui::graph_t layout)
@@ -1332,7 +1332,7 @@ public:
             break;
         default:
             throw std::runtime_error(
-                "NumberLayoutMenu::getAction: unknown layout type.\n");
+                "NumberLayoutMenu::getAction: unknown layout type.");
         }
     }
 
@@ -1398,7 +1398,7 @@ public:
         if (which < static_cast<unsigned int>(d_act.size()))
             return d_act[which];
         else
-            throw std::runtime_error("ColorMapMenu::getAction: which out of range.\n");
+            throw std::runtime_error("ColorMapMenu::getAction: which out of range.");
     }
 
 signals:

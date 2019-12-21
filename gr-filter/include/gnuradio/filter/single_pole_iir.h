@@ -66,7 +66,7 @@ public:
     void set_taps(tap_type alpha)
     {
         if (alpha < 0 || alpha > 1)
-            throw std::out_of_range("Alpha must be in [0, 1]\n");
+            throw std::out_of_range("Alpha must be in [0, 1]");
 
         d_alpha = alpha;
         d_one_minus_alpha = 1.0 - alpha;
@@ -146,7 +146,7 @@ public:
     void set_taps(double alpha)
     {
         if (alpha < 0 || alpha > 1)
-            throw std::out_of_range("Alpha must be in [0, 1]\n");
+            throw std::out_of_range("Alpha must be in [0, 1]");
 
         d_alpha = alpha;
         d_one_minus_alpha = 1.0 - alpha;

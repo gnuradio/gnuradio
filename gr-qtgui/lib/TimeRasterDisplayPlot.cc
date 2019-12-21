@@ -428,7 +428,7 @@ int TimeRasterDisplayPlot::getIntensityColorMapType(unsigned int which) const
 {
     if (which >= d_color_map_type.size())
         throw std::runtime_error(
-            "TimerasterDisplayPlot::GetIntesityColorMap: invalid which.\n");
+            "TimerasterDisplayPlot::GetIntesityColorMap: invalid which.");
 
     return d_color_map_type[which];
 }
@@ -455,7 +455,7 @@ void TimeRasterDisplayPlot::setIntensityColorMapType(const unsigned int which,
 {
     if (which >= d_color_map_type.size())
         throw std::runtime_error(
-            "TimerasterDisplayPlot::setIntesityColorMap: invalid which.\n");
+            "TimerasterDisplayPlot::setIntesityColorMap: invalid which.");
 
     if ((d_color_map_type[which] != newType) ||
         ((newType == INTENSITY_COLOR_MAP_TYPE_USER_DEFINED) &&
