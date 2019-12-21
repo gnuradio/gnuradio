@@ -40,8 +40,8 @@ private:
     std::vector<gr_complex> d_taps_lower;
     std::vector<gr_complex> d_taps_upper;
     bool d_updated;
-    gr::filter::kernel::fir_filter_with_buffer_ccc* d_filter_lower;
-    gr::filter::kernel::fir_filter_with_buffer_ccc* d_filter_upper;
+    std::unique_ptr<gr::filter::kernel::fir_filter_with_buffer_ccc> d_filter_lower;
+    std::unique_ptr<gr::filter::kernel::fir_filter_with_buffer_ccc> d_filter_upper;
 
     /*!
      * Design the band-edge filter based on the number of samples
@@ -58,7 +58,6 @@ public:
                           float rolloff,
                           int filter_size,
                           float bandwidth);
-    ~fll_band_edge_cc_impl();
 
     void set_samples_per_symbol(float sps);
     void set_rolloff(float rolloff);
