@@ -31,9 +31,9 @@ namespace blocks {
 class file_descriptor_source_impl : public file_descriptor_source
 {
 private:
-    size_t d_itemsize;
-    int d_fd;
-    bool d_repeat;
+    const size_t d_itemsize;
+    const int d_fd;
+    const bool d_repeat;
 
     std::vector<unsigned char> d_residue;
     unsigned long d_residue_len;

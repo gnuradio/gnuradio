@@ -98,7 +98,7 @@ int file_descriptor_source_impl::read_items(char* buf, int nitems)
 int file_descriptor_source_impl::handle_residue(char* buf, int nbytes_read)
 {
     assert(nbytes_read >= 0);
-    int nitems_read = nbytes_read / d_itemsize;
+    const int nitems_read = nbytes_read / d_itemsize;
     d_residue_len = nbytes_read % d_itemsize;
     if (d_residue_len > 0) {
         // fprintf (stderr, "handle_residue: %d\n", d_residue_len);
