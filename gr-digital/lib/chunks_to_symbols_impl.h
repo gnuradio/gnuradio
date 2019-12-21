@@ -40,11 +40,6 @@ public:
 
     ~chunks_to_symbols_impl();
 
-    void set_vector_from_pmt(std::vector<float>& symbol_table,
-                             pmt::pmt_t& symbol_table_pmt);
-    void set_vector_from_pmt(std::vector<gr_complex>& symbol_table,
-                             pmt::pmt_t& symbol_table_pmt);
-
     void handle_set_symbol_table(pmt::pmt_t symbol_table_pmt);
     void set_symbol_table(const std::vector<OUT_T>& symbol_table);
 
