@@ -32,7 +32,8 @@ namespace digital {
 class map_bb_impl : public map_bb
 {
 private:
-    unsigned char d_map[0x100];
+    static constexpr size_t s_map_size = 0x100;
+    unsigned char d_map[s_map_size];
     gr::thread::mutex d_mutex;
 
 public:
