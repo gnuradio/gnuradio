@@ -71,7 +71,6 @@ pfb_clock_sync_fff_impl::pfb_clock_sync_fff_impl(double sps,
     // Let scheduler adjust our relative_rate.
     enable_update_rate(true);
 
-    d_nfilters = filter_size;
     d_sps = floor(sps);
 
     // Set the damping factor for a critically damped system
@@ -195,7 +194,7 @@ float pfb_clock_sync_fff_impl::clock_rate() const { return d_rate_f; }
 
 void pfb_clock_sync_fff_impl::update_gains()
 {
-    float denom = (1.0 + 2.0 * d_damping * d_loop_bw + d_loop_bw * d_loop_bw);
+    const float denom = (1.0 + 2.0 * d_damping * d_loop_bw + d_loop_bw * d_loop_bw);
     d_alpha = (4 * d_damping * d_loop_bw) / denom;
     d_beta = (4 * d_loop_bw * d_loop_bw) / denom;
 }
@@ -206,7 +205,7 @@ void pfb_clock_sync_fff_impl::set_taps(const std::vector<float>& newtaps,
 {
     int i, j;
 
-    unsigned int ntaps = newtaps.size();
+    const unsigned int ntaps = newtaps.size();
     d_taps_per_filter = (unsigned int)ceil((double)ntaps / (double)d_nfilters);
 
     // Create d_numchan vectors to store each channel's taps
