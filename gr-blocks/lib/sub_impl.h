@@ -32,7 +32,7 @@ namespace blocks {
 template <class T>
 class BLOCKS_API sub_impl : public sub<T>
 {
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     sub_impl(size_t vlen);

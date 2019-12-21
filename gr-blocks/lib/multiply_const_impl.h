@@ -33,7 +33,7 @@ template <class T>
 class BLOCKS_API multiply_const_impl : public multiply_const<T>
 {
     T d_k;
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     multiply_const_impl(T k, size_t vlen);

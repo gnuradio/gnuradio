@@ -32,7 +32,7 @@ template <class T>
 class argmax_impl : public argmax<T>
 {
 private:
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     argmax_impl(size_t vlen);

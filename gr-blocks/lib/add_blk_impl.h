@@ -33,7 +33,7 @@ template <class T>
 class BLOCKS_API add_blk_impl : public add_blk<T>
 {
 private:
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     add_blk_impl(size_t vlen);

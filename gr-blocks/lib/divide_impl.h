@@ -32,7 +32,7 @@ namespace blocks {
 template <class T>
 class BLOCKS_API divide_impl : public divide<T>
 {
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     divide_impl(size_t vlen);

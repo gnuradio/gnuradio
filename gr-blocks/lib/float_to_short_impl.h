@@ -30,7 +30,7 @@ namespace blocks {
 
 class BLOCKS_API float_to_short_impl : public float_to_short
 {
-    size_t d_vlen;
+    const size_t d_vlen;
     float d_scale;
 
 public:
