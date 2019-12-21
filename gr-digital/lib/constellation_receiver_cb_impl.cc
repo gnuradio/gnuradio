@@ -44,10 +44,10 @@ constellation_receiver_cb::sptr constellation_receiver_cb::make(
         new constellation_receiver_cb_impl(constell, loop_bw, fmin, fmax));
 }
 
-static int ios[] = {
+static const std::vector<int> iosig = {
     sizeof(char), sizeof(float), sizeof(float), sizeof(float), sizeof(gr_complex)
 };
-static std::vector<int> iosig(ios, ios + sizeof(ios) / sizeof(int));
+
 constellation_receiver_cb_impl::constellation_receiver_cb_impl(
     constellation_sptr constellation, float loop_bw, float fmin, float fmax)
     : block("constellation_receiver_cb",
