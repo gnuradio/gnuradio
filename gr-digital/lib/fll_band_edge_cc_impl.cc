@@ -87,12 +87,6 @@ fll_band_edge_cc_impl::fll_band_edge_cc_impl(float samps_per_sym,
     design_filter(d_sps, d_rolloff, d_filter_size);
 }
 
-fll_band_edge_cc_impl::~fll_band_edge_cc_impl()
-{
-    delete d_filter_upper;
-    delete d_filter_lower;
-}
-
 /*******************************************************************
  SET FUNCTIONS
 *******************************************************************/
@@ -186,17 +180,15 @@ void fll_band_edge_cc_impl::design_filter(float samps_per_sym,
 
 void fll_band_edge_cc_impl::print_taps()
 {
-    unsigned int i;
-
     printf("Upper Band-edge: [");
-    for (i = 0; i < d_taps_upper.size(); i++) {
-        printf(" %.4e + %.4ej,", d_taps_upper[i].real(), d_taps_upper[i].imag());
+    for (const auto& tap : d_taps_upper) {
+        printf(" %.4e + %.4ej,", tap.real(), tap.imag());
     }
     printf("]\n\n");
 
     printf("Lower Band-edge: [");
-    for (i = 0; i < d_taps_lower.size(); i++) {
-        printf(" %.4e + %.4ej,", d_taps_lower[i].real(), d_taps_lower[i].imag());
+    for (const auto& tap : d_taps_lower) {
+        printf(" %.4e + %.4ej,", tap.real(), tap.imag());
     }
     printf("]\n\n");
 }
