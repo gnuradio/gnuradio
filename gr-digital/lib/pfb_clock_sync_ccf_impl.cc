@@ -93,14 +93,14 @@ pfb_clock_sync_ccf_impl::pfb_clock_sync_ccf_impl(double sps,
     d_rate_f = d_rate - (float)d_rate_i;
     d_filtnum = (int)floor(d_k);
 
-    d_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilters);
-    d_diff_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilters);
+    d_filters.resize(d_nfilters);
+    d_diff_filters.resize(d_nfilters);
 
     // Create an FIR filter for each channel and zero out the taps
     std::vector<float> vtaps(1, 0);
     for (int i = 0; i < d_nfilters; i++) {
-        d_filters[i] = new kernel::fir_filter_ccf(1, vtaps);
-        d_diff_filters[i] = new kernel::fir_filter_ccf(1, vtaps);
+         d_filters[i].reset(new kernel::fir_filter_ccf(1, vtaps));
+         d_diff_filters[i].reset(new kernel::fir_filter_ccf(1, vtaps));
     }
 
     // Now, actually set the filters' taps
@@ -114,14 +114,6 @@ pfb_clock_sync_ccf_impl::pfb_clock_sync_ccf_impl(double sps,
     d_last_out = 0;
 
     set_relative_rate((uint64_t)d_osps, (uint64_t)d_sps);
-}
-
-pfb_clock_sync_ccf_impl::~pfb_clock_sync_ccf_impl()
-{
-    for (int i = 0; i < d_nfilters; i++) {
-        delete d_filters[i];
-        delete d_diff_filters[i];
-    }
 }
 
 bool pfb_clock_sync_ccf_impl::check_topology(int ninputs, int noutputs)
@@ -217,7 +209,7 @@ void pfb_clock_sync_ccf_impl::update_gains()
 
 void pfb_clock_sync_ccf_impl::set_taps(const std::vector<float>& newtaps,
                                        std::vector<std::vector<float>>& ourtaps,
-                                       std::vector<kernel::fir_filter_ccf*>& ourfilter)
+                                       std::vector<std::unique_ptr<kernel::fir_filter_ccf>>& ourfilter)
 {
     int i, j;
 
