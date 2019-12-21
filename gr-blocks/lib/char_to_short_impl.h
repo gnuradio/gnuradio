@@ -30,7 +30,7 @@ namespace blocks {
 
 class BLOCKS_API char_to_short_impl : public char_to_short
 {
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     char_to_short_impl(size_t vlen);

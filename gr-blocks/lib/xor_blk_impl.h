@@ -32,7 +32,7 @@ namespace blocks {
 template <class T>
 class BLOCKS_API xor_blk_impl : public xor_blk<T>
 {
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     xor_blk_impl(size_t vlen);
