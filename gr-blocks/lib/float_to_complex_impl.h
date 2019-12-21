@@ -30,7 +30,7 @@ namespace blocks {
 
 class BLOCKS_API float_to_complex_impl : public float_to_complex
 {
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     float_to_complex_impl(size_t vlen);

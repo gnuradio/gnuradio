@@ -32,7 +32,7 @@ class tag_share_impl : public tag_share
 {
 private:
     size_t d_sizeof_io_item;
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     tag_share_impl(size_t sizeof_io_item, size_t sizeof_share_item, size_t vlen);

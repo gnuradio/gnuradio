@@ -33,7 +33,7 @@ template <class T>
 class BLOCKS_API abs_blk_impl : public abs_blk<T>
 {
 private:
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     abs_blk_impl(size_t vlen);

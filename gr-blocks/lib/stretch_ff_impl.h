@@ -32,7 +32,7 @@ class stretch_ff_impl : public stretch_ff
 {
 private:
     float d_lo; // the constant
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     stretch_ff_impl(float lo, size_t vlen);
