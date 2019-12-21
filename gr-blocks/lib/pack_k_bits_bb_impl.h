@@ -32,11 +32,10 @@ namespace blocks {
 class pack_k_bits_bb_impl : public pack_k_bits_bb
 {
 private:
-    kernel::pack_k_bits* d_pack;
+    const kernel::pack_k_bits d_pack;
 
 public:
     pack_k_bits_bb_impl(unsigned k);
-    ~pack_k_bits_bb_impl();
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
