@@ -194,7 +194,7 @@ void logger_set_level(logger_ptr logger, const std::string& level)
     else if (nocase == "emerg")
         logger_set_level(logger, log4cpp::Priority::EMERG);
     else
-        throw std::runtime_error("logger_set_level: Bad level type.\n");
+        throw std::runtime_error("logger_set_level: Bad level type.");
 }
 
 void logger_set_level(logger_ptr logger, log4cpp::Priority::Value level)

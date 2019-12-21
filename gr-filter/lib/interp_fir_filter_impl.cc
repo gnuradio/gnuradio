@@ -52,11 +52,11 @@ interp_fir_filter_impl<IN_T, OUT_T, TAP_T>::interp_fir_filter_impl(
       d_firs(interpolation)
 {
     if (interpolation == 0) {
-        throw std::out_of_range("interp_fir_filter_impl: interpolation must be > 0\n");
+        throw std::out_of_range("interp_fir_filter_impl: interpolation must be > 0");
     }
 
     if (taps.empty()) {
-        throw std::runtime_error("interp_fir_filter_impl: no filter taps provided.\n");
+        throw std::runtime_error("interp_fir_filter_impl: no filter taps provided.");
     }
 
     std::vector<TAP_T> dummy_taps;
@@ -94,7 +94,7 @@ void interp_fir_filter_impl<IN_T, OUT_T, TAP_T>::set_taps(const std::vector<TAP_
 
     if (d_new_taps.size() % this->interpolation() != 0) {
         throw std::runtime_error(
-            "interp_fir_filter_impl: error setting interpolator taps.\n");
+            "interp_fir_filter_impl: error setting interpolator taps.");
     }
 }
 

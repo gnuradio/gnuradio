@@ -56,7 +56,7 @@ float mmse_interp_differentiator_ff::differentiate(const float input[], float mu
     int imu = (int)rint(mu * DNSTEPS);
 
     if ((imu < 0) || (imu > DNSTEPS)) {
-        throw std::runtime_error("mmse_interp_differentiator_ff: imu out of bounds.\n");
+        throw std::runtime_error("mmse_interp_differentiator_ff: imu out of bounds.");
     }
 
     float r = filters[imu]->filter(input);

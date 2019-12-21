@@ -176,7 +176,7 @@ void pfb_arb_resampler_ccf::set_phase(float ph)
 {
     if ((ph < 0) || (ph >= 2.0 * GR_M_PI)) {
         throw std::runtime_error(
-            "pfb_arb_resampler_ccf: set_phase value out of bounds [0, 2pi).\n");
+            "pfb_arb_resampler_ccf: set_phase value out of bounds [0, 2pi).");
     }
 
     float ph_diff = 2.0 * GR_M_PI / (float)d_filters.size();
@@ -377,7 +377,7 @@ void pfb_arb_resampler_ccc::set_phase(float ph)
 {
     if ((ph < 0) || (ph >= 2.0 * GR_M_PI)) {
         throw std::runtime_error(
-            "pfb_arb_resampler_ccc: set_phase value out of bounds [0, 2pi).\n");
+            "pfb_arb_resampler_ccc: set_phase value out of bounds [0, 2pi).");
     }
 
     float ph_diff = 2.0 * GR_M_PI / (float)d_filters.size();
@@ -575,7 +575,7 @@ void pfb_arb_resampler_fff::set_phase(float ph)
 {
     if ((ph < 0) || (ph >= 2.0 * GR_M_PI)) {
         throw std::runtime_error(
-            "pfb_arb_resampler_fff: set_phase value out of bounds [0, 2pi).\n");
+            "pfb_arb_resampler_fff: set_phase value out of bounds [0, 2pi).");
     }
 
     float ph_diff = 2.0 * GR_M_PI / (float)d_filters.size();

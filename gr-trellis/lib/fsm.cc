@@ -86,12 +86,12 @@ fsm::fsm(const char* name)
     FILE* fsmfile;
 
     if ((fsmfile = fopen(name, "r")) == NULL)
-        throw std::runtime_error("fsm::fsm(const char *name): file open error\n");
+        throw std::runtime_error("fsm::fsm(const char *name): file open error");
     // printf("file open error in fsm()\n");
 
     if (fscanf(fsmfile, "%d %d %d\n", &d_I, &d_S, &d_O) == EOF) {
         if (ferror(fsmfile) != 0)
-            throw std::runtime_error("fsm::fsm(const char *name): file read error\n");
+            throw std::runtime_error("fsm::fsm(const char *name): file read error");
     }
 
     d_NS.resize(d_I * d_S);
@@ -102,7 +102,7 @@ fsm::fsm(const char* name)
             if (fscanf(fsmfile, "%d", &(d_NS[i * d_I + j])) == EOF) {
                 if (ferror(fsmfile) != 0)
                     throw std::runtime_error(
-                        "fsm::fsm(const char *name): file read error\n");
+                        "fsm::fsm(const char *name): file read error");
             }
         }
     }
@@ -111,7 +111,7 @@ fsm::fsm(const char* name)
             if (fscanf(fsmfile, "%d", &(d_OS[i * d_I + j])) == EOF) {
                 if (ferror(fsmfile) != 0)
                     throw std::runtime_error(
-                        "fsm::fsm(const char *name): file read error\n");
+                        "fsm::fsm(const char *name): file read error");
             }
         }
     }
@@ -450,7 +450,7 @@ void fsm::generate_TM()
         }
         if (done == false && d_S > 1) {
             // throw std::runtime_error ("fsm::generate_TM(): FSM appears to be
-            // disconnected\n");
+            // disconnected");
             printf("fsm::generate_TM(): FSM appears to be disconnected\n");
             printf("state %d cannot be reached from all other states\n", s);
         }

@@ -56,7 +56,7 @@ gr_complex mmse_fir_interpolator_cc::interpolate(const gr_complex input[], float
     int imu = (int)rint(mu * NSTEPS);
 
     if ((imu < 0) || (imu > NSTEPS)) {
-        throw std::runtime_error("mmse_fir_interpolator_cc: imu out of bounds.\n");
+        throw std::runtime_error("mmse_fir_interpolator_cc: imu out of bounds.");
     }
 
     gr_complex r = filters[imu]->filter(input);

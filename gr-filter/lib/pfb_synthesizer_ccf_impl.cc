@@ -54,7 +54,7 @@ pfb_synthesizer_ccf_impl::pfb_synthesizer_ccf_impl(unsigned int numchans,
     d_twox = (twox ? 2 : 1);
     if (d_numchans % d_twox != 0) {
         throw std::invalid_argument("pfb_synthesizer_ccf_impl: number of channels must "
-                                    "be even for 2x oversampling.\n");
+                                    "be even for 2x oversampling.");
     }
 
     d_filters = std::vector<kernel::fir_filter_with_buffer_ccf*>(d_twox * d_numchans);
@@ -219,7 +219,7 @@ void pfb_synthesizer_ccf_impl::set_channel_map(const std::vector<int>& map)
         int min = *std::min_element(map.begin(), map.end());
         if ((max >= static_cast<int>(d_twox * d_numchans)) || (min < 0)) {
             throw std::invalid_argument(
-                "pfb_synthesizer_ccf_impl::set_channel_map: map range out of bounds.\n");
+                "pfb_synthesizer_ccf_impl::set_channel_map: map range out of bounds.");
         }
         d_channel_map = map;
 
