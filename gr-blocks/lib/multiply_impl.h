@@ -32,7 +32,7 @@ namespace blocks {
 template <class T>
 class BLOCKS_API multiply_impl : public multiply<T>
 {
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     multiply_impl(size_t vlen);

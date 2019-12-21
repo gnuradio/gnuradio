@@ -30,7 +30,7 @@ namespace blocks {
 
 class BLOCKS_API complex_to_magphase_impl : public complex_to_magphase
 {
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     complex_to_magphase_impl(size_t vlen);

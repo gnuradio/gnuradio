@@ -31,7 +31,7 @@ namespace blocks {
 template <class T>
 class BLOCKS_API or_blk_impl : public or_blk<T>
 {
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     or_blk_impl(size_t vlen);
