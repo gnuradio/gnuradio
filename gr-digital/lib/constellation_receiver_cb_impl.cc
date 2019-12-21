@@ -112,7 +112,7 @@ void constellation_receiver_cb_impl::handle_set_constellation(
 void constellation_receiver_cb_impl::handle_rotate_phase(pmt::pmt_t rotation)
 {
     if (pmt::is_real(rotation)) {
-        double phase = pmt::to_double(rotation);
+        const double phase = pmt::to_double(rotation);
         d_phase += phase;
     }
 }

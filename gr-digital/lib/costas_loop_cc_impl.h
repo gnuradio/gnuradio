@@ -32,7 +32,7 @@ namespace digital {
 class costas_loop_cc_impl : public costas_loop_cc
 {
 private:
-    int d_order;
+    const int d_order;
     float d_error;
     float d_noise;
 
@@ -85,8 +85,9 @@ private:
      */
     float phase_detector_snr_2(gr_complex sample) const; // for BPSK
 
-
-    float (costas_loop_cc_impl::*d_phase_detector)(gr_complex sample) const;
+    typedef float (costas_loop_cc_impl::*d_phase_detector_t)(gr_complex sample) const;
+    static d_phase_detector_t choose_phase_detector(int order, bool use_snr);
+    const d_phase_detector_t d_phase_detector;
 
 public:
     costas_loop_cc_impl(float loop_bw, int order, bool use_snr = false);
