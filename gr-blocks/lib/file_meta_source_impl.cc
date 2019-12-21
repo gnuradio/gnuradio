@@ -116,11 +116,10 @@ bool file_meta_source_impl::read_header(pmt::pmt_t& hdr, pmt::pmt_t& extras)
     size_t ret;
     size_t size = 0;
     std::string str;
-    char* hdr_buffer = new char[METADATA_HEADER_SIZE];
+    std::vector<char> hdr_buffer(METADATA_HEADER_SIZE);
     while (size < METADATA_HEADER_SIZE) {
         ret = fread(&hdr_buffer[size], sizeof(char), METADATA_HEADER_SIZE - size, fp);
         if (ret == 0) {
-            delete[] hdr_buffer;
             if (feof(fp))
                 return false;
             else {
@@ -134,9 +133,9 @@ bool file_meta_source_impl::read_header(pmt::pmt_t& hdr, pmt::pmt_t& extras)
     }
 
     // Convert to string or the char array gets confused by the \0
-    str.insert(0, hdr_buffer, METADATA_HEADER_SIZE);
+    str.insert(0, hdr_buffer.data(), METADATA_HEADER_SIZE);
     hdr = pmt::deserialize_str(str);
-    delete[] hdr_buffer;
+    hdr_buffer.clear();
 
     uint64_t seg_start, extra_len = 0;
     pmt::pmt_t r, dump;
@@ -148,11 +147,10 @@ bool file_meta_source_impl::read_header(pmt::pmt_t& hdr, pmt::pmt_t& extras)
 
     if (extra_len > 0) {
         size = 0;
-        hdr_buffer = new char[extra_len];
+        hdr_buffer.resize(extra_len);
         while (size < extra_len) {
             ret = fread(&hdr_buffer[size], sizeof(char), extra_len - size, fp);
             if (ret == 0) {
-                delete[] hdr_buffer;
                 if (feof(fp))
                     return false;
                 else {
@@ -166,9 +164,8 @@ bool file_meta_source_impl::read_header(pmt::pmt_t& hdr, pmt::pmt_t& extras)
         }
 
         str.clear();
-        str.insert(0, hdr_buffer, extra_len);
+        str.insert(0, hdr_buffer.data(), extra_len);
         extras = pmt::deserialize_str(str);
-        delete[] hdr_buffer;
     }
 
     return true;
