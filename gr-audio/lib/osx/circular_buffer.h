@@ -82,7 +82,7 @@ public:
     {
         if (bufLen_I == 0)
             throw std::runtime_error("circular_buffer(): "
-                                     "Number of items to buffer must be > 0.\n");
+                                     "Number of items to buffer must be > 0.");
         d_bufLen_I = bufLen_I;
         d_buffer = (T*)new T[d_bufLen_I];
         d_doWriteBlock = doWriteBlock;
@@ -176,7 +176,7 @@ public:
             return (0);
         if (!buf)
             throw std::runtime_error("circular_buffer::enqueue(): "
-                                     "input buffer is NULL.\n");
+                                     "input buffer is NULL.");
         gr::thread::scoped_lock l(*d_internal);
         if (d_doAbort) {
             return (2);
@@ -253,10 +253,10 @@ public:
                         << ", #av_rd = " << d_n_avail_read_I << std::endl);
         if (!bufLen_I)
             throw std::runtime_error("circular_buffer::dequeue(): "
-                                     "input bufLen pointer is NULL.\n");
+                                     "input bufLen pointer is NULL.");
         if (!buf)
             throw std::runtime_error("circular_buffer::dequeue(): "
-                                     "input buffer pointer is NULL.\n");
+                                     "input buffer pointer is NULL.");
         size_t l_bufLen_I = *bufLen_I;
         if (l_bufLen_I == 0)
             return (0);

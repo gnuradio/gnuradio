@@ -151,7 +151,7 @@ void sink_c_impl::initialize()
     check_set_qss(d_qApplication);
 
     if (d_center_freq < 0) {
-        throw std::runtime_error("sink_c_impl: Received bad center frequency.\n");
+        throw std::runtime_error("sink_c_impl: Received bad center frequency.");
     }
 
     uint64_t maxBufferSize = 32768;

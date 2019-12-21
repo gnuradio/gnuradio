@@ -61,7 +61,7 @@ public:
         (void)which_port;
         (void)msg;
         throw std::runtime_error(
-            "rpcextractor_base: no post defined for this data type.\n");
+            "rpcextractor_base: no post defined for this data type.");
     }
 
 protected:
@@ -81,7 +81,7 @@ public:
         (void)which_port;
         (void)msg;
         throw std::runtime_error(
-            "rpcextractor_base: no post defined for this data type.\n");
+            "rpcextractor_base: no post defined for this data type.");
     }
 
 protected:
@@ -1543,7 +1543,7 @@ public:
     {
         throw std::runtime_error(
             "ERROR: rpcbasic_register_variable_rw called with no args. if this happens "
-            "someone used rpcbasic_register_variable_rw incorrectly.\n");
+            "someone used rpcbasic_register_variable_rw incorrectly.");
     };
 
     void set(Tfrom _variable)

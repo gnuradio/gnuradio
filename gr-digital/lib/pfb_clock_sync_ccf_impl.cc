@@ -69,7 +69,7 @@ pfb_clock_sync_ccf_impl::pfb_clock_sync_ccf_impl(double sps,
       d_out_idx(0)
 {
     if (taps.empty())
-        throw std::runtime_error("pfb_clock_sync_ccf: please specify a filter.\n");
+        throw std::runtime_error("pfb_clock_sync_ccf: please specify a filter.");
 
     // Let scheduler adjust our relative_rate.
     // enable_update_rate(true);
