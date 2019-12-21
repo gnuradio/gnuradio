@@ -432,7 +432,7 @@ void NumberDisplayForm::setTitle(const std::string& title)
 std::string NumberDisplayForm::unit(unsigned int which) const
 {
     if (static_cast<size_t>(which) >= d_unit.size())
-        throw std::runtime_error("NumberDisplayForm::units: invalid 'which'.\n");
+        throw std::runtime_error("NumberDisplayForm::units: invalid 'which'.");
 
     return d_unit[which];
 }
@@ -440,7 +440,7 @@ std::string NumberDisplayForm::unit(unsigned int which) const
 void NumberDisplayForm::setUnit(unsigned int which, const std::string& unit)
 {
     if (static_cast<size_t>(which) >= d_unit.size())
-        throw std::runtime_error("NumberDisplayForm::setUnits: invalid 'which'.\n");
+        throw std::runtime_error("NumberDisplayForm::setUnits: invalid 'which'.");
 
     d_unit[which] = unit;
 }
@@ -448,7 +448,7 @@ void NumberDisplayForm::setUnit(unsigned int which, const std::string& unit)
 float NumberDisplayForm::factor(unsigned int which) const
 {
     if (static_cast<size_t>(which) >= d_factor.size())
-        throw std::runtime_error("NumberDisplayForm::factor: invalid 'which'.\n");
+        throw std::runtime_error("NumberDisplayForm::factor: invalid 'which'.");
 
     return d_factor[which];
 }
@@ -456,7 +456,7 @@ float NumberDisplayForm::factor(unsigned int which) const
 void NumberDisplayForm::setFactor(unsigned int which, float factor)
 {
     if (static_cast<size_t>(which) >= d_factor.size())
-        throw std::runtime_error("NumberDisplayForm::setFactor: invalid 'which'.\n");
+        throw std::runtime_error("NumberDisplayForm::setFactor: invalid 'which'.");
 
     d_factor[which] = factor;
 }

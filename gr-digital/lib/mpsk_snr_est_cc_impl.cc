@@ -113,7 +113,7 @@ double mpsk_snr_est_cc_impl::snr()
     if (d_snr_est)
         return d_snr_est->snr();
     else
-        throw std::runtime_error("mpsk_snr_est_cc_impl:: No SNR estimator defined.\n");
+        throw std::runtime_error("mpsk_snr_est_cc_impl:: No SNR estimator defined.");
 }
 
 snr_est_type_t mpsk_snr_est_cc_impl::type() const { return d_type; }
@@ -143,7 +143,7 @@ void mpsk_snr_est_cc_impl::set_type(snr_est_type_t t)
         d_snr_est = new mpsk_snr_est_svr(d_alpha);
         break;
     default:
-        throw std::invalid_argument("mpsk_snr_est_cc_impl: unknown type specified.\n");
+        throw std::invalid_argument("mpsk_snr_est_cc_impl: unknown type specified.");
     }
 }
 
@@ -153,7 +153,7 @@ void mpsk_snr_est_cc_impl::set_tag_nsample(int n)
         d_nsamples = n;
         d_count = 0; // reset state
     } else
-        throw std::invalid_argument("mpsk_snr_est_cc_impl: tag_nsamples can't be <= 0\n");
+        throw std::invalid_argument("mpsk_snr_est_cc_impl: tag_nsamples can't be <= 0");
 }
 
 void mpsk_snr_est_cc_impl::set_alpha(double alpha)
@@ -163,7 +163,7 @@ void mpsk_snr_est_cc_impl::set_alpha(double alpha)
         if (d_snr_est)
             d_snr_est->set_alpha(d_alpha);
     } else
-        throw std::invalid_argument("mpsk_snr_est_cc_impl: alpha must be in [0,1]\n");
+        throw std::invalid_argument("mpsk_snr_est_cc_impl: alpha must be in [0,1]");
 }
 
 } /* namespace digital */

@@ -87,7 +87,7 @@ file_meta_source_impl::file_meta_source_impl(const std::string& filename,
         d_state = STATE_INLINE;
 
     if (!open(filename, hdr_filename))
-        throw std::runtime_error("file_meta_source: can't open file\n");
+        throw std::runtime_error("file_meta_source: can't open file");
 
     do_update();
 
@@ -96,7 +96,7 @@ file_meta_source_impl::file_meta_source_impl(const std::string& filename,
         parse_header(hdr, 0, d_tags);
         parse_extras(extras, 0, d_tags);
     } else
-        throw std::runtime_error("file_meta_source: could not read header.\n");
+        throw std::runtime_error("file_meta_source: could not read header.");
 
     // Set output signature based on itemsize info in header
     set_output_signature(io_signature::make(1, 1, d_itemsize));
@@ -193,7 +193,7 @@ void file_meta_source_impl::parse_header(pmt::pmt_t hdr,
         t.srcid = alias_pmt();
         tags.push_back(t);
     } else {
-        throw std::runtime_error("file_meta_source: Could not extract sample rate.\n");
+        throw std::runtime_error("file_meta_source: Could not extract sample rate.");
     }
 
     // GET TIME STAMP
@@ -208,7 +208,7 @@ void file_meta_source_impl::parse_header(pmt::pmt_t hdr,
         t.srcid = alias_pmt();
         tags.push_back(t);
     } else {
-        throw std::runtime_error("file_meta_source: Could not extract time stamp.\n");
+        throw std::runtime_error("file_meta_source: Could not extract time stamp.");
     }
 
     // GET ITEM SIZE OF DATA
@@ -216,7 +216,7 @@ void file_meta_source_impl::parse_header(pmt::pmt_t hdr,
         d_itemsize =
             pmt::to_long(pmt::dict_ref(hdr, pmt::string_to_symbol("size"), pmt::PMT_NIL));
     } else {
-        throw std::runtime_error("file_meta_source: Could not extract item size.\n");
+        throw std::runtime_error("file_meta_source: Could not extract item size.");
     }
 
     // GET SEGMENT SIZE
@@ -227,7 +227,7 @@ void file_meta_source_impl::parse_header(pmt::pmt_t hdr,
         // Convert from bytes to items
         d_seg_size /= d_itemsize;
     } else {
-        throw std::runtime_error("file_meta_source: Could not extract segment size.\n");
+        throw std::runtime_error("file_meta_source: Could not extract segment size.");
     }
 }
 
