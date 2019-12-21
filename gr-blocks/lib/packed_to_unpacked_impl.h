@@ -34,8 +34,8 @@ template <class T>
 class packed_to_unpacked_impl : public packed_to_unpacked<T>
 {
 private:
-    unsigned int d_bits_per_chunk;
-    endianness_t d_endianness;
+    const unsigned int d_bits_per_chunk;
+    const endianness_t d_endianness;
     unsigned int d_index;
     const unsigned int d_bits_per_type = sizeof(T) * 8;
     const unsigned int d_log2_l_type = log2_const<sizeof(T) * 8>();
