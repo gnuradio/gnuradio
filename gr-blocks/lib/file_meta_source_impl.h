@@ -45,7 +45,7 @@ private:
     pmt_t d_time_stamp;
     size_t d_seg_size;
     bool d_updated;
-    bool d_repeat;
+    const bool d_repeat;
 
     FILE *d_new_fp, *d_new_hdr_fp;
     FILE *d_fp, *d_hdr_fp;

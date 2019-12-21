@@ -61,7 +61,7 @@ int file_descriptor_sink_impl::work(int noutput_items,
                                     gr_vector_const_void_star& input_items,
                                     gr_vector_void_star& output_items)
 {
-    char* inbuf = (char*)input_items[0];
+    const char* inbuf = static_cast<const char*>(input_items[0]);
     unsigned long byte_size = noutput_items * d_itemsize;
 
     while (byte_size > 0) {

@@ -50,7 +50,7 @@ int file_sink_impl::work(int noutput_items,
                          gr_vector_const_void_star& input_items,
                          gr_vector_void_star& output_items)
 {
-    char* inbuf = (char*)input_items[0];
+    const char* inbuf = static_cast<const char*>(input_items[0]);
     int nwritten = 0;
 
     do_update(); // update d_fp is reqd
@@ -59,7 +59,7 @@ int file_sink_impl::work(int noutput_items,
         return noutput_items; // drop output on the floor
 
     while (nwritten < noutput_items) {
-        int count = fwrite(inbuf, d_itemsize, noutput_items - nwritten, d_fp);
+        const int count = fwrite(inbuf, d_itemsize, noutput_items - nwritten, d_fp);
         if (count == 0) {
             if (ferror(d_fp)) {
                 std::stringstream s;
