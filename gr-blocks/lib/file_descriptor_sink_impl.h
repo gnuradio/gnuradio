@@ -31,8 +31,8 @@ namespace blocks {
 class file_descriptor_sink_impl : public file_descriptor_sink
 {
 private:
-    size_t d_itemsize;
-    int d_fd;
+    const size_t d_itemsize;
+    const int d_fd;
 
 public:
     file_descriptor_sink_impl(size_t itemsize, int fd);

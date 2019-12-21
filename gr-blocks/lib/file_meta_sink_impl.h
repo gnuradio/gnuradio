@@ -36,10 +36,10 @@ class file_meta_sink_impl : public file_meta_sink
 private:
     enum meta_state_t { STATE_INLINE = 0, STATE_DETACHED };
 
-    size_t d_itemsize;
+    const size_t d_itemsize;
     double d_samp_rate;
-    double d_relative_rate;
-    size_t d_max_seg_size;
+    const double d_relative_rate;
+    const size_t d_max_seg_size;
     size_t d_total_seg_size;
     pmt_t d_header;
     pmt_t d_extra;
