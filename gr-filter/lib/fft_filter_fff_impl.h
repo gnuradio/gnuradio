@@ -34,13 +34,11 @@ class FILTER_API fft_filter_fff_impl : public fft_filter_fff
 private:
     int d_nsamples;
     bool d_updated;
-    kernel::fft_filter_fff* d_filter;
+    kernel::fft_filter_fff d_filter;
     std::vector<float> d_new_taps;
 
 public:
     fft_filter_fff_impl(int decimation, const std::vector<float>& taps, int nthreads = 1);
-
-    ~fft_filter_fff_impl();
 
     void set_taps(const std::vector<float>& taps);
     std::vector<float> taps() const;

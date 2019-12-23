@@ -34,15 +34,13 @@ class FILTER_API fft_filter_ccc_impl : public fft_filter_ccc
 private:
     int d_nsamples;
     bool d_updated;
-    kernel::fft_filter_ccc* d_filter;
+    kernel::fft_filter_ccc d_filter;
     std::vector<gr_complex> d_new_taps;
 
 public:
     fft_filter_ccc_impl(int decimation,
                         const std::vector<gr_complex>& taps,
                         int nthreads = 1);
-
-    ~fft_filter_ccc_impl();
 
     void set_taps(const std::vector<gr_complex>& taps);
     std::vector<gr_complex> taps() const;
