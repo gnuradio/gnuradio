@@ -105,14 +105,14 @@ Each significant class shall be contained in its own file.
 
 * Storage management
 
-Strongly consider using the boost smart pointer templates, scoped_ptr
-and shared_ptr.  scoped_ptr should be used for locals that contain
+Strongly consider using the std smart pointer templates, unique_ptr
+and shared_ptr.  unique_ptr should be used for locals that contain
 pointers to objects that we need to delete when we exit the current
 scope.  shared_ptr implements transparent reference counting and is a
 major win.  You never have to worry about calling delete.  The right
 thing happens.
 
-See http://www.boost.org/libs/smart_ptr/smart_ptr.htm
+See https://en.cppreference.com/book/intro/smart_pointers
 
 
 * Unit tests
