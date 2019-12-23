@@ -28,9 +28,9 @@
 #include <gnuradio/rpcpmtconverters_thrift.h>
 #include <gnuradio/rpcserver_base.h>
 #include <boost/format.hpp>
-#include <boost/thread/mutex.hpp>
 #include <iostream>
 #include <map>
+#include <mutex>
 #include <sstream>
 #include <string>
 
@@ -90,7 +90,7 @@ public:
     virtual void shutdown();
 
 private:
-    boost::mutex d_callback_map_lock;
+    std::mutex d_callback_map_lock;
 
     typedef std::map<std::string, configureCallback_t> ConfigureCallbackMap_t;
     ConfigureCallbackMap_t d_setcallbackmap;

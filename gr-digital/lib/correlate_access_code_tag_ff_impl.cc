@@ -69,7 +69,7 @@ correlate_access_code_tag_ff_impl::~correlate_access_code_tag_ff_impl() {}
 
 bool correlate_access_code_tag_ff_impl::set_access_code(const std::string& access_code)
 {
-    gr::thread::scoped_lock l(d_mutex_access_code);
+    gr::thread::lock_guard l(d_mutex_access_code);
 
     d_len = access_code.length(); // # of bytes in string
     if (d_len > 64)
@@ -93,7 +93,7 @@ int correlate_access_code_tag_ff_impl::work(int noutput_items,
                                             gr_vector_const_void_star& input_items,
                                             gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock l(d_mutex_access_code);
+    gr::thread::lock_guard l(d_mutex_access_code);
 
     const float* in = (const float*)input_items[0];
     float* out = (float*)output_items[0];

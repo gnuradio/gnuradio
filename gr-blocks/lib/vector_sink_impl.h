@@ -36,7 +36,7 @@ class vector_sink_impl : public vector_sink<T>
 private:
     std::vector<T> d_data;
     std::vector<tag_t> d_tags;
-    mutable gr::thread::mutex d_data_mutex; // protects internal data access.
+    mutable std::mutex d_data_mutex; // protects internal data access.
     unsigned int d_vlen;
 
 public:

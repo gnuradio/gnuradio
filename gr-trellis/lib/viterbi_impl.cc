@@ -56,7 +56,7 @@ viterbi_impl<T>::viterbi_impl(const fsm& FSM, int K, int S0, int SK)
 template <class T>
 void viterbi_impl<T>::set_FSM(const fsm& FSM)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_FSM = FSM;
     this->set_relative_rate(1, (uint64_t)d_FSM.O());
 }
@@ -64,7 +64,7 @@ void viterbi_impl<T>::set_FSM(const fsm& FSM)
 template <class T>
 void viterbi_impl<T>::set_K(int K)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_K = K;
     this->set_output_multiple(d_K);
 }
@@ -72,14 +72,14 @@ void viterbi_impl<T>::set_K(int K)
 template <class T>
 void viterbi_impl<T>::set_S0(int S0)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_S0 = S0;
 }
 
 template <class T>
 void viterbi_impl<T>::set_SK(int SK)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_SK = SK;
 }
 
@@ -104,7 +104,7 @@ int viterbi_impl<T>::general_work(int noutput_items,
                                   gr_vector_const_void_star& input_items,
                                   gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     int nstreams = input_items.size();
     int nblocks = noutput_items / d_K;
 

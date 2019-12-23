@@ -235,7 +235,7 @@ void time_sink_c_impl::set_trigger_mode(trigger_mode mode,
                                         int channel,
                                         const std::string& tag_key)
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
 
     d_trigger_mode = mode;
     d_trigger_slope = slope;
@@ -305,7 +305,7 @@ double time_sink_c_impl::line_alpha(unsigned int which)
 void time_sink_c_impl::set_nsamps(const int newsize)
 {
     if (newsize != d_size) {
-        gr::thread::scoped_lock lock(d_setlock);
+        gr::thread::lock_guard lock(d_setlock);
 
         // Set new size and reset buffer index
         // (throws away any currently held data, but who cares?)
@@ -345,7 +345,7 @@ void time_sink_c_impl::set_nsamps(const int newsize)
 
 void time_sink_c_impl::set_samp_rate(const double samp_rate)
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
     d_samp_rate = samp_rate;
     d_main_gui->setSampleRate(d_samp_rate);
 }
@@ -390,7 +390,7 @@ void time_sink_c_impl::disable_legend() { d_main_gui->disableLegend(); }
 
 void time_sink_c_impl::reset()
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
     _reset();
 }
 
@@ -564,7 +564,7 @@ int time_sink_c_impl::work(int noutput_items,
     _npoints_resize();
     _gui_update_trigger();
 
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
 
     int nfill = d_end - d_index;                 // how much room left in buffers
     int nitems = std::min(noutput_items, nfill); // num items we can put in buffers

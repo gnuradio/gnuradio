@@ -153,18 +153,16 @@ tpb_thread_body::tpb_thread_body(block_sptr block,
 
         case block_executor::BLKD_IN: // Wait for input.
         {
-            gr::thread::scoped_lock guard(d->d_tpb.mutex);
+            gr::thread::unique_lock guard(d->d_tpb.mutex);
 
             if (!d->d_tpb.input_changed) {
-                boost::system_time const timeout =
-                    boost::get_system_time() + boost::posix_time::milliseconds(250);
-                d->d_tpb.input_cond.timed_wait(guard, timeout);
+                d->d_tpb.input_cond.wait_for(guard, std::chrono::milliseconds(250));
             }
         } break;
 
         case block_executor::BLKD_OUT: // Wait for output buffer space.
         {
-            gr::thread::scoped_lock guard(d->d_tpb.mutex);
+            gr::thread::unique_lock guard(d->d_tpb.mutex);
             while (!d->d_tpb.output_changed) {
                 d->d_tpb.output_cond.wait(guard);
             }

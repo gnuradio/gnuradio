@@ -58,8 +58,8 @@ class portaudio_sink : public sink
     gr::buffer_sptr d_writer; // buffer used between work and callback
     gr::buffer_reader_sptr d_reader;
 
-    gr::thread::mutex d_ringbuffer_mutex;
-    gr::thread::condition_variable d_ringbuffer_cond;
+    std::mutex d_ringbuffer_mutex;
+    std::condition_variable d_ringbuffer_cond;
     bool d_ringbuffer_ready;
 
     // random stats

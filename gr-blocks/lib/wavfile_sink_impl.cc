@@ -102,7 +102,7 @@ wavfile_sink_impl::wavfile_sink_impl(const char* filename,
 
 bool wavfile_sink_impl::open(const char* filename)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     // we use the open system call to get access to the O_LARGEFILE flag.
     int fd;
@@ -135,7 +135,7 @@ bool wavfile_sink_impl::open(const char* filename)
 
 void wavfile_sink_impl::close()
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     if (!d_fp)
         return;
@@ -178,7 +178,7 @@ int wavfile_sink_impl::work(int noutput_items,
 
     int nwritten;
 
-    gr::thread::scoped_lock guard(d_mutex); // hold mutex for duration of this block
+    gr::thread::lock_guard guard(d_mutex); // hold mutex for duration of this block
     do_update();                            // update: d_fp is reqd
     if (!d_fp)                              // drop output on the floor
         return noutput_items;
@@ -222,7 +222,7 @@ short int wavfile_sink_impl::convert_to_short(float sample)
 
 void wavfile_sink_impl::set_bits_per_sample(int bits_per_sample)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
     if (bits_per_sample == 8 || bits_per_sample == 16) {
         d_bytes_per_sample_new = bits_per_sample / 8;
     }
@@ -230,7 +230,7 @@ void wavfile_sink_impl::set_bits_per_sample(int bits_per_sample)
 
 void wavfile_sink_impl::set_sample_rate(unsigned int sample_rate)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
     d_sample_rate = sample_rate;
 }
 

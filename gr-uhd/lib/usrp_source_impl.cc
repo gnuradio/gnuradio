@@ -22,9 +22,9 @@
 
 #include "gr_uhd_common.h"
 #include "usrp_source_impl.h"
+#include <gnuradio/thread/thread.h>
 #include <boost/format.hpp>
 #include <boost/make_shared.hpp>
-#include <boost/thread/thread.hpp>
 #include <iostream>
 #include <stdexcept>
 
@@ -432,7 +432,7 @@ void usrp_source_impl::set_recv_timeout(const double timeout, const bool one_pac
 
 bool usrp_source_impl::start(void)
 {
-    boost::recursive_mutex::scoped_lock lock(d_mutex);
+    gr::thread::recursive_lock_guard lock(d_mutex);
     if (not _rx_stream) {
         _rx_stream = _dev->get_rx_stream(_stream_args);
         _samps_per_packet = _rx_stream->get_max_num_samps();
@@ -478,7 +478,7 @@ void usrp_source_impl::flush(void)
 
 bool usrp_source_impl::stop(void)
 {
-    boost::recursive_mutex::scoped_lock lock(d_mutex);
+    gr::thread::recursive_lock_guard lock(d_mutex);
     this->issue_stream_cmd(::uhd::stream_cmd_t::STREAM_MODE_STOP_CONTINUOUS);
     this->flush();
 
@@ -538,7 +538,7 @@ int usrp_source_impl::work(int noutput_items,
                            gr_vector_const_void_star& input_items,
                            gr_vector_void_star& output_items)
 {
-    boost::recursive_mutex::scoped_lock lock(d_mutex);
+    gr::thread::recursive_lock_guard lock(d_mutex);
     boost::this_thread::disable_interruption disable_interrupt;
     // In order to allow for low-latency:
     // We receive all available packets without timeout.

@@ -49,7 +49,7 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(int size) : gr::vmcircbuf(size)
     fprintf(stderr, "gr::vmcircbuf_mmap_shm_open: mmap or shm_open is not available\n");
     throw std::runtime_error("gr::vmcircbuf_mmap_shm_open");
 #else
-    gr::thread::scoped_lock guard(s_vm_mutex);
+    gr::thread::lock_guard guard(s_vm_mutex);
 
     static int s_seg_counter = 0;
 
@@ -165,7 +165,7 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(int size) : gr::vmcircbuf(size)
 vmcircbuf_mmap_shm_open::~vmcircbuf_mmap_shm_open()
 {
 #if defined(HAVE_MMAP)
-    gr::thread::scoped_lock guard(s_vm_mutex);
+    gr::thread::lock_guard guard(s_vm_mutex);
 
     if (munmap(d_base, 2 * d_size) == -1) {
         perror("gr::vmcircbuf_mmap_shm_open: munmap (2)");

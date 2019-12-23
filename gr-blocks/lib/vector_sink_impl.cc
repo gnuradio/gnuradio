@@ -48,7 +48,7 @@ vector_sink_impl<T>::vector_sink_impl(unsigned int vlen, const int reserve_items
                  io_signature::make(0, 0, 0)),
       d_vlen(vlen)
 {
-    gr::thread::scoped_lock guard(d_data_mutex);
+    gr::thread::lock_guard guard(d_data_mutex);
     d_data.reserve(d_vlen * reserve_items);
 }
 
@@ -60,14 +60,14 @@ vector_sink_impl<T>::~vector_sink_impl()
 template <class T>
 std::vector<T> vector_sink_impl<T>::data() const
 {
-    gr::thread::scoped_lock guard(d_data_mutex);
+    gr::thread::lock_guard guard(d_data_mutex);
     return d_data;
 }
 
 template <class T>
 std::vector<tag_t> vector_sink_impl<T>::tags() const
 {
-    gr::thread::scoped_lock guard(d_data_mutex);
+    gr::thread::lock_guard guard(d_data_mutex);
     return d_tags;
 }
 
@@ -75,7 +75,7 @@ std::vector<tag_t> vector_sink_impl<T>::tags() const
 template <class T>
 void vector_sink_impl<T>::reset()
 {
-    gr::thread::scoped_lock guard(d_data_mutex);
+    gr::thread::lock_guard guard(d_data_mutex);
     d_tags.clear();
     d_data.clear();
 }
@@ -89,7 +89,7 @@ int vector_sink_impl<T>::work(int noutput_items,
 
     // can't touch this (as long as work() is working, the accessors shall not
     // read the data
-    gr::thread::scoped_lock guard(d_data_mutex);
+    gr::thread::lock_guard guard(d_data_mutex);
     for (unsigned int i = 0; i < noutput_items * d_vlen; i++)
         d_data.push_back(iptr[i]);
     std::vector<tag_t> tags;

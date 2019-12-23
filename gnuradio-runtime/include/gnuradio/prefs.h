@@ -163,7 +163,7 @@ protected:
     virtual char* option_to_env(std::string section, std::string option);
 
 private:
-    gr::thread::mutex d_mutex;
+    std::mutex d_mutex;
     config_map_t d_config_map;
 };
 

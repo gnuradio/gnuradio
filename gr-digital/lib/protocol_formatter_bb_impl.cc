@@ -59,7 +59,7 @@ protocol_formatter_bb_impl::~protocol_formatter_bb_impl() {}
 
 void protocol_formatter_bb_impl::set_header_format(header_format_base::sptr& format)
 {
-    gr::thread::scoped_lock guard(d_setlock);
+    gr::thread::lock_guard guard(d_setlock);
     d_format = format;
 }
 
@@ -68,7 +68,7 @@ int protocol_formatter_bb_impl::work(int noutput_items,
                                      gr_vector_const_void_star& input_items,
                                      gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock guard(d_setlock);
+    gr::thread::lock_guard guard(d_setlock);
     unsigned char* out = (unsigned char*)output_items[0];
     const unsigned char* in = (const unsigned char*)input_items[0];
 

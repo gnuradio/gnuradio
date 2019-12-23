@@ -44,7 +44,7 @@ private:
     FILE* d_fp;
     FILE* d_new_fp;
     bool d_updated;
-    boost::mutex d_mutex;
+    std::mutex d_mutex;
 
     /*!
      * \brief Convert a sample value within [-1;+1] to a corresponding

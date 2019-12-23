@@ -65,7 +65,7 @@ fir_filter_blk_impl<IN_T, OUT_T, TAP_T>::~fir_filter_blk_impl()
 template <class IN_T, class OUT_T, class TAP_T>
 void fir_filter_blk_impl<IN_T, OUT_T, TAP_T>::set_taps(const std::vector<TAP_T>& taps)
 {
-    gr::thread::scoped_lock l(this->d_setlock);
+    gr::thread::lock_guard l(this->d_setlock);
     d_fir->set_taps(taps);
     d_updated = true;
 }
@@ -81,7 +81,7 @@ int fir_filter_blk_impl<IN_T, OUT_T, TAP_T>::work(int noutput_items,
                                                   gr_vector_const_void_star& input_items,
                                                   gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock l(this->d_setlock);
+    gr::thread::lock_guard l(this->d_setlock);
 
     const IN_T* in = (const IN_T*)input_items[0];
     OUT_T* out = (OUT_T*)output_items[0];

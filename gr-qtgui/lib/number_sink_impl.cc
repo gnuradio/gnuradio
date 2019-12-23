@@ -246,7 +246,7 @@ void number_sink_impl::enable_autoscale(bool en) { d_main_gui->autoScale(en); }
 
 void number_sink_impl::reset()
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
     _reset();
 }
 
@@ -297,7 +297,7 @@ int number_sink_impl::work(int noutput_items,
                            gr_vector_const_void_star& input_items,
                            gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
 
     _gui_update_trigger();
 

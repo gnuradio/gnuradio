@@ -42,7 +42,7 @@ private:
     bool d_use_fft_filters;
     gr_complex* d_rotator;
     gr_complex* d_tmp;         // used for fft filters
-    gr::thread::mutex d_mutex; // mutex to protect set/work access
+    std::mutex d_mutex; // mutex to protect set/work access
 
     inline int work_fir_exp(int noutput_items,
                             gr_vector_const_void_star& input_items,

@@ -36,7 +36,7 @@ private:
 
     size_t d_itemsize;
     int d_delta;
-    gr::thread::mutex d_mutex_delay;
+    std::mutex d_mutex_delay;
 
 public:
     delay_impl(size_t itemsize, int delay);

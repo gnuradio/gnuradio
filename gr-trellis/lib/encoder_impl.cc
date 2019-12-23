@@ -59,21 +59,21 @@ encoder_impl<IN_T, OUT_T>::encoder_impl(const fsm& FSM, int ST, int K, bool B)
 template <class IN_T, class OUT_T>
 void encoder_impl<IN_T, OUT_T>::set_FSM(const fsm& FSM)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_FSM = FSM;
 }
 
 template <class IN_T, class OUT_T>
 void encoder_impl<IN_T, OUT_T>::set_ST(int ST)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_ST = ST;
 }
 
 template <class IN_T, class OUT_T>
 void encoder_impl<IN_T, OUT_T>::set_K(int K)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_K = K;
 }
 
@@ -87,7 +87,7 @@ int encoder_impl<IN_T, OUT_T>::work(int noutput_items,
                                     gr_vector_const_void_star& input_items,
                                     gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     int ST_tmp = 0;
 
     if (d_B) { // blockwise operation

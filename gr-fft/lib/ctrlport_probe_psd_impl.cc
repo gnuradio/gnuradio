@@ -62,8 +62,8 @@ void ctrlport_probe_psd_impl::forecast(int noutput_items,
 }
 
 //    boost::shared_mutex mutex_buffer;
-//    mutable boost::mutex mutex_notify;
-//    boost::condition_variable condition_buffer_ready;
+//    mutable std::mutex mutex_notify;
+//    std::condition_variable condition_buffer_ready;
 std::vector<gr_complex> ctrlport_probe_psd_impl::get()
 {
     mutex_buffer.lock();
@@ -71,7 +71,7 @@ std::vector<gr_complex> ctrlport_probe_psd_impl::get()
     mutex_buffer.unlock();
 
     // wait for condition
-    boost::mutex::scoped_lock lock(mutex_notify);
+    gr::thread::unique_lock lock(mutex_notify);
     condition_buffer_ready.wait(lock);
 
     mutex_buffer.lock();

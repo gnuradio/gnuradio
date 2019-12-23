@@ -38,8 +38,8 @@ private:
     std::string d_desc;
     size_t d_len;
     boost::shared_mutex mutex_buffer;
-    mutable boost::mutex mutex_notify;
-    boost::condition_variable condition_buffer_ready;
+    mutable std::mutex mutex_notify;
+    std::condition_variable condition_buffer_ready;
 
     std::vector<gr_complex> d_buffer;
     gr::fft::fft_complex d_fft;

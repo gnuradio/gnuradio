@@ -294,7 +294,7 @@ void freq_sink_f_impl::set_trigger_mode(trigger_mode mode,
                                         int channel,
                                         const std::string& tag_key)
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
 
     d_trigger_mode = mode;
     d_trigger_level = level;
@@ -371,7 +371,7 @@ void freq_sink_f_impl::disable_legend() { d_main_gui->disableLegend(); }
 
 void freq_sink_f_impl::reset()
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
     _reset();
 }
 
@@ -407,7 +407,7 @@ void freq_sink_f_impl::fft(float* data_out, const float* data_in, int size)
 
 bool freq_sink_f_impl::windowreset()
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
 
     filter::firdes::win_type newwintype;
     newwintype = d_main_gui->getFFTWindowType();
@@ -429,7 +429,7 @@ void freq_sink_f_impl::buildwindow()
 
 bool freq_sink_f_impl::fftresize()
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
 
     int newfftsize = d_main_gui->getFFTSize();
     d_fftavg = d_main_gui->getFFTAverage();
@@ -579,7 +579,7 @@ int freq_sink_f_impl::work(int noutput_items,
     check_clicked();
     _gui_update_trigger();
 
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
     for (d_index = 0; d_index < noutput_items; d_index += d_fftsize) {
 
         if ((gr::high_res_timer_now() - d_last_time) > d_update_time) {

@@ -56,7 +56,7 @@ tag_debug_impl::~tag_debug_impl() {}
 
 std::vector<tag_t> tag_debug_impl::current_tags()
 {
-    gr::thread::scoped_lock l(d_mutex);
+    gr::thread::lock_guard l(d_mutex);
     return d_tags;
 }
 
@@ -83,7 +83,7 @@ int tag_debug_impl::work(int noutput_items,
                          gr_vector_const_void_star& input_items,
                          gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock l(d_mutex);
+    gr::thread::lock_guard l(d_mutex);
     bool toprint = false;
 
     std::stringstream sout;

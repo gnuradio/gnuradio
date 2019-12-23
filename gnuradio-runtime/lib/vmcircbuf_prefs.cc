@@ -65,7 +65,7 @@ static void ensure_dir_path()
 
 int vmcircbuf_prefs::get(const char* key, char* value, int value_size)
 {
-    gr::thread::scoped_lock guard(s_vm_mutex);
+    gr::thread::lock_guard guard(s_vm_mutex);
 
     FILE* fp = fopen(pathname(key).c_str(), "r");
     if (fp == 0) {
@@ -88,7 +88,7 @@ int vmcircbuf_prefs::get(const char* key, char* value, int value_size)
 
 void vmcircbuf_prefs::set(const char* key, const char* value)
 {
-    gr::thread::scoped_lock guard(s_vm_mutex);
+    gr::thread::lock_guard guard(s_vm_mutex);
 
     ensure_dir_path();
 

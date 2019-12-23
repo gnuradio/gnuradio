@@ -42,9 +42,9 @@ msg_queue_sptr make_msg_queue(unsigned int limit = 0);
 class GR_RUNTIME_API msg_queue
 {
 private:
-    gr::thread::mutex d_mutex;
-    gr::thread::condition_variable d_not_empty;
-    gr::thread::condition_variable d_not_full;
+    std::mutex d_mutex;
+    std::condition_variable d_not_empty;
+    std::condition_variable d_not_full;
     unsigned int d_limit; // max # of messages in queue.  0 -> unbounded
 
     std::deque<pmt::pmt_t> d_msgs;

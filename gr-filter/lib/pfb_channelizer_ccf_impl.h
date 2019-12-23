@@ -42,7 +42,7 @@ private:
     int d_rate_ratio;
     int d_output_multiple;
     std::vector<int> d_channel_map;
-    gr::thread::mutex d_mutex; // mutex to protect set/work access
+    std::mutex d_mutex; // mutex to protect set/work access
 
 public:
     pfb_channelizer_ccf_impl(unsigned int nfilts,

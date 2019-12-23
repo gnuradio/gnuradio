@@ -41,7 +41,7 @@ private:
 
     pmt::pmt_t d_key, d_me; // d_key is the tag name, d_me is the block name + unique ID
 
-    gr::thread::mutex d_mutex_access_code;
+    std::mutex d_mutex_access_code;
 
 public:
     correlate_access_code_tag_bb_impl(const std::string& access_code,

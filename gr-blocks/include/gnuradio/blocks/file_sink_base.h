@@ -24,8 +24,8 @@
 #define INCLUDED_GR_FILE_SINK_BASE_H
 
 #include <gnuradio/blocks/api.h>
-#include <boost/thread.hpp>
 #include <cstdio>
+#include <mutex>
 
 namespace gr {
 namespace blocks {
@@ -40,7 +40,7 @@ protected:
     FILE* d_new_fp; // new FILE pointer
     bool d_updated; // is there a new FILE pointer?
     bool d_is_binary;
-    boost::mutex d_mutex;
+    std::mutex d_mutex;
     bool d_unbuffered;
     bool d_append;
 

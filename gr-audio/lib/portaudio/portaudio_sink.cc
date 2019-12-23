@@ -102,7 +102,7 @@ int portaudio_sink_callback(const void* inputBuffer,
 
     if (nreqd_samples <= navail_samples) { // We've got enough data...
         {
-            gr::thread::scoped_lock guard(self->d_ringbuffer_mutex);
+            gr::thread::lock_guard guard(self->d_ringbuffer_mutex);
 
             memcpy(outputBuffer,
                    self->d_reader->read_pointer(),
@@ -322,7 +322,7 @@ int portaudio_sink::work(int noutput_items,
         if (nframes == 0) {                                // no room...
             if (d_ok_to_block) {
                 {
-                    gr::thread::scoped_lock guard(d_ringbuffer_mutex);
+                    gr::thread::unique_lock guard(d_ringbuffer_mutex);
                     while (!d_ringbuffer_ready)
                         d_ringbuffer_cond.wait(guard);
                 }
@@ -339,7 +339,7 @@ int portaudio_sink::work(int noutput_items,
 
         // We can write the smaller of the request and the room we've got
         {
-            gr::thread::scoped_lock guard(d_ringbuffer_mutex);
+            gr::thread::lock_guard guard(d_ringbuffer_mutex);
 
             int nf = std::min(noutput_items - k, nframes);
             float* p = (float*)d_writer->write_pointer();

@@ -78,7 +78,7 @@ min_available_space(block_detail* d, int output_multiple, int min_noutput_items)
         min_noutput_items = 1;
     for (int i = 0; i < d->noutputs(); i++) {
         buffer_sptr out_buf = d->output(i);
-        gr::thread::scoped_lock guard(*out_buf->mutex());
+        gr::thread::lock_guard guard(*out_buf->mutex());
         int avail_n = round_down(out_buf->space_available(), output_multiple);
         int best_n = round_down(out_buf->bufsize() / 2, output_multiple);
         if (best_n < min_noutput_items)
@@ -310,7 +310,7 @@ block_executor::state block_executor::run_one_iteration()
                  * Acquire the mutex and grab local copies of items_available and done.
                  */
                 buffer_reader_sptr in_buf = d->input(i);
-                gr::thread::scoped_lock guard(*in_buf->mutex());
+                gr::thread::lock_guard guard(*in_buf->mutex());
                 d_ninput_items[i] = in_buf->items_available();
                 d_input_done[i] = in_buf->done();
             }
@@ -357,7 +357,7 @@ block_executor::state block_executor::run_one_iteration()
                  * Acquire the mutex and grab local copies of items_available and done.
                  */
                 buffer_reader_sptr in_buf = d->input(i);
-                gr::thread::scoped_lock guard(*in_buf->mutex());
+                gr::thread::lock_guard guard(*in_buf->mutex());
                 d_ninput_items[i] = in_buf->items_available();
                 d_input_done[i] = in_buf->done();
             }

@@ -36,7 +36,7 @@ class FILTER_API pfb_arb_resampler_fff_impl : public pfb_arb_resampler_fff
 private:
     kernel::pfb_arb_resampler_fff* d_resamp;
     bool d_updated;
-    gr::thread::mutex d_mutex; // mutex to protect set/work access
+    std::mutex d_mutex; // mutex to protect set/work access
 
 public:
     pfb_arb_resampler_fff_impl(float rate,

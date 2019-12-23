@@ -32,7 +32,7 @@
 
 namespace gnuradio {
 
-static gr::thread::mutex s_mutex;
+static std::mutex s_mutex;
 typedef std::map<gr::basic_block*, gr::basic_block_sptr> sptr_map;
 static sptr_map s_map;
 
@@ -53,13 +53,13 @@ struct disarmable_deleter {
 void detail::sptr_magic::create_and_stash_initial_sptr(gr::hier_block2* p)
 {
     gr::basic_block_sptr sptr(p, disarmable_deleter());
-    gr::thread::scoped_lock guard(s_mutex);
+    gr::thread::lock_guard guard(s_mutex);
     s_map.insert(sptr_map::value_type(static_cast<gr::basic_block*>(p), sptr));
 }
 
 void detail::sptr_magic::cancel_initial_sptr(gr::hier_block2* p)
 {
-    gr::thread::scoped_lock guard(s_mutex);
+    gr::thread::lock_guard guard(s_mutex);
     sptr_map::iterator pos = s_map.find(static_cast<gr::basic_block*>(p));
     if (pos == s_map.end())
         return; /* Not in the map, nothing to do */
@@ -83,7 +83,7 @@ gr::basic_block_sptr detail::sptr_magic::fetch_initial_sptr(gr::basic_block* p)
      * p is a subclass of gr::hier_block2, thus we've already created the shared pointer
      * and stashed it away.  Fish it out and return it.
      */
-    gr::thread::scoped_lock guard(s_mutex);
+    gr::thread::lock_guard guard(s_mutex);
     sptr_map::iterator pos = s_map.find(static_cast<gr::basic_block*>(p));
     if (pos == s_map.end())
         throw std::invalid_argument("sptr_magic: invalid pointer!");

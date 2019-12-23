@@ -73,7 +73,7 @@ viterbi_combined_impl<IN_T, OUT_T>::viterbi_combined_impl(
 template <class IN_T, class OUT_T>
 void viterbi_combined_impl<IN_T, OUT_T>::set_K(int K)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_K = K;
     this->set_output_multiple(d_K);
 }
@@ -81,7 +81,7 @@ void viterbi_combined_impl<IN_T, OUT_T>::set_K(int K)
 template <class IN_T, class OUT_T>
 void viterbi_combined_impl<IN_T, OUT_T>::set_D(int D)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_D = D;
     this->set_relative_rate(1, (uint64_t)d_D);
 }
@@ -89,35 +89,35 @@ void viterbi_combined_impl<IN_T, OUT_T>::set_D(int D)
 template <class IN_T, class OUT_T>
 void viterbi_combined_impl<IN_T, OUT_T>::set_FSM(const fsm& FSM)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_FSM = FSM;
 }
 
 template <class IN_T, class OUT_T>
 void viterbi_combined_impl<IN_T, OUT_T>::set_S0(int S0)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_S0 = S0;
 }
 
 template <class IN_T, class OUT_T>
 void viterbi_combined_impl<IN_T, OUT_T>::set_SK(int SK)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_SK = SK;
 }
 
 template <class IN_T, class OUT_T>
 void viterbi_combined_impl<IN_T, OUT_T>::set_TYPE(digital::trellis_metric_type_t type)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_TYPE = type;
 }
 
 template <class IN_T, class OUT_T>
 void viterbi_combined_impl<IN_T, OUT_T>::set_TABLE(const std::vector<IN_T>& table)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_TABLE = table;
 }
 
@@ -144,7 +144,7 @@ int viterbi_combined_impl<IN_T, OUT_T>::general_work(
     gr_vector_const_void_star& input_items,
     gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     int nstreams = input_items.size();
     int nblocks = noutput_items / d_K;
 

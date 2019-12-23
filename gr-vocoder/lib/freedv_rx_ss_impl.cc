@@ -144,14 +144,14 @@ void datatx(void* callback_state, unsigned char* packet, size_t* size) { return;
 
 void freedv_rx_ss_impl::set_squelch_thresh(float squelch_thresh)
 {
-    gr::thread::scoped_lock l(d_setlock);
+    gr::thread::lock_guard l(d_setlock);
     d_squelch_thresh = squelch_thresh;
     freedv_set_snr_squelch_thresh(d_freedv, d_squelch_thresh);
 }
 
 void freedv_rx_ss_impl::set_squelch_en(bool squelch_enabled)
 {
-    gr::thread::scoped_lock l(d_setlock);
+    gr::thread::lock_guard l(d_setlock);
     d_squelch_en = squelch_enabled;
     if (squelch_enabled)
         freedv_set_squelch_en(d_freedv, 1);

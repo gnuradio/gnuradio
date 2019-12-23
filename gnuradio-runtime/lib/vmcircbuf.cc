@@ -40,7 +40,7 @@
 #include "vmcircbuf_mmap_tmpfile.h"
 #include "vmcircbuf_sysv_shm.h"
 
-gr::thread::mutex s_vm_mutex;
+std::mutex s_vm_mutex;
 
 namespace gr {
 

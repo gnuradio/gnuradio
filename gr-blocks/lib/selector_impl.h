@@ -37,7 +37,7 @@ private:
     unsigned int d_input_index, d_output_index;
     unsigned int d_num_inputs, d_num_outputs; // keep track of the topology
 
-    gr::thread::mutex d_mutex;
+    std::mutex d_mutex;
 
 
 public:
@@ -50,7 +50,7 @@ public:
     void handle_enable(pmt::pmt_t msg);
     void set_enabled(bool enable)
     {
-        gr::thread::scoped_lock l(d_mutex);
+        gr::thread::lock_guard l(d_mutex);
         d_enabled = enable;
     }
     bool enabled() const { return d_enabled; }

@@ -228,7 +228,7 @@ void time_raster_sink_f_impl::set_samp_rate(const double samp_rate)
 
 void time_raster_sink_f_impl::set_num_rows(double rows)
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
     d_rows = rows;
     d_main_gui->setNumRows(rows);
 }
@@ -236,7 +236,7 @@ void time_raster_sink_f_impl::set_num_rows(double rows)
 void time_raster_sink_f_impl::set_num_cols(double cols)
 {
     if (d_cols != cols) {
-        gr::thread::scoped_lock lock(d_setlock);
+        gr::thread::lock_guard lock(d_setlock);
 
         d_qApplication->postEvent(d_main_gui, new TimeRasterSetSize(d_rows, cols));
 

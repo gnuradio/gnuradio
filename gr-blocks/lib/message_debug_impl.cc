@@ -46,7 +46,7 @@ void message_debug_impl::print(pmt::pmt_t msg)
 
 void message_debug_impl::store(pmt::pmt_t msg)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
     d_messages.push_back(msg);
 }
 
@@ -77,7 +77,7 @@ int message_debug_impl::num_messages() { return (int)d_messages.size(); }
 
 pmt::pmt_t message_debug_impl::get_message(int i)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     if ((size_t)i >= d_messages.size()) {
         throw std::runtime_error("message_debug: index for message out of bounds.");

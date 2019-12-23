@@ -87,7 +87,7 @@ void basic_block::message_port_register_in(pmt::pmt_t port_id)
     }
     msg_queue[port_id] = msg_queue_t();
     msg_queue_ready[port_id] =
-        boost::shared_ptr<boost::condition_variable>(new boost::condition_variable());
+        boost::shared_ptr<std::condition_variable>(new std::condition_variable());
 }
 
 pmt::pmt_t basic_block::message_ports_in()
@@ -185,7 +185,7 @@ void basic_block::_post(pmt::pmt_t which_port, pmt::pmt_t msg)
 
 void basic_block::insert_tail(pmt::pmt_t which_port, pmt::pmt_t msg)
 {
-    gr::thread::scoped_lock guard(mutex);
+    gr::thread::lock_guard guard(mutex);
 
     if ((msg_queue.find(which_port) == msg_queue.end()) ||
         (msg_queue_ready.find(which_port) == msg_queue_ready.end())) {
@@ -202,7 +202,7 @@ void basic_block::insert_tail(pmt::pmt_t which_port, pmt::pmt_t msg)
 
 pmt::pmt_t basic_block::delete_head_nowait(pmt::pmt_t which_port)
 {
-    gr::thread::scoped_lock guard(mutex);
+    gr::thread::lock_guard guard(mutex);
 
     if (empty_p(which_port)) {
         return pmt::pmt_t();

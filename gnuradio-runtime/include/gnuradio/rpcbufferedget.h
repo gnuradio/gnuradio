@@ -23,8 +23,8 @@
 #ifndef RPCBUFFEREDGET_H
 #define RPCBUFFEREDGET_H
 
-#include <boost/thread/condition_variable.hpp>
-#include <boost/thread/mutex.hpp>
+#include <condition_variable>
+#include <mutex>
 
 template <typename TdataType>
 class rpcbufferedget
@@ -46,7 +46,7 @@ public:
         if (!d_data_needed)
             return;
         {
-            boost::mutex::scoped_lock lock(d_buffer_lock);
+            gr::thread::lock_guard lock(d_buffer_lock);
             d_buffer = data;
             d_data_needed = false;
         }
@@ -55,7 +55,7 @@ public:
 
     TdataType get()
     {
-        boost::mutex::scoped_lock lock(d_buffer_lock);
+        gr::thread::unique_lock lock(d_buffer_lock);
         d_data_needed = true;
         d_data_ready.wait(lock);
         return d_buffer;
@@ -63,8 +63,8 @@ public:
 
 private:
     bool d_data_needed;
-    boost::condition_variable d_data_ready;
-    boost::mutex d_buffer_lock;
+    std::condition_variable d_data_ready;
+    std::mutex d_buffer_lock;
     TdataType d_buffer;
 };
 

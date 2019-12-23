@@ -103,7 +103,7 @@ fastnoise_source_impl<T>::~fastnoise_source_impl()
 template <class T>
 void fastnoise_source_impl<T>::set_type(noise_type_t type)
 {
-    gr::thread::scoped_lock l(this->d_setlock);
+    gr::thread::lock_guard l(this->d_setlock);
     d_type = type;
     generate();
 }
@@ -111,7 +111,7 @@ void fastnoise_source_impl<T>::set_type(noise_type_t type)
 template <class T>
 void fastnoise_source_impl<T>::set_amplitude(float ampl)
 {
-    gr::thread::scoped_lock l(this->d_setlock);
+    gr::thread::lock_guard l(this->d_setlock);
     d_ampl = ampl;
     generate();
 }
@@ -119,7 +119,7 @@ void fastnoise_source_impl<T>::set_amplitude(float ampl)
 template <>
 void fastnoise_source_impl<gr_complex>::set_amplitude(float ampl)
 {
-    gr::thread::scoped_lock l(this->d_setlock);
+    gr::thread::lock_guard l(this->d_setlock);
     d_ampl = ampl / sqrtf(2.0f);
     generate();
 }
@@ -160,7 +160,7 @@ int fastnoise_source_impl<T>::work(int noutput_items,
                                    gr_vector_const_void_star& input_items,
                                    gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock l(this->d_setlock);
+    gr::thread::lock_guard l(this->d_setlock);
 
     T* out = (T*)output_items[0];
 

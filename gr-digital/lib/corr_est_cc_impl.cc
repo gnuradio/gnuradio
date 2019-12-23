@@ -123,7 +123,7 @@ std::vector<gr_complex> corr_est_cc_impl::symbols() const { return d_symbols; }
 
 void corr_est_cc_impl::set_symbols(const std::vector<gr_complex>& symbols)
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
 
     d_symbols = symbols;
 
@@ -172,7 +172,7 @@ void corr_est_cc_impl::_set_mark_delay(unsigned int mark_delay)
 
 void corr_est_cc_impl::set_mark_delay(unsigned int mark_delay)
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
     _set_mark_delay(mark_delay);
 }
 
@@ -202,7 +202,7 @@ void corr_est_cc_impl::_set_threshold(float threshold)
 
 void corr_est_cc_impl::set_threshold(float threshold)
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
     _set_threshold(threshold);
 }
 
@@ -210,7 +210,7 @@ int corr_est_cc_impl::work(int noutput_items,
                            gr_vector_const_void_star& input_items,
                            gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
 
     const gr_complex* in = (gr_complex*)input_items[0];
     gr_complex* out = (gr_complex*)output_items[0];

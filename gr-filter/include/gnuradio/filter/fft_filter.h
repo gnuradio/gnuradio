@@ -27,6 +27,7 @@
 #include <gnuradio/filter/api.h>
 #include <gnuradio/gr_complex.h>
 #include <volk/volk_alloc.hh>
+#include <memory>
 #include <vector>
 
 namespace gr {

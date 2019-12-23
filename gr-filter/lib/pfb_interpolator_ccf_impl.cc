@@ -54,7 +54,7 @@ pfb_interpolator_ccf_impl::~pfb_interpolator_ccf_impl() {}
 
 void pfb_interpolator_ccf_impl::set_taps(const std::vector<float>& taps)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     polyphase_filterbank::set_taps(taps);
     set_history(d_taps_per_filter);

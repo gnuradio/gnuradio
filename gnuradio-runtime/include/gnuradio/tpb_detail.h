@@ -35,11 +35,11 @@ class block_detail;
  * \brief used by thread-per-block scheduler
  */
 struct GR_RUNTIME_API tpb_detail {
-    gr::thread::mutex mutex; //< protects all vars
+    std::mutex mutex; //< protects all vars
     bool input_changed;
-    gr::thread::condition_variable input_cond;
+    std::condition_variable input_cond;
     bool output_changed;
-    gr::thread::condition_variable output_cond;
+    std::condition_variable output_cond;
 
 public:
     tpb_detail() : input_changed(false), output_changed(false) {}
@@ -58,7 +58,7 @@ public:
     //! Called by pmt msg posters
     void notify_msg()
     {
-        gr::thread::scoped_lock guard(mutex);
+        gr::thread::lock_guard guard(mutex);
         input_changed = true;
         input_cond.notify_one();
         output_changed = true;
@@ -68,7 +68,7 @@ public:
     //! Called by us
     void clear_changed()
     {
-        gr::thread::scoped_lock guard(mutex);
+        gr::thread::lock_guard guard(mutex);
         input_changed = false;
         output_changed = false;
     }
@@ -77,7 +77,7 @@ private:
     //! Used by notify_downstream
     void set_input_changed()
     {
-        gr::thread::scoped_lock guard(mutex);
+        gr::thread::lock_guard guard(mutex);
         input_changed = true;
         input_cond.notify_one();
     }
@@ -85,7 +85,7 @@ private:
     //! Used by notify_upstream
     void set_output_changed()
     {
-        gr::thread::scoped_lock guard(mutex);
+        gr::thread::lock_guard guard(mutex);
         output_changed = true;
         output_cond.notify_one();
     }

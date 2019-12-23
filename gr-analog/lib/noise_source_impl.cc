@@ -70,21 +70,21 @@ noise_source_impl<T>::~noise_source_impl<T>()
 template <class T>
 void noise_source_impl<T>::set_type(noise_type_t type)
 {
-    gr::thread::scoped_lock l(this->d_setlock);
+    gr::thread::lock_guard l(this->d_setlock);
     d_type = type;
 }
 
 template <class T>
 void noise_source_impl<T>::set_amplitude(float ampl)
 {
-    gr::thread::scoped_lock l(this->d_setlock);
+    gr::thread::lock_guard l(this->d_setlock);
     d_ampl = ampl;
 }
 
 template <>
 void noise_source_impl<gr_complex>::set_amplitude(float ampl)
 {
-    gr::thread::scoped_lock l(this->d_setlock);
+    gr::thread::lock_guard l(this->d_setlock);
     d_ampl = ampl / sqrtf(2.0f);
 }
 
@@ -94,7 +94,7 @@ int noise_source_impl<T>::work(int noutput_items,
                                gr_vector_const_void_star& input_items,
                                gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock l(this->d_setlock);
+    gr::thread::lock_guard l(this->d_setlock);
 
     T* out = (T*)output_items[0];
 
@@ -134,7 +134,7 @@ int noise_source_impl<gr_complex>::work(int noutput_items,
                                         gr_vector_const_void_star& input_items,
                                         gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock l(this->d_setlock);
+    gr::thread::lock_guard l(this->d_setlock);
 
     gr_complex* out = (gr_complex*)output_items[0];
 

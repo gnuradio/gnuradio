@@ -54,8 +54,8 @@ private:
     bool d_ok_to_block, d_pass_through;
     bool d_waiting_for_data, d_do_reset, d_hardware_changed;
     bool d_using_default_device;
-    gr::thread::mutex d_internal;
-    gr::thread::condition_variable d_cond_data;
+    std::mutex d_internal;
+    std::condition_variable d_cond_data;
     std::vector<circular_buffer<float>*> d_buffers;
     std::string d_desired_name, d_selected_name;
 

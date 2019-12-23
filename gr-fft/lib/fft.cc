@@ -23,6 +23,7 @@
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/gr_complex.h>
 #include <gnuradio/sys_paths.h>
+#include <gnuradio/thread/thread.h>
 #include <fftw3.h>
 #include <volk/volk.h>
 
@@ -57,7 +58,7 @@ namespace fs = boost::filesystem;
 
 namespace gr {
 namespace fft {
-static boost::mutex wisdom_thread_mutex;
+static std::mutex wisdom_thread_mutex;
 boost::interprocess::file_lock wisdom_lock;
 static bool wisdom_lock_init_done = false; // Modify while holding 'wisdom_thread_mutex'
 
@@ -78,9 +79,9 @@ double* malloc_double(int size)
 
 void free(void* b) { volk_free(b); }
 
-boost::mutex& planner::mutex()
+std::mutex& planner::mutex()
 {
-    static boost::mutex s_planning_mutex;
+    static std::mutex s_planning_mutex;
 
     return s_planning_mutex;
 }
@@ -169,7 +170,7 @@ static void export_wisdom()
 fft_complex::fft_complex(int fft_size, bool forward, int nthreads)
 {
     // Hold global mutex during plan construction and destruction.
-    planner::scoped_lock lock(planner::mutex());
+    gr::thread::lock_guard lock(planner::mutex());
 
     assert(sizeof(fftwf_complex) == sizeof(gr_complex));
 
@@ -212,7 +213,7 @@ fft_complex::fft_complex(int fft_size, bool forward, int nthreads)
 fft_complex::~fft_complex()
 {
     // Hold global mutex during plan construction and destruction.
-    planner::scoped_lock lock(planner::mutex());
+    gr::thread::lock_guard lock(planner::mutex());
 
     fftwf_destroy_plan((fftwf_plan)d_plan);
     volk_free(d_inbuf);
@@ -238,7 +239,7 @@ void fft_complex::execute() { fftwf_execute((fftwf_plan)d_plan); }
 fft_real_fwd::fft_real_fwd(int fft_size, int nthreads)
 {
     // Hold global mutex during plan construction and destruction.
-    planner::scoped_lock lock(planner::mutex());
+    gr::thread::lock_guard lock(planner::mutex());
 
     assert(sizeof(fftwf_complex) == sizeof(gr_complex));
 
@@ -278,7 +279,7 @@ fft_real_fwd::fft_real_fwd(int fft_size, int nthreads)
 fft_real_fwd::~fft_real_fwd()
 {
     // Hold global mutex during plan construction and destruction.
-    planner::scoped_lock lock(planner::mutex());
+    gr::thread::lock_guard lock(planner::mutex());
 
     fftwf_destroy_plan((fftwf_plan)d_plan);
     volk_free(d_inbuf);
@@ -305,7 +306,7 @@ void fft_real_fwd::execute() { fftwf_execute((fftwf_plan)d_plan); }
 fft_real_rev::fft_real_rev(int fft_size, int nthreads)
 {
     // Hold global mutex during plan construction and destruction.
-    planner::scoped_lock lock(planner::mutex());
+    gr::thread::lock_guard lock(planner::mutex());
 
     assert(sizeof(fftwf_complex) == sizeof(gr_complex));
 
@@ -348,7 +349,7 @@ fft_real_rev::fft_real_rev(int fft_size, int nthreads)
 fft_real_rev::~fft_real_rev()
 {
     // Hold global mutex during plan construction and destruction.
-    planner::scoped_lock lock(planner::mutex());
+    gr::thread::lock_guard lock(planner::mutex());
 
     fftwf_destroy_plan((fftwf_plan)d_plan);
     volk_free(d_inbuf);

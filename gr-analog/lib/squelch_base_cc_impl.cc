@@ -52,7 +52,7 @@ int squelch_base_cc_impl::ramp() const { return d_ramp; }
 
 void squelch_base_cc_impl::set_ramp(int ramp)
 {
-    gr::thread::scoped_lock l(d_setlock);
+    gr::thread::lock_guard l(d_setlock);
     d_ramp = ramp;
 }
 
@@ -60,7 +60,7 @@ bool squelch_base_cc_impl::gate() const { return d_gate; }
 
 void squelch_base_cc_impl::set_gate(bool gate)
 {
-    gr::thread::scoped_lock l(d_setlock);
+    gr::thread::lock_guard l(d_setlock);
     d_gate = gate;
 }
 
@@ -79,7 +79,7 @@ int squelch_base_cc_impl::general_work(int noutput_items,
 
     int j = 0;
 
-    gr::thread::scoped_lock l(d_setlock);
+    gr::thread::lock_guard l(d_setlock);
 
     for (int i = 0; i < noutput_items; i++) {
         update_state(in[i]);

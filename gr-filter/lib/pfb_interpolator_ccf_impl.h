@@ -39,7 +39,7 @@ class FILTER_API pfb_interpolator_ccf_impl : public pfb_interpolator_ccf,
 private:
     bool d_updated;
     unsigned int d_rate;
-    gr::thread::mutex d_mutex; // mutex to protect set/work access
+    std::mutex d_mutex; // mutex to protect set/work access
 
 public:
     pfb_interpolator_ccf_impl(unsigned int interp, const std::vector<float>& taps);

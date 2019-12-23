@@ -69,7 +69,7 @@ void pfb_arb_resampler_ccc_impl::forecast(int noutput_items,
 
 void pfb_arb_resampler_ccc_impl::set_taps(const std::vector<gr_complex>& taps)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     d_resamp->set_taps(taps);
     set_history(d_resamp->taps_per_filter());
@@ -85,7 +85,7 @@ void pfb_arb_resampler_ccc_impl::print_taps() { d_resamp->print_taps(); }
 
 void pfb_arb_resampler_ccc_impl::set_rate(float rate)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     d_resamp->set_rate(rate);
     set_relative_rate(rate);
@@ -93,7 +93,7 @@ void pfb_arb_resampler_ccc_impl::set_rate(float rate)
 
 void pfb_arb_resampler_ccc_impl::set_phase(float ph)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
     d_resamp->set_phase(ph);
 }
 
@@ -131,7 +131,7 @@ int pfb_arb_resampler_ccc_impl::general_work(int noutput_items,
                                              gr_vector_const_void_star& input_items,
                                              gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     gr_complex* in = (gr_complex*)input_items[0];
     gr_complex* out = (gr_complex*)output_items[0];

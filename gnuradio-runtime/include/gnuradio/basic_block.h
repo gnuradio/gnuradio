@@ -29,13 +29,14 @@
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/sptr_magic.h>
 #include <gnuradio/thread/thread.h>
+#include <condition_variable>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/foreach.hpp>
 #include <boost/function.hpp>
-#include <boost/thread/condition_variable.hpp>
 #include <deque>
 #include <iostream>
 #include <map>
+#include <mutex>
 #include <string>
 
 #include <gnuradio/rpcregisterhelpers.h>
@@ -66,10 +67,10 @@ private:
     typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator> msg_queue_map_t;
     typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator>::iterator
         msg_queue_map_itr;
-    std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::comparator>
+    std::map<pmt::pmt_t, boost::shared_ptr<std::condition_variable>, pmt::comparator>
         msg_queue_ready;
 
-    gr::thread::mutex mutex; //< protects all vars
+    std::mutex mutex; //< protects all vars
 
 protected:
     friend class flowgraph;

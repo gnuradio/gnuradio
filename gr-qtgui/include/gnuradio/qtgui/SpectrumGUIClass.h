@@ -116,7 +116,7 @@ public:
 
 protected:
 private:
-    gr::thread::mutex d_mutex;
+    std::mutex d_mutex;
     int64_t _dataPoints;
     std::string _title;
     double _centerFrequency;

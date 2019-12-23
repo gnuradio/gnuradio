@@ -65,7 +65,7 @@ void delay_impl::set_dly(int d)
     // protects from quickly-repeated calls to this function that
     // would end with d_delta=0.
     if (d != dly()) {
-        gr::thread::scoped_lock l(d_mutex_delay);
+        gr::thread::lock_guard l(d_mutex_delay);
         int old = dly();
         set_history(d + 1);
         declare_sample_delay(history() - 1);
@@ -78,7 +78,7 @@ int delay_impl::general_work(int noutput_items,
                              gr_vector_const_void_star& input_items,
                              gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock l(d_mutex_delay);
+    gr::thread::lock_guard l(d_mutex_delay);
     assert(input_items.size() == output_items.size());
 
     const char* iptr;

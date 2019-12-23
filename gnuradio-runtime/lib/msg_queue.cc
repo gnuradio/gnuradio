@@ -49,7 +49,7 @@ void msg_queue::insert_tail(message::sptr msg)
     if (msg->d_next)
         throw std::invalid_argument("gr::msg_queue::insert_tail: msg already in queue");
 
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::unique_lock guard(d_mutex);
 
     while (full_p())
         d_not_full.wait(guard);
@@ -70,7 +70,7 @@ void msg_queue::insert_tail(message::sptr msg)
 
 message::sptr msg_queue::delete_head()
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::unique_lock guard(d_mutex);
     message::sptr m;
 
     while ((m = d_head) == 0)
@@ -91,7 +91,7 @@ message::sptr msg_queue::delete_head()
 
 message::sptr msg_queue::delete_head_nowait()
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
     message::sptr m;
 
     if ((m = d_head) == 0) {

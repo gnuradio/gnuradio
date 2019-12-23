@@ -48,7 +48,7 @@ rpcserver_thrift::~rpcserver_thrift()
 void rpcserver_thrift::registerConfigureCallback(const std::string& id,
                                                  const configureCallback_t callback)
 {
-    boost::mutex::scoped_lock lock(d_callback_map_lock);
+    gr::thread::lock_guard lock(d_callback_map_lock);
     {
         ConfigureCallbackMap_t::const_iterator iter(d_setcallbackmap.find(id));
         if (iter != d_setcallbackmap.end()) {
@@ -68,7 +68,7 @@ void rpcserver_thrift::registerConfigureCallback(const std::string& id,
 
 void rpcserver_thrift::unregisterConfigureCallback(const std::string& id)
 {
-    boost::mutex::scoped_lock lock(d_callback_map_lock);
+    gr::thread::lock_guard lock(d_callback_map_lock);
     ConfigureCallbackMap_t::iterator iter(d_setcallbackmap.find(id));
     if (iter == d_setcallbackmap.end()) {
         std::stringstream s;
@@ -87,7 +87,7 @@ void rpcserver_thrift::unregisterConfigureCallback(const std::string& id)
 void rpcserver_thrift::registerQueryCallback(const std::string& id,
                                              const queryCallback_t callback)
 {
-    boost::mutex::scoped_lock lock(d_callback_map_lock);
+    gr::thread::lock_guard lock(d_callback_map_lock);
     {
         QueryCallbackMap_t::const_iterator iter(d_getcallbackmap.find(id));
         if (iter != d_getcallbackmap.end()) {
@@ -107,7 +107,7 @@ void rpcserver_thrift::registerQueryCallback(const std::string& id,
 
 void rpcserver_thrift::unregisterQueryCallback(const std::string& id)
 {
-    boost::mutex::scoped_lock lock(d_callback_map_lock);
+    gr::thread::lock_guard lock(d_callback_map_lock);
     QueryCallbackMap_t::iterator iter(d_getcallbackmap.find(id));
     if (iter == d_getcallbackmap.end()) {
         std::stringstream s;
@@ -127,7 +127,7 @@ void rpcserver_thrift::unregisterQueryCallback(const std::string& id)
 void rpcserver_thrift::registerHandlerCallback(const std::string& id,
                                                const handlerCallback_t callback)
 {
-    boost::mutex::scoped_lock lock(d_callback_map_lock);
+    gr::thread::lock_guard lock(d_callback_map_lock);
     {
         HandlerCallbackMap_t::const_iterator iter(d_handlercallbackmap.find(id));
         if (iter != d_handlercallbackmap.end()) {
@@ -147,7 +147,7 @@ void rpcserver_thrift::registerHandlerCallback(const std::string& id,
 
 void rpcserver_thrift::unregisterHandlerCallback(const std::string& id)
 {
-    boost::mutex::scoped_lock lock(d_callback_map_lock);
+    gr::thread::lock_guard lock(d_callback_map_lock);
     HandlerCallbackMap_t::iterator iter(d_handlercallbackmap.find(id));
     if (iter == d_handlercallbackmap.end()) {
         std::stringstream s;
@@ -167,7 +167,7 @@ void rpcserver_thrift::unregisterHandlerCallback(const std::string& id)
 
 void rpcserver_thrift::setKnobs(const GNURadio::KnobMap& knobs)
 {
-    boost::mutex::scoped_lock lock(d_callback_map_lock);
+    gr::thread::lock_guard lock(d_callback_map_lock);
     std::for_each(knobs.begin(),
                   knobs.end(),
                   set_f<GNURadio::KnobMap::value_type, ConfigureCallbackMap_t>(
@@ -177,7 +177,7 @@ void rpcserver_thrift::setKnobs(const GNURadio::KnobMap& knobs)
 void rpcserver_thrift::getKnobs(GNURadio::KnobMap& _return,
                                 const GNURadio::KnobIDList& knobs)
 {
-    boost::mutex::scoped_lock lock(d_callback_map_lock);
+    gr::thread::lock_guard lock(d_callback_map_lock);
     if (knobs.size() == 0) {
         std::for_each(d_getcallbackmap.begin(),
                       d_getcallbackmap.end(),
@@ -195,7 +195,7 @@ void rpcserver_thrift::getKnobs(GNURadio::KnobMap& _return,
 void rpcserver_thrift::getRe(GNURadio::KnobMap& _return,
                              const GNURadio::KnobIDList& knobs)
 {
-    boost::mutex::scoped_lock lock(d_callback_map_lock);
+    gr::thread::lock_guard lock(d_callback_map_lock);
     if (knobs.size() == 0) {
         std::for_each(d_getcallbackmap.begin(),
                       d_getcallbackmap.end(),
@@ -221,7 +221,7 @@ void rpcserver_thrift::getRe(GNURadio::KnobMap& _return,
 void rpcserver_thrift::properties(GNURadio::KnobPropMap& _return,
                                   const GNURadio::KnobIDList& knobs)
 {
-    boost::mutex::scoped_lock lock(d_callback_map_lock);
+    gr::thread::lock_guard lock(d_callback_map_lock);
     if (knobs.size() == 0) {
         std::for_each(
             d_getcallbackmap.begin(),
@@ -250,7 +250,7 @@ void rpcserver_thrift::postMessage(const std::string& alias,
     // just need to get the PMT itself out of this to pass to the set_h
     // function for handling the message post.
 
-    boost::mutex::scoped_lock lock(d_callback_map_lock);
+    gr::thread::lock_guard lock(d_callback_map_lock);
 
     pmt::pmt_t alias_pmt = pmt::deserialize_str(alias);
     pmt::pmt_t port_pmt = pmt::deserialize_str(port);

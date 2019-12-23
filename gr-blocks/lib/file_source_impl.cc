@@ -134,7 +134,7 @@ void file_source_impl::open(const char* filename,
                             uint64_t length_items)
 {
     // obtain exclusive access for duration of this function
-    gr::thread::scoped_lock lock(fp_mutex);
+    gr::thread::lock_guard lock(fp_mutex);
 
     if (d_new_fp) {
         fclose(d_new_fp);
@@ -211,7 +211,7 @@ void file_source_impl::open(const char* filename,
 void file_source_impl::close()
 {
     // obtain exclusive access for duration of this function
-    gr::thread::scoped_lock lock(fp_mutex);
+    gr::thread::lock_guard lock(fp_mutex);
 
     if (d_new_fp != NULL) {
         fclose(d_new_fp);
@@ -223,7 +223,7 @@ void file_source_impl::close()
 void file_source_impl::do_update()
 {
     if (d_updated) {
-        gr::thread::scoped_lock lock(fp_mutex); // hold while in scope
+        gr::thread::lock_guard lock(fp_mutex); // hold while in scope
 
         if (d_fp)
             fclose(d_fp);
@@ -248,7 +248,7 @@ int file_source_impl::work(int noutput_items,
     if (d_fp == NULL)
         throw std::runtime_error("work with file not open");
 
-    gr::thread::scoped_lock lock(fp_mutex); // hold for the rest of this function
+    gr::thread::lock_guard lock(fp_mutex); // hold for the rest of this function
 
     // No items remaining - all done
     if (d_items_remaining == 0)

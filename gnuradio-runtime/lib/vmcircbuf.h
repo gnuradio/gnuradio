@@ -27,7 +27,7 @@
 #include <gnuradio/thread/thread.h>
 #include <vector>
 
-extern gr::thread::mutex s_vm_mutex;
+extern std::mutex s_vm_mutex;
 
 namespace gr {
 

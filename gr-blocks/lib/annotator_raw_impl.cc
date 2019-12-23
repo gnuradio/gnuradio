@@ -55,7 +55,7 @@ annotator_raw_impl::~annotator_raw_impl() {}
 
 void annotator_raw_impl::add_tag(uint64_t offset, pmt_t key, pmt_t val)
 {
-    gr::thread::scoped_lock l(d_mutex);
+    gr::thread::lock_guard l(d_mutex);
 
     tag_t tag;
     tag.srcid = pmt::intern(name());
@@ -78,7 +78,7 @@ int annotator_raw_impl::work(int noutput_items,
                              gr_vector_const_void_star& input_items,
                              gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock l(d_mutex);
+    gr::thread::lock_guard l(d_mutex);
 
     const char* in = (const char*)input_items[0];
     char* out = (char*)output_items[0];

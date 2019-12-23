@@ -107,7 +107,7 @@ void udp_source_impl::connect(const std::string& host, int port)
 
 void udp_source_impl::disconnect()
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
 
     if (!d_connected)
         return;
@@ -145,7 +145,7 @@ void udp_source_impl::handle_read(const boost::system::error_code& error,
 {
     if (!error) {
         {
-            boost::lock_guard<gr::thread::mutex> lock(d_udp_mutex);
+            gr::thread::lock_guard lock(d_udp_mutex);
             if (d_eof && (bytes_transferred == 0)) {
                 // If we are using EOF notification, test for it and don't
                 // add anything to the output.
@@ -176,7 +176,7 @@ int udp_source_impl::work(int noutput_items,
                           gr_vector_const_void_star& input_items,
                           gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock l(d_setlock);
+    gr::thread::lock_guard l(d_setlock);
 
     char* out = (char*)output_items[0];
 
@@ -184,10 +184,10 @@ int udp_source_impl::work(int noutput_items,
     // on a conditional signal before proceeding. We use this
     // because the conditional wait is interruptible while a
     // synchronous receive_from is not.
-    boost::unique_lock<boost::mutex> lock(d_udp_mutex);
+    gr::thread::unique_lock lock(d_udp_mutex);
 
-    // use timed_wait to avoid permanent blocking in the work function
-    d_cond_wait.timed_wait(lock, boost::posix_time::milliseconds(10));
+    // use wait_for to avoid permanent blocking in the work function
+    d_cond_wait.wait_for(lock, std::chrono::milliseconds(10));
 
     if (d_residual < 0) {
         return d_residual;

@@ -23,7 +23,7 @@
 #include "usrp_block_impl.h"
 #include <gnuradio/uhd/usrp_source.h>
 #include <uhd/convert.hpp>
-#include <boost/thread/mutex.hpp>
+#include <mutex>
 
 static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("rx_time");
 static const pmt::pmt_t RATE_KEY = pmt::string_to_symbol("rx_rate");
@@ -137,7 +137,7 @@ private:
     // tag shadows
     double _samp_rate;
 
-    boost::recursive_mutex d_mutex;
+    std::recursive_mutex d_mutex;
 };
 
 } /* namespace uhd */

@@ -927,9 +927,9 @@ protected:
     /*! Used by block's setters and work functions to make
      * setting/resetting of parameters thread-safe.
      *
-     * Used by calling gr::thread::scoped_lock l(d_setlock);
+     * Used by calling gr::thread::lock_guard l(d_setlock);
      */
-    gr::thread::mutex d_setlock;
+    std::mutex d_setlock;
 
     /*! Used by blocks to access the logger system.
      */

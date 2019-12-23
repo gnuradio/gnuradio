@@ -24,7 +24,7 @@
 #define INCLUDED_BLOCKS_FILE_SOURCE_IMPL_H
 
 #include <gnuradio/blocks/file_source.h>
-#include <boost/thread/mutex.hpp>
+#include <mutex>
 
 namespace gr {
 namespace blocks {
@@ -45,7 +45,7 @@ private:
     long d_repeat_cnt;
     pmt::pmt_t d_add_begin_tag;
 
-    boost::mutex fp_mutex;
+    std::mutex fp_mutex;
     pmt::pmt_t _id;
 
     void do_update();

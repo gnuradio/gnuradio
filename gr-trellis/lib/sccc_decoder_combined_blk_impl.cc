@@ -112,7 +112,7 @@ sccc_decoder_combined_blk_impl<IN_T, OUT_T>::~sccc_decoder_combined_blk_impl()
 template <class IN_T, class OUT_T>
 void sccc_decoder_combined_blk_impl<IN_T, OUT_T>::set_scaling(float scaling)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_scaling = scaling;
 }
 
@@ -133,7 +133,7 @@ int sccc_decoder_combined_blk_impl<IN_T, OUT_T>::general_work(
     gr_vector_const_void_star& input_items,
     gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     int nblocks = noutput_items / d_blocklength;
     float (*p2min)(float, float) = NULL;
 

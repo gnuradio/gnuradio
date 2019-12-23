@@ -37,7 +37,7 @@ private:
     std::vector<tag_t> d_tags;
     bool d_display;
     pmt::pmt_t d_filter;
-    gr::thread::mutex d_mutex;
+    std::mutex d_mutex;
 
 public:
     tag_debug_impl(size_t sizeof_stream_item,

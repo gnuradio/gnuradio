@@ -71,7 +71,7 @@ file_sink_base::~file_sink_base()
 
 bool file_sink_base::open(const char* filename)
 {
-    gr::thread::scoped_lock guard(d_mutex); // hold mutex for duration of this function
+    gr::thread::lock_guard guard(d_mutex); // hold mutex for duration of this function
 
     // we use the open system call to get access to the O_LARGEFILE flag.
     int fd;
@@ -101,7 +101,7 @@ bool file_sink_base::open(const char* filename)
 
 void file_sink_base::close()
 {
-    gr::thread::scoped_lock guard(d_mutex); // hold mutex for duration of this function
+    gr::thread::lock_guard guard(d_mutex); // hold mutex for duration of this function
 
     if (d_new_fp) {
         fclose(d_new_fp);
@@ -113,7 +113,7 @@ void file_sink_base::close()
 void file_sink_base::do_update()
 {
     if (d_updated) {
-        gr::thread::scoped_lock guard(d_mutex); // hold mutex for duration of this block
+        gr::thread::lock_guard guard(d_mutex); // hold mutex for duration of this block
         if (d_fp)
             fclose(d_fp);
         d_fp = d_new_fp; // install new file pointer

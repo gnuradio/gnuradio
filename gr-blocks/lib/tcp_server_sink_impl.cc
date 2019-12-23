@@ -87,7 +87,7 @@ tcp_server_sink_impl::tcp_server_sink_impl(size_t itemsize,
 void tcp_server_sink_impl::do_accept(const boost::system::error_code& error)
 {
     if (!error) {
-        gr::thread::scoped_lock guard(d_writing_mut);
+        gr::thread::lock_guard guard(d_writing_mut);
         d_sockets.insert(d_socket.release());
         d_socket.reset(new boost::asio::ip::tcp::socket(d_io_service));
         d_acceptor.async_accept(*d_socket,
@@ -102,7 +102,7 @@ void tcp_server_sink_impl::do_write(const boost::system::error_code& error,
                                     std::set<boost::asio::ip::tcp::socket*>::iterator i)
 {
     {
-        gr::thread::scoped_lock guard(d_writing_mut);
+        gr::thread::lock_guard guard(d_writing_mut);
         --d_writing;
         if (error) {
             delete *i;
@@ -114,7 +114,7 @@ void tcp_server_sink_impl::do_write(const boost::system::error_code& error,
 
 tcp_server_sink_impl::~tcp_server_sink_impl()
 {
-    gr::thread::scoped_lock guard(d_writing_mut);
+    gr::thread::unique_lock guard(d_writing_mut);
     while (d_writing) {
         d_writing_cond.wait(guard);
     }
@@ -137,7 +137,7 @@ int tcp_server_sink_impl::work(int noutput_items,
 {
     const char* in = (const char*)input_items[0];
 
-    gr::thread::scoped_lock guard(d_writing_mut);
+    gr::thread::unique_lock guard(d_writing_mut);
     while (d_writing) {
         d_writing_cond.wait(guard);
     }

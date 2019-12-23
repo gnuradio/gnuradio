@@ -34,7 +34,7 @@ class annotator_raw_impl : public annotator_raw
 private:
     size_t d_itemsize;
     std::vector<tag_t> d_queued_tags;
-    gr::thread::mutex d_mutex;
+    std::mutex d_mutex;
 
 public:
     annotator_raw_impl(size_t sizeof_stream_item);

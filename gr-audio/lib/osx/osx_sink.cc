@@ -694,7 +694,7 @@ int osx_sink::work(int noutput_items,
 {
 #if _OSX_AU_DEBUG_RENDER_
     {
-        gr::thread::scoped_lock l(d_internal);
+        gr::thread::lock_guard l(d_internal);
         std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
                   << "Starting: #OI = " << noutput_items
                   << ", reset = " << (d_do_reset ? "true" : "false") << std::endl;
@@ -726,7 +726,7 @@ int osx_sink::work(int noutput_items,
 
 #if _OSX_AU_DEBUG_RENDER_
             {
-                gr::thread::scoped_lock l(d_internal);
+                gr::thread::lock_guard l(d_internal);
                 std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::work: "
                           << "doing reset." << std::endl;
             }
@@ -743,7 +743,7 @@ int osx_sink::work(int noutput_items,
 
             teardown();
 
-            gr::thread::scoped_lock l(d_internal);
+            gr::thread::lock_guard l(d_internal);
 
             setup();
             start();
@@ -756,7 +756,7 @@ int osx_sink::work(int noutput_items,
         }
     }
 
-    gr::thread::scoped_lock l(d_internal);
+    gr::thread::lock_guard l(d_internal);
 
     // take the input data, copy it, and push it to the bottom of
     // the queue.  mono input is pushed onto queue[0]; stereo input
@@ -882,7 +882,7 @@ OSStatus osx_sink::au_output_callback(void* in_ref_con,
     osx_sink* This = reinterpret_cast<osx_sink*>(in_ref_con);
     OSStatus err = noErr;
 
-    gr::thread::scoped_lock l(This->d_internal);
+    gr::thread::lock_guard l(This->d_internal);
 
 #if _OSX_AU_DEBUG_RENDER_
     std::cerr << ((void*)(pthread_self())) << " : audio_osx_sink::au_output_callback: "

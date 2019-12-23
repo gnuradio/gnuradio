@@ -63,7 +63,7 @@ metrics_impl<T>::metrics_impl(int O,
 template <class T>
 void metrics_impl<T>::set_O(int O)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_O = O;
     this->set_relative_rate((uint64_t)d_O, (uint64_t)d_D);
     this->set_output_multiple((int)d_O);
@@ -72,7 +72,7 @@ void metrics_impl<T>::set_O(int O)
 template <class T>
 void metrics_impl<T>::set_D(int D)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_D = D;
     this->set_relative_rate((uint64_t)d_O, (uint64_t)d_D);
 }
@@ -80,14 +80,14 @@ void metrics_impl<T>::set_D(int D)
 template <class T>
 void metrics_impl<T>::set_TYPE(digital::trellis_metric_type_t type)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_TYPE = type;
 }
 
 template <class T>
 void metrics_impl<T>::set_TABLE(const std::vector<T>& table)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     d_TABLE = table;
 }
 
@@ -112,7 +112,7 @@ int metrics_impl<T>::general_work(int noutput_items,
                                   gr_vector_const_void_star& input_items,
                                   gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock guard(this->d_setlock);
+    gr::thread::lock_guard guard(this->d_setlock);
     int nstreams = input_items.size();
 
     for (int m = 0; m < nstreams; m++) {

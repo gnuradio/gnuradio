@@ -91,7 +91,7 @@ void udp_sink_impl::disconnect()
     if (!d_connected)
         return;
 
-    gr::thread::scoped_lock guard(d_mutex); // protect d_socket from work()
+    gr::thread::lock_guard guard(d_mutex); // protect d_socket from work()
 
     // Send a few zero-length packets to signal receiver we are done
     boost::array<char, 0> send_buf;
@@ -115,7 +115,7 @@ int udp_sink_impl::work(int noutput_items,
     ssize_t r = 0, bytes_sent = 0, bytes_to_send = 0;
     ssize_t total_size = noutput_items * d_itemsize;
 
-    gr::thread::scoped_lock guard(d_mutex); // protect d_socket
+    gr::thread::lock_guard guard(d_mutex); // protect d_socket
 
     while (bytes_sent < total_size) {
         bytes_to_send = std::min((ssize_t)d_payload_size, (total_size - bytes_sent));

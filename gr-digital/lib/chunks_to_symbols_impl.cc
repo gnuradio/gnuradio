@@ -93,7 +93,7 @@ template <class IN_T, class OUT_T>
 void chunks_to_symbols_impl<IN_T, OUT_T>::set_symbol_table(
     const std::vector<OUT_T>& symbol_table)
 {
-    gr::thread::scoped_lock lock(this->d_setlock);
+    gr::thread::lock_guard lock(this->d_setlock);
     d_symbol_table = symbol_table;
 }
 
@@ -102,7 +102,7 @@ int chunks_to_symbols_impl<IN_T, OUT_T>::work(int noutput_items,
                                               gr_vector_const_void_star& input_items,
                                               gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock lock(this->d_setlock);
+    gr::thread::lock_guard lock(this->d_setlock);
     assert(noutput_items % d_D == 0);
     assert(input_items.size() == output_items.size());
     int nstreams = input_items.size();

@@ -71,7 +71,7 @@ private:
      */
     void store(pmt::pmt_t msg);
 
-    gr::thread::mutex d_mutex;
+    std::mutex d_mutex;
     std::vector<pmt::pmt_t> d_messages;
 
 public:

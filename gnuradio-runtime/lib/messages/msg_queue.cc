@@ -41,7 +41,7 @@ msg_queue::~msg_queue() { flush(); }
 
 void msg_queue::insert_tail(pmt::pmt_t msg)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::unique_lock guard(d_mutex);
 
     while (full_p())
         d_not_full.wait(guard);
@@ -52,7 +52,7 @@ void msg_queue::insert_tail(pmt::pmt_t msg)
 
 pmt::pmt_t msg_queue::delete_head()
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::unique_lock guard(d_mutex);
 
     while (empty_p())
         d_not_empty.wait(guard);
@@ -68,7 +68,7 @@ pmt::pmt_t msg_queue::delete_head()
 
 pmt::pmt_t msg_queue::delete_head_nowait()
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     if (empty_p())
         return pmt::pmt_t();

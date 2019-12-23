@@ -185,7 +185,7 @@ private:
     static boost::scoped_ptr<thrift_application_base_impl> p_impl;
 
     // Mutex to protect the endpoint string.
-    gr::thread::mutex d_lock;
+    std::mutex d_lock;
 
     // Will be set to true by a the application_started() function,
     // specialized for a particular booter implementation, once the
@@ -247,7 +247,7 @@ template <typename TserverBase, typename TserverClass>
 void thrift_application_base<TserverBase, TserverClass>::set_endpoint(
     const std::string& endpoint)
 {
-    gr::thread::scoped_lock guard(d_lock);
+    gr::thread::lock_guard guard(d_lock);
     p_impl->d_endpointStr = endpoint;
 }
 

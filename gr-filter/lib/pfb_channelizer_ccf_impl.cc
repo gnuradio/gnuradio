@@ -107,7 +107,7 @@ pfb_channelizer_ccf_impl::~pfb_channelizer_ccf_impl() { delete[] d_idxlut; }
 
 void pfb_channelizer_ccf_impl::set_taps(const std::vector<float>& taps)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     polyphase_filterbank::set_taps(taps);
     set_history(d_taps_per_filter + 1);
@@ -123,7 +123,7 @@ std::vector<std::vector<float>> pfb_channelizer_ccf_impl::taps() const
 
 void pfb_channelizer_ccf_impl::set_channel_map(const std::vector<int>& map)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     if (!map.empty()) {
         unsigned int max = (unsigned int)*std::max_element(map.begin(), map.end());
@@ -142,7 +142,7 @@ int pfb_channelizer_ccf_impl::general_work(int noutput_items,
                                            gr_vector_const_void_star& input_items,
                                            gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     gr_complex* in = (gr_complex*)input_items[0];
     gr_complex* out = (gr_complex*)output_items[0];

@@ -97,7 +97,7 @@ public:
     size_t nreaders() const { return d_readers.size(); }
     buffer_reader* reader(size_t index) { return d_readers[index]; }
 
-    gr::thread::mutex* mutex() { return &d_mutex; }
+    std::mutex* mutex() { return &d_mutex; }
 
     uint64_t nitems_written() { return d_abs_write_offset; }
 
@@ -176,7 +176,7 @@ private:
     // The mutex protects d_write_index, d_abs_write_offset, d_done, d_item_tags
     // and the d_read_index's and d_abs_read_offset's in the buffer readers.
     //
-    gr::thread::mutex d_mutex;
+    std::mutex d_mutex;
     unsigned int d_write_index;  // in items [0,d_bufsize)
     uint64_t d_abs_write_offset; // num items written since the start
     bool d_done;
@@ -302,7 +302,7 @@ public:
     void set_done(bool done) { d_buffer->set_done(done); }
     bool done() const { return d_buffer->done(); }
 
-    gr::thread::mutex* mutex() { return d_buffer->mutex(); }
+    std::mutex* mutex() { return d_buffer->mutex(); }
 
     uint64_t nitems_read() { return d_abs_read_offset; }
 

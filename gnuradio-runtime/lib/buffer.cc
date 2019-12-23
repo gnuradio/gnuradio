@@ -192,14 +192,14 @@ void* buffer::write_pointer() { return &d_base[d_write_index * d_sizeof_item]; }
 
 void buffer::update_write_pointer(int nitems)
 {
-    gr::thread::scoped_lock guard(*mutex());
+    gr::thread::lock_guard guard(*mutex());
     d_write_index = index_add(d_write_index, nitems);
     d_abs_write_offset += nitems;
 }
 
 void buffer::set_done(bool done)
 {
-    gr::thread::scoped_lock guard(*mutex());
+    gr::thread::lock_guard guard(*mutex());
     d_done = done;
 }
 
@@ -230,13 +230,13 @@ void buffer::drop_reader(buffer_reader* reader)
 
 void buffer::add_item_tag(const tag_t& tag)
 {
-    gr::thread::scoped_lock guard(*mutex());
+    gr::thread::lock_guard guard(*mutex());
     d_item_tags.insert(std::pair<uint64_t, tag_t>(tag.offset, tag));
 }
 
 void buffer::remove_item_tag(const tag_t& tag, long id)
 {
-    gr::thread::scoped_lock guard(*mutex());
+    gr::thread::lock_guard guard(*mutex());
     for (std::multimap<uint64_t, tag_t>::iterator it =
              d_item_tags.lower_bound(tag.offset);
          it != d_item_tags.upper_bound(tag.offset);
@@ -256,7 +256,7 @@ void buffer::prune_tags(uint64_t max_time)
 
        If this function is used elsewhere, remember to lock the
        buffer's mutex al la the scoped_lock:
-           gr::thread::scoped_lock guard(*mutex());
+           gr::thread::lock_guard guard(*mutex());
      */
 
     /*
@@ -328,7 +328,7 @@ const void* buffer_reader::read_pointer()
 
 void buffer_reader::update_read_pointer(int nitems)
 {
-    gr::thread::scoped_lock guard(*mutex());
+    gr::thread::lock_guard guard(*mutex());
     d_read_index = d_buffer->index_add(d_read_index, nitems);
     d_abs_read_offset += nitems;
 }
@@ -338,7 +338,7 @@ void buffer_reader::get_tags_in_range(std::vector<tag_t>& v,
                                       uint64_t abs_end,
                                       long id)
 {
-    gr::thread::scoped_lock guard(*mutex());
+    gr::thread::lock_guard guard(*mutex());
 
     v.clear();
     std::multimap<uint64_t, tag_t>::iterator itr =

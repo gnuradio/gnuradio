@@ -106,7 +106,7 @@ int portaudio_source_callback(const void* inputBuffer,
 
         // copy from input buffer to ringbuffer
         {
-            gr::thread::scoped_lock guard(self->d_ringbuffer_mutex);
+            gr::thread::lock_guard l(self->d_ringbuffer_mutex);
 
             memcpy(self->d_writer->write_pointer(),
                    inputBuffer,
@@ -315,7 +315,7 @@ int portaudio_source::work(int noutput_items,
                 return k;
 
             if (d_ok_to_block) {
-                gr::thread::scoped_lock guard(d_ringbuffer_mutex);
+                gr::thread::unique_lock guard(d_ringbuffer_mutex);
                 while (d_ringbuffer_ready == false)
                     d_ringbuffer_cond.wait(guard); // block here, then try again
                 continue;
@@ -334,7 +334,7 @@ int portaudio_source::work(int noutput_items,
 
             // Fill with some frames of zeros
             {
-                gr::thread::scoped_lock guard(d_ringbuffer_mutex);
+                gr::thread::lock_guard guard(d_ringbuffer_mutex);
 
                 int nf = std::min(noutput_items - k, (int)d_portaudio_buffer_size_frames);
                 for (int i = 0; i < nf; i++) {
@@ -351,7 +351,7 @@ int portaudio_source::work(int noutput_items,
 
         // We can read the smaller of the request and what's in the buffer.
         {
-            gr::thread::scoped_lock guard(d_ringbuffer_mutex);
+            gr::thread::lock_guard guard(d_ringbuffer_mutex);
 
             int nf = std::min(noutput_items - k, nframes);
 

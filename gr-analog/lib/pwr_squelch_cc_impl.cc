@@ -69,13 +69,13 @@ void pwr_squelch_cc_impl::update_state(const gr_complex& in)
 
 void pwr_squelch_cc_impl::set_threshold(double db)
 {
-    gr::thread::scoped_lock l(d_setlock);
+    gr::thread::lock_guard l(d_setlock);
     d_threshold = std::pow(10.0, db / 10);
 }
 
 void pwr_squelch_cc_impl::set_alpha(double alpha)
 {
-    gr::thread::scoped_lock l(d_setlock);
+    gr::thread::lock_guard l(d_setlock);
     d_iir.set_taps(alpha);
 }
 

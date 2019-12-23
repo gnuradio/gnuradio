@@ -269,7 +269,7 @@ bool file_meta_source_impl::open(const std::string& filename,
 
 bool file_meta_source_impl::_open(FILE** fp, const char* filename)
 {
-    gr::thread::scoped_lock guard(d_setlock); // hold mutex for duration of this function
+    gr::thread::lock_guard guard(d_setlock); // hold mutex for duration of this function
 
     bool ret = true;
     int fd;
@@ -296,7 +296,7 @@ bool file_meta_source_impl::_open(FILE** fp, const char* filename)
 
 void file_meta_source_impl::close()
 {
-    gr::thread::scoped_lock guard(d_setlock); // hold mutex for duration of this function
+    gr::thread::lock_guard guard(d_setlock); // hold mutex for duration of this function
     if (d_state == STATE_DETACHED) {
         if (d_new_hdr_fp) {
             fclose(d_new_hdr_fp);
@@ -326,7 +326,7 @@ void file_meta_source_impl::close()
 void file_meta_source_impl::do_update()
 {
     if (d_updated) {
-        gr::thread::scoped_lock guard(d_setlock); // hold mutex for duration of this block
+        gr::thread::lock_guard guard(d_setlock); // hold mutex for duration of this block
         if (d_state == STATE_DETACHED) {
             if (d_hdr_fp)
                 fclose(d_hdr_fp);
@@ -383,7 +383,7 @@ int file_meta_source_impl::work(int noutput_items,
         d_tags.pop_back();
     }
 
-    gr::thread::scoped_lock lock(d_setlock); // hold for the rest of this function
+    gr::thread::lock_guard lock(d_setlock); // hold for the rest of this function
     while (size) {
         i = fread(out, d_itemsize, size, d_fp);
 

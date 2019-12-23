@@ -57,14 +57,14 @@ peak_detector2_fb_impl::~peak_detector2_fb_impl() {}
 
 void peak_detector2_fb_impl::set_threshold_factor_rise(float thr)
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
     d_threshold_factor_rise = thr;
     invalidate();
 }
 
 void peak_detector2_fb_impl::set_look_ahead(int look)
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
     d_look_ahead = look;
     invalidate();
 }
@@ -90,7 +90,7 @@ int peak_detector2_fb_impl::work(int noutput_items,
 
     memset(optr, 0, noutput_items * sizeof(char));
 
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
 
     // have not crossed threshold yet
     if (d_found == false) {

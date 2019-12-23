@@ -220,7 +220,7 @@ void const_sink_c_impl::set_trigger_mode(trigger_mode mode,
                                          int channel,
                                          const std::string& tag_key)
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
 
     d_trigger_mode = mode;
     d_trigger_slope = slope;
@@ -278,7 +278,7 @@ double const_sink_c_impl::line_alpha(unsigned int which)
 
 void const_sink_c_impl::set_nsamps(const int newsize)
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
 
     if (newsize != d_size) {
         // Set new size and reset buffer index
@@ -320,7 +320,7 @@ void const_sink_c_impl::disable_legend() { d_main_gui->disableLegend(); }
 
 void const_sink_c_impl::reset()
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
     _reset();
 }
 

@@ -285,7 +285,7 @@ void block_detail::stop_perf_counters(int noutput_items, int nproduced)
         d_pc_start_time = (float)gr::high_res_timer_now();
         for (size_t i = 0; i < d_input.size(); i++) {
             buffer_reader_sptr in_buf = d_input[i];
-            gr::thread::scoped_lock guard(*in_buf->mutex());
+            gr::thread::lock_guard guard(*in_buf->mutex());
             float pfull = static_cast<float>(in_buf->items_available()) /
                           static_cast<float>(in_buf->max_possible_items_available());
             d_ins_input_buffers_full[i] = pfull;
@@ -294,7 +294,7 @@ void block_detail::stop_perf_counters(int noutput_items, int nproduced)
         }
         for (size_t i = 0; i < d_output.size(); i++) {
             buffer_sptr out_buf = d_output[i];
-            gr::thread::scoped_lock guard(*out_buf->mutex());
+            gr::thread::lock_guard guard(*out_buf->mutex());
             float pfull = 1.0f - static_cast<float>(out_buf->space_available()) /
                                      static_cast<float>(out_buf->bufsize());
             d_ins_output_buffers_full[i] = pfull;
@@ -325,7 +325,7 @@ void block_detail::stop_perf_counters(int noutput_items, int nproduced)
 
         for (size_t i = 0; i < d_input.size(); i++) {
             buffer_reader_sptr in_buf = d_input[i];
-            gr::thread::scoped_lock guard(*in_buf->mutex());
+            gr::thread::lock_guard guard(*in_buf->mutex());
             float pfull = static_cast<float>(in_buf->items_available()) /
                           static_cast<float>(in_buf->max_possible_items_available());
 
@@ -337,7 +337,7 @@ void block_detail::stop_perf_counters(int noutput_items, int nproduced)
 
         for (size_t i = 0; i < d_output.size(); i++) {
             buffer_sptr out_buf = d_output[i];
-            gr::thread::scoped_lock guard(*out_buf->mutex());
+            gr::thread::lock_guard guard(*out_buf->mutex());
             float pfull = 1.0f - static_cast<float>(out_buf->space_available()) /
                                      static_cast<float>(out_buf->bufsize());
 

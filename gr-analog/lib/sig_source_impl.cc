@@ -111,7 +111,7 @@ int sig_source_impl<T>::work(int noutput_items,
 {
     T* optr = (T*)output_items[0];
     T t;
-    gr::thread::scoped_lock l(this->d_setlock);
+    gr::thread::lock_guard l(this->d_setlock);
 
     switch (d_waveform) {
     case GR_CONST_WAVE:
@@ -187,7 +187,7 @@ int sig_source_impl<gr_complex>::work(int noutput_items,
 {
     gr_complex* optr = (gr_complex*)output_items[0];
     gr_complex t;
-    gr::thread::scoped_lock l(this->d_setlock);
+    gr::thread::lock_guard l(this->d_setlock);
 
     switch (d_waveform) {
     case GR_CONST_WAVE:
@@ -315,7 +315,7 @@ void sig_source_impl<T>::set_offset(T offset)
 template <class T>
 void sig_source_impl<T>::set_phase(float phase)
 {
-    gr::thread::scoped_lock l(this->d_setlock);
+    gr::thread::lock_guard l(this->d_setlock);
     d_nco.set_phase(phase);
 }
 

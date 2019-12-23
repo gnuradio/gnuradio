@@ -35,9 +35,9 @@ namespace gr {
  */
 class GR_RUNTIME_API msg_queue : public msg_handler
 {
-    gr::thread::mutex d_mutex;
-    gr::thread::condition_variable d_not_empty;
-    gr::thread::condition_variable d_not_full;
+    std::mutex d_mutex;
+    std::condition_variable d_not_empty;
+    std::condition_variable d_not_full;
     message::sptr d_head;
     message::sptr d_tail;
     unsigned int d_count; // # of messages in queue.

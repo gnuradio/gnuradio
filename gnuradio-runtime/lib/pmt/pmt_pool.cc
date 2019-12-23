@@ -56,7 +56,7 @@ pmt_pool::~pmt_pool()
 
 void* pmt_pool::malloc()
 {
-    scoped_lock guard(d_mutex);
+    gr::thread::unique_lock guard(d_mutex);
     item* p;
 
     if (d_max_items != 0) {
@@ -100,7 +100,7 @@ void pmt_pool::free(void* foo)
     if (!foo)
         return;
 
-    scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     item* p = (item*)foo;
     p->d_next = d_freelist;

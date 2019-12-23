@@ -99,7 +99,7 @@ void vector_map_impl::set_mapping(std::vector<std::vector<std::vector<size_t>>> 
             }
         }
     }
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
     d_mapping = mapping;
 }
 

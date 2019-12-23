@@ -49,8 +49,8 @@ private:
     };
 
     int d_writing;
-    boost::condition_variable d_writing_cond;
-    boost::mutex d_writing_mut;
+    std::condition_variable d_writing_cond;
+    std::mutex d_writing_mut;
 
     void do_accept(const boost::system::error_code& error);
     void do_write(const boost::system::error_code& error,

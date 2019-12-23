@@ -51,7 +51,7 @@ vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size) : gr::vmcircbuf(size)
     throw std::runtime_error("gr::vmcircbuf_sysv_shm");
 #else
 
-    gr::thread::scoped_lock guard(s_vm_mutex);
+    gr::thread::lock_guard guard(s_vm_mutex);
 
     int pagesize = gr::pagesize();
 
@@ -165,7 +165,7 @@ vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size) : gr::vmcircbuf(size)
 vmcircbuf_sysv_shm::~vmcircbuf_sysv_shm()
 {
 #if defined(HAVE_SYS_SHM_H)
-    gr::thread::scoped_lock guard(s_vm_mutex);
+    gr::thread::lock_guard guard(s_vm_mutex);
 
     if (shmdt(d_base - gr::pagesize()) == -1 || shmdt(d_base) == -1 ||
         shmdt(d_base + d_size) == -1 || shmdt(d_base + 2 * d_size) == -1) {

@@ -87,47 +87,47 @@ siso_f_impl::siso_f_impl(
 
 void siso_f_impl::set_FSM(const fsm& FSM)
 {
-    gr::thread::scoped_lock guard(d_setlock);
+    gr::thread::lock_guard guard(d_setlock);
     d_FSM = FSM;
     recalculate();
 }
 
 void siso_f_impl::set_K(int K)
 {
-    gr::thread::scoped_lock guard(d_setlock);
+    gr::thread::lock_guard guard(d_setlock);
     d_K = K;
     recalculate();
 }
 
 void siso_f_impl::set_POSTI(bool POSTI)
 {
-    gr::thread::scoped_lock guard(d_setlock);
+    gr::thread::lock_guard guard(d_setlock);
     d_POSTI = POSTI;
     recalculate();
 }
 
 void siso_f_impl::set_POSTO(bool POSTO)
 {
-    gr::thread::scoped_lock guard(d_setlock);
+    gr::thread::lock_guard guard(d_setlock);
     d_POSTO = POSTO;
     recalculate();
 }
 
 void siso_f_impl::set_S0(int S0)
 {
-    gr::thread::scoped_lock guard(d_setlock);
+    gr::thread::lock_guard guard(d_setlock);
     d_S0 = S0;
 }
 
 void siso_f_impl::set_SK(int SK)
 {
-    gr::thread::scoped_lock guard(d_setlock);
+    gr::thread::lock_guard guard(d_setlock);
     d_SK = SK;
 }
 
 void siso_f_impl::set_SISO_TYPE(trellis::siso_type_t type)
 {
-    gr::thread::scoped_lock guard(d_setlock);
+    gr::thread::lock_guard guard(d_setlock);
     d_SISO_TYPE = type;
 }
 
@@ -162,7 +162,7 @@ int siso_f_impl::general_work(int noutput_items,
                               gr_vector_const_void_star& input_items,
                               gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock guard(d_setlock);
+    gr::thread::lock_guard guard(d_setlock);
     int nstreams = output_items.size();
     // printf("general_work:Streams:  %d\n",nstreams);
     int multiple;

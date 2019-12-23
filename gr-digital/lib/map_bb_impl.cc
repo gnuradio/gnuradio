@@ -47,7 +47,7 @@ map_bb_impl::~map_bb_impl() {}
 
 void map_bb_impl::set_map(const std::vector<int>& map)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     for (int i = 0; i < 0x100; i++)
         d_map[i] = i;
@@ -69,7 +69,7 @@ int map_bb_impl::work(int noutput_items,
                       gr_vector_const_void_star& input_items,
                       gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     const unsigned char* in = (const unsigned char*)input_items[0];
     unsigned char* out = (unsigned char*)output_items[0];

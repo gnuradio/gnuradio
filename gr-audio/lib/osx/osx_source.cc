@@ -1025,7 +1025,7 @@ int osx_source::work(int noutput_items,
 
             teardown();
 
-            gr::thread::scoped_lock l(d_internal);
+            gr::thread::lock_guard l(d_internal);
 
 #if _OSX_AU_DEBUG_RENDER_
             std::cerr << "audio_osx_source::work: mutex locked." << std::endl;
@@ -1041,7 +1041,7 @@ int osx_source::work(int noutput_items,
         }
     }
 
-    gr::thread::scoped_lock l(d_internal);
+    gr::thread::lock_guard l(d_internal);
 
 #if _OSX_AU_DEBUG_RENDER_
     std::cerr << "audio_osx_source::work: mutex locked." << std::endl;
@@ -1201,7 +1201,7 @@ OSStatus osx_source::au_input_callback(void* in_ref_con,
 #endif
 
     osx_source* This = reinterpret_cast<osx_source*>(in_ref_con);
-    gr::thread::scoped_lock l(This->d_internal);
+    gr::thread::lock_guard l(This->d_internal);
     gr::logger_ptr d_logger = This->d_logger;
 
 #if _OSX_AU_DEBUG_RENDER_

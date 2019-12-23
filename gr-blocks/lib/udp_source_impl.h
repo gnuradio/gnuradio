@@ -54,8 +54,8 @@ private:
     boost::asio::ip::udp::endpoint d_endpoint_rcvd;
     boost::asio::io_service d_io_service;
 
-    gr::thread::condition_variable d_cond_wait;
-    gr::thread::mutex d_udp_mutex;
+    std::condition_variable d_cond_wait;
+    std::mutex d_udp_mutex;
     gr::thread::thread d_udp_thread;
 
     void start_receive();

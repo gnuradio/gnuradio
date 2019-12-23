@@ -48,7 +48,7 @@ private:
     int d_state;
     std::vector<int> d_channel_map;
     unsigned int d_twox;
-    gr::thread::mutex d_mutex; // mutex to protect set/work access
+    std::mutex d_mutex; // mutex to protect set/work access
 
     /*!
      * \brief Tap setting algorithm for critically sampled channels

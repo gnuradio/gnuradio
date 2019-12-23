@@ -35,7 +35,7 @@ private:
     size_t d_item_size;
     std::vector<size_t> d_in_vlens;
     std::vector<std::vector<std::vector<size_t>>> d_mapping;
-    gr::thread::mutex d_mutex; // mutex to protect set/work access
+    std::mutex d_mutex; // mutex to protect set/work access
 
 public:
     vector_map_impl(size_t item_size,

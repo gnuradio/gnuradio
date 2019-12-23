@@ -35,7 +35,7 @@ class FILTER_API filterbank_vcvcf_impl : public filterbank_vcvcf, kernel::filter
 {
 private:
     bool d_updated;
-    gr::thread::mutex d_mutex; // mutex to protect set/work access
+    std::mutex d_mutex; // mutex to protect set/work access
 
 public:
     filterbank_vcvcf_impl(const std::vector<std::vector<float>>& taps);

@@ -57,7 +57,7 @@ int plateau_detector_fb_impl::general_work(int noutput_items,
                                            gr_vector_void_star& output_items)
 {
     // thread-safe protection from ::set_threshold
-    gr::thread::scoped_lock l(d_setlock);
+    gr::thread::lock_guard l(d_setlock);
 
     const float* in = (const float*)input_items[0];
     unsigned char* out = (unsigned char*)output_items[0];
@@ -88,7 +88,7 @@ int plateau_detector_fb_impl::general_work(int noutput_items,
 void plateau_detector_fb_impl::set_threshold(float threshold)
 {
     // thread-safe protection from ::set_threshold
-    gr::thread::scoped_lock l(d_setlock);
+    gr::thread::lock_guard l(d_setlock);
     d_threshold = threshold;
 }
 

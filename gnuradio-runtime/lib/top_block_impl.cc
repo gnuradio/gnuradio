@@ -90,7 +90,7 @@ top_block_impl::~top_block_impl()
 
 void top_block_impl::start(int max_noutput_items)
 {
-    gr::thread::scoped_lock l(d_mutex);
+    gr::thread::unique_lock l(d_mutex);
 
     d_max_noutput_items = max_noutput_items;
 
@@ -121,7 +121,7 @@ void top_block_impl::start(int max_noutput_items)
 
 void top_block_impl::stop()
 {
-    gr::thread::scoped_lock lock(d_mutex);
+    gr::thread::lock_guard lock(d_mutex);
 
     if (d_scheduler)
         d_scheduler->stop();
@@ -134,7 +134,7 @@ void top_block_impl::wait()
     do {
         wait_for_jobs();
         {
-            gr::thread::scoped_lock lock(d_mutex);
+            gr::thread::unique_lock lock(d_mutex);
             if (!d_lock_count) {
                 if (d_retry_wait) {
                     d_retry_wait = false;
@@ -158,7 +158,7 @@ void top_block_impl::wait_for_jobs()
 // thread or deadlock will occur when reconfiguration happens
 void top_block_impl::lock()
 {
-    gr::thread::scoped_lock lock(d_mutex);
+    gr::thread::lock_guard lock(d_mutex);
     if (d_scheduler)
         d_scheduler->stop();
     d_lock_count++;
@@ -166,7 +166,7 @@ void top_block_impl::lock()
 
 void top_block_impl::unlock()
 {
-    gr::thread::scoped_lock lock(d_mutex);
+    gr::thread::lock_guard lock(d_mutex);
 
     if (d_lock_count <= 0) {
         d_lock_count = 0; // fix it, then complain

@@ -233,7 +233,7 @@ void time_raster_sink_b_impl::set_num_rows(double rows) { d_main_gui->setNumRows
 void time_raster_sink_b_impl::set_num_cols(double cols)
 {
     if (d_cols != cols) {
-        gr::thread::scoped_lock lock(d_setlock);
+        gr::thread::lock_guard lock(d_setlock);
 
         d_qApplication->postEvent(d_main_gui, new TimeRasterSetSize(d_rows, cols));
 

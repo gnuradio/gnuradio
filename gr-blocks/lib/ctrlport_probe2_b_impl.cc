@@ -69,7 +69,7 @@ std::vector<signed char> ctrlport_probe2_b_impl::get() { return buffered_get.get
 
 void ctrlport_probe2_b_impl::set_length(int len)
 {
-    gr::thread::scoped_lock guard(d_setlock);
+    gr::thread::lock_guard guard(d_setlock);
 
     if (len > 8191) {
         GR_LOG_WARN(d_logger,
@@ -92,7 +92,7 @@ int ctrlport_probe2_b_impl::work(int noutput_items,
 {
     const char* in = (const char*)input_items[0];
 
-    gr::thread::scoped_lock guard(d_setlock);
+    gr::thread::lock_guard guard(d_setlock);
 
     // copy samples to get buffer if we need samples
     if (d_index < d_len) {

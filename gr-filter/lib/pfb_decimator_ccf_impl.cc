@@ -98,7 +98,7 @@ pfb_decimator_ccf_impl::~pfb_decimator_ccf_impl() { delete[] d_rotator; }
 
 void pfb_decimator_ccf_impl::set_taps(const std::vector<float>& taps)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     polyphase_filterbank::set_taps(taps);
     set_history(d_taps_per_filter);
@@ -114,7 +114,7 @@ std::vector<std::vector<float>> pfb_decimator_ccf_impl::taps() const
 
 void pfb_decimator_ccf_impl::set_channel(const unsigned int chan)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
     d_chan = chan;
 }
 
@@ -122,7 +122,7 @@ int pfb_decimator_ccf_impl::work(int noutput_items,
                                  gr_vector_const_void_star& input_items,
                                  gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     if (d_updated) {
         d_updated = false;

@@ -62,7 +62,7 @@ selector_impl::~selector_impl() {}
 
 void selector_impl::set_input_index(unsigned int input_index)
 {
-    gr::thread::scoped_lock l(d_mutex);
+    gr::thread::lock_guard l(d_mutex);
     if (input_index < d_num_inputs)
         d_input_index = input_index;
     else
@@ -71,7 +71,7 @@ void selector_impl::set_input_index(unsigned int input_index)
 
 void selector_impl::set_output_index(unsigned int output_index)
 {
-    gr::thread::scoped_lock l(d_mutex);
+    gr::thread::lock_guard l(d_mutex);
     if (output_index < d_num_outputs)
         d_output_index = output_index;
     else
@@ -82,7 +82,7 @@ void selector_impl::handle_enable(pmt::pmt_t msg)
 {
     if (pmt::is_bool(msg)) {
         bool en = pmt::to_bool(msg);
-        gr::thread::scoped_lock l(d_mutex);
+        gr::thread::lock_guard l(d_mutex);
         d_enabled = en;
     } else {
         GR_LOG_WARN(d_logger,
@@ -119,7 +119,7 @@ int selector_impl::general_work(int noutput_items,
     const uint8_t** in = (const uint8_t**)&input_items[0];
     uint8_t** out = (uint8_t**)&output_items[0];
 
-    gr::thread::scoped_lock l(d_mutex);
+    gr::thread::lock_guard l(d_mutex);
     if (d_enabled) {
         std::copy(in[d_input_index],
                   in[d_input_index] + noutput_items * d_itemsize,

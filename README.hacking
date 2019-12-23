@@ -41,6 +41,21 @@ Boost 1.35 and later is fairly common in modern distributions.
 If it isn't available for your system, please refer to
 README.building-boost for instructions
 
+As features from Boost are incorporated into standard C++ GNU Radio
+will reduce dependence on Boost.
+
+Status:
+  * program_options — Will remain
+  * shared_ptr      — PR in flight
+  * shared_mutex    — C++17
+  * filesystem      — C++17
+  * thread          — Unknown
+  * date_time       — Unknown
+  * regex           — Unknown
+  * system          — Unknown
+  * chrono          — Unknown
+  * atomic          — Unknown
+
 * C++ and Python
 
 GNU Radio is a hybrid system.  Some parts of the system are built in C++ and

@@ -62,7 +62,7 @@ bool exponentiate_const_cci_impl::check_topology(int ninputs, int noutputs)
 
 void exponentiate_const_cci_impl::set_exponent(int exponent)
 {
-    gr::thread::scoped_lock guard(d_setlock);
+    gr::thread::lock_guard guard(d_setlock);
     d_exponent = exponent;
 }
 
@@ -70,7 +70,7 @@ int exponentiate_const_cci_impl::work(int noutput_items,
                                       gr_vector_const_void_star& input_items,
                                       gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock guard(d_setlock);
+    gr::thread::lock_guard guard(d_setlock);
 
     for (unsigned int i = 0; i < input_items.size(); i++) {
         const gr_complex* in = (const gr_complex*)input_items[i];

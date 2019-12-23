@@ -88,7 +88,7 @@ pfb_synthesizer_ccf_impl::~pfb_synthesizer_ccf_impl()
 
 void pfb_synthesizer_ccf_impl::set_taps(const std::vector<float>& taps)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     // The different modes, 1x or 2x the sampling rate, have
     // different filtering partitions.
@@ -212,7 +212,7 @@ std::vector<std::vector<float>> pfb_synthesizer_ccf_impl::taps() const { return 
 
 void pfb_synthesizer_ccf_impl::set_channel_map(const std::vector<int>& map)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     if (!map.empty()) {
         int max = *std::max_element(map.begin(), map.end());
@@ -234,7 +234,7 @@ int pfb_synthesizer_ccf_impl::work(int noutput_items,
                                    gr_vector_const_void_star& input_items,
                                    gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock guard(d_mutex);
+    gr::thread::lock_guard guard(d_mutex);
 
     gr_complex* in = (gr_complex*)input_items[0];
     gr_complex* out = (gr_complex*)output_items[0];

@@ -79,11 +79,11 @@ protected:
     flat_flowgraph_sptr d_ffg;
     scheduler_sptr d_scheduler;
 
-    gr::thread::mutex d_mutex; // protects d_state and d_lock_count
+    std::mutex d_mutex; // protects d_state and d_lock_count
     tb_state d_state;
     int d_lock_count;
     bool d_retry_wait;
-    boost::condition_variable d_lock_cond;
+    std::condition_variable d_lock_cond;
     int d_max_noutput_items;
 
 private:

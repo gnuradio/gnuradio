@@ -21,9 +21,12 @@
 #ifndef INCLUDED_PMT_POOL_H
 #define INCLUDED_PMT_POOL_H
 
+#include <gnuradio/thread/thread.h>
+#include <condition_variable>
 #include <pmt/api.h>
 #include <boost/thread.hpp>
 #include <cstddef>
+#include <mutex>
 #include <vector>
 
 namespace pmt {
@@ -41,9 +44,8 @@ class PMT_API pmt_pool
         struct item* d_next;
     };
 
-    typedef boost::unique_lock<boost::mutex> scoped_lock;
-    mutable boost::mutex d_mutex;
-    boost::condition_variable d_cond;
+    mutable std::mutex d_mutex;
+    std::condition_variable d_cond;
 
     size_t d_itemsize;
     size_t d_alignment;

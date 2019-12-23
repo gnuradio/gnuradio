@@ -335,7 +335,7 @@ void waterfall_sink_c_impl::fft(float* data_out, const gr_complex* data_in, int 
 
 void waterfall_sink_c_impl::windowreset()
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
 
     filter::firdes::win_type newwintype;
     newwintype = d_main_gui->getFFTWindowType();
@@ -355,7 +355,7 @@ void waterfall_sink_c_impl::buildwindow()
 
 void waterfall_sink_c_impl::fftresize()
 {
-    gr::thread::scoped_lock lock(d_setlock);
+    gr::thread::lock_guard lock(d_setlock);
 
     int newfftsize = d_main_gui->getFFTSize();
     d_fftavg = d_main_gui->getFFTAverage();
