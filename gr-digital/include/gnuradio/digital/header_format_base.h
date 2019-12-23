@@ -121,10 +121,10 @@ namespace digital {
  * \sa header_format_counter
  */
 class DIGITAL_API header_format_base
-    : public boost::enable_shared_from_this<gr::digital::header_format_base>
+    : public std::enable_shared_from_this<gr::digital::header_format_base>
 {
 public:
-    typedef boost::shared_ptr<header_format_base> sptr;
+    typedef std::shared_ptr<header_format_base> sptr;
 
     header_format_base();
     virtual ~header_format_base();

@@ -99,7 +99,7 @@ class GR_UHD_API usrp_sink : virtual public usrp_block
 {
 public:
     // gr::uhd::usrp_sink::sptr
-    typedef boost::shared_ptr<usrp_sink> sptr;
+    typedef std::shared_ptr<usrp_sink> sptr;
 
     /*!
      * \param device_addr the address to identify the hardware

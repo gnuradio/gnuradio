@@ -7,12 +7,12 @@
 //
 
 //
-// This is highly hacked up version of boost::shared_ptr
+// This is highly hacked up version of std::shared_ptr
 // We just need enough to get SWIG to "do the right thing" and
 // generate "Smart Pointer" code.
 //
 
-namespace boost {
+namespace std {
 
 template<class T> class shared_ptr
 {

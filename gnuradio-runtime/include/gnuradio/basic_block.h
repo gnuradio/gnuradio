@@ -54,7 +54,7 @@ namespace gr {
  * processing functions.
  */
 class GR_RUNTIME_API basic_block : public msg_accepter,
-                                   public boost::enable_shared_from_this<basic_block>
+                                   public std::enable_shared_from_this<basic_block>
 {
     typedef boost::function<void(pmt::pmt_t)> msg_handler_t;
 
@@ -66,7 +66,7 @@ private:
     typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator> msg_queue_map_t;
     typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator>::iterator
         msg_queue_map_itr;
-    std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::comparator>
+    std::map<pmt::pmt_t, std::shared_ptr<boost::condition_variable>, pmt::comparator>
         msg_queue_ready;
 
     gr::thread::mutex mutex; //< protects all vars

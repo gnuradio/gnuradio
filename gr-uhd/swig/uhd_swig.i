@@ -124,7 +124,7 @@
 %include <uhd/types/serial.hpp>
 %include <uhd/usrp/dboard_iface.hpp>
 
-%template(dboard_iface_sptr) boost::shared_ptr<uhd::usrp::dboard_iface>;
+%template(dboard_iface_sptr) std::shared_ptr<uhd::usrp::dboard_iface>;
 
 ////////////////////////////////////////////////////////////////////////
 // block magic

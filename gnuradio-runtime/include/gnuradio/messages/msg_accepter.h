@@ -24,7 +24,7 @@
 
 #include <gnuradio/api.h>
 #include <pmt/pmt.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace gr {
 namespace messages {
@@ -48,7 +48,7 @@ public:
     virtual void post(pmt::pmt_t which_port, pmt::pmt_t msg) = 0;
 };
 
-typedef boost::shared_ptr<msg_accepter> msg_accepter_sptr;
+typedef std::shared_ptr<msg_accepter> msg_accepter_sptr;
 
 } /* namespace messages */
 } /* namespace gr */

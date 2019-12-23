@@ -37,7 +37,7 @@ class BLOCKS_API complex_to_imag : virtual public sync_block
 {
 public:
     // gr::blocks::complex_to_imag_ff::sptr
-    typedef boost::shared_ptr<complex_to_imag> sptr;
+    typedef std::shared_ptr<complex_to_imag> sptr;
 
     /*!
      * Build a complex to imaginary part block.

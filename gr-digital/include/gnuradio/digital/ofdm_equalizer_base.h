@@ -36,13 +36,13 @@ namespace digital {
  * \ingroup equalizers_blk
  */
 class DIGITAL_API ofdm_equalizer_base
-    : public boost::enable_shared_from_this<ofdm_equalizer_base>
+    : public std::enable_shared_from_this<ofdm_equalizer_base>
 {
 protected:
     int d_fft_len;
 
 public:
-    typedef boost::shared_ptr<ofdm_equalizer_base> sptr;
+    typedef std::shared_ptr<ofdm_equalizer_base> sptr;
 
     ofdm_equalizer_base(int fft_len);
     virtual ~ofdm_equalizer_base();
@@ -88,7 +88,7 @@ protected:
     std::vector<gr_complex> d_channel_state;
 
 public:
-    typedef boost::shared_ptr<ofdm_equalizer_1d_pilots> sptr;
+    typedef std::shared_ptr<ofdm_equalizer_1d_pilots> sptr;
 
     ofdm_equalizer_1d_pilots(int fft_len,
                              const std::vector<std::vector<int>>& occupied_carriers,

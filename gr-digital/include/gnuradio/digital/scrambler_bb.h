@@ -42,7 +42,7 @@ class DIGITAL_API scrambler_bb : virtual public sync_block
 {
 public:
     // gr::digital::scrambler_bb::sptr
-    typedef boost::shared_ptr<scrambler_bb> sptr;
+    typedef std::shared_ptr<scrambler_bb> sptr;
 
     /*!
      * Make a scramber block.

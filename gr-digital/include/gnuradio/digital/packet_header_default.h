@@ -47,10 +47,10 @@ namespace digital {
  * this class to create packet headers from data streams.
  */
 class DIGITAL_API packet_header_default
-    : public boost::enable_shared_from_this<gr::digital::packet_header_default>
+    : public std::enable_shared_from_this<gr::digital::packet_header_default>
 {
 public:
-    typedef boost::shared_ptr<packet_header_default> sptr;
+    typedef std::shared_ptr<packet_header_default> sptr;
 
     packet_header_default(long header_len,
                           const std::string& len_tag_key = "packet_len",

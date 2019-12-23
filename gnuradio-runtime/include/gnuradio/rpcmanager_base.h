@@ -23,7 +23,7 @@
 #ifndef RPCMANAGER_BASE_H
 #define RPCMANAGER_BASE_H
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 class rpcserver_booter_base;
 // class rpcserver_booter_aggregator;
@@ -31,7 +31,7 @@ class rpcserver_booter_base;
 class rpcmanager_base
 {
 public:
-    typedef boost::shared_ptr<rpcserver_booter_base> rpcserver_booter_base_sptr;
+    typedef std::shared_ptr<rpcserver_booter_base> rpcserver_booter_base_sptr;
 
     rpcmanager_base() { ; }
     ~rpcmanager_base() { ; }

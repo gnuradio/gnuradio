@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%template(top_block_sptr) boost::shared_ptr<gr::top_block>;
+%template(top_block_sptr) std::shared_ptr<gr::top_block>;
 
 namespace gr {
   // Hack to have a Python shim implementation of gr.top_block

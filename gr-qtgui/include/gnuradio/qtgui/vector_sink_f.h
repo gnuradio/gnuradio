@@ -54,7 +54,7 @@ class QTGUI_API vector_sink_f : virtual public sync_block
 {
 public:
     // gr::qtgui::vector_sink_f::sptr
-    typedef boost::shared_ptr<vector_sink_f> sptr;
+    typedef std::shared_ptr<vector_sink_f> sptr;
 
     /*!
      * \brief Build a vector plotting sink.

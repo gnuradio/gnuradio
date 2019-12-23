@@ -36,7 +36,7 @@ namespace blocks {
 class BLOCKS_API patterned_interleaver : virtual public block
 {
 public:
-    typedef boost::shared_ptr<patterned_interleaver> sptr;
+    typedef std::shared_ptr<patterned_interleaver> sptr;
 
     /*!
      * Make a patterned interleaver block.

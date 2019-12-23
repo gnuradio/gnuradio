@@ -63,7 +63,7 @@ public:
     // Stores the generated endpoint string after the Thrift runtime has initialized.
     std::string d_endpointStr;
     // Thread to execute the Thrift runtime's blocking serve() function.
-    boost::shared_ptr<gr::thread::thread> d_start_thrift_thread;
+    std::shared_ptr<gr::thread::thread> d_start_thrift_thread;
 };
 
 /*!

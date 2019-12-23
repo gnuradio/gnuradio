@@ -41,7 +41,7 @@ template <class T>
 class BLOCKS_API not_blk : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<not_blk<T>> sptr;
+    typedef std::shared_ptr<not_blk<T>> sptr;
 
     static sptr make(size_t vlen = 1);
 };

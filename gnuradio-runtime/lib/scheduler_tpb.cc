@@ -76,7 +76,7 @@ scheduler_tpb::scheduler_tpb(flat_flowgraph_sptr ffg, int max_noutput_items)
     }
 
     thread::barrier_sptr start_sync =
-        boost::make_shared<thread::barrier>(blocks.size() + 1);
+        std::make_shared<thread::barrier>(blocks.size() + 1);
 
     // Fire off a thead for each block
 

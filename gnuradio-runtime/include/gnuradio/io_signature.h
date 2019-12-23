@@ -43,7 +43,7 @@ class GR_RUNTIME_API io_signature
                  const std::vector<int>& sizeof_stream_items);
 
 public:
-    typedef boost::shared_ptr<io_signature> sptr;
+    typedef std::shared_ptr<io_signature> sptr;
 
     static const int IO_INFINITE = -1;
 

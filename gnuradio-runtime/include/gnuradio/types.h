@@ -25,7 +25,7 @@
 
 #include <gnuradio/api.h>
 #include <stddef.h> // size_t
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <vector>
 
 #include <gnuradio/gr_complex.h>

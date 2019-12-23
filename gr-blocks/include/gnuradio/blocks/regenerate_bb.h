@@ -45,7 +45,7 @@ class BLOCKS_API regenerate_bb : virtual public sync_block
 {
 public:
     // gr::blocks::regenerate_bb::sptr
-    typedef boost::shared_ptr<regenerate_bb> sptr;
+    typedef std::shared_ptr<regenerate_bb> sptr;
 
     /*!
      * \brief Make a regenerate block
