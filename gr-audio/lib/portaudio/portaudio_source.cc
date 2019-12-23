@@ -106,7 +106,7 @@ int portaudio_source_callback(const void* inputBuffer,
 
         // copy from input buffer to ringbuffer
         {
-            gr::thread::scoped_lock(d_ringbuffer_mutex);
+            gr::thread::scoped_lock guard(self->d_ringbuffer_mutex);
 
             memcpy(self->d_writer->write_pointer(),
                    inputBuffer,
