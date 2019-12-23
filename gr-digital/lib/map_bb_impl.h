@@ -34,7 +34,7 @@ class map_bb_impl : public map_bb
 private:
     static constexpr size_t s_map_size = 0x100;
     unsigned char d_map[s_map_size];
-    gr::thread::mutex d_mutex;
+    mutable gr::thread::mutex d_mutex;
 
 public:
     map_bb_impl(const std::vector<int>& map);
