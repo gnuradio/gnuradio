@@ -61,8 +61,8 @@ parameters:
     option_labels: ['MMSE, 8 tap FIR', 'Polyphase Filterbank, MMSE', 'Polyphase Filterbank,
             MF']
     option_attributes:
-        hide_nfilters: [all, '', '']
-        hide_pfb_mf_taps: [all, all, '']
+        hide_nfilters: [all, none, none]
+        hide_pfb_mf_taps: [all, all, none]
 -   id: nfilters
     label: Filterbank Arms
     dtype: int
