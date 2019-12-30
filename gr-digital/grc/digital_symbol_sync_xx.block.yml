@@ -24,7 +24,7 @@ parameters:
             D'Andrea GMSK, 'y[n]y''[n] Maximum Likelyhood', 'sgn(y[n])y''[n] Maximum
             Likelyhood']
     option_attributes:
-        hide_constellation: [part, part, part, all, all, all, all, all, all]
+        hide_constellation: ['part', 'part', 'part', 'all', 'all', 'all', 'all', 'all', 'all']
 -   id: constellation
     label: TED Slicer Constellation
     dtype: raw
