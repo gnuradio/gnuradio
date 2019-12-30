@@ -19,7 +19,7 @@ parameters:
     options: [digital.TED_MUELLER_AND_MULLER, digital.TED_MOD_MUELLER_AND_MULLER,
         digital.TED_ZERO_CROSSING, digital.TED_GARDNER, digital.TED_EARLY_LATE, digital.TED_DANDREA_AND_MENGALI_GEN_MSK,
         digital.TED_MENGALI_AND_DANDREA_GMSK, digital.TED_SIGNAL_TIMES_SLOPE_ML, digital.TED_SIGNUM_TIMES_SLOPE_ML]
-    option_labels: ["Mueller and M\xFCller", "Modified Mueller and M\xFCller", Zero
+    option_labels: ["Mueller and Mueller", "Modified Mueller and Mueller", Zero
             Crossing, Gardner, Early-Late, D'Andrea and Mengali Gen MSK, Mengali and
             D'Andrea GMSK, 'y[n]y''[n] Maximum Likelyhood', 'sgn(y[n])y''[n] Maximum
             Likelyhood']
