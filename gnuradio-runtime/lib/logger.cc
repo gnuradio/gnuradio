@@ -263,7 +263,10 @@ void logger_add_file_appender(logger_ptr logger,
 {
     log4cpp::PatternLayout* layout = new log4cpp::PatternLayout();
     log4cpp::Appender* app =
-        new log4cpp::FileAppender("FileAppender::" + filename, filename);
+        new log4cpp::FileAppender(
+            "FileAppender::" + filename,
+            filename,
+            append);
     layout->setConversionPattern(pattern);
     app->setLayout(layout);
     logger->setAppender(app);
