@@ -216,11 +216,12 @@ class PropsDialog(Gtk.Dialog):
         buf.delete(buf.get_start_iter(), buf.get_end_iter())
         pos = buf.get_end_iter()
 
-        # Add link to wiki page for this block, at the top
-        note = "Wiki Page for this Block: "
-        prefix = self._config.wiki_block_docs_url_prefix
-        suffix = self._block.label.replace(" ", "_")
-        buf.insert(pos, note + prefix + suffix + '\n\n')
+        # Add link to wiki page for this block, at the top, as long as it's not an OOT block
+        if self._block.category[0] == "Core":
+            note = "Wiki Page for this Block: "
+            prefix = self._config.wiki_block_docs_url_prefix
+            suffix = self._block.label.replace(" ", "_")
+            buf.insert(pos, note + prefix + suffix + '\n\n')
 
         docstrings = self._block.documentation.copy()
         if not docstrings:

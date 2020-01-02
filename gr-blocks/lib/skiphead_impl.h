@@ -31,7 +31,7 @@ namespace blocks {
 class skiphead_impl : public skiphead
 {
 private:
-    uint64_t d_nitems_to_skip;
+    const uint64_t d_nitems_to_skip;
     uint64_t d_nitems; // total items seen
     std::vector<tag_t> d_tags;
 

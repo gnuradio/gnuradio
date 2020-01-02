@@ -129,7 +129,7 @@ void pfb_channelizer_ccf_impl::set_channel_map(const std::vector<int>& map)
         unsigned int max = (unsigned int)*std::max_element(map.begin(), map.end());
         if (max >= d_nfilts) {
             throw std::invalid_argument(
-                "pfb_channelizer_ccf_impl::set_channel_map: map range out of bounds.\n");
+                "pfb_channelizer_ccf_impl::set_channel_map: map range out of bounds.");
         }
         d_channel_map = map;
     }

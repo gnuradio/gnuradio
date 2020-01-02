@@ -34,7 +34,7 @@ namespace digital {
 class cpmmod_bc_impl : public cpmmod_bc
 {
 private:
-    int d_type;
+    const int d_type;
     float d_index;
     int d_sps;
     int d_length;

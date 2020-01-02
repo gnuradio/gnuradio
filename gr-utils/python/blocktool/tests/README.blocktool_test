@@ -1,0 +1,12 @@
+gr_blocktool: Block Header parsing tool.
+Parses GNU Radio header files to generate YAML or JSON output.
+
+This directory consists of test for the parsed header output and Blocktool Exceptions.
+============================================================================================
+- Schema defined in the test will be strictly followed for every parsed JSON output file.
+
+Two sample response for header files are available in this directory:
+=====================================================================
+
+- sample_agc2_cc.json for public header file agc2_cc.h from gr-analog directory.
+- sample_additive_scrambler_bb.json for public header file additive_scrambler_bb.h from gr-digital directory.

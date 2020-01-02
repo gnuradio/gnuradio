@@ -46,6 +46,9 @@ GR_CHECK_BUILD_TYPE(${CMAKE_BUILD_TYPE})
 SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 
+include(GrComponent)
+GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING)
+
 # Set the version information here
 SET(VERSION_MAJOR 3)
 SET(VERSION_API   9)
@@ -357,7 +360,6 @@ include(GrBoost)
 # Enable python component
 ########################################################################
 include(GrPython)
-find_package(PythonLibs ${GR_PYTHON_MIN_VERSION})
 GR_PYTHON_CHECK_MODULE("six - python 2 and 3 compatibility library" six "True" SIX_FOUND)
 find_package(SWIG)
 
@@ -375,10 +377,6 @@ GR_REGISTER_COMPONENT("python-support" ENABLE_PYTHON
     SWIG_FOUND
     SWIG_VERSION_CHECK
     SIX_FOUND
-)
-
-GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING
-    Boost_FOUND
 )
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Coverage")

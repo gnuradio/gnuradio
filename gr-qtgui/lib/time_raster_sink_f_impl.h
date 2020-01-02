@@ -38,7 +38,7 @@ class QTGUI_API time_raster_sink_f_impl : public time_raster_sink_f
 private:
     void initialize();
 
-    std::string d_name;
+    const std::string d_name;
     int d_nconnections;
 
     int d_index;

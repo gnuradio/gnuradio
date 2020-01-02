@@ -311,7 +311,7 @@ void time_raster_sink_b_impl::set_multiplier(const std::vector<float>& mult)
         }
     } else {
         throw std::runtime_error(
-            "time_raster_sink_b_impl::set_multiplier incorrect dimensions.\n");
+            "time_raster_sink_b_impl::set_multiplier incorrect dimensions.");
     }
 }
 
@@ -331,7 +331,7 @@ void time_raster_sink_b_impl::set_offset(const std::vector<float>& offset)
         }
     } else {
         throw std::runtime_error(
-            "time_raster_sink_b_impl::set_offset incorrect dimensions.\n");
+            "time_raster_sink_b_impl::set_offset incorrect dimensions.");
     }
 }
 

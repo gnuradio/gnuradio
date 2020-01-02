@@ -43,7 +43,7 @@ private:
     const unsigned int d_vlen; //!< Vector length at input
     float d_vecavg;
 
-    std::string d_name; //!< Initial title of the plot
+    const std::string d_name; //!< Initial title of the plot
     int d_nconnections; //!< Number of connected streaming ports on input
 
     const pmt::pmt_t d_port;

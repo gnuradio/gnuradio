@@ -1,5 +1,5 @@
 #
-# Copyright 2013-2014,2017,2018 Free Software Foundation, Inc.
+# Copyright 2013-2014,2017-2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -161,8 +161,8 @@ class ModToolAdd(ModTool):
             return
         try:
             append_re_line_sequence(self._file['cmlib'],
-                                    '\$\{CMAKE_CURRENT_SOURCE_DIR\}/qa_%s.cc.*\n' % self.info['modname'],
-                                    '    ${CMAKE_CURRENT_SOURCE_DIR}/qa_%s.cc' % self.info['blockname'])
+                                    r'list\(APPEND test_{}_sources.*\n'.format(self.info['modname']),
+                                    'qa_{}.cc'.format(self.info['blockname']))
             append_re_line_sequence(self._file['qalib'],
                                     '#include.*\n',
                                     '#include "{}"'.format(fname_qa_h))
@@ -172,6 +172,20 @@ class ModToolAdd(ModTool):
                                                                                    self.info['blockname'])
                                     )
             self.scm.mark_files_updated((self._file['qalib'],))
+        except IOError:
+            logger.warning("Can't add C++ QA files.")
+
+    def _run_cc_qa_boostutf(self):
+        " Add C++ QA files for 3.8 API if intructed from _run_lib"
+        fname_qa_cc = 'qa_{}.cc'.format(self.info['blockname'])
+        self._write_tpl('qa_cpp_boostutf', 'lib', fname_qa_cc)
+        if self.skip_cmakefiles:
+            return
+        try:
+            append_re_line_sequence(self._file['cmlib'],
+                                   r'list\(APPEND test_{}_sources.*\n'.format(self.info['modname']),
+                                    'qa_{}.cc'.format(self.info['blockname']))
+            self.scm.mark_files_updated((self._file['cmlib'],))
         except IOError:
             logger.warning("Can't add C++ QA files.")
 
@@ -199,7 +213,9 @@ class ModToolAdd(ModTool):
             self._write_tpl('block_h36',   self.info['includedir'], fname_h)
             self._write_tpl('block_cpp36', 'lib',                    fname_cc)
         if self.add_cc_qa:
-            if self.info['version'] in ('37', '38') :
+            if self.info['version'] == '38':
+                self._run_cc_qa_boostutf()
+            elif self.info['version'] == '37':
                 self._run_cc_qa()
             elif self.info['version'] == '36':
                 logger.warning("Warning: C++ QA files not supported for 3.6-style OOTs.")
@@ -239,7 +255,7 @@ class ModToolAdd(ModTool):
         if re.search('#include', oldfile):
             append_re_line_sequence(self._file['swig'], '^#include.*\n', include_str)
         else: # I.e., if the swig file is empty
-            regexp = re.compile('^%\{\n', re.MULTILINE)
+            regexp = re.compile(r'^%\{\n', re.MULTILINE)
             oldfile = regexp.sub('%%{\n%s\n' % include_str, oldfile, count=1)
             with open(self._file['swig'], 'w') as f:
                 f.write(oldfile)

@@ -33,9 +33,8 @@ namespace blocks {
 class tag_debug_impl : public tag_debug
 {
 private:
-    std::string d_name;
+    const std::string d_name;
     std::vector<tag_t> d_tags;
-    std::vector<tag_t>::iterator d_tags_itr;
     bool d_display;
     pmt::pmt_t d_filter;
     gr::thread::mutex d_mutex;

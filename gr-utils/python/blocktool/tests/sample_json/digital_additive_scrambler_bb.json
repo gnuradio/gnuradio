@@ -1,0 +1,95 @@
+{
+    "namespace": [
+        "gr",
+        "digital"
+    ],
+    "class": "additive_scrambler_bb",
+    "io_signature": {
+        "input": {
+            "signature": "make",
+            "min_streams": "1",
+            "max_streams": "1",
+            "sizeof_stream_item": "sizeof(unsigned char)"
+        },
+        "output": {
+            "signature": "make",
+            "min_streams": "1",
+            "max_streams": "1",
+            "sizeof_stream_item": "sizeof(unsigned char)"
+        }
+    },
+    "message_port": {
+        "input": [],
+        "output": []
+    },
+    "make": {
+        "arguments": [
+            {
+                "name": "mask",
+                "dtype": "int",
+                "default": ""
+            },
+            {
+                "name": "seed",
+                "dtype": "int",
+                "default": ""
+            },
+            {
+                "name": "len",
+                "dtype": "int",
+                "default": ""
+            },
+            {
+                "name": "count",
+                "dtype": "int",
+                "default": "0"
+            },
+            {
+                "name": "bits_per_byte",
+                "dtype": "int",
+                "default": "1"
+            },
+            {
+                "name": "reset_tag_key",
+                "dtype": "std::string const &",
+                "default": ""
+            }
+        ]
+    },
+    "methods": [],
+    "properties": [
+        {
+            "name": "mask",
+            "dtype": "int",
+            "read_only": true
+        },
+        {
+            "name": "seed",
+            "dtype": "int",
+            "read_only": true
+        },
+        {
+            "name": "len",
+            "dtype": "int",
+            "read_only": true
+        },
+        {
+            "name": "count",
+            "dtype": "int",
+            "read_only": true
+        },
+        {
+            "name": "bits_per_byte",
+            "dtype": "int",
+            "read_only": true
+        }
+    ],
+    "docstring": [
+        "/*!\n     * \\ingroup coding_blk\n     *\n     * \\brief\n     * Scramble an input stream using an LFSR.\n     *\n     * \\details\n     * This block scrambles up to 8 bits per byte of the input\n     * data stream, starting at the LSB.\n     *\n     * The scrambler works by XORing the incoming bit stream by the\n     * output of the LFSR. Optionally, after \\p count bits have been\n     * processed, the shift register is reset to the \\p seed value.\n     * This allows processing fixed length vectors of samples.\n     *\n     * Alternatively, the LFSR can be reset using a reset tag to\n     * scramble variable length vectors. However, it cannot be reset\n     * between bytes.\n     *\n     * For details on configuring the LFSR, see gr::digital::lfsr.\n     */",
+        "// gr::digital::additive_scrambler_bb::sptr",
+        "/*!\n       * \\brief Create additive scrambler.\n       *\n       * \\param mask   Polynomial mask for LFSR\n       * \\param seed   Initial shift register contents\n       * \\param len    Shift register length\n       * \\param count  Number of bytes after which shift register is reset, 0=never\n       * \\param bits_per_byte Number of bits per byte\n       * \\param reset_tag_key When a tag with this key is detected, the shift register is reset (when this is set, count is ignored!)\n       */",
+        "/* namespace digital */",
+        "/* namespace gr */",
+        "/* INCLUDED_DIGITAL_ADDITIVE_SCRAMBLER_BB_H */"
+    ]
+}

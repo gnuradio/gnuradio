@@ -69,7 +69,7 @@ pfb_clock_sync_ccf_impl::pfb_clock_sync_ccf_impl(double sps,
       d_out_idx(0)
 {
     if (taps.empty())
-        throw std::runtime_error("pfb_clock_sync_ccf: please specify a filter.\n");
+        throw std::runtime_error("pfb_clock_sync_ccf: please specify a filter.");
 
     // Let scheduler adjust our relative_rate.
     // enable_update_rate(true);
@@ -416,11 +416,10 @@ int pfb_clock_sync_ccf_impl::general_work(int noutput_items,
 
             // Manage Tags
             std::vector<tag_t> xtags;
-            std::vector<tag_t>::iterator itags;
             d_new_in = nitems_read(0) + count + d_out_idx + d_sps;
             get_tags_in_range(xtags, 0, d_old_in, d_new_in);
-            for (itags = xtags.begin(); itags != xtags.end(); itags++) {
-                tag_t new_tag = *itags;
+            for (const auto& tag : xtags) {
+                tag_t new_tag = tag;
                 // new_tag.offset = d_last_out + d_taps_per_filter/(2*d_sps) - 2;
                 new_tag.offset = d_last_out + d_taps_per_filter / 4 - 2;
                 add_item_tag(0, new_tag);

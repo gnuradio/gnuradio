@@ -31,7 +31,11 @@ parameters:
     default: '[]'
     hide: ${ ('all' if int(num_opts) else 'none') }
 -   id: value
-    label: Option 0 (Default)
+    label: Default option
+    dtype: ${type}
+    default: '0'
+-   id: option0    
+    label: Option 0
     dtype: ${ type }
     default: '0'
     hide: ${ ('none' if int(num_opts) > 0 else 'all') }
@@ -105,7 +109,7 @@ templates:
     - self._${id}_callback(${id})
     make: |-
         <%
-            all_options = [ value, option1, option2, option3, option4 ][:int(num_opts)]
+            all_options = [ option0, option1, option2, option3, option4 ][:int(num_opts)]
             all_labels = [ label0, label1, label2, label3, label4 ][:int(num_opts)]
         %>\
         # Create the options list

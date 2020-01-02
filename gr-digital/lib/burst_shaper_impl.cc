@@ -324,16 +324,15 @@ void burst_shaper_impl<T>::propagate_tags(int in_offset,
     tag_t temp_tag;
 
     std::vector<tag_t> tags;
-    std::vector<tag_t>::iterator it;
 
     this->get_tags_in_range(tags, 0, abs_start, abs_end);
 
-    for (it = tags.begin(); it != tags.end(); it++) {
-        if (!pmt::equal(it->key, d_length_tag_key)) {
-            if (skip && (it->offset == d_length_tag_offset))
+    for (const auto& tag : tags) {
+        if (!pmt::equal(tag.key, d_length_tag_key)) {
+            if (skip && (tag.offset == d_length_tag_offset))
                 continue;
-            temp_tag = *it;
-            temp_tag.offset = abs_offset + it->offset - abs_start;
+            temp_tag = tag;
+            temp_tag.offset = abs_offset + tag.offset - abs_start;
             this->add_item_tag(0, temp_tag);
         }
     }

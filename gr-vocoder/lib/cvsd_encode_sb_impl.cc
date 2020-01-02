@@ -70,10 +70,10 @@ cvsd_encode_sb_impl::cvsd_encode_sb_impl(short min_step,
       d_stepsize(min_step)
 {
     if (d_K > 32)
-        throw std::runtime_error("cvsd_decode_bs_impl: K must be <= 32\n");
+        throw std::runtime_error("cvsd_decode_bs_impl: K must be <= 32");
 
     if (d_J > d_K)
-        throw std::runtime_error("cvsd_decode_bs_impl: J must be <= K\n");
+        throw std::runtime_error("cvsd_decode_bs_impl: J must be <= K");
 }
 
 cvsd_encode_sb_impl::~cvsd_encode_sb_impl()

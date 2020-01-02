@@ -322,7 +322,7 @@ def show_types(parent):
 def show_missing_xterm(parent, xterm):
     markup = textwrap.dedent("""\
         The xterm executable {0!r} is missing.
-        You can change this setting in your gnurado.conf, in section [grc], 'xterm_executable'.
+        You can change this setting in your gnuradio.conf, in section [grc], 'xterm_executable'.
         \n\
         (This message is shown only once)\
     """).format(xterm)

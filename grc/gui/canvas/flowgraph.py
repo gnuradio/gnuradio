@@ -804,9 +804,15 @@ class FlowGraph(CoreFlowgraph, Drawable):
         return redraw
 
     def get_extents(self):
-        extent = 100000, 100000, 0, 0
-        for element in self._elements_to_draw:
-            extent = (min_or_max(xy, e_xy) for min_or_max, xy, e_xy in zip(
-                (min, min, max, max), extent, element.get_extents()
-            ))
+        show_comments = Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active()
+        def sub_extents():
+            for element in self._elements_to_draw:
+                yield element.get_extents()
+                if element.is_block and show_comments and element.enabled:
+                    yield element.get_extents_comment()
+
+        extent = 10000000, 10000000, 0, 0
+        cmps = (min, min, max, max)
+        for sub_extent in sub_extents():
+            extent = [cmp(xy, e_xy) for cmp, xy, e_xy in zip(cmps, extent, sub_extent)]
         return tuple(extent)
