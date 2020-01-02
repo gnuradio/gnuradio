@@ -99,7 +99,7 @@ float costas_loop_cc_impl::phase_detector_8(gr_complex sample) const
        Circuits and Systems, Vol. 2, pp. 1447 - 1450, 2004.
     */
 
-    const float K = (sqrt(2.0) - 1);
+    const float K = (sqrtf(2.0) - 1);
     if (fabsf(sample.real()) >= fabsf(sample.imag())) {
         return ((sample.real() > 0 ? 1.0 : -1.0) * sample.imag() -
                 (sample.imag() > 0 ? 1.0 : -1.0) * sample.real() * K);
@@ -122,7 +122,7 @@ float costas_loop_cc_impl::phase_detector_2(gr_complex sample) const
 
 float costas_loop_cc_impl::phase_detector_snr_8(gr_complex sample) const
 {
-    const float K = (sqrt(2.0) - 1);
+    const float K = (sqrtf(2.0) - 1);
     const float snr = abs(sample) * abs(sample) / d_noise;
     if (fabsf(sample.real()) >= fabsf(sample.imag())) {
         return ((blocks::tanhf_lut(snr * sample.real()) * sample.imag()) -
