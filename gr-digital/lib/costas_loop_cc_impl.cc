@@ -34,7 +34,7 @@
 namespace gr {
 namespace digital {
 
-costas_loop_cc::sptr costas_loop_cc::make(float loop_bw, int order, bool use_snr)
+costas_loop_cc::sptr costas_loop_cc::make(float loop_bw, unsigned int order, bool use_snr)
 {
     return gnuradio::get_initial_sptr(new costas_loop_cc_impl(loop_bw, order, use_snr));
 }
@@ -42,7 +42,7 @@ costas_loop_cc::sptr costas_loop_cc::make(float loop_bw, int order, bool use_snr
 static int ios[] = { sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float) };
 static std::vector<int> iosig(ios, ios + sizeof(ios) / sizeof(int));
 
-costas_loop_cc_impl::costas_loop_cc_impl(float loop_bw, int order, bool use_snr)
+costas_loop_cc_impl::costas_loop_cc_impl(float loop_bw, unsigned int order, bool use_snr)
     : sync_block("costas_loop_cc",
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::makev(1, 4, iosig)),
@@ -59,7 +59,7 @@ costas_loop_cc_impl::costas_loop_cc_impl(float loop_bw, int order, bool use_snr)
 
 costas_loop_cc_impl::~costas_loop_cc_impl() {}
 
-costas_loop_cc_impl::d_phase_detector_t costas_loop_cc_impl::choose_phase_detector(int order, bool use_snr)
+costas_loop_cc_impl::d_phase_detector_t costas_loop_cc_impl::choose_phase_detector(unsigned int order, bool use_snr)
 {
   switch (order) {
   case 2:
