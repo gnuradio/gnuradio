@@ -79,7 +79,7 @@ unsigned int unpacked_to_packed_impl<T>::get_bit_be1(const T* in_vector,
                                                      unsigned int bit_addr,
                                                      unsigned int bits_per_chunk)
 {
-    const unsigned int byte_addr = (int)bit_addr / bits_per_chunk;
+    const unsigned int byte_addr = bit_addr / bits_per_chunk;
     const T x = in_vector[byte_addr];
     const unsigned int residue = bit_addr - byte_addr * bits_per_chunk;
     // printf("Bit addr %d  byte addr %d  residue %d  val
