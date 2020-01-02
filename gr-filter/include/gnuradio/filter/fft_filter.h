@@ -26,7 +26,7 @@
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/filter/api.h>
 #include <gnuradio/gr_complex.h>
-#include <volk/volk_alloc.h>
+#include <volk/volk_alloc.hh>
 #include <vector>
 
 namespace gr {
