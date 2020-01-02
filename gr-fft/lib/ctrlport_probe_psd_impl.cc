@@ -61,9 +61,6 @@ void ctrlport_probe_psd_impl::forecast(int noutput_items,
         ninput_items_required[i] = d_len;
 }
 
-//    boost::shared_mutex mutex_buffer;
-//    mutable std::mutex mutex_notify;
-//    std::condition_variable condition_buffer_ready;
 std::vector<gr_complex> ctrlport_probe_psd_impl::get()
 {
     mutex_buffer.lock();
