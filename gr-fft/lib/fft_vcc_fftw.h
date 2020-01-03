@@ -32,11 +32,11 @@ namespace fft {
 class FFT_API fft_vcc_fftw : public fft_vcc
 {
 private:
-    fft_complex* d_fft;
-    unsigned int d_fft_size;
+    const unsigned int d_fft_size;
+    const bool d_forward;
+    fft_complex d_fft;
     std::vector<float> d_window;
-    bool d_forward;
-    bool d_shift;
+    const bool d_shift;
 
 public:
     fft_vcc_fftw(int fft_size,
@@ -44,8 +44,6 @@ public:
                  const std::vector<float>& window,
                  bool shift,
                  int nthreads = 1);
-
-    ~fft_vcc_fftw();
 
     void set_nthreads(int n);
     int nthreads() const;

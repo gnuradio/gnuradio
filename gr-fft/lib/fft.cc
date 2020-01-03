@@ -47,7 +47,6 @@ static int my_fftw_read_char(void* f) { return fgetc((FILE*)f); }
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <cassert>
 #include <stdexcept>
 
 #include <boost/filesystem/operations.hpp>
@@ -167,37 +166,24 @@ static void export_wisdom()
 // ----------------------------------------------------------------
 
 fft_complex::fft_complex(int fft_size, bool forward, int nthreads)
+    : d_fft_size(fft_size), d_nthreads(nthreads), d_inbuf(fft_size), d_outbuf(fft_size)
 {
     // Hold global mutex during plan construction and destruction.
     planner::scoped_lock lock(planner::mutex());
 
-    assert(sizeof(fftwf_complex) == sizeof(gr_complex));
+    static_assert(sizeof(fftwf_complex) == sizeof(gr_complex));
 
     if (fft_size <= 0) {
         throw std::out_of_range("fft_impl_fftw: invalid fft_size");
     }
 
-    d_fft_size = fft_size;
-    d_inbuf = (gr_complex*)volk_malloc(sizeof(gr_complex) * inbuf_length(),
-                                       volk_get_alignment());
-    if (d_inbuf == 0) {
-        throw std::runtime_error("volk_malloc");
-    }
-    d_outbuf = (gr_complex*)volk_malloc(sizeof(gr_complex) * outbuf_length(),
-                                        volk_get_alignment());
-    if (d_outbuf == 0) {
-        volk_free(d_inbuf);
-        throw std::runtime_error("volk_malloc");
-    }
-
-    d_nthreads = nthreads;
     config_threading(nthreads);
     lock_wisdom();
     import_wisdom(); // load prior wisdom from disk
 
     d_plan = fftwf_plan_dft_1d(fft_size,
-                               reinterpret_cast<fftwf_complex*>(d_inbuf),
-                               reinterpret_cast<fftwf_complex*>(d_outbuf),
+                               reinterpret_cast<fftwf_complex*>(d_inbuf.data()),
+                               reinterpret_cast<fftwf_complex*>(d_outbuf.data()),
                                forward ? FFTW_FORWARD : FFTW_BACKWARD,
                                FFTW_MEASURE);
 
@@ -215,8 +201,6 @@ fft_complex::~fft_complex()
     planner::scoped_lock lock(planner::mutex());
 
     fftwf_destroy_plan((fftwf_plan)d_plan);
-    volk_free(d_inbuf);
-    volk_free(d_outbuf);
 }
 
 void fft_complex::set_nthreads(int n)
@@ -236,36 +220,28 @@ void fft_complex::execute() { fftwf_execute((fftwf_plan)d_plan); }
 // ----------------------------------------------------------------
 
 fft_real_fwd::fft_real_fwd(int fft_size, int nthreads)
+    : d_fft_size(fft_size),
+      d_nthreads(nthreads),
+      d_inbuf(fft_size),
+      d_outbuf(fft_size / 2 + 1)
 {
     // Hold global mutex during plan construction and destruction.
     planner::scoped_lock lock(planner::mutex());
 
-    assert(sizeof(fftwf_complex) == sizeof(gr_complex));
+    static_assert(sizeof(fftwf_complex) == sizeof(gr_complex));
 
     if (fft_size <= 0) {
         throw std::out_of_range("gr::fft: invalid fft_size");
     }
 
-    d_fft_size = fft_size;
-    d_inbuf = (float*)volk_malloc(sizeof(float) * inbuf_length(), volk_get_alignment());
-    if (d_inbuf == 0) {
-        throw std::runtime_error("volk_malloc");
-    }
-
-    d_outbuf = (gr_complex*)volk_malloc(sizeof(gr_complex) * outbuf_length(),
-                                        volk_get_alignment());
-    if (d_outbuf == 0) {
-        volk_free(d_inbuf);
-        throw std::runtime_error("volk_malloc");
-    }
-
-    d_nthreads = nthreads;
     config_threading(nthreads);
     lock_wisdom();
     import_wisdom(); // load prior wisdom from disk
 
-    d_plan = fftwf_plan_dft_r2c_1d(
-        fft_size, d_inbuf, reinterpret_cast<fftwf_complex*>(d_outbuf), FFTW_MEASURE);
+    d_plan = fftwf_plan_dft_r2c_1d(fft_size,
+                                   d_inbuf.data(),
+                                   reinterpret_cast<fftwf_complex*>(d_outbuf.data()),
+                                   FFTW_MEASURE);
 
     if (d_plan == NULL) {
         fprintf(stderr, "gr::fft::fft_real_fwd: error creating plan\n");
@@ -281,8 +257,6 @@ fft_real_fwd::~fft_real_fwd()
     planner::scoped_lock lock(planner::mutex());
 
     fftwf_destroy_plan((fftwf_plan)d_plan);
-    volk_free(d_inbuf);
-    volk_free(d_outbuf);
 }
 
 void fft_real_fwd::set_nthreads(int n)
@@ -303,30 +277,20 @@ void fft_real_fwd::execute() { fftwf_execute((fftwf_plan)d_plan); }
 // ----------------------------------------------------------------
 
 fft_real_rev::fft_real_rev(int fft_size, int nthreads)
+    : d_fft_size(fft_size),
+      d_nthreads(nthreads),
+      d_inbuf(fft_size / 2 + 1),
+      d_outbuf(fft_size)
 {
     // Hold global mutex during plan construction and destruction.
     planner::scoped_lock lock(planner::mutex());
 
-    assert(sizeof(fftwf_complex) == sizeof(gr_complex));
+    static_assert(sizeof(fftwf_complex) == sizeof(gr_complex));
 
     if (fft_size <= 0) {
         throw std::out_of_range("gr::fft::fft_real_rev: invalid fft_size");
     }
 
-    d_fft_size = fft_size;
-    d_inbuf = (gr_complex*)volk_malloc(sizeof(gr_complex) * inbuf_length(),
-                                       volk_get_alignment());
-    if (d_inbuf == 0) {
-        throw std::runtime_error("volk_malloc");
-    }
-
-    d_outbuf = (float*)volk_malloc(sizeof(float) * outbuf_length(), volk_get_alignment());
-    if (d_outbuf == 0) {
-        volk_free(d_inbuf);
-        throw std::runtime_error("volk_malloc");
-    }
-
-    d_nthreads = nthreads;
     config_threading(nthreads);
     lock_wisdom();
     import_wisdom(); // load prior wisdom from disk
@@ -334,8 +298,10 @@ fft_real_rev::fft_real_rev(int fft_size, int nthreads)
     // FIXME If there's ever a chance that the planning functions
     // will be called in multiple threads, we've got to ensure single
     // threaded access.  They are not thread-safe.
-    d_plan = fftwf_plan_dft_c2r_1d(
-        fft_size, reinterpret_cast<fftwf_complex*>(d_inbuf), d_outbuf, FFTW_MEASURE);
+    d_plan = fftwf_plan_dft_c2r_1d(fft_size,
+                                   reinterpret_cast<fftwf_complex*>(d_inbuf.data()),
+                                   d_outbuf.data(),
+                                   FFTW_MEASURE);
 
     if (d_plan == NULL) {
         fprintf(stderr, "gr::fft::fft_real_rev: error creating plan\n");
@@ -351,8 +317,6 @@ fft_real_rev::~fft_real_rev()
     planner::scoped_lock lock(planner::mutex());
 
     fftwf_destroy_plan((fftwf_plan)d_plan);
-    volk_free(d_inbuf);
-    volk_free(d_outbuf);
 }
 
 void fft_real_rev::set_nthreads(int n)
