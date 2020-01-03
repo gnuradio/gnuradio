@@ -91,7 +91,7 @@ public:
     int outbuf_length() const { return d_outbuf.size(); }
 
     /*!
-     *  Set the number of threads to use for caclulation.
+     *  Set the number of threads to use for calculation.
      */
     void set_nthreads(int n);
 
