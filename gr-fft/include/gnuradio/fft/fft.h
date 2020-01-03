@@ -41,14 +41,6 @@ namespace fft {
  */
 FFT_API gr_complex* malloc_complex(int size);
 
-/*! \brief Helper function for allocating float* buffers
- */
-FFT_API float* malloc_float(int size);
-
-/*! \brief Helper function for allocating double* buffers
- */
-FFT_API double* malloc_double(int size);
-
 /*! \brief Helper function for freeing fft buffers
  * TODO: Remove once the single user of this stops using it.
  */
