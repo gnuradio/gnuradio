@@ -96,8 +96,7 @@ double probe_mpsk_snr_est_c_impl::snr()
     if (d_snr_est)
         return d_snr_est->snr();
     else
-        throw std::runtime_error(
-            "probe_mpsk_snr_est_c_impl:: No SNR estimator defined.");
+        throw std::runtime_error("probe_mpsk_snr_est_c_impl:: No SNR estimator defined.");
 }
 
 double probe_mpsk_snr_est_c_impl::signal()
@@ -105,8 +104,7 @@ double probe_mpsk_snr_est_c_impl::signal()
     if (d_snr_est)
         return d_snr_est->signal();
     else
-        throw std::runtime_error(
-            "probe_mpsk_snr_est_c_impl:: No SNR estimator defined.");
+        throw std::runtime_error("probe_mpsk_snr_est_c_impl:: No SNR estimator defined.");
 }
 
 
@@ -115,8 +113,7 @@ double probe_mpsk_snr_est_c_impl::noise()
     if (d_snr_est)
         return d_snr_est->noise();
     else
-        throw std::runtime_error(
-            "probe_mpsk_snr_est_c_impl:: No SNR estimator defined.");
+        throw std::runtime_error("probe_mpsk_snr_est_c_impl:: No SNR estimator defined.");
 }
 
 snr_est_type_t probe_mpsk_snr_est_c_impl::type() const { return d_type; }
@@ -146,8 +143,7 @@ void probe_mpsk_snr_est_c_impl::set_type(snr_est_type_t t)
         d_snr_est = new mpsk_snr_est_svr(d_alpha);
         break;
     default:
-        throw std::invalid_argument(
-            "probe_mpsk_snr_est_c_impl: unknown type specified.");
+        throw std::invalid_argument("probe_mpsk_snr_est_c_impl: unknown type specified.");
     }
 }
 
@@ -168,8 +164,7 @@ void probe_mpsk_snr_est_c_impl::set_alpha(double alpha)
         if (d_snr_est)
             d_snr_est->set_alpha(d_alpha);
     } else
-        throw std::invalid_argument(
-            "probe_mpsk_snr_est_c_impl: alpha must be in [0,1]");
+        throw std::invalid_argument("probe_mpsk_snr_est_c_impl: alpha must be in [0,1]");
 }
 
 } /* namespace digital */

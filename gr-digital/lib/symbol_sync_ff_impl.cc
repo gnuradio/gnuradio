@@ -88,9 +88,8 @@ symbol_sync_ff_impl::symbol_sync_ff_impl(enum ted_type detector_type,
       d_out_instantaneous_clock_period(NULL),
       d_out_average_clock_period(NULL)
 {
-    set_output_signature(io_signature::makev(1, 4, {
-        sizeof(float), sizeof(float), sizeof(float), sizeof(float)
-    }));
+    set_output_signature(io_signature::makev(
+        1, 4, { sizeof(float), sizeof(float), sizeof(float), sizeof(float) }));
 
     if (sps <= 1.0f)
         throw std::out_of_range("nominal samples per symbol must be > 1");

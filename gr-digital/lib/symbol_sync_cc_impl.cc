@@ -86,9 +86,8 @@ symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
       d_out_instantaneous_clock_period(NULL),
       d_out_average_clock_period(NULL)
 {
-    set_output_signature(io_signature::makev(1, 4, {
-        sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float)
-    }));
+    set_output_signature(io_signature::makev(
+        1, 4, { sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float) }));
 
     if (sps <= 1.0f)
         throw std::out_of_range("nominal samples per symbol must be > 1");
@@ -128,8 +127,12 @@ symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
                         d_interps_per_symbol % sps);
 
     // Symbol Clock Tracking and Estimation
-    d_clock.reset(new clock_tracking_loop(
-        loop_bw, sps + max_deviation, sps - max_deviation, sps, damping_factor, ted_gain));
+    d_clock.reset(new clock_tracking_loop(loop_bw,
+                                          sps + max_deviation,
+                                          sps - max_deviation,
+                                          sps,
+                                          damping_factor,
+                                          ted_gain));
 
     // Timing Error Detector
     d_ted->sync_reset();

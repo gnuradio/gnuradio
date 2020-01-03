@@ -80,9 +80,10 @@ public:
 
     void update_taps(const std::vector<float>& taps);
 
-    void set_taps(const std::vector<float>& taps,
-                  std::vector<std::vector<float>>& ourtaps,
-                  std::vector<std::unique_ptr<kernel::fir_filter_ccf>>& ourfilter) override;
+    void
+    set_taps(const std::vector<float>& taps,
+             std::vector<std::vector<float>>& ourtaps,
+             std::vector<std::unique_ptr<kernel::fir_filter_ccf>>& ourfilter) override;
 
     std::vector<std::vector<float>> taps() const;
     std::vector<std::vector<float>> diff_taps() const;
