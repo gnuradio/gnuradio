@@ -64,28 +64,24 @@ class test_scrambler(gr_unittest.TestCase):
         self.assertEqual(src_data, dst.data())
 
     def test_additive_scrambler_reset(self):
-        src_data = (1,)*1000
+        src_data = (1,)*200
         src = blocks.vector_source_b(src_data, False)
-        scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100)
-        descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100)
+        scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 50)
         dst = blocks.vector_sink_b()
-        self.tb.connect(src, scrambler, descrambler, dst)
+        self.tb.connect(src, scrambler, dst)
         self.tb.run()
-        self.assertEqual(src_data, dst.data())
+        output = dst.data()
+        self.assertEqual(output[:50] * 4, output)
 
     def test_additive_scrambler_reset_3bpb(self):
-        src_data = (5,)*2000
+        src_data = (5,)*200
         src = blocks.vector_source_b(src_data, False)
-        scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100, 3)
-        descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100, 3)
+        scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 50, 3)
         dst = blocks.vector_sink_b()
-        dst2 = blocks.vector_sink_b()
-        self.tb.connect(src, scrambler, descrambler, dst)
-        self.tb.connect(scrambler, dst2)
+        self.tb.connect(src, scrambler, dst)
         self.tb.run()
-        if not (src_data == dst.data()):
-            self.fail('Not equal.')
-        self.assertEqual(src_data, src_data)
+        output = dst.data()
+        self.assertEqual(output[:50] * 4, output)
 
     def test_additive_scrambler_tags(self):
         src_data = (1,)*1000
