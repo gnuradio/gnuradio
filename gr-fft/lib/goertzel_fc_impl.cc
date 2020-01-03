@@ -41,13 +41,11 @@ goertzel_fc_impl::goertzel_fc_impl(int rate, int len, float freq)
                      io_signature::make(1, 1, sizeof(gr_complex)),
                      len),
       d_goertzel(rate, len, freq),
-      d_len(len)
+      d_len(len),
+      d_freq(freq),
+      d_rate(rate)
 {
-    d_rate = rate;
-    d_freq = freq;
 }
-
-goertzel_fc_impl::~goertzel_fc_impl() {}
 
 void goertzel_fc_impl::set_freq(float freq)
 {
