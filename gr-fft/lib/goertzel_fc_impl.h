@@ -33,7 +33,7 @@ class FFT_API goertzel_fc_impl : public goertzel_fc
 {
 private:
     goertzel d_goertzel;
-    int d_len;
+    const int d_len;
     float d_freq;
     int d_rate;
 
@@ -45,8 +45,8 @@ public:
     void set_freq(float freq);
     void set_rate(int rate);
 
-    float freq() { return d_freq; }
-    int rate() { return d_rate; }
+    float freq() const { return d_freq; }
+    int rate() const { return d_rate; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

@@ -45,9 +45,9 @@ public:
 
     virtual void set_rate(int rate) = 0;
 
-    virtual float freq() = 0;
+    virtual float freq() const = 0;
 
-    virtual int rate() = 0;
+    virtual int rate() const = 0;
 };
 
 } /* namespace fft */

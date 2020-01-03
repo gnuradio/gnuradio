@@ -40,9 +40,9 @@ goertzel_fc_impl::goertzel_fc_impl(int rate, int len, float freq)
                      io_signature::make(1, 1, sizeof(float)),
                      io_signature::make(1, 1, sizeof(gr_complex)),
                      len),
-      d_goertzel(rate, len, freq)
+      d_goertzel(rate, len, freq),
+      d_len(len)
 {
-    d_len = len;
     d_rate = rate;
     d_freq = freq;
 }
@@ -65,7 +65,7 @@ int goertzel_fc_impl::work(int noutput_items,
                            gr_vector_const_void_star& input_items,
                            gr_vector_void_star& output_items)
 {
-    float* in = (float*)input_items[0];
+    const float* in = static_cast<const float*>(input_items[0]);
     gr_complex* out = (gr_complex*)output_items[0];
 
     for (int i = 0; i < noutput_items; i++) {

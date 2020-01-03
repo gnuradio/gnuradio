@@ -47,18 +47,16 @@ fft_vfc_fftw::fft_vfc_fftw(int fft_size,
                  io_signature::make(1, 1, fft_size * sizeof(float)),
                  io_signature::make(1, 1, fft_size * sizeof(gr_complex))),
       d_fft_size(fft_size),
-      d_forward(forward)
+      d_forward(forward),
+      d_fft(fft_size, forward, nthreads)
 {
-    d_fft = new fft_complex(d_fft_size, d_forward, nthreads);
     if (!set_window(window))
         throw std::runtime_error("fft_vfc: window not the same length as fft_size");
 }
 
-fft_vfc_fftw::~fft_vfc_fftw() { delete d_fft; }
+void fft_vfc_fftw::set_nthreads(int n) { d_fft.set_nthreads(n); }
 
-void fft_vfc_fftw::set_nthreads(int n) { d_fft->set_nthreads(n); }
-
-int fft_vfc_fftw::nthreads() const { return d_fft->nthreads(); }
+int fft_vfc_fftw::nthreads() const { return d_fft.nthreads(); }
 
 bool fft_vfc_fftw::set_window(const std::vector<float>& window)
 {
@@ -84,20 +82,20 @@ int fft_vfc_fftw::work(int noutput_items,
 
         // copy input into optimally aligned buffer
         if (!d_window.empty()) {
-            gr_complex* dst = d_fft->get_inbuf();
+            gr_complex* dst = d_fft.get_inbuf();
             for (unsigned int i = 0; i < d_fft_size; i++) // apply window
                 dst[i] = in[i] * d_window[i];
         } else {
-            gr_complex* dst = d_fft->get_inbuf();
+            gr_complex* dst = d_fft.get_inbuf();
             for (unsigned int i = 0; i < d_fft_size; i++) // float to complex conversion
                 dst[i] = in[i];
         }
 
         // compute the fft
-        d_fft->execute();
+        d_fft.execute();
 
         // copy result to output stream
-        memcpy(out, d_fft->get_outbuf(), output_data_size);
+        memcpy(out, d_fft.get_outbuf(), output_data_size);
 
         in += d_fft_size;
         out += d_fft_size;

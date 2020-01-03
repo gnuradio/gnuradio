@@ -41,7 +41,7 @@ public:
     void set_params(int rate, int len, float freq);
 
     // Process a input array
-    gr_complex batch(float* in);
+    gr_complex batch(const float* in);
 
     // Process sample by sample
     void input(const float& in);
