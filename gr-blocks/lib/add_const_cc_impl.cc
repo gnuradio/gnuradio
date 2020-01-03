@@ -57,10 +57,10 @@ int add_const_cc_impl::work(int noutput_items,
     const gr_complex* iptr = (const gr_complex*)input_items[0];
     gr_complex* optr = (gr_complex*)output_items[0];
 
-    unsigned long input_size = static_cast<unsigned long> (noutput_items);
+    unsigned long input_size = static_cast<unsigned long>(noutput_items);
 
     gr::thread::scoped_lock guard(d_setlock);
-    if(d_k_copy.size() < input_size) {
+    if (d_k_copy.size() < input_size) {
         d_k_copy.resize(input_size, d_k);
     }
 

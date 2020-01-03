@@ -57,10 +57,10 @@ int add_const_ff_impl::work(int noutput_items,
     const float* iptr = (const float*)input_items[0];
     float* optr = (float*)output_items[0];
 
-    unsigned long input_size = static_cast<unsigned long> (noutput_items);
+    unsigned long input_size = static_cast<unsigned long>(noutput_items);
 
     gr::thread::scoped_lock guard(d_setlock);
-    if(d_k_copy.size() < input_size) {
+    if (d_k_copy.size() < input_size) {
         d_k_copy.resize(input_size, d_k);
     }
 
