@@ -2,8 +2,8 @@ name: Check PR Formatting
 
 on:
   pull_request:
-    paths:
-      - '!volk/'
+    paths-ignore:
+      - 'volk/'
 
 jobs:
   build:
