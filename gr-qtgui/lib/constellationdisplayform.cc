@@ -33,6 +33,7 @@ ConstellationDisplayForm::ConstellationDisplayForm(int nplots, QWidget* parent)
     d_int_validator->setBottom(0);
 
     d_layout = new QGridLayout(this);
+    d_layout->setContentsMargins( 0,0,0,0 );
     d_display_plot = new ConstellationDisplayPlot(nplots, this);
     d_layout->addWidget(d_display_plot, 0, 0);
     setLayout(d_layout);
