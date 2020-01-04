@@ -1,5 +1,6 @@
 '[Core]':
 - Misc:
+  - options
   - pad_source
   - pad_sink
   - virtual_source
