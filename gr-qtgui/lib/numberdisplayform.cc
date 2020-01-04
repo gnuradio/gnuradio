@@ -36,6 +36,7 @@ NumberDisplayForm::NumberDisplayForm(int nplots, gr::qtgui::graph_t type, QWidge
     d_graph_type = type;
     d_title = new QLabel(QString(""));
     d_layout = new QGridLayout(this);
+    d_layout->setContentsMargins( 0,0,0,0 );
     for (unsigned int i = 0; i < d_nplots; ++i) {
         d_min.push_back(+1e32);
         d_max.push_back(-1e32);
