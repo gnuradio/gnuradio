@@ -58,6 +58,7 @@ class PropsDialog(Gtk.Dialog):
         self._block = block
         self._hash = 0
         self._config = parent.config
+        self._params_height = 0
 
         vpaned = Gtk.VPaned()
         self.vbox.pack_start(vpaned, True, True, 0)
@@ -172,6 +173,7 @@ class PropsDialog(Gtk.Dialog):
         """
         if force or self._params_changed():
             # hide params box before changing
+            self._params_height=0
             for category, label, vbox in self._params_boxes:
                 vbox.hide()
                 # empty the params box
@@ -199,7 +201,8 @@ class PropsDialog(Gtk.Dialog):
                     color='foreground="red"' if not box_all_valid else '', name=Utils.encode(category)
                 ))
                 vbox.show()  # show params box with new params
-
+                self._params_height=max(self._params_height,vbox.get_preferred_height()[0])
+                
         if self._block.is_valid():
             self._error_box.hide()
         else:
@@ -207,6 +210,7 @@ class PropsDialog(Gtk.Dialog):
         messages = '\n\n'.join(self._block.get_error_messages())
         self._error_messages_text_display.set_text(messages)
 
+        self.set_size_request(*Utils.scale((Constants.MIN_DIALOG_WIDTH, self._params_height+80)))
         self._update_docs_page()
         self._update_generated_code_page()
 
