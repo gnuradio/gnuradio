@@ -147,9 +147,11 @@ static void do_arch_warning(const std::string& arch)
         return; // no warning when arch not specified
 
     gr::logger_ptr logger, debug_logger;
-    gr::configure_default_loggers(logger, debug_logger, "audio_registry::do_arch_warning");
+    gr::configure_default_loggers(
+        logger, debug_logger, "audio_registry::do_arch_warning");
     std::ostringstream msg;
-    msg << "ERROR Could not find audio architecture \"" << arch << "\" in registry." << std::endl;
+    msg << "ERROR Could not find audio architecture \"" << arch << "\" in registry."
+        << std::endl;
     msg << "    Defaulting to the first available architecture..." << std::endl;
     GR_LOG_ERROR(debug_logger, msg.str());
 }

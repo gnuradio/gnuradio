@@ -27,9 +27,9 @@
 #include "flat_flowgraph.h"
 #include "scheduler_tpb.h"
 #include "top_block_impl.h"
+#include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/top_block.h>
-#include <gnuradio/logger.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -73,8 +73,8 @@ make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_except
                 gr::logger_ptr logger, debug_logger;
                 gr::configure_default_loggers(logger, debug_logger, "make_scheduler");
                 std::ostringstream msg;
-                msg << "WARNING Invalid GR_SCHEDULER environment variable value \""
-                          << v << "\".  Using \"" << scheduler_table[0].name << "\"\n";
+                msg << "WARNING Invalid GR_SCHEDULER environment variable value \"" << v
+                    << "\".  Using \"" << scheduler_table[0].name << "\"\n";
                 GR_LOG_WARN(debug_logger, msg.str());
                 factory = scheduler_table[0].f;
             }

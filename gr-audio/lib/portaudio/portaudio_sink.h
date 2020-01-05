@@ -24,8 +24,8 @@
 
 #include <gnuradio/audio/sink.h>
 #include <gnuradio/buffer.h>
-#include <gnuradio/thread/thread.h>
 #include <gnuradio/logger.h>
+#include <gnuradio/thread/thread.h>
 #include <portaudio.h>
 #include <stdexcept>
 #include <string>
@@ -50,7 +50,7 @@ class portaudio_sink : public sink
     std::string d_device_name;
     bool d_ok_to_block;
     bool d_verbose;
-    
+
     unsigned int d_portaudio_buffer_size_frames; // number of frames in a portaudio buffer
 
     PaStream* d_stream;

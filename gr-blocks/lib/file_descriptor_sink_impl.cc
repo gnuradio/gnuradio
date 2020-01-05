@@ -72,10 +72,9 @@ int file_descriptor_sink_impl::work(int noutput_items,
             if (errno == EINTR)
                 continue;
             else {
-                GR_LOG_ERROR(
-                    d_debug_logger,
-                    boost::format("ERROR file_descriptor_sink: %s") % strerror(errno)
-                );
+                GR_LOG_ERROR(d_debug_logger,
+                             boost::format("ERROR file_descriptor_sink: %s") %
+                                 strerror(errno));
                 return -1; // indicate we're done
             }
         } else {

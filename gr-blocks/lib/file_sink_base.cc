@@ -25,8 +25,8 @@
 #endif
 
 #include <gnuradio/blocks/file_sink_base.h>
-#include <gnuradio/thread/thread.h>
 #include <gnuradio/logger.h>
+#include <gnuradio/thread/thread.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -86,7 +86,8 @@ bool file_sink_base::open(const char* filename)
         flags = O_WRONLY | O_CREAT | O_TRUNC | OUR_O_LARGEFILE | OUR_O_BINARY;
     }
     if ((fd = ::open(filename, flags, 0664)) < 0) {
-        GR_LOG_ERROR(debug_logger, boost::format("ERROR %s: %s") % filename % strerror(errno));
+        GR_LOG_ERROR(debug_logger,
+                     boost::format("ERROR %s: %s") % filename % strerror(errno));
         return false;
     }
     if (d_new_fp) { // if we've already got a new one open, close it
@@ -95,7 +96,8 @@ bool file_sink_base::open(const char* filename)
     }
 
     if ((d_new_fp = fdopen(fd, d_is_binary ? "wb" : "w")) == NULL) {
-        GR_LOG_ERROR(debug_logger, boost::format("ERROR %s: %s") % filename % strerror(errno));
+        GR_LOG_ERROR(debug_logger,
+                     boost::format("ERROR %s: %s") % filename % strerror(errno));
         ::close(fd); // don't leak file descriptor if fdopen fails.
     }
 

@@ -25,9 +25,9 @@
 
 #include "thrift/ControlPort.h"
 #include "thrift/gnuradio_types.h"
+#include <gnuradio/logger.h>
 #include <gnuradio/rpcpmtconverters_thrift.h>
 #include <gnuradio/rpcserver_base.h>
-#include <gnuradio/logger.h>
 #include <boost/format.hpp>
 #include <boost/thread/mutex.hpp>
 #include <iostream>
@@ -118,8 +118,8 @@ private:
         } else {
             std::ostringstream msg;
             msg << "ERROR Message " << _handlerCallback.description
-                      << " requires PRIVLVL <= " << _handlerCallback.priv
-                      << " to set, currently at: " << cur_priv << std::endl;
+                << " requires PRIVLVL <= " << _handlerCallback.priv
+                << " to set, currently at: " << cur_priv << std::endl;
             GR_LOG_ERROR(debug_logger, msg.str());
         }
     }

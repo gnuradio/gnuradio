@@ -24,9 +24,9 @@
 #define GR_VMCIRCBUF_H
 
 #include <gnuradio/api.h>
-#include <gnuradio/thread/thread.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
+#include <gnuradio/thread/thread.h>
 #include <vector>
 
 extern gr::thread::mutex s_vm_mutex;
@@ -46,7 +46,8 @@ protected:
     logger_ptr d_debug_logger;
 
     // CREATORS
-    vmcircbuf(int size) : d_size(size), d_base(0){
+    vmcircbuf(int size) : d_size(size), d_base(0)
+    {
         gr::configure_default_loggers(d_logger, d_debug_logger, "gr::vmcircbuf");
     };
 

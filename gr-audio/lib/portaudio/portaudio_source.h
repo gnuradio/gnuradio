@@ -25,8 +25,8 @@
 
 #include <gnuradio/audio/source.h>
 #include <gnuradio/buffer.h>
-#include <gnuradio/thread/thread.h>
 #include <gnuradio/logger.h>
+#include <gnuradio/thread/thread.h>
 #include <portaudio.h>
 #include <stdexcept>
 #include <string>

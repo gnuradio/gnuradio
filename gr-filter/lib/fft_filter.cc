@@ -24,10 +24,10 @@
 #include "config.h"
 #endif
 
-#include <boost/smart_ptr/make_unique.hpp>
 #include <gnuradio/filter/fft_filter.h>
 #include <gnuradio/logger.h>
 #include <volk/volk.h>
+#include <boost/smart_ptr/make_unique.hpp>
 #include <cstring>
 #include <iostream>
 
@@ -40,9 +40,7 @@ namespace kernel {
 fft_filter_fff::fft_filter_fff(int decimation,
                                const std::vector<float>& taps,
                                int nthreads)
-    : d_fftsize(-1),
-      d_decimation(decimation),
-      d_nthreads(nthreads)
+    : d_fftsize(-1), d_decimation(decimation), d_nthreads(nthreads)
 {
     set_taps(taps);
 }
@@ -95,7 +93,7 @@ void fft_filter_fff::compute_sizes(int ntaps)
         gr::configure_default_loggers(logger, debug_logger, "fft_filter_fff");
         std::ostringstream msg;
         msg << "fft_filter_fff: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
-                  << " nsamples = " << d_nsamples << std::endl;
+            << " nsamples = " << d_nsamples << std::endl;
         GR_LOG_ERROR(debug_logger, msg.str());
     }
 
@@ -174,9 +172,7 @@ int fft_filter_fff::filter(int nitems, const float* input, float* output)
 fft_filter_ccc::fft_filter_ccc(int decimation,
                                const std::vector<gr_complex>& taps,
                                int nthreads)
-    : d_fftsize(-1),
-      d_decimation(decimation),
-      d_nthreads(nthreads)
+    : d_fftsize(-1), d_decimation(decimation), d_nthreads(nthreads)
 {
     set_taps(taps);
 }
@@ -229,7 +225,7 @@ void fft_filter_ccc::compute_sizes(int ntaps)
         gr::configure_default_loggers(logger, debug_logger, "fft_filter_ccc");
         std::ostringstream msg;
         msg << "fft_filter_ccc: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
-                  << " nsamples = " << d_nsamples << std::endl;
+            << " nsamples = " << d_nsamples << std::endl;
         GR_LOG_ERROR(debug_logger, msg.str());
     }
 
@@ -309,9 +305,7 @@ int fft_filter_ccc::filter(int nitems, const gr_complex* input, gr_complex* outp
 fft_filter_ccf::fft_filter_ccf(int decimation,
                                const std::vector<float>& taps,
                                int nthreads)
-    : d_fftsize(-1),
-      d_decimation(decimation),
-      d_nthreads(nthreads)
+    : d_fftsize(-1), d_decimation(decimation), d_nthreads(nthreads)
 {
     set_taps(taps);
 }
@@ -364,7 +358,7 @@ void fft_filter_ccf::compute_sizes(int ntaps)
         gr::configure_default_loggers(logger, debug_logger, "fft_filter_ccf");
         std::ostringstream msg;
         msg << "fft_filter_ccf: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
-                  << " nsamples = " << d_nsamples << std::endl;
+            << " nsamples = " << d_nsamples << std::endl;
         GR_LOG_ERROR(debug_logger, msg.str());
     }
 

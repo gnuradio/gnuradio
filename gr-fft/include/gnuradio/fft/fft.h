@@ -172,7 +172,7 @@ class FFT_API fft_real_rev
     void* d_plan;
     gr::logger_ptr d_logger;
     gr::logger_ptr d_debug_logger;
-    
+
 public:
     fft_real_rev(int fft_size, int nthreads = 1);
     // Copy disabled due to d_plan.

@@ -90,7 +90,7 @@ sink_s_impl::sink_s_impl(double framerate,
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::ostringstream msg;
         msg << "ERROR Couldn't initialize SDL:" << SDL_GetError()
-                  << " \n SDL_Init(SDL_INIT_VIDEO) failed\n";
+            << " \n SDL_Init(SDL_INIT_VIDEO) failed\n";
         GR_LOG_ERROR(d_debug_logger, msg.str());
         throw std::runtime_error("video_sdl::sink_s");
     };
@@ -106,7 +106,7 @@ sink_s_impl::sink_s_impl(double framerate,
     if (d_screen == NULL) {
         std::ostringstream msg;
         msg << "ERROR Unable to set SDL video mode: " << SDL_GetError()
-                  << "\n SDL_SetVideoMode() Failed \n";
+            << "\n SDL_SetVideoMode() Failed \n";
         GR_LOG_ERROR(d_debug_logger, msg.str());
         exit(1);
     }

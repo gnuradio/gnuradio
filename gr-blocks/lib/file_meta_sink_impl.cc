@@ -167,7 +167,8 @@ bool file_meta_sink_impl::_open(FILE** fp, const char* filename)
     if ((fd = ::open(filename,
                      O_WRONLY | O_CREAT | O_TRUNC | OUR_O_LARGEFILE | OUR_O_BINARY,
                      0664)) < 0) {
-        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s: %s") % filename % strerror(errno));
+        GR_LOG_ERROR(d_debug_logger,
+                     boost::format("ERROR %s: %s") % filename % strerror(errno));
         return false;
     }
 
@@ -177,7 +178,8 @@ bool file_meta_sink_impl::_open(FILE** fp, const char* filename)
     }
 
     if ((*fp = fdopen(fd, "wb")) == NULL) {
-        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s: %s") % filename % strerror(errno));
+        GR_LOG_ERROR(d_debug_logger,
+                     boost::format("ERROR %s: %s") % filename % strerror(errno));
         ::close(fd); // don't leak file descriptor if fdopen fails.
     }
 

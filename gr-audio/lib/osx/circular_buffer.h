@@ -23,8 +23,8 @@
 #ifndef _CIRCULAR_BUFFER_H_
 #define _CIRCULAR_BUFFER_H_
 
-#include <gnuradio/thread/thread.h>
 #include <gnuradio/logger.h>
+#include <gnuradio/thread/thread.h>
 #include <iostream>
 #include <stdexcept>
 
@@ -34,12 +34,12 @@
 
 #if DO_DEBUG
 #define LOG(X) \
-    do {         \
-        X        \
+    do {       \
+        X      \
     } while (0);
 #else
 #define LOG(X) \
-    do {         \
+    do {       \
     } while (0);
 #endif
 
@@ -94,14 +94,11 @@ public:
         d_readBlock = d_writeBlock = NULL;
         reset();
         gr::configure_default_loggers(d_logger, d_debug_logger, "circular_buffer");
-        LOG(
-            std::ostringstream msg;
+        LOG(std::ostringstream msg;
             msg << "c_b(): buf len (items) = " << d_bufLen_
-                        << ", doWriteBlock = " << (d_doWriteBlock ? "true" : "false")
-                        << ", doFullRead = " << (d_doFullRead ? "true" : "false")
-                        << std::endl;
-            GR_LOG_INFO(d_debug_logger, msg.str());
-        );
+                << ", doWriteBlock = " << (d_doWriteBlock ? "true" : "false")
+                << ", doFullRead = " << (d_doFullRead ? "true" : "false") << std::endl;
+            GR_LOG_INFO(d_debug_logger, msg.str()););
     };
 
     ~circular_buffer()
@@ -170,18 +167,15 @@ public:
 
     int enqueue(T* buf, size_t bufLen_I)
     {
-        LOG(
-            std::ostringstream msg;
+        LOG(std::ostringstream msg;
             msg << "INFO enqueue: buf = " << (void*)buf << ", bufLen = " << bufLen_I
-                        << ", #av_wr = " << d_n_avail_write_I
-                        << ", #av_rd = " << d_n_avail_read_I << std::endl;
-            GR_LOG_INFO(d_debug_logger, msg.str());
-        );
+                << ", #av_wr = " << d_n_avail_write_I << ", #av_rd = " << d_n_avail_read_I
+                << std::endl;
+            GR_LOG_INFO(d_debug_logger, msg.str()););
         if (bufLen_I > d_bufLen_I) {
             std::ostringstream msg;
             msg << "ERROR: cannot add buffer longer (" << bufLen_I
-                      << ") than instantiated length (" << d_bufLen_I << ")."
-                      << std::endl;
+                << ") than instantiated length (" << d_bufLen_I << ")." << std::endl;
             GR_LOG_INFO(d_debug_logger, msg.str());
             throw std::runtime_error("circular_buffer::enqueue()");
         }
@@ -200,16 +194,19 @@ public:
         if (bufLen_I > d_n_avail_write_I) {
             if (d_doWriteBlock) {
                 while (bufLen_I > d_n_avail_write_I) {
-                    LOG(GR_LOG_INFO(d_debug_logger, "INFO enqueue #len > #a, waiting\n"););
+                    LOG(GR_LOG_INFO(d_debug_logger,
+                                    "INFO enqueue #len > #a, waiting\n"););
                     // wait; will automatically unlock() the internal mutex via
                     // the scoped lock
                     d_writeBlock->wait(l);
                     // and auto re-lock() it here.
                     if (d_doAbort) {
-                        LOG(GR_LOG_INFO(d_debug_logger, "INFO enqueue #len > #a, aborting\n"););
+                        LOG(GR_LOG_INFO(d_debug_logger,
+                                        "INFO enqueue #len > #a, aborting\n"););
                         return (2);
                     }
-                    LOG(GR_LOG_INFO(d_debug_logger, "INFO enqueue #len > #a, done waiting\n"););
+                    LOG(GR_LOG_INFO(d_debug_logger,
+                                    "INFO enqueue #len > #a, done waiting\n"););
                 }
             } else {
                 d_n_avail_read_I = d_bufLen_I - bufLen_I;
@@ -262,13 +259,11 @@ public:
 
     int dequeue(T* buf, size_t* bufLen_I)
     {
-        LOG(
-            std::ostringstream msg;
-            msg << "INFO dequeue: buf = " << ((void*)buf) << ", *bufLen = "
-                        << (*bufLen_I) << ", #av_wr = " << d_n_avail_write_I
-                        << ", #av_rd = " << d_n_avail_read_I << std::endl;
-            GR_LOG_INFO(d_debug_logger, msg.str());
-        );
+        LOG(std::ostringstream msg;
+            msg << "INFO dequeue: buf = " << ((void*)buf) << ", *bufLen = " << (*bufLen_I)
+                << ", #av_wr = " << d_n_avail_write_I << ", #av_rd = " << d_n_avail_read_I
+                << std::endl;
+            GR_LOG_INFO(d_debug_logger, msg.str()););
         if (!bufLen_I)
             throw std::runtime_error("circular_buffer::dequeue(): "
                                      "input bufLen pointer is NULL.");
@@ -281,8 +276,7 @@ public:
         if (l_bufLen_I > d_bufLen_I) {
             std::ostringstream msg;
             msg << "ERROR: cannot remove buffer longer (" << l_bufLen_I
-                << ") than instantiated length (" << d_bufLen_I << ")."
-                << std::endl;
+                << ") than instantiated length (" << d_bufLen_I << ")." << std::endl;
             GR_LOG_INFO(d_debug_logger, msg.str());
             throw std::runtime_error("circular_buffer::dequeue()");
         }
@@ -299,10 +293,12 @@ public:
                 d_readBlock->wait(l);
                 // and re-lock() it here.
                 if (d_doAbort) {
-                    LOG(GR_LOG_INFO(d_debug_logger, "INFO dequeue #a < #len, aborting\n"););
+                    LOG(GR_LOG_INFO(d_debug_logger,
+                                    "INFO dequeue #a < #len, aborting\n"););
                     return (2);
                 }
-                LOG(GR_LOG_INFO(d_debug_logger, "INFO dequeue #a < #len, done waiting\n"););
+                LOG(GR_LOG_INFO(d_debug_logger,
+                                "INFO dequeue #a < #len, done waiting\n"););
             }
         } else {
             while (d_n_avail_read_I == 0) {
@@ -312,10 +308,12 @@ public:
                 d_readBlock->wait(l);
                 // and re-lock() it here.
                 if (d_doAbort) {
-                    LOG(GR_LOG_INFO(d_debug_logger, "INFO dequeue: #a == 0, aborting.\n"););
+                    LOG(GR_LOG_INFO(d_debug_logger,
+                                    "INFO dequeue: #a == 0, aborting.\n"););
                     return (2);
                 }
-                LOG(GR_LOG_INFO(d_debug_logger, "INFO dequeue: #a == 0, done waiting.\n"););
+                LOG(GR_LOG_INFO(d_debug_logger,
+                                "INFO dequeue: #a == 0, done waiting.\n"););
             }
         }
         if (l_bufLen_I > d_n_avail_read_I)

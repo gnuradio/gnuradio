@@ -80,11 +80,9 @@ inline void ofdm_frame_sink_impl::enter_have_header()
 
     if (VERBOSE)
         GR_LOG_INFO(
-            d_debug_logger, 
-            boost::format("INFO enter_have_header (payload_len = %d) (offset = %d)\n")
-            % payload_len
-            % whitener_offset
-        );
+            d_debug_logger,
+            boost::format("INFO enter_have_header (payload_len = %d) (offset = %d)\n") %
+                payload_len % whitener_offset);
 }
 
 char ofdm_frame_sink_impl::slicer(const gr_complex x)
@@ -327,7 +325,7 @@ int ofdm_frame_sink_impl::work(int noutput_items,
     switch (d_state) {
     case STATE_SYNC_SEARCH: // Look for flag indicating beginning of pkt
         if (VERBOSE)
-                GR_LOG_INFO(d_debug_logger, "INFO SYNC Search, noutput=%d\n");
+            GR_LOG_INFO(d_debug_logger, "INFO SYNC Search, noutput=%d\n");
 
         if (sig[0]) { // Found it, set up for header decode
             enter_have_sync();
@@ -342,12 +340,9 @@ int ofdm_frame_sink_impl::work(int noutput_items,
         if (VERBOSE) {
             if (sig[0])
                 GR_LOG_ERROR(d_debug_logger, "ERROR -- Found SYNC in HAVE_SYNC\n");
-                GR_LOG_INFO(
-                    d_debug_logger,
-                    "INFO Header Search bitcnt=%d, header=0x%08x\n"
-                    % d_headerbytelen_cnt
-                    % d_header
-                );
+            GR_LOG_INFO(d_debug_logger,
+                        "INFO Header Search bitcnt=%d, header=0x%08x\n" %
+                            d_headerbytelen_cnt % d_header);
         }
 
         j = 0;
@@ -357,7 +352,8 @@ int ofdm_frame_sink_impl::work(int noutput_items,
 
             if (++d_headerbytelen_cnt == HEADERBYTELEN) {
                 if (VERBOSE)
-                    GR_LOG_INFO(d_debug_logger, boost::format("INFO got header: 0x%08x\n")% d_header);
+                    GR_LOG_INFO(d_debug_logger,
+                                boost::format("INFO got header: 0x%08x\n") % d_header);
 
                 // we have a full header, check to see if it has been received properly
                 if (header_ok()) {
@@ -392,11 +388,9 @@ int ofdm_frame_sink_impl::work(int noutput_items,
         if (VERBOSE) {
             if (sig[0])
                 GR_LOG_ERROR(
-                    d_debug_logger
-                    boost::format("ERROR Found SYNC in HAVE_HEADER at %d, length of %d\n")
-                    % d_packetlen_cnt
-                    % d_packetlen
-                );
+                    d_debug_logger boost::format(
+                        "ERROR Found SYNC in HAVE_HEADER at %d, length of %d\n") %
+                    d_packetlen_cnt % d_packetlen);
             GR_LOG_ERROR(d_debug_logger, "Packet Build\n");
         }
 

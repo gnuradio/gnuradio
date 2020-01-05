@@ -72,10 +72,9 @@ vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
             if (strncmp(name, all[i]->name(), strlen(all[i]->name())) == 0) {
                 s_default_factory = all[i];
                 if (verbose)
-                    GR_LOG_INFO(
-                        debug_logger, 
-                        boost::format("INFO Using %s\n") % s_default_factory->name()
-                    );
+                    GR_LOG_INFO(debug_logger,
+                                boost::format("INFO Using %s\n") %
+                                    s_default_factory->name());
                 return s_default_factory;
             }
         }
@@ -83,7 +82,7 @@ vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
 
     // either we don't have a default, or the default named is not in our
     // list of factories.  Find the first factory that works.
-    
+
     if (verbose)
         GR_LOG_INFO(debug_logger, "INFO finding a working factory...\n");
 
@@ -151,12 +150,16 @@ check_mapping(vmcircbuf* c, int counter, int size, const char* msg, bool verbose
         if (p1[i] != counter + i) {
             ok = false;
             if (verbose)
-                GR_LOG_ERROR(debug_logger, boost::format("ERROR p1[%d] == %u, expected %u\n") % i % p1[i] % (counter + i));
+                GR_LOG_ERROR(debug_logger,
+                             boost::format("ERROR p1[%d] == %u, expected %u\n") % i %
+                                 p1[i] % (counter + i));
             break;
         }
         if (p2[i] != counter + i) {
             if (verbose)
-                GR_LOG_ERROR(debug_logger, boost::format("ERROR p1[%d] == %u, expected %u\n") % i % p2[i] % (counter + i));
+                GR_LOG_ERROR(debug_logger,
+                             boost::format("ERROR p1[%d] == %u, expected %u\n") % i %
+                                 p2[i] % (counter + i));
             ok = false;
             break;
         }
@@ -197,11 +200,10 @@ test_a_bunch(vmcircbuf_factory* factory, int n, int size, int* start_ptr, bool v
         *start_ptr += size;
         if ((c[i] = factory->make(size)) == 0) {
             if (verbose)
-                GR_LOG_ERROR(
-                    debug_logger, 
-                    boost::format("ERROR Failed to allocate gr::vmcircbuf number %d of size %d (cum = %s)\n") 
-                    % (i + 1) % size % memsize(cum_size)
-                )
+                GR_LOG_ERROR(debug_logger,
+                             boost::format("ERROR Failed to allocate gr::vmcircbuf "
+                                           "number %d of size %d (cum = %s)\n") %
+                                 (i + 1) % size % memsize(cum_size))
             return false;
         }
         init_buffer(c[i], counter[i], size);
@@ -245,10 +247,9 @@ static bool standard_tests(vmcircbuf_factory* f, int verbose)
     }
 
     if (verbose >= 1)
-        GR_LOG_ERROR(
-            debug_logger,
-            boost::format("ERROR ....... %s: %s\n") % f->name() % (ok ? "OK" : "Doesn't work")
-        )
+        GR_LOG_ERROR(debug_logger,
+                     boost::format("ERROR ....... %s: %s\n") % f->name() %
+                         (ok ? "OK" : "Doesn't work"))
     return ok;
 }
 
@@ -275,15 +276,15 @@ bool vmcircbuf_sysconfig::test_factory(vmcircbuf_factory* f, int verbose)
         if (verbose)
             GR_LOG_ERROR(
                 debug_logger,
-                boost::format("ERROR vmcircbuf_factory::test_factory (%s): caught %s\n") % f->name() % sig.name().c_str()
-            )
-            return false;
+                boost::format("ERROR vmcircbuf_factory::test_factory (%s): caught %s\n") %
+                    f->name() % sig.name().c_str())
+        return false;
     } catch (...) {
         if (verbose)
-            GR_LOG_ERROR(
-                debug_logger,
-                boost::format("ERROR vmcircbuf_factory::test_factory (%s) some kind of uncaught exception.\n") % f->name()
-            )
+            GR_LOG_ERROR(debug_logger,
+                         boost::format("ERROR vmcircbuf_factory::test_factory (%s) some "
+                                       "kind of uncaught exception.\n") %
+                             f->name())
         return false;
     }
     return false; // never gets here.  shut compiler up.

@@ -78,8 +78,8 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(int size) : gr::vmcircbuf(size)
             // Where the "portable format" doesn't work, we try building
             // a full filesystem pathname pointing into a suitable temporary directory.
 
-            seg_name = str(boost::format("%s/gnuradio-%d-%d") %
-                           gr::tmp_path() % getpid() % s_seg_counter);
+            seg_name = str(boost::format("%s/gnuradio-%d-%d") % gr::tmp_path() %
+                           getpid() % s_seg_counter);
         }
 
         shm_fd = shm_open(seg_name.c_str(), O_RDWR | O_CREAT | O_EXCL, 0600);
@@ -95,9 +95,8 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(int size) : gr::vmcircbuf(size)
                 EEXIST) // Named segment already exists (shouldn't happen).  Try again
                 continue;
 
-            static std::string msg =
-                str(boost::format("gr::vmcircbuf_mmap_shm_open: shm_open [%s]") %
-                    seg_name);
+            static std::string msg = str(
+                boost::format("gr::vmcircbuf_mmap_shm_open: shm_open [%s]") % seg_name);
             GR_LOG_ERROR(d_debug_logger, msg.c_str());
             throw std::runtime_error("gr::vmcircbuf_mmap_shm_open");
         }

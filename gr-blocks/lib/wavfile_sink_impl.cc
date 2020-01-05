@@ -109,7 +109,8 @@ bool wavfile_sink_impl::open(const char* filename)
     if ((fd = ::open(filename,
                      O_WRONLY | O_CREAT | O_TRUNC | OUR_O_LARGEFILE | OUR_O_BINARY,
                      0664)) < 0) {
-        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s: %s") % filename % strerror(errno));
+        GR_LOG_ERROR(d_debug_logger,
+                     boost::format("ERROR %s: %s") % filename % strerror(errno));
         return false;
     }
 
@@ -119,17 +120,17 @@ bool wavfile_sink_impl::open(const char* filename)
     }
 
     if ((d_new_fp = fdopen(fd, "wb")) == NULL) {
-        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s: %s") % filename % strerror(errno));
+        GR_LOG_ERROR(d_debug_logger,
+                     boost::format("ERROR %s: %s") % filename % strerror(errno));
         ::close(fd); // don't leak file descriptor if fdopen fails.
         return false;
     }
     d_updated = true;
 
     if (!wavheader_write(d_new_fp, d_sample_rate, d_nchans, d_bytes_per_sample_new)) {
-        GR_LOG_ERROR(
-            d_debug_logger,
-            boost::format("ERROR [%s] could not write to WAV file: %s\n") % __FILE__ % strerror(errno)
-        )
+        GR_LOG_ERROR(d_debug_logger,
+                     boost::format("ERROR [%s] could not write to WAV file: %s\n") %
+                         __FILE__ % strerror(errno))
         exit(-1);
     }
 
@@ -199,10 +200,9 @@ int wavfile_sink_impl::work(int noutput_items,
             wav_write_sample(d_fp, sample_buf_s, d_bytes_per_sample);
 
             if (feof(d_fp) || ferror(d_fp)) {
-                GR_LOG_ERROR(
-                    d_debug_logger,
-                    boost::format("ERROR [%s] file i/o error %s\n") % __FILE__ % strerror(errno)
-                );
+                GR_LOG_ERROR(d_debug_logger,
+                             boost::format("ERROR [%s] file i/o error %s\n") % __FILE__ %
+                                 strerror(errno));
                 close();
                 exit(-1);
             }

@@ -81,7 +81,7 @@ void rpcserver_thrift::unregisterConfigureCallback(const std::string& id)
         throw std::runtime_error(s.str().c_str());
     }
 
-    if (DEBUG){
+    if (DEBUG) {
         std::ostringstream msg;
         msg << "INFO unregistering set: " << id << std::endl;
         GR_LOG_INFO(d_debug_logger, msg.str());

@@ -24,9 +24,9 @@
 #define INCLUDED_GR_RUNTIME_BLOCK_EXECUTOR_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/tags.h>
-#include <gnuradio/logger.h>
 #include <fstream>
 
 namespace gr {
