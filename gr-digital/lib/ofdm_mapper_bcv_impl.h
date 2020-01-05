@@ -25,6 +25,7 @@
 
 #include <gnuradio/digital/ofdm_mapper_bcv.h>
 #include <gnuradio/message.h>
+#include <gnuradio/random.h>
 #include <vector>
 
 namespace gr {
@@ -33,6 +34,8 @@ namespace digital {
 class ofdm_mapper_bcv_impl : public ofdm_mapper_bcv
 {
 private:
+    /* NOTE: d_rand_sym.set_integer_limits(0, new_const.size()) must be called
+     *        * if set_constellation() is ever added */
     std::vector<gr_complex> d_constellation;
     msg_queue::sptr d_msgq;
     message::sptr d_msg;
@@ -52,6 +55,7 @@ private:
 
     std::vector<int> d_subcarrier_map;
 
+    gr::random d_rnd_sym;
     int randsym();
 
 public:
