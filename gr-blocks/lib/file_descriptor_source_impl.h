@@ -35,7 +35,7 @@ private:
     int d_fd;
     bool d_repeat;
 
-    unsigned char* d_residue;
+    std::vector<unsigned char> d_residue;
     unsigned long d_residue_len;
 
 protected:

@@ -58,7 +58,7 @@ file_descriptor_source_impl::file_descriptor_source_impl(size_t itemsize,
       d_itemsize(itemsize),
       d_fd(fd),
       d_repeat(repeat),
-      d_residue(new unsigned char[itemsize]),
+      d_residue(itemsize),
       d_residue_len(0)
 {
 }
@@ -66,7 +66,6 @@ file_descriptor_source_impl::file_descriptor_source_impl(size_t itemsize,
 file_descriptor_source_impl::~file_descriptor_source_impl()
 {
     close(d_fd);
-    delete[] d_residue;
 }
 
 int file_descriptor_source_impl::read_items(char* buf, int nitems)
@@ -77,7 +76,7 @@ int file_descriptor_source_impl::read_items(char* buf, int nitems)
     int nbytes_read = 0;
 
     if (d_residue_len > 0) {
-        memcpy(buf, d_residue, d_residue_len);
+        memcpy(buf, d_residue.data(), d_residue_len);
         nbytes_read = d_residue_len;
         d_residue_len = 0;
     }
@@ -103,7 +102,7 @@ int file_descriptor_source_impl::handle_residue(char* buf, int nbytes_read)
     d_residue_len = nbytes_read % d_itemsize;
     if (d_residue_len > 0) {
         // fprintf (stderr, "handle_residue: %d\n", d_residue_len);
-        memcpy(d_residue, buf + nbytes_read - d_residue_len, d_residue_len);
+        memcpy(d_residue.data(), buf + nbytes_read - d_residue_len, d_residue_len);
     }
     return nitems_read;
 }

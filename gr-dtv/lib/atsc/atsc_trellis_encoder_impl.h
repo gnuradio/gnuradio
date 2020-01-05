@@ -34,10 +34,10 @@ private:
     bool debug;
 
     /* How many separate Trellis encoders / Viterbi decoders run in parallel */
-    static const int NCODERS = 12;
-    static const int SEGMENT_SIZE = ATSC_MPEG_RS_ENCODED_LENGTH;
-    static const int INPUT_SIZE = (SEGMENT_SIZE * 12);
-    static const int OUTPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
+    static constexpr int NCODERS = 12;
+    static constexpr int SEGMENT_SIZE = ATSC_MPEG_RS_ENCODED_LENGTH;
+    static constexpr int INPUT_SIZE = (SEGMENT_SIZE * 12);
+    static constexpr int OUTPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
 
     void reset();
     void encode(atsc_data_segment out[NCODERS],

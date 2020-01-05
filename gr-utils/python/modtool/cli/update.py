@@ -34,6 +34,8 @@ from .base import block_name, run, cli_input, ModToolException
 @click.command('update', short_help=ModToolUpdate.description)
 @click.option('--complete', is_flag=True, default=None,
               help="Convert all the XML bindings to YAML.")
+@click.option('-I', '--include-blacklisted', is_flag=True, default=None,
+              help="Include XML files with blacklisted names in the conversion process")
 @block_name
 def cli(**kwargs):
     """ Update the XML bindings to YAML bindings """

@@ -30,8 +30,8 @@
 namespace gr {
 namespace channels {
 
-const float default_delays[] = { 0.0, 0.1, 0.5 };
-const float default_mags[] = { 1.0, 0.8, 0.3 };
+constexpr float default_delays[] = { 0.0, 0.1, 0.5 };
+constexpr float default_mags[] = { 1.0, 0.8, 0.3 };
 
 /*!
  * \brief fading simulator

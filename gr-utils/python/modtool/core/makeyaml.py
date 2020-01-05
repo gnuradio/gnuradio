@@ -28,11 +28,44 @@ import os
 import re
 import glob
 import logging
+import yaml
+
+from collections import OrderedDict
+
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except:
+    from yaml import Loader, Dumper
+
+try:
+    from gnuradio.blocktool.core import Constants
+except ImportError:
+    have_blocktool = False
+else:
+    have_blocktool = True
 
 from ..tools import ParserCCBlock, CMakeFileEditor, ask_yes_no, GRCYAMLGenerator
 from .base import ModTool, ModToolException
 
+
 logger = logging.getLogger(__name__)
+
+## setup dumper for dumping OrderedDict ##
+_MAPPING_TAG = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
+
+
+def dict_representer(dumper, data):
+    """ Representer to represent special OrderedDict """
+    return dumper.represent_dict(data.items())
+
+
+def dict_constructor(loader, node):
+    """ Construct an OrderedDict for dumping """
+    return OrderedDict(loader.construct_pairs(node))
+
+
+Dumper.add_representer(OrderedDict, dict_representer)
+Loader.add_constructor(_MAPPING_TAG, dict_constructor)
 
 
 class ModToolMakeYAML(ModTool):
@@ -55,7 +88,8 @@ class ModToolMakeYAML(ModTool):
         # This portion will be covered by the CLI
         if not self.cli:
             self.validate()
-        logger.warning("Warning: This is an experimental feature. Don't expect any magic.")
+        logger.warning(
+            "Warning: This is an experimental feature. Don't expect any magic.")
         # 1) Go through lib/
         if not self.skip_subdirs['lib']:
             if self.info['version'] in ('37', '38'):
@@ -106,10 +140,10 @@ class ModToolMakeYAML(ModTool):
                 file_exists = True
                 logger.warning("Warning: Overwriting existing GRC file.")
         grc_generator = GRCYAMLGenerator(
-                modname=self.info['modname'],
-                blockname=blockname,
-                params=params,
-                iosig=iosig
+            modname=self.info['modname'],
+            blockname=blockname,
+            params=params,
+            iosig=iosig
         )
         grc_generator.save(path_to_yml)
         if file_exists:
@@ -120,7 +154,8 @@ class ModToolMakeYAML(ModTool):
             ed = CMakeFileEditor(self._file['cmgrc'])
             if re.search(fname_yml, ed.cfile) is None and not ed.check_for_glob('*.yml'):
                 logger.info("Adding GRC bindings to grc/CMakeLists.txt...")
-                ed.append_value('install', fname_yml, to_ignore_end='DESTINATION[^()]+')
+                ed.append_value('install', fname_yml,
+                                to_ignore_end='DESTINATION[^()]+')
                 ed.write()
                 self.scm.mark_files_updated(self._file['cmgrc'])
 
@@ -138,18 +173,21 @@ class ModToolMakeYAML(ModTool):
                               'std::vector<int>': 'int_vector',
                               'std::vector<float>': 'real_vector',
                               'std::vector<gr_complex>': 'complex_vector',
-                             }
+                              }
             if p_type in ('int',) and default_v is not None and len(default_v) > 1 and default_v[:2].lower() == '0x':
                 return 'hex'
             try:
                 return translate_dict[p_type]
             except KeyError:
                 return 'raw'
+
         def _get_blockdata(fname_cc):
             """ Return the block name and the header file name from the .cc file name """
-            blockname = os.path.splitext(os.path.basename(fname_cc.replace('_impl.', '.')))[0]
+            blockname = os.path.splitext(os.path.basename(
+                fname_cc.replace('_impl.', '.')))[0]
             fname_h = (blockname + '.h').replace('_impl.', '.')
-            contains_modulename =  blockname.startswith(self.info['modname']+'_')
+            contains_modulename = blockname.startswith(
+                self.info['modname']+'_')
             blockname = blockname.replace(self.info['modname']+'_', '', 1)
             return (blockname, fname_h, contains_modulename)
         # Go, go, go
@@ -157,15 +195,171 @@ class ModToolMakeYAML(ModTool):
         (blockname, fname_h, contains_modulename) = _get_blockdata(fname_cc)
         try:
             parser = ParserCCBlock(fname_cc,
-                                   os.path.join(self.info['includedir'], fname_h),
+                                   os.path.join(
+                                       self.info['includedir'], fname_h),
                                    blockname,
                                    self.info['version'],
                                    _type_translate
-                                  )
+                                   )
         except IOError:
-            raise ModToolException("Can't open some of the files necessary to parse {}.".format(fname_cc))
+            raise ModToolException(
+                "Can't open some of the files necessary to parse {}.".format(fname_cc))
 
         if contains_modulename:
             return (parser.read_params(), parser.read_io_signature(), self.info['modname']+'_'+blockname)
         else:
             return (parser.read_params(), parser.read_io_signature(), blockname)
+
+
+def yaml_generator(self, **kwargs):
+    """
+    Generate YAML file from the block header file using blocktool API
+    """
+    header = self.filename.split('.')[0]
+    block = self.modname.split('-')[-1]
+    label = header.split('_')
+    del label[-1]
+    yml_file = os.path.join('.', block+'_'+header+'.block.yml')
+    _header = (('id', '{}_{}'.format(block, header)),
+               ('label', ' '.join(label).upper()),
+               ('category', '[{}]'.format(block.capitalize())),
+               ('flags', '[python, cpp]')
+               )
+    params_list = [
+        '${'+s['name']+'}' for s in self.parsed_data['properties'] if self.parsed_data['properties']]
+    _templates = [('imports', 'from gnuradio import {}'.format(block)),
+                  ('make', '{}.{}({})'.format(block, header, ', '.join(params_list)))
+                  ]
+
+    if self.parsed_data['methods']:
+        list_callbacks = []
+        for param in self.parsed_data['methods']:
+            arguments = []
+            for args in param['arguments_type']:
+                arguments.append(args['name'])
+            arg_list = ['${'+s+'}' for s in arguments if arguments]
+            list_callbacks.append(
+                param['name']+'({})'.format(', '.join(arg_list)))
+        callback_key = ('callbacks')
+        callbacks = (callback_key, tuple(list_callbacks))
+        _templates.append(callbacks)
+    _templates = tuple(_templates)
+
+    data = OrderedDict()
+    for tag, value in _header:
+        data[tag] = value
+
+    templates = OrderedDict()
+    for tag, value in _templates:
+        templates[tag] = value
+    data['templates'] = templates
+
+    parameters = []
+    for param in self.parsed_data['properties']:
+        parameter = OrderedDict()
+        parameter['id'] = param['name']
+        parameter['label'] = param['name'].capitalize()
+        parameter['dtype'] = param['dtype']
+        parameter['read_only'] = param['read_only']
+        parameters.append(parameter)
+    if parameters:
+        data['parameters'] = parameters
+
+    input_signature = []
+    max_input_port = self.parsed_data['io_signature']['input']['max_streams']
+    i_sig = self.parsed_data['io_signature']['input']['signature']
+    for port in range(0, int(max_input_port)):
+        input_sig = OrderedDict()
+        if i_sig is Constants.MAKE:
+            input_sig['domain'] = 'stream'
+            input_sig['dtype'] = self.parsed_data['io_signature']['input']['sizeof_stream_item']
+        elif i_sig is Constants.MAKE2:
+            input_sig['domain'] = 'stream'
+            input_sig['dtype'] = self.parsed_data['io_signature']['input']['sizeof_stream_item' +
+                                                                           str(port+1)]
+        elif i_sig is Constants.MAKE3:
+            input_sig['domain'] = 'stream'
+            input_sig['dtype'] = self.parsed_data['io_signature']['input']['sizeof_stream_item' +
+                                                                           str(port+1)]
+        elif i_sig is Constants.MAKEV:
+            input_sig['domain'] = 'stream'
+            input_sig['dtype'] = self.parsed_data['io_signature']['input']['sizeof_stream_items']
+        input_signature.append(input_sig)
+
+    if self.parsed_data['message_port']['input']:
+        for _input in self.parsed_data['message_port']['input']:
+            m_input_sig = OrderedDict()
+            m_input_sig['domain'] = 'message'
+            m_input_sig['id'] = _input
+            input_signature.append(m_input_sig)
+    if input_signature:
+        data['inputs'] = input_signature
+
+    output_signature = []
+    max_output_port = self.parsed_data['io_signature']['output']['max_streams']
+    o_sig = self.parsed_data['io_signature']['output']['signature']
+    for port in range(0, int(max_output_port)):
+        output_sig = OrderedDict()
+        if o_sig is Constants.MAKE:
+            output_sig['domain'] = 'stream'
+            output_sig['dtype'] = self.parsed_data['io_signature']['output']['sizeof_stream_item']
+        elif o_sig is Constants.MAKE2:
+            output_sig['domain'] = 'stream'
+            output_sig['dtype'] = self.parsed_data['io_signature']['output']['sizeof_stream_item' +
+                                                                             str(port+1)]
+        elif o_sig is Constants.MAKE3:
+            output_sig['domain'] = 'stream'
+            output_sig['dtype'] = self.parsed_data['io_signature']['output']['sizeof_stream_item' +
+                                                                             str(port+1)]
+        elif o_sig is Constants.MAKEV:
+            output_sig['domain'] = 'stream'
+            output_sig['dtype'] = self.parsed_data['io_signature']['output']['sizeof_stream_items']
+        output_signature.append(output_sig)
+
+    if self.parsed_data['message_port']['output']:
+        for _output in self.parsed_data['message_port']['output']:
+            m_output_sig = OrderedDict()
+            m_output_sig['domain'] = 'message'
+            m_output_sig['id'] = _output
+            output_signature.append(m_output_sig)
+    if output_signature:
+        data['outputs'] = output_signature
+
+    _cpp_templates = [('includes', '#include <gnuradio/{}/{}>'.format(block, self.filename)),
+                      ('declarations', '{}::{}::sptr ${{id}}'.format(block, header)),
+                      ('make', 'this->${{id}} = {}::{}::make({})'.format(
+                          block, header, ', '.join(params_list)))
+                      ]
+
+    if self.parsed_data['methods']:
+        list_callbacks = []
+        for param in self.parsed_data['methods']:
+            arguments = []
+            for args in param['arguments_type']:
+                arguments.append(args['name'])
+            arg_list = ['${'+s+'}' for s in arguments if arguments]
+            list_callbacks.append(
+                param['name']+'({})'.format(', '.join(arg_list)))
+        callback_key = ('callbacks')
+        callbacks = (callback_key, tuple(list_callbacks))
+        _cpp_templates.append(callbacks)
+
+    link = ('link', 'gnuradio-{}'.format(block))
+    _cpp_templates.append(link)
+    _cpp_templates = tuple(_cpp_templates)
+
+    cpp_templates = OrderedDict()
+    for tag, value in _cpp_templates:
+        cpp_templates[tag] = value
+    data['cpp_templates'] = cpp_templates
+
+    if self.parsed_data['docstring'] is not None:
+        data['documentation'] = self.parsed_data['docstring']
+    data['file_format'] = 1
+
+    if kwargs['output']:
+        with open(yml_file, 'w') as yml:
+            yaml.dump(data, yml, Dumper=Dumper, default_flow_style=False)
+    else:
+        print(yaml.dump(data, Dumper=Dumper, allow_unicode=True,
+                        default_flow_style=False, indent=4))

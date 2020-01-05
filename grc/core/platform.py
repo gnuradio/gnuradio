@@ -110,6 +110,7 @@ class Platform(Element):
                 raise Exception('Not a hier block')
         except Exception as e:
             Messages.send('>>> Load Error: {}: {}\n'.format(file_path, str(e)))
+            Messages.send_flowgraph_error_report(flow_graph)
             return None, None
         finally:
             self._auto_hier_block_generate_chain.discard(file_path)

@@ -3,10 +3,10 @@
  * DO NOT EDIT BY HAND.
  */
 
-static const int NTAPS = 8;
-static const int NSTEPS = 128;
+static constexpr int NTAPS = 8;
+static constexpr int NSTEPS = 128;
 
-static const float taps[NSTEPS + 1][NTAPS] = {
+static constexpr float taps[NSTEPS + 1][NTAPS] = {
     //    -4            -3            -2            -1             0             1 2 3 mu
     { 0.00000e+00,
       0.00000e+00,

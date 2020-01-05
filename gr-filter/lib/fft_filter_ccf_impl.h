@@ -35,13 +35,11 @@ class FILTER_API fft_filter_ccf_impl : public fft_filter_ccf
 private:
     int d_nsamples;
     bool d_updated;
-    kernel::fft_filter_ccf* d_filter;
+    kernel::fft_filter_ccf d_filter;
     std::vector<float> d_new_taps;
 
 public:
     fft_filter_ccf_impl(int decimation, const std::vector<float>& taps, int nthreads = 1);
-
-    ~fft_filter_ccf_impl();
 
     void set_taps(const std::vector<float>& taps);
     std::vector<float> taps() const;

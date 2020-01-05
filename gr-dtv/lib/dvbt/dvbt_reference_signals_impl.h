@@ -27,16 +27,16 @@
 #include <vector>
 
 // This should eventually go into a const file
-const int SYMBOLS_PER_FRAME = 68;
-const int FRAMES_PER_SUPERFRAME = 4;
+constexpr int SYMBOLS_PER_FRAME = 68;
+constexpr int FRAMES_PER_SUPERFRAME = 4;
 
-const int SCATTERED_PILOT_SIZE_2k = 142;
-const int CONTINUAL_PILOT_SIZE_2k = 45;
-const int TPS_PILOT_SIZE_2k = 17;
+constexpr int SCATTERED_PILOT_SIZE_2k = 142;
+constexpr int CONTINUAL_PILOT_SIZE_2k = 45;
+constexpr int TPS_PILOT_SIZE_2k = 17;
 
-const int SCATTERED_PILOT_SIZE_8k = 568;
-const int CONTINUAL_PILOT_SIZE_8k = 177;
-const int TPS_PILOT_SIZE_8k = 68;
+constexpr int SCATTERED_PILOT_SIZE_8k = 568;
+constexpr int CONTINUAL_PILOT_SIZE_8k = 177;
+constexpr int TPS_PILOT_SIZE_8k = 68;
 
 namespace gr {
 namespace dtv {

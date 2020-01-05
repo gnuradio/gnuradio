@@ -70,7 +70,7 @@ void annotator_raw_impl::add_tag(uint64_t offset, pmt_t key, pmt_t val)
     // make sure we are not adding an item in the past!
     if (tag.offset > nitems_read(0)) {
         throw std::runtime_error(
-            "annotator_raw::add_tag: item added too far in the past\n.");
+            "annotator_raw::add_tag: item added too far in the past.");
     }
 }
 

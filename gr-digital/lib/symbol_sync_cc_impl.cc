@@ -72,8 +72,6 @@ symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
     : block("symbol_sync_cc",
             io_signature::make(1, 1, sizeof(gr_complex)),
             io_signature::makev(1, 4, std::vector<int>(4, sizeof(float)))),
-      d_ted(NULL),
-      d_interp(NULL),
       d_inst_output_period(sps / static_cast<float>(osps)),
       d_inst_clock_period(sps),
       d_avg_clock_period(sps),
@@ -88,15 +86,9 @@ symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
       d_out_instantaneous_clock_period(NULL),
       d_out_average_clock_period(NULL)
 {
-    // Brute force fix of the output io_signature, because I can't get
-    // an anonymous std::vector<int>() rvalue, with a const expression
-    // initializing the vector, to work.  Lvalues seem to make everything
-    // better.
-    int output_io_sizes[4] = {
+    set_output_signature(io_signature::makev(1, 4, {
         sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float)
-    };
-    std::vector<int> output_io_sizes_vector(&output_io_sizes[0], &output_io_sizes[4]);
-    set_output_signature(io_signature::makev(1, 4, output_io_sizes_vector));
+    }));
 
     if (sps <= 1.0f)
         throw std::out_of_range("nominal samples per symbol must be > 1");
@@ -105,14 +97,14 @@ symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
         throw std::out_of_range("output samples per symbol must be > 0");
 
     // Timing Error Detector
-    d_ted = timing_error_detector::make(detector_type, slicer);
-    if (d_ted == NULL)
+    d_ted.reset(timing_error_detector::make(detector_type, slicer));
+    if (d_ted == nullptr)
         throw std::runtime_error("unable to create timing_error_detector");
 
     // Interpolating Resampler
-    d_interp = interpolating_resampler_ccf::make(
-        interp_type, d_ted->needs_derivative(), n_filters, taps);
-    if (d_interp == NULL)
+    d_interp.reset(interpolating_resampler_ccf::make(
+        interp_type, d_ted->needs_derivative(), n_filters, taps));
+    if (d_interp == nullptr)
         throw std::runtime_error("unable to create interpolating_resampler_ccf");
 
     // Block Internal Clocks
@@ -136,8 +128,8 @@ symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
                         d_interps_per_symbol % sps);
 
     // Symbol Clock Tracking and Estimation
-    d_clock = new clock_tracking_loop(
-        loop_bw, sps + max_deviation, sps - max_deviation, sps, damping_factor, ted_gain);
+    d_clock.reset(new clock_tracking_loop(
+        loop_bw, sps + max_deviation, sps - max_deviation, sps, damping_factor, ted_gain));
 
     // Timing Error Detector
     d_ted->sync_reset();
@@ -151,13 +143,6 @@ symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
     d_filter_delay = (d_interp->ntaps() + 1) / 2;
 
     set_output_multiple(d_osps_n);
-}
-
-symbol_sync_cc_impl::~symbol_sync_cc_impl()
-{
-    delete d_ted;
-    delete d_interp;
-    delete d_clock;
 }
 
 //

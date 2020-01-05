@@ -30,10 +30,9 @@ namespace blocks {
 
 class BLOCKS_API tagged_stream_to_pdu_impl : public tagged_stream_to_pdu
 {
-    pdu::vector_type d_type;
+    const pdu::vector_type d_type;
     pmt::pmt_t d_pdu_meta;
     pmt::pmt_t d_pdu_vector;
-    std::vector<tag_t>::iterator d_tags_itr;
     std::vector<tag_t> d_tags;
 
 public:

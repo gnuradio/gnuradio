@@ -48,7 +48,5 @@ cpp_templates:
     callbacks:
     - set_packet_len(${packet_len})
     - set_packet_len_pmt(${packet_len})
-    translations:
-        gr.sizeof_: 'sizeof('
 
 file_format: 1

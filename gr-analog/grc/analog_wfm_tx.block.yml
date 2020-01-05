@@ -1,6 +1,6 @@
 id: analog_wfm_tx
 label: WBFM Transmit
-flags: [ python ]
+flags: [ python, cpp ]
 
 parameters:
 -   id: audio_rate
@@ -38,4 +38,10 @@ templates:
     make: "analog.wfm_tx(\n\taudio_rate=${audio_rate},\n\tquad_rate=${quad_rate},\n\
         \ttau=${tau},\n\tmax_dev=${max_dev},\n\tfh=${fh},\n)"
 
+cpp_templates:
+    includes: [ '#include <gnuradio/analog/frequency_modulator_fc.h>', '#include <boost/math/constants/constants.hpp>' ]
+    declarations: gr::analog::frequency_modulator_fc::sptr ${id};
+    make: this->${id} = gr::analog::frequency_modulator_fc::make(2 * boost::math::constants::pi<double>() * ${max_dev} / ${quad_rate});
+    link: ['gnuradio-analog']          
+      
 file_format: 1

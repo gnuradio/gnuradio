@@ -28,19 +28,19 @@ from __future__ import unicode_literals
 import os
 
 try:
-    from .channels_swig import *
+    from .channels_swig import channels_swig
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
     __path__.append(os.path.join(dirname, "..", "..", "swig"))
     from .channels_swig import *
 
 # Blocks for Hardware Impairments
-from .amp_bal import *
-from .conj_fs_iqcorr import *
-from .distortion_2_gen import *
-from .distortion_3_gen import *
-from .iqbal_gen import *
-from .impairments import *
-from .phase_bal import *
-from .phase_noise_gen import *
-from .quantizer import *
+from .amp_bal import amp_bal
+from .conj_fs_iqcorr import conj_fs_iqcorr
+from .distortion_2_gen import distortion_2_gen
+from .distortion_3_gen import distortion_3_gen
+from .impairments import impairments
+from .iqbal_gen import iqbal_gen
+from .phase_bal import phase_bal
+from .phase_noise_gen import phase_noise_gen
+from .quantizer import quantizer

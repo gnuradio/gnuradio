@@ -30,8 +30,8 @@
 namespace gr {
 namespace channels {
 
-const float default_delays2[] = { 1.0, 1.9, 2.7 };
-const float default_mags2[] = { 1.0, 0.95, 0.8 };
+constexpr float default_delays2[] = { 1.0, 1.9, 2.7 };
+constexpr float default_mags2[] = { 1.0, 0.95, 0.8 };
 
 /*!
  * \brief fading simulator
@@ -66,12 +66,12 @@ public:
                      float fDTs,
                      bool LOS,
                      float K,
-                     int seed,
+                     uint32_t seed,
                      std::vector<float> delays,
-                     std::vector<float> delay_std,
-                     std::vector<float> delay_maxdev,
+                     std::vector<float> delays_std,
+                     std::vector<float> delays_maxdev,
                      std::vector<float> mags,
-                     int ntaps);
+                     unsigned int ntaps);
 
     virtual float fDTs() = 0;
     virtual float K() = 0;

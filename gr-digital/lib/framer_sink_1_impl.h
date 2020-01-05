@@ -33,8 +33,8 @@ class framer_sink_1_impl : public framer_sink_1
 private:
     enum state_t { STATE_SYNC_SEARCH, STATE_HAVE_SYNC, STATE_HAVE_HEADER };
 
-    static const int MAX_PKT_LEN = 4096;
-    static const int HEADERBITLEN = 32;
+    static constexpr int MAX_PKT_LEN = 4096;
+    static constexpr int HEADERBITLEN = 32;
 
     msg_queue::sptr d_target_queue; // where to send the packet when received
     state_t d_state;

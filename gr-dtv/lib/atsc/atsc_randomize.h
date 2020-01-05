@@ -84,8 +84,8 @@ private:
 
     unsigned int d_state;
 
-    static const unsigned int PRELOAD_VALUE = 0x018f; /* 0xf180 bit reversed */
-    static const unsigned int MASK = 0xa638;
+    static constexpr unsigned int PRELOAD_VALUE = 0x018f; /* 0xf180 bit reversed */
+    static constexpr unsigned int MASK = 0xa638;
     static unsigned char s_output_map[1 << 14];
     static bool s_output_map_initialized_p;
 };

@@ -33,7 +33,7 @@ namespace blocks {
 class lfsr_32k_source_s_impl : public lfsr_32k_source_s
 {
 private:
-    static const int BUFSIZE = 2048 - 1; // ensure pattern isn't packet aligned
+    static constexpr int BUFSIZE = 2048 - 1; // ensure pattern isn't packet aligned
     int d_index;
     short d_buffer[BUFSIZE];
 

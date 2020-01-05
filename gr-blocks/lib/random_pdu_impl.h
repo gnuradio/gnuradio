@@ -25,7 +25,8 @@
 
 #include <gnuradio/blocks/random_pdu.h>
 #include <boost/generator_iterator.hpp>
-#include <boost/random.hpp>
+
+#include <random>
 
 namespace gr {
 namespace blocks {
@@ -33,11 +34,9 @@ namespace blocks {
 class random_pdu_impl : public random_pdu
 {
 private:
-    boost::mt19937 d_rng;
-    boost::uniform_int<> d_urange;
-    boost::uniform_int<> d_brange;
-    boost::variate_generator<boost::mt19937, boost::uniform_int<>> d_rvar; // pdu length
-    boost::variate_generator<boost::mt19937, boost::uniform_int<>> d_bvar; // pdu contents
+    std::mt19937 d_rng;
+    std::uniform_int_distribution<> d_urange;
+    std::uniform_int_distribution<> d_brange;
     unsigned char d_mask;
     int d_length_modulo;
 

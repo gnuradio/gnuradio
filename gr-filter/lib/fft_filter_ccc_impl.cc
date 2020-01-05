@@ -48,18 +48,15 @@ fft_filter_ccc_impl::fft_filter_ccc_impl(int decimation,
                      io_signature::make(1, 1, sizeof(gr_complex)),
                      io_signature::make(1, 1, sizeof(gr_complex)),
                      decimation),
-      d_updated(false)
+      d_updated(false),
+      d_filter(decimation, taps, nthreads)
 {
     set_history(1);
 
-    d_filter = new kernel::fft_filter_ccc(decimation, taps, nthreads);
-
     d_new_taps = taps;
-    d_nsamples = d_filter->set_taps(taps);
+    d_nsamples = d_filter.set_taps(taps);
     set_output_multiple(d_nsamples);
 }
-
-fft_filter_ccc_impl::~fft_filter_ccc_impl() { delete d_filter; }
 
 void fft_filter_ccc_impl::set_taps(const std::vector<gr_complex>& taps)
 {
@@ -71,16 +68,12 @@ std::vector<gr_complex> fft_filter_ccc_impl::taps() const { return d_new_taps; }
 
 void fft_filter_ccc_impl::set_nthreads(int n)
 {
-    if (d_filter)
-        d_filter->set_nthreads(n);
+    d_filter.set_nthreads(n);
 }
 
 int fft_filter_ccc_impl::nthreads() const
 {
-    if (d_filter)
-        return d_filter->nthreads();
-    else
-        return 0;
+    return d_filter.nthreads();
 }
 
 int fft_filter_ccc_impl::work(int noutput_items,
@@ -91,13 +84,13 @@ int fft_filter_ccc_impl::work(int noutput_items,
     gr_complex* out = (gr_complex*)output_items[0];
 
     if (d_updated) {
-        d_nsamples = d_filter->set_taps(d_new_taps);
+        d_nsamples = d_filter.set_taps(d_new_taps);
         d_updated = false;
         set_output_multiple(d_nsamples);
         return 0; // output multiple may have changed
     }
 
-    d_filter->filter(noutput_items, in, out);
+    d_filter.filter(noutput_items, in, out);
 
     return noutput_items;
 }

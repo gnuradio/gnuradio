@@ -51,9 +51,9 @@ class atsc_viterbi_decoder_impl : public atsc_viterbi_decoder
 private:
     typedef interleaver_fifo<unsigned char> fifo_t;
 
-    static const int SEGMENT_SIZE = ATSC_MPEG_RS_ENCODED_LENGTH; // 207
-    static const int OUTPUT_SIZE = (SEGMENT_SIZE * 12);
-    static const int INPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
+    static constexpr int SEGMENT_SIZE = ATSC_MPEG_RS_ENCODED_LENGTH; // 207
+    static constexpr int OUTPUT_SIZE = (SEGMENT_SIZE * 12);
+    static constexpr int INPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
 
     single_viterbi_t viterbi[NCODERS];
     fifo_t* fifo[NCODERS];

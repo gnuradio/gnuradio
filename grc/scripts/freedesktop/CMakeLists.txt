@@ -40,13 +40,6 @@ install(FILES gnuradio-grc.desktop DESTINATION share/applications)
 install(FILES gnuradio-grc.xml DESTINATION share/mime/packages)
 
 # Install icons
-install(FILES grc-icon-256.png DESTINATION share/icons/gnome/256x256/apps RENAME gnuradio-grc.png)
-install(FILES grc-icon-128.png DESTINATION share/icons/gnome/128x128/apps RENAME gnuradio-grc.png)
-install(FILES grc-icon-64.png DESTINATION share/icons/gnome/64x64/apps RENAME gnuradio-grc.png)
-install(FILES grc-icon-48.png DESTINATION share/icons/gnome/48x48/apps RENAME gnuradio-grc.png)
-install(FILES grc-icon-32.png DESTINATION share/icons/gnome/32x32/apps RENAME gnuradio-grc.png)
-install(FILES grc-icon-24.png DESTINATION share/icons/gnome/24x24/apps RENAME gnuradio-grc.png)
-install(FILES grc-icon-16.png DESTINATION share/icons/gnome/16x16/apps RENAME gnuradio-grc.png)
 install(FILES grc-icon-256.png DESTINATION share/icons/hicolor/256x256/apps RENAME gnuradio-grc.png)
 install(FILES grc-icon-128.png DESTINATION share/icons/hicolor/128x128/apps RENAME gnuradio-grc.png)
 install(FILES grc-icon-64.png DESTINATION share/icons/hicolor/64x64/apps RENAME gnuradio-grc.png)

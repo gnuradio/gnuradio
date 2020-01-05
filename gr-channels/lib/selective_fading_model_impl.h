@@ -27,10 +27,6 @@
 #include <gnuradio/channels/selective_fading_model.h>
 #include <gnuradio/sync_block.h>
 
-//#include <iostream>
-#include <boost/format.hpp>
-#include <boost/random.hpp>
-
 #include "sincostable.h"
 #include <gnuradio/fxpt.h>
 

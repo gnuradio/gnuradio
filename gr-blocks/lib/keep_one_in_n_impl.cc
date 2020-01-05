@@ -92,10 +92,9 @@ int keep_one_in_n_impl::general_work(int noutput_items,
     // Because we have set TPP_DONT, we have to propagate the tags here manually.
     // Adjustment of the tag sample value is done using the float d_decim_rate.
     std::vector<tag_t> tags;
-    std::vector<tag_t>::iterator t;
     get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + ni);
-    for (t = tags.begin(); t != tags.end(); t++) {
-        tag_t new_tag = *t;
+    for (const auto& tag : tags) {
+        tag_t new_tag = tag;
         new_tag.offset *= d_decim_rate;
         add_item_tag(0, new_tag);
     }

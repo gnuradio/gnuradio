@@ -453,11 +453,16 @@ ${str_to_fancyc_comment(license)}
 #include <gnuradio/attributes.h>
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_CASE(test_${blockname}_t1)
-{
-    // Put test here
-}
+namespace gr {
+  namespace ${modname} {
 
+    BOOST_AUTO_TEST_CASE(test_${blockname}_t1)
+    {
+      // Put test here
+    }
+
+  } /* namespace ${modname} */
+} /* namespace gr */
 '''
 
 # C++ file for QA
@@ -552,7 +557,7 @@ templates:
 
 #  Make one 'parameters' list entry for every parameter you want settable from the GUI.
 #     Keys include:
-#     * id (makes the value accessible as \$keyname, e.g. in the make entry)
+#     * id (makes the value accessible as keyname, e.g. in the make entry)
 #     * label (label shown in the GUI)
 #     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
 parameters:

@@ -45,7 +45,7 @@ void goertzel::set_params(int rate, int len, float freq)
     d_processed = 0;
 }
 
-gr_complex goertzel::batch(float* in)
+gr_complex goertzel::batch(const float* in)
 {
     d_d1 = 0.0;
     d_d2 = 0.0;

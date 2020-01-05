@@ -287,7 +287,7 @@ void block::set_max_noutput_items(int m)
 {
     if (m <= 0)
         throw std::runtime_error("block::set_max_noutput_items: value for "
-                                 "max_noutput_items must be greater than 0.\n");
+                                 "max_noutput_items must be greater than 0.");
 
     d_max_noutput_items = m;
     d_max_noutput_items_set = true;

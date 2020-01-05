@@ -24,6 +24,7 @@
 #include "config.h"
 #endif
 
+#include <boost/smart_ptr/make_unique.hpp>
 #include <gnuradio/filter/fft_filter.h>
 #include <volk/volk.h>
 #include <cstring>
@@ -40,20 +41,9 @@ fft_filter_fff::fft_filter_fff(int decimation,
                                int nthreads)
     : d_fftsize(-1),
       d_decimation(decimation),
-      d_fwdfft(NULL),
-      d_invfft(NULL),
-      d_nthreads(nthreads),
-      d_xformed_taps(NULL)
+      d_nthreads(nthreads)
 {
     set_taps(taps);
-}
-
-fft_filter_fff::~fft_filter_fff()
-{
-    delete d_fwdfft;
-    delete d_invfft;
-    if (d_xformed_taps != NULL)
-        volk_free(d_xformed_taps);
 }
 
 /*
@@ -106,14 +96,9 @@ void fft_filter_fff::compute_sizes(int ntaps)
 
     // compute new plans
     if (d_fftsize != old_fftsize) {
-        delete d_fwdfft;
-        delete d_invfft;
-        if (d_xformed_taps != NULL)
-            volk_free(d_xformed_taps);
-        d_fwdfft = new fft::fft_real_fwd(d_fftsize);
-        d_invfft = new fft::fft_real_rev(d_fftsize);
-        d_xformed_taps = (gr_complex*)volk_malloc(
-            sizeof(gr_complex) * (d_fftsize / 2 + 1), volk_get_alignment());
+        d_fwdfft = boost::make_unique<fft::fft_real_fwd>(d_fftsize);
+        d_invfft = boost::make_unique<fft::fft_real_rev>(d_fftsize);
+        d_xformed_taps.resize(d_fftsize / 2 + 1);
     }
 }
 
@@ -148,10 +133,9 @@ int fft_filter_fff::filter(int nitems, const float* input, float* output)
         d_fwdfft->execute(); // compute fwd xform
 
         gr_complex* a = d_fwdfft->get_outbuf();
-        gr_complex* b = d_xformed_taps;
         gr_complex* c = d_invfft->get_inbuf();
 
-        volk_32fc_x2_multiply_32fc_a(c, a, b, d_fftsize / 2 + 1);
+        volk_32fc_x2_multiply_32fc_a(c, a, d_xformed_taps.data(), d_xformed_taps.size());
 
         d_invfft->execute(); // compute inv xform
 
@@ -187,20 +171,9 @@ fft_filter_ccc::fft_filter_ccc(int decimation,
                                int nthreads)
     : d_fftsize(-1),
       d_decimation(decimation),
-      d_fwdfft(NULL),
-      d_invfft(NULL),
-      d_nthreads(nthreads),
-      d_xformed_taps(NULL)
+      d_nthreads(nthreads)
 {
     set_taps(taps);
-}
-
-fft_filter_ccc::~fft_filter_ccc()
-{
-    delete d_fwdfft;
-    delete d_invfft;
-    if (d_xformed_taps != NULL)
-        volk_free(d_xformed_taps);
 }
 
 /*
@@ -253,14 +226,9 @@ void fft_filter_ccc::compute_sizes(int ntaps)
 
     // compute new plans
     if (d_fftsize != old_fftsize) {
-        delete d_fwdfft;
-        delete d_invfft;
-        if (d_xformed_taps != NULL)
-            volk_free(d_xformed_taps);
-        d_fwdfft = new fft::fft_complex(d_fftsize, true, d_nthreads);
-        d_invfft = new fft::fft_complex(d_fftsize, false, d_nthreads);
-        d_xformed_taps = (gr_complex*)volk_malloc(sizeof(gr_complex) * d_fftsize,
-                                                  volk_get_alignment());
+        d_fwdfft = boost::make_unique<fft::fft_complex>(d_fftsize, true, d_nthreads);
+        d_invfft = boost::make_unique<fft::fft_complex>(d_fftsize, false, d_nthreads);
+        d_xformed_taps.resize(d_fftsize);
     }
 }
 
@@ -294,7 +262,7 @@ int fft_filter_ccc::filter(int nitems, const gr_complex* input, gr_complex* outp
         d_fwdfft->execute(); // compute fwd xform
 
         gr_complex* a = d_fwdfft->get_outbuf();
-        gr_complex* b = d_xformed_taps;
+        gr_complex* b = d_xformed_taps.data();
         gr_complex* c = d_invfft->get_inbuf();
 
         volk_32fc_x2_multiply_32fc_a(c, a, b, d_fftsize);
@@ -334,20 +302,9 @@ fft_filter_ccf::fft_filter_ccf(int decimation,
                                int nthreads)
     : d_fftsize(-1),
       d_decimation(decimation),
-      d_fwdfft(NULL),
-      d_invfft(NULL),
-      d_nthreads(nthreads),
-      d_xformed_taps(NULL)
+      d_nthreads(nthreads)
 {
     set_taps(taps);
-}
-
-fft_filter_ccf::~fft_filter_ccf()
-{
-    delete d_fwdfft;
-    delete d_invfft;
-    if (d_xformed_taps != NULL)
-        volk_free(d_xformed_taps);
 }
 
 /*
@@ -400,14 +357,9 @@ void fft_filter_ccf::compute_sizes(int ntaps)
 
     // compute new plans
     if (d_fftsize != old_fftsize) {
-        delete d_fwdfft;
-        delete d_invfft;
-        if (d_xformed_taps != NULL)
-            volk_free(d_xformed_taps);
-        d_fwdfft = new fft::fft_complex(d_fftsize, true, d_nthreads);
-        d_invfft = new fft::fft_complex(d_fftsize, false, d_nthreads);
-        d_xformed_taps = (gr_complex*)volk_malloc(sizeof(gr_complex) * d_fftsize,
-                                                  volk_get_alignment());
+        d_fwdfft = boost::make_unique<fft::fft_complex>(d_fftsize, true, d_nthreads);
+        d_invfft = boost::make_unique<fft::fft_complex>(d_fftsize, false, d_nthreads);
+        d_xformed_taps.resize(d_fftsize);
     }
 }
 
@@ -443,7 +395,7 @@ int fft_filter_ccf::filter(int nitems, const gr_complex* input, gr_complex* outp
         d_fwdfft->execute(); // compute fwd xform
 
         gr_complex* a = d_fwdfft->get_outbuf();
-        gr_complex* b = d_xformed_taps;
+        gr_complex* b = d_xformed_taps.data();
         gr_complex* c = d_invfft->get_inbuf();
 
         volk_32fc_x2_multiply_32fc_a(c, a, b, d_fftsize);

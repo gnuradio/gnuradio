@@ -194,7 +194,7 @@ void logger_set_level(logger_ptr logger, const std::string& level)
     else if (nocase == "emerg")
         logger_set_level(logger, log4cpp::Priority::EMERG);
     else
-        throw std::runtime_error("logger_set_level: Bad level type.\n");
+        throw std::runtime_error("logger_set_level: Bad level type.");
 }
 
 void logger_set_level(logger_ptr logger, log4cpp::Priority::Value level)
@@ -263,7 +263,10 @@ void logger_add_file_appender(logger_ptr logger,
 {
     log4cpp::PatternLayout* layout = new log4cpp::PatternLayout();
     log4cpp::Appender* app =
-        new log4cpp::FileAppender("FileAppender::" + filename, filename);
+        new log4cpp::FileAppender(
+            "FileAppender::" + filename,
+            filename,
+            append);
     layout->setConversionPattern(pattern);
     app->setLayout(layout);
     logger->setAppender(app);

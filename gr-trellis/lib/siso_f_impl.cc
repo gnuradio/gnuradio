@@ -173,7 +173,7 @@ int siso_f_impl::general_work(int noutput_items,
     else if (d_POSTO)
         multiple = d_FSM.O();
     else
-        throw std::runtime_error("siso_f_impl: Not both POSTI and POSTO can be false.\n");
+        throw std::runtime_error("siso_f_impl: Not both POSTI and POSTO can be false.");
 
     int nblocks = noutput_items / (d_K * multiple);
     // printf("general_work:Blocks:  %d\n",nblocks);

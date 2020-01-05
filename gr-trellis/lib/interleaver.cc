@@ -79,7 +79,7 @@ interleaver::interleaver(const char* name)
     if (fscanf(interleaverfile, "%d\n", &d_K) == EOF) {
         if (ferror(interleaverfile) != 0)
             throw std::runtime_error(
-                "interleaver::interleaver(const char *name): file read error\n");
+                "interleaver::interleaver(const char *name): file read error");
     }
 
     d_INTER.resize(d_K);
@@ -89,7 +89,7 @@ interleaver::interleaver(const char* name)
         if (fscanf(interleaverfile, "%d", &(d_INTER[i])) == EOF) {
             if (ferror(interleaverfile) != 0)
                 throw std::runtime_error(
-                    "interleaver::interleaver(const char *name): file read error\n");
+                    "interleaver::interleaver(const char *name): file read error");
         }
     }
 

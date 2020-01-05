@@ -41,8 +41,8 @@ namespace gr {
  */
 class GR_RUNTIME_API fxpt
 {
-    static const int WORDBITS = 32;
-    static const int NBITS = 10;
+    static constexpr int WORDBITS = 32;
+    static constexpr int NBITS = 10;
     static const float s_sine_table[1 << NBITS][2];
     static const float PI;
     static const float TAU;

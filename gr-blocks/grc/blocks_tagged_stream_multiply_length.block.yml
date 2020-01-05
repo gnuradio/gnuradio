@@ -51,7 +51,5 @@ cpp_templates:
         ${c});'
     callbacks:
     - set_scalar(${c})
-    translations:
-        gr.sizeof_: 'sizeof('
 
 file_format: 1

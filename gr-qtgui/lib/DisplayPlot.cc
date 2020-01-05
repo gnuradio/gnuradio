@@ -414,7 +414,7 @@ void DisplayPlot::legendEntryChecked(const QVariant& plotItem, bool on, int inde
 {
 #if QWT_VERSION < 0x060100
     std::runtime_error("DisplayPlot::legendEntryChecked with QVariant not enabled in "
-                       "this version of QWT.\n");
+                       "this version of QWT.");
 #else
     QwtPlotItem* p = infoToItem(plotItem);
     legendEntryChecked(p, on);

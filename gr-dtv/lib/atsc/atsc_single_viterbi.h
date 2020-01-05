@@ -31,7 +31,7 @@ class atsc_single_viterbi
 public:
     atsc_single_viterbi();
 
-    static const unsigned int TB_LEN = 32;
+    static constexpr unsigned int TB_LEN = 32;
 
     /*!
      * \p INPUT ideally takes on the values +/- 1,3,5,7
