@@ -9,11 +9,6 @@ import argparse
 import logging
 import sys
 
-import gi
-gi.require_version('Gtk', '3.0')
-gi.require_version('PangoCairo', '1.0')
-
-
 VERSION_AND_DISCLAIMER_TEMPLATE = """\
 GNU Radio Companion %s
 
@@ -70,8 +65,10 @@ def main():
     log.debug("Starting GNU Radio Companion ({})".format(py_version))
 
     # Delay importing until the logging is setup
-    from .gui.Platform import Platform
-    from .gui.Application import Application
+    from core.platform import Platform
+    #from .gui.Application import Application
+    from PyQt5.QtWidgets import QApplication
+    from guipyqt.window import MyWindow
 
     log.debug("Loading platform")
     platform = Platform(
@@ -79,11 +76,16 @@ def main():
         version_parts=(gr.major_version(), gr.api_version(),
                        gr.minor_version()),
         prefs=gr.prefs(),
-        install_prefix=gr.prefix()
+        #install_prefix=gr.prefix()
     )
     platform.build_library()
 
     log.debug("Loading application")
-    app = Application(args.flow_graphs, platform)
+    app = QApplication([])
+    application = MyWindow(platform)
+    application.show()
     log.debug("Running")
-    sys.exit(app.run())
+    sys.exit(app.exec_()) # pyqt's blocking function
+
+if __name__ == "__main__":
+    main()
