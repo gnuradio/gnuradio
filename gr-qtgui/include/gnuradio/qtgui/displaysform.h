@@ -60,7 +60,7 @@ public slots:
     void closeEvent(QCloseEvent* e);
 
     void setUpdateTime(double t);
-
+    void setSamplesPerSymbol(int64_t sps);
     void setTitle(const QString& title);
     void setLineLabel(unsigned int which, const QString& label);
     void setLineColor(unsigned int which, const QString& color);
@@ -104,13 +104,14 @@ protected:
     bool d_isclosed;
 
     unsigned int d_nplots;
+    int d_sps;
 
     QGridLayout* d_layout;
     DisplayPlot* d_display_plot;
     std::vector<DisplayPlot*> d_displays_plot;
 	bool d_system_specified_flag;
 
-    QwtPlotGrid* d_grid;
+    std::vector<QwtPlotGrid*> d_grids;
 
     bool d_menu_on;
     QMenu* d_menu;

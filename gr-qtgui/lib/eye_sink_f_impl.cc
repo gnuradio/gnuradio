@@ -141,17 +141,16 @@ namespace gr {
       check_set_qss(d_qApplication);
 
       unsigned int numplots = (d_nconnections > 0) ? d_nconnections : 1;
-      d_main_gui = new EyeDisplayForm(numplots, d_parent);
+      d_main_gui = new EyeDisplayForm(numplots, false, d_parent);
       d_main_gui->setNPoints(d_size);
       d_main_gui->setSampleRate(d_samp_rate);
       d_main_gui->disableLegend();
 
-      if (!d_name.empty())
-          set_title(d_name);
-
       // initialize update time to 10 times a second
       set_update_time(0.1);
-  }
+      // initialize number of samples per symbol to 4
+	  set_samp_per_symbol(4);
+ }
 
   void eye_sink_f_impl::exec_() { d_qApplication->exec(); }
 
@@ -187,10 +186,14 @@ namespace gr {
       d_last_time = 0;
   }
 
-  //TODOCS set_title no longer used
+  void eye_sink_f_impl::set_samp_per_symbol(unsigned int sps)
+  {
+      d_main_gui->setSamplesPerSymbol(sps);
+  }
+
   void eye_sink_f_impl::set_title(const std::string& title)
   {
-      d_main_gui->setTitle(title.c_str());
+	  // set_title no longer used but called by swig
   }
 
   void eye_sink_f_impl::set_line_label(unsigned int which, const std::string& label)
@@ -269,7 +272,7 @@ namespace gr {
 
   std::string eye_sink_f_impl::line_label(unsigned int which)
   {
-      return d_main_gui->lineLabel(0).toStdString();
+	  return d_main_gui->lineLabel(0).toStdString();
   }
 
   std::string eye_sink_f_impl::line_color(unsigned int which)
@@ -345,7 +348,7 @@ namespace gr {
 
   int eye_sink_f_impl::nsamps() const { return d_size; }
 
-  void eye_sink_f_impl::enable_stem_plot(bool en) { /* d_main_gui->setStem(en);*/ }
+  void eye_sink_f_impl::enable_stem_plot(bool en) { /* Unused, but do not remove*/ }
 
   void eye_sink_f_impl::enable_menu(bool en) { d_main_gui->enableMenu(en); }
 
@@ -353,9 +356,9 @@ namespace gr {
 
   void eye_sink_f_impl::enable_autoscale(bool en) { d_main_gui->autoScale(en); }
 
-  void eye_sink_f_impl::enable_semilogx(bool en) { /* d_main_gui->setSemilogx(en); */}
+  void eye_sink_f_impl::enable_semilogx(bool en) { /* Unused, but do not remove*/}
 
-  void eye_sink_f_impl::enable_semilogy(bool en) { /* d_main_gui->setSemilogy(en); */}
+  void eye_sink_f_impl::enable_semilogy(bool en) { /* Unused, but do not remove*/}
 
   void eye_sink_f_impl::enable_control_panel(bool en)
   {

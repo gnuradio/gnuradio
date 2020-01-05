@@ -94,6 +94,7 @@ namespace gr {
 	    void set_y_axis(double min, double max);
 	    void set_y_label(const std::string& label, const std::string& unit = "");
 	    void set_update_time(double t);
+        void set_samp_per_symbol(unsigned int sps);
 	    void set_title(const std::string& title);
 	    void set_line_label(unsigned int which, const std::string& label);
 	    void set_line_color(unsigned int which, const std::string& color);
@@ -125,9 +126,9 @@ namespace gr {
 	    void enable_menu(bool en);
 	    void enable_grid(bool en);
 	    void enable_autoscale(bool en);
-	    void enable_stem_plot(bool en);
-	    void enable_semilogx(bool en);
-	    void enable_semilogy(bool en);
+	    void enable_stem_plot(bool en); // Unused, but do not remove
+	    void enable_semilogx(bool en); // Unused, but do not remove
+	    void enable_semilogy(bool en); // Unused, but do not remove
 	    void enable_control_panel(bool en);
 	    void enable_tags(unsigned int which, bool en);
 	    void enable_tags(bool en);

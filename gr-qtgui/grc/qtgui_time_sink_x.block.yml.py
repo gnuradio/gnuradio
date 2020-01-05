@@ -312,9 +312,9 @@ templates:
         for i in range(${2 if type.startswith('msg') else 2*int(nconnections)}):
             if len(labels[i]) == 0:
                 if (i % 2 == 0):
-                    self.${id}.set_line_label(i, "Re{{Data {0}}}".format(i/2))
+                    self.${id}.set_line_label(i, "Re{{Data {0}}}".format(round(i/2)))
                 else:
-                    self.${id}.set_line_label(i, "Im{{Data {0}}}".format(i/2))
+                    self.${id}.set_line_label(i, "Im{{Data {0}}}".format(round((i-1)/2)))
             else:
                 self.${id}.set_line_label(i, labels[i])
             self.${id}.set_line_width(i, widths[i])

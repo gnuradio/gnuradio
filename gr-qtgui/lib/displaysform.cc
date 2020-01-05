@@ -36,11 +36,15 @@ DisplaysForm::DisplaysForm(int nplots, QWidget* parent)
     resize(QSize(800, 600));
 
     // Set up a grid that can be turned on/off
-    d_grid = new QwtPlotGrid();
     QPen* gridpen = new QPen(Qt::DashLine);
-    gridpen->setWidthF(0.25);
-    gridpen->setColor(Qt::gray);
-    d_grid->setPen(*gridpen);
+	gridpen->setWidthF(1.0);
+	gridpen->setColor(Qt::gray);
+
+	// Each eye must have one grid attached
+	for (unsigned int i = 0; i < d_nplots; ++i) {
+    	d_grids.push_back(new QwtPlotGrid());
+		d_grids[i]->setPen(*gridpen);
+    }
 
     // Create a set of actions for the menu
     d_stop_act = new QAction("Stop", this);
@@ -198,8 +202,9 @@ void DisplaysForm::closeEvent(QCloseEvent* e)
 
 void DisplaysForm::setUpdateTime(double t) { d_update_time = t; }
 
-//TODOCS no longer used
-void DisplaysForm::setTitle(const QString& title) { /*d_display_plot->setTitle(title); */}
+void DisplaysForm::setSamplesPerSymbol(int64_t  samples_per_symbol) { d_sps = (int) samples_per_symbol; }
+
+void DisplaysForm::setTitle(const QString& title) { /* Unused but do not remove */}
 
 void DisplaysForm::setLineLabel(unsigned int which, const QString& label)
 {
@@ -238,8 +243,7 @@ void DisplaysForm::setMarkerAlpha(unsigned int which, unsigned int alpha)
     d_displays_plot[which]->replot();
 }
 
-//TODOCS no longer used?
-QString DisplaysForm::title() { return d_display_plot->title().text(); }
+QString DisplaysForm::title() { /* Unused */ return ""; }
 
 QString DisplaysForm::lineLabel(unsigned int which)
 {
@@ -248,8 +252,7 @@ QString DisplaysForm::lineLabel(unsigned int which)
 
 QString DisplaysForm::lineColor(unsigned int which)
 {
-    unsigned int i=0;
-    // TODOCS return d_displays_plot[which]->getLineColor(i.name();
+    return d_displays_plot[which]->getLineColor(0).name();
 }
 
 int DisplaysForm::lineWidth(unsigned int which)
@@ -299,15 +302,19 @@ void DisplaysForm::setStop()
 
 void DisplaysForm::setGrid(bool on)
 {
+    if (on) {
+        d_grid_state = true;
+    } else {
+        d_grid_state = false;
+    }
+
+    // create one grid per eye pattern
     for (unsigned int i = 0; i < d_nplots; ++i) {
         if (on) {
             // will auto-detach if already attached.
-            // TODOCS create one grid per plot 
-            d_grid->attach(d_displays_plot[i]);
-            d_grid_state = true;
+            d_grids[i]->attach(d_displays_plot[i]);
         } else {
-            d_grid->detach();
-            d_grid_state = false;
+            d_grids[i]->detach();
         }
         d_grid_act->setChecked(on);
         d_displays_plot[i]->replot();

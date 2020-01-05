@@ -52,17 +52,6 @@ EyeControlPanel::EyeControlPanel(EyeDisplayForm* form) : QVBoxLayout(), d_parent
     d_yrange_layout->addWidget(d_yrange_plus);
     d_yrange_layout->addWidget(d_yrange_minus);
 
-    d_xmax_layout = new QHBoxLayout;
-    d_xmax_label = new QLabel("X Max:");
-    d_xmax_plus = new QPushButton("+");
-    d_xmax_minus = new QPushButton("-");
-    d_xmax_plus->setMaximumWidth(30);
-    d_xmax_minus->setMaximumWidth(30);
-    d_xmax_layout->addWidget(d_xmax_label);
-    d_xmax_layout->addWidget(d_xmax_plus);
-    d_xmax_layout->addWidget(d_xmax_minus);
-
-
     // Set up the box for trigger items
     d_trigger_box = new QGroupBox("Trigger");
     d_trigger_layout = new QVBoxLayout;
@@ -109,7 +98,6 @@ EyeControlPanel::EyeControlPanel(EyeDisplayForm* form) : QVBoxLayout(), d_parent
     d_axes_layout->addWidget(d_axislabels_check);
     d_axes_layout->addLayout(d_yoff_layout);
     d_axes_layout->addLayout(d_yrange_layout);
-    d_axes_layout->addLayout(d_xmax_layout);
     d_axes_box->setLayout(d_axes_layout);
 
     d_trigger_layout->addWidget(d_trigger_mode_combo);
@@ -139,8 +127,6 @@ EyeControlPanel::EyeControlPanel(EyeDisplayForm* form) : QVBoxLayout(), d_parent
     connect(
         d_yrange_minus, SIGNAL(pressed(void)), d_parent, SLOT(notifyYRangeMinus(void)));
 
-    connect(d_xmax_plus, SIGNAL(pressed(void)), d_parent, SLOT(notifyXAxisPlus(void)));
-    connect(d_xmax_minus, SIGNAL(pressed(void)), d_parent, SLOT(notifyXAxisMinus(void)));
     connect(d_trigger_mode_combo,
             SIGNAL(currentIndexChanged(const QString&)),
             d_parent,

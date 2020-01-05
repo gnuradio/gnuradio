@@ -147,15 +147,15 @@ namespace gr {
       check_set_qss(d_qApplication);
 
       unsigned int numplots = (d_nconnections > 0) ? d_nconnections : 2;
-      d_main_gui = new EyeDisplayForm(numplots, d_parent);
+      d_main_gui = new EyeDisplayForm(numplots, true, d_parent);
       d_main_gui->setNPoints(d_size);
       d_main_gui->setSampleRate(d_samp_rate);
-
-      if (!d_name.empty())
-          set_title(d_name);
+      d_main_gui->disableLegend();
 
       // initialize update time to 10 times a second
       set_update_time(0.1);
+      // initialize number of samples per symbol to 4
+	  set_samp_per_symbol(4);
   }
 
   void eye_sink_c_impl::exec_() { d_qApplication->exec(); }
@@ -192,10 +192,16 @@ namespace gr {
       d_last_time = 0;
   }
 
+  void eye_sink_c_impl::set_samp_per_symbol(unsigned int sps)
+  {
+      d_main_gui->setSamplesPerSymbol(sps);
+  }
+
   void eye_sink_c_impl::set_title(const std::string& title)
   {
-      d_main_gui->setTitle(title.c_str());
+	  // set_title no longer used but called by swig
   }
+
 
   void eye_sink_c_impl::set_line_label(unsigned int which, const std::string& label)
   {
@@ -357,11 +363,11 @@ namespace gr {
 
   void eye_sink_c_impl::enable_autoscale(bool en) { d_main_gui->autoScale(en); }
 
-  void eye_sink_c_impl::enable_stem_plot(bool en) { /* d_main_gui->setStem(en);*/ }
+  void eye_sink_c_impl::enable_stem_plot(bool en) { /* Unused, but do not remove*/ }
 
-  void eye_sink_c_impl::enable_semilogx(bool en) { /* d_main_gui->setSemilogx(en);*/ }
+  void eye_sink_c_impl::enable_semilogx(bool en) { /* Unused, but do not remove*/ }
 
-  void eye_sink_c_impl::enable_semilogy(bool en) { /* d_main_gui->setSemilogy(en);*/ }
+  void eye_sink_c_impl::enable_semilogy(bool en) { /* Unused, but do not remove*/ }
 
   void eye_sink_c_impl::enable_control_panel(bool en)
   {

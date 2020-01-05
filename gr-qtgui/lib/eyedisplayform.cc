@@ -31,7 +31,7 @@
 #include <iostream>
 
 
-EyeDisplayForm::EyeDisplayForm(int nplots, QWidget* parent)
+EyeDisplayForm::EyeDisplayForm(int nplots, bool cmplx, QWidget* parent)
 	    : DisplaysForm(nplots, parent)
 {
     d_current_units = 1;
@@ -47,20 +47,37 @@ EyeDisplayForm::EyeDisplayForm(int nplots, QWidget* parent)
     d_int_validator->setBottom(0);
 
     d_layout = new QGridLayout(this);
-    //CS d_display_plot = new EyeDisplayPlot(1, nplots, 0, this);
-    //CS temp keep old plot on 2nd column
-    //CS d_layout->addWidget(d_display_plot, 0, 1);
     d_controlpanel = NULL;
 
-    // Setup the layout of the display
-    for (unsigned int i = 0; i < d_nplots; ++i) {
-    	d_displays_plot.push_back(new EyeDisplayPlot(1, 1, i, this));
-        d_layout->addWidget(d_displays_plot[i], i, 0);
-        d_display_plot = d_displays_plot[i];
-        d_layout->setRowStretch(i, 1);
+    unsigned int i=0;
+    if (cmplx == true) {
+    	d_rows = d_nplots/2;
+    	d_cols = 2;
+    } else {
+    	d_rows = d_nplots;
+    	d_cols = 1;
     }
 
-    d_layout->setColumnStretch(0, 1);
+
+    // Setup the layout of the display
+    for (unsigned int row = 0; row < d_rows; ++row) {
+    	for (unsigned int col = 0; col < d_cols; ++col) {
+    		if (i < d_nplots) {
+				d_displays_plot.push_back(new EyeDisplayPlot(i, this));
+				d_layout->addWidget(d_displays_plot[i], row, col);
+				d_display_plot = d_displays_plot[i];
+				++i;
+    		}
+    	}
+    }
+
+    for (unsigned int row = 0; row < d_rows; ++row) {
+    	d_layout->setRowStretch(row, 1);
+    }
+
+    for (unsigned int col = 0; col < d_cols; ++col) {
+    	d_layout->setColumnStretch(col, 1);
+    }
     setLayout(d_layout);
 
     d_nptsmenu = new NPointsMenu(this);
@@ -202,7 +219,8 @@ void EyeDisplayForm::setupControlPanel()
             d_controlpanel,
             SLOT(toggleTriggerSlope(gr::qtgui::trigger_slope)));
     connect(d_stop_act, SIGNAL(triggered()), d_controlpanel, SLOT(toggleStopButton()));
-    d_layout->addLayout(d_controlpanel, 0, 1);
+
+    d_layout->addLayout(d_controlpanel, 0, d_cols, d_rows, 1);
 
     d_controlpanel->toggleAutoScale(d_autoscale_act->isChecked());
     d_controlpanel->toggleGrid(d_grid_act->isChecked());
@@ -240,7 +258,7 @@ void EyeDisplayForm::newData(const QEvent* updateEvent)
     const std::vector<std::vector<gr::tag_t>> tags = tevent->getTags();
 
     for (unsigned int i = 0; i < d_nplots; ++i) {
-    	getSinglePlot(i)->plotNewData(dataPoints, numDataPoints, d_update_time, tags);
+    	getSinglePlot(i)->plotNewData(dataPoints, numDataPoints, d_sps, d_update_time, tags);
         }
 }
 
@@ -465,85 +483,83 @@ std::string EyeDisplayForm::getTriggerTagKey() const { return d_trig_tag_key; }
 
 void EyeDisplayForm::notifyYAxisPlus()
 {
+    for (unsigned int i = 0; i < d_nplots; ++i) {
+
 #if QWT_VERSION < 0x060100
-    QwtScaleDiv* ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
-    double range = ax->upperBound() - ax->lowerBound();
-    double step = range / 20.0;
-    getPlot()->setYaxis(ax->lowerBound() + step, ax->upperBound() + step);
+		QwtScaleDiv* ax = getSinglePlot(i)->axisScaleDiv(QwtPlot::yLeft);
+		double range = ax->upperBound() - ax->lowerBound();
+		double step = range / 20.0;
+		getSinglePlot(i)->setYaxis(ax->lowerBound() + step, ax->upperBound() + step);
 
 #else
 
-    QwtScaleDiv ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
-    double range = ax.upperBound() - ax.lowerBound();
-    double step = range / 20.0;
-    getPlot()->setYaxis(ax.lowerBound() + step, ax.upperBound() + step);
+		QwtScaleDiv ax = getSinglePlot(i)->axisScaleDiv(QwtPlot::yLeft);
+		double range = ax.upperBound() - ax.lowerBound();
+		double step = range / 20.0;
+		getSinglePlot(i)->setYaxis(ax.lowerBound() + step, ax.upperBound() + step);
 #endif
+    }
 }
 
 void EyeDisplayForm::notifyYAxisMinus()
 {
+    for (unsigned int i = 0; i < d_nplots; ++i) {
+
 #if QWT_VERSION < 0x060100
-    QwtScaleDiv* ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
-    double range = ax->upperBound() - ax->lowerBound();
-    double step = range / 20.0;
-    getPlot()->setYaxis(ax->lowerBound() - step, ax->upperBound() - step);
+		QwtScaleDiv* ax = getSinglePlot(i)->axisScaleDiv(QwtPlot::yLeft);
+		double range = ax->upperBound() - ax->lowerBound();
+		double step = range / 20.0;
+		getSinglePlot(i)->setYaxis(ax->lowerBound() - step, ax->upperBound() - step);
 
 #else
 
-    QwtScaleDiv ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
-    double range = ax.upperBound() - ax.lowerBound();
-    double step = range / 20.0;
-    getPlot()->setYaxis(ax.lowerBound() - step, ax.upperBound() - step);
+		QwtScaleDiv ax = getSinglePlot(i)->axisScaleDiv(QwtPlot::yLeft);
+		double range = ax.upperBound() - ax.lowerBound();
+		double step = range / 20.0;
+		getSinglePlot(i)->setYaxis(ax.lowerBound() - step, ax.upperBound() - step);
 #endif
+    }
 }
 
 void EyeDisplayForm::notifyYRangePlus()
 {
+    for (unsigned int i = 0; i < d_nplots; ++i) {
+
 #if QWT_VERSION < 0x060100
-    QwtScaleDiv* ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
-    double range = ax->upperBound() - ax->lowerBound();
-    double step = range / 20.0;
-    getPlot()->setYaxis(ax->lowerBound() - step, ax->upperBound() + step);
+		QwtScaleDiv* ax = getSinglePlot(i)->axisScaleDiv(QwtPlot::yLeft);
+		double range = ax->upperBound() - ax->lowerBound();
+		double step = range / 20.0;
+		getSinglePlot(i)->setYaxis(ax->lowerBound() - step, ax->upperBound() + step);
 
 #else
 
-    QwtScaleDiv ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
-    double range = ax.upperBound() - ax.lowerBound();
-    double step = range / 20.0;
-    getPlot()->setYaxis(ax.lowerBound() - step, ax.upperBound() + step);
+		QwtScaleDiv ax = getSinglePlot(i)->axisScaleDiv(QwtPlot::yLeft);
+		double range = ax.upperBound() - ax.lowerBound();
+		double step = range / 20.0;
+		getSinglePlot(i)->setYaxis(ax.lowerBound() - step, ax.upperBound() + step);
 #endif
+    }
 }
 
 void EyeDisplayForm::notifyYRangeMinus()
 {
+    for (unsigned int i = 0; i < d_nplots; ++i) {
+
 #if QWT_VERSION < 0x060100
-    QwtScaleDiv* ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
-    double range = ax->upperBound() - ax->lowerBound();
-    double step = range / 20.0;
-    getPlot()->setYaxis(ax->lowerBound() + step, ax->upperBound() - step);
+		QwtScaleDiv* ax = getSinglePlot(i)->axisScaleDiv(QwtPlot::yLeft);
+		double range = ax->upperBound() - ax->lowerBound();
+		double step = range / 20.0;
+		getSinglePlot(i)->setYaxis(ax->lowerBound() + step, ax->upperBound() - step);
 
 #else
 
-    QwtScaleDiv ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
-    double range = ax.upperBound() - ax.lowerBound();
-    double step = range / 20.0;
-    getPlot()->setYaxis(ax.lowerBound() + step, ax.upperBound() - step);
+		QwtScaleDiv ax = getSinglePlot(i)->axisScaleDiv(QwtPlot::yLeft);
+		double range = ax.upperBound() - ax.lowerBound();
+		double step = range / 20.0;
+		getSinglePlot(i)->setYaxis(ax.lowerBound() + step, ax.upperBound() - step);
 #endif
+    }
 }
-
-
-void EyeDisplayForm::notifyXAxisPlus()
-{
-    // increase by 10%
-    setNPoints(static_cast<int>(1.1 * getNPoints()));
-}
-
-void EyeDisplayForm::notifyXAxisMinus()
-{
-    // decrease by 10%
-    setNPoints(static_cast<int>(0.9 * getNPoints()));
-}
-
 
 void EyeDisplayForm::notifyTriggerMode(const QString& mode)
 {
@@ -635,3 +651,4 @@ void EyeDisplayForm::notifyTriggerDelayMinus()
         trig = 0;
     emit signalTriggerDelay(trig);
 }
+

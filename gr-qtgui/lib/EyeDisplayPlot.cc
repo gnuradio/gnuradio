@@ -106,17 +106,17 @@ private:
 /***********************************************************************
  * Main Time domain plotter widget
  **********************************************************************/
-EyeDisplayPlot::EyeDisplayPlot(int nplots, int ncurves, unsigned int curve_index, QWidget* parent)
-    : DisplayPlot(nplots, parent)
+
+EyeDisplayPlot::EyeDisplayPlot(unsigned int curve_index, QWidget* parent)
+    : DisplayPlot(1, parent)
 {
 
 	d_numPoints = 1024;
 
-	// TODOCS temporarily fixed for tests
 	d_sps = 4;
+
 	d_numPointsPerPeriod = 2 * d_sps + 1;
 	d_numPeriods = std::floor((d_numPoints -1) / 2 / d_sps);
-	// END TODO
 
 	d_xdata = new double[d_numPointsPerPeriod];
     d_curve_index = curve_index;
@@ -163,7 +163,7 @@ EyeDisplayPlot::EyeDisplayPlot(int nplots, int ncurves, unsigned int curve_index
            << QColor(Qt::yellow) << QColor(Qt::gray) << QColor(Qt::darkRed)
            << QColor(Qt::darkGreen) << QColor(Qt::darkBlue)
            << QColor(Qt::darkGray)
-           // cycle through all colors again to increase time_sink_f input limit
+           // cycle through all colors again to increase eye_sink_f input limit
            // from 12 to 24, otherwise you get a segfault
            << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
            << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
@@ -217,8 +217,13 @@ EyeDisplayPlot::EyeDisplayPlot(int nplots, int ncurves, unsigned int curve_index
 
 EyeDisplayPlot::~EyeDisplayPlot()
 {
-    delete[] d_ydata[0];
-    delete[] d_xdata;
+	// Only delete d_ydata related to this plot
+	delete[] d_ydata[d_curve_index];
+
+    // Delete d_xdata only once (one layout may have multiple eye pattern = EyeDisplayPlot)
+	if (d_curve_index = 0) {
+    	delete[] d_xdata;
+	}
 
     // d_zoomer and _panner deleted when parent deleted
 }
@@ -227,54 +232,85 @@ void EyeDisplayPlot::replot() { QwtPlot::replot(); }
 
 void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                                         const int64_t numDataPoints,
+										int sps,
                                         const double timeInterval,
                                         const std::vector<std::vector<gr::tag_t>>& tags)
 {
-	if (!d_stop) {
-        if ((numDataPoints > 0)) {
-            if (numDataPoints != d_numPoints) {
-                d_numPoints = numDataPoints;
-            	d_numPeriods = std::floor(d_numPoints / d_numPointsPerPeriod);
+    QList<QColor> colors;
+    colors << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
+           << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
+           << QColor(Qt::yellow) << QColor(Qt::gray) << QColor(Qt::darkRed)
+           << QColor(Qt::darkGreen) << QColor(Qt::darkBlue)
+           << QColor(Qt::darkGray)
+           // cycle through all colors again to increase eye_sink_f input limit
+           // from 12 to 24, otherwise you get a segfault
+           << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
+           << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
+           << QColor(Qt::yellow) << QColor(Qt::gray) << QColor(Qt::darkRed)
+           << QColor(Qt::darkGreen) << QColor(Qt::darkBlue) << QColor(Qt::darkGray);
 
+    if (!d_stop) {
+		if ((numDataPoints > 0)) {
+            if ((numDataPoints != d_numPoints) || (d_sps !=sps))  {
+            	// Detach all curves
+            	for (unsigned int i = 0; i < d_numPeriods; ++i) {
+            		d_plot_curve[i]->detach();
+            	}
+            	d_numPoints = numDataPoints;
+            	d_sps = sps;
+            	d_numPointsPerPeriod = 2 * d_sps + 1;
+            	d_numPeriods = std::floor((d_numPoints -1) / 2 / d_sps);
+
+				// clear d_plot_curve, d_xdata, d_ydata
+            	d_plot_curve.clear();
+				d_ydata.clear();
                 delete[] d_xdata;
-                d_xdata = new double[(1 + d_numPointsPerPeriod)];
+				d_xdata = new double[(1 + d_numPointsPerPeriod)];
+				_resetXAxisPoints();
 
-                for (unsigned int i = 0; i < d_numPeriods; ++i) {
-					delete[] d_ydata[i];
+				// New data structure and data
+				for (unsigned int i = 0; i < d_numPeriods; ++i) {
+					int64_t time_index = i * (d_numPointsPerPeriod-1);
+					d_ydata.push_back(new double[d_numPointsPerPeriod]);
+					memcpy(d_ydata[i], &(dataPoints[d_curve_index][time_index]), d_numPointsPerPeriod * sizeof(double));
+					d_plot_curve.push_back(new QwtPlotCurve(QString("Eye [Data %1]").arg(d_curve_index)));
+					d_plot_curve[i]->attach(this);
+					d_plot_curve[i]->setPen(QPen(colors[d_curve_index]));
+					d_plot_curve[i]->setRenderHint(QwtPlotItem::RenderAntialiased);
 
-					d_ydata[i] = new double[(1 + d_numPointsPerPeriod)];
+					QwtSymbol* symbol = new QwtSymbol(
+						QwtSymbol::NoSymbol, QBrush(colors[d_curve_index]), QPen(colors[d_curve_index]), QSize(7, 7));
 
 #if QWT_VERSION < 0x060000
 					d_plot_curve[i]->setRawData(d_xdata, d_ydata[i], d_numPointsPerPeriod);
+					d_plot_curve[i]->setSymbol(*symbol);
 #else
 					d_plot_curve[i]->setRawSamples(d_xdata, d_ydata[i], d_numPointsPerPeriod);
+					d_plot_curve[i]->setSymbol(symbol);
 #endif
+				}
+            } else {
+    			// New data
+                for (unsigned int i = 0; i < d_numPeriods; ++i) {
+    				int64_t time_index = i * (d_numPointsPerPeriod-1);
+    				memcpy(d_ydata[i], &(dataPoints[d_curve_index][time_index]), d_numPointsPerPeriod * sizeof(double));
                 }
-
-                _resetXAxisPoints();
-            }
-
-            for (unsigned int i = 0; i < d_numPeriods; ++i) {
-				int64_t time_index = i * (d_numPointsPerPeriod-1);
-				memcpy(d_ydata[i], &(dataPoints[d_curve_index][time_index]), d_numPointsPerPeriod * sizeof(double));
             }
 
 
-            // TODOCS memcpy(d_ydata[0], dataPoints[d_curve_index], numDataPoints * sizeof(double));
 
             // Detach and delete any tags that were plotted last time
-            for (unsigned int n = 0; n < 1; ++n) { //TODOCS remove for
-                for (size_t i = 0; i < d_tag_markers[0].size(); i++) {
-                    d_tag_markers[0][i]->detach();
-                    delete d_tag_markers[0][i];
-                }
-                d_tag_markers[0].clear();
-            }
+            for (size_t i = 0; i < d_tag_markers[0].size(); i++) {
+				d_tag_markers[0][i]->detach();
+				delete d_tag_markers[0][i];
+			}
+			d_tag_markers[0].clear();
 
             // Plot and attach any new tags found.
             // First test if this was a complex input where real/imag get
             // split here into two stream.
-            /* TODOTODOCS removed temporarily uint64_t offset = (*t).offset; issue a seg fault
+            /* TODOTODOCS removed temporarily
+            uint64_t offset = (*t).offset; issue a seg fault
             if (!tags.empty()) {
                 bool cmplx = false;
                 unsigned int mult = d_nplots / tags.size();
@@ -409,16 +445,15 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 void EyeDisplayPlot::legendEntryChecked(QwtPlotItem* plotItem, bool on)
 {
     // When line is turned on/off, immediately show/hide tag markers
-    for (unsigned int n = 0; n < 1; ++n) { //TODOCS remove for
-        if (plotItem == d_plot_curve[n]) {
-            for (size_t i = 0; i < d_tag_markers[0].size(); i++) {
-                if (!(!on && d_tag_markers_en[0]))
-                    d_tag_markers[0][i]->hide();
-                else
-                    d_tag_markers[0][i]->show();
-            }
-        }
-    }
+	if (plotItem == d_plot_curve[0]) {
+		for (size_t i = 0; i < d_tag_markers[0].size(); i++) {
+			if (!(!on && d_tag_markers_en[0]))
+				d_tag_markers[0][i]->hide();
+			else
+				d_tag_markers[0][i]->show();
+		}
+	}
+
     DisplayPlot::legendEntryChecked(plotItem, on);
 }
 
@@ -442,7 +477,7 @@ void EyeDisplayPlot::_resetXAxisPoints()
         d_xdata[loc] = delt * (loc - d_sps);
     }
 
-    setAxisScale(QwtPlot::xBottom, - delt * d_sps, d_sps * delt);
+    setAxisScale(QwtPlot::xBottom, - delt * d_sps, delt * d_sps);
     // Set up zoomer base for maximum unzoom x-axis
     // and reset to maximum unzoom level
     QwtDoubleRect zbase = d_zoomer->zoomBase();
@@ -500,17 +535,6 @@ void EyeDisplayPlot::stemPlot(bool en)
 	            d_plot_curve[i]->setStyle(QwtPlotCurve::Lines);
 	            setLineMarker(i, QwtSymbol::NoSymbol);
 	}
-}
-
-void EyeDisplayPlot::setSemilogx(bool en)
-{
-	setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
-    _resetXAxisPoints();
-}
-
-void EyeDisplayPlot::setSemilogy(bool en)
-{
-	setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
 }
 
 void EyeDisplayPlot::enableTagMarker(unsigned int which, bool en)
@@ -584,18 +608,121 @@ void EyeDisplayPlot::setTriggerLines(double x, double y)
 void EyeDisplayPlot::setLineLabel(unsigned int which, QString label)
 {
 
-	/* if (which >= d_plot_curve.size())
+	if (which >= d_plot_curve.size())
         throw std::runtime_error("EyeDisplayPlot::setLineLabel: index out of bounds");
-        */
-    d_plot_curve[0]->setTitle(label);
+    d_plot_curve[which]->setTitle(label);
 }
 
-QString EyeDisplayPlot::getLineLabel(unsigned int which)
+
+// Overriding of method DisplayPlot::setLineColor
+void EyeDisplayPlot::setLineColor(unsigned int which, QColor color)
 {
-    //if (which >= d_plot_curve.size())
-    	//return d_plot_curve[0]->title().text();
-        // throw std::runtime_error("EyeDisplayPlot::getLineLabel: index out of bounds");
-    return d_plot_curve[0]->title().text();
+	for (unsigned int i = 0; i < d_plot_curve.size(); ++i) {
+        // Set the color of the pen
+        QPen pen(d_plot_curve[i]->pen());
+        pen.setColor(color);
+        d_plot_curve[i]->setPen(pen);
+        // And set the color of the markers
+#if QWT_VERSION < 0x060000
+        // d_plot_curve[which]->setBrush(QBrush(QColor(color)));
+        d_plot_curve[i]->setPen(pen);
+        QwtSymbol sym = (QwtSymbol)d_plot_curve[i]->symbol();
+        setLineMarker(i, sym.style());
+#else
+        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
+        if (sym) {
+            sym->setColor(color);
+            sym->setPen(pen);
+            d_plot_curve[i]->setSymbol(sym);
+        }
+#endif
+	}
+}
+
+// Overriding of method DisplayPlot::setLineWidth
+void EyeDisplayPlot::setLineWidth(unsigned int which, int width)
+{
+	for (unsigned int i = 0; i < d_plot_curve.size(); ++i) {
+        // Set the new line width
+        QPen pen(d_plot_curve[i]->pen());
+        pen.setWidth(width);
+        d_plot_curve[i]->setPen(pen);
+
+        // Scale the marker size proportionally
+#if QWT_VERSION < 0x060000
+        QwtSymbol sym = (QwtSymbol)d_plot_curve[i]->symbol();
+        sym.setSize(7 + 10 * log10(1.0 * width), 7 + 10 * log10(1.0 * width));
+        d_plot_curve[i]->setSymbol(sym);
+#else
+        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
+        if (sym) {
+            sym->setSize(7 + 10 * log10(1.0 * i), 7 + 10 * log10(1.0 * i));
+            d_plot_curve[i]->setSymbol(sym);
+        }
+#endif
+    }
+}
+
+// Overriding of method DisplayPlot::setLineMarker
+void EyeDisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
+{
+	for (unsigned int i = 0; i < d_plot_curve.size(); ++i) {
+#if QWT_VERSION < 0x060000
+        QwtSymbol sym = (QwtSymbol)d_plot_curve[i]->symbol();
+        QPen pen(d_plot_curve[i]->pen());
+        QBrush brush(pen.color());
+        sym.setStyle(marker);
+        sym.setPen(pen);
+        sym.setBrush(brush);
+        d_plot_curve[i]->setSymbol(sym);
+#else
+        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
+        if (sym) {
+            sym->setStyle(marker);
+            d_plot_curve[i]->setSymbol(sym);
+        }
+#endif
+    }
+}
+
+// Overriding of method DisplayPlot::setLineStyle
+void EyeDisplayPlot::setLineStyle(unsigned int which, Qt::PenStyle style)
+{
+	for (unsigned int i = 0; i < d_plot_curve.size(); ++i) {
+        QPen pen(d_plot_curve[i]->pen());
+        pen.setStyle(style);
+        d_plot_curve[i]->setPen(pen);
+    }
+}
+
+// Overriding of method DisplayPlot::setLineStyle
+
+// Overriding of method DisplayPlot::setMarkerAlpha
+void EyeDisplayPlot::setMarkerAlpha(unsigned int which, int alpha)
+{
+	for (unsigned int i = 0; i < d_plot_curve.size(); ++i) {
+        // Get the pen color
+        QPen pen(d_plot_curve[i]->pen());
+        QColor color = pen.color();
+
+        // Set new alpha and update pen
+        color.setAlpha(alpha);
+        pen.setColor(color);
+        d_plot_curve[i]->setPen(pen);
+
+        // And set the new color for the markers
+#if QWT_VERSION < 0x060000
+        QwtSymbol sym = (QwtSymbol)d_plot_curve[i]->symbol();
+        setLineMarker(i, sym.style());
+#else
+        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
+        if (sym) {
+            sym->setColor(color);
+            sym->setPen(pen);
+            d_plot_curve[i]->setSymbol(sym);
+        }
+#endif
+    }
 }
 
 #endif /* EYE_DISPLAY_PLOT_C */

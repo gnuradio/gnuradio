@@ -61,7 +61,6 @@ private:
     QVBoxLayout* d_axes_layout;
     QHBoxLayout* d_yoff_layout;
     QHBoxLayout* d_yrange_layout;
-    QHBoxLayout* d_xmax_layout;
     QVBoxLayout* d_trigger_layout;
     QHBoxLayout* d_trigger_level_layout;
     QHBoxLayout* d_trigger_delay_layout;
@@ -69,7 +68,6 @@ private:
 
     QLabel* d_yoff_label;
     QLabel* d_yrange_label;
-    QLabel* d_xmax_label;
     QLabel* d_trigger_level_label;
     QLabel* d_trigger_delay_label;
 
@@ -79,7 +77,6 @@ private:
 
     QPushButton *d_yoff_plus, *d_yoff_minus;
     QPushButton *d_yrange_plus, *d_yrange_minus;
-    QPushButton *d_xmax_plus, *d_xmax_minus;
     QComboBox* d_trigger_mode_combo;
     QComboBox* d_trigger_slope_combo;
     QPushButton *d_trigger_level_plus, *d_trigger_level_minus;

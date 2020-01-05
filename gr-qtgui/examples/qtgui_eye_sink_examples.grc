@@ -111,7 +111,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '32000'
+    value: 32000*sps
   states:
     bus_sink: false
     bus_source: false
@@ -123,12 +123,33 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '4'
+    value: '8'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
     coordinate: [176, 12.0]
+    rotation: 0
+    state: disabled
+- name: sps
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 3,0,1,1
+    label: Samples per symbol
+    min_len: '200'
+    orient: Qt.Vertical
+    rangeType: int
+    start: '3'
+    step: '1'
+    stop: '10'
+    value: '5'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 84.0]
     rotation: 0
     state: enabled
 - name: analog_random_source_x
@@ -180,7 +201,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [664, 264.0]
+    coordinate: [664, 280.0]
     rotation: 0
     state: true
 - name: blocks_multiply_const_vxx_0
@@ -233,7 +254,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [824, 360.0]
+    coordinate: [888, 360.0]
     rotation: 0
     state: true
 - name: blocks_throttle_0
@@ -303,7 +324,7 @@ blocks:
   parameters:
     alias: ''
     comment: ''
-    gui_hint: 2, 0, 1, 2
+    gui_hint: 4, 0, 6, 2
     label0: Eye Sink (Float) 2
     label1: Eye Sink (Complex) 2
     label10: Tab 10
@@ -387,9 +408,9 @@ blocks:
     marker9: '-1'
     name: '""'
     nconnections: '2'
+    samp_per_symbol: sps
     size: '1024'
     srate: samp_rate
-    stemplot: 'False'
     style1: '1'
     style10: '1'
     style2: '1'
@@ -484,9 +505,9 @@ blocks:
     marker9: '-1'
     name: '""'
     nconnections: '2'
+    samp_per_symbol: sps
     size: '1024'
     srate: samp_rate
-    stemplot: 'False'
     style1: '1'
     style10: '1'
     style2: '1'
@@ -581,9 +602,9 @@ blocks:
     marker9: '-1'
     name: '""'
     nconnections: '1'
+    samp_per_symbol: sps
     size: '1024'
     srate: samp_rate
-    stemplot: 'False'
     style1: '1'
     style10: '1'
     style2: '1'
@@ -678,9 +699,9 @@ blocks:
     marker9: '-1'
     name: '""'
     nconnections: '1'
+    samp_per_symbol: sps
     size: '1024'
     srate: samp_rate
-    stemplot: 'False'
     style1: '1'
     style10: '1'
     style2: '1'
@@ -720,6 +741,200 @@ blocks:
     coordinate: [768, 548.0]
     rotation: 0
     state: disabled
+- name: qtgui_eye_sink_x_1_1
+  id: qtgui_eye_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'False'
+    grid: 'False'
+    gui_hint: notebook@3
+    label1: ''
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    samp_per_symbol: sps
+    size: '1024'
+    srate: samp_rate
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [888, 404.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_eye_sink_x_1_1_0
+  id: qtgui_eye_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'False'
+    grid: 'False'
+    gui_hint: notebook@1
+    label1: ''
+    label10: Signal 10
+    label2: ''
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '2'
+    samp_per_symbol: sps
+    size: '1024'
+    srate: samp_rate
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [888, 500.0]
+    rotation: 0
+    state: enabled
 
 connections:
 - [analog_random_source_x, '0', digital_psk_mod_0, '0']
@@ -730,8 +945,11 @@ connections:
 - [blocks_multiply_const_vxx_0, '0', blocks_complex_to_real_0_0, '0']
 - [blocks_multiply_const_vxx_0, '0', qtgui_eye_sink_x_0, '1']
 - [blocks_multiply_const_vxx_0, '0', qtgui_eye_sink_x_1_0, '0']
+- [blocks_multiply_const_vxx_0, '0', qtgui_eye_sink_x_1_1_0, '1']
 - [blocks_multiply_const_vxx_0_0, '0', blocks_complex_to_real_0, '0']
 - [blocks_multiply_const_vxx_0_0, '0', qtgui_eye_sink_x_0, '0']
+- [blocks_multiply_const_vxx_0_0, '0', qtgui_eye_sink_x_1_1, '0']
+- [blocks_multiply_const_vxx_0_0, '0', qtgui_eye_sink_x_1_1_0, '0']
 - [blocks_throttle_0, '0', channels_channel_model_0, '0']
 - [channels_channel_model_0, '0', blocks_multiply_const_vxx_0, '0']
 - [channels_channel_model_0, '0', blocks_multiply_const_vxx_0_0, '0']

@@ -32,6 +32,10 @@ parameters:
     dtype: int
     default: '1024'
     hide: ${ ('all' if type.startswith('msg') else 'none') }
+-   id: samp_per_symbol
+    label: Samples per Symbol
+    dtype: int
+    default: 'sps'
 -   id: srate
     label: Sample Rate
     dtype: float
@@ -141,14 +145,6 @@ parameters:
     category: Config
     dtype: enum
     default: 'True'
-    options: ['True', 'False']
-    option_labels: ['Yes', 'No']
-    hide: part
--   id: stemplot
-    label: Stem Plot
-    category: Config
-    dtype: enum
-    default: 'False'
     options: ['True', 'False']
     option_labels: ['Yes', 'No']
     hide: part
@@ -946,6 +942,7 @@ templates:
     - set_update_time(${update_time})
     - set_y_axis(${ymin}, ${ymax})
     - set_samp_rate(${srate})
+    - set_samp_per_symbol(${samp_per_symbol})
     - self.${id}.set_trigger_mode(${tr_mode}, ${tr_slope}, ${tr_level}, ${tr_delay},
         ${tr_chan}, ${tr_tag})
     make: |-
@@ -959,6 +956,7 @@ templates:
             ${0 if type.startswith('msg') else nconnections} #number of inputs
         )
         self.${id}.set_update_time(${update_time})
+        self.${id}.set_samp_per_symbol(${samp_per_symbol})
         self.${id}.set_y_axis(${ymin}, ${ymax})
 
         self.${id}.set_y_label(${ylabel}, ${yunit})
@@ -969,7 +967,6 @@ templates:
         self.${id}.enable_grid(${grid})
         self.${id}.enable_axis_labels(${axislabels})
         self.${id}.enable_control_panel(${ctrlpanel})
-        self.${id}.enable_stem_plot(${stemplot})
 
         % if legend == "False":
         self.${id}.disable_legend()
@@ -993,9 +990,9 @@ templates:
         for i in range(${2 if type.startswith('msg') else 2*int(nconnections)}):
             if len(labels[i]) == 0:
                 if (i % 2 == 0):
-                    self.${id}.set_line_label(i, "Eye [Re{{Data {0}}}]".format(i/2))
+                    self.${id}.set_line_label(i, "Eye [Re{{Data {0}}}]".format(round(i/2)))
                 else:
-                    self.${id}.set_line_label(i, "Eye [Im{{Data {0}}}]".format(i/2))
+                    self.${id}.set_line_label(i, "Eye [Im{{Data {0}}}]".format(round((i-1)/2)))
             else:
                 self.${id}.set_line_label(i, labels[i])
             self.${id}.set_line_width(i, widths[i])

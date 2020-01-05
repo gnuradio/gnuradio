@@ -40,7 +40,7 @@ class EyeDisplayForm : public DisplaysForm
     Q_OBJECT
 
 public:
-    EyeDisplayForm(int nplots = 1, QWidget* parent = 0);
+    EyeDisplayForm(int nplots = 1, bool cmplx = false, QWidget* parent = 0);
     ~EyeDisplayForm();
 
     EyeDisplayPlot* getPlot();
@@ -88,8 +88,6 @@ private slots:
     void notifyYAxisMinus();
     void notifyYRangePlus();
     void notifyYRangeMinus();
-    void notifyXAxisPlus();
-    void notifyXAxisMinus();
     void notifyTriggerMode(const QString& mode);
     void notifyTriggerSlope(const QString& slope);
     void notifyTriggerLevelPlus();
@@ -112,7 +110,8 @@ private:
     double d_stop_frequency;
     double d_current_units;
     int d_npoints;
-
+    unsigned int d_rows;
+    unsigned int d_cols;
     NPointsMenu* d_nptsmenu;
 
     QAction* d_controlpanelmenu;
@@ -135,8 +134,6 @@ private:
 
     EyeControlPanel* d_controlpanel;
 
-protected:
-	std::vector<QwtPlotCurve*> d_plot_curves;
 };
 
 #endif /* EYE_DISPLAY_FORM_H */

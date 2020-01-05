@@ -45,12 +45,13 @@ class EyeDisplayPlot : public DisplayPlot
 
 public:
 
-	EyeDisplayPlot(int nplots, int ncurves, unsigned int curve_index, QWidget*);
+	EyeDisplayPlot(unsigned int curve_index, QWidget* parent);
     virtual ~EyeDisplayPlot();
 
     void plotNewData(const std::vector<double*> dataPoints,
                      const int64_t numDataPoints,
-                     const double timeInterval,
+					 int d_sps,
+					 const double timeInterval,
                      const std::vector<std::vector<gr::tag_t>>& tags =
                          std::vector<std::vector<gr::tag_t>>());
 
@@ -63,14 +64,16 @@ public:
     const QColor getTagTextColor();
     const QColor getTagBackgroundColor();
     const Qt::BrushStyle getTagBackgroundStyle();
-
+    void setLineColor(unsigned int which, QColor color);
+    void setLineWidth(unsigned int which, int width);
+    void setLineMarker(unsigned int which, QwtSymbol::Style marker);
+    void setLineStyle(unsigned int which, Qt::PenStyle style);
+    void setMarkerAlpha(unsigned int which, int alpha);
 public slots:
     void setSampleRate(double sr, double units, const std::string& strunits);
 
     void setAutoScale(bool state);
     void setAutoScaleShot();
-    void setSemilogx(bool en);
-    void setSemilogy(bool en);
 
     void legendEntryChecked(QwtPlotItem* plotItem, bool on);
     void legendEntryChecked(const QVariant& plotItem, bool on, int index);
@@ -87,7 +90,6 @@ public slots:
     void setTagBackgroundStyle(Qt::BrushStyle b);
 
     void setLineLabel(unsigned int which, QString label);
-    QString getLineLabel(unsigned int which);
 
 private:
     void _resetXAxisPoints();
@@ -100,7 +102,7 @@ private:
     double d_sample_rate;
 
     unsigned int d_curve_index;
-    unsigned int d_sps;
+    int d_sps;
     unsigned int d_numPointsPerPeriod;
     unsigned int d_numPeriods;
 
