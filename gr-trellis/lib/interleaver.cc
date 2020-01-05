@@ -20,14 +20,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <gnuradio/random.h>
 #include <gnuradio/trellis/interleaver.h>
 #include <gnuradio/trellis/quicksort_index.h>
 #include <cmath>
+#if __cplusplus >= 201103L
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include <stdexcept>
+// #include <stdexcept>
 #include <string>
 
 namespace gr {
@@ -109,12 +115,14 @@ interleaver::interleaver(int K, int seed)
     d_INTER.resize(d_K);
     d_DEINTER.resize(d_K);
 
+    gr::random rnd_int(seed, 0, INT_MAX);
+
     if (seed >= 0)
         srand((unsigned int)seed);
     std::vector<int> tmp(d_K);
     for (int i = 0; i < d_K; i++) {
         d_INTER[i] = i;
-        tmp[i] = rand();
+        tmp[i] = rnd_int.ran_int();
     }
     quicksort_index<int>(tmp, d_INTER, 0, d_K - 1);
 
