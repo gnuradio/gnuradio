@@ -90,11 +90,11 @@ buffer::buffer(int nitems, size_t sizeof_item, block_sptr link)
       d_done(false),
       d_last_min_items_read(0)
 {
+    gr::configure_default_loggers(d_logger, d_debug_logger, "buffer");
     if (!allocate_buffer(nitems, sizeof_item))
         throw std::bad_alloc();
 
     s_buffer_count++;
-    gr::configure_default_loggers(d_logger, d_debug_logger, "buffer");
 }
 
 buffer_sptr make_buffer(int nitems, size_t sizeof_item, block_sptr link)
@@ -129,15 +129,15 @@ bool buffer::allocate_buffer(int nitems, size_t sizeof_item)
     // This only happens if sizeof_item is not a power of two.
 
     if (nitems > 2 * orig_nitems && nitems * (int)sizeof_item > granularity) {
-        std::ostringstream msg;
-        msg << "WARNING allocate_buffer: tried to allocate\n"
-            << "   " << orig_nitems << " items of size " << sizeof_item
-            << ". Due to alignment requirements\n"
-            << "   " << nitems << " were allocated.  If this isn't OK, consider padding\n"
-            << "   your structure to a power-of-two bytes.\n"
-            << "   On this platform, our allocation granularity is " << granularity
-            << " bytes.\n";
-        GR_LOG_WARN(d_debug_logger, msg.str());
+        auto msg =
+            str(boost::format(
+                    "WARNING allocate_buffer: tried to allocate\n"
+                    "   %d items of size %d. Due to alignment requirements\n"
+                    "   %d were allocated.  If this isn't OK, consider padding\n"
+                    "   your structure to a power-of-two bytes.\n"
+                    "   On this platform, our allocation granularity is %d bytes.\n") %
+                orig_nitems % sizeof_item % nitems % granularity);
+        GR_LOG_WARN(d_debug_logger, msg.c_str());
     }
 
     d_bufsize = nitems;
