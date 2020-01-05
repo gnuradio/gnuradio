@@ -83,9 +83,8 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(int size) : gr::vmcircbuf(size)
                 EEXIST) // Named segment already exists (shouldn't happen).  Try again
                 continue;
 
-            static std::string msg =
-                str(boost::format("gr::vmcircbuf_mmap_shm_open: shm_open [%s]") %
-                    seg_name);
+            static std::string msg = str(
+                boost::format("gr::vmcircbuf_mmap_shm_open: shm_open [%s]") % seg_name);
             GR_LOG_ERROR(d_debug_logger, msg.c_str());
             throw std::runtime_error("gr::vmcircbuf_mmap_shm_open");
         }

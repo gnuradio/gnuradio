@@ -81,7 +81,7 @@ void fft_filter_fff::compute_sizes(int ntaps)
         gr::configure_default_loggers(logger, debug_logger, "fft_filter_fff");
         std::ostringstream msg;
         msg << "fft_filter_fff: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
-                  << " nsamples = " << d_nsamples << std::endl;
+            << " nsamples = " << d_nsamples << std::endl;
         GR_LOG_ERROR(debug_logger, msg.str());
     }
 
@@ -213,7 +213,7 @@ void fft_filter_ccc::compute_sizes(int ntaps)
         gr::configure_default_loggers(logger, debug_logger, "fft_filter_ccc");
         std::ostringstream msg;
         msg << "fft_filter_ccc: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
-                  << " nsamples = " << d_nsamples << std::endl;
+            << " nsamples = " << d_nsamples << std::endl;
         GR_LOG_ERROR(debug_logger, msg.str());
     }
 
@@ -346,7 +346,7 @@ void fft_filter_ccf::compute_sizes(int ntaps)
         gr::configure_default_loggers(logger, debug_logger, "fft_filter_ccf");
         std::ostringstream msg;
         msg << "fft_filter_ccf: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
-                  << " nsamples = " << d_nsamples << std::endl;
+            << " nsamples = " << d_nsamples << std::endl;
         GR_LOG_ERROR(debug_logger, msg.str());
     }
 

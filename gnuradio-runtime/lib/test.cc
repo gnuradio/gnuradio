@@ -94,10 +94,9 @@ int test::general_work(int noutput_items,
         if (ninput_items[i] < (int)(noutput_items + history())) {
             std::ostringstream msg;
             msg << "ERROR ninput_items[" << i << "] < noutput_items+history()"
-                      << std::endl;
+                << std::endl;
             msg << "ninput_items[" << i << "] = " << ninput_items[i] << std::endl;
-            msg << "noutput_items+history() = " << noutput_items + history()
-                      << std::endl;
+            msg << "noutput_items+history() = " << noutput_items + history() << std::endl;
             msg << "noutput_items = " << noutput_items << std::endl;
             msg << "history() = " << history() << std::endl;
             GR_LOG_ERROR(d_debug_logger, msg.str());

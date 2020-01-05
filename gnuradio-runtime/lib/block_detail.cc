@@ -222,7 +222,8 @@ void block_detail::set_processor_affinity(const std::vector<int>& mask)
             gr::thread::thread_bind_to_processor(thread, mask);
         } catch (std::runtime_error& e) {
             gr::logger_ptr logger, debug_logger;
-            gr::configure_default_loggers(logger, debug_logger, "block_detail:set_processor_affinity");
+            gr::configure_default_loggers(
+                logger, debug_logger, "block_detail:set_processor_affinity");
             std::ostringstream msg;
             msg << "ERROR invalid mask." << std::endl;
             GR_LOG_ERROR(debug_logger, msg.str());

@@ -12,8 +12,8 @@
 #define INCLUDED_THREAD_BODY_WRAPPER_H
 
 #include <gnuradio/api.h>
-#include <gnuradio/thread/thread.h>
 #include <gnuradio/logger.h>
+#include <gnuradio/thread/thread.h>
 #include <exception>
 #include <iostream>
 

@@ -53,11 +53,9 @@ inline void packet_sink_impl::enter_have_sync()
 inline void packet_sink_impl::enter_have_header(int payload_len)
 {
     if (VERBOSE)
-        GR_LOG_INFO(
-            d_debug_logger, 
-            boost::format("INFO enter_have_header (payload_len = %d)\n")
-            % payload_len
-        );
+        GR_LOG_INFO(d_debug_logger,
+                    boost::format("INFO enter_have_header (payload_len = %d)\n") %
+                        payload_len);
     d_state = STATE_HAVE_HEADER;
     d_packetlen = payload_len;
     d_packetlen_cnt = 0;
@@ -129,11 +127,9 @@ int packet_sink_impl::work(int noutput_items,
         case STATE_HAVE_SYNC:
             if (VERBOSE)
                 GR_LOG_INFO(
-                    d_debug_logger, 
-                    boost::format("INFO Header Search bitcnt=%d, header=0x%08x\n")
-                    % d_headerbitlen_cnt
-                    % d_header
-                );
+                    d_debug_logger,
+                    boost::format("INFO Header Search bitcnt=%d, header=0x%08x\n") %
+                        d_headerbitlen_cnt % d_header);
 
             while (count < noutput_items) { // Shift bits one at a time into header
                 if (slice(inbuf[count++]))
@@ -143,7 +139,9 @@ int packet_sink_impl::work(int noutput_items,
 
                 if (++d_headerbitlen_cnt == HEADERBITLEN) {
                     if (VERBOSE)
-                        GR_LOG_INFO(d_debug_logger, boost::format("INFO got header: 0x%08x\n")% d_header);
+                        GR_LOG_INFO(d_debug_logger,
+                                    boost::format("INFO got header: 0x%08x\n") %
+                                        d_header);
 
                     // we have a full header, check to see if it has been received
                     // properly

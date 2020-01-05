@@ -9,8 +9,8 @@
 
 #include "thrift/gnuradio_types.h"
 #include <gnuradio/gr_complex.h>
-#include <gnuradio/rpcpmtconverters_thrift.h>
 #include <gnuradio/logger.h>
+#include <gnuradio/rpcpmtconverters_thrift.h>
 #include <boost/assign/ptr_map_inserter.hpp>
 #include <iostream>
 

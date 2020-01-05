@@ -46,7 +46,8 @@ static void werror(char* where, DWORD last_error)
                   buf,
                   sizeof(buf) / sizeof(TCHAR), // buffer size
                   NULL);
-    GR_LOG_ERROR(debug_logger, boost::format("ERROR %s: Error %d: %s" % where % last_error % buf));
+    GR_LOG_ERROR(debug_logger,
+                 boost::format("ERROR %s: Error %d: %s" % where % last_error % buf));
     return;
 }
 #endif
@@ -56,7 +57,8 @@ vmcircbuf_createfilemapping::vmcircbuf_createfilemapping(int size) : gr::vmcircb
 {
 #if !defined(HAVE_CREATEFILEMAPPING)
     std::stringstream error_msg;
-    error_msg << "ERROR " << __FUNCTION__ << ": createfilemapping is not available" << std::endl;
+    error_msg << "ERROR " << __FUNCTION__ << ": createfilemapping is not available"
+              << std::endl;
     GR_LOG_ERROR(d_debug_logger, error_msg.str());
     throw std::runtime_error("gr::vmcircbuf_createfilemapping");
 #else

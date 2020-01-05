@@ -44,11 +44,9 @@ inline void framer_sink_1_impl::enter_have_header(int payload_len, int whitener_
 {
     if (VERBOSE)
         GR_LOG_INFO(
-            d_debug_logger, 
-            boost::format("INFO enter_have_header (payload_len = %d) (offset = %d)\n")
-            % payload_len
-            % whitener_offset
-        );
+            d_debug_logger,
+            boost::format("INFO enter_have_header (payload_len = %d) (offset = %d)\n") %
+                payload_len % whitener_offset);
 
     d_state = STATE_HAVE_HEADER;
     d_packetlen = payload_len;
@@ -103,18 +101,18 @@ int framer_sink_1_impl::work(int noutput_items,
         case STATE_HAVE_SYNC:
             if (VERBOSE)
                 GR_LOG_INFO(
-                    d_debug_logger, 
-                    boost::format("INFO Header Search bitcnt=%d, header=0x%08x\n")
-                    % d_headerbitlen_cnt
-                    % d_header
-                );
+                    d_debug_logger,
+                    boost::format("INFO Header Search bitcnt=%d, header=0x%08x\n") %
+                        d_headerbitlen_cnt % d_header);
 
             while (count < noutput_items) { // Shift bits one at a time into header
                 d_header = (d_header << 1) | (in[count++] & 0x1);
                 if (++d_headerbitlen_cnt == HEADERBITLEN) {
 
                     if (VERBOSE)
-                        GR_LOG_INFO(d_debug_logger, boost::format("INFO got header: 0x%08x\n")% d_header);
+                        GR_LOG_INFO(d_debug_logger,
+                                    boost::format("INFO got header: 0x%08x\n") %
+                                        d_header);
 
                     // we have a full header, check to see if it has been received
                     // properly

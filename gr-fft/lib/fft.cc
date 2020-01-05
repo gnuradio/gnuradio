@@ -108,10 +108,12 @@ static void import_wisdom()
     if (fp != 0) {
         int r = fftwf_import_wisdom_from_file(fp);
         fclose(fp);
-        if (!r){
+        if (!r) {
             gr::logger_ptr logger, debug_logger;
             gr::configure_default_loggers(logger, debug_logger, "fft::import_wisdom");
-            GR_LOG_ERROR(debug_logger, boost::format("can't import wisdom from %s\n") % filename.c_str());
+            GR_LOG_ERROR(debug_logger,
+                         boost::format("can't import wisdom from %s\n") %
+                             filename.c_str());
         }
     }
 }
@@ -140,10 +142,9 @@ static void export_wisdom()
     } else {
         gr::logger_ptr logger, debug_logger;
         gr::configure_default_loggers(logger, debug_logger, "fft::export_wisdom");
-        GR_LOG_ERROR(
-            debug_logger, 
-            boost::format("ERROR fft_impl_fftw %s: %s\n") % filename.c_str() % strerror(errno)
-        );
+        GR_LOG_ERROR(debug_logger,
+                     boost::format("ERROR fft_impl_fftw %s: %s\n") % filename.c_str() %
+                         strerror(errno));
     }
 }
 
@@ -174,8 +175,8 @@ fft_complex::fft_complex(int fft_size, bool forward, int nthreads)
                                FFTW_MEASURE);
 
     if (d_plan == NULL) {
-       GR_LOG_ERROR(d_debug_logger, "ERROR error creating plan\n");
-       throw std::runtime_error("fftwf_plan_dft_1d failed");
+        GR_LOG_ERROR(d_debug_logger, "ERROR error creating plan\n");
+        throw std::runtime_error("fftwf_plan_dft_1d failed");
     }
     export_wisdom(); // store new wisdom to disk
     unlock_wisdom();

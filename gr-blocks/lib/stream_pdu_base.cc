@@ -102,8 +102,10 @@ void stream_pdu_base::send(pmt::pmt_t msg)
         gr::logger_ptr logger, debug_logger;
         gr::configure_default_loggers(logger, debug_logger, "stream_pdu_base");
         std::ostringstream msg;
-        msg << boost::format("WARNING stream_pdu_base::send(pdu) write failed! (d_fd=%d, len=%d, rv=%d)") 
-            %d_fd % len % rv << std::endl;
+        msg << boost::format("WARNING stream_pdu_base::send(pdu) write failed! (d_fd=%d, "
+                             "len=%d, rv=%d)") %
+                   d_fd % len % rv
+            << std::endl;
         GR_LOG_WARN(debug_logger, msg.str());
     }
 }

@@ -12,10 +12,10 @@
 #define INCLUDED_GR_RUNTIME_BUFFER_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/tags.h>
 #include <gnuradio/thread/thread.h>
-#include <gnuradio/logger.h>
 #include <boost/weak_ptr.hpp>
 #include <map>
 #include <memory>

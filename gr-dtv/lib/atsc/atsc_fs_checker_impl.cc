@@ -89,8 +89,7 @@ int atsc_fs_checker_impl::general_work(int noutput_items,
             } else {
                 // should be extremely rare.
                 std::ostringstream msg;
-                msg << "!!! atsc_fs_checker: PN63 error count = " << errors
-                          << std::endl;
+                msg << "!!! atsc_fs_checker: PN63 error count = " << errors << std::endl;
                 GR_LOG_ERROR(d_debug_logger, msg.str());
             }
         }

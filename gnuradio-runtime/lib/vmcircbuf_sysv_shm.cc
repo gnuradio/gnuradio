@@ -35,7 +35,8 @@ namespace gr {
 vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size) : gr::vmcircbuf(size)
 {
 #if !defined(HAVE_SYS_SHM_H)
-    GR_LOG_ERROR(d_debug_logger, "ERROR gr::vmcircbuf_sysv_shm: sysv shared memory is not available\n");
+    GR_LOG_ERROR(d_debug_logger,
+                 "ERROR gr::vmcircbuf_sysv_shm: sysv shared memory is not available\n");
     throw std::runtime_error("gr::vmcircbuf_sysv_shm");
 #else
 
@@ -44,7 +45,9 @@ vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size) : gr::vmcircbuf(size)
     int pagesize = gr::pagesize();
 
     if (size <= 0 || (size % pagesize) != 0) {
-        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR gr::vmcircbuf_sysv_shm: invalid size = %d\n") % size);
+        GR_LOG_ERROR(d_debug_logger,
+                     boost::format("ERROR gr::vmcircbuf_sysv_shm: invalid size = %d\n") %
+                         size);
         throw std::runtime_error("gr::vmcircbuf_sysv_shm");
     }
 
@@ -60,19 +63,25 @@ vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size) : gr::vmcircbuf(size)
         // buffer. Ideally we'd map it no access, but I don't think that's possible with
         // SysV
         if ((shmid_guard = shmget(IPC_PRIVATE, pagesize, IPC_CREAT | 0400)) == -1) {
-            GR_LOG_ERROR(d_debug_logger, boost::format("ERROR gr::vmcircbuf_sysv_shm: shmget (0): %s\n") % strerror(errno));
+            GR_LOG_ERROR(d_debug_logger,
+                         boost::format("ERROR gr::vmcircbuf_sysv_shm: shmget (0): %s\n") %
+                             strerror(errno));
             continue;
         }
 
         if ((shmid2 = shmget(IPC_PRIVATE, 2 * size + 2 * pagesize, IPC_CREAT | 0700)) ==
             -1) {
-            GR_LOG_ERROR(d_debug_logger, boost::format("ERROR gr::vmcircbuf_sysv_shm: shmget (1): %s\n") % strerror(errno));
+            GR_LOG_ERROR(d_debug_logger,
+                         boost::format("ERROR gr::vmcircbuf_sysv_shm: shmget (1): %s\n") %
+                             strerror(errno));
             shmctl(shmid_guard, IPC_RMID, 0);
             continue;
         }
 
         if ((shmid1 = shmget(IPC_PRIVATE, size, IPC_CREAT | 0700)) == -1) {
-            GR_LOG_ERROR(d_debug_logger, boost::format("ERROR gr::vmcircbuf_sysv_shm: shmget (2): %s\n") % strerror(errno));
+            GR_LOG_ERROR(d_debug_logger,
+                         boost::format("ERROR gr::vmcircbuf_sysv_shm: shmget (2): %s\n") %
+                             strerror(errno));
             shmctl(shmid_guard, IPC_RMID, 0);
             shmctl(shmid2, IPC_RMID, 0);
             continue;
@@ -80,7 +89,9 @@ vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size) : gr::vmcircbuf(size)
 
         void* first_copy = shmat(shmid2, 0, 0);
         if (first_copy == (void*)-1) {
-            GR_LOG_ERROR(d_debug_logger, boost::format("ERROR gr::vmcircbuf_sysv_shm: shmat (1): %s\n") % strerror(errno));
+            GR_LOG_ERROR(d_debug_logger,
+                         boost::format("ERROR gr::vmcircbuf_sysv_shm: shmat (1): %s\n") %
+                             strerror(errno));
             shmctl(shmid_guard, IPC_RMID, 0);
             shmctl(shmid2, IPC_RMID, 0);
             shmctl(shmid1, IPC_RMID, 0);
@@ -100,7 +111,9 @@ vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size) : gr::vmcircbuf(size)
 
         // first read-only guard page
         if (shmat(shmid_guard, first_copy, SHM_RDONLY) == (void*)-1) {
-            GR_LOG_ERROR(d_debug_logger, boost::format("ERROR gr::vmcircbuf_sysv_shm: shmat (2): %s\n") % strerror(errno));
+            GR_LOG_ERROR(d_debug_logger,
+                         boost::format("ERROR gr::vmcircbuf_sysv_shm: shmat (2): %s\n") %
+                             strerror(errno));
             shmctl(shmid_guard, IPC_RMID, 0);
             shmctl(shmid1, IPC_RMID, 0);
             continue;
@@ -108,7 +121,9 @@ vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size) : gr::vmcircbuf(size)
 
         // first copy
         if (shmat(shmid1, (char*)first_copy + pagesize, 0) == (void*)-1) {
-            GR_LOG_ERROR(d_debug_logger, boost::format("ERROR gr::vmcircbuf_sysv_shm: shmat (3): %s\n") % strerror(errno));
+            GR_LOG_ERROR(d_debug_logger,
+                         boost::format("ERROR gr::vmcircbuf_sysv_shm: shmat (3): %s\n") %
+                             strerror(errno));
             shmctl(shmid_guard, IPC_RMID, 0);
             shmctl(shmid1, IPC_RMID, 0);
             shmdt(first_copy);
@@ -117,7 +132,9 @@ vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size) : gr::vmcircbuf(size)
 
         // second copy
         if (shmat(shmid1, (char*)first_copy + pagesize + size, 0) == (void*)-1) {
-            GR_LOG_ERROR(d_debug_logger, boost::format("ERROR gr::vmcircbuf_sysv_shm: shmat (4): %s\n") % strerror(errno));
+            GR_LOG_ERROR(d_debug_logger,
+                         boost::format("ERROR gr::vmcircbuf_sysv_shm: shmat (4): %s\n") %
+                             strerror(errno));
             shmctl(shmid_guard, IPC_RMID, 0);
             shmctl(shmid1, IPC_RMID, 0);
             shmdt((char*)first_copy + pagesize);
@@ -127,7 +144,9 @@ vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size) : gr::vmcircbuf(size)
         // second read-only guard page
         if (shmat(shmid_guard, (char*)first_copy + pagesize + 2 * size, SHM_RDONLY) ==
             (void*)-1) {
-            GR_LOG_ERROR(d_debug_logger, boost::format("ERROR gr::vmcircbuf_sysv_shm: shmat (5): %s\n") % strerror(errno));
+            GR_LOG_ERROR(d_debug_logger,
+                         boost::format("ERROR gr::vmcircbuf_sysv_shm: shmat (5): %s\n") %
+                             strerror(errno));
             shmctl(shmid_guard, IPC_RMID, 0);
             shmctl(shmid1, IPC_RMID, 0);
             shmdt(first_copy);
@@ -157,7 +176,9 @@ vmcircbuf_sysv_shm::~vmcircbuf_sysv_shm()
 
     if (shmdt(d_base - gr::pagesize()) == -1 || shmdt(d_base) == -1 ||
         shmdt(d_base + d_size) == -1 || shmdt(d_base + 2 * d_size) == -1) {
-        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR gr::vmcircbuf_sysv_shm: shmdt (2): %s\n") % strerror(errno));
+        GR_LOG_ERROR(d_debug_logger,
+                     boost::format("ERROR gr::vmcircbuf_sysv_shm: shmdt (2): %s\n") %
+                         strerror(errno));
     }
 #endif
 }

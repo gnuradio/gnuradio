@@ -6,8 +6,8 @@
  * Usage : decode [-3|4|5] [-a|u|l] < infile > outfile
  */
 #include "g72x.h"
-#include <stdio.h>
 #include <gnuradio/logger.h>
+#include <stdio.h>
 
 /*
  * Unpack input codes and pass them back as bytes.
@@ -81,19 +81,17 @@ main(int argc, char** argv)
             out_size = sizeof(short);
             break;
         default:
-            GR_LOG_ERROR(
-                debug_logger,
-                boost::format("ERROR %s %s %s %s %s %s %s %s %s")
-                % "CCITT ADPCM Decoder -- usage:\n"
-                % "\tdecode [-3|4|5] [-a|u|l] < infile > outfile\n"
-                % "where:\n"
-                % "\t-3\tProcess G.723 24kbps (3-bit) input data\n"
-                % "\t-4\tProcess G.721 32kbps (4-bit) input data [default]\n"
-                % "\t-5\tProcess G.723 40kbps (5-bit) input data\n"
-                % "\t-a\tGenerate 8-bit A-law data\n"
-                % "\t-u\tGenerate 8-bit u-law data [default]\n"
-                % "\t-l\tGenerate 16-bit linear PCM data\n"
-            )
+            GR_LOG_ERROR(debug_logger,
+                         boost::format("ERROR %s %s %s %s %s %s %s %s %s") %
+                             "CCITT ADPCM Decoder -- usage:\n" %
+                             "\tdecode [-3|4|5] [-a|u|l] < infile > outfile\n" %
+                             "where:\n" %
+                             "\t-3\tProcess G.723 24kbps (3-bit) input data\n" %
+                             "\t-4\tProcess G.721 32kbps (4-bit) input data [default]\n" %
+                             "\t-5\tProcess G.723 40kbps (5-bit) input data\n" %
+                             "\t-a\tGenerate 8-bit A-law data\n" %
+                             "\t-u\tGenerate 8-bit u-law data [default]\n" %
+                             "\t-l\tGenerate 16-bit linear PCM data\n")
             exit(1);
         }
         argc--;

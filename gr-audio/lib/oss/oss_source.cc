@@ -52,7 +52,8 @@ oss_source::oss_source(int sampling_rate, const std::string device_name, bool ok
       d_chunk_size(0)
 {
     if ((d_fd = open(d_device_name.c_str(), O_RDONLY)) < 0) {
-        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s: %s") % d_device_name % strerror(errno));
+        GR_LOG_ERROR(d_debug_logger,
+                     boost::format("ERROR %s: %s") % d_device_name % strerror(errno));
         throw std::runtime_error("audio_oss_source");
     }
 
@@ -67,29 +68,35 @@ oss_source::oss_source(int sampling_rate, const std::string device_name, bool ok
     int format = AFMT_S16_NE;
     int orig_format = format;
     if (ioctl(d_fd, SNDCTL_DSP_SETFMT, &format) < 0) {
-        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s ioctl failed %s\n") % d_device_name % strerror(errno));
+        GR_LOG_ERROR(d_debug_logger,
+                     boost::format("ERROR %s ioctl failed %s\n") % d_device_name %
+                         strerror(errno));
         throw std::runtime_error("audio_oss_source");
     }
 
     if (format != orig_format) {
         GR_LOG_ERROR(
             d_debug_logger,
-            boost::format("ERROR %s unable to support format %d. card requested %d instead.\n") 
-            % orig_format % format
-        );
+            boost::format(
+                "ERROR %s unable to support format %d. card requested %d instead.\n") %
+                orig_format % format);
     }
 
     // set to stereo no matter what.  Some hardware only does stereo
     int channels = 2;
     if (ioctl(d_fd, SNDCTL_DSP_CHANNELS, &channels) < 0 || channels != 2) {
-        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR could not set STEREO mode: %s\n") % strerror(errno));
+        GR_LOG_ERROR(d_debug_logger,
+                     boost::format("ERROR could not set STEREO mode: %s\n") %
+                         strerror(errno));
         throw std::runtime_error("audio_oss_source");
     }
 
     // set sampling freq
     int sf = sampling_rate;
     if (ioctl(d_fd, SNDCTL_DSP_SPEED, &sf) < 0) {
-        GR_LOG_ERROR(d_debug_logger, boost::format("ERROR %s: invalid sampling_rate %d\n") % d_device_name % sampling_rate);
+        GR_LOG_ERROR(d_debug_logger,
+                     boost::format("ERROR %s: invalid sampling_rate %d\n") %
+                         d_device_name % sampling_rate);
         sampling_rate = 8000;
         if (ioctl(d_fd, SNDCTL_DSP_SPEED, &sf) < 0) {
             GR_LOG_ERROR(d_debug_logger, "failed to set sampling_rate to 8000\n");
@@ -127,7 +134,8 @@ int oss_source::work(int noutput_items,
         int result_nbytes = read(d_fd, d_buffer, nbytes);
 
         if (result_nbytes < 0) {
-            GR_LOG_ERROR(d_debug_logger, boost::format("audio_oss_source: %s\n") % strerror(errno));
+            GR_LOG_ERROR(d_debug_logger,
+                         boost::format("audio_oss_source: %s\n") % strerror(errno));
             return -1; // say we're done
         }
 

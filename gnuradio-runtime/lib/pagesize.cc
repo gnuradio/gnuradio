@@ -37,11 +37,13 @@ int pagesize()
 #elif defined(HAVE_SYSCONF)
         s_pagesize = sysconf(_SC_PAGESIZE);
         if (s_pagesize == -1) {
-            GR_LOG_ERROR(debug_logger, boost::format("ERROR _SC_PAGESIZE: %s\n") % strerror(errno));
+            GR_LOG_ERROR(debug_logger,
+                         boost::format("ERROR _SC_PAGESIZE: %s\n") % strerror(errno));
             s_pagesize = 4096;
         }
 #else
-        GR_LOG_ERROR(debug_logger, boost::format("ERROR no info; setting pagesize = 4096\n"));
+        GR_LOG_ERROR(debug_logger,
+                     boost::format("ERROR no info; setting pagesize = 4096\n"));
         s_pagesize = 4096;
 #endif
     }
