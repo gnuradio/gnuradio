@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## UNRELESEASED
+
+### Changed
+#### Project Scope
+- COMPATIBILITY WARNING: Replaced non-threadsafe (s)rand with our own xoroshiro-based PRNG 
+
+#### gr-digital
+- COMPATIBILITY: Change of random OFDM pilots
+
+#### gr-trellis
+- COMPATIBILITY: random interleaver: PRNG change -> different interleaver
+
+### Added
+#### gnuradio-runtime
+- XOROSHIRO128+-based PRNG
+
 ## [3.7.13.5] - 2019-04-20
 
 ### Fixed

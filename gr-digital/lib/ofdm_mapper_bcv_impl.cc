@@ -60,7 +60,8 @@ ofdm_mapper_bcv_impl::ofdm_mapper_bcv_impl(const std::vector<gr_complex>& conste
       d_bit_offset(0),
       d_pending_flag(0),
       d_resid(0),
-      d_nresid(0)
+      d_nresid(0),
+      d_rnd_sym(gr::random(1765399812, 0, constellation.size()))
 {
     GR_LOG_WARN(d_logger, "The gr::digital::ofdm_mapper_bcv block has been deprecated.");
 
@@ -137,7 +138,7 @@ ofdm_mapper_bcv_impl::ofdm_mapper_bcv_impl(const std::vector<gr_complex>& conste
 
 ofdm_mapper_bcv_impl::~ofdm_mapper_bcv_impl() {}
 
-int ofdm_mapper_bcv_impl::randsym() { return (rand() % d_constellation.size()); }
+int ofdm_mapper_bcv_impl::randsym() { return (d_rnd_sym.ran_int()); }
 
 int ofdm_mapper_bcv_impl::work(int noutput_items,
                                gr_vector_const_void_star& input_items,
