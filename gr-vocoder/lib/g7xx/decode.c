@@ -6,8 +6,8 @@
  * Usage : decode [-3|4|5] [-a|u|l] < infile > outfile
  */
 #include "g72x.h"
-#include <gnuradio/logger.h>
 #include <stdio.h>
+
 
 /*
  * Unpack input codes and pass them back as bytes.
@@ -44,8 +44,6 @@ main(int argc, char** argv)
     int out_size;
     int (*dec_routine)();
     int dec_bits;
-    gr::logger_ptr logger, debug_logger;
-    gr::configure_default_loggers(logger, debug_logger, "g7xx decode");
 
     g72x_init_state(&state);
     out_coding = AUDIO_ENCODING_ULAW;
@@ -81,17 +79,15 @@ main(int argc, char** argv)
             out_size = sizeof(short);
             break;
         default:
-            GR_LOG_ERROR(debug_logger,
-                         boost::format("ERROR %s %s %s %s %s %s %s %s %s") %
-                             "CCITT ADPCM Decoder -- usage:\n" %
-                             "\tdecode [-3|4|5] [-a|u|l] < infile > outfile\n" %
-                             "where:\n" %
-                             "\t-3\tProcess G.723 24kbps (3-bit) input data\n" %
-                             "\t-4\tProcess G.721 32kbps (4-bit) input data [default]\n" %
-                             "\t-5\tProcess G.723 40kbps (5-bit) input data\n" %
-                             "\t-a\tGenerate 8-bit A-law data\n" %
-                             "\t-u\tGenerate 8-bit u-law data [default]\n" %
-                             "\t-l\tGenerate 16-bit linear PCM data\n")
+            fprintf(stderr, "CCITT ADPCM Decoder -- usage:\n");
+            fprintf(stderr, "\tdecode [-3|4|5] [-a|u|l] < infile > outfile\n");
+            fprintf(stderr, "where:\n");
+            fprintf(stderr, "\t-3\tProcess G.723 24kbps (3-bit) input data\n");
+            fprintf(stderr, "\t-4\tProcess G.721 32kbps (4-bit) input data [default]\n");
+            fprintf(stderr, "\t-5\tProcess G.723 40kbps (5-bit) input data\n");
+            fprintf(stderr, "\t-a\tGenerate 8-bit A-law data\n");
+            fprintf(stderr, "\t-u\tGenerate 8-bit u-law data [default]\n");
+            fprintf(stderr, "\t-l\tGenerate 16-bit linear PCM data\n");
             exit(1);
         }
         argc--;
