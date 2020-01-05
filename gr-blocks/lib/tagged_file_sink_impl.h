@@ -41,9 +41,10 @@ private:
     double d_sample_rate;
     uint64_t d_last_N;
     double d_timeval;
+    std::string d_filename;
 
 public:
-    tagged_file_sink_impl(size_t itemsize, double samp_rate);
+    tagged_file_sink_impl(size_t itemsize, double samp_rate, const char *filename);
     ~tagged_file_sink_impl();
 
     int work(int noutput_items,

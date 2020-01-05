@@ -32,6 +32,7 @@
 #include <sys/types.h>
 #include <iostream>
 #include <stdexcept>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #ifdef HAVE_IO_H
 #include <io.h>
@@ -53,18 +54,19 @@
 namespace gr {
 namespace blocks {
 
-tagged_file_sink::sptr tagged_file_sink::make(size_t itemsize, double samp_rate)
+tagged_file_sink::sptr tagged_file_sink::make(size_t itemsize, double samp_rate, const char *filename)
 {
-    return gnuradio::get_initial_sptr(new tagged_file_sink_impl(itemsize, samp_rate));
+    return gnuradio::get_initial_sptr(new tagged_file_sink_impl(itemsize, samp_rate, filename));
 }
 
-tagged_file_sink_impl::tagged_file_sink_impl(size_t itemsize, double samp_rate)
+tagged_file_sink_impl::tagged_file_sink_impl(size_t itemsize, double samp_rate, const char *filename)
     : sync_block("tagged_file_sink",
                  io_signature::make(1, 1, itemsize),
                  io_signature::make(0, 0, 0)),
       d_itemsize(itemsize),
       d_n(0),
-      d_sample_rate(samp_rate)
+      d_sample_rate(samp_rate),
+      d_filename(filename)
 {
     d_state = NOT_IN_BURST;
     d_last_N = 0;
@@ -155,8 +157,23 @@ int tagged_file_sink_impl::work(int noutput_items,
                     std::stringstream filename;
                     filename.setf(std::ios::fixed, std::ios::floatfield);
                     filename.precision(8);
-                    filename << "file" << unique_id() << "_" << d_n << "_" << d_timeval
-                             << ".dat";
+
+                    if ( d_filename.length() ) 
+                    {
+                        const boost::posix_time::time_facet *facet = 
+                        new boost::posix_time::time_facet(d_filename.c_str());
+
+                        const boost::posix_time::ptime now = 
+                        boost::posix_time::second_clock::local_time();
+                        
+                        filename.imbue(std::locale(std::locale::classic(), facet));
+                        filename << now << ".dat"; 
+                    }
+                    else
+                    {
+                        filename << "file" << unique_id() << "_" << d_n << "_" 
+                        << d_timeval << ".dat";   
+                    }
                     d_n++;
 
                     int fd;

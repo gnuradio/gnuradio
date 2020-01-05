@@ -38,7 +38,7 @@ class test_tag_file_sink(gr_unittest.TestCase):
         src = blocks.vector_source_i(src_data)
         trg = blocks.vector_source_s(trg_data)
         op  = blocks.burst_tagger(gr.sizeof_int)
-        snk = blocks.tagged_file_sink(gr.sizeof_int, 1)
+        snk = blocks.tagged_file_sink(gr.sizeof_int, 1, "")
         self.tb.connect(src, (op,0))
         self.tb.connect(trg, (op,1))
         self.tb.connect(op, snk)

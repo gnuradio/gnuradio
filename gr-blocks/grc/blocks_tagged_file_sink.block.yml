@@ -15,6 +15,10 @@ parameters:
     label: Sample Rate
     dtype: int
     default: samp_rate
+    id: filename
+    label: File Name
+    dtype: string
+    default: ""
 -   id: vlen
     label: Vec Length
     dtype: int
@@ -31,11 +35,11 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.tagged_file_sink(${type.size}*${vlen}, ${samp_rate})
+    make: blocks.tagged_file_sink(${type.size}*${vlen}, ${samp_rate}, ${filename})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/tagged_file_sink.h>']
     declarations: 'blocks::tagged_file_sink::sptr ${id};'
-    make: 'this->${id} = blocks::tagged_file_sink::make(${type.size}*${vlen}, ${samp_rate});'
+    make: 'this->${id} = blocks::tagged_file_sink::make(${type.size}*${vlen}, ${samp_rate}, ${filename});'
 
 file_format: 1

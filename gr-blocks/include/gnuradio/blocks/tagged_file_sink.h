@@ -57,8 +57,14 @@ public:
      * \param itemsize The item size of the input data stream.
      * \param samp_rate The sample rate used to determine the time
      *                  difference between bursts
+     * \param filename Ex: 'FileNameKeyword %%Y-%%m-%%d %%H:%%M:%%S.dat' 
+     *                 result as:
+     *                 'FileNameKeyword 2019-12-05 15:51:56.dat'.
+     *                 If empty: 'file17_0_262.34583333.dat' 
+     *                 (file, unique_id, no, timeval)
+     *                 See also, boost time Format Flags...
      */
-    static sptr make(size_t itemsize, double samp_rate);
+    static sptr make(size_t itemsize, double samp_rate, const char *filename );
 };
 
 } /* namespace blocks */
