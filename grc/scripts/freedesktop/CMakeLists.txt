@@ -61,7 +61,9 @@ if(UNIX AND HAVE_XDG_UTILS)
         DESTINATION ${GR_PKG_LIBEXEC_DIR}
         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
     )
-    install (
-        CODE "execute_process(COMMAND ${CMAKE_INSTALL_PREFIX}/${GR_PKG_LIBEXEC_DIR}/grc_setup_freedesktop install)" 
+    if(ENABLE_POSTINSTALL)
+        install (
+            CODE "execute_process(COMMAND ${CMAKE_INSTALL_PREFIX}/${GR_PKG_LIBEXEC_DIR}/grc_setup_freedesktop install)"
     )
+    endif(ENABLE_POSTINSTALL)
 endif(UNIX AND HAVE_XDG_UTILS)
