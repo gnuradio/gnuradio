@@ -1,122 +1,114 @@
 import sys
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QLabel, QGridLayout, QWidget, QTreeView, QAbstractItemView
-from PyQt5.QtCore import QSize, QDataStream, QVariant, Qt
-from PyQt5.QtGui import QStandardItem, QStandardItemModel
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 import six
 import time
 
-class MyQTreeView(QTreeView):
-    def __init__(self):
-        QTreeView.__init__(self)
+WINDOW_SIZE = 840, 600
+BLOCK_ENABLED_COLOR = '#F1ECFF'
 
+class Block(QGraphicsItem):
+    def __init__(self, x, y, label):
+        QGraphicsItem.__init__(self)
+        self.x = x
+        self.y = y
+        self.current_width = 300 # default shouldnt matter, it will change immedaitely after the first paint
+        self.label = label
+        self.setFlag(QGraphicsItem.ItemIsMovable)
+        
+    def paint(self, painter, option, widget):
+        # Set font
+        font = QFont('Helvetica', 10)
+        #font.setStretch(70) # makes it more condensed
+        font.setBold(True)
+        
+        # Figure out width of font so we can adjust rectangle width
+        fm = QFontMetrics(font)
+        self.current_width = fm.width(self.label) + 10 # adds some margin
+        
+        # Draw rectangle
+        painter.setPen(QPen(Qt.black,  1, Qt.SolidLine)) # line color
+        painter.setBrush(QColor(BLOCK_ENABLED_COLOR)) # solid color        
+        painter.drawRect(self.x, self.y, self.current_width, 150)
+        
+        # Draw block label text
+        painter.setFont(font)
+        painter.drawText(QRectF(self.x, self.y - 60, self.current_width, 150), Qt.AlignCenter, self.label)  # NOTE the 3rd/4th arg in  QRectF seems to set the bounding box of the text, so if there is ever any clipping, thats why
+   
+    def boundingRect(self): # required to have
+        return QRectF(self.x, self.y, self.current_width, 150) # same as the rectangle we draw
+
+    def mouseReleaseEvent(self, e):
+        super(Block, self).mouseReleaseEvent(e)
+
+    def mouseDoubleClickEvent(self, e):
+        print("DETECTED DOUBLE CLICK!")
+        super(Block, self).mouseDoubleClickEvent(e)      
+
+# Main Canvas
+class MyQGraphicsScene(QGraphicsScene):
+    def __init__(self, platform):
+        QGraphicsScene.__init__(self)
+        self.platform = platform
+        
     def dragEnterEvent(self, event):
-        print(event.QueryWhatsThis)
-        print(event.DragEnter)
-        print(event.WhatsThis)
-        print(event.WhatsThisClicked)
-
         if event.mimeData().hasUrls:
+            event.setDropAction(Qt.CopyAction)
             event.accept()
         else:
-            event.ignore()
-        print("dragEnterEvent")
-
-
+            event.ignore()    
 
     def dragMoveEvent(self, event):
-        print("dragMoveEvent")
         if event.mimeData().hasUrls:
-            event.setDropAction(QtCore.Qt.CopyAction)
+            event.setDropAction(Qt.CopyAction)
             event.accept()
         else:
             event.ignore()
-
-
-    def dropEvent(self, event):
-        QTreeView.dropEvent(self, event)
-        if event.mimeData().hasUrls:
-            event.setDropAction(QtCore.Qt.CopyAction)
-            event.accept()
-            # to get a list of files:
-            drop_list = []
-            for url in event.mimeData().urls():
-                drop_list.append(str(url.toLocalFile()))
-            # handle the list here
-        else:
-            event.ignore()
-
-
-
-
-
-
-
-class BlockModel(QStandardItemModel):
-    def __init__(self):
-        QStandardItemModel.__init__(self)
-
+            
     def decode_data(self, bytearray):
-
         data = []
         item = {}
-
         ds = QDataStream(bytearray)
         while not ds.atEnd():
-
             row = ds.readInt32()
             column = ds.readInt32()
-
             map_items = ds.readInt32()
             for i in range(map_items):
-
                 key = ds.readInt32()
-
                 value = QVariant()
                 ds >> value
                 item[Qt.ItemDataRole(key)] = value
-
             data.append(item)
-
         return data
+                    
+    def dropEvent(self, event):
+        QGraphicsScene.dropEvent(self, event)
+        if event.mimeData().hasUrls:
+            data = event.mimeData()
+            if data.hasFormat('application/x-qabstractitemmodeldatalist'):
+                bytearray = data.data('application/x-qabstractitemmodeldatalist')
+                data_items = self.decode_data(bytearray)
 
-    def itemData(self, x):
-        return {0: x.data()}
-
-    def dropMimeData(self, data, action, row, column, parent):
-        print(row, column)
-        if data.hasFormat('application/x-qabstractitemmodeldatalist'):
-            bytearray = data.data('application/x-qabstractitemmodeldatalist')
-
-            data_items = self.decode_data(bytearray)
-
-            # Assuming that we get at least one item, and that it defines text that we can display.
-            text = data_items[0][Qt.DisplayRole]
-            print(text.value())
-
-            return True
+                # Pull out label text and use it to find block's key
+                label_text = data_items[0][Qt.DisplayRole].value() # Assuming that we get at least one item, and that it defines text that we can display.
+                # Pretty inefficient way of doing it, but on Marc's computer it takes less than 1ms, and we can always improve it later
+                for block in six.itervalues(self.platform.blocks):
+                    if block.label == label_text:
+                        break
+                print("Creating", block.key)
+            
+                # Add block of this key at the cursor position
+                cursor_pos = event.scenePos()
+                new_block = Block(cursor_pos.x(), cursor_pos.y(), label_text)
+                self.addItem(new_block)
+                
+                event.setDropAction(Qt.CopyAction)
+                event.accept()
+            else:
+                return QStandardItemModel.dropMimeData(self, data, action, row, column, parent)
         else:
-            return QStandardItemModel.dropMimeData(self, data, action, row, column, parent)
-
-'''
-            for row in range(self.rowCount()):
-                name = self.item(row, 0).text()
-
-                print(name)
-
-
-                if name == text:
-                    number_item = self.item(row, 1)
-                    print(number_item)
-                    number = int(number_item.text())
-                    print(number)
-                    number_item.setText(str(number + 1))
-                    break
-                #else:
-                #    name_item = QStandardItem(text)
-                #    number_item = QStandardItem("1")
-                #    self.appendRow([name_item, number_item])
-'''
+            event.ignore()
 
 
 class MyWindow(QMainWindow):
@@ -130,23 +122,82 @@ class MyWindow(QMainWindow):
 
         centralWidget = QWidget()
         self.setCentralWidget(centralWidget)
+        
+        # Set up layout
+        gridLayout = QGridLayout(centralWidget)
+        centralWidget.setLayout(gridLayout)
 
+        # Set up menu bar
+        menubar = self.menuBar()
+        fileMenu = menubar.addMenu('&File')
+        editMenu = menubar.addMenu('&Edit')
+        viewMenu = menubar.addMenu('&View')
+        runMenu = menubar.addMenu('&Run')
+        toolsMenu = menubar.addMenu('&Tools')
+        helpMenu = menubar.addMenu('&Help')
+
+        # Set up toolbar
+        # Is the following line really necessary?
+        QIcon.setThemeName("default")
+        newAct = QAction(QIcon.fromTheme('document-new'), 'New', self)
+        toolbar = self.addToolBar('New')
+        toolbar.addAction(newAct)
+        openAct = QAction(QIcon.fromTheme('document-open'), 'Open', self)
+        toolbar = self.addToolBar('Open')
+        toolbar.addAction(openAct)
+        saveAct = QAction(QIcon.fromTheme('document-save'), 'Save', self)
+        toolbar = self.addToolBar('Save')
+        toolbar.addAction(saveAct)
+        closeAct = QAction(QIcon.fromTheme('call-stop'), 'Close', self)
+        toolbar = self.addToolBar('Close')
+        toolbar.addAction(closeAct)
+        printAct = QAction(QIcon.fromTheme('document-print'), 'Print', self)
+        toolbar = self.addToolBar('Print')
+        toolbar.addAction(printAct)
+        cutAct = QAction(QIcon.fromTheme('edit-cut'), 'Cut', self)
+        toolbar = self.addToolBar('Cut')
+        toolbar.addAction(cutAct)
+        copyAct = QAction(QIcon.fromTheme('edit-copy'), 'Copy', self)
+        toolbar = self.addToolBar('Copy')
+        toolbar.addAction(copyAct)
+        pasteAct = QAction(QIcon.fromTheme('edit-paste'), 'Paste', self)
+        toolbar = self.addToolBar('Paste')
+        toolbar.addAction(pasteAct)
+        undoAct = QAction(QIcon.fromTheme('edit-undo'), 'Undo', self)
+        toolbar = self.addToolBar('Undo')
+        toolbar.addAction(undoAct)
+        redoAct = QAction(QIcon.fromTheme('edit-redo'), 'Redo', self)
+        toolbar = self.addToolBar('Redo')
+        toolbar.addAction(redoAct)
+        
         # Create QStandardItemModel to represent blocks that will show up in the TreeView
-        block_model = BlockModel() #QStandardItemModel()
+        block_model = QStandardItemModel()
 
         # TreeView
-        self.tree = MyQTreeView() # MIGHT NEED A self IN THE ARG, I SEE IT EVERYWHERE ELSE BUT NOT SURE WHAT IT DOES
+        self.tree = QTreeView(self)
         self.tree.setModel(block_model)
         self.tree.setHeaderHidden(True)
         self.tree.setDragEnabled(True) # needed to be able to click and hold on one of the rows
-        self.tree.setDragDropMode(QAbstractItemView.DragDrop) # definitely needed, options are NoDragDrop, DragOnly, DropOnly, DragDrop, InternalMove
-        #self.tree.setEnabled(True)
+        self.tree.setDragDropMode(QAbstractItemView.DragOnly)
+        gridLayout.addWidget(self.tree, 0, 1)
+        
+        # Main Canvas
+        self.view = QGraphicsView()
+        self.scene = MyQGraphicsScene(self.platform)
+        self.scene.acceptDrops = True
+        self.scene.setSceneRect(QRectF(0, 0, *WINDOW_SIZE))
+ 
+        #felt = QBrush(QPixmap(os.path.join('images','felt.png')))
+        #self.scene.setBackgroundBrush(felt)
 
-        gridLayout = QGridLayout(centralWidget)
-        centralWidget.setLayout(gridLayout)
-        gridLayout.addWidget(self.tree, 0, 0)
+        #name = QGraphicsPixmapItem()
+        #name.setPixmap(QPixmap(os.path.join('images','ronery.png')))
+        #name.setPos(QPointF(170, 375))
+        #self.scene.addItem(name)
 
-
+        self.view.setScene(self.scene)
+        gridLayout.addWidget(self.view, 0, 0)        
+        
         # Create tree/dict structure out of list of blocks. Takes ~1 ms on Marc's machine
         block_tree = {}
         for block in six.itervalues(self.platform.blocks):
@@ -178,13 +229,8 @@ class MyWindow(QMainWindow):
                 else:
                     print("ERROR, SHOULD NOT HAVE THIS MANY CATEGORIES!")
 
-
         # Populate TreeView using recursive method. Takes ~1.5 ms on Marc's machine
         self._populateTree(block_tree, block_model.invisibleRootItem())
-
-
-
-
 
     # Recursive method of populating the tree
     def _populateTree(self, children, parent):
@@ -192,10 +238,10 @@ class MyWindow(QMainWindow):
             child_item = QStandardItem(child)
             child_item.setEditable(False)
             child_item.setDragEnabled(True)
-            child_item.setDropEnabled(True)
-            #child_item.setEnabled(True)
             parent.appendRow(child_item)
             if bool(children): # if dict is not empty it will return True
+                parent.setDragEnabled(False) # categories should not be draggable
                 self._populateTree(children[child], child_item)
+                
 
 
