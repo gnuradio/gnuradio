@@ -17,7 +17,8 @@
 #include "alsa_sink.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <stdio.h>
+#include <future>
+#include <cstdio>
 #include <iostream>
 #include <stdexcept>
 
@@ -473,11 +474,9 @@ bool alsa_sink::write_buffer(const void* vbuffer, unsigned nframes, unsigned siz
             if (d_ok_to_block == true)
                 continue; // try again
             break;
-        }
-
-        else if (r == -EPIPE) { // underrun
+        } else if (r == -EPIPE) { // underrun
             d_nunderuns++;
-            fputs("aU", stderr);
+            std::async(::fputs, "aU", stderr);
             if ((r = snd_pcm_prepare(d_pcm_handle)) < 0) {
                 output_error_msg("snd_pcm_prepare failed. Can't recover from underrun",
                                  r);
