@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(rotator_cc.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(e127d40b39a00e6725b5f7214ef0e6d2)                     */
+/* BINDTOOL_HEADER_FILE_HASH(a8a69ee8f26e479fef8ba11414826da8)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -39,7 +39,10 @@ void bind_rotator_cc(py::module& m)
                gr::basic_block,
                std::shared_ptr<rotator_cc>>(m, "rotator_cc", D(rotator_cc))
 
-        .def(py::init(&rotator_cc::make), py::arg("phase_inc") = 0., D(rotator_cc, make))
+        .def(py::init(&rotator_cc::make),
+             py::arg("phase_inc") = 0.,
+             py::arg("tag_inc_updates") = false,
+             D(rotator_cc, make))
 
 
         .def("set_phase_inc",
