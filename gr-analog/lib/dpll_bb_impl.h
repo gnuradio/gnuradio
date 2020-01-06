@@ -23,8 +23,6 @@ private:
     unsigned char d_restart;
     float d_pulse_phase, d_pulse_frequency;
     float d_gain, d_decision_threshold;
-    gr::logger_ptr d_logger;
-    gr::logger_ptr d_debug_logger;
 
 public:
     dpll_bb_impl(float period, float gain);

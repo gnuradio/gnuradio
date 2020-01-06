@@ -65,12 +65,10 @@ tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU, bool istunflag)
     int err = set_mtu(dev_cstr, MTU);
     if (err < 0) {
         std::ostringstream msg;
-        msg << boost::format("ERROR tuntap_pdu: failed to set MTU to %d.\n"
-                             "You should use ifconfig to set the MTU. E.g.,\n"
-                             "  $ sudo ifconfig %s mtu %d\n") %
+        msg << boost::format("failed to set MTU to %d. You should use ifconfig to set "
+                             "the MTU. E.g., `$ sudo ifconfig %s mtu %d`") %
                    MTU % dev % MTU;
-        msg << std::endl;
-        GR_LOG_ERROR(d_debug_logger, msg.str());
+        GR_LOG_ERROR(d_logger, msg.str());
     }
 
 

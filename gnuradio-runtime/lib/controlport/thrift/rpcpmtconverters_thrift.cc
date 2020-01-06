@@ -110,6 +110,7 @@ GNURadio::Knob rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
         result.value.__set_a_c32vector(z);
         return result;
     } else {
+        // FIXME: Don't get loggers every time we need to log something.
         gr::logger_ptr logger, debug_logger;
         gr::configure_default_loggers(logger, debug_logger, "rpcpmtconverter");
         std::ostringstream msg;
@@ -254,6 +255,7 @@ rpcpmtconverter::to_pmt_reg<TO_PMT_F>::to_pmt_reg(To_PMT& instance,
 
 pmt::pmt_t rpcpmtconverter::to_pmt_f::operator()(const GNURadio::Knob& knob)
 {
+    // FIXME: Don't get loggers every time we need to log something.
     gr::logger_ptr logger, debug_logger;
     gr::configure_default_loggers(logger, debug_logger, "rpcpmtconverter");
     std::ostringstream msg;

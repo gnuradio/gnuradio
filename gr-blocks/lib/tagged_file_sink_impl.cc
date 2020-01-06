@@ -153,8 +153,8 @@ int tagged_file_sink_impl::work(int noutput_items,
                                      O_WRONLY | O_CREAT | O_TRUNC | OUR_O_LARGEFILE |
                                          OUR_O_BINARY,
                                      0664)) < 0) {
-                        GR_LOG_ERROR(d_debug_logger,
-                                     boost::format("ERROR %s: %s") % filename.str() %
+                        GR_LOG_ERROR(d_logger,
+                                     boost::format("::open %s: %s") % filename.str() %
                                          strerror(errno));
                         return -1;
                     }
@@ -162,8 +162,8 @@ int tagged_file_sink_impl::work(int noutput_items,
                     // FIXME:
                     // if((d_handle = fdopen (fd, d_is_binary ? "wb" : "w")) == NULL) {
                     if ((d_handle = fdopen(fd, "wb")) == NULL) {
-                        GR_LOG_ERROR(d_debug_logger,
-                                     boost::format("ERROR %s: %s") % filename.str() %
+                        GR_LOG_ERROR(d_logger,
+                                     boost::format("fdopen %s: %s") % filename.str() %
                                          strerror(errno));
                         ::close(fd); // don't leak file descriptor if fdopen fails.
                     }
@@ -191,8 +191,8 @@ int tagged_file_sink_impl::work(int noutput_items,
                         &inbuf[d_itemsize * idx], d_itemsize, idx_stop - idx, d_handle);
                     if (count == 0) {
                         if (ferror(d_handle)) {
-                            GR_LOG_ERROR(d_debug_logger,
-                                         boost::format("ERROR writing file: %s") %
+                            GR_LOG_ERROR(d_logger,
+                                         boost::format("writing file(1): %s") %
                                              strerror(errno));
                         }
                     }
@@ -210,8 +210,8 @@ int tagged_file_sink_impl::work(int noutput_items,
                     &inbuf[d_itemsize * idx], d_itemsize, noutput_items - idx, d_handle);
                 if (count == 0) {
                     if (ferror(d_handle)) {
-                        GR_LOG_ERROR(d_debug_logger,
-                                     boost::format("ERROR writing file: %s") %
+                        GR_LOG_ERROR(d_logger,
+                                     boost::format("writing file(2): %s") %
                                          strerror(errno));
                     }
                 }

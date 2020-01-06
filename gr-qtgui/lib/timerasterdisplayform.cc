@@ -26,11 +26,9 @@ TimeRasterDisplayForm::TimeRasterDisplayForm(
     gr::configure_default_loggers(logger, debug_logger, "fft_filter_ccf");
     std::ostringstream msg;
     msg << "Warning: QWT5 has been found which has serious performance issues with "
-           "raster plots."
-        << std::endl
-        << "         Consider updating to QWT version 6 to use the time raster GUIs."
-        << std::endl;
-    GR_LOG_ERROR(debug_logger, msg.str());
+           "raster plots. Consider updating to QWT version 6 to use the time raster "
+           "GUIs.";
+    GR_LOG_WARN(logger, msg.str());
 #endif
 
     d_layout = new QGridLayout(this);

@@ -33,8 +33,8 @@ local_sighandler::local_sighandler(int signum, void (*new_handler)(int))
 
     gr::configure_default_loggers(d_logger, d_debug_logger, "local_sighandler");
     if (sigaction(d_signum, &new_action, &d_old_action) < 0) {
-        GR_LOG_ERROR(d_debug_logger,
-                     boost::format("ERROR sigaction (install new): %s") % strerror(errno))
+        GR_LOG_ERROR(d_logger,
+                     boost::format("sigaction (install new): %s") % strerror(errno))
         throw std::runtime_error("sigaction");
     }
 #endif
@@ -44,8 +44,8 @@ local_sighandler::~local_sighandler() noexcept(false)
 {
 #ifdef HAVE_SIGACTION
     if (sigaction(d_signum, &d_old_action, 0) < 0) {
-        GR_LOG_ERROR(d_debug_logger,
-                     boost::format("ERROR sigaction (restore old): %s") % strerror(errno))
+        GR_LOG_ERROR(d_logger,
+                     boost::format("sigaction (restore old): %s") % strerror(errno))
         throw std::runtime_error("sigaction");
     }
 #endif

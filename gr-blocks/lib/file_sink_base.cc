@@ -47,6 +47,7 @@ file_sink_base::file_sink_base(const char* filename, bool is_binary, bool append
 {
     if (!open(filename))
         throw std::runtime_error("can't open file");
+    gr::configure_default_loggers(d_logger, d_debug_logger, "file_sink_base");
 }
 
 file_sink_base::~file_sink_base()
@@ -65,8 +66,6 @@ bool file_sink_base::open(const char* filename)
     // we use the open system call to get access to the O_LARGEFILE flag.
     int fd;
     int flags;
-    gr::logger_ptr logger, debug_logger;
-    gr::configure_default_loggers(logger, debug_logger, "pagesize");
 
     if (d_append) {
         flags = O_WRONLY | O_CREAT | O_APPEND | OUR_O_LARGEFILE | OUR_O_BINARY;
@@ -74,8 +73,7 @@ bool file_sink_base::open(const char* filename)
         flags = O_WRONLY | O_CREAT | O_TRUNC | OUR_O_LARGEFILE | OUR_O_BINARY;
     }
     if ((fd = ::open(filename, flags, 0664)) < 0) {
-        GR_LOG_ERROR(debug_logger,
-                     boost::format("ERROR %s: %s") % filename % strerror(errno));
+        GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
         return false;
     }
     if (d_new_fp) { // if we've already got a new one open, close it
@@ -84,8 +82,7 @@ bool file_sink_base::open(const char* filename)
     }
 
     if ((d_new_fp = fdopen(fd, d_is_binary ? "wb" : "w")) == NULL) {
-        GR_LOG_ERROR(debug_logger,
-                     boost::format("ERROR %s: %s") % filename % strerror(errno));
+        GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
         ::close(fd); // don't leak file descriptor if fdopen fails.
     }
 

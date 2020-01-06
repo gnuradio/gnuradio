@@ -78,9 +78,9 @@ sink_uc_impl::sink_uc_impl(double framerate,
     atexit(SDL_Quit); // check if this is the way to do this
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::ostringstream msg;
-        msg << "ERROR Couldn't initialize SDL:" << SDL_GetError()
-            << " \n SDL_Init(SDL_INIT_VIDEO) failed\n";
-        GR_LOG_ERROR(d_debug_logger, msg.str());
+        msg << "Couldn't initialize SDL:" << SDL_GetError()
+            << "; SDL_Init(SDL_INIT_VIDEO) failed";
+        GR_LOG_ERROR(d_logger, msg.str());
         throw std::runtime_error("video_sdl::sink_uc");
     }
 
@@ -94,9 +94,9 @@ sink_uc_impl::sink_uc_impl(double framerate,
 
     if (d_screen == NULL) {
         std::ostringstream msg;
-        msg << "ERROR Unable to set SDL video mode: " << SDL_GetError()
-            << "\n SDL_SetVideoMode() Failed \n";
-        GR_LOG_ERROR(d_debug_logger, msg.str());
+        msg << "Unable to set SDL video mode: " << SDL_GetError()
+            << "; SDL_SetVideoMode() Failed";
+        GR_LOG_ERROR(d_logger, msg.str());
         exit(1);
     }
 
@@ -108,13 +108,15 @@ sink_uc_impl::sink_uc_impl(double framerate,
     if (!(d_image =
               SDL_CreateYUVOverlay(d_width, d_height, SDL_YV12_OVERLAY, d_screen))) {
         std::ostringstream msg;
-        msg << "ERROR SDL: Couldn't create a YUV overlay: \n" << SDL_GetError() << "\n";
-        GR_LOG_ERROR(d_debug_logger, msg.str());
+        msg << "SDL: Couldn't create a YUV overlay: " << SDL_GetError();
+        GR_LOG_ERROR(d_logger, msg.str());
         throw std::runtime_error("video_sdl::sink_uc");
     }
 
-    printf("SDL screen_mode %d bits-per-pixel\n", d_screen->format->BitsPerPixel);
-    printf("SDL overlay_mode %i \n", d_image->format);
+    GR_LOG_INFO(d_debug_logger,
+                boost::format("SDL screen_mode %d bits-per-pixel") %
+                    d_screen->format->BitsPerPixel);
+    GR_LOG_INFO(d_debug_logger, boost::format("SDL overlay_mode %i ") % d_image->format);
 
     d_chunk_size = std::min(1, 16384 / width); // width*16;
     d_chunk_size = d_chunk_size * width;
@@ -130,8 +132,8 @@ sink_uc_impl::sink_uc_impl(double framerate,
 
     if (SDL_LockYUVOverlay(d_image)) {
         std::ostringstream msg;
-        msg << "ERROR SDL: Couldn't lock a YUV overlay: \n" << SDL_GetError() << "\n";
-        GR_LOG_ERROR(d_debug_logger, msg.str());
+        msg << "SDL: Couldn't lock a YUV overlay: " << SDL_GetError();
+        GR_LOG_ERROR(d_logger, msg.str());
         throw std::runtime_error("video_sdl::sink_uc");
     }
 
@@ -312,10 +314,10 @@ int sink_uc_impl::work(int noutput_items,
         break;
     default: // 0 or more then 3 channels
         std::ostringstream msg;
-        msg << "ERROR Wrong number of channels:";
-        msg << "1, 2 or 3 channels are supported.\n  Requested number of channels is "
-            << input_items.size() << "\n";
-        GR_LOG_ERROR(d_debug_logger, msg.str());
+        msg << "Wrong number of channels: 1, 2 or 3 channels are supported. Requested "
+               "number of channels is "
+            << input_items.size();
+        GR_LOG_ERROR(d_logger, msg.str());
         throw std::runtime_error("video_sdl::sink_uc");
     }
 

@@ -52,12 +52,12 @@ public:
             } catch (std::exception const& e) {
                 std::ostringstream msg;
                 msg << "ERROR thread[" << d_name << "]: " << e.what() << std::endl;
-                GR_LOG_ERROR(d_debug_logger, msg.str());
+                GR_LOG_ERROR(d_logger, msg.str());
             } catch (...) {
                 std::ostringstream msg;
                 msg << "ERROR thread[" << d_name << "]: "
                     << "caught unrecognized exception" << std::endl;
-                GR_LOG_ERROR(d_debug_logger, msg.str());
+                GR_LOG_ERROR(d_logger, msg.str());
             }
 
         } else {

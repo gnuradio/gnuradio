@@ -61,7 +61,7 @@ int vmcircbuf_prefs::get(const char* key, char* value, int value_size)
     gr::configure_default_loggers(logger, debug_logger, "vmcircbuf_prefs::get");
 
     if (fp == 0) {
-        GR_LOG_ERROR(debug_logger,
+        GR_LOG_ERROR(logger,
                      boost::format("%s: %s") % pathname(key).c_str() % strerror(errno));
         return 0;
     }
@@ -70,7 +70,7 @@ int vmcircbuf_prefs::get(const char* key, char* value, int value_size)
     value[ret] = '\0';
     if (ret == 0 && !feof(fp)) {
         if (ferror(fp) != 0) {
-            GR_LOG_ERROR(debug_logger,
+            GR_LOG_ERROR(logger,
                          boost::format("%s: %s") % pathname(key).c_str() %
                              strerror(errno));
             fclose(fp);
@@ -91,7 +91,7 @@ void vmcircbuf_prefs::set(const char* key, const char* value)
 
     FILE* fp = fopen(pathname(key).c_str(), "w");
     if (fp == 0) {
-        GR_LOG_ERROR(debug_logger,
+        GR_LOG_ERROR(logger,
                      boost::format("%s: %s") % pathname(key).c_str() % strerror(errno));
         return;
     }
@@ -99,7 +99,7 @@ void vmcircbuf_prefs::set(const char* key, const char* value)
     size_t ret = fwrite(value, 1, strlen(value), fp);
     if (ret == 0) {
         if (ferror(fp) != 0) {
-            GR_LOG_ERROR(debug_logger,
+            GR_LOG_ERROR(logger,
                          boost::format("%s: %s") % pathname(key).c_str() %
                              strerror(errno));
             fclose(fp);

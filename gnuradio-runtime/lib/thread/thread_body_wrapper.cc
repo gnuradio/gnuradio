@@ -65,11 +65,11 @@ void mask_signals()
 #endif
     r = pthread_sigmask(SIG_BLOCK, &new_set, 0);
     if (r != 0) {
+        // FIXME use predefined loggers
         gr::logger_ptr logger, debug_logger;
         gr::configure_default_loggers(
             logger, debug_logger, "thread_body_wrapper::mask_signals");
-        GR_LOG_ERROR(debug_logger,
-                     boost::format("pthread_sigmask: %s") % strerror(errno));
+        GR_LOG_ERROR(logger, boost::format("pthread_sigmask: %s") % strerror(errno));
     }
 }
 

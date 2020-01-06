@@ -51,6 +51,7 @@ block_detail::block_detail(unsigned int ninputs, unsigned int noutputs)
 {
     s_ncurrently_allocated++;
     d_pc_start_time = gr::high_res_timer_now();
+    gr::configure_default_loggers(d_logger, d_debug_logger, "block_detail");
 }
 
 block_detail::~block_detail()
@@ -221,12 +222,9 @@ void block_detail::set_processor_affinity(const std::vector<int>& mask)
         try {
             gr::thread::thread_bind_to_processor(thread, mask);
         } catch (std::runtime_error& e) {
-            gr::logger_ptr logger, debug_logger;
-            gr::configure_default_loggers(
-                logger, debug_logger, "block_detail:set_processor_affinity");
             std::ostringstream msg;
-            msg << "ERROR invalid mask." << std::endl;
-            GR_LOG_ERROR(debug_logger, msg.str());
+            msg << "set_processor_affinity: invalid mask." << std::endl;
+            GR_LOG_ERROR(d_logger, msg.str());
         }
     }
 }

@@ -108,7 +108,7 @@ private:
             msg << "ERROR Message " << _handlerCallback.description
                 << " requires PRIVLVL <= " << _handlerCallback.priv
                 << " to set, currently at: " << cur_priv << std::endl;
-            GR_LOG_ERROR(debug_logger, msg.str());
+            GR_LOG_ERROR(logger, msg.str());
         }
     }
 
@@ -133,7 +133,7 @@ private:
                     msg << "ERROR Key " << p.first
                         << " requires PRIVLVL <= " << iter->second.priv
                         << " to set, currently at: " << cur_priv << std::endl;
-                    GR_LOG_ERROR(debug_logger, msg.str());
+                    GR_LOG_ERROR(logger, msg.str());
                 }
             } else {
                 throw apache::thrift::TApplicationException(__FILE__ " " S__LINE__);
@@ -165,12 +165,12 @@ private:
                     msg << "ERROR Key " << iter->first
                         << " requires PRIVLVL: <= " << iter->second.priv
                         << " to get, currently at: " << cur_priv << std::endl;
-                    GR_LOG_ERROR(debug_logger, msg.str());
+                    GR_LOG_ERROR(logger, msg.str());
                 }
             } else {
                 std::ostringstream smsgs;
                 msg << "Ctrlport Key called with unregistered key (" << p << ")\n";
-                GR_LOG_ERROR(debug_logger, ss.str());
+                GR_LOG_ERROR(logger, ss.str());
                 throw apache::thrift::TApplicationException(__FILE__ " " S__LINE__);
             }
         }
@@ -198,7 +198,7 @@ private:
                 msg << "ERROR Key " << p.first
                     << " requires PRIVLVL: <= " << p.second.priv
                     << " to get, currently at: " << cur_priv << std::endl;
-                GR_LOG_ERROR(debug_logger, msg.str());
+                GR_LOG_ERROR(logger, msg.str());
             }
         }
 
@@ -233,7 +233,7 @@ private:
                 msg << "ERROR Key " << p.first
                     << " requires PRIVLVL: <= " << p.second.priv
                     << " to get, currently at: " << cur_priv << std::endl;
-                GR_LOG_ERROR(debug_logger, msg.str());
+                GR_LOG_ERROR(logger, msg.str());
             }
         }
 
@@ -270,7 +270,7 @@ private:
                     msg << "ERROR Key " << iter->first
                         << " requires PRIVLVL: <= " << iter->second.priv
                         << " to get, currently at: " << cur_priv << std::endl;
-                    GR_LOG_ERROR(debug_logger, msg.str());
+                    GR_LOG_ERROR(logger, msg.str());
                 }
             } else {
                 throw apache::thrift::TApplicationException(__FILE__ " " S__LINE__);

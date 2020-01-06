@@ -93,13 +93,12 @@ int test::general_work(int noutput_items,
         char* in = (char*)input_items[i];
         if (ninput_items[i] < (int)(noutput_items + history())) {
             std::ostringstream msg;
-            msg << "ERROR ninput_items[" << i << "] < noutput_items+history()"
-                << std::endl;
-            msg << "ninput_items[" << i << "] = " << ninput_items[i] << std::endl;
-            msg << "noutput_items+history() = " << noutput_items + history() << std::endl;
-            msg << "noutput_items = " << noutput_items << std::endl;
-            msg << "history() = " << history() << std::endl;
-            GR_LOG_ERROR(d_debug_logger, msg.str());
+            msg << "ninput_items[" << i << "] < noutput_items+history()";
+            msg << "ninput_items[" << i << "] = " << ninput_items[i];
+            msg << "noutput_items+history() = " << noutput_items + history();
+            msg << "noutput_items = " << noutput_items;
+            msg << "history() = " << history();
+            GR_LOG_ERROR(d_logger, msg.str());
             throw std::runtime_error("test");
         } else {
             for (int j = 0; j < ninput_items[i]; j++) {

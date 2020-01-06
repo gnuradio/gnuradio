@@ -31,20 +31,9 @@ dpll_bb_impl::dpll_bb_impl(float period, float gain)
       d_restart(0),
       d_pulse_phase(0)
 {
-    gr::configure_default_loggers(d_logger, d_debug_logger, "dpll_bb");
     d_pulse_frequency = 1.0 / period;
     d_gain = gain;
     d_decision_threshold = 1.0 - 0.5 * d_pulse_frequency;
-#if 0
-    GR_LOG_ERROR(
-        d_debug_logger, 
-        boost::format("ERROR frequency = %f period = %f gain = %f threshold = %f\n")  
-        % d_pulse_frequency
-        % period
-        % d_gain
-        % d_decision_threshold
-    );
-#endif
 }
 
 dpll_bb_impl::~dpll_bb_impl() {}

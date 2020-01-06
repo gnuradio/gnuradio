@@ -33,6 +33,7 @@ namespace blocks {
 
 stream_pdu_base::stream_pdu_base(int MTU) : d_fd(-1), d_started(false), d_finished(false)
 {
+    gr::configure_default_loggers(d_pdu_logger, d_pdu_debug_logger, "stream_pdu_base");
     // reserve space for rx buffer
     d_rxbuf.resize(MTU, 0);
 }
@@ -99,14 +100,11 @@ void stream_pdu_base::send(pmt::pmt_t msg)
 
     const int rv = write(d_fd, pmt::uniform_vector_elements(vector, offset), len);
     if (rv != len) {
-        gr::logger_ptr logger, debug_logger;
-        gr::configure_default_loggers(logger, debug_logger, "stream_pdu_base");
         std::ostringstream msg;
-        msg << boost::format("WARNING stream_pdu_base::send(pdu) write failed! (d_fd=%d, "
-                             "len=%d, rv=%d)") %
-                   d_fd % len % rv
-            << std::endl;
-        GR_LOG_WARN(debug_logger, msg.str());
+        msg << boost::format(
+                   "stream_pdu_base::send(pdu) write failed! (d_fd=%d, len=%d, rv=%d)") %
+                   d_fd % len % rv;
+        GR_LOG_WARN(d_pdu_logger, msg.str());
     }
 }
 

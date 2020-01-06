@@ -25,7 +25,7 @@ namespace digital {
 inline void framer_sink_1_impl::enter_search()
 {
     if (VERBOSE)
-        GR_LOG_INFO(d_debug_logger, "INFO enter_search\n");
+        GR_LOG_INFO(d_debug_logger, "enter_search");
 
     d_state = STATE_SYNC_SEARCH;
 }
@@ -33,7 +33,7 @@ inline void framer_sink_1_impl::enter_search()
 inline void framer_sink_1_impl::enter_have_sync()
 {
     if (VERBOSE)
-        GR_LOG_INFO(d_debug_logger, "INFO enter_have_sync\n");
+        GR_LOG_INFO(d_debug_logger, "enter_have_sync");
 
     d_state = STATE_HAVE_SYNC;
     d_header = 0;
@@ -43,10 +43,9 @@ inline void framer_sink_1_impl::enter_have_sync()
 inline void framer_sink_1_impl::enter_have_header(int payload_len, int whitener_offset)
 {
     if (VERBOSE)
-        GR_LOG_INFO(
-            d_debug_logger,
-            boost::format("INFO enter_have_header (payload_len = %d) (offset = %d)\n") %
-                payload_len % whitener_offset);
+        GR_LOG_INFO(d_debug_logger,
+                    boost::format("enter_have_header (payload_len = %d) (offset = %d)") %
+                        payload_len % whitener_offset);
 
     d_state = STATE_HAVE_HEADER;
     d_packetlen = payload_len;
@@ -80,14 +79,14 @@ int framer_sink_1_impl::work(int noutput_items,
     int count = 0;
 
     if (VERBOSE)
-        GR_LOG_INFO(d_debug_logger, "INFO >>> Entering state machine\n");
+        GR_LOG_INFO(d_debug_logger, "enter state machine");
 
     while (count < noutput_items) {
         switch (d_state) {
 
         case STATE_SYNC_SEARCH: // Look for flag indicating beginning of pkt
             if (VERBOSE)
-                GR_LOG_INFO(d_debug_logger, "INFO SYNC Search, noutput=%d\n");
+                GR_LOG_INFO(d_debug_logger, "SYNC Search, noutput=%d");
 
             while (count < noutput_items) {
                 if (in[count] & 0x2) { // Found it, set up for header decode
@@ -100,10 +99,9 @@ int framer_sink_1_impl::work(int noutput_items,
 
         case STATE_HAVE_SYNC:
             if (VERBOSE)
-                GR_LOG_INFO(
-                    d_debug_logger,
-                    boost::format("INFO Header Search bitcnt=%d, header=0x%08x\n") %
-                        d_headerbitlen_cnt % d_header);
+                GR_LOG_INFO(d_debug_logger,
+                            boost::format("Header Search bitcnt=%d, header=0x%08x") %
+                                d_headerbitlen_cnt % d_header);
 
             while (count < noutput_items) { // Shift bits one at a time into header
                 d_header = (d_header << 1) | (in[count++] & 0x1);
@@ -111,8 +109,7 @@ int framer_sink_1_impl::work(int noutput_items,
 
                     if (VERBOSE)
                         GR_LOG_INFO(d_debug_logger,
-                                    boost::format("INFO got header: 0x%08x\n") %
-                                        d_header);
+                                    boost::format("got header: 0x%08x") % d_header);
 
                     // we have a full header, check to see if it has been received
                     // properly
@@ -142,7 +139,7 @@ int framer_sink_1_impl::work(int noutput_items,
 
         case STATE_HAVE_HEADER:
             if (VERBOSE)
-                GR_LOG_INFO(d_debug_logger, "INFO Packet Build\n");
+                GR_LOG_INFO(d_debug_logger, "Packet Build");
 
             while (count <
                    noutput_items) { // shift bits into bytes of packet one at a time

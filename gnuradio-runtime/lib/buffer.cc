@@ -131,13 +131,13 @@ bool buffer::allocate_buffer(int nitems, size_t sizeof_item)
     if (nitems > 2 * orig_nitems && nitems * (int)sizeof_item > granularity) {
         auto msg =
             str(boost::format(
-                    "WARNING allocate_buffer: tried to allocate\n"
-                    "   %d items of size %d. Due to alignment requirements\n"
-                    "   %d were allocated.  If this isn't OK, consider padding\n"
-                    "   your structure to a power-of-two bytes.\n"
-                    "   On this platform, our allocation granularity is %d bytes.\n") %
+                    "allocate_buffer: tried to allocate"
+                    "   %d items of size %d. Due to alignment requirements"
+                    "   %d were allocated.  If this isn't OK, consider padding"
+                    "   your structure to a power-of-two bytes."
+                    "   On this platform, our allocation granularity is %d bytes.") %
                 orig_nitems % sizeof_item % nitems % granularity);
-        GR_LOG_WARN(d_debug_logger, msg.c_str());
+        GR_LOG_WARN(d_logger, msg.c_str());
     }
 
     d_bufsize = nitems;
@@ -145,8 +145,8 @@ bool buffer::allocate_buffer(int nitems, size_t sizeof_item)
     if (d_vmcircbuf == 0) {
         std::ostringstream msg;
         msg << "gr::buffer::allocate_buffer: failed to allocate buffer of size "
-            << d_bufsize * d_sizeof_item / 1024 << " KB\n";
-        GR_LOG_ERROR(d_debug_logger, msg.str());
+            << d_bufsize * d_sizeof_item / 1024 << " KB";
+        GR_LOG_ERROR(d_logger, msg.str());
         return false;
     }
 

@@ -140,7 +140,7 @@ static void do_arch_warning(const std::string& arch)
     msg << "ERROR Could not find audio architecture \"" << arch << "\" in registry."
         << std::endl;
     msg << "    Defaulting to the first available architecture..." << std::endl;
-    GR_LOG_ERROR(debug_logger, msg.str());
+    GR_LOG_ERROR(logger, msg.str());
 }
 
 source::sptr
@@ -164,7 +164,7 @@ source::make(int sampling_rate, const std::string device_name, bool ok_to_block)
         return e.source(sampling_rate, device_name, ok_to_block);
     }
 
-    GR_LOG_INFO(logger, boost::format("Audio source arch: %1%") % (entry.arch));
+    GR_LOG_INFO(debug_logger, boost::format("Audio source arch: %1%") % (entry.arch));
     return entry.source(sampling_rate, device_name, ok_to_block);
 }
 
@@ -189,7 +189,7 @@ sink::sptr sink::make(int sampling_rate, const std::string device_name, bool ok_
     }
 
     do_arch_warning(arch);
-    GR_LOG_INFO(logger, boost::format("Audio sink arch: %1%") % (entry.arch));
+    GR_LOG_INFO(debug_logger, boost::format("Audio sink arch: %1%") % (entry.arch));
     return entry.sink(sampling_rate, device_name, ok_to_block);
 }
 
