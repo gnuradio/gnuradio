@@ -61,6 +61,10 @@ private:
     void create_diff_taps(const std::vector<float>& newtaps,
                           std::vector<float>& difftaps);
 
+    void set_taps(const std::vector<float>& taps,
+                  std::vector<std::vector<float>>& ourtaps,
+                  std::vector<kernel::fir_filter_fff*>& ourfilter);
+
 public:
     pfb_clock_sync_fff_impl(double sps,
                             float gain,
@@ -76,10 +80,6 @@ public:
     void forecast(int noutput_items, gr_vector_int& ninput_items_required);
 
     void update_taps(const std::vector<float>& taps);
-
-    void set_taps(const std::vector<float>& taps,
-                  std::vector<std::vector<float>>& ourtaps,
-                  std::vector<kernel::fir_filter_fff*>& ourfilter);
 
     std::vector<std::vector<float>> taps() const;
     std::vector<std::vector<float>> diff_taps() const;
