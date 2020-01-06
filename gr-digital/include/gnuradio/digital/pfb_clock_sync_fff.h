@@ -192,18 +192,6 @@ public:
     virtual void update_taps(const std::vector<float>& taps) = 0;
 
     /*!
-     * Used to set the taps of the filters in the filterbank and
-     * differential filterbank.
-     *
-     * WARNING: this should not be used externally and will be moved
-     * to a private function in the next API.
-     */
-    virtual void
-    set_taps(const std::vector<float>& taps,
-             std::vector<std::vector<float>>& ourtaps,
-             std::vector<gr::filter::kernel::fir_filter_fff*>& ourfilter) = 0;
-
-    /*!
      * Returns all of the taps of the matched filter
      */
     virtual std::vector<std::vector<float>> taps() const = 0;
