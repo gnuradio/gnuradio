@@ -26,6 +26,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <stdexcept>
+#include <future>
 #ifdef _MSC_VER
 #include <io.h>
 #endif
@@ -68,6 +69,14 @@ void portaudio_sink::create_ringbuffer(void)
     d_reader = gr::buffer_add_reader(d_writer, 0);
 }
 
+
+void portaudio_underrun_notification(gr::logger_ptr logger)
+{
+    ssize_t r = ::write(2, "aU", 2);
+    if (r == -1) {
+        GR_LOG_ERROR(logger, "portaudio_source_callback write error to stderr.");
+    }
+}
 /*
  * This routine will be called by the PortAudio engine when audio is needed.
  * It may called at interrupt level on some machines so don't do anything
@@ -82,7 +91,7 @@ int portaudio_sink_callback(const void* inputBuffer,
                             PaStreamCallbackFlags statusFlags,
                             void* arg)
 {
-    portaudio_sink* self = (portaudio_sink*)arg;
+    auto self = reinterpret_cast<portaudio_sink*>(arg);
     int nreqd_samples = framesPerBuffer * self->d_output_parameters.channelCount;
 
     int navail_samples = self->d_reader->items_available();
@@ -105,13 +114,7 @@ int portaudio_sink_callback(const void* inputBuffer,
     }
 
     else { // underrun
-        self->d_nunderuns++;
-        ssize_t r = ::write(2, "aU", 2); // FIXME change to non-blocking call
-        if (r == -1) {
-            GR_LOG_ERROR(d_debug_logger,
-                         boost::format("write error to stderr: %s") % strerror(errno));
-        }
-
+        std::async(&portaudio_underrun_notification, self->d_logger);
         // FIXME we should transfer what we've got and pad the rest
         memset(outputBuffer, 0, nreqd_samples * sizeof(sample_t));
 
@@ -138,8 +141,7 @@ portaudio_sink::portaudio_sink(int sampling_rate,
       d_stream(0),
       d_ringbuffer_mutex(),
       d_ringbuffer_cond(),
-      d_ringbuffer_ready(false),
-      d_nunderuns(0)
+      d_ringbuffer_ready(false)
 {
     memset(&d_output_parameters, 0, sizeof(d_output_parameters));
 
@@ -237,7 +239,7 @@ bool portaudio_sink::check_topology(int ninputs, int noutputs)
 #if 1
     d_portaudio_buffer_size_frames =
         (int)(0.0213333333 * d_sampling_rate + 0.5); // Force 1024 frame buffers at 48000
-    GR_LOG_ERROR(d_debug_logger,
+    GR_LOG_ERROR(d_logger,
                  boost::format("ERROR Latency = %8.5f, requested sampling_rate = %g\n") %
                      0.0213333333 % (double)d_sampling_rate);
 #endif
@@ -260,13 +262,13 @@ bool portaudio_sink::check_topology(int ninputs, int noutputs)
 
         d_portaudio_buffer_size_frames = (int)(d_output_parameters.suggestedLatency  * psi->sampleRate);
         GR_LOG_ERROR(
-            d_debug_logger, 
+            d_logger, 
             boost::format("ERROR Latency = %7.4f, psi->sampleRate = %g\n") 
             % d_input_parameters.suggestedLatency
             % psi->sampleRate
         );
 #endif
-    GR_LOG_ERROR(d_debug_logger,
+    GR_LOG_ERROR(d_logger,
                  boost::format("ERROR d_portaudio_buffer_size_frames = %d\n") %
                      d_portaudio_buffer_size_frames);
 
