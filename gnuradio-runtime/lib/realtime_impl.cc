@@ -42,7 +42,7 @@ static int rescale_virtual_pri(int virtual_pri, int min_real_pri, int max_real_p
     float rmax = min_real_pri + (0.75 * (max_real_pri - min_real_pri));
     float m = (rmax - rmin) / (rt_priority_max() - rt_priority_min());
     float y = m * (virtual_pri - rt_priority_min()) + rmin;
-    int y_int = static_cast<int>(rint(y));
+    int y_int = static_cast<int>(rintf(y));
     return std::max(min_real_pri, std::min(max_real_pri, y_int));
 }
 
