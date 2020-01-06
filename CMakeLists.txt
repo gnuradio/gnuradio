@@ -479,6 +479,12 @@ find_package(MPLIB)
 add_definitions(${MPLIB_DEFINITIONS})
 
 ########################################################################
+# Post-Install tasks are tasks that are usually not executed during
+# install, but for source builds, that's actually more convenient.
+########################################################################
+GR_REGISTER_COMPONENT("post-install" ENABLE_POSTINSTALL)
+
+########################################################################
 # Add subdirectories (in order of deps)
 ########################################################################
 add_subdirectory(docs)
