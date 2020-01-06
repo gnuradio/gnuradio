@@ -29,9 +29,9 @@ import logging
 import logging.handlers
 import argparse
 
-from companion import grc
-from companion import properties
-from companion import helpers
+from gui_qt import grc
+from gui_qt import properties
+from gui_qt import helpers
 
 LEVELS = {'--debug': logging.DEBUG,
           '--info': logging.INFO,
