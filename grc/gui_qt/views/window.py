@@ -14,11 +14,11 @@ Keys = QtGui.QKeySequence
 
 
 class MainWindow(QtWidgets.QMainWindow, base.View):
-    """
+    '''
     GRC.Views.MainWindow
     ---------------------------
     Class that handles the main view definition for the main grc window
-    """
+    '''
 
     def __init__(self):
         super().__init__()  # REQUIRED for both QMainWindow and base.View
@@ -32,8 +32,8 @@ class MainWindow(QtWidgets.QMainWindow, base.View):
                             QtWidgets.QMainWindow.AnimatedDocks)
 
         # Setup the window icon
-        self.log.debug("Setting window icon ({0})".format(self.gp.path.ICON))
-        icon = QtGui.QIcon(self.gp.path.ICON)
+        self.log.debug("Setting window icon ({0})".format(self.settings.path.ICON))
+        icon = QtGui.QIcon(self.settings.path.ICON)
         self.setWindowIcon(icon)
 
         self.log.debug("Setting window size")
@@ -42,7 +42,7 @@ class MainWindow(QtWidgets.QMainWindow, base.View):
 
         self.setCorner(Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
 
-        self.menuBar().setNativeMenuBar(self.gp.window.NATIVE_MENUBAR)
+        self.menuBar().setNativeMenuBar(self.settings.window.NATIVE_MENUBAR)
 
         # TODO: Not sure about document mode
         #self.setDocumentMode(True)
@@ -55,10 +55,10 @@ class MainWindow(QtWidgets.QMainWindow, base.View):
         #QtCore.QMetaObject.connectSlotsByName(self)
 
     def createActions(self, actions):
-        """
+        '''
         Defines all actions for this view.
         Controller manages connecting signals to slots implemented in the controller
-        """
+        '''
         self.log.debug("Creating actions")
 
         # File Actions
@@ -168,7 +168,7 @@ class MainWindow(QtWidgets.QMainWindow, base.View):
         actions['errors'].setEnabled(False)
 
     def createMenus(self, actions, menus):
-        """ Setup the main menubar for the application """
+        ''' Setup the main menubar for the application '''
         self.log.debug("Creating menus")
 
         # Global menu options
@@ -287,7 +287,7 @@ class MainWindow(QtWidgets.QMainWindow, base.View):
 
     # Overridden methods
     def addDockWidget(self, location, widget):
-        """ Adds a dock widget to the view. """
+        ''' Adds a dock widget to the view. '''
         # This overrides QT's addDockWidget so that a 'show' menu auto can automatically be
         # generated for this action.
         super().addDockWidget(location, widget)
@@ -301,7 +301,7 @@ class MainWindow(QtWidgets.QMainWindow, base.View):
         self.menus['panels'].setEnabled(True)
 
     def addToolBar(self, toolbar):
-        """ Adds a toolbar to the main window """
+        ''' Adds a toolbar to the main window '''
         # This is also overridden so a show menu item can automatically be added
         super().addToolBar(toolbar)
         name = toolbar.windowTitle()
@@ -312,6 +312,6 @@ class MainWindow(QtWidgets.QMainWindow, base.View):
         self.menus['toolbars'].setEnabled(True)
 
     def addMenu(self, menu):
-        """ Adds a menu to the main window """
+        ''' Adds a menu to the main window '''
         help = self.menus["help"].menuAction()
         self.menuBar().insertMenu(help, menu)

@@ -5,7 +5,7 @@ from .. import views, base
 
 
 class Reports(base.Controller):
-    """ GRC.Controllers.Reports """
+    ''' GRC.Controllers.Reports '''
 
     def __init__(self):
         # Required function calls
@@ -20,7 +20,7 @@ class Reports(base.Controller):
         # Register the dock widget through the AppController.
         # The AppController then tries to find a saved dock location from the preferences
         # before calling the MainWindow Controller to add the widget.
-        self.app.registerDockWidget(self.view, location=self.gp.window.REPORTS_DOCK_LOCATION)
+        self.app.registerDockWidget(self.view, location=self.settings.window.REPORTS_DOCK_LOCATION)
 
         # Register the menus
         self.app.registerMenu(self.view.menus["reports"])
@@ -55,7 +55,7 @@ class Reports(base.Controller):
 
 
 class ReportsHandler(logging.Handler):  # Inherit from logging.Handler
-    """ Writes out logs to the reporst window """
+    ''' Writes out logs to the reporst window '''
 
     def __init__(self, add_line, show_level=True, short_level=True):
         # run the regular Handler __init__

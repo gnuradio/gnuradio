@@ -14,7 +14,7 @@ Keys = QtGui.QKeySequence
 
 
 class Reports(QtWidgets.QDockWidget, base.View):
-    """ GRC.Views.Reports """
+    ''' GRC.Views.Reports '''
 
     def __init__(self):
         super().__init__()  # REQUIRED for both QMainWindow and base.View
@@ -34,7 +34,7 @@ class Reports(QtWidgets.QDockWidget, base.View):
         text.setUndoRedoEnabled(False)
         text.setReadOnly(True)
 
-        html = """
+        html = '''
             <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\"
             \"http://www.w3.org/TR/REC-html40/strict.dtd\">
             <html>
@@ -69,7 +69,7 @@ class Reports(QtWidgets.QDockWidget, base.View):
                 </style>
             </head>
             </html>
-            """
+            '''
         text.setHtml(textwrap.dedent(html))
 
         text.setObjectName("reports::contents::layout::text")
@@ -81,7 +81,7 @@ class Reports(QtWidgets.QDockWidget, base.View):
         self.setWidget(contents)
 
     def createActions(self, actions):
-        """ Defines all actions for this view. """
+        ''' Defines all actions for this view. '''
 
         self.log.debug("Creating actions")
 
@@ -94,7 +94,7 @@ class Reports(QtWidgets.QDockWidget, base.View):
         actions['show_level'].setChecked = False  # Apparently, the checked named argument doesn't work
 
     def createMenus(self, actions, menus):
-        """ Setup the view's menus """
+        ''' Setup the view's menus '''
 
         self.log.debug("Creating menus")
 
