@@ -2,41 +2,42 @@ import abc
 import logging
 import weakref
 
+from PyQt5 import QtWidgets
+
 # GRC imports
 from . import helpers
 
 
 class Controller(object):
-    """ Abstract base class for all grc controllers. """
+    ''' Abstract base class for all grc controllers. '''
     __metaclass__ = abc.ABCMeta
 
     def __init__(self):
-        """
-        Initializes the controller base class.
-        Sets up a default logger that can be overridden by the child class.
-        """
-        name = "grc.controller.{0}".format(self.__class__.__name__.lower())
+        ''' Setup the default logger and get references to the application and platform '''
+        # Default logger (can be overridden by the inheriting class)
+        name = "grc.{0}".format(self.__class__.__name__.lower())
         self.log = logging.getLogger(name)
         self.log.debug("Using default logger - {0}".format(name))
 
-        self.view = None
+        # Application reference - Use weak references to avoid issues with circular references
+        # Platform and settings properties are accessed through this reference
+        self._app = weakref.ref(QtWidgets.QApplication.instance())
 
-    @classmethod
-    def setAttributes(cls, app, gp):
-        """
-        Adds references for the app controller and global properties as
-        attributes of the base class so that they are automatically inherited
-        by the children.
-        """
-        # Need to use a weak references for the app controller due to circular references.
-        # Otherwise the python gc will not correctly recover objects
-        cls.appRef = weakref.ref(app)
-        cls.gp = gp
+        # Controller view?
+        # TODO: Just combine this into a component?
+        self.view = None
 
     @property
     def app(self):
-        """ Returns a referent for the weakref to the app controller"""
-        return self.appRef()
+        return self._app()
+
+    @property
+    def settings(self):
+        return self._app().settings
+
+    @property
+    def platform(self):
+        return self._app().platform
 
     # Controller setup functions
     def setView(self, view):
@@ -51,7 +52,7 @@ class Controller(object):
 
     # Base methods
     def setLogger(self, loggerName):
-        """ Replaces the default logger """
+        ''' Replaces the default logger '''
         del self.log    # Get rid of the original logger since it is being replaced
         self.log = logging.getLogger(loggerName)
         self.log.debug("Using custom logger - {0}".format(loggerName))
@@ -112,15 +113,15 @@ class Controller(object):
 
 
 class View(object):
-    """ Abstract base class for all grc views. """
+    ''' Abstract base class for all grc views. '''
     __metaclass__ = abc.ABCMeta
 
     def __init__(self):
-        """
+        '''
         Initializes the view base class.
         Sets up a default logger that can be overridden by a child and calls createActions
         to initialize the view's actions.
-        """
+        '''
         name = "grc.view.{0}".format(self.__class__.__name__.lower())
         self.log = logging.getLogger(name)
         self.log.debug("Using default logger - {0}".format(name))
@@ -134,39 +135,48 @@ class View(object):
         self.createMenus(self.actions, self.menus)
         self.createToolbars(self.actions, self.toolbars)
 
+        # Application reference - Use weak references to avoid issues with circular references
+        # Platform and settings properties are accessed through this reference
+        self._app = weakref.ref(QtWidgets.QApplication.instance())
+
+    @property
+    def app(self):
+        return self._app()
+
+    @property
+    def settings(self):
+        return self._app().settings
+
+    @property
+    def platform(self):
+        return self._app().platform
+
     # Required methods
     @abc.abstractmethod
     def createActions(self, actions):
-        """ Add actions to the view. """
+        ''' Add actions to the view. '''
         raise NotImplementedError()
 
     @abc.abstractmethod
     def createMenus(self, actions, menus):
-        """ Add actions to the view. """
+        ''' Add actions to the view. '''
         raise NotImplementedError()
 
     @abc.abstractmethod
     def createToolbars(self, actions, toolbars):
-        """ Add actions to the view. """
+        ''' Add actions to the view. '''
         raise NotImplementedError()
-
-    # Class methods
-    @classmethod
-    def setAttributes(cls, gp):
-        """ Adds reference for the global properties as an attributes of the base class. """
-        # Cannot set 'self.controller' because each view has a different corresponding controller.
-        cls.gp = gp
 
     # Base methods
     def setLogger(self, loggerName):
-        """ Replaces the default logger. """
+        ''' Replaces the default logger. '''
         del self.log    # Get rid of the original logger since it is being replaced
         self.log = logging.getLogger(loggerName)
         self.log.debug("Using custom logger - {0}".format(loggerName))
 
     def setController(self, controller):
-        """
+        '''
         Creates a weak reference to the owning controller.
         Called by controller after the view has been initialized.
-        """
+        '''
         self.controller = weakref.ref(controller)

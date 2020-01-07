@@ -2,7 +2,7 @@ import logging
 
 
 class GRCHandler(logging.Handler):  # Inherit from logging.Handler
-    """ Custom log handler for GRC. Stores log entries to be viewed using the GRC debug window. """
+    ''' Custom log handler for GRC. Stores log entries to be viewed using the GRC debug window. '''
 
     def __init__(self, maxLength=256):
         # run the regular Handler __init__
@@ -18,7 +18,7 @@ class GRCHandler(logging.Handler):  # Inherit from logging.Handler
 
 
 class ConsoleFormatter(logging.Formatter):
-    """
+    '''
      Custom log formatter that nicely truncates the log message and log levels
       - Verbose mode outputs: time, level, message, name, filename, and line number
       - Normal mode output varies based on terminal size:
@@ -27,7 +27,7 @@ class ConsoleFormatter(logging.Formatter):
             120 < w      - Level, Message, Name, File, Line
       - Color mode ouptuts the same variable sizes and uses the blessings module
         to add color
-    """
+    '''
 
     # TODO: Better handle multi line messages. Need to indent them or something
 
