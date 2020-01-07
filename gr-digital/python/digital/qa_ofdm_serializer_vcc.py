@@ -195,7 +195,7 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         """ Make sure it fails if it should """
         fft_len = 16
         occupied_carriers = ((1, 3, 4, 11, 12, 112),) # Something invalid
-        self.assertRaises(RuntimeError, digital.ofdm_serializer_vcc, fft_len, occupied_carriers, self.tsb_key)
+        self.assertRaises(TypeError, digital.ofdm_serializer_vcc, fft_len, occupied_carriers, self.tsb_key)
 
 
 if __name__ == '__main__':

@@ -198,12 +198,12 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
 
     def test_004_t (self):
         """
-        Provoking RuntimeError exceptions providing wrong user input (earlier invisible SIGFPE).
+        Provoking TypeError exceptions providing wrong user input (earlier invisible SIGFPE).
         """
         fft_len = 6
 
         # Occupied carriers
-        with self.assertRaises(RuntimeError) as oc:
+        with self.assertRaises(TypeError) as oc:
           alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                         (),
                         ((),),
@@ -212,7 +212,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
                         self.tsb_key)
 
         # Pilot carriers
-        with self.assertRaises(RuntimeError) as pc:
+        with self.assertRaises(TypeError) as pc:
           alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                         ((),),
                         (),
@@ -221,7 +221,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
                         self.tsb_key)
 
         # Pilot carrier symbols
-        with self.assertRaises(RuntimeError) as ps:
+        with self.assertRaises(TypeError) as ps:
           alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                         ((),),
                         ((),),
