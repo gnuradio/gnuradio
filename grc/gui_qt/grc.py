@@ -1,60 +1,59 @@
 import logging
 import textwrap
+
 from PyQt5 import QtWidgets
 
 # GRC Imports
 from . import base            # Base classes
 from . import controllers     # Internal controllers
 
+from .helpers.profiling import StopWatch
 
-class AppController(object):
-    """
-    Main controller everything;
-    handles setting up child controllers, views, and global actions.
-    """
+class Application(QtWidgets.QApplication):
+    '''
+    This is the main QT application for GRC.
+    It handles setting up the application components and actions and handles communication between different components in the system.
+    '''
 
-    def __init__(self, gp):
-        # Note. Logger must have the correct naming convention to share
-        # handlers
+    def __init__(self, settings, platform):
+        # Note. Logger must have the correct naming convention to share handlers
         self.log = logging.getLogger("grc.app")
         self.log.debug("__init__")
 
-        # Save the global preferences
-        self.gp = gp
+        self.log.debug("Creating QApplication instance")
+        QtWidgets.QApplication.__init__(self, settings.argv)
 
-        # Setup the base classes
-        base.Controller.setAttributes(self, gp)
-        base.View.setAttributes(gp)
+        # Save references to the global settings and gnuradio platform
+        self.settings = settings
+        self.platform = platform
+
 
         # Load the main view class and initialize QMainWindow
-        self.log.debug("ARGV - {0}".format(gp.argv))
-        self.log.debug("INSTALL_DIR - {0}".format(gp.path.INSTALL))
+        self.log.debug("ARGV - {0}".format(settings.argv))
+        self.log.debug("INSTALL_DIR - {0}".format(settings.path.INSTALL))
 
         # Global signals
         self.signals = {}
 
-        self.log.debug("Creating QApplication instance")
-        self._app = QtWidgets.QApplication(gp.argv)
-
-        import time
-        # Need to setup the slots for the QtAction
-        self.log.debug("Loading MainWindow controller")
-        start = time.time()
+        # Setup the main application window
+        self.log.debug("Creating main application window")
+        stopwatch = StopWatch()
         self.MainWindow = controllers.MainWindow()
-        self.log.debug ("Elapsed - " + "{0:0.1f}ms".format((time.time() - start) * 1000))
-
-        self.log.debug("Loading Reports controller")
+        stopwatch.lap('mainwindow')
         self.Reports = controllers.Reports()
-        self.log.debug ("Elapsed - " + "{0:0.1f}ms".format((time.time() - start) * 1000))
-
-        self.log.debug("Loading BlockLibrary controller")
+        stopwatch.lap('reports')
         self.BlockLibrary = controllers.BlockLibrary()
-        self.log.debug("Elapsed - " + "{0:0.1f}ms".format((time.time() - start) * 1000))
+        stopwatch.lap('blocklibrary')
+
+        # Debug times
+        self.log.debug("Loaded MainWindow controller - {:.4f}s".format(stopwatch.elapsed("mainwindow")))
+        self.log.debug("Loaded Reports controller - {:.4f}s".format(stopwatch.elapsed("reports")))
+        self.log.debug("Loaded BlockLibrary controller - {:.4}s".format(stopwatch.elapsed("blocklibrary")))
 
         # Print Startup information once everything has loaded
         self.log.critical("TODO: Change welcome message.")
 
-        welcome = """
+        welcome = '''
         linux; GNU C++ version 4.8.2; Boost_105400; UHD_003.007.002-94-ge56809a0
 
         <<< Welcome to GNU Radio Companion 3.7.6git-1-g01deede >>>
@@ -64,7 +63,7 @@ class AppController(object):
           /home/seth/Dev/gnuradio/target/share/gnuradio/grc/blocks
           /home/seth/.grc_gnuradio
         Loading: \"/home/seth/Dev/persistent-ew/gnuradio/target/flex_rx.grc\"
-        """
+        '''
         self.log.info(textwrap.dedent(welcome))
 
 
@@ -100,7 +99,6 @@ class AppController(object):
 
     def run(self):
         ''' Launches the main QT event loop '''
-
         # Show the main window after everything is initialized.
         self.MainWindow.show()
-        return (self._app.exec_())
+        return (self.exec_())

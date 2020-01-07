@@ -1,5 +1,11 @@
+import six
+
+from PyQt5.QtGui import QStandardItemModel
+
 # GRC imports
 from .. import views, base
+
+
 
 
 NAME_INDEX = 0
@@ -7,7 +13,7 @@ KEY_INDEX = 1
 DOC_INDEX = 2
 
 class BlockLibrary(base.Controller):
-    """ GRC.Controllers.BlockLibrary """
+    ''' GRC.Controllers.BlockLibrary '''
 
     def __init__(self):
         # Required function calls
@@ -22,43 +28,40 @@ class BlockLibrary(base.Controller):
         # Register the dock widget through the AppController.
         # The AppController then tries to find a saved dock location from the preferences
         # before calling the MainWindow Controller to add the widget.
-        self.app.registerDockWidget(self.view, location=self.gp.window.BLOCK_LIBRARY_DOCK_LOCATION)
+        self.app.registerDockWidget(self.view, location=self.settings.window.BLOCK_LIBRARY_DOCK_LOCATION)
 
         # Register the menus
         #self.app.registerMenu(self.view.menus["library"])
+        block_tree = self.load_tree()
+        self.view.populateTree(block_tree)
 
-    def load_block_tree(self, block_tree):
-        """
-        Load a block tree with categories and blocks.
-        Step 1: Load all blocks from the xml specification.
-        Step 2: Load blocks with builtin category specifications.
-        
-        Args:
-            block_tree: the block tree object
-        """
-        #recursive function to load categories and blocks
-        def load_category(cat_n, parent=None):
-            #add this category
-            parent = (parent or []) + [cat_n.find('name')]
-            block_tree.add_block(parent)
-            #recursive call to load sub categories
-            map(lambda c: load_category(c, parent), cat_n.findall('cat'))
-            #add blocks in this category
-            for block_key in cat_n.findall('block'):
-                if block_key not in self.get_block_keys():
-                    print >> sys.stderr, 'Warning: Block key "%s" not found when loading category tree.' % (block_key)
-                    continue
-                block = self.get_block(block_key)
-                #if it exists, the block's category shall not be overridden by the xml tree
-                if not block.get_category():
-                    block.set_category(parent)
+    def load_tree(self):
+        ''' Load the block tree from the platform and builds a nested dictionary '''
 
-        # recursively load the category trees and update the categories for each block
-        for category_tree_n in self._category_trees_n:
-            load_category(category_tree_n)
+        block_tree = {}
+        # Loop through all of the blocks and create the nested hierarchy (this can be unlimited nesting)
+        # This takes advantage of Python's use of references to move through the nested layers
+        for block in six.itervalues(self.app.platform.blocks):
+            if block.category:
+                # Blocks with None category should be left out for whatever reason (e.g. not installed)
+                #print(block.category) # in list form, e.g. ['Core', 'Digital Television', 'ATSC']
+                #print(block.label) # label GRC uses to name block
+                #print(block.key) # actual block name (i.e. class name)
 
-        #add blocks to block tree
-        for block in self.get_blocks():
-            #blocks with empty categories are hidden
-            if not block.get_category(): continue
-            block_tree.add_block(block.get_category(), block)
+                # Create a copy of the category list so things can be removed without changing the original list
+                category = block.category[:]
+
+                # Get a reference to the main block tree.
+                # As nested categories are added, this is updated to point to the proper sub-tree in the next layer
+                sub_tree = block_tree
+                while category:
+                    current = category.pop(0)
+                    if current not in sub_tree.keys():
+                        # Create the new sub-tree
+                        sub_tree[current] = {}
+                    # Move to the next layer in the block tree
+                    sub_tree = sub_tree[current]
+                # Sub_tree should now point at the final node of the block_tree that contains the block
+                # Add a reference to the block object to the proper subtree
+                sub_tree[block.label] = block
+        return block_tree

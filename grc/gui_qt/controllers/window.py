@@ -6,7 +6,7 @@ from .. import views, base
 
 
 class MainWindow(base.Controller):
-    """ GRC.Controllers.MainWindow - Controls main window view """
+    ''' GRC.Controllers.MainWindow - Controls main window view '''
 
     def __init__(self):
         # Required function calls
@@ -37,8 +37,8 @@ class MainWindow(base.Controller):
         self.registerToolBar(toolbars["run"])
 
         self.log.debug("Loading flowgraph model")
-        test_flowgraph = os.path.join(self.gp.path.INSTALL, 'gui_qt/resources/data/rx_logo.grc')
-        self.flowgraph = views.FlowGraph(self.view, test_flowgraph)
+        test_flowgraph = os.path.join(self.settings.path.INSTALL, 'gui_qt/resources/data/rx_logo.grc')
+        self.flowgraph = views.Flowgraph(self.view, test_flowgraph)
         self.log.debug("Adding flowgraph view")
         self.view.new_tab(self.flowgraph)
 
@@ -56,7 +56,7 @@ class MainWindow(base.Controller):
 
         if filename:
             self.log.info("Opening flowgraph ({0})".format(filename))
-            self.flowgraph = views.FlowGraph(self.view, filename)
+            self.flowgraph = views.Flowgraph(self.view, filename)
             self.view.new_tab(self.flowgraph)
 
     def save_triggered(self):

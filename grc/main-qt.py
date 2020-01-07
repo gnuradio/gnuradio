@@ -33,21 +33,42 @@ from gui_qt import grc
 from gui_qt import properties
 from gui_qt import helpers
 
+from core.platform import Platform
+
+
 LEVELS = {'--debug': logging.DEBUG,
           '--info': logging.INFO,
           '--warning': logging.WARNING,
           '--error': logging.ERROR,
           '--critical': logging.CRITICAL}
 
-'''
-Script that launches the GNU Radio Companion application. This should handle
-the logging, translation and main QT setup.
-'''
+
+VERSION_AND_DISCLAIMER_TEMPLATE = """\
+GNU Radio Companion %s
+
+This program is part of GNU Radio
+GRC comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it.
+"""
+
+
+# Script for launching GRC. This should handle logging, translation, platform, and main QT setup.
 if __name__ == "__main__":
 
     ''' Global Settings/Constants '''
-    # Save the current path and arguements in the global properties
-    gp = properties.Properties(sys.argv)
+    # Initialize a class with all of the default settings and properties
+    # TODO: Move argv to separate argument parsing class that overrides default properties?
+    # TODO: Split settings/constants into separate classes rather than a single properites class?
+    settings = properties.Properties(sys.argv)
+
+
+    ''' GNU Radio '''
+    # Load gnuradio framework
+    try:
+        from gnuradio import gr
+    except ImportError as e:
+        print ('Unable to import GR framework')
+
 
     usage = 'usage: %prog [options] [saved flow graphs]'
     version = """
@@ -59,9 +80,16 @@ if __name__ == "__main__":
     and you are welcome to redistribute it.
     """ % "3.7.2"  # gr.version()
 
+
     ''' Arguments and Environment Variables '''
     #parser = argparse.ArgumentParser(usage=usage#, version=version)
     #args = parser.parse_args()
+    #parser = argparse.ArgumentParser(
+    #description=VERSION_AND_DISCLAIMER_TEMPLATE % gr.version())
+    #parser.add_argument('flow_graphs', nargs='*')
+    #parser.add_argument('--log', choices=['debug', 'info', 'warning', 'error', 'critical'], default='warning')
+    #args = parser.parse_args()
+
 
     ''' Logging Support '''
     # Initialize logging first so that it can be used immediately
@@ -91,16 +119,31 @@ if __name__ == "__main__":
     console.setFormatter(formatter)
     log.addHandler(console)
 
+
+
+    #msg_format = '[%(asctime)s - %(levelname)8s] --- %(message)s (%(filename)s:%(lineno)s)'
+    msg_format = '[%(levelname)s] %(message)s (%(filename)s:%(lineno)s)'
+    date_format = '%I:%M'
+    formatter = logging.Formatter(msg_format, datefmt=date_format)
+
+    #formatter = utils.log.ConsoleFormatter()
+    console.setFormatter(formatter)
+    log.addHandler(console)
+
+    py_version = sys.version.split()[0]
+    log.debug("Starting GNU Radio Companion ({})".format(py_version))
+
+
     ''' Translation Support '''
     # Try to get the current locale. Always add English
     lc, encoding = locale.getdefaultlocale()
     if lc:
         languages = [lc]
-    languages += gp.DEFAULT_LANGUAGE
+    languages += settings.DEFAULT_LANGUAGE
     log.debug("Using locale - %s" % str(languages))
 
     # Still run even if the english translation isn't found
-    language = gettext.translation(gp.APP_NAME, gp.path.LANGUAGE, languages=languages,
+    language = gettext.translation(settings.APP_NAME, settings.path.LANGUAGE, languages=languages,
                                    fallback=True)
     if type(language) == gettext.NullTranslations:
         log.error("Unable to find any translation")
@@ -110,13 +153,14 @@ if __name__ == "__main__":
     # Still need to install null translation to let the system handle calls to _()
     language.install()
 
-    ''' SYSTEM PROPERTIES '''
+
+    ''' OS Platform '''
     # Figure out system specific properties and setup defaults.
     # Some properties should be overriddable by preferences
     # Get the current OS
     if platform.system() == "Linux":
         log.debug("Detected Linux")
-        gp.system.OS = "Linux"
+        settings.system.OS = "Linux"
         # Deteremine if Unity is running....
         try:
             #current_desktop = os.environ['DESKTOP_SESSION']
@@ -125,32 +169,36 @@ if __name__ == "__main__":
             if current_desktop == "Unity":
                 log.debug("Detected GRC is running under unity")
                 # Use the native menubar rather than leaving it in the window
-                gp.window.NATIVE_MENUBAR = True
+                settings.window.NATIVE_MENUBAR = True
         except:
             log.error("Unable to determine the Linux desktop system")
 
     elif platform.system() == "Darwin":
         log.debug("Detected Mac OS X")
-        gp.system.OS = "OS X"
+        settings.system.OS = "OS X"
         # Setup Mac specific QT elements
-        gp.window.NATIVE_MENUBAR = True
+        settings.window.NATIVE_MENUBAR = True
     elif platform.system() == "Windows":
         log.warning("Detected Windows")
-        gp.system.OS = "Windows"
+        settings.system.OS = "Windows"
     else:
         log.warning("Unknown operating system")
 
+
     ''' Preferences '''
+    # TODO: Move earlier? Need to load user preferences and override the default properties/settings
 
-    ''' GNU Radio '''
-    # Load gnuradio framework
-    try:
-        from gnuradio import gr
-    except ImportError as e:
-        log.error('Unable to import GR framework')
+    log.debug("Loading platform")
+    # TODO: Might be beneficial to rename Platform to avoid confusion with the builtin Python module
+    # Possible names: internal, model?
+    model = Platform(
+        version=gr.version(),
+        version_parts=(gr.major_version(), gr.api_version(), gr.minor_version()),
+        prefs=gr.prefs(),
+        #install_prefix=gr.prefix()
+    )
+    model.build_library()
 
-    # Initialize the GUI
-    controller = grc.AppController(gp)
-    # Launch the app
-    #sys.exit(0)
-    sys.exit(controller.run())
+    # Launch GRC
+    app = grc.Application(settings, model)
+    sys.exit(app.run())

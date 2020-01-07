@@ -1,7 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-#from PyQt4.QtCore import Qt, QRectF
-
 
 class DrawingView(QGraphicsView):
     def __init__(self, parent, flow_graph):
@@ -22,6 +20,7 @@ class DrawingView(QGraphicsView):
         #self.addActions(parent.main_window.menuEdit.actions())
 
     def wheelEvent(self, event):
+        # TODO: Support multi touch drag and drop for scrolling through the view
         if event.modifiers() == Qt.ControlModifier:
             factor = 1.2
             if event.delta() < 0 :
