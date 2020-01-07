@@ -17,7 +17,7 @@
 namespace gr {
 
 const float fxpt::s_sine_table[1 << NBITS][2] = {
-#include "sine_table.h"
+#include "generated/sine_table.h"
 };
 
 const float fxpt::PI = 3.14159265358979323846;
