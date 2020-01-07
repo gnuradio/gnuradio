@@ -310,7 +310,7 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
             // First test if this was a complex input where real/imag get
             // split here into two stream.
             /* TODOTODOCS removed temporarily
-            uint64_t offset = (*t).offset; issue a seg fault
+            // uint64_t offset = (*t).offset; issue a seg fault
             if (!tags.empty()) {
                 bool cmplx = false;
                 unsigned int mult = d_nplots / tags.size();

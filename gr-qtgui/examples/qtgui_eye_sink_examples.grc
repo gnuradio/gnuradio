@@ -143,7 +143,7 @@ blocks:
     start: '3'
     step: '1'
     stop: '10'
-    value: '5'
+    value: '10'
     widget: counter_slider
   states:
     bus_sink: false
@@ -169,7 +169,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [336, 212.0]
+    coordinate: [360, 244.0]
     rotation: 180
     state: enabled
 - name: blocks_complex_to_real_0
@@ -288,15 +288,15 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     noise_voltage: noise_amp
-    seed: '42'
-    taps: '1.0'
+    seed: '0'
+    taps: 1.0 + 1.0j
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [312, 332.0]
+    coordinate: [344, 340.0]
     rotation: 0
-    state: enabled
+    state: true
 - name: digital_psk_mod_0
   id: digital_psk_mod
   parameters:
@@ -950,9 +950,9 @@ connections:
 - [blocks_multiply_const_vxx_0_0, '0', qtgui_eye_sink_x_0, '0']
 - [blocks_multiply_const_vxx_0_0, '0', qtgui_eye_sink_x_1_1, '0']
 - [blocks_multiply_const_vxx_0_0, '0', qtgui_eye_sink_x_1_1_0, '0']
+- [blocks_throttle_0, '0', blocks_multiply_const_vxx_0_0, '0']
 - [blocks_throttle_0, '0', channels_channel_model_0, '0']
 - [channels_channel_model_0, '0', blocks_multiply_const_vxx_0, '0']
-- [channels_channel_model_0, '0', blocks_multiply_const_vxx_0_0, '0']
 - [digital_psk_mod_0, '0', blocks_throttle_0, '0']
 
 metadata:
