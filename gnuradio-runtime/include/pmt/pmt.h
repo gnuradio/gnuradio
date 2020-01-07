@@ -89,7 +89,7 @@ public:
     exception(const std::string& msg, pmt_t obj);
 };
 
-class PMT_API wrong_type : public exception
+class PMT_API wrong_type : public std::invalid_argument
 {
 public:
     wrong_type(const std::string& msg, pmt_t obj);

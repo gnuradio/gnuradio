@@ -65,7 +65,7 @@ class test_vector_sink_source(gr_unittest.TestCase):
         # vector has sufficient size
         src_data = [float(x) for x in range(16)]
         expected_result = tuple(src_data)
-        self.assertRaises(RuntimeError, lambda : blocks.vector_source_f(src_data, False, 3))
+        self.assertRaises(TypeError, lambda : blocks.vector_source_f(src_data, False, 3))
 
     def test_004(self):
         # Test sending and receiving tagged streams

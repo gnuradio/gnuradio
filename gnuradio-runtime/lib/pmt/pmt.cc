@@ -37,7 +37,7 @@ exception::exception(const std::string& msg, pmt_t obj)
 }
 
 wrong_type::wrong_type(const std::string& msg, pmt_t obj)
-    : exception(msg + ": wrong_type ", obj)
+    : invalid_argument(msg + ": wrong_type " + write_string(obj))
 {
 }
 
