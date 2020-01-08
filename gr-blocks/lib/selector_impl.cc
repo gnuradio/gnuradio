@@ -55,7 +55,12 @@ selector_impl::selector_impl(size_t itemsize,
     message_port_register_in(pmt::mp("en"));
     set_msg_handler(pmt::mp("en"), [this](pmt::pmt_t msg) { this->handle_enable(msg); });
 
-    // TODO: add message ports for input_index and output_index
+    message_port_register_in(pmt::mp("iindex"));
+    set_msg_handler(pmt::mp("iindex"),
+                    [this](pmt::pmt_t msg) { this->handle_msg_input_index(msg); });
+    message_port_register_in(pmt::mp("oindex"));
+    set_msg_handler(pmt::mp("oindex"),
+                    [this](pmt::pmt_t msg) { this->handle_msg_output_index(msg); });
 }
 
 selector_impl::~selector_impl() {}
@@ -77,6 +82,44 @@ void selector_impl::set_output_index(unsigned int output_index)
     else
         throw std::out_of_range("output_index must be < noutputs");
 }
+
+void selector_impl::handle_msg_input_index(pmt::pmt_t msg)
+{
+    pmt::pmt_t data = pmt::cdr(msg);
+
+    if (pmt::is_integer(data)) {
+        const unsigned int new_port = pmt::to_long(data);
+
+        if (new_port < d_num_inputs)
+            set_input_index(new_port);
+        else
+            GR_LOG_WARN(
+                d_logger,
+                "handle_msg_input_index: port index greater than available ports.");
+    } else
+        GR_LOG_WARN(
+            d_logger,
+            "handle_msg_input_index: Non-PMT type received, expecting integer PMT");
+}
+
+void selector_impl::handle_msg_output_index(pmt::pmt_t msg)
+{
+    pmt::pmt_t data = pmt::cdr(msg);
+
+    if (pmt::is_integer(data)) {
+        const unsigned int new_port = pmt::to_long(data);
+        if (new_port < d_num_outputs)
+            set_output_index(new_port);
+        else
+            GR_LOG_WARN(
+                d_logger,
+                "handle_msg_output_index: port index greater than available ports.");
+    } else
+        GR_LOG_WARN(
+            d_logger,
+            "handle_msg_output_index: Non-PMT type received, expecting integer PMT");
+}
+
 
 void selector_impl::handle_enable(pmt::pmt_t msg)
 {
