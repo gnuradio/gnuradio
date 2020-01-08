@@ -101,18 +101,6 @@ class Config(CoreConfig):
         return self._gr_prefs.get_string('grc-docs', 'wiki_block_docs_url_prefix', '')
 
     @property
-    def default_canvas_size(self):
-        try:  # ugly, but matches current code style
-            raw = self._gr_prefs.get_string('grc', 'canvas_default_size', '1280, 1024')
-            value = tuple(int(x.strip('() ')) for x in raw.split(','))
-            if len(value) != 2 or not all(300 < x < 4096 for x in value):
-                raise ValueError
-            return value
-        except (ValueError, TypeError):
-            print("Error: invalid 'canvas_default_size' setting.", file=sys.stderr)
-            return Constants.DEFAULT_CANVAS_SIZE_DEFAULT
-
-    @property
     def font_size(self):
         try:  # ugly, but matches current code style
             font_size = self._gr_prefs.get_long('grc', 'canvas_font_size',
@@ -192,7 +180,7 @@ class Config(CoreConfig):
     def variable_editor_position(self, pos=None, sidebar=False):
         # Figure out default
         if sidebar:
-            w, h = self.main_window_size()
+            _, h = self.main_window_size()
             return self.entry('variable_editor_sidebar_position', pos, default=int(h*0.7))
         else:
             return self.entry('variable_editor_position', pos, default=int(self.blocks_window_position()*0.5))
