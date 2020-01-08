@@ -27,6 +27,7 @@ if(ENABLE_TESTING)
     )
 
     if(PYTEST_FOUND)
+        set(GR_TEST_ENVIRONS "GRC_BLOCKS_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}/../blocks\"")
         GR_ADD_TEST(grc_tests ${QA_PYTHON_EXECUTABLE} -B -m pytest ${CMAKE_CURRENT_SOURCE_DIR})
     endif()
 endif(ENABLE_TESTING)
