@@ -19,10 +19,6 @@ parameters:
     label: Description
     dtype: string
     hide: ${ ('none' if description else 'part') }
--   id: window_size
-    label: Canvas Size
-    dtype: int_vector
-    hide: part
 -   id: output_language
     label: Output Language
     dtype: enum
@@ -130,9 +126,6 @@ parameters:
     hide: part
 
 asserts:
-- ${ not window_size or len(window_size) == 2 }
-- ${ not window_size or 300 <= window_size[0] <= 4096 }
-- ${ not window_size or 300 <= window_size[1] <= 4096 }
 - ${ len(placement) == 4 or len(placement) == 2 }
 - ${ all(i >= 0 for i in placement) }
 
