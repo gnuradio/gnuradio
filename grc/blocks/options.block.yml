@@ -109,7 +109,9 @@ parameters:
 -   id: catch_exceptions
     label: Catch Block Exceptions
     category: Advanced
-    dtype: bool
+    dtype: enum
+    options: ['False', 'True']
+    option_labels: ['Off', 'On']
     default: 'True'
     hide: part
 -   id: run_command
