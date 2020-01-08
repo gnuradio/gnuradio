@@ -8,8 +8,8 @@ parameters:
     dtype: int
     default: fft_len
 -   id: cp_len
-    label: CP Length
-    dtype: int
+    label: CP Length(s)
+    dtype: raw
     default: fft_len/4
 -   id: rolloff
     label: Rolloff
@@ -32,8 +32,16 @@ outputs:
 
 templates:
     imports: from gnuradio import digital
-    make: digital.ofdm_cyclic_prefixer(${input_size}, ${input_size} + ${cp_len}, ${rolloff},
-        ${tagname})
+    make: |-
+        digital.ofdm_cyclic_prefixer(
+            ${input_size},
+        % if isinstance(context.get('cp_len')(), (tuple, list)):
+            ${cp_len},
+        % else:
+            ${input_size} + ${cp_len},
+        % endif
+            ${rolloff},
+            ${tagname})
 
 cpp_templates:
     includes: ['#include <gnuradio/digital/ofdm_cyclic_prefixer.h>']
@@ -41,7 +49,11 @@ cpp_templates:
     make: |-
         this->${id} = digital::ofdm_cyclic_prefixer::make(
             ${input_size},
+        % if isinstance(context.get('cp_len')(), (tuple, list)):
+            ${cp_len},
+        % else:
             ${input_size} + ${cp_len},
+        % endif
             ${rolloff},
             ${tagname});
     link: ['gnuradio-digital']
