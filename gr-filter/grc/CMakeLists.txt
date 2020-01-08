@@ -21,6 +21,7 @@ install(FILES
     filter.tree.yml
     filter_dc_blocker_xx.block.yml
     filter_fft_filter_xxx.block.yml
+    filter_fft_low_pass_filter.block.yml
     filter_fir_filter_xxx.block.yml
     filter_filter_delay_fc.block.yml
     filter_filterbank_vcvcf.block.yml
