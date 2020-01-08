@@ -25,7 +25,6 @@ import tempfile
 from grc.core.platform import Platform
 
 
-@pytest.mark.xfail(reason="core/platform.py:198 self.blocks['options']) throws KeyError")
 def test_generator():
     # c&p form compiler code.
     # todo: make this independent from installed GR
