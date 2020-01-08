@@ -25,7 +25,6 @@ import tempfile
 
 from grc.compiler import main
 
-@pytest.mark.xfail(reason="core/platform.py:198 self.blocks['options']) throws KeyError")
 def test_compiler(capsys):
     args = Namespace(
         output=tempfile.gettempdir(),
