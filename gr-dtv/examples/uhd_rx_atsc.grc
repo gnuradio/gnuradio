@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: Receive ATSC from UHD
     window_size: 4000, 4000
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [10, 10]
     rotation: 0
     state: enabled
@@ -42,6 +46,7 @@ blocks:
     label4: ''
     labels: '[]'
     num_opts: '2'
+    option0: TX/RX
     option1: RX2
     option2: '2'
     option3: '3'
@@ -52,6 +57,9 @@ blocks:
     value: TX/RX
     widget: radio_buttons
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [344, 20.0]
     rotation: 0
     state: enabled
@@ -61,6 +69,9 @@ blocks:
     comment: ''
     value: 4.5e6/286*684
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [96, 108.0]
     rotation: 0
     state: enabled
@@ -73,6 +84,9 @@ blocks:
     type: real
     value: 605e6
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [520, 20.0]
     rotation: 0
     state: enabled
@@ -91,6 +105,9 @@ blocks:
     value: '18'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [664, 20.0]
     rotation: 0
     state: enabled
@@ -100,6 +117,9 @@ blocks:
     comment: ''
     value: atsc_sym_rate*sps
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [216, 108.0]
     rotation: 0
     state: enabled
@@ -112,6 +132,9 @@ blocks:
     type: real
     value: 6.25e6
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [520, 92.0]
     rotation: 0
     state: enabled
@@ -121,6 +144,9 @@ blocks:
     comment: ''
     value: '1.1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 108.0]
     rotation: 0
     state: enabled
@@ -138,6 +164,9 @@ blocks:
     reference: '4.0'
     type: float
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1144, 204.0]
     rotation: 0
     state: enabled
@@ -153,6 +182,9 @@ blocks:
     unbuffered: 'False'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1120, 476.0]
     rotation: 0
     state: enabled
@@ -168,6 +200,9 @@ blocks:
     minoutbuf: '0'
     type: ff
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [912, 220.0]
     rotation: 0
     state: enabled
@@ -199,6 +234,9 @@ blocks:
     label9: Tab 9
     num_tabs: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [192, 28.0]
     rotation: 0
     state: enabled
@@ -211,6 +249,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [136, 496.0]
     rotation: 0
     state: enabled
@@ -223,6 +264,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [928, 496.0]
     rotation: 0
     state: enabled
@@ -235,6 +279,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [680, 496.0]
     rotation: 0
     state: enabled
@@ -247,6 +294,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [848, 360.0]
     rotation: 0
     state: enabled
@@ -259,6 +309,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [568, 360.0]
     rotation: 0
     state: enabled
@@ -271,6 +324,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [376, 496.0]
     rotation: 0
     state: enabled
@@ -284,6 +340,9 @@ blocks:
     minoutbuf: '0'
     rate: oversampled_rate
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [320, 356.0]
     rotation: 0
     state: enabled
@@ -296,6 +355,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1112, 360.0]
     rotation: 0
     state: enabled
@@ -309,6 +371,9 @@ blocks:
     minoutbuf: '0'
     rate: oversampled_rate
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [616, 228.0]
     rotation: 0
     state: enabled
@@ -323,6 +388,9 @@ blocks:
     rate: sample_rate
     sps: sps
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [336, 220.0]
     rotation: 0
     state: enabled
@@ -636,6 +704,38 @@ blocks:
     norm_gain9: 'False'
     num_mboards: '1'
     otw: ''
+    rx_agc0: Default
+    rx_agc1: Default
+    rx_agc10: Default
+    rx_agc11: Default
+    rx_agc12: Default
+    rx_agc13: Default
+    rx_agc14: Default
+    rx_agc15: Default
+    rx_agc16: Default
+    rx_agc17: Default
+    rx_agc18: Default
+    rx_agc19: Default
+    rx_agc2: Default
+    rx_agc20: Default
+    rx_agc21: Default
+    rx_agc22: Default
+    rx_agc23: Default
+    rx_agc24: Default
+    rx_agc25: Default
+    rx_agc26: Default
+    rx_agc27: Default
+    rx_agc28: Default
+    rx_agc29: Default
+    rx_agc3: Default
+    rx_agc30: Default
+    rx_agc31: Default
+    rx_agc4: Default
+    rx_agc5: Default
+    rx_agc6: Default
+    rx_agc7: Default
+    rx_agc8: Default
+    rx_agc9: Default
     samp_rate: sample_rate
     sd_spec0: ''
     sd_spec1: ''
@@ -659,6 +759,9 @@ blocks:
     time_source7: ''
     type: fc32
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [40, 180.0]
     rotation: 0
     state: true
@@ -736,54 +839,61 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [40, 332.0]
     rotation: 180
     state: enabled
 - name: virtual_sink_0
   id: virtual_sink
   parameters:
-    affinity: ''
     alias: ''
     comment: ''
     stream_id: agc-sync
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1136, 300.0]
     rotation: 180
     state: true
 - name: virtual_sink_1
   id: virtual_sink
   parameters:
-    affinity: ''
     alias: ''
     comment: ''
     stream_id: viterbi-deint
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1120, 404.0]
     rotation: 180
     state: true
 - name: virtual_source_0
   id: virtual_source
   parameters:
-    affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
     stream_id: viterbi-deint
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [136, 444.0]
     rotation: 180
     state: true
 - name: virtual_source_2
   id: virtual_source
   parameters:
-    affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
     stream_id: agc-sync
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [320, 300.0]
     rotation: 180
     state: true
