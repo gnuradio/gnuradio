@@ -32,18 +32,13 @@ template <class IN_T, class OUT_T>
 class chunks_to_symbols_impl : public chunks_to_symbols<IN_T, OUT_T>
 {
 private:
-    int d_D;
+    const int d_D;
     std::vector<OUT_T> d_symbol_table;
 
 public:
     chunks_to_symbols_impl(const std::vector<OUT_T>& symbol_table, const int D = 1);
 
     ~chunks_to_symbols_impl();
-
-    void set_vector_from_pmt(std::vector<float>& symbol_table,
-                             pmt::pmt_t& symbol_table_pmt);
-    void set_vector_from_pmt(std::vector<gr_complex>& symbol_table,
-                             pmt::pmt_t& symbol_table_pmt);
 
     void handle_set_symbol_table(pmt::pmt_t symbol_table_pmt);
     void set_symbol_table(const std::vector<OUT_T>& symbol_table);

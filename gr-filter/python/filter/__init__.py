@@ -26,6 +26,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import os
+from gnuradio.fft import window
 
 try:
     from .filter_swig import *
@@ -41,4 +42,4 @@ from . import pfb
 from . import optfir
 
 # Pull this into the filter module
-from gnuradio.fft import window
+from .file_taps_loader import file_taps_loader

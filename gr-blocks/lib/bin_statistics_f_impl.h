@@ -36,7 +36,7 @@ class bin_statistics_f_impl : public bin_statistics_f
 private:
     enum state_t { ST_INIT, ST_TUNE_DELAY, ST_DWELL_DELAY };
 
-    size_t d_vlen;
+    const size_t d_vlen;
     msg_queue::sptr d_msgq;
     feval_dd* d_tune;
     size_t d_tune_delay;

@@ -32,7 +32,7 @@ namespace blocks {
 class BLOCKS_API file_source_impl : public file_source
 {
 private:
-    size_t d_itemsize;
+    const size_t d_itemsize;
     uint64_t d_start_offset_items;
     uint64_t d_length_items;
     uint64_t d_items_remaining;

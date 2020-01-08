@@ -306,11 +306,11 @@ void symbol_sync_ff_impl::propagate_tags(uint64_t nitems_rd,
     // on and after the interpolated input sample, up to half way to
     // the next output sample.
 
-    uint64_t mid_period_offset =
+    const uint64_t mid_period_offset =
         nitems_rd + d_filter_delay + static_cast<uint64_t>(iidx) +
         static_cast<uint64_t>(llroundf(iidx_fraction + inst_output_period / 2.0f));
 
-    uint64_t output_offset = nitems_wr + static_cast<uint64_t>(oidx);
+    const uint64_t output_offset = nitems_wr + static_cast<uint64_t>(oidx);
 
     int i;
     std::vector<tag_t>::iterator t;
@@ -332,7 +332,7 @@ void symbol_sync_ff_impl::save_expiring_tags(uint64_t nitems_rd, int consumed)
     // Tags that have already been propagated, have already been erased
     // from d_tags.
 
-    uint64_t consumed_offset = nitems_rd + static_cast<uint64_t>(consumed);
+    const uint64_t consumed_offset = nitems_rd + static_cast<uint64_t>(consumed);
     std::vector<tag_t>::iterator t;
 
     for (t = d_tags.begin(); t != d_tags.end();) {
@@ -387,7 +387,7 @@ void symbol_sync_ff_impl::emit_optional_output(int oidx,
 void symbol_sync_ff_impl::forecast(int noutput_items,
                                    gr_vector_int& ninput_items_required)
 {
-    unsigned ninputs = ninput_items_required.size();
+    const unsigned ninputs = ninput_items_required.size();
 
     // The '+ 2' in the expression below is an effort to always have at
     // least one output sample, even if the main loop decides it has to
@@ -396,7 +396,7 @@ void symbol_sync_ff_impl::forecast(int noutput_items,
     // The d_clock->get_max_avg_period() is also an effort to do the same,
     // in case we have the worst case allowable clock timing deviation on
     // input.
-    int answer = static_cast<int>(ceilf(static_cast<float>(noutput_items + 2) *
+    const int answer = static_cast<int>(ceilf(static_cast<float>(noutput_items + 2) *
                                         d_clock->get_max_avg_period() / d_osps)) +
                  static_cast<int>(d_interp->ntaps());
 
@@ -410,7 +410,7 @@ int symbol_sync_ff_impl::general_work(int noutput_items,
                                       gr_vector_void_star& output_items)
 {
     // max input to consume
-    int ni = ninput_items[0] - static_cast<int>(d_interp->ntaps());
+    const int ni = ninput_items[0] - static_cast<int>(d_interp->ntaps());
     if (ni <= 0)
         return 0;
 
@@ -428,8 +428,8 @@ int symbol_sync_ff_impl::general_work(int noutput_items,
     int look_ahead_phase_n = 0;
     float look_ahead_phase_wrapped = 0.0f;
 
-    uint64_t nitems_rd = nitems_read(0);
-    uint64_t nitems_wr = nitems_written(0);
+    const uint64_t nitems_rd = nitems_read(0);
+    const uint64_t nitems_wr = nitems_written(0);
     uint64_t sync_tag_offset;
     float sync_timing_offset;
     float sync_clock_period;

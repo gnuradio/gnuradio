@@ -26,13 +26,13 @@ namespace gr {
   // Hack to have a Python shim implementation of gr.top_block
   // that instantiates one of these and passes through calls
   %rename(top_block_swig) make_top_block;
-  gr::top_block_sptr make_top_block(const std::string name)
+  gr::top_block_sptr make_top_block(const std::string name, bool catch_exceptions)
     throw (std::logic_error);
 
   class top_block : public gr::hier_block2
   {
   private:
-    top_block(const std::string &name);
+    top_block(const std::string &name, bool catch_exceptions=true);
 
   public:
     ~top_block();

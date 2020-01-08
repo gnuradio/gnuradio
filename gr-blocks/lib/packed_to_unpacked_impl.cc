@@ -65,9 +65,9 @@ template <class T>
 void packed_to_unpacked_impl<T>::forecast(int noutput_items,
                                           gr_vector_int& ninput_items_required)
 {
-    int input_required = (int)ceil((d_index + noutput_items * d_bits_per_chunk) /
+    const int input_required = (int)ceil((d_index + noutput_items * d_bits_per_chunk) /
                                    (1.0 * this->d_bits_per_type));
-    unsigned ninputs = ninput_items_required.size();
+    const unsigned ninputs = ninput_items_required.size();
     for (unsigned int i = 0; i < ninputs; i++) {
         ninput_items_required[i] = input_required;
         // printf("Forecast wants %d needs %d\n",noutput_items,ninput_items_required[i]);
@@ -78,7 +78,7 @@ template <class T>
 unsigned int packed_to_unpacked_impl<T>::get_bit_le(const T* in_vector,
                                                     unsigned int bit_addr)
 {
-    T x = in_vector[bit_addr >> this->d_log2_l_type];
+    const T x = in_vector[bit_addr >> this->d_log2_l_type];
     return (x >> (bit_addr & (this->d_bits_per_type - 1))) & 1;
 }
 
@@ -86,7 +86,7 @@ template <class T>
 unsigned int packed_to_unpacked_impl<T>::get_bit_be(const T* in_vector,
                                                     unsigned int bit_addr)
 {
-    T x = in_vector[bit_addr >> this->d_log2_l_type];
+    const T x = in_vector[bit_addr >> this->d_log2_l_type];
     return (x >>
             ((this->d_bits_per_type - 1) - (bit_addr & (this->d_bits_per_type - 1)))) &
            1;
@@ -101,7 +101,7 @@ int packed_to_unpacked_impl<T>::general_work(int noutput_items,
     unsigned int index_tmp = d_index;
 
     assert(input_items.size() == output_items.size());
-    int nstreams = input_items.size();
+    const int nstreams = input_items.size();
 
     for (int m = 0; m < nstreams; m++) {
         const T* in = (T*)input_items[m];

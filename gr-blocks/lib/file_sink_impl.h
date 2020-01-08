@@ -31,7 +31,7 @@ namespace blocks {
 class file_sink_impl : public file_sink
 {
 private:
-    size_t d_itemsize;
+    const size_t d_itemsize;
 
 public:
     file_sink_impl(size_t itemsize, const char* filename, bool append = false);

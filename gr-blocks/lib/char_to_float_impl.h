@@ -30,7 +30,7 @@ namespace blocks {
 
 class BLOCKS_API char_to_float_impl : public char_to_float
 {
-    size_t d_vlen;
+    const size_t d_vlen;
     float d_scale;
 
 public:

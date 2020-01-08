@@ -30,7 +30,7 @@ namespace blocks {
 
 class BLOCKS_API multiply_conjugate_cc_impl : public multiply_conjugate_cc
 {
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     multiply_conjugate_cc_impl(size_t vlen);

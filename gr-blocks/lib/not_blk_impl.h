@@ -32,7 +32,7 @@ namespace blocks {
 template <class T>
 class BLOCKS_API not_blk_impl : public not_blk<T>
 {
-    size_t d_vlen;
+    const size_t d_vlen;
 
 public:
     not_blk_impl(size_t vlen);

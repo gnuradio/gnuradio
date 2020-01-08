@@ -116,7 +116,7 @@ void async_decoder_impl::decode_unpacked(pmt::pmt_t msg)
     size_t nbits_in = pmt::length(bits);
     size_t nbits_out = 0;
     size_t nblocks = 1;
-    bool variable_frame_size = d_decoder->set_frame_size(nbits_in * d_decoder->rate());
+    bool variable_frame_size = d_decoder->set_frame_size(nbits_in * d_decoder->rate() - diff);
 
     // Check here if the frame size is larger than what we've
     // allocated for in the constructor.
