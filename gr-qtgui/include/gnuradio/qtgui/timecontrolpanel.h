@@ -34,7 +34,7 @@
 #include <QSlider>
 #include <vector>
 
-class QTGUI_API TimeControlPanel : public QVBoxLayout
+class TimeControlPanel : public QVBoxLayout
 {
     Q_OBJECT
 

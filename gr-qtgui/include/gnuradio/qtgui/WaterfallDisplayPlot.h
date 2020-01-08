@@ -41,7 +41,7 @@
  * \brief QWidget for displaying waterfall (spectrogram) plots.
  * \ingroup qtgui_blk
  */
-class QTGUI_API WaterfallDisplayPlot : public DisplayPlot
+class WaterfallDisplayPlot : public DisplayPlot
 {
     Q_OBJECT
 

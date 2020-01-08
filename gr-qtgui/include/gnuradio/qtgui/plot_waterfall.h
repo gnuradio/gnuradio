@@ -45,7 +45,7 @@ class QwtColorMap;
  *
  * \sa QwtRasterData, QwtColorMap
  */
-class QTGUI_API PlotWaterfall : public QwtPlotRasterItem
+class PlotWaterfall : public QwtPlotRasterItem
 {
 public:
     explicit PlotWaterfall(WaterfallData* data, const QString& title = QString::null);

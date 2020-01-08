@@ -38,7 +38,7 @@
 #include <gnuradio/qtgui/trigger_mode.h>
 #include <qwt_symbol.h>
 
-class QTGUI_API LineColorMenu : public QMenu
+class LineColorMenu : public QMenu
 {
     Q_OBJECT
 
@@ -122,7 +122,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API LineWidthMenu : public QMenu
+class LineWidthMenu : public QMenu
 {
     Q_OBJECT
 
@@ -200,7 +200,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API LineStyleMenu : public QMenu
+class LineStyleMenu : public QMenu
 {
     Q_OBJECT
 
@@ -266,7 +266,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API LineMarkerMenu : public QMenu
+class LineMarkerMenu : public QMenu
 {
     Q_OBJECT
 
@@ -359,7 +359,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API MarkerAlphaMenu : public QMenu
+class MarkerAlphaMenu : public QMenu
 {
     Q_OBJECT
 
@@ -422,7 +422,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API LineTitleAction : public QAction
+class LineTitleAction : public QAction
 {
     Q_OBJECT
 
@@ -475,7 +475,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API OtherAction : public QAction
+class OtherAction : public QAction
 {
     Q_OBJECT
 
@@ -529,7 +529,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API OtherDualAction : public QAction
+class OtherDualAction : public QAction
 {
     Q_OBJECT
 
@@ -590,7 +590,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API FFTSizeMenu : public QMenu
+class FFTSizeMenu : public QMenu
 {
     Q_OBJECT
 
@@ -705,7 +705,7 @@ private:
 
 /********************************************************************/
 
-class QTGUI_API AverageMenu : public QMenu
+class AverageMenu : public QMenu
 {
     Q_OBJECT
 
@@ -812,7 +812,7 @@ private:
 
 /********************************************************************/
 
-class QTGUI_API FFTAverageMenu : public AverageMenu
+class FFTAverageMenu : public AverageMenu
 {
 public:
     FFTAverageMenu(QWidget* parent) : AverageMenu("FFT Average", parent)
@@ -826,7 +826,7 @@ public:
 /********************************************************************/
 
 
-class QTGUI_API FFTWindowMenu : public QMenu
+class FFTWindowMenu : public QMenu
 {
     Q_OBJECT
 
@@ -933,7 +933,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API NPointsMenu : public QAction
+class NPointsMenu : public QAction
 {
     Q_OBJECT
 
@@ -986,7 +986,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API ColorMapMenu : public QMenu
+class ColorMapMenu : public QMenu
 {
     Q_OBJECT
 
@@ -1083,7 +1083,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API TriggerModeMenu : public QMenu
+class TriggerModeMenu : public QMenu
 {
     Q_OBJECT
 
@@ -1161,7 +1161,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API TriggerSlopeMenu : public QMenu
+class TriggerSlopeMenu : public QMenu
 {
     Q_OBJECT
 
@@ -1228,7 +1228,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API TriggerChannelMenu : public QMenu
+class TriggerChannelMenu : public QMenu
 {
     Q_OBJECT
 
@@ -1280,7 +1280,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API NumberLayoutMenu : public QMenu
+class NumberLayoutMenu : public QMenu
 {
     Q_OBJECT
 
@@ -1353,7 +1353,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API NumberColorMapMenu : public QMenu
+class NumberColorMapMenu : public QMenu
 {
     Q_OBJECT
 
@@ -1435,7 +1435,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API PopupMenu : public QAction
+class PopupMenu : public QAction
 {
     Q_OBJECT
 
@@ -1488,7 +1488,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API ItemFloatAct : public QAction
+class ItemFloatAct : public QAction
 {
     Q_OBJECT
 

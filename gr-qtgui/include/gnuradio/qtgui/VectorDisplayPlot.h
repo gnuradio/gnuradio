@@ -32,7 +32,7 @@
  * \brief QWidget for displaying 1D-vector plots.
  * \ingroup qtgui_blk
  */
-class QTGUI_API VectorDisplayPlot : public DisplayPlot
+class VectorDisplayPlot : public DisplayPlot
 {
     Q_OBJECT
 

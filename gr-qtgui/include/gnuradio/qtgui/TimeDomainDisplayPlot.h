@@ -33,7 +33,7 @@
  * \brief QWidget for displaying time domain plots.
  * \ingroup qtgui_blk
  */
-class QTGUI_API TimeDomainDisplayPlot : public DisplayPlot
+class TimeDomainDisplayPlot : public DisplayPlot
 {
     Q_OBJECT
 
