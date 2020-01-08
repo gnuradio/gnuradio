@@ -77,6 +77,12 @@ public:
     virtual void set_display(bool d) = 0;
 
     /*!
+     * \brief Set whether to store all tags ever received (s=True) or solely the
+     * tags from the last work (s=False).
+     */
+    virtual void set_save_all(bool s) = 0;
+
+    /*!
      * \brief Set a new key to filter with.
      */
     virtual void set_key_filter(const std::string& key_filter) = 0;
