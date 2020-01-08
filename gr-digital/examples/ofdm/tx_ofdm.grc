@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: OFDM Tx
     window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 12.0]
     rotation: 0
     state: enabled
@@ -35,6 +39,9 @@ blocks:
     comment: ''
     value: '64'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [208, 12.0]
     rotation: 0
     state: enabled
@@ -44,6 +51,9 @@ blocks:
     comment: ''
     value: digital.header_format_ofdm(occupied_carriers, 1, length_tag_key,)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [912, 68.0]
     rotation: 0
     state: enabled
@@ -53,6 +63,9 @@ blocks:
     comment: ''
     value: digital.constellation_bpsk()
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [592, 12.0]
     rotation: 0
     state: enabled
@@ -62,6 +75,9 @@ blocks:
     comment: ''
     value: '"packet_len"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [368, 12.0]
     rotation: 0
     state: enabled
@@ -72,6 +88,9 @@ blocks:
     value: (list(range(-26, -21)) + list(range(-20, -7)) + list(range(-6, 0)) + list(range(1,
       7)) + list(range(8, 21)) + list(range(22, 27)),)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [512, 68.0]
     rotation: 0
     state: enabled
@@ -81,6 +100,9 @@ blocks:
     comment: ''
     value: '96'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [496, 12.0]
     rotation: 0
     state: enabled
@@ -90,6 +112,9 @@ blocks:
     comment: ''
     value: digital.constellation_qpsk()
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [752, 12.0]
     rotation: 0
     state: enabled
@@ -99,6 +124,9 @@ blocks:
     comment: ''
     value: ((-21, -7, 7, 21,),)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [672, 68.0]
     rotation: 0
     state: enabled
@@ -108,6 +136,9 @@ blocks:
     comment: ''
     value: ((1, 1, 1, -1,),)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [800, 68.0]
     rotation: 0
     state: enabled
@@ -117,6 +148,9 @@ blocks:
     comment: ''
     value: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [912, 12.0]
     rotation: 0
     state: enabled
@@ -126,6 +160,9 @@ blocks:
     comment: ''
     value: '50000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [272, 12.0]
     rotation: 0
     state: enabled
@@ -140,6 +177,9 @@ blocks:
       0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356,
       0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [208, 68.0]
     rotation: 0
     state: enabled
@@ -151,6 +191,9 @@ blocks:
       1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 0, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1,
       1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0] '
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [336, 68.0]
     rotation: 0
     state: enabled
@@ -168,6 +211,9 @@ blocks:
     repeat: 'True'
     type: byte
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 164.0]
     rotation: 0
     state: enabled
@@ -183,6 +229,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [200, 692.0]
     rotation: 0
     state: enabled
@@ -200,6 +249,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [640, 244.0]
     rotation: 0
     state: enabled
@@ -217,6 +269,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [880, 180.0]
     rotation: 0
     state: enabled
@@ -233,6 +288,9 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [176, 180.0]
     rotation: 0
     state: enabled
@@ -249,6 +307,9 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [712, 828.0]
     rotation: 0
     state: enabled
@@ -265,6 +326,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [360, 684.0]
     rotation: 0
     state: enabled
@@ -282,6 +346,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [512, 360.0]
     rotation: 0
     state: enabled
@@ -298,6 +365,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [552, 692.0]
     rotation: 0
     state: enabled
@@ -316,6 +386,9 @@ blocks:
     seed: '0'
     taps: 1.0 + 1.0j
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [200, 812.0]
     rotation: 0
     state: enabled
@@ -333,6 +406,9 @@ blocks:
     out_type: complex
     symbol_table: header_mod.points()
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [216, 320.0]
     rotation: 0
     state: enabled
@@ -350,6 +426,9 @@ blocks:
     out_type: complex
     symbol_table: payload_mod.points()
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [216, 392.0]
     rotation: 0
     state: enabled
@@ -365,6 +444,9 @@ blocks:
     minoutbuf: '0'
     packed: 'True'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [384, 172.0]
     rotation: 0
     state: enabled
@@ -384,6 +466,9 @@ blocks:
     pilot_symbols: pilot_symbols
     sync_words: (sync_word1, sync_word2)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [200, 476.0]
     rotation: 0
     state: enabled
@@ -393,13 +478,16 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    cp_len: fft_len//4
+    cp_len: fft_len/4
     input_size: fft_len
     maxoutbuf: '0'
     minoutbuf: '0'
     rolloff: rolloff
     tagname: length_tag_key
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [624, 508.0]
     rotation: 0
     state: enabled
@@ -424,6 +512,9 @@ blocks:
     sync_word1: sync_word1
     sync_word2: sync_word2
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [440, 764.0]
     rotation: 0
     state: enabled
@@ -438,6 +529,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [640, 180.0]
     rotation: 0
     state: enabled
@@ -456,6 +550,9 @@ blocks:
     type: complex
     window: ()
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [416, 492.0]
     rotation: 0
     state: enabled
@@ -466,6 +563,9 @@ blocks:
     comment: ''
     stream_id: Header Bits
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1088, 188.0]
     rotation: 0
     state: enabled
@@ -543,6 +643,9 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [960, 756.0]
     rotation: 0
     state: enabled
@@ -563,16 +666,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'True'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -637,6 +740,9 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [960, 668.0]
     rotation: 0
     state: enabled
@@ -647,6 +753,9 @@ blocks:
     comment: ''
     stream_id: Time Domain
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [856, 524]
     rotation: 0
     state: enabled
@@ -657,6 +766,9 @@ blocks:
     comment: ''
     stream_id: Payload Bits
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [832, 252.0]
     rotation: 0
     state: enabled
@@ -667,6 +779,9 @@ blocks:
     comment: ''
     stream_id: Pre-OFDM
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [744, 372.0]
     rotation: 0
     state: enabled
@@ -677,6 +792,9 @@ blocks:
     comment: ''
     stream_id: Tx Signal
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [960, 620.0]
     rotation: 0
     state: enabled
@@ -687,6 +805,9 @@ blocks:
     comment: ''
     stream_id: Header Bits
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 316.0]
     rotation: 0
     state: enabled
@@ -697,6 +818,9 @@ blocks:
     comment: ''
     stream_id: Payload Bits
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 388.0]
     rotation: 0
     state: enabled
@@ -707,6 +831,9 @@ blocks:
     comment: ''
     stream_id: Pre-OFDM
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 524.0]
     rotation: 0
     state: enabled
@@ -717,6 +844,9 @@ blocks:
     comment: ''
     stream_id: Time Domain
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 692.0]
     rotation: 0
     state: enabled
@@ -727,6 +857,9 @@ blocks:
     comment: ''
     stream_id: Tx Signal
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 844.0]
     rotation: 0
     state: enabled
