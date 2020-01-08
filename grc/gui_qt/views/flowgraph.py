@@ -19,9 +19,11 @@ DEFAULT_MAX_Y = 1024
 
 # TODO: Combine the scene and view? Maybe the scene should be the controller?
 class FlowgraphScene(QtWidgets.QGraphicsScene, base.Controller):
-    #def __init__(self, *args, **kwargs):
-    #    QtWidgets.QGraphicsScene.__init__(self, *args, **kwargs)
-
+    def __init__(self, *args, **kwargs):
+        super(FlowgraphScene, self).__init__()
+        self.isPanning    = False
+        self.mousePressed = False
+        
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls:
             event.setDropAction(Qt.CopyAction)
@@ -60,36 +62,26 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Controller):
                 bytearray = data.data('application/x-qabstractitemmodeldatalist')
                 data_items = self.decode_data(bytearray)
 
-                # Pull out label text and use it to find block's key
+                # Find block in tree so that we can pull out label
                 block_key = data_items[0][QtCore.Qt.UserRole].value()
                 block = self.platform.blocks[block_key]
 
-                print("Creating", block.key)
-
                 # Add block of this key at the cursor position
                 cursor_pos = event.scenePos()
-                #new_block = Block(cursor_pos.x(), cursor_pos.y(), label_text)
 
-                attrib = {}
+                # Pull out its params (keep in mind we still havent added the dialog box that lets you change param values so this is more for show)
                 params = []
-
-                '''
-                for param in xml_block.findall('param'):
-                    key = param.find('key').text
-                    value = param.find('value').text
-                    if key.startswith('_'):
-                        attrib[key] = literal_eval(value)
-                    else:
+                for p in block.parameters_data: # block.parameters_data is a list of dicts, one per param
+                    if 'label' in p: # for now let's just show it as long as it has a label
+                        key = p['label']
+                        value = p.get('default', '') # just show default value for now
                         params.append((key, value))
-                '''
-                block_widget = Block(block_key, attrib, params)
-
-                proxy = self.addWidget(block_widget)
-                proxy.ItemIsMoveable = True
-                #proxy.setFlag(QGraphicsItem.ItemIsMoveable)
-                proxy.setPos(cursor_pos.x(), cursor_pos.y())
-
-                #self.addItem(p)
+                    
+                # Tell the block where to show up on the canvas
+                attrib = {'_coordinate':(cursor_pos.x(), cursor_pos.y())}
+                
+                new_block = Block(block_key, block.label, attrib, params)
+                self.addItem(new_block)
 
                 event.setDropAction(Qt.CopyAction)
                 event.accept()
@@ -97,16 +89,59 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Controller):
                 return QtGui.QStandardItemModel.dropMimeData(self, data, action, row, column, parent)
         else:
             event.ignore()
+    
+    def mousePressEvent(self,  event):
+        if event.button() == Qt.LeftButton:
+            self.mousePressed = True
+            if self.isPanning:
+                #self.setCursor(Qt.ClosedHandCursor)
+                self.dragPos = event.pos()
+                event.accept()
+            else:
+                super(FlowgraphScene, self).mousePressEvent(event)
+
+    def mouseMoveEvent(self, event):
+        if self.mousePressed and self.isPanning:
+            newPos = event.pos()
+            diff = newPos - self.dragPos
+            self.dragPos = newPos
+            self.horizontalScrollBar().setValue(self.horizontalScrollBar().value() - diff.x())
+            self.verticalScrollBar().setValue(self.verticalScrollBar().value() - diff.y())
+            event.accept()
+        else:
+            itemUnderMouse = self.itemAt(event.pos(), QtGui.QTransform()) # the 2nd arg lets you transform some items and ignore others
+            if  itemUnderMouse is not None:
+                #~ print itemUnderMouse
+                pass
+
+            super(FlowgraphScene, self).mouseMoveEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            if event.modifiers() & Qt.ControlModifier:
+                #self.setCursor(Qt.OpenHandCursor)
+                pass
+            else:
+                self.isPanning = False
+                #self.setCursor(Qt.ArrowCursor)
+            self.mousePressed = False
+        super(FlowgraphScene, self).mouseReleaseEvent(event)
+
+    def mouseDoubleClickEvent(self, event): # Will be used to open up dialog box of a block
+        print("You double clicked on a block")
 
 
+        
+        
+        
 
-class Flowgraph(QtWidgets.QGraphicsView):
+class Flowgraph(QtWidgets.QGraphicsView, base.Controller): # added base.Controller so it can see platform
     def __init__(self, parent, filename=None):
         super(Flowgraph, self).__init__()
         self.setParent(parent)
         self.setAlignment(Qt.AlignLeft|Qt.AlignTop)
 
-        self.scene = FlowgraphScene()#QtWidgets.QGraphicsScene()
+        self.scene = FlowgraphScene()
 
         self.setSceneRect(0,0,DEFAULT_MAX_X, DEFAULT_MAX_Y)
         if filename is not None:
@@ -114,11 +149,9 @@ class Flowgraph(QtWidgets.QGraphicsView):
         else:
             self.initEmpty()
 
-        self.setScene(self.scene);
+        self.setScene(self.scene)
         self.setBackgroundBrush(QtGui.QBrush(Qt.white))
-        self.setInteractive(True)
-        self.setDragMode(QtWidgets.QGraphicsView.RubberBandDrag)
-
+        
         self.isPanning    = False
         self.mousePressed = False
 
@@ -140,20 +173,25 @@ class Flowgraph(QtWidgets.QGraphicsView):
                 else:
                     params.append((key, value))
 
-            block = Block(block_key, attrib, params)
-            x, y = block._coordinate
-            proxy = self.scene.addWidget(block)
-            proxy.ItemIsMoveable = True
-            #proxy.setFlag(QGraphicsItem.ItemIsMoveable)
-            proxy.setPos(x, y)
-        bounds = self.scene.itemsBoundingRect()
-        self.setSceneRect(bounds)
-        self.fitInView(bounds)
+            # Find block in tree so that we can pull out label
+            block = self.platform.blocks[block_key]
+                
+            new_block = Block(block_key, block.label, attrib, params)
+            self.scene.addItem(new_block)
+
+        # This part no longer works now that we are using a Scene with GraphicsItems, but I'm sure there's still some way to do it
+        #bounds = self.scene.itemsBoundingRect()
+        #self.setSceneRect(bounds)
+        #self.fitInView(bounds)
 
     def initEmpty(self):
         self.setSceneRect(0,0,DEFAULT_MAX_X, DEFAULT_MAX_Y)
 
-
+    def wheelEvent(self,  event):
+        factor = 1.1;
+        if event.angleDelta().y() < 0:
+            factor = 1.0 / factor
+        self.scale(factor, factor)
 
     def mousePressEvent(self,  event):
         if event.button() == Qt.LeftButton:
@@ -163,6 +201,7 @@ class Flowgraph(QtWidgets.QGraphicsView):
                 self.dragPos = event.pos()
                 event.accept()
             else:
+                # This will pass the mouse move event to the scene
                 super(Flowgraph, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
@@ -174,24 +213,21 @@ class Flowgraph(QtWidgets.QGraphicsView):
             self.verticalScrollBar().setValue(self.verticalScrollBar().value() - diff.y())
             event.accept()
         else:
-            itemUnderMouse = self.itemAt(event.pos())
-            if  itemUnderMouse is not None:
-                #~ print itemUnderMouse
-                pass
-
+            # This will pass the mouse move event to the scene
             super(Flowgraph, self).mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
             if event.modifiers() & Qt.ControlModifier:
                 self.setCursor(Qt.OpenHandCursor)
+                pass
             else:
                 self.isPanning = False
                 self.setCursor(Qt.ArrowCursor)
             self.mousePressed = False
         super(Flowgraph, self).mouseReleaseEvent(event)
 
-    def mouseDoubleClickEvent(self, event):
+    def mouseDoubleClickEvent(self, event): # Will be used to open up dialog box of a block
         pass
 
     def keyPressEvent(self, event):
@@ -208,10 +244,9 @@ class Flowgraph(QtWidgets.QGraphicsView):
                 self.setCursor(Qt.ArrowCursor)
         else:
             super(Flowgraph, self).keyPressEvent(event)
+            
+    def mouseDoubleClickEvent(self, event):
+        # This will pass the double click event to the scene
+        super(Flowgraph, self).mouseDoubleClickEvent(event)
 
 
-    def wheelEvent(self,  event):
-        factor = 1.1;
-        if event.angleDelta().y() < 0:
-            factor = 1.0 / factor
-        self.scale(factor, factor)
