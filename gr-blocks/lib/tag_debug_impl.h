@@ -22,8 +22,10 @@ class tag_debug_impl : public tag_debug
 {
 private:
     const std::string d_name;
-    std::vector<tag_t> d_tags;
+    std::vector<tag_t> d_work_tags; /** tags from last work */
+    std::vector<tag_t> d_tags;      /** optionally holds all tags ever received */
     bool d_display;
+    bool d_save_all;
     pmt::pmt_t d_filter;
     gr::thread::mutex d_mutex;
 
@@ -39,6 +41,8 @@ public:
     int num_tags();
 
     void set_display(bool d);
+
+    void set_save_all(bool s);
 
     void set_key_filter(const std::string& key_filter);
     std::string key_filter() const;

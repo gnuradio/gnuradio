@@ -35,7 +35,8 @@ tag_debug_impl::tag_debug_impl(size_t sizeof_stream_item,
                  io_signature::make(1, -1, sizeof_stream_item),
                  io_signature::make(0, 0, 0)),
       d_name(name),
-      d_display(true)
+      d_display(true),
+      d_save_all(false)
 {
     set_key_filter(key_filter);
 }
@@ -45,7 +46,12 @@ tag_debug_impl::~tag_debug_impl() {}
 std::vector<tag_t> tag_debug_impl::current_tags()
 {
     gr::thread::scoped_lock l(d_mutex);
-    return d_tags;
+
+    if (d_save_all) {
+        return d_tags;
+    } else {
+        return d_work_tags;
+    }
 }
 
 int tag_debug_impl::num_tags()
@@ -56,6 +62,17 @@ int tag_debug_impl::num_tags()
 }
 
 void tag_debug_impl::set_display(bool d) { d_display = d; }
+
+void tag_debug_impl::set_save_all(bool s)
+{
+    gr::thread::scoped_lock l(d_mutex);
+
+    if (d_save_all && !s) {
+        d_tags.clear();
+    }
+
+    d_save_all = s;
+}
 
 void tag_debug_impl::set_key_filter(const std::string& key_filter)
 {
@@ -86,20 +103,19 @@ int tag_debug_impl::work(int noutput_items,
         abs_N = nitems_read(i);
         end_N = abs_N + (uint64_t)(noutput_items);
 
-        d_tags.clear();
+        d_work_tags.clear();
         if (pmt::is_null(d_filter))
-            get_tags_in_range(d_tags, i, abs_N, end_N);
+            get_tags_in_range(d_work_tags, i, abs_N, end_N);
         else
-            get_tags_in_range(d_tags, i, abs_N, end_N, d_filter);
+            get_tags_in_range(d_work_tags, i, abs_N, end_N, d_filter);
 
-        if (!d_tags.empty()) {
+        if (!d_work_tags.empty())
             toprint = true;
-        }
 
         if (d_display) {
             sout << "Input Stream: " << std::setw(2) << std::setfill('0') << i
                  << std::setfill(' ') << std::endl;
-            for (const auto& tag : d_tags) {
+            for (const auto& tag : d_work_tags) {
                 sout << std::setw(10) << "Offset: " << tag.offset << std::setw(10)
                      << "Source: "
                      << (pmt::is_symbol(tag.srcid) ? pmt::symbol_to_string(tag.srcid)
@@ -108,6 +124,11 @@ int tag_debug_impl::work(int noutput_items,
                      << std::setw(10) << "Value: ";
                 sout << tag.value << std::endl;
             }
+        }
+
+        if (d_save_all) {
+            for (const auto& tag : d_work_tags)
+                d_tags.push_back(tag);
         }
     }
 
