@@ -37,7 +37,7 @@ static constexpr int SpectrumWindowCaptionEventType = 10008;
 static constexpr int SpectrumWindowResetEventType = 10009;
 static constexpr int SpectrumFrequencyRangeEventType = 10010;
 
-class QTGUI_API SpectrumUpdateEvent : public QEvent
+class SpectrumUpdateEvent : public QEvent
 {
 
 public:
@@ -79,7 +79,7 @@ private:
     int _droppedFFTFrames;
 };
 
-class QTGUI_API SpectrumWindowCaptionEvent : public QEvent
+class SpectrumWindowCaptionEvent : public QEvent
 {
 public:
     SpectrumWindowCaptionEvent(const QString&);
@@ -91,7 +91,7 @@ private:
     QString _labelString;
 };
 
-class QTGUI_API SpectrumWindowResetEvent : public QEvent
+class SpectrumWindowResetEvent : public QEvent
 {
 public:
     SpectrumWindowResetEvent();
@@ -101,7 +101,7 @@ protected:
 private:
 };
 
-class QTGUI_API SpectrumFrequencyRangeEvent : public QEvent
+class SpectrumFrequencyRangeEvent : public QEvent
 {
 public:
     SpectrumFrequencyRangeEvent(const double, const double, const double);
@@ -118,7 +118,7 @@ private:
 };
 
 
-class QTGUI_API TimeUpdateEvent : public QEvent
+class TimeUpdateEvent : public QEvent
 {
 public:
     TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
@@ -148,7 +148,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API FreqUpdateEvent : public QEvent
+class FreqUpdateEvent : public QEvent
 {
 public:
     FreqUpdateEvent(const std::vector<double*> dataPoints, const uint64_t numDataPoints);
@@ -170,7 +170,7 @@ private:
 };
 
 
-class QTGUI_API SetFreqEvent : public QEvent
+class SetFreqEvent : public QEvent
 {
 public:
     SetFreqEvent(const double, const double);
@@ -216,7 +216,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API WaterfallUpdateEvent : public QEvent
+class WaterfallUpdateEvent : public QEvent
 {
 public:
     WaterfallUpdateEvent(const std::vector<double*> dataPoints,
@@ -247,7 +247,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API TimeRasterUpdateEvent : public QEvent
+class TimeRasterUpdateEvent : public QEvent
 {
 public:
     TimeRasterUpdateEvent(const std::vector<double*> dataPoints,
@@ -269,7 +269,7 @@ private:
 };
 
 
-class QTGUI_API TimeRasterSetSize : public QEvent
+class TimeRasterSetSize : public QEvent
 {
 public:
     TimeRasterSetSize(const double nrows, const double ncols);
@@ -289,7 +289,7 @@ private:
 /********************************************************************/
 
 
-class QTGUI_API HistogramUpdateEvent : public QEvent
+class HistogramUpdateEvent : public QEvent
 {
 public:
     HistogramUpdateEvent(const std::vector<double*> points, const uint64_t npoints);
@@ -311,7 +311,7 @@ private:
 };
 
 
-class QTGUI_API HistogramSetAccumulator : public QEvent
+class HistogramSetAccumulator : public QEvent
 {
 public:
     HistogramSetAccumulator(const bool en);
@@ -325,7 +325,7 @@ private:
     bool _en;
 };
 
-class QTGUI_API HistogramClearEvent : public QEvent
+class HistogramClearEvent : public QEvent
 {
 public:
     HistogramClearEvent() : QEvent(QEvent::Type(SpectrumUpdateEventType + 2)) {}
@@ -339,7 +339,7 @@ public:
 /********************************************************************/
 
 
-class QTGUI_API NumberUpdateEvent : public QEvent
+class NumberUpdateEvent : public QEvent
 {
 public:
     NumberUpdateEvent(const std::vector<float> samples);

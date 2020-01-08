@@ -35,7 +35,7 @@
  * \brief DisplayForm child for managing waterfall (spectrogram) plots.
  * \ingroup qtgui_blk
  */
-class QTGUI_API WaterfallDisplayForm : public DisplayForm
+class WaterfallDisplayForm : public DisplayForm
 {
     Q_OBJECT
 

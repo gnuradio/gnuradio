@@ -34,7 +34,7 @@
  * \brief DisplayForm child for managing vector plots.
  * \ingroup qtgui_blk
  */
-class QTGUI_API VectorDisplayForm : public DisplayForm
+class VectorDisplayForm : public DisplayForm
 {
     Q_OBJECT
 

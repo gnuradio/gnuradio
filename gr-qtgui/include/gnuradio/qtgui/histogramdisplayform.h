@@ -34,7 +34,7 @@
  * \brief DisplayForm child for managing histogram domain plots.
  * \ingroup qtgui_blk
  */
-class QTGUI_API HistogramDisplayForm : public DisplayForm
+class HistogramDisplayForm : public DisplayForm
 {
     Q_OBJECT
 

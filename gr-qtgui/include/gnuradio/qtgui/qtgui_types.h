@@ -23,7 +23,6 @@
 #ifndef QTGUI_TYPES_H
 #define QTGUI_TYPES_H
 
-#include <gnuradio/qtgui/api.h>
 #include <gnuradio/high_res_timer.h>
 #include <qwt_color_map.h>
 #include <qwt_scale_draw.h>
@@ -46,7 +45,7 @@ enum data_type_t {
 } /* namespace qtgui */
 } /* namespace gr */
 
-class QTGUI_API FreqOffsetAndPrecisionClass
+class FreqOffsetAndPrecisionClass
 {
 public:
     FreqOffsetAndPrecisionClass(const int freqPrecision)
@@ -74,7 +73,7 @@ private:
     double _centerFrequency;
 };
 
-class QTGUI_API TimeScaleData
+class TimeScaleData
 {
 public:
     TimeScaleData()
@@ -106,7 +105,7 @@ private:
 /***********************************************************************
  * Text scale widget to provide X (freq) axis text
  **********************************************************************/
-class QTGUI_API FreqDisplayScaleDraw : public QwtScaleDraw, FreqOffsetAndPrecisionClass
+class FreqDisplayScaleDraw : public QwtScaleDraw, FreqOffsetAndPrecisionClass
 {
 public:
     FreqDisplayScaleDraw(const unsigned int precision)
@@ -148,7 +147,7 @@ enum {
     INTENSITY_COLOR_MAP_TYPE_COOL = 6,
 };
 
-class QTGUI_API ColorMap_MultiColor : public QwtLinearColorMap
+class ColorMap_MultiColor : public QwtLinearColorMap
 {
 public:
     ColorMap_MultiColor() : QwtLinearColorMap(Qt::darkCyan, Qt::white)
@@ -159,19 +158,19 @@ public:
     }
 };
 
-class QTGUI_API ColorMap_WhiteHot : public QwtLinearColorMap
+class ColorMap_WhiteHot : public QwtLinearColorMap
 {
 public:
     ColorMap_WhiteHot() : QwtLinearColorMap(Qt::black, Qt::white) {}
 };
 
-class QTGUI_API ColorMap_BlackHot : public QwtLinearColorMap
+class ColorMap_BlackHot : public QwtLinearColorMap
 {
 public:
     ColorMap_BlackHot() : QwtLinearColorMap(Qt::white, Qt::black) {}
 };
 
-class QTGUI_API ColorMap_Incandescent : public QwtLinearColorMap
+class ColorMap_Incandescent : public QwtLinearColorMap
 {
 public:
     ColorMap_Incandescent() : QwtLinearColorMap(Qt::black, Qt::white)
@@ -180,7 +179,7 @@ public:
     }
 };
 
-class QTGUI_API ColorMap_Sunset : public QwtLinearColorMap
+class ColorMap_Sunset : public QwtLinearColorMap
 {
 public:
     ColorMap_Sunset() : QwtLinearColorMap(QColor(0, 0, 0, 0), QColor(255, 255, 193, 255))
@@ -193,7 +192,7 @@ public:
     }
 };
 
-class QTGUI_API ColorMap_Cool : public QwtLinearColorMap
+class ColorMap_Cool : public QwtLinearColorMap
 {
 public:
     ColorMap_Cool() : QwtLinearColorMap(QColor(0, 0, 0, 0), QColor(255, 255, 255, 255))
@@ -206,7 +205,7 @@ public:
     }
 };
 
-class QTGUI_API ColorMap_UserDefined : public QwtLinearColorMap
+class ColorMap_UserDefined : public QwtLinearColorMap
 {
 public:
     ColorMap_UserDefined(QColor low, QColor high) : QwtLinearColorMap(low, high) {}

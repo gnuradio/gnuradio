@@ -23,7 +23,6 @@
 #ifndef WATERFALL_GLOBAL_DATA_HPP
 #define WATERFALL_GLOBAL_DATA_HPP
 
-#include <gnuradio/qtgui/api.h>
 #include <inttypes.h>
 #include <qwt_raster_data.h>
 
@@ -32,7 +31,7 @@
 #include <qwt_point_3d.h> // doesn't seem necessary, but is...
 #endif
 
-class QTGUI_API WaterfallData : public QwtRasterData
+class WaterfallData : public QwtRasterData
 {
 public:
     WaterfallData(const double, const double, const uint64_t, const unsigned int);
