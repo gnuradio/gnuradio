@@ -63,10 +63,7 @@ file_descriptor_source_impl::file_descriptor_source_impl(size_t itemsize,
 {
 }
 
-file_descriptor_source_impl::~file_descriptor_source_impl()
-{
-    close(d_fd);
-}
+file_descriptor_source_impl::~file_descriptor_source_impl() { close(d_fd); }
 
 int file_descriptor_source_impl::read_items(char* buf, int nitems)
 {

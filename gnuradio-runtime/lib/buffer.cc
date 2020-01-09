@@ -341,11 +341,11 @@ void buffer_reader::get_tags_in_range(std::vector<tag_t>& v,
     uint64_t lower_bound = abs_start - d_attr_delay;
     // check for underflow and if so saturate at 0
     if (lower_bound > abs_start)
-      lower_bound = 0;
+        lower_bound = 0;
     uint64_t upper_bound = abs_end - d_attr_delay;
     // check for underflow and if so saturate at 0
     if (upper_bound > abs_end)
-      upper_bound = 0;
+        upper_bound = 0;
 
     v.clear();
     std::multimap<uint64_t, tag_t>::iterator itr =

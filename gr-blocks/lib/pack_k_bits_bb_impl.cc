@@ -42,7 +42,7 @@ pack_k_bits_bb_impl::pack_k_bits_bb_impl(unsigned k)
                      io_signature::make(1, 1, sizeof(unsigned char)),
                      io_signature::make(1, 1, sizeof(unsigned char)),
                      k),
-    d_pack(k)
+      d_pack(k)
 {
 }
 

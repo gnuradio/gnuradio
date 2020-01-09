@@ -33,10 +33,10 @@ class atsc_fs_checker_impl : public atsc_fs_checker
 {
 private:
     static constexpr int SRSIZE = 1024; // must be power of two
-    int d_index;                    // points at oldest sample
-    float d_sample_sr[SRSIZE];      // sample shift register
-    atsc::syminfo d_tag_sr[SRSIZE]; // tag shift register
-    unsigned char d_bit_sr[SRSIZE]; // binary decision shift register
+    int d_index;                        // points at oldest sample
+    float d_sample_sr[SRSIZE];          // sample shift register
+    atsc::syminfo d_tag_sr[SRSIZE];     // tag shift register
+    unsigned char d_bit_sr[SRSIZE];     // binary decision shift register
     int d_field_num;
     int d_segment_num;
 

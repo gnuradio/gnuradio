@@ -114,9 +114,8 @@ int tag_debug_impl::work(int noutput_items,
             for (const auto& tag : d_tags) {
                 sout << std::setw(10) << "Offset: " << tag.offset << std::setw(10)
                      << "Source: "
-                     << (pmt::is_symbol(tag.srcid)
-                             ? pmt::symbol_to_string(tag.srcid)
-                             : "n/a")
+                     << (pmt::is_symbol(tag.srcid) ? pmt::symbol_to_string(tag.srcid)
+                                                   : "n/a")
                      << std::setw(10) << "Key: " << pmt::symbol_to_string(tag.key)
                      << std::setw(10) << "Value: ";
                 sout << tag.value << std::endl;

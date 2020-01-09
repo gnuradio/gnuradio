@@ -27,8 +27,8 @@
 #include "local_sighandler.h"
 #include <stdio.h>
 #include <string.h>
-#include <stdexcept>
 #include <boost/format.hpp>
+#include <stdexcept>
 
 namespace gr {
 

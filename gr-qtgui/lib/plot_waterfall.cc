@@ -279,4 +279,3 @@ QImage PlotWaterfall::renderImage(const QwtScaleMap& xMap,
 
     return std::move(image);
 }
-
