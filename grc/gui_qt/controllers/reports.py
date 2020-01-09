@@ -1,5 +1,5 @@
 # GRC imports
-import cgi
+import html
 import logging
 from .. import views, base
 
@@ -73,11 +73,11 @@ class ReportsHandler(logging.Handler):  # Inherit from logging.Handler
         # Just handle all formatting here
         if self.show_level:
             level = self.formatLevel(record.levelname)
-            message = cgi.escape(record.msg)
+            message = html.escape(record.msg)
             output = self.formatOutput()
             self.add_line(output.format(level, message))
         else:
-            message = cgi.escape(record.msg)
+            message = html.escape(record.msg)
             output = self.formatOutput()
             self.add_line(output.format(message))
 
