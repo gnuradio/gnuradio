@@ -98,8 +98,8 @@ pfb_clock_sync_ccf_impl::pfb_clock_sync_ccf_impl(double sps,
     // Create an FIR filter for each channel and zero out the taps
     std::vector<float> vtaps(1, 0);
     for (int i = 0; i < d_nfilters; i++) {
-         d_filters[i].reset(new kernel::fir_filter_ccf(1, vtaps));
-         d_diff_filters[i].reset(new kernel::fir_filter_ccf(1, vtaps));
+        d_filters[i].reset(new kernel::fir_filter_ccf(1, vtaps));
+        d_diff_filters[i].reset(new kernel::fir_filter_ccf(1, vtaps));
     }
 
     // Now, actually set the filters' taps
@@ -206,9 +206,10 @@ void pfb_clock_sync_ccf_impl::update_gains()
     d_beta = (4 * d_loop_bw * d_loop_bw) / denom;
 }
 
-void pfb_clock_sync_ccf_impl::set_taps(const std::vector<float>& newtaps,
-                                       std::vector<std::vector<float>>& ourtaps,
-                                       std::vector<std::unique_ptr<kernel::fir_filter_ccf>>& ourfilter)
+void pfb_clock_sync_ccf_impl::set_taps(
+    const std::vector<float>& newtaps,
+    std::vector<std::vector<float>>& ourtaps,
+    std::vector<std::unique_ptr<kernel::fir_filter_ccf>>& ourfilter)
 {
     int i, j;
 

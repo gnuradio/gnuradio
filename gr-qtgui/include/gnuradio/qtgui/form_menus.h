@@ -1138,8 +1138,7 @@ public:
             return d_act[3];
             break;
         default:
-            throw std::runtime_error(
-                "TriggerModeMenu::getAction: unknown trigger mode.");
+            throw std::runtime_error("TriggerModeMenu::getAction: unknown trigger mode.");
         }
     }
 
@@ -1193,8 +1192,7 @@ public:
         if (which < static_cast<unsigned int>(d_act.size()))
             return d_act[which];
         else
-            throw std::runtime_error(
-                "TriggerSlopeMenu::getAction: which out of range.");
+            throw std::runtime_error("TriggerSlopeMenu::getAction: which out of range.");
     }
 
     QAction* getAction(gr::qtgui::trigger_slope slope)
@@ -1314,8 +1312,7 @@ public:
         if (which < static_cast<unsigned int>(d_act.size()))
             return d_act[which];
         else
-            throw std::runtime_error(
-                "NumberLayoutMenu::getAction: which out of range.");
+            throw std::runtime_error("NumberLayoutMenu::getAction: which out of range.");
     }
 
     QAction* getAction(gr::qtgui::graph_t layout)
@@ -1331,8 +1328,7 @@ public:
             return d_act[1];
             break;
         default:
-            throw std::runtime_error(
-                "NumberLayoutMenu::getAction: unknown layout type.");
+            throw std::runtime_error("NumberLayoutMenu::getAction: unknown layout type.");
         }
     }
 

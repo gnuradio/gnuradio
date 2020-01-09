@@ -74,10 +74,10 @@ private:
     const int d_decimation;
     std::unique_ptr<fft::fft_real_fwd> d_fwdfft; // forward "plan"
     std::unique_ptr<fft::fft_real_rev> d_invfft; // inverse "plan"
-    int d_nthreads;              // number of FFTW threads to use
-    std::vector<float> d_tail;   // state carried between blocks for overlap-add
-    std::vector<float> d_taps;   // stores time domain taps
-    volk::vector<gr_complex> d_xformed_taps;  // Fourier xformed taps
+    int d_nthreads;                              // number of FFTW threads to use
+    std::vector<float> d_tail; // state carried between blocks for overlap-add
+    std::vector<float> d_taps; // stores time domain taps
+    volk::vector<gr_complex> d_xformed_taps; // Fourier xformed taps
 
     void compute_sizes(int ntaps);
     int tailsize() const { return d_ntaps - 1; }
@@ -174,12 +174,12 @@ private:
     int d_nsamples;
     int d_fftsize; // fftsize = ntaps + nsamples - 1
     const int d_decimation;
-    std::unique_ptr<fft::fft_complex> d_fwdfft;     // forward "plan"
-    std::unique_ptr<fft::fft_complex> d_invfft;     // inverse "plan"
-    int d_nthreads;                 // number of FFTW threads to use
+    std::unique_ptr<fft::fft_complex> d_fwdfft; // forward "plan"
+    std::unique_ptr<fft::fft_complex> d_invfft; // inverse "plan"
+    int d_nthreads;                             // number of FFTW threads to use
     std::vector<gr_complex> d_tail; // state carried between blocks for overlap-add
     std::vector<gr_complex> d_taps; // stores time domain taps
-    volk::vector<gr_complex> d_xformed_taps;     // Fourier xformed taps
+    volk::vector<gr_complex> d_xformed_taps; // Fourier xformed taps
 
     void compute_sizes(int ntaps);
     int tailsize() const { return d_ntaps - 1; }
@@ -276,12 +276,12 @@ private:
     int d_nsamples;
     int d_fftsize; // fftsize = ntaps + nsamples - 1
     const int d_decimation;
-    std::unique_ptr<fft::fft_complex> d_fwdfft;     // forward "plan"
-    std::unique_ptr<fft::fft_complex> d_invfft;     // inverse "plan"
-    int d_nthreads;                 // number of FFTW threads to use
+    std::unique_ptr<fft::fft_complex> d_fwdfft; // forward "plan"
+    std::unique_ptr<fft::fft_complex> d_invfft; // inverse "plan"
+    int d_nthreads;                             // number of FFTW threads to use
     std::vector<gr_complex> d_tail; // state carried between blocks for overlap-add
     std::vector<float> d_taps;      // stores time domain taps
-    volk::vector<gr_complex> d_xformed_taps;     // Fourier xformed taps
+    volk::vector<gr_complex> d_xformed_taps; // Fourier xformed taps
 
     void compute_sizes(int ntaps);
     int tailsize() const { return d_ntaps - 1; }

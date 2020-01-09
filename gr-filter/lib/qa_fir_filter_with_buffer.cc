@@ -30,9 +30,9 @@
 #include <gnuradio/types.h>
 #include <volk/volk.h>
 #include <boost/test/unit_test.hpp>
+#include <algorithm>
 #include <cmath>
 #include <cstring>
-#include <algorithm>
 
 using std::vector;
 

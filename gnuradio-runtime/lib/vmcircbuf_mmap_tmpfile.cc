@@ -65,11 +65,8 @@ vmcircbuf_mmap_tmpfile::vmcircbuf_mmap_tmpfile(int size) : gr::vmcircbuf(size)
 
     // open a temporary file that we'll map in a bit later
     while (1) {
-        seg_name = str(boost::format(
-                       "%s/gnuradio-%d-%d-XXXXXX") %
-                       gr::tmp_path() %
-                       getpid() %
-                       s_seg_counter);
+        seg_name = str(boost::format("%s/gnuradio-%d-%d-XXXXXX") % gr::tmp_path() %
+                       getpid() % s_seg_counter);
         s_seg_counter++;
 
         seg_fd = open(seg_name.c_str(), O_RDWR | O_CREAT | O_EXCL, 0600);

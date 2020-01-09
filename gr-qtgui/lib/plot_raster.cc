@@ -298,4 +298,3 @@ QwtInterval PlotTimeRaster::interval(Qt::Axis ax) const
     return d_data->data->interval(ax);
 }
 #endif
-

@@ -67,15 +67,9 @@ void fft_filter_fff_impl::set_taps(const std::vector<float>& taps)
 
 std::vector<float> fft_filter_fff_impl::taps() const { return d_new_taps; }
 
-void fft_filter_fff_impl::set_nthreads(int n)
-{
-    d_filter.set_nthreads(n);
-}
+void fft_filter_fff_impl::set_nthreads(int n) { d_filter.set_nthreads(n); }
 
-int fft_filter_fff_impl::nthreads() const
-{
-    return d_filter.nthreads();
-}
+int fft_filter_fff_impl::nthreads() const { return d_filter.nthreads(); }
 
 int fft_filter_fff_impl::work(int noutput_items,
                               gr_vector_const_void_star& input_items,

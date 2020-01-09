@@ -120,9 +120,8 @@ int fft_vcc_fftw::work(int noutput_items,
             memcpy(&out[0],
                    &d_fft.get_outbuf()[len],
                    sizeof(gr_complex) * (d_fft_size - len));
-            memcpy(&out[d_fft_size - len],
-                   &d_fft.get_outbuf()[0],
-                   sizeof(gr_complex) * len);
+            memcpy(
+                &out[d_fft_size - len], &d_fft.get_outbuf()[0], sizeof(gr_complex) * len);
         } else {
             memcpy(out, d_fft.get_outbuf(), output_data_size);
         }

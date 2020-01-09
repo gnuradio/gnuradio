@@ -66,7 +66,7 @@ void packed_to_unpacked_impl<T>::forecast(int noutput_items,
                                           gr_vector_int& ninput_items_required)
 {
     const int input_required = (int)ceil((d_index + noutput_items * d_bits_per_chunk) /
-                                   (1.0 * this->d_bits_per_type));
+                                         (1.0 * this->d_bits_per_type));
     const unsigned ninputs = ninput_items_required.size();
     for (unsigned int i = 0; i < ninputs; i++) {
         ninput_items_required[i] = input_required;

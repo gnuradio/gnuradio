@@ -33,8 +33,8 @@
 #include <volk/volk.h>
 
 #include <string.h>
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 
 namespace gr {
 namespace qtgui {

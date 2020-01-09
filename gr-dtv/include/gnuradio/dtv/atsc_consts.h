@@ -38,8 +38,9 @@ static constexpr int MPEG_TRANSPORT_ERROR_BIT = 0x80; // top bit of byte after S
 // ATSC specific constants
 static constexpr double ATSC_SYMBOL_RATE = 4.5e6 / 286 * 684;            // ~10.76 MHz
 static constexpr double ATSC_DATA_SEGMENT_RATE = ATSC_SYMBOL_RATE / 832; // ~12.935 kHz
-static constexpr int ATSC_DATA_SEGMENT_LENGTH = 832; // includes 4 sync symbols at beginning
-static constexpr int ATSC_DSEGS_PER_FIELD = 312;     // regular data segs / field
+static constexpr int ATSC_DATA_SEGMENT_LENGTH =
+    832;                                         // includes 4 sync symbols at beginning
+static constexpr int ATSC_DSEGS_PER_FIELD = 312; // regular data segs / field
 
 } /* namespace dtv */
 } /* namespace gr */
