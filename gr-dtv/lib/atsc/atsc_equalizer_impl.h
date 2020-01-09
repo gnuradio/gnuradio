@@ -34,7 +34,8 @@ class atsc_equalizer_impl : public atsc_equalizer
 {
 private:
     static constexpr int NTAPS = 64;
-    static constexpr int NPRETAPS = (int)(NTAPS * 0.8); // probably should be either .2 or .8
+    static constexpr int NPRETAPS =
+        (int)(NTAPS * 0.8); // probably should be either .2 or .8
 
     // the length of the field sync pattern that we know unequivocally
     static constexpr int KNOWN_FIELD_SYNC_LENGTH = 4 + 511 + 3 * 63;

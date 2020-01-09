@@ -33,16 +33,15 @@ namespace gr {
 namespace digital {
 
 
-void set_vector_from_pmt(
-    std::vector<gr_complex>& symbol_table, pmt::pmt_t& symbol_table_pmt)
+void set_vector_from_pmt(std::vector<gr_complex>& symbol_table,
+                         pmt::pmt_t& symbol_table_pmt)
 {
     size_t length;
     const gr_complex* elements = pmt::c32vector_elements(symbol_table_pmt, length);
     symbol_table.assign(elements, elements + length);
 }
 
-void set_vector_from_pmt(
-    std::vector<float>& symbol_table, pmt::pmt_t& symbol_table_pmt)
+void set_vector_from_pmt(std::vector<float>& symbol_table, pmt::pmt_t& symbol_table_pmt)
 {
     size_t length;
     const float* elements = pmt::f32vector_elements(symbol_table_pmt, length);

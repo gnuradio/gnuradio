@@ -106,8 +106,8 @@ int decoder_impl::general_work(int noutput_items,
                      pmt::intern(alias()));
     }
 
-    int consumed = std::lround(
-        items / relative_rate() * (output_multiple() - d_decoder->get_history()));
+    int consumed = std::lround(items / relative_rate() *
+                               (output_multiple() - d_decoder->get_history()));
     int returned = items * (output_multiple() - d_decoder->get_history());
 
     consume_each(consumed);

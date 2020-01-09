@@ -102,7 +102,8 @@ void prefs::_read_files(const std::vector<std::string>& filenames)
                         section = "default";
                         key = okey;
                     }
-                    std::transform(section.begin(), section.end(), section.begin(), ::tolower);
+                    std::transform(
+                        section.begin(), section.end(), section.begin(), ::tolower);
                     std::transform(key.begin(), key.end(), key.begin(), ::tolower);
                     // value of a basic_option is always a std::vector<string>; we only
                     // allow single values, so:

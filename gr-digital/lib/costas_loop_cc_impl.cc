@@ -59,28 +59,29 @@ costas_loop_cc_impl::costas_loop_cc_impl(float loop_bw, unsigned int order, bool
 
 costas_loop_cc_impl::~costas_loop_cc_impl() {}
 
-costas_loop_cc_impl::d_phase_detector_t costas_loop_cc_impl::choose_phase_detector(unsigned int order, bool use_snr)
+costas_loop_cc_impl::d_phase_detector_t
+costas_loop_cc_impl::choose_phase_detector(unsigned int order, bool use_snr)
 {
-  switch (order) {
-  case 2:
-    if (use_snr) {
-      return &costas_loop_cc_impl::phase_detector_snr_2;
-    }
-    return &costas_loop_cc_impl::phase_detector_2;
+    switch (order) {
+    case 2:
+        if (use_snr) {
+            return &costas_loop_cc_impl::phase_detector_snr_2;
+        }
+        return &costas_loop_cc_impl::phase_detector_2;
 
-  case 4:
-    if (use_snr) {
-      return &costas_loop_cc_impl::phase_detector_snr_4;
-    }
-    return &costas_loop_cc_impl::phase_detector_4;
+    case 4:
+        if (use_snr) {
+            return &costas_loop_cc_impl::phase_detector_snr_4;
+        }
+        return &costas_loop_cc_impl::phase_detector_4;
 
-  case 8:
-    if (use_snr) {
-      return &costas_loop_cc_impl::phase_detector_snr_8;
+    case 8:
+        if (use_snr) {
+            return &costas_loop_cc_impl::phase_detector_snr_8;
+        }
+        return &costas_loop_cc_impl::phase_detector_8;
     }
-    return &costas_loop_cc_impl::phase_detector_8;
-  }
-  throw std::invalid_argument("order must be 2, 4, or 8");
+    throw std::invalid_argument("order must be 2, 4, or 8");
 }
 
 float costas_loop_cc_impl::phase_detector_8(gr_complex sample) const

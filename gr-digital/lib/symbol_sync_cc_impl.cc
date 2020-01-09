@@ -86,9 +86,8 @@ symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
       d_out_instantaneous_clock_period(NULL),
       d_out_average_clock_period(NULL)
 {
-    set_output_signature(io_signature::makev(1, 4, {
-        sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float)
-    }));
+    set_output_signature(io_signature::makev(
+        1, 4, { sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float) }));
 
     if (sps <= 1.0f)
         throw std::out_of_range("nominal samples per symbol must be > 1");
@@ -128,8 +127,12 @@ symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
                         d_interps_per_symbol % sps);
 
     // Symbol Clock Tracking and Estimation
-    d_clock.reset(new clock_tracking_loop(
-        loop_bw, sps + max_deviation, sps - max_deviation, sps, damping_factor, ted_gain));
+    d_clock.reset(new clock_tracking_loop(loop_bw,
+                                          sps + max_deviation,
+                                          sps - max_deviation,
+                                          sps,
+                                          damping_factor,
+                                          ted_gain));
 
     // Timing Error Detector
     d_ted->sync_reset();
@@ -388,8 +391,8 @@ void symbol_sync_cc_impl::forecast(int noutput_items,
     // in case we have the worst case allowable clock timing deviation on
     // input.
     const int answer = static_cast<int>(ceilf(static_cast<float>(noutput_items + 2) *
-                                        d_clock->get_max_avg_period() / d_osps)) +
-                 static_cast<int>(d_interp->ntaps());
+                                              d_clock->get_max_avg_period() / d_osps)) +
+                       static_cast<int>(d_interp->ntaps());
 
     for (unsigned i = 0; i < ninputs; i++)
         ninput_items_required[i] = answer;

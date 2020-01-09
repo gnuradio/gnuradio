@@ -44,7 +44,7 @@ private:
     float d_vecavg;
 
     const std::string d_name; //!< Initial title of the plot
-    int d_nconnections; //!< Number of connected streaming ports on input
+    int d_nconnections;       //!< Number of connected streaming ports on input
 
     const pmt::pmt_t d_port;
     const pmt::pmt_t d_msg; //< Key of outgoing messages

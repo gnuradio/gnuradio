@@ -24,9 +24,9 @@
 #include "config.h"
 #endif
 
-#include <boost/smart_ptr/make_unique.hpp>
 #include <gnuradio/filter/fft_filter.h>
 #include <volk/volk.h>
+#include <boost/smart_ptr/make_unique.hpp>
 #include <cstring>
 #include <iostream>
 
@@ -39,9 +39,7 @@ namespace kernel {
 fft_filter_fff::fft_filter_fff(int decimation,
                                const std::vector<float>& taps,
                                int nthreads)
-    : d_fftsize(-1),
-      d_decimation(decimation),
-      d_nthreads(nthreads)
+    : d_fftsize(-1), d_decimation(decimation), d_nthreads(nthreads)
 {
     set_taps(taps);
 }
@@ -169,9 +167,7 @@ int fft_filter_fff::filter(int nitems, const float* input, float* output)
 fft_filter_ccc::fft_filter_ccc(int decimation,
                                const std::vector<gr_complex>& taps,
                                int nthreads)
-    : d_fftsize(-1),
-      d_decimation(decimation),
-      d_nthreads(nthreads)
+    : d_fftsize(-1), d_decimation(decimation), d_nthreads(nthreads)
 {
     set_taps(taps);
 }
@@ -300,9 +296,7 @@ int fft_filter_ccc::filter(int nitems, const gr_complex* input, gr_complex* outp
 fft_filter_ccf::fft_filter_ccf(int decimation,
                                const std::vector<float>& taps,
                                int nthreads)
-    : d_fftsize(-1),
-      d_decimation(decimation),
-      d_nthreads(nthreads)
+    : d_fftsize(-1), d_decimation(decimation), d_nthreads(nthreads)
 {
     set_taps(taps);
 }
