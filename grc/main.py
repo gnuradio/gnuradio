@@ -225,7 +225,7 @@ def main():
     msg_format = '[%(levelname)s] %(message)s'
     # If debug output is enabled for the console, then add the file and line numbers. (MAYBE: Module too?)
     if args.log == 'debug':
-        msg_format += ' (%(filename)s:%(lineno)s)'
+        msg_format += ' (%(name)s:%(lineno)s)'
     formatter = logging.Formatter(msg_format)
     #formatter = utils.log.ConsoleFormatter()
     console.setFormatter(formatter)

@@ -6,6 +6,7 @@ from PyQt5 import QtWidgets
 # GRC Imports
 from . import base            # Base classes
 from . import controllers     # Internal controllers
+from . import components
 
 from .helpers.profiling import StopWatch
 
@@ -42,7 +43,7 @@ class Application(QtWidgets.QApplication):
         stopwatch.lap('mainwindow')
         self.Reports = controllers.Reports()
         stopwatch.lap('reports')
-        self.BlockLibrary = controllers.BlockLibrary()
+        self.BlockLibrary = components.BlockLibrary()
         stopwatch.lap('blocklibrary')
 
         # Debug times
