@@ -1,9 +1,40 @@
+# Copyright 2014-2020 Free Software Foundation, Inc.
+# This file is part of GNU Radio
+#
+# GNU Radio Companion is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# GNU Radio Companion is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+
+from __future__ import absolute_import, print_function
+
+# Standard modules
+import logging
 import os
 import sys
-from PyQt5.Qt import Qt
-from PyQt5 import QtCore, QtGui, QtWidgets
 
+# Third-party  modules
+import six
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.Qt import Qt
+from PyQt5.QtGui import QStandardItemModel
+
+# Custom modules
+from . import Flowgraph
 from .. import base
+
+# Logging
+log = logging.getLogger(__name__)
 
 # Shortcuts
 Action = QtWidgets.QAction
@@ -13,31 +44,26 @@ Icons = QtGui.QIcon.fromTheme
 Keys = QtGui.QKeySequence
 
 
-class MainWindow(QtWidgets.QMainWindow, base.View):
-    '''
-    GRC.Views.MainWindow
-    ---------------------------
-    Class that handles the main view definition for the main grc window
-    '''
+class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def __init__(self):
-        super().__init__()  # REQUIRED for both QMainWindow and base.View
-        self.log.debug("__init__")
+        QtWidgets.QMainWindow.__init__(self)
+        base.Component.__init__(self)
 
-        # Main window properties
-        self.log.debug("Setting window properties")
+        log.debug("Setting the main window")
+        self.setObjectName('main')
         self.setWindowTitle(_('window-title'))
         self.setDockOptions(QtWidgets.QMainWindow.AllowNestedDocks |
                             QtWidgets.QMainWindow.AllowTabbedDocks |
                             QtWidgets.QMainWindow.AnimatedDocks)
 
         # Setup the window icon
-        self.log.debug("Setting window icon ({0})".format(self.settings.path.ICON))
         icon = QtGui.QIcon(self.settings.path.ICON)
+        log.debug("Setting window icon - ({0})".format(self.settings.path.ICON))
         self.setWindowIcon(icon)
 
-        self.log.debug("Setting window size")
         screen = QtWidgets.QDesktopWidget().availableGeometry()
+        log.debug("Setting window size - ({}, {})".format(screen.width(), screen.height()))
         self.resize(screen.width() * 0.50, screen.height())
 
         self.setCorner(Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
@@ -54,12 +80,69 @@ class MainWindow(QtWidgets.QMainWindow, base.View):
         #actions['Report.triggered.connect(self.reportDock.show)
         #QtCore.QMetaObject.connectSlotsByName(self)
 
+
+
+
+        ### Translation support
+
+        #self.setWindowTitle(_translate("blockLibraryDock", "Library", None))
+        #library.headerItem().setText(0, _translate("blockLibraryDock", "Blocks", None))
+        #QtCore.QMetaObject.connectSlotsByName(blockLibraryDock)
+
+        # TODO: Move to the base controller and set actions as class attributes
+        # Automatically create the actions, menus and toolbars.
+        # Child controllers need to call the register functions to integrate into the mainwindow
+        self.actions = {}
+        self.menus = {}
+        self.toolbars = {}
+        self.createActions(self.actions)
+        self.createMenus(self.actions, self.menus)
+        self.createToolbars(self.actions, self.toolbars)
+        self.connectSlots()
+
+
+        ### Rest of the GUI widgets
+
+        # Map some of the view's functions to the controller class
+        self.registerDockWidget = self.addDockWidget
+        self.registerMenu = self.addMenu
+        self.registerToolBar = self.addToolBar
+
+        # Do other initialization stuff. View should already be allocated and
+        # actions dynamically connected to class functions. Also, the log
+        # functionality should be also allocated
+        log.debug("__init__")
+
+        # Add the menus from the view
+        menus = self.menus
+        self.registerMenu(menus["file"])
+        self.registerMenu(menus["edit"])
+        self.registerMenu(menus["view"])
+        self.registerMenu(menus["build"])
+        self.registerMenu(menus["help"])
+
+        toolbars = self.toolbars
+        self.registerToolBar(toolbars["file"])
+        self.registerToolBar(toolbars["edit"])
+        self.registerToolBar(toolbars["run"])
+
+        log.debug("Loading flowgraph model")
+        test_flowgraph = os.path.join(self.settings.path.INSTALL, 'gui_qt/resources/data/rx_logo.grc')
+        self.flowgraph = Flowgraph(self, test_flowgraph)
+        log.debug("Adding flowgraph view")
+        self.new_tab(self.flowgraph)
+
+    '''def show(self):
+        log.debug("Showing main window")
+        self.show()
+    '''
+
     def createActions(self, actions):
         '''
         Defines all actions for this view.
         Controller manages connecting signals to slots implemented in the controller
         '''
-        self.log.debug("Creating actions")
+        log.debug("Creating actions")
 
         # File Actions
         actions['new'] = Action(Icons("document-new"), _("new"), self,
@@ -73,7 +156,6 @@ class MainWindow(QtWidgets.QMainWindow, base.View):
 
         actions['close_all'] = Action(Icons("window-close"), _("close_all"), self,
                                       shortcut=Keys.Close, statusTip=_("close_all-tooltip"))
-
         actions['save'] = Action(Icons("document-save"), _("save"), self,
                                  shortcut=Keys.Save, statusTip=_("save-tooltip"))
 
@@ -169,7 +251,7 @@ class MainWindow(QtWidgets.QMainWindow, base.View):
 
     def createMenus(self, actions, menus):
         ''' Setup the main menubar for the application '''
-        self.log.debug("Creating menus")
+        log.debug("Creating menus")
 
         # Global menu options
         self.menuBar().setNativeMenuBar(True)
@@ -243,7 +325,7 @@ class MainWindow(QtWidgets.QMainWindow, base.View):
         menus['help'] = help
 
     def createToolbars(self, actions, toolbars):
-        self.log.debug("Creating toolbars")
+        log.debug("Creating toolbars")
 
         # Main toolbar
         file = Toolbar("File")
@@ -273,7 +355,7 @@ class MainWindow(QtWidgets.QMainWindow, base.View):
         toolbars['run'] = run
 
     def createStatusBar(self):
-        self.log.debug("Creating status bar")
+        log.debug("Creating status bar")
         self.statusBar().showMessage(_("ready-message"))
 
     def new_tab(self, flowgraph):
@@ -294,7 +376,7 @@ class MainWindow(QtWidgets.QMainWindow, base.View):
         # This is the only instance where a controller holds a reference to a view it does not
         # actually control.
         name = widget.__class__.__name__
-        self.log.debug("Generating show action item for widget: {0}".format(name))
+        log.debug("Generating show action item for widget: {0}".format(name))
 
         # Create the new action and wire it to the show/hide for the widget
         self.menus["panels"].addAction(widget.toggleViewAction())
@@ -305,7 +387,7 @@ class MainWindow(QtWidgets.QMainWindow, base.View):
         # This is also overridden so a show menu item can automatically be added
         super().addToolBar(toolbar)
         name = toolbar.windowTitle()
-        self.log.debug("Generating show action item for toolbar: {0}".format(name))
+        log.debug("Generating show action item for toolbar: {0}".format(name))
 
         # Create the new action and wire it to the show/hide for the widget
         self.menus["toolbars"].addAction(toolbar.toggleViewAction())
@@ -315,3 +397,113 @@ class MainWindow(QtWidgets.QMainWindow, base.View):
         ''' Adds a menu to the main window '''
         help = self.menus["help"].menuAction()
         self.menuBar().insertMenu(help, menu)
+
+    # Action Handlers
+    def new_triggered(self):
+        log.debug('new file')
+
+    def open_triggered(self):
+        log.debug('open')
+        filename = self.open()
+
+        if filename:
+            log.info("Opening flowgraph ({0})".format(filename))
+            self.flowgraph = views.Flowgraph(self, filename)
+            self.new_tab(self.flowgraph)
+
+    def save_triggered(self):
+        log.debug('save')
+
+    def save_as_triggered(self):
+        log.debug('save')
+
+    def close_triggered(self):
+        log.debug('close')
+
+    def close_all_triggered(self):
+        log.debug('close')
+
+    def print_triggered(self):
+        log.debug('print')
+
+    def screen_capture_triggered(self):
+        log.debug('screen capture')
+
+    def undo_triggered(self):
+        log.debug('undo')
+
+    def redo_triggered(self):
+        log.debug('redo')
+
+    def cut_triggered(self):
+        log.debug('cut')
+
+    def copy_triggered(self):
+        log.debug('copy')
+
+    def paste_triggered(self):
+        log.debug('paste')
+
+    def delete_triggered(self):
+        log.debug('delete')
+
+    def rotate_ccw_triggered(self):
+        log.debug('rotate_ccw')
+
+    def rotate_cw_triggered(self):
+        log.debug('rotate_cw')
+
+    def errors_triggered(self):
+        log.debug('errors')
+
+    def find_triggered(self):
+        log.debug('find block')
+
+    def about_triggered(self):
+        log.debug('about')
+        self.about()
+
+    def about_qt_triggered(self):
+        log.debug('about_qt')
+        self.aboutQt()
+
+    def properties_triggered(self):
+        log.debug('properties')
+
+    def enable_triggered(self):
+        log.debug('enable')
+
+    def disable_triggered(self):
+        log.debug('disable')
+
+    def execute_triggered(self):
+        log.debug('execute')
+
+    def generate_triggered(self):
+        log.debug('generate')
+
+    def types_triggered(self):
+        log.debug('types')
+        self.types()
+
+    def preferences_triggered(self):
+        log.debug('preferences')
+
+    def exit_triggered(self):
+        log.debug('exit')
+
+    def help_triggered(self):
+        log.debug('help')
+        self.help()
+
+    def kill_triggered(self):
+        log.debug('kill')
+
+    def report_triggered(self):
+        log.debug('report')
+
+    def library_triggered(self):
+        log.debug('library_triggered')
+
+    def library_toggled(self):
+        log.debug('library_toggled')

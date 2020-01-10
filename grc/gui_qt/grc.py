@@ -1,14 +1,40 @@
+# Copyright 2014-2020 Free Software Foundation, Inc.
+# This file is part of GNU Radio
+#
+# GNU Radio Companion is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# GNU Radio Companion is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+
+from __future__ import absolute_import, print_function
+
+# Standard modules
 import logging
 import textwrap
 
-from PyQt5 import QtWidgets
+# Third-party  modules
+import six
 
-# GRC Imports
-from . import base            # Base classes
-from . import controllers     # Internal controllers
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+# Custom modules
+from . import base
 from . import components
-
 from .helpers.profiling import StopWatch
+
+# Logging
+# Setup the logger to use a different name than the file name
+log = logging.getLogger('grc.application')
+
 
 class Application(QtWidgets.QApplication):
     '''
@@ -18,10 +44,9 @@ class Application(QtWidgets.QApplication):
 
     def __init__(self, settings, platform):
         # Note. Logger must have the correct naming convention to share handlers
-        self.log = logging.getLogger("grc.app")
-        self.log.debug("__init__")
+        log.debug("__init__")
 
-        self.log.debug("Creating QApplication instance")
+        log.debug("Creating QApplication instance")
         QtWidgets.QApplication.__init__(self, settings.argv)
 
         # Save references to the global settings and gnuradio platform
@@ -30,29 +55,29 @@ class Application(QtWidgets.QApplication):
 
 
         # Load the main view class and initialize QMainWindow
-        self.log.debug("ARGV - {0}".format(settings.argv))
-        self.log.debug("INSTALL_DIR - {0}".format(settings.path.INSTALL))
+        log.debug("ARGV - {0}".format(settings.argv))
+        log.debug("INSTALL_DIR - {0}".format(settings.path.INSTALL))
 
         # Global signals
         self.signals = {}
 
         # Setup the main application window
-        self.log.debug("Creating main application window")
+        log.debug("Creating main application window")
         stopwatch = StopWatch()
-        self.MainWindow = controllers.MainWindow()
+        self.MainWindow = components.MainWindow()
         stopwatch.lap('mainwindow')
-        self.Reports = controllers.Reports()
-        stopwatch.lap('reports')
+        self.Console = components.Console()
+        stopwatch.lap('console')
         self.BlockLibrary = components.BlockLibrary()
         stopwatch.lap('blocklibrary')
 
         # Debug times
-        self.log.debug("Loaded MainWindow controller - {:.4f}s".format(stopwatch.elapsed("mainwindow")))
-        self.log.debug("Loaded Reports controller - {:.4f}s".format(stopwatch.elapsed("reports")))
-        self.log.debug("Loaded BlockLibrary controller - {:.4}s".format(stopwatch.elapsed("blocklibrary")))
+        log.debug("Loaded MainWindow controller - {:.4f}s".format(stopwatch.elapsed("mainwindow")))
+        log.debug("Loaded Console component - {:.4f}s".format(stopwatch.elapsed("console")))
+        log.debug("Loaded BlockLibrary component - {:.4}s".format(stopwatch.elapsed("blocklibrary")))
 
         # Print Startup information once everything has loaded
-        self.log.critical("TODO: Change welcome message.")
+        log.critical("TODO: Change welcome message.")
 
         welcome = '''
         linux; GNU C++ version 4.8.2; Boost_105400; UHD_003.007.002-94-ge56809a0
@@ -65,7 +90,7 @@ class Application(QtWidgets.QApplication):
           /home/seth/.grc_gnuradio
         Loading: \"/home/seth/Dev/persistent-ew/gnuradio/target/flex_rx.grc\"
         '''
-        self.log.info(textwrap.dedent(welcome))
+        log.info(textwrap.dedent(welcome))
 
 
     # Global registration functions
@@ -78,7 +103,7 @@ class Application(QtWidgets.QApplication):
         ''' Allows child controllers to register a widget that can be docked in the main window '''
         # TODO: Setup the system to automatically add new "Show <View Name>" menu items when a new
         # dock widget is added.
-        self.log.debug("Registering widget ({0}, {1})".format(widget.__class__.__name__, location))
+        log.debug("Registering widget ({0}, {1})".format(widget.__class__.__name__, location))
         self.MainWindow.registerDockWidget(location, widget)
 
     def registerMenu(self, menu):
@@ -91,7 +116,7 @@ class Application(QtWidgets.QApplication):
         #  - MainWindow does not need to call register in the app controller. It can call directly
         #  - Possibly view sidebars and toolbars as submenu
         #  - Have the ability to create an entirely new menu
-        self.log.debug("Registering menu ({0})".format(menu.title()))
+        log.debug("Registering menu ({0})".format(menu.title()))
         self.MainWindow.registerMenu(menu)
 
     def registerAction(self, action, menu):

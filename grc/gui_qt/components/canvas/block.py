@@ -111,19 +111,19 @@ class Block(QtWidgets.QGraphicsItem):
         self.width = 300 # default shouldnt matter, it will change immedaitely after the first paint
         self.block_key = block_key
         self.block_label = block_label
-        
+
         # figure out height of block based on how many params there are
         i = 30
         for row, (key, value) in enumerate(self.params):
-            if value is not None:  
-                i+= 20      
-        self.height = i 
-        
+            if value is not None:
+                i+= 20
+        self.height = i
+
         # figure out width of block based on widest line of text
         fm = QtGui.QFontMetrics(QtGui.QFont('Helvetica', 10))
-        largest_width = fm.width(self.block_label)/2      
+        largest_width = fm.width(self.block_label)/2
         for row, (key, value) in enumerate(self.params):
-            if value is not None:  
+            if value is not None:
                 if len(value) > LONG_VALUE:
                     value = value[:LONG_VALUE-3] + '...'
                 if fm.width(value) > largest_width:
@@ -131,11 +131,11 @@ class Block(QtWidgets.QGraphicsItem):
                 if fm.width(key + ': ') > largest_width:
                     largest_width = fm.width(key + ': ') # the keys need a little more margin
         self.width = largest_width*2 + 15 # the *2 is because we only measured half the width, the + 15 is margin
-                    
-        
+
+
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
-        
-        
+
+
         '''
         layout = QtWidgets.QVBoxLayout()
         layout.setSpacing(0)
@@ -155,17 +155,17 @@ class Block(QtWidgets.QGraphicsItem):
         font = QtGui.QFont('Helvetica', 10)
         #font.setStretch(70) # makes it more condensed
         font.setBold(True)
-        
+
         # Draw main rectangle
         painter.setPen(QtGui.QPen(2))
         painter.setBrush(QtGui.QBrush(QtGui.QColor(0xFA, 0xF8, 0xE0)))
         ARC = 10
         painter.drawRoundedRect(self.x, self.y, self.width-1, self.height, ARC, ARC);
-       
+
         # Draw block label text
         painter.setFont(font)
         painter.drawText(QtCore.QRectF(self.x, self.y - self.height/2 + 10, self.width, self.height), Qt.AlignCenter, self.block_label)  # NOTE the 3rd/4th arg in  QRectF seems to set the bounding box of the text, so if there is ever any clipping, thats why
-   
+
         # Draw param text
         y_offset = 30 # params start 30 down from the top of the box
         for row, (key, value) in enumerate(self.params):
@@ -174,13 +174,13 @@ class Block(QtWidgets.QGraphicsItem):
                     value = value[:LONG_VALUE-3] + '...'
                 font.setBold(True)
                 painter.setFont(font)
-                painter.drawText(QtCore.QRectF(self.x - self.width/2, self.y + y_offset, self.width, self.height), Qt.AlignRight, key + ': ') 
+                painter.drawText(QtCore.QRectF(self.x - self.width/2, self.y + y_offset, self.width, self.height), Qt.AlignRight, key + ': ')
                 font.setBold(False)
                 painter.setFont(font)
-                painter.drawText(QtCore.QRectF(self.x + self.width/2, self.y + y_offset, self.width, self.height), Qt.AlignLeft, value) 
+                painter.drawText(QtCore.QRectF(self.x + self.width/2, self.y + y_offset, self.width, self.height), Qt.AlignLeft, value)
                 y_offset += 20
 
-   
+
     def boundingRect(self): # required to have
         return QtCore.QRectF(self.x, self.y, self.width, self.height) # same as the rectangle we draw
 
@@ -189,7 +189,7 @@ class Block(QtWidgets.QGraphicsItem):
 
     def mouseDoubleClickEvent(self, e):
         print("DETECTED DOUBLE CLICK!")
-        super(Block, self).mouseDoubleClickEvent(e)     
+        super(Block, self).mouseDoubleClickEvent(e)
 
 
 
