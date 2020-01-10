@@ -17,35 +17,30 @@
 
 from __future__ import absolute_import, print_function
 
-# Standard
+# Standard modules
 import logging
 
-# Third party
+# Third-party  modules
 import six
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QStandardItemModel
 
-# GRC
+# Custom modules
 from .. import base
 
 # Logging
 log = logging.getLogger(__name__)
 
 
-NAME_INDEX = 0
-KEY_INDEX = 1
-DOC_INDEX = 2
-
 class BlockLibrary(QtWidgets.QDockWidget, base.Component):
-    ''' Block Library Component '''
 
     def __init__(self):
         QtWidgets.QDockWidget.__init__(self)
         base.Component.__init__(self)
 
-        self.setObjectName("block_library")
-        self.setWindowTitle("Available Blocks")
+        self.setObjectName('block_library')
+        self.setWindowTitle('Available Blocks')
 
         # TODO: Pull from preferences and revert to default if not found?
         self.resize(400, 300)
@@ -55,23 +50,24 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
 
         # Create the layout widget
         container = QtWidgets.QWidget(self)
-        container.setObjectName("block_library::container")
+        container.setObjectName('block_library::container')
+        self._container = container
 
         layout = QtWidgets.QVBoxLayout(container)
+        layout.setObjectName('block_library::layout')
         layout.setSpacing(0)
         layout.setContentsMargins(5, 0, 5, 5)
-        layout.setObjectName("block_library::layout")
         self._layout = layout
 
         # Setup the model for holding block data
         self._model = QtGui.QStandardItemModel()
 
         library = QtWidgets.QTreeView(container)
+        library.setObjectName('block_library::library')
         library.setModel(self._model)
         library.setDragEnabled(True)
         library.setDragDropMode(QtWidgets.QAbstractItemView.DragOnly)
         #library.setColumnCount(1)
-        library.setObjectName("block_library::library")
         library.setHeaderHidden(True)
         #library.headerItem().setText(0, "Blocks")
         self._library = library
@@ -93,7 +89,6 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         self._block_tree = self.load_blocks()
         self.populate_tree(self._block_tree)
 
-
         # TODO: Move to the base controller and set actions as class attributes
         # Automatically create the actions, menus and toolbars.
         # Child controllers need to call the register functions to integrate into the mainwindow
@@ -111,7 +106,10 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         self.app.registerDockWidget(self, location=self.settings.window.BLOCK_LIBRARY_DOCK_LOCATION)
 
         # Register the menus
-        #self.app.registerMenu(self.view.menus["library"])
+        #self.app.registerMenu(self.menus["library"])
+
+
+    ### Actions
 
     def createActions(self, actions):
         log.debug("Creating actions")
