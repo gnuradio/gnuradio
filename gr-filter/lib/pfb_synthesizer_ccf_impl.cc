@@ -26,8 +26,8 @@
 
 #include "pfb_synthesizer_ccf_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cstdio>
 #include <algorithm>
+#include <cstdio>
 
 namespace gr {
 namespace filter {
