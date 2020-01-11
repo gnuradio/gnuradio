@@ -33,9 +33,9 @@ bool stderr_backend::log(const entry& what)
     std::cerr << "@" << std::put_time(&localtime, "%T") << " "
               << severity_to_string(what.level) << " [" << (what.source) << "]: ";
     if (what.purpose.size()) {
-            std::cerr << "(" << (what.purpose) << ") ";
+        std::cerr << "(" << (what.purpose) << ") ";
     }
-    std::cerr << (what.message)  << "\n";
+    std::cerr << (what.message) << "\n";
     // std::cerr.flush();
     return std::cerr.good();
 }

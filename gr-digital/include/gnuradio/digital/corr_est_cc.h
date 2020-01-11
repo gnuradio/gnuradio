@@ -87,8 +87,9 @@ typedef enum {
     THRESHOLD_ABSOLUTE,
 } tm_type;
 
-class DIGITAL_API corr_est_cc : virtual public sync_block {
-    public:
+class DIGITAL_API corr_est_cc : virtual public sync_block
+{
+public:
     typedef boost::shared_ptr<corr_est_cc> sptr;
 
     /*!

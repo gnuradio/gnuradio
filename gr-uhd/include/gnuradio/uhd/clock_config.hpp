@@ -20,19 +20,16 @@ namespace uhd {
  * this structure in UHD 4.0. Older versions of UHD still have it, but it won't
  * be modified any more.
  */
-struct clock_config_t
-{
+struct clock_config_t {
     //------ simple usage --------//
-    clock_config_t(void):
-        ref_source(REF_INT),
-        pps_source(PPS_SMA),
-        pps_polarity(PPS_POS)
+    clock_config_t(void) : ref_source(REF_INT), pps_source(PPS_SMA), pps_polarity(PPS_POS)
     {
         /* NOP */
     }
 
     //! A convenience function to create an external clock configuration
-    static clock_config_t external(void){
+    static clock_config_t external(void)
+    {
         clock_config_t clock_config;
         clock_config.ref_source = clock_config_t::REF_SMA;
         clock_config.pps_source = clock_config_t::PPS_SMA;
@@ -41,7 +38,8 @@ struct clock_config_t
     }
 
     //! A convenience function to create an internal clock configuration
-    static clock_config_t internal(void){
+    static clock_config_t internal(void)
+    {
         clock_config_t clock_config;
         clock_config.ref_source = clock_config_t::REF_INT;
         clock_config.pps_source = clock_config_t::PPS_SMA;
@@ -52,18 +50,18 @@ struct clock_config_t
     //------ advanced usage --------//
     enum ref_source_t {
         REF_AUTO = int('a'), // automatic (device specific)
-        REF_INT  = int('i'), // internal reference
-        REF_SMA  = int('s'), // external sma port
-        REF_MIMO = int('m') // reference from mimo cable
+        REF_INT = int('i'),  // internal reference
+        REF_SMA = int('s'),  // external sma port
+        REF_MIMO = int('m')  // reference from mimo cable
     } ref_source;
     enum pps_source_t {
-        PPS_INT  = int('i'), // there is no internal
-        PPS_SMA  = int('s'), // external sma port
+        PPS_INT = int('i'), // there is no internal
+        PPS_SMA = int('s'), // external sma port
         PPS_MIMO = int('m') // time sync from mimo cable
     } pps_source;
     enum pps_polarity_t {
         PPS_NEG = int('n'), // negative edge
-        PPS_POS = int('p') // positive edge
+        PPS_POS = int('p')  // positive edge
     } pps_polarity;
 };
 
