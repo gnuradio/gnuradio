@@ -369,7 +369,16 @@ int alsa_sink::work_s32(int noutput_items,
     unsigned int nchan = input_items.size();
     const float** in = (const float**)&input_items[0];
     sample_t* buf = (sample_t*)d_buffer;
-    int bi;
+
+    /*
+     * vector of vectors to keep each channel after conversion
+     * to int32_t. These are then placed in the buffer in the
+     * standard WAV file format:
+     * [chan0samp0, chan1samp0, ..., chanNsamp0, chan0samp1, ...]
+     * */
+    volk::vector<volk::vector<sample_t>> buf_channels(
+        nchan, volk::vector<sample_t>(d_period_size));
+
     int n;
 
     unsigned int sizeof_frame = nchan * sizeof(sample_t);
@@ -377,16 +386,24 @@ int alsa_sink::work_s32(int noutput_items,
 
     for (n = 0; n < noutput_items; n += d_period_size) {
         // process one period of data
-        bi = 0;
-        for (unsigned int i = 0; i < d_period_size; i++) {
-            for (unsigned int chan = 0; chan < nchan; chan++) {
-                buf[bi++] = (sample_t)(in[chan][i] * scale_factor);
-            }
-        }
+        for (unsigned int chan = 0; chan < nchan; chan++)
+            volk_32f_s32f_convert_32i(
+                buf_channels[chan].data(), in[chan], scale_factor, d_period_size);
 
         // update src pointers
         for (unsigned int chan = 0; chan < nchan; chan++)
             in[chan] += d_period_size;
+
+        /*
+         * build buf in the standard WAV file format:
+         * [chan0samp0, chan1samp0, ..., chanNsamp0, chan0samp1, ...]
+         * */
+        unsigned int sample = 0;
+        while (sample < d_period_size * nchan)
+            for (unsigned int channel = 0; channel < nchan; channel++) {
+                buf[sample] = buf_channels[channel][sample];
+                sample++;
+            }
 
         if (!write_buffer(buf, d_period_size, sizeof_frame))
             return -1; // No fixing this problem.  Say we're done.

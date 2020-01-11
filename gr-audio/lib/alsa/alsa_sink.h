@@ -29,6 +29,7 @@
 
 #include <gnuradio/audio/sink.h>
 #include <alsa/asoundlib.h>
+#include <volk/volk_alloc.hh>
 #include <stdexcept>
 #include <string>
 
