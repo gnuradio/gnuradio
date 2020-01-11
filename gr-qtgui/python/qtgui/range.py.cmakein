@@ -38,7 +38,7 @@ class Range(object):
     def find_precision(self):
         # Get the decimal part of the step
         temp = str(float(self.step) - int(self.step))[2:]
-        precision = len(temp) if temp is not '0' else 0
+        precision = len(temp) if temp != '0' else 0
         precision = min(precision, 13)
 
         if precision == 0 and self.max < 100:
