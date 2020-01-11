@@ -1,0 +1,18 @@
+name: Check PR Formatting
+
+on:
+  pull_request:
+    paths-ignore:
+      - 'volk/'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: gnuradio/clang-format-lint-action@v0.5-4
+      with:
+        source: '.'
+        exclude: './volk,gr-vocoder/lib/codec2'
+        extensions: 'h,hpp,cpp,cc'
