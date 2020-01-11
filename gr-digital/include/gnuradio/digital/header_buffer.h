@@ -210,7 +210,7 @@ public:
      * In receiving mode, this returns the current length in bits of
      * the received header.
      */
-     std::size_t length() const;
+    std::size_t length() const;
 
     /*!
      * Returns a constant pointer to the buffer.

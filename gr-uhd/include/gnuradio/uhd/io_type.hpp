@@ -53,11 +53,14 @@ public:
      * Create an io type from a built-in type id.
      * \param tid a type id known to the system
      */
-    io_type_t(tid_t tid) : size(tid == COMPLEX_FLOAT64 ? sizeof(std::complex<double>) :
-            tid == COMPLEX_FLOAT32 ? sizeof(std::complex<float>) :
-            tid == COMPLEX_INT16 ? sizeof(std::complex<int16_t>) :
-            sizeof(std::complex<int8_t>)),
-        tid(tid)
+    io_type_t(tid_t tid)
+        : size(tid == COMPLEX_FLOAT64
+                   ? sizeof(std::complex<double>)
+                   : tid == COMPLEX_FLOAT32
+                         ? sizeof(std::complex<float>)
+                         : tid == COMPLEX_INT16 ? sizeof(std::complex<int16_t>)
+                                                : sizeof(std::complex<int8_t>)),
+          tid(tid)
     {
         // nop
     }
