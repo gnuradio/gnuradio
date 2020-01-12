@@ -188,13 +188,6 @@ templates:
         % for n in range(max_nchan):
         ${'%'} if context.get('nchan')() > ${n}:
         self.${'$'}{id}.set_center_freq(${'$'}{${'center_freq' + str(n)}}, ${n})
-        ${'%'} if context.get('rx_agc${n}')() != 'Enabled':
-        ${'%'} if bool(eval(context.get('norm_gain' + '${n}')())):
-        self.${'$'}{id}.set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})
-        ${'%'} else:
-        self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
-        ${'%'} endif
-        ${'%'} endif  # if rx_agc${n} != 'Enabled'
         
         ${'%'} if context.get('ant${n}')():
         self.${'$'}{id}.set_antenna(${'$'}{${'ant' + str(n)}}, ${n})
@@ -209,6 +202,13 @@ templates:
         ${'%'} elif context.get('rx_agc${n}')() == 'Disabled':
         self.${'$'}{id}.set_rx_agc(False, ${n})
         ${'%'} endif
+        ${'%'} if context.get('rx_agc${n}')() != 'Enabled':
+        ${'%'} if bool(eval(context.get('norm_gain' + '${n}')())):
+        self.${'$'}{id}.set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} else:
+        self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} endif
+        ${'%'} endif  # if rx_agc${n} != 'Enabled'
         ${'%'} if context.get('dc_offs_enb${n}')():
         self.${'$'}{id}.set_auto_dc_offset(${'$'}{${'dc_offs_enb' + str(n)}}, ${n})
         ${'%'} endif
