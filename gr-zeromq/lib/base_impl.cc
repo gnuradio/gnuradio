@@ -19,8 +19,13 @@
 namespace gr {
 namespace zeromq {
 
-base_impl::base_impl(int type, size_t itemsize, size_t vlen, int timeout, bool pass_tags)
-    : d_vsize(itemsize * vlen), d_timeout(timeout), d_pass_tags(pass_tags)
+base_impl::base_impl(int type,
+                     size_t itemsize,
+                     size_t vlen,
+                     int timeout,
+                     bool pass_tags,
+                     const std::string& key)
+    : d_vsize(itemsize * vlen), d_timeout(timeout), d_pass_tags(pass_tags), d_key(key)
 {
     /* "Fix" timeout value (ms for new API, us for old API) */
     int major, minor, patch;
@@ -57,8 +62,9 @@ base_sink_impl::base_sink_impl(int type,
                                char* address,
                                int timeout,
                                bool pass_tags,
-                               int hwm)
-    : base_impl(type, itemsize, vlen, timeout, pass_tags)
+                               int hwm,
+                               const std::string& key)
+    : base_impl(type, itemsize, vlen, timeout, pass_tags, key)
 {
     /* Set high watermark */
     if (hwm >= 0) {
@@ -78,6 +84,16 @@ int base_sink_impl::send_message(const void* in_buf,
                                  const int in_nitems,
                                  const uint64_t in_offset)
 {
+    /* Send key if it exists */
+    if (d_key.size() > 0) {
+        zmq::message_t key_message(d_key.size());
+        memcpy(key_message.data(), d_key.data(), d_key.size());
+#if USE_NEW_CPPZMQ_SEND_RECV
+        d_socket->send(key_message, zmq::send_flags::sndmore);
+#else
+        d_socket->send(key_message, ZMQ_SNDMORE);
+#endif
+    }
     /* Meta-data header */
     std::string header("");
     if (d_pass_tags) {
@@ -115,8 +131,9 @@ base_source_impl::base_source_impl(int type,
                                    char* address,
                                    int timeout,
                                    bool pass_tags,
-                                   int hwm)
-    : base_impl(type, itemsize, vlen, timeout, pass_tags),
+                                   int hwm,
+                                   const std::string& key)
+    : base_impl(type, itemsize, vlen, timeout, pass_tags, key),
       d_consumed_bytes(0),
       d_consumed_items(0)
 {
@@ -192,6 +209,22 @@ bool base_source_impl::load_message(bool wait)
     d_socket->recv(&d_msg);
 #endif
 
+    /* Throw away key and get the first message. Avoid blocking if a multi-part
+     * message is not sent */
+    if (d_key.size() > 0 && !more) {
+        int64_t is_multipart;
+        d_socket->getsockopt(ZMQ_RCVMORE, &is_multipart, &more_len);
+
+        d_msg.rebuild();
+        if (is_multipart)
+#if USE_NEW_CPPZMQ_SEND_RECV
+            d_socket->recv(d_msg);
+#else
+            d_socket->recv(&d_msg);
+#endif
+        else
+            return false;
+    }
     /* Parse header from the first (or only) message of a multi-part message */
     if (d_pass_tags && !more) {
         uint64_t rcv_offset;

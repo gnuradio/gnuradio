@@ -35,6 +35,10 @@ parameters:
     dtype: int
     default: '-1'
     hide: ${ ('part' if hwm == -1 else 'none') }
+-   id: key
+    label: Filter Key
+    dtype: string
+    default: ''
 
 outputs:
 -   domain: stream
@@ -44,7 +48,7 @@ outputs:
 templates:
     imports: from gnuradio import zeromq
     make: zeromq.sub_source(${type.itemsize}, ${vlen}, ${address}, ${timeout}, ${pass_tags},
-        ${hwm})
+        ${hwm}, ${key})
 
 cpp_templates:
     includes: [ '#include <gnuradio/zeromq/sub_source.h>' ]
@@ -54,7 +58,8 @@ cpp_templates:
         const_cast<char *>(${address}${'.c_str())' if str(address)[0] not in '"\'' else ')'},
         ${timeout}, 
         ${pass_tags}, 
-        ${hwm});
+        ${hwm},
+        ${key});
     link: ['gnuradio-zeromq']      
     translations:
       'True': 'true'
