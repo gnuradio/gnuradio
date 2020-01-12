@@ -107,11 +107,13 @@ private:
  * Main Time domain plotter widget
  **********************************************************************/
 
-EyeDisplayPlot::EyeDisplayPlot(unsigned int curve_index, QWidget* parent)
+EyeDisplayPlot::EyeDisplayPlot(unsigned int nplots, unsigned int curve_index, QWidget* parent)
     : DisplayPlot(1, parent)
 {
+    std::cout << "EyeDisplayPlot::EyeDisplayPlot d_nplots=" << d_nplots << std::endl;
 
 	d_numPoints = 1024;
+	d_nplots = nplots;
 
 	d_sps = 4;
 
@@ -192,12 +194,11 @@ EyeDisplayPlot::EyeDisplayPlot(unsigned int curve_index, QWidget* parent)
 #endif
 
     }
-
+	std::cout << "fin de EyeDisplayPlot::EyeDisplayPlot() d_curve_index=" << d_curve_index << std::endl;
     d_sample_rate = 1;
     _resetXAxisPoints();
 
-    d_tag_markers.resize(d_nplots);
-    d_tag_markers_en = std::vector<bool>(d_nplots, true);
+    d_tag_markers_en = true;
 
     d_trigger_lines[0] = new QwtPlotMarker();
     d_trigger_lines[0]->setLineStyle(QwtPlotMarker::HLine);
@@ -217,13 +218,11 @@ EyeDisplayPlot::EyeDisplayPlot(unsigned int curve_index, QWidget* parent)
 
 EyeDisplayPlot::~EyeDisplayPlot()
 {
-	// Only delete d_ydata related to this plot
-	delete[] d_ydata[d_curve_index];
-
-    // Delete d_xdata only once (one layout may have multiple eye pattern = EyeDisplayPlot)
-	if (d_curve_index = 0) {
-    	delete[] d_xdata;
+	for (unsigned int i = 0; i < d_nplots; ++i) {
+		delete[] d_ydata[i];
 	}
+
+	delete[] d_xdata;
 
     // d_zoomer and _panner deleted when parent deleted
 }
@@ -248,6 +247,8 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
            << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
            << QColor(Qt::yellow) << QColor(Qt::gray) << QColor(Qt::darkRed)
            << QColor(Qt::darkGreen) << QColor(Qt::darkBlue) << QColor(Qt::darkGray);
+
+    std::cout << "EyeDisplayPlot::plotNewData-----" << std::endl;
 
     if (!d_stop) {
 		if ((numDataPoints > 0)) {
@@ -297,126 +298,127 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                 }
             }
 
-
-
             // Detach and delete any tags that were plotted last time
-            for (size_t i = 0; i < d_tag_markers[0].size(); i++) {
-				d_tag_markers[0][i]->detach();
-				delete d_tag_markers[0][i];
+            for (size_t i = 0; i < d_tag_markers.size(); i++) {
+				d_tag_markers[i]->detach();
+				delete d_tag_markers[i];
 			}
-			d_tag_markers[0].clear();
-
+			d_tag_markers.clear();
+			std::cout << "Detach and delete any tags " << std::endl;
             // Plot and attach any new tags found.
             // First test if this was a complex input where real/imag get
             // split here into two stream.
-            /* TODOTODOCS removed temporarily
-            // uint64_t offset = (*t).offset; issue a seg fault
-            if (!tags.empty()) {
-                bool cmplx = false;
+			if (!tags.empty()) {
+            	std::cout << "EyeDisplayPlot::if (!tags.empty(" << std::endl;
                 unsigned int mult = d_nplots / tags.size();
-                if (mult == 2)
-                    cmplx = true;
-
+                std::cout << "EyeDisplayPlot::if (!tags.empty(0) d_nplots/tags.size()=" << d_nplots  <<"/" << tags.size() << std::endl;
+				unsigned int tags_index = d_curve_index / mult;
+                std::cout << "EyeDisplayPlot::if (!tags.empty(1) tags_index=" << tags_index << " mult=" << mult << std::endl;
                 std::vector<std::vector<gr::tag_t>>::const_iterator tag = tags.begin();
-                for (unsigned int i = 0; i < d_nplots; i += mult) {
-                    std::vector<gr::tag_t>::const_iterator t;
-                    for (t = tag->begin(); t != tag->end(); t++) {
-                        uint64_t offset = (*t).offset;
+ 			    // Move iterator to curve[d_curve_index] tags set i.e. tags[tags_index]
+                for (unsigned int i = 0; i < tags_index; i ++) {
+                	std::cout << "EyeDisplayPlot::avant tag++ i=" << i << " d_curve_index=" << d_curve_index << " d_nplots=" << d_nplots << std::endl;
 
-                        // Ignore tag if its offset is outside our plottable vector.
-                        if (offset >= (uint64_t)d_numPoints) {
-                            continue;
-                        }
+                	tag++;
+			    }
+                std::cout << "EyeDisplayPlot::if (!tags.empty(2)" << std::endl;
 
-                        double sample_offset = double(offset) / d_sample_rate;
+                std::vector<gr::tag_t>::const_iterator t;
+				for (t = tag->begin(); t != tag->end(); t++) {
+					uint64_t offset = (*t).offset;
+	                std::cout << "EyeDisplayPlot::if (!tags.empty(3) offset=" << offset << std::endl;
 
-                        std::stringstream s;
-                        s << (*t).key << ": " << (*t).value;
+					// Ignore tag if its offset is outside our plottable vector.
+					if (offset >= (uint64_t)((d_numPointsPerPeriod - 1) * d_numPeriods)) {
+						continue;
+					}
 
-                        // Select the right input stream to put the tag on. If real,
-                        // just use i; if it's a complex stream, find the max of the
-                        // real and imaginary parts and put the tag on that one.
-                        int which = 0; // TODO CS remove which
+					// Adjust the offset in range of the eye pattern length (0 to d_numPointsPerPeriod - 1)
+					unsigned int period = offset / (d_numPointsPerPeriod - 1);
+					double sample_offset = double((offset % (d_numPointsPerPeriod - 1) - d_sps)) / d_sample_rate;
 
+					std::stringstream s;
+					s << (*t).key << ": " << (*t).value;
 
-                        double yval = d_ydata[0][offset];
+					double yval = d_ydata[period][offset];
 
-                        // Find if we already have a marker at this location
-                        std::vector<QwtPlotMarker*>::iterator mitr;
-                        for (mitr = d_tag_markers[which].begin();
-                             mitr != d_tag_markers[which].end();
-                             mitr++) {
-                            if ((*mitr)->xValue() == sample_offset) {
-                                break;
-                            }
-                        }
+					// Find if we already have a marker at this location
+					std::vector<QwtPlotMarker*>::iterator mitr;
+					for (mitr = d_tag_markers.begin();
+						 mitr != d_tag_markers.end();
+						 mitr++) {
+						if ((*mitr)->xValue() == sample_offset) {
+							break;
+						}
+					}
 
-                        // If no matching marker, create a new one
-                        if (mitr == d_tag_markers[which].end()) {
-                            bool show = d_plot_curve[which]->isVisible();
+					// If no matching marker, create a new one
+					if (mitr == d_tag_markers.end()) {
+						bool show = d_plot_curve[d_curve_index]->isVisible();
 
-                            QwtPlotMarker* m = new QwtPlotMarker();
-                            m->setXValue(sample_offset);
-                            m->setYValue(yval);
+						QwtPlotMarker* m = new QwtPlotMarker();
+						m->setXValue(sample_offset);
+						m->setYValue(yval);
 
-                            QBrush brush(getTagBackgroundColor(),
-                                         getTagBackgroundStyle());
+						QBrush brush(getTagBackgroundColor(),
+									 getTagBackgroundStyle());
 
-                            QPen pen;
-                            pen.setColor(Qt::black);
-                            pen.setWidth(1);
+						QPen pen;
+						pen.setColor(Qt::black);
+						pen.setWidth(1);
 
-                            QwtSymbol* sym = new QwtSymbol(
-                                QwtSymbol::NoSymbol, brush, pen, QSize(12, 12));
+						QwtSymbol* sym = new QwtSymbol(
+							QwtSymbol::NoSymbol, brush, pen, QSize(12, 12));
 
-                            if (yval >= 0) {
-                                sym->setStyle(QwtSymbol::DTriangle);
-                                m->setLabelAlignment(Qt::AlignTop);
-                            } else {
-                                sym->setStyle(QwtSymbol::UTriangle);
-                                m->setLabelAlignment(Qt::AlignBottom);
-                            }
+						if (yval >= 0) {
+							sym->setStyle(QwtSymbol::DTriangle);
+							m->setLabelAlignment(Qt::AlignTop);
+						} else {
+							sym->setStyle(QwtSymbol::UTriangle);
+							m->setLabelAlignment(Qt::AlignBottom);
+						}
 
 #if QWT_VERSION < 0x060000
-                            m->setSymbol(*sym);
+						m->setSymbol(*sym);
 #else
-                            m->setSymbol(sym);
+						m->setSymbol(sym);
 #endif
-                            QwtText tag_label(s.str().c_str());
-                            tag_label.setColor(getTagTextColor());
-                            m->setLabel(tag_label);
+						QwtText tag_label(s.str().c_str());
+						tag_label.setColor(getTagTextColor());
+						m->setLabel(tag_label);
 
-                            m->attach(this);
+						m->attach(this);
 
-                            if (!(show && d_tag_markers_en[which])) {
-                                m->hide();
-                            }
+						if (!(show && d_tag_markers_en)) {
+							m->hide();
+						}
 
-                            d_tag_markers[which].push_back(m);
-                        } else {
-                            // Prepend the new tag to the existing marker
-                            // And set it at the max value
-                            if (fabs(yval) < fabs((*mitr)->yValue()))
-                                (*mitr)->setYValue(yval);
-                            QString orig = (*mitr)->label().text();
-                            s << std::endl;
-                            orig.prepend(s.str().c_str());
+						d_tag_markers.push_back(m);
+					} else {
+						// Prepend the new tag to the existing marker
+						// And set it at the max value
+						if (fabs(yval) < fabs((*mitr)->yValue()))
+							(*mitr)->setYValue(yval);
+						QString orig = (*mitr)->label().text();
+						s << std::endl;
+						orig.prepend(s.str().c_str());
 
-                            QwtText newtext(orig);
-                            newtext.setColor(getTagTextColor());
+						QwtText newtext(orig);
+						newtext.setColor(getTagTextColor());
 
-                            QBrush brush(getTagBackgroundColor(),
-                                         getTagBackgroundStyle());
-                            newtext.setBackgroundBrush(brush);
+						QBrush brush(getTagBackgroundColor(),
+									 getTagBackgroundStyle());
+						newtext.setBackgroundBrush(brush);
 
-                            (*mitr)->setLabel(newtext);
-                        }
-                    }
+						(*mitr)->setLabel(newtext);
+					}
+				}
 
-                    tag++;
-                }
+
             }
-*/
+
+            std::cout << "EyeDisplayPlot::d_autoscale_state-----" << std::endl;
+
 
             if (d_autoscale_state) {
                 double bottom = 1e20, top = -1e20;
@@ -436,21 +438,24 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                     d_autoscale_shot = false;
                 }
             }
+            std::cout << "EyeDisplayPlot::replot()----" << std::endl;
 
             replot();
         }
     }
+    std::cout << "fin EyeDisplayPlot::plotNewData-----" << std::endl;
+
 }
 
 void EyeDisplayPlot::legendEntryChecked(QwtPlotItem* plotItem, bool on)
 {
     // When line is turned on/off, immediately show/hide tag markers
-	if (plotItem == d_plot_curve[0]) {
-		for (size_t i = 0; i < d_tag_markers[0].size(); i++) {
-			if (!(!on && d_tag_markers_en[0]))
-				d_tag_markers[0][i]->hide();
+	if (plotItem == d_plot_curve[d_curve_index]) {
+		for (size_t i = 0; i < d_tag_markers.size(); i++) {
+			if (!(!on && d_tag_markers_en))
+				d_tag_markers[i]->hide();
 			else
-				d_tag_markers[0][i]->show();
+				d_tag_markers[i]->show();
 		}
 	}
 
@@ -539,12 +544,7 @@ void EyeDisplayPlot::stemPlot(bool en)
 
 void EyeDisplayPlot::enableTagMarker(unsigned int which, bool en)
 {
-    which = 0; //TODOCS always 0
-    if ((size_t)which < d_tag_markers_en.size())
-        d_tag_markers_en[which] = en;
-    else
-        throw std::runtime_error(
-            "EyeDisplayPlot: enabled tag marker does not exist.\n");
+	d_tag_markers_en = en;
 }
 
 const QColor EyeDisplayPlot::getTagTextColor() { return d_tag_text_color; }

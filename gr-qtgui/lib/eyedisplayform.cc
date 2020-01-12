@@ -63,7 +63,7 @@ EyeDisplayForm::EyeDisplayForm(int nplots, bool cmplx, QWidget* parent)
     for (unsigned int row = 0; row < d_rows; ++row) {
     	for (unsigned int col = 0; col < d_cols; ++col) {
     		if (i < d_nplots) {
-				d_displays_plot.push_back(new EyeDisplayPlot(i, this));
+				d_displays_plot.push_back(new EyeDisplayPlot(d_nplots, i, this));
 				d_layout->addWidget(d_displays_plot[i], row, col);
 				d_display_plot = d_displays_plot[i];
 				++i;
@@ -258,7 +258,8 @@ void EyeDisplayForm::newData(const QEvent* updateEvent)
     const std::vector<std::vector<gr::tag_t>> tags = tevent->getTags();
 
     for (unsigned int i = 0; i < d_nplots; ++i) {
-    	getSinglePlot(i)->plotNewData(dataPoints, numDataPoints, d_sps, d_update_time, tags);
+        std::cout << "getSinglePlot(i)->plotNewData-----" << std::endl;
+getSinglePlot(i)->plotNewData(dataPoints, numDataPoints, d_sps, d_update_time, tags);
         }
 }
 

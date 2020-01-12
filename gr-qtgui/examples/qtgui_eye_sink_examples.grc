@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -185,7 +186,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [704, 216.0]
+    coordinate: [696, 216.0]
     rotation: 0
     state: true
 - name: blocks_complex_to_real_0_0
@@ -201,7 +202,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [664, 280.0]
+    coordinate: [664, 304.0]
     rotation: 0
     state: true
 - name: blocks_multiply_const_vxx_0
@@ -210,7 +211,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    const: 2+2j
+    const: '2'
     maxoutbuf: '0'
     minoutbuf: '0'
     type: complex
@@ -219,7 +220,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [560, 372.0]
+    coordinate: [560, 412.0]
     rotation: 0
     state: true
 - name: blocks_multiply_const_vxx_0_0
@@ -237,7 +238,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [552, 212.0]
+    coordinate: [560, 476.0]
     rotation: 0
     state: true
 - name: blocks_null_sink_0
@@ -294,7 +295,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [344, 340.0]
+    coordinate: [344, 372.0]
     rotation: 0
     state: true
 - name: digital_psk_mod_0

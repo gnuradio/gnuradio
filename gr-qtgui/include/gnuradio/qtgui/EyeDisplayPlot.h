@@ -45,7 +45,7 @@ class EyeDisplayPlot : public DisplayPlot
 
 public:
 
-	EyeDisplayPlot(unsigned int curve_index, QWidget* parent);
+	EyeDisplayPlot(unsigned int nplots, unsigned int curve_index, QWidget* parent);
     virtual ~EyeDisplayPlot();
 
     void plotNewData(const std::vector<double*> dataPoints,
@@ -102,14 +102,15 @@ private:
     double d_sample_rate;
 
     unsigned int d_curve_index;
+    unsigned int nplots;
     int d_sps;
     unsigned int d_numPointsPerPeriod;
     unsigned int d_numPeriods;
 
     bool d_autoscale_shot;
 
-    std::vector<std::vector<QwtPlotMarker*>> d_tag_markers;
-    std::vector<bool> d_tag_markers_en;
+    std::vector<QwtPlotMarker*> d_tag_markers;
+    bool d_tag_markers_en;
 
     QColor d_tag_text_color;
     QColor d_tag_background_color;
