@@ -26,7 +26,8 @@ public:
                     char* address,
                     int timeout,
                     bool pass_tags,
-                    int hwm);
+                    int hwm,
+                    const std::string& key);
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

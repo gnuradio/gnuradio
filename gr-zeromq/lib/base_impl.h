@@ -20,7 +20,12 @@ namespace zeromq {
 class base_impl : public virtual gr::sync_block
 {
 public:
-    base_impl(int type, size_t itemsize, size_t vlen, int timeout, bool pass_tags);
+    base_impl(int type,
+              size_t itemsize,
+              size_t vlen,
+              int timeout,
+              bool pass_tags,
+              const std::string& key = "");
     virtual ~base_impl();
 
 protected:
@@ -30,6 +35,7 @@ protected:
     size_t d_vsize;
     int d_timeout;
     bool d_pass_tags;
+    const std::string d_key;
 };
 
 class base_sink_impl : public base_impl
@@ -41,7 +47,8 @@ public:
                    char* address,
                    int timeout,
                    bool pass_tags,
-                   int hwm);
+                   int hwm,
+                   const std::string& key = "");
 
 protected:
     int send_message(const void* in_buf, const int in_nitems, const uint64_t in_offset);
@@ -56,7 +63,8 @@ public:
                      char* address,
                      int timeout,
                      bool pass_tags,
-                     int hwm);
+                     int hwm,
+                     const std::string& key = "");
 
 protected:
     zmq::message_t d_msg;
