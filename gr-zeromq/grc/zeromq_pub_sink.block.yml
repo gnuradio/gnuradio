@@ -35,6 +35,10 @@ parameters:
     dtype: int
     default: '-1'
     hide: ${ ('part' if hwm == -1 else 'none') }
+-   id: key
+    label: Filter Key
+    dtype: string
+    default: ''
 
 inputs:
 -   domain: stream
@@ -44,7 +48,7 @@ inputs:
 templates:
     imports: from gnuradio import zeromq
     make: zeromq.pub_sink(${type.itemsize}, ${vlen}, ${address}, ${timeout}, ${pass_tags},
-        ${hwm})
+        ${hwm}, ${key})
         
 cpp_templates:
     includes: [ '#include <gnuradio/zeromq/pub_sink.h>' ]

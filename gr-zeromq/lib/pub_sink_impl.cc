@@ -19,19 +19,29 @@
 namespace gr {
 namespace zeromq {
 
-pub_sink::sptr pub_sink::make(
-    size_t itemsize, size_t vlen, char* address, int timeout, bool pass_tags, int hwm)
+pub_sink::sptr pub_sink::make(size_t itemsize,
+                              size_t vlen,
+                              char* address,
+                              int timeout,
+                              bool pass_tags,
+                              int hwm,
+                              const std::string& key)
 {
     return gnuradio::get_initial_sptr(
-        new pub_sink_impl(itemsize, vlen, address, timeout, pass_tags, hwm));
+        new pub_sink_impl(itemsize, vlen, address, timeout, pass_tags, hwm, key));
 }
 
-pub_sink_impl::pub_sink_impl(
-    size_t itemsize, size_t vlen, char* address, int timeout, bool pass_tags, int hwm)
+pub_sink_impl::pub_sink_impl(size_t itemsize,
+                             size_t vlen,
+                             char* address,
+                             int timeout,
+                             bool pass_tags,
+                             int hwm,
+                             const std::string& key)
     : gr::sync_block("pub_sink",
                      gr::io_signature::make(1, 1, itemsize * vlen),
                      gr::io_signature::make(0, 0, 0)),
-      base_sink_impl(ZMQ_PUB, itemsize, vlen, address, timeout, pass_tags, hwm)
+      base_sink_impl(ZMQ_PUB, itemsize, vlen, address, timeout, pass_tags, hwm, key)
 {
     /* All is delegated */
 }

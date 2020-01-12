@@ -19,22 +19,32 @@
 namespace gr {
 namespace zeromq {
 
-sub_source::sptr sub_source::make(
-    size_t itemsize, size_t vlen, char* address, int timeout, bool pass_tags, int hwm)
+sub_source::sptr sub_source::make(size_t itemsize,
+                                  size_t vlen,
+                                  char* address,
+                                  int timeout,
+                                  bool pass_tags,
+                                  int hwm,
+                                  const std::string& key)
 {
     return gnuradio::get_initial_sptr(
-        new sub_source_impl(itemsize, vlen, address, timeout, pass_tags, hwm));
+        new sub_source_impl(itemsize, vlen, address, timeout, pass_tags, hwm, key));
 }
 
-sub_source_impl::sub_source_impl(
-    size_t itemsize, size_t vlen, char* address, int timeout, bool pass_tags, int hwm)
+sub_source_impl::sub_source_impl(size_t itemsize,
+                                 size_t vlen,
+                                 char* address,
+                                 int timeout,
+                                 bool pass_tags,
+                                 int hwm,
+                                 const std::string& key)
     : gr::sync_block("sub_source",
                      gr::io_signature::make(0, 0, 0),
                      gr::io_signature::make(1, 1, itemsize * vlen)),
-      base_source_impl(ZMQ_SUB, itemsize, vlen, address, timeout, pass_tags, hwm)
+      base_source_impl(ZMQ_SUB, itemsize, vlen, address, timeout, pass_tags, hwm, key)
 {
     /* Subscribe */
-    d_socket->setsockopt(ZMQ_SUBSCRIBE, "", 0);
+    d_socket->setsockopt(ZMQ_SUBSCRIBE, key.c_str(), key.size());
 }
 
 int sub_source_impl::work(int noutput_items,
