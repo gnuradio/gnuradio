@@ -16,7 +16,6 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-blocks" ENABLE_GR_BLOCKS
     Boost_FOUND
-    ENABLE_VOLK
     ENABLE_GNURADIO_RUNTIME
 )
 

@@ -67,7 +67,7 @@ target_link_libraries(gnuradio-qtgui PUBLIC
     gnuradio-runtime
     gnuradio-fft
     gnuradio-filter
-    ${GR_VOLK_LIB}
+    Volk::volk
     qwt::qwt
     Qt5::Widgets
 )

@@ -175,9 +175,9 @@ add_library(gnuradio-blocks
     )
 
 target_link_libraries(gnuradio-blocks
-  gnuradio-runtime
-  ${GR_VOLK_LIB}
-  )
+    gnuradio-runtime
+    Volk::volk
+)
 
 target_include_directories(gnuradio-blocks
   PUBLIC

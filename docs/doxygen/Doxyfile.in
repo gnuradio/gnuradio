@@ -174,11 +174,7 @@ STRIP_FROM_INC_PATH    = @CMAKE_SOURCE_DIR@/gnuradio-runtime/include \
                          @CMAKE_SOURCE_DIR@/gr-wavelet/include \
                          @CMAKE_BINARY_DIR@/gr-wavelet/include \
                          @CMAKE_SOURCE_DIR@/gr-zeromq/include \
-                         @CMAKE_BINARY_DIR@/gr-zeromq/include \
-                         @CMAKE_SOURCE_DIR@/volk/include \
-                         @CMAKE_BINARY_DIR@/volk/include \
-                         @CMAKE_SOURCE_DIR@/volk/tmpl \
-                         @CMAKE_BINARY_DIR@/volk/tmpl
+                         @CMAKE_BINARY_DIR@/gr-zeromq/include
 
 # If the SHORT_NAMES tag is set to YES, doxygen will generate much shorter
 # (but less readable) file names. This can be useful if your file system
@@ -726,9 +722,7 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = @abs_top_srcdir@/volk \
-                         @abs_top_builddir@/volk \
-                         @abs_top_builddir@/cmake/msvc \
+EXCLUDE                = @abs_top_builddir@/cmake/msvc \
                          @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/docs/doxygen/xml \
                          @abs_top_builddir@/docs/doxygen/other/doxypy.py \
@@ -793,10 +787,7 @@ EXCLUDE                = @abs_top_srcdir@/volk \
                          @abs_top_srcdir@/gr-wavelet/lib \
                          @abs_top_builddir@/gr-wavelet/lib \
                          @abs_top_srcdir@/gr-zeromq/lib \
-                         @abs_top_builddir@/gr-zeromq/lib \
-                         @abs_top_srcdir@/volk/cmake/msvc \
-                         @abs_top_builddir@/volk/cmake/msvc \
-                         @abs_top_srcdir@/volk/kernels/volk/volk_8u_conv_k7_r2puppet_8u.h
+                         @abs_top_builddir@/gr-zeromq/lib
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
