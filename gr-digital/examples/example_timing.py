@@ -39,7 +39,7 @@ except ImportError:
     print("Error: could not from matplotlib import pyplot (http://matplotlib.sourceforge.net/)")
     sys.exit(1)
 
-from numpy.fft import fftpack
+from scipy import fftpack
 
 class example_timing(gr.top_block):
     def __init__(self, N, sps, rolloff, ntaps, bw, noise,
