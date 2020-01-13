@@ -16,7 +16,6 @@ include(GrBoost)
 include(GrComponent)
 
 GR_REGISTER_COMPONENT("gr-channels" ENABLE_GR_CHANNELS
-    ENABLE_VOLK
     Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_BLOCKS

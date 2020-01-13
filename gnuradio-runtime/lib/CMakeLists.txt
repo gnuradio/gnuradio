@@ -188,7 +188,7 @@ endif(ENABLE_GR_CTRLPORT)
 
 target_link_libraries(gnuradio-runtime PUBLIC
   gnuradio-pmt
-  ${GR_VOLK_LIB}
+  Volk::volk
   Boost::program_options
   Boost::filesystem
   Boost::system

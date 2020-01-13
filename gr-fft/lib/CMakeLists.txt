@@ -20,7 +20,7 @@ add_library(gnuradio-fft
 target_link_libraries(gnuradio-fft PUBLIC
   gnuradio-runtime
   fftw3f::fftw3f
-  ${GR_VOLK_LIB}
+  Volk::volk
 )
 
 target_include_directories(gnuradio-fft

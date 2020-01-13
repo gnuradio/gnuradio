@@ -55,6 +55,7 @@ set(GCC_MIN_VERSION "4.8.4")
 set(CLANG_MIN_VERSION "3.4.0")
 set(APPLECLANG_MIN_VERSION "500")
 set(MSVC_MIN_VERSION "1800")
+set(VOLK_MIN_VERSION "2.1.0")
 
 # Enable generation of compile_commands.json for code completion engines
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -368,67 +369,19 @@ endif()
 
 
 ########################################################################
-# Setup volk as a subproject
+# Detect and configure VOLK
 ########################################################################
 message(STATUS "")
 message(STATUS "Configuring VOLK support...")
+find_package(Volk ${VOLK_MIN_VERSION} REQUIRED)
+message(STATUS "  Found VOLK:")
+message(STATUS "  * Version: ${VOLK_VERSION}")
+message(STATUS "  * Libraries: ${VOLK_LIBRARIES}")
+message(STATUS "  * Includes: ${VOLK_INCLUDE_DIRS}")
 
-OPTION(ENABLE_INTERNAL_VOLK "Enable internal VOLK only" ON)
-UNSET(Volk_FOUND)
-if(NOT ENABLE_INTERNAL_VOLK)
-    find_package(Volk)
-    set(GR_VOLK_LIB "Volk::volk")
-    if(NOT Volk_FOUND)
-        message(STATUS "  External VOLK not found; checking internal.")
-    endif()
-endif()
-if(NOT Volk_FOUND)
-    find_file(INTREE_VOLK_FOUND
-        volk/volk_common.h
-        PATHS ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
-        NO_DEFAULT_PATH
-        NO_CMAKE_FIND_ROOT_PATH
-    )
-
-    if(NOT INTREE_VOLK_FOUND)
-        message(STATUS "  VOLK submodule is not checked out.")
-        message(STATUS "  To check out the VOLK submodule, use:")
-        message(STATUS "    git pull --recurse-submodules=on")
-        message(STATUS "    git submodule update --init")
-        if(ENABLE_INTERNAL_VOLK)
-            message(STATUS "  External VOLK disabled.")
-        endif()
-        message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
-        message(STATUS "")
-        message(FATAL_ERROR "VOLK required but not found.")
-    endif()
-
-    add_subdirectory(volk)
-    # if the above command returns, then VOLK is enabled
-
-    include(GrComponent)
-    GR_REGISTER_COMPONENT("volk" ENABLE_VOLK)
-
-    SET(VOLK_INCLUDE_DIRS
-        ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
-        ${CMAKE_CURRENT_BINARY_DIR}/volk/include
-    )
-
-    set(GR_VOLK_LIB "volk")
-
-    SET(VOLK_INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_PREFIX}/lib)
-    SET(VOLK_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include)
-else()
-    message(STATUS "  An external VOLK has been found and will be used for build.")
-    SET(ENABLE_VOLK TRUE)
-
-    get_filename_component(VOLK_INSTALL_LIBRARY_DIR "${VOLK_LIBRARIES}" DIRECTORY)
-    SET(VOLK_INSTALL_INCLUDE_DIR ${VOLK_INCLUDE_DIRS})
-endif(NOT Volk_FOUND)
-
-message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
-
-# Handle logging
+########################################################################
+# Configure Log4CPP
+########################################################################
 find_package(LOG4CPP REQUIRED)
 
 ########################################################################

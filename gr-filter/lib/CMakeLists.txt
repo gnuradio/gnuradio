@@ -59,7 +59,7 @@ target_link_libraries(gnuradio-filter PUBLIC
     gnuradio-runtime
     gnuradio-fft
     gnuradio-blocks
-    ${GR_VOLK_LIB}
+    Volk::volk
 )
 
 target_include_directories(gnuradio-filter

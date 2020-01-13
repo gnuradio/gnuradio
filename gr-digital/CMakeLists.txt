@@ -16,7 +16,6 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-digital" ENABLE_GR_DIGITAL
     Boost_FOUND
-    ENABLE_VOLK
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_FFT
     ENABLE_GR_FILTER

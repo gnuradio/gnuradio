@@ -73,7 +73,7 @@ target_link_libraries(gnuradio-dtv PUBLIC
     gnuradio-analog
     gnuradio-filter
     gnuradio-fec
-    ${GR_VOLK_LIB}
+    Volk::volk
     )
 
 target_include_directories(gnuradio-dtv

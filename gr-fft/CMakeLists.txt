@@ -18,7 +18,6 @@ find_package(FFTW3f)
 include(GrComponent)
 
 GR_REGISTER_COMPONENT("gr-fft" ENABLE_GR_FFT
-    ENABLE_VOLK
     Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_BLOCKS
