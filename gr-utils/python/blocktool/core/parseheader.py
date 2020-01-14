@@ -56,6 +56,7 @@ class BlockHeaderParser(BlockTool):
         BlockTool.__init__(self, **kwargs)
         self.parsed_data = {}
         self.addcomments = blocktool_comments
+        self.include_paths = None
         if (include_paths):
             self.include_paths = [p.strip() for p in include_paths.split(',')]
         if not os.path.isfile(file_path):
@@ -107,7 +108,9 @@ class BlockHeaderParser(BlockTool):
             xml_generator_path=generator_path,
             xml_generator=generator_name,
             include_paths=self.include_paths,
-            compiler='gcc')
+            compiler='gcc',
+            define_symbols=['BOOST_ATOMIC_DETAIL_EXTRA_BACKEND_GENERIC'],
+            cflags='-std=c++11')
         decls = parser.parse(
             [self.target_file], xml_generator_config)
         global_namespace = declarations.get_global_namespace(decls)
