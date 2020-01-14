@@ -395,7 +395,6 @@ class ofdm_rx(gr.hier_block2):
             self.connect((chanest, 0),      blocks.tag_debug(gr.sizeof_gr_complex * fft_len, 'post-hdr-chanest'))
             self.connect(header_eq,         blocks.file_sink(gr.sizeof_gr_complex * fft_len, 'post-hdr-eq.dat'))
             self.connect(header_serializer, blocks.file_sink(gr.sizeof_gr_complex,           'post-hdr-serializer.dat'))
-            self.connect(header_descrambler, blocks.file_sink(1,                             'post-hdr-demod.dat'))
         ### Payload demod ####################################################
         payload_fft = fft.fft_vcc(self.fft_len, True, (), True)
         payload_constellation = _get_constellation(bps_payload)
@@ -448,4 +447,4 @@ class ofdm_rx(gr.hier_block2):
             self.connect(payload_serializer, blocks.file_sink(gr.sizeof_gr_complex,         'post-payload-serializer.dat'))
             self.connect(payload_demod,      blocks.file_sink(1,                            'post-payload-demod.dat'))
             self.connect(payload_pack,       blocks.file_sink(1,                            'post-payload-pack.dat'))
-            self.connect(crc,                blocks.file_sink(1,                            'post-payload-crc.dat'))
+            self.connect(self.crc,           blocks.file_sink(1,                            'post-payload-crc.dat'))
