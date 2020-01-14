@@ -243,13 +243,14 @@ namespace gr {
       d_trigger_tag_key = pmt::intern(tag_key);
       d_triggered = false;
       d_trigger_count = 0;
+      int d_sps = d_main_gui->getSamplesPerSymbol();
 
-      if ((d_trigger_delay < 0) || (d_trigger_delay >= d_size)) {
+      if ((d_trigger_delay < 0) || (d_trigger_delay > 2 * d_sps)) {
           GR_LOG_WARN(
               d_logger,
               boost::format("Trigger delay (%1%) outside of display range (0:%2%).") %
-                  (d_trigger_delay / d_samp_rate) % ((d_size - 1) / d_samp_rate));
-          d_trigger_delay = std::max(0, std::min(d_size - 1, d_trigger_delay));
+                  (d_trigger_delay / d_samp_rate) % ((2 * d_sps) / d_samp_rate));
+          d_trigger_delay = std::max(0, std::min(2 * d_sps, d_trigger_delay));
           delay = d_trigger_delay / d_samp_rate;
       }
 
@@ -309,6 +310,7 @@ namespace gr {
           // (throws away any currently held data, but who cares?)
           d_size = newsize;
           d_buffer_size = 2 * d_size;
+          int d_sps = d_main_gui->getSamplesPerSymbol();
 
           // Resize buffers and replace data
           for (unsigned int n = 0; n < d_nconnections + 1; n++) {
@@ -324,13 +326,13 @@ namespace gr {
           }
 
           // If delay was set beyond the new boundary, pull it back.
-          if (d_trigger_delay >= d_size) {
+          if (d_trigger_delay > 2 * d_sps) {
               GR_LOG_WARN(d_logger,
                           boost::format("Trigger delay (%1%) outside of display range "
                                         "(0:%2%). Moving to 50%% point.") %
                               (d_trigger_delay / d_samp_rate) %
-                              ((d_size - 1) / d_samp_rate));
-              d_trigger_delay = d_size - 1;
+                              ((2 * d_sps) / d_samp_rate));
+              d_trigger_delay = d_sps;
               d_main_gui->setTriggerDelay(d_trigger_delay / d_samp_rate);
           }
 
@@ -460,19 +462,21 @@ namespace gr {
       d_trigger_level = d_main_gui->getTriggerLevel();
       d_trigger_channel = d_main_gui->getTriggerChannel();
       d_trigger_count = 0;
+      int d_sps = d_main_gui->getSamplesPerSymbol();
 
       float delayf = d_main_gui->getTriggerDelay();
       int delay = static_cast<int>(delayf * d_samp_rate);
 
+      // TODOCS separate lowerbound and upperbound
       if (delay != d_trigger_delay) {
           // We restrict the delay to be within the window of time being
           // plotted.
-          if ((delay < 0) || (delay >= d_size)) {
+          if ((delay < 0) || (delay > 2 * d_sps)) {
               GR_LOG_WARN(
                   d_logger,
                   boost::format("Trigger delay (%1%) outside of display range (0:%2%).") %
-                      (delay / d_samp_rate) % ((d_size - 1) / d_samp_rate));
-              delay = std::max(0, std::min(d_size - 1, delay));
+                      (delay / d_samp_rate) % ((2 * d_sps) / d_samp_rate));
+              delay = std::max(0, std::min(2 * d_sps, delay));
               delayf = delay / d_samp_rate;
           }
 

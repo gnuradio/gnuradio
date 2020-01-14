@@ -47,6 +47,8 @@ public:
     EyeDisplayPlot* getSinglePlot(unsigned int);
 
     int getNPoints() const;
+    int getSamplesPerSymbol() const;
+
     gr::qtgui::trigger_mode getTriggerMode() const;
     gr::qtgui::trigger_slope getTriggerSlope() const;
     float getTriggerLevel() const;

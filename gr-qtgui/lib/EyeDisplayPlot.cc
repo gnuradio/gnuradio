@@ -110,7 +110,6 @@ private:
 EyeDisplayPlot::EyeDisplayPlot(unsigned int nplots, unsigned int curve_index, QWidget* parent)
     : DisplayPlot(1, parent)
 {
-    std::cout << "EyeDisplayPlot::EyeDisplayPlot d_nplots=" << d_nplots << std::endl;
 
 	d_numPoints = 1024;
 	d_nplots = nplots;
@@ -194,8 +193,8 @@ EyeDisplayPlot::EyeDisplayPlot(unsigned int nplots, unsigned int curve_index, QW
 #endif
 
     }
-	std::cout << "fin de EyeDisplayPlot::EyeDisplayPlot() d_curve_index=" << d_curve_index << std::endl;
-    d_sample_rate = 1;
+
+	d_sample_rate = 1;
     _resetXAxisPoints();
 
     d_tag_markers_en = true;
@@ -218,11 +217,13 @@ EyeDisplayPlot::EyeDisplayPlot(unsigned int nplots, unsigned int curve_index, QW
 
 EyeDisplayPlot::~EyeDisplayPlot()
 {
-	for (unsigned int i = 0; i < d_nplots; ++i) {
-		delete[] d_ydata[i];
-	}
 
-	delete[] d_xdata;
+	// Delete d_ydata set used by this EyeDisplayPlot
+	delete[] d_ydata[d_curve_index];
+
+	// Delete d_xdata once (it is used by some EyeDisplayPlot)
+	if (d_curve_index == 0)
+		delete[] d_xdata;
 
     // d_zoomer and _panner deleted when parent deleted
 }
@@ -247,8 +248,6 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
            << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
            << QColor(Qt::yellow) << QColor(Qt::gray) << QColor(Qt::darkRed)
            << QColor(Qt::darkGreen) << QColor(Qt::darkBlue) << QColor(Qt::darkGray);
-
-    std::cout << "EyeDisplayPlot::plotNewData-----" << std::endl;
 
     if (!d_stop) {
 		if ((numDataPoints > 0)) {
@@ -304,29 +303,21 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 				delete d_tag_markers[i];
 			}
 			d_tag_markers.clear();
-			std::cout << "Detach and delete any tags " << std::endl;
-            // Plot and attach any new tags found.
+           // Plot and attach any new tags found.
             // First test if this was a complex input where real/imag get
             // split here into two stream.
 			if (!tags.empty()) {
-            	std::cout << "EyeDisplayPlot::if (!tags.empty(" << std::endl;
                 unsigned int mult = d_nplots / tags.size();
-                std::cout << "EyeDisplayPlot::if (!tags.empty(0) d_nplots/tags.size()=" << d_nplots  <<"/" << tags.size() << std::endl;
-				unsigned int tags_index = d_curve_index / mult;
-                std::cout << "EyeDisplayPlot::if (!tags.empty(1) tags_index=" << tags_index << " mult=" << mult << std::endl;
+ 				unsigned int tags_index = d_curve_index / mult;
                 std::vector<std::vector<gr::tag_t>>::const_iterator tag = tags.begin();
  			    // Move iterator to curve[d_curve_index] tags set i.e. tags[tags_index]
                 for (unsigned int i = 0; i < tags_index; i ++) {
-                	std::cout << "EyeDisplayPlot::avant tag++ i=" << i << " d_curve_index=" << d_curve_index << " d_nplots=" << d_nplots << std::endl;
-
                 	tag++;
 			    }
-                std::cout << "EyeDisplayPlot::if (!tags.empty(2)" << std::endl;
 
                 std::vector<gr::tag_t>::const_iterator t;
 				for (t = tag->begin(); t != tag->end(); t++) {
 					uint64_t offset = (*t).offset;
-	                std::cout << "EyeDisplayPlot::if (!tags.empty(3) offset=" << offset << std::endl;
 
 					// Ignore tag if its offset is outside our plottable vector.
 					if (offset >= (uint64_t)((d_numPointsPerPeriod - 1) * d_numPeriods)) {
@@ -417,9 +408,6 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 
             }
 
-            std::cout << "EyeDisplayPlot::d_autoscale_state-----" << std::endl;
-
-
             if (d_autoscale_state) {
                 double bottom = 1e20, top = -1e20;
 				for (unsigned int i = 0; i < d_numPeriods; ++i) {
@@ -438,13 +426,9 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                     d_autoscale_shot = false;
                 }
             }
-            std::cout << "EyeDisplayPlot::replot()----" << std::endl;
-
             replot();
         }
     }
-    std::cout << "fin EyeDisplayPlot::plotNewData-----" << std::endl;
-
 }
 
 void EyeDisplayPlot::legendEntryChecked(QwtPlotItem* plotItem, bool on)
@@ -479,15 +463,15 @@ void EyeDisplayPlot::_resetXAxisPoints()
 {
     double delt = 1.0 / d_sample_rate;
     for (long loc = 0; loc < d_numPointsPerPeriod; loc++) {
-        d_xdata[loc] = delt * (loc - d_sps);
+        d_xdata[loc] = delt * loc;
     }
 
-    setAxisScale(QwtPlot::xBottom, - delt * d_sps, delt * d_sps);
+    setAxisScale(QwtPlot::xBottom, 0, 2.0 * delt * d_sps);
     // Set up zoomer base for maximum unzoom x-axis
     // and reset to maximum unzoom level
     QwtDoubleRect zbase = d_zoomer->zoomBase();
-    zbase.setLeft( - delt * d_sps);
-    zbase.setRight( delt * d_sps);
+    zbase.setLeft( 0.0);
+    zbase.setRight( 2.0 * delt * d_sps);
     d_zoomer->zoom(zbase);
     d_zoomer->setZoomBase(zbase);
     d_zoomer->zoom(0);
@@ -511,8 +495,8 @@ void EyeDisplayPlot::setAutoScaleShot()
 
 
 void EyeDisplayPlot::setSampleRate(double sr,
-                                          double units,
-                                          const std::string& strunits)
+	double units,
+	const std::string& strunits)
 {
     double newsr = sr / units;
     if ((newsr != d_sample_rate) ||
