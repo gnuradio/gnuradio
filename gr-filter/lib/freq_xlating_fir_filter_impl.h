@@ -42,6 +42,7 @@ protected:
     double d_center_freq;
     double d_sampling_freq;
     bool d_updated;
+    const int d_decim;
 
     virtual void build_composite_fir();
 

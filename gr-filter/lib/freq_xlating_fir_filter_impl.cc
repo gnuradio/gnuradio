@@ -57,7 +57,8 @@ freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::freq_xlating_fir_filter_impl(
       d_proto_taps(taps),
       d_center_freq(center_freq),
       d_sampling_freq(sampling_freq),
-      d_updated(false)
+      d_updated(false),
+      d_decim(decimation)
 {
     std::vector<gr_complex> dummy_taps;
     d_composite_fir =
@@ -175,9 +176,15 @@ int freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::work(
 
     unsigned j = 0;
     for (int i = 0; i < noutput_items; i++) {
-        out[i] = d_r.rotate(d_composite_fir->filter(&in[j]));
-        j += this->decimation();
+        out[i] = d_composite_fir->filter(&in[j]);
+        j += d_decim;
     }
+
+    // re-use of the same buffer as the input and output is safe for many volk functions
+    // and faster than creating local temporary memory in the work function and doing an
+    // extra copy. So out is used below as both the in and out params to the rotate
+    // function.
+    d_r.rotateN(out, out, noutput_items);
 
     return noutput_items;
 }
