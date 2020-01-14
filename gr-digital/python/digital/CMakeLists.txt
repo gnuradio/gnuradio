@@ -33,13 +33,6 @@ GR_PYTHON_INSTALL(
     gmsk.py
     gfsk.py
     modulation_utils.py
-    ofdm.py
-    ofdm_packet_utils.py
-    ofdm_receiver.py
-    ofdm_sync_fixed.py
-    ofdm_sync_ml.py
-    ofdm_sync_pnac.py
-    ofdm_sync_pn.py
     ofdm_txrx.py
     packet_utils.py
     psk.py
