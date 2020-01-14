@@ -258,8 +258,7 @@ void EyeDisplayForm::newData(const QEvent* updateEvent)
     const std::vector<std::vector<gr::tag_t>> tags = tevent->getTags();
 
     for (unsigned int i = 0; i < d_nplots; ++i) {
-        std::cout << "getSinglePlot(i)->plotNewData-----" << std::endl;
-getSinglePlot(i)->plotNewData(dataPoints, numDataPoints, d_sps, d_update_time, tags);
+        getSinglePlot(i)->plotNewData(dataPoints, numDataPoints, d_sps, d_update_time, tags);
         }
 }
 
@@ -304,6 +303,8 @@ void EyeDisplayForm::setYLabel(const std::string& label, const std::string& unit
 }
 
 int EyeDisplayForm::getNPoints() const { return d_npoints; }
+
+int EyeDisplayForm::getSamplesPerSymbol() const { return d_sps; }
 
 void EyeDisplayForm::setNPoints(const int npoints)
 {
@@ -355,9 +356,9 @@ void EyeDisplayForm::setTriggerMode(gr::qtgui::trigger_mode mode)
 
     if ((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) ||
         (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
-        getPlot()->attachTriggerLines(true);
+    	getSinglePlot(d_trig_channel)->attachTriggerLines(true);
     } else {
-        getPlot()->attachTriggerLines(false);
+    	getSinglePlot(d_trig_channel)->attachTriggerLines(false);
     }
 
     emit signalReplot();
@@ -370,9 +371,9 @@ void EyeDisplayForm::updateTrigger(gr::qtgui::trigger_mode mode)
     if ((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) ||
         (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
         d_tr_level_act->activate(QAction::Trigger);
-        getPlot()->attachTriggerLines(true);
+        getSinglePlot(d_trig_channel)->attachTriggerLines(true);
     } else {
-        getPlot()->attachTriggerLines(false);
+    	getSinglePlot(d_trig_channel)->attachTriggerLines(false);
     }
 
     // if tag mode, popup tag key box to set
@@ -402,7 +403,7 @@ void EyeDisplayForm::setTriggerLevel(QString s)
 
     if ((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) ||
         (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
-        getPlot()->setTriggerLines(d_trig_delay * d_current_units, d_trig_level);
+    	getSinglePlot(d_trig_channel)->setTriggerLines(d_trig_delay * d_current_units, d_trig_level);
     }
 
     emit signalReplot();
@@ -415,7 +416,7 @@ void EyeDisplayForm::setTriggerLevel(float level)
 
     if ((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) ||
         (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
-        getPlot()->setTriggerLines(d_trig_delay * d_current_units, d_trig_level);
+    	getSinglePlot(d_trig_channel)->setTriggerLines(d_trig_delay * d_current_units, d_trig_level);
     }
 
     emit signalReplot();
@@ -429,7 +430,7 @@ void EyeDisplayForm::setTriggerDelay(QString s)
 
     if ((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) ||
         (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
-        getPlot()->setTriggerLines(d_trig_delay * d_current_units, d_trig_level);
+    	getSinglePlot(d_trig_channel)->setTriggerLines(d_trig_delay * d_current_units, d_trig_level);
     }
 
     emit signalReplot();
@@ -442,7 +443,7 @@ void EyeDisplayForm::setTriggerDelay(float delay)
 
     if ((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) ||
         (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
-        getPlot()->setTriggerLines(d_trig_delay * d_current_units, d_trig_level);
+    	getSinglePlot(d_trig_channel)->setTriggerLines(d_trig_delay * d_current_units, d_trig_level);
     }
 
     emit signalReplot();
@@ -452,7 +453,9 @@ float EyeDisplayForm::getTriggerDelay() const { return d_trig_delay; }
 
 void EyeDisplayForm::setTriggerChannel(int channel)
 {
-    d_trig_channel = channel;
+	getSinglePlot(d_trig_channel)->attachTriggerLines(false);
+	d_trig_channel = channel;
+	updateTrigger(d_trig_mode);
     d_tr_channel_menu->getAction(d_trig_channel)->setChecked(true);
 
     emit signalReplot();
@@ -629,8 +632,11 @@ void EyeDisplayForm::notifyTriggerDelayPlus()
     double range = ax.upperBound() - ax.lowerBound();
 #endif
 
-    double step = range / 20.0;
+    double step = range / (2 * d_sps);
     double trig = getTriggerDelay() + step / d_current_units;
+    std::cout << "trig=" << trig << " units=" << d_current_units << std::endl;
+    if (trig > range / d_current_units)
+        trig = range / d_current_units;
     emit signalTriggerDelay(trig);
 }
 
@@ -646,9 +652,10 @@ void EyeDisplayForm::notifyTriggerDelayMinus()
     double range = ax.upperBound() - ax.lowerBound();
 #endif
 
-    double step = range / 20.0;
+    double step = range / (2 * d_sps);
     double trig = getTriggerDelay() - step / d_current_units;
-    if (trig < 0)
+    std::cout << "trig=" << trig << " units=" << d_current_units << std::endl;
+   if (trig < 0)
         trig = 0;
     emit signalTriggerDelay(trig);
 }

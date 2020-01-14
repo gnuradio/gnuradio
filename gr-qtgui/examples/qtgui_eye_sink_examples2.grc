@@ -202,7 +202,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [664, 304.0]
+    coordinate: [704, 360.0]
     rotation: 0
     state: true
 - name: blocks_multiply_const_vxx_0
@@ -220,7 +220,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [560, 412.0]
+    coordinate: [568, 404.0]
     rotation: 0
     state: true
 - name: blocks_multiply_const_vxx_0_0
@@ -238,7 +238,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [560, 476.0]
+    coordinate: [536, 212.0]
     rotation: 0
     state: true
 - name: blocks_null_sink_0
@@ -295,7 +295,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [344, 372.0]
+    coordinate: [352, 388.0]
     rotation: 0
     state: true
 - name: digital_psk_mod_0
@@ -649,8 +649,8 @@ blocks:
 connections:
 - [analog_random_source_x, '0', digital_psk_mod_0, '0']
 - [blocks_complex_to_real_0, '0', qtgui_eye_sink_x_0_0, '0']
+- [blocks_complex_to_real_0, '0', qtgui_eye_sink_x_0_0, '1']
 - [blocks_complex_to_real_0_0, '0', blocks_null_sink_0, '0']
-- [blocks_complex_to_real_0_0, '0', qtgui_eye_sink_x_0_0, '1']
 - [blocks_multiply_const_vxx_0, '0', blocks_complex_to_real_0_0, '0']
 - [blocks_multiply_const_vxx_0, '0', qtgui_eye_sink_x_0, '1']
 - [blocks_multiply_const_vxx_0, '0', qtgui_eye_sink_x_1_0, '0']
