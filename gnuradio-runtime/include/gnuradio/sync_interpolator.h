@@ -47,7 +47,7 @@ protected:
                       unsigned interpolation);
 
 public:
-    unsigned interpolation() const { return d_interpolation; }
+    inline unsigned interpolation() const { return d_interpolation; }
     void set_interpolation(unsigned interpolation)
     {
         d_interpolation = interpolation;
