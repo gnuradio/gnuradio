@@ -39,7 +39,7 @@ class BlockTool(ABC):
 
     def __init__(self, modname=None, filename=None, targetdir=None,
                  target_file=None, module=None, impldir=None, impl_file=None,
-                 yaml=False, json=False, **kwargs):
+                 yaml=False, json=False, include_paths=None, **kwargs):
         """ __init__ """
         pass
 
