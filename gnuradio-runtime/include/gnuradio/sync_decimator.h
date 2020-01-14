@@ -47,7 +47,7 @@ protected:
                    unsigned decimation);
 
 public:
-    unsigned decimation() const { return d_decimation; }
+    inline unsigned decimation() const { return d_decimation; }
     void set_decimation(unsigned decimation)
     {
         d_decimation = decimation;
