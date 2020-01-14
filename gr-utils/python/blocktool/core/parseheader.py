@@ -51,11 +51,13 @@ class BlockHeaderParser(BlockTool):
     name = 'Block Parse Header'
     description = 'Create a parsed output from a block header file'
 
-    def __init__(self, file_path=None, blocktool_comments=False, **kwargs):
+    def __init__(self, file_path=None, blocktool_comments=False, include_paths=None, **kwargs):
         """ __init__ """
         BlockTool.__init__(self, **kwargs)
         self.parsed_data = {}
         self.addcomments = blocktool_comments
+        if (include_paths):
+            self.include_paths = [p.strip() for p in include_paths.split(',')]
         if not os.path.isfile(file_path):
             raise BlockToolException('file does not exist')
         file_path = os.path.abspath(file_path)
@@ -104,6 +106,7 @@ class BlockHeaderParser(BlockTool):
         xml_generator_config = parser.xml_generator_configuration_t(
             xml_generator_path=generator_path,
             xml_generator=generator_name,
+            include_paths=self.include_paths,
             compiler='gcc')
         decls = parser.parse(
             [self.target_file], xml_generator_config)
