@@ -104,7 +104,7 @@ private:
 
 
 /***********************************************************************
- * Main Time domain plotter widget
+ * Main Eye Pattern plotter widget
  **********************************************************************/
 
 EyeDisplayPlot::EyeDisplayPlot(unsigned int nplots, unsigned int curve_index, QWidget* parent)
@@ -158,7 +158,7 @@ EyeDisplayPlot::EyeDisplayPlot(unsigned int nplots, unsigned int curve_index, QW
     setAxisTitle( QwtPlot::yLeft, yAxisTitle );
     // setAxisTitle(QwtPlot::yLeft, "Amplitude");
 
-    QList<QColor> colors;
+
     colors << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
            << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
            << QColor(Qt::yellow) << QColor(Qt::gray) << QColor(Qt::darkRed)
@@ -197,7 +197,9 @@ EyeDisplayPlot::EyeDisplayPlot(unsigned int nplots, unsigned int curve_index, QW
 	d_sample_rate = 1;
     _resetXAxisPoints();
 
-    d_tag_markers_en = true;
+    // d_tag_markers and d_tag_markers are 2 std::vector of size 1 for Eye Plot
+    d_tag_markers.resize(1);
+    d_tag_markers_en = std::vector<bool>(1, true);
 
     d_trigger_lines[0] = new QwtPlotMarker();
     d_trigger_lines[0]->setLineStyle(QwtPlotMarker::HLine);
@@ -234,20 +236,8 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                                         const int64_t numDataPoints,
 										int sps,
                                         const double timeInterval,
-                                        const std::vector<std::vector<gr::tag_t>>& tags)
+										const std::vector<std::vector<gr::tag_t>>& tags)
 {
-    QList<QColor> colors;
-    colors << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
-           << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
-           << QColor(Qt::yellow) << QColor(Qt::gray) << QColor(Qt::darkRed)
-           << QColor(Qt::darkGreen) << QColor(Qt::darkBlue)
-           << QColor(Qt::darkGray)
-           // cycle through all colors again to increase eye_sink_f input limit
-           // from 12 to 24, otherwise you get a segfault
-           << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
-           << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
-           << QColor(Qt::yellow) << QColor(Qt::gray) << QColor(Qt::darkRed)
-           << QColor(Qt::darkGreen) << QColor(Qt::darkBlue) << QColor(Qt::darkGray);
 
     if (!d_stop) {
 		if ((numDataPoints > 0)) {
@@ -298,12 +288,13 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
             }
 
             // Detach and delete any tags that were plotted last time
-            for (size_t i = 0; i < d_tag_markers.size(); i++) {
-				d_tag_markers[i]->detach();
-				delete d_tag_markers[i];
-			}
-			d_tag_markers.clear();
-           // Plot and attach any new tags found.
+            for (size_t i = 0; i < d_tag_markers[0].size(); i++) {
+                d_tag_markers[0][i]->detach();
+                delete d_tag_markers[0][i];
+            }
+            d_tag_markers[0].clear();
+
+            // Plot and attach any new tags found.
             // First test if this was a complex input where real/imag get
             // split here into two stream.
 			if (!tags.empty()) {
@@ -326,26 +317,26 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 
 					// Adjust the offset in range of the eye pattern length (0 to d_numPointsPerPeriod - 1)
 					unsigned int period = offset / (d_numPointsPerPeriod - 1);
-					double sample_offset = double((offset % (d_numPointsPerPeriod - 1) - d_sps)) / d_sample_rate;
+					unsigned int eye_offset = offset % (d_numPointsPerPeriod - 1);
+					double sample_offset = double(eye_offset) / d_sample_rate;
 
 					std::stringstream s;
 					s << (*t).key << ": " << (*t).value;
 
-					double yval = d_ydata[period][offset];
+					double yval = d_ydata[period][eye_offset];
 
 					// Find if we already have a marker at this location
-					std::vector<QwtPlotMarker*>::iterator mitr;
-					for (mitr = d_tag_markers.begin();
-						 mitr != d_tag_markers.end();
-						 mitr++) {
-						if ((*mitr)->xValue() == sample_offset) {
-							break;
-						}
-					}
-
+                    std::vector<QwtPlotMarker*>::iterator mitr;
+                    for (mitr = d_tag_markers[0].begin();
+                         mitr != d_tag_markers[0].end();
+                         mitr++) {
+                        if ((*mitr)->xValue() == sample_offset) {
+                            break;
+                        }
+                    }
 					// If no matching marker, create a new one
-					if (mitr == d_tag_markers.end()) {
-						bool show = d_plot_curve[d_curve_index]->isVisible();
+					if (mitr == d_tag_markers[0].end()) {
+						bool show = d_plot_curve[0]->isVisible();
 
 						QwtPlotMarker* m = new QwtPlotMarker();
 						m->setXValue(sample_offset);
@@ -380,11 +371,11 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 
 						m->attach(this);
 
-						if (!(show && d_tag_markers_en)) {
+						if (!(show && d_tag_markers_en[0])) {
 							m->hide();
 						}
 
-						d_tag_markers.push_back(m);
+						d_tag_markers[0].push_back(m);
 					} else {
 						// Prepend the new tag to the existing marker
 						// And set it at the max value
@@ -433,16 +424,13 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 
 void EyeDisplayPlot::legendEntryChecked(QwtPlotItem* plotItem, bool on)
 {
-    // When line is turned on/off, immediately show/hide tag markers
-	if (plotItem == d_plot_curve[d_curve_index]) {
-		for (size_t i = 0; i < d_tag_markers.size(); i++) {
-			if (!(!on && d_tag_markers_en))
-				d_tag_markers[i]->hide();
-			else
-				d_tag_markers[i]->show();
-		}
-	}
-
+	// When line is turned on/off, immediately show/hide tag markers
+    for (size_t i = 0; i < d_tag_markers[0].size(); i++) {
+        if (!(!on && d_tag_markers_en[0]))
+            d_tag_markers[0][i]->hide();
+        else
+            d_tag_markers[0][i]->show();
+    }
     DisplayPlot::legendEntryChecked(plotItem, on);
 }
 
@@ -528,7 +516,12 @@ void EyeDisplayPlot::stemPlot(bool en)
 
 void EyeDisplayPlot::enableTagMarker(unsigned int which, bool en)
 {
-	d_tag_markers_en = en;
+    // which always equal 0
+	if ((size_t)which < d_tag_markers_en.size())
+        d_tag_markers_en[0] = en;
+    else
+        throw std::runtime_error(
+            "TimeDomainDisplayPlot: enabled tag marker does not exist.");
 }
 
 const QColor EyeDisplayPlot::getTagTextColor() { return d_tag_text_color; }

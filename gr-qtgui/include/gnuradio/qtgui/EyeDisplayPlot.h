@@ -30,7 +30,7 @@
 #include <vector>
 
 /*!
- * \brief QWidget for displaying time domain plots.
+ * \brief QWidget for displaying eye pattern plots.
  * \ingroup qtgui_blk
  */
 class EyeDisplayPlot : public DisplayPlot
@@ -69,6 +69,7 @@ public:
     void setLineMarker(unsigned int which, QwtSymbol::Style marker);
     void setLineStyle(unsigned int which, Qt::PenStyle style);
     void setMarkerAlpha(unsigned int which, int alpha);
+
 public slots:
     void setSampleRate(double sr, double units, const std::string& strunits);
 
@@ -109,9 +110,10 @@ private:
 
     bool d_autoscale_shot;
 
-    std::vector<QwtPlotMarker*> d_tag_markers;
-    bool d_tag_markers_en;
+    std::vector<std::vector<QwtPlotMarker*>> d_tag_markers;
+    std::vector<bool> d_tag_markers_en;
 
+    QList<QColor> colors;
     QColor d_tag_text_color;
     QColor d_tag_background_color;
     Qt::BrushStyle d_tag_background_style;

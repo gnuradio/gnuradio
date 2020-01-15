@@ -38,8 +38,8 @@ namespace gr {
  *
  * \details
  * This is a QT-based graphical sink the takes set of a float streams
- * and plots them in the time domain. Each signal is plotted with a
- * different color, and the \a set_title and \a set_color functions
+ * and plots them as eye patterns. Each signal is plotted on a
+ * different layout, and the \a set_title and \a set_color functions
  * can be used to change the label and color for a given input number.
  *
  * The sink supports plotting streaming float data or
@@ -61,7 +61,7 @@ namespace gr {
 	    typedef boost::shared_ptr<eye_sink_f> sptr;
 
 	    /*!
-	     * \brief Build floating point time sink
+	     * \brief Build floating point eye sink
 	     *
 	     * \param size number of points to plot at once
 	     * \param samp_rate sample rate (used to set x-axis labels)
@@ -125,7 +125,7 @@ namespace gr {
 	     * to show the trigger event at the given delay along with some
 	     * portion of the signal before the event. The delay must be
 	     * within 0 - t_max where t_max is the maximum amount of time
-	     * displayed on the time plot.
+         * displayed on the eye pattern equal to 2 symbol time.
 	     *
 	     * \param mode The trigger_mode: free, auto, normal, or tag.
 	     * \param slope The trigger_slope: positive or negative. Only

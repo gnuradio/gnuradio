@@ -46,7 +46,6 @@ public:
     DisplaysForm(int nplots = 1, QWidget* parent = 0);
     ~DisplaysForm();
 
-    virtual DisplayPlot* getPlot() = 0;
     void Reset();
     bool isClosed() const;
 
