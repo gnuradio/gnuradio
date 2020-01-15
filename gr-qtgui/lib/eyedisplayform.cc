@@ -165,7 +165,9 @@ EyeDisplayForm::EyeDisplayForm(int nplots, bool cmplx, QWidget* parent)
             this,
             SLOT(onPlotPointSelected(const QPointF)));
 
-    connect(this, SIGNAL(signalReplot()), getPlot(), SLOT(replot()));
+    for (unsigned int i = 0; i < d_nplots; ++i) {
+    	connect(this, SIGNAL(signalReplot()), getSinglePlot(i), SLOT(replot()));
+    }
 }
 
 EyeDisplayForm::~EyeDisplayForm()
@@ -240,11 +242,6 @@ void EyeDisplayForm::teardownControlPanel()
     d_controlpanelmenu->setChecked(false);
 }
 
-EyeDisplayPlot* EyeDisplayForm::getPlot()
-{
-    return ((EyeDisplayPlot*)d_displays_plot[0]);
-}
-
 EyeDisplayPlot* EyeDisplayForm::getSinglePlot(unsigned int i)
 {
     return ((EyeDisplayPlot*)d_displays_plot[i]);
@@ -293,7 +290,21 @@ void EyeDisplayForm::setSampleRate(const double samprate)
     }
 }
 
-void EyeDisplayForm::setYaxis(double min, double max) { getPlot()->setYaxis(min, max); }
+//TODO CS remove or "empty" this method
+void EyeDisplayForm::setYaxis(double min, double max)
+{
+	for (unsigned int i = 0; i < d_nplots; ++i) {
+		getSinglePlot(i)->setYaxis(min, max);
+	}
+}
+
+void EyeDisplayForm::setAxisLabels(bool en)
+{
+
+	for (unsigned int i = 0; i < d_nplots; ++i) {
+		getSinglePlot(i)->setAxisLabels(en);
+	}
+}
 
 void EyeDisplayForm::setYLabel(const std::string& label, const std::string& unit)
 {
@@ -319,7 +330,6 @@ void EyeDisplayForm::autoScale(bool en)
     for (unsigned int i = 0; i < d_nplots; ++i) {
     	getSinglePlot(i)->setAutoScale(d_autoscale_state);
         }
-    // CS getPlot()->setAutoScale(d_autoscale_state);
     emit signalReplot();
 }
 
@@ -333,14 +343,14 @@ void EyeDisplayForm::autoScaleShot()
 
 void EyeDisplayForm::setTagMenu(unsigned int which, bool en)
 {
-    getPlot()->enableTagMarker(which, en);
+	getSinglePlot(which)->enableTagMarker(0, en);
     d_tagsmenu[which]->setChecked(en);
 }
 
 void EyeDisplayForm::tagMenuSlot(bool en)
 {
     for (size_t i = 0; i < d_tagsmenu.size(); i++) {
-        getPlot()->enableTagMarker(i, d_tagsmenu[i]->isChecked());
+    	getSinglePlot(i)->enableTagMarker(0, d_tagsmenu[i]->isChecked());
     }
 }
 
@@ -591,12 +601,12 @@ void EyeDisplayForm::notifyTriggerSlope(const QString& slope)
 void EyeDisplayForm::notifyTriggerLevelPlus()
 {
 #if QWT_VERSION < 0x060100
-    QwtScaleDiv* ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
+    QwtScaleDiv* ax = getSinglePlot(0)->axisScaleDiv(QwtPlot::yLeft);
     double range = ax->upperBound() - ax->lowerBound();
 
 #else
 
-    QwtScaleDiv ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
+    QwtScaleDiv ax = getSinglePlot(0)->axisScaleDiv(QwtPlot::yLeft);
     double range = ax.upperBound() - ax.lowerBound();
 #endif
 
@@ -607,12 +617,12 @@ void EyeDisplayForm::notifyTriggerLevelPlus()
 void EyeDisplayForm::notifyTriggerLevelMinus()
 {
 #if QWT_VERSION < 0x060100
-    QwtScaleDiv* ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
+    QwtScaleDiv* ax = getSinglePlot(0)->axisScaleDiv(QwtPlot::yLeft);
     double range = ax->upperBound() - ax->lowerBound();
 
 #else
 
-    QwtScaleDiv ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
+    QwtScaleDiv ax = getSinglePlot(0)->axisScaleDiv(QwtPlot::yLeft);
     double range = ax.upperBound() - ax.lowerBound();
 #endif
 
@@ -623,18 +633,18 @@ void EyeDisplayForm::notifyTriggerLevelMinus()
 void EyeDisplayForm::notifyTriggerDelayPlus()
 {
 #if QWT_VERSION < 0x060100
-    QwtScaleDiv* ax = getPlot()->axisScaleDiv(QwtPlot::xBottom);
+    QwtScaleDiv* ax = getSinglePlot(0)->axisScaleDiv(QwtPlot::xBottom);
     double range = ax->upperBound() - ax->lowerBound();
 
 #else
 
-    QwtScaleDiv ax = getPlot()->axisScaleDiv(QwtPlot::xBottom);
+    QwtScaleDiv ax = getSinglePlot(0)->axisScaleDiv(QwtPlot::xBottom);
     double range = ax.upperBound() - ax.lowerBound();
 #endif
 
     double step = range / (2 * d_sps);
     double trig = getTriggerDelay() + step / d_current_units;
-    std::cout << "trig=" << trig << " units=" << d_current_units << std::endl;
+
     if (trig > range / d_current_units)
         trig = range / d_current_units;
     emit signalTriggerDelay(trig);
@@ -643,18 +653,18 @@ void EyeDisplayForm::notifyTriggerDelayPlus()
 void EyeDisplayForm::notifyTriggerDelayMinus()
 {
 #if QWT_VERSION < 0x060100
-    QwtScaleDiv* ax = getPlot()->axisScaleDiv(QwtPlot::xBottom);
+    QwtScaleDiv* ax = getSinglePlot(0)->axisScaleDiv(QwtPlot::xBottom);
     double range = ax->upperBound() - ax->lowerBound();
 
 #else
 
-    QwtScaleDiv ax = getPlot()->axisScaleDiv(QwtPlot::xBottom);
+    QwtScaleDiv ax = getSinglePlot(0)->axisScaleDiv(QwtPlot::xBottom);
     double range = ax.upperBound() - ax.lowerBound();
 #endif
 
     double step = range / (2 * d_sps);
     double trig = getTriggerDelay() - step / d_current_units;
-    std::cout << "trig=" << trig << " units=" << d_current_units << std::endl;
+
    if (trig < 0)
         trig = 0;
     emit signalTriggerDelay(trig);

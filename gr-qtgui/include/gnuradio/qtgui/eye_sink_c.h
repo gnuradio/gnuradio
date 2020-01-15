@@ -38,10 +38,10 @@ namespace gr {
    * \ingroup qtgui
    *
    * \details
-   * This is a QT-based graphical sink the takes set of a complex
-   * streams and plots them in the time domain. For each signal, both
-   * the signal's I and Q parts are plotted, and they are all plotted
-   * with a different color, and the \a set_title and \a set_color
+   * This is a QT-based graphical sink which takes a set of a complex
+   * streams and plots them as an eye pattern. For each signal, both
+   * the signal's I and Q eye patterns are plotted, and they are all plotted
+   * on a different layout, and the \a set_title and \a set_color
    * functions can be used to change the label and color for a given
    * input number.
    *
@@ -63,7 +63,7 @@ namespace gr {
         typedef boost::shared_ptr<eye_sink_c> sptr;
 
         /*!
-         * \brief Build complex time sink
+         * \brief Build complex eye sink
          *
          * \param size number of points to plot at once
          * \param samp_rate sample rate (used to set x-axis labels)
@@ -120,8 +120,8 @@ namespace gr {
          * given direction (x[1] > x[0] for Positive or x[1] < x[0] for
          * Negative), then the trigger is activated.
          *
-         * With the complex time sink, each input has two lines drawn
-         * for the real and imaginary parts of the signal. When
+         * With the complex eye sink, each input has two eye patterns
+         * drawn for the real and imaginary parts of the signal. When
          * selecting the \p channel value, channel 0 is the real signal
          * and channel 1 is the imaginary signal. For more than 1 input
          * stream, channel 2i is the real part of the ith input and
@@ -135,7 +135,7 @@ namespace gr {
          * to show the trigger event at the given delay along with some
          * portion of the signal before the event. The delay must be
          * within 0 - t_max where t_max is the maximum amount of time
-         * displayed on the time plot.
+         * displayed on the eye pattern equal to 2 symbol time.
          *
          * \param mode The trigger_mode: free, auto, normal, or tag.
          * \param slope The trigger_slope: positive or negative. Only

@@ -32,7 +32,7 @@
 class EyeControlPanel;
 
 /*!
- * \brief DisplaysForm child for managing time domain plots.
+ * \brief DisplaysForm child for managing eye pattern plots.
  * \ingroup qtgui_blk
  */
 class EyeDisplayForm : public DisplaysForm
@@ -55,6 +55,7 @@ public:
     float getTriggerDelay() const;
     int getTriggerChannel() const;
     std::string getTriggerTagKey() const;
+    void setAxisLabels(bool en);
 
 public slots:
     void customEvent(QEvent* e);

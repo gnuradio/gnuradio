@@ -170,9 +170,63 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [360, 244.0]
+    coordinate: [440, 228.0]
     rotation: 180
     state: enabled
+- name: blocks_add_xx_0
+  id: blocks_add_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 464.0]
+    rotation: 0
+    state: disabled
+- name: blocks_add_xx_0_0
+  id: blocks_add_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [704, 496.0]
+    rotation: 0
+    state: true
+- name: blocks_add_xx_0_0_0
+  id: blocks_add_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [632, 304.0]
+    rotation: 0
+    state: true
 - name: blocks_complex_to_real_0
   id: blocks_complex_to_real
   parameters:
@@ -202,7 +256,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [664, 304.0]
+    coordinate: [712, 320.0]
     rotation: 0
     state: true
 - name: blocks_multiply_const_vxx_0
@@ -220,7 +274,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [560, 412.0]
+    coordinate: [584, 404.0]
     rotation: 0
     state: true
 - name: blocks_multiply_const_vxx_0_0
@@ -238,7 +292,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [560, 476.0]
+    coordinate: [384, 508.0]
     rotation: 0
     state: true
 - name: blocks_null_sink_0
@@ -258,6 +312,66 @@ blocks:
     coordinate: [888, 360.0]
     rotation: 0
     state: true
+- name: blocks_tags_strobe_0
+  id: blocks_tags_strobe
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    key: pmt.intern("strobe")
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nsamps: '202'
+    type: complex
+    value: pmt.intern("TEST")
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 484.0]
+    rotation: 0
+    state: disabled
+- name: blocks_tags_strobe_0_0
+  id: blocks_tags_strobe
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    key: pmt.intern("strobe")
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nsamps: '202'
+    type: complex
+    value: pmt.intern("TEST")
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [368, 564.0]
+    rotation: 0
+    state: true
+- name: blocks_tags_strobe_0_0_0
+  id: blocks_tags_strobe
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    key: pmt.intern("strobe")
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nsamps: '2000'
+    type: complex
+    value: pmt.intern("TEST")
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [104, 468.0]
+    rotation: 0
+    state: true
 - name: blocks_throttle_0
   id: blocks_throttle
   parameters:
@@ -274,7 +388,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [96, 372.0]
+    coordinate: [80, 372.0]
     rotation: 0
     state: enabled
 - name: channels_channel_model_0
@@ -295,7 +409,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [344, 372.0]
+    coordinate: [352, 364.0]
     rotation: 0
     state: true
 - name: digital_psk_mod_0
@@ -545,7 +659,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [888, 228.0]
+    coordinate: [888, 244.0]
     rotation: 0
     state: enabled
 - name: qtgui_eye_sink_x_1
@@ -939,21 +1053,28 @@ blocks:
 
 connections:
 - [analog_random_source_x, '0', digital_psk_mod_0, '0']
+- [blocks_add_xx_0, '0', blocks_throttle_0, '0']
+- [blocks_add_xx_0_0, '0', qtgui_eye_sink_x_1_1_0, '0']
+- [blocks_add_xx_0_0_0, '0', blocks_complex_to_real_0_0, '0']
 - [blocks_complex_to_real_0, '0', qtgui_eye_sink_x_0_0, '0']
 - [blocks_complex_to_real_0, '0', qtgui_eye_sink_x_1, '0']
 - [blocks_complex_to_real_0_0, '0', blocks_null_sink_0, '0']
 - [blocks_complex_to_real_0_0, '0', qtgui_eye_sink_x_0_0, '1']
-- [blocks_multiply_const_vxx_0, '0', blocks_complex_to_real_0_0, '0']
 - [blocks_multiply_const_vxx_0, '0', qtgui_eye_sink_x_0, '1']
 - [blocks_multiply_const_vxx_0, '0', qtgui_eye_sink_x_1_0, '0']
 - [blocks_multiply_const_vxx_0, '0', qtgui_eye_sink_x_1_1_0, '1']
+- [blocks_multiply_const_vxx_0_0, '0', blocks_add_xx_0_0, '0']
 - [blocks_multiply_const_vxx_0_0, '0', blocks_complex_to_real_0, '0']
 - [blocks_multiply_const_vxx_0_0, '0', qtgui_eye_sink_x_0, '0']
 - [blocks_multiply_const_vxx_0_0, '0', qtgui_eye_sink_x_1_1, '0']
-- [blocks_multiply_const_vxx_0_0, '0', qtgui_eye_sink_x_1_1_0, '0']
+- [blocks_tags_strobe_0, '0', blocks_add_xx_0, '1']
+- [blocks_tags_strobe_0_0, '0', blocks_add_xx_0_0, '1']
+- [blocks_tags_strobe_0_0_0, '0', blocks_add_xx_0_0_0, '1']
 - [blocks_throttle_0, '0', blocks_multiply_const_vxx_0_0, '0']
 - [blocks_throttle_0, '0', channels_channel_model_0, '0']
+- [channels_channel_model_0, '0', blocks_add_xx_0_0_0, '0']
 - [channels_channel_model_0, '0', blocks_multiply_const_vxx_0, '0']
+- [digital_psk_mod_0, '0', blocks_add_xx_0, '0']
 - [digital_psk_mod_0, '0', blocks_throttle_0, '0']
 
 metadata:
