@@ -56,11 +56,10 @@ public:
      * \param K      Rician factor (ratio of the specular power to the scattered power)
      * \param seed   a random number to seed the noise generators
      * \param delays a vector of values that specify the time delay of each impulse
-     * \param delay_std a vector of values that specify the gaussian step size std of
-     * delays \param delay_maxdev a vector of values that specify the max deviation of
+     * \param delays_std a vector of values that specify the gaussian step size std of
+     * delays \param delays_maxdev a vector of values that specify the max deviation of
      * each delay component \param mags   a vector of values that specify the magnitude of
-     * each impulse \param mags   a vector of values that specify the magnitude of each
-     * impulse \param ntaps  the number of filter taps
+     * each impulse \param ntaps  the number of filter taps
      */
     static sptr make(unsigned int N,
                      float fDTs,
