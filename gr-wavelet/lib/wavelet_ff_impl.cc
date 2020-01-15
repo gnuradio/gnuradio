@@ -56,7 +56,7 @@ wavelet_ff_impl::wavelet_ff_impl(int size, int order, bool forward)
     if (d_workspace == NULL)
         throw std::runtime_error("can't allocate wavelet workspace");
     d_temp = (double*)malloc(d_size * sizeof(double));
-    if (d_workspace == NULL)
+    if (d_temp == NULL)
         throw std::runtime_error("can't allocate wavelet double conversion temp");
 }
 
