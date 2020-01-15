@@ -23,3 +23,5 @@
 
 \li `git checkout vMAJOR.MINOR.ABI.PATCH; git submodule update` should be clean
 \li `gnuradio/dtools/bin/roll-tarball.sh`
+
+*/
