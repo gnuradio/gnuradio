@@ -90,7 +90,7 @@ int fft_vcc_fftw::work(int noutput_items,
         if (!d_window.empty()) {
             gr_complex* dst = d_fft.get_inbuf();
             if (!d_forward && d_shift) {
-                unsigned int offset = (!d_forward && d_shift) ? (d_fft_size / 2) : 0;
+                unsigned int offset = d_fft_size / 2;
                 int fft_m_offset = d_fft_size - offset;
                 volk_32fc_32f_multiply_32fc(
                     &dst[fft_m_offset], &in[0], &d_window[0], offset);
