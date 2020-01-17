@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2019 "C. Seguinot".
+ * Copyright 2020
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,10 +40,17 @@ namespace gr {
    * \details
    * This is a QT-based graphical sink which takes a set of a complex
    * streams and plots them as an eye pattern. For each signal, both
-   * the signal's I and Q eye patterns are plotted, and they are all plotted
-   * on a different layout, and the \a set_title and \a set_color
-   * functions can be used to change the label and color for a given
-   * input number.
+   * the signal's I and Q eye patterns are plotted. Eye patterns are
+   * 2 symbol's time long. Symbol rate must be an integer multiple of
+   * the sample rate to obtain the eye pattern. The \a set_title and
+   * \a set_color functions can be used to change the label and color
+   * for a given input number.
+   *
+   * Trigger occurs at the beginning of each stream used to plot the
+   * eye pattern; whilst a real eye diagram would be triggerred with
+   * a (recovered) symbol clock. For these reasons, triggerring of
+   * noisy and/or unsynchronized signals may lead to uncorrect eye
+   * pattern.
    *
    * The sink supports plotting streaming complex data or
    * messages. The message port is named "in". The two modes cannot

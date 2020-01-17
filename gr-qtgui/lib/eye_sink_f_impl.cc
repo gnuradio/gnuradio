@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2019 "C. Seguinot".
+ * Copyright 2020
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -467,7 +467,6 @@ namespace gr {
       float delayf = d_main_gui->getTriggerDelay();
       int delay = static_cast<int>(delayf * d_samp_rate);
 
-      // TODOCS separate lowerbound and upperbound
       if (delay != d_trigger_delay) {
           // We restrict the delay to be within the window of time being
           // plotted.
