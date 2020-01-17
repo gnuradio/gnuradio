@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008-2012 Free Software Foundation, Inc.
+ * Copyright 2008-2012,2020 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -33,93 +33,89 @@
  * \brief QWidget for displaying eye pattern plots.
  * \ingroup qtgui_blk
  */
-class EyeDisplayPlot : public DisplayPlot
-{
-    Q_OBJECT
+class EyeDisplayPlot: public DisplayPlot {
+	Q_OBJECT
 
-    Q_PROPERTY(QColor tag_text_color READ getTagTextColor WRITE setTagTextColor)
-    Q_PROPERTY(QColor tag_background_color READ getTagBackgroundColor WRITE
-                   setTagBackgroundColor)
-    Q_PROPERTY(Qt::BrushStyle tag_background_style READ getTagBackgroundStyle WRITE
-                   setTagBackgroundStyle)
+	Q_PROPERTY(QColor tag_text_color READ getTagTextColor WRITE setTagTextColor)
+	Q_PROPERTY(QColor tag_background_color READ getTagBackgroundColor WRITE
+			setTagBackgroundColor)
+	Q_PROPERTY(Qt::BrushStyle tag_background_style READ getTagBackgroundStyle WRITE
+			setTagBackgroundStyle)
 
 public:
 
 	EyeDisplayPlot(unsigned int nplots, unsigned int curve_index, QWidget* parent);
-    virtual ~EyeDisplayPlot();
+	virtual ~EyeDisplayPlot();
 
-    void plotNewData(const std::vector<double*> dataPoints,
-                     const int64_t numDataPoints,
-					 int d_sps,
-					 const double timeInterval,
-                     const std::vector<std::vector<gr::tag_t>>& tags =
-                         std::vector<std::vector<gr::tag_t>>());
+	void plotNewData(const std::vector<double*> dataPoints,
+			const int64_t numDataPoints, int d_sps, const double timeInterval,
+			const std::vector<std::vector<gr::tag_t>>& tags = std::vector<
+					std::vector<gr::tag_t>>());
 
-    void replot();
+	void replot();
 
-    void stemPlot(bool en);
+	void stemPlot(bool en);
 
-    double sampleRate() const;
+	double sampleRate() const;
 
-    const QColor getTagTextColor();
-    const QColor getTagBackgroundColor();
-    const Qt::BrushStyle getTagBackgroundStyle();
-    void setLineColor(unsigned int which, QColor color);
-    void setLineWidth(unsigned int which, int width);
-    void setLineMarker(unsigned int which, QwtSymbol::Style marker);
-    void setLineStyle(unsigned int which, Qt::PenStyle style);
-    void setMarkerAlpha(unsigned int which, int alpha);
+	const QColor getTagTextColor();
+	const QColor getTagBackgroundColor();
+	const Qt::BrushStyle getTagBackgroundStyle();
+	void setLineColor(unsigned int which, QColor color);
+	void setLineWidth(unsigned int which, int width);
+	void setLineMarker(unsigned int which, QwtSymbol::Style marker);
+	void setLineStyle(unsigned int which, Qt::PenStyle style);
+	void setMarkerAlpha(unsigned int which, int alpha);
 
 public slots:
-    void setSampleRate(double sr, double units, const std::string& strunits);
+	void setSampleRate(double sr, double units, const std::string& strunits);
 
-    void setAutoScale(bool state);
-    void setAutoScaleShot();
+	void setAutoScale(bool state);
+	void setAutoScaleShot();
 
-    void legendEntryChecked(QwtPlotItem* plotItem, bool on);
-    void legendEntryChecked(const QVariant& plotItem, bool on, int index);
+	void legendEntryChecked(QwtPlotItem* plotItem, bool on);
+	void legendEntryChecked(const QVariant& plotItem, bool on, int index);
 
-    void enableTagMarker(unsigned int which, bool en);
+	void enableTagMarker(unsigned int which, bool en);
 
-    void setYLabel(const std::string& label, const std::string& unit = "");
+	void setYLabel(const std::string& label, const std::string& unit = "");
 
-    void attachTriggerLines(bool en);
-    void setTriggerLines(double x, double y);
+	void attachTriggerLines(bool en);
+	void setTriggerLines(double x, double y);
 
-    void setTagTextColor(QColor c);
-    void setTagBackgroundColor(QColor c);
-    void setTagBackgroundStyle(Qt::BrushStyle b);
+	void setTagTextColor(QColor c);
+	void setTagBackgroundColor(QColor c);
+	void setTagBackgroundStyle(Qt::BrushStyle b);
 
-    void setLineLabel(unsigned int which, QString label);
+	void setLineLabel(unsigned int which, QString label);
 
 private:
-    void _resetXAxisPoints();
-    void _autoScale(double bottom, double top);
+	void _resetXAxisPoints();
+	void _autoScale(double bottom, double top);
 
-    std::vector<double*> d_ydata;
+	std::vector<double*> d_ydata;
 
-    double* d_xdata;
+	double* d_xdata;
 
-    double d_sample_rate;
+	double d_sample_rate;
 
-    unsigned int d_curve_index;
-    unsigned int nplots;
-    int d_sps;
-    unsigned int d_numPointsPerPeriod;
-    unsigned int d_numPeriods;
+	unsigned int d_curve_index;
+	unsigned int nplots;
+	int d_sps;
+	unsigned int d_numPointsPerPeriod;
+	unsigned int d_numPeriods;
 
-    bool d_autoscale_shot;
+	bool d_autoscale_shot;
 
-    std::vector<std::vector<QwtPlotMarker*>> d_tag_markers;
-    std::vector<bool> d_tag_markers_en;
+	std::vector<std::vector<QwtPlotMarker*>> d_tag_markers;
+	std::vector<bool> d_tag_markers_en;
 
-    QList<QColor> colors;
-    QColor d_tag_text_color;
-    QColor d_tag_background_color;
-    Qt::BrushStyle d_tag_background_style;
+	QList<QColor> colors;
+	QColor d_tag_text_color;
+	QColor d_tag_background_color;
+	Qt::BrushStyle d_tag_background_style;
 
-    QwtPlotMarker* d_trigger_lines[2];
-
+	QwtPlotMarker* d_trigger_lines[2];
 
 };
 
