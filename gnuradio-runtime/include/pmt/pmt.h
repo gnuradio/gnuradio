@@ -992,16 +992,6 @@ public:
     }
 };
 
-// FIXME: Remove in 3.8.
-class comperator
-{
-public:
-    bool operator()(pmt::pmt_t const& p1, pmt::pmt_t const& p2) const
-    {
-        return pmt::eqv(p1, p2) ? false : p1.get() > p2.get();
-    }
-};
-
 } /* namespace pmt */
 
 #include <pmt/pmt_sugar.h>
