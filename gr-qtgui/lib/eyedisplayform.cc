@@ -50,8 +50,9 @@ EyeDisplayForm::EyeDisplayForm(int nplots, bool cmplx, QWidget* parent)
     d_controlpanel = NULL;
 
     unsigned int i=0;
-    if (cmplx == true) {
-    	d_rows = d_nplots/2;
+    if ((cmplx == true) || ((cmplx == false) && (d_nplots > 3))) {
+    	// Split eye patterns on 2 columns
+    	d_rows = std::floor((d_nplots + 1) / 2);
     	d_cols = 2;
     } else {
     	d_rows = d_nplots;
@@ -290,7 +291,6 @@ void EyeDisplayForm::setSampleRate(const double samprate)
     }
 }
 
-//TODO CS remove or "empty" this method
 void EyeDisplayForm::setYaxis(double min, double max)
 {
 	for (unsigned int i = 0; i < d_nplots; ++i) {

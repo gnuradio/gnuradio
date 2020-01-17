@@ -323,8 +323,7 @@ void DisplaysForm::setGrid(bool on)
 
 void DisplaysForm::setAxisLabels(bool en)
 {
-    // TODO CS extend axis labels to every eye pattern...
-	d_axislabels = en;
+    d_axislabels = en;
     d_axislabelsmenu->setChecked(en);
 
 	for (unsigned int i = 0; i < d_nplots; ++i) {
