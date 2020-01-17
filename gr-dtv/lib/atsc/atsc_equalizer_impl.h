@@ -56,7 +56,7 @@ private:
     unsigned short d_flags;
     short d_segno;
 
-    int d_buff_not_filled;
+    bool d_buff_not_filled;
 
 public:
     atsc_equalizer_impl();
