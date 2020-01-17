@@ -105,7 +105,7 @@ alsa_sink::alsa_sink(int sampling_rate, const std::string device_name, bool ok_t
         }
     }
     if (ok_to_block == false)
-        snd_pcm_nonblock(d_pcm_handle, !ok_to_block);
+        snd_pcm_nonblock(d_pcm_handle, 1);
     if (error < 0) {
         GR_LOG_ERROR(d_logger,
                      boost::format("[%1%]: %2%") % (d_device_name) %
