@@ -47,9 +47,9 @@ namespace gr {
    * for a given input number.
    *
    * Trigger occurs at the beginning of each stream used to plot the
-   * eye pattern; whilst a real eye diagram would be triggerred with
-   * a (recovered) symbol clock. For these reasons, triggerring of
-   * noisy and/or unsynchronized signals may lead to uncorrect eye
+   * eye pattern; whilst a real eye diagram would be triggered with
+   * a (recovered) symbol clock. For these reasons, triggering of
+   * noisy and/or unsynchronized signals may lead to incorrect eye
    * pattern.
    *
    * The sink supports plotting streaming complex data or
