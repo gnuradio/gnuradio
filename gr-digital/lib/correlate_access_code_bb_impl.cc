@@ -97,15 +97,11 @@ int correlate_access_code_bb_impl::work(int noutput_items,
         out[i] = t;
 
         // compute hamming distance between desired access code and current data
-        unsigned long long wrong_bits = 0;
-        unsigned int nwrong = d_threshold + 1;
-        int new_flag = 0;
-
-        wrong_bits = (d_data_reg ^ d_access_code) & d_mask;
-        nwrong = gr::blocks::count_bits64(wrong_bits);
+        unsigned long long wrong_bits = (d_data_reg ^ d_access_code) & d_mask;
+        unsigned int nwrong = gr::blocks::count_bits64(wrong_bits);
 
         // test for access code with up to threshold errors
-        new_flag = (nwrong <= d_threshold);
+        bool new_flag = (nwrong <= d_threshold);
 
         // shift in new data and new flag
         d_data_reg = (d_data_reg << 1) | (in[i] & 0x1);
