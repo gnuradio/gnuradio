@@ -271,13 +271,6 @@ gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}])\
 ##  For top block code, generate a main routine.
 ##  Instantiate the top block and run as gui or cli.
 ########################################################
-<%def name="make_default(type_, param)">
-    % if type_ == 'eng_float':
-eng_notation.num_to_str(float(${param.templates.render('make')}))
-    % else:
-${param.templates.render('make')}
-    % endif
-</%def>\
 % if not generate_options.startswith('hb'):
 <% params_eq_list = list() %>
 % if parameters:
