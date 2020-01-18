@@ -331,7 +331,7 @@ def argument_parser():
 
         default = param.templates.render('make')
         if type_ == 'eng_float':
-            default = '"' + eng_notation.num_to_str(float(default)) + '"'
+            default = "eng_notation.num_to_str(float(" + default + "))"
         # FIXME:
         if type_ == 'string':
             type_ = 'str'
