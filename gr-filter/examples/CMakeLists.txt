@@ -21,6 +21,7 @@ include(GrPython)
 
 # Base stuff
 GR_PYTHON_INSTALL(PROGRAMS
+    benchmark_filters.py
     channelize.py
     chirp_channelize.py
     decimate.py
@@ -42,6 +43,9 @@ GR_PYTHON_INSTALL(PROGRAMS
 install(
     FILES
     filter_taps.grc
+    filter_taps_loader.grc
+    filter_taps_example_complex_bandpass_taps
+    polyphase_channelizer_demo.grc
     resampler_demo.grc
     DESTINATION ${GR_PKG_FILTER_EXAMPLES_DIR}
 )
