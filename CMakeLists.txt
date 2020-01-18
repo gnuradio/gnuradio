@@ -452,7 +452,7 @@ find_package(LOG4CPP REQUIRED)
 # Distribute the README file
 ########################################################################
 install(
-    FILES README.md README.hacking CHANGELOG.md
+    FILES README.md CONTRIBUTING.md CHANGELOG.md
     DESTINATION ${GR_PKG_DOC_DIR}
 )
 
