@@ -87,11 +87,11 @@ class ModToolNewModule(ModTool):
         for root, dirs, files in os.walk('.'):
             for filename in files:
                 f = os.path.join(root, filename)
-                with open(f, 'r') as filetext:
+                with open(f, 'r', encoding="latin-1") as filetext:
                     s = filetext.read()
                 s = s.replace('howto', self.info['modname'])
                 s = s.replace('HOWTO', self.info['modname'].upper())
-                with open(f, 'w') as filetext:
+                with open(f, 'w', encoding="latin-1") as filetext:
                     filetext.write(s)
                 if filename.find('howto') != -1:
                     os.rename(f, os.path.join(root, filename.replace('howto', self.info['modname'])))
