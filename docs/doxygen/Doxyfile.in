@@ -746,6 +746,7 @@ EXCLUDE                = @abs_top_srcdir@/volk \
                          @abs_top_builddir@/_CPack_Packages \
                          @abs_top_srcdir@/cmake \
                          @abs_top_srcdir@/gr-utils/python/modtool/gr-newmod \
+                         @abs_top_builddir@/gr-utils/python/modtool/gr-newmod \
                          @abs_top_srcdir@/docs/doxygen/doxyxml/example \
                          @abs_top_srcdir@/gnuradio-runtime/lib \
                          @abs_top_builddir@/gnuradio-runtime/lib \
