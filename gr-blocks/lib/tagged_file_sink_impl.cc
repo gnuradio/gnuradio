@@ -63,12 +63,13 @@ tagged_file_sink_impl::tagged_file_sink_impl(size_t itemsize, double samp_rate)
                  io_signature::make(1, 1, itemsize),
                  io_signature::make(0, 0, 0)),
       d_itemsize(itemsize),
+      d_sample_rate(samp_rate),
+      d_state(state_t::NOT_IN_BURST),
+      d_handle(nullptr),
       d_n(0),
-      d_sample_rate(samp_rate)
+      d_last_N(0),
+      d_timeval(0)
 {
-    d_state = NOT_IN_BURST;
-    d_last_N = 0;
-    d_timeval = 0;
 }
 
 tagged_file_sink_impl::~tagged_file_sink_impl() {}
@@ -107,7 +108,7 @@ int tagged_file_sink_impl::work(int noutput_items,
 
     int idx = 0, idx_stop = 0;
     while (idx < noutput_items) {
-        if (d_state == NOT_IN_BURST) {
+        if (d_state == state_t::NOT_IN_BURST) {
             while (vitr != all_tags.end()) {
                 if ((pmt::eqv((*vitr).key, bkey)) && pmt::is_true((*vitr).value)) {
 
@@ -177,13 +178,13 @@ int tagged_file_sink_impl::work(int noutput_items,
 
                     // std::cout << "Created new file: " << filename.str() << std::endl;
 
-                    d_state = IN_BURST;
+                    d_state = state_t::IN_BURST;
                     break;
                 }
 
                 vitr++;
             }
-            if (d_state == NOT_IN_BURST)
+            if (d_state == state_t::NOT_IN_BURST)
                 return noutput_items;
         } else { // In burst
             while (vitr != all_tags.end()) {
@@ -202,7 +203,7 @@ int tagged_file_sink_impl::work(int noutput_items,
                         }
                     }
                     idx = idx_stop;
-                    d_state = NOT_IN_BURST;
+                    d_state = state_t::NOT_IN_BURST;
                     vitr++;
                     fclose(d_handle);
                     break;
@@ -210,7 +211,7 @@ int tagged_file_sink_impl::work(int noutput_items,
                     vitr++;
                 }
             }
-            if (d_state == IN_BURST) {
+            if (d_state == state_t::IN_BURST) {
                 int count = fwrite(
                     &inbuf[d_itemsize * idx], d_itemsize, noutput_items - idx, d_handle);
                 if (count == 0) {
