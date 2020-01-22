@@ -37,6 +37,5 @@ if(ENABLE_DOXYGEN)
 # Add subdirectories
 ########################################################################
 add_subdirectory(doxygen)
-add_subdirectory(exploring-gnuradio)
 
 endif(ENABLE_DOXYGEN)
