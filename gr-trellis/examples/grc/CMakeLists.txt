@@ -51,12 +51,12 @@ configure_file(
 
 install(
     FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/tcm.grc
-    ${CMAKE_CURRENT_BINARY_DIR}/viterbi_equalization.grc
-    ${CMAKE_CURRENT_BINARY_DIR}/turbo_equalization.grc
-    ${CMAKE_CURRENT_BINARY_DIR}/sccc.grc
-    ${CMAKE_CURRENT_BINARY_DIR}/pccc.grc
     ${CMAKE_CURRENT_BINARY_DIR}/interference_cancellation.grc
+    ${CMAKE_CURRENT_BINARY_DIR}/pccc.grc
+    ${CMAKE_CURRENT_BINARY_DIR}/sccc.grc
+    ${CMAKE_CURRENT_BINARY_DIR}/tcm.grc
+    ${CMAKE_CURRENT_BINARY_DIR}/turbo_equalization.grc
+    ${CMAKE_CURRENT_BINARY_DIR}/viterbi_equalization.grc
     readme.txt
     DESTINATION ${GR_PKG_TRELLIS_EXAMPLES_DIR}
 )
