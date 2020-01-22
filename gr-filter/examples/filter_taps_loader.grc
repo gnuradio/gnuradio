@@ -23,7 +23,6 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: Complex Taps Loaded From File
-    window_size: ''
   states:
     bus_sink: false
     bus_source: false
@@ -37,7 +36,7 @@ blocks:
   id: variable_file_filter_taps
   parameters:
     comment: ''
-    file: filter_taps_example_complex_bandpass_taps
+    file: subprocess.getoutput("gnuradio-config-info --prefix") + "/share/gnuradio/examples/filter/filter_taps_example_complex_bandpass_taps"
     verbose: 'False'
   states:
     bus_sink: false
@@ -95,6 +94,19 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [524, 161]
+    rotation: 0
+    state: true
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import subprocess
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [512, 20.0]
     rotation: 0
     state: true
 - name: lp_filter
