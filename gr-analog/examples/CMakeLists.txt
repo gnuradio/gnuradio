@@ -22,11 +22,14 @@ include(GrPython)
 # Base stuff
 GR_PYTHON_INSTALL(PROGRAMS
     fmtest.py
+    fm_demod.py
     DESTINATION ${GR_PKG_ANALOG_EXAMPLES_DIR}
 )
 
 install(
     FILES
     noise_power.grc
+    fm_rx.grc
+    fm_tx.grc
     DESTINATION ${GR_PKG_ANALOG_EXAMPLES_DIR}
 )
