@@ -51,4 +51,9 @@ if(LIBGSM_FOUND)
     gsm_audio_loopback.py
     DESTINATION ${GR_PKG_VOCODER_EXAMPLES_DIR}
     )
+  install(
+    FILES
+    loopback-gsmfr.grc
+    DESTINATION ${GR_PKG_VOCODER_EXAMPLES_DIR}
+    )
 endif(LIBGSM_FOUND)

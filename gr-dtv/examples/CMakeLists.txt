@@ -27,12 +27,8 @@ GR_PYTHON_INSTALL(
 
 install(
     FILES
-    README.atsc
-    README.dvbs
-    README.dvbs2
-    README.dvbt
-    README.dvbt2
-    README.catv
+    catv_tx_256qam.grc
+    catv_tx_64qam.grc
     dvbs2_tx.grc
     dvbs_tx.grc
     dvbt_rx_8k.grc
@@ -40,6 +36,22 @@ install(
     dvbt_tx_8k.grc
     file_atsc_rx.grc
     file_atsc_tx.grc
+    germany-g10.grc
+    germany-g1.grc
+    germany-g2.grc
+    germany-g3.grc
+    germany-g4.grc
+    germany-g5.grc
+    germany-g6.grc
+    germany-g7.grc
+    germany-g8.grc
+    germany-g9.grc
+    README.atsc
+    README.catv
+    README.dvbs
+    README.dvbs2
+    README.dvbt
+    README.dvbt2
     uhd_atsc_capture.grc
     uhd_atsc_tx.grc
     uhd_rx_atsc.grc
@@ -63,16 +75,5 @@ install(
     vv034-dtg016.grc
     vv035-dtg052.grc
     vv036-dtg091.grc
-    germany-g1.grc
-    germany-g2.grc
-    germany-g3.grc
-    germany-g4.grc
-    germany-g5.grc
-    germany-g6.grc
-    germany-g7.grc
-    germany-g8.grc
-    germany-g9.grc
-    germany-g10.grc
-    catv_tx_64qam.grc
     DESTINATION ${GR_PKG_DTV_EXAMPLES_DIR}
 )
