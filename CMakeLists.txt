@@ -437,6 +437,14 @@ message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
 find_package(LOG4CPP REQUIRED)
 
 ########################################################################
+# Disable complex math NaN/INFO range checking for performance
+########################################################################
+check_cxx_compiler_flag(-fcx-limited-range HAVE_CX_LIMITED_RANGE)
+if(HAVE_CX_LIMITED_RANGE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcx-limited-range")
+endif(HAVE_CX_LIMITED_RANGE)
+
+########################################################################
 # Distribute the README file
 ########################################################################
 install(
