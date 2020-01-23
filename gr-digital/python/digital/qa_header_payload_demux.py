@@ -103,8 +103,8 @@ class qa_header_payload_demux (gr_unittest.TestCase):
         """Execute self.tb"""
         stop_time = time.time() + timeout
         self.tb.start()
-        while len(payload_sink.data()) < payload_len and \
-                len(header_sink.data()) < header_len and \
+        while (len(payload_sink.data()) < payload_len or \
+                len(header_sink.data()) < header_len) and \
                 time.time() < stop_time:
             time.sleep(.2)
         self.tb.stop()
