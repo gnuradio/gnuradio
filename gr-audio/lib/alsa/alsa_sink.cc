@@ -264,9 +264,15 @@ bool alsa_sink::check_topology(int ninputs, int noutputs)
     if (err < 0)
         bail("snd_pcm_sw_params", err);
 
-    d_buffer_size_bytes = d_period_size * nchan * snd_pcm_format_size(d_format, 1);
+    unsigned int output_buffer_sample_size = snd_pcm_format_size(d_format, 1);
+
+    d_buffer_size_bytes = d_period_size * nchan * output_buffer_sample_size;
 
     d_buffer = new char[d_buffer_size_bytes];
+
+    d_channel_buffers_size_bytes = d_buffer_size_bytes / nchan;
+
+    check_output_channels(nchan);
 
     if (CHATTY_DEBUG) {
         GR_LOG_DEBUG(d_logger,
@@ -369,44 +375,21 @@ int alsa_sink::work_s32(int noutput_items,
     unsigned int nchan = input_items.size();
     const float** in = (const float**)&input_items[0];
     sample_t* buf = (sample_t*)d_buffer;
-
-    /*
-     * vector of vectors to keep each channel after conversion
-     * to int32_t. These are then placed in the buffer in the
-     * standard WAV file format:
-     * [chan0samp0, chan1samp0, ..., chanNsamp0, chan0samp1, ...]
-     * */
-    volk::vector<volk::vector<sample_t>> buf_channels(
-        nchan, volk::vector<sample_t>(d_period_size));
-
     int n;
 
     unsigned int sizeof_frame = nchan * sizeof(sample_t);
     assert(d_buffer_size_bytes == d_period_size * sizeof_frame);
 
+    check_output_channels(nchan);
+
+    cast_output_buffers_to_sample_t<sample_t>(in, nchan, scale_factor);
+
     for (n = 0; n < noutput_items; n += d_period_size) {
-        // process one period of data
-        for (unsigned int chan = 0; chan < nchan; chan++)
-            volk_32f_s32f_convert_32i(
-                buf_channels[chan].data(), in[chan], scale_factor, d_period_size);
+        build_output_buffer<sample_t>(buf, n, n + d_period_size);
 
-        // update src pointers
-        for (unsigned int chan = 0; chan < nchan; chan++)
-            in[chan] += d_period_size;
-
-        /*
-         * build buf in the standard WAV file format:
-         * [chan0samp0, chan1samp0, ..., chanNsamp0, chan0samp1, ...]
-         * */
-        unsigned int sample = 0;
-        while (sample < d_period_size * nchan)
-            for (unsigned int channel = 0; channel < nchan; channel++) {
-                buf[sample] = buf_channels[channel][sample];
-                sample++;
-            }
-
-        if (!write_buffer(buf, d_period_size, sizeof_frame))
+        if (!write_buffer(buf, d_period_size, sizeof_frame)) {
             return -1; // No fixing this problem.  Say we're done.
+        }
     }
 
     return n;
@@ -548,6 +531,82 @@ void alsa_sink::bail(const char* msg, int err)
 {
     output_error_msg(msg, err);
     throw std::runtime_error("audio_alsa_sink");
+}
+
+/*
+ * Function to add or remove channels to the volk::vector
+ * that holds pointers to the channels.
+ */
+void alsa_sink::check_output_channels(unsigned int nchan)
+{
+    gr::thread::scoped_lock guard(d_setlock);
+    int sizediff = nchan - d_channel_buffers.size();
+    if (sizediff == 0) {
+        return;
+    } else if (sizediff > 0) {
+        for (int i = 0; i < sizediff; i++) {
+            volk::vector<char> channel = volk::vector<char>(d_channel_buffers_size_bytes);
+            d_channel_buffers.push_back(channel);
+        }
+    } else {
+        for (int i = 0; i < std::abs(sizediff); i++) {
+            d_channel_buffers.pop_back();
+        }
+    }
+}
+
+/*
+ * build output buf in the standard WAV file format:
+ * [chan0samp0, chan1samp0, ..., chanNsamp0, chan0samp1, ...]
+ * */
+template <class T>
+void alsa_sink::build_output_buffer(T* buf,
+                                    unsigned int startperiod,
+                                    unsigned int endperiod)
+{
+    unsigned int nchan = d_channel_buffers.size();
+    volk::vector<T*> channel_buffers_sample_t = volk::vector<T*>(nchan);
+    for (unsigned int i = 0; i < nchan; i++) {
+        channel_buffers_sample_t[i] = (T*)d_channel_buffers[i].data();
+    }
+    unsigned int out_samp = 0;
+    for (unsigned int samp = startperiod; samp < endperiod; samp++) {
+        for (unsigned int chan = 0; chan < nchan; chan++) {
+            buf[out_samp] = channel_buffers_sample_t[chan][samp];
+            out_samp++;
+        }
+    }
+}
+
+/*
+ * Use volk's casting functions to paralellize casting output
+ * to int32_t or int16_t
+ */
+template <class T>
+void alsa_sink::cast_output_buffers_to_sample_t(const float** in,
+                                                unsigned int nchan,
+                                                float scale_factor)
+{
+    gr::thread::scoped_lock guard(d_setlock);
+    unsigned int n_channel_elements_sample_t = d_channel_buffers[0].size() / sizeof(T);
+
+    if (sizeof(T) == sizeof(int32_t)) {
+        for (unsigned int chan = 0; chan < nchan; chan++) {
+            volk_32f_s32f_convert_32i((int32_t*)d_channel_buffers[chan].data(),
+                                      in[chan],
+                                      scale_factor,
+                                      n_channel_elements_sample_t);
+        }
+    }
+
+    else if (sizeof(T) == sizeof(int16_t)) {
+        for (unsigned int chan = 0; chan < nchan; chan++) {
+            volk_32f_s32f_convert_16i((int16_t*)d_channel_buffers[chan].data(),
+                                      in[chan],
+                                      scale_factor,
+                                      n_channel_elements_sample_t);
+        }
+    }
 }
 
 } /* namespace audio */

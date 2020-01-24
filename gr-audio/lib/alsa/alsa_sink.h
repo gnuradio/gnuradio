@@ -63,6 +63,8 @@ class alsa_sink : public sink
     snd_pcm_uframes_t d_period_size;  // in frames
     unsigned int d_buffer_size_bytes; // sizeof of d_buffer
     char* d_buffer;
+    unsigned int d_channel_buffers_size_bytes; // size of buffer for each chan
+    volk::vector<volk::vector<char>> d_channel_buffers;
     work_t d_worker; // the work method to use
     bool d_special_case_mono_to_stereo;
 
@@ -73,6 +75,13 @@ class alsa_sink : public sink
 
     void output_error_msg(const char* msg, int err);
     void bail(const char* msg, int err);
+    void check_output_channels(unsigned int nchan);
+    template <class T>
+    void build_output_buffer(T* buf, unsigned int startperiod, unsigned int endperiod);
+    template <class T>
+    void cast_output_buffers_to_sample_t(const float** in,
+                                         unsigned int nchan,
+                                         float scale_factor);
 
 public:
     alsa_sink(int sampling_rate, const std::string device_name, bool ok_to_block);
