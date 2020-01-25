@@ -25,6 +25,7 @@
 #define INCLUDED_PFB_ARB_RESAMPLER_H
 
 #include <gnuradio/filter/fir_filter.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
 namespace filter {
@@ -106,6 +107,9 @@ private:
     unsigned int d_taps_per_filter; // num taps for each arm of the filterbank
     int d_delay;                    // filter's group delay
     float d_est_phase_change;       // est. of phase change of a sine wave through filt.
+    boost::thread* filter_thread;
+    gr::thread::mutex d_mutex; // mutex to protect filter call
+    gr_complex d_o0;
 
     /*!
      * Takes in the taps and convolves them with [-1,0,1], which
@@ -128,6 +132,11 @@ private:
     void create_taps(const std::vector<float>& newtaps,
                      std::vector<std::vector<float>>& ourtaps,
                      std::vector<kernel::fir_filter_ccf*>& ourfilter);
+
+    /*!
+     * Separate thread for one of the filters
+     */
+    void run_thread(int filter_index, gr_complex* input);
 
 public:
     /*!
@@ -234,6 +243,9 @@ private:
     unsigned int d_taps_per_filter; // num taps for each arm of the filterbank
     int d_delay;                    // filter's group delay
     float d_est_phase_change;       // est. of phase change of a sine wave through filt.
+    boost::thread* filter_thread;
+    gr::thread::mutex d_mutex; // mutex to protect filter call
+    gr_complex d_o0;
 
     /*!
      * Takes in the taps and convolves them with [-1,0,1], which
@@ -256,6 +268,11 @@ private:
     void create_taps(const std::vector<gr_complex>& newtaps,
                      std::vector<std::vector<gr_complex>>& ourtaps,
                      std::vector<kernel::fir_filter_ccc*>& ourfilter);
+
+    /*!
+     * Separate thread for one of the filters
+     */
+    void run_thread(int filter_index, gr_complex* input);
 
 public:
     /*!
@@ -423,6 +440,9 @@ private:
     unsigned int d_taps_per_filter; // num taps for each arm of the filterbank
     int d_delay;                    // filter's group delay
     float d_est_phase_change;       // est. of phase change of a sine wave through filt.
+    boost::thread* filter_thread;
+    gr::thread::mutex d_mutex; // mutex to protect filter call
+    float d_o0;
 
     /*!
      * Takes in the taps and convolves them with [-1,0,1], which
@@ -445,6 +465,11 @@ private:
     void create_taps(const std::vector<float>& newtaps,
                      std::vector<std::vector<float>>& ourtaps,
                      std::vector<kernel::fir_filter_fff*>& ourfilter);
+
+    /*!
+     * Separate thread for one of the filters
+     */
+    void run_thread(int filter_index, float* input);
 
 public:
     /*!

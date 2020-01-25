@@ -38,6 +38,7 @@ namespace kernel {
 pfb_arb_resampler_ccf::pfb_arb_resampler_ccf(float rate,
                                              const std::vector<float>& taps,
                                              unsigned int filter_size)
+    : filter_thread(NULL)
 {
     d_acc = 0; // start accumulator at 0
 
@@ -90,6 +91,8 @@ pfb_arb_resampler_ccf::pfb_arb_resampler_ccf(float rate,
 
 pfb_arb_resampler_ccf::~pfb_arb_resampler_ccf()
 {
+    gr::thread::scoped_lock guard(d_mutex);
+
     for (unsigned int i = 0; i < d_int_rate; i++) {
         delete d_filters[i];
         delete d_diff_filters[i];
@@ -197,24 +200,34 @@ float pfb_arb_resampler_ccf::phase_offset(float freq, float fs)
     return -adj * d_est_phase_change;
 }
 
+void pfb_arb_resampler_ccf::run_thread(int filter_index, gr_complex* input)
+{
+    d_o0 = d_filters[filter_index]->filter(input);
+}
+
 int pfb_arb_resampler_ccf::filter(gr_complex* output,
                                   gr_complex* input,
                                   int n_to_read,
                                   int& n_read)
 {
+    gr::thread::scoped_lock guard(d_mutex);
+
     int i_out = 0, i_in = 0;
     unsigned int j = d_last_filter;
-    ;
-    gr_complex o0, o1;
+    gr_complex o1;
 
     while (i_in < n_to_read) {
         // start j by wrapping around mod the number of channels
         while (j < d_int_rate) {
             // Take the current filter and derivative filter output
-            o0 = d_filters[j]->filter(&input[i_in]);
+            filter_thread = new boost::thread(
+                boost::bind(&pfb_arb_resampler_ccf::run_thread, this, j, &input[i_in]));
             o1 = d_diff_filters[j]->filter(&input[i_in]);
 
-            output[i_out] = o0 + o1 * d_acc; // linearly interpolate between samples
+            filter_thread->join();
+            delete filter_thread;
+
+            output[i_out] = d_o0 + o1 * d_acc; // linearly interpolate between samples
             i_out++;
 
             // Adjust accumulator and index into filterbank
@@ -236,6 +249,7 @@ int pfb_arb_resampler_ccf::filter(gr_complex* output,
 pfb_arb_resampler_ccc::pfb_arb_resampler_ccc(float rate,
                                              const std::vector<gr_complex>& taps,
                                              unsigned int filter_size)
+    : filter_thread(NULL)
 {
     d_acc = 0; // start accumulator at 0
 
@@ -288,6 +302,8 @@ pfb_arb_resampler_ccc::pfb_arb_resampler_ccc(float rate,
 
 pfb_arb_resampler_ccc::~pfb_arb_resampler_ccc()
 {
+    gr::thread::scoped_lock guard(d_mutex);
+
     for (unsigned int i = 0; i < d_int_rate; i++) {
         delete d_filters[i];
         delete d_diff_filters[i];
@@ -398,24 +414,34 @@ float pfb_arb_resampler_ccc::phase_offset(float freq, float fs)
     return -adj * d_est_phase_change;
 }
 
+void pfb_arb_resampler_ccc::run_thread(int filter_index, gr_complex* input)
+{
+    d_o0 = d_filters[filter_index]->filter(input);
+}
+
 int pfb_arb_resampler_ccc::filter(gr_complex* output,
                                   gr_complex* input,
                                   int n_to_read,
                                   int& n_read)
 {
+    gr::thread::scoped_lock guard(d_mutex);
+
     int i_out = 0, i_in = 0;
     unsigned int j = d_last_filter;
-    ;
-    gr_complex o0, o1;
+    gr_complex o1;
 
     while (i_in < n_to_read) {
         // start j by wrapping around mod the number of channels
         while (j < d_int_rate) {
             // Take the current filter and derivative filter output
-            o0 = d_filters[j]->filter(&input[i_in]);
+            filter_thread = new boost::thread(
+                boost::bind(&pfb_arb_resampler_ccc::run_thread, this, j, &input[i_in]));
             o1 = d_diff_filters[j]->filter(&input[i_in]);
 
-            output[i_out] = o0 + o1 * d_acc; // linearly interpolate between samples
+            filter_thread->join();
+            delete filter_thread;
+
+            output[i_out] = d_o0 + o1 * d_acc; // linearly interpolate between samples
             i_out++;
 
             // Adjust accumulator and index into filterbank
@@ -437,6 +463,7 @@ int pfb_arb_resampler_ccc::filter(gr_complex* output,
 pfb_arb_resampler_fff::pfb_arb_resampler_fff(float rate,
                                              const std::vector<float>& taps,
                                              unsigned int filter_size)
+    : filter_thread(NULL)
 {
     d_acc = 0; // start accumulator at 0
 
@@ -489,6 +516,8 @@ pfb_arb_resampler_fff::pfb_arb_resampler_fff(float rate,
 
 pfb_arb_resampler_fff::~pfb_arb_resampler_fff()
 {
+    gr::thread::scoped_lock guard(d_mutex);
+
     for (unsigned int i = 0; i < d_int_rate; i++) {
         delete d_filters[i];
         delete d_diff_filters[i];
@@ -596,21 +625,31 @@ float pfb_arb_resampler_fff::phase_offset(float freq, float fs)
     return -adj * d_est_phase_change;
 }
 
+void pfb_arb_resampler_fff::run_thread(int filter_index, float* input)
+{
+    d_o0 = d_filters[filter_index]->filter(input);
+}
+
 int pfb_arb_resampler_fff::filter(float* output, float* input, int n_to_read, int& n_read)
 {
+    gr::thread::scoped_lock guard(d_mutex);
+
     int i_out = 0, i_in = 0;
     unsigned int j = d_last_filter;
-    ;
-    float o0, o1;
+    float o1;
 
     while (i_in < n_to_read) {
         // start j by wrapping around mod the number of channels
         while (j < d_int_rate) {
             // Take the current filter and derivative filter output
-            o0 = d_filters[j]->filter(&input[i_in]);
+            filter_thread = new boost::thread(
+                boost::bind(&pfb_arb_resampler_fff::run_thread, this, j, &input[i_in]));
             o1 = d_diff_filters[j]->filter(&input[i_in]);
 
-            output[i_out] = o0 + o1 * d_acc; // linearly interpolate between samples
+            filter_thread->join();
+            delete filter_thread;
+
+            output[i_out] = d_o0 + o1 * d_acc; // linearly interpolate between samples
             i_out++;
 
             // Adjust accumulator and index into filterbank
