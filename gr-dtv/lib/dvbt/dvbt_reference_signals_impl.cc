@@ -149,7 +149,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
     d_sampling_freq_correction = 0.0;
 
     // allocate PRBS buffer
-    d_wk = new char[d_Kmax - d_Kmin + 1];
+    d_wk = new (std::nothrow) char[d_Kmax - d_Kmin + 1];
     if (d_wk == NULL) {
         std::cerr << "Reference Signals, cannot allocate memory for d_wk." << std::endl;
         throw std::bad_alloc();
