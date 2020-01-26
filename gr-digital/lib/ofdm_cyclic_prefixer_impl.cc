@@ -196,7 +196,8 @@ int ofdm_cyclic_prefixer_impl::work(int noutput_items,
             add_item_tag(0, tags[i].offset, tags[i].key, tags[i].value);
         }
         // Finally switch to next state.
-        ++d_state %= d_cp_lengths.size();
+        ++d_state;
+        d_state %= d_cp_lengths.size();
     }
     /* 3) If we're in packet mode:
           - flush the delay line, if applicable */
