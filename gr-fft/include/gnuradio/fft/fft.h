@@ -66,7 +66,6 @@ public:
  */
 class FFT_API fft_complex
 {
-    const int d_fft_size;
     int d_nthreads;
     volk::vector<gr_complex> d_inbuf;
     volk::vector<gr_complex> d_outbuf;
@@ -113,7 +112,6 @@ public:
  */
 class FFT_API fft_real_fwd
 {
-    const int d_fft_size;
     int d_nthreads;
     volk::vector<float> d_inbuf;
     volk::vector<gr_complex> d_outbuf;
@@ -160,7 +158,6 @@ public:
  */
 class FFT_API fft_real_rev
 {
-    const int d_fft_size;
     int d_nthreads;
     volk::vector<gr_complex> d_inbuf;
     volk::vector<float> d_outbuf;

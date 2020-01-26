@@ -47,7 +47,6 @@ fft_vfc_fftw::fft_vfc_fftw(int fft_size,
                  io_signature::make(1, 1, fft_size * sizeof(float)),
                  io_signature::make(1, 1, fft_size * sizeof(gr_complex))),
       d_fft_size(fft_size),
-      d_forward(forward),
       d_fft(fft_size, forward, nthreads)
 {
     if (!set_window(window))
