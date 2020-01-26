@@ -33,7 +33,6 @@ class FFT_API fft_vfc_fftw : public fft_vfc
 {
 private:
     const unsigned int d_fft_size;
-    const bool d_forward;
     fft_complex d_fft;
     std::vector<float> d_window;
 
