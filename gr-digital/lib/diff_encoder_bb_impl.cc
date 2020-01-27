@@ -55,7 +55,7 @@ int diff_encoder_bb_impl::work(int noutput_items,
 
     unsigned last_out = d_last_out;
 
-    for (unsigned int i = 0; i < noutput_items; i++) {
+    for (int i = 0; i < noutput_items; i++) {
         out[i] = (in[i] + last_out) % d_modulus;
         last_out = out[i];
     }

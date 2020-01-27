@@ -49,7 +49,7 @@ void map_bb_impl::set_map(const std::vector<int>& map)
 {
     gr::thread::scoped_lock guard(d_mutex);
 
-    for (int i = 0; i < s_map_size; i++) {
+    for (unsigned int i = 0; i < s_map_size; i++) {
         d_map[i] = i;
     }
 
@@ -62,7 +62,7 @@ std::vector<int> map_bb_impl::map() const
 {
     std::vector<int> m(s_map_size);
     gr::thread::scoped_lock guard(d_mutex);
-    for (unsigned i = 0; i < s_map_size; i++) {
+    for (unsigned int i = 0; i < s_map_size; i++) {
         m[i] = d_map[i];
     }
     return m;

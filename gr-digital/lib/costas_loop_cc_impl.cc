@@ -47,7 +47,6 @@ costas_loop_cc_impl::costas_loop_cc_impl(float loop_bw, unsigned int order, bool
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::makev(1, 4, iosig)),
       blocks::control_loop(loop_bw, 1.0, -1.0),
-      d_order(order),
       d_error(0),
       d_noise(1.0),
       d_phase_detector(choose_phase_detector(order, use_snr))
