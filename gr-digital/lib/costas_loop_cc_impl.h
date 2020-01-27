@@ -32,7 +32,6 @@ namespace digital {
 class costas_loop_cc_impl : public costas_loop_cc
 {
 private:
-    const unsigned int d_order;
     float d_error;
     float d_noise;
 
