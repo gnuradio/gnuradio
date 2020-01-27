@@ -1,0 +1,9 @@
+id: rfnoc.io.ctrl_port
+label: Control Port
+color: "#00BCD4"
+
+multiple_connections_per_input: false
+multiple_connections_per_output: true
+
+templates:
+-   type: [rfnoc.io.ctrl_port, rfnoc.io.ctrl_port]
