@@ -3,3 +3,26 @@
   - uhd_usrp_source
   - uhd_usrp_sink
   - uhd_amsg_source
+  - RFNoC:
+    - Device Control:
+      - uhd_rfnoc_graph
+    - Blocks:
+      - uhd_rfnoc_ddc
+      - uhd_rfnoc_duc
+      - uhd_rfnoc_fft
+      - uhd_rfnoc_rx_radio
+      - uhd_rfnoc_tx_radio
+      - uhd_rfnoc_rx_streamer
+      - uhd_rfnoc_tx_streamer
+  - RFNoC Image Builder:
+    - Blocks:
+      - uhd_fpga_ddc
+      - uhd_fpga_duc
+      - uhd_fpga_fft
+      - uhd_fpga_null_src_sink
+    - Core:
+      - uhd_fpga_sep
+      - uhd_fpga_radio
+      - uhd_fpga_x310
+      - uhd_fpga_ctrl_xbar
+      - uhd_fpga_chdr_xbar
