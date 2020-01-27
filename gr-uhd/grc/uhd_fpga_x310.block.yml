@@ -1,0 +1,38 @@
+id: uhd_fpga_x310 
+label: X310 Device
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: enum
+    default: 'device'
+    options: ['block', 'sep', 'device']
+    hide: all
+
+inputs:
+-   domain: rfnoc.io.ctrl_port
+    id: ctrlport_radio0
+    dtype: f64
+-   domain: rfnoc.io.ctrl_port
+    id: ctrlport_radio1
+    dtype: f64
+
+outputs:
+-   domain: rfnoc.clk
+    id: radio
+    dtype: message
+-   domain: rfnoc.clk
+    id: ce
+    dtype: message
+
+-   domain: rfnoc.io.time_keeper
+    id: time_keeper
+    dtype: f32
+-   domain: rfnoc.io.radio
+    id: x300_radio0
+    dtype: sc32
+-   domain: rfnoc.io.radio
+    id: x300_radio1
+    dtype: sc32
+
+file_format: 1

@@ -1,0 +1,9 @@
+id: rfnoc.clk
+label: Clock
+color: "#72706F"
+
+multiple_connections_per_input: false
+multiple_connections_per_output: true
+
+templates:
+-   type: [rfnoc.clk, rfnoc.clk]
