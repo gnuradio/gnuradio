@@ -34,6 +34,9 @@ parameters:
     default: '0'
     hide: part
 
+asserts:
+-   ${ rrate > 0 }
+
 inputs:
 -   domain: stream
     dtype: ${ type.input }

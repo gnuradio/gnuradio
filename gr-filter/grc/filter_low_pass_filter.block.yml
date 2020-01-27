@@ -76,7 +76,7 @@ templates:
         ${beta}))
 
 cpp_templates:
-    includes: ['#include <gnuradio/filter/firdes.h>', '#include <gnuradio/filter/interp_fir_filter.h>']
+    includes: ['#include <gnuradio/filter/firdes.h>', '#include <gnuradio/filter/interp_fir_filter.h>', '#include <gnuradio/filter/fir_filter_blk.h>']
     declarations: 'gr::filter::${type}::sptr ${id};'
     make: |-
         this->${id} = filter::${type}::make(

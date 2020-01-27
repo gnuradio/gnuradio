@@ -62,7 +62,6 @@ cpp_templates:
     includes: ['#include <gnuradio/filter/pfb_synthesizer_ccf.h>']
     declarations: 'gr::filter::pfb_synthesizer_ccf::sptr ${id};'
     make: |-
-        <% from gnuradio import filter %>
         std::vector<float> taps = {${str(eval(taps))[1:-1]}};
         std::vector<int> ch_map = {${str(ch_map)[1:-1]}};
         this->${id} = gr::filter::pfb_synthesizer_ccf::make(
