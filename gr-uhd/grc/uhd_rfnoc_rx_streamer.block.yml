@@ -1,0 +1,57 @@
+id: uhd_rfnoc_rx_streamer
+label: RFNoC Rx Streamer
+
+templates:
+  imports: |-
+    from gnuradio import uhd
+  make: |-
+    uhd.rfnoc_rx_streamer(
+        self.rfnoc_graph,
+        ${ num_chans },
+        uhd.stream_args(
+            cpu_format="${ output_type.type }",
+            otw_format="${ otw.type }",
+            channels=[],
+            args="",
+        ),
+        1,
+        True
+    )
+
+parameters:
+- id: num_chans
+  label: Number of Channels
+  dtype: int
+  default: 1
+  hide: part
+- id: otw
+  label: Wire Format
+  dtype: enum
+  options: ['', sc16]
+  option_labels: [Automatic, Complex int16]
+  option_attributes:
+    type: ['', sc16]
+  hide: part
+- id: output_type
+  label: Output Type
+  dtype: enum
+  options: [fc32, sc16]
+  option_labels: [Complex float32, Complex int16]
+  option_attributes:
+    type: [fc32, sc16]
+  hide: part
+
+asserts:
+  - ${ num_chans > 0 }
+
+inputs:
+- domain: rfnoc
+  dtype: ${ otw.type }
+  multiplicity: ${ num_chans }
+
+outputs:
+- domain: stream
+  dtype: ${ output_type.type }
+  multiplicity: ${ num_chans }
+
+file_format: 1

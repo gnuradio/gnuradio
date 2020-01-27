@@ -1,0 +1,9 @@
+id: rfnoc.io.time_keeper
+label: Time Keeper
+color: "#F57C00"
+
+multiple_connections_per_input: false
+multiple_connections_per_output: true
+
+templates:
+-   type: [rfnoc.io.time_keeper, rfnoc.io.time_keeper]
