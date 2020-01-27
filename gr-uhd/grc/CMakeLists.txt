@@ -31,3 +31,30 @@ install(FILES
     uhd.tree.yml
     DESTINATION ${GRC_BLOCKS_DIR}
 )
+
+if(ENABLE_UHD_RFNOC)
+    install(FILES
+        rfnoc.domain.yml
+        uhd_fpga_clk.domain.yml
+        uhd_fpga_ctrl.domain.yml
+        uhd_fpga_data.domain.yml
+        uhd_fpga_ddc.block.yml
+        uhd_fpga_duc.block.yml
+        uhd_fpga_fft.block.yml
+        uhd_fpga_io_ctrl_port.domain.yml
+        uhd_fpga_io_radio.domain.yml
+        uhd_fpga_io_time_keeper.domain.yml
+        uhd_fpga_radio.block.yml
+        uhd_fpga_sep.block.yml
+        uhd_fpga_x310.block.yml
+        uhd_rfnoc_ddc.block.yml
+        uhd_rfnoc_duc.block.yml
+        uhd_rfnoc_fft.block.yml
+        uhd_rfnoc_graph.block.yml
+        uhd_rfnoc_rx_radio.block.yml
+        uhd_rfnoc_rx_streamer.block.yml
+        uhd_rfnoc_tx_radio.block.yml
+        uhd_rfnoc_tx_streamer.block.yml
+        DESTINATION ${GRC_BLOCKS_DIR}
+    )
+endif(ENABLE_UHD_RFNOC)

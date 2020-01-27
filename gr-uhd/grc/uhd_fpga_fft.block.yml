@@ -1,0 +1,12 @@
+id: uhd_fpga_fft
+label: FFT
+
+inputs:
+-   domain: stream
+    id: port0
+
+outputs:
+-   domain: stream
+    id: port0
+
+file_format: 1
