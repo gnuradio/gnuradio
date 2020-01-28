@@ -66,6 +66,8 @@ def run_blocktool(module):
               help='blocktool helper comments will be added in the header file')
 @click.option('-o', '--output', is_flag=True,
               help='If given, a file with desired output format will be generated')
+@click.option('-I', '--include_paths', default=None,
+              help='Comma separated list of include paths for header files')
 def cli(**kwargs):
     """
     Block header parsing tool.

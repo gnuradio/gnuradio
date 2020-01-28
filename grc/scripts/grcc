@@ -23,13 +23,14 @@ import sys
 GR_IMPORT_ERROR_MESSAGE = """\
 Cannot import gnuradio.
 
-Is the model path environment variable set correctly?
+Is the Python path environment variable set correctly?
     All OS: PYTHONPATH
 
 Is the library path environment variable set correctly?
     Linux: LD_LIBRARY_PATH
     Windows: PATH
-    MacOSX: DYLD_LIBRARY_PATH
+
+See https://wiki.gnuradio.org/index.php/ModuleNotFoundError
 """
 
 

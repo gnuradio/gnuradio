@@ -31,5 +31,6 @@ install(
 GR_PYTHON_INSTALL(PROGRAMS
   simple_copy_controller.py
   usrp_source_controller.py
+  usrp_sink_controller.py
   DESTINATION ${GR_PKG_DATA_DIR}/examples/ctrlport
 )

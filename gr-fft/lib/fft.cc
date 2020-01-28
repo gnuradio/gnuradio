@@ -156,12 +156,13 @@ static void export_wisdom()
 // ----------------------------------------------------------------
 
 fft_complex::fft_complex(int fft_size, bool forward, int nthreads)
-    : d_fft_size(fft_size), d_nthreads(nthreads), d_inbuf(fft_size), d_outbuf(fft_size)
+    : d_nthreads(nthreads), d_inbuf(fft_size), d_outbuf(fft_size)
 {
     // Hold global mutex during plan construction and destruction.
     planner::scoped_lock lock(planner::mutex());
 
-    static_assert(sizeof(fftwf_complex) == sizeof(gr_complex));
+    static_assert(sizeof(fftwf_complex) == sizeof(gr_complex),
+                  "The size of fftwf_complex is not equal to gr_complex");
 
     if (fft_size <= 0) {
         throw std::out_of_range("fft_impl_fftw: invalid fft_size");
@@ -210,15 +211,13 @@ void fft_complex::execute() { fftwf_execute((fftwf_plan)d_plan); }
 // ----------------------------------------------------------------
 
 fft_real_fwd::fft_real_fwd(int fft_size, int nthreads)
-    : d_fft_size(fft_size),
-      d_nthreads(nthreads),
-      d_inbuf(fft_size),
-      d_outbuf(fft_size / 2 + 1)
+    : d_nthreads(nthreads), d_inbuf(fft_size), d_outbuf(fft_size / 2 + 1)
 {
     // Hold global mutex during plan construction and destruction.
     planner::scoped_lock lock(planner::mutex());
 
-    static_assert(sizeof(fftwf_complex) == sizeof(gr_complex));
+    static_assert(sizeof(fftwf_complex) == sizeof(gr_complex),
+                  "The size of fftwf_complex is not equal to gr_complex");
 
     if (fft_size <= 0) {
         throw std::out_of_range("gr::fft: invalid fft_size");
@@ -267,15 +266,13 @@ void fft_real_fwd::execute() { fftwf_execute((fftwf_plan)d_plan); }
 // ----------------------------------------------------------------
 
 fft_real_rev::fft_real_rev(int fft_size, int nthreads)
-    : d_fft_size(fft_size),
-      d_nthreads(nthreads),
-      d_inbuf(fft_size / 2 + 1),
-      d_outbuf(fft_size)
+    : d_nthreads(nthreads), d_inbuf(fft_size / 2 + 1), d_outbuf(fft_size)
 {
     // Hold global mutex during plan construction and destruction.
     planner::scoped_lock lock(planner::mutex());
 
-    static_assert(sizeof(fftwf_complex) == sizeof(gr_complex));
+    static_assert(sizeof(fftwf_complex) == sizeof(gr_complex),
+                  "The size of fftwf_complex is not equal to gr_complex");
 
     if (fft_size <= 0) {
         throw std::out_of_range("gr::fft::fft_real_rev: invalid fft_size");

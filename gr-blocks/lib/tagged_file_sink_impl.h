@@ -32,13 +32,13 @@ namespace blocks {
 class tagged_file_sink_impl : public tagged_file_sink
 {
 private:
-    enum { NOT_IN_BURST = 0, IN_BURST };
+    enum class state_t { NOT_IN_BURST = 0, IN_BURST };
 
-    size_t d_itemsize;
-    int d_state;
+    const size_t d_itemsize;
+    const double d_sample_rate;
+    state_t d_state;
     FILE* d_handle;
     int d_n;
-    double d_sample_rate;
     uint64_t d_last_N;
     double d_timeval;
 

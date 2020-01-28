@@ -60,6 +60,8 @@ void* INIT_RS(unsigned int symsize,
         return NULL; /* Can't have more roots than symbol values! */
 
     rs = (struct rs*)calloc(1, sizeof(struct rs));
+    if (rs == NULL)
+        return NULL;
     rs->mm = symsize;
     rs->nn = (1 << symsize) - 1;
 

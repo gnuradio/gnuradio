@@ -160,14 +160,8 @@ interp_resampler_mmse_8tap_cc::interp_resampler_mmse_8tap_cc(bool derivative)
       d_interp_diff(NULL)
 {
     d_interp = new filter::mmse_fir_interpolator_cc();
-    if (d_interp == NULL)
-        throw std::runtime_error("unable to create mmse_fir_interpolator_cc");
-
     if (d_derivative) {
         d_interp_diff = new filter::mmse_interp_differentiator_cc();
-        if (d_interp_diff == NULL)
-            throw std::runtime_error("unable to create "
-                                     "mmse_interp_differentiator_cc");
     }
 }
 
@@ -200,14 +194,9 @@ interp_resampler_mmse_8tap_ff::interp_resampler_mmse_8tap_ff(bool derivative)
       d_interp_diff(NULL)
 {
     d_interp = new filter::mmse_fir_interpolator_ff();
-    if (d_interp == NULL)
-        throw std::runtime_error("unable to create mmse_fir_interpolator_ff");
 
     if (d_derivative) {
         d_interp_diff = new filter::mmse_interp_differentiator_ff();
-        if (d_interp_diff == NULL)
-            throw std::runtime_error("unable to create "
-                                     "mmse_interp_differentiator_ff");
     }
 }
 
@@ -271,14 +260,9 @@ interp_resampler_pfb_no_mf_cc::interp_resampler_pfb_no_mf_cc(bool derivative, in
 
         t.assign(&taps[src][0], &taps[src][NTAPS]);
         d_filters[dst] = new filter::kernel::fir_filter_ccf(1, t);
-        if (d_filters[dst] == NULL)
-            throw std::runtime_error("unable to create fir_filter_ccf");
-
         if (d_derivative) {
             t.assign(&Dtaps[src][0], &Dtaps[src][DNTAPS]);
             d_diff_filters[dst] = new filter::kernel::fir_filter_ccf(1, t);
-            if (d_diff_filters[dst] == NULL)
-                throw std::runtime_error("unable to create fir_filter_ccf");
         }
     }
 }
@@ -356,14 +340,9 @@ interp_resampler_pfb_no_mf_ff::interp_resampler_pfb_no_mf_ff(bool derivative, in
 
         t.assign(&taps[src][0], &taps[src][NTAPS]);
         d_filters[dst] = new filter::kernel::fir_filter_fff(1, t);
-        if (d_filters[dst] == NULL)
-            throw std::runtime_error("unable to create fir_filter_fff");
-
         if (d_derivative) {
             t.assign(&Dtaps[src][0], &Dtaps[src][DNTAPS]);
             d_diff_filters[dst] = new filter::kernel::fir_filter_fff(1, t);
-            if (d_diff_filters[dst] == NULL)
-                throw std::runtime_error("unable to create fir_filter_fff");
         }
     }
 }
@@ -502,9 +481,6 @@ interp_resampler_pfb_mf_ccf::interp_resampler_pfb_mf_ccf(const std::vector<float
                 d_taps[i][j] = taps[k];
         }
         d_filters[i] = new filter::kernel::fir_filter_ccf(1, d_taps[i]);
-        if (d_filters[i] == NULL)
-            throw std::runtime_error("unable to create fir_filter_ccf");
-
         if (!d_derivative)
             continue;
 
@@ -515,8 +491,6 @@ interp_resampler_pfb_mf_ccf::interp_resampler_pfb_mf_ccf(const std::vector<float
                 d_diff_taps[i][j] = diff_taps[k];
         }
         d_diff_filters[i] = new filter::kernel::fir_filter_ccf(1, d_diff_taps[i]);
-        if (d_diff_filters[i] == NULL)
-            throw std::runtime_error("unable to create fir_filter_ccf");
     }
 }
 
@@ -656,9 +630,6 @@ interp_resampler_pfb_mf_fff::interp_resampler_pfb_mf_fff(const std::vector<float
                 d_taps[i][j] = taps[k];
         }
         d_filters[i] = new filter::kernel::fir_filter_fff(1, d_taps[i]);
-        if (d_filters[i] == NULL)
-            throw std::runtime_error("unable to create fir_filter_fff");
-
         if (!d_derivative)
             continue;
 
@@ -669,8 +640,6 @@ interp_resampler_pfb_mf_fff::interp_resampler_pfb_mf_fff(const std::vector<float
                 d_diff_taps[i][j] = diff_taps[k];
         }
         d_diff_filters[i] = new filter::kernel::fir_filter_fff(1, d_diff_taps[i]);
-        if (d_diff_filters[i] == NULL)
-            throw std::runtime_error("unable to create fir_filter_fff");
     }
 }
 

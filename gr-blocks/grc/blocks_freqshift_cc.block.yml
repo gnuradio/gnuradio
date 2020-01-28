@@ -1,0 +1,34 @@
+id: blocks_freqshift_cc
+label: Frequency Shift
+category: '[Core]/Math Operators'
+
+parameters:
+-   id: sample_rate
+    label: Sample Rate
+    dtype: real
+    default: samp_rate
+-   id: freq
+    label: Frequency Shift
+    dtype: real
+    default: '0.0'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: |-
+        from gnuradio import blocks
+        import math
+    make: blocks.rotator_cc(2.0*math.pi*${freq}/${sample_rate})
+    callbacks:
+    - set_phase_inc(2.0*math.pi*${freq}/${sample_rate})
+
+documentation: |-
+    This block is a convenience wrapper around using a rotator block for frequency shifting.  This block obfuscates the 2*Pi*freq/samp_rate phase_inc field and calculation, and only requires the designer to provide the frequency and sample rate.
+
+file_format: 1

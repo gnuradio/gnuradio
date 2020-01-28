@@ -55,6 +55,14 @@ inputs:
     id: en
     optional: true
     hide: ${ showports }
+-   domain: message
+    id: iindex
+    optional: true
+    hide: ${ showports }
+-   domain: message
+    id: oindex
+    optional: true
+    hide: ${ showports }
 
 outputs:
 -   domain: stream
