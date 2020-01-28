@@ -72,9 +72,9 @@ class ModToolMakeYAML(ModTool):
 
     def _search_files(self, path, path_glob):
         """ Search for files matching pattern in the given path. """
-        files = sorted(glob.glob("{}/{}".format(path, path_glob)))
+        files = sorted(glob.glob(f"{path}/{path_glob}")
         files_filt = []
-        logger.info("Searching for matching files in {}/:".format(path))
+        logger.info(f"Searching for matching files in {path}/:")
         for f in files:
             if re.search(self.info['pattern'], os.path.basename(f)) is not None:
                 files_filt.append(f)
@@ -86,15 +86,15 @@ class ModToolMakeYAML(ModTool):
         """ Take the return values from the parser and call the YAML
         generator. Also, check the makefile if the .yml file is in there.
         If necessary, add. """
-        fname_yml = '{}_{}.block.yml'.format(self.info['modname'], blockname)
+        fname_yml = f'{self.info['modname']}_{blockname}.block.yml'
         path_to_yml = os.path.join('grc', fname_yml)
         # Some adaptions for the GRC
         for inout in ('in', 'out'):
             if iosig[inout]['max_ports'] == '-1':
-                iosig[inout]['max_ports'] = '$num_{}puts'.format(inout)
-                params.append({'key': 'num_{}puts'.format(inout),
+                iosig[inout]['max_ports'] = f'$num_{inout}puts'
+                params.append({'key': f'num_{inout}puts',
                                'type': 'int',
-                               'name': 'Num {}puts'.format(inout),
+                               'name': f'Num {inout}puts',
                                'default': '2',
                                'in_constructor': False})
         file_exists = False
@@ -153,7 +153,7 @@ class ModToolMakeYAML(ModTool):
             blockname = blockname.replace(self.info['modname']+'_', '', 1)
             return (blockname, fname_h, contains_modulename)
         # Go, go, go
-        logger.info("Making GRC bindings for {}...".format(fname_cc))
+        logger.info(f"Making GRC bindings for {fname_cc}...")
         (blockname, fname_h, contains_modulename) = _get_blockdata(fname_cc)
         try:
             parser = ParserCCBlock(fname_cc,
@@ -163,7 +163,7 @@ class ModToolMakeYAML(ModTool):
                                    _type_translate
                                   )
         except IOError:
-            raise ModToolException("Can't open some of the files necessary to parse {}.".format(fname_cc))
+            raise ModToolException(f"Can't open some of the files necessary to parse {fname_cc}.")
 
         if contains_modulename:
             return (parser.read_params(), parser.read_io_signature(), self.info['modname']+'_'+blockname)

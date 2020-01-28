@@ -48,8 +48,8 @@ the Free Software Foundation, Inc., 51 Franklin Street,
 Boston, MA 02110-1301, USA.
 ''' % datetime.now().year
 
-Templates['grlicense'] = '''
-Copyright {0} Free Software Foundation, Inc.
+Templates['grlicense'] = f'''
+Copyright {datetime.now().year} Free Software Foundation, Inc.
 
 This file is part of GNU Radio
 
@@ -67,7 +67,7 @@ You should have received a copy of the GNU General Public License
 along with GNU Radio; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 51 Franklin Street,
 Boston, MA 02110-1301, USA.
-'''.format(datetime.now().year)
+'''
 
 # Header file of a sync/decimator/interpolator block
 Templates['block_impl_h'] = '''/* -*- c++ -*- */

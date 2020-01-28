@@ -40,8 +40,8 @@ except:
 
         def __repr__(self):
             keys = sorted(self.__dict__)
-            items = ("{}={!r}".format(k, self.__dict__[k]) for k in keys)
-            return "{}({})".format(type(self).__name__, ", ".join(items))
+            items = (f"{k}={self.__dict__[k]!r}" for k in keys)
+            return f"{type(self).__name__}({", ".join(items)})"
 
         def __eq__(self, other):
             return self.__dict__ == other.__dict__
@@ -156,7 +156,7 @@ class ModTool(object):
         self.info['pydir'] = 'python'
         if os.path.isdir(os.path.join('python', self.info['modname'])):
             self.info['pydir'] = os.path.join('python', self.info['modname'])
-        self._file['qalib']    = os.path.join('lib',    'qa_{}.cc'.format(self.info['modname']))
+        self._file['qalib']    = os.path.join('lib',    f'qa_{self.info['modname']}.cc')
         self._file['pyinit']   = os.path.join(self.info['pydir'], '__init__.py')
         self._file['cmlib']    = os.path.join('lib',    'CMakeLists.txt')
         self._file['cmgrc']    = os.path.join('grc',    'CMakeLists.txt')
@@ -192,7 +192,7 @@ class ModTool(object):
             files = os.listdir(directory)
             os.chdir(directory)
         except OSError:
-            logger.error("Can't read or chdir to directory {}.".format(directory))
+            logger.error(f"Can't read or chdir to directory {directory}.")
             return False
         self.info['is_component'] = False
         for f in files:

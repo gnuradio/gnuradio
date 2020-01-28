@@ -43,7 +43,7 @@ class ModToolException(ClickException):
     """ Exception class for enhanced CLI interface """
     def show(self, file = None):
         """ displays the colored message """
-        click.secho('ModToolException: {}'.format(self.format_message()), fg='red')
+        click.secho(f'ModToolException: {self.format_message()}', fg='red')
 
 
 class CommandCLI(click.Group):
