@@ -116,7 +116,7 @@ class LDPC_matrix(object):
                n_p_q = None,
                H_matrix = None):
     if (alist_filename != None):
-      self.H = self.read_alist_file(alist_filename)
+      self.H = read_alist_file(alist_filename)
     elif (n_p_q != None):
       self.H = self.regular_LDPC_code_contructor(n_p_q)
     elif (H_matrix != None):
