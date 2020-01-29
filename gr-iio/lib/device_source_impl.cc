@@ -273,100 +273,40 @@ void device_source_impl::channel_read(const struct iio_channel* chn,
         iio_channel_convert(chn, (void*)dst_ptr, (const void*)src_ptr);
 }
 
-void device_source_impl::refill_thread()
-{
-    boost::unique_lock<boost::mutex> lock(iio_mutex);
-    ssize_t ret;
-
-    for (;;) {
-        while (!please_refill_buffer)
-            iio_cond.wait(lock);
-
-        please_refill_buffer = false;
-
-        lock.unlock();
-        ret = iio_buffer_refill(buf);
-        lock.lock();
-
-        if (ret < 0)
-            break;
-
-        items_in_buffer = (unsigned long)ret / iio_buffer_step(buf);
-        byte_offset = 0;
-
-        iio_cond2.notify_all();
-    }
-
-    /* -EBADF happens when the buffer is cancelled */
-    if (ret != -EBADF) {
-
-        char buf[256];
-        iio_strerror(-ret, buf, sizeof(buf));
-        std::string error(buf);
-
-        std::cerr << "Unable to refill buffer: " << error << std::endl;
-    }
-
-    thread_stopped = true;
-    iio_cond2.notify_all();
-}
-
 int device_source_impl::work(int noutput_items,
                              gr_vector_const_void_star& input_items,
                              gr_vector_void_star& output_items)
 {
-    boost::unique_lock<boost::mutex> lock(iio_mutex);
+    ssize_t ret;
 
-    if (thread_stopped)
-        return -1; /* EOF */
+    // Check if we've processed what we have first
+    if (!items_in_buffer) {
+        ret = iio_buffer_refill(buf);
+        if (ret < 0) {
+            /* -EBADF happens when the buffer is cancelled */
+            if (ret != -EBADF) {
 
-    /* No items in buffer -> ask for a refill */
-    if (!please_refill_buffer && !items_in_buffer) {
-        please_refill_buffer = true;
-        iio_cond.notify_all();
-    }
+                char buf[256];
+                iio_strerror(-ret, buf, sizeof(buf));
+                std::string error(buf);
 
-    while (please_refill_buffer) {
-        bool fast_enough =
-            iio_cond2.timed_wait(lock, boost::posix_time::milliseconds(timeout));
-        if (thread_stopped)
-            return -1; /* EOF */
-
-        if (!fast_enough) {
-            message_port_pub(port_id, pmt::mp("timeout"));
-
-            /* GNU Radio won't call our block anytime soon if the
-             * work() function returns 0; it can take up to 500ms
-             * before it gets called again. To avoid that, we make
-             * this block send itself a dummy message on its input
-             * system message port, so that the scheduler calls us
-             * again promptly. */
-#ifdef GR_VERSION_3_7_OR_LESS
-            pmt::pmt_t payload = pmt::from_long(0);
-#else
-            pmt::pmt_t payload = pmt::from_bool(false);
-#endif
-            pmt::pmt_t msg = pmt::cons(pmt::mp("done"), payload);
-            post(pmt::mp("system"), msg);
-            return 0;
+                std::cerr << "Unable to refill buffer: " << error << std::endl;
+            }
+            return -1;
         }
+
+        items_in_buffer = (unsigned long)ret / iio_buffer_step(buf);
+        if (!items_in_buffer)
+            return 0;
+
+        byte_offset = 0;
     }
 
+    // Process samples
     unsigned long items = std::min(items_in_buffer, (unsigned long)noutput_items);
 
-    for (unsigned int i = 0; i < output_items.size(); i++) {
+    for (unsigned int i = 0; i < output_items.size(); i++)
         channel_read(channel_list[i], output_items[i], items * sizeof(short));
-
-        if (!byte_offset) {
-            tag_t tag;
-            tag.value = pmt::from_long(items_in_buffer);
-            tag.offset = nitems_written(i);
-            tag.key = pmt::intern("buffer_start");
-            tag.srcid = alias_pmt();
-
-            add_item_tag(i, tag);
-        }
-    }
 
     items_in_buffer -= items;
     byte_offset += items * iio_buffer_step(buf);
@@ -376,17 +316,12 @@ int device_source_impl::work(int noutput_items,
 
 bool device_source_impl::start()
 {
-    boost::unique_lock<boost::mutex> lock(iio_mutex);
-
     items_in_buffer = 0;
-    please_refill_buffer = false;
+    byte_offset = 0;
     thread_stopped = false;
 
     buf = iio_device_create_buffer(dev, buffer_size, false);
-
-    if (buf) {
-        refill_thd = boost::thread(&device_source_impl::refill_thread, this);
-    } else {
+    if (!buf) {
         throw std::runtime_error("Unable to create buffer!\n");
     }
 
@@ -395,15 +330,10 @@ bool device_source_impl::start()
 
 bool device_source_impl::stop()
 {
+    thread_stopped = true;
+
     if (buf)
         iio_buffer_cancel(buf);
-
-    boost::unique_lock<boost::mutex> lock(iio_mutex);
-    please_refill_buffer = true;
-    iio_cond.notify_all();
-    lock.unlock();
-
-    refill_thd.join();
 
     if (buf) {
         iio_buffer_destroy(buf);
@@ -467,19 +397,23 @@ int device_source_impl::handle_decimation_interpolation(unsigned long samplerate
 
     // Get ranges
     chan = iio_device_find_channel(dev, channel_name, false);
-    if (chan == NULL) {
-        // Channel doesn't exist so the dec/int filters probably don't exist
-        return -1;
-    }
-    iio_channel_attr_read(chan, an.c_str(), buff, sizeof(buff));
+    if (chan == NULL)
+        return -1; // Channel doesn't exist so the dec/int filters probably don't exist
+
+    ret = iio_channel_attr_read(chan, an.c_str(), buff, sizeof(buff));
+    if (ret < 0)
+        return -1; // Channel attribute does not exist so no dec/int filter exist
+
     sscanf(buff, "%llu %llu ", &max, &min);
 
     // Write lower range (maybe)
     if (disable_dec)
         min = max;
+
     ret = iio_channel_attr_write_longlong(chan, "sampling_frequency", min);
     if (ret < 0)
         std::cerr << "Unable to write attribute sampling_frequency\n";
+
     return ret;
 }
 
