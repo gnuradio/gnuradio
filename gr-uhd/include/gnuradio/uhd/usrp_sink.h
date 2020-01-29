@@ -43,7 +43,9 @@ class uhd_usrp_sink;
  * There are multiple ways to do bursty transmission without triggering
  * underruns:
  * - Using SOB/EOB tags
- * - Using tagged streams (See \ref page_tagged_stream_blocks)
+ * - Using tagged streams (See <a
+ * href="https://wiki.gnuradio.org/index.php/Tagged_Stream_Blocks" target="_blank">Tagged
+ * Stream Blocks</a>)
  *
  * The sob and eob (start and end of burst) tag values are pmt booleans.
  * When present, burst tags should be set to true (pmt::PMT_T).

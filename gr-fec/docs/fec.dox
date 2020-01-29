@@ -127,8 +127,9 @@ deployments given the three initial FEC coders available.
 
 \subsubsection fec_deploy_tag_stream Tagged Stream Deployments
 
-GNU Radio's gr-fec also comes with simple deployments for \ref
-page_tagged_stream_blocks blocks. These deployments work similarly to
+GNU Radio's gr-fec also comes with simple deployments for
+<a href="https://wiki.gnuradio.org/index.php/Tagged_Stream_Blocks" target="_blank">Tagged Stream Blocks</a>
+blocks. These deployments work similarly to
 the normal streaming deployments but fit into a tagged stream system
 by setting a tagged stream tag to control the frame size. Like all
 tagged stream blocks, they expect the tag to be located in the stream
@@ -170,8 +171,8 @@ deployments given the three initial FEC coders available.
 \subsubsection fec_deploy_async Asynchronous Deployments
 
 The final standard deployment shipped with GNU Radio is for
-asynchronous \ref page_msg_passing and handling PDUs:
-gr::fec::async_encoder and gr::fec::async_decoder.
+asynchronous <a href="https://wiki.gnuradio.org/index.php/Message_Passing" target="_blank">Message Passing</a>
+and handling PDUs: gr::fec::async_encoder and gr::fec::async_decoder.
 
 Unlike the other deployments, these C++ deployments do not also have
 an extended Python deployment. Because this deployment uses message
