@@ -31,7 +31,7 @@ http://files.ettus.com/manual/annotated.html
 \section uhd_command_syntax Command Syntax
 
 The UHD sink and source can be controlled by a message port. These message ports
-take commands, which are PMTs formatted as described in \ref msg_passing_commands.
+take commands, which are PMTs formatted as described in <a href="https://wiki.gnuradio.org/index.php/Message_Passing" target="_blank">Using messages as commands</a>.
 
 There is a legacy format, which will be deprecated in the future, where commands may
 be tuples, formatted as:
