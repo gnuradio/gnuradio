@@ -144,7 +144,8 @@ protected:
     static const unsigned int d_default_thrift_buffer_size;
 
     /*!
-     * \ref page_logger instances.
+     * <a href="https://wiki.gnuradio.org/index.php/Logging" target="_blank">Logging</a>
+     * instances.
      */
     gr::logger_ptr d_logger, d_debug_logger;
 
