@@ -12,6 +12,7 @@
 #define GR_BLOCKS_CONTROL_LOOP
 
 #include <gnuradio/blocks/api.h>
+#include <gnuradio/math.h>
 
 namespace gr {
 namespace blocks {
@@ -72,7 +73,11 @@ public:
     /*! \brief Advance the control loop based on the current gain
      *  settings and the inputted error signal.
      */
-    void advance_loop(float error);
+    void advance_loop(float error)
+    {
+        d_freq = d_freq + d_beta * error;
+        d_phase = d_phase + d_freq + d_alpha * error;
+    }
 
     /*! \brief Keep the phase between -2pi and 2pi.
      *
@@ -87,7 +92,13 @@ public:
      * method in case another way is desired as this is fairly
      * heavy-handed.
      */
-    void phase_wrap();
+    void phase_wrap()
+    {
+        while (d_phase > GR_M_TWOPI)
+            d_phase -= GR_M_TWOPI;
+        while (d_phase < -GR_M_TWOPI)
+            d_phase += GR_M_TWOPI;
+    }
 
     /*! \brief Keep the frequency between d_min_freq and d_max_freq.
      *
@@ -102,7 +113,14 @@ public:
      * method in case another way is desired as this is fairly
      * heavy-handed.
      */
-    void frequency_limit();
+    void frequency_limit()
+    {
+        if (d_freq > d_max_freq)
+            d_freq = d_max_freq;
+        else if (d_freq < d_min_freq)
+            d_freq = d_min_freq;
+    }
+
 
     /*******************************************************************
      * SET FUNCTIONS

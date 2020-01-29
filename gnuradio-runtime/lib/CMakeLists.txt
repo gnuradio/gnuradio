@@ -106,7 +106,6 @@ target_sources(gnuradio-runtime PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/math/fast_atan2f.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/math/fxpt.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/math/random.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/math/sincos.cc
   )
 
 # Controlport

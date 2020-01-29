@@ -40,28 +40,6 @@ void control_loop::update_gains()
     d_beta = (4 * d_loop_bw * d_loop_bw) / denom;
 }
 
-void control_loop::advance_loop(float error)
-{
-    d_freq = d_freq + d_beta * error;
-    d_phase = d_phase + d_freq + d_alpha * error;
-}
-
-void control_loop::phase_wrap()
-{
-    while (d_phase > M_TWOPI)
-        d_phase -= M_TWOPI;
-    while (d_phase < -M_TWOPI)
-        d_phase += M_TWOPI;
-}
-
-void control_loop::frequency_limit()
-{
-    if (d_freq > d_max_freq)
-        d_freq = d_max_freq;
-    else if (d_freq < d_min_freq)
-        d_freq = d_min_freq;
-}
-
 /*******************************************************************
  * SET FUNCTIONS
  *******************************************************************/
