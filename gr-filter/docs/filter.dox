@@ -56,7 +56,7 @@ filter).
 
 \li PFB arbitrary resampler (see pfb_arb_resampler.h): performs
 arbitrary resampling (i.e., using any real number) using the polyphase
-filterbank method. \sa \ref pfb_arb_resampler
+filterbank method. \sa <a href="https://wiki.gnuradio.org/index.php/Polyphase_Filterbanks" target="_blank">The PFB Arbitrary Resampler Kernel</a>
 
 \li Polyphase filterbank (see polyphase_filterbank.h): a set of base
 classes with standard functions for building many polyphase filterbank
