@@ -44,27 +44,15 @@ public:
     void adjust_freq(double delta_angle_rate) { phase_inc += delta_angle_rate; }
 
     // increment current phase angle
-    void step()
-    {
-        phase += phase_inc;
-        if (fabs(phase) > GR_M_PI) {
-            while (phase > GR_M_PI)
-                phase -= 2 * GR_M_PI;
-
-            while (phase < -GR_M_PI)
-                phase += 2 * GR_M_PI;
-        }
-    }
-
-    void step(int n)
+    void step(int n = 1)
     {
         phase += phase_inc * n;
         if (fabs(phase) > GR_M_PI) {
             while (phase > GR_M_PI)
-                phase -= 2 * GR_M_PI;
+                phase -= GR_M_TWOPI;
 
             while (phase < -GR_M_PI)
-                phase += 2 * GR_M_PI;
+                phase += GR_M_TWOPI;
         }
     }
 
@@ -73,7 +61,7 @@ public:
     double get_freq() const { return phase_inc; }
 
     // compute sin and cos for current phase angle
-    void sincos(float* sinx, float* cosx) const;
+    void sincos(float* sinx, float* cosx) const { gr::sincosf(phase, sinx, cosx); }
 
     // compute cos or sin for current phase angle
     float cos() const { return std::cos(phase); }
@@ -92,12 +80,6 @@ protected:
     double phase;
     double phase_inc;
 };
-
-template <class o_type, class i_type>
-void nco<o_type, i_type>::sincos(float* sinx, float* cosx) const
-{
-    gr::sincosf(phase, sinx, cosx);
-}
 
 template <class o_type, class i_type>
 void nco<o_type, i_type>::sin(float* output, int noutput_items, double ampl)

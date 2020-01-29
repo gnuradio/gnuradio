@@ -12,12 +12,48 @@
 #define INCLUDED_GR_SINCOS_H
 
 #include <gnuradio/api.h>
+#include <cmath>
 
 namespace gr {
 
-// compute sine and cosine at the same time
-GR_RUNTIME_API void sincos(double x, double* sin, double* cos);
-GR_RUNTIME_API void sincosf(float x, float* sin, float* cos);
+#if defined(HAVE_SINCOS)
+
+inline void sincos(double x, double* sinx, double* cosx) { ::sincos(x, sinx, cosx); }
+
+#else
+
+inline void sincos(double x, double* sinx, double* cosx)
+{
+    *sinx = ::sin(x);
+    *cosx = ::cos(x);
+}
+
+#endif
+
+// ----------------------------------------------------------------
+
+#if defined(HAVE_SINCOSF)
+
+inline void sincosf(float x, float* sinx, float* cosx) { ::sincosf(x, sinx, cosx); }
+
+#elif defined(HAVE_SINF) && defined(HAVE_COSF)
+
+inline void sincosf(float x, float* sinx, float* cosx)
+{
+    *sinx = ::sinf(x);
+    *cosx = ::cosf(x);
+}
+
+#else
+
+inline void sincosf(float x, float* sinx, float* cosx)
+{
+    *sinx = ::sin(x);
+    *cosx = ::cos(x);
+}
+
+#endif
+
 } // namespace gr
 
 #endif /* INCLUDED_GR_SINCOS_H */

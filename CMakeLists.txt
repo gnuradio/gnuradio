@@ -419,6 +419,20 @@ message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
 find_package(LOG4CPP REQUIRED)
 
 ########################################################################
+# Setup Native Capabilities Flag
+########################################################################
+option(ENABLE_NATIVE "Enable native build optimizations" OFF)
+IF(UNIX)
+    IF (ENABLE_NATIVE)
+        MESSAGE(STATUS "Found GNU Radio native optimization flag.  Setting native CPU optimization flags.")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -ftree-vectorize")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native -ftree-vectorize")
+    ELSE (ENABLE_NATIVE)
+        MESSAGE(STATUS "Not using additional GNU Radio native architecture optimizations.")
+    ENDIF (ENABLE_NATIVE)
+ENDIF(UNIX)
+
+########################################################################
 # Disable complex math NaN/INFO range checking for performance
 ########################################################################
 check_cxx_compiler_flag(-fcx-limited-range HAVE_CX_LIMITED_RANGE)
