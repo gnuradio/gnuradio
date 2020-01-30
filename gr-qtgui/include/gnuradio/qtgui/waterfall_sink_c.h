@@ -85,7 +85,7 @@ public:
     /*!
      * \brief Build a complex waterfall sink.
      *
-     * \param size size of the FFT to compute and display. If using
+     * \param fftsize size of the FFT to compute and display. If using
      *        the PDU message port to plot samples, the length of
      *        each PDU must be a multiple of the FFT size.
      * \param wintype type of window to apply (see gr::fft::window::win_type)
@@ -98,7 +98,7 @@ public:
      *        the PDU message port is being used.
      * \param parent a QWidget parent object, if any
      */
-    static sptr make(int size,
+    static sptr make(int fftsize,
                      int wintype,
                      double fc,
                      double bw,
