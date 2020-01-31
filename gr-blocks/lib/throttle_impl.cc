@@ -76,6 +76,12 @@ int throttle_impl::work(int noutput_items,
         }
     }
 
+    // copy all samples output[i] <= input[i]
+    const char* in = (const char*)input_items[0];
+    char* out = (char*)output_items[0];
+    std::memcpy(out, in, noutput_items * d_itemsize);
+    d_total_samples += noutput_items;
+
     auto now = std::chrono::steady_clock::now();
     auto expected_time = d_start + d_sample_period * d_total_samples;
 
@@ -90,11 +96,6 @@ int throttle_impl::work(int noutput_items,
         std::this_thread::sleep_until(expected_time);
     }
 
-    // copy all samples output[i] <= input[i]
-    const char* in = (const char*)input_items[0];
-    char* out = (char*)output_items[0];
-    std::memcpy(out, in, noutput_items * d_itemsize);
-    d_total_samples += noutput_items;
     return noutput_items;
 }
 
