@@ -12,6 +12,7 @@
 #define INCLUDED_GR_THROTTLE_IMPL_H
 
 #include <gnuradio/blocks/throttle.h>
+#include <chrono>
 
 namespace gr {
 namespace blocks {
@@ -19,10 +20,11 @@ namespace blocks {
 class throttle_impl : public throttle
 {
 private:
-    boost::system_time d_start;
+    std::chrono::time_point<std::chrono::steady_clock> d_start;
     size_t d_itemsize;
     uint64_t d_total_samples;
-    double d_samps_per_tick, d_samps_per_us;
+    double d_sample_rate;
+    std::chrono::duration<double> d_sample_period;
     bool d_ignore_tags;
 
 public:

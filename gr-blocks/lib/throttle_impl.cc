@@ -14,9 +14,9 @@
 
 #include "throttle_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/thread/thread.hpp>
 #include <cstring>
 #include <limits>
+#include <thread>
 
 pmt::pmt_t throttle_rx_rate_pmt(pmt::intern("rx_rate"));
 
@@ -43,7 +43,7 @@ throttle_impl::~throttle_impl() {}
 
 bool throttle_impl::start()
 {
-    d_start = boost::get_system_time();
+    d_start = std::chrono::steady_clock::now();
     d_total_samples = 0;
     return block::start();
 }
@@ -51,13 +51,13 @@ bool throttle_impl::start()
 void throttle_impl::set_sample_rate(double rate)
 {
     // changing the sample rate performs a reset of state params
-    d_start = boost::get_system_time();
+    d_start = std::chrono::steady_clock::now();
     d_total_samples = 0;
-    d_samps_per_tick = rate / boost::posix_time::time_duration::ticks_per_second();
-    d_samps_per_us = rate / 1e6;
+    d_sample_rate = rate;
+    d_sample_period = std::chrono::duration<double>(1 / rate);
 }
 
-double throttle_impl::sample_rate() const { return d_samps_per_us * 1e6; }
+double throttle_impl::sample_rate() const { return d_sample_rate; }
 
 int throttle_impl::work(int noutput_items,
                         gr_vector_const_void_star& input_items,
@@ -76,20 +76,18 @@ int throttle_impl::work(int noutput_items,
         }
     }
 
-    // calculate the expected number of samples to have passed through
-    boost::system_time now = boost::get_system_time();
-    boost::int64_t ticks = (now - d_start).ticks();
-    uint64_t expected_samps = uint64_t(d_samps_per_tick * ticks);
+    auto now = std::chrono::steady_clock::now();
+    auto expected_time = d_start + d_sample_period * d_total_samples;
 
-    // if the expected samples was less, we need to throttle back
-    if (d_total_samples > expected_samps) {
-        double sleep_time = (d_total_samples - expected_samps) / d_samps_per_us;
-        if (std::numeric_limits<long>::max() < sleep_time) {
+    if (expected_time > now) {
+        auto limit_duration =
+            std::chrono::duration<double>(std::numeric_limits<long>::max());
+        if (expected_time - now > limit_duration) {
             GR_LOG_ALERT(d_logger,
                          "WARNING: Throttle sleep time overflow! You "
                          "are probably using a very low sample rate.");
         }
-        boost::this_thread::sleep(boost::posix_time::microseconds(long(sleep_time)));
+        std::this_thread::sleep_until(expected_time);
     }
 
     // copy all samples output[i] <= input[i]
