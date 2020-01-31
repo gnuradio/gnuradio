@@ -24,7 +24,7 @@
   - variable_constellation_rect
   - variable_modulate_vector
 - Packet Operators:
-  - digital_correlate_access_code_tag_bb
+  - digital_correlate_access_code_tag_xx
   - digital_correlate_access_code_xx_ts
   - digital_crc32_bb
   - digital_crc32_async_bb
