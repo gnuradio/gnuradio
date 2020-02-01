@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2020 Free Software Foundation, Inc.
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
@@ -11,6 +11,7 @@
 
 #include "dvbt_configure.h"
 #include <gnuradio/dtv/dvbt_reference_signals.h>
+#include <gnuradio/fft/fft.h>
 #include <deque>
 #include <vector>
 
@@ -226,6 +227,10 @@ private:
     // In and Out data length
     int d_ninput;
     int d_noutput;
+
+    fft::fft_complex ofdm_fft;
+    int ofdm_fft_size;
+    float normalization;
 
 public:
     dvbt_reference_signals_impl(int itemsize,
