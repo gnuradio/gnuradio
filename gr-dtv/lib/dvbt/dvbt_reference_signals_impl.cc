@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2015,2016,2018,2019 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2018,2019,2020 Free Software Foundation, Inc.
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
@@ -1207,10 +1207,13 @@ dvbt_reference_signals_impl::dvbt_reference_signals_impl(
              transmission_mode,
              include_cell_id,
              cell_id),
-      d_pg(config)
+      d_pg(config),
+      d_ninput(ninput),
+      d_noutput(noutput),
+      ofdm_fft(config.d_transmission_mode == T2k ? 2048 : 8192, false, 1),
+      ofdm_fft_size(config.d_transmission_mode == T2k ? 2048 : 8192),
+      normalization(1.0 / std::sqrt(27.0 * config.d_payload_length))
 {
-    d_ninput = ninput;
-    d_noutput = noutput;
 }
 
 /*
@@ -1231,9 +1234,20 @@ int dvbt_reference_signals_impl::general_work(int noutput_items,
 {
     const gr_complex* in = (const gr_complex*)input_items[0];
     gr_complex* out = (gr_complex*)output_items[0];
+    gr_complex* dst;
 
     for (int i = 0; i < noutput_items; i++) {
         d_pg.update_output(&in[i * d_ninput], &out[i * d_noutput]);
+        dst = ofdm_fft.get_inbuf();
+        memcpy(&dst[ofdm_fft_size / 2],
+               &out[i * d_noutput],
+               sizeof(gr_complex) * ofdm_fft_size / 2);
+        memcpy(&dst[0],
+               &out[(i * d_noutput) + (ofdm_fft_size / 2)],
+               sizeof(gr_complex) * ofdm_fft_size / 2);
+        ofdm_fft.execute();
+        volk_32fc_s32fc_multiply_32fc(
+            &out[i * d_noutput], ofdm_fft.get_outbuf(), normalization, ofdm_fft_size);
     }
 
     // Tell runtime system how many input items we consumed on
