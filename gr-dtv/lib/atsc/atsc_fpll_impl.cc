@@ -41,32 +41,39 @@ int atsc_fpll_impl::work(int noutput_items,
                          gr_vector_const_void_star& input_items,
                          gr_vector_void_star& output_items)
 {
+    constexpr float alpha = 0.01;
+    constexpr float beta = alpha * alpha / 4.0;
+
     const gr_complex* in = (const gr_complex*)input_items[0];
     float* out = (float*)output_items[0];
+    float a_cos, a_sin;
+    float x;
+    gr_complex result, filtered;
 
     for (int k = 0; k < noutput_items; k++) {
-        float a_cos, a_sin;
-
         d_nco.step();                 // increment phase
         d_nco.sincos(&a_sin, &a_cos); // compute cos and sin
 
         // Mix out carrier and output I-only signal
-        gr_complex result = in[k] * gr_complex(a_sin, a_cos);
+
+        // PR Merge Note: Once the Costas Optimization PR #3076 merges, this
+        // line below helps with performance when cx_limited_range is not available
+        // such as on Macs and Windows.  Once the merge happens I'll push an update.
+        // gr::fast_cc_multiply(result, in[k], gr_complex(a_sin, a_cos));
+        result = in[k] * gr_complex(a_sin, a_cos);
+
         out[k] = result.real();
 
         // Update phase/freq error
-        gr_complex filtered = d_afc.filter(result);
-        float x = gr::fast_atan2f(filtered.imag(), filtered.real());
+        filtered = d_afc.filter(result);
+        x = gr::fast_atan2f(filtered.imag(), filtered.real());
 
         // avoid slamming filter with big transitions
-        static const float limit = GR_M_PI / 2.0;
-        if (x > limit)
-            x = limit;
-        else if (x < -limit)
-            x = -limit;
+        if (x > M_PI_2)
+            x = M_PI_2;
+        else if (x < -M_PI_2)
+            x = -M_PI_2;
 
-        static const float alpha = 0.01;
-        static const float beta = alpha * alpha / 4.0;
         d_nco.adjust_phase(alpha * x);
         d_nco.adjust_freq(beta * x);
     }
