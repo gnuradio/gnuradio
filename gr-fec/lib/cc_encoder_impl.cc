@@ -133,14 +133,13 @@ int cc_encoder_impl::parity(int x)
     return parityb(x);
 }
 
-int cc_encoder_impl::parityb(unsigned int x) { return Partab[x]; }
+int cc_encoder_impl::parityb(unsigned char x) { return Partab[x]; }
 
 void cc_encoder_impl::partab_init(void)
 {
     int i, cnt, ti;
 
     /* Initialize parity lookup table */
-    printf("256\n");
     for (i = 0; i < 256; i++) {
         cnt = 0;
         ti = i;
