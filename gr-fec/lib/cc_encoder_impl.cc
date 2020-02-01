@@ -133,13 +133,14 @@ int cc_encoder_impl::parity(int x)
     return parityb(x);
 }
 
-int cc_encoder_impl::parityb(unsigned char x) { return Partab[x]; }
+int cc_encoder_impl::parityb(unsigned int x) { return Partab[x]; }
 
 void cc_encoder_impl::partab_init(void)
 {
     int i, cnt, ti;
 
     /* Initialize parity lookup table */
+    printf("256\n");
     for (i = 0; i < 256; i++) {
         cnt = 0;
         ti = i;
@@ -157,7 +158,7 @@ void cc_encoder_impl::generic_work(void* in_buffer, void* out_buffer)
     const unsigned char* in = (const unsigned char*)in_buffer;
     unsigned char* out = (unsigned char*)out_buffer;
 
-    unsigned char my_state = d_start_state;
+    unsigned int my_state = d_start_state;
 
     if (d_mode == CC_TAILBITING) {
         for (unsigned int i = 0; i < d_k - 1; ++i) {
