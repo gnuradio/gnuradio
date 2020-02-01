@@ -16,14 +16,13 @@ options:
     output_language: python
     placement: (0,0)
     qt_qss_theme: ''
-    realtime_scheduling: ''
+    realtime_scheduling: '1'
     run: 'True'
     run_command: '{python} -u {filename}'
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: Receive ATSC from UHD
-    window_size: 4000, 4000
+    title: Receive ATSC from USRP
   states:
     bus_sink: false
     bus_source: false
@@ -33,36 +32,6 @@ options:
     state: enabled
 
 blocks:
-- name: antenna
-  id: variable_qtgui_chooser
-  parameters:
-    comment: ''
-    gui_hint: 1,0,1,1
-    label: Antenna
-    label0: TX/RX
-    label1: RX2
-    label2: ''
-    label3: ''
-    label4: ''
-    labels: '[]'
-    num_opts: '2'
-    option0: TX/RX
-    option1: RX2
-    option2: '2'
-    option3: '3'
-    option4: '4'
-    options: '[0, 1, 2]'
-    orient: Qt.QVBoxLayout
-    type: string
-    value: TX/RX
-    widget: radio_buttons
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [344, 20.0]
-    rotation: 0
-    state: enabled
 - name: atsc_sym_rate
   id: variable
   parameters:
@@ -72,43 +41,43 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [96, 108.0]
+    coordinate: [192, 12.0]
     rotation: 0
     state: enabled
-- name: freq
+- name: center_freq
   id: variable_qtgui_entry
   parameters:
-    comment: ''
-    gui_hint: 1,1,1,1
-    label: Frequency
+    comment: Digital Ch 28 - 557 MHz
+    gui_hint: 0,0,1,2
+    label: Center Frequency
     type: real
-    value: 605e6
+    value: 557e6
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [520, 20.0]
+    coordinate: [792, 4.0]
     rotation: 0
     state: enabled
 - name: gain
   id: variable_qtgui_range
   parameters:
     comment: ''
-    gui_hint: 1,3,1,1
+    gui_hint: 1,0,1,2
     label: Gain
     min_len: '200'
     orient: Qt.Horizontal
     rangeType: float
     start: '0'
-    step: '1'
-    stop: '31'
-    value: '18'
+    step: '2'
+    stop: '60'
+    value: '46'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [664, 20.0]
+    coordinate: [656, 4.0]
     rotation: 0
     state: enabled
 - name: oversampled_rate
@@ -120,22 +89,19 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [216, 108.0]
+    coordinate: [432, 12.0]
     rotation: 0
     state: enabled
 - name: sample_rate
-  id: variable_qtgui_entry
+  id: variable
   parameters:
     comment: ''
-    gui_hint: 1,2,1,1
-    label: Sample Rate
-    type: real
-    value: 6.25e6
+    value: atsc_sym_rate*sps
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [520, 92.0]
+    coordinate: [312, 12.0]
     rotation: 0
     state: enabled
 - name: sps
@@ -147,7 +113,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 108.0]
+    coordinate: [568, 12.0]
     rotation: 0
     state: enabled
 - name: agc
@@ -167,7 +133,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1144, 204.0]
+    coordinate: [1032, 244.0]
     rotation: 0
     state: enabled
 - name: blocks_file_sink_0
@@ -177,7 +143,7 @@ blocks:
     alias: ''
     append: 'False'
     comment: ''
-    file: mpeg.ts
+    file: /tmp/mpeg.live.ts
     type: byte
     unbuffered: 'False'
     vlen: '1'
@@ -185,13 +151,13 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1120, 476.0]
+    coordinate: [832, 668.0]
     rotation: 0
     state: enabled
 - name: dc_blocker_xx_0
   id: dc_blocker_xx
   parameters:
-    affinity: ''
+    affinity: '1'
     alias: ''
     comment: ''
     length: '4096'
@@ -203,41 +169,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [912, 220.0]
-    rotation: 0
-    state: enabled
-- name: displays
-  id: qtgui_tab_widget
-  parameters:
-    alias: ''
-    comment: ''
-    gui_hint: 0,0,1,4
-    label0: RX Spectrum
-    label1: Baseband
-    label10: Tab 10
-    label11: Tab 11
-    label12: Tab 12
-    label13: Tab 13
-    label14: Tab 14
-    label15: Tab 15
-    label16: Tab 16
-    label17: Tab 17
-    label18: Tab 18
-    label19: Tab 19
-    label2: ''
-    label3: Tab 3
-    label4: Tab 4
-    label5: Tab 5
-    label6: Tab 6
-    label7: Tab 7
-    label8: Tab 8
-    label9: Tab 9
-    num_tabs: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [192, 28.0]
+    coordinate: [832, 260.0]
     rotation: 0
     state: enabled
 - name: dtv_atsc_deinterleaver_0
@@ -252,7 +184,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [136, 496.0]
+    coordinate: [120, 608.0]
     rotation: 0
     state: enabled
 - name: dtv_atsc_depad_0
@@ -267,7 +199,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [928, 496.0]
+    coordinate: [752, 608.0]
     rotation: 0
     state: enabled
 - name: dtv_atsc_derandomizer_0
@@ -282,7 +214,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [680, 496.0]
+    coordinate: [568, 608.0]
     rotation: 0
     state: enabled
 - name: dtv_atsc_equalizer_0
@@ -297,7 +229,23 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [848, 360.0]
+    coordinate: [664, 504.0]
+    rotation: 0
+    state: enabled
+- name: dtv_atsc_fpll_0
+  id: dtv_atsc_fpll
+  parameters:
+    affinity: '0'
+    alias: ''
+    comment: Set core affinity for performance
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rate: oversampled_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 268.0]
     rotation: 0
     state: enabled
 - name: dtv_atsc_fs_checker_0
@@ -312,7 +260,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [568, 360.0]
+    coordinate: [440, 504.0]
     rotation: 0
     state: enabled
 - name: dtv_atsc_rs_decoder_0
@@ -327,7 +275,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [376, 496.0]
+    coordinate: [320, 608.0]
     rotation: 0
     state: enabled
 - name: dtv_atsc_sync_0
@@ -343,94 +291,123 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [320, 356.0]
+    coordinate: [200, 500.0]
     rotation: 0
     state: enabled
 - name: dtv_atsc_viterbi_decoder_0
   id: dtv_atsc_viterbi_decoder
   parameters:
-    affinity: ''
+    affinity: '2'
     alias: ''
-    comment: ''
+    comment: Set core affinity for performance
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1112, 360.0]
+    coordinate: [816, 504.0]
     rotation: 0
     state: enabled
-- name: fpll
-  id: dtv_atsc_fpll
+- name: filter_fft_rrc_filter_0
+  id: filter_fft_rrc_filter
   parameters:
     affinity: ''
     alias: ''
-    comment: ''
+    alpha: '0.1152'
+    comment: 'FFT-based filter is less CPU intensive
+
+      for all but the smallest filter tap lengths.'
+    decim: '1'
+    gain: '1'
     maxoutbuf: '0'
     minoutbuf: '0'
-    rate: oversampled_rate
+    ntaps: int((2*8 + 1)*sps)
+    nthreads: '1'
+    samp_rate: sample_rate
+    sym_rate: atsc_sym_rate/2.0
+    type: ccc
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [616, 228.0]
+    coordinate: [272, 228.0]
     rotation: 0
-    state: enabled
-- name: rx_filter
-  id: dtv_atsc_rx_filter
+    state: true
+- name: note_0
+  id: note
   parameters:
-    affinity: ''
     alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    rate: sample_rate
-    sps: sps
+    comment: "Past examples with the RX filter use a pfb arb resampler\nthat crushes\
+      \ most CPUs.  This approach is optimally tuned\nand only needs an FFT-based\
+      \ RRC and no resampler \nfor better performance."
+    note: ''
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [336, 220.0]
+    coordinate: [856, 380.0]
     rotation: 0
-    state: enabled
-- name: uhd_usrp_source_0
+    state: true
+- name: note_1
+  id: note
+  parameters:
+    alias: ''
+    comment: "This flowgraph can be adapted to watch the stream live by\ninstalling\
+      \ gr-grnet and using a tcp sink in \"server\" mode.\nYou can then use smplayer\
+      \ to play the stream (vlc doesn't\nwork as well as it doesn't seem to tolerate\
+      \ stream errors\nwell.  In smplayer, under options these non-default settings\n\
+      seemed to help with stream viewing:\n- set performance preferences to allow\
+      \ \n  frame drops and hard frame drops.\n- Set hardware decoding to auto.\n\
+      - On the cache performance tab Increase stream buffer to 8096.\n\nNOTE: Be patient\
+      \ with the players if there's errors in the signal.\nOn a real TV it may pixelate,\
+      \ but with streaming players they may\nget out of sync and look like they freeze\
+      \ with no video while \nthey're trying to resync with good data."
+    note: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1024, 516.0]
+    rotation: 0
+    state: true
+- name: u
   id: uhd_usrp_source
   parameters:
     affinity: ''
     alias: ''
-    ant0: TX/RX
-    ant1: RX2
-    ant10: RX2
-    ant11: RX2
-    ant12: RX2
-    ant13: RX2
-    ant14: RX2
-    ant15: RX2
-    ant16: RX2
-    ant17: RX2
-    ant18: RX2
-    ant19: RX2
-    ant2: RX2
-    ant20: RX2
-    ant21: RX2
-    ant22: RX2
-    ant23: RX2
-    ant24: RX2
-    ant25: RX2
-    ant26: RX2
-    ant27: RX2
-    ant28: RX2
-    ant29: RX2
-    ant3: RX2
-    ant30: RX2
-    ant31: RX2
-    ant4: RX2
-    ant5: RX2
-    ant6: RX2
-    ant7: RX2
-    ant8: RX2
-    ant9: RX2
+    ant0: RX2
+    ant1: ''
+    ant10: ''
+    ant11: ''
+    ant12: ''
+    ant13: ''
+    ant14: ''
+    ant15: ''
+    ant16: ''
+    ant17: ''
+    ant18: ''
+    ant19: ''
+    ant2: ''
+    ant20: ''
+    ant21: ''
+    ant22: ''
+    ant23: ''
+    ant24: ''
+    ant25: ''
+    ant26: ''
+    ant27: ''
+    ant28: ''
+    ant29: ''
+    ant3: ''
+    ant30: ''
+    ant31: ''
+    ant4: ''
+    ant5: ''
+    ant6: ''
+    ant7: ''
+    ant8: ''
+    ant9: ''
     bw0: '0'
     bw1: '0'
     bw10: '0'
@@ -463,7 +440,7 @@ blocks:
     bw7: '0'
     bw8: '0'
     bw9: '0'
-    center_freq0: freq
+    center_freq0: center_freq
     center_freq1: '0'
     center_freq10: '0'
     center_freq11: '0'
@@ -495,7 +472,7 @@ blocks:
     center_freq7: '0'
     center_freq8: '0'
     center_freq9: '0'
-    clock_rate: 0e0
+    clock_rate: '0.0'
     clock_source0: ''
     clock_source1: ''
     clock_source2: ''
@@ -504,7 +481,11 @@ blocks:
     clock_source5: ''
     clock_source6: ''
     clock_source7: ''
-    comment: ''
+    comment: 'Sample rate matches symbol rate to
+
+      avoid interpolation error and no  longer
+
+      requires an arbitrary resampler.'
     dc_offs_enb0: '""'
     dc_offs_enb1: '""'
     dc_offs_enb10: '""'
@@ -537,7 +518,7 @@ blocks:
     dc_offs_enb7: '""'
     dc_offs_enb8: '""'
     dc_offs_enb9: '""'
-    dev_addr: '"num_recv_frames=128,master_clock_rate=" + str(sample_rate*4)'
+    dev_addr: '"num_recv_frames=128"'
     dev_args: '""'
     gain0: gain
     gain1: '0'
@@ -667,8 +648,8 @@ blocks:
     lo_source7: internal
     lo_source8: internal
     lo_source9: internal
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     nchan: '1'
     norm_gain0: 'False'
     norm_gain1: 'False'
@@ -704,7 +685,7 @@ blocks:
     norm_gain9: 'False'
     num_mboards: '1'
     otw: ''
-    rx_agc0: Default
+    rx_agc0: Disabled
     rx_agc1: Default
     rx_agc10: Default
     rx_agc11: Default
@@ -762,9 +743,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [40, 180.0]
+    coordinate: [32, 116.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: usrp_freq_sink
   id: qtgui_freq_sink_x
   parameters:
@@ -780,7 +761,7 @@ blocks:
     alpha7: '1.0'
     alpha8: '1.0'
     alpha9: '1.0'
-    autoscale: 'True'
+    autoscale: 'False'
     average: '0.2'
     axislabels: 'True'
     bw: sample_rate
@@ -796,13 +777,13 @@ blocks:
     color9: '"dark green"'
     comment: ''
     ctrlpanel: 'False'
-    fc: freq
-    fftsize: '4096'
+    fc: center_freq
+    fftsize: '2048'
     freqhalf: 'True'
     grid: 'True'
-    gui_hint: displays@0
+    gui_hint: 3,0,1,4
     label: Relative Gain
-    label1: ''
+    label1: RX Signal
     label10: ''
     label2: ''
     label3: ''
@@ -836,85 +817,31 @@ blocks:
     width8: '1'
     width9: '1'
     wintype: firdes.WIN_BLACKMAN_hARRIS
-    ymax: '10'
-    ymin: '-140'
+    ymax: '-20'
+    ymin: '-100'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [40, 332.0]
-    rotation: 180
+    coordinate: [304, 112.0]
+    rotation: 0
     state: enabled
-- name: virtual_sink_0
-  id: virtual_sink
-  parameters:
-    alias: ''
-    comment: ''
-    stream_id: agc-sync
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1136, 300.0]
-    rotation: 180
-    state: true
-- name: virtual_sink_1
-  id: virtual_sink
-  parameters:
-    alias: ''
-    comment: ''
-    stream_id: viterbi-deint
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1120, 404.0]
-    rotation: 180
-    state: true
-- name: virtual_source_0
-  id: virtual_source
-  parameters:
-    alias: ''
-    comment: ''
-    stream_id: viterbi-deint
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [136, 444.0]
-    rotation: 180
-    state: true
-- name: virtual_source_2
-  id: virtual_source
-  parameters:
-    alias: ''
-    comment: ''
-    stream_id: agc-sync
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [320, 300.0]
-    rotation: 180
-    state: true
 
 connections:
-- [agc, '0', virtual_sink_0, '0']
+- [agc, '0', dtv_atsc_sync_0, '0']
 - [dc_blocker_xx_0, '0', agc, '0']
 - [dtv_atsc_deinterleaver_0, '0', dtv_atsc_rs_decoder_0, '0']
 - [dtv_atsc_depad_0, '0', blocks_file_sink_0, '0']
 - [dtv_atsc_derandomizer_0, '0', dtv_atsc_depad_0, '0']
 - [dtv_atsc_equalizer_0, '0', dtv_atsc_viterbi_decoder_0, '0']
+- [dtv_atsc_fpll_0, '0', dc_blocker_xx_0, '0']
 - [dtv_atsc_fs_checker_0, '0', dtv_atsc_equalizer_0, '0']
 - [dtv_atsc_rs_decoder_0, '0', dtv_atsc_derandomizer_0, '0']
 - [dtv_atsc_sync_0, '0', dtv_atsc_fs_checker_0, '0']
-- [dtv_atsc_viterbi_decoder_0, '0', virtual_sink_1, '0']
-- [fpll, '0', dc_blocker_xx_0, '0']
-- [rx_filter, '0', fpll, '0']
-- [uhd_usrp_source_0, '0', rx_filter, '0']
-- [uhd_usrp_source_0, '0', usrp_freq_sink, '0']
-- [virtual_source_0, '0', dtv_atsc_deinterleaver_0, '0']
-- [virtual_source_2, '0', dtv_atsc_sync_0, '0']
+- [dtv_atsc_viterbi_decoder_0, '0', dtv_atsc_deinterleaver_0, '0']
+- [filter_fft_rrc_filter_0, '0', dtv_atsc_fpll_0, '0']
+- [u, '0', filter_fft_rrc_filter_0, '0']
+- [u, '0', usrp_freq_sink, '0']
 
 metadata:
   file_format: 1
