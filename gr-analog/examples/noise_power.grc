@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -22,9 +23,11 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: ''
-    window_size: 1280, 1024
   states:
-    coordinate: [8, 11]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 12.0]
     rotation: 0
     state: enabled
 
@@ -44,7 +47,10 @@ blocks:
     value: '1'
     widget: counter_slider
   states:
-    coordinate: [8, 435]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 436.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -53,7 +59,10 @@ blocks:
     comment: ''
     value: '32000'
   states:
-    coordinate: [176, 11]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [176, 12.0]
     rotation: 0
     state: enabled
 - name: analog_fastnoise_source_x_0
@@ -70,7 +79,10 @@ blocks:
     seed: '0'
     type: complex
   states:
-    coordinate: [8, 75]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 76.0]
     rotation: 0
     state: enabled
 - name: analog_fastnoise_source_x_1
@@ -87,7 +99,10 @@ blocks:
     seed: '0'
     type: float
   states:
-    coordinate: [8, 171]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 172.0]
     rotation: 0
     state: enabled
 - name: analog_noise_source_x_0
@@ -103,7 +118,10 @@ blocks:
     seed: '0'
     type: complex
   states:
-    coordinate: [8, 267]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 268.0]
     rotation: 0
     state: enabled
 - name: analog_noise_source_x_1
@@ -119,7 +137,10 @@ blocks:
     seed: '0'
     type: float
   states:
-    coordinate: [8, 347]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 348.0]
     rotation: 0
     state: enabled
 - name: blocks_abs_xx_0
@@ -133,7 +154,10 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [368, 368]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [376, 368.0]
     rotation: 0
     state: enabled
 - name: blocks_abs_xx_0_0
@@ -147,7 +171,10 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [368, 200]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [376, 200.0]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_mag_squared_1
@@ -160,7 +187,10 @@ blocks:
     minoutbuf: '0'
     vlen: '1'
   states:
-    coordinate: [368, 288]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [400, 288.0]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_mag_squared_2
@@ -173,7 +203,10 @@ blocks:
     minoutbuf: '0'
     vlen: '1'
   states:
-    coordinate: [368, 104]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [400, 104.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_xx_0
@@ -188,7 +221,10 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [480, 352]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [488, 352.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_xx_0_0
@@ -203,7 +239,10 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [480, 184]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [488, 184.0]
     rotation: 0
     state: enabled
 - name: blocks_nlog10_ff_0
@@ -218,7 +257,10 @@ blocks:
     n: '10'
     vlen: '1'
   states:
-    coordinate: [784, 91]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 100.0]
     rotation: 0
     state: enabled
 - name: blocks_nlog10_ff_0_0
@@ -233,7 +275,10 @@ blocks:
     n: '10'
     vlen: '1'
   states:
-    coordinate: [784, 187]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 196.0]
     rotation: 0
     state: enabled
 - name: blocks_nlog10_ff_0_1
@@ -248,7 +293,10 @@ blocks:
     n: '10'
     vlen: '1'
   states:
-    coordinate: [784, 275]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 284.0]
     rotation: 0
     state: enabled
 - name: blocks_nlog10_ff_0_2
@@ -263,7 +311,10 @@ blocks:
     n: '10'
     vlen: '1'
   states:
-    coordinate: [784, 355]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 364.0]
     rotation: 0
     state: enabled
 - name: blocks_throttle_0
@@ -279,7 +330,10 @@ blocks:
     type: complex
     vlen: '1'
   states:
-    coordinate: [208, 99]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 100.0]
     rotation: 0
     state: enabled
 - name: blocks_throttle_0_0
@@ -295,7 +349,10 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [208, 195]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 196.0]
     rotation: 0
     state: enabled
 - name: blocks_throttle_0_1
@@ -311,7 +368,10 @@ blocks:
     type: complex
     vlen: '1'
   states:
-    coordinate: [208, 283]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 284.0]
     rotation: 0
     state: enabled
 - name: blocks_throttle_0_2
@@ -327,7 +387,10 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [208, 363]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 364.0]
     rotation: 0
     state: enabled
 - name: qtgui_number_sink_0
@@ -387,6 +450,9 @@ blocks:
     unit9: ''
     update_time: '0.10'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [992, 208]
     rotation: 0
     state: enabled
@@ -402,7 +468,10 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [592, 99]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 100.0]
     rotation: 0
     state: enabled
 - name: single_pole_iir_filter_xx_0_0
@@ -417,7 +486,10 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [592, 195]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 196.0]
     rotation: 0
     state: enabled
 - name: single_pole_iir_filter_xx_0_1
@@ -432,7 +504,10 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [592, 283]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 284.0]
     rotation: 0
     state: enabled
 - name: single_pole_iir_filter_xx_0_2
@@ -447,7 +522,10 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [592, 363]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 364.0]
     rotation: 0
     state: enabled
 
