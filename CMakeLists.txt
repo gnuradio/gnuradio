@@ -84,13 +84,7 @@ endif()
 ########################################################################
 # Compiler version setup
 ########################################################################
-# Append -O2 optimization flag for Debug builds (Not on MSVC since conflicts with RTC1 flag)
-IF (NOT MSVC)
-    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
-    SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O2")
-ENDIF()
-
-# Check compiler version against our minimum
+# Check compiler version against our minimum and set flags
 IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     IF(DEFINED CMAKE_CXX_COMPILER_VERSION)
         IF(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS ${GCC_MIN_VERSION})
@@ -99,6 +93,13 @@ IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     ELSE()
         MESSAGE(WARNING "\nCannot determine the version of the compiler selected to build GNU Radio (GCC : ${CMAKE_CXX_COMPILER}). This build may or not work. We highly recommend using GCC version ${GCC_MIN_VERSION} or more recent.")
     ENDIF()
+    # Release flags: -O3 enables tree vectorization
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O2")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG")
+    set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")
+    set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG")
 ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     EXECUTE_PROCESS(COMMAND
         ${CMAKE_CXX_COMPILER} -v
@@ -126,6 +127,14 @@ ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     ELSE()
         MESSAGE(WARNING "\nCannot determine the version of the compiler selected to build GNU Radio (${APPLE_STR}Clang : ${CMAKE_CXX_COMPILER}). This build may or not work. We highly recommend using Apple Clang version ${APPLECLANG_MIN_VERSION} or more recent, or Clang version ${CLANG_MIN_VERSION} or more recent.")
     ENDIF()
+    # Same flags as gcc. Note that -Og has a different meaning for Clang, but
+    # may be changed to be more optimized for debuggability in the future.
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O2")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG")
+    set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")
+    set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG")
 ELSE()
     MESSAGE(status "Skipping compiler version check.")
 ENDIF()
