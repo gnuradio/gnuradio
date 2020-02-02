@@ -21,3 +21,20 @@
     - variable_qtgui_entry
     - variable_qtgui_label
     - qtgui_edit_box_msg
+    - qtgui_auto_correlator_sink
+    - qtgui_grbackground
+    - variable_qtgui_azelplot
+    - qtgui_compass
+    - variable_qtgui_dial_control
+    - qtgui_dialgauge
+    - variable_qtgui_distanceradar
+    - qtgui_graphicitem
+    - qtgui_graphicoverlay
+    - qtgui_ledindicator
+    - qtgui_levelgauge
+    - variable_qtgui_msgcheckbox
+    - qtgui_msgdigitalnumbercontrol
+    - variable_qtgui_msg_push_button
+    - variable_qtgui_toggle_button_msg
+    - variable_qtgui_toggle_switch
+    
