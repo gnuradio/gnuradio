@@ -15,8 +15,23 @@ configure_file(util.py.cmakein "${CMAKE_CURRENT_BINARY_DIR}/util.py" @ONLY)
 
 GR_PYTHON_INSTALL(
     FILES __init__.py
-          "${CMAKE_CURRENT_BINARY_DIR}/range.py"
-          "${CMAKE_CURRENT_BINARY_DIR}/util.py"
+    compass.py
+    togglebutton.py
+    msgpushbutton.py
+    msgcheckbox.py
+    distanceradar.py
+    azelplot.py
+    digitalnumbercontrol.py
+    dialcontrol.py
+    ledindicator.py
+    graphicitem.py
+    levelgauge.py
+    dialgauge.py
+    toggleswitch.py
+    graphicoverlay.py
+    auto_correlator_sink.py
+    "${CMAKE_CURRENT_BINARY_DIR}/range.py"
+    "${CMAKE_CURRENT_BINARY_DIR}/util.py"
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui
 )
 
