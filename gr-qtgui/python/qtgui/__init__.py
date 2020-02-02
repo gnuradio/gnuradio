@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011, 2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -25,3 +25,22 @@ except ImportError:
 
 from .range import Range, RangeWidget
 from . import util
+
+from .compass import GrCompass
+from .togglebutton import ToggleButton
+from .msgpushbutton import MsgPushButton
+from .distanceradar import DistanceRadar
+from .azelplot import AzElPlot
+from .msgcheckbox import MsgCheckBox
+from .digitalnumbercontrol import MsgDigitalNumberControl
+from .dialcontrol import GrDialControl
+from .ledindicator import GrLEDIndicator
+from .graphicitem import GrGraphicItem
+from .levelgauge import GrLevelGauge
+from .dialgauge import GrDialGauge
+from .toggleswitch import GrToggleSwitch
+from .graphicoverlay import GrGraphicOverlay
+from .auto_correlator_sink import AutoCorrelatorSink
+from .auto_correlator_sink import AutoCorrelator
+from .auto_correlator_sink import Normalize
+
