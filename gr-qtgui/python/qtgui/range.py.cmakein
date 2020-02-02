@@ -206,8 +206,9 @@ class RangeWidget(QtWidgets.QWidget):
             layout.addWidget(self.counter)
             self.setLayout(layout)
 
-            # Flag to ignore the slider event caused by a change to the counter.
+            # Flags to ignore the slider event caused by a change to the counter (and vice versa).
             self.ignoreSlider = False
+            self.ignoreCounter = False
             self.range = ranges
 
         def sliderChanged(self, value):
@@ -215,6 +216,7 @@ class RangeWidget(QtWidgets.QWidget):
             # If the counter was changed, ignore any of these events
             if not self.ignoreSlider:
                 # Value is already float. Just set the counter
+                self.ignoreCounter = True
                 self.counter.setValue(self.rangeType(value))
                 self.notifyChanged(self.rangeType(value))
             self.ignoreSlider = False
@@ -231,8 +233,14 @@ class RangeWidget(QtWidgets.QWidget):
                 self.ignoreSlider = True
                 self.slider.setValue(new)
 
-            self.notifyChanged(self.rangeType(value))
+            if not self.ignoreCounter:
+                self.notifyChanged(self.rangeType(value))
+            self.ignoreCounter = False
 
+        def setValue(self, value):
+            """ Wrapper to handle changing the value externally """
+            self.ignoreSlider = True
+            self.counter.setValue(value)
 
 if __name__ == "__main__":
     from PyQt4 import Qt
