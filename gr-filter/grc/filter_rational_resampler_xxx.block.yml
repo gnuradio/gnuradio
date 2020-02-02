@@ -59,4 +59,24 @@ templates:
     callbacks:
     - set_taps(${taps})
 
+documentation: |-
+    This is a rational resampling polyphase FIR filter.
+
+    Either taps or fractional_bw may be specified, but not both.
+
+    If neither is specified, a reasonable default, 0.4, is used as the fractional_bw.
+    
+    Parameters:
+    Interpolation
+        Interpolation factor (integer > 0)
+    
+    Decimation
+        Decimation factor (integer > 0)
+    
+    Taps (R)
+        Optional filter coefficients (sequence)
+    
+    Fractional BW
+        Fractional bandwidth in (0, 0.5), measured at final freq (use 0.4) (float)
+
 file_format: 1
