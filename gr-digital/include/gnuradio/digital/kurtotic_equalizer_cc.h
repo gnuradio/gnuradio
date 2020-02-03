@@ -20,6 +20,7 @@ namespace digital {
 /*!
  * \brief Implements a kurtosis-based adaptive equalizer on complex stream
  * \ingroup equalizers_blk
+ * \ingroup deprecated_blk
  *
  * \details
  * Warning: This block does not yet work.

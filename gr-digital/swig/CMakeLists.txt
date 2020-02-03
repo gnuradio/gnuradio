@@ -55,6 +55,7 @@ install(
   FILES
   ${SWIGFILES}
   constellation.i
+  equalizers.i
   ofdm_equalizer.i
   packet_header.i
   ${SWIGDOCFILES}
