@@ -17,6 +17,10 @@ install(FILES
     api.h
     argmax.h
     control_loop.h
+    correctiq.h
+    correctiq_auto.h
+    correctiq_man.h
+    correctiq_swapiq.h
     count_bits.h
     divide.h
     file_sink_base.h

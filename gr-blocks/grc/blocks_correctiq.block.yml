@@ -1,0 +1,20 @@
+id: blocks_correctiq
+label: Remove DC Spike
+category: '[Core]/IQ Correction'
+
+templates:
+  imports: from gnuradio import blocks
+  make: blocks.correctiq(${})
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+documentation: |-
+    This block to removes that center frequency IQ DC spike with an IIR filter.
+
+file_format: 1

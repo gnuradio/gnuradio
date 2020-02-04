@@ -1,0 +1,56 @@
+id: blocks_correctiq_auto
+label: Remove DC Spike AutoSync
+category: '[Core]/IQ Correction'
+
+templates:
+  imports: from gnuradio import blocks
+  make: blocks.correctiq_auto(${samp_rate}, ${freq}, ${gain}, ${syncWindow})
+  callbacks:
+  - set_freq(${freq})
+  - set_gain(${gain})
+
+parameters:
+-   id: samp_rate
+    label: Sample Rate
+    dtype: float
+    default: samp_rate
+-   id: syncWindow
+    label: Sync Learning Period (sec)
+    dtype: float
+    default: '2'
+-   id: freq
+    label: Frequency
+    dtype: float
+-   id: gain
+    label: Upstream Gain
+    dtype: float
+
+inputs:
+-   domain: stream
+    dtype: complex
+-   domain: message
+    id: rsync
+    optional: true
+
+outputs:
+-   domain: stream
+    dtype: complex
+-   domain: message
+    id: sync_start
+    optional: true
+-   domain: message
+    id: offsets
+    optional: true
+
+documentation: |-
+    This block to removes that center frequency IQ DC spike with a slight variation.  It automatically calculates the offset then switches to straight DC offset mode to prevent any possible IIR filtering after it's been tuned.  However, if frequency or upstream gain is changed, it must retune, so frequency and upstream gain are all taken as parameters and monitored for changes.
+    
+    Notes: 
+    
+    1. Any message received on the rsync port will trigger a resync process.  So it could be a frequency or gain change, or any other desired condition.
+    
+    2. The optional sync_start output message will be sent whenever a resync is triggered.  This can be used downstream to know the filter is calculating and adapting.  Note that there is no initial syncing message (this is assumed on block start so downstream blocks that are interested should make the same assumption).
+    
+    3. When a sync is finished, the real and imag offsets will be sent in the optional offsets message.  Note that the work loop calculates out[].real(in[].real() - real_offset) and same for imag.  So offsets are subtractive from the input values. 
+
+file_format: 1

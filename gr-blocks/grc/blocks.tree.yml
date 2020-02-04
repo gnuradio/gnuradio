@@ -39,6 +39,11 @@
   - blocks_file_meta_source
   - blocks_file_meta_sink
   - blocks_tagged_file_sink
+- IQ Correction:
+  - blocks_correctiq_auto
+  - blocks_correctiq_man
+  - blocks_swapiq
+  - blocks_correctiq
 - Level Controllers:
   - blocks_mute_xx
   - blocks_sample_and_hold_xx
