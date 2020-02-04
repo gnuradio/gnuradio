@@ -20,6 +20,10 @@ add_library(gnuradio-blocks
     and_blk_impl.cc
     and_const_impl.cc
     argmax_impl.cc
+    correctiq_auto_impl.cc
+    correctiq_impl.cc
+    correctiq_man_impl.cc
+    correctiq_swapiq_impl.cc
     divide_impl.cc
     integrate_impl.cc
     max_blk_impl.cc
