@@ -63,6 +63,7 @@ class CommandCLI(click.Group):
         try:
             mod = import_module('gnuradio.modtool.cli.' + cmd_name)
         except ImportError:
+            logging.error(ImportError)
             return self.commands.get(cmd_name)
         return mod.cli
 
