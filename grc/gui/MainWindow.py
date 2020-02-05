@@ -330,7 +330,9 @@ class MainWindow(Gtk.ApplicationWindow):
             Actions.FLOW_GRAPH_KILL()
         #remove the page
         self.notebook.remove_page(self.notebook.page_num(self.page_to_be_closed))
-        if ensure and self.notebook.get_n_pages() == 0: self.new_page() #no pages, make a new one
+        if ensure and self.notebook.get_n_pages() == 0:
+            self.new_page() #no pages, make a new one
+            self.current_page.saved = False
         self.page_to_be_closed = None #set the page to be closed back to None
         return True
 
