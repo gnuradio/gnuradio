@@ -34,6 +34,7 @@ install(FILES
   io_signature.h
   logger.h
   math.h
+  memory.h
   message.h
   misc.h
   msg_accepter.h

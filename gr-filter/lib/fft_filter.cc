@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010,2012,2014 Free Software Foundation, Inc.
+ * Copyright 2010,2012,2014,2020 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -13,8 +13,8 @@
 #endif
 
 #include <gnuradio/filter/fft_filter.h>
+#include <gnuradio/memory.h>
 #include <volk/volk.h>
-#include <boost/smart_ptr/make_unique.hpp>
 #include <cstring>
 #include <iostream>
 
@@ -82,8 +82,8 @@ void fft_filter_fff::compute_sizes(int ntaps)
 
     // compute new plans
     if (d_fftsize != old_fftsize) {
-        d_fwdfft = boost::make_unique<fft::fft_real_fwd>(d_fftsize);
-        d_invfft = boost::make_unique<fft::fft_real_rev>(d_fftsize);
+        d_fwdfft = gr::make_unique<fft::fft_real_fwd>(d_fftsize);
+        d_invfft = gr::make_unique<fft::fft_real_rev>(d_fftsize);
         d_xformed_taps.resize(d_fftsize / 2 + 1);
     }
 }
@@ -210,8 +210,8 @@ void fft_filter_ccc::compute_sizes(int ntaps)
 
     // compute new plans
     if (d_fftsize != old_fftsize) {
-        d_fwdfft = boost::make_unique<fft::fft_complex>(d_fftsize, true, d_nthreads);
-        d_invfft = boost::make_unique<fft::fft_complex>(d_fftsize, false, d_nthreads);
+        d_fwdfft = gr::make_unique<fft::fft_complex>(d_fftsize, true, d_nthreads);
+        d_invfft = gr::make_unique<fft::fft_complex>(d_fftsize, false, d_nthreads);
         d_xformed_taps.resize(d_fftsize);
     }
 }
@@ -339,8 +339,8 @@ void fft_filter_ccf::compute_sizes(int ntaps)
 
     // compute new plans
     if (d_fftsize != old_fftsize) {
-        d_fwdfft = boost::make_unique<fft::fft_complex>(d_fftsize, true, d_nthreads);
-        d_invfft = boost::make_unique<fft::fft_complex>(d_fftsize, false, d_nthreads);
+        d_fwdfft = gr::make_unique<fft::fft_complex>(d_fftsize, true, d_nthreads);
+        d_invfft = gr::make_unique<fft::fft_complex>(d_fftsize, false, d_nthreads);
         d_xformed_taps.resize(d_fftsize);
     }
 }
