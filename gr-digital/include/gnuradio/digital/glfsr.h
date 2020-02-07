@@ -27,22 +27,22 @@ namespace digital {
 class DIGITAL_API glfsr
 {
 private:
-    uint32_t d_shift_register;
-    uint32_t d_mask;
+    boost::uint32_t d_shift_register;
+    boost::uint32_t d_mask;
 
 public:
-    glfsr(uint32_t mask, uint32_t seed)
+    glfsr(boost::uint32_t mask, boost::uint32_t seed)
     {
         d_shift_register = seed;
         d_mask = mask;
     }
     ~glfsr();
 
-    static uint32_t glfsr_mask(unsigned int degree);
+    static boost::uint32_t glfsr_mask(unsigned int degree);
 
-    uint8_t next_bit();
+    boost::uint8_t next_bit();
 
-    uint32_t mask() const { return d_mask; }
+    boost::uint32_t mask() const { return d_mask; }
 };
 
 } /* namespace digital */
