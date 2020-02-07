@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014,2020 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -18,6 +18,8 @@
 #include "atsc_types.h"
 #include "gnuradio/dtv/atsc_consts.h"
 #include <gnuradio/io_signature.h>
+
+#define ATSC_SEGMENTS_PER_DATA_FIELD 313
 
 static const int PN511_ERROR_LIMIT = 20; // max number of bits wrong
 static const int PN63_ERROR_LIMIT = 5;
@@ -97,7 +99,12 @@ int atsc_fs_checker_impl::general_work(int noutput_items,
                 out[output_produced].data[j] = in[i].data[j];
             out[output_produced].pli.set_regular_seg((d_field_num == 2), d_segment_num);
             d_segment_num++;
-            output_produced++;
+            if (d_segment_num > (ATSC_SEGMENTS_PER_DATA_FIELD - 1)) {
+                d_field_num = 0;
+                d_segment_num = 0;
+            } else {
+                output_produced++;
+            }
         }
     }
 
