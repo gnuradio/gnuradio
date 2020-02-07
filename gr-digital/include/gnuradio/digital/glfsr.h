@@ -12,7 +12,7 @@
 #define INCLUDED_DIGITAL_GLFSR_H
 
 #include <gnuradio/digital/api.h>
-#include <boost/cstdint.hpp>
+#include <cstdint>
 
 namespace gr {
 namespace digital {
@@ -27,22 +27,22 @@ namespace digital {
 class DIGITAL_API glfsr
 {
 private:
-    boost::uint32_t d_shift_register;
-    boost::uint32_t d_mask;
+    uint32_t d_shift_register;
+    uint32_t d_mask;
 
 public:
-    glfsr(boost::uint32_t mask, boost::uint32_t seed)
+    glfsr(uint32_t mask, uint32_t seed)
     {
         d_shift_register = seed;
         d_mask = mask;
     }
     ~glfsr();
 
-    static boost::uint32_t glfsr_mask(unsigned int degree);
+    static uint32_t glfsr_mask(unsigned int degree);
 
-    boost::uint8_t next_bit();
+    uint8_t next_bit();
 
-    boost::uint32_t mask() const { return d_mask; }
+    uint32_t mask() const { return d_mask; }
 };
 
 } /* namespace digital */
