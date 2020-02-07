@@ -282,3 +282,33 @@ BOOST_AUTO_TEST_CASE(t11_set_block_affinity)
     // least one thread core exists to use.
     BOOST_CHECK_EQUAL(set[0], ret[0]);
 }
+
+BOOST_AUTO_TEST_CASE(t12_release_shared_pointers)
+{
+    if (VERBOSE)
+        std::cout << "qa_top_block::t12()\n";
+
+    gr::top_block_sptr tb = gr::make_top_block("top");
+
+    gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
+    gr::block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
+    gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+
+    tb->connect(src, 0, head, 0);
+    tb->connect(head, 0, dst, 0);
+
+    tb->start();
+    tb->stop();
+    tb->wait();
+
+    BOOST_CHECK(src.use_count() > 1);
+    BOOST_CHECK(head.use_count() > 1);
+    BOOST_CHECK(dst.use_count() > 1);
+
+    tb->disconnect(src, 0, head, 0);
+    tb->disconnect(head, 0, dst, 0);
+
+    BOOST_CHECK_EQUAL(1, src.use_count());
+    BOOST_CHECK_EQUAL(1, head.use_count());
+    BOOST_CHECK_EQUAL(1, dst.use_count());
+}
