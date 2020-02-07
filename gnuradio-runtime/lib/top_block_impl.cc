@@ -122,6 +122,8 @@ void top_block_impl::stop()
     if (d_scheduler)
         d_scheduler->stop();
 
+    d_ffg.reset();
+
     d_state = IDLE;
 }
 
