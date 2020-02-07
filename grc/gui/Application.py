@@ -225,7 +225,10 @@ class Application(Gtk.Application):
         elif action == Actions.NOTHING_SELECT:
             flow_graph.unselect()
         elif action == Actions.SELECT_ALL:
-            flow_graph.select_all()
+            if main.btwin.search_entry.has_focus():
+                main.btwin.search_entry.select_region(0, -1)
+            else:
+                flow_graph.select_all()
         ##################################################
         # Enable/Disable
         ##################################################
