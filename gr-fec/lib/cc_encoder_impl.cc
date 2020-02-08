@@ -168,7 +168,7 @@ void cc_encoder_impl::generic_work(void* in_buffer, void* out_buffer)
     const unsigned char* in = (const unsigned char*)in_buffer;
     unsigned char* out = (unsigned char*)out_buffer;
 
-    unsigned my_state = d_start_state;
+    unsigned int my_state = d_start_state;
 
     if (d_mode == CC_TAILBITING) {
         for (unsigned int i = 0; i < d_k - 1; ++i) {
