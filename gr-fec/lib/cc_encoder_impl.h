@@ -34,7 +34,7 @@ private:
     unsigned int d_rate;
     unsigned int d_k;
     std::vector<int> d_polys;
-    int d_start_state;
+    unsigned int d_start_state;
     cc_mode_t d_mode;
     int d_padding;
     int d_output_size;
