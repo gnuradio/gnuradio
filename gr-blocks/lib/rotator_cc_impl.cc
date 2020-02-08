@@ -60,8 +60,8 @@ int rotator_cc_impl::work(int noutput_items,
     gr_complex* out = (gr_complex*)output_items[0];
 
 #if 1
-      for (int i=0; i<noutput_items; i++)
-      	out[i] = d_r.rotate(in[i]);
+    for (int i = 0; i < noutput_items; i++)
+        out[i] = d_r.rotate(in[i]);
 #else
     d_r.rotateN(out, in, noutput_items);
 #endif
