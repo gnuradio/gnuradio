@@ -20,4 +20,7 @@ if(${PACKAGE_FIND_VERSION_MAJOR} EQUAL ${MAJOR_VERSION})
       set(PACKAGE_VERSION_COMPATIBLE 1)  # compat for minor/patch version
     endif()
   endif()
+  if(${PACKAGE_FIND_VERSION_MINOR} EQUAL "8")
+    set(PACKAGE_VERSION_COMPATIBLE 1)  # declare compatibility with 3.8 for now
+  endif()
 endif()
