@@ -1,9 +1,0 @@
-id: rfnoc.io.radio
-label: Radio
-color: "#4CAF50"
-
-multiple_connections_per_input: false
-multiple_connections_per_output: true
-
-templates:
--   type: [rfnoc.io.radio, rfnoc.io.radio]
