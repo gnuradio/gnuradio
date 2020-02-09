@@ -35,14 +35,6 @@
 %ignore gr::uhd::usrp_sink::get_device;
 %ignore gr::uhd::usrp_source::get_device;
 
-#ifdef GR_HAVE_RFNOC
-%ignore gr::uhd::rfnoc_graph::create_rx_streamer;
-%ignore gr::uhd::rfnoc_graph::create_tx_streamer;
-%ignore gr::uhd::rfnoc_graph::get_block_ref;
-%ignore gr::uhd::rfnoc_block::get_block_ref;
-%ignore gr::uhd::rfnoc_block::make_block_ref;
-#endif
-
 ////////////////////////////////////////////////////////////////////////
 // block headers
 ////////////////////////////////////////////////////////////////////////
@@ -51,20 +43,6 @@
 #include <gnuradio/uhd/usrp_sink.h>
 #include <gnuradio/uhd/amsg_source.h>
 %}
-
-#ifdef GR_HAVE_RFNOC
-%{
-#include <gnuradio/uhd/rfnoc_block.h>
-#include <gnuradio/uhd/rfnoc_graph.h>
-#include <gnuradio/uhd/rfnoc_tx_streamer.h>
-#include <gnuradio/uhd/rfnoc_rx_streamer.h>
-#include <gnuradio/uhd/rfnoc_block_generic.h>
-#include <gnuradio/uhd/rfnoc_ddc.h>
-#include <gnuradio/uhd/rfnoc_duc.h>
-#include <gnuradio/uhd/rfnoc_rx_radio.h>
-#include <gnuradio/uhd/rfnoc_tx_radio.h>
-%}
-#endif
 
 %include "gnuradio/uhd/usrp_block.h"
 
@@ -208,47 +186,20 @@
 %include <gnuradio/uhd/usrp_sink.h>
 %include <gnuradio/uhd/amsg_source.h>
 
-#ifdef GR_HAVE_RFNOC
-%include <gnuradio/uhd/rfnoc_graph.h>
-%include <gnuradio/uhd/rfnoc_block.h>
-%include <gnuradio/uhd/rfnoc_tx_streamer.h>
-%include <gnuradio/uhd/rfnoc_rx_streamer.h>
-%include <gnuradio/uhd/rfnoc_block_generic.h>
-%include <gnuradio/uhd/rfnoc_ddc.h>
-%include <gnuradio/uhd/rfnoc_duc.h>
-%include <gnuradio/uhd/rfnoc_rx_radio.h>
-%include <gnuradio/uhd/rfnoc_tx_radio.h>
-#endif
-
 GR_SWIG_BLOCK_MAGIC2(uhd, usrp_source)
 GR_SWIG_BLOCK_MAGIC2(uhd, usrp_sink)
 GR_SWIG_BLOCK_MAGIC2(uhd, amsg_source)
-
-#ifdef GR_HAVE_RFNOC
-GR_SWIG_BLOCK_MAGIC2(uhd, rfnoc_graph)
-GR_SWIG_BLOCK_MAGIC2(uhd, rfnoc_tx_streamer);
-GR_SWIG_BLOCK_MAGIC2(uhd, rfnoc_rx_streamer);
-GR_SWIG_BLOCK_MAGIC2(uhd, rfnoc_block_generic);
-GR_SWIG_BLOCK_MAGIC2(uhd, rfnoc_ddc);
-GR_SWIG_BLOCK_MAGIC2(uhd, rfnoc_duc);
-GR_SWIG_BLOCK_MAGIC2(uhd, rfnoc_rx_radio);
-GR_SWIG_BLOCK_MAGIC2(uhd, rfnoc_tx_radio);
-#endif
-
 
 ////////////////////////////////////////////////////////////////////////
 // device discovery (no need to %include device.hpp)
 ////////////////////////////////////////////////////////////////////////
 %{
-static uhd::device_addrs_t find_devices_raw(
-    const uhd::device_addr_t &dev_addr = uhd::device_addr_t())
-{
+static uhd::device_addrs_t find_devices_raw(const uhd::device_addr_t &dev_addr = uhd::device_addr_t()){
     return uhd::device::find(dev_addr);
 }
 %}
 
-static uhd::device_addrs_t find_devices_raw(
-    const uhd::device_addr_t &dev_addr = uhd::device_addr_t());
+static uhd::device_addrs_t find_devices_raw(const uhd::device_addr_t &dev_addr = uhd::device_addr_t());
 
 ////////////////////////////////////////////////////////////////////////
 // helpful constants
