@@ -66,17 +66,17 @@ class QEngValidator(Qt.QValidator):
             val=eng_notation.str_to_num(s)
         except (IndexError, ValueError) as e:
             if re.match(self.re,s):
-                self.parent.setStyleSheet("background-color: yellow;");
+                self.parent.setStyleSheet("background-color: yellow;")
                 return (Qt.QValidator.Intermediate, s, pos)
             else:
                 return (Qt.QValidator.Invalid, s, pos)
 
         if self.max is not None and val > self.max:
-            self.parent.setStyleSheet("background-color: yellow;");
+            self.parent.setStyleSheet("background-color: yellow;")
         elif self.min is not None and val < self.min:
-            self.parent.setStyleSheet("background-color: yellow;");
+            self.parent.setStyleSheet("background-color: yellow;")
         else:
-            self.parent.setStyleSheet("background-color: white;");
+            self.parent.setStyleSheet("background-color: white;")
 
         return (Qt.QValidator.Acceptable, s, pos)
 
