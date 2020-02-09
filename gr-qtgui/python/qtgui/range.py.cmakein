@@ -59,8 +59,8 @@ class QEngValidator(Qt.QValidator):
         self.min = minimum
         self.max = maximum
         self.parent = parent
-
         self.re = r'^\d*(\.\d*)?((e\d*)|[EPTGMkmunpfa])?$'
+
     def validate(self, s, pos):
         try:
             val=eng_notation.str_to_num(s)
@@ -73,12 +73,11 @@ class QEngValidator(Qt.QValidator):
 
         if self.max is not None and val > self.max:
             self.parent.setStyleSheet("background-color: yellow;");
-
         elif self.min is not None and val < self.min:
             self.parent.setStyleSheet("background-color: yellow;");
         else:
-
             self.parent.setStyleSheet("background-color: white;");
+
         return (Qt.QValidator.Acceptable, s, pos)
 
     def fixup(self, s):
