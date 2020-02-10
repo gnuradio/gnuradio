@@ -42,7 +42,7 @@ install(
     README.dvbt2
     uhd_atsc_capture.grc
     uhd_atsc_tx.grc
-    uhd_rx_atsc.grc
+    uhd_atsc_rx.grc
     vv001-cr35.grc
     vv003-cr23.grc
     vv004-8kfft.grc
