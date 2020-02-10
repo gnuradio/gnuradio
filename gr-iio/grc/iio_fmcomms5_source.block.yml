@@ -202,6 +202,6 @@ templates:
     imports: from gnuradio import iio
     make: iio.fmcomms5_source_f32c(${uri}, ${frequency1}, ${frequency2}, ${samplerate}, ${bandwidth}, ${rx1_en}, ${rx2_en}, ${rx3_en}, ${rx4_en}, ${buffer_size}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${gain2}, ${manual_gain2}, ${gain3}, ${manual_gain3}, ${gain4}, ${manual_gain4}, ${rf_port_select}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
     callbacks:
-    - set_params(${frequency1}, ${frequency2}, ${samplerate}, ${bandwidth}, ${rx1_en}, ${rx2_en}, ${rx3_en}, ${rx4_en}, ${buffer_size}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${gain2}, ${manual_gain2}, ${gain3}, ${manual_gain3}, ${gain4}, ${manual_gain4}, ${rf_port_select}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
+    - set_params(${frequency1}, ${frequency2}, ${samplerate}, ${bandwidth}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${gain2}, ${manual_gain2}, ${gain3}, ${manual_gain3}, ${gain4}, ${manual_gain4}, ${rf_port_select}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
 
 file_format: 1

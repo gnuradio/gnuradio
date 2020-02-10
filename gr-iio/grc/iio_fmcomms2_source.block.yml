@@ -149,6 +149,6 @@ templates:
     imports: from gnuradio import iio
     make: iio.fmcomms2_source_f32c(${uri}, ${frequency}, ${samplerate}, ${bandwidth}, ${rx1_en}, ${rx2_en}, ${buffer_size}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${gain2}, ${manual_gain2}, ${rf_port_select}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
     callbacks:
-      - set_params(${frequency}, ${samplerate}, ${bandwidth}, ${rx1_en}, ${rx2_en}, ${buffer_size}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${gain2}, ${manual_gain2}, ${rf_port_select}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
+      - set_params(${frequency}, ${samplerate}, ${bandwidth}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${gain2}, ${manual_gain2}, ${rf_port_select}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
 
 file_format: 1
