@@ -64,7 +64,14 @@ dvbt2_pilotgenerator_cc_impl::dvbt2_pilotgenerator_cc_impl(
     unsigned int vlength)
     : gr::block("dvbt2_pilotgenerator_cc",
                 gr::io_signature::make(1, 1, sizeof(gr_complex)),
-                gr::io_signature::make(1, 1, sizeof(gr_complex) * vlength))
+                gr::io_signature::make(1, 1, sizeof(gr_complex) * vlength)),
+      fft_size(fftsize),
+      pilot_pattern(pilotpattern),
+      carrier_mode(carriermode),
+      papr_mode(paprmode),
+      equalization_enable(equalization),
+      ofdm_fft(vlength, false, 1),
+      ofdm_fft_size(vlength)
 {
     int step, ki;
     double x, sinc, sincrms = 0.0;
@@ -1071,10 +1078,6 @@ dvbt2_pilotgenerator_cc_impl::dvbt2_pilotgenerator_cc_impl(
     } else {
         active_items = (N_P2 * C_P2) + ((numdatasyms - 1) * C_DATA) + N_FC;
     }
-    fft_size = fftsize;
-    pilot_pattern = pilotpattern;
-    carrier_mode = carriermode;
-    papr_mode = paprmode;
     left_nulls = ((vlength - C_PS) / 2) + 1;
     right_nulls = (vlength - C_PS) / 2;
     if ((fftsize == FFTSIZE_32K || fftsize == FFTSIZE_32K_T2GI) && (miso == FALSE)) {
@@ -1129,14 +1132,6 @@ dvbt2_pilotgenerator_cc_impl::dvbt2_pilotgenerator_cc_impl(
     for (unsigned int i = 0; i < vlength; i++) {
         inverse_sinc[i] *= sincrms;
     }
-    equalization_enable = equalization;
-    ofdm_fft_size = vlength;
-    ofdm_fft = new (std::nothrow) fft::fft_complex(ofdm_fft_size, false, 1);
-    if (ofdm_fft == NULL) {
-        GR_LOG_FATAL(d_logger,
-                     "Pilot Generator and IFFT, cannot allocate memory for ofdm_fft.");
-        throw std::bad_alloc();
-    }
 
     num_symbols = numdatasyms + N_P2;
     data_carrier_map.resize(num_symbols);
@@ -1152,7 +1147,7 @@ dvbt2_pilotgenerator_cc_impl::dvbt2_pilotgenerator_cc_impl(
 /*
  * Our virtual destructor.
  */
-dvbt2_pilotgenerator_cc_impl::~dvbt2_pilotgenerator_cc_impl() { delete ofdm_fft; }
+dvbt2_pilotgenerator_cc_impl::~dvbt2_pilotgenerator_cc_impl() {}
 
 void dvbt2_pilotgenerator_cc_impl::forecast(int noutput_items,
                                             gr_vector_int& ninput_items_required)
@@ -2700,14 +2695,14 @@ int dvbt2_pilotgenerator_cc_impl::general_work(int noutput_items,
             if (equalization_enable == EQUALIZATION_ON) {
                 volk_32fc_x2_multiply_32fc(out, out, inverse_sinc, ofdm_fft_size);
             }
-            dst = ofdm_fft->get_inbuf();
+            dst = ofdm_fft.get_inbuf();
             memcpy(
                 &dst[ofdm_fft_size / 2], &out[0], sizeof(gr_complex) * ofdm_fft_size / 2);
             memcpy(
                 &dst[0], &out[ofdm_fft_size / 2], sizeof(gr_complex) * ofdm_fft_size / 2);
-            ofdm_fft->execute();
+            ofdm_fft.execute();
             volk_32fc_s32fc_multiply_32fc(
-                out, ofdm_fft->get_outbuf(), normalization, ofdm_fft_size);
+                out, ofdm_fft.get_outbuf(), normalization, ofdm_fft_size);
             out += ofdm_fft_size;
         }
     }

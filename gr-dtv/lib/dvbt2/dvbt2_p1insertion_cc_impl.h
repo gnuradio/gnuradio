@@ -20,11 +20,8 @@ namespace dtv {
 class dvbt2_p1insertion_cc_impl : public dvbt2_p1insertion_cc
 {
 private:
-    int fft_size;
-    int guard_interval;
     int frame_items;
     int insertion_items;
-    int N_P2;
     int p1_randomize[384];
     int modulation_sequence[384];
     int dbpsk_modulation_sequence[385];
@@ -48,8 +45,7 @@ private:
     int imag_positive_threshold_count;
     int imag_negative_threshold_count;
 
-    fft::fft_complex* p1_fft;
-    int p1_fft_size;
+    fft::fft_complex p1_fft;
 
     const static int p1_active_carriers[384];
     const static unsigned char s1_modulation_patterns[8][8];
