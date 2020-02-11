@@ -73,7 +73,7 @@ private:
     void init_prbs(void);
     void init_pilots(void);
 
-    fft::fft_complex* ofdm_fft;
+    fft::fft_complex ofdm_fft;
     int ofdm_fft_size;
 
     const static unsigned char pn_sequence_table[CHIPS / 8];

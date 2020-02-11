@@ -43,62 +43,78 @@ dvbt2_p1insertion_cc_impl::dvbt2_p1insertion_cc_impl(dvbt2_extended_carrier_t ca
                                                      float vclip)
     : gr::block("dvbt2_p1insertion_cc",
                 gr::io_signature::make(1, 1, sizeof(gr_complex)),
-                gr::io_signature::make(1, 1, sizeof(gr_complex)))
+                gr::io_signature::make(1, 1, sizeof(gr_complex))),
+      show_levels(showlevels),
+      real_positive(0.0),
+      real_negative(0.0),
+      imag_positive(0.0),
+      imag_negative(0.0),
+      real_positive_threshold(vclip),
+      real_negative_threshold(-vclip),
+      imag_positive_threshold(vclip),
+      imag_negative_threshold(-vclip),
+      real_positive_threshold_count(0),
+      real_negative_threshold_count(0),
+      imag_positive_threshold_count(0),
+      imag_negative_threshold_count(0),
+      p1_fft(1024, false, 1)
 {
     int s1, s2, index = 0;
+    int p1_fft_size = 1024;
+    int symbol_size, N_P2, guard_interval;
     const gr_complex* in = (const gr_complex*)p1_freq;
     gr_complex* out = (gr_complex*)p1_time;
     s1 = preamble;
     switch (fftsize) {
     case FFTSIZE_1K:
-        fft_size = 1024;
+        symbol_size = 1024;
         N_P2 = 16;
         break;
     case FFTSIZE_2K:
-        fft_size = 2048;
+        symbol_size = 2048;
         N_P2 = 8;
         break;
     case FFTSIZE_4K:
-        fft_size = 4096;
+        symbol_size = 4096;
         N_P2 = 4;
         break;
     case FFTSIZE_8K:
     case FFTSIZE_8K_T2GI:
-        fft_size = 8192;
+        symbol_size = 8192;
         N_P2 = 2;
         break;
     case FFTSIZE_16K:
     case FFTSIZE_16K_T2GI:
-        fft_size = 16384;
+        symbol_size = 16384;
         N_P2 = 1;
         break;
     case FFTSIZE_32K:
     case FFTSIZE_32K_T2GI:
-        fft_size = 32768;
+        symbol_size = 32768;
         N_P2 = 1;
         break;
     }
     switch (guardinterval) {
     case GI_1_32:
-        guard_interval = fft_size / 32;
+        guard_interval = symbol_size / 32;
         break;
     case GI_1_16:
-        guard_interval = fft_size / 16;
+        guard_interval = symbol_size / 16;
         break;
     case GI_1_8:
-        guard_interval = fft_size / 8;
+        guard_interval = symbol_size / 8;
         break;
     case GI_1_4:
-        guard_interval = fft_size / 4;
+        guard_interval = symbol_size / 4;
         break;
     case GI_1_128:
-        guard_interval = fft_size / 128;
+        guard_interval = symbol_size / 128;
         break;
     case GI_19_128:
-        guard_interval = (fft_size * 19) / 128;
+        guard_interval = (symbol_size * 19) / 128;
         break;
     case GI_19_256:
-        guard_interval = (fft_size * 19) / 256;
+        guard_interval = (symbol_size * 19) / 256;
         break;
     }
     init_p1_randomizer();
@@ -136,13 +152,11 @@ dvbt2_p1insertion_cc_impl::dvbt2_p1insertion_cc_impl(dvbt2_extended_carrier_t ca
     for (int i = 0; i < 384; i++) {
         p1_freq[p1_active_carriers[i] + 86] = float(dbpsk_modulation_sequence[i]);
     }
-    p1_fft_size = 1024;
-    p1_fft = new fft::fft_complex(p1_fft_size, false, 1);
-    gr_complex* dst = p1_fft->get_inbuf();
+    gr_complex* dst = p1_fft.get_inbuf();
     memcpy(&dst[p1_fft_size / 2], &in[0], sizeof(gr_complex) * p1_fft_size / 2);
     memcpy(&dst[0], &in[p1_fft_size / 2], sizeof(gr_complex) * p1_fft_size / 2);
-    p1_fft->execute();
-    memcpy(out, p1_fft->get_outbuf(), sizeof(gr_complex) * p1_fft_size);
+    p1_fft.execute();
+    memcpy(out, p1_fft.get_outbuf(), sizeof(gr_complex) * p1_fft_size);
     for (int i = 0; i < 1024; i++) {
         p1_time[i] /= std::sqrt(384.0);
     }
@@ -152,31 +166,18 @@ dvbt2_p1insertion_cc_impl::dvbt2_p1insertion_cc_impl(dvbt2_extended_carrier_t ca
     p1_freqshft[0] = p1_freq[1023];
     in = (const gr_complex*)p1_freqshft;
     out = (gr_complex*)p1_timeshft;
-    dst = p1_fft->get_inbuf();
+    dst = p1_fft.get_inbuf();
     memcpy(&dst[p1_fft_size / 2], &in[0], sizeof(gr_complex) * p1_fft_size / 2);
     memcpy(&dst[0], &in[p1_fft_size / 2], sizeof(gr_complex) * p1_fft_size / 2);
-    p1_fft->execute();
-    memcpy(out, p1_fft->get_outbuf(), sizeof(gr_complex) * p1_fft_size);
+    p1_fft.execute();
+    memcpy(out, p1_fft.get_outbuf(), sizeof(gr_complex) * p1_fft_size);
     for (int i = 0; i < 1024; i++) {
         p1_timeshft[i] /= std::sqrt(384.0);
     }
     frame_items =
-        ((numdatasyms + N_P2) * fft_size) + ((numdatasyms + N_P2) * guard_interval);
+        ((numdatasyms + N_P2) * symbol_size) + ((numdatasyms + N_P2) * guard_interval);
     insertion_items = frame_items + 2048;
     set_output_multiple(frame_items + 2048);
-    show_levels = showlevels;
-    real_positive = 0.0;
-    real_negative = 0.0;
-    imag_positive = 0.0;
-    imag_negative = 0.0;
-    real_positive_threshold = vclip;
-    real_negative_threshold = -vclip;
-    imag_positive_threshold = vclip;
-    imag_negative_threshold = -vclip;
-    real_positive_threshold_count = 0;
-    real_negative_threshold_count = 0;
-    imag_positive_threshold_count = 0;
-    imag_negative_threshold_count = 0;
 }
 
 void dvbt2_p1insertion_cc_impl::init_p1_randomizer(void)
@@ -198,7 +199,7 @@ void dvbt2_p1insertion_cc_impl::init_p1_randomizer(void)
 /*
  * Our virtual destructor.
  */
-dvbt2_p1insertion_cc_impl::~dvbt2_p1insertion_cc_impl() { delete p1_fft; }
+dvbt2_p1insertion_cc_impl::~dvbt2_p1insertion_cc_impl() {}
 
 void dvbt2_p1insertion_cc_impl::forecast(int noutput_items,
                                          gr_vector_int& ninput_items_required)
