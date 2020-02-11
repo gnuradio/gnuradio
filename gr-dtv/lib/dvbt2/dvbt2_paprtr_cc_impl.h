@@ -37,13 +37,11 @@ private:
     int fft_size;
     int left_nulls;
     int right_nulls;
-    int pilot_pattern;
     int carrier_mode;
     int papr_mode;
     int version_num;
     double v_clip;
     int num_iterations;
-    const int* papr_map;
     const int* p2_papr_map;
     const int* tr_papr_map;
     int p2_carrier_map[MAX_CARRIERS];
@@ -69,7 +67,7 @@ private:
     int shift;
     void init_pilots(int);
 
-    fft::fft_complex* papr_fft;
+    fft::fft_complex papr_fft;
     int papr_fft_size;
 
     const static int p2_papr_map_1k[10];
