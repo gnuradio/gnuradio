@@ -29,12 +29,8 @@
  * of consistency.
  */
 
-#define GR_M_PI 3.14159265358979323846            /* pi */
-#define GR_M_PI_4 0.78539816339744830961566084582 /* pi/4 */
-#define GR_M_TWOPI 6.28318530717958647692         /* 2*pi */
-#define GR_M_SQRT2 1.41421356237309504880         /* sqrt(2) */
-#define GR_M_ONE_OVER_2PI 0.15915494309189533577  /* 1 / (2*pi) */
-#define GR_M_MINUS_TWO_PI -6.28318530717958647692 /* - 2*pi */
+#define GR_M_PI 3.14159265358979323846    /* pi */
+#define GR_M_SQRT2 1.41421356237309504880 /* sqrt(2) */
 
 
 namespace gr {

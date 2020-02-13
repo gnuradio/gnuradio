@@ -575,7 +575,7 @@ constellation_psk::~constellation_psk() {}
 unsigned int constellation_psk::get_sector(const gr_complex* sample)
 {
     float phase = arg(*sample);
-    float width = GR_M_TWOPI / n_sectors;
+    float width = (2.0 * GR_M_PI) / n_sectors;
     int sector = floor(phase / width + 0.5);
     if (sector < 0)
         sector += n_sectors;
@@ -584,7 +584,7 @@ unsigned int constellation_psk::get_sector(const gr_complex* sample)
 
 unsigned int constellation_psk::calc_sector_value(unsigned int sector)
 {
-    float phase = sector * GR_M_TWOPI / n_sectors;
+    float phase = sector * (2.0 * GR_M_PI) / n_sectors;
     gr_complex sector_center = gr_complex(cos(phase), sin(phase));
     unsigned int closest_point = get_closest_point(&sector_center);
     return closest_point;

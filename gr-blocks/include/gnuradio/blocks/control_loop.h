@@ -94,10 +94,10 @@ public:
      */
     void phase_wrap()
     {
-        while (d_phase > GR_M_TWOPI)
-            d_phase -= GR_M_TWOPI;
-        while (d_phase < -GR_M_TWOPI)
-            d_phase += GR_M_TWOPI;
+        while (d_phase > (2 * GR_M_PI))
+            d_phase -= 2 * GR_M_PI;
+        while (d_phase < (-2 * GR_M_PI))
+            d_phase += 2 * GR_M_PI;
     }
 
     /*! \brief Keep the frequency between d_min_freq and d_max_freq.

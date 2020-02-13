@@ -40,9 +40,9 @@ pll_freqdet_cf_impl::~pll_freqdet_cf_impl() {}
 float pll_freqdet_cf_impl::mod_2pi(float in)
 {
     if (in > GR_M_PI)
-        return in - GR_M_TWOPI;
+        return in - (2.0 * GR_M_PI);
     else if (in < -GR_M_PI)
-        return in + GR_M_TWOPI;
+        return in + (2.0 * GR_M_PI);
     else
         return in;
 }

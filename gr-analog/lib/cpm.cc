@@ -36,7 +36,7 @@ std::vector<float> generate_cpm_lrc_taps(unsigned samples_per_sym, unsigned L)
 {
     std::vector<float> taps(samples_per_sym * L, 1.0 / L / samples_per_sym);
     for (unsigned i = 0; i < samples_per_sym * L; i++) {
-        taps[i] *= 1 - std::cos(GR_M_TWOPI * i / L / samples_per_sym);
+        taps[i] *= 1 - std::cos((2.0 * GR_M_PI) * i / L / samples_per_sym);
     }
 
     return taps;
@@ -79,7 +79,7 @@ generate_cpm_lsrc_taps(unsigned samples_per_sym, unsigned L, double beta)
             taps_d[i] *= M_PI_4;
         } else {
             double tmp = 4.0 * beta * k / Ls;
-            taps_d[i] *= std::cos(beta * GR_M_TWOPI * k / Ls) / (1 - tmp * tmp);
+            taps_d[i] *= std::cos(beta * (2.0 * GR_M_PI) * k / Ls) / (1 - tmp * tmp);
         }
         sum += taps_d[i];
     }

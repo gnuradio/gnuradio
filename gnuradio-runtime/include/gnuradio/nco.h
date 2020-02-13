@@ -49,10 +49,10 @@ public:
         phase += phase_inc * n;
         if (fabs(phase) > GR_M_PI) {
             while (phase > GR_M_PI)
-                phase -= GR_M_TWOPI;
+                phase -= 2 * GR_M_PI;
 
             while (phase < -GR_M_PI)
-                phase += GR_M_TWOPI;
+                phase += 2 * GR_M_PI;
         }
     }
 
