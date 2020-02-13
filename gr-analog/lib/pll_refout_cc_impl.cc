@@ -40,9 +40,9 @@ pll_refout_cc_impl::~pll_refout_cc_impl() {}
 float pll_refout_cc_impl::mod_2pi(float in)
 {
     if (in > GR_M_PI)
-        return in - GR_M_TWOPI;
+        return in - (2.0 * GR_M_PI);
     else if (in < -GR_M_PI)
-        return in + GR_M_TWOPI;
+        return in + (2.0 * GR_M_PI);
     else
         return in;
 }

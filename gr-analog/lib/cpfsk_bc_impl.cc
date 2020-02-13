@@ -51,10 +51,10 @@ int cpfsk_bc_impl::work(int noutput_items,
             else
                 d_phase -= d_freq;
 
-            while (d_phase > GR_M_TWOPI)
-                d_phase -= GR_M_TWOPI;
-            while (d_phase < -GR_M_TWOPI)
-                d_phase += GR_M_TWOPI;
+            while (d_phase > (2.0 * GR_M_PI))
+                d_phase -= (2.0 * GR_M_PI);
+            while (d_phase < -(2.0 * GR_M_PI))
+                d_phase += (2.0 * GR_M_PI);
 
             *out++ = gr_expj(d_phase) * d_ampl;
         }
