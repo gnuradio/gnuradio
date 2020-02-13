@@ -85,6 +85,9 @@
   - blocks_tagged_stream_multiply_length
   - blocks_tagged_stream_to_pdu
   - blocks_random_pdu
+  - blocks_var_to_msg
+  - blocks_msgpair_to_var
+  - blocks_msg_meta_to_pair
 - Misc:
   - blocks_throttle
   - blocks_vector_source_x

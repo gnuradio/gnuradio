@@ -13,6 +13,9 @@ GR_PYTHON_INSTALL(
     __init__.py
     parse_file_metadata.py
     stream_to_vector_decimator.py
+    msg_pair_to_var.py
+    msg_meta_to_pair.py
+    var_to_msg.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/blocks
 )
 
