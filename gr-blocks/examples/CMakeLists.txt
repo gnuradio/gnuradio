@@ -13,6 +13,8 @@ install(
   selector.grc
   test_stream_mux_tags.grc
   vector_source_with_tags.grc
+  msg_to_var.grc
+  var_to_msg.grc
   DESTINATION ${GR_PKG_DATA_DIR}/examples/blocks
 )
 

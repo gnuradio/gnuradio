@@ -24,6 +24,9 @@ except ImportError:
     from .blocks_swig import *
 
 from .stream_to_vector_decimator import *
+from .msg_meta_to_pair import meta_to_pair
+from .msg_pair_to_var import msg_pair_to_var
+from .var_to_msg import var_to_msg_pair
 
 #alias old add_vXX and multiply_vXX
 add_vcc = add_cc
