@@ -28,7 +28,7 @@
  * compile. GR_M_PI actually works with C++ but is defined here for the sake
  * of consistency.
  */
-#define GR_M_LOG2E 1.4426950408889634074          /* log_2 e */
+
 #define GR_M_PI 3.14159265358979323846            /* pi */
 #define GR_M_PI_4 0.78539816339744830961566084582 /* pi/4 */
 #define GR_M_TWOPI 6.28318530717958647692         /* 2*pi */

@@ -35,9 +35,6 @@
 /* Normal function integrated from -Inf to x. Range: 0-1 */
 #define normal(x) (0.5 + 0.5 * erf((x) / GR_M_SQRT2))
 
-/* Logarithm base 2 */
-#define gr_log2(x) (log(x) * GR_M_LOG2E)
-
 namespace gr {
 namespace fec {
 
@@ -69,8 +66,8 @@ void gen_met(int mettab[2][256], /* Metric table, [sent sym][rx symbol] */
 
     /* Prob of this value occurring for a 0-bit */ /* P(s|0) */
     p0 = normal(((0 - OFFSET + 0.5) / amp + 1) / noise);
-    metrics[0][0] = gr_log2(2 * p0 / (p1 + p0)) - bias;
-    metrics[1][0] = gr_log2(2 * p1 / (p1 + p0)) - bias;
+    metrics[0][0] = ::log2(2 * p0 / (p1 + p0)) - bias;
+    metrics[1][0] = ::log2(2 * p1 / (p1 + p0)) - bias;
 
     for (s = 1; s < 255; s++) {
         /* P(s|1), prob of receiving s given 1 transmitted */
@@ -84,8 +81,8 @@ void gen_met(int mettab[2][256], /* Metric table, [sent sym][rx symbol] */
 #ifdef notdef
         printf("P(%d|1) = %lg, P(%d|0) = %lg\n", s, p1, s, p0);
 #endif
-        metrics[0][s] = gr_log2(2 * p0 / (p1 + p0)) - bias;
-        metrics[1][s] = gr_log2(2 * p1 / (p1 + p0)) - bias;
+        metrics[0][s] = ::log2(2 * p0 / (p1 + p0)) - bias;
+        metrics[1][s] = ::log2(2 * p1 / (p1 + p0)) - bias;
     }
     /* 255 is also a special value */
     /* P(s|1) */
@@ -93,8 +90,8 @@ void gen_met(int mettab[2][256], /* Metric table, [sent sym][rx symbol] */
     /* P(s|0) */
     p0 = 1 - normal(((255 - OFFSET - 0.5) / amp + 1) / noise);
 
-    metrics[0][255] = gr_log2(2 * p0 / (p1 + p0)) - bias;
-    metrics[1][255] = gr_log2(2 * p1 / (p1 + p0)) - bias;
+    metrics[0][255] = ::log2(2 * p0 / (p1 + p0)) - bias;
+    metrics[1][255] = ::log2(2 * p1 / (p1 + p0)) - bias;
 #ifdef notdef
     /* The probability of a raw symbol error is the probability
      * that a 1-bit would be received as a sample with value
