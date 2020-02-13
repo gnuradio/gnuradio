@@ -128,7 +128,7 @@ int ofdm_frame_equalizer_vcvc_impl::work(int noutput_items,
     gr_complex phase_correction;
     for (int i = 0; i < frame_len; i++) {
         phase_correction =
-            gr_expj(-GR_M_TWOPI * carrier_offset * d_cp_len / d_fft_len * (i + 1));
+            gr_expj(-(2.0 * GR_M_PI) * carrier_offset * d_cp_len / d_fft_len * (i + 1));
         for (int k = 0; k < d_fft_len; k++) {
             out[i * d_fft_len + k] *= phase_correction;
         }
@@ -141,7 +141,7 @@ int ofdm_frame_equalizer_vcvc_impl::work(int noutput_items,
 
     // Update the channel state regarding the frequency offset
     phase_correction =
-        gr_expj(GR_M_TWOPI * carrier_offset * d_cp_len / d_fft_len * frame_len);
+        gr_expj((2.0 * GR_M_PI) * carrier_offset * d_cp_len / d_fft_len * frame_len);
     for (int k = 0; k < d_fft_len; k++) {
         d_channel_state[k] *= phase_correction;
     }
