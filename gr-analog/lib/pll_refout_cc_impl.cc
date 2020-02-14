@@ -14,7 +14,6 @@
 
 #include "pll_refout_cc_impl.h"
 #include <gnuradio/io_signature.h>
-#include <gnuradio/math.h>
 #include <gnuradio/sincos.h>
 #include <math.h>
 
@@ -36,23 +35,6 @@ pll_refout_cc_impl::pll_refout_cc_impl(float loop_bw, float max_freq, float min_
 }
 
 pll_refout_cc_impl::~pll_refout_cc_impl() {}
-
-float pll_refout_cc_impl::mod_2pi(float in)
-{
-    if (in > GR_M_PI)
-        return in - (2.0 * GR_M_PI);
-    else if (in < -GR_M_PI)
-        return in + (2.0 * GR_M_PI);
-    else
-        return in;
-}
-
-float pll_refout_cc_impl::phase_detector(gr_complex sample, float ref_phase)
-{
-    float sample_phase;
-    sample_phase = gr::fast_atan2f(sample.imag(), sample.real());
-    return mod_2pi(sample_phase - ref_phase);
-}
 
 int pll_refout_cc_impl::work(int noutput_items,
                              gr_vector_const_void_star& input_items,

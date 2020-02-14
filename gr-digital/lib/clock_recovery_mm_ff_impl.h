@@ -57,6 +57,8 @@ private:
     filter::mmse_fir_interpolator_ff* d_interp;
 
     bool d_verbose;
+
+    float slice(float x) { return x < 0 ? -1.0F : 1.0F; }
 };
 
 } /* namespace digital */

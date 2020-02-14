@@ -360,7 +360,32 @@ public:
     /*! \brief Advance the loop based on the current gain
      *  settings and the input error signal.
      */
-    void advance_loop(float error);
+    void advance_loop(float error)
+    {
+        // So the loop can be reverted one step, if needed.
+        d_prev_avg_period = d_avg_period;
+        d_prev_inst_period = d_inst_period;
+        d_prev_phase = d_phase;
+
+        // Integral arm of PI filter
+        d_avg_period = d_avg_period + d_beta * error;
+        // Limit the integral arm output here, as a large negative
+        // error input can lead to a negative d_avg_period, which
+        // will cause an infitine loop in the phase wrap method.
+        period_limit();
+
+        // Proportional arm of PI filter and final sum of PI filter arms
+        d_inst_period = d_avg_period + d_alpha * error;
+        // Limit the filter output here, for the errant case of a large
+        // negative error input, that can lead to a negative d_inst_period,
+        // which results in an incorrect phase increment, as it is assumed
+        // to be moving forward to the next symbol.
+        if (d_inst_period <= 0.f)
+            d_inst_period = d_avg_period;
+
+        // Compute the new, unwrapped clock phase
+        d_phase = d_phase + d_inst_period;
+    }
 
     /*! \brief Undo a single, prior advance_loop() call.
      *
@@ -373,7 +398,12 @@ public:
      * perform correctly given the constraints of GNURadio's streaming
      * engine, interpolation filtering, and tag propagation.
      */
-    void revert_loop();
+    void revert_loop()
+    {
+        d_avg_period = d_prev_avg_period;
+        d_inst_period = d_prev_inst_period;
+        d_phase = d_prev_phase;
+    }
 
     /*! \brief
      * Keep the clock phase estimate, tau, between -T_avg/2 and T_avg/2.
@@ -391,7 +421,17 @@ public:
      * clock, and this class doesn't actually use the phase at all,
      * so calling this is optional.
      */
-    void phase_wrap();
+    void phase_wrap()
+    {
+        float period = d_avg_period; // One could argue d_inst_period instead
+        float limit = period / 2.0f;
+
+        while (d_phase > limit)
+            d_phase -= period;
+
+        while (d_phase <= -limit)
+            d_phase += period;
+    }
 
     /*! \brief
      * Keep the estimated average clock period, T_avg, between T_avg_min
@@ -409,7 +449,13 @@ public:
      * It is set as a separate virtual method in case another way is desired
      * as this is fairly heavy-handed.
      */
-    virtual void period_limit();
+    virtual void period_limit()
+    {
+        if (d_avg_period > d_max_avg_period)
+            d_avg_period = d_max_avg_period;
+        else if (d_avg_period < d_min_avg_period)
+            d_avg_period = d_min_avg_period;
+    }
 
     /*******************************************************************
      * SET FUNCTIONS

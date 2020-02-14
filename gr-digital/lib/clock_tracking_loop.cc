@@ -101,60 +101,6 @@ void clock_tracking_loop::update_gains()
     set_beta(beta);
 }
 
-void clock_tracking_loop::advance_loop(float error)
-{
-    // So the loop can be reverted one step, if needed.
-    d_prev_avg_period = d_avg_period;
-    d_prev_inst_period = d_inst_period;
-    d_prev_phase = d_phase;
-
-    // Integral arm of PI filter
-    d_avg_period = d_avg_period + d_beta * error;
-    // Limit the integral arm output here, as a large negative
-    // error input can lead to a negative d_avg_period, which
-    // will cause an infitine loop in the phase wrap method.
-    period_limit();
-
-    // Proportional arm of PI filter and final sum of PI filter arms
-    d_inst_period = d_avg_period + d_alpha * error;
-    // Limit the filter output here, for the errant case of a large
-    // negative error input, that can lead to a negative d_inst_period,
-    // which results in an incorrect phase increment, as it is assumed
-    // to be moving forward to the next symbol.
-    if (d_inst_period <= 0.f)
-        d_inst_period = d_avg_period;
-
-    // Compute the new, unwrapped clock phase
-    d_phase = d_phase + d_inst_period;
-}
-
-void clock_tracking_loop::revert_loop()
-{
-    d_avg_period = d_prev_avg_period;
-    d_inst_period = d_prev_inst_period;
-    d_phase = d_prev_phase;
-}
-
-void clock_tracking_loop::phase_wrap()
-{
-    float period = d_avg_period; // One could argue d_inst_period instead
-    float limit = period / 2.0f;
-
-    while (d_phase > limit)
-        d_phase -= period;
-
-    while (d_phase <= -limit)
-        d_phase += period;
-}
-
-void clock_tracking_loop::period_limit()
-{
-    if (d_avg_period > d_max_avg_period)
-        d_avg_period = d_max_avg_period;
-    else if (d_avg_period < d_min_avg_period)
-        d_avg_period = d_min_avg_period;
-}
-
 /*******************************************************************
  * SET FUNCTIONS
  *******************************************************************/
