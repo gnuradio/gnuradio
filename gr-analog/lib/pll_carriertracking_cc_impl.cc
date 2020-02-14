@@ -14,7 +14,6 @@
 
 #include "pll_carriertracking_cc_impl.h"
 #include <gnuradio/io_signature.h>
-#include <gnuradio/math.h>
 #include <gnuradio/sincos.h>
 
 #include <cmath>
@@ -44,29 +43,6 @@ pll_carriertracking_cc_impl::pll_carriertracking_cc_impl(float loop_bw,
 
 pll_carriertracking_cc_impl::~pll_carriertracking_cc_impl() {}
 
-float pll_carriertracking_cc_impl::mod_2pi(float in)
-{
-    if (in > GR_M_PI)
-        return in - (2.0 * GR_M_PI);
-    else if (in < -GR_M_PI)
-        return in + (2.0 * GR_M_PI);
-    else
-        return in;
-}
-
-float pll_carriertracking_cc_impl::phase_detector(gr_complex sample, float ref_phase)
-{
-    float sample_phase;
-    //  sample_phase = atan2(sample.imag(),sample.real());
-    sample_phase = gr::fast_atan2f(sample.imag(), sample.real());
-    return mod_2pi(sample_phase - ref_phase);
-}
-
-bool pll_carriertracking_cc_impl::lock_detector(void)
-{
-    return (fabsf(d_locksig) > d_lock_threshold);
-}
-
 bool pll_carriertracking_cc_impl::squelch_enable(bool set_squelch)
 {
     return d_squelch_enable = set_squelch;
@@ -89,7 +65,8 @@ int pll_carriertracking_cc_impl::work(int noutput_items,
 
     for (int i = 0; i < noutput_items; i++) {
         gr::sincosf(d_phase, &t_imag, &t_real);
-        optr[i] = iptr[i] * gr_complex(t_real, -t_imag);
+
+        fast_cc_multiply(optr[i], iptr[i], gr_complex(t_real, -t_imag));
 
         error = phase_detector(iptr[i], d_phase);
 

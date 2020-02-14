@@ -37,23 +37,6 @@ pll_freqdet_cf_impl::pll_freqdet_cf_impl(float loop_bw, float max_freq, float mi
 
 pll_freqdet_cf_impl::~pll_freqdet_cf_impl() {}
 
-float pll_freqdet_cf_impl::mod_2pi(float in)
-{
-    if (in > GR_M_PI)
-        return in - (2.0 * GR_M_PI);
-    else if (in < -GR_M_PI)
-        return in + (2.0 * GR_M_PI);
-    else
-        return in;
-}
-
-float pll_freqdet_cf_impl::phase_detector(gr_complex sample, float ref_phase)
-{
-    float sample_phase;
-    sample_phase = gr::fast_atan2f(sample.imag(), sample.real());
-    return mod_2pi(sample_phase - ref_phase);
-}
-
 int pll_freqdet_cf_impl::work(int noutput_items,
                               gr_vector_const_void_star& input_items,
                               gr_vector_void_star& output_items)

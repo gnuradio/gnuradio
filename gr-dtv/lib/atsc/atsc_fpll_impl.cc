@@ -55,12 +55,7 @@ int atsc_fpll_impl::work(int noutput_items,
         d_nco.sincos(&a_sin, &a_cos); // compute cos and sin
 
         // Mix out carrier and output I-only signal
-
-        // PR Merge Note: Once the Costas Optimization PR #3076 merges, this
-        // line below helps with performance when cx_limited_range is not available
-        // such as on Macs and Windows.  Once the merge happens I'll push an update.
-        // gr::fast_cc_multiply(result, in[k], gr_complex(a_sin, a_cos));
-        result = in[k] * gr_complex(a_sin, a_cos);
+        gr::fast_cc_multiply(result, in[k], gr_complex(a_sin, a_cos));
 
         out[k] = result.real();
 
