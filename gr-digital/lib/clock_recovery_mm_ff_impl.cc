@@ -60,8 +60,6 @@ void clock_recovery_mm_ff_impl::forecast(int noutput_items,
             (int)ceil((noutput_items * d_omega) + d_interp->ntaps());
 }
 
-static inline float slice(float x) { return x < 0 ? -1.0F : 1.0F; }
-
 void clock_recovery_mm_ff_impl::set_omega(float omega)
 {
     d_omega = omega;

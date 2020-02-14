@@ -74,27 +74,6 @@ void clock_recovery_mm_cc_impl::forecast(int noutput_items,
             (int)ceil((noutput_items * d_omega) + d_interp->ntaps()) + FUDGE;
 }
 
-gr_complex clock_recovery_mm_cc_impl::slicer_0deg(gr_complex sample)
-{
-    float real = 0, imag = 0;
-
-    if (sample.real() > 0)
-        real = 1;
-    if (sample.imag() > 0)
-        imag = 1;
-    return gr_complex(real, imag);
-}
-
-gr_complex clock_recovery_mm_cc_impl::slicer_45deg(gr_complex sample)
-{
-    float real = -1, imag = -1;
-    if (sample.real() > 0)
-        real = 1;
-    if (sample.imag() > 0)
-        imag = 1;
-    return gr_complex(real, imag);
-}
-
 void clock_recovery_mm_cc_impl::set_omega(float omega)
 {
     d_omega = omega;
@@ -135,8 +114,8 @@ int clock_recovery_mm_cc_impl::general_work(int noutput_items,
             d_c_1T = d_c_0T;
             d_c_0T = slicer_0deg(d_p_0T);
 
-            x = (d_c_0T - d_c_2T) * conj(d_p_1T);
-            y = (d_p_0T - d_p_2T) * conj(d_c_1T);
+            fast_cc_multiply(x, d_c_0T - d_c_2T, conj(d_p_1T));
+            fast_cc_multiply(y, d_p_0T - d_p_2T, conj(d_c_1T));
             u = y - x;
             mm_val = u.real();
             out[oo++] = d_p_0T;
@@ -169,8 +148,8 @@ int clock_recovery_mm_cc_impl::general_work(int noutput_items,
             d_c_1T = d_c_0T;
             d_c_0T = slicer_0deg(d_p_0T);
 
-            x = (d_c_0T - d_c_2T) * conj(d_p_1T);
-            y = (d_p_0T - d_p_2T) * conj(d_c_1T);
+            fast_cc_multiply(x, d_c_0T - d_c_2T, conj(d_p_1T));
+            fast_cc_multiply(y, d_p_0T - d_p_2T, conj(d_c_1T));
             u = y - x;
             mm_val = u.real();
             out[oo++] = d_p_0T;

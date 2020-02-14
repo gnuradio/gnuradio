@@ -61,8 +61,26 @@ private:
     gr_complex d_p_2T, d_p_1T, d_p_0T;
     gr_complex d_c_2T, d_c_1T, d_c_0T;
 
-    gr_complex slicer_0deg(gr_complex sample);
-    gr_complex slicer_45deg(gr_complex sample);
+    gr_complex slicer_0deg(gr_complex sample)
+    {
+        float real = 0.0f, imag = 0.0f;
+
+        if (sample.real() > 0.0f)
+            real = 1.0f;
+        if (sample.imag() > 0.0f)
+            imag = 1.0f;
+        return gr_complex(real, imag);
+    }
+
+    gr_complex slicer_45deg(gr_complex sample)
+    {
+        float real = -1.0f, imag = -1.0f;
+        if (sample.real() > 0.0f)
+            real = 1.0f;
+        if (sample.imag() > 0.0f)
+            imag = 1.0f;
+        return gr_complex(real, imag);
+    }
 };
 
 } /* namespace digital */
