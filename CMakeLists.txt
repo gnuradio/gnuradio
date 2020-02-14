@@ -436,6 +436,12 @@ if(NOT Volk_FOUND)
 
     SET(VOLK_INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_PREFIX}/lib)
     SET(VOLK_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include)
+
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/volk/.lastrelease)
+        file(READ ${CMAKE_CURRENT_SOURCE_DIR}/volk/.lastrelease Volk_VERSION OFFSET 1)
+    else()
+        set(Volk_VERSION "2.0.0")
+    endif()
 else()
     message(STATUS "  An external VOLK has been found and will be used for build.")
     SET(ENABLE_VOLK TRUE)
@@ -445,6 +451,11 @@ else()
 endif(NOT Volk_FOUND)
 
 message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
+
+if (Volk_VERSION VERSION_EQUAL "2.0.0")
+  message("  Version 2.0.0 of VOLK was detected. Applying workaround for broken rotator kernel.")
+  add_definitions(-DAPPLY_BROKEN_ROTATOR_WORKAROUND)
+endif()
 
 # Handle logging
 find_package(LOG4CPP REQUIRED)
