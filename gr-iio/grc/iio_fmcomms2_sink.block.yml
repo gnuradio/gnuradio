@@ -124,6 +124,6 @@ templates:
     imports: from gnuradio import iio
     make: iio.fmcomms2_sink_f32c(${uri}, ${frequency}, ${samplerate}, ${bandwidth}, ${tx1_en}, ${tx2_en}, ${buffer_size}, ${cyclic}, ${rf_port_select}, ${attenuation1}, ${attenuation2}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
     callbacks:
-      - set_params(${frequency}, ${samplerate}, ${bandwidth}, ${tx1_en}, ${tx2_en}, ${buffer_size}, ${cyclic}, ${rf_port_select}, ${attenuation1}, ${attenuation2}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
+      - set_params(${frequency}, ${samplerate}, ${bandwidth}, ${rf_port_select}, ${attenuation1}, ${attenuation2}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
 
 file_format: 1
