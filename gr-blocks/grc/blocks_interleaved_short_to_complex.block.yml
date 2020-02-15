@@ -3,6 +3,10 @@ label: IShort To Complex
 flags: [ python, cpp ]
 
 parameters:
+-   id: scale_factor
+    label: Scale Factor
+    dtype: float
+    default: '1.0'
 -   id: vector_input
     label: Vector Input
     dtype: enum
@@ -30,9 +34,10 @@ outputs:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.interleaved_short_to_complex(${vector_input}, ${swap})
+    make: blocks.interleaved_short_to_complex(${vector_input}, ${swap},${scale_factor})
     callbacks:
     - set_swap(${swap})
+    - set_scale_factor(${scale_factor})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/interleaved_short_to_complex.h>']
@@ -40,8 +45,18 @@ cpp_templates:
     make: 'this->${id} = blocks::interleaved_short_to_complex::make(${vector_input}, ${swap});'
     callbacks:
     - set_swap(${swap})
+    - set_scale_factor(${scale_factor})
     translations:
         'True': 'true'
         'False': 'false'
+
+documentation: |-
+    This block converts interleaved 12/16-bit IQ samples to a float complex data 
+    type. The default scale factor is 1.0 for backward compatibility, however if 
+    the inputs are signed voltage style, some attention needs to be
+    paid to the scale factor to get the correct scaling.  If the input is
+    12-bit represented in a 16-bit number (-2047 to 2047), the scale factor
+    should be 2047.0.  If the input is a full 16-bit sample (-32767 to 32767) 
+    the scale factor should be set to 32767.0 (SHRT_MAX).  
 
 file_format: 1

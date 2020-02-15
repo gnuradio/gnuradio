@@ -19,12 +19,18 @@ namespace blocks {
 class BLOCKS_API interleaved_short_to_complex_impl : public interleaved_short_to_complex
 {
 private:
+    float d_scalar;
+    bool d_vector;
     bool d_swap;
 
 public:
-    interleaved_short_to_complex_impl(bool vector_input = false, bool swap = false);
+    interleaved_short_to_complex_impl(bool vector_input = false,
+                                      bool swap = false,
+                                      float scale_factor = 1.0f);
 
     void set_swap(bool swap);
+
+    virtual void set_scale_factor(float new_value) { d_scalar = new_value; };
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

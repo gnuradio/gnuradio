@@ -30,9 +30,12 @@ public:
     /*!
      * Build an interleaved short to complex block.
      */
-    static sptr make(bool vector_input = false, bool swap = false);
+    static sptr
+    make(bool vector_input = false, bool swap = false, float scale_factor = 1.0f);
 
     virtual void set_swap(bool swap) = 0;
+
+    virtual void set_scale_factor(float new_value) = 0;
 };
 
 } /* namespace blocks */
