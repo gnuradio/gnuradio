@@ -98,7 +98,6 @@ add_library(gnuradio-blocks
     head_impl.cc
     int_to_float_impl.cc
     interleave_impl.cc
-    interleaved_short_array_to_complex.cc
     interleaved_short_to_complex_impl.cc
     interleaved_char_to_complex_impl.cc
     keep_m_in_n_impl.cc

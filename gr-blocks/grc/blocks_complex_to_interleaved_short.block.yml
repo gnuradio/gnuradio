@@ -3,6 +3,10 @@ label: Complex To IShort
 flags: [ python, cpp ]
 
 parameters:
+-   id: scale_factor
+    label: Scale Factor
+    dtype: float
+    default: '1.0'
 -   id: vector_output
     label: Vector Output
     dtype: enum
@@ -23,14 +27,32 @@ outputs:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.complex_to_interleaved_short(${vector_output})
+    make: blocks.complex_to_interleaved_short(${vector_output},${scale_factor})
+    callbacks:
+    - set_scale_factor(${scale_factor})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/complex_to_interleaved_short.h>']
     declarations: 'blocks::complex_to_interleaved_short::sptr ${id};'
     make: 'this->${id} = blocks::complex_to_interleaved_short::make(${vector_output});'
+    callbacks:
+    - set_scale_factor(${scale_factor})
     translations:
         'True': 'true'
         'False': 'false'
+
+documentation: |-
+    This block converts a complex sample to interleaved IQ 16-bit values.  
+    The default scale factor is 1.0 for backward compatibility, however if 
+    the outputs should be signed voltage style, some care needs to be taken 
+    with the scale factor.  For a 12-bit output (-2047 to 2047), the 
+    scale factor should be 2047.0. For a full 16-bit output, the 
+    scale factor should be 32767.0.
+    
+    Also note that this block can inherently cause a loss of precision as it
+    maps the scaled inputs to integer outputs using an lrintf function.  So
+    if you overlay a complex-to-ishort into a ishort-to-complex and overlay it
+    on the original signal, you can notice variation due to the integer
+    rounding.
 
 file_format: 1

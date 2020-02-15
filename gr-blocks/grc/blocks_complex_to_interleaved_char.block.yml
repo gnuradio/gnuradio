@@ -3,6 +3,10 @@ label: Complex To IChar
 flags: [ python, cpp ]
 
 parameters:
+-   id: scale_factor
+    label: Scale Factor
+    dtype: float
+    default: '1.0'
 -   id: vector_output
     label: Vector Output
     dtype: enum
@@ -23,7 +27,7 @@ outputs:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.complex_to_interleaved_char(${vector_output})
+    make: blocks.complex_to_interleaved_char(${vector_output}, ${scale_factor})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/complex_to_interleaved_char.h>']
@@ -33,4 +37,16 @@ cpp_templates:
         'True': 'true'
         'False': 'false'
 
+documentation: |-
+    This block converts a complex sample to interleaved IQ bytes.  
+    The default scale factor is 1.0 for backward compatibility, however if 
+    the outputs should be signed voltage style bytes (-127 to 127) the scale factor
+    should be set to 127.0 (SCHAR_MAX).  
+    
+    Also note that this block can inherently cause a loss of precision as it
+    maps the scaled inputs to integer outputs using an lrintf function.  So
+    if you overlay a complex-to-ichar into a ichar-to-complex and overlay it
+    on the original signal, you can notice variation due to the integer
+    rounding.
+    
 file_format: 1
