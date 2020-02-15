@@ -8,19 +8,64 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
 ## UNRELESEASED
 
-### Changed
+## [3.7.14.0] - 2020-02-15
+
+### Fixed
 #### Project Scope
-- COMPATIBILITY WARNING: Replaced non-threadsafe (s)rand with our own xoroshiro-based PRNG 
+- replace remaining calls to thread-unsafe `rand` with internal random generators
+
+#### gnuradio-runtime
+- don't give up on looking for configuration files if system directory doesn't exist
+- `get_tags_in_range` on delay blocks
+- premature tag pruning
+
+#### gr-blocks
+- 8 bit WAV file reading
+- `matrix_multiply` no longer wrongly converts complex float to double
+- Boost 1.70 compat
 
 #### gr-digital
-- COMPATIBILITY: Change of random OFDM pilots
+- UHD packet example: frame bit fixes
+- `additive_scrambler` count-based reset
+- `map_bb` buffer overflow, thread safety
 
-#### gr-trellis
-- COMPATIBILITY: random interleaver: PRNG change -> different interleaver
+#### gr-dtv
+- falsely failing assert
+
+#### gr-fec
+- `cc_encoder`: constraint length > 8
+
+#### grc
+- Ctrl-F unselects blocks (so that "d" doesn't disable them)
 
 ### Added
 #### gnuradio-runtime
 - XOROSHIRO128+-based PRNG
+
+#### gr-digital
+- `additive_scrambler` test
+
+#### gr-uhd
+- future UHD compat layer
+
+### Changed
+#### Project Scope
+- COMPATIBILITY WARNING: Replaced non-threadsafe (s)rand with our own xoroshiro-based PRNG 
+- Whole tree code reformatting
+
+#### gr-blocks
+- replaced reconfiguring selector with 3.8 backport
+
+#### gr-channels
+- removed unnecessary delay in selective fading model
+
+#### gr-digital
+- COMPATIBILITY: Change of random OFDM pilots
+- backport of 3.8 constellation changes
+
+#### gr-trellis
+- COMPATIBILITY: random interleaver: PRNG change -> different interleaver
+
 
 ## [3.7.13.5] - 2019-04-20
 
