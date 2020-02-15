@@ -30,7 +30,9 @@ public:
     /*!
      * Build an interleaved char to complex block.
      */
-    static sptr make(bool vector_input = false);
+    static sptr make(bool vector_input = false, float scale_factor = 1.0f);
+
+    virtual void set_scale_factor(float new_value) = 0;
 };
 
 } /* namespace blocks */

@@ -39,7 +39,9 @@ public:
     /*!
      * Build a complex to interleaved shorts block.
      */
-    static sptr make(bool vector = false);
+    static sptr make(bool vector = false, float scale_factor = 1.0f);
+
+    virtual void set_scale_factor(float new_value) = 0;
 };
 
 } /* namespace blocks */

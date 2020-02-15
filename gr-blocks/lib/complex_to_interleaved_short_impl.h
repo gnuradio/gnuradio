@@ -19,10 +19,13 @@ namespace blocks {
 class BLOCKS_API complex_to_interleaved_short_impl : public complex_to_interleaved_short
 {
 private:
+    float d_scalar;
     bool d_vector;
 
 public:
-    complex_to_interleaved_short_impl(bool vector);
+    complex_to_interleaved_short_impl(bool vector, float scale_factor);
+
+    virtual void set_scale_factor(float new_value) { d_scalar = new_value; };
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
