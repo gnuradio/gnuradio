@@ -29,10 +29,10 @@ gpg=$(which gpg2 2> /dev/null || which gpg)
 gz=$(which pigz 2> /dev/null || which gzip)
 
 echo "Figuring out versions"
-version_major=$(grep -i 'set(version_major' CMakeLists.txt |sed 's/.*VERSION_MAJOR[[:space:]]*\([[:digit:]]*\))/\1/i')
-version_api=$(grep -i 'set(version_api' CMakeLists.txt     |sed 's/.*VERSION_API[[:space:]]*\([[:digit:]]*\))/\1/i')
-version_abi=$(grep -i 'set(version_abi' CMakeLists.txt     |sed 's/.*VERSION_ABI[[:space:]]*\([[:digit:]]*\))/\1/i')
-version_patch=$(grep -i 'set(version_patch' CMakeLists.txt |sed 's/.*VERSION_PATCH[[:space:]]*\([[:digit:]]*\))/\1/i')
+version_major=$(grep -i 'set(version_info_major' CMakeLists.txt |sed 's/.*VERSION_INFO_MAJOR_VERSION[[:space:]]*\([[:digit:]]*\))/\1/i')
+version_api=$(grep -i 'set(version_info_api' CMakeLists.txt     |sed 's/.*VERSION_INFO_API_COMPAT[[:space:]]*\([[:digit:]]*\))/\1/i')
+version_abi=$(grep -i 'set(version_info_minor' CMakeLists.txt     |sed 's/.*VERSION_INFO_MINOR_VERSION[[:space:]]*\([[:digit:]]*\))/\1/i')
+version_patch=$(grep -i 'set(version_info_maint' CMakeLists.txt |sed 's/.*VERSION_INFO_MAINT_VERSION[[:space:]]*\([[:digit:]]*\))/\1/i')
 version="${version_major}.${version_api}.${version_abi}.${version_patch}"
 echo "Releasing version ${version}"
 
