@@ -7,6 +7,109 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.8.1.0-rc1] - 2020-02-16
+
+### Changed
+
+#### Project Scope
+
+- clang-tidy improvements
+  - Throw exceptions by value, catch by reference
+  - `emplace_back` where applicable
+  - `empty()` instead of `vector::size() == 0`
+
+### Fixed
+
+#### Project scope
+
+- FindQwt paths
+- floatAlmostEqual unittest assert function wrongly passing on sequence types
+- Only require boost unittest when testing is enabled
+- FindLOG4CPP typo
+
+#### gnuradio-runtime
+
+- block gateway shadowed system port
+- Flaky message passing unit test contained timeout (not the test's job)
+- ctrlport/`rpcaggregator` & Co: removed storage of references to scope-lifetime objects
+- Sine table generation python was wrong
+- `get_tags_in_range` for delay < (end-start)
+- premature tag pruning
+
+#### gr_modtool
+
+- wrong use of `input` -> `raw_input`
+- allow empty argument list
+- testing
+- check for and deny TSB under Python
+- QA addition bugs 
+
+#### gr-analog
+
+- clipping in FM receiver: remove superfluous gain
+- C++ generation for multiple blocks
+
+#### gr-audio
+
+- portaudio source: lock acquisition
+
+#### gr-blocks 
+
+- broken `rotator` workaround
+
+#### gr-digital
+
+- `map_bb` buffer overflow
+- `map_bb` thread safety
+- `additive_scrambler `count based reset
+
+#### gr-fec
+
+- heap corruption in `async_decoder`
+- `cc_encoder` was broken for constraint lengths > 8
+
+#### gr-fft
+
+- restore Boost 1.53 compat
+
+#### gr-qtgui
+
+- no longer requiring unnecessary key in `edit_box_msg`
+
+#### gr-uhd
+
+- fixed examples under Py3
+- multichannel objects not populating channels
+
+#### GRC
+
+- several issues with YAML files
+- nested objects now properly populate namespaces
+- comments now included in block bounds calculation
+- Wiki documentation link removed from OOT blocks' docs tab
+- Dragging connections to auto-hide ports works now
+
+### Added
+
+#### Project Scope
+
+- Codec2 development branch / future compat
+- Boost 1.71 compat
+- CI now checks for formatting
+
+#### gnuradio-runtime
+
+- dot graphs now contain message edges
+
+#### gr-uhd
+
+- UHD Filter API
+
+#### GRC
+
+- block affinity, buffer sizes available as advanced options for blocks
+- testing
+
 ## [3.8.0.0] - 2019-08-09
 
 Witness me!
