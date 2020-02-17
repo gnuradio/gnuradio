@@ -26,6 +26,7 @@
   - pfb_arb_resampler_xxx
   - rational_resampler_xxx
   - rational_resampler_base_xxx
+  - ival_decimator
 - Channelizers:
   - freq_xlating_fft_filter_ccc
   - freq_xlating_fir_filter_xxx

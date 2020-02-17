@@ -1,4 +1,4 @@
-# Copyright (C) 2012-2014,2017-2019 Free Software Foundation, Inc.
+# Copyright (C) 2012-2014,2017-2019,2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -15,6 +15,7 @@ add_library(gnuradio-filter
   fft_filter.cc
   firdes.cc
   freq_xlating_fir_filter_impl.cc
+  ival_decimator_impl.cc
   iir_filter.cc
   interp_fir_filter_impl.cc
   mmse_fir_interpolator_cc.cc

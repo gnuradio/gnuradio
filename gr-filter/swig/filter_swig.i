@@ -26,6 +26,7 @@
 #include "gnuradio/filter/fft_filter_ccc.h"
 #include "gnuradio/filter/fft_filter_ccf.h"
 #include "gnuradio/filter/fft_filter_fff.h"
+#include "gnuradio/filter/ival_decimator.h"
 #include "gnuradio/filter/mmse_interpolator_cc.h"
 #include "gnuradio/filter/mmse_interpolator_ff.h"
 #include "gnuradio/filter/mmse_resampler_cc.h"
@@ -54,6 +55,7 @@
 %include "gnuradio/filter/pm_remez.h"
 %include "gnuradio/filter/dc_blocker_cc.h"
 %include "gnuradio/filter/dc_blocker_ff.h"
+%include "gnuradio/filter/ival_decimator.h"
 %include "gnuradio/filter/filter_delay_fc.h"
 %include "gnuradio/filter/filterbank_vcvcf.h"
 %include "gnuradio/filter/fir_filter_blk.h"
@@ -85,6 +87,7 @@
 
 GR_SWIG_BLOCK_MAGIC2(filter, dc_blocker_cc);
 GR_SWIG_BLOCK_MAGIC2(filter, dc_blocker_ff);
+GR_SWIG_BLOCK_MAGIC2(filter, ival_decimator);
 GR_SWIG_BLOCK_MAGIC2(filter, filter_delay_fc);
 GR_SWIG_BLOCK_MAGIC2(filter, filterbank_vcvcf);
 GR_SWIG_BLOCK_MAGIC2_TMPL(filter, fir_filter_ccc, fir_filter_blk<gr_complex, gr_complex, gr_complex>);
