@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -14,6 +14,7 @@ install(FILES
     filter_fir_filter_xxx.block.yml
     filter_filter_delay_fc.block.yml
     filter_filterbank_vcvcf.block.yml
+    filter_ival_decimator.block.yml
     filter_mmse_interpolator_xx.block.yml
     filter_mmse_resampler_xx.block.yml
     filter_freq_xlating_fft_filter_ccc.block.yml
