@@ -1,4 +1,4 @@
-# Copyright (C) 2012,2014,2017 Free Software Foundation, Inc.
+# Copyright (C) 2012,2014,2017,2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -15,6 +15,7 @@ install(FILES
     fir_filter_blk.h
     fir_filter_with_buffer.h
     fft_filter.h
+    ival_decimator.h
     iir_filter.h
     interpolator_taps.h
     interp_fir_filter.h
