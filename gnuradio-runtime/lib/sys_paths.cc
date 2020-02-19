@@ -3,20 +3,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #include <gnuradio/sys_paths.h>
@@ -66,8 +54,18 @@ const char* appdata_path()
 
 std::string __userconf_path()
 {
-    boost::filesystem::path p(appdata_path());
-    p = p / ".gnuradio";
+    const char* path;
+
+    // First determine if there is an environment variable specifying the prefs path
+    path = getenv("GR_PREFS_PATH");
+    boost::filesystem::path p;
+    if (path) {
+        p = path;
+    } else {
+        p = appdata_path();
+        p = p / ".gnuradio";
+    }
+
     return p.string();
 }
 

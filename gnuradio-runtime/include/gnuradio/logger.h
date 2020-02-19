@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_GR_LOGGER_H
@@ -167,136 +155,136 @@ typedef log4cpp::Category* logger_ptr;
 #define GR_RESET_CONFIGURATION() gr::logger_config::reset_config();
 
 /* Logger name referenced macros */
-#define GR_DEBUG(name, msg)                                         \
-    {                                                               \
-        gr::logger_ptr logger = gr::logger_get_logger(name);        \
-        *logger << log4cpp::Priority::DEBUG << msg << log4cpp::eol; \
+#define GR_DEBUG(name, msg)                                           \
+    {                                                                 \
+        gr::logger_ptr logger = gr::logger_get_logger(name);          \
+        *logger << log4cpp::Priority::DEBUG << (msg) << log4cpp::eol; \
     }
 
-#define GR_INFO(name, msg)                                         \
-    {                                                              \
-        gr::logger_ptr logger = gr::logger_get_logger(name);       \
-        *logger << log4cpp::Priority::INFO << msg << log4cpp::eol; \
+#define GR_INFO(name, msg)                                           \
+    {                                                                \
+        gr::logger_ptr logger = gr::logger_get_logger(name);         \
+        *logger << log4cpp::Priority::INFO << (msg) << log4cpp::eol; \
     }
 
 #define GR_NOTICE(name, msg)                                 \
     {                                                        \
         gr::logger_ptr logger = gr::logger_get_logger(name); \
-        *logger << log4cpp::Priority::NOTICE << msg;         \
+        *logger << log4cpp::Priority::NOTICE << (msg);       \
     }
 
-#define GR_WARN(name, msg)                                         \
-    {                                                              \
-        gr::logger_ptr logger = gr::logger_get_logger(name);       \
-        *logger << log4cpp::Priority::WARN << msg << log4cpp::eol; \
+#define GR_WARN(name, msg)                                           \
+    {                                                                \
+        gr::logger_ptr logger = gr::logger_get_logger(name);         \
+        *logger << log4cpp::Priority::WARN << (msg) << log4cpp::eol; \
     }
 
-#define GR_ERROR(name, msg)                                         \
-    {                                                               \
-        gr::logger_ptr logger = gr::logger_get_logger(name);        \
-        *logger << log4cpp::Priority::ERROR << msg << log4cpp::eol; \
+#define GR_ERROR(name, msg)                                           \
+    {                                                                 \
+        gr::logger_ptr logger = gr::logger_get_logger(name);          \
+        *logger << log4cpp::Priority::ERROR << (msg) << log4cpp::eol; \
     }
 
-#define GR_CRIT(name, msg)                                         \
-    {                                                              \
-        gr::logger_ptr logger = gr::logger_get_logger(name);       \
-        *logger << log4cpp::Priority::CRIT << msg << log4cpp::eol; \
+#define GR_CRIT(name, msg)                                           \
+    {                                                                \
+        gr::logger_ptr logger = gr::logger_get_logger(name);         \
+        *logger << log4cpp::Priority::CRIT << (msg) << log4cpp::eol; \
     }
 
-#define GR_ALERT(name, msg)                                         \
-    {                                                               \
-        gr::logger_ptr logger = gr::logger_get_logger(name);        \
-        *logger << log4cpp::Priority::ALERT << msg << log4cpp::eol; \
+#define GR_ALERT(name, msg)                                           \
+    {                                                                 \
+        gr::logger_ptr logger = gr::logger_get_logger(name);          \
+        *logger << log4cpp::Priority::ALERT << (msg) << log4cpp::eol; \
     }
 
-#define GR_FATAL(name, msg)                                         \
-    {                                                               \
-        gr::logger_ptr logger = gr::logger_get_logger(name);        \
-        *logger << log4cpp::Priority::FATAL << msg << log4cpp::eol; \
+#define GR_FATAL(name, msg)                                           \
+    {                                                                 \
+        gr::logger_ptr logger = gr::logger_get_logger(name);          \
+        *logger << log4cpp::Priority::FATAL << (msg) << log4cpp::eol; \
     }
 
-#define GR_EMERG(name, msg)                                         \
-    {                                                               \
-        gr::logger_ptr logger = gr::logger_get_logger(name);        \
-        *logger << log4cpp::Priority::EMERG << msg << log4cpp::eol; \
+#define GR_EMERG(name, msg)                                           \
+    {                                                                 \
+        gr::logger_ptr logger = gr::logger_get_logger(name);          \
+        *logger << log4cpp::Priority::EMERG << (msg) << log4cpp::eol; \
     }
 
-#define GR_ERRORIF(name, cond, msg)                                     \
-    {                                                                   \
-        if ((cond)) {                                                   \
-            gr::logger_ptr logger = gr::logger_get_logger(name);        \
-            *logger << log4cpp::Priority::ERROR << msg << log4cpp::eol; \
-        }                                                               \
+#define GR_ERRORIF(name, cond, msg)                                       \
+    {                                                                     \
+        if ((cond)) {                                                     \
+            gr::logger_ptr logger = gr::logger_get_logger(name);          \
+            *logger << log4cpp::Priority::ERROR << (msg) << log4cpp::eol; \
+        }                                                                 \
     }
 
-#define GR_ASSERT(name, cond, msg)                                      \
-    {                                                                   \
-        if (!(cond)) {                                                  \
-            gr::logger_ptr logger = gr::logger_get_logger(name);        \
-            *logger << log4cpp::Priority::EMERG << msg << log4cpp::eol; \
-        }                                                               \
-        assert(0);                                                      \
+#define GR_ASSERT(name, cond, msg)                                        \
+    {                                                                     \
+        if (!(cond)) {                                                    \
+            gr::logger_ptr logger = gr::logger_get_logger(name);          \
+            *logger << log4cpp::Priority::EMERG << (msg) << log4cpp::eol; \
+        }                                                                 \
+        assert(0);                                                        \
     }
 
 /* LoggerPtr Referenced Macros */
-#define GR_LOG_DEBUG(logger, msg)                                   \
-    {                                                               \
-        *logger << log4cpp::Priority::DEBUG << msg << log4cpp::eol; \
+#define GR_LOG_DEBUG(logger, msg)                                     \
+    {                                                                 \
+        *logger << log4cpp::Priority::DEBUG << (msg) << log4cpp::eol; \
     }
 
-#define GR_LOG_INFO(logger, msg)                                   \
-    {                                                              \
-        *logger << log4cpp::Priority::INFO << msg << log4cpp::eol; \
-    }
-
-#define GR_LOG_NOTICE(logger, msg)                                   \
+#define GR_LOG_INFO(logger, msg)                                     \
     {                                                                \
-        *logger << log4cpp::Priority::NOTICE << msg << log4cpp::eol; \
+        *logger << log4cpp::Priority::INFO << (msg) << log4cpp::eol; \
     }
 
-#define GR_LOG_WARN(logger, msg)                                   \
-    {                                                              \
-        *logger << log4cpp::Priority::WARN << msg << log4cpp::eol; \
+#define GR_LOG_NOTICE(logger, msg)                                     \
+    {                                                                  \
+        *logger << log4cpp::Priority::NOTICE << (msg) << log4cpp::eol; \
     }
 
-#define GR_LOG_ERROR(logger, msg)                                   \
-    {                                                               \
-        *logger << log4cpp::Priority::ERROR << msg << log4cpp::eol; \
+#define GR_LOG_WARN(logger, msg)                                     \
+    {                                                                \
+        *logger << log4cpp::Priority::WARN << (msg) << log4cpp::eol; \
     }
 
-#define GR_LOG_CRIT(logger, msg)                                   \
-    {                                                              \
-        *logger << log4cpp::Priority::CRIT << msg << log4cpp::eol; \
+#define GR_LOG_ERROR(logger, msg)                                     \
+    {                                                                 \
+        *logger << log4cpp::Priority::ERROR << (msg) << log4cpp::eol; \
     }
 
-#define GR_LOG_ALERT(logger, msg)                                   \
-    {                                                               \
-        *logger << log4cpp::Priority::ALERT << msg << log4cpp::eol; \
+#define GR_LOG_CRIT(logger, msg)                                     \
+    {                                                                \
+        *logger << log4cpp::Priority::CRIT << (msg) << log4cpp::eol; \
     }
 
-#define GR_LOG_FATAL(logger, msg)                                   \
-    {                                                               \
-        *logger << log4cpp::Priority::FATAL << msg << log4cpp::eol; \
+#define GR_LOG_ALERT(logger, msg)                                     \
+    {                                                                 \
+        *logger << log4cpp::Priority::ALERT << (msg) << log4cpp::eol; \
     }
 
-#define GR_LOG_EMERG(logger, msg)                                   \
-    {                                                               \
-        *logger << log4cpp::Priority::EMERG << msg << log4cpp::eol; \
+#define GR_LOG_FATAL(logger, msg)                                     \
+    {                                                                 \
+        *logger << log4cpp::Priority::FATAL << (msg) << log4cpp::eol; \
     }
 
-#define GR_LOG_ERRORIF(logger, cond, msg)                               \
-    {                                                                   \
-        if ((cond)) {                                                   \
-            *logger << log4cpp::Priority::ERROR << msg << log4cpp::eol; \
-        }                                                               \
+#define GR_LOG_EMERG(logger, msg)                                     \
+    {                                                                 \
+        *logger << log4cpp::Priority::EMERG << (msg) << log4cpp::eol; \
     }
 
-#define GR_LOG_ASSERT(logger, cond, msg)                                \
-    {                                                                   \
-        if (!(cond)) {                                                  \
-            *logger << log4cpp::Priority::EMERG << msg << log4cpp::eol; \
-            assert(0);                                                  \
-        }                                                               \
+#define GR_LOG_ERRORIF(logger, cond, msg)                                 \
+    {                                                                     \
+        if ((cond)) {                                                     \
+            *logger << log4cpp::Priority::ERROR << (msg) << log4cpp::eol; \
+        }                                                                 \
+    }
+
+#define GR_LOG_ASSERT(logger, cond, msg)                                  \
+    {                                                                     \
+        if (!(cond)) {                                                    \
+            *logger << log4cpp::Priority::EMERG << (msg) << log4cpp::eol; \
+            assert(0);                                                    \
+        }                                                                 \
     }
 
 namespace gr {

@@ -1,0 +1,39 @@
+id: blocks_correctiq_man
+label: IQ Correction Manual Offset
+category: '[Core]/IQ Correction'
+
+templates:
+  imports: from gnuradio import blocks
+  make: blocks.correctiq_man(${real}, ${imag})
+  callbacks:
+  - set_real(${real})
+  - set_imag(${imag})
+
+parameters:
+-   id: real
+    label: Real (I)
+    dtype: float
+    default: '0.0'
+-   id: imag
+    label: Imag (Q)
+    dtype: float
+    default: '0.0'
+
+inputs:
+-   domain: stream
+    dtype: complex
+-   domain: message
+    id: set_real
+    optional: true
+-   domain: message
+    id: set_imag
+    optional: true
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+documentation: |-
+    This block provides a mechanism to manually provide a real and imaginary signal offset.  Very similar to a complex add block, the block supports dynamic updating on the values.
+
+file_format: 1

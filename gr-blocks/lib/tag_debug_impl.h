@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_GR_TAG_DEBUG_IMPL_H
@@ -33,10 +21,11 @@ namespace blocks {
 class tag_debug_impl : public tag_debug
 {
 private:
-    std::string d_name;
-    std::vector<tag_t> d_tags;
-    std::vector<tag_t>::iterator d_tags_itr;
+    const std::string d_name;
+    std::vector<tag_t> d_work_tags; /** tags from last work */
+    std::vector<tag_t> d_tags;      /** optionally holds all tags ever received */
     bool d_display;
+    bool d_save_all;
     pmt::pmt_t d_filter;
     gr::thread::mutex d_mutex;
 
@@ -52,6 +41,8 @@ public:
     int num_tags();
 
     void set_display(bool d);
+
+    void set_save_all(bool s);
 
     void set_key_filter(const std::string& key_filter);
     std::string key_filter() const;

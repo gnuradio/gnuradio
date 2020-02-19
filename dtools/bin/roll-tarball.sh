@@ -3,25 +3,12 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 
 setopt ERR_EXIT
 
 project=gnuradio
-version=$1
 tempdir=$(mktemp -d)
 
 #use gpg2 if available, gpg else
@@ -29,10 +16,16 @@ gpg=$(which gpg2 2> /dev/null || which gpg)
 #use parallel pigz if available, else gzip
 gz=$(which pigz 2> /dev/null || which gzip)
 
+echo "Figuring out versions"
+version_major=$(grep -i 'set(version_major' CMakeLists.txt |sed 's/.*VERSION_MAJOR[[:space:]]*\([[:digit:]]*\))/\1/i')
+version_api=$(grep -i 'set(version_api' CMakeLists.txt     |sed 's/.*VERSION_API[[:space:]]*\([[:digit:]]*\))/\1/i')
+version_abi=$(grep -i 'set(version_abi' CMakeLists.txt     |sed 's/.*VERSION_ABI[[:space:]]*\([[:digit:]]*\))/\1/i')
+version_patch=$(grep -i 'set(version_patch' CMakeLists.txt |sed 's/.*VERSION_PATCH[[:space:]]*\([[:digit:]]*\))/\1/i')
+version="${version_major}.${version_api}.${version_abi}.${version_patch}"
 echo "Releasing version ${version}"
 
 echo "Making temporary clean worktree…"
-git worktree add "${tempdir}/${project}" "v$1"
+git clone --recursive "$(pwd)" "${tempdir}/${project}"
 pushd "${tempdir}/${project}"
 gitroot=$(pwd)
 gitversion=$(git describe)
@@ -43,9 +36,6 @@ echo "Will use the following key for signing…"
 gpg2 --list-keys "${signingkey}" || echo "Can't get info about key ${signingkey}.  Did you forget to do 'git config --local user.signingkey=0xDEADBEEF'?'"
 echo "… end of key info."
 
-echo "making sure submodules are up-to-date…"
-git submodule update --init
-echo "…sure."
 
 archivedir=${gitroot}/archives
 plaindir=${project}-${version}
@@ -113,6 +103,5 @@ mv "${archivedir}/"* "./archives/"
 echo "… I'm moved."
 
 echo "Clean up temporary files…"
-git worktree prune
 rm -r ${tempdir}
 echo "…all clean."

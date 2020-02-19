@@ -45,7 +45,5 @@ cpp_templates:
     make: 'this->${id} = blocks::repeat::make(${type.size}*${vlen}, ${interp});'
     callbacks:
     - set_interpolation(${interp})
-    translations:
-        gr.sizeof_: 'sizeof('
 
 file_format: 1

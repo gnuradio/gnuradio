@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #include "fading_model_impl.h"
@@ -28,14 +16,14 @@ namespace gr {
 namespace channels {
 
 fading_model::sptr
-fading_model::make(unsigned int N, float fDTs, bool LOS, float K, int seed)
+fading_model::make(unsigned int N, float fDTs, bool LOS, float K, uint32_t seed)
 {
     return gnuradio::get_initial_sptr(new fading_model_impl(N, fDTs, LOS, K, seed));
 }
 
 // Block constructor
 fading_model_impl::fading_model_impl(
-    unsigned int N, float fDTs, bool LOS, float K, int seed)
+    unsigned int N, float fDTs, bool LOS, float K, uint32_t seed)
     : sync_block("fading_model",
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::make(1, 1, sizeof(gr_complex))),

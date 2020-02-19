@@ -4,20 +4,8 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 #
 """
 GNU radio specific extension of unittest.
@@ -82,10 +70,10 @@ class TestCase(unittest.TestCase):
         places.0
         """
         self.assertEqual(len(a), len(b))
-        return all((
+        return all([
             self.assertComplexAlmostEqual(x, y, places, msg)
             for (x, y) in zip(a, b)
-        ))
+        ])
 
 
     def assertComplexTuplesAlmostEqual2(self, a, b,
@@ -95,10 +83,10 @@ class TestCase(unittest.TestCase):
         Approximate equality is determined by calling assertComplexAlmostEqual().
         """
         self.assertEqual(len(a), len(b))
-        return all((
+        return all([
             self.assertComplexAlmostEqual2(x, y, abs_eps, rel_eps, msg)
             for (x, y) in zip(a, b)
-        ))
+        ])
 
 
     def assertFloatTuplesAlmostEqual(self, a, b, places=7, msg=None):
@@ -108,19 +96,19 @@ class TestCase(unittest.TestCase):
         places.
         """
         self.assertEqual(len(a), len(b))
-        return all((
+        return all([
             self.assertAlmostEqual(x, y, places, msg)
             for (x, y) in zip(a, b)
-        ))
+        ])
 
 
     def assertFloatTuplesAlmostEqual2(self, a, b,
                                       abs_eps=1e-12, rel_eps=1e-6, msg=None):
         self.assertEqual(len(a), len(b))
-        return all((
+        return all([
             self.assertComplexAlmostEqual2(x, y, abs_eps, rel_eps, msg)
             for (x, y) in zip(a, b)
-        ))
+        ])
 
 TestResult = unittest.TestResult
 TestSuite = unittest.TestSuite

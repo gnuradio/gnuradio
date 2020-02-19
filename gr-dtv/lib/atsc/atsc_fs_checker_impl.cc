@@ -1,23 +1,11 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014,2020 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -30,6 +18,8 @@
 #include "atsc_types.h"
 #include "gnuradio/dtv/atsc_consts.h"
 #include <gnuradio/io_signature.h>
+
+#define ATSC_SEGMENTS_PER_DATA_FIELD 313
 
 static const int PN511_ERROR_LIMIT = 20; // max number of bits wrong
 static const int PN63_ERROR_LIMIT = 5;
@@ -109,7 +99,12 @@ int atsc_fs_checker_impl::general_work(int noutput_items,
                 out[output_produced].data[j] = in[i].data[j];
             out[output_produced].pli.set_regular_seg((d_field_num == 2), d_segment_num);
             d_segment_num++;
-            output_produced++;
+            if (d_segment_num > (ATSC_SEGMENTS_PER_DATA_FIELD - 1)) {
+                d_field_num = 0;
+                d_segment_num = 0;
+            } else {
+                output_produced++;
+            }
         }
     }
 

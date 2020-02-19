@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_DTV_ATSC_EQUALIZER_IMPL_H
@@ -33,11 +21,12 @@ namespace dtv {
 class atsc_equalizer_impl : public atsc_equalizer
 {
 private:
-    static const int NTAPS = 64;
-    static const int NPRETAPS = (int)(NTAPS * 0.8); // probably should be either .2 or .8
+    static constexpr int NTAPS = 64;
+    static constexpr int NPRETAPS =
+        (int)(NTAPS * 0.8); // probably should be either .2 or .8
 
     // the length of the field sync pattern that we know unequivocally
-    static const int KNOWN_FIELD_SYNC_LENGTH = 4 + 511 + 3 * 63;
+    static constexpr int KNOWN_FIELD_SYNC_LENGTH = 4 + 511 + 3 * 63;
 
     float training_sequence1[KNOWN_FIELD_SYNC_LENGTH];
     float training_sequence2[KNOWN_FIELD_SYNC_LENGTH];
@@ -55,7 +44,7 @@ private:
     unsigned short d_flags;
     short d_segno;
 
-    int d_buff_not_filled;
+    bool d_buff_not_filled;
 
 public:
     atsc_equalizer_impl();

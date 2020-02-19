@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #include "usrp_block_impl.h"
@@ -362,6 +350,34 @@ boost::uint32_t usrp_block_impl::get_gpio_attr(const std::string& bank,
 {
 #ifdef UHD_USRP_MULTI_USRP_GPIO_API
     return _dev->get_gpio_attr(bank, attr, mboard);
+#else
+    throw std::runtime_error("not implemented in this version");
+#endif
+}
+
+std::vector<std::string> usrp_block_impl::get_filter_names(const std::string& search_mask)
+{
+#ifdef UHD_USRP_MULTI_FILTER_API
+    return _dev->get_filter_names(search_mask);
+#else
+    throw std::runtime_error("not implemented in this version");
+#endif
+}
+
+::uhd::filter_info_base::sptr usrp_block_impl::get_filter(const std::string& path)
+{
+#ifdef UHD_USRP_MULTI_FILTER_API
+    return _dev->get_filter(path);
+#else
+    throw std::runtime_error("not implemented in this version");
+#endif
+}
+
+void usrp_block_impl::set_filter(const std::string& path,
+                                 ::uhd::filter_info_base::sptr filter)
+{
+#ifdef UHD_USRP_MULTI_FILTER_API
+    _dev->set_filter(path, filter);
 #else
     throw std::runtime_error("not implemented in this version");
 #endif

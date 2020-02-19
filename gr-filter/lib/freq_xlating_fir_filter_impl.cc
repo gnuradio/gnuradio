@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -57,7 +45,8 @@ freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::freq_xlating_fir_filter_impl(
       d_proto_taps(taps),
       d_center_freq(center_freq),
       d_sampling_freq(sampling_freq),
-      d_updated(false)
+      d_updated(false),
+      d_decim(decimation)
 {
     std::vector<gr_complex> dummy_taps;
     d_composite_fir =
@@ -175,9 +164,15 @@ int freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::work(
 
     unsigned j = 0;
     for (int i = 0; i < noutput_items; i++) {
-        out[i] = d_r.rotate(d_composite_fir->filter(&in[j]));
-        j += this->decimation();
+        out[i] = d_composite_fir->filter(&in[j]);
+        j += d_decim;
     }
+
+    // re-use of the same buffer as the input and output is safe for many volk functions
+    // and faster than creating local temporary memory in the work function and doing an
+    // extra copy. So out is used below as both the in and out params to the rotate
+    // function.
+    d_r.rotateN(out, out, noutput_items);
 
     return noutput_items;
 }

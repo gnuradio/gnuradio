@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -22,9 +23,11 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: ''
-    window_size: 1280, 1024
   states:
-    coordinate: [368, 19]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [448, 20.0]
     rotation: 0
     state: enabled
 
@@ -35,7 +38,10 @@ blocks:
     comment: ''
     value: 429e6
   states:
-    coordinate: [808, 20]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [888, 20.0]
     rotation: 0
     state: enabled
 - name: pilot_freq
@@ -44,7 +50,10 @@ blocks:
     comment: ''
     value: (6000000.0 - (symbol_rate / 2)) / 2
   states:
-    coordinate: [680, 20]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [760, 20.0]
     rotation: 0
     state: enabled
 - name: symbol_rate
@@ -53,7 +62,10 @@ blocks:
     comment: ''
     value: 4500000.0 / 286 * 684
   states:
-    coordinate: [552, 19]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [632, 20.0]
     rotation: 0
     state: enabled
 - name: tx_gain
@@ -71,7 +83,10 @@ blocks:
     value: '50'
     widget: counter_slider
   states:
-    coordinate: [808, 88]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [888, 84.0]
     rotation: 0
     state: enabled
 - name: vga1_gain
@@ -89,7 +104,10 @@ blocks:
     value: '-8'
     widget: counter_slider
   states:
-    coordinate: [552, 88]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [632, 84.0]
     rotation: 0
     state: enabled
 - name: vga2_gain
@@ -107,7 +125,10 @@ blocks:
     value: '10'
     widget: counter_slider
   states:
-    coordinate: [680, 88]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [760, 84.0]
     rotation: 0
     state: enabled
 - name: blocks_file_source_0
@@ -126,6 +147,9 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [64, 19]
     rotation: 0
     state: enabled
@@ -142,6 +166,9 @@ blocks:
     offset: '4'
     type: byte
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [88, 468.0]
     rotation: 0
     state: enabled
@@ -155,6 +182,9 @@ blocks:
     minoutbuf: '0'
     phase_inc: ((-3000000.0 + pilot_freq) / symbol_rate) * (math.pi * 2)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [336, 332]
     rotation: 0
     state: enabled
@@ -170,6 +200,9 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [88, 424.0]
     rotation: 180
     state: enabled
@@ -182,6 +215,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [88, 376.0]
     rotation: 0
     state: enabled
@@ -194,6 +230,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [88, 280.0]
     rotation: 0
     state: enabled
@@ -206,6 +245,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [88, 136.0]
     rotation: 180
     state: enabled
@@ -218,6 +260,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [88, 184.0]
     rotation: 0
     state: enabled
@@ -230,6 +275,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [88, 232.0]
     rotation: 180
     state: enabled
@@ -242,6 +290,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [88, 328.0]
     rotation: 180
     state: enabled
@@ -260,6 +311,9 @@ blocks:
     rate2: C1_5_MEDIUM
     rate3: C1_4
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [328, 476.0]
     rotation: 0
     state: enabled
@@ -277,6 +331,9 @@ blocks:
     taps: firdes.root_raised_cosine(0.11, symbol_rate, symbol_rate/2, 0.1152, 200)
     type: ccc
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [576, 316]
     rotation: 0
     state: enabled
@@ -287,9 +344,27 @@ blocks:
     comment: ''
     imports: import math
   states:
-    coordinate: [368, 91]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [448, 92.0]
     rotation: 0
     state: enabled
+- name: note_0
+  id: note
+  parameters:
+    alias: ''
+    comment: 'This file is available at
+
+      http://www.w6rz.net/advatsc.ts'
+    note: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [264, 20.0]
+    rotation: 0
+    state: true
 - name: qtgui_freq_sink_x_0
   id: qtgui_freq_sink_x
   parameters:
@@ -364,6 +439,9 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [944, 452.0]
     rotation: 0
     state: enabled
@@ -637,30 +715,35 @@ blocks:
     time_source7: ''
     type: fc32
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [944, 276.0]
     rotation: 0
     state: enabled
 - name: virtual_sink_1
   id: virtual_sink
   parameters:
-    affinity: ''
     alias: ''
     comment: ''
     stream_id: mod-rot
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [592, 484.0]
     rotation: 0
     state: true
 - name: virtual_source_1
   id: virtual_source
   parameters:
-    affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
     stream_id: mod-rot
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [336, 276.0]
     rotation: 180
     state: true

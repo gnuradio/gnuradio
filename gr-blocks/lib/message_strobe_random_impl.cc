@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -26,14 +14,6 @@
 
 #include "message_strobe_random_impl.h"
 #include <gnuradio/io_signature.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <cstdio>
-#include <iostream>
-#include <stdexcept>
 
 namespace gr {
 namespace blocks {
@@ -57,17 +37,17 @@ message_strobe_random_impl::message_strobe_random_impl(
     : block("message_strobe_random",
             io_signature::make(0, 0, 0),
             io_signature::make(0, 0, 0)),
-      d_finished(false),
+      d_rng(),
       d_mean_ms(mean_ms),
       d_std_ms(std_ms),
       d_dist(dist),
+      pd(d_mean_ms),
+      nd(d_mean_ms, d_std_ms),
+      ud(d_mean_ms - d_std_ms, d_mean_ms + d_std_ms),
+      d_finished(false),
       d_msg(msg),
-      d_rng(),
       d_port(pmt::mp("strobe"))
 {
-    // allocate RNGs
-    update_dist();
-
     // set up ports
     message_port_register_out(d_port);
     d_thread = boost::shared_ptr<gr::thread::thread>(
@@ -78,40 +58,37 @@ message_strobe_random_impl::message_strobe_random_impl(
                     boost::bind(&message_strobe_random_impl::set_msg, this, _1));
 }
 
+void message_strobe_random_impl::set_mean(float mean_ms)
+{
+    d_mean_ms = mean_ms;
+    pd = std::poisson_distribution<>(d_mean_ms);
+    nd = std::normal_distribution<>(d_mean_ms, d_std_ms);
+    ud = std::uniform_real_distribution<>(d_mean_ms - d_std_ms, d_mean_ms + d_std_ms);
+}
+
+float message_strobe_random_impl::mean() const { return d_mean_ms; }
+
+void message_strobe_random_impl::set_std(float std_ms)
+{
+    d_std_ms = std_ms;
+    nd = std::normal_distribution<>(d_mean_ms, d_std_ms);
+    ud = std::uniform_real_distribution<>(d_mean_ms - d_std_ms, d_mean_ms + d_std_ms);
+}
+
 long message_strobe_random_impl::next_delay()
 {
     switch (d_dist) {
     case STROBE_POISSON:
         // return d_variate_poisson->operator()();
-        return static_cast<long>(d_variate_poisson->operator()());
+        return static_cast<long>(pd(d_rng));
     case STROBE_GAUSSIAN:
-        return static_cast<long>(d_variate_normal->operator()());
+        return static_cast<long>(nd(d_rng));
     case STROBE_UNIFORM:
-        return static_cast<long>(d_variate_uniform->operator()());
+        return static_cast<long>(ud(d_rng));
     default:
         throw std::runtime_error(
             "message_strobe_random_impl::d_distribution is very unhappy with you");
     }
-}
-
-void message_strobe_random_impl::update_dist()
-{
-    boost::poisson_distribution<> pd(d_mean_ms);
-    d_variate_poisson = boost::shared_ptr<
-        boost::variate_generator<boost::mt19937, boost::poisson_distribution<>>>(
-        new boost::variate_generator<boost::mt19937, boost::poisson_distribution<>>(d_rng,
-                                                                                    pd));
-
-    boost::normal_distribution<> nd(d_mean_ms, d_std_ms);
-    d_variate_normal = boost::shared_ptr<
-        boost::variate_generator<boost::mt19937, boost::normal_distribution<>>>(
-        new boost::variate_generator<boost::mt19937, boost::normal_distribution<>>(d_rng,
-                                                                                   nd));
-
-    boost::uniform_real<> ud(d_mean_ms - d_std_ms, d_mean_ms + d_std_ms);
-    d_variate_uniform = boost::shared_ptr<
-        boost::variate_generator<boost::mt19937, boost::uniform_real<>>>(
-        new boost::variate_generator<boost::mt19937, boost::uniform_real<>>(d_rng, ud));
 }
 
 

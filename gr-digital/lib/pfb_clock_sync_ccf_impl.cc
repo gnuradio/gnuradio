@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -69,13 +57,12 @@ pfb_clock_sync_ccf_impl::pfb_clock_sync_ccf_impl(double sps,
       d_out_idx(0)
 {
     if (taps.empty())
-        throw std::runtime_error("pfb_clock_sync_ccf: please specify a filter.\n");
+        throw std::runtime_error("pfb_clock_sync_ccf: please specify a filter.");
 
     // Let scheduler adjust our relative_rate.
     // enable_update_rate(true);
     set_tag_propagation_policy(TPP_DONT);
 
-    d_nfilters = filter_size;
     d_sps = floor(sps);
 
     // Set the damping factor for a critically damped system
@@ -93,14 +80,14 @@ pfb_clock_sync_ccf_impl::pfb_clock_sync_ccf_impl(double sps,
     d_rate_f = d_rate - (float)d_rate_i;
     d_filtnum = (int)floor(d_k);
 
-    d_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilters);
-    d_diff_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilters);
+    d_filters.resize(d_nfilters);
+    d_diff_filters.resize(d_nfilters);
 
     // Create an FIR filter for each channel and zero out the taps
     std::vector<float> vtaps(1, 0);
     for (int i = 0; i < d_nfilters; i++) {
-        d_filters[i] = new kernel::fir_filter_ccf(1, vtaps);
-        d_diff_filters[i] = new kernel::fir_filter_ccf(1, vtaps);
+        d_filters[i].reset(new kernel::fir_filter_ccf(1, vtaps));
+        d_diff_filters[i].reset(new kernel::fir_filter_ccf(1, vtaps));
     }
 
     // Now, actually set the filters' taps
@@ -114,14 +101,6 @@ pfb_clock_sync_ccf_impl::pfb_clock_sync_ccf_impl(double sps,
     d_last_out = 0;
 
     set_relative_rate((uint64_t)d_osps, (uint64_t)d_sps);
-}
-
-pfb_clock_sync_ccf_impl::~pfb_clock_sync_ccf_impl()
-{
-    for (int i = 0; i < d_nfilters; i++) {
-        delete d_filters[i];
-        delete d_diff_filters[i];
-    }
 }
 
 bool pfb_clock_sync_ccf_impl::check_topology(int ninputs, int noutputs)
@@ -210,18 +189,19 @@ float pfb_clock_sync_ccf_impl::phase() const { return d_k; }
 
 void pfb_clock_sync_ccf_impl::update_gains()
 {
-    float denom = (1.0 + 2.0 * d_damping * d_loop_bw + d_loop_bw * d_loop_bw);
+    const float denom = (1.0 + 2.0 * d_damping * d_loop_bw + d_loop_bw * d_loop_bw);
     d_alpha = (4 * d_damping * d_loop_bw) / denom;
     d_beta = (4 * d_loop_bw * d_loop_bw) / denom;
 }
 
-void pfb_clock_sync_ccf_impl::set_taps(const std::vector<float>& newtaps,
-                                       std::vector<std::vector<float>>& ourtaps,
-                                       std::vector<kernel::fir_filter_ccf*>& ourfilter)
+void pfb_clock_sync_ccf_impl::set_taps(
+    const std::vector<float>& newtaps,
+    std::vector<std::vector<float>>& ourtaps,
+    std::vector<std::unique_ptr<kernel::fir_filter_ccf>>& ourfilter)
 {
     int i, j;
 
-    unsigned int ntaps = newtaps.size();
+    const unsigned int ntaps = newtaps.size();
     d_taps_per_filter = (unsigned int)ceil((double)ntaps / (double)d_nfilters);
 
     // Create d_numchan vectors to store each channel's taps
@@ -416,11 +396,10 @@ int pfb_clock_sync_ccf_impl::general_work(int noutput_items,
 
             // Manage Tags
             std::vector<tag_t> xtags;
-            std::vector<tag_t>::iterator itags;
             d_new_in = nitems_read(0) + count + d_out_idx + d_sps;
             get_tags_in_range(xtags, 0, d_old_in, d_new_in);
-            for (itags = xtags.begin(); itags != xtags.end(); itags++) {
-                tag_t new_tag = *itags;
+            for (const auto& tag : xtags) {
+                tag_t new_tag = tag;
                 // new_tag.offset = d_last_out + d_taps_per_filter/(2*d_sps) - 2;
                 new_tag.offset = d_last_out + d_taps_per_filter / 4 - 2;
                 add_item_tag(0, new_tag);

@@ -2,20 +2,8 @@
 /*
  * Copyright 2015 Free Software Foundation, Inc.
  *
- * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_DTV_ATSC_TRELLIS_ENCODER_IMPL_H
@@ -34,10 +22,10 @@ private:
     bool debug;
 
     /* How many separate Trellis encoders / Viterbi decoders run in parallel */
-    static const int NCODERS = 12;
-    static const int SEGMENT_SIZE = ATSC_MPEG_RS_ENCODED_LENGTH;
-    static const int INPUT_SIZE = (SEGMENT_SIZE * 12);
-    static const int OUTPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
+    static constexpr int NCODERS = 12;
+    static constexpr int SEGMENT_SIZE = ATSC_MPEG_RS_ENCODED_LENGTH;
+    static constexpr int INPUT_SIZE = (SEGMENT_SIZE * 12);
+    static constexpr int OUTPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
 
     void reset();
     void encode(atsc_data_segment out[NCODERS],

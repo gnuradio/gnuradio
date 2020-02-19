@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_FFT_FFT_VCC_FFTW_IMPL_H
@@ -32,11 +20,11 @@ namespace fft {
 class FFT_API fft_vcc_fftw : public fft_vcc
 {
 private:
-    fft_complex* d_fft;
-    unsigned int d_fft_size;
+    const unsigned int d_fft_size;
+    const bool d_forward;
+    fft_complex d_fft;
     std::vector<float> d_window;
-    bool d_forward;
-    bool d_shift;
+    const bool d_shift;
 
 public:
     fft_vcc_fftw(int fft_size,
@@ -44,8 +32,6 @@ public:
                  const std::vector<float>& window,
                  bool shift,
                  int nthreads = 1);
-
-    ~fft_vcc_fftw();
 
     void set_nthreads(int n);
     int nthreads() const;

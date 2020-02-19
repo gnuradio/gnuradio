@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_GR_SIMPLE_FRAMER_SYNC_H
@@ -42,13 +30,13 @@ namespace digital {
  *      0xACDDA4E2F28C20FC (padded on right with a zero)
  * </pre>
  */
-static const unsigned long long GRSF_SYNC = 0xacdda4e2f28c20fcULL;
+static constexpr unsigned long long GRSF_SYNC = 0xacdda4e2f28c20fcULL;
 
-static const int GRSF_BITS_PER_BYTE = 8;
-static const int GRSF_SYNC_OVERHEAD = sizeof(GRSF_SYNC);
-static const int GRSF_PAYLOAD_OVERHEAD = 1; // 1 byte seqno
-static const int GRSF_TAIL_PAD = 1;         // one byte trailing padding
-static const int GRSF_OVERHEAD =
+static constexpr int GRSF_BITS_PER_BYTE = 8;
+static constexpr int GRSF_SYNC_OVERHEAD = sizeof(GRSF_SYNC);
+static constexpr int GRSF_PAYLOAD_OVERHEAD = 1; // 1 byte seqno
+static constexpr int GRSF_TAIL_PAD = 1;         // one byte trailing padding
+static constexpr int GRSF_OVERHEAD =
     GRSF_SYNC_OVERHEAD + GRSF_PAYLOAD_OVERHEAD + GRSF_TAIL_PAD;
 
 } /* namespace digital */

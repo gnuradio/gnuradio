@@ -2,20 +2,8 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 #
 
 from __future__ import print_function
@@ -1980,9 +1968,10 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.mfilterCoeff.setText(fcoeff)
 
     def action_save_dialog(self):
-        filename = QtGui.QFileDialog.getSaveFileName(self, "Save CSV Filter File", ".", "")
+        file_dialog_output = QtGui.QFileDialog.getSaveFileName(self, "Save CSV Filter File", ".", "")
+        filename = file_dialog_output[0]
         try:
-            handle = open(filename, "wb")
+            handle = open(filename, "w")
         except IOError:
             reply = QtGui.QMessageBox.information(self, 'File Name',
                                                   ("Could not save to file: %s" % filename),
@@ -2006,12 +1995,13 @@ class gr_plot_filter(QtGui.QMainWindow):
         handle.close()
 
     def action_open_dialog(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self, "Open CSV Filter File", ".", "")
-        if(len(filename) == 0):
+        file_dialog_output = QtGui.QFileDialog.getOpenFileName(self, "Open CSV Filter File", ".", "")
+        if(len(file_dialog_output) == 0):
             return
-
+        # file_dialog_output returns tuple of (filename, file filter)
+        filename = file_dialog_output[0]
         try:
-            handle = open(filename, "rb")
+            handle = open(filename, "r")
         except IOError:
             reply = QtGui.QMessageBox.information(self, 'File Name',
                                                   ("Could not open file: %s" % filename),

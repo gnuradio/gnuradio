@@ -2,19 +2,8 @@
 Copyright 2007-2011, 2016q Free Software Foundation, Inc.
 This file is part of GNU Radio
 
-GNU Radio Companion is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+SPDX-License-Identifier: GPL-2.0-or-later
 
-GNU Radio Companion is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from __future__ import absolute_import
@@ -755,8 +744,6 @@ class FlowGraph(CoreFlowgraph, Drawable):
 
     def _handle_mouse_motion_move(self, coordinate):
         # only continue if mouse-over stuff is enabled (just the auto-hide port label stuff for now)
-        if not Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active():
-            return
         redraw = False
         for element in self._elements_to_draw:
             over_element = element.what_is_selected(coordinate)
@@ -772,6 +759,8 @@ class FlowGraph(CoreFlowgraph, Drawable):
             if self.element_under_mouse:
                 redraw |= self.element_under_mouse.mouse_out() or False
                 self.element_under_mouse = None
+        if not Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active():
+            return
         if redraw:
             # self.create_labels()
             self.create_shapes()

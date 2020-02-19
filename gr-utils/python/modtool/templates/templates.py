@@ -3,20 +3,8 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 #
 ''' All the templates for skeleton files (needed by ModToolAdd) '''
 
@@ -32,20 +20,7 @@ Templates = {}
 Templates['defaultlicense'] = '''
 Copyright %d {copyrightholder}.
 
-This is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-This software is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this software; see the file COPYING.  If not, write to
-the Free Software Foundation, Inc., 51 Franklin Street,
-Boston, MA 02110-1301, USA.
+SPDX-License-Identifier: GPL-3.0-or-later
 ''' % datetime.now().year
 
 Templates['grlicense'] = '''
@@ -53,20 +28,7 @@ Copyright {0} Free Software Foundation, Inc.
 
 This file is part of GNU Radio
 
-GNU Radio is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GNU Radio is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with GNU Radio; see the file COPYING.  If not, write to
-the Free Software Foundation, Inc., 51 Franklin Street,
-Boston, MA 02110-1301, USA.
+SPDX-License-Identifier: GPL-3.0-or-later
 '''.format(datetime.now().year)
 
 # Header file of a sync/decimator/interpolator block
@@ -453,11 +415,16 @@ ${str_to_fancyc_comment(license)}
 #include <gnuradio/attributes.h>
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_CASE(test_${blockname}_t1)
-{
-    // Put test here
-}
+namespace gr {
+  namespace ${modname} {
 
+    BOOST_AUTO_TEST_CASE(test_${blockname}_t1)
+    {
+      // Put test here
+    }
+
+  } /* namespace ${modname} */
+} /* namespace gr */
 '''
 
 # C++ file for QA
@@ -552,7 +519,7 @@ templates:
 
 #  Make one 'parameters' list entry for every parameter you want settable from the GUI.
 #     Keys include:
-#     * id (makes the value accessible as \$keyname, e.g. in the make entry)
+#     * id (makes the value accessible as keyname, e.g. in the make entry)
 #     * label (label shown in the GUI)
 #     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
 parameters:

@@ -4,6 +4,7 @@
   - variable_high_pass_filter_taps
   - variable_band_pass_filter_taps
   - variable_band_reject_filter_taps
+  - variable_file_filter_taps
   - variable_rrc_filter_taps
   - low_pass_filter
   - high_pass_filter

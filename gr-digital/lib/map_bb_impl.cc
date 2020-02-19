@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -49,19 +37,22 @@ void map_bb_impl::set_map(const std::vector<int>& map)
 {
     gr::thread::scoped_lock guard(d_mutex);
 
-    for (int i = 0; i < 0x100; i++)
+    for (unsigned int i = 0; i < s_map_size; i++) {
         d_map[i] = i;
+    }
 
-    unsigned int size = std::min((size_t)0x100, map.size());
+    const unsigned int size = std::min(s_map_size, map.size());
     for (unsigned int i = 0; i < size; i++)
         d_map[i] = map[i];
 }
 
 std::vector<int> map_bb_impl::map() const
 {
-    std::vector<int> m;
-    for (unsigned i = 0; i < 0x100; i++)
+    std::vector<int> m(s_map_size);
+    gr::thread::scoped_lock guard(d_mutex);
+    for (unsigned int i = 0; i < s_map_size; i++) {
         m[i] = d_map[i];
+    }
     return m;
 }
 

@@ -2,20 +2,8 @@
 /*
  * Copyright 2008,2010,2012,2018 Free Software Foundation, Inc.
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -63,10 +51,10 @@ int cpfsk_bc_impl::work(int noutput_items,
             else
                 d_phase -= d_freq;
 
-            while (d_phase > GR_M_TWOPI)
-                d_phase -= GR_M_TWOPI;
-            while (d_phase < -GR_M_TWOPI)
-                d_phase += GR_M_TWOPI;
+            while (d_phase > (2.0 * GR_M_PI))
+                d_phase -= (2.0 * GR_M_PI);
+            while (d_phase < -(2.0 * GR_M_PI))
+                d_phase += (2.0 * GR_M_PI);
 
             *out++ = gr_expj(d_phase) * d_ampl;
         }

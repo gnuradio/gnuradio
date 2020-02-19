@@ -36,7 +36,5 @@ cpp_templates:
     includes: ['#include <gnuradio/blocks/file_descriptor_sink.h>']
     declarations: 'blocks::file_descriptor_sink::sptr ${id};'
     make: 'this->${id} = blocks::file_descriptor_sink::make(${type.size}*${vlen}, ${fd});'
-    translations:
-        gr.sizeof_: 'sizeof('
 
 file_format: 1

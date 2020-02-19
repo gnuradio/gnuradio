@@ -1,6 +1,7 @@
 options:
   parameters:
     author: Example
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -22,16 +23,45 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: UHD WBFM Receive
-    window_size: 1280, 1024
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [8, 12.0]
+    coordinate: [16, 12.0]
     rotation: 0
     state: enabled
 
 blocks:
+- name: antenna
+  id: variable_qtgui_chooser
+  parameters:
+    comment: ''
+    gui_hint: 0,4,1,1
+    label: Antenna
+    label0: '"RX2"'
+    label1: '"TX/RX"'
+    label2: ''
+    label3: ''
+    label4: ''
+    labels: '[]'
+    num_opts: '2'
+    option0: '"RX2"'
+    option1: '"TX/RX"'
+    option2: '2'
+    option3: '3'
+    option4: '4'
+    options: '[0, 1, 2]'
+    orient: Qt.QVBoxLayout
+    type: string
+    value: '"RX2"'
+    widget: combo_box
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [640, 404.0]
+    rotation: 0
+    state: true
 - name: audio_decim
   id: variable
   parameters:
@@ -41,108 +71,139 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [624, 212.0]
+    coordinate: [632, 132.0]
     rotation: 0
     state: enabled
-- name: fine
-  id: variable_qtgui_range
+- name: freq
+  id: variable
   parameters:
     comment: ''
-    gui_hint: 0,2,1,2
-    label: Fine Freq (MHz)
-    min_len: '200'
-    orient: Qt.Horizontal
-    rangeType: float
-    start: -.1
-    step: '.01'
-    stop: '.1'
-    value: '0'
-    widget: counter_slider
+    value: 93.3e6
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [272, 308.0]
+    coordinate: [280, 20.0]
     rotation: 0
-    state: enabled
+    state: true
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 400e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [192, 20.0]
+    rotation: 0
+    state: true
 - name: tun_freq
   id: variable_qtgui_range
   parameters:
-    comment: ''
+    comment: 'CCIR Band
+
+
+      If in Italy, change Step size to 50e3'
     gui_hint: 0,0,1,2
     label: UHD Freq (MHz)
     min_len: '200'
     orient: Qt.Horizontal
     rangeType: float
-    start: '87.9'
-    step: '1'
-    stop: '108.1'
-    value: freq/1e6
+    start: 87.5e6
+    step: 100e3
+    stop: 108e6
+    value: freq
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [24, 308.0]
+    coordinate: [72, 404.0]
     rotation: 0
     state: enabled
+- name: tun_freq
+  id: variable_qtgui_range
+  parameters:
+    comment: Japan FM Band
+    gui_hint: 0,0,1,2
+    label: UHD Freq (MHz)
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: 76e6
+    step: 100e3
+    stop: 95e6
+    value: freq
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 404.0]
+    rotation: 0
+    state: disabled
+- name: tun_freq
+  id: variable_qtgui_range
+  parameters:
+    comment: OIRT Band
+    gui_hint: 0,0,1,2
+    label: UHD Freq (MHz)
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: 65.8e6
+    step: 30e3
+    stop: 74e6
+    value: freq
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [360, 404.0]
+    rotation: 0
+    state: disabled
 - name: tun_gain
   id: variable_qtgui_range
   parameters:
     comment: ''
-    gui_hint: ''
+    gui_hint: 0,2,1,2
     label: UHD Gain
     min_len: '200'
     orient: Qt.Horizontal
     rangeType: float
     start: '0'
-    step: '1'
-    stop: '20'
-    value: '10'
+    step: '.1'
+    stop: '1'
+    value: '.5'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [160, 308.0]
+    coordinate: [504, 404.0]
     rotation: 0
     state: enabled
 - name: volume
   id: variable_qtgui_range
   parameters:
     comment: ''
-    gui_hint: 1, 0, 1, 4
+    gui_hint: 1, 0, 1, 5
     label: Volume
     min_len: '200'
     orient: Qt.Horizontal
     rangeType: float
     start: '0'
     step: '0.1'
-    stop: '10'
-    value: '1'
+    stop: '1'
+    value: '.5'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [816, 212.0]
-    rotation: 0
-    state: enabled
-- name: address
-  id: parameter
-  parameters:
-    alias: ''
-    comment: ''
-    hide: none
-    label: IP Address
-    short_id: a
-    type: ''
-    value: addr=192.168.10.2
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [168, 12.0]
+    coordinate: [824, 68.0]
     rotation: 0
     state: enabled
 - name: analog_wfm_rcv
@@ -159,24 +220,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [616, 148.0]
-    rotation: 0
-    state: enabled
-- name: audio_output
-  id: parameter
-  parameters:
-    alias: ''
-    comment: ''
-    hide: none
-    label: Audio Output Device
-    short_id: O
-    type: ''
-    value: ''
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [736, 12.0]
+    coordinate: [632, 196.0]
     rotation: 0
     state: enabled
 - name: audio_sink
@@ -185,7 +229,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    device_name: audio_output
+    device_name: ''
     num_inputs: '1'
     ok_to_block: 'True'
     samp_rate: int(samp_rate/audio_decim)
@@ -193,7 +237,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1008, 148.0]
+    coordinate: [984, 204.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_vxx
@@ -211,41 +255,24 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [824, 156.0]
+    coordinate: [824, 204.0]
     rotation: 0
     state: enabled
-- name: freq
+- name: device_args
   id: parameter
   parameters:
     alias: ''
     comment: ''
     hide: none
-    label: Default Frequency
-    short_id: f
-    type: eng_float
-    value: 93.3e6
+    label: Device Args
+    short_id: a
+    type: ''
+    value: '""'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [448, 12.0]
-    rotation: 0
-    state: enabled
-- name: gain
-  id: parameter
-  parameters:
-    alias: ''
-    comment: ''
-    hide: none
-    label: Default Gain
-    short_id: g
-    type: eng_float
-    value: '0'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [600, 12.0]
+    coordinate: [368, 20.0]
     rotation: 0
     state: enabled
 - name: low_pass_filter_0
@@ -269,9 +296,22 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [288, 156.0]
+    coordinate: [376, 156.0]
     rotation: 0
     state: enabled
+- name: note_0
+  id: note
+  parameters:
+    alias: ''
+    comment: Enable only one frequency range for your location
+    note: Enable/Display tun_freq
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [144, 332.0]
+    rotation: 0
+    state: true
 - name: qtgui_freq_sink_x_0
   id: qtgui_freq_sink_x
   parameters:
@@ -303,11 +343,11 @@ blocks:
     color9: '"dark green"'
     comment: ''
     ctrlpanel: 'False'
-    fc: (tun_freq+fine)*1e6
+    fc: tun_freq
     fftsize: '512'
     freqhalf: 'True'
     grid: 'False'
-    gui_hint: 2,0,2,4
+    gui_hint: 3,0,2,5
     label: Relative Gain
     label1: ''
     label10: ''
@@ -349,24 +389,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [616, 304.0]
-    rotation: 0
-    state: enabled
-- name: samp_rate
-  id: parameter
-  parameters:
-    alias: ''
-    comment: ''
-    hide: none
-    label: Sample Rate
-    short_id: s
-    type: eng_float
-    value: 400e3
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [320, 12.0]
+    coordinate: [632, 272.0]
     rotation: 0
     state: enabled
 - name: uhd_usrp_source_0
@@ -374,7 +397,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    ant0: ''
+    ant0: antenna
     ant1: ''
     ant10: ''
     ant11: ''
@@ -438,7 +461,7 @@ blocks:
     bw7: '0'
     bw8: '0'
     bw9: '0'
-    center_freq0: (tun_freq+fine)*1e6
+    center_freq0: tun_freq
     center_freq1: '0'
     center_freq10: '0'
     center_freq11: '0'
@@ -512,7 +535,7 @@ blocks:
     dc_offs_enb7: '""'
     dc_offs_enb8: '""'
     dc_offs_enb9: '""'
-    dev_addr: address
+    dev_addr: device_args
     dev_args: '""'
     gain0: tun_gain
     gain1: '0'
@@ -645,7 +668,7 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     nchan: '1'
-    norm_gain0: 'False'
+    norm_gain0: 'True'
     norm_gain1: 'False'
     norm_gain10: 'False'
     norm_gain11: 'False'
@@ -737,7 +760,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [24, 172.0]
+    coordinate: [128, 156.0]
     rotation: 0
     state: enabled
 

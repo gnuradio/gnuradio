@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -44,10 +32,10 @@ constellation_receiver_cb::sptr constellation_receiver_cb::make(
         new constellation_receiver_cb_impl(constell, loop_bw, fmin, fmax));
 }
 
-static int ios[] = {
+static const std::vector<int> iosig = {
     sizeof(char), sizeof(float), sizeof(float), sizeof(float), sizeof(gr_complex)
 };
-static std::vector<int> iosig(ios, ios + sizeof(ios) / sizeof(int));
+
 constellation_receiver_cb_impl::constellation_receiver_cb_impl(
     constellation_sptr constellation, float loop_bw, float fmin, float fmax)
     : block("constellation_receiver_cb",
@@ -112,7 +100,7 @@ void constellation_receiver_cb_impl::handle_set_constellation(
 void constellation_receiver_cb_impl::handle_rotate_phase(pmt::pmt_t rotation)
 {
     if (pmt::is_real(rotation)) {
-        double phase = pmt::to_double(rotation);
+        const double phase = pmt::to_double(rotation);
         d_phase += phase;
     }
 }

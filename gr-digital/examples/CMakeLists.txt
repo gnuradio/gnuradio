@@ -2,30 +2,19 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 
 include(GrPython)
 
 # Base stuff
 GR_PYTHON_INSTALL(PROGRAMS
+    berawgn.py
     example_costas.py
     example_fll.py
     example_timing.py
-    run_length.py
     gen_whitener.py
+    run_length.py
     snr_estimators.py
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}
 )
@@ -38,10 +27,10 @@ install(
 
 # Narrowband
 GR_PYTHON_INSTALL(PROGRAMS
-    narrowband/uhd_interface.py
+    narrowband/benchmark_add_channel.py
     narrowband/digital_bert_rx.py
     narrowband/digital_bert_tx.py
-    narrowband/benchmark_add_channel.py
+    narrowband/uhd_interface.py
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/narrowband
 )
 
@@ -56,9 +45,12 @@ GR_PYTHON_INSTALL(PROGRAMS
 
 install(
     FILES
-    ofdm/tx_ofdm.grc
-    ofdm/rx_ofdm.grc
+    ofdm/ofdm_sync.m
+    ofdm/ofdm_sync_pn.m
+    ofdm/plot_ofdm.m
     ofdm/ofdm_loopback.grc
+    ofdm/rx_ofdm.grc
+    ofdm/tx_ofdm.grc
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/ofdm
 )
 
@@ -81,9 +73,9 @@ install(
 install(
     FILES
     packet/burst_tagger.grc
+    packet/example_corr_est.grc
     packet/example_corr_est_and_clock_sync.grc
     packet/example_corr_est_and_phase_sync.grc
-    packet/example_corr_est.grc
     packet/formatter_crc.grc
     packet/formatter_ofdm.grc
     packet/packet_loopback_hier.grc
@@ -97,8 +89,8 @@ install(
     packet/tx_stage3.grc
     packet/tx_stage4.grc
     packet/tx_stage5.grc
-    packet/tx_stage6a.grc
     packet/tx_stage6.grc
+    packet/tx_stage6a.grc
     packet/uhd_packet_rx.grc
     packet/uhd_packet_rx_tun.grc
     packet/uhd_packet_tx.grc

@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -88,15 +76,8 @@ symbol_sync_ff_impl::symbol_sync_ff_impl(enum ted_type detector_type,
       d_out_instantaneous_clock_period(NULL),
       d_out_average_clock_period(NULL)
 {
-    // Brute force fix of the output io_signature, because I can't get
-    // an anonymous std::vector<int>() rvalue, with a const expression
-    // initializing the vector, to work.  Lvalues seem to make everything
-    // better.
-    int output_io_sizes[4] = {
-        sizeof(float), sizeof(float), sizeof(float), sizeof(float)
-    };
-    std::vector<int> output_io_sizes_vector(&output_io_sizes[0], &output_io_sizes[4]);
-    set_output_signature(io_signature::makev(1, 4, output_io_sizes_vector));
+    set_output_signature(io_signature::makev(
+        1, 4, { sizeof(float), sizeof(float), sizeof(float), sizeof(float) }));
 
     if (sps <= 1.0f)
         throw std::out_of_range("nominal samples per symbol must be > 1");
@@ -312,11 +293,11 @@ void symbol_sync_ff_impl::propagate_tags(uint64_t nitems_rd,
     // on and after the interpolated input sample, up to half way to
     // the next output sample.
 
-    uint64_t mid_period_offset =
+    const uint64_t mid_period_offset =
         nitems_rd + d_filter_delay + static_cast<uint64_t>(iidx) +
         static_cast<uint64_t>(llroundf(iidx_fraction + inst_output_period / 2.0f));
 
-    uint64_t output_offset = nitems_wr + static_cast<uint64_t>(oidx);
+    const uint64_t output_offset = nitems_wr + static_cast<uint64_t>(oidx);
 
     int i;
     std::vector<tag_t>::iterator t;
@@ -338,7 +319,7 @@ void symbol_sync_ff_impl::save_expiring_tags(uint64_t nitems_rd, int consumed)
     // Tags that have already been propagated, have already been erased
     // from d_tags.
 
-    uint64_t consumed_offset = nitems_rd + static_cast<uint64_t>(consumed);
+    const uint64_t consumed_offset = nitems_rd + static_cast<uint64_t>(consumed);
     std::vector<tag_t>::iterator t;
 
     for (t = d_tags.begin(); t != d_tags.end();) {
@@ -393,7 +374,7 @@ void symbol_sync_ff_impl::emit_optional_output(int oidx,
 void symbol_sync_ff_impl::forecast(int noutput_items,
                                    gr_vector_int& ninput_items_required)
 {
-    unsigned ninputs = ninput_items_required.size();
+    const unsigned ninputs = ninput_items_required.size();
 
     // The '+ 2' in the expression below is an effort to always have at
     // least one output sample, even if the main loop decides it has to
@@ -402,9 +383,9 @@ void symbol_sync_ff_impl::forecast(int noutput_items,
     // The d_clock->get_max_avg_period() is also an effort to do the same,
     // in case we have the worst case allowable clock timing deviation on
     // input.
-    int answer = static_cast<int>(ceilf(static_cast<float>(noutput_items + 2) *
-                                        d_clock->get_max_avg_period() / d_osps)) +
-                 static_cast<int>(d_interp->ntaps());
+    const int answer = static_cast<int>(ceilf(static_cast<float>(noutput_items + 2) *
+                                              d_clock->get_max_avg_period() / d_osps)) +
+                       static_cast<int>(d_interp->ntaps());
 
     for (unsigned i = 0; i < ninputs; i++)
         ninput_items_required[i] = answer;
@@ -416,7 +397,7 @@ int symbol_sync_ff_impl::general_work(int noutput_items,
                                       gr_vector_void_star& output_items)
 {
     // max input to consume
-    int ni = ninput_items[0] - static_cast<int>(d_interp->ntaps());
+    const int ni = ninput_items[0] - static_cast<int>(d_interp->ntaps());
     if (ni <= 0)
         return 0;
 
@@ -434,8 +415,8 @@ int symbol_sync_ff_impl::general_work(int noutput_items,
     int look_ahead_phase_n = 0;
     float look_ahead_phase_wrapped = 0.0f;
 
-    uint64_t nitems_rd = nitems_read(0);
-    uint64_t nitems_wr = nitems_written(0);
+    const uint64_t nitems_rd = nitems_read(0);
+    const uint64_t nitems_wr = nitems_written(0);
     uint64_t sync_tag_offset;
     float sync_timing_offset;
     float sync_clock_period;

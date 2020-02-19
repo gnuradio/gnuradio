@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_GR_UHD_BLOCK_IMPL_H
@@ -68,6 +56,8 @@ public:
                                   const std::string& attr,
                                   const size_t mboard = 0);
     size_t get_num_mboards();
+    std::vector<std::string> get_filter_names(const std::string& search_mask);
+    ::uhd::filter_info_base::sptr get_filter(const std::string& path);
 
     // Setters
     void set_time_source(const std::string& source, const size_t mboard);
@@ -84,6 +74,7 @@ public:
                        const boost::uint32_t value,
                        const boost::uint32_t mask,
                        const size_t mboard);
+    void set_filter(const std::string& path, ::uhd::filter_info_base::sptr filter);
 
     // RPC
     void setup_rpc();

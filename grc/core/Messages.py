@@ -1,19 +1,8 @@
 # Copyright 2007, 2015 Free Software Foundation, Inc.
 # This file is part of GNU Radio
 #
-# GNU Radio Companion is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# GNU Radio Companion is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+# SPDX-License-Identifier: GPL-2.0-or-later
+# 
 
 
 from __future__ import absolute_import
@@ -143,3 +132,17 @@ def send_fail_save_preferences(prefs_file_path):
 
 def send_warning(warning):
     send('>>> Warning: %s\n' % warning)
+
+
+def send_flowgraph_error_report(flowgraph):
+    """ verbose error report for flowgraphs """
+    error_list = flowgraph.get_error_messages()
+    if not error_list:
+        return
+
+    send('*' * 50 + '\n')
+    summary_msg = '{} errors from flowgraph:\n'.format(len(error_list))
+    send(summary_msg)
+    for err in error_list:
+        send(err)
+    send('\n' + '*' * 50 + '\n')

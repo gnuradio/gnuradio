@@ -1,14 +1,5 @@
 % if not generate_options.startswith('hb'):
-<%
-from sys import version_info
-from gnuradio import eng_notation
-python_version = version_info.major
-%>\
-% if python_version == 2:
-#!/usr/bin/env python2
-% elif python_version == 3:
 #!/usr/bin/env python3
-% endif
 % endif
 # -*- coding: utf-8 -*-
 <%def name="indent(code)">${ '\n        '.join(str(code).splitlines()) }</%def>
@@ -51,6 +42,7 @@ if __name__ == '__main__':
 ##${imp.replace("  # grc-generated hier_block", "")}
 ${imp}
 % endfor
+
 ########################################################
 ##Create Class
 ##  Write the class declaration for a top or hier block.
@@ -67,7 +59,7 @@ from gnuradio import qtgui
 class ${class_name}(gr.top_block, Qt.QWidget):
 
     def __init__(${param_str}):
-        gr.top_block.__init__(self, "${title}")
+        gr.top_block.__init__(self, "${title}", catch_exceptions=${catch_exceptions})
         Qt.QWidget.__init__(self)
         self.setWindowTitle("${title}")
         qtgui.util.check_set_qss()
@@ -100,7 +92,7 @@ class ${class_name}(gr.top_block, Qt.QWidget):
 
 class ${class_name}(gr.top_block):
     def __init__(self, doc):
-        gr.top_block.__init__(self, "${title}")
+        gr.top_block.__init__(self, "${title}", catch_exceptions=${catch_exceptions})
         self.doc = doc
         self.plot_lst = []
         self.widget_lst = []
@@ -109,7 +101,7 @@ class ${class_name}(gr.top_block):
 class ${class_name}(gr.top_block):
 
     def __init__(${param_str}):
-        gr.top_block.__init__(self, "${title}")
+        gr.top_block.__init__(self, "${title}", catch_exceptions=${catch_exceptions})
 % elif generate_options.startswith('hb'):
     <% in_sigs = flow_graph.get_hier_block_stream_io('in') %>
     <% out_sigs = flow_graph.get_hier_block_stream_io('out') %>
@@ -228,6 +220,7 @@ gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}])\
         ${ connection.rstrip() }
         % endfor
         % endif
+
 ########################################################
 ## QT sink close method reimplementation
 ########################################################
@@ -275,18 +268,37 @@ gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}])\
         % endfor
         % endif
     % endfor
+\
+% for snip in flow_graph.get_snippets_dict():
+
+${indent(snip['def'])}
+% for line in snip['lines']:
+    ${indent(line)}
+% endfor
+% endfor
+\
+<%
+snippet_sections = ['main_after_init', 'main_after_start', 'main_after_stop']
+snippets = {}
+for section in snippet_sections:
+    snippets[section] = flow_graph.get_snippets_dict(section) 
+%>
+\
+%for section in snippet_sections:
+%if snippets[section]:
+
+def snippets_${section}(tb):
+    % for snip in snippets[section]:
+    ${indent(snip['call'])}
+    % endfor
+%endif
+%endfor
+
 ########################################################
 ##Create Main
 ##  For top block code, generate a main routine.
 ##  Instantiate the top block and run as gui or cli.
 ########################################################
-<%def name="make_default(type_, param)">
-    % if type_ == 'eng_float':
-eng_notation.num_to_str(float(${param.templates.render('make')}))
-    % else:
-${param.templates.render('make')}
-    % endif
-</%def>\
 % if not generate_options.startswith('hb'):
 <% params_eq_list = list() %>
 % if parameters:
@@ -312,7 +324,7 @@ def argument_parser():
 
         default = param.templates.render('make')
         if type_ == 'eng_float':
-            default = '"' + eng_notation.num_to_str(float(default)) + '"'
+            default = "eng_notation.num_to_str(float(" + default + "))"
         # FIXME:
         if type_ == 'string':
             type_ = 'str'
@@ -344,9 +356,11 @@ def main(top_block_cls=${class_name}, options=None):
     qapp = Qt.QApplication(sys.argv)
 
     tb = top_block_cls(${ ', '.join(params_eq_list) })
+    ${'snippets_main_after_init(tb)' if snippets['main_after_init'] else ''}
     % if flow_graph.get_option('run'):
     tb.start(${flow_graph.get_option('max_nouts') or ''})
     % endif
+    ${'snippets_main_after_start(tb)' if snippets['main_after_start'] else ''}
     % if flow_graph.get_option('qt_qss_theme'):
     tb.setStyleSheetFromFile("${ flow_graph.get_option('qt_qss_theme') }")
     % endif
@@ -365,6 +379,7 @@ def main(top_block_cls=${class_name}, options=None):
     def quitting():
         tb.stop()
         tb.wait()
+        ${'snippets_main_after_stop(tb)' if snippets['main_after_stop'] else ''}
     qapp.aboutToQuit.connect(quitting)
     % for m in monitors:
     % if m.params['en'].get_value() == 'True':
@@ -377,6 +392,7 @@ def main(top_block_cls=${class_name}, options=None):
     def killProc(signum, frame, tb):
         tb.stop()
         tb.wait()
+        ${'snippets_main_after_stop(tb)' if snippets['main_after_stop'] else ''}
         serverProc.terminate()
         serverProc.kill()
     time.sleep(1)
@@ -392,20 +408,23 @@ def main(top_block_cls=${class_name}, options=None):
                                url = "http://localhost:" + port + "/bokehgui")
         # Create Top Block instance
         tb = top_block_cls(doc)
+        ${'snippets_main_after_init(tb)' if snippets['main_after_init'] else ''}
         try:
             tb.start()
+            ${'snippets_main_after_start(tb)' if snippets['main_after_start'] else ''}
             signal.signal(signal.SIGTERM, functools.partial(killProc, tb=tb))
             session.loop_until_closed()
         finally:
             print("Exiting the simulation. Stopping Bokeh Server")
             tb.stop()
             tb.wait()
+            ${'snippets_main_after_stop(tb)' if snippets['main_after_stop'] else ''}
     finally:
         serverProc.terminate()
         serverProc.kill()
     % elif generate_options == 'no_gui':
     tb = top_block_cls(${ ', '.join(params_eq_list) })
-
+    ${'snippets_main_after_init(tb)' if snippets['main_after_init'] else ''}
     def sig_handler(sig=None, frame=None):
         % for m in monitors:
         % if m.params['en'].get_value() == 'True':
@@ -414,6 +433,7 @@ def main(top_block_cls=${class_name}, options=None):
         % endfor
         tb.stop()
         tb.wait()
+        ${'snippets_main_after_stop(tb)' if snippets['main_after_stop'] else ''}
         sys.exit(0)
 
     signal.signal(signal.SIGINT, sig_handler)
@@ -421,6 +441,7 @@ def main(top_block_cls=${class_name}, options=None):
 
     % if flow_graph.get_option('run_options') == 'prompt':
     tb.start(${ flow_graph.get_option('max_nouts') or '' })
+    ${'snippets_main_after_start(tb)' if snippets['main_after_start'] else ''}
     % for m in monitors:
     % if m.params['en'].get_value() == 'True':
     tb.${m.name}.start()
@@ -431,8 +452,10 @@ def main(top_block_cls=${class_name}, options=None):
     except EOFError:
         pass
     tb.stop()
+    ## ${'snippets_main_after_stop(tb)' if snippets['main_after_stop'] else ''}
     % elif flow_graph.get_option('run_options') == 'run':
     tb.start(${flow_graph.get_option('max_nouts') or ''})
+    ${'snippets_main_after_start(tb)' if snippets['main_after_start'] else ''}
     % for m in monitors:
     % if m.params['en'].get_value() == 'True':
     tb.${m.name}.start()
@@ -440,13 +463,13 @@ def main(top_block_cls=${class_name}, options=None):
     % endfor
     % endif
     tb.wait()
+    ${'snippets_main_after_stop(tb)' if snippets['main_after_stop'] else ''}
     % for m in monitors:
     % if m.params['en'].get_value() == 'True':
     tb.${m.name}.stop()
     % endif
     % endfor
     % endif
-
 
 if __name__ == '__main__':
     main()

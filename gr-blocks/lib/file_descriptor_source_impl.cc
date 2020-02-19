@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -58,16 +46,12 @@ file_descriptor_source_impl::file_descriptor_source_impl(size_t itemsize,
       d_itemsize(itemsize),
       d_fd(fd),
       d_repeat(repeat),
-      d_residue(new unsigned char[itemsize]),
+      d_residue(itemsize),
       d_residue_len(0)
 {
 }
 
-file_descriptor_source_impl::~file_descriptor_source_impl()
-{
-    close(d_fd);
-    delete[] d_residue;
-}
+file_descriptor_source_impl::~file_descriptor_source_impl() { close(d_fd); }
 
 int file_descriptor_source_impl::read_items(char* buf, int nitems)
 {
@@ -77,7 +61,7 @@ int file_descriptor_source_impl::read_items(char* buf, int nitems)
     int nbytes_read = 0;
 
     if (d_residue_len > 0) {
-        memcpy(buf, d_residue, d_residue_len);
+        memcpy(buf, d_residue.data(), d_residue_len);
         nbytes_read = d_residue_len;
         d_residue_len = 0;
     }
@@ -99,11 +83,11 @@ int file_descriptor_source_impl::read_items(char* buf, int nitems)
 int file_descriptor_source_impl::handle_residue(char* buf, int nbytes_read)
 {
     assert(nbytes_read >= 0);
-    int nitems_read = nbytes_read / d_itemsize;
+    const unsigned int nitems_read = nbytes_read / d_itemsize;
     d_residue_len = nbytes_read % d_itemsize;
     if (d_residue_len > 0) {
         // fprintf (stderr, "handle_residue: %d\n", d_residue_len);
-        memcpy(d_residue, buf + nbytes_read - d_residue_len, d_residue_len);
+        memcpy(d_residue.data(), buf + nbytes_read - d_residue_len, d_residue_len);
     }
     return nitems_read;
 }

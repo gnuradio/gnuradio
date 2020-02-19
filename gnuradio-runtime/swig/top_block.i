@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 %template(top_block_sptr) boost::shared_ptr<gr::top_block>;
@@ -26,13 +14,13 @@ namespace gr {
   // Hack to have a Python shim implementation of gr.top_block
   // that instantiates one of these and passes through calls
   %rename(top_block_swig) make_top_block;
-  gr::top_block_sptr make_top_block(const std::string name)
+  gr::top_block_sptr make_top_block(const std::string name, bool catch_exceptions)
     throw (std::logic_error);
 
   class top_block : public gr::hier_block2
   {
   private:
-    top_block(const std::string &name);
+    top_block(const std::string &name, bool catch_exceptions=true);
 
   public:
     ~top_block();

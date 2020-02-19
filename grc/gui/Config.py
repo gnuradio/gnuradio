@@ -2,19 +2,8 @@
 Copyright 2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
-GNU Radio Companion is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+SPDX-License-Identifier: GPL-2.0-or-later
 
-GNU Radio Companion is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from __future__ import absolute_import, print_function
@@ -30,7 +19,7 @@ from six.moves import configparser
 HEADER = """\
 # This contains only GUI settings for GRC and is not meant for users to edit.
 #
-# GRC settings not accessible through the GUI are in gnuradio.conf under
+# GRC settings not accessible through the GUI are in config.conf under
 # section [grc].
 
 """
@@ -99,18 +88,6 @@ class Config(CoreConfig):
     @property
     def wiki_block_docs_url_prefix(self):
         return self._gr_prefs.get_string('grc-docs', 'wiki_block_docs_url_prefix', '')
-
-    @property
-    def default_canvas_size(self):
-        try:  # ugly, but matches current code style
-            raw = self._gr_prefs.get_string('grc', 'canvas_default_size', '1280, 1024')
-            value = tuple(int(x.strip('() ')) for x in raw.split(','))
-            if len(value) != 2 or not all(300 < x < 4096 for x in value):
-                raise ValueError
-            return value
-        except (ValueError, TypeError):
-            print("Error: invalid 'canvas_default_size' setting.", file=sys.stderr)
-            return Constants.DEFAULT_CANVAS_SIZE_DEFAULT
 
     @property
     def font_size(self):
@@ -192,7 +169,7 @@ class Config(CoreConfig):
     def variable_editor_position(self, pos=None, sidebar=False):
         # Figure out default
         if sidebar:
-            w, h = self.main_window_size()
+            _, h = self.main_window_size()
             return self.entry('variable_editor_sidebar_position', pos, default=int(h*0.7))
         else:
             return self.entry('variable_editor_position', pos, default=int(self.blocks_window_position()*0.5))

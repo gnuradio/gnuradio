@@ -39,6 +39,11 @@
   - blocks_file_meta_source
   - blocks_file_meta_sink
   - blocks_tagged_file_sink
+- IQ Correction:
+  - blocks_correctiq_auto
+  - blocks_correctiq_man
+  - blocks_swapiq
+  - blocks_correctiq
 - Level Controllers:
   - blocks_mute_xx
   - blocks_sample_and_hold_xx
@@ -85,6 +90,9 @@
   - blocks_tagged_stream_multiply_length
   - blocks_tagged_stream_to_pdu
   - blocks_random_pdu
+  - blocks_var_to_msg
+  - blocks_msgpair_to_var
+  - blocks_msg_meta_to_pair
 - Misc:
   - blocks_throttle
   - blocks_vector_source_x

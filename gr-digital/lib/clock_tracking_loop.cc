@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -111,60 +99,6 @@ void clock_tracking_loop::update_gains()
 
     set_alpha(alpha);
     set_beta(beta);
-}
-
-void clock_tracking_loop::advance_loop(float error)
-{
-    // So the loop can be reverted one step, if needed.
-    d_prev_avg_period = d_avg_period;
-    d_prev_inst_period = d_inst_period;
-    d_prev_phase = d_phase;
-
-    // Integral arm of PI filter
-    d_avg_period = d_avg_period + d_beta * error;
-    // Limit the integral arm output here, as a large negative
-    // error input can lead to a negative d_avg_period, which
-    // will cause an infitine loop in the phase wrap method.
-    period_limit();
-
-    // Proportional arm of PI filter and final sum of PI filter arms
-    d_inst_period = d_avg_period + d_alpha * error;
-    // Limit the filter output here, for the errant case of a large
-    // negative error input, that can lead to a negative d_inst_period,
-    // which results in an incorrect phase increment, as it is assumed
-    // to be moving forward to the next symbol.
-    if (d_inst_period <= 0.f)
-        d_inst_period = d_avg_period;
-
-    // Compute the new, unwrapped clock phase
-    d_phase = d_phase + d_inst_period;
-}
-
-void clock_tracking_loop::revert_loop()
-{
-    d_avg_period = d_prev_avg_period;
-    d_inst_period = d_prev_inst_period;
-    d_phase = d_prev_phase;
-}
-
-void clock_tracking_loop::phase_wrap()
-{
-    float period = d_avg_period; // One could argue d_inst_period instead
-    float limit = period / 2.0f;
-
-    while (d_phase > limit)
-        d_phase -= period;
-
-    while (d_phase <= -limit)
-        d_phase += period;
-}
-
-void clock_tracking_loop::period_limit()
-{
-    if (d_avg_period > d_max_avg_period)
-        d_avg_period = d_max_avg_period;
-    else if (d_avg_period < d_min_avg_period)
-        d_avg_period = d_min_avg_period;
 }
 
 /*******************************************************************

@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -8,88 +9,87 @@ options:
     description: ''
     gen_cmake: 'On'
     gen_linking: dynamic
-    generate_options: no_gui
+    generate_options: qt_gui
     hier_block_src_path: '.:'
     id: uhd_atsc_capture
     max_nouts: '0'
     output_language: python
     placement: (0,0)
     qt_qss_theme: ''
-    realtime_scheduling: ''
+    realtime_scheduling: '1'
     run: 'True'
     run_command: '{python} -u {filename}'
-    run_options: run
+    run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: Receive ATSC from UHD
-    window_size: 4000, 4000
+    title: Capture ATSC Channel
   states:
-    coordinate: [11, 9]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [10, 10]
     rotation: 0
     state: enabled
 
 blocks:
-- name: antenna
-  id: variable
-  parameters:
-    comment: ''
-    value: '"TX/RX"'
-  states:
-    coordinate: [32, 188.0]
-    rotation: 0
-    state: enabled
 - name: atsc_sym_rate
   id: variable
   parameters:
     comment: ''
     value: 4.5e6/286*684
   states:
-    coordinate: [128, 124.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [192, 12.0]
     rotation: 0
     state: enabled
-- name: duration
-  id: variable
+- name: center_freq
+  id: variable_qtgui_entry
   parameters:
-    comment: ''
-    value: '30'
+    comment: Digital Ch 28 - 557MHz
+    gui_hint: 0,0,1,2
+    label: Center Frequency
+    type: real
+    value: 557e6
   states:
-    coordinate: [424, 188.0]
-    rotation: 0
-    state: enabled
-- name: freq
-  id: variable
-  parameters:
-    comment: ''
-    value: 605e6
-  states:
-    coordinate: [128, 188.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [792, 4.0]
     rotation: 0
     state: enabled
 - name: gain
-  id: variable
+  id: variable_qtgui_range
   parameters:
     comment: ''
-    value: '18'
+    gui_hint: 1,0,1,2
+    label: Gain
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '2'
+    stop: '60'
+    value: '46'
+    widget: counter_slider
   states:
-    coordinate: [232, 188.0]
-    rotation: 0
-    state: enabled
-- name: oversampled_rate
-  id: variable
-  parameters:
-    comment: ''
-    value: atsc_sym_rate*sps
-  states:
-    coordinate: [248, 124.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [656, 4.0]
     rotation: 0
     state: enabled
 - name: sample_rate
   id: variable
   parameters:
     comment: ''
-    value: 6.25e6
+    value: atsc_sym_rate*sps
   states:
-    coordinate: [320, 188.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 12.0]
     rotation: 0
     state: enabled
 - name: sps
@@ -98,7 +98,10 @@ blocks:
     comment: ''
     value: '1.1'
   states:
-    coordinate: [32, 124.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [432, 12.0]
     rotation: 0
     state: enabled
 - name: blocks_file_sink_0
@@ -108,35 +111,23 @@ blocks:
     alias: ''
     append: 'False'
     comment: ''
-    file: atsc_iq.sc16
-    type: short
+    file: /tmp/atsc_11.8385MSPS.iq
+    type: complex
     unbuffered: 'False'
-    vlen: '2'
+    vlen: '1'
   states:
-    coordinate: [600, 324.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [336, 276.0]
     rotation: 0
-    state: enabled
-- name: blocks_head_0
-  id: blocks_head
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_items: int(sample_rate*duration)
-    type: short
-    vlen: '2'
-  states:
-    coordinate: [352, 340.0]
-    rotation: 0
-    state: enabled
+    state: true
 - name: u
   id: uhd_usrp_source
   parameters:
     affinity: ''
     alias: ''
-    ant0: antenna
+    ant0: RX2
     ant1: ''
     ant10: ''
     ant11: ''
@@ -200,7 +191,7 @@ blocks:
     bw7: '0'
     bw8: '0'
     bw9: '0'
-    center_freq0: freq
+    center_freq0: center_freq
     center_freq1: '0'
     center_freq10: '0'
     center_freq11: '0'
@@ -241,7 +232,11 @@ blocks:
     clock_source5: ''
     clock_source6: ''
     clock_source7: ''
-    comment: ''
+    comment: 'Sample rate matches symbol rate to
+
+      avoid interpolation error and no  longer
+
+      requires an arbitrary resampler for decoding.'
     dc_offs_enb0: '""'
     dc_offs_enb1: '""'
     dc_offs_enb10: '""'
@@ -274,7 +269,7 @@ blocks:
     dc_offs_enb7: '""'
     dc_offs_enb8: '""'
     dc_offs_enb9: '""'
-    dev_addr: '""'
+    dev_addr: '"num_recv_frames=128"'
     dev_args: '""'
     gain0: gain
     gain1: '0'
@@ -441,6 +436,38 @@ blocks:
     norm_gain9: 'False'
     num_mboards: '1'
     otw: ''
+    rx_agc0: Disabled
+    rx_agc1: Default
+    rx_agc10: Default
+    rx_agc11: Default
+    rx_agc12: Default
+    rx_agc13: Default
+    rx_agc14: Default
+    rx_agc15: Default
+    rx_agc16: Default
+    rx_agc17: Default
+    rx_agc18: Default
+    rx_agc19: Default
+    rx_agc2: Default
+    rx_agc20: Default
+    rx_agc21: Default
+    rx_agc22: Default
+    rx_agc23: Default
+    rx_agc24: Default
+    rx_agc25: Default
+    rx_agc26: Default
+    rx_agc27: Default
+    rx_agc28: Default
+    rx_agc29: Default
+    rx_agc3: Default
+    rx_agc30: Default
+    rx_agc31: Default
+    rx_agc4: Default
+    rx_agc5: Default
+    rx_agc6: Default
+    rx_agc7: Default
+    rx_agc8: Default
+    rx_agc9: Default
     samp_rate: sample_rate
     sd_spec0: ''
     sd_spec1: ''
@@ -453,7 +480,7 @@ blocks:
     show_lo_controls: 'False'
     stream_args: ''
     stream_chans: '[]'
-    sync: sync
+    sync: none
     time_source0: ''
     time_source1: ''
     time_source2: ''
@@ -462,15 +489,98 @@ blocks:
     time_source5: ''
     time_source6: ''
     time_source7: ''
-    type: sc16
+    type: fc32
   states:
-    coordinate: [48, 308.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 116.0]
+    rotation: 0
+    state: enabled
+- name: usrp_freq_sink
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '0.2'
+    axislabels: 'True'
+    bw: sample_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: center_freq
+    fftsize: '2048'
+    freqhalf: 'True'
+    grid: 'True'
+    gui_hint: 3,0,1,4
+    label: Relative Gain
+    label1: RX Signal
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"RX Spectrum"'
+    nconnections: '1'
+    showports: 'True'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+    ymax: '-20'
+    ymin: '-100'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [304, 112.0]
     rotation: 0
     state: enabled
 
 connections:
-- [blocks_head_0, '0', blocks_file_sink_0, '0']
-- [u, '0', blocks_head_0, '0']
+- [u, '0', blocks_file_sink_0, '0']
+- [u, '0', usrp_freq_sink, '0']
 
 metadata:
   file_format: 1

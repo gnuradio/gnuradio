@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -70,7 +58,7 @@ void annotator_raw_impl::add_tag(uint64_t offset, pmt_t key, pmt_t val)
     // make sure we are not adding an item in the past!
     if (tag.offset > nitems_read(0)) {
         throw std::runtime_error(
-            "annotator_raw::add_tag: item added too far in the past\n.");
+            "annotator_raw::add_tag: item added too far in the past.");
     }
 }
 

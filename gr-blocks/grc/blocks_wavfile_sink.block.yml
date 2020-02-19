@@ -37,8 +37,10 @@ templates:
 cpp_templates:
     includes: ['#include <gnuradio/blocks/wavfile_sink.h>']
     declarations: 'blocks::wavfile_sink::sptr ${id};'
-    make: 'this->${id} = blocks::wavfile_sink::make(${file}, ${nchan}, ${samp_rate}, ${bits_per_sample});'
+    make: |-
+      this->${id} = blocks::wavfile_sink::make(${file}${'.c_str()' if str(file)[0] != "'" and str(file)[0] != "\"" else ''}, ${nchan}, ${samp_rate}, ${bits_per_sample});
     callbacks:
-    - open(${file})
+    ## TODO Handle std::string type when const char* argument is needed
+    - this->${id}->open(${file})
 
 file_format: 1

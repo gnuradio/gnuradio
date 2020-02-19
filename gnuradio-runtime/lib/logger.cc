@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 /*******************************************************************************
@@ -194,7 +182,7 @@ void logger_set_level(logger_ptr logger, const std::string& level)
     else if (nocase == "emerg")
         logger_set_level(logger, log4cpp::Priority::EMERG);
     else
-        throw std::runtime_error("logger_set_level: Bad level type.\n");
+        throw std::runtime_error("logger_set_level: Bad level type.");
 }
 
 void logger_set_level(logger_ptr logger, log4cpp::Priority::Value level)
@@ -263,7 +251,7 @@ void logger_add_file_appender(logger_ptr logger,
 {
     log4cpp::PatternLayout* layout = new log4cpp::PatternLayout();
     log4cpp::Appender* app =
-        new log4cpp::FileAppender("FileAppender::" + filename, filename);
+        new log4cpp::FileAppender("FileAppender::" + filename, filename, append);
     layout->setConversionPattern(pattern);
     app->setLayout(layout);
     logger->setAppender(app);

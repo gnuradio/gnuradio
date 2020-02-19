@@ -55,6 +55,14 @@ inputs:
     id: en
     optional: true
     hide: ${ showports }
+-   domain: message
+    id: iindex
+    optional: true
+    hide: ${ showports }
+-   domain: message
+    id: oindex
+    optional: true
+    hide: ${ showports }
 
 outputs:
 -   domain: stream
@@ -86,7 +94,6 @@ cpp_templates:
     - set_input_index(${input_index})
     - set_output_index(${output_index})
     translations:
-        gr.sizeof_: 'sizeof('
         'True': 'true'
         'False': 'false'
 

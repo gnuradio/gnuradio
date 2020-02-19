@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_GR_RANDOM_H
@@ -27,8 +15,8 @@
 #include <gnuradio/gr_complex.h>
 
 #include <stdlib.h>
-#include <boost/random.hpp>
 #include <ctime>
+#include <random>
 
 namespace gr {
 
@@ -43,12 +31,10 @@ protected:
     bool d_gauss_stored;
     float d_gauss_value;
 
-    boost::mt19937* d_rng; // mersenne twister as random number generator
-    boost::uniform_real<float>*
+    std::mt19937 d_rng; // mersenne twister as random number generator
+    std::uniform_real_distribution<float>
         d_uniform; // choose uniform distribution, default is [0,1)
-    boost::uniform_int<>* d_integer_dis;
-    boost::variate_generator<boost::mt19937&, boost::uniform_real<float>>* d_generator;
-    boost::variate_generator<boost::mt19937&, boost::uniform_int<>>* d_integer_generator;
+    std::uniform_int_distribution<> d_integer_dis;
 
 public:
     random(unsigned int seed = 0, int min_integer = 0, int max_integer = 2);

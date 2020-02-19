@@ -3,20 +3,8 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 #
 """ Module to convert XML bindings to YAML bindings """
 
@@ -34,6 +22,8 @@ from .base import block_name, run, cli_input, ModToolException
 @click.command('update', short_help=ModToolUpdate.description)
 @click.option('--complete', is_flag=True, default=None,
               help="Convert all the XML bindings to YAML.")
+@click.option('-I', '--include-blacklisted', is_flag=True, default=None,
+              help="Include XML files with blacklisted names in the conversion process")
 @block_name
 def cli(**kwargs):
     """ Update the XML bindings to YAML bindings """

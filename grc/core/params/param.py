@@ -1,19 +1,8 @@
 # Copyright 2008-2017 Free Software Foundation, Inc.
 # This file is part of GNU Radio
 #
-# GNU Radio Companion is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# GNU Radio Companion is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+# SPDX-License-Identifier: GPL-2.0-or-later
+# 
 
 from __future__ import absolute_import
 
@@ -256,9 +245,13 @@ class Param(Element):
         elif dtype in ('string', 'file_open', 'file_save', '_multiline', '_multiline_python_external'):
             # Do not check if file/directory exists, that is a runtime issue
             try:
-                value = self.parent_flowgraph.evaluate(expr)
-                if not isinstance(value, str):
-                    raise Exception()
+                # Do not evaluate multiline strings (code snippets or comments)
+                if dtype not in ['_multiline','_multiline_python_external']:
+                    value = self.parent_flowgraph.evaluate(expr)
+                    if not isinstance(value, str):
+                        raise Exception()
+                else:
+                    value = str(expr)
             except Exception:
                 self._stringify_flag = True
                 value = str(expr)

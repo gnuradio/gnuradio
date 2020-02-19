@@ -4,26 +4,15 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef GR_BLOCKS_CONTROL_LOOP
 #define GR_BLOCKS_CONTROL_LOOP
 
 #include <gnuradio/blocks/api.h>
+#include <gnuradio/math.h>
 
 namespace gr {
 namespace blocks {
@@ -84,7 +73,11 @@ public:
     /*! \brief Advance the control loop based on the current gain
      *  settings and the inputted error signal.
      */
-    void advance_loop(float error);
+    void advance_loop(float error)
+    {
+        d_freq = d_freq + d_beta * error;
+        d_phase = d_phase + d_freq + d_alpha * error;
+    }
 
     /*! \brief Keep the phase between -2pi and 2pi.
      *
@@ -99,7 +92,13 @@ public:
      * method in case another way is desired as this is fairly
      * heavy-handed.
      */
-    void phase_wrap();
+    void phase_wrap()
+    {
+        while (d_phase > (2 * GR_M_PI))
+            d_phase -= 2 * GR_M_PI;
+        while (d_phase < (-2 * GR_M_PI))
+            d_phase += 2 * GR_M_PI;
+    }
 
     /*! \brief Keep the frequency between d_min_freq and d_max_freq.
      *
@@ -114,7 +113,14 @@ public:
      * method in case another way is desired as this is fairly
      * heavy-handed.
      */
-    void frequency_limit();
+    void frequency_limit()
+    {
+        if (d_freq > d_max_freq)
+            d_freq = d_max_freq;
+        else if (d_freq < d_min_freq)
+            d_freq = d_min_freq;
+    }
+
 
     /*******************************************************************
      * SET FUNCTIONS

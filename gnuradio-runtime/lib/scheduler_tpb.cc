@@ -4,19 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -51,13 +40,16 @@ public:
     }
 };
 
-scheduler_sptr scheduler_tpb::make(flat_flowgraph_sptr ffg, int max_noutput_items)
+scheduler_sptr
+scheduler_tpb::make(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_exceptions)
 {
-    return scheduler_sptr(new scheduler_tpb(ffg, max_noutput_items));
+    return scheduler_sptr(new scheduler_tpb(ffg, max_noutput_items, catch_exceptions));
 }
 
-scheduler_tpb::scheduler_tpb(flat_flowgraph_sptr ffg, int max_noutput_items)
-    : scheduler(ffg, max_noutput_items)
+scheduler_tpb::scheduler_tpb(flat_flowgraph_sptr ffg,
+                             int max_noutput_items,
+                             bool catch_exceptions)
+    : scheduler(ffg, max_noutput_items, catch_exceptions)
 {
     int block_max_noutput_items;
 
@@ -91,7 +83,9 @@ scheduler_tpb::scheduler_tpb(flat_flowgraph_sptr ffg, int max_noutput_items)
             block_max_noutput_items = max_noutput_items;
         }
         d_threads.create_thread(thread::thread_body_wrapper<tpb_container>(
-            tpb_container(blocks[i], block_max_noutput_items, start_sync), name.str()));
+            tpb_container(blocks[i], block_max_noutput_items, start_sync),
+            name.str(),
+            catch_exceptions));
     }
     start_sync->wait();
 }

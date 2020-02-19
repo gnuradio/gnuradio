@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef _GR_NCO_H_
@@ -56,19 +44,7 @@ public:
     void adjust_freq(double delta_angle_rate) { phase_inc += delta_angle_rate; }
 
     // increment current phase angle
-    void step()
-    {
-        phase += phase_inc;
-        if (fabs(phase) > GR_M_PI) {
-            while (phase > GR_M_PI)
-                phase -= 2 * GR_M_PI;
-
-            while (phase < -GR_M_PI)
-                phase += 2 * GR_M_PI;
-        }
-    }
-
-    void step(int n)
+    void step(int n = 1)
     {
         phase += phase_inc * n;
         if (fabs(phase) > GR_M_PI) {
@@ -85,7 +61,7 @@ public:
     double get_freq() const { return phase_inc; }
 
     // compute sin and cos for current phase angle
-    void sincos(float* sinx, float* cosx) const;
+    void sincos(float* sinx, float* cosx) const { gr::sincosf(phase, sinx, cosx); }
 
     // compute cos or sin for current phase angle
     float cos() const { return std::cos(phase); }
@@ -104,12 +80,6 @@ protected:
     double phase;
     double phase_inc;
 };
-
-template <class o_type, class i_type>
-void nco<o_type, i_type>::sincos(float* sinx, float* cosx) const
-{
-    gr::sincosf(phase, sinx, cosx);
-}
 
 template <class o_type, class i_type>
 void nco<o_type, i_type>::sin(float* output, int noutput_items, double ampl)

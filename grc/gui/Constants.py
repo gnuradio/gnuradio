@@ -2,19 +2,8 @@
 Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
-GNU Radio Companion is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+SPDX-License-Identifier: GPL-2.0-or-later
 
-GNU Radio Companion is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from __future__ import absolute_import
@@ -40,8 +29,6 @@ MIN_DIALOG_HEIGHT = 500
 # default sizes
 DEFAULT_BLOCKS_WINDOW_WIDTH = 100
 DEFAULT_CONSOLE_WINDOW_WIDTH = 100
-
-DEFAULT_CANVAS_SIZE_DEFAULT = 1280, 1024
 
 FONT_SIZE = DEFAULT_FONT_SIZE = 8
 FONT_FAMILY = "Sans"
@@ -105,6 +92,17 @@ and kindly ask to update their GRC Block Descriptions or Block Tree to include a
 # _SCREEN_RESOLUTION = _SCREEN.get_resolution() if _SCREEN else -1
 # DPI_SCALING = _SCREEN_RESOLUTION / 96.0 if _SCREEN_RESOLUTION > 0 else 1.0
 DPI_SCALING = 1.0  # todo: figure out the GTK3 way (maybe cairo does this for us
+
+# Gtk-themes classified as dark
+GTK_DARK_THEMES = [
+    'Adwaita-dark',
+    'HighContrastInverse',
+]
+
+GTK_SETTINGS_INI_PATH = '~/.config/gtk-3.0/settings.ini'
+
+GTK_INI_PREFER_DARK_KEY = 'gtk-application-prefer-dark-theme'
+GTK_INI_THEME_NAME_KEY = 'gtk-theme-name'
 
 
 def update_font_size(font_size):

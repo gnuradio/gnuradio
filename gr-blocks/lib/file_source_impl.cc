@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -162,7 +150,9 @@ void file_source_impl::open(const char* filename,
 
     if (d_seekable) {
         // Check to ensure the file will be consumed according to item size
-        GR_FSEEK(d_new_fp, 0, SEEK_END);
+        if (GR_FSEEK(d_new_fp, 0, SEEK_END) == -1) {
+            throw std::runtime_error("can't fseek()");
+        }
         file_size = GR_FTELL(d_new_fp);
 
         // Make sure there will be at least one item available
@@ -198,7 +188,9 @@ void file_source_impl::open(const char* filename,
 
     // Rewind to start offset
     if (d_seekable) {
-        GR_FSEEK(d_new_fp, start_offset_items * d_itemsize, SEEK_SET);
+        if (GR_FSEEK(d_new_fp, start_offset_items * d_itemsize, SEEK_SET) == -1) {
+            throw std::runtime_error("can't fseek()");
+        }
     }
 
     d_updated = true;
@@ -281,7 +273,9 @@ int file_source_impl::work(int noutput_items,
 
             // Repeat: rewind and request tag
             if (d_repeat && d_seekable) {
-                GR_FSEEK(d_fp, d_start_offset_items * d_itemsize, SEEK_SET);
+                if (GR_FSEEK(d_fp, d_start_offset_items * d_itemsize, SEEK_SET) == -1) {
+                    throw std::runtime_error("can't fseek()");
+                }
                 d_items_remaining = d_length_items;
                 if (d_add_begin_tag != pmt::PMT_NIL) {
                     d_file_begin = true;

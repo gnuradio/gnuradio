@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #include <gnuradio/trellis/base.h>
@@ -86,12 +74,12 @@ fsm::fsm(const char* name)
     FILE* fsmfile;
 
     if ((fsmfile = fopen(name, "r")) == NULL)
-        throw std::runtime_error("fsm::fsm(const char *name): file open error\n");
+        throw std::runtime_error("fsm::fsm(const char *name): file open error");
     // printf("file open error in fsm()\n");
 
     if (fscanf(fsmfile, "%d %d %d\n", &d_I, &d_S, &d_O) == EOF) {
         if (ferror(fsmfile) != 0)
-            throw std::runtime_error("fsm::fsm(const char *name): file read error\n");
+            throw std::runtime_error("fsm::fsm(const char *name): file read error");
     }
 
     d_NS.resize(d_I * d_S);
@@ -102,7 +90,7 @@ fsm::fsm(const char* name)
             if (fscanf(fsmfile, "%d", &(d_NS[i * d_I + j])) == EOF) {
                 if (ferror(fsmfile) != 0)
                     throw std::runtime_error(
-                        "fsm::fsm(const char *name): file read error\n");
+                        "fsm::fsm(const char *name): file read error");
             }
         }
     }
@@ -111,7 +99,7 @@ fsm::fsm(const char* name)
             if (fscanf(fsmfile, "%d", &(d_OS[i * d_I + j])) == EOF) {
                 if (ferror(fsmfile) != 0)
                     throw std::runtime_error(
-                        "fsm::fsm(const char *name): file read error\n");
+                        "fsm::fsm(const char *name): file read error");
             }
         }
     }
@@ -450,7 +438,7 @@ void fsm::generate_TM()
         }
         if (done == false && d_S > 1) {
             // throw std::runtime_error ("fsm::generate_TM(): FSM appears to be
-            // disconnected\n");
+            // disconnected");
             printf("fsm::generate_TM(): FSM appears to be disconnected\n");
             printf("state %d cannot be reached from all other states\n", s);
         }

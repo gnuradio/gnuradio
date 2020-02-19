@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef THRIFT_APPLICATION_BASE_H
@@ -33,7 +21,7 @@
 namespace {
 // Time, in milliseconds, to wait between checks to the Thrift runtime to see if
 // it has fully initialized.
-static const unsigned int THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS(200);
+static constexpr unsigned int THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS(200);
 }; // namespace
 
 namespace apache {
@@ -156,7 +144,8 @@ protected:
     static const unsigned int d_default_thrift_buffer_size;
 
     /*!
-     * \ref page_logger instances.
+     * <a href="https://wiki.gnuradio.org/index.php/Logging" target="_blank">Logging</a>
+     * instances.
      */
     gr::logger_ptr d_logger, d_debug_logger;
 

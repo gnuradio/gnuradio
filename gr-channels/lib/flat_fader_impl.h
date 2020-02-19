@@ -4,34 +4,19 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef FLAT_FADER_IMPL_H
 #define FLAT_FADER_IMPL_H
 
-#include <gnuradio/io_signature.h>
-#include <stdint.h>
-#include <iostream>
-
-#include <boost/format.hpp>
-#include <boost/random.hpp>
-
 #include "sincostable.h"
 #include <gnuradio/fxpt.h>
+#include <gnuradio/io_signature.h>
+
+#include <stdint.h>
+#include <random>
 
 // FASTSINCOS:  0 = slow native,  1 = gr::fxpt impl,  2 = sincostable.h
 #define FASTSINCOS 2
@@ -43,14 +28,12 @@ class flat_fader_impl
 {
 private:
     // initial theta variate generator
-    boost::mt19937 seed_1;
-    boost::uniform_real<> dist_1; // U(-pi,pi)
-    boost::variate_generator<boost::mt19937&, boost::uniform_real<>> rv_1;
+    std::mt19937 rng_1;
+    std::uniform_real_distribution<double> dist_1; // U(-pi,pi)
 
     // random walk variate
-    boost::mt19937 seed_2;
-    boost::uniform_real<> dist_2; // U(0,1)
-    boost::variate_generator<boost::mt19937&, boost::uniform_real<>> rv_2;
+    std::mt19937 rng_2;
+    std::uniform_real_distribution<double> dist_2; // U(0,1)
 
 public:
     int d_N;        // number of sinusoids
@@ -74,7 +57,7 @@ public:
 
     void update_theta();
 
-    flat_fader_impl(unsigned int N, float fDTs, bool LOS, float K, int seed);
+    flat_fader_impl(uint32_t N, float fDTs, bool LOS, float K, uint32_t seed);
     gr_complex next_sample();
     void next_samples(std::vector<gr_complex>& HVec, int n_samples);
 

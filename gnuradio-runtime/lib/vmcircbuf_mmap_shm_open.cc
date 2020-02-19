@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -74,8 +62,8 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(int size) : gr::vmcircbuf(size)
             // Where the "portable format" doesn't work, we try building
             // a full filesystem pathname pointing into a suitable temporary directory.
 
-            seg_name = str(boost::format("%s/gnuradio-%d-%d") %
-                           gr::tmp_path() % getpid() % s_seg_counter);
+            seg_name = str(boost::format("%s/gnuradio-%d-%d") % gr::tmp_path() %
+                           getpid() % s_seg_counter);
         }
 
         shm_fd = shm_open(seg_name.c_str(), O_RDWR | O_CREAT | O_EXCL, 0600);
@@ -91,9 +79,8 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(int size) : gr::vmcircbuf(size)
                 EEXIST) // Named segment already exists (shouldn't happen).  Try again
                 continue;
 
-            static std::string msg =
-                str(boost::format("gr::vmcircbuf_mmap_shm_open: shm_open [%s]") %
-                    seg_name);
+            static std::string msg = str(
+                boost::format("gr::vmcircbuf_mmap_shm_open: shm_open [%s]") % seg_name);
             perror(msg.c_str());
             throw std::runtime_error("gr::vmcircbuf_mmap_shm_open");
         }

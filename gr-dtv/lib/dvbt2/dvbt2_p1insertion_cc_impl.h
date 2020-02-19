@@ -2,20 +2,8 @@
 /*
  * Copyright 2015 Free Software Foundation, Inc.
  *
- * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_DTV_DVBT2_P1INSERTION_CC_IMPL_H
@@ -32,11 +20,8 @@ namespace dtv {
 class dvbt2_p1insertion_cc_impl : public dvbt2_p1insertion_cc
 {
 private:
-    int fft_size;
-    int guard_interval;
     int frame_items;
     int insertion_items;
-    int N_P2;
     int p1_randomize[384];
     int modulation_sequence[384];
     int dbpsk_modulation_sequence[385];
@@ -60,8 +45,7 @@ private:
     int imag_positive_threshold_count;
     int imag_negative_threshold_count;
 
-    fft::fft_complex* p1_fft;
-    int p1_fft_size;
+    fft::fft_complex p1_fft;
 
     const static int p1_active_carriers[384];
     const static unsigned char s1_modulation_patterns[8][8];

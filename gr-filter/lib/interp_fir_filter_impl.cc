@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -52,11 +40,11 @@ interp_fir_filter_impl<IN_T, OUT_T, TAP_T>::interp_fir_filter_impl(
       d_firs(interpolation)
 {
     if (interpolation == 0) {
-        throw std::out_of_range("interp_fir_filter_impl: interpolation must be > 0\n");
+        throw std::out_of_range("interp_fir_filter_impl: interpolation must be > 0");
     }
 
     if (taps.empty()) {
-        throw std::runtime_error("interp_fir_filter_impl: no filter taps provided.\n");
+        throw std::runtime_error("interp_fir_filter_impl: no filter taps provided.");
     }
 
     std::vector<TAP_T> dummy_taps;
@@ -94,7 +82,7 @@ void interp_fir_filter_impl<IN_T, OUT_T, TAP_T>::set_taps(const std::vector<TAP_
 
     if (d_new_taps.size() % this->interpolation() != 0) {
         throw std::runtime_error(
-            "interp_fir_filter_impl: error setting interpolator taps.\n");
+            "interp_fir_filter_impl: error setting interpolator taps.");
     }
 }
 
