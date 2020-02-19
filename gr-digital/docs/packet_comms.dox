@@ -158,9 +158,9 @@ transmitted frame:
   Because the pulse shape filter up-samples, in packet_tx, we use a
   \ref gr::blocks::tagged_stream_multiply_length "Tagged Stream Multiply Length Tag block".
   The resampler block knows nothing about
-  tagged streams, so when it up-samples, the \ref
-  page_tagged_stream_blocks "tagged stream block (TSB)" tag value does
-  not change. We need to change this tag's value, too, and so we use
+  tagged streams, so when it up-samples, the
+  <a href="https://wiki.gnuradio.org/index.php/Tagged_Stream_Blocks" target="_blank">tagged stream block (TSB)</a>
+  tag value does not change. We need to change this tag's value, too, and so we use
   the multiply length tag block for this purpose. This is helpful when
   working with UHD devices, like in uhd_packet_tx.grc, because we can
   explicitly tell the UHD USRP Sink block to expect a tagged stream to
@@ -609,8 +609,9 @@ back to the HPD block to guide the payload processing.
 
 If the packet formatter parsing operation fails by not getting enough
 data or if the data is corrupted, it will return false. When the
-Packet Parser sees this, it emits a message that just contains a \ref
-page_pmt "PMT" False (pmt::PMT_F), which resets the HPD block to start
+Packet Parser sees this, it emits a message that just contains a
+<a href="https://wiki.gnuradio.org/index.php/Polymorphic_Types_(PMTs)" target="_blank">PMT</a>
+False (pmt::PMT_F), which resets the HPD block to start
 looking for another header trigger event.
 
 If the header parsing completes successfully, the HPD block gets a

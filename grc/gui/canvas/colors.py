@@ -2,19 +2,8 @@
 Copyright 2008,2013 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
-GNU Radio Companion is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+SPDX-License-Identifier: GPL-2.0-or-later
 
-GNU Radio Companion is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from __future__ import absolute_import
@@ -75,4 +64,44 @@ PORT_TYPE_TO_COLOR.update((key, get_color(color)) for key, (_, color) in Constan
 #################################################################################
 # param box colors
 #################################################################################
+DARK_THEME_STYLES = b"""
+                         #dtype_complex         { background-color: #3399FF; }
+                         #dtype_real            { background-color: #FF8C69; }
+                         #dtype_float           { background-color: #FF8C69; }
+                         #dtype_int             { background-color: #00FF99; }
+
+                         #dtype_complex_vector  { background-color: #3399AA; }
+                         #dtype_real_vector     { background-color: #CC8C69; }
+                         #dtype_float_vector    { background-color: #CC8C69; }
+                         #dtype_int_vector      { background-color: #00CC99; }
+
+                         #dtype_bool            { background-color: #00FF99; }
+                         #dtype_hex             { background-color: #00FF99; }
+                         #dtype_string          { background-color: #CC66CC; }
+                         #dtype_id              { background-color: #DDDDDD; }
+                         #dtype_stream_id       { background-color: #DDDDDD; }
+                         #dtype_raw             { background-color: #23272A; }
+
+                         #enum_custom           { background-color: #EEEEEE; }
+                     """
+LIGHT_THEME_STYLES = b"""
+                        #dtype_complex         { background-color: #3399FF; }
+                        #dtype_real            { background-color: #FF8C69; }
+                        #dtype_float           { background-color: #FF8C69; }
+                        #dtype_int             { background-color: #00FF99; }
+
+                        #dtype_complex_vector  { background-color: #3399AA; }
+                        #dtype_real_vector     { background-color: #CC8C69; }
+                        #dtype_float_vector    { background-color: #CC8C69; }
+                        #dtype_int_vector      { background-color: #00CC99; }
+
+                        #dtype_bool            { background-color: #00FF99; }
+                        #dtype_hex             { background-color: #00FF99; }
+                        #dtype_string          { background-color: #CC66CC; }
+                        #dtype_id              { background-color: #DDDDDD; }
+                        #dtype_stream_id       { background-color: #DDDDDD; }
+                        #dtype_raw             { background-color: #FFFFFF; }
+
+                        #enum_custom           { background-color: #EEEEEE; }
+                    """
 

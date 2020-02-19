@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_CHANNELS_SELECTIVE_FADING_MODEL2_IMPL_H
@@ -26,10 +14,6 @@
 #include "flat_fader_impl.h"
 #include <gnuradio/channels/selective_fading_model2.h>
 #include <gnuradio/sync_block.h>
-
-//#include <iostream>
-#include <boost/format.hpp>
-#include <boost/random.hpp>
 
 #include "sincostable.h"
 #include <gnuradio/fxpt.h>
@@ -48,21 +32,20 @@ private:
     std::vector<float> d_mags;
     sincostable d_sintable;
 
-    boost::mt19937 seed_1;
-    boost::normal_distribution<> dist_1; // U(-pi,pi)
-    boost::variate_generator<boost::mt19937&, boost::normal_distribution<>> rv_1;
+    std::mt19937 rng_1;
+    std::normal_distribution<> dist_1; // U(-pi,pi)
 
 public:
     selective_fading_model2_impl(unsigned int N,
                                  float fDTs,
                                  bool LOS,
                                  float K,
-                                 int seed,
+                                 uint32_t seed,
                                  std::vector<float> delays,
-                                 std::vector<float> delay_std,
-                                 std::vector<float> delay_maxdev,
+                                 std::vector<float> delays_std,
+                                 std::vector<float> delays_maxdev,
                                  std::vector<float> mags,
-                                 int ntaps);
+                                 unsigned int ntaps);
     ~selective_fading_model2_impl();
     void setup_rpc();
     int work(int noutput_items,

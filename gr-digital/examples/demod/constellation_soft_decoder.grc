@@ -1,6 +1,7 @@
 options:
   parameters:
     author: Tom Rondeau
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -25,6 +26,9 @@ options:
     title: Soft Decoder Example
     window_size: 2000, 2000
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 12.0]
     rotation: 0
     state: enabled
@@ -36,6 +40,9 @@ blocks:
     comment: ''
     value: '4'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [173, 11]
     rotation: 0
     state: enabled
@@ -51,6 +58,9 @@ blocks:
     sym_map: digital.psk_4()[1]
     type: calcdist
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [208, 540.0]
     rotation: 0
     state: enabled
@@ -66,6 +76,9 @@ blocks:
     sym_map: digital.psk_2()[1]
     type: calcdist
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [384, 540.0]
     rotation: 0
     state: disabled
@@ -81,6 +94,9 @@ blocks:
     sym_map: digital.psk_2()[1]
     type: calcdist
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1040, 540.0]
     rotation: 0
     state: disabled
@@ -96,6 +112,9 @@ blocks:
     sym_map: digital.psk_4()[1]
     type: calcdist
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [864, 540.0]
     rotation: 0
     state: disabled
@@ -111,6 +130,9 @@ blocks:
     sym_map: digital.qam_16()[1]
     type: calcdist
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [688, 540.0]
     rotation: 0
     state: disabled
@@ -126,6 +148,9 @@ blocks:
     sym_map: digital.qam_16()[1]
     type: calcdist
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [32, 540.0]
     rotation: 0
     state: disabled
@@ -142,6 +167,7 @@ blocks:
     label4: ''
     labels: '[]'
     num_opts: '3'
+    option0: '29'
     option1: '58'
     option2: '116'
     option3: '3'
@@ -152,6 +178,9 @@ blocks:
     value: '29'
     widget: combo_box
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1464, 260.0]
     rotation: 0
     state: enabled
@@ -161,6 +190,9 @@ blocks:
     comment: ''
     value: '32'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [840, 268.0]
     rotation: 0
     state: enabled
@@ -179,6 +211,9 @@ blocks:
     value: '0.0001'
     widget: slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [32, 348.0]
     rotation: 0
     state: enabled
@@ -188,6 +223,9 @@ blocks:
     comment: ''
     value: firdes.root_raised_cosine(nfilts, nfilts, 1.0/float(sps), 0.35, 11*sps*nfilts)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [680, 268.0]
     rotation: 0
     state: enabled
@@ -197,6 +235,9 @@ blocks:
     comment: ''
     value: '100000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [312, 11]
     rotation: 0
     state: enabled
@@ -206,6 +247,9 @@ blocks:
     comment: ''
     value: '4'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [239, 11]
     rotation: 0
     state: enabled
@@ -223,6 +267,9 @@ blocks:
     repeat: 'True'
     type: byte
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [80, 244.0]
     rotation: 180
     state: enabled
@@ -237,6 +284,9 @@ blocks:
     scale: '1'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1272, 180.0]
     rotation: 0
     state: enabled
@@ -251,6 +301,9 @@ blocks:
     scale: '1'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1272, 124.0]
     rotation: 0
     state: enabled
@@ -265,6 +318,9 @@ blocks:
     scale: '1'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1280, 340.0]
     rotation: 0
     state: enabled
@@ -281,6 +337,9 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [784, 340.0]
     rotation: 0
     state: enabled
@@ -297,6 +356,9 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [80, 172.0]
     rotation: 0
     state: enabled
@@ -310,6 +372,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1136, 180.0]
     rotation: 0
     state: enabled
@@ -323,6 +388,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [312, 340.0]
     rotation: 0
     state: enabled
@@ -341,6 +409,9 @@ blocks:
     seed: '0'
     taps: '1.0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [472, 132.0]
     rotation: 0
     state: enabled
@@ -353,6 +424,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1144, 128.0]
     rotation: 0
     state: enabled
@@ -366,6 +440,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1120, 284.0]
     rotation: 0
     state: enabled
@@ -384,6 +461,9 @@ blocks:
     samples_per_symbol: sps
     verbose: 'False'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [256, 148.0]
     rotation: 0
     state: enabled
@@ -397,6 +477,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [928, 124.0]
     rotation: 0
     state: enabled
@@ -410,6 +493,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1136, 236.0]
     rotation: 180
     state: enabled
@@ -430,6 +516,9 @@ blocks:
     taps: rrc_taps
     type: ccf
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [672, 124.0]
     rotation: 0
     state: enabled
@@ -440,6 +529,9 @@ blocks:
     comment: ''
     imports: import cmath
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [488, 11]
     rotation: 0
     state: enabled
@@ -450,6 +542,9 @@ blocks:
     comment: ''
     imports: import math
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [400, 11]
     rotation: 0
     state: enabled
@@ -460,6 +555,9 @@ blocks:
     comment: ''
     note: auto-build LUT
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [32, 492.0]
     rotation: 0
     state: enabled
@@ -470,6 +568,9 @@ blocks:
     comment: ''
     note: Python-generated LUT
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [688, 492.0]
     rotation: 0
     state: enabled
@@ -559,6 +660,9 @@ blocks:
     ymax: '2'
     ymin: '-2'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [928, 52.0]
     rotation: 0
     state: enabled
@@ -579,16 +683,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -653,6 +757,9 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1464, 128.0]
     rotation: 0
     state: enabled

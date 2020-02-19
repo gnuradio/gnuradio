@@ -1,6 +1,7 @@
 id: zeromq_rep_sink
 label: ZMQ REP Sink
 category: '[Core]/ZeroMQ Interfaces'
+flags: [python, cpp]
 
 
 parameters:
@@ -46,4 +47,18 @@ templates:
     make: zeromq.rep_sink(${type.itemsize}, ${vlen}, ${address}, ${timeout}, ${pass_tags},
         ${hwm})
         
+cpp_templates:
+    includes: [ '#include <gnuradio/zeromq/rep_sink.h>' ]
+    declarations: gr::zeromq::rep_sink::sptr ${id};
+    make: this->${id} = gr::zeromq::rep_sink::make(${type.itemsize}, 
+        ${vlen}, 
+        const_cast<char *>(${address}${'.c_str())' if str(address)[0] not in '"\'' else ')'},
+        ${timeout}, 
+        ${pass_tags}, 
+        ${hwm});
+    link: ['gnuradio-zeromq']      
+    translations:
+      'True': 'true'
+      'False': 'false'
+
 file_format: 1

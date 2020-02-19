@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_DIGITAL_PFB_CLOCK_SYNC_CCF_IMPL_H
@@ -40,10 +28,10 @@ private:
     float d_alpha;
     float d_beta;
 
-    int d_nfilters;
+    const int d_nfilters;
     int d_taps_per_filter;
-    std::vector<kernel::fir_filter_ccf*> d_filters;
-    std::vector<kernel::fir_filter_ccf*> d_diff_filters;
+    std::vector<std::unique_ptr<kernel::fir_filter_ccf>> d_filters;
+    std::vector<std::unique_ptr<kernel::fir_filter_ccf>> d_diff_filters;
     std::vector<std::vector<float>> d_taps;
     std::vector<std::vector<float>> d_dtaps;
     std::vector<float> d_updated_taps;
@@ -63,6 +51,10 @@ private:
     void create_diff_taps(const std::vector<float>& newtaps,
                           std::vector<float>& difftaps);
 
+    void set_taps(const std::vector<float>& taps,
+                  std::vector<std::vector<float>>& ourtaps,
+                  std::vector<std::unique_ptr<kernel::fir_filter_ccf>>& ourfilter);
+
 public:
     pfb_clock_sync_ccf_impl(double sps,
                             float loop_bw,
@@ -71,7 +63,6 @@ public:
                             float init_phase = 0,
                             float max_rate_deviation = 1.5,
                             int osps = 1);
-    ~pfb_clock_sync_ccf_impl();
 
     void setup_rpc();
 
@@ -80,10 +71,6 @@ public:
     void forecast(int noutput_items, gr_vector_int& ninput_items_required);
 
     void update_taps(const std::vector<float>& taps);
-
-    void set_taps(const std::vector<float>& taps,
-                  std::vector<std::vector<float>>& ourtaps,
-                  std::vector<kernel::fir_filter_ccf*>& ourfilter);
 
     std::vector<std::vector<float>> taps() const;
     std::vector<std::vector<float>> diff_taps() const;

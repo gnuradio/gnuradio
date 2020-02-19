@@ -16,6 +16,7 @@ class_name = flow_graph.get_option('id')
 %>\
 
 cmake_minimum_required(VERSION 3.8)
+set(CMAKE_CXX_STANDARD 11)
 
 % if generate_options == 'qt_gui':
 find_package(Qt5Widgets REQUIRED)
@@ -25,14 +26,14 @@ include_directories(
     ${'$'}{GNURADIO_ALL_INCLUDE_DIRS}
     ${'$'}{Boost_INCLUDE_DIRS}
     % if generate_options == 'qt_gui':
-    ${'$'}{Qt5Widgets_INCLUDES}
+    ${'$'}{Qt5Widgets_INCLUDE_DIRS}
     % endif
     $ENV{HOME}/.grc_gnuradio
 )
 
 % if generate_options == 'qt_gui':
 add_definitions(${'$'}{Qt5Widgets_DEFINITIONS})
-
+set(CMAKE_CXX_FLAGS "${'$'}{CMAKE_CXX_FLAGS} -fPIC")
 set(CMAKE_AUTOMOC TRUE)
 % endif
 

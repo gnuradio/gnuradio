@@ -2,19 +2,8 @@
 Copyright 2007-2011 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
-GNU Radio Companion is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+SPDX-License-Identifier: GPL-2.0-or-later
 
-GNU Radio Companion is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 
@@ -143,6 +132,7 @@ class Application(Gtk.Application):
                     main.new_page(file_path, show=file_path_to_show == file_path)
             if not main.current_page:
                 main.new_page()  # ensure that at least a blank page exists
+                main.current_page.saved = False
 
             main.btwin.search_entry.hide()
 
@@ -235,7 +225,10 @@ class Application(Gtk.Application):
         elif action == Actions.NOTHING_SELECT:
             flow_graph.unselect()
         elif action == Actions.SELECT_ALL:
-            flow_graph.select_all()
+            if main.btwin.search_entry.has_focus():
+                main.btwin.search_entry.select_region(0, -1)
+            else:
+                flow_graph.select_all()
         ##################################################
         # Enable/Disable
         ##################################################
@@ -601,6 +594,7 @@ class Application(Gtk.Application):
         ##################################################
         elif action == Actions.FLOW_GRAPH_NEW:
             main.new_page()
+            main.current_page.saved = False
             args = (GLib.Variant('s', 'qt_gui'),)
             flow_graph = main.current_page.flow_graph
             flow_graph.options_block.params['generate_options'].set_value(str(args[0])[1:-1])

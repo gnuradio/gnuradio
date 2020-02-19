@@ -2,20 +2,8 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 
 ########################################################################
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
@@ -46,6 +34,9 @@ GR_CHECK_BUILD_TYPE(${CMAKE_BUILD_TYPE})
 SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 
+include(GrComponent)
+GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING)
+
 # Set the version information here
 SET(VERSION_MAJOR 3)
 SET(VERSION_API   9)
@@ -58,8 +49,7 @@ set(GR_BOOST_MIN_VERSION "1.53")
 set(GR_SWIG_MIN_VERSION "3.0.8")
 set(GR_CMAKE_MIN_VERSION "3.5.1")
 set(GR_MAKO_MIN_VERSION "0.4.2")
-set(GR_PYTHON_MIN_VERSION "2.7.6")
-set(GR_PYTHON3_MIN_VERSION "3.6.5")
+set(GR_PYTHON_MIN_VERSION "3.6.5")
 set(GCC_MIN_VERSION "4.8.4")
 set(CLANG_MIN_VERSION "3.4.0")
 set(APPLECLANG_MIN_VERSION "500")
@@ -142,28 +132,10 @@ ENDIF()
 # set after CppUnit check below). Use the variable CMAKE_CXX_STANDARD
 # since it will actually be used for this purposes starting in CMake 3.1.
 
-SET(CMAKE_C_EXTENSIONS OFF)
-SET(CMAKE_CXX_EXTENSIONS OFF)
-
-IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    SET(CMAKE_CXX_STANDARD 11)
-ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    SET(CMAKE_CXX_STANDARD 11)
-ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    SET(CMAKE_CXX_STANDARD 11)
-ELSE()
-    message(WARNING "C++ standard could not be set because compiler is not GNU, Clang or MSVC.")
-ENDIF()
-
-IF(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-    SET(CMAKE_C_STANDARD 11)
-ELSEIF(CMAKE_C_COMPILER_ID MATCHES "Clang")
-    SET(CMAKE_C_STANDARD 11)
-ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-    SET(CMAKE_C_STANDARD 11)
-ELSE()
-    message(WARNING "C standard could not be set because compiler is not GNU, Clang or MSVC.")
-ENDIF()
+set(CMAKE_C_EXTENSIONS OFF)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_C_STANDARD 11)
 
 ########################################################################
 # Environment setup
@@ -376,10 +348,6 @@ GR_REGISTER_COMPONENT("python-support" ENABLE_PYTHON
     SIX_FOUND
 )
 
-GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING
-    Boost_FOUND
-)
-
 if(${CMAKE_BUILD_TYPE} STREQUAL "Coverage")
   include(CodeCoverage)
   setup_target_for_coverage(coverage "ctest || exit 0" coverage)
@@ -451,10 +419,32 @@ message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
 find_package(LOG4CPP REQUIRED)
 
 ########################################################################
+# Setup Native Capabilities Flag
+########################################################################
+option(ENABLE_NATIVE "Enable native build optimizations" OFF)
+IF(UNIX)
+    IF (ENABLE_NATIVE)
+        MESSAGE(STATUS "Found GNU Radio native optimization flag.  Setting native CPU optimization flags.")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -ftree-vectorize")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native -ftree-vectorize")
+    ELSE (ENABLE_NATIVE)
+        MESSAGE(STATUS "Not using additional GNU Radio native architecture optimizations.")
+    ENDIF (ENABLE_NATIVE)
+ENDIF(UNIX)
+
+########################################################################
+# Disable complex math NaN/INFO range checking for performance
+########################################################################
+check_cxx_compiler_flag(-fcx-limited-range HAVE_CX_LIMITED_RANGE)
+if(HAVE_CX_LIMITED_RANGE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcx-limited-range")
+endif(HAVE_CX_LIMITED_RANGE)
+
+########################################################################
 # Distribute the README file
 ########################################################################
 install(
-    FILES README.md README.hacking CHANGELOG.md
+    FILES README.md CONTRIBUTING.md CHANGELOG.md
     DESTINATION ${GR_PKG_DOC_DIR}
 )
 
@@ -479,6 +469,12 @@ list(APPEND GR_TEST_PYTHON_DIRS
 # multiprecision arithmetic library header to include
 find_package(MPLIB)
 add_definitions(${MPLIB_DEFINITIONS})
+
+########################################################################
+# Post-Install tasks are tasks that are usually not executed during
+# install, but for source builds, that's actually more convenient.
+########################################################################
+GR_REGISTER_COMPONENT("post-install" ENABLE_POSTINSTALL)
 
 ########################################################################
 # Add subdirectories (in order of deps)

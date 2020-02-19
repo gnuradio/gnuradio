@@ -5,20 +5,8 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 #
 
 @PY_QT_IMPORT@
@@ -38,7 +26,7 @@ class Range(object):
     def find_precision(self):
         # Get the decimal part of the step
         temp = str(float(self.step) - int(self.step))[2:]
-        precision = len(temp) if temp is not '0' else 0
+        precision = len(temp) if temp != '0' else 0
         precision = min(precision, 13)
 
         if precision == 0 and self.max < 100:
@@ -81,6 +69,7 @@ class RangeWidget(QtWidgets.QWidget):
         self.notifyChanged = slot
 
         layout = Qt.QHBoxLayout()
+        layout.setContentsMargins( 0,0,0,0 )
         label = Qt.QLabel(label)
         layout.addWidget(label)
 
@@ -211,6 +200,8 @@ class RangeWidget(QtWidgets.QWidget):
 
             # Need another horizontal layout to wrap the other widgets.
             layout = Qt.QHBoxLayout()
+            layout.setContentsMargins( 0,0,0,0 )
+            layout.setSpacing(10)
             layout.addWidget(self.slider)
             layout.addWidget(self.counter)
             self.setLayout(layout)

@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_PMT_H
@@ -101,7 +89,7 @@ public:
     exception(const std::string& msg, pmt_t obj);
 };
 
-class PMT_API wrong_type : public exception
+class PMT_API wrong_type : public std::invalid_argument
 {
 public:
     wrong_type(const std::string& msg, pmt_t obj);
@@ -984,16 +972,6 @@ PMT_API pmt_t deserialize_str(std::string str);
  * \brief Provide a comparator function object to allow pmt use in stl types
  */
 class comparator
-{
-public:
-    bool operator()(pmt::pmt_t const& p1, pmt::pmt_t const& p2) const
-    {
-        return pmt::eqv(p1, p2) ? false : p1.get() > p2.get();
-    }
-};
-
-// FIXME: Remove in 3.8.
-class comperator
 {
 public:
     bool operator()(pmt::pmt_t const& p1, pmt::pmt_t const& p2) const

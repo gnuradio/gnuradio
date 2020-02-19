@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -22,8 +23,10 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: ''
-    window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 12]
     rotation: 0
     state: enabled
@@ -35,6 +38,9 @@ blocks:
     comment: ''
     value: 429e6
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [176, 12]
     rotation: 0
     state: enabled
@@ -44,6 +50,9 @@ blocks:
     comment: ''
     value: (8000000.0 * 8) / 7
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 76]
     rotation: 0
     state: enabled
@@ -62,6 +71,9 @@ blocks:
     value: '50'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [240, 496]
     rotation: 0
     state: enabled
@@ -80,6 +92,9 @@ blocks:
     value: '-8'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 496]
     rotation: 0
     state: enabled
@@ -98,6 +113,9 @@ blocks:
     value: '10'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [120, 496]
     rotation: 0
     state: enabled
@@ -117,37 +135,10 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [352, 60.0]
-    rotation: 0
-    state: enabled
-- name: blocks_multiply_const_xx_0
-  id: blocks_multiply_const_xx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    const: '0.0022097087'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    type: complex
-    vlen: '1'
-  states:
-    coordinate: [704, 404.0]
-    rotation: 0
-    state: enabled
-- name: blocks_vector_to_stream_0
-  id: blocks_vector_to_stream
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_items: '2048'
-    type: complex
-    vlen: '1'
-  states:
-    coordinate: [64, 320.0]
     rotation: 0
     state: enabled
 - name: digital_ofdm_cyclic_prefixer_0
@@ -163,7 +154,10 @@ blocks:
     rolloff: '0'
     tagname: ''
   states:
-    coordinate: [424, 388.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [64, 388.0]
     rotation: 0
     state: enabled
 - name: dtv_dvbt_bit_inner_interleaver_0
@@ -178,6 +172,9 @@ blocks:
     minoutbuf: '0'
     transmission_mode: T2k
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [888, 212.0]
     rotation: 180
     state: enabled
@@ -193,6 +190,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1152, 76.0]
     rotation: 0
     state: enabled
@@ -206,6 +206,9 @@ blocks:
     minoutbuf: '0'
     nsize: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [624, 92.0]
     rotation: 0
     state: enabled
@@ -223,6 +226,9 @@ blocks:
     ninput: '1'
     noutput: '1512'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1136, 188.0]
     rotation: 180
     state: enabled
@@ -239,6 +245,9 @@ blocks:
     minoutbuf: '0'
     transmission_mode: T2k
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [352, 196.0]
     rotation: 180
     state: enabled
@@ -259,6 +268,9 @@ blocks:
     s: '51'
     t: '8'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [880, 36.0]
     rotation: 0
     state: enabled
@@ -280,7 +292,10 @@ blocks:
     transmission_mode: T2k
     type: complex
   states:
-    coordinate: [64, 132.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [64, 140.0]
     rotation: 180
     state: enabled
 - name: dtv_dvbt_symbol_inner_interleaver_0
@@ -294,115 +309,11 @@ blocks:
     minoutbuf: '0'
     transmission_mode: T2k
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [632, 212.0]
     rotation: 180
-    state: enabled
-- name: fft_vxx_0
-  id: fft_vxx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    fft_size: '2048'
-    forward: 'False'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    nthreads: '1'
-    shift: 'True'
-    type: complex
-    window: window.rectangular(2048)
-  states:
-    coordinate: [64, 372.0]
-    rotation: 0
-    state: enabled
-- name: qtgui_const_sink_x_0
-  id: qtgui_const_sink_x
-  parameters:
-    affinity: ''
-    alias: ''
-    alpha1: '1.0'
-    alpha10: '1.0'
-    alpha2: '1.0'
-    alpha3: '1.0'
-    alpha4: '1.0'
-    alpha5: '1.0'
-    alpha6: '1.0'
-    alpha7: '1.0'
-    alpha8: '1.0'
-    alpha9: '1.0'
-    autoscale: 'False'
-    axislabels: 'True'
-    color1: '"blue"'
-    color10: '"red"'
-    color2: '"red"'
-    color3: '"red"'
-    color4: '"red"'
-    color5: '"red"'
-    color6: '"red"'
-    color7: '"red"'
-    color8: '"red"'
-    color9: '"red"'
-    comment: ''
-    grid: 'False'
-    gui_hint: ''
-    label1: ''
-    label10: ''
-    label2: ''
-    label3: ''
-    label4: ''
-    label5: ''
-    label6: ''
-    label7: ''
-    label8: ''
-    label9: ''
-    legend: 'True'
-    marker1: '0'
-    marker10: '0'
-    marker2: '0'
-    marker3: '0'
-    marker4: '0'
-    marker5: '0'
-    marker6: '0'
-    marker7: '0'
-    marker8: '0'
-    marker9: '0'
-    name: '""'
-    nconnections: '1'
-    size: '1024'
-    style1: '0'
-    style10: '0'
-    style2: '0'
-    style3: '0'
-    style4: '0'
-    style5: '0'
-    style6: '0'
-    style7: '0'
-    style8: '0'
-    style9: '0'
-    tr_chan: '0'
-    tr_level: '0.0'
-    tr_mode: qtgui.TRIG_MODE_FREE
-    tr_slope: qtgui.TRIG_SLOPE_POS
-    tr_tag: '""'
-    type: complex
-    update_time: '0.10'
-    width1: '1'
-    width10: '1'
-    width2: '1'
-    width3: '1'
-    width4: '1'
-    width5: '1'
-    width6: '1'
-    width7: '1'
-    width8: '1'
-    width9: '1'
-    xmax: '2'
-    xmin: '-2'
-    ymax: '2'
-    ymin: '-2'
-  states:
-    coordinate: [424, 308.0]
-    rotation: 0
     state: enabled
 - name: uhd_usrp_sink_0
   id: uhd_usrp_sink
@@ -674,25 +585,24 @@ blocks:
     time_source7: ''
     type: fc32
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [984, 348.0]
     rotation: 0
     state: enabled
 
 connections:
 - [blocks_file_source_0, '0', dtv_dvbt_energy_dispersal_0, '0']
-- [blocks_multiply_const_xx_0, '0', uhd_usrp_sink_0, '0']
-- [blocks_vector_to_stream_0, '0', qtgui_const_sink_x_0, '0']
-- [digital_ofdm_cyclic_prefixer_0, '0', blocks_multiply_const_xx_0, '0']
+- [digital_ofdm_cyclic_prefixer_0, '0', uhd_usrp_sink_0, '0']
 - [dtv_dvbt_bit_inner_interleaver_0, '0', dtv_dvbt_symbol_inner_interleaver_0, '0']
 - [dtv_dvbt_convolutional_interleaver_0, '0', dtv_dvbt_inner_coder_0, '0']
 - [dtv_dvbt_energy_dispersal_0, '0', dtv_dvbt_reed_solomon_enc_0, '0']
 - [dtv_dvbt_inner_coder_0, '0', dtv_dvbt_bit_inner_interleaver_0, '0']
 - [dtv_dvbt_map_0, '0', dtv_dvbt_reference_signals_0, '0']
 - [dtv_dvbt_reed_solomon_enc_0, '0', dtv_dvbt_convolutional_interleaver_0, '0']
-- [dtv_dvbt_reference_signals_0, '0', blocks_vector_to_stream_0, '0']
-- [dtv_dvbt_reference_signals_0, '0', fft_vxx_0, '0']
+- [dtv_dvbt_reference_signals_0, '0', digital_ofdm_cyclic_prefixer_0, '0']
 - [dtv_dvbt_symbol_inner_interleaver_0, '0', dtv_dvbt_map_0, '0']
-- [fft_vxx_0, '0', digital_ofdm_cyclic_prefixer_0, '0']
 
 metadata:
   file_format: 1

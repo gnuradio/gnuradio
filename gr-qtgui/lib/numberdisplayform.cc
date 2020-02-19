@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #include <gnuradio/qtgui/numberdisplayform.h>
@@ -36,6 +24,7 @@ NumberDisplayForm::NumberDisplayForm(int nplots, gr::qtgui::graph_t type, QWidge
     d_graph_type = type;
     d_title = new QLabel(QString(""));
     d_layout = new QGridLayout(this);
+    d_layout->setContentsMargins(0, 0, 0, 0);
     for (unsigned int i = 0; i < d_nplots; ++i) {
         d_min.push_back(+1e32);
         d_max.push_back(-1e32);
@@ -432,7 +421,7 @@ void NumberDisplayForm::setTitle(const std::string& title)
 std::string NumberDisplayForm::unit(unsigned int which) const
 {
     if (static_cast<size_t>(which) >= d_unit.size())
-        throw std::runtime_error("NumberDisplayForm::units: invalid 'which'.\n");
+        throw std::runtime_error("NumberDisplayForm::units: invalid 'which'.");
 
     return d_unit[which];
 }
@@ -440,7 +429,7 @@ std::string NumberDisplayForm::unit(unsigned int which) const
 void NumberDisplayForm::setUnit(unsigned int which, const std::string& unit)
 {
     if (static_cast<size_t>(which) >= d_unit.size())
-        throw std::runtime_error("NumberDisplayForm::setUnits: invalid 'which'.\n");
+        throw std::runtime_error("NumberDisplayForm::setUnits: invalid 'which'.");
 
     d_unit[which] = unit;
 }
@@ -448,7 +437,7 @@ void NumberDisplayForm::setUnit(unsigned int which, const std::string& unit)
 float NumberDisplayForm::factor(unsigned int which) const
 {
     if (static_cast<size_t>(which) >= d_factor.size())
-        throw std::runtime_error("NumberDisplayForm::factor: invalid 'which'.\n");
+        throw std::runtime_error("NumberDisplayForm::factor: invalid 'which'.");
 
     return d_factor[which];
 }
@@ -456,7 +445,7 @@ float NumberDisplayForm::factor(unsigned int which) const
 void NumberDisplayForm::setFactor(unsigned int which, float factor)
 {
     if (static_cast<size_t>(which) >= d_factor.size())
-        throw std::runtime_error("NumberDisplayForm::setFactor: invalid 'which'.\n");
+        throw std::runtime_error("NumberDisplayForm::setFactor: invalid 'which'.");
 
     d_factor[which] = factor;
 }

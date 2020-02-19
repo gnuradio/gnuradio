@@ -3,20 +3,8 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 #
 """
 OFDM Transmitter / Receiver hier blocks.
@@ -395,7 +383,6 @@ class ofdm_rx(gr.hier_block2):
             self.connect((chanest, 0),      blocks.tag_debug(gr.sizeof_gr_complex * fft_len, 'post-hdr-chanest'))
             self.connect(header_eq,         blocks.file_sink(gr.sizeof_gr_complex * fft_len, 'post-hdr-eq.dat'))
             self.connect(header_serializer, blocks.file_sink(gr.sizeof_gr_complex,           'post-hdr-serializer.dat'))
-            self.connect(header_descrambler, blocks.file_sink(1,                             'post-hdr-demod.dat'))
         ### Payload demod ####################################################
         payload_fft = fft.fft_vcc(self.fft_len, True, (), True)
         payload_constellation = _get_constellation(bps_payload)
@@ -448,4 +435,4 @@ class ofdm_rx(gr.hier_block2):
             self.connect(payload_serializer, blocks.file_sink(gr.sizeof_gr_complex,         'post-payload-serializer.dat'))
             self.connect(payload_demod,      blocks.file_sink(1,                            'post-payload-demod.dat'))
             self.connect(payload_pack,       blocks.file_sink(1,                            'post-payload-pack.dat'))
-            self.connect(crc,                blocks.file_sink(1,                            'post-payload-crc.dat'))
+            self.connect(self.crc,           blocks.file_sink(1,                            'post-payload-crc.dat'))

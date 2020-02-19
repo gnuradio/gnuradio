@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -66,12 +54,11 @@ pfb_clock_sync_fff_impl::pfb_clock_sync_fff_impl(double sps,
       d_out_idx(0)
 {
     if (taps.empty())
-        throw std::runtime_error("pfb_clock_sync_fff: please specify a filter.\n");
+        throw std::runtime_error("pfb_clock_sync_fff: please specify a filter.");
 
     // Let scheduler adjust our relative_rate.
     enable_update_rate(true);
 
-    d_nfilters = filter_size;
     d_sps = floor(sps);
 
     // Set the damping factor for a critically damped system
@@ -195,7 +182,7 @@ float pfb_clock_sync_fff_impl::clock_rate() const { return d_rate_f; }
 
 void pfb_clock_sync_fff_impl::update_gains()
 {
-    float denom = (1.0 + 2.0 * d_damping * d_loop_bw + d_loop_bw * d_loop_bw);
+    const float denom = (1.0 + 2.0 * d_damping * d_loop_bw + d_loop_bw * d_loop_bw);
     d_alpha = (4 * d_damping * d_loop_bw) / denom;
     d_beta = (4 * d_loop_bw * d_loop_bw) / denom;
 }
@@ -206,7 +193,7 @@ void pfb_clock_sync_fff_impl::set_taps(const std::vector<float>& newtaps,
 {
     int i, j;
 
-    unsigned int ntaps = newtaps.size();
+    const unsigned int ntaps = newtaps.size();
     d_taps_per_filter = (unsigned int)ceil((double)ntaps / (double)d_nfilters);
 
     // Create d_numchan vectors to store each channel's taps

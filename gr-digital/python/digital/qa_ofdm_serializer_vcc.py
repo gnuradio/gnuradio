@@ -4,20 +4,8 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 #
 
 from __future__ import division
@@ -207,7 +195,7 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         """ Make sure it fails if it should """
         fft_len = 16
         occupied_carriers = ((1, 3, 4, 11, 12, 112),) # Something invalid
-        self.assertRaises(RuntimeError, digital.ofdm_serializer_vcc, fft_len, occupied_carriers, self.tsb_key)
+        self.assertRaises(TypeError, digital.ofdm_serializer_vcc, fft_len, occupied_carriers, self.tsb_key)
 
 
 if __name__ == '__main__':

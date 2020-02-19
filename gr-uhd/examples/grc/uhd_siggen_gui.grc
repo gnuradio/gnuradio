@@ -1,6 +1,7 @@
 options:
   parameters:
     author: Ettus Research
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -66,6 +67,7 @@ blocks:
     label4: ''
     labels: '[]'
     num_opts: '2'
+    option0: RX2
     option1: TX/RX
     option2: J1
     option3: J2
@@ -317,6 +319,7 @@ blocks:
     label4: Sweep
     labels: '[]'
     num_opts: '5'
+    option0: '0'
     option1: '1'
     option2: '2'
     option3: '3'

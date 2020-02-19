@@ -5,7 +5,8 @@ from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 import argparse
-from volk_test_funcs import *
+from volk_test_funcs import (create_connection, new_table, replace_results,
+                             helper, timeit, format_results)
 
 ######################################################################
 

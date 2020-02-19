@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_GR_FRAMER_SINK_1_IMPL_H
@@ -33,8 +21,8 @@ class framer_sink_1_impl : public framer_sink_1
 private:
     enum state_t { STATE_SYNC_SEARCH, STATE_HAVE_SYNC, STATE_HAVE_HEADER };
 
-    static const int MAX_PKT_LEN = 4096;
-    static const int HEADERBITLEN = 32;
+    static constexpr int MAX_PKT_LEN = 4096;
+    static constexpr int HEADERBITLEN = 32;
 
     msg_queue::sptr d_target_queue; // where to send the packet when received
     state_t d_state;

@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -107,7 +95,7 @@ file_meta_sink_impl::file_meta_sink_impl(size_t itemsize,
         d_state = STATE_INLINE;
 
     if (!open(filename))
-        throw std::runtime_error("file_meta_sink: can't open file\n");
+        throw std::runtime_error("file_meta_sink: can't open file");
 
     pmt::pmt_t timestamp = pmt::make_tuple(pmt::from_uint64(0), pmt::from_double(0));
 
@@ -243,7 +231,7 @@ void file_meta_sink_impl::write_header(FILE* fp, pmt::pmt_t header, pmt::pmt_t e
     std::string extra_str = pmt::serialize_str(extra);
 
     if ((header_str.size() != METADATA_HEADER_SIZE) && (extra_str.size() != d_extra_size))
-        throw std::runtime_error("file_meta_sink: header or extra_dict is wrong size.\n");
+        throw std::runtime_error("file_meta_sink: header or extra_dict is wrong size.");
 
     size_t nwritten = 0;
     while (nwritten < header_str.size()) {
@@ -252,7 +240,7 @@ void file_meta_sink_impl::write_header(FILE* fp, pmt::pmt_t header, pmt::pmt_t e
         nwritten += count;
         if ((count == 0) && (ferror(fp))) {
             fclose(fp);
-            throw std::runtime_error("file_meta_sink: error writing header to file.\n");
+            throw std::runtime_error("file_meta_sink: error writing header to file.");
         }
     }
 
@@ -263,7 +251,7 @@ void file_meta_sink_impl::write_header(FILE* fp, pmt::pmt_t header, pmt::pmt_t e
         nwritten += count;
         if ((count == 0) && (ferror(fp))) {
             fclose(fp);
-            throw std::runtime_error("file_meta_sink: error writing extra to file.\n");
+            throw std::runtime_error("file_meta_sink: error writing extra to file.");
         }
     }
 
@@ -391,9 +379,8 @@ int file_meta_sink_impl::work(int noutput_items,
     std::vector<tag_t> all_tags;
     get_tags_in_range(all_tags, 0, abs_N, end_N);
 
-    std::vector<tag_t>::iterator itr;
-    for (itr = all_tags.begin(); itr != all_tags.end(); itr++) {
-        int item_offset = (int)(itr->offset - abs_N);
+    for (const auto& tag : all_tags) {
+        int item_offset = (int)(tag.offset - abs_N);
 
         // Write date to file up to the next tag location
         while (nwritten < item_offset) {
@@ -419,11 +406,11 @@ int file_meta_sink_impl::work(int noutput_items,
 
         if (d_total_seg_size > 0) {
             update_last_header();
-            update_header(itr->key, itr->value);
+            update_header(tag.key, tag.value);
             write_and_update();
             d_total_seg_size = 0;
         } else {
-            update_header(itr->key, itr->value);
+            update_header(tag.key, tag.value);
             update_last_header();
         }
     }

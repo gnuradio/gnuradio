@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -87,7 +75,7 @@ file_meta_source_impl::file_meta_source_impl(const std::string& filename,
         d_state = STATE_INLINE;
 
     if (!open(filename, hdr_filename))
-        throw std::runtime_error("file_meta_source: can't open file\n");
+        throw std::runtime_error("file_meta_source: can't open file");
 
     do_update();
 
@@ -96,7 +84,7 @@ file_meta_source_impl::file_meta_source_impl(const std::string& filename,
         parse_header(hdr, 0, d_tags);
         parse_extras(extras, 0, d_tags);
     } else
-        throw std::runtime_error("file_meta_source: could not read header.\n");
+        throw std::runtime_error("file_meta_source: could not read header.");
 
     // Set output signature based on itemsize info in header
     set_output_signature(io_signature::make(1, 1, d_itemsize));
@@ -116,11 +104,10 @@ bool file_meta_source_impl::read_header(pmt::pmt_t& hdr, pmt::pmt_t& extras)
     size_t ret;
     size_t size = 0;
     std::string str;
-    char* hdr_buffer = new char[METADATA_HEADER_SIZE];
+    std::vector<char> hdr_buffer(METADATA_HEADER_SIZE);
     while (size < METADATA_HEADER_SIZE) {
         ret = fread(&hdr_buffer[size], sizeof(char), METADATA_HEADER_SIZE - size, fp);
         if (ret == 0) {
-            delete[] hdr_buffer;
             if (feof(fp))
                 return false;
             else {
@@ -134,9 +121,9 @@ bool file_meta_source_impl::read_header(pmt::pmt_t& hdr, pmt::pmt_t& extras)
     }
 
     // Convert to string or the char array gets confused by the \0
-    str.insert(0, hdr_buffer, METADATA_HEADER_SIZE);
+    str.insert(0, hdr_buffer.data(), METADATA_HEADER_SIZE);
     hdr = pmt::deserialize_str(str);
-    delete[] hdr_buffer;
+    hdr_buffer.clear();
 
     uint64_t seg_start, extra_len = 0;
     pmt::pmt_t r, dump;
@@ -148,11 +135,10 @@ bool file_meta_source_impl::read_header(pmt::pmt_t& hdr, pmt::pmt_t& extras)
 
     if (extra_len > 0) {
         size = 0;
-        hdr_buffer = new char[extra_len];
+        hdr_buffer.resize(extra_len);
         while (size < extra_len) {
             ret = fread(&hdr_buffer[size], sizeof(char), extra_len - size, fp);
             if (ret == 0) {
-                delete[] hdr_buffer;
                 if (feof(fp))
                     return false;
                 else {
@@ -166,9 +152,8 @@ bool file_meta_source_impl::read_header(pmt::pmt_t& hdr, pmt::pmt_t& extras)
         }
 
         str.clear();
-        str.insert(0, hdr_buffer, extra_len);
+        str.insert(0, hdr_buffer.data(), extra_len);
         extras = pmt::deserialize_str(str);
-        delete[] hdr_buffer;
     }
 
     return true;
@@ -193,7 +178,7 @@ void file_meta_source_impl::parse_header(pmt::pmt_t hdr,
         t.srcid = alias_pmt();
         tags.push_back(t);
     } else {
-        throw std::runtime_error("file_meta_source: Could not extract sample rate.\n");
+        throw std::runtime_error("file_meta_source: Could not extract sample rate.");
     }
 
     // GET TIME STAMP
@@ -208,7 +193,7 @@ void file_meta_source_impl::parse_header(pmt::pmt_t hdr,
         t.srcid = alias_pmt();
         tags.push_back(t);
     } else {
-        throw std::runtime_error("file_meta_source: Could not extract time stamp.\n");
+        throw std::runtime_error("file_meta_source: Could not extract time stamp.");
     }
 
     // GET ITEM SIZE OF DATA
@@ -216,7 +201,7 @@ void file_meta_source_impl::parse_header(pmt::pmt_t hdr,
         d_itemsize =
             pmt::to_long(pmt::dict_ref(hdr, pmt::string_to_symbol("size"), pmt::PMT_NIL));
     } else {
-        throw std::runtime_error("file_meta_source: Could not extract item size.\n");
+        throw std::runtime_error("file_meta_source: Could not extract item size.");
     }
 
     // GET SEGMENT SIZE
@@ -227,7 +212,7 @@ void file_meta_source_impl::parse_header(pmt::pmt_t hdr,
         // Convert from bytes to items
         d_seg_size /= d_itemsize;
     } else {
-        throw std::runtime_error("file_meta_source: Could not extract segment size.\n");
+        throw std::runtime_error("file_meta_source: Could not extract segment size.");
     }
 }
 

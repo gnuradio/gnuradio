@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -49,6 +37,7 @@ constellation::constellation(std::vector<gr_complex> constell,
       d_pre_diff_code(pre_diff_code),
       d_rotational_symmetry(rotational_symmetry),
       d_dimensionality(dimensionality),
+      d_scalefactor(1.0),
       d_re_min(1e20),
       d_re_max(1e20),
       d_im_min(1e20),
@@ -586,7 +575,7 @@ constellation_psk::~constellation_psk() {}
 unsigned int constellation_psk::get_sector(const gr_complex* sample)
 {
     float phase = arg(*sample);
-    float width = GR_M_TWOPI / n_sectors;
+    float width = (2.0 * GR_M_PI) / n_sectors;
     int sector = floor(phase / width + 0.5);
     if (sector < 0)
         sector += n_sectors;
@@ -595,7 +584,7 @@ unsigned int constellation_psk::get_sector(const gr_complex* sample)
 
 unsigned int constellation_psk::calc_sector_value(unsigned int sector)
 {
-    float phase = sector * GR_M_TWOPI / n_sectors;
+    float phase = sector * (2.0 * GR_M_PI) / n_sectors;
     gr_complex sector_center = gr_complex(cos(phase), sin(phase));
     unsigned int closest_point = get_closest_point(&sector_center);
     return closest_point;

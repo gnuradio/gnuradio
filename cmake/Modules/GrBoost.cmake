@@ -2,20 +2,8 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 
 if(DEFINED __INCLUDED_GR_BOOST_CMAKE)
     return()
@@ -33,8 +21,11 @@ set(BOOST_REQUIRED_COMPONENTS
     system
     regex
     thread
-    unit_test_framework
 )
+
+if(ENABLE_TESTING)
+    list(APPEND BOOST_REQUIRED_COMPONENTS unit_test_framework)
+endif(ENABLE_TESTING)
 
 if(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
     list(APPEND BOOST_LIBRARYDIR "/usr/lib64") #fedora 64-bit fix
@@ -69,18 +60,20 @@ if(MSVC)
     endif(BOOST_ALL_DYN_LINK)
 endif(MSVC)
 
-find_package(Boost ${GR_BOOST_MIN_VERSION} COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
-
 # This does not allow us to disable specific versions. It is used
 # internally by cmake to know the formation newer versions. As newer
 # Boost version beyond what is shown here are produced, we must extend
 # this list. To disable Boost versions, see below.
+
 set(Boost_ADDITIONAL_VERSIONS
     "1.53" "1.54.0" "1.54"
     "1.55.0" "1.55" "1.56.0" "1.56" "1.57.0" "1.57" "1.58.0" "1.58" "1.59.0" "1.59"
     "1.60.0" "1.60" "1.61.0" "1.61" "1.62.0" "1.62" "1.63.0" "1.63" "1.64.0" "1.64"
     "1.65.0" "1.65" "1.66.0" "1.66" "1.67.0" "1.67" "1.68.0" "1.68" "1.69.0" "1.69"
+    "1.71.0" "1.71"
 )
+
+find_package(Boost ${GR_BOOST_MIN_VERSION} COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
 
 # Boost 1.52 disabled, see https://svn.boost.org/trac/boost/ticket/7669
 # Similar problems with Boost 1.46 and 1.47.

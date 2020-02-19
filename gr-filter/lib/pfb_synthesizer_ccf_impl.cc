@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -26,8 +14,8 @@
 
 #include "pfb_synthesizer_ccf_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cstdio>
 #include <algorithm>
+#include <cstdio>
 
 namespace gr {
 namespace filter {
@@ -54,7 +42,7 @@ pfb_synthesizer_ccf_impl::pfb_synthesizer_ccf_impl(unsigned int numchans,
     d_twox = (twox ? 2 : 1);
     if (d_numchans % d_twox != 0) {
         throw std::invalid_argument("pfb_synthesizer_ccf_impl: number of channels must "
-                                    "be even for 2x oversampling.\n");
+                                    "be even for 2x oversampling.");
     }
 
     d_filters = std::vector<kernel::fir_filter_with_buffer_ccf*>(d_twox * d_numchans);
@@ -219,7 +207,7 @@ void pfb_synthesizer_ccf_impl::set_channel_map(const std::vector<int>& map)
         int min = *std::min_element(map.begin(), map.end());
         if ((max >= static_cast<int>(d_twox * d_numchans)) || (min < 0)) {
             throw std::invalid_argument(
-                "pfb_synthesizer_ccf_impl::set_channel_map: map range out of bounds.\n");
+                "pfb_synthesizer_ccf_impl::set_channel_map: map range out of bounds.");
         }
         d_channel_map = map;
 

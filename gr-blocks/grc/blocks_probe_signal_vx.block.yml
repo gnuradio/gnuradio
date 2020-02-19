@@ -1,6 +1,6 @@
 id: blocks_probe_signal_vx
 label: Probe Signal Vector
-flags: [ python, cpp ]
+flags: [ show_id, python, cpp ]
 
 parameters:
 -   id: type

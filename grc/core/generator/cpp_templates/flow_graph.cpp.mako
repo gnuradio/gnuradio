@@ -13,6 +13,10 @@ GNU Radio version: ${version}
 ********************/
 
 #include "${flow_graph.get_option('id')}.hpp"
+% if flow_graph.get_option('realtime_scheduling'):
+#include <gnuradio/realtime.h>
+% endif
+
 % if parameters:
 
 namespace po = boost::program_options;
@@ -25,12 +29,18 @@ class_name = flow_graph.get_option('id') + ('_' if flow_graph.get_option('id') =
 
 param_str = ", ".join((param.vtype + " " + param.name) for param in parameters)
 param_str_without_types = ", ".join(param.name for param in parameters)
+initializer_str = ",\n  ".join((param.name + "(" + param.name + ")") for param in parameters)
+
+if generate_options == 'qt_gui':
+  initializer_str = 'QWidget()' + (',\n  ' if len(parameters) > 0 else '') + initializer_str
+
+if len(initializer_str) > 0:
+  initializer_str = '\n: ' + initializer_str
 %>\
 
-% if generate_options == 'no_gui':
-${class_name}::${class_name} (${param_str}) {
-% elif generate_options == 'qt_gui':
-${class_name}::${class_name} (${param_str}) : QWidget() {
+${class_name}::${class_name} (${param_str}) ${initializer_str} {
+
+% if generate_options == 'qt_gui':
     this->setWindowTitle("${title}");
     // check_set_qss
     // set icon
@@ -47,16 +57,12 @@ ${class_name}::${class_name} (${param_str}) : QWidget() {
     this->top_layout->addLayout(this->top_grid_layout);
 
     this->settings = new QSettings("GNU Radio", "${class_name}");
-
 % endif
 
 % if flow_graph.get_option('thread_safe_setters'):
 ## self._lock = threading.RLock()
 % endif
-
-
     this->tb = gr::make_top_block("${title}");
-
 
 % if blocks:
 // Blocks:
@@ -113,7 +119,7 @@ void ${class_name}::set_${var.name} (${var.vtype} ${var.name}) {
 int main (int argc, char **argv) {
     % if parameters:
     % for parameter in parameters:
-    ${parameter.vtype} ${parameter.name};
+    ${parameter.vtype} ${parameter.name} = ${parameter.cpp_templates.render('make')};
     % endfor
 
     po::options_description desc("Options");
@@ -140,7 +146,7 @@ int main (int argc, char **argv) {
     % endif
 
     % if generate_options == 'no_gui':
-    ${class_name}* top_block = new ${class_name}();
+    ${class_name}* top_block = new ${class_name}(${param_str_without_types});
     ## TODO: params
     % if flow_graph.get_option('run_options') == 'prompt':
     top_block->tb->start();

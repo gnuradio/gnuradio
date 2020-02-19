@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -65,11 +53,9 @@ int multiply_by_tag_value_cc_impl::work(int noutput_items,
     std::vector<tag_t> tags;
     get_tags_in_window(tags, 0, 0, noutput_items, d_tag_key);
 
-    std::vector<tag_t>::iterator itag = tags.begin();
-
     int start = 0, end;
-    while (itag != tags.end()) {
-        end = itag->offset - nitems_read(0);
+    for (const auto& tag : tags) {
+        end = tag.offset - nitems_read(0);
         end *= d_vlen;
 
         // Multiply based on the current value of k from 'start' to 'end'
@@ -77,7 +63,7 @@ int multiply_by_tag_value_cc_impl::work(int noutput_items,
         start = end;
 
         // Extract new value of k
-        pmt::pmt_t k = itag->value;
+        pmt::pmt_t k = tag.value;
         if (pmt::is_complex(k)) {
             d_k = pmt::to_complex(k);
         } else if (pmt::is_number(k)) {
@@ -87,8 +73,6 @@ int multiply_by_tag_value_cc_impl::work(int noutput_items,
                         boost::format("Got key '%1%' with incompatible value of '%2%'") %
                             pmt::write_string(d_tag_key) % pmt::write_string(k));
         }
-
-        itag++;
     }
 
     volk_32fc_s32fc_multiply_32fc(

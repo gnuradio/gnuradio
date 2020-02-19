@@ -2,20 +2,8 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 
 include(GrPython)
 
@@ -27,12 +15,8 @@ GR_PYTHON_INSTALL(
 
 install(
     FILES
-    README.atsc
-    README.dvbs
-    README.dvbs2
-    README.dvbt
-    README.dvbt2
-    README.catv
+    catv_tx_256qam.grc
+    catv_tx_64qam.grc
     dvbs2_tx.grc
     dvbs_tx.grc
     dvbt_rx_8k.grc
@@ -40,9 +24,25 @@ install(
     dvbt_tx_8k.grc
     file_atsc_rx.grc
     file_atsc_tx.grc
+    germany-g10.grc
+    germany-g1.grc
+    germany-g2.grc
+    germany-g3.grc
+    germany-g4.grc
+    germany-g5.grc
+    germany-g6.grc
+    germany-g7.grc
+    germany-g8.grc
+    germany-g9.grc
+    README.atsc
+    README.catv
+    README.dvbs
+    README.dvbs2
+    README.dvbt
+    README.dvbt2
     uhd_atsc_capture.grc
     uhd_atsc_tx.grc
-    uhd_rx_atsc.grc
+    uhd_atsc_rx.grc
     vv001-cr35.grc
     vv003-cr23.grc
     vv004-8kfft.grc
@@ -63,16 +63,5 @@ install(
     vv034-dtg016.grc
     vv035-dtg052.grc
     vv036-dtg091.grc
-    germany-g1.grc
-    germany-g2.grc
-    germany-g3.grc
-    germany-g4.grc
-    germany-g5.grc
-    germany-g6.grc
-    germany-g7.grc
-    germany-g8.grc
-    germany-g9.grc
-    germany-g10.grc
-    catv_tx_64qam.grc
     DESTINATION ${GR_PKG_DTV_EXAMPLES_DIR}
 )

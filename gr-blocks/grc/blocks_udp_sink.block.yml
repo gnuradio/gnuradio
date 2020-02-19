@@ -48,7 +48,6 @@ cpp_templates:
     declarations: 'blocks::udp_sink::sptr ${id};'
     make: 'this->${id} = blocks::udp_sink::make(${type.size}*${vlen}, ${ipaddr}, ${port}, ${psize}, ${eof});'
     translations:
-        gr.sizeof_: 'sizeof('
         'True': 'true'
         'False': 'false'
 

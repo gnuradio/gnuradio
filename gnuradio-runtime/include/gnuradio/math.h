@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 /*
@@ -40,14 +28,28 @@
  * compile. GR_M_PI actually works with C++ but is defined here for the sake
  * of consistency.
  */
-#define GR_M_LOG2E 1.4426950408889634074          /* log_2 e */
-#define GR_M_PI 3.14159265358979323846            /* pi */
-#define GR_M_PI_4 0.78539816339744830961566084582 /* pi/4 */
-#define GR_M_TWOPI (2 * GR_M_PI)                  /* 2*pi */
-#define GR_M_SQRT2 1.41421356237309504880         /* sqrt(2) */
+
+#define GR_M_PI 3.14159265358979323846    /* pi */
+#define GR_M_SQRT2 1.41421356237309504880 /* sqrt(2) */
 
 
 namespace gr {
+
+static inline void
+fast_cc_multiply(gr_complex& out, const gr_complex cc1, const gr_complex cc2)
+{
+    // The built-in complex.h multiply has significant NaN/INF checking that
+    // considerably slows down performance.  While on some compilers the
+    // -fcx-limit-range flag can be used, this fast function makes the math consistent
+    // in terms of performance for the Costas loop.
+    float o_r, o_i;
+
+    o_r = (cc1.real() * cc2.real()) - (cc1.imag() * cc2.imag());
+    o_i = (cc1.real() * cc2.imag()) + (cc1.imag() * cc2.real());
+
+    out.real(o_r);
+    out.imag(o_i);
+}
 
 static inline bool is_power_of_2(long x) { return x != 0 && (x & (x - 1)) == 0; }
 
@@ -74,10 +76,7 @@ static inline float fast_atan2f(gr_complex z) { return fast_atan2f(z.imag(), z.r
 /* This bounds x by +/- clip without a branch */
 static inline float branchless_clip(float x, float clip)
 {
-    float x1 = fabsf(x + clip);
-    float x2 = fabsf(x - clip);
-    x1 -= x2;
-    return 0.5 * x1;
+    return 0.5 * (std::abs(x + clip) - std::abs(x - clip));
 }
 
 static inline float clip(float x, float clip)

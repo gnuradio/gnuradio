@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -55,7 +43,12 @@ selector_impl::selector_impl(size_t itemsize,
     message_port_register_in(pmt::mp("en"));
     set_msg_handler(pmt::mp("en"), [this](pmt::pmt_t msg) { this->handle_enable(msg); });
 
-    // TODO: add message ports for input_index and output_index
+    message_port_register_in(pmt::mp("iindex"));
+    set_msg_handler(pmt::mp("iindex"),
+                    [this](pmt::pmt_t msg) { this->handle_msg_input_index(msg); });
+    message_port_register_in(pmt::mp("oindex"));
+    set_msg_handler(pmt::mp("oindex"),
+                    [this](pmt::pmt_t msg) { this->handle_msg_output_index(msg); });
 }
 
 selector_impl::~selector_impl() {}
@@ -77,6 +70,44 @@ void selector_impl::set_output_index(unsigned int output_index)
     else
         throw std::out_of_range("output_index must be < noutputs");
 }
+
+void selector_impl::handle_msg_input_index(pmt::pmt_t msg)
+{
+    pmt::pmt_t data = pmt::cdr(msg);
+
+    if (pmt::is_integer(data)) {
+        const unsigned int new_port = pmt::to_long(data);
+
+        if (new_port < d_num_inputs)
+            set_input_index(new_port);
+        else
+            GR_LOG_WARN(
+                d_logger,
+                "handle_msg_input_index: port index greater than available ports.");
+    } else
+        GR_LOG_WARN(
+            d_logger,
+            "handle_msg_input_index: Non-PMT type received, expecting integer PMT");
+}
+
+void selector_impl::handle_msg_output_index(pmt::pmt_t msg)
+{
+    pmt::pmt_t data = pmt::cdr(msg);
+
+    if (pmt::is_integer(data)) {
+        const unsigned int new_port = pmt::to_long(data);
+        if (new_port < d_num_outputs)
+            set_output_index(new_port);
+        else
+            GR_LOG_WARN(
+                d_logger,
+                "handle_msg_output_index: port index greater than available ports.");
+    } else
+        GR_LOG_WARN(
+            d_logger,
+            "handle_msg_output_index: Non-PMT type received, expecting integer PMT");
+}
+
 
 void selector_impl::handle_enable(pmt::pmt_t msg)
 {

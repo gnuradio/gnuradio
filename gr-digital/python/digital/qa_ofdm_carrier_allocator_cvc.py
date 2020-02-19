@@ -3,20 +3,8 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 #
 
 from gnuradio import gr, gr_unittest, digital, blocks
@@ -210,12 +198,12 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
 
     def test_004_t (self):
         """
-        Provoking RuntimeError exceptions providing wrong user input (earlier invisible SIGFPE).
+        Provoking TypeError exceptions providing wrong user input (earlier invisible SIGFPE).
         """
         fft_len = 6
 
         # Occupied carriers
-        with self.assertRaises(RuntimeError) as oc:
+        with self.assertRaises(TypeError) as oc:
           alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                         (),
                         ((),),
@@ -224,7 +212,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
                         self.tsb_key)
 
         # Pilot carriers
-        with self.assertRaises(RuntimeError) as pc:
+        with self.assertRaises(TypeError) as pc:
           alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                         ((),),
                         (),
@@ -233,7 +221,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
                         self.tsb_key)
 
         # Pilot carrier symbols
-        with self.assertRaises(RuntimeError) as ps:
+        with self.assertRaises(TypeError) as ps:
           alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                         ((),),
                         ((),),

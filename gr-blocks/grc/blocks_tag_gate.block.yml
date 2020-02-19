@@ -56,7 +56,6 @@ cpp_templates:
     callbacks:
     - self.${id}.set_single_key(${single_key})
     translations:
-        gr.sizeof_: 'sizeof('
         'True': 'true'
         'False': 'false'
 

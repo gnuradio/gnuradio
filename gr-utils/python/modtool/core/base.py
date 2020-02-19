@@ -3,20 +3,8 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 #
 """ Base class for the modules """
 
@@ -30,22 +18,7 @@ import glob
 import logging
 import itertools
 
-try:
-    from types import SimpleNamespace
-except:
-    # Py2.7 doesn't have SimpleNamespace, soooo use what Py3 docs say is roughly equivalent
-    class SimpleNamespace:
-        def __init__(self, **kwargs):
-            self.__dict__.update(kwargs)
-
-        def __repr__(self):
-            keys = sorted(self.__dict__)
-            items = ("{}={!r}".format(k, self.__dict__[k]) for k in keys)
-            return "{}({})".format(type(self).__name__, ", ".join(items))
-
-        def __eq__(self, other):
-            return self.__dict__ == other.__dict__
-
+from types import SimpleNamespace
 from gnuradio import gr
 from ..tools import get_modname, SCMRepoFactory
 
@@ -198,7 +171,7 @@ class ModTool(object):
         for f in files:
             if os.path.isfile(f) and f == 'CMakeLists.txt':
                 with open(f) as filetext:
-                    if re.search('find_package\(Gnuradio', filetext.read()) is not None:
+                    if re.search(r'find_package\(Gnuradio', filetext.read()) is not None:
                         self.info['version'] = '36' # Might be 37, check that later
                         has_makefile = True
                     elif re.search('GR_REGISTER_COMPONENT', filetext.read()) is not None:

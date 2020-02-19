@@ -1,0 +1,29 @@
+id: blocks_msg_meta_to_pair
+label: Message Meta Value to Pair
+
+parameters:
+-   id: keyin
+    label: Incoming Meta Name
+    dtype: string
+    default: key in
+-   id: keyout
+    label: Outgoing Pair Name
+    dtype: string
+    default: key out
+
+inputs:
+-   domain: message
+    id: inmeta
+
+outputs:
+-   domain: message
+    id: outpair
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.meta_to_pair(${keyin},${keyout})
+
+documentation: |-
+    This block converts a metadata dictionary item to a pmt pair that is compatible with other blocks expecting a pair in.  You can specify which item in the incoming metadata to output as a pair and what the pair name is.
+
+file_format: 1

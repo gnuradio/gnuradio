@@ -1,21 +1,9 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2015,2016,2018,2019 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2018,2019,2020 Free Software Foundation, Inc.
  *
- * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -149,7 +137,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
     d_sampling_freq_correction = 0.0;
 
     // allocate PRBS buffer
-    d_wk = new char[d_Kmax - d_Kmin + 1];
+    d_wk = new (std::nothrow) char[d_Kmax - d_Kmin + 1];
     if (d_wk == NULL) {
         std::cerr << "Reference Signals, cannot allocate memory for d_wk." << std::endl;
         throw std::bad_alloc();
@@ -1219,10 +1207,13 @@ dvbt_reference_signals_impl::dvbt_reference_signals_impl(
              transmission_mode,
              include_cell_id,
              cell_id),
-      d_pg(config)
+      d_pg(config),
+      d_ninput(ninput),
+      d_noutput(noutput),
+      ofdm_fft(config.d_transmission_mode == T2k ? 2048 : 8192, false, 1),
+      ofdm_fft_size(config.d_transmission_mode == T2k ? 2048 : 8192),
+      normalization(1.0 / std::sqrt(27.0 * config.d_payload_length))
 {
-    d_ninput = ninput;
-    d_noutput = noutput;
 }
 
 /*
@@ -1243,9 +1234,20 @@ int dvbt_reference_signals_impl::general_work(int noutput_items,
 {
     const gr_complex* in = (const gr_complex*)input_items[0];
     gr_complex* out = (gr_complex*)output_items[0];
+    gr_complex* dst;
 
     for (int i = 0; i < noutput_items; i++) {
         d_pg.update_output(&in[i * d_ninput], &out[i * d_noutput]);
+        dst = ofdm_fft.get_inbuf();
+        memcpy(&dst[ofdm_fft_size / 2],
+               &out[i * d_noutput],
+               sizeof(gr_complex) * ofdm_fft_size / 2);
+        memcpy(&dst[0],
+               &out[(i * d_noutput) + (ofdm_fft_size / 2)],
+               sizeof(gr_complex) * ofdm_fft_size / 2);
+        ofdm_fft.execute();
+        volk_32fc_s32fc_multiply_32fc(
+            &out[i * d_noutput], ofdm_fft.get_outbuf(), normalization, ofdm_fft_size);
     }
 
     // Tell runtime system how many input items we consumed on

@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -293,4 +281,34 @@ BOOST_AUTO_TEST_CASE(t11_set_block_affinity)
     // We only set the core affinity to 0 because we always know at
     // least one thread core exists to use.
     BOOST_CHECK_EQUAL(set[0], ret[0]);
+}
+
+BOOST_AUTO_TEST_CASE(t12_release_shared_pointers)
+{
+    if (VERBOSE)
+        std::cout << "qa_top_block::t12()\n";
+
+    gr::top_block_sptr tb = gr::make_top_block("top");
+
+    gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
+    gr::block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
+    gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+
+    tb->connect(src, 0, head, 0);
+    tb->connect(head, 0, dst, 0);
+
+    tb->start();
+    tb->stop();
+    tb->wait();
+
+    BOOST_CHECK(src.use_count() > 1);
+    BOOST_CHECK(head.use_count() > 1);
+    BOOST_CHECK(dst.use_count() > 1);
+
+    tb->disconnect(src, 0, head, 0);
+    tb->disconnect(head, 0, dst, 0);
+
+    BOOST_CHECK_EQUAL(1, src.use_count());
+    BOOST_CHECK_EQUAL(1, head.use_count());
+    BOOST_CHECK_EQUAL(1, dst.use_count());
 }

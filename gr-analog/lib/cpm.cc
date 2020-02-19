@@ -2,20 +2,8 @@
 /*
  * Copyright 2010,2012 Free Software Foundation, Inc.
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 // Calculate the taps for the CPM phase responses
@@ -48,7 +36,7 @@ std::vector<float> generate_cpm_lrc_taps(unsigned samples_per_sym, unsigned L)
 {
     std::vector<float> taps(samples_per_sym * L, 1.0 / L / samples_per_sym);
     for (unsigned i = 0; i < samples_per_sym * L; i++) {
-        taps[i] *= 1 - std::cos(GR_M_TWOPI * i / L / samples_per_sym);
+        taps[i] *= 1 - std::cos((2.0 * GR_M_PI) * i / L / samples_per_sym);
     }
 
     return taps;
@@ -91,7 +79,7 @@ generate_cpm_lsrc_taps(unsigned samples_per_sym, unsigned L, double beta)
             taps_d[i] *= M_PI_4;
         } else {
             double tmp = 4.0 * beta * k / Ls;
-            taps_d[i] *= std::cos(beta * GR_M_TWOPI * k / Ls) / (1 - tmp * tmp);
+            taps_d[i] *= std::cos(beta * (2.0 * GR_M_PI) * k / Ls) / (1 - tmp * tmp);
         }
         sum += taps_d[i];
     }

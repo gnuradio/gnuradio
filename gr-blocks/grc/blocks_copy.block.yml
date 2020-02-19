@@ -62,7 +62,6 @@ cpp_templates:
     callbacks:
     - set_enabled(${enabled})
     translations:
-        gr.sizeof_: 'sizeof('
         'True': 'true'
         'False': 'false'
 

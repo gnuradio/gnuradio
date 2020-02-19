@@ -3,20 +3,8 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 #
 """ Module to add new blocks """
 
@@ -101,15 +89,15 @@ def get_lang(self):
 
 def get_blockname(self):
     """ Get the blockname"""
-    if self.info['blockname'] is None:
+    if not self.info['blockname'] or self.info['blockname'].isspace():
         while not self.info['blockname'] or self.info['blockname'].isspace():
             self.info['blockname'] = cli_input("Enter name of block/code (without module name prefix): ")
-    if not re.match('[a-zA-Z0-9_]+', self.info['blockname']):
+    if not re.match('^[a-zA-Z0-9_]+$', self.info['blockname']):
         raise ModToolException('Invalid block name.')
 
 def get_copyrightholder(self):
     """ Get the copyrightholder of the block to be added """
-    if self.info['copyrightholder'] is None:
+    if not self.info['copyrightholder'] or self.info['copyrightholder'].isspace():
         user = getpass.getuser()
         git_user = self.scm.get_gituser()
         if git_user:
@@ -134,16 +122,19 @@ def get_arglist(self):
                                             default='',
                                             show_default=False)
 
-
 def get_py_qa(self):
     """ Get a boolean value for addition of py_qa """
-    if not (self.info['blocktype'] in ('noblock') or self.skip_subdirs['python']):
-        if self.add_py_qa is None:
+    if self.add_py_qa is None:
+        if not (self.info['blocktype'] in ('noblock') or self.skip_subdirs['python']):
             self.add_py_qa = ask_yes_no(click.style('Add Python QA code?', fg='cyan'), True)
+        else:
+            self.add_py_qa = False
 
 def get_cpp_qa(self):
     """ Get a boolean value for addition of cpp_qa """
-    if self.info['lang'] == 'cpp':
-        if self.add_cc_qa is None:
+    if self.add_cc_qa is None:
+        if self.info['lang'] == 'cpp':
             self.add_cc_qa = ask_yes_no(click.style('Add C++ QA code?', fg='cyan'),
                                         not self.add_py_qa)
+        else:
+            self.add_cc_qa = False

@@ -1,0 +1,204 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2020 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ *
+ */
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include "correctiq_auto_impl.h"
+#include <gnuradio/io_signature.h>
+#include <volk/volk.h>
+#include <boost/format.hpp>
+
+namespace gr {
+namespace blocks {
+
+correctiq_auto::sptr
+correctiq_auto::make(double samp_rate, double freq, float gain, float sync_window)
+{
+    return gnuradio::get_initial_sptr(
+        new correctiq_auto_impl(samp_rate, freq, gain, sync_window));
+}
+
+/*
+ * The private constructor
+ */
+correctiq_auto_impl::correctiq_auto_impl(double samp_rate,
+                                         double freq,
+                                         float gain,
+                                         float sync_window)
+    : gr::sync_block("correctiq_auto",
+                     gr::io_signature::make(1, 1, sizeof(gr_complex)),
+                     gr::io_signature::make(1, 1, sizeof(gr_complex))),
+      d_avg_real(0.0),
+      d_avg_img(0.0),
+      d_ratio(1e-05f),
+      d_samp_rate(samp_rate),
+      d_freq(freq),
+      d_gain(gain),
+      d_sync_window(sync_window),
+      d_synchronized(false),
+      d_buffer_size(8192),
+      d_volk_const_buffer(NULL)
+{
+    d_max_sync_samples = (long)(d_samp_rate * (double)d_sync_window);
+
+    set_const_buffer(d_buffer_size);
+    d_k = gr_complex(0.0, 0.0);
+    fill_const_buffer();
+
+    message_port_register_in(pmt::mp("rsync"));
+    set_msg_handler(pmt::mp("rsync"),
+                    [this](pmt::pmt_t msg) { this->handle_resync(msg); });
+
+    message_port_register_out(pmt::mp("sync_start"));
+    message_port_register_out(pmt::mp("offsets"));
+
+    GR_LOG_INFO(d_logger, "Block start.  Auto Synchronizing...");
+}
+
+void correctiq_auto_impl::trigger_resync(std::string reason)
+{
+    gr::thread::scoped_lock guard(d_setlock);
+
+    std::string d_resync_msg = reason + ".  Auto Synchronizing...";
+
+    GR_LOG_INFO(d_logger, d_resync_msg);
+    d_synchronized = false;
+    d_sync_counter = 0;
+
+    // reset counters on an unsync
+    d_avg_real = 0.0;
+    d_avg_img = 0.0;
+    d_k = gr_complex(d_avg_real, d_avg_img);
+
+    send_syncing();
+}
+
+void correctiq_auto_impl::send_sync_values()
+{
+    pmt::pmt_t meta = pmt::make_dict();
+
+    meta = pmt::dict_add(meta, pmt::mp("real"), pmt::mp(d_avg_real));
+    meta = pmt::dict_add(meta, pmt::mp("imag"), pmt::mp(d_avg_img));
+
+    pmt::pmt_t pdu = pmt::cons(meta, pmt::PMT_NIL);
+    message_port_pub(pmt::mp("offsets"), pdu);
+}
+
+void correctiq_auto_impl::send_syncing()
+{
+    pmt::pmt_t pdu = pmt::cons(pmt::intern("syncing"), pmt::from_bool(true));
+
+    message_port_pub(pmt::mp("sync_start"), pdu);
+}
+
+void correctiq_auto_impl::handle_resync(pmt::pmt_t msg)
+{
+    trigger_resync("Resync message received.");
+}
+
+/*
+ * Our virtual destructor.
+ */
+correctiq_auto_impl::~correctiq_auto_impl()
+{
+    if (d_volk_const_buffer)
+        volk_free(d_volk_const_buffer);
+}
+
+void correctiq_auto_impl::set_const_buffer(int new_size)
+{
+    d_buffer_size = new_size;
+
+    if (d_volk_const_buffer) {
+        volk_free(d_volk_const_buffer);
+    }
+
+    d_volk_const_buffer = reinterpret_cast<gr_complex*>(
+        volk_malloc(sizeof(gr_complex) * d_buffer_size, volk_get_alignment()));
+
+    fill_const_buffer();
+}
+
+void correctiq_auto_impl::fill_const_buffer()
+{
+    gr_complex* tmp_ptr = d_volk_const_buffer;
+
+    for (int i = 0; i < d_buffer_size; i++) {
+        *tmp_ptr++ = d_k;
+    }
+}
+
+double correctiq_auto_impl::get_freq() { return d_freq; }
+
+float correctiq_auto_impl::get_gain() { return d_gain; }
+
+void correctiq_auto_impl::set_freq(double new_value)
+{
+    trigger_resync("Frequency change detected");
+}
+
+void correctiq_auto_impl::set_gain(float new_value)
+{
+    trigger_resync("Gain change detected");
+}
+
+int correctiq_auto_impl::work(int noutput_items,
+                              gr_vector_const_void_star& input_items,
+                              gr_vector_void_star& output_items)
+{
+    gr::thread::scoped_lock guard(d_setlock);
+
+    if (!d_synchronized) {
+        const gr_complex* in = (const gr_complex*)input_items[0];
+        gr_complex* out = (gr_complex*)output_items[0];
+
+        for (int i = 0; i < noutput_items; i++) {
+            // Synchronizing.  Behave just like normal correctiq.
+            d_avg_real = d_ratio * (in[i].real() - d_avg_real) + d_avg_real;
+            d_avg_img = d_ratio * (in[i].imag() - d_avg_img) + d_avg_img;
+            d_sync_counter++;
+
+            out[i].real(in[i].real() - d_avg_real);
+            out[i].imag(in[i].imag() - d_avg_img);
+        }
+    } else {
+        if (noutput_items > d_buffer_size)
+            set_const_buffer(noutput_items);
+
+        // Inputs are complex but we're casting as floats to leverage volk
+        const float* in = (const float*)input_items[0];
+        float* out = (float*)output_items[0];
+
+        volk_32f_x2_add_32f(
+            out, in, reinterpret_cast<float*>(d_volk_const_buffer), 2 * noutput_items);
+    }
+
+    if (!d_synchronized && (d_sync_counter >= d_max_sync_samples)) {
+        d_synchronized = true;
+        d_k = gr_complex(d_avg_real, d_avg_img);
+        fill_const_buffer();
+
+        GR_LOG_INFO(d_logger, "Auto offset now synchronized.");
+        GR_LOG_INFO(
+            d_logger,
+            boost::format{ "Applying these offsets (real-real_offset, "
+                           "imag-imag_offset)... real_offset: %.6f, imag_offset: %.6f" } %
+                d_avg_real % d_avg_img);
+
+        send_sync_values();
+    }
+
+    return noutput_items;
+}
+
+} /* namespace blocks */
+} /* namespace gr */

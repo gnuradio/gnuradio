@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -46,6 +47,7 @@ blocks:
     label4: ''
     labels: '[]'
     num_opts: '2'
+    option0: TX/RX
     option1: RX2
     option2: '2'
     option3: '3'

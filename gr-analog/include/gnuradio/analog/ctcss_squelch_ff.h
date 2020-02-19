@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_ANALOG_CTCSS_SQUELCH_FF_H
@@ -51,7 +39,8 @@ public:
      * \param freq frequency value to use as the squelch tone.
      * \param level threshold level for the squelch tone.
      * \param len length of the frequency filters.
-     * \param ramp sets response characteristic.
+     * \param ramp attack / release time in samples; a sinusodial ramp
+     *             is used. set to 0 to disable.
      * \param gate if true, no output if no squelch tone.
      *             if false, output 0's if no squelch tone.
      */

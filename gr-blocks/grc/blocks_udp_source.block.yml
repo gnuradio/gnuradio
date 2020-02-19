@@ -50,7 +50,6 @@ cpp_templates:
     declarations: 'blocks::udp_source::sptr ${id};'
     make: 'this->${id} = blocks::udp_source::make(${type.size}*${vlen}, ${ipaddr}, ${port}, ${psize}, ${eof});'
     translations:
-        gr.sizeof_: 'sizeof('
         'True': 'true'
         'False': 'false'
 

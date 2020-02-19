@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -50,28 +38,6 @@ void control_loop::update_gains()
     float denom = (1.0 + 2.0 * d_damping * d_loop_bw + d_loop_bw * d_loop_bw);
     d_alpha = (4 * d_damping * d_loop_bw) / denom;
     d_beta = (4 * d_loop_bw * d_loop_bw) / denom;
-}
-
-void control_loop::advance_loop(float error)
-{
-    d_freq = d_freq + d_beta * error;
-    d_phase = d_phase + d_freq + d_alpha * error;
-}
-
-void control_loop::phase_wrap()
-{
-    while (d_phase > M_TWOPI)
-        d_phase -= M_TWOPI;
-    while (d_phase < -M_TWOPI)
-        d_phase += M_TWOPI;
-}
-
-void control_loop::frequency_limit()
-{
-    if (d_freq > d_max_freq)
-        d_freq = d_max_freq;
-    else if (d_freq < d_min_freq)
-        d_freq = d_min_freq;
 }
 
 /*******************************************************************

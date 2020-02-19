@@ -1,23 +1,11 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013, 2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_DIGITAL_OFDM_CYCLIC_PREFIXER_H
@@ -30,7 +18,7 @@ namespace gr {
 namespace digital {
 
 /*!
- * \brief Adds a cyclic prefix and performs pulse shaping on OFDM symbols.
+ * \brief Adds a cyclic prefix and performs optional pulse shaping on OFDM symbols.
  * \ingroup ofdm_blk
  *
  * \details
@@ -45,6 +33,19 @@ namespace digital {
  *         the pulse shaping.
  *
  * The pulse shape is a raised cosine in the time domain.
+ *
+ * Different CP lengths as for instance needed in LTE are supported. This
+ * is why one of the inputs is std::vector<int>. After every CP given has
+ * been prepended to symbols, each with the length of the IFFT operation,
+ * the mechanism will wrap around and start over. To give an example, the
+ * input tuple for LTE with an FFT length of 2048 would be (160,) +
+ * (144,)*6, which is equal to (160, 144, 144, 144, 144, 144, 144). A
+ * uniform CP would be indicated by (uniform_cp_length, ).
+ *
+ * This block does some sanity checking: 1. It is not allowed to have a
+ * vector of CP lengths, which are only 0.  2. Not a single CP in the
+ * vector must be longer than the rolloff. 3. Not a single CP is allowed to
+ * be < 0.
  */
 class DIGITAL_API ofdm_cyclic_prefixer : virtual public tagged_stream_block
 {
@@ -52,13 +53,24 @@ public:
     typedef boost::shared_ptr<ofdm_cyclic_prefixer> sptr;
 
     /*!
-     * \param input_size FFT length (i.e. length of the OFDM symbols)
-     * \param output_size FFT length + cyclic prefix length (in samples)
-     * \param rolloff_len Length of the rolloff flank in samples
-     * \param len_tag_key For framed processing the key of the length tag
+     * \param input_size IFFT length (i.e. length of the OFDM symbols).
+     * \param output_size FFT length + cyclic prefix length (in samples).
+     * \param rolloff_len Length of the rolloff flank in samples.
+     * \param len_tag_key For framed processing the key of the length tag.
      */
     static sptr make(size_t input_size,
                      size_t output_size,
+                     int rolloff_len = 0,
+                     const std::string& len_tag_key = "");
+
+    /*!
+     * \param fft_len IFFT length (i.e. length of the OFDM symbols).
+     * \param cp_lengths CP lengths. Wraps around after reaching the end.
+     * \param rolloff_len Length of the rolloff flank in samples.
+     * \param len_tag_key For framed processing the key of the length tag.
+     */
+    static sptr make(int fft_len,
+                     const std::vector<int>& cp_lengths,
                      int rolloff_len = 0,
                      const std::string& len_tag_key = "");
 };

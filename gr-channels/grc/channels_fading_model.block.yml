@@ -48,10 +48,10 @@ documentation: |-
        A. Alimohammad S.F. Fard B.F. Cockburn C. Schlegel
        26th November 2008
 
-        int d_N=8;          // number of sinusoids
+        unsigned int d_N=8;          // number of sinusoids
         float d_fDTs=0.01   // normalized maximum doppler frequency (f_doppler / f_samprate)
         float d_K=4;        // Rician factor (ratio of the specular power to the scattered power)
         bool d_LOS=true;    // LOS path exists? chooses Rician (LOS) vs Rayleigh (NLOS) model.
-        int seed=0;         // noise seed
+        uint32_t seed=0;         // noise seed
 
 file_format: 1

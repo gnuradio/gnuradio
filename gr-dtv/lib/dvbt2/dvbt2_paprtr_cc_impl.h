@@ -2,20 +2,8 @@
 /*
  * Copyright 2015 Free Software Foundation, Inc.
  *
- * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_DTV_DVBT2_PAPRTR_CC_IMPL_H
@@ -49,13 +37,11 @@ private:
     int fft_size;
     int left_nulls;
     int right_nulls;
-    int pilot_pattern;
     int carrier_mode;
     int papr_mode;
     int version_num;
     double v_clip;
     int num_iterations;
-    const int* papr_map;
     const int* p2_papr_map;
     const int* tr_papr_map;
     int p2_carrier_map[MAX_CARRIERS];
@@ -81,7 +67,7 @@ private:
     int shift;
     void init_pilots(int);
 
-    fft::fft_complex* papr_fft;
+    fft::fft_complex papr_fft;
     int papr_fft_size;
 
     const static int p2_papr_map_1k[10];

@@ -2,19 +2,8 @@
 Copyright 2008-2015 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
-GNU Radio Companion is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+SPDX-License-Identifier: GPL-2.0-or-later
 
-GNU Radio Companion is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from __future__ import absolute_import, print_function
@@ -198,7 +187,7 @@ class SubprocessLoader(object):
         """ Receive response from worker's stdout """
         for line in iter(self._worker.stdout.readline, ''):
             try:
-                key, cmd, args = json.loads(line.decode('utf-8'), encoding='utf-8')
+                key, cmd, args = json.loads(line.decode('utf-8'))
                 if key != self.AUTH_CODE:
                     raise ValueError('Got wrong auth code')
                 return cmd, args
@@ -268,7 +257,7 @@ def worker_main():
     # flush out to signal the main process we are ready for new commands
     sys.stdout.flush()
     for line in iter(sys.stdin.readline, ''):
-        code, cmd, args = json.loads(line, encoding='utf-8')
+        code, cmd, args = json.loads(line)
         try:
             if cmd == 'query':
                 key, imports, make = args

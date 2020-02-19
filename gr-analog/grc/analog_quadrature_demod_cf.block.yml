@@ -6,7 +6,7 @@ parameters:
 -   id: gain
     label: Gain
     dtype: real
-    default: samp_rate/(2*math.pi*fsk_deviation_hz/8.0)
+    default: samp_rate/(2*math.pi*fsk_deviation_hz)
 
 inputs:
 -   domain: stream

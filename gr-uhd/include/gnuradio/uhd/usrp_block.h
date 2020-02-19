@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifndef INCLUDED_GR_UHD_USRP_BLOCK_H
@@ -554,6 +542,36 @@ public:
     virtual boost::uint32_t get_gpio_attr(const std::string& bank,
                                           const std::string& attr,
                                           const size_t mboard = 0) = 0;
+
+    /*!
+     * Enumerate the available filters in the signal path.
+     * \param search_mask
+     * \parblock
+     * Select only certain filter names by specifying this search mask.
+     *
+     * E.g. if search mask is set to "rx_frontends/A" only filter names including
+     * that string will be returned. \endparblock \return a vector of strings
+     * representing the selected filter names.
+     */
+    virtual std::vector<std::string>
+    get_filter_names(const std::string& search_mask = "") = 0;
+
+    /*!
+     * Write back a filter obtained by get_filter() to the signal path.
+     * This filter can be a modified version of the originally returned one.
+     * The information about Rx or Tx is contained in the path parameter.
+     * \param path the name of the filter as returned from get_filter_names().
+     * \param filter the filter_info_base::sptr of the filter object to be written
+     */
+    virtual void set_filter(const std::string& path,
+                            ::uhd::filter_info_base::sptr filter) = 0;
+
+    /*!
+     * Return the filter object for the given name.
+     * @param path the name of the filter as returned from get_filter_names()
+     * @return the filter object
+     */
+    virtual ::uhd::filter_info_base::sptr get_filter(const std::string& path) = 0;
 };
 
 } /* namespace uhd */

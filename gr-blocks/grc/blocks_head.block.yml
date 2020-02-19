@@ -46,7 +46,5 @@ cpp_templates:
     make: 'this->${id} = blocks::head::make(${type.size}*${vlen}, ${num_items});'
     callbacks:
     - set_length(${num_items})
-    translations:
-        gr.sizeof_: 'sizeof('
 
 file_format: 1

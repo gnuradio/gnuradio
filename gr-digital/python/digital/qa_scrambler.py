@@ -4,20 +4,8 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 #
 
 
@@ -64,28 +52,24 @@ class test_scrambler(gr_unittest.TestCase):
         self.assertEqual(src_data, dst.data())
 
     def test_additive_scrambler_reset(self):
-        src_data = (1,)*1000
+        src_data = (1,)*200
         src = blocks.vector_source_b(src_data, False)
-        scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100)
-        descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100)
+        scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 50)
         dst = blocks.vector_sink_b()
-        self.tb.connect(src, scrambler, descrambler, dst)
+        self.tb.connect(src, scrambler, dst)
         self.tb.run()
-        self.assertEqual(src_data, dst.data())
+        output = dst.data()
+        self.assertEqual(output[:50] * 4, output)
 
     def test_additive_scrambler_reset_3bpb(self):
-        src_data = (5,)*2000
+        src_data = (5,)*200
         src = blocks.vector_source_b(src_data, False)
-        scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100, 3)
-        descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100, 3)
+        scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 50, 3)
         dst = blocks.vector_sink_b()
-        dst2 = blocks.vector_sink_b()
-        self.tb.connect(src, scrambler, descrambler, dst)
-        self.tb.connect(scrambler, dst2)
+        self.tb.connect(src, scrambler, dst)
         self.tb.run()
-        if not (src_data == dst.data()):
-            self.fail('Not equal.')
-        self.assertEqual(src_data, src_data)
+        output = dst.data()
+        self.assertEqual(output[:50] * 4, output)
 
     def test_additive_scrambler_tags(self):
         src_data = (1,)*1000

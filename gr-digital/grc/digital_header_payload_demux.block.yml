@@ -41,8 +41,6 @@ parameters:
     option_attributes:
         itemsize: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
             gr.sizeof_char]
-        cpp_itemsize: [sizeof(gr_complex), sizeof(gr_float), sizeof(gr_int), sizeof(gr_short),
-            sizeof(gr_char)]
     hide: part
 -   id: timing_tag_key
     label: Timing tag key
@@ -104,7 +102,7 @@ cpp_templates:
             ${length_tag_key},
             ${trigger_tag_key},
             ${output_symbols},
-            ${type.cpp_itemsize},
+            ${type.itemsize},
             ${timing_tag_key},
             ${samp_rate},
             ${special_tags},

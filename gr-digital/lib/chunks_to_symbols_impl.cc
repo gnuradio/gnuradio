@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -31,6 +19,22 @@
 
 namespace gr {
 namespace digital {
+
+
+void set_vector_from_pmt(std::vector<gr_complex>& symbol_table,
+                         pmt::pmt_t& symbol_table_pmt)
+{
+    size_t length;
+    const gr_complex* elements = pmt::c32vector_elements(symbol_table_pmt, length);
+    symbol_table.assign(elements, elements + length);
+}
+
+void set_vector_from_pmt(std::vector<float>& symbol_table, pmt::pmt_t& symbol_table_pmt)
+{
+    size_t length;
+    const float* elements = pmt::f32vector_elements(symbol_table_pmt, length);
+    symbol_table.assign(elements, elements + length);
+}
 
 template <class IN_T, class OUT_T>
 typename chunks_to_symbols<IN_T, OUT_T>::sptr
@@ -60,25 +64,6 @@ chunks_to_symbols_impl<IN_T, OUT_T>::chunks_to_symbols_impl(
 template <class IN_T, class OUT_T>
 chunks_to_symbols_impl<IN_T, OUT_T>::~chunks_to_symbols_impl()
 {
-}
-
-
-template <class IN_T, class OUT_T>
-void chunks_to_symbols_impl<IN_T, OUT_T>::set_vector_from_pmt(
-    std::vector<gr_complex>& symbol_table, pmt::pmt_t& symbol_table_pmt)
-{
-    size_t length;
-    const gr_complex* elements = pmt::c32vector_elements(symbol_table_pmt, length);
-    symbol_table.assign(elements, elements + length);
-}
-
-template <class IN_T, class OUT_T>
-void chunks_to_symbols_impl<IN_T, OUT_T>::set_vector_from_pmt(
-    std::vector<float>& symbol_table, pmt::pmt_t& symbol_table_pmt)
-{
-    size_t length;
-    const float* elements = pmt::f32vector_elements(symbol_table_pmt, length);
-    symbol_table.assign(elements, elements + length);
 }
 
 template <class IN_T, class OUT_T>

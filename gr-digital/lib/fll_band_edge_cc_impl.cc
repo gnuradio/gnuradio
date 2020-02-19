@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -87,12 +75,6 @@ fll_band_edge_cc_impl::fll_band_edge_cc_impl(float samps_per_sym,
     design_filter(d_sps, d_rolloff, d_filter_size);
 }
 
-fll_band_edge_cc_impl::~fll_band_edge_cc_impl()
-{
-    delete d_filter_upper;
-    delete d_filter_lower;
-}
-
 /*******************************************************************
  SET FUNCTIONS
 *******************************************************************/
@@ -144,7 +126,7 @@ void fll_band_edge_cc_impl::design_filter(float samps_per_sym,
                                           float rolloff,
                                           int filter_size)
 {
-    int M = rint(filter_size / samps_per_sym);
+    const int M = rintf(filter_size / samps_per_sym);
     float power = 0;
 
     // Create the baseband filter by adding two sincs together
@@ -180,23 +162,23 @@ void fll_band_edge_cc_impl::design_filter(float samps_per_sym,
 
     // Set the history to ensure enough input items for each filter
     set_history(filter_size + 1);
-    d_filter_upper = new gr::filter::kernel::fir_filter_with_buffer_ccc(d_taps_upper);
-    d_filter_lower = new gr::filter::kernel::fir_filter_with_buffer_ccc(d_taps_lower);
+    d_filter_upper.reset(
+        new gr::filter::kernel::fir_filter_with_buffer_ccc(d_taps_upper));
+    d_filter_lower.reset(
+        new gr::filter::kernel::fir_filter_with_buffer_ccc(d_taps_lower));
 }
 
 void fll_band_edge_cc_impl::print_taps()
 {
-    unsigned int i;
-
     printf("Upper Band-edge: [");
-    for (i = 0; i < d_taps_upper.size(); i++) {
-        printf(" %.4e + %.4ej,", d_taps_upper[i].real(), d_taps_upper[i].imag());
+    for (const auto& tap : d_taps_upper) {
+        printf(" %.4e + %.4ej,", tap.real(), tap.imag());
     }
     printf("]\n\n");
 
     printf("Lower Band-edge: [");
-    for (i = 0; i < d_taps_lower.size(); i++) {
-        printf(" %.4e + %.4ej,", d_taps_lower[i].real(), d_taps_lower[i].imag());
+    for (const auto& tap : d_taps_lower) {
+        printf(" %.4e + %.4ej,", tap.real(), tap.imag());
     }
     printf("]\n\n");
 }

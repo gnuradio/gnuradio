@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -143,7 +131,7 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
             } else if (use_fp_rrate) {
                 for (t = rtags.begin(); t != rtags.end(); t++) {
                     tag_t new_tag = *t;
-                    new_tag.offset = ((double)new_tag.offset * rrate) + 0.5;
+                    new_tag.offset = std::llround((double)new_tag.offset * rrate);
                     for (int o = 0; o < d->noutputs(); o++)
                         out_buf[o]->add_item_tag(new_tag);
                 }
@@ -191,7 +179,7 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
                 } else if (use_fp_rrate) {
                     for (t = rtags.begin(); t != rtags.end(); t++) {
                         tag_t new_tag = *t;
-                        new_tag.offset = ((double)new_tag.offset * rrate) + 0.5;
+                        new_tag.offset = std::llround((double)new_tag.offset * rrate);
                         out_buf->add_item_tag(new_tag);
                     }
                 } else {

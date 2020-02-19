@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -60,8 +48,8 @@ int tagged_stream_to_pdu_impl::work(int noutput_items,
     // Grab tags, throw them into dict
     get_tags_in_range(d_tags, 0, nitems_read(0), nitems_read(0) + ninput_items[0]);
     d_pdu_meta = pmt::make_dict();
-    for (d_tags_itr = d_tags.begin(); d_tags_itr != d_tags.end(); d_tags_itr++) {
-        d_pdu_meta = dict_add(d_pdu_meta, (*d_tags_itr).key, (*d_tags_itr).value);
+    for (const auto& tag : d_tags) {
+        d_pdu_meta = dict_add(d_pdu_meta, tag.key, tag.value);
     }
 
     // Grab data, throw into vector

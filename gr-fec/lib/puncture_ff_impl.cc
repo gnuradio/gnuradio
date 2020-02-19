@@ -4,20 +4,8 @@
  *
  * This file is part of GNU Radio
  *
- * GNU Radio is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * GNU Radio is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -79,18 +67,18 @@ puncture_ff_impl::~puncture_ff_impl() {}
 
 int puncture_ff_impl::fixed_rate_ninput_to_noutput(int ninput)
 {
-    return (int)((((d_puncsize - d_puncholes) / (double)(d_puncsize)) * ninput) + .5);
+    return std::lround(((d_puncsize - d_puncholes) / (double)(d_puncsize)) * ninput);
 }
 
 int puncture_ff_impl::fixed_rate_noutput_to_ninput(int noutput)
 {
-    return (int)(((d_puncsize / (double)(d_puncsize - d_puncholes)) * noutput) + .5);
+    return std::lround((d_puncsize / (double)(d_puncsize - d_puncholes)) * noutput);
 }
 
 void puncture_ff_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
 {
     ninput_items_required[0] =
-        (int)(((d_puncsize / (double)(d_puncsize - d_puncholes)) * noutput_items) + .5);
+        std::lround((d_puncsize / (double)(d_puncsize - d_puncholes)) * noutput_items);
 }
 
 /*
@@ -138,7 +126,7 @@ int puncture_ff_impl::general_work(int noutput_items,
                  % ((int)(((1.0/relative_rate()) * noutput_items) + .5)));
     */
 
-    consume_each((int)(((1.0 / relative_rate()) * noutput_items) + .5));
+    consume_each(std::lround((1.0 / relative_rate()) * noutput_items));
     return noutput_items;
 }
 

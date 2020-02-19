@@ -56,7 +56,7 @@ cpp_templates:
     declarations: 'analog::agc2_${type.fcn}::sptr ${id};'
     make: |-
         this->${id} = analog::agc2_${type.fcn}::make(${attack_rate}, ${decay_rate}, ${reference}, ${gain});
-        this->${id}.set_max_gain(${max_gain});
+        this->${id}->set_max_gain(${max_gain});
     callbacks:
     - set_attack_rate(${attack_rate})
     - set_decay_rate(${decay_rate})
