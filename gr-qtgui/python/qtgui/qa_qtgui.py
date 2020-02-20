@@ -69,5 +69,11 @@ class test_qtgui(gr_unittest.TestCase):
     def test12(self):
         self.qtsnk = qtgui.histogram_sink_f(1024, 100, -1, 1, "Test", 1)
 
+    def test13(self):
+        self.qtsnk = qtgui.eye_sink_c(1024, 1, "Test", 1)
+
+    def test13(self):
+        self.qtsnk = qtgui.eye_sink_c(1024, 1, "Test", 1)
+
 if __name__ == '__main__':
     gr_unittest.run(test_qtgui, "test_qtgui.xml")

@@ -29,6 +29,8 @@ purposes. These include:
 
 \li Time Domain (gr::qtgui::time_sink_c and gr::qtgui::time_sink_f):
 x-axis is time, y-axis is amplitude.
+\li Eye pattern (gr::qtgui::eye_sink_c and gr::qtgui::eye_sink_f):
+x-axis is time, y-axis is amplitude.
 \li Frequency Domain or PSD (gr::qtgui::freq_sink_c and
 gr::qtgui::freq_sink_f): x-axis is frequency, y-axis is magnitude in
 dB.
@@ -44,7 +46,7 @@ the data stream.
 \li Combined Sink (gr::qtgui::sink_c and gr::qtgui::sink_f): combines
 time, frequency, waterfall, and constellation plots into one widget.
 
-The time domain, frequency domain, and waterfall have both a complex
+The time domain, eye pattern, frequency domain, and waterfall have both a complex
 and a floating point block. The constellation plot only makes sense
 with complex inputs. The time raster plots accept bits and floats.
 
@@ -88,11 +90,11 @@ FFT averaging.
 
 \subsection qtgui_menu_trigger Triggering Menu for Time Plots
 
-The time plots have triggering capabilities. Triggering can happen
-when the signal of a specific channel crosses (positive or negative
-slope) a certain level threshold. Or triggering can be done off a
-specific stream tag such that whenever a tag of a given key is found,
-the scope will trigger.
+The time plots and eye pattern plots have triggering capabilities. 
+Triggering can happen when the signal of a specific channel crosses 
+(positive or negative slope) a certain level threshold. Or triggering 
+can be done off a specific stream tag such that whenever a tag of a 
+given key is found, the scope will trigger.
 
 In the signal level mode, the trigger can be either 'auto' or 'normal'
 where the latter will only trigger when the event is seen. The 'auto'
