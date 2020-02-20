@@ -91,8 +91,12 @@ void pull_msg_source_impl::readloop()
 
             std::string buf(static_cast<char*>(msg.data()), msg.size());
             std::stringbuf sb(buf);
-            pmt::pmt_t m = pmt::deserialize(sb);
-            message_port_pub(d_port, m);
+            try {
+                pmt::pmt_t m = pmt::deserialize(sb);
+                message_port_pub(d_port, m);
+            } catch (pmt::exception& e) {
+                GR_LOG_ERROR(d_logger, std::string("Invalid PMT message: ") + e.what());
+            }
 
         } else {
             boost::this_thread::sleep(boost::posix_time::microseconds(100));
