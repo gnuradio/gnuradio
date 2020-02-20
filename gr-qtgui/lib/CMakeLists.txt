@@ -2,20 +2,8 @@
 #
 # This file is part of GNU Radio
 #
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
 
 ########################################################################
 # Setup the QT file generations stuff
@@ -25,6 +13,7 @@
 add_library(gnuradio-qtgui
     DisplayPlot.cc
     FrequencyDisplayPlot.cc
+    EyeDisplayPlot.cc
     TimeDomainDisplayPlot.cc
     TimeRasterDisplayPlot.cc
     timeRasterGlobalData.cc
@@ -35,6 +24,9 @@ add_library(gnuradio-qtgui
     VectorDisplayPlot.cc
     spectrumdisplayform.cc
     displayform.cc
+    eyedisplaysform.cc
+    eyedisplayform.cc
+    eyecontrolpanel.cc
     timedisplayform.cc
     timecontrolpanel.cc
     timerasterdisplayform.cc
@@ -50,6 +42,8 @@ add_library(gnuradio-qtgui
     plot_raster.cc
     sink_c_impl.cc
     sink_f_impl.cc
+    eye_sink_c_impl.cc
+    eye_sink_f_impl.cc
     time_sink_c_impl.cc
     time_sink_f_impl.cc
     time_raster_sink_b_impl.cc
@@ -101,7 +95,10 @@ set(qtgui_mod_includedir ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/qtgui)
 QT5_WRAP_CPP(qtgui_moc_sources
     ${qtgui_mod_includedir}/spectrumdisplayform.h
     ${qtgui_mod_includedir}/displayform.h
+    ${qtgui_mod_includedir}/eyedisplaysform.h
+    ${qtgui_mod_includedir}/eyedisplayform.h
     ${qtgui_mod_includedir}/timedisplayform.h
+    ${qtgui_mod_includedir}/eyecontrolpanel.h
     ${qtgui_mod_includedir}/timecontrolpanel.h
     ${qtgui_mod_includedir}/timerasterdisplayform.h
     ${qtgui_mod_includedir}/freqdisplayform.h
@@ -113,6 +110,7 @@ QT5_WRAP_CPP(qtgui_moc_sources
     ${qtgui_mod_includedir}/vectordisplayform.h
     ${qtgui_mod_includedir}/form_menus.h
     ${qtgui_mod_includedir}/DisplayPlot.h
+    ${qtgui_mod_includedir}/EyeDisplayPlot.h
     ${qtgui_mod_includedir}/FrequencyDisplayPlot.h
     ${qtgui_mod_includedir}/TimeDomainDisplayPlot.h
     ${qtgui_mod_includedir}/TimeRasterDisplayPlot.h

@@ -1,6 +1,7 @@
 '[Core]':
 - Instrumentation:
   - QT:
+    - qtgui_eye_sink_x
     - qtgui_freq_sink_x
     - qtgui_time_sink_x
     - qtgui_const_sink_x
