@@ -23,8 +23,8 @@
 #ifndef EYE_CONTROL_PANEL_H
 #define EYE_CONTROL_PANEL_H
 
-#include <gnuradio/qtgui/eyedisplaysform.h>
 #include <gnuradio/qtgui/eyedisplayform.h>
+#include <gnuradio/qtgui/eyedisplaysform.h>
 #include <QtGui/QtGui>
 #include <QCheckBox>
 #include <QComboBox>

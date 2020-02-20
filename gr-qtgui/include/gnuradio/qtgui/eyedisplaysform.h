@@ -43,7 +43,7 @@ class QTGUI_API EyeDisplaysForm : public QWidget
     Q_OBJECT
 
 public:
-	EyeDisplaysForm(int nplots = 1, QWidget* parent = 0);
+    EyeDisplaysForm(int nplots = 1, QWidget* parent = 0);
     ~EyeDisplaysForm();
 
     void Reset();

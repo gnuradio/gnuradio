@@ -185,7 +185,10 @@ void EyeDisplaysForm::mousePressEvent(QMouseEvent* e)
 
 void EyeDisplaysForm::updateGuiTimer() { d_display_plot->canvas()->update(); }
 
-void EyeDisplaysForm::onPlotPointSelected(const QPointF p) { emit plotPointSelected(p, 3); }
+void EyeDisplaysForm::onPlotPointSelected(const QPointF p)
+{
+    emit plotPointSelected(p, 3);
+}
 
 void EyeDisplaysForm::Reset() {}
 
