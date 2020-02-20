@@ -230,7 +230,7 @@ void file_meta_sink_impl::write_header(FILE* fp, pmt::pmt_t header, pmt::pmt_t e
     std::string header_str = pmt::serialize_str(header);
     std::string extra_str = pmt::serialize_str(extra);
 
-    if ((header_str.size() != METADATA_HEADER_SIZE) && (extra_str.size() != d_extra_size))
+    if ((header_str.size() != METADATA_HEADER_SIZE) || (extra_str.size() != d_extra_size))
         throw std::runtime_error("file_meta_sink: header or extra_dict is wrong size.");
 
     size_t nwritten = 0;
