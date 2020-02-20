@@ -16,8 +16,19 @@ install(FILES
   ConstellationDisplayPlot.h
   const_sink_c.h
   displayform.h
+  eyedisplaysform.h
   DisplayPlot.h
+  timecontrolpanel.h
+  eyecontrolpanel.h
+  eyedisplayform.h
+  EyeDisplayPlot.h
+  eye_sink_c.h
+  eye_sink_f.h
   form_menus.h
+  eye_sink_c.h
+  eye_sink_f.h
+  eyecontrolpanel.h
+  EyeDisplayPlot.h
   freqdisplayform.h
   freqcontrolpanel.h
   freq_sink_c.h
