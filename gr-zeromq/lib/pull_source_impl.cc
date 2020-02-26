@@ -36,6 +36,8 @@ pull_source_impl::pull_source_impl(
     /* All is delegated */
 }
 
+pull_source_impl::~pull_source_impl() {}
+
 int pull_source_impl::work(int noutput_items,
                            gr_vector_const_void_star& input_items,
                            gr_vector_void_star& output_items)

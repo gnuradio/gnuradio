@@ -36,6 +36,8 @@ rep_sink_impl::rep_sink_impl(
     /* All is delegated */
 }
 
+rep_sink_impl::~rep_sink_impl() {}
+
 int rep_sink_impl::work(int noutput_items,
                         gr_vector_const_void_star& input_items,
                         gr_vector_void_star& output_items)

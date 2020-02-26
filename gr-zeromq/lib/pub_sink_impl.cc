@@ -36,6 +36,8 @@ pub_sink_impl::pub_sink_impl(
     /* All is delegated */
 }
 
+pub_sink_impl::~pub_sink_impl() {}
+
 int pub_sink_impl::work(int noutput_items,
                         gr_vector_const_void_star& input_items,
                         gr_vector_void_star& output_items)

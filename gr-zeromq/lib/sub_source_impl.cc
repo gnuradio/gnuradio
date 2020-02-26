@@ -37,6 +37,8 @@ sub_source_impl::sub_source_impl(
     d_socket->setsockopt(ZMQ_SUBSCRIBE, "", 0);
 }
 
+sub_source_impl::~sub_source_impl() {}
+
 int sub_source_impl::work(int noutput_items,
                           gr_vector_const_void_star& input_items,
                           gr_vector_void_star& output_items)
