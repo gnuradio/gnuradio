@@ -31,6 +31,9 @@ inputs:
     dtype: ${ type }
     vlen: ${ vlen }
     multiplicity: ${ num_ports }
+-   domain: message
+    id: dly
+    optional: true
 
 outputs:
 -   domain: stream
