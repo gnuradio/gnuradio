@@ -35,6 +35,7 @@ add_library(gnuradio-blocks
     not_blk_impl.cc
     packed_to_unpacked_impl.cc
     peak_detector_impl.cc
+    phase_shift_impl.cc
     probe_signal_impl.cc
     probe_signal_v_impl.cc
     sample_and_hold_impl.cc
