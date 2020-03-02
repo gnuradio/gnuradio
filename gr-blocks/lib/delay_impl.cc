@@ -35,6 +35,9 @@ delay_impl::delay_impl(size_t itemsize, int delay)
     }
     set_dly(delay);
     d_delta = 0;
+
+    message_port_register_in(pmt::mp("dly"));
+    set_msg_handler(pmt::mp("dly"), [this](pmt::pmt_t msg) { this->handle_msg(msg); });
 }
 
 delay_impl::~delay_impl() {}
@@ -53,11 +56,30 @@ void delay_impl::set_dly(int d)
     // protects from quickly-repeated calls to this function that
     // would end with d_delta=0.
     if (d != dly()) {
-        gr::thread::scoped_lock l(d_mutex_delay);
+        gr::thread::scoped_lock l(d_setlock);
         int old = dly();
         set_history(d + 1);
         declare_sample_delay(history() - 1);
         d_delta += dly() - old;
+    }
+}
+
+void delay_impl::handle_msg(pmt::pmt_t msg)
+{
+    if (pmt::is_number(msg)) {
+        int value = pmt::to_long(msg);
+        set_dly(value);
+    } else {
+        if (pmt::is_pair(msg)) {
+            pmt::pmt_t data = pmt::cdr(msg);
+            if (pmt::is_number(data)) {
+                int value = pmt::to_long(data);
+                set_dly(value);
+            } else
+                GR_LOG_WARN(
+                    d_logger,
+                    "Delay message must be a number or a number pair.  Ignoring value.");
+        }
     }
 }
 
@@ -66,7 +88,7 @@ int delay_impl::general_work(int noutput_items,
                              gr_vector_const_void_star& input_items,
                              gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock l(d_mutex_delay);
+    gr::thread::scoped_lock l(d_setlock);
     assert(input_items.size() == output_items.size());
 
     const char* iptr;
