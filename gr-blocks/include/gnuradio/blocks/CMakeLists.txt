@@ -39,6 +39,7 @@ install(FILES
     pack_k_bits.h
     packed_to_unpacked.h
     peak_detector.h
+    phase_shift.h
     probe_signal.h
     probe_signal_v.h
     rotator.h
