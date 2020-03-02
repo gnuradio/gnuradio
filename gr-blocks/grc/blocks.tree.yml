@@ -108,6 +108,7 @@
   - blocks_copy
   - blocks_selector
   - blocks_nop
+  - blocks_phase_shift
   - xmlrpc_server
   - xmlrpc_client
 - Modulators:

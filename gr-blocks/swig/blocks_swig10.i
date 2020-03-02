@@ -24,6 +24,7 @@
 #include "gnuradio/blocks/patterned_interleaver.h"
 #include "gnuradio/blocks/pack_k_bits_bb.h"
 #include "gnuradio/blocks/packed_to_unpacked.h"
+#include "gnuradio/blocks/phase_shift.h"
 %}
 
 %include "gnuradio/blocks/min_blk.h"
@@ -34,6 +35,7 @@
 %include "gnuradio/blocks/patterned_interleaver.h"
 %include "gnuradio/blocks/pack_k_bits_bb.h"
 %include "gnuradio/blocks/packed_to_unpacked.h"
+%include "gnuradio/blocks/phase_shift.h"
 
 GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, min_ff, min_blk<float>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, min_ii, min_blk<std::int32_t>);
@@ -54,3 +56,4 @@ GR_SWIG_BLOCK_MAGIC2(blocks, pack_k_bits_bb);
 GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, packed_to_unpacked_bb, packed_to_unpacked<std::uint8_t>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, packed_to_unpacked_ss, packed_to_unpacked<std::int16_t>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, packed_to_unpacked_ii, packed_to_unpacked<std::int32_t>);
+GR_SWIG_BLOCK_MAGIC2(blocks, phase_shift);
