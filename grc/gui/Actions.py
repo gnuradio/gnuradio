@@ -498,6 +498,12 @@ TYPES_WINDOW_DISPLAY = actions.register("app.types",
     tooltip='Types color mapping',
     icon_name='dialog-information',
 )
+KEYBOARD_SHORTCUTS_WINDOW_DISPLAY = actions.register("app.keys",
+    label='_Keys',
+    tooltip='Keyboard - Shortcuts',
+    icon_name='dialog-information',
+    keypresses=["<Ctrl>K"],
+)
 FLOW_GRAPH_GEN = actions.register("app.flowgraph.generate",
     label='_Generate',
     tooltip='Generate the flow graph',

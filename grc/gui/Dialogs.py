@@ -277,18 +277,58 @@ def show_help(parent):
     markup = textwrap.dedent("""\
         <b>Usage Tips</b>
         \n\
-        <u>Add block</u>: drag and drop or double click a block in the block selection window.
+        <u>Add block</u>: drag and drop or double click a block in the block 
+       selection window.
         <u>Rotate block</u>: Select a block, press left/right on the keyboard.
         <u>Change type</u>: Select a block, press up/down on the keyboard.
         <u>Edit parameters</u>: double click on a block in the flow graph.
-        <u>Make connection</u>: click on the source port of one block, then click on the sink port of another block.
-        <u>Remove connection</u>: select the connection and press delete, or drag the connection.
+        <u>Make connection</u>: click on the source port of one block, then 
+       click on the sink port of another block.
+        <u>Remove connection</u>: select the connection and press delete, or 
+       drag the connection.
         \n\
-        * See the menu for other keyboard shortcuts.\
+        *Press CTRL+K or see menu for Keyboard - Shortcuts
+        \
     """)
 
     MessageDialogWrapper(
         parent, Gtk.MessageType.INFO, Gtk.ButtonsType.CLOSE, title='Help', markup=markup
+    ).run_and_destroy()
+
+def show_keyboard_shortcuts(parent):
+    """ Display keyboard shortcut-keys. """
+    markup = textwrap.dedent("""\
+    <b>Keyboard Shortcuts</b>
+    \n\
+    <u>Ctrl+N</u>: Create a new flowgraph. 
+    <u>Ctrl+O</u>: Open an existing flowgraph.
+    <u>Ctrl+S</u>: Save the current flowgraph or save as for new. 
+    <u>Ctrl+W</u>: Close the current flowgraph.
+    <u>Ctrl+Z</u>: Undo a change to the flowgraph.         
+    <u>Ctrl+Y</u>: Redo a change to the flowgraph.
+    <u>Ctrl+A</u>: Selects all blocks and connections.
+    <u>Ctrl+P</u>: Screen Capture of the Flowgraph.
+    <u>Ctrl+E</u>: Show variable editor. 
+    <u>Ctrl+F</u>: Search for a block by name.       
+    <u>Ctrl+Q</u>: Quit. 
+    <u>F1</u>    : Help menu.            
+    <u>F5</u>    : Generate the Flowgraph. 
+    <u>F6</u>    : Execute the Flowgraph.     
+    <u>F7</u>    : Kill the Flowgraph.
+    <u>Ctrl+Shift+S</u>: Save as the current flowgraph.
+    <u>Ctrl+Shift+D</u>: Create a duplicate of current flow graph.   
+    
+    <u>Ctrl+X/C/V</u>: Edit-cut/copy/paste.
+    <u>Ctrl+D/B/R</u>: Toggle visibility of disabled blocks or
+            connections/block tree widget/console.
+    <u>Shift+T/M/B/L/C/R</u>: Vertical Align Top/Middle/Bottom and
+            Horizontal Align Left/Center/Right respectively of the 
+            selected block.
+    \
+    """)
+    
+    MessageDialogWrapper(
+        parent, Gtk.MessageType.INFO, Gtk.ButtonsType.CLOSE, title='Keyboard - Shortcuts', markup=markup
     ).run_and_destroy()
 
 
