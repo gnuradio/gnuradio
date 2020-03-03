@@ -24,4 +24,10 @@ scheduler::scheduler(flat_flowgraph_sptr ffg,
 
 scheduler::~scheduler() {}
 
+void scheduler::register_error_handler(std::shared_ptr<basic_error_handler> handler)
+{
+    errorHandler = handler;
+}
+
+std::shared_ptr<basic_error_handler> scheduler::errorHandler;
 } /* namespace gr */
