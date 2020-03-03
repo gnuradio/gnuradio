@@ -30,8 +30,7 @@ elif(cmd == "antenna"):
 else:
     val = pmt.from_double(float(val))
 
-argv = [None, args.host, args.port]
-radiosys = GNURadioControlPortClient(argv=argv, rpcmethod='thrift')
+radiosys = GNURadioControlPortClient(host=args.host, port=args.port, rpcmethod='thrift')
 radio = radiosys.client
 
 radio.postMessage(args.alias, port, pmt.cons(pmt.intern(cmd), val))
