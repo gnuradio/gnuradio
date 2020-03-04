@@ -29,6 +29,10 @@
   - blocks_message_strobe_random
   - blocks_tags_strobe
   - blocks_test_tag_variable_rate_ff
+- Deprecated:
+  - blocks_tcp_server_sink
+  - blocks_udp_source
+  - blocks_udp_sink
 - File Operators:
   - blocks_wavfile_source
   - blocks_wavfile_sink
@@ -112,9 +116,6 @@
 - Networking Tools:
   - blocks_tuntap_pdu
   - blocks_socket_pdu
-  - blocks_tcp_server_sink
-  - blocks_udp_source
-  - blocks_udp_sink
 - Peak Detectors:
   - blocks_burst_tagger
   - blocks_peak_detector_xb
