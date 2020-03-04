@@ -1,5 +1,5 @@
 id: blocks_udp_source
-label: UDP Source
+label: UDP Source (Deprecated)
 flags: [ throttle, python, cpp ]
 
 parameters:
@@ -52,5 +52,8 @@ cpp_templates:
     translations:
         'True': 'true'
         'False': 'false'
+
+documentation: |-
+    This block has been deprecated and replaced with a more capable UDP source block in Networking Tools.
 
 file_format: 1

@@ -1,5 +1,5 @@
 id: blocks_udp_sink
-label: UDP Sink
+label: UDP Sink (Deprecated)
 flags: [ python, cpp ]
 
 parameters:
@@ -50,5 +50,8 @@ cpp_templates:
     translations:
         'True': 'true'
         'False': 'false'
+
+documentation: |-
+    This block has been deprecated and replaced with a more capable UDP sink block in Networking Tools.
 
 file_format: 1
