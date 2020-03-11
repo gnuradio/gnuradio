@@ -1,0 +1,57 @@
+id: blocks_moving_average_xx
+label: Moving Average
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float, int, short]
+    option_attributes:
+        fcn: [cc, ff, ii, ss]
+        scale: [complex, real, int, int]
+    hide: part
+-   id: length
+    label: Length
+    dtype: int
+    default: '1000'
+-   id: scale
+    label: Scale
+    dtype: ${ type.scale }
+    default: '1'
+-   id: max_iter
+    label: Max Iter
+    dtype: int
+    default: '4000'
+-   id: vlen
+    label: Length of Vectors
+    dtype: int
+    default: 1
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.moving_average_${type.fcn}(${length}, ${scale}, ${max_iter}, ${vlen})
+    callbacks:
+    - set_length_and_scale(${length}, ${scale})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/moving_average.h>']
+    declarations: 'blocks::moving_average_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::moving_average_${type.fcn}::make(${length}, ${scale}, ${max_iter}, ${vlen});'
+    callbacks:
+    - set_length_and_scale(${length}, ${scale})
+
+file_format: 1

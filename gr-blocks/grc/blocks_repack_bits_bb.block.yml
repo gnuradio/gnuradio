@@ -1,0 +1,58 @@
+id: blocks_repack_bits_bb
+label: Repack Bits
+flags: [ python, cpp ]
+
+parameters:
+-   id: k
+    label: Bits per input byte
+    dtype: int
+    default: '1'
+-   id: l
+    label: Bits per output byte
+    dtype: int
+    default: '8'
+-   id: len_tag_key
+    label: Length Tag Key
+    dtype: string
+    default: '""'
+    hide: part
+-   id: align_output
+    label: Packet Alignment
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: [Output, Input]
+    hide: part
+-   id: endianness
+    label: Endianness
+    dtype: int
+    default: gr.GR_LSB_FIRST
+    options: [gr.GR_MSB_FIRST, gr.GR_LSB_FIRST]
+    option_labels: [MSB, LSB]
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.repack_bits_bb(${k}, ${l}, ${len_tag_key}, ${align_output}, ${endianness})
+    callbacks:
+    - set_k_and_l(${k},${l})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/repack_bits_bb.h>']
+    declarations: 'blocks::repack_bits_bb::sptr ${id};'
+    make: 'this->${id} = blocks::repack_bits_bb::make(${k}, ${l}, ${len_tag_key}, ${align_output}, ${endianness});'
+    callbacks:
+    - set_k_and_l(${k},${l})
+    translations:
+        gr.: ''
+        'True': 'true'
+        'False': 'false'
+file_format: 1

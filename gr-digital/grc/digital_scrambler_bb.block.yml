@@ -1,0 +1,37 @@
+id: digital_scrambler_bb
+label: Scrambler
+flags: [ python, cpp ]
+
+parameters:
+-   id: mask
+    label: Mask
+    dtype: hex
+    default: '0x8A'
+-   id: seed
+    label: Seed
+    dtype: hex
+    default: '0x7F'
+-   id: len
+    label: Length
+    dtype: int
+    default: '7'
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.scrambler_bb(${mask}, ${seed}, ${len})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/scrambler_bb.h>']
+    declarations: 'digital::scrambler_bb::sptr ${id};'
+    make: 'this->${id} = digital::scrambler_bb::make(${mask}, ${seed}, ${len});'
+    link: ['gnuradio-digital']
+
+file_format: 1

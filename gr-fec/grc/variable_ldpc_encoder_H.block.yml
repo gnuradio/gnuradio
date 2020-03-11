@@ -1,0 +1,48 @@
+id: variable_ldpc_encoder_H_def
+label: LDPC Encoder Definition (via Parity Check)
+flags: [ show_id ]
+
+parameters:
+-   id: value
+    label: Ignore Me
+    dtype: raw
+    default: '"ok"'
+    hide: all
+-   id: ndim
+    label: Parallelism
+    dtype: enum
+    options: ['0', '1', '2']
+-   id: dim1
+    label: Dimension 1
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if (int(ndim) >= 1) else 'all') }
+-   id: dim2
+    label: Dimension 2
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if (int(ndim) >= 2) else 'all') }
+-   id: H
+    label: Parity Check Matrix
+    dtype: raw
+value: ${ value }
+
+templates:
+    imports: from gnuradio import fec
+    var_make: |-
+        % if int(ndim)==0:
+        self.${id} = ${id} = fec.ldpc_par_mtrx_encoder_make_H(${H})\
+        % elif int(ndim)==1:
+        self.${id} = ${id} = list(map((lambda a: fec.ldpc_par_mtrx_encoder_make_H(${H})),\
+        range(0,${dim1})))
+        % else:
+        self.${id} = ${id} = list(map((lambda b: list( map((lambda \
+        a: fec.ldpc_par_mtrx_encoder_make_H(${H})), range(0,${dim2})))), range(0,${dim1})))\
+        % endif
+
+documentation: |-
+    This block creates a LDPC Encoder Definition variable.
+
+    This encoder performs a reduced complexity algorithm described by Richardson and Urbanke in Appendix A of their book: Modern Coding Theory. Compared to the block "LDPC Encoder Definition (via Generator)," this encoder requires orders of magnitude fewer operations to create each codeword. This is accomplished by completing a significant amount of the complex matrix manipulation (including inverse, multiplication, and Gaussian elimination operations) during preprocessing. The disadvantage of this encoder is that it requires a specially formatted matrix. However, GNU Radio includes python scripts to format a standard parity check matrix appropriately for this encoder, as well as a small library of encoding-ready matrices for use.
+
+file_format: 1

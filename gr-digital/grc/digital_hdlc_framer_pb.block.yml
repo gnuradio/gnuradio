@@ -1,0 +1,28 @@
+id: digital_hdlc_framer_pb
+label: HDLC Framer
+flags: [ python, cpp ]
+
+parameters:
+-   id: frame_tag_name
+    label: Frame tag name
+    dtype: string
+
+inputs:
+-   domain: message
+    id: in
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.hdlc_framer_pb(${frame_tag_name})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/hdlc_framer_pb.h>']
+    declarations: 'digital::hdlc_framer_pb::sptr ${id};'
+    make: 'this->${id} = digital::hdlc_framer_pb::make(${frame_tag_name});'
+    link: ['gnuradio-digital']
+
+file_format: 1

@@ -1,0 +1,25 @@
+#!/bin/sh
+
+tarball=$1
+if [ "x$tarball" = "x" ]
+then
+  echo "usage: $0 tarball" 1>&2
+  exit 1
+fi
+
+path=${tarball%%.tar.gz}
+
+tar tzf $tarball  \
+  | grep -E '\.(h|py|v|vh)$'   \
+  | sed -e "s/$path/./"  \
+  | sort >/tmp/tarball-h-files
+
+find . \( -name '*.h' -o -name '*.py' -o -name '*.v' -o -name '*.vh' \) -print \
+  | grep -v ./$path | sort >/tmp/build-h-files
+
+comm -23 /tmp/build-h-files /tmp/tarball-h-files \
+ | grep -Ev '(GrAtsc|_swig_|limbo|config\.h|std_paths\.h)'
+
+# rm /tmp/tarball-h-files /tmp/build-h-files
+
+

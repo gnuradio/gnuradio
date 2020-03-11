@@ -1,0 +1,53 @@
+id: dtv_dvbt_reed_solomon_dec
+label: Reed-Solomon Decoder
+
+parameters:
+-   id: p
+    label: p
+    dtype: int
+    default: '2'
+-   id: m
+    label: m
+    dtype: int
+    default: '8'
+-   id: gfpoly
+    label: GF polynomial
+    dtype: raw
+    default: '0x11d'
+-   id: n
+    label: N
+    dtype: int
+    default: '255'
+-   id: k
+    label: K
+    dtype: int
+    default: '239'
+-   id: t
+    label: t
+    dtype: int
+    default: '8'
+-   id: s
+    label: Shortening size
+    dtype: int
+    default: '51'
+-   id: blocks
+    label: Blocks
+    dtype: int
+    default: '8'
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: ${ blocks*(n-s) }
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: ${ blocks*(k-s) }
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.dvbt_reed_solomon_dec(${p}, ${m}, ${gfpoly}, ${n}, ${k}, ${t}, ${s},
+        ${blocks})
+
+file_format: 1

@@ -1,0 +1,51 @@
+id: blocks_message_strobe_random
+label: Message Strobe Random-Delay
+flags: [ python ]
+
+parameters:
+-   id: msg
+    label: Message PMT
+    dtype: raw
+    default: pmt.intern("TEST")
+-   id: dist
+    label: Distribution
+    dtype: enum
+    options: [blocks.STROBE_POISSON, blocks.STROBE_UNIFORM, blocks.STROBE_GAUSSIAN]
+    option_labels: [Poisson, Uniform, Gaussian]
+-   id: mean
+    label: Mean (ms)
+    dtype: real
+    default: '1000'
+-   id: std
+    label: Std (ms)
+    dtype: real
+    default: '100'
+
+inputs:
+-   domain: message
+    id: set_msg
+    optional: true
+
+outputs:
+-   domain: message
+    id: strobe
+    optional: true
+
+templates:
+    imports: |-
+        from gnuradio import blocks
+        import pmt
+    make: blocks.message_strobe_random(${msg}, ${dist}, ${mean}, ${std})
+    callbacks:
+    - set_msg(${msg})
+    - set_dist(${dist})
+    - set_mean(${mean})
+    - set_std(${std})
+
+documentation: |-
+    Please note some peculiarities below:
+                - poisson does not care about your std
+                - gaussian operates as expected
+                - uniform is actually of the range (mean-std, mean+std) - thus we are lying and it is not actually an std here
+
+file_format: 1

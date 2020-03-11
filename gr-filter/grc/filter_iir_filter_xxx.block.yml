@@ -1,0 +1,67 @@
+id: iir_filter_xxx
+label: IIR Filter
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [ffd, ccf, ccd, ccc, ccz]
+    option_labels: [Float->Float (Double Taps), Complex->Complex (Float Taps), Complex->Complex
+            (Double Taps), Complex->Complex (Complex Taps), Complex->Complex (Complex
+            Double Taps)]
+    option_attributes:
+        input: [float, complex, complex, complex, complex]
+        output: [float, complex, complex, complex, complex]
+        taps: [real_vector, real_vector, real_vector, complex_vector, complex_vector]
+    hide: part
+-   id: fftaps
+    label: Feed-forward Taps
+    dtype: ${ type.taps }
+-   id: fbtaps
+    label: Feedback Taps
+    dtype: ${ type.taps }
+-   id: oldstyle
+    label: Old Style of Taps
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+
+templates:
+    imports: from gnuradio import filter
+    make: filter.iir_filter_${type}(${fftaps}, ${fbtaps}, ${oldstyle})
+    callbacks:
+    - set_taps(${fftaps}, ${fbtaps})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/iir_filter_${type}.h>']
+    declarations: 'filter::firdes::sptr ${id};'
+    make: |-
+        % if str(type.taps) == "complex_vector":
+        std::vector<gr_complex> fftaps = {${str(fftaps)[1:-1]}};
+        std::vector<gr_complex> fbtaps = {${str(fbtaps)[1:-1]}};
+        % else:
+        std::vector<float> fftaps = {${str(fftaps)[1:-1]}};
+        std::vector<float> fbtaps = {${str(fbtaps)[1:-1]}};
+        % endif
+        this->${id} = filter::iir_filter_${type}::make(
+            fftaps,
+            fbtaps,
+            ${oldstyle});
+    link: ['gnuradio-filter']
+    callbacks:
+    - set_taps(fftaps, fbtaps)
+    translations:
+        'True': 'true'
+        'False': 'false'
+
+file_format: 1

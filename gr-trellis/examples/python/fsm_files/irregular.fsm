@@ -1,0 +1,11 @@
+2 2 2
+
+0 0
+0 1
+
+0 1
+0 1
+
+
+useless irregular FSM for testing. state 0 has 3 incoming edges and state
+1 has 1 incoming edge.

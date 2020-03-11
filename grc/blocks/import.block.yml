@@ -1,0 +1,21 @@
+id: import_
+label: Import
+flags: [ python ]
+
+parameters:
+-   id: imports
+    label: Import
+    dtype: import
+
+templates:
+    imports: ${imports}
+
+documentation: |-
+    Import additional python modules into the namespace.
+
+    Examples:
+    from gnuradio.filter import firdes
+    import math,cmath
+    from math import pi
+
+file_format: 1

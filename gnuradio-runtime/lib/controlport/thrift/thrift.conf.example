@@ -1,0 +1,7 @@
+# This file contains sane defaults for the Thrift RPC backend
+# You should move this to your system config directory, typically something like
+# /etc/gnuradio/conf.d/thrift.conf
+[thrift]
+port = 9090
+nthreads = 2
+buffersize = 1434

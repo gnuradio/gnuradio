@@ -1,0 +1,45 @@
+id: variable_tag_object
+label: Tag Object
+flags: [ show_id, python ]
+
+parameters:
+-   id: offset
+    label: Offset
+    dtype: int
+    default: '0'
+-   id: key
+    label: Key
+    dtype: raw
+    default: pmt.intern("key")
+-   id: value
+    label: Value
+    dtype: raw
+    default: pmt.intern("value")
+-   id: src
+    label: Source ID
+    dtype: raw
+    default: pmt.intern("src")
+value: ${ value }
+
+templates:
+    imports: import pmt
+    var_make: self.${id} = ${id} = gr.tag_utils.python_to_tag((${offset}, ${key},
+        ${value}, ${src}))
+    callbacks:
+    - self.set_${id}(gr.tag_utils.python_to_tag((${offset}, ${key}, ${value}, ${src})))
+
+documentation: |-
+    This block creates a tag object. While tags are based on an
+        absolute offset, this is based on a relative offset that must be
+        appropriately translated by the block using it. For example, this
+        is used by the vector_source blocks, which will treat a 0 offset
+        in the tag as the first item in the stream when the vector starts
+        or repeats.
+
+        The tag objects are created using the python_to_tag Python
+        function to make it easy to generate a tag_t in Python. The call
+        looks like:
+
+            gr.tag_utils.python_to_tag(($offset, $key, $value, $src))
+
+file_format: 1

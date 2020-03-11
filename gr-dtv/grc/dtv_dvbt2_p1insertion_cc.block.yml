@@ -1,0 +1,122 @@
+id: dtv_dvbt2_p1insertion_cc
+label: P1 Symbol Insertion
+
+parameters:
+-   id: carriermode
+    label: Extended Carrier Mode
+    dtype: enum
+    options: [CARRIERS_NORMAL, CARRIERS_EXTENDED]
+    option_labels: [Normal, Extended]
+    option_attributes:
+        val: [dtv.CARRIERS_NORMAL, dtv.CARRIERS_EXTENDED]
+-   id: fftsize1
+    label: FFT Size
+    dtype: enum
+    options: [FFTSIZE_1K, FFTSIZE_2K, FFTSIZE_4K, FFTSIZE_8K, FFTSIZE_8K_T2GI, FFTSIZE_16K,
+        FFTSIZE_32K, FFTSIZE_32K_T2GI]
+    option_labels: [1K, 2K, 4K, 8K, 8K DVB-T2 GI, 16K, 32K, 32K DVB-T2 GI]
+    option_attributes:
+        val: [dtv.FFTSIZE_1K, dtv.FFTSIZE_2K, dtv.FFTSIZE_4K, dtv.FFTSIZE_8K, dtv.FFTSIZE_8K_T2GI,
+            dtv.FFTSIZE_16K, dtv.FFTSIZE_32K, dtv.FFTSIZE_32K_T2GI]
+    hide: ${ (preamble1.hide_base if str(version) == 'VERSION_111' else preamble2.hide_base)
+        }
+-   id: fftsize2
+    label: FFT Size
+    dtype: enum
+    options: [FFTSIZE_2K, FFTSIZE_4K, FFTSIZE_8K, FFTSIZE_8K_T2GI, FFTSIZE_16K, FFTSIZE_16K_T2GI]
+    option_labels: [2K, 4K, 8K, 8K DVB-T2 GI, 16K, 16K DVB-T2 GI]
+    option_attributes:
+        val: [dtv.FFTSIZE_2K, dtv.FFTSIZE_4K, dtv.FFTSIZE_8K, dtv.FFTSIZE_8K_T2GI,
+            dtv.FFTSIZE_16K, dtv.FFTSIZE_16K_T2GI]
+    hide: ${ (preamble1.hide_lite if str(version) == 'VERSION_111' else preamble2.hide_lite)
+        }
+-   id: guardinterval
+    label: Guard Interval
+    dtype: enum
+    options: [GI_1_32, GI_1_16, GI_1_8, GI_1_4, GI_1_128, GI_19_128, GI_19_256]
+    option_labels: [1/32, 1/16, 1/8, 1/4, 1/128, 19/128, 19/256]
+    option_attributes:
+        val: [dtv.GI_1_32, dtv.GI_1_16, dtv.GI_1_8, dtv.GI_1_4, dtv.GI_1_128, dtv.GI_19_128,
+            dtv.GI_19_256]
+-   id: numdatasyms
+    label: Number of Data Symbols
+    dtype: int
+    default: '100'
+-   id: version
+    label: Specification Version
+    dtype: enum
+    options: [VERSION_111, VERSION_131]
+    option_labels: [1.1.1, 1.3.1]
+    option_attributes:
+        hide_111: [none, all]
+        hide_131: [all, none]
+        val: [dtv.VERSION_111, dtv.VERSION_131]
+-   id: preamble1
+    label: Preamble
+    dtype: enum
+    options: [PREAMBLE_T2_SISO, PREAMBLE_T2_MISO]
+    option_labels: [T2 SISO, T2 MISO]
+    option_attributes:
+        hide_base: [none, none]
+        hide_lite: [all, all]
+        val: [dtv.PREAMBLE_T2_SISO, dtv.PREAMBLE_T2_MISO]
+    hide: ${ version.hide_111 }
+-   id: preamble2
+    label: Preamble
+    dtype: enum
+    options: [PREAMBLE_T2_SISO, PREAMBLE_T2_MISO, PREAMBLE_T2_LITE_SISO, PREAMBLE_T2_LITE_MISO]
+    option_labels: [T2 SISO, T2 MISO, T2-Lite SISO, T2-Lite MISO]
+    option_attributes:
+        hide_base: [none, none, all, all]
+        hide_lite: [all, all, none, none]
+        val: [dtv.PREAMBLE_T2_SISO, dtv.PREAMBLE_T2_MISO, dtv.PREAMBLE_T2_LITE_SISO,
+            dtv.PREAMBLE_T2_LITE_MISO]
+    hide: ${ version.hide_131 }
+-   id: showlevels
+    label: Show Peak IQ Levels
+    dtype: enum
+    options: [SHOWLEVELS_OFF, SHOWLEVELS_ON]
+    option_labels: ['Off', 'On']
+    option_attributes:
+        hide_vclip: [all, none]
+        val: [dtv.SHOWLEVELS_OFF, dtv.SHOWLEVELS_ON]
+-   id: vclip
+    label: Vclip
+    dtype: float
+    default: '3.3'
+    hide: ${ showlevels.hide_vclip }
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import dtv
+    make: |-
+        dtv.dvbt2_p1insertion_cc(
+            ${carriermode.val},
+            % if str(version) == 'VERSION_111':
+            ${fftsize1.val},
+            % else:
+            % if str(preamble2) == 'PREAMBLE_T2_SISO' or str(preamble2) == 'PREAMBLE_T2_MISO':
+            ${fftsize1.val},
+            % else:
+            ${fftsize2.val},
+            % endif
+            % endif
+            ${guardinterval.val},
+            ${numdatasyms},
+            % if str(version) == 'VERSION_111':
+            ${preamble1.val},
+            % else:
+            ${preamble2.val},
+            % endif
+            ${showlevels.val},
+            ${vclip}
+            )
+
+file_format: 1

@@ -1,0 +1,36 @@
+id: digital_hdlc_deframer_bp
+label: HDLC Deframer
+flags: [ python, cpp ]
+
+parameters:
+-   id: min
+    label: Min length
+    dtype: int
+    default: '32'
+-   id: max
+    label: Max length
+    dtype: int
+    default: '500'
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: message
+    id: out
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.hdlc_deframer_bp(${min}, ${max})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/hdlc_deframer_bp.h>']
+    declarations: 'digital::hdlc_deframer_bp::sptr ${id};'
+    make: |-
+        this->${id} = digital::hdlc_deframer_bp::make(
+            ${min},
+            ${max});
+    link: ['gnuradio-digital']
+
+file_format: 1

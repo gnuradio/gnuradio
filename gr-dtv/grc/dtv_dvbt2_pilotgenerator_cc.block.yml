@@ -1,0 +1,154 @@
+id: dtv_dvbt2_pilotgenerator_cc
+label: Pilot Generator and IFFT
+
+parameters:
+-   id: carriermode
+    label: Extended Carrier Mode
+    dtype: enum
+    options: [CARRIERS_NORMAL, CARRIERS_EXTENDED]
+    option_labels: [Normal, Extended]
+    option_attributes:
+        val: [dtv.CARRIERS_NORMAL, dtv.CARRIERS_EXTENDED]
+-   id: fftsize
+    label: FFT Size
+    dtype: enum
+    options: [FFTSIZE_1K, FFTSIZE_2K, FFTSIZE_4K, FFTSIZE_8K, FFTSIZE_8K_T2GI, FFTSIZE_16K,
+        FFTSIZE_16K_T2GI, FFTSIZE_32K, FFTSIZE_32K_T2GI]
+    option_labels: [1K, 2K, 4K, 8K, 8K DVB-T2 GI, 16K, 16K DVB-T2 GI, 32K, 32K DVB-T2
+            GI]
+    option_attributes:
+        val: [dtv.FFTSIZE_1K, dtv.FFTSIZE_2K, dtv.FFTSIZE_4K, dtv.FFTSIZE_8K, dtv.FFTSIZE_8K_T2GI,
+            dtv.FFTSIZE_16K, dtv.FFTSIZE_16K_T2GI, dtv.FFTSIZE_32K, dtv.FFTSIZE_32K_T2GI]
+        vlength: [1024, 2048, 4096, 8192, 8192, 16384, 16384, 32768,
+            32768]
+-   id: pilotpattern
+    label: Pilot Pattern
+    dtype: enum
+    options: [PILOT_PP1, PILOT_PP2, PILOT_PP3, PILOT_PP4, PILOT_PP5, PILOT_PP6, PILOT_PP7,
+        PILOT_PP8]
+    option_labels: [PP1, PP2, PP3, PP4, PP5, PP6, PP7, PP8]
+    option_attributes:
+        val: [dtv.PILOT_PP1, dtv.PILOT_PP2, dtv.PILOT_PP3, dtv.PILOT_PP4, dtv.PILOT_PP5,
+            dtv.PILOT_PP6, dtv.PILOT_PP7, dtv.PILOT_PP8]
+-   id: guardinterval
+    label: Guard Interval
+    dtype: enum
+    options: [GI_1_32, GI_1_16, GI_1_8, GI_1_4, GI_1_128, GI_19_128, GI_19_256]
+    option_labels: [1/32, 1/16, 1/8, 1/4, 1/128, 19/128, 19/256]
+    option_attributes:
+        val: [dtv.GI_1_32, dtv.GI_1_16, dtv.GI_1_8, dtv.GI_1_4, dtv.GI_1_128, dtv.GI_19_128,
+            dtv.GI_19_256]
+-   id: numdatasyms
+    label: Number of Data Symbols
+    dtype: int
+    default: '100'
+-   id: paprmode1
+    label: PAPR Mode
+    dtype: enum
+    options: [PAPR_OFF, PAPR_ACE, PAPR_TR, PAPR_BOTH]
+    option_labels: ['Off', Active Constellation Extension, Tone Reservation, Both
+            ACE and TR]
+    option_attributes:
+        val: [dtv.PAPR_OFF, dtv.PAPR_ACE, dtv.PAPR_TR, dtv.PAPR_BOTH]
+    hide: ${ version.hide_111 }
+-   id: paprmode2
+    label: PAPR Mode
+    dtype: enum
+    options: [PAPR_OFF, PAPR_ACE, PAPR_TR, PAPR_BOTH]
+    option_labels: [P2 Only, Active Constellation Extension, Tone Reservation, Both
+            ACE and TR]
+    option_attributes:
+        val: [dtv.PAPR_OFF, dtv.PAPR_ACE, dtv.PAPR_TR, dtv.PAPR_BOTH]
+    hide: ${ version.hide_131 }
+-   id: version
+    label: Specification Version
+    dtype: enum
+    options: [VERSION_111, VERSION_131]
+    option_labels: [1.1.1, 1.3.1]
+    option_attributes:
+        hide_111: [none, all]
+        hide_131: [all, none]
+        val: [dtv.VERSION_111, dtv.VERSION_131]
+-   id: preamble1
+    label: Preamble
+    dtype: enum
+    options: [PREAMBLE_T2_SISO, PREAMBLE_T2_MISO]
+    option_labels: [T2 SISO, T2 MISO]
+    option_attributes:
+        hide_miso: [all, none]
+        val: [dtv.PREAMBLE_T2_SISO, dtv.PREAMBLE_T2_MISO]
+    hide: ${ version.hide_111 }
+-   id: preamble2
+    label: Preamble
+    dtype: enum
+    options: [PREAMBLE_T2_SISO, PREAMBLE_T2_MISO, PREAMBLE_T2_LITE_SISO, PREAMBLE_T2_LITE_MISO]
+    option_labels: [T2 SISO, T2 MISO, T2-Lite SISO, T2-Lite MISO]
+    option_attributes:
+        hide_miso: [all, none, all, none]
+        val: [dtv.PREAMBLE_T2_SISO, dtv.PREAMBLE_T2_MISO, dtv.PREAMBLE_T2_LITE_SISO,
+            dtv.PREAMBLE_T2_LITE_MISO]
+    hide: ${ version.hide_131 }
+-   id: misogroup
+    label: MISO Group
+    dtype: enum
+    options: [MISO_TX1, MISO_TX2]
+    option_labels: [TX1, TX2]
+    option_attributes:
+        val: [dtv.MISO_TX1, dtv.MISO_TX2]
+    hide: ${ (preamble1.hide_miso if str(version) == 'VERSION_111' else preamble2.hide_miso)
+        }
+-   id: equalization
+    label: Sin(x)/x Equalization
+    dtype: enum
+    options: [EQUALIZATION_OFF, EQUALIZATION_ON]
+    option_labels: ['Off', 'On']
+    option_attributes:
+        hide_bandwidth: [all, none]
+        val: [dtv.EQUALIZATION_OFF, dtv.EQUALIZATION_ON]
+-   id: bandwidth
+    label: Bandwidth
+    dtype: enum
+    options: [BANDWIDTH_1_7_MHZ, BANDWIDTH_5_0_MHZ, BANDWIDTH_6_0_MHZ, BANDWIDTH_7_0_MHZ,
+        BANDWIDTH_8_0_MHZ, BANDWIDTH_10_0_MHZ]
+    option_labels: [1.7 MHz, 5 MHz, 6 MHz, 7 MHz, 8 MHz, 10 MHz]
+    option_attributes:
+        val: [dtv.BANDWIDTH_1_7_MHZ, dtv.BANDWIDTH_5_0_MHZ, dtv.BANDWIDTH_6_0_MHZ,
+            dtv.BANDWIDTH_7_0_MHZ, dtv.BANDWIDTH_8_0_MHZ, dtv.BANDWIDTH_10_0_MHZ]
+    hide: ${ equalization.hide_bandwidth }
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ fftsize.vlength }
+
+templates:
+    imports: from gnuradio import dtv
+    make: |-
+        dtv.dvbt2_pilotgenerator_cc(
+            ${carriermode.val},
+            ${fftsize.val},
+            ${pilotpattern.val},
+            ${guardinterval.val},
+            ${numdatasyms},
+            % if str(version) == 'VERSION_111':
+            ${paprmode1.val},
+            % else:
+            ${paprmode2.val},
+            % endif
+            ${version.val},
+            % if str(version) == 'VERSION_111':
+            ${preamble1.val},
+            % else:
+            ${preamble2.val},
+            % endif
+            ${misogroup.val},
+            ${equalization.val},
+            ${bandwidth.val},
+            ${fftsize.vlength}
+            )
+
+file_format: 1

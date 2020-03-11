@@ -1,0 +1,451 @@
+# Copyright (C) 2017 Free Software Foundation, Inc.
+#
+# Permission is granted to copy, distribute and/or modify this document
+# under the terms of the GNU Free Documentation License, Version 1.3
+# or any later version published by the Free Software Foundation;
+# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+# A copy of the license is included in the section entitled "GNU
+# Free Documentation License".
+
+/*! \page page_ctrlport ControlPort
+
+\section ctrlport_introduction Introduction
+
+This is the ControlPort package. It is a tool to create distributed
+control applications for GNU Radio. It provides blocks that can be
+connected to an output stream to plot the signal remotely. It also
+provides an API that allows blocks to export variables that can be
+set, monitored, and plotted remotely.
+
+ControlPort-specific functions and utilities are found in the
+'ctrlport' namespace. From Python, access is done using the
+gnuradio.ctrlport module, imported as:
+
+\code
+    from gnuradio import ctrlport
+\endcode
+
+
+\section ctrlport_conf Configuration
+
+ControlPort is configured using two files. The first is the GNU Radio
+preferences file while the second file is specific to the type of
+middleware used.
+
+The GNU Radio preferences file has three options. The 'on' option is
+used to enable or disable the use of ControlPort, and is disabled by
+default. The 'config' option allows a user to specify the
+middleware-specific configuration file. The 'edges_list' is a special
+option that exports the list of nodes and edges of the flowgraph
+across ControlPort. This latter option is mainly used for redrawing
+the flowgraph for the Performance Counter applications.
+
+\code
+  [ControlPort]
+  on = True
+  edges_list = True
+  config = path-to/ctrlport.conf
+\endcode
+
+The ControlPort preferences are installed by default into
+'gnuradio-runtime.conf'. These can always be overridden in the local
+~/.gnuradio/config.conf file.
+
+
+
+\section ctrlport_deps Dependencies
+
+ControlPort is an abstracted remote procedure call tool that. It is
+built on top of other middleware libraries. The following subsections
+explain some details about the use of the particular middleware
+project.
+
+Currently, the only implemented middleware library is the Apache
+Thrift project.
+
+\subsection ctrlport_thrift Apache Thrift
+
+Current version support: >= 0.9.2
+
+Apache Thrift is a middleware layer that defines interfaces of a
+program using its own Thrift language. GNU Radio's interface file is:
+
+gnuradio-runtime/lib/controlport/thrift/gnuradio.thrift
+
+This file defines the interfaces set, get, trigger, and properties. It
+also defines a set of data structure Knobs to allow us to pass any
+type of data over the interfaces.
+
+To use Thrift in ControlPort requires a minimum Thrift version of
+0.9.0. If a Thrift version greater than or equal to this version is
+not found, the Thrift backend to ControlPort will not be installed,
+through ControlPort itself still will be. During cmake configuration
+time, it prints out information about finding Thrift and requires:
+
+\li Thrift header files by looking for thrift/Thrift.h
+\li Thrift C++ libraries: libthrift.so
+\li Thrift Python bindings: "import thrift"
+
+If all of these are not satisfied, the Thrift backend will not be
+installed. Upon completion, cmake outputs a notification of what
+components will be built. You will see this if Thrift was found and
+can be used:
+
+\code
+* gr-ctrlport
+* * thrift
+\endcode
+
+Cmake also uses the Thrift compiler ("thrift") to build the C++ and
+Python files necessary for compiling ControlPort. It runs "thrift
+--gen cpp" the C++ bindings in the build directory, and then
+it runs "thrift --gen py" to build the Python bindings, also in the
+build directory. These are used to compile the Thrift ControlPort
+features and are necessary files to run the Python clients. If cmake
+fails to produce these bindings, it should error out.
+
+
+
+\subsubsection ctrlport_thrift_prefs Configuration
+
+Thrift does not support its own concept of a configuration file, so we
+have built one for our purposes in GNU Radio. The 'config' option in
+the ControlPort section of the preference files tells ControlPort
+where to find the backend-specific file format. GNU Radio's Thrift
+format follows the same "[Section] key = value" scheme used in all of
+its other preference files. Currently supported configuration options
+are:
+
+\code
+[thrift]
+port = 9090
+nthreads = 2
+buffersize = 1434
+init_attempts = 100
+\endcode
+
+
+\subsubsection ctrlport_thrift_issues Thrift: Current Issues
+
+Thrift uses a thread pool system to handle each connection, but it
+will only allow up to a specified number of threads in the server. The
+default value is 10 threads, but the Thrift configuration file allows
+the user to change this value.
+
+Thrift also does not find and use a free ephemeral port when launching
+the server. It must be told explicitly which port to launch on, which
+we set in the configuration file. This makes it difficult to launch
+multiple flowgraphs on the same machine because that will cause a port
+collision. Until this is fixed, a way around this is to use the
+environmental variable GR_CONF_THRIFT_PORT=xxx to set the port number
+for that specific application.
+
+Efficiency issues of Thrift come from the over-the-wire formatting
+done by the transport protocol. It defaults to using 512 byte packets,
+which can lead to a lot of fragmentation of the data over the
+connection. The buffersize configuration allows the user to set this
+value to whatever number fits their network needs. The default 1434 is
+designed around the standard 1500 byte Ethernet frame size limit minus
+the TCP/IP and Ethernet header size.
+
+
+\subsection ctrlport_client_translation Translation Layer for Clients
+
+Different backends will produce different ways to interface with the
+system. ControlPort in the running flowgraph acts as the server by
+exposing interfaces to blocks. The interfaces and API in GNU Radio to
+communicate with ControlPort are all abstracted completely away from
+the backend methods and data types. That is, the code in GNU Radio's
+scheduler and in the blocks that expose their ControlPort interfaces
+will work regardless of the backend used.
+
+We are building better abstractions on the clients sides now, as
+well. Although certain backends will support other features of
+discovery and services that work well with their products, GNU Radio
+wants to make sure that clients can access the data from the
+interfaces in the same way for any backend used. This abstraction is
+done through the GNURadioControlPortClient. This class is told which
+type of backend is used, and defaults to Thrift, and can be passed
+information about the server's endpoint such as the host name and port
+number to attach to. The GNURadioControlPortClient returns a 'radio'
+object that represents the connection to the running flowgraph.
+
+
+\section ctrlport_using Using ControlPort to Export Variables
+
+The ability to export variables from a block is inherited from
+gr::block. Then, when the flowgraph is started, the function
+<b>setup_rpc()</b> is called in turn for each block. By default, this
+is an empty function. A block overloads this function and defines and
+exports variables in it.
+
+Say we have a class <b>gr::blocks::foo</b> that has variables <b>a</b>
+and <b>b</b> that we want to export. Specifically, we want to be able
+to read the values of both <b>a</b> and <b>b</b> and also set the
+value of <b>b</b>. The class <b>gr::blocks::foo</b> has setters and
+getters all set up. So our class implementation header file looks
+something like:
+
+\code
+namespace gr {
+  namespace blocks {
+
+    class foo_impl : public foo
+    {
+    private:
+      float  d_a, d_b;
+
+    public:
+      foo_impl(float a, float b);
+      ~foo_impl();
+
+      float a() const { return d_a; }
+      float b() const { return d_a; }
+      void set_a(float a) { d_a = a; }
+      void set_b(float b) { d_b = b; }
+      void setup_rpc();
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
+    };
+
+  } /* namespace blocks */
+} /* namespace gr */
+\endcode
+
+The source code then sets up the class and fills in
+<b>setup_rpc()</b>.
+
+\code
+namespace gr {
+  namespace blocks {
+
+    foo_impl::foo_impl(float a, float b):
+      sync_bloc(....),
+      d_a(a), d_b(b)
+    { }
+
+    foo_impl::~foo_impl()
+    { }
+
+    void
+    foo_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<foo, float>(
+          alias(), "a",
+          &foo::a,
+          pmt::mp(-2.0f), pmt::mp(2.0f), pmt::mp(0.0f),
+          "", "Get value of a", RPC_PRIVLVL_MIN,
+          DISPTIME | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<foo, float>(
+          alias(), "b",
+          &foo::b,
+          pmt::mp(0.0f), pmt::mp(20.0f), pmt::mp(10.0f),
+          "", "Get value of b", RPC_PRIVLVL_MIN,
+          DISPTIME | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_set<foo, float>(
+          alias(), "b",
+          &foo::set_b,
+          pmt::mp(0.0f), pmt::mp(20.0f), pmt::mp(10.0f),
+          "", "Set value of b", RPC_PRIVLVL_MIN,
+          DISPNULL)));
+#endif /* GR_CTRLPORT */
+    }
+
+    int
+    foo_impl::work(int noutput_items,
+                   gr_vector_const_void_star &input_items,
+                   gr_vector_void_star &output_items)
+    { .... }
+
+  } /* namespace blocks */
+} /* namespace gr */
+\endcode
+
+In the above example, we're ignoring some of the basic semantics of
+the class as a GNU Radio block and focus just on the call to set up
+the get and set functions over ControlPort. Each block has a function
+that allows us to add a new ControlPort interface object to a list,
+the <b>add_rpc_variable</b>. We don't care about that list anymore;
+that's for ControlPort to worry about. We just add new variables,
+either setters or getters.
+
+Without dissecting every piece of the above calls, notice that we use
+the public class, <b>gr::blocks::foo</b> as the class, not the
+implementation class. We also use the block's alias, which GNU Radio
+uses as a database entry to connect a block by name to the pointer in
+memory. This allows ControlPort to know where the object in memory is
+at any given time to access the setters and getters.
+
+The three PMTs specified are simply an expected minimum, maximum, and
+default value. None of these are strictly enforced and only serve as
+guides. The RPC_PRIVLVL_MIN is currently a placeholder for a
+privilege level setting. In many cases, reading <b>b</b> might be
+fine for everyone, but we want strong restrictions on who has the
+ability to set <b>b</b>.
+
+And finally, we can specify display options to hint at the right way
+to display this variable when remotely plotting it. More on that in
+the following section.
+
+Finally, note that we put \#ifdefs around the code. We always want
+<b>setup_rpc</b> to be there and callable, but if ControlPort was not
+built for GNU Radio, we cannot register any variables with it. This is
+just a nicety to allow us to set up our code for use with ControlPort
+without requiring it.
+
+
+\subsection ctrlport_alt_reg Alternative Registers
+
+If using the concept above, <b>setup_rpc</b> automatically gets called
+when the flowgraph is started. In most instances, this is all we ever
+need since there's nothing interesting going on until then. However,
+if not using a gr::block or needing access before we run the flowgraph,
+the above method won't work (it comes down to when the block's alias
+has meaning).
+
+There are alternate variable registration functions for the sets and
+gets. These take the form:
+
+\code
+  rpcbasic_register_get(const std::string& name,
+			const char* functionbase,
+                        T* obj,
+			Tfrom (T::*function)(),
+			const pmt::pmt_t &min, const pmt::pmt_t &max, const pmt::pmt_t &def,
+			const char* units_ = "",
+			const char* desc_ = "",
+			priv_lvl_t minpriv_ = RPC_PRIVLVL_MIN,
+			DisplayType display_ = DISPNULL)
+
+  rpcbasic_register_set(const std::string& name,
+			const char* functionbase,
+                        T* obj,
+			void (T::*function)(Tto),
+			const pmt::pmt_t &min, const pmt::pmt_t &max, const pmt::pmt_t &def,
+			const char* units_ = "",
+			const char* desc_ = "",
+			priv_lvl_t minpriv_ = RPC_PRIVLVL_MIN,
+			DisplayType display_ = DISPNULL)
+\endcode
+
+The only thing different about the above code is that instead of
+taking a single 'alias()' name, which provides us access to the
+objects pointer, we instead provide a unique name
+(<b>fucntionbase</b>) and a pointer to the object itself
+(<b>obj</b>). These are templated functions, so the class T is known
+from that.
+
+If using this method, the recommended way is to create a new function
+(not <b>setup_rpc</b>), register the variable using
+<b>add_rpc_variable</b> but with the different <b>register_get/set</b>
+shown here, and then call this function either in the object's
+constructor or make it a public member function to be called when you
+need it.
+
+
+\section ctrlport_disp Display Options
+
+When exporting a new RPC variable over ControlPort, one argument is a
+display options mask. These options are useful to a remote client to
+tell identify activities like default plotters and initial
+conditions. The <b>gr-ctrlport-monitor</b> application uses this
+heavily in determining how to plot ControlPort variables.
+
+The options mask is just a 32-bit value with options OR'd
+together. Certain options are only appropriate for certain types of
+plots. Options on plots where that option is not available will
+simply be ignored.
+
+The main caveat to be aware of is that the DISPXY plot type is
+specific to complex values. Therefore, DISPOPTCPLX is assumed.
+
+These options are specified in rpccallbackregister_base.h and are
+exposed through SWIG to live in the \b gr namespace.
+
+<b>Plot Types</b>
+\li <b>DISPNULL:</b> Nothing specified.
+\li <b>DISPTIME:</b> Time-domain plot.
+\li <b>DISPXY:</b> XY or constellation plot (complex only).
+\li <b>DISPPSD:</b> PSD plot.
+\li <b>DISPSPEC:</b> Spectrogram plot.
+\li <b>DISPRAST:</b> Time raster plot (non-complex only)
+
+<b>Plot Options</b>
+\li <b>DISPOPTCPLX:</b> Signal is complex.
+\li <b>DISPOPTLOG:</b> Start plot in semilog-y mode (time domain only).
+\li <b>DISPOPTSTEM:</b> Start plot in stem mode (time domain only).
+\li <b>DISPOPTSTRIP:</b> Run plot as a stripchart (time domain only).
+\li <b>DISPOPTSCATTER:</b> Do scatter plot instead of lines (XY plot only).
+
+
+\section ctrlport_probes ControlPort Probes
+
+ControlPort provides a set of probes that can be used as sinks that
+pass vectors of data across ControlPort. These probes are used to
+sample or visualize data remotely. We can place a ControlPort probe
+anywhere in the flowgraph to grab the latest sample of data from the
+block it's connected to.
+
+The main ControlPort probe to use is
+<b>blocks.ctrlport_probe2_x</b>. From GRC, this is simply "CtrlPort
+Probe", which can handle complex, floats, ints, shorts, and bytes. The
+blocks are named and given a description to identify them over
+ControlPort. The blocks also take a vector length for how many samples
+to pass back at a time. Finally, these blocks take a display hint,
+as described in the above section. This allows us to specify the
+default behavior for how to display the samples.
+
+Another block that can be used is the <b>fft.ctrlport_probe_psd</b> to
+calculate the PSD and pass that over the ControlPort interface.
+
+\section ctrlport_monitors ControlPort Monitors
+
+There are two main ControlPort monitor applications provided with GNU
+Radio. Both act similarly. The first is a standard ControlPort monitor
+application. This connects to a running flowgraph and displays all
+exported interfaces in a table format. The name, unit, latest sample,
+and description of all interfaces are display in a
+row. Double-clicking will open up the default display. Right clicking
+any item will allow the user to select the type of plot to use to
+display the data.
+
+When a display is active, using the buttons at the top, the subwindows
+can all be tiled or windowed as needed to manage the full
+interface. We can then drag-and-drop any other item on top of a
+currently running display plot.
+
+To launch the ControlPort monitor application, know the IP address and
+port of the ControlPort endpoint established by the flowgraph and run:
+
+<pre>
+gr-ctrlport-monitor \<ip-addr\> \<port\>
+</pre>
+
+
+\subsection perfmonitor Performance Monitor
+
+A second application is used to locally redraw the flowgraph and
+display some of the Performance Counters. In this application, the
+nodes are blue boxes where the size of the box is proportional to the
+work time and the color depth and line width are proportional to the
+output buffer fullness.
+
+The controls at the top of the Performance Monitor application allow
+us to select the instantaneous, average, and variance values of the
+Performance Counters. And the work time and buffer fullness can be
+displayed as a table or bar graph.
+
+To launch the Performance Monitor, run:
+
+<pre>
+gr-perf-monitorx \<ip-addr\> \<port\>
+</pre>
+
+*/

@@ -1,0 +1,161 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: no_gui
+    hier_block_src_path: '.:'
+    id: zmq_msg
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: 1280, 1024
+  states:
+    coordinate: [10, 10]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+  states:
+    coordinate: [944, 112]
+    rotation: 0
+    state: enabled
+- name: blocks_message_strobe_random_0
+  id: blocks_message_strobe_random
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    dist: blocks.STROBE_POISSON
+    maxoutbuf: '0'
+    mean: '100'
+    minoutbuf: '0'
+    msg: pmt.intern("TEST")
+    std: '0'
+  states:
+    coordinate: [216, 83]
+    rotation: 0
+    state: enabled
+- name: zeromq_pub_msg_sink_0
+  id: zeromq_pub_msg_sink
+  parameters:
+    address: tcp://127.0.0.1:5555
+    affinity: ''
+    alias: ''
+    comment: ''
+    timeout: '100'
+  states:
+    coordinate: [480, 99]
+    rotation: 0
+    state: disabled
+- name: zeromq_pull_msg_source_0
+  id: zeromq_pull_msg_source
+  parameters:
+    address: tcp://127.0.0.1:5556
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    timeout: '100'
+  states:
+    coordinate: [656, 243]
+    rotation: 0
+    state: disabled
+- name: zeromq_push_msg_sink_0
+  id: zeromq_push_msg_sink
+  parameters:
+    address: tcp://127.0.0.1:5556
+    affinity: ''
+    alias: ''
+    comment: ''
+    timeout: '100'
+  states:
+    coordinate: [480, 243]
+    rotation: 0
+    state: disabled
+- name: zeromq_rep_msg_sink_0
+  id: zeromq_rep_msg_sink
+  parameters:
+    address: tcp://127.0.0.1:5557
+    affinity: ''
+    alias: ''
+    comment: ''
+    timeout: '100'
+  states:
+    coordinate: [480, 323]
+    rotation: 0
+    state: enabled
+- name: zeromq_req_msg_source_0
+  id: zeromq_req_msg_source
+  parameters:
+    address: tcp://127.0.0.1:5557
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    timeout: '100'
+  states:
+    coordinate: [656, 323]
+    rotation: 0
+    state: enabled
+- name: zeromq_sub_msg_source_0
+  id: zeromq_sub_msg_source
+  parameters:
+    address: tcp://127.0.0.1:5555
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    timeout: '100'
+  states:
+    coordinate: [656, 99]
+    rotation: 0
+    state: disabled
+- name: zeromq_sub_msg_source_0_0
+  id: zeromq_sub_msg_source
+  parameters:
+    address: tcp://127.0.0.1:5555
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    timeout: '100'
+  states:
+    coordinate: [656, 163]
+    rotation: 0
+    state: disabled
+
+connections:
+- [blocks_message_strobe_random_0, strobe, zeromq_pub_msg_sink_0, in]
+- [blocks_message_strobe_random_0, strobe, zeromq_push_msg_sink_0, in]
+- [blocks_message_strobe_random_0, strobe, zeromq_rep_msg_sink_0, in]
+- [zeromq_pull_msg_source_0, out, blocks_message_debug_0, print]
+- [zeromq_req_msg_source_0, out, blocks_message_debug_0, print]
+- [zeromq_sub_msg_source_0, out, blocks_message_debug_0, print]
+- [zeromq_sub_msg_source_0_0, out, blocks_message_debug_0, print]
+
+metadata:
+  file_format: 1

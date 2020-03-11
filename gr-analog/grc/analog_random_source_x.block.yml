@@ -1,0 +1,52 @@
+id: analog_random_source_x
+label: Random Source
+flags: [ python ]
+
+parameters:
+-   id: type
+    label: Output Type
+    dtype: enum
+    options: [int, short, byte]
+    option_attributes:
+        fcn: [i, s, b]
+    hide: part
+-   id: min
+    label: Minimum
+    dtype: int
+    default: '0'
+-   id: max
+    label: Maximum
+    dtype: int
+    default: '2'
+-   id: num_samps
+    label: Num Samples
+    dtype: int
+    default: '1000'
+-   id: repeat
+    label: Repeat
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: |-
+        from gnuradio import blocks
+        import numpy
+    make: blocks.vector_source_${type.fcn}(list(map(int, numpy.random.randint(${min}, ${max},
+        ${num_samps}))), ${repeat})
+
+documentation: |-
+    Generate num samples of random numbers of [min, max). Repeat samples if specified.
+
+    Ex: With min=0 and max=2, the sequence 01110101... will be generated.
+
+    This block wraps Vector Source, i.e. it creates a vector source using a vector filled with values returned from calling np.random.randint(min, max, num_samps) once
+
+    If you would like a traditional random number generator, use Random Uniform Source instead
+
+file_format: 1

@@ -1,0 +1,676 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: Example of an OFDM receiver
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: no_gui
+    hier_block_src_path: '.:'
+    id: rx_ofdm
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: OFDM Rx
+    window_size: 1280, 1024
+  states:
+    coordinate: [8, 12.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: fft_len
+  id: variable
+  parameters:
+    comment: ''
+    value: '64'
+  states:
+    coordinate: [328, 12.0]
+    rotation: 0
+    state: enabled
+- name: header_equalizer
+  id: variable
+  parameters:
+    comment: ''
+    value: digital.ofdm_equalizer_simpledfe(fft_len, header_mod.base(), occupied_carriers,
+      pilot_carriers, pilot_symbols)
+  states:
+    coordinate: [952, 76.0]
+    rotation: 0
+    state: enabled
+- name: header_formatter
+  id: variable
+  parameters:
+    comment: ''
+    value: digital.packet_header_ofdm(occupied_carriers, n_syms=1, len_tag_key=packet_length_tag_key,
+      frame_len_tag_key=length_tag_key, bits_per_header_sym=header_mod.bits_per_symbol(),
+      bits_per_payload_sym=payload_mod.bits_per_symbol(), scramble_header=False)
+  states:
+    coordinate: [880, 12.0]
+    rotation: 0
+    state: enabled
+- name: header_mod
+  id: variable
+  parameters:
+    comment: ''
+    value: digital.constellation_bpsk()
+  states:
+    coordinate: [512, 12.0]
+    rotation: 0
+    state: enabled
+- name: length_tag_key
+  id: variable
+  parameters:
+    comment: ''
+    value: '"frame_len"'
+  states:
+    coordinate: [392, 12.0]
+    rotation: 0
+    state: enabled
+- name: occupied_carriers
+  id: variable
+  parameters:
+    comment: ''
+    value: (list(range(-26, -21)) + list(range(-20, -7)) + list(range(-6, 0)) + list(range(1,
+      7)) + list(range(8, 21)) + list(range(22, 27)),)
+  states:
+    coordinate: [568, 76.0]
+    rotation: 0
+    state: enabled
+- name: packet_len
+  id: variable
+  parameters:
+    comment: ''
+    value: '96'
+  states:
+    coordinate: [1056, 12.0]
+    rotation: 0
+    state: enabled
+- name: packet_length_tag_key
+  id: variable
+  parameters:
+    comment: ''
+    value: '"packet_len"'
+  states:
+    coordinate: [1152, 12.0]
+    rotation: 0
+    state: enabled
+- name: payload_equalizer
+  id: variable
+  parameters:
+    comment: ''
+    value: digital.ofdm_equalizer_simpledfe(fft_len, payload_mod.base(), occupied_carriers,
+      pilot_carriers, pilot_symbols, 1)
+  states:
+    coordinate: [1136, 76.0]
+    rotation: 0
+    state: enabled
+- name: payload_mod
+  id: variable
+  parameters:
+    comment: ''
+    value: digital.constellation_qpsk()
+  states:
+    coordinate: [688, 12.0]
+    rotation: 0
+    state: enabled
+- name: pilot_carriers
+  id: variable
+  parameters:
+    comment: ''
+    value: ((-21, -7, 7, 21,),)
+  states:
+    coordinate: [720, 76.0]
+    rotation: 0
+    state: enabled
+- name: pilot_symbols
+  id: variable
+  parameters:
+    comment: ''
+    value: ((1, 1, 1, -1,),)
+  states:
+    coordinate: [840, 76.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '10000'
+  states:
+    coordinate: [184, 76.0]
+    rotation: 0
+    state: enabled
+- name: sync_word1
+  id: variable
+  parameters:
+    comment: ''
+    value: '[0., 0., 0., 0., 0., 0., 0., 1.41421356, 0., -1.41421356, 0., 1.41421356,
+      0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356,
+      0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356,
+      0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356,
+      0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356,
+      0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]'
+  states:
+    coordinate: [272, 76.0]
+    rotation: 0
+    state: enabled
+- name: sync_word2
+  id: variable
+  parameters:
+    comment: ''
+    value: '[0j, 0j, 0j, 0j, 0j, 0j, (-1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (1+0j),
+      (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1 +0j), (1+0j),
+      (1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j),
+      (1+0j), (-1+0j), 0j, (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j),
+      (1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (-1+0j),
+      (-1+0j), (-1+0j), (1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j),
+      0j, 0j, 0j, 0j, 0j]'
+  states:
+    coordinate: [416, 76.0]
+    rotation: 0
+    state: enabled
+- name: analog_frequency_modulator_fc_0
+  id: analog_frequency_modulator_fc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    sensitivity: -2.0/fft_len
+  states:
+    coordinate: [912, 292.0]
+    rotation: 0
+    state: enabled
+- name: analog_random_source_x_0
+  id: analog_random_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max: '255'
+    maxoutbuf: '0'
+    min: '0'
+    minoutbuf: '0'
+    num_samps: '1000'
+    repeat: 'True'
+    type: byte
+  states:
+    coordinate: [16, 212.0]
+    rotation: 0
+    state: enabled
+- name: blocks_delay_0
+  id: blocks_delay
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    delay: fft_len+fft_len//4
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [688, 436.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_xx_0
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [800, 408.0]
+    rotation: 0
+    state: enabled
+- name: blocks_repack_bits_bb_0
+  id: blocks_repack_bits_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    align_output: 'True'
+    comment: ''
+    endianness: gr.GR_LSB_FIRST
+    k: payload_mod.bits_per_symbol()
+    l: '8'
+    len_tag_key: packet_length_tag_key
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [432, 892.0]
+    rotation: 0
+    state: enabled
+- name: blocks_stream_to_tagged_stream_0
+  id: blocks_stream_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    len_tag_key: packet_length_tag_key
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packet_len: packet_len
+    type: byte
+    vlen: '1'
+  states:
+    coordinate: [176, 228.0]
+    rotation: 0
+    state: enabled
+- name: blocks_tag_debug_1
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '""'
+    name: Rx Bytes
+    num_inputs: '1'
+    type: byte
+    vlen: '1'
+  states:
+    coordinate: [864, 884.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [464, 484.0]
+    rotation: 0
+    state: enabled
+- name: channels_channel_model_0
+  id: channels_channel_model
+  parameters:
+    affinity: ''
+    alias: ''
+    block_tags: 'True'
+    comment: ''
+    epsilon: '1.0'
+    freq_offset: 0 * 1.0/fft_len
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    noise_voltage: '0.1'
+    seed: '0'
+    taps: '1.0'
+  states:
+    coordinate: [448, 372.0]
+    rotation: 180
+    state: enabled
+- name: digital_constellation_decoder_cb_0
+  id: digital_constellation_decoder_cb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: header_mod.base()
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [1072, 580.0]
+    rotation: 180
+    state: enabled
+- name: digital_constellation_decoder_cb_1
+  id: digital_constellation_decoder_cb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: payload_mod.base()
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [192, 900.0]
+    rotation: 0
+    state: enabled
+- name: digital_crc32_bb_0
+  id: digital_crc32_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    check: 'True'
+    comment: ''
+    lengthtagname: packet_length_tag_key
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packed: 'True'
+  states:
+    coordinate: [640, 884.0]
+    rotation: 0
+    state: enabled
+- name: digital_header_payload_demux_0
+  id: digital_header_payload_demux
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    guard_interval: fft_len//4
+    header_len: '3'
+    header_padding: '0'
+    items_per_symbol: fft_len
+    length_tag_key: length_tag_key
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    output_symbols: 'True'
+    samp_rate: samp_rate
+    special_tags: ()
+    timing_tag_key: '"rx_time"'
+    trigger_tag_key: '""'
+    type: complex
+  states:
+    coordinate: [1008, 388.0]
+    rotation: 0
+    state: enabled
+- name: digital_ofdm_chanest_vcvc_0
+  id: digital_ofdm_chanest_vcvc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    eq_noise_red_len: '0'
+    force_one_symbol: 'False'
+    max_carr_offset: '3'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    n_data_symbols: '1'
+    sync_symbol1: sync_word1
+    sync_symbol2: sync_word2
+  states:
+    coordinate: [432, 636.0]
+    rotation: 0
+    state: enabled
+- name: digital_ofdm_frame_equalizer_vcvc_0
+  id: digital_ofdm_frame_equalizer_vcvc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    cp_len: fft_len//4
+    equalizer: header_equalizer.base()
+    fft_len: fft_len
+    fixed_frame_len: '1'
+    len_tag_key: length_tag_key
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    propagate_channel_state: 'True'
+  states:
+    coordinate: [720, 628.0]
+    rotation: 0
+    state: enabled
+- name: digital_ofdm_frame_equalizer_vcvc_1
+  id: digital_ofdm_frame_equalizer_vcvc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    cp_len: fft_len//4
+    equalizer: payload_equalizer.base()
+    fft_len: fft_len
+    fixed_frame_len: '0'
+    len_tag_key: length_tag_key
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    propagate_channel_state: 'True'
+  states:
+    coordinate: [680, 764.0]
+    rotation: 0
+    state: enabled
+- name: digital_ofdm_serializer_vcc_header
+  id: digital_ofdm_serializer_vcc
+  parameters:
+    affinity: ''
+    alias: ''
+    carr_offset_key: ''
+    comment: ''
+    fft_len: fft_len
+    input_is_shifted: 'True'
+    len_tag_key: length_tag_key
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    occupied_carriers: occupied_carriers
+    packet_len_tag_key: ''
+    symbols_skipped: '0'
+  states:
+    coordinate: [976, 652.0]
+    rotation: 0
+    state: enabled
+- name: digital_ofdm_serializer_vcc_payload
+  id: digital_ofdm_serializer_vcc
+  parameters:
+    affinity: ''
+    alias: ''
+    carr_offset_key: ''
+    comment: ''
+    fft_len: fft_len
+    input_is_shifted: 'True'
+    len_tag_key: length_tag_key
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    occupied_carriers: occupied_carriers
+    packet_len_tag_key: packet_length_tag_key
+    symbols_skipped: '1'
+  states:
+    coordinate: [912, 764.0]
+    rotation: 0
+    state: enabled
+- name: digital_ofdm_sync_sc_cfb_0
+  id: digital_ofdm_sync_sc_cfb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    cp_len: fft_len//4
+    fft_len: fft_len
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    threshold: '0.9'
+    use_even_carriers: 'False'
+  states:
+    coordinate: [688, 292.0]
+    rotation: 0
+    state: enabled
+- name: digital_ofdm_tx_0
+  id: digital_ofdm_tx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    cp_len: fft_len//4
+    fft_len: fft_len
+    header_mod: '"BPSK"'
+    log: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    occupied_carriers: occupied_carriers
+    packet_len_key: packet_length_tag_key
+    payload_mod: '"QPSK"'
+    pilot_carriers: pilot_carriers
+    pilot_symbols: pilot_symbols
+    rolloff: '0'
+    scramble_bits: 'False'
+    sync_word1: sync_word1
+    sync_word2: sync_word2
+  states:
+    coordinate: [400, 148.0]
+    rotation: 0
+    state: enabled
+- name: digital_packet_headerparser_b_0
+  id: digital_packet_headerparser_b
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    header_formatter: header_formatter.base()
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [832, 580.0]
+    rotation: 180
+    state: enabled
+- name: fft_vxx_0
+  id: fft_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fft_size: fft_len
+    forward: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nthreads: '1'
+    shift: 'True'
+    type: complex
+    window: ()
+  states:
+    coordinate: [224, 636.0]
+    rotation: 0
+    state: enabled
+- name: fft_vxx_1
+  id: fft_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fft_size: fft_len
+    forward: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nthreads: '1'
+    shift: 'True'
+    type: complex
+    window: ()
+  states:
+    coordinate: [216, 764.0]
+    rotation: 0
+    state: enabled
+- name: import_1
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: from gnuradio.digital.utils import tagged_streams
+  states:
+    coordinate: [184, 12.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Header Stream
+  states:
+    coordinate: [1328, 436.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_1
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Payload Stream
+  states:
+    coordinate: [1328, 484.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_1_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Payload IQ
+  states:
+    coordinate: [1152, 796.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Header Stream
+  states:
+    coordinate: [16, 668.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Payload IQ
+  states:
+    coordinate: [16, 900.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_1
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Payload Stream
+  states:
+    coordinate: [16, 796.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_frequency_modulator_fc_0, '0', blocks_multiply_xx_0, '0']
+- [analog_random_source_x_0, '0', blocks_stream_to_tagged_stream_0, '0']
+- [blocks_delay_0, '0', blocks_multiply_xx_0, '1']
+- [blocks_multiply_xx_0, '0', digital_header_payload_demux_0, '0']
+- [blocks_repack_bits_bb_0, '0', digital_crc32_bb_0, '0']
+- [blocks_stream_to_tagged_stream_0, '0', digital_ofdm_tx_0, '0']
+- [blocks_throttle_0, '0', blocks_delay_0, '0']
+- [blocks_throttle_0, '0', digital_ofdm_sync_sc_cfb_0, '0']
+- [channels_channel_model_0, '0', blocks_throttle_0, '0']
+- [digital_constellation_decoder_cb_0, '0', digital_packet_headerparser_b_0, '0']
+- [digital_constellation_decoder_cb_1, '0', blocks_repack_bits_bb_0, '0']
+- [digital_crc32_bb_0, '0', blocks_tag_debug_1, '0']
+- [digital_header_payload_demux_0, '0', virtual_sink_0, '0']
+- [digital_header_payload_demux_0, '1', virtual_sink_1, '0']
+- [digital_ofdm_chanest_vcvc_0, '0', digital_ofdm_frame_equalizer_vcvc_0, '0']
+- [digital_ofdm_frame_equalizer_vcvc_0, '0', digital_ofdm_serializer_vcc_header, '0']
+- [digital_ofdm_frame_equalizer_vcvc_1, '0', digital_ofdm_serializer_vcc_payload,
+  '0']
+- [digital_ofdm_serializer_vcc_header, '0', digital_constellation_decoder_cb_0, '0']
+- [digital_ofdm_serializer_vcc_payload, '0', virtual_sink_1_0, '0']
+- [digital_ofdm_sync_sc_cfb_0, '0', analog_frequency_modulator_fc_0, '0']
+- [digital_ofdm_sync_sc_cfb_0, '1', digital_header_payload_demux_0, '1']
+- [digital_ofdm_tx_0, '0', channels_channel_model_0, '0']
+- [digital_packet_headerparser_b_0, header_data, digital_header_payload_demux_0, header_data]
+- [fft_vxx_0, '0', digital_ofdm_chanest_vcvc_0, '0']
+- [fft_vxx_1, '0', digital_ofdm_frame_equalizer_vcvc_1, '0']
+- [virtual_source_0, '0', fft_vxx_0, '0']
+- [virtual_source_0_0, '0', digital_constellation_decoder_cb_1, '0']
+- [virtual_source_1, '0', fft_vxx_1, '0']
+
+metadata:
+  file_format: 1

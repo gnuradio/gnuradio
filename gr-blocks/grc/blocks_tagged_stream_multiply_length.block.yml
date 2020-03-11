@@ -1,0 +1,55 @@
+id: blocks_tagged_stream_multiply_length
+label: Tagged Stream Multiply Length Tag
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: lengthtagname
+    label: Length tag names
+    dtype: string
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: c
+    label: Length Scalar
+    dtype: real
+    default: '1.0'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+-   domain: message
+    id: set_scalar
+    optional: true
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.tagged_stream_multiply_length(${type.size}*${vlen}, ${lengthtagname},
+        ${c})
+    callbacks:
+    - set_scalar(${c})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/tagged_stream_multiply_length.h>']
+    declarations: 'blocks::tagged_stream_multiply_length::sptr ${id};'
+    make: 'this->${id} = blocks.tagged_stream_multiply_length(${type.size}*${vlen}, ${lengthtagname},
+        ${c});'
+    callbacks:
+    - set_scalar(${c})
+
+file_format: 1

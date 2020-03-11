@@ -1,0 +1,123 @@
+#!/usr/bin/env python
+#
+# Copyright 2006 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+#
+
+import re
+import os
+import os.path
+import sys
+from argparse import ArgumentParser
+
+dry_run = False
+modified_files = []
+
+dirs_to_ignore = ('CVS', '.svn', '.deps', '.libs')
+extensions_to_ignore = ('.o', '.lo',
+                        '.a', '.la', '.lai',
+                        '.so', '.soT',
+                        '.pyc', '.pyo',
+                        '.ko', '.fasl', '.rwbak',
+                        '.tar', '.gz', '.log',
+                        '.eps', '.ps', '.pdf',
+                        '.png', '.jpg', '.jpeg', '.bmp',
+                        '.dat', '.ihx',
+                        '.diff',
+                        '.lib', '.lst', '.rel', '.sym', '.asm', '.rst', 'mem', '.map', # sdcc output
+                        '.rbf', '.esf', '.qpf', '.psf', '.quartus', '.bsf', '.cmp'     # quartus
+                        )
+
+def destructively_remove(list, predicate):
+    """
+    Destructively remove elements from LIST for which PREDICATE is true
+    """
+    for i in range(len(list)):
+        if predicate(list[i]):
+            del list[i]
+            destructively_remove(list, predicate)
+            return
+
+
+def expunge_unwanted_dirnames(dirnames):
+    """
+    Destructively remove directory names that we don't want to visit.
+    This is a _very_ non-functional approach to programming...
+    """
+    destructively_remove(dirnames, lambda d: d in dirs_to_ignore)
+
+def expunge_unwanted_filenames(filenames):
+    """
+    Destructively remove filenames that we don't want to visit.
+    This is a _very_ non-functional approach to programming...
+    """
+    destructively_remove(filenames,
+                         lambda f: f.endswith('~') or os.path.splitext(f)[1] in extensions_to_ignore)
+
+
+def walk_directory(dirname):
+    for dirpath, dirnames, filenames in os.walk(dirname):
+        expunge_unwanted_dirnames(dirnames)
+        expunge_unwanted_filenames(filenames)
+        for f in filenames:
+            update_one(os.path.join(dirpath, f))
+
+
+addr_pattern = re.compile(r'\b59 Temple Place(,| *-) *Suite 330\b', re.IGNORECASE)
+addr_replacement = '51 Franklin Street'
+zip_pattern  = re.compile(r'\b02111-1307\b')
+zip_replacement = '02110-1301'
+
+def update_one(filename):
+    f = open(filename, 'r')
+    s = f.read()
+    f.close()
+    t = s
+    t = addr_pattern.sub(addr_replacement, t)
+    t = zip_pattern.sub(zip_replacement, t)
+    if s != t:
+        modified_files.append(filename)
+        if not dry_run:
+            f = open(filename, 'w')
+            f.write(t)
+
+
+def handle_file_or_dir(file_or_dir):
+    if os.path.isfile(file_or_dir):
+        update_one(file_or_dir)
+    elif os.path.isdir(file_or_dir):
+        walk_directory(file_or_dir)
+    else:
+        pass   # ignore the other cases
+
+
+def main():
+    global dry_run
+
+    parser = ArgumentParser()
+    parser.add_argument('-l', '--list-modified-files', action='store_true',
+                      help='List modified files to stdout')
+    parser.add_argument('--dry-run', action='store_true',
+                      help="Don't modify any files, just report what would be modified")
+    parser.add_argument('file_or_dir', metavar='FILE-OR-DIR', nargs='*')
+    args = parser.parse_args()
+
+    dry_run = args.dry_run
+    if args.dry_run:
+        args.list_modified_files = True
+
+    for file_or_dir in args.file_or_dir:
+        handle_file_or_dir(file_or_dir)
+
+    if args.list_modified_files:
+        for f in modified_files:
+            sys.stdout.write(f + '\n')
+
+
+if __name__ == '__main__':
+    main()
+

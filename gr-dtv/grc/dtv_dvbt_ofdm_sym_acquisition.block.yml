@@ -1,0 +1,44 @@
+id: dtv_dvbt_ofdm_sym_acquisition
+label: OFDM Symbol Acquisition
+
+parameters:
+-   id: type
+    label: Output Type
+    dtype: enum
+    default: float
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        fcn: [c, f, i, s, b]
+    hide: part
+-   id: fft_length
+    label: FFT Length
+    dtype: int
+    default: '2048'
+-   id: occupied_tones
+    label: Occupied Tones
+    dtype: int
+    default: '1705'
+-   id: cp_length
+    label: Cyclic Prefix Length
+    dtype: int
+    default: '64'
+-   id: snr
+    label: SNR
+    dtype: real
+    default: '10'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ fft_length }
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.dvbt_ofdm_sym_acquisition(1, ${fft_length}, ${occupied_tones}, ${cp_length},
+        ${snr})
+
+file_format: 1

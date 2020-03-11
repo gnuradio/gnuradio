@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<programlisting>
+  1  #!/usr/bin/env python
+  2
+  3  from gnuradio import gr
+  4  from gnuradio import audio
+  5  from gnuradio import trellis, digital, analog, blocks
+  6  from gnuradio import eng_notation
+  7  import math
+  8  import sys
+  9  import random
+ 10  import fsm_utils
+ 11
+ 12  def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
+ 13      tb = gr.top_block ()
+ 14
+ 15      # TX
+ 16      src = blocks.lfsr_32k_source_s()
+ 17      src_head = blocks.head (gr.sizeof_short,Kb/16) # packet size in shorts
+ 18      s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
+ 19      enc = trellis.encoder_ss(f,0) # initial state = 0
+ 20      mod = digital.chunks_to_symbols_sf(constellation,dimensionality)
+ 21
+ 22      # CHANNEL
+ 23      add = blocks.add_ff()
+ 24      noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+ 25
+ 26      # RX
+ 27      metrics = trellis.metrics_f(f.O(),dimensionality,constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
+ 28      va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.
+ 29      fsmi2s = blocks.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
+ 30      dst = blocks.check_lfsr_32k_s();
+ 31
+ 32      tb.connect (src,src_head,s2fsmi,enc,mod)
+ 33      tb.connect (mod,(add,0))
+ 34      tb.connect (noise,(add,1))
+ 35      tb.connect (add,metrics)
+ 36      tb.connect (metrics,va,fsmi2s,dst)
+ 37
+ 38      tb.run()
+ 39
+ 40      # A bit of cheating: run the program once and print the
+ 41      # final encoder state.
+ 42      # Then put it as the last argument in the viterbi block
+ 43      #print &quot;final state = &quot; , enc.ST()
+ 44
+ 45      ntotal = dst.ntotal ()
+ 46      nright = dst.nright ()
+ 47      runlength = dst.runlength ()
+ 48      return (ntotal,ntotal-nright)
+ 49
+ 50
+ 51  def main(args):
+ 52      nargs = len (args)
+ 53      if nargs == 3:
+ 54          fname=args[0]
+ 55          esn0_db=float(args[1]) # Es/No in dB
+ 56          rep=int(args[2]) # number of times the experiment is run to collect enough errors
+ 57      else:
+ 58          sys.stderr.write (&apos;usage: test_tcm.py fsm_fname Es/No_db  repetitions\n&apos;)
+ 59          sys.exit (1)
+ 60
+ 61      # system parameters
+ 62      f=trellis.fsm(fname) # get the FSM specification from a file
+ 63      Kb=1024*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
+ 64      bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
+ 65      K=Kb/bitspersymbol # packet size in trellis steps
+ 66      modulation = fsm_utils.psk4 # see fsm_utlis.py for available predefined modulations
+ 67      dimensionality = modulation[0]
+ 68      constellation = modulation[1]
+ 69      if len(constellation)/dimensionality != f.O():
+ 70          sys.stderr.write (&apos;Incompatible FSM output cardinality and modulation size.\n&apos;)
+ 71          sys.exit (1)
+ 72      # calculate average symbol energy
+ 73      Es = 0
+ 74      for i in range(len(constellation)):
+ 75          Es = Es + constellation[i]**2
+ 76      Es = Es / (len(constellation)/dimensionality)
+ 77      N0=Es/pow(10.0,esn0_db/10.0); # noise variance
+ 78
+ 79      tot_s=0
+ 80      terr_s=0
+ 81      for i in range(rep):
+ 82          (s,e)=run_test(f,Kb,bitspersymbol,K,dimensionality,constellation,N0,-long(666+i)) # run experiment with different seed to get different noise realizations
+ 83          tot_s=tot_s+s
+ 84          terr_s=terr_s+e
+ 85          if (i%100==0):
+ 86              print i,s,e,tot_s,terr_s, &apos;%e&apos; % ((1.0*terr_s)/tot_s)
+ 87      # estimate of the (short) error rate
+ 88      print tot_s,terr_s, &apos;%e&apos; % ((1.0*terr_s)/tot_s)
+ 89
+ 90
+ 91  if __name__ == &apos;__main__&apos;:
+ 92      main (sys.argv[1:])
+</programlisting>

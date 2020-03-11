@@ -1,0 +1,349 @@
+id: qtgui_vector_sink_f
+label: QT GUI Vector Sink
+flags: [ python ]
+
+parameters:
+-   id: name
+    label: Name
+    dtype: string
+    default: '""'
+    hide: ${ ('none' if len(name) > 0 else 'part') }
+-   id: vlen
+    label: Vector Size
+    dtype: int
+    default: '1024'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: x_start
+    label: X-Axis Start Value
+    dtype: real
+    default: '0'
+-   id: x_step
+    label: X-Axis Step Value
+    dtype: real
+    default: '1.0'
+-   id: x_axis_label
+    label: X-Axis Label
+    dtype: string
+    default: '"x-Axis"'
+    hide: ${ ('none' if (len(x_axis_label) > 0 and x_axis_label != "x-Axis") else
+        'part') }
+-   id: y_axis_label
+    label: Y-Axis Label
+    dtype: string
+    default: '"y-Axis"'
+    hide: ${ ('none' if (len(y_axis_label) > 0 and y_axis_label != "y-Axis") else
+        'part') }
+-   id: x_units
+    label: X-Axis Units
+    dtype: string
+    default: '""'
+    hide: '''part'''
+-   id: y_units
+    label: Y-Axis Units
+    dtype: string
+    default: '""'
+    hide: '''part'''
+-   id: ref_level
+    label: Ref Level
+    dtype: real
+    default: '0'
+-   id: grid
+    label: Grid
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+-   id: autoscale
+    label: Autoscale
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+-   id: average
+    label: Average
+    dtype: enum
+    default: 'False'
+    options: ['1.0', '0.2', '0.1', '0.05']
+    option_labels: [None, Low, Medium, High]
+    hide: part
+-   id: ymin
+    label: Y min
+    dtype: real
+    default: '-140'
+    hide: part
+-   id: ymax
+    label: Y max
+    dtype: real
+    default: '10'
+    hide: part
+-   id: nconnections
+    label: Number of Inputs
+    dtype: int
+    default: '1'
+    hide: part
+-   id: update_time
+    label: Update Period
+    dtype: real
+    default: '0.10'
+    hide: part
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+-   id: showports
+    label: Show Msg Ports
+    dtype: bool
+    default: 'False'
+    hide: part
+-   id: label1
+    label: Line 1 Label
+    category: Config
+    dtype: string
+    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+-   id: width1
+    label: Line 1 Width
+    category: Config
+    dtype: int
+    default: '1'
+    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+-   id: color1
+    label: Line 1 Color
+    category: Config
+    dtype: enum
+    options: ['"blue"', '"red"', '"green"', '"black"', '"cyan"', '"magenta"', '"yellow"',
+        '"dark red"', '"dark green"', '"dark blue"']
+    option_labels: [Blue, Red, Green, Black, Cyan, Magenta, Yellow, Dark Red, Dark
+            Green, Dark Blue]
+    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+-   id: alpha1
+    label: Line 1 Alpha
+    category: Config
+    dtype: float
+    default: '1.0'
+    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+-   id: label2
+    label: Line 2 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
+-   id: width2
+    label: Line 2 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
+-   id: color2
+    label: Line 2 Color
+    base_key: color1
+    default: '"red"'
+    hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
+-   id: alpha2
+    label: Line 2 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
+-   id: label3
+    label: Line 3 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
+-   id: width3
+    label: Line 3 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
+-   id: color3
+    label: Line 3 Color
+    base_key: color1
+    default: '"green"'
+    hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
+-   id: alpha3
+    label: Line 3 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
+-   id: label4
+    label: Line 4 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
+-   id: width4
+    label: Line 4 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
+-   id: color4
+    label: Line 4 Color
+    base_key: color1
+    default: '"black"'
+    hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
+-   id: alpha4
+    label: Line 4 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
+-   id: label5
+    label: Line 5 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
+-   id: width5
+    label: Line 5 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
+-   id: color5
+    label: Line 5 Color
+    base_key: color1
+    default: '"cyan"'
+    hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
+-   id: alpha5
+    label: Line 5 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
+-   id: label6
+    label: Line 6 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
+-   id: width6
+    label: Line 6 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
+-   id: color6
+    label: Line 6 Color
+    base_key: color1
+    default: '"magenta"'
+    hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
+-   id: alpha6
+    label: Line 6 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
+-   id: label7
+    label: Line 7 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
+-   id: width7
+    label: Line 7 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
+-   id: color7
+    label: Line 7 Color
+    base_key: color1
+    default: '"yellow"'
+    hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
+-   id: alpha7
+    label: Line 7 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
+-   id: label8
+    label: Line 8 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
+-   id: width8
+    label: Line 8 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
+-   id: color8
+    label: Line 8 Color
+    base_key: color1
+    default: '"dark red"'
+    hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
+-   id: alpha8
+    label: Line 8 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
+-   id: label9
+    label: Line 9 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
+-   id: width9
+    label: Line 9 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
+-   id: color9
+    label: Line 9 Color
+    base_key: color1
+    default: '"dark green"'
+    hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
+-   id: alpha9
+    label: Line 9 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
+-   id: label10
+    label: Line 10 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
+-   id: width10
+    label: Line 10 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
+-   id: color10
+    label: Line 10 Color
+    base_key: color1
+    default: '"dark blue"'
+    hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
+-   id: alpha10
+    label: Line 10 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
+
+inputs:
+-   domain: stream
+    dtype: float
+    vlen: ${ vlen }
+    multiplicity: ${ nconnections }
+
+outputs:
+-   domain: message
+    id: xval
+    optional: true
+    hide: ${ not showports }
+
+templates:
+    imports: |-
+        from PyQt5 import Qt
+        from gnuradio import qtgui
+        import sip
+    callbacks:
+    - set_update_time(${update_time})
+    - set_x_axis(${x_start}, ${x_step})
+    - set_y_axis(${ymin}, ${ymax})
+    - set_ref_level(${ref_level})
+    - set_x_axis_units(${x_units})
+    - set_y_axis_units(${y_units})
+    make: |-
+        <%
+            win = 'self._%s_win'%id
+        %>\
+        qtgui.vector_sink_f(
+            ${vlen},
+            ${x_start},
+            ${x_step},
+            ${x_axis_label},
+            ${y_axis_label},
+            ${name},
+            ${nconnections} # Number of inputs
+        )
+        self.${id}.set_update_time(${update_time})
+        self.${id}.set_y_axis(${ymin}, ${ymax})
+        self.${id}.enable_autoscale(${autoscale})
+        self.${id}.enable_grid(${grid})
+        self.${id}.set_x_axis_units(${x_units})
+        self.${id}.set_y_axis_units(${y_units})
+        self.${id}.set_ref_level(${ref_level})
+
+        labels = [${label1}, ${label2}, ${label3}, ${label4}, ${label5},
+            ${label6}, ${label7}, ${label8}, ${label9}, ${label10}]
+        widths = [${width1}, ${width2}, ${width3}, ${width4}, ${width5},
+            ${width6}, ${width7}, ${width8}, ${width9}, ${width10}]
+        colors = [${color1}, ${color2}, ${color3}, ${color4}, ${color5},
+            ${color6}, ${color7}, ${color8}, ${color9}, ${color10}]
+        alphas = [${alpha1}, ${alpha2}, ${alpha3}, ${alpha4}, ${alpha5},
+            ${alpha6}, ${alpha7}, ${alpha8}, ${alpha9}, ${alpha10}]
+
+        for i in range(${nconnections}):
+            if len(labels[i]) == 0:
+                self.${id}.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.${id}.set_line_label(i, labels[i])
+            self.${id}.set_line_width(i, widths[i])
+            self.${id}.set_line_color(i, colors[i])
+            self.${id}.set_line_alpha(i, alphas[i])
+
+        ${win} = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)
+        ${gui_hint() % win}
+
+documentation: |-
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

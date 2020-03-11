@@ -1,0 +1,12 @@
+This is the gr-fec package. It contains all of the FEC
+encoders and decoders. To use the FEC blocks, the Python
+namespace is in gnuradio.fec, which would be normally
+imported as:
+
+    from gnuradio import fec
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using:
+
+    help(fec)

@@ -1,0 +1,120 @@
+/*! \page page_audio Audio Interface
+
+\section audio_introduction Introduction
+
+The gnuradio audio component provides gr::audio::source and
+gr::audio::sink blocks. The audio blocks stream floating point samples
+to and from audio hardware.
+
+The gr-audio component will be built automatically when
+gnuradio-runtime is enabled. Support for underlying audio
+architectures depends on OS and installed libraries. At the time of
+writing, gr-audio supports OSS, ALSA, Jack, Portaudio, Audiounit, and
+Winmm.
+
+At runtime, gr-audio will automatically select from the available
+architectures. The user can override the selection via configuration
+file by setting "audio_module" to one of the following strings:
+
+\li oss
+\li alsa
+\li jack
+\li portaudio
+\li osx
+\li windows
+
+See gr-audio.conf for an example.
+
+Import this package with:
+
+\code
+    from gnuradio import audio
+\endcode
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using:
+
+\code
+    help(audio)
+\endcode
+
+
+\section audio_usage Usage
+For an audio source, a typical ArgumentParser option and it's use looks
+like:
+
+\code
+    parser.add_argument("-O", "--audio-output", default="",
+                       help="pcm device name.  E.g., hw:0,0 or surround51 or /dev/dsp")
+    audio_rate = 32e3
+    audio_sink = audio.sink (int (audio_rate), options.audio_output)
+\endcode
+
+Similarly, an audio sink would have a typical ArgumentParser option and
+its use would look like:
+
+\code
+    parser.add_argument("-I", "--audio-input", default="",
+                      help="pcm input device name.  E.g., hw:0,0 or /dev/dsp")
+    audio_rate = 32e3
+    audio_source = audio.source(int(audio_rate), audio_input)
+\endcode
+
+
+\section audio_adding Adding a New Audio Machine
+
+There may come a time when we need to define a new audio machine type
+besides those currently supported. To do this, we have to follow a
+simple pattern to add it to the list of potential machines GNU Radio
+can use.
+
+1. Add a new directory in gr-audio/lib for the new machine name, like
+the alsa, oss, etc. that are already there.
+
+2. Follow the pattern of the other machines to create the class
+structure for both a source and sink implementation for the machine.
+
+3. Make sure to add the factory function for both the new source and
+sink classes. Like in the ALSA sink case, we have:
+
+\code
+    sink::sptr
+    alsa_sink_fcn(int sampling_rate,
+                  const std::string &device_name,
+                  bool ok_to_block)
+    {
+      return sink::sptr
+        (new alsa_sink(sampling_rate, device_name, ok_to_block));
+    }
+\endcode
+
+4. Add the new source and sink factory functions to the audio
+registration list in gr-audio/lib/audio_registry.cc and
+audio_registry.h files. Select the appropriate registry priority, HIGH
+if you want this to be the default when using 'auto'. For Linux audio
+systems, we generally want to default to ALSA, fall back on OSS, but
+have other machine interfaces defined as MED priority. For example, in
+the .cc file for ALSA, OSS, and PortAudio:
+
+\code
+    #ifdef ALSA_FOUND
+            s_registry.push_back(register_source(REG_PRIO_HIGH, "alsa", alsa_source_fcn));
+    #endif /* ALSA_FOUND */
+
+    #ifdef OSS_FOUND
+            s_registry.push_back(register_source(REG_PRIO_LOW, "oss", oss_source_fcn));
+    #endif /* OSS_FOUND */
+
+    #ifdef PORTAUDIO_FOUND
+            s_registry.push_back(register_source(REG_PRIO_MED, "portaudio", portaudio_source_fcn));
+    #endif /* PORTAUDIO_FOUND */
+\endcode
+
+
+5. Follow the examples in the gr-audio/lib/CMakeLists.txt file for the
+different machine types to add the new one, including the
+add_definitions to provide the new YOURMACH_FOUND used in the
+audio_registry files.
+
+*/

@@ -1,0 +1,45 @@
+id: uhd_fpga_sep
+label: Stream Endpoint
+flags: [ python ]
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: enum
+    default: 'sep'
+    options: ['block', 'sep', 'device']
+    hide: all
+-   id: ctrl
+    label: Pass Control Traffic
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+-   id: data
+    label: Pass Data Traffic
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+-   id: buff_size
+    label: Buffer Size
+    dtype: int
+    default: '32768'
+    hide: part
+
+
+inputs:
+-   domain: rfnoc.data
+    id: in0
+    dtype: fc32
+    multiplicity: ${ nports }
+
+outputs:
+-   domain: rfnoc.data
+    id: out0
+    dtype: fc32
+    multiplicity: ${ nports }
+
+file_format: 1

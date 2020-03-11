@@ -1,0 +1,50 @@
+id: digital_mpsk_snr_est_cc
+label: MPSK SNR Estimator
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: ['0', '1', '2', '3']
+    option_labels: [Simple, Skewness, 2nd and 4th Moment, SVR]
+-   id: tag_nsamples
+    label: Samples between tags
+    dtype: int
+    default: '10000'
+-   id: alpha
+    label: Filter Alpha
+    dtype: real
+    default: '0.001'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.mpsk_snr_est_cc(${type}, ${tag_nsamples}, ${alpha})
+    callbacks:
+    - set_type(${type})
+    - set_tag_nsamples(${tag_nsamples})
+    - set_alpha(${alpha})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/mpsk_snr_est_cc.h>']
+    declarations: 'digital::mpsk_snr_est_cc::sptr ${id};'
+    make: |-
+        this->${id} = digital::mpsk_snr_est_cc::make(
+            ${type},
+            ${tag_nsamples},
+            ${alpha});
+    link: ['gnuradio-digital']
+    callbacks:
+    - set_type(${type})
+    - set_tag_nsamples(${tag_nsamples})
+    - set_alpha(${alpha})
+
+file_format: 1

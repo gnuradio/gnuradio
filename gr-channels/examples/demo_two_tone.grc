@@ -1,0 +1,473 @@
+options:
+  parameters:
+    author: mettus
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: demo_two_tone
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: 1280, 1024
+  states:
+    coordinate: [10, 10]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: beta
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 4,0,1,1
+    label: k3 (IP3)
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: -.1
+    step: '0.001'
+    stop: '0'
+    value: '0'
+    widget: counter_slider
+  states:
+    coordinate: [215, 137]
+    rotation: 0
+    state: enabled
+- name: const_size
+  id: variable
+  parameters:
+    comment: ''
+    value: '4'
+  states:
+    coordinate: [102, 93]
+    rotation: 0
+    state: enabled
+- name: f1
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 2,0,1,1
+    label: f1
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: -samp_rate/2
+    step: '1'
+    stop: samp_rate/2
+    value: samp_rate/7.0
+    widget: counter_slider
+  states:
+    coordinate: [522, 8]
+    rotation: 0
+    state: enabled
+- name: f2
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 2,1,1,1
+    label: f2
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: -samp_rate/2
+    step: '1'
+    stop: samp_rate/2
+    value: samp_rate/9.0
+    widget: counter_slider
+  states:
+    coordinate: [670, 9]
+    rotation: 0
+    state: enabled
+- name: gamma
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 4,1,1,1
+    label: k2 (IP2)
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: -.1
+    step: '0.001'
+    stop: '0'
+    value: '0'
+    widget: counter_slider
+  states:
+    coordinate: [322, 138]
+    rotation: 0
+    state: enabled
+- name: i_ofs
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 5,0,1,1
+    label: I offset
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '-1'
+    step: '0.001'
+    stop: '1'
+    value: '0'
+    widget: counter_slider
+  states:
+    coordinate: [430, 138]
+    rotation: 0
+    state: enabled
+- name: magbal
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 3,0,1,1
+    label: IQ Magnitude Imbalance
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '0.1'
+    stop: '10'
+    value: '0'
+    widget: counter_slider
+  states:
+    coordinate: [814, 9]
+    rotation: 0
+    state: enabled
+- name: phase_noise_mag
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 1,1,1,1
+    label: Phase Noise Mag (dB)
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '-100'
+    step: '1'
+    stop: '0'
+    value: '-100'
+    widget: counter_slider
+  states:
+    coordinate: [357, 8]
+    rotation: 0
+    state: enabled
+- name: phasebal
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 3,1,1,1
+    label: IQ Phase Imbalance
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '0.1'
+    stop: '45'
+    value: '0'
+    widget: counter_slider
+  states:
+    coordinate: [990, 9]
+    rotation: 0
+    state: enabled
+- name: q_ofs
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 5,1,1,1
+    label: Q offset
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '-1'
+    step: '0.001'
+    stop: '1'
+    value: '0'
+    widget: counter_slider
+  states:
+    coordinate: [538, 139]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    coordinate: [11, 93]
+    rotation: 0
+    state: enabled
+- name: sig_amp
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 1,0,1,1
+    label: Signal Power (dB)
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '-100'
+    step: '1'
+    stop: '0'
+    value: '0'
+    widget: counter_slider
+  states:
+    coordinate: [214, 8]
+    rotation: 0
+    state: enabled
+- name: twotones
+  id: variable_qtgui_check_box
+  parameters:
+    comment: ''
+    'false': 'False'
+    gui_hint: 0,0,1,1
+    label: Two Tones?
+    'true': 'True'
+    type: bool
+    value: 'False'
+  states:
+    coordinate: [650, 143]
+    rotation: 0
+    state: enabled
+- name: analog_noise_source_x_0
+  id: analog_noise_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '.00001'
+    comment: ''
+    maxoutbuf: ''
+    minoutbuf: '0'
+    noise_type: analog.GR_GAUSSIAN
+    seed: '42'
+    type: complex
+  states:
+    coordinate: [32, 444.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: pow(10,sig_amp/20.0)*twotones
+    comment: ''
+    freq: f2
+    maxoutbuf: ''
+    minoutbuf: '0'
+    offset: '0'
+    samp_rate: samp_rate
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    coordinate: [32, 332.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_1
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: pow(10,sig_amp/20.0)
+    comment: ''
+    freq: f1
+    maxoutbuf: ''
+    minoutbuf: '0'
+    offset: '0'
+    samp_rate: samp_rate
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    coordinate: [32, 220.0]
+    rotation: 0
+    state: enabled
+- name: blocks_add_xx_0
+  id: blocks_add_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: ''
+    minoutbuf: '0'
+    num_inputs: '3'
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [304, 336.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: ''
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [408, 364.0]
+    rotation: 0
+    state: enabled
+- name: channels_amp_bal_0
+  id: channels_amp_bal
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha: '0.0001'
+    comment: ''
+    maxoutbuf: ''
+    minoutbuf: '0'
+  states:
+    coordinate: [848, 396.0]
+    rotation: 0
+    state: enabled
+- name: channels_impairments_0
+  id: channels_impairments
+  parameters:
+    affinity: ''
+    alias: ''
+    beta: beta
+    comment: ''
+    freq_offset: '0'
+    gamma: gamma
+    i_ofs: i_ofs
+    magbal: magbal
+    maxoutbuf: ''
+    minoutbuf: '0'
+    phase_noise_mag: phase_noise_mag
+    phasebal: '0'
+    q_ofs: q_ofs
+  states:
+    coordinate: [576, 308.0]
+    rotation: 0
+    state: enabled
+- name: channels_phase_bal_0
+  id: channels_phase_bal
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha: '0.00001'
+    comment: ''
+    maxoutbuf: ''
+    minoutbuf: '0'
+  states:
+    coordinate: [856, 340.0]
+    rotation: 0
+    state: disabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import math
+  states:
+    coordinate: [8, 160]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: '1024'
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: 6,0,1,2
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: ''
+    minoutbuf: ''
+    name: QT GUI Plot
+    nconnections: '1'
+    showports: 'True'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    coordinate: [1072, 332.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_noise_source_x_0, '0', blocks_add_xx_0, '2']
+- [analog_sig_source_x_0, '0', blocks_add_xx_0, '1']
+- [analog_sig_source_x_1, '0', blocks_add_xx_0, '0']
+- [blocks_add_xx_0, '0', blocks_throttle_0, '0']
+- [blocks_throttle_0, '0', channels_impairments_0, '0']
+- [channels_amp_bal_0, '0', qtgui_freq_sink_x_0, '0']
+- [channels_impairments_0, '0', channels_amp_bal_0, '0']
+- [channels_impairments_0, '0', channels_phase_bal_0, '0']
+- [channels_phase_bal_0, '0', qtgui_freq_sink_x_0, '0']
+
+metadata:
+  file_format: 1

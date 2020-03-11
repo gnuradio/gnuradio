@@ -1,0 +1,35 @@
+id: digital_kurtotic_equalizer_cc
+label: Kurtotic Equalizer
+flags: [ python, cpp ]
+
+parameters:
+-   id: num_taps
+    label: Num. Taps
+    dtype: int
+-   id: mu
+    label: Mu
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.kurtotic_equalizer_cc(${num_taps}, ${mu})
+    callbacks:
+    - set_gain(${mu})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/kurtotic_equalizer_cc.h>']
+    declarations: 'digital::kurtotic_equalizer_cc::sptr ${id};'
+    make: 'this->${id} = digital::kurtotic_equalizer_cc::make(${num_taps}, ${mu});'
+    link: ['gnuradio-digital']
+    callbacks:
+    - set_gain(${mu})
+
+file_format: 1

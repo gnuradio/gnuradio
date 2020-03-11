@@ -1,0 +1,25 @@
+id: digital_framer_sink_1
+label: Framer Sink 1
+flags: [ python, cpp ]
+
+parameters:
+-   id: target_queue
+    label: Target Message Queue
+    dtype: raw
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.framer_sink_1(${target_queue})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/framer_sink_1.h>']
+    declarations: 'digital::framer_sink_1::sptr ${id};'
+    make: |-
+        this->${id} = digital::framer_sink_1::make(${target_queue});
+    link: ['gnuradio-digital']
+
+file_format: 1

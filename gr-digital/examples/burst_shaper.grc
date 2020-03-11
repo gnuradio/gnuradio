@@ -1,0 +1,268 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: no_gui
+    hier_block_src_path: '.:'
+    id: burst_shaper
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: run
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: 1280, 1024
+  states:
+    coordinate: [10, 10]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    coordinate: [392, 11]
+    rotation: 0
+    state: enabled
+- name: window_taps
+  id: variable
+  parameters:
+    comment: ''
+    value: fft.window.hann(10)
+  states:
+    coordinate: [232, 11]
+    rotation: 0
+    state: enabled
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+  states:
+    coordinate: [960, 192.0]
+    rotation: 0
+    state: enabled
+- name: blocks_message_debug_0_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+  states:
+    coordinate: [960, 344.0]
+    rotation: 0
+    state: enabled
+- name: blocks_tag_debug_0
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '"packet_len"'
+    name: Float
+    num_inputs: '1'
+    type: float
+    vlen: '1'
+  states:
+    coordinate: [704, 236.0]
+    rotation: 0
+    state: enabled
+- name: blocks_tag_debug_0_0
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '"packet_len"'
+    name: Complex
+    num_inputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [704, 388.0]
+    rotation: 0
+    state: enabled
+- name: blocks_tagged_stream_to_pdu_0
+  id: blocks_tagged_stream_to_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: packet_len
+    type: float
+  states:
+    coordinate: [704, 188.0]
+    rotation: 0
+    state: enabled
+- name: blocks_tagged_stream_to_pdu_1
+  id: blocks_tagged_stream_to_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: packet_len
+    type: complex
+  states:
+    coordinate: [704, 340.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: float
+    vlen: '1'
+  states:
+    coordinate: [464, 188.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle_0_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [464, 340.0]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_source_x_0
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'False'
+    tags: '[gr.python_to_tag({''offset'':0, ''key'':pmt.intern(''packet_len''), ''value'':pmt.from_long(20),
+      ''srcid'':pmt.intern(''vector_source'')})]'
+    type: complex
+    vector: '[complex(1.0), complex(-1.0)]*15'
+    vlen: '1'
+  states:
+    coordinate: [8, 324.0]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_source_x_0_0
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'False'
+    tags: '[gr.python_to_tag({''offset'':0, ''key'':pmt.intern(''packet_len''), ''value'':pmt.from_long(20),
+      ''srcid'':pmt.intern(''vector_source'')})]'
+    type: float
+    vector: '[1.0, -1.0]*15'
+    vlen: '1'
+  states:
+    coordinate: [8, 172.0]
+    rotation: 0
+    state: enabled
+- name: digital_burst_shaper_xx_0
+  id: digital_burst_shaper_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    insert_phasing: 'False'
+    length_tag_name: '"packet_len"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    post_padding: '5'
+    pre_padding: '5'
+    type: float
+    window: window_taps
+  states:
+    coordinate: [240, 156.0]
+    rotation: 0
+    state: enabled
+- name: digital_burst_shaper_xx_0_0
+  id: digital_burst_shaper_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    insert_phasing: 'False'
+    length_tag_name: '"packet_len"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    post_padding: '5'
+    pre_padding: '5'
+    type: complex
+    window: window_taps
+  states:
+    coordinate: [240, 308.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import pmt
+  states:
+    coordinate: [8, 99]
+    rotation: 0
+    state: enabled
+- name: import_0_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: from gnuradio import fft
+  states:
+    coordinate: [96, 99]
+    rotation: 0
+    state: enabled
+
+connections:
+- [blocks_tagged_stream_to_pdu_0, pdus, blocks_message_debug_0, print]
+- [blocks_tagged_stream_to_pdu_1, pdus, blocks_message_debug_0_0, print]
+- [blocks_throttle_0, '0', blocks_tag_debug_0, '0']
+- [blocks_throttle_0, '0', blocks_tagged_stream_to_pdu_0, '0']
+- [blocks_throttle_0_0, '0', blocks_tag_debug_0_0, '0']
+- [blocks_throttle_0_0, '0', blocks_tagged_stream_to_pdu_1, '0']
+- [blocks_vector_source_x_0, '0', digital_burst_shaper_xx_0_0, '0']
+- [blocks_vector_source_x_0_0, '0', digital_burst_shaper_xx_0, '0']
+- [digital_burst_shaper_xx_0, '0', blocks_throttle_0, '0']
+- [digital_burst_shaper_xx_0_0, '0', blocks_throttle_0_0, '0']
+
+metadata:
+  file_format: 1

@@ -1,0 +1,55 @@
+id: dtv_dvbt_inner_coder
+label: Inner Coder
+
+parameters:
+-   id: ninput
+    label: Input length
+    dtype: int
+    default: '1'
+-   id: noutput
+    label: Output length
+    dtype: int
+    default: '1512'
+-   id: constellation
+    label: Constellation Type
+    dtype: enum
+    options: [qpsk, 16qam, 64qam]
+    option_labels: [QPSK, 16QAM, 64QAM]
+    option_attributes:
+        val: [dtv.MOD_QPSK, dtv.MOD_16QAM, dtv.MOD_64QAM]
+-   id: hierarchy
+    label: Hierarchy Type
+    dtype: enum
+    options: [nh, alpha1, alpha2, alpha4]
+    option_labels: [Non Hierarchical, Alpha 1, Alpha 2, Alpha 4]
+    option_attributes:
+        val: [dtv.NH, dtv.ALPHA1, dtv.ALPHA2, dtv.ALPHA4]
+-   id: code_rate
+    label: Code rate
+    dtype: enum
+    options: [C1_2, C2_3, C3_4, C5_6, C7_8]
+    option_labels: [1/2, 2/3, 3/4, 5/6, 7/8]
+    option_attributes:
+        val: [dtv.C1_2, dtv.C2_3, dtv.C3_4, dtv.C5_6, dtv.C7_8]
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: ${ ninput }
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: ${ noutput }
+
+asserts:
+- ${ ninput > 0 }
+- ${ noutput > 0 }
+- ${ noutput >= ninput }
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.dvbt_inner_coder(${ninput}, ${noutput}, ${constellation.val}, ${hierarchy.val},
+        ${code_rate.val})
+
+file_format: 1

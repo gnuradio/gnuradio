@@ -1,0 +1,70 @@
+id: qtgui_edit_box_msg
+label: QT GUI Message Edit Box
+flags: [ python ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    default: string
+    options: [string, int, float, double, complex, int_vec, flt_vec, dbl_vec, cpx_vec]
+    option_labels: [String, Int, Float, Double, Complex, Int (Vec), Float (Vec), Double
+            (Vec), Complex (Vec)]
+    option_attributes:
+        t: [qtgui.STRING, qtgui.INT, qtgui.FLOAT, qtgui.DOUBLE, qtgui.COMPLEX, qtgui.INT_VEC,
+            qtgui.FLOAT_VEC, qtgui.DOUBLE_VEC, qtgui.COMPLEX_VEC]
+-   id: value
+    label: Value
+    dtype: string
+-   id: label
+    label: Label
+    dtype: string
+-   id: is_pair
+    label: Pair Mode
+    dtype: enum
+    default: 'True'
+    options: ['False', 'True']
+-   id: is_static
+    label: Static Mode
+    dtype: enum
+    default: 'True'
+    options: ['False', 'True']
+-   id: key
+    label: Key
+    dtype: string
+    hide: ${ ('none' if is_pair == 'True' else 'all') }
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+
+asserts:
+- ${(len(key) > 0) or not ((is_pair == 'True') and (is_static == 'True'))}
+
+inputs:
+-   domain: message
+    id: val
+    optional: true
+
+outputs:
+-   domain: message
+    id: msg
+    optional: true
+
+templates:
+    imports: |-
+        from PyQt5 import Qt
+        from gnuradio import qtgui
+        import sip
+    make: |-
+        <%
+            win = 'self._%s_win'%id
+        %>\
+        qtgui.edit_box_msg(${type.t}, ${value}, ${label}, ${is_pair}, ${is_static}, ${key})
+        ${win} = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)
+        ${gui_hint() % win}
+
+documentation: |-
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

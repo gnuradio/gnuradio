@@ -1,0 +1,33 @@
+id: digital_probe_density_b
+label: Probe Density
+flags: [ python, cpp ]
+
+parameters:
+-   id: alpha
+    label: Alpha
+    dtype: real
+    default: '1'
+-   id: probe_rate
+    label: Probe Rate
+    dtype: real
+    default: '10'
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.probe_density_b(${alpha})
+    callbacks:
+    - set_alpha(${alpha})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/probe_density_b.h>']
+    declarations: 'digital::probe_density_b::sptr ${id};'
+    make: 'this->${id} = digital::probe_density_b::make(${alpha});'
+    link: ['gnuradio-digital']
+    callbacks:
+    - set_alpha(${alpha})
+
+file_format: 1

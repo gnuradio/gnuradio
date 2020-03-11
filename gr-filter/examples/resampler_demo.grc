@@ -1,0 +1,343 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: resampler_demo
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: 1280, 1024
+  states:
+    coordinate: [8, 12.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: frac_bw
+  id: variable_qtgui_label
+  parameters:
+    comment: ''
+    formatter: 'lambda x: "%0.2f"%x'
+    gui_hint: 0,2,1,1
+    label: Fractional Bandwidth
+    type: real
+    value: '.45'
+  states:
+    coordinate: [440, 12.0]
+    rotation: 0
+    state: enabled
+- name: new_rate
+  id: variable_qtgui_label
+  parameters:
+    comment: ''
+    formatter: None
+    gui_hint: 0,1,1,1
+    label: Resampling Rate
+    type: real
+    value: '48000'
+  states:
+    coordinate: [304, 12.0]
+    rotation: 0
+    state: enabled
+- name: nphases
+  id: variable
+  parameters:
+    comment: ''
+    value: '32'
+  states:
+    coordinate: [664, 12.0]
+    rotation: 0
+    state: enabled
+- name: rs_taps
+  id: variable
+  parameters:
+    comment: ''
+    value: firdes.low_pass(nphases, nphases, frac_bw, 0.5-frac_bw)
+  states:
+    coordinate: [752, 12.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable_qtgui_label
+  parameters:
+    comment: ''
+    formatter: None
+    gui_hint: 0,0,1,1
+    label: Sampling Rate
+    type: real
+    value: '44100'
+  states:
+    coordinate: [176, 12.0]
+    rotation: 0
+    state: enabled
+- name: adder
+  id: blocks_add_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: '-1.0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    coordinate: [200, 180.0]
+    rotation: 0
+    state: enabled
+- name: analog_frequency_modulator_fc_0
+  id: analog_frequency_modulator_fc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    sensitivity: math.pi
+  states:
+    coordinate: [504, 180.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '2'
+    comment: ''
+    freq: '0.05'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    samp_rate: samp_rate
+    type: float
+    waveform: analog.GR_TRI_WAVE
+  states:
+    coordinate: [32, 148.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import math
+  states:
+    coordinate: [8, 92.0]
+    rotation: 0
+    state: enabled
+- name: pfb_arb_resampler_xxx_0
+  id: pfb_arb_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    atten: '100'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nfilts: nphases
+    rrate: float(new_rate)/samp_rate
+    samp_delay: '0'
+    taps: rs_taps
+    type: ccf
+  states:
+    coordinate: [712, 268.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: '1024'
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: 1,0,1,3
+    label: Relative Gain
+    label1: Original Spectrum
+    label10: ''
+    label2: Resampled Spectrum
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: Original Spectrum
+    nconnections: '1'
+    showports: 'True'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    coordinate: [960, 156.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: new_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: '1024'
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: 2,0,1,3
+    label: Relative Gain
+    label1: Resampled Spectrum
+    label10: ''
+    label2: Resampled Spectrum
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: Resampled Spectrum
+    nconnections: '1'
+    showports: 'True'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    coordinate: [960, 268.0]
+    rotation: 0
+    state: enabled
+- name: throttle
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: float
+    vlen: '1'
+  states:
+    coordinate: [328, 180.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [adder, '0', throttle, '0']
+- [analog_frequency_modulator_fc_0, '0', pfb_arb_resampler_xxx_0, '0']
+- [analog_frequency_modulator_fc_0, '0', qtgui_freq_sink_x_0, '0']
+- [analog_sig_source_x_0, '0', adder, '0']
+- [pfb_arb_resampler_xxx_0, '0', qtgui_freq_sink_x_0_0, '0']
+- [throttle, '0', analog_frequency_modulator_fc_0, '0']
+
+metadata:
+  file_format: 1

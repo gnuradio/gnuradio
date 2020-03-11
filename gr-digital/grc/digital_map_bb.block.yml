@@ -1,0 +1,31 @@
+id: digital_map_bb
+label: Map
+flags: [ python, cpp ]
+
+parameters:
+-   id: map
+    label: Map
+    dtype: int_vector
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.map_bb(${map})
+
+cpp_templates:
+
+    includes: ['#include <gnuradio/digital/map_bb.h>']
+    declarations: 'digital::map_bb::sptr ${id};'
+    make: |-
+        std::vector<int> map = {${str(map)[1:-1]}};
+        this->${id} = digital::map_bb::make(map);
+    link: ['gnuradio-digital']
+
+file_format: 1

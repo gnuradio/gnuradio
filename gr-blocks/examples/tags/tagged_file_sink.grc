@@ -1,0 +1,220 @@
+options:
+  parameters:
+    author: ''
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: tagged_file_sink_test
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Tagged File Sink Test
+    window_size: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: burst
+  id: variable_qtgui_check_box
+  parameters:
+    comment: 'Check the box to start a new burst file
+
+      Uncheck the box to close the file'
+    'false': 'False'
+    gui_hint: 0,0,1,1
+    label: ''
+    'true': 'True'
+    type: bool
+    value: 'False'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [624, 68.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 12]
+    rotation: 0
+    state: enabled
+- name: variable_qtgui_label_0
+  id: variable_qtgui_label
+  parameters:
+    comment: ''
+    formatter: None
+    gui_hint: 1,0,1,1
+    label: Check the box to start a new burst file
+    type: string
+    value: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [760, 340.0]
+    rotation: 0
+    state: true
+- name: variable_qtgui_label_0_0
+  id: variable_qtgui_label
+  parameters:
+    comment: ''
+    formatter: None
+    gui_hint: 2,0,1,1
+    label: Uncheck the box to close the file
+    type: string
+    value: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [760, 420.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1'
+    comment: ''
+    freq: '1000'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [280, 212.0]
+    rotation: 0
+    state: true
+- name: block_test_bursts
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nimport pmt\n\nclass blk(gr.sync_block):  # other base\
+      \ classes are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python\
+      \ Block example - a simple multiply const\"\"\"\n\n    def __init__(self, burst=False):\
+      \  # only default arguments here\n        \"\"\"arguments to this function show\
+      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
+      \   self,\n            name='Embedded Python Block',   # will show up in GRC\n\
+      \            in_sig=[np.complex64],\n            out_sig=[np.complex64]\n  \
+      \      )\n        \n        self.burst = burst\n        self.burst_state = False\n\
+      \n    def work(self, input_items, output_items):\n        \"\"\"example: multiply\
+      \ with constant\"\"\"\n        \n        if self.burst != self.burst_state:\
+      \        \n            self.burst_state = self.burst\n        \n           \
+      \ key = pmt.intern(\"burst\")\n            value = pmt.from_bool(self.burst_state)\n\
+      \            self.add_item_tag(0, self.nitems_written(0), key, value)\n    \
+      \    \n        output_items[0][:] = input_items[0] \n        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    burst: burst
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Embedded Python Block', 'blk', [('burst', 'False')], [('0', 'complex',
+      1)], [('0', 'complex', 1)], 'Embedded Python Block example - a simple multiply
+      const', ['burst'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [760, 252.0]
+    rotation: 0
+    state: true
+- name: blocks_tag_debug_0
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '""'
+    name: ''
+    num_inputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1056, 364.0]
+    rotation: 0
+    state: true
+- name: blocks_tagged_file_sink_0
+  id: blocks_tagged_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    samp_rate: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1040, 252.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [504, 252.0]
+    rotation: 0
+    state: true
+
+connections:
+- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
+- [block_test_bursts, '0', blocks_tag_debug_0, '0']
+- [block_test_bursts, '0', blocks_tagged_file_sink_0, '0']
+- [blocks_throttle_0, '0', block_test_bursts, '0']
+
+metadata:
+  file_format: 1

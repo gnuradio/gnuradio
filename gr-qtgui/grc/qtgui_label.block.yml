@@ -1,0 +1,65 @@
+id: variable_qtgui_label
+label: QT GUI Label
+flags: [ show_id, python ]
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    hide: ${ ('none' if label else 'part') }
+-   id: type
+    label: Type
+    dtype: enum
+    default: int
+    options: [real, int, string, bool, raw]
+    option_labels: [Float, Integer, String, Boolean, Any]
+    option_attributes:
+        conv: [eng_notation.str_to_num, int, str, bool, eval]
+        str: [eng_notation.num_to_str, str, str, str, repr]
+    hide: part
+-   id: value
+    label: Default Value
+    dtype: ${ type }
+    default: '0'
+-   id: formatter
+    label: Formatter
+    dtype: raw
+    default: None
+    hide: part
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+value: ${ value }
+
+templates:
+    imports: |-
+        from PyQt5 import Qt
+        from gnuradio import eng_notation
+    var_make: self.${id} = ${id} = ${value}
+    callbacks:
+    - self.set_${id}(self._${id}_formatter(${value}))
+    - Qt.QMetaObject.invokeMethod(self._${id}_label, "setText", Qt.Q_ARG("QString",
+        ${id}))
+    make: |-
+        <%
+            win = 'self._%s_tool_bar'%id
+        %>\
+        ${win} = Qt.QToolBar(self)
+
+        if ${formatter}:
+            self._${id}_formatter = ${formatter}
+        else:
+            self._${id}_formatter = lambda x: ${type.str}(x)
+
+        ${win}.addWidget(Qt.QLabel(${(label if (len(label) - 2 > 0) else repr(id))} + ": "))
+        self._${id}_label = Qt.QLabel(str(self._${id}_formatter(self.${id})))
+        self._${id}_tool_bar.addWidget(self._${id}_label)
+        ${gui_hint() % win}
+
+documentation: |-
+    This block creates a variable with a label widget for text. Leave the label blank to use the variable id as the label.
+
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

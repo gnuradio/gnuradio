@@ -1,0 +1,54 @@
+id: trellis_permutation
+label: Trellis Permutation
+category: '[Core]/Trellis Coding'
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: interleaver_size
+    label: Interleaver Size
+    dtype: int
+-   id: table
+    label: Table
+    dtype: int_vector
+-   id: syms_per_block
+    label: Symbols per Block
+    dtype: int
+-   id: vlen
+    label: Vec Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import trellis
+    make: trellis.permutation(${interleaver_size}, ${table}, ${syms_per_block}, ${type.size}*${vlen})
+    callbacks:
+    - set_K(${interleaver_size})
+    - set_TABLE(${table})
+    - set_SYMS_PER_BLOCK(${syms_per_block})
+
+documentation: |-
+    Interleaver size is given in blocks.
+    One Symbol = (in/out type) * (vector length)
+
+file_format: 1

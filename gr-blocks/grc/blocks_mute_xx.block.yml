@@ -1,0 +1,46 @@
+id: blocks_mute_xx
+label: Mute
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [complex, float, int, short]
+    option_attributes:
+        fcn: [cc, ff, ii, ss]
+    hide: part
+-   id: mute
+    label: Mute
+    dtype: raw
+    default: 'False'
+    options: ['True', 'False']
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+-   domain: message
+    id: set_mute
+    optional: true
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.mute_${type.fcn}(bool(${mute}))
+    callbacks:
+    - set_mute(bool(${mute}))
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/mute.h>']
+    declarations: 'blocks::mute_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::mute_${type.fcn}::(bool(${mute}));'
+    callbacks:
+    - set_mute(bool(${mute}))
+    translations:
+        'True': 'true'
+        'False': 'false'
+
+file_format: 1

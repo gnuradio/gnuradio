@@ -1,0 +1,13 @@
+This is the gr-digital package. It contains all of the digital
+modulation blocks, utilities, and examples. To use the digital blocks,
+the Python namespaces is in gnuradio.digital, which would be normally
+imported as:
+
+    from gnuradio import digital
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using: 
+
+    help(digital)
+

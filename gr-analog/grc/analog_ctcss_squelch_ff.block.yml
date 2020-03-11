@@ -1,0 +1,57 @@
+id: analog_ctcss_squelch_ff
+label: CTCSS Squelch
+flags: [ python, cpp ]
+
+parameters:
+-   id: rate
+    label: Sampling Rate (Hz)
+    dtype: real
+    default: samp_rate
+-   id: freq
+    label: Tone Frequency
+    dtype: real
+    default: '100.0'
+-   id: level
+    label: Level
+    dtype: real
+    default: '0.01'
+-   id: len
+    label: Length
+    dtype: int
+    default: '0'
+-   id: ramp
+    label: Ramp
+    dtype: int
+    default: '0'
+-   id: gate
+    label: Gate
+    dtype: bool
+    default: 'False'
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.ctcss_squelch_ff(${rate}, ${freq}, ${level}, ${len}, ${ramp}, ${gate})
+    callbacks:
+    - set_level(${level})
+    - set_frequency(${freq})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/ctcss_squelch_ff.h>']
+    make: 'this->${id} = analog::ctcss_squelch_ff::make(${rate}, ${freq}, ${level}, ${len}, ${ramp}, ${gate});'
+    callbacks:
+    - set_level(${level})
+    - set_frequency(${freq})
+    link: ['gnuradio-analog']
+    translations:
+        'True': 'true'
+        'False': 'false'
+
+file_format: 1

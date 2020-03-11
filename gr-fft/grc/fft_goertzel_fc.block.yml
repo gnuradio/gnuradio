@@ -1,0 +1,30 @@
+id: goertzel_fc
+label: Goertzel
+
+parameters:
+-   id: rate
+    label: Rate
+    dtype: int
+-   id: len
+    label: Length
+    dtype: int
+-   id: freq
+    label: Frequency
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import fft
+    make: fft.goertzel_fc(${rate}, ${len}, ${freq})
+    callbacks:
+    - set_freq(${freq})
+    - set_rate(${rate})
+
+file_format: 1

@@ -1,0 +1,54 @@
+id: variable_ccsds_encoder_def
+label: CCSDS Encoder Definition
+flags: [ show_id ]
+
+parameters:
+-   id: ndim
+    label: Parallelism
+    dtype: enum
+    default: '0'
+    options: ['0', '1', '2']
+-   id: dim1
+    label: Dimension 1
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if (int(ndim) >= 1) else 'all') }
+-   id: dim2
+    label: Dimension 2
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if (int(ndim) >= 2) else 'all') }
+-   id: framebits
+    label: Frame Bits
+    dtype: int
+    default: '2048'
+-   id: state_start
+    label: Start State
+    dtype: int
+    default: '0'
+-   id: mode
+    label: Streaming Behavior
+    dtype: int
+    options: ['fec.CC_STREAMING', 'fec.CC_TERMINATED', 'fec.CC_TAILBITING', 'fec.CC_TRUNCATED']
+    option_labels: [Streaming, Terminated, Tailbiting, Truncated]
+value: ${ fec.ccsds_encoder_make(framebits, state_start, mode) }
+
+templates:
+    imports: from gnuradio import fec
+    var_make: |-
+        % if int(ndim)==0:
+        self.${id} = ${id} = fec.ccsds_encoder_make(${framebits},\
+        ${state_start}, ${mode})
+        % elif int(ndim)==1:
+        self.${id} = ${id} = list(map(\
+        (lambda a: fec.ccsds_encoder_make(${framebits}, ${state_start}, ${mode})),\
+        range(0,${dim1}) ))
+        % else:
+        self.${id} = ${id} = list(map( (lambda b: list( map(\
+        ( lambda a: fec.ccsds_encoder_make(${framebits}, ${state_start}, ${mode})),\
+        range(0,${dim2}) ) ) ), range(0,${dim1})))
+        % endif
+
+documentation: ""
+
+file_format: 1

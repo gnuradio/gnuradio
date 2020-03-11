@@ -1,0 +1,78 @@
+id: variable_qtgui_entry
+label: QT GUI Entry
+flags: [ show_id, python, cpp ]
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    hide: ${ ('none' if label else 'part') }
+-   id: type
+    label: Type
+    dtype: enum
+    default: int
+    options: [real, int, string, bool, raw]
+    option_labels: [Float, Integer, String, Boolean, Any]
+    option_attributes:
+        conv: [eng_notation.str_to_num, int, str, bool, eval]
+        str: [eng_notation.num_to_str, str, str, str, repr]
+    hide: part
+-   id: value
+    label: Default Value
+    dtype: ${ type }
+    default: '0'
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+value: ${ value }
+
+templates:
+    imports: |-
+        from PyQt5 import Qt
+        from gnuradio import eng_notation
+    var_make: self.${id} = ${id} = ${value}
+    callbacks:
+    - self.set_${id}(${value})
+    - Qt.QMetaObject.invokeMethod(self._${id}_line_edit, "setText", Qt.Q_ARG("QString",
+        ${type.str}(${id})))
+    make: |-
+        <%
+            win = 'self._%s_tool_bar'%id
+        %>
+        ${win} = Qt.QToolBar(self)
+        ${win}.addWidget(Qt.QLabel(${(label if (len(label) - 2 > 0) else repr(id))} + ": "))
+        self._${id}_line_edit = Qt.QLineEdit(str(self.${id}))
+        self._${id}_tool_bar.addWidget(self._${id}_line_edit)
+        self._${id}_line_edit.returnPressed.connect(
+            lambda: self.set_${id}(${type.conv}(str(self._${id}_line_edit.text()))))
+        ${gui_hint() % win}
+
+cpp_templates:
+    includes: ['#include <QToolBar>', '#include <QLineEdit>', '#include <QLabel>', '#include <QMetaObject>', '#include <QString>']
+    declarations: |-
+        QToolBar *_${id}_tool_bar;
+        QLineEdit *_${id}_line_edit;
+        QLabel *_${id}_label;
+    var_make: ${id} = ${value};
+    callbacks:
+    - set_${id}(${value})
+    - QMetaObject::invokeMethod(this->_${id}_line_edit, "setText", Q_ARG(QString,
+        QString::number(${id})))
+    link: ['gnuradio-qtgui', 'Qt5::Widgets']
+    make: |-
+        this->_${id}_tool_bar = new QToolBar();
+        this->_${id}_label = new QLabel(QString::fromStdString(std::string("${label.strip("'")}")+ std::string(":")));
+        this->_${id}_tool_bar->addWidget(_${id}_label);
+        this->_${id}_line_edit = new QLineEdit(QString::number(this->${id}));
+        this->_${id}_tool_bar->addWidget(this->_${id}_line_edit);
+        QObject::connect(this->_${id}_line_edit, &QLineEdit::returnPressed, this, [this] () {this->set_${id}(this->_${id}_line_edit->text().toInt());});
+
+        this->top_layout->addWidget(this->_${id}_tool_bar);
+
+documentation: |-
+    This block creates a variable with a text entry box. Leave the label blank to use the variable id as the label.
+
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

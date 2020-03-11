@@ -1,0 +1,71 @@
+id: variable_qtgui_msg_push_button
+label: QT GUI Msg Push Button
+category: '[Core]/GUI Widgets/QT'
+flags: [ show_id, python ]
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    hide: ${ ('none' if label else 'part') }
+-   id: type
+    label: Type
+    dtype: enum
+    default: int
+    options: [real, int, string, bool]
+    option_labels: [Float, Integer, String, Boolean]
+    option_attributes:
+        conv: [float, int, str, bool]
+    hide: part
+-   id: msgName
+    label: Message Property Name
+    dtype: string
+    default: 'pressed'
+-   id: value
+    label: Message Value
+    dtype: ${ type }
+    default: '1'
+-   id: relBackgroundColor
+    label: Button Background
+    dtype: enum
+    default: 'default'
+    options: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: relFontColor
+    label: Button Font Color
+    dtype: enum
+    default: 'default'
+    options: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+
+outputs:
+-   domain: message
+    id: pressed
+    optional: false
+
+templates:
+    imports: from gnuradio import qtgui
+    var_make: self.${id} = None
+    make: |-
+        <%
+            win = '_%s_toggle_button'%id
+        %>\
+        ${win} = qtgui.MsgPushButton(${(label if (len(label) - 2 > 0) else repr(id))}, ${msgName},${value},"${relBackgroundColor}","${relFontColor}")
+        self.${id} = ${win}
+
+        ${gui_hint() % win}
+
+documentation: |-
+    This block creates a variable push button that creates a message when clicked. Leave the label blank to use the variable id as the label.
+
+    You can define both the output message pmt name as well as the value and value type.
+
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

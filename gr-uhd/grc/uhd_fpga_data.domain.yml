@@ -1,0 +1,9 @@
+id: rfnoc.data
+label: Data
+color: "#2196F3"
+
+multiple_connections_per_input: false
+multiple_connections_per_output: true
+
+templates:
+-   type: [rfnoc.data, rfnoc.data]

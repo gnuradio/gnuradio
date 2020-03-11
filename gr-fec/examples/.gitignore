@@ -1,0 +1,3 @@
+*.py
+callgrind.out.*
+perf.*

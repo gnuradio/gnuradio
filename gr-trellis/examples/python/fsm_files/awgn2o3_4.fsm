@@ -1,0 +1,15 @@
+4 4 8
+
+0       1       2       3
+0       1       2       3
+0       1       2       3
+0       1       2       3
+
+0       7       4       3
+3       4       7       0
+5       2       1       6
+6       1       2       5
+
+I don't remember how I generated this one...
+it is a bit better than awgn2o3_4_msb and worse
+than awgn2o3_4_msbG.

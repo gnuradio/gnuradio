@@ -1,0 +1,38 @@
+id: uhd_fpga_ddc
+label: DDC
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: enum
+    default: 'block'
+    options: ['block', 'sep', 'device']
+    hide: all
+-   id: desc
+    label: Block Descriptor
+    dtype: string
+    default: 'ddc_2x64.yml'
+    hide: all
+-   id: nports
+    label: Number of Ports
+    dtype: int
+    default: '1'
+    hide: part
+
+
+inputs:
+-   domain: rfnoc.clk
+    id: ddc
+    dtype: message
+-   domain: rfnoc.data
+    id: port
+    dtype: fc32
+    multiplicity: ${ nports }
+
+outputs:
+-   domain: rfnoc.data
+    id: port
+    dtype: fc32
+    multiplicity: ${ nports }
+
+file_format: 1

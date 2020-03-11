@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<programlisting>
+  1  #!/usr/bin/env python
+  2
+  3  from gnuradio import gr
+  4  from gnuradio import audio
+  5  from gnuradio import trellis, digital, analog, filter, blocks
+  6  from gnuradio import eng_notation
+  7  import math
+  8  import sys
+  9  import random
+ 10  import fsm_utils
+ 11
+ 12  def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constellation,N0,seed):
+ 13      tb = gr.top_block ()
+ 14      L = len(channel)
+ 15
+ 16      # TX
+ 17      # this for loop is TOO slow in python!!!
+ 18      packet = [0]*(K+2*L)
+ 19      random.seed(seed)
+ 20      for i in range(len(packet)):
+ 21          packet[i] = random.randint(0, 2**bitspersymbol - 1) # random symbols
+ 22      for i in range(L): # first/last L symbols set to 0
+ 23          packet[i] = 0
+ 24          packet[len(packet)-i-1] = 0
+ 25      src = blocks.vector_source_s(packet,False)
+ 26      mod = digital.chunks_to_symbols_sf(modulation[1],modulation[0])
+ 27
+ 28      # CHANNEL
+ 29      isi = filter.fir_filter_fff(1,channel)
+ 30      add = blocs.add_ff()
+ 31      noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+ 32
+ 33      # RX
+ 34      skip = blocks.skiphead(gr.sizeof_float, L) # skip the first L samples since you know they are coming from the L zero symbols
+ 35      #metrics = trellis.metrics_f(f.O(),dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
+ 36      #va = trellis.viterbi_s(f,K+L,0,0) # Put -1 if the Initial/Final states are not set.
+ 37      va = trellis.viterbi_combined_s(f,K+L,0,0,dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # using viterbi_combined_s instead of metrics_f/viterbi_s allows larger packet lengths because metrics_f is complaining for not being able to allocate large buffers. This is due to the large f.O() in this application...
+ 38      dst = blocks.vector_sink_s()
+ 39
+ 40      tb.connect (src,mod)
+ 41      tb.connect (mod,isi,(add,0))
+ 42      tb.connect (noise,(add,1))
+ 43      #tb.connect (add,metrics)
+ 44      #tb.connect (metrics,va,dst)
+ 45      tb.connect (add,skip,va,dst)
+ 46
+ 47      tb.run()
+ 48
+ 49      data = dst.data()
+ 50      ntotal = len(data) - L
+ 51      nright=0
+ 52      for i in range(ntotal):
+ 53          if packet[i+L]==data[i]:
+ 54              nright=nright+1
+ 55          #else:
+ 56              #print &quot;Error in &quot;, i
+ 57
+ 58      return (ntotal,ntotal-nright)
+ 59
+ 60
+ 61  def main(args):
+ 62      nargs = len (args)
+ 63      if nargs == 2:
+ 64          esn0_db=float(args[0])
+ 65          rep=int(args[1])
+ 66      else:
+ 67          sys.stderr.write (&apos;usage: test_viterbi_equalization1.py Es/No_db  repetitions\n&apos;)
+ 68          sys.exit (1)
+ 69
+ 70      # system parameters
+ 71      Kb=2048  # packet size in bits
+ 72      modulation = fsm_utils.pam4 # see fsm_utlis.py for available predefined modulations
+ 73      channel = fsm_utils.c_channel # see fsm_utlis.py for available predefined test channels
+ 74      f=trellis.fsm(len(modulation[1]),len(channel)) # generate the FSM automatically
+ 75      bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
+ 76      K=Kb/bitspersymbol # packet size in trellis steps
+ 77
+ 78      tot_channel = fsm_utils.make_isi_lookup(modulation,channel,True) # generate the lookup table (normalize energy to 1)
+ 79      dimensionality = tot_channel[0]
+ 80      tot_constellation = tot_channel[1]
+ 81      N0=pow(10.0,-esn0_db/10.0); # noise variance
+ 82      if len(tot_constellation)/dimensionality != f.O():
+ 83          sys.stderr.write (&apos;Incompatible FSM output cardinality and lookup table size.\n&apos;)
+ 84          sys.exit (1)
+ 85
+ 86      tot_s=0 # total number of transmitted shorts
+ 87      terr_s=0 # total number of shorts in error
+ 88      terr_p=0 # total number of packets in error
+ 89
+ 90      for i in range(rep):
+ 91          (s,e)=run_test(f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constellation,N0,-long(666+i)) # run experiment with different seed to get different data and noise realizations
+ 92          tot_s=tot_s+s
+ 93          terr_s=terr_s+e
+ 94          terr_p=terr_p+(terr_s!=0)
+ 95          if ((i+1)%100==0) : # display progress
+ 96              print i+1,terr_p, &apos;%.2e&apos; % ((1.0*terr_p)/(i+1)),tot_s,terr_s, &apos;%.2e&apos; % ((1.0*terr_s)/tot_s)
+ 97      # estimate of the (short or symbol) error rate
+ 98      print rep,terr_p, &apos;%.2e&apos; % ((1.0*terr_p)/(i+1)),tot_s,terr_s, &apos;%.2e&apos; % ((1.0*terr_s)/tot_s)
+ 99
+100
+101  if __name__ == &apos;__main__&apos;:
+102      main (sys.argv[1:])
+</programlisting>

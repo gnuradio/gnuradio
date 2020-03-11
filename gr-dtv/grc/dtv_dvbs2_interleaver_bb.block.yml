@@ -1,0 +1,94 @@
+id: dtv_dvbs2_interleaver_bb
+label: Interleaver
+
+parameters:
+-   id: framesize
+    label: FECFRAME size
+    dtype: enum
+    options: [FECFRAME_NORMAL, FECFRAME_MEDIUM, FECFRAME_SHORT]
+    option_labels: [Normal, Medium, Short]
+    option_attributes:
+        hide_medium: [all, none, all]
+        hide_normal: [none, all, all]
+        hide_short: [all, all, none]
+        val: [dtv.FECFRAME_NORMAL, dtv.FECFRAME_MEDIUM, dtv.FECFRAME_SHORT]
+-   id: rate1
+    label: Code rate
+    dtype: enum
+    options: [C1_4, C1_3, C2_5, C1_2, C3_5, C2_3, C3_4, C4_5, C5_6, C8_9, C9_10, C2_9_VLSNR,
+        C13_45, C9_20, C90_180, C96_180, C11_20, C100_180, C104_180, C26_45, C18_30,
+        C28_45, C23_36, C116_180, C20_30, C124_180, C25_36, C128_180, C13_18, C132_180,
+        C22_30, C135_180, C140_180, C7_9, C154_180]
+    option_labels: [1/4, 1/3, 2/5, 1/2, 3/5, 2/3, 3/4, 4/5, 5/6, 8/9, 9/10, 2/9 VL-SNR,
+        13/45, 9/20, 90/180, 96/180, 11/20, 100/180, 104/180, 26/45, 18/30, 28/45,
+        23/36, 116/180, 20/30, 124/180, 25/36, 128/180, 13/18, 132/180, 22/30, 135/180,
+        140/180, 7/9, 154/180]
+    option_attributes:
+        val: [dtv.C1_4, dtv.C1_3, dtv.C2_5, dtv.C1_2, dtv.C3_5, dtv.C2_3, dtv.C3_4,
+            dtv.C4_5, dtv.C5_6, dtv.C8_9, dtv.C9_10, dtv.C2_9_VLSNR, dtv.C13_45, dtv.C9_20,
+            dtv.C90_180, dtv.C96_180, dtv.C11_20, dtv.C100_180, dtv.C104_180, dtv.C26_45,
+            dtv.C18_30, dtv.C28_45, dtv.C23_36, dtv.C116_180, dtv.C20_30, dtv.C124_180,
+            dtv.C25_36, dtv.C128_180, dtv.C13_18, dtv.C132_180, dtv.C22_30, dtv.C135_180,
+            dtv.C140_180, dtv.C7_9, dtv.C154_180]
+    hide: ${ framesize.hide_normal }
+-   id: rate2
+    label: Code rate
+    dtype: enum
+    options: [C1_5_MEDIUM, C11_45_MEDIUM, C1_3_MEDIUM]
+    option_labels: [1/5, 11/45, 1/3]
+    option_attributes:
+        val: [dtv.C1_5_MEDIUM, dtv.C11_45_MEDIUM, dtv.C1_3_MEDIUM]
+    hide: ${ framesize.hide_medium }
+-   id: rate3
+    label: Code rate
+    dtype: enum
+    options: [C1_4, C1_3, C2_5, C1_2, C3_5, C2_3, C3_4, C4_5, C5_6, C8_9, C11_45,
+        C4_15, C14_45, C7_15, C8_15, C26_45, C32_45, C1_5_VLSNR_SF2, C11_45_VLSNR_SF2,
+        C1_5_VLSNR, C4_15_VLSNR, C1_3_VLSNR]
+    option_labels: [1/4, 1/3, 2/5, 1/2, 3/5, 2/3, 3/4, 4/5, 5/6, 8/9, 11/45, 4/15,
+        14/45, 7/15, 8/15, 26/45, 32/45, 1/5 VL-SNR SF2, 11/45 VL-SNR SF2, 1/5 VL-SNR,
+        4/15 VL-SNR, 1/3 VL-SNR]
+    option_attributes:
+        val: [dtv.C1_4, dtv.C1_3, dtv.C2_5, dtv.C1_2, dtv.C3_5, dtv.C2_3, dtv.C3_4,
+            dtv.C4_5, dtv.C5_6, dtv.C8_9, dtv.C11_45, dtv.C4_15, dtv.C14_45, dtv.C7_15,
+            dtv.C8_15, dtv.C26_45, dtv.C32_45, dtv.C1_5_VLSNR_SF2, dtv.C11_45_VLSNR_SF2,
+            dtv.C1_5_VLSNR, dtv.C4_15_VLSNR, dtv.C1_3_VLSNR]
+    hide: ${ framesize.hide_short }
+-   id: constellation
+    label: Constellation
+    dtype: enum
+    options: [MOD_QPSK, MOD_8PSK, MOD_8APSK, MOD_16APSK, MOD_8_8APSK, MOD_32APSK,
+        MOD_4_12_16APSK, MOD_4_8_4_16APSK, MOD_64APSK, MOD_8_16_20_20APSK, MOD_4_12_20_28APSK,
+        MOD_128APSK, MOD_256APSK, MOD_BPSK, MOD_BPSK_SF2]
+    option_labels: [QPSK, 8PSK, 8APSK, 16APSK, 8+8APSK, 32APSK, 4+12+16rbAPSK, 4+8+4+16APSK,
+        64APSK, 8+16+20+20APSK, 4+12+20+28APSK, 128APSK, 256APSK, PI/2 BPSK, PI/2
+            BPSK-SF2]
+    option_attributes:
+        val: [dtv.MOD_QPSK, dtv.MOD_8PSK, dtv.MOD_8APSK, dtv.MOD_16APSK, dtv.MOD_8_8APSK,
+            dtv.MOD_32APSK, dtv.MOD_4_12_16APSK, dtv.MOD_4_8_4_16APSK, dtv.MOD_64APSK,
+            dtv.MOD_8_16_20_20APSK, dtv.MOD_4_12_20_28APSK, dtv.MOD_128APSK, dtv.MOD_256APSK,
+            dtv.MOD_BPSK, dtv.MOD_BPSK_SF2]
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import dtv
+    make: |-
+        dtv.dvbs2_interleaver_bb(
+            ${framesize.val},
+            % if str(framesize) == 'FECFRAME_NORMAL':
+            ${rate1.val},
+            % elif str(framesize) == 'FECFRAME_MEDIUM':
+            ${rate2.val},
+            % else:
+            ${rate3.val},
+            % endif
+            ${constellation.val})
+
+file_format: 1

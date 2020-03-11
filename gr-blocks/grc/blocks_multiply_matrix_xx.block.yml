@@ -1,0 +1,55 @@
+id: blocks_multiply_matrix_xx
+label: Multiply by Matrix
+flags: [ python ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [float, complex]
+    option_attributes:
+        fcn: [ff, cc]
+    hide: part
+-   id: A
+    label: Matrix A
+    dtype: raw
+    default: ((1, 0), (0, 1))
+    hide: part
+-   id: tag_propagation_policy
+    label: TPP
+    dtype: enum
+    options: [gr.TPP_ALL_TO_ALL, gr.TPP_ONE_TO_ONE, gr.TPP_DONT, gr.TPP_CUSTOM]
+    option_labels: [All to All, One to One, No Propagation, Matrix-Defined]
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    multiplicity: ${ len(A[0]) }
+-   domain: message
+    id: set_A
+    optional: true
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    multiplicity: ${ len(A) }
+
+asserts:
+- ${ len(A) > 0 }
+- ${ len(A[0]) > 0 }
+#- ${ tag_propagation_policy != gr.TPP_ONE_TO_ONE or len(A) == len(A[0]) }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.multiply_matrix_${type.fcn}(${A}, ${tag_propagation_policy})
+    callbacks:
+    - set_A(${A})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/multiply_matrix.h>']
+    declarations: 'blocks::multiply_matrix_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::multiply_matrix_${type.fcn}::make(${A}, ${tag_propagation_policy});'
+    callbacks:
+    - set_A(${A})
+
+file_format: 1

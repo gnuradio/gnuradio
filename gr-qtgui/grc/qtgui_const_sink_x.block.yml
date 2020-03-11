@@ -1,0 +1,456 @@
+id: qtgui_const_sink_x
+label: QT GUI Constellation Sink
+flags: [ python ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    default: complex
+    options: [complex, msg_complex]
+    option_labels: [Complex, Complex Message]
+    option_attributes:
+        fcn: [const_sink_c, const_sink_c]
+        t: [complex, message]
+    hide: part
+-   id: name
+    label: Name
+    dtype: string
+    default: '""'
+    hide: ${ ('none' if len(name) > 0 else 'part') }
+-   id: size
+    label: Number of Points
+    dtype: int
+    default: '1024'
+    hide: ${ ('all' if type.startswith('msg')  else 'none') }
+-   id: grid
+    label: Grid
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+-   id: autoscale
+    label: Autoscale
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+-   id: ymin
+    label: Y min
+    dtype: real
+    default: '-2'
+    hide: part
+-   id: ymax
+    label: Y max
+    dtype: real
+    default: '2'
+    hide: part
+-   id: xmin
+    label: X min
+    dtype: real
+    default: '-2'
+    hide: part
+-   id: xmax
+    label: X max
+    dtype: real
+    default: '2'
+    hide: part
+-   id: nconnections
+    label: Number of Inputs
+    dtype: int
+    default: '1'
+    hide: ${ ('all' if type.startswith('msg') else 'part') }
+-   id: update_time
+    label: Update Period
+    dtype: real
+    default: '0.10'
+    hide: part
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+-   id: tr_mode
+    label: Trigger Mode
+    category: Trigger
+    dtype: enum
+    default: qtgui.TRIG_MODE_FREE
+    options: [qtgui.TRIG_MODE_FREE, qtgui.TRIG_MODE_AUTO, qtgui.TRIG_MODE_NORM, qtgui.TRIG_MODE_TAG]
+    option_labels: [Free, Auto, Normal, Tag]
+    hide: part
+-   id: tr_slope
+    label: Trigger Slope
+    category: Trigger
+    dtype: enum
+    default: qtgui.TRIG_MODE_POS
+    options: [qtgui.TRIG_SLOPE_POS, qtgui.TRIG_SLOPE_NEG]
+    option_labels: [Positive, Negative]
+    hide: part
+-   id: tr_level
+    label: Trigger Level
+    category: Trigger
+    dtype: float
+    default: '0.0'
+    hide: part
+-   id: tr_chan
+    label: Trigger Channel
+    category: Trigger
+    dtype: int
+    default: '0'
+    hide: part
+-   id: tr_tag
+    label: Trigger Tag Key
+    category: Trigger
+    dtype: string
+    default: '""'
+    hide: part
+-   id: legend
+    label: Legend
+    category: Config
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+-   id: axislabels
+    label: Axis Labels
+    category: Config
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+-   id: label1
+    label: Line 1 Label
+    category: Config
+    dtype: string
+    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+-   id: width1
+    label: Line 1 Width
+    category: Config
+    dtype: int
+    default: '1'
+    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+-   id: color1
+    label: Line 1 Color
+    category: Config
+    dtype: enum
+    options: ['"blue"', '"red"', '"green"', '"black"', '"cyan"', '"magenta"', '"yellow"',
+        '"dark red"', '"dark green"', '"Dark Blue"']
+    option_labels: [Blue, Red, Green, Black, Cyan, Magenta, Yellow, Dark Red, Dark
+            Green, Dark Blue]
+    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+-   id: style1
+    label: Line 1 Style
+    category: Config
+    dtype: enum
+    options: ['0', '1', '2', '3', '4', '5']
+    option_labels: [None, Solid, Dash, Dots, Dash-Dot, Dash-Dot-Dot]
+    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+-   id: marker1
+    label: Line 1 Marker
+    category: Config
+    dtype: enum
+    options: ['0', '1', '2', '3', '4', '6', '7', '8', '9', '-1']
+    option_labels: [Circle, Rectangle, Diamond, Triangle, Down Triangle, Left Triangle,
+        Right Triangle, Cross, X-Cross, None]
+    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+-   id: alpha1
+    label: Line 1 Alpha
+    category: Config
+    dtype: float
+    default: '1.0'
+    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+-   id: label2
+    label: Line 2 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
+-   id: width2
+    label: Line 2 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
+-   id: color2
+    label: Line 2 Color
+    base_key: color1
+    default: '"red"'
+    hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
+-   id: style2
+    label: Line 2 Style
+    base_key: style1
+    hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
+-   id: marker2
+    label: Line 2 Marker
+    base_key: marker1
+    hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
+-   id: alpha2
+    label: Line 2 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
+-   id: label3
+    label: Line 3 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
+-   id: width3
+    label: Line 3 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
+-   id: color3
+    label: Line 3 Color
+    base_key: color1
+    default: '"red"'
+    hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
+-   id: style3
+    label: Line 3 Style
+    base_key: style1
+    hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
+-   id: marker3
+    label: Line 3 Marker
+    base_key: marker1
+    hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
+-   id: alpha3
+    label: Line 3 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
+-   id: label4
+    label: Line 4 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
+-   id: width4
+    label: Line 4 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
+-   id: color4
+    label: Line 4 Color
+    base_key: color1
+    default: '"red"'
+    hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
+-   id: style4
+    label: Line 4 Style
+    base_key: style1
+    hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
+-   id: marker4
+    label: Line 4 Marker
+    base_key: marker1
+    hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
+-   id: alpha4
+    label: Line 4 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
+-   id: label5
+    label: Line 5 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
+-   id: width5
+    label: Line 5 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
+-   id: color5
+    label: Line 5 Color
+    base_key: color1
+    default: '"red"'
+    hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
+-   id: style5
+    label: Line 5 Style
+    base_key: style1
+    hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
+-   id: marker5
+    label: Line 5 Marker
+    base_key: marker1
+    hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
+-   id: alpha5
+    label: Line 5 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
+-   id: label6
+    label: Line 6 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
+-   id: width6
+    label: Line 6 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
+-   id: color6
+    label: Line 6 Color
+    base_key: color1
+    default: '"red"'
+    hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
+-   id: style6
+    label: Line 6 Style
+    base_key: style1
+    hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
+-   id: marker6
+    label: Line 6 Marker
+    base_key: marker1
+    hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
+-   id: alpha6
+    label: Line 6 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
+-   id: label7
+    label: Line 7 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
+-   id: width7
+    label: Line 7 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
+-   id: color7
+    label: Line 7 Color
+    base_key: color1
+    default: '"red"'
+    hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
+-   id: style7
+    label: Line 7 Style
+    base_key: style1
+    hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
+-   id: marker7
+    label: Line 7 Marker
+    base_key: marker1
+    hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
+-   id: alpha7
+    label: Line 7 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
+-   id: label8
+    label: Line 8 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
+-   id: width8
+    label: Line 8 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
+-   id: color8
+    label: Line 8 Color
+    base_key: color1
+    default: '"red"'
+    hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
+-   id: style8
+    label: Line 8 Style
+    base_key: style1
+    hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
+-   id: marker8
+    label: Line 8 Marker
+    base_key: marker1
+    hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
+-   id: alpha8
+    label: Line 8 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
+-   id: label9
+    label: Line 9 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
+-   id: width9
+    label: Line 9 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
+-   id: color9
+    label: Line 9 Color
+    base_key: color1
+    default: '"red"'
+    hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
+-   id: style9
+    label: Line 9 Style
+    base_key: style1
+    hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
+-   id: marker9
+    label: Line 9 Marker
+    base_key: marker1
+    hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
+-   id: alpha9
+    label: Line 9 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
+-   id: label10
+    label: Line 10 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
+-   id: width10
+    label: Line 10 Width
+    base_key: width1
+    hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
+-   id: color10
+    label: Line 10 Color
+    base_key: color1
+    default: '"red"'
+    hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
+-   id: style10
+    label: Line 10 Style
+    base_key: style1
+    hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
+-   id: marker10
+    label: Line 10 Marker
+    base_key: marker1
+    hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
+-   id: alpha10
+    label: Line 10 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
+
+inputs:
+-   domain: stream
+    dtype: ${ type.t }
+    multiplicity: ${ (0 if type.startswith('msg') else nconnections) }
+    optional: true
+
+templates:
+    imports: |-
+        from PyQt5 import Qt
+        from gnuradio import qtgui
+        import sip
+    callbacks:
+    - set_update_time(${update_time})
+    - self.${id}.set_trigger_mode(${tr_mode}, ${tr_slope}, ${tr_level}, ${tr_chan},
+        ${tr_tag})
+    make: |-
+        <%
+            win = 'self._%s_win'%id
+        %>\
+        qtgui.${type.fcn}(
+            ${size}, #size
+            ${name}, #name
+            ${0 if type.startswith('msg') else nconnections} #number of inputs
+        )
+        self.${id}.set_update_time(${update_time})
+        self.${id}.set_y_axis(${ymin}, ${ymax})
+        self.${id}.set_x_axis(${xmin}, ${xmax})
+        self.${id}.set_trigger_mode(${tr_mode}, ${tr_slope}, ${tr_level}, ${tr_chan}, ${tr_tag})
+        self.${id}.enable_autoscale(${autoscale})
+        self.${id}.enable_grid(${grid})
+        self.${id}.enable_axis_labels(${axislabels})
+
+        % if legend == "False":
+        self.${id}.disable_legend()
+        % endif
+
+        labels = [${label1}, ${label2}, ${label3}, ${label4}, ${label5},
+            ${label6}, ${label7}, ${label8}, ${label9}, ${label10}]
+        widths = [${width1}, ${width2}, ${width3}, ${width4}, ${width5},
+            ${width6}, ${width7}, ${width8}, ${width9}, ${width10}]
+        colors = [${color1}, ${color2}, ${color3}, ${color4}, ${color5},
+            ${color6}, ${color7}, ${color8}, ${color9}, ${color10}]
+        styles = [${style1}, ${style2}, ${style3}, ${style4}, ${style5},
+            ${style6}, ${style7}, ${style8}, ${style9}, ${style10}]
+        markers = [${marker1}, ${marker2}, ${marker3}, ${marker4}, ${marker5},
+            ${marker6}, ${marker7}, ${marker8}, ${marker9}, ${marker10}]
+        alphas = [${alpha1}, ${alpha2}, ${alpha3}, ${alpha4}, ${alpha5},
+            ${alpha6}, ${alpha7}, ${alpha8}, ${alpha9}, ${alpha10}]
+
+        for i in range(${1 if type.startswith('msg') else nconnections}):
+            if len(labels[i]) == 0:
+                self.${id}.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.${id}.set_line_label(i, labels[i])
+            self.${id}.set_line_width(i, widths[i])
+            self.${id}.set_line_color(i, colors[i])
+            self.${id}.set_line_style(i, styles[i])
+            self.${id}.set_line_marker(i, markers[i])
+            self.${id}.set_line_alpha(i, alphas[i])
+
+        self._${id}_win = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)
+        ${gui_hint() % win}
+
+documentation: |-
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

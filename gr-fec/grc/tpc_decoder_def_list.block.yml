@@ -1,0 +1,80 @@
+id: variable_tpc_decoder_def
+label: TPC Decoder Definition
+flags: [ show_id ]
+
+parameters:
+-   id: value
+    label: Ignore Me
+    dtype: raw
+    default: '"ok"'
+    hide: all
+-   id: ndim
+    label: Parallelism
+    dtype: enum
+    default: '0'
+    options: ['0', '1', '2']
+-   id: dim1
+    label: Dimension 1
+    dtype: int
+    default: '4'
+    hide: ${ ('none' if (int(ndim) >= 1) else 'all') }
+-   id: dim2
+    label: Dimension 2
+    dtype: int
+    default: '4'
+    hide: ${ ('none' if (int(ndim) >= 2) else 'all') }
+-   id: row_poly
+    label: Row Encoder Polynomials
+    dtype: int_vector
+    default: '[3]'
+-   id: col_poly
+    label: Column Encoder Polynomials
+    dtype: int_vector
+    default: '[43]'
+-   id: krow
+    label: K Row
+    dtype: int
+    default: '26'
+-   id: kcol
+    label: K Col
+    dtype: int
+    default: '6'
+-   id: bval
+    label: B
+    dtype: int
+    default: '9'
+-   id: qval
+    label: Q
+    dtype: int
+    default: '3'
+-   id: max_iter
+    label: NUM Turbo Iterations
+    dtype: int
+    default: '6'
+-   id: decoder_type
+    label: Decoder Type
+    dtype: enum
+    options: ['0', '1', '2', '3', '4']
+    option_labels: [Linear LOG-MAP, MAX LOG-MAP, Constant LOG-MAP, LOG-MAP (LUT Correction
+            Factor), LOG-MAP (C Correction Factor)]
+value: ${ value }
+
+templates:
+    imports: from gnuradio import fec
+    var_make: |-
+        % if int(ndim)==0:
+        self.${id} = ${id} = fec.tpc_decoder_make(${row_poly}, ${col_poly}, ${krow}, ${kcol}, ${bval}, ${qval}, ${max_iter}, ${decoder_type})
+        % elif int(ndim)==1:
+        self.${id} = ${id} = list(map( (lambda a: fec.tpc_decoder_make(${row_poly}, ${col_poly}, ${krow}, ${kcol}, ${bval}, ${qval}, \
+        ${max_iter}, ${decoder_type})), range(0,${dim1}) ))
+        % else:
+        self.${id} = ${id} = list(map( (lambda b: list(map( ( lambda a: fec.tpc_decoder_make(${row_poly}, ${col_poly}, ${krow}, ${kcol}, \
+        ${bval}, ${qval}, ${max_iter}, ${decoder_type})), range(0,${dim2})))), range(0,${dim1})))
+        % endif
+
+documentation: |-
+    This instantiates a 1-dim array or 2-dim array fo Turbo Product Encoders (TPC).
+            Restrictions: B and Q must be carefully chosen such that when the matrices are setup,
+            and the first B outputs are removed, they (the first B outputs) are all 0's.
+
+file_format: 1

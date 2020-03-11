@@ -1,0 +1,32 @@
+id: blocks_rotator_cc
+label: Rotator
+flags: [ python, cpp ]
+
+parameters:
+-   id: phase_inc
+    label: Phase Increment
+    dtype: real
+    default: '0.0'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.rotator_cc(${phase_inc})
+    callbacks:
+    - set_phase_inc(${phase_inc})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/rotator_cc.h>']
+    declarations: 'blocks::rotator_cc::sptr ${id};'
+    make: 'this->${id} = blocks::rotator_cc::make(${phase_inc});'
+    callbacks:
+    - set_phase_inc(${phase_inc})
+
+file_format: 1

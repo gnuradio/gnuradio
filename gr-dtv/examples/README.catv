@@ -1,0 +1,38 @@
+A test Transport Stream (26.970352 Mbps) for the 64QAM example flow graph
+is available here:
+
+http://www.w6rz.net/advqam64.ts
+
+It is 357,356,980 bytes.
+
+A test Transport Stream (38.810701 Mbps) for the 256QAM example flow graph
+is available here:
+
+http://www.w6rz.net/advqam256.ts
+
+It is 514,241,664 bytes.
+
+The three parameters Control_Word, I_taps and J_increment can be
+used to control the interleaver from the following table.
+
+Control_Word    I_taps    J_increment    Burst protection    Latency
+     0            128          1              95 us            4 ms
+     1            128          1              95 us            4 ms
+     2            128          2             190 us            8 ms
+     3             64          2              47 us            2 ms
+     4            128          3             285 us           12 ms
+     5             32          4              24 us           0.98 ms
+     6            128          4             379 us           16 ms
+     7             16          8              12 us           0.48 ms
+     8            128          5             474 us           20 ms
+     9              8          16            5.9 us           0.22 ms
+    10            128          6             569 us           24 ms
+    11          Reserved
+    12            128          7             664 us           28 ms
+    13          Reserved
+    14            128          8             759 us           32 ms
+    15          Reserved
+
+The default is Control_Word = 6, I_taps = 128 and J_increment = 4
+which seems to be the most commonly used on CATV systems.
+

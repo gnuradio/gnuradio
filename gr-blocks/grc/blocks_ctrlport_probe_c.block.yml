@@ -1,0 +1,32 @@
+id: blocks_ctrlport_probe_c
+label: Ctrlport Complex Probe
+flags: [ python, cpp ]
+
+parameters:
+-   id: name
+    label: Name
+    dtype: string
+    default: constellation
+-   id: desc
+    label: Description
+    dtype: string
+    default: Constellation Points
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.ctrlport_probe_c(${name}, ${desc})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/ctrlport_probe_c.h>']
+    declarations: 'blocks::ctrlport_probe_c::sptr ${id};'
+    make: 'this->${id} = blocks::ctrlport_probe_c::make(${name}, ${desc});'
+
+
+documentation: |-
+    Place this in a graph to export complex values to a GRCP port probe.
+
+file_format: 1

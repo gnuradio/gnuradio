@@ -1,0 +1,133 @@
+/*! \page page_channels Channel Model Blocks
+
+\section channels_introduction Introduction
+
+This is the gr-channels package. It contains signal processing blocks to
+simulate channel models.
+
+The Python namespace is in gnuradio.channels, which would be normally
+imported as:
+
+\code
+    from gnuradio import channels
+\endcode
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using:
+
+\code
+    help(channels)
+\endcode
+
+
+\section channels_types Available Channel Models
+
+\subsection channels_awgn AWGN Channel
+
+The basic gr::channels::channel_model block is essentially an
+additive white Gaussian noise (AWGN) channel with a few extra
+additions. This channel model simulates AWGN as well as frequency and
+timing offsets between the transmit and receiver and a simple static
+multipath environment.
+
+The parameters include:
+
+\li <b>noise_voltage</b> The AWGN noise level as a voltage (to be calculated
+    externally to meet, say, a desired SNR).
+\li <b>frequency_offset</b> The normalized frequency offset. 0 is no offset;
+    0.25 would be, for a digital modem, one quarter of the symbol
+    rate.
+\li <b>epsilon</b> The sample timing offset to emulate the different rates
+    between the sample clocks of the transmitter and receiver. 1.0 is
+    no difference.
+\li <b>taps</b> Taps of a FIR filter to emulate a multipath delay profile.
+\li <b>noise_seed</b> A random number generator seed for the noise source.
+
+
+\subsection channels_fading Fading Channel Model
+
+The gr::channels::fading_model builds a basic fading simulation. This
+model approximates a fading channel using the sum of sinusoids method
+for the number of expected multipath components. This block also takes
+in the Doppler frequency shift as a normalized value, a line-of-sight
+(LOS) parameter that is either true or false, the Rician K factor, and
+a random seed to the noise generators. These parameters are provided
+in the documentation as:
+
+\li <b>N</b>       the number of sinusoids to use in simulating the channel; 8 is a good value
+\li <b>fDTs</b>    normalized maximum Doppler frequency, fD * Ts
+\li <b>LOS</b>     include Line-of-Site path? selects between Rayleigh (NLOS) and Rician (LOS) models
+\li <b>K</b>       Rician factor (ratio of the specular power to the scattered power)
+\li <b>seed</b>    a random number to seed the noise generators
+
+
+\subsection channels_selective_fading Frequency-Selective Fading Model
+
+Extending the fading model, the gr::channels::selective_fading_model
+channel model allows us to specify frequency selective parameters for
+the model. Starting with the same inputs as the
+gr::channels::fading_model, this block also takes in power delay
+profile (PDP). The PDP is given as a vector of the times of the delays
+and another vector of the corresponding magnitudes of the PDP. We also
+specify the number of taps in the filter to simulate this. These
+parameters are provided in the documentation as:
+
+\li <b>N</b>       the number of sinusoids to use in simulating the channel; 8 is a good value
+\li <b>fDTs</b>    normalized maximum Doppler frequency, fD * Ts
+\li <b>LOS</b>     include Line-of-Site path? selects between Rayleigh (NLOS) and Rician (LOS) models
+\li <b>K</b>       Rician factor (ratio of the specular power to the scattered power)
+\li <b>seed</b>    a random number to seed the noise generators
+\li <b>delays</b>  a vector of values that specify the time delay of each impulse
+\li <b>mags</b>    a vector of values that specify the magnitude of each impulse
+\li <b>ntaps</b>   the number of filter taps.
+
+
+\subsection channels_hw_impairments Hardware Impairments Model
+
+GNU Radio also provides a model for incorporating parameters of a
+radio transmitter and receiver to better simulate signals as they
+would be transmitted and received through real hardware. This
+simulation tool can be used to see how a waveform would behave over a
+known radio, or if designing radio hardware, this block could help
+understand the requirements and tolerances for the new system.
+
+The hardware impairments model is a Python-only hierarchical block,
+which is declared as digital.impairments(...). The block is also
+represented in GRC under the "Impairment Models" category.
+
+The impairments model is actually made up of a handful of other
+hierarchical blocks, each of which perform one aspect of the
+impairments model. Each subsection is usable on its own, and each one
+can be used in GRC. These subsystems are:
+
+\li digital.phase_noise_gen ("Phase Noise Generator")
+\li digital.iqbal_gen ("IQ Imbalance Generator")
+\li digital.distortion_3_gen ("Third Order Distortion")
+\li digital.distortion_2_gen ("Second Order Distortion")
+
+There are also a few other blocks that were built to develop and
+simulate different hardware behaviors
+
+\li digital.quantizer ("Quantizer"): quantizes to b number of bits.
+\li digital.amp_bal ("Amplitude Balance"): corrects IQ amplitude imbalance.
+\li digital.phase_bal ("Phase Balance"): corrects IQ phase imbalance.
+
+The digital.impairments model combines the phase noise, IQ imbalance,
+and second and third order distortion generators. It also performs I
+and Q offset imbalance and internal frequency shifting problems.
+
+The parameters for using the hardware impairments model are:
+
+\li phase_noise_mag: the level of the phase noise (in dB).
+\li magbal: The level of the magnitude imbalance between I and Q.
+\li phasebal: The level of the phase imbalance (as an angle).
+\li q_ofs: Offset value of the quadrature arm (as a magnitude).
+\li i_ofs: Offset value of the in-phase arm (as a magnitude).
+\li freq_offset: normalized frequency offset.
+\li gamma: Level of the 2nd order distortion.
+\li beta: level of the 3rd order distortion.
+
+
+
+*/

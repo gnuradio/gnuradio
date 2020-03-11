@@ -1,0 +1,43 @@
+# Copyright (C) 2017 Free Software Foundation, Inc.
+#
+# Permission is granted to copy, distribute and/or modify this document
+# under the terms of the GNU Free Documentation License, Version 1.3
+# or any later version published by the Free Software Foundation;
+# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+# A copy of the license is included in the section entitled "GNU
+# Free Documentation License".
+
+/*! \mainpage
+
+\image html gnuradio-logo.svg
+
+<H1> Welcome to GNU Radio! </H1>
+
+For details about GNU Radio and using it, please see the
+<a href="https://www.gnuradio.org/" target="_blank"><b>main project page</b></a>.
+
+Other information about the project and discussion about GNU Radio,
+software radio, and communication theory in general can be found at
+the <a href="https://www.gnuradio.org/blog/" target="_blank"><b>GNU Radio blog</b></a>.
+
+This manual is split into two parts: A usage manual and a reference. The usage manual
+deals with concepts of GNU Radio, introductions, how to build GNU Radio etc.
+The reference contains a list of all GNU Radio components, sorted by in-tree components,
+modules, files, namespaces and classes.
+
+To access these parts, follow these links or use the tree browser in the left sidebar.
+A search function is also available at the top right.
+
+\li \subpage page_usage "Part I - GNU Radio Usage"
+\li \subpage page_components "Part II - Reference"
+
+<H3> Documentation License </H3>
+
+The Free Software Foundation gives permission to use and distribute
+the program source documentation strings, after processing them
+through Doxygen or some comparable program, under the GNU Free
+Documentation License, version 1.3 or later.  However, we do not grant
+such permission for the program code in our release (aside from the
+documentation strings).
+
+*/

@@ -1,0 +1,34 @@
+id: blocks_stretch_ff
+label: Stretch
+flags: [ python, cpp ]
+
+parameters:
+-   id: lo
+    label: Low
+    dtype: real
+-   id: vlen
+    label: Vec. Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: float
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: float
+    vlen: ${ vlen }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.stretch_ff(${lo}, ${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/stretch_ff.h>']
+    declarations: 'blocks::stretch_ff::sptr ${id};'
+    make: 'this->${id} = blocks::stretch_ff::make(${lo}, ${vlen});'
+
+file_format: 1

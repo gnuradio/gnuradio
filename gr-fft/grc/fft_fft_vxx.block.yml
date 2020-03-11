@@ -1,0 +1,57 @@
+id: fft_vxx
+label: FFT
+
+parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [complex, float]
+    hide: part
+-   id: fft_size
+    label: FFT Size
+    dtype: int
+    default: '1024'
+-   id: forward
+    label: Forward/Reverse
+    dtype: enum
+    options: ['True', 'False']
+    option_labels: [Forward, Reverse]
+-   id: window
+    label: Window
+    dtype: real_vector
+    default: window.blackmanharris(1024)
+-   id: shift
+    label: Shift
+    dtype: enum
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: ${ 'all' if type == 'float' else 'none' }
+-   id: nthreads
+    label: Num. Threads
+    dtype: int
+    default: '1'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ fft_size }
+
+outputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ fft_size }
+
+templates:
+    imports: |-
+        from gnuradio import fft
+        from gnuradio.fft import window
+    make: |-
+        % if type == "complex":
+        fft.fft_vcc(${fft_size}, ${forward}, ${window}, ${shift}, ${nthreads})
+        % else:
+        fft.fft_vfc(${fft_size}, ${forward}, ${window}, ${nthreads})
+        % endif
+    callbacks:
+    - set_nthreads(${nthreads})
+
+file_format: 1

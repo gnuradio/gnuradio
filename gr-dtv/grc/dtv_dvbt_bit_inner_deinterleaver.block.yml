@@ -1,0 +1,46 @@
+id: dtv_dvbt_bit_inner_deinterleaver
+label: Bit Inner Deinterleaver
+
+parameters:
+-   id: constellation
+    label: Constellation Type
+    dtype: enum
+    options: [qpsk, 16qam, 64qam]
+    option_labels: [QPSK, 16QAM, 64QAM]
+    option_attributes:
+        val: [dtv.MOD_QPSK, dtv.MOD_16QAM, dtv.MOD_64QAM]
+-   id: hierarchy
+    label: Hierarchy Type
+    dtype: enum
+    options: [nh, alpha1, alpha2, alpha4]
+    option_labels: [Non Hierarchical, Alpha 1, Alpha 2, Alpha 4]
+    option_attributes:
+        num_streams: ['1', '2', '2', '2']
+        val: [dtv.NH, dtv.ALPHA1, dtv.ALPHA2, dtv.ALPHA4]
+    hide: part
+-   id: transmission_mode
+    label: Transmission Mode
+    dtype: enum
+    options: [T2k, T8k]
+    option_labels: [2K, 8K]
+    option_attributes:
+        payload_length: [1512, 6048]
+        val: [dtv.T2k, dtv.T8k]
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: ${ transmission_mode.payload_length }
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: ${ transmission_mode.payload_length }
+    multiplicity: ${ hierarchy.num_streams }
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.dvbt_bit_inner_deinterleaver(${transmission_mode.payload_length}, ${constellation.val},
+        ${hierarchy.val}, ${transmission_mode.val})
+
+file_format: 1

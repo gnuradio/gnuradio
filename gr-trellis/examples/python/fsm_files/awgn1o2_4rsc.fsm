@@ -1,0 +1,14 @@
+2 4 4
+
+0 2
+2 0
+1 3
+3 1
+
+0 3
+0 3
+1 2
+1 2
+
+Recursive Systematic Codes(RSC)
+GM1o2_4rsc=[1, 1+D+D^2/1+D^2] = [1, 7/5] (in decimal);

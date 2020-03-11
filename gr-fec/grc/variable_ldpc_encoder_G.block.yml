@@ -1,0 +1,48 @@
+id: variable_ldpc_encoder_G_def
+label: LDPC Encoder Definition (via Generator)
+flags: [ show_id ]
+
+parameters:
+-   id: value
+    label: Ignore Me
+    dtype: raw
+    default: '"ok"'
+    hide: all
+-   id: ndim
+    label: Parallelism
+    dtype: enum
+    options: ['0', '1', '2']
+-   id: dim1
+    label: Dimension 1
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if (int(ndim) >= 1) else 'all') }
+-   id: dim2
+    label: Dimension 2
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if (int(ndim) >= 2) else 'all') }
+-   id: G
+    label: LDPC Generator Matrix
+    dtype: raw
+value: ${ value }
+
+templates:
+    imports: from gnuradio import fec
+    var_make: |-
+        % if int(ndim)==0:
+        self.${id} = ${id} = fec.ldpc_gen_mtrx_encoder_make(${G})\
+        % elif int(ndim)==1:
+        self.${id} = ${id} = list(map((lambda a: fec.ldpc_gen_mtrx_encoder_make(${G})),\
+        range(0,${dim1})))
+        % else:
+        self.${id} = ${id} = list(map((lambda b: list( map((lambda \
+        a: fec.ldpc_gen_mtrx_encoder_make(${G})), range(0,${dim2})))), range(0,${dim1})))\
+        % endif
+
+documentation: |-
+    Given a generator matrix in systematic form, G = [I|P], where I is the identity matrix and P is the parity submatrix, the information word s is encoded into a codeword x via:
+
+    x = G'*s
+
+file_format: 1

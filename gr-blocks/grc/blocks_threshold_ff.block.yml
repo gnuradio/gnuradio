@@ -1,0 +1,42 @@
+id: blocks_threshold_ff
+label: Threshold
+flags: [ python, cpp ]
+
+parameters:
+-   id: low
+    label: Low
+    dtype: real
+    default: '-100'
+-   id: high
+    label: High
+    dtype: real
+    default: '100'
+-   id: init
+    label: Initial State
+    dtype: real
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.threshold_ff(${low}, ${high}, ${init})
+    callbacks:
+    - set_hi(${high})
+    - set_lo(${low})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/threshold_ff.h>']
+    declarations: 'blocks::threshold_ff::sptr ${id};'
+    make: 'this->${id} = blocks::threshold_ff::make(${low}, ${high}, ${init});'
+    callbacks:
+    - set_hi(${high})
+    - set_lo(${low})
+
+file_format: 1

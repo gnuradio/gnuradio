@@ -1,0 +1,13 @@
+This is the gr-analog package. It contains all of the analog
+modulation blocks, utilities, and examples. To use the analog blocks,
+the Python namespaces is in gnuradio.analog, which would be normally
+imported as:
+
+    from gnuradio import analog
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using:
+
+    help(analog)
+

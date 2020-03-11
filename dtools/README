@@ -1,0 +1,13 @@
+#
+# Copyright 2006 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+#
+
+This is a collection of tools that are useful for building tarball
+distributions of GNU Radio.  They're probably not of general interest.
+
+To use, add dtools/bin to PATH and dtools/python to PYTHONPATH

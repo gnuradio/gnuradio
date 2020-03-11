@@ -1,0 +1,47 @@
+id: digital_crc32_bb
+label: Stream CRC32
+flags: [ python, cpp ]
+
+parameters:
+-   id: check
+    label: Mode
+    dtype: enum
+    options: ['False', 'True']
+    option_labels: [Generate CRC, Check CRC]
+-   id: lengthtagname
+    label: Length tag name
+    dtype: string
+    default: '"packet_len"'
+-   id: packed
+    label: Packed
+    dtype: bool
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.crc32_bb(${check}, ${lengthtagname}, ${packed})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/crc32_bb.h>']
+    declarations: 'digital::crc32_bb::sptr ${id};'
+    make: |-
+        this->${id} = digital::crc32_bb::make(
+            ${check},
+            ${lengthtagname},
+            ${packed});
+    link: ['gnuradio-digital']
+    translations:
+        'True': 'true'
+        'False': 'false'
+
+file_format: 1

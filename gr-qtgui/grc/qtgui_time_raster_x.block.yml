@@ -1,0 +1,267 @@
+id: qtgui_time_raster_sink_x
+label: QT GUI Time Raster Sink
+flags: [ python ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    default: complex
+    options: [byte, float, msg_byte, msg_float]
+    option_labels: [Byte, Float, Byte Message, Float Message]
+    option_attributes:
+        fcn: [time_raster_sink_b, time_raster_sink_f, time_raster_sink_b, time_raster_sink_f]
+        t: [byte, float, message, message]
+    hide: part
+-   id: name
+    label: Name
+    dtype: string
+    default: '""'
+    hide: ${ ('none' if len(name) > 0 else 'part') }
+-   id: samp_rate
+    label: Sample Rate
+    dtype: real
+    default: samp_rate
+-   id: nrows
+    label: Num. Rows
+    dtype: int
+    default: 256
+    hide: ${ ('all' if type.startswith('msg') else 'none') }
+-   id: ncols
+    label: Num. Cols
+    dtype: int
+    default: 256
+-   id: grid
+    label: Grid
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+-   id: zmin
+    label: Int. min
+    dtype: real
+    default: '-1'
+    hide: part
+-   id: zmax
+    label: Int. max
+    dtype: real
+    default: '1'
+    hide: part
+-   id: mult
+    label: Multiplier
+    dtype: real_vector
+    default: '[]'
+    hide: part
+-   id: offset
+    label: Offset
+    dtype: real_vector
+    default: '[]'
+    hide: part
+-   id: nconnections
+    label: Number of Inputs
+    dtype: int
+    default: '1'
+    hide: ${ ('all' if type.startswith('msg') else 'part') }
+-   id: update_time
+    label: Update Period
+    dtype: real
+    default: '0.10'
+    hide: part
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+-   id: axislabels
+    label: Axis Labels
+    category: Config
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+-   id: label1
+    label: Line 1 Label
+    category: Config
+    dtype: string
+    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+-   id: color1
+    label: Line 1 Color
+    category: Config
+    dtype: enum
+    options: ['0', '1', '2', '3', '5', '6']
+    option_labels: [Multi Color, White Hot, Black Hot, Incandescent, Sunset, Cool]
+    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+-   id: alpha1
+    label: Line 1 Alpha
+    category: Config
+    dtype: float
+    default: '1.0'
+    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+-   id: label2
+    label: Line 2 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
+-   id: color2
+    label: Line 2 Color
+    base_key: color1
+    hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
+-   id: alpha2
+    label: Line 2 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
+-   id: label3
+    label: Line 3 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
+-   id: color3
+    label: Line 3 Color
+    base_key: color1
+    hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
+-   id: alpha3
+    label: Line 3 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
+-   id: label4
+    label: Line 4 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
+-   id: color4
+    label: Line 4 Color
+    base_key: color1
+    hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
+-   id: alpha4
+    label: Line 4 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
+-   id: label5
+    label: Line 5 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
+-   id: color5
+    label: Line 5 Color
+    base_key: color1
+    hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
+-   id: alpha5
+    label: Line 5 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
+-   id: label6
+    label: Line 6 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
+-   id: color6
+    label: Line 6 Color
+    base_key: color1
+    hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
+-   id: alpha6
+    label: Line 6 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
+-   id: label7
+    label: Line 7 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
+-   id: color7
+    label: Line 7 Color
+    base_key: color1
+    hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
+-   id: alpha7
+    label: Line 7 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
+-   id: label8
+    label: Line 8 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
+-   id: color8
+    label: Line 8 Color
+    base_key: color1
+    hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
+-   id: alpha8
+    label: Line 8 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
+-   id: label9
+    label: Line 9 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
+-   id: color9
+    label: Line 9 Color
+    base_key: color1
+    hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
+-   id: alpha9
+    label: Line 9 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
+-   id: label10
+    label: Line 10 Label
+    base_key: label1
+    hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
+-   id: color10
+    label: Line 10 Color
+    base_key: color1
+    hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
+-   id: alpha10
+    label: Line 10 Alpha
+    base_key: alpha1
+    hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
+
+inputs:
+-   domain: stream
+    dtype: ${ type.t }
+    multiplicity: ${ (0 if type.startswith('msg') else nconnections) }
+    optional: true
+
+templates:
+    imports: |-
+        from PyQt5 import Qt
+        from gnuradio import qtgui
+        import sip
+    callbacks:
+    - set_num_rows(${nrows})
+    - set_num_cols(${ncols})
+    - set_multiplier(${mult})
+    - set_offset(${offset})
+    - set_update_time(${update_time})
+    make: |-
+        <%
+            win = 'self._%s_win'%id
+        %>\
+        qtgui.${type.fcn}(
+            ${samp_rate},
+            ${nrows},
+            ${ncols},
+            ${mult},
+            ${offset},
+            ${name},
+            ${0 if type.startswith('msg') else nconnections}
+        )
+
+        self.${id}.set_update_time(${update_time})
+        self.${id}.set_intensity_range(${zmin}, ${zmax})
+        self.${id}.enable_grid(${grid})
+        self.${id}.enable_axis_labels(${axislabels})
+
+        labels = [${label1}, ${label2}, ${label3}, ${label4}, ${label5},
+            ${label6}, ${label7}, ${label8}, ${label9}, ${label10}]
+        colors = [${color1}, ${color2}, ${color3}, ${color4}, ${color5},
+            ${color6}, ${color7}, ${color8}, ${color9}, ${color10}]
+        alphas = [${alpha1}, ${alpha2}, ${alpha3}, ${alpha4}, ${alpha5},
+            ${alpha6}, ${alpha7}, ${alpha8}, ${alpha9}, ${alpha10}]
+
+        for i in range(${1 if type.startswith('msg') else nconnections}):
+            if len(labels[i]) == 0:
+                self.${id}.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.${id}.set_line_label(i, labels[i])
+            self.${id}.set_color_map(i, colors[i])
+            self.${id}.set_line_alpha(i, alphas[i])
+
+        ${win} = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)
+        ${gui_hint() % win}
+
+documentation: |-
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

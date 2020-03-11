@@ -1,0 +1,498 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: ber_curve_gen
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: 2000,2000
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 11]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: esno_0
+  id: variable
+  parameters:
+    comment: ''
+    value: 'numpy.arange(0, 8, .5) '
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 139]
+    rotation: 0
+    state: enabled
+- name: framebits
+  id: variable
+  parameters:
+    comment: ''
+    value: '4096'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [112, 75]
+    rotation: 0
+    state: enabled
+- name: k
+  id: variable
+  parameters:
+    comment: ''
+    value: '7'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 379]
+    rotation: 0
+    state: enabled
+- name: polys
+  id: variable
+  parameters:
+    comment: ''
+    value: '[79, 109]'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [80, 379]
+    rotation: 0
+    state: enabled
+- name: rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 315]
+    rotation: 0
+    state: enabled
+- name: samp_rate_0
+  id: variable
+  parameters:
+    comment: ''
+    value: '35000000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 75]
+    rotation: 0
+    state: enabled
+- name: dec_cc
+  id: variable_cc_decoder_def
+  parameters:
+    comment: ''
+    dim1: len(esno_0)
+    dim2: '1'
+    framebits: framebits
+    k: k
+    mode: fec.CC_STREAMING
+    ndim: '2'
+    padding: 'False'
+    polys: polys
+    rate: rate
+    state_end: '-1'
+    state_start: '0'
+    value: '"ok"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 659]
+    rotation: 0
+    state: enabled
+- name: dec_dummy
+  id: variable_dummy_decoder_def
+  parameters:
+    comment: ''
+    dim1: len(esno_0)
+    dim2: '1'
+    framebits: framebits
+    ndim: '2'
+    value: '"ok"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [424, 771]
+    rotation: 0
+    state: enabled
+- name: dec_ldpc
+  id: variable_ldpc_decoder_def
+  parameters:
+    comment: ''
+    dim1: len(esno_0)
+    dim2: '1'
+    file: gr.prefix() + "/share/gnuradio/fec/ldpc/271.127.3.112"
+    max_iter: '50'
+    ndim: '2'
+    sigma: '0.5'
+    value: '"ok"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 739]
+    rotation: 0
+    state: enabled
+- name: dec_rep
+  id: variable_repetition_decoder_def
+  parameters:
+    comment: ''
+    dim1: len(esno_0)
+    dim2: '1'
+    framebits: framebits
+    ndim: '2'
+    prob: '0.5'
+    rep: '3'
+    value: '"ok"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 739]
+    rotation: 0
+    state: enabled
+- name: dec_tpc
+  id: variable_tpc_decoder_def
+  parameters:
+    bval: '9'
+    col_poly: '[43]'
+    comment: ''
+    decoder_type: '1'
+    dim1: len(esno_0)
+    dim2: '1'
+    kcol: '6'
+    krow: '26'
+    max_iter: '6'
+    ndim: '2'
+    qval: '3'
+    row_poly: '[3]'
+    value: '"ok"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [776, 659]
+    rotation: 0
+    state: enabled
+- name: enc_cc
+  id: variable_cc_encoder_def
+  parameters:
+    comment: ''
+    dim1: len(esno_0)
+    dim2: '1'
+    framebits: framebits
+    k: k
+    mode: fec.CC_STREAMING
+    ndim: '2'
+    padding: 'False'
+    polys: polys
+    rate: rate
+    state_start: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 451]
+    rotation: 0
+    state: enabled
+- name: enc_dummy
+  id: variable_dummy_encoder_def
+  parameters:
+    comment: ''
+    dim1: len(esno_0)
+    dim2: '1'
+    framebits: framebits
+    ndim: '2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [424, 659]
+    rotation: 0
+    state: enabled
+- name: enc_ldpc
+  id: variable_ldpc_encoder_def
+  parameters:
+    comment: ''
+    dim1: len(esno_0)
+    dim2: '1'
+    file: gr.prefix() + "/share/gnuradio/fec/ldpc/271.127.3.112"
+    ndim: '2'
+    value: '"ok"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 627]
+    rotation: 0
+    state: enabled
+- name: enc_rep
+  id: variable_repetition_encoder_def
+  parameters:
+    comment: ''
+    dim1: len(esno_0)
+    dim2: '1'
+    framebits: framebits
+    ndim: '2'
+    rep: '3'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 603]
+    rotation: 0
+    state: enabled
+- name: enc_tpc
+  id: variable_tpc_encoder_def
+  parameters:
+    bval: '9'
+    col_poly: '[43]'
+    comment: ''
+    dim1: len(esno_0)
+    dim2: '1'
+    kcol: '6'
+    krow: '26'
+    ndim: '2'
+    qval: '3'
+    row_poly: '[3]'
+    value: '"ok"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [776, 467]
+    rotation: 0
+    state: enabled
+
+- name: fec_bercurve_generator_0
+  id: fec_bercurve_generator
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decoder_list: dec_cc
+    encoder_list: enc_cc
+    esno: esno_0
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    puncpat: '''11'''
+    samp_rate: samp_rate_0
+    seed: '-100'
+    threadtype: '"capillary"'
+  states:
+    bus_sink: false
+    bus_source: true
+    bus_structure: null
+    coordinate: [248, 212.0]
+    rotation: 0
+    state: enabled
+- name: fec_bercurve_generator_0_0
+  id: fec_bercurve_generator
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decoder_list: dec_rep
+    encoder_list: enc_rep
+    esno: esno_0
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    puncpat: '''11'''
+    samp_rate: samp_rate_0
+    seed: '-100'
+    threadtype: '"capillary"'
+  states:
+    bus_sink: false
+    bus_source: true
+    bus_structure: null
+    coordinate: [248, 116.0]
+    rotation: 0
+    state: enabled
+- name: fec_bercurve_generator_0_0_0
+  id: fec_bercurve_generator
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decoder_list: dec_dummy
+    encoder_list: enc_dummy
+    esno: esno_0
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    puncpat: '''11'''
+    samp_rate: samp_rate_0
+    seed: '-100'
+    threadtype: '"capillary"'
+  states:
+    bus_sink: false
+    bus_source: true
+    bus_structure: null
+    coordinate: [248, 12.0]
+    rotation: 0
+    state: enabled
+- name: fec_bercurve_generator_0_1
+  id: fec_bercurve_generator
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decoder_list: dec_ldpc
+    encoder_list: enc_ldpc
+    esno: esno_0
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    puncpat: '''11'''
+    samp_rate: samp_rate_0
+    seed: '-100'
+    threadtype: '"capillary"'
+  states:
+    bus_sink: false
+    bus_source: true
+    bus_structure: null
+    coordinate: [248, 332.0]
+    rotation: 0
+    state: enabled
+- name: fec_bercurve_generator_0_1_0
+  id: fec_bercurve_generator
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decoder_list: dec_tpc
+    encoder_list: enc_tpc
+    esno: esno_0
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    puncpat: '''11'''
+    samp_rate: samp_rate_0
+    seed: '-100'
+    threadtype: '"capillary"'
+  states:
+    bus_sink: false
+    bus_source: true
+    bus_structure: null
+    coordinate: [248, 460.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_bercurve_sink_0
+  id: qtgui_bercurve_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1'
+    alpha10: '1.0'
+    alpha2: '1'
+    alpha3: '1'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    berlimit: '-10'
+    berminerrors: '1000'
+    bus_structure_sink: list(map(lambda b:list(map(lambda a:b * len(esno) * 2 + a,
+      range(len(esno)*2))), range(num_curves)))
+    color1: '"blue"'
+    color10: '"red"'
+    color2: '"red"'
+    color3: '"magenta"'
+    color4: '"dark red"'
+    color5: '"Dark Blue"'
+    color6: '"red"'
+    color7: '"red"'
+    color8: '"red"'
+    color9: '"red"'
+    comment: ''
+    curvenames: '[]'
+    esno: esno_0
+    gui_hint: ''
+    label1: None
+    label10: ''
+    label2: Rep. (Rate=3)
+    label3: CC (K=7, Rate=2)
+    label4: LDPC
+    label5: TPC
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    marker1: '0'
+    marker10: '0'
+    marker2: '1'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    num_curves: '5'
+    style1: '1'
+    style10: '0'
+    style2: '2'
+    style3: '5'
+    style4: '5'
+    style5: '4'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    update_time: '0.10'
+    width1: '2'
+    width10: '1'
+    width2: '2'
+    width3: '2'
+    width4: '2'
+    width5: '2'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ymax: '0'
+    ymin: '-10'
+  states:
+    bus_sink: true
+    bus_source: false
+    bus_structure: null
+    coordinate: [696, 15]
+    rotation: 0
+    state: enabled
+
+connections:
+- [fec_bercurve_generator_0, '32', qtgui_bercurve_sink_0, '162']
+- [fec_bercurve_generator_0_0, '32', qtgui_bercurve_sink_0, '161']
+- [fec_bercurve_generator_0_0_0, '32', qtgui_bercurve_sink_0, '160']
+- [fec_bercurve_generator_0_1, '32', qtgui_bercurve_sink_0, '163']
+- [fec_bercurve_generator_0_1_0, '32', qtgui_bercurve_sink_0, '164']
+
+metadata:
+  file_format: 1

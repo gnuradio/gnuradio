@@ -1,0 +1,110 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2006,2009,2013 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ *
+ */
+
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdlib.h>
+#include <gnuradio/constants.h>
+
+namespace gr {
+
+  const std::string
+  prefix()
+  {
+    //Use "GR_PREFIX" environment variable when specified
+    const char *prefix = getenv("GR_PREFIX");
+    if (prefix != NULL) return prefix;
+
+    return "@prefix@";
+  }
+
+  const std::string
+  sysconfdir()
+  {
+    //Provide the sysconfdir in terms of prefix()
+    //when the "GR_PREFIX" environment var is specified.
+    if (getenv("GR_PREFIX") != NULL)
+    {
+      return prefix() + "/@GR_CONF_DIR@";
+    }
+
+    return "@SYSCONFDIR@";
+  }
+
+  const std::string
+  prefsdir()
+  {
+    //Provide the prefsdir in terms of sysconfdir()
+    //when the "GR_PREFIX" environment var is specified.
+    if (getenv("GR_PREFIX") != NULL)
+    {
+      return sysconfdir() + "/@CMAKE_PROJECT_NAME@/conf.d";
+    }
+
+    return "@GR_PREFSDIR@";
+  }
+
+  const std::string
+  build_date()
+  {
+    return "@BUILD_DATE@";
+  }
+
+  const std::string
+  version()
+  {
+    return "@VERSION@";
+  }
+
+  // Return individual parts of the version
+  const std::string
+  major_version()
+  {
+    return "@MAJOR_VERSION@";
+  }
+
+  const std::string
+  api_version()
+  {
+    return "@API_COMPAT@";
+  }
+
+  const std::string
+  minor_version()
+  {
+    return "@MINOR_VERSION@";
+  }
+
+  const std::string
+  c_compiler()
+  {
+    return "@cmake_c_compiler_version@";
+  }
+
+  const std::string
+  cxx_compiler()
+  {
+    return "@cmake_cxx_compiler_version@";
+  }
+
+  const std::string
+  compiler_flags()
+  {
+    return "@COMPILER_INFO@";
+  }
+
+  const std::string
+  build_time_enabled_components()
+  {
+    return "@_gr_enabled_components@";
+  }
+} /* namespace gr */

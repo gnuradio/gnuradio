@@ -1,0 +1,166 @@
+options:
+  parameters:
+    author: Example
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: example flow graph
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: dial_tone
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Dial Tone
+    window_size: 1280, 1024
+  states:
+    coordinate: [16, 12.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: ampl
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 0, 0, 1, 2
+    label: Volume
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '.001'
+    stop: '.5'
+    value: '.4'
+    widget: counter_slider
+  states:
+    coordinate: [816, 12.0]
+    rotation: 0
+    state: enabled
+- name: noise
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 1, 0, 1, 2
+    label: Noise Amplitude
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '.001'
+    stop: '.2'
+    value: '0.005'
+    widget: counter_slider
+  states:
+    coordinate: [680, 12.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    coordinate: [208, 12.0]
+    rotation: 0
+    state: enabled
+- name: analog_noise_source_x_0
+  id: analog_noise_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: noise
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    noise_type: analog.GR_GAUSSIAN
+    seed: '-42'
+    type: float
+  states:
+    coordinate: [312, 252.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: ampl
+    comment: ''
+    freq: '350'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    samp_rate: samp_rate
+    type: float
+    waveform: analog.GR_COS_WAVE
+  states:
+    coordinate: [320, 12.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_1
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: ampl
+    comment: ''
+    freq: '440'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    samp_rate: samp_rate
+    type: float
+    waveform: analog.GR_COS_WAVE
+  states:
+    coordinate: [320, 124.0]
+    rotation: 0
+    state: enabled
+- name: audio_sink
+  id: audio_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    device_name: ''
+    num_inputs: '1'
+    ok_to_block: 'True'
+    samp_rate: '32000'
+  states:
+    coordinate: [800, 156.0]
+    rotation: 0
+    state: enabled
+- name: blocks_add_xx
+  id: blocks_add_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '3'
+    type: float
+    vlen: '1'
+  states:
+    coordinate: [600, 128.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_noise_source_x_0, '0', blocks_add_xx, '2']
+- [analog_sig_source_x_0, '0', blocks_add_xx, '0']
+- [analog_sig_source_x_1, '0', blocks_add_xx, '1']
+- [blocks_add_xx, '0', audio_sink, '0']
+
+metadata:
+  file_format: 1

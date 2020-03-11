@@ -1,0 +1,27 @@
+id: dtv_dvbt_energy_dispersal
+label: Energy Dispersal
+
+parameters:
+-   id: nsize
+    label: Blocks(1504 Bytes)
+    dtype: int
+    default: '8'
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: 1
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: ${ 1504*nsize }
+
+asserts:
+- ${ nsize > 0 }
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.dvbt_energy_dispersal(${nsize})
+
+file_format: 1

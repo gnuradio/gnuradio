@@ -1,0 +1,188 @@
+/*! \page page_uhd UHD Interface
+
+\section uhd_introduction Introduction
+
+This is the GNU Radio UHD package. It is the interface to the UHD
+library to connect to and send and receive data between the Ettus
+Research, LLC product line. To use the UHD blocks, the Python
+namespaces is in gnuradio.uhd, which would be normally imported
+as:
+
+\code
+    from gnuradio import uhd
+\endcode
+
+The relevant blocks are listed in the \ref uhd_blk group. The most important
+components are the gr::uhd::usrp_source and gr::uhd::usrp_sink blocks, which
+act as receivers/transmitters. Both are derived from gr::uhd::usrp_block, which
+defines many of the shared functions between those blocks.
+
+\section uhd_external_docs External Documentation
+
+Ettus Research maintains the comprehensive documentation to the underlying UHD driver, which can be found at:
+
+http://files.ettus.com/manual/
+
+The list of classes in the UHD Doxygen is located at:
+
+http://files.ettus.com/manual/annotated.html
+
+
+\section uhd_command_syntax Command Syntax
+
+The UHD sink and source can be controlled by a message port. These message ports
+take commands, which are PMTs formatted as described in <a href="https://wiki.gnuradio.org/index.php/Message_Passing" target="_blank">Using messages as commands</a>.
+
+There is a legacy format, which will be deprecated in the future, where commands may
+be tuples, formatted as:
+
+    (command, value, [channel])
+
+See older versions of this manual for documentation on this deprecated command format.
+
+In general, every command consists of one or more key/value pairs (either stored as a
+PMT pair, or a dictionary). A full list of keys is listed below.
+
+Example:
+\code{.cpp}
+pmt::pmt_t command = pmt::cons( // Make a pair
+    pmt::mp("freq"), // Key is 'freq' => sets the frequency
+    pmt::mp(1.1e9) // Set the frequency to 1.1 GHz
+);
+// Now pass 'command' into the USRP block's command port
+\endcode
+
+This PMT would set the frequency to 1.1 GHz on all channels. We make use of the pmt::mp() function
+which automatically sets the PMT types. Assume we only want to set the frequency on channel 1
+(i.e. the second channel). In this case, we must construct a dictionary:
+\code{.cpp}
+pmt::pmt_t command = pmt::make_dict();
+command = pmt::dict_add(command, pmt::mp("freq"), pmt::mp(1.1e9)); // Specify frequency
+command = pmt::dict_add(command, pmt::mp("chan"), pmt::mp(1)); // Specify channel
+// Now pass 'command' into the USRP block's command port
+\endcode
+
+This command structure becomes more intuitive when thinking of sending the command PMT
+as a function call, where the key/value pairs are argument names and values, respectively.
+In the above example, the behaviour is the same as if calling
+\code{.python}
+usrp_source.set_center_freq(freq=1.1e9, chan=1)
+\endcode
+The main difference is that we can add more properties to the same
+command PMT, e.g. as such:
+\code{.cpp}
+// 'command' is the same PMT as in the previous example
+command = pmt::dict_add(command, pmt::mp("gain"), pmt::mp(23.0)); // Specify gain
+command = pmt::dict_add(command, pmt::mp("antenna"), pmt::mp("TX/RX")); // Switch antenna
+// Now pass 'command' into the USRP block's command port
+\endcode
+When the USRP block interprets this command PMT, all properties will be
+set.
+
+
+\subsection uhd_command_syntax_cmds Common command keys
+
+The following command keys are understood by both UHD Source and Sink:
+
+Command name | Value Type   | Description
+-------------|--------------|-------------------------------------------------------------
+`chan`       | int          | Specifies a channel. If this is not given, either all channels are chosen, or channel 0, depending on the action. A value of -1 forces 'all channels', where possible.
+`gain`       | double       | Sets the Tx or Rx gain (in dB). Defaults to all channels.
+`freq`       | double       | Sets the Tx or Rx frequency. Defaults to all channels. If specified without `lo_offset`, it will set the LO offset to zero.
+`lo_offset`  | double       | Sets an LO offset. Defaults to all channels. Note this does not affect the effective center frequency.
+`tune`       | tune_request | Like freq, but sets a full tune request (i.e. center frequency and DSP offset). Defaults to all channels.
+`lo_freq`    | double       | For fully manual tuning: Set the LO frequency (RF frequency). Conflicts with `freq`, `lo_offset`, and `tune`.
+`dsp_freq`   | double       | For fully manual tuning: Set the DSP frequency (CORDIC frequency). Conflicts with `freq`, `lo_offset`, and `tune`.
+`direction`  | string       | Used for timed transceiver tuning to ensure tuning order is maintained. Values other than 'TX' or 'RX' will be ignored.
+`rate`       | double       | See usrp_block::set_samp_rate(). *Always* affects all channels.
+`bandwidth`  | double       | See usrp_block::set_bandwidth(). Defaults to all channels.
+`time`       | timestamp    | Sets a command time. See usrp_block::set_command_time(). A value of PMT_NIL will clear the command time.
+`mboard`     | int          | Specify mboard index, where applicable.
+`antenna`    | string       | See usrp_block::set_antenna(). Defaults to all channels.
+
+Special types:
+
+- tune_request: Like a uhd::tune_request_t, but always uses POLICY_AUTO. This is a pair, composed of (target_frequency, lo_offset)
+- timestamp: A pair composed of (long full_secs, double frac_secs). Similar to uhd::time_spec_t
+
+\b Note: Not all commands are affected by `time`. See the UHD manual for details on timed commands.
+
+\subsection uhd_command_syntax_multi_vs_single Dictionaries vs pairs
+
+Given the choices, it may be unclear if it's preferable to send multiple commands
+to the USRP block with a single key/value pair each, or send a single dict with
+all the values.
+
+In general, the dictionary should be preferred. It has some distinct advantages:
+- If it carries a timestamp, this timestamp is valid for all key/value pairs it
+  may be applied to.
+- All settings will be applied at once. With multiple messages, other blocks might
+  be sending interfering messages while the messages are being processed.
+
+\section uhd_configuring Configuring a UHD object
+
+A typical option parser setup for a UHD device looks like
+
+\code
+    parser = OptionParser(option_class=eng_option)
+    parser.add_option("-a", "--args", type="string", default="",
+                      help="UHD device address args , [default=%default]")
+    parser.add_option("", "--spec", type="string", default=None,
+                      help="Subdevice of UHD device where appropriate")
+    parser.add_option("-A", "--antenna", type="string", default=None,
+                      help="select Rx Antenna where appropriate")
+    parser.add_option("-s", "--samp-rate", type="eng_float", default=1e6,
+                      help="set sample rate (bandwidth) [default=%default]")
+    parser.add_option("-f", "--freq", type="eng_float", default=None,
+                      help="set frequency to FREQ", metavar="FREQ")
+    parser.add_option("-g", "--gain", type="eng_float", default=None,
+                      help="set gain in dB (default is midpoint)")
+\endcode
+
+To use these options to create a UHD source object:
+
+\code
+    stream_args = uhd.stream_args()
+    self.u = uhd.usrp_source(device_addr=options.args,
+                             stream_args)
+    self.u.set_samp_rate(options.samp_rate)
+
+    # if no gain was specified, use the mid-point in dB
+    if options.gain is None:
+        g = self.u.get_gain_range()
+        options.gain = float(g.start()+g.stop())/2
+    self.u.set_gain(options.gain, 0)
+
+    # Set the center frequency
+    self.u.set_center_freq(options.freq, 0)
+
+    # Set the subdevice spec
+    if(options.spec):
+        self.u.set_subdev_spec(options.spec, 0)
+
+     # Set the antenna
+     if(options.antenna):
+        self.u.set_antenna(options.antenna, 0)
+\endcode
+
+Frequently, your application may need a sample rate that is not
+supported by the UHD device. If you have extra CPU power to spare, you
+can easily set the sample rate you want, then ask the device what the
+actual sample rate set was. Then, you can easily create an arbitrary
+resampler to take care of the difference.
+
+\code
+    self.u.set_samp_rate(options.samp_rate)
+
+    desired_rate = options.samp_rate
+    actual_rate = self.u.get_samp_rate()
+    resample = desired_rate / actual_rate
+
+    # Use the filter.pfb version and pass only the resample factor.
+    # This block builds a half-band filter for you
+
+    self.resampler = filter.pfb.arb_resampler_ccf(resample)
+\endcode
+
+*/
+// vim: set ft=doxygen:

@@ -1,0 +1,20 @@
+##################################################
+# Freedesktop Notes
+##################################################
+
+This directory contains icons, a mime type, and menu files for grc.
+Installation of these files requires a set of tools called xdg-utils.
+xdg-utils will install files in a standard way according to the freedesktop.org standards.
+
+Desktop environments that implement these standards are gnome, kde, xfce, and others.
+If you have one of these desktop environments, xdg-utils should come installed.
+If xdg-utils is not installed, then this directory will be ignored by the build.
+
+The gtk IconTheme module locates the installed icons for use inside the grc app.
+On recent versions of gtk, IconTheme ignores the icons installed into the default theme.
+This presents a problem for the gnome file system browser, nautilus, and the grc app.
+As a solution, icons are also installed under the gnome theme.
+
+*.png files - these are the icons of various sizes
+*.desktop files - these are the menu items for grc executables
+*.xml file - this is the mime type for the saved flow graphs

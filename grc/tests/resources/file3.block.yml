@@ -1,0 +1,66 @@
+id: variable_qtgui_check_box
+label: QT GUI Check Box
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    hide: ${ ('none' if label else 'part') }
+-   id: type
+    label: Type
+    dtype: enum
+    default: int
+    options: [real, int, string, bool, raw]
+    option_labels: [Float, Integer, String, Boolean, Any]
+    option_attributes:
+        conv: [float, int, str, bool, eval]
+    hide: part
+-   id: value
+    label: Default Value
+    dtype: ${ type }
+    default: 'True'
+-   id: 'true'
+    label: 'True'
+    dtype: ${ type }
+    default: 'True'
+-   id: 'false'
+    label: 'False'
+    dtype: ${ type }
+    default: 'False'
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+value: ${ value }
+
+asserts:
+- ${value in (true, false)}
+
+templates:
+    imports: from PyQt4 import Qt
+    var_make: self.${id} = ${id} = ${value}
+    callbacks:
+    - self.set_${id}(${value})
+    - self._${id}_callback(${id})
+    make: |-
+        <%
+            win = '_%s_check_box'%id
+            if not label:
+                label = id
+        %>
+        ${win} = Qt.QCheckBox(${label})
+        self._${id}_choices = {True: ${true}, False: ${false}}
+        self._${id}_choices_inv = {${true}: True, ${false}: False}
+        self._${id}_callback = lambda i: Qt.QMetaObject.invokeMethod(${win}, "setChecked", Qt.Q_ARG("bool", self._${id}_choices_inv[i]))
+        self._${id}_callback(self.${id})
+        ${win}.stateChanged.connect(lambda i: self.set_${id}(self._${id}_choices[bool(i)]))
+        ${gui_hint()(win)}
+
+documentation: |-
+    This block creates a variable check box. Leave the label blank to use the variable id as the label.
+
+    A check box selects between two values of similar type. Te values do not necessarily need to be of boolean type.
+
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

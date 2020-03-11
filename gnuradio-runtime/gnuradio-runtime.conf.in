@@ -1,0 +1,39 @@
+# This file contains system wide configuration data for GNU Radio.
+# You may override any setting on a per-user basis by editing
+# ~/.gnuradio/config.conf
+
+[DEFAULT]
+verbose = False
+
+# The maximum number of messages a block will store up before pruning
+# the queue by popping messages from the front.
+max_messages = 8192
+
+
+[LOG]
+# Levels can be (case insensitive):
+#       DEBUG, INFO, WARN, TRACE, ERROR, ALERT, CRIT, FATAL, EMERG
+log_level = debug
+debug_level = emerg
+
+# These file names can either be 'stdout' to output to standard output
+# or 'stderr' to output to standard error. Any other string will
+# create a file in which to output the logging information. An empty
+# string or no value here will ignore this level of configuration
+# completely.
+log_file = stdout
+debug_file = stderr
+
+# Used for advanced configuration of the logger
+#log_config = @CMAKE_INSTALL_PREFIX@/etc/gnuradio/gr_log_default.xml
+
+
+[PerfCounters]
+on = False
+export = False
+clock = thread
+#clock = monotonic
+
+[ControlPort]
+on = False
+edges_list = False

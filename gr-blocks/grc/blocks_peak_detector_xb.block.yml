@@ -1,0 +1,59 @@
+id: blocks_peak_detector_xb
+label: Peak Detector
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [float, int, short]
+    option_attributes:
+        fcn: [f, i, s]
+    hide: part
+-   id: threshold_factor_rise
+    label: TH Factor Rise
+    dtype: real
+    default: '0.25'
+-   id: threshold_factor_fall
+    label: TH Factor Fall
+    dtype: real
+    default: '0.40'
+-   id: look_ahead
+    label: Look Ahead
+    dtype: int
+    default: '10'
+-   id: alpha
+    label: Alpha
+    dtype: real
+    default: '0.001'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.peak_detector_${type.fcn}b(${threshold_factor_rise}, ${threshold_factor_fall},
+        ${look_ahead}, ${alpha})
+    callbacks:
+    - set_threshold_factor_rise(${threshold_factor_rise})
+    - set_threshold_factor_fall(${threshold_factor_fall})
+    - set_look_ahead(${look_ahead})
+    - set_alpha(${alpha})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/peak_detector.h>']
+    declarations: 'blocks::peak_detector_${type.fcn}b::sptr ${id};'
+    make: 'this->${id} = blocks::peak_detector_${type.fcn}b::make(${threshold_factor_rise}, ${threshold_factor_fall},
+        ${look_ahead}, ${alpha});'
+    callbacks:
+    - set_threshold_factor_rise(${threshold_factor_rise})
+    - set_threshold_factor_fall(${threshold_factor_fall})
+    - set_look_ahead(${look_ahead})
+    - set_alpha(${alpha})
+
+file_format: 1

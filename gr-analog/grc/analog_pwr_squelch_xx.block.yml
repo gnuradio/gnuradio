@@ -1,0 +1,70 @@
+id: analog_pwr_squelch_xx
+label: Power Squelch
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float]
+    option_attributes:
+        fcn: [cc, ff]
+    hide: part
+-   id: threshold
+    label: Threshold (dB)
+    dtype: real
+-   id: alpha
+    label: Alpha
+    dtype: real
+    default: 1e-4
+-   id: ramp
+    label: Ramp
+    dtype: int
+    default: '0'
+-   id: gate
+    label: Gate
+    dtype: enum
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.pwr_squelch_${type.fcn}(${threshold}, ${alpha}, ${ramp}, ${gate})
+    callbacks:
+    - set_threshold(${threshold})
+    - set_alpha(${alpha})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/pwr_squelch_${type.fcn}.h>']
+    make: 'this->${id} = analog::pwr_squelch_${type.fcn}::make(${threshold}, ${alpha}, ${ramp}, ${gate});'
+    callbacks:
+    - set_threshold(${threshold})
+    - set_alpha(${alpha})
+    link: ['gnuradio-analog']
+    translations:
+        True: true
+        False: false
+
+documentation: |-
+    This will either pass the input unchanged or block it, depending on
+    whether its envelope is over a certain threshold. The envelope is calculated
+    by taking the squared magnitude of the signal and lowpassing it with a
+    single pole IIR filter (with the specified alpha).
+
+    The ramp parameter specifies the attack / release time, in samples.
+    A sinusodial ramp is used to progressively mute / unmute the input.
+    If ramp is set to 0, input is muted / unmuted without a ramp.
+
+    For realtime applications you'll want to set the gate parameter to
+    false, which produces zeros when the input is muted. If it is true,
+    the block will stop producing samples when in muted state.
+
+file_format: 1

@@ -1,0 +1,80 @@
+id: variable_cc_decoder_def
+label: CC Decoder Definition
+flags: [ show_id ]
+
+parameters:
+-   id: value
+    label: Ignore Me
+    dtype: raw
+    default: '"ok"'
+    hide: all
+-   id: ndim
+    label: Parallelism
+    dtype: enum
+    default: '0'
+    options: ['0', '1', '2']
+-   id: dim1
+    label: Dimension 1
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if (int(ndim) >= 1) else 'all') }
+-   id: dim2
+    label: Dimension 2
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if (int(ndim) >= 2) else 'all') }
+-   id: framebits
+    label: Frame Bits
+    dtype: int
+    default: '2048'
+-   id: k
+    label: Constraint Length (K)
+    dtype: int
+    default: '7'
+-   id: rate
+    label: Rate Inverse (1/R) (1/2) --> 2
+    dtype: int
+    default: '2'
+-   id: polys
+    label: Polynomials
+    dtype: int_vector
+    default: '[79,109]'
+-   id: state_start
+    label: Start State
+    dtype: int
+    default: '0'
+-   id: state_end
+    label: End State
+    dtype: int
+    default: '-1'
+-   id: mode
+    label: Streaming Behavior
+    dtype: raw
+    options: ['fec.CC_STREAMING', 'fec.CC_TERMINATED', 'fec.CC_TAILBITING', 'fec.CC_TRUNCATED']
+    option_labels: [Streaming, Terminated, Tailbiting, Truncated]
+-   id: padding
+    label: Byte Padding
+    dtype: bool
+    default: 'False'
+value: ${ fec.cc_decoder.make(framebits, k, rate, polys, state_start, state_end, mode,
+    padding) }
+
+templates:
+    imports: from gnuradio import fec
+    var_make: |-
+        % if int(ndim)==0:
+        self.${id} = ${id} = fec.cc_decoder.make(${framebits},\
+        ${k}, ${rate}, ${polys}, ${state_start}, ${state_end}, ${mode}, ${padding})\
+        % elif int(ndim)==1:
+        self.${id} = ${id} = list(map( (lambda a: fec.cc_decoder.make(${framebits},\
+        ${k}, ${rate}, ${polys}, ${state_start}, ${state_end}, ${mode}, ${padding})),\
+        range(0,${dim1})))
+        % else:
+        self.${id} = ${id} = list(map( (lambda b: list(map(\
+        ( lambda a: fec.cc_decoder.make(${framebits}, ${k}, ${rate}, ${polys}, ${state_start},\
+        ${state_end}, ${mode}, ${padding})), range(0,${dim2}) ) ) ), range(0,${dim1})))\
+        % endif
+
+documentation: ""
+
+file_format: 1

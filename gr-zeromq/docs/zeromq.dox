@@ -1,0 +1,22 @@
+/*! \page page_zeromq ZeroMQ
+
+\section zmq_introduction Introduction
+
+This is the gr-zeromq package. It contains bindings for ZeroMQ.
+
+The Python namespace is in gnuradio.zeromq, which would be normally
+imported as:
+
+\code
+    from gnuradio import zeromq
+\endcode
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using:
+
+\code
+    help(zeromq)
+\endcode
+
+*/

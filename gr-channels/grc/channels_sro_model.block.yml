@@ -1,0 +1,43 @@
+id: channels_sro_model
+label: SRO Model
+
+parameters:
+-   id: srate
+    label: Sample Rate Hz
+    dtype: real
+    default: samp_rate
+-   id: stdev
+    label: SRO Standard Deviation Hz per sample
+    dtype: real
+    default: '0.01'
+-   id: maxdev
+    label: Max SRO Bound Hz
+    dtype: real
+    default: 1e3
+-   id: seed
+    label: Seed
+    dtype: int
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import channels
+    make: |-
+        channels.sro_model(
+                ${srate},
+                ${stdev},
+                ${maxdev},
+                ${seed})
+    callbacks:
+    - set_std_dev(${stdev})
+    - set_max_dev(${maxdev})
+    - set_samp_rate(${srate})
+
+file_format: 1

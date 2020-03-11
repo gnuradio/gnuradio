@@ -1,0 +1,390 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: file_atsc_tx
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: 1280, 1024
+  states:
+    coordinate: [368, 19]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: center_freq
+  id: variable
+  parameters:
+    comment: ''
+    value: 429e6
+  states:
+    coordinate: [808, 20]
+    rotation: 0
+    state: enabled
+- name: pilot_freq
+  id: variable
+  parameters:
+    comment: ''
+    value: (6000000.0 - (symbol_rate / 2)) / 2
+  states:
+    coordinate: [680, 20]
+    rotation: 0
+    state: enabled
+- name: symbol_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 4500000.0 / 286 * 684
+  states:
+    coordinate: [552, 19]
+    rotation: 0
+    state: enabled
+- name: blocks_file_sink_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: atsc.cfile
+    type: complex
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    coordinate: [1048, 236]
+    rotation: 0
+    state: enabled
+- name: blocks_file_source_0
+  id: blocks_file_source
+  parameters:
+    affinity: ''
+    alias: ''
+    begin_tag: pmt.PMT_NIL
+    comment: ''
+    file: advatsc.ts
+    length: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    repeat: 'False'
+    type: byte
+    vlen: '1'
+  states:
+    coordinate: [64, 19]
+    rotation: 0
+    state: enabled
+- name: blocks_keep_m_in_n_0
+  id: blocks_keep_m_in_n
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    m: '832'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    n: '1024'
+    offset: '4'
+    type: byte
+  states:
+    coordinate: [88, 468.0]
+    rotation: 0
+    state: enabled
+- name: blocks_rotator_cc_0
+  id: blocks_rotator_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    phase_inc: ((-3000000.0 + pilot_freq) / symbol_rate) * (math.pi * 2)
+  states:
+    coordinate: [336, 332]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: symbol_rate
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [824, 332]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_to_stream_1
+  id: blocks_vector_to_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: '1024'
+    type: byte
+    vlen: '1'
+  states:
+    coordinate: [88, 424.0]
+    rotation: 180
+    state: enabled
+- name: dtv_atsc_field_sync_mux_0
+  id: dtv_atsc_field_sync_mux
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [88, 376.0]
+    rotation: 0
+    state: enabled
+- name: dtv_atsc_interleaver_0
+  id: dtv_atsc_interleaver
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [88, 280.0]
+    rotation: 0
+    state: enabled
+- name: dtv_atsc_pad_0
+  id: dtv_atsc_pad
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [88, 136.0]
+    rotation: 180
+    state: enabled
+- name: dtv_atsc_randomizer_0
+  id: dtv_atsc_randomizer
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [88, 184.0]
+    rotation: 0
+    state: enabled
+- name: dtv_atsc_rs_encoder_0
+  id: dtv_atsc_rs_encoder
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [88, 232.0]
+    rotation: 180
+    state: enabled
+- name: dtv_atsc_trellis_encoder_0
+  id: dtv_atsc_trellis_encoder
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [88, 328.0]
+    rotation: 180
+    state: enabled
+- name: dtv_dvbs2_modulator_bc_0
+  id: dtv_dvbs2_modulator_bc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: MOD_8VSB
+    framesize: FECFRAME_NORMAL
+    interpolation: INTERPOLATION_OFF
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rate1: C1_4
+    rate2: C1_5_MEDIUM
+    rate3: C1_4
+  states:
+    coordinate: [328, 476.0]
+    rotation: 0
+    state: enabled
+- name: fft_filter_xxx_0
+  id: fft_filter_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decim: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nthreads: '1'
+    samp_delay: '0'
+    taps: firdes.root_raised_cosine(0.11, symbol_rate, symbol_rate/2, 0.1152, 200)
+    type: ccc
+  states:
+    coordinate: [576, 316]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import math
+  states:
+    coordinate: [368, 91]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '0.1'
+    axislabels: 'True'
+    bw: symbol_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: center_freq
+    fftsize: '1024'
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    nconnections: '1'
+    showports: 'True'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    coordinate: [1048, 396]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_0
+  id: virtual_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    stream_id: mod-rot
+  states:
+    coordinate: [592, 484.0]
+    rotation: 0
+    state: true
+- name: virtual_source_0
+  id: virtual_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: ''
+    minoutbuf: ''
+    stream_id: mod-rot
+  states:
+    coordinate: [336, 276.0]
+    rotation: 180
+    state: true
+
+connections:
+- [blocks_file_source_0, '0', dtv_atsc_pad_0, '0']
+- [blocks_keep_m_in_n_0, '0', dtv_dvbs2_modulator_bc_0, '0']
+- [blocks_rotator_cc_0, '0', fft_filter_xxx_0, '0']
+- [blocks_throttle_0, '0', blocks_file_sink_0, '0']
+- [blocks_throttle_0, '0', qtgui_freq_sink_x_0, '0']
+- [blocks_vector_to_stream_1, '0', blocks_keep_m_in_n_0, '0']
+- [dtv_atsc_field_sync_mux_0, '0', blocks_vector_to_stream_1, '0']
+- [dtv_atsc_interleaver_0, '0', dtv_atsc_trellis_encoder_0, '0']
+- [dtv_atsc_pad_0, '0', dtv_atsc_randomizer_0, '0']
+- [dtv_atsc_randomizer_0, '0', dtv_atsc_rs_encoder_0, '0']
+- [dtv_atsc_rs_encoder_0, '0', dtv_atsc_interleaver_0, '0']
+- [dtv_atsc_trellis_encoder_0, '0', dtv_atsc_field_sync_mux_0, '0']
+- [dtv_dvbs2_modulator_bc_0, '0', virtual_sink_0, '0']
+- [fft_filter_xxx_0, '0', blocks_throttle_0, '0']
+- [virtual_source_0, '0', blocks_rotator_cc_0, '0']
+
+metadata:
+  file_format: 1

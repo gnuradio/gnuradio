@@ -1,0 +1,117 @@
+id: dtv_dvbt2_paprtr_cc
+label: Tone Reservation PAPR
+
+parameters:
+-   id: carriermode
+    label: Extended Carrier Mode
+    dtype: enum
+    options: [CARRIERS_NORMAL, CARRIERS_EXTENDED]
+    option_labels: [Normal, Extended]
+    option_attributes:
+        val: [dtv.CARRIERS_NORMAL, dtv.CARRIERS_EXTENDED]
+-   id: fftsize
+    label: FFT Size
+    dtype: enum
+    options: [FFTSIZE_1K, FFTSIZE_2K, FFTSIZE_4K, FFTSIZE_8K, FFTSIZE_8K_T2GI, FFTSIZE_16K,
+        FFTSIZE_16K_T2GI, FFTSIZE_32K, FFTSIZE_32K_T2GI]
+    option_labels: [1K, 2K, 4K, 8K, 8K DVB-T2 GI, 16K, 16K DVB-T2 GI, 32K, 32K DVB-T2
+            GI]
+    option_attributes:
+        val: [dtv.FFTSIZE_1K, dtv.FFTSIZE_2K, dtv.FFTSIZE_4K, dtv.FFTSIZE_8K, dtv.FFTSIZE_8K_T2GI,
+            dtv.FFTSIZE_16K, dtv.FFTSIZE_16K_T2GI, dtv.FFTSIZE_32K, dtv.FFTSIZE_32K_T2GI]
+        vlength: [1024, 2048, 4096, 8192, 8192, 16384, 16384, 32768,
+            32768]
+-   id: pilotpattern
+    label: Pilot Pattern
+    dtype: enum
+    options: [PILOT_PP1, PILOT_PP2, PILOT_PP3, PILOT_PP4, PILOT_PP5, PILOT_PP6, PILOT_PP7,
+        PILOT_PP8]
+    option_labels: [PP1, PP2, PP3, PP4, PP5, PP6, PP7, PP8]
+    option_attributes:
+        val: [dtv.PILOT_PP1, dtv.PILOT_PP2, dtv.PILOT_PP3, dtv.PILOT_PP4, dtv.PILOT_PP5,
+            dtv.PILOT_PP6, dtv.PILOT_PP7, dtv.PILOT_PP8]
+-   id: guardinterval
+    label: Guard Interval
+    dtype: enum
+    options: [GI_1_32, GI_1_16, GI_1_8, GI_1_4, GI_1_128, GI_19_128, GI_19_256]
+    option_labels: [1/32, 1/16, 1/8, 1/4, 1/128, 19/128, 19/256]
+    option_attributes:
+        val: [dtv.GI_1_32, dtv.GI_1_16, dtv.GI_1_8, dtv.GI_1_4, dtv.GI_1_128, dtv.GI_19_128,
+            dtv.GI_19_256]
+-   id: numdatasyms
+    label: Number of Data Symbols
+    dtype: int
+    default: '100'
+-   id: paprmode1
+    label: PAPR Mode
+    dtype: enum
+    options: [PAPR_OFF, PAPR_ACE, PAPR_TR, PAPR_BOTH]
+    option_labels: ['Off', Active Constellation Extension, Tone Reservation, Both
+            ACE and TR]
+    option_attributes:
+        hide_vclip: [all, all, none, none]
+        val: [dtv.PAPR_OFF, dtv.PAPR_ACE, dtv.PAPR_TR, dtv.PAPR_BOTH]
+    hide: ${ version.hide_111 }
+-   id: paprmode2
+    label: PAPR Mode
+    dtype: enum
+    options: [PAPR_OFF, PAPR_ACE, PAPR_TR, PAPR_BOTH]
+    option_labels: [P2 Only, Active Constellation Extension, Tone Reservation, Both
+            ACE and TR]
+    option_attributes:
+        hide_vclip: [all, all, none, none]
+        val: [dtv.PAPR_OFF, dtv.PAPR_ACE, dtv.PAPR_TR, dtv.PAPR_BOTH]
+    hide: ${ version.hide_131 }
+-   id: version
+    label: Specification Version
+    dtype: enum
+    options: [VERSION_111, VERSION_131]
+    option_labels: [1.1.1, 1.3.1]
+    option_attributes:
+        hide_111: [none, all]
+        hide_131: [all, none]
+        val: [dtv.VERSION_111, dtv.VERSION_131]
+-   id: vclip
+    label: Vclip
+    dtype: float
+    default: '3.3'
+    hide: ${ (paprmode1.hide_vclip if str(version) == 'VERSION_111' else paprmode2.hide_vclip)
+        }
+-   id: iterations
+    label: Iterations
+    dtype: int
+    default: '10'
+    hide: ${ (paprmode1.hide_vclip if str(version) == 'VERSION_111' else paprmode2.hide_vclip)
+        }
+
+inputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ fftsize.vlength }
+
+outputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ fftsize.vlength }
+
+templates:
+    imports: from gnuradio import dtv
+    make: |-
+        dtv.dvbt2_paprtr_cc(
+            ${carriermode.val},
+            ${fftsize.val},
+            ${pilotpattern.val},
+            ${guardinterval.val},
+            ${numdatasyms},
+            % if str(version) == 'VERSION_111':
+            ${paprmode1.val},
+            % else:
+            ${paprmode2.val},
+            % endif
+            ${version.val},
+            ${vclip},
+            ${iterations},
+            ${fftsize.vlength}
+            )
+
+file_format: 1

@@ -1,0 +1,27 @@
+id: dtv_dvbt_energy_descramble
+label: Energy Descramble
+
+parameters:
+-   id: nsize
+    label: Blocks(188 Bytes)
+    dtype: int
+    default: '8'
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: ${ nsize*188 }
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: 1
+
+asserts:
+- ${ nsize > 0 }
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.dvbt_energy_descramble(${nsize})
+
+file_format: 1

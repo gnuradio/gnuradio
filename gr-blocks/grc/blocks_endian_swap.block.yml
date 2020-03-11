@@ -1,0 +1,32 @@
+id: blocks_endian_swap
+label: Endian Swap
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [complex, s32, s16]
+    option_labels: [Complex, Int, Short]
+    option_attributes:
+        size: ['8', '4', '2']
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.endian_swap(${type.size})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/endian_swap.h>']
+    declarations: 'blocks::endian_swap::sptr ${id};'
+    make: 'this->${id} = blocks::endian_swap::make(${type.size});'
+
+file_format: 1

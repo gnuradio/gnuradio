@@ -1,0 +1,62 @@
+id: digital_ofdm_frame_equalizer_vcvc
+label: OFDM Frame Equalizer
+flags: [ python, cpp ]
+
+parameters:
+-   id: fft_len
+    label: FFT length
+    dtype: int
+    default: fft_len
+    hide: ${ 'part' if fft_len == 1 else 'none' }
+-   id: cp_len
+    label: CP length
+    dtype: int
+    default: fft_len/4
+-   id: equalizer
+    label: Equalizer
+    dtype: raw
+-   id: len_tag_key
+    label: Length Tag Key
+    dtype: string
+-   id: propagate_channel_state
+    label: Propagate Channel State
+    dtype: enum
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+-   id: fixed_frame_len
+    label: Fixed frame length
+    dtype: int
+    default: '0'
+    hide: ${ ('none' if fixed_frame_len else 'part') }
+
+inputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ fft_len }
+
+outputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ fft_len }
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.ofdm_frame_equalizer_vcvc(${equalizer}, ${cp_len}, ${len_tag_key},
+        ${propagate_channel_state}, ${fixed_frame_len})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/ofdm_frame_equalizer_vcvc.h>']
+    declarations: 'digital::ofdm_frame_equalizer_vcvc::sptr ${id};'
+    make: |-
+        this->${id} = digital::ofdm_frame_equalizer_vcvc::make(
+            ${equalizer},
+            ${cp_len},
+            ${len_tag_key},
+            ${propagate_channel_state},
+            ${fixed_frame_len});
+    link: ['gnuradio-digital']
+    translations:
+        'True': 'true'
+        'False': 'false'
+
+file_format: 1

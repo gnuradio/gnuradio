@@ -1,0 +1,59 @@
+id: variable_constellation_rect
+label: Constellation Rect. Object
+category: Modulators
+flags: [ show_id, python ]
+
+parameters:
+-   id: sym_map
+    label: Symbol Map
+    dtype: int_vector
+    default: '[0, 1, 3, 2]'
+-   id: const_points
+    label: Constellation Points
+    dtype: complex_vector
+    default: '[-1-1j, -1+1j, 1+1j, 1-1j]'
+-   id: rot_sym
+    label: Rotational Symmetry
+    dtype: int
+    default: '4'
+-   id: real_sect
+    label: Real Sectors
+    dtype: int
+    default: '2'
+-   id: imag_sect
+    label: Imaginary Sectors
+    dtype: int
+    default: '2'
+-   id: w_real_sect
+    label: Width Real Sectors
+    dtype: int
+    default: '1'
+-   id: w_imag_sect
+    label: Width Imaginary Sectors
+    dtype: int
+    default: '1'
+-   id: precision
+    label: Soft bits precision
+    dtype: int
+    default: '8'
+    hide: part
+-   id: soft_dec_lut
+    label: Soft Decisions LUT
+    dtype: raw
+    default: None
+    hide: ${ ('part' if str(soft_dec_lut) == 'None' else 'none') }
+value: ${ digital.constellation_rect(const_points, sym_map, rot_sym, real_sect, imag_sect,
+    w_real_sect, w_imag_sect) }
+
+templates:
+    imports: from gnuradio import digital
+    var_make: |-
+        self.${id} = ${id} = digital.constellation_rect(${const_points}, ${sym_map},
+        ${rot_sym}, ${real_sect}, ${imag_sect}, ${w_real_sect}, ${w_imag_sect}).base()
+        % if str(soft_dec_lut).lower() == '"auto"' or str(soft_dec_lut).lower() == "'auto'":
+        self.${id}.gen_soft_dec_lut(${precision})
+        % elif str(soft_dec_lut) != "None":
+        self.${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision})
+        % endif
+
+file_format: 1

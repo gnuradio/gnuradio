@@ -1,0 +1,30 @@
+id: analog_fm_preemph
+label: FM Preemphasis
+flags: [ python ]
+
+parameters:
+-   id: samp_rate
+    label: Sample Rate
+    dtype: real
+-   id: tau
+    label: Tau
+    dtype: real
+    default: 75e-6
+-   id: fh
+    label: High Corner Freq
+    dtype: real
+    default: '-1.0'
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.fm_preemph(fs=${samp_rate}, tau=${tau}, fh=${fh})
+
+file_format: 1

@@ -1,0 +1,59 @@
+id: audio_source
+label: Audio Source
+category: '[Core]/Audio'
+flags: [ throttle, python, cpp ]
+
+parameters:
+-   id: samp_rate
+    label: Sample Rate
+    dtype: int
+    default: samp_rate
+    options: ['16000', '22050', '24000', '32000', '44100', '48000']
+    option_labels: [16 kHz, 22.05 kHz, 24 kHz, 32 kHz, 44.1 kHz, 48 kHz]
+-   id: device_name
+    label: Device Name
+    dtype: string
+    hide: ${ ('none' if device_name else 'part') }
+-   id: ok_to_block
+    label: OK to Block
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+-   id: num_outputs
+    label: Num Outputs
+    dtype: int
+    default: '1'
+    hide: part
+
+outputs:
+-   domain: stream
+    dtype: float
+    multiplicity: ${ num_outputs }
+
+asserts:
+- ${ 0 < num_outputs }
+
+templates:
+    imports: from gnuradio import audio
+    make: audio.source(${samp_rate}, ${device_name}, ${ok_to_block})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/audio/source.h>' ]
+    declarations: 'audio::source::sptr ${id};'
+    make: 'this->${id} = audio::source::make(${samp_rate}, ${device_name}, ${ok_to_block});'
+    link: ['gnuradio-audio']
+    translations:
+        "'": '"'
+        'True': 'true'
+        'False': 'false'
+
+documentation: |-
+    Not all sampling rates will be supported by your hardware.
+
+    Leave the device name blank to choose default audio device. ALSA users with audio trouble may try setting the device name to plughw:0,0
+
+    The audio source can have multiple outputs depending upon your hardware. For example, set the outputs to 2 for stereo audio.
+
+file_format: 1

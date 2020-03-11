@@ -1,0 +1,670 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: fecapi_async_decoders
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: 2000,2000
+  states:
+    coordinate: [10, 10]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: dec_cc
+  id: variable_cc_decoder_def
+  parameters:
+    comment: ''
+    dim1: '1'
+    dim2: '4'
+    framebits: MTU*8
+    k: k
+    mode: fec.CC_TERMINATED
+    ndim: '0'
+    padding: 'False'
+    polys: polys
+    rate: rate
+    state_end: '-1'
+    state_start: '0'
+    value: '"ok"'
+  states:
+    coordinate: [401, 687]
+    rotation: 0
+    state: enabled
+- name: dec_dummy
+  id: variable_dummy_decoder_def
+  parameters:
+    comment: ''
+    dim1: '1'
+    dim2: '1'
+    framebits: MTU*8
+    ndim: '0'
+    value: '"ok"'
+  states:
+    coordinate: [598, 636]
+    rotation: 0
+    state: enabled
+- name: dec_rep
+  id: variable_repetition_decoder_def
+  parameters:
+    comment: ''
+    dim1: '1'
+    dim2: '1'
+    framebits: MTU*8
+    ndim: '0'
+    prob: '0.5'
+    rep: rep
+    value: '"ok"'
+  states:
+    coordinate: [781, 651]
+    rotation: 0
+    state: enabled
+- name: enc_cc
+  id: variable_cc_encoder_def
+  parameters:
+    comment: ''
+    dim1: '1'
+    dim2: '1'
+    framebits: MTU*8
+    k: k
+    mode: fec.CC_TERMINATED
+    ndim: '0'
+    padding: 'False'
+    polys: polys
+    rate: rate
+    state_start: '0'
+  states:
+    coordinate: [401, 510]
+    rotation: 0
+    state: enabled
+- name: enc_ccsds
+  id: variable_ccsds_encoder_def
+  parameters:
+    comment: ''
+    dim1: '1'
+    dim2: '1'
+    framebits: MTU*8
+    mode: fec.CC_TERMINATED
+    ndim: '0'
+    state_start: '0'
+  states:
+    coordinate: [992, 537]
+    rotation: 0
+    state: enabled
+- name: enc_dummy
+  id: variable_dummy_encoder_def
+  parameters:
+    comment: ''
+    dim1: '1'
+    dim2: '1'
+    framebits: MTU*8
+    ndim: '0'
+  states:
+    coordinate: [599, 538]
+    rotation: 0
+    state: enabled
+- name: enc_rep
+  id: variable_repetition_encoder_def
+  parameters:
+    comment: ''
+    dim1: '4'
+    dim2: '1'
+    framebits: MTU*8
+    ndim: '0'
+    rep: rep
+  states:
+    coordinate: [781, 538]
+    rotation: 0
+    state: enabled
+- name: k
+  id: variable
+  parameters:
+    comment: ''
+    value: '7'
+  states:
+    coordinate: [264, 535]
+    rotation: 0
+    state: enabled
+- name: polys
+  id: variable
+  parameters:
+    comment: ''
+    value: '[109, 79]'
+  states:
+    coordinate: [308, 600]
+    rotation: 0
+    state: enabled
+- name: rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '2'
+  states:
+    coordinate: [332, 536]
+    rotation: 0
+    state: enabled
+- name: rep
+  id: variable
+  parameters:
+    comment: ''
+    value: '3'
+  states:
+    coordinate: [785, 473]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '50000'
+  states:
+    coordinate: [10, 73]
+    rotation: 0
+    state: enabled
+- name: MTU
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: MTU
+    short_id: ''
+    type: intx
+    value: '1500'
+  states:
+    coordinate: [568, 11]
+    rotation: 0
+    state: enabled
+- name: analog_random_source_x_0
+  id: analog_random_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max: '256'
+    maxoutbuf: '0'
+    min: '0'
+    minoutbuf: '0'
+    num_samps: '1000'
+    repeat: 'True'
+    type: byte
+  states:
+    coordinate: [50, 502]
+    rotation: 180
+    state: disabled
+- name: blocks_char_to_float_0_0_0_0
+  id: blocks_char_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    coordinate: [872, 307]
+    rotation: 0
+    state: enabled
+- name: blocks_char_to_float_0_1
+  id: blocks_char_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    coordinate: [408, 375]
+    rotation: 0
+    state: enabled
+- name: blocks_char_to_float_0_1_0
+  id: blocks_char_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    coordinate: [420, 430]
+    rotation: 0
+    state: enabled
+- name: blocks_ctrlport_monitor_performance_0
+  id: blocks_ctrlport_monitor_performance
+  parameters:
+    alias: ''
+    comment: ''
+    en: 'True'
+  states:
+    coordinate: [366, 10]
+    rotation: 0
+    state: disabled
+- name: blocks_pdu_to_tagged_stream_0
+  id: blocks_pdu_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: pkt_len
+    type: byte
+  states:
+    coordinate: [368, 235]
+    rotation: 0
+    state: enabled
+- name: blocks_pdu_to_tagged_stream_0_0
+  id: blocks_pdu_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: pkt_len
+    type: byte
+  states:
+    coordinate: [872, 235]
+    rotation: 180
+    state: enabled
+- name: blocks_repack_bits_bb_0_0
+  id: blocks_repack_bits_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    align_output: 'False'
+    comment: ''
+    endianness: gr.GR_LSB_FIRST
+    k: '8'
+    l: '1'
+    len_tag_key: pkt_len
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [137, 354]
+    rotation: 0
+    state: enabled
+- name: blocks_stream_to_tagged_stream_0_0
+  id: blocks_stream_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    len_tag_key: pkt_len
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packet_len: frame_size
+    type: byte
+    vlen: '1'
+  states:
+    coordinate: [69, 281]
+    rotation: 180
+    state: enabled
+- name: blocks_tagged_stream_to_pdu_0
+  id: blocks_tagged_stream_to_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: pkt_len
+    type: byte
+  states:
+    coordinate: [344, 147]
+    rotation: 0
+    state: enabled
+- name: blocks_tagged_stream_to_pdu_1
+  id: blocks_tagged_stream_to_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: pkt_len
+    type: float
+  states:
+    coordinate: [601, 375]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: byte
+    vlen: '1'
+  states:
+    coordinate: [109, 224]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_source_x_0_1_0
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'True'
+    tags: '[]'
+    type: byte
+    vector: (frame_size//15)*[0, 0, 1, 0, 3, 0, 7, 0, 15, 0, 31, 0, 63, 0, 127]
+    vlen: '1'
+  states:
+    coordinate: [60, 140]
+    rotation: 180
+    state: enabled
+- name: digital_map_bb_0
+  id: digital_map_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    map: '[-1,1]'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [409, 311]
+    rotation: 180
+    state: enabled
+- name: fec_async_decoder_0
+  id: fec_async_decoder
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decoder: dec_cc
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mtu: MTU
+    packed: 'False'
+    rev_pack: 'True'
+  states:
+    coordinate: [864, 139]
+    rotation: 0
+    state: enabled
+- name: fec_async_encoder_0
+  id: fec_async_encoder
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    encoder: enc_ccsds
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mtu: MTU
+    packed: 'False'
+    rev_pack: 'True'
+    rev_unpack: 'True'
+  states:
+    coordinate: [552, 139]
+    rotation: 0
+    state: enabled
+- name: frame_size
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Frame Size
+    short_id: ''
+    type: intx
+    value: '30'
+  states:
+    coordinate: [171, 11]
+    rotation: 0
+    state: enabled
+- name: puncpat
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: ''
+    value: '''11'''
+  states:
+    coordinate: [282, 11]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '0.6'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Decoded
+    label10: Signal 10
+    label2: Input
+    label3: Rep. (Rate=3)
+    label4: CC (K=7, Rate=2)
+    label5: CCSDS
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '2'
+    size: '512'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.01'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1.5'
+    ymin: '-0.5'
+    yunit: '""'
+  states:
+    coordinate: [1059, 368]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_1
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'False'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: '1024'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    coordinate: [639, 250]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_random_source_x_0, '0', blocks_throttle_0, '0']
+- [blocks_char_to_float_0_0_0_0, '0', qtgui_time_sink_x_0, '0']
+- [blocks_char_to_float_0_1, '0', blocks_tagged_stream_to_pdu_1, '0']
+- [blocks_char_to_float_0_1, '0', qtgui_time_sink_x_1, '0']
+- [blocks_char_to_float_0_1_0, '0', qtgui_time_sink_x_0, '1']
+- [blocks_pdu_to_tagged_stream_0, '0', digital_map_bb_0, '0']
+- [blocks_pdu_to_tagged_stream_0_0, '0', blocks_char_to_float_0_0_0_0, '0']
+- [blocks_repack_bits_bb_0_0, '0', blocks_char_to_float_0_1_0, '0']
+- [blocks_repack_bits_bb_0_0, '0', blocks_tagged_stream_to_pdu_0, '0']
+- [blocks_stream_to_tagged_stream_0_0, '0', blocks_repack_bits_bb_0_0, '0']
+- [blocks_tagged_stream_to_pdu_0, pdus, fec_async_encoder_0, in]
+- [blocks_tagged_stream_to_pdu_1, pdus, fec_async_decoder_0, in]
+- [blocks_throttle_0, '0', blocks_stream_to_tagged_stream_0_0, '0']
+- [blocks_vector_source_x_0_1_0, '0', blocks_throttle_0, '0']
+- [digital_map_bb_0, '0', blocks_char_to_float_0_1, '0']
+- [fec_async_decoder_0, out, blocks_pdu_to_tagged_stream_0_0, pdus]
+- [fec_async_encoder_0, out, blocks_pdu_to_tagged_stream_0, pdus]
+
+metadata:
+  file_format: 1

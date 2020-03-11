@@ -1,0 +1,26 @@
+The process of updating and exporting the Doxygen document strings
+into Python consists of a few steps.
+
+1. Make sure the 'docs' component will be built, which requires
+Doxygen.
+
+2. Build the project like normal, which will run Doxygen and store the
+   XML files into $(top_builddir).
+
+3. In $(top_srcdir)/docs/doxygen, run the command:
+
+   $ python swig_doc.py \
+     	    $(top_builddir)/docstrings/docs/doxygen/xml \
+     	    $(top_srcdir)/gnuradio-runtime/swig/swig_doc.i
+
+   This uses the XML output of Doxygen to to rebuild a SWIG file that
+   contains all of the current Doxygen markups.
+
+4. Rebuild the GNU Radio libraries. Since gnuradio.i is included in
+   all of the GNU Radio components, and gnuradio.i includes
+   swig_doc.i, when the libraries are rebuilt, they will now include
+   the documentation strings in Python.
+
+5. Install GNU Radio. Now, when you run help() in Python on a GNU
+   Radio block, you will get the full documentation.
+

@@ -1,0 +1,13 @@
+This is the gr-channels package. It contains signal processing blocks to
+simulate channel models.
+
+The Python namespace is in gnuradio.channels, which would be normally
+imported as:
+
+    from gnuradio import channels
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using:
+
+    help(channels)

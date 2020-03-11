@@ -1,0 +1,94 @@
+id: dtv_dvbt_demod_reference_signals
+label: Demod Reference Signals
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+-   id: constellation
+    label: Constellation Type
+    dtype: enum
+    options: [qpsk, 16qam, 64qam]
+    option_labels: [QPSK, 16QAM, 64QAM]
+    option_attributes:
+        val: [dtv.MOD_QPSK, dtv.MOD_16QAM, dtv.MOD_64QAM]
+-   id: hierarchy
+    label: Hierarchy Type
+    dtype: enum
+    options: [nh, alpha1, alpha2, alpha4]
+    option_labels: [Non Hierarchical, Alpha 1, Alpha 2, Alpha 4]
+    option_attributes:
+        val: [dtv.NH, dtv.ALPHA1, dtv.ALPHA2, dtv.ALPHA4]
+-   id: code_rate_hp
+    label: Code rate HP
+    dtype: enum
+    options: [C1_2, C2_3, C3_4, C5_6, C7_8]
+    option_labels: [1/2, 2/3, 3/4, 5/6, 7/8]
+    option_attributes:
+        val: [dtv.C1_2, dtv.C2_3, dtv.C3_4, dtv.C5_6, dtv.C7_8]
+-   id: code_rate_lp
+    label: Code rate LP
+    dtype: enum
+    options: [C1_2, C2_3, C3_4, C5_6, C7_8]
+    option_labels: [1/2, 2/3, 3/4, 5/6, 7/8]
+    option_attributes:
+        val: [dtv.C1_2, dtv.C2_3, dtv.C3_4, dtv.C5_6, dtv.C7_8]
+-   id: guard_interval
+    label: Guard Interval
+    dtype: enum
+    options: [GI_1_32, GI_1_16, GI_1_8, GI_1_4]
+    option_labels: [1/32, 1/16, 1/8, 1/4]
+    option_attributes:
+        val: [dtv.GI_1_32, dtv.GI_1_16, dtv.GI_1_8, dtv.GI_1_4]
+-   id: transmission_mode
+    label: Transmission Mode
+    dtype: enum
+    options: [T2k, T8k]
+    option_labels: [2K, 8K]
+    option_attributes:
+        fft_length: [2048, 8192]
+        payload_length: [1512, 6048]
+        val: [dtv.T2k, dtv.T8k]
+-   id: include_cell_id
+    label: Include Cell ID
+    dtype: enum
+    options: [call_id_yes, cell_id_no]
+    option_labels: ['Yes', 'No']
+    option_attributes:
+        val: ['1', '0']
+-   id: cell_id
+    label: Cell Id
+    dtype: int
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ transmission_mode.fft_length }
+
+outputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ transmission_mode.payload_length }
+
+templates:
+    imports: from gnuradio import dtv
+    make: |-
+        dtv.dvbt_demod_reference_signals(
+            ${type.size},
+            ${transmission_mode.fft_length},
+            ${transmission_mode.payload_length},
+            ${constellation.val},
+            ${hierarchy.val},
+            ${code_rate_hp.val},
+            ${code_rate_lp.val},
+            ${guard_interval.val},
+            ${transmission_mode.val},
+            ${include_cell_id.val},
+            ${cell_id})
+
+file_format: 1

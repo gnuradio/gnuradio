@@ -1,0 +1,29 @@
+id: digital_diff_decoder_bb
+label: Differential Decoder
+flags: [ python, cpp ]
+
+parameters:
+-   id: modulus
+    label: Modulus
+    dtype: int
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.diff_decoder_bb(${modulus})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/diff_decoder_bb.h>']
+    declarations: 'digital::diff_decoder_bb::sptr ${id};'
+    make: |-
+        this->${id} = digital::diff_decoder_bb::make(${modulus});
+    link: ['gnuradio-digital']
+
+file_format: 1

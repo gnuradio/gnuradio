@@ -1,0 +1,14 @@
+2 4 4
+
+0 2
+0 2
+1 3
+1 3
+
+0 3
+3 0
+1 2
+2 1
+
+AWGN CC from Proakis-Salehi pg 779
+GM1o2_4=[1+D^2, 1+D+D^2] = [5, 7] (in decimal);

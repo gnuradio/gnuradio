@@ -1,0 +1,32 @@
+id: analog_fmdet_cf
+label: FM Detector
+flags: [ python ]
+
+parameters:
+-   id: samplerate
+    label: Sample rate
+    dtype: real
+-   id: freq_low
+    label: Lowest frequency
+    dtype: real
+-   id: freq_high
+    label: Highest frequency
+    dtype: real
+-   id: scl
+    label: Scale factor
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import analog
+    make: "analog.fmdet_cf(\n\tsamplerate=${samplerate},\n\tfreq_low=${freq_low},\n\
+        \tfreq_high=${freq_high},\n\tscl=${scl}\n)"
+
+file_format: 1

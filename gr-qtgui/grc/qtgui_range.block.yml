@@ -1,0 +1,85 @@
+id: variable_qtgui_range
+label: QT GUI Range
+flags: [ show_id, python ]
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    hide: ${ ('none' if label else 'part') }
+-   id: rangeType
+    label: Type
+    dtype: enum
+    default: '"float"'
+    options: [float, int]
+    option_attributes:
+        type: [float, int]
+    hide: part
+-   id: value
+    label: Default Value
+    dtype: ${ rangeType.type }
+    default: '50'
+-   id: start
+    label: Start
+    dtype: ${ rangeType.type }
+    default: '0'
+-   id: stop
+    label: Stop
+    dtype: ${ rangeType.type }
+    default: '100'
+-   id: step
+    label: Step
+    dtype: ${ rangeType.type }
+    default: '1'
+-   id: widget
+    label: Widget
+    dtype: enum
+    default: counter_slider
+    options: [counter_slider, counter, slider, dial]
+    option_labels: [Counter + Slider, Counter, Slider, Knob]
+    hide: part
+-   id: orient
+    label: Orientation
+    dtype: enum
+    default: Qt.Horizontal
+    options: [Qt.Horizontal, Qt.Vertical]
+    option_labels: [Horizontal, Vertical]
+    option_attributes:
+        minfcn: [setMinimumWidth, setMinimumHeight]
+        scalepos: [BottomScale, LeftScale]
+    hide: ${ ('part' if widget == "slider" else 'all') }
+-   id: min_len
+    label: Minimum Length
+    dtype: int
+    default: '200'
+    hide: part
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+value: ${ value }
+
+asserts:
+- ${start <= value <= stop}
+- ${start <= stop}
+
+templates:
+    imports: from gnuradio.qtgui import Range, RangeWidget
+    var_make: self.${id} = ${id} = ${value}
+    callbacks:
+    - self.set_${id}(${value})
+    make: |-
+        <%
+            win = 'self._%s_win'%id
+            range = 'self._%s_range'%id
+        %>\
+        ${range} = Range(${start}, ${stop}, ${step}, ${value}, ${min_len})
+        ${win} = RangeWidget(${range}, self.set_${id}, ${(label if (len(label) - 2 > 0) else repr(id))}, "${widget}", ${rangeType})
+        ${gui_hint() % win}
+
+documentation: |-
+    This block creates a variable with a slider.     Leave the label blank to use the variable id as the label.     The value must be a real number.     The value must be between the start and the stop.
+
+        The GUI hint can be used to position the widget within the application.     The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span].     Both the tab specification and the grid position are optional.
+
+file_format: 1

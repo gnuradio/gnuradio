@@ -1,0 +1,16 @@
+id: dtv_catv_transport_framing_enc_bb
+label: Transport Framing Encoder
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.catv_transport_framing_enc_bb()
+
+file_format: 1

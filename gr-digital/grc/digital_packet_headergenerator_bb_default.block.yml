@@ -1,0 +1,35 @@
+id: digital_packet_headergenerator_bb_default
+label: Packet Header Generator (Default)
+flags: [ python, cpp ]
+
+parameters:
+-   id: header_len
+    label: Header Length
+    dtype: int
+-   id: len_tag_key
+    label: Length Tag Name
+    dtype: string
+    default: '"packet_len"'
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.packet_headergenerator_bb(${header_len}, ${len_tag_key})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/packet_headergenerator_bb.h>']
+    declarations: 'digital::packet_headergenerator_bb::sptr ${id};'
+    make: |-
+        this->${id} = digital::packet_headergenerator_bb::make(
+            ${header_len},
+            ${len_tag_key});
+    link: ['gnuradio-digital']
+
+file_format: 1

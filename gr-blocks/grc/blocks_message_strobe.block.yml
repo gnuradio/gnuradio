@@ -1,0 +1,34 @@
+id: blocks_message_strobe
+label: Message Strobe
+flags: [ python ]
+
+parameters:
+-   id: msg
+    label: Message PMT
+    dtype: raw
+    default: pmt.intern("TEST")
+-   id: period
+    label: Period (ms)
+    dtype: int
+    default: '1000'
+
+inputs:
+-   domain: message
+    id: set_msg
+    optional: true
+
+outputs:
+-   domain: message
+    id: strobe
+    optional: true
+
+templates:
+    imports: |-
+        from gnuradio import blocks
+        import pmt
+    make: blocks.message_strobe(${msg}, ${period})
+    callbacks:
+    - set_msg(${msg})
+    - set_period(${period})
+
+file_format: 1

@@ -1,0 +1,57 @@
+id: variable_ldpc_decoder_def
+label: LDPC Decoder Definition
+flags: [ show_id ]
+
+parameters:
+-   id: value
+    label: Ignore Me
+    dtype: raw
+    default: '"ok"'
+    hide: all
+-   id: ndim
+    label: Parallelism
+    dtype: enum
+    default: '0'
+    options: ['0', '1', '2']
+-   id: dim1
+    label: Dimension 1
+    dtype: int
+    default: '4'
+    hide: ${ ('none' if (int(ndim) >= 1) else 'all') }
+-   id: dim2
+    label: Dimension 2
+    dtype: int
+    default: '4'
+    hide: ${ ('none' if (int(ndim) >= 2) else 'all') }
+-   id: file
+    label: AList File
+    dtype: file_open
+-   id: sigma
+    label: Sigma
+    dtype: float
+    default: '0.5'
+-   id: max_iter
+    label: Max Iterations
+    dtype: int
+    default: '50'
+value: ${ value }
+
+templates:
+    imports: from gnuradio import fec
+    var_make: |-
+        % if int(ndim)==0:
+        self.${id} = ${id} = fec.ldpc_decoder.make(${file}, ${sigma}, ${max_iter})
+        % elif int(ndim)==1:
+        self.${id} = ${id} = list(map( (lambda a: fec.ldpc_decoder.make(${file}, ${sigma}, ${max_iter})), range(0,${dim1})))
+        % else:
+        self.${id} = ${id} = list(map( (lambda b: list( map( ( lambda a: fec.ldpc_decoder.make(${file}, ${sigma}, ${max_iter})), range(0,${dim2}) ) ) ), range(0,${dim1})))
+        % endif
+
+documentation: |-
+    This is a soft-decision decoder that uses belief propagation (also known as message passing) that is described at:
+
+    www.cs.toronto.edu/~radford/ftp/LDPC-2012-02-11/decoding.html
+
+    Designed for a memoryless AWGN channel, it assumes a noise variance of the value specified for sigma.
+
+file_format: 1

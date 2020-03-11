@@ -1,0 +1,58 @@
+<!--
+Copyright 2008 Free Software Foundation, Inc.
+This file is part of GNU Radio
+
+SPDX-License-Identifier: GPL-2.0-or-later
+
+-->
+<!--
+    gnuradio_python.blocks.dtd
+    Josh Blum
+    The document type definition for blocks.
+ -->
+<!--
+    Top level element.
+    A block contains a name, ...parameters list, and list of IO ports.
+ -->
+<!ELEMENT block (name, key, category?, throttle?, flags?, import*, var_make?, var_value?,
+        make, callback*, param_tab_order?, param*, bus_sink?, bus_source?, check*,
+        sink*, source*, bus_structure_sink?, bus_structure_source?, doc?,  grc_source?)>
+<!--
+    Sub level elements.
+ -->
+<!ELEMENT param_tab_order (tab+)>
+<!ELEMENT param (base_key?, name, key, value?, type?, hide?, option*, tab?)>
+<!ELEMENT option (name, key, opt*)>
+<!ELEMENT sink (name, type, vlen?, domain?, nports?, optional?, hide?)>
+<!ELEMENT source (name, type, vlen?, domain?, nports?, optional?, hide?)>
+<!--
+    Bottom level elements.
+    Character data only.
+ -->
+<!ELEMENT category (#PCDATA)>
+<!ELEMENT import (#PCDATA)>
+<!ELEMENT doc (#PCDATA)>
+<!ELEMENT grc_source (#PCDATA)>
+<!ELEMENT tab (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT base_key (#PCDATA)>
+<!ELEMENT key (#PCDATA)>
+<!ELEMENT check (#PCDATA)>
+<!ELEMENT bus_sink (#PCDATA)>
+<!ELEMENT bus_source (#PCDATA)>
+<!ELEMENT opt (#PCDATA)>
+<!ELEMENT type (#PCDATA)>
+<!ELEMENT hide (#PCDATA)>
+<!ELEMENT vlen (#PCDATA)>
+<!ELEMENT domain (#PCDATA)>
+<!ELEMENT nports (#PCDATA)>
+<!ELEMENT bus_structure_sink (#PCDATA)>
+<!ELEMENT bus_structure_source (#PCDATA)>
+<!ELEMENT var_make (#PCDATA)>
+<!ELEMENT var_value (#PCDATA)>
+<!ELEMENT make (#PCDATA)>
+<!ELEMENT value (#PCDATA)>
+<!ELEMENT callback (#PCDATA)>
+<!ELEMENT optional (#PCDATA)>
+<!ELEMENT throttle (#PCDATA)>
+<!ELEMENT flags (#PCDATA)>
