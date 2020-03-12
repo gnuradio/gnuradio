@@ -1,17 +1,17 @@
-#
-# Copyright 2008 Free Software Foundation, Inc.
-#
-# This file is part of GNU Radio
-#
-# SPDX-License-Identifier: GPL-3.0-or-later
-#
-#
+%
+% Copyright 2008 Free Software Foundation, Inc.
+%
+% This file is part of GNU Radio
+%
+% SPDX-License-Identifier: GPL-3.0-or-later
+%
+%
 
-# See Altera Application Note AN455
-#
-# R  = decimation factor, 8-256
-# Fc = passband (one-sided) cutoff frequency
-# L  = number of taps
+% See Altera Application Note AN455
+%
+% R  = decimation factor, 8-256
+% Fc = passband (one-sided) cutoff frequency
+% L  = number of taps
 
 function taps = cic_comp_taps(R, Fc, L)
     M = 1;                                   %% Differential delay
