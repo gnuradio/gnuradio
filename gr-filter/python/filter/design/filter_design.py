@@ -38,16 +38,9 @@ except ImportError:
     raise SystemExit('Please install NumPy to run this script (https://www.np.org/)')
 
 try:
-    from numpy.fft import fftpack as fft_detail
+    import numpy.fft as fft_detail
 except ImportError:
-
-    print('Could not import fftpack, trying pocketfft')
-    # Numpy changed fft implementation in version 1.17
-    # from fftpack to pocketfft
-    try:
-        from numpy.fft import pocketfft as fft_detail
-    except ImportError:
-        raise SystemExit('Could not import fft implementation of numpy')
+    raise SystemExit('Could not import fft implementation of numpy')
     
 try:
     from scipy import poly1d, signal
