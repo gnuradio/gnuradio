@@ -43,7 +43,12 @@ except ImportError:
     raise SystemExit('Could not import fft implementation of numpy')
     
 try:
-    from scipy import poly1d, signal
+    from numpy import poly1d
+except ImportError:
+    raise SystemExit('Please install NumPy to run this script (https://www.np.org)')
+
+try:
+    from scipy import signal
 except ImportError:
     raise SystemExit('Please install SciPy to run this script (https://www.scipy.org)')
 
