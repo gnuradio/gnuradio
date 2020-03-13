@@ -1229,7 +1229,7 @@ class Ui_MainWindow(object):
         self.mfilterspecView.setTabText(self.mfilterspecView.indexOf(self.mpoleZero), _translate("MainWindow", "Pole-Zero Plot"))
         self.mfilterspecView.setTabText(self.mfilterspecView.indexOf(self.mfcTab), _translate("MainWindow", "Filter Coefficients"))
         self.fselectComboBox.setItemText(0, _translate("MainWindow", "FIR"))
-        self.fselectComboBox.setItemText(1, _translate("MainWindow", "IIR(scipy)"))
+        self.fselectComboBox.setItemText(1, _translate("MainWindow", "IIR"))
         self.filterTypeComboBox.setItemText(0, _translate("MainWindow", "Low Pass"))
         self.filterTypeComboBox.setItemText(1, _translate("MainWindow", "High Pass"))
         self.filterTypeComboBox.setItemText(2, _translate("MainWindow", "Band Pass"))
