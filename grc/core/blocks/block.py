@@ -77,8 +77,11 @@ class Block(Element):
 
         self.states = {'state': True, 'bus_source': False, 'bus_sink': False, 'bus_structure': None}
 
-        if 'cpp' in self.flags and self.enabled and not (self.is_virtual_source() or self.is_virtual_sink()):
-            self.orig_cpp_templates = self.cpp_templates # The original template, in case we have to edit it when transpiling to C++         
+        if Flags.HAS_CPP in self.flags and self.enabled and not (self.is_virtual_source() or self.is_virtual_sink()):
+            # This is a workaround to allow embedded python blocks/modules to load as there is 
+            # currently 'cpp' in the flags by default caused by the other built-in blocks
+            if hasattr(self,'cpp_templates'):
+                self.orig_cpp_templates = self.cpp_templates # The original template, in case we have to edit it when transpiling to C++         
 
         self.current_bus_structure = {'source': None, 'sink': None}
 
