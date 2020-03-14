@@ -34,7 +34,7 @@ class ANALOG_API fastnoise_source : virtual public sync_block
 {
 public:
     // gr::analog::fastnoise_source::sptr
-    typedef boost::shared_ptr<fastnoise_source<T>> sptr;
+    typedef std::shared_ptr<fastnoise_source<T>> sptr;
 
     /*! \brief Make a fast noise source
      * \param type the random distribution to use (see

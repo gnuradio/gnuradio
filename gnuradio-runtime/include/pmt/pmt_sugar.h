@@ -54,7 +54,7 @@ static inline pmt_t mp(std::complex<float> z)
 }
 
 //! Make pmt msg_accepter
-static inline pmt_t mp(boost::shared_ptr<gr::messages::msg_accepter> ma)
+static inline pmt_t mp(std::shared_ptr<gr::messages::msg_accepter> ma)
 {
     return make_msg_accepter(ma);
 }

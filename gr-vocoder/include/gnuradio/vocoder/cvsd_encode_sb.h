@@ -76,7 +76,7 @@ class VOCODER_API cvsd_encode_sb : virtual public sync_decimator
 {
 public:
     // gr::vocoder::cvsd_encode_sb::sptr
-    typedef boost::shared_ptr<cvsd_encode_sb> sptr;
+    typedef std::shared_ptr<cvsd_encode_sb> sptr;
 
     /*!
      * \brief Constructor parameters to initialize the CVSD encoder.

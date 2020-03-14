@@ -144,31 +144,31 @@
 
 #if UHD_VERSION < 4000000 
 
-%template(filter_info_base_sptr) boost::shared_ptr<uhd::filter_info_base>;
-%template(analog_filter_base_stpr) boost::shared_ptr<uhd::analog_filter_base>;
-%template(analog_filter_lp_stpr) boost::shared_ptr<uhd::analog_filter_lp>;
-%template(digital_filter_base_int16_t_sptr) boost::shared_ptr<uhd::digital_filter_base<int16_t>>;
-%template(digital_filter_fir_int16_t_sptr) boost::shared_ptr<uhd::digital_filter_fir<int16_t>>;
+%template(filter_info_base_sptr) std::shared_ptr<uhd::filter_info_base>;
+%template(analog_filter_base_stpr) std::shared_ptr<uhd::analog_filter_base>;
+%template(analog_filter_lp_stpr) std::shared_ptr<uhd::analog_filter_lp>;
+%template(digital_filter_base_int16_t_sptr) std::shared_ptr<uhd::digital_filter_base<int16_t>>;
+%template(digital_filter_fir_int16_t_sptr) std::shared_ptr<uhd::digital_filter_fir<int16_t>>;
 
 %extend uhd::filter_info_base{
-    boost::shared_ptr<uhd::analog_filter_base> to_analog_info_base(boost::shared_ptr<uhd::filter_info_base> ptr) {
-       return boost::dynamic_pointer_cast<uhd::analog_filter_base>(ptr);
+    std::shared_ptr<uhd::analog_filter_base> to_analog_info_base(std::shared_ptr<uhd::filter_info_base> ptr) {
+       return std::dynamic_pointer_cast<uhd::analog_filter_base>(ptr);
     }
 
-    boost::shared_ptr<uhd::analog_filter_lp> to_analog_filter_lp(boost::shared_ptr<uhd::filter_info_base> ptr) {
-       return boost::dynamic_pointer_cast<uhd::analog_filter_lp>(ptr);
+    std::shared_ptr<uhd::analog_filter_lp> to_analog_filter_lp(std::shared_ptr<uhd::filter_info_base> ptr) {
+       return std::dynamic_pointer_cast<uhd::analog_filter_lp>(ptr);
     }
 
-    boost::shared_ptr<uhd::digital_filter_base<int16_t>> to_digital_filter_base_int16(boost::shared_ptr<uhd::filter_info_base> ptr) {
-       return boost::dynamic_pointer_cast<uhd::digital_filter_base<int16_t>>(ptr);
+    std::shared_ptr<uhd::digital_filter_base<int16_t>> to_digital_filter_base_int16(std::shared_ptr<uhd::filter_info_base> ptr) {
+       return std::dynamic_pointer_cast<uhd::digital_filter_base<int16_t>>(ptr);
     }
 
-    boost::shared_ptr<uhd::digital_filter_fir<int16_t>> to_digital_filter_fir_int16(boost::shared_ptr<uhd::filter_info_base> ptr) {
-       return boost::dynamic_pointer_cast<uhd::digital_filter_fir<int16_t>>(ptr);
+    std::shared_ptr<uhd::digital_filter_fir<int16_t>> to_digital_filter_fir_int16(std::shared_ptr<uhd::filter_info_base> ptr) {
+       return std::dynamic_pointer_cast<uhd::digital_filter_fir<int16_t>>(ptr);
     }
 }
 
-%template(dboard_iface_sptr) boost::shared_ptr<uhd::usrp::dboard_iface>;
+%template(dboard_iface_sptr) std::shared_ptr<uhd::usrp::dboard_iface>;
 
 #else
 

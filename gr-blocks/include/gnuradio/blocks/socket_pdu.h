@@ -25,7 +25,7 @@ class BLOCKS_API socket_pdu : virtual public block
 {
 public:
     // gr::blocks::socket_pdu::sptr
-    typedef boost::shared_ptr<socket_pdu> sptr;
+    typedef std::shared_ptr<socket_pdu> sptr;
 
     /*!
      * \brief Construct a SOCKET PDU interface

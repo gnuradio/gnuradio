@@ -27,7 +27,7 @@ class TRELLIS_API constellation_metrics_cf : virtual public block
 {
 public:
     // gr::trellis::constellation_metrics_cf::sptr
-    typedef boost::shared_ptr<constellation_metrics_cf> sptr;
+    typedef std::shared_ptr<constellation_metrics_cf> sptr;
 
     static sptr make(digital::constellation_sptr constellation,
                      digital::trellis_metric_type_t TYPE);

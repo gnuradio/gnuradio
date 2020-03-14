@@ -31,7 +31,7 @@ protected:
 
 public:
     // gr::blocks::file_descriptor_source::sptr
-    typedef boost::shared_ptr<file_descriptor_source> sptr;
+    typedef std::shared_ptr<file_descriptor_source> sptr;
 
     /*!
      * Build a file descriptor source block. The provided file descriptor will

@@ -34,7 +34,7 @@ class BLOCKS_API complex_to_interleaved_short : virtual public sync_interpolator
 {
 public:
     // gr::blocks::complex_to_interleaved_short::sptr
-    typedef boost::shared_ptr<complex_to_interleaved_short> sptr;
+    typedef std::shared_ptr<complex_to_interleaved_short> sptr;
 
     /*!
      * Build a complex to interleaved shorts block.

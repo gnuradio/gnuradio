@@ -34,7 +34,7 @@ class CHANNELS_API selective_fading_model2 : virtual public sync_block
 {
 public:
     // gr::channels::channel_model2::sptr
-    typedef boost::shared_ptr<selective_fading_model2> sptr;
+    typedef std::shared_ptr<selective_fading_model2> sptr;
 
     /*! \brief Build the channel simulator.
      *

@@ -28,7 +28,7 @@ namespace zeromq {
 class ZEROMQ_API sub_source : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<sub_source> sptr;
+    typedef std::shared_ptr<sub_source> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of gr::zeromq::sub_source.

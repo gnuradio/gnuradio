@@ -33,7 +33,7 @@ class VOCODER_API codec2_encode_sp : virtual public sync_decimator
 {
 public:
     // gr::vocoder::codec2_encode_sp::sptr
-    typedef boost::shared_ptr<codec2_encode_sp> sptr;
+    typedef std::shared_ptr<codec2_encode_sp> sptr;
 
     /*!
      * \brief Make Codec2 encoder block.

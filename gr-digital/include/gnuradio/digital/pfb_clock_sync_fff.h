@@ -144,7 +144,7 @@ class DIGITAL_API pfb_clock_sync_fff : virtual public block
 {
 public:
     // gr::digital::pfb_clock_sync_fff::sptr
-    typedef boost::shared_ptr<pfb_clock_sync_fff> sptr;
+    typedef std::shared_ptr<pfb_clock_sync_fff> sptr;
 
     /*!
      * Build the polyphase filterbank timing synchronizer.

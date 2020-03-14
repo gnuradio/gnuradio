@@ -37,7 +37,7 @@ namespace zeromq {
 class ZEROMQ_API pub_sink : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<pub_sink> sptr;
+    typedef std::shared_ptr<pub_sink> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of zeromq::pub_sink.

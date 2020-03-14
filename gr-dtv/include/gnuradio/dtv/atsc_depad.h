@@ -27,7 +27,7 @@ class DTV_API atsc_depad : virtual public gr::sync_interpolator
 {
 public:
     // gr::dtv::atsc_depad::sptr
-    typedef boost::shared_ptr<atsc_depad> sptr;
+    typedef std::shared_ptr<atsc_depad> sptr;
 
     /*!
      * \brief Make a new instance of gr::dtv::atsc_depad.

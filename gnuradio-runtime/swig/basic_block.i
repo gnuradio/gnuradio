@@ -9,8 +9,8 @@
  */
 
 class gr::basic_block;
-typedef boost::shared_ptr<gr::basic_block> gr::basic_block_sptr;
-%template(basic_block_sptr) boost::shared_ptr<gr::basic_block>;
+typedef std::shared_ptr<gr::basic_block> gr::basic_block_sptr;
+%template(basic_block_sptr) std::shared_ptr<gr::basic_block>;
 
 %import "pmt_swig.i"
 

@@ -27,7 +27,7 @@ namespace digital {
 class DIGITAL_API hdlc_deframer_bp : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<hdlc_deframer_bp> sptr;
+    typedef std::shared_ptr<hdlc_deframer_bp> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of digital::hdlc_deframer.

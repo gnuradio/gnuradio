@@ -27,7 +27,7 @@ namespace dtv {
 class DTV_API dvbt_convolutional_interleaver : virtual public sync_interpolator
 {
 public:
-    typedef boost::shared_ptr<dvbt_convolutional_interleaver> sptr;
+    typedef std::shared_ptr<dvbt_convolutional_interleaver> sptr;
 
     /*!
      * \brief Create a DVB-T convolutional interleaver.

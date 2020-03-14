@@ -25,7 +25,7 @@ class BLOCKS_API short_to_float : virtual public sync_block
 {
 public:
     // gr::blocks::short_to_float_ff::sptr
-    typedef boost::shared_ptr<short_to_float> sptr;
+    typedef std::shared_ptr<short_to_float> sptr;
 
     /*!
      * Build a short to float block.

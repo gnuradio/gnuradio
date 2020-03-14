@@ -48,7 +48,7 @@ class FFT_API fft_vfc : virtual public sync_block
 {
 public:
     // gr::fft::fft_vfc::sptr
-    typedef boost::shared_ptr<fft_vfc> sptr;
+    typedef std::shared_ptr<fft_vfc> sptr;
 
     /*! \brief
      * \param[in] fft_size N.

@@ -32,7 +32,7 @@ namespace dtv {
 class DTV_API dvbt_map : virtual public block
 {
 public:
-    typedef boost::shared_ptr<dvbt_map> sptr;
+    typedef std::shared_ptr<dvbt_map> sptr;
 
     /*!
      * \brief Create a DVB-T mapper.

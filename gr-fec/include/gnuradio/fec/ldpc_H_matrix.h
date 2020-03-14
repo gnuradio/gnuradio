@@ -11,8 +11,7 @@
 
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/fec_mtrx.h>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace gr {
 namespace fec {
@@ -35,10 +34,10 @@ namespace code {
  * /lib/python2.7/dist-packages/gnuradio/fec/LDPC/Generate_LDPC_matrix.py.
  */
 class FEC_API ldpc_H_matrix : virtual public fec_mtrx,
-                              public boost::enable_shared_from_this<ldpc_H_matrix>
+                              public std::enable_shared_from_this<ldpc_H_matrix>
 {
 public:
-    typedef boost::shared_ptr<ldpc_H_matrix> sptr;
+    typedef std::shared_ptr<ldpc_H_matrix> sptr;
 
     /*!
      * \brief Constructor given alist file and gap

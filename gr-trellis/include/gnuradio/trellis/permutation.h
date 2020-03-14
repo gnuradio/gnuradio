@@ -26,7 +26,7 @@ class TRELLIS_API permutation : virtual public sync_block
 {
 public:
     // gr::trellis::permutation::sptr
-    typedef boost::shared_ptr<permutation> sptr;
+    typedef std::shared_ptr<permutation> sptr;
 
     static sptr
     make(int K, const std::vector<int>& TABLE, int SYMS_PER_BLOCK, size_t NBYTES);

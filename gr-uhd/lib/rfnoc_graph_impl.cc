@@ -210,5 +210,5 @@ private:
 rfnoc_graph::sptr rfnoc_graph::make(const device_addr_t& dev_addr)
 {
     check_abi();
-    return boost::make_shared<rfnoc_graph_impl>(dev_addr);
+    return std::make_shared<rfnoc_graph_impl>(dev_addr);
 }

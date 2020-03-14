@@ -28,7 +28,7 @@ class BLOCKS_API probe_signal : virtual public sync_block
 {
 public:
     // gr::blocks::probe_signal::sptr
-    typedef boost::shared_ptr<probe_signal<T>> sptr;
+    typedef std::shared_ptr<probe_signal<T>> sptr;
 
     static sptr make();
 

@@ -42,7 +42,7 @@ namespace blocks {
 class BLOCKS_API plateau_detector_fb : virtual public block
 {
 public:
-    typedef boost::shared_ptr<plateau_detector_fb> sptr;
+    typedef std::shared_ptr<plateau_detector_fb> sptr;
 
     /*!
      * \param max_len Maximum length of the plateau

@@ -35,7 +35,7 @@ class BLOCKS_API pack_k_bits_bb : virtual public sync_decimator
 {
 public:
     // gr::blocks::pack_k_bits_bb::sptr
-    typedef boost::shared_ptr<pack_k_bits_bb> sptr;
+    typedef std::shared_ptr<pack_k_bits_bb> sptr;
 
     /*!
      * \brief Make a pack_k_bits block.

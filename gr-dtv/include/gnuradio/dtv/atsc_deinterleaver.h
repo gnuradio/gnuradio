@@ -27,7 +27,7 @@ class DTV_API atsc_deinterleaver : virtual public gr::sync_block
 {
 public:
     // gr::dtv::atsc_deinterleaver::sptr
-    typedef boost::shared_ptr<atsc_deinterleaver> sptr;
+    typedef std::shared_ptr<atsc_deinterleaver> sptr;
 
     /*!
      * \brief Make a new instance of gr::dtv::atsc_deinterleaver.

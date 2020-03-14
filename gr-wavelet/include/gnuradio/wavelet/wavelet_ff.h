@@ -25,7 +25,7 @@ class WAVELET_API wavelet_ff : virtual public sync_block
 {
 public:
     // gr::wavelet::wavelet_ff:sptr
-    typedef boost::shared_ptr<wavelet_ff> sptr;
+    typedef std::shared_ptr<wavelet_ff> sptr;
 
     /*!
      * \param size

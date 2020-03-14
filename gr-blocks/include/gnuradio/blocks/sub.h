@@ -31,7 +31,7 @@ class BLOCKS_API sub : virtual public sync_block
 {
 public:
     // gr::blocks::sub::sptr
-    typedef boost::shared_ptr<sub<T>> sptr;
+    typedef std::shared_ptr<sub<T>> sptr;
 
     static sptr make(size_t vlen = 1);
 };

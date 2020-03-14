@@ -14,7 +14,7 @@
 %include "stdint.i"
 
 %{
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <boost/any.hpp>
 #include <complex>
 #include <string>
@@ -67,11 +67,11 @@ namespace pmt {
 // Language independent exception handler
 ////////////////////////////////////////////////////////////////////////
 
-%template(swig_pmt_ptr) boost::shared_ptr<pmt::pmt_base>;
+%template(swig_pmt_ptr) std::shared_ptr<pmt::pmt_base>;
 
 namespace pmt{
   class pmt_base;
-  typedef boost::shared_ptr<pmt::pmt_base> pmt_t;
+  typedef std::shared_ptr<pmt::pmt_base> pmt_t;
 
   %pythoncode
   %{
@@ -253,8 +253,8 @@ namespace pmt{
   void any_set(pmt_t obj, const boost::any &any);
 
   bool is_msg_accepter(const pmt_t &obj);
-  pmt_t make_msg_accepter(boost::shared_ptr<gr::messages::msg_accepter> ma);
-  boost::shared_ptr<gr::messages::msg_accepter> msg_accepter_ref(const pmt_t &obj);
+  pmt_t make_msg_accepter(std::shared_ptr<gr::messages::msg_accepter> ma);
+  std::shared_ptr<gr::messages::msg_accepter> msg_accepter_ref(const pmt_t &obj);
 
   bool eq(const pmt_t& x, const pmt_t& y);
   bool eqv(const pmt_t& x, const pmt_t& y);

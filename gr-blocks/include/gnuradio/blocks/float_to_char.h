@@ -25,7 +25,7 @@ class BLOCKS_API float_to_char : virtual public sync_block
 {
 public:
     // gr::blocks::float_to_char_ff::sptr
-    typedef boost::shared_ptr<float_to_char> sptr;
+    typedef std::shared_ptr<float_to_char> sptr;
 
     /*!
      * Build a float to char block.

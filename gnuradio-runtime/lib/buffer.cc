@@ -47,7 +47,7 @@ static long s_buffer_reader_count = 0;
  both want pointers to each other, and unless we do something, we'll
  never delete any of them because of the circular structure.
  They'll always have a reference count of at least one.  We could
- use boost::weak_ptr's from gr::buffer to gr::buffer_reader but that
+ use std::weak_ptr's from gr::buffer to gr::buffer_reader but that
  introduces it's own problems.  (gr::buffer_reader's destructor needs
  to call gr::buffer::drop_reader, but has no easy way to get a
  shared_ptr to itself.)

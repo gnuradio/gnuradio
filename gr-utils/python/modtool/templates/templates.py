@@ -275,7 +275,7 @@ namespace gr {
     class ${modname.upper()}_API ${blockname} : virtual public gr::${grblocktype}
     {
      public:
-      typedef boost::shared_ptr<${blockname}> sptr;
+      typedef std::shared_ptr<${blockname}> sptr;
 
       /*!
        * \brief Return a shared_ptr to a new instance of ${modname}::${blockname}.
@@ -712,7 +712,7 @@ class ${modname.upper()}_API ${blockname}
 
 class ${modname}_${blockname};
 
-typedef boost::shared_ptr<${modname}_${blockname}> ${modname}_${blockname}_sptr;
+typedef std::shared_ptr<${modname}_${blockname}> ${modname}_${blockname}_sptr;
 
 ${modname.upper()}_API ${modname}_${blockname}_sptr ${modname}_make_${blockname} (${arglist});
 

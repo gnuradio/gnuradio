@@ -40,7 +40,7 @@ class ANALOG_API pll_carriertracking_cc : virtual public sync_block,
 {
 public:
     // gr::analog::pll_carriertracking_cc::sptr
-    typedef boost::shared_ptr<pll_carriertracking_cc> sptr;
+    typedef std::shared_ptr<pll_carriertracking_cc> sptr;
 
     /* \brief Make a carrier tracking PLL block.
      *

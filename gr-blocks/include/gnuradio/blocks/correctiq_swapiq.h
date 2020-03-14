@@ -26,7 +26,7 @@ namespace blocks {
 class BLOCKS_API swap_iq : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<swap_iq> sptr;
+    typedef std::shared_ptr<swap_iq> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of correctiq::swap_iq.

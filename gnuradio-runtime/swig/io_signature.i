@@ -16,7 +16,7 @@ namespace gr {
                  const std::vector<int> &sizeof_stream_items);
 
   public:
-    typedef boost::shared_ptr<io_signature> sptr;
+    typedef std::shared_ptr<io_signature> sptr;
 
     // Avoids a swig warning, otherwise we could just
     // #include <gnuradio/io_signature.h> instead of redoing this
@@ -47,7 +47,7 @@ namespace gr {
 } /* namespace gr */
 
 
-%template(io_signature_sptr) boost::shared_ptr<gr::io_signature>;
+%template(io_signature_sptr) std::shared_ptr<gr::io_signature>;
 %pythoncode %{
 io_signature_sptr.__repr__ = lambda self: "<io_signature: %d, %d>" % (self.min_streams(), self.max_streams())
 io_signaturev = io_signature.makev;

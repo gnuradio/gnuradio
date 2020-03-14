@@ -30,7 +30,7 @@ class BLOCKS_API lfsr_32k_source_s : virtual public sync_block
 {
 public:
     // gr::blocks::lfsr_32k_source_s::sptr
-    typedef boost::shared_ptr<lfsr_32k_source_s> sptr;
+    typedef std::shared_ptr<lfsr_32k_source_s> sptr;
 
     /*!
      * \brief Make a LFSR 32k source block.

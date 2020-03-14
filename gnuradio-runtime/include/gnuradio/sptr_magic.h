@@ -12,7 +12,7 @@
 #define INCLUDED_GR_RUNTIME_SPTR_MAGIC_H
 
 #include <gnuradio/api.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace gr {
 class basic_block;
@@ -25,7 +25,7 @@ namespace detail {
 class GR_RUNTIME_API sptr_magic
 {
 public:
-    static boost::shared_ptr<gr::basic_block> fetch_initial_sptr(gr::basic_block* p);
+    static std::shared_ptr<gr::basic_block> fetch_initial_sptr(gr::basic_block* p);
     static void create_and_stash_initial_sptr(gr::hier_block2* p);
     static void cancel_initial_sptr(gr::hier_block2* p);
 };
@@ -33,12 +33,12 @@ public:
 
 /*
  * \brief New!  Improved!  Standard method to get/create the
- * boost::shared_ptr for a block.
+ * std::shared_ptr for a block.
  */
 template <class T>
-boost::shared_ptr<T> get_initial_sptr(T* p)
+std::shared_ptr<T> get_initial_sptr(T* p)
 {
-    return boost::dynamic_pointer_cast<T, gr::basic_block>(
+    return std::dynamic_pointer_cast<T, gr::basic_block>(
         detail::sptr_magic::fetch_initial_sptr(p));
 }
 } // namespace gnuradio

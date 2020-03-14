@@ -75,7 +75,7 @@ class QTGUI_API freq_sink_c : virtual public sync_block
 {
 public:
     // gr::qtgui::freq_sink_c::sptr
-    typedef boost::shared_ptr<freq_sink_c> sptr;
+    typedef std::shared_ptr<freq_sink_c> sptr;
 
     /*!
      * \brief Build a complex PSD sink.

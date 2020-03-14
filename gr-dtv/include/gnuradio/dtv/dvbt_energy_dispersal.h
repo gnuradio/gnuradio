@@ -29,7 +29,7 @@ namespace dtv {
 class DTV_API dvbt_energy_dispersal : virtual public gr::block
 {
 public:
-    typedef boost::shared_ptr<dvbt_energy_dispersal> sptr;
+    typedef std::shared_ptr<dvbt_energy_dispersal> sptr;
 
     /*!
      * \brief Create DVB-T energy dispersal.

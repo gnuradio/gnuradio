@@ -32,7 +32,7 @@ class FILTER_API hilbert_fc : virtual public sync_block
 {
 public:
     // gr::filter::hilbert_fc::sptr
-    typedef boost::shared_ptr<hilbert_fc> sptr;
+    typedef std::shared_ptr<hilbert_fc> sptr;
 
     /*!
      * Build a Hilbert transformer filter block.

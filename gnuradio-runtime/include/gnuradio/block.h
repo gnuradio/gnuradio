@@ -955,7 +955,7 @@ typedef std::vector<block_sptr>::iterator block_viter_t;
 
 inline block_sptr cast_to_block_sptr(basic_block_sptr p)
 {
-    return boost::dynamic_pointer_cast<block, basic_block>(p);
+    return std::dynamic_pointer_cast<block, basic_block>(p);
 }
 
 GR_RUNTIME_API std::ostream& operator<<(std::ostream& os, const block* m);

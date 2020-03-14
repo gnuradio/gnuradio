@@ -23,7 +23,7 @@ namespace dtv {
 class DTV_API atsc_field_sync_mux : virtual public gr::block
 {
 public:
-    typedef boost::shared_ptr<atsc_field_sync_mux> sptr;
+    typedef std::shared_ptr<atsc_field_sync_mux> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of dtv::atsc_field_sync_mux.

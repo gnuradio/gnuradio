@@ -47,7 +47,7 @@ namespace digital {
 class DIGITAL_API protocol_formatter_bb : virtual public tagged_stream_block
 {
 public:
-    typedef boost::shared_ptr<protocol_formatter_bb> sptr;
+    typedef std::shared_ptr<protocol_formatter_bb> sptr;
 
     /*!
      * Make a packet header block using a given \p format.

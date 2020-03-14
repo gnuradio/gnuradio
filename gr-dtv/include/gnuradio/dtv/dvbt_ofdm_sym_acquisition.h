@@ -27,7 +27,7 @@ namespace dtv {
 class DTV_API dvbt_ofdm_sym_acquisition : virtual public block
 {
 public:
-    typedef boost::shared_ptr<dvbt_ofdm_sym_acquisition> sptr;
+    typedef std::shared_ptr<dvbt_ofdm_sym_acquisition> sptr;
 
     /*!
      * \brief Create OFDM symbol acquisition.

@@ -31,7 +31,7 @@ class DIGITAL_API simple_framer : virtual public block
 {
 public:
     // gr::digital::simple_framer::sptr
-    typedef boost::shared_ptr<simple_framer> sptr;
+    typedef std::shared_ptr<simple_framer> sptr;
 
     /*!
      * Make a simple_framer block.

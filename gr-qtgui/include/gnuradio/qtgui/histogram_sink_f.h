@@ -64,7 +64,7 @@ class QTGUI_API histogram_sink_f : virtual public sync_block
 {
 public:
     // gr::qtgui::histogram_sink_f::sptr
-    typedef boost::shared_ptr<histogram_sink_f> sptr;
+    typedef std::shared_ptr<histogram_sink_f> sptr;
 
     /*!
      * \brief Build floating point histogram sink

@@ -27,7 +27,7 @@ class WAVELET_API wvps_ff : virtual public sync_block
 {
 public:
     // gr::wavelet::wvps_ff::sptr
-    typedef boost::shared_ptr<wvps_ff> sptr;
+    typedef std::shared_ptr<wvps_ff> sptr;
 
     /*!
       \param ilen

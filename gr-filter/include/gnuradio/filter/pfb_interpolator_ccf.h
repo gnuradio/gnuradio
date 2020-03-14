@@ -68,7 +68,7 @@ class FILTER_API pfb_interpolator_ccf : virtual public sync_interpolator
 {
 public:
     // gr::filter::pfb_interpolator_ccf::sptr
-    typedef boost::shared_ptr<pfb_interpolator_ccf> sptr;
+    typedef std::shared_ptr<pfb_interpolator_ccf> sptr;
 
     /*!
      * Build the polyphase filterbank interpolator.

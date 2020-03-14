@@ -9,8 +9,8 @@
  */
 
 class gr::block_detail;
-typedef boost::shared_ptr<gr::block_detail> gr::block_detail_sptr;
-%template(block_detail_sptr) boost::shared_ptr<gr::block_detail>;
+typedef std::shared_ptr<gr::block_detail> gr::block_detail_sptr;
+%template(block_detail_sptr) std::shared_ptr<gr::block_detail>;
 %rename(block_detail) gr::make_block_detail;
 %ignore gr::block_detail;
 

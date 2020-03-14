@@ -37,7 +37,7 @@ class BLOCKS_API vector_map : virtual public sync_block
 {
 public:
     // gr::blocks::vector_map::sptr
-    typedef boost::shared_ptr<vector_map> sptr;
+    typedef std::shared_ptr<vector_map> sptr;
 
     /*!
      * Build a vector map block.

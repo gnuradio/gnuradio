@@ -30,7 +30,7 @@ class BLOCKS_API peak_detector2_fb : virtual public sync_block
 {
 public:
     // gr::blocks::peak_detector2_fb::sptr
-    typedef boost::shared_ptr<peak_detector2_fb> sptr;
+    typedef std::shared_ptr<peak_detector2_fb> sptr;
 
     /*!
      * Build a peak detector block with float in, byte out.

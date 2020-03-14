@@ -14,7 +14,7 @@
 #include <gnuradio/block.h>
 #include <gnuradio/fec/api.h>
 #include <gnuradio/logger.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace gr {
 namespace fec {
@@ -34,7 +34,7 @@ public:
     std::string alias() { return (boost::format("%s%d") % d_name % unique_id()).str(); }
 
 public:
-    typedef boost::shared_ptr<generic_encoder> sptr;
+    typedef std::shared_ptr<generic_encoder> sptr;
 
     /*!
      * Returns the rate of the code. For every 1 input bit, there

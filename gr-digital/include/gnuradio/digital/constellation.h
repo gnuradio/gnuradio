@@ -16,7 +16,6 @@
 #include <gnuradio/gr_complex.h>
 #include <pmt/pmt.h>
 #include <boost/any.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <vector>
 
 namespace gr {
@@ -29,7 +28,7 @@ namespace digital {
 /************************************************************/
 
 class constellation;
-typedef boost::shared_ptr<constellation> constellation_sptr;
+typedef std::shared_ptr<constellation> constellation_sptr;
 
 /*!
  * \brief An abstracted constellation object
@@ -47,7 +46,7 @@ typedef boost::shared_ptr<constellation> constellation_sptr;
  * from this class and overloaded to perform optimized slicing and
  * constellation mappings.
  */
-class DIGITAL_API constellation : public boost::enable_shared_from_this<constellation>
+class DIGITAL_API constellation : public std::enable_shared_from_this<constellation>
 {
 public:
     constellation(std::vector<gr_complex> constell,
@@ -224,7 +223,7 @@ protected:
 class DIGITAL_API constellation_calcdist : public constellation
 {
 public:
-    typedef boost::shared_ptr<constellation_calcdist> sptr;
+    typedef std::shared_ptr<constellation_calcdist> sptr;
 
     /*!
      * Make a general constellation object that calculates the Euclidean distance for hard
@@ -325,7 +324,7 @@ private:
 class DIGITAL_API constellation_rect : public constellation_sector
 {
 public:
-    typedef boost::shared_ptr<constellation_rect> sptr;
+    typedef std::shared_ptr<constellation_rect> sptr;
 
     /*!
      * Make a rectangular constellation object.
@@ -394,7 +393,7 @@ private:
 class DIGITAL_API constellation_expl_rect : public constellation_rect
 {
 public:
-    typedef boost::shared_ptr<constellation_expl_rect> sptr;
+    typedef std::shared_ptr<constellation_expl_rect> sptr;
 
     static sptr make(std::vector<gr_complex> constellation,
                      std::vector<int> pre_diff_code,
@@ -444,7 +443,7 @@ private:
 class DIGITAL_API constellation_psk : public constellation_sector
 {
 public:
-    typedef boost::shared_ptr<constellation_psk> sptr;
+    typedef std::shared_ptr<constellation_psk> sptr;
 
     // public constructor
     static sptr make(std::vector<gr_complex> constell,
@@ -483,7 +482,7 @@ protected:
 class DIGITAL_API constellation_bpsk : public constellation
 {
 public:
-    typedef boost::shared_ptr<constellation_bpsk> sptr;
+    typedef std::shared_ptr<constellation_bpsk> sptr;
 
     // public constructor
     static sptr make();
@@ -519,7 +518,7 @@ protected:
 class DIGITAL_API constellation_qpsk : public constellation
 {
 public:
-    typedef boost::shared_ptr<constellation_qpsk> sptr;
+    typedef std::shared_ptr<constellation_qpsk> sptr;
 
     // public constructor
     static sptr make();
@@ -554,7 +553,7 @@ protected:
 class DIGITAL_API constellation_dqpsk : public constellation
 {
 public:
-    typedef boost::shared_ptr<constellation_dqpsk> sptr;
+    typedef std::shared_ptr<constellation_dqpsk> sptr;
 
     // public constructor
     static sptr make();
@@ -591,7 +590,7 @@ protected:
 class DIGITAL_API constellation_8psk : public constellation
 {
 public:
-    typedef boost::shared_ptr<constellation_8psk> sptr;
+    typedef std::shared_ptr<constellation_8psk> sptr;
 
     // public constructor
     static sptr make();
@@ -627,7 +626,7 @@ protected:
 class DIGITAL_API constellation_8psk_natural : public constellation
 {
 public:
-    typedef boost::shared_ptr<constellation_8psk_natural> sptr;
+    typedef std::shared_ptr<constellation_8psk_natural> sptr;
 
     // public constructor
     static sptr make();
@@ -665,7 +664,7 @@ protected:
 class DIGITAL_API constellation_16qam : public constellation
 {
 public:
-    typedef boost::shared_ptr<constellation_16qam> sptr;
+    typedef std::shared_ptr<constellation_16qam> sptr;
 
     // public constructor
     static sptr make();

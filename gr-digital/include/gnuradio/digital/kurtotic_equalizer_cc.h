@@ -36,7 +36,7 @@ protected:
 
 public:
     // gr::digital::kurtotic_equalizer_cc::sptr
-    typedef boost::shared_ptr<kurtotic_equalizer_cc> sptr;
+    typedef std::shared_ptr<kurtotic_equalizer_cc> sptr;
 
     static sptr make(int num_taps, float mu);
 

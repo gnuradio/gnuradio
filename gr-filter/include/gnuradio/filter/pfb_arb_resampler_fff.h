@@ -84,7 +84,7 @@ class FILTER_API pfb_arb_resampler_fff : virtual public block
 {
 public:
     // gr::filter::pfb_arb_resampler_fff::sptr
-    typedef boost::shared_ptr<pfb_arb_resampler_fff> sptr;
+    typedef std::shared_ptr<pfb_arb_resampler_fff> sptr;
 
     /*!
      * Build the polyphase filterbank arbitrary resampler.

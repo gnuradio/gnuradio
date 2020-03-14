@@ -28,7 +28,7 @@ private:
     std::poisson_distribution<> pd;      //(d_mean_ms);
     std::normal_distribution<> nd;       //(d_mean_ms, d_std_ms);
     std::uniform_real_distribution<> ud; //(d_mean_ms - d_std_ms, d_mean_ms + d_std_ms);
-    boost::shared_ptr<gr::thread::thread> d_thread;
+    std::shared_ptr<gr::thread::thread> d_thread;
     bool d_finished;
     pmt::pmt_t d_msg;
     const pmt::pmt_t d_port;

@@ -45,7 +45,7 @@ void tcp_connection::send(pmt::pmt_t vector)
     size_t len = pmt::blob_length(vector);
 
     // Asio async_write() requires the buffer to remain valid until the handler is called.
-    boost::shared_ptr<char[]> txbuf(new char[len]);
+    std::shared_ptr<char[]> txbuf(new char[len]);
 
     size_t temp = 0;
     memcpy(txbuf.get(), pmt::uniform_vector_elements(vector, temp), len);

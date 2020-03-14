@@ -52,7 +52,7 @@ namespace digital {
 class DIGITAL_API ofdm_sync_sc_cfb : virtual public hier_block2
 {
 public:
-    typedef boost::shared_ptr<ofdm_sync_sc_cfb> sptr;
+    typedef std::shared_ptr<ofdm_sync_sc_cfb> sptr;
 
     /*! \param fft_len FFT length
      *  \param cp_len Length of the guard interval (cyclic prefix) in samples

@@ -50,7 +50,7 @@ class BLOCKS_API unpacked_to_packed : virtual public block
 {
 public:
     // gr::blocks::unpacked_to_packed::sptr
-    typedef boost::shared_ptr<unpacked_to_packed<T>> sptr;
+    typedef std::shared_ptr<unpacked_to_packed<T>> sptr;
 
     static sptr make(unsigned int bits_per_chunk, endianness_t endianness);
 };

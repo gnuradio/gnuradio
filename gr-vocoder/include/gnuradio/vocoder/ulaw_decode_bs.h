@@ -25,7 +25,7 @@ class VOCODER_API ulaw_decode_bs : virtual public sync_block
 {
 public:
     // gr::vocoder::ulaw_decode_bs::sptr
-    typedef boost::shared_ptr<ulaw_decode_bs> sptr;
+    typedef std::shared_ptr<ulaw_decode_bs> sptr;
 
     /*!
      * \brief Make ulaw decoder block.

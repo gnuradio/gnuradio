@@ -30,7 +30,7 @@ class BLOCKS_API xor_blk : virtual public sync_block
 {
 public:
     // gr::blocks::xor::sptr
-    typedef boost::shared_ptr<xor_blk<T>> sptr;
+    typedef std::shared_ptr<xor_blk<T>> sptr;
 
     static sptr make(size_t vlen = 1);
 };

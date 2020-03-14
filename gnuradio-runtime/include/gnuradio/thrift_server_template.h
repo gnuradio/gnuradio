@@ -38,11 +38,11 @@ protected:
     friend class thrift_application_base<TserverBase, TImplClass>;
 
 private:
-    boost::shared_ptr<TserverClass> d_handler;
-    boost::shared_ptr<thrift::TProcessor> d_processor;
-    boost::shared_ptr<thrift::transport::TServerTransport> d_serverTransport;
-    boost::shared_ptr<thrift::transport::TTransportFactory> d_transportFactory;
-    boost::shared_ptr<thrift::protocol::TProtocolFactory> d_protocolFactory;
+    std::shared_ptr<TserverClass> d_handler;
+    std::shared_ptr<thrift::TProcessor> d_processor;
+    std::shared_ptr<thrift::transport::TServerTransport> d_serverTransport;
+    std::shared_ptr<thrift::transport::TTransportFactory> d_transportFactory;
+    std::shared_ptr<thrift::protocol::TProtocolFactory> d_protocolFactory;
     /**
      * Custom TransportFactory that allows you to override the default Thrift buffer size
      * of 512 bytes.
@@ -59,10 +59,10 @@ private:
 
         virtual ~TBufferedTransportFactory() {}
 
-        virtual boost::shared_ptr<thrift::transport::TTransport>
-        getTransport(boost::shared_ptr<thrift::transport::TTransport> trans)
+        virtual std::shared_ptr<thrift::transport::TTransport>
+        getTransport(std::shared_ptr<thrift::transport::TTransport> trans)
         {
-            return boost::shared_ptr<thrift::transport::TTransport>(
+            return std::shared_ptr<thrift::transport::TTransport>(
                 new thrift::transport::TBufferedTransport(trans, bufferSize));
         }
 
@@ -121,11 +121,11 @@ thrift_server_template<TserverBase, TserverClass, TImplClass>::thrift_server_tem
                 d_processor, d_serverTransport, d_transportFactory, d_protocolFactory));
     } else {
         // std::cout << "Thrift Multi-threaded server : " << d_nthreads << std::endl;
-        boost::shared_ptr<thrift::concurrency::ThreadManager> threadManager(
+        std::shared_ptr<thrift::concurrency::ThreadManager> threadManager(
             thrift::concurrency::ThreadManager::newSimpleThreadManager(nthreads));
 
         threadManager->threadFactory(
-            boost::shared_ptr<thrift::concurrency::PlatformThreadFactory>(
+            std::shared_ptr<thrift::concurrency::PlatformThreadFactory>(
                 new thrift::concurrency::PlatformThreadFactory()));
 
         threadManager->start();

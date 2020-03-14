@@ -26,7 +26,7 @@ class DTV_API atsc_rs_decoder : virtual public gr::sync_block
 {
 public:
     // gr::dtv::atsc_rs_decoder::sptr
-    typedef boost::shared_ptr<atsc_rs_decoder> sptr;
+    typedef std::shared_ptr<atsc_rs_decoder> sptr;
 
     /*!
      * Returns the number of errors corrected by the decoder.

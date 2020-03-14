@@ -33,7 +33,7 @@ namespace blocks {
 class BLOCKS_API stream_to_tagged_stream : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<stream_to_tagged_stream> sptr;
+    typedef std::shared_ptr<stream_to_tagged_stream> sptr;
 
     /*!
      * \param itemsize Item size

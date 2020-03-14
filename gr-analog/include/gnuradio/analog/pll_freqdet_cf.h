@@ -39,7 +39,7 @@ class ANALOG_API pll_freqdet_cf : virtual public sync_block,
 {
 public:
     // gr::analog::pll_freqdet_cf::sptr
-    typedef boost::shared_ptr<pll_freqdet_cf> sptr;
+    typedef std::shared_ptr<pll_freqdet_cf> sptr;
 
     /* \brief Make PLL block that outputs the tracked signal's frequency.
      *

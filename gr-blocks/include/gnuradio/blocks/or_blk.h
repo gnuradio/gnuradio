@@ -28,7 +28,7 @@ class BLOCKS_API or_blk : virtual public sync_block
 {
 public:
     // gr::blocks::or_blk::sptr
-    typedef boost::shared_ptr<or_blk<T>> sptr;
+    typedef std::shared_ptr<or_blk<T>> sptr;
 
     static sptr make(size_t vlen = 1);
 };

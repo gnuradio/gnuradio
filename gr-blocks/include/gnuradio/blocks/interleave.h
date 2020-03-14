@@ -49,7 +49,7 @@ class BLOCKS_API interleave : virtual public block
 {
 public:
     // gr::blocks::interleave::sptr
-    typedef boost::shared_ptr<interleave> sptr;
+    typedef std::shared_ptr<interleave> sptr;
 
     /*!
      * Make a stream interleave block.

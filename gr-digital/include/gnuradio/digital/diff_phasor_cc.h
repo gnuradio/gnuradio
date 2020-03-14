@@ -31,7 +31,7 @@ class DIGITAL_API diff_phasor_cc : virtual public sync_block
 {
 public:
     // gr::digital::diff_phasor_cc::sptr
-    typedef boost::shared_ptr<diff_phasor_cc> sptr;
+    typedef std::shared_ptr<diff_phasor_cc> sptr;
 
     /*!
      * Make a differential phasor decoding block.

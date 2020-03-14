@@ -25,7 +25,7 @@ class BLOCKS_API add_const_ss : virtual public sync_block
 {
 public:
     // gr::blocks::add_const_ss::sptr
-    typedef boost::shared_ptr<add_const_ss> sptr;
+    typedef std::shared_ptr<add_const_ss> sptr;
 
     /*!
      * \brief Create an instance of add_const_ss

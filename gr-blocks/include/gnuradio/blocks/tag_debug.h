@@ -47,7 +47,7 @@ class BLOCKS_API tag_debug : virtual public sync_block
 {
 public:
     // gr::blocks::tag_debug::sptr
-    typedef boost::shared_ptr<tag_debug> sptr;
+    typedef std::shared_ptr<tag_debug> sptr;
 
     /*!
      * Build a tag debug block

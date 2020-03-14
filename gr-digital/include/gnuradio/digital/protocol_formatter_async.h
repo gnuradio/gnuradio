@@ -59,7 +59,7 @@ namespace digital {
 class DIGITAL_API protocol_formatter_async : virtual public block
 {
 public:
-    typedef boost::shared_ptr<protocol_formatter_async> sptr;
+    typedef std::shared_ptr<protocol_formatter_async> sptr;
 
     /*!
      * Make a packet header block using a given \p format.

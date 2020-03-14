@@ -24,7 +24,7 @@ namespace dtv {
 class DTV_API atsc_randomizer : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<atsc_randomizer> sptr;
+    typedef std::shared_ptr<atsc_randomizer> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of dtv::atsc_randomizer.

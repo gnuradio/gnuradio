@@ -19,7 +19,7 @@
 namespace gr {
 
 class test;
-typedef boost::shared_ptr<test> test_sptr;
+typedef std::shared_ptr<test> test_sptr;
 
 // public constructor
 GR_RUNTIME_API test_sptr make_test(const std::string& name = std::string("test"),

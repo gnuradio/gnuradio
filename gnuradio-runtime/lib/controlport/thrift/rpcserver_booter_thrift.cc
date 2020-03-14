@@ -79,7 +79,7 @@ const unsigned int thrift_application_base<rpcserver_base, rpcserver_booter_thri
     d_default_thrift_buffer_size(ALRIGHT_DEFAULT_BUFFER_SIZE);
 
 template <class rpcserver_base, class rpcserver_booter_thrift>
-boost::scoped_ptr<thrift_application_base_impl>
+std::unique_ptr<thrift_application_base_impl>
     thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::p_impl(
         new thrift_application_base_impl());
 

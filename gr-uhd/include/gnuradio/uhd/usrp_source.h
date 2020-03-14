@@ -46,7 +46,7 @@ class GR_UHD_API usrp_source : virtual public usrp_block
 {
 public:
     // gr::uhd::usrp_source::sptr
-    typedef boost::shared_ptr<usrp_source> sptr;
+    typedef std::shared_ptr<usrp_source> sptr;
 
     /*!
      * \param device_addr the address to identify the hardware

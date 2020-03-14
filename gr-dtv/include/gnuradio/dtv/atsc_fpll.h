@@ -41,7 +41,7 @@ class DTV_API atsc_fpll : virtual public gr::sync_block
 {
 public:
     // gr::dtv::atsc_fpll::sptr
-    typedef boost::shared_ptr<atsc_fpll> sptr;
+    typedef std::shared_ptr<atsc_fpll> sptr;
 
     /*!
      * \brief Make a new instance of gr::dtv::atsc_fpll.

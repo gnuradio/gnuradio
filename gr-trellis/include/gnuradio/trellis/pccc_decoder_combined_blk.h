@@ -30,7 +30,7 @@ template <class IN_T, class OUT_T>
 class TRELLIS_API pccc_decoder_combined_blk : virtual public block
 {
 public:
-    typedef boost::shared_ptr<pccc_decoder_combined_blk<IN_T, OUT_T>> sptr;
+    typedef std::shared_ptr<pccc_decoder_combined_blk<IN_T, OUT_T>> sptr;
 
     static sptr make(const fsm& FSMo,
                      int STo0,

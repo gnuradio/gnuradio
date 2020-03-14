@@ -25,7 +25,7 @@ class BLOCKS_API vector_to_stream : virtual public sync_interpolator
 {
 public:
     // gr::blocks::vector_to_stream::sptr
-    typedef boost::shared_ptr<vector_to_stream> sptr;
+    typedef std::shared_ptr<vector_to_stream> sptr;
 
     /*!
      * Make vector-to-stream block

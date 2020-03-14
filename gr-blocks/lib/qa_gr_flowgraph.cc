@@ -23,7 +23,7 @@ namespace blocks {
 class null_qa_source : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<null_qa_source> sptr;
+    typedef std::shared_ptr<null_qa_source> sptr;
     static sptr make(size_t sizeof_stream_item);
 };
 class null_source_qa_impl : public null_qa_source
@@ -56,7 +56,7 @@ null_qa_source::sptr null_qa_source::make(size_t sizeof_stream_item)
 class null_qa_sink : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<null_qa_sink> sptr;
+    typedef std::shared_ptr<null_qa_sink> sptr;
     static sptr make(size_t sizeof_stream_item);
 };
 class null_sink_qa_impl : public null_qa_sink
