@@ -25,7 +25,7 @@ from .base import common_params, block_name, run, cli_input, ModToolException
 
 @click.command('add')
 @click.option('-t', '--block-type', type=click.Choice(ModToolAdd.block_types),
-              help="One of {}.".format(', '.join(ModToolAdd.block_types)))
+              help=f"One of {', '.join(ModToolAdd.block_types)}.")
 @click.option('--license-file',
               help="File containing the license header for every source code file.")
 @click.option('--copyright',
@@ -49,7 +49,8 @@ def cli(**kwargs):
     click.secho("GNU Radio module name identified: " + self.info['modname'], fg='green')
     get_blocktype(self)
     get_lang(self)
-    click.secho("Language: {}".format({'cpp': 'C++', 'python': 'Python'}[self.info['lang']]), fg='green')
+    info_lang = {'cpp': 'C++', 'python': 'Python'}[self.info['lang']]
+    click.secho(f"Language: {info_lang}", fg='green')
     if ((self.skip_subdirs['lib'] and self.info['lang'] == 'cpp')
             or (self.skip_subdirs['python'] and self.info['lang'] == 'python')):
         raise ModToolException('Missing or skipping relevant subdir.')
@@ -114,7 +115,8 @@ def get_copyrightholder(self):
         with SequenceCompleter(copyright_candidates):
             self.info['copyrightholder'] = cli_input("Please specify the copyright holder: ")
             if not self.info['copyrightholder'] or self.info['copyrightholder'].isspace():
-                self.info['copyrightholder'] = "gr-{} author".format(self.info['modname'])
+                inf_=self.info['modname']
+                self.info['copyrightholder'] = f"gr-{inf_} author"
     elif self.info['is_component']:
         click.secho("For GNU Radio components the FSF is added as copyright holder",
                     fg='cyan')

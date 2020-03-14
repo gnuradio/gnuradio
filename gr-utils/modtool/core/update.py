@@ -73,11 +73,11 @@ class ModToolUpdate(ModTool):
         else:
             blocks = [self.info['blockname']]
         for blockname in blocks:
-            xml_file = "{}_{}.xml".format(module_name, blockname)
-            yml_file = "{}_{}.block.yml".format(module_name, blockname)
+            xml_file = f"{module_name}_{blockname}.xml"
+            yml_file = f"{module_name}_{blockname}.block.yml"
             if not conv.load_block_xml(path+xml_file, self.info["include_blacklisted"]):
                 continue
-            logger.info("Converted {} to {}".format(xml_file, yml_file))
+            logger.info(f"Converted {xml_file} to {yml_file}")
             os.remove(path+xml_file)
             nsubs = self._run_cmakelists(xml_file, yml_file)
             if nsubs > 1:

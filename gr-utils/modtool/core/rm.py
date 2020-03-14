@@ -49,29 +49,29 @@ class ModToolRemove(ModTool):
         def _remove_cc_test_case(filename=None, ed=None):
             """ Special function that removes the occurrences of a qa*.cc file
             from the CMakeLists.txt. """
+            modname_=self.info['modname']
             if filename[:2] != 'qa':
                 return
             if self.info['version'] == '37':
                 (base, ext) = os.path.splitext(filename)
                 if ext == '.h':
                     remove_pattern_from_file(self._file['qalib'],
-                                             r'^#include "{}"\s*$'.format(filename))
+                                             fr'^#include "{filename}"\s*$')
                     remove_pattern_from_file(self._file['qalib'],
-                                             r'^\s*s->addTest\(gr::{}::{}::suite\(\)\);\s*$'.format(
-                                                    self.info['modname'], base)
+                                             fr'^\s*s->addTest\(gr::{modname_}::{base}::suite\(\)\);\s*$'
                                             )
                     self.scm.mark_file_updated(self._file['qalib'])
                 elif ext == '.cc':
                     ed.remove_value('list',
                                     r'\$\{CMAKE_CURRENT_SOURCE_DIR\}/%s' % filename,
-                                    to_ignore_start='APPEND test_{}_sources'.format(self.info['modname']))
+                                    to_ignore_start=f'APPEND test_{modname_}_sources')
                     self.scm.mark_file_updated(ed.filename)
             elif self.info['version'] == '38':
                 (base, ext) = os.path.splitext(filename)
                 if ext == '.cc':
                     ed.remove_value(
                         'list', filename,
-                        to_ignore_start='APPEND test_{}_sources'.format(self.info['modname']))
+                        to_ignore_start=f'APPEND test_{modname_}_sources' )
                     self.scm.mark_file_updated(ed.filename)
             else:
                 filebase = os.path.splitext(filename)[0]
@@ -112,8 +112,8 @@ class ModToolRemove(ModTool):
             py_files_deleted = self._run_subdir('python', ('*.py',), ('GR_PYTHON_INSTALL',),
                                                 cmakeedit_func=_remove_py_test_case)
             for f in py_files_deleted:
-                remove_pattern_from_file(self._file['pyinit'], r'.*import\s+{}.*'.format(f[:-3]))
-                remove_pattern_from_file(self._file['pyinit'], r'.*from\s+{}\s+import.*\n'.format(f[:-3]))
+                remove_pattern_from_file(self._file['pyinit'], fr'.*import\s+{f[:-3]}.*')
+                remove_pattern_from_file(self._file['pyinit'], fr'.*from\s+{f[:-3]}\s+import.*\n')
         if not self.skip_subdirs['grc']:
             self._run_subdir('grc', ('*.yml',), ('install',))
 
@@ -130,9 +130,9 @@ class ModToolRemove(ModTool):
         # 1. Create a filtered list
         files = []
         for g in globs:
-            files = files + sorted(glob.glob("{}/{}".format(path, g)))
+            files = files + sorted(glob.glob(f"{path}/{g}"))
         files_filt = []
-        logger.info("Searching for matching files in {}/:".format(path))
+        logger.info("Searching for matching files in {path}/:")
         for f in files:
             if re.search(self.info['pattern'], os.path.basename(f)) is not None:
                 files_filt.append(f)
@@ -141,12 +141,12 @@ class ModToolRemove(ModTool):
             return []
         # 2. Delete files, Makefile entries and other occurrences
         files_deleted = []
-        ed = CMakeFileEditor('{}/CMakeLists.txt'.format(path))
+        ed = CMakeFileEditor(f'{path}/CMakeLists.txt')
         yes = self.info['yes']
         for f in files_filt:
             b = os.path.basename(f)
             if not yes and self.cli:
-                ans = cli_input("Really delete {}? [Y/n/a/q]: ".format(f)).lower().strip()
+                ans = cli_input(f"Really delete {f}? [Y/n/a/q]: ").lower().strip()
                 if ans == 'a':
                     yes = True
                 if ans == 'q':
@@ -154,14 +154,14 @@ class ModToolRemove(ModTool):
                 if ans == 'n':
                     continue
             files_deleted.append(b)
-            logger.info("Deleting {}.".format(f))
+            logger.info(f"Deleting {f}.")
             self.scm.remove_file(f)
             os.unlink(f)
-            logger.info("Deleting occurrences of {} from {}/CMakeLists.txt...".format(b, path))
+            logger.info(f"Deleting occurrences of {b} from {path}/CMakeLists.txt...")
             for var in makefile_vars:
                 ed.remove_value(var, b)
             if cmakeedit_func is not None:
                 cmakeedit_func(b, ed)
         ed.write()
-        self.scm.mark_files_updated(('{}/CMakeLists.txt'.format(path)))
+        self.scm.mark_files_updated((f'{path}/CMakeLists.txt'))
         return files_deleted

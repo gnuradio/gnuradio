@@ -61,7 +61,7 @@ class ModToolRename(ModTool):
         module = self.info['modname']
         oldname = self.info['oldname']
         newname = self.info['newname']
-        logger.info("In module '{}' rename block '{}' to '{}'".format(module, oldname, newname))
+        logger.info(f"In module '{module}' rename block '{oldname}' to '{newname}'")
         self._run_swig_rename(self._file['swig'], oldname, newname)
         self._run_grc_rename(self.info['modname'], oldname, newname)
         self._run_python_qa(self.info['modname'], oldname, newname)
@@ -74,11 +74,11 @@ class ModToolRename(ModTool):
         """ Rename SWIG includes and block_magic """
         nsubs = self._run_file_replace(swigfilename, old, new)
         if nsubs < 1:
-            logger.info("Couldn't find '{}' in file '{}'.".format(old, swigfilename))
+            logger.info(f"Couldn't find '{old}' in file '{swigfilename}'.")
         if nsubs == 2:
             logger.info("Changing 'noblock' type file")
         if nsubs > 3:
-            logger.warning("Hm, changed more then expected while editing {}.".format(swigfilename))
+            logger.warning(f"Hm, changed more then expected while editing {swigfilename}.")
         return False
 
     def _run_lib(self, module, old, new):
@@ -147,7 +147,7 @@ class ModToolRename(ModTool):
         filename = path + 'CMakeLists.txt'
         nsubs = self._run_file_replace(filename, first, second)
         if nsubs < 1:
-            logger.info("'{}' wasn't in '{}'.".format(first, filename))
+            logger.info(f"'{first}' wasn't in '{filename}'.")
 
     def _run_file_rename(self, path, old, new):
         files = os.listdir(path)
@@ -156,14 +156,14 @@ class ModToolRename(ModTool):
                 nl = file.replace(old, new)
                 src = path + file
                 dst = path + nl
-                logger.info("Renaming file '{}' to '{}'.".format(src, dst))
+                logger.info(f"Renaming file '{src}' to '{dst}'.")
                 os.rename(src, dst)
 
     def _run_file_replace(self, filename, old, new):
         if not os.path.isfile(filename):
             return False
         else:
-            logger.info("In '{}' renaming occurrences of '{}' to '{}'".format(filename, old, new))
+            logger.info(f"In '{filename}' renaming occurrences of '{old}' to '{new}'")
 
         with open(filename) as f:
             cfile = f.read()

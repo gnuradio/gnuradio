@@ -23,13 +23,13 @@ Copyright %d {copyrightholder}.
 SPDX-License-Identifier: GPL-3.0-or-later
 ''' % datetime.now().year
 
-Templates['grlicense'] = '''
-Copyright {0} Free Software Foundation, Inc.
+Templates['grlicense'] = f'''
+Copyright {datetime.now().year} Free Software Foundation, Inc.
 
 This file is part of GNU Radio
 
 SPDX-License-Identifier: GPL-3.0-or-later
-'''.format(datetime.now().year)
+'''
 
 # Header file of a sync/decimator/interpolator block
 Templates['block_impl_h'] = '''/* -*- c++ -*- */
