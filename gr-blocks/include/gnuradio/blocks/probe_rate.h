@@ -25,7 +25,7 @@ class BLOCKS_API probe_rate : virtual public sync_block
 {
 public:
     // gr::blocks::probe_rate::sptr
-    typedef boost::shared_ptr<probe_rate> sptr;
+    typedef std::shared_ptr<probe_rate> sptr;
 
     /*!
      * \brief Make a throughput measurement block

@@ -26,7 +26,7 @@ namespace blocks {
 class BLOCKS_API tag_gate : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<tag_gate> sptr;
+    typedef std::shared_ptr<tag_gate> sptr;
 
     virtual void set_propagation(bool propagate_tags) = 0;
 

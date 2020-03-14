@@ -27,7 +27,7 @@ namespace dtv {
 class DTV_API catv_randomizer_bb : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<catv_randomizer_bb> sptr;
+    typedef std::shared_ptr<catv_randomizer_bb> sptr;
 
     /*!
      * \brief Create an ITU-T J.83B randomizer.

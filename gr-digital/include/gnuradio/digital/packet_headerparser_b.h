@@ -37,7 +37,7 @@ namespace digital {
 class DIGITAL_API packet_headerparser_b : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<packet_headerparser_b> sptr;
+    typedef std::shared_ptr<packet_headerparser_b> sptr;
 
     /*!
      * \param header_formatter Header object. This should be the same as used for

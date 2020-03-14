@@ -14,7 +14,7 @@
 #include <pmt/pmt.h>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace gr {
 
@@ -35,7 +35,7 @@ private:
                    bool no_delay = false);
 
 public:
-    typedef boost::shared_ptr<tcp_connection> sptr;
+    typedef std::shared_ptr<tcp_connection> sptr;
 
     static sptr
     make(boost::asio::io_service& io_service, int MTU = 10000, bool no_delay = false);
@@ -45,7 +45,7 @@ public:
     void start(gr::basic_block* block);
     void send(pmt::pmt_t vector);
     void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
-    void handle_write(boost::shared_ptr<char[]> txbuf,
+    void handle_write(std::shared_ptr<char[]> txbuf,
                       const boost::system::error_code& error,
                       size_t bytes_transferred)
     {

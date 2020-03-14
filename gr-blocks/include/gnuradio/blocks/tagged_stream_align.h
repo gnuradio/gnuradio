@@ -26,7 +26,7 @@ namespace blocks {
 class BLOCKS_API tagged_stream_align : virtual public block
 {
 public:
-    typedef boost::shared_ptr<tagged_stream_align> sptr;
+    typedef std::shared_ptr<tagged_stream_align> sptr;
 
     /*!
      * Make a tagged stream align

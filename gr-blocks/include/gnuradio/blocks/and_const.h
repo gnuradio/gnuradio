@@ -32,7 +32,7 @@ class BLOCKS_API and_const : virtual public sync_block
 
 public:
     // gr::blocks::and_const::sptr
-    typedef boost::shared_ptr<and_const<T>> sptr;
+    typedef std::shared_ptr<and_const<T>> sptr;
 
     /*!
      * \brief Create an instance of and_const

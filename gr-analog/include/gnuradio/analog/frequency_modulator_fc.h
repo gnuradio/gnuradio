@@ -51,7 +51,7 @@ class ANALOG_API frequency_modulator_fc : virtual public sync_block
 {
 public:
     // gr::analog::frequency_modulator_fc::sptr
-    typedef boost::shared_ptr<frequency_modulator_fc> sptr;
+    typedef std::shared_ptr<frequency_modulator_fc> sptr;
 
     /*!
      * Build a frequency modulator block.

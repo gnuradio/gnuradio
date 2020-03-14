@@ -86,7 +86,7 @@ class GR_RUNTIME_API block_gateway : virtual public gr::block
 {
 public:
     // gr::block_gateway::sptr
-    typedef boost::shared_ptr<block_gateway> sptr;
+    typedef std::shared_ptr<block_gateway> sptr;
 
     /*!
      * Make a new gateway block.

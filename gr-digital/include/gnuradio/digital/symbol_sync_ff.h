@@ -44,7 +44,7 @@ class DIGITAL_API symbol_sync_ff : virtual public block
 {
 public:
     // gr::digital::symbol_sync_ff::sptr
-    typedef boost::shared_ptr<symbol_sync_ff> sptr;
+    typedef std::shared_ptr<symbol_sync_ff> sptr;
 
     /*!
      * Make a Symbol Synchronizer block.

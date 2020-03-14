@@ -36,7 +36,7 @@ class BLOCKS_API burst_tagger : virtual public sync_block
 {
 public:
     // gr::blocks::burst_tagger::sptr
-    typedef boost::shared_ptr<burst_tagger> sptr;
+    typedef std::shared_ptr<burst_tagger> sptr;
 
     /*!
      * Build a burst tagger gnuradio/blocks.

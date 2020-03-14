@@ -25,7 +25,7 @@ class BLOCKS_API conjugate_cc : virtual public sync_block
 {
 public:
     // gr::blocks::conjugate_cc_ff::sptr
-    typedef boost::shared_ptr<conjugate_cc> sptr;
+    typedef std::shared_ptr<conjugate_cc> sptr;
 
     static sptr make();
 };

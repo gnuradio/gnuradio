@@ -14,7 +14,7 @@
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/generic_encoder.h>
 #include <gnuradio/tagged_stream_block.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace gr {
 namespace fec {
@@ -35,7 +35,7 @@ namespace fec {
 class FEC_API tagged_encoder : virtual public tagged_stream_block
 {
 public:
-    typedef boost::shared_ptr<tagged_encoder> sptr;
+    typedef std::shared_ptr<tagged_encoder> sptr;
 
     /*!
      * Build the FEC encoder block from an FECAPI encoder object.

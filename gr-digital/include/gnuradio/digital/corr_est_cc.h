@@ -78,7 +78,7 @@ typedef enum {
 class DIGITAL_API corr_est_cc : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<corr_est_cc> sptr;
+    typedef std::shared_ptr<corr_est_cc> sptr;
 
     /*!
      * Make a block that correlates against the \p symbols vector

@@ -20,7 +20,7 @@ namespace gr {
 namespace messages {
 
 class msg_queue;
-typedef boost::shared_ptr<msg_queue> msg_queue_sptr;
+typedef std::shared_ptr<msg_queue> msg_queue_sptr;
 
 msg_queue_sptr make_msg_queue(unsigned int limit = 0);
 

@@ -81,7 +81,7 @@ class QTGUI_API waterfall_sink_f : virtual public sync_block
 {
 public:
     // gr::qtgui::waterfall_sink_f::sptr
-    typedef boost::shared_ptr<waterfall_sink_f> sptr;
+    typedef std::shared_ptr<waterfall_sink_f> sptr;
 
     /*!
      * \brief Build a floating point waterfall sink.

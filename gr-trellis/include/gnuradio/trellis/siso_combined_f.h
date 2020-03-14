@@ -28,7 +28,7 @@ class TRELLIS_API siso_combined_f : virtual public block
 {
 public:
     // gr::trellis::siso_combined_f::sptr
-    typedef boost::shared_ptr<siso_combined_f> sptr;
+    typedef std::shared_ptr<siso_combined_f> sptr;
 
     static sptr make(const fsm& FSM,
                      int K,

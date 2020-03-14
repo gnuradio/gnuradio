@@ -86,7 +86,7 @@ int UHD_SAFE_MAIN(int argc, char* argv[])
     usrp_source->set_samp_rate(samp_rate);
     usrp_source->set_center_freq(center_freq);
 
-    boost::shared_ptr<tag_sink_demo> tag_sink = boost::make_shared<tag_sink_demo>();
+    std::shared_ptr<tag_sink_demo> tag_sink = std::make_shared<tag_sink_demo>();
 
     //------------------------------------------------------------------
     //-- connect the usrp source test blocks
@@ -103,13 +103,13 @@ int UHD_SAFE_MAIN(int argc, char* argv[])
     const uhd::time_spec_t time_now = usrp_sink->get_time_now();
     const double actual_samp_rate = usrp_sink->get_samp_rate();
 
-    boost::shared_ptr<tag_source_demo> tag_source = boost::make_shared<tag_source_demo>(
-        time_now.get_full_secs() + 1,
-        time_now.get_frac_secs(), // time now + 1 second
-        actual_samp_rate,
-        idle_dur,
-        burst_dur,
-        length_tag);
+    std::shared_ptr<tag_source_demo> tag_source =
+        std::make_shared<tag_source_demo>(time_now.get_full_secs() + 1,
+                                          time_now.get_frac_secs(), // time now + 1 second
+                                          actual_samp_rate,
+                                          idle_dur,
+                                          burst_dur,
+                                          length_tag);
 
     //------------------------------------------------------------------
     //-- connect the usrp sink test blocks

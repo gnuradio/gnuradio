@@ -29,7 +29,7 @@
 ////////////////////////////////////////////////////////////////////////
 %include <gnuradio/block_gateway.h>
 
-%template(block_gateway_sptr) boost::shared_ptr<gr::block_gateway>;
+%template(block_gateway_sptr) std::shared_ptr<gr::block_gateway>;
 %pythoncode %{
 block_gateway_sptr.__repr__ = lambda self: "<block_gateway>"
 block_gateway = block_gateway.make;

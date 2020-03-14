@@ -25,7 +25,7 @@ class BLOCKS_API float_to_int : virtual public sync_block
 {
 public:
     // gr::blocks::float_to_int_ff::sptr
-    typedef boost::shared_ptr<float_to_int> sptr;
+    typedef std::shared_ptr<float_to_int> sptr;
 
     /*!
      * Build a float to int block.

@@ -24,7 +24,7 @@ namespace audio {
 class GR_AUDIO_API sink : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<sink> sptr;
+    typedef std::shared_ptr<sink> sptr;
 
     /*!
      * Creates a sink from an audio device at a specified

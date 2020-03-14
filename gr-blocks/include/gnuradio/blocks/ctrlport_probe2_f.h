@@ -32,7 +32,7 @@ class BLOCKS_API ctrlport_probe2_f : virtual public sync_block
 {
 public:
     // gr::blocks::ctrlport_probe2_f::sptr
-    typedef boost::shared_ptr<ctrlport_probe2_f> sptr;
+    typedef std::shared_ptr<ctrlport_probe2_f> sptr;
 
     /*!
      * \brief Make a ControlPort probe block.

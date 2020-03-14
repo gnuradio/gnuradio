@@ -15,7 +15,7 @@ namespace gr {
   class msg_queue : public gr::msg_handler
   {
   public:
-    typedef boost::shared_ptr<msg_queue> sptr;
+    typedef std::shared_ptr<msg_queue> sptr;
 
     static sptr make(unsigned int limit=0);
 
@@ -86,7 +86,7 @@ namespace gr {
 %}
 
 // smash in new python delete_head and insert_tail methods...
-%template(msg_queue_sptr) boost::shared_ptr<gr::msg_queue>;
+%template(msg_queue_sptr) std::shared_ptr<gr::msg_queue>;
 %pythoncode %{
 msg_queue_sptr.delete_head = py_msg_queue__delete_head
 msg_queue_sptr.insert_tail = py_msg_queue__insert_tail

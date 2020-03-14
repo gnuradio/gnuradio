@@ -48,7 +48,7 @@ class DIGITAL_API probe_mpsk_snr_est_c : virtual public sync_block
 {
 public:
     // gr::digital::probe_mpsk_snr_est_c::sptr
-    typedef boost::shared_ptr<probe_mpsk_snr_est_c> sptr;
+    typedef std::shared_ptr<probe_mpsk_snr_est_c> sptr;
 
     /*! Make an MPSK SNR probe.
      *

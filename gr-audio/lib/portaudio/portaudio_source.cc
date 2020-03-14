@@ -227,8 +227,8 @@ bool portaudio_source::check_topology(int ninputs, int noutputs)
     if (Pa_IsStreamActive(d_stream)) {
         Pa_CloseStream(d_stream);
         d_stream = 0;
-        d_reader.reset(); // boost::shared_ptr for d_reader = 0
-        d_writer.reset(); // boost::shared_ptr for d_write = 0
+        d_reader.reset(); // std::shared_ptr for d_reader = 0
+        d_writer.reset(); // std::shared_ptr for d_write = 0
     }
 
     d_input_parameters.channelCount = noutputs; // # of channels we're really using

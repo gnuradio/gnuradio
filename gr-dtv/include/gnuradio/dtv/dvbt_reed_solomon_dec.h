@@ -25,7 +25,7 @@ namespace dtv {
 class DTV_API dvbt_reed_solomon_dec : virtual public block
 {
 public:
-    typedef boost::shared_ptr<dvbt_reed_solomon_dec> sptr;
+    typedef std::shared_ptr<dvbt_reed_solomon_dec> sptr;
 
     /*!
      * \brief Create a Reed Solomon decoder.

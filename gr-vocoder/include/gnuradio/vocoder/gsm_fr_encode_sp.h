@@ -28,7 +28,7 @@ class VOCODER_API gsm_fr_encode_sp : virtual public sync_decimator
 {
 public:
     // gr::vocoder::gsm_fr_encode_sp::sptr
-    typedef boost::shared_ptr<gsm_fr_encode_sp> sptr;
+    typedef std::shared_ptr<gsm_fr_encode_sp> sptr;
 
     /*!
      * \brief Make GSM encoder block.

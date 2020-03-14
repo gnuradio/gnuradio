@@ -28,7 +28,7 @@ template <class T>
 class BLOCKS_API probe_signal_v : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<probe_signal_v<T>> sptr;
+    typedef std::shared_ptr<probe_signal_v<T>> sptr;
 
     static sptr make(size_t size);
 

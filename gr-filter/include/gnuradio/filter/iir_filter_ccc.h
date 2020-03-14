@@ -57,7 +57,7 @@ class FILTER_API iir_filter_ccc : virtual public sync_block
 {
 public:
     // gr::filter::iir_filter_ccc::sptr
-    typedef boost::shared_ptr<iir_filter_ccc> sptr;
+    typedef std::shared_ptr<iir_filter_ccc> sptr;
 
     static sptr make(const std::vector<gr_complex>& fftaps,
                      const std::vector<gr_complex>& fbtaps,

@@ -134,7 +134,7 @@ public:
 
 inline top_block_sptr cast_to_top_block_sptr(basic_block_sptr block)
 {
-    return boost::dynamic_pointer_cast<top_block, basic_block>(block);
+    return std::dynamic_pointer_cast<top_block, basic_block>(block);
 }
 
 } // namespace gr

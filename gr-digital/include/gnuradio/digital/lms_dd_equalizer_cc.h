@@ -60,7 +60,7 @@ protected:
 
 public:
     // gr::digital::lms_dd_equalizer_cc::sptr
-    typedef boost::shared_ptr<lms_dd_equalizer_cc> sptr;
+    typedef std::shared_ptr<lms_dd_equalizer_cc> sptr;
 
     /*!
      * Make an LMS decision-directed equalizer

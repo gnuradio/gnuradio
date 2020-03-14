@@ -27,7 +27,7 @@ template <class T>
 class BLOCKS_API mute_blk : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<mute_blk<T>> sptr;
+    typedef std::shared_ptr<mute_blk<T>> sptr;
 
     static sptr make(bool mute = false);
 

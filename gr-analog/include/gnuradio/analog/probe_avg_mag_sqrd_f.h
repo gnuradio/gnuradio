@@ -33,7 +33,7 @@ class ANALOG_API probe_avg_mag_sqrd_f : virtual public sync_block
 {
 public:
     // gr::analog::probe_avg_mag_sqrd_f::sptr
-    typedef boost::shared_ptr<probe_avg_mag_sqrd_f> sptr;
+    typedef std::shared_ptr<probe_avg_mag_sqrd_f> sptr;
 
     /*!
      * \brief Make a float sink that computes avg magnitude squared.

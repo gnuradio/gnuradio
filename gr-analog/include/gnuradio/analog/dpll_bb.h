@@ -29,7 +29,7 @@ class ANALOG_API dpll_bb : virtual public sync_block
 {
 public:
     // gr::analog::dpll_bb::sptr
-    typedef boost::shared_ptr<dpll_bb> sptr;
+    typedef std::shared_ptr<dpll_bb> sptr;
 
     static sptr make(float period, float gain);
 

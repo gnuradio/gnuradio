@@ -44,7 +44,7 @@ class CHANNELS_API channel_model : virtual public hier_block2
 {
 public:
     // gr::channels::channel_model::sptr
-    typedef boost::shared_ptr<channel_model> sptr;
+    typedef std::shared_ptr<channel_model> sptr;
 
     /*! \brief Build the channel simulator.
      *

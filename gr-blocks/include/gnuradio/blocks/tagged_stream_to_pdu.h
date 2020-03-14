@@ -31,7 +31,7 @@ class BLOCKS_API tagged_stream_to_pdu : virtual public tagged_stream_block
 {
 public:
     // gr::blocks::tagged_stream_to_pdu::sptr
-    typedef boost::shared_ptr<tagged_stream_to_pdu> sptr;
+    typedef std::shared_ptr<tagged_stream_to_pdu> sptr;
 
     /*!
      * \brief Construct a tagged_stream_to_pdu block

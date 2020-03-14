@@ -18,10 +18,10 @@
 %include "gnuradio/fec/cc_common.h"
 
 %nodefaultctor gr::fec::generic_encoder;
-%template(generic_encoder_sptr) boost::shared_ptr<gr::fec::generic_encoder>;
+%template(generic_encoder_sptr) std::shared_ptr<gr::fec::generic_encoder>;
 
 %nodefaultctor gr::fec::generic_decoder;
-%template(generic_decoder_sptr) boost::shared_ptr<gr::fec::generic_decoder>;
+%template(generic_decoder_sptr) std::shared_ptr<gr::fec::generic_decoder>;
 
 %{
 #include "gnuradio/fec/generic_decoder.h"

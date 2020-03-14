@@ -319,7 +319,7 @@ GR_RUNTIME_API std::string dot_graph(hier_block2_sptr hierblock2);
 
 inline hier_block2_sptr cast_to_hier_block2_sptr(basic_block_sptr block)
 {
-    return boost::dynamic_pointer_cast<hier_block2, basic_block>(block);
+    return std::dynamic_pointer_cast<hier_block2, basic_block>(block);
 }
 
 } /* namespace gr */

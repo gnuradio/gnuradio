@@ -52,7 +52,7 @@ class QTGUI_API time_raster_sink_b : virtual public sync_block
 {
 public:
     // gr::qtgui::time_raster_sink_b::sptr
-    typedef boost::shared_ptr<time_raster_sink_b> sptr;
+    typedef std::shared_ptr<time_raster_sink_b> sptr;
 
     /*!
      * \brief Build a bit time raster sink.

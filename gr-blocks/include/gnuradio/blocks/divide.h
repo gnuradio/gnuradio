@@ -31,7 +31,7 @@ class BLOCKS_API divide : virtual public sync_block
 {
 public:
     // gr::blocks::divide::sptr
-    typedef boost::shared_ptr<divide<T>> sptr;
+    typedef std::shared_ptr<divide<T>> sptr;
 
     static sptr make(size_t vlen = 1);
 };

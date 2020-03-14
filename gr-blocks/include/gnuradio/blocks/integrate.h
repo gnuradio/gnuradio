@@ -28,7 +28,7 @@ class BLOCKS_API integrate : virtual public sync_decimator
 {
 public:
     // gr::blocks::integrate::sptr
-    typedef boost::shared_ptr<integrate<T>> sptr;
+    typedef std::shared_ptr<integrate<T>> sptr;
 
     static sptr make(int decim, unsigned int vlen = 1);
 };

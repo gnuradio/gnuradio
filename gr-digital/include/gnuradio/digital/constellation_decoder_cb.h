@@ -31,7 +31,7 @@ class DIGITAL_API constellation_decoder_cb : virtual public block
 {
 public:
     // gr::digital::constellation_decoder_cb::sptr
-    typedef boost::shared_ptr<constellation_decoder_cb> sptr;
+    typedef std::shared_ptr<constellation_decoder_cb> sptr;
 
     /*!
      * \brief Make constellation decoder block.

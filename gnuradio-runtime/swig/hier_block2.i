@@ -11,8 +11,8 @@
 %include <basic_block.i>
 
 class gr::hier_block2;
-typedef boost::shared_ptr<gr::hier_block2> gr::hier_block2_sptr;
-%template(hier_block2_sptr) boost::shared_ptr<gr::hier_block2>;
+typedef std::shared_ptr<gr::hier_block2> gr::hier_block2_sptr;
+%template(hier_block2_sptr) std::shared_ptr<gr::hier_block2>;
 
 namespace gr {
   // Hack to have a Python shim implementation of gr.hier_block2

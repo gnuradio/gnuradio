@@ -29,7 +29,7 @@ class TRELLIS_API viterbi : virtual public block
 {
 public:
     // gr::trellis::viterbi::sptr
-    typedef boost::shared_ptr<viterbi<T>> sptr;
+    typedef std::shared_ptr<viterbi<T>> sptr;
 
     static sptr make(const fsm& FSM, int K, int S0, int SK);
 

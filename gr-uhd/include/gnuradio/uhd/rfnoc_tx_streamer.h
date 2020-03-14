@@ -32,7 +32,7 @@ namespace uhd {
 class GR_UHD_API rfnoc_tx_streamer : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<rfnoc_tx_streamer> sptr;
+    typedef std::shared_ptr<rfnoc_tx_streamer> sptr;
 
     /*!
      * \param graph Reference to the graph this block is connected to

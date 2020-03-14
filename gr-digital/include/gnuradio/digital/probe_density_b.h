@@ -29,7 +29,7 @@ class DIGITAL_API probe_density_b : virtual public sync_block
 {
 public:
     // gr::digital::probe_density_b::sptr
-    typedef boost::shared_ptr<probe_density_b> sptr;
+    typedef std::shared_ptr<probe_density_b> sptr;
 
     /*!
      * Make a density probe block.

@@ -17,7 +17,6 @@
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/sptr_magic.h>
 #include <gnuradio/thread/thread.h>
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/function.hpp>
 #include <boost/thread/condition_variable.hpp>
 #include <deque>
@@ -41,7 +40,7 @@ namespace gr {
  * processing functions.
  */
 class GR_RUNTIME_API basic_block : public msg_accepter,
-                                   public boost::enable_shared_from_this<basic_block>
+                                   public std::enable_shared_from_this<basic_block>
 {
     typedef boost::function<void(pmt::pmt_t)> msg_handler_t;
 
@@ -53,7 +52,7 @@ private:
     typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator> msg_queue_map_t;
     typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator>::iterator
         msg_queue_map_itr;
-    std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::comparator>
+    std::map<pmt::pmt_t, std::shared_ptr<boost::condition_variable>, pmt::comparator>
         msg_queue_ready;
 
     gr::thread::mutex mutex; //< protects all vars
@@ -291,7 +290,7 @@ public:
      * store them. Each block has a vector to do this, and these never
      * need to be accessed again once they are registered with the RPC
      * backend. This function takes a
-     * boost::shared_sptr<rpcbasic_base> so that when the block is
+     * std::shared_sptr<rpcbasic_base> so that when the block is
      * deleted, all RPC registered variables are cleaned up.
      *
      * \param s an rpcbasic_sptr of the new RPC variable register to store.

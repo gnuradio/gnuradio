@@ -80,7 +80,7 @@ class FILTER_API pfb_decimator_ccf : virtual public sync_block
 {
 public:
     // gr::filter::pfb_decimator_ccf::sptr
-    typedef boost::shared_ptr<pfb_decimator_ccf> sptr;
+    typedef std::shared_ptr<pfb_decimator_ccf> sptr;
 
     /*!
      * Build the polyphase filterbank decimator.

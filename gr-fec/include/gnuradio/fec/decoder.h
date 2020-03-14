@@ -16,7 +16,7 @@
 #include <gnuradio/fec/generic_decoder.h>
 #include <boost/format.hpp>
 #include <boost/shared_array.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace gr {
 namespace fec {
@@ -54,7 +54,7 @@ namespace fec {
 class FEC_API decoder : virtual public block
 {
 public:
-    typedef boost::shared_ptr<decoder> sptr;
+    typedef std::shared_ptr<decoder> sptr;
     typedef boost::shared_array<unsigned char> buf_sptr;
 
     /*!

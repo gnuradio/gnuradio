@@ -30,7 +30,7 @@ protected:
     rfnoc_block() {} // For virtual subclassing
 
 public:
-    using sptr = boost::shared_ptr<rfnoc_block>;
+    using sptr = std::shared_ptr<rfnoc_block>;
 
     //! Factory function to create a UHD block controller reference
     //

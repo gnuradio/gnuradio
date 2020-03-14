@@ -29,7 +29,7 @@ namespace filter {
 class FILTER_API ival_decimator : virtual public gr::sync_decimator
 {
 public:
-    typedef boost::shared_ptr<ival_decimator> sptr;
+    typedef std::shared_ptr<ival_decimator> sptr;
 
     static sptr make(int decimation, int data_size);
 };

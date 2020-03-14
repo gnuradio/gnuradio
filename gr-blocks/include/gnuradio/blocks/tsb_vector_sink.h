@@ -30,7 +30,7 @@ template <class T>
 class BLOCKS_API tsb_vector_sink : virtual public gr::tagged_stream_block
 {
 public:
-    typedef boost::shared_ptr<tsb_vector_sink<T>> sptr;
+    typedef std::shared_ptr<tsb_vector_sink<T>> sptr;
 
     virtual void reset() = 0;
     virtual std::vector<std::vector<T>> data() const = 0;

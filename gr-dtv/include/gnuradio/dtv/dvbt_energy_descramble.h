@@ -29,7 +29,7 @@ namespace dtv {
 class DTV_API dvbt_energy_descramble : virtual public block
 {
 public:
-    typedef boost::shared_ptr<dvbt_energy_descramble> sptr;
+    typedef std::shared_ptr<dvbt_energy_descramble> sptr;
 
     /*!
      * \brief Create DVB-T Energy descramble.

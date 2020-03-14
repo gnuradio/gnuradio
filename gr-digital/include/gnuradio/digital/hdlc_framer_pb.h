@@ -36,7 +36,7 @@ namespace digital {
 class DIGITAL_API hdlc_framer_pb : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<hdlc_framer_pb> sptr;
+    typedef std::shared_ptr<hdlc_framer_pb> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of digital::hdlc_framer.

@@ -56,7 +56,7 @@ namespace blocks {
 class BLOCKS_API repack_bits_bb : virtual public tagged_stream_block
 {
 public:
-    typedef boost::shared_ptr<repack_bits_bb> sptr;
+    typedef std::shared_ptr<repack_bits_bb> sptr;
 
     /*!
      * \param k Number of relevant bits on the input stream

@@ -13,7 +13,7 @@
 
 #include <gnuradio/api.h>
 #include <pmt/pmt.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace gr {
 namespace messages {
@@ -33,7 +33,7 @@ public:
     virtual pmt::pmt_t retrieve() = 0;
 };
 
-typedef boost::shared_ptr<msg_producer> msg_producer_sptr;
+typedef std::shared_ptr<msg_producer> msg_producer_sptr;
 
 } /* namespace messages */
 } /* namespace gr */

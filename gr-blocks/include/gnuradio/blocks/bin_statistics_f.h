@@ -38,7 +38,7 @@ protected:
 
 public:
     // gr::blocks::bin_statistics_f::sptr
-    typedef boost::shared_ptr<bin_statistics_f> sptr;
+    typedef std::shared_ptr<bin_statistics_f> sptr;
 
     /*!
      * Build a bin statistics block. See qa_bin_statistics.py and

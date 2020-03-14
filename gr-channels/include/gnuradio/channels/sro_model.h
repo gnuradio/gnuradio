@@ -31,7 +31,7 @@ class CHANNELS_API sro_model : virtual public block
 {
 public:
     // gr::channels::sro_model::sptr
-    typedef boost::shared_ptr<sro_model> sptr;
+    typedef std::shared_ptr<sro_model> sptr;
 
     /*! \brief Build the sample rate offset model
      *

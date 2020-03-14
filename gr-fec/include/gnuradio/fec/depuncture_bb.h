@@ -79,7 +79,7 @@ class FEC_API depuncture_bb : virtual public block
 {
 public:
     // gr::fec::depuncture_bb::sptr
-    typedef boost::shared_ptr<depuncture_bb> sptr;
+    typedef std::shared_ptr<depuncture_bb> sptr;
 
     /*!
      * \brief Constructs a depuncture block.

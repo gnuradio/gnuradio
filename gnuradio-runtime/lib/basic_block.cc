@@ -75,7 +75,7 @@ void basic_block::message_port_register_in(pmt::pmt_t port_id)
     }
     msg_queue[port_id] = msg_queue_t();
     msg_queue_ready[port_id] =
-        boost::shared_ptr<boost::condition_variable>(new boost::condition_variable());
+        std::shared_ptr<boost::condition_variable>(new boost::condition_variable());
 }
 
 pmt::pmt_t basic_block::message_ports_in()

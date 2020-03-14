@@ -25,7 +25,7 @@ namespace gr {
   class message
   {
   public:
-    typedef boost::shared_ptr<message> sptr;
+    typedef std::shared_ptr<message> sptr;
 
   private:
     message(long type, double arg1, double arg2, size_t length);
@@ -59,7 +59,7 @@ namespace gr {
 
 
 
-%template(message_sptr) boost::shared_ptr<gr::message>;
+%template(message_sptr) std::shared_ptr<gr::message>;
 %pythoncode %{
 message_from_string = message.make_from_string
 message = message.make

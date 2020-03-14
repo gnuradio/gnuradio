@@ -15,7 +15,6 @@
 #include <gnuradio/digital/header_format_base.h>
 #include <gnuradio/logger.h>
 #include <pmt/pmt.h>
-#include <boost/enable_shared_from_this.hpp>
 
 namespace gr {
 namespace digital {

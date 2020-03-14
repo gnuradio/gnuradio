@@ -43,7 +43,7 @@ namespace digital {
 class DIGITAL_API ofdm_serializer_vcc : virtual public tagged_stream_block
 {
 public:
-    typedef boost::shared_ptr<ofdm_serializer_vcc> sptr;
+    typedef std::shared_ptr<ofdm_serializer_vcc> sptr;
 
     /*!
      * \param fft_len FFT length

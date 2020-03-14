@@ -26,7 +26,7 @@ class DTV_API atsc_equalizer : virtual public gr::block
 {
 public:
     // gr::dtv::atsc_equalizer::sptr
-    typedef boost::shared_ptr<atsc_equalizer> sptr;
+    typedef std::shared_ptr<atsc_equalizer> sptr;
 
     /*!
      * \brief Make a new instance of gr::dtv::atsc_equalizer.

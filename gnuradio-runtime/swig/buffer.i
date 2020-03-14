@@ -9,8 +9,8 @@
  */
 
 class gr::buffer;
-typedef boost::shared_ptr<gr::buffer> gr::buffer_sptr;
-%template(buffer_sptr) boost::shared_ptr<gr::buffer>;
+typedef std::shared_ptr<gr::buffer> gr::buffer_sptr;
+%template(buffer_sptr) std::shared_ptr<gr::buffer>;
 %rename(buffer) gr::make_buffer;
 %ignore gr::buffer;
 
@@ -18,8 +18,8 @@ gr::buffer_sptr
 gr::make_buffer (int nitems, size_t sizeof_item, gr::block_sptr link);
 
 class gr::buffer_reader;
-typedef boost::shared_ptr<gr::buffer_reader> gr::buffer_reader_sptr;
-%template(buffer_reader_sptr) boost::shared_ptr<gr::buffer_reader>;
+typedef std::shared_ptr<gr::buffer_reader> gr::buffer_reader_sptr;
+%template(buffer_reader_sptr) std::shared_ptr<gr::buffer_reader>;
 %ignore gr::buffer_reader;
 
 %rename(buffer_add_reader) gr::buffer_add_reader;

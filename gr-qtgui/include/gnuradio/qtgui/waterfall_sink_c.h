@@ -80,7 +80,7 @@ class QTGUI_API waterfall_sink_c : virtual public sync_block
 {
 public:
     // gr::qtgui::waterfall_sink_c::sptr
-    typedef boost::shared_ptr<waterfall_sink_c> sptr;
+    typedef std::shared_ptr<waterfall_sink_c> sptr;
 
     /*!
      * \brief Build a complex waterfall sink.

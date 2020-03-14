@@ -25,7 +25,7 @@ class BLOCKS_API tuntap_pdu : virtual public block
 {
 public:
     // gr::blocks::tuntap_pdu::sptr
-    typedef boost::shared_ptr<tuntap_pdu> sptr;
+    typedef std::shared_ptr<tuntap_pdu> sptr;
 
     /*!
      * \brief Construct a TUNTAP PDU interface

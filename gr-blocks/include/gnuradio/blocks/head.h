@@ -29,7 +29,7 @@ class BLOCKS_API head : virtual public sync_block
 {
 public:
     // gr::blocks::head::sptr
-    typedef boost::shared_ptr<head> sptr;
+    typedef std::shared_ptr<head> sptr;
 
     static sptr make(size_t sizeof_stream_item, uint64_t nitems);
 

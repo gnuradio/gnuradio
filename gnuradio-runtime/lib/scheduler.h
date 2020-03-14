@@ -19,7 +19,7 @@
 namespace gr {
 
 class scheduler;
-typedef boost::shared_ptr<scheduler> scheduler_sptr;
+typedef std::shared_ptr<scheduler> scheduler_sptr;
 
 /*!
  * \brief Abstract scheduler that takes a flattened flow graph and

@@ -11,8 +11,8 @@
 %include <basic_block.i>
 
 class gr::block;
-typedef boost::shared_ptr<gr::block> gr::block_sptr;
-%template(block_sptr) boost::shared_ptr<gr::block>;
+typedef std::shared_ptr<gr::block> gr::block_sptr;
+%template(block_sptr) std::shared_ptr<gr::block>;
 
 // support vectors of these...
 namespace std {

@@ -30,7 +30,7 @@ class BLOCKS_API repeat : virtual public sync_interpolator
 {
 public:
     // gr::blocks::repeat::sptr
-    typedef boost::shared_ptr<repeat> sptr;
+    typedef std::shared_ptr<repeat> sptr;
 
     /*!
      * Make a repeat block.

@@ -28,7 +28,7 @@ class BLOCKS_API vector_insert : virtual public block
 {
 public:
     // gr::blocks::vector_insert::sptr
-    typedef boost::shared_ptr<vector_insert<T>> sptr;
+    typedef std::shared_ptr<vector_insert<T>> sptr;
 
     /*!
      * Make vector insert block.

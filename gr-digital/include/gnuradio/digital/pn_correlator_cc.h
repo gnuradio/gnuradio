@@ -30,7 +30,7 @@ class DIGITAL_API pn_correlator_cc : virtual public sync_decimator
 {
 public:
     // gr::digital::pn_correlator_cc::sptr
-    typedef boost::shared_ptr<pn_correlator_cc> sptr;
+    typedef std::shared_ptr<pn_correlator_cc> sptr;
 
     /*!
      * \brief Make PN code sequential search correlator block.

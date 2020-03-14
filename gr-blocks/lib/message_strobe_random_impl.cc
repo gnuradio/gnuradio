@@ -50,7 +50,7 @@ message_strobe_random_impl::message_strobe_random_impl(
 {
     // set up ports
     message_port_register_out(d_port);
-    d_thread = boost::shared_ptr<gr::thread::thread>(
+    d_thread = std::shared_ptr<gr::thread::thread>(
         new gr::thread::thread(boost::bind(&message_strobe_random_impl::run, this)));
 
     message_port_register_in(pmt::mp("set_msg"));

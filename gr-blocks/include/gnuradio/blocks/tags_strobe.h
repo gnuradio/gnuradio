@@ -33,7 +33,7 @@ class BLOCKS_API tags_strobe : virtual public sync_block
 {
 public:
     // gr::blocks::tags_strobe::sptr
-    typedef boost::shared_ptr<tags_strobe> sptr;
+    typedef std::shared_ptr<tags_strobe> sptr;
 
     /*!
      * Make a tags stobe block to send tags with value \p value

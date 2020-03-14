@@ -30,7 +30,7 @@ template <class T>
 class BLOCKS_API peak_detector : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<peak_detector<T>> sptr;
+    typedef std::shared_ptr<peak_detector<T>> sptr;
 
     /*!
      * Make a peak detector block.

@@ -25,7 +25,7 @@ class VOCODER_API g721_encode_sb : virtual public sync_block
 {
 public:
     // gr::vocoder::g721_encode_sb::sptr
-    typedef boost::shared_ptr<g721_encode_sb> sptr;
+    typedef std::shared_ptr<g721_encode_sb> sptr;
 
     /*!
      * \brief Make G721 encoder block.

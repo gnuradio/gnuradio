@@ -26,7 +26,7 @@ class BLOCKS_API pdu_filter : virtual public block
 {
 public:
     // gr::blocks::pdu_filter::sptr
-    typedef boost::shared_ptr<pdu_filter> sptr;
+    typedef std::shared_ptr<pdu_filter> sptr;
 
     /*!
      * \brief Construct a PDU filter
