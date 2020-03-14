@@ -13,7 +13,7 @@
 #include <uhd/rfnoc/noc_block_base.hpp>
 #include <uhd/stream.hpp>
 #include <uhd/types/device_addr.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace gr {
 namespace uhd {
@@ -28,7 +28,7 @@ class rfnoc_block;
 class GR_UHD_API rfnoc_graph
 {
 public:
-    using sptr = boost::shared_ptr<rfnoc_graph>;
+    using sptr = std::shared_ptr<rfnoc_graph>;
 
     static sptr make(const ::uhd::device_addr_t& dev_addr);
 

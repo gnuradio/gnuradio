@@ -29,7 +29,7 @@ class BLOCKS_API streams_to_stream : virtual public sync_interpolator
 {
 public:
     // gr::blocks::streams_to_stream::sptr
-    typedef boost::shared_ptr<streams_to_stream> sptr;
+    typedef std::shared_ptr<streams_to_stream> sptr;
 
     /*!
      * Make a streams-to-stream block.

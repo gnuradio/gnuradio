@@ -44,7 +44,7 @@ namespace digital {
 class DIGITAL_API crc32_async_bb : virtual public block
 {
 public:
-    typedef boost::shared_ptr<crc32_async_bb> sptr;
+    typedef std::shared_ptr<crc32_async_bb> sptr;
 
     /*!
      * \param check Set to true if you want to check CRC, false to create CRC.

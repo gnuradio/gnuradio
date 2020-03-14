@@ -31,7 +31,7 @@ class BLOCKS_API multiply : virtual public sync_block
 {
 public:
     // gr::blocks::multiply::sptr
-    typedef boost::shared_ptr<multiply<T>> sptr;
+    typedef std::shared_ptr<multiply<T>> sptr;
 
     static sptr make(size_t vlen = 1);
 };

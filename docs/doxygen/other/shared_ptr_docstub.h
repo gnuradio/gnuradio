@@ -1,4 +1,4 @@
-namespace boost {
+namespace std {
 /*!
  * \brief shared_ptr documentation stub
  *
@@ -20,4 +20,4 @@ public:
 }; // shared_ptr
 
 
-} // namespace boost
+} // namespace std

@@ -26,7 +26,7 @@ class ANALOG_API feedforward_agc_cc : virtual public sync_block
 {
 public:
     // gr::analog::feedforward_agc_cc::sptr
-    typedef boost::shared_ptr<feedforward_agc_cc> sptr;
+    typedef std::shared_ptr<feedforward_agc_cc> sptr;
 
     /*!
      * Build a complex valued feed-forward AGC loop block.

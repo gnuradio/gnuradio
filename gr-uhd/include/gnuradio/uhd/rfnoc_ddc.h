@@ -22,7 +22,7 @@ namespace uhd {
 class GR_UHD_API rfnoc_ddc : virtual public rfnoc_block
 {
 public:
-    typedef boost::shared_ptr<rfnoc_ddc> sptr;
+    typedef std::shared_ptr<rfnoc_ddc> sptr;
 
     /*!
      * \param graph Reference to the rfnoc_graph object this block is attached to

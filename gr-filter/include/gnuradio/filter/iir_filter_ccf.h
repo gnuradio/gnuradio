@@ -57,7 +57,7 @@ class FILTER_API iir_filter_ccf : virtual public sync_block
 {
 public:
     // gr::filter::iir_filter_ccf::sptr
-    typedef boost::shared_ptr<iir_filter_ccf> sptr;
+    typedef std::shared_ptr<iir_filter_ccf> sptr;
 
     static sptr make(const std::vector<float>& fftaps,
                      const std::vector<float>& fbtaps,

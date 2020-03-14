@@ -27,7 +27,7 @@ class ANALOG_API random_uniform_source : virtual public sync_block
 {
 public:
     // gr::analog::random_uniform_source::sptr
-    typedef boost::shared_ptr<random_uniform_source<T>> sptr;
+    typedef std::shared_ptr<random_uniform_source<T>> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of analog::random_uniform_source_X.

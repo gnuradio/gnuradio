@@ -25,7 +25,7 @@ class BLOCKS_API magphase_to_complex : virtual public sync_block
 {
 public:
     // gr::blocks::magphase_to_complex_ff::sptr
-    typedef boost::shared_ptr<magphase_to_complex> sptr;
+    typedef std::shared_ptr<magphase_to_complex> sptr;
 
     /*!
      * Build a mag and phase to complex block.

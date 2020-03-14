@@ -29,7 +29,7 @@ class BLOCKS_API multiply_const : virtual public sync_block
 
 public:
     // gr::blocks::multiply_const::sptr
-    typedef boost::shared_ptr<multiply_const<T>> sptr;
+    typedef std::shared_ptr<multiply_const<T>> sptr;
 
     /*!
      * \brief Create an instance of multiply_const

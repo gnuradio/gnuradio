@@ -48,7 +48,7 @@ class FFT_API fft_vcc : virtual public sync_block
 {
 public:
     // gr::fft::fft_vcc::sptr
-    typedef boost::shared_ptr<fft_vcc> sptr;
+    typedef std::shared_ptr<fft_vcc> sptr;
     /*! \brief
      * \param[in] fft_size N.
      * \param[in] forward True performs FFT, False performs IFFT.

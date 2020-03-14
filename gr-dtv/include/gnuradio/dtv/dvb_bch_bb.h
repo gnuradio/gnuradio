@@ -28,7 +28,7 @@ namespace dtv {
 class DTV_API dvb_bch_bb : virtual public gr::block
 {
 public:
-    typedef boost::shared_ptr<dvb_bch_bb> sptr;
+    typedef std::shared_ptr<dvb_bch_bb> sptr;
 
     /*!
      * \brief Create a baseband frame BCH encoder.

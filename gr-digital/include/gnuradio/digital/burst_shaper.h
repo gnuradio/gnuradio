@@ -52,7 +52,7 @@ template <class T>
 class DIGITAL_API burst_shaper : virtual public block
 {
 public:
-    typedef boost::shared_ptr<burst_shaper<T>> sptr;
+    typedef std::shared_ptr<burst_shaper<T>> sptr;
 
     /*!
      * Make a burst shaper block.

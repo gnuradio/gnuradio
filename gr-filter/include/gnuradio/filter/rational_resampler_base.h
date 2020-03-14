@@ -58,7 +58,7 @@ template <class IN_T, class OUT_T, class TAP_T>
 class FILTER_API rational_resampler_base : virtual public block
 {
 public:
-    typedef boost::shared_ptr<rational_resampler_base<IN_T, OUT_T, TAP_T>> sptr;
+    typedef std::shared_ptr<rational_resampler_base<IN_T, OUT_T, TAP_T>> sptr;
 
     /*!
      * Make a rational resampling FIR filter.

@@ -32,7 +32,7 @@ class BLOCKS_API sample_and_hold : virtual public sync_block
 {
 public:
     // gr::blocks::sample_and_hold::sptr
-    typedef boost::shared_ptr<sample_and_hold<T>> sptr;
+    typedef std::shared_ptr<sample_and_hold<T>> sptr;
 
     static sptr make();
 };

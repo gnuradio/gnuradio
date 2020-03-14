@@ -25,7 +25,7 @@ class VOCODER_API alaw_encode_sb : virtual public sync_block
 {
 public:
     // gr::vocoder::alaw_encode_sb::sptr
-    typedef boost::shared_ptr<alaw_encode_sb> sptr;
+    typedef std::shared_ptr<alaw_encode_sb> sptr;
 
     /*!
      * \brief Make alaw encoder block.

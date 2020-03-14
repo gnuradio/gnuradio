@@ -29,7 +29,7 @@ class BLOCKS_API wavfile_sink : virtual public sync_block
 {
 public:
     // gr::blocks::wavfile_sink::sptr
-    typedef boost::shared_ptr<wavfile_sink> sptr;
+    typedef std::shared_ptr<wavfile_sink> sptr;
 
     /*
      * \param filename The .wav file to be opened

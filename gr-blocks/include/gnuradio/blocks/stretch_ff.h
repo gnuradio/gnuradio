@@ -27,7 +27,7 @@ class BLOCKS_API stretch_ff : virtual public sync_block
 {
 public:
     // gr::blocks::stretch_ff::sptr
-    typedef boost::shared_ptr<stretch_ff> sptr;
+    typedef std::shared_ptr<stretch_ff> sptr;
 
     /*!
      * \brief Make a stretch block.

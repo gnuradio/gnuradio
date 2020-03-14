@@ -30,7 +30,7 @@ protected:
 
 public:
     // gr::analog::pwr_squelch_cc::sptr
-    typedef boost::shared_ptr<pwr_squelch_cc> sptr;
+    typedef std::shared_ptr<pwr_squelch_cc> sptr;
 
     /*!
      * \brief Make power-based squelch block.

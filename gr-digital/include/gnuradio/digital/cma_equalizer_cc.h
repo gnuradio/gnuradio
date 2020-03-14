@@ -37,7 +37,7 @@ protected:
 
 public:
     // gr::digital::cma_equalizer_cc::sptr
-    typedef boost::shared_ptr<cma_equalizer_cc> sptr;
+    typedef std::shared_ptr<cma_equalizer_cc> sptr;
 
     /*!
      * Make a CMA Equalizer block

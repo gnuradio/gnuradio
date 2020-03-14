@@ -101,7 +101,7 @@ class FILTER_API pfb_channelizer_ccf : virtual public block
 {
 public:
     // gr::filter::pfb_channelizer_ccf::sptr
-    typedef boost::shared_ptr<pfb_channelizer_ccf> sptr;
+    typedef std::shared_ptr<pfb_channelizer_ccf> sptr;
 
     /*!
      * Build the polyphase filterbank decimator.

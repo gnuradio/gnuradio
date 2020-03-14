@@ -25,7 +25,7 @@ class BLOCKS_API udp_source : virtual public sync_block
 {
 public:
     // gr::blocks::udp_source::sptr
-    typedef boost::shared_ptr<udp_source> sptr;
+    typedef std::shared_ptr<udp_source> sptr;
 
     /*!
      * \brief UDP Source Constructor

@@ -51,7 +51,7 @@ namespace digital {
 class DIGITAL_API protocol_parser_b : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<protocol_parser_b> sptr;
+    typedef std::shared_ptr<protocol_parser_b> sptr;
 
     /*!
      * Make a packet header block using a given \p format.

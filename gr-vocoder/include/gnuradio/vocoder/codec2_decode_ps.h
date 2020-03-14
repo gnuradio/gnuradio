@@ -32,7 +32,7 @@ class VOCODER_API codec2_decode_ps : virtual public sync_interpolator
 {
 public:
     // gr::vocoder::codec2_decode_ps::sptr
-    typedef boost::shared_ptr<codec2_decode_ps> sptr;
+    typedef std::shared_ptr<codec2_decode_ps> sptr;
 
     /*!
      * \brief Make Codec2 decoder block.

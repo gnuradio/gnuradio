@@ -56,7 +56,7 @@ class BLOCKS_API vector_source : virtual public sync_block
 {
 public:
     // gr::blocks::vector_source::sptr
-    typedef boost::shared_ptr<vector_source<T>> sptr;
+    typedef std::shared_ptr<vector_source<T>> sptr;
 
     static sptr make(const std::vector<T>& data,
                      bool repeat = false,

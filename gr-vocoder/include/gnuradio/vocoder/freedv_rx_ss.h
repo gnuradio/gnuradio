@@ -31,7 +31,7 @@ namespace vocoder {
 class VOCODER_API freedv_rx_ss : virtual public gr::block
 {
 public:
-    typedef boost::shared_ptr<freedv_rx_ss> sptr;
+    typedef std::shared_ptr<freedv_rx_ss> sptr;
 
     /*!
      * \brief Make FreeDV modem demodulator block.

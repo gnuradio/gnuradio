@@ -14,8 +14,8 @@ _GR_SWIG_BLOCK_MAGIC_HELPER(PKG, BASE_NAME, PKG ## _ ## BASE_NAME)
 
 %define _GR_SWIG_BLOCK_MAGIC_HELPER_COMMON(PKG, BASE_NAME, FULL_NAME)
 class FULL_NAME;
-typedef boost::shared_ptr<FULL_NAME> FULL_NAME ## _sptr;
-%template(FULL_NAME ## _sptr) boost::shared_ptr<FULL_NAME>;
+typedef std::shared_ptr<FULL_NAME> FULL_NAME ## _sptr;
+%template(FULL_NAME ## _sptr) std::shared_ptr<FULL_NAME>;
 %rename(BASE_NAME) PKG ## _make_ ## BASE_NAME;
 %ignore FULL_NAME;
 %enddef
@@ -30,7 +30,7 @@ FULL_NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), 
 #endif
 
 %define GR_SWIG_BLOCK_MAGIC2(PKG, BASE_NAME)
-%template(BASE_NAME ## _sptr) boost::shared_ptr<gr:: ## PKG ## :: ## BASE_NAME>;
+%template(BASE_NAME ## _sptr) std::shared_ptr<gr:: ## PKG ## :: ## BASE_NAME>;
 %pythoncode %{
 BASE_NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id())
 BASE_NAME = BASE_NAME.make;
@@ -39,7 +39,7 @@ BASE_NAME = BASE_NAME.make;
 
 %define GR_SWIG_BLOCK_MAGIC2_TMPL(PKG, BASE_NAME, TARGET_NAME...)
 %template(BASE_NAME) gr:: ## PKG ## :: ## TARGET_NAME;
-%template(BASE_NAME ## _sptr) boost::shared_ptr<gr:: ## PKG ## :: ## TARGET_NAME ## >;
+%template(BASE_NAME ## _sptr) std::shared_ptr<gr:: ## PKG ## :: ## TARGET_NAME ## >;
 %pythoncode %{
 BASE_NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id())
 BASE_NAME = BASE_NAME.make
@@ -48,7 +48,7 @@ BASE_NAME = BASE_NAME.make
 
 
 %define GR_SWIG_BLOCK_MAGIC_FACTORY(PKG, BASE_NAME, FACTORY)
-%template(FACTORY ## _sptr) boost::shared_ptr<gr:: ## PKG ## :: ## BASE_NAME>;
+%template(FACTORY ## _sptr) std::shared_ptr<gr:: ## PKG ## :: ## BASE_NAME>;
 %pythoncode %{
 FACTORY ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id())
 FACTORY = BASE_NAME ## _make_ ## FACTORY;

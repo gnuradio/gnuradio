@@ -41,7 +41,7 @@ class BLOCKS_API message_strobe_random : virtual public block
 {
 public:
     // gr::blocks::message_strobe_random::sptr
-    typedef boost::shared_ptr<message_strobe_random> sptr;
+    typedef std::shared_ptr<message_strobe_random> sptr;
 
     /*!
      * Make a message stobe block to sends message \p msg at random

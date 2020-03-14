@@ -158,7 +158,7 @@ private:
     gr::vmcircbuf* d_vmcircbuf;
     size_t d_sizeof_item; // in bytes
     std::vector<buffer_reader*> d_readers;
-    boost::weak_ptr<block> d_link; // block that writes to this buffer
+    std::weak_ptr<block> d_link; // block that writes to this buffer
 
     //
     // The mutex protects d_write_index, d_abs_write_offset, d_done, d_item_tags
@@ -333,10 +333,10 @@ private:
                                                                int delay);
 
     buffer_sptr d_buffer;
-    unsigned int d_read_index;     // in items [0,d->buffer.d_bufsize)
-    uint64_t d_abs_read_offset;    // num items seen since the start
-    boost::weak_ptr<block> d_link; // block that reads via this buffer reader
-    unsigned d_attr_delay;         // sample delay attribute for tag propagation
+    unsigned int d_read_index;   // in items [0,d->buffer.d_bufsize)
+    uint64_t d_abs_read_offset;  // num items seen since the start
+    std::weak_ptr<block> d_link; // block that reads via this buffer reader
+    unsigned d_attr_delay;       // sample delay attribute for tag propagation
 
     //! constructor is private.  Use gr::buffer::add_reader to create instances
     buffer_reader(buffer_sptr buffer, unsigned int read_index, block_sptr link);

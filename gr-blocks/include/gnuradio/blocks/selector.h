@@ -30,7 +30,7 @@ namespace blocks {
 class BLOCKS_API selector : virtual public block
 {
 public:
-    typedef boost::shared_ptr<selector> sptr;
+    typedef std::shared_ptr<selector> sptr;
 
     static sptr
     make(size_t itemsize, unsigned int input_index, unsigned int output_index);

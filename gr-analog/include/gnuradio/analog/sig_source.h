@@ -28,7 +28,7 @@ class ANALOG_API sig_source : virtual public sync_block
 {
 public:
     // gr::analog::sig_source::sptr
-    typedef boost::shared_ptr<sig_source<T>> sptr;
+    typedef std::shared_ptr<sig_source<T>> sptr;
 
     /*!
      * Build a signal source block.

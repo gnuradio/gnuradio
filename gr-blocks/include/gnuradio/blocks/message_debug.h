@@ -40,7 +40,7 @@ class BLOCKS_API message_debug : virtual public block
 {
 public:
     // gr::blocks::message_debug::sptr
-    typedef boost::shared_ptr<message_debug> sptr;
+    typedef std::shared_ptr<message_debug> sptr;
 
     /*!
      * \brief Build the message debug block. It takes no parameters

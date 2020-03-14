@@ -14,7 +14,7 @@
 #include <gnuradio/block.h>
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/generic_decoder.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace gr {
 namespace fec {
@@ -67,7 +67,7 @@ namespace fec {
 class FEC_API async_decoder : virtual public block
 {
 public:
-    typedef boost::shared_ptr<async_decoder> sptr;
+    typedef std::shared_ptr<async_decoder> sptr;
 
     /*!
      * Build the PDU-based FEC decoder block from an FECAPI decoder object.

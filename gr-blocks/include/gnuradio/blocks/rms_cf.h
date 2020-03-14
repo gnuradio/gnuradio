@@ -25,7 +25,7 @@ class BLOCKS_API rms_cf : virtual public sync_block
 {
 public:
     // gr::blocks::rms_cf::sptr
-    typedef boost::shared_ptr<rms_cf> sptr;
+    typedef std::shared_ptr<rms_cf> sptr;
 
     /*!
      * \brief Make an RMS calc. block.

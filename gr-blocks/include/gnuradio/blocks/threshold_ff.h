@@ -30,7 +30,7 @@ class BLOCKS_API threshold_ff : virtual public sync_block
 {
 public:
     // gr::blocks::threshold_ff::sptr
-    typedef boost::shared_ptr<threshold_ff> sptr;
+    typedef std::shared_ptr<threshold_ff> sptr;
 
     /* \brief Create a threadshold block.
      * \param lo Threshold input signal needs to drop below to

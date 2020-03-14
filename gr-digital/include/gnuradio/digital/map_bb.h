@@ -32,7 +32,7 @@ class DIGITAL_API map_bb : virtual public sync_block
 {
 public:
     // gr::digital::map_bb::sptr
-    typedef boost::shared_ptr<map_bb> sptr;
+    typedef std::shared_ptr<map_bb> sptr;
 
     /*!
      * Make a map block.

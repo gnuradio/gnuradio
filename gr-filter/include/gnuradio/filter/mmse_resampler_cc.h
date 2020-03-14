@@ -30,7 +30,7 @@ class FILTER_API mmse_resampler_cc : virtual public block
 {
 public:
     // gr::filter::mmse_resampler_cc::sptr
-    typedef boost::shared_ptr<mmse_resampler_cc> sptr;
+    typedef std::shared_ptr<mmse_resampler_cc> sptr;
 
     /*!
      * \brief Build the resampling MMSE filter (complex input, complex output)

@@ -25,7 +25,7 @@ class BLOCKS_API interleaved_char_to_complex : virtual public sync_decimator
 {
 public:
     // gr::blocks::interleaved_char_to_complex::sptr
-    typedef boost::shared_ptr<interleaved_char_to_complex> sptr;
+    typedef std::shared_ptr<interleaved_char_to_complex> sptr;
 
     /*!
      * Build an interleaved char to complex block.

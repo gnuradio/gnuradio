@@ -28,7 +28,7 @@ class BLOCKS_API moving_average : virtual public sync_block
 {
 public:
     // gr::blocks::moving_average::sptr
-    typedef boost::shared_ptr<moving_average<T>> sptr;
+    typedef std::shared_ptr<moving_average<T>> sptr;
 
     /*!
      * Create a moving average block.

@@ -30,7 +30,7 @@ class BLOCKS_API tcp_server_sink : virtual public gr::sync_block
 {
 public:
     // gr::blocks::tcp_server_sink::sptr
-    typedef boost::shared_ptr<tcp_server_sink> sptr;
+    typedef std::shared_ptr<tcp_server_sink> sptr;
 
     /*!
      * \brief TCP Server Sink Constructor

@@ -28,7 +28,7 @@ template <class IN_T, class OUT_T>
 class TRELLIS_API sccc_encoder : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<sccc_encoder<IN_T, OUT_T>> sptr;
+    typedef std::shared_ptr<sccc_encoder<IN_T, OUT_T>> sptr;
 
     static sptr make(const fsm& FSMo,
                      int STo,

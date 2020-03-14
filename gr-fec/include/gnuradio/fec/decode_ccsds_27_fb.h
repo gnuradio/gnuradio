@@ -41,7 +41,7 @@ class FEC_API decode_ccsds_27_fb : virtual public sync_decimator
 {
 public:
     // gr::fec::decode_ccsds_27_fb::sptr
-    typedef boost::shared_ptr<decode_ccsds_27_fb> sptr;
+    typedef std::shared_ptr<decode_ccsds_27_fb> sptr;
 
     static sptr make();
 };

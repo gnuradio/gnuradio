@@ -30,7 +30,7 @@ class ANALOG_API agc2_ff : virtual public sync_block
 {
 public:
     // gr::analog::agc2_ff::sptr
-    typedef boost::shared_ptr<agc2_ff> sptr;
+    typedef std::shared_ptr<agc2_ff> sptr;
 
     /*!
      * Build a floating point AGC loop block with attack and decay rates.

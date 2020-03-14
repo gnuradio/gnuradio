@@ -29,7 +29,7 @@ class DIGITAL_API diff_encoder_bb : virtual public sync_block
 {
 public:
     // gr::digital::diff_encoder_bb::sptr
-    typedef boost::shared_ptr<diff_encoder_bb> sptr;
+    typedef std::shared_ptr<diff_encoder_bb> sptr;
 
     /*!
      * Make a differential encoder block.

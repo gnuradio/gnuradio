@@ -40,7 +40,7 @@ class ANALOG_API pll_refout_cc : virtual public sync_block,
 {
 public:
     // gr::analog::pll_refout_cc::sptr
-    typedef boost::shared_ptr<pll_refout_cc> sptr;
+    typedef std::shared_ptr<pll_refout_cc> sptr;
 
     /* \brief Make PLL block that outputs the tracked carrier signal.
      *

@@ -27,7 +27,7 @@ namespace dtv {
 class DTV_API dvbt2_freqinterleaver_cc : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<dvbt2_freqinterleaver_cc> sptr;
+    typedef std::shared_ptr<dvbt2_freqinterleaver_cc> sptr;
 
     /*!
      * \brief Create a DVB-T2 frequency interleaver.

@@ -25,7 +25,7 @@ class BLOCKS_API keep_one_in_n : virtual public block
 {
 public:
     // gr::blocks::keep_one_in_n::sptr
-    typedef boost::shared_ptr<keep_one_in_n> sptr;
+    typedef std::shared_ptr<keep_one_in_n> sptr;
 
     /*!
      * Make a keep one in n block.

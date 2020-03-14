@@ -39,7 +39,7 @@ template <class T>
 class BLOCKS_API argmax : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<argmax<T>> sptr;
+    typedef std::shared_ptr<argmax<T>> sptr;
 
     static sptr make(size_t vlen);
 };

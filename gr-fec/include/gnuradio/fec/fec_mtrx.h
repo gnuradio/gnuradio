@@ -10,8 +10,8 @@
 #define INCLUDED_fec_mtrx_H
 
 #include <gnuradio/fec/api.h>
-#include <boost/shared_ptr.hpp>
 #include <cstdlib>
+#include <memory>
 
 namespace gr {
 namespace fec {
@@ -33,10 +33,10 @@ typedef struct {
 
 FEC_API void matrix_free(matrix* x);
 
-typedef boost::shared_ptr<matrix> matrix_sptr;
+typedef std::shared_ptr<matrix> matrix_sptr;
 
 class fec_mtrx;
-typedef boost::shared_ptr<fec_mtrx> fec_mtrx_sptr;
+typedef std::shared_ptr<fec_mtrx> fec_mtrx_sptr;
 
 /*!
  * \brief Read in an alist file and produce the matrix object.

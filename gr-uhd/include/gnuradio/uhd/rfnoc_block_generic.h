@@ -26,7 +26,7 @@ namespace uhd {
 class GR_UHD_API rfnoc_block_generic : virtual public rfnoc_block
 {
 public:
-    typedef boost::shared_ptr<rfnoc_block_generic> sptr;
+    typedef std::shared_ptr<rfnoc_block_generic> sptr;
 
     /*!
      * \param graph Reference to the underlying rfnoc_graph object

@@ -25,7 +25,7 @@ class BLOCKS_API udp_sink : virtual public sync_block
 {
 public:
     // gr::blocks::udp_sink::sptr
-    typedef boost::shared_ptr<udp_sink> sptr;
+    typedef std::shared_ptr<udp_sink> sptr;
 
     /*!
      * \brief UDP Sink Constructor

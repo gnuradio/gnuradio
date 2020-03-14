@@ -43,7 +43,7 @@ template <class IN_T, class OUT_T>
 class DIGITAL_API chunks_to_symbols : virtual public sync_interpolator
 {
 public:
-    typedef boost::shared_ptr<chunks_to_symbols<IN_T, OUT_T>> sptr;
+    typedef std::shared_ptr<chunks_to_symbols<IN_T, OUT_T>> sptr;
 
     /*!
      * Make a chunks-to-symbols block.

@@ -14,7 +14,7 @@
 %include "stdint.i"
 
 %{
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <boost/any.hpp>
 #include <complex>
 #include <string>

@@ -38,7 +38,7 @@ class BLOCKS_API complex_to_mag_squared : virtual public sync_block
 {
 public:
     // gr::blocks::complex_to_mag_squared_ff::sptr
-    typedef boost::shared_ptr<complex_to_mag_squared> sptr;
+    typedef std::shared_ptr<complex_to_mag_squared> sptr;
 
     /*!
      * Build a complex to magnitude squared block.

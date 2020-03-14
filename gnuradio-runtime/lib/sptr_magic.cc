@@ -54,7 +54,7 @@ void detail::sptr_magic::cancel_initial_sptr(gr::hier_block2* p)
         return; /* Not in the map, nothing to do */
     gr::basic_block_sptr sptr = pos->second;
     s_map.erase(pos);
-    boost::get_deleter<disarmable_deleter, gr::basic_block>(sptr)->disarm();
+    std::get_deleter<disarmable_deleter, gr::basic_block>(sptr)->disarm();
 }
 
 gr::basic_block_sptr detail::sptr_magic::fetch_initial_sptr(gr::basic_block* p)

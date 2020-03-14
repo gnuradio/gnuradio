@@ -29,7 +29,7 @@ class BLOCKS_API stream_to_streams : virtual public sync_decimator
 {
 public:
     // gr::blocks::stream_to_streams::sptr
-    typedef boost::shared_ptr<stream_to_streams> sptr;
+    typedef std::shared_ptr<stream_to_streams> sptr;
 
     /*!
      * Make a stream-to-streams block.

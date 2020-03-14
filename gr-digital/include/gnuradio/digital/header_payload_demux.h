@@ -150,7 +150,7 @@ namespace digital {
 class DIGITAL_API header_payload_demux : virtual public block
 {
 public:
-    typedef boost::shared_ptr<header_payload_demux> sptr;
+    typedef std::shared_ptr<header_payload_demux> sptr;
 
     /*!
      * \param header_len Number of symbols per header

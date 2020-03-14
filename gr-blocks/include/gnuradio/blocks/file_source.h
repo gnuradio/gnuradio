@@ -25,7 +25,7 @@ class BLOCKS_API file_source : virtual public sync_block
 {
 public:
     // gr::blocks::file_source::sptr
-    typedef boost::shared_ptr<file_source> sptr;
+    typedef std::shared_ptr<file_source> sptr;
 
     /*!
      * \brief Create a file source.

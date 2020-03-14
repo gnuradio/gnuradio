@@ -41,7 +41,7 @@ class FILTER_API filter_delay_fc : virtual public sync_block
 {
 public:
     // gr::filter::filter_delay_fc::sptr
-    typedef boost::shared_ptr<filter_delay_fc> sptr;
+    typedef std::shared_ptr<filter_delay_fc> sptr;
 
     /*!
      * Build a filter with delay block.

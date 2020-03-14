@@ -30,7 +30,7 @@ class VIDEO_SDL_API sink_uc : virtual public sync_block
 {
 public:
     // gr::video_sdl::sink_uc::sptr
-    typedef boost::shared_ptr<sink_uc> sptr;
+    typedef std::shared_ptr<sink_uc> sptr;
 
     static sptr make(double framerate,
                      int width,

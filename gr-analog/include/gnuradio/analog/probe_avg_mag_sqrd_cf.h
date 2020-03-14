@@ -34,7 +34,7 @@ class ANALOG_API probe_avg_mag_sqrd_cf : virtual public sync_block
 {
 public:
     // gr::analog::probe_avg_mag_sqrd_cf::sptr
-    typedef boost::shared_ptr<probe_avg_mag_sqrd_cf> sptr;
+    typedef std::shared_ptr<probe_avg_mag_sqrd_cf> sptr;
 
     /*!
      * \brief Make a block that computes avg magnitude squared.

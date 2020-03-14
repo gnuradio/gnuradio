@@ -36,7 +36,7 @@ namespace dtv {
 class DTV_API dvbt_inner_coder : virtual public block
 {
 public:
-    typedef boost::shared_ptr<dvbt_inner_coder> sptr;
+    typedef std::shared_ptr<dvbt_inner_coder> sptr;
 
     /*!
      * \brief Create an Inner coder with Puncturing.

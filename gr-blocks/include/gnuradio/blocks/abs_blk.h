@@ -32,7 +32,7 @@ class BLOCKS_API abs_blk : virtual public sync_block
 
 public:
     // gr::blocks::abs_blk::sptr
-    typedef boost::shared_ptr<abs_blk<T>> sptr;
+    typedef std::shared_ptr<abs_blk<T>> sptr;
 
     /*!
      * \brief Create an instance of abs_blk

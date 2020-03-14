@@ -58,7 +58,7 @@ template <class T>
 class BLOCKS_API multiply_matrix : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<multiply_matrix<T>> sptr;
+    typedef std::shared_ptr<multiply_matrix<T>> sptr;
 
     /*!
      * \param A The matrix
