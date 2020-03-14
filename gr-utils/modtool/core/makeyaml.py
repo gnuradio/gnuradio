@@ -76,8 +76,7 @@ class ModToolMakeYAML(ModTool):
         # This portion will be covered by the CLI
         if not self.cli:
             self.validate()
-        logger.warning(
-            "Warning: This is an experimental feature. Don't expect any magic.")
+        logger.warning("Warning: This is an experimental feature. Don't expect any magic.")
         # 1) Go through lib/
         if not self.skip_subdirs['lib']:
             if self.info['version'] in ('37', '38'):
@@ -94,9 +93,9 @@ class ModToolMakeYAML(ModTool):
 
     def _search_files(self, path, path_glob):
         """ Search for files matching pattern in the given path. """
-        files = sorted(glob.glob("{}/{}".format(path, path_glob)))
+        files = sorted(glob.glob(f"{path}/{path_glob}"))
         files_filt = []
-        logger.info("Searching for matching files in {}/:".format(path))
+        logger.info(f"Searching for matching files in {path}/:")
         for f in files:
             if re.search(self.info['pattern'], os.path.basename(f)) is not None:
                 files_filt.append(f)
@@ -108,15 +107,16 @@ class ModToolMakeYAML(ModTool):
         """ Take the return values from the parser and call the YAML
         generator. Also, check the makefile if the .yml file is in there.
         If necessary, add. """
-        fname_yml = '{}_{}.block.yml'.format(self.info['modname'], blockname)
+        modname_=self.info['modname']
+        fname_yml = f'{modname_}_{blockname}.block.yml'
         path_to_yml = os.path.join('grc', fname_yml)
         # Some adaptions for the GRC
         for inout in ('in', 'out'):
             if iosig[inout]['max_ports'] == '-1':
-                iosig[inout]['max_ports'] = '$num_{}puts'.format(inout)
-                params.append({'key': 'num_{}puts'.format(inout),
+                iosig[inout]['max_ports'] = f'$num_{inout}puts'
+                params.append({'key': f'num_{inout}puts',
                                'type': 'int',
-                               'name': 'Num {}puts'.format(inout),
+                               'name': f'Num {inout}puts',
                                'default': '2',
                                'in_constructor': False})
         file_exists = False
@@ -142,8 +142,7 @@ class ModToolMakeYAML(ModTool):
             ed = CMakeFileEditor(self._file['cmgrc'])
             if re.search(fname_yml, ed.cfile) is None and not ed.check_for_glob('*.yml'):
                 logger.info("Adding GRC bindings to grc/CMakeLists.txt...")
-                ed.append_value('install', fname_yml,
-                                to_ignore_end='DESTINATION[^()]+')
+                ed.append_value('install', fname_yml, to_ignore_end='DESTINATION[^()]+')
                 ed.write()
                 self.scm.mark_files_updated(self._file['cmgrc'])
 
@@ -171,27 +170,23 @@ class ModToolMakeYAML(ModTool):
 
         def _get_blockdata(fname_cc):
             """ Return the block name and the header file name from the .cc file name """
-            blockname = os.path.splitext(os.path.basename(
-                fname_cc.replace('_impl.', '.')))[0]
+            blockname = os.path.splitext(os.path.basename(fname_cc.replace('_impl.', '.')))[0]
             fname_h = (blockname + '.h').replace('_impl.', '.')
-            contains_modulename = blockname.startswith(
-                self.info['modname']+'_')
+            contains_modulename =  blockname.startswith(self.info['modname']+'_')
             blockname = blockname.replace(self.info['modname']+'_', '', 1)
             return (blockname, fname_h, contains_modulename)
         # Go, go, go
-        logger.info("Making GRC bindings for {}...".format(fname_cc))
+        logger.info(f"Making GRC bindings for {fname_cc}...")
         (blockname, fname_h, contains_modulename) = _get_blockdata(fname_cc)
         try:
             parser = ParserCCBlock(fname_cc,
-                                   os.path.join(
-                                       self.info['includedir'], fname_h),
+                                   os.path.join(self.info['includedir'], fname_h),
                                    blockname,
                                    self.info['version'],
                                    _type_translate
                                    )
         except IOError:
-            raise ModToolException(
-                "Can't open some of the files necessary to parse {}.".format(fname_cc))
+            raise ModToolException(f"Can't open some of the files necessary to parse {fname_cc}.")
 
         if contains_modulename:
             return (parser.read_params(), parser.read_io_signature(), self.info['modname']+'_'+blockname)
@@ -208,15 +203,17 @@ def yaml_generator(self, **kwargs):
     label = header.split('_')
     del label[-1]
     yml_file = os.path.join('.', block+'_'+header+'.block.yml')
-    _header = (('id', '{}_{}'.format(block, header)),
+    stri_=block.capitalize()
+    _header = (('id', f'{block}_{ header}'),
                ('label', ' '.join(label).upper()),
-               ('category', '[{}]'.format(block.capitalize())),
+               ('category', f'[{stri_}]'),
                ('flags', '[python, cpp]')
                )
     params_list = [
         '${'+s['name']+'}' for s in self.parsed_data['properties'] if self.parsed_data['properties']]
-    _templates = [('imports', 'from gnuradio import {}'.format(block)),
-                  ('make', '{}.{}({})'.format(block, header, ', '.join(params_list)))
+    str_= ', '.join(params_list)
+    _templates = [('imports', f'from gnuradio import {block}'),
+                  ('make', f'{block}.{ header}({str_})')
                   ]
 
     if self.parsed_data['methods']:
@@ -226,8 +223,9 @@ def yaml_generator(self, **kwargs):
             for args in param['arguments_type']:
                 arguments.append(args['name'])
             arg_list = ['${'+s+'}' for s in arguments if arguments]
+            arg_=', '.join(arg_list)
             list_callbacks.append(
-                param['name']+'({})'.format(', '.join(arg_list)))
+                param['name']+f'({arg_})')
         callback_key = ('callbacks')
         callbacks = (callback_key, tuple(list_callbacks))
         _templates.append(callbacks)
@@ -312,11 +310,12 @@ def yaml_generator(self, **kwargs):
             output_signature.append(m_output_sig)
     if output_signature:
         data['outputs'] = output_signature
-
-    _cpp_templates = [('includes', '#include <gnuradio/{}/{}>'.format(block, self.filename)),
-                      ('declarations', '{}::{}::sptr ${{id}}'.format(block, header)),
-                      ('make', 'this->${{id}} = {}::{}::make({})'.format(
-                          block, header, ', '.join(params_list)))
+     
+    file_=self.filename
+    param_=', '.join(params_list)
+    _cpp_templates = [('includes', '#include <gnuradio/{block}/{file_}>'),
+                      ('declarations', '{block}::{ header}::sptr ${{id}}'),
+                      ('make', 'this->${{id}} = {block}::{ header}::make({param_})')
                       ]
 
     if self.parsed_data['methods']:
@@ -326,13 +325,14 @@ def yaml_generator(self, **kwargs):
             for args in param['arguments_type']:
                 arguments.append(args['name'])
             arg_list = ['${'+s+'}' for s in arguments if arguments]
+            arg_l=', '.join(arg_list)
             list_callbacks.append(
-                param['name']+'({})'.format(', '.join(arg_list)))
+                param['name']+f'({arg_l})')
         callback_key = ('callbacks')
         callbacks = (callback_key, tuple(list_callbacks))
         _cpp_templates.append(callbacks)
 
-    link = ('link', 'gnuradio-{}'.format(block))
+    link = ('link', 'gnuradio-{block}')
     _cpp_templates.append(link)
     _cpp_templates = tuple(_cpp_templates)
 

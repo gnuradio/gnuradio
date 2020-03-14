@@ -34,7 +34,8 @@ class ModToolNewModule(ModTool):
         self.directory = self.dir
 
     def assign(self):
-        self.dir = os.path.join(self.directory, 'gr-{}'.format(self.info['modname']))
+        modname_=self.info['modname']
+        self.dir = os.path.join(self.directory, f'gr-{modname_}')
         if self.srcdir is None:
             self.srcdir = os.path.join(gr.prefix(),'share','gnuradio','modtool','templates','gr-newmod')
 
@@ -64,12 +65,12 @@ class ModToolNewModule(ModTool):
             self.assign()
             self.validate()
         self._setup_scm(mode='new')
-        logger.info("Creating out-of-tree module in {}...".format(self.dir))
+        logger.info(f"Creating out-of-tree module in {self.dir}...")
         try:
             shutil.copytree(self.srcdir, self.dir)
             os.chdir(self.dir)
         except OSError:
-            raise ModToolException('Could not create directory {}.'.format(self.dir))
+            raise ModToolException(f'Could not create directory {self.dir}.')
         for root, dirs, files in os.walk('.'):
             for filename in files:
                 f = os.path.join(root, filename)

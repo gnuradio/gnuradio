@@ -45,12 +45,13 @@ class GRCYAMLGenerator(object):
         """docstring for __init__"""
         params_list = ['${'+s['key']+'}' for s in params if s['in_constructor']]
         # Can't make a dict 'cause order matters
-        self._header = (('id', '{}_{}'.format(modname, blockname)),
+        str_=', '.join(params_list)
+        self._header = (('id', f'{modname}_{blockname}'),
                         ('label', blockname.replace('_', ' ')),
-                        ('category', '[{}]'.format(modname.capitalize()))
+                        (f'category', '[{modname.capitalize()}]')
                        )
-        self._templates = (('imports', 'import {}'.format(modname)),
-                           ('make', '{}.{}({})'.format(modname, blockname, ', '.join(params_list)))
+        self._templates = (('imports', f'import {modname}'),
+                           ('make', f'{modname}.{blockname}({str_})')
                           )
         self.params = params
         self.iosig = iosig
