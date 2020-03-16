@@ -23,7 +23,6 @@ from .base import ModTool, ModToolException
 
 logger = logging.getLogger(__name__)
 
-
 class ModToolNewModule(ModTool):
     """ Create a new out-of-tree module """
     name = 'newmod'
@@ -37,8 +36,7 @@ class ModToolNewModule(ModTool):
     def assign(self):
         self.dir = os.path.join(self.directory, 'gr-{}'.format(self.info['modname']))
         if self.srcdir is None:
-            self.srcdir = '/usr/local/share/gnuradio/modtool/templates/gr-newmod'
-        self.srcdir = gr.prefs().get_string('modtool', 'newmod_path', self.srcdir)
+            self.srcdir = os.path.join(gr.prefix(),'share','gnuradio','modtool','templates','gr-newmod')
 
     def validate(self):
         """ Validates the arguments """
