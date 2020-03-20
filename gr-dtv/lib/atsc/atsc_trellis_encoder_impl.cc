@@ -17,7 +17,7 @@
 namespace gr {
 namespace dtv {
 
-static const int DIBITS_PER_BYTE = 4;
+static constexpr int DIBITS_PER_BYTE = 4;
 
 #define SEGOF(x) ((x) / ((SEGMENT_SIZE + 1) * DIBITS_PER_BYTE))
 #define SYMOF(x) (((x) % ((SEGMENT_SIZE + 1) * DIBITS_PER_BYTE)) - 4)
