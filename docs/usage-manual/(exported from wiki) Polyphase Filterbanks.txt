@@ -3,16 +3,17 @@
     <ns>0</ns>
     <id>3496</id>
     <revision>
-      <id>4513</id>
-      <parentid>4318</parentid>
-      <timestamp>2018-11-02T02:03:09Z</timestamp>
+      <id>4877</id>
+      <parentid>4513</parentid>
+      <timestamp>2019-03-12T22:44:11Z</timestamp>
       <contributor>
         <username>777arc</username>
         <id>632</id>
       </contributor>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="7339">== Introduction ==
+      <text xml:space="preserve" bytes="7365">[[Category:Usage Manual]]
+== Introduction ==
 
 Polyphase filterbanks (PFB) are a very powerful set of filtering tools
 that can efficiently perform many multi-rate signal processing
@@ -152,7 +153,7 @@ should provide an error roughly equivalent to the quanization error of
 using 16-bit fixed point representation. Generally, increasing over 32
 provides some accuracy benefits without a huge increase in
 computational demands.</text>
-      <sha1>qgfvtgmqeoxutntovjunwzowmz49fvh</sha1>
+      <sha1>ctzii3mllzcd7uazhuv0yd5kflu7bvv</sha1>
     </revision>
   </page>
 </mediawiki>

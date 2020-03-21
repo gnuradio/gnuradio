@@ -3,17 +3,19 @@
     <ns>0</ns>
     <id>47</id>
     <revision>
-      <id>4311</id>
-      <parentid>4310</parentid>
-      <timestamp>2018-06-26T19:59:29Z</timestamp>
+      <id>6247</id>
+      <parentid>6246</parentid>
+      <timestamp>2019-10-22T15:57:56Z</timestamp>
       <contributor>
-        <username>777arc</username>
-        <id>632</id>
+        <username>Duggabe</username>
+        <id>846</id>
       </contributor>
-      <comment>/* Special Thanks */</comment>
+      <minor/>
+      <comment>/* Filter Design correct grammer */</comment>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="22088">= GNU Radio Companion =
+      <text xml:space="preserve" bytes="22162">[[Category:Usage Manual]]
+= GNU Radio Companion =
 
 GNU Radio Companion (GRC) is a graphical tool for creating signal flow graphs and generating flow-graph source code. There is a [[WorkingGroups|GNU Radio Companion Working Group]] handling the development.
 
@@ -123,7 +125,7 @@ The variable block is the most basic way to use a variable in GRC. The ID parame
 
 === Variable Controls ===
 
-Certain blocks have callback methods that allow their parameters to be changed while executing flow graph. Variable controls in GRC use variables in combination with callback methods to modify these parameters. If a parameter has a callback method, the parameter will be underlined in the block-properties dialog. The variable slider, variable text box, and the variable chooser block provide graphical widgets such as sliders, text boxes, radio buttons, and drop downs as variable controls. In addition, the variable sink block takes samples from a gnuradio stream and writes the samples to a variable.
+Certain blocks have callback methods that allow their parameters to be changed while executing flow graph. Variable controls in GRC use variables in combination with callback methods to modify these parameters. If a parameter has a callback method, the parameter will be underlined in the block-properties dialog. The variable slider, variable text box, and the variable chooser block provide graphical widgets such as sliders, text boxes, radio buttons, and drop downs as variable controls. In addition, the [[Probe Signal]] combined with [[Function Probe]] blocks takes samples from a gnuradio stream and writes the samples to a variable.
 
 === String Evaluation ===
 
@@ -135,7 +137,7 @@ To use a variable inside a string simply type the name of the variable into the 
 
 == Filter Design ==
 
-Many blocks in gnuradio that take an array of complex or real taps as a parameter. GNU Radio provides a package to generate all kinds of filter and window taps. See the [http://gnuradio.org/doc/doxygen/classgr+firdes.html firdes package] from the gnuradio documentation.
+Many blocks in gnuradio take an array of complex or real taps as a parameter. GNU Radio provides a package to generate all kinds of filter and window taps. See the [https://www.gnuradio.org/doc/doxygen/classgr_1_1filter_1_1firdes.html firdes package] from the gnuradio documentation.
 
 === Firdes Taps Generators ===
 
@@ -420,8 +422,8 @@ Set the '''GRC_BLOCKS_PATH''' environment variable to a path that contains your 
 
 == Special Thanks ==
 
-* '''[http://www.cer.jhu.edu/| CER Technology Fellowship]:''' initial funding
-* '''[http://www.ece.jhu.edu/~cooper/| A. Brinton Cooper]:''' starting the project
+* '''[http://www.cer.jhu.edu/ CER Technology Fellowship]:''' initial funding
+* '''[http://www.ece.jhu.edu/~cooper/ A. Brinton Cooper]:''' starting the project
 * '''Patrick Mulligan:''' starting the project
 * '''William R. Kenan Jr. Fund:''' usrp & computers
 * '''Patrick Strasser:''' the GRC icon
@@ -431,7 +433,7 @@ Set the '''GRC_BLOCKS_PATH''' environment variable to a path that contains your 
 [http://www.joshknows.com/grc#screenshots Screen Shots]
 
 Feel free to submit your own screen shots or flow graphs.</text>
-      <sha1>m9jzkey4r3k9dc2qhm3u4qpz4gbegaf</sha1>
+      <sha1>e27hwprs9rgxfxv6iiy7zns4v9kmde5</sha1>
     </revision>
   </page>
 </mediawiki>
