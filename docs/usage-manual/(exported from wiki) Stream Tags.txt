@@ -3,17 +3,17 @@
     <ns>0</ns>
     <id>3482</id>
     <revision>
-      <id>4286</id>
-      <parentid>4285</parentid>
-      <timestamp>2018-06-26T18:38:25Z</timestamp>
+      <id>6198</id>
+      <parentid>6191</parentid>
+      <timestamp>2019-09-30T20:17:37Z</timestamp>
       <contributor>
         <username>777arc</username>
         <id>632</id>
       </contributor>
-      <comment>/* Getting tags from a Stream */</comment>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="10223">== Introduction ==
+      <text xml:space="preserve" bytes="12354">[[Category:Usage Manual]]
+== Introduction ==
 
 GNU Radio was originally a streaming system with no other mechanism to
 pass data between blocks. Streams of data are a model that work well
@@ -109,9 +109,38 @@ of the tag information in the function call:
                     const pmt::pmt_t &value,
                     const pmt::pmt_t &srcid=pmt::PMT_F);
 
-In Python, we can add a tag to a stream using:
+In Python, we can add a tag to a stream using one of the following:
 
- add_item_tag(which_output, abs_offset, key, value, srcid) # note that the key and value are both PMTs
+ add_item_tag(which_output, abs_offset, key, value)
+ add_item_tag(which_output, abs_offset, key, value, srcid)
+
+Note that the key and value are both PMTs.  To create a string type PMT you can use pmt.intern("example_key")
+
+Here is an example of a Python block that loops through samples and puts tags on random ones, and outputs the same signal:
+<syntaxhighlight lang="python">
+ import numpy as np
+ from gnuradio import gr
+ import pmt
+ 
+ class blk(gr.sync_block):
+     def __init__(self):
+         gr.sync_block.__init__(
+             self,
+             name='Embedded Python Block',
+             in_sig=[np.complex64],
+             out_sig=[np.complex64]
+         )
+ 
+     def work(self, input_items, output_items):
+         for indx, sample in enumerate(input_items[0]):
+             if np.random.rand() > 0.95: # 5% chance this sample is chosen
+                 key = pmt.intern("example_key")
+                 value = pmt.intern("example_value")
+                 self.add_item_tag(0, self.nitems_written(0) + indx, key, value)
+                 # note: (self.nitems_written(0) + indx) is our current sample, in absolute time
+         output_items[0][:] = input_items[0] # copy input to output
+         return len(output_items[0])
+</syntaxhighlight>
 
 === Getting tags from a Stream ===
 
@@ -150,10 +179,34 @@ In Python, the main difference from the C++ function is that instead of having t
 argument be a vector where the tags are stored, the Python version
 just returns a list of tags. We would use it like this:
 
+<syntaxhighlight lang="python">
  def work(self, input_items, output_items):
      ....
-     tags = get_tags_in_window(which_input, rel_start, rel_end)
+     tags = self.get_tags_in_window(which_input, rel_start, rel_end)
      ....
+</syntaxhighlight>
+
+If you want to grab all tags on the samples currently being processed by work(), on input port 0, here's a minimal example of doing that:
+
+<syntaxhighlight lang="python">
+ import numpy as np
+ from gnuradio import gr
+ import pmt
+ 
+ class blk(gr.sync_block):
+     def __init__(self):
+         gr.sync_block.__init__(self,name='Read Tags', in_sig=[np.float32], out_sig=None)
+ 
+     def work(self, input_items, output_items):
+         tags = self.get_tags_in_window(0, 0, len(input_items[0]))
+         for tag in tags:
+             key = pmt.to_python(tag.key) # convert from PMT to python string
+             value = pmt.to_python(tag.value) # Note that the type(value) can be several things, it depends what PMT type it was
+             print 'key:', key
+             print 'value:', value, type(value)
+             print ''
+         return len(input_items[0])
+</syntaxhighlight>
 
 == Tag Propagation ==
 
@@ -230,7 +283,7 @@ potentially lost, we have lost track of the timing information. The
 USRP driver recognizes when packets have been dropped and uses this to
 queue another tag, which allows us to resync. Likewise, any point the
 sample rate or frequency changes, a new tag is issued.</text>
-      <sha1>q8so7nd8lqh1et3zmf8x28z6qxq2hwd</sha1>
+      <sha1>lh9drcohakf8o2pksgy2wpounqwfo3h</sha1>
     </revision>
   </page>
 </mediawiki>

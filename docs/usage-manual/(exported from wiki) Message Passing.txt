@@ -3,17 +3,18 @@
     <ns>0</ns>
     <id>3481</id>
     <revision>
-      <id>4294</id>
-      <parentid>4287</parentid>
-      <timestamp>2018-06-26T19:55:38Z</timestamp>
+      <id>6529</id>
+      <parentid>4868</parentid>
+      <timestamp>2020-01-13T17:35:27Z</timestamp>
       <contributor>
-        <username>777arc</username>
-        <id>632</id>
+        <username>Mormj</username>
+        <id>802</id>
       </contributor>
-      <comment>/* Code Examples */</comment>
+      <comment>/* Message Handler Functions */</comment>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="15505">== Introduction ==
+      <text xml:space="preserve" bytes="15759">[[Category:Usage Manual]]
+== Introduction ==
 
 GNU Radio was originally a streaming system with no other mechanism to
 pass data between blocks. Streams of data are a model that work well
@@ -95,6 +96,11 @@ Boost's 'bind' function:
 
   set_msg_handler(pmt::pmt_t port_id,
     boost::bind(&block_class::message_handler_function, this, _1));
+
+Or starting in GNU Radio 3.8 using C++11 we can avoid Boost and express the binding as a lambda function (preferred)
+
+  set_msg_handler(pmt::pmt_t port_id, 
+    [this](pmt::pmt_t msg) { this->message_handler_function(msg); });
 
 In Python:
 
@@ -358,7 +364,7 @@ A Python Block example:
      def handle_msg(self, msg):
          self.message_port_pub(pmt.intern('msg_out'), pmt.intern('message received!'))
 </syntaxhighlight></text>
-      <sha1>2o3zxqazokbseo12y27nl24a8nuw50r</sha1>
+      <sha1>es5ic6domqmdirvs8232ksas04tdf0n</sha1>
     </revision>
   </page>
 </mediawiki>

@@ -3,16 +3,17 @@
     <ns>0</ns>
     <id>3479</id>
     <revision>
-      <id>4293</id>
-      <parentid>4159</parentid>
-      <timestamp>2018-06-26T19:54:28Z</timestamp>
+      <id>4867</id>
+      <parentid>4293</parentid>
+      <timestamp>2019-03-12T22:43:19Z</timestamp>
       <contributor>
         <username>777arc</username>
         <id>632</id>
       </contributor>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="14458">== Introduction ==
+      <text xml:space="preserve" bytes="14484">[[Category:Usage Manual]]
+== Introduction ==
 
 Metadata files have extra information in the form of headers that
 carry metadata about the samples in the file. Raw, binary files carry
@@ -337,7 +338,7 @@ encoded as a vector of uint16 with [day, month, year].
                                    blocks.GR_FILE_FLOAT, True,
                                    1000000, extra_str, False)
 </syntaxhighlight></text>
-      <sha1>8f3uw6sq1s6a90diya9eycq96qyzdr3</sha1>
+      <sha1>swg5klnvnjj6ehkn82c6078mgq3mnaz</sha1>
     </revision>
   </page>
 </mediawiki>
