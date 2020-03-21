@@ -3,17 +3,17 @@
     <ns>0</ns>
     <id>3491</id>
     <revision>
-      <id>4296</id>
-      <parentid>4232</parentid>
-      <timestamp>2018-06-26T19:57:30Z</timestamp>
+      <id>4875</id>
+      <parentid>4296</parentid>
+      <timestamp>2019-03-12T22:44:00Z</timestamp>
       <contributor>
         <username>777arc</username>
         <id>632</id>
       </contributor>
-      <comment>/* Calling VOLK kernels in Work() */</comment>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="6023">== Introduction ==
+      <text xml:space="preserve" bytes="6049">[[Category:Usage Manual]]
+== Introduction ==
 
 Note: Many blocks have already been converted to use VOLK in their calls, so
 they can also serve as examples. See the
@@ -147,7 +147,7 @@ complex streams together.
 '''Tip:''' If benchmarking GNU Radio blocks, it can be useful to have a
 volk_config file that sets all architectures to 'generic' as a way to
 test the vectorized versus non-vectorized implementations.</text>
-      <sha1>l1efbbjitjppeec1a99mjnlyimos14e</sha1>
+      <sha1>751jgw6850j6u6uclltkylfgnv85dac</sha1>
     </revision>
   </page>
 </mediawiki>

@@ -3,16 +3,17 @@
     <ns>0</ns>
     <id>3484</id>
     <revision>
-      <id>4183</id>
-      <timestamp>2018-05-15T19:17:50Z</timestamp>
+      <id>4871</id>
+      <parentid>4183</parentid>
+      <timestamp>2019-03-12T22:43:41Z</timestamp>
       <contributor>
         <username>777arc</username>
         <id>632</id>
       </contributor>
-      <comment>first shot</comment>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="9367">GNU Radio has a logging interface to enable various levels of logging
+      <text xml:space="preserve" bytes="9393">[[Category:Usage Manual]]
+GNU Radio has a logging interface to enable various levels of logging
 information to be printed to the console or a file. The logger derives
 from [http://log4cpp.sourceforge.net log4cpp] which is readily
 available in most Linux distributions. This is an optional dependency
@@ -224,7 +225,7 @@ You can isntantiate this by the following.  (Reference logger.h for list of meth
  log=gr.logger("nameOfLogger")
  log.debug("Log a debug message")
  log.set_level("INFO");</text>
-      <sha1>at9a5on70hlibjm75oo3rtgswcsu1u9</sha1>
+      <sha1>iihlmg3bam2b9a6q1yy1inpzt8az1ve</sha1>
     </revision>
   </page>
 </mediawiki>

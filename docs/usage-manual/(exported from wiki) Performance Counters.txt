@@ -3,17 +3,17 @@
     <ns>0</ns>
     <id>3485</id>
     <revision>
-      <id>4185</id>
-      <parentid>4184</parentid>
-      <timestamp>2018-05-15T19:32:41Z</timestamp>
+      <id>4872</id>
+      <parentid>4185</parentid>
+      <timestamp>2019-03-12T22:43:46Z</timestamp>
       <contributor>
         <username>777arc</username>
         <id>632</id>
       </contributor>
-      <comment>/* Run-time Config */</comment>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="3590">== Introduction ==
+      <text xml:space="preserve" bytes="3616">[[Category:Usage Manual]]
+== Introduction ==
 
 Each block can have a set of Performance Counters that the schedule
 keeps track of. These counters measure and store information about
@@ -94,7 +94,7 @@ counters. This application is particularly useful in learning which
 blocks are the computationally complex blocks that could use extra
 optimization or work to improve their performance. It can also be used
 to understand the current 'health' of the application.</text>
-      <sha1>fwupl0jgeaweqt982b4ly5ycqonuce0</sha1>
+      <sha1>rx725rwa6ws4e2bbgxxgyqpks51j041</sha1>
     </revision>
   </page>
 </mediawiki>

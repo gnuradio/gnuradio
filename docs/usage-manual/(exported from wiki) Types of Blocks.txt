@@ -3,17 +3,19 @@
     <ns>0</ns>
     <id>3495</id>
     <revision>
-      <id>4281</id>
-      <parentid>4280</parentid>
-      <timestamp>2018-06-26T18:32:20Z</timestamp>
+      <id>6500</id>
+      <parentid>4864</parentid>
+      <timestamp>2020-01-05T18:46:42Z</timestamp>
       <contributor>
-        <username>777arc</username>
-        <id>632</id>
+        <username>Duggabe</username>
+        <id>846</id>
       </contributor>
-      <comment>/* Synchronous Block */</comment>
+      <minor/>
+      <comment>correct Python examples</comment>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="8059">== Introduction ==
+      <text xml:space="preserve" bytes="8123">[[Category:Usage Manual]]
+== Introduction ==
 
 To take advantage of the gnuradio framework, users will create various blocks to implement the desired data processing. There are several types of blocks to choose from:
 
@@ -118,9 +120,9 @@ Some observations:
 An example decimation block in Python:
 
 <syntaxhighlight lang="python">
-class my_decim_block(gr.block):
+class my_decim_block(gr.decim_block):
     def __init__(self, args):
-        gr.block.__init__(self,
+        gr.decim_block.__init__(self,
             name="my block",
             in_sig=[numpy.float32],
             out_sig=[numpy.float32])
@@ -167,9 +169,9 @@ Some observations:
 An example interpolation block in Python:
 
 <syntaxhighlight lang="python">
-class my_interp_block(gr.block):
+class my_interp_block(gr.interp_block):
     def __init__(self, args):
-        gr.block.__init__(self,
+        gr.interp_block.__init__(self,
             name="my block",
             in_sig=[numpy.float32],
             out_sig=[numpy.float32])
@@ -239,9 +241,9 @@ The adder revisited as a basic block in Python:
 from gnuradio import gr
 import gnuradio.extras
 
-class my_basic_adder_block(gr.block):
+class my_basic_adder_block(gr.basic_block):
     def __init__(self, args):
-        gr.block.__init__(self,
+        gr.basic_block.__init__(self,
             name="another_adder_block",
             in_sig=[...],
             out_sig=[...])
@@ -269,7 +271,7 @@ class my_basic_adder_block(gr.block):
         #return produced
         return len(out)
 </syntaxhighlight></text>
-      <sha1>2twbp3b6eokenw23qolevp25jtaqk31</sha1>
+      <sha1>45ab6553658lbupm4hdgnjnvx9bl7dj</sha1>
     </revision>
   </page>
 </mediawiki>

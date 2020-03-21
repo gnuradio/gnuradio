@@ -3,18 +3,17 @@
     <ns>0</ns>
     <id>3480</id>
     <revision>
-      <id>4291</id>
-      <parentid>4290</parentid>
-      <timestamp>2018-06-26T19:41:49Z</timestamp>
+      <id>4863</id>
+      <parentid>4291</parentid>
+      <timestamp>2019-03-12T22:42:43Z</timestamp>
       <contributor>
         <username>777arc</username>
         <id>632</id>
       </contributor>
-      <minor/>
-      <comment>/* Reconfiguring Flowgraphs */</comment>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="10039">== Operating a Flowgraph ==
+      <text xml:space="preserve" bytes="10065">[[Category:Usage Manual]]
+== Operating a Flowgraph ==
 
 The basic data structure in GNU Radio is the flowgraph, which
 represents the connections of the blocks through which a continuous
@@ -273,7 +272,7 @@ the max noutput_items both locally and globally.
  if __name__ == "__main__":
      main()
 </syntaxhighlight></text>
-      <sha1>3arcnnd2d65pytajld93l8nvlqplnps</sha1>
+      <sha1>rggsk6ltg0cpkpujkwarub0b27ji35z</sha1>
     </revision>
   </page>
 </mediawiki>

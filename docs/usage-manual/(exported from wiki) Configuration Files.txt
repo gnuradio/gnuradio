@@ -3,16 +3,17 @@
     <ns>0</ns>
     <id>3490</id>
     <revision>
-      <id>4228</id>
-      <timestamp>2018-06-11T05:11:22Z</timestamp>
+      <id>4874</id>
+      <parentid>4228</parentid>
+      <timestamp>2019-03-12T22:43:56Z</timestamp>
       <contributor>
         <username>777arc</username>
         <id>632</id>
       </contributor>
-      <comment>Created page with "== Configuration / Preference Files ==  GNU Radio defines some of its basic behavior through a set of configuration files located in ${prefix}/etc/gnuradio/conf.d. Different c..."</comment>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="2711">== Configuration / Preference Files ==
+      <text xml:space="preserve" bytes="2737">[[Category:Usage Manual]]
+== Configuration / Preference Files ==
 
 GNU Radio defines some of its basic behavior through a set of
 configuration files located in
@@ -82,7 +83,7 @@ The "GR_CONF_" is a prefix to identify this as a GNU Radio
 configuration variable and the section and option names are in
 uppercase. The value is the same format that would be used in the
 config file itself.</text>
-      <sha1>3tjlcfewvu2log4t9s6q45upgqh8rwo</sha1>
+      <sha1>e8qpaipnj5q10iyngqrtnz8btlg3xm9</sha1>
     </revision>
   </page>
 </mediawiki>
