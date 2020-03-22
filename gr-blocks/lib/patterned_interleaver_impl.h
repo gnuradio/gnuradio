@@ -12,7 +12,7 @@
 #define INCLUDED_PATTERNED_INTERLEAVER_IMPL_H
 
 #include <gnuradio/blocks/patterned_interleaver.h>
-#include <boost/foreach.hpp>
+#include <algorithm>
 
 namespace gr {
 namespace blocks {
@@ -30,7 +30,7 @@ public:
     int pattern_max(std::vector<int> pattern)
     {
         int mval(0);
-        BOOST_FOREACH (int i, pattern) {
+        for (const auto& i : pattern) {
             mval = std::max(mval, i);
         }
         return mval;

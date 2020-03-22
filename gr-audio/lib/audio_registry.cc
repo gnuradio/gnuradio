@@ -10,7 +10,6 @@
 #include "audio_registry.h"
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
-#include <boost/foreach.hpp>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -151,7 +150,7 @@ source::make(int sampling_rate, const std::string device_name, bool ok_to_block)
     std::string arch = default_arch_name();
     source_entry_t entry = get_source_registry().front();
 
-    BOOST_FOREACH (const source_entry_t& e, get_source_registry()) {
+    for (const auto& e : get_source_registry()) {
         if (e.prio > entry.prio)
             entry = e; // entry is highest prio
         if (arch != e.arch)
@@ -175,7 +174,7 @@ sink::sptr sink::make(int sampling_rate, const std::string device_name, bool ok_
     std::string arch = default_arch_name();
     sink_entry_t entry = get_sink_registry().front();
 
-    BOOST_FOREACH (const sink_entry_t& e, get_sink_registry()) {
+    for (const sink_entry_t& e : get_sink_registry()) {
         if (e.prio > entry.prio)
             entry = e; // entry is highest prio
         if (arch != e.arch)

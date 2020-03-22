@@ -69,7 +69,7 @@ std::string usrp_source_impl::get_subdev_spec(size_t mboard)
 
 void usrp_source_impl::set_samp_rate(double rate)
 {
-    BOOST_FOREACH (const size_t chan, _stream_args.channels) {
+    for (const auto& chan : _stream_args.channels) {
         _dev->set_rx_rate(rate, chan);
     }
     _samp_rate = this->get_samp_rate();

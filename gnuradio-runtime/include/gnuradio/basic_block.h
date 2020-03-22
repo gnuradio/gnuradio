@@ -18,7 +18,6 @@
 #include <gnuradio/sptr_magic.h>
 #include <gnuradio/thread/thread.h>
 #include <boost/enable_shared_from_this.hpp>
-#include <boost/foreach.hpp>
 #include <boost/function.hpp>
 #include <boost/thread/condition_variable.hpp>
 #include <deque>
@@ -226,7 +225,7 @@ public:
     bool empty_p()
     {
         bool rv = true;
-        BOOST_FOREACH (msg_queue_map_t::value_type& i, msg_queue) {
+        for (const auto& i : msg_queue) {
             rv &= msg_queue[i.first].empty();
         }
         return rv;
@@ -240,7 +239,7 @@ public:
     bool empty_handled_p()
     {
         bool rv = true;
-        BOOST_FOREACH (msg_queue_map_t::value_type& i, msg_queue) {
+        for (const auto& i : msg_queue) {
             rv &= empty_handled_p(i.first);
         }
         return rv;

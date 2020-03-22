@@ -14,7 +14,6 @@
 
 #include "stream_mux_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/foreach.hpp>
 #include <cstring>
 
 namespace gr {
@@ -80,7 +79,7 @@ int stream_mux_impl::general_work(int noutput_items,
                            d_stream,
                            input_index[d_stream],
                            input_index[d_stream] + items_to_copy);
-        BOOST_FOREACH (gr::tag_t t, stream_t) {
+        for (auto t : stream_t) {
             t.offset = t.offset - nitems_read(d_stream) - input_index[d_stream] +
                        nitems_written(0) + out_index;
             add_item_tag(0, t);
