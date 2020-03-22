@@ -19,7 +19,7 @@ namespace blocks {
 class plateau_detector_fb_impl : public plateau_detector_fb
 {
 private:
-    int d_max_len;
+    const int d_max_len;
     float d_threshold;
 
 public:

@@ -20,10 +20,10 @@ namespace blocks {
 class udp_sink_impl : public udp_sink
 {
 private:
-    size_t d_itemsize;
+    const size_t d_itemsize;
 
-    int d_payload_size;        // maximum transmission unit (packet length)
-    bool d_eof;                // send zero-length packet on disconnect
+    const int d_payload_size;  // maximum transmission unit (packet length)
+    const bool d_eof;          // send zero-length packet on disconnect
     bool d_connected;          // are we connected?
     gr::thread::mutex d_mutex; // protects d_socket and d_connected
 

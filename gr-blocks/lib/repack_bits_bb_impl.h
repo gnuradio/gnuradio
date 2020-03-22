@@ -22,11 +22,11 @@ private:
     int d_k; //! Bits on input stream
     int d_l; //! Bits on output stream
     const bool d_packet_mode;
-    int d_in_index;      // Current bit of input byte
-    int d_out_index;     // Current bit of output byte
-    bool d_align_output; //! true if the output shall be aligned, false if the input shall
-                         //! be aligned
-    endianness_t d_endianness;
+    int d_in_index;            // Current bit of input byte
+    int d_out_index;           // Current bit of output byte
+    const bool d_align_output; //! true if the output shall be aligned, false if the input
+                               //! shall be aligned
+    const endianness_t d_endianness;
 
 protected:
     int calculate_output_stream_length(const gr_vector_int& ninput_items);

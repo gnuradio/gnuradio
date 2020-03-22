@@ -21,10 +21,10 @@ namespace blocks {
 class ctrlport_probe2_c_impl : public ctrlport_probe2_c
 {
 private:
-    std::string d_id;
-    std::string d_desc;
+    const std::string d_id;
+    const std::string d_desc;
     size_t d_len;
-    unsigned int d_disp_mask;
+    const unsigned int d_disp_mask;
 
     size_t d_index;
     std::vector<gr_complex> d_buffer;

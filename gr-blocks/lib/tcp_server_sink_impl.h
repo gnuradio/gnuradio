@@ -22,7 +22,7 @@ namespace blocks {
 class tcp_server_sink_impl : public tcp_server_sink
 {
 private:
-    size_t d_itemsize;
+    const size_t d_itemsize;
 
     boost::asio::io_service d_io_service;
     gr::thread::thread d_io_serv_thread;

@@ -19,7 +19,7 @@ namespace blocks {
 class BLOCKS_API tags_strobe_impl : public tags_strobe
 {
 private:
-    size_t d_itemsize;
+    const size_t d_itemsize;
     uint64_t d_nsamps;
     tag_t d_tag;
     uint64_t d_offset;

@@ -23,7 +23,7 @@ namespace blocks {
 class swap_iq_impl : public swap_iq
 {
 private:
-    int d_datatype;
+    const int d_datatype;
 
 public:
     swap_iq_impl(int datatype, int datasize);

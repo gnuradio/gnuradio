@@ -26,7 +26,7 @@ private:
     int d_length;
     T d_scale;
     int d_max_iter;
-    unsigned int d_vlen;
+    const unsigned int d_vlen;
     std::vector<T> d_sum;
 
 

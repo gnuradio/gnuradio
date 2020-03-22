@@ -31,7 +31,7 @@ private:
     std::vector<tcp_connection::sptr> d_tcp_connections;
     void handle_tcp_read(const boost::system::error_code& error,
                          size_t bytes_transferred);
-    bool d_tcp_no_delay;
+    const bool d_tcp_no_delay;
 
     // TCP server specific
     boost::shared_ptr<boost::asio::ip::tcp::acceptor> d_acceptor_tcp;

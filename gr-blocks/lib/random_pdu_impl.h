@@ -25,8 +25,8 @@ private:
     std::mt19937 d_rng;
     std::uniform_int_distribution<> d_urange;
     std::uniform_int_distribution<> d_brange;
-    unsigned char d_mask;
-    int d_length_modulo;
+    const unsigned char d_mask;
+    const int d_length_modulo;
 
 public:
     random_pdu_impl(int min_items,

@@ -19,7 +19,7 @@ namespace blocks {
 class tag_share_impl : public tag_share
 {
 private:
-    size_t d_sizeof_io_item;
+    const size_t d_sizeof_io_item;
     const size_t d_vlen;
 
 public:

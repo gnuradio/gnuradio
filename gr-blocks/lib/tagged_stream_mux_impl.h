@@ -20,8 +20,8 @@ namespace blocks {
 class tagged_stream_mux_impl : public tagged_stream_mux
 {
 private:
-    size_t d_itemsize;
-    unsigned int d_tag_preserve_head_pos;
+    const size_t d_itemsize;
+    const unsigned int d_tag_preserve_head_pos;
 
 protected:
     int calculate_output_stream_length(const gr_vector_int& ninput_items);

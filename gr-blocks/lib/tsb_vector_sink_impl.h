@@ -23,7 +23,7 @@ class tsb_vector_sink_impl : public tsb_vector_sink<T>
 private:
     std::vector<std::vector<T>> d_data;
     std::vector<tag_t> d_tags;
-    unsigned int d_vlen;
+    const unsigned int d_vlen;
 
 public:
     tsb_vector_sink_impl(unsigned int vlen, const std::string& tsb_key);

@@ -20,9 +20,9 @@ namespace blocks {
 class vco_c_impl : public vco_c
 {
 private:
-    double d_sampling_rate;
-    double d_sensitivity;
-    double d_amplitude;
+    const double d_sampling_rate;
+    const double d_sensitivity;
+    const double d_amplitude;
     double d_k;
     gr::fxpt_vco d_vco;
 

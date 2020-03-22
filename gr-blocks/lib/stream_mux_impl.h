@@ -19,10 +19,10 @@ namespace blocks {
 class BLOCKS_API stream_mux_impl : public stream_mux
 {
 private:
-    size_t d_itemsize;
-    unsigned int d_stream;   // index of currently selected stream
-    int d_residual;          // number if items left to put into current stream
-    gr_vector_int d_lengths; // number if items to pack per stream
+    const size_t d_itemsize;
+    unsigned int d_stream;         // index of currently selected stream
+    int d_residual;                // number if items left to put into current stream
+    const gr_vector_int d_lengths; // number if items to pack per stream
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required);
 

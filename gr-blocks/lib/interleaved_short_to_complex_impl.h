@@ -20,7 +20,7 @@ class BLOCKS_API interleaved_short_to_complex_impl : public interleaved_short_to
 {
 private:
     float d_scalar;
-    bool d_vector;
+    const bool d_vector;
     bool d_swap;
 
 public:
