@@ -21,11 +21,11 @@ class throttle_impl : public throttle
 {
 private:
     std::chrono::time_point<std::chrono::steady_clock> d_start;
-    size_t d_itemsize;
+    const size_t d_itemsize;
     uint64_t d_total_samples;
     double d_sample_rate;
     std::chrono::duration<double> d_sample_period;
-    bool d_ignore_tags;
+    const bool d_ignore_tags;
 
 public:
     throttle_impl(size_t itemsize, double samples_per_sec, bool ignore_tags = true);

@@ -19,7 +19,7 @@ namespace blocks {
 class annotator_1to1_impl : public annotator_1to1
 {
 private:
-    uint64_t d_when;
+    const uint64_t d_when;
     uint64_t d_tag_counter;
     std::vector<tag_t> d_stored_tags;
 

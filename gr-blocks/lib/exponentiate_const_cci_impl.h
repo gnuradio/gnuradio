@@ -20,7 +20,7 @@ class exponentiate_const_cci_impl : public exponentiate_const_cci
 {
 private:
     int d_exponent;
-    int d_vlen;
+    const int d_vlen;
 
 public:
     exponentiate_const_cci_impl(int exponent, size_t vlen);

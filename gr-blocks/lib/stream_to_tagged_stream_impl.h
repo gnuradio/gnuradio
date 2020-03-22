@@ -19,10 +19,10 @@ namespace blocks {
 class stream_to_tagged_stream_impl : public stream_to_tagged_stream
 {
 private:
-    size_t d_itemsize;
+    const size_t d_itemsize;
     unsigned d_packet_len;
     pmt::pmt_t d_packet_len_pmt;
-    pmt::pmt_t d_len_tag_key;
+    const pmt::pmt_t d_len_tag_key;
     uint64_t d_next_tag_pos;
 
 public:

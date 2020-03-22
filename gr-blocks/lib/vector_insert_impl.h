@@ -23,7 +23,7 @@ class vector_insert_impl : public vector_insert<T>
 private:
     std::vector<T> d_data;
     int d_offset;
-    int d_periodicity;
+    const int d_periodicity;
 
 public:
     vector_insert_impl(const std::vector<T>& data, int periodicity, int offset);

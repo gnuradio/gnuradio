@@ -20,8 +20,8 @@ namespace blocks {
 class vector_map_impl : public vector_map
 {
 private:
-    size_t d_item_size;
-    std::vector<size_t> d_in_vlens;
+    const size_t d_item_size;
+    const std::vector<size_t> d_in_vlens;
     std::vector<std::vector<std::vector<size_t>>> d_mapping;
     gr::thread::mutex d_mutex; // mutex to protect set/work access
 

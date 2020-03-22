@@ -24,10 +24,10 @@ private:
     float d_ratio;
     gr_complex d_k;
 
-    double d_samp_rate;
+    const double d_samp_rate;
     double d_freq;
     float d_gain;
-    float d_sync_window;
+    const float d_sync_window;
 
     long d_sync_counter;
     bool d_synchronized;

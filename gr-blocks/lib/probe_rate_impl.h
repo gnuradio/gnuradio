@@ -20,7 +20,7 @@ class probe_rate_impl : public probe_rate
 {
 private:
     double d_alpha, d_beta, d_avg;
-    double d_min_update_time;
+    const double d_min_update_time;
     boost::posix_time::ptime d_last_update;
     uint64_t d_lastthru;
     void setup_rpc();

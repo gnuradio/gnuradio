@@ -20,7 +20,7 @@ class wavfile_sink_impl : public wavfile_sink
 {
 private:
     unsigned d_sample_rate;
-    int d_nchans;
+    const int d_nchans;
     unsigned d_sample_count;
     int d_bytes_per_sample;
     int d_bytes_per_sample_new;

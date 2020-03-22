@@ -21,7 +21,7 @@ template <class T>
 class min_blk_impl : public min_blk<T>
 {
 private:
-    size_t d_vlen, d_vlen_out;
+    const size_t d_vlen, d_vlen_out;
 
 public:
     min_blk_impl(size_t vlen, size_t vlen_out);

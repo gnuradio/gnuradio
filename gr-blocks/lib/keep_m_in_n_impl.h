@@ -21,7 +21,7 @@ class BLOCKS_API keep_m_in_n_impl : public keep_m_in_n
     int d_m;
     int d_n;
     int d_offset;
-    int d_itemsize;
+    const int d_itemsize;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required);
 

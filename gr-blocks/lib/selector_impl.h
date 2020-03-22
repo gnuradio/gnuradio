@@ -20,7 +20,7 @@ namespace blocks {
 class selector_impl : public selector
 {
 private:
-    size_t d_itemsize;
+    const size_t d_itemsize;
     bool d_enabled;
     unsigned int d_input_index, d_output_index;
     unsigned int d_num_inputs, d_num_outputs; // keep track of the topology

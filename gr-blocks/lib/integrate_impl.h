@@ -20,8 +20,8 @@ namespace blocks {
 template <class T>
 class BLOCKS_API integrate_impl : public integrate<T>
 {
-    int d_decim;
-    unsigned int d_vlen;
+    const int d_decim;
+    const unsigned int d_vlen;
 
 public:
     integrate_impl(int decim, unsigned int vlen);
