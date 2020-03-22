@@ -65,7 +65,7 @@ std::string usrp_sink_impl::get_subdev_spec(size_t mboard)
 
 void usrp_sink_impl::set_samp_rate(double rate)
 {
-    BOOST_FOREACH (const size_t chan, _stream_args.channels) {
+    for (const auto& chan : _stream_args.channels) {
         _dev->set_tx_rate(rate, chan);
     }
     _sample_rate = this->get_samp_rate();
@@ -413,7 +413,7 @@ int usrp_sink_impl::work(int noutput_items,
         GR_LOG_DEBUG(d_debug_logger,
                      boost::format("Executing %d pending commands.") %
                          _pending_cmds.size());
-        BOOST_FOREACH (const pmt::pmt_t& cmd_pmt, _pending_cmds) {
+        for (const auto& cmd_pmt : _pending_cmds) {
             msg_handler_command(cmd_pmt);
         }
         _pending_cmds.clear();
@@ -440,7 +440,7 @@ void usrp_sink_impl::tag_work(int& ninput_items)
     // For commands that are in the middle of the burst:
     std::vector<pmt::pmt_t> commands_in_burst; // Store the command
     uint64_t in_burst_cmd_offset = 0;          // Store its position
-    BOOST_FOREACH (const tag_t& my_tag, _tags) {
+    for (const auto& my_tag : _tags) {
         const uint64_t my_tag_count = my_tag.offset;
         const pmt::pmt_t& key = my_tag.key;
         const pmt::pmt_t& value = my_tag.value;
@@ -566,7 +566,7 @@ void usrp_sink_impl::tag_work(int& ninput_items)
             // ...then it's in the middle of a burst, only send() until before the tag
             max_count = in_burst_cmd_offset;
         } else if (in_burst_cmd_offset < max_count) {
-            BOOST_FOREACH (const pmt::pmt_t& cmd_pmt, commands_in_burst) {
+            for (const auto& cmd_pmt : commands_in_burst) {
                 _pending_cmds.push_back(cmd_pmt);
             }
         }
