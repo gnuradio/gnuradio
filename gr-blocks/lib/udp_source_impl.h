@@ -23,11 +23,11 @@ class udp_source_impl : public udp_source
 {
 private:
     const size_t d_itemsize;
-    int d_payload_size; // maximum transmission unit (packet length)
-    const bool d_eof;   // look for an EOF signal
-    bool d_connected;   // are we connected?
-    char* d_rxbuf;      // get UDP buffer items
-    char* d_residbuf;   // hold buffer between calls
+    int d_payload_size;           // maximum transmission unit (packet length)
+    const bool d_eof;             // look for an EOF signal
+    bool d_connected;             // are we connected?
+    std::vector<char> d_rxbuf;    // get UDP buffer items
+    std::vector<char> d_residbuf; // hold buffer between calls
     ssize_t d_residual; // hold information about number of bytes stored in residbuf
     ssize_t d_sent;     // track how much of d_residbuf we've outputted
 
