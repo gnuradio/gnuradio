@@ -15,6 +15,7 @@
 #include <gnuradio/thread/thread.h>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
+#include <memory>
 
 namespace gr {
 namespace blocks {
@@ -37,7 +38,7 @@ private:
     std::string d_host;
     unsigned short d_port;
 
-    boost::asio::ip::udp::socket* d_socket;
+    std::unique_ptr<boost::asio::ip::udp::socket> d_socket;
     boost::asio::ip::udp::endpoint d_endpoint;
     boost::asio::ip::udp::endpoint d_endpoint_rcvd;
     boost::asio::io_service d_io_service;
