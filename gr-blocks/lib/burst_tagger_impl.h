@@ -19,7 +19,7 @@ namespace blocks {
 class burst_tagger_impl : public burst_tagger
 {
 private:
-    size_t d_itemsize;
+    const size_t d_itemsize;
     bool d_state;
     pmt::pmt_t d_true_key;
     pmt::pmt_t d_true_value;

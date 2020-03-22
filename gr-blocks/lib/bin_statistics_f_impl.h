@@ -27,8 +27,8 @@ private:
     const size_t d_vlen;
     msg_queue::sptr d_msgq;
     feval_dd* d_tune;
-    size_t d_tune_delay;
-    size_t d_dwell_delay;
+    const size_t d_tune_delay;
+    const size_t d_dwell_delay;
     double d_center_freq;
 
     state_t d_state;

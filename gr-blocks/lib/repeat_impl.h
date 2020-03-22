@@ -18,7 +18,7 @@ namespace blocks {
 
 class BLOCKS_API repeat_impl : public repeat
 {
-    size_t d_itemsize;
+    const size_t d_itemsize;
     int d_interp;
 
 public:

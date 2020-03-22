@@ -19,7 +19,7 @@ namespace blocks {
 class tag_gate_impl : public tag_gate
 {
 private:
-    size_t d_item_size;
+    const size_t d_item_size;
     bool d_propagate_tags;
     bool d_single_key_set;
 

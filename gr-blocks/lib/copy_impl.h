@@ -19,7 +19,7 @@ namespace blocks {
 class copy_impl : public copy
 {
 private:
-    size_t d_itemsize;
+    const size_t d_itemsize;
     bool d_enabled;
 
 public:

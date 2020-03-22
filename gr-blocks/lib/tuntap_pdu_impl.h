@@ -25,8 +25,8 @@ class tuntap_pdu_impl : public tuntap_pdu, public stream_pdu_base
 {
 #if (defined(linux) || defined(__linux) || defined(__linux__))
 private:
-    std::string d_dev;
-    bool d_istunflag;
+    const std::string d_dev;
+    const bool d_istunflag;
     int tun_alloc(char* dev, int flags);
     int set_mtu(const char* dev, int MTU);
 

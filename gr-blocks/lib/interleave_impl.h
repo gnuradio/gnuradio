@@ -18,8 +18,8 @@ namespace blocks {
 
 class BLOCKS_API interleave_impl : public interleave
 {
-    size_t d_itemsize;
-    unsigned int d_blocksize;
+    const size_t d_itemsize;
+    const unsigned int d_blocksize;
     unsigned int d_ninputs;
 
 public:

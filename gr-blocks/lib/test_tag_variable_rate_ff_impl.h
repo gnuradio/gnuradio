@@ -19,8 +19,8 @@ namespace blocks {
 class test_tag_variable_rate_ff_impl : public test_tag_variable_rate_ff
 {
 protected:
-    bool d_update_once;
-    double d_update_step;
+    const bool d_update_once;
+    const double d_update_step;
     double d_accum;
     double d_rrate;
     uint64_t d_old_in, d_new_in, d_last_out;

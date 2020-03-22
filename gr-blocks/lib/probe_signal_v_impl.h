@@ -22,7 +22,7 @@ class probe_signal_v_impl : public probe_signal_v<T>
 {
 private:
     std::vector<T> d_level;
-    size_t d_size;
+    const size_t d_size;
 
 public:
     probe_signal_v_impl(size_t size);
