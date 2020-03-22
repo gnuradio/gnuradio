@@ -15,7 +15,6 @@
 #include "tpb_thread_body.h"
 #include <gnuradio/prefs.h>
 #include <pmt/pmt.h>
-#include <boost/foreach.hpp>
 #include <boost/thread.hpp>
 #include <iostream>
 
@@ -87,7 +86,7 @@ tpb_thread_body::tpb_thread_body(block_sptr block,
         d->d_tpb.clear_changed();
 
         // handle any queued up messages
-        BOOST_FOREACH (basic_block::msg_queue_map_t::value_type& i, block->msg_queue) {
+        for (const auto& i : block->msg_queue) {
             // Check if we have a message handler attached before getting
             // any messages. This is mostly a protection for the unknown
             // startup sequence of the threads.

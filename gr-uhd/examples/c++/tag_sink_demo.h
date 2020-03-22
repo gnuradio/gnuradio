@@ -9,7 +9,6 @@
 
 #include <gnuradio/io_signature.h>
 #include <gnuradio/sync_block.h>
-#include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <complex>
 #include <iostream>
@@ -39,7 +38,7 @@ public:
                           pmt::string_to_symbol("rx_time"));
 
         // print all tags
-        BOOST_FOREACH (const gr::tag_t& rx_time_tag, rx_time_tags) {
+        for (const auto& rx_time_tag : rx_time_tags) {
             const uint64_t offset = rx_time_tag.offset;
             const pmt::pmt_t& value = rx_time_tag.value;
 

@@ -34,7 +34,7 @@ patterned_interleaver_impl::patterned_interleaver_impl(size_t itemsize,
       d_counts(pattern_max(pattern) + 1, 0),
       d_itemsize(itemsize)
 {
-    BOOST_FOREACH (int i, d_pattern) {
+    for (const auto& i : d_pattern) {
         d_counts[i]++;
     }
     set_output_multiple(d_pattern.size());

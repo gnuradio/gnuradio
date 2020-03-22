@@ -59,14 +59,14 @@ public:
 
     virtual void set_fDTs(float fDTs)
     {
-        BOOST_FOREACH (gr::channels::flat_fader_impl* fader, d_faders) {
+        for (const auto& fader : d_faders) {
             fader->d_fDTs = fDTs;
             fader->d_step = powf(0.00125 * fDTs, 1.1);
         }
     }
     virtual void set_K(float K)
     {
-        BOOST_FOREACH (gr::channels::flat_fader_impl* fader, d_faders) {
+        for (const auto& fader : d_faders) {
             fader->d_K = K;
             fader->scale_los = sqrtf(fader->d_K) / sqrtf(fader->d_K + 1);
             fader->scale_nlos = (1 / sqrtf(fader->d_K + 1));
@@ -74,7 +74,7 @@ public:
     }
     virtual void set_step(float step)
     {
-        BOOST_FOREACH (gr::channels::flat_fader_impl* fader, d_faders) {
+        for (const auto& fader : d_faders) {
             fader->d_step = step;
         }
     }
