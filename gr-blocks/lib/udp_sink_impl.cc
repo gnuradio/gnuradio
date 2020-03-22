@@ -20,6 +20,7 @@
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
+#include <boost/make_unique.hpp>
 #include <stdexcept>
 
 namespace gr {
@@ -64,7 +65,7 @@ void udp_sink_impl::connect(const std::string& host, int port)
             host, s_port, boost::asio::ip::resolver_query_base::passive);
         d_endpoint = *resolver.resolve(query);
 
-        d_socket = new boost::asio::ip::udp::socket(d_io_service);
+        d_socket = boost::make_unique<boost::asio::ip::udp::socket>(d_io_service);
         d_socket->open(d_endpoint.protocol());
 
         boost::asio::socket_base::reuse_address roption(true);
@@ -90,7 +91,7 @@ void udp_sink_impl::disconnect()
     }
 
     d_socket->close();
-    delete d_socket;
+    d_socket.reset();
 
     d_connected = false;
 }
