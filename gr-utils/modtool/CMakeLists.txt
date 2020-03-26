@@ -1,4 +1,4 @@
-# Copyright 2018 Free Software Foundation, Inc.
+# Copyright 2018,2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -26,6 +26,11 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/modtool.conf
     DESTINATION ${GR_PREFSDIR}
+)
+
+GR_PYTHON_INSTALL(
+    PROGRAMS    gr_modtool
+    DESTINATION ${GR_RUNTIME_DIR}
 )
 
 ########################################################################

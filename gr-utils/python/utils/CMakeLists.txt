@@ -22,7 +22,6 @@ GR_PYTHON_INSTALL(
 
 GR_PYTHON_INSTALL(
     PROGRAMS
-    gr_modtool
     gr_plot
     gr_plot_const
     gr_plot_fft
