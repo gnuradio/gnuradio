@@ -76,7 +76,7 @@ if(ENABLE_GR_UTILS)
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(python/utils)
+add_subdirectory(plot_tools)
 add_subdirectory(read_file_metadata)
 
 if(ENABLE_GR_BLOCKTOOL)
