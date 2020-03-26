@@ -1,4 +1,4 @@
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2011,2012,2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -79,11 +79,11 @@ if(ENABLE_GR_UTILS)
 add_subdirectory(python/utils)
 
 if(ENABLE_GR_BLOCKTOOL)
-add_subdirectory(python/blocktool)
+add_subdirectory(blocktool)
 endif(ENABLE_GR_BLOCKTOOL)
 
 if(ENABLE_GR_MODTOOL)
-add_subdirectory(python/modtool)
+add_subdirectory(modtool)
 endif(ENABLE_GR_MODTOOL)
 
 endif(ENABLE_GR_UTILS)
