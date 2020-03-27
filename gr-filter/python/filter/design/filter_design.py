@@ -19,24 +19,13 @@ import warnings
 from optparse import OptionParser
 
 from gnuradio import filter
+from gnuradio.fft import fft_detail
 
 try:
     import numpy as np
 except ImportError:
     raise SystemExit('Please install NumPy to run this script (https://www.np.org/)')
 
-try:
-    from numpy.fft import fftpack as fft_detail
-except ImportError:
-
-    print('Could not import fftpack, trying pocketfft')
-    # Numpy changed fft implementation in version 1.17
-    # from fftpack to pocketfft
-    try:
-        from numpy.fft import pocketfft as fft_detail
-    except ImportError:
-        raise SystemExit('Could not import fft implementation of numpy')
-    
 try:
     from scipy import poly1d, signal
 except ImportError:
@@ -51,7 +40,6 @@ try:
     import pyqtgraph as pg
 except ImportError:
     raise SystemExit('Please install pyqtgraph to run this script (http://www.pyqtgraph.org)')
-
 
 try:
     from gnuradio.filter.pyqt_filter_stacked import Ui_MainWindow
