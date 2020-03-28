@@ -24,6 +24,9 @@ options:
     title: ''
     window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [10, 10]
     rotation: 0
     state: enabled
@@ -40,6 +43,9 @@ blocks:
     msg: pmt.cons(pmt.PMT_NIL, pmt.make_u8vector(16,0x77))
     period: '200'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [362, 81]
     rotation: 0
     state: enabled
@@ -54,6 +60,9 @@ blocks:
     msg: pmt.intern("OUTPUT2")
     period: '100'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [400, 156]
     rotation: 0
     state: enabled
@@ -69,6 +78,9 @@ blocks:
     type: message
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [618, 87]
     rotation: 0
     state: enabled
@@ -84,6 +96,9 @@ blocks:
     type: message
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [695, 172]
     rotation: 0
     state: enabled
@@ -101,6 +116,9 @@ blocks:
     type: message
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [120, 100.0]
     rotation: 0
     state: enabled
@@ -118,16 +136,19 @@ blocks:
     type: message
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [120, 148.0]
     rotation: 0
     state: enabled
 
 connections:
-- [blocks_message_strobe_0, strobe, pad_sink_0, in0]
-- [blocks_message_strobe_0_1, strobe, pad_sink_0, in0]
-- [blocks_message_strobe_0_1, strobe, pad_sink_1, in0]
-- [pad_source_0, out0, blocks_message_strobe_0, set_msg]
-- [pad_source_1, out0, blocks_message_strobe_0, set_msg]
+- [blocks_message_strobe_0, strobe, pad_sink_0, in]
+- [blocks_message_strobe_0_1, strobe, pad_sink_0, in]
+- [blocks_message_strobe_0_1, strobe, pad_sink_1, in]
+- [pad_source_0, out, blocks_message_strobe_0, set_msg]
+- [pad_source_1, out, blocks_message_strobe_0, set_msg]
 
 metadata:
   file_format: 1
