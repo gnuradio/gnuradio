@@ -74,6 +74,9 @@ MENU_BAR_LIST = [
             Actions.TOGGLE_SHOW_PARAMETER_EXPRESSION, Actions.TOGGLE_SHOW_PARAMETER_EVALUATION],
         [Actions.TOGGLE_HIDE_DISABLED_BLOCKS, Actions.TOGGLE_AUTO_HIDE_PORT_LABELS, Actions.TOGGLE_SNAP_TO_GRID, Actions.TOGGLE_SHOW_BLOCK_COMMENTS, Actions.TOGGLE_SHOW_BLOCK_IDS,],
         [Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB],
+        [Actions.ZOOM_IN],
+        [Actions.ZOOM_OUT],
+        [Actions.ZOOM_RESET],
         [Actions.ERRORS_WINDOW_DISPLAY, Actions.FIND_BLOCKS],
     ]),
     ('_Run', [
