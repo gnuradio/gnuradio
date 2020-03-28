@@ -24,6 +24,9 @@ options:
     title: ''
     window_size: ''
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 11]
     rotation: 0
     state: enabled
@@ -35,6 +38,9 @@ blocks:
     comment: ''
     value: int(1+(taps_per_filt-1)//2)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [832, 444.0]
     rotation: 0
     state: enabled
@@ -44,6 +50,9 @@ blocks:
     comment: ''
     value: '32'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1240, 84.0]
     rotation: 0
     state: enabled
@@ -53,6 +62,9 @@ blocks:
     comment: ''
     value: len(psf_taps)/nfilts
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [736, 444.0]
     rotation: 0
     state: enabled
@@ -67,6 +79,9 @@ blocks:
     tag: packet_len
     type: byte
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [544, 252.0]
     rotation: 0
     state: enabled
@@ -81,6 +96,9 @@ blocks:
     tag: packet_len
     type: byte
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [544, 180.0]
     rotation: 0
     state: enabled
@@ -98,6 +116,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [768, 172.0]
     rotation: 0
     state: enabled
@@ -115,6 +136,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [768, 244.0]
     rotation: 0
     state: enabled
@@ -131,6 +155,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [992, 376.0]
     rotation: 0
     state: enabled
@@ -148,6 +175,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [216, 360.0]
     rotation: 0
     state: enabled
@@ -166,6 +196,9 @@ blocks:
     type: complex
     window: firdes.window(firdes.WIN_HANN, 20, 0)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [472, 340.0]
     rotation: 0
     state: enabled
@@ -183,6 +216,9 @@ blocks:
     out_type: complex
     symbol_table: hdr_const.points()
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1104, 184.0]
     rotation: 0
     state: enabled
@@ -200,6 +236,9 @@ blocks:
     out_type: complex
     symbol_table: pld_const.points()
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1104, 256.0]
     rotation: 0
     state: enabled
@@ -213,6 +252,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [312, 107]
     rotation: 180
     state: enabled
@@ -226,6 +268,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [960, 180.0]
     rotation: 0
     state: enabled
@@ -239,6 +284,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [960, 252.0]
     rotation: 0
     state: enabled
@@ -252,6 +300,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [56, 225]
     rotation: 0
     state: enabled
@@ -269,6 +320,9 @@ blocks:
     rev_pack: 'False'
     rev_unpack: 'False'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [64, 99]
     rotation: 180
     state: enabled
@@ -286,6 +340,9 @@ blocks:
     rev_pack: 'False'
     rev_unpack: 'False'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [312, 172.0]
     rotation: 0
     state: enabled
@@ -301,6 +358,9 @@ blocks:
     value: digital.constellation_calcdist((digital.psk_2()[0]), (digital.psk_2()[1]),
       2, 1).base()
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [552, 11]
     rotation: 0
     state: enabled
@@ -315,6 +375,9 @@ blocks:
     type: ''
     value: ' fec.dummy_encoder_make(8000)'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [192, 11]
     rotation: 0
     state: enabled
@@ -330,6 +393,9 @@ blocks:
     value: digital.header_format_default(digital.packet_utils.default_access_code,
       0)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [904, 11]
     rotation: 0
     state: enabled
@@ -340,6 +406,9 @@ blocks:
     comment: ''
     stream_id: Mod Header
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1296, 180.0]
     rotation: 0
     state: enabled
@@ -350,6 +419,9 @@ blocks:
     comment: ''
     stream_id: Mod Payload
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1296, 252.0]
     rotation: 0
     state: enabled
@@ -365,6 +437,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1280, 388.0]
     rotation: 0
     state: enabled
@@ -380,6 +455,9 @@ blocks:
     type: message
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [144, 163]
     rotation: 180
     state: enabled
@@ -395,6 +473,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [472, 508.0]
     rotation: 0
     state: enabled
@@ -410,6 +491,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [736, 508.0]
     rotation: 0
     state: enabled
@@ -427,6 +511,9 @@ blocks:
     type: message
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [504, 107]
     rotation: 180
     state: enabled
@@ -445,6 +532,9 @@ blocks:
     taps: psf_taps
     type: ccf
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [728, 348.0]
     rotation: 0
     state: enabled
@@ -460,6 +550,9 @@ blocks:
     value: digital.constellation_calcdist((digital.psk_2()[0]), (digital.psk_2()[1]),
       2, 1).base()
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [728, 11]
     rotation: 0
     state: enabled
@@ -474,6 +567,9 @@ blocks:
     type: ''
     value: ' fec.dummy_encoder_make(8000)'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [368, 11]
     rotation: 0
     state: enabled
@@ -488,6 +584,9 @@ blocks:
     type: ''
     value: '[0,]'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1240, 11]
     rotation: 0
     state: enabled
@@ -498,6 +597,9 @@ blocks:
     comment: ''
     stream_id: Mod Header
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 331]
     rotation: 0
     state: enabled
@@ -508,6 +610,9 @@ blocks:
     comment: ''
     stream_id: Mod Payload
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 388.0]
     rotation: 0
     state: enabled
@@ -522,6 +627,9 @@ blocks:
     type: eng_float
     value: '2'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1080, 11]
     rotation: 0
     state: enabled
@@ -539,14 +647,14 @@ connections:
 - [digital_chunks_to_symbols_xx_0, '0', mod_header, '0']
 - [digital_chunks_to_symbols_xx_0_0, '0', mod_payload, '0']
 - [digital_crc32_async_bb_1, out, fec_async_encoder_0, in]
-- [digital_crc32_async_bb_1, out, pad_sink_1, in0]
+- [digital_crc32_async_bb_1, out, pad_sink_1, in]
 - [digital_map_bb_1, '0', digital_chunks_to_symbols_xx_0, '0']
 - [digital_map_bb_1_0, '0', digital_chunks_to_symbols_xx_0_0, '0']
 - [digital_protocol_formatter_async_0, header, fec_async_encoder_0_0, in]
 - [digital_protocol_formatter_async_0, payload, blocks_pdu_to_tagged_stream_0, pdus]
 - [fec_async_encoder_0, out, digital_protocol_formatter_async_0, in]
 - [fec_async_encoder_0_0, out, blocks_pdu_to_tagged_stream_0_0, pdus]
-- [pad_source_0, out0, digital_crc32_async_bb_1, in]
+- [pad_source_0, out, digital_crc32_async_bb_1, in]
 - [pfb_arb_resampler_xxx_0, '0', blocks_tagged_stream_multiply_length_0, '0']
 - [rx_mod_header, '0', blocks_tagged_stream_mux_0, '0']
 - [rx_mod_payload, '0', blocks_tagged_stream_mux_0, '1']
