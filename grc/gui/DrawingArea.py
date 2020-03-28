@@ -91,17 +91,32 @@ class DrawingArea(Gtk.DrawingArea):
         coords = x / self.zoom_factor, y / self.zoom_factor
         self._flow_graph.add_new_block(selection_data.get_text(), coords)
 
+    def zoom_in(self):
+        change = 1.2
+        zoom_factor = min(self.zoom_factor * change, 5.0)
+        self._set_zoom_factor(zoom_factor)
+
+    def zoom_out(self):
+        change = 1/1.2 
+        zoom_factor = max(self.zoom_factor * change, 0.1)
+        self._set_zoom_factor(zoom_factor)
+
+    def reset_zoom(self):
+        self._set_zoom_factor(1.0)
+
+    def _set_zoom_factor(self, zoom_factor):
+        if zoom_factor != self.zoom_factor:
+            self.zoom_factor = zoom_factor
+            self._update_after_zoom = True
+            self.queue_draw()
+
     def _handle_mouse_scroll(self, widget, event):
         if event.get_state() & Gdk.ModifierType.CONTROL_MASK:
-            change = 1.2 if event.direction == Gdk.ScrollDirection.UP else 1/1.2
-            zoom_factor = min(max(self.zoom_factor * change, 0.1), 5.0)
-
-            if zoom_factor != self.zoom_factor:
-                self.zoom_factor = zoom_factor
-                self._update_after_zoom = True
-                self.queue_draw()
+            if event.direction == Gdk.ScrollDirection.UP:
+                self.zoom_in()
+            else:
+                self.zoom_out()
             return True
-
         return False
 
     def _handle_mouse_button_press(self, widget, event):

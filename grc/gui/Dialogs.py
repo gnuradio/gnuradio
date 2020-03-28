@@ -324,6 +324,8 @@ def show_keyboard_shortcuts(parent):
     <u>Shift+T/M/B/L/C/R</u>: Vertical Align Top/Middle/Bottom and
             Horizontal Align Left/Center/Right respectively of the 
             selected block.
+    <u>Ctrl+0</u>: Reset the zoom level
+    <u>Ctrl++/-</u>: Zoom in and out
     \
     """)
     

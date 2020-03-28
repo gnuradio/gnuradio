@@ -371,6 +371,21 @@ BLOCK_BYPASS = actions.register("win.block_bypass",
     icon_name='media-seek-forward',
     keypresses=["b"],
 )
+ZOOM_IN = actions.register("win.zoom_in",
+    label='Zoom In',
+    tooltip='Increase the canvas zoom level',
+    keypresses=["<Ctrl>plus","<Ctrl>equal","<Ctrl>KP_Add"],
+)
+ZOOM_OUT = actions.register("win.zoom_out",
+    label='Zoom Out',
+    tooltip='Decrease the canvas zoom level',
+    keypresses=["<Ctrl>minus","<Ctrl>KP_Subtract"],
+)
+ZOOM_RESET = actions.register("win.zoom_reset",
+    label='Reset Zoom',
+    tooltip='Reset the canvas zoom level',
+    keypresses=["<Ctrl>0","<Ctrl>KP_0"],
+)
 TOGGLE_SNAP_TO_GRID = actions.register("win.snap_to_grid",
     label='_Snap to grid',
     tooltip='Snap blocks to a grid for an easier connection alignment',
