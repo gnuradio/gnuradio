@@ -78,6 +78,7 @@ macro(GR_PYTHON_CHECK_MODULE desc mod cmd have)
     GR_PYTHON_CHECK_MODULE_RAW(
         "${desc}" "
 #########################################
+from distutils.version import LooseVersion
 try:
     import ${mod}
     assert ${cmd}
