@@ -67,5 +67,12 @@ int file_sink_impl::work(int noutput_items,
     return nwritten;
 }
 
+bool file_sink_impl::stop()
+{
+    do_update();
+    fflush(d_fp);
+    return true;
+}
+
 } /* namespace blocks */
 } /* namespace gr */
