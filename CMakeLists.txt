@@ -50,6 +50,7 @@ set(GR_SWIG_MIN_VERSION "3.0.8")
 set(GR_CMAKE_MIN_VERSION "3.5.1")
 set(GR_MAKO_MIN_VERSION "0.4.2")
 set(GR_PYTHON_MIN_VERSION "3.6.5")
+set(GR_NUMPY_MIN_VERSION "1.13.0")
 set(GCC_MIN_VERSION "4.8.4")
 set(CLANG_MIN_VERSION "3.4.0")
 set(APPLECLANG_MIN_VERSION "500")
@@ -330,6 +331,11 @@ include(GrBoost)
 ########################################################################
 include(GrPython)
 GR_PYTHON_CHECK_MODULE("six - python 2 and 3 compatibility library" six "True" SIX_FOUND)
+GR_PYTHON_CHECK_MODULE(
+    "numpy"
+    numpy
+    "LooseVersion(numpy.__version__) >= LooseVersion('${GR_NUMPY_MIN_VERSION}')"
+    NUMPY_FOUND)
 find_package(SWIG)
 
 if(SWIG_FOUND)
@@ -346,6 +352,7 @@ GR_REGISTER_COMPONENT("python-support" ENABLE_PYTHON
     SWIG_FOUND
     SWIG_VERSION_CHECK
     SIX_FOUND
+    NUMPY_FOUND
 )
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Coverage")
