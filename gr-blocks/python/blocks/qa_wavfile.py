@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2010,2013 Free Software Foundation, Inc.
+# Copyright 2008,2010,2013,2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -16,7 +16,7 @@ from os.path import getsize
 
 g_in_file = os.path.join(os.getenv("srcdir"), "test_16bit_1chunk.wav")
 g_extra_header_offset = 36
-g_extra_header_len = 18
+g_extra_header_len = 22
 
 class test_wavefile(gr_unittest.TestCase):
 
@@ -43,19 +43,33 @@ class test_wavefile(gr_unittest.TestCase):
         self.tb.run()
         wf_out.close()
 
+        # Test file validity.
+        import wave
+        try:
+            with wave.open(infile, 'rb') as f:
+                pass
+            with wave.open(outfile, 'rb') as f:
+                pass
+        except:
+            raise AssertionError('Invalid WAV file')
+
         # we're losing all extra header chunks
         self.assertEqual(getsize(infile) - g_extra_header_len, getsize(outfile))
 
-        in_f  = open(infile,  'rb')
-        out_f = open(outfile, 'rb')
+        with open(infile, 'rb') as f:
+            in_data = bytearray(f.read())
+        with open(outfile, 'rb') as f:
+            out_data = bytearray(f.read())
 
-        in_data  = in_f.read()
-        out_data = out_f.read()
-        out_f.close()
         os.remove(outfile)
-        # cut extra header chunks input file
+
+        # Ignore size field:
+        in_data[4:8] = b'\x00\x00\x00\x00'
+        out_data[4:8] = b'\x00\x00\x00\x00'
+
+        # cut extra header chunks from input file
         self.assertEqual(in_data[:g_extra_header_offset] + \
                          in_data[g_extra_header_offset + g_extra_header_len:], out_data)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_wavefile, "test_wavefile.xml")
+    gr_unittest.run(test_wavefile)

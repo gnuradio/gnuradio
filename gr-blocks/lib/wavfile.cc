@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008,2012-2013 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2012-2013,2020 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -13,6 +13,7 @@
 #endif
 
 #include <gnuradio/blocks/wavfile.h>
+#include <gnuradio/logger.h>
 #include <stdint.h>
 #include <cstring>
 
@@ -73,8 +74,13 @@ bool wavheader_parse(FILE* fp,
     uint16_t block_align;
     uint16_t bits_per_sample;
     uint32_t chunk_size;
+    long real_file_size;
 
     size_t fresult;
+
+    fseek(fp, 0L, SEEK_END);
+    real_file_size = ftell(fp);
+    rewind(fp);
 
     fresult = fread(str_buf, 1, 4, fp);
     if (fresult != 4 || strncmp(str_buf, "RIFF", 4) || feof(fp)) {
@@ -82,6 +88,16 @@ bool wavheader_parse(FILE* fp,
     }
 
     fresult = fread(&file_size, 1, 4, fp);
+    file_size = wav_to_host(file_size);
+    if (fresult != 4 || file_size != real_file_size - 8L) {
+        // FIXME use predefined loggers
+        gr::logger_ptr logger, debug_logger;
+        gr::configure_default_loggers(logger, debug_logger, "wavfile");
+        GR_LOG_ERROR(logger,
+                     boost::format("invalid file size (expected: %d; actual: %d)") %
+                         (file_size + 8L) % real_file_size);
+        return false;
+    }
 
     fresult = fread(str_buf, 1, 8, fp);
     if (fresult != 8 || strncmp(str_buf, "WAVEfmt ", 8) || feof(fp)) {
