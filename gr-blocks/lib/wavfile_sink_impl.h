@@ -22,6 +22,7 @@ class wavfile_sink_impl : public wavfile_sink
 private:
     wav_header_info d_h;
     int d_bytes_per_sample_new;
+    bool d_append;
 
     float d_max_sample_val;
     float d_min_sample_val;
@@ -59,6 +60,13 @@ private:
      */
     void close_wav();
 
+    /*!
+     * \brief Checks if the given WAV file is compatible with the current
+     * configuration in order to open it to append information.
+     * This also finds the value of d_first_sample_pos.
+     */
+    bool check_append_compat_file(FILE* fp);
+
 protected:
     bool stop();
 
@@ -66,7 +74,8 @@ public:
     wavfile_sink_impl(const char* filename,
                       int n_channels,
                       unsigned int sample_rate,
-                      int bits_per_sample);
+                      int bits_per_sample,
+                      bool append);
     ~wavfile_sink_impl();
 
     bool open(const char* filename);
@@ -74,6 +83,7 @@ public:
 
     void set_sample_rate(unsigned int sample_rate);
     void set_bits_per_sample(int bits_per_sample);
+    void set_append(bool append) override;
 
     int bits_per_sample();
     unsigned int sample_rate();
