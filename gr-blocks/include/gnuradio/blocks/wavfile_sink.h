@@ -40,7 +40,8 @@ public:
     static sptr make(const char* filename,
                      int n_channels,
                      unsigned int sample_rate,
-                     int bits_per_sample = 16);
+                     int bits_per_sample = 16,
+                     bool append = false);
 
     /*!
      * \brief Opens a new file and writes a WAV header. Thread-safe.
@@ -67,6 +68,13 @@ public:
      * is kept.
      */
     virtual void set_bits_per_sample(int bits_per_sample) = 0;
+
+    /*!
+     * \brief Enable appending to an existing file instead of
+     * creating it. This will not affect the WAV file currently
+     * opened (see set_sample_rate()).
+     */
+    virtual void set_append(bool append) = 0;
 };
 
 } /* namespace blocks */
