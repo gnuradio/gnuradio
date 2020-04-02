@@ -162,6 +162,15 @@ class Page(Gtk.HBox):
         """
         self.label.set_markup(markup)
 
+    def set_tooltip(self, text):
+        """
+        Set the tooltip text in this label.
+
+        Args:
+            text: the new tooltip text
+        """
+        self.label.set_tooltip_text(text)
+
     def get_read_only(self):
         """
         Get the read-only state of the file.

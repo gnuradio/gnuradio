@@ -361,6 +361,10 @@ class MainWindow(Gtk.ApplicationWindow):
                 foreground='black' if page.saved else 'red', ro=' (ro)' if page.get_read_only() else '',
                 title=Utils.encode(file_name or NEW_FLOGRAPH_TITLE),
             ))
+            fpath = page.file_path
+            if not fpath:
+                fpath = '(unsaved)'
+            page.set_tooltip(fpath)
         # show/hide notebook tabs
         self.notebook.set_show_tabs(len(self.get_pages()) > 1)
 
