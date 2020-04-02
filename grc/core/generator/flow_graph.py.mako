@@ -89,9 +89,9 @@ class ${class_name}(gr.top_block, Qt.QWidget):
         except:
             pass
 % elif generate_options == 'bokeh_gui':
-
+<%  param_str_bokeh      = ', '.join(['%s=%s'%(param.name, param.templates.render('make')) for param in parameters]) %>
 class ${class_name}(gr.top_block):
-    def __init__(self, doc):
+    def __init__(self, doc, ${param_str_bokeh}):
         gr.top_block.__init__(self, "${title}", catch_exceptions=${catch_exceptions})
         self.doc = doc
         self.plot_lst = []
