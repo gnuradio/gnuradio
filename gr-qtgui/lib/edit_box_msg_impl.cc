@@ -17,8 +17,7 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/qtgui/utils.h>
-
-#include <boost/lexical_cast.hpp>
+#include <sstream>
 
 namespace gr {
 namespace qtgui {
@@ -371,7 +370,7 @@ void edit_box_msg_impl::set_value(pmt::pmt_t val)
 
 void edit_box_msg_impl::edit_finished()
 {
-    QString text = d_val->text();
+    const QString text = d_val->text();
     bool conv_ok = true;
     int xi;
     float xf;
@@ -455,16 +454,17 @@ void edit_box_msg_impl::edit_finished()
         }
         d_msg = pmt::init_f64vector(xv.size(), xv);
     } break;
-    case COMPLEX:
-        try {
-            xc = boost::lexical_cast<gr_complex>(text.toStdString());
-        } catch (boost::bad_lexical_cast const& e) {
+    case COMPLEX: {
+        std::stringstream ss(text.toStdString());
+        ss >> xc;
+        if (static_cast<size_t>(ss.tellg()) != ss.str().size()) {
             GR_LOG_WARN(d_logger,
-                        boost::format("Conversion to complex failed (%1%)") % e.what());
+                        boost::format("Conversion of %s to complex failed") %
+                            text.toStdString());
             return;
         }
         d_msg = pmt::from_complex(xc.real(), xc.imag());
-        break;
+    } break;
     case COMPLEX_VEC: {
         std::vector<gr_complex> xv;
         QStringList text_list = text.split(",");

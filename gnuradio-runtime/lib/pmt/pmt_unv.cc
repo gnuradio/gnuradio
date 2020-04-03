@@ -138,7 +138,8 @@ uint8_t* u8vector_writable_elements(pmt_t vector, size_t& len)
 
 const std::string pmt_u8vector::string_ref(size_t k) const
 {
-    return std::to_string(ref(k));
+    const auto& ch = ref(k);
+    return std::string(&ch, &ch + 1);
 }
 
 } /* namespace pmt */
@@ -260,7 +261,8 @@ int8_t* s8vector_writable_elements(pmt_t vector, size_t& len)
 
 const std::string pmt_s8vector::string_ref(size_t k) const
 {
-    return std::to_string(ref(k));
+    const auto& ch = ref(k);
+    return std::string(&ch, &ch + 1);
 }
 
 } /* namespace pmt */
