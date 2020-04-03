@@ -57,10 +57,10 @@ namespace qtgui {
  * how to handle complex numbers.
  *
  * Complex numbers are currently handled a bit differently than
- * expected. Because we use the Boost lexical_cast function,
- * complex numbers MUST be in the form "(a,b)" to represent "a +
- * jb". Note that you cannot even have a space after the comma, so
- * "(1.23,10.56)" is correct while "(1.23, 10.56)" will not parse.
+ * expected. Because we use the std iostream for complex, complex numbers MUST
+ * be in the form "(a,b)" to represent "a + jb". Note that you cannot even have
+ * a space after the comma, so "(1.23,10.56)" is correct while "(1.23, 10.56)"
+ * will not parse.
  *
  * The 'static' mode prevents the user from changing the data type
  * or the key used in the widget. If also in 'pair' mode, the key
