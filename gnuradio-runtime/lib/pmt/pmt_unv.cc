@@ -17,7 +17,8 @@
 #include "pmt_int.h"
 #include "pmt_unv_int.h"
 #include <pmt/pmt.h>
-#include <boost/lexical_cast.hpp>
+#include <sstream>
+#include <string>
 #include <vector>
 ////////////////////////////////////////////////////////////////////////////
 //                           pmt_u8vector
@@ -137,7 +138,7 @@ uint8_t* u8vector_writable_elements(pmt_t vector, size_t& len)
 
 const std::string pmt_u8vector::string_ref(size_t k) const
 {
-    return boost::lexical_cast<std::string, uint8_t>(ref(k));
+    return std::to_string(ref(k));
 }
 
 } /* namespace pmt */
@@ -259,7 +260,7 @@ int8_t* s8vector_writable_elements(pmt_t vector, size_t& len)
 
 const std::string pmt_s8vector::string_ref(size_t k) const
 {
-    return boost::lexical_cast<std::string, int8_t>(ref(k));
+    return std::to_string(ref(k));
 }
 
 } /* namespace pmt */
@@ -1143,7 +1144,9 @@ float* f32vector_writable_elements(pmt_t vector, size_t& len)
 
 const std::string pmt_f32vector::string_ref(size_t k) const
 {
-    return boost::lexical_cast<std::string, float>(ref(k));
+    char buf[128];
+    snprintf(buf, sizeof(buf), "%.*f", std::numeric_limits<float>::digits10, ref(k));
+    return buf;
 }
 
 } /* namespace pmt */
@@ -1268,7 +1271,9 @@ double* f64vector_writable_elements(pmt_t vector, size_t& len)
 
 const std::string pmt_f64vector::string_ref(size_t k) const
 {
-    return boost::lexical_cast<std::string, double>(ref(k));
+    char buf[128];
+    snprintf(buf, sizeof(buf), "%.*f", std::numeric_limits<double>::digits10, ref(k));
+    return buf;
 }
 
 } /* namespace pmt */
@@ -1396,7 +1401,9 @@ std::complex<float>* c32vector_writable_elements(pmt_t vector, size_t& len)
 
 const std::string pmt_c32vector::string_ref(size_t k) const
 {
-    return boost::lexical_cast<std::string, std::complex<float>>(ref(k));
+    std::stringstream ss;
+    ss << ref(k);
+    return ss.str();
 }
 
 } /* namespace pmt */
@@ -1524,7 +1531,9 @@ std::complex<double>* c64vector_writable_elements(pmt_t vector, size_t& len)
 
 const std::string pmt_c64vector::string_ref(size_t k) const
 {
-    return boost::lexical_cast<std::string, std::complex<double>>(ref(k));
+    std::stringstream ss;
+    ss << ref(k);
+    return ss.str();
 }
 
 } /* namespace pmt */
