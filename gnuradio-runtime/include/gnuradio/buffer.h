@@ -15,8 +15,8 @@
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/tags.h>
 #include <gnuradio/thread/thread.h>
-#include <boost/weak_ptr.hpp>
 #include <map>
+#include <memory>
 
 namespace gr {
 
