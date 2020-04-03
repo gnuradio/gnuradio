@@ -55,6 +55,7 @@ install(
   FILES
   ${SWIGFILES}
   constellation.i
+  equalizers.i
   ofdm_equalizer.i
   packet_header.i
   ${SWIGDOCFILES}
@@ -66,3 +67,4 @@ GR_PYTHON_INSTALL(
   FILES ${CMAKE_CURRENT_BINARY_DIR}/digital_swig.py
   DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital
 )
+

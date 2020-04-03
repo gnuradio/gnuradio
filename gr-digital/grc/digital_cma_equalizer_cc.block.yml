@@ -1,5 +1,6 @@
 id: digital_cma_equalizer_cc
 label: CMA Equalizer
+category: '[Core]/Deprecated'
 flags: [ python, cpp ]
 
 parameters:
