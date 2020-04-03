@@ -12,8 +12,6 @@
 #include "dvb_defines.h"
 
 #include <gnuradio/dtv/dvb_ldpc_bb.h>
-#include <boost/smart_ptr.hpp>
-
 
 namespace gr {
 namespace dtv {
