@@ -31,6 +31,7 @@ class TopBlockGenerator(object):
 
         self._flow_graph = FlowGraphProxy(flow_graph)
         self._generate_options = self._flow_graph.get_option('generate_options')
+        self._hide_qt_window = self._flow_graph.get_option('hide_qt_window')
 
         self._mode = TOP_BLOCK_FILE_MODE
         # Handle the case where the directory is read-only
@@ -119,7 +120,8 @@ class TopBlockGenerator(object):
             'monitors': monitors,
             'generate_options': self._generate_options,
             'version': platform.config.version,
-            'catch_exceptions': fg.get_option('catch_exceptions')
+            'catch_exceptions': fg.get_option('catch_exceptions'),
+            'hide': self._hide_qt_window
         }
         flow_graph_code = python_template.render(
             title=title,

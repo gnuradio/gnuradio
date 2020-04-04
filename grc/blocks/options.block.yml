@@ -31,6 +31,13 @@ parameters:
     default: qt_gui
     options: [qt_gui, bokeh_gui, no_gui, hb, hb_qt_gui]
     option_labels: [QT GUI, Bokeh GUI, No GUI, Hier Block, Hier Block (QT GUI)]
+-   id: hide_qt_window
+    label: QT Window
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: [Hide, 'Show']
+    hide: part
 -   id: gen_linking
     label: Linking
     dtype: enum
