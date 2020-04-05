@@ -217,30 +217,6 @@ bool tcp_sink_impl::stop()
     return true;
 }
 
-void tcp_sink_impl::check_for_disconnect()
-{
-    char buff[1];
-    int bytes_read =
-        d_tcpsocket->receive(boost::asio::buffer(buff), d_tcpsocket->message_peek, ec);
-    if ((boost::asio::error::eof == ec) || (boost::asio::error::connection_reset == ec)) {
-        std::stringstream msg;
-        msg << "Disconnect detected on " << d_host << ":" << d_port << ".";
-        GR_LOG_INFO(d_logger, msg.str());
-
-        d_tcpsocket->close();
-        delete d_tcpsocket;
-        d_tcpsocket = NULL;
-
-        exit(1);
-    } else {
-        if (ec) {
-            std::stringstream msg;
-            msg << "Socket error " << ec << " detected.";
-            GR_LOG_ERROR(d_logger, msg.str());
-        }
-    }
-}
-
 int tcp_sink_impl::work(int noutput_items,
                         gr_vector_const_void_star& input_items,
                         gr_vector_void_star& output_items)
