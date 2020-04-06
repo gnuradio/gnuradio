@@ -41,7 +41,7 @@ public:
             new adaptive_algorithm_cma(cons, step_size, modulus));
     }
 
-    gr_complex error(const gr_complex& out)
+    gr_complex error(const gr_complex& out) const
     {
         gr_complex error = out * (norm(out) - d_modulus);
         float re = gr::clip(error.real(), 1.0);
@@ -49,9 +49,15 @@ public:
         return gr_complex(re, im);
     }
 
-    gr_complex error_dd(gr_complex& u_n, gr_complex& decision) { return error(u_n); }
+    gr_complex error_dd(gr_complex& u_n, gr_complex& decision) const
+    {
+        return error(u_n);
+    }
 
-    gr_complex error_tr(const gr_complex& u_n, const gr_complex& d_n) { return error(u_n); }
+    gr_complex error_tr(const gr_complex& u_n, const gr_complex& d_n) const
+    {
+        return error(u_n);
+    }
 
     void update_taps(gr_complex* taps,
                      const gr_complex* in,
@@ -78,7 +84,6 @@ public:
     }
 
     ~adaptive_algorithm_cma() {}
-    adaptive_algorithm_t algorithm_type;
 };
 
 } // namespace digital

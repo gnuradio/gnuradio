@@ -28,11 +28,9 @@ meas_evm_cc_impl::meas_evm_cc_impl(constellation_sptr cons, evm_measurement_t me
                      gr::io_signature::make(1, 1, sizeof(gr_complex)),
                      gr::io_signature::make(1, 1, sizeof(float))),
       d_cons(cons),
+      d_cons_points(d_cons->points()),
       d_meas_type(meas_type)
 {
-
-    d_cons_points = d_cons->points();
-
     // Calculate the average power of the constellation
     float sum = 0.0;
     int N = d_cons_points.size();
@@ -50,8 +48,8 @@ int meas_evm_cc_impl::work(int noutput_items,
                            gr_vector_const_void_star& input_items,
                            gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    float* out = (float*)output_items[0];
+    auto in = static_cast<const gr_complex*>(input_items[0]);
+    auto out = static_cast<float*>(output_items[0]);
 
     // Compare incoming symbols to the constellation decision points
     for (int s = 0; s < noutput_items; s++) {

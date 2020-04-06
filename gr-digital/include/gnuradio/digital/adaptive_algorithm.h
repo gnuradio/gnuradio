@@ -29,17 +29,17 @@ class DIGITAL_API adaptive_algorithm
     : public std::enable_shared_from_this<adaptive_algorithm>
 {
 protected:
-    adaptive_algorithm_t d_algorithm_type;
-    constellation_sptr d_constellation;
+    const adaptive_algorithm_t d_algorithm_type;
+    const constellation_sptr d_constellation;
 
 public:
     virtual ~adaptive_algorithm() {}
 
     adaptive_algorithm(adaptive_algorithm_t alg_type, constellation_sptr cons)
+        : d_algorithm_type(alg_type), d_constellation(cons)
     {
-        d_algorithm_type = alg_type;
-        d_constellation = cons;
     }
+
     adaptive_algorithm_sptr base() { return shared_from_this(); }
 
     virtual void initialize_taps(std::vector<gr_complex>& taps)
@@ -48,7 +48,7 @@ public:
         taps[0] = gr_complex(1.0, 0.0); // default weights, overridden by derived classes
     }
 
-    virtual gr_complex error_dd(gr_complex& wu, gr_complex& decision)
+    virtual gr_complex error_dd(gr_complex& wu, gr_complex& decision) const
     {
         // The `map_to_points` function will treat `decision` as an array pointer.
         // This call is "safe" because `map_to_points` is limited by the
@@ -60,7 +60,7 @@ public:
         return decision - wu;
     }
 
-    virtual gr_complex error_tr(const gr_complex& wu, const gr_complex& d_n)
+    virtual gr_complex error_tr(const gr_complex& wu, const gr_complex& d_n) const
     {
         return d_n - wu;
     }

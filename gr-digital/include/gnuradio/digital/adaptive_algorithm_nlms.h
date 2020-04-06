@@ -53,7 +53,6 @@ public:
                      const gr_complex decision,
                      unsigned int num_taps)
     {
-
         gr_complex dp;
         volk_32fc_x2_conjugate_dot_prod_32fc(&dp, in, in, num_taps);
         float magsq = real(dp);
@@ -65,7 +64,6 @@ public:
     }
 
     ~adaptive_algorithm_nlms() {}
-    adaptive_algorithm_t algorithm_type;
 
     void initialize_taps(std::vector<gr_complex>& taps)
     {

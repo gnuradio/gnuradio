@@ -31,7 +31,6 @@ protected:
         : adaptive_algorithm(adaptive_algorithm_t::LMS, cons), d_step_size(step_size)
     {
     }
-    adaptive_algorithm_t algorithm_type;
 
 public:
     static sptr make(constellation_sptr cons, float step_size)

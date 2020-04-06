@@ -61,11 +61,10 @@ linear_equalizer_impl::linear_equalizer_impl(unsigned num_taps,
       d_adapt_after_training(adapt_after_training),
       d_training_sequence(training_sequence),
       d_training_start_tag(training_start_tag),
+      d_new_taps(num_taps),
       d_updated(false),
       d_training_sample(0)
 {
-    d_new_taps.resize(num_taps);
-
     if (training_start_tag == "" || training_sequence.empty()) {
         d_training_state = equalizer_state_t::DD;
     } else {
