@@ -60,7 +60,13 @@ public:
 
     void rotateN(gr_complex* out, const gr_complex* in, int n)
     {
+#ifdef APPLY_BROKEN_ROTATOR_WORKAROUND
+        for (int i = 0; i < n; i++) {
+            out[i] = rotate(in[i]);
+        }
+#else
         volk_32fc_s32fc_x2_rotator_32fc(out, in, d_phase_incr, &d_phase, n);
+#endif
     }
 };
 
