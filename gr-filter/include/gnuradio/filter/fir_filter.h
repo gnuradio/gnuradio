@@ -43,7 +43,6 @@ protected:
     std::vector<TAP_T> d_taps;
     unsigned int d_ntaps;
     TAP_T** d_aligned_taps;
-    OUT_T* d_output;
     int d_align;
     int d_naligned;
 };

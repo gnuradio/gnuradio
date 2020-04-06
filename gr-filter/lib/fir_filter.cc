@@ -26,9 +26,6 @@ fir_filter<IN_T, OUT_T, TAP_T>::fir_filter(int decimation, const std::vector<TAP
 
     d_aligned_taps = NULL;
     set_taps(taps);
-
-    // Make sure the output sample is always aligned, too.
-    d_output = (OUT_T*)volk_malloc(1 * sizeof(OUT_T), d_align);
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
@@ -42,9 +39,6 @@ fir_filter<IN_T, OUT_T, TAP_T>::~fir_filter()
         ::free(d_aligned_taps);
         d_aligned_taps = NULL;
     }
-
-    // Free output sample
-    volk_free(d_output);
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
@@ -125,9 +119,10 @@ float fir_filter<float, float, float>::filter(const float input[])
 {
     const float* ar = (float*)((size_t)input & ~(d_align - 1));
     unsigned al = input - ar;
+    float output;
 
-    volk_32f_x2_dot_prod_32f_a(d_output, ar, d_aligned_taps[al], d_ntaps + al);
-    return *d_output;
+    volk_32f_x2_dot_prod_32f_a(&output, ar, d_aligned_taps[al], d_ntaps + al);
+    return output;
 }
 
 template <>
@@ -135,9 +130,10 @@ gr_complex fir_filter<gr_complex, gr_complex, float>::filter(const gr_complex in
 {
     const gr_complex* ar = (gr_complex*)((size_t)input & ~(d_align - 1));
     unsigned al = input - ar;
+    gr_complex output;
 
-    volk_32fc_32f_dot_prod_32fc_a(d_output, ar, d_aligned_taps[al], (d_ntaps + al));
-    return *d_output;
+    volk_32fc_32f_dot_prod_32fc_a(&output, ar, d_aligned_taps[al], (d_ntaps + al));
+    return output;
 }
 
 template <>
@@ -145,9 +141,10 @@ gr_complex fir_filter<float, gr_complex, gr_complex>::filter(const float input[]
 {
     const float* ar = (float*)((size_t)input & ~(d_align - 1));
     unsigned al = input - ar;
+    gr_complex output;
 
-    volk_32fc_32f_dot_prod_32fc_a(d_output, d_aligned_taps[al], ar, (d_ntaps + al));
-    return *d_output;
+    volk_32fc_32f_dot_prod_32fc_a(&output, d_aligned_taps[al], ar, (d_ntaps + al));
+    return output;
 }
 
 template <>
@@ -156,9 +153,10 @@ fir_filter<gr_complex, gr_complex, gr_complex>::filter(const gr_complex input[])
 {
     const gr_complex* ar = (gr_complex*)((size_t)input & ~(d_align - 1));
     unsigned al = input - ar;
+    gr_complex output;
 
-    volk_32fc_x2_dot_prod_32fc_a(d_output, ar, d_aligned_taps[al], (d_ntaps + al));
-    return *d_output;
+    volk_32fc_x2_dot_prod_32fc_a(&output, ar, d_aligned_taps[al], (d_ntaps + al));
+    return output;
 }
 
 template <>
@@ -167,10 +165,10 @@ fir_filter<std::int16_t, gr_complex, gr_complex>::filter(const std::int16_t inpu
 {
     const std::int16_t* ar = (std::int16_t*)((size_t)input & ~(d_align - 1));
     unsigned al = input - ar;
+    gr_complex output;
 
-    volk_16i_32fc_dot_prod_32fc_a(d_output, ar, d_aligned_taps[al], (d_ntaps + al));
-
-    return *d_output;
+    volk_16i_32fc_dot_prod_32fc_a(&output, ar, d_aligned_taps[al], (d_ntaps + al));
+    return output;
 }
 
 template <>
@@ -178,10 +176,10 @@ short fir_filter<float, std::int16_t, float>::filter(const float input[])
 {
     const float* ar = (float*)((size_t)input & ~(d_align - 1));
     unsigned al = input - ar;
+    short output;
 
-    volk_32f_x2_dot_prod_16i_a(d_output, ar, d_aligned_taps[al], (d_ntaps + al));
-
-    return *d_output;
+    volk_32f_x2_dot_prod_16i_a(&output, ar, d_aligned_taps[al], (d_ntaps + al));
+    return output;
 }
 template class fir_filter<float, float, float>;
 template class fir_filter<gr_complex, gr_complex, float>;
