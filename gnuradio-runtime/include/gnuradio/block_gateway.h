@@ -116,6 +116,18 @@ public:
 
     void block__set_history(unsigned history) { return gr::block::set_history(history); }
 
+    void block__set_block_alias(std::string alias)
+    {
+        return gr::block::set_block_alias(alias);
+    }
+
+    std::string block__alias(void) const { return gr::block::alias(); }
+
+    void block__set_processor_affinity(std::vector<int> mask)
+    {
+        return gr::block::set_processor_affinity(mask);
+    }
+
     void block__set_fixed_rate(bool fixed_rate)
     {
         return gr::block::set_fixed_rate(fixed_rate);
