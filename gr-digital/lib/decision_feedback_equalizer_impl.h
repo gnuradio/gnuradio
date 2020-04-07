@@ -15,6 +15,7 @@
 #include <gnuradio/digital/decision_feedback_equalizer.h>
 #include <gnuradio/filter/fir_filter.h>
 #include <volk/volk_alloc.hh>
+#include <deque>
 
 namespace gr {
 namespace digital {
@@ -31,7 +32,7 @@ private:
     const std::vector<gr_complex> d_training_sequence;
     const std::string d_training_start_tag;
     const unsigned d_num_taps;
-    std::vector<gr_complex> d_decision_history;
+    std::deque<gr_complex> d_decision_history;
     std::vector<gr_complex> d_new_taps;
     bool d_updated;
 

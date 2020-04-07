@@ -98,10 +98,8 @@ decision_feedback_equalizer_impl::decision_feedback_equalizer_impl(
 
 void decision_feedback_equalizer_impl::update_decision_history(gr_complex decision)
 {
-    std::rotate(d_decision_history.begin(),
-                d_decision_history.begin() + 1,
-                d_decision_history.end());
-    d_decision_history[d_decision_history.size() - 1] = decision;
+    d_decision_history.pop_front();
+    d_decision_history.push_back(decision);
 }
 
 int decision_feedback_equalizer_impl::work(int noutput_items,
