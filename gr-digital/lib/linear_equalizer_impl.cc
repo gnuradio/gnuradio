@@ -16,6 +16,7 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/misc.h>
 #include <volk/volk.h>
+#include <boost/smart_ptr/make_unique.hpp>
 #include <vector>
 
 #include "adaptive_algorithms.h"
@@ -108,22 +109,20 @@ int linear_equalizer_impl::equalize(const gr_complex* input_samples,
     }
 
     const gr_complex* samples;
+    std::unique_ptr<std::vector<gr_complex>> in_prepended_history;
     if (history_included) {
         samples = input_samples;
     } else {
-        // When process() is called outside the scheduler, allow zeros to be added
-        // as history
-        vector<gr_complex> in_prepended_history(num_inputs + d_num_taps - 1);
+        in_prepended_history =
+            boost::make_unique<std::vector<gr_complex>>(num_inputs + d_num_taps - 1);
         std::copy(input_samples,
                   input_samples + num_inputs,
-                  in_prepended_history.begin() + d_num_taps - 1);
-        samples = in_prepended_history.data();
+                  in_prepended_history->begin() + d_num_taps - 1);
+        samples = in_prepended_history->data();
     }
 
     unsigned int tag_index = 0;
-
-    unsigned int j = 0;
-    size_t k, l = d_taps.size();
+    unsigned int j = 0; // pre-decimated input buffer index
     for (unsigned i = 0; i < nout; i++) {
         output_symbols[i] = filter(&samples[j]);
 
@@ -169,8 +168,9 @@ int linear_equalizer_impl::equalize(const gr_complex* input_samples,
             break;
         case equalizer_state_t::TRAINING:
         case equalizer_state_t::DD:
-            d_alg->update_taps(&d_taps[0], &samples[j], d_error, d_decision, l);
-            for (k = 0; k < l; k++) {
+            d_alg->update_taps(
+                &d_taps[0], &samples[j], d_error, d_decision, d_taps.size());
+            for (unsigned k = 0; k < d_taps.size(); k++) {
                 // Update aligned taps in filter object.
                 filter::kernel::fir_filter_ccc::update_tap(d_taps[k], k);
             }
@@ -187,11 +187,20 @@ int linear_equalizer_impl::work(int noutput_items,
                                 gr_vector_const_void_star& input_items,
                                 gr_vector_void_star& output_items)
 {
+    {
+        gr::thread::scoped_lock guard(d_mutex);
+        if (d_updated) {
+            d_taps = d_new_taps;
+            set_history(d_taps.size());
+            d_updated = false;
+            return 0; // history requirements may have changed.
+        }
+    }
+
     auto in = static_cast<const gr_complex*>(input_items[0]);
     auto out = static_cast<gr_complex*>(output_items[0]);
 
     int outlen = output_items.size();
-
     unsigned short* state = nullptr;
     gr_complex* taps = nullptr;
 
@@ -200,21 +209,14 @@ int linear_equalizer_impl::work(int noutput_items,
     if (outlen > 2)
         state = static_cast<unsigned short*>(output_items[2]);
 
-    if (d_updated) {
-        gr::thread::scoped_lock guard(d_mutex);
-        d_taps = d_new_taps;
-        set_history(d_taps.size());
-        d_updated = false;
-        return 0; // history requirements may have changed.
-    }
-
     unsigned long int nread = nitems_read(0);
     vector<tag_t> tags;
-    vector<unsigned int> training_start_samples;
     get_tags_in_window(
         tags, 0, 0, noutput_items * decimation(), pmt::intern(d_training_start_tag));
+    vector<unsigned int> training_start_samples(tags.size());
+    unsigned int tag_index = 0;
     for (const auto& tag : tags) {
-        training_start_samples.push_back(tag.offset - nread);
+        training_start_samples[tag_index++] = tag.offset - nread;
     }
 
     return equalize(in,

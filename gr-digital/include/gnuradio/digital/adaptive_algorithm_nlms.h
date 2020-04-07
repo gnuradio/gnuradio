@@ -41,7 +41,7 @@ public:
     gr_complex update_tap(const gr_complex tap,
                           const gr_complex& in,
                           const gr_complex error,
-                          const gr_complex decision)
+                          const gr_complex decision) override
     {
         throw std::runtime_error(
             "NLMS can only update all taps at once, single tap update is not valid");
@@ -51,7 +51,7 @@ public:
                      const gr_complex* in,
                      const gr_complex error,
                      const gr_complex decision,
-                     unsigned int num_taps)
+                     unsigned int num_taps) override
     {
         gr_complex dp;
         volk_32fc_x2_conjugate_dot_prod_32fc(&dp, in, in, num_taps);
@@ -65,7 +65,7 @@ public:
 
     ~adaptive_algorithm_nlms() {}
 
-    void initialize_taps(std::vector<gr_complex>& taps)
+    void initialize_taps(std::vector<gr_complex>& taps) override
     {
         std::fill(taps.begin(), taps.end(), gr_complex(0.0, 0.0));
     }

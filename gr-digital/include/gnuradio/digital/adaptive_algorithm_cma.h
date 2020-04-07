@@ -49,12 +49,12 @@ public:
         return gr_complex(re, im);
     }
 
-    gr_complex error_dd(gr_complex& u_n, gr_complex& decision) const
+    gr_complex error_dd(gr_complex& u_n, gr_complex& decision) const override
     {
         return error(u_n);
     }
 
-    gr_complex error_tr(const gr_complex& u_n, const gr_complex& d_n) const
+    gr_complex error_tr(const gr_complex& u_n, const gr_complex& d_n) const override
     {
         return error(u_n);
     }
@@ -63,7 +63,7 @@ public:
                      const gr_complex* in,
                      const gr_complex error,
                      const gr_complex decision,
-                     unsigned int num_taps)
+                     unsigned int num_taps) override
     {
         volk::vector<gr_complex> prod_vector(num_taps), conj_vector(num_taps);
 
@@ -78,7 +78,7 @@ public:
     gr_complex update_tap(const gr_complex tap,
                           const gr_complex& u_n,
                           const gr_complex err,
-                          const gr_complex decision)
+                          const gr_complex decision) override
     {
         return conj(conj(tap) - d_step_size * u_n * conj(err));
     }

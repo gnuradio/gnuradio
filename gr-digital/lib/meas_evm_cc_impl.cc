@@ -14,6 +14,7 @@
 
 #include "meas_evm_cc_impl.h"
 #include <gnuradio/io_signature.h>
+#include <numeric>
 
 namespace gr {
 namespace digital {
@@ -32,14 +33,13 @@ meas_evm_cc_impl::meas_evm_cc_impl(constellation_sptr cons, evm_measurement_t me
       d_meas_type(meas_type)
 {
     // Calculate the average power of the constellation
-    float sum = 0.0;
-    int N = d_cons_points.size();
-    for (int i = 0; i < N; i++) {
-        sum += std::norm(d_cons_points[i]);
-    }
-    sum /= (float)N;
-    d_cons_mag_sq = sum;
-    d_cons_mag = sqrt(sum);
+    float d_cons_mag_sq =
+        std::accumulate(d_cons_points.begin(),
+                        d_cons_points.end(),
+                        0.0,
+                        [](float s, gr_complex e) -> float { return s + std::norm(e); }) /
+        d_cons_points.size();
+    d_cons_mag = sqrt(d_cons_mag_sq);
 }
 
 meas_evm_cc_impl::~meas_evm_cc_impl() {}

@@ -44,7 +44,7 @@ public:
                      const gr_complex* in,
                      const gr_complex error,
                      const gr_complex decision,
-                     unsigned int num_taps)
+                     unsigned int num_taps) override
     {
         volk::vector<gr_complex> prod_vector(num_taps), conj_vector(num_taps);
 
@@ -59,12 +59,12 @@ public:
     gr_complex update_tap(const gr_complex tap,
                           const gr_complex& u_n,
                           const gr_complex err,
-                          const gr_complex decision)
+                          const gr_complex decision) override
     {
         return conj(conj(tap) + d_step_size * u_n * conj(err));
     }
 
-    void initialize_taps(std::vector<gr_complex>& taps)
+    void initialize_taps(std::vector<gr_complex>& taps) override
     {
         std::fill(taps.begin(), taps.end(), gr_complex(0.0, 0.0));
     }
