@@ -72,7 +72,7 @@ decision_feedback_equalizer_impl::decision_feedback_equalizer_impl(
       d_alg(alg),
       d_adapt_after_training(adapt_after_training),
       d_training_sequence(training_sequence),
-      d_training_start_tag(training_start_tag),
+      d_training_start_tag(pmt::intern(training_start_tag)),
       d_num_taps(num_taps_forward + num_taps_feedback),
       d_decision_history(num_taps_feedback),
       d_new_taps(num_taps_forward + num_taps_feedback),
@@ -116,6 +116,15 @@ int decision_feedback_equalizer_impl::work(int noutput_items,
         }
     }
 
+    unsigned long int nread = nitems_read(0);
+    vector<tag_t> tags;
+    get_tags_in_window(tags, 0, 0, noutput_items * decimation(), d_training_start_tag);
+    vector<unsigned int> training_start_samples(tags.size());
+    unsigned int tag_index = 0;
+    for (const auto& tag : tags) {
+        training_start_samples[tag_index++] = tag.offset - nread;
+    }
+
     auto in = static_cast<const gr_complex*>(input_items[0]);
     auto out = static_cast<gr_complex*>(output_items[0]);
 
@@ -127,16 +136,6 @@ int decision_feedback_equalizer_impl::work(int noutput_items,
         taps = static_cast<gr_complex*>(output_items[1]);
     if (outlen > 2)
         state = static_cast<unsigned short*>(output_items[2]);
-
-    unsigned long int nread = nitems_read(0);
-    vector<tag_t> tags;
-    get_tags_in_window(
-        tags, 0, 0, noutput_items * decimation(), pmt::intern(d_training_start_tag));
-    vector<unsigned int> training_start_samples(tags.size());
-    unsigned int tag_index = 0;
-    for (const auto& tag : tags) {
-        training_start_samples[tag_index++] = tag.offset - nread;
-    }
 
     return equalize(in,
                     out,

@@ -33,13 +33,13 @@ meas_evm_cc_impl::meas_evm_cc_impl(constellation_sptr cons, evm_measurement_t me
       d_meas_type(meas_type)
 {
     // Calculate the average power of the constellation
-    float d_cons_mag_sq =
+    float cons_mag_sq =
         std::accumulate(d_cons_points.begin(),
                         d_cons_points.end(),
                         0.0,
                         [](float s, gr_complex e) -> float { return s + std::norm(e); }) /
         d_cons_points.size();
-    d_cons_mag = sqrt(d_cons_mag_sq);
+    d_cons_mag = sqrt(cons_mag_sq);
 }
 
 meas_evm_cc_impl::~meas_evm_cc_impl() {}

@@ -27,7 +27,7 @@ private:
     adaptive_algorithm_sptr d_alg;
     const bool d_adapt_after_training;
     const std::vector<gr_complex> d_training_sequence;
-    const std::string d_training_start_tag;
+    const pmt::pmt_t d_training_start_tag;
 
     std::vector<gr_complex> d_new_taps;
     bool d_updated;

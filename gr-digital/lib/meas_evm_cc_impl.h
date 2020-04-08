@@ -20,10 +20,9 @@ class meas_evm_cc_impl : public meas_evm_cc
 {
 private:
     constellation_sptr d_cons;
-    std::vector<gr_complex> d_cons_points;
+    const std::vector<gr_complex> d_cons_points;
     float d_cons_mag;
-    float d_cons_mag_sq;
-    evm_measurement_t d_meas_type;
+    const evm_measurement_t d_meas_type;
 
 public:
     meas_evm_cc_impl(constellation_sptr cons, evm_measurement_t meas_type);
