@@ -17,9 +17,8 @@ try:
     from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
     from matplotlib.figure import Figure
 except:
-    gr.log.error("Unable to import matplotlib.  Please install matplotlib first "
+    gr.log.error("Unable to import matplotlib. It's an optional dependency. "
                  "(e.g., via pip/pip3/dpkg/MacPorts).")
-    sys.exit(1)
     
 from gnuradio import gr
 import pmt
