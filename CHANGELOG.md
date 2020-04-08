@@ -7,7 +7,7 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
-## [3.8.1.0-rc1] - 2020-02-16
+## [3.8.1.0] - 2020-04-08
 
 ### Changed
 
@@ -17,15 +17,26 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
   - Throw exceptions by value, catch by reference
   - `emplace_back` where applicable
   - `empty()` instead of `vector::size() == 0`
+- Use CMake to check for endianness instead of `BOOST_BIG_ENDIAN`
+
+#### gr-fec
+
+- Scipy becomes optional dependency (for polar channel code construction)
+
+#### gr_modtool
+
+- use Boost.UTF instead of cppunit
 
 ### Fixed
 
-#### Project scope
+#### Project Scope
 
 - FindQwt paths
 - floatAlmostEqual unittest assert function wrongly passing on sequence types
 - Only require boost unittest when testing is enabled
 - FindLOG4CPP typo
+- numpy.fft(pack) imports
+- several scipy imports that can be done with numpy alone
 
 #### gnuradio-runtime
 
@@ -35,14 +46,7 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 - Sine table generation python was wrong
 - `get_tags_in_range` for delay < (end-start)
 - premature tag pruning
-
-#### gr_modtool
-
-- wrong use of `input` -> `raw_input`
-- allow empty argument list
-- testing
-- check for and deny TSB under Python
-- QA addition bugs 
+- release flattened flowgraph after stopping; fixes restartability/shutdown issues
 
 #### gr-analog
 
@@ -53,9 +57,9 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
 - portaudio source: lock acquisition
 
-#### gr-blocks 
+#### gr-blocks
 
-- broken `rotator` workaround
+- rotator VOLK workaround
 
 #### gr-digital
 
@@ -81,6 +85,15 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 - fixed examples under Py3
 - multichannel objects not populating channels
 
+#### gr_modtool
+
+- wrong use of `input` -> `raw_input`
+- allow empty argument list
+- testing
+- check for and deny TSB under Python
+- QA addition bugs
+- correct path for C++ QA tests
+
 #### GRC
 
 - several issues with YAML files
@@ -88,6 +101,10 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 - comments now included in block bounds calculation
 - Wiki documentation link removed from OOT blocks' docs tab
 - Dragging connections to auto-hide ports works now
+- generated and re-generated several example flowgraphs
+- `bokeh_layout` module name
+- Revert toggle buttons to text entry for bool block props, allowing GRC
+  variables to be used
 
 ### Added
 
@@ -100,6 +117,7 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 #### gnuradio-runtime
 
 - dot graphs now contain message edges
+- Python wrapping for blocks' `set_affinity` and `{g,s}et_alias`
 
 #### gr-uhd
 
@@ -109,6 +127,10 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
 - block affinity, buffer sizes available as advanced options for blocks
 - testing
+- Python snippets (please snippet responsibly!)
+- `show_id` flag added to embedded python blocks, Probes
+- global option to toggle showing of IDs
+- Help "Keyboard Shortcut" entry
 
 ## [3.8.0.0] - 2019-08-09
 
