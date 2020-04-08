@@ -480,7 +480,8 @@ TOGGLE_BLOCKS_WINDOW = actions.register("win.toggle_blocks_window",
 TOGGLE_SCROLL_LOCK = actions.register("win.console.scroll_lock",
     label='Console Scroll _Lock',
     tooltip='Toggle scroll lock for the console window',
-    preference_name='scroll_lock'
+    preference_name='scroll_lock',
+    keypresses=["Scroll_Lock"],
 )
 ABOUT_WINDOW_DISPLAY = actions.register("app.about",
     label='_About',
@@ -555,11 +556,13 @@ CLEAR_CONSOLE = actions.register("win.console.clear",
     label='_Clear Console',
     tooltip='Clear Console',
     icon_name='edit-clear',
+    keypresses=["<Ctrl>l"],
 )
 SAVE_CONSOLE = actions.register("win.console.save",
     label='_Save Console',
     tooltip='Save Console',
     icon_name='edit-save',
+    keypresses=["<Ctrl><Shift>p"],
 )
 OPEN_HIER = actions.register("win.open_hier",
     label='Open H_ier',
