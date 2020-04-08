@@ -23,14 +23,22 @@ except ImportError:
     __path__.append(os.path.join(dirname, "..", "..", "swig"))
     from .qtgui_swig import *
 
+try:
+	import matplotlib.pyplot as plt
+	from .distanceradar import DistanceRadar
+	from .azeplot import AzElPlot
+except ImportError:
+	from gnuradio import gr
+	gr.log.warn("Matplotlib is a required dependency to use DistanceRadar and AzElPlot."
+                "  Please install matplotlib to use these blocks (https://matplotlib.org/)")
+
+
 from .range import Range, RangeWidget
 from . import util
 
 from .compass import GrCompass
 from .togglebutton import ToggleButton
 from .msgpushbutton import MsgPushButton
-from .distanceradar import DistanceRadar
-from .azelplot import AzElPlot
 from .msgcheckbox import MsgCheckBox
 from .digitalnumbercontrol import MsgDigitalNumberControl
 from .dialcontrol import GrDialControl
@@ -43,4 +51,3 @@ from .graphicoverlay import GrGraphicOverlay
 from .auto_correlator_sink import AutoCorrelatorSink
 from .auto_correlator_sink import AutoCorrelator
 from .auto_correlator_sink import Normalize
-
