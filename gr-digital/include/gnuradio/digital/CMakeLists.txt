@@ -9,6 +9,10 @@
 # Install header files
 ########################################################################
 install(FILES
+    adaptive_algorithm.h
+    adaptive_algorithm_cma.h
+    adaptive_algorithm_lms.h
+    adaptive_algorithm_nlms.h
     additive_scrambler_bb.h
     api.h
     binary_slicer_fb.h
@@ -32,6 +36,7 @@ install(FILES
     crc32.h
     crc32_bb.h
     crc32_async_bb.h
+    decision_feedback_equalizer.h
     descrambler_bb.h
     diff_decoder_bb.h
     diff_encoder_bb.h
@@ -47,6 +52,7 @@ install(FILES
     header_payload_demux.h
     kurtotic_equalizer_cc.h
     lfsr.h
+    linear_equalizer.h
     lms_dd_equalizer_cc.h
     map_bb.h
     metric_type.h
@@ -91,3 +97,4 @@ install(FILES
     timing_error_detector_type.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
 )
+

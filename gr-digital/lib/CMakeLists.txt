@@ -33,6 +33,7 @@ add_library(gnuradio-digital
     crc32.cc
     crc32_bb_impl.cc
     crc32_async_bb_impl.cc
+    decision_feedback_equalizer_impl.cc
     descrambler_bb_impl.cc
     diff_decoder_bb_impl.cc
     diff_encoder_bb_impl.cc
@@ -47,8 +48,10 @@ add_library(gnuradio-digital
     header_buffer.cc
     header_payload_demux_impl.cc
     kurtotic_equalizer_cc_impl.cc
+    linear_equalizer_impl.cc
     lms_dd_equalizer_cc_impl.cc
     map_bb_impl.cc
+    meas_evm_cc_impl.cc
     modulate_vector.cc
     mpsk_snr_est.cc
     mpsk_snr_est_cc_impl.cc
@@ -140,3 +143,4 @@ if(ENABLE_TESTING)
     )
   endforeach(qa_file)
 endif(ENABLE_TESTING)
+

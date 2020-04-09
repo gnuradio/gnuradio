@@ -61,6 +61,13 @@
 #include "gnuradio/digital/ofdm_serializer_vcc.h"
 #include "gnuradio/digital/packet_headerparser_b.h"
 #include "gnuradio/digital/header_payload_demux.h"
+#include "gnuradio/digital/adaptive_algorithm.h"
+#include "gnuradio/digital/adaptive_algorithm_lms.h"
+#include "gnuradio/digital/adaptive_algorithm_nlms.h"
+#include "gnuradio/digital/adaptive_algorithm_cma.h"
+#include "gnuradio/digital/linear_equalizer.h"
+#include "gnuradio/digital/meas_evm_cc.h"
+#include "gnuradio/digital/decision_feedback_equalizer.h"
 %}
 
 %include "gnuradio/digital/mpsk_snr_est.h"
@@ -88,6 +95,13 @@
 %include "gnuradio/digital/simple_framer.h"
 %include "gnuradio/digital/symbol_sync_cc.h"
 %include "gnuradio/digital/symbol_sync_ff.h"
+%include "gnuradio/digital/adaptive_algorithm.h"
+%include "gnuradio/digital/adaptive_algorithm_lms.h"
+%include "gnuradio/digital/adaptive_algorithm_nlms.h"
+%include "gnuradio/digital/adaptive_algorithm_cma.h"
+%include "gnuradio/digital/linear_equalizer.h"
+%include "gnuradio/digital/meas_evm_cc.h"
+%include "gnuradio/digital/decision_feedback_equalizer.h"
 
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_snr_est_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, protocol_formatter_async);
@@ -106,7 +120,12 @@ GR_SWIG_BLOCK_MAGIC2(digital, simple_correlator);
 GR_SWIG_BLOCK_MAGIC2(digital, simple_framer);
 GR_SWIG_BLOCK_MAGIC2(digital, symbol_sync_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, symbol_sync_ff);
+GR_SWIG_BLOCK_MAGIC2(digital, linear_equalizer);
+GR_SWIG_BLOCK_MAGIC2(digital, meas_evm_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, decision_feedback_equalizer);
 
 // Properly package up non-block objects
 %include "packet_header.i"
 %include "constellation.i"
+%include "equalizers.i"
+
