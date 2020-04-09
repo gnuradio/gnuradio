@@ -1,5 +1,6 @@
 id: digital_kurtotic_equalizer_cc
 label: Kurtotic Equalizer
+category: '[Core]/Deprecated'
 flags: [ python, cpp ]
 
 parameters:

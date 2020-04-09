@@ -4,9 +4,9 @@
   - digital_descrambler_bb
   - digital_scrambler_bb
 - Equalizers:
-  - digital_cma_equalizer_cc
-  - digital_lms_dd_equalizer_cc
-  - digital_kurtotic_equalizer_cc
+  - variable_adaptive_algorithm
+  - digital_linear_equalizer
+  - digital_decision_feedback_equalizer
 - Measurement Tools:
   - digital_mpsk_snr_est_cc
   - digital_probe_density_b
