@@ -120,9 +120,7 @@ static bool check_mapping(
 {
     bool ok = true;
 
-    if (verbose) {
-        GR_LOG_INFO(debug_logger, msg);
-    }
+    GR_LOG_INFO(debug_logger, msg);
 
     unsigned int* p1 = (unsigned int*)c->pointer_to_first_copy();
     unsigned int* p2 = (unsigned int*)c->pointer_to_second_copy();
@@ -136,11 +134,9 @@ static bool check_mapping(
             break;
         }
         if (p2[i] != counter + i) {
-            if (verbose) {
-                GR_LOG_ERROR(debug_logger,
-                             boost::format("p1[%d] == %u, expected %u\n") % i % p2[i] %
-                                 (counter + i));
-            }
+            GR_LOG_ERROR(debug_logger,
+                         boost::format("p1[%d] == %u, expected %u\n") % i % p2[i] %
+                             (counter + i));
             ok = false;
             break;
         }
@@ -192,7 +188,7 @@ test_a_bunch(vmcircbuf_factory* factory, int n, int size, int* start_ptr, bool v
     for (int i = 0; i < n; i++) {
         std::string msg =
             str(boost::format("test_a_bunch_%dx%s[%d]") % n % memsize(size) % i);
-        ok = check_mapping(c[i], counter[i], size, msg.c_str(), mapping_debug_logger) &&
+        ok = check_mapping(c[i], counter[i], size, msg.c_str(), debug_logger) &&
              ok;
     }
 
