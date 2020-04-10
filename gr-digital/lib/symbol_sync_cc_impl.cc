@@ -13,9 +13,9 @@
 #endif
 
 #include "symbol_sync_cc_impl.h"
+#include <gnuradio/integer_math.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
-#include <boost/math/common_factor.hpp>
 #include <stdexcept>
 
 namespace gr {
@@ -95,7 +95,7 @@ symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
         throw std::runtime_error("unable to create interpolating_resampler_ccf");
 
     // Block Internal Clocks
-    d_interps_per_symbol_n = boost::math::lcm(d_ted->inputs_per_symbol(), d_osps_n);
+    d_interps_per_symbol_n = GR_LCM(d_ted->inputs_per_symbol(), d_osps_n);
     d_interps_per_ted_input_n = d_interps_per_symbol_n / d_ted->inputs_per_symbol();
     d_interps_per_output_sample_n = d_interps_per_symbol_n / d_osps_n;
 
