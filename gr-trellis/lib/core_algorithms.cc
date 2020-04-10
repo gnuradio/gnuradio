@@ -158,7 +158,7 @@ void viterbi_algorithm_combined(int I,
 {
     std::vector<int> trace(S * K);
     std::vector<float> alpha(S * 2);
-    float* metric = new float[O];
+    std::vector<float> metric(O);
     int alphai;
     float norm, mm, minm;
     int minmi;
@@ -175,7 +175,7 @@ void viterbi_algorithm_combined(int I,
 
     alphai = 0;
     for (int k = 0; k < K; k++) {
-        calc_metric(O, D, TABLE, &(in[k * D]), metric, TYPE); // calc metrics
+        calc_metric(O, D, TABLE, &(in[k * D]), metric.data(), TYPE); // calc metrics
         norm = INF;
         for (int j = 0; j < S; j++) { // for each next state do ACS
             minm = INF;
@@ -213,8 +213,6 @@ void viterbi_algorithm_combined(int I,
         out[k] = (To)PI[st][i0];
         st = PS[st][i0];
     }
-
-    delete[] metric;
 }
 
 // Ti = s i f c
@@ -666,7 +664,7 @@ void siso_algorithm_combined(int I,
     float norm, mm, minm;
     std::vector<float> alpha(S * (K + 1));
     std::vector<float> beta(S * (K + 1));
-    float* prioro = new float[O * K];
+    std::vector<float> prioro(O * K);
 
     if (S0 < 0) { // initial state not specified
         for (int i = 0; i < S; i++)
@@ -801,8 +799,6 @@ void siso_algorithm_combined(int I,
         }
     } else
         throw std::runtime_error("Not both POSTI and POSTO can be false.");
-
-    delete[] prioro;
 }
 
 //---------
