@@ -12,6 +12,7 @@
 #define INCLUDED_GR_RUNTIME_BLOCK_EXECUTOR_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/tags.h>
 #include <fstream>
@@ -27,7 +28,8 @@ class GR_RUNTIME_API block_executor
 {
 protected:
     block_sptr d_block; // The block we're trying to run
-    std::unique_ptr<std::ofstream> d_log;
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
     // These are allocated here so we don't have to on each iteration
 
