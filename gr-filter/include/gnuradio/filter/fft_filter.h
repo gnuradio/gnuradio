@@ -14,6 +14,7 @@
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/filter/api.h>
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/logger.h>
 #include <volk/volk_alloc.hh>
 #include <vector>
 
@@ -69,6 +70,8 @@ private:
 
     void compute_sizes(int ntaps);
     int tailsize() const { return d_ntaps - 1; }
+
+    gr::logger_ptr d_logger, d_debug_logger;
 
 public:
     /*!
@@ -172,6 +175,8 @@ private:
     void compute_sizes(int ntaps);
     int tailsize() const { return d_ntaps - 1; }
 
+    gr::logger_ptr d_logger, d_debug_logger;
+
 public:
     /*!
      * \brief Construct an FFT filter for complex vectors with the given taps and
@@ -273,6 +278,8 @@ private:
 
     void compute_sizes(int ntaps);
     int tailsize() const { return d_ntaps - 1; }
+
+    gr::logger_ptr d_logger, d_debug_logger;
 
 public:
     /*!
