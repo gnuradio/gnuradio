@@ -18,6 +18,7 @@
 #include "atsc_types.h"
 #include "gnuradio/dtv/atsc_consts.h"
 #include <gnuradio/io_signature.h>
+#include <string>
 
 #define ATSC_SEGMENTS_PER_DATA_FIELD 313
 
@@ -37,6 +38,7 @@ atsc_fs_checker_impl::atsc_fs_checker_impl()
                 io_signature::make(1, 1, sizeof(atsc_soft_data_segment)),
                 io_signature::make(1, 1, sizeof(atsc_soft_data_segment)))
 {
+    gr::configure_default_loggers(d_logger, d_debug_logger, "dtv_atsc_fs_checker");
     reset();
 }
 
@@ -69,7 +71,8 @@ int atsc_fs_checker_impl::general_work(int noutput_items,
         for (int j = 0; j < LENGTH_511 && errors < PN511_ERROR_LIMIT; j++)
             errors += (in[i].data[j + OFFSET_511] >= 0) ^ atsc_pn511[j];
 
-        // std::cout << errors << std::endl;
+        GR_LOG_DEBUG(d_debug_logger,
+                     std::string("second PN63 error count = ") + std::to_string(errors));
 
         if (errors < PN511_ERROR_LIMIT) { // 511 pattern is good.
             // determine if this is field 1 or field 2
@@ -79,17 +82,17 @@ int atsc_fs_checker_impl::general_work(int noutput_items,
 
             // we should have either field 1 (== PN63) or field 2 (== ~PN63)
             if (errors <= PN63_ERROR_LIMIT) {
-                // std::cout << "Found FIELD_SYNC_1" << std::endl;
+                GR_LOG_DEBUG(d_debug_logger, "Found FIELD_SYNC_1")
                 d_field_num = 1;    // We are in field number 1 now
                 d_segment_num = -1; // This is the first segment
             } else if (errors >= (LENGTH_2ND_63 - PN63_ERROR_LIMIT)) {
-                // std::cout << "Found FIELD_SYNC_2" << std::endl;
+                GR_LOG_DEBUG(d_debug_logger, "Found FIELD_SYNC_2")
                 d_field_num = 2;    // We are in field number 2 now
                 d_segment_num = -1; // This is the first segment
             } else {
                 // should be extremely rare.
-                std::cerr << "!!! atsc_fs_checker: PN63 error count = " << errors
-                          << std::endl;
+                GR_LOG_WARN(d_logger,
+                            std::string("PN63 error count = ") + std::to_string(errors));
             }
         }
 

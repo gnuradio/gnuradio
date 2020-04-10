@@ -13,6 +13,7 @@
 
 #include "atsc_syminfo_impl.h"
 #include <gnuradio/dtv/atsc_fs_checker.h>
+#include <gnuradio/logger.h>
 
 namespace gr {
 namespace dtv {
@@ -27,6 +28,8 @@ private:
     unsigned char d_bit_sr[SRSIZE];     // binary decision shift register
     int d_field_num;
     int d_segment_num;
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
     static constexpr int OFFSET_511 = 4;      // offset to second PN 63 pattern
     static constexpr int LENGTH_511 = 511;    // length of PN 63 pattern
