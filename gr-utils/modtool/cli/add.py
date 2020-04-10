@@ -12,6 +12,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import os
 import re
 import getpass
 
@@ -94,7 +95,13 @@ def get_blockname(self):
             self.info['blockname'] = cli_input("Enter name of block/code (without module name prefix): ")
     if not re.match('^[a-zA-Z0-9_]+$', self.info['blockname']):
         raise ModToolException('Invalid block name.')
-
+    for block in os.scandir('./grc/'):
+        if block.is_file():
+            s = block.name
+            present_block = self.info['modname'] + "_" + self.info['blockname'] + ".block.yml"
+            if s == present_block:
+                raise ModToolException('Block Already Present.')
+                
 def get_copyrightholder(self):
     """ Get the copyrightholder of the block to be added """
     if not self.info['copyrightholder'] or self.info['copyrightholder'].isspace():
