@@ -12,6 +12,7 @@
 
 #include <gnuradio/audio/sink.h>
 #include <gnuradio/buffer.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/thread/thread.h>
 #include <portaudio.h>
 #include <stdexcept>
@@ -50,9 +51,6 @@ class portaudio_sink : public sink
     gr::thread::condition_variable d_ringbuffer_cond;
     bool d_ringbuffer_ready;
 
-    // random stats
-    int d_nunderuns; // count of underruns
-    // gri_logger_sptr d_log;  // handle to non-blocking logging instance
 
     void output_error_msg(const char* msg, int err);
     void bail(const char* msg, int err);

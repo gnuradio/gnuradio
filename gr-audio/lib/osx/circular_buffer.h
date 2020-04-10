@@ -11,6 +11,7 @@
 #ifndef _CIRCULAR_BUFFER_H_
 #define _CIRCULAR_BUFFER_H_
 
+#include <gnuradio/logger.h>
 #include <gnuradio/thread/thread.h>
 #include <iostream>
 #include <stdexcept>
@@ -20,13 +21,13 @@
 #endif
 
 #if DO_DEBUG
-#define DEBUG(X) \
-    do {         \
-        X        \
+#define LOG(X) \
+    do {       \
+        X      \
     } while (0);
 #else
-#define DEBUG(X) \
-    do {         \
+#define LOG(X) \
+    do {       \
     } while (0);
 #endif
 
@@ -66,6 +67,8 @@ private:
     };
 
 public:
+    gr::logger_ptr d_logger, d_debug_logger;
+
     circular_buffer(size_t bufLen_I, bool doWriteBlock = true, bool doFullRead = false)
     {
         if (bufLen_I == 0)
@@ -78,10 +81,12 @@ public:
         d_internal = NULL;
         d_readBlock = d_writeBlock = NULL;
         reset();
-        DEBUG(std::cerr << "c_b(): buf len (items) = " << d_bufLen_
-                        << ", doWriteBlock = " << (d_doWriteBlock ? "true" : "false")
-                        << ", doFullRead = " << (d_doFullRead ? "true" : "false")
-                        << std::endl);
+        gr::configure_default_loggers(d_logger, d_debug_logger, "circular_buffer");
+        LOG(std::ostringstream msg;
+            msg << "c_b(): buf len (items) = " << d_bufLen_
+                << ", doWriteBlock = " << (d_doWriteBlock ? "true" : "false")
+                << ", doFullRead = " << (d_doFullRead ? "true" : "false");
+            GR_LOG_INFO(d_debug_logger, msg.str()););
     };
 
     ~circular_buffer()
@@ -150,13 +155,16 @@ public:
 
     int enqueue(T* buf, size_t bufLen_I)
     {
-        DEBUG(std::cerr << "enqueue: buf = " << (void*)buf << ", bufLen = " << bufLen_I
-                        << ", #av_wr = " << d_n_avail_write_I
-                        << ", #av_rd = " << d_n_avail_read_I << std::endl);
+        LOG(std::ostringstream msg;
+            msg << "enqueue: buf = " << (void*)buf << ", bufLen = " << bufLen_I
+                << ", #av_wr = " << d_n_avail_write_I
+                << ", #av_rd = " << d_n_avail_read_I;
+            GR_LOG_INFO(d_debug_logger, msg.str()););
         if (bufLen_I > d_bufLen_I) {
-            std::cerr << "ERROR: cannot add buffer longer (" << bufLen_I
-                      << ") than instantiated length (" << d_bufLen_I << ")."
-                      << std::endl;
+            std::ostringstream msg;
+            msg << "cannot add buffer longer (" << bufLen_I
+                << ") than instantiated length (" << d_bufLen_I << ").";
+            GR_LOG_INFO(d_debug_logger, msg.str());
             throw std::runtime_error("circular_buffer::enqueue()");
         }
 
@@ -174,21 +182,21 @@ public:
         if (bufLen_I > d_n_avail_write_I) {
             if (d_doWriteBlock) {
                 while (bufLen_I > d_n_avail_write_I) {
-                    DEBUG(std::cerr << "enqueue: #len > #a, waiting." << std::endl);
+                    LOG(GR_LOG_INFO(d_debug_logger, "enqueue #len > #a, waiting"););
                     // wait; will automatically unlock() the internal mutex via
                     // the scoped lock
                     d_writeBlock->wait(l);
                     // and auto re-lock() it here.
                     if (d_doAbort) {
-                        DEBUG(std::cerr << "enqueue: #len > #a, aborting." << std::endl);
+                        LOG(GR_LOG_INFO(d_debug_logger, "enqueue #len > #a, aborting"););
                         return (2);
                     }
-                    DEBUG(std::cerr << "enqueue: #len > #a, done waiting." << std::endl);
+                    LOG(GR_LOG_INFO(d_debug_logger, "enqueue #len > #a, done waiting"););
                 }
             } else {
                 d_n_avail_read_I = d_bufLen_I - bufLen_I;
                 d_n_avail_write_I = bufLen_I;
-                DEBUG(std::cerr << "circular_buffer::enqueue: overflow" << std::endl);
+                LOG(GR_LOG_ERROR(d_logger, "enqueue overflow"););
                 retval = -1;
             }
         }
@@ -236,9 +244,11 @@ public:
 
     int dequeue(T* buf, size_t* bufLen_I)
     {
-        DEBUG(std::cerr << "dequeue: buf = " << ((void*)buf) << ", *bufLen = "
-                        << (*bufLen_I) << ", #av_wr = " << d_n_avail_write_I
-                        << ", #av_rd = " << d_n_avail_read_I << std::endl);
+        LOG(std::ostringstream msg;
+            msg << "dequeue: buf = " << ((void*)buf) << ", *bufLen = " << (*bufLen_I)
+                << ", #av_wr = " << d_n_avail_write_I
+                << ", #av_rd = " << d_n_avail_read_I;
+            GR_LOG_INFO(d_debug_logger, msg.str()););
         if (!bufLen_I)
             throw std::runtime_error("circular_buffer::dequeue(): "
                                      "input bufLen pointer is NULL.");
@@ -249,9 +259,10 @@ public:
         if (l_bufLen_I == 0)
             return (0);
         if (l_bufLen_I > d_bufLen_I) {
-            std::cerr << "ERROR: cannot remove buffer longer (" << l_bufLen_I
-                      << ") than instantiated length (" << d_bufLen_I << ")."
-                      << std::endl;
+            std::ostringstream msg;
+            msg << "cannot remove buffer longer (" << l_bufLen_I
+                << ") than instantiated length (" << d_bufLen_I << ").";
+            GR_LOG_ERROR(d_logger, msg.str());
             throw std::runtime_error("circular_buffer::dequeue()");
         }
 
@@ -261,29 +272,29 @@ public:
         }
         if (d_doFullRead) {
             while (d_n_avail_read_I < l_bufLen_I) {
-                DEBUG(std::cerr << "dequeue: #a < #len, waiting." << std::endl);
+                LOG(GR_LOG_INFO(d_debug_logger, "dequeue #a < #len, waiting"););
                 // wait; will automatically unlock() the internal mutex via
                 // the scoped lock
                 d_readBlock->wait(l);
                 // and re-lock() it here.
                 if (d_doAbort) {
-                    DEBUG(std::cerr << "dequeue: #a < #len, aborting." << std::endl);
+                    LOG(GR_LOG_INFO(d_debug_logger, "dequeue #a < #len, aborting"););
                     return (2);
                 }
-                DEBUG(std::cerr << "dequeue: #a < #len, done waiting." << std::endl);
+                LOG(GR_LOG_INFO(d_debug_logger, "dequeue #a < #len, done waiting"););
             }
         } else {
             while (d_n_avail_read_I == 0) {
-                DEBUG(std::cerr << "dequeue: #a == 0, waiting." << std::endl);
+                LOG(GR_LOG_INFO(d_debug_logger, "dequeue: #a == 0, waiting."););
                 // wait; will automatically unlock() the internal mutex via
                 // the scoped lock
                 d_readBlock->wait(l);
                 // and re-lock() it here.
                 if (d_doAbort) {
-                    DEBUG(std::cerr << "dequeue: #a == 0, aborting." << std::endl);
+                    LOG(GR_LOG_INFO(d_debug_logger, "dequeue: #a == 0, aborting."););
                     return (2);
                 }
-                DEBUG(std::cerr << "dequeue: #a == 0, done waiting." << std::endl);
+                LOG(GR_LOG_INFO(d_debug_logger, "dequeue: #a == 0, done waiting."););
             }
         }
         if (l_bufLen_I > d_n_avail_read_I)
