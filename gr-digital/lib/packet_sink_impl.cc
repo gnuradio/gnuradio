@@ -33,8 +33,9 @@ static const int DEFAULT_THRESHOLD = 12;
 
 inline void packet_sink_impl::enter_search()
 {
-    if (VERBOSE)
-        fprintf(stderr, "@ enter_search\n");
+    if (VERBOSE) {
+        GR_LOG_INFO(d_debug_logger, "enter_search");
+    }
 
     d_state = STATE_SYNC_SEARCH;
     d_shift_reg = 0;
@@ -42,9 +43,9 @@ inline void packet_sink_impl::enter_search()
 
 inline void packet_sink_impl::enter_have_sync()
 {
-    if (VERBOSE)
-        fprintf(stderr, "@ enter_have_sync\n");
-
+    if (VERBOSE) {
+        GR_LOG_INFO(d_debug_logger, "enter_have_sync");
+    }
     d_state = STATE_HAVE_SYNC;
     d_header = 0;
     d_headerbitlen_cnt = 0;
@@ -52,9 +53,10 @@ inline void packet_sink_impl::enter_have_sync()
 
 inline void packet_sink_impl::enter_have_header(int payload_len)
 {
-    if (VERBOSE)
-        fprintf(stderr, "@ enter_have_header (payload_len = %d)\n", payload_len);
-
+    if (VERBOSE) {
+        GR_LOG_INFO(d_debug_logger,
+                    boost::format("enter_have_header (payload_len = %d)") % payload_len);
+    }
     d_state = STATE_HAVE_HEADER;
     d_packetlen = payload_len;
     d_packetlen_cnt = 0;
@@ -97,16 +99,16 @@ int packet_sink_impl::work(int noutput_items,
     float* inbuf = (float*)input_items[0];
     int count = 0;
 
-    if (VERBOSE)
-        fprintf(stderr, ">>> Entering state machine\n"), fflush(stderr);
+    if (VERBOSE) {
+        GR_LOG_INFO(d_debug_logger, "enter state machine");
+    }
 
     while (count < noutput_items) {
         switch (d_state) {
 
         case STATE_SYNC_SEARCH: // Look for sync vector
             if (VERBOSE)
-                fprintf(stderr, "SYNC Search, noutput=%d\n", noutput_items),
-                    fflush(stderr);
+                GR_LOG_INFO(d_debug_logger, "SYNC Search, noutput=%d");
 
             while (count < noutput_items) {
                 if (slice(inbuf[count++]))
@@ -126,11 +128,9 @@ int packet_sink_impl::work(int noutput_items,
 
         case STATE_HAVE_SYNC:
             if (VERBOSE)
-                fprintf(stderr,
-                        "Header Search bitcnt=%d, header=0x%08x\n",
-                        d_headerbitlen_cnt,
-                        d_header),
-                    fflush(stderr);
+                GR_LOG_INFO(d_debug_logger,
+                            boost::format("Header Search bitcnt=%d, header=0x%08x") %
+                                d_headerbitlen_cnt % d_header);
 
             while (count < noutput_items) { // Shift bits one at a time into header
                 if (slice(inbuf[count++]))
@@ -140,7 +140,8 @@ int packet_sink_impl::work(int noutput_items,
 
                 if (++d_headerbitlen_cnt == HEADERBITLEN) {
                     if (VERBOSE)
-                        fprintf(stderr, "got header: 0x%08x\n", d_header);
+                        GR_LOG_INFO(d_debug_logger,
+                                    boost::format("got header: 0x%08x") % d_header);
 
                     // we have a full header, check to see if it has been received
                     // properly
@@ -158,8 +159,9 @@ int packet_sink_impl::work(int noutput_items,
             break;
 
         case STATE_HAVE_HEADER:
-            if (VERBOSE)
-                fprintf(stderr, "Packet Build\n"), fflush(stderr);
+            if (VERBOSE) {
+                GR_LOG_INFO(d_debug_logger, "Packet Build");
+            }
 
             while (count <
                    noutput_items) { // shift bits into bytes of packet one at a time
