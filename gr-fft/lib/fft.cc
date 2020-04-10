@@ -109,7 +109,10 @@ static void import_wisdom()
         int r = fftwf_import_wisdom_from_file(fp);
         fclose(fp);
         if (!r) {
-            fprintf(stderr, "gr::fft: can't import wisdom from %s\n", filename.c_str());
+            gr::logger_ptr logger, debug_logger;
+            gr::configure_default_loggers(logger, debug_logger, "fft::import_wisdom");
+            GR_LOG_ERROR(logger,
+                         boost::format("can't import wisdom from %s") % filename.c_str());
         }
     }
 }
@@ -136,8 +139,10 @@ static void export_wisdom()
         fftwf_export_wisdom_to_file(fp);
         fclose(fp);
     } else {
-        fprintf(stderr, "fft_impl_fftw: ");
-        perror(filename.c_str());
+        gr::logger_ptr logger, debug_logger;
+        gr::configure_default_loggers(logger, debug_logger, "fft::export_wisdom");
+        GR_LOG_ERROR(logger,
+                     boost::format("%s: %s") % filename.c_str() % strerror(errno));
     }
 }
 
@@ -146,6 +151,7 @@ static void export_wisdom()
 fft_complex::fft_complex(int fft_size, bool forward, int nthreads)
     : d_nthreads(nthreads), d_inbuf(fft_size), d_outbuf(fft_size)
 {
+    gr::configure_default_loggers(d_logger, d_debug_logger, "fft_complex");
     // Hold global mutex during plan construction and destruction.
     planner::scoped_lock lock(planner::mutex());
 
@@ -167,7 +173,7 @@ fft_complex::fft_complex(int fft_size, bool forward, int nthreads)
                                FFTW_MEASURE);
 
     if (d_plan == NULL) {
-        fprintf(stderr, "gr::fft: error creating plan\n");
+        GR_LOG_ERROR(d_logger, "creating plan failed");
         throw std::runtime_error("fftwf_plan_dft_1d failed");
     }
     export_wisdom(); // store new wisdom to disk
@@ -201,6 +207,8 @@ void fft_complex::execute() { fftwf_execute((fftwf_plan)d_plan); }
 fft_real_fwd::fft_real_fwd(int fft_size, int nthreads)
     : d_nthreads(nthreads), d_inbuf(fft_size), d_outbuf(fft_size / 2 + 1)
 {
+    gr::configure_default_loggers(d_logger, d_debug_logger, "fft_real_fwd");
+
     // Hold global mutex during plan construction and destruction.
     planner::scoped_lock lock(planner::mutex());
 
@@ -221,7 +229,7 @@ fft_real_fwd::fft_real_fwd(int fft_size, int nthreads)
                                    FFTW_MEASURE);
 
     if (d_plan == NULL) {
-        fprintf(stderr, "gr::fft::fft_real_fwd: error creating plan\n");
+        GR_LOG_ERROR(d_logger, "creating plan failed");
         throw std::runtime_error("fftwf_plan_dft_r2c_1d failed");
     }
     export_wisdom(); // store new wisdom to disk
@@ -256,6 +264,8 @@ void fft_real_fwd::execute() { fftwf_execute((fftwf_plan)d_plan); }
 fft_real_rev::fft_real_rev(int fft_size, int nthreads)
     : d_nthreads(nthreads), d_inbuf(fft_size / 2 + 1), d_outbuf(fft_size)
 {
+    gr::configure_default_loggers(d_logger, d_debug_logger, "fft_real_rev");
+
     // Hold global mutex during plan construction and destruction.
     planner::scoped_lock lock(planner::mutex());
 
@@ -279,7 +289,7 @@ fft_real_rev::fft_real_rev(int fft_size, int nthreads)
                                    FFTW_MEASURE);
 
     if (d_plan == NULL) {
-        fprintf(stderr, "gr::fft::fft_real_rev: error creating plan\n");
+        GR_LOG_ERROR(d_logger, "creating plan failed");
         throw std::runtime_error("fftwf_plan_dft_c2r_1d failed");
     }
     export_wisdom(); // store new wisdom to disk
