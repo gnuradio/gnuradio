@@ -17,7 +17,8 @@
 #include "alsa_sink.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <stdio.h>
+#include <cstdio>
+#include <future>
 #include <iostream>
 #include <stdexcept>
 
@@ -257,7 +258,7 @@ bool alsa_sink::check_topology(int ninputs, int noutputs)
     d_buffer = new char[d_buffer_size_bytes];
 
     if (CHATTY_DEBUG) {
-        GR_LOG_DEBUG(d_logger,
+        GR_LOG_DEBUG(d_debug_logger,
                      boost::format("[%1%]: sample resolution = %2% bits") %
                          snd_pcm_name(d_pcm_handle) %
                          snd_pcm_hw_params_get_sbits(d_hw_params));
@@ -473,11 +474,11 @@ bool alsa_sink::write_buffer(const void* vbuffer, unsigned nframes, unsigned siz
             if (d_ok_to_block == true)
                 continue; // try again
             break;
-        }
-
-        else if (r == -EPIPE) { // underrun
+        } else if (r == -EPIPE) { // underrun
             d_nunderuns++;
-            fputs("aU", stderr);
+            // we need to have an lvalue, async pitfall!
+            auto future_local = std::async(::fputs, "aU", stderr);
+
             if ((r = snd_pcm_prepare(d_pcm_handle)) < 0) {
                 output_error_msg("snd_pcm_prepare failed. Can't recover from underrun",
                                  r);
