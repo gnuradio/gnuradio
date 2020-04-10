@@ -30,6 +30,7 @@
 #include <gnuradio/math.h>
 #include <gnuradio/random.h>
 
+#include <chrono>
 #include <cmath>
 
 namespace gr {
@@ -54,7 +55,9 @@ void random::reseed(unsigned int seed)
 {
     d_seed = seed;
     if (d_seed == 0) {
-        d_rng.seed(time(nullptr));
+        auto now = std::chrono::system_clock::now().time_since_epoch();
+        auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(now).count();
+        d_rng.seed(ns);
     } else {
         d_rng.seed(d_seed);
     }

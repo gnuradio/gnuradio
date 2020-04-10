@@ -42,8 +42,7 @@ public:
 
     /*!
      * \brief Change the seed for the initialized number generator. seed = 0 initializes
-     * the random number generator with the system time. Note that a fast initialization
-     * of various instances can result in the same seed.
+     * the random number generator with the system time.
      */
     void reseed(unsigned int seed);
 
