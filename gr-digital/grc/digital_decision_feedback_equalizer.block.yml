@@ -1,0 +1,62 @@
+id: digital_decision_feedback_equalizer
+label: Decision Feedback Equalizer
+category: '[Equalizers]'
+flags: [ python ]
+
+templates:
+  imports: from gnuradio import digital
+  make: digital.decision_feedback_equalizer(${num_taps_fwd}, ${num_taps_rev}, ${sps}, ${alg}, ${adapt_after_training}, ${training_sequence}, ${training_start_tag})
+
+parameters:
+-   id: num_taps_fwd
+    label: Num. Taps (Forward)
+    dtype: int
+    default: 5
+-   id: num_taps_rev 
+    label: Num. Taps (Feedback)
+    dtype: int
+    default: 3
+-   id: training_sequence
+    label: Training Sequence
+    dtype: complex_vector
+    default: '[ ]'
+    hide: 'part'
+-   id: training_start_tag
+    label: Training Start Tag
+    dtype: string
+    default: 'corr_est'
+    hide: 'part'
+-   id: adapt_after_training
+    label: Adapt After Training
+    dtype: bool
+    default: 'True'
+    hide: 'part'
+-   id: sps
+    label: Input Samples per Symbol
+    dtype: int
+-   id: alg
+    label: Adaptive Algorithm Object
+    dtype: raw
+    hide: 'part'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+-   label: taps
+    domain: stream
+    dtype: complex
+    vlen: ${num_taps_fwd+num_taps_rev}
+    optional: true
+    optional: true
+-   label: state
+    domain: stream
+    dtype: short
+    optional: true
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1

@@ -168,6 +168,12 @@ include(CMakeOverloads)
 ########################################################################
 include(GrMiscUtils) #compiler flag check
 
+include(TestBigEndian)
+TEST_BIG_ENDIAN(GR_IS_BIG_ENDIAN)
+if(GR_IS_BIG_ENDIAN)
+    add_definitions(-DGR_IS_BIG_ENDIAN)
+endif(GR_IS_BIG_ENDIAN)
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
    CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     if(NOT WIN32)

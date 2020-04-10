@@ -21,6 +21,7 @@ namespace digital {
 /*!
  * \brief Least-Mean-Square Decision Directed Equalizer (complex in/out)
  * \ingroup equalizers_blk
+ * \ingroup deprecated_blk
  *
  * \details
  * This block implements an LMS-based decision-directed equalizer.

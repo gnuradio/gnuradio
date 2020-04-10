@@ -300,24 +300,26 @@ def show_keyboard_shortcuts(parent):
     markup = textwrap.dedent("""\
     <b>Keyboard Shortcuts</b>
     \n\
-    <u>Ctrl+N</u>: Create a new flowgraph. 
+    <u>Ctrl+N</u>: Create a new flowgraph.
     <u>Ctrl+O</u>: Open an existing flowgraph.
-    <u>Ctrl+S</u>: Save the current flowgraph or save as for new. 
+    <u>Ctrl+S</u>: Save the current flowgraph or save as for new.
     <u>Ctrl+W</u>: Close the current flowgraph.
-    <u>Ctrl+Z</u>: Undo a change to the flowgraph.         
+    <u>Ctrl+Z</u>: Undo a change to the flowgraph.
     <u>Ctrl+Y</u>: Redo a change to the flowgraph.
     <u>Ctrl+A</u>: Selects all blocks and connections.
     <u>Ctrl+P</u>: Screen Capture of the Flowgraph.
-    <u>Ctrl+E</u>: Show variable editor. 
-    <u>Ctrl+F</u>: Search for a block by name.       
-    <u>Ctrl+Q</u>: Quit. 
-    <u>F1</u>    : Help menu.            
-    <u>F5</u>    : Generate the Flowgraph. 
-    <u>F6</u>    : Execute the Flowgraph.     
+    <u>Ctrl+Shift+P</u>: Save the console output to file.
+    <u>Ctrl+L</u>: Clear the console.
+    <u>Ctrl+E</u>: Show variable editor.
+    <u>Ctrl+F</u>: Search for a block by name.
+    <u>Ctrl+Q</u>: Quit.
+    <u>F1</u>    : Help menu.
+    <u>F5</u>    : Generate the Flowgraph.
+    <u>F6</u>    : Execute the Flowgraph.
     <u>F7</u>    : Kill the Flowgraph.
     <u>Ctrl+Shift+S</u>: Save as the current flowgraph.
-    <u>Ctrl+Shift+D</u>: Create a duplicate of current flow graph.   
-    
+    <u>Ctrl+Shift+D</u>: Create a duplicate of current flow graph.
+
     <u>Ctrl+X/C/V</u>: Edit-cut/copy/paste.
     <u>Ctrl+D/B/R</u>: Toggle visibility of disabled blocks or
             connections/block tree widget/console.

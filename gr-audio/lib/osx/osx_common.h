@@ -48,8 +48,7 @@ namespace osx {
         GR_LOG_WARN(d_logger, boost::format("  %s:%d") % __FILE__ % __LINE__);        \
     }
 
-#include <boost/detail/endian.hpp> //BOOST_BIG_ENDIAN
-#ifdef BOOST_BIG_ENDIAN
+#ifdef GR_IS_BIG_ENDIAN
 #define GR_PCM_ENDIANNESS kLinearPCMFormatFlagIsBigEndian
 #else
 #define GR_PCM_ENDIANNESS 0
