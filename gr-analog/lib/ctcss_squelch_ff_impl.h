@@ -25,7 +25,7 @@ private:
     float d_freq;
     float d_level;
     int d_len;
-    int d_rate;
+    const int d_rate;
     bool d_mute;
 
     std::unique_ptr<fft::goertzel> d_goertzel_l;
