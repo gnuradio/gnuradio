@@ -34,8 +34,7 @@ class ModToolNewModule(ModTool):
         self.directory = self.dir
 
     def assign(self):
-        modname_=self.info['modname']
-        self.dir = os.path.join(self.directory, f'gr-{modname_}')
+        self.dir = os.path.join(self.directory, f'gr-{self.info["modname"]}')
         if self.srcdir is None:
             self.srcdir = os.path.join(gr.prefix(),'share','gnuradio','modtool','templates','gr-newmod')
 

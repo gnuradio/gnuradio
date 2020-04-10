@@ -143,17 +143,17 @@ class ModToolAdd(ModTool):
 
     def _run_cc_qa(self):
         " Add C++ QA files for 3.7 API if intructed from _run_lib"
-        blockname_=self.info['blockname']
+        blockname_ = self.info['blockname']
         fname_qa_h  = f'qa_{blockname_}.h'
         fname_qa_cc = f'qa_{blockname_}.cc'
         self._write_tpl('qa_cpp', 'lib', fname_qa_cc)
         self._write_tpl('qa_h',   'lib', fname_qa_h)
-        modname_= self.info['modname']
+        modname_ = self.info['modname']
         if self.skip_cmakefiles:
             return
         try:
             append_re_line_sequence(self._file['cmlib'],
-                                  fr'list\(APPEND test_{modname_}_sources.*\n',
+                                    fr'list\(APPEND test_{modname_}_sources.*\n',
                                     f'qa_{blockname_}.cc')
             append_re_line_sequence(self._file['qalib'],
                                     '#include.*\n',
@@ -168,16 +168,16 @@ class ModToolAdd(ModTool):
 
     def _run_cc_qa_boostutf(self):
         " Add C++ QA files for 3.8 API if intructed from _run_lib"
-        blockk_=self.info['blockname']
-        fname_qa_cc = f'qa_{blockk_}.cc'
+        blockname_ = self.info['blockname']
+        fname_qa_cc = f'qa_{blockname_}.cc'
         self._write_tpl('qa_cpp_boostutf', 'lib', fname_qa_cc)
-        modd_=self.info['modname']
+        modname_ = self.info['modname']
         if self.skip_cmakefiles:
             return
         try:
             append_re_line_sequence(self._file['cmlib'],
-                                   fr'list\(APPEND test_{modd_}_sources.*\n',
-                                    f'qa_{blockk_}.cc')
+                                   fr'list\(APPEND test_{modname_}_sources.*\n',
+                                    f'qa_{blockname_}.cc')
             self.scm.mark_files_updated((self._file['cmlib'],))
         except IOError:
             logger.warning("Can't add C++ QA files.")
@@ -232,8 +232,7 @@ class ModToolAdd(ModTool):
         if self._get_mainswigfile() is None:
             logger.warning('Warning: No main swig file found.')
             return
-        swig_info=self._file['swig']
-        logger.info(f"Editing {swig_info}...")
+        logger.info(f"Editing {self._file["swig"]}...")
         mod_block_sep = '/'
         if self.info['version'] == '36':
             mod_block_sep = '_'
@@ -241,8 +240,9 @@ class ModToolAdd(ModTool):
         with open(self._file['swig'], 'a') as f:
             f.write(swig_block_magic_str)
         is_component = {True: 'gnuradio/' + self.info['modname'], False: self.info['modname']}[self.info['is_component']]
-        blockn=self.info['blockname']
-        include_str = f'#include "{is_component}{mod_block_sep}{blockn}.h"'
+        blockname_ = self.info['blockname']
+        include_str = f'#include "{is_component}{mod_block_sep}{blockname_}.h"'
+
         with open(self._file['swig'], 'r') as f:
             oldfile = f.read()
         if re.search('#include', oldfile):
@@ -266,8 +266,7 @@ class ModToolAdd(ModTool):
         self.scm.mark_files_updated((os.path.join(self.info['pydir'], fname_py_qa),))
         if self.skip_cmakefiles or CMakeFileEditor(self._file['cmpython']).check_for_glob('qa_*.py'):
             return
-        pydir_=self.info['pydir']
-        logger.info(f"Editing {pydir_}/CMakeLists.txt...")
+        logger.info(f"Editing {self.info["pydir"]}/CMakeLists.txt...")
         with open(self._file['cmpython'], 'a') as f:
             f.write(
                 'GR_ADD_TEST(qa_%s ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/%s)\n' % \
@@ -282,7 +281,7 @@ class ModToolAdd(ModTool):
         - include in __init__.py
         """
         fname_py = self.info['blockname'] + '.py'
-        blockname_=self.info['blockname']
+        blockname_ = self.info['blockname']
         self._write_tpl('block_python', self.info['pydir'], fname_py)
         append_re_line_sequence(self._file['pyinit'],
                                 '(^from.*import.*\n|# import any pure.*\n)',
