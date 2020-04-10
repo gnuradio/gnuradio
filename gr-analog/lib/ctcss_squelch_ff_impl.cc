@@ -73,12 +73,12 @@ ctcss_squelch_ff_impl::ctcss_squelch_ff_impl(
     : block("ctcss_squelch_ff",
             io_signature::make(1, 1, sizeof(float)),
             io_signature::make(1, 1, sizeof(float))),
-      squelch_base_ff_impl("ctcss_squelch_ff", ramp, gate)
+      squelch_base_ff_impl("ctcss_squelch_ff", ramp, gate),
+      d_freq(freq),
+      d_level(level),
+      d_rate(rate),
+      d_mute(true)
 {
-    d_freq = freq;
-    d_level = level;
-    d_rate = rate;
-
     // Default is 100 ms detection time
     if (len == 0)
         d_len = (int)(d_rate / 10.0);
@@ -91,8 +91,6 @@ ctcss_squelch_ff_impl::ctcss_squelch_ff_impl(
     d_goertzel_l = boost::make_unique<fft::goertzel>(d_rate, d_len, f_l);
     d_goertzel_c = boost::make_unique<fft::goertzel>(d_rate, d_len, freq);
     d_goertzel_r = boost::make_unique<fft::goertzel>(d_rate, d_len, f_r);
-
-    d_mute = true;
 }
 
 ctcss_squelch_ff_impl::~ctcss_squelch_ff_impl() {}
