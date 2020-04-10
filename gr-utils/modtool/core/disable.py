@@ -70,8 +70,7 @@ class ModToolDisable(ModTool):
                 ed.write()
                 self.scm.mark_file_updated(self._file['qalib'])
             elif self.info['version'] == '38':
-                blockname_=self._info['blockname']
-                fname_qa_cc = f'qa_{blockname_}.cc'
+                fname_qa_cc = f'qa_{self._info["blockname"]}.cc'
                 cmake.comment_out_lines(fname_qa_cc)
             elif self.info['version'] == '36':
                 cmake.comment_out_lines('add_executable.*'+fname)
@@ -84,8 +83,7 @@ class ModToolDisable(ModTool):
             as well as the block magic """
             with open(self._file['swig']) as f:
                 swigfile = f.read()
-            modn_=self.info['modname']
-            (swigfile, nsubs) = re.subn(f'(.include\s+"({modn_}/)?{fname}")',
+            (swigfile, nsubs) = re.subn(f'(.include\s+"({self.info["modname"]}/)?{fname}")',
                                         r'//\1', swigfile)
             if nsubs > 0:
                 logger.info(f"Changing {self._file['swig']}...")
@@ -122,12 +120,11 @@ class ModToolDisable(ModTool):
         else:
             from ..cli import cli_input
         # List of special rules: 0: subdir, 1: filename re match, 2: callback
-        modname_=self.info['modname']
         special_treatments = (
                 ('python', r'qa.+py$', _handle_py_qa),
                 ('python', r'^(?!qa).+py$', _handle_py_mod),
                 ('lib', r'qa.+\.cc$', _handle_cc_qa),
-                (f'include/{modname_}', r'.+\.h$', _handle_h_swig),
+                (f'include/{self.info["modname"]}', r'.+\.h$', _handle_h_swig),
                 ('include', r'.+\.h$', _handle_h_swig),
                 ('swig', r'.+\.i$', _handle_i_swig)
         )
@@ -135,7 +132,7 @@ class ModToolDisable(ModTool):
             if self.skip_subdirs[subdir]:
                 continue
             if self.info['version'] in ('37', '38') and subdir == 'include':
-                subdir = f'include/{modname_}'
+                subdir = f'include/{self.info["modname"]}'
             try:
                 cmake = CMakeFileEditor(os.path.join(subdir, 'CMakeLists.txt'))
             except IOError:

@@ -107,8 +107,7 @@ class ModToolMakeYAML(ModTool):
         """ Take the return values from the parser and call the YAML
         generator. Also, check the makefile if the .yml file is in there.
         If necessary, add. """
-        modname_=self.info['modname']
-        fname_yml = f'{modname_}_{blockname}.block.yml'
+        fname_yml = f'{self.info["modname"]}_{blockname}.block.yml'
         path_to_yml = os.path.join('grc', fname_yml)
         # Some adaptions for the GRC
         for inout in ('in', 'out'):
@@ -203,15 +202,14 @@ def yaml_generator(self, **kwargs):
     label = header.split('_')
     del label[-1]
     yml_file = os.path.join('.', block+'_'+header+'.block.yml')
-    stri_=block.capitalize()
     _header = (('id', f'{block}_{ header}'),
                ('label', ' '.join(label).upper()),
-               ('category', f'[{stri_}]'),
+               ('category', f'[{block.capitalize()}]'),
                ('flags', '[python, cpp]')
                )
     params_list = [
         '${'+s['name']+'}' for s in self.parsed_data['properties'] if self.parsed_data['properties']]
-    str_= ', '.join(params_list)
+    str_ = ', '.join(params_list)
     _templates = [('imports', f'from gnuradio import {block}'),
                   ('make', f'{block}.{ header}({str_})')
                   ]
@@ -223,7 +221,7 @@ def yaml_generator(self, **kwargs):
             for args in param['arguments_type']:
                 arguments.append(args['name'])
             arg_list = ['${'+s+'}' for s in arguments if arguments]
-            arg_=', '.join(arg_list)
+            arg_ = ', '.join(arg_list)
             list_callbacks.append(
                 param['name']+f'({arg_})')
         callback_key = ('callbacks')
@@ -311,9 +309,8 @@ def yaml_generator(self, **kwargs):
     if output_signature:
         data['outputs'] = output_signature
      
-    file_=self.filename
-    param_=', '.join(params_list)
-    _cpp_templates = [('includes', '#include <gnuradio/{block}/{file_}>'),
+    param_ = ', '.join(params_list)
+    _cpp_templates = [('includes', '#include <gnuradio/{block}/{self.filename}>'),
                       ('declarations', '{block}::{ header}::sptr ${{id}}'),
                       ('make', 'this->${{id}} = {block}::{ header}::make({param_})')
                       ]
@@ -325,9 +322,9 @@ def yaml_generator(self, **kwargs):
             for args in param['arguments_type']:
                 arguments.append(args['name'])
             arg_list = ['${'+s+'}' for s in arguments if arguments]
-            arg_l=', '.join(arg_list)
+            arg_ = ', '.join(arg_list)
             list_callbacks.append(
-                param['name']+f'({arg_l})')
+                param['name']+f'({arg_})')
         callback_key = ('callbacks')
         callbacks = (callback_key, tuple(list_callbacks))
         _cpp_templates.append(callbacks)

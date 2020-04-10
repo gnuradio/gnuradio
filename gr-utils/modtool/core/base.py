@@ -129,8 +129,7 @@ class ModTool(object):
         self.info['pydir'] = 'python'
         if os.path.isdir(os.path.join('python', self.info['modname'])):
             self.info['pydir'] = os.path.join('python', self.info['modname'])
-        modn_=self.info['modname']
-        self._file['qalib']    = os.path.join('lib',    f'qa_{modn_}.cc')
+        self._file['qalib']    = os.path.join('lib',    f'qa_{self.info["modname"]}.cc')
         self._file['pyinit']   = os.path.join(self.info['pydir'], '__init__.py')
         self._file['cmlib']    = os.path.join('lib',    'CMakeLists.txt')
         self._file['cmgrc']    = os.path.join('grc',    'CMakeLists.txt')
