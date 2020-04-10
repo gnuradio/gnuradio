@@ -15,6 +15,7 @@
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/tags.h>
 #include <fstream>
+#include <memory>
 
 namespace gr {
 
@@ -26,7 +27,7 @@ class GR_RUNTIME_API block_executor
 {
 protected:
     block_sptr d_block; // The block we're trying to run
-    std::ofstream* d_log;
+    std::unique_ptr<std::ofstream> d_log;
 
     // These are allocated here so we don't have to on each iteration
 

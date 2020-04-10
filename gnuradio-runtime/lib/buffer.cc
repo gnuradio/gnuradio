@@ -82,7 +82,6 @@ buffer::buffer(int nitems, size_t sizeof_item, block_sptr link)
     : d_base(0),
       d_bufsize(0),
       d_max_reader_delay(0),
-      d_vmcircbuf(0),
       d_sizeof_item(sizeof_item),
       d_link(link),
       d_write_index(0),
@@ -103,7 +102,6 @@ buffer_sptr make_buffer(int nitems, size_t sizeof_item, block_sptr link)
 
 buffer::~buffer()
 {
-    delete d_vmcircbuf;
     assert(d_readers.size() == 0);
     s_buffer_count--;
 }
@@ -139,7 +137,7 @@ bool buffer::allocate_buffer(int nitems, size_t sizeof_item)
     }
 
     d_bufsize = nitems;
-    d_vmcircbuf = gr::vmcircbuf_sysconfig::make(d_bufsize * d_sizeof_item);
+    d_vmcircbuf.reset(gr::vmcircbuf_sysconfig::make(d_bufsize * d_sizeof_item));
     if (d_vmcircbuf == 0) {
         std::cerr << "gr::buffer::allocate_buffer: failed to allocate buffer of size "
                   << d_bufsize * d_sizeof_item / 1024 << " KB\n";

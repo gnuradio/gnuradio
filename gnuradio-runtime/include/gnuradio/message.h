@@ -35,17 +35,16 @@ private:
     double d_arg1; // optional arg1
     double d_arg2; // optional arg2
 
-    unsigned char* d_buf_start; // start of allocated buffer
+    std::vector<unsigned char> d_buf;
     unsigned char* d_msg_start; // where the msg starts
     unsigned char* d_msg_end;   // one beyond end of msg
-    unsigned char* d_buf_end;   // one beyond end of allocated buffer
 
     message(long type, double arg1, double arg2, size_t length);
 
     friend class msg_queue;
 
-    unsigned char* buf_data() const { return d_buf_start; }
-    size_t buf_len() const { return d_buf_end - d_buf_start; }
+    unsigned char* buf_data() { return d_buf.data(); }
+    size_t buf_len() const { return d_buf.size(); }
 
 public:
     /*!

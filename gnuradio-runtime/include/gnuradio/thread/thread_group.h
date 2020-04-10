@@ -20,6 +20,7 @@
 #include <boost/function.hpp>
 #include <boost/thread/shared_mutex.hpp>
 #include <boost/utility.hpp>
+#include <memory>
 
 namespace gr {
 namespace thread {
@@ -31,14 +32,14 @@ public:
     ~thread_group();
 
     boost::thread* create_thread(const boost::function0<void>& threadfunc);
-    void add_thread(boost::thread* thrd);
+    void add_thread(std::unique_ptr<boost::thread> thrd);
     void remove_thread(boost::thread* thrd);
     void join_all();
     void interrupt_all();
     size_t size() const;
 
 private:
-    std::list<boost::thread*> m_threads;
+    std::list<std::unique_ptr<boost::thread>> m_threads;
     mutable boost::shared_mutex m_mutex;
 };
 

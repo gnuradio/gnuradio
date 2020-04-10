@@ -31,7 +31,7 @@ private:
     friend GR_RUNTIME_API top_block_sptr make_top_block(const std::string& name,
                                                         bool catch_exceptions);
 
-    top_block_impl* d_impl;
+    std::unique_ptr<top_block_impl> d_impl;
 
 protected:
     top_block(const std::string& name, bool catch_exceptions = true);

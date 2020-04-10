@@ -148,14 +148,14 @@ private:
                                                                int delay);
 
 protected:
-    char* d_base;           // base address of buffer
+    char* d_base;           // base address of buffer inside d_vmcircbuf.
     unsigned int d_bufsize; // in items
 
     // Keep track of maximum sample delay of any reader; Only prune tags past this.
     unsigned d_max_reader_delay;
 
 private:
-    gr::vmcircbuf* d_vmcircbuf;
+    std::unique_ptr<gr::vmcircbuf> d_vmcircbuf;
     size_t d_sizeof_item; // in bytes
     std::vector<buffer_reader*> d_readers;
     std::weak_ptr<block> d_link; // block that writes to this buffer
