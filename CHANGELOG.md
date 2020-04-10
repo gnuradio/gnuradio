@@ -9,6 +9,13 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
 ## [3.9.0.0] - Unreleased
 
+### Changed
+
+#### Project Scope
+
+- Logging: removed all `std::cerr` and `fprintf(stderr,…)` by GNU Radio logging
+- Logging: Changed logging format for many multiline error logs
+
 ## [3.8.0.0] - 2019-08-09
 
 Witness me!
