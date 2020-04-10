@@ -115,8 +115,7 @@ def get_copyrightholder(self):
         with SequenceCompleter(copyright_candidates):
             self.info['copyrightholder'] = cli_input("Please specify the copyright holder: ")
             if not self.info['copyrightholder'] or self.info['copyrightholder'].isspace():
-                inf_=self.info['modname']
-                self.info['copyrightholder'] = f"gr-{inf_} author"
+                self.info['copyrightholder'] = f"gr-{self.info["modname"]} author"
     elif self.info['is_component']:
         click.secho("For GNU Radio components the FSF is added as copyright holder",
                     fg='cyan')

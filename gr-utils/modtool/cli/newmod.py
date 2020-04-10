@@ -36,8 +36,7 @@ def cli(**kwargs):
     kwargs['cli'] = True
     self = ModToolNewModule(**kwargs)
     get_modname(self)
-    info_=self.info['modname']
-    self.dir = os.path.join(self.dir, f'gr-{info_}')
+    self.dir = os.path.join(self.dir, f'gr-{self.info["modname"]}')
     try:
         os.stat(self.dir)
     except OSError:
