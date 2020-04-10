@@ -136,6 +136,6 @@ class CMakeFileEditor(object):
 
     def check_for_glob(self, globstr):
         """ Returns true if a glob as in globstr is found in the cmake file """
-        str_=globstr.replace('*', r'\*')
+        str_ = globstr.replace('*', r'\*')
         glob_re = fr'GLOB\s[a-z_]+\s"{str_}"'
         return re.search(glob_re, self.cfile, flags=re.MULTILINE|re.IGNORECASE) is not None
