@@ -13,6 +13,7 @@
 #endif
 
 #include "ctcss_squelch_ff_impl.h"
+#include <boost/make_unique.hpp>
 
 namespace gr {
 namespace analog {
@@ -87,19 +88,14 @@ ctcss_squelch_ff_impl::ctcss_squelch_ff_impl(
     float f_l, f_r;
     compute_freqs(d_freq, f_l, f_r);
 
-    d_goertzel_l = new fft::goertzel(d_rate, d_len, f_l);
-    d_goertzel_c = new fft::goertzel(d_rate, d_len, freq);
-    d_goertzel_r = new fft::goertzel(d_rate, d_len, f_r);
+    d_goertzel_l = boost::make_unique<fft::goertzel>(d_rate, d_len, f_l);
+    d_goertzel_c = boost::make_unique<fft::goertzel>(d_rate, d_len, freq);
+    d_goertzel_r = boost::make_unique<fft::goertzel>(d_rate, d_len, f_r);
 
     d_mute = true;
 }
 
-ctcss_squelch_ff_impl::~ctcss_squelch_ff_impl()
-{
-    delete d_goertzel_l;
-    delete d_goertzel_c;
-    delete d_goertzel_r;
-}
+ctcss_squelch_ff_impl::~ctcss_squelch_ff_impl() {}
 
 std::vector<float> ctcss_squelch_ff_impl::squelch_range() const
 {

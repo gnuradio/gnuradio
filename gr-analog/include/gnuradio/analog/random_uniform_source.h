@@ -32,10 +32,9 @@ public:
     /*!
      * \brief Return a shared_ptr to a new instance of analog::random_uniform_source_X.
      *
-     * To avoid accidental use of raw pointers, analog::random_uniform_source_b's
-     * constructor is in a private implementation
-     * class. analog::random_uniform_source_b::make is the public interface for
-     * creating new instances.
+     * Since it's perfectly safe to generate non-pointer random source blocks,
+     * the constructor for this block is public. Nevertheless this make()
+     * function is exposed for consistency.
      * \param minimum defines minimal integer value output.
      * \param maximum output values are below this value
      * \param seed for Pseudo Random Number Generator. Defaults to 0. In this case current

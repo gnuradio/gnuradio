@@ -33,21 +33,20 @@ random_uniform_source_impl<T>::random_uniform_source_impl(int minimum,
                                                           int seed)
     : sync_block("random_uniform_source",
                  io_signature::make(0, 0, 0),
-                 io_signature::make(1, 1, sizeof(T)))
+                 io_signature::make(1, 1, sizeof(T))),
+      d_rng(seed, minimum, maximum)
 {
-    d_rng = new gr::random(seed, minimum, maximum);
 }
 
 template <class T>
 random_uniform_source_impl<T>::~random_uniform_source_impl()
 {
-    delete d_rng;
 }
 
 template <class T>
 int random_uniform_source_impl<T>::random_value()
 {
-    return d_rng->ran_int();
+    return d_rng.ran_int();
 }
 
 template <class T>
