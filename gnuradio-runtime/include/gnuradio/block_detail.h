@@ -13,6 +13,7 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/high_res_timer.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/tags.h>
 #include <gnuradio/tpb_detail.h>
@@ -231,6 +232,10 @@ public:
     int d_produce_or;
 
     int consumed() const;
+
+    // necessary because stupidly block_executor.cc's "propagate_tags" is a function, not
+    // any class member
+    gr::logger_ptr d_logger, d_debug_logger;
 
     // ----------------------------------------------------------------------------
 

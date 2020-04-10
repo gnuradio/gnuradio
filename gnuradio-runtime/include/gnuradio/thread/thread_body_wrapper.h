@@ -12,6 +12,7 @@
 #define INCLUDED_THREAD_BODY_WRAPPER_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/thread/thread.h>
 #include <exception>
 #include <iostream>
@@ -28,6 +29,8 @@ private:
     F d_f;
     std::string d_name;
     bool d_catch_exceptions;
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
 public:
     explicit thread_body_wrapper(F f,
@@ -35,6 +38,7 @@ public:
                                  bool catch_exceptions = true)
         : d_f(f), d_name(name), d_catch_exceptions(catch_exceptions)
     {
+        gr::configure_default_loggers(d_logger, d_debug_logger, "thread_body_wrapper");
     }
 
     void operator()()
@@ -46,10 +50,13 @@ public:
                 d_f();
             } catch (boost::thread_interrupted const&) {
             } catch (std::exception const& e) {
-                std::cerr << "thread[" << d_name << "]: " << e.what() << std::endl;
+                std::ostringstream msg;
+                msg << "ERROR thread[" << d_name << "]: " << e.what();
+                GR_LOG_ERROR(d_logger, msg.str());
             } catch (...) {
-                std::cerr << "thread[" << d_name << "]: "
-                          << "caught unrecognized exception\n";
+                std::ostringstream msg;
+                msg << "ERROR thread[" << d_name << "]: caught unrecognized exception";
+                GR_LOG_ERROR(d_logger, msg.str());
             }
 
         } else {

@@ -78,6 +78,8 @@ protected:
 private:
     void restart();
     void wait_for_jobs();
+
+    gr::logger_ptr d_logger, d_debug_logger;
 };
 
 } /* namespace gr */

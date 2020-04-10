@@ -12,9 +12,11 @@
 #define INCLUDED_GR_RUNTIME_BUFFER_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/tags.h>
 #include <gnuradio/thread/thread.h>
+#include <boost/weak_ptr.hpp>
 #include <map>
 #include <memory>
 
@@ -44,6 +46,9 @@ GR_RUNTIME_API buffer_sptr make_buffer(int nitems,
 class GR_RUNTIME_API buffer
 {
 public:
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
+
     virtual ~buffer();
 
     /*!

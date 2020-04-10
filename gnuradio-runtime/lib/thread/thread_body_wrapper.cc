@@ -12,6 +12,7 @@
 #include <config.h>
 #endif
 
+#include <gnuradio/logger.h>
 #include <gnuradio/thread/thread_body_wrapper.h>
 
 #ifdef HAVE_SIGNAL_H
@@ -63,8 +64,13 @@ void mask_signals()
     sigaddset(&new_set, SIGXFSZ);
 #endif
     r = pthread_sigmask(SIG_BLOCK, &new_set, 0);
-    if (r != 0)
-        perror("pthread_sigmask");
+    if (r != 0) {
+        // FIXME use predefined loggers
+        gr::logger_ptr logger, debug_logger;
+        gr::configure_default_loggers(
+            logger, debug_logger, "thread_body_wrapper::mask_signals");
+        GR_LOG_ERROR(logger, boost::format("pthread_sigmask: %s") % strerror(errno));
+    }
 }
 
 #else

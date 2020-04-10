@@ -13,6 +13,7 @@
 
 #include "thrift/ControlPort.h"
 #include "thrift/gnuradio_types.h"
+#include <gnuradio/logger.h>
 #include <gnuradio/rpcpmtconverters_thrift.h>
 #include <gnuradio/rpcserver_base.h>
 #include <boost/format.hpp>
@@ -29,6 +30,9 @@
 class rpcserver_thrift : public virtual rpcserver_base, public GNURadio::ControlPortIf
 {
 public:
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
+
     rpcserver_thrift();
     virtual ~rpcserver_thrift();
 
@@ -100,9 +104,11 @@ private:
         if (cur_priv <= _handlerCallback.priv) {
             _handlerCallback.callback->post(port, msg);
         } else {
-            std::cerr << "Message " << _handlerCallback.description
-                      << " requires PRIVLVL <= " << _handlerCallback.priv
-                      << " to set, currently at: " << cur_priv << std::endl;
+            std::ostringstream msg;
+            msg << _handlerCallback.description
+                << " requires PRIVLVL <= " << _handlerCallback.priv
+                << " to set, currently at: " << cur_priv;
+            GR_LOG_ERROR(logger, msg.str());
         }
     }
 
@@ -123,9 +129,11 @@ private:
                     (*iter->second.callback)
                         .post(pmt::PMT_NIL, rpcpmtconverter::To_PMT::instance(p.second));
                 } else {
-                    std::cerr << "Key " << p.first
-                              << " requires PRIVLVL <= " << iter->second.priv
-                              << " to set, currently at: " << cur_priv << std::endl;
+                    std::ostringstream msg;
+                    msg << "Key " << p.first
+                        << " requires PRIVLVL <= " << iter->second.priv
+                        << " to set, currently at: " << cur_priv;
+                    GR_LOG_ERROR(logger, msg.str());
                 }
             } else {
                 throw apache::thrift::TApplicationException(__FILE__ " " S__LINE__);
@@ -153,14 +161,16 @@ private:
                     outknobs[p] =
                         rpcpmtconverter::from_pmt((*iter->second.callback).retrieve());
                 } else {
-                    std::cerr << "Key " << iter->first
-                              << " requires PRIVLVL: <= " << iter->second.priv
-                              << " to get, currently at: " << cur_priv << std::endl;
+                    std::ostringstream msg;
+                    msg << "Key " << iter->first
+                        << " requires PRIVLVL: <= " << iter->second.priv
+                        << " to get, currently at: " << cur_priv;
+                    GR_LOG_ERROR(logger, msg.str());
                 }
             } else {
-                std::stringstream ss;
-                ss << "Ctrlport Key called with unregistered key (" << p << ")\n";
-                std::cerr << ss.str();
+                std::ostringstream smsgs;
+                msg << "Ctrlport Key called with unregistered key (" << p << ")\n";
+                GR_LOG_ERROR(logger, ss.str());
                 throw apache::thrift::TApplicationException(__FILE__ " " S__LINE__);
             }
         }
@@ -184,8 +194,10 @@ private:
                 outknobs[p.first] =
                     rpcpmtconverter::from_pmt(p.second.callback->retrieve());
             } else {
-                std::cerr << "Key " << p.first << " requires PRIVLVL <= " << p.second.priv
-                          << " to get, currently at: " << cur_priv << std::endl;
+                std::ostringstream msg;
+                msg << "Key " << p.first << " requires PRIVLVL: <= " << p.second.priv
+                    << " to get, currently at: " << cur_priv;
+                GR_LOG_ERROR(logger, msg.str());
             }
         }
 
@@ -216,8 +228,10 @@ private:
                 prop.display = static_cast<uint32_t>(p.second.display);
                 outknobs[p.first] = prop;
             } else {
-                std::cerr << "Key " << p.first << " requires PRIVLVL <= " << p.second.priv
-                          << " to get, currently at: " << cur_priv << std::endl;
+                std::ostringstream msg;
+                msg << "Key " << p.first << " requires PRIVLVL: <= " << p.second.priv
+                    << " to get, currently at: " << cur_priv;
+                GR_LOG_ERROR(logger, msg.str());
             }
         }
 
@@ -250,9 +264,11 @@ private:
                     prop.display = static_cast<uint32_t>(iter->second.display);
                     outknobs[p] = prop;
                 } else {
-                    std::cerr << "Key " << iter->first
-                              << " requires PRIVLVL: <= " << iter->second.priv
-                              << " to get, currently at: " << cur_priv << std::endl;
+                    std::ostringstream msg;
+                    msg << "Key " << iter->first
+                        << " requires PRIVLVL: <= " << iter->second.priv
+                        << " to get, currently at: " << cur_priv;
+                    GR_LOG_ERROR(logger, msg.str());
                 }
             } else {
                 throw apache::thrift::TApplicationException(__FILE__ " " S__LINE__);
