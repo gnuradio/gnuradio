@@ -30,6 +30,7 @@
 #endif
 
 #include <gnuradio/filter/pm_remez.h>
+#include <gnuradio/logger.h>
 #include <assert.h>
 #include <cmath>
 #include <iostream>
@@ -763,9 +764,9 @@ static int remez(double h[],
 //
 //////////////////////////////////////////////////////////////////////////////
 
-static void punt(const std::string msg)
+static void punt(gr::logger_ptr logger, const std::string msg)
 {
-    std::cerr << msg << '\n';
+    GR_LOG_ERROR(logger, msg);
     throw std::runtime_error(msg);
 }
 
@@ -776,22 +777,29 @@ std::vector<double> pm_remez(int order,
                              const std::string filter_type,
                              int grid_density) noexcept(false)
 {
+    static bool loggers_set_up = false;
+
+    gr::logger_ptr logger, debug_logger;
+    if (!loggers_set_up) {
+        gr::configure_default_loggers(logger, debug_logger, "pm_remez");
+        loggers_set_up = true;
+    }
     int numtaps = order + 1;
     if (numtaps < 4)
-        punt("gr_remez: number of taps must be >= 3");
+        punt(logger, "number of taps must be >= 3");
 
     int numbands = arg_bands.size() / 2;
     LOCAL_BUFFER(double, bands, numbands * 2);
     if (numbands < 1 || arg_bands.size() % 2 == 1)
-        punt("gr_remez: must have an even number of band edges");
+        punt(logger, "must have an even number of band edges");
 
     for (unsigned int i = 1; i < arg_bands.size(); i++) {
         if (arg_bands[i] < arg_bands[i - 1])
-            punt("gr_remez: band edges must be nondecreasing");
+            punt(logger, "band edges must be nondecreasing");
     }
 
     if (arg_bands[0] < 0 || arg_bands[arg_bands.size() - 1] > 1)
-        punt("gr_remez: band edges must be in the range [0,1]");
+        punt(logger, "band edges must be in the range [0,1]");
 
     // Divide by 2 to fit with the implementation that uses a
     // sample rate of [0, 0.5] instead of [0, 1.0]
@@ -800,7 +808,7 @@ std::vector<double> pm_remez(int order,
 
     LOCAL_BUFFER(double, response, numbands * 2);
     if (arg_response.size() != arg_bands.size())
-        punt("gr_remez: must have one response magnitude for each band edge");
+        punt(logger, "must have one response magnitude for each band edge");
 
     for (int i = 0; i < 2 * numbands; i++)
         response[i] = arg_response[i];
@@ -811,7 +819,7 @@ std::vector<double> pm_remez(int order,
 
     if (!arg_weight.empty()) {
         if ((int)arg_weight.size() != numbands)
-            punt("gr_remez: need one weight for each band [=length(band)/2]");
+            punt(logger, "need one weight for each band [=length(band)/2]");
         for (int i = 0; i < numbands; i++)
             weight[i] = arg_weight[i];
     }
@@ -824,23 +832,23 @@ std::vector<double> pm_remez(int order,
     else if (filter_type == "hilbert")
         itype = HILBERT;
     else
-        punt("gr_remez: unknown ftype '" + filter_type + "'");
+        punt(logger, "unknown ftype '" + filter_type + "'");
 
     if (grid_density < 16)
-        punt("gr_remez: grid_density is too low; must be >= 16");
+        punt(logger, "grid_density is too low; must be >= 16");
 
     LOCAL_BUFFER(double, coeff, numtaps + 5); // FIXME why + 5?
     int err =
         remez(coeff, numtaps, numbands, bands, response, weight, itype, grid_density);
 
     if (err == -1)
-        punt("gr_remez: failed to converge");
+        punt(logger, "failed to converge");
 
     if (err == -2)
-        punt("gr_remez: insufficient extremals -- cannot continue");
+        punt(logger, "insufficient extremals -- cannot continue");
 
     if (err == -3)
-        punt("gr_remez: too many extremals -- cannot continue");
+        punt(logger, "too many extremals -- cannot continue");
 
     return std::vector<double>(&coeff[0], &coeff[numtaps]);
 }

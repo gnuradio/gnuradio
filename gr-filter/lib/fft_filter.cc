@@ -13,6 +13,7 @@
 #endif
 
 #include <gnuradio/filter/fft_filter.h>
+#include <gnuradio/logger.h>
 #include <volk/volk.h>
 #include <boost/smart_ptr/make_unique.hpp>
 #include <cstring>
@@ -29,6 +30,7 @@ fft_filter_fff::fft_filter_fff(int decimation,
                                int nthreads)
     : d_fftsize(-1), d_decimation(decimation), d_nthreads(nthreads)
 {
+    gr::configure_default_loggers(d_logger, d_debug_logger, "fft_filter_fff");
     set_taps(taps);
 }
 
@@ -76,8 +78,10 @@ void fft_filter_fff::compute_sizes(int ntaps)
     d_nsamples = d_fftsize - d_ntaps + 1;
 
     if (VERBOSE) {
-        std::cerr << "fft_filter_fff: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
-                  << " nsamples = " << d_nsamples << std::endl;
+        std::ostringstream msg;
+        msg << "fft_filter_fff: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
+            << " nsamples = " << d_nsamples;
+        GR_LOG_ERROR(d_logger, msg.str());
     }
 
     // compute new plans
@@ -157,6 +161,7 @@ fft_filter_ccc::fft_filter_ccc(int decimation,
                                int nthreads)
     : d_fftsize(-1), d_decimation(decimation), d_nthreads(nthreads)
 {
+    gr::configure_default_loggers(d_logger, d_debug_logger, "fft_filter_ccc");
     set_taps(taps);
 }
 
@@ -204,8 +209,11 @@ void fft_filter_ccc::compute_sizes(int ntaps)
     d_nsamples = d_fftsize - d_ntaps + 1;
 
     if (VERBOSE) {
-        std::cerr << "fft_filter_ccc: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
-                  << " nsamples = " << d_nsamples << std::endl;
+        gr::logger_ptr logger, debug_logger;
+        std::ostringstream msg;
+        msg << "fft_filter_ccc: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
+            << " nsamples = " << d_nsamples;
+        GR_LOG_ERROR(logger, msg.str());
     }
 
     // compute new plans
@@ -286,6 +294,7 @@ fft_filter_ccf::fft_filter_ccf(int decimation,
                                int nthreads)
     : d_fftsize(-1), d_decimation(decimation), d_nthreads(nthreads)
 {
+    gr::configure_default_loggers(d_logger, d_debug_logger, "fft_filter_ccf");
     set_taps(taps);
 }
 
@@ -333,8 +342,12 @@ void fft_filter_ccf::compute_sizes(int ntaps)
     d_nsamples = d_fftsize - d_ntaps + 1;
 
     if (VERBOSE) {
-        std::cerr << "fft_filter_ccf: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
-                  << " nsamples = " << d_nsamples << std::endl;
+        gr::logger_ptr logger, debug_logger;
+        gr::configure_default_loggers(logger, debug_logger, "fft_filter_ccf");
+        std::ostringstream msg;
+        msg << "fft_filter_ccf: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
+            << " nsamples = " << d_nsamples;
+        GR_LOG_ERROR(logger, msg.str());
     }
 
     // compute new plans
