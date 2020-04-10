@@ -59,13 +59,15 @@ wavfile_source_impl::wavfile_source_impl(const char* filename, bool repeat)
     // we use "open" to use to the O_LARGEFILE flag
 
     int fd;
-    if ((fd = open(filename, O_RDONLY | OUR_O_LARGEFILE | OUR_O_BINARY)) < 0) {
-        perror(filename);
+    if ((fd = ::open(filename, O_RDONLY | OUR_O_LARGEFILE | OUR_O_BINARY)) < 0) {
+        GR_LOG_ERROR(d_logger,
+                     boost::format("::open: %s: %s") % filename % strerror(errno));
         throw std::runtime_error("can't open file");
     }
 
     if ((d_fp = fdopen(fd, "rb")) == NULL) {
-        perror(filename);
+        GR_LOG_ERROR(d_logger,
+                     boost::format("fdopen: %s: %s") % filename % strerror(errno));
         throw std::runtime_error("can't open file");
     }
 
@@ -123,7 +125,8 @@ int wavfile_source_impl::work(int noutput_items,
             }
 
             if (fseek(d_fp, d_first_sample_pos, SEEK_SET) == -1) {
-                fprintf(stderr, "[%s] fseek failed\n", __FILE__);
+                GR_LOG_ERROR(d_logger,
+                             boost::format("fseek failed %s") % strerror(errno));
                 exit(-1);
             }
 
@@ -145,9 +148,9 @@ int wavfile_source_impl::work(int noutput_items,
         // trouble they won't be processed. Serves them bloody right.
         if (feof(d_fp) || ferror(d_fp)) {
             if (i == 0) {
-                fprintf(stderr,
-                        "[%s] WAV file has corrupted header or i/o error\n",
-                        __FILE__);
+                GR_LOG_ERROR(d_logger,
+                             boost::format("WAV file has corrupted header or i/o error") %
+                                 strerror(errno));
                 return -1;
             }
             return i;

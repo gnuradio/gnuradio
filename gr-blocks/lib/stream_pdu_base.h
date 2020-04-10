@@ -12,6 +12,7 @@
 #define INCLUDED_STREAM_PDU_BASE_H
 
 #include <gnuradio/basic_block.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/thread/thread.h>
 #include <pmt/pmt.h>
 
@@ -41,6 +42,8 @@ protected:
     bool wait_ready();
     void start_rxthread(basic_block* blk, pmt::pmt_t rxport);
     void stop_rxthread();
+
+    gr::logger_ptr d_pdu_logger, d_pdu_debug_logger;
 };
 
 } /* namespace blocks */

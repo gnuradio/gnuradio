@@ -12,6 +12,7 @@
 #define INCLUDED_GR_FILE_SINK_BASE_H
 
 #include <gnuradio/blocks/api.h>
+#include <gnuradio/logger.h>
 #include <boost/thread.hpp>
 #include <cstdio>
 
@@ -31,6 +32,7 @@ protected:
     boost::mutex d_mutex;
     bool d_unbuffered;
     bool d_append;
+    gr::logger_ptr d_logger, d_debug_logger;
 
 protected:
     file_sink_base(const char* filename, bool is_binary, bool append);

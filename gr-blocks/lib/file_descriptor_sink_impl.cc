@@ -60,7 +60,7 @@ int file_descriptor_sink_impl::work(int noutput_items,
             if (errno == EINTR)
                 continue;
             else {
-                perror("file_descriptor_sink");
+                GR_LOG_ERROR(d_logger, strerror(errno));
                 return -1; // indicate we're done
             }
         } else {
