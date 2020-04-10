@@ -54,7 +54,7 @@ void random::reseed(unsigned int seed)
 {
     d_seed = seed;
     if (d_seed == 0) {
-        d_rng.seed();
+        d_rng.seed(time(nullptr));
     } else {
         d_rng.seed(d_seed);
     }
