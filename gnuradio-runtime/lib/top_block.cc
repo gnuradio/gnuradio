@@ -18,6 +18,7 @@
 #include <gnuradio/prefs.h>
 #include <gnuradio/top_block.h>
 #include <unistd.h>
+#include <boost/make_unique.hpp>
 #include <iostream>
 
 namespace gr {
@@ -27,17 +28,15 @@ top_block_sptr make_top_block(const std::string& name, bool catch_exceptions)
 }
 
 top_block::top_block(const std::string& name, bool catch_exceptions)
-    : hier_block2(name, io_signature::make(0, 0, 0), io_signature::make(0, 0, 0))
+    : hier_block2(name, io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
+      d_impl(boost::make_unique<top_block_impl>(this, catch_exceptions))
 {
-    d_impl = new top_block_impl(this, catch_exceptions);
 }
 
 top_block::~top_block()
 {
     stop();
     wait();
-
-    delete d_impl;
 }
 
 void top_block::start(int max_noutput_items)

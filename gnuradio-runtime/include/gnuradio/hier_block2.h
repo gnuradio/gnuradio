@@ -40,13 +40,16 @@ private:
                      gr::io_signature::sptr output_signature);
 
     /*!
-     * \brief Private implementation details of gr::hier_block2
+     * \brief Private implementation details of gr::hier_block2.
+     *
+     * This is a pointer in order to not break ABI when implementation object
+     * changes.
      */
-    hier_block2_detail* d_detail;
+    std::unique_ptr<hier_block2_detail> d_detail;
 
 
 protected:
-    hier_block2(void) {} // allows pure virtual interface sub-classes
+    hier_block2(); // allows pure virtual interface sub-classes
     hier_block2(const std::string& name,
                 gr::io_signature::sptr input_signature,
                 gr::io_signature::sptr output_signature);

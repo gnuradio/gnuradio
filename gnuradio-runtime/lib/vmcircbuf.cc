@@ -108,23 +108,23 @@ void vmcircbuf_sysconfig::set_default_factory(vmcircbuf_factory* f)
 //		    test code for vmcircbuf factories
 // ------------------------------------------------------------------------
 
-static void init_buffer(vmcircbuf* c, int counter, int size)
+static void init_buffer(const vmcircbuf& c, int counter, int size)
 {
-    unsigned int* p = (unsigned int*)c->pointer_to_first_copy();
+    unsigned int* p = (unsigned int*)c.pointer_to_first_copy();
     for (unsigned int i = 0; i < size / sizeof(int); i++)
         p[i] = counter + i;
 }
 
 static bool
-check_mapping(vmcircbuf* c, int counter, int size, const char* msg, bool verbose)
+check_mapping(const vmcircbuf& c, int counter, int size, const char* msg, bool verbose)
 {
     bool ok = true;
 
     if (verbose)
         fprintf(stderr, "... %s", msg);
 
-    unsigned int* p1 = (unsigned int*)c->pointer_to_first_copy();
-    unsigned int* p2 = (unsigned int*)c->pointer_to_second_copy();
+    unsigned int* p1 = (unsigned int*)c.pointer_to_first_copy();
+    unsigned int* p2 = (unsigned int*)c.pointer_to_second_copy();
 
     // fprintf(stderr, "p1 = %p, p2 = %p\n", p1, p2);
 
@@ -167,13 +167,13 @@ test_a_bunch(vmcircbuf_factory* factory, int n, int size, int* start_ptr, bool v
 {
     bool ok = true;
     std::vector<int> counter(n);
-    std::vector<vmcircbuf*> c(n);
+    std::vector<std::unique_ptr<vmcircbuf>> c(n);
     int cum_size = 0;
 
     for (int i = 0; i < n; i++) {
         counter[i] = *start_ptr;
         *start_ptr += size;
-        if ((c[i] = factory->make(size)) == 0) {
+        if ((c[i] = std::unique_ptr<vmcircbuf>(factory->make(size))) == 0) {
             if (verbose)
                 fprintf(
                     stderr,
@@ -183,21 +183,15 @@ test_a_bunch(vmcircbuf_factory* factory, int n, int size, int* start_ptr, bool v
                     memsize(cum_size));
             return false;
         }
-        init_buffer(c[i], counter[i], size);
+        init_buffer(*c[i], counter[i], size);
         cum_size += size;
     }
 
     for (int i = 0; i < n; i++) {
         std::string msg =
             str(boost::format("test_a_bunch_%dx%s[%d]") % n % memsize(size) % i);
-        ok &= check_mapping(c[i], counter[i], size, msg.c_str(), verbose);
+        ok &= check_mapping(*c[i], counter[i], size, msg.c_str(), verbose);
     }
-
-    for (int i = 0; i < n; i++) {
-        delete c[i];
-        c[i] = 0;
-    }
-
     return ok;
 }
 

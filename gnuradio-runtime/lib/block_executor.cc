@@ -20,6 +20,7 @@
 #include <block_executor.h>
 #include <stdio.h>
 #include <boost/format.hpp>
+#include <boost/make_unique.hpp>
 #include <boost/thread.hpp>
 #include <iostream>
 #include <limits>
@@ -213,11 +214,11 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
 }
 
 block_executor::block_executor(block_sptr block, int max_noutput_items)
-    : d_block(block), d_log(0), d_max_noutput_items(max_noutput_items)
+    : d_block(block), d_max_noutput_items(max_noutput_items)
 {
     if (ENABLE_LOGGING) {
         std::string name = str(boost::format("sst-%03d.log") % which_scheduler++);
-        d_log = new std::ofstream(name.c_str());
+        d_log = boost::make_unique<std::ofstream>(name.c_str());
         std::unitbuf(*d_log); // make it unbuffered...
         *d_log << "block_executor: " << d_block << std::endl;
     }
@@ -232,9 +233,6 @@ block_executor::block_executor(block_sptr block, int max_noutput_items)
 
 block_executor::~block_executor()
 {
-    if (ENABLE_LOGGING)
-        delete d_log;
-
     d_block->stop(); // stop any drivers, etc.
 }
 
