@@ -87,7 +87,7 @@ top_block_impl::~top_block_impl()
     if (d_lock_count) {
         GR_LOG_ERROR(d_logger, "destroying locked block.");
     }
-    // FIXME: ponder the sensibility of setting a raw pointer to zero at the end of
+    // NOTE: Investigate the sensibility of setting a raw pointer to zero at the end of
     // destructor
     d_owner = 0;
 }
