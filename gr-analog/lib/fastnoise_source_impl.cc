@@ -59,7 +59,8 @@ fastnoise_source_impl<T>::fastnoise_source_impl(noise_type_t type,
                  io_signature::make(0, 0, 0),
                  io_signature::make(1, 1, sizeof(T))),
       d_type(type),
-      d_ampl(ampl)
+      d_ampl(ampl),
+      d_rng(seed)
 {
     d_samples.resize(samples);
     xoroshiro128p_seed(d_state, (uint64_t)seed);
@@ -76,7 +77,8 @@ fastnoise_source_impl<gr_complex>::fastnoise_source_impl(noise_type_t type,
                  io_signature::make(0, 0, 0),
                  io_signature::make(1, 1, sizeof(gr_complex))),
       d_type(type),
-      d_ampl(ampl / sqrtf(2.0f))
+      d_ampl(ampl / sqrtf(2.0f)),
+      d_rng(seed)
 {
     d_samples.resize(samples);
     xoroshiro128p_seed(d_state, (uint64_t)seed);
