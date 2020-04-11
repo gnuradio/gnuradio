@@ -107,7 +107,11 @@ macro(GR_SWIG_MAKE name)
     list(INSERT GR_SWIG_INCLUDE_DIRS 0 "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>")
 
     #setup the swig flags with flags and include directories
-    set(CMAKE_SWIG_FLAGS -fvirtual -modern -keyword -w511 -w314 -relativeimport -py3 -module ${name} ${GR_SWIG_FLAGS})
+    set(modern_keyword "-modern")
+    if("${SWIG_VERSION}" VERSION_GREATER "3.0.12")
+      set(modern_keyword "")
+    endif()
+    set(CMAKE_SWIG_FLAGS -fvirtual ${modern_keyword} -keyword -w511 -w314 -relativeimport -py3 -module ${name} ${GR_SWIG_FLAGS})
 
     #set the C++ property on the swig .i file so it builds
     set_source_files_properties(${ifiles} PROPERTIES CPLUSPLUS ON)
