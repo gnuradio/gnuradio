@@ -31,7 +31,7 @@ private:
     void readloop();
 
 public:
-    rep_msg_sink_impl(char* address, int timeout);
+    rep_msg_sink_impl(char* address, int timeout, bool bind);
     ~rep_msg_sink_impl();
 
     bool start() override;
