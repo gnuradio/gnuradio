@@ -10,6 +10,12 @@ parameters:
     label: Timeout (msec)
     dtype: float
     default: '100'
+-   id: bind
+    category: Advanced
+    label: Bind
+    dtype: bool
+    default: 'False'
+    hide: part
 
 outputs:
 -   domain: message
@@ -18,6 +24,6 @@ outputs:
 
 templates:
     imports: from gnuradio import zeromq
-    make: zeromq.pull_msg_source(${address}, ${timeout})
+    make: zeromq.pull_msg_source(${address}, ${timeout}, ${bind})
 
 file_format: 1
