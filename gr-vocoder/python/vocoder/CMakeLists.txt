@@ -46,6 +46,11 @@ if(ENABLE_TESTING)
     list(APPEND py_qa_test_files
       qa_codec2_vocoder.py
       )
+    if(LIBCODEC2_HAS_FREEDV_API)
+      list(APPEND py_qa_test_files
+        qa_freedv.py
+        )
+    endif()
   endif()
   if(LIBGSM_FOUND)
     list(APPEND py_qa_test_files
