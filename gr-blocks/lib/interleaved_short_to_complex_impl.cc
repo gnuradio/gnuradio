@@ -34,7 +34,6 @@ interleaved_short_to_complex_impl::interleaved_short_to_complex_impl(bool vector
                      gr::io_signature::make(1, 1, sizeof(gr_complex)),
                      vector_input ? 1 : 2),
       d_scalar(scale_factor),
-      d_vector(vector_input),
       d_swap(swap)
 {
     const int alignment_multiple = volk_get_alignment() / sizeof(gr_complex);
