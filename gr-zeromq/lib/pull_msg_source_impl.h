@@ -43,7 +43,7 @@ private:
 public:
     bool d_finished;
 
-    pull_msg_source_impl(char* address, int timeout);
+    pull_msg_source_impl(char* address, int timeout, bool bind);
     ~pull_msg_source_impl();
 
     bool start();
