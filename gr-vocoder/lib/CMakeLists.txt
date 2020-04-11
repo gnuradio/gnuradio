@@ -39,7 +39,6 @@ if(LIBCODEC2_FOUND)
 endif(LIBCODEC2_FOUND)
 if(LIBCODEC2_HAS_FREEDV_API)
   target_sources(gnuradio-vocoder PRIVATE
-    freedv_api.cc
     freedv_rx_ss_impl.cc
     freedv_tx_ss_impl.cc
     )
