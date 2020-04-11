@@ -32,8 +32,7 @@ interleaved_char_to_complex_impl::interleaved_char_to_complex_impl(bool vector_i
                      gr::io_signature::make(1, 1, (vector_input ? 2 : 1) * sizeof(char)),
                      gr::io_signature::make(1, 1, sizeof(gr_complex)),
                      vector_input ? 1 : 2),
-      d_scalar(scale_factor),
-      d_vector(vector_input)
+      d_scalar(scale_factor)
 {
     const int alignment_multiple = volk_get_alignment() / sizeof(gr_complex);
     set_alignment(std::max(1, alignment_multiple));

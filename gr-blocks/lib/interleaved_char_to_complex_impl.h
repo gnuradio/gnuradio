@@ -20,7 +20,6 @@ class BLOCKS_API interleaved_char_to_complex_impl : public interleaved_char_to_c
 {
 private:
     float d_scalar;
-    const bool d_vector;
 
 public:
     interleaved_char_to_complex_impl(bool vector_input = false,
