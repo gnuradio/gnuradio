@@ -73,7 +73,7 @@ def soft_dec_table_generator(soft_dec_gen, prec, Es=1):
 
     '''
 
-    npts = 2.0**prec
+    npts = int(2.0**prec)
     maxd = Es*numpy.sqrt(2.0)/2.0
     yrng = numpy.linspace(-maxd, maxd, npts)
     xrng = numpy.linspace(-maxd, maxd, npts)
@@ -110,7 +110,7 @@ def soft_dec_table(constel, symbols, prec, npwr=1):
     re_max = max(numpy.array(constel).real)
     im_max = max(numpy.array(constel).imag)
 
-    npts = 2.0**prec
+    npts = int(2.0**prec)
     yrng = numpy.linspace(im_min, im_max, npts)
     xrng = numpy.linspace(re_min, re_max, npts)
 
