@@ -16,7 +16,7 @@
 #include <gnuradio/prefs.h>
 #include <gnuradio/thread/thread.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/scoped_ptr.hpp>
+#include <memory>
 
 namespace {
 // Time, in milliseconds, to wait between checks to the Thrift runtime to see if
@@ -171,7 +171,7 @@ private:
 
     // Pointer to the structure containing statically allocated
     // state information for the applicaiton_base singleton.
-    static boost::scoped_ptr<thrift_application_base_impl> p_impl;
+    static std::unique_ptr<thrift_application_base_impl> p_impl;
 
     // Mutex to protect the endpoint string.
     gr::thread::mutex d_lock;

@@ -22,7 +22,7 @@ template <class T>
 class random_uniform_source_impl : public random_uniform_source<T>
 {
 private:
-    gr::random* d_rng;
+    gr::random d_rng;
 
 public:
     random_uniform_source_impl(int minimum, int maximum, int seed);

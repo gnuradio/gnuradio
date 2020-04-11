@@ -37,6 +37,7 @@ typedef int mode_t;
 #include <boost/format.hpp>
 #include <boost/thread.hpp>
 #include <iostream>
+#include <memory>
 
 namespace gr {
 
@@ -302,8 +303,8 @@ private:
     /*! \brief Period (seconds) over which watcher thread checks config file for changes
      */
     unsigned int watch_period;
-    /*! \brief Pointer to watch thread for config file changes */
-    boost::thread* watch_thread;
+    /*! \brief watch thread for config file changes */
+    std::unique_ptr<boost::thread> watch_thread;
 
     /*! \brief Watcher thread method
      * /param filename Name of configuration file

@@ -14,6 +14,7 @@
 #include "squelch_base_ff_impl.h"
 #include <gnuradio/analog/ctcss_squelch_ff.h>
 #include <gnuradio/fft/goertzel.h>
+#include <memory>
 
 namespace gr {
 namespace analog {
@@ -24,12 +25,12 @@ private:
     float d_freq;
     float d_level;
     int d_len;
-    int d_rate;
+    const int d_rate;
     bool d_mute;
 
-    fft::goertzel* d_goertzel_l;
-    fft::goertzel* d_goertzel_c;
-    fft::goertzel* d_goertzel_r;
+    std::unique_ptr<fft::goertzel> d_goertzel_l;
+    std::unique_ptr<fft::goertzel> d_goertzel_c;
+    std::unique_ptr<fft::goertzel> d_goertzel_r;
 
     static int find_tone(float freq);
     static void compute_freqs(const float& freq, float& f_l, float& f_r);

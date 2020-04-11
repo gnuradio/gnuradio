@@ -43,10 +43,10 @@ udp_source_impl::udp_source_impl(
       d_payload_size(payload_size),
       d_eof(eof),
       d_connected(false),
-      d_residual(0),
-      d_sent(0),
       d_rxbuf(4 * payload_size),
-      d_residbuf(BUF_SIZE_PAYLOADS * payload_size)
+      d_residbuf(BUF_SIZE_PAYLOADS * payload_size),
+      d_residual(0),
+      d_sent(0)
 {
     connect(host, port);
 }

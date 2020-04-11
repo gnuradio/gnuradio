@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,13 +22,11 @@ GR_PYTHON_INSTALL(
 
 GR_PYTHON_INSTALL(
     PROGRAMS
-    gr_modtool
     gr_plot
     gr_plot_const
     gr_plot_fft
     gr_plot_psd
     gr_plot_iq
     gr_plot_qt
-    gr_read_file_metadata
     DESTINATION ${GR_RUNTIME_DIR}
 )

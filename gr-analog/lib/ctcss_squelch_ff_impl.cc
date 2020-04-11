@@ -13,6 +13,7 @@
 #endif
 
 #include "ctcss_squelch_ff_impl.h"
+#include <boost/make_unique.hpp>
 
 namespace gr {
 namespace analog {
@@ -72,12 +73,12 @@ ctcss_squelch_ff_impl::ctcss_squelch_ff_impl(
     : block("ctcss_squelch_ff",
             io_signature::make(1, 1, sizeof(float)),
             io_signature::make(1, 1, sizeof(float))),
-      squelch_base_ff_impl("ctcss_squelch_ff", ramp, gate)
+      squelch_base_ff_impl("ctcss_squelch_ff", ramp, gate),
+      d_freq(freq),
+      d_level(level),
+      d_rate(rate),
+      d_mute(true)
 {
-    d_freq = freq;
-    d_level = level;
-    d_rate = rate;
-
     // Default is 100 ms detection time
     if (len == 0)
         d_len = (int)(d_rate / 10.0);
@@ -87,19 +88,12 @@ ctcss_squelch_ff_impl::ctcss_squelch_ff_impl(
     float f_l, f_r;
     compute_freqs(d_freq, f_l, f_r);
 
-    d_goertzel_l = new fft::goertzel(d_rate, d_len, f_l);
-    d_goertzel_c = new fft::goertzel(d_rate, d_len, freq);
-    d_goertzel_r = new fft::goertzel(d_rate, d_len, f_r);
-
-    d_mute = true;
+    d_goertzel_l = boost::make_unique<fft::goertzel>(d_rate, d_len, f_l);
+    d_goertzel_c = boost::make_unique<fft::goertzel>(d_rate, d_len, freq);
+    d_goertzel_r = boost::make_unique<fft::goertzel>(d_rate, d_len, f_r);
 }
 
-ctcss_squelch_ff_impl::~ctcss_squelch_ff_impl()
-{
-    delete d_goertzel_l;
-    delete d_goertzel_c;
-    delete d_goertzel_r;
-}
+ctcss_squelch_ff_impl::~ctcss_squelch_ff_impl() {}
 
 std::vector<float> ctcss_squelch_ff_impl::squelch_range() const
 {

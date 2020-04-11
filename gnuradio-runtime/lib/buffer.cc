@@ -13,21 +13,12 @@
 #endif
 #include "vmcircbuf.h"
 #include <gnuradio/buffer.h>
+#include <gnuradio/integer_math.h>
 #include <gnuradio/math.h>
 #include <assert.h>
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
-
-// the following header is deprecated as of Boost 1.66.0, and the
-// other API was introduced in Boost 1.58.0. Since we still support
-// Boost back to 1.54.0, use the older API if pre-1.5.80 and otherwise
-// use the newer API.
-#if (BOOST_VERSION < 105800)
-#include <boost/math/common_factor_rt.hpp>
-#else
-#include <boost/integer/common_factor_rt.hpp>
-#endif
 
 namespace gr {
 
@@ -68,13 +59,9 @@ static long s_buffer_reader_count = 0;
  *
  *     type_size * nitems == k * page_size
  */
-static long minimum_buffer_items(long type_size, long page_size)
+static inline long minimum_buffer_items(long type_size, long page_size)
 {
-#if (BOOST_VERSION < 105800)
-    return page_size / boost::math::gcd(type_size, page_size);
-#else
-    return page_size / boost::integer::gcd(type_size, page_size);
-#endif
+    return page_size / GR_GCD(type_size, page_size);
 }
 
 
@@ -82,7 +69,6 @@ buffer::buffer(int nitems, size_t sizeof_item, block_sptr link)
     : d_base(0),
       d_bufsize(0),
       d_max_reader_delay(0),
-      d_vmcircbuf(0),
       d_sizeof_item(sizeof_item),
       d_link(link),
       d_write_index(0),
@@ -103,7 +89,6 @@ buffer_sptr make_buffer(int nitems, size_t sizeof_item, block_sptr link)
 
 buffer::~buffer()
 {
-    delete d_vmcircbuf;
     assert(d_readers.size() == 0);
     s_buffer_count--;
 }
@@ -139,7 +124,7 @@ bool buffer::allocate_buffer(int nitems, size_t sizeof_item)
     }
 
     d_bufsize = nitems;
-    d_vmcircbuf = gr::vmcircbuf_sysconfig::make(d_bufsize * d_sizeof_item);
+    d_vmcircbuf.reset(gr::vmcircbuf_sysconfig::make(d_bufsize * d_sizeof_item));
     if (d_vmcircbuf == 0) {
         std::cerr << "gr::buffer::allocate_buffer: failed to allocate buffer of size "
                   << d_bufsize * d_sizeof_item / 1024 << " KB\n";

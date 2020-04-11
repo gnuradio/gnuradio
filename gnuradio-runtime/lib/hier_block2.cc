@@ -16,6 +16,7 @@
 #include <gnuradio/flowgraph.h>
 #include <gnuradio/hier_block2.h>
 #include <gnuradio/io_signature.h>
+#include <boost/make_unique.hpp>
 #include <iostream>
 
 namespace gr {
@@ -30,11 +31,13 @@ hier_block2_sptr make_hier_block2(const std::string& name,
         new hier_block2(name, input_signature, output_signature));
 }
 
+hier_block2::hier_block2() {}
+
 hier_block2::hier_block2(const std::string& name,
                          gr::io_signature::sptr input_signature,
                          gr::io_signature::sptr output_signature)
     : basic_block(name, input_signature, output_signature),
-      d_detail(new hier_block2_detail(this)),
+      d_detail(boost::make_unique<hier_block2_detail>(this)),
       hier_message_ports_in(pmt::PMT_NIL),
       hier_message_ports_out(pmt::PMT_NIL)
 {
@@ -46,7 +49,6 @@ hier_block2::~hier_block2()
 {
     disconnect_all();
     gnuradio::detail::sptr_magic::cancel_initial_sptr(this);
-    delete d_detail;
 }
 
 hier_block2::opaque_self hier_block2::self() { return shared_from_this(); }

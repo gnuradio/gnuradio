@@ -46,9 +46,7 @@ protected:
 
     bool d_connected;
 
-    virtual void check_for_disconnect();
     virtual void connect(bool initial_connection);
-
     virtual void run_listener();
 
 public:

@@ -31,7 +31,7 @@ private:
 public:
     bool d_finished;
 
-    req_msg_source_impl(char* address, int timeout);
+    req_msg_source_impl(char* address, int timeout, bool bind);
     ~req_msg_source_impl();
 
     bool start() override;

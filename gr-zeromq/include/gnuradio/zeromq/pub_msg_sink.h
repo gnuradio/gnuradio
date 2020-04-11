@@ -38,8 +38,11 @@ public:
      *
      * \param address  ZMQ socket address specifier
      * \param timeout  Receive timeout in milliseconds, default is 100ms, 1us increments
+     * \param bind     If true this block will bind to the address, otherwise it will
+     * connect; the default is to bind
+     *
      */
-    static sptr make(char* address, int timeout = 100);
+    static sptr make(char* address, int timeout = 100, bool bind = true);
 
     /*!
      * \brief Return a std::string of ZMQ_LAST_ENDPOINT from the underlying ZMQ socket.

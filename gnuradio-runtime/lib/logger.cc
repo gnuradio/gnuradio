@@ -20,6 +20,7 @@
 
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
+#include <boost/make_unique.hpp>
 #include <algorithm>
 #include <stdexcept>
 
@@ -87,7 +88,7 @@ void logger_config::load_config(std::string filename, unsigned int watch_period)
         instance.filename = filename;
         instance.watch_period = watch_period;
         // Stop any file watching thread
-        if (instance.watch_thread != NULL)
+        if (instance.watch_thread)
             stop_watch();
         // Load configuration
         // std::cout<<"GNURadio Loading logger
@@ -95,8 +96,8 @@ void logger_config::load_config(std::string filename, unsigned int watch_period)
         logger_configured = logger_load_config(instance.filename);
         // Start watch if required
         if (instance.watch_period > 0) {
-            instance.watch_thread =
-                new boost::thread(watch_file, instance.filename, instance.watch_period);
+            instance.watch_thread = boost::make_unique<boost::thread>(
+                watch_file, instance.filename, instance.watch_period);
         }
     }
 }
@@ -108,8 +109,7 @@ void logger_config::stop_watch()
     if (instance.watch_thread) {
         instance.watch_thread->interrupt();
         instance.watch_thread->join();
-        delete (instance.watch_thread);
-        instance.watch_thread = NULL;
+        instance.watch_thread.reset();
     }
 }
 

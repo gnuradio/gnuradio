@@ -19,12 +19,12 @@
 namespace gr {
 namespace zeromq {
 
-rep_msg_sink::sptr rep_msg_sink::make(char* address, int timeout)
+rep_msg_sink::sptr rep_msg_sink::make(char* address, int timeout, bool bind)
 {
-    return gnuradio::get_initial_sptr(new rep_msg_sink_impl(address, timeout));
+    return gnuradio::get_initial_sptr(new rep_msg_sink_impl(address, timeout, bind));
 }
 
-rep_msg_sink_impl::rep_msg_sink_impl(char* address, int timeout)
+rep_msg_sink_impl::rep_msg_sink_impl(char* address, int timeout, bool bind)
     : gr::block("rep_msg_sink",
                 gr::io_signature::make(0, 0, 0),
                 gr::io_signature::make(0, 0, 0)),
@@ -43,7 +43,12 @@ rep_msg_sink_impl::rep_msg_sink_impl(char* address, int timeout)
 
     int time = 0;
     d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
-    d_socket->bind(address);
+
+    if (bind) {
+        d_socket->bind(address);
+    } else {
+        d_socket->connect(address);
+    }
 
     message_port_register_in(d_port);
 }

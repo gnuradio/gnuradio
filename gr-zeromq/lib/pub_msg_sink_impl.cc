@@ -19,12 +19,12 @@
 namespace gr {
 namespace zeromq {
 
-pub_msg_sink::sptr pub_msg_sink::make(char* address, int timeout)
+pub_msg_sink::sptr pub_msg_sink::make(char* address, int timeout, bool bind)
 {
-    return gnuradio::get_initial_sptr(new pub_msg_sink_impl(address, timeout));
+    return gnuradio::get_initial_sptr(new pub_msg_sink_impl(address, timeout, bind));
 }
 
-pub_msg_sink_impl::pub_msg_sink_impl(char* address, int timeout)
+pub_msg_sink_impl::pub_msg_sink_impl(char* address, int timeout, bool bind)
     : gr::block("pub_msg_sink",
                 gr::io_signature::make(0, 0, 0),
                 gr::io_signature::make(0, 0, 0)),
@@ -32,15 +32,22 @@ pub_msg_sink_impl::pub_msg_sink_impl(char* address, int timeout)
 {
     int major, minor, patch;
     zmq::version(&major, &minor, &patch);
+
     if (major < 3) {
         d_timeout = timeout * 1000;
     }
 
     d_context = new zmq::context_t(1);
     d_socket = new zmq::socket_t(*d_context, ZMQ_PUB);
+
     int time = 0;
     d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
-    d_socket->bind(address);
+
+    if (bind) {
+        d_socket->bind(address);
+    } else {
+        d_socket->connect(address);
+    }
 
     message_port_register_in(pmt::mp("in"));
     set_msg_handler(pmt::mp("in"), boost::bind(&pub_msg_sink_impl::handler, this, _1));
