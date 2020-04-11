@@ -42,7 +42,7 @@ public:
      */
     static sptr make(int mode = freedv_api::MODE_1600,
                      float squelch_thresh = -100.0,
-                     int interleave_frames = 1);
+                     int interleave_frames = -1);
 
     virtual void set_squelch_thresh(float squelch_thresh) = 0;
     virtual float squelch_thresh() = 0;

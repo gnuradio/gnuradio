@@ -39,9 +39,9 @@ public:
      * \param msg_txt Low Rate message text (callsign, location)
      * \param interleave_frames FreeDV 700D mode number of frames to average error
      */
-    static sptr make(int mode = freedv_api::MODE_1600,
+    static sptr make(freedv_api::freedv_modes mode = freedv_api::MODE_1600,
                      const std::string msg_txt = "GNU Radio",
-                     int interleave_frames = 1);
+                     int interleave_frames = -1);
 };
 
 } /* namespace vocoder */

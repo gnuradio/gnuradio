@@ -50,16 +50,31 @@ freedv_rx_ss_impl::freedv_rx_ss_impl(int mode,
                 io_signature::make(1, 1, sizeof(short))),
       d_squelch_thresh(squelch_thresh)
 {
+    configure_default_loggers(d_logger, d_debug_logger, "freedv_rx_ss");
+    GR_LOG_INFO(d_debug_logger, "Mode " + std::to_string(mode));
 #ifdef FREEDV_MODE_700D
     if (mode == FREEDV_MODE_700D) {
-        d_adv.interleave_frames = interleave_frames;
-        if ((d_freedv = freedv_open_advanced(mode, &d_adv)) == NULL)
+        interleave_frames = (interleave_frames <= 0) ? 1 : interleave_frames;
+        d_adv.interleave_frames = interleave_frames ? 1 : 0;
+        if ((d_freedv = freedv_open_advanced(mode, &d_adv)) == NULL) {
             throw std::runtime_error("freedv_tx_ss_impl: freedv_open_advanced failed");
+        }
     } else {
+        if (interleave_frames > 0) {
+            GR_LOG_WARN(
+                d_logger,
+                "frame interleaving is only possible in the 700D mode, not in mode " +
+                    std::to_string(mode));
+        }
         if ((d_freedv = freedv_open(mode)) == NULL)
             throw std::runtime_error("freedv_tx_ss_impl: freedv_open failed");
     }
 #else
+    if (interleave_frames > 0) {
+        GR_LOG_WARN(d_logger,
+                    "frame interleaving is only possible in the 700D mode, which is not "
+                    "available");
+    }
     if ((d_freedv = freedv_open(mode)) == NULL)
         throw std::runtime_error("freedv_rx_ss_impl: freedv_open failed");
 #endif

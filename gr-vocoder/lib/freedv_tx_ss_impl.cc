@@ -15,9 +15,8 @@
 #include "freedv_tx_ss_impl.h"
 
 #include <gnuradio/io_signature.h>
-#include <iomanip>
-#include <iostream>
 #include <stdexcept>
+#include <string>
 
 extern "C" {
 char get_next_tx_char(void* callback_state)
@@ -40,14 +39,15 @@ char get_next_tx_char(void* callback_state)
 namespace gr {
 namespace vocoder {
 
-freedv_tx_ss::sptr
-freedv_tx_ss::make(int mode, const std::string msg_txt, int interleave_frames)
+freedv_tx_ss::sptr freedv_tx_ss::make(freedv_api::freedv_modes mode,
+                                      const std::string msg_txt,
+                                      int interleave_frames)
 {
     return gnuradio::get_initial_sptr(
         new freedv_tx_ss_impl(mode, msg_txt, interleave_frames));
 }
 
-freedv_tx_ss_impl::freedv_tx_ss_impl(int mode,
+freedv_tx_ss_impl::freedv_tx_ss_impl(freedv_api::freedv_modes mode,
                                      const std::string msg_txt,
                                      int interleave_frames)
     : sync_block("vocoder_freedv_tx_ss",
@@ -55,16 +55,33 @@ freedv_tx_ss_impl::freedv_tx_ss_impl(int mode,
                  io_signature::make(1, 1, sizeof(short))),
       d_msg_text(msg_txt)
 {
+    configure_default_loggers(d_logger, d_debug_logger, "freedv_tx_ss");
+    GR_LOG_INFO(d_debug_logger, "Mode " + std::to_string(mode));
 #ifdef FREEDV_MODE_700D
     if (mode == FREEDV_MODE_700D) {
-        d_adv.interleave_frames = interleave_frames;
-        if ((d_freedv = freedv_open_advanced(mode, &d_adv)) == NULL)
+        // interleave_frames = (interleave_frames <= 0) ? 1 : interleave_frames;
+        struct freedv_advanced advanced_settings;
+        advanced_settings.interleave_frames = interleave_frames;
+        if ((d_freedv = freedv_open_advanced(mode, &advanced_settings)) == NULL) {
             throw std::runtime_error("freedv_tx_ss_impl: freedv_open_advanced failed");
+        }
     } else {
-        if ((d_freedv = freedv_open(mode)) == NULL)
+        if (interleave_frames > 0) {
+            GR_LOG_WARN(
+                d_logger,
+                "frame interleaving is only possible in the 700D mode, not in mode " +
+                    std::to_string(mode));
+        }
+        if ((d_freedv = freedv_open(mode)) == NULL) {
             throw std::runtime_error("freedv_tx_ss_impl: freedv_open failed");
+        }
     }
 #else
+    if (interleave_frames > 0) {
+        GR_LOG_WARN(d_logger,
+                    "frame interleaving is only possible in the 700D mode, which is not "
+                    "available");
+    }
     if ((d_freedv = freedv_open(mode)) == NULL)
         throw std::runtime_error("freedv_tx_ss_impl: freedv_open failed");
 #endif
@@ -73,9 +90,17 @@ freedv_tx_ss_impl::freedv_tx_ss_impl(int mode,
     freedv_set_callback_txt(d_freedv, NULL, get_next_tx_char, (void*)&d_cb_state);
     d_nom_modem_samples = freedv_get_n_nom_modem_samples(d_freedv);
     set_output_multiple(d_nom_modem_samples);
+    assert(d_freedv);
 }
 
-freedv_tx_ss_impl::~freedv_tx_ss_impl() { freedv_close(d_freedv); }
+freedv_tx_ss_impl::~freedv_tx_ss_impl()
+{
+    if (!d_freedv) {
+        GR_LOG_ERROR(d_logger, "d_freedv context pointer null in destructor");
+    } else {
+        freedv_close(d_freedv);
+    }
+}
 
 void freedv_tx_ss_impl::set_clip(int val)
 {

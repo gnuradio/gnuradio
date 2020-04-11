@@ -11,6 +11,7 @@
 #ifndef INCLUDED_VOCODER_FREEDV_TX_SS_IMPL_H
 #define INCLUDED_VOCODER_FREEDV_TX_SS_IMPL_H
 
+#include <gnuradio/logger.h>
 #include <gnuradio/vocoder/freedv_tx_ss.h>
 
 extern "C" {
@@ -31,18 +32,18 @@ namespace vocoder {
 class freedv_tx_ss_impl : public freedv_tx_ss
 {
 private:
+    gr::logger_ptr d_logger, d_debug_logger;
     struct freedv_tx_callback_state d_cb_state;
     struct freedv* d_freedv;
     std::string d_msg_text;
     int d_nom_modem_samples;
     int d_clip;
     int d_tx_bpf;
-#ifdef FREEDV_MODE_700D
-    struct freedv_advanced d_adv;
-#endif
 
 public:
-    freedv_tx_ss_impl(int mode, const std::string txt_msg, int interleave_frames);
+    freedv_tx_ss_impl(freedv_api::freedv_modes mode,
+                      const std::string txt_msg,
+                      int interleave_frames);
     ~freedv_tx_ss_impl();
 
     void set_clip(bool val);

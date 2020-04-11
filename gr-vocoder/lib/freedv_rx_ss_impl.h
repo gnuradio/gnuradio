@@ -11,6 +11,7 @@
 #ifndef INCLUDED_VOCODER_FREEDV_RX_SS_IMPL_H
 #define INCLUDED_VOCODER_FREEDV_RX_SS_IMPL_H
 
+#include <gnuradio/logger.h>
 #include <gnuradio/vocoder/freedv_rx_ss.h>
 
 extern "C" {
@@ -29,6 +30,7 @@ namespace vocoder {
 class freedv_rx_ss_impl : public freedv_rx_ss
 {
 private:
+    gr::logger_ptr d_logger, d_debug_logger;
     struct freedv* d_freedv;
     int d_nin, d_nout;
     struct freedv_rx_callback_state d_cb_state;
