@@ -21,12 +21,12 @@
 namespace gr {
 namespace zeromq {
 
-pull_msg_source::sptr pull_msg_source::make(char* address, int timeout)
+pull_msg_source::sptr pull_msg_source::make(char* address, int timeout, bool bind)
 {
-    return gnuradio::get_initial_sptr(new pull_msg_source_impl(address, timeout));
+    return gnuradio::get_initial_sptr(new pull_msg_source_impl(address, timeout, bind));
 }
 
-pull_msg_source_impl::pull_msg_source_impl(char* address, int timeout)
+pull_msg_source_impl::pull_msg_source_impl(char* address, int timeout, bool bind)
     : gr::block("pull_msg_source",
                 gr::io_signature::make(0, 0, 0),
                 gr::io_signature::make(0, 0, 0)),
@@ -45,7 +45,12 @@ pull_msg_source_impl::pull_msg_source_impl(char* address, int timeout)
 
     int time = 0;
     d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
-    d_socket->connect(address);
+
+    if (bind) {
+        d_socket->bind(address);
+    } else {
+        d_socket->connect(address);
+    }
 
     message_port_register_out(d_port);
 }

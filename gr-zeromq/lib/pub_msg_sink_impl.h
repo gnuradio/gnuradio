@@ -25,7 +25,7 @@ private:
     zmq::socket_t* d_socket;
 
 public:
-    pub_msg_sink_impl(char* address, int timeout);
+    pub_msg_sink_impl(char* address, int timeout, bool bind);
     ~pub_msg_sink_impl();
 
     void handler(pmt::pmt_t msg);
