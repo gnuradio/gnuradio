@@ -26,7 +26,7 @@ except ImportError:
 try:
 	import matplotlib.pyplot as plt
 	from .distanceradar import DistanceRadar
-	from .azeplot import AzElPlot
+	from .azelplot import AzElPlot
 except ImportError:
 	from gnuradio import gr
 	gr.log.warn("Matplotlib is a required dependency to use DistanceRadar and AzElPlot."
