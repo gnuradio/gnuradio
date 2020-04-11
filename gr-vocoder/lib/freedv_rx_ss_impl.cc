@@ -48,9 +48,7 @@ freedv_rx_ss_impl::freedv_rx_ss_impl(int mode,
     : gr::block("vocoder_freedv_rx_ss",
                 io_signature::make(1, 1, sizeof(short)),
                 io_signature::make(1, 1, sizeof(short))),
-      d_mode(mode),
-      d_squelch_thresh(squelch_thresh),
-      d_interleave_frames(interleave_frames)
+      d_squelch_thresh(squelch_thresh)
 {
 #ifdef FREEDV_MODE_700D
     if (mode == FREEDV_MODE_700D) {
