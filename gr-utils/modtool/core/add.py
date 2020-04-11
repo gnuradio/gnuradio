@@ -232,7 +232,7 @@ class ModToolAdd(ModTool):
         if self._get_mainswigfile() is None:
             logger.warning('Warning: No main swig file found.')
             return
-        logger.info(f"Editing {self._file["swig"]}...")
+        logger.info(f'Editing {self._file["swig"]}...')
         mod_block_sep = '/'
         if self.info['version'] == '36':
             mod_block_sep = '_'
@@ -266,7 +266,7 @@ class ModToolAdd(ModTool):
         self.scm.mark_files_updated((os.path.join(self.info['pydir'], fname_py_qa),))
         if self.skip_cmakefiles or CMakeFileEditor(self._file['cmpython']).check_for_glob('qa_*.py'):
             return
-        logger.info(f"Editing {self.info["pydir"]}/CMakeLists.txt...")
+        logger.info(f'Editing {self.info["pydir"]}/CMakeLists.txt...')
         with open(self._file['cmpython'], 'a') as f:
             f.write(
                 'GR_ADD_TEST(qa_%s ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/%s)\n' % \
