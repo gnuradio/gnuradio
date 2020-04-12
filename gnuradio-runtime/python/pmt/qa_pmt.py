@@ -18,6 +18,10 @@ class test_pmt(unittest.TestCase):
     MAXINT32 = (2**31)-1
     MININT32 = (-MAXINT32)-1
 
+    def setUp(self):
+        from ctypes import sizeof, c_long
+        self.sizeof_long = sizeof(c_long)
+
     def test01(self):
         a = pmt.intern("a")
         b = pmt.from_double(123765)
@@ -112,6 +116,8 @@ class test_pmt(unittest.TestCase):
         self.assertEqual(const,pmt.to_long(deser))
 
     def test15(self):
+        if(self.sizeof_long <= 4):
+            return
         const = self.MAXINT32 + 1
         x_pmt = pmt.from_long(const)
         s = pmt.serialize_str(x_pmt)
@@ -137,6 +143,8 @@ class test_pmt(unittest.TestCase):
         self.assertEqual(const, x_long)
 
     def test18(self):
+        if(self.sizeof_long <= 4):
+            return
         const = self.MININT32 - 1
         x_pmt = pmt.from_long(const)
         s = pmt.serialize_str(x_pmt)
