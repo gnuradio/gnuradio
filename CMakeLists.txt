@@ -373,11 +373,18 @@ endif()
 ########################################################################
 message(STATUS "")
 message(STATUS "Configuring VOLK support...")
-find_package(Volk ${VOLK_MIN_VERSION} REQUIRED)
+find_package(Volk REQUIRED)
 message(STATUS "  Found VOLK:")
 message(STATUS "  * Version: ${VOLK_VERSION}")
 message(STATUS "  * Libraries: ${VOLK_LIBRARIES}")
 message(STATUS "  * Includes: ${VOLK_INCLUDE_DIRS}")
+if("${VOLK_VERSION}" STREQUAL "")
+  message(WARNING "Empty VOLK version string. Assuming compatibility. Good luck!")
+else()
+  if("${VOLK_VERSION}" VERSION_LESS ${VOLK_MIN_VERSION})
+    message(FATAL_ERROR "VOLK version ${VOLK_VERSION} < ${VOLK_MIN_VERSION}")
+  endif()
+endif()
 
 ########################################################################
 # Configure Log4CPP
