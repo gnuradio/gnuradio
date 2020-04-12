@@ -16,7 +16,6 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-network" ENABLE_GR_NETWORK
     Boost_FOUND
-    ENABLE_VOLK
     ENABLE_GNURADIO_RUNTIME
 )
 
