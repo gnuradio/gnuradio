@@ -10,7 +10,11 @@
 
 #include "gr_uhd_common.h"
 #include "usrp_source_impl.h"
+#include <gnuradio/prefs.h>
+#include <boost/format.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/thread/thread.hpp>
+#include <chrono>
 #include <mutex>
 #include <stdexcept>
 
@@ -35,7 +39,10 @@ usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t& device_addr,
       _recv_timeout(0.1), // seconds
       _recv_one_packet(true),
       _tag_now(false),
-      _issue_stream_cmd_on_start(issue_stream_cmd_on_start)
+      _issue_stream_cmd_on_start(issue_stream_cmd_on_start),
+      _last_log(std::chrono::steady_clock::now()),
+      _overflow_log_interval(
+          gr::prefs::singleton()->get_long("uhd", "logging_interval_ms", 750))
 {
     std::stringstream str;
     str << name() << unique_id();
@@ -74,6 +81,13 @@ void usrp_source_impl::set_samp_rate(double rate)
     }
     _samp_rate = this->get_samp_rate();
     _tag_now = true;
+    auto is_should_ratio = _samp_rate / rate;
+    if (is_should_ratio < 0.99 || is_should_ratio > 1.01) {
+        GR_LOG_WARN(
+            d_logger,
+            boost::format("Requested sample rate %g Hz not set; instead, %g Hz used.") %
+                rate % _samp_rate);
+    }
 }
 
 double usrp_source_impl::get_samp_rate(void)
@@ -589,10 +603,23 @@ int usrp_source_impl::work(int noutput_items,
         // its ok to timeout, perhaps the user is doing finite streaming
         return 0;
 
-    case ::uhd::rx_metadata_t::ERROR_CODE_OVERFLOW:
+    case ::uhd::rx_metadata_t::ERROR_CODE_OVERFLOW: {
+        static auto oflow_msg =
+            boost::format("In the last %d ms, %d overflows occurred.");
         _tag_now = true;
+        ++_overflow_count;
+        auto now = std::chrono::steady_clock::now();
+        auto delta = now - _last_log;
+        if (delta > _overflow_log_interval) {
+            _last_log = now;
+            auto ms =
+                std::chrono::duration_cast<std::chrono::milliseconds>(delta).count();
+            GR_LOG_ERROR(d_logger, oflow_msg % ms % _overflow_count);
+            _overflow_count = 0;
+        }
         // ignore overflows and try work again
         return work(noutput_items, input_items, output_items);
+    }
 
     default:
         GR_LOG_WARN(d_logger,
