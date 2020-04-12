@@ -76,21 +76,21 @@ templates:
         ${beta}))
 
 cpp_templates:
-    includes: ['#include <gnuradio/filter/firdes.h>']
-    declarations: 'filter::firdes::sptr ${id};'
+    includes: ['#include <gnuradio/filter/firdes.h>', '#include <gnuradio/filter/interp_fir_filter.h>', '#include <gnuradio/filter/fir_filter_blk.h>']
+    declarations: 'gr::filter::${type}::sptr ${id};'
     make: |-
         this->${id} = filter::${type}::make(
             ${ interp if str(type).startswith('interp') else decim },
-            firdes.low_pass(
+            gr::filter::firdes::low_pass(
                 ${gain},
                 ${samp_rate},
                 ${cutoff_freq},
                 ${width},
-                ${win},
+                ${win.replace('firdes.', 'gr::filter::firdes::')},
                 ${beta}));
     link: ['gnuradio-filter']
     callbacks:
-    - set_taps(firdes::low_pass(${gain}, ${samp_rate}, ${cutoff_freq}, ${width}, ${win},
+    - set_taps(gr::filter::firdes::low_pass(${gain}, ${samp_rate}, ${cutoff_freq}, ${width}, ${win.replace('firdes.', 'gr::filter::firdes::')},
         ${beta}))
 
 documentation: |-

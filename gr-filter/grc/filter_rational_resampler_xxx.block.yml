@@ -1,6 +1,6 @@
 id: rational_resampler_xxx
 label: Rational Resampler
-flags: [ python ]
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -56,6 +56,50 @@ templates:
         % else:
                 fractional_bw=None)
         % endif
+    callbacks:
+    - set_taps(${taps})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/rational_resampler_base.h>']
+    declarations: 'gr::filter::rational_resampler_base_${type}::sptr ${id};'
+    make: |-
+        <%
+            taps = self.context.get('taps')
+            try: taps
+            except (NameError): taps = None
+            taps = None if (len(taps) == 0) else taps
+        %>
+        % if taps == None or len(taps) == 0:
+            <%
+            # Leverage python module to generate default values for taps
+            from gnuradio import filter
+            %>
+            <%
+               fbw = self.context.get('fbw')
+               fbw = float(fbw) if (len(fbw) > 0 and float(fbw) != 0) else None
+               iotype = self.context.get('type')
+               ftype = eval('filter.rational_resampler.rational_resampler_' + str(iotype))
+               fltr = ftype(int(self.context.get('interp')), int(self.context.get('decim')), taps, fbw)
+               taps = fltr.taps()
+               # Format complex taps values for C++
+               if iotype == 'fcc' or iotype == 'ccc':
+                   cmplx_taps = []
+                   for cmplx in taps:
+                       cmplx_taps.append({cmplx.real, cmplx.imag})
+                   taps = cmplx_taps
+            %>
+        % endif
+
+        % if str(type.taps) == "complex_vector":
+        std::vector<gr_complex> taps = {${str(taps)[1:-1]}};
+        % else:
+        std::vector<float> taps = {${str(taps)[1:-1]}};
+        % endif
+        this->${id} = gr::filter::rational_resampler_base_${type}::make(
+            ${interp},
+            ${decim},
+            taps);
+    link: ['gnuradio-filter']
     callbacks:
     - set_taps(${taps})
 
