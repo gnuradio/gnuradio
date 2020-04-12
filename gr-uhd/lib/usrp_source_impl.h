@@ -11,7 +11,12 @@
 #include "usrp_block_impl.h"
 #include <gnuradio/uhd/usrp_source.h>
 #include <uhd/convert.hpp>
+#include <algorithm>
+#include <chrono>
+#include <complex>
 #include <mutex>
+#include <string>
+#include <vector>
 
 static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("rx_time");
 static const pmt::pmt_t RATE_KEY = pmt::string_to_symbol("rx_rate");
@@ -127,6 +132,9 @@ private:
     ::uhd::rx_metadata_t _metadata;
     pmt::pmt_t _id;
     bool _issue_stream_cmd_on_start;
+    std::chrono::time_point<std::chrono::steady_clock> _last_log;
+    unsigned int _overflow_count;
+    std::chrono::milliseconds _overflow_log_interval;
 
     // tag shadows
     double _samp_rate;

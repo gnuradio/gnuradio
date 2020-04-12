@@ -11,7 +11,9 @@
 #include "gr_uhd_common.h"
 #include "usrp_sink_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/prefs.h>
 #include <boost/thread/thread.hpp>
+#include <chrono>
 #include <climits>
 #include <stdexcept>
 
@@ -432,8 +434,10 @@ int usrp_sink_impl::work(int noutput_items,
             // There is a tag gap since no length_tag was found immediately following
             // the last sample of the previous burst. Drop samples until the next
             // length_tag is found. Notify the user of the tag gap.
-            GR_LOG_ERROR(d_logger, "tG");
-            // increment the timespec by the number of samples dropped
+            static auto formatted_log_entry =
+                boost::format("Tag gap (nitems_read = %d): no more items to send in "
+                              "current burst, but got %d more items; dropping them.");
+            GR_LOG_ERROR(d_logger, formatted_log_entry % samp0_count % ninput_items);
             _metadata.time_spec += ::uhd::time_spec_t(0, ninput_items, _sample_rate);
             return ninput_items;
         }
@@ -454,9 +458,8 @@ int usrp_sink_impl::work(int noutput_items,
 
     // Some post-processing tasks if we actually transmitted the entire burst
     if (not _pending_cmds.empty() && num_sent == size_t(ninput_items)) {
-        GR_LOG_DEBUG(d_debug_logger,
-                     boost::format("Executing %d pending commands.") %
-                         _pending_cmds.size());
+        static auto debug_msg = boost::format("Executing %d pending commands.");
+        GR_LOG_DEBUG(d_debug_logger, debug_msg % _pending_cmds.size());
         for (const auto& cmd_pmt : _pending_cmds) {
             msg_handler_command(cmd_pmt);
         }
@@ -694,6 +697,22 @@ void usrp_sink_impl::async_event_loop()
     typedef ::uhd::async_metadata_t md_t;
     md_t metadata;
 
+    using clock = std::chrono::steady_clock;
+    auto millisecond_cast = [](auto timediff) {
+        return std::chrono::duration_cast<std::chrono::milliseconds>(timediff);
+    };
+    unsigned int underflow_counter = 0;
+    unsigned int time_error_counter = 0;
+    unsigned int sequence_error_counter = 0;
+    auto last_underflow_log = clock::now();
+    auto last_time_err_log = clock::now();
+    auto last_sequence_err_log = clock::now();
+    auto log_interval = std::chrono::milliseconds(
+        gr::prefs::singleton()->get_long("uhd", "logging_interval_ms", 750));
+
+    auto uflow_msg = boost::format("In the last %d ms, %d underflows occurred.");
+    auto time_msg = boost::format("In the last %d ms, %d cmd time errors occurred.");
+
     while (_async_event_loop_running) {
         while (!_dev->get_device()->recv_async_msg(metadata, 0.1)) {
             if (!_async_event_loop_running) {
@@ -708,18 +727,23 @@ void usrp_sink_impl::async_event_loop()
         }
         if (metadata.event_code & md_t::EVENT_CODE_UNDERFLOW) {
             event_list = pmt::list_add(event_list, UNDERFLOW_KEY);
+            ++underflow_counter;
         }
         if (metadata.event_code & md_t::EVENT_CODE_UNDERFLOW_IN_PACKET) {
             event_list = pmt::list_add(event_list, UNDERFLOW_IN_PACKET_KEY);
+            ++underflow_counter;
         }
         if (metadata.event_code & md_t::EVENT_CODE_SEQ_ERROR) {
             event_list = pmt::list_add(event_list, SEQ_ERROR_KEY);
+            ++sequence_error_counter;
         }
         if (metadata.event_code & md_t::EVENT_CODE_SEQ_ERROR_IN_BURST) {
             event_list = pmt::list_add(event_list, SEQ_ERROR_IN_BURST_KEY);
+            ++sequence_error_counter;
         }
         if (metadata.event_code & md_t::EVENT_CODE_TIME_ERROR) {
             event_list = pmt::list_add(event_list, TIME_ERROR_KEY);
+            ++time_error_counter;
         }
 
         if (!pmt::eq(event_list, pmt::PMT_NIL)) {
@@ -735,8 +759,37 @@ void usrp_sink_impl::async_event_loop()
             pmt::pmt_t msg = pmt::cons(ASYNC_MSG_KEY, value);
             message_port_pub(ASYNC_MSGS_PORT_KEY, msg);
         }
+        if (underflow_counter) {
+            auto now = clock::now();
+            auto delta = now - last_underflow_log;
+            if (delta > log_interval) {
+                auto ms = millisecond_cast(delta).count();
+                GR_LOG_ERROR(d_logger, uflow_msg % ms % underflow_counter);
+                last_underflow_log = now;
+                underflow_counter = 0;
+            }
+        }
+        if (time_error_counter) {
+            auto now = clock::now();
+            auto delta = now - last_time_err_log;
+            if (delta > log_interval) {
+                auto ms = millisecond_cast(delta).count();
+                GR_LOG_ERROR(d_logger, time_msg % ms % time_error_counter);
+                last_time_err_log = now;
+                time_error_counter = 0;
+            }
+        }
+        if (sequence_error_counter) {
+            auto now = clock::now();
+            auto delta = now - last_sequence_err_log;
+            if (delta > log_interval) {
+                auto ms = millisecond_cast(delta).count();
+                GR_LOG_ERROR(d_logger, time_msg % ms % sequence_error_counter);
+                last_sequence_err_log = now;
+                time_error_counter = 0;
+            }
+        }
     }
 }
-
-} /* namespace uhd */
-} /* namespace gr */
+} // namespace uhd
+} // namespace gr
