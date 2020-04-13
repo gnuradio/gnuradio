@@ -8,13 +8,12 @@
  *
  */
 
+#include <gnuradio/logger.h>
 #include <gnuradio/trellis/base.h>
 #include <gnuradio/trellis/fsm.h>
 #include <stdlib.h>
 #include <cmath>
-#include <cstdio>
 #include <fstream>
-#include <iostream>
 #include <stdexcept>
 #include <string>
 
@@ -419,6 +418,8 @@ void fsm::generate_PS_PI()
 //######################################################################
 void fsm::generate_TM()
 {
+    gr::logger_ptr logger, debug_logger;
+    gr::configure_default_loggers(logger, debug_logger, "gnuradio-config-info.cc");
     d_TMi.resize(d_S * d_S);
     d_TMl.resize(d_S * d_S);
 
@@ -439,8 +440,12 @@ void fsm::generate_TM()
         if (done == false && d_S > 1) {
             // throw std::runtime_error ("fsm::generate_TM(): FSM appears to be
             // disconnected");
-            printf("fsm::generate_TM(): FSM appears to be disconnected\n");
-            printf("state %d cannot be reached from all other states\n", s);
+
+            GR_LOG_ERROR(
+                logger,
+                (boost::format("fsm::generate_TM(): FSM appears to be disconnected"
+                               "state %d cannot be reached from all other states") %
+                 s));
         }
     }
 }
@@ -476,8 +481,7 @@ void fsm::write_trellis_svg(std::string filename, int number_stages)
 {
     std::ofstream trellis_fname(filename.c_str());
     if (!trellis_fname) {
-        std::cout << "file not found " << std::endl;
-        exit(-1);
+        throw std::runtime_error("file not found");
     }
     const int TRELLIS_Y_OFFSET = 30;
     const int TRELLIS_X_OFFSET = 20;
@@ -566,8 +570,7 @@ void fsm::write_fsm_txt(std::string filename)
 {
     std::ofstream trellis_fname(filename.c_str());
     if (!trellis_fname) {
-        std::cout << "file not found " << std::endl;
-        exit(-1);
+        throw std::runtime_error("file not found");
     }
     trellis_fname << d_I << ' ' << d_S << ' ' << d_O << std::endl;
     trellis_fname << std::endl;
