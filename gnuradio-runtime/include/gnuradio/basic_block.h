@@ -13,6 +13,7 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/io_signature.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/msg_accepter.h>
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/sptr_magic.h>
@@ -20,7 +21,6 @@
 #include <boost/function.hpp>
 #include <boost/thread/condition_variable.hpp>
 #include <deque>
-#include <iostream>
 #include <map>
 #include <string>
 
@@ -73,6 +73,11 @@ protected:
     std::string d_symbol_alias;
     vcolor d_color;
     bool d_rpc_set;
+
+    /*! Used by blocks to access the logger system.
+     */
+    gr::logger_ptr d_logger;       //! Default logger
+    gr::logger_ptr d_debug_logger; //! Verbose logger
 
     msg_queue_map_t msg_queue;
     std::vector<rpcbasic_sptr> d_rpc_vars; // container for all RPC variables

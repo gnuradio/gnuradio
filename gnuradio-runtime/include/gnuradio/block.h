@@ -919,11 +919,6 @@ protected:
      */
     gr::thread::mutex d_setlock;
 
-    /*! Used by blocks to access the logger system.
-     */
-    gr::logger_ptr d_logger;
-    gr::logger_ptr d_debug_logger;
-
     // These are really only for internal use, but leaving them public avoids
     // having to work up an ever-varying list of friend GR_RUNTIME_APIs
 
