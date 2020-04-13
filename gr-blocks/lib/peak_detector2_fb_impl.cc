@@ -88,9 +88,10 @@ int peak_detector2_fb_impl::work(int noutput_items,
                 sigout[i] = d_avg;
             if (iptr[i] > d_avg * (1.0f + d_threshold_factor_rise)) {
                 d_found = true;
-                d_peak_val = std::numeric_limits<float>::min();
+                d_peak_val = iptr[i];
+                d_peak_ind = i;
                 set_output_multiple(d_look_ahead);
-                return i;
+                return i + 1;
             }
         }
         return noutput_items;
