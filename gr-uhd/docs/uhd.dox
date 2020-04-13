@@ -210,5 +210,19 @@ resampler to take care of the difference.
     self.resampler = filter.pfb.arb_resampler_ccf(resample)
 \endcode
 
+\section Logging
+
+gr-uhd will emit log messages when unexpected events occur.
+
+For under- and overflows, as well as command time errors, since these tend to happen in high-rate scenarios, such errors are counted for logging intervals. The first error after a time longer than the logging interval has passed is logged immediately, but subsequent log entries are accumulated.
+
+The logging interval can be configured using the GNU Radio preferences framework (i.e. gnuradio.conf file), as follows:
+
+\code
+[uhd]
+logging_interval_ms=750
+\endcode
+
+It is an integer that defaults to 750, representing the minimum number of milliseconds between logged under-, overflow events or command time errors.
 */
 // vim: set ft=doxygen:

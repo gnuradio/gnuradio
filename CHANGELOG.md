@@ -426,6 +426,18 @@ amplitude, offset and phase parameters
 - Unhandled exceptions now handled, much calmer
 - Avoid infinite blocking in `tb.stop()` by using `ZMQ_LINGER`
 
+#### gr-uhd
+
+- Change of log method, and increase message verbosity
+
+### Added
+
+#### gr-uhd
+
+- Added `gr::prefs`-configurable logging interval for underflow, overflow and
+  command time error (`[uhd]` section, `logging_interval_ms` key, milliseconds
+  integer)
+
 ## [3.8.0.0] - 2019-08-09
 
 Witness me!
