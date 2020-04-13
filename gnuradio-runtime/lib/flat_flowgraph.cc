@@ -20,7 +20,6 @@
 #include <volk/volk.h>
 #include <boost/format.hpp>
 #include <iostream>
-#include <map>
 
 namespace gr {
 

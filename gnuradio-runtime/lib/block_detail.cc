@@ -15,7 +15,6 @@
 #include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/logger.h>
-#include <iostream>
 
 namespace gr {
 

@@ -357,8 +357,10 @@ long block::min_output_buffer(size_t i)
 
 void block::set_min_output_buffer(long min_output_buffer)
 {
-    std::cout << "set_min_output_buffer on block " << unique_id() << " to "
-              << min_output_buffer << std::endl;
+    GR_LOG_INFO(d_debug_logger,
+                std::string("set_min_output_buffer on block ") +
+                    std::to_string(unique_id()) + " to " +
+                    std::to_string(min_output_buffer));
     for (int i = 0; i < output_signature()->max_streams(); i++) {
         set_min_output_buffer(i, min_output_buffer);
     }
@@ -594,14 +596,17 @@ void block::reset_perf_counters()
 
 void block::system_handler(pmt::pmt_t msg)
 {
-    // std::cout << "system_handler " << msg << "\n";
     pmt::pmt_t op = pmt::car(msg);
     if (pmt::eqv(op, d_pmt_done)) {
         d_finished = pmt::to_long(pmt::cdr(msg));
+        GR_LOG_INFO(d_debug_logger,
+                    std::string("Received shutdown message on system port, finished = ") +
+                        std::to_string(d_finished));
         global_block_registry.notify_blk(alias());
     } else {
-        std::cout << "WARNING: bad message op on system port!\n";
-        pmt::print(msg);
+        GR_LOG_ERROR(d_logger,
+                     std::string("bad message op on system port: ") +
+                         pmt::write_string(msg));
     }
 }
 
