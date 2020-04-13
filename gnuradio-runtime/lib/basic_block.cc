@@ -39,6 +39,7 @@ basic_block::basic_block(const std::string& name,
       d_rpc_set(false),
       d_message_subscribers(pmt::make_dict())
 {
+    configure_default_loggers(d_logger, d_debug_logger, d_symbol_name);
     s_ncurrently_allocated++;
 }
 
@@ -177,7 +178,9 @@ void basic_block::insert_tail(pmt::pmt_t which_port, pmt::pmt_t msg)
 
     if ((msg_queue.find(which_port) == msg_queue.end()) ||
         (msg_queue_ready.find(which_port) == msg_queue_ready.end())) {
-        std::cout << "target port = " << pmt::symbol_to_string(which_port) << std::endl;
+        GR_LOG_ERROR(d_logger,
+                     std::string("attempted insertion on invalid queue ") +
+                         pmt::symbol_to_string(which_port));
         throw std::runtime_error("attempted to insert_tail on invalid queue!");
     }
 
