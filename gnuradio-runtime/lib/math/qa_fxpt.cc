@@ -14,11 +14,8 @@
 
 #include <gnuradio/fxpt.h>
 #include <gnuradio/math.h>
-#include <math.h>
-#include <stdio.h>
-#include <unistd.h>
 #include <boost/test/unit_test.hpp>
-#include <iostream>
+#include <cmath>
 
 static const float SIN_COS_TOLERANCE = 1e-5;
 
@@ -60,7 +57,7 @@ BOOST_AUTO_TEST_CASE(t1)
     BOOST_CHECK(std::abs(-0.707106781 - gr::fxpt::sin(-0x20000000)) <= SIN_COS_TOLERANCE);
 
     for (float p = -GR_M_PI; p < GR_M_PI; p += 2 * GR_M_PI / 3600) {
-        float expected = sin(p);
+        float expected = std::sin(p);
         float actual = gr::fxpt::sin(gr::fxpt::float_to_fixed(p));
         BOOST_CHECK(std::abs(expected - actual) <= SIN_COS_TOLERANCE);
     }
@@ -69,7 +66,7 @@ BOOST_AUTO_TEST_CASE(t1)
 BOOST_AUTO_TEST_CASE(t2)
 {
     for (float p = -GR_M_PI; p < GR_M_PI; p += 2 * GR_M_PI / 3600) {
-        float expected = cos(p);
+        float expected = std::cos(p);
         float actual = gr::fxpt::cos(gr::fxpt::float_to_fixed(p));
         BOOST_CHECK(std::abs(expected - actual) <= SIN_COS_TOLERANCE);
     }
@@ -78,8 +75,8 @@ BOOST_AUTO_TEST_CASE(t2)
 BOOST_AUTO_TEST_CASE(t3)
 {
     for (float p = -GR_M_PI; p < GR_M_PI; p += 2 * GR_M_PI / 3600) {
-        float expected_sin = sin(p);
-        float expected_cos = cos(p);
+        float expected_sin = std::sin(p);
+        float expected_cos = std::cos(p);
         float actual_sin;
         float actual_cos;
         gr::fxpt::sincos(gr::fxpt::float_to_fixed(p), &actual_sin, &actual_cos);

@@ -14,11 +14,8 @@
 
 #include "vco.h"
 #include <gnuradio/fxpt_vco.h>
-#include <math.h>
-#include <stdio.h>
-#include <unistd.h>
 #include <boost/test/unit_test.hpp>
-#include <iostream>
+#include <cmath>
 
 static const float SIN_COS_TOLERANCE = 1e-5;
 
@@ -27,7 +24,7 @@ static const float SIN_COS_AMPL = 0.8;
 
 static const int SIN_COS_BLOCK_SIZE = 100000;
 
-static double max_d(double a, double b) { return fabs(a) > fabs(b) ? a : b; }
+static double max_d(double a, double b) { return std::fabs(a) > std::fabs(b) ? a : b; }
 
 BOOST_AUTO_TEST_CASE(t0)
 {
@@ -37,7 +34,7 @@ BOOST_AUTO_TEST_CASE(t0)
     float input[SIN_COS_BLOCK_SIZE];
 
     for (int i = 0; i < SIN_COS_BLOCK_SIZE; i++) {
-        input[i] = sin(double(i));
+        input[i] = std::sin(double(i));
     }
 
     for (int i = 0; i < SIN_COS_BLOCK_SIZE; i++) {
@@ -70,7 +67,7 @@ BOOST_AUTO_TEST_CASE(t1)
     double max_error = 0;
 
     for (int i = 0; i < SIN_COS_BLOCK_SIZE; i++) {
-        input[i] = sin(double(i));
+        input[i] = std::sin(double(i));
     }
 
     ref_vco.cos(
