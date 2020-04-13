@@ -90,7 +90,7 @@ int peak_detector2_fb_impl::work(int noutput_items,
                 d_found = true;
                 d_peak_val = std::numeric_limits<float>::min();
                 set_output_multiple(d_look_ahead);
-                return i;
+                return i + 1;
             }
         }
         return noutput_items;
