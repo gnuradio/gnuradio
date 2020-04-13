@@ -115,6 +115,32 @@ class test_peak_detector2(gr_unittest.TestCase):
         # only part of the expected_result
         self.assertEqual(expected_result[0:len(dst_data)], dst_data)
 
+    def test_peak5(self):
+        #print "\n\nTEST 5"
+        tb = self.tb
+
+        data = [0, 0, 0, 10, 0, 0, 0, 0]
+        alpha = 0.25
+        expected_result_peak = [0, 0, 0, 1, 0, 0, 0, 0]
+        expected_result_average = [0]
+        for i in data:
+            expected_result_average.append(expected_result_average[-1] * (1 - alpha) + i * alpha)
+
+        src = blocks.vector_source_f(data, False)
+        regen = blocks.peak_detector2_fb(2.0, 2, alpha)
+        dst = blocks.vector_sink_b()
+        avg = blocks.vector_sink_f()
+
+        tb.connect(src, regen)
+        tb.connect((regen, 0), dst)
+        tb.connect((regen, 1), avg)
+        tb.run()
+
+        dst_data = dst.data()
+        dst_avg = avg.data()
+
+        self.assertEqual(expected_result_peak, dst_data)
+        self.assertFloatTuplesAlmostEqual(expected_result_average[1:], dst_avg)
 
 if __name__ == '__main__':
     gr_unittest.run(test_peak_detector2)
