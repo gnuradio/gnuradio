@@ -121,15 +121,15 @@ class test_peak_detector2(gr_unittest.TestCase):
         #print "\n\nTEST 5"
         tb = self.tb
 
-        data = [0, 1, 3, 7, 5, 2, 1, 0]
-        alpha = 0.1
+        data = [0, 0, 0, 10, 0, 0, 0, 0]
+        alpha = 0.25
         expected_result_peak = [0, 0, 0, 1, 0, 0, 0, 0]
         expected_result_average = [0]
         for i in data:
             expected_result_average.append(expected_result_average[-1] * (1 - alpha) + i * alpha)
 
         src = blocks.vector_source_f(data, False)
-        regen = blocks.peak_detector2_fb(3.0, 2, alpha)
+        regen = blocks.peak_detector2_fb(2.0, 2, alpha)
         dst = blocks.vector_sink_b()
         avg = blocks.vector_sink_f()
 
