@@ -48,8 +48,8 @@ wavfile_sink::sptr wavfile_sink::make(const char* filename,
                                       unsigned int sample_rate,
                                       int bits_per_sample)
 {
-    return gnuradio::get_initial_sptr(
-        new wavfile_sink_impl(filename, n_channels, sample_rate, bits_per_sample));
+    return gnuradio::get_initial_sptr(new wavfile_sink_impl(
+        filename, n_channels, sample_rate, bits_per_sample));
 }
 
 wavfile_sink_impl::wavfile_sink_impl(const char* filename,
@@ -59,32 +59,20 @@ wavfile_sink_impl::wavfile_sink_impl(const char* filename,
     : sync_block("wavfile_sink",
                  io_signature::make(1, n_channels, sizeof(float)),
                  io_signature::make(0, 0, 0)),
-      d_sample_rate(sample_rate),
-      d_nchans(n_channels),
-      d_fp(0),
-      d_new_fp(0),
+      d_h{}, // Init with zeros
+      d_fp(nullptr),
+      d_new_fp(nullptr),
       d_updated(false)
 {
-    if (bits_per_sample != 8 && bits_per_sample != 16) {
-        throw std::runtime_error("Invalid bits per sample (supports 8 and 16)");
-    }
-    d_bytes_per_sample = bits_per_sample / 8;
-    d_bytes_per_sample_new = d_bytes_per_sample;
+    d_h.sample_rate = sample_rate;
+    d_h.nchans = n_channels;
+
+    set_bits_per_sample_unlocked(bits_per_sample);
+
+    d_h.bytes_per_sample = d_bytes_per_sample_new;
 
     if (!open(filename)) {
-        throw std::runtime_error("can't open file");
-    }
-
-    if (bits_per_sample == 8) {
-        d_max_sample_val = 0xFF;
-        d_min_sample_val = 0;
-        d_normalize_fac = d_max_sample_val / 2;
-        d_normalize_shift = 1;
-    } else {
-        d_max_sample_val = 0x7FFF;
-        d_min_sample_val = -0x7FFF;
-        d_normalize_fac = d_max_sample_val;
-        d_normalize_shift = 0;
+        throw std::runtime_error("can't open WAV file");
     }
 }
 
@@ -93,10 +81,10 @@ bool wavfile_sink_impl::open(const char* filename)
     gr::thread::scoped_lock guard(d_mutex);
 
     // we use the open system call to get access to the O_LARGEFILE flag.
+    int flags = OUR_O_LARGEFILE | OUR_O_BINARY | O_CREAT | O_WRONLY | O_TRUNC;
     int fd;
-    if ((fd = ::open(filename,
-                     O_WRONLY | O_CREAT | O_TRUNC | OUR_O_LARGEFILE | OUR_O_BINARY,
-                     0664)) < 0) {
+
+    if ((fd = ::open(filename, flags, 0664)) < 0) {
         GR_LOG_ERROR(d_logger,
                      boost::format("::open: %s: %s") % filename % strerror(errno));
         return false;
@@ -104,22 +92,26 @@ bool wavfile_sink_impl::open(const char* filename)
 
     if (d_new_fp) { // if we've already got a new one open, close it
         fclose(d_new_fp);
-        d_new_fp = 0;
+        d_new_fp = nullptr;
     }
 
-    if ((d_new_fp = fdopen(fd, "wb")) == NULL) {
+    if (!(d_new_fp = fdopen(fd, "wb"))) {
         GR_LOG_ERROR(d_logger,
                      boost::format("fdopen: %s: %s") % filename % strerror(errno));
+
         ::close(fd); // don't leak file descriptor if fdopen fails.
         return false;
     }
-    d_updated = true;
 
-    if (!wavheader_write(d_new_fp, d_sample_rate, d_nchans, d_bytes_per_sample_new)) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("could not write to WAV file: %s") % strerror(errno))
-        exit(-1);
+    d_h.first_sample_pos = 44;
+    if (!wavheader_write(
+            d_new_fp, d_h.sample_rate, d_h.nchans, d_bytes_per_sample_new)) {
+        GR_LOG_ERROR(d_logger, boost::format("could not save WAV header"));
+        fclose(d_new_fp);
+        return false;
     }
+
+    d_updated = true;
 
     return true;
 }
@@ -136,12 +128,12 @@ void wavfile_sink_impl::close()
 
 void wavfile_sink_impl::close_wav()
 {
-    unsigned int byte_count = d_sample_count * d_bytes_per_sample;
-
-    wavheader_complete(d_fp, byte_count);
+    if (!wavheader_complete(d_fp, d_h.first_sample_pos)) {
+        GR_LOG_ERROR(d_logger, boost::format("could not save WAV header"));
+    }
 
     fclose(d_fp);
-    d_fp = NULL;
+    d_fp = nullptr;
 }
 
 wavfile_sink_impl::~wavfile_sink_impl() { stop(); }
@@ -150,7 +142,7 @@ bool wavfile_sink_impl::stop()
 {
     if (d_new_fp) {
         fclose(d_new_fp);
-        d_new_fp = NULL;
+        d_new_fp = nullptr;
     }
 
     close();
@@ -162,7 +154,7 @@ int wavfile_sink_impl::work(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
 {
-    float** in = (float**)&input_items[0];
+    auto in = (float**)&input_items[0];
     int n_in_chans = input_items.size();
 
     short int sample_buf_s;
@@ -170,12 +162,14 @@ int wavfile_sink_impl::work(int noutput_items,
     int nwritten;
 
     gr::thread::scoped_lock guard(d_mutex); // hold mutex for duration of this block
-    do_update();                            // update: d_fp is reqd
+    do_update();                            // update: d_fp is read
     if (!d_fp)                              // drop output on the floor
         return noutput_items;
 
+    int nchans = d_h.nchans;
+    int bytes_per_sample = d_h.bytes_per_sample;
     for (nwritten = 0; nwritten < noutput_items; nwritten++) {
-        for (int chan = 0; chan < d_nchans; chan++) {
+        for (int chan = 0; chan < nchans; chan++) {
             // Write zeros to channels which are in the WAV file
             // but don't have any inputs here
             if (chan < n_in_chans) {
@@ -184,7 +178,7 @@ int wavfile_sink_impl::work(int noutput_items,
                 sample_buf_s = 0;
             }
 
-            wav_write_sample(d_fp, sample_buf_s, d_bytes_per_sample);
+            wav_write_sample(d_fp, sample_buf_s, bytes_per_sample);
 
             if (feof(d_fp) || ferror(d_fp)) {
                 GR_LOG_ERROR(d_logger,
@@ -192,7 +186,6 @@ int wavfile_sink_impl::work(int noutput_items,
                 close();
                 exit(-1);
             }
-            d_sample_count++;
         }
     }
 
@@ -203,11 +196,9 @@ short int wavfile_sink_impl::convert_to_short(float sample)
 {
     sample += d_normalize_shift;
     sample *= d_normalize_fac;
-    if (sample > d_max_sample_val) {
-        sample = d_max_sample_val;
-    } else if (sample < d_min_sample_val) {
-        sample = d_min_sample_val;
-    }
+
+    // In C++17, use std::clamp.
+    sample = std::max(std::min(sample, d_max_sample_val), d_min_sample_val);
 
     return (short int)boost::math::iround(sample);
 }
@@ -215,20 +206,39 @@ short int wavfile_sink_impl::convert_to_short(float sample)
 void wavfile_sink_impl::set_bits_per_sample(int bits_per_sample)
 {
     gr::thread::scoped_lock guard(d_mutex);
-    if (bits_per_sample == 8 || bits_per_sample == 16) {
-        d_bytes_per_sample_new = bits_per_sample / 8;
+    set_bits_per_sample_unlocked(bits_per_sample);
+}
+
+void wavfile_sink_impl::set_bits_per_sample_unlocked(int bits_per_sample)
+{
+    switch (bits_per_sample) {
+    case 8:
+        d_max_sample_val = float(UINT8_MAX);
+        d_min_sample_val = float(0);
+        d_normalize_fac = d_max_sample_val / 2;
+        d_normalize_shift = 1;
+        break;
+    case 16:
+        d_max_sample_val = float(INT16_MAX);
+        d_min_sample_val = float(INT16_MIN);
+        d_normalize_fac = d_max_sample_val;
+        d_normalize_shift = 0;
+        break;
+    default:
+        throw std::runtime_error("Invalid bits per sample (only 8 and 16 are supported)");
     }
+    d_bytes_per_sample_new = bits_per_sample / 8;
 }
 
 void wavfile_sink_impl::set_sample_rate(unsigned int sample_rate)
 {
     gr::thread::scoped_lock guard(d_mutex);
-    d_sample_rate = sample_rate;
+    d_h.sample_rate = sample_rate;
 }
 
 int wavfile_sink_impl::bits_per_sample() { return d_bytes_per_sample_new; }
 
-unsigned int wavfile_sink_impl::sample_rate() { return d_sample_rate; }
+unsigned int wavfile_sink_impl::sample_rate() { return d_h.sample_rate; }
 
 void wavfile_sink_impl::do_update()
 {
@@ -241,22 +251,11 @@ void wavfile_sink_impl::do_update()
     }
 
     d_fp = d_new_fp; // install new file pointer
-    d_new_fp = 0;
-    d_sample_count = 0;
-    d_bytes_per_sample = d_bytes_per_sample_new;
+    d_new_fp = nullptr;
 
-    if (d_bytes_per_sample == 1) {
-        d_max_sample_val = UCHAR_MAX;
-        d_min_sample_val = 0;
-        d_normalize_fac = d_max_sample_val / 2;
-        d_normalize_shift = 1;
-    } else if (d_bytes_per_sample == 2) {
-        d_max_sample_val = SHRT_MAX;
-        d_min_sample_val = SHRT_MIN;
-        d_normalize_fac = d_max_sample_val;
-        d_normalize_shift = 0;
-    }
-
+    d_h.bytes_per_sample = d_bytes_per_sample_new;
+    // Avoid deadlock.
+    set_bits_per_sample_unlocked(8 * d_bytes_per_sample_new);
     d_updated = false;
 }
 

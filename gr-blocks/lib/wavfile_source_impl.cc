@@ -49,15 +49,10 @@ wavfile_source_impl::wavfile_source_impl(const char* filename, bool repeat)
                  io_signature::make(1, 2, sizeof(float))),
       d_fp(NULL),
       d_repeat(repeat),
-      d_sample_rate(1),
-      d_nchans(1),
-      d_bytes_per_sample(2),
-      d_first_sample_pos(0),
-      d_samples_per_chan(0),
+      d_h{}, // Init with zeros
       d_sample_idx(0)
 {
     // we use "open" to use to the O_LARGEFILE flag
-
     int fd;
     if ((fd = ::open(filename, O_RDONLY | OUR_O_LARGEFILE | OUR_O_BINARY)) < 0) {
         GR_LOG_ERROR(d_logger,
@@ -72,29 +67,25 @@ wavfile_source_impl::wavfile_source_impl(const char* filename, bool repeat)
     }
 
     // Scan headers, check file validity
-    if (!wavheader_parse(d_fp,
-                         d_sample_rate,
-                         d_nchans,
-                         d_bytes_per_sample,
-                         d_first_sample_pos,
-                         d_samples_per_chan)) {
+    if (!wavheader_parse(d_fp, d_h)) {
         throw std::runtime_error("is not a valid wav file");
     }
 
-    if (d_samples_per_chan == 0) {
+
+    if (d_h.samples_per_chan == 0) {
         throw std::runtime_error("WAV file does not contain any samples");
     }
 
-    if (d_bytes_per_sample == 1) {
-        d_normalize_fac = 128;
+    if (d_h.bytes_per_sample == 1) {
+        d_normalize_fac = UINT8_MAX / 2;
         d_normalize_shift = 1;
     } else {
-        d_normalize_fac = 0x7FFF;
+        d_normalize_fac = INT16_MAX;
         d_normalize_shift = 0;
     }
 
     // Re-set the output signature
-    set_output_signature(io_signature::make(1, d_nchans, sizeof(float)));
+    set_output_signature(io_signature::make(1, d_h.nchans, sizeof(float)));
 }
 
 wavfile_source_impl::~wavfile_source_impl() { fclose(d_fp); }
@@ -111,20 +102,20 @@ int wavfile_source_impl::work(int noutput_items,
                               gr_vector_const_void_star& input_items,
                               gr_vector_void_star& output_items)
 {
-    float** out = (float**)&output_items[0];
+    auto out = (float**)&output_items[0];
     int n_out_chans = output_items.size();
 
     int i;
     short sample;
 
     for (i = 0; i < noutput_items; i++) {
-        if (d_sample_idx >= d_samples_per_chan) {
+        if (d_sample_idx >= d_h.samples_per_chan) {
             if (!d_repeat) {
                 // if nothing was read at all, say we're done.
                 return i ? i : -1;
             }
 
-            if (fseek(d_fp, d_first_sample_pos, SEEK_SET) == -1) {
+            if (fseek(d_fp, d_h.first_sample_pos, SEEK_SET) == -1) {
                 GR_LOG_ERROR(d_logger,
                              boost::format("fseek failed %s") % strerror(errno));
                 exit(-1);
@@ -133,8 +124,8 @@ int wavfile_source_impl::work(int noutput_items,
             d_sample_idx = 0;
         }
 
-        for (int chan = 0; chan < d_nchans; chan++) {
-            sample = wav_read_sample(d_fp, d_bytes_per_sample);
+        for (int chan = 0; chan < d_h.nchans; chan++) {
+            sample = wav_read_sample(d_fp, d_h.bytes_per_sample);
 
             if (chan < n_out_chans) {
                 out[chan][i] = convert_to_float(sample);

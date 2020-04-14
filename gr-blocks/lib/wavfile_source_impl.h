@@ -11,6 +11,7 @@
 #ifndef INCLUDED_GR_WAVFILE_SOURCE_IMPL_H
 #define INCLUDED_GR_WAVFILE_SOURCE_IMPL_H
 
+#include <gnuradio/blocks/wavfile.h>
 #include <gnuradio/blocks/wavfile_source.h>
 #include <cstdio> // for FILE
 
@@ -23,11 +24,7 @@ private:
     FILE* d_fp;
     bool d_repeat;
 
-    unsigned d_sample_rate;
-    int d_nchans;
-    int d_bytes_per_sample;
-    int d_first_sample_pos;
-    unsigned d_samples_per_chan;
+    wav_header_info d_h;
     unsigned d_sample_idx;
     int d_normalize_shift;
     int d_normalize_fac;
@@ -41,11 +38,11 @@ public:
     wavfile_source_impl(const char* filename, bool repeat);
     ~wavfile_source_impl();
 
-    unsigned int sample_rate() const { return d_sample_rate; };
+    unsigned int sample_rate() const { return d_h.sample_rate; };
 
-    int bits_per_sample() const { return d_bytes_per_sample * 8; };
+    int bits_per_sample() const { return d_h.bytes_per_sample * 8; };
 
-    int channels() const { return d_nchans; };
+    int channels() const { return d_h.nchans; };
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
