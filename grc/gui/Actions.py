@@ -24,6 +24,7 @@ import logging
 
 from gi.repository import Gtk, Gdk, Gio, GLib, GObject
 
+from . import Utils
 
 log = logging.getLogger(__name__)
 
@@ -136,7 +137,10 @@ class Action(Gio.SimpleAction):
         self.label = label
         self.tooltip = tooltip
         self.icon_name = icon_name
-        self.keypresses = keypresses
+        if keypresses:
+            self.keypresses = [kp.replace("<Ctrl>", Utils.get_modifier_key(True)) for kp in keypresses]
+        else:
+            self.keypresses = None
         self.prefix = prefix
         self.preference_name = preference_name
         self.default = default
