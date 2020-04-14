@@ -21,7 +21,7 @@ namespace blocks {
 
 null_source::sptr null_source::make(size_t sizeof_stream_item)
 {
-    return gnuradio::get_initial_sptr(new null_source_impl(sizeof_stream_item));
+    return gnuradio::make_block_sptr<null_source_impl>(sizeof_stream_item);
 }
 
 null_source_impl::null_source_impl(size_t sizeof_stream_item)
