@@ -8,6 +8,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 from __future__ import absolute_import
 
+from sys import platform
 import numbers
 
 from gi.repository import GLib
@@ -152,3 +153,24 @@ def scale(coor, reverse=False):
 def scale_scalar(coor, reverse=False):
     factor = Constants.DPI_SCALING if not reverse else 1 / Constants.DPI_SCALING
     return int(coor * factor)
+
+def get_modifier_key(angle_brackets=False):
+    """
+    Get the modifier key based on platform.
+
+    Args:
+        angle_brackets: if return the modifier key with <> or not
+
+    Returns:
+        return the string with the modifier key
+    """
+    if platform == "darwin":
+        if angle_brackets:
+            return "<Meta>"
+        else:
+            return "Meta"
+    else:
+        if angle_brackets:
+            return "<Ctrl>"
+        else:
+            return "Ctrl"
