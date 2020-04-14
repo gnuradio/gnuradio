@@ -287,9 +287,10 @@ def show_help(parent):
         <u>Remove connection</u>: select the connection and press delete, or 
        drag the connection.
         \n\
-        *Press CTRL+K or see menu for Keyboard - Shortcuts
+        *Press Ctrl+K or see menu for Keyboard - Shortcuts
         \
     """)
+    markup = markup.replace("Ctrl", Utils.get_modifier_key())
 
     MessageDialogWrapper(
         parent, Gtk.MessageType.INFO, Gtk.ButtonsType.CLOSE, title='Help', markup=markup
@@ -328,6 +329,7 @@ def show_keyboard_shortcuts(parent):
             selected block.
     \
     """)
+    markup = markup.replace("Ctrl", Utils.get_modifier_key())
     
     MessageDialogWrapper(
         parent, Gtk.MessageType.INFO, Gtk.ButtonsType.CLOSE, title='Keyboard - Shortcuts', markup=markup
