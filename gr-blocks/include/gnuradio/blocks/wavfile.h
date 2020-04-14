@@ -20,27 +20,43 @@
 namespace gr {
 namespace blocks {
 
+
+//! WAV file header information.
+struct wav_header_info {
+    // TODO: refactor to use correct types (int16/32, etc.).
+
+    //! sample rate [S/s]
+    unsigned sample_rate;
+
+    //! Number of channels
+    int nchans;
+
+    //! Bytes per sample
+    /** Can either be 1 or 2 (corresponding to 8 or 16 bit samples, respectively) */
+    int bytes_per_sample;
+
+    //! Number of the first byte containing a sample
+    /** Use this with fseek() to jump from the end of the file to the
+     *  first sample when in repeat mode.
+     */
+    int first_sample_pos;
+
+    //! Number of samples per channel
+    unsigned samples_per_chan;
+
+    //! Size of DATA chunk
+    unsigned data_chunk_size;
+};
+
 /*!
  * \brief Read signal information from a given WAV file.
  *
- * \param[in]  fp          File pointer to an opened, empty file.
- * \param[out] sample_rate Stores the sample rate [S/s]
- * \param[out] nchans      Number of channels
- * \param[out] bytes_per_sample Bytes per sample, can either be 1 or 2 (corresponding o
- *                              8 or 16 bit samples, respectively)
- * \param[out] first_sample_pos Number of the first byte containing a sample. Use this
- *                              with fseek() to jump from the end of the file to the
- *                              first sample when in repeat mode.
- * \param[out] samples_per_chan Number of samples per channel
+ * \param[in]  fp     File pointer to an opened, empty file.
+ * \param[out] info   Parsed information.
  * \return True on a successful read, false if the file could not be read or is
- *         not a valid WAV file.
+ *         not a valid or incompatible WAV file.
  */
-BLOCKS_API bool wavheader_parse(FILE* fp,
-                                unsigned int& sample_rate,
-                                int& nchans,
-                                int& bytes_per_sample,
-                                int& first_sample_pos,
-                                unsigned int& samples_per_chan);
+BLOCKS_API bool wavheader_parse(FILE* fp, wav_header_info& info);
 
 /*!
  * \brief Read one sample from an open WAV file at the current position.
@@ -79,10 +95,10 @@ BLOCKS_API void wav_write_sample(FILE* fp, short int sample, int bytes_per_sampl
  * function (which shouldn't happen), you need to fseek() to the
  * end of the file (or wherever).
  *
- * \param[in] fp         File pointer to an open WAV file with a blank header
- * \param[in] byte_count Length of all samples written to the file in bytes.
+ * \param[in] fp               File pointer to an open WAV file with a blank header
+ * \param[in] first_sample_pos Position of the first sample in DATA chunk.
  */
-BLOCKS_API bool wavheader_complete(FILE* fp, unsigned int byte_count);
+BLOCKS_API bool wavheader_complete(FILE* fp, unsigned first_sample_pos);
 
 } /* namespace blocks */
 } /* namespace gr */

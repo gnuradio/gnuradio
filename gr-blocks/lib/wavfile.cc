@@ -17,6 +17,7 @@
 #include <stdint.h>
 #include <cstring>
 
+
 namespace gr {
 namespace blocks {
 #define VALID_COMPRESSION_TYPE 0x0001
@@ -55,12 +56,7 @@ static inline uint32_t wav_to_host(uint32_t x) { return wtohl(x); }
 static inline uint16_t wav_to_host(uint16_t x) { return wtohs(x); }
 static inline int16_t wav_to_host(int16_t x) { return wtohs(x); }
 
-bool wavheader_parse(FILE* fp,
-                     unsigned int& sample_rate_o,
-                     int& nchans_o,
-                     int& bytes_per_sample_o,
-                     int& first_sample_pos_o,
-                     unsigned int& samples_per_chan_o)
+bool wavheader_parse(FILE* fp, wav_header_info& info)
 {
     // _o variables take return values
     char str_buf[8] = { 0 };
@@ -167,11 +163,13 @@ bool wavheader_parse(FILE* fp,
     chunk_size = wav_to_host(chunk_size);
 
     // Output values
-    sample_rate_o = (unsigned)sample_rate;
-    nchans_o = (int)nchans;
-    bytes_per_sample_o = (int)(bits_per_sample / 8);
-    first_sample_pos_o = (int)ftell(fp);
-    samples_per_chan_o = (unsigned)(chunk_size / (bytes_per_sample_o * nchans));
+    info.sample_rate = (unsigned)sample_rate;
+    info.nchans = (int)nchans;
+    info.bytes_per_sample = (int)(bits_per_sample / 8);
+    info.first_sample_pos = (int)ftell(fp);
+    info.samples_per_chan = (unsigned)(chunk_size / (info.bytes_per_sample * nchans));
+    info.data_chunk_size = (unsigned)chunk_size;
+
     return true;
 }
 
@@ -241,30 +239,40 @@ void wav_write_sample(FILE* fp, short int sample, int bytes_per_sample)
     fwrite(data_ptr, 1, bytes_per_sample, fp);
 }
 
-
-bool wavheader_complete(FILE* fp, unsigned int byte_count)
+inline bool fwrite_field_32(FILE* fp, long position, uint32_t data)
 {
-    uint32_t chunk_size = (uint32_t)byte_count;
-    chunk_size = host_to_wav(chunk_size);
-
-    if (fseek(fp, 40, SEEK_SET) != 0) {
-        return false;
-    }
-    fwrite(&chunk_size, 1, 4, fp);
-
-    chunk_size = (uint32_t)byte_count + 36; // fmt chunk and data header
-    chunk_size = host_to_wav(chunk_size);
-    if (fseek(fp, 4, SEEK_SET) != 0) {
+    data = host_to_wav(data);
+    if (fseek(fp, position, SEEK_SET) != 0) {
         return false;
     }
 
-    fwrite(&chunk_size, 1, 4, fp);
+    return 4 == fwrite(&data, 1, 4, fp);
+}
 
-    if (ferror(fp)) {
+bool wavheader_complete(FILE* fp, unsigned first_sample_pos)
+{
+    fseek(fp, 0L, SEEK_END);
+    long real_file_size = ftell(fp);
+
+    if (first_sample_pos >= real_file_size) {
         return false;
     }
 
-    return true;
+    uint32_t field_data;
+    bool ok;
+
+    // Write "data chunk size".
+    field_data = uint32_t(real_file_size - first_sample_pos);
+    ok = fwrite_field_32(fp, first_sample_pos - 4, field_data);
+    if (!ok) {
+        return false;
+    }
+
+    // Write "total file size" - 8
+    field_data = uint32_t(real_file_size - 8);
+    ok = fwrite_field_32(fp, 4, field_data);
+
+    return ok;
 }
 
 } /* namespace blocks */
