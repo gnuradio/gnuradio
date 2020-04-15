@@ -1,5 +1,6 @@
 id: vocoder_cvsd_encode_fb
 label: CVSD Encoder
+flags: [ python ]
 
 parameters:
 -   id: resample
