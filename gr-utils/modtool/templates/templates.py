@@ -122,8 +122,8 @@ namespace gr {
     ${blockname}::sptr
     ${blockname}::make(${strip_default_values(arglist)})
     {
-      return gnuradio::get_initial_sptr
-        (new ${blockname}_impl(${strip_arg_types(arglist)}));
+      return gnuradio::make_block_sptr<${blockname}_impl>(
+        ${strip_arg_types(arglist)});
     }
 
 <%
