@@ -1,5 +1,6 @@
 id: vocoder_codec2_encode_sp
 label: CODEC2 Audio Encoder
+flags: [ python, cpp ]
 
 parameters:
 -   id: mode
@@ -11,6 +12,10 @@ parameters:
         codec2.MODE_700C, codec2.MODE_WB, codec2.MODE_450, codec2.MODE_450PWB]
     option_labels: [3200 bps, 2400 bps, 1600 bps, 1400 bps, 1300 bps, 1200 bps, 700
             bps, 700B bps, 700C bps, Wideband, 450 bps, 450PWB bps]
+    option_attributes:
+        cpp_options: [vocoder::codec2::MODE_3200, vocoder::codec2::MODE_2400, vocoder::codec2::MODE_1600, vocoder::codec2::MODE_1400,
+            vocoder::codec2::MODE_1300, vocoder::codec2::MODE_1200, vocoder::codec2::MODE_700, vocoder::codec2::MODE_700B,
+            vocoder::codec2::MODE_700C, vocoder::codec2::MODE_WB, vocoder::codec2::MODE_450, vocoder::codec2::MODE_450PWB]
     hide: none
 
 inputs:
@@ -27,6 +32,12 @@ templates:
         from gnuradio import vocoder
         from gnuradio.vocoder import codec2
     make: vocoder.codec2_encode_sp(${mode})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/vocoder/codec2_encode_sp.h>' ]
+    declarations: 'vocoder::codec2_encode_sp::sptr ${id};'
+    make: 'this->${id} = vocoder::codec2_encode_sp::make(${mode});'
+    link: ['gnuradio-vocoder']
 
 documentation: |-
     Not all modes may be supported by the underlying codec2 library.
