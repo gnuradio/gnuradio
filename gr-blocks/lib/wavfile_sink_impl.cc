@@ -127,7 +127,7 @@ bool wavfile_sink_impl::open(const char* filename)
         d_h.first_sample_pos = 44;
         if (!wavheader_write(
                 d_new_fp, d_h.sample_rate, d_h.nchans, d_bytes_per_sample_new)) {
-            GR_LOG_ERROR(d_logger, boost::format("could not save WAV header"));
+            GR_LOG_ERROR(d_logger, "could not save WAV header");
             fclose(d_new_fp);
             return false;
         }
