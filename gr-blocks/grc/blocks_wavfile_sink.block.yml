@@ -19,6 +19,12 @@ parameters:
     label: Bits per Sample
     dtype: int
     default: '8'
+-   id: append
+    label: Append to existing file
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
 
 inputs:
 -   domain: stream
@@ -30,7 +36,7 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.wavfile_sink(${file}, ${nchan}, ${samp_rate}, ${bits_per_sample})
+    make: blocks.wavfile_sink(${file}, ${nchan}, ${samp_rate}, ${bits_per_sample}, ${append})
     callbacks:
     - open(${file})
 
@@ -38,9 +44,12 @@ cpp_templates:
     includes: ['#include <gnuradio/blocks/wavfile_sink.h>']
     declarations: 'blocks::wavfile_sink::sptr ${id};'
     make: |-
-      this->${id} = blocks::wavfile_sink::make(${file}${'.c_str()' if str(file)[0] != "'" and str(file)[0] != "\"" else ''}, ${nchan}, ${samp_rate}, ${bits_per_sample});
+      this->${id} = blocks::wavfile_sink::make(${file}${'.c_str()' if str(file)[0] != "'" and str(file)[0] != "\"" else ''}, ${nchan}, ${samp_rate}, ${bits_per_sample}, ${append});
     callbacks:
     ## TODO Handle std::string type when const char* argument is needed
     - this->${id}->open(${file})
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1
