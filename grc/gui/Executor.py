@@ -17,6 +17,7 @@ from distutils.spawn import find_executable
 from gi.repository import GLib
 
 from ..core import Messages
+from . import Utils
 
 
 class ExecFlowGraphThread(threading.Thread):
@@ -87,7 +88,9 @@ class ExecFlowGraphThread(threading.Thread):
 
         xterm_executable = find_executable(self.xterm_executable)
 
-        run_command_args = f'cmake .. && make && cd ../.. && {xterm_executable} -e {run_command}'
+        nproc = Utils.get_cmake_nproc()
+
+        run_command_args = f'cmake .. && cmake --build . -j{nproc} && cd ../.. && {xterm_executable} -e {run_command}'
         Messages.send_start_exec(run_command_args)
 
         return subprocess.Popen(
