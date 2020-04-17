@@ -9,6 +9,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 from __future__ import absolute_import
 
 from sys import platform
+import os
 import numbers
 
 from gi.repository import GLib
@@ -174,3 +175,21 @@ def get_modifier_key(angle_brackets=False):
             return "<Ctrl>"
         else:
             return "Ctrl"
+
+
+_nproc = None
+def get_cmake_nproc():
+    """ Get number of cmake processes for C++ flowgraphs """
+    global _nproc # Cached result
+    if _nproc:
+        return _nproc
+    try:
+        # See https://docs.python.org/3.8/library/os.html#os.cpu_count
+        _nproc = len(os.sched_getaffinity(0))
+    except:
+        _nproc = os.cpu_count()
+    if not _nproc:
+        _nproc = 1
+
+    _nproc = max(_nproc//2 - 1, 1)
+    return _nproc
