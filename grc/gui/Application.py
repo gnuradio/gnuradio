@@ -621,6 +621,8 @@ class Application(Gtk.Application):
                 self.platform.config.default_qss_theme = file_paths[0]
         elif action == Actions.FLOW_GRAPH_CLOSE:
             main.close_page()
+        elif action == Actions.FLOW_GRAPH_CLOSE_MIDDLE_MOUSE:
+            main.close_page()
         elif action == Actions.FLOW_GRAPH_OPEN_RECENT:
             file_path = str(args[0])[1:-1]
             main.new_page(file_path, show=True)

@@ -96,8 +96,11 @@ class Page(Gtk.HBox):
         flow_graph.import_data(initial_state)
         self.state_cache = StateCache(initial_state)
 
-        # tab box to hold label and close button
+        # tab box to hold label button and close button
         self.label = Gtk.Label()
+        label_button = Gtk.Button.new_with_label("untitled")
+        label_button.connect("clicked", self.close_flowgraph_using_middle_mouse)
+
         image = Gtk.Image.new_from_icon_name('window-close', Gtk.IconSize.MENU)
         image_box = Gtk.HBox(homogeneous=False, spacing=0)
         image_box.pack_start(image, True, False, 0)
@@ -107,7 +110,7 @@ class Page(Gtk.HBox):
         button.add(image_box)
 
         tab = self.tab = Gtk.HBox(homogeneous=False, spacing=0)
-        tab.pack_start(self.label, False, False, 0)
+        tab.pack_start(label_button, False, False, 0)
         tab.pack_start(button, False, False, 0)
         tab.show_all()
 
@@ -152,6 +155,17 @@ class Page(Gtk.HBox):
         """
         self.main_window.page_to_be_closed = self
         Actions.FLOW_GRAPH_CLOSE()
+
+    def close_flowgraph_using_middle_mouse(self,button):
+        """
+        The label_button was clicked
+        Make the current flowgraph selected and close it
+
+        Args:
+            the: button
+        """
+        self.main_window.page_to_be_closed = self
+        Actions.FLOW_GRAPH_CLOSE_MIDDLE_MOUSE()
 
     def set_markup(self, markup):
         """

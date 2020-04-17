@@ -261,6 +261,12 @@ FLOW_GRAPH_CLOSE = actions.register("app.flowgraph.close",
     icon_name='window-close',
     keypresses=["<Ctrl>w"],
 )
+FLOW_GRAPH_CLOSE_MIDDLE_MOUSE = actions.register("app.flowgraph.close_middle_mouse",
+    label='_Close using Middle Mouse Button',
+    tooltip='Close the current flow graph using Middle Mouse',
+    icon_name='window-close-middle-mouse',
+    keypresses=["Pointer_Button3"],
+)
 APPLICATION_INITIALIZE = actions.register("app.initialize")
 APPLICATION_QUIT = actions.register("app.quit",
     label='_Quit',
