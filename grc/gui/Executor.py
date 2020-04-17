@@ -11,6 +11,7 @@ import shlex
 import subprocess
 import threading
 import time
+from pathlib import Path
 from distutils.spawn import find_executable
 
 from gi.repository import GLib
@@ -62,8 +63,11 @@ class ExecFlowGraphThread(threading.Thread):
         # it looks really ugly and confusing in the console panel.
         Messages.send_start_exec(' '.join(run_command_args))
 
+        dirname = Path(generator.file_path).parent
+
         return subprocess.Popen(
             args=run_command_args,
+            cwd=dirname,
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             shell=False, universal_newlines=True
         )
@@ -83,11 +87,11 @@ class ExecFlowGraphThread(threading.Thread):
 
         xterm_executable = find_executable(self.xterm_executable)
 
-        run_command_args = ['cmake .. &&', 'make && ', xterm_executable, '-e', run_command]
-        Messages.send_start_exec(' '.join(run_command_args))
+        run_command_args = f'cmake .. && make && cd ../.. && {xterm_executable} -e {run_command}'
+        Messages.send_start_exec(run_command_args)
 
         return subprocess.Popen(
-            args=' '.join(run_command_args),
+            args=run_command_args,
             cwd=builddir,
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             shell=True, universal_newlines=True
