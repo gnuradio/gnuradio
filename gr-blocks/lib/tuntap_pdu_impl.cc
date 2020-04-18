@@ -151,6 +151,7 @@ int tuntap_pdu_impl::set_mtu(const char* dev, int MTU)
     /* preparation of the struct ifr, of type "struct ifreq" */
     memset(&ifr, 0, sizeof(ifr));
     strncpy(ifr.ifr_name, dev, IFNAMSIZ);
+    ifr.ifr_name[IFNAMSIZ - 1] = '\0';
     ifr.ifr_addr.sa_family = AF_INET; /* address family */
     ifr.ifr_mtu = MTU;
 
