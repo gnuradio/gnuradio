@@ -1,5 +1,6 @@
 id: dtv_dvbt2_framemapper_cc
 label: Frame Mapper
+flags: [ python, cpp ]
 
 parameters:
 -   id: framesize
@@ -228,5 +229,50 @@ templates:
             ${reservedbiasbits.val},
             ${l1scrambled.val},
             ${inband.val})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbt2_framemapper_cc.h>']
+    declarations: 'dtv::dvbt2_framemapper_cc::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbt2_framemapper_cc::make(
+            ${framesize.val},
+            ${rate.val},
+            ${constellation.val},
+            ${rotation.val},
+            ${fecblocks},
+            ${tiblocks},
+            ${carriermode.val},
+            % if str(version) == 'VERSION_111':
+            ${fftsize1.val},
+            % else:
+            % if str(preamble2) == 'PREAMBLE_T2_SISO' or str(preamble2) == 'PREAMBLE_T2_MISO':
+            ${fftsize1.val},
+            % else:
+            ${fftsize2.val},
+            % endif
+            % endif
+            ${guardinterval.val},
+            ${l1constellation.val},
+            ${pilotpattern.val},
+            ${t2frames},
+            ${numdatasyms},
+            % if str(version) == 'VERSION_111':
+            ${paprmode1.val},
+            % else:
+            ${paprmode2.val},
+            % endif
+            ${version.val},
+            % if str(version) == 'VERSION_111':
+            ${preamble1.val},
+            % else:
+            ${preamble2.val},
+            % endif
+            ${inputmode.val},
+            ${reservedbiasbits.val},
+            ${l1scrambled.val},
+            ${inband.val});
+    link: ['gnuradio-dtv']
+    translations:
+        dtv\.: 'dtv::'
 
 file_format: 1

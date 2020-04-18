@@ -1,5 +1,6 @@
 id: dtv_dvb_bbscrambler_bb
 label: BBscrambler
+flags: [ python, cpp ]
 
 parameters:
 -   id: standard
@@ -132,5 +133,36 @@ templates:
             % endif
             % endif
             )
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvb_bbscrambler_bb.h>']
+    declarations: 'dtv::dvb_bbscrambler_bb::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvb_bbscrambler_bb::make(
+            ${standard.val},
+            % if str(standard) == 'STANDARD_DVBT2':
+            ${framesize1.val},
+            % else:
+            ${framesize2.val},
+            % endif
+            % if str(standard) == 'STANDARD_DVBT2':
+            % if str(framesize1) == 'FECFRAME_NORMAL':
+            ${rate1.val}
+            % else:
+            ${rate2.val}
+            % endif
+            % else:
+            % if str(framesize2) == 'FECFRAME_NORMAL':
+            ${rate3.val}
+            % elif str(framesize2) == 'FECFRAME_MEDIUM':
+            ${rate4.val}
+            % else:
+            ${rate5.val}
+            % endif
+            % endif
+            );
+    link: ['gnuradio-dtv']
+    translations:
+        dtv\.: 'dtv::'
 
 file_format: 1

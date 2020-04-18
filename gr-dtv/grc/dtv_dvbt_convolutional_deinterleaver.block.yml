@@ -1,5 +1,6 @@
 id: dtv_dvbt_convolutional_deinterleaver
 label: Convolutional Deinterleaver
+flags: [ python, cpp ]
 
 parameters:
 -   id: blocks
@@ -33,5 +34,12 @@ asserts:
 templates:
     imports: from gnuradio import dtv
     make: dtv.dvbt_convolutional_deinterleaver(${blocks}, ${I}, ${M})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbt_convolutional_deinterleaver.h>']
+    declarations: 'dtv::dvbt_convolutional_deinterleaver::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbt_convolutional_deinterleaver::make(${blocks}, ${I}, ${M});
+    link: ['gnuradio-dtv']
 
 file_format: 1

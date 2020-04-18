@@ -1,5 +1,6 @@
 id: dtv_dvbt_viterbi_decoder
 label: Viterbi Decoder
+flags: [ python, cpp ]
 
 parameters:
 -   id: constellation
@@ -47,5 +48,18 @@ templates:
     imports: from gnuradio import dtv
     make: dtv.dvbt_viterbi_decoder(${constellation.val}, ${hierarchy.val}, ${code_rate.val},
         ${block_size})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbt_viterbi_decoder.h>']
+    declarations: 'dtv::dvbt_viterbi_decoder::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbt_viterbi_decoder::make(
+            ${constellation.val},
+            ${hierarchy.val},
+            ${code_rate.val},
+            ${block_size});
+    link: ['gnuradio-dtv']
+    translations:
+        dtv\.: 'dtv::'
 
 file_format: 1

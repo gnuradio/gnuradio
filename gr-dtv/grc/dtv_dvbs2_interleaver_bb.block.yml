@@ -1,5 +1,6 @@
 id: dtv_dvbs2_interleaver_bb
 label: Interleaver
+flags: [ python, cpp ]
 
 parameters:
 -   id: framesize
@@ -90,5 +91,23 @@ templates:
             ${rate3.val},
             % endif
             ${constellation.val})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbs2_interleaver_bb.h>']
+    declarations: 'dtv::dvbs2_interleaver_bb::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbs2_interleaver_bb::make(
+            ${framesize.val},
+            % if str(framesize) == 'FECFRAME_NORMAL':
+            ${rate1.val},
+            % elif str(framesize) == 'FECFRAME_MEDIUM':
+            ${rate2.val},
+            % else:
+            ${rate3.val},
+            % endif
+            ${constellation.val});
+    link: ['gnuradio-dtv']
+    translations:
+        dtv\.: 'dtv::'
 
 file_format: 1

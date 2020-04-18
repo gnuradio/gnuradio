@@ -1,5 +1,6 @@
 id: dtv_dvbt2_freqinterleaver_cc
 label: Frequency Interleaver
+flags: [ python, cpp ]
 
 parameters:
 -   id: carriermode
@@ -114,5 +115,31 @@ templates:
             ${preamble2.val}
             % endif
             )
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbt2_freqinterleaver_cc.h>']
+    declarations: 'dtv::dvbt2_freqinterleaver_cc::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbt2_freqinterleaver_cc::make(
+            ${carriermode.val},
+            ${fftsize.val},
+            ${pilotpattern.val},
+            ${guardinterval.val},
+            ${numdatasyms},
+            % if str(version) == 'VERSION_111':
+            ${paprmode1.val},
+            % else:
+            ${paprmode2.val},
+            % endif
+            ${version.val},
+            % if str(version) == 'VERSION_111':
+            ${preamble1.val}
+            % else:
+            ${preamble2.val}
+            % endif
+            );
+    link: ['gnuradio-dtv']
+    translations:
+        dtv\.: 'dtv::'
 
 file_format: 1

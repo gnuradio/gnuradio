@@ -1,5 +1,6 @@
 id: dtv_dvbt_map
 label: DVB-T Map
+flags: [ python, cpp ]
 
 parameters:
 -   id: constellation
@@ -43,5 +44,19 @@ templates:
     imports: from gnuradio import dtv
     make: dtv.dvbt_map(${transmission_mode.payload_length}, ${constellation.val},
         ${hierarchy.val}, ${transmission_mode.val}, ${gain})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbt_map.h>']
+    declarations: 'dtv::dvbt_map::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbt_map::make(
+            ${transmission_mode.payload_length},
+            ${constellation.val},
+            ${hierarchy.val},
+            ${transmission_mode.val},
+            ${gain});
+    link: ['gnuradio-dtv']
+    translations:
+        dtv\.: 'dtv::'
 
 file_format: 1

@@ -1,5 +1,6 @@
 id: dtv_dvbs2_physical_cc
 label: Physical Layer Framer
+flags: [ python, cpp ]
 
 parameters:
 -   id: framesize
@@ -103,5 +104,25 @@ templates:
             ${constellation.val},
             ${pilots.val},
             ${goldcode})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbs2_physical_cc.h>']
+    declarations: 'dtv::dvbs2_physical_cc::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbs2_physical_cc::make(
+            ${framesize.val},
+            % if str(framesize) == 'FECFRAME_NORMAL':
+            ${rate1.val},
+            % elif str(framesize) == 'FECFRAME_MEDIUM':
+            ${rate2.val},
+            % else:
+            ${rate3.val},
+            % endif
+            ${constellation.val},
+            ${pilots.val},
+            ${goldcode});
+    link: ['gnuradio-dtv']
+    translations:
+        dtv\.: 'dtv::'
 
 file_format: 1
