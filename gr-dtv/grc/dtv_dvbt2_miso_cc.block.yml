@@ -1,5 +1,6 @@
 id: dtv_dvbt2_miso_cc
 label: MISO Processing
+flags: [ python, cpp ]
 
 parameters:
 -   id: carriermode
@@ -92,5 +93,25 @@ templates:
             ${paprmode2.val}
             % endif
             )
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbt2_miso_cc.h>']
+    declarations: 'dtv::dvbt2_miso_cc::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbt2_miso_cc::make(
+            ${carriermode.val},
+            ${fftsize.val},
+            ${pilotpattern.val},
+            ${guardinterval.val},
+            ${numdatasyms},
+            % if str(version) == 'VERSION_111':
+            ${paprmode1.val}
+            % else:
+            ${paprmode2.val}
+            % endif
+            );
+    link: ['gnuradio-dtv']
+    translations:
+        dtv\.: 'dtv::'
 
 file_format: 1

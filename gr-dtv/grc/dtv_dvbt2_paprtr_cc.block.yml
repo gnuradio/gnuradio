@@ -1,5 +1,6 @@
 id: dtv_dvbt2_paprtr_cc
 label: Tone Reservation PAPR
+flags: [ python, cpp ]
 
 parameters:
 -   id: carriermode
@@ -113,5 +114,29 @@ templates:
             ${iterations},
             ${fftsize.vlength}
             )
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbt2_paprtr_cc.h>']
+    declarations: 'dtv::dvbt2_paprtr_cc::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbt2_paprtr_cc::make(
+            ${carriermode.val},
+            ${fftsize.val},
+            ${pilotpattern.val},
+            ${guardinterval.val},
+            ${numdatasyms},
+            % if str(version) == 'VERSION_111':
+            ${paprmode1.val},
+            % else:
+            ${paprmode2.val},
+            % endif
+            ${version.val},
+            ${vclip},
+            ${iterations},
+            ${fftsize.vlength}
+            );
+    link: ['gnuradio-dtv']
+    translations:
+        dtv\.: 'dtv::'
 
 file_format: 1

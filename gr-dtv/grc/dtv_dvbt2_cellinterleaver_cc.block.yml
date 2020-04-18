@@ -1,5 +1,6 @@
 id: dtv_dvbt2_cellinterleaver_cc
 label: Cell/Time Interleaver
+flags: [ python, cpp ]
 
 parameters:
 -   id: framesize
@@ -37,5 +38,14 @@ templates:
     imports: from gnuradio import dtv
     make: dtv.dvbt2_cellinterleaver_cc(${framesize.val}, ${constellation.val}, ${fecblocks},
         ${tiblocks})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbt2_cellinterleaver_cc.h>']
+    declarations: 'dtv::dvbt2_cellinterleaver_cc::sptr ${id};'
+    make: 'this->${id} = dtv::dvbt2_cellinterleaver_cc::make(${framesize.val},
+        ${constellation.val}, ${fecblocks}, ${tiblocks});'
+    link: ['gnuradio-dtv']
+    translations:
+        dtv\.: 'dtv::'
 
 file_format: 1

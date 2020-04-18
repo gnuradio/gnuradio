@@ -1,5 +1,6 @@
 id: dtv_atsc_pad
 label: ATSC Pad
+flags: [ python, cpp ]
 
 inputs:
 -   domain: stream
@@ -13,5 +14,11 @@ outputs:
 templates:
     imports: from gnuradio import dtv
     make: dtv.atsc_pad()
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/atsc_pad.h>']
+    declarations: 'dtv::atsc_pad::sptr ${id};'
+    make: 'this->${id} = dtv::atsc_pad::make();'
+    link: ['gnuradio-dtv']
 
 file_format: 1

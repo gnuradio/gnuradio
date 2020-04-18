@@ -1,5 +1,6 @@
 id: dtv_catv_trellis_enc_bb
 label: Trellis Encoder
+flags: [ python, cpp ]
 
 parameters:
 -   id: constellation
@@ -21,5 +22,13 @@ outputs:
 templates:
     imports: from gnuradio import dtv
     make: dtv.catv_trellis_enc_bb(${constellation.val})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/catv_trellis_enc_bb.h>']
+    declarations: 'dtv::catv_trellis_enc_bb::sptr ${id};'
+    make: 'dtv::catv_trellis_enc_bb::make(${constellation.val});'
+    link: ['gnuradio-dtv']
+    translations:
+        dtv\.: "dtv::"
 
 file_format: 1

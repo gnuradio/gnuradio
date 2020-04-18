@@ -1,5 +1,6 @@
 id: dtv_catv_reed_solomon_enc_bb
 label: Reed-Solomon Encoder
+flags: [ python, cpp ]
 
 inputs:
 -   domain: stream
@@ -12,5 +13,11 @@ outputs:
 templates:
     imports: from gnuradio import dtv
     make: dtv.catv_reed_solomon_enc_bb()
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/catv_reed_solomon_enc_bb.h>']
+    declarations: 'dtv::catv_reed_solomon_enc_bb::sptr ${id};'
+    make: 'this->${id} = dtv::catv_reed_solomon_enc_bb::make();'
+    link: ['gnuradio-dtv']
 
 file_format: 1

@@ -1,5 +1,6 @@
 id: dtv_dvbt_inner_coder
 label: Inner Coder
+flags: [ python, cpp ]
 
 parameters:
 -   id: ninput
@@ -51,5 +52,19 @@ templates:
     imports: from gnuradio import dtv
     make: dtv.dvbt_inner_coder(${ninput}, ${noutput}, ${constellation.val}, ${hierarchy.val},
         ${code_rate.val})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbt_inner_coder.h>']
+    declarations: 'dtv::dvbt_inner_coder::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbt_inner_coder::make(
+            ${ninput},
+            ${noutput},
+            ${constellation.val},
+            ${hierarchy.val},
+            ${code_rate.val});
+    link: ['gnuradio-dtv']
+    translations:
+        dtv\.: 'dtv::'
 
 file_format: 1
