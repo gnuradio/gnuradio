@@ -34,9 +34,13 @@ def have_dark_theme():
         theme_name = config.get(
             'Settings', Constants.GTK_INI_THEME_NAME_KEY, fallback=None)
         return is_dark_theme(theme_name)
-    theme = subprocess.check_output(
-        ["gsettings", "get", "org.gnome.desktop.interface", "gtk-theme"]
-    ).decode('utf-8').strip().replace("'", "")
+    try:
+        theme = subprocess.check_output(
+            ["gsettings", "get", "org.gnome.desktop.interface", "gtk-theme"],
+            stderr=subprocess.DEVNULL
+        ).decode('utf-8').strip().replace("'", "")
+    except:
+        return False
     return is_dark_theme(theme)
 
 def add_style_provider():
