@@ -439,6 +439,8 @@ class Application(Gtk.Application):
             Dialogs.show_about(main, self.platform.config)
         elif action == Actions.HELP_WINDOW_DISPLAY:
             Dialogs.show_help(main)
+        elif action == Actions.GET_INVOLVED_WINDOW_DISPLAY:
+            Dialogs.show_get_involved(main)
         elif action == Actions.TYPES_WINDOW_DISPLAY:
             Dialogs.show_types(main)
         elif action == Actions.KEYBOARD_SHORTCUTS_WINDOW_DISPLAY:
