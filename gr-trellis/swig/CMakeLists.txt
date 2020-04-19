@@ -1,4 +1,4 @@
-# Copyright 2012,2016,2019 Free Software Foundation, Inc.
+# Copyright 2012,2016,2019,2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -30,6 +30,8 @@ configure_file(
 set(GR_SWIG_TRELLIS_IFILES
   trellis_swig0
   trellis_swig1
+  trellis_swig2
+  trellis_swig3
 )
 
 foreach(swigfile ${GR_SWIG_TRELLIS_IFILES})
