@@ -150,6 +150,8 @@ public:
         return gr::block::set_min_output_buffer(size);
     }
 
+    long block__min_output_buffer(size_t i) { return gr::block::min_output_buffer(i); }
+
     long block__max_output_buffer(size_t i) { return gr::block::max_output_buffer(i); }
 
     void block__set_max_output_buffer(long max_output_buffer)
@@ -163,6 +165,27 @@ public:
     }
 
     int block__output_multiple(void) const { return gr::block::output_multiple(); }
+
+    bool block__output_multiple_set(void) const
+    {
+        return gr::block::output_multiple_set();
+    }
+
+    void block__set_min_noutput_items(int m)
+    {
+        return gr::block::set_min_noutput_items(m);
+    }
+
+    int block__min_noutput_items(void) const { return gr::block::min_noutput_items(); }
+
+    void block__set_max_noutput_items(int m)
+    {
+        return gr::block::set_max_noutput_items(m);
+    }
+
+    void block__unset_max_noutput_items() { return gr::block::unset_max_noutput_items(); }
+
+    int block__max_noutput_items(void) { return gr::block::max_noutput_items(); }
 
     void block__consume(int which_input, int how_many_items)
     {
