@@ -45,6 +45,7 @@ blocks:
     label4: ''
     labels: '[]'
     num_opts: '4'
+    option0: RX2
     option1: TX/RX
     option2: J1
     option3: J2
