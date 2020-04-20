@@ -36,7 +36,8 @@ parameters:
     label: Beta
     dtype: float
     default: '6.76'
-value: ${ firdes.band_pass(gain, samp_rate, low_cutoff_freq, high_cutoff_freq, width,win, beta) }
+value: ${ getattr(firdes, str(type))(gain, samp_rate, low_cutoff_freq, high_cutoff_freq,
+    width, win, beta) }
 
 templates:
     imports: from gnuradio.filter import firdes
