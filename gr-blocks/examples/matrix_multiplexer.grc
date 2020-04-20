@@ -43,6 +43,7 @@ blocks:
     label4: ''
     labels: '[]'
     num_opts: '3'
+    option0: ((1, 0), (0, 1))
     option1: ((0, 1), (1, 0))
     option2: ((.5, .5), (.5, .5))
     option3: '3'
