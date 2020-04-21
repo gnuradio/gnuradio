@@ -163,6 +163,13 @@ class test_firdes(gr_unittest.TestCase):
         new_taps = filter.firdes.root_raised_cosine(1, 4, 1, 0.35, 11)
         self.assertFloatTuplesAlmostEqual(known_taps, new_taps, 5)
 
+    def test_root_raised_cosine_gain(self):
+        """Confirm DC gain is as expected"""
+        taps = filter.firdes.root_raised_cosine(1, 4, 1, 0.35, 11)
+        self.assertAlmostEqual(sum(taps), 1.0)
+        taps = filter.firdes.root_raised_cosine(1, 4, 1, 1.0, 11)
+        self.assertAlmostEqual(sum(taps), 1.0)
+
     def test_gaussian(self):
         known_taps = (0.0003600157215259969, 0.0031858310103416443,
                       0.0182281993329525, 0.06743486225605011,
