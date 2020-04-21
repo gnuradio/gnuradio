@@ -67,7 +67,10 @@ class Param(CoreParam):
         errors = self.get_error_messages()
         tooltip_lines = ['Key: ' + self.key, 'Type: ' + self.dtype]
         if self.is_valid():
-            value = str(self.get_evaluated())
+            value = self.get_evaluated()
+            if hasattr(value,"__len__"):
+                tooltip_lines.append('Length: {}'.format(len(value)))
+            value = str(value)
             if len(value) > 100:
                 value = '{}...{}'.format(value[:50], value[-50:])
             tooltip_lines.append('Value: ' + value)
