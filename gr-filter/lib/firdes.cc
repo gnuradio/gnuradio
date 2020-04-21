@@ -571,6 +571,7 @@ vector<float> firdes::root_raised_cosine(
         } else {
             if (alpha == 1) {
                 taps[i] = -1;
+                scale += taps[i];
                 continue;
             }
             x3 = (1 - alpha) * x1;
