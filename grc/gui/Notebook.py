@@ -98,8 +98,9 @@ class Page(Gtk.HBox):
 
         # tab box to hold label button and close button
         self.label = Gtk.Label()
-        label_button = Gtk.Button.new_with_label("untitled")
-        label_button.connect("clicked", self.close_flowgraph_using_middle_mouse)
+        self.label_button = Gtk.Button.new_with_label("untitled")
+        self.label_button.set_relief(Gtk.ReliefStyle.NONE)
+        self.label_button.connect("clicked", self.close_flowgraph_using_middle_mouse)
 
         image = Gtk.Image.new_from_icon_name('window-close', Gtk.IconSize.MENU)
         image_box = Gtk.HBox(homogeneous=False, spacing=0)
@@ -110,7 +111,7 @@ class Page(Gtk.HBox):
         button.add(image_box)
 
         tab = self.tab = Gtk.HBox(homogeneous=False, spacing=0)
-        tab.pack_start(label_button, False, False, 0)
+        tab.pack_start(self.label_button, False, False, 0)
         tab.pack_start(button, False, False, 0)
         tab.show_all()
 
@@ -175,6 +176,8 @@ class Page(Gtk.HBox):
             markup: the new markup text
         """
         self.label.set_markup(markup)
+        # print(self.label.get_label())
+        # self.label_button.set_markup(markup)
 
     def set_tooltip(self, text):
         """
