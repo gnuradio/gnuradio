@@ -36,7 +36,7 @@ class MakoTemplates(dict):
     def compile(cls, text):
         text = str(text)
         try:
-            template = Template(text)
+            template = Template(text, strict_undefined=True)
         except SyntaxException as error:
             raise TemplateError(text, *error.args)
 
