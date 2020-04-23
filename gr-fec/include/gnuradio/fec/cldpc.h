@@ -48,7 +48,7 @@ public:
       section A.1 of the reference given below.
        - "Modern Coding Theory", T Richardson and R Urbanke.
     */
-    std::vector<char> encode(std::vector<char> dataword);
+    std::vector<uint8_t> encode(std::vector<uint8_t> dataword);
 
     //! Returns the dimension of the code
     int dimension();
@@ -66,16 +66,16 @@ public:
     int get_N();
 
     //! Returns the syndrome for a given vector "in"
-    std::vector<char> syndrome(const std::vector<char> in);
+    std::vector<uint8_t> syndrome(const std::vector<uint8_t> in);
 
     //! Returns true if "in" is a codeword, else false
-    bool is_codeword(const std::vector<char> in);
+    bool is_codeword(const std::vector<uint8_t> in);
 
     //! Set the variable _list
     void set_alist(const alist _list);
 
     //! Obtain systematic bits from "in"
-    std::vector<char> get_systematic_bits(std::vector<char> in);
+    std::vector<uint8_t> get_systematic_bits(std::vector<uint8_t> in);
 
 private:
     //! The parity check matrix

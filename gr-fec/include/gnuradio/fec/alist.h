@@ -75,7 +75,7 @@ public:
     void print_mlist_i(int i);
 
     //! Returns the corresponding H matrix
-    std::vector<std::vector<char>> get_matrix();
+    std::vector<std::vector<uint8_t>> get_matrix();
 
 protected:
     //! A variable indicating if data has been read from alist-file

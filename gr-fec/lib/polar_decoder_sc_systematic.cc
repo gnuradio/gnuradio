@@ -30,7 +30,7 @@ generic_decoder::sptr polar_decoder_sc_systematic::make(
 polar_decoder_sc_systematic::polar_decoder_sc_systematic(
     int block_size, int num_info_bits, std::vector<int> frozen_bit_positions)
     : polar_decoder_common(
-          block_size, num_info_bits, frozen_bit_positions, std::vector<char>())
+          block_size, num_info_bits, frozen_bit_positions, std::vector<uint8_t>())
 {
     d_llr_vec = (float*)volk_malloc(sizeof(float) * block_size * (block_power() + 1),
                                     volk_get_alignment());

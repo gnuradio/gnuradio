@@ -56,7 +56,7 @@ public:
                                       int block_size,
                                       int num_info_bits,
                                       std::vector<int> frozen_bit_positions,
-                                      std::vector<char> frozen_bit_values);
+                                      std::vector<uint8_t> frozen_bit_values);
     ~polar_decoder_sc_list();
 
     // FECAPI
@@ -67,7 +67,7 @@ private:
                           int block_size,
                           int num_info_bits,
                           std::vector<int> frozen_bit_positions,
-                          std::vector<char> frozen_bit_values);
+                          std::vector<uint8_t> frozen_bit_values);
 
     polar::scl_list* d_scl;
 

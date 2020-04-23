@@ -23,13 +23,13 @@
 namespace gr {
 namespace fec {
 
-depuncture_bb::sptr depuncture_bb::make(int puncsize, int puncpat, int delay, char symbol)
+depuncture_bb::sptr depuncture_bb::make(int puncsize, int puncpat, int delay, uint8_t symbol)
 {
     return gnuradio::get_initial_sptr(
         new depuncture_bb_impl(puncsize, puncpat, delay, symbol));
 }
 
-depuncture_bb_impl::depuncture_bb_impl(int puncsize, int puncpat, int delay, char symbol)
+depuncture_bb_impl::depuncture_bb_impl(int puncsize, int puncpat, int delay, uint8_t symbol)
     : block("depuncture_bb",
             io_signature::make(1, 1, sizeof(unsigned char)),
             io_signature::make(1, 1, sizeof(unsigned char))),

@@ -28,7 +28,7 @@ namespace code {
 generic_encoder::sptr polar_encoder::make(int block_size,
                                           int num_info_bits,
                                           std::vector<int> frozen_bit_positions,
-                                          std::vector<char> frozen_bit_values,
+                                          std::vector<uint8_t> frozen_bit_values,
                                           bool is_packed)
 {
     return generic_encoder::sptr(new polar_encoder(
@@ -38,7 +38,7 @@ generic_encoder::sptr polar_encoder::make(int block_size,
 polar_encoder::polar_encoder(int block_size,
                              int num_info_bits,
                              std::vector<int>& frozen_bit_positions,
-                             std::vector<char>& frozen_bit_values,
+                             std::vector<uint8_t>& frozen_bit_values,
                              bool is_packed)
     : polar_common(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values),
       d_is_packed(is_packed)

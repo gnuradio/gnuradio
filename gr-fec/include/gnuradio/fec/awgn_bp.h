@@ -74,7 +74,7 @@ public:
     void update_vars();
 
     //! Returns the current estimate
-    std::vector<char> get_estimate();
+    std::vector<uint8_t> get_estimate();
 
     //! Computes initial estimate based on the vector rx_word
     void compute_init_estimate(std::vector<float> rx_word);
@@ -83,16 +83,16 @@ public:
     void decision();
 
     //! Returns the syndrome for the current estimate
-    std::vector<char> get_syndrome();
+    std::vector<uint8_t> get_syndrome();
 
     //! Returns the syndrome for the input codeword
-    std::vector<char> get_syndrome(const std::vector<char> codeword);
+    std::vector<uint8_t> get_syndrome(const std::vector<uint8_t> codeword);
 
     //! Checks if the current estimate is a codeword
     bool is_codeword();
 
     //! Checks if the input is a codeword
-    bool is_codeword(const std::vector<char> codeword);
+    bool is_codeword(const std::vector<uint8_t> codeword);
 
     //! Sets the variable K
     void set_K(int k);
@@ -113,7 +113,7 @@ public:
      * \param niterations The number of message passing iterations
      *        done to decode this codeword.
      */
-    std::vector<char> decode(std::vector<float> rx_word, int* niterations);
+    std::vector<uint8_t> decode(std::vector<float> rx_word, int* niterations);
 
 private:
     //! The number of check nodes in the tanner-graph
@@ -159,6 +159,6 @@ private:
     std::vector<int> num_mlist;
 
     //! The array for holding estimate computed on BP decoding
-    std::vector<char> estimate;
+    std::vector<uint8_t> estimate;
 };
 #endif // ifndef AWGN_BP_H
