@@ -15,7 +15,7 @@ from gnuradio import gr, filter
 from .fm_emph import fm_deemph
 from math import pi
 
-from . import analog_swig as analog
+from . import analog_python as analog
 
 
 class fm_demod_cf(gr.hier_block2):

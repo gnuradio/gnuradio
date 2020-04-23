@@ -17,7 +17,7 @@ import math
 from gnuradio import gr
 from gnuradio import filter
 
-from . import analog_swig as analog
+from . import analog_python as analog
 from .fm_emph import fm_deemph
 
 
