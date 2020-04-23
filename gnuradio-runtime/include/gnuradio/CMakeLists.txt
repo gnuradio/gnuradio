@@ -23,7 +23,6 @@ install(FILES
   constants.h
   endianness.h
   expj.h
-  feval.h
   flowgraph.h
   fxpt.h
   fxpt_nco.h
@@ -42,7 +41,6 @@ install(FILES
   msg_queue.h
   nco.h
   prefs.h
-  py_feval.h
   pycallback_object.h
   random.h
   realtime.h

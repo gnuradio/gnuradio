@@ -47,7 +47,6 @@ add_library(gnuradio-runtime
   block_gateway_impl.cc
   block_registry.cc
   buffer.cc
-  feval.cc
   flat_flowgraph.cc
   flowgraph.cc
   hier_block2.cc
@@ -196,10 +195,14 @@ target_link_libraries(gnuradio-runtime PUBLIC
   Boost::thread
   Log4Cpp::log4cpp
   MPLib::mplib
+  ${PYTHON_LIBRARIES}
   )
 
 target_include_directories(gnuradio-runtime
   PUBLIC
+    ${PYTHON_INCLUDE_DIR} 
+    ${PYTHON_NUMPY_INCLUDE_DIR} 
+    ${pybind11_INCLUDE_DIR}
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
