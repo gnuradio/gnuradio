@@ -17,10 +17,10 @@ from __future__ import unicode_literals
 import os
 
 try:
-    from .vocoder_swig import *
+    from .vocoder_python import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from .vocoder_swig import *
+    __path__.append(os.path.join(dirname, "bindings"))
+    from .vocoder_python import *
 
 from .cvsd import *
