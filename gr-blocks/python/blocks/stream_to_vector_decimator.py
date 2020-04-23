@@ -10,7 +10,7 @@ from __future__ import unicode_literals
 
 from gnuradio import gr
 
-from . import blocks_swig as blocks
+from . import blocks_python as blocks
 
 
 class stream_to_vector_decimator(gr.hier_block2):

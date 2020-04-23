@@ -20,13 +20,13 @@ class test_conjugate (gr_unittest.TestCase):
         self.tb = None
 
     def test_000 (self):
-        src_data = (-2-2j, -1-1j, -2+2j, -1+1j,
+        src_data = [-2-2j, -1-1j, -2+2j, -1+1j,
                      2-2j,  1-1j,  2+2j,  1+1j,
-                     0+0j)
+                     0+0j]
 
-        exp_data = (-2+2j, -1+1j, -2-2j, -1-1j,
+        exp_data = [-2+2j, -1+1j, -2-2j, -1-1j,
                      2+2j,  1+1j,  2-2j,  1-1j,
-                     0-0j)
+                     0-0j]
 
         src = blocks.vector_source_c(src_data)
         op = blocks.conjugate_cc ()

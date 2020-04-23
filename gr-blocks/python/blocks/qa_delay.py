@@ -24,7 +24,7 @@ class test_delay(gr_unittest.TestCase):
         delta_t = 0
         tb = self.tb
         src_data = [float(x) for x in range(0, 100)]
-        expected_result = tuple(delta_t*[0.0] + src_data)
+        expected_result = list(delta_t*[0.0] + src_data)
 
         src = blocks.vector_source_f(src_data)
         op = blocks.delay(gr.sizeof_float, delta_t)
@@ -39,7 +39,7 @@ class test_delay(gr_unittest.TestCase):
         delta_t = 10
         tb = self.tb
         src_data = [float(x) for x in range(0, 100)]
-        expected_result = tuple(delta_t*[0.0] + src_data)
+        expected_result = list(delta_t*[0.0] + src_data)
 
         src = blocks.vector_source_f(src_data)
         op = blocks.delay(gr.sizeof_float, delta_t)

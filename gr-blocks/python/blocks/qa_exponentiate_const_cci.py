@@ -23,8 +23,8 @@ class qa_exponentiate_const_cci(gr_unittest.TestCase):
 
     def test_001_t(self):
         for exponent in range(1,10):
-            in_data = (1+1j, -1, 4-1j, -3-7j)
-            out_data = (in_data[0]**exponent, in_data[1]**exponent, in_data[2]**exponent, in_data[3]**exponent)
+            in_data = [1+1j, -1, 4-1j, -3-7j]
+            out_data = [in_data[0]**exponent, in_data[1]**exponent, in_data[2]**exponent, in_data[3]**exponent]
 
             # Test streaming input
             source = blocks.vector_source_c(in_data, False, 1)

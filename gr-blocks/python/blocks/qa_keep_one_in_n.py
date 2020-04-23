@@ -20,9 +20,9 @@ class test_keep_one_in_n(gr_unittest.TestCase):
         self.tb = None
 
     def test_001(self):
-        src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-        expected_data = (5, 10)
-        src = blocks.vector_source_b(src_data);
+        src_data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        expected_data = [5, 10]
+        src = blocks.vector_source_b(src_data)
         op = blocks.keep_one_in_n(gr.sizeof_char, 5)
         dst = blocks.vector_sink_b()
         self.tb.connect(src, op, dst)

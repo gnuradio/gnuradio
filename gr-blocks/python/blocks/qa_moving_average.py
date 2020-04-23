@@ -27,7 +27,11 @@ def make_random_float_tuple(L, scale=1):
     return tuple(result)
 
 class test_moving_average(gr_unittest.TestCase):
-
+    def assertListAlmostEqual(self, list1, list2, tol):
+        self.assertEqual(len(list1), len(list2))
+        for a, b in zip(list1, list2):
+            self.assertAlmostEqual(a, b, tol)
+         
     def setUp(self):
         random.seed(0)
         self.tb = gr.top_block()
@@ -109,7 +113,7 @@ class test_moving_average(gr_unittest.TestCase):
         ref_data = ref_dst.data()
 
         # make sure result is close to zero
-        self.assertTupleEqual(dut_data, ref_data)
+        self.assertEqual(dut_data, ref_data)
 
     def test_04(self):
         tb = self.tb
@@ -138,7 +142,7 @@ class test_moving_average(gr_unittest.TestCase):
         dst_data = dst.data()
 
         # make sure result is close to zero
-        self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 4)
+        self.assertListAlmostEqual(expected_result, dst_data, 4)
 
 if __name__ == '__main__':
     gr_unittest.run(test_moving_average, "test_moving_average.xml")
