@@ -40,7 +40,7 @@ class test_flowgraph (gr_unittest.TestCase):
 
         self.assertEqual(dbg.num_messages(), 1)
         data = pmt.u8vector_elements(pmt.cdr(dbg.get_message(0)))
-        self.assertEqual((1, 2, 3), data)
+        self.assertEqual([1, 2, 3], data)
 
 if __name__ == '__main__':
     gr_unittest.run(test_flowgraph, 'test_flowgraph.xml')
