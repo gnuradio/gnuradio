@@ -36,8 +36,8 @@ from .hier_block2 import *
 from .tag_utils import *
 from .gateway import basic_block, sync_block, decim_block, interp_block, py_io_signature
 
-# Force the preference database to be initialized
-prefs = prefs.singleton
+# # Force the preference database to be initialized
+# prefs = prefs.singleton
 
 log = gr.logger("log")
 log.set_level(prefs().get_string("LOG", "log_level", "notset"))
