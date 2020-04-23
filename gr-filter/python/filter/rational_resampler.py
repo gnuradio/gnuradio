@@ -12,7 +12,7 @@ from __future__ import division
 from __future__ import unicode_literals
 
 from gnuradio import gr, gru
-from . import filter_swig as filter
+from . import filter_python as filter
 
 _plot = None
 

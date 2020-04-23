@@ -73,7 +73,7 @@ class test_rational_resampler (gr_unittest.TestCase):
         taps = (-4, 5)
         src_data = (234,  -4,  23,  -56,  45,    98,  -23,  -7)
         xr = (1186, -112, 339, -460, -167, 582)
-        expected_result = tuple([float(x) for x in xr])
+        expected_result = [float(x) for x in xr]
 
         tb = gr.top_block()
         src = blocks.vector_source_f(src_data)
@@ -96,7 +96,7 @@ class test_rational_resampler (gr_unittest.TestCase):
               1100,11013,110130,
               1300,13017,130170,
               1700.0,17000.0,170000.0, 0.0)
-        expected_result = tuple([float(x) for x in xr])
+        expected_result = [float(x) for x in xr]
 
         tb = gr.top_block()
         src = blocks.vector_source_f(src_data)

@@ -21,7 +21,7 @@ from __future__ import unicode_literals
 
 
 import math, cmath
-from . import filter_swig as filter
+from . import filter_python as filter
 
 # ----------------------------------------------------------------
 

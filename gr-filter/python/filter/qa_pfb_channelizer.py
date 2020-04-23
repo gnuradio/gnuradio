@@ -61,7 +61,8 @@ class test_pfb_channelizer(gr_unittest.TestCase):
 
     def test_0003(self):
         """Test roundig error handling for oversample rate, (bad)."""
-        self.assertRaises(TypeError,
+        # pybind11 raises ValueError instead of TypeError
+        self.assertRaises(ValueError,
                           filter.pfb.channelizer_ccf,
                           36, taps=self.taps, oversample_rate=10.1334)
 
