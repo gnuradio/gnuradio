@@ -11,7 +11,7 @@
 from __future__ import unicode_literals
 from gnuradio import gr, blocks
 
-from . import fec_swig as fec
+from . import fec_python as fec
 
 
 class threaded_encoder(gr.hier_block2):

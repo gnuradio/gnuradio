@@ -17,9 +17,9 @@ import numpy as np
 
 from gnuradio import gr, gr_unittest, blocks
 from gnuradio import fec
-from fec import extended_decoder
-from fec.polar.encoder import PolarEncoder
-from fec.polar import channel_construction as cc
+from gnuradio.fec import extended_decoder
+from gnuradio.fec.polar.encoder import PolarEncoder
+from gnuradio.fec.polar import channel_construction as cc
 
 # import os
 # print('PID:', os.getpid())
