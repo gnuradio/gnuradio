@@ -30,7 +30,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         occupied_carriers = ((0, 1, 2),)
         pilot_carriers = ((3,),)
         sync_word = (list(range(fft_len)),)
-        expected_result = tuple(sync_word[0] + [1j, 0, 0, 1, 2, 3])
+        expected_result = sync_word[0] + [1j, 0, 0, 1, 2, 3]
         #                                                 ^ DC carrier
         src = blocks.vector_source_c(tx_symbols, False, 1)
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
@@ -58,7 +58,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         occupied_carriers = ((0, 1, 2),)
         pilot_carriers = ((-2,),)
         pilot_symbols = ((1j,),)
-        expected_result = (1j, 0, 1, 2, 3)
+        expected_result = [1j, 0, 1, 2, 3]
         #                         ^ DC carrier
         src = blocks.vector_source_c(tx_symbols, False, 1)
         alloc = digital.ofdm_carrier_allocator_cvc(
@@ -82,7 +82,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         pilot_symbols = ((1j,),)
         occupied_carriers = ((-1, 1, 2),)
         pilot_carriers = ((3,),)
-        expected_result = (1j, 0, 1, 0, 2, 3)
+        expected_result = [1j, 0, 1, 0, 2, 3]
         src = blocks.vector_source_c(tx_symbols, False, 1)
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                        occupied_carriers,
@@ -99,7 +99,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         self.tb.run ()
         self.assertEqual(sink.data()[0], expected_result)
 
-    def test_002_t (self):
+    def test_002_tb (self):
         """
         once again, but this time add a sync word
         """
@@ -109,7 +109,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         pilot_symbols = ((1j,),)
         occupied_carriers = ((-1, 1, 2),)
         pilot_carriers = ((3,),)
-        expected_result = sync_word + (1j, 0, 1, 0, 2, 3) + (1j, 0, 4, 0, 5, 6)
+        expected_result = list(sync_word + (1j, 0, 1, 0, 2, 3) + (1j, 0, 4, 0, 5, 6))
         special_tag1 = gr.tag_t()
         special_tag1.offset = 0
         special_tag1.key = pmt.string_to_symbol("spam")
@@ -156,9 +156,9 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         pilot_symbols = ((1j, 2j), (3j, 4j))
         occupied_carriers = ((1, 3, 4, 11, 12, 14), (1, 2, 4, 11, 13, 14),)
         pilot_carriers = ((2, 13), (3, 12))
-        expected_result = (0, 1,  1j,  2,  3, 0, 0, 0, 0, 0, 0, 4,  5,  2j, 6,  0,
+        expected_result = list((0, 1,  1j,  2,  3, 0, 0, 0, 0, 0, 0, 4,  5,  2j, 6,  0,
                            0, 7,  8,  3j,  9, 0, 0, 0, 0, 0, 0, 10, 4j, 11, 12, 0,
-                           0, 13, 1j, 14, 15, 0, 0, 0, 0, 0, 0, 0,  0,  2j, 0,  0)
+                           0, 13, 1j, 14, 15, 0, 0, 0, 0, 0, 0, 0,  0,  2j, 0,  0))
         fft_len = 16
         testtag1 = gr.tag_t()
         testtag1.offset = 0
@@ -203,30 +203,34 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         fft_len = 6
 
         # Occupied carriers
-        with self.assertRaises(TypeError) as oc:
+        #with self.assertRaises(TypeError) as oc:
+        #Pybind11 raises this as a ValueError
+        with self.assertRaises(ValueError) as oc:
           alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
-                        (),
-                        ((),),
-                        ((),),
-                        (),
+                        [],
+                        [[],],
+                        [[],],
+                        [],
                         self.tsb_key)
 
         # Pilot carriers
-        with self.assertRaises(TypeError) as pc:
+        #Pybind11 raises this as a ValueError
+        with self.assertRaises(ValueError) as pc:
           alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
-                        ((),),
-                        (),
-                        ((),),
-                        (),
+                        [[],],
+                        [],
+                        [[],],
+                        [],
                         self.tsb_key)
 
         # Pilot carrier symbols
-        with self.assertRaises(TypeError) as ps:
+        #Pybind11 raises this as a ValueError
+        with self.assertRaises(ValueError) as ps:
           alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
-                        ((),),
-                        ((),),
-                        (),
-                        (),
+                        [[],],
+                        [[],],
+                        [],
+                        [],
                         self.tsb_key)
 
 

@@ -35,10 +35,10 @@ class test_correlate_access_code(gr_unittest.TestCase):
         self.tb = None
 
     def test_001(self):
-        pad = (0,) * 64
+        pad = [0,] * 64
         #           0  0  0  1  0  0  0  1
-        src_data = (1, 0, 1, 1, 1, 1, 0, 1, 1) + pad + (0,) * 7
-        expected_result = pad + (1, 0, 1, 1, 3, 1, 0, 1, 1, 2) + (0,) * 6
+        src_data = [1, 0, 1, 1, 1, 1, 0, 1, 1] + pad + [0,] * 7
+        expected_result = pad + [1, 0, 1, 1, 3, 1, 0, 1, 1, 2] + [0,] * 6
         src = blocks.vector_source_b(src_data)
         op = digital.correlate_access_code_bb("1011", 0)
         dst = blocks.vector_sink_b()
@@ -49,13 +49,13 @@ class test_correlate_access_code(gr_unittest.TestCase):
 
 
     def test_002(self):
-        code = tuple(string_to_1_0_list(default_access_code))
+        code = list(string_to_1_0_list(default_access_code))
         access_code = to_1_0_string(code)
-        pad = (0,) * 64
+        pad = [0,] * 64
         #print code
         #print access_code
-        src_data = code + (1, 0, 1, 1) + pad
-        expected_result = pad + code + (3, 0, 1, 1)
+        src_data = code + [1, 0, 1, 1] + pad
+        expected_result = pad + code + [3, 0, 1, 1]
         src = blocks.vector_source_b(src_data)
         op = digital.correlate_access_code_bb(access_code, 0)
         dst = blocks.vector_sink_b()
@@ -65,13 +65,13 @@ class test_correlate_access_code(gr_unittest.TestCase):
         self.assertEqual(expected_result, result_data)
 
     def test_003(self):
-        code = tuple(string_to_1_0_list(default_access_code))
+        code = list(string_to_1_0_list(default_access_code))
         access_code = to_1_0_string(code)
-        pad = (0,) * 64
+        pad = [0,] * 64
         #print code
         #print access_code
-        src_data = code + (1, 0, 1, 1) + pad
-        expected_result = code + (1, 0, 1, 1) + pad
+        src_data = code + [1, 0, 1, 1] + pad
+        expected_result = code + [1, 0, 1, 1] + pad
         src = blocks.vector_source_b(src_data)
         op = digital.correlate_access_code_tag_bb(access_code, 0, "test")
         dst = blocks.vector_sink_b()
@@ -81,14 +81,14 @@ class test_correlate_access_code(gr_unittest.TestCase):
         self.assertEqual(expected_result, result_data)
 
     def test_004(self):
-        code = tuple(string_to_1_0_list(default_access_code))
+        code = list(string_to_1_0_list(default_access_code))
         access_code = to_1_0_string(code)
-        pad = (0,) * 64
+        pad = [0,] * 64
         #print code
         #print access_code
-        src_bits = code + (1, 0, 1, 1) + pad
+        src_bits = code + [1, 0, 1, 1] + pad
         src_data = [2.0*x - 1.0 for x in src_bits]
-        expected_result_bits = code + (1, 0, 1, 1) + pad
+        expected_result_bits = code + [1, 0, 1, 1] + pad
         expected_result = [2.0*x - 1.0 for x in expected_result_bits]
         src = blocks.vector_source_f(src_data)
         op = digital.correlate_access_code_tag_ff(access_code, 0, "test")

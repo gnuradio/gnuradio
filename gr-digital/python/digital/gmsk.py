@@ -25,7 +25,7 @@ import numpy
 
 from gnuradio import gr, blocks, analog, filter
 from . import modulation_utils
-from . import digital_swig as digital
+from . import digital_python as digital
 
 # default values (used in __init__ and add_options)
 _def_samples_per_symbol = 2

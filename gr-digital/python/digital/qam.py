@@ -22,7 +22,7 @@ from .generic_mod_demod import shared_mod_args, shared_demod_args
 from .utils.gray_code import gray_code
 from .utils import mod_codes
 from . import modulation_utils
-from . import digital_swig as digital
+from . import digital_python as digital
 
 # Default number of points in constellation.
 _def_constellation_points = 16

@@ -21,7 +21,7 @@ def additive_scramble_lfsr(mask, seed, reglen, bpb, data):
         for i in range(0,bpb):
             scramble_word ^= l.next_bit() << i
         out.append(d ^ scramble_word)
-    return tuple(out)
+    return out
 
 class test_scrambler(gr_unittest.TestCase):
 
@@ -32,17 +32,17 @@ class test_scrambler(gr_unittest.TestCase):
         self.tb = None
 
     def test_scrambler_descrambler(self):
-        src_data = (1,)*1000
+        src_data = [1,]*1000
         src = blocks.vector_source_b(src_data, False)
         scrambler = digital.scrambler_bb(0x8a, 0x7F, 7)     # CCSDS 7-bit scrambler
         descrambler = digital.descrambler_bb(0x8a, 0x7F, 7)
         dst = blocks.vector_sink_b()
         self.tb.connect(src, scrambler, descrambler, dst)
         self.tb.run()
-        self.assertEqual(tuple(src_data[:-8]), dst.data()[8:]) # skip garbage during synchronization
+        self.assertEqual(src_data[:-8], dst.data()[8:]) # skip garbage during synchronization
 
     def test_additive_scrambler(self):
-        src_data = (1,)*1000
+        src_data = [1,]*1000
         src = blocks.vector_source_b(src_data, False)
         scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7)
         descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7)
@@ -52,7 +52,7 @@ class test_scrambler(gr_unittest.TestCase):
         self.assertEqual(src_data, dst.data())
 
     def test_additive_scrambler_reset(self):
-        src_data = (1,)*200
+        src_data = [1,]*200
         src = blocks.vector_source_b(src_data, False)
         scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 50)
         dst = blocks.vector_sink_b()
@@ -62,7 +62,7 @@ class test_scrambler(gr_unittest.TestCase):
         self.assertEqual(output[:50] * 4, output)
 
     def test_additive_scrambler_reset_3bpb(self):
-        src_data = (5,)*200
+        src_data = [5,]*200
         src = blocks.vector_source_b(src_data, False)
         scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 50, 3)
         dst = blocks.vector_sink_b()
@@ -72,7 +72,7 @@ class test_scrambler(gr_unittest.TestCase):
         self.assertEqual(output[:50] * 4, output)
 
     def test_additive_scrambler_tags(self):
-        src_data = (1,)*1000
+        src_data = [1,]*1000
         src = blocks.vector_source_b(src_data, False)
         scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100)
         descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100)

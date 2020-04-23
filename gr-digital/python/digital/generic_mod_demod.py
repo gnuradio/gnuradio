@@ -20,7 +20,7 @@ from __future__ import unicode_literals
 from gnuradio import gr, blocks, filter, analog
 from .modulation_utils import extract_kwargs_from_options_for_class
 from .utils import mod_codes
-from . import digital_swig as digital
+from . import digital_python as digital
 import math
 
 

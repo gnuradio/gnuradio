@@ -35,11 +35,11 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         sink = blocks.vector_sink_b()
         self.tb.connect(src, header, sink)
         self.tb.run()
-        expected_data = (
+        expected_data = [
                 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0
-        )
+        ]
         self.assertEqual(sink.data(), expected_data)
 
     def test_002_32bits (self):
@@ -50,12 +50,12 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         sink = blocks.vector_sink_b()
         self.tb.connect(src, header, sink)
         self.tb.run()
-        expected_data = (
+        expected_data = [
             #   | Number of symbols                  | Packet number                      | CRC
                 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1, 0, 0, 1, 0, 0, 0, 1,
                 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 1, 0, 1, 1, 1,
                 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1, 1, 0, 0, 0, 1, 0, 1
-        )
+        ]
         self.assertEqual(sink.data(), expected_data)
 
     def test_003_12bits_formatter_object (self):
@@ -67,11 +67,11 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         sink = blocks.vector_sink_b()
         self.tb.connect(src, header, sink)
         self.tb.run()
-        expected_data = (
+        expected_data = [
             0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0
-        )
+        ]
         self.assertEqual(sink.data(), expected_data)
 
     def test_004_8bits_formatter_ofdm (self):
@@ -86,11 +86,11 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         sink = blocks.vector_sink_b()
         self.tb.connect(src, header, sink)
         self.tb.run()
-        expected_data = (
+        expected_data = [
             0, 0, 1, 0, 0, 0,
             0, 1, 0, 0, 0, 0,
             0, 0, 1, 0, 0, 0
-        )
+        ]
         self.assertEqual(sink.data(), expected_data)
 
 if __name__ == '__main__':

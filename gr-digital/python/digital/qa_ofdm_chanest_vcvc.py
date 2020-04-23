@@ -113,7 +113,7 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
         sync_symbol2 = (0, 0, 0, 1j, -1, 1, -1j,  1j, 0, 1, -1j, -1, -1j, 1, 0, 0)
         data_symbol  = (0, 0, 0, 1, -1, 1, -1,  1, 0, 1, -1, -1, -1, 1, 0, 0)
         tx_data = sync_symbol1 + sync_symbol2 + data_symbol
-        channel = (0, 0, 0, 2, -2, 2, 3j, 2, 0, 2, 2, 2, 2, 3, 0, 0)
+        channel = [0, 0, 0, 2, -2, 2, 3j, 2, 0, 2, 2, 2, 2, 3, 0, 0]
         src = blocks.vector_source_c(tx_data, False, fft_len)
         chan = blocks.multiply_const_vcc(channel)
         chanest = digital.ofdm_chanest_vcvc(sync_symbol1, sync_symbol2, 1)
@@ -139,7 +139,7 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
         sync_symbol = (0, 0, 0, 1,  0, 1,  0, -1, 0, 1,  0, -1,  0, 1, 0, 0)
         data_symbol  = (0, 0, 0, 1, -1, 1, -1,  1, 0, 1, -1, -1, -1, 1, 0, 0)
         tx_data = sync_symbol + data_symbol
-        channel = (0, 0, 0, 2, 2, 2, 2, 3, 3, 2.5, 2.5, -3, -3, 1j, 1j, 0)
+        channel = [0, 0, 0, 2, 2, 2, 2, 3, 3, 2.5, 2.5, -3, -3, 1j, 1j, 0]
         #channel = (0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
         src = blocks.vector_source_c(tx_data, False, fft_len)
         chan = blocks.multiply_const_vcc(channel)
@@ -166,7 +166,7 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
         ref_symbol  = (0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0)
         data_symbol = (0, 0, 0, 1, -1, 1, -1,  1, 0, 1, -1, -1, -1, 1, 0, 0)
         tx_data = sync_symbol + data_symbol
-        channel = (0, 0, 0, 2, 2, 2, 2.5, 3, 2.5, 2, 2.5, 3, 2, 1, 1, 0)
+        channel = [0, 0, 0, 2, 2, 2, 2.5, 3, 2.5, 2, 2.5, 3, 2, 1, 1, 0]
         src = blocks.vector_source_c(tx_data, False, fft_len)
         chan = blocks.multiply_const_vcc(channel)
         chanest = digital.ofdm_chanest_vcvc(sync_symbol, ref_symbol, 1)
@@ -190,7 +190,7 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
         data_symbol  = (0, 0, 0,  1, -1, 1,  -1,  1, 0, 1,  -1, -1,  -1, 1, 0, 0)
         # Channel       0  1  2  3  4   5   6  7    8   9 10 11   12  13   14  15
         # Shifted      (0, 0, 0, 0, 0, 1j, -1, 1, -1j, 1j, 0, 1, -1j, -1, -1j, 1)
-        chanest_exp  = (0, 0, 0, 5, 6, 7, 8, 9, 0, 11, 12, 13, 14, 15, 0, 0)
+        chanest_exp  = [0, 0, 0, 5, 6, 7, 8, 9, 0, 11, 12, 13, 14, 15, 0, 0]
         tx_data = shift_tuple(sync_symbol1, carr_offset) + \
                   shift_tuple(sync_symbol2, carr_offset) + \
                   shift_tuple(data_symbol, carr_offset)
@@ -209,7 +209,7 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
             if pmt.symbol_to_string(tag.key) == 'ofdm_sync_chan_taps':
                 chan_est = pmt.c32vector_elements(tag.value)
         self.assertEqual(chan_est, chanest_exp)
-        self.assertEqual(sink.data(), tuple(numpy.multiply(shift_tuple(data_symbol, carr_offset), channel)))
+        self.assertEqual(sink.data(), list(numpy.multiply(shift_tuple(data_symbol, carr_offset), channel)))
 
 
     def test_999_all_at_once(self):
