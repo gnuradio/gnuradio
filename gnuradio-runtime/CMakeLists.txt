@@ -28,6 +28,7 @@ GR_REGISTER_COMPONENT("gnuradio-runtime" ENABLE_GNURADIO_RUNTIME
     PYTHONINTERP_FOUND
     MPLIB_FOUND
     LOG4CPP_FOUND
+    pybind11_FOUND
 )
 
 get_filename_component(GNURADIO_RUNTIME_PYTHONPATH
@@ -38,12 +39,8 @@ get_filename_component(GNURADIO_RUNTIME_PYTHONPATH
 # Register controlport component
 ########################################################################
 
-FIND_PACKAGE(SWIG)
-
 GR_REGISTER_COMPONENT("gr-ctrlport" ENABLE_GR_CTRLPORT
   Boost_FOUND
-  SWIG_FOUND
-  SWIG_VERSION_CHECK
   ENABLE_GNURADIO_RUNTIME
 )
 
@@ -81,7 +78,6 @@ add_subdirectory(include)
 add_subdirectory(lib)
 add_subdirectory(apps)
 if(ENABLE_PYTHON)
-     add_subdirectory(swig)
      add_subdirectory(python)
     add_subdirectory(examples)
 endif(ENABLE_PYTHON)

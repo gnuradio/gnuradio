@@ -48,7 +48,7 @@ function(GR_ADD_TEST test_name)
         #Only do this for the python directories matching the following:
         foreach(pydir ${GR_TEST_PYTHON_DIRS})
             get_filename_component(name ${pydir} NAME)
-            if(name MATCHES "^(swig|lib|src)$")
+            if(name MATCHES "^(lib|src)$")
                 list(APPEND GR_TEST_PYTHON_DIRS ${pydir}/${CMAKE_BUILD_TYPE})
             endif()
         endforeach(pydir)

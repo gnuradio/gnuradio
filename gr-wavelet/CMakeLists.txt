@@ -36,7 +36,6 @@ if(ENABLE_GR_WAVELET)
 add_subdirectory(include/gnuradio/wavelet)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
-    add_subdirectory(swig)
     add_subdirectory(python/wavelet)
 endif(ENABLE_PYTHON)
 
