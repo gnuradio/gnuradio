@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 import pmt
 
-from . import runtime_swig as gr
+from . import gr_python as gr
 
 class PythonTag(object):
     " Python container for tags "
@@ -58,17 +58,17 @@ def python_to_tag(tag_struct):
                 good = True
 
         if('key' in tag_struct):
-            if(isinstance(tag_struct['key'], pmt.swig_pmt_ptr)):
+            if(isinstance(tag_struct['key'], pmt.pmt_base)):
                 tag.key = tag_struct['key']
                 good = True
 
         if('value' in tag_struct):
-            if(isinstance(tag_struct['value'], pmt.swig_pmt_ptr)):
+            if(isinstance(tag_struct['value'], pmt.pmt_base)):
                 tag.value = tag_struct['value']
                 good = True
 
         if('srcid' in tag_struct):
-            if(isinstance(tag_struct['srcid'], pmt.swig_pmt_ptr)):
+            if(isinstance(tag_struct['srcid'], pmt.pmt_base)):
                 tag.srcid = tag_struct['srcid']
                 good = True
 
@@ -78,15 +78,15 @@ def python_to_tag(tag_struct):
                 tag.offset = tag_struct[0]
                 good = True
 
-            if(isinstance(tag_struct[1], pmt.swig_pmt_ptr)):
+            if(isinstance(tag_struct[1], pmt.pmt_base)):
                 tag.key = tag_struct[1]
                 good = True
 
-            if(isinstance(tag_struct[2], pmt.swig_pmt_ptr)):
+            if(isinstance(tag_struct[2], pmt.pmt_base)):
                 tag.value = tag_struct[2]
                 good = True
 
-            if(isinstance(tag_struct[3], pmt.swig_pmt_ptr)):
+            if(isinstance(tag_struct[3], pmt.pmt_base)):
                 tag.srcid = tag_struct[3]
                 good = True
 
@@ -95,11 +95,11 @@ def python_to_tag(tag_struct):
                 tag.offset = tag_struct[0]
                 good = True
 
-            if(isinstance(tag_struct[1], pmt.swig_pmt_ptr)):
+            if(isinstance(tag_struct[1], pmt.pmt_base)):
                 tag.key = tag_struct[1]
                 good = True
 
-            if(isinstance(tag_struct[2], pmt.swig_pmt_ptr)):
+            if(isinstance(tag_struct[2], pmt.pmt_base)):
                 tag.value = tag_struct[2]
                 good = True
 
@@ -112,33 +112,33 @@ def python_to_tag(tag_struct):
 
 def tag_t_offset_compare_key():
     """
-    Convert a tag_t_offset_compare function into a key=function
+    Convert a tag_t.offset_compare function into a key=function
     This method is modeled after functools.cmp_to_key(_func_).
     It can be used by functions that accept a key function, such as
     sorted(), min(), max(), etc. to compare tags by their offsets,
-    e.g., sorted(tag_list, key=gr.tag_t_offset_compare_key()).
+    e.g., sorted(tag_list, key=gr.tag_t.offset_compare_key()).
     """
     class K(object):
         def __init__(self, obj, *args):
             self.obj = obj
         def __lt__(self, other):
             # x.offset < y.offset
-            return gr.tag_t_offset_compare(self.obj, other.obj)
+            return gr.tag_t.offset_compare(self.obj, other.obj)
         def __gt__(self, other):
             # y.offset < x.offset
-            return gr.tag_t_offset_compare(other.obj, self.obj)
+            return gr.tag_t.offset_compare(other.obj, self.obj)
         def __eq__(self, other):
             # not (x.offset < y.offset) and not (y.offset < x.offset)
-            return not gr.tag_t_offset_compare(self.obj, other.obj) and \
-                   not gr.tag_t_offset_compare(other.obj, self.obj)
+            return not gr.tag_t.offset_compare(self.obj, other.obj) and \
+                   not gr.tag_t.offset_compare(other.obj, self.obj)
         def __le__(self, other):
             # not (y.offset < x.offset)
-            return not gr.tag_t_offset_compare(other.obj, self.obj)
+            return not gr.tag_t.offset_compare(other.obj, self.obj)
         def __ge__(self, other):
             # not (x.offset < y.offset)
-            return not gr.tag_t_offset_compare(self.obj, other.obj)
+            return not gr.tag_t.offset_compare(self.obj, other.obj)
         def __ne__(self, other):
             # (x.offset < y.offset) or (y.offset < x.offset)
-            return gr.tag_t_offset_compare(self.obj, other.obj) or \
-                   gr.tag_t_offset_compare(other.obj, self.obj)
+            return gr.tag_t.offset_compare(self.obj, other.obj) or \
+                   gr.tag_t.offset_compare(other.obj, self.obj)
     return K
