@@ -60,7 +60,7 @@ class GR_RUNTIME_API block : public basic_block
 {
 public:
     //! Magic return values from general_work
-    enum { WORK_CALLED_PRODUCE = -2, WORK_DONE = -1 };
+    enum work_return_t { WORK_CALLED_PRODUCE = -2, WORK_DONE = -1 };
 
     /*!
      * \brief enum to represent different tag propagation policies.
