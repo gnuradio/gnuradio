@@ -33,11 +33,11 @@ from __future__ import unicode_literals
 import os
 
 try:
-    from .pmt_swig import *
+    from .pmt_python import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from .pmt_swig import *
+    __path__.append(os.path.join(dirname, "bindings"))
+    from .pmt_python import *
 
 # due to changes in the PMT_NIL singleton for static builds, we force
 # this into Python here.
