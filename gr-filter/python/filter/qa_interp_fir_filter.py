@@ -32,7 +32,7 @@ class test_interp_fir_filter(gr_unittest.TestCase):
               700,7011,70110,
               1100,11013,110130,
               1300,13017,130170)
-        expected_result = tuple([float(x) for x in xr])
+        expected_result = [float(x) for x in xr]
 
         src = blocks.vector_source_f(src_data)
         op = filter.interp_fir_filter_fff(interpolation, taps)
