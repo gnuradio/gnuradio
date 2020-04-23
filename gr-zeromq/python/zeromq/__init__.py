@@ -16,11 +16,11 @@ from __future__ import unicode_literals
 import os
 
 try:
-    from .zeromq_swig import *
+    from .zeromq_python import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from .zeromq_swig import *
+    __path__.append(os.path.join(dirname, "bindings"))
+    from .zeromq_python import *
 
 from .probe_manager import probe_manager
 from .rpc_manager import rpc_manager
