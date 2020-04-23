@@ -13,7 +13,14 @@ description here (python/__init__.py).
 from __future__ import unicode_literals
 
 # import swig generated symbols into the network namespace
-from .network_swig import *
+import os
+
+try:
+    from .network_python import *
+except ImportError:
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    __path__.append(os.path.join(dirname, "bindings"))
+    from .network_python import *
 
 # import any pure python here
 #

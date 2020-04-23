@@ -31,3 +31,5 @@ include(GrTest)
 
 set(GR_TEST_TARGET_DEPS gnuradio-network)
 set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
+
+add_subdirectory(bindings)
