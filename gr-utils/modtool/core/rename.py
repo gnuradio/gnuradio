@@ -70,17 +70,6 @@ class ModToolRename(ModTool):
         self._run_include(self.info['modname'], oldname, newname)
         return
 
-    def _run_swig_rename(self, swigfilename, old, new):
-        """ Rename SWIG includes and block_magic """
-        nsubs = self._run_file_replace(swigfilename, old, new)
-        if nsubs < 1:
-            logger.info(f"Couldn't find '{old}' in file '{swigfilename}'.")
-        if nsubs == 2:
-            logger.info("Changing 'noblock' type file")
-        if nsubs > 3:
-            logger.warning(f"Hm, changed more then expected while editing {swigfilename}.")
-        return False
-
     def _run_lib(self, module, old, new):
         ccfile = './lib/' + old + '_impl.cc'
         if not os.path.isfile(ccfile):  # in case it is a 'noblock'

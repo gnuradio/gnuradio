@@ -78,41 +78,6 @@ class ModToolDisable(ModTool):
                 cmake.comment_out_lines('GR_ADD_TEST.*'+os.path.splitext(fname)[0])
             self.scm.mark_file_updated(cmake.filename)
             return True
-        def _handle_h_swig(cmake, fname):
-            """ Comment out include files from the SWIG file,
-            as well as the block magic """
-            with open(self._file['swig']) as f:
-                swigfile = f.read()
-            (swigfile, nsubs) = re.subn(f'(.include\s+"({self.info["modname"]}/)?{fname}")',
-                                        r'//\1', swigfile)
-            if nsubs > 0:
-                logger.info(f"Changing {self._file['swig']}...")
-            if nsubs > 1: # Need to find a single BLOCK_MAGIC
-                blockname = os.path.splitext(fname[len(self.info['modname'])+1:])[0]
-                if self.info['version'] in ('37', '38'):
-                    blockname = os.path.splitext(fname)[0]
-                (swigfile, nsubs) = re.subn(f'(GR_SWIG_BLOCK_MAGIC2?.+{blockname}.+;)', r'//\1', swigfile)
-                if nsubs > 1:
-                    logger.warning(f"Hm, changed more then expected while editing {self._file['swig']}.")
-            with open(self._file['swig'], 'w') as f:
-                f.write(swigfile)
-            self.scm.mark_file_updated(self._file['swig'])
-            return False
-        def _handle_i_swig(cmake, fname):
-            """ Comment out include files from the SWIG file,
-            as well as the block magic """
-            with open(self._file['swig']) as f:
-                swigfile = f.read()
-            blockname = os.path.splitext(fname[len(self.info['modname'])+1:])[0]
-            if self.info['version'] in ('37', '38'):
-                blockname = os.path.splitext(fname)[0]
-            swigfile = re.sub(r'(%include\s+"'+fname+'")', r'//\1', swigfile)
-            logger.info(f"Changing {self._file['swig']}...")
-            swigfile = re.sub('(GR_SWIG_BLOCK_MAGIC2?.+'+blockname+'.+;)', r'//\1', swigfile)
-            with open(self._file['swig'], 'w') as f:
-                f.write(swigfile)
-            self.scm.mark_file_updated(self._file['swig'])
-            return False
 
         # This portion will be covered by the CLI
         if not self.cli:
@@ -123,10 +88,7 @@ class ModToolDisable(ModTool):
         special_treatments = (
                 ('python', r'qa.+py$', _handle_py_qa),
                 ('python', r'^(?!qa).+py$', _handle_py_mod),
-                ('lib', r'qa.+\.cc$', _handle_cc_qa),
-                (f'include/{self.info["modname"]}', r'.+\.h$', _handle_h_swig),
-                ('include', r'.+\.h$', _handle_h_swig),
-                ('swig', r'.+\.i$', _handle_i_swig)
+                ('lib', r'qa.+\.cc$', _handle_cc_qa)
         )
         for subdir in self._subdirs:
             if self.skip_subdirs[subdir]:

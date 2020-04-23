@@ -8,4 +8,5 @@
 #
 
 from .core.parseheader import BlockHeaderParser
+from .core.parseheader_generic import GenericHeaderParser
 from .core.outputschema import RESULT_SCHEMA

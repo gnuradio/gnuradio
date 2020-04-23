@@ -90,24 +90,12 @@ class ModToolRemove(ModTool):
             ed.delete_entry('GR_ADD_TEST', filebase)
             ed.remove_double_newlines()
 
-        def _make_swig_regex(filename):
-            filebase = os.path.splitext(filename)[0]
-            pyblockname = filebase.replace(self.info['modname'] + '_', '')
-            regexp = r'(^\s*GR_SWIG_BLOCK_MAGIC2?\({},\s*{}\);|^\s*.include\s*"({}/)?{}"\s*)'.format \
-                    (self.info['modname'], pyblockname, self.info['modname'], filename)
-            return regexp
         # Go, go, go!
         if not self.skip_subdirs['lib']:
             self._run_subdir('lib', ('*.cc', '*.h'), ('add_library', 'list'),
                              cmakeedit_func=_remove_cc_test_case)
         if not self.skip_subdirs['include']:
             incl_files_deleted = self._run_subdir(self.info['includedir'], ('*.h',), ('install',))
-        if not self.skip_subdirs['swig']:
-            swig_files_deleted = self._run_subdir('swig', ('*.i',), ('install',))
-            for f in incl_files_deleted + swig_files_deleted:
-                # TODO do this on all *.i files
-                remove_pattern_from_file(self._file['swig'], _make_swig_regex(f))
-                self.scm.mark_file_updated(self._file['swig'])
         if not self.skip_subdirs['python']:
             py_files_deleted = self._run_subdir('python', ('*.py',), ('GR_PYTHON_INSTALL',),
                                                 cmakeedit_func=_remove_py_test_case)
