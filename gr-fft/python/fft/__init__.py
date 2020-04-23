@@ -17,8 +17,8 @@ from __future__ import unicode_literals
 import os
 
 try:
-    from .fft_swig import *
+    from .fft_python import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from .fft_swig import *
+    __path__.append(os.path.join(dirname, "bindings"))
+    from .fft_python import *
