@@ -16,11 +16,11 @@ from __future__ import unicode_literals
 import os
 
 try:
-    from .channels_swig import channels_swig
+    from .channels_python import channels_python
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from .channels_swig import *
+    __path__.append(os.path.join(dirname, "bindings"))
+    from .channels_python import *
 
 # Blocks for Hardware Impairments
 from .amp_bal import amp_bal
