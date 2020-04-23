@@ -53,9 +53,8 @@ int or_blk_impl<T>::work(int noutput_items,
     return noutput_items;
 }
 
-template class or_blk<short>;
-template class or_blk<int>;
-template class or_blk<char>;
-
+template class or_blk<std::uint8_t>;
+template class or_blk<std::int16_t>;
+template class or_blk<std::int32_t>;
 } /* namespace blocks */
 } /* namespace gr */
