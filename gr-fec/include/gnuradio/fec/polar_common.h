@@ -16,6 +16,7 @@
 
 #include <gnuradio/fec/api.h>
 #include <vector>
+#include <stdint.h>
 
 // Forward declaration for those objects. SWIG doesn't like them to be #include'd.
 namespace gr {
@@ -62,7 +63,7 @@ public:
     polar_common(int block_size,
                  int num_info_bits,
                  std::vector<int> frozen_bit_positions,
-                 std::vector<char> frozen_bit_values);
+                 std::vector<uint8_t> frozen_bit_values);
     ~polar_common();
 
 protected:
@@ -78,7 +79,7 @@ protected:
                                   const unsigned int num_bytes) const;
 
     std::vector<int> d_frozen_bit_positions;
-    std::vector<char> d_frozen_bit_values;
+    std::vector<uint8_t> d_frozen_bit_values;
     std::vector<int> d_info_bit_positions;
     std::vector<int> d_info_bit_positions_reversed;
     void setup_info_bit_positions_reversed();

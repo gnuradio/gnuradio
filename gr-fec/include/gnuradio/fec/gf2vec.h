@@ -12,12 +12,13 @@
 #define GF2VEC_H
 
 #include <vector>
+#include <stdint.h>
 
 class GF2Vec
 {
 private:
     //! The vector vec
-    std::vector<char> vec;
+    std::vector<uint8_t> vec;
 
     //! Resize the vector
     void resize(int size);
@@ -30,16 +31,16 @@ public:
     GF2Vec(int size);
 
     //! Returns the vector
-    std::vector<char> get_vec();
+    std::vector<uint8_t> get_vec();
 
     //! Returns the size of the vector
     int size();
 
     //! Resets the vector with the given input
-    void set_vec(const std::vector<char>);
+    void set_vec(const std::vector<uint8_t>);
 
     //! Access the ith element
-    char& operator[](int i);
+    uint8_t& operator[](int i);
 
     //! Overloading the operator '='
     void operator=(GF2Vec x);
@@ -51,7 +52,7 @@ public:
     friend GF2Vec operator+(GF2Vec a, GF2Vec b);
 
     //! Overloading the operator '*'
-    friend char operator*(GF2Vec a, GF2Vec b);
+    friend uint8_t operator*(GF2Vec a, GF2Vec b);
 
     //! Prints the vector
     void print_vec();

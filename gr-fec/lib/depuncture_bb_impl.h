@@ -26,7 +26,7 @@ private:
     char d_sym;
 
 public:
-    depuncture_bb_impl(int puncsize, int puncpat, int delay = 0, char symbol = 127);
+    depuncture_bb_impl(int puncsize, int puncpat, int delay = 0, uint8_t symbol = 127);
     ~depuncture_bb_impl();
 
     int general_work(int noutput_items,

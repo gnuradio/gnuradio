@@ -12,9 +12,9 @@
 
 alist::alist(const char* fname) : data_ok(false) { read(fname); }
 
-std::vector<std::vector<char>> alist::get_matrix()
+std::vector<std::vector<uint8_t>> alist::get_matrix()
 {
-    std::vector<std::vector<char>> mat;
+    std::vector<std::vector<uint8_t>> mat;
     mat.resize(M);
     for (int i = 0; i < M; i++) {
         mat[i].resize(N);

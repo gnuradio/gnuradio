@@ -17,7 +17,7 @@
 class GF2Mat
 {
     //! The matrix H
-    std::vector<std::vector<char>> H;
+    std::vector<std::vector<uint8_t>> H;
 
     //! Number of rows in H
     int M;
@@ -36,7 +36,7 @@ public:
     GF2Mat(alist _list);
 
     //! Initializes the class from a 2-D vector X
-    GF2Mat(std::vector<std::vector<char>> X);
+    GF2Mat(std::vector<std::vector<uint8_t>> X);
 
     //! Returns the variable M
     int get_M();
@@ -78,7 +78,7 @@ public:
     void add_rows(int i, int j);
 
     //! Returns the variable H
-    std::vector<std::vector<char>> get_H();
+    std::vector<std::vector<uint8_t>> get_H();
 
     /*!
      * \brief Obtains an equivalent representation of H for encoding

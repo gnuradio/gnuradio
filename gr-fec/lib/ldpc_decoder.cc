@@ -84,8 +84,8 @@ void ldpc_decoder::generic_work(void* inBuffer, void* outBuffer)
         }
 
         int n_iterations = 0;
-        std::vector<char> estimate(d_spa.decode(rx, &n_iterations));
-        std::vector<char> data(d_code.get_systematic_bits(estimate));
+        std::vector<uint8_t> estimate(d_spa.decode(rx, &n_iterations));
+        std::vector<uint8_t> data(d_code.get_systematic_bits(estimate));
         memcpy(&out[j], &data[0], d_code.dimension());
         d_iterations = n_iterations;
 

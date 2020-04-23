@@ -24,7 +24,7 @@ GF2Mat::GF2Mat(int m, int n)
     }
 }
 
-GF2Mat::GF2Mat(std::vector<std::vector<char>> X)
+GF2Mat::GF2Mat(std::vector<std::vector<uint8_t>> X)
 {
     M = X.size();
     N = X[0].size();
@@ -179,4 +179,4 @@ GF2Mat GF2Mat::get_G(std::vector<int>& permute, int& rank)
     return G;
 }
 
-std::vector<std::vector<char>> GF2Mat::get_H() { return H; }
+std::vector<std::vector<uint8_t>> GF2Mat::get_H() { return H; }

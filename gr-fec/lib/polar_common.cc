@@ -31,7 +31,7 @@ namespace code {
 polar_common::polar_common(int block_size,
                            int num_info_bits,
                            std::vector<int> frozen_bit_positions,
-                           std::vector<char> frozen_bit_values)
+                           std::vector<uint8_t> frozen_bit_values)
     : d_frozen_bit_positions(frozen_bit_positions),
       d_frozen_bit_values(frozen_bit_values),
       d_block_size(block_size),

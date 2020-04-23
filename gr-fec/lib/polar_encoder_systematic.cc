@@ -30,7 +30,7 @@ generic_encoder::sptr polar_encoder_systematic::make(
 polar_encoder_systematic::polar_encoder_systematic(int block_size,
                                                    int num_info_bits,
                                                    std::vector<int> frozen_bit_positions)
-    : polar_common(block_size, num_info_bits, frozen_bit_positions, std::vector<char>())
+    : polar_common(block_size, num_info_bits, frozen_bit_positions, std::vector<uint8_t>())
 {
     d_volk_syst_intermediate = (unsigned char*)volk_malloc(
         sizeof(unsigned char) * block_size, volk_get_alignment());
