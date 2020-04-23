@@ -50,6 +50,8 @@ namespace digital {
 class DIGITAL_API header_format_counter : public header_format_default
 {
 public:
+    typedef std::shared_ptr<header_format_counter> sptr;
+
     header_format_counter(const std::string& access_code, int threshold, int bps);
     virtual ~header_format_counter();
 
