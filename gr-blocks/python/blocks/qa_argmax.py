@@ -24,9 +24,9 @@ class test_arg_max(gr_unittest.TestCase):
     def test_001(self):
         tb = self.tb
 
-        src1_data = (0,0.2,-0.3,0,12,0)
-        src2_data = (0,0.0,3.0,0,10,0)
-        src3_data = (0,0.0,3.0,0,1,0)
+        src1_data = [0,0.2,-0.3,0,12,0]
+        src2_data = [0,0.0,3.0,0,10,0]
+        src3_data = [0,0.0,3.0,0,1,0]
 
         src1 = blocks.vector_source_f(src1_data)
         s2v1 = blocks.stream_to_vector(gr.sizeof_float, len(src1_data))
@@ -54,8 +54,8 @@ class test_arg_max(gr_unittest.TestCase):
         tb.run()
         index = dst1.data()
         source = dst2.data()
-        self.assertEqual(index, (4,))
-        self.assertEqual(source, (0,))
+        self.assertEqual(index, [4,])
+        self.assertEqual(source, [0,])
 
 if __name__ == '__main__':
     gr_unittest.run(test_arg_max, "test_arg_max.xml")

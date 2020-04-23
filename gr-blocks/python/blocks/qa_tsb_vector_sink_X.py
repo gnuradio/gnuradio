@@ -38,7 +38,7 @@ class qa_tsb_vector_sink (gr_unittest.TestCase):
                 sink
         )
         self.tb.run()
-        self.assertEqual((tuple(data[0:packet_len]), tuple(data[packet_len:])), sink.data())
+        self.assertEqual([data[0:packet_len], data[packet_len:]], sink.data())
         self.assertEqual(len(sink.tags()), 1)
         self.assertEqual(sink.tags()[0].offset, tag.offset)
 

@@ -21,8 +21,8 @@ class qa_plateau_detector_fb (gr_unittest.TestCase):
 
     def test_001_t (self):
         #                  | Spur spike 1     | Plateau                  | Spur spike 2
-        test_signal  = (0, 1, .2, .4, .6, .8, 1, 1, 1, 1, 1, .8, .6, .4, 1, 0)
-        expected_sig = (0, 0,  0,  0,  0,  0, 0, 0, 1, 0, 0,  0,  0,  0, 0, 0)
+        test_signal  = [0, 1, .2, .4, .6, .8, 1, 1, 1, 1, 1, .8, .6, .4, 1, 0]
+        expected_sig = [0, 0,  0,  0,  0,  0, 0, 0, 1, 0, 0,  0,  0,  0, 0, 0]
         #                                           | Center of Plateau
         sink = blocks.vector_sink_b()
         self.tb.connect(blocks.vector_source_f(test_signal), blocks.plateau_detector_fb(5), sink)

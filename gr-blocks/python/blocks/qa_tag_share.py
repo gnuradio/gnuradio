@@ -28,8 +28,8 @@ class qa_tag_share(gr_unittest.TestCase):
         tag_offset = 0
         in0_value = 1.0+1.0j
         in1_value = 2.717
-        in0_data = (in0_value,)*10
-        in1_data = (in1_value,)*10
+        in0_data = [in0_value,]*10
+        in1_data = [in1_value,]*10
         sink_data = in0_data
 
         tag = gr.tag_t()

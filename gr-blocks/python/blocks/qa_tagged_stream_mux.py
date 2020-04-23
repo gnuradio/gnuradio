@@ -45,7 +45,7 @@ class qa_tagged_stream_mux (gr_unittest.TestCase):
         packets1 = (
             (3, 4),     (7, 8, 9),  (11, 12, 13),  (17,)
         )
-        expected = ((0, 1, 2, 3, 4), (5, 6, 7, 8, 9), (10, 11, 12, 13), (14, 15, 16, 17))
+        expected = [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9], [10, 11, 12, 13], [14, 15, 16, 17]]
         data0, tags0 = self.setup_data_tags(packets0)
         data1, tags1 = self.setup_data_tags(packets1)
         tags0.append(make_tag('spam', 42, 4))
@@ -95,7 +95,7 @@ class qa_tagged_stream_mux (gr_unittest.TestCase):
         self.tb.connect(mux, sink)
         self.tb.run()
         self.assertEqual(len(sink.data()), 1)
-        self.assertEqual(sink.data()[0], tuple(data0 + data1))
+        self.assertEqual(sink.data()[0], data0 + data1)
         self.assertEqual(len(sink.tags()), 1)
         tag = gr.tag_to_python(sink.tags()[0])
         tag = (tag.offset, tag.key, tag.value)

@@ -17,11 +17,11 @@ from __future__ import unicode_literals
 import os
 
 try:
-    from .blocks_swig import *
+    from .blocks_python import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from .blocks_swig import *
+    __path__.append(os.path.join(dirname, "bindings"))
+    from .blocks_python import *
 
 from .stream_to_vector_decimator import *
 from .msg_meta_to_pair import meta_to_pair

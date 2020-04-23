@@ -50,26 +50,26 @@ class test_mute(gr_unittest.TestCase):
         self.assertEqual(exp_data, result_data)
 
     def test_unmute_ii(self):
-        src_data = (1, 2, 3, 4, 5)
-        expected_result = (1, 2, 3, 4, 5)
+        src_data = [1, 2, 3, 4, 5]
+        expected_result = [1, 2, 3, 4, 5]
         op = blocks.mute_ii(False)
         self.help_ii((src_data,), expected_result, op)
 
     def test_mute_ii(self):
-        src_data = (1, 2, 3, 4, 5)
-        expected_result = (0, 0, 0, 0, 0)
+        src_data = [1, 2, 3, 4, 5]
+        expected_result = [0, 0, 0, 0, 0]
         op = blocks.mute_ii(True)
         self.help_ii((src_data,), expected_result, op)
 
     def test_unmute_cc(self):
-        src_data = (1+5j, 2+5j, 3+5j, 4+5j, 5+5j)
-        expected_result = (1+5j, 2+5j, 3+5j, 4+5j, 5+5j)
+        src_data = [1+5j, 2+5j, 3+5j, 4+5j, 5+5j]
+        expected_result = [1+5j, 2+5j, 3+5j, 4+5j, 5+5j]
         op = blocks.mute_cc(False)
         self.help_cc((src_data,), expected_result, op)
 
     def test_unmute_cc(self):
-        src_data = (1+5j, 2+5j, 3+5j, 4+5j, 5+5j)
-        expected_result =(0+0j, 0+0j, 0+0j, 0+0j, 0+0j)
+        src_data = [1+5j, 2+5j, 3+5j, 4+5j, 5+5j]
+        expected_result =[0+0j, 0+0j, 0+0j, 0+0j, 0+0j]
         op = blocks.mute_cc(True)
         self.help_cc((src_data,), expected_result, op)
 

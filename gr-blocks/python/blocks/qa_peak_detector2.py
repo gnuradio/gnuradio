@@ -24,11 +24,11 @@ class test_peak_detector2(gr_unittest.TestCase):
         tb = self.tb
 
         n=10
-        data = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                9, 8, 7, 6, 5, 4, 3, 2, 1, 0,)+n*(0,)
+        data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                9, 8, 7, 6, 5, 4, 3, 2, 1, 0,]+n*[0,]
 
-        expected_result = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-                           0, 0, 0, 0, 0, 0, 0, 0, 0, 0)+n*(0,)
+        expected_result = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                           0, 0, 0, 0, 0, 0, 0, 0, 0, 0]+n*[0,]
 
 
         src = blocks.vector_source_f(data, False)
@@ -48,11 +48,11 @@ class test_peak_detector2(gr_unittest.TestCase):
         tb = self.tb
 
         n=10
-        data = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                9, 8, 7, 6, 5, 4, 3, 2, 1, 0,)+n*(0,)
+        data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                9, 8, 7, 6, 5, 4, 3, 2, 1, 0,]+n*[0,]
 
-        expected_result = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-                           0, 0, 0, 0, 0, 0, 0, 0, 0, 0)+n*(0,)
+        expected_result = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                           0, 0, 0, 0, 0, 0, 0, 0, 0, 0]+n*[0,]
 
 
         src = blocks.vector_source_f(data, False)
@@ -76,8 +76,8 @@ class test_peak_detector2(gr_unittest.TestCase):
         l = 8100
         m = 100
         n = 10
-        data =  l*(0,)+ (10,)+ m*(0,)+(100,)+ n*(0,)
-        expected_result =  l*(0,)+ (0,)+ m*(0,)+(1,)+ n*(0,)
+        data =  l*[0,]+ [10,]+ m*[0,]+[100,]+ n*[0,]
+        expected_result =  l*[0,]+ [0,]+ m*[0,]+[1,]+ n*[0,]
 
 
         src = blocks.vector_source_f(data, False)
@@ -100,8 +100,8 @@ class test_peak_detector2(gr_unittest.TestCase):
         l = 8100
         m = 100
         n = 10
-        data =  l*(0,)+ (10,)+ m*(0,)+(100,)+ n*(0,)
-        expected_result =  l*(0,)+ (0,)+ m*(0,)+(1,)+ n*(0,)
+        data =  l*[0,]+ [10,]+ m*[0,]+[100,]+ n*[0,]
+        expected_result =  l*[0,]+ [0,]+ m*[0,]+[1,]+ n*[0,]
 
 
         src = blocks.vector_source_f(data, False)

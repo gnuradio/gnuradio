@@ -22,7 +22,7 @@ class qa_stream_to_tagged_stream (gr_unittest.TestCase):
         self.tb = None
 
     def test_001_t (self):
-        src_data = (1, ) * 50
+        src_data = [1, ] * 50
         packet_len = 10
         len_tag_key = 'packet_len'
         src = blocks.vector_source_f(src_data, False, 1)

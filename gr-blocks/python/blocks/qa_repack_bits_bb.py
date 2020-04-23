@@ -25,8 +25,8 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
 
     def test_001_simple (self):
         """ Very simple test, 2 bits -> 1 """
-        src_data = (0b11, 0b01, 0b10)
-        expected_data = (0b1, 0b1, 0b1, 0b0, 0b0, 0b1)
+        src_data = [0b11, 0b01, 0b10]
+        expected_data = [0b1, 0b1, 0b1, 0b0, 0b0, 0b1]
         k = 2
         l = 1
         src = blocks.vector_source_b(src_data, False, 1)
@@ -38,8 +38,8 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
 
     def test_001_simple_msb (self):
         """ Very simple test, 2 bits -> 1 with MSB set """
-        src_data = (0b11, 0b01, 0b10)
-        expected_data = (0b1, 0b1, 0b0, 0b1, 0b1, 0b0)
+        src_data = [0b11, 0b01, 0b10]
+        expected_data = [0b1, 0b1, 0b0, 0b1, 0b1, 0b0]
         k = 2
         l = 1
         src = blocks.vector_source_b(src_data, False, 1)
@@ -51,8 +51,8 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
 
     def test_002_three (self):
         """ 8 -> 3 """
-        src_data = (0b11111101, 0b11111111, 0b11111111)
-        expected_data = (0b101,) + (0b111,) * 7
+        src_data = [0b11111101, 0b11111111, 0b11111111]
+        expected_data = [0b101,] + [0b111,] * 7
         k = 8
         l = 3
         src = blocks.vector_source_b(src_data, False, 1)
@@ -64,8 +64,8 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
 
     def test_002_three (self):
         """ 8 -> 3 """
-        src_data = (0b11111101, 0b11111111, 0b11111111)
-        expected_data = (0b101,) + (0b111,) * 7
+        src_data = [0b11111101, 0b11111111, 0b11111111]
+        expected_data = [0b101,] + [0b111,] * 7
         k = 8
         l = 3
         src = blocks.vector_source_b(src_data, False, 1)
@@ -77,8 +77,8 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
 
     def test_002_three_msb (self):
         """ 8 -> 3 """
-        src_data = (0b11111101, 0b11111111, 0b11111111)
-        expected_data = (0b111,) + (0b111,) + (0b011,) + (0b111,) * 5
+        src_data = [0b11111101, 0b11111111, 0b11111111]
+        expected_data = [0b111,] + [0b111,] + [0b011,] + [0b111,] * 5
         k = 8
         l = 3
         src = blocks.vector_source_b(src_data, False, 1)
@@ -90,7 +90,7 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
 
     def test_003_lots_of_bytes (self):
         """ Lots and lots of bytes, multiple packer stages """
-        src_data = tuple([random.randint(0, 255) for x in range(3*5*7*8 * 10)])
+        src_data = [random.randint(0, 255) for x in range(3*5*7*8 * 10)]
         src = blocks.vector_source_b(src_data, False, 1)
         repack1 = blocks.repack_bits_bb(8, 3)
         repack2 = blocks.repack_bits_bb(3, 5)
@@ -103,7 +103,7 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
 
     def test_003_lots_of_bytes_msb (self):
         """ Lots and lots of bytes, multiple packer stages """
-        src_data = tuple([random.randint(0, 255) for x in range(3*5*7*8 * 10)])
+        src_data = [random.randint(0, 255) for x in range(3*5*7*8 * 10)]
         src = blocks.vector_source_b(src_data, False, 1)
         repack1 = blocks.repack_bits_bb(8, 3, "", False, gr.GR_MSB_FIRST)
         repack2 = blocks.repack_bits_bb(3, 5, "", False, gr.GR_MSB_FIRST)
@@ -116,8 +116,8 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
 
     def test_004_three_with_tags (self):
         """ 8 -> 3 """
-        src_data = (0b11111101, 0b11111111)
-        expected_data = (0b101,) + (0b111,) * 4 + (0b001,)
+        src_data = [0b11111101, 0b11111111]
+        expected_data = [0b101,] + [0b111,] * 4 + [0b001,]
         k = 8
         l = 3
         src = blocks.vector_source_b(src_data, False, 1)
@@ -135,8 +135,8 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
 
     def test_005_three_with_tags_trailing (self):
         """ 3 -> 8, trailing bits """
-        src_data = (0b101,) + (0b111,) * 4 + (0b001,)
-        expected_data = (0b11111101, 0b11111111)
+        src_data = [0b101,] + [0b111,] * 4 + [0b001,]
+        expected_data = [0b11111101, 0b11111111]
         k = 3
         l = 8
         src = blocks.vector_source_b(src_data, False, 1)
