@@ -42,4 +42,20 @@ add_custom_command(
 
 add_custom_target(doxygen_target ALL DEPENDS ${BUILT_DIRS})
 
+if(ENABLE_DOXYGEN)
+    add_custom_command( 
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/gnuradio_docstrings.json
+    COMMAND python3 ${CMAKE_SOURCE_DIR}/docs/doxygen/update_pydoc.py "scrape"
+    "--xml_path" ${CMAKE_BINARY_DIR}/docs/doxygen/xml
+    "--json_path" ${CMAKE_CURRENT_BINARY_DIR}/gnuradio_docstrings.json
+    COMMENT "Scraping generated documentation for docstrings ..."
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/update_pydoc.py doxygen_target)
+
+    add_custom_target(
+        gnuradio_docstrings ALL
+        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/gnuradio_docstrings.json
+        )
+endif(ENABLE_DOXYGEN)
+
+
 install(DIRECTORY ${BUILT_DIRS} DESTINATION ${GR_PKG_DOC_DIR})
