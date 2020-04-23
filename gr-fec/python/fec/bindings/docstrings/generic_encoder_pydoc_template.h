@@ -1,0 +1,66 @@
+/*
+ * Copyright 2020 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ *
+ */
+#include "pydoc_macros.h"
+#define D(...) DOC(gr, fec, __VA_ARGS__)
+/*
+  This file contains placeholders for docstrings for the Python bindings.
+  Do not edit! These were automatically extracted during the binding process
+  and will be overwritten during the build process
+ */
+
+
+static const char* __doc_gr_fec_generic_encoder = R"doc()doc";
+
+
+static const char* __doc_gr_fec_generic_encoder_generic_encoder_0 = R"doc()doc";
+
+
+static const char* __doc_gr_fec_generic_encoder_generic_encoder_1 = R"doc()doc";
+
+
+static const char* __doc_gr_fec_generic_encoder_generic_encoder_2 = R"doc()doc";
+
+
+static const char* __doc_gr_fec_generic_encoder_generic_work = R"doc()doc";
+
+
+static const char* __doc_gr_fec_generic_encoder_unique_id = R"doc()doc";
+
+
+static const char* __doc_gr_fec_generic_encoder_alias = R"doc()doc";
+
+
+static const char* __doc_gr_fec_generic_encoder_rate = R"doc()doc";
+
+
+static const char* __doc_gr_fec_generic_encoder_get_input_size = R"doc()doc";
+
+
+static const char* __doc_gr_fec_generic_encoder_get_output_size = R"doc()doc";
+
+
+static const char* __doc_gr_fec_generic_encoder_get_input_conversion = R"doc()doc";
+
+
+static const char* __doc_gr_fec_generic_encoder_get_output_conversion = R"doc()doc";
+
+
+static const char* __doc_gr_fec_generic_encoder_set_frame_size = R"doc()doc";
+
+
+static const char* __doc_gr_fec_get_encoder_output_size = R"doc()doc";
+
+
+static const char* __doc_gr_fec_get_encoder_input_size = R"doc()doc";
+
+
+static const char* __doc_gr_fec_get_encoder_input_conversion = R"doc()doc";
+
+
+static const char* __doc_gr_fec_get_encoder_output_conversion = R"doc()doc";

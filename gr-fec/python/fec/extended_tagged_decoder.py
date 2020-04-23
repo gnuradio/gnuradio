@@ -15,7 +15,7 @@ from __future__ import unicode_literals
 
 from gnuradio import gr, blocks, digital
 
-from . import fec_swig as fec
+from . import fec_python as fec
 
 from .bitflip import *
 
