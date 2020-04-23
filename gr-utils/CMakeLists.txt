@@ -84,7 +84,10 @@ add_subdirectory(blocktool)
 endif(ENABLE_GR_BLOCKTOOL)
 
 if(ENABLE_GR_MODTOOL)
+add_subdirectory(bindtool)
 add_subdirectory(modtool)
 endif(ENABLE_GR_MODTOOL)
+
+
 
 endif(ENABLE_GR_UTILS)

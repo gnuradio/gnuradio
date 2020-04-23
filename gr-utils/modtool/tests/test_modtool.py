@@ -101,7 +101,6 @@ class TestModToolCore(unittest.TestCase):
         self.assertTrue(path.isdir(path.join(module_dir, 'include')))
         self.assertTrue(path.isdir(path.join(module_dir, 'docs')))
         self.assertTrue(path.isdir(path.join(module_dir, 'cmake')))
-        self.assertTrue(path.isdir(path.join(module_dir, 'swig')))
         self.assertTrue(path.exists(path.join(module_dir, 'CMakeLists.txt')))
 
         ## The check for object instantiation ##
