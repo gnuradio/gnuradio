@@ -151,7 +151,7 @@ class test_fft(gr_unittest.TestCase):
                            (14.7145 - 14.4113j),
                            (-60.0053 + 114.7418j),
                            (-440.1561 - 1632.9807j))
-        window = fft.window_hamming(ntaps=self.fft_size)
+        window = fft.window.hamming(ntaps=self.fft_size)
 
         src = blocks.vector_source_c(src_data)
         s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
@@ -197,7 +197,7 @@ class test_fft(gr_unittest.TestCase):
                            (-22.2144 - 20.0343j),
                            (17.0359 + 17.6910j),
                            (-91.8955 - 103.1093j))
-        window = fft.window_hamming(ntaps=self.fft_size)
+        window = fft.window.hamming(ntaps=self.fft_size)
 
         src = blocks.vector_source_c(src_data)
         s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
