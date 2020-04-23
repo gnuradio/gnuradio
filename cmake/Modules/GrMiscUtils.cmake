@@ -145,8 +145,6 @@ function(GRCC)
   list(APPEND PYTHONPATHS
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/gnuradio-runtime/python
-    ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/swig
-    ${CMAKE_BINARY_DIR}/gnuradio-runtime/lib/swig
     )
 
   if(WIN32)
@@ -155,7 +153,7 @@ function(GRCC)
     #Only do this for the python directories matching the following:
     foreach(pydir ${PYTHONPATHS})
       get_filename_component(name ${pydir} NAME)
-      if(name MATCHES "^(swig|lib|src)$")
+      if(name MATCHES "^(lib|src)$")
         list(APPEND PYTHONPATHS ${pydir}/${CMAKE_BUILD_TYPE})
       endif()
     endforeach(pydir)

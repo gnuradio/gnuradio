@@ -729,13 +729,10 @@ EXCLUDE                = @abs_top_builddir@/cmake/msvc \
                          @abs_top_srcdir@/docs/doxygen/other/shared_ptr_docstub.h \
                          @abs_top_builddir@/dtools \
                          @abs_top_builddir@/gnuradio-runtime/lib/runtime/gr_error_handler.cc \
-                         @abs_top_builddir@/gnuradio-runtime/swig \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading.py \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading_23.py \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading_24.py \
                          @abs_top_builddir@/gr-trellis/doc \
-                         @abs_top_builddir@/gr-trellis/swig/trellis_swig.py \
-                         @abs_top_builddir@/gr-video-sdl/swig/video_sdl_swig.py \
                          @abs_top_builddir@/grc \
                          @abs_top_builddir@/_CPack_Packages \
                          @abs_top_srcdir@/cmake \
@@ -819,8 +816,6 @@ EXCLUDE_PATTERNS       = */.deps/* \
 
 EXCLUDE_SYMBOLS        = ad9862 \
                          numpy \
-                         *swig* \
-                         *Swig* \
                          *my_top_block* \
                          *my_graph* \
                          *app_top_block* \
