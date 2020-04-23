@@ -298,6 +298,11 @@ pmt_t pmt_from_complex(double re, double im)
     return pmt_t(new pmt_complex(std::complex<double>(re, im)));
 }
 
+pmt_t pmt_from_complex(const std::complex<double> &z)
+{
+    return pmt_t(new pmt_complex(z));
+}
+
 pmt_t from_complex(const std::complex<double>& z) { return pmt_t(new pmt_complex(z)); }
 
 std::complex<double> to_complex(pmt_t x)
