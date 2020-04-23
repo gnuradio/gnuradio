@@ -37,6 +37,8 @@ class test_uhd(gr_unittest.TestCase):
         """
         Try to manipulate the stream args channels for proper swig'ing checks.
         """
+        # FIXME: stream_args_t.channels.append does not work due to copy operation of STL vectors
+        # Needs to either change API, remove QA test, or somehow remap append()
         sa = uhd.stream_args_t()
         sa.channels.append(1)
         sa.channels.append(0)
