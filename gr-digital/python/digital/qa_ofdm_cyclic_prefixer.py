@@ -26,8 +26,8 @@ class test_ofdm_cyclic_prefixer (gr_unittest.TestCase):
         " The easiest test: make sure the CP is added correctly. "
         fft_len = 8
         cp_len = 2
-        expected_result = (6, 7, 0, 1, 2, 3, 4, 5, 6, 7,
-                           6, 7, 0, 1, 2, 3, 4, 5, 6, 7)
+        expected_result = [6, 7, 0, 1, 2, 3, 4, 5, 6, 7,
+                           6, 7, 0, 1, 2, 3, 4, 5, 6, 7]
         src = blocks.vector_source_c(list(range(fft_len)) * 2, False, fft_len)
         cp = digital.ofdm_cyclic_prefixer(fft_len, fft_len + cp_len)
         sink = blocks.vector_sink_c()
@@ -40,8 +40,8 @@ class test_ofdm_cyclic_prefixer (gr_unittest.TestCase):
         fft_len = 8
         cp_len = 2
         rolloff = 2
-        expected_result = (7.0 / 2,         8, 1, 2, 3, 4, 5, 6, 7, 8, # 1.0/2
-                           7.0 / 2+1.0 / 2, 8, 1, 2, 3, 4, 5, 6, 7, 8)
+        expected_result = [7.0 / 2,         8, 1, 2, 3, 4, 5, 6, 7, 8, # 1.0/2
+                           7.0 / 2+1.0 / 2, 8, 1, 2, 3, 4, 5, 6, 7, 8]
         src = blocks.vector_source_c(list(range(1, fft_len+1)) * 2, False, fft_len)
         cp = digital.ofdm_cyclic_prefixer(fft_len, fft_len + cp_len, rolloff)
         sink = blocks.vector_sink_c()
@@ -54,8 +54,8 @@ class test_ofdm_cyclic_prefixer (gr_unittest.TestCase):
         fft_len = 8
         cp_len = 2
         tag_name = "ts_last"
-        expected_result = (7.0 / 2,         8, 1, 2, 3, 4, 5, 6, 7, 8, # 1.0/2
-                           7.0 / 2+1.0 / 2, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1.0 / 2)
+        expected_result = [7.0 / 2,         8, 1, 2, 3, 4, 5, 6, 7, 8, # 1.0/2
+                           7.0 / 2+1.0 / 2, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1.0 / 2]
         tag2 = gr.tag_t()
         tag2.offset = 1
         tag2.key = pmt.string_to_symbol("random_tag")
@@ -77,12 +77,12 @@ class test_ofdm_cyclic_prefixer (gr_unittest.TestCase):
         "Two CP lengths, no rolloff and no tags."
         fft_len = 8
         cp_lengths = (3, 2, 2)
-        expected_result = (5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, # 1
+        expected_result = [5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, # 1
                            6, 7, 0, 1, 2, 3, 4, 5, 6, 7,    # 2
                            6, 7, 0, 1, 2, 3, 4, 5, 6, 7,    # 3
                            5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, # 4
                            6, 7, 0, 1, 2, 3, 4, 5, 6, 7,    # 5
-        )
+        ]
         src = blocks.vector_source_c(list(range(fft_len))*5, False, fft_len)
         cp = digital.ofdm_cyclic_prefixer(fft_len, cp_lengths)
         sink = blocks.vector_sink_c()
@@ -95,12 +95,12 @@ class test_ofdm_cyclic_prefixer (gr_unittest.TestCase):
         fft_len = 8
         cp_lengths = (3, 2, 2)
         rolloff = 2
-        expected_result = (6.0/2,7,8,1,2,3,4,5,6,7,8,        #1
+        expected_result = [6.0/2,7,8,1,2,3,4,5,6,7,8,        #1
                            7.0/2 + 1.0/2,8,1,2,3,4,5,6,7,8,  #2
                            7.0/2 + 1.0/2,8,1,2,3,4,5,6,7,8,  #3
                            6.0/2 + 1.0/2,7,8,1,2,3,4,5,6,7,8,#4
                            7.0/2 + 1.0/2,8,1,2,3,4,5,6,7,8   #5
-        )
+        ]
         src = blocks.vector_source_c(list(range(1, fft_len+1))*5, False, fft_len)
         cp = digital.ofdm_cyclic_prefixer(fft_len, cp_lengths, rolloff)
         sink = blocks.vector_sink_c()
@@ -114,10 +114,10 @@ class test_ofdm_cyclic_prefixer (gr_unittest.TestCase):
         cp_lengths = (3, 2, 2)
         rolloff = 2
         tag_name = "ts_last"
-        expected_result = (
+        expected_result = [
             6.0/2, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8,           #1
             7.0/2+1.0/2, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1.0/2  #Last tail
-        )
+        ]
         # First test tag
         tag0 = gr.tag_t()
         tag0.offset = 0

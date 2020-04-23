@@ -19,7 +19,7 @@ from gnuradio import gr
 from gnuradio.digital.generic_mod_demod import generic_mod, generic_demod
 from gnuradio.digital.generic_mod_demod import shared_mod_args, shared_demod_args
 from .utils import mod_codes
-from . import digital_swig as digital
+from . import digital_python as digital
 from . import modulation_utils
 
 # The default encoding (e.g. gray-code, set-partition)

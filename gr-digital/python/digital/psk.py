@@ -18,7 +18,7 @@ from __future__ import unicode_literals
 from math import pi, log
 from cmath import exp
 
-from . import digital_swig
+from . import digital_python
 from . import modulation_utils
 from .utils import mod_codes, gray_code
 from .generic_mod_demod import generic_mod, generic_demod
@@ -66,7 +66,7 @@ def psk_constellation(m=_def_constellation_points, mod_code=_def_mod_code,
     if post_diff_code is not None:
         inverse_post_diff_code = mod_codes.invert_code(post_diff_code)
         points = [points[x] for x in inverse_post_diff_code]
-    constellation = digital_swig.constellation_psk(points, pre_diff_code, m)
+    constellation = digital_python.constellation_psk(points, pre_diff_code, m)
     return constellation
 
 # /////////////////////////////////////////////////////////////////////////////

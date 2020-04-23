@@ -12,7 +12,7 @@ This file contains constellations that are similar to QAM, but are not perfect s
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from . import digital_swig
+from . import digital_python
 from .qam import large_ampls_to_corners_mapping
 
 def qam32_holeinside_constellation(large_ampls_to_corners=False):
@@ -55,10 +55,10 @@ def qam32_holeinside_constellation(large_ampls_to_corners=False):
     width = 0.5
     pre_diff_code = []
     if not large_ampls_to_corners:
-        constellation = digital_swig.constellation_rect(points, pre_diff_code, 4,
+        constellation = digital_python.constellation_rect(points, pre_diff_code, 4,
                                                         side, side, width, width)
     else:
         sector_values = large_ampls_to_corners_mapping(side, points, width)
-        constellation = digital_swig.constellation_expl_rect(
+        constellation = digital_python.constellation_expl_rect(
             points, pre_diff_code, 4, side, side, width, width, sector_values)
     return constellation

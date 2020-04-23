@@ -30,7 +30,7 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         tx_symbols = (0, 1,  1j,  2,  3, 0, 0, 0, 0, 0, 0, 4,  5,  2j, 6,  0,
                       0, 7,  8,  3j,  9, 0, 0, 0, 0, 0, 0, 10, 4j, 11, 12, 0,
                       0, 13, 1j, 14, 15, 0, 0, 0, 0, 0, 0, 0,  0,  2j, 0,  0)
-        expected_result = tuple(range(1, 16)) + (0, 0, 0)
+        expected_result = list(range(1, 16)) + [0, 0, 0]
         occupied_carriers = ((1, 3, 4, 11, 12, 14), (1, 2, 4, 11, 13, 14),)
         n_syms = len(tx_symbols) // fft_len
         src = blocks.vector_source_c(tx_symbols, False, fft_len)
@@ -48,7 +48,7 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
             0, 0, 0, 0, 6, 1j,  7,  8,    0,   9, 10, 1j, 11, 0, 0, 0,
             0, 0, 0, 0, 0, 12, 13, 14,    0,  15, 16, 17,  0, 0, 0, 0,
         )
-        expected_result = tuple(range(18))
+        expected_result = list(range(18))
         occupied_carriers = ((13, 14, 15, 1, 2, 3), (-4, -2, -1, 1, 2, 4),)
         n_syms = len(tx_symbols) // fft_len
         src = blocks.vector_source_c(tx_symbols, False, fft_len)
@@ -66,7 +66,7 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
                       0, 0, 7,  8,  3j,  9, 0, 0, 0, 0, 0, 0, 10, 4j, 11, 12,
                       0, 0, 13, 1j, 14, 15, 0, 0, 0, 0, 0, 0, 0,  0,  2j, 0)
         carr_offset = 1 # Compare this with tx_symbols from the previous test
-        expected_result = tuple(range(1, 16)) + (0, 0, 0)
+        expected_result = list(range(1, 16)) + [0, 0, 0]
         occupied_carriers = ((1, 3, 4, 11, 12, 14), (1, 2, 4, 11, 13, 14),)
         n_syms = len(tx_symbols) // fft_len
         offsettag = gr.tag_t()
@@ -97,7 +97,7 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         pilot_carriers = ((3,),(5,))
         pilot_symbols = ((1j,),(-1j,))
         #tx_data = tuple([numpy.random.randint(0, 10) for x in range(4 * n_syms)])
-        tx_data = (1, 2, 3, 4)
+        tx_data = [1, 2, 3, 4]
         src = blocks.vector_source_c(tx_data, False, 1)
         alloc = digital.ofdm_carrier_allocator_cvc(
                 fft_len,
@@ -135,7 +135,7 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         occupied_carriers = ((-2, -1, 1, 2),)
         pilot_carriers = ((-3,),(3,))
         pilot_symbols = ((1j,),(-1j,))
-        tx_data = (1, 2, 3, 4)
+        tx_data = [1, 2, 3, 4]
         offsettag = gr.tag_t()
         offsettag.offset = 0
         offsettag.key = pmt.string_to_symbol("ofdm_sync_carr_offset")
@@ -172,11 +172,11 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
     def test_005_packet_len_tag (self):
         """ Standard test """
         fft_len = 16
-        tx_symbols = list(range(1, 16));
+        tx_symbols = list(range(1, 16))
         tx_symbols = (0, 1,  1j,  2,  3, 0, 0, 0, 0, 0, 0, 4,  5,  2j, 6,  0,
                       0, 7,  8,  3j,  9, 0, 0, 0, 0, 0, 0, 10, 4j, 11, 12, 0,
                       0, 13, 1j, 14, 15, 0, 0, 0, 0, 0, 0, 0,  0,  2j, 0,  0)
-        expected_result = tuple(range(1, 16))
+        expected_result = list(range(1, 16))
         occupied_carriers = ((1, 3, 4, 11, 12, 14), (1, 2, 4, 11, 13, 14),)
         n_syms = len(tx_symbols) // fft_len
         packet_len_tsb_key = "packet_len"
@@ -195,7 +195,9 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         """ Make sure it fails if it should """
         fft_len = 16
         occupied_carriers = ((1, 3, 4, 11, 12, 112),) # Something invalid
-        self.assertRaises(TypeError, digital.ofdm_serializer_vcc, fft_len, occupied_carriers, self.tsb_key)
+        #self.assertRaises(TypeError, digital.ofdm_serializer_vcc, fft_len, occupied_carriers, self.tsb_key)
+        #pybind11 raises ValueError instead of TypeError
+        self.assertRaises(ValueError, digital.ofdm_serializer_vcc, fft_len, occupied_carriers, self.tsb_key)
 
 
 if __name__ == '__main__':

@@ -9,7 +9,7 @@ from __future__ import unicode_literals
 #
 
 from gnuradio import gru
-from . import digital_swig as digital
+from . import digital_python as digital
 import struct
 
 def gen_and_append_crc32(s):

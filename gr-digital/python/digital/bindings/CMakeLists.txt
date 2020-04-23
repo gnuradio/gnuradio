@@ -1,0 +1,94 @@
+include(GrPybind)
+
+########################################################################
+# Python Bindings
+########################################################################
+
+list(APPEND digital_python_files
+    additive_scrambler_bb_python.cc
+    binary_slicer_fb_python.cc
+    burst_shaper_python.cc
+    chunks_to_symbols_python.cc
+    clock_recovery_mm_cc_python.cc
+    clock_recovery_mm_ff_python.cc
+    cma_equalizer_cc_python.cc
+    constellation_python.cc
+    constellation_decoder_cb_python.cc
+    constellation_receiver_cb_python.cc
+    constellation_soft_decoder_cf_python.cc
+    corr_est_cc_python.cc
+    correlate_access_code_bb_python.cc
+    correlate_access_code_bb_ts_python.cc
+    correlate_access_code_ff_ts_python.cc
+    correlate_access_code_tag_bb_python.cc
+    correlate_access_code_tag_ff_python.cc
+    costas_loop_cc_python.cc
+    cpmmod_bc_python.cc
+    crc32_python.cc
+    crc32_async_bb_python.cc
+    crc32_bb_python.cc
+    descrambler_bb_python.cc
+    diff_decoder_bb_python.cc
+    diff_encoder_bb_python.cc
+    diff_phasor_cc_python.cc
+    fll_band_edge_cc_python.cc
+    framer_sink_1_python.cc
+    glfsr_python.cc
+    glfsr_source_b_python.cc
+    glfsr_source_f_python.cc
+    hdlc_deframer_bp_python.cc
+    hdlc_framer_pb_python.cc
+    header_buffer_python.cc
+    header_format_base_python.cc
+    header_format_counter_python.cc
+    header_format_crc_python.cc
+    header_format_default_python.cc
+    header_format_ofdm_python.cc
+    header_payload_demux_python.cc
+    interpolating_resampler_type_python.cc
+    kurtotic_equalizer_cc_python.cc
+    lfsr_python.cc
+    lms_dd_equalizer_cc_python.cc
+    map_bb_python.cc
+    metric_type_python.cc
+    # modulate_vector_python.cc
+    mpsk_snr_est_python.cc
+    mpsk_snr_est_cc_python.cc
+    msk_timing_recovery_cc_python.cc
+    ofdm_carrier_allocator_cvc_python.cc
+    ofdm_chanest_vcvc_python.cc
+    ofdm_cyclic_prefixer_python.cc
+    ofdm_equalizer_base_python.cc
+    ofdm_equalizer_simpledfe_python.cc
+    ofdm_equalizer_static_python.cc
+    ofdm_frame_equalizer_vcvc_python.cc
+    ofdm_serializer_vcc_python.cc
+    ofdm_sync_sc_cfb_python.cc
+    packet_header_default_python.cc
+    packet_header_ofdm_python.cc
+    packet_headergenerator_bb_python.cc
+    packet_headerparser_b_python.cc
+    packet_sink_python.cc
+    pfb_clock_sync_ccf_python.cc
+    pfb_clock_sync_fff_python.cc
+    pn_correlator_cc_python.cc
+    probe_density_b_python.cc
+    probe_mpsk_snr_est_c_python.cc
+    protocol_formatter_async_python.cc
+    protocol_formatter_bb_python.cc
+    protocol_parser_b_python.cc
+    scrambler_bb_python.cc
+    simple_correlator_python.cc
+    simple_framer_python.cc
+    simple_framer_sync_python.cc
+    symbol_sync_cc_python.cc
+    symbol_sync_ff_python.cc
+    timing_error_detector_type_python.cc
+    python_bindings.cc)
+
+GR_PYBIND_MAKE(digital 
+   ../../.. 
+   gr::digital
+   "${digital_python_files}")
+
+install(TARGETS digital_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital COMPONENT pythonapi)

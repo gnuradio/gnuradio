@@ -35,7 +35,7 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
         fft_len = 8
         equalizer = digital.ofdm_equalizer_static(fft_len)
         n_syms = 3
-        tx_data = (1,) * fft_len * n_syms
+        tx_data = [1,] * fft_len * n_syms
         chan_tag = gr.tag_t()
         chan_tag.offset = 0
         chan_tag.key = pmt.string_to_symbol("ofdm_sync_chan_taps")
@@ -73,7 +73,7 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
         fft_len = 8
         equalizer = digital.ofdm_equalizer_static(fft_len, symbols_skipped=1)
         n_syms = 3
-        tx_data = (1,) * fft_len * n_syms
+        tx_data = [1,] * fft_len * n_syms
         chan_tag = gr.tag_t()
         chan_tag.offset = 0
         chan_tag.key = pmt.string_to_symbol("ofdm_sync_chan_taps")

@@ -20,11 +20,12 @@ class test_simple_correlator(gr_unittest.TestCase):
         self.tb = None
 
     def test_00(self):
-        expected_result = (
+        expected_result = [
             0x00, 0x11, 0x22, 0x33,
             0x44, 0x55, 0x66, 0x77,
             0x88, 0x99, 0xaa, 0xbb,
-            0xcc, 0xdd, 0xee, 0xff)
+            0xcc, 0xdd, 0xee, 0xff
+        ]
 
         # Filter taps to expand the data to oversample by 8
         # Just using a RRC for some basic filter shape

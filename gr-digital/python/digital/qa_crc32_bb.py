@@ -37,7 +37,7 @@ class qa_crc32_bb(gr_unittest.TestCase):
     def test_002_crc_equal(self):
         """ Go through CRC set / CRC check and make sure the output
         is the same as the input. """
-        data = (0, 1, 2, 3, 4, 5, 6, 7, 8)
+        data = [0, 1, 2, 3, 4, 5, 6, 7, 8]
         src = blocks.vector_source_b(data)
         crc = digital.crc32_bb(False, self.tsb_key)
         crc_check = digital.crc32_bb(True, self.tsb_key)
@@ -97,7 +97,7 @@ class qa_crc32_bb(gr_unittest.TestCase):
 
     def test_004_fail(self):
         """ Corrupt the data and make sure it fails CRC test. """
-        data = (0, 1, 2, 3, 4, 5, 6, 7)
+        data = [0, 1, 2, 3, 4, 5, 6, 7]
         src = blocks.vector_source_b(data)
         crc = digital.crc32_bb(False, self.tsb_key)
         crc_check = digital.crc32_bb(True, self.tsb_key)
@@ -114,7 +114,7 @@ class qa_crc32_bb(gr_unittest.TestCase):
     def test_005_tag_propagation(self):
         """ Make sure tags on the CRC aren't lost. """
         # Data with precalculated CRC
-        data = (0, 1, 2, 3, 4, 5, 6, 7, 8, 2, 67, 225, 188)
+        data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 2, 67, 225, 188]
         testtag = gr.tag_t()
         testtag.offset = len(data) - 1
         testtag.key = pmt.string_to_symbol('tag1')
@@ -151,7 +151,7 @@ class qa_crc32_bb(gr_unittest.TestCase):
     def test_007_crc_equal(self):
         """ Go through CRC set / CRC check and make sure the output
         is the same as the input. """
-        data = (0, 1, 2, 3, 4, 5, 6, 7, 8)
+        data = [0, 1, 2, 3, 4, 5, 6, 7, 8]
         src = blocks.vector_source_b(data)
         crc = digital.crc32_bb(False, self.tsb_key, False)
         crc_check = digital.crc32_bb(True, self.tsb_key, False)
@@ -167,7 +167,7 @@ class qa_crc32_bb(gr_unittest.TestCase):
     def test_002_crc_equal_unpacked (self):
         """ Test unpacked operation with packed operation
         """
-        data = (0, 1, 2, 3, 4, 5, 6, 7, 8)
+        data = [0, 1, 2, 3, 4, 5, 6, 7, 8]
         src = blocks.vector_source_b(data)
         unpack1 = blocks.repack_bits_bb(8, 1, self.tsb_key, False, gr.GR_LSB_FIRST)
         unpack2 = blocks.repack_bits_bb(8, 1, self.tsb_key, False, gr.GR_LSB_FIRST)
@@ -190,7 +190,7 @@ class qa_crc32_bb(gr_unittest.TestCase):
     def test_003_crc_equal_unpacked(self):
         """ Test unpacked operation with packed operation
         """
-        data = range(35)
+        data = list(range(35))
         src = blocks.vector_source_b(data)
         unpack1 = blocks.repack_bits_bb(8, 1, self.tsb_key, False,
                                         gr.GR_LSB_FIRST)
