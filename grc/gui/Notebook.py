@@ -176,8 +176,8 @@ class Page(Gtk.HBox):
             markup: the new markup text
         """
         self.label.set_markup(markup)
-        # print(self.label.get_label())
-        # self.label_button.set_markup(markup)
+        self.label_ = self.label_button.get_child()
+        self.label_.set_markup(markup)
 
     def set_tooltip(self, text):
         """
