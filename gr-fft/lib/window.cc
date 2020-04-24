@@ -316,6 +316,29 @@ std::vector<float> window::riemann(int ntaps)
     return taps;
 }
 
+std::vector<float> window::tukey(int ntaps, float a)
+{
+    if ((a < 0) || (a > 1))
+        throw std::out_of_range("window::tukey: alpha must be between 0 and 1");
+
+    float N = static_cast<float>(ntaps - 1);
+
+    float aN = a * N;
+    float p1 = aN / 2.0;
+    float mid = midn(ntaps);
+    std::vector<float> taps(ntaps);
+    for (int i = 0; i < mid; i++) {
+        if (abs(i) < p1) {
+            taps[i] = 0.5 * (1.0 - cos((2 * GR_M_PI * i) / (aN)));
+            taps[ntaps - 1 - i] = taps[i];
+        } else {
+            taps[i] = 1.0;
+            taps[ntaps - i - 1] = 1.0;
+        }
+    }
+    return taps;
+}
+
 std::vector<float> window::build(win_type type, int ntaps, double beta)
 {
     switch (type) {
