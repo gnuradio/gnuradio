@@ -120,7 +120,8 @@ templates:
             ${plotfreq}, #plotfreq
             ${plotwaterfall}, #plotwaterfall
             ${plottime}, #plottime
-            ${plotconst} #plotconst
+            ${plotconst} #plotconst,
+            None # parent
         )
         self.${id}.set_update_time(1.0/${rate})
         ${win} = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)

@@ -312,7 +312,8 @@ templates:
             ${x_axis_label},
             ${y_axis_label},
             ${name},
-            ${nconnections} # Number of inputs
+            ${nconnections}, # Number of inputs
+            None # parent
         )
         self.${id}.set_update_time(${update_time})
         self.${id}.set_y_axis(${ymin}, ${ymax})
