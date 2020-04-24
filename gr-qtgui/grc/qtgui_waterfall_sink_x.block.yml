@@ -32,7 +32,7 @@ parameters:
     hide: ${ ('part' if type == "float" or type == "msg_float" else 'all') }
 -   id: wintype
     label: Window Type
-    dtype: int
+    dtype: enum
     default: firdes.WIN_BLACKMAN_hARRIS
     options: [firdes.WIN_BLACKMAN_hARRIS, firdes.WIN_HAMMING, firdes.WIN_HANN, firdes.WIN_BLACKMAN,
         firdes.WIN_RECTANGULAR, firdes.WIN_KAISER, firdes.WIN_FLATTOP]
@@ -266,7 +266,8 @@ templates:
             ${fc}, #fc
             ${bw}, #bw
             ${name}, #name
-            ${ (0 if type.startswith('msg') else nconnections) } #number of inputs
+            ${ (0 if type.startswith('msg') else nconnections) }, #number of inputs
+            None # parent
         )
         self.${id}.set_update_time(${update_time})
         self.${id}.enable_grid(${grid})

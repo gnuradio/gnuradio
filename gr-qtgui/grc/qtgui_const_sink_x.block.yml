@@ -409,7 +409,8 @@ templates:
         qtgui.${type.fcn}(
             ${size}, #size
             ${name}, #name
-            ${0 if type.startswith('msg') else nconnections} #number of inputs
+            ${0 if type.startswith('msg') else nconnections}, #number of inputs
+            None # parent
         )
         self.${id}.set_update_time(${update_time})
         self.${id}.set_y_axis(${ymin}, ${ymax})

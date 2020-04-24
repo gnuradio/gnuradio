@@ -249,7 +249,8 @@ templates:
             ${type.size},
             ${avg},
             ${graph_type},
-            ${nconnections}
+            ${nconnections},
+            None # parent
         )
         self.${id}.set_update_time(${update_time})
         self.${id}.set_title(${name})

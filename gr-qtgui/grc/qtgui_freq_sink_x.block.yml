@@ -405,7 +405,8 @@ templates:
             ${fc}, #fc
             ${bw}, #bw
             ${name}, #name
-            ${ 0 if (type == 'msg_complex' or type == 'msg_float') else nconnections }
+            ${ 0 if (type == 'msg_complex' or type == 'msg_float') else nconnections },
+            None # parent
         )
         self.${id}.set_update_time(${update_time})
         self.${id}.set_y_axis(${ymin}, ${ymax})

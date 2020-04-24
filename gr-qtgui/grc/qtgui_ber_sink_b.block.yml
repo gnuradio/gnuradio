@@ -336,7 +336,8 @@ templates:
             ${num_curves}, #number of curves
             ${berminerrors}, #ensure at least
             ${berlimit}, #cutoff
-            ${curvenames} #indiv. curve names
+            ${curvenames}, #indiv. curve names
+            None # parent
         )
         self.${id}.set_update_time(${update_time})
         self.${id}.set_y_axis(${ymin}, ${ymax})
