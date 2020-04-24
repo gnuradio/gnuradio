@@ -288,6 +288,16 @@ public:
     static std::vector<float> riemann(int ntaps);
 
     /*!
+     * \brief Build a Tukey window.
+     *
+     * \param ntaps Number of coefficients in the window.
+     * \param alpha Shaping parameter for the Tukey window, an
+     *        alpha of zero is equivalent to a rectangular
+     *        window, an alpha of 1 is equivalent to Hann.
+     */
+    static std::vector<float> tukey(int ntaps, float alpha);
+
+    /*!
      * \brief Build a window using gr::fft::win_type to index the
      * type of window desired.
      *
