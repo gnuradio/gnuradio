@@ -115,7 +115,7 @@ endif(APPLE)
 find_package(Doxygen)
 
 ########################################################################
-s# PyBind11 Related
+# PyBind11 Related
 ########################################################################
 
 find_package(pybind11 REQUIRED)
