@@ -211,9 +211,20 @@ public:
     static std::vector<float> nuttal_cfd(int ntaps);
 
     /*!
-     * \brief Build a flat top window.
+     * \brief Build a flat top window per the SRS specification
      *
-     * See: http://en.wikipedia.org/wiki/Window_function#Flat_top_window
+     * See:
+     * <pre>
+     *     Stanford Research Systems, "Model SR785 Dynamic Signal
+     *     Analyzer: Operating Manual and Programming Reference,"
+     *     2017, pp 2-13
+     * </pre>
+     *
+     * Note: there are many flat top windows, and this implementation is different from
+     * SciPY and Matlab which use the coefficients from D’Antona et al. "Digital Signal
+     * Processing for Measurement Systems" with the following cosine coefficients: <pre>
+     *     [0.21557895, 0.41663158, 0.277263158, 0.083578947, 0.006947368]
+     * </pre>
      *
      * \param ntaps Number of coefficients in the window.
      */
