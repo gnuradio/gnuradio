@@ -300,6 +300,10 @@ public:
 
     /*!
      * \brief Build a Tukey window.
+     * <pre>
+     * Bloomfield, P. Fourier Analysis of Time Series: An Introduction. New York:
+     * Wiley-Interscience, 2000, pp 69 (eqn 6.9)
+     * </pre>
      *
      * \param ntaps Number of coefficients in the window.
      * \param alpha Shaping parameter for the Tukey window, an
@@ -307,6 +311,17 @@ public:
      *        window, an alpha of 1 is equivalent to Hann.
      */
     static std::vector<float> tukey(int ntaps, float alpha);
+
+    /*!
+     * \brief Build a Gaussian window using the equation
+     * <pre>
+     * exp(-(1/2) * (n/sigma)^2)
+     * </pre>
+     *
+     * \param ntaps Number of coefficients in the window.
+     * \param sigma Standard deviation of gaussian distribution.
+     */
+    static std::vector<float> gaussian(int ntaps, float sigma);
 
     /*!
      * \brief Build a window using gr::fft::win_type to index the

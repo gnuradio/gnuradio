@@ -339,6 +339,22 @@ std::vector<float> window::tukey(int ntaps, float a)
     return taps;
 }
 
+std::vector<float> window::gaussian(int ntaps, float sigma)
+{
+    if (sigma <= 0)
+        throw std::out_of_range("window::gaussian: sigma must be > 0");
+
+    float a = 2 * sigma * sigma;
+    double m1 = midm1(ntaps);
+    std::vector<float> taps(ntaps);
+    for (int i = 0; i < midn(ntaps); i++) {
+        float N = (i - m1);
+        taps[i] = exp(-(N * N / a));
+        taps[ntaps - 1 - i] = taps[i];
+    }
+    return taps;
+}
+
 std::vector<float> window::build(win_type type, int ntaps, double beta)
 {
     switch (type) {
