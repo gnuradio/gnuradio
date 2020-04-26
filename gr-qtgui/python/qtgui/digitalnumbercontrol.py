@@ -128,6 +128,8 @@ class DigitalNumberControl(QFrame):
         self.offset = event.pos()
 
         if self.read_only:
+            if self.debug_click:
+                gr.log.info("click received but read-only.  Not changing frequency.")
             return
 
         fm = QFontMetrics(self.numberFont)
@@ -195,10 +197,12 @@ class DigitalNumberControl(QFrame):
                     else:
                         cur_freq -= increment
 
-                    self.setFrequency(cur_freq)
+                    # Cannot call setFrequency to emit.  Change must happen now for
+                    # paint event when clicked.
+                    self.setFrequencyNow(cur_freq)
+                    
                     if self.click_callback is not None:
                         self.click_callback(self.getFrequency())
-
                 break
 
         if (not found_number) and (not clicked_thousands):
@@ -221,10 +225,19 @@ class DigitalNumberControl(QFrame):
             else:
                 cur_freq -= increment
 
-            self.setFrequency(cur_freq)
+            # Cannot call setFrequency to emit.  Change must happen now for
+            # paint event when clicked.
+            self.setFrequencyNow(cur_freq)
+                
             if self.click_callback is not None:
+                if self.debug_click:
+                    gr.log.info('Calling self.click_callback')
+                    
                 self.click_callback(self.getFrequency())
-
+            else:
+                if self.debug_click:
+                    gr.log.info('self.click_callback is None.  Not calling callback.')
+                    
     def setColors(self, background, fontColor):
         self.background_color = background
         self.fontColor = fontColor
@@ -245,6 +258,14 @@ class DigitalNumberControl(QFrame):
 
         self.update()
 
+    def setFrequencyNow(self, new_freq):
+        # This setFrequency differs from setFrequency() in that it
+        # it updates the display immediately rather than emiting
+        # to the message queue as required during msg handling
+        if (new_freq >= self.min_freq) and (new_freq <= self.max_freq):
+            self.cur_freq = int(new_freq)
+            self.update()
+            
     def setFrequency(self, new_freq):
         if type(new_freq) == int:
             self.updateInt.emit(new_freq)
@@ -285,7 +306,9 @@ class DigitalNumberControl(QFrame):
                 textstr = textstr.replace(",", ".")
         else:
             textstr = str(self.getFrequency())
+
         rect = QtCore.QRect(0, 0, size.width()-4, size.height())
+        
         painter.drawText(rect, Qt.AlignRight + Qt.AlignVCenter, textstr)
 
 # ################################################################################
