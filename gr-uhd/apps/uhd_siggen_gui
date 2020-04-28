@@ -21,16 +21,14 @@ Signal Generator App
 ##################################################
 
 from __future__ import print_function
-import sip
 import sys
 import threading
 import time
-from distutils.version import StrictVersion
 from PyQt5 import Qt
 from PyQt5.QtCore import pyqtSlot
+import sip # Needs to be imported after PyQt5, could fail otherwise
 from gnuradio import analog
 from gnuradio import eng_notation
-from gnuradio import gr
 from gnuradio import qtgui
 from gnuradio import uhd
 from gnuradio.filter import firdes
@@ -461,4 +459,3 @@ def x11_init_threads():
 if __name__ == '__main__':
     x11_init_threads()
     main()
-
