@@ -104,7 +104,7 @@ class qa_linear_equalizer(gr_unittest.TestCase):
         preamble_symbols = self.map_symbols_to_constellation(self.unpack_values(self.preamble, 8, 2), cons)
 
         alg = digital.adaptive_algorithm_lms(cons, gain).base()
-        evm = digital.meas_evm_cc(cons, digital.evm_measurement_t_EVM_PERCENT)
+        evm = digital.meas_evm_cc(cons, digital.evm_measurement_t.EVM_PERCENT)
         leq = digital.linear_equalizer(num_taps, self.sps, alg, False, preamble_symbols, 'corr_est')
         correst = digital.corr_est_cc(modulated_sync_word, self.sps, 12, corr_calc, digital.THRESHOLD_ABSOLUTE)
         constmod = digital.generic_mod(
@@ -130,8 +130,8 @@ class qa_linear_equalizer(gr_unittest.TestCase):
         self.tb.run()
 
         # look at the last 1000 samples, should converge quickly, below 5% EVM
-        upper_bound = tuple(20.0*numpy.ones((num_test,)))
-        lower_bound = tuple(0.0*numpy.zeros((num_test,)))
+        upper_bound = list(20.0*numpy.ones((num_test,)))
+        lower_bound = list(0.0*numpy.zeros((num_test,)))
         output_data = vsi.data()
         output_data = output_data[-num_test:]
         self.assertLess(output_data, upper_bound)

@@ -15,6 +15,10 @@
 
 namespace py = pybind11;
 
+void bind_adaptive_algorithm(py::module&);
+void bind_adaptive_algorithm_cma(py::module&);
+void bind_adaptive_algorithm_lms(py::module&);
+void bind_adaptive_algorithm_nlms(py::module&);
 void bind_additive_scrambler_bb(py::module&);
 void bind_binary_slicer_fb(py::module&);
 void bind_burst_shaper(py::module&);
@@ -37,6 +41,7 @@ void bind_cpmmod_bc(py::module&);
 void bind_crc32(py::module&);
 void bind_crc32_async_bb(py::module&);
 void bind_crc32_bb(py::module&);
+void bind_decision_feedback_equalizer(py::module&);
 void bind_descrambler_bb(py::module&);
 void bind_diff_decoder_bb(py::module&);
 void bind_diff_encoder_bb(py::module&);
@@ -58,10 +63,12 @@ void bind_header_payload_demux(py::module&);
 void bind_interpolating_resampler_type(py::module&);
 void bind_kurtotic_equalizer_cc(py::module&);
 void bind_lfsr(py::module&);
+void bind_linear_equalizer(py::module&);
 void bind_lms_dd_equalizer_cc(py::module&);
 void bind_map_bb(py::module&);
+void bind_meas_evm_cc(py::module&);
 void bind_metric_type(py::module&);
-// void bind_modulate_vector(py::module&);
+void bind_modulate_vector(py::module&);
 void bind_mpsk_snr_est(py::module&);
 void bind_mpsk_snr_est_cc(py::module&);
 void bind_msk_timing_recovery_cc(py::module&);
@@ -114,6 +121,10 @@ PYBIND11_MODULE(digital_python, m)
     // Allow access to base block methods
     py::module::import("gnuradio.gr");
 
+    bind_adaptive_algorithm(m);
+    bind_adaptive_algorithm_cma(m);
+    bind_adaptive_algorithm_lms(m);
+    bind_adaptive_algorithm_nlms(m);
     bind_additive_scrambler_bb(m);
     bind_binary_slicer_fb(m);
     bind_burst_shaper(m);
@@ -136,6 +147,7 @@ PYBIND11_MODULE(digital_python, m)
     bind_crc32(m);
     bind_crc32_async_bb(m);
     bind_crc32_bb(m);
+    bind_decision_feedback_equalizer(m);
     bind_descrambler_bb(m);
     bind_diff_decoder_bb(m);
     bind_diff_encoder_bb(m);
@@ -157,10 +169,12 @@ PYBIND11_MODULE(digital_python, m)
     bind_interpolating_resampler_type(m);
     bind_kurtotic_equalizer_cc(m);
     bind_lfsr(m);
+    bind_linear_equalizer(m);
     bind_lms_dd_equalizer_cc(m);
     bind_map_bb(m);
+    bind_meas_evm_cc(m);
     bind_metric_type(m);
-    // bind_modulate_vector(m);
+    bind_modulate_vector(m);
     bind_mpsk_snr_est(m);
     bind_mpsk_snr_est_cc(m);
     bind_msk_timing_recovery_cc(m);

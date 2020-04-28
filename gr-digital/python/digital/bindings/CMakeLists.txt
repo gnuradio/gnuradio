@@ -5,6 +5,10 @@ include(GrPybind)
 ########################################################################
 
 list(APPEND digital_python_files
+    adaptive_algorithm_python.cc
+    adaptive_algorithm_cma_python.cc
+    adaptive_algorithm_lms_python.cc
+    adaptive_algorithm_nlms_python.cc
     additive_scrambler_bb_python.cc
     binary_slicer_fb_python.cc
     burst_shaper_python.cc
@@ -27,6 +31,7 @@ list(APPEND digital_python_files
     crc32_python.cc
     crc32_async_bb_python.cc
     crc32_bb_python.cc
+    decision_feedback_equalizer_python.cc
     descrambler_bb_python.cc
     diff_decoder_bb_python.cc
     diff_encoder_bb_python.cc
@@ -48,10 +53,12 @@ list(APPEND digital_python_files
     interpolating_resampler_type_python.cc
     kurtotic_equalizer_cc_python.cc
     lfsr_python.cc
+    linear_equalizer_python.cc
     lms_dd_equalizer_cc_python.cc
     map_bb_python.cc
+    meas_evm_cc_python.cc
     metric_type_python.cc
-    # modulate_vector_python.cc
+    modulate_vector_python.cc
     mpsk_snr_est_python.cc
     mpsk_snr_est_cc_python.cc
     msk_timing_recovery_cc_python.cc

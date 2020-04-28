@@ -143,8 +143,8 @@ class qa_header_payload_demux (gr_unittest.TestCase):
             payload_sink,
             header_sink)
         self.run_tb(payload_sink, len(payload), header_sink, len(header))
-        self.assertEqual(header_sink.data(), header)
-        self.assertEqual(payload_sink.data(), payload)
+        self.assertEqual(header_sink.data(), list(header))
+        self.assertEqual(payload_sink.data(), list(payload))
         ptags_header = []
         for tag in header_sink.tags():
             ptag = gr.tag_to_python(tag)
@@ -201,8 +201,8 @@ class qa_header_payload_demux (gr_unittest.TestCase):
         self.connect_all_blocks(data_src, None, hpd, mock_header_demod, payload_sink, header_sink)
         self.run_tb(payload_sink, len(payload), header_sink, len(header))
         # Check results
-        self.assertEqual(header_sink.data(), header)
-        self.assertEqual(payload_sink.data(), payload)
+        self.assertEqual(header_sink.data(), list(header))
+        self.assertEqual(payload_sink.data(), list(payload))
         ptags_header = []
         for tag in header_sink.tags():
             ptag = gr.tag_to_python(tag)
@@ -225,10 +225,10 @@ class qa_header_payload_demux (gr_unittest.TestCase):
     def test_001_headerpadding (self):
         """ Like test 1, but with header padding. """
         n_zeros = 3
-        header = (1, 2, 3)
+        header = [1, 2, 3]
         header_padding = 1
-        payload = tuple(range(5, 20))
-        data_signal = (0,) * n_zeros + header + payload
+        payload = list(range(5, 20))
+        data_signal = [0,] * n_zeros + header + payload
         trigger_signal = [0] * len(data_signal)
         trigger_signal[n_zeros] = 1
         # This is dropped:
@@ -269,7 +269,7 @@ class qa_header_payload_demux (gr_unittest.TestCase):
         self.run_tb(payload_sink, len(payload), header_sink, len(header)+2)
         # Check values
         # Header now is padded:
-        self.assertEqual(header_sink.data(), (0,) + header + (payload[0],))
+        self.assertEqual(header_sink.data(), [0,] + header + [payload[0],])
         self.assertEqual(payload_sink.data(), payload)
         ptags_header = []
         for tag in header_sink.tags():
@@ -293,11 +293,11 @@ class qa_header_payload_demux (gr_unittest.TestCase):
     def test_001_headerpadding_payload_offset (self):
         """ Like test 1, but with header padding + payload offset. """
         n_zeros = 3
-        header = (1, 2, 3)
+        header = [1, 2, 3]
         header_padding = 1
         payload_offset = -1
-        payload = tuple(range(5, 20))
-        data_signal = (0,) * n_zeros + header + payload + (0,) * 100
+        payload = list(range(5, 20))
+        data_signal = [0,] * n_zeros + header + payload + [0,] * 100
         trigger_signal = [0] * len(data_signal)
         trigger_signal[n_zeros] = 1
         # This goes on output 1, item 3 + 1 (for payload offset)
@@ -339,7 +339,7 @@ class qa_header_payload_demux (gr_unittest.TestCase):
         self.tb.stop()
         self.tb.wait()
         # Header is now padded:
-        self.assertEqual(header_sink.data(),  (0,) + header + (payload[0],))
+        self.assertEqual(header_sink.data(),  [0,] + header + [payload[0],])
         # Payload is now offset:
         self.assertEqual(
             payload_sink.data(),
@@ -433,12 +433,12 @@ class qa_header_payload_demux (gr_unittest.TestCase):
         """
         ### Tx Data
         n_zeros = 5
-        header = (1, 2, 3)
-        header_fail = (-1, -2, -4) # Contents don't really matter
-        payload1 = tuple(range(5, 20))
-        payload2 = (42,)
+        header = [1, 2, 3]
+        header_fail = [-1, -2, -4] # Contents don't really matter
+        payload1 = list(range(5, 20))
+        payload2 = [42,]
         sampling_rate = 2
-        data_signal = (0,) * n_zeros + header + payload1
+        data_signal = [0,] * n_zeros + header + payload1
         trigger_signal = [0,] * len(data_signal) * 2
         trigger_signal[n_zeros] = 1
         trigger_signal[len(data_signal)] = 1
@@ -448,8 +448,8 @@ class qa_header_payload_demux (gr_unittest.TestCase):
             len(data_signal),
             len(data_signal)+len(header_fail)+n_zeros))
         tx_signal = data_signal + \
-                header_fail + (0,) * n_zeros + \
-                header + payload2 + (0,) * 1000
+                header_fail + [0,] * n_zeros + \
+                header + payload2 + [0,] * 1000
         # Timing tag: This is preserved and updated:
         timing_tag = make_tag('rx_time', (0, 0), 0)
         # Rx freq tags:
@@ -513,7 +513,7 @@ class qa_header_payload_demux (gr_unittest.TestCase):
         # 31: header 3
         # 34: payload 2 (length 1)
         # 35: 1000 zeros
-        self.assertEqual(header_sink.data(),  header + header_fail + header)
+        self.assertEqual(header_sink.data(),  list(header + header_fail + header))
         self.assertEqual(payload_sink.data(), payload1 + payload2)
         tags_payload = [gr.tag_to_python(x) for x in payload_sink.tags()]
         tags_payload = sorted([(x.offset, x.key, x.value) for x in tags_payload])
@@ -618,8 +618,8 @@ class qa_header_payload_demux (gr_unittest.TestCase):
         payload_sink = blocks.vector_sink_f()
         self.connect_all_blocks(data_src, trigger_src, hpd, mock_header_demod, payload_sink, header_sink)
         self.run_tb(payload_sink, total_payload_len, header_sink, header_len*n_bursts)
-        self.assertEqual(header_sink.data(), tuple([1]*header_len*n_bursts))
-        self.assertEqual(payload_sink.data(), tuple([2]*total_payload_len))
+        self.assertEqual(header_sink.data(), list([1]*header_len*n_bursts))
+        self.assertEqual(payload_sink.data(), list([2]*total_payload_len))
 
 if __name__ == '__main__':
     gr_unittest.run(qa_header_payload_demux, "qa_header_payload_demux.xml")
