@@ -20,7 +20,7 @@ class dvb_bbscrambler_bb_impl : public dvb_bbscrambler_bb
 private:
     int kbch;
     int frame_size;
-    unsigned char bb_randomise[FRAME_SIZE_NORMAL];
+    __GR_ATTR_ALIGNED(8) unsigned char bb_randomise[FRAME_SIZE_NORMAL];
     uint32_t* bb_randomize32;
     uint64_t* bb_randomize64;
     void init_bb_randomiser(void);
