@@ -36,6 +36,11 @@ const pmt::pmt_t gr::uhd::cmd_gain_key()
     static const pmt::pmt_t val = pmt::mp("gain");
     return val;
 }
+const pmt::pmt_t gr::uhd::cmd_power_key()
+{
+    static const pmt::pmt_t val = pmt::mp("power_dbm");
+    return val;
+}
 const pmt::pmt_t gr::uhd::cmd_freq_key()
 {
     static const pmt::pmt_t val = pmt::mp("freq");
@@ -134,6 +139,7 @@ usrp_block_impl::usrp_block_impl(const ::uhd::device_addr_t& device_addr,
     // Register default command handlers:
     REGISTER_CMD_HANDLER(cmd_freq_key(), _cmd_handler_freq);
     REGISTER_CMD_HANDLER(cmd_gain_key(), _cmd_handler_gain);
+    REGISTER_CMD_HANDLER(cmd_power_key(), _cmd_handler_power);
     REGISTER_CMD_HANDLER(cmd_lo_offset_key(), _cmd_handler_looffset);
     REGISTER_CMD_HANDLER(cmd_tune_key(), _cmd_handler_tune);
     REGISTER_CMD_HANDLER(cmd_lo_freq_key(), _cmd_handler_lofreq);
@@ -647,6 +653,21 @@ void usrp_block_impl::_cmd_handler_gain(const pmt::pmt_t& gain_,
     }
 
     set_gain(gain, chan);
+}
+
+void usrp_block_impl::_cmd_handler_power(const pmt::pmt_t& power_dbm_,
+                                         int chan,
+                                         const pmt::pmt_t& msg)
+{
+    double power_dbm = pmt::to_double(power_dbm_);
+    if (chan == -1) {
+        for (size_t i = 0; i < _nchan; i++) {
+            set_power_reference(power_dbm, i);
+        }
+        return;
+    }
+
+    set_power_reference(power_dbm, chan);
 }
 
 void usrp_block_impl::_cmd_handler_antenna(const pmt::pmt_t& ant,

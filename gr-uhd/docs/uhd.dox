@@ -88,6 +88,7 @@ Command name | Value Type   | Description
 -------------|--------------|-------------------------------------------------------------
 `chan`       | int          | Specifies a channel. If this is not given, either all channels are chosen, or channel 0, depending on the action. A value of -1 forces 'all channels', where possible.
 `gain`       | double       | Sets the Tx or Rx gain (in dB). Defaults to all channels.
+`power_dbm`  | double       | Sets the Tx or Rx power reference level (in dBm). Defaults to all channels. Works for certain devices only, and only if calibration data is available.
 `freq`       | double       | Sets the Tx or Rx frequency. Defaults to all channels. If specified without `lo_offset`, it will set the LO offset to zero.
 `lo_offset`  | double       | Sets an LO offset. Defaults to all channels. Note this does not affect the effective center frequency.
 `tune`       | tune_request | Like freq, but sets a full tune request (i.e. center frequency and DSP offset). Defaults to all channels.

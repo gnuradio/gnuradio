@@ -151,6 +151,31 @@ void bind_usrp_block(py::module& m)
              D(usrp_block, get_gain_range, 1))
 
 
+        .def("has_power_reference",
+             &usrp_block::has_power_reference,
+             py::arg("chan") = 0,
+             D(usrp_block, has_power_reference))
+
+
+        .def("set_power_reference",
+             &usrp_block::set_power_reference,
+             py::arg("power_dbm"),
+             py::arg("chan") = 0,
+             D(usrp_block, set_power_reference))
+
+
+        .def("get_power_reference",
+             &usrp_block::get_power_reference,
+             py::arg("chan") = 0,
+             D(usrp_block, get_power_reference))
+
+
+        .def("get_power_range",
+             &usrp_block::get_power_range,
+             py::arg("chan") = 0,
+             D(usrp_block, get_power_range))
+
+
         .def("set_antenna",
              &usrp_block::set_antenna,
              py::arg("ant"),

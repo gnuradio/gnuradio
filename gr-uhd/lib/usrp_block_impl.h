@@ -118,6 +118,7 @@ protected:
     void
     _cmd_handler_looffset(const pmt::pmt_t& lo_offset, int chan, const pmt::pmt_t& msg);
     void _cmd_handler_gain(const pmt::pmt_t& gain, int chan, const pmt::pmt_t& msg);
+    void _cmd_handler_power(const pmt::pmt_t& power_dbm, int chan, const pmt::pmt_t& msg);
     void _cmd_handler_antenna(const pmt::pmt_t& ant, int chan, const pmt::pmt_t& msg);
     void _cmd_handler_rate(const pmt::pmt_t& rate, int chan, const pmt::pmt_t& msg);
     void _cmd_handler_tune(const pmt::pmt_t& tune, int chan, const pmt::pmt_t& msg);
