@@ -29,7 +29,7 @@ class test_alaw_vocoder (gr_unittest.TestCase):
         self.tb.connect(src, enc, dec, snk)
         self.tb.run()
         actual_result = snk.data()
-        self.assertEqual(data, actual_result)
+        self.assertEqual(list(data), actual_result)
 
 
 if __name__ == '__main__':
