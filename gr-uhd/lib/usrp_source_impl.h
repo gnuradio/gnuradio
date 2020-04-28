@@ -51,6 +51,9 @@ public:
     std::vector<std::string> get_gain_names(size_t chan);
     ::uhd::gain_range_t get_gain_range(size_t chan);
     ::uhd::gain_range_t get_gain_range(const std::string& name, size_t chan);
+    bool has_power_reference(size_t chan);
+    double get_power_reference(size_t chan);
+    ::uhd::meta_range_t get_power_range(size_t chan);
     std::string get_antenna(size_t chan);
     std::vector<std::string> get_antennas(size_t chan);
     ::uhd::sensor_value_t get_sensor(const std::string& name, size_t chan);
@@ -72,6 +75,7 @@ public:
     void set_gain(double gain, const std::string& name, size_t chan);
     void set_rx_agc(const bool enable, size_t chan);
     void set_normalized_gain(double gain, size_t chan);
+    void set_power_reference(double power_dbm, size_t chan);
     void set_antenna(const std::string& ant, size_t chan);
     void set_bandwidth(double bandwidth, size_t chan);
     double get_bandwidth(size_t chan);

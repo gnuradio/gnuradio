@@ -75,6 +75,18 @@ static const char* __doc_gr_uhd_usrp_block_get_gain_range_0 = R"doc()doc";
 static const char* __doc_gr_uhd_usrp_block_get_gain_range_1 = R"doc()doc";
 
 
+static const char* __doc_gr_uhd_usrp_block_has_power_reference = R"doc()doc";
+
+
+static const char* __doc_gr_uhd_usrp_block_set_power_reference = R"doc()doc";
+
+
+static const char* __doc_gr_uhd_usrp_block_get_power_reference = R"doc()doc";
+
+
+static const char* __doc_gr_uhd_usrp_block_get_power_range = R"doc()doc";
+
+
 static const char* __doc_gr_uhd_usrp_block_set_antenna = R"doc()doc";
 
 

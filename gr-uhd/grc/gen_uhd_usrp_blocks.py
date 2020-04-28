@@ -148,7 +148,6 @@ templates:
             ${'%'} endif
             % endif
         )
-
         % for m in range(max_mboards):
         ${'%'} if context.get('num_mboards')() > ${m}:
         ########################################################################
@@ -166,9 +165,7 @@ templates:
         ########################################################################
         ${'%'} endif
         % endfor  # for m in range(max_mboards)
-
         self.${'$'}{id}.set_samp_rate(${'$'}{samp_rate})
-
         ${'%'} if sync == 'sync':
         self.${'$'}{id}.set_time_unknown_pps(uhd.time_spec(0))
         ${'%'} elif sync == 'pc_clock':
@@ -180,14 +177,12 @@ templates:
         % for n in range(max_nchan):
         ${'%'} if context.get('nchan')() > ${n}:
         self.${'$'}{id}.set_center_freq(${'$'}{${'center_freq' + str(n)}}, ${n})
-
         ${'%'} if context.get('ant${n}')():
         self.${'$'}{id}.set_antenna(${'$'}{${'ant' + str(n)}}, ${n})
         ${'%'} endif
         ${'%'} if context.get('bw${n}')():
         self.${'$'}{id}.set_bandwidth(${'$'}{${'bw' + str(n)}}, ${n})
         ${'%'} endif
-
         % if sourk == 'source':
         ${'%'} if context.get('rx_agc${n}')() == 'Enabled':
         self.${'$'}{id}.set_rx_agc(True, ${n})
@@ -195,8 +190,10 @@ templates:
         self.${'$'}{id}.set_rx_agc(False, ${n})
         ${'%'} endif
         ${'%'} if context.get('rx_agc${n}')() != 'Enabled':
-        ${'%'} if bool(eval(context.get('norm_gain' + '${n}')())):
+        ${'%'} if context.get('gain_type' + '${n}')() == 'normalized':
         self.${'$'}{id}.set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} elif context.get('gain_type' + '${n}')() == 'power':
+        self.${'$'}{id}.set_power_reference(${'$'}{${'gain' + str(n)}}, ${n})
         ${'%'} else:
         self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
         ${'%'} endif
@@ -208,8 +205,10 @@ templates:
         self.${'$'}{id}.set_auto_iq_balance(${'$'}{${'iq_imbal_enb' + str(n)}}, ${n})
         ${'%'} endif
         % else:
-        ${'%'} if bool(eval(context.get('norm_gain' + '${n}')())):
+        ${'%'} if context.get('gain_type' + '${n}')() == 'normalized':
         self.${'$'}{id}.set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} elif context.get('gain_type' + '${n}')() == 'power':
+        self.${'$'}{id}.set_power_reference(${'$'}{${'gain' + str(n)}}, ${n})
         ${'%'} else:
         self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
         ${'%'} endif
@@ -230,10 +229,23 @@ templates:
     -   ${'$'}{'set_rx_agc(False, ${n})' if context.get('rx_agc${n}')() == 'Disabled' else ''}
     -   |
         ${'%'} if context.get('rx_agc${n}')() != 'Enabled':
-        self.${'$'}{id}.set_${'$'}{'normalized_' if bool(eval(context.get('norm_gain${n}')())) else ''}gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} if context.get('gain_type' + '${n}')() == 'normalized':
+        self.${'$'}{id}.set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} elif context.get('gain_type' + '${n}')() == 'power':
+        self.${'$'}{id}.set_power_reference(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} else:
+        self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} endif
         ${'%'} endif
     % else:
-    -   self.${'$'}{id}.set_${'$'}{'normalized_' if bool(eval(context.get('norm_gain${n}')())) else ''}gain(${'$'}{${'gain' + str(n)}}, ${n})
+    -   |
+        ${'%'} if context.get('gain_type' + '${n}')() == 'normalized':
+        self.${'$'}{id}.set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} elif context.get('gain_type' + '${n}')() == 'power':
+        self.${'$'}{id}.set_power_reference(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} else:
+        self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} endif
     % endif
     -   ${'$'}{'set_lo_source(' + lo_source${n} + ', uhd.ALL_LOS, ${n})' if show_lo_controls else ''}
     -   ${'$'}{'set_lo_export_enabled(' + lo_export${n} + ', uhd.ALL_LOS, ${n})' if show_lo_controls else ''}
@@ -271,15 +283,19 @@ cpp_templates:
       this->${'$'}{id}->set_rx_agc(False, ${n});
       ${'%'} endif
       ${'%'} if context.get('rx_agc${n}')() != 'Enabled':
-      ${'%'} if bool(eval(context.get('norm_gain' + '${n}')())):
+      ${'%'} if context.get('gain_type' + '${n}')() == 'normalized':
       this->${'$'}{id}->set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n});
+      ${'%'} elif context.get('gain_type' + '${n}')() == 'power':
+      this->${'$'}{id}->set_power_reference(${'$'}{${'gain' + str(n)}}, ${n});
       ${'%'} else:
       this->${'$'}{id}->set_gain(${'$'}{${'gain' + str(n)}}, ${n});
       ${'%'} endif
       ${'%'} endif
       % else:
-      ${'%'} if bool(eval(context.get('norm_gain' + '${n}')())):
+      ${'%'} if context.get('gain_type' + '${n}')() == 'normalized':
       this->${'$'}{id}->set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n});
+      ${'%'} elif context.get('gain_type' + '${n}')() == 'power':
+      this->${'$'}{id}->set_power_reference(${'$'}{${'gain' + str(n)}}, ${n});
       ${'%'} else:
       this->${'$'}{id}->set_gain(${'$'}{${'gain' + str(n)}}, ${n});
       ${'%'} endif
@@ -315,10 +331,25 @@ cpp_templates:
     % if sourk == 'source':
     -   ${'$'}{'set_rx_agc(True, ${n})' if context.get('rx_agc${n}')() == 'Enabled' else ''}
     -   ${'$'}{'set_rx_agc(False, ${n})' if context.get('rx_agc${n}')() == 'Disabled' else ''}
-    -   ${'$'}{'set_gain(${'$'}{${'gain' + str(n)}}, ${n})' if not bool(eval(context.get('norm_gain${n}')())) and context.get('rx_agc${n}')() != 'Enabled' else ''}
-    -   ${'$'}{'set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})' if bool(eval(context.get('norm_gain${n}')())) and context.get('rx_agc${n}')() != 'Enabled' else ''}
+    -   |
+        ${'%'} if context.get('rx_agc${n}')() != 'Enabled':
+        ${'%'} if context.get('gain_type' + '${n}')() == 'normalized':
+        this->${'$'}{id}->set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n});
+        ${'%'} elif context.get('gain_type' + '${n}')() == 'power':
+        this->${'$'}{id}->set_power_reference(${'$'}{${'gain' + str(n)}}, ${n});
+        ${'%'} else:
+        this->${'$'}{id}->set_gain(${'$'}{${'gain' + str(n)}}, ${n});
+        ${'%'} endif
+        ${'%'} endif
     % else:
-    -   this->${'$'}{id}->set_${'$'}{'normalized_' if bool(eval(context.get('norm_gain${n}')())) else ''}gain(${'$'}{${'gain' + str(n)}}, ${n});
+    -   |
+        ${'%'} if context.get('gain_type' + '${n}')() == 'normalized':
+        this->${'$'}{id}->set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n});
+        ${'%'} elif context.get('gain_type' + '${n}')() == 'power':
+        this->${'$'}{id}->set_power_reference(${'$'}{${'gain' + str(n)}}, ${n});
+        ${'%'} else:
+        this->${'$'}{id}->set_gain(${'$'}{${'gain' + str(n)}}, ${n});
+        ${'%'} endif
     % endif
     -   ${'$'}{'set_lo_source(' + lo_source${n} + ', ::uhd::usrp::multi_usrp::ALL_LOS, ${n})' if show_lo_controls else ''}
     -   ${'$'}{'set_lo_export_enabled(' + lo_export${n} + ', ::uhd::usrp::multi_usrp::ALL_LOS, ${n})' if show_lo_controls else ''}
@@ -432,17 +463,16 @@ PARAMS_TMPL = """
 % else:
     hide: ${'$'}{ 'none' if nchan > ${n} else 'all' }
 % endif
--   id: norm_gain${n}
+-   id: gain_type${n}
     label: 'Ch${n}: Gain Type'
     category: RF Options
-    dtype: string
-    default: 'False'
-    options: ['False', 'True']
-    option_labels: [Absolute (dB), Normalized]
+    dtype: enum
+    options: [default, normalized, power]
+    option_labels: [Absolute (dB), Normalized, Absolute Power (dBm)]
 % if sourk == 'source':
-    hide: ${'$'}{ 'all' if nchan <= ${n} or rx_agc${n} == 'Enabled' else ('none' if bool(eval('norm_gain' + str(${n}))) else 'part')}
+    hide: ${'$'}{ 'all' if nchan <= ${n} or rx_agc${n} == 'Enabled' else ('none' if (eval('gain_type' + str(${n})) == 'default') else 'part')}
 % else:
-    hide: ${'$'}{ 'all' if nchan <= ${n} else ('none' if bool(eval('norm_gain' + str(${n}))) else 'part')}
+    hide: ${'$'}{ 'all' if nchan <= ${n} else ('none' if (eval('gain_type' + str(${n})) == 'default') else 'part')}
 % endif
 -   id: ant${n}
     label: 'Ch${n}: Antenna'
