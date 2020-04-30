@@ -22,7 +22,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: ''
+    title: Show spectrum analyzer
   states:
     bus_sink: false
     bus_source: false
@@ -63,7 +63,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [80, 108.0]
+    coordinate: [32, 108.0]
     rotation: 0
     state: enabled
 - name: blocks_message_debug_0
@@ -76,45 +76,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [616, 416.0]
-    rotation: 0
+    coordinate: [440, 344.0]
+    rotation: 180
     state: disabled
-- name: blocks_null_sink_0
-  id: blocks_null_sink
-  parameters:
-    affinity: ''
-    alias: ''
-    bus_structure_sink: '[[0,],]'
-    comment: ''
-    num_inputs: '1'
-    type: complex
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [344, 336.0]
-    rotation: 0
-    state: true
-- name: blocks_null_source_0
-  id: blocks_null_source
-  parameters:
-    affinity: ''
-    alias: ''
-    bus_structure_source: '[[0,],]'
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_outputs: '1'
-    type: complex
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [24, 336.0]
-    rotation: 0
-    state: true
 - name: blocks_throttle_0
   id: blocks_throttle
   parameters:
@@ -131,7 +95,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [168, 332.0]
+    coordinate: [240, 148.0]
     rotation: 0
     state: true
 - name: freq_xlating_fir_filter_xxx_0
@@ -151,7 +115,21 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [320, 140.0]
+    coordinate: [424, 140.0]
+    rotation: 0
+    state: true
+- name: note_0
+  id: note
+  parameters:
+    alias: ''
+    comment: "The Throttle and Frequency Xlating FIR Filter blocks\nare emulating\
+      \ a hardware device such as a USRP \nwhich is tuned by a message."
+    note: View Block Comments
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 36.0]
     rotation: 0
     state: true
 - name: qtgui_edit_box_msg_0
@@ -168,12 +146,12 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     type: float
-    value: ''
+    value: '0'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [560, 284.0]
+    coordinate: [728, 284.0]
     rotation: 180
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -253,7 +231,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [632, 168.0]
+    coordinate: [744, 168.0]
     rotation: 0
     state: enabled
 - name: qtgui_waterfall_sink_x_0
@@ -314,14 +292,13 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [632, 32.0]
+    coordinate: [744, 32.0]
     rotation: 0
     state: enabled
 
 connections:
-- [analog_sig_source_x_0, '0', freq_xlating_fir_filter_xxx_0, '0']
-- [blocks_null_source_0, '0', blocks_throttle_0, '0']
-- [blocks_throttle_0, '0', blocks_null_sink_0, '0']
+- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
+- [blocks_throttle_0, '0', freq_xlating_fir_filter_xxx_0, '0']
 - [freq_xlating_fir_filter_xxx_0, '0', qtgui_freq_sink_x_0, '0']
 - [freq_xlating_fir_filter_xxx_0, '0', qtgui_waterfall_sink_x_0, '0']
 - [qtgui_edit_box_msg_0, msg, blocks_message_debug_0, print]
