@@ -432,7 +432,8 @@ TOGGLE_AUTO_HIDE_PORT_LABELS = actions.register("win.auto_hide_port_labels",
 TOGGLE_SHOW_BLOCK_COMMENTS = actions.register("win.show_block_comments",
     label='Show Block Comments',
     tooltip="Show comment beneath each block",
-    preference_name='show_block_comments'
+    preference_name='show_block_comments',
+    default=True
 )
 TOGGLE_SHOW_CODE_PREVIEW_TAB = actions.register("win.toggle_code_preview",
     label='Generated Code Preview',
