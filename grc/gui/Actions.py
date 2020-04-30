@@ -23,7 +23,6 @@ def filter_from_dict(vars):
 
 
 class Namespace(object):
-
     def __init__(self):
         self._actions = {}
 
@@ -35,15 +34,25 @@ class Namespace(object):
         #log.debug("Connecting action <{}> to handler <{}>".format(name, handler.__name__))
         self._actions[name].connect('activate', handler)
 
-    def register(self, name, parameter=None, handler=None, label=None, tooltip=None,
-                 icon_name=None, keypresses=None, preference_name=None, default=None):
+    def register(self,
+                 name,
+                 parameter=None,
+                 handler=None,
+                 label=None,
+                 tooltip=None,
+                 icon_name=None,
+                 keypresses=None,
+                 preference_name=None,
+                 default=None):
         # Check types
         if not isinstance(name, str):
             raise TypeError("Cannot register function: 'name' must be a str")
         if parameter and not isinstance(parameter, str):
-            raise TypeError("Cannot register function: 'parameter' must be a str")
+            raise TypeError(
+                "Cannot register function: 'parameter' must be a str")
         if handler and not callable(handler):
-            raise TypeError("Cannot register function: 'handler' must be callable")
+            raise TypeError(
+                "Cannot register function: 'handler' must be callable")
 
         # Check if the name has a prefix.
         prefix = None
@@ -53,15 +62,23 @@ class Namespace(object):
             name = name[4:]
 
         if handler:
-            log.debug("Register action [{}, prefix={}, param={}, handler={}]".format(
-                  name, prefix, parameter, handler.__name__))
+            log.debug(
+                "Register action [{}, prefix={}, param={}, handler={}]".format(
+                    name, prefix, parameter, handler.__name__))
         else:
-            log.debug("Register action [{}, prefix={}, param={}, handler=None]".format(
-                  name, prefix, parameter))
+            log.debug(
+                "Register action [{}, prefix={}, param={}, handler=None]".
+                format(name, prefix, parameter))
 
-        action = Action(name, parameter, label=label, tooltip=tooltip,
-                        icon_name=icon_name, keypresses=keypresses, prefix=prefix,
-                        preference_name=preference_name, default=default)
+        action = Action(name,
+                        parameter,
+                        label=label,
+                        tooltip=tooltip,
+                        icon_name=icon_name,
+                        keypresses=keypresses,
+                        prefix=prefix,
+                        preference_name=preference_name,
+                        default=default)
         if handler:
             action.connect('activate', handler)
 
@@ -79,7 +96,6 @@ class Namespace(object):
         self._actions[key] = action
         return action
 
-
     # If the actions namespace is called, trigger an action
     def __call__(self, name):
         # Try to parse the action string.
@@ -87,7 +103,8 @@ class Namespace(object):
         if not valid:
             raise Exception("Invalid action string: '{}'".format(name))
         if action_name not in self._actions:
-            raise Exception("Action '{}' is not registered!".format(action_name))
+            raise Exception(
+                "Action '{}' is not registered!".format(action_name))
 
         if target_value:
             self._actions[action_name].activate(target_value)
@@ -119,15 +136,25 @@ class Action(Gio.SimpleAction):
     # Change these to normal python properties.
     #prefs_name
 
-    def __init__(self, name, parameter=None, label=None, tooltip=None,
-                 icon_name=None, keypresses=None, prefix=None,
-                 preference_name=None, default=None):
+    def __init__(self,
+                 name,
+                 parameter=None,
+                 label=None,
+                 tooltip=None,
+                 icon_name=None,
+                 keypresses=None,
+                 prefix=None,
+                 preference_name=None,
+                 default=None):
         self.name = name
         self.label = label
         self.tooltip = tooltip
         self.icon_name = icon_name
         if keypresses:
-            self.keypresses = [kp.replace("<Ctrl>", Utils.get_modifier_key(True)) for kp in keypresses]
+            self.keypresses = [
+                kp.replace("<Ctrl>", Utils.get_modifier_key(True))
+                for kp in keypresses
+            ]
         else:
             self.keypresses = None
         self.prefix = prefix
@@ -144,7 +171,10 @@ class Action(Gio.SimpleAction):
             variant = GLib.VariantType.new(parameter)
         if preference_name:
             state = GLib.Variant.new_boolean(True)
-        Gio.SimpleAction.__init__(self, name=name, parameter_type=variant, state=state)
+        Gio.SimpleAction.__init__(self,
+                                  name=name,
+                                  parameter_type=variant,
+                                  state=state)
 
     def enable(self):
         self.props.enabled = True
@@ -181,7 +211,9 @@ class Action(Gio.SimpleAction):
                 param = GLib.Variant(self.type, parameter)
                 self.activate(param)
             except TypeError:
-                raise TypeError("Invalid parameter type for action '{}'. Expected: '{}'".format(self.get_name(), self.type))
+                raise TypeError(
+                    "Invalid parameter type for action '{}'. Expected: '{}'".
+                    format(self.get_name(), self.type))
         else:
             self.activate()
 
@@ -189,7 +221,8 @@ class Action(Gio.SimpleAction):
         log.debug("load_from_preferences({})".format(args))
         if self.preference_name is not None:
             config = Gtk.Application.get_default().config
-            self.set_active(config.entry(self.preference_name, default=bool(self.default)))
+            self.set_active(
+                config.entry(self.preference_name, default=bool(self.default)))
 
     def save_to_preferences(self, *args):
         log.debug("save_to_preferences({})".format(args))
@@ -215,77 +248,90 @@ def connect(action, handler=None):
 PAGE_CHANGE = actions.register("win.page_change")
 EXTERNAL_UPDATE = actions.register("app.external_update")
 VARIABLE_EDITOR_UPDATE = actions.register("app.variable_editor_update")
-FLOW_GRAPH_NEW = actions.register("app.flowgraph.new",
+FLOW_GRAPH_NEW = actions.register(
+    "app.flowgraph.new",
     label='_New',
     tooltip='Create a new flow graph',
     icon_name='document-new',
     keypresses=["<Ctrl>n"],
 )
-FLOW_GRAPH_NEW_TYPE = actions.register("app.flowgraph.new_type",
+FLOW_GRAPH_NEW_TYPE = actions.register(
+    "app.flowgraph.new_type",
     parameter="s",
 )
-FLOW_GRAPH_OPEN = actions.register("app.flowgraph.open",
+FLOW_GRAPH_OPEN = actions.register(
+    "app.flowgraph.open",
     label='_Open',
     tooltip='Open an existing flow graph',
     icon_name='document-open',
     keypresses=["<Ctrl>o"],
 )
-FLOW_GRAPH_OPEN_RECENT = actions.register("app.flowgraph.open_recent",
+FLOW_GRAPH_OPEN_RECENT = actions.register(
+    "app.flowgraph.open_recent",
     label='Open _Recent',
     tooltip='Open a recently used flow graph',
     icon_name='document-open-recent',
     parameter="s",
 )
 FLOW_GRAPH_CLEAR_RECENT = actions.register("app.flowgraph.clear_recent")
-FLOW_GRAPH_SAVE = actions.register("app.flowgraph.save",
+FLOW_GRAPH_SAVE = actions.register(
+    "app.flowgraph.save",
     label='_Save',
     tooltip='Save the current flow graph',
     icon_name='document-save',
     keypresses=["<Ctrl>s"],
 )
-FLOW_GRAPH_SAVE_AS = actions.register("app.flowgraph.save_as",
+FLOW_GRAPH_SAVE_AS = actions.register(
+    "app.flowgraph.save_as",
     label='Save _As',
     tooltip='Save the current flow graph as...',
     icon_name='document-save-as',
     keypresses=["<Ctrl><Shift>s"],
 )
-FLOW_GRAPH_SAVE_COPY = actions.register("app.flowgraph.save_copy",
+FLOW_GRAPH_SAVE_COPY = actions.register(
+    "app.flowgraph.save_copy",
     label='Save Copy',
     tooltip='Save a copy of current flow graph',
 )
-FLOW_GRAPH_DUPLICATE = actions.register("app.flowgraph.duplicate",
+FLOW_GRAPH_DUPLICATE = actions.register(
+    "app.flowgraph.duplicate",
     label='_Duplicate',
     tooltip='Create a duplicate of current flow graph',
     #stock_id=Gtk.STOCK_COPY,
     keypresses=["<Ctrl><Shift>d"],
 )
-FLOW_GRAPH_CLOSE = actions.register("app.flowgraph.close",
+FLOW_GRAPH_CLOSE = actions.register(
+    "app.flowgraph.close",
     label='_Close',
     tooltip='Close the current flow graph',
     icon_name='window-close',
     keypresses=["<Ctrl>w"],
 )
 APPLICATION_INITIALIZE = actions.register("app.initialize")
-APPLICATION_QUIT = actions.register("app.quit",
+APPLICATION_QUIT = actions.register(
+    "app.quit",
     label='_Quit',
     tooltip='Quit program',
     icon_name='application-exit',
     keypresses=["<Ctrl>q"],
 )
-FLOW_GRAPH_UNDO = actions.register("win.undo",
+FLOW_GRAPH_UNDO = actions.register(
+    "win.undo",
     label='_Undo',
     tooltip='Undo a change to the flow graph',
     icon_name='edit-undo',
     keypresses=["<Ctrl>z"],
 )
-FLOW_GRAPH_REDO = actions.register("win.redo",
+FLOW_GRAPH_REDO = actions.register(
+    "win.redo",
     label='_Redo',
     tooltip='Redo a change to the flow graph',
     icon_name='edit-redo',
     keypresses=["<Ctrl>y"],
 )
 NOTHING_SELECT = actions.register("win.unselect")
-SELECT_ALL = actions.register("win.select_all",
+SELECT_ALL = actions.register(
+    "win.select_all",
     label='Select _All',
     tooltip='Select all blocks and connections in the flow graph',
     icon_name='edit-select-all',
@@ -293,51 +339,60 @@ SELECT_ALL = actions.register("win.select_all",
 )
 ELEMENT_SELECT = actions.register("win.select")
 ELEMENT_CREATE = actions.register("win.add")
-ELEMENT_DELETE = actions.register("win.delete",
+ELEMENT_DELETE = actions.register(
+    "win.delete",
     label='_Delete',
     tooltip='Delete the selected blocks',
     icon_name='edit-delete',
     keypresses=["Delete"],
 )
 BLOCK_MOVE = actions.register("win.block_move")
-BLOCK_ROTATE_CCW = actions.register("win.block_rotate_ccw",
+BLOCK_ROTATE_CCW = actions.register(
+    "win.block_rotate_ccw",
     label='Rotate Counterclockwise',
     tooltip='Rotate the selected blocks 90 degrees to the left',
     icon_name='object-rotate-left',
     keypresses=["Left"],
 )
-BLOCK_ROTATE_CW = actions.register("win.block_rotate",
+BLOCK_ROTATE_CW = actions.register(
+    "win.block_rotate",
     label='Rotate Clockwise',
     tooltip='Rotate the selected blocks 90 degrees to the right',
     icon_name='object-rotate-right',
     keypresses=["Right"],
 )
-BLOCK_VALIGN_TOP = actions.register("win.block_align_top",
+BLOCK_VALIGN_TOP = actions.register(
+    "win.block_align_top",
     label='Vertical Align Top',
     tooltip='Align tops of selected blocks',
     keypresses=["<Shift>t"],
 )
-BLOCK_VALIGN_MIDDLE = actions.register("win.block_align_middle",
+BLOCK_VALIGN_MIDDLE = actions.register(
+    "win.block_align_middle",
     label='Vertical Align Middle',
     tooltip='Align centers of selected blocks vertically',
     keypresses=["<Shift>m"],
 )
-BLOCK_VALIGN_BOTTOM = actions.register("win.block_align_bottom",
+BLOCK_VALIGN_BOTTOM = actions.register(
+    "win.block_align_bottom",
     label='Vertical Align Bottom',
     tooltip='Align bottoms of selected blocks',
     keypresses=["<Shift>b"],
 )
-BLOCK_HALIGN_LEFT = actions.register("win.block_align_left",
+BLOCK_HALIGN_LEFT = actions.register(
+    "win.block_align_left",
     label='Horizontal Align Left',
     tooltip='Align left edges of blocks selected blocks',
     keypresses=["<Shift>l"],
 )
-BLOCK_HALIGN_CENTER = actions.register("win.block_align_center",
+BLOCK_HALIGN_CENTER = actions.register(
+    "win.block_align_center",
     label='Horizontal Align Center',
     tooltip='Align centers of selected blocks horizontally',
     keypresses=["<Shift>c"],
 )
-BLOCK_HALIGN_RIGHT = actions.register("win.block_align_right",
+BLOCK_HALIGN_RIGHT = actions.register(
+    "win.block_align_right",
     label='Horizontal Align Right',
     tooltip='Align right edges of selected blocks',
     keypresses=["<Shift>r"],
@@ -351,249 +406,288 @@ BLOCK_ALIGNMENTS = [
     BLOCK_HALIGN_CENTER,
     BLOCK_HALIGN_RIGHT,
 ]
-BLOCK_PARAM_MODIFY = actions.register("win.block_modify",
+BLOCK_PARAM_MODIFY = actions.register(
+    "win.block_modify",
     label='_Properties',
     tooltip='Modify params for the selected block',
     icon_name='document-properties',
     keypresses=["Return"],
 )
-BLOCK_ENABLE = actions.register("win.block_enable",
+BLOCK_ENABLE = actions.register(
+    "win.block_enable",
     label='E_nable',
     tooltip='Enable the selected blocks',
     icon_name='network-wired',
     keypresses=["e"],
 )
-BLOCK_DISABLE = actions.register("win.block_disable",
+BLOCK_DISABLE = actions.register(
+    "win.block_disable",
     label='D_isable',
     tooltip='Disable the selected blocks',
     icon_name='network-wired-disconnected',
     keypresses=["d"],
 )
-BLOCK_BYPASS = actions.register("win.block_bypass",
+BLOCK_BYPASS = actions.register(
+    "win.block_bypass",
     label='_Bypass',
     tooltip='Bypass the selected block',
     icon_name='media-seek-forward',
     keypresses=["b"],
 )
-TOGGLE_SNAP_TO_GRID = actions.register("win.snap_to_grid",
+TOGGLE_SNAP_TO_GRID = actions.register(
+    "win.snap_to_grid",
     label='_Snap to grid',
     tooltip='Snap blocks to a grid for an easier connection alignment',
     preference_name='snap_to_grid',
 )
-TOGGLE_HIDE_DISABLED_BLOCKS = actions.register("win.hide_disabled",
+TOGGLE_HIDE_DISABLED_BLOCKS = actions.register(
+    "win.hide_disabled",
     label='Hide _Disabled Blocks',
     tooltip='Toggle visibility of disabled blocks and connections',
     icon_name='image-missing',
     keypresses=["<Ctrl>d"],
     preference_name='hide_disabled',
 )
-TOGGLE_HIDE_VARIABLES = actions.register("win.hide_variables",
+TOGGLE_HIDE_VARIABLES = actions.register(
+    "win.hide_variables",
     label='Hide Variables',
     tooltip='Hide all variable blocks',
     preference_name='hide_variables',
     default=False,
 )
-TOGGLE_SHOW_BLOCK_IDS = actions.register("win.show_block_ids",
+TOGGLE_SHOW_BLOCK_IDS = actions.register(
+    "win.show_block_ids",
     label='Show All Block IDs',
     tooltip='Show all the block IDs',
     preference_name='show_block_ids',
     default=False,
 )
-TOGGLE_FLOW_GRAPH_VAR_EDITOR = actions.register("win.toggle_variable_editor",
+TOGGLE_FLOW_GRAPH_VAR_EDITOR = actions.register(
+    "win.toggle_variable_editor",
     label='Show _Variable Editor',
-    tooltip='Show the variable editor. Modify variables and imports in this flow graph',
+    tooltip=
+    'Show the variable editor. Modify variables and imports in this flow graph',
     icon_name='accessories-text-editor',
     default=True,
     keypresses=["<Ctrl>e"],
     preference_name='variable_editor_visable',
 )
-TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR = actions.register("win.toggle_variable_editor_sidebar",
+TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR = actions.register(
+    "win.toggle_variable_editor_sidebar",
     label='Move the Variable Editor to the Sidebar',
     tooltip='Move the variable editor to the sidebar',
     default=False,
     preference_name='variable_editor_sidebar',
 )
-TOGGLE_AUTO_HIDE_PORT_LABELS = actions.register("win.auto_hide_port_labels",
+TOGGLE_AUTO_HIDE_PORT_LABELS = actions.register(
+    "win.auto_hide_port_labels",
     label='Auto-Hide _Port Labels',
     tooltip='Automatically hide port labels',
-    preference_name='auto_hide_port_labels'
-)
-TOGGLE_SHOW_BLOCK_COMMENTS = actions.register("win.show_block_comments",
+    preference_name='auto_hide_port_labels')
+TOGGLE_SHOW_BLOCK_COMMENTS = actions.register(
+    "win.show_block_comments",
     label='Show Block Comments',
     tooltip="Show comment beneath each block",
-    preference_name='show_block_comments'
-)
-TOGGLE_SHOW_CODE_PREVIEW_TAB = actions.register("win.toggle_code_preview",
+    preference_name='show_block_comments')
+TOGGLE_SHOW_CODE_PREVIEW_TAB = actions.register(
+    "win.toggle_code_preview",
     label='Generated Code Preview',
     tooltip="Show a preview of the code generated for each Block in its "
-            "Properties Dialog",
+    "Properties Dialog",
     preference_name='show_generated_code_tab',
     default=False,
 )
-TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY = actions.register("win.show_flowgraph_complexity",
+TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY = actions.register(
+    "win.show_flowgraph_complexity",
     label='Show Flowgraph Complexity',
     tooltip="How many Balints is the flowgraph...",
     preference_name='show_flowgraph_complexity',
     default=False,
 )
-BLOCK_CREATE_HIER = actions.register("win.block_create_hier",
+BLOCK_CREATE_HIER = actions.register(
+    "win.block_create_hier",
     label='C_reate Hier',
     tooltip='Create hier block from selected blocks',
     icon_name='document-new',
     keypresses=["c"],
 )
-BLOCK_CUT = actions.register("win.block_cut",
+BLOCK_CUT = actions.register(
+    "win.block_cut",
     label='Cu_t',
     tooltip='Cut',
     icon_name='edit-cut',
     keypresses=["<Ctrl>x"],
 )
-BLOCK_COPY = actions.register("win.block_copy",
+BLOCK_COPY = actions.register(
+    "win.block_copy",
     label='_Copy',
     tooltip='Copy',
     icon_name='edit-copy',
     keypresses=["<Ctrl>c"],
 )
-BLOCK_PASTE = actions.register("win.block_paste",
+BLOCK_PASTE = actions.register(
+    "win.block_paste",
     label='_Paste',
     tooltip='Paste',
     icon_name='edit-paste',
     keypresses=["<Ctrl>v"],
 )
-ERRORS_WINDOW_DISPLAY = actions.register("app.errors",
+ERRORS_WINDOW_DISPLAY = actions.register(
+    "app.errors",
     label='Flowgraph _Errors',
     tooltip='View flow graph errors',
     icon_name='dialog-error',
 )
-TOGGLE_CONSOLE_WINDOW = actions.register("win.toggle_console_window",
+TOGGLE_CONSOLE_WINDOW = actions.register(
+    "win.toggle_console_window",
     label='Show _Console Panel',
     tooltip='Toggle visibility of the console',
     keypresses=["<Ctrl>r"],
     preference_name='console_window_visible',
-    default=True
-)
+    default=True)
 # TODO: Might be able to convert this to a Gio.PropertyAction eventually.
 #       actions would need to be defined in the correct class and not globally
-TOGGLE_BLOCKS_WINDOW = actions.register("win.toggle_blocks_window",
+TOGGLE_BLOCKS_WINDOW = actions.register(
+    "win.toggle_blocks_window",
     label='Show _Block Tree Panel',
     tooltip='Toggle visibility of the block tree widget',
     keypresses=["<Ctrl>b"],
     preference_name='blocks_window_visible',
-    default=True
-)
-TOGGLE_SCROLL_LOCK = actions.register("win.console.scroll_lock",
+    default=True)
+TOGGLE_SCROLL_LOCK = actions.register(
+    "win.console.scroll_lock",
     label='Console Scroll _Lock',
     tooltip='Toggle scroll lock for the console window',
     preference_name='scroll_lock',
     keypresses=["Scroll_Lock"],
 )
-ABOUT_WINDOW_DISPLAY = actions.register("app.about",
+ABOUT_WINDOW_DISPLAY = actions.register(
+    "app.about",
     label='_About',
     tooltip='About this program',
     icon_name='help-about',
 )
-HELP_WINDOW_DISPLAY = actions.register("app.help",
+HELP_WINDOW_DISPLAY = actions.register(
+    "app.help",
     label='_Help',
     tooltip='Usage tips',
     icon_name='help-contents',
     keypresses=["F1"],
 )
-TYPES_WINDOW_DISPLAY = actions.register("app.types",
+TYPES_WINDOW_DISPLAY = actions.register(
+    "app.types",
     label='_Types',
     tooltip='Types color mapping',
     icon_name='dialog-information',
 )
-KEYBOARD_SHORTCUTS_WINDOW_DISPLAY = actions.register("app.keys",
+KEYBOARD_SHORTCUTS_WINDOW_DISPLAY = actions.register(
+    "app.keys",
     label='_Keys',
     tooltip='Keyboard - Shortcuts',
     icon_name='dialog-information',
     keypresses=["<Ctrl>K"],
 )
-FLOW_GRAPH_GEN = actions.register("app.flowgraph.generate",
+FLOW_GRAPH_GEN = actions.register(
+    "app.flowgraph.generate",
     label='_Generate',
     tooltip='Generate the flow graph',
     icon_name='insert-object',
     keypresses=["F5"],
 )
-FLOW_GRAPH_EXEC = actions.register("app.flowgraph.execute",
+FLOW_GRAPH_EXEC = actions.register(
+    "app.flowgraph.execute",
     label='_Execute',
     tooltip='Execute the flow graph',
     icon_name='media-playback-start',
     keypresses=["F6"],
 )
-FLOW_GRAPH_KILL = actions.register("app.flowgraph.kill",
+FLOW_GRAPH_KILL = actions.register(
+    "app.flowgraph.kill",
     label='_Kill',
     tooltip='Kill the flow graph',
     icon_name='media-playback-stop',
     keypresses=["F7"],
 )
-FLOW_GRAPH_SCREEN_CAPTURE = actions.register("app.flowgraph.screen_capture",
+FLOW_GRAPH_SCREEN_CAPTURE = actions.register(
+    "app.flowgraph.screen_capture",
     label='Screen Ca_pture',
     tooltip='Create a screen capture of the flow graph',
     icon_name='printer',
     keypresses=["<Ctrl>p"],
 )
-PORT_CONTROLLER_DEC = actions.register("win.port_controller_dec",
+PORT_CONTROLLER_DEC = actions.register(
+    "win.port_controller_dec",
     keypresses=["KP_Subtract", "minus"],
 )
-PORT_CONTROLLER_INC = actions.register("win.port_controller_inc",
+PORT_CONTROLLER_INC = actions.register(
+    "win.port_controller_inc",
     keypresses=["KP_Add", "plus"],
 )
-BLOCK_INC_TYPE = actions.register("win.block_inc_type",
+BLOCK_INC_TYPE = actions.register(
+    "win.block_inc_type",
     keypresses=["Down"],
 )
-BLOCK_DEC_TYPE = actions.register("win.block_dec_type",
+BLOCK_DEC_TYPE = actions.register(
+    "win.block_dec_type",
     keypresses=["Up"],
 )
 RELOAD_BLOCKS = actions.register("app.reload_blocks",
-    label='Reload _Blocks',
-    tooltip='Reload Blocks',
-    icon_name='view-refresh'
-)
-FIND_BLOCKS = actions.register("win.find_blocks",
+                                 label='Reload _Blocks',
+                                 tooltip='Reload Blocks',
+                                 icon_name='view-refresh')
+FIND_BLOCKS = actions.register(
+    "win.find_blocks",
     label='_Find Blocks',
     tooltip='Search for a block by name (and key)',
     icon_name='edit-find',
     keypresses=["<Ctrl>f", "slash"],
 )
-CLEAR_CONSOLE = actions.register("win.console.clear",
+CLEAR_CONSOLE = actions.register(
+    "win.console.clear",
     label='_Clear Console',
     tooltip='Clear Console',
     icon_name='edit-clear',
     keypresses=["<Ctrl>l"],
 )
-SAVE_CONSOLE = actions.register("win.console.save",
+SAVE_CONSOLE = actions.register(
+    "win.console.save",
     label='_Save Console',
     tooltip='Save Console',
     icon_name='edit-save',
     keypresses=["<Ctrl><Shift>p"],
 )
-OPEN_HIER = actions.register("win.open_hier",
+OPEN_HIER = actions.register(
+    "win.open_hier",
     label='Open H_ier',
     tooltip='Open the source of the selected hierarchical block',
     icon_name='go-jump',
 )
-BUSSIFY_SOURCES = actions.register("win.bussify_sources",
+BUSSIFY_SOURCES = actions.register(
+    "win.bussify_sources",
     label='Toggle So_urce Bus',
     tooltip='Gang source ports into a single bus port',
     icon_name='go-jump',
 )
-BUSSIFY_SINKS = actions.register("win.bussify_sinks",
+BUSSIFY_SINKS = actions.register(
+    "win.bussify_sinks",
     label='Toggle S_ink Bus',
     tooltip='Gang sink ports into a single bus port',
     icon_name='go-jump',
 )
-XML_PARSER_ERRORS_DISPLAY = actions.register("app.xml_errors",
+XML_PARSER_ERRORS_DISPLAY = actions.register(
+    "app.xml_errors",
     label='_Parser Errors',
     tooltip='View errors that occurred while parsing XML files',
     icon_name='dialog-error',
 )
-FLOW_GRAPH_OPEN_QSS_THEME = actions.register("app.open_qss_theme",
+FLOW_GRAPH_OPEN_QSS_THEME = actions.register(
+    "app.open_qss_theme",
     label='Set Default QT GUI _Theme',
     tooltip='Set a default QT Style Sheet file to use for QT GUI',
     icon_name='document-open',
 )
-TOOLS_RUN_FDESIGN = actions.register("app.filter_design",
+TOOLS_RUN_FDESIGN = actions.register(
+    "app.filter_design",
     label='Filter Design Tool',
     tooltip='Execute gr_filter_design',
     icon_name='media-playback-start',
