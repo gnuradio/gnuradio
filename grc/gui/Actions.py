@@ -437,6 +437,7 @@ TOGGLE_SNAP_TO_GRID = actions.register(
     label='_Snap to grid',
     tooltip='Snap blocks to a grid for an easier connection alignment',
     preference_name='snap_to_grid',
+    default=True,
 )
 TOGGLE_HIDE_DISABLED_BLOCKS = actions.register(
     "win.hide_disabled",
@@ -445,6 +446,7 @@ TOGGLE_HIDE_DISABLED_BLOCKS = actions.register(
     icon_name='image-missing',
     keypresses=["<Ctrl>d"],
     preference_name='hide_disabled',
+    default=False,
 )
 TOGGLE_HIDE_VARIABLES = actions.register(
     "win.hide_variables",
@@ -481,12 +483,16 @@ TOGGLE_AUTO_HIDE_PORT_LABELS = actions.register(
     "win.auto_hide_port_labels",
     label='Auto-Hide _Port Labels',
     tooltip='Automatically hide port labels',
-    preference_name='auto_hide_port_labels')
+    preference_name='auto_hide_port_labels',
+    default=False,
+)
 TOGGLE_SHOW_BLOCK_COMMENTS = actions.register(
     "win.show_block_comments",
     label='Show Block Comments',
     tooltip="Show comment beneath each block",
-    preference_name='show_block_comments')
+    preference_name='show_block_comments',
+    default=True,
+)
 TOGGLE_SHOW_CODE_PREVIEW_TAB = actions.register(
     "win.toggle_code_preview",
     label='Generated Code Preview',
@@ -558,6 +564,7 @@ TOGGLE_SCROLL_LOCK = actions.register(
     tooltip='Toggle scroll lock for the console window',
     preference_name='scroll_lock',
     keypresses=["Scroll_Lock"],
+    default=False,
 )
 ABOUT_WINDOW_DISPLAY = actions.register(
     "app.about",
