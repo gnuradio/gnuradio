@@ -21,7 +21,7 @@ parameters:
     default: '1024'
 -   id: wintype
     label: Window Type
-    dtype: int
+    dtype: enum
     default: firdes.WIN_BLACKMAN_hARRIS
     options: [firdes.WIN_BLACKMAN_hARRIS, firdes.WIN_HAMMING, firdes.WIN_HANN, firdes.WIN_BLACKMAN,
         firdes.WIN_RECTANGULAR, firdes.WIN_KAISER]
@@ -120,7 +120,7 @@ templates:
             ${plotfreq}, #plotfreq
             ${plotwaterfall}, #plotwaterfall
             ${plottime}, #plottime
-            ${plotconst} #plotconst,
+            ${plotconst}, #plotconst
             None # parent
         )
         self.${id}.set_update_time(1.0/${rate})
