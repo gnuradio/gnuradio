@@ -36,7 +36,7 @@ class QwtColorMap;
 class PlotTimeRaster : public QwtPlotRasterItem
 {
 public:
-    explicit PlotTimeRaster(const QString& title = QString::null);
+    explicit PlotTimeRaster(const QString& title = QString());
     virtual ~PlotTimeRaster();
 
     const TimeRasterData* data() const;
