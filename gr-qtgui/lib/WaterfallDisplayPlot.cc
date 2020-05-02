@@ -46,7 +46,7 @@ public:
     virtual QwtText label(double value) const
     {
         double secs = double(value * getSecondsPerLine());
-        return QwtText(QString("").sprintf("%.2e", secs));
+        return QwtText(QString::number(secs, 'e', 2));
     }
 
     virtual void initiateUpdate()
