@@ -31,7 +31,7 @@ pdu_remove_impl::pdu_remove_impl(pmt::pmt_t k)
     message_port_register_out(pdu::pdu_port_id());
     message_port_register_in(pdu::pdu_port_id());
     set_msg_handler(pdu::pdu_port_id(),
-                    boost::bind(&pdu_remove_impl::handle_msg, this, _1));
+                    std::bind(&pdu_remove_impl::handle_msg, this, std::placeholders::_1));
 }
 
 void pdu_remove_impl::handle_msg(pmt::pmt_t pdu)

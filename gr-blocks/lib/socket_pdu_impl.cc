@@ -88,8 +88,9 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
 
         start_tcp_accept();
 
-        set_msg_handler(pdu::pdu_port_id(),
-                        boost::bind(&socket_pdu_impl::tcp_server_send, this, _1));
+        set_msg_handler(
+            pdu::pdu_port_id(),
+            std::bind(&socket_pdu_impl::tcp_server_send, this, std::placeholders::_1));
     } else if (type == "TCP_CLIENT") {
         boost::system::error_code error = boost::asio::error::host_not_found;
         d_tcp_socket.reset(new boost::asio::ip::tcp::socket(d_io_service));
@@ -98,8 +99,9 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
             throw boost::system::system_error(error);
         d_tcp_socket->set_option(boost::asio::ip::tcp::no_delay(d_tcp_no_delay));
 
-        set_msg_handler(pdu::pdu_port_id(),
-                        boost::bind(&socket_pdu_impl::tcp_client_send, this, _1));
+        set_msg_handler(
+            pdu::pdu_port_id(),
+            std::bind(&socket_pdu_impl::tcp_client_send, this, std::placeholders::_1));
 
         d_tcp_socket->async_read_some(
             boost::asio::buffer(d_rxbuf),
@@ -118,8 +120,9 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
                         boost::asio::placeholders::error,
                         boost::asio::placeholders::bytes_transferred));
 
-        set_msg_handler(pdu::pdu_port_id(),
-                        boost::bind(&socket_pdu_impl::udp_send, this, _1));
+        set_msg_handler(
+            pdu::pdu_port_id(),
+            std::bind(&socket_pdu_impl::udp_send, this, std::placeholders::_1));
     } else if (type == "UDP_CLIENT") {
         d_udp_socket.reset(
             new boost::asio::ip::udp::socket(d_io_service, d_udp_endpoint));
@@ -131,8 +134,9 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
                         boost::asio::placeholders::error,
                         boost::asio::placeholders::bytes_transferred));
 
-        set_msg_handler(pdu::pdu_port_id(),
-                        boost::bind(&socket_pdu_impl::udp_send, this, _1));
+        set_msg_handler(
+            pdu::pdu_port_id(),
+            std::bind(&socket_pdu_impl::udp_send, this, std::placeholders::_1));
     } else
         throw std::runtime_error("gr::blocks:socket_pdu: unknown socket type");
 

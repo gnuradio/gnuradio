@@ -86,7 +86,8 @@ tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU, bool istunflag)
 
     // set up input message port
     message_port_register_in(pdu::pdu_port_id());
-    set_msg_handler(pdu::pdu_port_id(), boost::bind(&tuntap_pdu_impl::send, this, _1));
+    set_msg_handler(pdu::pdu_port_id(),
+                    std::bind(&tuntap_pdu_impl::send, this, std::placeholders::_1));
 }
 
 int tuntap_pdu_impl::tun_alloc(char* dev, int flags)

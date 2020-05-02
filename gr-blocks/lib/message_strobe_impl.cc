@@ -41,8 +41,9 @@ message_strobe_impl::message_strobe_impl(pmt::pmt_t msg, long period_ms)
     message_port_register_out(d_port);
 
     message_port_register_in(pmt::mp("set_msg"));
-    set_msg_handler(pmt::mp("set_msg"),
-                    boost::bind(&message_strobe_impl::set_msg, this, _1));
+    set_msg_handler(
+        pmt::mp("set_msg"),
+        std::bind(&message_strobe_impl::set_msg, this, std::placeholders::_1));
 }
 
 message_strobe_impl::~message_strobe_impl() {}
@@ -53,7 +54,7 @@ bool message_strobe_impl::start()
     // nothing breaks on concurrent access, I'll just leave it as bool.
     d_finished = false;
     d_thread = std::shared_ptr<gr::thread::thread>(
-        new gr::thread::thread(boost::bind(&message_strobe_impl::run, this)));
+        new gr::thread::thread(std::bind(&message_strobe_impl::run, this)));
 
     return block::start();
 }
