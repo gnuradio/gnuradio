@@ -642,8 +642,12 @@ c64vector_writable_elements(pmt_t v, size_t& len); //< len is in elements
  * ------------------------------------------------------------------------
  */
 
-//! Return true if \p obj is a dictionary (warning: also returns true for a pair)
+//! Return true if \p obj is a dictionary
 PMT_API bool is_dict(const pmt_t& obj);
+
+//! Return a newly allocated dict whose car is a key-value pair \p x and whose cdr is a
+//! dict \p y.
+PMT_API pmt_t dcons(const pmt_t& x, const pmt_t& y);
 
 //! Make an empty dictionary
 PMT_API pmt_t make_dict();
@@ -713,6 +717,14 @@ PMT_API std::shared_ptr<gr::messages::msg_accepter> msg_accepter_ref(const pmt_t
  *			  General functions
  * ------------------------------------------------------------------------
  */
+
+/*!
+ * Returns true if the object is a PDU meaning:
+ *   the object is a pair
+ *   the car is a dictionary type object (including an empty dict)
+ *   the cdr is a uniform vector of any type
+ */
+PMT_API bool is_pdu(const pmt_t& obj);
 
 //! Return true if x and y are the same object; otherwise return false.
 PMT_API bool eq(const pmt_t& x, const pmt_t& y);
@@ -801,7 +813,7 @@ PMT_API pmt_t reverse_x(pmt_t list);
 /*!
  * \brief (acons x y a) == (cons (cons x y) a)
  */
-inline static pmt_t acons(pmt_t x, pmt_t y, pmt_t a) { return cons(cons(x, y), a); }
+inline static pmt_t acons(pmt_t x, pmt_t y, pmt_t a) { return dcons(cons(x, y), a); }
 
 /*!
  * \brief locates \p nth element of \n list where the car is the 'zeroth' element.

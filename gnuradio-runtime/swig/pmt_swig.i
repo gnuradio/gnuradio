@@ -238,6 +238,7 @@ namespace pmt{
 
   bool is_dict(const pmt_t &obj);
   pmt_t make_dict();
+  pmt_t dcons(const pmt_t& x, const pmt_t& y);
   pmt_t dict_add(const pmt_t &dict, const pmt_t &key, const pmt_t &value);
   pmt_t dict_delete(const pmt_t &dict, const pmt_t &key);
   bool  dict_has_key(const pmt_t &dict, const pmt_t &key);
@@ -256,6 +257,7 @@ namespace pmt{
   pmt_t make_msg_accepter(std::shared_ptr<gr::messages::msg_accepter> ma);
   std::shared_ptr<gr::messages::msg_accepter> msg_accepter_ref(const pmt_t &obj);
 
+  bool is_pdu(const pmt_t& obj);
   bool eq(const pmt_t& x, const pmt_t& y);
   bool eqv(const pmt_t& x, const pmt_t& y);
   bool equal(const pmt_t& x, const pmt_t& y);
