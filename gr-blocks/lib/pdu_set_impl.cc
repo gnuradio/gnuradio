@@ -31,7 +31,8 @@ pdu_set_impl::pdu_set_impl(pmt::pmt_t k, pmt::pmt_t v)
 {
     message_port_register_out(pdu::pdu_port_id());
     message_port_register_in(pdu::pdu_port_id());
-    set_msg_handler(pdu::pdu_port_id(), boost::bind(&pdu_set_impl::handle_msg, this, _1));
+    set_msg_handler(pdu::pdu_port_id(),
+                    std::bind(&pdu_set_impl::handle_msg, this, std::placeholders::_1));
 }
 
 void pdu_set_impl::handle_msg(pmt::pmt_t pdu)

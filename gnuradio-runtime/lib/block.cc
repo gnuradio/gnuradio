@@ -49,7 +49,8 @@ block::block(const std::string& name,
 {
     global_block_registry.register_primitive(alias(), this);
     message_port_register_in(d_system_port);
-    set_msg_handler(d_system_port, boost::bind(&block::system_handler, this, _1));
+    set_msg_handler(d_system_port,
+                    std::bind(&block::system_handler, this, std::placeholders::_1));
 }
 
 block::~block() { global_block_registry.unregister_primitive(symbol_name()); }
