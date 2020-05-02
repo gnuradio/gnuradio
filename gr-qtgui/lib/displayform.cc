@@ -302,7 +302,7 @@ void DisplayForm::setAxisLabels(bool en)
 
 void DisplayForm::saveFigure()
 {
-    QPixmap qpix = QPixmap::grabWidget(this);
+    QPixmap qpix = this->grab();
 
     QString types = QString(tr("JPEG file (*.jpg);;Portable Network Graphics file "
                                "(*.png);;Bitmap file (*.bmp);;TIFF file (*.tiff)"));
