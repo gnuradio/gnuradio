@@ -36,7 +36,7 @@ class QwtColorMap;
 class PlotWaterfall : public QwtPlotRasterItem
 {
 public:
-    explicit PlotWaterfall(WaterfallData* data, const QString& title = QString::null);
+    explicit PlotWaterfall(WaterfallData* data, const QString& title = QString());
     virtual ~PlotWaterfall();
 
     const WaterfallData* data() const;
