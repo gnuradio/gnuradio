@@ -44,7 +44,7 @@ void stream_pdu_base::start_rxthread(basic_block* blk, pmt::pmt_t port)
 {
     d_blk = blk;
     d_port = port;
-    d_thread = gr::thread::thread(boost::bind(&stream_pdu_base::run, this));
+    d_thread = gr::thread::thread(std::bind(&stream_pdu_base::run, this));
     d_started = true;
 }
 

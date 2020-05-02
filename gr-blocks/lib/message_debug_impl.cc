@@ -78,14 +78,17 @@ message_debug_impl::message_debug_impl()
     : block("message_debug", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0))
 {
     message_port_register_in(pmt::mp("print"));
-    set_msg_handler(pmt::mp("print"), boost::bind(&message_debug_impl::print, this, _1));
+    set_msg_handler(pmt::mp("print"),
+                    std::bind(&message_debug_impl::print, this, std::placeholders::_1));
 
     message_port_register_in(pmt::mp("store"));
-    set_msg_handler(pmt::mp("store"), boost::bind(&message_debug_impl::store, this, _1));
+    set_msg_handler(pmt::mp("store"),
+                    std::bind(&message_debug_impl::store, this, std::placeholders::_1));
 
     message_port_register_in(pmt::mp("print_pdu"));
-    set_msg_handler(pmt::mp("print_pdu"),
-                    boost::bind(&message_debug_impl::print_pdu, this, _1));
+    set_msg_handler(
+        pmt::mp("print_pdu"),
+        std::bind(&message_debug_impl::print_pdu, this, std::placeholders::_1));
 }
 
 message_debug_impl::~message_debug_impl() {}
