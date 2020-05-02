@@ -17,7 +17,6 @@ parameters:
     label: FFT Size
     dtype: int
     default: '1024'
-    hide: ${ 'part' if vlen == 1 else 'none' }
 -   id: ref_scale
     label: Reference Scale
     dtype: real
