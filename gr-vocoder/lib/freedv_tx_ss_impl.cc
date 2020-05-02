@@ -70,7 +70,8 @@ freedv_tx_ss_impl::freedv_tx_ss_impl(int mode,
     if ((d_freedv = freedv_open(mode)) == NULL)
         throw std::runtime_error("freedv_tx_ss_impl: freedv_open failed");
 #endif
-    snprintf(d_cb_state.tx_str, 79, "%s", d_msg_text.c_str());
+    std::string txstr = str(boost::format("%s") % d_msg_text.c_str());
+    strcpy(d_cb_state.tx_str, txstr.c_str()); 
     d_cb_state.ptx_str = d_cb_state.tx_str;
     freedv_set_callback_txt(d_freedv, NULL, get_next_tx_char, (void*)&d_cb_state);
     d_nom_modem_samples = freedv_get_n_nom_modem_samples(d_freedv);

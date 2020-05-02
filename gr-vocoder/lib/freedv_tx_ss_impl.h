@@ -12,6 +12,8 @@
 #define INCLUDED_VOCODER_FREEDV_TX_SS_IMPL_H
 
 #include <gnuradio/vocoder/freedv_tx_ss.h>
+#include <boost/format.hpp>
+#include <string.h>
 
 extern "C" {
 struct freedv_tx_callback_state {
