@@ -163,6 +163,7 @@ class test_pmt(unittest.TestCase):
         d = pmt.dict_add(d, min_key, _min)
         s = pmt.serialize_str(d)
         deser = pmt.deserialize_str(s)
+        self.assertTrue(pmt.is_dict(deser))
         self.assertTrue(pmt.equal(d, deser))
         p_dict = pmt.to_python(deser)
         self.assertEqual(self.MAXINT32, p_dict["MAX"])

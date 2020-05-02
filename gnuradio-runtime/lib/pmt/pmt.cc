@@ -82,6 +82,8 @@ static pmt_any* _any(pmt_t x) { return dynamic_cast<pmt_any*>(x.get()); }
 //                           Globals
 ////////////////////////////////////////////////////////////////////////////
 
+pmt_null::pmt_null() {}
+
 pmt_t get_PMT_NIL()
 {
     static pmt_t _NIL = pmt_t(new pmt_null());
@@ -314,7 +316,6 @@ std::complex<double> to_complex(pmt_t x)
 //                              Pairs
 ////////////////////////////////////////////////////////////////////////////
 
-pmt_null::pmt_null() {}
 pmt_pair::pmt_pair(const pmt_t& car, const pmt_t& cdr) : d_car(car), d_cdr(cdr) {}
 
 bool is_null(const pmt_t& x) { return x == PMT_NIL; }
@@ -658,9 +659,22 @@ void* uniform_vector_writable_elements(pmt_t vector, size_t& len)
  * Chris Okasaki, 1998, section 3.3.
  */
 
-bool is_dict(const pmt_t& obj) { return is_null(obj) || is_pair(obj); }
+pmt_dict::pmt_dict(const pmt_t& car, const pmt_t& cdr) : pmt_pair::pmt_pair(car, cdr) {}
+
+bool is_dict(const pmt_t& obj) { return is_null(obj) || obj->is_dict(); }
 
 pmt_t make_dict() { return PMT_NIL; }
+
+pmt_t dcons(const pmt_t& x, const pmt_t& y)
+{
+    // require arguments to be a PMT pair and PMT dictionary respectively
+    if (!is_pair(x))
+        throw wrong_type("pmt_dcons: not a pair", x);
+    if (!is_dict(y))
+        throw wrong_type("pmt_dcons: not a dict", y);
+
+    return pmt_t(new pmt_dict(x, y));
+}
 
 pmt_t dict_add(const pmt_t& dict, const pmt_t& key, const pmt_t& value)
 {
@@ -693,7 +707,7 @@ pmt_t dict_delete(const pmt_t& dict, const pmt_t& key)
     if (eqv(caar(dict), key))
         return cdr(dict);
 
-    return cons(car(dict), dict_delete(cdr(dict), key));
+    return dcons(car(dict), dict_delete(cdr(dict), key));
 }
 
 pmt_t dict_ref(const pmt_t& dict, const pmt_t& key, const pmt_t& not_found)
@@ -814,6 +828,11 @@ size_t blob_length(pmt_t blob)
 //                          General Functions
 ////////////////////////////////////////////////////////////////////////////
 
+bool is_pdu(const pmt_t& obj)
+{
+    return is_pair(obj) && is_dict(car(obj)) && is_uniform_vector(cdr(obj));
+}
+
 bool eq(const pmt_t& x, const pmt_t& y) { return x == y; }
 
 bool eqv(const pmt_t& x, const pmt_t& y)
@@ -904,6 +923,7 @@ size_t length(const pmt_t& x)
     if (x->is_null())
         return 0;
 
+    // also returns correct result for dictionaries
     if (x->is_pair()) {
         size_t length = 1;
         pmt_t it = cdr(x);
@@ -917,8 +937,6 @@ size_t length(const pmt_t& x)
         // not a proper list
         throw wrong_type("pmt_length", x);
     }
-
-    // FIXME dictionary length (number of entries)
 
     throw wrong_type("pmt_length", x);
 }
@@ -986,9 +1004,16 @@ pmt_t reverse(pmt_t listx)
     pmt_t list = listx;
     pmt_t r = PMT_NIL;
 
-    while (is_pair(list)) {
-        r = cons(car(list), r);
-        list = cdr(list);
+    if (is_dict(listx)) {
+        while (is_pair(list)) {
+            r = dcons(car(list), r);
+            list = cdr(list);
+        }
+    } else {
+        while (is_pair(list)) {
+            r = cons(car(list), r);
+            list = cdr(list);
+        }
     }
     if (is_null(list))
         return r;
