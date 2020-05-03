@@ -410,6 +410,12 @@ install(
     DESTINATION ${GR_PKG_DOC_DIR}
 )
 
+install(
+    FILES .clang-format
+    RENAME clang-format.conf
+    DESTINATION ${GR_PKG_DATA_DIR}
+)
+
 ########################################################################
 # The following dependency libraries are needed by all gr modules:
 ########################################################################
