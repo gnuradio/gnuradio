@@ -49,8 +49,8 @@ wavfile_sink::sptr wavfile_sink::make(const char* filename,
                                       int bits_per_sample,
                                       bool append)
 {
-    return gnuradio::get_initial_sptr(new wavfile_sink_impl(
-        filename, n_channels, sample_rate, bits_per_sample, append));
+    return gnuradio::make_block_sptr<wavfile_sink_impl>(
+        filename, n_channels, sample_rate, bits_per_sample, append);
 }
 
 wavfile_sink_impl::wavfile_sink_impl(const char* filename,

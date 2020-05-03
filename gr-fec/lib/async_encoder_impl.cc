@@ -26,8 +26,8 @@ async_encoder::sptr async_encoder::make(generic_encoder::sptr my_encoder,
                                         bool rev_pack,
                                         int mtu)
 {
-    return gnuradio::get_initial_sptr(
-        new async_encoder_impl(my_encoder, packed, rev_unpack, rev_pack, mtu));
+    return gnuradio::make_block_sptr<async_encoder_impl>(
+        my_encoder, packed, rev_unpack, rev_pack, mtu);
 }
 
 async_encoder_impl::async_encoder_impl(generic_encoder::sptr my_encoder,

@@ -22,7 +22,7 @@ namespace blocks {
 template <class T>
 typename integrate<T>::sptr integrate<T>::make(int decim, unsigned int vlen)
 {
-    return gnuradio::get_initial_sptr(new integrate_impl<T>(decim, vlen));
+    return gnuradio::make_block_sptr<integrate_impl<T>>(decim, vlen);
 }
 
 template <class T>

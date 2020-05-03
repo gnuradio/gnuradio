@@ -36,8 +36,8 @@ codec2_decode_ps::sptr codec2_decode_ps::make(int mode)
     bits_per_frame = codec2_bits_per_frame(codec2);
     codec2_destroy(codec2);
 
-    return gnuradio::get_initial_sptr(
-        new codec2_decode_ps_impl(mode, samples_per_frame, bits_per_frame));
+    return gnuradio::make_block_sptr<codec2_decode_ps_impl>(
+        mode, samples_per_frame, bits_per_frame);
 }
 
 

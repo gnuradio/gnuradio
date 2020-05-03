@@ -21,7 +21,7 @@ namespace blocks {
 
 complex_to_float::sptr complex_to_float::make(size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new complex_to_float_impl(vlen));
+    return gnuradio::make_block_sptr<complex_to_float_impl>(vlen);
 }
 
 complex_to_float_impl::complex_to_float_impl(size_t vlen)

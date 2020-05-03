@@ -21,7 +21,7 @@ namespace filter {
 pfb_interpolator_ccf::sptr pfb_interpolator_ccf::make(unsigned int interp,
                                                       const std::vector<float>& taps)
 {
-    return gnuradio::get_initial_sptr(new pfb_interpolator_ccf_impl(interp, taps));
+    return gnuradio::make_block_sptr<pfb_interpolator_ccf_impl>(interp, taps);
 }
 
 

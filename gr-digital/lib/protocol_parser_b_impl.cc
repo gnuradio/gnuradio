@@ -23,7 +23,7 @@ namespace digital {
 
 protocol_parser_b::sptr protocol_parser_b::make(const header_format_base::sptr& format)
 {
-    return gnuradio::get_initial_sptr(new protocol_parser_b_impl(format));
+    return gnuradio::make_block_sptr<protocol_parser_b_impl>(format);
 }
 
 

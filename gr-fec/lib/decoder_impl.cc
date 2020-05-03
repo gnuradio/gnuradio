@@ -23,8 +23,8 @@ decoder::sptr decoder::make(generic_decoder::sptr my_decoder,
                             size_t input_item_size,
                             size_t output_item_size)
 {
-    return gnuradio::get_initial_sptr(
-        new decoder_impl(my_decoder, input_item_size, output_item_size));
+    return gnuradio::make_block_sptr<decoder_impl>(
+        my_decoder, input_item_size, output_item_size);
 }
 
 decoder_impl::decoder_impl(generic_decoder::sptr my_decoder,

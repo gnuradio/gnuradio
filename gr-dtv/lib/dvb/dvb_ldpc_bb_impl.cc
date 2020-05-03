@@ -21,8 +21,8 @@ dvb_ldpc_bb::sptr dvb_ldpc_bb::make(dvb_standard_t standard,
                                     dvb_code_rate_t rate,
                                     dvb_constellation_t constellation)
 {
-    return gnuradio::get_initial_sptr(
-        new dvb_ldpc_bb_impl(standard, framesize, rate, constellation));
+    return gnuradio::make_block_sptr<dvb_ldpc_bb_impl>(
+        standard, framesize, rate, constellation);
 }
 
 /*

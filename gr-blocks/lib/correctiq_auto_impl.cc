@@ -23,8 +23,8 @@ namespace blocks {
 correctiq_auto::sptr
 correctiq_auto::make(double samp_rate, double freq, float gain, float sync_window)
 {
-    return gnuradio::get_initial_sptr(
-        new correctiq_auto_impl(samp_rate, freq, gain, sync_window));
+    return gnuradio::make_block_sptr<correctiq_auto_impl>(
+        samp_rate, freq, gain, sync_window);
 }
 
 /*

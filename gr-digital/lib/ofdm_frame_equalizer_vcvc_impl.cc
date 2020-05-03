@@ -29,8 +29,8 @@ ofdm_frame_equalizer_vcvc::make(ofdm_equalizer_base::sptr equalizer,
                                 bool propagate_channel_state,
                                 int fixed_frame_len)
 {
-    return gnuradio::get_initial_sptr(new ofdm_frame_equalizer_vcvc_impl(
-        equalizer, cp_len, tsb_key, propagate_channel_state, fixed_frame_len));
+    return gnuradio::make_block_sptr<ofdm_frame_equalizer_vcvc_impl>(
+        equalizer, cp_len, tsb_key, propagate_channel_state, fixed_frame_len);
 }
 
 ofdm_frame_equalizer_vcvc_impl::ofdm_frame_equalizer_vcvc_impl(

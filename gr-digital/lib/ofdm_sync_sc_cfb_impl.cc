@@ -30,8 +30,8 @@ namespace digital {
 ofdm_sync_sc_cfb::sptr
 ofdm_sync_sc_cfb::make(int fft_len, int cp_len, bool use_even_carriers, float threshold)
 {
-    return gnuradio::get_initial_sptr(
-        new ofdm_sync_sc_cfb_impl(fft_len, cp_len, use_even_carriers, threshold));
+    return gnuradio::make_block_sptr<ofdm_sync_sc_cfb_impl>(
+        fft_len, cp_len, use_even_carriers, threshold);
 }
 
 ofdm_sync_sc_cfb_impl::ofdm_sync_sc_cfb_impl(int fft_len,

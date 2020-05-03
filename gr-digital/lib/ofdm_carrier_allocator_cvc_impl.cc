@@ -27,14 +27,13 @@ ofdm_carrier_allocator_cvc::sptr ofdm_carrier_allocator_cvc::make(
     const std::string& len_tag_key,
     const bool output_is_shifted)
 {
-    return gnuradio::get_initial_sptr(
-        new ofdm_carrier_allocator_cvc_impl(fft_len,
-                                            occupied_carriers,
-                                            pilot_carriers,
-                                            pilot_symbols,
-                                            sync_words,
-                                            len_tag_key,
-                                            output_is_shifted));
+    return gnuradio::make_block_sptr<ofdm_carrier_allocator_cvc_impl>(fft_len,
+                                                                      occupied_carriers,
+                                                                      pilot_carriers,
+                                                                      pilot_symbols,
+                                                                      sync_words,
+                                                                      len_tag_key,
+                                                                      output_is_shifted);
 }
 
 ofdm_carrier_allocator_cvc_impl::ofdm_carrier_allocator_cvc_impl(

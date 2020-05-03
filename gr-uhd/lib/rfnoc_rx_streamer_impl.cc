@@ -33,8 +33,8 @@ rfnoc_rx_streamer::sptr rfnoc_rx_streamer::make(rfnoc_graph::sptr graph,
                                                 const size_t vlen,
                                                 const bool issue_stream_cmd_on_start)
 {
-    return gnuradio::get_initial_sptr(new rfnoc_rx_streamer_impl(
-        graph, num_chans, stream_args, vlen, issue_stream_cmd_on_start));
+    return gnuradio::make_block_sptr<rfnoc_rx_streamer_impl>(
+        graph, num_chans, stream_args, vlen, issue_stream_cmd_on_start);
 }
 
 

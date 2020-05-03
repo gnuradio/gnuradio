@@ -23,7 +23,7 @@ namespace trellis {
 template <class T>
 typename viterbi<T>::sptr viterbi<T>::make(const fsm& FSM, int K, int S0, int SK)
 {
-    return gnuradio::get_initial_sptr(new viterbi_impl<T>(FSM, K, S0, SK));
+    return gnuradio::make_block_sptr<viterbi_impl<T>>(FSM, K, S0, SK);
 }
 
 template <class T>

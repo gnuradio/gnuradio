@@ -20,7 +20,7 @@ namespace analog {
 
 dpll_bb::sptr dpll_bb::make(float period, float gain)
 {
-    return gnuradio::get_initial_sptr(new dpll_bb_impl(period, gain));
+    return gnuradio::make_block_sptr<dpll_bb_impl>(period, gain);
 }
 
 dpll_bb_impl::dpll_bb_impl(float period, float gain)

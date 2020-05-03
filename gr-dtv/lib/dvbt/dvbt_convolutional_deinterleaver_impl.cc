@@ -23,8 +23,7 @@ const int dvbt_convolutional_deinterleaver_impl::d_MUX_PKT = 8;
 dvbt_convolutional_deinterleaver::sptr
 dvbt_convolutional_deinterleaver::make(int nsize, int I, int M)
 {
-    return gnuradio::get_initial_sptr(
-        new dvbt_convolutional_deinterleaver_impl(nsize, I, M));
+    return gnuradio::make_block_sptr<dvbt_convolutional_deinterleaver_impl>(nsize, I, M);
 }
 
 /*

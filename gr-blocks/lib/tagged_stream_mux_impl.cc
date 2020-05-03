@@ -22,8 +22,8 @@ tagged_stream_mux::sptr tagged_stream_mux::make(size_t itemsize,
                                                 const std::string& lengthtagname,
                                                 unsigned int tag_preserve_head_pos)
 {
-    return gnuradio::get_initial_sptr(
-        new tagged_stream_mux_impl(itemsize, lengthtagname, tag_preserve_head_pos));
+    return gnuradio::make_block_sptr<tagged_stream_mux_impl>(
+        itemsize, lengthtagname, tag_preserve_head_pos);
 }
 
 tagged_stream_mux_impl::tagged_stream_mux_impl(size_t itemsize,

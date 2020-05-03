@@ -23,8 +23,8 @@ dvbt_demap::sptr dvbt_demap::make(int nsize,
                                   dvbt_transmission_mode_t transmission,
                                   float gain)
 {
-    return gnuradio::get_initial_sptr(
-        new dvbt_demap_impl(nsize, constellation, hierarchy, transmission, gain));
+    return gnuradio::make_block_sptr<dvbt_demap_impl>(
+        nsize, constellation, hierarchy, transmission, gain);
 }
 
 /*

@@ -20,8 +20,7 @@ namespace blocks {
 
 probe_rate::sptr probe_rate::make(size_t itemsize, double update_rate_ms, double alpha)
 {
-    return gnuradio::get_initial_sptr(
-        new probe_rate_impl(itemsize, update_rate_ms, alpha));
+    return gnuradio::make_block_sptr<probe_rate_impl>(itemsize, update_rate_ms, alpha);
 }
 
 probe_rate_impl::probe_rate_impl(size_t itemsize, double update_rate_ms, double alpha)

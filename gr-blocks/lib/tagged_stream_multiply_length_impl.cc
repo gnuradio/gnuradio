@@ -21,8 +21,8 @@ namespace blocks {
 tagged_stream_multiply_length::sptr tagged_stream_multiply_length::make(
     size_t itemsize, const std::string& lengthtagname, double scalar)
 {
-    return gnuradio::get_initial_sptr(
-        new tagged_stream_multiply_length_impl(itemsize, lengthtagname, scalar));
+    return gnuradio::make_block_sptr<tagged_stream_multiply_length_impl>(
+        itemsize, lengthtagname, scalar);
 }
 
 tagged_stream_multiply_length_impl::tagged_stream_multiply_length_impl(

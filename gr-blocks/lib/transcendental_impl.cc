@@ -104,8 +104,8 @@ transcendental::sptr transcendental::make(const std::string& name,
         throw std::runtime_error("could not find transcendental function for " + key);
 
     // make a new block with found work function
-    return gnuradio::get_initial_sptr(
-        new transcendental_impl(get_map()[key].work_fcn, get_map()[key].io_size));
+    return gnuradio::make_block_sptr<transcendental_impl>(get_map()[key].work_fcn,
+                                                          get_map()[key].io_size);
 }
 
 transcendental_impl::transcendental_impl(const work_fcn_type& work_fcn,

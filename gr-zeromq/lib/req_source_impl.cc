@@ -22,8 +22,8 @@ namespace zeromq {
 req_source::sptr req_source::make(
     size_t itemsize, size_t vlen, char* address, int timeout, bool pass_tags, int hwm)
 {
-    return gnuradio::get_initial_sptr(
-        new req_source_impl(itemsize, vlen, address, timeout, pass_tags, hwm));
+    return gnuradio::make_block_sptr<req_source_impl>(
+        itemsize, vlen, address, timeout, pass_tags, hwm);
 }
 
 req_source_impl::req_source_impl(

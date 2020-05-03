@@ -29,18 +29,17 @@ dvbt_demod_reference_signals::make(int itemsize,
                                    int include_cell_id,
                                    int cell_id)
 {
-    return gnuradio::get_initial_sptr(
-        new dvbt_demod_reference_signals_impl(itemsize,
-                                              ninput,
-                                              noutput,
-                                              constellation,
-                                              hierarchy,
-                                              code_rate_HP,
-                                              code_rate_LP,
-                                              guard_interval,
-                                              transmission_mode,
-                                              include_cell_id,
-                                              cell_id));
+    return gnuradio::make_block_sptr<dvbt_demod_reference_signals_impl>(itemsize,
+                                                                        ninput,
+                                                                        noutput,
+                                                                        constellation,
+                                                                        hierarchy,
+                                                                        code_rate_HP,
+                                                                        code_rate_LP,
+                                                                        guard_interval,
+                                                                        transmission_mode,
+                                                                        include_cell_id,
+                                                                        cell_id);
 }
 
 /*

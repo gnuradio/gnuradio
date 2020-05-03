@@ -21,7 +21,7 @@ namespace digital {
 
 hdlc_deframer_bp::sptr hdlc_deframer_bp::make(int length_min = 32, int length_max = 500)
 {
-    return gnuradio::get_initial_sptr(new hdlc_deframer_bp_impl(length_min, length_max));
+    return gnuradio::make_block_sptr<hdlc_deframer_bp_impl>(length_min, length_max);
 }
 
 /*

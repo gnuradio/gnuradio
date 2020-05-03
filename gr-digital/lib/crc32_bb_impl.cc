@@ -20,7 +20,7 @@ namespace digital {
 
 crc32_bb::sptr crc32_bb::make(bool check, const std::string& lengthtagname, bool packed)
 {
-    return gnuradio::get_initial_sptr(new crc32_bb_impl(check, lengthtagname, packed));
+    return gnuradio::make_block_sptr<crc32_bb_impl>(check, lengthtagname, packed);
 }
 
 crc32_bb_impl::crc32_bb_impl(bool check, const std::string& lengthtagname, bool packed)

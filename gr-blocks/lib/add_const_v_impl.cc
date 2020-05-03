@@ -21,7 +21,7 @@ namespace blocks {
 template <class T>
 typename add_const_v<T>::sptr add_const_v<T>::make(std::vector<T> k)
 {
-    return gnuradio::get_initial_sptr(new add_const_v_impl<T>(k));
+    return gnuradio::make_block_sptr<add_const_v_impl<T>>(k);
 }
 
 template <class T>

@@ -20,7 +20,7 @@ namespace fft {
 
 goertzel_fc::sptr goertzel_fc::make(int rate, int len, float freq)
 {
-    return gnuradio::get_initial_sptr(new goertzel_fc_impl(rate, len, freq));
+    return gnuradio::make_block_sptr<goertzel_fc_impl>(rate, len, freq);
 }
 
 goertzel_fc_impl::goertzel_fc_impl(int rate, int len, float freq)

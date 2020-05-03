@@ -34,10 +34,8 @@ class GR_RUNTIME_API hier_block2 : public basic_block
 {
 private:
     friend class hier_block2_detail;
-    friend GR_RUNTIME_API hier_block2_sptr
-    make_hier_block2(const std::string& name,
-                     gr::io_signature::sptr input_signature,
-                     gr::io_signature::sptr output_signature);
+    template <typename T, typename... Args>
+    friend std::shared_ptr<T> gnuradio::make_block_sptr(Args&&... args);
 
     /*!
      * \brief Private implementation details of gr::hier_block2.

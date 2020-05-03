@@ -22,7 +22,7 @@ namespace blocks {
 
 complex_to_arg::sptr complex_to_arg::make(size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new complex_to_arg_impl(vlen));
+    return gnuradio::make_block_sptr<complex_to_arg_impl>(vlen);
 }
 
 complex_to_arg_impl::complex_to_arg_impl(size_t vlen)

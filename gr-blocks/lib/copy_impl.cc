@@ -21,7 +21,7 @@ namespace blocks {
 
 copy::sptr copy::make(size_t itemsize)
 {
-    return gnuradio::get_initial_sptr(new copy_impl(itemsize));
+    return gnuradio::make_block_sptr<copy_impl>(itemsize);
 }
 
 copy_impl::copy_impl(size_t itemsize)

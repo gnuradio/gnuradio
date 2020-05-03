@@ -23,8 +23,8 @@ namespace network {
 tcp_sink::sptr tcp_sink::make(
     size_t itemsize, size_t veclen, const std::string& host, int port, int sinkmode)
 {
-    return gnuradio::get_initial_sptr(
-        new tcp_sink_impl(itemsize, veclen, host, port, sinkmode));
+    return gnuradio::make_block_sptr<tcp_sink_impl>(
+        itemsize, veclen, host, port, sinkmode);
 }
 
 /*

@@ -203,8 +203,7 @@ multiply_matrix<T>::make(std::vector<std::vector<T>> A,
     if (A.empty() || A[0].empty()) {
         throw std::invalid_argument("matrix A has invalid dimensions.");
     }
-    return gnuradio::get_initial_sptr(
-        new multiply_matrix_impl<T>(A, tag_propagation_policy));
+    return gnuradio::make_block_sptr<multiply_matrix_impl<T>>(A, tag_propagation_policy);
 }
 
 template <>

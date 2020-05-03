@@ -30,7 +30,7 @@ namespace dtv {
 
 atsc_fs_checker::sptr atsc_fs_checker::make()
 {
-    return gnuradio::get_initial_sptr(new atsc_fs_checker_impl());
+    return gnuradio::make_block_sptr<atsc_fs_checker_impl>();
 }
 
 atsc_fs_checker_impl::atsc_fs_checker_impl()

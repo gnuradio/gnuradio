@@ -25,8 +25,8 @@ namespace digital {
 correlate_access_code_bb::sptr
 correlate_access_code_bb::make(const std::string& access_code, int threshold)
 {
-    return gnuradio::get_initial_sptr(
-        new correlate_access_code_bb_impl(access_code, threshold));
+    return gnuradio::make_block_sptr<correlate_access_code_bb_impl>(access_code,
+                                                                    threshold);
 }
 
 correlate_access_code_bb_impl::correlate_access_code_bb_impl(

@@ -24,8 +24,8 @@ sro_model::sptr sro_model::make(double sample_rate_hz,
                                 double max_dev_hz,
                                 double noise_seed)
 {
-    return gnuradio::get_initial_sptr(
-        new sro_model_impl(sample_rate_hz, std_dev_hz, max_dev_hz, noise_seed));
+    return gnuradio::make_block_sptr<sro_model_impl>(
+        sample_rate_hz, std_dev_hz, max_dev_hz, noise_seed);
 }
 
 sro_model_impl::sro_model_impl(double sample_rate_hz,

@@ -21,7 +21,7 @@ namespace blocks {
 template <class T>
 typename argmax<T>::sptr argmax<T>::make(size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new argmax_impl<T>(vlen));
+    return gnuradio::make_block_sptr<argmax_impl<T>>(vlen);
 }
 
 template <class T>

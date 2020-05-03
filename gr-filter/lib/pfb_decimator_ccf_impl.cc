@@ -27,8 +27,8 @@ pfb_decimator_ccf::sptr pfb_decimator_ccf::make(unsigned int decim,
                                                 bool use_fft_rotator,
                                                 bool use_fft_filters)
 {
-    return gnuradio::get_initial_sptr(new pfb_decimator_ccf_impl(
-        decim, taps, channel, use_fft_rotator, use_fft_filters));
+    return gnuradio::make_block_sptr<pfb_decimator_ccf_impl>(
+        decim, taps, channel, use_fft_rotator, use_fft_filters);
 }
 
 pfb_decimator_ccf_impl::pfb_decimator_ccf_impl(unsigned int decim,

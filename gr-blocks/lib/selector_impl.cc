@@ -23,8 +23,7 @@ namespace blocks {
 selector::sptr
 selector::make(size_t itemsize, unsigned int input_index, unsigned int output_index)
 {
-    return gnuradio::get_initial_sptr(
-        new selector_impl(itemsize, input_index, output_index));
+    return gnuradio::make_block_sptr<selector_impl>(itemsize, input_index, output_index);
 }
 
 selector_impl::selector_impl(size_t itemsize,

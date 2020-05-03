@@ -28,14 +28,14 @@ udp_source::sptr udp_source::make(size_t itemsize,
                                   bool source_zeros,
                                   bool ipv6)
 {
-    return gnuradio::get_initial_sptr(new udp_source_impl(itemsize,
-                                                          veclen,
-                                                          port,
-                                                          header_type,
-                                                          payloadsize,
-                                                          notify_missed,
-                                                          source_zeros,
-                                                          ipv6));
+    return gnuradio::make_block_sptr<udp_source_impl>(itemsize,
+                                                      veclen,
+                                                      port,
+                                                      header_type,
+                                                      payloadsize,
+                                                      notify_missed,
+                                                      source_zeros,
+                                                      ipv6);
 }
 
 /*

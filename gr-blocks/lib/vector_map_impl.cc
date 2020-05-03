@@ -42,7 +42,7 @@ vector_map::sptr vector_map::make(size_t item_size,
                                   std::vector<size_t> in_vlens,
                                   std::vector<std::vector<std::vector<size_t>>> mapping)
 {
-    return gnuradio::get_initial_sptr(new vector_map_impl(item_size, in_vlens, mapping));
+    return gnuradio::make_block_sptr<vector_map_impl>(item_size, in_vlens, mapping);
 }
 
 vector_map_impl::vector_map_impl(size_t item_size,

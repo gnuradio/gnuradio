@@ -22,7 +22,7 @@ namespace blocks {
 
 float_to_int::sptr float_to_int::make(size_t vlen, float scale)
 {
-    return gnuradio::get_initial_sptr(new float_to_int_impl(vlen, scale));
+    return gnuradio::make_block_sptr<float_to_int_impl>(vlen, scale);
 }
 
 float_to_int_impl::float_to_int_impl(size_t vlen, float scale)

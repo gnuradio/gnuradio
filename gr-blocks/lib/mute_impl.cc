@@ -24,7 +24,7 @@ namespace blocks {
 template <class T>
 typename mute_blk<T>::sptr mute_blk<T>::make(bool mute)
 {
-    return gnuradio::get_initial_sptr(new mute_impl<T>(mute));
+    return gnuradio::make_block_sptr<mute_impl<T>>(mute);
 }
 
 template <class T>

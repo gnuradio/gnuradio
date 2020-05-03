@@ -21,7 +21,7 @@ namespace analog {
 
 simple_squelch_cc::sptr simple_squelch_cc::make(double threshold_db, double alpha)
 {
-    return gnuradio::get_initial_sptr(new simple_squelch_cc_impl(threshold_db, alpha));
+    return gnuradio::make_block_sptr<simple_squelch_cc_impl>(threshold_db, alpha);
 }
 
 simple_squelch_cc_impl::simple_squelch_cc_impl(double threshold_db, double alpha)

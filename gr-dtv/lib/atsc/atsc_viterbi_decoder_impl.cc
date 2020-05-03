@@ -22,7 +22,7 @@ namespace dtv {
 
 atsc_viterbi_decoder::sptr atsc_viterbi_decoder::make()
 {
-    return gnuradio::get_initial_sptr(new atsc_viterbi_decoder_impl());
+    return gnuradio::make_block_sptr<atsc_viterbi_decoder_impl>();
 }
 
 atsc_viterbi_decoder_impl::atsc_viterbi_decoder_impl()

@@ -33,8 +33,8 @@ time_sink_c::sptr time_sink_c::make(int size,
                                     unsigned int nconnections,
                                     QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(
-        new time_sink_c_impl(size, samp_rate, name, nconnections, parent));
+    return gnuradio::make_block_sptr<time_sink_c_impl>(
+        size, samp_rate, name, nconnections, parent);
 }
 
 time_sink_c_impl::time_sink_c_impl(int size,

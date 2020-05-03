@@ -22,7 +22,7 @@ namespace filter {
 hilbert_fc::sptr
 hilbert_fc::make(unsigned int ntaps, firdes::win_type window, double beta)
 {
-    return gnuradio::get_initial_sptr(new hilbert_fc_impl(ntaps, window, beta));
+    return gnuradio::make_block_sptr<hilbert_fc_impl>(ntaps, window, beta);
 }
 
 hilbert_fc_impl::hilbert_fc_impl(unsigned int ntaps, firdes::win_type window, double beta)

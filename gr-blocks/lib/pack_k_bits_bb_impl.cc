@@ -22,7 +22,7 @@ namespace blocks {
 
 pack_k_bits_bb::sptr pack_k_bits_bb::make(unsigned k)
 {
-    return gnuradio::get_initial_sptr(new pack_k_bits_bb_impl(k));
+    return gnuradio::make_block_sptr<pack_k_bits_bb_impl>(k);
 }
 
 pack_k_bits_bb_impl::pack_k_bits_bb_impl(unsigned k)

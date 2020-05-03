@@ -26,8 +26,8 @@ socket_pdu::sptr socket_pdu::make(std::string type,
                                   int MTU /*= 10000*/,
                                   bool tcp_no_delay /*= false*/)
 {
-    return gnuradio::get_initial_sptr(
-        new socket_pdu_impl(type, addr, port, MTU, tcp_no_delay));
+    return gnuradio::make_block_sptr<socket_pdu_impl>(
+        type, addr, port, MTU, tcp_no_delay);
 }
 
 socket_pdu_impl::socket_pdu_impl(std::string type,

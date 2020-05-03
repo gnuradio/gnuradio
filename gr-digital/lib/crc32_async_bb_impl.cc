@@ -21,7 +21,7 @@ namespace digital {
 
 crc32_async_bb::sptr crc32_async_bb::make(bool check)
 {
-    return gnuradio::get_initial_sptr(new crc32_async_bb_impl(check));
+    return gnuradio::make_block_sptr<crc32_async_bb_impl>(check);
 }
 
 crc32_async_bb_impl::crc32_async_bb_impl(bool check)

@@ -27,8 +27,8 @@ pub_sink::sptr pub_sink::make(size_t itemsize,
                               int hwm,
                               const std::string& key)
 {
-    return gnuradio::get_initial_sptr(
-        new pub_sink_impl(itemsize, vlen, address, timeout, pass_tags, hwm, key));
+    return gnuradio::make_block_sptr<pub_sink_impl>(
+        itemsize, vlen, address, timeout, pass_tags, hwm, key);
 }
 
 pub_sink_impl::pub_sink_impl(size_t itemsize,

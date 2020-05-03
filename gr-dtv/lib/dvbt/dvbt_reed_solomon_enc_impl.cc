@@ -23,8 +23,8 @@ static const int rs_init_prim = 1; // primitive is 1 (alpha)
 dvbt_reed_solomon_enc::sptr dvbt_reed_solomon_enc::make(
     int p, int m, int gfpoly, int n, int k, int t, int s, int blocks)
 {
-    return gnuradio::get_initial_sptr(
-        new dvbt_reed_solomon_enc_impl(p, m, gfpoly, n, k, t, s, blocks));
+    return gnuradio::make_block_sptr<dvbt_reed_solomon_enc_impl>(
+        p, m, gfpoly, n, k, t, s, blocks);
 }
 
 /*

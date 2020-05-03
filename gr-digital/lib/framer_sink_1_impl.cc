@@ -52,7 +52,7 @@ inline void framer_sink_1_impl::enter_have_header(int payload_len, int whitener_
 
 framer_sink_1::sptr framer_sink_1::make(msg_queue::sptr target_queue)
 {
-    return gnuradio::get_initial_sptr(new framer_sink_1_impl(target_queue));
+    return gnuradio::make_block_sptr<framer_sink_1_impl>(target_queue);
 }
 
 framer_sink_1_impl::framer_sink_1_impl(msg_queue::sptr target_queue)

@@ -22,8 +22,7 @@ namespace filter {
 pfb_arb_resampler_ccc::sptr pfb_arb_resampler_ccc::make(
     float rate, const std::vector<gr_complex>& taps, unsigned int filter_size)
 {
-    return gnuradio::get_initial_sptr(
-        new pfb_arb_resampler_ccc_impl(rate, taps, filter_size));
+    return gnuradio::make_block_sptr<pfb_arb_resampler_ccc_impl>(rate, taps, filter_size);
 }
 
 

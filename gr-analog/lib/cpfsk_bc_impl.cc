@@ -20,7 +20,7 @@ namespace analog {
 
 cpfsk_bc::sptr cpfsk_bc::make(float k, float ampl, int samples_per_sym)
 {
-    return gnuradio::get_initial_sptr(new cpfsk_bc_impl(k, ampl, samples_per_sym));
+    return gnuradio::make_block_sptr<cpfsk_bc_impl>(k, ampl, samples_per_sym);
 }
 
 cpfsk_bc_impl::cpfsk_bc_impl(float k, float ampl, int samples_per_sym)

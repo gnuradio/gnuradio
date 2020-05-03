@@ -68,8 +68,8 @@ packet_sink::sptr packet_sink::make(const std::vector<unsigned char>& sync_vecto
                                     msg_queue::sptr target_queue,
                                     int threshold)
 {
-    return gnuradio::get_initial_sptr(
-        new packet_sink_impl(sync_vector, target_queue, threshold));
+    return gnuradio::make_block_sptr<packet_sink_impl>(
+        sync_vector, target_queue, threshold);
 }
 
 packet_sink_impl::packet_sink_impl(const std::vector<unsigned char>& sync_vector,

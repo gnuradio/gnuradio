@@ -26,8 +26,7 @@ template <class T>
 typename fastnoise_source<T>::sptr
 fastnoise_source<T>::make(noise_type_t type, float ampl, long seed, long samples)
 {
-    return gnuradio::get_initial_sptr(
-        new fastnoise_source_impl<T>(type, ampl, seed, samples));
+    return gnuradio::make_block_sptr<fastnoise_source_impl<T>>(type, ampl, seed, samples);
 }
 
 template <>

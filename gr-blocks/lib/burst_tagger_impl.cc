@@ -21,7 +21,7 @@ namespace blocks {
 
 burst_tagger::sptr burst_tagger::make(size_t itemsize)
 {
-    return gnuradio::get_initial_sptr(new burst_tagger_impl(itemsize));
+    return gnuradio::make_block_sptr<burst_tagger_impl>(itemsize);
 }
 
 burst_tagger_impl::burst_tagger_impl(size_t itemsize)

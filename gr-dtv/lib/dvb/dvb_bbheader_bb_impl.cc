@@ -25,8 +25,8 @@ dvb_bbheader_bb::sptr dvb_bbheader_bb::make(dvb_standard_t standard,
                                             int fecblocks,
                                             int tsrate)
 {
-    return gnuradio::get_initial_sptr(new dvb_bbheader_bb_impl(
-        standard, framesize, rate, rolloff, mode, inband, fecblocks, tsrate));
+    return gnuradio::make_block_sptr<dvb_bbheader_bb_impl>(
+        standard, framesize, rate, rolloff, mode, inband, fecblocks, tsrate);
 }
 
 /*

@@ -26,7 +26,7 @@ namespace blocks {
 
 annotator_raw::sptr annotator_raw::make(size_t sizeof_stream_item)
 {
-    return gnuradio::get_initial_sptr(new annotator_raw_impl(sizeof_stream_item));
+    return gnuradio::make_block_sptr<annotator_raw_impl>(sizeof_stream_item);
 }
 
 annotator_raw_impl::annotator_raw_impl(size_t sizeof_stream_item)

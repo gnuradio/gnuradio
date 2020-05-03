@@ -23,8 +23,8 @@ namespace blocks {
 peak_detector2_fb::sptr
 peak_detector2_fb::make(float threshold_factor_rise, int look_ahead, float alpha)
 {
-    return gnuradio::get_initial_sptr(
-        new peak_detector2_fb_impl(threshold_factor_rise, look_ahead, alpha));
+    return gnuradio::make_block_sptr<peak_detector2_fb_impl>(
+        threshold_factor_rise, look_ahead, alpha);
 }
 
 peak_detector2_fb_impl::peak_detector2_fb_impl(float threshold_factor_rise,

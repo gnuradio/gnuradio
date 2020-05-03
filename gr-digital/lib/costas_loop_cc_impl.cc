@@ -24,7 +24,7 @@ namespace digital {
 
 costas_loop_cc::sptr costas_loop_cc::make(float loop_bw, unsigned int order, bool use_snr)
 {
-    return gnuradio::get_initial_sptr(new costas_loop_cc_impl(loop_bw, order, use_snr));
+    return gnuradio::make_block_sptr<costas_loop_cc_impl>(loop_bw, order, use_snr);
 }
 
 static int ios[] = { sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float) };

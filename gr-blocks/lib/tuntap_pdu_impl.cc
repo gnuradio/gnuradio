@@ -33,7 +33,7 @@ namespace blocks {
 tuntap_pdu::sptr tuntap_pdu::make(std::string dev, int MTU, bool istunflag)
 {
 #if (defined(linux) || defined(__linux) || defined(__linux__))
-    return gnuradio::get_initial_sptr(new tuntap_pdu_impl(dev, MTU, istunflag));
+    return gnuradio::make_block_sptr<tuntap_pdu_impl>(dev, MTU, istunflag);
 #else
     throw std::runtime_error("tuntap_pdu not implemented on this platform");
 #endif

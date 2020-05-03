@@ -24,8 +24,8 @@ message_strobe_random::make(pmt::pmt_t msg,
                             float mean_ms,
                             float std_ms)
 {
-    return gnuradio::get_initial_sptr(
-        new message_strobe_random_impl(msg, dist, mean_ms, std_ms));
+    return gnuradio::make_block_sptr<message_strobe_random_impl>(
+        msg, dist, mean_ms, std_ms);
 }
 
 

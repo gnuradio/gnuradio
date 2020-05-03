@@ -18,7 +18,7 @@ namespace dtv {
 
 catv_trellis_enc_bb::sptr catv_trellis_enc_bb::make(catv_constellation_t constellation)
 {
-    return gnuradio::get_initial_sptr(new catv_trellis_enc_bb_impl(constellation));
+    return gnuradio::make_block_sptr<catv_trellis_enc_bb_impl>(constellation);
 }
 
 /*

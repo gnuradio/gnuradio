@@ -21,7 +21,7 @@ namespace digital {
 constellation_decoder_cb::sptr
 constellation_decoder_cb::make(constellation_sptr constellation)
 {
-    return gnuradio::get_initial_sptr(new constellation_decoder_cb_impl(constellation));
+    return gnuradio::make_block_sptr<constellation_decoder_cb_impl>(constellation);
 }
 
 constellation_decoder_cb_impl::constellation_decoder_cb_impl(

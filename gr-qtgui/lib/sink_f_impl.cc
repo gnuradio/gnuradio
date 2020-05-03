@@ -35,16 +35,16 @@ sink_f::sptr sink_f::make(int fftsize,
                           bool plotconst,
                           QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(new sink_f_impl(fftsize,
-                                                      wintype,
-                                                      fc,
-                                                      bw,
-                                                      name,
-                                                      plotfreq,
-                                                      plotwaterfall,
-                                                      plottime,
-                                                      plotconst,
-                                                      parent));
+    return gnuradio::make_block_sptr<sink_f_impl>(fftsize,
+                                                  wintype,
+                                                  fc,
+                                                  bw,
+                                                  name,
+                                                  plotfreq,
+                                                  plotwaterfall,
+                                                  plottime,
+                                                  plotconst,
+                                                  parent);
 }
 
 sink_f_impl::sink_f_impl(int fftsize,

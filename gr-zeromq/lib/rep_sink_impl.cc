@@ -22,8 +22,8 @@ namespace zeromq {
 rep_sink::sptr rep_sink::make(
     size_t itemsize, size_t vlen, char* address, int timeout, bool pass_tags, int hwm)
 {
-    return gnuradio::get_initial_sptr(
-        new rep_sink_impl(itemsize, vlen, address, timeout, pass_tags, hwm));
+    return gnuradio::make_block_sptr<rep_sink_impl>(
+        itemsize, vlen, address, timeout, pass_tags, hwm);
 }
 
 rep_sink_impl::rep_sink_impl(

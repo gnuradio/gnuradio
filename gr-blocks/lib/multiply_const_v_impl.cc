@@ -22,7 +22,7 @@ namespace blocks {
 template <class T>
 typename multiply_const_v<T>::sptr multiply_const_v<T>::make(std::vector<T> k)
 {
-    return gnuradio::get_initial_sptr(new multiply_const_v_impl<T>(k));
+    return gnuradio::make_block_sptr<multiply_const_v_impl<T>>(k);
 }
 
 template <>

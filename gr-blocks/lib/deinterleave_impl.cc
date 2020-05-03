@@ -20,7 +20,7 @@ namespace blocks {
 
 deinterleave::sptr deinterleave::make(size_t itemsize, unsigned int blocksize)
 {
-    return gnuradio::get_initial_sptr(new deinterleave_impl(itemsize, blocksize));
+    return gnuradio::make_block_sptr<deinterleave_impl>(itemsize, blocksize);
 }
 
 deinterleave_impl::deinterleave_impl(size_t itemsize, unsigned int blocksize)

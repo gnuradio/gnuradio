@@ -21,8 +21,8 @@ namespace blocks {
 tag_share::sptr
 tag_share::make(size_t sizeof_io_item, size_t sizeof_share_item, size_t vlen)
 {
-    return gnuradio::get_initial_sptr(
-        new tag_share_impl(sizeof_io_item, sizeof_share_item, vlen));
+    return gnuradio::make_block_sptr<tag_share_impl>(
+        sizeof_io_item, sizeof_share_item, vlen);
 }
 
 /*

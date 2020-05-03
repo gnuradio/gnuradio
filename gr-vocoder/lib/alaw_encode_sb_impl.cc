@@ -25,7 +25,7 @@ extern "C" {
 
 alaw_encode_sb::sptr alaw_encode_sb::make()
 {
-    return gnuradio::get_initial_sptr(new alaw_encode_sb_impl());
+    return gnuradio::make_block_sptr<alaw_encode_sb_impl>();
 }
 
 alaw_encode_sb_impl::alaw_encode_sb_impl()

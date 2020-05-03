@@ -40,7 +40,7 @@ namespace blocks {
 
 wavfile_source::sptr wavfile_source::make(const char* filename, bool repeat)
 {
-    return gnuradio::get_initial_sptr(new wavfile_source_impl(filename, repeat));
+    return gnuradio::make_block_sptr<wavfile_source_impl>(filename, repeat);
 }
 
 wavfile_source_impl::wavfile_source_impl(const char* filename, bool repeat)

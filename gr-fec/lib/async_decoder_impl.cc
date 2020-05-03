@@ -23,8 +23,8 @@ namespace fec {
 async_decoder::sptr
 async_decoder::make(generic_decoder::sptr my_decoder, bool packed, bool rev_pack, int mtu)
 {
-    return gnuradio::get_initial_sptr(
-        new async_decoder_impl(my_decoder, packed, rev_pack, mtu));
+    return gnuradio::make_block_sptr<async_decoder_impl>(
+        my_decoder, packed, rev_pack, mtu);
 }
 
 async_decoder_impl::async_decoder_impl(generic_decoder::sptr my_decoder,

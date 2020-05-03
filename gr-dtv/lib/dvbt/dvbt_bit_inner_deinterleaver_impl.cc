@@ -27,8 +27,8 @@ dvbt_bit_inner_deinterleaver::make(int nsize,
                                    dvbt_hierarchy_t hierarchy,
                                    dvbt_transmission_mode_t transmission)
 {
-    return gnuradio::get_initial_sptr(new dvbt_bit_inner_deinterleaver_impl(
-        nsize, constellation, hierarchy, transmission));
+    return gnuradio::make_block_sptr<dvbt_bit_inner_deinterleaver_impl>(
+        nsize, constellation, hierarchy, transmission);
 }
 
 /*

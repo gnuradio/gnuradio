@@ -29,7 +29,9 @@ gr_derived_block_sptr gr_make_derived_block();
 class gr_derived_block : public gr::hier_block2
 {
 private:
-    friend gr_derived_block_sptr gr_make_derived_block();
+    template <typename T, typename... Args>
+    friend std::shared_ptr<T> gnuradio::make_block_sptr(Args&&... args);
+
     gr_derived_block();
 
 public:
@@ -39,7 +41,7 @@ public:
 
 gr_derived_block_sptr gr_make_derived_block()
 {
-    return gnuradio::get_initial_sptr(new gr_derived_block());
+    return gnuradio::make_block_sptr<gr_derived_block>();
 }
 
 gr_derived_block::gr_derived_block()

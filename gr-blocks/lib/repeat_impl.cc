@@ -20,7 +20,7 @@ namespace blocks {
 
 repeat::sptr repeat::make(size_t itemsize, int interp)
 {
-    return gnuradio::get_initial_sptr(new repeat_impl(itemsize, interp));
+    return gnuradio::make_block_sptr<repeat_impl>(itemsize, interp);
 }
 
 repeat_impl::repeat_impl(size_t itemsize, int interp)

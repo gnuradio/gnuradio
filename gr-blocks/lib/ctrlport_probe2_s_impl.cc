@@ -23,8 +23,7 @@ ctrlport_probe2_s::sptr ctrlport_probe2_s::make(const std::string& id,
                                                 int len,
                                                 unsigned disp_mask)
 {
-    return gnuradio::get_initial_sptr(
-        new ctrlport_probe2_s_impl(id, desc, len, disp_mask));
+    return gnuradio::make_block_sptr<ctrlport_probe2_s_impl>(id, desc, len, disp_mask);
 }
 
 ctrlport_probe2_s_impl::ctrlport_probe2_s_impl(const std::string& id,

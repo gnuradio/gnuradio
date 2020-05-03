@@ -34,8 +34,8 @@ freq_sink_f::sptr freq_sink_f::make(int fftsize,
                                     int nconnections,
                                     QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(
-        new freq_sink_f_impl(fftsize, wintype, fc, bw, name, nconnections, parent));
+    return gnuradio::make_block_sptr<freq_sink_f_impl>(
+        fftsize, wintype, fc, bw, name, nconnections, parent);
 }
 
 freq_sink_f_impl::freq_sink_f_impl(int fftsize,

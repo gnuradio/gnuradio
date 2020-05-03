@@ -27,8 +27,8 @@ pfb_channelizer_ccf::sptr pfb_channelizer_ccf::make(unsigned int nfilts,
                                                     const std::vector<float>& taps,
                                                     float oversample_rate)
 {
-    return gnuradio::get_initial_sptr(
-        new pfb_channelizer_ccf_impl(nfilts, taps, oversample_rate));
+    return gnuradio::make_block_sptr<pfb_channelizer_ccf_impl>(
+        nfilts, taps, oversample_rate);
 }
 
 pfb_channelizer_ccf_impl::pfb_channelizer_ccf_impl(unsigned int nfilts,

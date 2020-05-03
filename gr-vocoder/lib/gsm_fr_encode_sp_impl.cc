@@ -22,7 +22,7 @@ namespace vocoder {
 
 gsm_fr_encode_sp::sptr gsm_fr_encode_sp::make()
 {
-    return gnuradio::get_initial_sptr(new gsm_fr_encode_sp_impl());
+    return gnuradio::make_block_sptr<gsm_fr_encode_sp_impl>();
 }
 
 gsm_fr_encode_sp_impl::gsm_fr_encode_sp_impl()

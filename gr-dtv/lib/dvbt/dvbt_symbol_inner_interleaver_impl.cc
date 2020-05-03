@@ -78,8 +78,8 @@ int dvbt_symbol_inner_interleaver_impl::calculate_R(int i)
 dvbt_symbol_inner_interleaver::sptr dvbt_symbol_inner_interleaver::make(
     int nsize, dvbt_transmission_mode_t transmission, int direction)
 {
-    return gnuradio::get_initial_sptr(
-        new dvbt_symbol_inner_interleaver_impl(nsize, transmission, direction));
+    return gnuradio::make_block_sptr<dvbt_symbol_inner_interleaver_impl>(
+        nsize, transmission, direction);
 }
 
 /*

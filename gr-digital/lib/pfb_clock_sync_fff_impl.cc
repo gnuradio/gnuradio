@@ -30,8 +30,8 @@ pfb_clock_sync_fff::sptr pfb_clock_sync_fff::make(double sps,
                                                   float max_rate_deviation,
                                                   int osps)
 {
-    return gnuradio::get_initial_sptr(new pfb_clock_sync_fff_impl(
-        sps, gain, taps, filter_size, init_phase, max_rate_deviation, osps));
+    return gnuradio::make_block_sptr<pfb_clock_sync_fff_impl>(
+        sps, gain, taps, filter_size, init_phase, max_rate_deviation, osps);
 }
 
 static int ios[] = { sizeof(float), sizeof(float), sizeof(float), sizeof(float) };

@@ -21,7 +21,7 @@ namespace blocks {
 
 magphase_to_complex::sptr magphase_to_complex::make(size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new magphase_to_complex_impl(vlen));
+    return gnuradio::make_block_sptr<magphase_to_complex_impl>(vlen);
 }
 
 magphase_to_complex_impl::magphase_to_complex_impl(size_t vlen)

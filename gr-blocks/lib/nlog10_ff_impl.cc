@@ -22,7 +22,7 @@ namespace blocks {
 
 nlog10_ff::sptr nlog10_ff::make(float n, size_t vlen, float k)
 {
-    return gnuradio::get_initial_sptr(new nlog10_ff_impl(n, vlen, k));
+    return gnuradio::make_block_sptr<nlog10_ff_impl>(n, vlen, k);
 }
 
 nlog10_ff_impl::nlog10_ff_impl(float n, size_t vlen, float k)

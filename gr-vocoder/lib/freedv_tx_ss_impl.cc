@@ -43,8 +43,7 @@ namespace vocoder {
 freedv_tx_ss::sptr
 freedv_tx_ss::make(int mode, const std::string msg_txt, int interleave_frames)
 {
-    return gnuradio::get_initial_sptr(
-        new freedv_tx_ss_impl(mode, msg_txt, interleave_frames));
+    return gnuradio::make_block_sptr<freedv_tx_ss_impl>(mode, msg_txt, interleave_frames);
 }
 
 freedv_tx_ss_impl::freedv_tx_ss_impl(int mode,

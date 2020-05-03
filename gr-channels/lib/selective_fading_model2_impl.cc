@@ -34,8 +34,8 @@ selective_fading_model2::make(unsigned int N,
                               std::vector<float> mags,
                               unsigned int ntaps)
 {
-    return gnuradio::get_initial_sptr(new selective_fading_model2_impl(
-        N, fDTs, LOS, K, seed, delays, delays_std, delays_maxdev, mags, ntaps));
+    return gnuradio::make_block_sptr<selective_fading_model2_impl>(
+        N, fDTs, LOS, K, seed, delays, delays_std, delays_maxdev, mags, ntaps);
 }
 
 // Block constructor

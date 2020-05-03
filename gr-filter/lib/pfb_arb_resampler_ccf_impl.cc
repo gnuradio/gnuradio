@@ -23,8 +23,7 @@ pfb_arb_resampler_ccf::sptr pfb_arb_resampler_ccf::make(float rate,
                                                         const std::vector<float>& taps,
                                                         unsigned int filter_size)
 {
-    return gnuradio::get_initial_sptr(
-        new pfb_arb_resampler_ccf_impl(rate, taps, filter_size));
+    return gnuradio::make_block_sptr<pfb_arb_resampler_ccf_impl>(rate, taps, filter_size);
 }
 
 

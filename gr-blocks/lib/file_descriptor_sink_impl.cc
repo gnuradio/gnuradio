@@ -31,7 +31,7 @@ namespace blocks {
 
 file_descriptor_sink::sptr file_descriptor_sink::make(size_t itemsize, int fd)
 {
-    return gnuradio::get_initial_sptr(new file_descriptor_sink_impl(itemsize, fd));
+    return gnuradio::make_block_sptr<file_descriptor_sink_impl>(itemsize, fd);
 }
 
 file_descriptor_sink_impl::file_descriptor_sink_impl(size_t itemsize, int fd)

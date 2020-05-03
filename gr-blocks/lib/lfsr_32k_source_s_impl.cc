@@ -21,7 +21,7 @@ namespace blocks {
 
 lfsr_32k_source_s::sptr lfsr_32k_source_s::make()
 {
-    return gnuradio::get_initial_sptr(new lfsr_32k_source_s_impl());
+    return gnuradio::make_block_sptr<lfsr_32k_source_s_impl>();
 }
 
 lfsr_32k_source_s_impl::lfsr_32k_source_s_impl()

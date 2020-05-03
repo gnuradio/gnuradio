@@ -21,7 +21,7 @@ namespace blocks {
 template <class T>
 typename or_blk<T>::sptr or_blk<T>::make(size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new or_blk_impl<T>(vlen));
+    return gnuradio::make_block_sptr<or_blk_impl<T>>(vlen);
 }
 
 template <class T>

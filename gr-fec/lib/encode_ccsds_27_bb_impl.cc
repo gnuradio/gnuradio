@@ -22,7 +22,7 @@ namespace fec {
 
 encode_ccsds_27_bb::sptr encode_ccsds_27_bb::make()
 {
-    return gnuradio::get_initial_sptr(new encode_ccsds_27_bb_impl());
+    return gnuradio::make_block_sptr<encode_ccsds_27_bb_impl>();
 }
 
 encode_ccsds_27_bb_impl::encode_ccsds_27_bb_impl()

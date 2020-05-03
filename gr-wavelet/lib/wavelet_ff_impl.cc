@@ -26,7 +26,7 @@ namespace wavelet {
 
 wavelet_ff::sptr wavelet_ff::make(int size, int order, bool forward)
 {
-    return gnuradio::get_initial_sptr(new wavelet_ff_impl(size, order, forward));
+    return gnuradio::make_block_sptr<wavelet_ff_impl>(size, order, forward);
 }
 
 wavelet_ff_impl::wavelet_ff_impl(int size, int order, bool forward)

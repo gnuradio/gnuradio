@@ -16,10 +16,7 @@
 namespace gr {
 namespace dtv {
 
-atsc_pad::sptr atsc_pad::make()
-{
-    return gnuradio::get_initial_sptr(new atsc_pad_impl());
-}
+atsc_pad::sptr atsc_pad::make() { return gnuradio::make_block_sptr<atsc_pad_impl>(); }
 
 atsc_pad_impl::atsc_pad_impl()
     : gr::sync_decimator("atsc_pad",

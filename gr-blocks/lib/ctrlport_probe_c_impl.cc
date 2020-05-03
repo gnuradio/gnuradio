@@ -21,7 +21,7 @@ namespace blocks {
 ctrlport_probe_c::sptr ctrlport_probe_c::make(const std::string& id,
                                               const std::string& desc)
 {
-    return gnuradio::get_initial_sptr(new ctrlport_probe_c_impl(id, desc));
+    return gnuradio::make_block_sptr<ctrlport_probe_c_impl>(id, desc);
 }
 
 ctrlport_probe_c_impl::ctrlport_probe_c_impl(const std::string& id,

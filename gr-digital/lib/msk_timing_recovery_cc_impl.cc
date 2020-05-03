@@ -23,8 +23,7 @@ namespace digital {
 msk_timing_recovery_cc::sptr
 msk_timing_recovery_cc::make(float sps, float gain, float limit, int osps = 1)
 {
-    return gnuradio::get_initial_sptr(
-        new msk_timing_recovery_cc_impl(sps, gain, limit, osps));
+    return gnuradio::make_block_sptr<msk_timing_recovery_cc_impl>(sps, gain, limit, osps);
 }
 
 /*

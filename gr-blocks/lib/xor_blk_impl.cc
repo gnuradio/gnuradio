@@ -21,7 +21,7 @@ namespace blocks {
 template <class T>
 typename xor_blk<T>::sptr xor_blk<T>::make(size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new xor_blk_impl<T>(vlen));
+    return gnuradio::make_block_sptr<xor_blk_impl<T>>(vlen);
 }
 
 template <class T>

@@ -21,7 +21,7 @@ namespace blocks {
 
 stream_mux::sptr stream_mux::make(size_t itemsize, const std::vector<int>& lengths)
 {
-    return gnuradio::get_initial_sptr(new stream_mux_impl(itemsize, lengths));
+    return gnuradio::make_block_sptr<stream_mux_impl>(itemsize, lengths);
 }
 
 stream_mux_impl::stream_mux_impl(size_t itemsize, const std::vector<int>& lengths)

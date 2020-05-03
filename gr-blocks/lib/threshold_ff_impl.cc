@@ -20,7 +20,7 @@ namespace blocks {
 
 threshold_ff::sptr threshold_ff::make(float lo, float hi, float initial_state)
 {
-    return gnuradio::get_initial_sptr(new threshold_ff_impl(lo, hi, initial_state));
+    return gnuradio::make_block_sptr<threshold_ff_impl>(lo, hi, initial_state);
 }
 
 threshold_ff_impl::threshold_ff_impl(float lo, float hi, float initial_state)

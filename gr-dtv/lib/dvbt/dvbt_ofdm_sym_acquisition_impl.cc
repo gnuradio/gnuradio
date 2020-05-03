@@ -216,8 +216,8 @@ void dvbt_ofdm_sym_acquisition_impl::derotate(const gr_complex* in, gr_complex* 
 dvbt_ofdm_sym_acquisition::sptr dvbt_ofdm_sym_acquisition::make(
     int blocks, int fft_length, int occupied_tones, int cp_length, float snr)
 {
-    return gnuradio::get_initial_sptr(new dvbt_ofdm_sym_acquisition_impl(
-        blocks, fft_length, occupied_tones, cp_length, snr));
+    return gnuradio::make_block_sptr<dvbt_ofdm_sym_acquisition_impl>(
+        blocks, fft_length, occupied_tones, cp_length, snr);
 }
 
 /*

@@ -21,7 +21,7 @@ namespace blocks {
 
 correctiq_man::sptr correctiq_man::make(float real, float imag)
 {
-    return gnuradio::get_initial_sptr(new correctiq_man_impl(real, imag));
+    return gnuradio::make_block_sptr<correctiq_man_impl>(real, imag);
 }
 
 /*

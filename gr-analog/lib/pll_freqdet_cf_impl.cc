@@ -23,8 +23,7 @@ namespace analog {
 
 pll_freqdet_cf::sptr pll_freqdet_cf::make(float loop_bw, float max_freq, float min_freq)
 {
-    return gnuradio::get_initial_sptr(
-        new pll_freqdet_cf_impl(loop_bw, max_freq, min_freq));
+    return gnuradio::make_block_sptr<pll_freqdet_cf_impl>(loop_bw, max_freq, min_freq);
 }
 
 pll_freqdet_cf_impl::pll_freqdet_cf_impl(float loop_bw, float max_freq, float min_freq)

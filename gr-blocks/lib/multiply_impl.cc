@@ -23,7 +23,7 @@ namespace blocks {
 template <class T>
 typename multiply<T>::sptr multiply<T>::make(size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new multiply_impl<T>(vlen));
+    return gnuradio::make_block_sptr<multiply_impl<T>>(vlen);
 }
 
 template <>

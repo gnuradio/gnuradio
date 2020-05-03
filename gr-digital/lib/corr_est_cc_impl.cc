@@ -30,8 +30,8 @@ corr_est_cc::sptr corr_est_cc::make(const std::vector<gr_complex>& symbols,
                                     float threshold,
                                     tm_type threshold_method)
 {
-    return gnuradio::get_initial_sptr(
-        new corr_est_cc_impl(symbols, sps, mark_delay, threshold, threshold_method));
+    return gnuradio::make_block_sptr<corr_est_cc_impl>(
+        symbols, sps, mark_delay, threshold, threshold_method);
 }
 
 corr_est_cc_impl::corr_est_cc_impl(const std::vector<gr_complex>& symbols,

@@ -41,7 +41,7 @@ int dvbt_energy_descramble_impl::clock_prbs(int clocks)
 
 dvbt_energy_descramble::sptr dvbt_energy_descramble::make(int nblocks)
 {
-    return gnuradio::get_initial_sptr(new dvbt_energy_descramble_impl(nblocks));
+    return gnuradio::make_block_sptr<dvbt_energy_descramble_impl>(nblocks);
 }
 
 /*

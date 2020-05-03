@@ -29,8 +29,8 @@ static int max_tone_index = 37;
 ctcss_squelch_ff::sptr
 ctcss_squelch_ff::make(int rate, float freq, float level, int len, int ramp, bool gate)
 {
-    return gnuradio::get_initial_sptr(
-        new ctcss_squelch_ff_impl(rate, freq, level, len, ramp, gate));
+    return gnuradio::make_block_sptr<ctcss_squelch_ff_impl>(
+        rate, freq, level, len, ramp, gate);
 }
 
 int ctcss_squelch_ff_impl::find_tone(float freq)
