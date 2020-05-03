@@ -119,23 +119,23 @@ ${blockname}::make(${strip_default_values(arglist)})
 
 <%
     if blocktype == 'decimator':
-        decimation = ', <+decimation+>'
+        decimation = ', REPLACE_ME_decimation'
     elif blocktype == 'interpolator':
-        decimation = ', <+interpolation+>'
+        decimation = ', REPLACE_ME_interpolation'
     elif blocktype == 'tagged_stream':
-        decimation = ', <+len_tag_key+>'
+        decimation = ', REPLACE_ME_len_tag_key'
     else:
         decimation = ''
     endif
     if blocktype == 'source':
         inputsig = '0, 0, 0'
     else:
-        inputsig = '<+MIN_IN+>, <+MAX_IN+>, sizeof(<+ITYPE+>)'
+        inputsig = 'REPLACE_ME_MIN_IN, REPLACE_ME_MAX_IN, sizeof(REPLACE_ME_ITYPE)'
     endif
     if blocktype == 'sink':
         outputsig = '0, 0, 0'
     else:
-        outputsig = '<+MIN_OUT+>, <+MAX_OUT+>, sizeof(<+OTYPE+>)'
+        outputsig = 'REPLACE_ME_MIN_OUT, REPLACE_ME_MAX_OUT, sizeof(REPLACE_ME_OTYPE)'
     endif
 %>
 /*
@@ -164,7 +164,7 @@ ${blockname}_impl::~${blockname}_impl() {}
   % if blocktype == 'general':
 void ${blockname}_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
 {
-    /* <+forecast+> e.g. ninput_items_required[0] = noutput_items */
+    /* REPLACE_ME_forecast e.g. ninput_items_required[0] = noutput_items */
 }
 
 int ${blockname}_impl::general_work (int noutput_items,
@@ -172,10 +172,10 @@ int ${blockname}_impl::general_work (int noutput_items,
                    gr_vector_const_void_star& input_items,
                    gr_vector_void_star& output_items)
 {
-    auto in = static_cast<const +ITYPE+*>(input_items[0]);
-    auto out = static_cast<+OTYPE+*>(output_items[0]);
+    auto in = static_cast<const REPLACE_ME_ITYPE*>(input_items[0]);
+    auto out = static_cast<REPLACE_ME_OTYPE*>(output_items[0]);
 
-    // Do <+signal processing+>
+    // Do REPLACE_ME_signal processing
     // Tell runtime system how many input items we consumed on
     // each input stream.
     consume_each(noutput_items);
@@ -187,7 +187,7 @@ int ${blockname}_impl::general_work (int noutput_items,
 int
 ${blockname}_impl::calculate_output_stream_length(const gr_vector_int& ninput_items)
 {
-    int noutput_items = /* <+set this+> */;
+    int noutput_items = REPLACE_ME; /* set this */;
     return noutput_items ;
 }
 
@@ -197,10 +197,10 @@ ${blockname}_impl::work (int noutput_items,
                    gr_vector_const_void_star& input_items,
                    gr_vector_void_star& output_items)
 {
-    const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
-    <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+    auto in = static_cast<const REPLACE_ME_ITYPE*>(input_items[0]);
+    auto out = static_cast<REPLACE_ME_OTYPE*>(output_items[0]);
 
-    // Do <+signal processing+>
+    // Do signal processing
 
     // Tell runtime system how many output items we produced.
     return noutput_items;
@@ -213,13 +213,13 @@ ${blockname}_impl::work(int noutput_items,
     gr_vector_void_star& output_items)
 {
     % if blocktype != 'source':
-    const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
+    auto in = static_cast<const REPLACE_ME_ITYPE*>(input_items[0]);
     % endif
     % if blocktype != 'sink':
-    <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+    auto out = static_cast<REPLACE_ME_OTYPE*>(output_items[0]);
     % endif
 
-    // Do <+signal processing+>
+    // Do signal processing
 
     // Tell runtime system how many output items we produced.
     return noutput_items;
@@ -247,7 +247,7 @@ namespace ${modname} {
 
 % if blocktype == 'noblock':
 /*!
- * \brief <+description+>
+ * \brief REPLACE_ME_description
  *
  */
 class ${modname.upper()}_API ${blockname}
@@ -259,7 +259,7 @@ private:
 };
 % else:
 /*!
- * \brief <+description of block+>
+ * \brief REPLACE_ME_description of block
  * \ingroup ${modname}
  *
  */
@@ -310,29 +310,29 @@ import numpy\
     if blocktype == 'source':
         inputsig = 'None'
     else:
-        inputsig = '[<+numpy.float32+>, ]'
+        inputsig = '[REPLACE_ME_numpy.float32, ]'
     if blocktype == 'sink':
         outputsig = 'None'
     else:
-        outputsig = '[<+numpy.float32+>, ]'
+        outputsig = '[REPLACE_ME_numpy.float32, ]'
 %>
 % else:
 <%
     if blocktype == 'source':
         inputsig = '0, 0, 0'
     else:
-        inputsig = '<+MIN_IN+>, <+MAX_IN+>, gr.sizeof_<+ITYPE+>'
+        inputsig = 'REPLACE_ME_MIN_IN, REPLACE_ME_MAX_IN, gr.sizeof_REPLACE_ME_ITYPE'
     if blocktype == 'sink':
         outputsig = '0, 0, 0'
     else:
-        outputsig = '<+MIN_OUT+>, <+MAX_OUT+>, gr.sizeof_<+OTYPE+>'
+        outputsig = 'REPLACE_ME_MIN_OUT, REPLACE_ME_MAX_OUT, gr.sizeof_REPLACE_ME_OTYPE'
 %>
 % endif
 <%
     if blocktype == 'interpolator':
-        deciminterp = ', <+interpolation+>'
+        deciminterp = ', REPLACE_ME_interpolation'
     elif blocktype == 'decimator':
-        deciminterp = ', <+decimation+>'
+        deciminterp = ', REPLACE_ME_decimation'
     else:
         deciminterp = ''
     if arglist == '':
@@ -382,7 +382,7 @@ class ${blockname}(${parenttype}):
 % if blocktype != 'sink':
         out = output_items[0]
 % endif
-        # <+signal processing here+>
+        # REPLACE_ME_signal processing here
 % if blocktype in ('sync', 'decimator', 'interpolator'):
         out[:] = in0
         return len(output_items[0])
@@ -591,9 +591,9 @@ ${modname}_make_${blockname} (${strip_default_values(arglist)})
 
 <%
     if blocktype == 'interpolator':
-        deciminterp = ', <+interpolation+>'
+        deciminterp = ', REPLACE_ME_interpolation'
     elif blocktype == 'decimator':
-        deciminterp = ', <+decimation+>'
+        deciminterp = ', REPLACE_ME_decimation'
     else:
         deciminterp = ''
     if arglist == '':
@@ -603,12 +603,12 @@ ${modname}_make_${blockname} (${strip_default_values(arglist)})
     if blocktype == 'source':
         inputsig = '0, 0, 0'
     else:
-        inputsig = '<+MIN_IN+>, <+MAX_IN+>, sizeof(<+ITYPE+>)'
+        inputsig = 'REPLACE_ME_MIN_IN, REPLACE_ME_MAX_IN, sizeof(REPLACE_ME_ITYPE)'
     endif
     if blocktype == 'sink':
         outputsig = '0, 0, 0'
     else:
-        outputsig = '<+MIN_OUT+>, <+MAX_OUT+>, sizeof(<+OTYPE+>)'
+        outputsig = 'REPLACE_ME_MIN_OUT, REPLACE_ME_MAX_OUT, sizeof(REPLACE_ME_OTYPE)'
     endif
 %>
 
@@ -622,10 +622,10 @@ ${modname}_${blockname}::${modname}_${blockname} (${strip_default_values(arglist
 {
 % if blocktype == 'hier'
     connect(self(), 0, d_firstblock, 0);
-    // <+connect other blocks+>
+    // REPLACE_ME_connect other blocks
     connect(d_lastblock, 0, self(), 0);
 % else:
-    // Put in <+constructor stuff+> here
+    // Put in REPLACE_ME_constructor stuff here
 % endif
 }
 
@@ -635,7 +635,7 @@ ${modname}_${blockname}::${modname}_${blockname} (${strip_default_values(arglist
  */
 ${modname}_${blockname}::~${modname}_${blockname}()
 {
-  // Put in <+destructor stuff+> here
+  // Put in REPLACE_ME_destructor stuff here
 }
 % endif
 
@@ -644,7 +644,7 @@ ${modname}_${blockname}::~${modname}_${blockname}()
 void
 ${modname}_${blockname}::forecast(int noutput_items, gr_vector_int& ninput_items_required)
 {
-    /* <+forecast+> e.g. ninput_items_required[0] = noutput_items */
+    /* REPLACE_ME_forecast e.g. ninput_items_required[0] = noutput_items */
 }
 
 int
@@ -653,10 +653,10 @@ ${modname}_${blockname}::general_work (int noutput_items,
            gr_vector_const_void_star& input_items,
            gr_vector_void_star& output_items)
 {
-    const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
-    <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+    const REPLACE_ME_ITYPE *in = (const REPLACE_ME_ITYPE *) input_items[0];
+    REPLACE_ME_OTYPE *out = (REPLACE_ME_OTYPE *) output_items[0];
 
-    // Do <+signal processing+>
+    // Do REPLACE_ME_signal processing
     // Tell runtime system how many input items we consumed on
     // each input stream.
     consume_each (noutput_items);
@@ -671,10 +671,10 @@ ${modname}_${blockname}::work(int noutput_items,
       gr_vector_const_void_star& input_items,
       gr_vector_void_star& output_items)
 {
-    const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
-    <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+    const REPLACE_ME_ITYPE *in = (const REPLACE_ME_ITYPE *) input_items[0];
+    REPLACE_ME_OTYPE *out = (REPLACE_ME_OTYPE *) output_items[0];
 
-    // Do <+signal processing+>
+    // Do REPLACE_ME_signal processing
 
     // Tell runtime system how many output items we produced.
     return noutput_items;
@@ -708,7 +708,7 @@ typedef std::shared_ptr<${modname}_${blockname}> ${modname}_${blockname}_sptr;
 ${modname.upper()}_API ${modname}_${blockname}_sptr ${modname}_make_${blockname} (${arglist});
 
 /*!
- * \brief <+description+>
+ * \brief REPLACE_ME_description
  * \ingroup ${modname}
  *
  */

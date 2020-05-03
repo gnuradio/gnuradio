@@ -15,12 +15,27 @@ from __future__ import unicode_literals
 import os
 import re
 import logging
+import subprocess
 
+from gnuradio import gr
 from ..tools import render_template, append_re_line_sequence, CMakeFileEditor
 from ..templates import Templates
 from .base import ModTool, ModToolException
 
 logger = logging.getLogger(__name__)
+
+
+def clang_format(s):
+    try:
+      p = subprocess.Popen(["clang-format"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+      out, err = p.communicate(s.encode('utf-8'))
+      if p.returncode != 0:
+        print("Failed to run clang-format: %s", err)
+        return s
+      return out.decode('utf-8')
+    except (RuntimeError, FileNotFoundError) as e:
+      print("Failed to run clang-format: %s", e)
+      return s
 
 
 class ModToolAdd(ModTool):
@@ -111,8 +126,11 @@ class ModToolAdd(ModTool):
         """ Shorthand for writing a substituted template to a file"""
         path_to_file = os.path.join(path, fname)
         logger.info(f"Adding file '{path_to_file}'...")
+        formatter = lambda x: x
+        if fname.endswith('.cc') or fname.endswith('.h'):
+          formatter = clang_format
         with open(path_to_file, 'w') as f:
-            f.write(render_template(tpl, **self.info))
+            f.write(formatter(render_template(tpl, **self.info)))
         self.scm.add_files((path_to_file,))
 
     def run(self):
