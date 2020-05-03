@@ -35,8 +35,8 @@ fll_band_edge_cc::sptr fll_band_edge_cc::make(float samps_per_sym,
                                               int filter_size,
                                               float bandwidth)
 {
-    return gnuradio::get_initial_sptr(
-        new fll_band_edge_cc_impl(samps_per_sym, rolloff, filter_size, bandwidth));
+    return gnuradio::make_block_sptr<fll_band_edge_cc_impl>(
+        samps_per_sym, rolloff, filter_size, bandwidth);
 }
 
 static int ios[] = { sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float) };

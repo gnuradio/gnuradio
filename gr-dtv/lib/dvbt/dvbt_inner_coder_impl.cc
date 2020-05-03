@@ -113,8 +113,8 @@ dvbt_inner_coder::sptr dvbt_inner_coder::make(int ninput,
                                               dvbt_hierarchy_t hierarchy,
                                               dvb_code_rate_t coderate)
 {
-    return gnuradio::get_initial_sptr(
-        new dvbt_inner_coder_impl(ninput, noutput, constellation, hierarchy, coderate));
+    return gnuradio::make_block_sptr<dvbt_inner_coder_impl>(
+        ninput, noutput, constellation, hierarchy, coderate);
 }
 
 /*

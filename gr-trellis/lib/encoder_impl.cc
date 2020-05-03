@@ -23,8 +23,8 @@ template <class IN_T, class OUT_T>
 typename encoder<IN_T, OUT_T>::sptr
 encoder<IN_T, OUT_T>::make(const fsm& FSM, int ST, int K)
 {
-    return gnuradio::get_initial_sptr(
-        new encoder_impl<IN_T, OUT_T>(FSM, ST, K, K >= 0 ? false : true));
+    return gnuradio::make_block_sptr<encoder_impl<IN_T, OUT_T>>(
+        FSM, ST, K, K >= 0 ? false : true);
 }
 
 template <class IN_T, class OUT_T>

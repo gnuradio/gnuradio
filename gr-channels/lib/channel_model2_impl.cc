@@ -22,8 +22,8 @@ channel_model2::sptr channel_model2::make(double noise_voltage,
                                           double noise_seed,
                                           bool block_tags)
 {
-    return gnuradio::get_initial_sptr(
-        new channel_model2_impl(noise_voltage, epsilon, taps, noise_seed, block_tags));
+    return gnuradio::make_block_sptr<channel_model2_impl>(
+        noise_voltage, epsilon, taps, noise_seed, block_tags);
 }
 
 // Hierarchical block constructor

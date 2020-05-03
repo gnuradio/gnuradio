@@ -24,7 +24,7 @@ pfb_synthesizer_ccf::sptr pfb_synthesizer_ccf::make(unsigned int numchans,
                                                     const std::vector<float>& taps,
                                                     bool twox)
 {
-    return gnuradio::get_initial_sptr(new pfb_synthesizer_ccf_impl(numchans, taps, twox));
+    return gnuradio::make_block_sptr<pfb_synthesizer_ccf_impl>(numchans, taps, twox);
 }
 
 pfb_synthesizer_ccf_impl::pfb_synthesizer_ccf_impl(unsigned int numchans,

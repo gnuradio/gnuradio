@@ -25,8 +25,8 @@ additive_scrambler_bb::sptr additive_scrambler_bb::make(int mask,
                                                         int bits_per_byte,
                                                         const std::string& reset_tag_key)
 {
-    return gnuradio::get_initial_sptr(new additive_scrambler_bb_impl(
-        mask, seed, len, count, bits_per_byte, reset_tag_key));
+    return gnuradio::make_block_sptr<additive_scrambler_bb_impl>(
+        mask, seed, len, count, bits_per_byte, reset_tag_key);
 }
 
 additive_scrambler_bb_impl::additive_scrambler_bb_impl(int mask,

@@ -23,8 +23,7 @@ namespace fft {
 fft_vfc::sptr
 fft_vfc::make(int fft_size, bool forward, const std::vector<float>& window, int nthreads)
 {
-    return gnuradio::get_initial_sptr(
-        new fft_vfc_fftw(fft_size, forward, window, nthreads));
+    return gnuradio::make_block_sptr<fft_vfc_fftw>(fft_size, forward, window, nthreads);
 }
 
 fft_vfc_fftw::fft_vfc_fftw(int fft_size,

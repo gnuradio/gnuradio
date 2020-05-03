@@ -25,8 +25,7 @@ using namespace filter::kernel;
 lms_dd_equalizer_cc::sptr
 lms_dd_equalizer_cc::make(int num_taps, float mu, int sps, constellation_sptr cnst)
 {
-    return gnuradio::get_initial_sptr(
-        new lms_dd_equalizer_cc_impl(num_taps, mu, sps, cnst));
+    return gnuradio::make_block_sptr<lms_dd_equalizer_cc_impl>(num_taps, mu, sps, cnst);
 }
 
 lms_dd_equalizer_cc_impl::lms_dd_equalizer_cc_impl(int num_taps,

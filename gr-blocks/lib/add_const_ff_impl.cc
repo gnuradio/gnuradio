@@ -20,7 +20,7 @@ namespace blocks {
 
 add_const_ff::sptr add_const_ff::make(float k)
 {
-    return gnuradio::get_initial_sptr(new add_const_ff_impl(k));
+    return gnuradio::make_block_sptr<add_const_ff_impl>(k);
 }
 
 add_const_ff_impl::add_const_ff_impl(float k)

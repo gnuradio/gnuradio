@@ -38,8 +38,8 @@ namespace vocoder {
 freedv_rx_ss::sptr
 freedv_rx_ss::make(int mode, float squelch_thresh, int interleave_frames)
 {
-    return gnuradio::get_initial_sptr(
-        new freedv_rx_ss_impl(mode, squelch_thresh, interleave_frames));
+    return gnuradio::make_block_sptr<freedv_rx_ss_impl>(
+        mode, squelch_thresh, interleave_frames);
 }
 
 freedv_rx_ss_impl::freedv_rx_ss_impl(int mode,

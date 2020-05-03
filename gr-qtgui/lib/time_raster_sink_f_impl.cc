@@ -33,8 +33,8 @@ time_raster_sink_f::sptr time_raster_sink_f::make(double samp_rate,
                                                   int nconnections,
                                                   QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(new time_raster_sink_f_impl(
-        samp_rate, rows, cols, mult, offset, name, nconnections, parent));
+    return gnuradio::make_block_sptr<time_raster_sink_f_impl>(
+        samp_rate, rows, cols, mult, offset, name, nconnections, parent);
 }
 
 time_raster_sink_f_impl::time_raster_sink_f_impl(double samp_rate,

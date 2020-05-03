@@ -21,7 +21,7 @@ namespace digital {
 
 kurtotic_equalizer_cc::sptr kurtotic_equalizer_cc::make(int num_taps, float mu)
 {
-    return gnuradio::get_initial_sptr(new kurtotic_equalizer_cc_impl(num_taps, mu));
+    return gnuradio::make_block_sptr<kurtotic_equalizer_cc_impl>(num_taps, mu);
 }
 
 kurtotic_equalizer_cc_impl::kurtotic_equalizer_cc_impl(int num_taps, float mu)

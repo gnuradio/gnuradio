@@ -20,7 +20,7 @@ namespace filter {
 
 filter_delay_fc::sptr filter_delay_fc::make(const std::vector<float>& taps)
 {
-    return gnuradio::get_initial_sptr(new filter_delay_fc_impl(taps));
+    return gnuradio::make_block_sptr<filter_delay_fc_impl>(taps);
 }
 
 filter_delay_fc_impl::filter_delay_fc_impl(const std::vector<float>& taps)

@@ -23,8 +23,7 @@ namespace digital {
 glfsr_source_f::sptr
 glfsr_source_f::make(unsigned int degree, bool repeat, uint32_t mask, uint32_t seed)
 {
-    return gnuradio::get_initial_sptr(
-        new glfsr_source_f_impl(degree, repeat, mask, seed));
+    return gnuradio::make_block_sptr<glfsr_source_f_impl>(degree, repeat, mask, seed);
 }
 
 glfsr_source_f_impl::glfsr_source_f_impl(unsigned int degree,

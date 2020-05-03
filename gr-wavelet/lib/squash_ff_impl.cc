@@ -25,7 +25,7 @@ namespace wavelet {
 squash_ff::sptr squash_ff::make(const std::vector<float>& igrid,
                                 const std::vector<float>& ogrid)
 {
-    return gnuradio::get_initial_sptr(new squash_ff_impl(igrid, ogrid));
+    return gnuradio::make_block_sptr<squash_ff_impl>(igrid, ogrid);
 }
 
 squash_ff_impl::squash_ff_impl(const std::vector<float>& igrid,

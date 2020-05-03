@@ -29,8 +29,8 @@ viterbi_combined<IN_T, OUT_T>::make(const fsm& FSM,
                                     const std::vector<IN_T>& TABLE,
                                     digital::trellis_metric_type_t TYPE)
 {
-    return gnuradio::get_initial_sptr(
-        new viterbi_combined_impl<IN_T, OUT_T>(FSM, K, S0, SK, D, TABLE, TYPE));
+    return gnuradio::make_block_sptr<viterbi_combined_impl<IN_T, OUT_T>>(
+        FSM, K, S0, SK, D, TABLE, TYPE);
 }
 
 template <class IN_T, class OUT_T>

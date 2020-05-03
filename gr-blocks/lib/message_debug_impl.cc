@@ -22,7 +22,7 @@ namespace blocks {
 
 message_debug::sptr message_debug::make()
 {
-    return gnuradio::get_initial_sptr(new message_debug_impl());
+    return gnuradio::make_block_sptr<message_debug_impl>();
 }
 
 void message_debug_impl::print(pmt::pmt_t msg)

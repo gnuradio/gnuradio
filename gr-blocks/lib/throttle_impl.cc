@@ -25,8 +25,8 @@ namespace blocks {
 
 throttle::sptr throttle::make(size_t itemsize, double samples_per_sec, bool ignore_tags)
 {
-    return gnuradio::get_initial_sptr(
-        new throttle_impl(itemsize, samples_per_sec, ignore_tags));
+    return gnuradio::make_block_sptr<throttle_impl>(
+        itemsize, samples_per_sec, ignore_tags);
 }
 
 throttle_impl::throttle_impl(size_t itemsize, double samples_per_second, bool ignore_tags)

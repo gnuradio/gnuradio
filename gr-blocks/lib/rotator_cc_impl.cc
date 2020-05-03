@@ -22,7 +22,7 @@ namespace blocks {
 
 rotator_cc::sptr rotator_cc::make(double phase_inc)
 {
-    return gnuradio::get_initial_sptr(new rotator_cc_impl(phase_inc));
+    return gnuradio::make_block_sptr<rotator_cc_impl>(phase_inc);
 }
 
 rotator_cc_impl::rotator_cc_impl(double phase_inc)

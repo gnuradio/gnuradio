@@ -24,7 +24,7 @@
 namespace gr {
 top_block_sptr make_top_block(const std::string& name, bool catch_exceptions)
 {
-    return gnuradio::get_initial_sptr(new top_block(name, catch_exceptions));
+    return gnuradio::make_block_sptr<top_block>(name, catch_exceptions);
 }
 
 top_block::top_block(const std::string& name, bool catch_exceptions)

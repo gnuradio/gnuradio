@@ -47,7 +47,7 @@ gr_complex moving_averager_c::filter(gr_complex x)
 
 dc_blocker_cc::sptr dc_blocker_cc::make(int D, bool long_form)
 {
-    return gnuradio::get_initial_sptr(new dc_blocker_cc_impl(D, long_form));
+    return gnuradio::make_block_sptr<dc_blocker_cc_impl>(D, long_form);
 }
 
 

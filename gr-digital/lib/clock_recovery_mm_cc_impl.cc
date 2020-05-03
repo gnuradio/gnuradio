@@ -28,8 +28,8 @@ static const int FUDGE = 16;
 clock_recovery_mm_cc::sptr clock_recovery_mm_cc::make(
     float omega, float gain_omega, float mu, float gain_mu, float omega_relative_limit)
 {
-    return gnuradio::get_initial_sptr(new clock_recovery_mm_cc_impl(
-        omega, gain_omega, mu, gain_mu, omega_relative_limit));
+    return gnuradio::make_block_sptr<clock_recovery_mm_cc_impl>(
+        omega, gain_omega, mu, gain_mu, omega_relative_limit);
 }
 
 clock_recovery_mm_cc_impl::clock_recovery_mm_cc_impl(

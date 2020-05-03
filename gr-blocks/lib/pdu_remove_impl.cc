@@ -21,7 +21,7 @@ namespace blocks {
 
 pdu_remove::sptr pdu_remove::make(pmt::pmt_t k)
 {
-    return gnuradio::get_initial_sptr(new pdu_remove_impl(k));
+    return gnuradio::make_block_sptr<pdu_remove_impl>(k);
 }
 
 pdu_remove_impl::pdu_remove_impl(pmt::pmt_t k)

@@ -32,8 +32,8 @@ siso_combined_f::sptr siso_combined_f::make(const fsm& FSM,
                                             const std::vector<float>& TABLE,
                                             digital::trellis_metric_type_t TYPE)
 {
-    return gnuradio::get_initial_sptr(new siso_combined_f_impl(
-        FSM, K, S0, SK, POSTI, POSTO, SISO_TYPE, D, TABLE, TYPE));
+    return gnuradio::make_block_sptr<siso_combined_f_impl>(
+        FSM, K, S0, SK, POSTI, POSTO, SISO_TYPE, D, TABLE, TYPE);
 }
 
 void siso_combined_f_impl::recalculate()

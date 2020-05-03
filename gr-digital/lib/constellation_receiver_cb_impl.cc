@@ -28,8 +28,8 @@ namespace digital {
 constellation_receiver_cb::sptr constellation_receiver_cb::make(
     constellation_sptr constell, float loop_bw, float fmin, float fmax)
 {
-    return gnuradio::get_initial_sptr(
-        new constellation_receiver_cb_impl(constell, loop_bw, fmin, fmax));
+    return gnuradio::make_block_sptr<constellation_receiver_cb_impl>(
+        constell, loop_bw, fmin, fmax);
 }
 
 static const std::vector<int> iosig = {

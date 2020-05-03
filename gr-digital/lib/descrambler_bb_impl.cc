@@ -20,7 +20,7 @@ namespace digital {
 
 descrambler_bb::sptr descrambler_bb::make(int mask, int seed, int len)
 {
-    return gnuradio::get_initial_sptr(new descrambler_bb_impl(mask, seed, len));
+    return gnuradio::make_block_sptr<descrambler_bb_impl>(mask, seed, len);
 }
 
 descrambler_bb_impl::descrambler_bb_impl(int mask, int seed, int len)

@@ -21,7 +21,7 @@ namespace blocks {
 
 endian_swap::sptr endian_swap::make(size_t item_size_bytes)
 {
-    return gnuradio::get_initial_sptr(new endian_swap_impl(item_size_bytes));
+    return gnuradio::make_block_sptr<endian_swap_impl>(item_size_bytes);
 }
 
 endian_swap_impl::endian_swap_impl(size_t item_size_bytes)

@@ -53,15 +53,15 @@ file_meta_sink::sptr file_meta_sink::make(size_t itemsize,
                                           pmt::pmt_t extra_dict,
                                           bool detached_header)
 {
-    return gnuradio::get_initial_sptr(new file_meta_sink_impl(itemsize,
-                                                              filename,
-                                                              samp_rate,
-                                                              relative_rate,
-                                                              type,
-                                                              complex,
-                                                              max_segment_size,
-                                                              extra_dict,
-                                                              detached_header));
+    return gnuradio::make_block_sptr<file_meta_sink_impl>(itemsize,
+                                                          filename,
+                                                          samp_rate,
+                                                          relative_rate,
+                                                          type,
+                                                          complex,
+                                                          max_segment_size,
+                                                          extra_dict,
+                                                          detached_header);
 }
 
 file_meta_sink_impl::file_meta_sink_impl(size_t itemsize,

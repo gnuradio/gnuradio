@@ -37,7 +37,7 @@ static const int bit2[8] = { 0, 99, 2, 98, 4, 97, 6, 96 };
 
 atsc_trellis_encoder::sptr atsc_trellis_encoder::make()
 {
-    return gnuradio::get_initial_sptr(new atsc_trellis_encoder_impl());
+    return gnuradio::make_block_sptr<atsc_trellis_encoder_impl>();
 }
 
 atsc_trellis_encoder_impl::atsc_trellis_encoder_impl()

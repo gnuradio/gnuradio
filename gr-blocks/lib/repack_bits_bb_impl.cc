@@ -24,8 +24,8 @@ repack_bits_bb::sptr repack_bits_bb::make(int k,
                                           bool align_output,
                                           endianness_t endianness)
 {
-    return gnuradio::get_initial_sptr(
-        new repack_bits_bb_impl(k, l, len_tag_key, align_output, endianness));
+    return gnuradio::make_block_sptr<repack_bits_bb_impl>(
+        k, l, len_tag_key, align_output, endianness);
 }
 
 repack_bits_bb_impl::repack_bits_bb_impl(int k,

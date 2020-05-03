@@ -33,17 +33,17 @@ symbol_sync_ff::sptr symbol_sync_ff::make(enum ted_type detector_type,
                                           int n_filters,
                                           const std::vector<float>& taps)
 {
-    return gnuradio::get_initial_sptr(new symbol_sync_ff_impl(detector_type,
-                                                              sps,
-                                                              loop_bw,
-                                                              damping_factor,
-                                                              ted_gain,
-                                                              max_deviation,
-                                                              osps,
-                                                              slicer,
-                                                              interp_type,
-                                                              n_filters,
-                                                              taps));
+    return gnuradio::make_block_sptr<symbol_sync_ff_impl>(detector_type,
+                                                          sps,
+                                                          loop_bw,
+                                                          damping_factor,
+                                                          ted_gain,
+                                                          max_deviation,
+                                                          osps,
+                                                          slicer,
+                                                          interp_type,
+                                                          n_filters,
+                                                          taps);
 }
 
 symbol_sync_ff_impl::symbol_sync_ff_impl(enum ted_type detector_type,

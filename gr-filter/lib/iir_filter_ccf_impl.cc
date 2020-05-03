@@ -22,7 +22,7 @@ iir_filter_ccf::sptr iir_filter_ccf::make(const std::vector<float>& fftaps,
                                           const std::vector<float>& fbtaps,
                                           bool oldstyle)
 {
-    return gnuradio::get_initial_sptr(new iir_filter_ccf_impl(fftaps, fbtaps, oldstyle));
+    return gnuradio::make_block_sptr<iir_filter_ccf_impl>(fftaps, fbtaps, oldstyle);
 }
 
 iir_filter_ccf_impl::iir_filter_ccf_impl(const std::vector<float>& fftaps,

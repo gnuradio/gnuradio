@@ -21,7 +21,7 @@ namespace blocks {
 
 pdu_set::sptr pdu_set::make(pmt::pmt_t k, pmt::pmt_t v)
 {
-    return gnuradio::get_initial_sptr(new pdu_set_impl(k, v));
+    return gnuradio::make_block_sptr<pdu_set_impl>(k, v);
 }
 
 pdu_set_impl::pdu_set_impl(pmt::pmt_t k, pmt::pmt_t v)

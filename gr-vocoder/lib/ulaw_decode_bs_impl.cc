@@ -25,7 +25,7 @@ extern "C" {
 
 ulaw_decode_bs::sptr ulaw_decode_bs::make()
 {
-    return gnuradio::get_initial_sptr(new ulaw_decode_bs_impl());
+    return gnuradio::make_block_sptr<ulaw_decode_bs_impl>();
 }
 
 ulaw_decode_bs_impl::ulaw_decode_bs_impl()

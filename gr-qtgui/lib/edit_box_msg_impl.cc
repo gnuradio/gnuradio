@@ -30,8 +30,8 @@ edit_box_msg::sptr edit_box_msg::make(data_type_t type,
                                       const std::string& key,
                                       QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(
-        new edit_box_msg_impl(type, value, label, is_pair, is_static, key, parent));
+    return gnuradio::make_block_sptr<edit_box_msg_impl>(
+        type, value, label, is_pair, is_static, key, parent);
 }
 
 edit_box_msg_impl::edit_box_msg_impl(data_type_t type,

@@ -33,8 +33,8 @@ eye_sink_c::sptr eye_sink_c::make(int size,
                                   unsigned int nconnections,
                                   QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(
-        new eye_sink_c_impl(size, samp_rate, name, nconnections, parent));
+    return gnuradio::make_block_sptr<eye_sink_c_impl>(
+        size, samp_rate, name, nconnections, parent);
 }
 
 eye_sink_c_impl::eye_sink_c_impl(int size,

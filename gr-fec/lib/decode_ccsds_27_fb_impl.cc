@@ -20,7 +20,7 @@ namespace fec {
 
 decode_ccsds_27_fb::sptr decode_ccsds_27_fb::make()
 {
-    return gnuradio::get_initial_sptr(new decode_ccsds_27_fb_impl());
+    return gnuradio::make_block_sptr<decode_ccsds_27_fb_impl>();
 }
 
 decode_ccsds_27_fb_impl::decode_ccsds_27_fb_impl()

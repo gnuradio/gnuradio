@@ -66,17 +66,17 @@ header_payload_demux::make(int header_len,
                            const std::vector<std::string>& special_tags,
                            const size_t header_padding)
 {
-    return gnuradio::get_initial_sptr(new header_payload_demux_impl(header_len,
-                                                                    items_per_symbol,
-                                                                    guard_interval,
-                                                                    length_tag_key,
-                                                                    trigger_tag_key,
-                                                                    output_symbols,
-                                                                    itemsize,
-                                                                    timing_tag_key,
-                                                                    samp_rate,
-                                                                    special_tags,
-                                                                    header_padding));
+    return gnuradio::make_block_sptr<header_payload_demux_impl>(header_len,
+                                                                items_per_symbol,
+                                                                guard_interval,
+                                                                length_tag_key,
+                                                                trigger_tag_key,
+                                                                output_symbols,
+                                                                itemsize,
+                                                                timing_tag_key,
+                                                                samp_rate,
+                                                                special_tags,
+                                                                header_padding);
 }
 
 header_payload_demux_impl::header_payload_demux_impl(

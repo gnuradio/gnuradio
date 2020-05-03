@@ -35,8 +35,8 @@ sink_s::sptr sink_s::make(double framerate,
                           int dst_width,
                           int dst_height)
 {
-    return gnuradio::get_initial_sptr(
-        new sink_s_impl(framerate, width, height, format, dst_width, dst_height));
+    return gnuradio::make_block_sptr<sink_s_impl>(
+        framerate, width, height, format, dst_width, dst_height);
 }
 
 sink_s_impl::sink_s_impl(double framerate,

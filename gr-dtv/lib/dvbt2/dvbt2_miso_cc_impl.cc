@@ -23,8 +23,8 @@ dvbt2_miso_cc::sptr dvbt2_miso_cc::make(dvbt2_extended_carrier_t carriermode,
                                         int numdatasyms,
                                         dvbt2_papr_t paprmode)
 {
-    return gnuradio::get_initial_sptr(new dvbt2_miso_cc_impl(
-        carriermode, fftsize, pilotpattern, guardinterval, numdatasyms, paprmode));
+    return gnuradio::make_block_sptr<dvbt2_miso_cc_impl>(
+        carriermode, fftsize, pilotpattern, guardinterval, numdatasyms, paprmode);
 }
 
 /*

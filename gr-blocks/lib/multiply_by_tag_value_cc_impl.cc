@@ -22,7 +22,7 @@ namespace blocks {
 multiply_by_tag_value_cc::sptr multiply_by_tag_value_cc::make(const std::string& tag_name,
                                                               size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new multiply_by_tag_value_cc_impl(tag_name, vlen));
+    return gnuradio::make_block_sptr<multiply_by_tag_value_cc_impl>(tag_name, vlen);
 }
 
 multiply_by_tag_value_cc_impl::multiply_by_tag_value_cc_impl(const std::string& tag_name,

@@ -27,8 +27,8 @@ dvbt2_p1insertion_cc::make(dvbt2_extended_carrier_t carriermode,
                            dvbt2_showlevels_t showlevels,
                            float vclip)
 {
-    return gnuradio::get_initial_sptr(new dvbt2_p1insertion_cc_impl(
-        carriermode, fftsize, guardinterval, numdatasyms, preamble, showlevels, vclip));
+    return gnuradio::make_block_sptr<dvbt2_p1insertion_cc_impl>(
+        carriermode, fftsize, guardinterval, numdatasyms, preamble, showlevels, vclip);
 }
 
 /*

@@ -23,7 +23,7 @@ namespace blocks {
 
 annotator_1to1::sptr annotator_1to1::make(int when, size_t sizeof_stream_item)
 {
-    return gnuradio::get_initial_sptr(new annotator_1to1_impl(when, sizeof_stream_item));
+    return gnuradio::make_block_sptr<annotator_1to1_impl>(when, sizeof_stream_item);
 }
 
 annotator_1to1_impl::annotator_1to1_impl(int when, size_t sizeof_stream_item)

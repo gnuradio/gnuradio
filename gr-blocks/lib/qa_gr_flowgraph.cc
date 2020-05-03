@@ -51,7 +51,7 @@ public:
 };
 null_qa_source::sptr null_qa_source::make(size_t sizeof_stream_item)
 {
-    return gnuradio::get_initial_sptr(new null_source_qa_impl(sizeof_stream_item));
+    return gnuradio::make_block_sptr<null_source_qa_impl>(sizeof_stream_item);
 }
 class null_qa_sink : virtual public sync_block
 {
@@ -78,7 +78,7 @@ public:
 };
 null_qa_sink::sptr null_qa_sink::make(size_t sizeof_stream_item)
 {
-    return gnuradio::get_initial_sptr(new null_sink_qa_impl(sizeof_stream_item));
+    return gnuradio::make_block_sptr<null_sink_qa_impl>(sizeof_stream_item);
 }
 } /* namespace blocks */
 } /* namespace gr */

@@ -21,7 +21,7 @@ namespace zeromq {
 
 pub_msg_sink::sptr pub_msg_sink::make(char* address, int timeout, bool bind)
 {
-    return gnuradio::get_initial_sptr(new pub_msg_sink_impl(address, timeout, bind));
+    return gnuradio::make_block_sptr<pub_msg_sink_impl>(address, timeout, bind);
 }
 
 pub_msg_sink_impl::pub_msg_sink_impl(char* address, int timeout, bool bind)

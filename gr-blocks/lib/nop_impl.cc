@@ -21,7 +21,7 @@ namespace blocks {
 
 nop::sptr nop::make(size_t sizeof_stream_item)
 {
-    return gnuradio::get_initial_sptr(new nop_impl(sizeof_stream_item));
+    return gnuradio::make_block_sptr<nop_impl>(sizeof_stream_item);
 }
 
 nop_impl::nop_impl(size_t sizeof_stream_item)

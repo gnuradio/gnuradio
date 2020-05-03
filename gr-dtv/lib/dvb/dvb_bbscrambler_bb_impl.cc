@@ -20,8 +20,7 @@ dvb_bbscrambler_bb::sptr dvb_bbscrambler_bb::make(dvb_standard_t standard,
                                                   dvb_framesize_t framesize,
                                                   dvb_code_rate_t rate)
 {
-    return gnuradio::get_initial_sptr(
-        new dvb_bbscrambler_bb_impl(standard, framesize, rate));
+    return gnuradio::make_block_sptr<dvb_bbscrambler_bb_impl>(standard, framesize, rate);
 }
 
 /*

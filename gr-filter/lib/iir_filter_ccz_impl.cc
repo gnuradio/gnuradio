@@ -22,7 +22,7 @@ iir_filter_ccz::sptr iir_filter_ccz::make(const std::vector<gr_complexd>& fftaps
                                           const std::vector<gr_complexd>& fbtaps,
                                           bool oldstyle)
 {
-    return gnuradio::get_initial_sptr(new iir_filter_ccz_impl(fftaps, fbtaps, oldstyle));
+    return gnuradio::make_block_sptr<iir_filter_ccz_impl>(fftaps, fbtaps, oldstyle);
 }
 
 iir_filter_ccz_impl::iir_filter_ccz_impl(const std::vector<gr_complexd>& fftaps,

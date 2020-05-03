@@ -23,8 +23,8 @@ encoder::sptr encoder::make(generic_encoder::sptr my_encoder,
                             size_t input_item_size,
                             size_t output_item_size)
 {
-    return gnuradio::get_initial_sptr(
-        new encoder_impl(my_encoder, input_item_size, output_item_size));
+    return gnuradio::make_block_sptr<encoder_impl>(
+        my_encoder, input_item_size, output_item_size);
 }
 
 encoder_impl::encoder_impl(generic_encoder::sptr my_encoder,

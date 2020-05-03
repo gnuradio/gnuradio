@@ -21,7 +21,7 @@ namespace blocks {
 
 exponentiate_const_cci::sptr exponentiate_const_cci::make(int exponent, size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new exponentiate_const_cci_impl(exponent, vlen));
+    return gnuradio::make_block_sptr<exponentiate_const_cci_impl>(exponent, vlen);
 }
 
 /*

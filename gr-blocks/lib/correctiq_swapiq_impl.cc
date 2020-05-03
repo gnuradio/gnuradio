@@ -20,7 +20,7 @@ namespace blocks {
 
 swap_iq::sptr swap_iq::make(int datatype, int datasize)
 {
-    return gnuradio::get_initial_sptr(new swap_iq_impl(datatype, datasize));
+    return gnuradio::make_block_sptr<swap_iq_impl>(datatype, datasize);
 }
 
 /*

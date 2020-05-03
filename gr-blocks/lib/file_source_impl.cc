@@ -46,8 +46,8 @@ file_source::sptr file_source::make(size_t itemsize,
                                     uint64_t start_offset_items,
                                     uint64_t length_items)
 {
-    return gnuradio::get_initial_sptr(new file_source_impl(
-        itemsize, filename, repeat, start_offset_items, length_items));
+    return gnuradio::make_block_sptr<file_source_impl>(
+        itemsize, filename, repeat, start_offset_items, length_items);
 }
 
 file_source_impl::file_source_impl(size_t itemsize,

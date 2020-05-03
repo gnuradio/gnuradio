@@ -28,8 +28,9 @@ GR_RUNTIME_API top_block_sptr make_top_block(const std::string& name,
 class GR_RUNTIME_API top_block : public hier_block2
 {
 private:
-    friend GR_RUNTIME_API top_block_sptr make_top_block(const std::string& name,
-                                                        bool catch_exceptions);
+    template <typename T, typename... Args>
+    friend std::shared_ptr<T> gnuradio::make_block_sptr(Args&&... args);
+
 
     std::unique_ptr<top_block_impl> d_impl;
 

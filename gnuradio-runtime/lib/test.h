@@ -205,19 +205,8 @@ protected:
          consume_type_t cons_type,
          produce_type_t prod_type);
 
-    friend GR_RUNTIME_API test_sptr make_test(const std::string& name,
-                                              int min_inputs,
-                                              int max_inputs,
-                                              unsigned int sizeof_input_item,
-                                              int min_outputs,
-                                              int max_outputs,
-                                              unsigned int sizeof_output_item,
-                                              unsigned int history,
-                                              unsigned int output_multiple,
-                                              double relative_rate,
-                                              bool fixed_rate,
-                                              consume_type_t cons_type,
-                                              produce_type_t prod_type);
+    template <typename T, typename... Args>
+    friend std::shared_ptr<T> gnuradio::make_block_sptr(Args&&... args);
 };
 
 } /* namespace gr */

@@ -33,8 +33,8 @@ histogram_sink_f::sptr histogram_sink_f::make(int size,
                                               int nconnections,
                                               QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(
-        new histogram_sink_f_impl(size, bins, xmin, xmax, name, nconnections, parent));
+    return gnuradio::make_block_sptr<histogram_sink_f_impl>(
+        size, bins, xmin, xmax, name, nconnections, parent);
 }
 
 histogram_sink_f_impl::histogram_sink_f_impl(int size,

@@ -26,9 +26,8 @@ rational_resampler_base<IN_T, OUT_T, TAP_T>::make(unsigned interpolation,
                                                   unsigned decimation,
                                                   const std::vector<TAP_T>& taps)
 {
-    return gnuradio::get_initial_sptr(
-        new rational_resampler_base_impl<IN_T, OUT_T, TAP_T>(
-            interpolation, decimation, taps));
+    return gnuradio::make_block_sptr<rational_resampler_base_impl<IN_T, OUT_T, TAP_T>>(
+        interpolation, decimation, taps);
 }
 
 template <class IN_T, class OUT_T, class TAP_T>

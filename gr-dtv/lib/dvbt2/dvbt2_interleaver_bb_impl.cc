@@ -20,8 +20,8 @@ dvbt2_interleaver_bb::sptr dvbt2_interleaver_bb::make(dvb_framesize_t framesize,
                                                       dvb_code_rate_t rate,
                                                       dvb_constellation_t constellation)
 {
-    return gnuradio::get_initial_sptr(
-        new dvbt2_interleaver_bb_impl(framesize, rate, constellation));
+    return gnuradio::make_block_sptr<dvbt2_interleaver_bb_impl>(
+        framesize, rate, constellation);
 }
 
 /*

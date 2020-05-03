@@ -38,8 +38,8 @@ namespace qtgui {
 number_sink::sptr number_sink::make(
     size_t itemsize, float average, graph_t graph_type, int nconnections, QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(
-        new number_sink_impl(itemsize, average, graph_type, nconnections, parent));
+    return gnuradio::make_block_sptr<number_sink_impl>(
+        itemsize, average, graph_type, nconnections, parent);
 }
 
 number_sink_impl::number_sink_impl(

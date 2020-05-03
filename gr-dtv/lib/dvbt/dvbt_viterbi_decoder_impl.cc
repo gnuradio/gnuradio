@@ -503,8 +503,8 @@ dvbt_viterbi_decoder::sptr dvbt_viterbi_decoder::make(dvb_constellation_t conste
                                                       dvb_code_rate_t coderate,
                                                       int bsize)
 {
-    return gnuradio::get_initial_sptr(
-        new dvbt_viterbi_decoder_impl(constellation, hierarchy, coderate, bsize));
+    return gnuradio::make_block_sptr<dvbt_viterbi_decoder_impl>(
+        constellation, hierarchy, coderate, bsize);
 }
 
 /*

@@ -31,8 +31,8 @@ const int udp_source_impl::BUF_SIZE_PAYLOADS =
 udp_source::sptr udp_source::make(
     size_t itemsize, const std::string& ipaddr, int port, int payload_size, bool eof)
 {
-    return gnuradio::get_initial_sptr(
-        new udp_source_impl(itemsize, ipaddr, port, payload_size, eof));
+    return gnuradio::make_block_sptr<udp_source_impl>(
+        itemsize, ipaddr, port, payload_size, eof);
 }
 
 udp_source_impl::udp_source_impl(

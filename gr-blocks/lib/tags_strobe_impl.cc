@@ -31,8 +31,8 @@ tags_strobe::sptr tags_strobe::make(size_t sizeof_stream_item,
                                     uint64_t nsamps,
                                     pmt::pmt_t key)
 {
-    return gnuradio::get_initial_sptr(
-        new tags_strobe_impl(sizeof_stream_item, value, nsamps, key));
+    return gnuradio::make_block_sptr<tags_strobe_impl>(
+        sizeof_stream_item, value, nsamps, key);
 }
 
 tags_strobe_impl::tags_strobe_impl(size_t sizeof_stream_item,

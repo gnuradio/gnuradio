@@ -29,8 +29,7 @@ namespace blocks {
 tcp_server_sink::sptr
 tcp_server_sink::make(size_t itemsize, const std::string& host, int port, bool noblock)
 {
-    return gnuradio::get_initial_sptr(
-        new tcp_server_sink_impl(itemsize, host, port, noblock));
+    return gnuradio::make_block_sptr<tcp_server_sink_impl>(itemsize, host, port, noblock);
 }
 
 tcp_server_sink_impl::tcp_server_sink_impl(size_t itemsize,

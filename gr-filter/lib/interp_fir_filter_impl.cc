@@ -25,8 +25,8 @@ typename interp_fir_filter<IN_T, OUT_T, TAP_T>::sptr
 interp_fir_filter<IN_T, OUT_T, TAP_T>::make(unsigned interpolation,
                                             const std::vector<TAP_T>& taps)
 {
-    return gnuradio::get_initial_sptr(
-        new interp_fir_filter_impl<IN_T, OUT_T, TAP_T>(interpolation, taps));
+    return gnuradio::make_block_sptr<interp_fir_filter_impl<IN_T, OUT_T, TAP_T>>(
+        interpolation, taps);
 }
 
 template <class IN_T, class OUT_T, class TAP_T>

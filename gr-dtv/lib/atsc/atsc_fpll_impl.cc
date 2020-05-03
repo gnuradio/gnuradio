@@ -22,7 +22,7 @@ namespace dtv {
 
 atsc_fpll::sptr atsc_fpll::make(float rate)
 {
-    return gnuradio::get_initial_sptr(new atsc_fpll_impl(rate));
+    return gnuradio::make_block_sptr<atsc_fpll_impl>(rate);
 }
 
 atsc_fpll_impl::atsc_fpll_impl(float rate)

@@ -27,8 +27,8 @@ udp_sink::sptr udp_sink::make(size_t itemsize,
                               int payloadsize,
                               bool send_eof)
 {
-    return gnuradio::get_initial_sptr(new udp_sink_impl(
-        itemsize, veclen, host, port, header_type, payloadsize, send_eof));
+    return gnuradio::make_block_sptr<udp_sink_impl>(
+        itemsize, veclen, host, port, header_type, payloadsize, send_eof);
 }
 
 /*

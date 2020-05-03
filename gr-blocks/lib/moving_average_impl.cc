@@ -104,8 +104,8 @@ template <class T>
 typename moving_average<T>::sptr
 moving_average<T>::make(int length, T scale, int max_iter, unsigned int vlen)
 {
-    return gnuradio::get_initial_sptr(
-        new moving_average_impl<T>(length, scale, max_iter, vlen));
+    return gnuradio::make_block_sptr<moving_average_impl<T>>(
+        length, scale, max_iter, vlen);
 }
 
 template <class T>

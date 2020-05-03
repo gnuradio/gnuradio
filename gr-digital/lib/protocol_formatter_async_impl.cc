@@ -23,7 +23,7 @@ namespace digital {
 protocol_formatter_async::sptr
 protocol_formatter_async::make(const header_format_base::sptr& format)
 {
-    return gnuradio::get_initial_sptr(new protocol_formatter_async_impl(format));
+    return gnuradio::make_block_sptr<protocol_formatter_async_impl>(format);
 }
 
 protocol_formatter_async_impl::protocol_formatter_async_impl(

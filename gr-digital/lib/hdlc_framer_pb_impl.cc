@@ -22,7 +22,7 @@ namespace digital {
 
 hdlc_framer_pb::sptr hdlc_framer_pb::make(const std::string frame_tag_name)
 {
-    return gnuradio::get_initial_sptr(new hdlc_framer_pb_impl(frame_tag_name));
+    return gnuradio::make_block_sptr<hdlc_framer_pb_impl>(frame_tag_name);
 }
 
 /*

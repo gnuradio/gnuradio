@@ -19,7 +19,7 @@ namespace gr {
 namespace digital {
 diff_decoder_bb::sptr diff_decoder_bb::make(unsigned int modulus)
 {
-    return gnuradio::get_initial_sptr(new diff_decoder_bb_impl(modulus));
+    return gnuradio::make_block_sptr<diff_decoder_bb_impl>(modulus);
 }
 
 diff_decoder_bb_impl::diff_decoder_bb_impl(unsigned int modulus)

@@ -22,8 +22,8 @@ namespace blocks {
 interleaved_char_to_complex::sptr interleaved_char_to_complex::make(bool vector_input,
                                                                     float scale_factor)
 {
-    return gnuradio::get_initial_sptr(
-        new interleaved_char_to_complex_impl(vector_input, scale_factor));
+    return gnuradio::make_block_sptr<interleaved_char_to_complex_impl>(vector_input,
+                                                                       scale_factor);
 }
 
 interleaved_char_to_complex_impl::interleaved_char_to_complex_impl(bool vector_input,

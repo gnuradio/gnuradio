@@ -21,7 +21,7 @@ namespace blocks {
 
 file_sink::sptr file_sink::make(size_t itemsize, const char* filename, bool append)
 {
-    return gnuradio::get_initial_sptr(new file_sink_impl(itemsize, filename, append));
+    return gnuradio::make_block_sptr<file_sink_impl>(itemsize, filename, append);
 }
 
 file_sink_impl::file_sink_impl(size_t itemsize, const char* filename, bool append)

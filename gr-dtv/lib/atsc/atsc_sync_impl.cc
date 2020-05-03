@@ -28,7 +28,7 @@ static const signed char SSI_MAX = 15;
 
 atsc_sync::sptr atsc_sync::make(float rate)
 {
-    return gnuradio::get_initial_sptr(new atsc_sync_impl(rate));
+    return gnuradio::make_block_sptr<atsc_sync_impl>(rate);
 }
 
 atsc_sync_impl::atsc_sync_impl(float rate)

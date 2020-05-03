@@ -22,8 +22,8 @@ dvbt2_cellinterleaver_cc::make(dvb_framesize_t framesize,
                                int fecblocks,
                                int tiblocks)
 {
-    return gnuradio::get_initial_sptr(
-        new dvbt2_cellinterleaver_cc_impl(framesize, constellation, fecblocks, tiblocks));
+    return gnuradio::make_block_sptr<dvbt2_cellinterleaver_cc_impl>(
+        framesize, constellation, fecblocks, tiblocks);
 }
 
 /*

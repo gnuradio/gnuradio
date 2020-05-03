@@ -27,9 +27,8 @@ freq_xlating_fir_filter<IN_T, OUT_T, TAP_T>::make(int decimation,
                                                   double center_freq,
                                                   double sampling_freq)
 {
-    return gnuradio::get_initial_sptr(
-        new freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>(
-            decimation, taps, center_freq, sampling_freq));
+    return gnuradio::make_block_sptr<freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>>(
+        decimation, taps, center_freq, sampling_freq);
 }
 
 template <class IN_T, class OUT_T, class TAP_T>

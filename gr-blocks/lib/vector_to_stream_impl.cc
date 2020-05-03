@@ -20,8 +20,7 @@ namespace blocks {
 
 vector_to_stream::sptr vector_to_stream::make(size_t itemsize, size_t nitems_per_block)
 {
-    return gnuradio::get_initial_sptr(
-        new vector_to_stream_impl(itemsize, nitems_per_block));
+    return gnuradio::make_block_sptr<vector_to_stream_impl>(itemsize, nitems_per_block);
 }
 
 vector_to_stream_impl::vector_to_stream_impl(size_t itemsize, size_t nitems_per_block)

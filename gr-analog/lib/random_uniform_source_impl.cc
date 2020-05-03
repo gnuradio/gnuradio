@@ -23,8 +23,8 @@ template <class T>
 typename random_uniform_source<T>::sptr
 random_uniform_source<T>::make(int minimum, int maximum, int seed)
 {
-    return gnuradio::get_initial_sptr(
-        new random_uniform_source_impl<T>(minimum, maximum, seed));
+    return gnuradio::make_block_sptr<random_uniform_source_impl<T>>(
+        minimum, maximum, seed);
 }
 
 template <class T>

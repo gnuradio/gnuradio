@@ -34,8 +34,8 @@ linear_equalizer::sptr linear_equalizer::make(unsigned num_taps,
                                               std::vector<gr_complex> training_sequence,
                                               const std::string& training_start_tag)
 {
-    return gnuradio::get_initial_sptr(new linear_equalizer_impl(
-        num_taps, sps, alg, adapt_after_training, training_sequence, training_start_tag));
+    return gnuradio::make_block_sptr<linear_equalizer_impl>(
+        num_taps, sps, alg, adapt_after_training, training_sequence, training_start_tag);
 }
 
 /*

@@ -22,8 +22,7 @@ namespace digital {
 mpsk_snr_est_cc::sptr
 mpsk_snr_est_cc::make(snr_est_type_t type, int tag_nsamples, double alpha)
 {
-    return gnuradio::get_initial_sptr(
-        new mpsk_snr_est_cc_impl(type, tag_nsamples, alpha));
+    return gnuradio::make_block_sptr<mpsk_snr_est_cc_impl>(type, tag_nsamples, alpha);
 }
 
 mpsk_snr_est_cc_impl::mpsk_snr_est_cc_impl(snr_est_type_t type,

@@ -28,8 +28,8 @@ agc3_cc::sptr agc3_cc::make(float attack_rate,
                             float gain,
                             int iir_update_decim)
 {
-    return gnuradio::get_initial_sptr(
-        new agc3_cc_impl(attack_rate, decay_rate, reference, gain, iir_update_decim));
+    return gnuradio::make_block_sptr<agc3_cc_impl>(
+        attack_rate, decay_rate, reference, gain, iir_update_decim);
 }
 
 agc3_cc_impl::agc3_cc_impl(float attack_rate,

@@ -24,8 +24,8 @@ dvbt_map::sptr dvbt_map::make(int nsize,
                               dvbt_transmission_mode_t transmission,
                               float gain)
 {
-    return gnuradio::get_initial_sptr(
-        new dvbt_map_impl(nsize, constellation, hierarchy, transmission, gain));
+    return gnuradio::make_block_sptr<dvbt_map_impl>(
+        nsize, constellation, hierarchy, transmission, gain);
 }
 
 /*

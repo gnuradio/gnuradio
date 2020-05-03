@@ -24,8 +24,8 @@ template <class T>
 typename packed_to_unpacked<T>::sptr
 packed_to_unpacked<T>::make(unsigned int bits_per_chunk, endianness_t endianness)
 {
-    return gnuradio::get_initial_sptr(
-        new packed_to_unpacked_impl<T>(bits_per_chunk, endianness));
+    return gnuradio::make_block_sptr<packed_to_unpacked_impl<T>>(bits_per_chunk,
+                                                                 endianness);
 }
 
 template <class T>

@@ -21,7 +21,7 @@ namespace blocks {
 
 head::sptr head::make(size_t sizeof_stream_item, uint64_t nitems)
 {
-    return gnuradio::get_initial_sptr(new head_impl(sizeof_stream_item, nitems));
+    return gnuradio::make_block_sptr<head_impl>(sizeof_stream_item, nitems);
 }
 
 head_impl::head_impl(size_t sizeof_stream_item, uint64_t nitems)

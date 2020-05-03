@@ -25,7 +25,7 @@ namespace fec {
 
 puncture_ff::sptr puncture_ff::make(int puncsize, int puncpat, int delay)
 {
-    return gnuradio::get_initial_sptr(new puncture_ff_impl(puncsize, puncpat, delay));
+    return gnuradio::make_block_sptr<puncture_ff_impl>(puncsize, puncpat, delay);
 }
 
 puncture_ff_impl::puncture_ff_impl(int puncsize, int puncpat, int delay)

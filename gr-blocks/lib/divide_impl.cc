@@ -23,7 +23,7 @@ namespace blocks {
 template <class T>
 typename divide<T>::sptr divide<T>::make(size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new divide_impl<T>(vlen));
+    return gnuradio::make_block_sptr<divide_impl<T>>(vlen);
 }
 
 template <>

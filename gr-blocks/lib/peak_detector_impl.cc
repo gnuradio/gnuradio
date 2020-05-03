@@ -49,8 +49,8 @@ typename peak_detector<T>::sptr peak_detector<T>::make(float threshold_factor_ri
                                                        int look_ahead,
                                                        float alpha)
 {
-    return gnuradio::get_initial_sptr(new peak_detector_impl<T>(
-        threshold_factor_rise, threshold_factor_fall, look_ahead, alpha));
+    return gnuradio::make_block_sptr<peak_detector_impl<T>>(
+        threshold_factor_rise, threshold_factor_fall, look_ahead, alpha);
 }
 
 template <class T>

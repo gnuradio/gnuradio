@@ -43,7 +43,7 @@ float moving_averager_f::filter(float x)
 
 dc_blocker_ff::sptr dc_blocker_ff::make(int D, bool long_form)
 {
-    return gnuradio::get_initial_sptr(new dc_blocker_ff_impl(D, long_form));
+    return gnuradio::make_block_sptr<dc_blocker_ff_impl>(D, long_form);
 }
 
 dc_blocker_ff_impl::dc_blocker_ff_impl(int D, bool long_form)

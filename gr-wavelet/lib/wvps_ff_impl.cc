@@ -29,7 +29,7 @@ static int ceil_log2(int k)
 
 wvps_ff::sptr wvps_ff::make(int ilen)
 {
-    return gnuradio::get_initial_sptr(new wvps_ff_impl(ilen));
+    return gnuradio::make_block_sptr<wvps_ff_impl>(ilen);
 }
 
 wvps_ff_impl::wvps_ff_impl(int ilen)

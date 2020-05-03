@@ -22,8 +22,8 @@ namespace filter {
 mmse_interpolator_ff::sptr mmse_interpolator_ff::make(float phase_shift,
                                                       float interp_ratio)
 {
-    return gnuradio::get_initial_sptr(
-        new mmse_interpolator_ff_impl(phase_shift, interp_ratio));
+    return gnuradio::make_block_sptr<mmse_interpolator_ff_impl>(phase_shift,
+                                                                interp_ratio);
 }
 
 mmse_interpolator_ff_impl::mmse_interpolator_ff_impl(float phase_shift,

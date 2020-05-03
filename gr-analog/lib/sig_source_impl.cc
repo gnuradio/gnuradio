@@ -32,8 +32,8 @@ typename sig_source<T>::sptr sig_source<T>::make(double sampling_freq,
                                                  T offset,
                                                  float phase)
 {
-    return gnuradio::get_initial_sptr(
-        new sig_source_impl<T>(sampling_freq, waveform, frequency, ampl, offset, phase));
+    return gnuradio::make_block_sptr<sig_source_impl<T>>(
+        sampling_freq, waveform, frequency, ampl, offset, phase);
 }
 
 template <class T>

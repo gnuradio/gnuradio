@@ -36,8 +36,8 @@ vector_sink_f::sptr vector_sink_f::make(unsigned int vlen,
                                         int nconnections,
                                         QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(new vector_sink_f_impl(
-        vlen, x_start, x_step, x_axis_label, y_axis_label, name, nconnections, parent));
+    return gnuradio::make_block_sptr<vector_sink_f_impl>(
+        vlen, x_start, x_step, x_axis_label, y_axis_label, name, nconnections, parent);
 }
 
 vector_sink_f_impl::vector_sink_f_impl(unsigned int vlen,

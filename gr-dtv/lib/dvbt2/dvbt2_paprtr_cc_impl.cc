@@ -34,16 +34,16 @@ dvbt2_paprtr_cc::sptr dvbt2_paprtr_cc::make(dvbt2_extended_carrier_t carriermode
                                             int iterations,
                                             unsigned int vlength)
 {
-    return gnuradio::get_initial_sptr(new dvbt2_paprtr_cc_impl(carriermode,
-                                                               fftsize,
-                                                               pilotpattern,
-                                                               guardinterval,
-                                                               numdatasyms,
-                                                               paprmode,
-                                                               version,
-                                                               vclip,
-                                                               iterations,
-                                                               vlength));
+    return gnuradio::make_block_sptr<dvbt2_paprtr_cc_impl>(carriermode,
+                                                           fftsize,
+                                                           pilotpattern,
+                                                           guardinterval,
+                                                           numdatasyms,
+                                                           paprmode,
+                                                           version,
+                                                           vclip,
+                                                           iterations,
+                                                           vlength);
 }
 
 /*

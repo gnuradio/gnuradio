@@ -27,8 +27,7 @@ template <class T>
 typename vector_insert<T>::sptr
 vector_insert<T>::make(const std::vector<T>& data, int periodicity, int offset)
 {
-    return gnuradio::get_initial_sptr(
-        new vector_insert_impl<T>(data, periodicity, offset));
+    return gnuradio::make_block_sptr<vector_insert_impl<T>>(data, periodicity, offset);
 }
 
 template <class T>

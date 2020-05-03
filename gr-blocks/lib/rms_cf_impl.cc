@@ -21,7 +21,7 @@ namespace blocks {
 
 rms_cf::sptr rms_cf::make(double alpha)
 {
-    return gnuradio::get_initial_sptr(new rms_cf_impl(alpha));
+    return gnuradio::make_block_sptr<rms_cf_impl>(alpha);
 }
 
 rms_cf_impl::rms_cf_impl(double alpha)

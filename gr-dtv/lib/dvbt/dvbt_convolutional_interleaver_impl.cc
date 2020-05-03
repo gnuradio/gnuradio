@@ -20,8 +20,7 @@ namespace dtv {
 dvbt_convolutional_interleaver::sptr
 dvbt_convolutional_interleaver::make(int nsize, int I, int M)
 {
-    return gnuradio::get_initial_sptr(
-        new dvbt_convolutional_interleaver_impl(nsize, I, M));
+    return gnuradio::make_block_sptr<dvbt_convolutional_interleaver_impl>(nsize, I, M);
 }
 
 /*

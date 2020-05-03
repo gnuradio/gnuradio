@@ -23,8 +23,8 @@ template <class IN_T, class OUT_T, class TAP_T>
 typename fir_filter_blk<IN_T, OUT_T, TAP_T>::sptr
 fir_filter_blk<IN_T, OUT_T, TAP_T>::make(int decimation, const std::vector<TAP_T>& taps)
 {
-    return gnuradio::get_initial_sptr(
-        new fir_filter_blk_impl<IN_T, OUT_T, TAP_T>(decimation, taps));
+    return gnuradio::make_block_sptr<fir_filter_blk_impl<IN_T, OUT_T, TAP_T>>(decimation,
+                                                                              taps);
 }
 
 

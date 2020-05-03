@@ -20,7 +20,7 @@ namespace digital {
 
 pn_correlator_cc::sptr pn_correlator_cc::make(int degree, int mask, int seed)
 {
-    return gnuradio::get_initial_sptr(new pn_correlator_cc_impl(degree, mask, seed));
+    return gnuradio::make_block_sptr<pn_correlator_cc_impl>(degree, mask, seed);
 }
 
 pn_correlator_cc_impl::pn_correlator_cc_impl(int degree, int mask, int seed)

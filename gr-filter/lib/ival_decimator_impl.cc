@@ -21,7 +21,7 @@ namespace filter {
 
 ival_decimator::sptr ival_decimator::make(int decimation, int data_size)
 {
-    return gnuradio::get_initial_sptr(new ival_decimator_impl(decimation, data_size));
+    return gnuradio::make_block_sptr<ival_decimator_impl>(decimation, data_size);
 }
 
 /*

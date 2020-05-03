@@ -33,8 +33,8 @@ waterfall_sink_f::sptr waterfall_sink_f::make(int fftsize,
                                               int nconnections,
                                               QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(
-        new waterfall_sink_f_impl(fftsize, wintype, fc, bw, name, nconnections, parent));
+    return gnuradio::make_block_sptr<waterfall_sink_f_impl>(
+        fftsize, wintype, fc, bw, name, nconnections, parent);
 }
 
 waterfall_sink_f_impl::waterfall_sink_f_impl(int fftsize,

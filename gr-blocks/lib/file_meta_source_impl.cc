@@ -48,8 +48,8 @@ file_meta_source::sptr file_meta_source::make(const std::string& filename,
                                               bool detached_header,
                                               const std::string& hdr_filename)
 {
-    return gnuradio::get_initial_sptr(
-        new file_meta_source_impl(filename, repeat, detached_header, hdr_filename));
+    return gnuradio::make_block_sptr<file_meta_source_impl>(
+        filename, repeat, detached_header, hdr_filename);
 }
 
 file_meta_source_impl::file_meta_source_impl(const std::string& filename,

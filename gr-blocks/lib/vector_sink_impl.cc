@@ -26,7 +26,7 @@ template <class T>
 typename vector_sink<T>::sptr vector_sink<T>::make(unsigned int vlen,
                                                    const int reserve_items)
 {
-    return gnuradio::get_initial_sptr(new vector_sink_impl<T>(vlen, reserve_items));
+    return gnuradio::make_block_sptr<vector_sink_impl<T>>(vlen, reserve_items);
 }
 
 template <class T>

@@ -26,8 +26,8 @@ fft_vcc::sptr fft_vcc::make(int fft_size,
                             bool shift,
                             int nthreads)
 {
-    return gnuradio::get_initial_sptr(
-        new fft_vcc_fftw(fft_size, forward, window, shift, nthreads));
+    return gnuradio::make_block_sptr<fft_vcc_fftw>(
+        fft_size, forward, window, shift, nthreads);
 }
 
 fft_vcc_fftw::fft_vcc_fftw(int fft_size,

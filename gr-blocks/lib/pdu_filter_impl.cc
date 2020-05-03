@@ -21,7 +21,7 @@ namespace blocks {
 
 pdu_filter::sptr pdu_filter::make(pmt::pmt_t k, pmt::pmt_t v, bool invert)
 {
-    return gnuradio::get_initial_sptr(new pdu_filter_impl(k, v, invert));
+    return gnuradio::make_block_sptr<pdu_filter_impl>(k, v, invert);
 }
 
 pdu_filter_impl::pdu_filter_impl(pmt::pmt_t k, pmt::pmt_t v, bool invert)

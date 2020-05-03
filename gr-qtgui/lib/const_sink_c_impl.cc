@@ -26,8 +26,7 @@ namespace qtgui {
 const_sink_c::sptr
 const_sink_c::make(int size, const std::string& name, int nconnections, QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(
-        new const_sink_c_impl(size, name, nconnections, parent));
+    return gnuradio::make_block_sptr<const_sink_c_impl>(size, name, nconnections, parent);
 }
 
 const_sink_c_impl::const_sink_c_impl(int size,

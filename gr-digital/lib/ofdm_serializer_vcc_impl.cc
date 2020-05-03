@@ -26,13 +26,13 @@ ofdm_serializer_vcc::make(int fft_len,
                           const std::string& carr_offset_key,
                           bool input_is_shifted)
 {
-    return gnuradio::get_initial_sptr(new ofdm_serializer_vcc_impl(fft_len,
-                                                                   occupied_carriers,
-                                                                   len_tag_key,
-                                                                   packet_len_tag_key,
-                                                                   symbols_skipped,
-                                                                   carr_offset_key,
-                                                                   input_is_shifted));
+    return gnuradio::make_block_sptr<ofdm_serializer_vcc_impl>(fft_len,
+                                                               occupied_carriers,
+                                                               len_tag_key,
+                                                               packet_len_tag_key,
+                                                               symbols_skipped,
+                                                               carr_offset_key,
+                                                               input_is_shifted);
 }
 
 ofdm_serializer_vcc::sptr
@@ -42,14 +42,14 @@ ofdm_serializer_vcc::make(const gr::digital::ofdm_carrier_allocator_cvc::sptr& a
                           const std::string& carr_offset_key,
                           bool input_is_shifted)
 {
-    return gnuradio::get_initial_sptr(
-        new ofdm_serializer_vcc_impl(allocator->fft_len(),
-                                     allocator->occupied_carriers(),
-                                     allocator->len_tag_key(),
-                                     packet_len_tag_key,
-                                     symbols_skipped,
-                                     carr_offset_key,
-                                     !input_is_shifted));
+    return gnuradio::make_block_sptr<ofdm_serializer_vcc_impl>(
+        allocator->fft_len(),
+        allocator->occupied_carriers(),
+        allocator->len_tag_key(),
+        packet_len_tag_key,
+        symbols_skipped,
+        carr_offset_key,
+        !input_is_shifted);
 }
 
 ofdm_serializer_vcc_impl::ofdm_serializer_vcc_impl(

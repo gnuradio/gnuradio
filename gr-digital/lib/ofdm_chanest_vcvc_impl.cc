@@ -26,12 +26,12 @@ ofdm_chanest_vcvc::make(const std::vector<gr_complex>& sync_symbol1,
                         int max_carr_offset,
                         bool force_one_sync_symbol)
 {
-    return gnuradio::get_initial_sptr(new ofdm_chanest_vcvc_impl(sync_symbol1,
-                                                                 sync_symbol2,
-                                                                 n_data_symbols,
-                                                                 eq_noise_red_len,
-                                                                 max_carr_offset,
-                                                                 force_one_sync_symbol));
+    return gnuradio::make_block_sptr<ofdm_chanest_vcvc_impl>(sync_symbol1,
+                                                             sync_symbol2,
+                                                             n_data_symbols,
+                                                             eq_noise_red_len,
+                                                             max_carr_offset,
+                                                             force_one_sync_symbol);
 }
 
 ofdm_chanest_vcvc_impl::ofdm_chanest_vcvc_impl(

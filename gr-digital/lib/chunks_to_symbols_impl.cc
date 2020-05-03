@@ -40,8 +40,8 @@ template <class IN_T, class OUT_T>
 typename chunks_to_symbols<IN_T, OUT_T>::sptr
 chunks_to_symbols<IN_T, OUT_T>::make(const std::vector<OUT_T>& symbol_table, const int D)
 {
-    return gnuradio::get_initial_sptr(
-        new chunks_to_symbols_impl<IN_T, OUT_T>(symbol_table, D));
+    return gnuradio::make_block_sptr<chunks_to_symbols_impl<IN_T, OUT_T>>(symbol_table,
+                                                                          D);
 }
 
 template <class IN_T, class OUT_T>

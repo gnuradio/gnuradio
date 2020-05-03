@@ -20,7 +20,7 @@ namespace blocks {
 
 add_const_cc::sptr add_const_cc::make(gr_complex k)
 {
-    return gnuradio::get_initial_sptr(new add_const_cc_impl(k));
+    return gnuradio::make_block_sptr<add_const_cc_impl>(k);
 }
 
 add_const_cc_impl::add_const_cc_impl(gr_complex k)

@@ -20,8 +20,7 @@ namespace analog {
 pwr_squelch_cc::sptr
 pwr_squelch_cc::make(double threshold, double alpha, int ramp, bool gate)
 {
-    return gnuradio::get_initial_sptr(
-        new pwr_squelch_cc_impl(threshold, alpha, ramp, gate));
+    return gnuradio::make_block_sptr<pwr_squelch_cc_impl>(threshold, alpha, ramp, gate);
 }
 
 pwr_squelch_cc_impl::pwr_squelch_cc_impl(double threshold,

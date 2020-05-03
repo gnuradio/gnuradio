@@ -23,7 +23,7 @@ namespace zeromq {
 
 sub_msg_source::sptr sub_msg_source::make(char* address, int timeout, bool bind)
 {
-    return gnuradio::get_initial_sptr(new sub_msg_source_impl(address, timeout, bind));
+    return gnuradio::make_block_sptr<sub_msg_source_impl>(address, timeout, bind);
 }
 
 sub_msg_source_impl::sub_msg_source_impl(char* address, int timeout, bool bind)
