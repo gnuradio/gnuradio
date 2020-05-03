@@ -67,6 +67,11 @@ class ModToolNewModule(ModTool):
         logger.info(f"Creating out-of-tree module in {self.dir}...")
         try:
             shutil.copytree(self.srcdir, self.dir)
+            try:
+              shutil.copyfile(os.path.join(gr.prefix(), 'share', 'gnuradio', 'clang-format.conf'),
+                              os.path.join(self.dir, '.clang-format'))
+            except FileNotFoundError as e:
+              logger.info(f'Failed to copy .clang-format: {e}')
             os.chdir(self.dir)
         except OSError:
             raise ModToolException(f'Could not create directory {self.dir}.')
