@@ -15,12 +15,12 @@ import os
 
 from gnuradio import gr, gr_unittest, trellis, digital, analog, blocks
 
-fsm_args = {"awgn1o2_4": (2, 4, 4,
-                          (0, 2, 0, 2, 1, 3, 1, 3),
-                          (0, 3, 3, 0, 1, 2, 2, 1),
-                          ),
-            "rep2": (2, 1, 4, (0, 0), (0, 3)),
-            "nothing": (2, 1, 2, (0, 0), (0, 1)),
+fsm_args = {"awgn1o2_4": [2, 4, 4,
+                          [0, 2, 0, 2, 1, 3, 1, 3],
+                          [0, 3, 3, 0, 1, 2, 2, 1],
+                         ],
+            "rep2": [2, 1, 4, [0, 0], [0, 3]],
+            "nothing": [2, 1, 2, [0, 0], [0, 1]],
             }
 
 constells = {2: digital.constellation_bpsk(),
@@ -31,7 +31,7 @@ class test_trellis (gr_unittest.TestCase):
 
     def test_001_fsm (self):
         f = trellis.fsm(*fsm_args["awgn1o2_4"])
-        self.assertEqual(fsm_args["awgn1o2_4"],(f.I(),f.S(),f.O(),f.NS(),f.OS()))
+        self.assertEqual(fsm_args["awgn1o2_4"],[f.I(),f.S(),f.O(),f.NS(),f.OS()])
 
     def test_002_fsm (self):
         f = trellis.fsm(*fsm_args["awgn1o2_4"])
@@ -51,8 +51,8 @@ class test_trellis (gr_unittest.TestCase):
 
     def test_001_interleaver (self):
         K = 5
-        IN = (1,2,3,4,0)
-        DIN = (4,0,1,2,3)
+        IN = [1,2,3,4,0]
+        DIN = [4,0,1,2,3]
         i = trellis.interleaver(K,IN)
         self.assertEqual((K,IN,DIN),(i.K(),i.INTER(),i.DEINTER()))
 
