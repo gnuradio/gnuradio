@@ -19,4 +19,31 @@ namespace py = pybind11;
 // pydoc.h is automatically generated in the build directory
 #include <viterbi_pydoc.h>
 
-void bind_viterbi(py::module& m) {}
+template <typename T>
+void bind_viterbi_template(py::module& m, const char* classname)
+{
+    using viterbi = gr::trellis::viterbi<T>;
+
+    py::class_<viterbi, gr::block, gr::basic_block, std::shared_ptr<viterbi>>(m,
+                                                                              classname)
+        .def(py::init(&gr::trellis::viterbi<T>::make),
+             py::arg("FSM"),
+             py::arg("K"),
+             py::arg("S0"),
+             py::arg("SK"))
+        .def("FSM", &viterbi::FSM)
+        .def("K", &viterbi::K)
+        .def("S0", &viterbi::S0)
+        .def("SK", &viterbi::SK)
+        .def("set_FSM", &viterbi::set_FSM)
+        .def("set_K", &viterbi::set_K)
+        .def("set_S0", &viterbi::set_S0)
+        .def("set_SK", &viterbi::set_SK);
+}
+
+void bind_viterbi(py::module& m)
+{
+    bind_viterbi_template<std::uint8_t>(m, "viterbi_b");
+    bind_viterbi_template<std::int16_t>(m, "viterbi_s");
+    bind_viterbi_template<std::int32_t>(m, "viterbi_i");
+}
