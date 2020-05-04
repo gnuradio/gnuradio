@@ -46,4 +46,3 @@ PYBIND11_MODULE(network_python, m)
     bind_udp_sink(m);
     bind_udp_source(m);
 }
-

@@ -33,7 +33,7 @@ void bind_gsm_fr_encode_sp(py::module& m)
                std::shared_ptr<gsm_fr_encode_sp>>(
         m, "gsm_fr_encode_sp", D(gsm_fr_encode_sp))
 
-       .def(py::init(&gsm_fr_encode_sp::make),D(gsm_fr_encode_sp, make))
+        .def(py::init(&gsm_fr_encode_sp::make), D(gsm_fr_encode_sp, make))
 
 
         ;

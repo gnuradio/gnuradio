@@ -11,8 +11,8 @@
 #ifndef GF2VEC_H
 #define GF2VEC_H
 
-#include <vector>
 #include <stdint.h>
+#include <vector>
 
 class GF2Vec
 {

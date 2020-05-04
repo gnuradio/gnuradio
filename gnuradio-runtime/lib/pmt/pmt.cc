@@ -298,7 +298,7 @@ pmt_t pmt_from_complex(double re, double im)
     return pmt_t(new pmt_complex(std::complex<double>(re, im)));
 }
 
-pmt_t pmt_from_complex(const std::complex<double> &z)
+pmt_t pmt_from_complex(const std::complex<double>& z)
 {
     return pmt_t(new pmt_complex(z));
 }

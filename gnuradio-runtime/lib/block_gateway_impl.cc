@@ -20,8 +20,7 @@ block_gateway::sptr block_gateway::make(const py::object& p,
                                         gr::io_signature::sptr in_sig,
                                         gr::io_signature::sptr out_sig)
 {
-    return block_gateway::sptr(
-        new block_gateway_impl(p, name, in_sig, out_sig));
+    return block_gateway::sptr(new block_gateway_impl(p, name, in_sig, out_sig));
 }
 
 block_gateway_impl::block_gateway_impl(const py::handle& p,
@@ -36,10 +35,10 @@ block_gateway_impl::block_gateway_impl(const py::handle& p,
 void block_gateway_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
 {
     py::gil_scoped_acquire acquire;
-    
-    py::object ret_ninput_items_required = _py_handle.attr("handle_forecast")(noutput_items, ninput_items_required.size());
-    ninput_items_required =  ret_ninput_items_required.cast<std::vector<int>>();
 
+    py::object ret_ninput_items_required =
+        _py_handle.attr("handle_forecast")(noutput_items, ninput_items_required.size());
+    ninput_items_required = ret_ninput_items_required.cast<std::vector<int>>();
 }
 
 int block_gateway_impl::general_work(int noutput_items,
@@ -49,9 +48,11 @@ int block_gateway_impl::general_work(int noutput_items,
 {
     py::gil_scoped_acquire acquire;
 
-    py::object ret = _py_handle.attr("handle_general_work")(noutput_items, ninput_items, input_items, output_items);
-    
-    return ret.cast<int>();;
+    py::object ret = _py_handle.attr("handle_general_work")(
+        noutput_items, ninput_items, input_items, output_items);
+
+    return ret.cast<int>();
+    ;
 }
 
 bool block_gateway_impl::start(void)
@@ -68,7 +69,6 @@ bool block_gateway_impl::stop(void)
 
     py::object ret = _py_handle.attr("stop")();
     return ret.cast<bool>();
-
 }
 
 } /* namespace gr */
