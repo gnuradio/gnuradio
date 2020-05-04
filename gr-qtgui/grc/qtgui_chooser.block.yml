@@ -126,11 +126,7 @@ templates:
         % if int(num_opts):
         self._${id}_labels = (\
         % for lbl in all_labels:
-        % if lbl:
         ${lbl}, \
-        % else:
-        self._${id}_options[${i}], \
-        % endif
         % endfor
         )
         % elif labels:
