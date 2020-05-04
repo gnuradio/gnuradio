@@ -24,13 +24,12 @@ void bind_wavfile(py::module& m)
     using wav_header_info = gr::blocks::wav_header_info;
 
     py::class_<wav_header_info, std::shared_ptr<wav_header_info>>(m, "wav_header_info")
-      .def_readwrite("sample_rate",&wav_header_info::sample_rate)
-      .def_readwrite("nchans",&wav_header_info::nchans)
-      .def_readwrite("bytes_per_sample",&wav_header_info::bytes_per_sample)
-      .def_readwrite("first_sample_pos",&wav_header_info::first_sample_pos)
-      .def_readwrite("samples_per_chan",&wav_header_info::samples_per_chan)
-      .def_readwrite("data_chunk_size",&wav_header_info::data_chunk_size)
-      ;
+        .def_readwrite("sample_rate", &wav_header_info::sample_rate)
+        .def_readwrite("nchans", &wav_header_info::nchans)
+        .def_readwrite("bytes_per_sample", &wav_header_info::bytes_per_sample)
+        .def_readwrite("first_sample_pos", &wav_header_info::first_sample_pos)
+        .def_readwrite("samples_per_chan", &wav_header_info::samples_per_chan)
+        .def_readwrite("data_chunk_size", &wav_header_info::data_chunk_size);
 
     m.def("wavheader_parse",
           &::gr::blocks::wavheader_parse,
