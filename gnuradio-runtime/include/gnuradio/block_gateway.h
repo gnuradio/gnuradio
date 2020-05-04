@@ -37,6 +37,7 @@ class GR_RUNTIME_API block_gateway : virtual public gr::block
 {
 private:
     py::handle d_py_handle;
+
 public:
     // gr::block_gateway::sptr
     typedef std::shared_ptr<block_gateway> sptr;
@@ -62,18 +63,17 @@ public:
     }
 
     void _add_item_tag(unsigned int which_output,
-                             uint64_t abs_offset,
-                             const pmt::pmt_t& key,
-                             const pmt::pmt_t& value,
-                             const pmt::pmt_t& srcid = pmt::PMT_F)
+                       uint64_t abs_offset,
+                       const pmt::pmt_t& key,
+                       const pmt::pmt_t& value,
+                       const pmt::pmt_t& srcid = pmt::PMT_F)
     {
         return gr::block::add_item_tag(which_output, abs_offset, key, value, srcid);
     }
 
 
-    std::vector<tag_t> _get_tags_in_range(unsigned int which_input,
-                                                uint64_t abs_start,
-                                                uint64_t abs_end)
+    std::vector<tag_t>
+    _get_tags_in_range(unsigned int which_input, uint64_t abs_start, uint64_t abs_end)
     {
         std::vector<gr::tag_t> tags;
         gr::block::get_tags_in_range(tags, which_input, abs_start, abs_end);
@@ -81,18 +81,17 @@ public:
     }
 
     std::vector<tag_t> _get_tags_in_range(unsigned int which_input,
-                                                uint64_t abs_start,
-                                                uint64_t abs_end,
-                                                const pmt::pmt_t& key)
+                                          uint64_t abs_start,
+                                          uint64_t abs_end,
+                                          const pmt::pmt_t& key)
     {
         std::vector<gr::tag_t> tags;
         gr::block::get_tags_in_range(tags, which_input, abs_start, abs_end, key);
         return tags;
     }
 
-    std::vector<tag_t> _get_tags_in_window(unsigned int which_input,
-                                                 uint64_t rel_start,
-                                                 uint64_t rel_end)
+    std::vector<tag_t>
+    _get_tags_in_window(unsigned int which_input, uint64_t rel_start, uint64_t rel_end)
     {
         std::vector<gr::tag_t> tags;
         gr::block::get_tags_in_window(tags, which_input, rel_start, rel_end);
@@ -100,21 +99,21 @@ public:
     }
 
     std::vector<tag_t> _get_tags_in_window(unsigned int which_input,
-                                                 uint64_t rel_start,
-                                                 uint64_t rel_end,
-                                                 const pmt::pmt_t& key)
+                                           uint64_t rel_start,
+                                           uint64_t rel_end,
+                                           const pmt::pmt_t& key)
     {
         std::vector<gr::tag_t> tags;
         gr::block::get_tags_in_window(tags, which_input, rel_start, rel_end, key);
         return tags;
     }
 
-    virtual void set_msg_handler_pybind(pmt::pmt_t which_port, std::string& handler_name) = 0;
+    virtual void set_msg_handler_pybind(pmt::pmt_t which_port,
+                                        std::string& handler_name) = 0;
 
 protected:
     virtual bool has_msg_handler(pmt::pmt_t which_port) = 0;
     virtual void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg) = 0;
-
 };
 
 } /* namespace gr */

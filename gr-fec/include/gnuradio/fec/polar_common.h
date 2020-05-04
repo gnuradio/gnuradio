@@ -15,8 +15,8 @@
 #include <vector>
 
 #include <gnuradio/fec/api.h>
-#include <vector>
 #include <stdint.h>
+#include <vector>
 
 // Forward declaration for those objects. SWIG doesn't like them to be #include'd.
 namespace gr {

@@ -46,7 +46,7 @@ public:
         }
         d_msg_handlers_pybind[which_port] = handler_name;
     }
-    
+
 protected:
     // Message handlers back into python using pybind API
     typedef std::map<pmt::pmt_t, std::string, pmt::comparator> msg_handlers_pybind_t;
@@ -68,7 +68,8 @@ protected:
             // d_msg_handlers_pybind[which_port]->calleval(msg); // Yes, invoke it.
             py::gil_scoped_acquire acquire;
             // std::string handler_name(d_msg_handlers_pybind[which_port]);
-            py::object ret = _py_handle.attr(d_msg_handlers_pybind[which_port].c_str())(msg);
+            py::object ret =
+                _py_handle.attr(d_msg_handlers_pybind[which_port].c_str())(msg);
         } else {
             // Pass to generic dispatcher if not found
             gr::basic_block::dispatch_msg(which_port, msg);

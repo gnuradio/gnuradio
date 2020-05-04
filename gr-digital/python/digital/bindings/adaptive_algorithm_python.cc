@@ -25,8 +25,7 @@ void bind_adaptive_algorithm(py::module& m)
     using adaptive_algorithm = ::gr::digital::adaptive_algorithm;
 
 
-    py::class_<adaptive_algorithm,
-               std::shared_ptr<adaptive_algorithm>>(
+    py::class_<adaptive_algorithm, std::shared_ptr<adaptive_algorithm>>(
         m, "adaptive_algorithm", D(adaptive_algorithm))
 
         .def("base", &adaptive_algorithm::base, D(adaptive_algorithm, base))

@@ -50,7 +50,4 @@ PYBIND11_MODULE(howto_python, m)
     /**************************************/
     // BINDING_FUNCTION_CALLS(
     // ) END BINDING_FUNCTION_CALLS
-
-
 }
-

@@ -768,13 +768,13 @@ void bind_pmt(py::module& m)
           D(init_u64vector, 0));
 
 
-    m.def("init_u64vector",
-          (pmt::pmt_t(*)(
-              size_t, std::vector<uint64_t, std::allocator<uint64_t>> const&)) &
-              ::pmt::init_u64vector,
-          py::arg("k"),
-          py::arg("data"),
-          D(init_u64vector, 1));
+    m.def(
+        "init_u64vector",
+        (pmt::pmt_t(*)(size_t, std::vector<uint64_t, std::allocator<uint64_t>> const&)) &
+            ::pmt::init_u64vector,
+        py::arg("k"),
+        py::arg("data"),
+        D(init_u64vector, 1));
 
 
     m.def("init_s64vector",
@@ -1174,8 +1174,7 @@ void bind_pmt(py::module& m)
 
 
     m.def("u64vector_elements",
-          (std::vector<uint64_t, std::allocator<uint64_t>> const (*)(
-              pmt::pmt_t)) &
+          (std::vector<uint64_t, std::allocator<uint64_t>> const (*)(pmt::pmt_t)) &
               ::pmt::u64vector_elements,
           py::arg("v"),
           D(u64vector_elements, 1));

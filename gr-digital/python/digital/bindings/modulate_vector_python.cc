@@ -16,14 +16,15 @@
 namespace py = pybind11;
 
 #include <gnuradio/basic_block.h>
-#include <gnuradio/runtime_types.h>
 #include <gnuradio/digital/modulate_vector.h>
+#include <gnuradio/runtime_types.h>
 
 void bind_modulate_vector(py::module& m)
 {
 
-    m.def("modulate_vector_bc",&::gr::digital::modulate_vector_bc,
-      py::arg("modulator"),
-      py::arg("data"),
-      py::arg("taps"));
+    m.def("modulate_vector_bc",
+          &::gr::digital::modulate_vector_bc,
+          py::arg("modulator"),
+          py::arg("data"),
+          py::arg("taps"));
 }
