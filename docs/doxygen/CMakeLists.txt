@@ -18,6 +18,13 @@ set(enable_html_docs YES)
 set(enable_latex_docs NO)
 set(enable_xml_docs YES)
 
+if(MATHJAX2_FOUND)
+  set(enable_mathjax YES)
+else()
+  message(WARNING "MathJax 2 not found, HTML equations might not be properly rendered.")
+  set(enable_mathjax NO)
+endif()
+
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in
     ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile

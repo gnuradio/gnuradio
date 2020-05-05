@@ -17,6 +17,7 @@ file(TO_NATIVE_PATH ${CMAKE_BINARY_DIR} abs_top_builddir)
 set(HAVE_DOT ${DOXYGEN_DOT_FOUND})
 set(enable_html_docs YES)
 set(enable_latex_docs NO)
+set(enable_mathjax NO)
 set(enable_xml_docs YES)
 
 configure_file(
