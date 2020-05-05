@@ -84,7 +84,7 @@ class QEngValidator(Qt.QValidator):
         pass
 
 class RangeWidget(QtWidgets.QWidget):
-    def __init__(self, ranges, slot, label, style, rangeType=float):
+    def __init__(self, ranges, slot, label, style, rangeType=float, orientation=QtCore.Qt.Horizontal):
         """ Creates the QT Range widget """
         QtWidgets.QWidget.__init__(self)
 
@@ -107,7 +107,7 @@ class RangeWidget(QtWidgets.QWidget):
         if style == "dial":
             self.d_widget = self.Dial(self, self.range, self.notifyChanged, rangeType)
         elif style == "slider":
-            self.d_widget = self.Slider(self, self.range, self.notifyChanged, rangeType)
+            self.d_widget = self.Slider(self, self.range, self.notifyChanged, rangeType, orientation)
         elif style == "counter":
             # The counter widget can be directly wired to the notifyChanged slot
             self.d_widget = self.Counter(self, self.range, self.notifyChanged, rangeType)
@@ -115,10 +115,10 @@ class RangeWidget(QtWidgets.QWidget):
             # Text input with engineering notation support
             self.d_widget = self.Eng(self, self.range, self.notifyChanged, rangeType)
         elif style == "eng_slider":
-            self.d_widget = self.EngSlider(self, self.range, self.notifyChanged, rangeType)
+            self.d_widget = self.EngSlider(self, self.range, self.notifyChanged, rangeType, orientation)
         else:
             # The CounterSlider needs its own internal handlers before calling notifyChanged
-            self.d_widget = self.CounterSlider(self, self.range, self.notifyChanged, rangeType)
+            self.d_widget = self.CounterSlider(self, self.range, self.notifyChanged, rangeType, orientation)
 
         layout.addWidget(self.d_widget)
         self.setLayout(layout)
@@ -151,8 +151,8 @@ class RangeWidget(QtWidgets.QWidget):
 
     class Slider(QtWidgets.QSlider):
         """ Creates the range using a slider """
-        def __init__(self, parent, ranges, slot, rangeType=float):
-            QtWidgets.QSlider.__init__(self, QtCore.Qt.Horizontal, parent)
+        def __init__(self, parent, ranges, slot, rangeType=float, orientation=QtCore.Qt.Horizontal):
+            QtWidgets.QSlider.__init__(self, orientation, parent)
 
             self.rangeType = rangeType
 
@@ -162,6 +162,7 @@ class RangeWidget(QtWidgets.QWidget):
             self.setTickPosition(2)
             self.setSingleStep(1)
             self.range = ranges
+            self.orientation = orientation
 
             # Round the initial value to the closest tick
             temp = int(round(ranges.demap_range(ranges.default), 0))
@@ -186,7 +187,10 @@ class RangeWidget(QtWidgets.QWidget):
 
         def mousePressEvent(self, event):
             if((event.button() == QtCore.Qt.LeftButton)):
-                new = self.minimum() + ((self.maximum()-self.minimum()) * event.x()) / self.width()
+                if self.orientation == QtCore.Qt.Horizontal:
+                    new = self.minimum() + ((self.maximum()-self.minimum()) * event.x()) / self.width()
+                else:
+                    new = self.minimum() + ((self.maximum()-self.minimum()) * event.y()) / self.height()
                 self.setValue(new)
                 event.accept()
             # Use repaint rather than calling the super mousePressEvent.
@@ -194,7 +198,10 @@ class RangeWidget(QtWidgets.QWidget):
             QtWidgets.QSlider.repaint(self)
 
         def mouseMoveEvent(self, event):
-            new = self.minimum() + ((self.maximum()-self.minimum()) * event.x()) / self.width()
+            if self.orientation == QtCore.Qt.Horizontal:
+                new = self.minimum() + ((self.maximum()-self.minimum()) * event.x()) / self.width()
+            else:
+                new = self.minimum() + ((self.maximum()-self.minimum()) * event.y()) / self.height()
             self.setValue(new)
             event.accept()
             QtWidgets.QSlider.repaint(self)
@@ -244,7 +251,7 @@ class RangeWidget(QtWidgets.QWidget):
 
     class CounterSlider(QtWidgets.QWidget):
         """ Creates the range using a counter and slider """
-        def __init__(self, parent, ranges, slot, rangeType=float):
+        def __init__(self, parent, ranges, slot, rangeType=float, orientation=QtCore.Qt.Horizontal):
             QtWidgets.QWidget.__init__(self, parent)
 
             self.rangeType = rangeType
@@ -252,7 +259,7 @@ class RangeWidget(QtWidgets.QWidget):
             # Slot to call in the parent
             self.notifyChanged = slot
 
-            self.slider = RangeWidget.Slider(parent, ranges, self.sliderChanged, rangeType)
+            self.slider = RangeWidget.Slider(parent, ranges, self.sliderChanged, rangeType, orientation)
             self.counter = RangeWidget.Counter(parent, ranges, self.counterChanged, rangeType)
 
             # Need another horizontal layout to wrap the other widgets.
@@ -301,7 +308,7 @@ class RangeWidget(QtWidgets.QWidget):
 
     class EngSlider(QtWidgets.QWidget):
         """ Creates the range using a counter and slider """
-        def __init__(self, parent, ranges, slot, rangeType=float):
+        def __init__(self, parent, ranges, slot, rangeType=float, orientation=QtCore.Qt.Horizontal):
             QtWidgets.QWidget.__init__(self, parent)
 
             self.first = True
@@ -310,7 +317,7 @@ class RangeWidget(QtWidgets.QWidget):
             # Slot to call in the parent
             self.notifyChanged = slot
 
-            self.slider = RangeWidget.Slider(parent, ranges, self.sliderChanged, rangeType)
+            self.slider = RangeWidget.Slider(parent, ranges, self.sliderChanged, rangeType, orientation)
             self.counter = RangeWidget.Eng(parent, ranges, self.counterChanged, rangeType)
 
             # Need another horizontal layout to wrap the other widgets.
