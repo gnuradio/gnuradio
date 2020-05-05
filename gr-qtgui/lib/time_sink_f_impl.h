@@ -28,6 +28,7 @@ private:
     double d_samp_rate;
     const std::string d_name;
     unsigned int d_nconnections;
+    const pmt::pmt_t d_tag_key;
 
     int d_index, d_start, d_end;
     std::vector<float*> d_fbuffers;
