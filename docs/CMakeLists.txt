@@ -9,12 +9,14 @@
 # Setup dependencies
 ########################################################################
 find_package(Doxygen)
+find_package(MathJax2)
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
-GR_REGISTER_COMPONENT("doxygen" ENABLE_DOXYGEN DOXYGEN_FOUND)
+GR_REGISTER_COMPONENT("doxygen" ENABLE_DOXYGEN
+  DOXYGEN_FOUND)
 
 ########################################################################
 # Begin conditional configuration
