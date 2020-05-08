@@ -18,6 +18,8 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/filesystem.hpp>
 #include <iostream>
 #include <stdexcept>
 
@@ -41,12 +43,21 @@
 namespace gr {
 namespace blocks {
 
-tagged_file_sink::sptr tagged_file_sink::make(size_t itemsize, double samp_rate)
+tagged_file_sink::sptr tagged_file_sink::make(size_t itemsize,
+                                              double samp_rate,
+                                              const std::string& directory,
+                                              const std::string& filename_prefix,
+                                              bool legacy_filename)
 {
-    return gnuradio::get_initial_sptr(new tagged_file_sink_impl(itemsize, samp_rate));
+    return gnuradio::get_initial_sptr(new tagged_file_sink_impl(
+        itemsize, samp_rate, directory, filename_prefix, legacy_filename));
 }
 
-tagged_file_sink_impl::tagged_file_sink_impl(size_t itemsize, double samp_rate)
+tagged_file_sink_impl::tagged_file_sink_impl(size_t itemsize,
+                                             double samp_rate,
+                                             const std::string& directory,
+                                             const std::string& filename_prefix,
+                                             bool legacy_filename)
     : sync_block("tagged_file_sink",
                  io_signature::make(1, 1, itemsize),
                  io_signature::make(0, 0, 0)),
@@ -56,7 +67,10 @@ tagged_file_sink_impl::tagged_file_sink_impl(size_t itemsize, double samp_rate)
       d_handle(nullptr),
       d_n(0),
       d_last_N(0),
-      d_timeval(0)
+      d_timeval(0),
+      d_directory(directory),
+      d_filename_prefix(filename_prefix),
+      d_legacy_filename(legacy_filename)
 {
 }
 
@@ -142,19 +156,43 @@ int tagged_file_sink_impl::work(int noutput_items,
                     d_last_N = N;
 
                     std::stringstream filename;
-                    filename.setf(std::ios::fixed, std::ios::floatfield);
-                    filename.precision(8);
-                    filename << "file" << unique_id() << "_" << d_n << "_" << d_timeval
-                             << ".dat";
+                    if (d_legacy_filename == true) {
+                        filename.setf(std::ios::fixed, std::ios::floatfield);
+                        filename.precision(8);
+                        filename << "file" << unique_id() << "_" << d_n << "_"
+                                 << d_timeval;
+                    } else {
+                        if (d_filename_prefix.length() == 0) {
+                            GR_LOG_ERROR(d_logger,
+                                         "Logic error: filename prefix cannot be empty.");
+                            return -1;
+                        }
+                        const boost::posix_time::ptime now =
+                            boost::posix_time::microsec_clock::local_time();
+                        static std::locale time_date(
+                            filename.getloc(),
+                            new boost::posix_time::time_facet("%Y-%m-%d_%H_%M_%S.%f"));
+
+                        filename << d_filename_prefix << "_";
+                        filename.imbue(time_date);
+                        filename << now;
+                    }
+                    filename << ".dat";
+
+                    boost::filesystem::path target_directory(d_directory);
+                    boost::filesystem::path target_filename(filename.str());
+                    boost::filesystem::path file_path =
+                        target_directory / target_filename;
+
                     d_n++;
 
                     int fd;
-                    if ((fd = ::open(filename.str().c_str(),
+                    if ((fd = ::open(file_path.c_str(),
                                      O_WRONLY | O_CREAT | O_TRUNC | OUR_O_LARGEFILE |
                                          OUR_O_BINARY,
                                      0664)) < 0) {
                         GR_LOG_ERROR(d_logger,
-                                     boost::format("::open %s: %s") % filename.str() %
+                                     boost::format("::open %s: %s") % file_path %
                                          strerror(errno));
                         return -1;
                     }
@@ -163,12 +201,12 @@ int tagged_file_sink_impl::work(int noutput_items,
                     // if((d_handle = fdopen (fd, d_is_binary ? "wb" : "w")) == NULL) {
                     if ((d_handle = fdopen(fd, "wb")) == NULL) {
                         GR_LOG_ERROR(d_logger,
-                                     boost::format("fdopen %s: %s") % filename.str() %
+                                     boost::format("fdopen %s: %s") % file_path %
                                          strerror(errno));
                         ::close(fd); // don't leak file descriptor if fdopen fails.
                     }
 
-                    // std::cout << "Created new file: " << filename.str() << std::endl;
+                    // std::cout << "Created new file: " << file_path.str() << std::endl;
 
                     d_state = state_t::IN_BURST;
                     break;

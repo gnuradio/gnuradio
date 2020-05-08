@@ -29,9 +29,16 @@ private:
     int d_n;
     uint64_t d_last_N;
     double d_timeval;
+    const std::string d_directory;
+    const std::string d_filename_prefix;
+    bool d_legacy_filename;
 
 public:
-    tagged_file_sink_impl(size_t itemsize, double samp_rate);
+    tagged_file_sink_impl(size_t itemsize,
+                          double samp_rate,
+                          const std::string& directory,
+                          const std::string& filename_prefix,
+                          bool legacy_filename);
     ~tagged_file_sink_impl();
 
     int work(int noutput_items,

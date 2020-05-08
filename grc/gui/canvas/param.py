@@ -29,7 +29,7 @@ class Param(CoreParam):
             gtk input class
         """
         dtype = self.dtype
-        if dtype in ('file_open', 'file_save'):
+        if dtype in ('file_open', 'file_save', 'directory_path'):
             input_widget_cls = ParamWidgets.FileParam
 
         elif dtype == 'enum':
@@ -131,7 +131,7 @@ class Param(CoreParam):
             else:
                 # Small vectors use eval
                 dt_str = ', '.join(map(Utils.num_to_str, e))
-        elif t in ('file_open', 'file_save'):
+        elif t in ('file_open', 'file_save', 'directory_path'):
             dt_str = self.get_value()
             truncate = -1
         else:

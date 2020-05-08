@@ -20,6 +20,20 @@ parameters:
     dtype: int
     default: '1'
     hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: directory
+    label: Directory
+    dtype: directory_path
+-   id: filename_prefix
+    label: Filename prefix
+    dtype: string
+    default: ""
+    hide: ${ 'none' if legacy_filename == False else 'all' }
+-   id: legacy_filename
+    label: Legacy filename
+    dtype: bool
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
 
 inputs:
 -   domain: stream
@@ -28,14 +42,15 @@ inputs:
 
 asserts:
 - ${ vlen > 0 }
+- ${ legacy_filename == True or len(filename_prefix) > 0 }
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.tagged_file_sink(${type.size}*${vlen}, ${samp_rate})
+    make: blocks.tagged_file_sink(${type.size}*${vlen}, ${samp_rate}, ${directory}, ${filename_prefix}, ${legacy_filename})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/tagged_file_sink.h>']
     declarations: 'blocks::tagged_file_sink::sptr ${id};'
-    make: 'this->${id} = blocks::tagged_file_sink::make(${type.size}*${vlen}, ${samp_rate});'
+    make: 'this->${id} = blocks::tagged_file_sink::make(${type.size}*${vlen}, ${directory}, ${samp_rate}, ${filename_prefix}, ${legacy_filename});'
 
 file_format: 1

@@ -283,7 +283,7 @@ class EnumEntryParam(InputParam):
 
 
 class FileParam(EntryParam):
-    """Provide an entry box for filename and a button to browse for a file."""
+    """Provide an entry box for filename/directory and a button to browse for a file."""
 
     def __init__(self, *args, **kwargs):
         EntryParam.__init__(self, *args, **kwargs)
@@ -293,7 +293,7 @@ class FileParam(EntryParam):
 
     def _handle_clicked(self, widget=None):
         """
-        If the button was clicked, open a file dialog in open/save format.
+        If the button was clicked, open a file/directory dialog in open/save format.
         Replace the text in the entry with the new filename from the file dialog.
         """
         # get the paths
@@ -323,6 +323,12 @@ class FileParam(EntryParam):
             file_dialog.add_buttons( 'gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-save', Gtk.ResponseType.OK )
             file_dialog.set_do_overwrite_confirmation(True)
             file_dialog.set_current_name(basename)  # show the current filename
+        elif self.param.dtype == 'directory_path':
+            file_dialog = Gtk.FileChooserDialog(
+                title = 'Choose Directory...',action = Gtk.FileChooserAction.SELECT_FOLDER,
+                transient_for=self._transient_for,
+            )
+            file_dialog.add_buttons( 'gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-open' , Gtk.ResponseType.OK )
         else:
             raise ValueError("Can't open file chooser dialog for type " + repr(self.param.dtype))
         file_dialog.set_current_folder(dirname)  # current directory
