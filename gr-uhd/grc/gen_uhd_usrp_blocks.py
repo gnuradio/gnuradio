@@ -150,9 +150,11 @@ templates:
                 channels=list(range(0,${'$'}{nchan})),
                 ${'%'} endif
             ),
+            % if sourk == 'sink':
             ${'%'} if len_tag_name:
             ${'$'}{len_tag_name},
             ${'%'} endif
+            % endif
         )
         % for m in range(max_mboards):
         ${'%'} if context.get('num_mboards')() > ${m}:
