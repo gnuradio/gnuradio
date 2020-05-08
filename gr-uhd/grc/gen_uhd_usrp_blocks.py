@@ -138,9 +138,11 @@ templates:
                 channels=list(range(0,${'$'}{nchan})),
                 ${'%'} endif
             ),
+            % if sourk == 'sink':
             ${'%'} if len_tag_name:
             ${'$'}{len_tag_name},
             ${'%'} endif
+            % endif
         )
         ${'%'} if clock_rate():
         self.${'$'}{id}.set_clock_rate(${'$'}{clock_rate}, uhd.ALL_MBOARDS)
