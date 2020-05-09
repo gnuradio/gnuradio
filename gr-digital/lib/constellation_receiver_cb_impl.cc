@@ -49,14 +49,12 @@ constellation_receiver_cb_impl::constellation_receiver_cb_impl(
             "This receiver only works with constellations of dimension 1.");
 
     message_port_register_in(pmt::mp("set_constellation"));
-    set_msg_handler(
-        pmt::mp("set_constellation"),
-        boost::bind(&constellation_receiver_cb_impl::handle_set_constellation, this, _1));
+    set_msg_handler(pmt::mp("set_constellation"),
+                    [this](pmt::pmt_t msg) { this->handle_set_constellation(msg); });
 
     message_port_register_in(pmt::mp("rotate_phase"));
-    set_msg_handler(
-        pmt::mp("rotate_phase"),
-        boost::bind(&constellation_receiver_cb_impl::handle_rotate_phase, this, _1));
+    set_msg_handler(pmt::mp("rotate_phase"),
+                    [this](pmt::pmt_t msg) { this->handle_rotate_phase(msg); });
 }
 
 constellation_receiver_cb_impl::~constellation_receiver_cb_impl() {}

@@ -125,7 +125,7 @@ usrp_block_impl::usrp_block_impl(const ::uhd::device_addr_t& device_addr,
     // Set up message ports:
     message_port_register_in(pmt::mp("command"));
     set_msg_handler(pmt::mp("command"),
-                    boost::bind(&usrp_block_impl::msg_handler_command, this, _1));
+                    [this](pmt::pmt_t msg) { this->msg_handler_command(msg); });
 
 // cuz we lazy:
 #define REGISTER_CMD_HANDLER(key, _handler) \
