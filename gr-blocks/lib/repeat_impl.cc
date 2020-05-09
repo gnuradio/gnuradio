@@ -32,7 +32,8 @@ repeat_impl::repeat_impl(size_t itemsize, int interp)
       d_interp(interp)
 {
     message_port_register_in(pmt::mp("interpolation"));
-    set_msg_handler(pmt::mp("interpolation"), [this](pmt::pmt_t msg) { this->msg_set_interpolation(msg); });
+    set_msg_handler(pmt::mp("interpolation"),
+                    [this](pmt::pmt_t msg) { this->msg_set_interpolation(msg); });
 }
 
 void repeat_impl::msg_set_interpolation(pmt::pmt_t msg)

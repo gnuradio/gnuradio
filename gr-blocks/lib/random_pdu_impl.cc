@@ -38,7 +38,8 @@ random_pdu_impl::random_pdu_impl(int min_items,
 {
     message_port_register_out(pdu::pdu_port_id());
     message_port_register_in(pmt::mp("generate"));
-    set_msg_handler(pmt::mp("generate"), [this](pmt::pmt_t msg) { this->generate_pdu(msg); });
+    set_msg_handler(pmt::mp("generate"),
+                    [this](pmt::pmt_t msg) { this->generate_pdu(msg); });
     if (length_modulo < 1)
         throw std::runtime_error("length_module must be >= 1");
     if (max_items < length_modulo)
