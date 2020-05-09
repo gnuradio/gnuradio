@@ -50,7 +50,7 @@ push_msg_sink_impl::push_msg_sink_impl(char* address, int timeout, bool bind)
     }
 
     message_port_register_in(pmt::mp("in"));
-    set_msg_handler(pmt::mp("in"), boost::bind(&push_msg_sink_impl::handler, this, _1));
+    set_msg_handler(pmt::mp("in"), [this](pmt::pmt_t msg) { this->handler(msg); });
 }
 
 push_msg_sink_impl::~push_msg_sink_impl()

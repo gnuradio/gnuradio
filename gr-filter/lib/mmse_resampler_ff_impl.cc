@@ -42,7 +42,7 @@ mmse_resampler_ff_impl::mmse_resampler_ff_impl(float phase_shift, float resamp_r
 
     message_port_register_in(pmt::intern("msg_in"));
     set_msg_handler(pmt::intern("msg_in"),
-                    boost::bind(&mmse_resampler_ff_impl::handle_msg, this, _1));
+                    [this](pmt::pmt_t msg) { this->handle_msg(msg); });
 }
 
 mmse_resampler_ff_impl::~mmse_resampler_ff_impl() { delete d_resamp; }

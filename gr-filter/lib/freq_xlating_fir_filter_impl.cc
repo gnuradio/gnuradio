@@ -56,12 +56,8 @@ freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::freq_xlating_fir_filter_impl(
     this->build_composite_fir();
 
     this->message_port_register_in(pmt::mp("freq"));
-    this->set_msg_handler(
-        pmt::mp("freq"),
-        boost::bind(
-            &freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::handle_set_center_freq,
-            this,
-            _1));
+    this->set_msg_handler(pmt::mp("freq"),
+                          [this](pmt::pmt_t msg) { this->handle_set_center_freq(msg); });
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
