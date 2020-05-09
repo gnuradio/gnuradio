@@ -83,7 +83,7 @@ sink_f_impl::sink_f_impl(int fftsize,
     // double-clicked
     message_port_register_out(d_port);
     message_port_register_in(d_port);
-    set_msg_handler(d_port, boost::bind(&sink_f_impl::handle_set_freq, this, _1));
+    set_msg_handler(d_port, [this](pmt::pmt_t msg) { this->handle_set_freq(msg); });
 
     d_main_gui = NULL;
 

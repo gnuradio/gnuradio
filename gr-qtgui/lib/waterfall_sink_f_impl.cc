@@ -103,20 +103,17 @@ waterfall_sink_f_impl::waterfall_sink_f_impl(int fftsize,
 
     // setup bw input port
     message_port_register_in(d_port_bw);
-    set_msg_handler(d_port_bw,
-                    boost::bind(&waterfall_sink_f_impl::handle_set_bw, this, _1));
+    set_msg_handler(d_port_bw, [this](pmt::pmt_t msg) { this->handle_set_bw(msg); });
 
     // setup output message port to post frequency when display is
     // double-clicked
     message_port_register_out(d_port);
     message_port_register_in(d_port);
-    set_msg_handler(d_port,
-                    boost::bind(&waterfall_sink_f_impl::handle_set_freq, this, _1));
+    set_msg_handler(d_port, [this](pmt::pmt_t msg) { this->handle_set_freq(msg); });
 
     // setup PDU handling input port
     message_port_register_in(pmt::mp("in"));
-    set_msg_handler(pmt::mp("in"),
-                    boost::bind(&waterfall_sink_f_impl::handle_pdus, this, _1));
+    set_msg_handler(pmt::mp("in"), [this](pmt::pmt_t msg) { this->handle_pdus(msg); });
 }
 
 waterfall_sink_f_impl::~waterfall_sink_f_impl()
