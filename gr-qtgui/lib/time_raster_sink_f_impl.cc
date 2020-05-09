@@ -71,8 +71,7 @@ time_raster_sink_f_impl::time_raster_sink_f_impl(double samp_rate,
 
     // setup PDU handling input port
     message_port_register_in(pmt::mp("in"));
-    set_msg_handler(pmt::mp("in"),
-                    boost::bind(&time_raster_sink_f_impl::handle_pdus, this, _1));
+    set_msg_handler(pmt::mp("in"), [this](pmt::pmt_t msg) { this->handle_pdus(msg); });
 
     d_icols = static_cast<int>(ceil(d_cols));
     d_tmpflt = (float*)volk_malloc(d_icols * sizeof(float), volk_get_alignment());
