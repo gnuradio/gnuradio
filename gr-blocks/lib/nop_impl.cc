@@ -26,7 +26,6 @@
 
 #include "nop_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/bind.hpp>
 
 namespace gr {
 namespace blocks {
@@ -45,7 +44,7 @@ nop_impl::nop_impl(size_t sizeof_stream_item)
     // Arrange to have count_received_msgs called when messages are received.
     message_port_register_in(pmt::mp("port"));
     set_msg_handler(pmt::mp("port"),
-                    boost::bind(&nop_impl::count_received_msgs, this, _1));
+                    [this](pmt::pmt_t msg) { this->count_received_msgs(msg); });
 }
 
 nop_impl::~nop_impl() {}
