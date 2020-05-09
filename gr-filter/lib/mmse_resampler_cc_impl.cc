@@ -41,7 +41,7 @@ mmse_resampler_cc_impl::mmse_resampler_cc_impl(float phase_shift, float resamp_r
     set_inverse_relative_rate(d_mu_inc);
     message_port_register_in(pmt::intern("msg_in"));
     set_msg_handler(pmt::intern("msg_in"),
-                    boost::bind(&mmse_resampler_cc_impl::handle_msg, this, _1));
+                    [this](pmt::pmt_t msg) { this->handle_msg(msg); });
 }
 
 mmse_resampler_cc_impl::~mmse_resampler_cc_impl() { delete d_resamp; }
