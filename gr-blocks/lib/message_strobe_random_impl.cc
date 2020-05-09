@@ -54,9 +54,7 @@ message_strobe_random_impl::message_strobe_random_impl(
         new gr::thread::thread(std::bind(&message_strobe_random_impl::run, this)));
 
     message_port_register_in(pmt::mp("set_msg"));
-    set_msg_handler(
-        pmt::mp("set_msg"),
-        std::bind(&message_strobe_random_impl::set_msg, this, std::placeholders::_1));
+    set_msg_handler(pmt::mp("set_msg"), [this](pmt::pmt_t msg) { this->set_msg(msg); });
 }
 
 void message_strobe_random_impl::set_mean(float mean_ms)
