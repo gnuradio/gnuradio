@@ -149,7 +149,7 @@ edit_box_msg_impl::edit_box_msg_impl(data_type_t type,
     message_port_register_out(d_port);
     message_port_register_in(pmt::mp("val"));
 
-    set_msg_handler(pmt::mp("val"), boost::bind(&edit_box_msg_impl::set_value, this, _1));
+    set_msg_handler(pmt::mp("val"), [this](pmt::pmt_t msg) { this->set_value(msg); });
 }
 
 edit_box_msg_impl::~edit_box_msg_impl()

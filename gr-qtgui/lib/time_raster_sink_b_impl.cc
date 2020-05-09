@@ -71,8 +71,7 @@ time_raster_sink_b_impl::time_raster_sink_b_impl(double samp_rate,
 
     // setup PDU handling input port
     message_port_register_in(pmt::mp("in"));
-    set_msg_handler(pmt::mp("in"),
-                    boost::bind(&time_raster_sink_b_impl::handle_pdus, this, _1));
+    set_msg_handler(pmt::mp("in"), [this](pmt::pmt_t msg) { this->handle_pdus(msg); });
 
     d_scale = 1.0f;
 
