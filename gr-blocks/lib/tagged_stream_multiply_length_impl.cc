@@ -38,9 +38,7 @@ tagged_stream_multiply_length_impl::tagged_stream_multiply_length_impl(
     set_relative_rate(1, 1);
     message_port_register_in(pmt::intern("set_scalar"));
     set_msg_handler(pmt::intern("set_scalar"),
-                    std::bind(&tagged_stream_multiply_length_impl::set_scalar_pmt,
-                              this,
-                              std::placeholders::_1));
+                    [this](pmt::pmt_t msg) { this->set_scalar_pmt(msg); });
 }
 
 tagged_stream_multiply_length_impl::~tagged_stream_multiply_length_impl() {}
