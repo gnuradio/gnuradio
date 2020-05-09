@@ -235,9 +235,7 @@ multiply_matrix_impl<gr_complex>::multiply_matrix_impl(
 
     pmt::pmt_t port_name = pmt::string_to_symbol("set_A");
     message_port_register_in(port_name);
-    set_msg_handler(
-        port_name,
-        boost::bind(&multiply_matrix_impl<gr_complex>::msg_handler_A, this, _1));
+    set_msg_handler(port_name, [this](pmt::pmt_t msg) { this->msg_handler_A(msg); });
 }
 
 template <>
@@ -256,8 +254,7 @@ multiply_matrix_impl<float>::multiply_matrix_impl(
 
     pmt::pmt_t port_name = pmt::string_to_symbol("set_A");
     message_port_register_in(port_name);
-    set_msg_handler(port_name,
-                    boost::bind(&multiply_matrix_impl<float>::msg_handler_A, this, _1));
+    set_msg_handler(port_name, [this](pmt::pmt_t msg) { this->msg_handler_A(msg); });
 }
 
 
