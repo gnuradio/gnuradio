@@ -9,7 +9,6 @@
 #
 
 import time, struct
-import six
 
 import pmt
 from gnuradio import gr, gr_unittest, digital, blocks
@@ -63,7 +62,7 @@ class test_packet_format_fb(gr_unittest.TestCase):
         rx_access_code = header[0:len(access_code)]
 
         length = len(send_str)
-        rx_length = struct.unpack_from(b"!H", six.b(header), len(access_code))[0]
+        rx_length = struct.unpack_from(b"!H", header.encode("latin-1"), len(access_code))[0]
 
         self.assertEqual(access_code, rx_access_code)
         self.assertEqual(length, rx_length)
@@ -156,9 +155,9 @@ class test_packet_format_fb(gr_unittest.TestCase):
         rx_access_code = header[0:len(access_code)]
 
         length = len(send_str)
-        rx_length = struct.unpack_from(b"!H", six.b(header), len(access_code))[0]
-        rx_bps = struct.unpack_from(b"!H", six.b(header), len(access_code)+4)[0]
-        rx_counter = struct.unpack_from(b"!H", six.b(header), len(access_code)+6)[0]
+        rx_length = struct.unpack_from(b"!H", header.encode("latin-1"), len(access_code))[0]
+        rx_bps = struct.unpack_from(b"!H", header.encode("latin-1"), len(access_code)+4)[0]
+        rx_counter = struct.unpack_from(b"!H", header.encode("latin-1"), len(access_code)+6)[0]
 
         self.assertEqual(access_code, rx_access_code)
         self.assertEqual(length, rx_length)

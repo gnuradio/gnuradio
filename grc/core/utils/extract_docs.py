@@ -15,9 +15,7 @@ import threading
 import json
 import random
 import itertools
-
-import six
-from six.moves import queue, filter, range
+import queue
 
 
 ###############################################################################
@@ -277,7 +275,7 @@ if __name__ == '__worker__':
 elif __name__ == '__main__':
     def callback(key, docs):
         print(key)
-        for match, doc in six.iteritems(docs):
+        for match, doc in docs.items():
             print('-->', match)
             print(str(doc).strip())
             print()

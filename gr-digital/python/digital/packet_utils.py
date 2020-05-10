@@ -14,7 +14,6 @@ from __future__ import division
 import struct
 
 import numpy
-import six
 
 from gnuradio import gru
 from . import crc

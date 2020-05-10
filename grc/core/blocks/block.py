@@ -12,8 +12,6 @@ import collections
 import itertools
 import copy
 
-import six
-from six.moves import range
 import re
 
 import ast
@@ -564,7 +562,7 @@ class Block(Element):
         return itertools.chain(self.active_sources, self.active_sinks)
 
     def children(self):
-        return itertools.chain(six.itervalues(self.params), self.ports())
+        return itertools.chain(self.params.values(), self.ports())
 
     ##############################################
     # Access
@@ -581,11 +579,11 @@ class Block(Element):
     ##############################################
     @property
     def namespace(self):
-        return {key: param.get_evaluated() for key, param in six.iteritems(self.params)}
+        return {key: param.get_evaluated() for key, param in self.params.items()}
 
     @property
     def namespace_templates(self):
-        return {key: param.template_arg for key, param in six.iteritems(self.params)}
+        return {key: param.template_arg for key, param in self.params.items()}
 
     def evaluate(self, expr):
         return self.parent_flowgraph.evaluate(expr, self.namespace)
@@ -626,7 +624,7 @@ class Block(Element):
 
         pre_rewrite_hash = -1
         while pre_rewrite_hash != get_hash():
-            for key, value in six.iteritems(parameters):
+            for key, value in parameters.items():
                 try:
                     self.params[key].set_value(value)
                 except KeyError:

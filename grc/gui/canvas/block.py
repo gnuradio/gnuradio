@@ -10,7 +10,6 @@ from __future__ import absolute_import, division
 
 import math
 
-import six
 from gi.repository import Gtk, Pango, PangoCairo
 
 from . import colors
@@ -345,7 +344,7 @@ class Block(CoreBlock, Drawable):
         type_templates = ' '.join(p.dtype for p in self.params.values()) + ' '
         type_templates += ' '.join(p.get_raw('dtype') for p in (self.sinks + self.sources))
         type_param = None
-        for key, param in six.iteritems(self.params):
+        for key, param in self.params.items():
             if not param.is_enum():
                 continue
             # Priority to the type controller
@@ -382,7 +381,7 @@ class Block(CoreBlock, Drawable):
         # Concat the nports string from the private nports settings of all ports
         nports_str = ' '.join(str(port.get_raw('multiplicity')) for port in self.ports())
         # Modify all params whose keys appear in the nports string
-        for key, param in six.iteritems(self.params):
+        for key, param in self.params.items():
             if param.is_enum() or param.key not in nports_str:
                 continue
             # Try to increment the port controller by direction

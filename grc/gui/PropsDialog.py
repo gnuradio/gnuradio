@@ -11,7 +11,6 @@ from gi.repository import Gtk, Gdk, GObject, Pango
 
 from . import Actions, Utils, Constants
 from .Dialogs import SimpleTextDisplay
-import six
 
 
 class PropsDialog(Gtk.Dialog):
@@ -233,7 +232,7 @@ class PropsDialog(Gtk.Dialog):
             docstrings = {block_class: docstrings[block_class]}
 
         # show docstring(s) extracted from python sources
-        for cls_name, docstring in six.iteritems(docstrings):
+        for cls_name, docstring in docstrings.items():
             buf.insert_with_tags_by_name(pos, cls_name + '\n', 'b')
             buf.insert(pos, docstring + '\n\n')
         pos.backward_chars(2)

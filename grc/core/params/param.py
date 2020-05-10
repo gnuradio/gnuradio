@@ -10,9 +10,6 @@ import ast
 import collections
 import textwrap
 
-import six
-from six.moves import range
-
 from .. import Constants
 from ..base import Element
 from ..utils.descriptors import Evaluated, EvaluatedEnum, setup_names
@@ -77,7 +74,7 @@ class Param(Element):
         options.attributes = collections.defaultdict(dict)
 
         padding = [''] * max(len(values), len(labels))
-        attributes = {key: value + padding for key, value in six.iteritems(attributes)}
+        attributes = {key: value + padding for key, value in attributes.items()}
 
         for i, option in enumerate(values):
             # Test against repeated keys
@@ -90,7 +87,7 @@ class Param(Element):
                 label = str(option)
             # Store the option
             options[option] = label
-            options.attributes[option] = {attrib: values[i] for attrib, values in six.iteritems(attributes)}
+            options.attributes[option] = {attrib: values[i] for attrib, values in attributes.items()}
 
         default = next(iter(options)) if options else ''
         if not self.value:
