@@ -9,11 +9,11 @@ file_list = module_name + '_python_files'
 %>
 list(APPEND ${file_list}
 ## File Includes
-% for f in files:  
+% for (f,h) in zip(files,hash_list):  
 <%
 basename = os.path.splitext(f)[0]
 %>\
-    ${basename}_python.cc
+    ${basename}_python.cc ${h} ${f}
 % endfor
     python_bindings.cc)
 

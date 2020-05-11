@@ -15,7 +15,7 @@ import pathlib
 import json
 from mako.template import Template
 from datetime import datetime
-
+import hashlib
 
 class BindingGenerator:
 
@@ -222,12 +222,23 @@ class BindingGenerator:
         license = tpl.render(year=datetime.now().year)
 
         binding_pathname = os.path.join(output_dir, 'CMakeLists.txt')
+        # hash the header files
+        hash_list = []        
+        for f in file_list:
+            hasher = hashlib.md5()
+            with open(f, 'rb') as file_in:
+                buf = file_in.read()
+                hasher.update(buf)
+            hash_list.append(hasher.hexdigest())
+
         file_list = [os.path.split(f)[-1] for f in file_list]
+        
         tpl = Template(filename=os.path.join(current_path, '..',
                                              'templates', 'CMakeLists.txt.mako'))
         pybind_code = tpl.render(
             license=license,
             files=file_list,
+            hash_list=hash_list,
             module_name=self.module_name
         )
 
