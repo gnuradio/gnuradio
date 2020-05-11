@@ -74,6 +74,8 @@ enum{
 #include "gnuradio/qtgui/displayform.h"
 #include "gnuradio/qtgui/sink_c.h"
 #include "gnuradio/qtgui/sink_f.h"
+#include "gnuradio/qtgui/eye_sink_c.h"
+#include "gnuradio/qtgui/eye_sink_f.h"
 #include "gnuradio/qtgui/time_sink_c.h"
 #include "gnuradio/qtgui/time_sink_f.h"
 #include "gnuradio/qtgui/time_raster_sink_b.h"
@@ -92,6 +94,8 @@ enum{
 
 %include "gnuradio/qtgui/sink_c.h"
 %include "gnuradio/qtgui/sink_f.h"
+%include "gnuradio/qtgui/eye_sink_c.h"
+%include "gnuradio/qtgui/eye_sink_f.h"
 %include "gnuradio/qtgui/time_sink_c.h"
 %include "gnuradio/qtgui/time_sink_f.h"
 %include "gnuradio/qtgui/time_raster_sink_b.h"
@@ -109,6 +113,8 @@ enum{
 
 GR_SWIG_BLOCK_MAGIC2(qtgui, sink_c);
 GR_SWIG_BLOCK_MAGIC2(qtgui, sink_f);
+GR_SWIG_BLOCK_MAGIC2(qtgui, eye_sink_c);
+GR_SWIG_BLOCK_MAGIC2(qtgui, eye_sink_f);
 GR_SWIG_BLOCK_MAGIC2(qtgui, time_sink_c);
 GR_SWIG_BLOCK_MAGIC2(qtgui, time_sink_f);
 GR_SWIG_BLOCK_MAGIC2(qtgui, time_raster_sink_b);
