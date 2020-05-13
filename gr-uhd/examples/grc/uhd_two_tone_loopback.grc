@@ -1,6 +1,7 @@
 options:
   parameters:
     author: Example
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -22,12 +23,11 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: UHD Loopback - 2 Tone
-    window_size: 1280, 1024
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1, 0]
+    coordinate: [8, 4.0]
     rotation: 0
     state: enabled
 
@@ -50,7 +50,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [0, 283]
+    coordinate: [8, 252.0]
     rotation: 0
     state: enabled
 - name: tone1
@@ -71,7 +71,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1, 131]
+    coordinate: [8, 124.0]
     rotation: 0
     state: enabled
 - name: tone2
@@ -92,7 +92,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [126, 132]
+    coordinate: [136, 124.0]
     rotation: 0
     state: enabled
 - name: tone_ampl
@@ -113,7 +113,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [152, 286]
+    coordinate: [144, 252.0]
     rotation: 0
     state: enabled
 - name: tun_freq
@@ -134,7 +134,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [80, 431]
+    coordinate: [8, 380.0]
     rotation: 0
     state: enabled
 - name: tun_rx_gain
@@ -155,7 +155,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [120, 571]
+    coordinate: [144, 380.0]
     rotation: 0
     state: enabled
 - name: tun_tx_gain
@@ -176,7 +176,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [-1, 573]
+    coordinate: [264, 380.0]
     rotation: 0
     state: enabled
 - name: address0
@@ -188,12 +188,12 @@ blocks:
     label: IP Address, Dev 0
     short_id: ''
     type: ''
-    value: addr=192.168.10.2
+    value: '"addr=192.168.10.2"'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [177, 0]
+    coordinate: [176, 4.0]
     rotation: 0
     state: enabled
 - name: address1
@@ -205,12 +205,12 @@ blocks:
     label: IP Address, Dev 1
     short_id: ''
     type: ''
-    value: addr=192.168.10.2
+    value: '"addr=192.168.10.2"'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [337, 0]
+    coordinate: [328, 4.0]
     rotation: 0
     state: enabled
 - name: analog_noise_source_x_0
@@ -229,7 +229,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [488, 396.0]
+    coordinate: [488, 388.0]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0
@@ -251,7 +251,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [464, 140.0]
+    coordinate: [464, 132.0]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_1
@@ -273,7 +273,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [464, 268.0]
+    coordinate: [464, 260.0]
     rotation: 0
     state: enabled
 - name: blocks_add_xx
@@ -291,7 +291,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [728, 184.0]
+    coordinate: [728, 176.0]
     rotation: 0
     state: enabled
 - name: freq
@@ -308,7 +308,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [649, 0]
+    coordinate: [600, 4.0]
     rotation: 0
     state: enabled
 - name: freq_offset
@@ -325,7 +325,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [804, 0]
+    coordinate: [752, 4.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -405,7 +405,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1000, 368.0]
+    coordinate: [1008, 376.0]
     rotation: 0
     state: enabled
 - name: rx_gain
@@ -422,7 +422,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1123, 0]
+    coordinate: [1048, 4.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -439,7 +439,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [523, 0]
+    coordinate: [480, 4.0]
     rotation: 0
     state: enabled
 - name: tx_gain
@@ -456,7 +456,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [983, 0]
+    coordinate: [912, 4.0]
     rotation: 0
     state: enabled
 - name: uhd_usrp_sink_0
@@ -732,7 +732,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [824, 148.0]
+    coordinate: [864, 140.0]
     rotation: 0
     state: enabled
 - name: uhd_usrp_source_0
@@ -1103,7 +1103,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [728, 308.0]
+    coordinate: [736, 316.0]
     rotation: 0
     state: enabled
 
