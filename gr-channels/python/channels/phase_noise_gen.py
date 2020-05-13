@@ -32,8 +32,8 @@ class phase_noise_gen(gr.hier_block2):
         # Blocks
         ##################################################
         self.filter_single_pole_iir_filter_xx_0 = filter.single_pole_iir_filter_ff(alpha, 1)
-        self.blocks_transcendental_0_0 = blocks.transcendental("sin", "float")
-        self.blocks_transcendental_0 = blocks.transcendental("cos", "float")
+        self.blocks_math_functions_sin_0 = blocks.math_functions_sin_float()
+        self.blocks_math_functions_cos_0 = blocks.math_functions_cos_float()
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
         self.blocks_float_to_complex_0 = blocks.float_to_complex(1)
         self.analog_noise_source_x_0 = analog.noise_source_f(analog.GR_GAUSSIAN, noise_mag, 42)
@@ -45,10 +45,10 @@ class phase_noise_gen(gr.hier_block2):
         self.connect((self.analog_noise_source_x_0, 0), (self.filter_single_pole_iir_filter_xx_0, 0))
         self.connect((self.blocks_multiply_xx_0, 0), (self, 0))
         self.connect((self, 0), (self.blocks_multiply_xx_0, 0))
-        self.connect((self.filter_single_pole_iir_filter_xx_0, 0), (self.blocks_transcendental_0, 0))
-        self.connect((self.filter_single_pole_iir_filter_xx_0, 0), (self.blocks_transcendental_0_0, 0))
-        self.connect((self.blocks_transcendental_0, 0), (self.blocks_float_to_complex_0, 0))
-        self.connect((self.blocks_transcendental_0_0, 0), (self.blocks_float_to_complex_0, 1))
+        self.connect((self.filter_single_pole_iir_filter_xx_0, 0), (self.blocks_math_functions_cos_0, 0))
+        self.connect((self.filter_single_pole_iir_filter_xx_0, 0), (self.blocks_math_functions_sin_0, 0))
+        self.connect((self.blocks_math_functions_cos_0, 0), (self.blocks_float_to_complex_0, 0))
+        self.connect((self.blocks_math_functions_sin_0, 0), (self.blocks_float_to_complex_0, 1))
 
 
 # QT sink close method reimplementation

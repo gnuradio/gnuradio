@@ -1,0 +1,32 @@
+id: blocks_math_functions_log
+label: Log
+flags: [ python, cpp ]
+
+parameters:
+  - id: type
+    label: Type
+    dtype: enum
+    options: [complex_float, float]
+    option_labels: [Complex, Float]
+    option_attributes:
+         type: [complex, float]
+    hide: part
+
+inputs:
+- domain: stream
+  dtype: ${ type.type }
+
+outputs:
+- domain: stream
+  dtype: ${ type.type }
+
+templates:
+  imports: from gnuradio import blocks
+  make: blocks.math_functions_log_${type}()
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/math_functions.h>']
+    declarations: 'blocks::math_functions_log_${type}::sptr ${id};'
+    make: this->${id} = blocks::math_functions_log_{$type}::make();'
+
+file_format: 1

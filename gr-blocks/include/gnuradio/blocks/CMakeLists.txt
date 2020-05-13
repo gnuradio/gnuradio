@@ -154,7 +154,6 @@ install(FILES
     test_tag_variable_rate_ff.h
     threshold_ff.h
     throttle.h
-    transcendental.h
     tuntap_pdu.h
     uchar_to_float.h
     udp_sink.h
@@ -167,6 +166,7 @@ install(FILES
     vector_to_streams.h
     wavfile_sink.h
     wavfile_source.h
+    math_functions.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
 )
 

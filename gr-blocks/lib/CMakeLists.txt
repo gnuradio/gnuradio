@@ -153,7 +153,6 @@ add_library(gnuradio-blocks
     test_tag_variable_rate_ff_impl.cc
     threshold_ff_impl.cc
     throttle_impl.cc
-    transcendental_impl.cc
     tcp_connection.cc
     tcp_server_sink_impl.cc
     tuntap_pdu_impl.cc
@@ -172,6 +171,7 @@ add_library(gnuradio-blocks
     vector_to_streams_impl.cc
     wavfile_sink_impl.cc
     wavfile_source_impl.cc
+    math_functions_impl.cc
     )
 
 target_link_libraries(gnuradio-blocks

@@ -34,6 +34,7 @@ set(GR_SWIG_BLOCK_IFILES
   blocks_swig8
   blocks_swig9
   blocks_swig10
+  blocks_swig11
   )
 
 set(GR_SWIG_INCLUDE_DIRS $<TARGET_PROPERTY:runtime_swig,INCLUDE_DIRECTORIES>)

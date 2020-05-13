@@ -29,7 +29,6 @@
 #include "gnuradio/blocks/tcp_server_sink.h"
 #include "gnuradio/blocks/test_tag_variable_rate_ff.h"
 #include "gnuradio/blocks/threshold_ff.h"
-#include "gnuradio/blocks/transcendental.h"
 #include "gnuradio/blocks/tuntap_pdu.h"
 #include "gnuradio/blocks/uchar_to_float.h"
 #include "gnuradio/blocks/udp_sink.h"
@@ -52,7 +51,6 @@
 %include "gnuradio/blocks/tcp_server_sink.h"
 %include "gnuradio/blocks/test_tag_variable_rate_ff.h"
 %include "gnuradio/blocks/threshold_ff.h"
-%include "gnuradio/blocks/transcendental.h"
 %include "gnuradio/blocks/tuntap_pdu.h"
 %include "gnuradio/blocks/uchar_to_float.h"
 %include "gnuradio/blocks/udp_sink.h"
@@ -74,7 +72,6 @@ GR_SWIG_BLOCK_MAGIC2(blocks, tags_strobe);
 GR_SWIG_BLOCK_MAGIC2(blocks, tcp_server_sink);
 GR_SWIG_BLOCK_MAGIC2(blocks, test_tag_variable_rate_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, threshold_ff);
-GR_SWIG_BLOCK_MAGIC2(blocks, transcendental);
 GR_SWIG_BLOCK_MAGIC2(blocks, tuntap_pdu);
 GR_SWIG_BLOCK_MAGIC2(blocks, uchar_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, udp_sink);

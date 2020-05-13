@@ -71,10 +71,24 @@
   - blocks_nlog10_ff
   - blocks_rms_xx
   - blocks_rotator_cc
-  - blocks_transcendental
   - blocks_argmax_xx
   - blocks_max_xx
   - blocks_min_xx
+  - blocks_math_functions_cos
+  - blocks_math_functions_cosh
+  - blocks_math_functions_exp
+  - blocks_math_functions_log
+  - blocks_math_functions_sin
+  - blocks_math_functions_sinh
+  - blocks_math_functions_sqrt
+  - blocks_math_functions_tan
+  - blocks_math_functions_tanh
+  - blocks_math_functions_acos
+  - blocks_math_functions_acosh
+  - blocks_math_functions_asin
+  - blocks_math_functions_asinh
+  - blocks_math_functions_atan
+  - blocks_math_functions_atanh
 - Measurement Tools:
   - blocks_message_debug
   - blocks_tag_debug
