@@ -24,12 +24,6 @@ GR_PYTHON_CHECK_MODULE_RAW(
   CLICK_PLUGINS_FOUND
   )
 
- GR_PYTHON_CHECK_MODULE_RAW(
-   "pygccxml"
-   "import pygccxml"
-   PYGCCXML_FOUND
-   )
-
 ########################################################################
 # Register component
 ########################################################################

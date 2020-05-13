@@ -9,15 +9,15 @@ file_list = module_name + '_python_files'
 %>
 list(APPEND ${file_list}
 ## File Includes
-% for (f,h) in zip(files,hash_list):  
+% for f in files:  
 <%
 basename = os.path.splitext(f)[0]
 %>\
-    ${basename}_python.cc ${h} ${f}
+    ${basename}_python.cc
 % endfor
     python_bindings.cc)
 
-GR_PYBIND_MAKE(${module_name} 
+GR_PYBIND_MAKE_CHECK_HASH(${module_name} 
    ../../.. 
    gr::${module_name}
    "${'${'+file_list+'}'}")

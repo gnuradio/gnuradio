@@ -13,37 +13,59 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */ 
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */ 
-/* BINDTOOL_HEADER_FILE(float_to_complex.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(a4ac419b65473f8c4130c7d53e4e70ee)                     */ 
+/* BINDTOOL_HEADER_FILE(phase_shift.h)                                        */
+/* BINDTOOL_HEADER_FILE_HASH(5657bd1fe7366cf279f6b1e29ee4df6b)                     */ 
 /***********************************************************************************/
 
-#include <pybind11/complex.h>
 #include <pybind11/pybind11.h>
+#include <pybind11/complex.h>
 #include <pybind11/stl.h>
 
 namespace py = pybind11;
 
-#include <gnuradio/blocks/float_to_complex.h>
+#include <gnuradio/blocks/phase_shift.h>
 // pydoc.h is automatically generated in the build directory
-#include <float_to_complex_pydoc.h>
+#include <phase_shift_pydoc.h>
 
-void bind_float_to_complex(py::module& m)
+void bind_phase_shift(py::module& m)
 {
 
-    using float_to_complex = ::gr::blocks::float_to_complex;
+    using phase_shift    = ::gr::blocks::phase_shift;
 
 
-    py::class_<float_to_complex,
-               gr::sync_block,
-               gr::block,
-               gr::basic_block,
-               std::shared_ptr<float_to_complex>>(
-        m, "float_to_complex", D(float_to_complex))
+    py::class_<phase_shift, gr::sync_block, gr::block, gr::basic_block,
+        std::shared_ptr<phase_shift>>(m, "phase_shift", D(phase_shift))
 
-        .def(py::init(&float_to_complex::make),
-             py::arg("vlen") = 1,
-             D(float_to_complex, make))
+        .def(py::init(&phase_shift::make),
+           py::arg("shift"),
+           py::arg("is_radians"),
+           D(phase_shift,make)
+        )
+        
 
+
+
+
+        .def("get_shift",&phase_shift::get_shift,
+            D(phase_shift,get_shift)
+        )
+
+
+        .def("set_shift",&phase_shift::set_shift,
+            py::arg("new_value"),
+            D(phase_shift,set_shift)
+        )
 
         ;
+
+
+
+
 }
+
+
+
+
+
+
+

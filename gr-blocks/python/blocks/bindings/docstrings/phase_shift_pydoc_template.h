@@ -16,21 +16,21 @@
 
 
  
- static const char *__doc_gr_blocks_add_const_bb = R"doc()doc";
+ static const char *__doc_gr_blocks_phase_shift = R"doc()doc";
 
 
- static const char *__doc_gr_blocks_add_const_bb_add_const_bb_0 = R"doc()doc";
+ static const char *__doc_gr_blocks_phase_shift_phase_shift_0 = R"doc()doc";
 
 
- static const char *__doc_gr_blocks_add_const_bb_add_const_bb_1 = R"doc()doc";
+ static const char *__doc_gr_blocks_phase_shift_phase_shift_1 = R"doc()doc";
 
 
- static const char *__doc_gr_blocks_add_const_bb_make = R"doc()doc";
+ static const char *__doc_gr_blocks_phase_shift_make = R"doc()doc";
 
 
- static const char *__doc_gr_blocks_add_const_bb_k = R"doc()doc";
+ static const char *__doc_gr_blocks_phase_shift_get_shift = R"doc()doc";
 
 
- static const char *__doc_gr_blocks_add_const_bb_set_k = R"doc()doc";
+ static const char *__doc_gr_blocks_phase_shift_set_shift = R"doc()doc";
 
   
