@@ -1,6 +1,7 @@
 options:
   parameters:
     author: Example
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -22,12 +23,11 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: UHD Constant Wave
-    window_size: 1280, 1024
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [10, 9]
+    coordinate: [8, 12.0]
     rotation: 0
     state: enabled
 
@@ -50,7 +50,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [170, 314]
+    coordinate: [168, 292.0]
     rotation: 0
     state: enabled
 - name: tun_freq
@@ -71,7 +71,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [31, 317]
+    coordinate: [32, 292.0]
     rotation: 0
     state: enabled
 - name: tun_gain
@@ -92,7 +92,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [302, 307]
+    coordinate: [304, 292.0]
     rotation: 0
     state: enabled
 - name: address
@@ -104,12 +104,12 @@ blocks:
     label: IP Address
     short_id: a
     type: ''
-    value: addr=192.168.10.2
+    value: '"addr=192.168.10.2"'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [188, 12]
+    coordinate: [184, 12.0]
     rotation: 0
     state: enabled
 - name: analog_const_source_x_0
@@ -126,7 +126,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [80, 220.0]
+    coordinate: [64, 204.0]
     rotation: 0
     state: enabled
 - name: freq
@@ -143,7 +143,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [468, 14]
+    coordinate: [456, 12.0]
     rotation: 0
     state: enabled
 - name: gain
@@ -160,7 +160,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [616, 13]
+    coordinate: [608, 12.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -177,7 +177,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [342, 14]
+    coordinate: [336, 12.0]
     rotation: 0
     state: enabled
 - name: uhd_usrp_sink_0
@@ -453,7 +453,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [312, 164.0]
+    coordinate: [304, 148.0]
     rotation: 0
     state: enabled
 
