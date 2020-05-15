@@ -173,6 +173,85 @@ endmacro(GR_PYBIND_MAKE_CHECK_HASH)
 
 macro(GR_PYBIND_MAKE_OOT name updir filter files) 
 
+list(APPEND regen_targets "")
+foreach(file ${files})
+    execute_process(COMMAND "python3" 
+    ${CMAKE_CURRENT_SOURCE_DIR}/header_utils.py
+    "flag_auto"
+    ${CMAKE_CURRENT_SOURCE_DIR}/${file}
+    OUTPUT_VARIABLE flag_auto
+    ) 
+    string(REGEX REPLACE "\n$" "" flag_auto "${flag_auto}")
+
+    execute_process(COMMAND "python3" 
+    ${CMAKE_CURRENT_SOURCE_DIR}/header_utils.py
+    "flag_pygccxml"
+    ${CMAKE_CURRENT_SOURCE_DIR}/${file}
+    OUTPUT_VARIABLE flag_pygccxml
+    ) 
+    string(REGEX REPLACE "\n$" "" flag_pygccxml "${flag_pygccxml}")
+
+    execute_process(COMMAND "python3" 
+    ${CMAKE_CURRENT_SOURCE_DIR}/header_utils.py
+    "header_filename"
+    ${CMAKE_CURRENT_SOURCE_DIR}/${file}
+    OUTPUT_VARIABLE header_filename
+    ) 
+    string(REGEX REPLACE "\n$" "" header_filename "${header_filename}")
+
+    execute_process(COMMAND "python3" 
+    ${CMAKE_CURRENT_SOURCE_DIR}/header_utils.py
+    "header_file_hash"
+    ${CMAKE_CURRENT_SOURCE_DIR}/${file}
+    OUTPUT_VARIABLE header_file_hash
+    ) 
+    string(REGEX REPLACE "\n$" "" header_file_hash "${header_file_hash}")
+
+    message(STATUS ${file} ":" ${flag_auto} ":" ${flag_pygccxml} ":" ${header_filename} ":" ${header_file_hash})
+
+    if (NOT ${header_filename} STREQUAL "None")  # If no header filename is specified, don't bother checking for a rebuild
+        set(header_full_path ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include/${name}/${header_filename})  # NOTE OOT version does not have gnuradio/ here
+        file(MD5 ${header_full_path} calc_hash)
+        # message(STATUS ${ii} " " ${calc_hash} " " ${saved_hash})
+        if (NOT ${calc_hash} STREQUAL ${header_file_hash})
+            # check the file and see if bindings should be automatically regenerated
+            if (flag_auto STREQUAL "False")   # the regex match was not found, manual bindings
+                # if (NOT bindtool_use_pygccxml STREQUAL )
+                message(FATAL_ERROR "Python bindings for " ${header_filename} " are out of sync" )
+            else()
+                if (flag_pygccxml STREQUAL "False") 
+                    if(NOT PYGCCXML_FOUND)
+                        message(FATAL_ERROR "Python bindings for " ${header_filename} " require pygccxml for automatic regeneration" )
+                    endif()
+                endif()
+                
+                message(STATUS "Regenerating Bindings in-place for " ${header_filename})
+
+                file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status)
+                # Automatically regenerate the bindings               
+                add_custom_command( 
+                    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}}/${file}
+                    COMMAND  "python3" 
+                    ${CMAKE_SOURCE_DIR}/gr-utils/bindtool/scripts/bind_intree_file.py
+                    "--output_dir" ${CMAKE_CURRENT_SOURCE_DIR}/..
+                    "--prefix" ${CMAKE_INSTALL_PREFIX}
+                    "--src" ${CMAKE_SOURCE_DIR}
+                    "--module" ${name} 
+                    "--filename" ${header_full_path}
+                    "--status" ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status 
+                    "--flag_automatic" ${flag_auto}
+                    "--flag_pygccxml" ${flag_pygccxml}
+                    # "--include" "$<INSTALL_INTERFACE:include>"  #FIXME: Make the pygccxml generation use the source tree headers
+                    COMMENT "Automatic generation of pybind11 bindings for " ${header_full_path})
+                add_custom_target(${file}_regen_bindings ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}}/${file})
+                list(APPEND regen_targets ${file}_regen_bindings)
+            endif()
+
+        endif()
+    endif()
+endforeach()
+
+
 configure_file(${CMAKE_SOURCE_DIR}/docs/doxygen/pydoc_macros.h ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
 pybind11_add_module(${name}_python ${files})
@@ -226,6 +305,6 @@ target_include_directories(${name}_python PUBLIC
 )
 target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} gnuradio-${MODULE_NAME})
 target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
-add_dependencies(${name}_python ${name}_docstrings)
+add_dependencies(${name}_python ${name}_docstrings ${regen_targets})
 
 endmacro(GR_PYBIND_MAKE_OOT)
