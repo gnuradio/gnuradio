@@ -23,6 +23,7 @@ GR_UHD_API const pmt::pmt_t cmd_gain_key();
 GR_UHD_API const pmt::pmt_t cmd_freq_key();
 GR_UHD_API const pmt::pmt_t cmd_lo_offset_key();
 GR_UHD_API const pmt::pmt_t cmd_tune_key();
+GR_UHD_API const pmt::pmt_t cmd_mtune_key();
 GR_UHD_API const pmt::pmt_t cmd_lo_freq_key();
 GR_UHD_API const pmt::pmt_t cmd_dsp_freq_key();
 GR_UHD_API const pmt::pmt_t cmd_rate_key();

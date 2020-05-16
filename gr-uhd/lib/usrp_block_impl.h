@@ -121,6 +121,7 @@ protected:
     void _cmd_handler_antenna(const pmt::pmt_t& ant, int chan, const pmt::pmt_t& msg);
     void _cmd_handler_rate(const pmt::pmt_t& rate, int chan, const pmt::pmt_t& msg);
     void _cmd_handler_tune(const pmt::pmt_t& tune, int chan, const pmt::pmt_t& msg);
+    void _cmd_handler_mtune(const pmt::pmt_t& tune, int chan, const pmt::pmt_t& msg);
     void _cmd_handler_bw(const pmt::pmt_t& bw, int chan, const pmt::pmt_t& msg);
     void _cmd_handler_lofreq(const pmt::pmt_t& lofreq, int chan, const pmt::pmt_t& msg);
     void _cmd_handler_dspfreq(const pmt::pmt_t& dspfreq, int chan, const pmt::pmt_t& msg);
