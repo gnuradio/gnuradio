@@ -24,7 +24,7 @@ def have_dark_theme():
         """
         Check if a theme is dark based on its name.
         """
-        return theme_name in Constants.GTK_DARK_THEMES or "dark" in theme_name.lower()
+        return theme_name and (theme_name in Constants.GTK_DARK_THEMES or "dark" in theme_name.lower())
     # GoGoGo
     config = configparser.ConfigParser()
     config.read(os.path.expanduser(Constants.GTK_SETTINGS_INI_PATH))
