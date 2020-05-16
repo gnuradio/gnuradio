@@ -92,6 +92,7 @@ Command name | Value Type   | Description
 `freq`       | double       | Sets the Tx or Rx frequency. Defaults to all channels. If specified without `lo_offset`, it will set the LO offset to zero.
 `lo_offset`  | double       | Sets an LO offset. Defaults to all channels. Note this does not affect the effective center frequency.
 `tune`       | tune_request | Like freq, but sets a full tune request (i.e. center frequency and DSP offset). Defaults to all channels.
+`mtune`      | tune_request_t | Like tune, but supports a full manual tune request as uhd::tune_request_t. Defaults to all channels.
 `lo_freq`    | double       | For fully manual tuning: Set the LO frequency (RF frequency). Conflicts with `freq`, `lo_offset`, and `tune`.
 `dsp_freq`   | double       | For fully manual tuning: Set the DSP frequency (CORDIC frequency). Conflicts with `freq`, `lo_offset`, and `tune`.
 `direction`  | string       | Used for timed transceiver tuning to ensure tuning order is maintained. Values other than 'TX' or 'RX' will be ignored.
@@ -105,8 +106,30 @@ Command name | Value Type   | Description
 Special types:
 
 - tune_request: Like a uhd::tune_request_t, but always uses POLICY_AUTO. This is a pair, composed of (target_frequency, lo_offset)
+- tune_request_t: Exact copy of uhd::tune_request_t, allowing full control. See details below.
+  It supports fully customized tunings with all policies and integer-N tuning. The policies are strings A, N, M for automatic, none and manual tuning.
 - timestamp: A pair composed of (long full_secs, double frac_secs). Similar to uhd::time_spec_t
 - gpio: This is a PMT dictionary with four key/value pairs: bank (string), attr (string), value (double) and mask (double). The `gpio` command calls `set_gpio_attr` with the elements from the dictionary as arguments. Can optionally contain `mboard` to specify the mainboard. Defaults to `0` (first mboard).
+
+Further notes on command `mtune`:
+
+The object is of type pmt::dict and has the same fields as uhd::tune_request_t:
+- `dsp_freq`: the dsp frequency as pmt double type.
+- `dsp_freq_policy`: policy for DSP tuning. Should be a string "A" (automatic), "M" (manual) or "N" (none). If not set, defaults to "A".
+- `rf_freq`: the rf frequency as pmt double type.
+- `rf_freq_policy`: policy for RF tuning. Should be a string "A" (automatic), "M" (manual) or "N" (none). If not set, defaults to "A".
+- `target_freq`: target frequency (for automatic runing) as pmt double type
+- `args`: string containing additional arguments, for example for integer N tuning.
+
+Example:
+
+\code
+tune_rx = pmt.make_dict()
+tune_rx = pmt.dict_add(tune_rx, pmt.to_pmt('rf_freq'), pmt.to_pmt(rf_freq))
+tune_rx = pmt.dict_add(tune_rx, pmt.to_pmt('rf_freq_policy'), pmt.to_pmt('M'))
+tune_rx = pmt.dict_add(tune_rx, pmt.to_pmt('dsp_freq_policy'), pmt.to_pmt('N'))
+tune_rx = pmt.dict_add(tune_rx, pmt.to_pmt('args'), pmt.to_pmt('mode_n=integer,int_n_step=1000e3'))
+\endcode
 
 \b Note: Not all commands are affected by `time`. See the UHD manual for details on timed commands.
 
