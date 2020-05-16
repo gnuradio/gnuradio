@@ -686,44 +686,48 @@ void usrp_block_impl::_cmd_handler_tune(const pmt::pmt_t& tune,
     _update_curr_tune_req(new_tune_reqest, chan);
 }
 
-void usrp_block_impl::_cmd_handler_mtune(const pmt::pmt_t& tune, int chan, const pmt::pmt_t& msg)
+void usrp_block_impl::_cmd_handler_mtune(const pmt::pmt_t& tune,
+                                         int chan,
+                                         const pmt::pmt_t& msg)
 {
     ::uhd::tune_request_t new_tune_request;
     if (pmt::dict_has_key(tune, pmt::mp("dsp_freq"))) {
-        new_tune_request.dsp_freq = pmt::to_double(pmt::dict_ref(tune, pmt::mp("dsp_freq"), 0));
+        new_tune_request.dsp_freq =
+            pmt::to_double(pmt::dict_ref(tune, pmt::mp("dsp_freq"), 0));
     }
     if (pmt::dict_has_key(tune, pmt::mp("rf_freq"))) {
-        new_tune_request.rf_freq = pmt::to_double(pmt::dict_ref(tune, pmt::mp("rf_freq"), 0));
+        new_tune_request.rf_freq =
+            pmt::to_double(pmt::dict_ref(tune, pmt::mp("rf_freq"), 0));
     }
     if (pmt::dict_has_key(tune, pmt::mp("target_freq"))) {
-        new_tune_request.dsp_freq = pmt::to_double(pmt::dict_ref(tune, pmt::mp("target_freq"), 0));
+        new_tune_request.dsp_freq =
+            pmt::to_double(pmt::dict_ref(tune, pmt::mp("target_freq"), 0));
     }
     if (pmt::dict_has_key(tune, pmt::mp("dsp_freq_policy"))) {
-        std::string policy = pmt::symbol_to_string(pmt::dict_ref(tune, pmt::mp("dsp_freq_policy"), pmt::mp("A")));
-        if(policy == "M") {
+        std::string policy = pmt::symbol_to_string(
+            pmt::dict_ref(tune, pmt::mp("dsp_freq_policy"), pmt::mp("A")));
+        if (policy == "M") {
             new_tune_request.dsp_freq_policy = ::uhd::tune_request_t::POLICY_MANUAL;
-        }
-        else if(policy == "A") {
+        } else if (policy == "A") {
             new_tune_request.dsp_freq_policy = ::uhd::tune_request_t::POLICY_AUTO;
-        }
-        else {
+        } else {
             new_tune_request.dsp_freq_policy = ::uhd::tune_request_t::POLICY_NONE;
         }
     }
     if (pmt::dict_has_key(tune, pmt::mp("rf_freq_policy"))) {
-        std::string policy = pmt::symbol_to_string(pmt::dict_ref(tune, pmt::mp("rf_freq_policy"), pmt::mp("A")));
-        if(policy == "M") {
+        std::string policy = pmt::symbol_to_string(
+            pmt::dict_ref(tune, pmt::mp("rf_freq_policy"), pmt::mp("A")));
+        if (policy == "M") {
             new_tune_request.rf_freq_policy = ::uhd::tune_request_t::POLICY_MANUAL;
-        }
-        else if(policy == "A") {
+        } else if (policy == "A") {
             new_tune_request.rf_freq_policy = ::uhd::tune_request_t::POLICY_AUTO;
-        }
-        else {
+        } else {
             new_tune_request.rf_freq_policy = ::uhd::tune_request_t::POLICY_NONE;
         }
     }
     if (pmt::dict_has_key(tune, pmt::mp("args"))) {
-        new_tune_request.args = ::uhd::device_addr_t(pmt::symbol_to_string(pmt::dict_ref(tune, pmt::mp("args"), pmt::mp(""))));
+        new_tune_request.args = ::uhd::device_addr_t(
+            pmt::symbol_to_string(pmt::dict_ref(tune, pmt::mp("args"), pmt::mp(""))));
     }
 
     _update_curr_tune_req(new_tune_request, chan);
