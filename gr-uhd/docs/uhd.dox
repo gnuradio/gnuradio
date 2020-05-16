@@ -84,25 +84,27 @@ set.
 
 The following command keys are understood by both UHD Source and Sink:
 
-Command name | Value Type   | Description
--------------|--------------|-------------------------------------------------------------
-`chan`       | int          | Specifies a channel. If this is not given, either all channels are chosen, or channel 0, depending on the action. A value of -1 forces 'all channels', where possible.
-`gain`       | double       | Sets the Tx or Rx gain (in dB). Defaults to all channels.
-`freq`       | double       | Sets the Tx or Rx frequency. Defaults to all channels. If specified without `lo_offset`, it will set the LO offset to zero.
-`lo_offset`  | double       | Sets an LO offset. Defaults to all channels. Note this does not affect the effective center frequency.
-`tune`       | tune_request | Like freq, but sets a full tune request (i.e. center frequency and DSP offset). Defaults to all channels.
-`lo_freq`    | double       | For fully manual tuning: Set the LO frequency (RF frequency). Conflicts with `freq`, `lo_offset`, and `tune`.
-`dsp_freq`   | double       | For fully manual tuning: Set the DSP frequency (CORDIC frequency). Conflicts with `freq`, `lo_offset`, and `tune`.
-`direction`  | string       | Used for timed transceiver tuning to ensure tuning order is maintained. Values other than 'TX' or 'RX' will be ignored.
-`rate`       | double       | See usrp_block::set_samp_rate(). *Always* affects all channels.
-`bandwidth`  | double       | See usrp_block::set_bandwidth(). Defaults to all channels.
-`time`       | timestamp    | Sets a command time. See usrp_block::set_command_time(). A value of PMT_NIL will clear the command time.
-`mboard`     | int          | Specify mboard index, where applicable.
-`antenna`    | string       | See usrp_block::set_antenna(). Defaults to all channels.
+Command name | Value Type     | Description
+-------------|----------------|-------------------------------------------------------------
+`chan`       | int            | Specifies a channel. If this is not given, either all channels are chosen, or channel 0, depending on the action. A value of -1 forces 'all channels', where possible.
+`gain`       | double         | Sets the Tx or Rx gain (in dB). Defaults to all channels.
+`freq`       | double         | Sets the Tx or Rx frequency. Defaults to all channels. If specified without `lo_offset`, it will set the LO offset to zero.
+`lo_offset`  | double         | Sets an LO offset. Defaults to all channels. Note this does not affect the effective center frequency.
+`tune`       | tune_request   | Like freq, but sets a full tune request (i.e. center frequency and DSP offset). Defaults to all channels.
+`mtune`      | tune_request_t | Like tune, but supports a full manual tune request as uhd::tune_request_t. Defaults to all channels.
+`lo_freq`    | double         | For fully manual tuning: Set the LO frequency (RF frequency). Conflicts with `freq`, `lo_offset`, and `tune`.
+`dsp_freq`   | double         | For fully manual tuning: Set the DSP frequency (CORDIC frequency). Conflicts with `freq`, `lo_offset`, and `tune`.
+`direction`  | string         | Used for timed transceiver tuning to ensure tuning order is maintained. Values other than 'TX' or 'RX' will be ignored.
+`rate`       | double         | See usrp_block::set_samp_rate(). *Always* affects all channels.
+`bandwidth`  | double         | See usrp_block::set_bandwidth(). Defaults to all channels.
+`time`       | timestamp      | Sets a command time. See usrp_block::set_command_time(). A value of PMT_NIL will clear the command time.
+`mboard`     | int            | Specify mboard index, where applicable.
+`antenna`    | string         | See usrp_block::set_antenna(). Defaults to all channels.
 
 Special types:
 
 - tune_request: Like a uhd::tune_request_t, but always uses POLICY_AUTO. This is a pair, composed of (target_frequency, lo_offset)
+- tune_request_t: Exact copy of uhd::tune_request_t, implemented as pmt::dict. It copies the fields dsp_freq, dsp_freq_policy, rf_freq, rf_freq_policy, target_freq, args to an actual tune_request_t object. Hence it supports fully customized tunings with all policies and integer-N tuning. The policies are strings A, N, M for automatic, none and manual tuning.
 - timestamp: A pair composed of (long full_secs, double frac_secs). Similar to uhd::time_spec_t
 
 \b Note: Not all commands are affected by `time`. See the UHD manual for details on timed commands.
