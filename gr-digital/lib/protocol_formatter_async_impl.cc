@@ -55,7 +55,9 @@ protocol_formatter_async_impl::protocol_formatter_async_impl(
     message_port_register_out(d_pld_port);
 
     set_msg_handler(d_in_port,
-                    boost::bind(&protocol_formatter_async_impl::append, this, _1));
+                    boost::bind(&protocol_formatter_async_impl::append,
+                                this,
+                                boost::placeholders::_1));
 }
 
 protocol_formatter_async_impl::~protocol_formatter_async_impl() {}

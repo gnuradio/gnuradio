@@ -72,7 +72,9 @@ puncture_ff_impl::puncture_ff_impl(int puncsize, int puncpat, int delay)
     set_fixed_rate(true);
     set_relative_rate((uint64_t)(d_puncsize - d_puncholes), (uint64_t)d_puncsize);
     set_output_multiple(d_puncsize - d_puncholes);
-    // set_msg_handler(boost::bind(&puncture_ff_impl::catch_msg, this, _1));
+    // set_msg_handler(boost::bind(&puncture_ff_impl::catch_msg,
+    //                             this,
+    //                             boost::placeholders::_1));
 }
 
 puncture_ff_impl::~puncture_ff_impl() {}

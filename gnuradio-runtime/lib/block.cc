@@ -61,7 +61,8 @@ block::block(const std::string& name,
 {
     global_block_registry.register_primitive(alias(), this);
     message_port_register_in(d_system_port);
-    set_msg_handler(d_system_port, boost::bind(&block::system_handler, this, _1));
+    set_msg_handler(d_system_port,
+                    boost::bind(&block::system_handler, this, boost::placeholders::_1));
 
     configure_default_loggers(d_logger, d_debug_logger, symbol_name());
 }

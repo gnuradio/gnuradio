@@ -44,8 +44,9 @@ pdu_filter_impl::pdu_filter_impl(pmt::pmt_t k, pmt::pmt_t v, bool invert)
 {
     message_port_register_out(pdu::pdu_port_id());
     message_port_register_in(pdu::pdu_port_id());
-    set_msg_handler(pdu::pdu_port_id(),
-                    boost::bind(&pdu_filter_impl::handle_msg, this, _1));
+    set_msg_handler(
+        pdu::pdu_port_id(),
+        boost::bind(&pdu_filter_impl::handle_msg, this, boost::placeholders::_1));
 }
 
 void pdu_filter_impl::handle_msg(pmt::pmt_t pdu)

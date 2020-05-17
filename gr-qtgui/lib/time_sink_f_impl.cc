@@ -80,7 +80,9 @@ time_sink_f_impl::time_sink_f_impl(int size,
 
     // setup PDU handling input port
     message_port_register_in(pmt::mp("in"));
-    set_msg_handler(pmt::mp("in"), boost::bind(&time_sink_f_impl::handle_pdus, this, _1));
+    set_msg_handler(
+        pmt::mp("in"),
+        boost::bind(&time_sink_f_impl::handle_pdus, this, boost::placeholders::_1));
 
     // +1 for the PDU buffer
     for (unsigned int n = 0; n < d_nconnections + 1; n++) {

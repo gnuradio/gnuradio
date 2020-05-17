@@ -44,8 +44,9 @@ nop_impl::nop_impl(size_t sizeof_stream_item)
 {
     // Arrange to have count_received_msgs called when messages are received.
     message_port_register_in(pmt::mp("port"));
-    set_msg_handler(pmt::mp("port"),
-                    boost::bind(&nop_impl::count_received_msgs, this, _1));
+    set_msg_handler(
+        pmt::mp("port"),
+        boost::bind(&nop_impl::count_received_msgs, this, boost::placeholders::_1));
 }
 
 nop_impl::~nop_impl() {}
