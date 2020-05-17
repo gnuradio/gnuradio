@@ -35,8 +35,9 @@ mute_impl<T>::mute_impl(bool mute)
       d_mute(mute)
 {
     this->message_port_register_in(pmt::intern("set_mute"));
-    this->set_msg_handler(pmt::intern("set_mute"),
-                          boost::bind(&mute_impl<T>::set_mute_pmt, this, _1));
+    this->set_msg_handler(
+        pmt::intern("set_mute"),
+        boost::bind(&mute_impl<T>::set_mute_pmt, this, boost::placeholders::_1));
 }
 
 template <class T>

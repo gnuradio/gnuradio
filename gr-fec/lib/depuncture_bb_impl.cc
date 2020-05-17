@@ -62,7 +62,9 @@ depuncture_bb_impl::depuncture_bb_impl(int puncsize, int puncpat, int delay, cha
     set_fixed_rate(true);
     set_relative_rate((uint64_t)d_puncsize, (uint64_t)(d_puncsize - d_puncholes));
     set_output_multiple(d_puncsize);
-    // set_msg_handler(boost::bind(&depuncture_bb_impl::catch_msg, this, _1));
+    // set_msg_handler(boost::bind(&depuncture_bb_impl::catch_msg,
+    //                             this,
+    //                             boost::placeholders::_1));
 }
 
 depuncture_bb_impl::~depuncture_bb_impl() {}

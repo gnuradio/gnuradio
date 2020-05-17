@@ -95,7 +95,7 @@ must then bind this port to the message handler. For this, we use
 Boost's 'bind' function:
 
   set_msg_handler(pmt::pmt_t port_id,
-    boost::bind(&block_class::message_handler_function, this, _1));
+    boost::bind(&block_class::message_handler_function, this, boost::placeholders::_1));
 
 Or starting in GNU Radio 3.8 using C++11 we can avoid Boost and express the binding as a lambda function (preferred)
 
@@ -247,15 +247,15 @@ The constructor of this block looks like this:
  {
    message_port_register_in(pmt::mp("print"));
    set_msg_handler(pmt::mp("print"),
-     boost::bind(&message_debug_impl::print, this, _1));
+     boost::bind(&message_debug_impl::print, this, boost::placeholders::_1));
  
    message_port_register_in(pmt::mp("store"));
    set_msg_handler(pmt::mp("store"),
-     boost::bind(&message_debug_impl::store, this, _1));
+     boost::bind(&message_debug_impl::store, this, boost::placeholders::_1));
  
    message_port_register_in(pmt::mp("print_pdu"));
    set_msg_handler(pmt::mp("print_pdu"),
-     boost::bind(&message_debug_impl::print_pdu, this, _1));
+     boost::bind(&message_debug_impl::print_pdu, this, boost::placeholders::_1));
  }
 </syntaxhighlight>
 

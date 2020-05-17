@@ -53,10 +53,14 @@ async_decoder_impl::async_decoder_impl(generic_decoder::sptr my_decoder,
     if (d_packed) {
         d_pack = new blocks::kernel::pack_k_bits(8);
         set_msg_handler(d_in_port,
-                        boost::bind(&async_decoder_impl::decode_packed, this, _1));
+                        boost::bind(&async_decoder_impl::decode_packed,
+                                    this,
+                                    boost::placeholders::_1));
     } else {
         set_msg_handler(d_in_port,
-                        boost::bind(&async_decoder_impl::decode_unpacked, this, _1));
+                        boost::bind(&async_decoder_impl::decode_unpacked,
+                                    this,
+                                    boost::placeholders::_1));
     }
 
     // The maximum frame size is set by the initial frame size of the decoder.

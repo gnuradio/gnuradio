@@ -32,8 +32,9 @@ repeat_impl::repeat_impl(size_t itemsize, int interp)
       d_interp(interp)
 {
     message_port_register_in(pmt::mp("interpolation"));
-    set_msg_handler(pmt::mp("interpolation"),
-                    boost::bind(&repeat_impl::msg_set_interpolation, this, _1));
+    set_msg_handler(
+        pmt::mp("interpolation"),
+        boost::bind(&repeat_impl::msg_set_interpolation, this, boost::placeholders::_1));
 }
 
 void repeat_impl::msg_set_interpolation(pmt::pmt_t msg)

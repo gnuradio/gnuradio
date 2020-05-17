@@ -37,9 +37,10 @@ tagged_stream_multiply_length_impl::tagged_stream_multiply_length_impl(
     set_tag_propagation_policy(TPP_DONT);
     set_relative_rate(1, 1);
     message_port_register_in(pmt::intern("set_scalar"));
-    set_msg_handler(
-        pmt::intern("set_scalar"),
-        boost::bind(&tagged_stream_multiply_length_impl::set_scalar_pmt, this, _1));
+    set_msg_handler(pmt::intern("set_scalar"),
+                    boost::bind(&tagged_stream_multiply_length_impl::set_scalar_pmt,
+                                this,
+                                boost::placeholders::_1));
 }
 
 tagged_stream_multiply_length_impl::~tagged_stream_multiply_length_impl() {}

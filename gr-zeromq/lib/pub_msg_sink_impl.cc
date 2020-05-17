@@ -50,7 +50,9 @@ pub_msg_sink_impl::pub_msg_sink_impl(char* address, int timeout, bool bind)
     }
 
     message_port_register_in(pmt::mp("in"));
-    set_msg_handler(pmt::mp("in"), boost::bind(&pub_msg_sink_impl::handler, this, _1));
+    set_msg_handler(
+        pmt::mp("in"),
+        boost::bind(&pub_msg_sink_impl::handler, this, boost::placeholders::_1));
 }
 
 pub_msg_sink_impl::~pub_msg_sink_impl()

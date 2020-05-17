@@ -57,8 +57,9 @@ chunks_to_symbols_impl<IN_T, OUT_T>::chunks_to_symbols_impl(
     this->message_port_register_in(pmt::mp("set_symbol_table"));
     this->set_msg_handler(
         pmt::mp("set_symbol_table"),
-        boost::bind(
-            &chunks_to_symbols_impl<IN_T, OUT_T>::handle_set_symbol_table, this, _1));
+        boost::bind(&chunks_to_symbols_impl<IN_T, OUT_T>::handle_set_symbol_table,
+                    this,
+                    boost::placeholders::_1));
 }
 
 template <class IN_T, class OUT_T>

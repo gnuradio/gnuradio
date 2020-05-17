@@ -55,7 +55,9 @@ sig_source_impl<T>::sig_source_impl(double sampling_freq,
     this->set_phase(phase);
     this->message_port_register_in(pmt::mp("freq"));
     this->set_msg_handler(pmt::mp("freq"),
-                          boost::bind(&sig_source_impl<T>::set_frequency_msg, this, _1));
+                          boost::bind(&sig_source_impl<T>::set_frequency_msg,
+                                      this,
+                                      boost::placeholders::_1));
 }
 
 template <class T>

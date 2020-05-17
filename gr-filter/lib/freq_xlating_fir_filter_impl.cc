@@ -61,7 +61,7 @@ freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::freq_xlating_fir_filter_impl(
         boost::bind(
             &freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::handle_set_center_freq,
             this,
-            _1));
+            boost::placeholders::_1));
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
