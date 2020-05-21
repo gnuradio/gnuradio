@@ -5,7 +5,7 @@ from gnuradio.bindtool import BindingGenerator
 import pathlib
 import sys
 
-parser = argparse.ArgumentParser(description='Bind a GR In-Tree Module')
+parser = argparse.ArgumentParser(description='Bind a GR Out of Tree Block')
 parser.add_argument('--module', type=str,
                     help='Name of gr module containing file to bind (e.g. fft digital analog)')
 
@@ -38,21 +38,16 @@ output_dir = args.output_dir
 includes = args.include
 name = args.module
 
-if name not in ['gr', 'pmt']:
-    namespace = ['gr', name]
-    prefix_include_root = 'gnuradio/'+name  # pmt, gnuradio/digital, etc.
-else:
-    namespace = [name]
-    if name == 'gr':
-        prefix_include_root = 'gnuradio'
-    elif name == 'pmt':
-        prefix_include_root = 'pmt'
+namespace = ['gr', name]
+prefix_include_root = name
+
 
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-    bg = BindingGenerator(args.prefix, namespace,
+    bg = BindingGenerator(prefix, namespace,
                           prefix_include_root, output_dir, addl_includes=','.join(args.include), catch_exceptions=False, write_json_output=False, status_output=args.status,
-                            flag_automatic=True if args.flag_automatic.lower() in ['1','true'] else False,
-                            flag_pygccxml=True if args.flag_pygccxml.lower() in ['1','true'] else False)
+                          flag_automatic=True if args.flag_automatic.lower() in [
+                              '1', 'true'] else False,
+                          flag_pygccxml=True if args.flag_pygccxml.lower() in ['1', 'true'] else False)
     bg.gen_file_binding(args.filename)

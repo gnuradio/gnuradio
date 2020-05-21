@@ -5,6 +5,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
+GR_PYTHON_CHECK_MODULE_RAW(
+    "pygccxml"
+    "import pygccxml"
+    PYGCCXML_FOUND
+    )
+
 include(GrPybind)
 
 ########################################################################

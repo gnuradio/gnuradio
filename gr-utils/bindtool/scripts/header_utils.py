@@ -18,7 +18,6 @@ class PybindHeaderParser:
         else:
             return False
         
-
     def get_flag_pygccxml(self):    
         # p = re.compile(r'BINDTOOL_USE_PYGCCXML\(([^\s])\)')
         # m = p.search(self.file_txt)
@@ -46,13 +45,17 @@ class PybindHeaderParser:
         else:
             return None
 
+    def get_flags(self):
+        return f'{self.get_flag_automatic()};{self.get_flag_pygccxml()};{self.get_header_filename()};{self.get_header_file_hash()};'
+
+
 
 def argParse():
     """Parses commandline args."""
     desc='Reads the parameters from the comment block in the pybind files'
     parser = ArgumentParser(description=desc)
     
-    parser.add_argument("function", help="Operation to perform on comment block of pybind file", choices=["flag_auto","flag_pygccxml","header_filename","header_file_hash"])
+    parser.add_argument("function", help="Operation to perform on comment block of pybind file", choices=["flag_auto","flag_pygccxml","header_filename","header_file_hash","all"])
     parser.add_argument("pathname", help="Pathname of pybind c++ file to read, e.g. blockname_python.cc")
 
     return parser.parse_args()
@@ -71,3 +74,5 @@ if __name__ == "__main__":
         print(pbhp.get_header_filename())
     elif args.function == "header_file_hash":
         print(pbhp.get_header_file_hash()) 
+    elif args.function == "all":
+        print(pbhp.get_flags())

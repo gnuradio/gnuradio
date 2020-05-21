@@ -52,39 +52,19 @@ configure_file(${CMAKE_SOURCE_DIR}/docs/doxygen/pydoc_macros.h ${CMAKE_CURRENT_B
 
 list(APPEND regen_targets "")
 foreach(file ${files})
+   
     execute_process(COMMAND "python3" 
     ${CMAKE_SOURCE_DIR}/gr-utils/bindtool/scripts/header_utils.py
-    "flag_auto"
+    "all"
     ${CMAKE_CURRENT_SOURCE_DIR}/${file}
-    OUTPUT_VARIABLE flag_auto
+    OUTPUT_VARIABLE flags_all
     ) 
-    string(REGEX REPLACE "\n$" "" flag_auto "${flag_auto}")
-
-    execute_process(COMMAND "python3" 
-    ${CMAKE_SOURCE_DIR}/gr-utils/bindtool/scripts/header_utils.py
-    "flag_pygccxml"
-    ${CMAKE_CURRENT_SOURCE_DIR}/${file}
-    OUTPUT_VARIABLE flag_pygccxml
-    ) 
-    string(REGEX REPLACE "\n$" "" flag_pygccxml "${flag_pygccxml}")
-
-    execute_process(COMMAND "python3" 
-    ${CMAKE_SOURCE_DIR}/gr-utils/bindtool/scripts/header_utils.py
-    "header_filename"
-    ${CMAKE_CURRENT_SOURCE_DIR}/${file}
-    OUTPUT_VARIABLE header_filename
-    ) 
-    string(REGEX REPLACE "\n$" "" header_filename "${header_filename}")
-
-    execute_process(COMMAND "python3" 
-    ${CMAKE_SOURCE_DIR}/gr-utils/bindtool/scripts/header_utils.py
-    "header_file_hash"
-    ${CMAKE_CURRENT_SOURCE_DIR}/${file}
-    OUTPUT_VARIABLE header_file_hash
-    ) 
-    string(REGEX REPLACE "\n$" "" header_file_hash "${header_file_hash}")
-
-    message(STATUS ${file} ":" ${flag_auto} ":" ${flag_pygccxml} ":" ${header_filename} ":" ${header_file_hash})
+    list(GET flags_all 0 flag_auto)
+    list(GET flags_all 1 flag_pygccxml)
+    list(GET flags_all 2 header_filename)
+    list(GET flags_all 3 header_file_hash
+    )
+    # message(STATUS ${file} ":" ${flag_auto} ":" ${flag_pygccxml} ":" ${header_filename} ":" ${header_file_hash})
 
     if (NOT ${header_filename} STREQUAL "None")  # If no header filename is specified, don't bother checking for a rebuild
         set(header_full_path ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include/gnuradio/${name}/${header_filename})
@@ -96,7 +76,7 @@ foreach(file ${files})
                 # if (NOT bindtool_use_pygccxml STREQUAL )
                 message(FATAL_ERROR "Python bindings for " ${header_filename} " are out of sync" )
             else()
-                if (flag_pygccxml STREQUAL "False") 
+                if (flag_pygccxml STREQUAL "True") 
                     if(NOT PYGCCXML_FOUND)
                         message(FATAL_ERROR "Python bindings for " ${header_filename} " require pygccxml for automatic regeneration" )
                     endif()
@@ -175,39 +155,20 @@ macro(GR_PYBIND_MAKE_OOT name updir filter files)
 
 list(APPEND regen_targets "")
 foreach(file ${files})
-    execute_process(COMMAND "python3" 
-    ${CMAKE_CURRENT_SOURCE_DIR}/header_utils.py
-    "flag_auto"
-    ${CMAKE_CURRENT_SOURCE_DIR}/${file}
-    OUTPUT_VARIABLE flag_auto
-    ) 
-    string(REGEX REPLACE "\n$" "" flag_auto "${flag_auto}")
 
     execute_process(COMMAND "python3" 
     ${CMAKE_CURRENT_SOURCE_DIR}/header_utils.py
-    "flag_pygccxml"
+    "all"
     ${CMAKE_CURRENT_SOURCE_DIR}/${file}
-    OUTPUT_VARIABLE flag_pygccxml
+    OUTPUT_VARIABLE flags_all
     ) 
-    string(REGEX REPLACE "\n$" "" flag_pygccxml "${flag_pygccxml}")
+    list(GET flags_all 0 flag_auto)
+    list(GET flags_all 1 flag_pygccxml)
+    list(GET flags_all 2 header_filename)
+    list(GET flags_all 3 header_file_hash
+    )
 
-    execute_process(COMMAND "python3" 
-    ${CMAKE_CURRENT_SOURCE_DIR}/header_utils.py
-    "header_filename"
-    ${CMAKE_CURRENT_SOURCE_DIR}/${file}
-    OUTPUT_VARIABLE header_filename
-    ) 
-    string(REGEX REPLACE "\n$" "" header_filename "${header_filename}")
-
-    execute_process(COMMAND "python3" 
-    ${CMAKE_CURRENT_SOURCE_DIR}/header_utils.py
-    "header_file_hash"
-    ${CMAKE_CURRENT_SOURCE_DIR}/${file}
-    OUTPUT_VARIABLE header_file_hash
-    ) 
-    string(REGEX REPLACE "\n$" "" header_file_hash "${header_file_hash}")
-
-    message(STATUS ${file} ":" ${flag_auto} ":" ${flag_pygccxml} ":" ${header_filename} ":" ${header_file_hash})
+    # message(STATUS ${file} ":" ${flag_auto} ":" ${flag_pygccxml} ":" ${header_filename} ":" ${header_file_hash})
 
     if (NOT ${header_filename} STREQUAL "None")  # If no header filename is specified, don't bother checking for a rebuild
         set(header_full_path ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include/${name}/${header_filename})  # NOTE OOT version does not have gnuradio/ here
@@ -219,7 +180,7 @@ foreach(file ${files})
                 # if (NOT bindtool_use_pygccxml STREQUAL )
                 message(FATAL_ERROR "Python bindings for " ${header_filename} " are out of sync" )
             else()
-                if (flag_pygccxml STREQUAL "False") 
+                if (flag_pygccxml STREQUAL "True") 
                     if(NOT PYGCCXML_FOUND)
                         message(FATAL_ERROR "Python bindings for " ${header_filename} " require pygccxml for automatic regeneration" )
                     endif()
@@ -232,7 +193,7 @@ foreach(file ${files})
                 add_custom_command( 
                     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}}/${file}
                     COMMAND  "python3" 
-                    ${CMAKE_SOURCE_DIR}/gr-utils/bindtool/scripts/bind_intree_file.py
+                    ${CMAKE_CURRENT_SOURCE_DIR}/bind_oot_file.py
                     "--output_dir" ${CMAKE_CURRENT_SOURCE_DIR}/..
                     "--prefix" ${CMAKE_INSTALL_PREFIX}
                     "--src" ${CMAKE_SOURCE_DIR}
