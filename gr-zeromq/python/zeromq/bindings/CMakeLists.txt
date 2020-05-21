@@ -19,7 +19,7 @@ list(APPEND zeromq_python_files
     sub_source_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(zeromq 
+GR_PYBIND_MAKE_CHECK_HASH(zeromq 
    ../../.. 
    gr::zeromq
    "${zeromq_python_files}")
