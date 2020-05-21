@@ -43,6 +43,9 @@ MAIN_TMPL = """\
 		\#end if
 	),$lentag_arg
 )
+\#if \$start_time() >= 0
+self.\$(id).set_start_time(uhd.time_spec(\$start_time))
+\#end if
 \#if \$clock_rate()
 self.\$(id).set_clock_rate(\$clock_rate, uhd.ALL_MBOARDS)
 \#end if
@@ -236,6 +239,17 @@ set_lo_export_enabled(\$lo_export$(n), uhd.ALL_LOS, $n)
 		<option>
 			<name>don't sync</name>
 			<key></key>
+		</option>
+	</param>
+	<param>
+		<name>Start Time (seconds)</name>
+		<key>start_time</key>
+		<value>-1</value>
+		<type>real</type>
+		<hide>\#if \$start_time() >= 0 then 'none' else 'part'#</hide>
+		<option>
+			<name>Default</name>
+			<key>-1</key>
 		</option>
 	</param>
 	<param>
