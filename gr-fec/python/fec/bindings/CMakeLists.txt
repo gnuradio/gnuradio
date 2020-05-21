@@ -1,3 +1,5 @@
+include(GrPybind)
+
 ########################################################################
 # Python Bindings
 ########################################################################
@@ -54,7 +56,7 @@ list(APPEND fec_python_files
     # #viterbi_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(fec 
+GR_PYBIND_MAKE_CHECK_HASH(fec 
    ../../.. 
    gr::fec
    "${fec_python_files}")
