@@ -67,7 +67,12 @@ foreach(file ${files})
     # message(STATUS ${file} ":" ${flag_auto} ":" ${flag_pygccxml} ":" ${header_filename} ":" ${header_file_hash})
 
     if (NOT ${header_filename} STREQUAL "None")  # If no header filename is specified, don't bother checking for a rebuild
-        set(header_full_path ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include/gnuradio/${name}/${header_filename})
+        if (${name} STREQUAL gr)
+            set(header_full_path ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include/gnuradio/${header_filename})
+        else()
+            set(header_full_path ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include/gnuradio/${name}/${header_filename})
+        endif()
+        
         file(MD5 ${header_full_path} calc_hash)
         # message(STATUS ${ii} " " ${calc_hash} " " ${saved_hash})
         if (NOT ${calc_hash} STREQUAL ${header_file_hash})
