@@ -116,6 +116,8 @@ public:
     virtual float fft_average() const = 0;
     virtual void set_fft_window(const gr::filter::firdes::win_type win) = 0;
     virtual gr::filter::firdes::win_type fft_window() = 0;
+    //! If true, normalize window to unit power
+    virtual void set_fft_window_normalized(const bool enable) = 0;
 
     virtual void set_frequency_range(const double centerfreq, const double bandwidth) = 0;
     virtual void set_y_axis(double min, double max) = 0;

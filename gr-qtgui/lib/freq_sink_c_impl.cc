@@ -20,6 +20,9 @@
 #include <qwt_symbol.h>
 #include <volk/volk.h>
 
+#include <boost/range/adaptor/transformed.hpp>
+#include <boost/range/numeric.hpp>
+
 #include <string.h>
 #include <algorithm>
 
@@ -207,6 +210,12 @@ void freq_sink_c_impl::set_fft_window(const filter::firdes::win_type win)
 }
 
 filter::firdes::win_type freq_sink_c_impl::fft_window() { return d_wintype; }
+
+void freq_sink_c_impl::set_fft_window_normalized(const bool enable)
+{
+    d_window_normalize = enable;
+    buildwindow();
+}
 
 void freq_sink_c_impl::set_frequency_range(const double centerfreq,
                                            const double bandwidth)
@@ -410,6 +419,22 @@ void freq_sink_c_impl::buildwindow()
     if (d_wintype != filter::firdes::WIN_NONE) {
         d_window = filter::firdes::window(d_wintype, d_fftsize, 6.76);
     }
+
+    if (!d_window_normalize) {
+        return;
+    }
+    // Calculate power of the window as 1/N * sum of squares
+    const float power =
+        boost::accumulate(
+            d_window | boost::adaptors::transformed([](const float x) { return x * x; }),
+            0.0) /
+        d_window.size();
+    const double norm_factor = std::sqrt(power);
+    GR_LOG_INFO(d_logger, boost::format("norm factor: %1%") % norm_factor);
+    GR_LOG_INFO(d_logger, boost::format("win before: %1%") % d_window.at(10));
+    // Now normalize such that the power of d_window is 1
+    std::for_each(d_window.begin(), d_window.end(), [&](float& x) { x /= norm_factor; });
+    GR_LOG_INFO(d_logger, boost::format("win after: %1%") % d_window.at(10));
 }
 
 bool freq_sink_c_impl::fftresize()
