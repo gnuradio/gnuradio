@@ -39,20 +39,24 @@ public:
 
     void setUnitType(const std::string& type) { d_unitType = type; }
 
+    void setYUnit(const std::string& unit) { d_y_unit = unit; }
+
 protected:
     using QwtPlotZoomer::trackerText;
     virtual QwtText trackerText(QPoint const& p) const
     {
         QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
-        QwtText t(QString("%1 %2, %3 dB")
+        QwtText t(QString("%1 %2, %3 %4")
                       .arg(dp.x(), 0, 'f', getFrequencyPrecision())
                       .arg(d_unitType.c_str())
-                      .arg(dp.y(), 0, 'f', 2));
+                      .arg(dp.y(), 0, 'f', 2)
+                      .arg(d_y_unit.c_str()));
         return t;
     }
 
 private:
     std::string d_unitType;
+    std::string d_y_unit = "dB";
 };
 
 
@@ -553,6 +557,7 @@ void FrequencyDisplayPlot::setYLabel(const std::string& label, const std::string
     if (unit.length() > 0)
         l += " (" + unit + ")";
     setAxisTitle(QwtPlot::yLeft, QString(l.c_str()));
+    static_cast<FreqDisplayZoomer*>(d_zoomer)->setYUnit(unit);
 }
 
 void FrequencyDisplayPlot::setMinFFTColor(QColor c)
