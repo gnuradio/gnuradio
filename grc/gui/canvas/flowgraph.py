@@ -502,6 +502,9 @@ class FlowGraph(CoreFlowgraph, Drawable):
         if self._new_connection is not None:
             yield self._new_connection.draw
         for element in self._elements_to_draw:
+            if element not in self.selected_elements:
+                yield element.draw
+        for element in self.selected_elements:
             yield element.draw
 
     def draw(self, cr):
