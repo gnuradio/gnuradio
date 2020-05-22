@@ -41,7 +41,7 @@ list(APPEND analog_python_files
     squelch_base_ff_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(analog 
+GR_PYBIND_MAKE_CHECK_HASH(analog 
    ../../.. 
    gr::analog
    "${analog_python_files}")

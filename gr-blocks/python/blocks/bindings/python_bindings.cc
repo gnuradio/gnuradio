@@ -116,6 +116,7 @@ void bind_pdu_set(py::module&);
 void bind_pdu_to_tagged_stream(py::module&);
 void bind_peak_detector(py::module&);
 void bind_peak_detector2_fb(py::module&);
+void bind_phase_shift(py::module&);
 void bind_plateau_detector_fb(py::module&);
 void bind_probe_rate(py::module&);
 void bind_probe_signal(py::module&);

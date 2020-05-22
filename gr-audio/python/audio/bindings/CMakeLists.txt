@@ -10,7 +10,7 @@ list(APPEND audio_python_files
     source_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(audio 
+GR_PYBIND_MAKE_CHECK_HASH(audio 
    ../../.. 
    gr::audio
    "${audio_python_files}")

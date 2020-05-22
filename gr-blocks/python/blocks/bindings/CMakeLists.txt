@@ -105,6 +105,7 @@ list(APPEND blocks_python_files
     pdu_to_tagged_stream_python.cc
     peak_detector_python.cc
     peak_detector2_fb_python.cc
+    phase_shift_python.cc
     plateau_detector_fb_python.cc
     probe_rate_python.cc
     probe_signal_python.cc
@@ -167,7 +168,7 @@ list(APPEND blocks_python_files
     xor_blk_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(blocks 
+GR_PYBIND_MAKE_CHECK_HASH(blocks 
   ../../.. 
   gr::blocks
   "${blocks_python_files}")

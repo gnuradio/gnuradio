@@ -256,6 +256,8 @@ class ModToolAdd(ModTool):
 
         header_info = {
             "module_name": self.info['modname'],
+            "filename": self.info['blockname'] + '.h',
+            "md5hash": "0",
             "namespace": {
                 "name": "::".join(['gr', self.info['modname']]),
                 "enums": [],

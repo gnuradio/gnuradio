@@ -28,7 +28,7 @@ list(APPEND trellis_python_files
     viterbi_combined_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(trellis 
+GR_PYBIND_MAKE_CHECK_HASH(trellis 
    ../../.. 
    gr::trellis
    "${trellis_python_files}")

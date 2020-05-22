@@ -65,7 +65,7 @@ list(APPEND dtv_python_files
     dvbt_viterbi_decoder_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(dtv 
+GR_PYBIND_MAKE_CHECK_HASH(dtv 
    ../../.. 
    gr::dtv
    "${dtv_python_files}")
