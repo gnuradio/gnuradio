@@ -250,10 +250,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
         Args:
             clipboard: the nested data of blocks, connections
         """
-        # todo: rewrite this...
-        selected = set()
         (x_min, y_min), blocks_n, connections_n = clipboard
-        old_id2block = dict()
         # recalc the position
         scroll_pane = self.drawing_area.get_parent().get_parent()
         h_adj = scroll_pane.get_hadjustment()
@@ -265,6 +262,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
             x_off, y_off = 0, 0
 
         # create blocks
+        pasted_blocks = {}
         for block_n in blocks_n:
             block_key = block_n.get('id')
             if block_key == 'options':
@@ -273,30 +271,29 @@ class FlowGraph(CoreFlowgraph, Drawable):
             block_name = block_n.get('name')
             # Verify whether a block with this name exists before adding it
             if block_name in (blk.name for blk in self.blocks):
-                block_name = self._get_unique_id(block_name)
-                block_n['name'] = block_name
+                block_n = block_n.copy()
+                block_n['name'] = self._get_unique_id(block_name)
 
             block = self.new_block(block_key)
             if not block:
                 continue  # unknown block was pasted (e.g. dummy block)
 
-            selected.add(block)
             block.import_data(**block_n)
-            old_id2block[block.params['id'].value] = block
-            # move block to offset coordinate
-            block.move((x_off, y_off))
+            pasted_blocks[block_name] = block  # that is before any rename
 
+            block.move((x_off, y_off))
             #TODO: prevent block from being pasted directly on top of another block
+
+        self.selected_elements = set(pasted_blocks.values())
 
         # update before creating connections
         self.update()
         # create connections
-        for connection_n in connections_n:
-            source = old_id2block[connection_n[0]].get_source(connection_n[1])
-            sink = old_id2block[connection_n[2]].get_sink(connection_n[3])
+        for src_block, src_port, dst_block, dst_port in connections_n:
+            source = pasted_blocks[src_block].get_source(src_port)
+            sink = pasted_blocks[dst_block].get_sink(dst_port)
             connection = self.connect(source, sink)
-            selected.add(connection)
-        self.selected_elements = selected
+            self.selected_elements.add(connection)
 
     ###########################################################################
     # Modify Selected
