@@ -52,7 +52,7 @@ list(APPEND filter_python_files
     single_pole_iir_filter_ff_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(filter 
+GR_PYBIND_MAKE_CHECK_HASH(filter 
    ../../.. 
    gr::filter
    "${filter_python_files}")

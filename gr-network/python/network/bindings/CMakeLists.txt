@@ -12,7 +12,7 @@ list(APPEND network_python_files
     udp_source_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(network 
+GR_PYBIND_MAKE_CHECK_HASH(network 
    ../../.. 
    gr::network
    "${network_python_files}")

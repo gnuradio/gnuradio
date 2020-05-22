@@ -17,7 +17,7 @@ basename = os.path.splitext(f)[0]
 % endfor
     python_bindings.cc)
 
-GR_PYBIND_MAKE(${module_name} 
+GR_PYBIND_MAKE_CHECK_HASH(${module_name} 
    ../../.. 
    gr::${module_name}
    "${'${'+file_list+'}'}")

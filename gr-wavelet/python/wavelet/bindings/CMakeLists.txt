@@ -10,7 +10,7 @@ list(APPEND wavelet_python_files
     wvps_ff_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(wavelet 
+GR_PYBIND_MAKE_CHECK_HASH(wavelet 
    ../../.. 
    gr::wavelet
    "${wavelet_python_files}")

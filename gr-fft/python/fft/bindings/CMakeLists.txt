@@ -15,7 +15,7 @@ list(APPEND fft_python_files
     window_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(fft 
+GR_PYBIND_MAKE_CHECK_HASH(fft 
    ../../.. 
    gr::fft
    "${fft_python_files}")

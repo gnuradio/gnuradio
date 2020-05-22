@@ -15,11 +15,14 @@ import pathlib
 import json
 from mako.template import Template
 from datetime import datetime
+import hashlib
 
 
 class BindingGenerator:
 
-    def __init__(self, prefix, namespace, prefix_include_root, output_dir="", addl_includes="", match_include_structure=False):
+    def __init__(self, prefix, namespace, prefix_include_root, output_dir="", addl_includes="", 
+                    match_include_structure=False, catch_exceptions=True, write_json_output=False, status_output=None,
+                    flag_automatic=False, flag_pygccxml=False):
         """Initialize BindingGenerator
         prefix -- path to installed gnuradio prefix (use gr.prefix() if unsure)
         namespace -- desired namespace to parse e.g. ['gr','module_name']
@@ -42,6 +45,11 @@ class BindingGenerator:
         self.prefix_include_root = prefix_include_root
         self.output_dir = output_dir
         self.match_include_structure = match_include_structure
+        self.catch_exceptions = catch_exceptions
+        self.write_json_output = write_json_output
+        self.status_output = status_output
+        self.flag_automatic = flag_automatic
+        self.flag_pygccxml = flag_pygccxml
 
         pass
 
@@ -60,7 +68,6 @@ class BindingGenerator:
             prefix_include_root=self.prefix_include_root,
         )
 
-
     def gen_pybind_cc(self, header_info, base_name):
         current_path = os.path.dirname(pathlib.Path(__file__).absolute())
         tpl = Template(filename=os.path.join(
@@ -69,11 +76,16 @@ class BindingGenerator:
 
         tpl = Template(filename=os.path.join(current_path, '..',
                                              'templates', 'generic_python_cc.mako'))
+
+
         return tpl.render(
             license=license,
             header_info=header_info,
             basename=base_name,
+            flag_automatic=self.flag_automatic,
+            flag_pygccxml=self.flag_pygccxml,
             prefix_include_root=self.prefix_include_root,
+
         )
 
     def write_pydoc_h(self, header_info, base_name, output_dir):
@@ -91,7 +103,6 @@ class BindingGenerator:
         except Exception as e:
             print(e)
             return None
-
 
     def write_pybind_cc(self, header_info, base_name, output_dir):
 
@@ -143,12 +154,19 @@ class BindingGenerator:
             include_paths=include_paths, file_path=file_to_process)
         try:
             header_info = parser.get_header_info(self.namespace)
-            # TODO: Scrape the docstrings
-            self.write_json(header_info, base_name, output_dir)
+            
+            if self.write_json_output:
+                self.write_json(header_info, base_name, output_dir)
             self.write_pybind_cc(header_info, base_name, output_dir)
             self.write_pydoc_h(header_info, base_name, output_dir)
 
+            if (self.status_output):
+                with open(self.status_output, 'w') as outfile:
+                    outfile.write("OK: " + str(datetime.now()))
+
         except Exception as e:
+            if not self.catch_exceptions:
+                raise(e)
             print(e)
             failure_pathname = os.path.join(
                 output_dir, 'failed_conversions.txt')
@@ -170,7 +188,7 @@ class BindingGenerator:
 
         output_dir = os.path.join(
             self.output_dir, rel_path_after_include, 'bindings')
-        doc_dir = os.path.join(output_dir,'docstrings')
+        doc_dir = os.path.join(output_dir, 'docstrings')
         if output_dir and not os.path.exists(output_dir) and not os.path.exists(doc_dir):
             output_dir = os.path.abspath(output_dir)
             print('creating output directory {}'.format(output_dir))
@@ -222,6 +240,7 @@ class BindingGenerator:
         license = tpl.render(year=datetime.now().year)
 
         binding_pathname = os.path.join(output_dir, 'CMakeLists.txt')
+
         file_list = [os.path.split(f)[-1] for f in file_list]
         tpl = Template(filename=os.path.join(current_path, '..',
                                              'templates', 'CMakeLists.txt.mako'))

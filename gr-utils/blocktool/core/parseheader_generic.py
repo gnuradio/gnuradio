@@ -265,10 +265,19 @@ class GenericHeaderParser(BlockTool):
         """
         module = self.modname.split('-')[-1]
         self.parsed_data['module_name'] = module
+        self.parsed_data['filename'] = self.filename
+        
+        import hashlib
+        hasher = hashlib.md5()
+        with open(self.target_file, 'rb') as file_in:
+            buf = file_in.read()
+            hasher.update(buf)
+        self.parsed_data['md5hash'] = hasher.hexdigest()
 
         # Right now if pygccxml is not installed, it will only handle the make function
         # TODO: extend this to other publicly declared functions in the h file
         if not PYGCCXML_AVAILABLE:
+            self.parsed_data['parser'] = 'simple'
             (params, iosig, blockname) = self._parse_cc_h(self.target_file)
             self.parsed_data['target_namespace'] = namespace_to_parse
 
@@ -301,6 +310,7 @@ class GenericHeaderParser(BlockTool):
 
             return self.parsed_data
         else:
+            self.parsed_data['parser'] = 'pygccxml'
             generator_path, generator_name = utils.find_xml_generator()
             xml_generator_config = parser.xml_generator_configuration_t(
                 xml_generator_path=generator_path,

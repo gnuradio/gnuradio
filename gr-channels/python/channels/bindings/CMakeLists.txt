@@ -15,7 +15,7 @@ list(APPEND channels_python_files
     sro_model_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(channels 
+GR_PYBIND_MAKE_CHECK_HASH(channels 
    ../../.. 
    gr::channels
    "${channels_python_files}")

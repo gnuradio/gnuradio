@@ -82,8 +82,8 @@ messages/msg_queue_python.cc
     # xoroshiro128p_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(gr 
-   ../../.. 
+GR_PYBIND_MAKE_CHECK_HASH(gr 
+   ../../../..
    gr::gr
    "${gr_python_files}")
 
