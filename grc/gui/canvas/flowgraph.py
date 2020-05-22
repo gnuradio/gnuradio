@@ -322,7 +322,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
         Returns:
             true for change
         """
-        return any(sb.type_controller_modify(direction) for sb in self.selected_blocks())
+        return any([sb.type_controller_modify(direction) for sb in self.selected_blocks()])
 
     def port_controller_modify_selected(self, direction):
         """
@@ -334,7 +334,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
         Returns:
             true for changed
         """
-        return any(sb.port_controller_modify(direction) for sb in self.selected_blocks())
+        return any([sb.port_controller_modify(direction) for sb in self.selected_blocks()])
 
     def change_state_selected(self, new_state):
         """
