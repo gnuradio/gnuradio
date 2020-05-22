@@ -104,8 +104,29 @@ Command name | Value Type     | Description
 Special types:
 
 - tune_request: Like a uhd::tune_request_t, but always uses POLICY_AUTO. This is a pair, composed of (target_frequency, lo_offset)
-- tune_request_t: Exact copy of uhd::tune_request_t, implemented as pmt::dict. It copies the fields dsp_freq, dsp_freq_policy, rf_freq, rf_freq_policy, target_freq, args to an actual tune_request_t object. Hence it supports fully customized tunings with all policies and integer-N tuning. The policies are strings A, N, M for automatic, none and manual tuning.
+- tune_request_t: Exact copt of uhd::tune_request_t, allowing full control. See details below
+Hence it supports fully customized tunings with all policies and integer-N tuning. The policies are strings A, N, M for automatic, none and manual tuning.
 - timestamp: A pair composed of (long full_secs, double frac_secs). Similar to uhd::time_spec_t
+
+Further notes on command `mtune`:
+
+The object is of type pmt::dict and has the same fields as uhd::tune_request_t:
+- `dsp_freq`: the dsp frequency as pmt double type.
+- `dsp_freq_policy`: policy for DSP tuning. Should be a string "A" (automatic), "M" (manual) or "N" (none). If not set, defaults to "A".
+- `rf_freq`: the rf frequency as pmt double type.
+- `rf_freq_policy`: policy for RF tuning. Should be a string "A" (automatic), "M" (manual) or "N" (none). If not set, defaults to "A".
+- `target_freq`: target frequency (for automatic runing) as pmt double type
+- `args`: string containing additional arguments, for example for integer N tuning.
+
+Example:
+
+\code
+tune_rx = pmt.make_dict()
+tune_rx = pmt.dict_add(tune_rx, pmt.to_pmt('rf_freq'), pmt.to_pmt(rf_freq))
+tune_rx = pmt.dict_add(tune_rx, pmt.to_pmt('rf_freq_policy'), pmt.to_pmt('M'))
+tune_rx = pmt.dict_add(tune_rx, pmt.to_pmt('dsp_freq_policy'), pmt.to_pmt('N'))
+tune_rx = pmt.dict_add(tune_rx, pmt.to_pmt('args'), pmt.to_pmt('mode_n=integer,int_n_step=1000e3'))
+\endcode
 
 \b Note: Not all commands are affected by `time`. See the UHD manual for details on timed commands.
 
