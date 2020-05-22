@@ -282,7 +282,12 @@ class FlowGraph(CoreFlowgraph, Drawable):
             pasted_blocks[block_name] = block  # that is before any rename
 
             block.move((x_off, y_off))
-            #TODO: prevent block from being pasted directly on top of another block
+            while any(Utils.align_to_grid(block.coordinate) == Utils.align_to_grid(other.coordinate)
+                   for other in self.blocks if other is not block):
+                block.move((Constants.CANVAS_GRID_SIZE, Constants.CANVAS_GRID_SIZE))
+                # shift all following blocks
+                x_off += Constants.CANVAS_GRID_SIZE
+                y_off += Constants.CANVAS_GRID_SIZE
 
         self.selected_elements = set(pasted_blocks.values())
 
