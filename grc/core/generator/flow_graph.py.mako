@@ -1,6 +1,5 @@
 % if not generate_options.startswith('hb'):
 <%
-from __future__ import print_function
 from sys import version_info
 from gnuradio import eng_notation
 python_version = version_info.major
