@@ -30,6 +30,9 @@ python_version = version_info.major
 # GNU Radio version: ${version}
 ##################################################
 
+% if python_version == 2:
+from __future__ import print_function
+% endif
 % if generate_options == 'qt_gui':
 from distutils.version import StrictVersion
 
