@@ -7,18 +7,10 @@
 
 from __future__ import absolute_import
 
-import os
-
-from mako.template import Template
-
 from .hier_block import HierBlockGenerator, QtHierBlockGenerator
 from .top_block import TopBlockGenerator
 from .cpp_top_block import CppTopBlockGenerator
 from .cpp_hier_block import CppHierBlockGenerator
-
-DATA_DIR = os.path.dirname(__file__)
-FLOW_GRAPH_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.py.mako')
-flow_graph_template = Template(filename=FLOW_GRAPH_TEMPLATE)
 
 
 class Generator(object):
