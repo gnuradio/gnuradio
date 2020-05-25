@@ -151,7 +151,7 @@ class Block(Element):
             # this is ok behavior, unfortunately we could be hiding other import bugs
             pass
         except Exception:
-            self.add_error_message(f'Failed to evaluate import expression {imports!r}')
+            self.add_error_message("Failed to evaluate import expression {!r}".format(imports))
 
     def update_bus_logic(self):
         ###############################
