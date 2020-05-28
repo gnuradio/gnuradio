@@ -254,10 +254,18 @@ class ModToolAdd(ModTool):
                                         'interpolator', 'general', 'hier', 'tagged_stream'):
             block_base = code_generator.GRTYPELIST[self.info['blocktype']]
 
+        import hashlib
+        header_file = self.info['blockname'] + '.h'
+        hasher = hashlib.md5()
+        with open(os.path.join(self.info['includedir'], header_file), 'rb') as file_in:
+            buf = file_in.read()
+            hasher.update(buf)
+        md5hash = hasher.hexdigest()
+
         header_info = {
             "module_name": self.info['modname'],
-            "filename": self.info['blockname'] + '.h',
-            "md5hash": "0",
+            "filename": header_file,
+            "md5hash": md5hash,
             "namespace": {
                 "name": "::".join(['gr', self.info['modname']]),
                 "enums": [],
