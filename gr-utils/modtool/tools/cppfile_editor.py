@@ -45,9 +45,25 @@ class CPPFileEditor(object):
         return 1
 
 
-    def remove_value(self, entry, value, to_ignore_start='', to_ignore_end=''):
-        # TODO - gr_modtool rm
-        pass
+    def remove_value(self, start_tag, end_tag, value):
+        
+        cfile_lines = self.cfile.splitlines()
+        try:
+            start_line_idx = [cfile_lines.index(s) for s in cfile_lines if start_tag in s][0]
+            end_line_idx = [cfile_lines.index(s) for s in cfile_lines if end_tag in s][0]
+        except:
+            logger.warning("Could not find start or end tags in search")
+            return 0
+
+        try:            
+            lines_between_tags = cfile_lines[(start_line_idx+1):end_line_idx]
+            remove_index = [lines_between_tags.index(s) for s in cfile_lines if value in s][0]
+            lines_between_tags.pop(remove_index)
+        except:
+            return 0
+
+        self.cfile = '\n'.join((cfile_lines[0:(start_line_idx+1)]+lines_between_tags+cfile_lines[end_line_idx:]))        
+        return 1
 
     def delete_entry(self, entry, value_pattern=''):
         """Remove an entry from the current buffer."""
