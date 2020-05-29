@@ -3,7 +3,7 @@
 # ~/.gnuradio/config.conf
 
 [grc]
-global_blocks_path = @blocksdir@
+global_blocks_path = 
 local_blocks_path =
 default_flow_graph =
 xterm_executable = @GRC_XTERM_EXE@
