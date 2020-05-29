@@ -1,5 +1,5 @@
 #
-# Copyright 2013, 2018, 2019 Free Software Foundation, Inc.
+# Copyright 2013, 2018-2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,7 +18,7 @@ import sys
 import glob
 import logging
 
-from ..tools import remove_pattern_from_file, CMakeFileEditor
+from ..tools import remove_pattern_from_file, CMakeFileEditor, CPPFileEditor
 from .base import ModTool, ModToolException
 
 logger = logging.getLogger(__name__)
@@ -102,6 +102,19 @@ class ModToolRemove(ModTool):
             for f in py_files_deleted:
                 remove_pattern_from_file(self._file['pyinit'], fr'.*import\s+{f[:-3]}.*')
                 remove_pattern_from_file(self._file['pyinit'], fr'.*from\s+{f[:-3]}\s+import.*\n')
+
+            pb_files_deleted = self._run_subdir('python/bindings', ('*.cc',), ('list',))
+
+            pbdoc_files_deleted = self._run_subdir('python/bindings/docstrings', ('*.h',), ('',))
+
+            # Update python_bindings.cc
+            ed = CPPFileEditor(self._file['ccpybind'])
+            ed.remove_value('// BINDING_FUNCTION_PROTOTYPES(', '// ) END BINDING_FUNCTION_PROTOTYPES', 
+                'void bind_' + self.info['blockname'] + '(py::module& m);')
+            ed.remove_value('// BINDING_FUNCTION_CALLS(', '// ) END BINDING_FUNCTION_CALLS', 
+                'bind_' + self.info['blockname'] + '(m);')
+            ed.write()
+
         if not self.skip_subdirs['grc']:
             self._run_subdir('grc', ('*.yml',), ('install',))
 
@@ -120,7 +133,7 @@ class ModToolRemove(ModTool):
         for g in globs:
             files = files + sorted(glob.glob(f"{path}/{g}"))
         files_filt = []
-        logger.info("Searching for matching files in {path}/:")
+        logger.info(f"Searching for matching files in {path}/:")
         for f in files:
             if re.search(self.info['pattern'], os.path.basename(f)) is not None:
                 files_filt.append(f)
@@ -129,7 +142,6 @@ class ModToolRemove(ModTool):
             return []
         # 2. Delete files, Makefile entries and other occurrences
         files_deleted = []
-        ed = CMakeFileEditor(f'{path}/CMakeLists.txt')
         yes = self.info['yes']
         for f in files_filt:
             b = os.path.basename(f)
@@ -145,11 +157,15 @@ class ModToolRemove(ModTool):
             logger.info(f"Deleting {f}.")
             self.scm.remove_file(f)
             os.unlink(f)
-            logger.info(f"Deleting occurrences of {b} from {path}/CMakeLists.txt...")
-            for var in makefile_vars:
-                ed.remove_value(var, b)
-            if cmakeedit_func is not None:
-                cmakeedit_func(b, ed)
-        ed.write()
-        self.scm.mark_files_updated((f'{path}/CMakeLists.txt'))
+
+            if (os.path.exists(f'{path}/CMakeLists.txt')):
+                ed = CMakeFileEditor(f'{path}/CMakeLists.txt')
+                logger.info(f"Deleting occurrences of {b} from {path}/CMakeLists.txt...")
+                for var in makefile_vars:
+                    ed.remove_value(var, b)
+                if cmakeedit_func is not None:
+                    cmakeedit_func(b, ed)
+                ed.write()
+                self.scm.mark_files_updated((f'{path}/CMakeLists.txt'))
+
         return files_deleted
