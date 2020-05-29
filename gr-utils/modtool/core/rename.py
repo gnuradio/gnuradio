@@ -62,7 +62,6 @@ class ModToolRename(ModTool):
         oldname = self.info['oldname']
         newname = self.info['newname']
         logger.info(f"In module '{module}' rename block '{oldname}' to '{newname}'")
-        self._run_swig_rename(self._file['swig'], oldname, newname)
         self._run_grc_rename(self.info['modname'], oldname, newname)
         self._run_python_qa(self.info['modname'], oldname, newname)
         self._run_python(self.info['modname'], oldname, newname)
