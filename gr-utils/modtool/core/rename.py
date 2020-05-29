@@ -67,6 +67,7 @@ class ModToolRename(ModTool):
         self._run_python(self.info['modname'], oldname, newname)
         self._run_lib(self.info['modname'], oldname, newname)
         self._run_include(self.info['modname'], oldname, newname)
+        self._run_pybind(self.info['modname'], oldname, newname)
         return
 
     def _run_lib(self, module, old, new):
@@ -116,6 +117,35 @@ class ModToolRename(ModTool):
             self._run_file_rename(path, old, new)
         else:
             logger.info("Not a Python block, nothing to do here...")
+
+    def _run_pybind(self, module, old, new):
+        path = './python/bindings/'
+        filename = path + old + '_python.cc'
+        self._run_file_replace(filename, old, new)
+        self._run_file_rename(path, old, new)
+        self._run_cmakelists(path, old, new)
+        # update the hash in the new file
+        import hashlib
+        hasher = hashlib.md5()
+        header_filename = './include/' + module + '/' + new + '.h' # note this requires _run_pybind to be called after _run_include
+        with open(header_filename, 'rb') as file_in:
+            buf = file_in.read()
+            hasher.update(buf)
+        newhash = hasher.hexdigest()
+        newfilename = path + new + '_python.cc'
+        with open(newfilename) as f:
+            file_txt = f.read()
+        m = re.search(r'BINDTOOL_HEADER_FILE_HASH\(([^\s]*)\)', file_txt)
+        if (m):
+            oldhash = m.group(1)
+            file_txt = re.sub(oldhash, newhash, file_txt)
+        with open(newfilename, "w") as f:
+            f.write(file_txt)
+       
+        path = './python/bindings/docstrings/'
+        filename = path + old + '_pydoc_template.h'
+        self._run_file_replace(filename, old, new)
+        self._run_file_rename(path, old, new)
 
     def _run_python_qa(self, module, old, new):
         new = 'qa_' + new
