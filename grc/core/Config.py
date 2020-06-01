@@ -25,6 +25,7 @@ class Config(object):
         self._gr_prefs = prefs if prefs else DummyPrefs()
         self.version = version
         self.version_parts = version_parts or version[1:].split('-', 1)[0].split('.')[:3]
+        self.enabled_components = self._gr_prefs.get_string('grc', 'enabled_components', '')
         if name:
             self.name = name
 
