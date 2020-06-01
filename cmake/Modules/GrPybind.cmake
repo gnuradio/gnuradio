@@ -119,6 +119,10 @@ SET(MODULE_NAME ${name})
 if (${name} STREQUAL gr)
     SET(MODULE_NAME "runtime")
 endif()
+if (${name} STREQUAL video_sdl)
+    SET(MODULE_NAME "video-sdl")
+endif()
+
 
 if(ENABLE_DOXYGEN)
     add_custom_command( 

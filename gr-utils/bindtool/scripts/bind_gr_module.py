@@ -37,7 +37,7 @@ output_dir = args.output_dir
 includes = args.include
 for name in args.names:
     if name not in ['gr', 'pmt']:
-        namespace = ['gr', name]
+        namespace = ['gr', name.replace("-","_")]
         module_dir = os.path.abspath(
             os.path.join(args.src, 'gr-'+name, 'include'))
         prefix_include_root = 'gnuradio/'+name  # pmt, gnuradio/digital, etc.
@@ -56,5 +56,5 @@ for name in args.names:
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", category=DeprecationWarning)
         bg = BindingGenerator(prefix, namespace, prefix_include_root,
-                              output_dir, addl_includes=includes, match_include_structure=True)
+                              output_dir, addl_includes=includes, match_include_structure=True, write_json_output=True)
         bg.gen_bindings(module_dir)
