@@ -515,6 +515,7 @@ install(
   DESTINATION ${CMAKE_MODULES_DIR}/gnuradio
 )
 
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/grc/grc.conf "enabled_components = ${_gr_enabled_components}")
 
 ########################################################################
 # Print summary

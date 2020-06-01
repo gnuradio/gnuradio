@@ -72,7 +72,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
             'parameters': parameters,
             'monitors': monitors,
             'generate_options': self._generate_options,
-            'version': platform.config.version
+            'config': platform.config
         }
 
         if not os.path.exists(self.file_path):
