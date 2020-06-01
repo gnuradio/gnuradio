@@ -1,9 +1,9 @@
-% if not generate_options.startswith('hb'):
 <%
 from sys import version_info
 from gnuradio import eng_notation
 python_version = version_info.major
 %>\
+% if not generate_options.startswith('hb'):
 % if python_version == 2:
 #!/usr/bin/env python2
 % elif python_version == 3:
