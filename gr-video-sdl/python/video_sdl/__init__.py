@@ -15,8 +15,8 @@ from __future__ import unicode_literals
 import os
 
 try:
-    from .video_sdl_swig import *
+    from .video_sdl_python import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from .video_sdl_swig import *
+    __path__.append(os.path.join(dirname, "bindings"))
+    from .video_sdl_python import *
