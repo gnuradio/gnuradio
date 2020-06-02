@@ -17,6 +17,7 @@ pybind11_add_module(vocoder_python
     ulaw_encode_sb_python.cc)
 
 if(LIBCODEC2_FOUND)
+    target_compile_definitions(vocoder_python PRIVATE LIBCODEC2_FOUND)
     target_sources(vocoder_python PRIVATE
     codec2_python.cc
     codec2_decode_ps_python.cc
@@ -25,13 +26,16 @@ if(LIBCODEC2_FOUND)
 endif(LIBCODEC2_FOUND)
 
 if(LIBCODEC2_HAS_FREEDV_API)
+    target_compile_definitions(vocoder_python PRIVATE LIBCODEC2_HAS_FREEDV_API)
     target_sources(vocoder_python PRIVATE
+    freedv_api_python.cc
     freedv_rx_ss_python.cc
     freedv_tx_ss_python.cc
     )
 endif(LIBCODEC2_HAS_FREEDV_API)
 
 if(LIBGSM_FOUND)
+    target_compile_definitions(vocoder_python PRIVATE LIBGSM_FOUND)
     target_sources(vocoder_python PRIVATE
     gsm_fr_decode_ps_python.cc
     gsm_fr_encode_sp_python.cc
