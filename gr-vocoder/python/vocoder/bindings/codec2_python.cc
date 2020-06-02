@@ -24,12 +24,26 @@ void bind_codec2(py::module& m)
 
     using codec2 = ::gr::vocoder::codec2;
 
+    py::class_<codec2, std::shared_ptr<codec2>> codec2_class(m, "codec2", D(codec2));
 
-    py::class_<codec2, std::shared_ptr<codec2>>(m, "codec2", D(codec2))
-
-        .def(py::init<>(), D(codec2, codec2, 0))
-        .def(
-            py::init<gr::vocoder::codec2 const&>(), py::arg("arg0"), D(codec2, codec2, 1))
-
-        ;
+    py::enum_<gr::vocoder::codec2::bit_rate>(codec2_class, "bit_rate")
+        .value("MODE_3200", gr::vocoder::codec2::MODE_3200)
+        .value("MODE_2400", gr::vocoder::codec2::MODE_2400)
+        .value("MODE_1600", gr::vocoder::codec2::MODE_1600)
+        .value("MODE_1400", gr::vocoder::codec2::MODE_1400)
+        .value("MODE_1300", gr::vocoder::codec2::MODE_1300)
+        .value("MODE_1200", gr::vocoder::codec2::MODE_1200)
+#ifdef CODEC2_MODE_700
+        .value("MODE_700", gr::vocoder::codec2::MODE_700)
+#endif
+#ifdef CODEC2_MODE_700B
+        .value("MODE_700B", gr::vocoder::codec2::MODE_700B)
+#endif
+#ifdef CODEC2_MODE_700C
+        .value("MODE_700C", gr::vocoder::codec2::MODE_700C)
+#endif
+#ifdef CODEC2_MODE_WB
+        .value("MODE_WB", gr::vocoder::codec2::MODE_WB)
+#endif
+        .export_values();
 }

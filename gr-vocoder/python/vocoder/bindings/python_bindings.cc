@@ -25,6 +25,7 @@ void bind_codec2_encode_sp(py::module&);
 void bind_cvsd_decode_bs(py::module&);
 void bind_cvsd_encode_sb(py::module&);
 #ifdef LIBCODEC2_HAS_FREEDV_API
+void bind_freedv_api(py::module&);
 void bind_freedv_rx_ss(py::module&);
 void bind_freedv_tx_ss(py::module&);
 #endif
@@ -70,6 +71,7 @@ PYBIND11_MODULE(vocoder_python, m)
     bind_cvsd_decode_bs(m);
     bind_cvsd_encode_sb(m);
 #ifdef LIBCODEC2_HAS_FREEDV_API
+    bind_freedv_api(m);
     bind_freedv_rx_ss(m);
     bind_freedv_tx_ss(m);
 #endif
