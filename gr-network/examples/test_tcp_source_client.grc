@@ -107,8 +107,8 @@ blocks:
     coordinate: [424, 300]
     rotation: 0
     state: enabled
-- name: grnet_tcp_source_0
-  id: grnet_tcp_source
+- name: network_tcp_source_0
+  id: network_tcp_source
   parameters:
     addr: 127.0.0.1
     affinity: ''
@@ -124,9 +124,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [192, 260]
+    coordinate: [225, 274]
     rotation: 0
-    state: enabled
+    state: true
 - name: qtgui_freq_sink_x_0
   id: qtgui_freq_sink_x
   parameters:
@@ -212,7 +212,7 @@ connections:
 - [blocks_probe_rate_0, rate, blocks_message_debug_0, print]
 - [blocks_throttle_0, '0', blocks_probe_rate_0, '0']
 - [blocks_throttle_0, '0', qtgui_freq_sink_x_0, '0']
-- [grnet_tcp_source_0, '0', blocks_throttle_0, '0']
+- [network_tcp_source_0, '0', blocks_throttle_0, '0']
 
 metadata:
   file_format: 1
