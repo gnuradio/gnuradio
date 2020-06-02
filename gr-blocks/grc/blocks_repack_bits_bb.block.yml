@@ -25,7 +25,7 @@ parameters:
     hide: part
 -   id: endianness
     label: Endianness
-    dtype: int
+    dtype: enum
     default: gr.GR_LSB_FIRST
     options: [gr.GR_MSB_FIRST, gr.GR_LSB_FIRST]
     option_labels: [MSB, LSB]
