@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -22,8 +23,10 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: ''
-    window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 12]
     rotation: 0
     state: enabled
@@ -35,6 +38,9 @@ blocks:
     comment: ''
     value: 1280e6
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 172.0]
     rotation: 0
     state: enabled
@@ -44,6 +50,9 @@ blocks:
     comment: ''
     value: '100'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 220.0]
     rotation: 0
     state: enabled
@@ -53,6 +62,9 @@ blocks:
     comment: ''
     value: symbol_rate * 2
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 76]
     rotation: 0
     state: enabled
@@ -62,6 +74,9 @@ blocks:
     comment: ''
     value: '8000000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 124.0]
     rotation: 0
     state: enabled
@@ -72,7 +87,7 @@ blocks:
     gui_hint: ''
     label: ''
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '1'
@@ -80,6 +95,9 @@ blocks:
     value: '50'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [240, 468.0]
     rotation: 0
     state: enabled
@@ -90,7 +108,7 @@ blocks:
     gui_hint: ''
     label: ''
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: int
     start: '-35'
     step: '1'
@@ -98,6 +116,9 @@ blocks:
     value: '-8'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 468.0]
     rotation: 0
     state: enabled
@@ -108,7 +129,7 @@ blocks:
     gui_hint: ''
     label: ''
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: int
     start: '0'
     step: '1'
@@ -116,6 +137,9 @@ blocks:
     value: '10'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [120, 468.0]
     rotation: 0
     state: enabled
@@ -131,6 +155,9 @@ blocks:
     unbuffered: 'False'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [808, 436.0]
     rotation: 0
     state: disabled
@@ -150,6 +177,9 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [176, 12.0]
     rotation: 0
     state: enabled
@@ -165,6 +195,9 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [504, 224.0]
     rotation: 0
     state: enabled
@@ -183,6 +216,9 @@ blocks:
     rate2: C1_5_MEDIUM
     rate3: C1_4
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [184, 356.0]
     rotation: 0
     state: enabled
@@ -198,6 +234,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1032, 60.0]
     rotation: 0
     state: enabled
@@ -211,6 +250,9 @@ blocks:
     minoutbuf: '0'
     nsize: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [456, 44.0]
     rotation: 0
     state: enabled
@@ -228,6 +270,9 @@ blocks:
     ninput: '1'
     noutput: '1512'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [184, 188.0]
     rotation: 0
     state: enabled
@@ -248,6 +293,9 @@ blocks:
     s: '51'
     t: '8'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [728, 20.0]
     rotation: 0
     state: enabled
@@ -265,6 +313,9 @@ blocks:
     taps: firdes.root_raised_cosine(1.0, samp_rate, samp_rate/2, 0.35, rrc_taps)
     type: ccc
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [480, 364.0]
     rotation: 0
     state: enabled
@@ -342,6 +393,9 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1040, 220.0]
     rotation: 0
     state: enabled
@@ -456,7 +510,7 @@ blocks:
     clock_source6: ''
     clock_source7: ''
     comment: ''
-    dev_addr: '"send_frame_size=65536,num_send_frames=256,master_clock_rate=" + str(samp_rate*2)'
+    dev_addr: '"send_frame_size=8192,num_send_frames=256,master_clock_rate=" + str(samp_rate*2)'
     dev_args: '""'
     gain0: tx_gain
     gain1: '0'
@@ -615,54 +669,61 @@ blocks:
     time_source7: ''
     type: fc32
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1040, 324.0]
     rotation: 0
     state: enabled
 - name: virtual_sink_0
   id: virtual_sink
   parameters:
-    affinity: ''
     alias: ''
     comment: ''
     stream_id: inner-mod
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [728, 220.0]
     rotation: 0
     state: true
 - name: virtual_sink_1
   id: virtual_sink
   parameters:
-    affinity: ''
     alias: ''
     comment: ''
     stream_id: int-inner
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1088, 140.0]
     rotation: 180
     state: true
 - name: virtual_source_0
   id: virtual_source
   parameters:
-    affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
     stream_id: inner-mod
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [184, 308.0]
     rotation: 180
     state: true
 - name: virtual_source_1
   id: virtual_source
   parameters:
-    affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
     stream_id: int-inner
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [184, 140.0]
     rotation: 180
     state: true
