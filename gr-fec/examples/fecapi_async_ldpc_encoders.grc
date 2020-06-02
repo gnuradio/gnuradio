@@ -1,6 +1,12 @@
 options:
   parameters:
+    author: ''
+    catch_exceptions: 'True'
     category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
     gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
@@ -9,12 +15,18 @@ options:
     max_nouts: '0'
     output_language: python
     placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
     run: 'True'
     run_command: '{python} -u {filename}'
     run_options: prompt
     sizing_mode: fixed
-    window_size: 2000,2000
+    thread_safe_setters: ''
+    title: ''
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [10, 10]
     rotation: 0
     state: enabled
@@ -23,38 +35,54 @@ blocks:
 - name: H
   id: variable_ldpc_H_matrix_def
   parameters:
-    filename: alist_file
+    comment: ''
+    filename: gr.prefix() + "/share/gnuradio/fec/ldpc/" + "n_0100_k_0042_gap_02.alist"
     gap: '2'
     value: '"ok"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [632, 451]
     rotation: 0
     state: enabled
 - name: MTU
   id: variable
   parameters:
+    comment: ''
     value: '1512'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [376, 11]
     rotation: 0
     state: enabled
 - name: alist_file
   id: variable
   parameters:
+    comment: ''
     value: gr.prefix() + "/share/gnuradio/fec/ldpc/" + "n_0100_k_0042_gap_02.alist"
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [480, 12.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: ldpc_enc
   id: variable_ldpc_encoder_def
   parameters:
+    comment: ''
     dim1: '1'
     dim2: '4'
-    file: alist_file
+    file: gr.prefix() + "/share/gnuradio/fec/ldpc/" + "n_0100_k_0042_gap_02.alist"
     ndim: '0'
     value: '"ok"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [344, 355]
     rotation: 0
     state: enabled
@@ -62,25 +90,36 @@ blocks:
   id: variable_ldpc_encoder_H_def
   parameters:
     H: H
+    comment: ''
     dim1: '1'
     dim2: '1'
     ndim: '0'
     value: '"ok"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [344, 451]
     rotation: 0
     state: enabled
 - name: samp_rate
   id: variable
   parameters:
+    comment: ''
     value: '20000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [10, 73]
     rotation: 0
     state: enabled
 - name: analog_random_source_x_0
   id: analog_random_source_x
   parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
     max: '256'
     maxoutbuf: '0'
     min: '0'
@@ -89,57 +128,87 @@ blocks:
     repeat: 'True'
     type: byte
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [40, 451]
     rotation: 180
     state: disabled
 - name: blocks_char_to_float_0_1
   id: blocks_char_to_float
   parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
     scale: '1'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [992, 164.0]
     rotation: 0
     state: enabled
 - name: blocks_char_to_float_0_1_0
   id: blocks_char_to_float
   parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
     scale: '1'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [992, 252.0]
     rotation: 0
     state: enabled
 - name: blocks_pdu_to_tagged_stream_0
   id: blocks_pdu_to_tagged_stream
   parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
     tag: pkt_len
     type: byte
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [560, 164.0]
     rotation: 0
     state: enabled
 - name: blocks_pdu_to_tagged_stream_0_0
   id: blocks_pdu_to_tagged_stream
   parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
     tag: pkt_len
     type: byte
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [560, 252.0]
     rotation: 0
     state: enabled
 - name: blocks_repack_bits_bb_0
   id: blocks_repack_bits_bb
   parameters:
+    affinity: ''
+    alias: ''
     align_output: 'True'
+    comment: ''
     endianness: gr.GR_LSB_FIRST
     k: '8'
     l: '1'
@@ -147,13 +216,19 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [776, 156.0]
     rotation: 0
     state: enabled
 - name: blocks_repack_bits_bb_0_0
   id: blocks_repack_bits_bb
   parameters:
+    affinity: ''
+    alias: ''
     align_output: 'True'
+    comment: ''
     endianness: gr.GR_LSB_FIRST
     k: '8'
     l: '1'
@@ -161,12 +236,18 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [776, 244.0]
     rotation: 0
     state: enabled
 - name: blocks_stream_to_tagged_stream_0_0
   id: blocks_stream_to_tagged_stream
   parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
     len_tag_key: pkt_len
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -174,23 +255,35 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [56, 283]
     rotation: 180
     state: enabled
 - name: blocks_tagged_stream_to_pdu_0
   id: blocks_tagged_stream_to_pdu
   parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
     tag: pkt_len
     type: byte
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [104, 355]
     rotation: 0
     state: enabled
 - name: blocks_throttle_0
   id: blocks_throttle
   parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
     ignoretag: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -198,12 +291,18 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [57, 219]
     rotation: 0
     state: enabled
 - name: blocks_vector_source_x_0_1_0
   id: blocks_vector_source_x
   parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
     repeat: 'True'
@@ -212,12 +311,18 @@ blocks:
     vector: (frame_size//15)*[0, 0, 1, 0, 3, 0, 7, 0, 15, 0, 31, 0, 63, 0, 127]
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [61, 140]
     rotation: 180
     state: enabled
 - name: fec_async_encoder_0
   id: fec_async_encoder
   parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
     encoder: ldpc_enc
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -226,12 +331,18 @@ blocks:
     rev_pack: 'True'
     rev_unpack: 'True'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [320, 156.0]
     rotation: 0
     state: enabled
 - name: fec_async_encoder_0_0
   id: fec_async_encoder
   parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
     encoder: ldpc_enc_H
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -240,32 +351,51 @@ blocks:
     rev_pack: 'True'
     rev_unpack: 'True'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [352, 244.0]
     rotation: 0
     state: enabled
 - name: frame_size
   id: parameter
   parameters:
+    alias: ''
+    comment: ''
     hide: none
     label: Frame Size
+    short_id: ''
     type: intx
     value: '42'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [171, 11]
     rotation: 0
     state: enabled
 - name: puncpat
   id: parameter
   parameters:
+    alias: ''
+    comment: ''
     hide: none
+    label: ''
+    short_id: ''
+    type: ''
     value: '''11'''
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [282, 11]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
   id: qtgui_time_sink_x
   parameters:
+    affinity: ''
+    alias: ''
     alpha1: '1.0'
     alpha10: '1.0'
     alpha2: '0.6'
@@ -278,19 +408,21 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
     ctrlpanel: 'False'
     entags: 'True'
     grid: 'False'
+    gui_hint: ''
     label1: LDPC (alist)
     label10: Signal 10
     label2: LDPC (H)
@@ -350,6 +482,9 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1168, 196.0]
     rotation: 0
     state: enabled
