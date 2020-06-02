@@ -18,6 +18,7 @@ list(APPEND digital_python_files
     cma_equalizer_cc_python.cc
     constellation_python.cc
     constellation_decoder_cb_python.cc
+    constellation_encoder_bc_python.cc
     constellation_receiver_cb_python.cc
     constellation_soft_decoder_cf_python.cc
     corr_est_cc_python.cc

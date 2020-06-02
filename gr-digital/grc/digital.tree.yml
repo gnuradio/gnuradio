@@ -55,6 +55,7 @@
   - digital_binary_slicer_fb
   - digital_chunks_to_symbols_xx
   - digital_constellation_decoder_cb
+  - digital_constellation_encoder_bc
   - digital_constellation_receiver_cb
   - digital_constellation_soft_decoder_cf
   - digital_diff_decoder_bb

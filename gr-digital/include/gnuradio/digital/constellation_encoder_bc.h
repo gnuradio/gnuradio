@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2012 Free Software Foundation, Inc.
+ * Copyright 2020 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -8,30 +8,29 @@
  *
  */
 
-#ifndef INCLUDED_DIGITAL_CONSTELLATION_DECODER_CB_H
-#define INCLUDED_DIGITAL_CONSTELLATION_DECODER_CB_H
+#ifndef INCLUDED_DIGITAL_CONSTELLATION_ENCODER_BC_H
+#define INCLUDED_DIGITAL_CONSTELLATION_ENCODER_BC_H
 
-#include <gnuradio/block.h>
 #include <gnuradio/digital/api.h>
 #include <gnuradio/digital/constellation.h>
+#include <gnuradio/sync_interpolator.h>
 
 namespace gr {
 namespace digital {
 
 /*!
- * \brief Constellation Decoder
+ * \brief Constellation Encoder
  * \ingroup symbol_coding_blk
  *
  * \details
- * Decode a constellation's points from a complex space to
- * (unpacked) bits based on the map of the \p constellation
- * object.
+ * Encode upacked bits into a constellation's complex space
+ * bits based on the map of the \p constellation object.
  */
-class DIGITAL_API constellation_decoder_cb : virtual public block
+class DIGITAL_API constellation_encoder_bc : virtual public sync_interpolator
 {
 public:
-    // gr::digital::constellation_decoder_cb::sptr
-    typedef std::shared_ptr<constellation_decoder_cb> sptr;
+    // gr::digital::constellation_encoder_bc::sptr
+    typedef std::shared_ptr<constellation_encoder_bc> sptr;
 
     /*!
      * \brief Make constellation decoder block.
@@ -46,4 +45,4 @@ public:
 } /* namespace digital */
 } /* namespace gr */
 
-#endif /* INCLUDED_DIGITAL_CONSTELLATION_DECODER_CB_H */
+#endif /* INCLUDED_DIGITAL_CONSTELLATION_ENCODER_BC_H */

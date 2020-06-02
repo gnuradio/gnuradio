@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(constellation_decoder_cb.h) */
-/* BINDTOOL_HEADER_FILE_HASH(688ec1fa379a5cdd51c2b31886991b28)                     */
+/* BINDTOOL_HEADER_FILE(constellation_encoder_bc.h) */
+/* BINDTOOL_HEADER_FILE_HASH(b7a40d63f0e359222f614398dd1483a3)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -23,26 +23,21 @@
 
 namespace py = pybind11;
 
-#include <gnuradio/digital/constellation_decoder_cb.h>
+#include <gnuradio/digital/constellation_encoder_bc.h>
 // pydoc.h is automatically generated in the build directory
-#include <constellation_decoder_cb_pydoc.h>
+#include <constellation_encoder_bc_pydoc.h>
 
-void bind_constellation_decoder_cb(py::module& m)
+void bind_constellation_encoder_bc(py::module& m)
 {
 
-    using constellation_decoder_cb = ::gr::digital::constellation_decoder_cb;
+    using constellation_encoder_bc = ::gr::digital::constellation_encoder_bc;
 
+    py::class_<constellation_encoder_bc,
+               gr::sync_interpolator,
+               std::shared_ptr<constellation_encoder_bc>>(
+        m, "constellation_encoder_bc", D(constellation_encoder_bc))
 
-    py::class_<constellation_decoder_cb,
-               gr::block,
-               gr::basic_block,
-               std::shared_ptr<constellation_decoder_cb>>(
-        m, "constellation_decoder_cb", D(constellation_decoder_cb))
-
-        .def(py::init(&constellation_decoder_cb::make),
+        .def(py::init(&constellation_encoder_bc::make),
              py::arg("constellation"),
-             D(constellation_decoder_cb, make))
-
-
-        ;
+             D(constellation_encoder_bc, make));
 }

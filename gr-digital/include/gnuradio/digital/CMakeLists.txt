@@ -23,6 +23,7 @@ install(FILES
     cma_equalizer_cc.h
     constellation.h
     constellation_decoder_cb.h
+    constellation_encoder_bc.h
     constellation_receiver_cb.h
     constellation_soft_decoder_cf.h
     corr_est_cc.h
