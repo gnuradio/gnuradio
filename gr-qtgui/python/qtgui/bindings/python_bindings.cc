@@ -30,6 +30,8 @@ void bind_const_sink_c(py::module&);
 void bind_constellationdisplayform(py::module&);
 void bind_displayform(py::module&);
 void bind_edit_box_msg(py::module&);
+void bind_eye_sink_c(py::module&);
+void bind_eye_sink_f(py::module&);
 void bind_form_menus(py::module&);
 void bind_freq_sink_c(py::module&);
 void bind_freq_sink_f(py::module&);
@@ -97,6 +99,8 @@ PYBIND11_MODULE(qtgui_python, m)
     // bind_constellationdisplayform(m);
     // bind_displayform(m);
     // bind_edit_box_msg(m);
+    bind_eye_sink_c(m);
+    bind_eye_sink_f(m);
     // bind_form_menus(m);
     bind_freq_sink_c(m);
     bind_freq_sink_f(m);
