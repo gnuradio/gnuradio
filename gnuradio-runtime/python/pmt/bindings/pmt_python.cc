@@ -297,6 +297,9 @@ void bind_pmt(py::module& m)
     m.def("cons", &::pmt::cons, py::arg("x"), py::arg("y"), D(cons));
 
 
+    m.def("dcons", &::pmt::dcons, py::arg("x"), py::arg("y"), D(dcons));
+
+
     m.def("car", &::pmt::car, py::arg("pair"), D(car));
 
 
@@ -1417,6 +1420,9 @@ void bind_pmt(py::module& m)
     // m.def("msg_accepter_ref",&pmt::msg_accepter_ref,
     //     py::arg("obj")
     // );
+    m.def("is_pdu", &::pmt::is_pdu, py::arg("obj"), D(is_pdu));
+
+
     m.def("eq", &::pmt::eq, py::arg("x"), py::arg("y"), D(eq));
 
 
