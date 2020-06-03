@@ -249,6 +249,9 @@ static const char* __doc_pmt_is_pair = R"doc()doc";
 static const char* __doc_pmt_cons = R"doc()doc";
 
 
+static const char* __doc_pmt_dcons = R"doc()doc";
+
+
 static const char* __doc_pmt_car = R"doc()doc";
 
 
@@ -769,6 +772,9 @@ static const char* __doc_pmt_make_msg_accepter = R"doc()doc";
 
 
 static const char* __doc_pmt_msg_accepter_ref = R"doc()doc";
+
+
+static const char* __doc_pmt_is_pdu = R"doc()doc";
 
 
 static const char* __doc_pmt_eq = R"doc()doc";
