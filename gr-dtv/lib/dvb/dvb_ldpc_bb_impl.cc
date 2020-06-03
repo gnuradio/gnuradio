@@ -595,8 +595,6 @@ int dvb_ldpc_bb_impl::general_work(int noutput_items,
             p = &puncturing_buffer[nbch];
             b = &out[i + nbch];
         }
-        // First zero all the parity bits
-        memset(p, 0, sizeof(unsigned char) * plen);
 
         // copy the information bits
         memcpy(&out[i], &in[consumed], sizeof(unsigned char) * nbch);
