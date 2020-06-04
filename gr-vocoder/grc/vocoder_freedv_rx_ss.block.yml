@@ -4,7 +4,7 @@ label: FreeDV demodulator
 parameters:
 -   id: mode
     label: Operating Mode
-    dtype: int
+    dtype: raw
     default: freedv_api.MODE_1600
     options: [freedv_api.MODE_1600, freedv_api.MODE_700, freedv_api.MODE_700B, freedv_api.MODE_2400A,
         freedv_api.MODE_2400B, freedv_api.MODE_800XA, freedv_api.MODE_700C, freedv_api.MODE_700D]
