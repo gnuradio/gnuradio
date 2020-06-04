@@ -271,9 +271,7 @@ void bind_eye_sink_c(py::module& m)
              D(eye_sink_c, enable_axis_labels))
 
 
-        .def("disable_legend",
-             &eye_sink_c::disable_legend,
-             D(eye_sink_c, disable_legend))
+        .def("disable_legend", &eye_sink_c::disable_legend, D(eye_sink_c, disable_legend))
 
 
         .def("nsamps", &eye_sink_c::nsamps, D(eye_sink_c, nsamps))
