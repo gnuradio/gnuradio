@@ -1,20 +1,19 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2020 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
- *
  */
 
-#include <gnuradio/qtgui/displayform.h>
+#include <gnuradio/qtgui/eyedisplaysform.h>
 
 #include <QFileDialog>
 #include <QPixmap>
 #include <iostream>
 
-DisplayForm::DisplayForm(int nplots, QWidget* parent)
+EyeDisplaysForm::EyeDisplaysForm(int nplots, QWidget* parent)
     : QWidget(parent), d_nplots(nplots), d_system_specified_flag(false)
 {
     d_isclosed = false;
@@ -24,11 +23,15 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
     resize(QSize(800, 600));
 
     // Set up a grid that can be turned on/off
-    d_grid = new QwtPlotGrid();
     QPen* gridpen = new QPen(Qt::DashLine);
-    gridpen->setWidthF(0.25);
+    gridpen->setWidthF(1.0);
     gridpen->setColor(Qt::gray);
-    d_grid->setPen(*gridpen);
+
+    // Each eye must have one grid attached
+    for (unsigned int i = 0; i < d_nplots; ++i) {
+        d_grids.push_back(new QwtPlotGrid());
+        d_grids[i]->setPen(*gridpen);
+    }
 
     // Create a set of actions for the menu
     d_stop_act = new QAction("Stop", this);
@@ -135,7 +138,7 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
     Reset();
 }
 
-DisplayForm::~DisplayForm()
+EyeDisplaysForm::~EyeDisplaysForm()
 {
     d_isclosed = true;
 
@@ -144,13 +147,12 @@ DisplayForm::~DisplayForm()
     // deleted
 }
 
-void DisplayForm::resizeEvent(QResizeEvent* e)
+void EyeDisplaysForm::resizeEvent(QResizeEvent* e)
 {
-    // QSize s = size();
-    // emit d_display_plot->resizeSlot(&s);
+    // not used by eye_sink
 }
 
-void DisplayForm::mousePressEvent(QMouseEvent* e)
+void EyeDisplaysForm::mousePressEvent(QMouseEvent* e)
 {
     bool ctrloff = Qt::ControlModifier != QApplication::keyboardModifiers();
     if ((e->button() == Qt::MidButton) && ctrloff && (d_menu_on)) {
@@ -161,117 +163,135 @@ void DisplayForm::mousePressEvent(QMouseEvent* e)
 
         // Update the line titles if changed externally
         for (unsigned int i = 0; i < d_nplots; ++i) {
-            d_lines_menu[i]->setTitle(d_display_plot->getLineLabel(i));
+            d_lines_menu[i]->setTitle(d_displays_plot[i]->title().text());
         }
         d_menu->exec(e->globalPos());
     }
 }
 
-void DisplayForm::updateGuiTimer() { d_display_plot->canvas()->update(); }
+void EyeDisplaysForm::updateGuiTimer() { d_display_plot->canvas()->update(); }
 
-void DisplayForm::onPlotPointSelected(const QPointF p) { emit plotPointSelected(p, 3); }
+void EyeDisplaysForm::onPlotPointSelected(const QPointF p)
+{
+    emit plotPointSelected(p, 3);
+}
 
-void DisplayForm::Reset() {}
+void EyeDisplaysForm::Reset() {}
 
-bool DisplayForm::isClosed() const { return d_isclosed; }
+bool EyeDisplaysForm::isClosed() const { return d_isclosed; }
 
-void DisplayForm::enableMenu(bool en) { d_menu_on = en; }
+void EyeDisplaysForm::enableMenu(bool en) { d_menu_on = en; }
 
-void DisplayForm::closeEvent(QCloseEvent* e)
+void EyeDisplaysForm::closeEvent(QCloseEvent* e)
 {
     d_isclosed = true;
     qApp->processEvents();
     QWidget::closeEvent(e);
 }
 
-void DisplayForm::setUpdateTime(double t) { d_update_time = t; }
+void EyeDisplaysForm::setUpdateTime(double t) { d_update_time = t; }
 
-void DisplayForm::setTitle(const QString& title) { d_display_plot->setTitle(title); }
-
-void DisplayForm::setLineLabel(unsigned int which, const QString& label)
+void EyeDisplaysForm::setSamplesPerSymbol(int64_t samples_per_symbol)
 {
-    d_display_plot->setLineLabel(which, label);
+    d_sps = (int)samples_per_symbol;
 }
 
-void DisplayForm::setLineColor(unsigned int which, const QString& color)
+void EyeDisplaysForm::setTitle(const QString& title)
+{
+    /* Used by parent class, do not remove */
+}
+
+void EyeDisplaysForm::setLineLabel(unsigned int which, const QString& label)
+{
+    // Line label used as eye pattern title
+    d_displays_plot[which]->setTitle(label);
+}
+
+void EyeDisplaysForm::setLineColor(unsigned int which, const QString& color)
 {
     QColor c = QColor(color);
-    d_display_plot->setLineColor(which, c);
-    d_display_plot->replot();
+    d_displays_plot[which]->setLineColor(0, c);
+    d_displays_plot[which]->replot();
 }
 
-void DisplayForm::setLineWidth(unsigned int which, unsigned int width)
+void EyeDisplaysForm::setLineWidth(unsigned int which, unsigned int width)
 {
-    d_display_plot->setLineWidth(which, width);
-    d_display_plot->replot();
+    d_displays_plot[which]->setLineWidth(0, width);
+    d_displays_plot[which]->replot();
 }
 
-void DisplayForm::setLineStyle(unsigned int which, Qt::PenStyle style)
+void EyeDisplaysForm::setLineStyle(unsigned int which, Qt::PenStyle style)
 {
-    d_display_plot->setLineStyle(which, style);
-    d_display_plot->replot();
+    d_displays_plot[which]->setLineStyle(0, style);
+    d_displays_plot[which]->replot();
 }
 
-void DisplayForm::setLineMarker(unsigned int which, QwtSymbol::Style marker)
+void EyeDisplaysForm::setLineMarker(unsigned int which, QwtSymbol::Style marker)
 {
-    d_display_plot->setLineMarker(which, marker);
-    d_display_plot->replot();
+    d_displays_plot[which]->setLineMarker(0, marker);
+    d_displays_plot[which]->replot();
 }
 
-void DisplayForm::setMarkerAlpha(unsigned int which, unsigned int alpha)
+void EyeDisplaysForm::setMarkerAlpha(unsigned int which, unsigned int alpha)
 {
-    d_display_plot->setMarkerAlpha(which, alpha);
-    d_display_plot->replot();
+    d_displays_plot[which]->setMarkerAlpha(0, alpha);
+    d_displays_plot[which]->replot();
 }
 
-QString DisplayForm::title() { return d_display_plot->title().text(); }
-
-QString DisplayForm::lineLabel(unsigned int which)
+QString EyeDisplaysForm::title()
 {
-    return d_display_plot->getLineLabel(which);
+    /* Title unused by eye_sink */
+    return "";
 }
 
-QString DisplayForm::lineColor(unsigned int which)
+QString EyeDisplaysForm::lineLabel(unsigned int which)
 {
-    return d_display_plot->getLineColor(which).name();
+    return d_displays_plot[which]->title().text();
 }
 
-int DisplayForm::lineWidth(unsigned int which)
+QString EyeDisplaysForm::lineColor(unsigned int which)
 {
-    return d_display_plot->getLineWidth(which);
+    return d_displays_plot[which]->getLineColor(0).name();
 }
 
-Qt::PenStyle DisplayForm::lineStyle(unsigned int which)
+int EyeDisplaysForm::lineWidth(unsigned int which)
 {
-    return d_display_plot->getLineStyle(which);
+    return d_displays_plot[which]->getLineWidth(0);
 }
 
-QwtSymbol::Style DisplayForm::lineMarker(unsigned int which)
+Qt::PenStyle EyeDisplaysForm::lineStyle(unsigned int which)
 {
-    return d_display_plot->getLineMarker(which);
+    return d_displays_plot[which]->getLineStyle(0);
 }
 
-int DisplayForm::markerAlpha(unsigned int which)
+QwtSymbol::Style EyeDisplaysForm::lineMarker(unsigned int which)
 {
-    return d_display_plot->getMarkerAlpha(which);
+    return d_displays_plot[which]->getLineMarker(0);
 }
 
-void DisplayForm::setSampleRate(const QString& rate) {}
-
-void DisplayForm::setStop(bool on)
+int EyeDisplaysForm::markerAlpha(unsigned int which)
 {
-    if (!on) {
-        // will auto-detach if already attached.
-        d_display_plot->setStop(false);
-        d_stop_state = false;
-    } else {
-        d_display_plot->setStop(true);
-        d_stop_state = true;
+    return d_displays_plot[which]->getMarkerAlpha(0);
+}
+
+void EyeDisplaysForm::setSampleRate(const QString& rate) {}
+
+void EyeDisplaysForm::setStop(bool on)
+{
+    for (unsigned int i = 0; i < d_nplots; ++i) {
+        if (!on) {
+            // will auto-detach if already attached.
+            d_displays_plot[i]->setStop(false);
+            d_stop_state = false;
+        } else {
+            d_displays_plot[i]->setStop(true);
+            d_stop_state = true;
+        }
+        d_displays_plot[i]->replot();
     }
-    d_display_plot->replot();
 }
 
-void DisplayForm::setStop()
+void EyeDisplaysForm::setStop()
 {
     if (d_stop_state == false)
         setStop(true);
@@ -279,30 +299,40 @@ void DisplayForm::setStop()
         setStop(false);
 }
 
-void DisplayForm::setGrid(bool on)
+void EyeDisplaysForm::setGrid(bool on)
 {
     if (on) {
-        // will auto-detach if already attached.
-        d_grid->attach(d_display_plot);
         d_grid_state = true;
     } else {
-        d_grid->detach();
         d_grid_state = false;
     }
-    d_grid_act->setChecked(on);
-    d_display_plot->replot();
+
+    // create one grid per eye pattern
+    for (unsigned int i = 0; i < d_nplots; ++i) {
+        if (on) {
+            // will auto-detach if already attached.
+            d_grids[i]->attach(d_displays_plot[i]);
+        } else {
+            d_grids[i]->detach();
+        }
+        d_grid_act->setChecked(on);
+        d_displays_plot[i]->replot();
+    }
 }
 
-void DisplayForm::setAxisLabels(bool en)
+void EyeDisplaysForm::setAxisLabels(bool en)
 {
     d_axislabels = en;
     d_axislabelsmenu->setChecked(en);
-    getPlot()->setAxisLabels(d_axislabels);
+
+    for (unsigned int i = 0; i < d_nplots; ++i) {
+        d_displays_plot[i]->setAxisLabels(d_axislabels);
+    }
 }
 
-void DisplayForm::saveFigure()
+void EyeDisplaysForm::saveFigure()
 {
-    QPixmap qpix = this->grab();
+    QPixmap qpix = QPixmap::grabWidget(this);
 
     QString types = QString(tr("JPEG file (*.jpg);;Portable Network Graphics file "
                                "(*.png);;Bitmap file (*.bmp);;TIFF file (*.tiff)"));
@@ -332,4 +362,9 @@ void DisplayForm::saveFigure()
     delete filebox;
 }
 
-void DisplayForm::disableLegend() { d_display_plot->disableLegend(); }
+void EyeDisplaysForm::disableLegend()
+{
+    for (unsigned int i = 0; i < d_nplots; ++i) {
+        d_displays_plot[i]->disableLegend();
+    }
+}

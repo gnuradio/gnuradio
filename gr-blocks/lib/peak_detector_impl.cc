@@ -15,10 +15,33 @@
 #include "peak_detector_impl.h"
 #include <gnuradio/io_signature.h>
 #include <string.h>
+#include <type_traits>
 #include <limits>
 
 namespace gr {
 namespace blocks {
+
+namespace {
+
+// lowest_value() returns -infinity if the type has a concept of
+// infinity. Otherwise it returns the lowest possible value.
+//
+// Positive infinity is guaranteed by std::numeric_limits<T>::has_infinity, but
+// since we want negative infinity let's use IEEE754.
+template <typename T,
+          typename std::enable_if<std::numeric_limits<T>::is_iec559, int>::type = 0>
+constexpr T lowest_value() noexcept
+{
+    return -std::numeric_limits<T>::infinity();
+}
+
+template <typename T,
+          typename std::enable_if<!std::numeric_limits<T>::is_iec559, int>::type = 0>
+constexpr T lowest_value() noexcept
+{
+    return std::numeric_limits<T>::lowest();
+}
+} // namespace
 
 template <class T>
 typename peak_detector<T>::sptr peak_detector<T>::make(float threshold_factor_rise,
@@ -61,7 +84,7 @@ int peak_detector_impl<T>::work(int noutput_items,
 
     memset(optr, 0, noutput_items * sizeof(char));
 
-    T peak_val = std::numeric_limits<T>::min();
+    T peak_val = lowest_value<T>();
     int peak_ind = 0;
     unsigned char state = 0;
     int i = 0;
@@ -89,7 +112,7 @@ int peak_detector_impl<T>::work(int noutput_items,
             } else {
                 optr[peak_ind] = 1;
                 state = 0;
-                peak_val = -(T)INFINITY;
+                peak_val = lowest_value<T>();
                 // printf("Leaving  State 1: Peak: %f  Peak Ind: %d   i: %d noutput_items:
                 // %d\n", peak_val, peak_ind, i, noutput_items);
             }

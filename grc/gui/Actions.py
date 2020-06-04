@@ -492,6 +492,11 @@ ABOUT_WINDOW_DISPLAY = actions.register("app.about",
     tooltip='About this program',
     icon_name='help-about',
 )
+GET_INVOLVED_WINDOW_DISPLAY = actions.register("app.get",
+    label='_Get Involved',
+    tooltip='Get involved in the community - instructions',
+    icon_name='help-faq',
+)
 HELP_WINDOW_DISPLAY = actions.register("app.help",
     label='_Help',
     tooltip='Usage tips',

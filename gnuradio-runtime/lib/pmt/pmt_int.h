@@ -128,6 +128,15 @@ public:
     void set_cdr(pmt_t cdr) { d_cdr = cdr; }
 };
 
+class pmt_dict : public pmt_pair
+{
+public:
+    pmt_dict(const pmt_t& car, const pmt_t& cdr);
+    //~pmt_dict(){};
+
+    bool is_dict() const { return true; }
+};
+
 class pmt_vector : public pmt_base
 {
     std::vector<pmt_t> d_v;

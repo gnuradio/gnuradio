@@ -80,7 +80,7 @@ DARK_THEME_STYLES = b"""
                          #dtype_string          { background-color: #CC66CC; }
                          #dtype_id              { background-color: #DDDDDD; }
                          #dtype_stream_id       { background-color: #DDDDDD; }
-                         #dtype_raw             { background-color: #23272A; }
+                         #dtype_raw             { background-color: #DDDDDD; }
 
                          #enum_custom           { background-color: #EEEEEE; }
                      """

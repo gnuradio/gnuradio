@@ -46,7 +46,7 @@ public:
     virtual QwtText label(double value) const
     {
         double secs = double(value * getSecondsPerLine());
-        return QwtText(QString("").sprintf("%.2f", secs));
+        return QwtText(QString::number(secs, 'f', 2));
     }
 
     virtual void initiateUpdate()
@@ -71,7 +71,7 @@ public:
     {
         if (d_rows > 0)
             value = d_rows - value;
-        return QwtText(QString("").sprintf("%.0f", value));
+        return QwtText(QString::number(value, 'f', 0));
     }
 
     virtual void initiateUpdate()

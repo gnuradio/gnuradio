@@ -23,12 +23,11 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: UHD FFT
-    window_size: 1280, 1024
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [-1, -3]
+    coordinate: [8, 4.0]
     rotation: 0
     state: enabled
 
@@ -60,7 +59,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [664, 435]
+    coordinate: [704, 220.0]
     rotation: 0
     state: enabled
 - name: chan0_lo_locked
@@ -76,9 +75,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [888, 131]
+    coordinate: [880, 132.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: current_freq_c
   id: variable_function_probe
   parameters:
@@ -92,9 +91,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [888, 267]
+    coordinate: [880, 252.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: freq_c
   id: variable_qtgui_entry
   parameters:
@@ -107,7 +106,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [528, 347]
+    coordinate: [304, 220.0]
     rotation: 0
     state: enabled
 - name: gain_
@@ -128,7 +127,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [656, 211]
+    coordinate: [584, 220.0]
     rotation: 0
     state: enabled
 - name: lo_locked_probe
@@ -144,9 +143,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [528, 435]
+    coordinate: [880, 372.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: samp_rate_
   id: variable_qtgui_entry
   parameters:
@@ -159,7 +158,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [680, 347]
+    coordinate: [456, 220.0]
     rotation: 0
     state: enabled
 - name: uhd_version_info
@@ -175,7 +174,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [536, 131]
+    coordinate: [456, 132.0]
     rotation: 0
     state: enabled
 - name: usrp_device_info
@@ -191,7 +190,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [712, 131]
+    coordinate: [632, 132.0]
     rotation: 0
     state: enabled
 - name: antenna
@@ -203,12 +202,12 @@ blocks:
     label: Antenna
     short_id: A
     type: ''
-    value: RX2
+    value: '"RX2"'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [792, 3]
+    coordinate: [784, 4.0]
     rotation: 0
     state: enabled
 - name: args
@@ -220,12 +219,12 @@ blocks:
     label: UHD device address args
     short_id: a
     type: ''
-    value: ''
+    value: '""'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [176, -5]
+    coordinate: [176, 4.0]
     rotation: 0
     state: enabled
 - name: display
@@ -259,7 +258,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [6, 178]
+    coordinate: [8, 180.0]
     rotation: 0
     state: enabled
 - name: fft_size
@@ -276,7 +275,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1104, -5]
+    coordinate: [1104, 4.0]
     rotation: 0
     state: enabled
 - name: freq
@@ -293,7 +292,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [478, 0]
+    coordinate: [464, 4.0]
     rotation: 0
     state: enabled
 - name: gain
@@ -310,7 +309,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [632, 3]
+    coordinate: [616, 4.0]
     rotation: 0
     state: enabled
 - name: import_0
@@ -323,7 +322,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [4, 105]
+    coordinate: [8, 124.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -403,7 +402,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [56, 288.0]
+    coordinate: [64, 296.0]
     rotation: 180
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -500,7 +499,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [336, 540.0]
+    coordinate: [336, 484.0]
     rotation: 0
     state: enabled
 - name: qtgui_waterfall_sink_x_0
@@ -561,7 +560,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [336, 432.0]
+    coordinate: [336, 360.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -578,7 +577,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [352, -5]
+    coordinate: [344, 4.0]
     rotation: 0
     state: enabled
 - name: spec
@@ -590,12 +589,12 @@ blocks:
     label: Subdev
     short_id: ''
     type: ''
-    value: ''
+    value: '""'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [888, -13]
+    coordinate: [888, 4.0]
     rotation: 0
     state: enabled
 - name: stream_args
@@ -607,12 +606,12 @@ blocks:
     label: Set additional stream args
     short_id: ''
     type: ''
-    value: ''
+    value: '""'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [176, 115]
+    coordinate: [176, 92.0]
     rotation: 0
     state: enabled
 - name: uhd_usrp_source_0
@@ -1000,7 +999,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1104, 107]
+    coordinate: [1104, 108.0]
     rotation: 0
     state: enabled
 - name: wire_format
@@ -1012,12 +1011,12 @@ blocks:
     label: Wire format
     short_id: ''
     type: ''
-    value: ''
+    value: '""'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [984, -5]
+    coordinate: [984, 4.0]
     rotation: 0
     state: enabled
 

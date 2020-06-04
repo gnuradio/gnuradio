@@ -9,6 +9,7 @@ from __future__ import absolute_import
 
 import os
 from os.path import expanduser, normpath, expandvars, exists
+from collections import OrderedDict
 
 from . import Constants
 
@@ -43,6 +44,9 @@ class Config(object):
 
         valid_paths = [normpath(expanduser(expandvars(path)))
                        for path in collected_paths if exists(path)]
+        # Deduplicate paths to avoid warnings about finding blocks twice, but
+        # preserve order of paths
+        valid_paths = list(OrderedDict.fromkeys(valid_paths))
 
         return valid_paths
 

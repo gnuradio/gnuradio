@@ -76,6 +76,7 @@ class Block(Element):
         self.active_sinks = []  # on rewrite
 
         self.states = {'state': True, 'bus_source': False, 'bus_sink': False, 'bus_structure': None}
+        self.block_namespace = {}
 
         if Flags.HAS_CPP in self.flags and self.enabled and not (self.is_virtual_source() or self.is_virtual_sink()):
             # This is a workaround to allow embedded python blocks/modules to load as there is 
@@ -129,6 +130,20 @@ class Block(Element):
 
         self.active_sources = [p for p in self.sources if not p.hidden]
         self.active_sinks = [p for p in self.sinks if not p.hidden]
+
+        # namespaces may have changed, update them
+        self.block_namespace.clear()
+        imports = ""
+        try:
+            imports = self.templates.render('imports')
+            exec(imports, self.block_namespace)
+        except ImportError:
+            # We do not have a good way right now to determine if an import is for a
+            # hier block, these imports will fail as they are not in the search path
+            # this is ok behavior, unfortunately we could be hiding other import bugs
+            pass
+        except Exception:
+            self.add_error_message(f'Failed to evaluate import expression {imports!r}')
 
     def update_bus_logic(self):
         ###############################
@@ -581,7 +596,9 @@ class Block(Element):
     ##############################################
     @property
     def namespace(self):
-        return {key: param.get_evaluated() for key, param in six.iteritems(self.params)}
+        # update block namespace
+        self.block_namespace.update({key:param.get_evaluated() for key, param in six.iteritems(self.params)})
+        return self.block_namespace
 
     @property
     def namespace_templates(self):

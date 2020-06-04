@@ -88,7 +88,11 @@ edit_box_msg_impl::edit_box_msg_impl(data_type_t type,
             d_key->setEnabled(false);
 
             QFontMetrics fm = d_key->fontMetrics();
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 11, 0))
+            int width = 15 + fm.horizontalAdvance(key_text);
+#else
             int width = 15 + fm.width(key_text);
+#endif
 
             d_key->setFixedWidth(width);
 

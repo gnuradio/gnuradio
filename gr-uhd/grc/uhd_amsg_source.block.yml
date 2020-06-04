@@ -8,8 +8,8 @@ parameters:
     hide: ${ 'none' if dev_addr else 'part' }
 
 outputs:
--   domain: stream
-    dtype: msg
+-   domain: message
+    id: msg
 
 templates:
     imports: from gnuradio import uhd

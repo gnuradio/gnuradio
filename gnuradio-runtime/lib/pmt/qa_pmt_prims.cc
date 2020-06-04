@@ -383,7 +383,27 @@ BOOST_AUTO_TEST_CASE(test_dict)
     // std::cout << "pmt::dict_keys:   " << pmt::dict_keys(dict) << std::endl;
     // std::cout << "pmt::dict_values: " << pmt::dict_values(dict) << std::endl;
     BOOST_CHECK(pmt::equal(keys, pmt::dict_keys(dict)));
-    BOOST_CHECK(pmt::equal(vals, pmt::dict_values(dict)));
+
+    dict = pmt::dict_delete(dict, k1);
+    BOOST_CHECK(pmt::eqv(pmt::dict_ref(dict, k0, not_found), v0));
+    BOOST_CHECK(pmt::is_dict(dict));
+    dict = pmt::dict_add(dict, k3, v3);
+    dict = pmt::reverse(dict);
+    BOOST_CHECK(pmt::eqv(pmt::dict_ref(dict, k0, not_found), v0));
+    BOOST_CHECK(pmt::is_dict(dict));
+}
+
+BOOST_AUTO_TEST_CASE(test_pdu)
+{
+    pmt::pmt_t dict = pmt::dict_add(pmt::make_dict(), pmt::mp("k0"), pmt::mp("v0"));
+    pmt::pmt_t vec = pmt::make_u8vector(1, 0);
+    BOOST_CHECK(!pmt::is_pdu(pmt::PMT_T));
+    BOOST_CHECK(!pmt::is_pdu(vec));
+    BOOST_CHECK(!pmt::is_pdu(dict));
+    BOOST_CHECK(!pmt::is_pdu(pmt::cons(dict, pmt::PMT_NIL)));
+    BOOST_CHECK(!pmt::is_pdu(pmt::cons(pmt::PMT_F, vec)));
+    BOOST_CHECK(pmt::is_pdu(pmt::cons(pmt::make_dict(), vec)));
+    BOOST_CHECK(pmt::is_pdu(pmt::cons(dict, vec)));
 }
 
 BOOST_AUTO_TEST_CASE(test_io)
