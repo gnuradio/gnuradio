@@ -17,7 +17,7 @@ parameters:
     default: samp_rate
 -   id: waveform
     label: Waveform
-    dtype: enum
+    dtype: raw
     default: analog.GR_COS_WAVE
     options: [analog.GR_CONST_WAVE, analog.GR_SIN_WAVE, analog.GR_COS_WAVE, analog.GR_SQR_WAVE,
         analog.GR_TRI_WAVE, analog.GR_SAW_WAVE]
