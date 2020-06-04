@@ -26,7 +26,7 @@ void bind_freedv_api(py::module& m)
     py::enum_<gr::vocoder::freedv_api::freedv_modes>(freedv_api_class, "freedv_modes")
 
 #ifdef FREEDV_MODE_1600
-        .value("MODE_1600", gr::vocoder::freedv_api::MODE_1600) 
+        .value("MODE_1600", gr::vocoder::freedv_api::MODE_1600)
 #endif
 #ifdef FREEDV_MODE_700
         .value("MODE_700", gr::vocoder::freedv_api::MODE_700)
