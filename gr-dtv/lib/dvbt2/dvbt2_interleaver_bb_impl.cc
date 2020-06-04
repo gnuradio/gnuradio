@@ -363,7 +363,7 @@ int dvbt2_interleaver_bb_impl::general_work(int noutput_items,
     unsigned char* out = (unsigned char*)output_items[0];
     int consumed = 0;
     int produced = 0;
-    int rows, offset, index;
+    int rows, offset, index, packed;
     unsigned int pack;
     const int* mux;
 
@@ -406,9 +406,10 @@ int dvbt2_interleaver_bb_impl::general_work(int noutput_items,
         } else {
             mux = &mux16[0];
         }
+        packed = frame_size / (mod * 2);
         for (int i = 0; i < noutput_items; i += packed_items) {
             index = 0;
-            for (int d = 0; d < frame_size / (mod * 2); d++) {
+            for (int d = 0; d < packed; d++) {
                 pack = 0;
                 for (int e = 0; e < (mod * 2); e++) {
                     offset = mux[e];
@@ -432,9 +433,10 @@ int dvbt2_interleaver_bb_impl::general_work(int noutput_items,
         } else {
             mux = &mux64[0];
         }
+        packed = frame_size / (mod * 2);
         for (int i = 0; i < noutput_items; i += packed_items) {
             index = 0;
-            for (int d = 0; d < frame_size / (mod * 2); d++) {
+            for (int d = 0; d < packed; d++) {
                 pack = 0;
                 for (int e = 0; e < (mod * 2); e++) {
                     offset = mux[e];
@@ -457,9 +459,10 @@ int dvbt2_interleaver_bb_impl::general_work(int noutput_items,
             } else {
                 mux = &mux256[0];
             }
+            packed = frame_size / (mod * 2);
             for (int i = 0; i < noutput_items; i += packed_items) {
                 index = 0;
-                for (int d = 0; d < frame_size / (mod * 2); d++) {
+                for (int d = 0; d < packed; d++) {
                     pack = 0;
                     for (int e = 0; e < (mod * 2); e++) {
                         offset = mux[e];
@@ -481,9 +484,10 @@ int dvbt2_interleaver_bb_impl::general_work(int noutput_items,
             } else {
                 mux = &mux256s[0];
             }
+            packed = frame_size / mod;
             for (int i = 0; i < noutput_items; i += packed_items) {
                 index = 0;
-                for (int d = 0; d < frame_size / mod; d++) {
+                for (int d = 0; d < packed; d++) {
                     pack = 0;
                     for (int e = 0; e < mod; e++) {
                         offset = mux[e];
