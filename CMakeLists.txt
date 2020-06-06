@@ -532,12 +532,16 @@ CONFIGURE_FILE(
   ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime/include/gnuradio/config.h
 )
 
-#Re-generate the constants file, now that we actually know which components will be enabled.
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-runtime/lib/constants.cc.in
-    ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime/lib/constants.cc
-    ESCAPE_QUOTES
-@ONLY)
+########################################################################
+# Handle the generated constants
+########################################################################
+
+# Use TIMESTAMP to be compatible with reproducible builds
+# and put in in the cache so configure_file sees it
+string(TIMESTAMP BUILD_DATE "%a, %d %b %Y %H:%M:%S")
+set(BUILD_DATE ${BUILD_DATE} CACHE INTERNAL "Build date")
+message(STATUS "Loading build date ${BUILD_DATE} into constants...")
+message(STATUS "Loading version ${VERSION} into constants...")
 
 # Install config.h in include/gnuradio
 install(
