@@ -31,6 +31,13 @@ string(REPLACE "\\" "\\\\" prefix "${prefix}")
 string(REPLACE "\\" "\\\\" SYSCONFDIR "${SYSCONFDIR}")
 string(REPLACE "\\" "\\\\" GR_PREFSDIR "${GR_PREFSDIR}")
 
+#Generate the constants file, now that we actually know which components will be enabled.
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/constants.cc.in
+  ${CMAKE_CURRENT_BINARY_DIR}/constants.cc
+  ESCAPE_QUOTES
+  @ONLY)
+
 #########################################################################
 # Include subdirs rather to populate to the sources lists.
 ########################################################################
@@ -39,12 +46,6 @@ add_subdirectory(pmt)
 ########################################################################
 # Setup library
 ########################################################################
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/constants.cc.in
-    ${CMAKE_CURRENT_BINARY_DIR}/constants.cc
-    ESCAPE_QUOTES
-    @ONLY)
-
 add_library(gnuradio-runtime
   ${CMAKE_CURRENT_BINARY_DIR}/constants.cc
   basic_block.cc
