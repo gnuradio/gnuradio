@@ -23,10 +23,11 @@ gr_check_hdr_n_def(sys/resource.h HAVE_SYS_RESOURCE_H)
 ########################################################################
 # Handle the generated constants
 ########################################################################
-execute_process(COMMAND ${PYTHON_EXECUTABLE} -c
-    "import time;print(time.strftime('%a, %d %b %Y %H:%M:%S', time.gmtime()))"
-    OUTPUT_VARIABLE BUILD_DATE OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+
+# Use TIMESTAMP to be compatible with reproducible builds
+# and put in in the cache so configure_file sees it
+string(TIMESTAMP BUILD_DATE "%a, %d %b %Y %H:%M:%S")
+set(BUILD_DATE ${BUILD_DATE} CACHE INTERNAL "Build date")
 message(STATUS "Loading build date ${BUILD_DATE} into constants...")
 message(STATUS "Loading version ${VERSION} into constants...")
 
