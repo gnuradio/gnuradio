@@ -19,10 +19,7 @@ endif(libunwind_FOUND)
 ########################################################################
 # Handle the generated constants
 ########################################################################
-execute_process(COMMAND ${PYTHON_EXECUTABLE} -c
-    "import time;print(time.strftime('%a, %d %b %Y %H:%M:%S', time.gmtime()))"
-    OUTPUT_VARIABLE BUILD_DATE OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+string(TIMESTAMP BUILD_DATE "%a, %d %b %Y %H:%M:%S" UTC)
 message(STATUS "Loading build date ${BUILD_DATE} into constants...")
 message(STATUS "Loading version ${VERSION} into constants...")
 
@@ -30,6 +27,13 @@ message(STATUS "Loading version ${VERSION} into constants...")
 string(REPLACE "\\" "\\\\" prefix "${prefix}")
 string(REPLACE "\\" "\\\\" SYSCONFDIR "${SYSCONFDIR}")
 string(REPLACE "\\" "\\\\" GR_PREFSDIR "${GR_PREFSDIR}")
+
+#Generate the constants file, now that we actually know which components will be enabled.
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/constants.cc.in
+  ${CMAKE_CURRENT_BINARY_DIR}/constants.cc
+  ESCAPE_QUOTES
+  @ONLY)
 
 #########################################################################
 # Include subdirs rather to populate to the sources lists.
@@ -39,12 +43,6 @@ add_subdirectory(pmt)
 ########################################################################
 # Setup library
 ########################################################################
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/constants.cc.in
-    ${CMAKE_CURRENT_BINARY_DIR}/constants.cc
-    ESCAPE_QUOTES
-    @ONLY)
-
 add_library(gnuradio-runtime
   ${CMAKE_CURRENT_BINARY_DIR}/constants.cc
   basic_block.cc
