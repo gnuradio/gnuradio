@@ -13,6 +13,7 @@
 #define MOVING_AVERAGE_IMPL_H
 
 #include <gnuradio/blocks/moving_average.h>
+#include <volk/volk_alloc.hh>
 #include <algorithm>
 #include <vector>
 
@@ -25,9 +26,10 @@ class moving_average_impl : public moving_average<T>
 private:
     int d_length;
     T d_scale;
+    volk::vector<T> d_scales;
     int d_max_iter;
     const unsigned int d_vlen;
-    std::vector<T> d_sum;
+    volk::vector<T> d_sum;
 
 
     int d_new_length;
