@@ -14,10 +14,13 @@ parameters:
 
 templates:
     imports: |-
-        import SimpleXMLRPCServer
+        try:
+            from xmlrpc.server import SimpleXMLRPCServer
+        except ImportError:
+            from SimpleXMLRPCServer import SimpleXMLRPCServer
         import threading
     make: |-
-        SimpleXMLRPCServer.SimpleXMLRPCServer((${addr}, ${port}), allow_none=True)
+        SimpleXMLRPCServer((${addr}, ${port}), allow_none=True)
         self.${id}.register_instance(self)
         self.${id}_thread = threading.Thread(target=self.${id}.serve_forever)
         self.${id}_thread.daemon = True
