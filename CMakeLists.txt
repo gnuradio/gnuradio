@@ -64,24 +64,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(GRC_DOCS_URL_PREFIX "https://wiki.gnuradio.org/index.php/")
 
 ########################################################################
-# Configure CMake policies
-########################################################################
-# This will suppress developer warnings during the cmake process that can occur
-# if a newer cmake version than the minimum is used.
-if(POLICY CMP0026)
-    cmake_policy(SET CMP0026 NEW)
-endif()
-if(POLICY CMP0043)
-    cmake_policy(SET CMP0043 NEW)
-endif()
-if(POLICY CMP0045)
-    cmake_policy(SET CMP0045 NEW)
-endif()
-if(POLICY CMP0046)
-    cmake_policy(SET CMP0046 NEW)
-endif()
-
-########################################################################
 # Compiler version setup
 ########################################################################
 # Append -O2 optimization flag for Debug builds (Not on MSVC since conflicts with RTC1 flag)
