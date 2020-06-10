@@ -58,7 +58,7 @@ blocks:
     label4: Packets
     labels: '[]'
     num_opts: '5'
-    option0: (0,0,0,0,1)
+    option0: (1,0,0,0,0)
     option1: (0,1,0,0,0)
     option2: (0,0,1,0,0)
     option3: (0,0,0,1,0)
