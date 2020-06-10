@@ -5,6 +5,7 @@ include(GrPybind)
 ########################################################################
 
 list(APPEND uhd_python_files
+    uhd_types_python.cc
     amsg_source_python.cc
     usrp_block_python.cc
     usrp_sink_python.cc

@@ -408,7 +408,7 @@ PARAMS_TMPL = """
 -   id: center_freq${n}
     label: 'Ch${n}: Center Freq (Hz)'
     category: RF Options
-    dtype: real
+    dtype: raw
     default: '0'
     hide: ${'$'}{ 'none' if (nchan > ${n}) else 'all' }
 % if sourk == 'source':

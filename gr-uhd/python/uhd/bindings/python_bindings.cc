@@ -13,8 +13,11 @@
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/arrayobject.h>
 
+#include <uhd/version.hpp>
+
 namespace py = pybind11;
 
+void bind_uhd_types(py::module&);
 void bind_amsg_source(py::module&);
 void bind_usrp_block(py::module&);
 void bind_usrp_sink(py::module&);
@@ -39,8 +42,14 @@ PYBIND11_MODULE(uhd_python, m)
     // Allow access to base block methods
     py::module::import("gnuradio.gr");
 
+    bind_uhd_types(m);
     bind_amsg_source(m);
     bind_usrp_block(m);
     bind_usrp_sink(m);
     bind_usrp_source(m);
+
+    m.def(
+        "get_version_string",
+        []() { return ::uhd::get_version_string(); },
+        "Returns UHD Version String");
 }

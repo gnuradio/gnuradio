@@ -101,6 +101,14 @@ public:
                      const ::uhd::stream_args_t& stream_args,
                      const std::string& tsb_tag_name = "");
 
+    // Also accept a string for the device_addr
+    static sptr make(const std::string& device_addr_str,
+                     const ::uhd::stream_args_t& stream_args,
+                     const std::string& tsb_tag_name = "")
+    {
+        return make(::uhd::device_addr_t(device_addr_str), stream_args, tsb_tag_name);
+    }
+
     /*!
      * Set the start time for outgoing samples.
      * To control when samples are transmitted,

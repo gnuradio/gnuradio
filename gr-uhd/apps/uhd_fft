@@ -94,7 +94,7 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.chan0_lo_locked = chan0_lo_locked = uhd.sensor_value("", False, "")
+        self.chan0_lo_locked = chan0_lo_locked = uhd.sensor_value("", False, "", "")
         self.usrp_device_info = usrp_device_info = "[No USRP Device Info Found!]"
         self.uhd_version_info = uhd_version_info = uhd.get_version_string()
         self.lo_locked_probe = lo_locked_probe = chan0_lo_locked.to_bool()
@@ -203,7 +203,8 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
             self.freq, #fc
             self.samp_rate, #bw
             "", #name
-            len(self.channels) #number of inputs
+            len(self.channels), #number of inputs
+            None # parent
         )
         self.qtgui_waterfall_sink_x_0.set_update_time(self.update_rate)
         self.qtgui_waterfall_sink_x_0.enable_grid(False)
@@ -220,7 +221,8 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
                 1024, #size
                 self.samp_rate, #samp_rate
                 "", #name
-                len(self.channels) #number of inputs
+                len(self.channels), #number of inputs
+                None # parent
         )
         self.qtgui_time_sink_x_0.set_update_time(self.update_rate)
         self.qtgui_time_sink_x_0.set_y_axis(-1, 1)
@@ -249,7 +251,8 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
                 self.freq, #fc
                 self.samp_rate, #bw
                 "", #name
-                len(self.channels) #number of inputs
+                len(self.channels), #number of inputs
+                None #parent
         )
         self.qtgui_freq_sink_x_0.set_update_time(self.update_rate)
         self.qtgui_freq_sink_x_0.set_y_axis(-100, 10)
