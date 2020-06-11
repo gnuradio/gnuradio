@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -21,10 +22,12 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: ''
-    window_size: ''
+    title: Show spectrum analyzer
   states:
-    coordinate: [8, 11]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 12.0]
     rotation: 0
     state: enabled
 
@@ -33,9 +36,12 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '32000'
+    value: '192000'
   states:
-    coordinate: [168, 11]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [192, 12.0]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0
@@ -49,11 +55,15 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
+    phase: '0'
     samp_rate: samp_rate
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
-    coordinate: [40, 180.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 108.0]
     rotation: 0
     state: enabled
 - name: blocks_message_debug_0
@@ -63,9 +73,65 @@ blocks:
     alias: ''
     comment: ''
   states:
-    coordinate: [1104, 272.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [440, 344.0]
+    rotation: 180
+    state: disabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 148.0]
     rotation: 0
-    state: enabled
+    state: true
+- name: freq_xlating_fir_filter_xxx_0
+  id: freq_xlating_fir_filter_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    center_freq: '0'
+    comment: ''
+    decim: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_rate: samp_rate
+    taps: firdes.low_pass(1,samp_rate,samp_rate/2, samp_rate/8)
+    type: ccf
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [424, 140.0]
+    rotation: 0
+    state: true
+- name: note_0
+  id: note
+  parameters:
+    alias: ''
+    comment: "The Throttle and Frequency Xlating FIR Filter blocks\nare emulating\
+      \ a hardware device such as a USRP \nwhich is tuned by a message."
+    note: View Block Comments
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 36.0]
+    rotation: 0
+    state: true
 - name: qtgui_edit_box_msg_0
   id: qtgui_edit_box_msg
   parameters:
@@ -80,49 +146,14 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     type: float
-    value: ''
+    value: '0'
   states:
-    coordinate: [360, 204.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [728, 284.0]
     rotation: 180
     state: enabled
-- name: qtgui_edit_box_msg_0_0
-  id: qtgui_edit_box_msg
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    gui_hint: 3,1,1,1
-    is_pair: 'False'
-    is_static: 'False'
-    key: vec
-    label: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    type: int_vec
-    value: '3'
-  states:
-    coordinate: [808, 108.0]
-    rotation: 180
-    state: disabled
-- name: qtgui_edit_box_msg_0_0_0
-  id: qtgui_edit_box_msg
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    gui_hint: 3,0,1,1
-    is_pair: 'False'
-    is_static: 'False'
-    key: vec
-    label: '"To Message Debug"'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    type: int_vec
-    value: '5'
-  states:
-    coordinate: [808, 236.0]
-    rotation: 0
-    state: disabled
 - name: qtgui_freq_sink_x_0
   id: qtgui_freq_sink_x
   parameters:
@@ -197,7 +228,10 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
-    coordinate: [376, 336.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [744, 168.0]
     rotation: 0
     state: enabled
 - name: qtgui_waterfall_sink_x_0
@@ -255,19 +289,22 @@ blocks:
     update_time: '0.10'
     wintype: firdes.WIN_BLACKMAN_hARRIS
   states:
-    coordinate: [376, 96.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [744, 32.0]
     rotation: 0
     state: enabled
 
 connections:
-- [analog_sig_source_x_0, '0', qtgui_freq_sink_x_0, '0']
-- [analog_sig_source_x_0, '0', qtgui_waterfall_sink_x_0, '0']
-- [qtgui_edit_box_msg_0, msg, analog_sig_source_x_0, freq]
+- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
+- [blocks_throttle_0, '0', freq_xlating_fir_filter_xxx_0, '0']
+- [freq_xlating_fir_filter_xxx_0, '0', qtgui_freq_sink_x_0, '0']
+- [freq_xlating_fir_filter_xxx_0, '0', qtgui_waterfall_sink_x_0, '0']
+- [qtgui_edit_box_msg_0, msg, blocks_message_debug_0, print]
+- [qtgui_edit_box_msg_0, msg, freq_xlating_fir_filter_xxx_0, freq]
 - [qtgui_edit_box_msg_0, msg, qtgui_freq_sink_x_0, freq]
 - [qtgui_edit_box_msg_0, msg, qtgui_waterfall_sink_x_0, freq]
-- [qtgui_edit_box_msg_0_0, msg, qtgui_edit_box_msg_0_0_0, val]
-- [qtgui_edit_box_msg_0_0_0, msg, blocks_message_debug_0, print]
-- [qtgui_edit_box_msg_0_0_0, msg, qtgui_edit_box_msg_0_0, val]
 - [qtgui_freq_sink_x_0, freq, qtgui_edit_box_msg_0, val]
 - [qtgui_waterfall_sink_x_0, freq, qtgui_edit_box_msg_0, val]
 
