@@ -56,7 +56,7 @@ if(ENABLE_DOXYGEN)
         "--output_dir" ${CMAKE_CURRENT_BINARY_DIR}
         "--filter" gr::vocoder
         COMMENT "Adding docstrings into vocoder pybind headers ..."
-        DEPENDS gnuradio_docstrings gnuradio-vocoder)
+        DEPENDS gnuradio_docstrings)
     add_custom_target(vocoder_docstrings ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/docstring_status)
 else(ENABLE_DOXYGEN)
     add_custom_command( 

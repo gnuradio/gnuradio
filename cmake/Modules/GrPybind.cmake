@@ -20,7 +20,7 @@ if(ENABLE_DOXYGEN)
         "--output_dir" ${CMAKE_CURRENT_BINARY_DIR}
         "--filter" ${filter}
         COMMENT "Adding docstrings into ${name} pybind headers ..."
-        DEPENDS gnuradio_docstrings gnuradio-${MODULE_NAME})
+        DEPENDS gnuradio_docstrings)
     add_custom_target(${name}_docstrings ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/docstring_status)
 else(ENABLE_DOXYGEN)
     add_custom_command( 
@@ -133,7 +133,7 @@ if(ENABLE_DOXYGEN)
         "--output_dir" ${CMAKE_CURRENT_BINARY_DIR}
         "--filter" ${filter}
         COMMENT "Adding docstrings into ${name} pybind headers ..."
-        DEPENDS gnuradio_docstrings gnuradio-${MODULE_NAME})
+        DEPENDS gnuradio_docstrings)
     add_custom_target(${name}_docstrings ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/docstring_status)
 else(ENABLE_DOXYGEN)
     add_custom_command( 
@@ -254,7 +254,7 @@ if(ENABLE_DOXYGEN)
         "--output_dir" ${CMAKE_CURRENT_BINARY_DIR}
         "--filter" ${filter}
         COMMENT "Adding docstrings into ${name} pybind headers ..."
-        DEPENDS extracted_docstrings gnuradio-${MODULE_NAME})
+        DEPENDS extracted_docstrings)
     add_custom_target(${name}_docstrings ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/docstring_status)
 else(ENABLE_DOXYGEN)
     add_custom_command( 

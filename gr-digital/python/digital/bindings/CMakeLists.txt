@@ -93,7 +93,7 @@ list(APPEND digital_python_files
     timing_error_detector_type_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(digital 
+GR_PYBIND_MAKE_CHECK_HASH(digital 
    ../../.. 
    gr::digital
    "${digital_python_files}")
