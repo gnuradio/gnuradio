@@ -38,9 +38,6 @@ if(NOT CMAKE_CROSSCOMPILING)
       CLICK_PLUGINS_FOUND
     )
 
-    set(utils_blocktool_deps
-        PYGCCXML_FOUND
-    )
 endif(NOT CMAKE_CROSSCOMPILING)
 
 GR_REGISTER_COMPONENT("gr-utils" ENABLE_GR_UTILS
@@ -58,7 +55,6 @@ GR_REGISTER_COMPONENT("gr_modtool" ENABLE_GR_MODTOOL
  GR_REGISTER_COMPONENT("gr_blocktool" ENABLE_GR_BLOCKTOOL
      ENABLE_GNURADIO_RUNTIME
      ENABLE_PYTHON
-     ${utils_blocktool_deps}
  )
 
 
