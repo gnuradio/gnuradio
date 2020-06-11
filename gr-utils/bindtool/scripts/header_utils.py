@@ -6,43 +6,51 @@ import re
 
 class PybindHeaderParser:
     def __init__(self, pathname):
-        with open(pathname,'r') as f:
-            self.file_txt = f.read()
+        try:
+            with open(pathname,'r') as f:
+                self.file_txt = f.read()
+        except:
+            self.file_txt = ""
 
     def get_flag_automatic(self):
-        # p = re.compile(r'BINDTOOL_GEN_AUTOMATIC\(([^\s])\)')
-        # m = p.search(self.file_txt)
-        m = re.search(r'BINDTOOL_GEN_AUTOMATIC\(([^\s])\)', self.file_txt)
-        if (m and m.group(1) == '1'):
-            return True
-        else:
+        try:
+            m = re.search(r'BINDTOOL_GEN_AUTOMATIC\(([^\s])\)', self.file_txt)
+            if (m and m.group(1) == '1'):
+                return True
+            else:
+                return False
+        except:
             return False
-        
-    def get_flag_pygccxml(self):    
-        # p = re.compile(r'BINDTOOL_USE_PYGCCXML\(([^\s])\)')
-        # m = p.search(self.file_txt)
-        m = re.search(r'BINDTOOL_USE_PYGCCXML\(([^\s])\)', self.file_txt)
-        if (m and m.group(1) == '1'):
-            return True
-        else:
+
+    def get_flag_pygccxml(self):
+        try:
+            m = re.search(r'BINDTOOL_USE_PYGCCXML\(([^\s])\)', self.file_txt)
+            if (m and m.group(1) == '1'):
+                return True
+            else:
+                return False
+        except:
             return False
 
     def get_header_filename(self):
-        # p = re.compile(r'BINDTOOL_HEADER_FILE\(([^\s]*)\)')
-        # m = p.search(self.file_txt)
-        m = re.search(r'BINDTOOL_HEADER_FILE\(([^\s]*)\)', self.file_txt)
-        if (m):
-            return m.group(1)
-        else:
+        try:
+            m = re.search(r'BINDTOOL_HEADER_FILE\(([^\s]*)\)', self.file_txt)
+            if (m):
+                return m.group(1)
+            else:
+                return None
+        except:
             return None
 
+
     def get_header_file_hash(self):
-        # p = re.compile(r'BINDTOOL_HEADER_FILE_HASH\(([^\s]*)\)')
-        # m = p.search(self.file_txt)
-        m = re.search(r'BINDTOOL_HEADER_FILE_HASH\(([^\s]*)\)', self.file_txt)
-        if (m):
-            return m.group(1)
-        else:
+        try:
+            m = re.search(r'BINDTOOL_HEADER_FILE_HASH\(([^\s]*)\)', self.file_txt)
+            if (m):
+                return m.group(1)
+            else:
+                return None
+        except:
             return None
 
     def get_flags(self):
