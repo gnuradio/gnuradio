@@ -22,13 +22,14 @@ void bind_uhd_types(py::module& m)
 {
     // Bindings copied from UHD
 
-    using str_map = std::map<std::string, std::string>;
+    // using str_map = std::map<std::string, std::string>;
 
     py::class_<::uhd::device_addr_t>(m, "device_addr_t")
         // Constructors
         .def(py::init<>())
         .def(py::init<std::string>())
-        .def(py::init<str_map>())
+        // Not defined for UHD < 3.11
+        // .def(py::init<str_map>())
 
         // Methods
         .def("__str__", &uhd::device_addr_t::to_pp_string)
@@ -145,11 +146,13 @@ void bind_uhd_types(py::module& m)
         .def("to_bool", &sensor_value_t::to_bool)
         .def("to_int", &sensor_value_t::to_int)
         .def("to_real", &sensor_value_t::to_real)
-        .def("__str__", &sensor_value_t::to_pp_string)
+        .def("__str__", &sensor_value_t::to_pp_string);
 
-        // Properties
-        .def_readwrite("name", &sensor_value_t::name)
-        .def_readwrite("value", &sensor_value_t::value)
-        .def_readwrite("unit", &sensor_value_t::unit)
-        .def_readwrite("type", &sensor_value_t::type);
+    // NOTE: UHD 3.9 has these properties defined as const so they cannot be
+    //  set in this manner.
+    // // Properties
+    // .def_readwrite("name", &sensor_value_t::name)
+    // .def_readwrite("value", &sensor_value_t::value)
+    // .def_readwrite("unit", &sensor_value_t::unit)
+    // .def_readwrite("type", &sensor_value_t::type);
 }
