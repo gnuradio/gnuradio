@@ -96,6 +96,11 @@ const pmt::pmt_t gr::uhd::cmd_tag_key()
     static const pmt::pmt_t val = pmt::mp("tag");
     return val;
 }
+const pmt::pmt_t gr::uhd::cmd_pc_clock_resync_key()
+{
+    static const pmt::pmt_t val = pmt::mp("pc_clock_resync");
+    return val;
+}
 
 const pmt::pmt_t gr::uhd::ant_direction_rx()
 {
@@ -141,6 +146,7 @@ usrp_block_impl::usrp_block_impl(const ::uhd::device_addr_t& device_addr,
     REGISTER_CMD_HANDLER(cmd_rate_key(), _cmd_handler_rate);
     REGISTER_CMD_HANDLER(cmd_bandwidth_key(), _cmd_handler_bw);
     REGISTER_CMD_HANDLER(cmd_antenna_key(), _cmd_handler_antenna);
+    REGISTER_CMD_HANDLER(cmd_pc_clock_resync_key(), _cmd_handler_pc_clock_resync);
 }
 
 usrp_block_impl::~usrp_block_impl()
@@ -668,6 +674,18 @@ void usrp_block_impl::_cmd_handler_rate(const pmt::pmt_t& rate_, int, const pmt:
 {
     const double rate = pmt::to_double(rate_);
     set_samp_rate(rate);
+}
+
+void usrp_block_impl::_cmd_handler_pc_clock_resync(const pmt::pmt_t&,
+                                                   int,
+                                                   const pmt::pmt_t&)
+{
+    const uint64_t ticks =
+        std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::high_resolution_clock::now().time_since_epoch())
+            .count();
+    const ::uhd::time_spec_t& time_spec = ::uhd::time_spec_t::from_ticks(ticks, 1.0e9);
+    set_time_now(time_spec, ::uhd::usrp::multi_usrp::ALL_MBOARDS);
 }
 
 void usrp_block_impl::_cmd_handler_tune(const pmt::pmt_t& tune,

@@ -32,6 +32,7 @@ GR_UHD_API const pmt::pmt_t cmd_mboard_key();
 GR_UHD_API const pmt::pmt_t cmd_antenna_key();
 GR_UHD_API const pmt::pmt_t cmd_direction_key();
 GR_UHD_API const pmt::pmt_t cmd_tag_key();
+GR_UHD_API const pmt::pmt_t cmd_pc_clock_resync_key();
 
 GR_UHD_API const pmt::pmt_t ant_direction_rx();
 GR_UHD_API const pmt::pmt_t ant_direction_tx();
