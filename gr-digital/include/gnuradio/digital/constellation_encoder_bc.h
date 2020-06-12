@@ -23,8 +23,8 @@ namespace digital {
  * \ingroup symbol_coding_blk
  *
  * \details
- * Encode upacked bits into a constellation's complex space
- * bits based on the map of the \p constellation object.
+ * Encode index of constellation points into a constellation's complex
+ * space based on the map of the \p constellation object.
  */
 class DIGITAL_API constellation_encoder_bc : virtual public sync_interpolator
 {
