@@ -929,7 +929,7 @@ inputs:
 -   domain: stream
     dtype: ${ type.t }
     multiplicity: ${ (0 if type.startswith('msg') else nconnections) }
-    optional: true
+    optional: ${ (True if type.startswith('msg') else False) }
 
 templates:
     imports: |-
