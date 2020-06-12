@@ -368,7 +368,7 @@ inputs:
 -   domain: stream
     dtype: ${ type.t }
     multiplicity: ${ (0 if (type == 'msg_complex' or type == 'msg_float') else nconnections) }
-    optional: true
+    optional: ${ (True if type.startswith('msg') else False) }
 -   domain: message
     id: freq
     optional: true
