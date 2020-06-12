@@ -103,3 +103,7 @@ the `python/bindings/docstrings` directory and are used as placeholders for the 
 
 Upon compilation, docstrings are scraped from the module and stored in a dictionary (using `update_pydoc.py scrape`) and then
 the values are substituted in the template file (using `update_pydoc.py sub`)
+
+## Compile Time
+
+The binding files are broken up into separate compilation units per block compared with the previous implementation where an entire module or larger groups of blocks were compiled together.  Because of this, it is possible depending on the build machine that compilation of GNU Radio will take longer using pybind11.  The upside is that when a single block source code is modified, the python bindings for the entire module do not have to be re-compiled.  This can significantly improve compile time when actively debugging or modifying a single block.
