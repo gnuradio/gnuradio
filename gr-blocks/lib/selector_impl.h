@@ -22,6 +22,7 @@ class selector_impl : public selector
 private:
     const size_t d_itemsize;
     bool d_enabled;
+    std::vector<uint64_t> d_dropped_samples;
     unsigned int d_input_index, d_output_index;
     unsigned int d_num_inputs, d_num_outputs; // keep track of the topology
 

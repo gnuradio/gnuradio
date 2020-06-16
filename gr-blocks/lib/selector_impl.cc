@@ -35,6 +35,7 @@ selector_impl::selector_impl(size_t itemsize,
             io_signature::make(1, -1, itemsize)),
       d_itemsize(itemsize),
       d_enabled(true),
+      d_dropped_samples(0),
       d_input_index(input_index),
       d_output_index(output_index),
       d_num_inputs(0),
@@ -42,6 +43,10 @@ selector_impl::selector_impl(size_t itemsize,
 {
     message_port_register_in(pmt::mp("en"));
     set_msg_handler(pmt::mp("en"), [this](pmt::pmt_t msg) { this->handle_enable(msg); });
+
+    // tag propagation is handled manually: tags from the selected input stream propagate
+    // to the selected output stream only
+    set_tag_propagation_policy(TPP_CUSTOM);
 
     message_port_register_in(pmt::mp("iindex"));
     set_msg_handler(pmt::mp("iindex"),
@@ -134,6 +139,8 @@ bool selector_impl::check_topology(int ninputs, int noutputs)
     if ((int)d_input_index < ninputs && (int)d_output_index < noutputs) {
         d_num_inputs = (unsigned int)ninputs;
         d_num_outputs = (unsigned int)noutputs;
+        d_dropped_samples.clear();
+        d_dropped_samples.resize(d_num_outputs, 0);
         return true;
     } else {
         GR_LOG_WARN(d_logger,
@@ -152,10 +159,32 @@ int selector_impl::general_work(int noutput_items,
 
     gr::thread::scoped_lock l(d_mutex);
     if (d_enabled) {
+
+        // propagate tags
+        std::vector<tag_t> tags;
+        get_tags_in_window(tags, 0, 0, noutput_items);
+        for (auto tag : tags) {
+            tag.offset -= d_dropped_samples[d_output_index];
+            add_item_tag(d_output_index, tag);
+        }
+
+        // move data from selected input to selected output
         std::copy(in[d_input_index],
                   in[d_input_index] + noutput_items * d_itemsize,
                   out[d_output_index]);
         produce(d_output_index, noutput_items);
+
+        // track dropped samples
+        for (size_t ii; ii < d_num_outputs; ii++) {
+            if (ii != d_output_index) {
+                d_dropped_samples[ii] += noutput_items;
+            }
+        }
+    } else {
+        // track dropped samples
+        for (size_t ii; ii < d_num_outputs; ii++) {
+            d_dropped_samples[ii] += noutput_items;
+        }
     }
 
     consume_each(noutput_items);
