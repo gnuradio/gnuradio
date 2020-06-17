@@ -60,7 +60,7 @@ pfb_synthesizer_ccf_impl::pfb_synthesizer_ccf_impl(unsigned int numchans,
     set_taps(taps);
 
     // Create the IFFT to handle the input channel rotations
-    d_fft = new fft::fft_complex(d_twox * d_numchans, false);
+    d_fft = new fft::fft_complex_rev(d_twox * d_numchans);
     std::fill_n(d_fft->get_inbuf(), d_twox * d_numchans, 0);
 
     set_output_multiple(d_numchans);

@@ -165,8 +165,8 @@ private:
     int d_nsamples;
     int d_fftsize; // fftsize = ntaps + nsamples - 1
     const int d_decimation;
-    std::unique_ptr<fft::fft_complex> d_fwdfft; // forward "plan"
-    std::unique_ptr<fft::fft_complex> d_invfft; // inverse "plan"
+    std::unique_ptr<fft::fft_complex_fwd> d_fwdfft; // forward "plan"
+    std::unique_ptr<fft::fft_complex_rev> d_invfft; // inverse "plan"
     int d_nthreads;                             // number of FFTW threads to use
     std::vector<gr_complex> d_tail; // state carried between blocks for overlap-add
     std::vector<gr_complex> d_taps; // stores time domain taps
@@ -269,8 +269,8 @@ private:
     int d_nsamples;
     int d_fftsize; // fftsize = ntaps + nsamples - 1
     const int d_decimation;
-    std::unique_ptr<fft::fft_complex> d_fwdfft; // forward "plan"
-    std::unique_ptr<fft::fft_complex> d_invfft; // inverse "plan"
+    std::unique_ptr<fft::fft_complex_fwd> d_fwdfft; // forward "plan"
+    std::unique_ptr<fft::fft_complex_rev> d_invfft; // inverse "plan"
     int d_nthreads;                             // number of FFTW threads to use
     std::vector<gr_complex> d_tail; // state carried between blocks for overlap-add
     std::vector<float> d_taps;      // stores time domain taps

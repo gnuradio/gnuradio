@@ -67,7 +67,7 @@ private:
     int shift;
     void init_pilots(int);
 
-    fft::fft_complex papr_fft;
+    fft::fft_complex_rev papr_fft;
     int papr_fft_size;
 
     const static int p2_papr_map_1k[10];

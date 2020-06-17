@@ -88,7 +88,7 @@ freq_sink_f_impl::freq_sink_f_impl(int fftsize,
     // this is usually desired when plotting
     d_shift = true;
 
-    d_fft = new fft::fft_complex(d_fftsize, true);
+    d_fft = new fft::fft_complex_fwd(d_fftsize, true);
     d_fbuf = (float*)volk_malloc(d_fftsize * sizeof(float), volk_get_alignment());
     memset(d_fbuf, 0, d_fftsize * sizeof(float));
 
@@ -451,7 +451,7 @@ bool freq_sink_f_impl::fftresize()
 
         // Reset FFTW plan for new size
         delete d_fft;
-        d_fft = new fft::fft_complex(d_fftsize, true);
+        d_fft = new fft::fft_complex_fwd(d_fftsize);
 
         volk_free(d_fbuf);
         d_fbuf = (float*)volk_malloc(d_fftsize * sizeof(float), volk_get_alignment());

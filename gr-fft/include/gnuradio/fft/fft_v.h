@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010,2012,2018 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2008,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef INCLUDED_FFT_FFT_VFC_H
-#define INCLUDED_FFT_FFT_VFC_H
+#ifndef INCLUDED_FFT_FFT_V_H
+#define INCLUDED_FFT_FFT_V_H
 
 #include <gnuradio/fft/api.h>
 #include <gnuradio/sync_block.h>
@@ -44,20 +44,21 @@ namespace fft {
  *
  * \see http://www.fftw.org/faq/section3.html#whyscaled
  */
-class FFT_API fft_vfc : virtual public sync_block
+template <class T, bool forward>
+class FFT_API fft_v : virtual public sync_block
 {
 public:
-    // gr::fft::fft_vfc::sptr
-    typedef std::shared_ptr<fft_vfc> sptr;
-
+    typedef std::shared_ptr<fft_v<T, forward>> sptr;
     /*! \brief
      * \param[in] fft_size N.
-     * \param[in] forward True performs FFT, False performs IFFT.
      * \param[in] window Window function to be used.
+     * \param[in] shift True moves DC carrier to the middle.
      * \param[in] nthreads Number of underlying threads.
      */
-    static sptr
-    make(int fft_size, bool forward, const std::vector<float>& window, int nthreads = 1);
+    static sptr make(int fft_size,
+                     const std::vector<float>& window,
+                     bool shift = false,
+                     int nthreads = 1);
 
     virtual void set_nthreads(int n) = 0;
 
@@ -69,4 +70,4 @@ public:
 } /* namespace fft */
 } /* namespace gr */
 
-#endif /* INCLUDED_FFT_FFT_VFC_H */
+#endif /* INCLUDED_FFT_FFT_V_H */

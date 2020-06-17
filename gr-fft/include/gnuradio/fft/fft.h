@@ -77,7 +77,6 @@ struct fft_outbuf<float, true> {
     typedef gr_complex type;
 };
 
-
 template <class T, bool forward>
 class FFT_API fft
 {
@@ -124,10 +123,10 @@ public:
     void execute();
 };
 
-    using fft_complex_fwd = fft<gr_complex, true>;
-    using fft_complex_rev = fft<gr_complex, false>;
-    using fft_real_fwd = fft<float, true>;
-    using fft_real_rev = fft<float, false>;
+using fft_complex_fwd = fft<gr_complex, true>;
+using fft_complex_rev = fft<gr_complex, false>;
+using fft_real_fwd = fft<float, true>;
+using fft_real_rev = fft<float, false>;
 
 } /* namespace fft */
 } /*namespace gr */

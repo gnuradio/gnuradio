@@ -68,7 +68,7 @@ dvbt2_paprtr_cc_impl::dvbt2_paprtr_cc_impl(dvbt2_extended_carrier_t carriermode,
       version_num(version),
       v_clip(vclip),
       num_iterations(iterations),
-      papr_fft(vlength, false, 1),
+      papr_fft(vlength, 1),
       papr_fft_size(vlength)
 {
     switch (fftsize) {

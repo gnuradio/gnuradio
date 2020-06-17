@@ -30,7 +30,7 @@ private:
     bool d_updated;
     unsigned int d_numchans;
     unsigned int d_taps_per_filter;
-    fft::fft_complex* d_fft;
+    fft::fft_complex_rev* d_fft;
     std::vector<kernel::fir_filter_with_buffer_ccf*> d_filters;
     std::vector<std::vector<float>> d_taps;
     int d_state;

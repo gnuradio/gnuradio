@@ -37,7 +37,7 @@ pfb_channelizer_ccf_impl::pfb_channelizer_ccf_impl(unsigned int nfilts,
     : block("pfb_channelizer_ccf",
             io_signature::make(nfilts, nfilts, sizeof(gr_complex)),
             io_signature::make(1, nfilts, sizeof(gr_complex))),
-      polyphase_filterbank(nfilts, taps, false),
+      polyphase_filterbank(nfilts, taps),
       d_updated(false),
       d_oversample_rate(oversample_rate)
 {

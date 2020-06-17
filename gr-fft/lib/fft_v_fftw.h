@@ -8,27 +8,31 @@
  *
  */
 
-#ifndef INCLUDED_FFT_FFT_VFC_FFTW_IMPL_H
-#define INCLUDED_FFT_FFT_VFC_FFTW_IMPL_H
+#ifndef INCLUDED_FFT_FFT_V_FFTW_IMPL_H
+#define INCLUDED_FFT_FFT_V_FFTW_IMPL_H
 
 #include <gnuradio/fft/fft.h>
-#include <gnuradio/fft/fft_vfc.h>
+#include <gnuradio/fft/fft_v.h>
 
 namespace gr {
 namespace fft {
 
-class FFT_API fft_vfc_fftw : public fft_vfc
+template <class T, bool forward>
+class FFT_API fft_v_fftw : public fft_v<T, forward>
 {
 private:
     const unsigned int d_fft_size;
-    fft_complex d_fft;
+    fft<T, forward> d_fft;
     std::vector<float> d_window;
+    const bool d_shift;
+    void fft_and_shift(const typename fft_inbuf<T, forward>::type* in,
+                       typename fft_outbuf<T, forward>::type* out);
 
 public:
-    fft_vfc_fftw(int fft_size,
-                 bool forward,
-                 const std::vector<float>& window,
-                 int nthreads = 1);
+    fft_v_fftw(int fft_size,
+               const std::vector<float>& window,
+               bool shift,
+               int nthreads = 1);
 
     void set_nthreads(int n);
     int nthreads() const;
@@ -42,4 +46,4 @@ public:
 } /* namespace fft */
 } /* namespace gr */
 
-#endif /* INCLUDED_FFT_FFT_VFC_FFTW_IMPL_H */
+#endif /* INCLUDED_FFT_FFT_V_FFTW_IMPL_H */

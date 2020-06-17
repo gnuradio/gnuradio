@@ -41,7 +41,7 @@ private:
     const pmt::pmt_t d_port_bw;
 
     bool d_shift;
-    fft::fft_complex* d_fft;
+    fft::fft_complex_fwd* d_fft;
 
     int d_index;
     std::vector<float*> d_residbufs;

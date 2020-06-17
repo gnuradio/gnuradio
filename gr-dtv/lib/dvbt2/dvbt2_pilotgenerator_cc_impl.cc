@@ -70,7 +70,7 @@ dvbt2_pilotgenerator_cc_impl::dvbt2_pilotgenerator_cc_impl(
       carrier_mode(carriermode),
       papr_mode(paprmode),
       equalization_enable(equalization),
-      ofdm_fft(vlength, false, 1),
+      ofdm_fft(vlength, 1),
       ofdm_fft_size(vlength)
 {
     int step, ki;

@@ -30,7 +30,7 @@ private:
     boost::condition_variable condition_buffer_ready;
 
     std::vector<gr_complex> d_buffer;
-    gr::fft::fft_complex d_fft;
+    gr::fft::fft_complex_fwd d_fft;
 
 public:
     ctrlport_probe_psd_impl(const std::string& id, const std::string& desc, int len);

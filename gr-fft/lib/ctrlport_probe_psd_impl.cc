@@ -33,7 +33,7 @@ ctrlport_probe_psd_impl::ctrlport_probe_psd_impl(const std::string& id,
       d_id(id),
       d_desc(desc),
       d_len(len),
-      d_fft(len, true, 1)
+      d_fft(len, 1)
 {
     set_length(len);
 }
