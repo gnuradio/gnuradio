@@ -33,9 +33,8 @@ namespace dtv {
 class dvbt2_paprtr_cc_impl : public dvbt2_paprtr_cc
 {
 private:
-    const int papr_fft_size;
-    fft::fft_complex papr_fft;
-
+    fft::fft_complex_rev papr_fft;
+    int papr_fft_size;
     int num_symbols;
     int fft_size;
     int left_nulls;

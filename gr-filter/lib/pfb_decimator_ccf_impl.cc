@@ -157,14 +157,14 @@ int pfb_decimator_ccf_impl::work_fir_fft(int noutput_items,
         for (unsigned int j = 0; j < d_rate; j++) {
             // Take in the items from the first input stream to d_rate
             in = (gr_complex*)input_items[d_rate - 1 - j];
-            d_fft.get_inbuf()[j] = d_fir_filters[j].filter(&in[i]);
+            d_fft->get_inbuf()[j] = d_fir_filters[j].filter(&in[i]);
         }
 
         // Perform the FFT to do the complex multiply despinning for all channels
-        d_fft.execute();
+        d_fft->execute();
 
         // Select only the desired channel out
-        out[i] = d_fft.get_outbuf()[d_chan];
+        out[i] = d_fft->get_outbuf()[d_chan];
     }
 
     return noutput_items;
@@ -218,14 +218,14 @@ int pfb_decimator_ccf_impl::work_fft_fft(int noutput_items,
     // an FFT.
     for (i = 0; i < noutput_items; i++) {
         for (unsigned int j = 0; j < d_rate; j++) {
-            d_fft.get_inbuf()[j] = d_tmp[j * noutput_items + i];
+            d_fft->get_inbuf()[j] = d_tmp[j * noutput_items + i];
         }
 
         // Perform the FFT to do the complex multiply despinning for all channels
-        d_fft.execute();
+        d_fft->execute();
 
         // Select only the desired channel out
-        out[i] = d_fft.get_outbuf()[d_chan];
+        out[i] = d_fft->get_outbuf()[d_chan];
     }
 
     return noutput_items;

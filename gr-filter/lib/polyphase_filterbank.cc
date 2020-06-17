@@ -18,11 +18,10 @@
 namespace gr {
 namespace filter {
 namespace kernel {
-
 polyphase_filterbank::polyphase_filterbank(unsigned int nfilts,
                                            const std::vector<float>& taps,
                                            bool fft_forward)
-    : d_nfilts(nfilts), d_fft(nfilts, fft_forward)
+    : d_nfilts(nfilts)
 {
     d_fir_filters.reserve(d_nfilts);
     d_fft_filters.reserve(d_nfilts);
@@ -36,6 +35,9 @@ polyphase_filterbank::polyphase_filterbank(unsigned int nfilts,
 
     // Now, actually set the filters' taps
     set_taps(taps);
+
+    // Create the FFT to handle the output de-spinning of the channels
+    d_fft = new fft::fft_complex_rev(d_nfilts);
 }
 
 polyphase_filterbank::~polyphase_filterbank() {}

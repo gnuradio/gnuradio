@@ -1041,7 +1041,7 @@ dvbt_reference_signals_impl::dvbt_reference_signals_impl(
       d_pg(config),
       d_ninput(ninput),
       d_noutput(noutput),
-      ofdm_fft(config.d_transmission_mode == T2k ? 2048 : 8192, false, 1),
+      ofdm_fft(config.d_transmission_mode == T2k ? 2048 : 8192, 1),
       ofdm_fft_size(config.d_transmission_mode == T2k ? 2048 : 8192),
       normalization(1.0 / std::sqrt(27.0 * config.d_payload_length))
 {

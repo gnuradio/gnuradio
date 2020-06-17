@@ -20,3 +20,6 @@ except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
     __path__.append(os.path.join(dirname, "bindings"))
     from .fft_python import *
+
+from .fft_vcc import fft_vcc
+from .fft_vfc import fft_vfc
