@@ -77,7 +77,7 @@ function(GR_ADD_TEST test_name)
             set(LD_PATH_VAR "DYLD_LIBRARY_PATH")
         endif()
 
-        set(binpath "${bindir}:$PATH")
+        set(binpath "${bindir}:\"$PATH\"")
         list(APPEND libpath "$${LD_PATH_VAR}")
         list(APPEND pypath "$PYTHONPATH")
 
