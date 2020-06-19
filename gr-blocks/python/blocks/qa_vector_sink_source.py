@@ -37,7 +37,7 @@ class test_vector_sink_source(gr_unittest.TestCase):
     def test_001(self):
         # Test that sink has data set in source for the simplest case
         src_data = [float(x) for x in range(16)]
-        expected_result = tuple(src_data)
+        expected_result = src_data
 
         src = blocks.vector_source_f(src_data)
         dst = blocks.vector_sink_f()
@@ -50,7 +50,7 @@ class test_vector_sink_source(gr_unittest.TestCase):
     def test_002(self):
         # Test vectors (the gnuradio vector I/O type)
         src_data = [float(x) for x in range(16)]
-        expected_result = tuple(src_data)
+        expected_result = src_data
 
         src = blocks.vector_source_f(src_data, False, 2)
         dst = blocks.vector_sink_f(2)
@@ -64,14 +64,13 @@ class test_vector_sink_source(gr_unittest.TestCase):
         # Test that we can only make vectors (the I/O type) if the input
         # vector has sufficient size
         src_data = [float(x) for x in range(16)]
-        expected_result = tuple(src_data)
-        self.assertRaises(TypeError, lambda : blocks.vector_source_f(src_data, False, 3))
+        self.assertRaises(ValueError, lambda : blocks.vector_source_f(src_data, False, 3))
 
     def test_004(self):
         # Test sending and receiving tagged streams
         src_data = [float(x) for x in range(16)]
-        expected_result = tuple(src_data)
-        src_tags = tuple([make_tag('key', 'val', 0, 'src')])
+        expected_result = src_data
+        src_tags = [make_tag('key', 'val', 0, 'src')]
         expected_tags = src_tags[:]
 
         src = blocks.vector_source_f(src_data, repeat=False, tags=src_tags)
@@ -89,10 +88,10 @@ class test_vector_sink_source(gr_unittest.TestCase):
         # Test that repeat works (with tagged streams)
         length = 16
         src_data = [float(x) for x in range(length)]
-        expected_result = tuple(src_data + src_data)
-        src_tags = tuple([make_tag('key', 'val', 0, 'src')])
-        expected_tags = tuple([make_tag('key', 'val', 0, 'src'),
-                               make_tag('key', 'val', length, 'src')])
+        expected_result = src_data + src_data
+        src_tags = [make_tag('key', 'val', 0, 'src')]
+        expected_tags = [make_tag('key', 'val', 0, 'src'),
+                               make_tag('key', 'val', length, 'src')]
 
         src = blocks.vector_source_f(src_data, repeat=True, tags=src_tags)
         head = blocks.head(gr.sizeof_float, 2*length)
@@ -110,7 +109,7 @@ class test_vector_sink_source(gr_unittest.TestCase):
     def test_006(self):
         # Test set_data
         src_data = [float(x) for x in range(16)]
-        expected_result = tuple(src_data)
+        expected_result = src_data
 
         src = blocks.vector_source_f((3,1,4))
         dst = blocks.vector_sink_f()
@@ -124,7 +123,7 @@ class test_vector_sink_source(gr_unittest.TestCase):
     def test_007(self):
         # Test set_repeat
         src_data = [float(x) for x in range(16)]
-        expected_result = tuple(src_data)
+        expected_result = src_data
 
         src = blocks.vector_source_f(src_data, True)
         dst = blocks.vector_sink_f()

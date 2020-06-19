@@ -21,8 +21,8 @@ class test_selector(gr_unittest.TestCase):
         self.tb = None
 
     def test_select_same(self):
-        src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-        expected_result = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+        src_data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        expected_result = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         expected_drop = ()
 
         num_inputs = 4; num_outputs = 4
@@ -99,8 +99,8 @@ class test_selector(gr_unittest.TestCase):
         self.assertEqual(expected_result, dst_data)
 
     def test_not_enabled (self):
-        src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-        expected_result = ()
+        src_data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        expected_result = []
 
         num_inputs = 4; num_outputs = 4
         input_index = 1; output_index = 2

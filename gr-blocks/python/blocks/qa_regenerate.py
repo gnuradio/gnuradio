@@ -26,9 +26,9 @@ class test_regenerate(gr_unittest.TestCase):
                 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        expected_result = (0, 0, 0,
+        expected_result = [0, 0, 0,
                            1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-                           1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+                           1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 
         src = blocks.vector_source_b(data, False)
@@ -71,7 +71,7 @@ class test_regenerate(gr_unittest.TestCase):
 
         dst_data = dst.data()
 
-        self.assertEqual(tuple(expected_result), dst_data)
+        self.assertEqual(expected_result, dst_data)
 
 
 if __name__ == '__main__':

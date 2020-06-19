@@ -7,7 +7,7 @@
 
 from __future__ import unicode_literals
 
-from . import pmt_swig as pmt
+from . import pmt_python as pmt
 import numpy
 
 # SWIG isn't taking in the #define PMT_NIL;
@@ -112,7 +112,7 @@ def pmt_to_python(p):
         if pmt_check(p):
             try:
                 return to_python(p)
-            except (TypeError, ValueError):
+            except (RuntimeError, TypeError, ValueError):  # TODO: make pybind11 handle wrong_type, convert to type error
                 # This exception will be handled by the general failure case
                 pass
     raise ValueError("can't convert %s type to pmt (%s)"%(type(p),p))

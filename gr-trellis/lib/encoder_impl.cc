@@ -20,16 +20,11 @@ namespace gr {
 namespace trellis {
 
 template <class IN_T, class OUT_T>
-typename encoder<IN_T, OUT_T>::sptr encoder<IN_T, OUT_T>::make(const fsm& FSM, int ST)
-{
-    return gnuradio::get_initial_sptr(new encoder_impl<IN_T, OUT_T>(FSM, ST, 0, false));
-}
-
-template <class IN_T, class OUT_T>
 typename encoder<IN_T, OUT_T>::sptr
 encoder<IN_T, OUT_T>::make(const fsm& FSM, int ST, int K)
 {
-    return gnuradio::get_initial_sptr(new encoder_impl<IN_T, OUT_T>(FSM, ST, K, true));
+    return gnuradio::get_initial_sptr(
+        new encoder_impl<IN_T, OUT_T>(FSM, ST, K, K >= 0 ? false : true));
 }
 
 template <class IN_T, class OUT_T>

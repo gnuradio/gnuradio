@@ -23,13 +23,22 @@ try:
 except:
     skip_pylint_test = True
 
-from modtool.core import ModToolNewModule
-from modtool.core import ModToolAdd
-from modtool.core import ModToolDisable
-from modtool.core import ModToolException
-from modtool.core import ModToolMakeYAML
-from modtool.core import ModToolRename
-from modtool.core import ModToolRemove
+try: # for debugging, full path must be given
+    from gnuradio.modtool.core import ModToolNewModule
+    from gnuradio.modtool.core import ModToolAdd
+    from gnuradio.modtool.core import ModToolDisable
+    from gnuradio.modtool.core import ModToolException
+    from gnuradio.modtool.core import ModToolMakeYAML
+    from gnuradio.modtool.core import ModToolRename
+    from gnuradio.modtool.core import ModToolRemove
+except:
+    from modtool.core import ModToolNewModule
+    from modtool.core import ModToolAdd
+    from modtool.core import ModToolDisable
+    from modtool.core import ModToolException
+    from modtool.core import ModToolMakeYAML
+    from modtool.core import ModToolRename
+    from modtool.core import ModToolRemove    
 
 class TestModToolCore(unittest.TestCase):
     """ The tests for the modtool core """
@@ -101,7 +110,6 @@ class TestModToolCore(unittest.TestCase):
         self.assertTrue(path.isdir(path.join(module_dir, 'include')))
         self.assertTrue(path.isdir(path.join(module_dir, 'docs')))
         self.assertTrue(path.isdir(path.join(module_dir, 'cmake')))
-        self.assertTrue(path.isdir(path.join(module_dir, 'swig')))
         self.assertTrue(path.exists(path.join(module_dir, 'CMakeLists.txt')))
 
         ## The check for object instantiation ##

@@ -474,7 +474,7 @@ class test_fft_filter(gr_unittest.TestCase):
         random.seed(0)
         for i in range(25):
             ntaps = int(random.uniform(2, 100))
-            taps = make_random_float_tuple(ntaps)
+            taps = list(make_random_float_tuple(ntaps))
 
             op = filter.fft_filter_fff(1, taps)
             result_data = op.taps()

@@ -14,7 +14,7 @@ parameters:
 - id: meas_type
   label: EVM Meas Type
   dtype: enum
-  options: [digital.evm_measurement_t_EVM_PERCENT, digital.evm_measurement_t_EVM_DB]
+  options: [digital.evm_measurement_t.EVM_PERCENT, digital.evm_measurement_t.EVM_DB]
   option_labels: [Percent, Power-Ratio (dB)]
   hide: part
 

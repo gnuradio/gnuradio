@@ -376,7 +376,8 @@ templates:
             ${xmin},
             ${xmax},
             ${name},
-            ${ 0 if type.startswith('msg') else nconnections}
+            ${ 0 if type.startswith('msg') else nconnections},
+            None # parent
         )
 
         self.${id}.set_update_time(${update_time})

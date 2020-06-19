@@ -18,11 +18,16 @@ from __future__ import unicode_literals
 import os
 
 try:
-    from .digital_swig import *
+    from .digital_python import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from .digital_swig import *
+    __path__.append(os.path.join(dirname, "bindings"))
+    from .digital_python import *
+
+from gnuradio import analog # just need analog for the enum
+class gmskmod_bc(cpmmod_bc):
+    def __init__(self, samples_per_sym = 2, L = 4, beta = 0.3):
+        cpmmod_bc.__init__(self, analog.cpm.GAUSSIAN, 0.5, samples_per_sym, L, beta)
 
 from .psk import *
 from .qam import *

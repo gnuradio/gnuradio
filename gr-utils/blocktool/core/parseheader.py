@@ -17,7 +17,12 @@ import re
 import codecs
 import logging
 
-from pygccxml import parser, declarations, utils
+PYGCCXML_AVAILABLE = False
+try:
+    from pygccxml import parser, declarations, utils
+    PYGCCXML_AVAILABLE = True
+except:
+    pass
 
 from ..core.base import BlockToolException, BlockTool
 from ..core.iosignature import io_signature, message_port
@@ -91,6 +96,7 @@ class BlockHeaderParser(BlockTool):
         """
         gr = self.modname.split('-')[0]
         module = self.modname.split('-')[-1]
+        self.parsed_data['module_name'] = module
         generator_path, generator_name = utils.find_xml_generator()
         xml_generator_config = parser.xml_generator_configuration_t(
             xml_generator_path=generator_path,
@@ -129,9 +135,16 @@ class BlockHeaderParser(BlockTool):
             self.parsed_data['class'] = ''
             for _class in main_namespace.declarations:
                 if isinstance(_class, declarations.class_t):
-                    main_class = _class
-                    self.parsed_data['class'] = str(_class).split('::')[
-                        2].split(' ')[0]
+                    expected_class_name = self.filename.split('.')[0]
+                    if expected_class_name in str(_class):
+                        main_class = _class
+                        self.parsed_data['class'] = str(_class).split('::')[
+                            2].split(' ')[0]
+                        # in more complicated blocks, there are many classes included in this declaration
+                        # Break after the first class - safe to assume this is the "main class"?
+                        if len(main_class.bases) > 0:
+                            self.parsed_data['block_type'] = main_class.bases[0].declaration_path[-1]
+                            break
         except RuntimeError:
             raise BlockToolException(
                 'Block header namespace {} must consist of a valid class instance'.format(module))
@@ -177,6 +190,8 @@ class BlockHeaderParser(BlockTool):
                 'make')[-1].split(')')[0].split('(')[1].lstrip().rstrip().split(',')
             if make_func:
                 for arg in make_func[0].arguments:
+                    make_arguments = None
+                    '''
                     for _arg in _make_fun:
                         if str(arg.name) in _arg:
                             make_arguments = {
@@ -194,8 +209,19 @@ class BlockHeaderParser(BlockTool):
                                 make_arguments['default'] = "True"
                             elif "false" in _arg:
                                 make_arguments['default'] = "False"
-                    self.parsed_data['make']['arguments'].append(
-                        make_arguments.copy())
+                    '''
+                    # In case the search did not find an argument in the inner loop
+                    # This happens while parsing digital/symbol_sync_cc.h
+                    if make_arguments:
+                        self.parsed_data['make']['arguments'].append(
+                            make_arguments.copy())
+                    else:
+                        self.parsed_data['make']['arguments'].append(
+                            {
+                                "name": str(arg.name),
+                                "dtype": str(arg.decl_type),
+                                "default": arg.default_value  # can we get default argument directly from arg
+                            })
         except RuntimeError:
             self.parsed_data['make'] = {}
             self.parsed_data['make']['arguments'] = []
@@ -247,6 +273,32 @@ class BlockHeaderParser(BlockTool):
                             getter_args.copy())
         except RuntimeError:
             self.parsed_data['properties'] = []
+
+        # all member functions
+        # setters and getters do not return all member functions for a block
+        try:
+            self.parsed_data['member_functions'] = []
+            query_methods = declarations.access_type_matcher_t('public')
+            functions = main_class.member_functions(function=query_methods,
+                                                  allow_empty=True,
+                                                  header_file=self.target_file)
+            if functions:
+                for fcn in functions:
+                    if str(fcn.name) not in [main_class.name, '~'+main_class.name, 'make']:
+                        fcn_args = {
+                            "name": str(fcn.name),
+                            "arguments": []
+                        }
+                        for argument in fcn.arguments:
+                            args = {
+                                "name": str(argument.name),
+                                "dtype": str(argument.decl_type),
+                                "default": argument.default_value
+                            }
+                            fcn_args['arguments'].append(args.copy())
+                        self.parsed_data['member_functions'].append(fcn_args.copy())
+        except RuntimeError:
+            self.parsed_data['member_functions'] = []
 
         # documentation
         try:

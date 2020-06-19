@@ -14,7 +14,7 @@ import cmath
 from gnuradio import gr
 from gnuradio.blocks import rotator_cc
 
-from .filter_swig import fft_filter_ccc
+from .filter_python import fft_filter_ccc
 
 
 __all__ = [ 'freq_xlating_fft_filter_ccc' ]

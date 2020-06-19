@@ -74,7 +74,7 @@ class test_hier_block2(gr_unittest.TestCase):
         nop1 = blocks.nop(gr.sizeof_int)
         nop2 = blocks.nop(gr.sizeof_int)
         hblock.connect(nop1, hblock)
-        self.assertRaises(TypeError,
+        self.assertRaises(ValueError,
             lambda: hblock.connect(nop2, hblock))
 
     def test_006_connect_invalid_src_port_neg(self):
@@ -82,7 +82,7 @@ class test_hier_block2(gr_unittest.TestCase):
                                 gr.io_signature(1,1,gr.sizeof_int),
                                 gr.io_signature(1,1,gr.sizeof_int))
         nop1 = blocks.nop(gr.sizeof_int)
-        self.assertRaises(TypeError,
+        self.assertRaises(ValueError,
             lambda: hblock.connect((hblock, -1), nop1))
 
     def test_005_connect_invalid_src_port_exceeds(self):
@@ -90,7 +90,7 @@ class test_hier_block2(gr_unittest.TestCase):
                                 gr.io_signature(1,1,gr.sizeof_int),
                                 gr.io_signature(1,1,gr.sizeof_int))
         nop1 = blocks.nop(gr.sizeof_int)
-        self.assertRaises(TypeError,
+        self.assertRaises(ValueError,
             lambda: hblock.connect((hblock, 1), nop1))
 
     def test_007_connect_invalid_dst_port_neg(self):
@@ -99,7 +99,7 @@ class test_hier_block2(gr_unittest.TestCase):
                                 gr.io_signature(1,1,gr.sizeof_int))
         nop1 = blocks.nop(gr.sizeof_int)
         nop2 = blocks.nop(gr.sizeof_int)
-        self.assertRaises(TypeError,
+        self.assertRaises(ValueError,
             lambda: hblock.connect(nop1, (nop2, -1)))
 
     def test_008_connect_invalid_dst_port_exceeds(self):
@@ -108,7 +108,7 @@ class test_hier_block2(gr_unittest.TestCase):
                                 gr.io_signature(1,1,gr.sizeof_int))
         nop1 = blocks.null_sink(gr.sizeof_int)
         nop2 = blocks.null_sink(gr.sizeof_int)
-        self.assertRaises(TypeError,
+        self.assertRaises(ValueError,
             lambda: hblock.connect(nop1, (nop2, 1)))
 
     def test_009_check_topology(self):
@@ -116,7 +116,7 @@ class test_hier_block2(gr_unittest.TestCase):
         hblock.check_topology(0, 0)
 
     def test_010_run(self):
-        expected = (1.0, 2.0, 3.0, 4.0)
+        expected = [1.0, 2.0, 3.0, 4.0]
         hblock = gr.top_block("test_block")
         src = blocks.vector_source_f(expected, False)
         sink1 = blocks.vector_sink_f()
@@ -144,7 +144,7 @@ class test_hier_block2(gr_unittest.TestCase):
         nop1 = blocks.nop(gr.sizeof_int)
         nop2 = blocks.nop(gr.sizeof_int)
         hblock.connect(hblock, nop1)
-        self.assertRaises(TypeError,
+        self.assertRaises(ValueError,
             lambda: hblock.disconnect(hblock, nop2))
 
     def test_014_disconnect_input_neg(self):
@@ -153,7 +153,7 @@ class test_hier_block2(gr_unittest.TestCase):
                                 gr.io_signature(1,1,gr.sizeof_int))
         nop1 = blocks.nop(gr.sizeof_int)
         hblock.connect(hblock, nop1)
-        self.assertRaises(TypeError,
+        self.assertRaises(ValueError,
             lambda: hblock.disconnect((hblock, -1), nop1))
 
     def test_015_disconnect_input_exceeds(self):
@@ -162,7 +162,7 @@ class test_hier_block2(gr_unittest.TestCase):
                                 gr.io_signature(1,1,gr.sizeof_int))
         nop1 = blocks.nop(gr.sizeof_int)
         hblock.connect(hblock, nop1)
-        self.assertRaises(TypeError,
+        self.assertRaises(ValueError,
             lambda: hblock.disconnect((hblock, 1), nop1))
 
     def test_016_disconnect_output(self):
@@ -180,7 +180,7 @@ class test_hier_block2(gr_unittest.TestCase):
         nop1 = blocks.nop(gr.sizeof_int)
         nop2 = blocks.nop(gr.sizeof_int)
         hblock.connect(nop1, hblock)
-        self.assertRaises(TypeError,
+        self.assertRaises(ValueError,
             lambda: hblock.disconnect(nop2, hblock))
 
     def test_018_disconnect_output_neg(self):
@@ -189,7 +189,7 @@ class test_hier_block2(gr_unittest.TestCase):
                                 gr.io_signature(1,1,gr.sizeof_int))
         nop1 = blocks.nop(gr.sizeof_int)
         hblock.connect(hblock, nop1)
-        self.assertRaises(TypeError,
+        self.assertRaises(ValueError,
             lambda: hblock.disconnect(nop1, (hblock, -1)))
 
     def test_019_disconnect_output_exceeds(self):
@@ -198,12 +198,12 @@ class test_hier_block2(gr_unittest.TestCase):
                                 gr.io_signature(1,1,gr.sizeof_int))
         nop1 = blocks.nop(gr.sizeof_int)
         hblock.connect(nop1, hblock)
-        self.assertRaises(TypeError,
+        self.assertRaises(ValueError,
             lambda: hblock.disconnect(nop1, (hblock, 1)))
 
     def test_020_run(self):
         hblock = gr.top_block("test_block")
-        data = (1.0, 2.0, 3.0, 4.0)
+        data = [1.0, 2.0, 3.0, 4.0]
         src = blocks.vector_source_f(data, False)
         dst = blocks.vector_sink_f()
         hblock.connect(src, dst)
@@ -222,7 +222,7 @@ class test_hier_block2(gr_unittest.TestCase):
         blk = gr.hier_block2("block",
                              gr.io_signature(1, 1, 1),
                              gr.io_signature(1, 1, 1))
-        self.assertRaises(TypeError,
+        self.assertRaises(ValueError,
                           lambda: hblock.connect(blk))
 
     def test_023_connect_single_twice(self):
@@ -231,7 +231,7 @@ class test_hier_block2(gr_unittest.TestCase):
                              gr.io_signature(0, 0, 0),
                              gr.io_signature(0, 0, 0))
         hblock.connect(blk)
-        self.assertRaises(TypeError,
+        self.assertRaises(ValueError,
                           lambda: hblock.connect(blk))
 
     def test_024_disconnect_single(self):
@@ -247,11 +247,11 @@ class test_hier_block2(gr_unittest.TestCase):
         blk = gr.hier_block2("block",
                              gr.io_signature(0, 0, 0),
                              gr.io_signature(0, 0, 0))
-        self.assertRaises(TypeError,
+        self.assertRaises(ValueError,
                           lambda: hblock.disconnect(blk))
 
     def test_026_run_single(self):
-        expected_data = (1.0,)
+        expected_data = [1.0,]
         tb = gr.top_block("top_block")
         hb = gr.hier_block2("block",
                             gr.io_signature(0, 0, 0),
@@ -336,7 +336,7 @@ class test_hier_block2(gr_unittest.TestCase):
         tb.disconnect(src)   # Singleton disconnect
         tb.connect(src, dst)
         tb.run()
-        self.assertEqual(dst.data(), (1,))
+        self.assertEqual(dst.data(), [1,])
 
     def test_030_nested_input(self):
         tb = gr.top_block()
@@ -352,7 +352,7 @@ class test_hier_block2(gr_unittest.TestCase):
         hb1.connect(hb1, hb2)
         hb2.connect(hb2, blocks.copy(gr.sizeof_char), dst)
         tb.run()
-        self.assertEqual(dst.data(), (1,))
+        self.assertEqual(dst.data(), [1,])
 
     def test_031_multiple_internal_inputs(self):
         tb = gr.top_block()
@@ -371,7 +371,7 @@ class test_hier_block2(gr_unittest.TestCase):
         dst = blocks.vector_sink_f()
         tb.connect(src, hb, dst)
         tb.run()
-        self.assertEqual(dst.data(), (3.0,))
+        self.assertEqual(dst.data(), [3.0,])
 
     def test_032_nested_multiple_internal_inputs(self):
         tb = gr.top_block()
@@ -395,11 +395,11 @@ class test_hier_block2(gr_unittest.TestCase):
         dst = blocks.vector_sink_f()
         tb.connect(src, hb, dst)
         tb.run()
-        self.assertEqual(dst.data(), (3.0,))
+        self.assertEqual(dst.data(), [3.0,])
 
 
     def test_033a_set_affinity(self):
-        expected = (1.0, 2.0, 3.0, 4.0)
+        expected = [1.0, 2.0, 3.0, 4.0]
         hblock = gr.top_block("test_block")
         src = blocks.vector_source_f(expected, False)
         snk = blocks.vector_sink_f()
@@ -410,7 +410,7 @@ class test_hier_block2(gr_unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_033b_unset_affinity(self):
-        expected = (1.0, 2.0, 3.0, 4.0)
+        expected = [1.0, 2.0, 3.0, 4.0]
         hblock = gr.top_block("test_block")
         src = blocks.vector_source_f(expected, False)
         snk = blocks.vector_sink_f()
@@ -422,14 +422,14 @@ class test_hier_block2(gr_unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_033c_get_affinity(self):
-        expected = (1.0, 2.0, 3.0, 4.0)
+        expected = [1.0, 2.0, 3.0, 4.0]
         hblock = gr.top_block("test_block")
         src = blocks.vector_source_f(expected, False)
         snk = blocks.vector_sink_f()
         hblock.connect(src, snk)
         hblock.set_processor_affinity([0,])
         procs = hblock.processor_affinity()
-        self.assertEqual((0,), procs)
+        self.assertEqual([0,], procs)
 
     def test_34a_lock_unlock(self):
         hblock = gr.top_block("test_block")

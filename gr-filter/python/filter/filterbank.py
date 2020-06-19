@@ -13,7 +13,7 @@ from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import fft
 from gnuradio import blocks
-from .filter_swig import fft_filter_ccc
+from .filter_python import fft_filter_ccc
 
 def _generate_synthesis_taps(mpoints):
     return []   # FIXME

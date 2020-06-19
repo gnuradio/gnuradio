@@ -46,9 +46,9 @@ void ldpc_encoder_impl::generic_work(void* inBuffer, void* outBuffer)
 {
     const unsigned char* in = (const unsigned char*)inBuffer;
     unsigned char* out = (unsigned char*)outBuffer;
-    std::vector<char> inbuf(inputSize);
+    std::vector<uint8_t> inbuf(inputSize);
     memcpy(&inbuf[0], in, inputSize);
-    std::vector<char> coded(d_code.encode(inbuf));
+    std::vector<uint8_t> coded(d_code.encode(inbuf));
     memcpy(&out[0], &coded[0], coded.size());
 }
 

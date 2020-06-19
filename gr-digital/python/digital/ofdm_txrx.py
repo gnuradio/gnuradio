@@ -26,7 +26,7 @@ import numpy
 
 from gnuradio import gr, blocks, fft, analog
 
-from . import digital_swig as digital
+from . import digital_python as digital
 
 
 _def_fft_len = 64

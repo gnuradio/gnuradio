@@ -20,8 +20,8 @@ class test_copy(gr_unittest.TestCase):
         self.tb = None
 
     def test_copy(self):
-        src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-        expected_result = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+        src_data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        expected_result = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         src = blocks.vector_source_b(src_data)
         op = blocks.copy(gr.sizeof_char)
         dst = blocks.vector_sink_b()
@@ -31,8 +31,8 @@ class test_copy(gr_unittest.TestCase):
         self.assertEqual(expected_result, dst_data)
 
     def test_copy_drop (self):
-        src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-        expected_result = ()
+        src_data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        expected_result = []
         src = blocks.vector_source_b(src_data)
         op = blocks.copy(gr.sizeof_char)
         op.set_enabled(False)

@@ -723,8 +723,6 @@ EXCLUDE_PATTERNS       = */.deps/* \
 
 EXCLUDE_SYMBOLS        = ad9862 \
                          numpy \
-                         *swig* \
-                         *Swig* \
                          *my_top_block* \
                          *my_graph* \
                          *app_top_block* \

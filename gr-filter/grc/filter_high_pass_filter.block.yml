@@ -39,7 +39,7 @@ parameters:
     dtype: real
 -   id: win
     label: Window
-    dtype: int
+    dtype: raw
     default: firdes.WIN_HAMMING
     options: [firdes.WIN_HAMMING, firdes.WIN_HANN, firdes.WIN_BLACKMAN, firdes.WIN_RECTANGULAR,
         firdes.WIN_KAISER]

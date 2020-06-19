@@ -15,8 +15,8 @@ import os
 
 from gnuradio import gr, gr_unittest
 from gnuradio import fec
-from fec import extended_encoder
-from fec import extended_decoder
+from gnuradio.fec import extended_encoder
+from gnuradio.fec import extended_decoder
 
 from _qa_helper import _qa_helper
 

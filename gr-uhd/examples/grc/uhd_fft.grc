@@ -70,7 +70,7 @@ blocks:
     function_args: '"''lo_locked''"'
     function_name: get_sensor
     poll_rate: '10'
-    value: uhd.sensor_value("", False, "")
+    value: uhd.sensor_value("", False, "", "")
   states:
     bus_sink: false
     bus_source: false

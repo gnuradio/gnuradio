@@ -28,7 +28,7 @@ generic_decoder::sptr polar_decoder_sc_list::make(int max_list_size,
                                                   int block_size,
                                                   int num_info_bits,
                                                   std::vector<int> frozen_bit_positions,
-                                                  std::vector<char> frozen_bit_values)
+                                                  std::vector<uint8_t> frozen_bit_values)
 {
     return generic_decoder::sptr(new polar_decoder_sc_list(max_list_size,
                                                            block_size,
@@ -41,7 +41,7 @@ polar_decoder_sc_list::polar_decoder_sc_list(int max_list_size,
                                              int block_size,
                                              int num_info_bits,
                                              std::vector<int> frozen_bit_positions,
-                                             std::vector<char> frozen_bit_values)
+                                             std::vector<uint8_t> frozen_bit_values)
     : polar_decoder_common(
           block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
 {

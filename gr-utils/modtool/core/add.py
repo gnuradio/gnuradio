@@ -1,5 +1,5 @@
 #
-# Copyright 2013-2014,2017-2019 Free Software Foundation, Inc.
+# Copyright 2013-2014,2017-2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -16,9 +16,11 @@ import os
 import re
 import logging
 
-from ..tools import render_template, append_re_line_sequence, CMakeFileEditor
+from ..tools import render_template, append_re_line_sequence, CMakeFileEditor, CPPFileEditor, code_generator
 from ..templates import Templates
 from .base import ModTool, ModToolException
+from gnuradio.bindtool import BindingGenerator
+from gnuradio import gr
 
 logger = logging.getLogger(__name__)
 
@@ -122,20 +124,20 @@ class ModToolAdd(ModTool):
         self.validate()
         self.assign()
 
-        has_swig = (
+        has_pybind = (
                 self.info['lang'] == 'cpp'
-                and not self.skip_subdirs['swig']
+                and not self.skip_subdirs['python']
         )
         has_grc = False
         if self.info['lang'] == 'cpp':
             self._run_lib()
-            has_grc = has_swig
+            has_grc = has_pybind
         else: # Python
             self._run_python()
             if self.info['blocktype'] != 'noblock':
                 has_grc = True
-        if has_swig:
-            self._run_swig()
+        if has_pybind:
+            self._run_pybind()
         if self.add_py_qa:
             self._run_python_qa()
         if has_grc and not self.skip_subdirs['grc']:
@@ -225,34 +227,98 @@ class ModToolAdd(ModTool):
             ed.write()
             self.scm.mark_files_updated((self._file['cminclude'], self._file['cmlib']))
 
-    def _run_swig(self):
-        """ Do everything that needs doing in the subdir 'swig'.
-        - Edit main *.i file
+    def _run_pybind(self):
+        """ Do everything that needs doing in the python bindings subdir.
+        - add blockname_python.cc 
+        - add reference and call to bind_blockname()
+        - include them into CMakeLists.txt
         """
-        if self._get_mainswigfile() is None:
-            logger.warning('Warning: No main swig file found.')
-            return
-        logger.info(f'Editing {self._file["swig"]}...')
-        mod_block_sep = '/'
-        if self.info['version'] == '36':
-            mod_block_sep = '_'
-        swig_block_magic_str = render_template('swig_block_magic', **self.info)
-        with open(self._file['swig'], 'a') as f:
-            f.write(swig_block_magic_str)
-        is_component = {True: 'gnuradio/' + self.info['modname'], False: self.info['modname']}[self.info['is_component']]
-        blockname_ = self.info['blockname']
-        include_str = f'#include "{is_component}{mod_block_sep}{blockname_}.h"'
 
-        with open(self._file['swig'], 'r') as f:
-            oldfile = f.read()
-        if re.search('#include', oldfile):
-            append_re_line_sequence(self._file['swig'], '^#include.*\n', include_str)
-        else: # I.e., if the swig file is empty
-            regexp = re.compile(r'^%\{\n', re.MULTILINE)
-            oldfile = regexp.sub('%%{\n%s\n' % include_str, oldfile, count=1)
-            with open(self._file['swig'], 'w') as f:
-                f.write(oldfile)
-        self.scm.mark_files_updated((self._file['swig'],))
+        # Generate bindings cc file
+        fname_cc = self.info['blockname'] + '_python.cc'
+        fname_pydoc_h = os.path.join('docstrings',self.info['blockname'] + '_pydoc_template.h')
+
+        # Update python_bindings.cc
+        ed = CPPFileEditor(self._file['ccpybind'])
+        ed.append_value('// BINDING_FUNCTION_PROTOTYPES(', '// ) END BINDING_FUNCTION_PROTOTYPES', 
+            'void bind_' + self.info['blockname'] + '(py::module& m);')
+        ed.append_value('// BINDING_FUNCTION_CALLS(', '// ) END BINDING_FUNCTION_CALLS', 
+            'bind_' + self.info['blockname'] + '(m);')
+        ed.write()
+
+        self.scm.mark_files_updated((self._file['ccpybind']))
+
+        bg = BindingGenerator(prefix=gr.prefix(), namespace=['gr',self.info['modname']], prefix_include_root=self.info['modname'])
+        block_base = ""
+        if self.info['blocktype'] in ('source', 'sink', 'sync', 'decimator',
+                                        'interpolator', 'general', 'hier', 'tagged_stream'):
+            block_base = code_generator.GRTYPELIST[self.info['blocktype']]
+
+        import hashlib
+        header_file = self.info['blockname'] + '.h'
+        hasher = hashlib.md5()
+        with open(os.path.join(self.info['includedir'], header_file), 'rb') as file_in:
+            buf = file_in.read()
+            hasher.update(buf)
+        md5hash = hasher.hexdigest()
+
+        header_info = {
+            "module_name": self.info['modname'],
+            "filename": header_file,
+            "md5hash": md5hash,
+            "namespace": {
+                "name": "::".join(['gr', self.info['modname']]),
+                "enums": [],
+                "variables": [],
+                "classes": [
+                    {
+                        "name": self.info['blockname'],
+                        "member_functions": [
+                            {
+                                "name": "make",
+                                "return_type": "::".join(("gr",self.info['modname'],self.info['blockname'],"sptr")),
+                                "has_static": "1",
+                                "arguments": []
+                            }
+                        ],
+                        "bases": [
+                            "::",
+                            "gr",
+                            block_base
+                        ],
+                        "constructors": [
+                            {
+                                "name": self.info['blockname'],
+                                "arguments": []
+                            }
+                        ]
+                    }
+                ],
+                "free_functions": [],
+                "namespaces": []
+            }
+        }
+        # def gen_pybind_cc(self, header_info, base_name):
+        pydoc_txt = bg.gen_pydoc_h(header_info,self.info['blockname'])
+        path_to_file = os.path.join('python','bindings', fname_pydoc_h)
+        logger.info("Adding file '{}'...".format(path_to_file))
+        with open(path_to_file, 'w') as f:
+            f.write(pydoc_txt)
+        self.scm.add_files((path_to_file,))
+
+        cc_txt = bg.gen_pybind_cc(header_info,self.info['blockname'])
+        path_to_file = os.path.join('python','bindings', fname_cc)
+        logger.info("Adding file '{}'...".format(path_to_file))
+        with open(path_to_file, 'w') as f:
+            f.write(cc_txt)
+        self.scm.add_files((path_to_file,))
+
+        if not self.skip_cmakefiles:
+            ed = CMakeFileEditor(self._file['cmpybind'])
+            cmake_list_var = 'APPEND {}_python_files'.format(self.info['modname'])
+            ed.append_value('list', fname_cc, to_ignore_start=cmake_list_var, to_ignore_end='python_bindings.cc')
+            ed.write()
+            self.scm.mark_files_updated((self._file['cmpybind']))
 
     def _run_python_qa(self):
         """ Do everything that needs doing in the subdir 'python' to add

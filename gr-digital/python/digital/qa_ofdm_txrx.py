@@ -40,7 +40,7 @@ class ofdm_rx_fg (gr.top_block):
         gr.top_block.__init__(self, "ofdm_rx")
         if prepend_zeros:
             samples = (0,) * prepend_zeros + tuple(samples)
-        src = blocks.vector_source_c(tuple(samples) + (0,) * 1000)
+        src = blocks.vector_source_c(list(samples) + [0,] * 1000)
         self.rx = ofdm_rx(frame_length_tag_key=len_tag_key, debug_log=LOG_DEBUG_INFO, scramble_bits=scramble_bits)
         if channel is not None:
             self.connect(src, channel, self.rx)
@@ -100,7 +100,7 @@ class test_ofdm_txrx (gr_unittest.TestCase):
         len_tag_key = 'frame_len'
         n_bytes = 21
         fft_len = 64
-        test_data = tuple([random.randint(0, 255) for x in range(n_bytes)])
+        test_data = list([random.randint(0, 255) for x in range(n_bytes)])
         # 1.0/fft_len is one sub-carrier, a fine freq offset stays below that
         freq_offset = 1.0 / fft_len * 0.7
         #channel = channels.channel_model(0.01, freq_offset)
@@ -113,8 +113,8 @@ class test_ofdm_txrx (gr_unittest.TestCase):
         rx_fg = ofdm_rx_fg(tx_samples, len_tag_key, channel, prepend_zeros=100)
         rx_fg.run()
         rx_data = rx_fg.get_rx_bytes()
-        self.assertEqual(tuple(tx_fg.tx.sync_word1), tuple(rx_fg.rx.sync_word1))
-        self.assertEqual(tuple(tx_fg.tx.sync_word2), tuple(rx_fg.rx.sync_word2))
+        self.assertEqual(list(tx_fg.tx.sync_word1), list(rx_fg.rx.sync_word1))
+        self.assertEqual(list(tx_fg.tx.sync_word2), list(rx_fg.rx.sync_word2))
         self.assertEqual(test_data, rx_data)
 
     def test_003_tx1packet_scramble(self):
@@ -122,7 +122,7 @@ class test_ofdm_txrx (gr_unittest.TestCase):
         len_tag_key = 'frame_len'
         n_bytes = 21
         fft_len = 64
-        test_data = tuple([random.randint(0, 255) for x in range(n_bytes)])
+        test_data = list([random.randint(0, 255) for x in range(n_bytes)])
         # 1.0/fft_len is one sub-carrier, a fine freq offset stays below that
         freq_offset = 1.0 / fft_len * 0.7
         #channel = channels.channel_model(0.01, freq_offset)
@@ -135,8 +135,8 @@ class test_ofdm_txrx (gr_unittest.TestCase):
         rx_fg = ofdm_rx_fg(tx_samples, len_tag_key, channel, prepend_zeros=100, scramble_bits=True)
         rx_fg.run()
         rx_data = rx_fg.get_rx_bytes()
-        self.assertEqual(tuple(tx_fg.tx.sync_word1), tuple(rx_fg.rx.sync_word1))
-        self.assertEqual(tuple(tx_fg.tx.sync_word2), tuple(rx_fg.rx.sync_word2))
+        self.assertEqual(list(tx_fg.tx.sync_word1), list(rx_fg.rx.sync_word1))
+        self.assertEqual(list(tx_fg.tx.sync_word2), list(rx_fg.rx.sync_word2))
         self.assertEqual(test_data, rx_data)
 
     def test_004_tx1packet_large_fO(self):
@@ -145,7 +145,7 @@ class test_ofdm_txrx (gr_unittest.TestCase):
         fft_len = 64
         len_tag_key = 'frame_len'
         n_bytes = 21
-        test_data = tuple([random.randint(0, 255) for x in range(n_bytes)])
+        test_data = list([random.randint(0, 255) for x in range(n_bytes)])
         #test_data = tuple([255 for x in range(n_bytes)])
         # 1.0/fft_len is one sub-carrier
         frequency_offset = 1.0 / fft_len * 2.5

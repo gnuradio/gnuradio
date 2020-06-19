@@ -161,7 +161,7 @@ class test_constellation(gr_unittest.TestCase):
     def setUp(self):
         random.seed(0)
         # Generate a list of random bits.
-        self.src_data = tuple([random.randint(0,1) for i in range(0, self.src_length)])
+        self.src_data = [random.randint(0,1) for i in range(0, self.src_length)]
 
     def tearDown(self):
         pass

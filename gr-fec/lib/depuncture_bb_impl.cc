@@ -23,13 +23,17 @@
 namespace gr {
 namespace fec {
 
-depuncture_bb::sptr depuncture_bb::make(int puncsize, int puncpat, int delay, char symbol)
+depuncture_bb::sptr
+depuncture_bb::make(int puncsize, int puncpat, int delay, uint8_t symbol)
 {
     return gnuradio::get_initial_sptr(
         new depuncture_bb_impl(puncsize, puncpat, delay, symbol));
 }
 
-depuncture_bb_impl::depuncture_bb_impl(int puncsize, int puncpat, int delay, char symbol)
+depuncture_bb_impl::depuncture_bb_impl(int puncsize,
+                                       int puncpat,
+                                       int delay,
+                                       uint8_t symbol)
     : block("depuncture_bb",
             io_signature::make(1, 1, sizeof(unsigned char)),
             io_signature::make(1, 1, sizeof(unsigned char))),
@@ -62,7 +66,7 @@ depuncture_bb_impl::depuncture_bb_impl(int puncsize, int puncpat, int delay, cha
     set_fixed_rate(true);
     set_relative_rate((uint64_t)d_puncsize, (uint64_t)(d_puncsize - d_puncholes));
     set_output_multiple(d_puncsize);
-    // set_msg_handler(boost::bind(&depuncture_bb_impl::catch_msg, this, _1));
+    // set_msg_handler(<portname>, [this](pmt::pmt_t msg) { this->catch_msg(msg); });
 }
 
 depuncture_bb_impl::~depuncture_bb_impl() {}

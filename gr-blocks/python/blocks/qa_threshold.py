@@ -24,7 +24,7 @@ class test_threshold(gr_unittest.TestCase):
 
         data = [0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 2, 2, 2]
 
-        expected_result = (0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1)
+        expected_result = [0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1]
 
         src = blocks.vector_source_f(data, False)
         op = blocks.threshold_ff(1, 1)

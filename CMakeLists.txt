@@ -46,7 +46,6 @@ include(GrVersion) #setup version info
 
 # Minimum dependency versions for central dependencies:
 set(GR_BOOST_MIN_VERSION "1.53")
-set(GR_SWIG_MIN_VERSION "3.0.8")
 set(GR_CMAKE_MIN_VERSION "3.5.1")
 set(GR_MAKO_MIN_VERSION "0.4.2")
 set(GR_PYTHON_MIN_VERSION "3.6.5")
@@ -56,6 +55,7 @@ set(CLANG_MIN_VERSION "3.4.0")
 set(APPLECLANG_MIN_VERSION "500")
 set(MSVC_MIN_VERSION "1800")
 set(VOLK_MIN_VERSION "2.1.0")
+set(PYBIND11_MIN_VERSION "2.4") # pybind11 sets versions like 2.4.dev4, which compares < 2.4.3
 
 # Enable generation of compile_commands.json for code completion engines
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -344,20 +344,28 @@ GR_PYTHON_CHECK_MODULE(
     "LooseVersion(numpy.__version__) >= LooseVersion('${GR_NUMPY_MIN_VERSION}')"
     NUMPY_FOUND)
 find_package(SWIG)
+# Needed for automatic regeneration of some bindings
+GR_PYTHON_CHECK_MODULE_RAW(
+    "pygccxml"
+    "import pygccxml"
+    PYGCCXML_FOUND
+    )
+ 
 
-if(SWIG_FOUND)
-    SET(SWIG_VERSION_CHECK FALSE)
-    if("${SWIG_VERSION}" VERSION_EQUAL ${GR_SWIG_MIN_VERSION} OR
-       "${SWIG_VERSION}" VERSION_GREATER ${GR_SWIG_MIN_VERSION})
-        SET(SWIG_VERSION_CHECK TRUE)
-    endif()
-endif(SWIG_FOUND)
+find_package(pybind11 REQUIRED)
+IF(${pybind11_VERSION} VERSION_LESS ${PYBIND11_MIN_VERSION})
+    message(FATAL_ERROR "pybind11 version ${pybind11_VERSION} < ${PYBIND11_MIN_VERSION}")
+ENDIF()
+
+execute_process(
+    COMMAND "${PYTHON_EXECUTABLE}" -c
+    "from __future__ import print_function\ntry:\n import numpy\n import os\n inc_path = numpy.get_include()\n if os.path.exists(os.path.join(inc_path, 'numpy', 'arrayobject.h')):\n  print(inc_path, end='')\nexcept:\n pass"
+    OUTPUT_VARIABLE PYTHON_NUMPY_INCLUDE_DIR)
 
 include(GrComponent)
 GR_REGISTER_COMPONENT("python-support" ENABLE_PYTHON
     PYTHONLIBS_FOUND
-    SWIG_FOUND
-    SWIG_VERSION_CHECK
+    pybind11_FOUND
     SIX_FOUND
     NUMPY_FOUND
 )
@@ -427,7 +435,6 @@ install(
 list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
     ${CMAKE_SOURCE_DIR}/gnuradio-runtime/python
-    ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig
 )
 
 

@@ -51,8 +51,7 @@ async_encoder_impl::async_encoder_impl(generic_encoder::sptr my_encoder,
     message_port_register_out(d_out_port);
 
     if (d_packed) {
-        set_msg_handler(d_in_port,
-                        boost::bind(&async_encoder_impl::encode_packed, this, _1));
+        set_msg_handler(d_in_port, [this](pmt::pmt_t msg) { this->encode_packed(msg); });
 
         d_unpack = new blocks::kernel::unpack_k_bits(8);
 
@@ -62,7 +61,7 @@ async_encoder_impl::async_encoder_impl(generic_encoder::sptr my_encoder,
 
     } else {
         set_msg_handler(d_in_port,
-                        boost::bind(&async_encoder_impl::encode_unpacked, this, _1));
+                        [this](pmt::pmt_t msg) { this->encode_unpacked(msg); });
     }
 
     if (d_packed || (strncmp(d_encoder->get_input_conversion(), "pack", 4) == 0)) {

@@ -36,9 +36,9 @@ crc32_async_bb_impl::crc32_async_bb_impl(bool check)
     message_port_register_out(d_out_port);
 
     if (check)
-        set_msg_handler(d_in_port, boost::bind(&crc32_async_bb_impl::check, this, _1));
+        set_msg_handler(d_in_port, [this](pmt::pmt_t msg) { this->check(msg); });
     else
-        set_msg_handler(d_in_port, boost::bind(&crc32_async_bb_impl::calc, this, _1));
+        set_msg_handler(d_in_port, [this](pmt::pmt_t msg) { this->calc(msg); });
 }
 
 crc32_async_bb_impl::~crc32_async_bb_impl() {}

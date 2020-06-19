@@ -17,7 +17,7 @@ import math
 from gnuradio import gr, filter
 from .fm_emph import fm_preemph
 
-from . import analog_swig as analog
+from . import analog_python as analog
 
 
 class nbfm_tx(gr.hier_block2):

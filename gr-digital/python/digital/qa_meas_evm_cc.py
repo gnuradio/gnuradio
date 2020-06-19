@@ -27,13 +27,13 @@ class qa_meas_evm_cc(gr_unittest.TestCase):
 
     def test_qpsk(self):
         # set up fg
-        expected_result = tuple(numpy.zeros((self.num_data,)))
+        expected_result = list(numpy.zeros((self.num_data,)))
 
         self.cons = cons = digital.constellation_qpsk().base()
         self.data = data = [random.randrange(len(cons.points())) for x in range(self.num_data)]
         self.symbols = symbols = numpy.squeeze([cons.map_to_points_v(i) for i in data])
 
-        evm = digital.meas_evm_cc(cons, digital.evm_measurement_t_EVM_PERCENT)
+        evm = digital.meas_evm_cc(cons, digital.evm_measurement_t.EVM_PERCENT)
         vso = blocks.vector_source_c(symbols, False, 1, [])
         # mc = blocks.multiply_const_cc(3.0+2.0j)
         vsi = blocks.vector_sink_f()
@@ -47,13 +47,13 @@ class qa_meas_evm_cc(gr_unittest.TestCase):
 
     def test_qpsk_nonzeroevm(self):
         # set up fg
-        expected_result = tuple(numpy.zeros((self.num_data,)))
+        expected_result = list(numpy.zeros((self.num_data,)))
 
         self.cons = cons = digital.constellation_qpsk().base()
         self.data = data = [random.randrange(len(cons.points())) for x in range(self.num_data)]
         self.symbols = symbols = numpy.squeeze([cons.map_to_points_v(i) for i in data])
 
-        evm = digital.meas_evm_cc(cons, digital.evm_measurement_t_EVM_PERCENT)
+        evm = digital.meas_evm_cc(cons, digital.evm_measurement_t.EVM_PERCENT)
         vso = blocks.vector_source_c(symbols, False, 1, [])
         mc = blocks.multiply_const_cc(3.0+2.0j)
         vsi = blocks.vector_sink_f()
@@ -66,8 +66,8 @@ class qa_meas_evm_cc(gr_unittest.TestCase):
         self.assertNotEqual(expected_result, output_data)
 
     def test_qpsk_channel(self):
-        upper_bound = tuple(50.0*numpy.ones((self.num_data,)))
-        lower_bound = tuple(0.0*numpy.zeros((self.num_data,)))
+        upper_bound = list(50.0*numpy.ones((self.num_data,)))
+        lower_bound = list(0.0*numpy.zeros((self.num_data,)))
 
         self.cons = cons = digital.constellation_qpsk().base()
         self.data = data = [random.randrange(len(cons.points())) for x in range(self.num_data)]
@@ -81,7 +81,7 @@ class qa_meas_evm_cc(gr_unittest.TestCase):
             noise_seed=0,
             block_tags=False)
 
-        evm = digital.meas_evm_cc(cons, digital.evm_measurement_t_EVM_PERCENT)
+        evm = digital.meas_evm_cc(cons, digital.evm_measurement_t.EVM_PERCENT)
         vso = blocks.vector_source_c(symbols, False, 1, [])
         mc = blocks.multiply_const_cc(3.0+2.0j)
         vsi = blocks.vector_sink_f()
@@ -95,8 +95,8 @@ class qa_meas_evm_cc(gr_unittest.TestCase):
         self.assertGreater(output_data, lower_bound)
 
     def test_qam16_channel(self):
-        upper_bound = tuple(50.0*numpy.ones((self.num_data,)))
-        lower_bound = tuple(0.0*numpy.zeros((self.num_data,)))
+        upper_bound = list(50.0*numpy.ones((self.num_data,)))
+        lower_bound = list(0.0*numpy.zeros((self.num_data,)))
 
         self.cons = cons = digital.constellation_16qam().base()
         self.data = data = [random.randrange(len(cons.points())) for x in range(self.num_data)]
@@ -110,7 +110,7 @@ class qa_meas_evm_cc(gr_unittest.TestCase):
             noise_seed=0,
             block_tags=False)
 
-        evm = digital.meas_evm_cc(cons, digital.evm_measurement_t_EVM_PERCENT)
+        evm = digital.meas_evm_cc(cons, digital.evm_measurement_t.EVM_PERCENT)
         vso = blocks.vector_source_c(symbols, False, 1, [])
         mc = blocks.multiply_const_cc(3.0+2.0j)
         vsi = blocks.vector_sink_f()

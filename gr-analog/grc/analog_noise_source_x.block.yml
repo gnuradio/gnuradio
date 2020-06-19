@@ -12,7 +12,7 @@ parameters:
     hide: part
 -   id: noise_type
     label: Noise Type
-    dtype: int
+    dtype: raw
     default: analog.GR_GAUSSIAN
     options: [analog.GR_UNIFORM, analog.GR_GAUSSIAN, analog.GR_LAPLACIAN, analog.GR_IMPULSE]
     option_labels: [Uniform, Gaussian, Laplacian, Impulse]

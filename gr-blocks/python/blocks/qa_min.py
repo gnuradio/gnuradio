@@ -23,8 +23,8 @@ class test_min(gr_unittest.TestCase):
         self.tb = None
 
     def test_001(self):
-        src_data = (0, 0.2, -0.25, 0, 12, 0)
-        expected_result = (float(min(src_data)),)
+        src_data = [0, 0.2, -0.25, 0, 12, 0]
+        expected_result = [float(min(src_data)),]
 
         src = blocks.vector_source_f(src_data)
         s2v = blocks.stream_to_vector(gr.sizeof_float, len(src_data))
@@ -37,8 +37,8 @@ class test_min(gr_unittest.TestCase):
         self.assertEqual(expected_result, result_data)
 
     def stest_002(self):
-        src_data=(-100,-99,-98,-97,-96,-1)
-        expected_result = (float(min(src_data)),)
+        src_data=[-100,-99,-98,-97,-96,-1]
+        expected_result = [float(min(src_data)),]
 
         src = blocks.vector_source_f(src_data)
         s2v = blocks.stream_to_vector(gr.sizeof_float, len(src_data))
@@ -51,8 +51,8 @@ class test_min(gr_unittest.TestCase):
         self.assertEqual(expected_result, result_data)
 
     def stest_003(self):
-        src_data0 = (0, 2, -3, 0, 12, 0)
-        src_data1 = (1, 1,  1, 1,  1, 1)
+        src_data0 = [0, 2, -3, 0, 12, 0]
+        src_data1 = [1, 1,  1, 1,  1, 1]
 
         expected_result = [float(min(x,y)) for x,y in zip(src_data0, src_data1)]
 
@@ -70,8 +70,8 @@ class test_min(gr_unittest.TestCase):
 
     def stest_004(self):
         dim = 2
-        src_data0 = (0, 2, -3, 0, 12, 0)
-        src_data1 = (1, 1,  1, 1,  1, 1)
+        src_data0 = [0, 2, -3, 0, 12, 0]
+        src_data1 = [1, 1,  1, 1,  1, 1]
 
         expected_data = []
         tmp = [float(min(x,y)) for x,y in zip(src_data0, src_data1)]
@@ -94,8 +94,8 @@ class test_min(gr_unittest.TestCase):
 
 
     def stest_s001(self):
-        src_data = (0, 2, -3, 0, 12, 0)
-        expected_result = (min(src_data),)
+        src_data = [0, 2, -3, 0, 12, 0]
+        expected_result = [min(src_data),]
 
         src = blocks.vector_source_s(src_data)
         s2v = blocks.stream_to_vector(gr.sizeof_short,len(src_data))
@@ -108,8 +108,8 @@ class test_min(gr_unittest.TestCase):
         self.assertEqual(expected_result, result_data)
 
     def stest_s002(self):
-        src_data=(-100,-99,-98,-97,-96,-1)
-        expected_result = (min(src_data),)
+        src_data=[-100,-99,-98,-97,-96,-1]
+        expected_result = [min(src_data),]
 
         src = blocks.vector_source_s(src_data)
         s2v = blocks.stream_to_vector(gr.sizeof_short, len(src_data))
@@ -123,8 +123,8 @@ class test_min(gr_unittest.TestCase):
 
 
     def stest_s003(self):
-        src_data0 = (0, 2, -3, 0, 12, 0)
-        src_data1 = (1, 1,  1, 1,  1, 1)
+        src_data0 = [0, 2, -3, 0, 12, 0]
+        src_data1 = [1, 1,  1, 1,  1, 1]
 
         expected_result = [min(x,y) for x,y in zip(src_data0, src_data1)]
 
@@ -142,8 +142,8 @@ class test_min(gr_unittest.TestCase):
 
     def stest_s004(self):
         dim = 2
-        src_data0 = (0, 2, -3, 0, 12, 0)
-        src_data1 = (1, 1,  1, 1,  1, 1)
+        src_data0 = [0, 2, -3, 0, 12, 0]
+        src_data1 = [1, 1,  1, 1,  1, 1]
 
         expected_data = []
         tmp = [min(x,y) for x,y in zip(src_data0, src_data1)]

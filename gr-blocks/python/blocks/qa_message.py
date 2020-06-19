@@ -15,29 +15,29 @@ from gnuradio import gr, gr_unittest, blocks
 import pmt
 
 
-def all_counts():
-    return (gr.block_ncurrently_allocated(),
-            gr.block_detail_ncurrently_allocated(),
-            gr.buffer_ncurrently_allocated(),
-            gr.buffer_reader_ncurrently_allocated(),
-            gr.message_ncurrently_allocated())
+# def all_counts():
+#     return (gr.block_ncurrently_allocated(),
+#             gr.block_detail_ncurrently_allocated(),
+#             gr.buffer_ncurrently_allocated(),
+#             gr.buffer_reader_ncurrently_allocated(),
+#             gr.message_ncurrently_allocated())
 
 
 class test_message(gr_unittest.TestCase):
 
-    def setUp(self):
-        self.msgq = gr.msg_queue()
+    # def setUp(self):
+    #     # self.msgq = gr.msg_queue()
 
-    def tearDown(self):
-        self.msgq = None
+    # def tearDown(self):
+    #     # self.msgq = None
 
-    def leak_check(self, fct):
-        begin = all_counts()
-        fct()
-        # tear down early so we can check for leaks
-        self.tearDown()
-        end = all_counts()
-        self.assertEqual(begin, end)
+    # def leak_check(self, fct):
+    #     begin = all_counts()
+    #     fct()
+    #     # tear down early so we can check for leaks
+    #     self.tearDown()
+    #     end = all_counts()
+    #     self.assertEqual(begin, end)
 
     def test_100(self):
         msg = gr.message(0, 1.5, 2.3)
@@ -56,38 +56,39 @@ class test_message(gr_unittest.TestCase):
         msg = gr.message_from_string(s)
         self.assertEquals(s.encode('utf8'), msg.to_string())
 
-    def test_200(self):
-        self.leak_check(self.body_200)
+    ## msg_queue was removed from API in 3.8
+    # def test_200(self):
+    #     self.leak_check(self.body_200)
 
-    def body_200(self):
-        self.msgq.insert_tail(gr.message(0))
-        self.assertEquals(1, self.msgq.count())
-        self.msgq.insert_tail(gr.message(1))
-        self.assertEquals(2, self.msgq.count())
-        msg0 = self.msgq.delete_head()
-        self.assertEquals(0, msg0.type())
-        msg1 = self.msgq.delete_head()
-        self.assertEquals(1, msg1.type())
-        self.assertEquals(0, self.msgq.count())
+    # def body_200(self):
+    #     self.msgq.insert_tail(gr.message(0))
+    #     self.assertEquals(1, self.msgq.count())
+    #     self.msgq.insert_tail(gr.message(1))
+    #     self.assertEquals(2, self.msgq.count())
+    #     msg0 = self.msgq.delete_head()
+    #     self.assertEquals(0, msg0.type())
+    #     msg1 = self.msgq.delete_head()
+    #     self.assertEquals(1, msg1.type())
+    #     self.assertEquals(0, self.msgq.count())
 
-    def test_201(self):
-        self.leak_check(self.body_201)
+    # def test_201(self):
+    #     self.leak_check(self.body_201)
 
-    def body_201(self):
-        self.msgq.insert_tail(gr.message(0))
-        self.assertEquals(1, self.msgq.count())
-        self.msgq.insert_tail(gr.message(1))
-        self.assertEquals(2, self.msgq.count())
+    # def body_201(self):
+    #     self.msgq.insert_tail(gr.message(0))
+    #     self.assertEquals(1, self.msgq.count())
+    #     self.msgq.insert_tail(gr.message(1))
+    #     self.assertEquals(2, self.msgq.count())
 
-    def test_202(self):
-        self.leak_check(self.body_202)
+    # def test_202(self):
+    #     self.leak_check(self.body_202)
 
     def body_202(self):
         # global msg
         msg = gr.message(666)
 
     def test_300(self):
-        input_data = (0,1,2,3,4,5,6,7,8,9)
+        input_data = [0,1,2,3,4,5,6,7,8,9]
         src = blocks.vector_source_b(input_data)
         dst = blocks.vector_sink_b()
         tb = gr.top_block()

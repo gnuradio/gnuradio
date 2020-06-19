@@ -58,6 +58,16 @@ public:
                      const ::uhd::stream_args_t& stream_args,
                      const bool issue_stream_cmd_on_start = true);
 
+    static sptr make(const std::string& device_addr_str,
+                     const ::uhd::stream_args_t& stream_args,
+                     const bool issue_stream_cmd_on_start = true)
+    {
+        return make(::uhd::device_addr_t(device_addr_str),
+                    stream_args,
+                    issue_stream_cmd_on_start);
+    }
+
+
     /*!
      * Set the start time for incoming samples.
      * To control when samples are received,

@@ -60,7 +60,7 @@ puncture_bb_impl::puncture_bb_impl(int puncsize, int puncpat, int delay)
     set_fixed_rate(true);
     set_relative_rate((uint64_t)(d_puncsize - d_puncholes), (uint64_t)d_puncsize);
     set_output_multiple(d_puncsize - d_puncholes);
-    // set_msg_handler(boost::bind(&puncture_bb_impl::catch_msg, this, _1));
+    // set_msg_handler(<portname>, [this](pmt::pmt_t msg) { this->catch_msg(msg); });
 }
 
 puncture_bb_impl::~puncture_bb_impl() {}

@@ -14,8 +14,8 @@ import numpy as np
 
 from gnuradio import gr, gr_unittest, blocks
 from gnuradio import fec
-from fec import extended_encoder
-from fec import extended_decoder
+from gnuradio.fec import extended_encoder
+from gnuradio.fec import extended_decoder
 
 from _qa_helper import _qa_helper
 
@@ -218,12 +218,12 @@ class test_fecapi_dummy(gr_unittest.TestCase):
         r2 = snk2.data()
         r3 = snk3.data()
 
-        data = tuple(data)
-        packed_data = tuple(packed_data)
-        self.assertTupleEqual(packed_data, r0)
-        self.assertTupleEqual(data, r1)
-        self.assertTupleEqual(packed_data, r2)
-        self.assertTupleEqual(data, r3)
+        data = list(data)
+        packed_data = list(packed_data)
+        self.assertListEqual(packed_data, r0)
+        self.assertListEqual(data, r1)
+        self.assertListEqual(packed_data, r2)
+        self.assertListEqual(data, r3)
 
 
 if __name__ == '__main__':

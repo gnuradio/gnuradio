@@ -63,12 +63,12 @@ class test_vector_map(gr_unittest.TestCase):
         # First (d) is interleaving of a and b.
         # Second (e) is interleaving of a and b and c.  c is taken in
         #     chunks of 2 which are reversed.
-        A = (1, 2, 3, 4, 5)
-        B = (11, 12, 13, 14, 15)
-        C = (99, 98, 97, 96, 95, 94, 93, 92, 91, 90)
-        expected_D = (1, 11, 2, 12, 3, 13, 4, 14, 5, 15)
-        expected_E = (1, 11, 98, 99, 2, 12, 96, 97, 3, 13, 94, 95,
-                      4, 14, 92, 93, 5, 15, 90, 91)
+        A = [1, 2, 3, 4, 5]
+        B = [11, 12, 13, 14, 15]
+        C = [99, 98, 97, 96, 95, 94, 93, 92, 91, 90]
+        expected_D = [1, 11, 2, 12, 3, 13, 4, 14, 5, 15]
+        expected_E = [1, 11, 98, 99, 2, 12, 96, 97, 3, 13, 94, 95,
+                      4, 14, 92, 93, 5, 15, 90, 91]
         mapping = [[(0, 0), (1, 0)], # mapping to produce D
                    [(0, 0), (1, 0), (2, 1), (2, 0)], # mapping to produce E
                    ]

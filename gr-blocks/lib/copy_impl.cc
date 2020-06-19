@@ -32,7 +32,7 @@ copy_impl::copy_impl(size_t itemsize)
       d_enabled(true)
 {
     message_port_register_in(pmt::mp("en"));
-    set_msg_handler(pmt::mp("en"), boost::bind(&copy_impl::handle_enable, this, _1));
+    set_msg_handler(pmt::mp("en"), [this](pmt::pmt_t msg) { this->handle_enable(msg); });
 }
 
 copy_impl::~copy_impl() {}

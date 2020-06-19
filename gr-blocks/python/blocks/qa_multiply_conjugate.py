@@ -20,16 +20,16 @@ class test_multiply_conjugate (gr_unittest.TestCase):
         self.tb = None
 
     def test_000 (self):
-        src_data0 = (-2-2j, -1-1j, -2+2j, -1+1j,
+        src_data0 = [-2-2j, -1-1j, -2+2j, -1+1j,
                       2-2j,  1-1j,  2+2j,  1+1j,
-                      0+0j)
-        src_data1 = (-3-3j, -4-4j, -3+3j, -4+4j,
+                      0+0j]
+        src_data1 = [-3-3j, -4-4j, -3+3j, -4+4j,
                       3-3j,  4-4j,  3+3j,  4+4j,
-                      0+0j)
+                      0+0j]
 
-        exp_data = (12+0j, 8+0j, 12+0j, 8+0j,
+        exp_data = [12+0j, 8+0j, 12+0j, 8+0j,
                     12+0j, 8+0j, 12+0j, 8+0j,
-                    0+0j)
+                    0+0j]
         src0 = blocks.vector_source_c(src_data0)
         src1 = blocks.vector_source_c(src_data1)
         op = blocks.multiply_conjugate_cc ()

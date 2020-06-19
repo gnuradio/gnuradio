@@ -40,7 +40,7 @@ class test_correlate_access_code_XX_ts(gr_unittest.TestCase):
         packet = header + payload
         pad = (0,) * 64
         src_data = (0, 0, 1, 1, 1, 1, 0, 1, 1) + tuple(string_to_1_0_list(packet)) + pad
-        expected = tuple(map(int, src_data[9+32:-len(pad)]))
+        expected = list(map(int, src_data[9+32:-len(pad)]))
         src = blocks.vector_source_b(src_data)
         op = digital.correlate_access_code_bb_ts("1011", 0, "sync")
         dst = blocks.vector_sink_b()

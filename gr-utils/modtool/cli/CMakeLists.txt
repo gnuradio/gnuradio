@@ -11,6 +11,7 @@ GR_PYTHON_INSTALL(FILES
     __init__.py
     add.py
     base.py
+    bind.py
     disable.py
     info.py
     makeyaml.py

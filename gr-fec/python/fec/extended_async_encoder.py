@@ -16,7 +16,7 @@ import weakref
 
 from gnuradio import gr
 
-from . import fec_swig as fec
+from . import fec_python as fec
 from .bitflip import read_bitlist
 
 

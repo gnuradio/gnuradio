@@ -11,7 +11,7 @@
 from __future__ import division
 from __future__ import unicode_literals
 from gnuradio import gr, filter, blocks
-from . import vocoder_swig
+from . import vocoder_python
 
 
 class cvsd_encode_fb(gr.hier_block2):
@@ -41,7 +41,7 @@ class cvsd_encode_fb(gr.hier_block2):
         taps = filter.firdes.low_pass(self.interp, self.interp, bw, 2*bw)
         interp = filter.interp_fir_filter_fff(self.interp, taps)
         f2s = blocks.float_to_short()
-        enc = vocoder_swig.cvsd_encode_sb()
+        enc = vocoder_python.cvsd_encode_sb()
 
         self.connect(self, src_scale, interp, f2s, enc, self)
 
@@ -68,7 +68,7 @@ class cvsd_decode_bf(gr.hier_block2):
         scale_factor = 32000.0
         self.decim = resample
 
-        dec = vocoder_swig.cvsd_decode_bs()
+        dec = vocoder_python.cvsd_decode_bs()
         s2f = blocks.short_to_float()
         taps = filter.firdes.low_pass(1, 1, bw, 2*bw)
         decim = filter.fir_filter_fff(self.decim, taps)

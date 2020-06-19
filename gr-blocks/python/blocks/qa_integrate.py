@@ -20,8 +20,8 @@ class test_integrate (gr_unittest.TestCase):
         self.tb = None
 
     def test_000_ss(self):
-        src_data = (1, 2, 3, 4, 5, 6)
-        dst_data = (6, 15)
+        src_data = [1, 2, 3, 4, 5, 6]
+        dst_data = [6, 15]
         src = blocks.vector_source_s(src_data)
         itg = blocks.integrate_ss(3)
         dst = blocks.vector_sink_s()
@@ -30,8 +30,8 @@ class test_integrate (gr_unittest.TestCase):
         self.assertEqual(dst_data, dst.data())
 
     def test_001_ii(self):
-        src_data = (1, 2, 3, 4, 5, 6)
-        dst_data = (6, 15)
+        src_data = [1, 2, 3, 4, 5, 6]
+        dst_data = [6, 15]
         src = blocks.vector_source_i(src_data)
         itg = blocks.integrate_ii(3)
         dst = blocks.vector_sink_i()
@@ -60,8 +60,8 @@ class test_integrate (gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(dst_data, dst.data(), 6)
 
     def test_004_ss_vec(self):
-        src_data = (1, 2, 3, 4, 5, 6)
-        dst_data = (9, 12)
+        src_data = [1, 2, 3, 4, 5, 6]
+        dst_data = [9, 12]
         vlen = 2
         src = blocks.vector_source_s(src_data, False, vlen)
         itg = blocks.integrate_ss(3, vlen)
