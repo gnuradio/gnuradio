@@ -343,14 +343,13 @@ GR_PYTHON_CHECK_MODULE(
     numpy
     "LooseVersion(numpy.__version__) >= LooseVersion('${GR_NUMPY_MIN_VERSION}')"
     NUMPY_FOUND)
-find_package(SWIG)
 # Needed for automatic regeneration of some bindings
 GR_PYTHON_CHECK_MODULE_RAW(
     "pygccxml"
     "import pygccxml"
     PYGCCXML_FOUND
     )
- 
+
 
 find_package(pybind11 REQUIRED)
 IF(${pybind11_VERSION} VERSION_LESS ${PYBIND11_MIN_VERSION})
