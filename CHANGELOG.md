@@ -16,6 +16,18 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 - Logging: removed all `std::cerr` and `fprintf(stderr,…)` by GNU Radio logging
 - Logging: Changed logging format for many multiline error logs
 
+### Deprecated
+
+#### gr-analog
+
+- `sig_source`: `freq` port will be removed in the future
+
+### Added 
+#### gr-analog
+
+- `sig_source`: `cmd` port adds support for dicts, setting of frequency,
+  amplitude, offset and phase parameters
+
 ## [3.8.0.0] - 2019-08-09
 
 Witness me!

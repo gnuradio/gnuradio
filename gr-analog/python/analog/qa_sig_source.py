@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2010,2012,2013 Free Software Foundation, Inc.
+#Copyright 2004, 2007, 2010, 2012, 2013, 2020 Free Software Foundation, Inc.
 #
-# This file is part of GNU Radio
+#This file is part of GNU Radio
 #
-# SPDX-License-Identifier: GPL-3.0-or-later
+#SPDX-License-Identifier: GPL-3.0-or-later
 #
 #
 
@@ -14,8 +14,8 @@ import math
 import pmt
 from gnuradio import gr, gr_unittest, analog, blocks
 
-class test_sig_source(gr_unittest.TestCase):
 
+class test_sig_source(gr_unittest.TestCase):
     def setUp(self):
         self.tb = gr.top_block()
 
@@ -71,7 +71,6 @@ class test_sig_source(gr_unittest.TestCase):
         dst_data = dst1.data()
         self.assertFloatTuplesAlmostEqual(expected_result, dst_data, 5)
 
-
     def test_sine_b(self):
         tb = self.tb
         sqrt2 = math.sqrt(2) / 2
@@ -85,7 +84,7 @@ class test_sig_source(gr_unittest.TestCase):
         tb.connect(op, dst1)
         tb.run()
         dst_data = dst1.data()
-        # Let the python know we are dealing with signed int behind scenes
+        #Let the python know we are dealing with signed int behind scenes
         dst_data_signed = [b if b < 127 else (256 - b) * -1 for b in dst_data]
         self.assertFloatTuplesAlmostEqual(expected_result, dst_data_signed)
 
@@ -106,7 +105,10 @@ class test_sig_source(gr_unittest.TestCase):
         tb = self.tb
         sqrt2 = math.sqrt(2) / 2
         sqrt2j = 1j * math.sqrt(2) / 2
-        expected_result = [1, sqrt2 + sqrt2j, 1j, -sqrt2 + sqrt2j, -1, -sqrt2 - sqrt2j, -1j, sqrt2 - sqrt2j, 1]
+        expected_result = [
+            1, sqrt2 + sqrt2j, 1j, -sqrt2 + sqrt2j, -1, -sqrt2 - sqrt2j, -1j,
+            sqrt2 - sqrt2j, 1
+        ]
         src1 = analog.sig_source_c(8, analog.GR_COS_WAVE, 1.0, 1.0)
         op = blocks.head(gr.sizeof_gr_complex, 9)
         dst1 = blocks.vector_sink_c()
@@ -117,8 +119,8 @@ class test_sig_source(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_result, dst_data, 5)
 
     def test_sqr_c(self):
-        tb = self.tb			#arg6 is a bit before -PI/2
-        expected_result = [1j, 1j, 0, 0, 1, 1, 1+0j, 1+1j, 1j]
+        tb = self.tb  #arg6 is a bit before -PI/2
+        expected_result = [1j, 1j, 0, 0, 1, 1, 1 + 0j, 1 + 1j, 1j]
         src1 = analog.sig_source_c(8, analog.GR_SQR_WAVE, 1.0, 1.0)
         op = blocks.head(gr.sizeof_gr_complex, 9)
         dst1 = blocks.vector_sink_c()
@@ -130,8 +132,10 @@ class test_sig_source(gr_unittest.TestCase):
 
     def test_tri_c(self):
         tb = self.tb
-        expected_result = [1+.5j, .75+.75j, .5+1j, .25+.75j, 0+.5j,
-                           .25+.25j, .5+0j, .75+.25j, 1+.5j]
+        expected_result = [
+            1 + .5j, .75 + .75j, .5 + 1j, .25 + .75j, 0 + .5j, .25 + .25j,
+            .5 + 0j, .75 + .25j, 1 + .5j
+        ]
         src1 = analog.sig_source_c(8, analog.GR_TRI_WAVE, 1.0, 1.0)
         op = blocks.head(gr.sizeof_gr_complex, 9)
         dst1 = blocks.vector_sink_c()
@@ -143,8 +147,10 @@ class test_sig_source(gr_unittest.TestCase):
 
     def test_saw_c(self):
         tb = self.tb
-        expected_result = [.5+.25j, .625+.375j, .75+.5j, .875+.625j,
-                            0+.75j, .125+.875j, .25+1j, .375+.125j, .5+.25j]
+        expected_result = [
+            .5 + .25j, .625 + .375j, .75 + .5j, .875 + .625j, 0 + .75j,
+            .125 + .875j, .25 + 1j, .375 + .125j, .5 + .25j
+        ]
         src1 = analog.sig_source_c(8, analog.GR_SAW_WAVE, 1.0, 1.0)
         op = blocks.head(gr.sizeof_gr_complex, 9)
         dst1 = blocks.vector_sink_c()
@@ -190,7 +196,7 @@ class test_sig_source(gr_unittest.TestCase):
         dst_data = dst1.data()
         self.assertFloatTuplesAlmostEqual(expected_result, dst_data, 5)
 
-    def test_freq_msg(self):
+    def test_freq_msg(self):  # deprecated but still tested
         src = analog.sig_source_c(8, analog.GR_SIN_WAVE, 1.0, 1.0)
         op = blocks.head(gr.sizeof_gr_complex, 9)
         snk = blocks.vector_sink_c()
@@ -202,6 +208,30 @@ class test_sig_source(gr_unittest.TestCase):
         self.tb.run()
 
         self.assertAlmostEqual(src.frequency(), frequency)
+
+    def test_cmd_msg(self):
+        src = analog.sig_source_c(8, analog.GR_SIN_WAVE, 1.0, 1.0)
+        op = blocks.head(gr.sizeof_gr_complex, 9)
+        snk = blocks.vector_sink_c()
+        self.tb.connect(src, op, snk)
+        self.assertAlmostEqual(src.frequency(), 1.0)
+
+        frequency = 3.0
+        amplitude = 10
+        offset = -1.0
+
+        src._post(
+            pmt.to_pmt('freq'),
+            pmt.to_pmt({
+                "freq": frequency,
+                "ampl": amplitude,
+                "offset": offset
+            }))
+        self.tb.run()
+
+        self.assertAlmostEqual(src.frequency(), frequency)
+        self.assertAlmostEqual(src.amplitude(), amplitude)
+        self.assertAlmostEqual(src.offset(), offset)
 
 
 if __name__ == '__main__':
