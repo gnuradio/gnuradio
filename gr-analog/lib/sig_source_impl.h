@@ -52,7 +52,7 @@ public:
 
     void set_sampling_freq(double sampling_freq);
     void set_waveform(gr_waveform_t waveform);
-    void set_frequency_msg(pmt::pmt_t msg);
+    void set_cmd_msg(pmt::pmt_t msg);
     void set_frequency(double frequency);
     void set_amplitude(double ampl);
     void set_offset(T offset);

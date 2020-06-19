@@ -41,7 +41,7 @@ parameters:
 
 inputs:
 -   domain: message
-    id: freq
+    id: cmd
     optional: true
 
 outputs:

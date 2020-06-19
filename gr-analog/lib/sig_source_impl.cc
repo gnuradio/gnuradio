@@ -53,9 +53,9 @@ sig_source_impl<T>::sig_source_impl(double sampling_freq,
 {
     this->set_frequency(frequency);
     this->set_phase(phase);
-    this->message_port_register_in(pmt::mp("freq"));
-    this->set_msg_handler(pmt::mp("freq"),
-                          [this](pmt::pmt_t msg) { this->set_frequency_msg(msg); });
+    this->message_port_register_in(pmt::mp("cmd"));
+    this->set_msg_handler(pmt::mp("cmd"),
+                          [this](pmt::pmt_t msg) { this->set_cmd_msg(msg); });
 }
 
 template <class T>
@@ -64,7 +64,7 @@ sig_source_impl<T>::~sig_source_impl()
 }
 
 template <class T>
-void sig_source_impl<T>::set_frequency_msg(pmt::pmt_t msg)
+void sig_source_impl<T>::set_cmd_msg(pmt::pmt_t msg)
 {
     // Accepts either a number that is assumed to be the new
     // frequency or a key:value pair message where the key must be
@@ -79,16 +79,20 @@ void sig_source_impl<T>::set_frequency_msg(pmt::pmt_t msg)
             if (pmt::is_number(val)) {
                 set_frequency(pmt::to_double(val));
             }
+        } else if (pmt::eq(key, pmt::intern("ampl"))) {
+            if (pmt::is_number(val)) {
+                set_amplitude(pmt::to_double(val));
+            }
         } else {
             GR_LOG_WARN(this->d_logger,
-                        boost::format("Set Frequency Message must have "
-                                      "the key = 'freq'; got '%1%'.") %
+                        boost::format("Set Command Message must have "
+                                      "the key = 'freq' or 'ampl'; got '%1%'.") %
                             pmt::write_string(key));
         }
     } else {
         GR_LOG_WARN(this->d_logger,
-                    "Set Frequency Message must be either a number or a "
-                    "key:value pair where the key is 'freq'.");
+                    "Set Command Message must be either a number or a "
+                    "key:value pair where the key is 'freq' or 'ampl'.");
     }
 }
 
