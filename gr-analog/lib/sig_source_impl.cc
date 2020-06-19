@@ -53,9 +53,12 @@ sig_source_impl<T>::sig_source_impl(double sampling_freq,
 {
     this->set_frequency(frequency);
     this->set_phase(phase);
+    this->message_port_register_in(pmt::mp("cmd"));
+    this->set_msg_handler(pmt::mp("cmd"),
+                          [this](pmt::pmt_t msg) { this->set_cmd_msg(msg); });
     this->message_port_register_in(pmt::mp("freq"));
     this->set_msg_handler(pmt::mp("freq"),
-                          [this](pmt::pmt_t msg) { this->set_frequency_msg(msg); });
+                          [this](pmt::pmt_t msg) { this->set_freq_msg(msg); });
 }
 
 template <class T>
@@ -64,32 +67,76 @@ sig_source_impl<T>::~sig_source_impl()
 }
 
 template <class T>
-void sig_source_impl<T>::set_frequency_msg(pmt::pmt_t msg)
+void sig_source_impl<T>::set_freq_msg(pmt::pmt_t msg)
 {
-    // Accepts either a number that is assumed to be the new
-    // frequency or a key:value pair message where the key must be
-    // "freq" and the value is the new frequency.
-
+    GR_LOG_INFO(this->d_logger,
+                "The `freq` port is deprecated and will be removed. Forwarding this "
+                "message to the `cmd` handler.");
     if (pmt::is_number(msg)) {
+        // if plain number, then interpret it as frequency
         set_frequency(pmt::to_double(msg));
+        return;
+    }
+    set_cmd_msg(msg);
+}
+
+template <class T>
+void sig_source_impl<T>::set_cmd_msg(pmt::pmt_t msg)
+{
+    static auto freq_key = pmt::intern("freq");
+    static auto ampl_key = pmt::intern("ampl");
+    static auto phase_key = pmt::intern("phase");
+    static auto offset_key = pmt::intern("offset");
+
+    // either a key:value pair or a dict
+    pmt::pmt_t list_of_items;
+    if (pmt::is_dict(msg)) {
+        list_of_items = pmt::dict_items(msg);
     } else if (pmt::is_pair(msg)) {
-        pmt::pmt_t key = pmt::car(msg);
-        pmt::pmt_t val = pmt::cdr(msg);
-        if (pmt::eq(key, pmt::intern("freq"))) {
+        list_of_items = pmt::list1(msg);
+    } else {
+        GR_LOG_WARN(this->d_logger, "malformed message: is not dict nor pair");
+        return;
+    }
+
+    do {
+        auto item = pmt::car(list_of_items);
+
+        auto key = pmt::car(item);
+        auto val = pmt::cdr(item);
+
+        if (key == freq_key) {
             if (pmt::is_number(val)) {
                 set_frequency(pmt::to_double(val));
+            } else {
+                GR_LOG_WARN(this->d_logger, "frequency value needs to be a number")
+            }
+        } else if (key == ampl_key) {
+            if (pmt::is_number(val)) {
+                set_amplitude(pmt::to_double(val));
+            } else {
+                GR_LOG_WARN(this->d_logger, "amplitude value needs to be a number")
+            }
+        } else if (key == phase_key) {
+            if (pmt::is_number(val)) {
+                set_phase(pmt::to_double(val));
+            } else {
+                GR_LOG_WARN(this->d_logger, "phase value needs to be a number")
+            }
+        } else if (key == offset_key) {
+            if (pmt::is_number(val)) {
+                set_offset(pmt::to_double(val));
+            } else {
+                GR_LOG_WARN(this->d_logger, "offset value needs to be a number")
             }
         } else {
             GR_LOG_WARN(this->d_logger,
-                        boost::format("Set Frequency Message must have "
-                                      "the key = 'freq'; got '%1%'.") %
-                            pmt::write_string(key));
+                        "unsupported message key " + pmt::write_string(key));
         }
-    } else {
-        GR_LOG_WARN(this->d_logger,
-                    "Set Frequency Message must be either a number or a "
-                    "key:value pair where the key is 'freq'.");
-    }
+
+        // advance to next item, if any
+        list_of_items = pmt::cdr(list_of_items);
+    } while (list_of_items != pmt::PMT_NIL);
 }
 
 template <class T>
@@ -312,5 +359,5 @@ template class sig_source<std::int16_t>;
 template class sig_source<std::int32_t>;
 template class sig_source<float>;
 template class sig_source<gr_complex>;
-} /* namespace analog */
+} // namespace analog
 } /* namespace gr */

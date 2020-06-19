@@ -41,8 +41,13 @@ parameters:
 
 inputs:
 -   domain: message
+    id: cmd
+    optional: true
+
+-   domain: message
     id: freq
     optional: true
+    hide: 1
 
 outputs:
 -   domain: stream
