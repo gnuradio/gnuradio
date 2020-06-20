@@ -46,7 +46,7 @@ messages/msg_queue_python.cc
     # pycallback_object_python.cc
     random_python.cc
     realtime_python.cc
-    # realtime_impl_python.cc
+    realtime_impl_python.cc
     # rpcbufferedget_python.cc
     # rpccallbackregister_base_python.cc
     # rpcmanager_python.cc
