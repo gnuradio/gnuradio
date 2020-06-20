@@ -56,7 +56,7 @@ void bind_prefs(py::module&);
 // void bind_pycallback_object(py::module&);
 void bind_random(py::module&);
 void bind_realtime(py::module&);
-// void bind_realtime_impl(py::module&);
+void bind_realtime_impl(py::module&);
 // void bind_rpcbufferedget(py::module&);
 // void bind_rpccallbackregister_base(py::module&);
 // void bind_rpcmanager(py::module&);
@@ -157,7 +157,7 @@ PYBIND11_MODULE(gr_python, m)
     // // bind_pycallback_object(m);
     bind_random(m);
     bind_realtime(m);
-    // // bind_realtime_impl(m);
+    bind_realtime_impl(m);
     // // bind_rpcbufferedget(m);
     // // bind_rpccallbackregister_base(m);
     // // bind_rpcmanager(m);
