@@ -111,6 +111,14 @@ namespace gr {
     {
     }
 % else:
+  % if blocktype != "source":
+    #pragma message("set the following appropriately and remove this warning")
+    using input_type = float;
+  % endif
+  % if blocktype != "sink":
+    #pragma message("set the following appropriately and remove this warning")
+    using output_type = float;
+  % endif
     ${blockname}::sptr
     ${blockname}::make(${strip_default_values(arglist)})
     {
@@ -120,23 +128,26 @@ namespace gr {
 
 <%
     if blocktype == 'decimator':
-        decimation = ', <+decimation+>'
+    #pragma message("set the following appropriately and remove this warning")
+        decimation = ', 2 /*<+decimation+>*/'
     elif blocktype == 'interpolator':
-        decimation = ', <+interpolation+>'
+    #pragma message("set the following appropriately and remove this warning")
+        decimation = ', 2 /*<+interpolation+>*/'
     elif blocktype == 'tagged_stream':
-        decimation = ', <+len_tag_key+>'
+    #pragma message("set the following appropriately and remove this warning")
+        decimation = ', /*<+len_tag_key+>*/'
     else:
         decimation = ''
     endif
     if blocktype == 'source':
         inputsig = '0, 0, 0'
     else:
-        inputsig = '<+MIN_IN+>, <+MAX_IN+>, sizeof(<+ITYPE+>)'
+        inputsig = '1, 1/* min, max nr of inputs */, sizeof(input_type)'
     endif
     if blocktype == 'sink':
         outputsig = '0, 0, 0'
     else:
-        outputsig = '<+MIN_OUT+>, <+MAX_OUT+>, sizeof(<+OTYPE+>)'
+        outputsig = '1, 1/* min, max nr of outputs */, sizeof(output_type)'
     endif
 %>
     /*
@@ -167,6 +178,7 @@ namespace gr {
     void
     ${blockname}_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
+    #pragma message("implement a forecast that fills in how many items on each input you need to produce noutput_items and remove this warning")
       /* <+forecast+> e.g. ninput_items_required[0] = noutput_items */
     }
 
@@ -176,9 +188,14 @@ namespace gr {
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
-      const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
-      <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+    % if blocktype != 'source':
+      const input_type *in = reinterpret_cast<const input_type*>(input_items[0]);
+    % endif
+    % if blocktype != 'sink':
+      output_type *out = reinterpret_cast<output_type*>(output_items[0]);
+    % endif
 
+      #pragma message("Implement the signal processing in your block and remove this warning")
       // Do <+signal processing+>
       // Tell runtime system how many input items we consumed on
       // each input stream.
@@ -191,7 +208,8 @@ namespace gr {
     int
     ${blockname}_impl::calculate_output_stream_length(const gr_vector_int &ninput_items)
     {
-      int noutput_items = /* <+set this+> */;
+      #pragma message("set the following appropriately and remove this warning")
+      int noutput_items = 0;
       return noutput_items ;
     }
 
@@ -201,9 +219,14 @@ namespace gr {
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
-      const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
-      <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+    % if blocktype != 'source':
+      const input_type *in = reinterpret_cast<const input_type*>(input_items[0]);
+    % endif
+    % if blocktype != 'sink':
+      output_type *out = reinterpret_cast<output_type*>(output_items[0]);
+    % endif
 
+      #pragma message("Implement the signal processing in your block and remove this warning")
       // Do <+signal processing+>
 
       // Tell runtime system how many output items we produced.
@@ -217,12 +240,13 @@ namespace gr {
         gr_vector_void_star &output_items)
     {
     % if blocktype != 'source':
-      const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
+      const input_type *in = reinterpret_cast<const input_type*>(input_items[0]);
     % endif
     % if blocktype != 'sink':
-      <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+      output_type *out = reinterpret_cast<output_type*>(output_items[0]);
     % endif
 
+      #pragma message("Implement the signal processing in your block and remove this warning")
       // Do <+signal processing+>
 
       // Tell runtime system how many output items we produced.
