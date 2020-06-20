@@ -27,7 +27,6 @@ install(FILES
     integrate.h
     lfsr_15_1_0.h
     lfsr_32k.h
-    log2_const.h
     max_blk.h
     min_blk.h
     moving_average.h

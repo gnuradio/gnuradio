@@ -63,10 +63,24 @@ void packed_to_unpacked_impl<T>::forecast(int noutput_items,
 }
 
 template <class T>
+unsigned int packed_to_unpacked_impl<T>::log2_l_type()
+{
+    unsigned int val = sizeof(T);
+    if (!val || (val & (val - 1))) {
+        return 0;
+    }
+    unsigned int ld = 0;
+    while (val >>= 1) {
+        ld++;
+    }
+    return ld + 3;
+};
+
+template <class T>
 unsigned int packed_to_unpacked_impl<T>::get_bit_le(const T* in_vector,
                                                     unsigned int bit_addr)
 {
-    const T x = in_vector[bit_addr >> this->d_log2_l_type];
+    const T x = in_vector[bit_addr >> this->log2_l_type()];
     return (x >> (bit_addr & (this->d_bits_per_type - 1))) & 1;
 }
 
@@ -74,7 +88,7 @@ template <class T>
 unsigned int packed_to_unpacked_impl<T>::get_bit_be(const T* in_vector,
                                                     unsigned int bit_addr)
 {
-    const T x = in_vector[bit_addr >> this->d_log2_l_type];
+    const T x = in_vector[bit_addr >> this->log2_l_type()];
     return (x >>
             ((this->d_bits_per_type - 1) - (bit_addr & (this->d_bits_per_type - 1)))) &
            1;
@@ -129,7 +143,7 @@ int packed_to_unpacked_impl<T>::general_work(int noutput_items,
     }
 
     d_index = index_tmp;
-    this->consume_each(d_index >> this->d_log2_l_type);
+    this->consume_each(d_index >> this->log2_l_type());
     d_index = d_index & (this->d_bits_per_type - 1);
     // printf("got to end\n");
     return noutput_items;
