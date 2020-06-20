@@ -484,9 +484,16 @@ Templates['qa_python'] = '''#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ${str_to_python_comment(license)}
 from gnuradio import gr, gr_unittest
-from gnuradio import blocks
+# from gnuradio import blocks
 % if lang == 'cpp':
-import ${modname}_swig as ${modname}
+try:
+    from ${modname} import ${blockname}
+except ImportError:
+    import os
+    import sys
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    sys.path.append(os.path.join(dirname, "bindings"))
+    from ${modname} import ${blockname}
 % else:
 from ${blockname} import ${blockname}
 % endif
@@ -498,6 +505,10 @@ class qa_${blockname}(gr_unittest.TestCase):
 
     def tearDown(self):
         self.tb = None
+
+    def test_instance(self):
+        # FIXME: Test will fail until you pass sensible arguments to the constructor
+        instance = ${blockname}()
 
     def test_001_t(self):
         # set up fg
