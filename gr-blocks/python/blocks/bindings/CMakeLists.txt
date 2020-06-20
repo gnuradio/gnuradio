@@ -73,7 +73,6 @@ list(APPEND blocks_python_files
     lfsr_15_1_0_python.cc
     lfsr_32k_python.cc
     lfsr_32k_source_s_python.cc
-    # log2_const_python.cc
     magphase_to_complex_python.cc
     max_blk_python.cc
     message_debug_python.cc

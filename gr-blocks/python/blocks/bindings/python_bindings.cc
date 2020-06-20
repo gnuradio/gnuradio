@@ -84,7 +84,6 @@ void bind_keep_one_in_n(py::module&);
 void bind_lfsr_15_1_0(py::module&);
 void bind_lfsr_32k(py::module&);
 void bind_lfsr_32k_source_s(py::module&);
-// void bind_log2_const(py::module&);
 void bind_magphase_to_complex(py::module&);
 void bind_max_blk(py::module&);
 void bind_message_debug(py::module&);
@@ -266,7 +265,6 @@ PYBIND11_MODULE(blocks_python, m)
     bind_lfsr_15_1_0(m);
     bind_lfsr_32k(m);
     bind_lfsr_32k_source_s(m);
-    // bind_log2_const(m);
     bind_magphase_to_complex(m);
     bind_max_blk(m);
     bind_message_debug(m);
