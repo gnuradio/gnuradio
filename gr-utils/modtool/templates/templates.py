@@ -434,7 +434,7 @@ ${str_to_fancyc_comment(license)}
 namespace gr {
   namespace ${modname} {
 
-    BOOST_AUTO_TEST_CASE(test_${blockname}_t1)
+    BOOST_AUTO_TEST_CASE(test_${blockname}_replace_with_specific_test_name)
     {
       // Put test here
     }
@@ -526,7 +526,7 @@ class qa_${blockname}(gr_unittest.TestCase):
         # FIXME: Test will fail until you pass sensible arguments to the constructor
         instance = ${blockname}()
 
-    def test_001_t(self):
+    def test_001_descriptive_test_name(self):
         # set up fg
         self.tb.run()
         # check data
