@@ -701,6 +701,7 @@ class Application(Gtk.Application):
         # Gen/Exec/Stop
         ##################################################
         elif action == Actions.FLOW_GRAPH_GEN:
+            self.generator = None
             if not page.process:
                 if not page.saved or not page.file_path:
                     Actions.FLOW_GRAPH_SAVE()  # only save if file path missing or not saved
@@ -709,23 +710,25 @@ class Application(Gtk.Application):
                     try:
                         Messages.send_start_gen(generator.file_path)
                         generator.write()
+                        self.generator = generator
                     except Exception as e:
                         Messages.send_fail_gen(e)
-                else:
-                    self.generator = None
+                        
+
         elif action == Actions.FLOW_GRAPH_EXEC:
             if not page.process:
                 Actions.FLOW_GRAPH_GEN()
-                xterm = self.platform.config.xterm_executable
-                if self.config.xterm_missing() != xterm:
-                    if not os.path.exists(xterm):
-                        Dialogs.show_missing_xterm(main, xterm)
-                    self.config.xterm_missing(xterm)
-                if page.saved and page.file_path:
-                    Executor.ExecFlowGraphThread(
-                        flow_graph_page=page,
-                        xterm_executable=xterm,
-                        callback=self.update_exec_stop
+                if self.generator:
+                    xterm = self.platform.config.xterm_executable
+                    if self.config.xterm_missing() != xterm:
+                        if not os.path.exists(xterm):
+                            Dialogs.show_missing_xterm(main, xterm)
+                        self.config.xterm_missing(xterm)
+                    if page.saved and page.file_path:
+                        Executor.ExecFlowGraphThread(
+                            flow_graph_page=page,
+                            xterm_executable=xterm,
+                            callback=self.update_exec_stop
                     )
         elif action == Actions.FLOW_GRAPH_KILL:
             if page.process:
