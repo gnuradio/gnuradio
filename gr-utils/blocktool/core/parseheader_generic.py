@@ -24,6 +24,13 @@ from ..core import Constants
 
 LOGGER = logging.getLogger(__name__)
 PYGCCXML_AVAILABLE = False
+# ugly hack to make pygccxml work with Python >= 3.8
+import time
+try:
+    time.clock
+except:
+    time.clock = time.perf_counter
+
 try:
     from pygccxml import parser, declarations, utils
     PYGCCXML_AVAILABLE = True
