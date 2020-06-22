@@ -147,7 +147,7 @@ templates:
         ${'%'} if clock_rate():
         self.${'$'}{id}.set_clock_rate(${'$'}{clock_rate}, uhd.ALL_MBOARDS)
         ${'%'} endif
-        
+
         % for m in range(max_mboards):
         ${'%'} if context.get('num_mboards')() > ${m}:
         ########################################################################
@@ -165,28 +165,28 @@ templates:
         ########################################################################
         ${'%'} endif
         % endfor  # for m in range(max_mboards)
-        
+
         self.${'$'}{id}.set_samp_rate(${'$'}{samp_rate})
-        
+
         ${'%'} if sync == 'sync':
-        self.${'$'}{id}.set_time_unknown_pps(uhd.time_spec())
+        self.${'$'}{id}.set_time_unknown_pps(uhd.time_spec(0))
         ${'%'} elif sync == 'pc_clock':
         self.${'$'}{id}.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
         ${'%'} else:
         # No synchronization enforced.
         ${'%'} endif
-        
+
         % for n in range(max_nchan):
         ${'%'} if context.get('nchan')() > ${n}:
         self.${'$'}{id}.set_center_freq(${'$'}{${'center_freq' + str(n)}}, ${n})
-        
+
         ${'%'} if context.get('ant${n}')():
         self.${'$'}{id}.set_antenna(${'$'}{${'ant' + str(n)}}, ${n})
         ${'%'} endif
         ${'%'} if context.get('bw${n}')():
         self.${'$'}{id}.set_bandwidth(${'$'}{${'bw' + str(n)}}, ${n})
         ${'%'} endif
-        
+
         % if sourk == 'source':
         ${'%'} if context.get('rx_agc${n}')() == 'Enabled':
         self.${'$'}{id}.set_rx_agc(True, ${n})
@@ -213,7 +213,7 @@ templates:
         self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
         ${'%'} endif
         % endif  # if sourk == 'source'
-        
+
         ${'%'} if context.get('show_lo_controls')():
         self.${'$'}{id}.set_lo_source(${'$'}{${'lo_source' + str(n)}}, uhd.ALL_LOS, ${n})
         self.${'$'}{id}.set_lo_export_enabled(${'$'}{${'lo_export' + str(n)}}, uhd.ALL_LOS, ${n})
@@ -306,7 +306,7 @@ cpp_templates:
       ${'%'} else:
       // No synchronization enforced.
       ${'%'} endif
-    link: ['gnuradio-uhd uhd']      
+    link: ['gnuradio-uhd uhd']
     callbacks:
     - set_samp_rate(${'$'}{samp_rate})
     % for n in range(max_nchan):
