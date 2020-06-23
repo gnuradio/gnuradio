@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(wavfile_sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(b8184d24184e3bd7aa4a08f5fca8ac0d)                     */
+/* BINDTOOL_HEADER_FILE_HASH(aef0fe37adeb3a7bb763e4ed9e807a17)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -29,9 +29,7 @@ namespace py = pybind11;
 
 void bind_wavfile_sink(py::module& m)
 {
-
     using wavfile_sink = ::gr::blocks::wavfile_sink;
-
 
     py::class_<wavfile_sink,
                gr::sync_block,
@@ -43,27 +41,27 @@ void bind_wavfile_sink(py::module& m)
              py::arg("filename"),
              py::arg("n_channels"),
              py::arg("sample_rate"),
-             py::arg("bits_per_sample") = 16,
+             py::arg("format"),
+             py::arg("subformat"),
              py::arg("append") = false,
              D(wavfile_sink, make))
 
-
         .def("open", &wavfile_sink::open, py::arg("filename"), D(wavfile_sink, open))
 
-
         .def("close", &wavfile_sink::close, D(wavfile_sink, close))
-
 
         .def("set_sample_rate",
              &wavfile_sink::set_sample_rate,
              py::arg("sample_rate"),
              D(wavfile_sink, set_sample_rate))
 
-
         .def("set_bits_per_sample",
              &wavfile_sink::set_bits_per_sample,
              py::arg("bits_per_sample"),
              D(wavfile_sink, set_bits_per_sample))
 
-        ;
+        .def("set_append",
+             &wavfile_sink::set_append,
+             py::arg("append"),
+             D(wavfile_sink, set_append));
 }

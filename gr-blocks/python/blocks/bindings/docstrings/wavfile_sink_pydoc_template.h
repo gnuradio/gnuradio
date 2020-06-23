@@ -37,3 +37,6 @@ static const char* __doc_gr_blocks_wavfile_sink_set_sample_rate = R"doc()doc";
 
 
 static const char* __doc_gr_blocks_wavfile_sink_set_bits_per_sample = R"doc()doc";
+
+
+static const char* __doc_gr_blocks_wavfile_sink_set_append = R"doc()doc";

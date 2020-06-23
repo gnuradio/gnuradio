@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2013 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2013,2020 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -13,6 +13,7 @@
 
 #include <gnuradio/blocks/wavfile.h>
 #include <gnuradio/blocks/wavfile_sink.h>
+#include <sndfile.h> // for SNDFILE
 
 namespace gr {
 namespace blocks {
@@ -29,16 +30,10 @@ private:
     float d_normalize_shift;
     float d_normalize_fac;
 
-    FILE* d_fp;
-    FILE* d_new_fp;
+    SNDFILE* d_fp;
+    SNDFILE* d_new_fp;
     bool d_updated;
     boost::mutex d_mutex;
-
-    /*!
-     * \brief Convert a sample value within [-1;+1] to a corresponding
-     *  short integer value
-     */
-    short convert_to_short(float sample);
 
     /*!
      * \brief If any file changes have occurred, update now. This is called
@@ -60,13 +55,6 @@ private:
      */
     void close_wav();
 
-    /*!
-     * \brief Checks if the given WAV file is compatible with the current
-     * configuration in order to open it to append information.
-     * This also finds the value of d_first_sample_pos.
-     */
-    bool check_append_compat_file(FILE* fp);
-
 protected:
     bool stop();
 
@@ -74,7 +62,8 @@ public:
     wavfile_sink_impl(const char* filename,
                       int n_channels,
                       unsigned int sample_rate,
-                      int bits_per_sample,
+                      wavfile_format_t format,
+                      wavfile_subformat_t subformat,
                       bool append);
     ~wavfile_sink_impl();
 

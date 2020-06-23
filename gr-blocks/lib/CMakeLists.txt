@@ -53,7 +53,6 @@ add_library(gnuradio-blocks
     file_sink_base.cc
     pack_k_bits.cc
     unpack_k_bits.cc
-    wavfile.cc
     add_const_bb_impl.cc
     add_const_ss_impl.cc
     add_const_ii_impl.cc
@@ -176,6 +175,7 @@ add_library(gnuradio-blocks
 target_link_libraries(gnuradio-blocks
     gnuradio-runtime
     Volk::volk
+    sndfile::sndfile
 )
 
 target_include_directories(gnuradio-blocks

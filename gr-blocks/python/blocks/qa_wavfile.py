@@ -15,6 +15,7 @@ import os
 from os.path import getsize
 
 g_in_file = os.path.join(os.getenv("srcdir"), "test_16bit_1chunk.wav")
+g_in_file_normal = os.path.join(os.getenv("srcdir"), "test_16bit_1chunk_normal.wav")
 g_extra_header_offset = 36
 g_extra_header_len = 22
 
@@ -38,7 +39,8 @@ class test_wavefile(gr_unittest.TestCase):
         wf_out = blocks.wavfile_sink(outfile,
                                      wf_in.channels(),
                                      wf_in.sample_rate(),
-                                     wf_in.bits_per_sample())
+                                     blocks.FORMAT_WAV,
+                                     blocks.FORMAT_PCM_16)
         self.tb.connect(wf_in, wf_out)
         self.tb.run()
         wf_out.close()
@@ -72,7 +74,7 @@ class test_wavefile(gr_unittest.TestCase):
                          in_data[g_extra_header_offset + g_extra_header_len:], out_data)
 
     def test_003_checkwav_append_copy(self):
-        infile  = g_in_file
+        infile  = g_in_file_normal
         outfile = "test_out_append.wav"
 
         # 1. Copy input to output
@@ -84,7 +86,8 @@ class test_wavefile(gr_unittest.TestCase):
         wf_out = blocks.wavfile_sink(outfile,
                                      wf_in.channels(),
                                      wf_in.sample_rate(),
-                                     wf_in.bits_per_sample(),
+                                     blocks.FORMAT_WAV,
+                                     blocks.FORMAT_PCM_16,
                                      True)
         self.tb.connect(wf_in, wf_out)
         self.tb.run()
@@ -96,7 +99,8 @@ class test_wavefile(gr_unittest.TestCase):
         wf_out = blocks.wavfile_sink(outfile,
                                      wf_in.channels(),
                                      wf_in.sample_rate(),
-                                     wf_in.bits_per_sample(),
+                                     blocks.FORMAT_WAV,
+                                     blocks.FORMAT_PCM_16,
                                      True)
         self.tb.connect(wf_in, halver, wf_out)
         self.tb.run()
@@ -130,12 +134,15 @@ class test_wavefile(gr_unittest.TestCase):
         data_in_halved = [int(round(d/2)) for d in data_in]
         self.assertEqual(data_in_halved, data_out[2*len(data_in):])
 
+        os.remove(outfile)
+
     def test_003_checkwav_append_non_existent_should_error(self):
         outfile = "no_file.wav"
 
-        with self.assertRaisesRegex(RuntimeError, 'WAV append mode requires target file to exist'):
-            blocks.wavfile_sink(outfile, 1, 44100, 16, True)
+        with self.assertRaisesRegex(RuntimeError, "Can't open WAV file."):
+            blocks.wavfile_sink(outfile, 1, 44100, blocks.FORMAT_WAV, blocks.FORMAT_PCM_16, True)
 
+        os.remove(outfile)
 
 def wav_read_frames(w):
     import struct
