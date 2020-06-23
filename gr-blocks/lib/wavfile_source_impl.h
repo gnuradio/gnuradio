@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2013,2020 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -13,7 +13,7 @@
 
 #include <gnuradio/blocks/wavfile.h>
 #include <gnuradio/blocks/wavfile_source.h>
-#include <cstdio> // for FILE
+#include <sndfile.h> // for SNDFILE
 
 namespace gr {
 namespace blocks {
@@ -21,18 +21,11 @@ namespace blocks {
 class wavfile_source_impl : public wavfile_source
 {
 private:
-    FILE* d_fp;
+    SNDFILE* d_fp;
     bool d_repeat;
 
     wav_header_info d_h;
-    unsigned d_sample_idx;
-    int d_normalize_shift;
-    int d_normalize_fac;
-
-    /*!
-     * \brief Convert an integer sample value to a float value within [-1;1]
-     */
-    float convert_to_float(short int sample);
+    long long d_sample_idx;
 
 public:
     wavfile_source_impl(const char* filename, bool repeat);

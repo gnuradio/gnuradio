@@ -12,6 +12,7 @@
 #define INCLUDED_GR_WAVFILE_SINK_H
 
 #include <gnuradio/blocks/api.h>
+#include <gnuradio/blocks/wavfile.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
@@ -35,12 +36,15 @@ public:
      * \param filename The .wav file to be opened
      * \param n_channels Number of channels (2 = stereo or I/Q output)
      * \param sample_rate Sample rate [S/s]
-     * \param bits_per_sample 16 or 8 bit, default is 16
+     * \param format Output format (WAV, FLAC, Ogg Vorbis, RF64)
+     * \param subformat Bits per sample
+     * \param append Append to existing file
      */
     static sptr make(const char* filename,
                      int n_channels,
                      unsigned int sample_rate,
-                     int bits_per_sample = 16,
+                     wavfile_format_t format,
+                     wavfile_subformat_t subformat,
                      bool append = false);
 
     /*!
