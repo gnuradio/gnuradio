@@ -55,9 +55,12 @@ void bind_uhd_types(py::module& m)
 
     py::class_<time_spec_t>(m, "time_spec_t")
         // Additional constructors
-        .def(py::init<double>())
-        .def(py::init<int64_t, double>())
-        .def(py::init<int64_t, long, double>())
+        .def(py::init<double>(), py::arg("secs") = 0)
+        .def(py::init<int64_t, double>(), py::arg("full_secs"), py::arg("frac_secs") = 0)
+        .def(py::init<int64_t, long, double>(),
+             py::arg("full_secs"),
+             py::arg("tick_count"),
+             py::arg("tick_rate"))
 
         // Methods
         .def_static("from_ticks", &time_spec_t::from_ticks)
