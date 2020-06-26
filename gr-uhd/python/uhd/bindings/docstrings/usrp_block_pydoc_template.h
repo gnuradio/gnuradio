@@ -186,6 +186,9 @@ static const char* __doc_gr_uhd_usrp_block_set_filter = R"doc()doc";
 static const char* __doc_gr_uhd_usrp_block_get_filter = R"doc()doc";
 
 
+static const char* __doc_gr_uhd_usrp_block_get_usrp_info = R"doc()doc";
+
+
 static const char* __doc_gr_uhd_cmd_chan_key = R"doc()doc";
 
 

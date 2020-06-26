@@ -57,12 +57,6 @@ void bind_usrp_sink(py::module& m)
              D(usrp_sink, set_start_time))
 
 
-        .def("get_usrp_info",
-             &usrp_sink::get_usrp_info,
-             py::arg("chan") = 0,
-             D(usrp_sink, get_usrp_info))
-
-
         .def("get_lo_names",
              &usrp_sink::get_lo_names,
              py::arg("chan") = 0,
