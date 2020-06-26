@@ -30,9 +30,6 @@ static const char* __doc_gr_uhd_usrp_sink_make = R"doc()doc";
 static const char* __doc_gr_uhd_usrp_sink_set_start_time = R"doc()doc";
 
 
-static const char* __doc_gr_uhd_usrp_sink_get_usrp_info = R"doc()doc";
-
-
 static const char* __doc_gr_uhd_usrp_sink_get_lo_names = R"doc()doc";
 
 

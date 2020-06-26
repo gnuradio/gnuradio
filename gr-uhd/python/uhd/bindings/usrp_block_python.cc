@@ -388,7 +388,18 @@ void bind_usrp_block(py::module& m)
              py::arg("path"),
              D(usrp_block, get_filter))
 
-        ;
+        .def(
+            "get_usrp_info",
+            [](usrp_block& self, const size_t chan = 0) {
+                std::map<std::string, std::string> new_map;
+                auto usrp_info = self.get_usrp_info(chan);
+                for (const auto& k : self.get_usrp_info(chan).keys()) {
+                    new_map[k] = usrp_info[k];
+                }
+                return new_map;
+            },
+            py::arg("chan") = 0,
+            D(usrp_block, get_usrp_info));
 
 
     m.def("cmd_chan_key", &::gr::uhd::cmd_chan_key, D(cmd_chan_key));

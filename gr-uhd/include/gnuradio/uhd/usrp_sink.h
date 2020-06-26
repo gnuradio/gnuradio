@@ -123,15 +123,6 @@ public:
     virtual void set_start_time(const ::uhd::time_spec_t& time) = 0;
 
     /*!
-     * Returns identifying information about this USRP's configuration.
-     * Returns motherboard ID, name, and serial.
-     * Returns daughterboard TX ID, subdev name and spec, serial, and antenna.
-     * \param chan channel index 0 to N-1
-     * \return TX info
-     */
-    virtual ::uhd::dict<std::string, std::string> get_usrp_info(size_t chan = 0) = 0;
-
-    /*!
      * Get a list of possible LO stage names
      * \param chan the channel index 0 to N-1
      * \return a vector of strings for possible LO names

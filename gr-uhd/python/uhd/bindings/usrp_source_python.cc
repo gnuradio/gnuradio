@@ -70,12 +70,6 @@ void bind_usrp_source(py::module& m)
              D(usrp_source, set_recv_timeout))
 
 
-        .def("get_usrp_info",
-             &usrp_source::get_usrp_info,
-             py::arg("chan") = 0,
-             D(usrp_source, get_usrp_info))
-
-
         .def("get_lo_names",
              &usrp_source::get_lo_names,
              py::arg("chan") = 0,
