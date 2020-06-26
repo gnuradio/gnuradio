@@ -13,9 +13,6 @@ Used to send and receive data between the Ettus Research, LLC product
 line.
 '''
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import uhd  # TODO: verify uhd python is installed as a dependency for gr-uhd with python
 
 ########################################################################
@@ -45,26 +42,6 @@ def _prepare_uhd_python():
             super().__init__(*args)
             for key, val in list(kwargs.items()): setattr(self, key, val)
     setattr(uhd_python, 'tune_request_t', tune_request_t)
-
-    #make the streamer args take **kwargs on init
-    class stream_args_t(uhd_python.stream_args_t):
-        def __init__(self, *args, **kwargs):
-            # UHD Python API doesn't have default args for stream_args_t
-            # If empty args, then append empty str's
-            while len(args) < 2:
-                args += ("",)
-            super(stream_args_t, self).__init__(*args)
-            for key, val in list(kwargs.items()):
-                #for some reason, I can't assign a list in the constructor
-                #but what I can do is append the elements individually
-                if key == 'channels':
-                    for v in val: self.channels.append(v)
-                elif key == 'args':
-                    self.args = uhd_python.device_addr_t(val)
-                else: setattr(self, key, val)
-
-    # FIXME: stream_args_t.channels.append does not work due to copy operation of STL vectors
-    setattr(uhd_python, 'stream_args_t', stream_args_t)
 
     #handle general things on all uhd_python attributes
     #Install the __str__ and __repr__ handlers if applicable
