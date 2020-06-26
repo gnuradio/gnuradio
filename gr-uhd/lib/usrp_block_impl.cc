@@ -741,3 +741,9 @@ void usrp_block_impl::_cmd_handler_dspfreq(const pmt::pmt_t& dspfreq,
 
     _update_curr_tune_req(new_tune_request, chan);
 }
+
+::uhd::dict<std::string, std::string> usrp_block_impl::get_usrp_info(size_t chan)
+{
+    chan = _stream_args.channels[chan];
+    return _dev->get_usrp_rx_info(chan);
+}

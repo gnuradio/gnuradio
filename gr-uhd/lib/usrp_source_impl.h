@@ -39,7 +39,6 @@ public:
     ~usrp_source_impl();
 
     // Get Commands
-    ::uhd::dict<std::string, std::string> get_usrp_info(size_t chan);
     std::string get_subdev_spec(size_t mboard);
     double get_samp_rate(void);
     ::uhd::meta_range_t get_samp_rates(void);

@@ -572,6 +572,15 @@ public:
      * @return the filter object
      */
     virtual ::uhd::filter_info_base::sptr get_filter(const std::string& path) = 0;
+
+    /*!
+     * Returns identifying information about this USRP's configuration.
+     * Returns motherboard ID, name, and serial.
+     * Returns daughterboard TX ID, subdev name and spec, serial, and antenna.
+     * \param chan channel index 0 to N-1
+     * \return TX info
+     */
+    virtual ::uhd::dict<std::string, std::string> get_usrp_info(size_t chan = 0) = 0;
 };
 
 } /* namespace uhd */

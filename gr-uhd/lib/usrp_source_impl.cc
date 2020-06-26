@@ -51,12 +51,6 @@ usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t& device_addr,
 
 usrp_source_impl::~usrp_source_impl() {}
 
-::uhd::dict<std::string, std::string> usrp_source_impl::get_usrp_info(size_t chan)
-{
-    chan = _stream_args.channels[chan];
-    return _dev->get_usrp_rx_info(chan);
-}
-
 void usrp_source_impl::set_subdev_spec(const std::string& spec, size_t mboard)
 {
     return _dev->set_rx_subdev_spec(spec, mboard);

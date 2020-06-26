@@ -75,6 +75,7 @@ public:
                        const boost::uint32_t mask,
                        const size_t mboard);
     void set_filter(const std::string& path, ::uhd::filter_info_base::sptr filter);
+    ::uhd::dict<std::string, std::string> get_usrp_info(size_t chan);
 
     // RPC
     void setup_rpc();

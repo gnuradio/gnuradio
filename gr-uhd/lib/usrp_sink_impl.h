@@ -55,7 +55,6 @@ public:
                    const std::string& length_tag_name);
     ~usrp_sink_impl();
 
-    ::uhd::dict<std::string, std::string> get_usrp_info(size_t chan);
     double get_samp_rate(void);
     ::uhd::meta_range_t get_samp_rates(void);
     double get_center_freq(size_t chan);

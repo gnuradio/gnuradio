@@ -47,12 +47,6 @@ usrp_sink_impl::~usrp_sink_impl()
     _async_event_thread.join();
 }
 
-::uhd::dict<std::string, std::string> usrp_sink_impl::get_usrp_info(size_t chan)
-{
-    chan = _stream_args.channels[chan];
-    return _dev->get_usrp_tx_info(chan);
-}
-
 void usrp_sink_impl::set_subdev_spec(const std::string& spec, size_t mboard)
 {
     return _dev->set_tx_subdev_spec(spec, mboard);
