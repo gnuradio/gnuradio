@@ -130,8 +130,7 @@ class Block(Element):
 
         self.update_bus_logic()
         # disconnect hidden ports
-        self.parent_flowgraph.disconnect(
-            *[p for p in self.ports() if p.hidden])
+        self.parent_flowgraph.disconnect_ports(*[p for p in self.ports() if p.hidden])
 
         self.active_sources = [p for p in self.sources if not p.hidden]
         self.active_sinks = [p for p in self.sinks if not p.hidden]
@@ -614,7 +613,7 @@ class Block(Element):
     def active_ports(self):
         return itertools.chain(self.active_sources, self.active_sinks)
 
-    def children(self):
+    def child_elements(self):
         return itertools.chain(self.params.values(), self.ports())
 
     ##############################################

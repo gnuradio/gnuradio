@@ -76,7 +76,7 @@ class Element(object):
         Call this base method before rewriting the element.
         """
         del self._error_messages[:]
-        for child in self.children():
+        for child in self.child_elements():
             child.rewrite()
 
     @property
@@ -123,7 +123,7 @@ class Element(object):
             if isinstance(obj, lazy_property):
                 delattr(self, name)
 
-    def children(self):
+    def child_elements(self):
         return
         yield  # empty generator
 
