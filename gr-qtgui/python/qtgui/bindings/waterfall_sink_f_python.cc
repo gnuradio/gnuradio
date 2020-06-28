@@ -67,11 +67,11 @@ void bind_waterfall_sink_f(py::module& m)
         //     D(waterfall_sink_f,pyqwidget)
         // )
         // For the sip conversion to python to work, the widget object
-        // needs to be explicitly converted to Long
+        // needs to be explicitly converted to long long.
         .def(
             "pyqwidget",
             [](std::shared_ptr<waterfall_sink_f> p) {
-                return PyLong_AsLong(p->pyqwidget());
+                return PyLong_AsLongLong(p->pyqwidget());
             },
             D(waterfall_sink_f, pyqwidget))
 
