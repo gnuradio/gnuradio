@@ -2,6 +2,8 @@
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtCore import Qt
 
+from ....core.blocks.block import Block as CoreBlock
+
 ARC        = 10  # arc radius for block corners
 LONG_VALUE = 20  # maximum length of a param string.
                  # if exceeded, '...' will be displayed
@@ -101,28 +103,52 @@ class BlockParams(QtWidgets.QWidget):
         super(BlockParams, self).paintEvent(event)
 '''
 
-class Block(QtWidgets.QGraphicsItem):
-    def __init__(self, block_key, block_label, attrib, params):
-        super(Block, self).__init__()
-        self.__dict__.update(attrib)
-        self.params = params
-        self.x = attrib['_coordinate'][0]
-        self.y = attrib['_coordinate'][1]
+class Block(QtWidgets.QGraphicsItem, CoreBlock):
+
+    @classmethod
+    def make_cls_with_base(cls, super_cls):
+        name = super_cls.__name__
+        bases = (super_cls,) + cls.__bases__[:-1]
+        namespace = cls.__dict__.copy()
+        return type(name, bases, namespace)
+
+    #def __init__(self, block_key, block_label, attrib, params, parent):
+    def __init__(self, parent, **n):
+        #super(self.__class__, self).__init__(parent, **n)
+        CoreBlock.__init__(self, parent)
+        QtWidgets.QGraphicsItem.__init__(self)
+        
+        #self.__dict__.update(attrib)
+        #self.params = params
+        #self.x = attrib['_coordinate'][0]
+        #self.y = attrib['_coordinate'][1]
+        #self.x = 500
+        #self.y = 300
+        try:
+            self.coordinate = tuple(self.states['coordinate'])
+        except KeyError:
+            self.coordinate = (500,300)
         self.width = 300 # default shouldnt matter, it will change immedaitely after the first paint
-        self.block_key = block_key
-        self.block_label = block_label
+        #self.block_key = block_key
+        #self.block_label = block_label
+        self.block_label = self.key
 
         # figure out height of block based on how many params there are
         i = 30
-        for row, (key, value) in enumerate(self.params):
-            if value is not None:
+        
+        for key, item in self.params.items():
+            value = item.value
+            if value is not None and item.hide == 'none':
                 i+= 20
+        
         self.height = i
 
+        
         # figure out width of block based on widest line of text
         fm = QtGui.QFontMetrics(QtGui.QFont('Helvetica', 10))
-        largest_width = fm.width(self.block_label)/2
-        for row, (key, value) in enumerate(self.params):
+        largest_width = fm.width(self.label)/1.5
+        for key, item in self.params.items():
+            value = item.value
             if value is not None:
                 if len(value) > LONG_VALUE:
                     value = value[:LONG_VALUE-3] + '...'
@@ -152,6 +178,7 @@ class Block(QtWidgets.QGraphicsItem):
         '''
 
     def paint(self, painter, option, widget):
+        x, y = tuple(self.states['coordinate'])
         # Set font
         font = QtGui.QFont('Helvetica', 10)
         #font.setStretch(70) # makes it more condensed
@@ -162,40 +189,57 @@ class Block(QtWidgets.QGraphicsItem):
             painter.setPen(QtGui.QPen(QtGui.QColor(0x42, 0xD4, 0xF5)))
         else:
             painter.setPen(QtGui.QPen(QtGui.QColor(0x00, 0x00, 0x00)))
-
         painter.setBrush(QtGui.QBrush(QtGui.QColor(0xFA, 0xF8, 0xE0)))
+
+        pen = QtGui.QPen(1)
+        if self.isSelected():
+            pen = QtGui.QPen(QtGui.QColor(0x00, 0x00, 0xFF))
+        else:
+            pen =QtGui.QPen(QtGui.QColor(0x61, 0x61, 0x61))
+
+        pen.setWidth(3)
+        painter.setPen(pen)
+
+        if self.state == 'enabled':
+            painter.setBrush(QtGui.QBrush(QtGui.QColor(0xF1, 0xEC, 0xFF)))
+        elif self.state == 'bypassed':
+            painter.setBrush(QtGui.QBrush(QtGui.QColor(0xF4, 0xFF, 0x81)))
+        else: # disabled
+            painter.setBrush(QtGui.QBrush(QtGui.QColor(0xCC, 0xCC, 0xCC)))
+
         ARC = 10
-        painter.drawRoundedRect(self.x, self.y, self.width-1, self.height, ARC, ARC);
+        painter.drawRoundedRect(x, y, self.width-1, self.height, ARC, ARC);
         painter.setPen(QtGui.QPen(1))
 
         # Draw block label text
         painter.setFont(font)
-        painter.drawText(QtCore.QRectF(self.x, self.y - self.height/2 + 10, self.width, self.height), Qt.AlignCenter, self.block_label)  # NOTE the 3rd/4th arg in  QRectF seems to set the bounding box of the text, so if there is ever any clipping, thats why
-
+        painter.drawText(QtCore.QRectF(x, y - self.height/2 + 10, self.width, self.height), Qt.AlignCenter, self.label)  # NOTE the 3rd/4th arg in  QRectF seems to set the bounding box of the text, so if there is ever any clipping, thats why
+        
         # Draw param text
         y_offset = 30 # params start 30 down from the top of the box
-        for row, (key, value) in enumerate(self.params):
-            if value is not None:
+        for key, item in self.params.items():
+            value = item.value
+            if value is not None and item.hide == 'none':
                 if len(value) > LONG_VALUE:
                     value = value[:LONG_VALUE-3] + '...'
                 font.setBold(True)
                 painter.setFont(font)
-                painter.drawText(QtCore.QRectF(self.x - self.width/2, self.y + y_offset, self.width, self.height), Qt.AlignRight, key + ': ')
+                painter.drawText(QtCore.QRectF(x - self.width/2, y + y_offset, self.width, self.height), Qt.AlignRight, key + ': ')
                 font.setBold(False)
                 painter.setFont(font)
-                painter.drawText(QtCore.QRectF(self.x + self.width/2, self.y + y_offset, self.width, self.height), Qt.AlignLeft, value)
+                painter.drawText(QtCore.QRectF(x + self.width/2, y + y_offset, self.width, self.height), Qt.AlignLeft, value)
                 y_offset += 20
 
-
     def boundingRect(self): # required to have
-        return QtCore.QRectF(self.x, self.y, self.width, self.height) # same as the rectangle we draw
+        x, y = tuple(self.states['coordinate'])
+        return QtCore.QRectF(x, y, self.width, self.height) # same as the rectangle we draw
 
     def mouseReleaseEvent(self, e):
-        super(Block, self).mouseReleaseEvent(e)
+        super(self.__class__, self).mouseReleaseEvent(e)
 
     def mouseDoubleClickEvent(self, e):
         print("DETECTED DOUBLE CLICK!")
-        super(Block, self).mouseDoubleClickEvent(e)
+        super(self.__class__, self).mouseDoubleClickEvent(e)
 
 
 
