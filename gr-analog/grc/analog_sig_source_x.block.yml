@@ -47,7 +47,6 @@ inputs:
 -   domain: message
     id: freq
     optional: true
-    hide: 1
 
 outputs:
 -   domain: stream
