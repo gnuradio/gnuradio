@@ -67,10 +67,12 @@ void bind_time_sink_c(py::module& m)
         //     D(time_sink_c,pyqwidget)
         // )
         // For the sip conversion to python to work, the widget object
-        // needs to be explicitly converted to Long
+        // needs to be explicitly converted to long long.
         .def(
             "pyqwidget",
-            [](std::shared_ptr<time_sink_c> p) { return PyLong_AsLong(p->pyqwidget()); },
+            [](std::shared_ptr<time_sink_c> p) {
+                return PyLong_AsLongLong(p->pyqwidget());
+            },
             D(time_sink_c, pyqwidget))
 
         .def("set_y_axis",
