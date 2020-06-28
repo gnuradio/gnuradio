@@ -30,9 +30,12 @@ import six
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtCore import Qt
 
+from itertools import count
+
 # Custom modules
 from .canvas.block import Block
 from .. import base
+from ...core.FlowGraph import FlowGraph as CoreFlowgraph
 
 # Logging
 log = logging.getLogger(__name__)
@@ -42,11 +45,15 @@ DEFAULT_MAX_Y = 1024
 
 
 # TODO: Combine the scene and view? Maybe the scene should be the controller?
-class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
+class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
     def __init__(self, *args, **kwargs):
         super(FlowgraphScene, self).__init__()
+        self.parent = self.platform
+        self.parent_platform = self.platform
+        CoreFlowgraph.__init__(self, self.platform)
         self.isPanning    = False
         self.mousePressed = False
+        
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls:
@@ -77,6 +84,23 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
                 item[Qt.ItemDataRole(key)] = value
             data.append(item)
         return data
+    
+    def _get_unique_id(self, base_id=''):
+        """
+        Get a unique id starting with the base id.
+
+        Args:
+            base_id: the id starts with this and appends a count
+
+        Returns:
+            a unique id
+        """
+        block_ids = set(b.name for b in self.blocks)
+        for index in count():
+            block_id = '{}_{}'.format(base_id, index)
+            if block_id not in block_ids:
+                break
+        return block_id
 
     def dropEvent(self, event):
         QtWidgets.QGraphicsScene.dropEvent(self, event)
@@ -104,8 +128,12 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
                 # Tell the block where to show up on the canvas
                 attrib = {'_coordinate':(cursor_pos.x(), cursor_pos.y())}
 
-                new_block = Block(block_key, block.label, attrib, params)
-                self.addItem(new_block)
+                id = self._get_unique_id(block_key)
+                
+                block = self.new_block(block_key, attrib=attrib)
+                block.states['coordinate'] = attrib['_coordinate']
+                block.params['id'].set_value(id)
+                self.addItem(block)
 
                 event.setDropAction(Qt.CopyAction)
                 event.accept()
@@ -174,6 +202,17 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
     def createToolbars(self, actions, toolbars):
         log.debug("Creating toolbars")
 
+
+    def import_data(self, data):
+        super(FlowgraphScene, self).import_data(data)
+        for block in self.blocks:
+            self.addItem(block)
+
+    def getMaxZValue(self):
+        z_values = []
+        for block in self.blocks:
+             z_values.append(block.zValue())
+        return max(z_values)
 
 
 class Flowgraph(QtWidgets.QGraphicsView, base.Component): # added base.Component so it can see platform

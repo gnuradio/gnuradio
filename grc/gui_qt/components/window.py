@@ -127,8 +127,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.registerToolBar(toolbars["run"])
 
         log.debug("Loading flowgraph model")
-        test_flowgraph = os.path.join(self.settings.path.INSTALL, 'gui_qt/resources/data/rx_logo.grc')
-        self.flowgraph = Flowgraph(self, test_flowgraph)
+        self.flowgraph = Flowgraph(self)
+        initial_state = self.platform.parse_flow_graph("")
+        self.flowgraph.scene.import_data(initial_state)
         log.debug("Adding flowgraph view")
         self.new_tab(self.flowgraph)
 
@@ -408,7 +409,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         if filename:
             log.info("Opening flowgraph ({0})".format(filename))
-            self.flowgraph = views.Flowgraph(self, filename)
+            self.flowgraph = Flowgraph(self)
+            initial_state = self.platform.parse_flow_graph(filename)
+            self.flowgraph.scene.import_data(initial_state)
             self.new_tab(self.flowgraph)
 
     def save_triggered(self):
@@ -491,6 +494,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def exit_triggered(self):
         log.debug('exit')
+        self.app.exit()
 
     def help_triggered(self):
         log.debug('help')
