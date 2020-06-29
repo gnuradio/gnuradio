@@ -20,6 +20,29 @@
 namespace gr {
 namespace blocks {
 
+namespace {
+template <typename T>
+inline void volk_add(T* out, const T* add, unsigned int num)
+{
+    for (unsigned int elem = 0; elem < num; elem++) {
+        out[elem] += add[elem];
+    }
+}
+
+template <>
+inline void volk_add<float>(float* out, const float* add, unsigned int num)
+{
+    volk_32f_x2_add_32f(out, out, add, num);
+}
+
+template <>
+inline void volk_add<gr_complex>(gr_complex* out, const gr_complex* add, unsigned int num)
+{
+    volk_32fc_x2_add_32fc(out, out, add, num);
+}
+} // namespace
+
+
 template <class T>
 typename add_blk<T>::sptr add_blk<T>::make(size_t vlen)
 {
@@ -34,24 +57,18 @@ add_blk_impl<float>::add_blk_impl(size_t vlen)
                  io_signature::make(1, 1, sizeof(float) * vlen)),
       d_vlen(vlen)
 {
-    const int alignment_multiple = volk_get_alignment() / sizeof(float);
-    set_alignment(std::max(1, alignment_multiple));
+    set_alignment(std::max(1, int(volk_get_alignment() / sizeof(float))));
 }
 
 template <>
-int add_blk_impl<float>::work(int noutput_items,
-                              gr_vector_const_void_star& input_items,
-                              gr_vector_void_star& output_items)
+add_blk_impl<gr_complex>::add_blk_impl(size_t vlen)
+    : sync_block("add_cc",
+                 io_signature::make(1, -1, sizeof(gr_complex) * vlen),
+                 io_signature::make(1, 1, sizeof(gr_complex) * vlen)),
+      d_vlen(vlen)
 {
-    float* out = (float*)output_items[0];
-    int noi = d_vlen * noutput_items;
-
-    memcpy(out, input_items[0], noi * sizeof(float));
-    for (size_t i = 1; i < input_items.size(); i++)
-        volk_32f_x2_add_32f(out, out, (const float*)input_items[i], noi);
-    return noutput_items;
+    set_alignment(std::max(1, int(volk_get_alignment() / sizeof(gr_complex))));
 }
-
 
 template <class T>
 add_blk_impl<T>::add_blk_impl(size_t vlen)
@@ -67,16 +84,12 @@ int add_blk_impl<T>::work(int noutput_items,
                           gr_vector_const_void_star& input_items,
                           gr_vector_void_star& output_items)
 {
-    T* optr = (T*)output_items[0];
+    T* out = (T*)output_items[0];
+    int noi = d_vlen * noutput_items;
 
-    int ninputs = input_items.size();
-
-    for (size_t i = 0; i < noutput_items * d_vlen; i++) {
-        T acc = ((T*)input_items[0])[i];
-        for (int j = 1; j < ninputs; j++)
-            acc += ((T*)input_items[j])[i];
-
-        *optr++ = (T)acc;
+    memcpy(out, input_items[0], noi * sizeof(T));
+    for (size_t i = 1; i < input_items.size(); i++) {
+        volk_add(out, (T*)input_items[i], noi);
     }
 
     return noutput_items;
