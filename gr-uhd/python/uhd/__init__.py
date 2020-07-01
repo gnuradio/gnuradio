@@ -13,8 +13,6 @@ Used to send and receive data between the Ettus Research, LLC product
 line.
 '''
 
-import uhd  # TODO: verify uhd python is installed as a dependency for gr-uhd with python
-
 ########################################################################
 # Prepare uhd swig module to make it more pythonic
 ########################################################################
