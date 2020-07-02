@@ -21,7 +21,7 @@ class FILTER_API iir_filter_ccc_impl : public iir_filter_ccc
 {
 private:
     bool d_updated;
-    kernel::iir_filter<gr_complex, gr_complex, gr_complex, gr_complex>* d_iir;
+    kernel::iir_filter<gr_complex, gr_complex, gr_complex, gr_complex> d_iir;
     std::vector<gr_complex> d_new_fftaps;
     std::vector<gr_complex> d_new_fbtaps;
 

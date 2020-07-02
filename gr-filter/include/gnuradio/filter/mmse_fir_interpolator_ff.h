@@ -56,7 +56,7 @@ public:
     float interpolate(const float input[], float mu) const;
 
 protected:
-    std::vector<kernel::fir_filter_fff*> filters;
+    const std::vector<kernel::fir_filter_fff> filters;
 };
 
 } /* namespace filter */

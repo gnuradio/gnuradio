@@ -22,7 +22,7 @@ class FILTER_API mmse_interpolator_ff_impl : public mmse_interpolator_ff
 private:
     double d_mu;
     double d_mu_inc;
-    mmse_fir_interpolator_ff* d_interp;
+    mmse_fir_interpolator_ff d_interp;
 
 public:
     mmse_interpolator_ff_impl(float phase_shift, float interp_ratio);

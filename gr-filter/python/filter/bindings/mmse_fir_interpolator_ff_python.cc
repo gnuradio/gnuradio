@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(mmse_fir_interpolator_ff.h) */
-/* BINDTOOL_HEADER_FILE_HASH(cdefd265e0c9caa146dd3a52f3338dc2)                     */
+/* BINDTOOL_HEADER_FILE_HASH(a5230c4b6ad2c4241956c24184a499c5)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -37,9 +37,6 @@ void bind_mmse_fir_interpolator_ff(py::module& m)
         m, "mmse_fir_interpolator_ff", D(mmse_fir_interpolator_ff))
 
         .def(py::init<>(), D(mmse_fir_interpolator_ff, mmse_fir_interpolator_ff, 0))
-        .def(py::init<gr::filter::mmse_fir_interpolator_ff const&>(),
-             py::arg("arg0"),
-             D(mmse_fir_interpolator_ff, mmse_fir_interpolator_ff, 1))
 
 
         .def(

@@ -38,10 +38,8 @@ rational_resampler_base_impl<IN_T, OUT_T, TAP_T>::rational_resampler_base_impl(
             io_signature::make(1, 1, sizeof(IN_T)),
             io_signature::make(1, 1, sizeof(OUT_T))),
       d_history(1),
-      d_interpolation(interpolation),
       d_decimation(decimation),
       d_ctr(0),
-      d_firs(interpolation),
       d_updated(false)
 {
     if (interpolation == 0)
@@ -54,10 +52,9 @@ rational_resampler_base_impl<IN_T, OUT_T, TAP_T>::rational_resampler_base_impl(
     this->set_relative_rate((uint64_t)interpolation, (uint64_t)decimation);
     this->set_output_multiple(1);
 
-    std::vector<TAP_T> dummy_taps;
-
+    d_firs.reserve(interpolation);
     for (unsigned i = 0; i < interpolation; i++) {
-        d_firs[i] = new kernel::fir_filter<IN_T, OUT_T, TAP_T>(1, dummy_taps);
+        d_firs.emplace_back(1, std::vector<TAP_T>());
     }
 
     set_taps(taps);
@@ -67,10 +64,6 @@ rational_resampler_base_impl<IN_T, OUT_T, TAP_T>::rational_resampler_base_impl(
 template <class IN_T, class OUT_T, class TAP_T>
 rational_resampler_base_impl<IN_T, OUT_T, TAP_T>::~rational_resampler_base_impl()
 {
-    int interp = this->interpolation();
-    for (int i = 0; i < interp; i++) {
-        delete d_firs[i];
-    }
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
@@ -110,7 +103,7 @@ void rational_resampler_base_impl<IN_T, OUT_T, TAP_T>::install_taps(
         xtaps[i % nfilters][i / nfilters] = taps[i];
 
     for (int n = 0; n < nfilters; n++)
-        d_firs[n]->set_taps(xtaps[n]);
+        d_firs[n].set_taps(xtaps[n]);
 
     set_history(nt);
     d_updated = false;
@@ -155,7 +148,7 @@ int rational_resampler_base_impl<IN_T, OUT_T, TAP_T>::general_work(
 
     int i = 0;
     while ((i < noutput_items) && (count < ninput_items[0])) {
-        out[i++] = d_firs[ctr]->filter(in);
+        out[i++] = d_firs[ctr].filter(in);
         ctr += this->decimation();
         while (ctr >= this->interpolation()) {
             ctr -= this->interpolation();

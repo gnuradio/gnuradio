@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(filterbank.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(db1e15f3685e422f95ab563c96e5d0fb)                     */
+/* BINDTOOL_HEADER_FILE_HASH(be850101db6157f52549d1616dc228a0)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -41,9 +41,6 @@ void bind_filterbank(py::module& m)
                  std::allocator<std::vector<float, std::allocator<float>>>> const&>(),
              py::arg("taps"),
              D(kernel, filterbank, filterbank, 0))
-        .def(py::init<gr::filter::kernel::filterbank const&>(),
-             py::arg("arg0"),
-             D(kernel, filterbank, filterbank, 1))
 
         .def("set_taps",
              &filterbank::set_taps,

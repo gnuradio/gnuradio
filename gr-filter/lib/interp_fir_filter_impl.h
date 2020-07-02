@@ -24,7 +24,7 @@ class FILTER_API interp_fir_filter_impl : public interp_fir_filter<IN_T, OUT_T, 
 {
 private:
     bool d_updated;
-    std::vector<kernel::fir_filter<IN_T, OUT_T, TAP_T>*> d_firs;
+    std::vector<kernel::fir_filter<IN_T, OUT_T, TAP_T>> d_firs;
     std::vector<TAP_T> d_new_taps;
 
     void install_taps(const std::vector<TAP_T>& taps);

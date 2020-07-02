@@ -25,7 +25,7 @@ class FILTER_API freq_xlating_fir_filter_impl
 {
 protected:
     std::vector<TAP_T> d_proto_taps;
-    kernel::fir_filter<IN_T, OUT_T, gr_complex>* d_composite_fir;
+    kernel::fir_filter<IN_T, OUT_T, gr_complex> d_composite_fir;
     blocks::rotator d_r;
     double d_center_freq;
     double d_sampling_freq;

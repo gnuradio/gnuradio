@@ -28,7 +28,7 @@ private:
     unsigned int d_chan;
     bool d_use_fft_rotator;
     bool d_use_fft_filters;
-    gr_complex* d_rotator;
+    std::vector<gr_complex> d_rotator;
     gr_complex* d_tmp;         // used for fft filters
     gr::thread::mutex d_mutex; // mutex to protect set/work access
 
@@ -53,6 +53,10 @@ public:
                            bool use_fft_filters = true);
 
     ~pfb_decimator_ccf_impl();
+
+    // No copy because d_tmp.
+    pfb_decimator_ccf_impl(const pfb_decimator_ccf_impl&) = delete;
+    pfb_decimator_ccf_impl& operator=(const pfb_decimator_ccf_impl&) = delete;
 
     void set_taps(const std::vector<float>& taps);
     void print_taps();

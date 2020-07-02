@@ -21,9 +21,9 @@ namespace filter {
 class FILTER_API filter_delay_fc_impl : public filter_delay_fc
 {
 private:
-    unsigned int d_delay;
-    kernel::fir_filter_fff* d_fir;
     std::vector<float> d_taps;
+    kernel::fir_filter_fff d_fir;
+    unsigned int d_delay;
     bool d_update;
 
 public:

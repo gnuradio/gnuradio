@@ -19,21 +19,25 @@
 namespace gr {
 namespace filter {
 
-mmse_interp_differentiator_cc::mmse_interp_differentiator_cc()
+namespace {
+std::vector<kernel::fir_filter_ccf> build_filters()
 {
-    filters.resize(DNSTEPS + 1);
-
+    std::vector<kernel::fir_filter_ccf> filters;
+    filters.reserve(DNSTEPS + 1);
     for (int i = 0; i < DNSTEPS + 1; i++) {
         std::vector<float> t(&Dtaps[i][0], &Dtaps[i][DNTAPS]);
-        filters[i] = new kernel::fir_filter_ccf(1, t);
+        filters.emplace_back(1, t);
     }
+    return filters;
+}
+} // namespace
+
+
+mmse_interp_differentiator_cc::mmse_interp_differentiator_cc() : filters(build_filters())
+{
 }
 
-mmse_interp_differentiator_cc::~mmse_interp_differentiator_cc()
-{
-    for (int i = 0; i < DNSTEPS + 1; i++)
-        delete filters[i];
-}
+mmse_interp_differentiator_cc::~mmse_interp_differentiator_cc() {}
 
 unsigned mmse_interp_differentiator_cc::ntaps() const { return DNTAPS; }
 
@@ -48,7 +52,7 @@ gr_complex mmse_interp_differentiator_cc::differentiate(const gr_complex input[]
         throw std::runtime_error("mmse_interp_differentiator_cc: imu out of bounds.");
     }
 
-    gr_complex r = filters[imu]->filter(input);
+    gr_complex r = filters[imu].filter(input);
     return r;
 }
 

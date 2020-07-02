@@ -30,12 +30,12 @@ private:
     bool d_updated;
     unsigned int d_numchans;
     unsigned int d_taps_per_filter;
-    fft::fft_complex* d_fft;
-    std::vector<kernel::fir_filter_with_buffer_ccf*> d_filters;
+    std::vector<kernel::fir_filter_with_buffer_ccf> d_filters;
     std::vector<std::vector<float>> d_taps;
     int d_state;
     std::vector<int> d_channel_map;
     unsigned int d_twox;
+    fft::fft_complex d_fft;
     gr::thread::mutex d_mutex; // mutex to protect set/work access
 
     /*!

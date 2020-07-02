@@ -36,23 +36,24 @@ pfb_synthesizer_ccf_impl::pfb_synthesizer_ccf_impl(unsigned int numchans,
                         numchans),
       d_updated(false),
       d_numchans(numchans),
-      d_state(0)
+      d_state(0),
+      d_twox(twox ? 2 : 1),
+      d_fft(d_twox * d_numchans, false)
 {
     // set up 2x multiplier; if twox==True, set to 2, otherwise to 1
-    d_twox = (twox ? 2 : 1);
     if (d_numchans % d_twox != 0) {
         throw std::invalid_argument("pfb_synthesizer_ccf_impl: number of channels must "
                                     "be even for 2x oversampling.");
     }
 
-    d_filters = std::vector<kernel::fir_filter_with_buffer_ccf*>(d_twox * d_numchans);
+    d_filters.reserve(d_twox * d_numchans);
     d_channel_map.resize(d_twox * d_numchans);
 
     // Create an FIR filter for each channel and zero out the taps
     // and set the default channel map
     std::vector<float> vtaps(0, d_twox * d_numchans);
     for (unsigned int i = 0; i < d_twox * d_numchans; i++) {
-        d_filters[i] = new kernel::fir_filter_with_buffer_ccf(vtaps);
+        d_filters.emplace_back(vtaps);
         d_channel_map[i] = i;
     }
 
@@ -60,19 +61,12 @@ pfb_synthesizer_ccf_impl::pfb_synthesizer_ccf_impl(unsigned int numchans,
     set_taps(taps);
 
     // Create the IFFT to handle the input channel rotations
-    d_fft = new fft::fft_complex(d_twox * d_numchans, false);
-    std::fill_n(d_fft->get_inbuf(), d_twox * d_numchans, 0);
+    std::fill_n(d_fft.get_inbuf(), d_twox * d_numchans, 0);
 
     set_output_multiple(d_numchans);
 }
 
-pfb_synthesizer_ccf_impl::~pfb_synthesizer_ccf_impl()
-{
-    delete d_fft;
-    for (unsigned int i = 0; i < d_twox * d_numchans; i++) {
-        delete d_filters[i];
-    }
-}
+pfb_synthesizer_ccf_impl::~pfb_synthesizer_ccf_impl() {}
 
 void pfb_synthesizer_ccf_impl::set_taps(const std::vector<float>& taps)
 {
@@ -125,7 +119,7 @@ void pfb_synthesizer_ccf_impl::set_taps1(const std::vector<float>& taps)
         }
 
         // Set the filter taps for each channel
-        d_filters[i]->set_taps(d_taps[i]);
+        d_filters[i].set_taps(d_taps[i]);
     }
 }
 
@@ -178,8 +172,8 @@ void pfb_synthesizer_ccf_impl::set_taps2(const std::vector<float>& taps)
         }
 
         // Set the filter taps for each channel
-        d_filters[i]->set_taps(d_taps[i]);
-        d_filters[d_numchans + i]->set_taps(d_taps[d_numchans + i]);
+        d_filters[i].set_taps(d_taps[i]);
+        d_filters[d_numchans + i].set_taps(d_taps[d_numchans + i]);
     }
 }
 
@@ -212,7 +206,7 @@ void pfb_synthesizer_ccf_impl::set_channel_map(const std::vector<int>& map)
         d_channel_map = map;
 
         // Zero out fft buffer so that unused channels are always 0
-        std::fill_n(d_fft->get_inbuf(), d_twox * d_numchans, 0);
+        std::fill_n(d_fft.get_inbuf(), d_twox * d_numchans, 0);
     }
 }
 
@@ -240,14 +234,14 @@ int pfb_synthesizer_ccf_impl::work(int noutput_items,
         for (n = 0; n < noutput_items / d_numchans; n++) {
             for (i = 0; i < ninputs; i++) {
                 in = (gr_complex*)input_items[i];
-                d_fft->get_inbuf()[d_channel_map[i]] = in[n];
+                d_fft.get_inbuf()[d_channel_map[i]] = in[n];
             }
 
             // spin through IFFT
-            d_fft->execute();
+            d_fft.execute();
 
             for (i = 0; i < d_numchans; i++) {
-                out[i] = d_filters[i]->filter(d_fft->get_outbuf()[i]);
+                out[i] = d_filters[i].filter(d_fft.get_outbuf()[i]);
             }
             out += d_numchans;
         }
@@ -259,20 +253,20 @@ int pfb_synthesizer_ccf_impl::work(int noutput_items,
             for (i = 0; i < ninputs; i++) {
                 // in = (gr_complex*)input_items[ninputs-i-1];
                 in = (gr_complex*)input_items[i];
-                d_fft->get_inbuf()[d_channel_map[i]] = in[n];
+                d_fft.get_inbuf()[d_channel_map[i]] = in[n];
             }
 
             // spin through IFFT
-            d_fft->execute();
+            d_fft.execute();
 
             // Output is sum of two filters, but the input buffer to the filters must be
             // circularly shifted by numchans every time through, done by using d_state to
             // determine which IFFT buffer position to pull from.
             for (i = 0; i < d_numchans; i++) {
                 out[i] =
-                    d_filters[i]->filter(d_fft->get_outbuf()[d_state * d_numchans + i]);
-                out[i] += d_filters[d_numchans + i]->filter(
-                    d_fft->get_outbuf()[(d_state ^ 1) * d_numchans + i]);
+                    d_filters[i].filter(d_fft.get_outbuf()[d_state * d_numchans + i]);
+                out[i] += d_filters[d_numchans + i].filter(
+                    d_fft.get_outbuf()[(d_state ^ 1) * d_numchans + i]);
             }
             d_state ^= 1;
 

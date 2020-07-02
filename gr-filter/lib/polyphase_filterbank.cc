@@ -22,33 +22,23 @@ namespace kernel {
 polyphase_filterbank::polyphase_filterbank(unsigned int nfilts,
                                            const std::vector<float>& taps,
                                            bool fft_forward)
-    : d_nfilts(nfilts)
+    : d_nfilts(nfilts), d_fft(nfilts, fft_forward)
 {
-    d_fir_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilts);
-    d_fft_filters = std::vector<kernel::fft_filter_ccf*>(d_nfilts);
+    d_fir_filters.reserve(d_nfilts);
+    d_fft_filters.reserve(d_nfilts);
 
     // Create an FIR filter for each channel and zero out the taps
     std::vector<float> vtaps(1, 0.0f);
     for (unsigned int i = 0; i < d_nfilts; i++) {
-        d_fir_filters[i] = new kernel::fir_filter_ccf(1, vtaps);
-        d_fft_filters[i] = new kernel::fft_filter_ccf(1, vtaps);
+        d_fir_filters.emplace_back(1, vtaps);
+        d_fft_filters.emplace_back(1, vtaps);
     }
 
     // Now, actually set the filters' taps
     set_taps(taps);
-
-    // Create the FFT to handle the output de-spinning of the channels
-    d_fft = new fft::fft_complex(d_nfilts, fft_forward);
 }
 
-polyphase_filterbank::~polyphase_filterbank()
-{
-    delete d_fft;
-    for (unsigned int i = 0; i < d_nfilts; i++) {
-        delete d_fir_filters[i];
-        delete d_fft_filters[i];
-    }
-}
+polyphase_filterbank::~polyphase_filterbank() {}
 
 void polyphase_filterbank::set_taps(const std::vector<float>& taps)
 {
@@ -75,8 +65,8 @@ void polyphase_filterbank::set_taps(const std::vector<float>& taps)
         }
 
         // Set the filter taps for each channel
-        d_fir_filters[i]->set_taps(d_taps[i]);
-        d_fft_filters[i]->set_taps(d_taps[i]);
+        d_fir_filters[i].set_taps(d_taps[i]);
+        d_fft_filters[i].set_taps(d_taps[i]);
     }
 }
 

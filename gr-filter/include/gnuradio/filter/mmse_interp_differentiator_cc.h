@@ -59,7 +59,7 @@ public:
     gr_complex differentiate(const gr_complex input[], float mu) const;
 
 protected:
-    std::vector<kernel::fir_filter_ccf*> filters;
+    const std::vector<kernel::fir_filter_ccf> filters;
 };
 
 } /* namespace filter */

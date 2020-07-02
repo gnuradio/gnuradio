@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pfb_arb_resampler.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(3ed59ae8b40af2ab691ebbf0000db786)                     */
+/* BINDTOOL_HEADER_FILE_HASH(7cc3fce37ee5e8d755875d6741d1bac5)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -48,9 +48,6 @@ void bind_pfb_arb_resampler(py::module& m)
              py::arg("taps"),
              py::arg("filter_size"),
              D(kernel, pfb_arb_resampler_ccf, pfb_arb_resampler_ccf, 0))
-        .def(py::init<gr::filter::kernel::pfb_arb_resampler_ccf const&>(),
-             py::arg("arg0"),
-             D(kernel, pfb_arb_resampler_ccf, pfb_arb_resampler_ccf, 1))
 
 
         .def("set_taps",
@@ -138,9 +135,6 @@ void bind_pfb_arb_resampler(py::module& m)
              py::arg("taps"),
              py::arg("filter_size"),
              D(kernel, pfb_arb_resampler_ccc, pfb_arb_resampler_ccc, 0))
-        .def(py::init<gr::filter::kernel::pfb_arb_resampler_ccc const&>(),
-             py::arg("arg0"),
-             D(kernel, pfb_arb_resampler_ccc, pfb_arb_resampler_ccc, 1))
 
 
         .def("set_taps",
@@ -227,9 +221,6 @@ void bind_pfb_arb_resampler(py::module& m)
              py::arg("taps"),
              py::arg("filter_size"),
              D(kernel, pfb_arb_resampler_fff, pfb_arb_resampler_fff, 0))
-        .def(py::init<gr::filter::kernel::pfb_arb_resampler_fff const&>(),
-             py::arg("arg0"),
-             D(kernel, pfb_arb_resampler_fff, pfb_arb_resampler_fff, 1))
 
 
         .def("set_taps",
