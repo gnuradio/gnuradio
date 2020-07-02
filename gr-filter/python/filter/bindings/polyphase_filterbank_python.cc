@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(polyphase_filterbank.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(1b2cf402bd792e0f7b6c6ee043486754)                     */
+/* BINDTOOL_HEADER_FILE_HASH(8651c06a82eb420afdb769759d3fa4bd)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -46,9 +46,6 @@ void bind_polyphase_filterbank(py::module& m)
              py::arg("taps"),
              py::arg("fft_forward") = false,
              D(kernel, polyphase_filterbank, polyphase_filterbank, 0))
-        .def(py::init<gr::filter::kernel::polyphase_filterbank const&>(),
-             py::arg("arg0"),
-             D(kernel, polyphase_filterbank, polyphase_filterbank, 1))
 
 
         .def("set_taps",

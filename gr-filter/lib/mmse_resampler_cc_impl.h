@@ -22,7 +22,7 @@ class FILTER_API mmse_resampler_cc_impl : public mmse_resampler_cc
 private:
     double d_mu;
     double d_mu_inc;
-    mmse_fir_interpolator_cc* d_resamp;
+    const mmse_fir_interpolator_cc d_resamp;
 
 public:
     mmse_resampler_cc_impl(float phase_shift, float resamp_ratio);

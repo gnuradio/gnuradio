@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(mmse_interp_differentiator_ff.h) */
-/* BINDTOOL_HEADER_FILE_HASH(e977b0951d9e294d926e0bed6ff513c6)                     */
+/* BINDTOOL_HEADER_FILE_HASH(8f07bad55ded4360fdf5b74807e0635b)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -39,9 +39,6 @@ void bind_mmse_interp_differentiator_ff(py::module& m)
 
         .def(py::init<>(),
              D(mmse_interp_differentiator_ff, mmse_interp_differentiator_ff, 0))
-        .def(py::init<gr::filter::mmse_interp_differentiator_ff const&>(),
-             py::arg("arg0"),
-             D(mmse_interp_differentiator_ff, mmse_interp_differentiator_ff, 1))
 
 
         .def("ntaps",

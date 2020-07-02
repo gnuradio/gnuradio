@@ -38,10 +38,10 @@ class FILTER_API dc_blocker_ff_impl : public dc_blocker_ff
 private:
     int d_length;
     bool d_long_form;
-    moving_averager_f* d_ma_0;
-    moving_averager_f* d_ma_1;
-    moving_averager_f* d_ma_2;
-    moving_averager_f* d_ma_3;
+    moving_averager_f d_ma_0;
+    moving_averager_f d_ma_1;
+    std::unique_ptr<moving_averager_f> d_ma_2;
+    std::unique_ptr<moving_averager_f> d_ma_3;
     std::deque<float> d_delay_line;
 
 public:

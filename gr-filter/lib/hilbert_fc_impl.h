@@ -22,7 +22,7 @@ class FILTER_API hilbert_fc_impl : public hilbert_fc
 {
 private:
     unsigned int d_ntaps;
-    kernel::fir_filter_fff* d_hilb;
+    kernel::fir_filter_fff d_hilb;
 
 public:
     hilbert_fc_impl(unsigned int ntaps,

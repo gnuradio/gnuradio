@@ -66,9 +66,7 @@ int filterbank_vcvcf_impl::general_work(int noutput_items,
         return 0; // history requirements may have changed.
     }
 
-    gr_complex* working;
-
-    working = new gr_complex[noutput_items + d_ntaps];
+    std::vector<gr_complex> working(noutput_items + d_ntaps);
 
     for (unsigned int i = 0; i < d_nfilts; i++) {
         // Only call the filter method on active filters.
@@ -79,7 +77,7 @@ int filterbank_vcvcf_impl::general_work(int noutput_items,
             }
             for (unsigned int j = 0; j < (unsigned int)(noutput_items); j++) {
                 unsigned int p = i + j * d_nfilts;
-                out[p] = d_fir_filters[i]->filter(working + j);
+                out[p] = d_fir_filters[i].filter(&working[j]);
             }
         } else {
             // Otherwise just output 0s.
@@ -90,7 +88,6 @@ int filterbank_vcvcf_impl::general_work(int noutput_items,
         }
     }
 
-    delete[] working;
     consume_each(noutput_items);
     return noutput_items;
 }

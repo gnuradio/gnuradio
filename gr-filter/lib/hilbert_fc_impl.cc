@@ -29,16 +29,16 @@ hilbert_fc_impl::hilbert_fc_impl(unsigned int ntaps, firdes::win_type window, do
     : sync_block("hilbert_fc",
                  io_signature::make(1, 1, sizeof(float)),
                  io_signature::make(1, 1, sizeof(gr_complex))),
-      d_ntaps(ntaps | 0x1) // ensure ntaps is odd
+      d_ntaps(ntaps | 0x1), // ensure ntaps is odd
+      d_hilb(1, firdes::hilbert(d_ntaps, window, beta))
 {
-    d_hilb = new kernel::fir_filter_fff(1, firdes::hilbert(d_ntaps, window, beta));
     set_history(d_ntaps);
 
     const int alignment_multiple = volk_get_alignment() / sizeof(float);
     set_alignment(std::max(1, alignment_multiple));
 }
 
-hilbert_fc_impl::~hilbert_fc_impl() { delete d_hilb; }
+hilbert_fc_impl::~hilbert_fc_impl() {}
 
 int hilbert_fc_impl::work(int noutput_items,
                           gr_vector_const_void_star& input_items,
@@ -48,7 +48,7 @@ int hilbert_fc_impl::work(int noutput_items,
     gr_complex* out = (gr_complex*)output_items[0];
 
     for (int i = 0; i < noutput_items; i++) {
-        out[i] = gr_complex(in[i + d_ntaps / 2], d_hilb->filter(&in[i]));
+        out[i] = gr_complex(in[i + d_ntaps / 2], d_hilb.filter(&in[i]));
     }
 
     return noutput_items;

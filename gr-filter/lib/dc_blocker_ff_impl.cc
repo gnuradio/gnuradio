@@ -14,15 +14,15 @@
 
 #include "dc_blocker_ff_impl.h"
 #include <gnuradio/io_signature.h>
+#include <boost/make_unique.hpp>
 #include <cstdio>
 
 namespace gr {
 namespace filter {
 
 moving_averager_f::moving_averager_f(int D)
-    : d_length(D), d_out(0), d_out_d1(0), d_out_d2(0)
+    : d_length(D), d_out(0), d_out_d1(0), d_out_d2(0), d_delay_line(d_length - 1, 0)
 {
-    d_delay_line = std::deque<float>(d_length - 1, 0);
 }
 
 moving_averager_f::~moving_averager_f() {}
@@ -51,34 +51,18 @@ dc_blocker_ff_impl::dc_blocker_ff_impl(int D, bool long_form)
                  io_signature::make(1, 1, sizeof(float)),
                  io_signature::make(1, 1, sizeof(float))),
       d_length(D),
-      d_long_form(long_form)
+      d_long_form(long_form),
+      d_ma_0(D),
+      d_ma_1(D)
 {
     if (d_long_form) {
-        d_ma_0 = new moving_averager_f(D);
-        d_ma_1 = new moving_averager_f(D);
-        d_ma_2 = new moving_averager_f(D);
-        d_ma_3 = new moving_averager_f(D);
+        d_ma_2 = boost::make_unique<moving_averager_f>(D);
+        d_ma_3 = boost::make_unique<moving_averager_f>(D);
         d_delay_line = std::deque<float>(d_length - 1, 0);
-    } else {
-        d_ma_0 = new moving_averager_f(D);
-        d_ma_1 = new moving_averager_f(D);
-        d_ma_2 = NULL;
-        d_ma_3 = NULL;
     }
 }
 
-dc_blocker_ff_impl::~dc_blocker_ff_impl()
-{
-    if (d_long_form) {
-        delete d_ma_0;
-        delete d_ma_1;
-        delete d_ma_2;
-        delete d_ma_3;
-    } else {
-        delete d_ma_0;
-        delete d_ma_1;
-    }
-}
+dc_blocker_ff_impl::~dc_blocker_ff_impl() {}
 
 int dc_blocker_ff_impl::group_delay()
 {
@@ -98,12 +82,12 @@ int dc_blocker_ff_impl::work(int noutput_items,
     if (d_long_form) {
         float y1, y2, y3, y4, d;
         for (int i = 0; i < noutput_items; i++) {
-            y1 = d_ma_0->filter(in[i]);
-            y2 = d_ma_1->filter(y1);
+            y1 = d_ma_0.filter(in[i]);
+            y2 = d_ma_1.filter(y1);
             y3 = d_ma_2->filter(y2);
             y4 = d_ma_3->filter(y3);
 
-            d_delay_line.push_back(d_ma_0->delayed_sig());
+            d_delay_line.push_back(d_ma_0.delayed_sig());
             d = d_delay_line[0];
             d_delay_line.pop_front();
 
@@ -112,9 +96,9 @@ int dc_blocker_ff_impl::work(int noutput_items,
     } else {
         float y1, y2;
         for (int i = 0; i < noutput_items; i++) {
-            y1 = d_ma_0->filter(in[i]);
-            y2 = d_ma_1->filter(y1);
-            out[i] = d_ma_0->delayed_sig() - y2;
+            y1 = d_ma_0.filter(in[i]);
+            y2 = d_ma_1.filter(y1);
+            out[i] = d_ma_0.delayed_sig() - y2;
         }
     }
 

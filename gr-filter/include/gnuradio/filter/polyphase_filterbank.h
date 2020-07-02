@@ -90,11 +90,11 @@ class FILTER_API polyphase_filterbank
 {
 protected:
     unsigned int d_nfilts;
-    std::vector<kernel::fir_filter_ccf*> d_fir_filters;
-    std::vector<kernel::fft_filter_ccf*> d_fft_filters;
+    std::vector<kernel::fir_filter_ccf> d_fir_filters;
+    std::vector<kernel::fft_filter_ccf> d_fft_filters;
     std::vector<std::vector<float>> d_taps;
     unsigned int d_taps_per_filter;
-    fft::fft_complex* d_fft;
+    fft::fft_complex d_fft;
 
 public:
     /*!

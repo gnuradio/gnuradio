@@ -22,7 +22,7 @@ namespace filter {
 class FILTER_API pfb_arb_resampler_ccc_impl : public pfb_arb_resampler_ccc
 {
 private:
-    kernel::pfb_arb_resampler_ccc* d_resamp;
+    kernel::pfb_arb_resampler_ccc d_resamp;
     bool d_updated;
     gr::thread::mutex d_mutex; // mutex to protect set/work access
 

@@ -72,7 +72,7 @@ int pfb_interpolator_ccf_impl::work(int noutput_items,
 
     while (i < noutput_items) {
         for (unsigned int j = 0; j < d_rate; j++) {
-            out[i] = d_fir_filters[j]->filter(&in[count]);
+            out[i] = d_fir_filters[j].filter(&in[count]);
             i++;
         }
         count++;

@@ -43,15 +43,12 @@ freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::freq_xlating_fir_filter_impl(
                      io_signature::make(1, 1, sizeof(OUT_T)),
                      decimation),
       d_proto_taps(taps),
+      d_composite_fir(decimation, {}),
       d_center_freq(center_freq),
       d_sampling_freq(sampling_freq),
       d_updated(false),
       d_decim(decimation)
 {
-    std::vector<gr_complex> dummy_taps;
-    d_composite_fir =
-        new kernel::fir_filter<IN_T, OUT_T, gr_complex>(decimation, dummy_taps);
-
     this->set_history(this->d_proto_taps.size());
     this->build_composite_fir();
 
@@ -63,7 +60,6 @@ freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::freq_xlating_fir_filter_impl(
 template <class IN_T, class OUT_T, class TAP_T>
 freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::~freq_xlating_fir_filter_impl()
 {
-    delete d_composite_fir;
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
@@ -84,7 +80,7 @@ void freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::build_composite_fir()
         ctaps[i] = d_proto_taps[i] * exp(gr_complex(0, i * fwT0));
     }
 
-    d_composite_fir->set_taps(ctaps);
+    d_composite_fir.set_taps(ctaps);
     d_r.set_phase_incr(exp(gr_complex(0, -fwT0 * this->decimation())));
 }
 
@@ -160,7 +156,7 @@ int freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::work(
 
     unsigned j = 0;
     for (int i = 0; i < noutput_items; i++) {
-        out[i] = d_composite_fir->filter(&in[j]);
+        out[i] = d_composite_fir.filter(&in[j]);
         j += d_decim;
     }
 

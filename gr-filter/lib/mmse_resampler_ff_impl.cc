@@ -30,8 +30,7 @@ mmse_resampler_ff_impl::mmse_resampler_ff_impl(float phase_shift, float resamp_r
             io_signature::make(1, 2, sizeof(float)),
             io_signature::make(1, 1, sizeof(float))),
       d_mu(phase_shift),
-      d_mu_inc(resamp_ratio),
-      d_resamp(new mmse_fir_interpolator_ff())
+      d_mu_inc(resamp_ratio)
 {
     if (resamp_ratio <= 0)
         throw std::out_of_range("resampling ratio must be > 0");
@@ -45,7 +44,7 @@ mmse_resampler_ff_impl::mmse_resampler_ff_impl(float phase_shift, float resamp_r
                     [this](pmt::pmt_t msg) { this->handle_msg(msg); });
 }
 
-mmse_resampler_ff_impl::~mmse_resampler_ff_impl() { delete d_resamp; }
+mmse_resampler_ff_impl::~mmse_resampler_ff_impl() {}
 
 void mmse_resampler_ff_impl::handle_msg(pmt::pmt_t msg)
 {
@@ -68,7 +67,7 @@ void mmse_resampler_ff_impl::forecast(int noutput_items,
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++) {
         ninput_items_required[i] =
-            (int)ceil((noutput_items * d_mu_inc) + d_resamp->ntaps());
+            (int)ceil((noutput_items * d_mu_inc) + d_resamp.ntaps());
     }
 }
 
@@ -85,7 +84,7 @@ int mmse_resampler_ff_impl::general_work(int noutput_items,
 
     if (ninput_items.size() == 1) {
         while (oo < noutput_items) {
-            out[oo++] = d_resamp->interpolate(&in[ii], static_cast<float>(d_mu));
+            out[oo++] = d_resamp.interpolate(&in[ii], static_cast<float>(d_mu));
 
             double s = d_mu + d_mu_inc;
             double f = floor(s);
@@ -99,7 +98,7 @@ int mmse_resampler_ff_impl::general_work(int noutput_items,
     } else {
         const float* rr = (const float*)input_items[1];
         while (oo < noutput_items) {
-            out[oo++] = d_resamp->interpolate(&in[ii], static_cast<float>(d_mu));
+            out[oo++] = d_resamp.interpolate(&in[ii], static_cast<float>(d_mu));
             d_mu_inc = static_cast<double>(rr[ii]);
 
             double s = d_mu + d_mu_inc;

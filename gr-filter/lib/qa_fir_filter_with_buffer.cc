@@ -110,12 +110,11 @@ void test_decimate(unsigned int decimate)
 
             // build filter
             vector<tap_type> f1_taps(&taps[0], &taps[n]);
-            kernel::fir_filter_with_buffer_fff* f1 =
-                new kernel::fir_filter_with_buffer_fff(f1_taps);
+            kernel::fir_filter_with_buffer_fff f1(f1_taps);
 
             // zero the output, then do the filtering
             memset(actual_output, 0, OUTPUT_LEN * sizeof(o_type));
-            f1->filterNdec(actual_output, input, ol / decimate, decimate);
+            f1.filterNdec(actual_output, input, ol / decimate, decimate);
 
             // check results
             //
@@ -128,7 +127,6 @@ void test_decimate(unsigned int decimate)
                 BOOST_CHECK(std::abs(expected_output[o] - actual_output[o]) <=
                             sqrt((float)n) * 0.25 * MAX_DATA * MAX_DATA * ERR_DELTA);
             }
-            delete f1;
         }
     }
     volk_free(input);
@@ -213,12 +211,11 @@ void test_decimate(unsigned int decimate)
 
             // build filter
             vector<tap_type> f1_taps(&taps[0], &taps[n]);
-            kernel::fir_filter_with_buffer_ccc* f1 =
-                new kernel::fir_filter_with_buffer_ccc(f1_taps);
+            kernel::fir_filter_with_buffer_ccc f1(f1_taps);
 
             // zero the output, then do the filtering
             std::fill_n(actual_output, OUTPUT_LEN, 0);
-            f1->filterNdec(actual_output, input, ol / decimate, decimate);
+            f1.filterNdec(actual_output, input, ol / decimate, decimate);
 
             // check results
             //
@@ -231,7 +228,6 @@ void test_decimate(unsigned int decimate)
                 BOOST_CHECK(std::abs(expected_output[o] - actual_output[o]) <=
                             sqrt((float)n) * 0.25 * MAX_DATA * MAX_DATA * ERR_DELTA);
             }
-            delete f1;
         }
     }
     volk_free(input);
@@ -314,12 +310,11 @@ void test_decimate(unsigned int decimate)
 
             // build filter
             vector<tap_type> f1_taps(&taps[0], &taps[n]);
-            kernel::fir_filter_with_buffer_ccf* f1 =
-                new kernel::fir_filter_with_buffer_ccf(f1_taps);
+            kernel::fir_filter_with_buffer_ccf f1(f1_taps);
 
             // zero the output, then do the filtering
             std::fill_n(actual_output, OUTPUT_LEN, 0);
-            f1->filterNdec(actual_output, input, ol / decimate, decimate);
+            f1.filterNdec(actual_output, input, ol / decimate, decimate);
 
             // check results
             //
@@ -332,7 +327,6 @@ void test_decimate(unsigned int decimate)
                 BOOST_CHECK(std::abs(expected_output[o] - actual_output[o]) <=
                             sqrt((float)n) * 0.25 * MAX_DATA * MAX_DATA * ERR_DELTA);
             }
-            delete f1;
         }
     }
     volk_free(input);

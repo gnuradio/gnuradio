@@ -32,8 +32,7 @@ mmse_interpolator_cc_impl::mmse_interpolator_cc_impl(float phase_shift,
             io_signature::make(1, 1, sizeof(gr_complex)),
             io_signature::make(1, 1, sizeof(gr_complex))),
       d_mu(phase_shift),
-      d_mu_inc(interp_ratio),
-      d_interp(new mmse_fir_interpolator_cc())
+      d_mu_inc(interp_ratio)
 {
     GR_LOG_WARN(d_logger,
                 "mmse_interpolator is deprecated. Please use mmse_resampler instead.");
@@ -46,7 +45,7 @@ mmse_interpolator_cc_impl::mmse_interpolator_cc_impl(float phase_shift,
     set_inverse_relative_rate(d_mu_inc);
 }
 
-mmse_interpolator_cc_impl::~mmse_interpolator_cc_impl() { delete d_interp; }
+mmse_interpolator_cc_impl::~mmse_interpolator_cc_impl() {}
 
 void mmse_interpolator_cc_impl::forecast(int noutput_items,
                                          gr_vector_int& ninput_items_required)
@@ -54,7 +53,7 @@ void mmse_interpolator_cc_impl::forecast(int noutput_items,
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++) {
         ninput_items_required[i] =
-            (int)ceil((noutput_items * d_mu_inc) + d_interp->ntaps());
+            (int)ceil((noutput_items * d_mu_inc) + d_interp.ntaps());
     }
 }
 
@@ -70,7 +69,7 @@ int mmse_interpolator_cc_impl::general_work(int noutput_items,
     int oo = 0; // output index
 
     while (oo < noutput_items) {
-        out[oo++] = d_interp->interpolate(&in[ii], static_cast<float>(d_mu));
+        out[oo++] = d_interp.interpolate(&in[ii], static_cast<float>(d_mu));
 
         double s = d_mu + d_mu_inc;
         double f = floor(s);

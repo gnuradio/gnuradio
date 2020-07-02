@@ -26,7 +26,7 @@ class FILTER_API pfb_channelizer_ccf_impl : public pfb_channelizer_ccf,
 private:
     bool d_updated;
     float d_oversample_rate;
-    int* d_idxlut;
+    std::vector<int> d_idxlut;
     int d_rate_ratio;
     int d_output_multiple;
     std::vector<int> d_channel_map;

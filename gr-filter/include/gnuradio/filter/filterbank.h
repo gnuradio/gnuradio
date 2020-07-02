@@ -41,10 +41,10 @@ namespace kernel {
 class FILTER_API filterbank
 {
 protected:
+    std::vector<std::vector<float>> d_taps;
     unsigned int d_nfilts;
     unsigned int d_ntaps;
-    std::vector<kernel::fir_filter_ccf*> d_fir_filters;
-    std::vector<std::vector<float>> d_taps;
+    std::vector<kernel::fir_filter_ccf> d_fir_filters;
     std::vector<bool> d_active;
     unsigned int d_taps_per_filter;
 

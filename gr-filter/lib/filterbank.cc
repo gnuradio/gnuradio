@@ -21,37 +21,32 @@ namespace gr {
 namespace filter {
 namespace kernel {
 
-filterbank::filterbank(const std::vector<std::vector<float>>& taps) : d_taps(taps)
+filterbank::filterbank(const std::vector<std::vector<float>>& taps)
+    : d_taps(taps), d_nfilts(d_taps.size())
 {
-    d_nfilts = d_taps.size();
-    d_fir_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilts);
     if (d_nfilts == 0) {
         throw std::invalid_argument("The taps vector may not be empty.");
     }
     d_active.resize(d_nfilts);
     // Create an FIR filter for each channel and zero out the taps
     std::vector<float> vtaps(1, 0.0f);
+    d_fir_filters.reserve(d_nfilts);
     for (unsigned int i = 0; i < d_nfilts; i++) {
-        d_fir_filters[i] = new kernel::fir_filter_ccf(1, vtaps);
+        d_fir_filters.emplace_back(1, vtaps);
     }
     // Now, actually set the filters' taps
     set_taps(d_taps);
 }
 
-filterbank::~filterbank()
-{
-    for (unsigned int i = 0; i < d_nfilts; i++) {
-        delete d_fir_filters[i];
-    }
-}
+filterbank::~filterbank() {}
 
 void filterbank::set_taps(const std::vector<std::vector<float>>& taps)
 {
-    d_taps = taps;
     // Check that the number of filters is correct.
-    if (d_nfilts != d_taps.size()) {
+    if (d_nfilts != taps.size()) {
         throw std::runtime_error("The number of filters is incorrect.");
     }
+    d_taps = taps;
     // Check that taps contains vectors of taps, where each vector
     // is the same length.
     d_ntaps = d_taps[0].size();
@@ -70,7 +65,7 @@ void filterbank::set_taps(const std::vector<std::vector<float>>& taps)
             }
         }
 
-        d_fir_filters[i]->set_taps(d_taps[i]);
+        d_fir_filters[i].set_taps(d_taps[i]);
     }
 }
 

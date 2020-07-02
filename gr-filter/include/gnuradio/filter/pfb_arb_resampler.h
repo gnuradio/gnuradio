@@ -82,8 +82,8 @@ namespace kernel {
 class FILTER_API pfb_arb_resampler_ccf
 {
 private:
-    std::vector<fir_filter_ccf*> d_filters;
-    std::vector<fir_filter_ccf*> d_diff_filters;
+    std::vector<fir_filter_ccf> d_filters;
+    std::vector<fir_filter_ccf> d_diff_filters;
     std::vector<std::vector<float>> d_taps;
     std::vector<std::vector<float>> d_dtaps;
     unsigned int d_int_rate;        // the number of filters (interpolation rate)
@@ -115,7 +115,7 @@ private:
      */
     void create_taps(const std::vector<float>& newtaps,
                      std::vector<std::vector<float>>& ourtaps,
-                     std::vector<kernel::fir_filter_ccf*>& ourfilter);
+                     std::vector<kernel::fir_filter_ccf>& ourfilter);
 
 public:
     /*!
@@ -210,8 +210,8 @@ public:
 class FILTER_API pfb_arb_resampler_ccc
 {
 private:
-    std::vector<fir_filter_ccc*> d_filters;
-    std::vector<fir_filter_ccc*> d_diff_filters;
+    std::vector<fir_filter_ccc> d_filters;
+    std::vector<fir_filter_ccc> d_diff_filters;
     std::vector<std::vector<gr_complex>> d_taps;
     std::vector<std::vector<gr_complex>> d_dtaps;
     unsigned int d_int_rate;        // the number of filters (interpolation rate)
@@ -243,7 +243,7 @@ private:
      */
     void create_taps(const std::vector<gr_complex>& newtaps,
                      std::vector<std::vector<gr_complex>>& ourtaps,
-                     std::vector<kernel::fir_filter_ccc*>& ourfilter);
+                     std::vector<kernel::fir_filter_ccc>& ourfilter);
 
 public:
     /*!
@@ -399,8 +399,8 @@ public:
 class FILTER_API pfb_arb_resampler_fff
 {
 private:
-    std::vector<fir_filter_fff*> d_filters;
-    std::vector<fir_filter_fff*> d_diff_filters;
+    std::vector<fir_filter_fff> d_filters;
+    std::vector<fir_filter_fff> d_diff_filters;
     std::vector<std::vector<float>> d_taps;
     std::vector<std::vector<float>> d_dtaps;
     unsigned int d_int_rate;        // the number of filters (interpolation rate)
@@ -432,7 +432,7 @@ private:
      */
     void create_taps(const std::vector<float>& newtaps,
                      std::vector<std::vector<float>>& ourtaps,
-                     std::vector<kernel::fir_filter_fff*>& ourfilter);
+                     std::vector<kernel::fir_filter_fff>& ourfilter);
 
 public:
     /*!

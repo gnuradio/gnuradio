@@ -21,7 +21,7 @@ class FILTER_API iir_filter_ccf_impl : public iir_filter_ccf
 {
 private:
     bool d_updated;
-    kernel::iir_filter<gr_complex, gr_complex, float, gr_complex>* d_iir;
+    kernel::iir_filter<gr_complex, gr_complex, float, gr_complex> d_iir;
     std::vector<float> d_new_fftaps;
     std::vector<float> d_new_fbtaps;
 

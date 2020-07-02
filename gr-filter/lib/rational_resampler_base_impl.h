@@ -23,11 +23,10 @@ class FILTER_API rational_resampler_base_impl
 {
 private:
     unsigned d_history;
-    unsigned d_interpolation;
     unsigned d_decimation;
     unsigned d_ctr;
     std::vector<TAP_T> d_new_taps;
-    std::vector<kernel::fir_filter<IN_T, OUT_T, TAP_T>*> d_firs;
+    std::vector<kernel::fir_filter<IN_T, OUT_T, TAP_T>> d_firs;
     bool d_updated;
 
     void install_taps(const std::vector<TAP_T>& taps);
@@ -42,7 +41,7 @@ public:
     unsigned history() const { return d_history; }
     void set_history(unsigned history) { d_history = history; }
 
-    unsigned interpolation() const { return d_interpolation; }
+    unsigned interpolation() const { return d_firs.size(); }
     unsigned decimation() const { return d_decimation; }
 
     void set_taps(const std::vector<TAP_T>& taps);

@@ -58,7 +58,7 @@ public:
     gr_complex interpolate(const gr_complex input[], float mu) const;
 
 protected:
-    std::vector<kernel::fir_filter_ccf*> filters;
+    const std::vector<kernel::fir_filter_ccf> filters;
 };
 
 } /* namespace filter */

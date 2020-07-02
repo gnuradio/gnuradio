@@ -28,7 +28,7 @@ public:
     gr_complex delayed_sig() { return d_out; }
 
 private:
-    int d_length;
+    const int d_length;
     gr_complex d_out, d_out_d1, d_out_d2;
     std::deque<gr_complex> d_delay_line;
 };
@@ -38,10 +38,10 @@ class FILTER_API dc_blocker_cc_impl : public dc_blocker_cc
 private:
     int d_length;
     bool d_long_form;
-    moving_averager_c* d_ma_0;
-    moving_averager_c* d_ma_1;
-    moving_averager_c* d_ma_2;
-    moving_averager_c* d_ma_3;
+    moving_averager_c d_ma_0;
+    moving_averager_c d_ma_1;
+    std::unique_ptr<moving_averager_c> d_ma_2;
+    std::unique_ptr<moving_averager_c> d_ma_3;
     std::deque<gr_complex> d_delay_line;
 
 public:

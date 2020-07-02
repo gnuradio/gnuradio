@@ -32,13 +32,12 @@ iir_filter_ffd_impl::iir_filter_ffd_impl(const std::vector<double>& fftaps,
     : sync_block("iir_filter_ffd",
                  io_signature::make(1, 1, sizeof(float)),
                  io_signature::make(1, 1, sizeof(float))),
-      d_updated(false)
+      d_updated(false),
+      d_iir(fftaps, fbtaps, oldstyle)
 {
-    d_iir =
-        new kernel::iir_filter<float, float, double, double>(fftaps, fbtaps, oldstyle);
 }
 
-iir_filter_ffd_impl::~iir_filter_ffd_impl() { delete d_iir; }
+iir_filter_ffd_impl::~iir_filter_ffd_impl() {}
 
 void iir_filter_ffd_impl::set_taps(const std::vector<double>& fftaps,
                                    const std::vector<double>& fbtaps)
@@ -56,11 +55,11 @@ int iir_filter_ffd_impl::work(int noutput_items,
     float* out = (float*)output_items[0];
 
     if (d_updated) {
-        d_iir->set_taps(d_new_fftaps, d_new_fbtaps);
+        d_iir.set_taps(d_new_fftaps, d_new_fbtaps);
         d_updated = false;
     }
 
-    d_iir->filter_n(out, in, noutput_items);
+    d_iir.filter_n(out, in, noutput_items);
     return noutput_items;
 }
 
