@@ -58,3 +58,9 @@ if(UNIX AND HAVE_XDG_UTILS)
     )
     endif(ENABLE_POSTINSTALL)
 endif(UNIX AND HAVE_XDG_UTILS)
+
+find_program(APPSTREAMCLI appstreamcli)
+
+if(UNIX AND APPSTREAMCLI)
+  GR_ADD_TEST(metainfo_test "${APPSTREAMCLI}" validate "${CMAKE_CURRENT_SOURCE_DIR}/org.gnuradio.grc.metainfo.xml")
+endif()
