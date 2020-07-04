@@ -27,6 +27,9 @@ install(FILES gnuradio-grc.desktop DESTINATION share/applications)
 # Install mime
 install(FILES gnuradio-grc.xml DESTINATION share/mime/packages)
 
+# Install appstream / metainfo file
+install(FILES org.gnuradio.grc.metainfo.xml DESTINATION share/metainfo)
+
 # Install icons
 install(FILES grc-icon-256.png DESTINATION share/icons/hicolor/256x256/apps RENAME gnuradio-grc.png)
 install(FILES grc-icon-128.png DESTINATION share/icons/hicolor/128x128/apps RENAME gnuradio-grc.png)
