@@ -33,9 +33,9 @@ class Paths(object):
     p = os.path
     PREFERENCES = p.expanduser('~/.grc')
     INSTALL = p.abspath(p.join(p.dirname(__file__), '..'))
-    RESOURCES = p.join(INSTALL, 'companion/resources')
-    LANGUAGE = p.join(INSTALL, 'companion/resources/language')
-    LOGO = p.join(INSTALL, 'companion/resources/logo')
+    RESOURCES = p.join(INSTALL, 'gui_qt/resources')
+    LANGUAGE = p.join(INSTALL, 'gui_qt/resources/language')
+    LOGO = p.join(INSTALL, 'gui_qt/resources/logo')
     ICON = p.join(LOGO, 'gnuradio_logo_icon-square-150x150-white.png')
 
     # Model Paths
