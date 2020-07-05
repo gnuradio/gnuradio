@@ -980,9 +980,8 @@ class gr_plot_filter(QtGui.QMainWindow):
 #            self.update_group_curves()
 
     def get_fft(self, fs, taps, Npts):
-        Ts = 1.0 / fs
         fftpts = fft_detail.fft(taps, Npts)
-        self.freq = np.arange(0, fs, 1.0 / (Npts*Ts))
+        self.freq = np.linspace(start=0, stop=fs, num=Npts, endpoint=False)
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
             self.fftdB = 20.0*np.log10(abs(fftpts))
