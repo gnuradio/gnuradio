@@ -322,8 +322,8 @@ class GenericHeaderParser(BlockTool):
                 include_paths=self.include_paths,
                 compiler='gcc',
                 undefine_symbols=['__PIE__'],
-                #define_symbols=['BOOST_ATOMIC_DETAIL_EXTRA_BACKEND_GENERIC', '__PIC__'],
-                define_symbols=['BOOST_ATOMIC_DETAIL_EXTRA_BACKEND_GENERIC'],
+                define_symbols=['BOOST_ATOMIC_DETAIL_EXTRA_BACKEND_GENERIC', '__PIC__'], # -fPIC corresponds to __PIC__ , so it should be set
+                #define_symbols=['BOOST_ATOMIC_DETAIL_EXTRA_BACKEND_GENERIC'],
                 cflags='-std=c++11 -fPIC')
             decls = parser.parse(
                 [self.target_file], xml_generator_config)

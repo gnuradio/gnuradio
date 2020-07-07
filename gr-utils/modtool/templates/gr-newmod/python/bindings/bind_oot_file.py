@@ -19,7 +19,7 @@ parser.add_argument(
     '--filename', help="File to be parsed")
 
 parser.add_argument(
-    '--include', help='Additional Include Dirs, separated', default=(), nargs='+')
+    '--include', type= str, help='Additional Include Dirs, separated', default=(), nargs='*') #Empty list should be allowed
 
 parser.add_argument(
     '--status', help='Location of output file for general status (used during cmake)', default=None
@@ -40,7 +40,6 @@ name = args.module
 
 namespace = ['gr', name]
 prefix_include_root = name
-
 
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=DeprecationWarning)
