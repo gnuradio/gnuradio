@@ -109,6 +109,12 @@ const pmt::pmt_t gr::uhd::cmd_tag_key()
     return val;
 }
 
+const pmt::pmt_t gr::uhd::cmd_gpio_key()
+{
+    static const pmt::pmt_t val = pmt::mp("gpio");
+    return val;
+}
+
 const pmt::pmt_t gr::uhd::ant_direction_rx()
 {
     static const pmt::pmt_t val = pmt::mp("RX");
@@ -153,6 +159,7 @@ usrp_block_impl::usrp_block_impl(const ::uhd::device_addr_t& device_addr,
     REGISTER_CMD_HANDLER(cmd_rate_key(), _cmd_handler_rate);
     REGISTER_CMD_HANDLER(cmd_bandwidth_key(), _cmd_handler_bw);
     REGISTER_CMD_HANDLER(cmd_antenna_key(), _cmd_handler_antenna);
+    REGISTER_CMD_HANDLER(cmd_gpio_key(), _cmd_handler_gpio);
 }
 
 usrp_block_impl::~usrp_block_impl()
@@ -674,6 +681,38 @@ void usrp_block_impl::_cmd_handler_antenna(const pmt::pmt_t& ant,
     }
 
     set_antenna(antenna, chan);
+}
+
+void usrp_block_impl::_cmd_handler_gpio(const pmt::pmt_t& gpio_attr,
+                                      int chan,
+                                      const pmt::pmt_t& msg)
+{
+    size_t mboard = pmt::to_long(pmt::dict_ref(
+        msg,
+        cmd_mboard_key(),
+        //pmt::from_long(::uhd::usrp::multi_usrp::ALL_MBOARDS) // Default to all mboards
+        pmt::from_long(0) // default to first mboard
+        ));
+
+    if (!pmt::is_dict(gpio_attr)) {
+        GR_LOG_ERROR(d_logger,
+                     boost::format("gpio_attr in  message is neither dict nor pair: %s") % gpio_attr);
+        return;
+    }
+    if (!pmt::dict_has_key(gpio_attr, pmt::mp("bank"))
+         || !pmt::dict_has_key(gpio_attr, pmt::mp("attr"))
+         || !pmt::dict_has_key(gpio_attr, pmt::mp("value"))
+         || !pmt::dict_has_key(gpio_attr, pmt::mp("mask"))) {
+        GR_LOG_ERROR(d_logger,
+                     boost::format("gpio_attr message must include bank, attr, value and mask"));
+        return;
+    }
+    std::string bank = pmt::symbol_to_string(pmt::dict_ref(gpio_attr, pmt::mp("bank"), pmt::mp("")));
+    std::string attr = pmt::symbol_to_string(pmt::dict_ref(gpio_attr, pmt::mp("attr"), pmt::mp("")));
+    uint32_t value = pmt::to_double(pmt::dict_ref(gpio_attr, pmt::mp("value"), 0));
+    uint32_t mask = pmt::to_double(pmt::dict_ref(gpio_attr, pmt::mp("mask"), 0));
+
+    set_gpio_attr(bank, attr, value, mask, mboard);
 }
 
 void usrp_block_impl::_cmd_handler_rate(const pmt::pmt_t& rate_, int, const pmt::pmt_t&)
