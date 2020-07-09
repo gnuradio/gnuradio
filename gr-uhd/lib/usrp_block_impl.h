@@ -127,6 +127,7 @@ protected:
     void _cmd_handler_bw(const pmt::pmt_t& bw, int chan, const pmt::pmt_t& msg);
     void _cmd_handler_lofreq(const pmt::pmt_t& lofreq, int chan, const pmt::pmt_t& msg);
     void _cmd_handler_dspfreq(const pmt::pmt_t& dspfreq, int chan, const pmt::pmt_t& msg);
+    void _cmd_handler_gpio(const pmt::pmt_t& gpio_attr, int chan, const pmt::pmt_t& msg);
 
     /**********************************************************************
      * Helpers
