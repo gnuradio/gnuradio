@@ -99,11 +99,13 @@ Command name | Value Type   | Description
 `time`       | timestamp    | Sets a command time. See usrp_block::set_command_time(). A value of PMT_NIL will clear the command time.
 `mboard`     | int          | Specify mboard index, where applicable.
 `antenna`    | string       | See usrp_block::set_antenna(). Defaults to all channels.
+`gpio`       | gpio         | PMT dictionary including bank, attr, value, mask for GPIO. See notes.
 
 Special types:
 
 - tune_request: Like a uhd::tune_request_t, but always uses POLICY_AUTO. This is a pair, composed of (target_frequency, lo_offset)
 - timestamp: A pair composed of (long full_secs, double frac_secs). Similar to uhd::time_spec_t
+- gpio: This is a PMT dictionary with four key/value pairs: bank (string), attr (string), value (double) and mask (double). The `gpio` command calls `set_gpio_attr` with the elements from the dictionary as arguments. Can optionally contain `mboard` to specify the mainboard. Defaults to `0` (first mboard).
 
 \b Note: Not all commands are affected by `time`. See the UHD manual for details on timed commands.
 
