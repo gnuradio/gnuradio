@@ -744,31 +744,35 @@ void usrp_block_impl::_cmd_handler_antenna(const pmt::pmt_t& ant,
 }
 
 void usrp_block_impl::_cmd_handler_gpio(const pmt::pmt_t& gpio_attr,
-                                      int chan,
-                                      const pmt::pmt_t& msg)
+                                        int chan,
+                                        const pmt::pmt_t& msg)
 {
     size_t mboard = pmt::to_long(pmt::dict_ref(
         msg,
         cmd_mboard_key(),
-        //pmt::from_long(::uhd::usrp::multi_usrp::ALL_MBOARDS) // Default to all mboards
+        // pmt::from_long(::uhd::usrp::multi_usrp::ALL_MBOARDS) // Default to all mboards
         pmt::from_long(0) // default to first mboard
         ));
 
     if (!pmt::is_dict(gpio_attr)) {
         GR_LOG_ERROR(d_logger,
-                     boost::format("gpio_attr in  message is neither dict nor pair: %s") % gpio_attr);
+                     boost::format("gpio_attr in  message is neither dict nor pair: %s") %
+                         gpio_attr);
         return;
     }
-    if (!pmt::dict_has_key(gpio_attr, pmt::mp("bank"))
-         || !pmt::dict_has_key(gpio_attr, pmt::mp("attr"))
-         || !pmt::dict_has_key(gpio_attr, pmt::mp("value"))
-         || !pmt::dict_has_key(gpio_attr, pmt::mp("mask"))) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("gpio_attr message must include bank, attr, value and mask"));
+    if (!pmt::dict_has_key(gpio_attr, pmt::mp("bank")) ||
+        !pmt::dict_has_key(gpio_attr, pmt::mp("attr")) ||
+        !pmt::dict_has_key(gpio_attr, pmt::mp("value")) ||
+        !pmt::dict_has_key(gpio_attr, pmt::mp("mask"))) {
+        GR_LOG_ERROR(
+            d_logger,
+            boost::format("gpio_attr message must include bank, attr, value and mask"));
         return;
     }
-    std::string bank = pmt::symbol_to_string(pmt::dict_ref(gpio_attr, pmt::mp("bank"), pmt::mp("")));
-    std::string attr = pmt::symbol_to_string(pmt::dict_ref(gpio_attr, pmt::mp("attr"), pmt::mp("")));
+    std::string bank =
+        pmt::symbol_to_string(pmt::dict_ref(gpio_attr, pmt::mp("bank"), pmt::mp("")));
+    std::string attr =
+        pmt::symbol_to_string(pmt::dict_ref(gpio_attr, pmt::mp("attr"), pmt::mp("")));
     uint32_t value = pmt::to_double(pmt::dict_ref(gpio_attr, pmt::mp("value"), 0));
     uint32_t mask = pmt::to_double(pmt::dict_ref(gpio_attr, pmt::mp("mask"), 0));
 
