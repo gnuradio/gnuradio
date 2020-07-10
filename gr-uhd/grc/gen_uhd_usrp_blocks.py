@@ -55,6 +55,13 @@ parameters:
     options: [sync, pc_clock, none]
     option_labels: [Unknown PPS, PC Clock, No Sync]
     hide: ${'$'}{ 'none' if sync else 'part'}
+-   id: start_time
+    label: Start Time (seconds)
+    dtype: real
+    default: -1.0
+    options: [-1.0]
+    option_labels: [Default]
+    hide: ${'$'}{ 'none' if start_time >= 0.0 else 'part' }
 -   id: clock_rate
     label: Clock Rate (Hz)
     dtype: real
@@ -220,6 +227,9 @@ templates:
         ${'%'} endif
         ${'%'} endif  # nchan > n
         % endfor  # for n in range(max_nchan)
+        ${'%'} if start_time() >= 0.0:
+        self.${'$'}{id}.set_start_time(uhd.time_spec(${'$'}{start_time}))
+        ${'%'} endif
     callbacks:
     -   set_samp_rate(${'$'}{samp_rate})
     % for n in range(max_nchan):
