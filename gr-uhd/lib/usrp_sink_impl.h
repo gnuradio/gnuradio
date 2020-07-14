@@ -95,7 +95,7 @@ public:
     void set_samp_rate(double rate);
     ::uhd::tune_result_t set_center_freq(const ::uhd::tune_request_t tune_request,
                                          size_t chan);
-    void set_gain(double gain, size_t chan);
+    void set_gain(double gain, size_t chan, pmt::pmt_t direction);
     void set_gain(double gain, const std::string& name, size_t chan);
     void set_normalized_gain(double gain, size_t chan);
     void set_antenna(const std::string& ant, size_t chan);
