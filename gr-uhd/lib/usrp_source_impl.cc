@@ -135,10 +135,10 @@ double usrp_source_impl::get_center_freq(size_t chan)
 void usrp_source_impl::set_gain(double gain, size_t chan, pmt::pmt_t direction)
 {
     chan = _stream_args.channels[chan];
-    if (pmt::eqv(direction, ant_direction_rx())) {
-        return _dev->set_rx_gain(gain, chan);
-    } else {
+    if (pmt::eqv(direction, ant_direction_tx())) {
         return _dev->set_tx_gain(gain, chan);
+    } else {
+        return _dev->set_rx_gain(gain, chan);
     }
 }
 
