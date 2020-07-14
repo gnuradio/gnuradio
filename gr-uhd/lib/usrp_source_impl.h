@@ -68,7 +68,7 @@ public:
     void set_samp_rate(double rate);
     ::uhd::tune_result_t set_center_freq(const ::uhd::tune_request_t tune_request,
                                          size_t chan);
-    void set_gain(double gain, size_t chan);
+    void set_gain(double gain, size_t chan = 0, pmt::pmt_t direction = pmt::PMT_NIL);
     void set_gain(double gain, const std::string& name, size_t chan);
     void set_rx_agc(const bool enable, size_t chan);
     void set_normalized_gain(double gain, size_t chan);

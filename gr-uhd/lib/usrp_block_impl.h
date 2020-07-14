@@ -133,7 +133,9 @@ protected:
     void _update_stream_args(const ::uhd::stream_args_t& stream_args_);
 
     // should be const, doesn't work though 'cause missing operator=() for tune_request_t
-    void _update_curr_tune_req(::uhd::tune_request_t& tune_req, int chan);
+    void _update_curr_tune_req(::uhd::tune_request_t& tune_req,
+                               int chan,
+                               pmt::pmt_t direction = pmt::PMT_NIL);
 
     /*! \brief Wait until a timeout or a sensor returns 'locked'.
      *
@@ -196,7 +198,7 @@ protected:
     _set_center_freq_from_internals(size_t chan, pmt::pmt_t direction) = 0;
 
     //! Calls _set_center_freq_from_internals() on all channels
-    void _set_center_freq_from_internals_allchans(pmt::pmt_t direction);
+    void _set_center_freq_from_internals_allchans();
 
     /**********************************************************************
      * Members
@@ -215,8 +217,10 @@ protected:
     std::vector<pmt::pmt_t> _pending_cmds;
     //! Shadows the last value we told the USRP to tune to for every channel
     // (this is not necessarily the true value the USRP is currently tuned to!).
-    std::vector<::uhd::tune_request_t> _curr_tune_req;
-    boost::dynamic_bitset<> _chans_to_tune;
+    std::vector<::uhd::tune_request_t> _curr_tx_tune_req;
+    std::vector<::uhd::tune_request_t> _curr_rx_tune_req;
+    boost::dynamic_bitset<> _tx_chans_to_tune;
+    boost::dynamic_bitset<> _rx_chans_to_tune;
 
     //! Stores the individual command handlers
     ::uhd::dict<pmt::pmt_t, cmd_handler_t> _msg_cmd_handlers;
