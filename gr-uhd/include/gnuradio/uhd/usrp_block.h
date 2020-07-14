@@ -147,8 +147,11 @@ public:
      *
      * \param gain the gain in dB
      * \param chan the channel index 0 to N-1
+     * \param direction TX or RX. This is mostly used by the internal message
+     *        handling.
      */
-    virtual void set_gain(double gain, size_t chan = 0) = 0;
+    virtual void
+    set_gain(double gain, size_t chan = 0, pmt::pmt_t direction = pmt::PMT_NIL) = 0;
 
     /*!
      * Set the named gain on the dboard.
