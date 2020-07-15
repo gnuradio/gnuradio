@@ -6,6 +6,7 @@
 #
 # GNU Radio Python Flow Graph
 # Title: FM stereo demod block
+# corrected output ports
 
 from __future__ import absolute_import
 from __future__ import division
@@ -73,8 +74,8 @@ class wfm_rcv_pll(gr.hier_block2):
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.analog_fm_deemph_0, 0), (self, 1))
-        self.connect((self.analog_fm_deemph_0_0, 0), (self, 0))
+        self.connect((self.analog_fm_deemph_0, 0), (self, 0))
+        self.connect((self.analog_fm_deemph_0_0, 0), (self, 1))
         self.connect((self.analog_pll_refout_cc_0, 0), (self.blocks_multiply_xx_0, 1))
         self.connect((self.analog_pll_refout_cc_0, 0), (self.blocks_multiply_xx_0, 0))
         self.connect((self.analog_quadrature_demod_cf_0, 0), (self.blocks_multiply_xx_2, 0))
