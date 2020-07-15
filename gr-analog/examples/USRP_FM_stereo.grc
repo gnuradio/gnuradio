@@ -157,7 +157,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [488, 200.0]
+    coordinate: [488, 168.0]
     rotation: 0
     state: true
 - name: audio_sink_0
@@ -174,7 +174,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [888, 200.0]
+    coordinate: [864, 168.0]
     rotation: 0
     state: true
 - name: blocks_multiply_const_vxx_0_0
@@ -192,7 +192,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [704, 196.0]
+    coordinate: [696, 164.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_vxx_0_0_0
@@ -220,7 +220,7 @@ blocks:
     alias: ''
     beta: '6.76'
     comment: ''
-    cutoff_freq: '180000'
+    cutoff_freq: '90000'
     decim: rf_decim
     gain: '1'
     maxoutbuf: '0'
@@ -234,7 +234,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [296, 156.0]
+    coordinate: [296, 124.0]
     rotation: 0
     state: true
 - name: qtgui_sink_x_0
@@ -263,7 +263,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [496, 324.0]
+    coordinate: [472, 276.0]
     rotation: 0
     state: true
 - name: uhd_usrp_source_0
@@ -634,7 +634,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [72, 164.0]
+    coordinate: [72, 132.0]
     rotation: 0
     state: true
 
