@@ -12,24 +12,21 @@ from ..io import yaml
 class HierBlockGenerator(TopBlockGenerator):
     """Extends the top block generator to also generate a block YML file"""
 
-    def __init__(self, flow_graph, file_path):
+    def __init__(self, flow_graph, _):
         """
         Initialize the hier block generator object.
 
         Args:
             flow_graph: the flow graph object
-            file_path: where to write the py file (the yml goes into HIER_BLOCK_LIB_DIR)
         """
-        TopBlockGenerator.__init__(self, flow_graph, file_path)
         platform = flow_graph.parent
+        output_dir = platform.config.hier_block_lib_dir
+        if not os.path.exists(output_dir):
+            os.mkdir(output_dir)
 
-        hier_block_lib_dir = platform.config.hier_block_lib_dir
-        if not os.path.exists(hier_block_lib_dir):
-            os.mkdir(hier_block_lib_dir)
-
+        TopBlockGenerator.__init__(self, flow_graph, output_dir)
         self._mode = Constants.HIER_BLOCK_FILE_MODE
-        self.file_path = os.path.join(hier_block_lib_dir, self._flow_graph.get_option('id') + '.py')
-        self.file_path_yml = self.file_path + '.block.yml'
+        self.file_path_yml = self.file_path[:-3] + '.block.yml'
 
     def write(self):
         """generate output and write it to files"""
