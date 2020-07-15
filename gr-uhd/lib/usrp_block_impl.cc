@@ -650,8 +650,8 @@ void usrp_block_impl::_cmd_handler_looffset(const pmt::pmt_t& lo_offset,
     pmt::pmt_t direction =
         pmt::dict_ref(msg,
                       cmd_direction_key(),
-                      pmt::PMT_NIL // Anything except "TX" or "RX will default to the
-                                   // messaged block direction"
+                      pmt::PMT_NIL // Anything except "TX" or "RX" will default to the
+                                   // messaged block direction
         );
 
     if (pmt::dict_has_key(msg, cmd_freq_key())) {
