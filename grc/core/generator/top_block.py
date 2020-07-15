@@ -20,13 +20,13 @@ python_template = Template(filename=PYTHON_TEMPLATE)
 
 class TopBlockGenerator(object):
 
-    def __init__(self, flow_graph, file_path):
+    def __init__(self, flow_graph, output_dir):
         """
         Initialize the top block generator object.
 
         Args:
             flow_graph: the flow graph object
-            file_path: the path to write the file to
+            output_dir: the path to write the file to
         """
 
         self._flow_graph = FlowGraphProxy(flow_graph)
@@ -35,11 +35,11 @@ class TopBlockGenerator(object):
         self._mode = TOP_BLOCK_FILE_MODE
         # Handle the case where the directory is read-only
         # In this case, use the system's temp directory
-        if not os.access(file_path, os.W_OK):
-            file_path = tempfile.gettempdir()
+        if not os.access(output_dir, os.W_OK):
+            output_dir = tempfile.gettempdir()
         filename = self._flow_graph.get_option('id') + '.py'
-        self.file_path = os.path.join(file_path, filename)
-        self._dirname = file_path
+        self.file_path = os.path.join(output_dir, filename)
+        self.output_dir = output_dir
 
     def _warnings(self):
         throttling_blocks = [b for b in self._flow_graph.get_enabled_blocks()
@@ -103,14 +103,15 @@ class TopBlockGenerator(object):
         monitors = fg.get_monitors()
 
         for block in fg.iter_enabled_blocks():
-            key = block.key
-            file_path = os.path.join(self._dirname, block.name + '.py')
-            if key == 'epy_block':
+            if block.key == 'epy_block':
                 src = block.params['_source_code'].get_value()
-                output.append((file_path, src))
-            elif key == 'epy_module':
+            elif block.key == 'epy_module':
                 src = block.params['source_code'].get_value()
-                output.append((file_path, src))
+            else:
+                continue
+
+            file_path = os.path.join(self.output_dir, block.name + ".py")
+            output.append((file_path, src))
 
         self.namespace = {
             'flow_graph': fg,
