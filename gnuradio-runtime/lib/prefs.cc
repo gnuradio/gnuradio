@@ -13,6 +13,7 @@
 #endif
 
 #include <gnuradio/constants.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/sys_paths.h>
 
@@ -72,6 +73,10 @@ std::vector<std::string> prefs::_sys_prefs_filenames()
 
 void prefs::_read_files(const std::vector<std::string>& filenames)
 {
+    gr::logger_ptr logger, debug_logger;
+    gr::configure_default_loggers(logger, debug_logger, "prefs");
+    std::ostringstream msg;
+
     for (const auto& fname : filenames) {
         std::ifstream infile(fname.c_str());
         if (infile.good()) {
@@ -98,14 +103,14 @@ void prefs::_read_files(const std::vector<std::string>& filenames)
                     d_config_map[section][key] = value;
                 }
             } catch (std::exception& e) {
-                std::cerr << "WARNING: Config file '" << fname
-                          << "' failed to parse:" << std::endl;
-                std::cerr << e.what() << std::endl;
-                std::cerr << "Skipping it" << std::endl;
+                msg << "WARNING: Config file '" << fname
+                    << "' failed to parse:" << std::endl;
+                msg << e.what() << std::endl;
+                msg << "Skipping it" << std::endl;
             }
         } else { // infile.good();
-            std::cerr << "WARNING: Config file '" << fname
-                      << "' could not be opened for reading." << std::endl;
+            msg << "WARNING: Config file '" << fname
+                << "' could not be opened for reading." << std::endl;
         }
     }
 }
