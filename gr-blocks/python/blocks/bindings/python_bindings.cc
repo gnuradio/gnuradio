@@ -134,6 +134,7 @@ void bind_short_to_char(py::module&);
 void bind_short_to_float(py::module&);
 void bind_skiphead(py::module&);
 void bind_socket_pdu(py::module&);
+void bind_stream_demux(py::module&);
 void bind_stream_mux(py::module&);
 void bind_stream_to_streams(py::module&);
 void bind_stream_to_tagged_stream(py::module&);
@@ -314,6 +315,7 @@ PYBIND11_MODULE(blocks_python, m)
     bind_short_to_float(m);
     bind_skiphead(m);
     bind_socket_pdu(m);
+    bind_stream_demux(m);
     bind_stream_mux(m);
     bind_stream_to_streams(m);
     bind_stream_to_tagged_stream(m);

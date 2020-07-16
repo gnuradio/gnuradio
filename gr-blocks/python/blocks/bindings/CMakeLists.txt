@@ -130,6 +130,7 @@ list(APPEND blocks_python_files
     short_to_float_python.cc
     skiphead_python.cc
     socket_pdu_python.cc
+    stream_demux_python.cc
     stream_mux_python.cc
     stream_to_streams_python.cc
     stream_to_tagged_stream_python.cc
@@ -174,8 +175,8 @@ list(APPEND blocks_python_files
     xor_blk_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE_CHECK_HASH(blocks 
-  ../../.. 
+GR_PYBIND_MAKE_CHECK_HASH(blocks
+  ../../..
   gr::blocks
   "${blocks_python_files}")
 

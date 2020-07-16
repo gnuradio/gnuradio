@@ -135,6 +135,7 @@ add_library(gnuradio-blocks
     short_to_float_impl.cc
     skiphead_impl.cc
     socket_pdu_impl.cc
+    stream_demux_impl.cc
     stream_mux_impl.cc
     stream_pdu_base.cc
     stream_to_streams_impl.cc

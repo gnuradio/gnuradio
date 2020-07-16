@@ -132,6 +132,7 @@ install(FILES
     short_to_float.h
     skiphead.h
     socket_pdu.h
+    stream_demux.h
     stream_mux.h
     stream_to_streams.h
     stream_to_tagged_stream.h
