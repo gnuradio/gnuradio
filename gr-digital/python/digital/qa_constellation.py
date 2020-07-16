@@ -8,7 +8,6 @@
 #
 #
 
-from __future__ import division
 
 import random, math
 from cmath import exp, pi, log, sqrt

@@ -8,7 +8,6 @@
 #
 #
 
-from __future__ import print_function
 
 
 from gnuradio import gr, gr_unittest

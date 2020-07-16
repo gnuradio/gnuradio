@@ -9,8 +9,6 @@
 '''
 Blocks and utilities for analog modulation and demodulation.
 '''
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 # The presence of this file turns this directory into a Python package
 import os

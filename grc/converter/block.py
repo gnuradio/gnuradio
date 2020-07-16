@@ -12,7 +12,6 @@ Converter for legacy block definitions in XML format
   how a converted definition would look like
 """
 
-from __future__ import absolute_import, division, print_function
 
 from collections import OrderedDict, defaultdict
 from itertools import chain

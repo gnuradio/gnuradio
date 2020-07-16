@@ -10,7 +10,6 @@
 
 # GNU Radio example program to record a dial tone to a WAV file
 
-from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio.eng_arg import eng_float

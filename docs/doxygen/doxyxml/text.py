@@ -9,7 +9,6 @@
 """
 Utilities for extracting text from generated classes.
 """
-from __future__ import unicode_literals
 
 def is_string(txt):
     if isinstance(txt, str):

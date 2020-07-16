@@ -15,7 +15,6 @@ The file instructs Pybind11 to transfer the doxygen comments into the
 python docstrings.
 
 """
-from __future__ import unicode_literals
 
 import os, sys, time, glob, re, json
 from argparse import ArgumentParser

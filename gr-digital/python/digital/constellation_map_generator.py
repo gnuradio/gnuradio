@@ -8,7 +8,6 @@
 #
 #
 
-from __future__ import unicode_literals
 def constellation_map_generator(basis_cpoints, basis_symbols, k, pi):
     '''
     Uses the a basis constellation provided (e.g., from

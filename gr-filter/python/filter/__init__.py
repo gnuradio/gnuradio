@@ -10,8 +10,6 @@
 '''
 Filter blocks and related functions.
 '''
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 import os
 from gnuradio.fft import window

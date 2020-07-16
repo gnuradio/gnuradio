@@ -12,8 +12,6 @@ QPSK modulation.
 
 Demodulation is not included since the generic_mod_demod
 """
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 from gnuradio import gr
 from gnuradio.digital.generic_mod_demod import generic_mod, generic_demod

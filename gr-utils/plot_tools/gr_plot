@@ -8,8 +8,6 @@
 #
 #
 
-from __future__ import print_function
-
 from gnuradio.plot_data import plot_data
 
 

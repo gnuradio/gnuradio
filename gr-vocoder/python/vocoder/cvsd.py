@@ -8,8 +8,6 @@
 #
 #
 
-from __future__ import division
-from __future__ import unicode_literals
 from gnuradio import gr, filter, blocks
 from . import vocoder_python
 

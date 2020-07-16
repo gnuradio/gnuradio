@@ -13,10 +13,6 @@ For simple configurations, no need to connect all the relevant OFDM blocks
 to form an OFDM Tx/Rx--simply use these.
 """
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import unicode_literals
 
 # Reminder: All frequency-domain stuff is in shifted form, i.e. DC carrier
 # in the middle!

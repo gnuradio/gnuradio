@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 #
 # Copyright 2005,2006,2011 Free Software Foundation, Inc.
 #

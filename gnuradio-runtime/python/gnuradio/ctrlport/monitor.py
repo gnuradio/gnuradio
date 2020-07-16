@@ -8,8 +8,6 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import sys, subprocess, re, signal, time, atexit, os
 from gnuradio import gr

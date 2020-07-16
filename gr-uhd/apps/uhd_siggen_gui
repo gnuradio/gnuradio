@@ -20,7 +20,6 @@ Signal Generator App
 # Generated: Sun Jun 28 17:21:28 2015
 ##################################################
 
-from __future__ import print_function
 import sys
 import threading
 import time

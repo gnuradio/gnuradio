@@ -9,8 +9,6 @@
 #
 #
 
-from __future__ import print_function
-
 @PY_QT_IMPORT@
 
 from gnuradio import gr

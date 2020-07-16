@@ -5,4 +5,3 @@ These do the real work of parsing the doxygen xml files but the
 resultant classes are not very friendly to navigate so the rest of the
 doxyxml module processes them further.
 """
-from __future__ import unicode_literals

@@ -7,7 +7,6 @@ While not primarily a simulation tool, GNU Radio does support development of sig
 
 GNU Radio is licensed under the GNU General Public License (GPL) version 3. All of the code is copyright of the Free Software Foundation.
 """
-from __future__ import unicode_literals
 
 # This file makes gnuradio a package
 # The docstring will be associated with the top level of the package.

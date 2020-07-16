@@ -10,7 +10,6 @@
 Miscellaneous utilities for managing mods and demods, as well as other items
 useful in dealing with generalized handling of different modulations and demods.
 """
-from __future__ import unicode_literals
 
 import inspect
 

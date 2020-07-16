@@ -8,7 +8,6 @@
 #
 #
 
-from __future__ import unicode_literals
 from gnuradio import gr
 from argparse import ArgumentParser
 import sys

@@ -6,8 +6,6 @@
 # Generated: Thu Aug  1 12:08:07 2013
 ##################################################
 
-from __future__ import division
-from __future__ import unicode_literals
 from gnuradio import blocks
 from gnuradio import gr
 from gnuradio.filter import firdes

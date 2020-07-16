@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-from __future__ import division
-from __future__ import unicode_literals
 import sys, math
 import argparse
 from volk_test_funcs import (create_connection, list_tables, get_results,

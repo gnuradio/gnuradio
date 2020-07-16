@@ -7,7 +7,6 @@
 Converter for legacy block tree definitions in XML format
 """
 
-from __future__ import absolute_import, print_function
 
 from ..core.io import yaml
 from . import xml

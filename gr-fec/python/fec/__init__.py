@@ -11,8 +11,6 @@
 Blocks for forward error correction.
 '''
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 try:
     from .fec_python import *

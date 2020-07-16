@@ -9,7 +9,6 @@
 '''
 Blocks and utilities for Video SDL module
 '''
-from __future__ import unicode_literals
 
 # The presence of this file turns this directory into a Python package
 import os

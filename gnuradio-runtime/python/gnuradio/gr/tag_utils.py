@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 import pmt
 
 from . import gr_python as gr

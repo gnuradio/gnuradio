@@ -10,9 +10,6 @@
 Utility to help plotting data from files.
 """
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
 
 from argparse import ArgumentParser
 

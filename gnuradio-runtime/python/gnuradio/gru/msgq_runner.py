@@ -28,7 +28,6 @@ To manually stop the runner, call stop() on the object.
 
 To determine if the runner has exited, call exited() on the object.
 """
-from __future__ import unicode_literals
 
 from gnuradio import gr
 import threading

@@ -27,8 +27,6 @@ bool, symbol (string), integer, real, complex, null, pair, list,
 vector, dict, uniform_vector, any (boost::any cast)
 '''
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 import os
 

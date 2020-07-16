@@ -15,9 +15,6 @@ For a great intro to how all this stuff works, see section 6.6 of
 and Barrie W. Jervis, Adison-Wesley, 1993.  ISBN 0-201-54413-X.
 '''
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
 
 
 import math, cmath
