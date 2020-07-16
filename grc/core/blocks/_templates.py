@@ -8,7 +8,6 @@ This dict class holds a (shared) cache of compiled mako templates.
 These
 
 """
-from __future__ import absolute_import, print_function
 
 from mako.template import Template
 from mako.exceptions import SyntaxException

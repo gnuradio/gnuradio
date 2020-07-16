@@ -8,8 +8,6 @@
 #
 #
 
-from __future__ import division
-from __future__ import unicode_literals
 from gnuradio import gr, gru, eng_notation, filter
 from gnuradio import audio
 from gnuradio import analog

@@ -5,7 +5,6 @@
 # 
 
 
-from __future__ import absolute_import
 
 from .hier_block import HierBlockGenerator, QtHierBlockGenerator
 from .top_block import TopBlockGenerator

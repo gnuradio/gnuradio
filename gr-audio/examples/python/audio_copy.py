@@ -8,7 +8,6 @@
 #
 #
 
-from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import audio
 from gnuradio.eng_arg import eng_float

@@ -8,7 +8,6 @@
 #
 #
 
-from __future__ import absolute_import
 
 
 from gnuradio import gr, gr_unittest

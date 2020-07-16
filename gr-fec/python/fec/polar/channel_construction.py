@@ -11,8 +11,6 @@
 foundational paper for polar codes.
 '''
 
-from __future__ import print_function
-from __future__ import absolute_import
 
 from .channel_construction_bec import calculate_bec_channel_capacities
 from .channel_construction_bec import design_snr_to_bec_eta

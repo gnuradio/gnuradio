@@ -9,8 +9,6 @@
 """
 This file contains constellations that are similar to QAM, but are not perfect squares.
 """
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 from . import digital_python
 from .qam import large_ampls_to_corners_mapping

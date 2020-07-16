@@ -7,8 +7,6 @@
 #
 #
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 from .gr_python import (top_block_pb,
     top_block_wait_unlocked, top_block_run_unlocked,

@@ -1,4 +1,3 @@
-from __future__ import division
 
 #
 # Copyright 2011-2013 Free Software Foundation, Inc.

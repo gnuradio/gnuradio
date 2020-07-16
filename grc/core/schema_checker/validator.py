@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 # 
 
-from __future__ import print_function
 
 import six
 

@@ -9,7 +9,6 @@
 """
 Display numbers as strings using engineering notation.
 """
-from __future__ import unicode_literals
 
 import six
 

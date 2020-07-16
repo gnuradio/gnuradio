@@ -11,9 +11,6 @@
 Provide a base flow graph for USRP signal generators.
 """
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
 import math
 try:
     from uhd_app import UHDApp

@@ -8,8 +8,6 @@
 #
 
 '''Add support for engineering notation to optparse.OptionParser'''
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 from copy import copy
 from optparse import Option, OptionValueError

@@ -11,8 +11,6 @@
 This is the gr-vocoder package. This package includes the various
 vocoder blocks in GNU Radio.
 '''
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 import os
 

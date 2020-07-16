@@ -10,7 +10,6 @@
 Classes providing more user-friendly interfaces to the doxygen xml
 docs than the generated classes provide.
 """
-from __future__ import unicode_literals
 
 import os
 

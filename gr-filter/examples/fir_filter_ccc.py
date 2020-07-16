@@ -8,9 +8,6 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
 from gnuradio import gr, filter
 from gnuradio import analog
 from gnuradio import blocks

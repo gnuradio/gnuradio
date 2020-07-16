@@ -22,8 +22,6 @@ UHD FFT: Simple Spectrum Analyzer for UHD.
 # Note this is a heavily modified version of a
 # the uhd_fft.grc example.
 
-from __future__ import print_function
-from __future__ import division
 import ctypes
 import sys
 import threading

@@ -6,9 +6,6 @@
 # Generated: Thu Aug  1 12:46:10 2013
 ##################################################
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import unicode_literals
 from gnuradio import analog
 from gnuradio import blocks
 from gnuradio import gr

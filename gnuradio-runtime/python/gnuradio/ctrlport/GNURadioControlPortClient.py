@@ -16,8 +16,6 @@ Remote Procedure Call (RPC) transports, the Apache Thrift middle-ware RPC
 is currently the only supported transport.
 
 """
-from __future__ import print_function
-from __future__ import unicode_literals
 
 from gnuradio.ctrlport.RPCConnection import RPCMethods
 try:

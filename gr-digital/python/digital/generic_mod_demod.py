@@ -13,9 +13,6 @@ Generic modulation and demodulation.
 
 # See gnuradio-examples/python/digital for examples
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 from gnuradio import gr, blocks, filter, analog
 from .modulation_utils import extract_kwargs_from_options_for_class

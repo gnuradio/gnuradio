@@ -12,7 +12,6 @@
 TXs a waveform (either from a file, or a sinusoid) in a frequency-hopping manner.
 """
 
-from __future__ import print_function
 import argparse
 import numpy
 import pmt

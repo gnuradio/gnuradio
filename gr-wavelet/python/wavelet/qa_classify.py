@@ -8,7 +8,6 @@
 #
 #
 
-from __future__ import division
 
 import numpy
 from gnuradio import gr, gr_unittest, wavelet, analog, blocks

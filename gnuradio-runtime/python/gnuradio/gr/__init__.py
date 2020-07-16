@@ -12,8 +12,6 @@
 """
 Core contents.
 """
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 # This is the main GNU Radio python module.
 # We pull the pybind output and the other modules into the gnuradio.gr namespace

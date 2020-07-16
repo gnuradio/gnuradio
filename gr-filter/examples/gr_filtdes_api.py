@@ -8,8 +8,6 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import unicode_literals
 from gnuradio.filter import filter_design
 import sys
 

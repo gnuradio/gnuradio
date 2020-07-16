@@ -5,7 +5,6 @@
 # 
 
 
-from __future__ import absolute_import
 from six.moves import range
 
 from ..utils import expr_utils

@@ -12,7 +12,6 @@
 Reads output from run_synthetic.py and runs gnuplot showing
 GFLOPS as f(npipes, nstages)
 """
-from __future__ import unicode_literals
 
 import re
 import sys

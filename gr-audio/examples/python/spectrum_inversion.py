@@ -14,7 +14,6 @@
 # to a SSB signal on the wrong sideband.
 #
 
-from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import audio
 from gnuradio import blocks
