@@ -265,7 +265,8 @@ int file_source_impl::work(int noutput_items,
             // EOF reached for non seekable file, return
             if (!d_seekable && feof((FILE*)d_fp))
                 return nitems_read == 0 ? WORK_DONE : nitems_read;
-            // For seekable files, the bounds of the file are known, so unexpected nitems is an error
+            // For seekable files, the bounds of the file are known, so unexpected nitems
+            // is an error
             throw std::runtime_error("fread error");
         }
 
