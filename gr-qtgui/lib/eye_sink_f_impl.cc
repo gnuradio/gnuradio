@@ -24,6 +24,9 @@
 
 #include <string.h>
 
+#include <boost/bind/placeholders.hpp>
+using namespace boost::placeholders;
+
 namespace gr {
 namespace qtgui {
 
