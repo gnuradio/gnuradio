@@ -21,8 +21,12 @@ if(MSVC)
 endif(MSVC)
 
 add_library(gr_fec_rs OBJECT
-    ${CMAKE_CURRENT_SOURCE_DIR}/encode_rs.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/decode_rs.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/ccsds.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/ccsds_tab.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/ccsds_tal.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/char.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/decode_rs_ccsds.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/encode_rs_ccsds.c
     ${CMAKE_CURRENT_SOURCE_DIR}/init_rs.c
   )
 target_include_directories(gr_fec_rs

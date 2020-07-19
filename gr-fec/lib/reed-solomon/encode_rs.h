@@ -2,17 +2,12 @@
  * Copyright 2002, Phil Karn, KA9Q
  * May be used under the terms of the GNU General Public License (GPL)
  */
+
+#include <gnuradio/fec/api.h>
+
 #include <string.h>
 
-#ifdef FIXED
-#include "fixed.h"
-#elif defined(BIGSYM)
-#include "int.h"
-#else
-#include "char.h"
-#endif
-
-void ENCODE_RS(
+FEC_API void ENCODE_RS(
 #ifndef FIXED
     void* p,
 #endif
