@@ -138,7 +138,7 @@ class my_top_block(gr.top_block):
         noise = analog.noise_source_f(analog.GR_GAUSSIAN, 0.001)
         add = blocks.add_ff()
         self.snk1 = qtgui.time_sink_f(npts, Rs,
-                                      "Complex Time Example", 3)
+                                      "Complex Time Example", 3, None)
 
         self.connect(src1, (src,0))
         self.connect(src2, (src,1))

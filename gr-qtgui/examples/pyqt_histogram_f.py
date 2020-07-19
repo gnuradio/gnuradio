@@ -154,7 +154,7 @@ class my_top_block(gr.top_block):
         src  = blocks.add_ff()
         thr = blocks.throttle(gr.sizeof_float, 100*npts)
         self.snk1 = qtgui.histogram_sink_f(npts, 200, -5, 5,
-                                           "Histogram")
+                                           "Histogram", 1, None)
         self.snk1.disable_legend()
 
         self.connect(src1, (src,0))

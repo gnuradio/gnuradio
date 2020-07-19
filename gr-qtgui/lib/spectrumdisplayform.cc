@@ -638,7 +638,7 @@ void SpectrumDisplayForm::waterfallIntensityColorTypeChanged(int newType)
 {
     QColor lowIntensityColor;
     QColor highIntensityColor;
-    if (newType == INTENSITY_COLOR_MAP_TYPE_USER_DEFINED) {
+    if (newType == gr::qtgui::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED) {
         // Select the Low Intensity Color
         lowIntensityColor = _waterfallDisplayPlot->getUserDefinedLowIntensityColor();
         if (!lowIntensityColor.isValid()) {

@@ -39,4 +39,20 @@ void bind_qtgui_types(py::module& m)
         .value("NUM_GRAPH_HORIZ", ::gr::qtgui::NUM_GRAPH_HORIZ) // 1
         .value("NUM_GRAPH_VERT", ::gr::qtgui::NUM_GRAPH_VERT)   // 2
         .export_values();
+    py::enum_<::gr::qtgui::intensity_t>(m, "intensity_t")
+        .value("INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR",
+               ::gr::qtgui::INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR) // 0
+        .value("INTENSITY_COLOR_MAP_TYPE_WHITE_HOT",
+               ::gr::qtgui::INTENSITY_COLOR_MAP_TYPE_WHITE_HOT) // 1
+        .value("INTENSITY_COLOR_MAP_TYPE_BLACK_HOT",
+               ::gr::qtgui::INTENSITY_COLOR_MAP_TYPE_BLACK_HOT) // 2
+        .value("INTENSITY_COLOR_MAP_TYPE_INCANDESCENT",
+               ::gr::qtgui::INTENSITY_COLOR_MAP_TYPE_INCANDESCENT) // 3
+        .value("INTENSITY_COLOR_MAP_TYPE_USER_DEFINED",
+               ::gr::qtgui::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED) // 4
+        .value("INTENSITY_COLOR_MAP_TYPE_SUNSET",
+               ::gr::qtgui::INTENSITY_COLOR_MAP_TYPE_SUNSET) // 5
+        .value("INTENSITY_COLOR_MAP_TYPE_COOL",
+               ::gr::qtgui::INTENSITY_COLOR_MAP_TYPE_COOL) // 6
+        .export_values();
 }

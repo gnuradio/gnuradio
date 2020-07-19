@@ -146,7 +146,8 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
 
         d_spectrogram[i]->attach(this);
 
-        d_intensity_color_map_type.push_back(INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR);
+        d_intensity_color_map_type.push_back(
+            gr::qtgui::INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR);
         setIntensityColorMapType(
             i, d_intensity_color_map_type[i], QColor("white"), QColor("white"));
 
@@ -435,10 +436,10 @@ void WaterfallDisplayPlot::setIntensityColorMapType(const unsigned int which,
                                                     const QColor highColor)
 {
     if ((d_intensity_color_map_type[which] != newType) ||
-        ((newType == INTENSITY_COLOR_MAP_TYPE_USER_DEFINED) &&
+        ((newType == gr::qtgui::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED) &&
          (lowColor.isValid() && highColor.isValid()))) {
         switch (newType) {
-        case INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR: {
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR: {
             d_intensity_color_map_type[which] = newType;
 #if QWT_VERSION < 0x060000
             ColorMap_MultiColor colorMap;
@@ -448,7 +449,7 @@ void WaterfallDisplayPlot::setIntensityColorMapType(const unsigned int which,
 #endif
             break;
         }
-        case INTENSITY_COLOR_MAP_TYPE_WHITE_HOT: {
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_WHITE_HOT: {
             d_intensity_color_map_type[which] = newType;
 #if QWT_VERSION < 0x060000
             ColorMap_WhiteHot colorMap;
@@ -458,7 +459,7 @@ void WaterfallDisplayPlot::setIntensityColorMapType(const unsigned int which,
 #endif
             break;
         }
-        case INTENSITY_COLOR_MAP_TYPE_BLACK_HOT: {
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_BLACK_HOT: {
             d_intensity_color_map_type[which] = newType;
 #if QWT_VERSION < 0x060000
             ColorMap_BlackHot colorMap;
@@ -468,7 +469,7 @@ void WaterfallDisplayPlot::setIntensityColorMapType(const unsigned int which,
 #endif
             break;
         }
-        case INTENSITY_COLOR_MAP_TYPE_INCANDESCENT: {
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_INCANDESCENT: {
             d_intensity_color_map_type[which] = newType;
 #if QWT_VERSION < 0x060000
             ColorMap_Incandescent colorMap;
@@ -478,7 +479,7 @@ void WaterfallDisplayPlot::setIntensityColorMapType(const unsigned int which,
 #endif
             break;
         }
-        case INTENSITY_COLOR_MAP_TYPE_SUNSET: {
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_SUNSET: {
             d_intensity_color_map_type[which] = newType;
 #if QWT_VERSION < 0x060000
             ColorMap_Sunset colorMap;
@@ -488,7 +489,7 @@ void WaterfallDisplayPlot::setIntensityColorMapType(const unsigned int which,
 #endif
             break;
         }
-        case INTENSITY_COLOR_MAP_TYPE_COOL: {
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_COOL: {
             d_intensity_color_map_type[which] = newType;
 #if QWT_VERSION < 0x060000
             ColorMap_Cool colorMap;
@@ -498,7 +499,7 @@ void WaterfallDisplayPlot::setIntensityColorMapType(const unsigned int which,
 #endif
             break;
         }
-        case INTENSITY_COLOR_MAP_TYPE_USER_DEFINED: {
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED: {
             d_user_defined_low_intensity_color = lowColor;
             d_user_defined_high_intensity_color = highColor;
             d_intensity_color_map_type[which] = newType;
@@ -582,25 +583,25 @@ void WaterfallDisplayPlot::_updateIntensityRangeDisplay()
 #else
         QwtInterval intv = d_spectrogram[i]->interval(Qt::ZAxis);
         switch (d_intensity_color_map_type[i]) {
-        case INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR:
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR:
             rightAxis->setColorMap(intv, new ColorMap_MultiColor());
             break;
-        case INTENSITY_COLOR_MAP_TYPE_WHITE_HOT:
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_WHITE_HOT:
             rightAxis->setColorMap(intv, new ColorMap_WhiteHot());
             break;
-        case INTENSITY_COLOR_MAP_TYPE_BLACK_HOT:
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_BLACK_HOT:
             rightAxis->setColorMap(intv, new ColorMap_BlackHot());
             break;
-        case INTENSITY_COLOR_MAP_TYPE_INCANDESCENT:
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_INCANDESCENT:
             rightAxis->setColorMap(intv, new ColorMap_Incandescent());
             break;
-        case INTENSITY_COLOR_MAP_TYPE_SUNSET:
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_SUNSET:
             rightAxis->setColorMap(intv, new ColorMap_Sunset());
             break;
-        case INTENSITY_COLOR_MAP_TYPE_COOL:
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_COOL:
             rightAxis->setColorMap(intv, new ColorMap_Cool());
             break;
-        case INTENSITY_COLOR_MAP_TYPE_USER_DEFINED:
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED:
             rightAxis->setColorMap(
                 intv,
                 new ColorMap_UserDefined(d_user_defined_low_intensity_color,

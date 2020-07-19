@@ -147,6 +147,10 @@ void bind_eye_sink_c(py::module& m)
              py::arg("samp_rate"),
              D(eye_sink_c, set_samp_rate))
 
+        .def("set_samp_per_symbol",
+             &eye_sink_c::set_samp_per_symbol,
+             py::arg("samp_per_symbol"),
+             D(eye_sink_c, set_samp_per_symbol))
 
         .def("set_line_alpha",
              &eye_sink_c::set_line_alpha,
