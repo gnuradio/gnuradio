@@ -1035,16 +1035,28 @@ signals:
 public slots:
     void getMultiColor()
     {
-        emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR);
+        emit whichTrigger(d_which, gr::qtgui::INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR);
     }
-    void getWhiteHot() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_WHITE_HOT); }
-    void getBlackHot() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_BLACK_HOT); }
+    void getWhiteHot()
+    {
+        emit whichTrigger(d_which, gr::qtgui::INTENSITY_COLOR_MAP_TYPE_WHITE_HOT);
+    }
+    void getBlackHot()
+    {
+        emit whichTrigger(d_which, gr::qtgui::INTENSITY_COLOR_MAP_TYPE_BLACK_HOT);
+    }
     void getIncandescent()
     {
-        emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_INCANDESCENT);
+        emit whichTrigger(d_which, gr::qtgui::INTENSITY_COLOR_MAP_TYPE_INCANDESCENT);
     }
-    void getSunset() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_SUNSET); }
-    void getCool() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_COOL); }
+    void getSunset()
+    {
+        emit whichTrigger(d_which, gr::qtgui::INTENSITY_COLOR_MAP_TYPE_SUNSET);
+    }
+    void getCool()
+    {
+        emit whichTrigger(d_which, gr::qtgui::INTENSITY_COLOR_MAP_TYPE_COOL);
+    }
     // void getOther(d_which, const QString &min_str, const QString &max_str)
     void getOther()
     {
@@ -1056,8 +1068,10 @@ public slots:
         d_min_value = QColorDialog::getColor(d_min_value, this);
         d_max_value = QColorDialog::getColor(d_max_value, this);
 
-        emit whichTrigger(
-            d_which, INTENSITY_COLOR_MAP_TYPE_USER_DEFINED, d_min_value, d_max_value);
+        emit whichTrigger(d_which,
+                          gr::qtgui::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED,
+                          d_min_value,
+                          d_max_value);
     }
 
 private:

@@ -54,7 +54,7 @@ class my_top_block(gr.top_block):
         thr  = blocks.throttle(gr.sizeof_char, 50000)
         head = blocks.head(gr.sizeof_char, 10000000)
         self.snk1 = qtgui.time_raster_sink_b(fs, nrows, ncols, [], [],
-                                             "Time Raster Example", 2)
+                                             "Time Raster Example", 2, None)
 
         self.connect(src0, thr, (self.snk1, 0))
         self.connect(src1, (self.snk1, 1))

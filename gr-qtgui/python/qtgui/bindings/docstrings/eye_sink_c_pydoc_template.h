@@ -69,6 +69,9 @@ static const char* __doc_gr_qtgui_eye_sink_c_set_nsamps = R"doc()doc";
 static const char* __doc_gr_qtgui_eye_sink_c_set_samp_rate = R"doc()doc";
 
 
+static const char* __doc_gr_qtgui_eye_sink_c_set_samp_per_symbol = R"doc()doc";
+
+
 static const char* __doc_gr_qtgui_eye_sink_c_set_line_alpha = R"doc()doc";
 
 

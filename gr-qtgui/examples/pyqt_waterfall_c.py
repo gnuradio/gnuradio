@@ -151,7 +151,7 @@ class my_top_block(gr.top_block):
         filt = filter.fft_filter_ccc(1, taps)
         self.snk1 = qtgui.waterfall_sink_c(npts, filter.firdes.WIN_BLACKMAN_hARRIS,
                                            0, Rs,
-                                           "Complex Waterfall Example", 2)
+                                           "Complex Waterfall Example", 2, None)
         self.snk1.set_color_map(0, qtgui.INTENSITY_COLOR_MAP_TYPE_COOL)
         self.snk1.set_color_map(1, qtgui.INTENSITY_COLOR_MAP_TYPE_COOL)
 

@@ -953,7 +953,8 @@ templates:
             ${size}, #size
             ${srate}, #samp_rate
             ${name}, #name
-            ${0 if type.startswith('msg') else nconnections} #number of inputs
+            ${0 if type.startswith('msg') else nconnections}, #number of inputs
+            None
         )
         self.${id}.set_update_time(${update_time})
         self.${id}.set_samp_per_symbol(${samp_per_symbol})

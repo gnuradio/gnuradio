@@ -121,11 +121,7 @@ enum graph_t {
     NUM_GRAPH_VERT,
 };
 
-} /* namespace qtgui */
-} /* namespace gr */
-
-
-enum {
+enum intensity_t {
     INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR = 0,
     INTENSITY_COLOR_MAP_TYPE_WHITE_HOT = 1,
     INTENSITY_COLOR_MAP_TYPE_BLACK_HOT = 2,
@@ -134,6 +130,10 @@ enum {
     INTENSITY_COLOR_MAP_TYPE_SUNSET = 5,
     INTENSITY_COLOR_MAP_TYPE_COOL = 6,
 };
+
+} /* namespace qtgui */
+} /* namespace gr */
+
 
 class ColorMap_MultiColor : public QwtLinearColorMap
 {

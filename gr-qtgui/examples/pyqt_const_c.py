@@ -141,7 +141,7 @@ class my_top_block(gr.top_block):
         src  = blocks.add_cc()
         channel = channels.channel_model(0.001)
         thr = blocks.throttle(gr.sizeof_gr_complex, 100*npts)
-        self.snk1 = qtgui.const_sink_c(npts, "Constellation Example", 1)
+        self.snk1 = qtgui.const_sink_c(npts, "Constellation Example", 1, None)
         self.snk1.disable_legend()
 
         self.connect(src1, (src,0))

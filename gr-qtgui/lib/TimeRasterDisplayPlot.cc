@@ -194,7 +194,7 @@ TimeRasterDisplayPlot::TimeRasterDisplayPlot(
 
         d_raster[i]->attach(this);
 
-        d_color_map_type.push_back(INTENSITY_COLOR_MAP_TYPE_BLACK_HOT);
+        d_color_map_type.push_back(gr::qtgui::INTENSITY_COLOR_MAP_TYPE_BLACK_HOT);
         setAlpha(i, 255 / d_nplots);
     }
 
@@ -221,8 +221,10 @@ TimeRasterDisplayPlot::TimeRasterDisplayPlot(
     // We've made sure the old type is different than here so we'll
     // force and update.
     for (unsigned int i = 0; i < d_nplots; ++i) {
-        setIntensityColorMapType(
-            i, INTENSITY_COLOR_MAP_TYPE_WHITE_HOT, QColor("white"), QColor("white"));
+        setIntensityColorMapType(i,
+                                 gr::qtgui::INTENSITY_COLOR_MAP_TYPE_WHITE_HOT,
+                                 QColor("white"),
+                                 QColor("white"));
     }
 
     _updateIntensityRangeDisplay();
@@ -446,10 +448,10 @@ void TimeRasterDisplayPlot::setIntensityColorMapType(const unsigned int which,
             "TimerasterDisplayPlot::setIntesityColorMap: invalid which.");
 
     if ((d_color_map_type[which] != newType) ||
-        ((newType == INTENSITY_COLOR_MAP_TYPE_USER_DEFINED) &&
+        ((newType == gr::qtgui::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED) &&
          (lowColor.isValid() && highColor.isValid()))) {
         switch (newType) {
-        case INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR: {
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR: {
             d_color_map_type[which] = newType;
 
             d_raster[which]->setColorMap(new ColorMap_MultiColor());
@@ -457,32 +459,32 @@ void TimeRasterDisplayPlot::setIntensityColorMapType(const unsigned int which,
                 d_zoomer->setTrackerPen(QColor(Qt::black));
             break;
         }
-        case INTENSITY_COLOR_MAP_TYPE_WHITE_HOT: {
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_WHITE_HOT: {
             d_color_map_type[which] = newType;
             d_raster[which]->setColorMap(new ColorMap_WhiteHot());
             break;
         }
-        case INTENSITY_COLOR_MAP_TYPE_BLACK_HOT: {
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_BLACK_HOT: {
             d_color_map_type[which] = newType;
             d_raster[which]->setColorMap(new ColorMap_BlackHot());
             break;
         }
-        case INTENSITY_COLOR_MAP_TYPE_INCANDESCENT: {
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_INCANDESCENT: {
             d_color_map_type[which] = newType;
             d_raster[which]->setColorMap(new ColorMap_Incandescent());
             break;
         }
-        case INTENSITY_COLOR_MAP_TYPE_SUNSET: {
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_SUNSET: {
             d_color_map_type[which] = newType;
             d_raster[which]->setColorMap(new ColorMap_Sunset());
             break;
         }
-        case INTENSITY_COLOR_MAP_TYPE_COOL: {
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_COOL: {
             d_color_map_type[which] = newType;
             d_raster[which]->setColorMap(new ColorMap_Cool());
             break;
         }
-        case INTENSITY_COLOR_MAP_TYPE_USER_DEFINED: {
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED: {
             d_low_intensity = lowColor;
             d_high_intensity = highColor;
             d_color_map_type[which] = newType;
@@ -529,25 +531,25 @@ void TimeRasterDisplayPlot::_updateIntensityRangeDisplay()
 #else
         QwtInterval intv = d_raster[i]->interval(Qt::ZAxis);
         switch (d_color_map_type[i]) {
-        case INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR:
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR:
             rightAxis->setColorMap(intv, new ColorMap_MultiColor());
             break;
-        case INTENSITY_COLOR_MAP_TYPE_WHITE_HOT:
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_WHITE_HOT:
             rightAxis->setColorMap(intv, new ColorMap_WhiteHot());
             break;
-        case INTENSITY_COLOR_MAP_TYPE_BLACK_HOT:
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_BLACK_HOT:
             rightAxis->setColorMap(intv, new ColorMap_BlackHot());
             break;
-        case INTENSITY_COLOR_MAP_TYPE_INCANDESCENT:
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_INCANDESCENT:
             rightAxis->setColorMap(intv, new ColorMap_Incandescent());
             break;
-        case INTENSITY_COLOR_MAP_TYPE_SUNSET:
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_SUNSET:
             rightAxis->setColorMap(intv, new ColorMap_Sunset());
             break;
-        case INTENSITY_COLOR_MAP_TYPE_COOL:
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_COOL:
             rightAxis->setColorMap(intv, new ColorMap_Cool());
             break;
-        case INTENSITY_COLOR_MAP_TYPE_USER_DEFINED:
+        case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED:
             rightAxis->setColorMap(
                 intv, new ColorMap_UserDefined(d_low_intensity, d_high_intensity));
             break;
