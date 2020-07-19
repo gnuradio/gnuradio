@@ -334,3 +334,41 @@ class FileParam(EntryParam):
             self._editing_callback()
             self._apply_change()
         file_dialog.destroy()  # destroy the dialog
+
+class DirectoryParam(FileParam):
+    """Provide an entry box for a directory and a button to browse for it."""
+
+    def _handle_clicked(self, widget=None):
+        """
+        Open the directory selector, when the button is clicked.
+        On success, update the entry.
+        """
+        dirname = self.param.get_evaluated() if self.param.is_valid() else ''
+        
+        if not os.path.isdir(dirname): # Check if directory exists, if not fall back to workdir
+            dirname = os.getcwd()
+
+        if self.param.dtype == "dir_select": # Setup directory selection dialog, and fail for unexpected dtype
+            dir_dialog = Gtk.FileChooserDialog(
+                title = 'Select a Directory...', action = Gtk.FileChooserAction.SELECT_FOLDER,
+                transient_for = self._transient_for
+            )
+        else:
+            raise ValueError("Can't open directory chooser dialog for type " + repr(self.param.dtype))
+
+        # Set dialog properties
+        dir_dialog.add_buttons( 'gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-open', Gtk.ResponseType.OK )
+        dir_dialog.set_current_folder(dirname)
+        dir_dialog.set_local_only(True)
+        dir_dialog.set_select_multiple(False)
+        
+        # Show dialog and update paramter on success
+        if Gtk.ResponseType.OK == dir_dialog.run():
+            path = dir_dialog.get_filename()
+            self._input.set_text(path)
+            self._editing_callback()
+            self._apply_change()
+
+        # Cleanup dialog
+        dir_dialog.destroy()
+

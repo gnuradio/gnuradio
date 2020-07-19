@@ -32,6 +32,9 @@ class Param(CoreParam):
         if dtype in ('file_open', 'file_save'):
             input_widget_cls = ParamWidgets.FileParam
 
+        elif dtype == 'dir_select':
+            input_widget_cls = ParamWidgets.DirectoryParam
+
         elif dtype == 'enum':
             input_widget_cls = ParamWidgets.EnumParam
 
