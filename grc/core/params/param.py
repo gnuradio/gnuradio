@@ -242,7 +242,7 @@ class Param(Element):
         #########################
         # String Types
         #########################
-        elif dtype in ('string', 'file_open', 'file_save', '_multiline', '_multiline_python_external'):
+        elif dtype in ('string', 'file_open', 'file_save', 'dir_select', '_multiline', '_multiline_python_external'):
             # Do not check if file/directory exists, that is a runtime issue
             try:
                 # Do not evaluate multiline strings (code snippets or comments)
@@ -293,7 +293,7 @@ class Param(Element):
         self._init = True
         value = self.get_value()
         # String types
-        if self.dtype in ('string', 'file_open', 'file_save', '_multiline', '_multiline_python_external'):
+        if self.dtype in ('string', 'file_open', 'file_save', 'dir_select', '_multiline', '_multiline_python_external'):
             if not self._init:
                 self.evaluate()
             return repr(value) if self._stringify_flag else value
