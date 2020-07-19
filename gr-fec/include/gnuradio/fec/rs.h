@@ -30,6 +30,11 @@ FEC_API void free_rs_int(void* rs);
 FEC_API void encode_rs_8(unsigned char* data, unsigned char* parity);
 FEC_API int decode_rs_8(unsigned char* data, int* eras_pos, int no_eras);
 
+/* CCSDS standard (255,223) RS codec with dual-basis symbol representation
+ */
+FEC_API void encode_rs_ccsds(unsigned char* data, unsigned char* parity);
+FEC_API int decode_rs_ccsds(unsigned char* data, int* eras_pos, int no_eras);
+
 /* Tables to map from conventional->dual (Taltab) and
  * dual->conventional (Tal1tab) bases
  */
