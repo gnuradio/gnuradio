@@ -68,7 +68,7 @@ eye_sink_c_impl::eye_sink_c_impl(int size,
 
     // setup PDU handling input port
     message_port_register_in(pmt::mp("in"));
-    set_msg_handler(pmt::mp("in"), boost::bind(&eye_sink_c_impl::handle_pdus, this, _1));
+    set_msg_handler(pmt::mp("in"), [this](pmt::pmt_t msg) { this->handle_pdus(msg); });
 
     // +2 for the PDU message buffers
     for (unsigned int n = 0; n < d_nconnections + 2; n++) {
