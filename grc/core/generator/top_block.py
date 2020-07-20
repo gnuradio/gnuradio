@@ -110,7 +110,7 @@ class TopBlockGenerator(object):
             else:
                 continue
 
-            file_path = os.path.join(self.output_dir, block.name + ".py")
+            file_path = os.path.join(self.output_dir, block.module_name + ".py")
             output.append((file_path, src))
 
         self.namespace = {

@@ -85,6 +85,7 @@ class EPyBlock(Block):
         super(EPyBlock, self).__init__(flow_graph, **kwargs)
         self.states['_io_cache'] = ''
 
+        self.module_name = self.name
         self._epy_source_hash = -1
         self._epy_reload_error = None
 
@@ -120,7 +121,9 @@ class EPyBlock(Block):
         self.label = blk_io.name or blk_io.cls
         self.documentation = {'': blk_io.doc}
 
-        self.templates['imports'] = 'import ' + self.name
+        self.module_name = "{}_{}".format(self.parent_flowgraph.get_option("id"), self.name)
+        self.templates['imports'] = 'import {} as {}  # embedded python block'.format(
+            self.module_name, self.name)
         self.templates['make'] = '{mod}.{cls}({args})'.format(
             mod=self.name,
             cls=blk_io.cls,
@@ -229,6 +232,12 @@ class EPyModule(Block):
         ], have_inputs=False, have_outputs=False, flags=flags, block_id=key
     )
 
-    templates = MakoTemplates(
-        imports='import ${ id }  # embedded python module',
-    )
+    def __init__(self, flow_graph, **kwargs):
+        super(EPyModule, self).__init__(flow_graph, **kwargs)
+        self.module_name = self.name
+
+    def rewrite(self):
+        super(EPyModule, self).rewrite()
+        self.module_name = "{}_{}".format(self.parent_flowgraph.get_option("id"), self.name)
+        self.templates['imports'] = 'import {} as {}  # embedded python module'.format(
+            self.module_name, self.name)
