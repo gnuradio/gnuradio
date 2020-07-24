@@ -59,8 +59,8 @@ parameters:
     label: Clock Rate (Hz)
     dtype: real
     default: 0e0
-    options: [0e0, 200e6, 184.32e6, 120e6, 30.72e6]
-    option_labels: [Default, 200 MHz, 184.32 MHz, 120 MHz, 30.72 MHz]
+    options: [0e0, 200e6, 184.32e6, 153.6e6, 125.0e6, 122.88e6, 120e6, 30.72e6]
+    option_labels: [Default, 200 MHz, 184.32 MHz, 153.6 MHz, 125 MHz, 122.88 MHz, 120 MHz, 30.72 MHz]
     hide: ${'$'}{ 'none' if clock_rate else 'part' }
 -   id: num_mboards
     label: Num Mboards
@@ -123,7 +123,11 @@ templates:
         import time
     make: |
         uhd.usrp_${sourk}(
+            ${'%'} if clock_rate():
+            ",".join((${'$'}{dev_addr}, ${'$'}{dev_args}, "master_clock_rate=${'$'}{clock_rate}")),
+            ${'%'} else:
             ",".join((${'$'}{dev_addr}, ${'$'}{dev_args})),
+            ${'%'} endif
             uhd.stream_args(
                 cpu_format="${'$'}{type}",
                 ${'%'} if otw:
@@ -144,9 +148,6 @@ templates:
             ${'%'} endif
             % endif
         )
-        ${'%'} if clock_rate():
-        self.${'$'}{id}.set_clock_rate(${'$'}{clock_rate}, uhd.ALL_MBOARDS)
-        ${'%'} endif
 
         % for m in range(max_mboards):
         ${'%'} if context.get('num_mboards')() > ${m}:
