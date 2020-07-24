@@ -169,7 +169,7 @@ templates:
         self.${'$'}{id}.set_samp_rate(${'$'}{samp_rate})
 
         ${'%'} if sync == 'sync':
-        self.${'$'}{id}.set_time_unknown_pps(uhd.time_spec(0))
+        self.${'$'}{id}.set_time_unknown_pps(uhd.time_spec(time.time()))
         ${'%'} elif sync == 'pc_clock':
         self.${'$'}{id}.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
         ${'%'} else:
