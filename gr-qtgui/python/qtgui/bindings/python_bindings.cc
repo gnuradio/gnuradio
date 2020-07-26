@@ -99,7 +99,7 @@ PYBIND11_MODULE(qtgui_python, m)
     bind_const_sink_c(m);
     // bind_constellationdisplayform(m);
     // bind_displayform(m);
-    // bind_edit_box_msg(m);
+    bind_edit_box_msg(m);
     bind_eye_sink_c(m);
     bind_eye_sink_f(m);
     // bind_form_menus(m);
