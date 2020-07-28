@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # Copyright 2008,2009,2011,2012,2015 Free Software Foundation, Inc.
 #
@@ -12,6 +12,7 @@ Provide a base flow graph for USRP signal generators.
 """
 
 import math
+import sys
 try:
     from uhd_app import UHDApp
 except ImportError:
@@ -36,8 +37,6 @@ WAVEFORM2_FREQ_KEY = 'waveform2_freq'
 FREQ_RANGE_KEY = 'freq_range'
 GAIN_RANGE_KEY = 'gain_range'
 TYPE_KEY = 'type'
-
-n2s = eng_notation.num_to_str
 
 WAVEFORMS = {
     analog.GR_CONST_WAVE : "Constant",
@@ -66,8 +65,8 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
 
         # Initialize device:
         self.setup_usrp(
-                ctor=uhd.usrp_sink,
-                args=args,
+            ctor=uhd.usrp_sink,
+            args=args,
         )
         print("[UHD-SIGGEN] UHD Signal Generator")
         print("[UHD-SIGGEN] UHD Version: {ver}".format(ver=uhd.get_version_string()))
@@ -150,7 +149,6 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
             self._src2.set_frequency(freq)
         elif self[TYPE_KEY] == "sweep":
             self._src1.set_frequency(freq)
-        return True
 
     def set_waveform(self, waveform_type):
         """
@@ -159,13 +157,13 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
         self.vprint("Selecting waveform...")
         self.lock()
         self.disconnect_all()
-        if waveform_type == analog.GR_SIN_WAVE or waveform_type == analog.GR_CONST_WAVE:
-            self._src = analog.sig_source_c(self[SAMP_RATE_KEY],      # Sample rate
-                                            waveform_type,                # Waveform waveform_type
-                                            self[WAVEFORM_FREQ_KEY], # Waveform frequency
-                                            self[AMPLITUDE_KEY],     # Waveform amplitude
-                                            self[WAVEFORM_OFFSET_KEY])        # Waveform offset
-        elif waveform_type == analog.GR_GAUSSIAN or waveform_type == analog.GR_UNIFORM:
+        if waveform_type in (analog.GR_SIN_WAVE, analog.GR_CONST_WAVE):
+            self._src = analog.sig_source_c(self[SAMP_RATE_KEY],       # Sample rate
+                                            waveform_type,             # Waveform waveform_type
+                                            self[WAVEFORM_FREQ_KEY],   # Waveform frequency
+                                            self[AMPLITUDE_KEY],       # Waveform amplitude
+                                            self[WAVEFORM_OFFSET_KEY]) # Waveform offset
+        elif waveform_type in (analog.GR_GAUSSIAN, analog.GR_UNIFORM):
             self._src = analog.noise_source_c(waveform_type, self[AMPLITUDE_KEY])
         elif waveform_type == "2tone":
             self._src1 = analog.sig_source_c(self[SAMP_RATE_KEY],
@@ -206,6 +204,7 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
             self.connect(self._src, self.extra_sink)
         self.unlock()
         self.vprint("Set baseband modulation to:", WAVEFORMS[waveform_type])
+        n2s = eng_notation.num_to_str
         if waveform_type == analog.GR_SIN_WAVE:
             self.vprint("Modulation frequency: %sHz" % (n2s(self[WAVEFORM_FREQ_KEY]),))
             self.vprint("Initial phase:", self[WAVEFORM_OFFSET_KEY])
@@ -213,7 +212,8 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
             self.vprint("Tone 1: %sHz" % (n2s(self[WAVEFORM_FREQ_KEY]),))
             self.vprint("Tone 2: %sHz" % (n2s(self[WAVEFORM2_FREQ_KEY]),))
         elif waveform_type == "sweep":
-            self.vprint("Sweeping across %sHz to %sHz" % (n2s(-self[WAVEFORM_FREQ_KEY] / 2.0), n2s(self[WAVEFORM_FREQ_KEY] / 2.0)))
+            self.vprint("Sweeping across {} Hz to {} Hz".format(
+                n2s(-self[WAVEFORM_FREQ_KEY] / 2.0), n2s(self[WAVEFORM_FREQ_KEY] / 2.0)))
             self.vprint("Sweep rate: %sHz" % (n2s(self[WAVEFORM2_FREQ_KEY]),))
         self.vprint("TX amplitude:", self[AMPLITUDE_KEY])
 
@@ -242,29 +242,29 @@ def setup_argparser():
     Create argument parser for signal generator.
     """
     parser = UHDApp.setup_argparser(
-            description="USRP Signal Generator.",
-            tx_or_rx="Tx",
+        description="USRP Signal Generator.",
+        tx_or_rx="Tx",
     )
     group = parser.add_argument_group('Siggen Arguments')
     group.add_argument("-x", "--waveform-freq", type=eng_arg.eng_float, default=0.0,
-                      help="Set baseband waveform frequency to FREQ")
+                       help="Set baseband waveform frequency to FREQ")
     group.add_argument("-y", "--waveform2-freq", type=eng_arg.eng_float, default=0.0,
-                      help="Set 2nd waveform frequency to FREQ")
+                       help="Set 2nd waveform frequency to FREQ")
     group.add_argument("--sine", dest="type", action="store_const", const=analog.GR_SIN_WAVE,
-                      help="Generate a carrier modulated by a complex sine wave",
-                      default=analog.GR_SIN_WAVE)
+                       help="Generate a carrier modulated by a complex sine wave",
+                       default=analog.GR_SIN_WAVE)
     group.add_argument("--const", dest="type", action="store_const", const=analog.GR_CONST_WAVE,
-                      help="Generate a constant carrier")
+                       help="Generate a constant carrier")
     group.add_argument("--offset", type=eng_arg.eng_float, default=0,
-                      help="Set waveform phase offset to OFFSET", metavar="OFFSET")
+                       help="Set waveform phase offset to OFFSET", metavar="OFFSET")
     group.add_argument("--gaussian", dest="type", action="store_const", const=analog.GR_GAUSSIAN,
-                      help="Generate Gaussian random output")
+                       help="Generate Gaussian random output")
     group.add_argument("--uniform", dest="type", action="store_const", const=analog.GR_UNIFORM,
-                      help="Generate Uniform random output")
+                       help="Generate Uniform random output")
     group.add_argument("--2tone", dest="type", action="store_const", const="2tone",
-                      help="Generate Two Tone signal for IMD testing")
+                       help="Generate Two Tone signal for IMD testing")
     group.add_argument("--sweep", dest="type", action="store_const", const="sweep",
-                      help="Generate a swept sine wave")
+                       help="Generate a swept sine wave")
     return parser
 
 def main():
@@ -278,7 +278,7 @@ def main():
         tb = USRPSiggen(args)
     except RuntimeError as ex:
         print(ex)
-        exit(1)
+        sys.exit(1)
     tb.start()
     input('[UHD-SIGGEN] Press Enter to quit:\n')
     tb.stop()
