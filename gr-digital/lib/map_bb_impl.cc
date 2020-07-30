@@ -30,6 +30,8 @@
 namespace gr {
 namespace digital {
 
+constexpr size_t map_bb_impl::s_map_size;
+
 map_bb::sptr map_bb::make(const std::vector<int>& map)
 {
     return gnuradio::get_initial_sptr(new map_bb_impl(map));
