@@ -300,7 +300,7 @@ cpp_templates:
       ${'%'} endif
       this->${'$'}{id}->set_samp_rate(${'$'}{samp_rate});
       ${'%'} if sync == 'sync':
-      this->${'$'}{id}->set_time_unknown_pps(::uhd::time_spec_t());
+      this->${'$'}{id}->set_time_unknown_pps(::uhd::time_spec_t(time(NULL)));
       ${'%'} elif sync == 'pc_clock':
       this->${'$'}{id}->set_time_now(::uhd::time_spec_t(time(NULL)), ::uhd::usrp::multi_usrp::ALL_MBOARDS);
       ${'%'} else:
