@@ -90,6 +90,8 @@ unsigned long long correlate_access_code_bb_ts_impl::access_code() const
 inline void correlate_access_code_bb_ts_impl::enter_search()
 {
     d_state = STATE_SYNC_SEARCH;
+    d_data_reg = 0;                 // K. McQuiggin - zero between access code searches to eliminate false detects due to poorly-chosen
+                                    // access codes.  2020.07.25
 }
 
 inline void correlate_access_code_bb_ts_impl::enter_have_sync()
