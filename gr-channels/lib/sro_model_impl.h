@@ -28,7 +28,7 @@ private:
     float d_samp_rate;
     float d_max_dev_hz;
     float d_std_dev_hz;
-    gr::filter::mmse_fir_interpolator_cc* d_interp;
+    const gr::filter::mmse_fir_interpolator_cc d_interp;
     gr::analog::fastnoise_source_f::sptr d_noise;
     double d_noise_seed;
 
