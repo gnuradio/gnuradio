@@ -36,7 +36,8 @@ polar_common::polar_common(int block_size,
       d_frozen_bit_values(frozen_bit_values),
       d_block_size(block_size),
       d_block_power((int)log2(float(block_size))),
-      d_num_info_bits(num_info_bits)
+      d_num_info_bits(num_info_bits),
+      d_unpacker(8)
 {
     if (pow(2, d_block_power) != d_block_size) {
         throw std::runtime_error("block_size MUST be a power of 2!");
@@ -55,8 +56,6 @@ polar_common::polar_common(int block_size,
     initialize_info_bit_position_vector();
     setup_volk_vectors();
     setup_info_bit_positions_reversed();
-
-    d_unpacker = new gr::blocks::kernel::unpack_k_bits(8);
 }
 
 void polar_common::initialize_info_bit_position_vector()
@@ -96,15 +95,15 @@ void polar_common::setup_info_bit_positions_reversed()
 void polar_common::setup_volk_vectors()
 {
     int nfrozen = block_size() - num_info_bits();
-    d_volk_temp = (unsigned char*)volk_malloc(sizeof(unsigned char) * block_size(),
-                                              volk_get_alignment());
-    d_volk_frozen_bit_mask = (unsigned char*)volk_malloc(
-        sizeof(unsigned char) * block_size(), volk_get_alignment());
-    d_volk_frozen_bits = (unsigned char*)volk_malloc(sizeof(unsigned char) * nfrozen,
-                                                     volk_get_alignment());
-    std::copy(d_frozen_bit_values.begin(), d_frozen_bit_values.end(), d_volk_frozen_bits);
-    std::fill(
-        d_volk_frozen_bits + d_frozen_bit_values.size(), d_volk_frozen_bits + nfrozen, 0);
+    d_volk_temp.resize(block_size());
+    d_volk_frozen_bit_mask.resize(block_size());
+    d_volk_frozen_bits.resize(nfrozen);
+    std::copy(d_frozen_bit_values.begin(),
+              d_frozen_bit_values.end(),
+              d_volk_frozen_bits.begin());
+    std::fill(d_volk_frozen_bits.data() + d_frozen_bit_values.size(),
+              d_volk_frozen_bits.data() + nfrozen,
+              0);
 
     unsigned int nfbit = 0;
     for (int i = 0; i < block_size(); i++) {
@@ -120,9 +119,9 @@ void polar_common::setup_volk_vectors()
 void polar_common::volk_encode(unsigned char* out_buf, const unsigned char* in_buf)
 {
     volk_8u_x3_encodepolar_8u_x2(out_buf,
-                                 d_volk_temp,
-                                 d_volk_frozen_bit_mask,
-                                 d_volk_frozen_bits,
+                                 d_volk_temp.data(),
+                                 d_volk_frozen_bit_mask.data(),
+                                 d_volk_frozen_bits.data(),
                                  in_buf,
                                  block_size());
 }
@@ -132,14 +131,7 @@ void polar_common::volk_encode_block(unsigned char* out_buf, unsigned char* in_b
     volk_8u_x2_encodeframepolar_8u(out_buf, in_buf, block_size());
 }
 
-polar_common::~polar_common()
-{
-    delete d_unpacker;
-
-    volk_free(d_volk_temp);
-    volk_free(d_volk_frozen_bit_mask);
-    volk_free(d_volk_frozen_bits);
-}
+polar_common::~polar_common() {}
 
 long polar_common::bit_reverse(long value, int active_bits) const
 {
@@ -156,16 +148,14 @@ void polar_common::print_packed_bit_array(const unsigned char* printed_array,
                                           const int num_bytes) const
 {
     int num_bits = num_bytes << 3;
-    unsigned char* temp = new unsigned char[num_bits];
-    d_unpacker->unpack(temp, printed_array, num_bytes);
+    std::vector<unsigned char> temp(num_bits);
+    d_unpacker.unpack(temp.data(), printed_array, num_bytes);
 
     std::cout << "[";
     for (int i = 0; i < num_bits; i++) {
-        std::cout << (int)*(temp + i) << " ";
+        std::cout << static_cast<int>(temp[i]) << " ";
     }
     std::cout << "]" << std::endl;
-
-    delete[] temp;
 }
 
 void polar_common::print_unpacked_bit_array(const unsigned char* bits,
