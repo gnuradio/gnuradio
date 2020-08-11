@@ -15,7 +15,7 @@
 if(MSVC)
     set_source_files_properties(
         ${CMAKE_CURRENT_SOURCE_DIR}/exercise.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/decode_rs.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/char.c
         PROPERTIES COMPILE_DEFINITIONS "MAX_ARRAY=256;"
     )
 endif(MSVC)
