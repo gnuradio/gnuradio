@@ -41,7 +41,6 @@ sro_model_impl::sro_model_impl(double sample_rate_hz,
       d_samp_rate(sample_rate_hz),
       d_max_dev_hz(max_dev_hz),
       d_std_dev_hz(std_dev_hz),
-      d_interp(new gr::filter::mmse_fir_interpolator_cc()),
       d_noise(gr::analog::fastnoise_source_f::make(
           analog::GR_GAUSSIAN, std_dev_hz, noise_seed)),
       d_noise_seed(noise_seed)
@@ -50,15 +49,14 @@ sro_model_impl::sro_model_impl(double sample_rate_hz,
     set_relative_rate(1, 1);
 }
 
-sro_model_impl::~sro_model_impl() { delete d_interp; }
+sro_model_impl::~sro_model_impl() {}
 
 void sro_model_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
 {
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++) {
-        ninput_items_required[i] =
-            (int)ceil((noutput_items * (d_mu_inc + d_max_dev_hz / d_samp_rate)) +
-                      d_interp->ntaps());
+        ninput_items_required[i] = (int)ceil(
+            (noutput_items * (d_mu_inc + d_max_dev_hz / d_samp_rate)) + d_interp.ntaps());
     }
 }
 
@@ -81,7 +79,7 @@ int sro_model_impl::general_work(int noutput_items,
         d_sro = std::max(d_sro, -d_max_dev_hz);
         d_mu_inc = 1.0 + d_sro / d_samp_rate;
 
-        out[oo++] = d_interp->interpolate(&in[ii], d_mu);
+        out[oo++] = d_interp.interpolate(&in[ii], d_mu);
 
         double s = d_mu + d_mu_inc;
         double f = floor(s);

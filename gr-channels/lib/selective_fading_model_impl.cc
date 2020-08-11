@@ -54,9 +54,9 @@ selective_fading_model_impl::selective_fading_model_impl(unsigned int N,
     if (mags.size() != delays.size())
         throw std::runtime_error("magnitude and delay vectors must be the same length!");
 
+    d_faders.reserve(mags.size());
     for (size_t i = 0; i < mags.size(); i++) {
-        d_faders.push_back(
-            new gr::channels::flat_fader_impl(N, fDTs, (i == 0) && (LOS), K, seed + i));
+        d_faders.emplace_back(N, fDTs, (i == 0) && (LOS), K, seed + i);
     }
 
     // set up tap history
@@ -67,12 +67,7 @@ selective_fading_model_impl::selective_fading_model_impl(unsigned int N,
     d_taps.resize(ntaps, gr_complex(0, 0));
 }
 
-selective_fading_model_impl::~selective_fading_model_impl()
-{
-    for (size_t i = 0; i < d_faders.size(); i++) {
-        delete d_faders[i];
-    }
-}
+selective_fading_model_impl::~selective_fading_model_impl() {}
 
 int selective_fading_model_impl::work(int noutput_items,
                                       gr_vector_const_void_star& input_items,
@@ -82,10 +77,9 @@ int selective_fading_model_impl::work(int noutput_items,
     gr_complex* out = (gr_complex*)output_items[0];
 
     // pregenerate fading components
-    std::vector<std::vector<gr_complex>> fading_taps;
+    std::vector<std::vector<gr_complex>> fading_taps(d_faders.size());
     for (size_t j = 0; j < d_faders.size(); j++) {
-        fading_taps.push_back(std::vector<gr_complex>());
-        d_faders[j]->next_samples(fading_taps[j], noutput_items);
+        d_faders[j].next_samples(fading_taps[j], noutput_items);
     }
 
     // loop over each output sample
@@ -99,7 +93,7 @@ int selective_fading_model_impl::work(int noutput_items,
         // add each flat fading component to the taps
         for (size_t j = 0; j < d_faders.size(); j++) {
             gr_complex ff_H(fading_taps[j][i]);
-            // gr_complex ff_H(d_faders[j]->next_sample());
+            // gr_complex ff_H(d_faders[j].next_sample());
             for (size_t k = 0; k < d_taps.size(); k++) {
                 float dist = k - d_delays[j];
                 float interpmag = d_sintable.sinc(GR_M_PI * dist);
