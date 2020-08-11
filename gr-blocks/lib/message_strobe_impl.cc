@@ -51,8 +51,7 @@ bool message_strobe_impl::start()
     // NOTE: d_finished should be something explicitly thread safe. But since
     // nothing breaks on concurrent access, I'll just leave it as bool.
     d_finished = false;
-    d_thread = std::shared_ptr<gr::thread::thread>(
-        new gr::thread::thread(std::bind(&message_strobe_impl::run, this)));
+    d_thread = gr::thread::thread(std::bind(&message_strobe_impl::run, this));
 
     return block::start();
 }
@@ -61,8 +60,8 @@ bool message_strobe_impl::stop()
 {
     // Shut down the thread
     d_finished = true;
-    d_thread->interrupt();
-    d_thread->join();
+    d_thread.interrupt();
+    d_thread.join();
 
     return block::stop();
 }
