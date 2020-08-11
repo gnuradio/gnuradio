@@ -20,6 +20,7 @@
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
+#include <boost/make_unique.hpp>
 #include <algorithm>
 #include <stdexcept>
 
@@ -41,7 +42,6 @@ tcp_server_sink_impl::tcp_server_sink_impl(size_t itemsize,
                  io_signature::make(0, 0, 0)),
       d_itemsize(itemsize),
       d_acceptor(d_io_service),
-      d_buf(new uint8_t[BUF_SIZE]),
       d_writing(0)
 {
     std::string s__port = (boost::format("%d") % port).str();
@@ -57,12 +57,12 @@ tcp_server_sink_impl::tcp_server_sink_impl(size_t itemsize,
     d_acceptor.listen();
 
     if (!noblock) {
-        d_socket.reset(new boost::asio::ip::tcp::socket(d_io_service));
-        d_acceptor.accept(*d_socket, d_endpoint);
-        d_sockets.insert(d_socket.release());
+        auto sock = boost::make_unique<boost::asio::ip::tcp::socket>(d_io_service);
+        d_acceptor.accept(*sock, d_endpoint);
+        d_sockets.insert(std::move(sock));
     }
 
-    d_socket.reset(new boost::asio::ip::tcp::socket(d_io_service));
+    d_socket = boost::make_unique<boost::asio::ip::tcp::socket>(d_io_service);
     d_acceptor.async_accept(*d_socket,
                             boost::bind(&tcp_server_sink_impl::do_accept,
                                         this,
@@ -75,8 +75,8 @@ void tcp_server_sink_impl::do_accept(const boost::system::error_code& error)
 {
     if (!error) {
         gr::thread::scoped_lock guard(d_writing_mut);
-        d_sockets.insert(d_socket.release());
-        d_socket.reset(new boost::asio::ip::tcp::socket(d_io_service));
+        d_sockets.insert(std::move(d_socket));
+        d_socket = boost::make_unique<boost::asio::ip::tcp::socket>(d_io_service);
         d_acceptor.async_accept(*d_socket,
                                 boost::bind(&tcp_server_sink_impl::do_accept,
                                             this,
@@ -84,15 +84,15 @@ void tcp_server_sink_impl::do_accept(const boost::system::error_code& error)
     }
 }
 
-void tcp_server_sink_impl::do_write(const boost::system::error_code& error,
-                                    size_t len,
-                                    std::set<boost::asio::ip::tcp::socket*>::iterator i)
+void tcp_server_sink_impl::do_write(
+    const boost::system::error_code& error,
+    size_t len,
+    std::set<std::unique_ptr<boost::asio::ip::tcp::socket>>::iterator i)
 {
     {
         gr::thread::scoped_lock guard(d_writing_mut);
         --d_writing;
         if (error) {
-            delete *i;
             d_sockets.erase(i);
         }
     }
@@ -105,14 +105,6 @@ tcp_server_sink_impl::~tcp_server_sink_impl()
     while (d_writing) {
         d_writing_cond.wait(guard);
     }
-
-    for (std::set<boost::asio::ip::tcp::socket*>::iterator i = d_sockets.begin();
-         i != d_sockets.end();
-         ++i) {
-        delete *i;
-    }
-    d_sockets.clear();
-
     d_io_service.reset();
     d_io_service.stop();
     d_io_serv_thread.join();
@@ -131,12 +123,10 @@ int tcp_server_sink_impl::work(int noutput_items,
 
     size_t data_len = std::min(size_t(BUF_SIZE), noutput_items * d_itemsize);
     data_len -= data_len % d_itemsize;
-    memcpy(d_buf.get(), in, data_len);
-    for (std::set<boost::asio::ip::tcp::socket*>::iterator i = d_sockets.begin();
-         i != d_sockets.end();
-         ++i) {
+    memcpy(d_buf.data(), in, data_len);
+    for (auto i = std::begin(d_sockets); i != std::end(d_sockets); ++i) {
         boost::asio::async_write(**i,
-                                 boost::asio::buffer(d_buf.get(), data_len),
+                                 boost::asio::buffer(d_buf.data(), data_len),
                                  boost::bind(&tcp_server_sink_impl::do_write,
                                              this,
                                              boost::asio::placeholders::error,

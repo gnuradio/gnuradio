@@ -28,13 +28,13 @@ private:
     gr::thread::thread d_io_serv_thread;
     boost::asio::ip::tcp::endpoint d_endpoint;
     std::unique_ptr<boost::asio::ip::tcp::socket> d_socket;
-    std::set<boost::asio::ip::tcp::socket*> d_sockets;
+    std::set<std::unique_ptr<boost::asio::ip::tcp::socket>> d_sockets;
     boost::asio::ip::tcp::acceptor d_acceptor;
 
-    std::shared_ptr<uint8_t[]> d_buf;
     enum {
         BUF_SIZE = 256 * 1024,
     };
+    std::array<uint8_t, BUF_SIZE> d_buf;
 
     int d_writing;
     boost::condition_variable d_writing_cond;
@@ -43,7 +43,7 @@ private:
     void do_accept(const boost::system::error_code& error);
     void do_write(const boost::system::error_code& error,
                   std::size_t len,
-                  std::set<boost::asio::ip::tcp::socket*>::iterator);
+                  std::set<std::unique_ptr<boost::asio::ip::tcp::socket>>::iterator);
 
 public:
     tcp_server_sink_impl(size_t itemsize,
