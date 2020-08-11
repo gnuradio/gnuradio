@@ -34,6 +34,8 @@ private:
                    int MTU = 10000,
                    bool no_delay = false);
 
+    void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
+
 public:
     typedef std::shared_ptr<tcp_connection> sptr;
 
@@ -44,12 +46,6 @@ public:
 
     void start(gr::basic_block* block);
     void send(pmt::pmt_t vector);
-    void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
-    void handle_write(std::shared_ptr<char[]> txbuf,
-                      const boost::system::error_code& error,
-                      size_t bytes_transferred)
-    {
-    }
 };
 
 } /* namespace blocks */
