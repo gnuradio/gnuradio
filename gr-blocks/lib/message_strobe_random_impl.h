@@ -13,6 +13,7 @@
 
 #include <gnuradio/blocks/message_strobe_random.h>
 
+#include <atomic>
 #include <random>
 
 namespace gr {
@@ -29,7 +30,7 @@ private:
     std::normal_distribution<> nd;       //(d_mean_ms, d_std_ms);
     std::uniform_real_distribution<> ud; //(d_mean_ms - d_std_ms, d_mean_ms + d_std_ms);
     gr::thread::thread d_thread;
-    bool d_finished;
+    std::atomic<bool> d_finished;
     pmt::pmt_t d_msg;
     const pmt::pmt_t d_port;
 

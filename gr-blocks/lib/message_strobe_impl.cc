@@ -48,8 +48,6 @@ message_strobe_impl::~message_strobe_impl() {}
 
 bool message_strobe_impl::start()
 {
-    // NOTE: d_finished should be something explicitly thread safe. But since
-    // nothing breaks on concurrent access, I'll just leave it as bool.
     d_finished = false;
     d_thread = gr::thread::thread(std::bind(&message_strobe_impl::run, this));
 
