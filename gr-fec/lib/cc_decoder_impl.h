@@ -12,6 +12,7 @@
 #define INCLUDED_FEC_CC_DECODER_IMPL_H
 
 #include <gnuradio/fec/cc_decoder.h>
+#include <volk/volk_alloc.hh>
 #include <map>
 #include <string>
 
@@ -57,9 +58,8 @@ private:
     cc_mode_t d_mode;
     int d_padding;
 
-    struct v* d_vp;
-    unsigned char* d_managed_in;
-    unsigned int d_managed_in_size;
+    struct v d_vp;
+    volk::vector<unsigned char> d_managed_in;
     int d_numstates;
     int d_decision_t_size;
     int* d_start_state;

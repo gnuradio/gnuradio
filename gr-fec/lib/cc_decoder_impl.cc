@@ -67,23 +67,15 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
                                      (d_rate * (d_k - 1)));
     }
 
-    d_vp = new struct v;
-
     d_numstates = 1 << (d_k - 1);
 
     d_decision_t_size = d_numstates / 8; // packed bit array
 
-    d_managed_in_size = 0;
     switch (d_mode) {
     case (CC_TAILBITING):
         d_end_state = &d_end_state_chaining;
         d_veclen = d_frame_size + (6 * (d_k - 1));
-        d_managed_in = (unsigned char*)volk_malloc(
-            d_veclen * d_rate * sizeof(unsigned char), volk_get_alignment());
-        d_managed_in_size = d_veclen * d_rate;
-        if (d_managed_in == NULL) {
-            throw std::runtime_error("cc_decoder: bad alloc for d_managed_in");
-        }
+        d_managed_in.resize(d_veclen * d_rate);
         break;
 
     case (CC_TRUNCATED):
@@ -106,25 +98,25 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
         throw std::runtime_error("cc_decoder: mode not recognized");
     }
 
-    d_vp->metrics = (unsigned char*)volk_malloc(2 * sizeof(unsigned char) * d_numstates,
-                                                volk_get_alignment());
-    if (d_vp->metrics == NULL) {
-        throw std::runtime_error("bad alloc for d_vp->metrics!");
+    d_vp.metrics = (unsigned char*)volk_malloc(2 * sizeof(unsigned char) * d_numstates,
+                                               volk_get_alignment());
+    if (d_vp.metrics == NULL) {
+        throw std::runtime_error("bad alloc for d_vp.metrics!");
     }
 
-    d_vp->metrics1.t = d_vp->metrics;
-    d_vp->metrics2.t = d_vp->metrics + d_numstates;
+    d_vp.metrics1.t = d_vp.metrics;
+    d_vp.metrics2.t = d_vp.metrics + d_numstates;
 
-    d_vp->decisions = (unsigned char*)volk_malloc(
+    d_vp.decisions = (unsigned char*)volk_malloc(
         sizeof(unsigned char) * d_veclen * d_decision_t_size, volk_get_alignment());
-    if (d_vp->decisions == NULL) {
-        throw std::runtime_error("bad alloc for d_vp->decisions!");
+    if (d_vp.decisions == NULL) {
+        throw std::runtime_error("bad alloc for d_vp.decisions!");
     }
 
     Branchtab = (unsigned char*)volk_malloc(
         sizeof(unsigned char) * d_numstates / 2 * rate, volk_get_alignment());
     if (Branchtab == NULL) {
-        throw std::runtime_error("bad alloc for d_vp->decisions!");
+        throw std::runtime_error("bad alloc for d_vp.decisions!");
     }
 
     create_viterbi();
@@ -157,15 +149,9 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
 
 cc_decoder_impl::~cc_decoder_impl()
 {
-    volk_free(d_vp->decisions);
+    volk_free(d_vp.decisions);
     volk_free(Branchtab);
-    volk_free(d_vp->metrics);
-
-    delete d_vp;
-
-    if (d_mode == CC_TAILBITING) {
-        volk_free(d_managed_in);
-    }
+    volk_free(d_vp.metrics);
 }
 
 int cc_decoder_impl::get_output_size()
@@ -213,18 +199,18 @@ void cc_decoder_impl::create_viterbi()
     switch (d_mode) {
     case (CC_STREAMING):
         d_start_state = &d_start_state_chaining;
-        init_viterbi_unbiased(d_vp);
+        init_viterbi_unbiased(&d_vp);
         break;
 
     case (CC_TAILBITING):
         d_start_state = &d_start_state_nonchaining;
-        init_viterbi_unbiased(d_vp);
+        init_viterbi_unbiased(&d_vp);
         break;
 
     case (CC_TRUNCATED):
     case (CC_TERMINATED):
         d_start_state = &d_start_state_nonchaining;
-        init_viterbi(d_vp, *d_start_state);
+        init_viterbi(&d_vp, *d_start_state);
         break;
 
     default:
@@ -295,7 +281,7 @@ int cc_decoder_impl::init_viterbi_unbiased(struct v* vp)
 int cc_decoder_impl::find_endstate()
 {
     unsigned char* met =
-        ((d_k + d_veclen) % 2 == 0) ? d_vp->new_metrics.t : d_vp->old_metrics.t;
+        ((d_k + d_veclen) % 2 == 0) ? d_vp.new_metrics.t : d_vp.old_metrics.t;
 
     unsigned char min = met[0];
     int state = 0;
@@ -313,12 +299,12 @@ int cc_decoder_impl::update_viterbi_blk(unsigned char* syms, int nbits)
 {
     unsigned char* d;
 
-    d = d_vp->decisions;
+    d = d_vp.decisions;
 
     memset(d, 0, d_decision_t_size * nbits);
 
-    d_kernel(d_vp->new_metrics.t,
-             d_vp->old_metrics.t,
+    d_kernel(d_vp.new_metrics.t,
+             d_vp.old_metrics.t,
              syms,
              d,
              nbits - (d_k - 1),
@@ -336,7 +322,7 @@ int cc_decoder_impl::chainback_viterbi(unsigned char* data,
     unsigned char* d;
 
     /* ADDSHIFT and SUBSHIFT make sure that the thing returned is a byte. */
-    d = d_vp->decisions;
+    d = d_vp.decisions;
     /* Make room beyond the end of the encoder register so we can
      * accumulate a full byte of decoded data
      */
@@ -395,7 +381,7 @@ bool cc_decoder_impl::set_frame_size(unsigned int frame_size)
     switch (d_mode) {
     case (CC_TAILBITING):
         d_veclen = d_frame_size + (6 * (d_k - 1));
-        if (d_veclen * d_rate > d_managed_in_size) {
+        if (d_veclen * d_rate > d_managed_in.size()) {
             throw std::runtime_error(
                 "cc_decoder: attempt to resize beyond d_managed_in buffer size!");
         }
@@ -433,14 +419,14 @@ void cc_decoder_impl::generic_work(void* inbuffer, void* outbuffer)
     switch (d_mode) {
 
     case (CC_TAILBITING):
-        memcpy(d_managed_in, in, d_frame_size * d_rate * sizeof(unsigned char));
-        memcpy(d_managed_in + d_frame_size * d_rate * sizeof(unsigned char),
+        memcpy(d_managed_in.data(), in, d_frame_size * d_rate * sizeof(unsigned char));
+        memcpy(d_managed_in.data() + d_frame_size * d_rate * sizeof(unsigned char),
                in,
                (d_veclen - d_frame_size) * d_rate * sizeof(unsigned char));
-        update_viterbi_blk(d_managed_in, d_veclen);
+        update_viterbi_blk(d_managed_in.data(), d_veclen);
         d_end_state_chaining = find_endstate();
         chainback_viterbi(&out[0], d_frame_size, *d_end_state, d_veclen - d_frame_size);
-        init_viterbi_unbiased(d_vp);
+        init_viterbi_unbiased(&d_vp);
         break;
 
 
@@ -452,7 +438,7 @@ void cc_decoder_impl::generic_work(void* inbuffer, void* outbuffer)
         }
         d_start_state_chaining =
             chainback_viterbi(&out[0], d_frame_size - (d_k - 1), *d_end_state, d_k - 1);
-        init_viterbi(d_vp, *d_start_state);
+        init_viterbi(&d_vp, *d_start_state);
         break;
 
     case (CC_STREAMING):
@@ -462,7 +448,7 @@ void cc_decoder_impl::generic_work(void* inbuffer, void* outbuffer)
         d_start_state_chaining = chainback_viterbi(
             &out[0], d_frame_size, *d_end_state, d_veclen - d_frame_size);
 
-        init_viterbi(d_vp, *d_start_state);
+        init_viterbi(&d_vp, *d_start_state);
         break;
 
     default:
