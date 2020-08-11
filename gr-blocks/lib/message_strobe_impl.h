@@ -12,6 +12,7 @@
 #define INCLUDED_GR_MESSAGE_STROBE_IMPL_H
 
 #include <gnuradio/blocks/message_strobe.h>
+#include <atomic>
 
 namespace gr {
 namespace blocks {
@@ -20,7 +21,7 @@ class BLOCKS_API message_strobe_impl : public message_strobe
 {
 private:
     gr::thread::thread d_thread;
-    bool d_finished;
+    std::atomic<bool> d_finished;
     long d_period_ms;
     pmt::pmt_t d_msg;
     const pmt::pmt_t d_port;
