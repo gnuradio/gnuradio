@@ -69,7 +69,8 @@ private:
                           std::vector<int> frozen_bit_positions,
                           std::vector<uint8_t> frozen_bit_values);
 
-    polar::scl_list* d_scl;
+    // Pointer because it's an impl type.
+    const std::unique_ptr<polar::scl_list> d_scl;
 
     void initialize_list(const float* in_buf);
     const unsigned char* decode_list();

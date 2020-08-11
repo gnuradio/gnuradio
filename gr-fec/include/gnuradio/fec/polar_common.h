@@ -14,8 +14,10 @@
 
 #include <vector>
 
+#include <gnuradio/blocks/unpack_k_bits.h>
 #include <gnuradio/fec/api.h>
 #include <stdint.h>
+#include <volk/volk_alloc.hh>
 #include <vector>
 
 // Forward declaration for those objects. SWIG doesn't like them to be #include'd.
@@ -90,9 +92,9 @@ protected:
     void setup_volk_vectors();
     void volk_encode(unsigned char* out_buf, const unsigned char* in_buf);
     void volk_encode_block(unsigned char* out_buf, unsigned char* in_buf);
-    unsigned char* d_volk_temp;
-    unsigned char* d_volk_frozen_bit_mask;
-    unsigned char* d_volk_frozen_bits;
+    volk::vector<unsigned char> d_volk_temp;
+    volk::vector<unsigned char> d_volk_frozen_bit_mask;
+    volk::vector<unsigned char> d_volk_frozen_bits;
 
 private:
     int d_block_size; // depending on paper called 'N' or 'm'
@@ -101,7 +103,7 @@ private:
 
     void initialize_info_bit_position_vector();
 
-    gr::blocks::kernel::unpack_k_bits*
+    gr::blocks::kernel::unpack_k_bits
         d_unpacker; // convenience for 'print_packed_bit_array' function.
 };
 
