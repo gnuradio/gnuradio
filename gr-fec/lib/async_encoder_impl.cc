@@ -35,7 +35,9 @@ async_encoder_impl::async_encoder_impl(generic_encoder::sptr my_encoder,
                                        bool rev_unpack,
                                        bool rev_pack,
                                        int mtu)
-    : block("async_encoder", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0))
+    : block("async_encoder", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
+      d_unpack(8),
+      d_pack(8)
 {
     d_in_port = pmt::mp("in");
     d_out_port = pmt::mp("out");
@@ -53,42 +55,22 @@ async_encoder_impl::async_encoder_impl(generic_encoder::sptr my_encoder,
     if (d_packed) {
         set_msg_handler(d_in_port, [this](pmt::pmt_t msg) { this->encode_packed(msg); });
 
-        d_unpack = new blocks::kernel::unpack_k_bits(8);
-
         int max_bits_out = d_encoder->rate() * d_mtu * 8;
-        d_bits_out =
-            (uint8_t*)volk_malloc(max_bits_out * sizeof(uint8_t), volk_get_alignment());
-
+        d_bits_out.resize(max_bits_out);
     } else {
         set_msg_handler(d_in_port,
                         [this](pmt::pmt_t msg) { this->encode_unpacked(msg); });
     }
 
     if (d_packed || (strncmp(d_encoder->get_input_conversion(), "pack", 4) == 0)) {
-        // encode_unpacked: if input conversion is 'pack', pack the input bits
-        // encode_packed: used to repack the output
-        d_pack = new blocks::kernel::pack_k_bits(8);
-
         // encode_unpacked: Holds packed bits in when input conversion is packed
         // encode_packed: holds the output bits of the encoder to be packed
         int max_bits_in = d_mtu * 8;
-        d_bits_in =
-            (uint8_t*)volk_malloc(max_bits_in * sizeof(uint8_t), volk_get_alignment());
+        d_bits_in.resize(max_bits_in);
     }
 }
 
-async_encoder_impl::~async_encoder_impl()
-{
-    if (d_packed) {
-        delete d_unpack;
-        volk_free(d_bits_out);
-    }
-
-    if (d_packed || (strncmp(d_encoder->get_input_conversion(), "pack", 4) == 0)) {
-        delete d_pack;
-        volk_free(d_bits_in);
-    }
-}
+async_encoder_impl::~async_encoder_impl() {}
 
 void async_encoder_impl::encode_unpacked(pmt::pmt_t msg)
 {
@@ -127,8 +109,8 @@ void async_encoder_impl::encode_unpacked(pmt::pmt_t msg)
     uint8_t* bits_out = pmt::u8vector_writable_elements(outvec, o0);
 
     if (strncmp(d_encoder->get_input_conversion(), "pack", 4) == 0) {
-        d_pack->pack(d_bits_in, bits_in, nbits_in / 8);
-        d_encoder->generic_work((void*)d_bits_in, (void*)bits_out);
+        d_pack.pack(d_bits_in.data(), bits_in, nbits_in / 8);
+        d_encoder->generic_work((void*)d_bits_in.data(), (void*)bits_out);
     } else {
         for (int i = 0; i < nblocks; i++) {
             d_encoder->generic_work((void*)&bits_in[i * d_encoder->get_input_size()],
@@ -167,14 +149,14 @@ void async_encoder_impl::encode_packed(pmt::pmt_t msg)
         // the decoder.
         // d_bits_in > bytes_in, so we're abusing the existence of
         // this allocated memory here
-        memcpy(d_bits_in, bytes_in, nbytes_in * sizeof(uint8_t));
+        memcpy(d_bits_in.data(), bytes_in, nbytes_in * sizeof(uint8_t));
     } else {
         // Encoder takes a stream of bits, but PDU's are received as
         // bytes, so we unpack them here.
         if (d_rev_unpack)
-            d_unpack->unpack_rev(d_bits_in, bytes_in, nbytes_in);
+            d_unpack.unpack_rev(d_bits_in.data(), bytes_in, nbytes_in);
         else
-            d_unpack->unpack(d_bits_in, bytes_in, nbytes_in);
+            d_unpack.unpack(d_bits_in.data(), bytes_in, nbytes_in);
     }
 
     // buffers for output bytes to go to
@@ -182,12 +164,12 @@ void async_encoder_impl::encode_packed(pmt::pmt_t msg)
     uint8_t* bytes_out = pmt::u8vector_writable_elements(outvec, o0);
 
     // ENCODE!
-    d_encoder->generic_work((void*)d_bits_in, (void*)d_bits_out);
+    d_encoder->generic_work((void*)d_bits_in.data(), (void*)d_bits_out.data());
 
     if (d_rev_pack)
-        d_pack->pack_rev(bytes_out, d_bits_out, nbytes_out);
+        d_pack.pack_rev(bytes_out, d_bits_out.data(), nbytes_out);
     else
-        d_pack->pack(bytes_out, d_bits_out, nbytes_out);
+        d_pack.pack(bytes_out, d_bits_out.data(), nbytes_out);
 
     pmt::pmt_t msg_pair = pmt::cons(meta, outvec);
     message_port_pub(d_out_port, msg_pair);
