@@ -50,8 +50,7 @@ message_strobe_random_impl::message_strobe_random_impl(
 {
     // set up ports
     message_port_register_out(d_port);
-    d_thread = std::shared_ptr<gr::thread::thread>(
-        new gr::thread::thread(std::bind(&message_strobe_random_impl::run, this)));
+    d_thread = gr::thread::thread(std::bind(&message_strobe_random_impl::run, this));
 
     message_port_register_in(pmt::mp("set_msg"));
     set_msg_handler(pmt::mp("set_msg"), [this](pmt::pmt_t msg) { this->set_msg(msg); });
@@ -94,8 +93,8 @@ long message_strobe_random_impl::next_delay()
 message_strobe_random_impl::~message_strobe_random_impl()
 {
     d_finished = true;
-    d_thread->interrupt();
-    d_thread->join();
+    d_thread.interrupt();
+    d_thread.join();
 }
 
 void message_strobe_random_impl::run()

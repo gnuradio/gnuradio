@@ -19,7 +19,7 @@ namespace blocks {
 class BLOCKS_API message_strobe_impl : public message_strobe
 {
 private:
-    std::shared_ptr<gr::thread::thread> d_thread;
+    gr::thread::thread d_thread;
     bool d_finished;
     long d_period_ms;
     pmt::pmt_t d_msg;
