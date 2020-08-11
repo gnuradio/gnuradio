@@ -82,8 +82,8 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
     }
 
     if (type == "TCP_SERVER") {
-        d_acceptor_tcp.reset(
-            new boost::asio::ip::tcp::acceptor(d_io_service, d_tcp_endpoint));
+        d_acceptor_tcp = std::make_shared<boost::asio::ip::tcp::acceptor>(d_io_service,
+                                                                          d_tcp_endpoint);
         d_acceptor_tcp->set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
 
         start_tcp_accept();
@@ -92,7 +92,7 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
                         [this](pmt::pmt_t msg) { this->tcp_server_send(msg); });
     } else if (type == "TCP_CLIENT") {
         boost::system::error_code error = boost::asio::error::host_not_found;
-        d_tcp_socket.reset(new boost::asio::ip::tcp::socket(d_io_service));
+        d_tcp_socket = std::make_shared<boost::asio::ip::tcp::socket>(d_io_service);
         d_tcp_socket->connect(d_tcp_endpoint, error);
         if (error)
             throw boost::system::system_error(error);
@@ -108,8 +108,8 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
                         boost::asio::placeholders::error,
                         boost::asio::placeholders::bytes_transferred));
     } else if (type == "UDP_SERVER") {
-        d_udp_socket.reset(
-            new boost::asio::ip::udp::socket(d_io_service, d_udp_endpoint));
+        d_udp_socket =
+            std::make_shared<boost::asio::ip::udp::socket>(d_io_service, d_udp_endpoint);
         d_udp_socket->async_receive_from(
             boost::asio::buffer(d_rxbuf),
             d_udp_endpoint_other,
@@ -121,8 +121,8 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
         set_msg_handler(pdu::pdu_port_id(),
                         [this](pmt::pmt_t msg) { this->udp_send(msg); });
     } else if (type == "UDP_CLIENT") {
-        d_udp_socket.reset(
-            new boost::asio::ip::udp::socket(d_io_service, d_udp_endpoint));
+        d_udp_socket =
+            std::make_shared<boost::asio::ip::udp::socket>(d_io_service, d_udp_endpoint);
         d_udp_socket->async_receive_from(
             boost::asio::buffer(d_rxbuf),
             d_udp_endpoint_other,
