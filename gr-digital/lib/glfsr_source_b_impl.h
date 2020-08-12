@@ -20,7 +20,7 @@ namespace digital {
 class glfsr_source_b_impl : public glfsr_source_b
 {
 private:
-    glfsr* d_glfsr;
+    glfsr d_glfsr;
 
     bool d_repeat;
     uint32_t d_index;
