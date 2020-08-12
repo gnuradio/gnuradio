@@ -42,22 +42,21 @@ corr_est_cc_impl::corr_est_cc_impl(const std::vector<gr_complex>& symbols,
     : sync_block("corr_est_cc",
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::make(1, 2, sizeof(gr_complex))),
-      d_src_id(pmt::intern(alias()))
+      d_src_id(pmt::intern(alias())),
+      d_symbols(symbols),
+      d_sps(sps),
+      d_filter(1, symbols), // taps will be re-set later in the constructor.
+      d_corr(s_nitems),
+      d_corr_mag(s_nitems),
+      d_threshold_method(threshold_method)
 {
-    d_sps = sps;
-    d_threshold_method = threshold_method;
-
     // In order to easily support the optional second output,
     // don't deal with an unbounded max number of output items.
     // For the common case of not using the optional second output,
     // this ensures we optimally call the volk routines.
-    const size_t nitems = 24 * 1024;
-    set_max_noutput_items(nitems);
-    d_corr = (gr_complex*)volk_malloc(sizeof(gr_complex) * nitems, volk_get_alignment());
-    d_corr_mag = (float*)volk_malloc(sizeof(float) * nitems, volk_get_alignment());
+    set_max_noutput_items(s_nitems);
 
     // Create time-reversed conjugate of symbols
-    d_symbols = symbols;
     for (size_t i = 0; i < d_symbols.size(); i++) {
         d_symbols[i] = conj(d_symbols[i]);
     }
@@ -66,15 +65,11 @@ corr_est_cc_impl::corr_est_cc_impl(const std::vector<gr_complex>& symbols,
     set_mark_delay(mark_delay);
     set_threshold(threshold);
 
-    // Correlation filter
-    d_filter = new kernel::fft_filter_ccc(1, d_symbols);
-
     // Per comments in gr-filter/include/gnuradio/filter/fft_filter.h,
     // set the block output multiple to the FFT filter kernel's internal,
     // assumed "nsamples", to ensure the scheduler always passes a
     // proper number of samples.
-    int nsamples;
-    nsamples = d_filter->set_taps(d_symbols);
+    const int nsamples = d_filter.set_taps(d_symbols);
     set_output_multiple(nsamples);
 
     // It looks like the kernel::fft_filter_ccc stashes a tail between
@@ -100,12 +95,7 @@ corr_est_cc_impl::corr_est_cc_impl(const std::vector<gr_complex>& symbols,
     d_scale = 1.0f;
 }
 
-corr_est_cc_impl::~corr_est_cc_impl()
-{
-    delete d_filter;
-    volk_free(d_corr);
-    volk_free(d_corr_mag);
-}
+corr_est_cc_impl::~corr_est_cc_impl() {}
 
 std::vector<gr_complex> corr_est_cc_impl::symbols() const { return d_symbols; }
 
@@ -119,8 +109,7 @@ void corr_est_cc_impl::set_symbols(const std::vector<gr_complex>& symbols)
     // set the block output multiple to the FFT filter kernel's internal,
     // assumed "nsamples", to ensure the scheduler always passes a
     // proper number of samples.
-    int nsamples;
-    nsamples = d_filter->set_taps(d_symbols);
+    const int nsamples = d_filter.set_taps(d_symbols);
     set_output_multiple(nsamples);
 
     // It looks like the kernel::fft_filter_ccc stashes a tail between
@@ -206,14 +195,14 @@ int corr_est_cc_impl::work(int noutput_items,
     if (output_items.size() > 1)
         corr = (gr_complex*)output_items[1];
     else
-        corr = d_corr;
+        corr = d_corr.data();
 
     // Our correlation filter length
     unsigned int hist_len = history() - 1;
 
     // Calculate the correlation of the non-delayed input with the
     // known symbols.
-    d_filter->filter(noutput_items, &in[hist_len], corr);
+    d_filter.filter(noutput_items, &in[hist_len], corr);
 
     // Find the magnitude squared of the correlation
     volk_32fc_magnitude_squared_32f(&d_corr_mag[0], corr, noutput_items);
