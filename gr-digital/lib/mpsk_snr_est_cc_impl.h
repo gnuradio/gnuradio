@@ -24,7 +24,7 @@ private:
     snr_est_type_t d_type;
     int d_nsamples, d_count;
     double d_alpha;
-    mpsk_snr_est* d_snr_est;
+    std::unique_ptr<mpsk_snr_est> d_snr_est;
 
     // d_key is the tag name, 'snr', d_me is the block name + unique ID
     pmt::pmt_t d_key, d_me;
