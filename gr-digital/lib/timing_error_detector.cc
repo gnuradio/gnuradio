@@ -14,49 +14,38 @@
 
 #include "timing_error_detector.h"
 #include <gnuradio/math.h>
+#include <boost/make_unique.hpp>
 #include <stdexcept>
 
 namespace gr {
 namespace digital {
 
-timing_error_detector* timing_error_detector::make(enum ted_type type,
-                                                   constellation_sptr constellation)
+std::unique_ptr<timing_error_detector>
+timing_error_detector::make(enum ted_type type, constellation_sptr constellation)
 {
-    timing_error_detector* ret = NULL;
     switch (type) {
     case TED_NONE:
-        break;
+        return nullptr;
     case TED_MUELLER_AND_MULLER:
-        ret = new ted_mueller_and_muller(constellation);
-        break;
+        return boost::make_unique<ted_mueller_and_muller>(constellation);
     case TED_MOD_MUELLER_AND_MULLER:
-        ret = new ted_mod_mueller_and_muller(constellation);
-        break;
+        return boost::make_unique<ted_mod_mueller_and_muller>(constellation);
     case TED_ZERO_CROSSING:
-        ret = new ted_zero_crossing(constellation);
-        break;
+        return boost::make_unique<ted_zero_crossing>(constellation);
     case TED_GARDNER:
-        ret = new ted_gardner();
-        break;
+        return boost::make_unique<ted_gardner>();
     case TED_EARLY_LATE:
-        ret = new ted_early_late();
-        break;
+        return boost::make_unique<ted_early_late>();
     case TED_DANDREA_AND_MENGALI_GEN_MSK:
-        ret = new ted_generalized_msk();
-        break;
+        return boost::make_unique<ted_generalized_msk>();
     case TED_SIGNAL_TIMES_SLOPE_ML:
-        ret = new ted_signal_times_slope_ml();
-        break;
+        return boost::make_unique<ted_signal_times_slope_ml>();
     case TED_SIGNUM_TIMES_SLOPE_ML:
-        ret = new ted_signum_times_slope_ml();
-        break;
+        return boost::make_unique<ted_signum_times_slope_ml>();
     case TED_MENGALI_AND_DANDREA_GMSK:
-        ret = new ted_gaussian_msk();
-        break;
-    default:
-        break;
+        return boost::make_unique<ted_gaussian_msk>();
     }
-    return ret;
+    return nullptr;
 }
 
 timing_error_detector::timing_error_detector(enum ted_type type,
