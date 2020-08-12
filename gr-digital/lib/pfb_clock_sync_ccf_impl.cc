@@ -80,14 +80,14 @@ pfb_clock_sync_ccf_impl::pfb_clock_sync_ccf_impl(double sps,
     d_rate_f = d_rate - (float)d_rate_i;
     d_filtnum = (int)floor(d_k);
 
-    d_filters.resize(d_nfilters);
-    d_diff_filters.resize(d_nfilters);
+    d_filters.reserve(d_nfilters);
+    d_diff_filters.reserve(d_nfilters);
 
     // Create an FIR filter for each channel and zero out the taps
     std::vector<float> vtaps(1, 0);
     for (int i = 0; i < d_nfilters; i++) {
-        d_filters[i].reset(new kernel::fir_filter_ccf(1, vtaps));
-        d_diff_filters[i].reset(new kernel::fir_filter_ccf(1, vtaps));
+        d_filters.emplace_back(1, vtaps);
+        d_diff_filters.emplace_back(1, vtaps);
     }
 
     // Now, actually set the filters' taps
@@ -194,10 +194,9 @@ void pfb_clock_sync_ccf_impl::update_gains()
     d_beta = (4 * d_loop_bw * d_loop_bw) / denom;
 }
 
-void pfb_clock_sync_ccf_impl::set_taps(
-    const std::vector<float>& newtaps,
-    std::vector<std::vector<float>>& ourtaps,
-    std::vector<std::unique_ptr<kernel::fir_filter_ccf>>& ourfilter)
+void pfb_clock_sync_ccf_impl::set_taps(const std::vector<float>& newtaps,
+                                       std::vector<std::vector<float>>& ourtaps,
+                                       std::vector<kernel::fir_filter_ccf>& ourfilter)
 {
     int i, j;
 
@@ -224,7 +223,7 @@ void pfb_clock_sync_ccf_impl::set_taps(
         }
 
         // Build a filter for each channel and add it's taps to it
-        ourfilter[i]->set_taps(ourtaps[i]);
+        ourfilter[i].set_taps(ourtaps[i]);
     }
 
     // Set the history to ensure enough input items for each filter
@@ -390,7 +389,7 @@ int pfb_clock_sync_ccf_impl::general_work(int noutput_items,
                 count -= 1;
             }
 
-            out[i + d_out_idx] = d_filters[d_filtnum]->filter(&in[count + d_out_idx]);
+            out[i + d_out_idx] = d_filters[d_filtnum].filter(&in[count + d_out_idx]);
             d_k = d_k + d_rate_i + d_rate_f; // update phase
 
 
@@ -427,7 +426,7 @@ int pfb_clock_sync_ccf_impl::general_work(int noutput_items,
         d_out_idx = 0;
 
         // Update the phase and rate estimates for this symbol
-        gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
+        gr_complex diff = d_diff_filters[d_filtnum].filter(&in[count]);
         error_r = out[i].real() * diff.real();
         error_i = out[i].imag() * diff.imag();
         d_error = (error_i + error_r) / 2.0; // average error from I&Q channel
