@@ -15,7 +15,7 @@
 #include "protocol_formatter_async_impl.h"
 #include <gnuradio/io_signature.h>
 #include <stdio.h>
-#include <volk/volk.h>
+#include <volk/volk_alloc.hh>
 
 namespace gr {
 namespace digital {
@@ -58,11 +58,9 @@ void protocol_formatter_async_impl::append(pmt::pmt_t msg)
     const uint8_t* bytes_in = pmt::u8vector_elements(input, pkt_len);
 
     // Pad the payload with 0's
-    uint8_t* payload =
-        (uint8_t*)volk_malloc(pkt_len * sizeof(uint8_t), volk_get_alignment());
-    memcpy(payload, bytes_in, pkt_len * sizeof(uint8_t));
-    output = pmt::init_u8vector(pkt_len, payload);
-    volk_free(payload);
+    volk::vector<uint8_t> payload(pkt_len);
+    memcpy(payload.data(), bytes_in, pkt_len * sizeof(uint8_t));
+    output = pmt::init_u8vector(pkt_len, payload.data());
 
     // Build the header from the input, metadata, and format
     d_format->format(pkt_len, bytes_in, header, meta);
