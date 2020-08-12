@@ -50,7 +50,7 @@ public:
      *                      for decision directed timing error detector
      *                      algorithms
      */
-    static timing_error_detector*
+    static std::unique_ptr<timing_error_detector>
     make(enum ted_type type, constellation_sptr constellation = constellation_sptr());
 
     virtual ~timing_error_detector(){};

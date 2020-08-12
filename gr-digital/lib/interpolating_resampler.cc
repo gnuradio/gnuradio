@@ -93,52 +93,40 @@ void interpolating_resampler::sync_reset(float phase)
 
 /*************************************************************************/
 
-interpolating_resampler_ccf* interpolating_resampler_ccf::make(
+std::unique_ptr<interpolating_resampler_ccf> interpolating_resampler_ccf::make(
     enum ir_type type, bool derivative, int nfilts, const std::vector<float>& taps)
 {
-    interpolating_resampler_ccf* ret = NULL;
     switch (type) {
     case IR_MMSE_8TAP:
-        ret = new interp_resampler_mmse_8tap_cc(derivative);
-        break;
+        return boost::make_unique<interp_resampler_mmse_8tap_cc>(derivative);
     case IR_PFB_NO_MF:
-        ret = new interp_resampler_pfb_no_mf_cc(derivative, nfilts);
-        break;
+        return boost::make_unique<interp_resampler_pfb_no_mf_cc>(derivative, nfilts);
     case IR_PFB_MF:
-        ret = new interp_resampler_pfb_mf_ccf(taps, nfilts, derivative);
-        break;
+        return boost::make_unique<interp_resampler_pfb_mf_ccf>(taps, nfilts, derivative);
     case IR_NONE:
-    default:
-        throw std::invalid_argument("interpolating_resampler_ccf: invalid "
-                                    "interpolating resampler type.");
-        break;
+        return nullptr;
     }
-    return ret;
+    throw std::invalid_argument("interpolating_resampler_ccf: invalid "
+                                "interpolating resampler type.");
 }
 
 /*************************************************************************/
 
-interpolating_resampler_fff* interpolating_resampler_fff::make(
+std::unique_ptr<interpolating_resampler_fff> interpolating_resampler_fff::make(
     enum ir_type type, bool derivative, int nfilts, const std::vector<float>& taps)
 {
-    interpolating_resampler_fff* ret = NULL;
     switch (type) {
     case IR_MMSE_8TAP:
-        ret = new interp_resampler_mmse_8tap_ff(derivative);
-        break;
+        return boost::make_unique<interp_resampler_mmse_8tap_ff>(derivative);
     case IR_PFB_NO_MF:
-        ret = new interp_resampler_pfb_no_mf_ff(derivative, nfilts);
-        break;
+        return boost::make_unique<interp_resampler_pfb_no_mf_ff>(derivative, nfilts);
     case IR_PFB_MF:
-        ret = new interp_resampler_pfb_mf_fff(taps, nfilts, derivative);
-        break;
+        return boost::make_unique<interp_resampler_pfb_mf_fff>(taps, nfilts, derivative);
     case IR_NONE:
-    default:
-        throw std::invalid_argument("interpolating_resampler_fff: invalid "
-                                    "interpolating resampler type.");
-        break;
+        return nullptr;
     }
-    return ret;
+    throw std::invalid_argument("interpolating_resampler_fff: invalid "
+                                "interpolating resampler type.");
 }
 
 /*************************************************************************/

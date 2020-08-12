@@ -47,26 +47,33 @@ symbol_sync_cc::sptr symbol_sync_cc::make(enum ted_type detector_type,
 }
 
 symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
-                                         float sps,
-                                         float loop_bw,
-                                         float damping_factor,
-                                         float ted_gain,
-                                         float max_deviation,
-                                         int osps,
+                                         const float sps,
+                                         const float loop_bw,
+                                         const float damping_factor,
+                                         const float ted_gain,
+                                         const float max_deviation,
+                                         const int osps,
                                          constellation_sptr slicer,
-                                         ir_type interp_type,
-                                         int n_filters,
+                                         const ir_type interp_type,
+                                         const int n_filters,
                                          const std::vector<float>& taps)
     : block("symbol_sync_cc",
             io_signature::make(1, 1, sizeof(gr_complex)),
             io_signature::makev(1, 4, std::vector<int>(4, sizeof(float)))),
+      d_ted(timing_error_detector::make(detector_type, slicer)),
+      d_clock(loop_bw,
+              sps + max_deviation,
+              sps - max_deviation,
+              sps,
+              damping_factor,
+              ted_gain),
+      d_interp(interpolating_resampler_ccf::make(
+          interp_type, d_ted->needs_derivative(), n_filters, taps)),
       d_inst_output_period(sps / static_cast<float>(osps)),
       d_inst_clock_period(sps),
       d_avg_clock_period(sps),
       d_osps(static_cast<float>(osps)),
       d_osps_n(osps),
-      d_tags(),
-      d_new_tags(),
       d_time_est_key(pmt::intern("time_est")),
       d_clock_est_key(pmt::intern("clock_est")),
       d_noutputs(1),
@@ -84,13 +91,10 @@ symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
         throw std::out_of_range("output samples per symbol must be > 0");
 
     // Timing Error Detector
-    d_ted.reset(timing_error_detector::make(detector_type, slicer));
     if (d_ted == nullptr)
         throw std::runtime_error("unable to create timing_error_detector");
 
     // Interpolating Resampler
-    d_interp.reset(interpolating_resampler_ccf::make(
-        interp_type, d_ted->needs_derivative(), n_filters, taps));
     if (d_interp == nullptr)
         throw std::runtime_error("unable to create interpolating_resampler_ccf");
 
@@ -113,14 +117,6 @@ symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
                                   "(%3f). Consider reducing osps or "
                                   "increasing sps") %
                         d_interps_per_symbol % sps);
-
-    // Symbol Clock Tracking and Estimation
-    d_clock.reset(new clock_tracking_loop(loop_bw,
-                                          sps + max_deviation,
-                                          sps - max_deviation,
-                                          sps,
-                                          damping_factor,
-                                          ted_gain));
 
     // Timing Error Detector
     d_ted->sync_reset();
@@ -220,7 +216,7 @@ bool symbol_sync_cc_impl::find_sync_tag(uint64_t nitems_rd,
             // got a time_est tag
             timing_offset = static_cast<float>(pmt::to_double(t->value));
             // next instantaneous clock period estimate will be nominal
-            clock_period = d_clock->get_nom_avg_period();
+            clock_period = d_clock.get_nom_avg_period();
 
             // Look for a clock_est tag at the same offset,
             // as we prefer clock_est tags
@@ -375,11 +371,11 @@ void symbol_sync_cc_impl::forecast(int noutput_items,
     // least one output sample, even if the main loop decides it has to
     // revert one computed sample and wait for the next call to
     // general_work().
-    // The d_clock->get_max_avg_period() is also an effort to do the same,
+    // The d_clock.get_max_avg_period() is also an effort to do the same,
     // in case we have the worst case allowable clock timing deviation on
     // input.
     const int answer = static_cast<int>(ceilf(static_cast<float>(noutput_items + 2) *
-                                              d_clock->get_max_avg_period() / d_osps)) +
+                                              d_clock.get_max_avg_period() / d_osps)) +
                        static_cast<int>(d_interp->ntaps());
 
     for (unsigned i = 0; i < ninputs; i++)
@@ -442,7 +438,7 @@ int symbol_sync_cc_impl::general_work(int noutput_items,
             // We must interpolate ahead to the *next* ted_input_clock, so the
             // ted will compute the error for *this* symbol.
             d_interp->next_phase(d_interps_per_ted_input *
-                                     (d_clock->get_inst_period() / d_interps_per_symbol),
+                                     (d_clock.get_inst_period() / d_interps_per_symbol),
                                  look_ahead_phase,
                                  look_ahead_phase_n,
                                  look_ahead_phase_wrapped);
@@ -478,10 +474,10 @@ int symbol_sync_cc_impl::general_work(int noutput_items,
 
         if (symbol_clock()) {
             // Symbol Clock Tracking and Estimation
-            d_clock->advance_loop(error);
-            d_inst_clock_period = d_clock->get_inst_period();
-            d_avg_clock_period = d_clock->get_avg_period();
-            d_clock->phase_wrap();
+            d_clock.advance_loop(error);
+            d_inst_clock_period = d_clock.get_inst_period();
+            d_avg_clock_period = d_clock.get_avg_period();
+            d_clock.phase_wrap();
 
             // Symbol Clock and Interpolator Positioning & Alignment
             d_inst_interp_period = d_inst_clock_period / d_interps_per_symbol;
@@ -512,7 +508,7 @@ int symbol_sync_cc_impl::general_work(int noutput_items,
                 // Revert the actions we took in the loop so far, and bail out.
 
                 // Symbol Clock Tracking and Estimation
-                d_clock->revert_loop();
+                d_clock.revert_loop();
 
                 // Timing Error Detector
                 d_ted->revert();
@@ -556,10 +552,10 @@ int symbol_sync_cc_impl::general_work(int noutput_items,
                     1) +
                 sync_timing_offset - d_interp->phase_wrapped();
 
-            d_clock->set_inst_period(d_inst_clock_period);
-            d_clock->set_avg_period(sync_clock_period);
-            d_avg_clock_period = d_clock->get_avg_period();
-            d_clock->set_phase(0.0f);
+            d_clock.set_inst_period(d_inst_clock_period);
+            d_clock.set_avg_period(sync_clock_period);
+            d_avg_clock_period = d_clock.get_avg_period();
+            d_clock.set_phase(0.0f);
 
             // Symbol Clock and Interpolator Positioning & Alignment
             d_inst_interp_period = d_inst_clock_period;

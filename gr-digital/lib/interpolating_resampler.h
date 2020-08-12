@@ -160,7 +160,7 @@ public:
      * \param taps   Prototype filter for the polyphase filter bank. Only
      *               needed for some types.
      */
-    static interpolating_resampler_ccf*
+    static std::unique_ptr<interpolating_resampler_ccf>
     make(enum ir_type type,
          bool derivative = false,
          int nfilts = 32,
@@ -222,7 +222,7 @@ public:
      * \param taps   Prototype filter for the polyphase filter bank. Only
      *               needed for some types.
      */
-    static interpolating_resampler_fff*
+    static std::unique_ptr<interpolating_resampler_fff>
     make(enum ir_type type,
          bool derivative = false,
          int nfilts = 32,
