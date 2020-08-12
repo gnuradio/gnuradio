@@ -17,6 +17,7 @@
 #include <gnuradio/filter/mmse_interp_differentiator_cc.h>
 #include <gnuradio/filter/mmse_interp_differentiator_ff.h>
 #include <gnuradio/gr_complex.h>
+#include <memory>
 #include <vector>
 
 namespace gr {
@@ -116,7 +117,7 @@ private:
 protected:
     interpolating_resampler(enum ir_type type, bool derivative = false);
 
-    bool d_derivative;
+    const bool d_derivative;
 
     float d_phase;
     float d_phase_wrapped;
@@ -296,8 +297,8 @@ public:
     gr_complex differentiate(const gr_complex input[], float mu) const;
 
 private:
-    filter::mmse_fir_interpolator_cc* d_interp;
-    filter::mmse_interp_differentiator_cc* d_interp_diff;
+    filter::mmse_fir_interpolator_cc d_interp;
+    std::unique_ptr<filter::mmse_interp_differentiator_cc> d_interp_diff;
 };
 
 /*!
@@ -344,8 +345,8 @@ public:
     float differentiate(const float input[], float mu) const;
 
 private:
-    filter::mmse_fir_interpolator_ff* d_interp;
-    filter::mmse_interp_differentiator_ff* d_interp_diff;
+    filter::mmse_fir_interpolator_ff d_interp;
+    std::unique_ptr<filter::mmse_interp_differentiator_ff> d_interp_diff;
 };
 
 /*************************************************************************/
@@ -399,8 +400,8 @@ public:
 
 private:
     int d_nfilters;
-    std::vector<filter::kernel::fir_filter_ccf*> d_filters;
-    std::vector<filter::kernel::fir_filter_ccf*> d_diff_filters;
+    std::vector<filter::kernel::fir_filter_ccf> d_filters;
+    std::vector<filter::kernel::fir_filter_ccf> d_diff_filters;
 };
 
 /*!
@@ -452,8 +453,8 @@ public:
 
 private:
     int d_nfilters;
-    std::vector<filter::kernel::fir_filter_fff*> d_filters;
-    std::vector<filter::kernel::fir_filter_fff*> d_diff_filters;
+    std::vector<filter::kernel::fir_filter_fff> d_filters;
+    std::vector<filter::kernel::fir_filter_fff> d_diff_filters;
 };
 
 /*************************************************************************/
@@ -510,8 +511,8 @@ public:
 private:
     int d_nfilters;
     const unsigned int d_taps_per_filter;
-    std::vector<filter::kernel::fir_filter_ccf*> d_filters;
-    std::vector<filter::kernel::fir_filter_ccf*> d_diff_filters;
+    std::vector<filter::kernel::fir_filter_ccf> d_filters;
+    std::vector<filter::kernel::fir_filter_ccf> d_diff_filters;
 
     std::vector<std::vector<float>> d_taps;
     std::vector<std::vector<float>> d_diff_taps;
@@ -569,8 +570,8 @@ public:
 private:
     int d_nfilters;
     const unsigned int d_taps_per_filter;
-    std::vector<filter::kernel::fir_filter_fff*> d_filters;
-    std::vector<filter::kernel::fir_filter_fff*> d_diff_filters;
+    std::vector<filter::kernel::fir_filter_fff> d_filters;
+    std::vector<filter::kernel::fir_filter_fff> d_diff_filters;
 
     std::vector<std::vector<float>> d_taps;
     std::vector<std::vector<float>> d_diff_taps;
