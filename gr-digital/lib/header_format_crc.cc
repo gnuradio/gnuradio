@@ -14,7 +14,7 @@
 #include <gnuradio/digital/header_buffer.h>
 #include <gnuradio/digital/header_format_crc.h>
 #include <string.h>
-#include <volk/volk.h>
+#include <volk/volk_alloc.hh>
 
 namespace gr {
 namespace digital {
@@ -40,8 +40,8 @@ bool header_format_crc::format(int nbytes_in,
                                pmt::pmt_t& output,
                                pmt::pmt_t& info)
 {
-    uint8_t* bytes_out = (uint8_t*)volk_malloc(header_nbytes(), volk_get_alignment());
-    memset(bytes_out, 0, header_nbytes());
+    // Creating the output pmt copies data; free our own here when done.
+    volk::vector<uint8_t> bytes_out(header_nbytes());
 
     // Should this throw instead of mask if the payload is too big
     // for 12-bit representation?
@@ -56,7 +56,7 @@ bool header_format_crc::format(int nbytes_in,
     uint32_t concat = 0;
     concat = (d_header_number << 12) | (nbytes_in);
 
-    header_buffer header(bytes_out);
+    header_buffer header(bytes_out.data());
     header.add_field32(concat, 24, true);
     header.add_field8(crc);
 
@@ -64,10 +64,7 @@ bool header_format_crc::format(int nbytes_in,
     d_header_number &= 0x0FFF;
 
     // Package output data into a PMT vector
-    output = pmt::init_u8vector(header_nbytes(), bytes_out);
-
-    // Creating the output pmt copies data; free our own here.
-    volk_free(bytes_out);
+    output = pmt::init_u8vector(header_nbytes(), bytes_out.data());
 
     return true;
 }
