@@ -14,6 +14,7 @@
 
 #include "interpolating_resampler.h"
 #include <gnuradio/math.h>
+#include <boost/make_unique.hpp>
 #include <deque>
 #include <stdexcept>
 
@@ -143,27 +144,19 @@ interpolating_resampler_fff* interpolating_resampler_fff::make(
 /*************************************************************************/
 
 interp_resampler_mmse_8tap_cc::interp_resampler_mmse_8tap_cc(bool derivative)
-    : interpolating_resampler_ccf(IR_MMSE_8TAP, derivative),
-      d_interp(NULL),
-      d_interp_diff(NULL)
+    : interpolating_resampler_ccf(IR_MMSE_8TAP, derivative)
 {
-    d_interp = new filter::mmse_fir_interpolator_cc();
     if (d_derivative) {
-        d_interp_diff = new filter::mmse_interp_differentiator_cc();
+        d_interp_diff = boost::make_unique<filter::mmse_interp_differentiator_cc>();
     }
 }
 
-interp_resampler_mmse_8tap_cc::~interp_resampler_mmse_8tap_cc()
-{
-    delete d_interp;
-    if (d_derivative)
-        delete d_interp_diff;
-}
+interp_resampler_mmse_8tap_cc::~interp_resampler_mmse_8tap_cc() {}
 
 gr_complex interp_resampler_mmse_8tap_cc::interpolate(const gr_complex input[],
                                                       float mu) const
 {
-    return d_interp->interpolate(input, mu);
+    return d_interp.interpolate(input, mu);
 }
 
 gr_complex interp_resampler_mmse_8tap_cc::differentiate(const gr_complex input[],
@@ -172,32 +165,23 @@ gr_complex interp_resampler_mmse_8tap_cc::differentiate(const gr_complex input[]
     return d_interp_diff->differentiate(input, mu);
 }
 
-unsigned int interp_resampler_mmse_8tap_cc::ntaps() const { return d_interp->ntaps(); }
+unsigned int interp_resampler_mmse_8tap_cc::ntaps() const { return d_interp.ntaps(); }
 
 /*************************************************************************/
 
 interp_resampler_mmse_8tap_ff::interp_resampler_mmse_8tap_ff(bool derivative)
-    : interpolating_resampler_fff(IR_MMSE_8TAP, derivative),
-      d_interp(NULL),
-      d_interp_diff(NULL)
+    : interpolating_resampler_fff(IR_MMSE_8TAP, derivative)
 {
-    d_interp = new filter::mmse_fir_interpolator_ff();
-
     if (d_derivative) {
-        d_interp_diff = new filter::mmse_interp_differentiator_ff();
+        d_interp_diff = boost::make_unique<filter::mmse_interp_differentiator_ff>();
     }
 }
 
-interp_resampler_mmse_8tap_ff::~interp_resampler_mmse_8tap_ff()
-{
-    delete d_interp;
-    if (d_derivative)
-        delete d_interp_diff;
-}
+interp_resampler_mmse_8tap_ff::~interp_resampler_mmse_8tap_ff() {}
 
 float interp_resampler_mmse_8tap_ff::interpolate(const float input[], float mu) const
 {
-    return d_interp->interpolate(input, mu);
+    return d_interp.interpolate(input, mu);
 }
 
 float interp_resampler_mmse_8tap_ff::differentiate(const float input[], float mu) const
@@ -205,7 +189,7 @@ float interp_resampler_mmse_8tap_ff::differentiate(const float input[], float mu
     return d_interp_diff->differentiate(input, mu);
 }
 
-unsigned int interp_resampler_mmse_8tap_ff::ntaps() const { return d_interp->ntaps(); }
+unsigned int interp_resampler_mmse_8tap_ff::ntaps() const { return d_interp.ntaps(); }
 
 /*************************************************************************/
 
@@ -213,10 +197,7 @@ unsigned int interp_resampler_mmse_8tap_ff::ntaps() const { return d_interp->nta
 #include "gnuradio/filter/interpolator_taps.h"
 
 interp_resampler_pfb_no_mf_cc::interp_resampler_pfb_no_mf_cc(bool derivative, int nfilts)
-    : interpolating_resampler_ccf(IR_PFB_NO_MF, derivative),
-      d_nfilters(0),
-      d_filters(),
-      d_diff_filters()
+    : interpolating_resampler_ccf(IR_PFB_NO_MF, derivative)
 {
     if (nfilts <= 1)
         throw std::invalid_argument("interpolating_resampler_pfb_no_mf_cc: "
@@ -238,31 +219,23 @@ interp_resampler_pfb_no_mf_cc::interp_resampler_pfb_no_mf_cc(bool derivative, in
     // N.B. We create an extra final row for an offset of 1.0, because it's
     // easier than dealing with wrap around from 0.99... to 0.0 shifted
     // by 1 tap.
-    d_filters = std::vector<filter::kernel::fir_filter_ccf*>(d_nfilters + 1);
-    d_diff_filters = std::vector<filter::kernel::fir_filter_ccf*>(d_nfilters + 1);
+    d_filters.reserve(d_nfilters + 1);
+    d_diff_filters.reserve(d_nfilters + 1);
 
     std::vector<float> t(NTAPS, 0);
     int incr = NSTEPS / d_nfilters;
-    int src, dst;
-    for (src = 0, dst = 0; src <= NSTEPS; src += incr, dst++) {
+    for (int src = 0; src <= NSTEPS; src += incr) {
 
         t.assign(&taps[src][0], &taps[src][NTAPS]);
-        d_filters[dst] = new filter::kernel::fir_filter_ccf(1, t);
+        d_filters.emplace_back(1, t);
         if (d_derivative) {
             t.assign(&Dtaps[src][0], &Dtaps[src][DNTAPS]);
-            d_diff_filters[dst] = new filter::kernel::fir_filter_ccf(1, t);
+            d_diff_filters.emplace_back(1, t);
         }
     }
 }
 
-interp_resampler_pfb_no_mf_cc::~interp_resampler_pfb_no_mf_cc()
-{
-    for (int i = 0; i <= d_nfilters; i++) {
-        delete d_filters[i];
-        if (d_derivative)
-            delete d_diff_filters[i];
-    }
-}
+interp_resampler_pfb_no_mf_cc::~interp_resampler_pfb_no_mf_cc() {}
 
 gr_complex interp_resampler_pfb_no_mf_cc::interpolate(const gr_complex input[],
                                                       float mu) const
@@ -273,7 +246,7 @@ gr_complex interp_resampler_pfb_no_mf_cc::interpolate(const gr_complex input[],
         throw std::runtime_error("interp_resampler_pfb_no_mf_cc: mu is not "
                                  "in the range [0.0, 1.0]");
 
-    return d_filters[arm]->filter(input);
+    return d_filters[arm].filter(input);
 }
 
 gr_complex interp_resampler_pfb_no_mf_cc::differentiate(const gr_complex input[],
@@ -285,7 +258,7 @@ gr_complex interp_resampler_pfb_no_mf_cc::differentiate(const gr_complex input[]
         throw std::runtime_error("interp_resampler_pfb_no_mf_cc: mu is not "
                                  "in the range [0.0, 1.0]");
 
-    return d_diff_filters[arm]->filter(input);
+    return d_diff_filters[arm].filter(input);
 }
 
 unsigned int interp_resampler_pfb_no_mf_cc::ntaps() const { return NTAPS; }
@@ -293,10 +266,7 @@ unsigned int interp_resampler_pfb_no_mf_cc::ntaps() const { return NTAPS; }
 /*************************************************************************/
 
 interp_resampler_pfb_no_mf_ff::interp_resampler_pfb_no_mf_ff(bool derivative, int nfilts)
-    : interpolating_resampler_fff(IR_PFB_NO_MF, derivative),
-      d_nfilters(0),
-      d_filters(),
-      d_diff_filters()
+    : interpolating_resampler_fff(IR_PFB_NO_MF, derivative), d_nfilters(0)
 {
     if (nfilts <= 1)
         throw std::invalid_argument("interpolating_resampler_pfb_no_mf_ff: "
@@ -318,31 +288,23 @@ interp_resampler_pfb_no_mf_ff::interp_resampler_pfb_no_mf_ff(bool derivative, in
     // N.B. We create an extra final row for an offset of 1.0, because it's
     // easier than dealing with wrap around from 0.99... to 0.0 shifted
     // by 1 tap.
-    d_filters = std::vector<filter::kernel::fir_filter_fff*>(d_nfilters + 1);
-    d_diff_filters = std::vector<filter::kernel::fir_filter_fff*>(d_nfilters + 1);
+    d_filters.reserve(d_nfilters + 1);
+    d_diff_filters.reserve(d_nfilters + 1);
 
     std::vector<float> t(NTAPS, 0);
     int incr = NSTEPS / d_nfilters;
-    int src, dst;
-    for (src = 0, dst = 0; src <= NSTEPS; src += incr, dst++) {
+    for (int src = 0; src <= NSTEPS; src += incr) {
 
         t.assign(&taps[src][0], &taps[src][NTAPS]);
-        d_filters[dst] = new filter::kernel::fir_filter_fff(1, t);
+        d_filters.emplace_back(1, t);
         if (d_derivative) {
             t.assign(&Dtaps[src][0], &Dtaps[src][DNTAPS]);
-            d_diff_filters[dst] = new filter::kernel::fir_filter_fff(1, t);
+            d_diff_filters.emplace_back(1, t);
         }
     }
 }
 
-interp_resampler_pfb_no_mf_ff::~interp_resampler_pfb_no_mf_ff()
-{
-    for (int i = 0; i <= d_nfilters; i++) {
-        delete d_filters[i];
-        if (d_derivative)
-            delete d_diff_filters[i];
-    }
-}
+interp_resampler_pfb_no_mf_ff::~interp_resampler_pfb_no_mf_ff() {}
 
 float interp_resampler_pfb_no_mf_ff::interpolate(const float input[], float mu) const
 {
@@ -352,7 +314,7 @@ float interp_resampler_pfb_no_mf_ff::interpolate(const float input[], float mu) 
         throw std::runtime_error("interp_resampler_pfb_no_mf_ff: mu is not "
                                  "in the range [0.0, 1.0]");
 
-    return d_filters[arm]->filter(input);
+    return d_filters[arm].filter(input);
 }
 
 float interp_resampler_pfb_no_mf_ff::differentiate(const float input[], float mu) const
@@ -363,7 +325,7 @@ float interp_resampler_pfb_no_mf_ff::differentiate(const float input[], float mu
         throw std::runtime_error("interp_resampler_pfb_no_mf_ff: mu is not "
                                  "in the range [0.0, 1.0]");
 
-    return d_diff_filters[arm]->filter(input);
+    return d_diff_filters[arm].filter(input);
 }
 
 unsigned int interp_resampler_pfb_no_mf_ff::ntaps() const { return NTAPS; }
@@ -376,11 +338,7 @@ interp_resampler_pfb_mf_ccf::interp_resampler_pfb_mf_ccf(const std::vector<float
     : interpolating_resampler_ccf(IR_PFB_MF, derivative),
       d_nfilters(nfilts),
       d_taps_per_filter(static_cast<unsigned int>(
-          ceil(static_cast<double>(taps.size()) / static_cast<double>(nfilts)))),
-      d_filters(),
-      d_diff_filters(),
-      d_taps(),
-      d_diff_taps()
+          ceil(static_cast<double>(taps.size()) / static_cast<double>(nfilts))))
 {
     if (d_nfilters <= 1)
         throw std::invalid_argument("interpolating_resampler_pfb_mf_ccf: "
@@ -452,8 +410,8 @@ interp_resampler_pfb_mf_ccf::interp_resampler_pfb_mf_ccf(const std::vector<float
     // N.B. We create an extra final row for an offset of 1.0, because it's
     // easier than dealing with wrap around from 0.99... to 0.0 shifted
     // by 1 tap.
-    d_filters = std::vector<filter::kernel::fir_filter_ccf*>(d_nfilters + 1);
-    d_diff_filters = std::vector<filter::kernel::fir_filter_ccf*>(d_nfilters + 1);
+    d_filters.reserve(d_nfilters + 1);
+    d_diff_filters.reserve(d_nfilters + 1);
 
     m = taps.size();
     n = diff_taps.size();
@@ -468,7 +426,7 @@ interp_resampler_pfb_mf_ccf::interp_resampler_pfb_mf_ccf(const std::vector<float
             if (k < m)
                 d_taps[i][j] = taps[k];
         }
-        d_filters[i] = new filter::kernel::fir_filter_ccf(1, d_taps[i]);
+        d_filters.emplace_back(1, d_taps[i]);
         if (!d_derivative)
             continue;
 
@@ -478,18 +436,11 @@ interp_resampler_pfb_mf_ccf::interp_resampler_pfb_mf_ccf(const std::vector<float
             if (k < n)
                 d_diff_taps[i][j] = diff_taps[k];
         }
-        d_diff_filters[i] = new filter::kernel::fir_filter_ccf(1, d_diff_taps[i]);
+        d_diff_filters.emplace_back(1, d_diff_taps[i]);
     }
 }
 
-interp_resampler_pfb_mf_ccf::~interp_resampler_pfb_mf_ccf()
-{
-    for (int i = 0; i <= d_nfilters; i++) {
-        delete d_filters[i];
-        if (d_derivative)
-            delete d_diff_filters[i];
-    }
-}
+interp_resampler_pfb_mf_ccf::~interp_resampler_pfb_mf_ccf() {}
 
 gr_complex interp_resampler_pfb_mf_ccf::interpolate(const gr_complex input[],
                                                     float mu) const
@@ -500,7 +451,7 @@ gr_complex interp_resampler_pfb_mf_ccf::interpolate(const gr_complex input[],
         throw std::runtime_error("interp_resampler_pfb_mf_ccf: mu is not "
                                  "in the range [0.0, 1.0]");
 
-    return d_filters[arm]->filter(input);
+    return d_filters[arm].filter(input);
 }
 
 gr_complex interp_resampler_pfb_mf_ccf::differentiate(const gr_complex input[],
@@ -512,7 +463,7 @@ gr_complex interp_resampler_pfb_mf_ccf::differentiate(const gr_complex input[],
         throw std::runtime_error("interp_resampler_pfb_mf_ccf: mu is not "
                                  "in the range [0.0, 1.0]");
 
-    return d_diff_filters[arm]->filter(input);
+    return d_diff_filters[arm].filter(input);
 }
 
 unsigned int interp_resampler_pfb_mf_ccf::ntaps() const { return d_taps_per_filter; }
@@ -525,11 +476,7 @@ interp_resampler_pfb_mf_fff::interp_resampler_pfb_mf_fff(const std::vector<float
     : interpolating_resampler_fff(IR_PFB_MF, derivative),
       d_nfilters(nfilts),
       d_taps_per_filter(static_cast<unsigned int>(
-          ceil(static_cast<double>(taps.size()) / static_cast<double>(nfilts)))),
-      d_filters(),
-      d_diff_filters(),
-      d_taps(),
-      d_diff_taps()
+          ceil(static_cast<double>(taps.size()) / static_cast<double>(nfilts))))
 {
     if (d_nfilters <= 1)
         throw std::invalid_argument("interpolating_resampler_pfb_mf_fff: "
@@ -601,8 +548,8 @@ interp_resampler_pfb_mf_fff::interp_resampler_pfb_mf_fff(const std::vector<float
     // N.B. We create an extra final row for an offset of 1.0, because it's
     // easier than dealing with wrap around from 0.99... to 0.0 shifted
     // by 1 tap.
-    d_filters = std::vector<filter::kernel::fir_filter_fff*>(d_nfilters + 1);
-    d_diff_filters = std::vector<filter::kernel::fir_filter_fff*>(d_nfilters + 1);
+    d_filters.reserve(d_nfilters + 1);
+    d_diff_filters.reserve(d_nfilters + 1);
 
     m = taps.size();
     n = diff_taps.size();
@@ -617,7 +564,7 @@ interp_resampler_pfb_mf_fff::interp_resampler_pfb_mf_fff(const std::vector<float
             if (k < m)
                 d_taps[i][j] = taps[k];
         }
-        d_filters[i] = new filter::kernel::fir_filter_fff(1, d_taps[i]);
+        d_filters.emplace_back(1, d_taps[i]);
         if (!d_derivative)
             continue;
 
@@ -627,18 +574,11 @@ interp_resampler_pfb_mf_fff::interp_resampler_pfb_mf_fff(const std::vector<float
             if (k < n)
                 d_diff_taps[i][j] = diff_taps[k];
         }
-        d_diff_filters[i] = new filter::kernel::fir_filter_fff(1, d_diff_taps[i]);
+        d_diff_filters.emplace_back(1, d_diff_taps[i]);
     }
 }
 
-interp_resampler_pfb_mf_fff::~interp_resampler_pfb_mf_fff()
-{
-    for (int i = 0; i <= d_nfilters; i++) {
-        delete d_filters[i];
-        if (d_derivative)
-            delete d_diff_filters[i];
-    }
-}
+interp_resampler_pfb_mf_fff::~interp_resampler_pfb_mf_fff() {}
 
 float interp_resampler_pfb_mf_fff::interpolate(const float input[], float mu) const
 {
@@ -648,7 +588,7 @@ float interp_resampler_pfb_mf_fff::interpolate(const float input[], float mu) co
         throw std::runtime_error("interp_resampler_pfb_mf_fff: mu is not "
                                  "in the range [0.0, 1.0]");
 
-    return d_filters[arm]->filter(input);
+    return d_filters[arm].filter(input);
 }
 
 float interp_resampler_pfb_mf_fff::differentiate(const float input[], float mu) const
@@ -659,7 +599,7 @@ float interp_resampler_pfb_mf_fff::differentiate(const float input[], float mu) 
         throw std::runtime_error("interp_resampler_pfb_mf_fff: mu is not "
                                  "in the range [0.0, 1.0]");
 
-    return d_diff_filters[arm]->filter(input);
+    return d_diff_filters[arm].filter(input);
 }
 
 unsigned int interp_resampler_pfb_mf_fff::ntaps() const { return d_taps_per_filter; }
