@@ -54,7 +54,7 @@ private:
     float d_omega_lim;            // actual omega clipping limit
 
     float d_last_sample;
-    filter::mmse_fir_interpolator_ff* d_interp;
+    filter::mmse_fir_interpolator_ff d_interp;
 
     bool d_verbose;
 
