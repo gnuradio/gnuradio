@@ -33,6 +33,7 @@ glfsr_source_f_impl::glfsr_source_f_impl(unsigned int degree,
     : sync_block("glfsr_source_f",
                  io_signature::make(0, 0, 0),
                  io_signature::make(1, 1, sizeof(float))),
+      d_glfsr(mask ? mask : glfsr::glfsr_mask(degree), seed),
       d_repeat(repeat),
       d_index(0),
       d_length((((uint32_t)1) << degree) - 1)
@@ -40,15 +41,11 @@ glfsr_source_f_impl::glfsr_source_f_impl(unsigned int degree,
     if (degree < 1 || degree > 32)
         throw std::runtime_error(
             "glfsr_source_f_impl: degree must be between 1 and 32 inclusive");
-
-    if (mask == 0)
-        mask = glfsr::glfsr_mask(degree);
-    d_glfsr = new glfsr(mask, seed);
 }
 
-glfsr_source_f_impl::~glfsr_source_f_impl() { delete d_glfsr; }
+glfsr_source_f_impl::~glfsr_source_f_impl() {}
 
-uint32_t glfsr_source_f_impl::mask() const { return d_glfsr->mask(); }
+uint32_t glfsr_source_f_impl::mask() const { return d_glfsr.mask(); }
 
 int glfsr_source_f_impl::work(int noutput_items,
                               gr_vector_const_void_star& input_items,
@@ -60,7 +57,7 @@ int glfsr_source_f_impl::work(int noutput_items,
 
     int i;
     for (i = 0; i < noutput_items; i++) {
-        out[i] = (float)d_glfsr->next_bit() * 2.0 - 1.0;
+        out[i] = (float)d_glfsr.next_bit() * 2.0 - 1.0;
         d_index++;
         if (d_index > d_length && d_repeat == false)
             break;
