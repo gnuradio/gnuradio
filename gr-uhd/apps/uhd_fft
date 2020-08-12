@@ -89,7 +89,6 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
         self.fft_size = args.fft_size
         self.freq = args.freq
         self.gain = args.gain
-        self.gain_type = args.gain_type
         self.samp_rate = args.samp_rate
         self.spec = args.spec
         self.stream_args = args.stream_args

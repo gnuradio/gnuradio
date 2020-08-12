@@ -28,7 +28,13 @@ LONG_TPL = """{prefix}  Motherboard: {mb_id} ({mb_serial})
 {prefix}  Antenna: {ant}
 """
 
+# PyLint can't reliably detect C++ exports in modules, so let's disable that
+# pylint: disable=no-member
+
 class UHDApp:
+    GAIN_TYPE_GAIN = 'dB'
+    GAIN_TYPE_POWER = 'power_dbm'
+
     " Base class for simple UHD-based applications "
     def __init__(self, prefix=None, args=None):
         self.prefix = prefix
@@ -37,7 +43,7 @@ class UHDApp:
         if self.args.sync == 'auto' and len(self.args.channels) > 1:
             self.args.sync = 'pps'
         self.antenna = None
-        self.gain_range = None
+        self.gain_range = None # Can also be power range
         self.samp_rate = None
         self.has_lo_sensor = None
         self.async_msgq = None
@@ -55,6 +61,7 @@ class UHDApp:
         self.lo_export = None
         self.usrp = None
         self.lo_source_channel = None
+        self.gain_type = self.GAIN_TYPE_GAIN
 
     def vprint(self, *args):
         """
@@ -179,8 +186,20 @@ class UHDApp:
                 ))
         self.antenna = self.usrp.get_antenna(0)
         # Set receive daughterboard gain:
-        self.set_gain(args.gain)
-        self.gain_range = self.usrp.get_gain_range(0)
+        if args.power:
+            if args.gain is not None:
+                print("[ERROR] Providing both --gain and --power is invalid!")
+                sys.exit(1)
+            self.gain_type = self.GAIN_TYPE_POWER
+            if not self.usrp.has_power_reference(0):
+                print("[ERROR] Device does not have power reference capabilities!")
+                sys.exit(1)
+            self.set_power_reference(args.power)
+            self.gain_range = self.usrp.get_power_range(0)
+        else:
+            self.set_gain(args.gain)
+            self.gain_range = self.usrp.get_gain_range(0)
+            self.gain_type = self.GAIN_TYPE_GAIN
         # Set frequency (tune request takes lo_offset):
         if hasattr(args, 'lo_offset') and args.lo_offset is not None:
             treq = uhd.tune_request(args.freq, args.lo_offset)
@@ -268,10 +287,19 @@ class UHDApp:
                         chan=chan, g=self.usrp.get_gain(i)
                     ))
         else:
-            self.vprint("Setting gain to {g} dB.".format(g=gain))
+            self.vprint("Setting gain to {g:.2f} dB.".format(g=gain))
             for chan in range(len(self.channels)):
                 self.usrp.set_gain(gain, chan)
         self.gain = self.usrp.get_gain(0)
+
+    def set_power_reference(self, power_dbm):
+        """
+        Safe power-ref-setter.
+        """
+        assert power_dbm is not None
+        self.vprint("Setting ref power to {g:.2f} dBm.".format(g=power_dbm))
+        self.usrp.set_power_reference(power_dbm)
+        self.gain = self.usrp.get_power_reference(0)
 
     def set_freq(self, freq, skip_sync=False):
         """
@@ -364,12 +392,11 @@ class UHDApp:
                            help="Sample rate")
         group.add_argument("-g", "--gain", type=eng_arg.eng_float, default=None,
                            help="Gain (default is midpoint)")
-        group.add_argument("--gain-type", choices=('db', 'normalized'), default='db',
-                           help="Gain Type (applies to -g)")
-        group.add_argument("-p", "--power-ref", type=eng_arg.eng_float, default=None,
-                           help="Reference power level (in dBm). "
+        group.add_argument("-p", "--power", type=eng_arg.eng_float, default=None,
+                           help="(Reference) power level (in dBm). "
                                 "Not supported by all devices (see UHD manual). "
-                                "Will fail if not supported. Precludes --gain. ")
+                                "Will fail if not supported. Precludes --gain. "
+                                "Behaviour may differ between applications.")
         if not skip_freq:
             group.add_argument("-f", "--freq", type=eng_arg.eng_float, default=None, required=True,
                                help="Set carrier frequency to FREQ",
@@ -390,8 +417,6 @@ class UHDApp:
         group.add_argument("--otw-format", choices=['sc16', 'sc12', 'sc8'], default='sc16',
                            help="Choose over-the-wire data format")
         group.add_argument("--stream-args", default="", help="Set additional stream arguments")
-        group.add_argument("-m", "--amplitude", type=eng_arg.eng_float, default=0.15,
-                           help="Set output amplitude to AMPL (0.0-1.0)", metavar="AMPL")
         group.add_argument("-v", "--verbose", action="count", help="Use verbose console output")
         group.add_argument("--show-async-msg", action="store_true",
                            help="Show asynchronous message notifications from UHD")
