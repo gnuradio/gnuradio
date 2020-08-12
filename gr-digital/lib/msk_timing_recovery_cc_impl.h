@@ -25,7 +25,7 @@ private:
     float d_sps;
     float d_gain;
     float d_limit;
-    filter::mmse_fir_interpolator_cc* d_interp;
+    filter::mmse_fir_interpolator_cc d_interp;
     gr_complex d_dly_conj_1, d_dly_conj_2, d_dly_diff_1;
     float d_mu, d_omega, d_gain_omega;
     int d_div;
