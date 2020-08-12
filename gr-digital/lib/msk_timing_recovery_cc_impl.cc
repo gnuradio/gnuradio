@@ -38,7 +38,6 @@ msk_timing_recovery_cc_impl::msk_timing_recovery_cc_impl(float sps,
                 gr::io_signature::make3(
                     1, 3, sizeof(gr_complex), sizeof(float), sizeof(float))),
       d_limit(limit),
-      d_interp(new filter::mmse_fir_interpolator_cc()),
       d_dly_conj_1(0),
       d_dly_conj_2(0),
       d_dly_diff_1(0),
@@ -53,7 +52,7 @@ msk_timing_recovery_cc_impl::msk_timing_recovery_cc_impl(float sps,
         throw std::out_of_range("osps must be 1 or 2");
 }
 
-msk_timing_recovery_cc_impl::~msk_timing_recovery_cc_impl() { delete d_interp; }
+msk_timing_recovery_cc_impl::~msk_timing_recovery_cc_impl() {}
 
 void msk_timing_recovery_cc_impl::set_sps(float sps)
 {
@@ -85,7 +84,7 @@ void msk_timing_recovery_cc_impl::forecast(int noutput_items,
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++) {
         ninput_items_required[i] =
-            (int)ceil((noutput_items * d_sps * 2) + 3.0 * d_sps + d_interp->ntaps());
+            (int)ceil((noutput_items * d_sps * 2) + 3.0 * d_sps + d_interp.ntaps());
     }
 }
 
@@ -159,7 +158,7 @@ int msk_timing_recovery_cc_impl::general_work(int noutput_items,
         // the actual equation for the nonlinearity is as follows:
         // e(n) = in[n]^2 * in[n-sps].conj()^2
         // we then differentiate the error by subtracting the sample delayed by d_sps/2
-        in_interp = d_interp->interpolate(&in[iidx], d_mu);
+        in_interp = d_interp.interpolate(&in[iidx], d_mu);
         sq = in_interp * in_interp;
         // conjugation is distributive.
         dly_conj = std::conj(d_dly_conj_2 * d_dly_conj_2);
