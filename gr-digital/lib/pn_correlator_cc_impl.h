@@ -20,9 +20,9 @@ namespace digital {
 class pn_correlator_cc_impl : public pn_correlator_cc
 {
 private:
-    int d_len;
+    const int d_len;
     float d_pn;
-    glfsr* d_reference;
+    glfsr d_reference;
 
 public:
     pn_correlator_cc_impl(int degree, int mask = 0, int seed = 1);

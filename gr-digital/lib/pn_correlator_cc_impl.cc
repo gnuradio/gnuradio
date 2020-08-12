@@ -28,17 +28,15 @@ pn_correlator_cc_impl::pn_correlator_cc_impl(int degree, int mask, int seed)
                      io_signature::make(1, 1, sizeof(gr_complex)),
                      io_signature::make(1, 1, sizeof(gr_complex)),
                      (unsigned int)((1ULL << degree) - 1)), // PN code length
-      d_pn(0.0f)
+      d_len((1ULL << degree) - 1),
+      d_pn(0.0f),
+      d_reference(mask ? mask : glfsr::glfsr_mask(degree), seed)
 {
-    d_len = (unsigned int)((1ULL << degree) - 1);
-    if (mask == 0)
-        mask = glfsr::glfsr_mask(degree);
-    d_reference = new glfsr(mask, seed);
     for (int i = 0; i < d_len; i++) // initialize to last value in sequence
-        d_pn = 2.0 * d_reference->next_bit() - 1.0;
+        d_pn = 2.0 * d_reference.next_bit() - 1.0;
 }
 
-pn_correlator_cc_impl::~pn_correlator_cc_impl() { delete d_reference; }
+pn_correlator_cc_impl::~pn_correlator_cc_impl() {}
 
 int pn_correlator_cc_impl::work(int noutput_items,
                                 gr_vector_const_void_star& input_items,
@@ -53,7 +51,7 @@ int pn_correlator_cc_impl::work(int noutput_items,
 
         for (int j = 0; j < d_len; j++) {
             if (j != 0) // retard PN generator one sample per period
-                d_pn = 2.0 * d_reference->next_bit() - 1.0; // no conditionals
+                d_pn = 2.0 * d_reference.next_bit() - 1.0; // no conditionals
             sum += *in++ * d_pn;
         }
 
