@@ -94,8 +94,12 @@ int correlate_access_code_tag_bb_impl::work(int noutput_items,
         uint64_t wrong_bits = 0;
         uint64_t nwrong = d_threshold + 1;
 
-        wrong_bits = (d_data_reg ^ d_access_code) & d_mask;
-        volk_64u_popcnt(&nwrong, wrong_bits);
+        if (d_data_reg_bits < d_len) {
+            d_data_reg_bits++;
+        } else {
+            wrong_bits = (d_data_reg ^ d_access_code) & d_mask;
+            volk_64u_popcnt(&nwrong, wrong_bits);
+        }
 
         // shift in new data
         d_data_reg = (d_data_reg << 1) | (in[i] & 0x1);

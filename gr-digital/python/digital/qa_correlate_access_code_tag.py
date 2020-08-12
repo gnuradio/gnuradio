@@ -34,7 +34,7 @@ class test_correlate_access_code(gr_unittest.TestCase):
     def tearDown(self):
         self.tb = None
 
-    def test_001(self):
+    def test_bb(self):
         pad = (0,) * 64
         src_data = (1, 0, 1, 1, 1, 1, 0, 1, 1) + pad + (0,) * 7
         src = blocks.vector_source_b(src_data)
@@ -46,6 +46,31 @@ class test_correlate_access_code(gr_unittest.TestCase):
         self.assertEqual(len(result_data), 2)
         self.assertEqual(result_data[0].offset, 4)
         self.assertEqual(result_data[1].offset, 9)
+
+    def test_bb_skip_prefix(self):
+        pad = (0,) * 64
+        src_data = (0, 1, 1, 1, 1, 0, 0, 1, 1) + pad + (0,) * 7
+        src = blocks.vector_source_b(src_data)
+        op = digital.correlate_access_code_tag_bb("0011", 0, "sync")
+        dst = blocks.tag_debug(gr.sizeof_char, "sync")
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.current_tags()
+        self.assertEqual(len(result_data), 1)
+        self.assertEqual(result_data[0].offset, 9)
+
+    def test_bb_immediate(self):
+        """Test that packets at start of stream match"""
+        pad = (0,) * 64
+        src_data = (0, 0, 1, 1) + pad + (0,) * 7
+        src = blocks.vector_source_b(src_data)
+        op = digital.correlate_access_code_tag_bb("0011", 0, "sync")
+        dst = blocks.tag_debug(gr.sizeof_char, "sync")
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.current_tags()
+        self.assertEqual(len(result_data), 1)
+        self.assertEqual(result_data[0].offset, 4)
 
     def test_002(self):
         code = tuple(string_to_1_0_list(default_access_code))
@@ -63,7 +88,7 @@ class test_correlate_access_code(gr_unittest.TestCase):
         self.assertEqual(len(result_data), 1)
         self.assertEqual(result_data[0].offset, len(code))
 
-    def test_003(self):
+    def test_ff(self):
         pad = (0,) * 64
         src_bits = (1, 0, 1, 1, 1, 1, 0, 1, 1) + pad + (0,) * 7
         src_data = [2.0*x - 1.0 for x in src_bits]
@@ -76,6 +101,33 @@ class test_correlate_access_code(gr_unittest.TestCase):
         self.assertEqual(len(result_data), 2)
         self.assertEqual(result_data[0].offset, 4)
         self.assertEqual(result_data[1].offset, 9)
+
+    def test_ff_skip_prefix(self):
+        pad = (0,) * 64
+        src_bits = (0, 1, 1, 1, 1, 0, 0, 1, 1) + pad + (0,) * 7
+        src_data = [2.0*x - 1.0 for x in src_bits]
+        src = blocks.vector_source_f(src_data)
+        op = digital.correlate_access_code_tag_ff("0011", 0, "sync")
+        dst = blocks.tag_debug(gr.sizeof_float, "sync")
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.current_tags()
+        self.assertEqual(len(result_data), 1)
+        self.assertEqual(result_data[0].offset, 9)
+
+    def test_ff_immediate(self):
+        """Test that packets at start of stream match"""
+        pad = (0,) * 64
+        src_bits = (0, 0, 1, 1) + pad + (0,) * 7
+        src_data = [2.0*x - 1.0 for x in src_bits]
+        src = blocks.vector_source_f(src_data)
+        op = digital.correlate_access_code_tag_ff("0011", 0, "sync")
+        dst = blocks.tag_debug(gr.sizeof_float, "sync")
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.current_tags()
+        self.assertEqual(len(result_data), 1)
+        self.assertEqual(result_data[0].offset, 4)
 
     def test_004(self):
         code = tuple(string_to_1_0_list(default_access_code))
@@ -96,4 +148,3 @@ class test_correlate_access_code(gr_unittest.TestCase):
 
 if __name__ == '__main__':
     gr_unittest.run(test_correlate_access_code, "test_correlate_access_code_tag.xml")
-

@@ -26,6 +26,7 @@ private:
     unsigned long long d_access_code; // access code to locate start of packet
                                       //   access code is left justified in the word
     unsigned long long d_data_reg;    // used to look for access_code
+    unsigned int d_data_reg_bits = 0; // used to makes sure we've seen the whole code
     unsigned long long d_mask;        // masks access_code bits (top N bits are set where
                                       //   N is the number of bits in the access code)
     unsigned int d_threshold;         // how many bits may be wrong in sync vector
