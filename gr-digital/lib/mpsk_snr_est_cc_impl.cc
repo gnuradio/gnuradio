@@ -14,10 +14,28 @@
 
 #include "mpsk_snr_est_cc_impl.h"
 #include <gnuradio/io_signature.h>
+#include <boost/make_unique.hpp>
 #include <cstdio>
 
 namespace gr {
 namespace digital {
+
+namespace {
+std::unique_ptr<mpsk_snr_est> choose_type(snr_est_type_t t, double d_alpha)
+{
+    switch (t) {
+    case (SNR_EST_SIMPLE):
+        return boost::make_unique<mpsk_snr_est_simple>(d_alpha);
+    case (SNR_EST_SKEW):
+        return boost::make_unique<mpsk_snr_est_skew>(d_alpha);
+    case (SNR_EST_M2M4):
+        return boost::make_unique<mpsk_snr_est_m2m4>(d_alpha);
+    case (SNR_EST_SVR):
+        return boost::make_unique<mpsk_snr_est_svr>(d_alpha);
+    }
+    throw std::invalid_argument("mpsk_snr_est_cc_impl: unknown type specified.");
+}
+} // namespace
 
 mpsk_snr_est_cc::sptr
 mpsk_snr_est_cc::make(snr_est_type_t type, int tag_nsamples, double alpha)
@@ -30,13 +48,11 @@ mpsk_snr_est_cc_impl::mpsk_snr_est_cc_impl(snr_est_type_t type,
                                            double alpha)
     : sync_block("mpsk_snr_est_cc",
                  io_signature::make(1, 1, sizeof(gr_complex)),
-                 io_signature::make(1, 1, sizeof(gr_complex)))
+                 io_signature::make(1, 1, sizeof(gr_complex))),
+      d_type(type),
+      d_nsamples(tag_nsamples),
+      d_count(0)
 {
-    d_snr_est = NULL;
-
-    d_type = type;
-    d_nsamples = tag_nsamples;
-    d_count = 0;
     set_alpha(alpha);
 
     set_type(type);
@@ -50,11 +66,7 @@ mpsk_snr_est_cc_impl::mpsk_snr_est_cc_impl(snr_est_type_t type,
     d_key = pmt::string_to_symbol("snr");
 }
 
-mpsk_snr_est_cc_impl::~mpsk_snr_est_cc_impl()
-{
-    if (d_snr_est)
-        delete d_snr_est;
-}
+mpsk_snr_est_cc_impl::~mpsk_snr_est_cc_impl() {}
 
 int mpsk_snr_est_cc_impl::work(int noutput_items,
                                gr_vector_const_void_star& input_items,
@@ -111,27 +123,8 @@ double mpsk_snr_est_cc_impl::alpha() const { return d_alpha; }
 
 void mpsk_snr_est_cc_impl::set_type(snr_est_type_t t)
 {
+    d_snr_est = choose_type(t, d_alpha);
     d_type = t;
-
-    if (d_snr_est)
-        delete d_snr_est;
-
-    switch (d_type) {
-    case (SNR_EST_SIMPLE):
-        d_snr_est = new mpsk_snr_est_simple(d_alpha);
-        break;
-    case (SNR_EST_SKEW):
-        d_snr_est = new mpsk_snr_est_skew(d_alpha);
-        break;
-    case (SNR_EST_M2M4):
-        d_snr_est = new mpsk_snr_est_m2m4(d_alpha);
-        break;
-    case (SNR_EST_SVR):
-        d_snr_est = new mpsk_snr_est_svr(d_alpha);
-        break;
-    default:
-        throw std::invalid_argument("mpsk_snr_est_cc_impl: unknown type specified.");
-    }
 }
 
 void mpsk_snr_est_cc_impl::set_tag_nsample(int n)
