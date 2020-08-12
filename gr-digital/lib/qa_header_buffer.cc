@@ -15,15 +15,15 @@
 #include <gnuradio/attributes.h>
 #include <gnuradio/digital/header_buffer.h>
 #include <stdio.h>
-#include <volk/volk.h>
+#include <volk/volk_alloc.hh>
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_CASE(test_add8)
 {
     size_t len = sizeof(uint8_t);
-    uint8_t* buf = (uint8_t*)volk_malloc(len, volk_get_alignment());
+    volk::vector<uint8_t> buf(len);
 
-    gr::digital::header_buffer header(buf);
+    gr::digital::header_buffer header(buf.data());
     header.add_field8(0xAF);
 
     BOOST_REQUIRE_EQUAL(len, header.length());
@@ -31,18 +31,16 @@ BOOST_AUTO_TEST_CASE(test_add8)
 
     header.clear();
     BOOST_REQUIRE_EQUAL((size_t)0, header.length());
-
-    volk_free(buf);
 }
 
 BOOST_AUTO_TEST_CASE(test_add16)
 {
     size_t len = sizeof(uint16_t);
-    uint8_t* buf = (uint8_t*)volk_malloc(len, volk_get_alignment());
+    volk::vector<uint8_t> buf(len);
 
     uint16_t data = 0xAF5C;
 
-    gr::digital::header_buffer header(buf);
+    gr::digital::header_buffer header(buf.data());
     header.add_field16(data);
 
     // Test standard add of a uint16
@@ -72,18 +70,16 @@ BOOST_AUTO_TEST_CASE(test_add16)
     BOOST_REQUIRE_EQUAL((size_t)1, header.length());
     BOOST_REQUIRE_EQUAL((uint8_t)0x5C, header.header()[0]);
     header.clear();
-
-    volk_free(buf);
 }
 
 BOOST_AUTO_TEST_CASE(test_add32)
 {
     size_t len = sizeof(uint32_t);
-    uint8_t* buf = (uint8_t*)volk_malloc(len, volk_get_alignment());
+    volk::vector<uint8_t> buf(len);
 
     uint32_t data = 0xAF5C7654;
 
-    gr::digital::header_buffer header(buf);
+    gr::digital::header_buffer header(buf.data());
     header.add_field32(data);
 
     // Test standard add of a uint32
@@ -119,18 +115,16 @@ BOOST_AUTO_TEST_CASE(test_add32)
     BOOST_REQUIRE_EQUAL((uint8_t)0x76, header.header()[1]);
     BOOST_REQUIRE_EQUAL((uint8_t)0x5C, header.header()[2]);
     header.clear();
-
-    volk_free(buf);
 }
 
 BOOST_AUTO_TEST_CASE(test_add64)
 {
     size_t len = sizeof(uint64_t);
-    uint8_t* buf = (uint8_t*)volk_malloc(len, volk_get_alignment());
+    volk::vector<uint8_t> buf(len);
 
     uint64_t data = 0xAF5C765432104567;
 
-    gr::digital::header_buffer header(buf);
+    gr::digital::header_buffer header(buf.data());
     header.add_field64(data);
 
     // Test standard add of a uint64
@@ -181,16 +175,14 @@ BOOST_AUTO_TEST_CASE(test_add64)
     BOOST_REQUIRE_EQUAL((uint8_t)0x32, header.header()[3]);
     BOOST_REQUIRE_EQUAL((uint8_t)0x54, header.header()[4]);
     header.clear();
-
-    volk_free(buf);
 }
 
 BOOST_AUTO_TEST_CASE(test_add_many)
 {
     size_t len = (32 + 64 + 8 + 16 + 32) / 8;
-    uint8_t* buf = (uint8_t*)volk_malloc(len, volk_get_alignment());
+    volk::vector<uint8_t> buf(len);
 
-    gr::digital::header_buffer header(buf);
+    gr::digital::header_buffer header(buf.data());
     header.add_field32(0x01234567);
     header.add_field64(0x89ABCDEFFEDCBA98);
     header.add_field8(0x76);
