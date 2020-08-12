@@ -43,7 +43,6 @@ clock_recovery_mm_cc_impl::clock_recovery_mm_cc_impl(
       d_omega_relative_limit(omega_relative_limit),
       d_gain_mu(gain_mu),
       d_last_sample(0),
-      d_interp(new filter::mmse_fir_interpolator_cc()),
       d_verbose(prefs::singleton()->get_bool("clock_recovery_mm_cc", "verbose", false)),
       d_p_2T(0),
       d_p_1T(0),
@@ -63,7 +62,7 @@ clock_recovery_mm_cc_impl::clock_recovery_mm_cc_impl(
     enable_update_rate(true); // fixes tag propagation through variable rate block
 }
 
-clock_recovery_mm_cc_impl::~clock_recovery_mm_cc_impl() { delete d_interp; }
+clock_recovery_mm_cc_impl::~clock_recovery_mm_cc_impl() {}
 
 void clock_recovery_mm_cc_impl::forecast(int noutput_items,
                                          gr_vector_int& ninput_items_required)
@@ -71,7 +70,7 @@ void clock_recovery_mm_cc_impl::forecast(int noutput_items,
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++)
         ninput_items_required[i] =
-            (int)ceil((noutput_items * d_omega) + d_interp->ntaps()) + FUDGE;
+            (int)ceil((noutput_items * d_omega) + d_interp.ntaps()) + FUDGE;
 }
 
 void clock_recovery_mm_cc_impl::set_omega(float omega)
@@ -91,10 +90,9 @@ int clock_recovery_mm_cc_impl::general_work(int noutput_items,
 
     bool write_foptr = output_items.size() >= 2;
 
-    int ii = 0; // input index
-    int oo = 0; // output index
-    int ni =
-        ninput_items[0] - d_interp->ntaps() - FUDGE; // don't use more input than this
+    int ii = 0;                                          // input index
+    int oo = 0;                                          // output index
+    int ni = ninput_items[0] - d_interp.ntaps() - FUDGE; // don't use more input than this
 
     assert(d_mu >= 0.0);
     assert(d_mu <= 1.0);
@@ -108,7 +106,7 @@ int clock_recovery_mm_cc_impl::general_work(int noutput_items,
         while (oo < noutput_items && ii < ni) {
             d_p_2T = d_p_1T;
             d_p_1T = d_p_0T;
-            d_p_0T = d_interp->interpolate(&in[ii], d_mu);
+            d_p_0T = d_interp.interpolate(&in[ii], d_mu);
 
             d_c_2T = d_c_1T;
             d_c_1T = d_c_0T;
@@ -142,7 +140,7 @@ int clock_recovery_mm_cc_impl::general_work(int noutput_items,
         while (oo < noutput_items && ii < ni) {
             d_p_2T = d_p_1T;
             d_p_1T = d_p_0T;
-            d_p_0T = d_interp->interpolate(&in[ii], d_mu);
+            d_p_0T = d_interp.interpolate(&in[ii], d_mu);
 
             d_c_2T = d_c_1T;
             d_c_1T = d_c_0T;

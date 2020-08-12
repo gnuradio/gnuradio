@@ -54,7 +54,7 @@ private:
     float d_gain_mu;              // gain for adjusting mu
 
     gr_complex d_last_sample;
-    filter::mmse_fir_interpolator_cc* d_interp;
+    filter::mmse_fir_interpolator_cc d_interp;
 
     bool d_verbose;
 
