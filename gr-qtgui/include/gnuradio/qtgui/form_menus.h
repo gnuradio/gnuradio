@@ -864,32 +864,32 @@ public:
             throw std::runtime_error("FFTWindowMenu::getAction: which out of range.");
     }
 
-    QAction* getActionFromWindow(gr::filter::firdes::win_type type)
+    QAction* getActionFromWindow(gr::fft::window::win_type type)
     {
         int which = 0;
         switch (static_cast<int>(type)) {
-        case ((gr::filter::firdes::WIN_NONE)):
+        case ((gr::fft::window::WIN_NONE)):
             which = 0;
             break;
-        case ((gr::filter::firdes::WIN_HAMMING)):
+        case ((gr::fft::window::WIN_HAMMING)):
             which = 1;
             break;
-        case ((gr::filter::firdes::WIN_HANN)):
+        case ((gr::fft::window::WIN_HANN)):
             which = 2;
             break;
-        case ((gr::filter::firdes::WIN_BLACKMAN)):
+        case ((gr::fft::window::WIN_BLACKMAN)):
             which = 3;
             break;
-        case ((gr::filter::firdes::WIN_BLACKMAN_hARRIS)):
+        case ((gr::fft::window::WIN_BLACKMAN_hARRIS)):
             which = 4;
             break;
-        case ((gr::filter::firdes::WIN_RECTANGULAR)):
+        case ((gr::fft::window::WIN_RECTANGULAR)):
             which = 5;
             break;
-        case ((gr::filter::firdes::WIN_KAISER)):
+        case ((gr::fft::window::WIN_KAISER)):
             which = 6;
             break;
-        case ((gr::filter::firdes::WIN_FLATTOP)):
+        case ((gr::fft::window::WIN_FLATTOP)):
             which = 7;
             break;
         }
@@ -897,20 +897,17 @@ public:
     }
 
 signals:
-    void whichTrigger(const gr::filter::firdes::win_type type);
+    void whichTrigger(const gr::fft::window::win_type type);
 
 public slots:
-    void getNone() { emit whichTrigger(gr::filter::firdes::WIN_NONE); }
-    void getHamming() { emit whichTrigger(gr::filter::firdes::WIN_HAMMING); }
-    void getHann() { emit whichTrigger(gr::filter::firdes::WIN_HANN); }
-    void getBlackman() { emit whichTrigger(gr::filter::firdes::WIN_BLACKMAN); }
-    void getBlackmanharris()
-    {
-        emit whichTrigger(gr::filter::firdes::WIN_BLACKMAN_hARRIS);
-    }
-    void getRectangular() { emit whichTrigger(gr::filter::firdes::WIN_RECTANGULAR); }
-    void getKaiser() { emit whichTrigger(gr::filter::firdes::WIN_KAISER); }
-    void getFlattop() { emit whichTrigger(gr::filter::firdes::WIN_FLATTOP); }
+    void getNone() { emit whichTrigger(gr::fft::window::WIN_NONE); }
+    void getHamming() { emit whichTrigger(gr::fft::window::WIN_HAMMING); }
+    void getHann() { emit whichTrigger(gr::fft::window::WIN_HANN); }
+    void getBlackman() { emit whichTrigger(gr::fft::window::WIN_BLACKMAN); }
+    void getBlackmanharris() { emit whichTrigger(gr::fft::window::WIN_BLACKMAN_hARRIS); }
+    void getRectangular() { emit whichTrigger(gr::fft::window::WIN_RECTANGULAR); }
+    void getKaiser() { emit whichTrigger(gr::fft::window::WIN_KAISER); }
+    void getFlattop() { emit whichTrigger(gr::fft::window::WIN_FLATTOP); }
 
 private:
     QList<QAction*> d_act;

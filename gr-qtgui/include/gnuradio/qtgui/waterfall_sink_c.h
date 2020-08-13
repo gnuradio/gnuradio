@@ -15,7 +15,7 @@
 #include <Python.h>
 #endif
 
-#include <gnuradio/filter/firdes.h>
+#include <gnuradio/fft/window.h>
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/sync_block.h>
 #include <qapplication.h>
@@ -122,8 +122,8 @@ public:
     virtual void set_time_per_fft(const double t) = 0;
     virtual void set_fft_average(const float fftavg) = 0;
     virtual float fft_average() const = 0;
-    virtual void set_fft_window(const gr::filter::firdes::win_type win) = 0;
-    virtual gr::filter::firdes::win_type fft_window() = 0;
+    virtual void set_fft_window(const gr::fft::window::win_type win) = 0;
+    virtual gr::fft::window::win_type fft_window() = 0;
 
     virtual void set_frequency_range(const double centerfreq, const double bandwidth) = 0;
     virtual void set_intensity_range(const double min, const double max) = 0;

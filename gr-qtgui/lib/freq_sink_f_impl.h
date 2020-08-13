@@ -15,7 +15,7 @@
 
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/fft/fft_shift.h>
-#include <gnuradio/filter/firdes.h>
+#include <gnuradio/fft/window.h>
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/qtgui/freqdisplayform.h>
 
@@ -30,7 +30,7 @@ private:
     int d_fftsize;
     fft::fft_shift<float> d_fft_shift;
     float d_fftavg;
-    filter::firdes::win_type d_wintype;
+    fft::window::win_type d_wintype;
     std::vector<float> d_window;
     double d_center_freq;
     double d_bandwidth;
@@ -112,8 +112,8 @@ public:
     int fft_size() const;
     void set_fft_average(const float fftavg);
     float fft_average() const;
-    void set_fft_window(const filter::firdes::win_type win);
-    filter::firdes::win_type fft_window();
+    void set_fft_window(const fft::window::win_type win);
+    fft::window::win_type fft_window();
 
     void set_frequency_range(const double centerfreq, const double bandwidth);
     void set_y_axis(double min, double max);

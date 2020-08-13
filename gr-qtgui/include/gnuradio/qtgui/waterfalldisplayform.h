@@ -36,7 +36,7 @@ public:
     int getFFTSize() const;
     double getTimePerFFT();
     float getFFTAverage() const;
-    gr::filter::firdes::win_type getFFTWindowType() const;
+    gr::fft::window::win_type getFFTWindowType() const;
 
     int getColorMap(unsigned int which);
     int getAlpha(unsigned int which);
@@ -57,7 +57,7 @@ public slots:
     void setSampleRate(const QString& samprate);
     void setFFTSize(const int);
     void setFFTAverage(const float);
-    void setFFTWindowType(const gr::filter::firdes::win_type);
+    void setFFTWindowType(const gr::fft::window::win_type);
 
     void setFrequencyRange(const double centerfreq, const double bandwidth);
 
@@ -88,7 +88,7 @@ private:
     int d_fftsize;
     double d_time_per_fft;
     float d_fftavg;
-    gr::filter::firdes::win_type d_fftwintype;
+    gr::fft::window::win_type d_fftwintype;
     double d_units;
 
     bool d_clicked;
