@@ -20,6 +20,9 @@
 #include <qwt_symbol.h>
 #include <volk/volk.h>
 
+#include <boost/range/adaptor/transformed.hpp>
+#include <boost/range/numeric.hpp>
+
 #include <string.h>
 
 namespace gr {
@@ -52,6 +55,7 @@ freq_sink_f_impl::freq_sink_f_impl(int fftsize,
       d_fft_shift(fftsize),
       d_fftavg(1.0),
       d_wintype((fft::window::win_type)(wintype)),
+      d_window_normalize(wintype & (1 << 15)),
       d_center_freq(fc),
       d_bandwidth(bw),
       d_name(name),
@@ -207,6 +211,12 @@ void freq_sink_f_impl::set_fft_window(const fft::window::win_type win)
 }
 
 fft::window::win_type freq_sink_f_impl::fft_window() { return d_wintype; }
+
+void freq_sink_f_impl::set_fft_window_normalized(const bool enable)
+{
+    d_window_normalize = enable;
+    buildwindow();
+}
 
 void freq_sink_f_impl::set_frequency_range(const double centerfreq,
                                            const double bandwidth)
@@ -411,7 +421,7 @@ void freq_sink_f_impl::buildwindow()
 {
     d_window.clear();
     if (d_wintype != fft::window::WIN_NONE) {
-        d_window = fft::window::build(d_wintype, d_fftsize);
+        d_window = fft::window::build(d_wintype, d_fftsize, 6.76, d_window_normalize);
     }
 }
 

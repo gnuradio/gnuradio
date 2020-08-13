@@ -54,6 +54,9 @@ static const char* __doc_gr_qtgui_freq_sink_f_set_fft_window = R"doc()doc";
 static const char* __doc_gr_qtgui_freq_sink_f_fft_window = R"doc()doc";
 
 
+static const char* __doc_gr_qtgui_freq_sink_f_set_fft_window_normalized = R"doc()doc";
+
+
 static const char* __doc_gr_qtgui_freq_sink_f_set_frequency_range = R"doc()doc";
 
 

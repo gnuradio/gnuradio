@@ -26,8 +26,8 @@ parameters:
 -   id: freqhalf
     label: Spectrum Width
     dtype: enum
-    default: 'True'
-    options: ['True', 'False']
+    default: True
+    options: [True, False]
     option_labels: [Full, Half]
     hide: ${ ('part' if type == "float" or type == "msg_float" else 'all') }
 -   id: wintype
@@ -39,6 +39,13 @@ parameters:
     option_labels: [Blackman-harris, Hamming, Hann, Blackman, Rectangular, Kaiser,
         Flat-top]
     hide: part
+-   id: norm_window
+    label: Normalize Window Power
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: [Yes, No]
+    hide: ${ ('none' if norm_window == 'True' else 'part') }
 -   id: fc
     label: Center Frequency (Hz)
     dtype: real
@@ -417,6 +424,7 @@ templates:
         self.${id}.set_fft_average(${average})
         self.${id}.enable_axis_labels(${axislabels})
         self.${id}.enable_control_panel(${ctrlpanel})
+        self.${id}.set_fft_window_normalized(${norm_window})
 
         % if legend == "False":
         self.${id}.disable_legend()

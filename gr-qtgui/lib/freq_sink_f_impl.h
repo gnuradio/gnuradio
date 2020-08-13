@@ -32,6 +32,7 @@ private:
     float d_fftavg;
     fft::window::win_type d_wintype;
     std::vector<float> d_window;
+    bool d_window_normalize = false; //<! If true, window functions will be normalized
     double d_center_freq;
     double d_bandwidth;
     const std::string d_name;
@@ -114,6 +115,7 @@ public:
     float fft_average() const;
     void set_fft_window(const fft::window::win_type win);
     fft::window::win_type fft_window();
+    void set_fft_window_normalized(const bool enable);
 
     void set_frequency_range(const double centerfreq, const double bandwidth);
     void set_y_axis(double min, double max);

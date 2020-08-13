@@ -102,6 +102,11 @@ void bind_freq_sink_f(py::module& m)
         .def("fft_window", &freq_sink_f::fft_window, D(freq_sink_f, fft_window))
 
 
+        .def("set_fft_window_normalized",
+             &freq_sink_f::set_fft_window_normalized,
+             D(freq_sink_f, set_fft_window_normalized))
+
+
         .def("set_frequency_range",
              &freq_sink_f::set_frequency_range,
              py::arg("centerfreq"),
