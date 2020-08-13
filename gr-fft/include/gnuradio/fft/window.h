@@ -331,8 +331,10 @@ public:
      * \param type a gr::fft::win_type index for the type of window.
      * \param ntaps Number of coefficients in the window.
      * \param beta Used only for building Kaiser windows.
+     * \param normalize If true, return a window with unit power
      */
-    static std::vector<float> build(win_type type, int ntaps, double beta = 6.76);
+    static std::vector<float>
+    build(win_type type, int ntaps, double beta = 6.76, const bool normalize = false);
 };
 
 } /* namespace fft */
