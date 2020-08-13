@@ -14,6 +14,8 @@
 
 #include <gnuradio/fft/window.h>
 #include <gnuradio/math.h>
+#include <algorithm>
+#include <numeric>
 #include <stdexcept>
 
 namespace gr {
@@ -355,8 +357,27 @@ std::vector<float> window::gaussian(int ntaps, float sigma)
     return taps;
 }
 
-std::vector<float> window::build(win_type type, int ntaps, double beta)
+std::vector<float>
+window::build(win_type type, int ntaps, double beta, const bool normalize)
 {
+    // If we want a normalized window, we get a non-normalized one first, then
+    // normalize it here:
+    if (normalize) {
+        auto win = build(type, ntaps, beta, false);
+        const double pwr_acc = // sum(win**2) / len(win)
+            std::accumulate(win.cbegin(),
+                            win.cend(),
+                            0.0,
+                            [](const double a, const double b) { return a + b * b; }) /
+            win.size();
+        const float norm_fac = static_cast<float>(std::sqrt(pwr_acc));
+        std::transform(win.begin(), win.end(), win.begin(), [norm_fac](const float tap) {
+            return tap / norm_fac;
+        });
+        return win;
+    }
+
+    // Create non-normalized window:
     switch (type) {
     case WIN_RECTANGULAR:
         return rectangular(ntaps);

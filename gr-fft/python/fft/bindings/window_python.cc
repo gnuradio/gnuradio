@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(window.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(b55c3b96105267729782fc5262efa28a)                     */
+/* BINDTOOL_HEADER_FILE(window.h)                                                  */
+/* BINDTOOL_HEADER_FILE_HASH(22de6d8875628eec777952b4902a09e9)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -176,6 +176,7 @@ void bind_window(py::module& m)
                     py::arg("type"),
                     py::arg("ntaps"),
                     py::arg("beta") = 6.76,
+                    py::arg("normalize") = false,
                     D(window, build))
 
         ;
