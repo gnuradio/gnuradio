@@ -11,7 +11,7 @@
 #ifndef FREQ_DISPLAY_FORM_H
 #define FREQ_DISPLAY_FORM_H
 
-#include <gnuradio/filter/firdes.h>
+#include <gnuradio/fft/window.h>
 #include <gnuradio/qtgui/FrequencyDisplayPlot.h>
 #include <gnuradio/qtgui/spectrumUpdateEvents.h>
 #include <QtGui/QtGui>
@@ -37,7 +37,7 @@ public:
 
     int getFFTSize() const;
     float getFFTAverage() const;
-    gr::filter::firdes::win_type getFFTWindowType() const;
+    gr::fft::window::win_type getFFTWindowType() const;
 
     // Trigger methods
     gr::qtgui::trigger_mode getTriggerMode() const;
@@ -58,7 +58,7 @@ public slots:
     void setSampleRate(const QString& samprate);
     void setFFTSize(const int);
     void setFFTAverage(const float);
-    void setFFTWindowType(const gr::filter::firdes::win_type);
+    void setFFTWindowType(const gr::fft::window::win_type);
 
     void setFrequencyRange(const double centerfreq, const double bandwidth);
     void setYaxis(double min, double max);
@@ -98,7 +98,7 @@ public slots:
 
 signals:
     void signalFFTSize(int size);
-    void signalFFTWindow(gr::filter::firdes::win_type win);
+    void signalFFTWindow(gr::fft::window::win_type win);
     void signalClearMaxData();
     void signalClearMinData();
     void signalSetMaxFFTVisible(bool en);
@@ -119,7 +119,7 @@ private:
     double d_samp_rate, d_center_freq;
     int d_fftsize;
     float d_fftavg;
-    gr::filter::firdes::win_type d_fftwintype;
+    gr::fft::window::win_type d_fftwintype;
     double d_units;
 
     bool d_clicked;
