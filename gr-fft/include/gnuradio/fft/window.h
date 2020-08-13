@@ -332,7 +332,7 @@ public:
      * \param ntaps Number of coefficients in the window.
      * \param beta Used only for building Kaiser windows.
      */
-    static std::vector<float> build(win_type type, int ntaps, double beta);
+    static std::vector<float> build(win_type type, int ntaps, double beta = 6.76);
 };
 
 } /* namespace fft */
