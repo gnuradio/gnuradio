@@ -175,7 +175,7 @@ void bind_window(py::module& m)
                     &window::build,
                     py::arg("type"),
                     py::arg("ntaps"),
-                    py::arg("beta"),
+                    py::arg("beta") = 6.76,
                     D(window, build))
 
         ;
