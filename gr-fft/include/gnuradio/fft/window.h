@@ -23,6 +23,7 @@ class FFT_API window
 {
 public:
     enum win_type {
+        WIN_NONE = -1,       //!< don't use a window
         WIN_HAMMING = 0,     //!< Hamming window; max attenuation 53 dB
         WIN_HANN = 1,        //!< Hann window; max attenuation 44 dB
         WIN_BLACKMAN = 2,    //!< Blackman window; max attenuation 74 dB
