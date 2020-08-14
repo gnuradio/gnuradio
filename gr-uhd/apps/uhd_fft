@@ -30,6 +30,7 @@ import ctypes
 import sys
 import threading
 import time
+import math
 from PyQt5 import Qt
 import sip # Needs to be imported after PyQt5, could fail otherwise
 from gnuradio import eng_notation
@@ -139,17 +140,29 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
             lambda: self.set_samp_rate(eng_notation.str_to_num(
                 str(self._samp_rate__line_edit.text()))))
         self.top_grid_layout.addWidget(self._samp_rate__tool_bar, 3, 2, 1, 2)
-        # Gain:
-        self._gain__range = Range(
-            self.gain_range.start(),
-            self.gain_range.stop(),
+        # Gain or Power:
+        self._gain_range = Range(
+            math.floor(self.gain_range.start()),
+            math.ceil(self.gain_range.stop()),
             max(self.gain_range.step(), 1.0),
-            self.gain,
-            200
+            self.gain if self.gain_type == self.GAIN_TYPE_GAIN
+            else self.get_gain_or_power(),
+            200.,
         )
         self._gain__win = RangeWidget(
-            self._gain__range, self.set_gain, "RX Gain", "counter_slider", float)
+            self._gain_range,
+            self.set_gain_or_power,
+            "RX Gain (dB)" if self.gain_type == self.GAIN_TYPE_GAIN
+            else "RX Power Reference (dBm)",
+            "counter_slider",
+            float
+        )
         self.top_grid_layout.addWidget(self._gain__win, 2, 0, 1, 4)
+        if self.gain_type == self.GAIN_TYPE_POWER:
+            self.power_scalers = [
+                blocks.multiply_const_cc(self.get_power_scaler())
+                for _ in range(len(self.channels))
+            ]
         # Center frequency:
         self._freq_tool_bar = Qt.QToolBar(self)
         self._freq_tool_bar.addWidget(Qt.QLabel("RX Tune Frequency: "))
@@ -276,12 +289,19 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
         )
         self.qtgui_freq_sink_x_0.set_update_time(self.update_rate)
         self.qtgui_freq_sink_x_0.set_y_axis(-100, 10)
+        if self.gain_type == self.GAIN_TYPE_GAIN:
+            self.qtgui_freq_sink_x_0.set_y_label("Relative Gain", "dB")
+        else:
+            self.qtgui_freq_sink_x_0.set_y_label("Received Power", "dBm")
         self.qtgui_freq_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, 0.0, 0, "")
         self.qtgui_freq_sink_x_0.enable_autoscale(True)
         self.qtgui_freq_sink_x_0.enable_grid(True)
         self.qtgui_freq_sink_x_0.set_fft_average(self.fft_average)
         self.qtgui_freq_sink_x_0.enable_control_panel(True)
         self.qtgui_freq_sink_x_0.disable_legend()
+        # Normalize windows so we can switch between windows live without losing
+        # power to the window itself
+        self.qtgui_freq_sink_x_0.set_fft_window_normalized(True)
         for i in range(len(self.channels)):
             self.qtgui_freq_sink_x_0.set_line_label(i, "Channel {0}".format(i))
             self.qtgui_freq_sink_x_0.set_line_width(i, widths[i])
@@ -397,7 +417,15 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
             (self.qtgui_waterfall_sink_x_0, 'freq'),
             (self.usrp, 'command'))
         for idx in range(len(self.channels)):
-            self.connect((self.usrp, idx), (self.qtgui_freq_sink_x_0, idx))
+            if self.gain_type == self.GAIN_TYPE_POWER:
+                # If we're in power mode, we have to scale the signal before it
+                # goes into the FFT block such that the power levels match
+                self.connect(
+                    (self.usrp, idx),
+                    self.power_scalers[idx],
+                    (self.qtgui_freq_sink_x_0, idx))
+            else:
+                self.connect((self.usrp, idx), (self.qtgui_freq_sink_x_0, idx))
             self.connect((self.usrp, idx), (self.qtgui_time_sink_x_0, idx))
             self.connect((self.usrp, idx), (self.qtgui_waterfall_sink_x_0, idx))
         if args.phase_relations and len(self.channels) > 1:
@@ -477,6 +505,28 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
         self._ant_callback(self.antenna)
         for c in range(len(self.channels)):
             self.usrp.set_antenna(self.antenna, c)
+
+    def set_gain_or_power(self, gain_or_power):
+        """ Execute when gain/power input has changed """
+        if self.gain_type == self.GAIN_TYPE_GAIN:
+            self.set_gain(gain_or_power)
+        else:
+            self.set_power_reference(gain_or_power)
+            for scaler in self.power_scalers:
+                scaler.set_k(self.get_power_scaler())
+
+    def get_gain_or_power(self):
+        """ Read back either gain or ref power based on mode """
+        if self.gain_type == self.GAIN_TYPE_GAIN:
+            return self.usrp.get_gain(0)
+        return self.usrp.get_power_reference(0)
+
+    def get_power_scaler(self):
+        """
+        Return the input to the power scaler as a function of the current power
+        reference level.
+        """
+        return 10**(self.gain/20)
 
 
 def setup_argparser():
