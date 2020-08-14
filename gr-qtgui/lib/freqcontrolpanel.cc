@@ -240,23 +240,23 @@ void FreqControlPanel::toggleFFTSize(int val)
     d_fft_size_combo->setCurrentIndex(index);
 }
 
-void FreqControlPanel::toggleFFTWindow(const gr::filter::firdes::win_type win)
+void FreqControlPanel::toggleFFTWindow(const gr::fft::window::win_type win)
 {
     if (win == -1)
         d_fft_win_combo->setCurrentIndex(0);
-    if (win == gr::filter::firdes::WIN_HAMMING)
+    if (win == gr::fft::window::WIN_HAMMING)
         d_fft_win_combo->setCurrentIndex(1);
-    else if (win == gr::filter::firdes::WIN_HANN)
+    else if (win == gr::fft::window::WIN_HANN)
         d_fft_win_combo->setCurrentIndex(2);
-    else if (win == gr::filter::firdes::WIN_BLACKMAN)
+    else if (win == gr::fft::window::WIN_BLACKMAN)
         d_fft_win_combo->setCurrentIndex(3);
-    else if (win == gr::filter::firdes::WIN_BLACKMAN_hARRIS)
+    else if (win == gr::fft::window::WIN_BLACKMAN_hARRIS)
         d_fft_win_combo->setCurrentIndex(4);
-    else if (win == gr::filter::firdes::WIN_RECTANGULAR)
+    else if (win == gr::fft::window::WIN_RECTANGULAR)
         d_fft_win_combo->setCurrentIndex(5);
-    else if (win == gr::filter::firdes::WIN_KAISER)
+    else if (win == gr::fft::window::WIN_KAISER)
         d_fft_win_combo->setCurrentIndex(6);
-    else if (win == gr::filter::firdes::WIN_FLATTOP)
+    else if (win == gr::fft::window::WIN_FLATTOP)
         d_fft_win_combo->setCurrentIndex(7);
 }
 
