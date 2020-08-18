@@ -92,6 +92,7 @@ set(GR_COMPONENTS
   vocoder
   wavelet
   zeromq
+  network
   )
 
 foreach(target ${GR_COMPONENTS})

@@ -39,6 +39,20 @@ if (APPLE)
     ) 
 endif(APPLE)
 
+#Add Windows DLL resource file if using MSVC
+if (MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-network.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-network.rc
+    @ONLY)
+
+    target_sources(gnuradio-network PRIVATE
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-network.rc
+    )
+endif (MSVC)
+
 ########################################################################
 #Install built library files
 ########################################################################
