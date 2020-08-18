@@ -45,7 +45,7 @@ SET(VERSION_PATCH 0-git)
 include(GrVersion) #setup version info
 
 # Minimum dependency versions for central dependencies:
-set(GR_BOOST_MIN_VERSION "1.53")
+set(GR_BOOST_MIN_VERSION "1.58")
 set(GR_CMAKE_MIN_VERSION "3.5.1")
 set(GR_MAKO_MIN_VERSION "0.4.2")
 set(GR_PYTHON_MIN_VERSION "3.6.5")
