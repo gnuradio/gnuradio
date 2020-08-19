@@ -87,9 +87,9 @@ class DrawingArea(Gtk.DrawingArea):
 
         self.connect('leave-notify-event', _handle_notify_event, False)
         self.connect('enter-notify-event', _handle_notify_event, True)
-        # todo: fix
-#        self.set_flags(Gtk.CAN_FOCUS)  # self.set_can_focus(True)
-#        self.connect('focus-out-event', self._handle_focus_lost_event)
+
+        self.set_can_focus(True)
+        self.connect('focus-out-event', self._handle_focus_lost_event)
 
 
     ##########################################################################
@@ -119,11 +119,7 @@ class DrawingArea(Gtk.DrawingArea):
         """
         Forward button click information to the flow graph.
         """
-        # The following line causes the canvas to reset position to 0,0
-        #  when changing focus from the console or block search back to 
-        #  the canvas
-        #  Removing this line leaves the canvas alone when focus changes
-        # self.grab_focus()
+        self.grab_focus()
 
         self.ctrl_mask = event.get_state() & Gdk.ModifierType.CONTROL_MASK
         self.mod1_mask = event.get_state() & Gdk.ModifierType.MOD1_MASK
@@ -224,7 +220,7 @@ class DrawingArea(Gtk.DrawingArea):
 
     def _handle_focus_lost_event(self, widget, event):
         # don't clear selection while context menu is active
-        if not self._flow_graph.context_menu.get_take_focus():
+        if not self._flow_graph.get_context_menu()._menu.get_visible():
             self._flow_graph.unselect()
-            self._flow_graph.update_selected()
-            self._flow_graph.queue_draw()
+            self._flow_graph.update_selected_elements()
+            self.queue_draw()
