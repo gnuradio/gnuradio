@@ -210,5 +210,6 @@ class DrawingArea(Gtk.DrawingArea):
         # don't clear selection while context menu is active
         if not self._flow_graph.get_context_menu()._menu.get_visible():
             self._flow_graph.unselect()
-            self._flow_graph.update_selected_elements()
+            self._flow_graph.update_selected()
             self.queue_draw()
+            Actions.ELEMENT_SELECT()
