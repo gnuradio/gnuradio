@@ -139,7 +139,7 @@ int packed_to_unpacked_impl<T>::general_work(int noutput_items,
 
         // printf("almost got to end\n");
         assert(ninput_items[m] >=
-               (int)((d_index + (this->d_bits_per_type - 1)) >> this->d_log2_l_type));
+               (int)((d_index + (this->d_bits_per_type - 1)) >> this->log2_l_type()));
     }
 
     d_index = index_tmp;
