@@ -7,6 +7,103 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.8.2.0] - 2020-08-21
+
+### Changed
+
+#### Project Scope
+
+- Call SWIG without `-modern` flag if new enough to make that inherent, thus
+  removing warnings
+
+#### GRC
+
+- Mako templating now `strict_undefined`
+- Show block comments by default
+- dynamically updated block namespaces (execute imports from templates)
+- Name-lookup detection of dark color themes, adjusted input box color scheme
+
+#### gr-dtv
+
+- `dvb_bbscrambler`: LUT 8B alignment (private, but relevant for future usable
+  optimization)
+
+### Fixed
+
+#### GRC
+
+- incorrect "clear console" and "save console" labels
+- generator: `flow_graph.py.mako` now contains import for `print_function` for
+  compatibility in Py2 generation
+- `variable_config.block.yml` now properly handles `configparser` /
+  `ConfigParser` import
+- Change port types of all selected block on key-press cycling, not just first
+  one
+- Always check for Python version in flow graph generation, not only in specific
+  block types
+- Don't run stale flow graphs
+- Prevent search keystrokes from modifying flowgraph
+
+#### gr-blocks
+
+- `file_sink` flushes contents to file on `stop()`
+- `file_meta_sink` block YAML: emit proper default PMT dict
+- XMLRPC client/server block templates: use Py3 XMLRPC when possible
+
+#### gr-digital
+
+- `soft_dec_lut_gen` now explicitly casts `2.0**prec` to `int`
+- `map_bb`: add missing definition of static `constexpr size_t s_map_size`
+
+#### gr-dtv
+
+- Reduce `send_frame_size` in UHD examples (broken after UHD v3.13.0.3-rc1)
+
+#### gr-filter
+
+- `logpwrfft` YAML was hiding FFT length
+- FFT frequency range calculation was occasionally off due to abuse of
+  `numpy.arange`
+
+#### gr-filter
+
+- GRC band pass filter taps block: use `firdes.complex_band_pass` when complex
+- `firdes.root_raised_cosine` gain for unity alpha
+
+#### gr-qtgui
+
+- `qtgui_chooser` regained 3.7 capability to set default
+- Frequency Sink hovering now respects set units
+- GRC blocks had optional stream inputs
+
+#### gr-uhd
+
+- ignore `len_tag_name` in USRP Source YAML generator python
+- `uhd_fft`/`uhd_siggen_gui`: import order of sip and Qt
+- GRC example block errors
+
+### Added
+
+#### GRC
+
+- OS X: Meta modifier key support (eq. Ctrl on other platforms)
+- configuration setting `show_block_comments`
+
+#### gr-analog
+
+- Signal source `cmd` port
+
+#### gr-zeromq
+
+- Message-based ZMQ blocks take bind argument, as necessary for N:1 patterns.
+  Changes ABI.
+
+### Deprecated
+
+#### gr-analog
+
+- Signal source `freq` port
+
 ## [3.8.1.0] - 2020-04-08
 
 ### Changed
