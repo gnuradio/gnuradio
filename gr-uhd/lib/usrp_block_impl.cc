@@ -21,7 +21,7 @@
  */
 
 #include "usrp_block_impl.h"
-#include <boost/make_shared.hpp>
+#include <functional>
 
 using namespace gr::uhd;
 
@@ -139,10 +139,11 @@ usrp_block_impl::usrp_block_impl(const ::uhd::device_addr_t& device_addr,
     set_msg_handler(pmt::mp("command"),
                     [this](pmt::pmt_t msg) { this->msg_handler_command(msg); });
 
-// cuz we lazy:
+    // because we're highly efficient and adverse to work
+    namespace ph = std::placeholders;
 #define REGISTER_CMD_HANDLER(key, _handler) \
     register_msg_cmd_handler(key,           \
-                             boost::bind(&usrp_block_impl::_handler, this, _1, _2, _3))
+                             std::bind(&usrp_block_impl::_handler, this, ph::_1, ph::_2, ph::_3))
     // Register default command handlers:
     REGISTER_CMD_HANDLER(cmd_freq_key(), _cmd_handler_freq);
     REGISTER_CMD_HANDLER(cmd_gain_key(), _cmd_handler_gain);
@@ -153,6 +154,7 @@ usrp_block_impl::usrp_block_impl(const ::uhd::device_addr_t& device_addr,
     REGISTER_CMD_HANDLER(cmd_rate_key(), _cmd_handler_rate);
     REGISTER_CMD_HANDLER(cmd_bandwidth_key(), _cmd_handler_bw);
     REGISTER_CMD_HANDLER(cmd_antenna_key(), _cmd_handler_antenna);
+#undef REGISTER_CMD_HANDLER
 }
 
 usrp_block_impl::~usrp_block_impl()
