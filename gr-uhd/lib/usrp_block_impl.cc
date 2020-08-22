@@ -142,8 +142,8 @@ usrp_block_impl::usrp_block_impl(const ::uhd::device_addr_t& device_addr,
     // because we're highly efficient and adverse to work
     namespace ph = std::placeholders;
 #define REGISTER_CMD_HANDLER(key, _handler) \
-    register_msg_cmd_handler(key,           \
-                             std::bind(&usrp_block_impl::_handler, this, ph::_1, ph::_2, ph::_3))
+    register_msg_cmd_handler(               \
+        key, std::bind(&usrp_block_impl::_handler, this, ph::_1, ph::_2, ph::_3))
     // Register default command handlers:
     REGISTER_CMD_HANDLER(cmd_freq_key(), _cmd_handler_freq);
     REGISTER_CMD_HANDLER(cmd_gain_key(), _cmd_handler_gain);
