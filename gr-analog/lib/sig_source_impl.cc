@@ -70,7 +70,7 @@ sig_source_impl<T>::sig_source_impl(double sampling_freq,
                           [this](pmt::pmt_t msg) { this->set_cmd_msg(msg); });
     this->message_port_register_in(pmt::mp("freq"));
     this->set_msg_handler(pmt::mp("freq"),
-                          [this](pmt::pmt_t msg) { this->set_frequency_msg(msg); });
+                          [this](pmt::pmt_t msg) { this->set_freq_msg(msg); });
 }
 
 template <class T>
