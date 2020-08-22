@@ -21,7 +21,6 @@
  */
 
 #include "usrp_block_impl.h"
-#include <boost/make_shared.hpp>
 
 using namespace gr::uhd;
 
@@ -163,6 +162,7 @@ usrp_block_impl::usrp_block_impl(const ::uhd::device_addr_t& device_addr,
     REGISTER_CMD_HANDLER(cmd_bandwidth_key(), _cmd_handler_bw);
     REGISTER_CMD_HANDLER(cmd_antenna_key(), _cmd_handler_antenna);
     REGISTER_CMD_HANDLER(cmd_gpio_key(), _cmd_handler_gpio);
+#undef REGISTER_CMD_HANDLER
 }
 
 usrp_block_impl::~usrp_block_impl()
