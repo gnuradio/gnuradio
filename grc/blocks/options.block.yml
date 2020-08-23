@@ -70,6 +70,11 @@ parameters:
     dtype: int_vector
     default: (0,0)
     hide: ${ ('part' if generate_options == 'bokeh_gui' else 'all') }
+-   id: window_size
+    label: Window size
+    dtype: int_vector
+    default: (1000,1000)
+    hide: ${ ('part' if generate_options == 'bokeh_gui' else 'all') }
 -   id: sizing_mode
     label: Sizing Mode
     dtype: enum
