@@ -391,18 +391,12 @@ def main(top_block_cls=${class_name}, options=None):
     % endfor
     qapp.exec_()
     % elif generate_options == 'bokeh_gui':
-    def killProc(signum, frame, tb):
-        tb.stop()
-        tb.wait()
-        ${'snippets_main_after_stop(tb)' if snippets['main_after_stop'] else ''}
-    time.sleep(1)
-        # Create Top Block instance
+    # Create Top Block instance
     tb = top_block_cls()
     ${'snippets_main_after_init(tb)' if snippets['main_after_init'] else ''}
     try:
         tb.start()
         ${'snippets_main_after_start(tb)' if snippets['main_after_start'] else ''}
-        signal.signal(signal.SIGTERM, functools.partial(killProc, tb=tb))
         bokehgui.utils.run_server(tb)
     finally:
         print("Exiting the simulation. Stopping Bokeh Server")
