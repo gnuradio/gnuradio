@@ -13,6 +13,7 @@
 
 #include <gnuradio/filter/api.h>
 #include <gnuradio/gr_complex.h>
+#include <volk/volk_alloc.hh>
 #include <vector>
 
 namespace gr {
@@ -26,15 +27,15 @@ namespace kernel {
 class FILTER_API fir_filter_with_buffer_fff
 {
 private:
+    mutable volk::vector<float> d_output; // Temporary storage for one element.
+    const int d_align;
+    const int d_naligned;
     std::vector<float> d_taps;
     unsigned int d_ntaps;
-    float* d_buffer_ptr;
-    float* d_buffer;
+    volk::vector<float> d_buffer_ptr;
+    float* d_buffer; // Current position pointer into d_buffer_ptr.
     unsigned int d_idx;
-    float** d_aligned_taps;
-    float* d_output;
-    int d_align;
-    int d_naligned;
+    std::vector<volk::vector<float>> d_aligned_taps;
 
 public:
     // CONSTRUCTORS
@@ -47,6 +48,12 @@ public:
      * new_taps[1], etc.
      */
     fir_filter_with_buffer_fff(const std::vector<float>& taps);
+
+    // Disable copy because of the raw pointer member d_buffer.
+    fir_filter_with_buffer_fff(const fir_filter_with_buffer_fff&) = delete;
+    fir_filter_with_buffer_fff& operator=(const fir_filter_with_buffer_fff&) = delete;
+    fir_filter_with_buffer_fff(fir_filter_with_buffer_fff&&) = default;
+    fir_filter_with_buffer_fff& operator=(fir_filter_with_buffer_fff&&) = default;
 
     ~fir_filter_with_buffer_fff();
 
@@ -122,15 +129,15 @@ public:
 class FILTER_API fir_filter_with_buffer_ccc
 {
 private:
+    mutable volk::vector<gr_complex> d_output; // Temporary storage for one element.
+    const int d_align;
+    const int d_naligned;
     std::vector<gr_complex> d_taps;
     unsigned int d_ntaps;
-    gr_complex* d_buffer_ptr;
-    gr_complex* d_buffer;
+    volk::vector<gr_complex> d_buffer_ptr;
+    gr_complex* d_buffer; // Current position pointer into d_buffer_ptr.
     unsigned int d_idx;
-    gr_complex** d_aligned_taps;
-    gr_complex* d_output;
-    int d_align;
-    int d_naligned;
+    std::vector<volk::vector<gr_complex>> d_aligned_taps;
 
 public:
     // CONSTRUCTORS
@@ -143,6 +150,12 @@ public:
      * new_taps[1], etc.
      */
     fir_filter_with_buffer_ccc(const std::vector<gr_complex>& taps);
+
+    // Disable copy because of the raw pointer member d_buffer.
+    fir_filter_with_buffer_ccc(const fir_filter_with_buffer_ccc&) = delete;
+    fir_filter_with_buffer_ccc& operator=(const fir_filter_with_buffer_ccc&) = delete;
+    fir_filter_with_buffer_ccc(fir_filter_with_buffer_ccc&&) = default;
+    fir_filter_with_buffer_ccc& operator=(fir_filter_with_buffer_ccc&&) = default;
 
     ~fir_filter_with_buffer_ccc();
 
@@ -218,15 +231,15 @@ public:
 class FILTER_API fir_filter_with_buffer_ccf
 {
 private:
+    mutable volk::vector<gr_complex> d_output; // Temporary storage for one element.
+    const int d_align;
+    const int d_naligned;
     std::vector<float> d_taps;
     unsigned int d_ntaps;
-    gr_complex* d_buffer_ptr;
-    gr_complex* d_buffer;
+    volk::vector<gr_complex> d_buffer_ptr;
+    gr_complex* d_buffer; // Current position pointer into d_buffer_ptr.
     unsigned int d_idx;
-    float** d_aligned_taps;
-    gr_complex* d_output;
-    int d_align;
-    int d_naligned;
+    std::vector<volk::vector<float>> d_aligned_taps;
 
 public:
     // CONSTRUCTORS
@@ -239,6 +252,12 @@ public:
      * new_taps[1], etc.
      */
     fir_filter_with_buffer_ccf(const std::vector<float>& taps);
+
+    // Disable copy because of the raw pointer member d_buffer.
+    fir_filter_with_buffer_ccf(const fir_filter_with_buffer_ccf&) = delete;
+    fir_filter_with_buffer_ccf& operator=(const fir_filter_with_buffer_ccf&) = delete;
+    fir_filter_with_buffer_ccf(fir_filter_with_buffer_ccf&&) = default;
+    fir_filter_with_buffer_ccf& operator=(fir_filter_with_buffer_ccf&&) = default;
 
     ~fir_filter_with_buffer_ccf();
 
