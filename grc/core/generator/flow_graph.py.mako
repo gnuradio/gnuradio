@@ -281,7 +281,7 @@ ${indent(snip['def'])}
 snippet_sections = ['main_after_init', 'main_after_start', 'main_after_stop']
 snippets = {}
 for section in snippet_sections:
-    snippets[section] = flow_graph.get_snippets_dict(section) 
+    snippets[section] = flow_graph.get_snippets_dict(section)
 %>
 \
 %for section in snippet_sections:
@@ -407,7 +407,7 @@ def main(top_block_cls=${class_name}, options=None):
         session = push_session(doc, session_id="${flow_graph.get_option('id')}",
                                url = "http://localhost:" + port + "/bokehgui")
         # Create Top Block instance
-        tb = top_block_cls(doc)
+        tb = top_block_cls(doc, ${ ', '.join(params_eq_list) })
         ${'snippets_main_after_init(tb)' if snippets['main_after_init'] else ''}
         try:
             tb.start()
