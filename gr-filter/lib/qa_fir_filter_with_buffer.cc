@@ -17,6 +17,7 @@
 #include <gnuradio/random.h>
 #include <gnuradio/types.h>
 #include <volk/volk.h>
+#include <volk/volk_alloc.hh>
 #include <boost/test/unit_test.hpp>
 #include <algorithm>
 #include <cmath>
@@ -78,26 +79,23 @@ void test_decimate(unsigned int decimate)
     const int MAX_TAPS = 29;
     const int OUTPUT_LEN = 37;
     const int INPUT_LEN = MAX_TAPS + OUTPUT_LEN;
-    size_t align = volk_get_alignment();
 
     // Mem aligned buffer not really necessary, but why not?
-    i_type* input = (float*)volk_malloc(INPUT_LEN * sizeof(float), align);
-    i_type* dline = (float*)volk_malloc(INPUT_LEN * sizeof(float), align);
-    o_type* expected_output = (float*)volk_malloc(OUTPUT_LEN * sizeof(float), align);
-    o_type* actual_output = (float*)volk_malloc(OUTPUT_LEN * sizeof(float), align);
-    tap_type* taps = (float*)volk_malloc(MAX_TAPS * sizeof(float), align);
-
-    memset(dline, 0, INPUT_LEN * sizeof(i_type));
+    volk::vector<i_type> input(INPUT_LEN);
+    volk::vector<i_type> dline(INPUT_LEN);
+    volk::vector<o_type> expected_output(OUTPUT_LEN);
+    volk::vector<o_type> actual_output(OUTPUT_LEN);
+    volk::vector<tap_type> taps(MAX_TAPS);
 
     for (int n = 0; n <= MAX_TAPS; n++) {
         for (int ol = 0; ol <= OUTPUT_LEN; ol++) {
 
             // build random test case
-            random_floats(input, INPUT_LEN);
-            random_floats(taps, MAX_TAPS);
+            random_floats(input.data(), INPUT_LEN);
+            random_floats(taps.data(), MAX_TAPS);
 
             // compute expected output values
-            memset(dline, 0, INPUT_LEN * sizeof(i_type));
+            std::fill(std::begin(dline), std::end(dline), 0);
             for (int o = 0; o < (int)(ol / decimate); o++) {
                 // use an actual delay line for this test
                 for (int dd = 0; dd < (int)decimate; dd++) {
@@ -105,7 +103,7 @@ void test_decimate(unsigned int decimate)
                         dline[oo] = dline[oo - 1];
                     dline[0] = input[decimate * o + dd];
                 }
-                expected_output[o] = ref_dotprod(dline, taps, n);
+                expected_output[o] = ref_dotprod(dline.data(), taps.data(), n);
             }
 
             // build filter
@@ -113,8 +111,8 @@ void test_decimate(unsigned int decimate)
             kernel::fir_filter_with_buffer_fff f1(f1_taps);
 
             // zero the output, then do the filtering
-            memset(actual_output, 0, OUTPUT_LEN * sizeof(o_type));
-            f1.filterNdec(actual_output, input, ol / decimate, decimate);
+            std::fill(std::begin(actual_output), std::end(actual_output), 0);
+            f1.filterNdec(actual_output.data(), input.data(), ol / decimate, decimate);
 
             // check results
             //
@@ -129,11 +127,6 @@ void test_decimate(unsigned int decimate)
             }
         }
     }
-    volk_free(input);
-    volk_free(dline);
-    volk_free(expected_output);
-    volk_free(actual_output);
-    volk_free(taps);
 }
 
 BOOST_AUTO_TEST_CASE(t1_fff) { test_decimate(1); }
@@ -177,28 +170,23 @@ void test_decimate(unsigned int decimate)
     const int MAX_TAPS = 29;
     const int OUTPUT_LEN = 37;
     const int INPUT_LEN = MAX_TAPS + OUTPUT_LEN;
-    size_t align = volk_get_alignment();
 
     // Mem aligned buffer not really necessary, but why not?
-    i_type* input = (gr_complex*)volk_malloc(INPUT_LEN * sizeof(gr_complex), align);
-    i_type* dline = (gr_complex*)volk_malloc(INPUT_LEN * sizeof(gr_complex), align);
-    o_type* expected_output =
-        (gr_complex*)volk_malloc(OUTPUT_LEN * sizeof(gr_complex), align);
-    o_type* actual_output =
-        (gr_complex*)volk_malloc(OUTPUT_LEN * sizeof(gr_complex), align);
-    tap_type* taps = (gr_complex*)volk_malloc(MAX_TAPS * sizeof(gr_complex), align);
-
-    std::fill_n(dline, INPUT_LEN, 0);
+    volk::vector<i_type> input(INPUT_LEN);
+    volk::vector<i_type> dline(INPUT_LEN);
+    volk::vector<o_type> expected_output(OUTPUT_LEN);
+    volk::vector<o_type> actual_output(OUTPUT_LEN);
+    volk::vector<tap_type> taps(MAX_TAPS);
 
     for (int n = 0; n <= MAX_TAPS; n++) {
         for (int ol = 0; ol <= OUTPUT_LEN; ol++) {
 
             // build random test case
-            random_complex(input, INPUT_LEN);
-            random_complex(taps, MAX_TAPS);
+            random_complex(input.data(), INPUT_LEN);
+            random_complex(taps.data(), MAX_TAPS);
 
             // compute expected output values
-            std::fill_n(dline, INPUT_LEN, 0);
+            std::fill(std::begin(dline), std::end(dline), 0);
             for (int o = 0; o < (int)(ol / decimate); o++) {
                 // use an actual delay line for this test
                 for (int dd = 0; dd < (int)decimate; dd++) {
@@ -206,7 +194,7 @@ void test_decimate(unsigned int decimate)
                         dline[oo] = dline[oo - 1];
                     dline[0] = input[decimate * o + dd];
                 }
-                expected_output[o] = ref_dotprod(dline, taps, n);
+                expected_output[o] = ref_dotprod(dline.data(), taps.data(), n);
             }
 
             // build filter
@@ -214,8 +202,8 @@ void test_decimate(unsigned int decimate)
             kernel::fir_filter_with_buffer_ccc f1(f1_taps);
 
             // zero the output, then do the filtering
-            std::fill_n(actual_output, OUTPUT_LEN, 0);
-            f1.filterNdec(actual_output, input, ol / decimate, decimate);
+            std::fill(std::begin(actual_output), std::end(actual_output), 0);
+            f1.filterNdec(actual_output.data(), input.data(), ol / decimate, decimate);
 
             // check results
             //
@@ -230,11 +218,6 @@ void test_decimate(unsigned int decimate)
             }
         }
     }
-    volk_free(input);
-    volk_free(dline);
-    volk_free(expected_output);
-    volk_free(actual_output);
-    volk_free(taps);
 }
 
 BOOST_AUTO_TEST_CASE(t1_ccc) { test_decimate(1); }
@@ -276,28 +259,23 @@ void test_decimate(unsigned int decimate)
     const int MAX_TAPS = 29;
     const int OUTPUT_LEN = 37;
     const int INPUT_LEN = MAX_TAPS + OUTPUT_LEN;
-    size_t align = volk_get_alignment();
 
     // Mem aligned buffer not really necessary, but why not?
-    i_type* input = (gr_complex*)volk_malloc(INPUT_LEN * sizeof(gr_complex), align);
-    i_type* dline = (gr_complex*)volk_malloc(INPUT_LEN * sizeof(gr_complex), align);
-    o_type* expected_output =
-        (gr_complex*)volk_malloc(OUTPUT_LEN * sizeof(gr_complex), align);
-    o_type* actual_output =
-        (gr_complex*)volk_malloc(OUTPUT_LEN * sizeof(gr_complex), align);
-    tap_type* taps = (float*)volk_malloc(MAX_TAPS * sizeof(float), align);
-
-    std::fill_n(dline, INPUT_LEN, 0);
+    volk::vector<i_type> input(INPUT_LEN);
+    volk::vector<i_type> dline(INPUT_LEN);
+    volk::vector<o_type> expected_output(OUTPUT_LEN);
+    volk::vector<o_type> actual_output(OUTPUT_LEN);
+    volk::vector<tap_type> taps(MAX_TAPS);
 
     for (int n = 0; n <= MAX_TAPS; n++) {
         for (int ol = 0; ol <= OUTPUT_LEN; ol++) {
 
             // build random test case
-            random_complex(input, INPUT_LEN);
-            random_floats(taps, MAX_TAPS);
+            random_complex(input.data(), INPUT_LEN);
+            random_floats(taps.data(), MAX_TAPS);
 
             // compute expected output values
-            std::fill_n(dline, INPUT_LEN, 0);
+            std::fill(std::begin(dline), std::end(dline), 0);
             for (int o = 0; o < (int)(ol / decimate); o++) {
                 // use an actual delay line for this test
                 for (int dd = 0; dd < (int)decimate; dd++) {
@@ -305,7 +283,7 @@ void test_decimate(unsigned int decimate)
                         dline[oo] = dline[oo - 1];
                     dline[0] = input[decimate * o + dd];
                 }
-                expected_output[o] = ref_dotprod(dline, taps, n);
+                expected_output[o] = ref_dotprod(dline.data(), taps.data(), n);
             }
 
             // build filter
@@ -313,8 +291,8 @@ void test_decimate(unsigned int decimate)
             kernel::fir_filter_with_buffer_ccf f1(f1_taps);
 
             // zero the output, then do the filtering
-            std::fill_n(actual_output, OUTPUT_LEN, 0);
-            f1.filterNdec(actual_output, input, ol / decimate, decimate);
+            std::fill(std::begin(actual_output), std::end(actual_output), 0);
+            f1.filterNdec(actual_output.data(), input.data(), ol / decimate, decimate);
 
             // check results
             //
@@ -329,11 +307,6 @@ void test_decimate(unsigned int decimate)
             }
         }
     }
-    volk_free(input);
-    volk_free(dline);
-    volk_free(expected_output);
-    volk_free(actual_output);
-    volk_free(taps);
 }
 
 BOOST_AUTO_TEST_CASE(t1_ccf) { test_decimate(1); }

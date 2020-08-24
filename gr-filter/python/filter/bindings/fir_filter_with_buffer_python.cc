@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(fir_filter_with_buffer.h) */
-/* BINDTOOL_HEADER_FILE_HASH(bb3571db4265c8c55abf11850978e0de)                     */
+/* BINDTOOL_HEADER_FILE_HASH(fc7229741eab002c302113309e5fcaed)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -42,9 +42,6 @@ void bind_fir_filter_with_buffer(py::module& m)
         .def(py::init<std::vector<float, std::allocator<float>> const&>(),
              py::arg("taps"),
              D(kernel, fir_filter_with_buffer_fff, fir_filter_with_buffer_fff, 0))
-        .def(py::init<gr::filter::kernel::fir_filter_with_buffer_fff const&>(),
-             py::arg("arg0"),
-             D(kernel, fir_filter_with_buffer_fff, fir_filter_with_buffer_fff, 1))
 
 
         .def("filter",
@@ -100,9 +97,6 @@ void bind_fir_filter_with_buffer(py::module& m)
                                   std::allocator<std::complex<float>>> const&>(),
              py::arg("taps"),
              D(kernel, fir_filter_with_buffer_ccc, fir_filter_with_buffer_ccc, 0))
-        .def(py::init<gr::filter::kernel::fir_filter_with_buffer_ccc const&>(),
-             py::arg("arg0"),
-             D(kernel, fir_filter_with_buffer_ccc, fir_filter_with_buffer_ccc, 1))
 
 
         .def("filter",
@@ -158,9 +152,6 @@ void bind_fir_filter_with_buffer(py::module& m)
         .def(py::init<std::vector<float, std::allocator<float>> const&>(),
              py::arg("taps"),
              D(kernel, fir_filter_with_buffer_ccf, fir_filter_with_buffer_ccf, 0))
-        .def(py::init<gr::filter::kernel::fir_filter_with_buffer_ccf const&>(),
-             py::arg("arg0"),
-             D(kernel, fir_filter_with_buffer_ccf, fir_filter_with_buffer_ccf, 1))
 
 
         .def("filter",
