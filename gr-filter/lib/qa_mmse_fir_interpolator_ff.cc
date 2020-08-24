@@ -15,7 +15,7 @@
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/filter/mmse_fir_interpolator_ff.h>
 #include <gnuradio/math.h>
-#include <volk/volk.h>
+#include <volk/volk_alloc.hh>
 #include <boost/test/unit_test.hpp>
 #include <cmath>
 #include <cstdio>
@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(t1)
     // use aligned malloc and make sure that everything in this
     // buffer is properly initialized.
     static const unsigned N = 100;
-    float* input = (float*)volk_malloc((N + 10) * sizeof(float), volk_get_alignment());
+    volk::vector<float> input(N + 10);
 
     for (unsigned i = 0; i < N + 10; i++)
         input[i] = test_fcn((double)i);
@@ -51,7 +51,6 @@ BOOST_AUTO_TEST_CASE(t1)
             // printf ("%9.6f  %9.6f  %9.6f\n", expected, actual, expected - actual);
         }
     }
-    volk_free(input);
 }
 
 } /* namespace filter */
