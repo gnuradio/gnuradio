@@ -10,6 +10,7 @@
 
 
 import sys
+import decimal
 from gnuradio import gr, blocks
 import pmt
 
@@ -75,12 +76,20 @@ def parse_header(p, VERBOSE=False):
         r = pmt.dict_ref(p, pmt.string_to_symbol("rx_time"), dump)
         secs = pmt.tuple_ref(r, 0)
         fracs = pmt.tuple_ref(r, 1)
-        secs = float(pmt.to_uint64(secs))
+        secs = pmt.to_uint64(secs)
         fracs = pmt.to_double(fracs)
-        t = secs + fracs
+        t = float(secs) + fracs
+        info["rx_time_secs"] = secs
+        info["rx_time_fracs"] = fracs
         info["rx_time"] = t
         if(VERBOSE):
-            print("Seconds: {0:.6f}".format(t))
+                # We need are going to print with ~1e-16 resolution,
+                # which is the precision we can expect in secs.
+                # The default value of precision for decimal
+                # is 28. The value of secs is not expected to be larger
+                # than 1e12, so this precision is enough.
+                s = decimal.Decimal(secs) + decimal.Decimal(fracs)
+                print("Seconds: {0:.16f}".format(s))
     else:
         sys.stderr.write("Could not find key 'time': invalid or corrupt data file.\n")
         sys.exit(1)
