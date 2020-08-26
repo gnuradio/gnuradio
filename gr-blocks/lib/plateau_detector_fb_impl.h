@@ -26,12 +26,12 @@ public:
     plateau_detector_fb_impl(int max_len, float threshold);
     ~plateau_detector_fb_impl();
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 
     virtual void set_threshold(float threshold);
     virtual float threshold() const;

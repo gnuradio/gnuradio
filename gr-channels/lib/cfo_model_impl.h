@@ -42,7 +42,7 @@ public:
 
     ~cfo_model_impl();
     void setup_rpc();
-    int work(int, gr_vector_const_void_star&, gr_vector_void_star&);
+    int work(int, gr_vector_const_void_star&, gr_vector_void_star&) override;
 
     void set_std_dev(double _dev)
     {

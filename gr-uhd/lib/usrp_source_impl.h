@@ -104,7 +104,7 @@ public:
     finite_acquisition_v(const size_t nsamps);
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
     void setup_rpc();
 

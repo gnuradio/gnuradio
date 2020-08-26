@@ -34,7 +34,7 @@ public:
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 
 protected:
     void phase_error_tracking(float phase_error);
