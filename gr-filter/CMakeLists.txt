@@ -43,7 +43,9 @@ endif(ENABLE_PYTHON)
 if(ENABLE_GRC)
     add_subdirectory(grc)
 endif(ENABLE_GRC)
-add_subdirectory(examples)
+if(ENABLE_EXAMPLES)
+    add_subdirectory(examples)
+endif(ENABLE_EXAMPLES)
 add_subdirectory(docs)
 
 ########################################################################

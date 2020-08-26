@@ -79,7 +79,9 @@ add_subdirectory(lib)
 add_subdirectory(apps)
 if(ENABLE_PYTHON)
      add_subdirectory(python)
-    add_subdirectory(examples)
+    if (ENABLE_EXAMPLES)
+        add_subdirectory(examples)
+    endif (ENABLE_EXAMPLES)
 endif(ENABLE_PYTHON)
 
 ########################################################################
