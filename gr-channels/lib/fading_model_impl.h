@@ -32,7 +32,7 @@ public:
     void setup_rpc();
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
     virtual float fDTs() { return d_fader.d_fDTs; }
     virtual float K() { return d_fader.d_K; }

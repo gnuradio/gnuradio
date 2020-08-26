@@ -32,8 +32,8 @@ public:
     selector_impl(size_t itemsize, unsigned int input_index, unsigned int output_index);
     ~selector_impl();
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
-    bool check_topology(int ninputs, int noutputs);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    bool check_topology(int ninputs, int noutputs) override;
     void setup_rpc();
     void handle_msg_input_index(pmt::pmt_t msg);
     void handle_msg_output_index(pmt::pmt_t msg);
@@ -54,7 +54,7 @@ public:
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

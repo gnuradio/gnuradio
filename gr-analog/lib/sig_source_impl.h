@@ -41,7 +41,7 @@ public:
 
     virtual int work(int noutput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 
     double sampling_freq() const { return d_sampling_freq; }
     gr_waveform_t waveform() const { return d_waveform; }

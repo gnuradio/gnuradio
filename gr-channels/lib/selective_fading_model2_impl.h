@@ -55,7 +55,7 @@ public:
     void setup_rpc();
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
     std::vector<gr_complex> d_taps;
 
     virtual float fDTs() { return d_faders[0].d_fDTs; }

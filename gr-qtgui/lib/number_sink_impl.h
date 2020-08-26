@@ -59,7 +59,7 @@ public:
                      QWidget* parent = NULL);
     ~number_sink_impl();
 
-    bool check_topology(int ninputs, int noutputs);
+    bool check_topology(int ninputs, int noutputs) override;
 
     void exec_();
     QWidget* qwidget();
@@ -100,7 +100,7 @@ public:
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace qtgui */

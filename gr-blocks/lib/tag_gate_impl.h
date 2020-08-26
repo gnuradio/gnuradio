@@ -33,7 +33,7 @@ public:
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
     void set_single_key(const std::string& single_key);
     std::string single_key() const;

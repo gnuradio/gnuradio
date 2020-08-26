@@ -69,7 +69,7 @@ public:
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
     long ntotal() const { return d_ntotal; }
     long nright() const { return d_nright; }
