@@ -356,6 +356,10 @@ if(${CMAKE_BUILD_TYPE} STREQUAL "Coverage")
   setup_target_for_coverage(coverage "ctest || exit 0" coverage)
 endif()
 
+########################################################################
+# Enable/disable examples
+########################################################################
+OPTION(ENABLE_EXAMPLES "Enable examples" ON)
 
 ########################################################################
 # Detect and configure VOLK
