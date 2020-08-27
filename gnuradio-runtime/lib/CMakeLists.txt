@@ -203,7 +203,7 @@ target_include_directories(gnuradio-runtime
     ${PYTHON_INCLUDE_DIR} 
     ${PYTHON_NUMPY_INCLUDE_DIR} 
     ${pybind11_INCLUDE_DIR}
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+    $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
   PRIVATE
