@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(message_debug.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(d30bdecc7a85481cac1f2c6ff843509b)                     */
+/* BINDTOOL_HEADER_FILE_HASH(5768fa881c26e7018f934e8997ac36de)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -36,7 +36,9 @@ void bind_message_debug(py::module& m)
     py::class_<message_debug, gr::block, gr::basic_block, std::shared_ptr<message_debug>>(
         m, "message_debug", D(message_debug))
 
-        .def(py::init(&message_debug::make), D(message_debug, make))
+        .def(py::init(&message_debug::make),
+             py::arg("en_uvec") = true,
+             D(message_debug, make))
 
 
         .def("num_messages", &message_debug::num_messages, D(message_debug, num_messages))
@@ -46,6 +48,12 @@ void bind_message_debug(py::module& m)
              &message_debug::get_message,
              py::arg("i"),
              D(message_debug, get_message))
+
+
+        .def("set_vector_print",
+             &message_debug::set_vector_print,
+             py::arg("en"),
+             D(message_debug, set_vector_print))
 
         ;
 }

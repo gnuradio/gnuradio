@@ -31,3 +31,6 @@ static const char* __doc_gr_blocks_message_debug_num_messages = R"doc()doc";
 
 
 static const char* __doc_gr_blocks_message_debug_get_message = R"doc()doc";
+
+
+static const char* __doc_gr_blocks_message_debug_set_vector_print = R"doc()doc";
