@@ -15,6 +15,7 @@
 #include <gnuradio/filter/pfb_decimator_ccf.h>
 #include <gnuradio/filter/polyphase_filterbank.h>
 #include <gnuradio/thread/thread.h>
+#include <volk/volk_alloc.hh>
 
 namespace gr {
 namespace filter {
@@ -29,8 +30,8 @@ private:
     bool d_use_fft_rotator;
     bool d_use_fft_filters;
     std::vector<gr_complex> d_rotator;
-    gr_complex* d_tmp;         // used for fft filters
-    gr::thread::mutex d_mutex; // mutex to protect set/work access
+    volk::vector<gr_complex> d_tmp; // used for fft filters
+    gr::thread::mutex d_mutex;      // mutex to protect set/work access
 
     inline int work_fir_exp(int noutput_items,
                             gr_vector_const_void_star& input_items,

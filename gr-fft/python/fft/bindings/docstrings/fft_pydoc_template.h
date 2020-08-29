@@ -106,9 +106,3 @@ static const char* __doc_gr_fft_fft_real_rev_nthreads = R"doc()doc";
 
 
 static const char* __doc_gr_fft_fft_real_rev_execute = R"doc()doc";
-
-
-static const char* __doc_gr_fft_malloc_complex = R"doc()doc";
-
-
-static const char* __doc_gr_fft_free = R"doc()doc";
