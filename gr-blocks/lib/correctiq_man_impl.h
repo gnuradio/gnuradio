@@ -12,6 +12,7 @@
 #define INCLUDED_CORRECTIQ_CORRECTIQ_MAN_IMPL_H
 
 #include <gnuradio/blocks/correctiq_man.h>
+#include <volk/volk_alloc.hh>
 
 namespace gr {
 namespace blocks {
@@ -19,13 +20,9 @@ namespace blocks {
 class correctiq_man_impl : public correctiq_man
 {
 private:
-    float d_avg_real;
-    float d_avg_img;
-
     gr_complex d_k;
 
-    int d_buffer_size;
-    gr_complex* d_volk_const_buffer;
+    volk::vector<gr_complex> d_volk_const_buffer;
 
     void set_const_buffer(int new_size);
     void fill_const_buffer();
@@ -34,8 +31,8 @@ public:
     correctiq_man_impl(float real, float imag);
     ~correctiq_man_impl();
 
-    virtual float get_real();
-    virtual float get_imag();
+    float get_real() const override;
+    float get_imag() const override;
 
     virtual void set_real(float new_value);
     virtual void set_imag(float new_value);

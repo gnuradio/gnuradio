@@ -40,8 +40,8 @@ public:
      * creating new instances.
      */
 
-    virtual double get_freq() = 0;
-    virtual float get_gain() = 0;
+    virtual double get_freq() const = 0;
+    virtual float get_gain() const = 0;
 
     virtual void set_freq(double newValue) = 0;
     virtual void set_gain(float newValue) = 0;
