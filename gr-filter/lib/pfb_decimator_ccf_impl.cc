@@ -59,27 +59,18 @@ pfb_decimator_ccf_impl::pfb_decimator_ccf_impl(unsigned int decim,
     } else {
         set_history(d_taps_per_filter);
     }
-
-    d_tmp = NULL;
 }
 
 bool pfb_decimator_ccf_impl::start()
 {
     if (d_use_fft_filters) {
-        d_tmp = fft::malloc_complex(max_noutput_items() * d_rate);
+        d_tmp.resize(max_noutput_items() * d_rate);
     }
 
     return block::start();
 }
 
-bool pfb_decimator_ccf_impl::stop()
-{
-    if ((d_use_fft_filters) && (d_tmp)) {
-        fft::free(d_tmp);
-    }
-
-    return block::stop();
-}
+bool pfb_decimator_ccf_impl::stop() { return block::stop(); }
 
 pfb_decimator_ccf_impl::~pfb_decimator_ccf_impl() {}
 

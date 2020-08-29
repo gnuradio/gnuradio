@@ -24,17 +24,6 @@
 namespace gr {
 namespace fft {
 
-
-/*! \brief Helper function for allocating complex* buffers
- * TODO: Remove once the single user of this stops using it.
- */
-FFT_API gr_complex* malloc_complex(int size);
-
-/*! \brief Helper function for freeing fft buffers
- * TODO: Remove once the single user of this stops using it.
- */
-FFT_API void free(void* b);
-
 /*!
  * \brief Export reference to planner mutex for those apps that
  * want to use FFTW w/o using the fft_impl_fftw* classes.

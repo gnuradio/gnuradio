@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(fft.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(4402b26d42b6210cd744a09ce7f6ffd6)                     */
+/* BINDTOOL_HEADER_FILE_HASH(ebbb274b1b433908749981712d96b3e9)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -153,11 +153,4 @@ void bind_fft(py::module& m)
         .def("execute", &fft_real_rev::execute, D(fft_real_rev, execute))
 
         ;
-
-
-    m.def(
-        "malloc_complex", &::gr::fft::malloc_complex, py::arg("size"), D(malloc_complex));
-
-
-    m.def("free", &::gr::fft::free, py::arg("b"), D(free));
 }

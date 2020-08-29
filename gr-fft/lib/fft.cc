@@ -48,13 +48,6 @@ static boost::mutex wisdom_thread_mutex;
 boost::interprocess::file_lock wisdom_lock;
 static bool wisdom_lock_init_done = false; // Modify while holding 'wisdom_thread_mutex'
 
-gr_complex* malloc_complex(int size)
-{
-    return (gr_complex*)volk_malloc(sizeof(gr_complex) * size, volk_get_alignment());
-}
-
-void free(void* b) { volk_free(b); }
-
 boost::mutex& planner::mutex()
 {
     static boost::mutex s_planning_mutex;
