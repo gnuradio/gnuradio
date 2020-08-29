@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(firdes.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(d9728e3175c510584d65ddba33955bb2)                     */
+/* BINDTOOL_HEADER_FILE(firdes.h)                                                  */
+/* BINDTOOL_HEADER_FILE_HASH(0b2837cc3e5dcdc4435575d7ce1950df)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -175,6 +175,31 @@ void bind_firdes(py::module& m)
                     py::arg("window") = ::gr::filter::firdes::win_type::WIN_HAMMING,
                     py::arg("beta") = 6.7599999999999998,
                     D(firdes, band_reject_2))
+
+
+        .def_static("complex_band_reject",
+                    &firdes::complex_band_reject,
+                    py::arg("gain"),
+                    py::arg("sampling_freq"),
+                    py::arg("low_cutoff_freq"),
+                    py::arg("high_cutoff_freq"),
+                    py::arg("transition_width"),
+                    py::arg("window") = ::gr::filter::firdes::win_type::WIN_HAMMING,
+                    py::arg("beta") = 6.7599999999999998,
+                    D(firdes, complex_band_reject))
+
+
+        .def_static("complex_band_reject_2",
+                    &firdes::complex_band_reject_2,
+                    py::arg("gain"),
+                    py::arg("sampling_freq"),
+                    py::arg("low_cutoff_freq"),
+                    py::arg("high_cutoff_freq"),
+                    py::arg("transition_width"),
+                    py::arg("attenuation_dB"),
+                    py::arg("window") = ::gr::filter::firdes::win_type::WIN_HAMMING,
+                    py::arg("beta") = 6.7599999999999998,
+                    D(firdes, complex_band_reject_2))
 
 
         .def_static("hilbert",
