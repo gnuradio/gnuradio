@@ -19,6 +19,10 @@
 namespace gr {
 namespace blocks {
 
+namespace {
+constexpr int default_const_buffer = 8192;
+}
+
 correctiq_man::sptr correctiq_man::make(float real, float imag)
 {
     return gnuradio::make_block_sptr<correctiq_man_impl>(real, imag);
@@ -31,9 +35,10 @@ correctiq_man_impl::correctiq_man_impl(float real, float imag)
     : gr::sync_block("correctiq_man",
                      gr::io_signature::make(1, 1, sizeof(gr_complex)),
                      gr::io_signature::make(1, 1, sizeof(gr_complex))),
-      d_k(real, imag)
+      d_k(real, imag),
+      d_volk_const_buffer(default_const_buffer)
 {
-    set_const_buffer(8192);
+    set_const_buffer(default_const_buffer);
 
     message_port_register_in(pmt::mp("set_real"));
     set_msg_handler(pmt::mp("set_real"),

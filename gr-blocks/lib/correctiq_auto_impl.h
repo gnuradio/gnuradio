@@ -20,18 +20,18 @@ namespace blocks {
 class correctiq_auto_impl : public correctiq_auto
 {
 private:
-    float d_avg_real;
-    float d_avg_img;
-    float d_ratio;
-    gr_complex d_k;
+    float d_avg_real{ 0.0 };
+    float d_avg_img{ 0.0 };
+    float d_ratio{ 1e-05f };
+    gr_complex d_k{ 0, 0 };
 
     const double d_samp_rate;
     double d_freq;
     float d_gain;
     const float d_sync_window;
 
-    long d_sync_counter;
-    bool d_synchronized;
+    long d_sync_counter{ 0 };
+    bool d_synchronized{ false };
 
     const long d_max_sync_samples;
 

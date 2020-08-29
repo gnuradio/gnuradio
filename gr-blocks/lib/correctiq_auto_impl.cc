@@ -20,6 +20,10 @@
 namespace gr {
 namespace blocks {
 
+namespace {
+constexpr int default_const_buffer = 8192;
+}
+
 correctiq_auto::sptr
 correctiq_auto::make(double samp_rate, double freq, float gain, float sync_window)
 {
@@ -37,18 +41,14 @@ correctiq_auto_impl::correctiq_auto_impl(double samp_rate,
     : gr::sync_block("correctiq_auto",
                      gr::io_signature::make(1, 1, sizeof(gr_complex)),
                      gr::io_signature::make(1, 1, sizeof(gr_complex))),
-      d_avg_real(0.0),
-      d_avg_img(0.0),
-      d_ratio(1e-05f),
-      d_k(d_avg_real, d_avg_img),
       d_samp_rate(samp_rate),
       d_freq(freq),
       d_gain(gain),
       d_sync_window(sync_window),
-      d_synchronized(false),
-      d_max_sync_samples((long)(d_samp_rate * (double)d_sync_window))
+      d_max_sync_samples((long)(d_samp_rate * (double)d_sync_window)),
+      d_volk_const_buffer(default_const_buffer)
 {
-    set_const_buffer(8192);
+    set_const_buffer(default_const_buffer);
 
     message_port_register_in(pmt::mp("rsync"));
     set_msg_handler(pmt::mp("rsync"),
