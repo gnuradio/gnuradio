@@ -74,12 +74,13 @@ private:
                   bool is_packed);
     bool d_is_packed;
 
-    // c'tor method for packed algorithm setup.
-    void setup_frozen_bit_inserter();
+    // Helper function to allow `d_frozen_bit_prototype` to be const.
+    volk::vector<unsigned char> make_prototype() const;
 
     // methods insert input bits and frozen bits into packed array for encoding
-    unsigned char* d_frozen_bit_prototype; // packed frozen bits are written onto it and
-                                           // later copies are used.
+    const volk::vector<unsigned char>
+        d_frozen_bit_prototype; // packed frozen bits are written onto it and
+                                // later copies are used.
     void insert_packed_frozen_bits_and_reverse(unsigned char* target,
                                                const unsigned char* input) const;
     void insert_unpacked_bit_into_packed_array_at_position(unsigned char* target,

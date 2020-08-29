@@ -20,6 +20,9 @@ namespace polar {
 
 struct path {
     path();
+    // Disable copy because of raw pointers.
+    path(const path&) = delete;
+    path& operator=(const path&) = delete;
     ~path();
     float path_metric;
     bool owns_vectors;
@@ -56,6 +59,11 @@ public:
     scl_list(const unsigned int list_size,
              const unsigned int block_size,
              const unsigned int block_power);
+
+    // Disable copy because of raw pointers.
+    scl_list(const scl_list&) = delete;
+    scl_list& operator=(const scl_list&) = delete;
+
     virtual ~scl_list();
     const unsigned int size() const { return d_list_size; };
     const unsigned int active_size() const { return d_active_path_counter; };

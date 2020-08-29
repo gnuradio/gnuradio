@@ -70,7 +70,7 @@ private:
 
     void bit_reverse_and_reset_frozen_bits(unsigned char* outbuf,
                                            const unsigned char* inbuf);
-    unsigned char* d_volk_syst_intermediate;
+    volk::vector<unsigned char> d_volk_syst_intermediate;
 };
 
 } // namespace code
