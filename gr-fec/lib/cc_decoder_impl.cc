@@ -98,26 +98,13 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
         throw std::runtime_error("cc_decoder: mode not recognized");
     }
 
-    d_vp.metrics = (unsigned char*)volk_malloc(2 * sizeof(unsigned char) * d_numstates,
-                                               volk_get_alignment());
-    if (d_vp.metrics == NULL) {
-        throw std::runtime_error("bad alloc for d_vp.metrics!");
-    }
+    d_vp.metrics.resize(2 * d_numstates);
+    d_vp.metrics1.t = d_vp.metrics.data();
+    d_vp.metrics2.t = d_vp.metrics.data() + d_numstates;
 
-    d_vp.metrics1.t = d_vp.metrics;
-    d_vp.metrics2.t = d_vp.metrics + d_numstates;
+    d_vp.decisions.resize(d_veclen * d_decision_t_size);
 
-    d_vp.decisions = (unsigned char*)volk_malloc(
-        sizeof(unsigned char) * d_veclen * d_decision_t_size, volk_get_alignment());
-    if (d_vp.decisions == NULL) {
-        throw std::runtime_error("bad alloc for d_vp.decisions!");
-    }
-
-    Branchtab = (unsigned char*)volk_malloc(
-        sizeof(unsigned char) * d_numstates / 2 * rate, volk_get_alignment());
-    if (Branchtab == NULL) {
-        throw std::runtime_error("bad alloc for d_vp.decisions!");
-    }
+    d_branchtab.resize(d_numstates / 2 * rate);
 
     create_viterbi();
 
@@ -147,12 +134,7 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
     }
 }
 
-cc_decoder_impl::~cc_decoder_impl()
-{
-    volk_free(d_vp.decisions);
-    volk_free(Branchtab);
-    volk_free(d_vp.metrics);
-}
+cc_decoder_impl::~cc_decoder_impl() {}
 
 int cc_decoder_impl::get_output_size()
 {
@@ -191,7 +173,7 @@ void cc_decoder_impl::create_viterbi()
     partab_init();
     for (state = 0; state < d_numstates / 2; state++) {
         for (i = 0; i < d_rate; i++) {
-            Branchtab[i * d_numstates / 2 + state] =
+            d_branchtab[i * d_numstates / 2 + state] =
                 (d_polys[i] < 0) ^ parity((2 * state) & abs(d_polys[i])) ? 255 : 0;
         }
     }
@@ -297,9 +279,7 @@ int cc_decoder_impl::find_endstate()
 
 int cc_decoder_impl::update_viterbi_blk(unsigned char* syms, int nbits)
 {
-    unsigned char* d;
-
-    d = d_vp.decisions;
+    unsigned char* d = d_vp.decisions.data();
 
     memset(d, 0, d_decision_t_size * nbits);
 
@@ -309,7 +289,7 @@ int cc_decoder_impl::update_viterbi_blk(unsigned char* syms, int nbits)
              d,
              nbits - (d_k - 1),
              d_k - 1,
-             Branchtab);
+             d_branchtab.data());
 
     return 0;
 }
@@ -319,10 +299,8 @@ int cc_decoder_impl::chainback_viterbi(unsigned char* data,
                                        unsigned int endstate,
                                        unsigned int tailsize)
 {
-    unsigned char* d;
-
     /* ADDSHIFT and SUBSHIFT make sure that the thing returned is a byte. */
-    d = d_vp.decisions;
+    unsigned char* d = d_vp.decisions.data();
     /* Make room beyond the end of the encoder register so we can
      * accumulate a full byte of decoded data
      */

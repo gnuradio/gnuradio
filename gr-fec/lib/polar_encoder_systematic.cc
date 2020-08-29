@@ -31,16 +31,12 @@ polar_encoder_systematic::polar_encoder_systematic(int block_size,
                                                    int num_info_bits,
                                                    std::vector<int> frozen_bit_positions)
     : polar_common(
-          block_size, num_info_bits, frozen_bit_positions, std::vector<uint8_t>())
+          block_size, num_info_bits, frozen_bit_positions, std::vector<uint8_t>()),
+      d_volk_syst_intermediate(block_size)
 {
-    d_volk_syst_intermediate = (unsigned char*)volk_malloc(
-        sizeof(unsigned char) * block_size, volk_get_alignment());
 }
 
-polar_encoder_systematic::~polar_encoder_systematic()
-{
-    volk_free(d_volk_syst_intermediate);
-}
+polar_encoder_systematic::~polar_encoder_systematic() {}
 
 void polar_encoder_systematic::generic_work(void* in_buffer, void* out_buffer)
 {
@@ -48,8 +44,8 @@ void polar_encoder_systematic::generic_work(void* in_buffer, void* out_buffer)
     unsigned char* out = (unsigned char*)out_buffer;
 
     volk_encode(out, in);
-    bit_reverse_and_reset_frozen_bits(d_volk_syst_intermediate, out);
-    volk_encode_block(out, d_volk_syst_intermediate);
+    bit_reverse_and_reset_frozen_bits(d_volk_syst_intermediate.data(), out);
+    volk_encode_block(out, d_volk_syst_intermediate.data());
 }
 
 void polar_encoder_systematic::bit_reverse_and_reset_frozen_bits(

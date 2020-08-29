@@ -11,6 +11,8 @@
 #ifndef INCLUDED_FEC_CC_COMMON_H
 #define INCLUDED_FEC_CC_COMMON_H
 
+#include <volk/volk_alloc.hh>
+
 typedef enum _cc_mode_t {
     CC_STREAMING = 0,
     CC_TERMINATED,
@@ -31,10 +33,10 @@ typedef union {
 } metric_t;
 
 struct v {
-    unsigned char* metrics;
+    volk::vector<unsigned char> metrics;
     metric_t old_metrics, new_metrics, metrics1,
         metrics2; /* Pointers to path metrics, swapped on every bit */
-    unsigned char* decisions;
+    volk::vector<unsigned char> decisions;
 };
 
 #endif /*INCLUDED_FEC_CC_COMMON_H*/

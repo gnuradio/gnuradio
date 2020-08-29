@@ -43,7 +43,7 @@ private:
                           unsigned int tailsize);
     int find_endstate();
 
-    unsigned char* Branchtab;
+    volk::vector<unsigned char> d_branchtab;
     unsigned char Partab[256];
 
 
@@ -84,6 +84,10 @@ public:
                     cc_mode_t mode = CC_STREAMING,
                     bool padded = false);
     ~cc_decoder_impl();
+
+    // Disable copy because of the raw pointers.
+    cc_decoder_impl(const cc_decoder_impl&) = delete;
+    cc_decoder_impl& operator=(const cc_decoder_impl&) = delete;
 
     void generic_work(void* inbuffer, void* outbuffer);
     bool set_frame_size(unsigned int frame_size);

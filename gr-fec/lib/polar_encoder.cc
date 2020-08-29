@@ -25,6 +25,19 @@ namespace gr {
 namespace fec {
 namespace code {
 
+volk::vector<unsigned char> polar_encoder::make_prototype() const
+{
+    volk::vector<unsigned char> proto(block_size() >> 3);
+
+    for (unsigned int i = 0; i < d_frozen_bit_positions.size(); i++) {
+        int rev_pos = (int)bit_reverse((long)d_frozen_bit_positions.at(i), block_power());
+        unsigned char frozen_bit = (unsigned char)d_frozen_bit_values.at(i);
+        insert_unpacked_bit_into_packed_array_at_position(
+            proto.data(), frozen_bit, rev_pos);
+    }
+    return proto;
+}
+
 generic_encoder::sptr polar_encoder::make(int block_size,
                                           int num_info_bits,
                                           std::vector<int> frozen_bit_positions,
@@ -41,26 +54,12 @@ polar_encoder::polar_encoder(int block_size,
                              std::vector<uint8_t>& frozen_bit_values,
                              bool is_packed)
     : polar_common(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values),
-      d_is_packed(is_packed)
+      d_is_packed(is_packed),
+      d_frozen_bit_prototype(make_prototype())
 {
-    setup_frozen_bit_inserter();
 }
 
-void polar_encoder::setup_frozen_bit_inserter()
-{
-    d_frozen_bit_prototype =
-        (unsigned char*)volk_malloc(block_size() >> 3, volk_get_alignment());
-    memset(d_frozen_bit_prototype, 0, block_size() >> 3);
-
-    for (unsigned int i = 0; i < d_frozen_bit_positions.size(); i++) {
-        int rev_pos = (int)bit_reverse((long)d_frozen_bit_positions.at(i), block_power());
-        unsigned char frozen_bit = (unsigned char)d_frozen_bit_values.at(i);
-        insert_unpacked_bit_into_packed_array_at_position(
-            d_frozen_bit_prototype, frozen_bit, rev_pos);
-    }
-}
-
-polar_encoder::~polar_encoder() { volk_free(d_frozen_bit_prototype); }
+polar_encoder::~polar_encoder() {}
 
 void polar_encoder::generic_work(void* in_buffer, void* out_buffer)
 {
@@ -129,7 +128,8 @@ void polar_encoder::encode_vector_packed_interbyte(unsigned char* target) const
 void polar_encoder::insert_packed_frozen_bits_and_reverse(
     unsigned char* target, const unsigned char* input) const
 {
-    memcpy(target, d_frozen_bit_prototype, block_size() >> 3);
+    std::copy(
+        std::begin(d_frozen_bit_prototype), std::end(d_frozen_bit_prototype), target);
     const int* info_bit_reversed_positions_ptr = &d_info_bit_positions_reversed[0];
     int bit_num = 0;
     unsigned char byte = *input;
