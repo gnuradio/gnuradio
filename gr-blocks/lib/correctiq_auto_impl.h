@@ -12,6 +12,7 @@
 #define INCLUDED_CORRECTIQ_CORRECTIQ_AUTO_IMPL_H
 
 #include <gnuradio/blocks/correctiq_auto.h>
+#include <volk/volk_alloc.hh>
 
 namespace gr {
 namespace blocks {
@@ -32,15 +33,14 @@ private:
     long d_sync_counter;
     bool d_synchronized;
 
-    long d_max_sync_samples;
+    const long d_max_sync_samples;
 
     void send_sync_values();
     void send_syncing();
 
     void trigger_resync(std::string reason);
 
-    int d_buffer_size;
-    gr_complex* d_volk_const_buffer;
+    volk::vector<gr_complex> d_volk_const_buffer;
 
     void set_const_buffer(int new_size);
     void fill_const_buffer();
@@ -49,11 +49,11 @@ public:
     correctiq_auto_impl(double samp_rate, double freq, float gain, float sync_window);
     ~correctiq_auto_impl();
 
-    virtual double get_freq();
-    virtual float get_gain();
+    double get_freq() const override;
+    float get_gain() const override;
 
-    virtual void set_freq(double new_value);
-    virtual void set_gain(float new_value);
+    void set_freq(double new_value) override;
+    void set_gain(float new_value) override;
 
     void handle_resync(pmt::pmt_t msg);
 

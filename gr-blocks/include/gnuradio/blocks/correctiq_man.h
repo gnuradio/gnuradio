@@ -38,8 +38,8 @@ public:
      * creating new instances.
      */
 
-    virtual float get_real() = 0;
-    virtual float get_imag() = 0;
+    virtual float get_real() const = 0;
+    virtual float get_imag() const = 0;
 
     virtual void set_real(float newValue) = 0;
     virtual void set_imag(float newValue) = 0;
