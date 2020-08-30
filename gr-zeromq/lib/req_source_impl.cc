@@ -66,9 +66,9 @@ int req_source_impl::work(int noutput_items,
                 zmq::message_t request(sizeof(uint32_t));
                 memcpy((void*)request.data(), &req_len, sizeof(uint32_t));
 #if USE_NEW_CPPZMQ_SEND_RECV
-                d_socket->send(request, zmq::send_flags::none);
+                d_socket.send(request, zmq::send_flags::none);
 #else
-                d_socket->send(request);
+                d_socket.send(request);
 #endif
 
                 d_req_pending = true;
