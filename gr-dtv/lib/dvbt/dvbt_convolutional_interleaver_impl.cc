@@ -38,21 +38,16 @@ dvbt_convolutional_interleaver_impl::dvbt_convolutional_interleaver_impl(int blo
 {
     // Positions are shift registers (FIFOs)
     // of length i*M
+    d_shift.reserve(d_I);
     for (int i = 0; i < d_I; i++) {
-        d_shift.push_back(new std::deque<unsigned char>(d_M * i, 0));
+        d_shift.emplace_back(d_M * i, 0);
     }
 }
 
 /*
  * Our virtual destructor.
  */
-dvbt_convolutional_interleaver_impl::~dvbt_convolutional_interleaver_impl()
-{
-    for (unsigned int i = 0; i < d_shift.size(); i++) {
-        delete d_shift.back();
-        d_shift.pop_back();
-    }
-}
+dvbt_convolutional_interleaver_impl::~dvbt_convolutional_interleaver_impl() {}
 
 int dvbt_convolutional_interleaver_impl::work(int noutput_items,
                                               gr_vector_const_void_star& input_items,
@@ -64,9 +59,9 @@ int dvbt_convolutional_interleaver_impl::work(int noutput_items,
     for (int i = 0; i < (noutput_items / d_I); i++) {
         // Process one block of I symbols
         for (unsigned int j = 0; j < d_shift.size(); j++) {
-            d_shift[j]->push_front(in[(d_I * i) + j]);
-            out[(d_I * i) + j] = d_shift[j]->back();
-            d_shift[j]->pop_back();
+            d_shift[j].push_front(in[(d_I * i) + j]);
+            out[(d_I * i) + j] = d_shift[j].back();
+            d_shift[j].pop_back();
         }
     }
 

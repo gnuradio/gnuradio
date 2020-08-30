@@ -80,19 +80,21 @@ private:
     const unsigned char* d_puncture;
 
     // Code rate k/n
-    int d_k;
-    int d_n;
+    const int d_k;
+    const int d_n;
     // Constellation with m
-    int d_m;
+    const int d_m;
 
     // Block size
-    int d_bsize;
-    // Symbols to consume on decoding from one block
-    int d_nsymbols;
-    // Number of bits after depuncturing a block
-    int d_nbits;
+    const int d_bsize;
+    // Symbols to consume on decoding from one block.
+    // It is also the number of input bytes since
+    // one byte always contains just one symbol.
+    const int d_nsymbols;
+    // Number of bits after depuncturing a block (before decoding)
+    const int d_nbits;
     // Number of full packed out bytes
-    int d_nout;
+    const int d_nout;
 
     // Traceback (in bytes)
     int d_ntraceback;
@@ -101,13 +103,13 @@ private:
     int mettab[2][256];
 
     // Buffer to keep the input bits
-    unsigned char* d_inbits;
+    std::vector<unsigned char> d_inbits;
 
     // This is used to get rid of traceback on the first frame
-    int d_init;
+    int d_init = 0;
 
     // Position in circular buffer where the current decoded byte is stored
-    int store_pos;
+    int store_pos = 0;
 
 #ifdef DTV_SSE2
     void dvbt_viterbi_chunks_init_sse2(__m128i* mm0, __m128i* pp0);

@@ -19,9 +19,9 @@ namespace dtv {
 class dvbt_convolutional_interleaver_impl : public dvbt_convolutional_interleaver
 {
 private:
-    int d_I;
-    int d_M;
-    std::vector<std::deque<unsigned char>*> d_shift;
+    const int d_I;
+    const int d_M;
+    std::vector<std::deque<unsigned char>> d_shift;
 
 public:
     dvbt_convolutional_interleaver_impl(int nsize, int I, int M);

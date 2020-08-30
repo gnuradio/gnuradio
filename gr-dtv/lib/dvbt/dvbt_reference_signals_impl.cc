@@ -88,30 +88,22 @@ const int dvbt_pilot_gen::d_tps_sync_odd[d_tps_sync_size] = { 1, 1, 0, 0, 1, 0, 
  */
 dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
     : config(c),
-      d_spilot_index(0),
-      d_cpilot_index(0),
-      d_tpilot_index(0),
-      d_symbol_index(0),
-      d_symbol_index_known(0),
-      d_frame_index(0),
-      d_superframe_index(0),
-      d_freq_offset_max(8),
-      d_trigger_index(0),
-      d_payload_index(0),
-      d_chanestim_index(0),
-      d_prev_mod_symbol_index(0),
-      d_mod_symbol_index(0)
+      d_Kmin(config.d_Kmin),
+      d_Kmax(config.d_Kmax),
+      d_fft_length(config.d_fft_length),
+      d_payload_length(config.d_payload_length),
+      d_zeros_on_left(config.d_zeros_on_left),
+      d_zeros_on_right(config.d_zeros_on_right),
+      d_cp_length(config.d_cp_length),
+      d_spilot_carriers_val(d_Kmax - d_Kmin + 1),
+      d_channel_gain(d_Kmax - d_Kmin + 1),
+      d_derot_in(d_fft_length),
+      d_chanestim_carriers(d_Kmax - d_Kmin + 1),
+      d_payload_carriers(d_Kmax - d_Kmin + 1),
+      d_wk(d_Kmax - d_Kmin + 1)
 {
-
     gr::configure_default_loggers(d_logger, d_debug_logger, "dvbt_pilot_gen");
     // Determine parameters from config file
-    d_Kmin = config.d_Kmin;
-    d_Kmax = config.d_Kmax;
-    d_fft_length = config.d_fft_length;
-    d_payload_length = config.d_payload_length;
-    d_zeros_on_left = config.d_zeros_on_left;
-    d_zeros_on_right = config.d_zeros_on_right;
-    d_cp_length = config.d_cp_length;
 
     // Set-up pilot data depending on transmission mode
     if (config.d_transmission_mode == T2k) {
@@ -134,45 +126,11 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
         d_tps_carriers = d_tps_carriers_2k;
     }
 
-    d_freq_offset = 0;
-    d_carrier_freq_correction = 0.0;
-    d_sampling_freq_correction = 0.0;
-
-    // allocate PRBS buffer
-    d_wk = new (std::nothrow) char[d_Kmax - d_Kmin + 1];
-    if (d_wk == NULL) {
-        GR_LOG_ERROR(d_logger, "cannot allocate memory for d_wk.");
-        throw std::bad_alloc();
-    }
     // Generate wk sequence
     generate_prbs();
 
-    // allocate buffer for scattered pilots
-    d_spilot_carriers_val = new (std::nothrow) gr_complex[d_Kmax - d_Kmin + 1];
-    if (d_spilot_carriers_val == NULL) {
-        GR_LOG_ERROR(d_logger, "cannot allocate memory for d_spilot_carriers_val.");
-        delete[] d_wk;
-        throw std::bad_alloc();
-    }
-
-    // allocate buffer for channel gains (for each useful carrier)
-    d_channel_gain = new (std::nothrow) gr_complex[d_Kmax - d_Kmin + 1];
-    if (d_channel_gain == NULL) {
-        GR_LOG_ERROR(d_logger, "cannot allocate memory for d_channel_gain.");
-        delete[] d_spilot_carriers_val;
-        delete[] d_wk;
-        throw std::bad_alloc();
-    }
-
     // Allocate buffer for continual pilots phase diffs
-    d_known_phase_diff = new (std::nothrow) float[d_cpilot_carriers_size - 1];
-    if (d_known_phase_diff == NULL) {
-        GR_LOG_ERROR(d_logger, "cannot allocate memory for d_known_phase_diff.");
-        delete[] d_channel_gain;
-        delete[] d_spilot_carriers_val;
-        delete[] d_wk;
-        throw std::bad_alloc();
-    }
+    d_known_phase_diff.resize(d_cpilot_carriers_size - 1);
 
     // Obtain phase diff for all continual pilots
     for (int i = 0; i < (d_cpilot_carriers_size - 1); i++) {
@@ -180,85 +138,17 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
                                      get_cpilot_value(d_cpilot_carriers[i]));
     }
 
-    d_cpilot_phase_diff = new (std::nothrow) float[d_cpilot_carriers_size - 1];
-    if (d_cpilot_phase_diff == NULL) {
-        GR_LOG_ERROR(d_logger, "cannot allocate memory for d_cpilot_phase_diff.");
-        delete[] d_known_phase_diff;
-        delete[] d_channel_gain;
-        delete[] d_spilot_carriers_val;
-        delete[] d_wk;
-        throw std::bad_alloc();
-    }
-
-    // Allocate buffer for derotated input symbol
-    d_derot_in = new (std::nothrow) gr_complex[d_fft_length];
-    if (d_derot_in == NULL) {
-        GR_LOG_ERROR(d_logger, "cannot allocate memory for d_derot_in.");
-        delete[] d_cpilot_phase_diff;
-        delete[] d_known_phase_diff;
-        delete[] d_channel_gain;
-        delete[] d_spilot_carriers_val;
-        delete[] d_wk;
-        throw std::bad_alloc();
-    }
+    d_cpilot_phase_diff.resize(d_cpilot_carriers_size - 1);
 
     // allocate buffer for first tps symbol constellation
-    d_tps_carriers_val = new (std::nothrow) gr_complex[d_tps_carriers_size];
-    if (d_tps_carriers_val == NULL) {
-        GR_LOG_ERROR(d_logger, "cannot allocate memory for d_tps_carriers_val.");
-        delete[] d_derot_in;
-        delete[] d_cpilot_phase_diff;
-        delete[] d_known_phase_diff;
-        delete[] d_channel_gain;
-        delete[] d_spilot_carriers_val;
-        delete[] d_wk;
-        throw std::bad_alloc();
-    }
+    d_tps_carriers_val.resize(d_tps_carriers_size);
 
     // allocate tps data buffer
-    d_tps_data = new (std::nothrow) unsigned char[d_symbols_per_frame];
-    if (d_tps_data == NULL) {
-        GR_LOG_ERROR(d_logger, "cannot allocate memory for d_tps_data.");
-        delete[] d_tps_carriers_val;
-        delete[] d_derot_in;
-        delete[] d_cpilot_phase_diff;
-        delete[] d_known_phase_diff;
-        delete[] d_channel_gain;
-        delete[] d_spilot_carriers_val;
-        delete[] d_wk;
-        throw std::bad_alloc();
-    }
+    d_tps_data.resize(d_symbols_per_frame);
 
-    d_prev_tps_symbol = new (std::nothrow) gr_complex[d_tps_carriers_size];
-    if (d_prev_tps_symbol == NULL) {
-        GR_LOG_ERROR(d_logger, "cannot allocate memory for d_prev_tps_symbol.");
-        delete[] d_tps_data;
-        delete[] d_tps_carriers_val;
-        delete[] d_derot_in;
-        delete[] d_cpilot_phase_diff;
-        delete[] d_known_phase_diff;
-        delete[] d_channel_gain;
-        delete[] d_spilot_carriers_val;
-        delete[] d_wk;
-        throw std::bad_alloc();
-    }
-    std::fill_n(d_prev_tps_symbol, d_tps_carriers_size, 0);
+    d_prev_tps_symbol.resize(d_tps_carriers_size);
 
-    d_tps_symbol = new (std::nothrow) gr_complex[d_tps_carriers_size];
-    if (d_tps_symbol == NULL) {
-        GR_LOG_ERROR(d_logger, "cannot allocate memory for d_tps_symbol.");
-        delete[] d_prev_tps_symbol;
-        delete[] d_tps_data;
-        delete[] d_tps_carriers_val;
-        delete[] d_derot_in;
-        delete[] d_cpilot_phase_diff;
-        delete[] d_known_phase_diff;
-        delete[] d_channel_gain;
-        delete[] d_spilot_carriers_val;
-        delete[] d_wk;
-        throw std::bad_alloc();
-    }
-    std::fill_n(d_tps_symbol, d_tps_carriers_size, 0);
+    d_tps_symbol.resize(d_tps_carriers_size);
 
     // Init receive TPS data vector
     for (int i = 0; i < d_symbols_per_frame; i++) {
@@ -271,41 +161,6 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
         d_tps_sync_oddv.push_back(d_tps_sync_odd[i]);
     }
 
-    // Allocate buffer for channel estimation carriers
-    d_chanestim_carriers = new (std::nothrow) int[d_Kmax - d_Kmin + 1];
-    if (d_chanestim_carriers == NULL) {
-        GR_LOG_ERROR(d_logger, "cannot allocate memory for d_chanestim_carriers.");
-        delete[] d_tps_symbol;
-        delete[] d_prev_tps_symbol;
-        delete[] d_tps_data;
-        delete[] d_tps_carriers_val;
-        delete[] d_derot_in;
-        delete[] d_cpilot_phase_diff;
-        delete[] d_known_phase_diff;
-        delete[] d_channel_gain;
-        delete[] d_spilot_carriers_val;
-        delete[] d_wk;
-        throw std::bad_alloc();
-    }
-
-    // Allocate buffer for payload carriers
-    d_payload_carriers = new (std::nothrow) int[d_Kmax - d_Kmin + 1];
-    if (d_payload_carriers == NULL) {
-        GR_LOG_ERROR(d_logger, "cannot allocate memory for d_payload_carriers.");
-        delete[] d_chanestim_carriers;
-        delete[] d_tps_symbol;
-        delete[] d_prev_tps_symbol;
-        delete[] d_tps_data;
-        delete[] d_tps_carriers_val;
-        delete[] d_derot_in;
-        delete[] d_cpilot_phase_diff;
-        delete[] d_known_phase_diff;
-        delete[] d_channel_gain;
-        delete[] d_spilot_carriers_val;
-        delete[] d_wk;
-        throw std::bad_alloc();
-    }
-
     // Reset the pilot generator
     reset_pilot_generator();
     // Format TPS data with current values
@@ -315,21 +170,7 @@ dvbt_pilot_gen::dvbt_pilot_gen(const dvbt_configure& c)
 /*
  * Destructor of class
  */
-dvbt_pilot_gen::~dvbt_pilot_gen()
-{
-    delete[] d_payload_carriers;
-    delete[] d_chanestim_carriers;
-    delete[] d_tps_symbol;
-    delete[] d_prev_tps_symbol;
-    delete[] d_tps_data;
-    delete[] d_tps_carriers_val;
-    delete[] d_derot_in;
-    delete[] d_cpilot_phase_diff;
-    delete[] d_known_phase_diff;
-    delete[] d_channel_gain;
-    delete[] d_spilot_carriers_val;
-    delete[] d_wk;
-}
+dvbt_pilot_gen::~dvbt_pilot_gen() {}
 
 /*
  * Generate PRBS sequence
@@ -1114,11 +955,11 @@ int dvbt_pilot_gen::parse_input(const gr_complex* in,
     // - integer frequency correction (post-FFT)
     // - fractional frequency (carrier and sampling) corrections (post-FFT)
     // TODO - use PI to update the corrections
-    frequency_correction(in, d_derot_in);
+    frequency_correction(in, d_derot_in.data());
 
     // Process spilot data
     // This is channel estimation function
-    int diff_symbol_index = process_spilot_data(d_derot_in);
+    int diff_symbol_index = process_spilot_data(d_derot_in.data());
 
     // Correct symbol index so that all subsequent processing
     // use correct symbol index
@@ -1131,7 +972,7 @@ int dvbt_pilot_gen::parse_input(const gr_complex* in,
 
     // Process TPS data
     // If a frame is recognized then signal end of frame
-    int frame_end = process_tps_data(d_derot_in, diff_symbol_index);
+    int frame_end = process_tps_data(d_derot_in.data(), diff_symbol_index);
 
     // We are just at the end of a frame
     if (frame_end) {
@@ -1139,7 +980,7 @@ int dvbt_pilot_gen::parse_input(const gr_complex* in,
     }
 
     // Process payload data with correct symbol index
-    process_payload_data(d_derot_in, out);
+    process_payload_data(d_derot_in.data(), out);
 
     // noutput_items should be 1 in this case
     return 1;

@@ -171,14 +171,12 @@ inline void dvbt2_interleaver_bb_impl::twist_interleave_columns(
 void dvbt2_interleaver_bb_impl::generate_lookup()
 {
     int rows, index = 0;
-    int* tempv;
-    int* tempu;
+    // vectors instead of arrays because they're fairly big.
+    std::vector<int> tempv2(FRAME_SIZE_NORMAL);
+    std::vector<int> tempu2(FRAME_SIZE_NORMAL);
     const int* twist;
     const int *c1, *c2, *c3, *c4, *c5, *c6, *c7, *c8;
     const int *c9, *c10, *c11, *c12, *c13, *c14, *c15, *c16;
-
-    tempv = new int[FRAME_SIZE_NORMAL];
-    tempu = new int[FRAME_SIZE_NORMAL];
 
     for (int i = 0; i < FRAME_SIZE_NORMAL; i++) {
         lookup_table[i] = i;
@@ -197,28 +195,28 @@ void dvbt2_interleaver_bb_impl::generate_lookup()
             twist = &twist16s[0];
         }
 
-        interleave_parity_bits(tempu, in);
+        interleave_parity_bits(tempu2.data(), in);
 
-        c1 = &tempv[0];
-        c2 = &tempv[rows];
-        c3 = &tempv[rows * 2];
-        c4 = &tempv[rows * 3];
-        c5 = &tempv[rows * 4];
-        c6 = &tempv[rows * 5];
-        c7 = &tempv[rows * 6];
-        c8 = &tempv[rows * 7];
+        c1 = &tempv2[0];
+        c2 = &tempv2[rows];
+        c3 = &tempv2[rows * 2];
+        c4 = &tempv2[rows * 3];
+        c5 = &tempv2[rows * 4];
+        c6 = &tempv2[rows * 5];
+        c7 = &tempv2[rows * 6];
+        c8 = &tempv2[rows * 7];
 
-        twist_interleave_columns(tempv, tempu, rows, mod * 2, twist);
+        twist_interleave_columns(tempv2.data(), tempu2.data(), rows, mod * 2, twist);
 
         for (int j = 0; j < rows; j++) {
-            tempu[index++] = c1[j];
-            tempu[index++] = c2[j];
-            tempu[index++] = c3[j];
-            tempu[index++] = c4[j];
-            tempu[index++] = c5[j];
-            tempu[index++] = c6[j];
-            tempu[index++] = c7[j];
-            tempu[index++] = c8[j];
+            tempu2[index++] = c1[j];
+            tempu2[index++] = c2[j];
+            tempu2[index++] = c3[j];
+            tempu2[index++] = c4[j];
+            tempu2[index++] = c5[j];
+            tempu2[index++] = c6[j];
+            tempu2[index++] = c7[j];
+            tempu2[index++] = c8[j];
         }
         break;
 
@@ -231,36 +229,36 @@ void dvbt2_interleaver_bb_impl::generate_lookup()
             twist = twist64s;
         }
 
-        interleave_parity_bits(tempu, in);
+        interleave_parity_bits(tempu2.data(), in);
 
-        c1 = &tempv[0];
-        c2 = &tempv[rows];
-        c3 = &tempv[rows * 2];
-        c4 = &tempv[rows * 3];
-        c5 = &tempv[rows * 4];
-        c6 = &tempv[rows * 5];
-        c7 = &tempv[rows * 6];
-        c8 = &tempv[rows * 7];
-        c9 = &tempv[rows * 8];
-        c10 = &tempv[rows * 9];
-        c11 = &tempv[rows * 10];
-        c12 = &tempv[rows * 11];
+        c1 = &tempv2[0];
+        c2 = &tempv2[rows];
+        c3 = &tempv2[rows * 2];
+        c4 = &tempv2[rows * 3];
+        c5 = &tempv2[rows * 4];
+        c6 = &tempv2[rows * 5];
+        c7 = &tempv2[rows * 6];
+        c8 = &tempv2[rows * 7];
+        c9 = &tempv2[rows * 8];
+        c10 = &tempv2[rows * 9];
+        c11 = &tempv2[rows * 10];
+        c12 = &tempv2[rows * 11];
 
-        twist_interleave_columns(tempv, tempu, rows, mod * 2, twist);
+        twist_interleave_columns(tempv2.data(), tempu2.data(), rows, mod * 2, twist);
 
         for (int j = 0; j < rows; j++) {
-            tempu[index++] = c1[j];
-            tempu[index++] = c2[j];
-            tempu[index++] = c3[j];
-            tempu[index++] = c4[j];
-            tempu[index++] = c5[j];
-            tempu[index++] = c6[j];
-            tempu[index++] = c7[j];
-            tempu[index++] = c8[j];
-            tempu[index++] = c9[j];
-            tempu[index++] = c10[j];
-            tempu[index++] = c11[j];
-            tempu[index++] = c12[j];
+            tempu2[index++] = c1[j];
+            tempu2[index++] = c2[j];
+            tempu2[index++] = c3[j];
+            tempu2[index++] = c4[j];
+            tempu2[index++] = c5[j];
+            tempu2[index++] = c6[j];
+            tempu2[index++] = c7[j];
+            tempu2[index++] = c8[j];
+            tempu2[index++] = c9[j];
+            tempu2[index++] = c10[j];
+            tempu2[index++] = c11[j];
+            tempu2[index++] = c12[j];
         }
         break;
 
@@ -268,79 +266,77 @@ void dvbt2_interleaver_bb_impl::generate_lookup()
         if (frame_size == FRAME_SIZE_NORMAL) {
             rows = frame_size / (mod * 2);
 
-            interleave_parity_bits(tempu, in);
+            interleave_parity_bits(tempu2.data(), in);
 
-            c1 = &tempv[0];
-            c2 = &tempv[rows];
-            c3 = &tempv[rows * 2];
-            c4 = &tempv[rows * 3];
-            c5 = &tempv[rows * 4];
-            c6 = &tempv[rows * 5];
-            c7 = &tempv[rows * 6];
-            c8 = &tempv[rows * 7];
-            c9 = &tempv[rows * 8];
-            c10 = &tempv[rows * 9];
-            c11 = &tempv[rows * 10];
-            c12 = &tempv[rows * 11];
-            c13 = &tempv[rows * 12];
-            c14 = &tempv[rows * 13];
-            c15 = &tempv[rows * 14];
-            c16 = &tempv[rows * 15];
+            c1 = &tempv2[0];
+            c2 = &tempv2[rows];
+            c3 = &tempv2[rows * 2];
+            c4 = &tempv2[rows * 3];
+            c5 = &tempv2[rows * 4];
+            c6 = &tempv2[rows * 5];
+            c7 = &tempv2[rows * 6];
+            c8 = &tempv2[rows * 7];
+            c9 = &tempv2[rows * 8];
+            c10 = &tempv2[rows * 9];
+            c11 = &tempv2[rows * 10];
+            c12 = &tempv2[rows * 11];
+            c13 = &tempv2[rows * 12];
+            c14 = &tempv2[rows * 13];
+            c15 = &tempv2[rows * 14];
+            c16 = &tempv2[rows * 15];
 
-            twist_interleave_columns(tempv, tempu, rows, mod * 2, twist256n);
+            twist_interleave_columns(
+                tempv2.data(), tempu2.data(), rows, mod * 2, twist256n);
 
             for (int j = 0; j < rows; j++) {
-                tempu[index++] = c1[j];
-                tempu[index++] = c2[j];
-                tempu[index++] = c3[j];
-                tempu[index++] = c4[j];
-                tempu[index++] = c5[j];
-                tempu[index++] = c6[j];
-                tempu[index++] = c7[j];
-                tempu[index++] = c8[j];
-                tempu[index++] = c9[j];
-                tempu[index++] = c10[j];
-                tempu[index++] = c11[j];
-                tempu[index++] = c12[j];
-                tempu[index++] = c13[j];
-                tempu[index++] = c14[j];
-                tempu[index++] = c15[j];
-                tempu[index++] = c16[j];
+                tempu2[index++] = c1[j];
+                tempu2[index++] = c2[j];
+                tempu2[index++] = c3[j];
+                tempu2[index++] = c4[j];
+                tempu2[index++] = c5[j];
+                tempu2[index++] = c6[j];
+                tempu2[index++] = c7[j];
+                tempu2[index++] = c8[j];
+                tempu2[index++] = c9[j];
+                tempu2[index++] = c10[j];
+                tempu2[index++] = c11[j];
+                tempu2[index++] = c12[j];
+                tempu2[index++] = c13[j];
+                tempu2[index++] = c14[j];
+                tempu2[index++] = c15[j];
+                tempu2[index++] = c16[j];
             }
         } else { // frame_size == FRAME_SIZE_SHORT
             rows = frame_size / mod;
 
-            interleave_parity_bits(tempu, in);
+            interleave_parity_bits(tempu2.data(), in);
 
-            c1 = &tempv[0];
-            c2 = &tempv[rows];
-            c3 = &tempv[rows * 2];
-            c4 = &tempv[rows * 3];
-            c5 = &tempv[rows * 4];
-            c6 = &tempv[rows * 5];
-            c7 = &tempv[rows * 6];
-            c8 = &tempv[rows * 7];
+            c1 = &tempv2[0];
+            c2 = &tempv2[rows];
+            c3 = &tempv2[rows * 2];
+            c4 = &tempv2[rows * 3];
+            c5 = &tempv2[rows * 4];
+            c6 = &tempv2[rows * 5];
+            c7 = &tempv2[rows * 6];
+            c8 = &tempv2[rows * 7];
 
-            twist_interleave_columns(tempv, tempu, rows, mod, twist256s);
+            twist_interleave_columns(tempv2.data(), tempu2.data(), rows, mod, twist256s);
 
             for (int j = 0; j < rows; j++) {
-                tempu[index++] = c1[j];
-                tempu[index++] = c2[j];
-                tempu[index++] = c3[j];
-                tempu[index++] = c4[j];
-                tempu[index++] = c5[j];
-                tempu[index++] = c6[j];
-                tempu[index++] = c7[j];
-                tempu[index++] = c8[j];
+                tempu2[index++] = c1[j];
+                tempu2[index++] = c2[j];
+                tempu2[index++] = c3[j];
+                tempu2[index++] = c4[j];
+                tempu2[index++] = c5[j];
+                tempu2[index++] = c6[j];
+                tempu2[index++] = c7[j];
+                tempu2[index++] = c8[j];
             }
         }
     }
 
-    // tempu now has the input indices interleaved correctly, so save it
-    memcpy(lookup_table, tempu, frame_size * sizeof(int));
-
-    delete[] tempu;
-    delete[] tempv;
+    // tempu2 now has the input indices interleaved correctly, so save it
+    memcpy(lookup_table, tempu2.data(), frame_size * sizeof(int));
 }
 
 /*

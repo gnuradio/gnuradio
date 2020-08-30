@@ -43,8 +43,9 @@ dvbt_convolutional_deinterleaver_impl::dvbt_convolutional_deinterleaver_impl(int
     set_output_multiple(2);
     // The positions are shift registers (FIFOs)
     // of length i*M
+    d_shift.reserve(d_I);
     for (int i = (d_I - 1); i >= 0; i--) {
-        d_shift.push_back(new std::deque<unsigned char>(d_M * i, 0));
+        d_shift.emplace_back(d_M * i, 0);
     }
 
     // There are 8 mux packets
@@ -54,13 +55,7 @@ dvbt_convolutional_deinterleaver_impl::dvbt_convolutional_deinterleaver_impl(int
 /*
  * Our virtual destructor.
  */
-dvbt_convolutional_deinterleaver_impl::~dvbt_convolutional_deinterleaver_impl()
-{
-    for (unsigned int i = 0; i < d_shift.size(); i++) {
-        delete d_shift.back();
-        d_shift.pop_back();
-    }
-}
+dvbt_convolutional_deinterleaver_impl::~dvbt_convolutional_deinterleaver_impl() {}
 
 void dvbt_convolutional_deinterleaver_impl::forecast(int noutput_items,
                                                      gr_vector_int& ninput_items_required)
@@ -112,9 +107,9 @@ int dvbt_convolutional_deinterleaver_impl::general_work(
         for (int mux_pkt = 0; mux_pkt < d_MUX_PKT; mux_pkt++) {
             // This is actually the deinterleaver
             for (int k = 0; k < (d_M * d_I); k++) {
-                d_shift[k % d_I]->push_back(in[count]);
-                out[count++] = d_shift[k % d_I]->front();
-                d_shift[k % d_I]->pop_front();
+                d_shift[k % d_I].push_back(in[count]);
+                out[count++] = d_shift[k % d_I].front();
+                d_shift[k % d_I].pop_front();
             }
         }
     }

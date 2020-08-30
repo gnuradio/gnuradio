@@ -22,16 +22,16 @@ private:
 
     static const int d_lookup_H[126][6];
 
-    int d_nsize;
+    const int d_nsize;
     dvbt_hierarchy_t d_hierarchy;
 
     // constellation
-    int d_v;
+    const int d_v;
     // Bit interleaver block size
     static const int d_bsize;
 
     // Table to keep interleaved indices
-    unsigned char* d_perm;
+    std::vector<unsigned char> d_perm;
 
 public:
     dvbt_bit_inner_deinterleaver_impl(int nsize,
