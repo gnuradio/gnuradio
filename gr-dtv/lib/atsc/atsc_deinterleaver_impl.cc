@@ -30,25 +30,22 @@ atsc_deinterleaver_impl::atsc_deinterleaver_impl()
                      io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded))),
       alignment_fifo(156)
 {
-    m_fifo.resize(52);
+    m_fifo.reserve(s_interleavers);
 
-    for (int i = 0; i < 52; i++)
-        m_fifo[52 - 1 - i] = new interleaver_fifo<unsigned char>(i * 4);
+    for (int i = 0; i < s_interleavers; i++)
+        m_fifo.emplace_back((52 - 1 - i) * 4);
 
     sync();
 }
 
-atsc_deinterleaver_impl::~atsc_deinterleaver_impl()
-{
-    for (int i = 0; i < 52; i++)
-        delete m_fifo[i];
-}
+atsc_deinterleaver_impl::~atsc_deinterleaver_impl() {}
 
 void atsc_deinterleaver_impl::reset()
 {
     sync();
-    for (int i = 0; i < 52; i++)
-        m_fifo[i]->reset();
+
+    for (auto& i : m_fifo)
+        i.reset();
 }
 
 int atsc_deinterleaver_impl::work(int noutput_items,
