@@ -49,7 +49,7 @@ int rep_sink_impl::work(int noutput_items,
         /* Wait for a small time (FIXME: scheduler can't wait for us) */
         /* We only wait if its the first iteration, for the others we'll
          * let the scheduler retry */
-        zmq::pollitem_t items[] = { { static_cast<void*>(*d_socket), 0, ZMQ_POLLIN, 0 } };
+        zmq::pollitem_t items[] = { { static_cast<void*>(d_socket), 0, ZMQ_POLLIN, 0 } };
         zmq::poll(&items[0], 1, first ? d_timeout : 0);
 
         /* If we don't have anything, we're done */
@@ -59,9 +59,9 @@ int rep_sink_impl::work(int noutput_items,
         /* Get and parse the request */
         zmq::message_t request;
 #if USE_NEW_CPPZMQ_SEND_RECV
-        d_socket->recv(request);
+        d_socket.recv(request);
 #else
-        d_socket->recv(&request);
+        d_socket.recv(&request);
 #endif
 
         int nitems_send = noutput_items - done;
