@@ -15,6 +15,7 @@
 #define ALSA_PCM_NEW_HW_PARAMS_API
 #define ALSA_PCM_NEW_SW_PARAMS_API
 
+#include "alsa_impl.h"
 #include <gnuradio/audio/sink.h>
 #include <alsa/asoundlib.h>
 #include <stdexcept>
@@ -41,22 +42,21 @@ class alsa_sink : public sink
 
     unsigned int d_sampling_rate;
     std::string d_device_name;
-    snd_pcm_t* d_pcm_handle;
-    snd_pcm_hw_params_t* d_hw_params;
-    snd_pcm_sw_params_t* d_sw_params;
+    alsa_internal::sndpcm_wrap d_pcm_handle;
+    alsa_internal::hwparam_wrap d_hw_params;
+    alsa_internal::swparam_wrap d_sw_params;
     snd_pcm_format_t d_format;
     unsigned int d_nperiods;
-    unsigned int d_period_time_us;    // microseconds
-    snd_pcm_uframes_t d_period_size;  // in frames
-    unsigned int d_buffer_size_bytes; // sizeof of d_buffer
-    char* d_buffer;
-    work_t d_worker; // the work method to use
+    unsigned int d_period_time_us;       // microseconds
+    snd_pcm_uframes_t d_period_size = 0; // in frames
+    std::vector<char> d_buffer;
+    work_t d_worker = 0; // the work method to use
     bool d_special_case_mono_to_stereo;
 
     // random stats
-    int d_nunderuns;    // count of underruns
-    int d_nsuspends;    // count of suspends
-    bool d_ok_to_block; // defaults to "true", controls blocking/non-block I/O
+    int d_nunderuns = 0; // count of underruns
+    int d_nsuspends = 0; // count of suspends
+    bool d_ok_to_block;  // defaults to "true", controls blocking/non-block I/O
 
     void output_error_msg(const char* msg, int err);
     void bail(const char* msg, int err);
