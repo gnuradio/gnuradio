@@ -131,15 +131,14 @@ dvbt_inner_coder_impl::dvbt_inner_coder_impl(int ninput,
       config(constellation, hierarchy, coderate, coderate),
       d_ninput(ninput),
       d_noutput(noutput),
-      d_reg(0)
+      d_k(config.d_cr_k), // input of encoder
+      d_n(config.d_cr_n), // output of encoder
+      d_m(config.d_m),    // constellation symbol size
+      d_in_bs((d_k * d_m) / 2),
+      d_in_buff(8 * d_in_bs),
+      d_out_bs(4 * d_n),
+      d_out_buff(8 * d_in_bs * d_n / d_k)
 {
-    // Determine k - input of encoder
-    d_k = config.d_cr_k;
-    // Determine n - output of encoder
-    d_n = config.d_cr_n;
-    // Determine m - constellation symbol size
-    d_m = config.d_m;
-
     // In order to accommodate all constalations (m=2,4,6)
     // and rates (1/2, 2/3, 3/4, 5/6, 7/8)
     // We need the following things to happen:
@@ -153,39 +152,16 @@ dvbt_inner_coder_impl::dvbt_inner_coder_impl(int ninput,
     // We output nm bits
     // We output one byte for a symbol of m bits
     // The out/in rate in bytes is: 8n/km (Bytes)
-
     assert(d_noutput % 1512 == 0);
 
     // Set output items multiple of 4
     set_output_multiple(4);
-
-    // calculate in and out block sizes
-    d_in_bs = (d_k * d_m) / 2;
-    d_out_bs = 4 * d_n;
-
-    // allocate bit buffers
-    d_in_buff = new (std::nothrow) unsigned char[8 * d_in_bs];
-    if (d_in_buff == NULL) {
-        GR_LOG_FATAL(d_logger, "Inner Coder, cannot allocate memory for d_in_buff.");
-        throw std::bad_alloc();
-    }
-
-    d_out_buff = new (std::nothrow) unsigned char[8 * d_in_bs * d_n / d_k];
-    if (d_out_buff == NULL) {
-        GR_LOG_FATAL(d_logger, "Inner Coder, cannot allocate memory for d_out_buff.");
-        delete[] d_in_buff;
-        throw std::bad_alloc();
-    }
 }
 
 /*
  * Our virtual destructor.
  */
-dvbt_inner_coder_impl::~dvbt_inner_coder_impl()
-{
-    delete[] d_out_buff;
-    delete[] d_in_buff;
-}
+dvbt_inner_coder_impl::~dvbt_inner_coder_impl() {}
 
 void dvbt_inner_coder_impl::forecast(int noutput_items,
                                      gr_vector_int& ninput_items_required)

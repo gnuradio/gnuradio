@@ -21,10 +21,10 @@ private:
     static const int d_NSYNC;
     static const int d_MUX_PKT;
 
-    int d_blocks;
-    int d_I;
-    int d_M;
-    std::vector<std::deque<unsigned char>*> d_shift;
+    const int d_blocks;
+    const int d_I;
+    const int d_M;
+    std::vector<std::deque<unsigned char>> d_shift;
 
 public:
     dvbt_convolutional_deinterleaver_impl(int nsize, int I, int M);

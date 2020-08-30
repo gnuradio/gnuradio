@@ -20,20 +20,20 @@ class dvbt_map_impl : public dvbt_map
 private:
     const dvbt_configure config;
 
-    int d_nsize;
+    const int d_nsize;
 
     // Constellation size
-    unsigned char d_constellation_size;
+    const unsigned char d_constellation_size;
     // Keeps transmission mode
-    dvbt_transmission_mode_t d_transmission_mode;
+    const dvbt_transmission_mode_t d_transmission_mode;
     // Step on each axis of the constellation
-    unsigned char d_step;
+    const unsigned char d_step;
     // Keep Alpha internally
-    unsigned char d_alpha;
+    const unsigned char d_alpha;
     // Gain for the complex values
-    float d_gain;
+    const float d_gain;
 
-    gr_complex* d_constellation_points;
+    std::vector<gr_complex> d_constellation_points;
 
     void make_constellation_points(int size, int step, int alpha);
     gr_complex find_constellation_point(int val);

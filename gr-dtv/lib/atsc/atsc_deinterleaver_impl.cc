@@ -33,7 +33,7 @@ atsc_deinterleaver_impl::atsc_deinterleaver_impl()
     m_fifo.reserve(s_interleavers);
 
     for (int i = 0; i < s_interleavers; i++)
-        m_fifo.emplace_back((52 - 1 - i) * 4);
+        m_fifo.emplace_back((s_interleavers - 1 - i) * 4);
 
     sync();
 }
@@ -64,8 +64,8 @@ int atsc_deinterleaver_impl::work(int noutput_items,
         if (in[i].pli.first_regular_seg_p())
             sync();
 
-        // remap OUTPUT pipeline info to reflect 52 data segment end-to-end delay
-        plinfo::delay(out[i].pli, in[i].pli, 52);
+        // remap OUTPUT pipeline info to reflect all data segment end-to-end delay
+        plinfo::delay(out[i].pli, in[i].pli, s_interleavers);
 
         // now do the actual deinterleaving
         for (unsigned int j = 0; j < sizeof(in[i].data); j++) {

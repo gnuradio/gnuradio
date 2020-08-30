@@ -11,6 +11,7 @@
 
 #include "dvbt_configure.h"
 #include <gnuradio/dtv/dvbt_demap.h>
+#include <volk/volk_alloc.hh>
 
 namespace gr {
 namespace dtv {
@@ -23,7 +24,7 @@ private:
     int d_nsize;
 
     // Constellation size
-    unsigned char d_constellation_size;
+    const unsigned char d_constellation_size;
     // Transmission mode
     dvbt_transmission_mode_t d_transmission_mode;
     // Step on each axis of the constellation
@@ -33,8 +34,8 @@ private:
     // Gain for the complex values
     float d_gain;
 
-    gr_complex* d_constellation_points;
-    float* d_sq_dist;
+    volk::vector<gr_complex> d_constellation_points;
+    volk::vector<float> d_sq_dist;
 
     void make_constellation_points(int size, int step, int alpha);
     int find_constellation_value(gr_complex val);
