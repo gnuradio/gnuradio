@@ -21,12 +21,14 @@ namespace dtv {
 class atsc_deinterleaver_impl : public atsc_deinterleaver
 {
 private:
+    static constexpr int s_interleavers = 52;
+
     //! transform a single symbol
     unsigned char transform(unsigned char input)
     {
-        unsigned char retval = m_fifo[m_commutator]->stuff(input);
+        unsigned char retval = m_fifo[m_commutator].stuff(input);
         m_commutator++;
-        if (m_commutator >= 52)
+        if (m_commutator >= s_interleavers)
             m_commutator = 0;
         return retval;
     }
@@ -41,7 +43,7 @@ private:
     interleaver_fifo<unsigned char> alignment_fifo;
 
     int m_commutator;
-    std::vector<interleaver_fifo<unsigned char>*> m_fifo;
+    std::vector<interleaver_fifo<unsigned char>> m_fifo;
 
 public:
     atsc_deinterleaver_impl();

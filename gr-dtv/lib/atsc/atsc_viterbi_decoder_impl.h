@@ -44,7 +44,7 @@ private:
     static constexpr int INPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
 
     single_viterbi_t viterbi[NCODERS];
-    fifo_t* fifo[NCODERS];
+    std::vector<fifo_t> fifo;
 
 public:
     atsc_viterbi_decoder_impl();
