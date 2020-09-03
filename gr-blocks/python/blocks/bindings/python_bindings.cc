@@ -172,9 +172,11 @@ void bind_vector_sink(py::module&);
 void bind_vector_source(py::module&);
 void bind_vector_to_stream(py::module&);
 void bind_vector_to_streams(py::module&);
+#ifndef NO_WAVFILE
 void bind_wavfile(py::module&);
 void bind_wavfile_sink(py::module&);
 void bind_wavfile_source(py::module&);
+#endif
 void bind_xor_blk(py::module&);
 
 // We need this hack because import_array() returns NULL
@@ -352,8 +354,10 @@ PYBIND11_MODULE(blocks_python, m)
     bind_vector_source(m);
     bind_vector_to_stream(m);
     bind_vector_to_streams(m);
+#ifndef NO_WAVFILE
     bind_wavfile(m);
     bind_wavfile_sink(m);
     bind_wavfile_source(m);
+#endif
     bind_xor_blk(m);
 }

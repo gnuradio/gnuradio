@@ -16,4 +16,11 @@ if(NOT ENABLE_GR_CTRLPORT)
     )
 endif(NOT ENABLE_GR_CTRLPORT)
 
+if(NOT SNDFILE_FOUND)
+  list(REMOVE_ITEM yml_files
+    ${CMAKE_CURRENT_SOURCE_DIR}/blocks_wavfile_sink.block.yml
+    ${CMAKE_CURRENT_SOURCE_DIR}/blocks_wavfile_source.block.yml
+    )
+endif()
+
 install(FILES ${yml_files} DESTINATION ${GRC_BLOCKS_DIR})

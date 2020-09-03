@@ -13,7 +13,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/ConfigChecks.cmake)
 ########################################################################
 # Setup library
 ########################################################################
-add_library(gnuradio-blocks
+set(BLOCKS_SOURCES
     abs_blk_impl.cc
     add_blk_impl.cc
     add_const_v_impl.cc
@@ -168,15 +168,29 @@ add_library(gnuradio-blocks
     vector_map_impl.cc
     vector_to_stream_impl.cc
     vector_to_streams_impl.cc
-    wavfile_sink_impl.cc
-    wavfile_source_impl.cc
     )
 
-target_link_libraries(gnuradio-blocks
+if (SNDFILE_FOUND)
+    set(BLOCKS_SOURCES ${BLOCKS_SOURCES}
+        wavfile_sink_impl.cc
+        wavfile_source_impl.cc
+    )
+endif()
+
+add_library(gnuradio-blocks ${BLOCKS_SOURCES})
+
+set(BLOCKS_LIBS
     gnuradio-runtime
     Volk::volk
-    sndfile::sndfile
-)
+    )
+
+if (SNDFILE_FOUND)
+    set(BLOCKS_LIBS ${BLOCKS_LIBS}
+        sndfile::sndfile
+    )
+endif()
+
+target_link_libraries(gnuradio-blocks ${BLOCKS_LIBS})
 
 target_include_directories(gnuradio-blocks
   PUBLIC
@@ -212,7 +226,11 @@ IF(MSVC)
 ENDIF(MSVC)
 
 if(BUILD_SHARED_LIBS)
-  GR_LIBRARY_FOO(gnuradio-blocks)
+    if (SNDFILE_FOUND)
+        GR_LIBRARY_FOO(gnuradio-blocks SNDFILE)
+    else()
+        GR_LIBRARY_FOO(gnuradio-blocks)
+    endif()
 endif()
 
 ########################################################################

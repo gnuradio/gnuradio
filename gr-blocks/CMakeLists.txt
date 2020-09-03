@@ -12,6 +12,14 @@ include(GrBoost)
 
 find_package(SNDFILE)
 
+if(NOT SNDFILE_FOUND)
+    message(STATUS "")
+    message(STATUS "********************* WARNING!!! *********************")
+    message(STATUS "libsndfile1-dev is required to compile wavfile blocks.")
+    message(STATUS "Wav File Sink and Source blocks will not be available.")
+    message(STATUS "******************************************************")
+endif()
+
 ########################################################################
 # Register component
 ########################################################################

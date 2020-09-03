@@ -43,6 +43,12 @@ if(ENABLE_TESTING)
       )
   endif(NOT ENABLE_GR_CTRLPORT OR CTRLPORT_BACKENDS EQUAL 0)
 
+  if(NOT SNDFILE_FOUND)
+    list(REMOVE_ITEM py_qa_test_files
+      ${CMAKE_CURRENT_SOURCE_DIR}/qa_wavfile.py
+      )
+  endif()
+
   foreach(py_qa_test_file ${py_qa_test_files})
     get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
     GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${py_qa_test_file})
