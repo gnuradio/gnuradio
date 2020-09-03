@@ -439,7 +439,7 @@ void EyeDisplayPlot::legendEntryChecked(const QVariant& plotItem, bool on, int i
 void EyeDisplayPlot::_resetXAxisPoints()
 {
     double delt = 1.0 / d_sample_rate;
-    for (long loc = 0; loc < d_numPointsPerPeriod; loc++) {
+    for (int64_t loc = 0; loc < d_numPointsPerPeriod; loc++) {
         d_xdata[loc] = delt * loc;
     }
 
