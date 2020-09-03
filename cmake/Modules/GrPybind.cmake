@@ -154,6 +154,9 @@ target_include_directories(${name}_python PUBLIC
 )
 target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} gnuradio-${MODULE_NAME})
 target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
+if(NOT SNDFILE_FOUND AND ${name} STREQUAL blocks)
+    target_compile_options(${name}_python PRIVATE -DNO_WAVFILE)
+endif()
 add_dependencies(${name}_python ${name}_docstrings ${regen_targets}) 
 
 endmacro(GR_PYBIND_MAKE_CHECK_HASH)

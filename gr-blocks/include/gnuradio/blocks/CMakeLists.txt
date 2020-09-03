@@ -51,7 +51,6 @@ install(FILES
     vector_insert.h
     vector_sink.h
     vector_source.h
-    wavfile.h
     xor_blk.h
     add_const_bb.h
     add_const_ss.h
@@ -163,10 +162,17 @@ install(FILES
     vector_map.h
     vector_to_stream.h
     vector_to_streams.h
-    wavfile_sink.h
-    wavfile_source.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
 )
+
+if(SNDFILE_FOUND)
+    install(FILES
+        wavfile.h
+        wavfile_sink.h
+        wavfile_source.h
+        DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
+    )
+endif()
 
 if(ENABLE_GR_CTRLPORT)
 install(FILES

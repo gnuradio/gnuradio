@@ -168,11 +168,15 @@ list(APPEND blocks_python_files
     vector_source_python.cc
     vector_to_stream_python.cc
     vector_to_streams_python.cc
-    wavfile_python.cc
-    wavfile_sink_python.cc
-    wavfile_source_python.cc
     xor_blk_python.cc
     python_bindings.cc)
+
+if (SNDFILE_FOUND)
+    list(APPEND blocks_python_files
+        wavfile_python.cc
+        wavfile_sink_python.cc
+        wavfile_source_python.cc)
+endif()
 
 GR_PYBIND_MAKE_CHECK_HASH(blocks 
   ../../.. 
