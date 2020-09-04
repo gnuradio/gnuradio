@@ -115,7 +115,7 @@ void osx_sink::setup()
             err_str += ": ";
             for (UInt32 nn = 0; nn < all_names.size(); ++nn) {
                 err_str += all_names[nn];
-                if (nn != all_names - 1) {
+                if (nn != all_names.size() - 1) {
                     err_str += ", ";
                 }
             }
@@ -906,7 +906,7 @@ OSStatus osx_sink::au_output_callback(void* in_ref_con,
     msg << ((void*)(pthread_self())) << " : audio_osx_sink::au_output_callback: "
         << "starting: qSC = " << This->d_queue_sample_count
         << ", in#F = " << in_number_frames << ", in#C = " << This->d_n_user_channels;
-    GR_LOG_INFO(d_debug_logger, msg.str());
+    GR_LOG_INFO(This->d_debug_logger, msg.str());
 #endif
 
     if (This->d_queue_sample_count < in_number_frames) {
@@ -933,7 +933,7 @@ OSStatus osx_sink::au_output_callback(void* in_ref_con,
                     << "number of available items changing "
                     << "unexpectedly (should never happen): was " << in_number_frames
                     << " now " << t_n_output_items;
-                GR_LOG_ERROR(d_logger, msg.str());
+                GR_LOG_ERROR(This->d_logger, msg.str());
                 err = kAudioUnitErr_TooManyFramesToProcess;
             }
         }
@@ -948,7 +948,7 @@ OSStatus osx_sink::au_output_callback(void* in_ref_con,
         std::ostringstream msg;
         msg << ((void*)(pthread_self())) << " au_output_callback: "
             << "signaling waiting condition";
-        GR_LOG_INFO(d_debug_logger, msg.str());
+        GR_LOG_INFO(This->d_debug_logger, msg.str());
 #endif
         This->d_cond_data.notify_one();
     }
@@ -957,7 +957,7 @@ OSStatus osx_sink::au_output_callback(void* in_ref_con,
     std::ostringstream msg;
     msg << ((void*)(pthread_self())) << " au_output_callback: "
         << "returning: qSC = " << This->d_queue_sample_count << ", err = " << err;
-    GR_LOG_INFO(d_debug_logger, msg.str());
+    GR_LOG_INFO(This->d_debug_logger, msg.str());
 #endif
 
     return (err);
