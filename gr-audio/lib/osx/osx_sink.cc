@@ -115,7 +115,7 @@ void osx_sink::setup()
             err_str += ": ";
             for (UInt32 nn = 0; nn < all_names.size(); ++nn) {
                 err_str += all_names[nn];
-                if (nn != all_names - 1) {
+                if (nn != all_names.size() - 1) {
                     err_str += ", ";
                 }
             }
@@ -933,7 +933,9 @@ OSStatus osx_sink::au_output_callback(void* in_ref_con,
                     << "number of available items changing "
                     << "unexpectedly (should never happen): was " << in_number_frames
                     << " now " << t_n_output_items;
+#if _OSX_AU_DEBUG_RENDER_
                 GR_LOG_ERROR(d_logger, msg.str());
+#endif
                 err = kAudioUnitErr_TooManyFramesToProcess;
             }
         }
