@@ -44,7 +44,7 @@ if(ENABLE_GRC)
 endif(ENABLE_GRC)
 if((ENABLE_GR_ANALOG) AND (ENABLE_EXAMPLES))
   add_subdirectory(examples/c++)
-endif(ENABLE_GR_ANALOG)
+endif((ENABLE_GR_ANALOG) AND (ENABLE_EXAMPLES))
 
 ########################################################################
 # Create Pkg Config File
