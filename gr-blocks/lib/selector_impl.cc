@@ -126,8 +126,9 @@ void selector_impl::forecast(int noutput_items, gr_vector_int& ninput_items_requ
 {
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++) {
-        ninput_items_required[i] = noutput_items;
+        ninput_items_required[i] = 0;
     }
+    ninput_items_required[d_input_index] = noutput_items;
 }
 
 bool selector_impl::check_topology(int ninputs, int noutputs)
