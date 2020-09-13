@@ -41,7 +41,7 @@ GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING)
 SET(VERSION_MAJOR 3)
 SET(VERSION_API   9)
 SET(VERSION_ABI   0)
-SET(VERSION_PATCH 0-git)
+SET(VERSION_PATCH git)
 include(GrVersion) #setup version info
 
 # Minimum dependency versions for central dependencies:
