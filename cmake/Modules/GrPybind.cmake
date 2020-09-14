@@ -40,7 +40,11 @@ target_include_directories(${name}_python PUBLIC
     ${PYBIND11_INCLUDE_DIR}
 )
 target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} gnuradio-${MODULE_NAME})
-target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
+   CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
+endif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
+      CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 add_dependencies(${name}_python ${name}_docstrings)
 
 endmacro(GR_PYBIND_MAKE)
@@ -153,7 +157,11 @@ target_include_directories(${name}_python PUBLIC
     ${PYBIND11_INCLUDE_DIR}
 )
 target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} gnuradio-${MODULE_NAME})
-target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
+   CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
+endif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
+      CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 if(NOT SNDFILE_FOUND AND ${name} STREQUAL blocks)
     target_compile_options(${name}_python PRIVATE -DNO_WAVFILE)
 endif()
@@ -277,7 +285,11 @@ target_include_directories(${name}_python PUBLIC
     ${PYBIND11_INCLUDE_DIR}
 )
 target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} gnuradio-${MODULE_NAME})
-target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
+   CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
+endif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
+      CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 add_dependencies(${name}_python ${name}_docstrings ${regen_targets})
 
 endmacro(GR_PYBIND_MAKE_OOT)
