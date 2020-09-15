@@ -26,7 +26,6 @@ from .FlowGraph import FlowGraph
 from .Connection import Connection
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
 
 
 class Platform(Element):

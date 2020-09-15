@@ -40,7 +40,15 @@ def main():
     # Enable logging
     # Note: All other modules need to use the 'grc.<module>' convention
     log = logging.getLogger('grc')
-    log.setLevel(logging.INFO)
+    # NOTE: This sets the log level to what was requested for the logger on the
+    # command line, but this may not be the correct approach if multiple handlers
+    # are intended to be used. The logger level shown here indicates all the log
+    # messages that are captured and the handler levels indicate messages each
+    # handler will output. A better approach may be resetting this to logging.DEBUG
+    # to catch everything and making sure the handlers have the correct levels set.
+    # This would be useful for a future GUI logging window that can filter messages
+    # independently of the console output. In this case, this should be DEBUG.
+    log.setLevel(LOG_LEVELS[args.log])
 
     # Console formatting
     console = logging.StreamHandler()
