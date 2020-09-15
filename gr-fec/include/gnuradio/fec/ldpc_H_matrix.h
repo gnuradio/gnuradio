@@ -12,6 +12,7 @@
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/fec_mtrx.h>
 #include <memory>
+#include <string>
 
 namespace gr {
 namespace fec {
