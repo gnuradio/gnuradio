@@ -19,6 +19,7 @@
 #include <gnuradio/blocks/pack_k_bits.h>
 #include <gnuradio/blocks/unpack_k_bits.h>
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
