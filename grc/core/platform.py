@@ -2,7 +2,7 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
 
 from codecs import open
@@ -29,7 +29,6 @@ from .FlowGraph import FlowGraph
 from .Connection import Connection
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
 
 
 class Platform(Element):
