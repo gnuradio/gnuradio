@@ -153,8 +153,14 @@ add_subdirectory(include/howto)
 add_subdirectory(lib)
 add_subdirectory(apps)
 add_subdirectory(docs)
-add_subdirectory(python)
-add_subdirectory(grc)
+# NOTE: manually update below to use GRC to generate C++ flowgraphs w/o python
+if(ENABLE_PYTHON)
+  message(STATUS "PYTHON and GRC components are enabled")
+  add_subdirectory(python)
+  add_subdirectory(grc)
+else(ENABLE_PYTHON)
+  message(STATUS "PYTHON and GRC components are disabled")
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Install cmake search helper for this library
