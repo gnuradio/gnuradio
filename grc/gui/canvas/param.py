@@ -73,6 +73,9 @@ class Param(CoreParam):
             if hasattr(value,"__len__"):
                 tooltip_lines.append('Length: {}'.format(len(value)))
             value = str(value)
+            # ensure that value is a UTF-8 string
+            # PMTs can produce non-UTF-8 strings
+            value = value.encode('utf-8', 'backslashreplace').decode('utf-8')
             if len(value) > 100:
                 value = '{}...{}'.format(value[:50], value[-50:])
             tooltip_lines.append('Value: ' + value)
@@ -139,6 +142,9 @@ class Param(CoreParam):
         else:
             # Other types
             dt_str = str(e)
+            # ensure that value is a UTF-8 string
+            # PMTs can produce non-UTF-8 strings
+            dt_str = dt_str.encode('utf-8', 'backslashreplace').decode('utf-8')
 
         # Done
         return _truncate(dt_str, truncate)
