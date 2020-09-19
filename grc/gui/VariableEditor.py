@@ -183,6 +183,9 @@ class VariableEditor(Gtk.VBox):
                     # Evaluate the params
                     for key in block.params:
                         evaluated = str(block.params[key].evaluate())
+                        # ensure that evaluated is a UTF-8 string
+                        # Old PMTs could produce non-UTF-8 strings
+                        evaluated = evaluated.encode('utf-8', 'backslashreplace').decode('utf-8')
                         self.set_tooltip_text(evaluated)
 
                     # Evaluate the block value
