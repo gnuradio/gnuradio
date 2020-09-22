@@ -603,6 +603,8 @@ int dvb_bch_bb_impl::general_work(int noutput_items,
 
     if (frame_size != FECFRAME_MEDIUM) {
         for (int i = 0; i < noutput_items; i += nbch) {
+            memcpy(out, in, sizeof(unsigned char) * kbch);
+            out += kbch;
             for (int j = 0; j < (int)kbch / 8; j++) {
                 b = 0;
 
@@ -610,7 +612,6 @@ int dvb_bch_bb_impl::general_work(int noutput_items,
                 // http://www.sunshine2k.de/articles/coding/crc/understanding_crc.html
                 for (int e = 0; e < 8; e++) {
                     temp = *in++;
-                    *out++ = temp;
                     consumed++;
 
                     b |= temp << (7 - e);
@@ -637,6 +638,8 @@ int dvb_bch_bb_impl::general_work(int noutput_items,
         }
     } else {
         for (int i = 0; i < noutput_items; i += nbch) {
+            memcpy(out, in, sizeof(unsigned char) * kbch);
+            out += kbch;
             for (int j = 0; j < (int)kbch / 4; j++) {
                 b = 0;
 
@@ -644,7 +647,6 @@ int dvb_bch_bb_impl::general_work(int noutput_items,
                 // http://www.sunshine2k.de/articles/coding/crc/understanding_crc.html
                 for (int e = 0; e < 4; e++) {
                     temp = *in++;
-                    *out++ = temp;
                     consumed++;
 
                     b |= temp << (3 - e);
