@@ -127,6 +127,7 @@
   - blocks_interleave
   - blocks_keep_m_in_n
   - blocks_keep_one_in_n
+  - blocks_stream_demux
   - blocks_stream_mux
   - blocks_stream_to_streams
   - blocks_stream_to_vector
