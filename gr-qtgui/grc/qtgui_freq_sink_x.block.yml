@@ -26,8 +26,8 @@ parameters:
 -   id: freqhalf
     label: Spectrum Width
     dtype: enum
-    default: True
-    options: [True, False]
+    default: 'True'
+    options: ['True', 'False']
     option_labels: [Full, Half]
     hide: ${ ('part' if type == "float" or type == "msg_float" else 'all') }
 -   id: wintype
