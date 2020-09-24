@@ -49,8 +49,9 @@ wavfile_sink_impl::wavfile_sink_impl(const char* filename,
 {
     int bits_per_sample;
 
-    if (n_channels > 24) {
-        throw std::runtime_error("Number of channels greater than 24 not supported.");
+    if (n_channels > s_max_channels) {
+        throw std::runtime_error("Number of channels greater than " +
+                                 std::to_string(s_max_channels) + " not supported.");
     }
 
     d_h.sample_rate = sample_rate;
@@ -85,6 +86,9 @@ wavfile_sink_impl::wavfile_sink_impl(const char* filename,
     }
     set_bits_per_sample_unlocked(bits_per_sample);
     d_h.bytes_per_sample = d_bytes_per_sample_new;
+
+    set_max_noutput_items(s_items_size);
+    d_buffer.resize(s_items_size * d_h.nchans);
 
     if (!open(filename)) {
         throw std::runtime_error("Can't open WAV file.");
@@ -243,7 +247,6 @@ int wavfile_sink_impl::work(int noutput_items,
     int n_in_chans = input_items.size();
     int nwritten;
     int errnum;
-    float sample[24];
 
     gr::thread::scoped_lock guard(d_mutex); // hold mutex for duration of this block
     do_update();                            // update: d_fp is read
@@ -257,21 +260,20 @@ int wavfile_sink_impl::work(int noutput_items,
             // Write zeros to channels which are in the WAV file
             // but don't have any inputs here
             if (chan < n_in_chans) {
-                sample[chan] = in[chan][nwritten];
+                d_buffer[chan + (nwritten * nchans)] = in[chan][nwritten];
             } else {
-                sample[chan] = 0;
+                d_buffer[chan + (nwritten * nchans)] = 0;
             }
         }
+    }
 
-        sf_write_float(d_fp, &sample[0], nchans);
+    sf_write_float(d_fp, &d_buffer[0], nchans * nwritten);
 
-        errnum = sf_error(d_fp);
-        if (errnum) {
-            GR_LOG_ERROR(d_logger,
-                         boost::format("sf_error: %s") % sf_error_number(errnum));
-            close();
-            throw std::runtime_error("File I/O error.");
-        }
+    errnum = sf_error(d_fp);
+    if (errnum) {
+        GR_LOG_ERROR(d_logger, boost::format("sf_error: %s") % sf_error_number(errnum));
+        close();
+        throw std::runtime_error("File I/O error.");
     }
 
     return nwritten;
