@@ -29,11 +29,15 @@ private:
     float d_min_sample_val;
     float d_normalize_shift;
     float d_normalize_fac;
+    std::vector<float> d_buffer;
 
     SNDFILE* d_fp;
     SNDFILE* d_new_fp;
     bool d_updated;
     boost::mutex d_mutex;
+
+    static constexpr int s_items_size = 8192;
+    static constexpr int s_max_channels = 24;
 
     /*!
      * \brief If any file changes have occurred, update now. This is called

@@ -46,8 +46,9 @@ wavfile_source_impl::wavfile_source_impl(const char* filename, bool repeat)
 
     d_h.sample_rate = (unsigned)sfinfo.samplerate;
     d_h.nchans = sfinfo.channels;
-    if (sfinfo.channels > 24) {
-        throw std::runtime_error("Number of channels greater than 24 not supported.");
+    if (sfinfo.channels > s_max_channels) {
+        throw std::runtime_error("Number of channels greater than " +
+                                 std::to_string(s_max_channels) + " not supported.");
     }
 
     switch (sfinfo.format & SF_FORMAT_SUBMASK) {
@@ -79,6 +80,9 @@ wavfile_source_impl::wavfile_source_impl(const char* filename, bool repeat)
         throw std::runtime_error("WAV file does not contain any samples.");
     }
 
+    set_output_multiple(s_items_size);
+    d_buffer.resize(s_items_size * d_h.nchans);
+
     // Re-set the output signature
     set_output_signature(io_signature::make(1, d_h.nchans, sizeof(float)));
 }
@@ -91,15 +95,16 @@ int wavfile_source_impl::work(int noutput_items,
 {
     auto out = (float**)&output_items[0];
     int n_out_chans = output_items.size();
-    int i;
+    int items = 0;
+    int produced = 0;
     int errnum;
-    float sample[24];
+    sf_count_t samples;
 
-    for (i = 0; i < noutput_items; i++) {
+    for (int i = 0; i < noutput_items; i += s_items_size) {
         if (d_sample_idx >= d_h.samples_per_chan) {
             if (!d_repeat) {
                 // if nothing was read at all, say we're done.
-                return i ? i : -1;
+                return items ? produced : -1;
             }
 
             if (sf_seek(d_fp, 0, SEEK_SET) == -1) {
@@ -111,14 +116,18 @@ int wavfile_source_impl::work(int noutput_items,
             d_sample_idx = 0;
         }
 
-        sf_read_float(d_fp, &sample[0], d_h.nchans);
-        for (int chan = 0; chan < d_h.nchans; chan++) {
-            if (chan < n_out_chans) {
-                out[chan][i] = sample[chan];
+        samples = sf_read_float(d_fp, &d_buffer[0], d_h.nchans * s_items_size);
+        items = (int)samples / d_h.nchans;
+        for (int n = 0; n < items; n++) {
+            for (int chan = 0; chan < d_h.nchans; chan++) {
+                if (chan < n_out_chans) {
+                    out[chan][n + produced] = d_buffer[chan + (n * d_h.nchans)];
+                }
             }
         }
 
-        d_sample_idx++;
+        produced += items;
+        d_sample_idx += items;
 
         // We're not going to deal with handling corrupt wav files,
         // so if they give us any trouble they won't be processed.
@@ -126,18 +135,18 @@ int wavfile_source_impl::work(int noutput_items,
 
         errnum = sf_error(d_fp);
         if (errnum) {
-            if (i == 0) {
+            if (items == 0) {
                 GR_LOG_ERROR(
                     d_logger,
                     boost::format("WAV file has corrupted header or I/O error, %s") %
                         sf_error_number(errnum));
                 return -1;
             }
-            return i;
+            return produced;
         }
     }
 
-    return noutput_items;
+    return produced;
 }
 
 } /* namespace blocks */
