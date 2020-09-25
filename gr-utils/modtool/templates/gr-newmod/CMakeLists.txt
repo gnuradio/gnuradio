@@ -73,6 +73,7 @@ ENDIF()
 ########################################################################
 # Install directories
 ########################################################################
+include(FindPkgConfig)
 find_package(Gnuradio "3.9" REQUIRED)
 include(GrVersion)
 
