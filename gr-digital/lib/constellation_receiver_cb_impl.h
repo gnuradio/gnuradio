@@ -69,7 +69,7 @@ private:
      * Message handler port to update the phase of the rotator. The
      * phase should be a real number (float or double) that is added
      * to the current phase. So we can rotate the constellation by
-     * 90 degress by passing a value of pmt::from_double(GR_M_PI/2).
+     * 90 degrees by passing a value of pmt::from_double(GR_M_PI/2).
      */
     void handle_rotate_phase(pmt::pmt_t rotation);
 

@@ -61,7 +61,7 @@ class test_file_source(gr_unittest.TestCase):
 
     def test_file_source_no_such_file(self):
         """
-        Try to open a non-existant file and verify exception is thrown.
+        Try to open a non-existent file and verify exception is thrown.
         """
         try:
             _ = blocks.file_source(gr.sizeof_float, "___no_such_file___")

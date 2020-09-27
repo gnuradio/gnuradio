@@ -333,7 +333,7 @@ public:
 
     /*!
      * \brief return a reference to the multiple precision rational
-     * represntation of the approximate output rate / input rate
+     * representation of the approximate output rate / input rate
      */
     mpq_class& mp_relative_rate() { return d_mp_relative_rate; }
 

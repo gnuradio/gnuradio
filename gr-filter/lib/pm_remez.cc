@@ -310,7 +310,7 @@ static double compute_A(double freq, int r, double ad[], double x[], double y[])
  * int gridsize  - Number of elements in the dense frequency grid
  * double Grid[] - Frequencies on the dense grid [gridsize]
  * double D[]    - Desired response on the dense grid [gridsize]
- * double W[]    - Weight function on the desnse grid [gridsize]
+ * double W[]    - Weight function on the dense grid [gridsize]
  *
  * OUTPUT:
  * -------

@@ -56,7 +56,7 @@ random::random(unsigned int seed, int min_integer, int max_integer)
     d_integer_dis = new boost::uniform_int<>(0, 1); // another "mapper"
     d_generator = NULL; // MUST be reinstantiated on every call to reseed.
     d_integer_generator =
-        NULL; // MUST be reinstantiated on everytime d_rng or d_integer_dis is changed.
+        NULL;     // MUST be reinstantiated whenever d_rng or d_integer_dis is changed.
     reseed(seed); // set seed for random number generator
     set_integer_limits(min_integer, max_integer);
 }
