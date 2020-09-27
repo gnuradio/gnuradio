@@ -76,7 +76,7 @@ public:
      * Uses the following header format:
      *  - Bits 0-11: The packet length (what was stored in the tag with key \p
      * len_tag_key)
-     *  - Bits 12-23: The header number (counts up everytime this function is called)
+     *  - Bits 12-23: The header number (counts up every time this function is called)
      *  - Bit 24-31: 8-Bit CRC
      */
     virtual bool format(int nbytes_in,

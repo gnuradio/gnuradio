@@ -268,7 +268,7 @@ class FlowGraph(Element):
                 value = eval(variable_block.value, namespace, variable_block.namespace)
                 namespace[variable_block.name] = value
                 self.namespace.update(namespace) # rewrite on subsequent blocks depends on an updated self.namespace 
-            except TypeError: #Type Errors may happen, but that desn't matter as they are displayed in the gui
+            except TypeError: #Type Errors may happen, but that doesn't matter as they are displayed in the gui
                 pass
             except Exception:
                 log.exception('Failed to evaluate variable block {0}'.format(variable_block.name), exc_info=True)
