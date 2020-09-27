@@ -37,7 +37,7 @@ asserts:
 - ${value in (true, false)}
 
 templates:
-    imports: from PyQt4 import Qt
+    imports: from PyQt5 import Qt
     var_make: self.${id} = ${id} = ${value}
     callbacks:
     - self.set_${id}(${value})
