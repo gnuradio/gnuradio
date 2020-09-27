@@ -11,7 +11,6 @@
 install(FILES
   api.h
   ber_sink_b.h
-  CMakeLists.txt
   constellationdisplayform.h
   ConstellationDisplayPlot.h
   const_sink_c.h
