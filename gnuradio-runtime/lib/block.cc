@@ -47,7 +47,7 @@ block::block(const std::string& name,
       d_pmt_done(pmt::intern("done")),
       d_system_port(pmt::intern("system"))
 {
-    global_block_registry.register_primitive(alias(), this);
+    global_block_registry.register_primitive(d_symbol_name, this);
     message_port_register_in(d_system_port);
     set_msg_handler(d_system_port, [this](pmt::pmt_t msg) { this->system_handler(msg); });
 }
@@ -598,7 +598,7 @@ void block::system_handler(pmt::pmt_t msg)
     pmt::pmt_t op = pmt::car(msg);
     if (pmt::eqv(op, d_pmt_done)) {
         d_finished = pmt::to_long(pmt::cdr(msg));
-        global_block_registry.notify_blk(alias());
+        global_block_registry.notify_blk(d_symbol_name);
     } else {
         std::cout << "WARNING: bad message op on system port!\n";
         pmt::print(msg);
