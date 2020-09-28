@@ -120,10 +120,14 @@ void block_registry::notify_blk(std::string blk)
     gr::thread::scoped_lock guard(d_mutex);
 
     if (primitive_map.find(blk) == primitive_map.end()) {
-        return;
+        throw std::runtime_error("block notify failed: block not found!");
     }
-    if (primitive_map[blk]->detail().get())
+    if (primitive_map[blk]->detail().get()) {
         primitive_map[blk]->detail()->d_tpb.notify_msg();
+    } else {
+        // not having block detail is not necessarily a problem; this will happen when
+        // publishing a message to a block that exists but has not yet been started
+    }
 }
 
 } /* namespace gr */
