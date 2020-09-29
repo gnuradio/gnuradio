@@ -5,6 +5,17 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
+########################################################################
+# Check if there is C++ code at all
+########################################################################
+if(NOT howto_sources)
+    MESSAGE(STATUS "No C++ sources... skipping python bindings")
+    return()
+endif(NOT howto_sources)
+
+########################################################################
+# Check for pygccxml
+########################################################################
 GR_PYTHON_CHECK_MODULE_RAW(
     "pygccxml"
     "import pygccxml"
