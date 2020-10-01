@@ -53,7 +53,7 @@ void bind_histogram_sink_f(py::module& m)
              py::arg("xmax"),
              py::arg("name"),
              py::arg("nconnections") = 1,
-             py::arg("parent") = __null,
+             py::arg("parent") = nullptr,
              D(histogram_sink_f, make))
 
 

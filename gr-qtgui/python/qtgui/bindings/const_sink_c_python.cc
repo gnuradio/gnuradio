@@ -49,7 +49,7 @@ void bind_const_sink_c(py::module& m)
              py::arg("size"),
              py::arg("name"),
              py::arg("nconnections") = 1,
-             py::arg("parent") = __null,
+             py::arg("parent") = nullptr,
              D(const_sink_c, make))
 
 

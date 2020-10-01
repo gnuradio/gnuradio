@@ -49,7 +49,7 @@ void bind_edit_box_msg(py::module& m)
              py::arg("is_pair") = true,
              py::arg("is_static") = true,
              py::arg("key") = "",
-             py::arg("parent") = __null,
+             py::arg("parent") = nullptr,
              D(edit_box_msg, make))
 
 

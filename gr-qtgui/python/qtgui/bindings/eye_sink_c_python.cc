@@ -53,7 +53,7 @@ void bind_eye_sink_c(py::module& m)
              py::arg("samp_rate"),
              py::arg("name"),
              py::arg("nconnections") = 1,
-             py::arg("parent") = __null,
+             py::arg("parent") = nullptr,
              D(eye_sink_c, make))
 
 

@@ -54,7 +54,7 @@ void bind_time_raster_sink_b(py::module& m)
              py::arg("offset"),
              py::arg("name"),
              py::arg("nconnections") = 1,
-             py::arg("parent") = __null,
+             py::arg("parent") = nullptr,
              D(time_raster_sink_b, make))
 
 
