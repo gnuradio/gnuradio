@@ -50,7 +50,7 @@ void bind_time_sink_f(py::module& m)
              py::arg("samp_rate"),
              py::arg("name"),
              py::arg("nconnections") = 1,
-             py::arg("parent") = __null,
+             py::arg("parent") = nullptr,
              D(time_sink_f, make))
 
 

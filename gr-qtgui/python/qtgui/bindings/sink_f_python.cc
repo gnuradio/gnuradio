@@ -52,7 +52,7 @@ void bind_sink_f(py::module& m)
              py::arg("plotwaterfall"),
              py::arg("plottime"),
              py::arg("plotconst"),
-             py::arg("parent") = __null,
+             py::arg("parent") = nullptr,
              D(sink_f, make))
 
 

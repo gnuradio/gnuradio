@@ -48,7 +48,7 @@ void bind_ber_sink_b(py::module& m)
              py::arg("berminerrors") = 100,
              py::arg("berLimit") = -7.,
              py::arg("curvenames") = std::vector<std::string>(),
-             py::arg("parent") = __null,
+             py::arg("parent") = nullptr,
              D(ber_sink_b, make))
 
 

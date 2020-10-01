@@ -50,7 +50,7 @@ void bind_number_sink(py::module& m)
              py::arg("average") = 0,
              py::arg("graph_type") = ::gr::qtgui::graph_t::NUM_GRAPH_HORIZ,
              py::arg("nconnections") = 1,
-             py::arg("parent") = __null,
+             py::arg("parent") = nullptr,
              D(number_sink, make))
 
 
