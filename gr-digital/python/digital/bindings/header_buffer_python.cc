@@ -37,7 +37,7 @@ void bind_header_buffer(py::module& m)
         m, "header_buffer", D(header_buffer))
 
         .def(py::init<uint8_t*>(),
-             py::arg("buffer") = __null,
+             py::arg("buffer") = nullptr,
              D(header_buffer, header_buffer, 0))
         .def(py::init<gr::digital::header_buffer const&>(),
              py::arg("arg0"),
