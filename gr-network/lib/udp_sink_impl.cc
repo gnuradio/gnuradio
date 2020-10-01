@@ -118,11 +118,11 @@ udp_sink_impl::udp_sink_impl(size_t itemsize,
 
     d_udpsocket = new boost::asio::ip::udp::socket(d_io_service);
 
-    std::string s_port = (boost::format("%d") % port).str();
-    std::string s_host = host.empty() ? std::string("localhost") : host;
+    std::string str_port = (boost::format("%d") % port).str();
+    std::string str_host = host.empty() ? std::string("localhost") : host;
     boost::asio::ip::udp::resolver resolver(d_io_service);
     boost::asio::ip::udp::resolver::query query(
-        s_host, s_port, boost::asio::ip::resolver_query_base::passive);
+        str_host, str_port, boost::asio::ip::resolver_query_base::passive);
 
     boost::system::error_code err;
     d_endpoint = *resolver.resolve(query, err);
