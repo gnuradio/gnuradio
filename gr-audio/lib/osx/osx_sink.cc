@@ -933,9 +933,7 @@ OSStatus osx_sink::au_output_callback(void* in_ref_con,
                     << "number of available items changing "
                     << "unexpectedly (should never happen): was " << in_number_frames
                     << " now " << t_n_output_items;
-#if _OSX_AU_DEBUG_RENDER_
-                GR_LOG_ERROR(d_logger, msg.str());
-#endif
+                GR_LOG_ERROR(This->d_logger, msg.str());
                 err = kAudioUnitErr_TooManyFramesToProcess;
             }
         }
