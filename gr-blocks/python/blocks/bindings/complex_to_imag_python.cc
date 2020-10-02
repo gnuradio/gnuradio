@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(complex_to_imag.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(0bfce7099bc7438e992f0cf95e067675)                     */
+/* BINDTOOL_HEADER_FILE(complex_to_imag.h)                                         */
+/* BINDTOOL_HEADER_FILE_HASH(9442f55b6bfffd545c22e5a7420b93c7)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
