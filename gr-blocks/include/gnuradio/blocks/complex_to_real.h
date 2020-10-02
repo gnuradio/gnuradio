@@ -18,7 +18,7 @@ namespace gr {
 namespace blocks {
 
 /*!
- * \brief Produces the real part (as a float0 of a complex stream.
+ * \brief Produces the real part (as a float) of a complex stream.
  * \ingroup type_converters_blk
  */
 class BLOCKS_API complex_to_real : virtual public sync_block
