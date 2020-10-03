@@ -7,7 +7,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 
-import six
 import logging
 
 from gi.repository import Gtk, Gdk, Gio, GLib, GObject

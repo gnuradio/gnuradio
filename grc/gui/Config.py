@@ -9,11 +9,10 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 import sys
 import os
+import configparser
 
 from ..core.Config import Config as CoreConfig
 from . import Constants
-
-from six.moves import configparser
 
 HEADER = """\
 # This contains only GUI settings for GRC and is not meant for users to edit.

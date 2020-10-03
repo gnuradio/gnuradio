@@ -13,9 +13,7 @@ import random
 from distutils.spawn import find_executable
 from itertools import count
 
-import six
 from gi.repository import GLib, Gtk
-from six.moves import filter
 
 from . import colors
 from .drawable import Drawable

@@ -1,13 +1,13 @@
-from .utils import Spec, expand, str_
+from .utils import Spec, expand
 
 OPTIONS_SCHEME = expand(
-    parameters=Spec(types=dict, required=False, item_scheme=(str_, str_)),
-    states=Spec(types=dict, required=False, item_scheme=(str_, str_)),
+    parameters=Spec(types=dict, required=False, item_scheme=(str, str)),
+    states=Spec(types=dict, required=False, item_scheme=(str, str)),
 )
 
 BLOCK_SCHEME = expand(
-    name=str_,
-    id=str_,
+    name=str,
+    id=str,
     **OPTIONS_SCHEME
 )
 

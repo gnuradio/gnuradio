@@ -8,8 +8,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 from ..Constants import LINE_SELECT_SENSITIVITY
 
-from six.moves import zip
-
 
 class Drawable(object):
     """

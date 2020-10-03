@@ -2,12 +2,11 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
 
 from collections import OrderedDict
 
-import six
 import yaml
 
 from ..params.param import attributed_str
@@ -27,7 +26,7 @@ class GRCDumper(yaml.SafeDumper):
         if self.alias_key is not None:
             self.represented_objects[self.alias_key] = node
 
-        for item_key, item_value in six.iteritems(data):
+        for item_key, item_value in data.items():
             node_key = self.represent_data(item_key)
             node_value = self.represent_data(item_value)
             value.append((node_key, node_value))
