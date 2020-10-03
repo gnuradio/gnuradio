@@ -338,11 +338,11 @@ def show_keyboard_shortcuts(parent):
 def show_get_involved(parent):
     """Get Involved Instructions"""
     markup = textwrap.dedent("""\
-    <tt><b>Welcome to GNU Radio Community!</b></tt>
+    <b>Welcome to GNU Radio Community!</b>
     \n\
-    <tt>For more details on contributing to GNU Radio and getting engaged with our great community visit </tt><a href="https://www.gnuradio.org/get-involved">here</a>.     
+    For more details on contributing to GNU Radio and getting engaged with our great community visit <a href="https://wiki.gnuradio.org/index.php/HowToGetInvolved">here</a>.
     \n\
-    <tt>You can also join our <a href="https://slack.gnuradio.org/">Slack Channel</a>, IRC Channel (#gnuradio) or contact through our <a href="https://lists.gnu.org/mailman/listinfo/discuss-gnuradio">mailing list(discuss-gnuradio)</a></tt>. 
+    You can also join our <a href="https://chat.gnuradio.org/">Matrix chat server</a>, IRC Channel (#gnuradio) or contact through our <a href="https://lists.gnu.org/mailman/listinfo/discuss-gnuradio">mailing list (discuss-gnuradio)</a>.
     \
     """)
     
