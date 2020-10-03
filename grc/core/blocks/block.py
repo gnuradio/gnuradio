@@ -11,8 +11,6 @@ import collections
 import itertools
 import copy
 
-import six
-from six.moves import range
 import re
 
 import ast
@@ -78,10 +76,10 @@ class Block(Element):
         self.block_namespace = {}
 
         if Flags.HAS_CPP in self.flags and self.enabled and not (self.is_virtual_source() or self.is_virtual_sink()):
-            # This is a workaround to allow embedded python blocks/modules to load as there is 
+            # This is a workaround to allow embedded python blocks/modules to load as there is
             # currently 'cpp' in the flags by default caused by the other built-in blocks
             if hasattr(self,'cpp_templates'):
-                self.orig_cpp_templates = self.cpp_templates # The original template, in case we have to edit it when transpiling to C++         
+                self.orig_cpp_templates = self.cpp_templates # The original template, in case we have to edit it when transpiling to C++
 
         self.current_bus_structure = {'source': None, 'sink': None}
 
@@ -148,7 +146,7 @@ class Block(Element):
         ###############################
         ## Bus Logic
         ###############################
-        
+
         for direc in {'source','sink'}:
             if direc == 'source':
                 ports = self.sources
@@ -156,7 +154,7 @@ class Block(Element):
                 bus_state = self.bus_source
             else:
                 ports = self.sinks
-                ports_gui = self.filter_bus_port(self.sinks)  
+                ports_gui = self.filter_bus_port(self.sinks)
                 bus_state = self.bus_sink
 
             # Remove the bus ports
@@ -176,7 +174,7 @@ class Block(Element):
                 self.current_bus_structure[direc] = struct
 
                 # Hide ports that are not part of the bus structure
-                #TODO: Blocks where it is desired to only have a subset 
+                #TODO: Blocks where it is desired to only have a subset
                 # of ports included in the bus still has some issues
                 for idx, port in enumerate(ports):
                     if any([idx in bus for bus in self.current_bus_structure[direc]]):
@@ -194,12 +192,12 @@ class Block(Element):
                         if port.key == saved_port.key:
                             self.parent_flowgraph.connections.remove(connection)
                             if saved_port.is_source:
-                                connection.source_port = port 
+                                connection.source_port = port
                             if saved_port.is_sink:
-                                connection.sink_port = port 
+                                connection.sink_port = port
                             self.parent_flowgraph.connections.add(connection)
 
-                        
+
             else:
                 self.current_bus_structure[direc] = None
 
@@ -358,7 +356,7 @@ class Block(Element):
     @property
     def bus_structure_source(self):
         """Gets the block's current source bus structure."""
-        try:  
+        try:
             bus_structure = self.params['bus_structure_source'].value or None
         except:
             bus_structure = None
@@ -367,7 +365,7 @@ class Block(Element):
     @property
     def bus_structure_sink(self):
         """Gets the block's current source bus structure."""
-        try:  
+        try:
             bus_structure = self.params['bus_structure_sink'].value or None
         except:
             bus_structure = None
@@ -447,7 +445,7 @@ class Block(Element):
 
                 if _vtype == bool:
                     return 'bool'
-             
+
                 if _vtype == complex:
                     return 'gr_complex'
 
@@ -474,11 +472,11 @@ class Block(Element):
 
         # Get the lvalue type
         self.vtype = get_type(value, py_type)
-    
+
         # The r-value for these types must be transformed to create legal C++ syntax.
         if self.vtype in ['bool', 'gr_complex'] or 'std::map' in self.vtype or 'std::vector' in self.vtype:
             evaluated = ast.literal_eval(value)
-            self.cpp_templates['var_make'] = self.cpp_templates['var_make'].replace('${value}', self.get_cpp_value(evaluated)) 
+            self.cpp_templates['var_make'] = self.cpp_templates['var_make'].replace('${value}', self.get_cpp_value(evaluated))
 
         if 'string' in self.vtype:
             self.cpp_templates['includes'].append('#include <string>')
@@ -494,7 +492,7 @@ class Block(Element):
             if re.match(pi_re, str(pyval)):
                 val_str = re.sub(pi_re, 'boost::math::constants::pi<double>()', val_str)
                 self.cpp_templates['includes'].append('#include <boost/math/constants/constants.hpp>')
-                
+
             return str(pyval)
 
         elif type(pyval) == bool:
@@ -514,7 +512,7 @@ class Block(Element):
             if len(val_str) > 1:
               # truncate to trim superfluous ', ' from the end
               val_str = val_str[0:-2]
- 
+
             return val_str + '}'
 
         elif type(pyval) == dict:
@@ -531,7 +529,7 @@ class Block(Element):
 
         if type(self.vtype) == str:
             self.cpp_templates['includes'].append('#include <string>')
-            return '"' + pyval + '"'    
+            return '"' + pyval + '"'
 
 
     def is_virtual_sink(self):
@@ -578,7 +576,7 @@ class Block(Element):
         return itertools.chain(self.active_sources, self.active_sinks)
 
     def children(self):
-        return itertools.chain(six.itervalues(self.params), self.ports())
+        return itertools.chain(self.params.values(), self.ports())
 
     ##############################################
     # Access
@@ -596,12 +594,12 @@ class Block(Element):
     @property
     def namespace(self):
         # update block namespace
-        self.block_namespace.update({key:param.get_evaluated() for key, param in six.iteritems(self.params)})
+        self.block_namespace.update({key:param.get_evaluated() for key, param in self.params.items()})
         return self.block_namespace
 
     @property
     def namespace_templates(self):
-        return {key: param.template_arg for key, param in six.iteritems(self.params)}
+        return {key: param.template_arg for key, param in self.params.items()}
 
     def evaluate(self, expr):
         return self.parent_flowgraph.evaluate(expr, self.namespace)
@@ -642,7 +640,7 @@ class Block(Element):
 
         pre_rewrite_hash = -1
         while pre_rewrite_hash != get_hash():
-            for key, value in six.iteritems(parameters):
+            for key, value in parameters.items():
                 try:
                     self.params[key].set_value(value)
                 except KeyError:
@@ -650,7 +648,7 @@ class Block(Element):
             # Store hash and call rewrite
             pre_rewrite_hash = get_hash()
             self.rewrite()
-            
+
     ##############################################
     # Controller Modify
     ##############################################

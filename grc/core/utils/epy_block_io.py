@@ -3,9 +3,6 @@
 import inspect
 import collections
 
-import six
-from six.moves import zip
-
 
 TYPE_MAP = {
     'complex64': 'complex', 'complex': 'complex',
@@ -39,7 +36,7 @@ def _find_block_class(source_code, cls):
         exec(source_code, ns)
     except Exception as e:
         raise ValueError("Can't interpret source code: " + str(e))
-    for var in six.itervalues(ns):
+    for var in ns.values():
         if inspect.isclass(var) and issubclass(var, cls):
             return var
     raise ValueError('No python block class found in code')

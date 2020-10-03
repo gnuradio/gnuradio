@@ -1,7 +1,6 @@
 import collections
 import os
 
-import six
 import codecs
 
 from .top_block import TopBlockGenerator
@@ -147,7 +146,7 @@ class QtHierBlockGenerator(HierBlockGenerator):
         block_n = collections.OrderedDict()
 
         # insert flags after category
-        for key, value in six.iteritems(n):
+        for key, value in n.items():
             block_n[key] = value
             if key == 'category':
                 block_n['flags'] = 'need_qt_gui'
