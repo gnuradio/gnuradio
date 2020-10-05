@@ -38,8 +38,6 @@ hilbert_fc_impl::hilbert_fc_impl(unsigned int ntaps, firdes::win_type window, do
     set_alignment(std::max(1, alignment_multiple));
 }
 
-hilbert_fc_impl::~hilbert_fc_impl() {}
-
 int hilbert_fc_impl::work(int noutput_items,
                           gr_vector_const_void_star& input_items,
                           gr_vector_void_star& output_items)

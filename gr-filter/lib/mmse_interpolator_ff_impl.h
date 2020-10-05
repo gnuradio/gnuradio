@@ -26,7 +26,6 @@ private:
 
 public:
     mmse_interpolator_ff_impl(float phase_shift, float interp_ratio);
-    ~mmse_interpolator_ff_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
     int general_work(int noutput_items,

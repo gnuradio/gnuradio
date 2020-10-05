@@ -58,11 +58,6 @@ interp_fir_filter_impl<IN_T, OUT_T, TAP_T>::interp_fir_filter_impl(
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-interp_fir_filter_impl<IN_T, OUT_T, TAP_T>::~interp_fir_filter_impl()
-{
-}
-
-template <class IN_T, class OUT_T, class TAP_T>
 void interp_fir_filter_impl<IN_T, OUT_T, TAP_T>::set_taps(const std::vector<TAP_T>& taps)
 {
     d_new_taps = taps;

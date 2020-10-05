@@ -38,8 +38,6 @@ filterbank::filterbank(const std::vector<std::vector<float>>& taps)
     set_taps(d_taps);
 }
 
-filterbank::~filterbank() {}
-
 void filterbank::set_taps(const std::vector<std::vector<float>>& taps)
 {
     // Check that the number of filters is correct.

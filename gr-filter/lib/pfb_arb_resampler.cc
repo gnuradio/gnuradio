@@ -75,8 +75,6 @@ pfb_arb_resampler_ccf::pfb_arb_resampler_ccf(float rate,
     d_est_phase_change = d_last_filter - (end_filter + accum_frac);
 }
 
-pfb_arb_resampler_ccf::~pfb_arb_resampler_ccf() {}
-
 void pfb_arb_resampler_ccf::create_taps(const std::vector<float>& newtaps,
                                         std::vector<std::vector<float>>& ourtaps,
                                         std::vector<fir_filter_ccf>& ourfilter)
@@ -266,8 +264,6 @@ pfb_arb_resampler_ccc::pfb_arb_resampler_ccc(float rate,
 
     d_est_phase_change = d_last_filter - (end_filter + accum_frac);
 }
-
-pfb_arb_resampler_ccc::~pfb_arb_resampler_ccc() {}
 
 void pfb_arb_resampler_ccc::create_taps(const std::vector<gr_complex>& newtaps,
                                         std::vector<std::vector<gr_complex>>& ourtaps,
@@ -461,8 +457,6 @@ pfb_arb_resampler_fff::pfb_arb_resampler_fff(float rate,
 
     d_est_phase_change = d_last_filter - (end_filter + accum_frac);
 }
-
-pfb_arb_resampler_fff::~pfb_arb_resampler_fff() {}
 
 void pfb_arb_resampler_fff::create_taps(const std::vector<float>& newtaps,
                                         std::vector<std::vector<float>>& ourtaps,

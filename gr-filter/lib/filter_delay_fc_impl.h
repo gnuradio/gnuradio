@@ -28,7 +28,6 @@ private:
 
 public:
     filter_delay_fc_impl(const std::vector<float>& taps);
-    ~filter_delay_fc_impl() override;
 
     std::vector<float> taps();
     void set_taps(const std::vector<float>& taps);

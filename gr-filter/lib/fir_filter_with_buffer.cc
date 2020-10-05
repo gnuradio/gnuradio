@@ -32,8 +32,6 @@ fir_filter_with_buffer_fff::fir_filter_with_buffer_fff(const std::vector<float>&
     set_taps(taps);
 }
 
-fir_filter_with_buffer_fff::~fir_filter_with_buffer_fff() {}
-
 void fir_filter_with_buffer_fff::set_taps(const std::vector<float>& taps)
 {
     d_ntaps = (int)taps.size();
@@ -139,8 +137,6 @@ fir_filter_with_buffer_ccc::fir_filter_with_buffer_ccc(
     set_taps(taps);
 }
 
-fir_filter_with_buffer_ccc::~fir_filter_with_buffer_ccc() {}
-
 void fir_filter_with_buffer_ccc::set_taps(const std::vector<gr_complex>& taps)
 {
     d_ntaps = (int)taps.size();
@@ -244,8 +240,6 @@ fir_filter_with_buffer_ccf::fir_filter_with_buffer_ccf(const std::vector<float>&
 {
     set_taps(taps);
 }
-
-fir_filter_with_buffer_ccf::~fir_filter_with_buffer_ccf() {}
 
 void fir_filter_with_buffer_ccf::set_taps(const std::vector<float>& taps)
 {

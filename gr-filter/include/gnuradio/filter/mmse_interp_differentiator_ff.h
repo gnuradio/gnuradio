@@ -37,7 +37,7 @@ class FILTER_API mmse_interp_differentiator_ff
 {
 public:
     mmse_interp_differentiator_ff();
-    ~mmse_interp_differentiator_ff();
+    mmse_interp_differentiator_ff(mmse_interp_differentiator_ff&&) = default;
 
     unsigned ntaps() const;
     unsigned nsteps() const;
@@ -58,7 +58,7 @@ public:
     float differentiate(const float input[], float mu) const;
 
 protected:
-    const std::vector<kernel::fir_filter_fff> filters;
+    std::vector<kernel::fir_filter_fff> filters;
 };
 
 } /* namespace filter */

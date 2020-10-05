@@ -26,7 +26,6 @@ private:
 
 public:
     mmse_resampler_ff_impl(float phase_shift, float resamp_ratio);
-    ~mmse_resampler_ff_impl() override;
 
     void handle_msg(pmt::pmt_t msg);
 

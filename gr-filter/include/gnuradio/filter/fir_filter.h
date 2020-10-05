@@ -26,15 +26,14 @@ class FILTER_API fir_filter
 {
 public:
     fir_filter(int decimation, const std::vector<TAP_T>& taps);
-    ~fir_filter();
 
     // Disallow copy.
     //
     // This prevents accidentally doing needless copies, not just of fir_filter,
     // but every block that contains one.
     fir_filter(const fir_filter&) = delete;
-    fir_filter(fir_filter&&) = default;
     fir_filter& operator=(const fir_filter&) = delete;
+    fir_filter(fir_filter&&) = default;
     fir_filter& operator=(fir_filter&&) = default;
 
     void set_taps(const std::vector<TAP_T>& taps);

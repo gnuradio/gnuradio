@@ -53,8 +53,6 @@ public:
                            bool use_fft_rotator = true,
                            bool use_fft_filters = true);
 
-    ~pfb_decimator_ccf_impl() override;
-
     // No copy because d_tmp.
     pfb_decimator_ccf_impl(const pfb_decimator_ccf_impl&) = delete;
     pfb_decimator_ccf_impl& operator=(const pfb_decimator_ccf_impl&) = delete;

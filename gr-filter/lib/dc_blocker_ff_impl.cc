@@ -25,8 +25,6 @@ moving_averager_f::moving_averager_f(int D)
 {
 }
 
-moving_averager_f::~moving_averager_f() {}
-
 float moving_averager_f::filter(float x)
 {
     d_out_d1 = d_out;
@@ -61,8 +59,6 @@ dc_blocker_ff_impl::dc_blocker_ff_impl(int D, bool long_form)
         d_delay_line = std::deque<float>(d_length - 1, 0);
     }
 }
-
-dc_blocker_ff_impl::~dc_blocker_ff_impl() {}
 
 int dc_blocker_ff_impl::group_delay()
 {

@@ -39,7 +39,6 @@ public:
                                  const std::vector<TAP_T>& taps,
                                  double center_freq,
                                  double sampling_freq);
-    ~freq_xlating_fir_filter_impl() override;
 
     void set_center_freq(double center_freq) override;
     double center_freq() const override;

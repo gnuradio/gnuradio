@@ -57,11 +57,6 @@ freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::freq_xlating_fir_filter_impl(
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::~freq_xlating_fir_filter_impl()
-{
-}
-
-template <class IN_T, class OUT_T, class TAP_T>
 void freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::build_composite_fir()
 {
     std::vector<gr_complex> ctaps(d_proto_taps.size());

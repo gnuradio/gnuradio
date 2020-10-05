@@ -72,8 +72,6 @@ bool pfb_decimator_ccf_impl::start()
 
 bool pfb_decimator_ccf_impl::stop() { return block::stop(); }
 
-pfb_decimator_ccf_impl::~pfb_decimator_ccf_impl() {}
-
 void pfb_decimator_ccf_impl::set_taps(const std::vector<float>& taps)
 {
     gr::thread::scoped_lock guard(d_mutex);

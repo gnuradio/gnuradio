@@ -55,8 +55,6 @@ public:
     fir_filter_with_buffer_fff(fir_filter_with_buffer_fff&&) = default;
     fir_filter_with_buffer_fff& operator=(fir_filter_with_buffer_fff&&) = default;
 
-    ~fir_filter_with_buffer_fff();
-
     // MANIPULATORS
 
     /*!
@@ -157,8 +155,6 @@ public:
     fir_filter_with_buffer_ccc(fir_filter_with_buffer_ccc&&) = default;
     fir_filter_with_buffer_ccc& operator=(fir_filter_with_buffer_ccc&&) = default;
 
-    ~fir_filter_with_buffer_ccc();
-
     // MANIPULATORS
 
     /*!
@@ -258,8 +254,6 @@ public:
     fir_filter_with_buffer_ccf& operator=(const fir_filter_with_buffer_ccf&) = delete;
     fir_filter_with_buffer_ccf(fir_filter_with_buffer_ccf&&) = default;
     fir_filter_with_buffer_ccf& operator=(fir_filter_with_buffer_ccf&&) = default;
-
-    ~fir_filter_with_buffer_ccf();
 
     // MANIPULATORS
 

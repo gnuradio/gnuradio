@@ -40,8 +40,6 @@ polyphase_filterbank::polyphase_filterbank(unsigned int nfilts,
     d_fft = new fft::fft_complex_rev(d_nfilts);
 }
 
-polyphase_filterbank::~polyphase_filterbank() {}
-
 void polyphase_filterbank::set_taps(const std::vector<float>& taps)
 {
     unsigned int i, j;

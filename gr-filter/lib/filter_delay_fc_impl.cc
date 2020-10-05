@@ -38,8 +38,6 @@ filter_delay_fc_impl::filter_delay_fc_impl(const std::vector<float>& taps)
     set_alignment(std::max(1, alignment_multiple));
 }
 
-filter_delay_fc_impl::~filter_delay_fc_impl() {}
-
 std::vector<float> filter_delay_fc_impl::taps() { return d_fir.taps(); }
 
 void filter_delay_fc_impl::set_taps(const std::vector<float>& taps)
