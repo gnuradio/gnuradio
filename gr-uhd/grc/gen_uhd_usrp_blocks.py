@@ -470,9 +470,9 @@ PARAMS_TMPL = """
     options: [default, normalized, power]
     option_labels: [Absolute (dB), Normalized, Absolute Power (dBm)]
 % if sourk == 'source':
-    hide: ${'$'}{ 'all' if nchan <= ${n} or rx_agc${n} == 'Enabled' else ('none' if (eval('gain_type' + str(${n})) == 'default') else 'part')}
+    hide: ${'$'}{ 'all' if nchan <= ${n} or rx_agc${n} == 'Enabled' else ('part' if (eval('gain_type' + str(${n})) == 'default') else 'none')}
 % else:
-    hide: ${'$'}{ 'all' if nchan <= ${n} else ('none' if (eval('gain_type' + str(${n})) == 'default') else 'part')}
+    hide: ${'$'}{ 'all' if nchan <= ${n} else ('part' if (eval('gain_type' + str(${n})) == 'default') else 'none')}
 % endif
 -   id: ant${n}
     label: 'Ch${n}: Antenna'
