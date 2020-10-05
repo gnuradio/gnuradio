@@ -34,8 +34,6 @@ std::vector<kernel::fir_filter_ccf> build_filters()
 
 mmse_fir_interpolator_cc::mmse_fir_interpolator_cc() : filters(build_filters()) {}
 
-mmse_fir_interpolator_cc::~mmse_fir_interpolator_cc() {}
-
 unsigned mmse_fir_interpolator_cc::ntaps() const { return NTAPS; }
 
 unsigned mmse_fir_interpolator_cc::nsteps() const { return NSTEPS; }

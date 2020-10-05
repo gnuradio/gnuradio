@@ -61,11 +61,6 @@ rational_resampler_base_impl<IN_T, OUT_T, TAP_T>::rational_resampler_base_impl(
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-rational_resampler_base_impl<IN_T, OUT_T, TAP_T>::~rational_resampler_base_impl()
-{
-}
-
-template <class IN_T, class OUT_T, class TAP_T>
 void rational_resampler_base_impl<IN_T, OUT_T, TAP_T>::set_taps(
     const std::vector<TAP_T>& taps)
 {

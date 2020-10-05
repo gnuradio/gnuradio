@@ -29,8 +29,6 @@ moving_averager_c::moving_averager_c(int D)
 {
 }
 
-moving_averager_c::~moving_averager_c() {}
-
 gr_complex moving_averager_c::filter(gr_complex x)
 {
     d_out_d1 = d_out;
@@ -66,8 +64,6 @@ dc_blocker_cc_impl::dc_blocker_cc_impl(int D, bool long_form)
         d_delay_line = std::deque<gr_complex>(d_length - 1, gr_complex(0, 0));
     }
 }
-
-dc_blocker_cc_impl::~dc_blocker_cc_impl() {}
 
 int dc_blocker_cc_impl::group_delay()
 {

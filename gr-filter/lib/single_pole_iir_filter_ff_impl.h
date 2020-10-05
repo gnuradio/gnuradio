@@ -27,7 +27,6 @@ private:
 
 public:
     single_pole_iir_filter_ff_impl(double alpha, unsigned int vlen);
-    ~single_pole_iir_filter_ff_impl() override;
 
     void set_taps(double alpha) override;
 

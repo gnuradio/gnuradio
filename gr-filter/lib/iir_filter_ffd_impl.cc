@@ -37,8 +37,6 @@ iir_filter_ffd_impl::iir_filter_ffd_impl(const std::vector<double>& fftaps,
 {
 }
 
-iir_filter_ffd_impl::~iir_filter_ffd_impl() {}
-
 void iir_filter_ffd_impl::set_taps(const std::vector<double>& fftaps,
                                    const std::vector<double>& fbtaps)
 {

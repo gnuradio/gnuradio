@@ -39,7 +39,7 @@ class FILTER_API mmse_fir_interpolator_cc
 {
 public:
     mmse_fir_interpolator_cc();
-    ~mmse_fir_interpolator_cc();
+    mmse_fir_interpolator_cc(mmse_fir_interpolator_cc&&) = default;
 
     unsigned ntaps() const;
     unsigned nsteps() const;
@@ -58,7 +58,7 @@ public:
     gr_complex interpolate(const gr_complex input[], float mu) const;
 
 protected:
-    const std::vector<kernel::fir_filter_ccf> filters;
+    std::vector<kernel::fir_filter_ccf> filters;
 };
 
 } /* namespace filter */

@@ -108,8 +108,6 @@ public:
                          const std::vector<float>& taps,
                          bool fft_forward = false);
 
-    ~polyphase_filterbank();
-
     /*!
      * Update the filterbank's filter taps from a prototype
      * filter.

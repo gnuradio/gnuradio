@@ -38,8 +38,6 @@ pfb_interpolator_ccf_impl::pfb_interpolator_ccf_impl(unsigned int interp,
     set_history(d_taps_per_filter);
 }
 
-pfb_interpolator_ccf_impl::~pfb_interpolator_ccf_impl() {}
-
 void pfb_interpolator_ccf_impl::set_taps(const std::vector<float>& taps)
 {
     gr::thread::scoped_lock guard(d_mutex);

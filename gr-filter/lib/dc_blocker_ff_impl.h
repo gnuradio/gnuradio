@@ -22,7 +22,6 @@ class moving_averager_f
 {
 public:
     moving_averager_f(int D);
-    ~moving_averager_f();
 
     float filter(float x);
     float delayed_sig() { return d_out; }
@@ -46,8 +45,6 @@ private:
 
 public:
     dc_blocker_ff_impl(int D, bool long_form);
-
-    ~dc_blocker_ff_impl() override;
 
     int group_delay() override;
 

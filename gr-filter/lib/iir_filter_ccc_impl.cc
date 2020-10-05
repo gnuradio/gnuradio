@@ -37,8 +37,6 @@ iir_filter_ccc_impl::iir_filter_ccc_impl(const std::vector<gr_complex>& fftaps,
 {
 }
 
-iir_filter_ccc_impl::~iir_filter_ccc_impl() {}
-
 void iir_filter_ccc_impl::set_taps(const std::vector<gr_complex>& fftaps,
                                    const std::vector<gr_complex>& fbtaps)
 {

@@ -41,8 +41,6 @@ pfb_arb_resampler_fff_impl::pfb_arb_resampler_fff_impl(float rate,
     set_relative_rate(rate);
 }
 
-pfb_arb_resampler_fff_impl::~pfb_arb_resampler_fff_impl() {}
-
 void pfb_arb_resampler_fff_impl::forecast(int noutput_items,
                                           gr_vector_int& ninput_items_required)
 {

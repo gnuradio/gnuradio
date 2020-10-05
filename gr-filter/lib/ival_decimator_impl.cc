@@ -43,11 +43,6 @@ ival_decimator_impl::ival_decimator_impl(int decimation, int data_size)
     gr::block::set_output_multiple(2);
 }
 
-/*
- * Our virtual destructor.
- */
-ival_decimator_impl::~ival_decimator_impl() {}
-
 int ival_decimator_impl::work(int noutput_items,
                               gr_vector_const_void_star& input_items,
                               gr_vector_void_star& output_items)

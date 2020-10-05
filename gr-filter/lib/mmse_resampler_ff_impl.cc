@@ -43,8 +43,6 @@ mmse_resampler_ff_impl::mmse_resampler_ff_impl(float phase_shift, float resamp_r
                     [this](pmt::pmt_t msg) { this->handle_msg(msg); });
 }
 
-mmse_resampler_ff_impl::~mmse_resampler_ff_impl() {}
-
 void mmse_resampler_ff_impl::handle_msg(pmt::pmt_t msg)
 {
     if (!pmt::is_dict(msg))

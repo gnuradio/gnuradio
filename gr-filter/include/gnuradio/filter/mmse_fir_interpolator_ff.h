@@ -39,7 +39,7 @@ class FILTER_API mmse_fir_interpolator_ff
 {
 public:
     mmse_fir_interpolator_ff();
-    ~mmse_fir_interpolator_ff();
+    mmse_fir_interpolator_ff(mmse_fir_interpolator_ff&&) = default;
 
     unsigned ntaps() const;
     unsigned nsteps() const;
@@ -56,7 +56,7 @@ public:
     float interpolate(const float input[], float mu) const;
 
 protected:
-    const std::vector<kernel::fir_filter_fff> filters;
+    std::vector<kernel::fir_filter_fff> filters;
 };
 
 } /* namespace filter */

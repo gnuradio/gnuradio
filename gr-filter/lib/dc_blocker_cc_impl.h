@@ -22,7 +22,6 @@ class moving_averager_c
 {
 public:
     moving_averager_c(int D);
-    ~moving_averager_c();
 
     gr_complex filter(gr_complex x);
     gr_complex delayed_sig() { return d_out; }
@@ -46,8 +45,6 @@ private:
 
 public:
     dc_blocker_cc_impl(int D, bool long_form);
-
-    ~dc_blocker_cc_impl() override;
 
     int group_delay() override;
 

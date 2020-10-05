@@ -29,7 +29,6 @@ public:
     iir_filter_ccz_impl(const std::vector<gr_complexd>& fftaps,
                         const std::vector<gr_complexd>& fbtaps,
                         bool oldstyle = true);
-    ~iir_filter_ccz_impl() override;
 
     void set_taps(const std::vector<gr_complexd>& fftaps,
                   const std::vector<gr_complexd>& fbtaps) override;

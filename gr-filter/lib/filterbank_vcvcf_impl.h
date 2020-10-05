@@ -27,7 +27,6 @@ private:
 
 public:
     filterbank_vcvcf_impl(const std::vector<std::vector<float>>& taps);
-    ~filterbank_vcvcf_impl() override;
 
     void set_taps(const std::vector<std::vector<float>>& taps) override;
     void print_taps() override;

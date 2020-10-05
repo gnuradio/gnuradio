@@ -36,8 +36,6 @@ single_pole_iir_filter_cc_impl::single_pole_iir_filter_cc_impl(double alpha,
     set_taps(alpha);
 }
 
-single_pole_iir_filter_cc_impl::~single_pole_iir_filter_cc_impl() {}
-
 void single_pole_iir_filter_cc_impl::set_taps(double alpha)
 {
     for (unsigned int i = 0; i < d_vlen; i++) {

@@ -39,8 +39,6 @@ pfb_arb_resampler_ccc_impl::pfb_arb_resampler_ccc_impl(
     set_relative_rate(rate);
 }
 
-pfb_arb_resampler_ccc_impl::~pfb_arb_resampler_ccc_impl() {}
-
 void pfb_arb_resampler_ccc_impl::forecast(int noutput_items,
                                           gr_vector_int& ninput_items_required)
 {

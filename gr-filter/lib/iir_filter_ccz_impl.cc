@@ -37,8 +37,6 @@ iir_filter_ccz_impl::iir_filter_ccz_impl(const std::vector<gr_complexd>& fftaps,
 {
 }
 
-iir_filter_ccz_impl::~iir_filter_ccz_impl() {}
-
 void iir_filter_ccz_impl::set_taps(const std::vector<gr_complexd>& fftaps,
                                    const std::vector<gr_complexd>& fbtaps)
 {

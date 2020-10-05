@@ -32,8 +32,6 @@ private:
 public:
     pfb_interpolator_ccf_impl(unsigned int interp, const std::vector<float>& taps);
 
-    ~pfb_interpolator_ccf_impl() override;
-
     void set_taps(const std::vector<float>& taps) override;
     void print_taps() override;
     std::vector<std::vector<float>> taps() const override;

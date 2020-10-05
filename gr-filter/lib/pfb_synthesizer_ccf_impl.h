@@ -53,8 +53,6 @@ public:
     pfb_synthesizer_ccf_impl(unsigned int numchans,
                              const std::vector<float>& taps,
                              bool twox);
-    ~pfb_synthesizer_ccf_impl() override;
-
     void set_taps(const std::vector<float>& taps) override;
     std::vector<std::vector<float>> taps() const override;
     void print_taps() override;

@@ -28,7 +28,6 @@ private:
 
 public:
     single_pole_iir_filter_cc_impl(double alpha, unsigned int vlen);
-    ~single_pole_iir_filter_cc_impl() override;
 
     void set_taps(double alpha) override;
 

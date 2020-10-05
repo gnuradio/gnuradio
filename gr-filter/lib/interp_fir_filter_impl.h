@@ -32,8 +32,6 @@ private:
 public:
     interp_fir_filter_impl(unsigned interpolation, const std::vector<TAP_T>& taps);
 
-    ~interp_fir_filter_impl() override;
-
     void set_taps(const std::vector<TAP_T>& taps) override;
     std::vector<TAP_T> taps() const override;
 

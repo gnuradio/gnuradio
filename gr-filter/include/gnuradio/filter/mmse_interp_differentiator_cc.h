@@ -38,7 +38,7 @@ class FILTER_API mmse_interp_differentiator_cc
 {
 public:
     mmse_interp_differentiator_cc();
-    ~mmse_interp_differentiator_cc();
+    mmse_interp_differentiator_cc(mmse_interp_differentiator_cc&&) = default;
 
     unsigned ntaps() const;
     unsigned nsteps() const;
@@ -59,7 +59,7 @@ public:
     gr_complex differentiate(const gr_complex input[], float mu) const;
 
 protected:
-    const std::vector<kernel::fir_filter_ccf> filters;
+    std::vector<kernel::fir_filter_ccf> filters;
 };
 
 } /* namespace filter */

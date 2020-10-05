@@ -36,8 +36,6 @@ mmse_interp_differentiator_ff::mmse_interp_differentiator_ff() : filters(build_f
 {
 }
 
-mmse_interp_differentiator_ff::~mmse_interp_differentiator_ff() {}
-
 unsigned mmse_interp_differentiator_ff::ntaps() const { return DNTAPS; }
 
 unsigned mmse_interp_differentiator_ff::nsteps() const { return DNSTEPS; }

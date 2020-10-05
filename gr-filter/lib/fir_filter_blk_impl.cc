@@ -45,11 +45,6 @@ fir_filter_blk_impl<IN_T, OUT_T, TAP_T>::fir_filter_blk_impl(
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-fir_filter_blk_impl<IN_T, OUT_T, TAP_T>::~fir_filter_blk_impl()
-{
-}
-
-template <class IN_T, class OUT_T, class TAP_T>
 void fir_filter_blk_impl<IN_T, OUT_T, TAP_T>::set_taps(const std::vector<TAP_T>& taps)
 {
     gr::thread::scoped_lock l(this->d_setlock);
