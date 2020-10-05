@@ -44,7 +44,7 @@ public:
 
     /*!
      * Make a new gateway block.
-     * \param py_object the pybind11 object with callback
+     * \param py_handle the pybind11 object with callback
      * \param name the name of the block (Ex: "Shirley")
      * \param in_sig the input signature for this block
      * \param out_sig the output signature for this block
