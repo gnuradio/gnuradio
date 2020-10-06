@@ -8,8 +8,6 @@
 #
 #
 
-from __future__ import division
-
 from gnuradio import gr, gr_unittest, filter, blocks
 
 import cmath, math
