@@ -10,9 +10,6 @@
 Display numbers as strings using engineering notation.
 """
 
-import six
-
-
 scale_factor = {}
 scale_factor['E'] = 1e18
 scale_factor['P'] = 1e15
@@ -56,7 +53,7 @@ def num_to_str (n, precision=6):
 def str_to_num (value):
     '''Convert a string in engineering notation to a number.  E.g., '15m' -> 15e-3'''
     try:
-        if not isinstance(value, six.string_types):
+        if not isinstance(value, str):
             raise TypeError("Value must be a string")
         scale = 1.0
         suffix = value[-1]
