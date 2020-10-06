@@ -29,7 +29,7 @@ def gcd(a,b):
     return a
 
 def lcm(a,b):
-    return a * b / gcd(a, b)
+    return a * b // gcd(a, b)
 
 def log2(x):
     return math.log(x) / math.log(2)
