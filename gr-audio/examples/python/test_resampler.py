@@ -42,8 +42,8 @@ class my_top_block(gr.top_block):
         input_rate = int(args.input_rate)
         output_rate = int(args.output_rate)
 
-        interp = gru.lcm(input_rate / output_rate, input_rate)
-        decim = gru.lcm(input_rate / output_rate, output_rate)
+        interp = gru.lcm(input_rate, output_rate) // input_rate
+        decim = gru.lcm(input_rate, output_rate) // output_rate
 
         print("interp =", interp)
         print("decim  =", decim)
