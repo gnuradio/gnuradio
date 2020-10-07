@@ -3,11 +3,9 @@
  * May be used under the terms of the GNU General Public License (GPL)
  */
 
-#include <gnuradio/fec/api.h>
-
 #include <string.h>
 
-FEC_API void ENCODE_RS(
+void ENCODE_RS(
 #ifndef FIXED
     void* p,
 #endif

@@ -3,8 +3,6 @@
  * May be used under the terms of the GNU General Public License (GPL)
  */
 
-#include <gnuradio/fec/api.h>
-
 #ifdef DEBUG
 #include <stdio.h>
 #endif
@@ -17,7 +15,7 @@
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
-FEC_API int DECODE_RS(
+int DECODE_RS(
 #ifndef FIXED
     void* p,
 #endif
