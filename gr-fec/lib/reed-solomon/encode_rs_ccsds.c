@@ -8,9 +8,7 @@
 #include "ccsds.h"
 #include "fixed.h"
 
-#include <gnuradio/fec/api.h>
-
-FEC_API void encode_rs_ccsds(unsigned char* data, unsigned char* parity)
+void encode_rs_ccsds(unsigned char* data, unsigned char* parity)
 {
     int i;
     unsigned char cdata[NN - NROOTS];
