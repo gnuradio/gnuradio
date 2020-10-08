@@ -52,7 +52,7 @@ def extract(cls):
     if not inspect.isclass(cls):
         cls = _find_block_class(cls, gr.gateway.gateway_block)
 
-    spec = inspect.getargspec(cls.__init__)
+    spec = inspect.getfullargspec(cls.__init__)
     init_args = spec.args[1:]
     defaults = [repr(arg) for arg in (spec.defaults or ())]
     doc = cls.__doc__ or cls.__init__.__doc__ or ''
