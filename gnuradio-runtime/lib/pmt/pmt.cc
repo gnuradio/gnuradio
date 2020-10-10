@@ -138,7 +138,7 @@ bool to_bool(pmt_t val)
 
 static const unsigned int get_symbol_hash_table_size()
 {
-    static const unsigned int SYMBOL_HASH_TABLE_SIZE = 701;
+    static const unsigned int SYMBOL_HASH_TABLE_SIZE = 8192;
     return SYMBOL_HASH_TABLE_SIZE;
 }
 
