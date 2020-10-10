@@ -188,7 +188,7 @@ void eye_sink_c_impl::set_samp_per_symbol(unsigned int sps)
 
 void eye_sink_c_impl::set_title(const std::string& title)
 {
-    // set_title no longer used but called by swig
+    // set_title no longer used.
 }
 
 

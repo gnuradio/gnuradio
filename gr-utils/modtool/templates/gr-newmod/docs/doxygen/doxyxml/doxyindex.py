@@ -46,14 +46,6 @@ class DoxyIndex(Base):
                 self._members.append(converted)
 
 
-def generate_swig_doc_i(self):
-    """
-    %feature("docstring") gr_make_align_on_samplenumbers_ss::align_state "
-    Wraps the C++: gr_align_on_samplenumbers_ss::align_state";
-    """
-    pass
-
-
 class DoxyCompMem(Base):
 
 
