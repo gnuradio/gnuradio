@@ -9,8 +9,6 @@
 
 # The presence of this file turns this directory into a Python package
 
-# import swig generated symbols into the ctrlport namespace
-#from ctrlport_swig import *
 from .monitor import *
 
 # import any pure python here

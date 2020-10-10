@@ -50,7 +50,6 @@ Other compilers may work, but are not supported.
 
 \subsection dep_python Python Wrappers
 \li python      (>= @GR_PYTHON_MIN_VERSION@)   http://www.python.org/download/
-\li swig        (>= @GR_SWIG_MIN_VERSION@)     http://www.swig.org/download.html
 \li numpy       (>= 1.1.0)                     http://sourceforge.net/projects/numpy/files/NumPy/
 
 \subsection dep_docs docs: Building the documentation
@@ -145,10 +144,10 @@ cmake is not case sensitive about these options. Similarly, "true",
 "on", or "yes" will turn this component on. All components are enabled
 by default so long as their dependencies are met.
 
-An example is -DENABLE_PYTHON=False turns off building any Python or
-Swigging components. The result will be the GNU Radio libraries and
-C++ programs/applications/examples. No Python or GRC files will be
-built or installed.
+An example is -DENABLE_PYTHON=False turns off building any Python
+components or generating Python bindings. The result will be the GNU
+Radio libraries and C++ programs/applications/examples. No Python or
+GRC files will be built or installed.
 
 The -DENABLE_DEFAULT=False can be used to disable all
 components. Individual components can then be selectively turned back

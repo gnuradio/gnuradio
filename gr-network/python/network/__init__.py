@@ -11,7 +11,6 @@ This is the GNU Radio NETWORK module. Place your Python package
 description here (python/__init__.py).
 '''
 
-# import swig generated symbols into the network namespace
 import os
 
 try:

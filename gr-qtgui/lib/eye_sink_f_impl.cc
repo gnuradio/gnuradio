@@ -182,7 +182,7 @@ void eye_sink_f_impl::set_samp_per_symbol(unsigned int sps)
 
 void eye_sink_f_impl::set_title(const std::string& title)
 {
-    // set_title no longer used but called by swig
+    // set_title no longer used.
 }
 
 void eye_sink_f_impl::set_line_label(unsigned int which, const std::string& label)
