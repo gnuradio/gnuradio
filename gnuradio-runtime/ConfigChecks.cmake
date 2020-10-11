@@ -29,14 +29,6 @@ GR_CHECK_HDR_N_DEF(malloc.h HAVE_MALLOC_H)
 
 ########################################################################
 CHECK_CXX_SOURCE_COMPILES("
-    #include <stdio.h>
-    int main(){snprintf(0, 0, 0); return 0;}
-    " HAVE_SNPRINTF
-)
-GR_ADD_COND_DEF(HAVE_SNPRINTF)
-
-########################################################################
-CHECK_CXX_SOURCE_COMPILES("
     #include <signal.h>
     int main(){sigaction(0, 0, 0); return 0;}
     " HAVE_SIGACTION
