@@ -319,7 +319,6 @@ include(GrBoost)
 # Enable python component
 ########################################################################
 include(GrPython)
-GR_PYTHON_CHECK_MODULE("six - python 2 and 3 compatibility library" six "True" SIX_FOUND)
 GR_PYTHON_CHECK_MODULE(
     "numpy"
     numpy
@@ -347,7 +346,6 @@ include(GrComponent)
 GR_REGISTER_COMPONENT("python-support" ENABLE_PYTHON
     PYTHONLIBS_FOUND
     pybind11_FOUND
-    SIX_FOUND
     NUMPY_FOUND
 )
 
