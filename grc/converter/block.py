@@ -145,7 +145,7 @@ def convert_templates(node, convert, block_id=''):
     templates['make'] = make or no_value
 
     templates['callbacks'] = [
-         convert(cb_node.text) for cb_node in node.iterfind('callback')
+        convert(cb_node.text) for cb_node in node.iterfind('callback')
     ] or no_value
 
     return OrderedDict((key, value) for key, value in templates.items() if value is not no_value)
