@@ -255,7 +255,7 @@ class Block(Element):
             )
             if block_requires_mode and current_generate_option not in valid_options:
                 self.add_error_message("Can't generate this block in mode: {} ".format(
-                                       repr(current_generate_option)))
+                    repr(current_generate_option)))
 
         check_generate_mode('QT GUI', Flags.NEED_QT_GUI, ('qt_gui', 'hb_qt_gui'))
 

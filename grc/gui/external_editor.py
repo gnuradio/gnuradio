@@ -28,7 +28,7 @@ class ExternalEditor(threading.Thread):
 
     def _create_tempfile(self, name, value):
         with tempfile.NamedTemporaryFile(
-            mode='wb', prefix=name + '_', suffix='.py', delete=False,
+                mode='wb', prefix=name + '_', suffix='.py', delete=False,
         ) as fp:
             fp.write(value.encode('utf-8'))
             return fp.name

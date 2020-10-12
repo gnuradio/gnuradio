@@ -152,5 +152,4 @@ class Param(CoreParam):
         """
         return '<span {foreground} font_desc="{font}"><b>{label}:</b> {value}</span>'.format(
             foreground='foreground="red"' if not self.is_valid() else '', font=Constants.PARAM_FONT,
-            label=Utils.encode(self.name), value=Utils.encode(self.pretty_print().replace('\n', ' '))
-        )
+            label=Utils.encode(self.name), value=Utils.encode(self.pretty_print().replace('\n', ' ')))

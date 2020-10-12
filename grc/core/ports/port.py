@@ -212,12 +212,12 @@ class Port(Element):
             if self.dtype == 'bus':
                 if self.is_sink:
                     if (self.parent.name == con.sink_port.parent.name and
-                       self.name == con.sink_port.name):
-                            port_in_con = True
+                            self.name == con.sink_port.name):
+                        port_in_con = True
                 elif self.is_source:
                     if (self.parent.name == con.source_port.parent.name and
-                       self.name == con.source_port.name):
-                            port_in_con = True
+                            self.name == con.source_port.name):
+                        port_in_con = True
 
                 if port_in_con:
                     yield con

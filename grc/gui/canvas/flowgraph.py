@@ -280,7 +280,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
 
             block.move((x_off, y_off))
             while any(Utils.align_to_grid(block.coordinate) == Utils.align_to_grid(other.coordinate)
-                   for other in self.blocks if other is not block):
+                      for other in self.blocks if other is not block):
                 block.move((Constants.CANVAS_GRID_SIZE, Constants.CANVAS_GRID_SIZE))
                 # shift all following blocks
                 x_off += Constants.CANVAS_GRID_SIZE
