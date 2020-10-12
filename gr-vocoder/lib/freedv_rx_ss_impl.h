@@ -13,16 +13,6 @@
 
 #include <gnuradio/vocoder/freedv_rx_ss.h>
 
-extern "C" {
-struct freedv_rx_callback_state {
-    FILE* ftxt;
-};
-static void put_next_rx_char(void* callback_state, char c);
-void put_next_rx_proto(void* callback_state, char* proto_bits);
-void datarx(void* callback_state, unsigned char* packet, size_t size);
-void datatx(void* callback_state, unsigned char* packet, size_t* size);
-}
-
 namespace gr {
 namespace vocoder {
 
@@ -33,7 +23,9 @@ private:
     short* d_demod_in;
     struct freedv* d_freedv;
     int d_nin, d_nout, d_frame;
-    struct freedv_rx_callback_state d_cb_state;
+    std::string d_rx_str;
+    static void put_next_rx_char(void* callback_state, char c);
+    const pmt::pmt_t d_port;
     struct MODEM_STATS d_stats;
     int d_mode;
     int d_sync;
