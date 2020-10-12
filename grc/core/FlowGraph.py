@@ -2,7 +2,7 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
 
 import collections
@@ -115,7 +115,7 @@ class FlowGraph(Element):
             if not section or sect == section:
                 output.append(d)
 
-        # Sort by descending priority 
+        # Sort by descending priority
         if section:
             output = sorted(output, key=lambda x: x['priority'], reverse=True)
 
@@ -255,7 +255,7 @@ class FlowGraph(Element):
                 variable_block.rewrite()
                 value = eval(variable_block.value, namespace, variable_block.namespace)
                 namespace[variable_block.name] = value
-                self.namespace.update(namespace) # rewrite on subsequent blocks depends on an updated self.namespace 
+                self.namespace.update(namespace) # rewrite on subsequent blocks depends on an updated self.namespace
             except TypeError: #Type Errors may happen, but that desn't matter as they are displayed in the gui
                 pass
             except Exception:
@@ -317,7 +317,7 @@ class FlowGraph(Element):
         connection = self.parent_platform.Connection(
             parent=self, source=porta, sink=portb)
         self.connections.add(connection)
-            
+
         return connection
 
     def disconnect(self, *ports):
@@ -411,7 +411,7 @@ class FlowGraph(Element):
 
             block.import_data(**block_data)
 
-        self.rewrite() 
+        self.rewrite()
 
         # build the connections
         def verify_and_get_port(key, block, dir):

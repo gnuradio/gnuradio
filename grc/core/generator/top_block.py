@@ -308,7 +308,7 @@ class TopBlockGenerator(object):
                 porta = con.source_port
                 portb = con.sink_port
                 fg = self._flow_graph
-                             
+
                 if porta.dtype == 'bus' and portb.dtype == 'bus':
                     # which bus port is this relative to the bus structure
                     if len(porta.bus_structure) == len(portb.bus_structure):
@@ -319,8 +319,8 @@ class TopBlockGenerator(object):
                                 parent=self, source=hidden_porta, sink=hidden_portb)
                             code = template.render(make_port_sig=make_port_sig, source=hidden_porta, sink=hidden_portb)
                             rendered.append(code)
-                            
 
-            
+
+
 
         return rendered

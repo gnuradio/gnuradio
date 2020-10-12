@@ -129,4 +129,3 @@ def test_slurp_if():
         % if abc:
     """
     assert result == expected
-

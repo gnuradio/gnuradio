@@ -2,7 +2,7 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
 import os
 import configparser
@@ -343,7 +343,7 @@ class DirectoryParam(FileParam):
         On success, update the entry.
         """
         dirname = self.param.get_evaluated() if self.param.is_valid() else ''
-        
+
         if not os.path.isdir(dirname): # Check if directory exists, if not fall back to workdir
             dirname = os.getcwd()
 
@@ -360,7 +360,7 @@ class DirectoryParam(FileParam):
         dir_dialog.set_current_folder(dirname)
         dir_dialog.set_local_only(True)
         dir_dialog.set_select_multiple(False)
-        
+
         # Show dialog and update paramter on success
         if Gtk.ResponseType.OK == dir_dialog.run():
             path = dir_dialog.get_filename()
@@ -370,4 +370,3 @@ class DirectoryParam(FileParam):
 
         # Cleanup dialog
         dir_dialog.destroy()
-
