@@ -13,18 +13,6 @@
 
 #include <gnuradio/vocoder/freedv_tx_ss.h>
 
-extern "C" {
-struct freedv_tx_callback_state {
-    char tx_str[80];
-    char* ptx_str;
-    int calls;
-};
-char get_next_tx_char(void* callback_state);
-void get_next_proto(void* callback_state, char* proto_bits);
-void datarx(void* callback_state, unsigned char* packet, size_t size);
-void datatx(void* callback_state, unsigned char* packet, size_t* size);
-}
-
 namespace gr {
 namespace vocoder {
 
@@ -33,7 +21,9 @@ class freedv_tx_ss_impl : public freedv_tx_ss
 private:
     short* d_speech_in;
     short* d_mod_out;
-    struct freedv_tx_callback_state d_cb_state;
+    std::string d_tx_str;
+    std::string::size_type d_tx_str_offset = 0;
+    static char get_next_tx_char(void* callback_state);
     struct freedv* d_freedv;
     int d_mode;
     std::string d_msg_text;
