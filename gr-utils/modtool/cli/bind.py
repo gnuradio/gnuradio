@@ -28,6 +28,8 @@ from .base import common_params, block_name, run, cli_input
 @click.command('bind', short_help=ModToolGenBindings.description)
 @click.option('-o', '--output', is_flag=True,
               help='If given, a file with desired output format will be generated')
+@click.option('--addl_includes',default ="",
+              help = 'comma separated list of additional include directories (default "")')
 @common_params
 @block_name
 def cli(**kwargs):
