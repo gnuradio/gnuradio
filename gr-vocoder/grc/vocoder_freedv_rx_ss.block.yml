@@ -29,6 +29,9 @@ inputs:
 outputs:
 -   domain: stream
     dtype: short
+-   domain: message
+    id: text
+    optional: true
 
 templates:
     imports: |-
