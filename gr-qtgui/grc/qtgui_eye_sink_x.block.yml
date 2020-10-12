@@ -12,11 +12,6 @@ parameters:
         fcn: [eye_sink_c, eye_sink_f, eye_sink_c, eye_sink_f]
         t: [complex, float, message, message]
     hide: part
--   id: name
-    label: Name
-    dtype: string
-    default: '""'
-    hide: ${ ('none' if len(name) > 0 else 'part') }
 -   id: ylabel
     label: Y Axis Label
     dtype: string
@@ -952,7 +947,6 @@ templates:
         qtgui.${type.fcn}(
             ${size}, #size
             ${srate}, #samp_rate
-            ${name}, #name
             ${0 if type.startswith('msg') else nconnections}, #number of inputs
             None
         )

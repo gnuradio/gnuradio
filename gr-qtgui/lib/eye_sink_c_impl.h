@@ -25,7 +25,6 @@ private:
 
     int d_size, d_buffer_size;
     double d_samp_rate;
-    std::string d_name;
     unsigned int d_nconnections;
 
     const pmt::pmt_t d_tag_key;
@@ -67,7 +66,6 @@ private:
 public:
     eye_sink_c_impl(int size,
                     double samp_rate,
-                    const std::string& name,
                     unsigned int nconnections,
                     QWidget* parent = NULL);
     ~eye_sink_c_impl();
@@ -87,7 +85,6 @@ public:
     void set_y_label(const std::string& label, const std::string& unit = "");
     void set_update_time(double t);
     void set_samp_per_symbol(unsigned int sps);
-    void set_title(const std::string& title);
     void set_line_label(unsigned int which, const std::string& label);
     void set_line_color(unsigned int which, const std::string& color);
     void set_line_width(unsigned int which, int width);

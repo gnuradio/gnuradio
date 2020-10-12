@@ -27,19 +27,15 @@
 namespace gr {
 namespace qtgui {
 
-eye_sink_c::sptr eye_sink_c::make(int size,
-                                  double samp_rate,
-                                  const std::string& name,
-                                  unsigned int nconnections,
-                                  QWidget* parent)
+eye_sink_c::sptr
+eye_sink_c::make(int size, double samp_rate, unsigned int nconnections, QWidget* parent)
 {
     return gnuradio::make_block_sptr<eye_sink_c_impl>(
-        size, samp_rate, name, nconnections, parent);
+        size, samp_rate, nconnections, parent);
 }
 
 eye_sink_c_impl::eye_sink_c_impl(int size,
                                  double samp_rate,
-                                 const std::string& name,
                                  unsigned int nconnections,
                                  QWidget* parent)
     : sync_block("eye_sink_c",
@@ -48,7 +44,6 @@ eye_sink_c_impl::eye_sink_c_impl(int size,
       d_size(size),
       d_buffer_size(2 * size),
       d_samp_rate(samp_rate),
-      d_name(name),
       d_nconnections(2 * nconnections),
       d_tag_key(pmt::mp("tags")),
       d_parent(parent)
@@ -185,12 +180,6 @@ void eye_sink_c_impl::set_samp_per_symbol(unsigned int sps)
 {
     d_main_gui->setSamplesPerSymbol(sps);
 }
-
-void eye_sink_c_impl::set_title(const std::string& title)
-{
-    // set_title no longer used.
-}
-
 
 void eye_sink_c_impl::set_line_label(unsigned int which, const std::string& label)
 {
