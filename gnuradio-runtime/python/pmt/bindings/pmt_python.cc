@@ -32,6 +32,7 @@ void bind_pmt(py::module& m)
 
         .def(py::init<>(), D(pmt_base, pmt_base))
         .def("__str__", [](const pmt::pmt_t& p) { return pmt::write_string(p); })
+        .def("__repr__", [](const pmt::pmt_t& p) { return pmt::write_string(p); })
         .def("is_bool", &pmt_base::is_bool, D(pmt_base, is_bool))
 
 
