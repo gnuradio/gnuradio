@@ -250,7 +250,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
                 {r"gr\.sizeof_([\w_]+)": r"sizeof(\1)"}
             )
             for key in translations:
-                make = re.sub(key.replace("\\\\", "\\"), translations[key],make)
+                make = re.sub(key.replace("\\\\", "\\"), translations[key], make)
                 declarations = declarations.replace(key, translations[key])
             if make:
                 blocks_make.append((block, make, declarations))

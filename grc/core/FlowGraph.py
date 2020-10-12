@@ -105,7 +105,7 @@ class FlowGraph(Element):
 
         output = []
         for snip in snippets:
-            d ={}
+            d = {}
             sect = snip.params['section'].value
             d['section'] = sect
             d['priority'] = snip.params['priority'].value
@@ -455,7 +455,7 @@ class FlowGraph(Element):
             had_connect_errors = True
 
         for block in self.blocks:
-            if block.is_dummy_block :
+            if block.is_dummy_block:
                 block.rewrite()      # Make ports visible
                 # Flowgraph errors depending on disabled blocks are not displayed
                 # in the error dialog box

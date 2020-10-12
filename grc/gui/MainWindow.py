@@ -64,7 +64,7 @@ class MainWindow(Gtk.ApplicationWindow):
         if not icon:
             # Set default window icon
             self.set_icon_from_file(os.path.dirname(os.path.abspath(__file__)) + "/icon.png")
-        else :
+        else:
             # Use gnuradio icon
             self.set_icon(icon.load_icon())
 

@@ -80,7 +80,7 @@ class CppHierBlockGenerator(CppTopBlockGenerator):
             self._flow_graph.get_option('id').replace('_', ' ').title()
         )
         data['category'] = self._flow_graph.get_option('category')
-        data['flags'] = [ 'cpp' ]
+        data['flags'] = ['cpp']
 
         # Parameters
         data['parameters'] = []
