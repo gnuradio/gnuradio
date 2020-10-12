@@ -312,7 +312,7 @@ class TopBlockGenerator(object):
                 if porta.dtype == 'bus' and portb.dtype == 'bus':
                     # which bus port is this relative to the bus structure
                     if len(porta.bus_structure) == len(portb.bus_structure):
-                        for port_num_a,port_num_b in zip(porta.bus_structure,portb.bus_structure):
+                        for port_num_a, port_num_b in zip(porta.bus_structure, portb.bus_structure):
                             hidden_porta = porta.parent.sources[port_num_a]
                             hidden_portb = portb.parent.sinks[port_num_b]
                             connection = fg.parent_platform.Connection(

@@ -70,7 +70,7 @@ class Param(CoreParam):
         tooltip_lines = ['Key: ' + self.key, 'Type: ' + self.dtype]
         if self.is_valid():
             value = self.get_evaluated()
-            if hasattr(value,"__len__"):
+            if hasattr(value, "__len__"):
                 tooltip_lines.append('Length: {}'.format(len(value)))
             value = str(value)
             if len(value) > 100:
