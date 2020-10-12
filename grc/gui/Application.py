@@ -443,7 +443,7 @@ class Application(Gtk.Application):
         elif action == Actions.TYPES_WINDOW_DISPLAY:
             Dialogs.show_types(main)
         elif action == Actions.KEYBOARD_SHORTCUTS_WINDOW_DISPLAY:
-            Dialogs.show_keyboard_shortcuts(main)   
+            Dialogs.show_keyboard_shortcuts(main)
         elif action == Actions.ERRORS_WINDOW_DISPLAY:
             Dialogs.ErrorsDialog(main, flow_graph).run_and_destroy()
         elif action == Actions.TOGGLE_CONSOLE_WINDOW:
@@ -713,7 +713,7 @@ class Application(Gtk.Application):
                         self.generator = generator
                     except Exception as e:
                         Messages.send_fail_gen(e)
-                        
+
 
         elif action == Actions.FLOW_GRAPH_EXEC:
             if not page.process:

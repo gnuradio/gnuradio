@@ -2,7 +2,7 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
 from os import path
 import sys
@@ -25,4 +25,3 @@ def test_flow_graph_converter_with_fp():
         data = flow_graph.from_xml(fp)
 
     flow_graph.dump(data, sys.stdout)
-
