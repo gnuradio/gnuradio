@@ -324,7 +324,7 @@ class UHDApp:
                 treq = uhd.tune_request(
                     target_freq=freq,
                     rf_freq=freq,
-                    rf_freq_policy=uhd.tune_reqest.POLICY_MANUAL,
+                    rf_freq_policy=uhd.tune_request.POLICY_MANUAL,
                     dsp_freq=tune_resp.actual_dsp_freq,
                     dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
             for chan in self.channels:

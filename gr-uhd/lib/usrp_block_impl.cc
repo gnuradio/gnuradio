@@ -616,14 +616,14 @@ void usrp_block_impl::_cmd_handler_freq(const pmt::pmt_t& freq_,
                                         const pmt::pmt_t& msg)
 {
     double freq = pmt::to_double(freq_);
-    ::uhd::tune_request_t new_tune_reqest(freq);
+    ::uhd::tune_request_t new_tune_request(freq);
     if (pmt::dict_has_key(msg, cmd_lo_offset_key())) {
         double lo_offset =
             pmt::to_double(pmt::dict_ref(msg, cmd_lo_offset_key(), pmt::PMT_NIL));
-        new_tune_reqest = ::uhd::tune_request_t(freq, lo_offset);
+        new_tune_request = ::uhd::tune_request_t(freq, lo_offset);
     }
 
-    _update_curr_tune_req(new_tune_reqest, chan);
+    _update_curr_tune_req(new_tune_request, chan);
 }
 
 void usrp_block_impl::_cmd_handler_looffset(const pmt::pmt_t& lo_offset,
@@ -701,8 +701,8 @@ void usrp_block_impl::_cmd_handler_tune(const pmt::pmt_t& tune,
 {
     double freq = pmt::to_double(pmt::car(tune));
     double lo_offset = pmt::to_double(pmt::cdr(tune));
-    ::uhd::tune_request_t new_tune_reqest(freq, lo_offset);
-    _update_curr_tune_req(new_tune_reqest, chan);
+    ::uhd::tune_request_t new_tune_request(freq, lo_offset);
+    _update_curr_tune_req(new_tune_request, chan);
 }
 
 void usrp_block_impl::_cmd_handler_bw(const pmt::pmt_t& bw,
