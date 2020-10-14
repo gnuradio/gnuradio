@@ -182,7 +182,9 @@ foreach(file ${files})
 
     # message(STATUS ${file} ":" ${flag_auto} ":" ${flag_pygccxml} ":" ${header_filename} ":" ${header_file_hash})
 
-    if (NOT ${header_filename} STREQUAL "None")  # If no header filename is specified, don't bother checking for a rebuild
+    # If no header filename is specified (set to empty or "None")
+    #  OR If hash is set to 0, then ignore the check as well
+    if (NOT ${header_filename} STREQUAL "None" AND NOT ${header_file_hash} STREQUAL "0")  
         set(header_full_path ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include/${name}/${header_filename})  # NOTE OOT version does not have gnuradio/ here
         file(MD5 ${header_full_path} calc_hash)
         # message(STATUS ${ii} " " ${calc_hash} " " ${saved_hash})
