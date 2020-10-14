@@ -48,6 +48,13 @@ private:
     gr::high_res_timer_type d_update_time;
     gr::high_res_timer_type d_last_time;
 
+    double d_x_start_value;
+    double d_x_end_value;
+    std::string d_x_label;
+    double d_y_start_value;
+    double d_y_end_value;
+    std::string d_y_label;
+
     void _ncols_resize();
 
     // Handles message input port for displaying PDU samples.
@@ -61,7 +68,13 @@ public:
                             const std::vector<float>& offset,
                             const std::string& name,
                             int nconnections,
-                            QWidget* parent = NULL);
+                            QWidget* parent = NULL,
+                            double x_start_value = 0.0,
+                            double x_end_value = 0.0,
+                            std::string x_label = "",
+                            double y_start_value = 0.0,
+                            double y_end_value = 0.0,
+                            std::string y_label = "");
     ~time_raster_sink_f_impl();
 
     bool check_topology(int ninputs, int noutputs);

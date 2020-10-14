@@ -40,8 +40,17 @@ class TimeRasterDisplayPlot : public DisplayPlot
                    setColorMapTitleFontSize)
 
 public:
-    TimeRasterDisplayPlot(
-        int nplots, double samp_rate, double rows, double cols, QWidget*);
+    TimeRasterDisplayPlot(int nplots,
+                          double samp_rate,
+                          double rows,
+                          double cols,
+                          QWidget*,
+                          double x_start_value = 0.0,
+                          double x_end_value = 0.0,
+                          std::string x_label = "",
+                          double y_start_value = 0.0,
+                          double y_end_value = 0.0,
+                          std::string y_label = "");
     virtual ~TimeRasterDisplayPlot();
 
     void reset();
@@ -100,6 +109,13 @@ private:
     QColor d_high_intensity;
 
     int d_color_bar_title_font_size;
+
+    double d_x_start_value;
+    double d_x_end_value;
+    std::string d_x_label;
+    double d_y_start_value;
+    double d_y_end_value;
+    std::string d_y_label;
 };
 
 #endif /* TIMERASTER_DISPLAY_PLOT_H */

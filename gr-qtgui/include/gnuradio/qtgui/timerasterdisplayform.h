@@ -33,7 +33,13 @@ public:
                           double rows = 1,
                           double cols = 1,
                           double zmax = 1,
-                          QWidget* parent = 0);
+                          QWidget* parent = 0,
+                          double x_start_value = 0.0,
+                          double x_end_value = 0.0,
+                          std::string x_label = "",
+                          double y_start_value = 0.0,
+                          double y_end_value = 0.0,
+                          std::string y_label = "");
     ~TimeRasterDisplayForm();
 
     TimeRasterDisplayPlot* getPlot();

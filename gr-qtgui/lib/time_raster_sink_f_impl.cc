@@ -31,10 +31,28 @@ time_raster_sink_f::sptr time_raster_sink_f::make(double samp_rate,
                                                   const std::vector<float>& offset,
                                                   const std::string& name,
                                                   int nconnections,
-                                                  QWidget* parent)
+                                                  QWidget* parent,
+                                                  double x_start_value,
+                                                  double x_end_value,
+                                                  std::string x_label,
+                                                  double y_start_value,
+                                                  double y_end_value,
+                                                  std::string y_label)
 {
-    return gnuradio::make_block_sptr<time_raster_sink_f_impl>(
-        samp_rate, rows, cols, mult, offset, name, nconnections, parent);
+    return gnuradio::make_block_sptr<time_raster_sink_f_impl>(samp_rate,
+                                                              rows,
+                                                              cols,
+                                                              mult,
+                                                              offset,
+                                                              name,
+                                                              nconnections,
+                                                              parent,
+                                                              x_start_value,
+                                                              x_end_value,
+                                                              x_label,
+                                                              y_start_value,
+                                                              y_end_value,
+                                                              y_label);
 }
 
 time_raster_sink_f_impl::time_raster_sink_f_impl(double samp_rate,
@@ -44,7 +62,13 @@ time_raster_sink_f_impl::time_raster_sink_f_impl(double samp_rate,
                                                  const std::vector<float>& offset,
                                                  const std::string& name,
                                                  int nconnections,
-                                                 QWidget* parent)
+                                                 QWidget* parent,
+                                                 double x_start_value,
+                                                 double x_end_value,
+                                                 std::string x_label,
+                                                 double y_start_value,
+                                                 double y_end_value,
+                                                 std::string y_label)
     : sync_block("time_raster_sink_f",
                  io_signature::make(0, nconnections, sizeof(float)),
                  io_signature::make(0, 0, 0)),
@@ -55,7 +79,13 @@ time_raster_sink_f_impl::time_raster_sink_f_impl(double samp_rate,
       d_cols(cols),
       d_mult(std::vector<float>(nconnections + 1, 1)),
       d_offset(std::vector<float>(nconnections + 1, 0)),
-      d_samp_rate(samp_rate)
+      d_samp_rate(samp_rate),
+      d_x_start_value(x_start_value),
+      d_x_end_value(x_end_value),
+      d_x_label(x_label),
+      d_y_start_value(y_start_value),
+      d_y_end_value(y_end_value),
+      d_y_label(y_label)
 {
     // Required now for Qt; argc must be greater than 0 and argv
     // must have at least one valid character. Must be valid through
@@ -128,8 +158,18 @@ void time_raster_sink_f_impl::initialize()
     // (zmax) to the number of connections so after adding the
     // streams, the max will the the max of 1's from all streams.
     int numplots = (d_nconnections > 0) ? d_nconnections : 1;
-    d_main_gui =
-        new TimeRasterDisplayForm(numplots, d_samp_rate, d_rows, d_cols, 1, d_parent);
+    d_main_gui = new TimeRasterDisplayForm(numplots,
+                                           d_samp_rate,
+                                           d_rows,
+                                           d_cols,
+                                           1,
+                                           d_parent,
+                                           d_x_start_value,
+                                           d_x_end_value,
+                                           d_x_label,
+                                           d_y_start_value,
+                                           d_y_end_value,
+                                           d_y_label);
 
     if (!d_name.empty())
         set_title(d_name);
