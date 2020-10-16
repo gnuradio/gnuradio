@@ -40,7 +40,7 @@ outputs:
   dtype: sizeof(gr_complex)
 cpp_templates:
   includes: '#include <gnuradio/analog/agc2_cc.h>'
-  declartions: analog::agc2_cc::sptr ${id}
+  declarations: analog::agc2_cc::sptr ${id}
   make: this->${id} = analog::agc2_cc::make(${attack_rate}, ${decay_rate}, ${reference},
     ${gain}, ${max_gain})
   callbacks: !!python/tuple

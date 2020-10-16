@@ -212,7 +212,7 @@ protected:
 /*                                                          */
 /************************************************************/
 
-/*! \brief Calculate Euclidian distance for any constellation
+/*! \brief Calculate Euclidean distance for any constellation
  *  \ingroup digital
  *
  * \details

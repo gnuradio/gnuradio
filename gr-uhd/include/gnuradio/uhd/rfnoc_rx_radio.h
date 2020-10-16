@@ -19,7 +19,7 @@ namespace uhd {
 /*! RFNoC RX Radio
  *
  * This wraps a radio block into GNU Radio. Note: When doing TX and RX in the
- * same flow graph, simply crate an rfnoc_rx_radio and an rfnoc_tx_radio with
+ * same flow graph, simply create an rfnoc_rx_radio and an rfnoc_tx_radio with
  * the same block ID.
  *
  * \ingroup uhd_blk

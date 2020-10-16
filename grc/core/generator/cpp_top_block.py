@@ -275,8 +275,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
         # Create an executable fragment of code containing all 'raw' variables in
         # order to infer the lvalue types.
         #
-        # Note that this differs from using ast.literal_eval() as literal_eval evaluates one
-        # variable at a time. The code fragment below evaluates all varaibles together which
+        # Note that this differs from using ast.literal_eval() as literal_eval evaluates one 
+        # variable at a time. The code fragment below evaluates all variables together which 
         # allows the variables to reference each other (i.e. a = b * c).
         prog = 'def get_decl_types():\n'
         prog += '\tvar_types = {}\n'

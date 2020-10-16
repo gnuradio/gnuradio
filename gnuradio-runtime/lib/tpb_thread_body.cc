@@ -76,7 +76,7 @@ tpb_thread_body::tpb_thread_body(block_sptr block,
         gr::thread::set_thread_priority(d->thread, block->thread_priority());
     }
 
-    // make sure our block isnt finished
+    // make sure our block isn't finished
     block->clear_finished();
 
     start_sync->wait();
