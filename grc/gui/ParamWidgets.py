@@ -360,8 +360,8 @@ class DirectoryParam(FileParam):
         dir_dialog.set_current_folder(dirname)
         dir_dialog.set_local_only(True)
         dir_dialog.set_select_multiple(False)
-
-        # Show dialog and update paramter on success
+        
+        # Show dialog and update parameter on success
         if Gtk.ResponseType.OK == dir_dialog.run():
             path = dir_dialog.get_filename()
             self._input.set_text(path)
