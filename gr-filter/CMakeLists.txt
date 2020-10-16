@@ -96,8 +96,8 @@ if(ENABLE_PYTHON)
     add_subdirectory(python/filter/gui)
     add_subdirectory(grc)
     add_subdirectory(apps)
+    add_subdirectory(examples)
 endif(ENABLE_PYTHON)
-add_subdirectory(examples)
 add_subdirectory(docs)
 
 ########################################################################
