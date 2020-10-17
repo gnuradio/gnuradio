@@ -178,6 +178,7 @@ protected:
     uint16_t d_bps; //!< bits/sec of payload modulation
 
     unsigned long long d_data_reg; //!< used to look for access_code
+    size_t d_data_reg_len; //!< Length of the saved access_code
     unsigned long long d_mask;     /*!< masks access_code bits (top N bits are set where
                                      N is the number of bits in the access code) */
     unsigned int d_threshold;      //!< how many bits may be wrong in sync vector

@@ -33,6 +33,7 @@ header_format_default::header_format_default(const std::string& access_code,
     : header_format_base(),
       d_bps(bps),
       d_data_reg(0),
+      d_data_reg_len(0),
       d_mask(0),
       d_threshold(0),
       d_pkt_len(0),
@@ -112,23 +113,27 @@ bool header_format_default::parse(int nbits_in,
             while (nbits_processed < nbits_in) {
                 // shift in new data
                 d_data_reg = (d_data_reg << 1) | ((input[nbits_processed++]) & 0x1);
+                if (d_data_reg_len < d_access_code_len){
+                    ++d_data_reg_len;
+                }
+                if (d_data_reg_len == d_access_code_len){
+                    // compute hamming distance between desired access code and current data
+                    uint64_t wrong_bits = 0;
+                    uint64_t nwrong = d_threshold + 1;
 
-                // compute hamming distance between desired access code and current data
-                uint64_t wrong_bits = 0;
-                uint64_t nwrong = d_threshold + 1;
+                    wrong_bits = (d_data_reg ^ d_access_code) & d_mask;
+                    volk_64u_popcnt(&nwrong, wrong_bits);
 
-                wrong_bits = (d_data_reg ^ d_access_code) & d_mask;
-                volk_64u_popcnt(&nwrong, wrong_bits);
-
-                if (nwrong <= d_threshold) {
-                    enter_have_sync();
-                    break;
+                    if (nwrong <= d_threshold) {
+                        enter_have_sync();
+                        break;
+                    }
                 }
             }
             break;
 
         case STATE_HAVE_SYNC:
-            while (nbits_processed <= nbits_in) { // Shift bits one at a time into header
+            while (nbits_processed < nbits_in) { // Shift bits one at a time into header
                 d_hdr_reg.insert_bit(input[nbits_processed++]);
                 if (d_hdr_reg.length() == (header_nbits() - d_access_code_len)) {
 
@@ -162,6 +167,8 @@ inline void header_format_default::enter_have_sync()
 {
     d_state = STATE_HAVE_SYNC;
     d_hdr_reg.clear();
+    d_data_reg = 0;
+    d_data_reg_len = 0;
 }
 
 inline void header_format_default::enter_have_header(int payload_len)
