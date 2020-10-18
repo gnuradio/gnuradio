@@ -124,7 +124,7 @@ public:
      *        premature return after a bad header could be less than
      *        this.
      */
-    virtual bool parse(int nbits_in,
+    virtual parse_result parse(int nbits_in,
                        const unsigned char* input,
                        std::vector<pmt::pmt_t>& info,
                        int& nbits_processed);

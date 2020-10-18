@@ -48,13 +48,13 @@ int protocol_parser_b_impl::work(int noutput_items,
 
     int count = 0;
     std::vector<pmt::pmt_t> info;
-    bool ret = d_format->parse(noutput_items, in, info, count);
+    header_format_base::parse_result ret = d_format->parse(noutput_items, in, info, count);
 
-    if (ret) {
+    if (ret == header_format_base::parse_result::ok) {
         for (size_t i = 0; i < info.size(); i++) {
             message_port_pub(d_out_port, info[i]);
         }
-    } else {
+    } else if (ret == header_format_base::parse_result::err){
         message_port_pub(d_out_port, pmt::PMT_F);
     }
 

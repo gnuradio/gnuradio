@@ -73,7 +73,7 @@ public:
                         pmt::pmt_t& output,
                         pmt::pmt_t& info);
 
-    virtual bool parse(int nbits_in,
+    virtual parse_result parse(int nbits_in,
                        const unsigned char* input,
                        std::vector<pmt::pmt_t>& info,
                        int& nbits_processed);
