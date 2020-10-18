@@ -139,6 +139,11 @@ public:
                         pmt::pmt_t& output,
                         pmt::pmt_t& info) = 0;
 
+    enum class parse_result{
+	    ok,
+	    err,
+	    more_data
+    };
     /*!
      * Parses a header. This function is overloaded in the child
      * class, which knows how to convert the incoming hard bits (0's
@@ -159,7 +164,7 @@ public:
      *
      * MUST be overloaded.
      */
-    virtual bool parse(int nbits_in,
+    virtual parse_result parse(int nbits_in,
                        const unsigned char* input,
                        std::vector<pmt::pmt_t>& info,
                        int& nbits_processed) = 0;

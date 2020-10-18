@@ -110,9 +110,9 @@ BOOST_AUTO_TEST_CASE(test_default_parse)
 
     int count = 0;
     std::vector<pmt::pmt_t> info;
-    bool ret = hdr_format->parse(nbits, bits.data(), info, count);
+    gr::digital::header_format_base::parse_result ret = hdr_format->parse(nbits, bits, info, count);	
 
-    BOOST_REQUIRE(ret);
+    BOOST_REQUIRE(ret == gr::digital::header_format_base::parse_result::ok);	
     BOOST_REQUIRE_EQUAL((size_t)1, info.size());
 
     pmt::pmt_t dict = info[0];
@@ -212,9 +212,9 @@ BOOST_AUTO_TEST_CASE(test_counter_parse)
 
     int count = 0;
     std::vector<pmt::pmt_t> info;
-    bool ret = hdr_format->parse(nbits, bits.data(), info, count);
+    gr::digital::header_format_base::parse_result ret = hdr_format->parse(nbits, bits, info, count);	
 
-    BOOST_REQUIRE(ret);
+    BOOST_REQUIRE(ret == gr::digital::header_format_base::parse_result::ok);	
     BOOST_REQUIRE_EQUAL((size_t)1, info.size());
 
     pmt::pmt_t dict = info[0];

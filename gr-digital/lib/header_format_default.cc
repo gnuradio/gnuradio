@@ -99,7 +99,7 @@ bool header_format_default::format(int nbytes_in,
     return true;
 }
 
-bool header_format_default::parse(int nbits_in,
+header_format_base::parse_result header_format_default::parse(int nbits_in,
                                   const unsigned char* input,
                                   std::vector<pmt::pmt_t>& info,
                                   int& nbits_processed)
@@ -138,10 +138,10 @@ bool header_format_default::parse(int nbits_in,
                         int payload_len = header_payload();
                         enter_have_header(payload_len);
                         info.push_back(d_info);
-                        return true;
+                        return parse_result::ok;
                     } else {
                         enter_search(); // bad header
-                        return false;
+                        return parse_result::err;
                     }
                     break;
                 }
@@ -150,7 +150,7 @@ bool header_format_default::parse(int nbits_in,
         }
     }
 
-    return false;
+    return parse_result::more_data;
 }
 
 size_t header_format_default::header_nbits() const

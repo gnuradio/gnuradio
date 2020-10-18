@@ -95,7 +95,7 @@ bool header_format_ofdm::format(int nbytes_in,
     return ret_val;
 }
 
-bool header_format_ofdm::parse(int nbits_in,
+header_format_base::parse_result header_format_ofdm::parse(int nbits_in,
                                const unsigned char* input,
                                std::vector<pmt::pmt_t>& info,
                                int& nbits_processed)
@@ -109,16 +109,16 @@ bool header_format_ofdm::parse(int nbits_in,
                 enter_have_header(payload_len);
                 info.push_back(d_info);
                 d_hdr_reg.clear();
-                return true;
+                return parse_result::ok;
             } else {
                 d_hdr_reg.clear();
-                return false;
+                return parse_result::err;
             }
             break;
         }
     }
 
-    return true;
+    return parse_result::more_data;
 }
 
 size_t header_format_ofdm::header_nbits() const { return d_header_len; }
