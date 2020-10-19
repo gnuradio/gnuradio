@@ -31,9 +31,9 @@ freedv_tx_ss::make(int mode, const std::string msg_txt, int interleave_frames)
 freedv_tx_ss_impl::freedv_tx_ss_impl(int mode,
                                      const std::string msg_txt,
                                      int interleave_frames)
-    : sync_block("vocoder_freedv_tx_ss",
-                 io_signature::make(1, 1, sizeof(short)),
-                 io_signature::make(1, 1, sizeof(short))),
+    : block("vocoder_freedv_tx_ss",
+            io_signature::make(1, 1, sizeof(short)),
+            io_signature::make(1, 1, sizeof(short))),
       d_mode(mode),
       d_msg_text(msg_txt),
       d_interleave_frames(interleave_frames)
@@ -53,6 +53,7 @@ freedv_tx_ss_impl::freedv_tx_ss_impl(int mode,
 #endif
     d_tx_str = msg_txt + "\r"; // FreeDV uses Carriage Return termination
     freedv_set_callback_txt(d_freedv, NULL, get_next_tx_char, this);
+    d_speech_samples = freedv_get_n_speech_samples(d_freedv);
     d_nom_modem_samples = freedv_get_n_nom_modem_samples(d_freedv);
     set_output_multiple(d_nom_modem_samples);
 }
@@ -91,17 +92,23 @@ void freedv_tx_ss_impl::set_tx_bpf(bool val)
         freedv_tx_ss_impl::set_tx_bpf(0);
 }
 
-int freedv_tx_ss_impl::work(int noutput_items,
-                            gr_vector_const_void_star& input_items,
-                            gr_vector_void_star& output_items)
+void freedv_tx_ss_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+{
+    ninput_items_required[0] = (noutput_items / d_nom_modem_samples) * d_speech_samples;
+}
+
+int freedv_tx_ss_impl::general_work(int noutput_items,
+                                    gr_vector_int& ninput_items,
+                                    gr_vector_const_void_star& input_items,
+                                    gr_vector_void_star& output_items)
 {
     short* in = (short*)input_items[0];
     short* out = (short*)output_items[0];
     int i;
 
     for (i = 0; i < (noutput_items / d_nom_modem_samples); i++)
-        freedv_tx(
-            d_freedv, &(out[i * d_nom_modem_samples]), &(in[i * d_nom_modem_samples]));
+        freedv_tx(d_freedv, &(out[i * d_nom_modem_samples]), &(in[i * d_speech_samples]));
+    consume_each(i * d_speech_samples);
     return noutput_items;
 }
 
