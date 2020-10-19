@@ -20,6 +20,7 @@ install(FILES
     vocoder_g723_40_encode_sb.block.yml
     vocoder_ulaw_decode_bs.block.yml
     vocoder_ulaw_encode_sb.block.yml
+    vocoder.tree.yml
     DESTINATION ${GRC_BLOCKS_DIR}
 )
 
