@@ -44,6 +44,7 @@ def cli(**kwargs):
     kwargs['cli'] = True
     self = ModToolAdd(**kwargs)
     click.secho("GNU Radio module name identified: " + self.info['modname'], fg='green')
+    get_blockname(self)
     get_blocktype(self)
     get_lang(self)
     info_lang = {'cpp': 'C++', 'python': 'Python'}[self.info['lang']]
@@ -51,7 +52,6 @@ def cli(**kwargs):
     if ((self.skip_subdirs['lib'] and self.info['lang'] == 'cpp')
             or (self.skip_subdirs['python'] and self.info['lang'] == 'python')):
         raise ModToolException('Missing or skipping relevant subdir.')
-    get_blockname(self)
     click.secho("Block/code identifier: " + self.info['blockname'], fg='green')
     if not self.license_file:
         get_copyrightholder(self)
