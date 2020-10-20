@@ -46,7 +46,7 @@ static void werror(char* where, DWORD last_error)
                   buf,
                   sizeof(buf) / sizeof(TCHAR), // buffer size
                   NULL);
-    GR_LOG_ERROR(logger, boost::format("%s: Error %d: %s" % where % last_error % buf));
+    GR_LOG_ERROR(logger, boost::format("%s: Error %d: %s") % where % last_error % buf);
     return;
 }
 #endif
