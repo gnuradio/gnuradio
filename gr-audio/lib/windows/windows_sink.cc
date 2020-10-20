@@ -178,8 +178,9 @@ int windows_sink::work(int noutput_items,
                 // let's just fail and give some debugging information about the status of
                 // the buffers.
                 for (int i = 0; i < nPeriods; i++) {
-                    GR_LOG_ERROR(
-                        d_logger, "audio buffer %d: %d", i, d_buffers[i]->dwFlags);
+                    GR_LOG_ERROR(d_logger,
+                                 boost::format("audio buffer %d: %d") % i %
+                                     d_buffers[i]->dwFlags);
                 }
                 GR_LOG_ERROR(d_logger,
                              boost::format("no audio buffers available: %s") %
@@ -343,11 +344,13 @@ int windows_sink::open_waveout_device(void)
                          0,
                          CALLBACK_EVENT | WAVE_ALLOWSYNC);
 
-    if (result)
+    if (result) {
         GR_LOG_ERROR(d_logger,
                      boost::format("Failed to open waveform output device. %s") %
-                         strerr(errno));
-    return -1;
+                         strerror(errno));
+        return -1;
+    }
+
     return 0;
 }
 
@@ -363,14 +366,16 @@ int windows_sink::write_waveout(LPWAVEHDR lp_wave_hdr)
     w_result = waveOutPrepareHeader(d_h_waveout, lp_wave_hdr, sizeof(WAVEHDR));
     if (w_result != 0) {
         GR_LOG_ERROR(d_logger,
-                     boost::format("Failed to waveOutPrepareHeader %s") % strerr(errno));
+                     boost::format("Failed to waveOutPrepareHeader %s") %
+                         strerror(errno));
         return -1;
     }
 
     w_result = waveOutWrite(d_h_waveout, lp_wave_hdr, sizeof(WAVEHDR));
     if (w_result != 0) {
         GR_LOG_ERROR(d_logger,
-                     boost::format("Failed to write block to device %s") % strerr(errno));
+                     boost::format("Failed to write block to device %s") %
+                         strerror(errno));
         switch (w_result) {
         case MMSYSERR_INVALHANDLE:
             GR_LOG_ERROR(d_logger, "Specified device handle is invalid");
