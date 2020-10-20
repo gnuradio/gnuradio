@@ -167,6 +167,7 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
         # Check data
         self.assertComplexTuplesAlmostEqual(rx_expected, sink.data()[0], places=4)
 
+
     def test_002_static (self):
         """
         - Add a simple channel
@@ -229,6 +230,9 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
         expected_dict = {
                 'ofdm_sync_chan_taps': channel[-fft_len:]
         }
+        # Won't be exactly the same when compiled with -fcx-limited-range
+        self.assertTrue(numpy.allclose(tag_dict['ofdm_sync_chan_taps'], expected_dict['ofdm_sync_chan_taps']))
+        expected_dict['ofdm_sync_chan_taps'] = tag_dict['ofdm_sync_chan_taps']
         self.assertEqual(tag_dict, expected_dict)
 
     def test_002_static_wo_tags (self):
@@ -330,6 +334,9 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
         equalizer = digital.ofdm_equalizer_simpledfe(
             fft_len, cnst.base(), occupied_carriers, pilot_carriers, pilot_symbols, 0, 0.01
         )
+        equalizer_soft = digital.ofdm_equalizer_simpledfe(
+            fft_len, cnst.base(), occupied_carriers, pilot_carriers, pilot_symbols, 0, 0.01, enable_soft_output=True
+        )
         channel = [
             0, 0,  1,  1, 0,  1,  1, 0,
             0, 0,  1,  1, 0,  1,  1, 0, # These coefficients will be rotated slightly...
@@ -346,16 +353,40 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
         chan_tag.value = pmt.init_c32vector(fft_len, channel[:fft_len])
         src = blocks.vector_source_c(numpy.multiply(tx_signal, channel), False, fft_len, (chan_tag,))
         eq = digital.ofdm_frame_equalizer_vcvc(equalizer.base(), 0, self.tsb_key, True)
+        eq_soft = digital.ofdm_frame_equalizer_vcvc(equalizer_soft.base(), 0, self.tsb_key, True)
         sink = blocks.tsb_vector_sink_c(fft_len, tsb_key=self.tsb_key)
+        sink_soft = blocks.tsb_vector_sink_c(fft_len, tsb_key=self.tsb_key)
+        stream_to_tagged = blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, fft_len, len(tx_data) // fft_len, self.tsb_key)
         self.tb.connect(
                 src,
-                blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, fft_len, len(tx_data) // fft_len, self.tsb_key),
+                stream_to_tagged,
                 eq,
                 sink
         )
+        self.tb.connect(
+          stream_to_tagged,
+          eq_soft,
+          sink_soft
+        )
         self.tb.run ()
-        rx_data = [cnst.decision_maker_v((x,)) if x != 0 else -1 for x in sink.data()[0]]
+
+        out_syms = numpy.array(sink.data()[0])
+        out_syms_soft = numpy.array(sink_soft.data()[0])
+        demod = lambda syms: [cnst.decision_maker_v((x,)) if x != 0 else -1 for x in syms]
+        rx_data = demod(out_syms)
+        rx_data_soft = demod(out_syms_soft)
+
+        ## Uncomment to plot symbols
+        #import matplotlib.pyplot as plt
+        #def plot_syms(d): plt.figure(); plt.plot(d.real, d.imag, 'b.')
+        #
+        #plot_syms(out_syms)
+        #plot_syms(out_syms_soft)
+        #plt.show()
+
         self.assertEqual(tx_data, rx_data)
+        self.assertEqual(rx_data, rx_data_soft)
+        self.assertFalse(numpy.allclose(out_syms, out_syms_soft))
         self.assertEqual(len(sink.tags()), 1)
         tag = sink.tags()[0]
         self.assertEqual(pmt.symbol_to_string(tag.key), "ofdm_sync_chan_taps")
@@ -363,5 +394,5 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_ofdm_frame_equalizer_vcvc, "qa_ofdm_frame_equalizer_vcvc.xml")
+    gr_unittest.run(qa_ofdm_frame_equalizer_vcvc)
 
