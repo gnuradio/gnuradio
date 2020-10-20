@@ -128,6 +128,7 @@ usrp_block_impl::usrp_block_impl(const ::uhd::device_addr_t& device_addr,
       _nchan(stream_args.channels.size()),
       _stream_now(_nchan == 1 and ts_tag_name.empty()),
       _start_time_set(false),
+      _force_tune(false),
       _curr_tune_req(stream_args.channels.size(), ::uhd::tune_request_t()),
       _chans_to_tune(stream_args.channels.size())
 {
@@ -606,7 +607,18 @@ void usrp_block_impl::msg_handler_command(pmt::pmt_t msg)
                                               pmt::from_long(-1) // Default to all chans
                                               )));
 
-    /// 3) Loop through all the values
+    /// 3) See if a direction was specified
+    pmt::pmt_t direction =
+        pmt::dict_ref(msg,
+                      cmd_direction_key(),
+                      pmt::PMT_NIL // Anything except "TX" or "RX will default to the
+                                   // messaged block direction"
+        );
+    // if the a direction symbol was provided, force a tune
+    _force_tune = pmt::is_symbol(direction);
+
+
+    /// 4) Loop through all the values
     GR_LOG_DEBUG(d_debug_logger, boost::format("Processing command message %s") % msg);
     pmt::pmt_t msg_items = pmt::dict_items(msg);
     for (size_t i = 0; i < pmt::length(msg_items); i++) {
@@ -623,17 +635,9 @@ void usrp_block_impl::msg_handler_command(pmt::pmt_t msg)
             break;
         }
     }
-
-    /// 4) See if a direction was specified
-    pmt::pmt_t direction =
-        pmt::dict_ref(msg,
-                      cmd_direction_key(),
-                      pmt::PMT_NIL // Anything except "TX" or "RX will default to the
-                                   // messaged block direction"
-        );
-
     /// 5) Check if we need to re-tune
     _set_center_freq_from_internals_allchans(direction);
+    _force_tune = false;
 }
 
 
@@ -666,7 +670,7 @@ void usrp_block_impl::_update_curr_tune_req(::uhd::tune_request_t& tune_req, int
         tune_req.rf_freq_policy != _curr_tune_req[chan].rf_freq_policy ||
         tune_req.rf_freq != _curr_tune_req[chan].rf_freq ||
         tune_req.dsp_freq != _curr_tune_req[chan].dsp_freq ||
-        tune_req.dsp_freq_policy != _curr_tune_req[chan].dsp_freq_policy) {
+        tune_req.dsp_freq_policy != _curr_tune_req[chan].dsp_freq_policy || _force_tune) {
         _curr_tune_req[chan] = tune_req;
         _chans_to_tune.set(chan);
     }

@@ -222,6 +222,7 @@ protected:
     bool _stream_now;
     ::uhd::time_spec_t _start_time;
     bool _start_time_set;
+    bool _force_tune;
 
     /****** Command interface related **********/
     //! Stores a list of commands for later execution
