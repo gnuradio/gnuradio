@@ -11,7 +11,6 @@
 import struct
 
 import numpy
-import six
 
 from gnuradio import gru
 from . import crc
@@ -19,20 +18,19 @@ from . import crc
 
 def conv_packed_binary_string_to_1_0_string(s):
     """
-    '\xAF' --> '10101111'
+    b'\xAF' --> '10101111'
     """
     r = []
     for ch in s:
-        x = ord(ch)
         for i in range(7,-1,-1):
-            t = (x >> i) & 0x1
+            t = (ch >> i) & 0x1
             r.append(t)
 
     return ''.join([chr(x + ord('0')) for x in r])
 
 def conv_1_0_string_to_packed_binary_string(s):
     """
-    '10101111' -> ('\xAF', False)
+    '10101111' -> (b'\xAF', False)
 
     Basically the inverse of conv_packed_binary_string_to_1_0_string,
     but also returns a flag indicating if we had to pad with leading zeros
@@ -57,15 +55,15 @@ def conv_1_0_string_to_packed_binary_string(s):
         t = 0
         for j in range(8):
             t = (t << 1) | (ord(s[i + j]) - ord('0'))
-        r.append(chr(t))
+        r.append(t)
         i += 8
-    return (''.join(r), padded)
+    return (bytes(r), padded)
 
 
 default_access_code = \
-  conv_packed_binary_string_to_1_0_string('\xAC\xDD\xA4\xE2\xF2\x8C\x20\xFC')
+  conv_packed_binary_string_to_1_0_string(b'\xAC\xDD\xA4\xE2\xF2\x8C\x20\xFC')
 default_preamble = \
-  conv_packed_binary_string_to_1_0_string('\xA4\xF2')
+  conv_packed_binary_string_to_1_0_string(b'\xA4\xF2')
 
 def is_1_0_string(s):
     if not isinstance(s, str):
