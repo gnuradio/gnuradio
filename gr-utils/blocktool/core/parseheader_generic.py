@@ -47,11 +47,14 @@ class GenericHeaderParser(BlockTool):
     name = 'Block Parse Header'
     description = 'Create a parsed output from a block header file'
 
-    def __init__(self, file_path=None, blocktool_comments=False, include_paths=None, **kwargs):
+    def __init__(self, file_path=None, blocktool_comments=False, define_symbols=None,  include_paths=None, **kwargs):
         """ __init__ """
         BlockTool.__init__(self, **kwargs)
         self.parsed_data = {}
         self.addcomments = blocktool_comments
+        self.define_symbols = ('BOOST_ATOMIC_DETAIL_EXTRA_BACKEND_GENERIC',)
+        if(define_symbols):
+            self.define_symbols += define_symbols
         self.include_paths = None
         if (include_paths):
             self.include_paths = [p.strip() for p in include_paths.split(',')]
@@ -270,7 +273,7 @@ class GenericHeaderParser(BlockTool):
         module = self.modname.split('-')[-1]
         self.parsed_data['module_name'] = module
         self.parsed_data['filename'] = self.filename
-        
+
         import hashlib
         hasher = hashlib.md5()
         with open(self.target_file, 'rb') as file_in:
@@ -322,11 +325,11 @@ class GenericHeaderParser(BlockTool):
                 include_paths=self.include_paths,
                 compiler='gcc',
                 undefine_symbols=['__PIE__'],
-                #define_symbols=['BOOST_ATOMIC_DETAIL_EXTRA_BACKEND_GENERIC', '__PIC__'],
-                define_symbols=['BOOST_ATOMIC_DETAIL_EXTRA_BACKEND_GENERIC'],
+                define_symbols=self.define_symbols,
                 cflags='-std=c++11 -fPIC')
             decls = parser.parse(
                 [self.target_file], xml_generator_config)
+
             global_namespace = declarations.get_global_namespace(decls)
 
             # namespace

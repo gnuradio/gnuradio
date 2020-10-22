@@ -38,6 +38,7 @@ class ModToolGenBindings(ModTool):
         ModTool.__init__(self, blockname, **kwargs)
         self.info['pattern'] = blockname
         self.info['addl_includes'] = kwargs['addl_includes']
+        self.info['define_symbols'] = kwargs['define_symbols']
 
     def validate(self):
         """ Validates the arguments """
@@ -58,6 +59,8 @@ class ModToolGenBindings(ModTool):
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", category=DeprecationWarning)
             file_to_process = os.path.join(self.dir, self.info['includedir'], self.info['blockname'] + '.h')
+
             bg = BindingGenerator(prefix=gr.prefix(), namespace=[
-                                  'gr', self.info['modname']], prefix_include_root=self.info['modname'], output_dir=os.path.join(self.dir, 'python'), addl_includes=self.info['addl_includes'])
+                                  'gr', self.info['modname']], prefix_include_root=self.info['modname'], output_dir=os.path.join(self.dir, 'python'),
+                                   define_symbols=self.info['define_symbols'], addl_includes=self.info['addl_includes'])
             bg.gen_file_binding(file_to_process)
