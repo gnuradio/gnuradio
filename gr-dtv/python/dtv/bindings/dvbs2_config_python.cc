@@ -48,4 +48,8 @@ void bind_dvbs2_config(py::module& m)
         .value("INTERPOLATION_OFF", ::gr::dtv::INTERPOLATION_OFF) // 0
         .value("INTERPOLATION_ON", ::gr::dtv::INTERPOLATION_ON)   // 1
         .export_values();
+
+    py::implicitly_convertible<int, gr::dtv::dvbs2_rolloff_factor_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbs2_pilots_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbs2_interpolation_t>();
 }

@@ -35,4 +35,6 @@ void bind_catv_config(py::module& m)
         .value("CATV_MOD_64QAM", ::gr::dtv::CATV_MOD_64QAM)   // 0
         .value("CATV_MOD_256QAM", ::gr::dtv::CATV_MOD_256QAM) // 1
         .export_values();
+
+    py::implicitly_convertible<int, gr::dtv::catv_constellation_t>();
 }

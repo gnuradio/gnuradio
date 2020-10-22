@@ -41,4 +41,7 @@ void bind_dvbt_config(py::module& m)
         .value("T2k", ::gr::dtv::T2k) // 0
         .value("T8k", ::gr::dtv::T8k) // 1
         .export_values();
+
+    py::implicitly_convertible<int, gr::dtv::dvbt_hierarchy_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt_transmission_mode_t>();
 }
