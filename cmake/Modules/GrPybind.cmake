@@ -209,7 +209,9 @@ foreach(file ${files})
                 message(STATUS "Regenerating Bindings in-place for " ${header_filename})
 
                 file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status)
-                # Automatically regenerate the bindings               
+                # Automatically regenerate the bindings
+                string(REPLACE ";" ","  extra_include_list "${extra_includes}")  #Convert ';' separated extra_includes to ',' separated list format
+                string(REPLACE ";" ","  defines "${define_symbols}")  #Convert ';' separated define_symbols to ',' separated list format
                 add_custom_command( 
                     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}}/${file}
                     COMMAND  "${PYTHON_EXECUTABLE}"
@@ -222,7 +224,8 @@ foreach(file ${files})
                     "--status" ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status 
                     "--flag_automatic" ${flag_auto}
                     "--flag_pygccxml" ${flag_pygccxml}
-                    # "--include" "$<INSTALL_INTERFACE:include>"  #FIXME: Make the pygccxml generation use the source tree headers
+                    "--defines" ${defines} #Add preprocessor defines
+                    "--include" ${extra_include_list} #Some oots may require additional includes
                     COMMENT "Automatic generation of pybind11 bindings for " ${header_full_path})
                 add_custom_target(${file}_regen_bindings ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}}/${file})
                 list(APPEND regen_targets ${file}_regen_bindings)
