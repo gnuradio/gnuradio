@@ -53,4 +53,6 @@ void bind_freedv_api(py::module& m)
         .value("SYNC_MANUAL", gr::vocoder::freedv_api::SYNC_MANUAL)
 #endif
         .export_values();
+
+    py::implicitly_convertible<int, gr::vocoder::freedv_api::freedv_modes>();
 }
