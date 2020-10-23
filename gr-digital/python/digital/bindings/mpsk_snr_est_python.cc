@@ -204,4 +204,6 @@ void bind_mpsk_snr_est(py::module& m)
         .value("SNR_EST_M2M4", ::gr::digital::SNR_EST_M2M4)     // 2
         .value("SNR_EST_SVR", ::gr::digital::SNR_EST_SVR)       // 3
         .export_values();
+
+    py::implicitly_convertible<int, ::gr::digital::snr_est_type_t>();
 }

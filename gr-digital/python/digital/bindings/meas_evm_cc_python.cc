@@ -37,6 +37,8 @@ void bind_meas_evm_cc(py::module& m)
         .value("EVM_DB", ::gr::digital::evm_measurement_t::EVM_DB)           // 1
         .export_values();
 
+    py::implicitly_convertible<int, ::gr::digital::evm_measurement_t>();
+
     py::class_<meas_evm_cc,
                gr::sync_block,
                gr::block,
