@@ -193,4 +193,6 @@ void bind_window(py::module& m)
         .value("WIN_BARTLETT", gr::fft::window::WIN_BARTLETT)               // 6
         .value("WIN_FLATTOP", gr::fft::window::WIN_FLATTOP)                 // 7
         .export_values();
+
+    py::implicitly_convertible<int, gr::fft::window::win_type>();
 }
