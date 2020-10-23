@@ -21,16 +21,18 @@ namespace py = pybind11;
 
 void bind_trigger_mode(py::module& m)
 {
-
-
     py::enum_<::gr::qtgui::trigger_mode>(m, "trigger_mode")
         .value("TRIG_MODE_FREE", ::gr::qtgui::TRIG_MODE_FREE) // 0
         .value("TRIG_MODE_AUTO", ::gr::qtgui::TRIG_MODE_AUTO) // 1
         .value("TRIG_MODE_NORM", ::gr::qtgui::TRIG_MODE_NORM) // 2
         .value("TRIG_MODE_TAG", ::gr::qtgui::TRIG_MODE_TAG)   // 3
         .export_values();
+
     py::enum_<::gr::qtgui::trigger_slope>(m, "trigger_slope")
         .value("TRIG_SLOPE_POS", ::gr::qtgui::TRIG_SLOPE_POS) // 0
         .value("TRIG_SLOPE_NEG", ::gr::qtgui::TRIG_SLOPE_NEG) // 1
         .export_values();
+
+    py::implicitly_convertible<int, ::gr::qtgui::trigger_mode>();
+    py::implicitly_convertible<int, ::gr::qtgui::trigger_slope>();
 }
