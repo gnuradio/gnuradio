@@ -14,8 +14,8 @@
 #include <gnuradio/uhd/usrp_block.h>
 #include <pmt/pmt.h>
 #include <uhd/usrp/multi_usrp.hpp>
-#include <boost/bind.hpp>
 #include <boost/dynamic_bitset.hpp>
+#include <functional>
 
 
 namespace gr {
@@ -31,9 +31,8 @@ static const std::string ALL_LOS;
 class usrp_block_impl : virtual public usrp_block
 {
 public:
-    typedef boost::function<::uhd::sensor_value_t(const std::string&)> get_sensor_fn_t;
-    typedef boost::function<void(const pmt::pmt_t&, int, const pmt::pmt_t&)>
-        cmd_handler_t;
+    typedef std::function<::uhd::sensor_value_t(const std::string&)> get_sensor_fn_t;
+    typedef std::function<void(const pmt::pmt_t&, int, const pmt::pmt_t&)> cmd_handler_t;
 
     static const double LOCK_TIMEOUT;
 
