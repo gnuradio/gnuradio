@@ -58,7 +58,9 @@ usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t& device_addr,
     _samp_rate = this->get_samp_rate();
     _samps_per_packet = 1;
     register_msg_cmd_handler(cmd_tag_key(),
-                             boost::bind(&usrp_source_impl::_cmd_handler_tag, this, _1));
+                             [this](const pmt::pmt_t& tag, const int, const pmt::pmt_t&) {
+                                 this->_cmd_handler_tag(tag);
+                             });
 }
 
 usrp_source_impl::~usrp_source_impl() {}

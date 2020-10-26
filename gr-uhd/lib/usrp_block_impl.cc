@@ -140,9 +140,11 @@ usrp_block_impl::usrp_block_impl(const ::uhd::device_addr_t& device_addr,
                     boost::bind(&usrp_block_impl::msg_handler_command, this, _1));
 
 // cuz we lazy:
-#define REGISTER_CMD_HANDLER(key, _handler) \
-    register_msg_cmd_handler(key,           \
-                             boost::bind(&usrp_block_impl::_handler, this, _1, _2, _3))
+#define REGISTER_CMD_HANDLER(key, _handler)                                   \
+    register_msg_cmd_handler(                                                 \
+        key, [this](const pmt::pmt_t& var, int chan, const pmt::pmt_t& msg) { \
+            this->_handler(var, chan, msg);                                   \
+        })
     // Register default command handlers:
     REGISTER_CMD_HANDLER(cmd_freq_key(), _cmd_handler_freq);
     REGISTER_CMD_HANDLER(cmd_gain_key(), _cmd_handler_gain);
@@ -257,11 +259,13 @@ bool usrp_block_impl::_check_mboard_sensors_locked()
         } else if (_dev->get_clock_source(mboard_index) == "mimo") {
             sensor_name = "mimo_locked";
         }
-        if (not _wait_for_locked_sensor(
-                get_mboard_sensor_names(mboard_index),
-                sensor_name,
-                boost::bind(
-                    &usrp_block_impl::get_mboard_sensor, this, _1, mboard_index))) {
+        if (not _wait_for_locked_sensor(get_mboard_sensor_names(mboard_index),
+                                        sensor_name,
+                                        [this, mboard_index](const std::string& name) {
+                                            return static_cast<::uhd::sensor_value_t>(
+                                                this->get_mboard_sensor(name,
+                                                                        mboard_index));
+                                        })) {
             GR_LOG_WARN(
                 d_logger,
                 boost::format(
