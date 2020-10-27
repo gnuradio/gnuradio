@@ -45,7 +45,7 @@ class GRCYAMLGenerator(object):
         str_ = ', '.join(params_list)
         self._header = (('id', f'{modname}_{blockname}'),
                         ('label', blockname.replace('_', ' ')),
-                        (f'category', '[{modname.capitalize()}]')
+                        (f'category', f'[{modname.capitalize()}]')
                        )
         self._templates = (('imports', f'import {modname}'),
                            ('make', f'{modname}.{blockname}({str_})')
