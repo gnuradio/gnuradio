@@ -28,6 +28,10 @@
 #include "tag_headers.h"
 #include <gnuradio/io_signature.h>
 
+namespace {
+constexpr int LINGER_DEFAULT = 1000; // 1 second.
+}
+
 namespace gr {
 namespace zeromq {
 
@@ -81,6 +85,9 @@ base_sink_impl::base_sink_impl(int type,
         d_socket->setsockopt(ZMQ_HWM, &tmp, sizeof(tmp));
 #endif
     }
+
+    /* Set ZMQ_LINGER so socket won't infinitely block during teardown */
+    d_socket->setsockopt(ZMQ_LINGER, &LINGER_DEFAULT, sizeof(LINGER_DEFAULT));
 
     /* Bind */
     d_socket->bind(address);
@@ -141,6 +148,9 @@ base_source_impl::base_source_impl(int type,
         d_socket->setsockopt(ZMQ_HWM, &tmp, sizeof(tmp));
 #endif
     }
+
+    /* Set ZMQ_LINGER so socket won't infinitely block during teardown */
+    d_socket->setsockopt(ZMQ_LINGER, &LINGER_DEFAULT, sizeof(LINGER_DEFAULT));
 
     /* Connect */
     d_socket->connect(address);
