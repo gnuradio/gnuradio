@@ -46,4 +46,6 @@ void bind_timing_error_detector_type(py::module& m)
         .value("TED_MENGALI_AND_DANDREA_GMSK",
                ::gr::digital::TED_MENGALI_AND_DANDREA_GMSK) // 9
         .export_values();
+
+    py::implicitly_convertible<int, ::gr::digital::ted_type>();
 }

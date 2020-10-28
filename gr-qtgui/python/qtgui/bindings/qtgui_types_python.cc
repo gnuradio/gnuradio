@@ -21,8 +21,6 @@ namespace py = pybind11;
 
 void bind_qtgui_types(py::module& m)
 {
-
-
     py::enum_<::gr::qtgui::data_type_t>(m, "data_type_t")
         .value("INT", ::gr::qtgui::INT)                 // 0
         .value("FLOAT", ::gr::qtgui::FLOAT)             // 1
@@ -34,11 +32,13 @@ void bind_qtgui_types(py::module& m)
         .value("DOUBLE_VEC", ::gr::qtgui::DOUBLE_VEC)   // 7
         .value("COMPLEX_VEC", ::gr::qtgui::COMPLEX_VEC) // 8
         .export_values();
+
     py::enum_<::gr::qtgui::graph_t>(m, "graph_t")
         .value("NUM_GRAPH_NONE", ::gr::qtgui::NUM_GRAPH_NONE)   // 0
         .value("NUM_GRAPH_HORIZ", ::gr::qtgui::NUM_GRAPH_HORIZ) // 1
         .value("NUM_GRAPH_VERT", ::gr::qtgui::NUM_GRAPH_VERT)   // 2
         .export_values();
+
     py::enum_<::gr::qtgui::intensity_t>(m, "intensity_t")
         .value("INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR",
                ::gr::qtgui::INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR) // 0
@@ -55,4 +55,8 @@ void bind_qtgui_types(py::module& m)
         .value("INTENSITY_COLOR_MAP_TYPE_COOL",
                ::gr::qtgui::INTENSITY_COLOR_MAP_TYPE_COOL) // 6
         .export_values();
+
+    py::implicitly_convertible<int, ::gr::qtgui::data_type_t>();
+    py::implicitly_convertible<int, ::gr::qtgui::graph_t>();
+    py::implicitly_convertible<int, ::gr::qtgui::intensity_t>();
 }

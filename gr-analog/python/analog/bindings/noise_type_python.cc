@@ -34,4 +34,6 @@ void bind_noise_type(py::module& m)
         .value("GR_LAPLACIAN", gr::analog::GR_LAPLACIAN) // 202
         .value("GR_IMPULSE", gr::analog::GR_IMPULSE)     // 203
         .export_values();
+
+    py::implicitly_convertible<int, gr::analog::noise_type_t>();
 }

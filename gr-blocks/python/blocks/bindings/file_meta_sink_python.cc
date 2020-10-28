@@ -42,6 +42,8 @@ void bind_file_meta_sink(py::module& m)
         .value("GR_FILE_DOUBLE", gr::blocks::GR_FILE_DOUBLE)       // 6
         .export_values();
 
+    py::implicitly_convertible<int, gr::blocks::gr_file_types>();
+
     py::class_<file_meta_sink,
                gr::sync_block,
                gr::block,
