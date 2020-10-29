@@ -11,7 +11,8 @@ install(
   peak_detector2.grc
   py_snippets_demo.grc
   selector.grc
-  test_stream_mux_tags.grc
+  stream_mux_demo.grc
+  stream_demux_demo.grc
   vector_source_with_tags.grc
   msg_to_var.grc
   var_to_msg.grc
