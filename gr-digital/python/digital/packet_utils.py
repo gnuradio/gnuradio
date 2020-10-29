@@ -8,11 +8,11 @@
 #
 
 
+import math
 import struct
 
 import numpy
 
-from gnuradio import gru
 from . import crc
 
 
@@ -166,7 +166,7 @@ def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
         number of bytes of padding to append.
     """
     modulus = 128
-    byte_modulus = gru.lcm(modulus // 8, samples_per_symbol) * bits_per_symbol // samples_per_symbol
+    byte_modulus = (modulus // 8) // math.gcd(modulus // 8, samples_per_symbol) * bits_per_symbol
     r = pkt_byte_len % byte_modulus
     if r == 0:
         return 0

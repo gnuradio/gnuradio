@@ -8,7 +8,8 @@
 #
 
 
-from gnuradio import gr, gru
+import math
+from gnuradio import gr
 from . import filter_python as filter
 
 _plot = None
@@ -80,7 +81,7 @@ class _rational_resampler_base(gr.hier_block2):
         if taps is None and fractional_bw is None:
             fractional_bw = 0.4
 
-        d = gru.gcd(interpolation, decimation)
+        d = math.gcd(interpolation, decimation)
 
         # If we have user-provided taps and the interp and decim
         # values have a common divisor, we don't reduce these values
@@ -142,5 +143,3 @@ class rational_resampler_fcc(_rational_resampler_base):
         """
         _rational_resampler_base.__init__(self, filter.rational_resampler_base_fcc,
                                           interpolation, decimation, taps, fractional_bw)
-
-
