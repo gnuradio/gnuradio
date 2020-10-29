@@ -12,7 +12,6 @@ GR_PYTHON_INSTALL(FILES
     freqz.py
     gnuplot_freqz.py
     hexint.py
-    mathmisc.py
     msgq_runner.py
     daemon.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/gru

@@ -48,6 +48,7 @@ Please see fm_demod.py and am_demod.py for details of the demodulation
 blocks.
 """
 
+import math
 import sys
 from argparse import ArgumentParser
 from gnuradio import gr, gru, uhd, audio
@@ -174,9 +175,9 @@ class app_top_block(gr.top_block):
             tail = ctcss
 
         if options.output_rate != audio_rate:
-            out_lcm = gru.lcm(audio_rate, options.output_rate)
-            out_interp = out_lcm // audio_rate
-            out_decim = out_lcm // options.output_rate
+            out_gcd = math.gcd(audio_rate, options.output_rate)
+            out_interp = options.output_rate // out_gcd
+            out_decim = audio_rate // out_gcd
             rsamp = filter.rational_resampler_fff(out_interp, out_decim)
             self.connect(tail, rsamp)
             tail = rsamp
