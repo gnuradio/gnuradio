@@ -59,9 +59,9 @@ from gnuradio.eng_option import eng_option
 
 # (device_rate, channel_rate, audio_rate, channel_pass, channel_stop, demod)
 DEMOD_PARAMS = {
-                'AM'  : (256e3,  16e3, 16e3,  5000,   8000, analog.demod_10k0a3e_cf),
-                'FM'  : (256e3,  32e3,  8e3,  8000,   9000, analog.demod_20k0f3e_cf),
-                'WFM' : (320e3, 320e3, 32e3, 80000, 115000, analog.demod_200kf3e_cf)
+                'AM'  : (256000,  16000, 16000,  5000,   8000, analog.demod_10k0a3e_cf),
+                'FM'  : (256000,  32000,  8000,  8000,   9000, analog.demod_20k0f3e_cf),
+                'WFM' : (320000, 320000, 32000, 80000, 115000, analog.demod_200kf3e_cf)
                }
 
 class uhd_src(gr.hier_block2):
