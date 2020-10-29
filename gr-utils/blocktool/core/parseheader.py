@@ -42,7 +42,7 @@ class BlockHeaderParser(BlockTool):
         : returns the parsed header data in python dict
         : return dict keys: namespace, class, io_signature, make,
                        properties, methods
-    : Can be used as an CLI command or an extenal API
+    : Can be used as an CLI command or an external API
     """
     name = 'Block Parse Header'
     description = 'Create a parsed output from a block header file'
@@ -95,7 +95,7 @@ class BlockHeaderParser(BlockTool):
         : returns the parsed header data in python dict
         : return dict keys: namespace, class, io_signature, make,
                        properties, methods
-        : Can be used as an CLI command or an extenal API
+        : Can be used as an CLI command or an external API
         """
         gr = self.modname.split('-')[0]
         module = self.modname.split('-')[-1]

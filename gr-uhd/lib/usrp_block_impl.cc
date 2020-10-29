@@ -494,7 +494,7 @@ void usrp_block_impl::msg_handler_command(pmt::pmt_t msg)
     // End of legacy backward compat code.
 
     // pmt_dict is a subclass of pmt_pair. Make sure we use pmt_pair!
-    // Old behavior was that these checks were interchangably. Be aware of this change!
+    // Old behavior was that these checks were interchangeable. Be aware of this change!
     if (!(pmt::is_dict(msg)) && pmt::is_pair(msg)) {
         GR_LOG_DEBUG(
             d_logger,

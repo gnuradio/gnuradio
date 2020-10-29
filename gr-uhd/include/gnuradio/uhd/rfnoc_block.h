@@ -34,7 +34,7 @@ public:
 
     //! Factory function to create a UHD block controller reference
     //
-    // \param graph Refernce to the flowgraph's RFNoC graph
+    // \param graph Reference to the flowgraph's RFNoC graph
     // \param block_args Block args
     // \param block_name Block name (e.g. "DDC")
     // \param device_select Device index (motherboard index)

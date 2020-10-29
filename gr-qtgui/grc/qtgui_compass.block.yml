@@ -34,7 +34,7 @@ parameters:
     options: ['False', 'True']
     option_labels: ['Stream', 'Message']
 -   id: backgroundColor
-    label: Backround Color
+    label: Background Color
     dtype: enum
     default: 'default'
     options: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']

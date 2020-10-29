@@ -50,6 +50,6 @@ templates:
         ${gui_hint() % win}
 
 documentation: |-
-    This block displays the selected graphic item.  You can pass a filename as a string in a message to change the image on the fly.  overlays can also be added by passing in a message with a dictionary of a list of dictionaries in the car portion of the message.  Each dicationary should have the following keys: 'filename','x','y', and an optional 'scalefactor'.  Setting the x/y attributes to -1,-1 will remove an overlay.  Otherwise items are indexed by filename and can be animated throughout the backgound image.
+    This block displays the selected graphic item.  You can pass a filename as a string in a message to change the image on the fly.  overlays can also be added by passing in a message with a dictionary of a list of dictionaries in the car portion of the message.  Each dictionary should have the following keys: 'filename','x','y', and an optional 'scalefactor'.  Setting the x/y attributes to -1,-1 will remove an overlay.  Otherwise items are indexed by filename and can be animated throughout the background image.
 
 file_format: 1
