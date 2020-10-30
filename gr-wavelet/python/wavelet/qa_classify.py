@@ -168,4 +168,4 @@ class test_classify(gr_unittest.TestCase):
         assert sum < 1e-6
 
 if __name__ == '__main__':
-   gr_unittest.run(test_classify, "test_classify.xml")
+   gr_unittest.run(test_classify)

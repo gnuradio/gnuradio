@@ -179,4 +179,4 @@ class test_depuncture (gr_unittest.TestCase):
         self.assertEqual(self.expected, dst_data)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_depuncture, "test_depuncture.xml")
+    gr_unittest.run(test_depuncture)

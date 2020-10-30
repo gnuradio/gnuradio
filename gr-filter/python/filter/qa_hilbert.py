@@ -58,4 +58,4 @@ class test_hilbert(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 5)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_hilbert, "test_hilbert.xml")
+    gr_unittest.run(test_hilbert)

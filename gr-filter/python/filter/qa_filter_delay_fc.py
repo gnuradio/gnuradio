@@ -141,4 +141,4 @@ class test_filter_delay_fc(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_filter_delay_fc, "test_filter_delay_fc.xml")
+    gr_unittest.run(test_filter_delay_fc)

@@ -104,5 +104,5 @@ class test_vector_insert(gr_unittest.TestCase):
             self.assertTrue(expected_result[i] == offsets[i])
 
 if __name__ == '__main__':
-    gr_unittest.run(test_vector_insert, "test_vector_insert.xml")
+    gr_unittest.run(test_vector_insert)
 

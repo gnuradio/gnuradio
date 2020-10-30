@@ -211,4 +211,4 @@ class test_chunks_to_symbols(gr_unittest.TestCase):
         self.assertEqual(expected_result, actual_result)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_chunks_to_symbols, "test_chunks_to_symbols.xml")
+    gr_unittest.run(test_chunks_to_symbols)

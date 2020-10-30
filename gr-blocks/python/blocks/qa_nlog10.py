@@ -32,5 +32,5 @@ class test_nlog10(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_nlog10, "test_nlog10.xml")
+    gr_unittest.run(test_nlog10)
 

@@ -43,5 +43,5 @@ class test_flowgraph (gr_unittest.TestCase):
         self.assertEqual([1, 2, 3], data)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_flowgraph, 'test_flowgraph.xml')
+    gr_unittest.run(test_flowgraph)
 

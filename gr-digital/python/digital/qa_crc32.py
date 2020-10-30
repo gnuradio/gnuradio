@@ -46,4 +46,4 @@ class test_crc32(gr_unittest.TestCase):
         self.assertEqual(expected_result, result)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_crc32, "test_crc32.xml")
+    gr_unittest.run(test_crc32)

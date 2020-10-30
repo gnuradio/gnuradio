@@ -72,5 +72,5 @@ class test_tcp_sink(gr_unittest.TestCase):
         #print "tb_rcv stopped by Timer"
 
 if __name__ == '__main__':
-    gr_unittest.run(test_tcp_sink, "test_tcp_server_sink.xml")
+    gr_unittest.run(test_tcp_sink)
 

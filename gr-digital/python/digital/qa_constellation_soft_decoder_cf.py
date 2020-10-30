@@ -157,5 +157,4 @@ class test_constellation_soft_decoder(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    #gr_unittest.run(test_constellation_soft_decoder, "test_constellation_soft_decoder.xml")
     gr_unittest.run(test_constellation_soft_decoder)

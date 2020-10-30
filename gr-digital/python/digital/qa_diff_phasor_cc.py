@@ -32,5 +32,5 @@ class test_diff_phasor(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(expected_result, actual_result)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_diff_phasor, "test_diff_phasor.xml")
+    gr_unittest.run(test_diff_phasor)
 

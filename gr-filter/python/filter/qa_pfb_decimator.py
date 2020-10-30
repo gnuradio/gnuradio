@@ -143,4 +143,4 @@ class test_pfb_decimator(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(expected_data3[-Ntest:], dst_data3[-Ntest:], 4)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_pfb_decimator, "test_pfb_decimator.xml")
+    gr_unittest.run(test_pfb_decimator)

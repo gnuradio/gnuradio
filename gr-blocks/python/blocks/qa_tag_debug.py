@@ -29,4 +29,4 @@ class test_tag_debug(gr_unittest.TestCase):
         x = op.current_tags()
 
 if __name__ == '__main__':
-    gr_unittest.run(test_tag_debug, "test_tag_debug.xml")
+    gr_unittest.run(test_tag_debug)

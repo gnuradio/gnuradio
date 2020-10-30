@@ -152,5 +152,5 @@ class test_udp_sink_source(gr_unittest.TestCase):
         #print "tb_rcv stopped by Timer"
 
 if __name__ == '__main__':
-    gr_unittest.run(test_udp_sink_source, "test_udp_sink_source.xml")
+    gr_unittest.run(test_udp_sink_source)
 

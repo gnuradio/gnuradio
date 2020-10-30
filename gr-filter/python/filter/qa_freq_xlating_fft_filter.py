@@ -132,4 +132,4 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
         self.assert_fft_ok(expected_data, result_data)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_freq_xlating_filter, "test_freq_xlating_filter.xml")
+    gr_unittest.run(test_freq_xlating_filter)

@@ -124,4 +124,4 @@ class test_fastnoise_source(gr_unittest.TestCase):
         src2 = analog.fastnoise_source_f(type=analog.GR_LAPLACIAN, **self.default_args)
         self.assertTrue(numpy.array_equal(numpy.array(src.samples()), numpy.array(src2.samples())))
 if __name__ == '__main__':
-    gr_unittest.run(test_fastnoise_source, "test_fastnoise_source.xml")
+    gr_unittest.run(test_fastnoise_source)

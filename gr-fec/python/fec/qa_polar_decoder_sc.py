@@ -106,4 +106,4 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_polar_decoder_sc, "test_polar_decoder_sc.xml")
+    gr_unittest.run(test_polar_decoder_sc)

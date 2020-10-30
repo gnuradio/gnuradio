@@ -41,4 +41,4 @@ class test_binary_slicer_fb(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_binary_slicer_fb, "test_binary_slicer_fb.xml")
+    gr_unittest.run(test_binary_slicer_fb)

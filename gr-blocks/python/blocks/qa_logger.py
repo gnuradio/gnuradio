@@ -82,4 +82,4 @@ class test_logger (gr_unittest.TestCase):
         self.assertEqual(b.one_in_n.log_level(), "alert")
 
 if __name__ == '__main__':
-    gr_unittest.run(test_logger, "test_logger.xml")
+    gr_unittest.run(test_logger)

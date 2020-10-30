@@ -32,4 +32,4 @@ class test_g721_vocoder (gr_unittest.TestCase):
         self.assertEqual(list(data), actual_result)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_g721_vocoder, "test_g721_vocoder.xml")
+    gr_unittest.run(test_g721_vocoder)

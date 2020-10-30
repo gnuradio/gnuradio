@@ -158,6 +158,6 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         self.assertEqual(msg, {'packet_len': packet_length, 'packet_num': 1, 'frame_len': 4})
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_packet_headerparser_b, "qa_packet_headerparser_b.xml")
+    gr_unittest.run(qa_packet_headerparser_b)
 
 

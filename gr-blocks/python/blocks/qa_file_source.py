@@ -138,4 +138,4 @@ class test_file_source(gr_unittest.TestCase):
         self.assertEqual(tags[1].offset, 1000)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_file_source, "test_file_source.xml")
+    gr_unittest.run(test_file_source)

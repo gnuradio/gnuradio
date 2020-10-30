@@ -83,4 +83,4 @@ class test_peak_detector(gr_unittest.TestCase):
         self.assertEqual(expected_result, dst_data)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_peak_detector, "test_peak_detector.xml")
+    gr_unittest.run(test_peak_detector)

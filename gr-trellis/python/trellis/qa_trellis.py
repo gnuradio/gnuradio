@@ -120,4 +120,4 @@ class trellis_tb(gr.top_block):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_trellis, "test_trellis.xml")
+    gr_unittest.run(test_trellis)

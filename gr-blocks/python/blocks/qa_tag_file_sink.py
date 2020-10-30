@@ -57,4 +57,4 @@ class test_tag_file_sink(gr_unittest.TestCase):
         self.assertEqual(idata1, (7, 8))
 
 if __name__ == '__main__':
-    gr_unittest.run(test_tag_file_sink, "test_tag_file_sink.xml")
+    gr_unittest.run(test_tag_file_sink)

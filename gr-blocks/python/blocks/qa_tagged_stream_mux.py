@@ -104,5 +104,5 @@ class qa_tagged_stream_mux (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_tagged_stream_mux, "qa_tagged_stream_mux.xml")
+    gr_unittest.run(qa_tagged_stream_mux)
 

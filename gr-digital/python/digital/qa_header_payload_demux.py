@@ -620,4 +620,4 @@ class qa_header_payload_demux (gr_unittest.TestCase):
         self.assertEqual(payload_sink.data(), list([2]*total_payload_len))
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_header_payload_demux, "qa_header_payload_demux.xml")
+    gr_unittest.run(qa_header_payload_demux)

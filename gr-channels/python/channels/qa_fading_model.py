@@ -46,4 +46,4 @@ class test_fading_model(gr_unittest.TestCase):
         #self.assertComplexTuplesAlmostEqual(exp_data, dst_data, 5)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_fading_model, "test_fading_model.xml")
+    gr_unittest.run(test_fading_model)

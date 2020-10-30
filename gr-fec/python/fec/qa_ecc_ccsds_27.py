@@ -38,4 +38,4 @@ class test_ccsds_27 (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_ccsds_27, "test_ccsds_27.xml")
+    gr_unittest.run(test_ccsds_27)

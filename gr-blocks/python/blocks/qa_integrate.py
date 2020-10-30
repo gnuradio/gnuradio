@@ -82,4 +82,4 @@ class test_integrate (gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(dst_data, dst.data(), 6)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_integrate, "test_integrate.xml")
+    gr_unittest.run(test_integrate)

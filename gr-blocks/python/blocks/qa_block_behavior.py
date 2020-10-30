@@ -65,4 +65,4 @@ class test_block_behavior(gr_unittest.TestCase):
         self.assertEqual(maxn_post, 1024)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_block_behavior, "test_block_behavior.xml")
+    gr_unittest.run(test_block_behavior)

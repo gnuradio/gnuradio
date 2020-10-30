@@ -31,4 +31,4 @@ class qa_plateau_detector_fb (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_plateau_detector_fb, "qa_plateau_detector_fb.xml")
+    gr_unittest.run(qa_plateau_detector_fb)

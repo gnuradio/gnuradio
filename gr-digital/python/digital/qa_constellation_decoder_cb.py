@@ -59,4 +59,4 @@ class test_constellation_decoder(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_constellation_decoder, "test_constellation_decoder.xml")
+    gr_unittest.run(test_constellation_decoder)

@@ -99,5 +99,5 @@ class test_tag_utils (gr_unittest.TestCase):
 
 if __name__ == '__main__':
     print('hi')
-    gr_unittest.run(test_tag_utils, "test_tag_utils.xml")
+    gr_unittest.run(test_tag_utils)
 

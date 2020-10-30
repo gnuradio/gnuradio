@@ -356,4 +356,4 @@ class qa_burst_shaper (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_burst_shaper, "qa_burst_shaper.xml")
+    gr_unittest.run(qa_burst_shaper)

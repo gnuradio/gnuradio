@@ -94,5 +94,5 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         self.assertEqual(sink.data(), expected_data)
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_packet_headergenerator_bb, "qa_packet_headergenerator_bb.xml")
+    gr_unittest.run(qa_packet_headergenerator_bb)
 

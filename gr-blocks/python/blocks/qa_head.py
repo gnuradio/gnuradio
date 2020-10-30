@@ -32,4 +32,4 @@ class test_head(gr_unittest.TestCase):
         self.assertEqual(expected_result, dst_data)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_head, "test_head.xml")
+    gr_unittest.run(test_head)

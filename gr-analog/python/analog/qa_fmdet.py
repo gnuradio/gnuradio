@@ -63,5 +63,5 @@ class test_fmdet_cf(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_result, result_data, 4)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_fmdet_cf, "test_fmdet_cf.xml")
+    gr_unittest.run(test_fmdet_cf)
 

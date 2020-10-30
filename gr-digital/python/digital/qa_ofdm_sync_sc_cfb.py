@@ -160,4 +160,4 @@ class qa_ofdm_sync_sc_cfb (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_ofdm_sync_sc_cfb, "qa_ofdm_sync_sc_cfb.xml")
+    gr_unittest.run(qa_ofdm_sync_sc_cfb)

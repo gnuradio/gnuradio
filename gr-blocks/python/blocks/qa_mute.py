@@ -74,4 +74,4 @@ class test_mute(gr_unittest.TestCase):
         self.help_cc((src_data,), expected_result, op)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_mute, "test_mute.xml")
+    gr_unittest.run(test_mute)
