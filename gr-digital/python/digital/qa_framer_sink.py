@@ -28,7 +28,7 @@ def to_1_0_string(L):
     return ''.join([chr(x + ord('0')) for x in L])
 
 
-class test_framker_sink(gr_unittest.TestCase):
+class test_framer_sink(gr_unittest.TestCase):
 
     def setUp(self):
         self.tb = gr.top_block()
@@ -89,4 +89,4 @@ class test_framker_sink(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_framker_sink)
+    gr_unittest.run(test_framer_sink)
