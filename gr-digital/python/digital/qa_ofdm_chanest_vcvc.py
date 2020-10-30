@@ -301,10 +301,11 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
 
         def run_flow_graph(sync_sym1, sync_sym2, data_sym):
             top_block = gr.top_block()
-            carr_offset = random.randint(-max_offset / 2, max_offset / 2) * 2
+            carr_offset = random.randint(-max_offset // 2, max_offset // 2) * 2
             tx_data = shift_tuple(sync_sym1, carr_offset) + \
                 shift_tuple(sync_sym2, carr_offset) + \
-                shift_tuple(data_sym, carr_offset)
+                shift_tuple(data_sym, carr_offset) + \
+                tuple((0,) * fft_len)
             channel = [
                 rand_range(
                     min_chan_ampl,
