@@ -20,6 +20,7 @@
 namespace gr {
 namespace blocks {
 
+// Smart Pointer wrapper for all types
 template <class T>
 typename add_blk<T>::sptr add_blk<T>::make(size_t vlen)
 {
@@ -67,6 +68,48 @@ int add_blk_impl<float>::work(int noutput_items,
 }
 
 
+// Complex implementation
+template <>
+add_blk_impl<gr_complex>::add_blk_impl(size_t vlen)
+    : sync_block("add_cc",
+                 io_signature::make(1, -1, sizeof(gr_complex) * vlen),
+                 io_signature::make(1, 1, sizeof(gr_complex) * vlen)),
+      d_vlen(vlen)
+{
+    // addition is done on floats, so no need to complex-align
+    const int alignment_multiple = volk_get_alignment() / sizeof(gr_complex);
+    set_alignment(std::max(1, alignment_multiple));
+}
+
+template <>
+int add_blk_impl<gr_complex>::work(int noutput_items,
+                                   gr_vector_const_void_star& input_items,
+                                   gr_vector_void_star& output_items)
+{
+    float* out = static_cast<float*>(output_items[0]);
+    int noi = d_vlen * noutput_items * 2; // attention: number of floats!
+
+    // strange single-input add case
+    if (input_items.size() == 1) {
+        memcpy(out, input_items[0], noi * sizeof(float));
+        return noutput_items;
+    }
+
+    // for two inputs, add up the two inputs into the output
+    volk_32f_x2_add_32f(out,
+                        static_cast<const float*>(input_items[0]),
+                        static_cast<const float*>(input_items[1]),
+                        noi);
+
+    // for more inputs, add the rest on top
+    for (size_t i = 2; i < input_items.size(); i++) {
+        volk_32f_x2_add_32f(out, out, static_cast<const float*>(input_items[i]), noi);
+    }
+    return noutput_items;
+}
+
+
+// Generic implementation
 template <class T>
 add_blk_impl<T>::add_blk_impl(size_t vlen)
     : sync_block("add_blk",
