@@ -13,13 +13,14 @@ import tempfile
 import array
 from gnuradio import gr, gr_unittest, blocks
 
+
 class test_file_sink(gr_unittest.TestCase):
 
-    def setUp (self):
+    def setUp(self):
         os.environ['GR_CONF_CONTROLPORT_ON'] = 'False'
-        self.tb = gr.top_block ()
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
     def test_file_sink(self):
@@ -42,6 +43,7 @@ class test_file_sink(gr_unittest.TestCase):
             result_data = array.array('f')
             result_data.fromfile(datafile, len(data))
             self.assertFloatTuplesAlmostEqual(expected_result, result_data)
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_file_sink)

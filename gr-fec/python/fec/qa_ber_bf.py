@@ -9,7 +9,6 @@
 #
 
 
-
 import numpy
 import copy
 
@@ -45,7 +44,8 @@ class test_ber_bf(gr_unittest.TestCase):
         self.tb.run()
 
         data = dst.data()
-        expected_result = self.log_ber(1., N) # [numpy.log10(1.0 / (8.0 * N)), ]
+        # [numpy.log10(1.0 / (8.0 * N)), ]
+        expected_result = self.log_ber(1., N)
 
         self.assertFloatTuplesAlmostEqual(expected_result, data, 5)
 

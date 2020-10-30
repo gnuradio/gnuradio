@@ -11,12 +11,13 @@
 
 from gnuradio import gr, gr_unittest, qtgui
 
+
 class test_qtgui(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
     # Tests to make sure we can instantiate the sink.
@@ -76,6 +77,7 @@ class test_qtgui(gr_unittest.TestCase):
 
     def test14(self):
         self.qtsnk = qtgui.eye_sink_c(1024, 1, 1, None)
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_qtgui)

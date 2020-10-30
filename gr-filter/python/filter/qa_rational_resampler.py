@@ -34,6 +34,7 @@ def reference_dec_filter(src_data, decim, taps):
     tb = None
     return result_data
 
+
 def reference_interp_filter(src_data, interp, taps):
     tb = gr.top_block()
     src = blocks.vector_source_f(src_data)
@@ -44,6 +45,7 @@ def reference_interp_filter(src_data, interp, taps):
     result_data = dst.data()
     tb = None
     return result_data
+
 
 def reference_interp_dec_filter(src_data, interp, decim, taps):
     tb = gr.top_block()
@@ -66,10 +68,9 @@ class test_rational_resampler (gr_unittest.TestCase):
     def tearDown(self):
         pass
 
-
     def test_000_1_to_1(self):
         taps = (-4, 5)
-        src_data = (234,  -4,  23,  -56,  45,    98,  -23,  -7)
+        src_data = (234, -4, 23, -56, 45, 98, -23, -7)
         xr = (1186, -112, 339, -460, -167, 582)
         expected_result = [float(x) for x in xr]
 
@@ -87,13 +88,13 @@ class test_rational_resampler (gr_unittest.TestCase):
         taps = [1, 10, 100, 1000, 10000]
         src_data = (0, 2, 3, 5, 7, 11, 13, 17)
         interpolation = 3
-        xr = (2,20,200,2003,20030,
-              300,3005,30050,
-              500,5007,50070,
-              700,7011,70110,
-              1100,11013,110130,
-              1300,13017,130170,
-              1700.0,17000.0,170000.0, 0.0)
+        xr = (2, 20, 200, 2003, 20030,
+              300, 3005, 30050,
+              500, 5007, 50070,
+              700, 7011, 70110,
+              1100, 11013, 110130,
+              1300, 13017, 130170,
+              1700.0, 17000.0, 170000.0, 0.0)
         expected_result = [float(x) for x in xr]
 
         tb = gr.top_block()
@@ -111,7 +112,8 @@ class test_rational_resampler (gr_unittest.TestCase):
         src_data = random_floats(10000)
         interpolation = 3
 
-        expected_result = reference_interp_filter(src_data, interpolation, taps)
+        expected_result = reference_interp_filter(
+            src_data, interpolation, taps)
 
         tb = gr.top_block()
         src = blocks.vector_source_f(src_data)
@@ -123,8 +125,8 @@ class test_rational_resampler (gr_unittest.TestCase):
         result_data = dst.data()
 
         N = 1000
-        offset = len(taps)-1
-        self.assertEqual(expected_result[offset:offset+N], result_data[0:N])
+        offset = len(taps) - 1
+        self.assertEqual(expected_result[offset:offset + N], result_data[0:N])
 
     def xtest_003_interp(self):
         taps = random_floats(9)
@@ -143,9 +145,9 @@ class test_rational_resampler (gr_unittest.TestCase):
         result_data = dst.data()
 
         N = 10
-        offset = 10#len(taps)-1
-        print(expected_result[100+offset:100+offset+N])
-        print(result_data[100:100+N])
+        offset = 10  # len(taps)-1
+        print(expected_result[100 + offset:100 + offset + N])
+        print(result_data[100:100 + N])
         #self.assertEqual(expected_result[offset:offset+N], result_data[0:N])
 
     # FIXME disabled.  Triggers hang on SuSE 10.0
@@ -157,11 +159,12 @@ class test_rational_resampler (gr_unittest.TestCase):
         random.seed(0)    # we want reproducibility
 
         for ntaps in range(1, MAX_TAPS + 1):
-            for decim in range(1, MAX_DECIM+1):
-                for ilen in range(ntaps + decim, ntaps + OUTPUT_LEN*decim):
+            for decim in range(1, MAX_DECIM + 1):
+                for ilen in range(ntaps + decim, ntaps + OUTPUT_LEN * decim):
                     src_data = random_floats(ilen)
                     taps = random_floats(ntaps)
-                    expected_result = reference_dec_filter(src_data, decim, taps)
+                    expected_result = reference_dec_filter(
+                        src_data, decim, taps)
 
                     tb = gr.top_block()
                     src = blocks.vector_source_f(src_data)
@@ -176,13 +179,16 @@ class test_rational_resampler (gr_unittest.TestCase):
                     L2 = len(expected_result)
                     L = min(L1, L2)
                     if False:
-                        sys.stderr.write('delta = %2d: ntaps = %d decim = %d ilen = %d\n' % (L2 - L1, ntaps, decim, ilen))
-                        sys.stderr.write('  len(result_data) = %d  len(expected_result) = %d\n' %
-                                         (len(result_data), len(expected_result)))
+                        sys.stderr.write(
+                            'delta = %2d: ntaps = %d decim = %d ilen = %d\n' %
+                            (L2 - L1, ntaps, decim, ilen))
+                        sys.stderr.write(
+                            '  len(result_data) = %d  len(expected_result) = %d\n' %
+                            (len(result_data), len(expected_result)))
                     self.assertEqual(expected_result[0:L], result_data[0:L])
 
-
     # FIXME disabled.  Triggers hang on SuSE 10.0
+
     def xtest_005_interp_random_vals(self):
         MAX_TAPS = 9
         MAX_INTERP = 7
@@ -191,11 +197,12 @@ class test_rational_resampler (gr_unittest.TestCase):
         random.seed(0)    # we want reproducibility
 
         for ntaps in range(1, MAX_TAPS + 1):
-            for interp in range(1, MAX_INTERP+1):
+            for interp in range(1, MAX_INTERP + 1):
                 for ilen in range(ntaps, ntaps + INPUT_LEN):
                     src_data = random_floats(ilen)
                     taps = random_floats(ntaps)
-                    expected_result = reference_interp_filter(src_data, interp, taps)
+                    expected_result = reference_interp_filter(
+                        src_data, interp, taps)
 
                     tb = gr.top_block()
                     src = blocks.vector_source_f(src_data)
@@ -208,14 +215,17 @@ class test_rational_resampler (gr_unittest.TestCase):
                     L1 = len(result_data)
                     L2 = len(expected_result)
                     L = min(L1, L2)
-                    #if True or abs(L1-L2) > 1:
+                    # if True or abs(L1-L2) > 1:
                     if False:
-                        sys.stderr.write('delta = %2d: ntaps = %d interp = %d ilen = %d\n' % (L2 - L1, ntaps, interp, ilen))
-                        #sys.stderr.write('  len(result_data) = %d  len(expected_result) = %d\n' %
+                        sys.stderr.write(
+                            'delta = %2d: ntaps = %d interp = %d ilen = %d\n' %
+                            (L2 - L1, ntaps, interp, ilen))
+                        # sys.stderr.write('  len(result_data) = %d  len(expected_result) = %d\n' %
                         #                 (len(result_data), len(expected_result)))
                     #self.assertEqual(expected_result[0:L], result_data[0:L])
                     # FIXME check first ntaps+1 answers
-                    self.assertEqual(expected_result[ntaps+1:L], result_data[ntaps+1:L])
+                    self.assertEqual(
+                        expected_result[ntaps + 1:L], result_data[ntaps + 1:L])
 
     def test_006_interp_decim(self):
         taps = random_floats(31)
@@ -223,7 +233,8 @@ class test_rational_resampler (gr_unittest.TestCase):
         interp = 3
         decimation = 2
 
-        expected_result = reference_interp_dec_filter(src_data, interp, decimation, taps)
+        expected_result = reference_interp_dec_filter(
+            src_data, interp, decimation, taps)
 
         tb = gr.top_block()
         src = blocks.vector_source_f(src_data)
@@ -236,7 +247,8 @@ class test_rational_resampler (gr_unittest.TestCase):
 
         N = 1000
         offset = len(taps) // 2
-        self.assertFloatTuplesAlmostEqual(expected_result[offset:offset+N], result_data[0:N], 5)
+        self.assertFloatTuplesAlmostEqual(
+            expected_result[offset:offset + N], result_data[0:N], 5)
 
 
 if __name__ == '__main__':

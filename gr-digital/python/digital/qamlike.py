@@ -13,6 +13,7 @@ This file contains constellations that are similar to QAM, but are not perfect s
 from . import digital_python
 from .qam import large_ampls_to_corners_mapping
 
+
 def qam32_holeinside_constellation(large_ampls_to_corners=False):
     # First make constellation for one quadrant.
     #      0   1   2
@@ -36,10 +37,10 @@ def qam32_holeinside_constellation(large_ampls_to_corners=False):
         ((1, 2), 0b111),
         ((2, 1), 0b100),
         ((2, 2), 0b110),
-        )
-    points = [None]*32
+    )
+    points = [None] * 32
     for indices, number in indices_and_numbers:
-        p_in_quadrant = 0.5+indices[0] + 1j*(0.5+indices[1])
+        p_in_quadrant = 0.5 + indices[0] + 1j * (0.5 + indices[1])
         for quadrant in range(4):
             index = number + 8 * quadrant
             rotation = pow(1j, quadrant)
@@ -53,8 +54,8 @@ def qam32_holeinside_constellation(large_ampls_to_corners=False):
     width = 0.5
     pre_diff_code = []
     if not large_ampls_to_corners:
-        constellation = digital_python.constellation_rect(points, pre_diff_code, 4,
-                                                        side, side, width, width)
+        constellation = digital_python.constellation_rect(
+            points, pre_diff_code, 4, side, side, width, width)
     else:
         sector_values = large_ampls_to_corners_mapping(side, points, width)
         constellation = digital_python.constellation_expl_rect(

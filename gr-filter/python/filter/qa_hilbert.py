@@ -12,26 +12,29 @@
 from gnuradio import gr, gr_unittest, filter, blocks
 import math
 
+
 def sig_source_f(samp_rate, freq, amp, N):
     t = [float(x) / samp_rate for x in range(N)]
-    y = [math.sin(2.*math.pi*freq*x) for x in t]
+    y = [math.sin(2. * math.pi * freq * x) for x in t]
     return y
+
 
 def fir_filter(x, taps):
     y = []
-    x2 = (len(taps)-1)*[0,] + x
-    delay = (len(taps)-1) // 2
+    x2 = (len(taps) - 1) * [0, ] + x
+    delay = (len(taps) - 1) // 2
     for i in range(len(x)):
         yi = 0
         for j in range(len(taps)):
-            yi += taps[len(taps)-1-j] * x2[i+j]
-        y.append(complex(x2[i+delay], yi))
+            yi += taps[len(taps) - 1 - j] * x2[i + j]
+        y.append(complex(x2[i + delay], yi))
     return y
+
 
 class test_hilbert(gr_unittest.TestCase):
 
     def setUp(self):
-        self.tb = gr.top_block ()
+        self.tb = gr.top_block()
 
     def tearDown(self):
         self.tb = None
@@ -56,6 +59,7 @@ class test_hilbert(gr_unittest.TestCase):
         dst_data = dst1.data()
 
         self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 5)
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_hilbert)

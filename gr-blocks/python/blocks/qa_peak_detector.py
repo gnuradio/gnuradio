@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, blocks
 
+
 class test_peak_detector(gr_unittest.TestCase):
 
     def setUp(self):
@@ -81,6 +82,7 @@ class test_peak_detector(gr_unittest.TestCase):
         dst_data = dst.data()
 
         self.assertEqual(expected_result, dst_data)
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_peak_detector)

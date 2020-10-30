@@ -14,6 +14,7 @@ import numpy
 from gnuradio import gr_unittest
 from gnuradio import fft
 
+
 class test_window(gr_unittest.TestCase):
     """
     Unit tests for fft.window
@@ -29,9 +30,13 @@ class test_window(gr_unittest.TestCase):
         """
         Verify window normalization
         """
-        win = fft.window.build(fft.win_type.WIN_BLACKMAN_hARRIS, 21, normalize=True)
-        power = numpy.sum([x*x for x in win])/len(win)
+        win = fft.window.build(
+            fft.win_type.WIN_BLACKMAN_hARRIS,
+            21,
+            normalize=True)
+        power = numpy.sum([x * x for x in win]) / len(win)
         self.assertAlmostEqual(power, 1.0)
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_window)
