@@ -63,7 +63,7 @@ public:
                       int post_padding,
                       bool insert_phasing,
                       const std::string& length_tag_name);
-    ~burst_shaper_impl();
+    ~burst_shaper_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
@@ -71,10 +71,10 @@ public:
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
                      gr_vector_void_star& output_items) override;
-    int pre_padding() const { return d_nprepad; }
-    int post_padding() const { return d_npostpad; }
-    int prefix_length() const;
-    int suffix_length() const;
+    int pre_padding() const override { return d_nprepad; }
+    int post_padding() const override { return d_npostpad; }
+    int prefix_length() const override;
+    int suffix_length() const override;
 };
 
 } // namespace digital

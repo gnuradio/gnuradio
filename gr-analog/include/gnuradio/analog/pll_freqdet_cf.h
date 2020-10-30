@@ -49,7 +49,7 @@ public:
      */
     static sptr make(float loop_bw, float max_freq, float min_freq);
 
-    virtual void set_loop_bandwidth(float bw) = 0;
+    void set_loop_bandwidth(float bw) override = 0;
     virtual void set_damping_factor(float df) = 0;
     virtual void set_alpha(float alpha) = 0;
     virtual void set_beta(float beta) = 0;

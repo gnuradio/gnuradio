@@ -25,7 +25,7 @@ private:
 
 public:
     min_blk_impl(size_t vlen, size_t vlen_out);
-    ~min_blk_impl();
+    ~min_blk_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

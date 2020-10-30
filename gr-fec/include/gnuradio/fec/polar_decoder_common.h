@@ -44,13 +44,13 @@ public:
                          int num_info_bits,
                          std::vector<int> frozen_bit_positions,
                          std::vector<uint8_t> frozen_bit_values);
-    ~polar_decoder_common();
+    ~polar_decoder_common() override;
 
     // FECAPI
-    double rate() { return (1.0 * get_output_size() / get_input_size()); };
-    int get_input_size() { return block_size(); };
-    int get_output_size() { return num_info_bits(); };
-    bool set_frame_size(unsigned int frame_size) { return false; };
+    double rate() override { return (1.0 * get_output_size() / get_input_size()); };
+    int get_input_size() override { return block_size(); };
+    int get_output_size() override { return num_info_bits(); };
+    bool set_frame_size(unsigned int frame_size) override { return false; };
 
 private:
     static const float D_LLR_FACTOR;

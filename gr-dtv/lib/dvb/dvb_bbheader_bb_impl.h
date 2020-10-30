@@ -66,7 +66,7 @@ public:
                          dvbt2_inband_t inband,
                          int fecblocks,
                          int tsrate);
-    ~dvb_bbheader_bb_impl();
+    ~dvb_bbheader_bb_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

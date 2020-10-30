@@ -53,17 +53,17 @@ public:
                       bool is_static = true,
                       const std::string& key = "",
                       QWidget* parent = 0);
-    ~edit_box_msg_impl();
+    ~edit_box_msg_impl() override;
 
     // Overload the start method of gr::block to emit a message if a
     // default value is provided.
-    bool start();
+    bool start() override;
 
-    void exec_();
-    QWidget* qwidget();
+    void exec_() override;
+    QWidget* qwidget() override;
 
 #ifdef ENABLE_PYTHON
-    PyObject* pyqwidget();
+    PyObject* pyqwidget() override;
 #else
     void* pyqwidget();
 #endif

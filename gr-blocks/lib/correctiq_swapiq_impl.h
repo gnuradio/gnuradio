@@ -27,7 +27,7 @@ private:
 
 public:
     swap_iq_impl(int datatype, int datasize);
-    ~swap_iq_impl();
+    ~swap_iq_impl() override;
 
     // Where all the action really happens
     int work(int noutput_items,

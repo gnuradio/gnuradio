@@ -98,7 +98,7 @@ public:
                               const double samp_rate,
                               const std::vector<std::string>& special_tags,
                               const size_t header_padding);
-    ~header_payload_demux_impl();
+    ~header_payload_demux_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

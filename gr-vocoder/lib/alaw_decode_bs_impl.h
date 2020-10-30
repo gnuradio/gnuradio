@@ -20,7 +20,7 @@ class alaw_decode_bs_impl : public alaw_decode_bs
 {
 public:
     alaw_decode_bs_impl();
-    ~alaw_decode_bs_impl();
+    ~alaw_decode_bs_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

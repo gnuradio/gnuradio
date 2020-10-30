@@ -21,7 +21,7 @@ class ldpc_par_mtrx_encoder_impl : public ldpc_par_mtrx_encoder
 {
 private:
     // plug into the generic fec api
-    void generic_work(void* inbuffer, void* outbuffer);
+    void generic_work(void* inbuffer, void* outbuffer) override;
 
     // Number of bits in the frame to be encoded
     unsigned int d_frame_size;
@@ -37,12 +37,12 @@ private:
 
 public:
     ldpc_par_mtrx_encoder_impl(const code::ldpc_H_matrix::sptr H_obj);
-    ~ldpc_par_mtrx_encoder_impl();
+    ~ldpc_par_mtrx_encoder_impl() override;
 
-    double rate();
-    bool set_frame_size(unsigned int frame_size);
-    int get_output_size();
-    int get_input_size();
+    double rate() override;
+    bool set_frame_size(unsigned int frame_size) override;
+    int get_output_size() override;
+    int get_input_size() override;
 };
 
 } /* namespace code */

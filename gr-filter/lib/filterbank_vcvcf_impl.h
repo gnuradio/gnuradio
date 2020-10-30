@@ -27,11 +27,11 @@ private:
 
 public:
     filterbank_vcvcf_impl(const std::vector<std::vector<float>>& taps);
-    ~filterbank_vcvcf_impl();
+    ~filterbank_vcvcf_impl() override;
 
-    void set_taps(const std::vector<std::vector<float>>& taps);
-    void print_taps();
-    std::vector<std::vector<float>> taps() const;
+    void set_taps(const std::vector<std::vector<float>>& taps) override;
+    void print_taps() override;
+    std::vector<std::vector<float>> taps() const override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

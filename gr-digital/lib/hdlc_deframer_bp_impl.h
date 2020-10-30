@@ -32,7 +32,7 @@ private:
 
 public:
     hdlc_deframer_bp_impl(int length_min, int length_max);
-    ~hdlc_deframer_bp_impl();
+    ~hdlc_deframer_bp_impl() override;
 
     // Where all the action really happens
     int work(int noutput_items,

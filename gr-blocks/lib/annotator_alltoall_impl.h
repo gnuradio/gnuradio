@@ -25,9 +25,9 @@ private:
 
 public:
     annotator_alltoall_impl(int when, size_t sizeof_stream_item);
-    ~annotator_alltoall_impl();
+    ~annotator_alltoall_impl() override;
 
-    std::vector<tag_t> data() const { return d_stored_tags; }
+    std::vector<tag_t> data() const override { return d_stored_tags; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

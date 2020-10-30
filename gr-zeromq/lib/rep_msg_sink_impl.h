@@ -32,7 +32,7 @@ private:
 
 public:
     rep_msg_sink_impl(char* address, int timeout, bool bind);
-    ~rep_msg_sink_impl();
+    ~rep_msg_sink_impl() override;
 
     bool start() override;
     bool stop() override;

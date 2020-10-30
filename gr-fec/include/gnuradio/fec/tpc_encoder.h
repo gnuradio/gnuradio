@@ -33,9 +33,9 @@ class FEC_API tpc_encoder : public generic_encoder
                 int qval);
 
     // plug into the generic fec api
-    void generic_work(void* inBuffer, void* outbuffer);
-    int get_output_size();
-    int get_input_size();
+    void generic_work(void* inBuffer, void* outbuffer) override;
+    int get_output_size() override;
+    int get_input_size() override;
 
     std::vector<int> d_rowpolys;
     std::vector<int> d_colpolys;
@@ -91,15 +91,15 @@ class FEC_API tpc_encoder : public generic_encoder
     FILE* fp;
 
 public:
-    ~tpc_encoder();
+    ~tpc_encoder() override;
     static generic_encoder::sptr make(std::vector<int> row_poly,
                                       std::vector<int> col_poly,
                                       int krow,
                                       int kcol,
                                       int bval,
                                       int qval);
-    double rate() { return (1.0 * get_input_size() / get_output_size()); }
-    bool set_frame_size(unsigned int) { return false; }
+    double rate() override { return (1.0 * get_input_size() / get_output_size()); }
+    bool set_frame_size(unsigned int) override { return false; }
 };
 
 

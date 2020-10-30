@@ -28,7 +28,7 @@ private:
 
 public:
     vco_c_impl(double sampling_rate, double sensitivity, double amplitude);
-    ~vco_c_impl();
+    ~vco_c_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

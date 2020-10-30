@@ -247,7 +247,7 @@ public:
                                 dvbt_transmission_mode_t transmission_mode = gr::dtv::T2k,
                                 int include_cell_id = 0,
                                 int cell_id = 0);
-    ~dvbt_reference_signals_impl();
+    ~dvbt_reference_signals_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

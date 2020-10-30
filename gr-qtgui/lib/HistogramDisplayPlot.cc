@@ -58,7 +58,7 @@ public:
         setTrackerMode(QwtPicker::AlwaysOn);
     }
 
-    virtual ~HistogramDisplayZoomer() {}
+    ~HistogramDisplayZoomer() override {}
 
     virtual void updateTrackerText() { updateDisplay(); }
 
@@ -66,7 +66,7 @@ public:
 
 protected:
     using QwtPlotZoomer::trackerText;
-    virtual QwtText trackerText(const QPoint& p) const
+    QwtText trackerText(const QPoint& p) const override
     {
         QwtText t;
         QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);

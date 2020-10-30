@@ -35,7 +35,7 @@ public:
     QwtDblClickPlotPicker(QWidget*);
 #endif /* QWT_VERSION < 0x060100 */
 
-    ~QwtDblClickPlotPicker();
+    ~QwtDblClickPlotPicker() override;
 
     virtual QwtPickerMachine* stateMachine(int) const;
 };
@@ -44,14 +44,14 @@ class QTGUI_API QwtPickerDblClickPointMachine : public QwtPickerMachine
 {
 public:
     QwtPickerDblClickPointMachine();
-    ~QwtPickerDblClickPointMachine();
+    ~QwtPickerDblClickPointMachine() override;
 
 #if QWT_VERSION < 0x060000
     virtual CommandList
 #else
-    virtual QList<QwtPickerMachine::Command>
+    QList<QwtPickerMachine::Command>
 #endif
-    transition(const QwtEventPattern& eventPattern, const QEvent* e);
+    transition(const QwtEventPattern& eventPattern, const QEvent* e) override;
 };
 
 void check_set_qss(QApplication* app);

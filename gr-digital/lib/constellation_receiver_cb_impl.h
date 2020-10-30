@@ -27,9 +27,9 @@ public:
                                    float fmin,
                                    float fmax);
 
-    ~constellation_receiver_cb_impl();
+    ~constellation_receiver_cb_impl() override;
 
-    void setup_rpc();
+    void setup_rpc() override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
@@ -37,7 +37,7 @@ public:
                      gr_vector_void_star& output_items) override;
 
 protected:
-    void phase_error_tracking(float phase_error);
+    void phase_error_tracking(float phase_error) override;
 
 private:
     constellation_sptr d_constellation;

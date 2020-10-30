@@ -29,7 +29,7 @@ public:
                     firdes::win_type window = firdes::WIN_HAMMING,
                     double beta = 6.76);
 
-    ~hilbert_fc_impl();
+    ~hilbert_fc_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

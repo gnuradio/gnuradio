@@ -71,7 +71,7 @@ public:
                           int cut,
                           int flush,
                           float thresh);
-    ~conv_bit_corr_bb_impl();
+    ~conv_bit_corr_bb_impl() override;
 
     void catch_msg(pmt::pmt_t msg);
     int general_work(int noutput_items,
@@ -79,7 +79,7 @@ public:
                      gr_vector_const_void_star& input_items,
                      gr_vector_void_star& output_items) override;
 
-    float data_garble_rate(int taps, float target);
+    float data_garble_rate(int taps, float target) override;
 };
 
 } /* namespace fec */

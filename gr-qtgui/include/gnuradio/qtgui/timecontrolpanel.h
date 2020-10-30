@@ -28,7 +28,7 @@ class TimeControlPanel : public QVBoxLayout
 
 public:
     TimeControlPanel(TimeDisplayForm* form);
-    ~TimeControlPanel();
+    ~TimeControlPanel() override;
 
 public slots:
     void toggleAutoScale(bool en);

@@ -34,7 +34,7 @@ private:
 
 public:
     catv_trellis_enc_bb_impl(catv_constellation_t constellation);
-    ~catv_trellis_enc_bb_impl();
+    ~catv_trellis_enc_bb_impl() override;
 
     // Where all the action really happens
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;

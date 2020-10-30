@@ -36,15 +36,15 @@ public:
     correlate_access_code_tag_bb_impl(const std::string& access_code,
                                       int threshold,
                                       const std::string& tag_name);
-    ~correlate_access_code_tag_bb_impl();
+    ~correlate_access_code_tag_bb_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
              gr_vector_void_star& output_items) override;
 
-    bool set_access_code(const std::string& access_code);
-    void set_threshold(int threshold) { d_threshold = threshold; };
-    void set_tagname(const std::string& tag_name)
+    bool set_access_code(const std::string& access_code) override;
+    void set_threshold(int threshold) override { d_threshold = threshold; };
+    void set_tagname(const std::string& tag_name) override
     {
         d_key = pmt::string_to_symbol(tag_name);
     };

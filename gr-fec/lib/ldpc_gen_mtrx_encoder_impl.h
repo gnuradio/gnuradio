@@ -21,9 +21,9 @@ namespace code {
 class FEC_API ldpc_gen_mtrx_encoder_impl : public ldpc_gen_mtrx_encoder
 {
 private:
-    void generic_work(void* inbuffer, void* outbuffer);
-    int get_output_size();
-    int get_input_size();
+    void generic_work(void* inbuffer, void* outbuffer) override;
+    int get_output_size() override;
+    int get_input_size() override;
 
     // Number of bits in the information word
     unsigned int d_frame_size;
@@ -39,10 +39,10 @@ private:
 
 public:
     ldpc_gen_mtrx_encoder_impl(const ldpc_G_matrix::sptr G_obj);
-    ~ldpc_gen_mtrx_encoder_impl();
+    ~ldpc_gen_mtrx_encoder_impl() override;
 
-    bool set_frame_size(unsigned int frame_size);
-    double rate();
+    bool set_frame_size(unsigned int frame_size) override;
+    double rate() override;
 };
 
 } /* namespace code */

@@ -70,7 +70,7 @@ class DIGITAL_API header_format_default : public header_format_base
 public:
     typedef std::shared_ptr<header_format_default> sptr;
     header_format_default(const std::string& access_code, int threshold, int bps);
-    virtual ~header_format_default();
+    ~header_format_default() override;
 
     /*!
      * Creates a header from the access code and packet length and
@@ -89,10 +89,10 @@ public:
      *        input PDU). Data can be extracted from this for the
      *        header formatting or inserted.
      */
-    virtual bool format(int nbytes_in,
-                        const unsigned char* input,
-                        pmt::pmt_t& output,
-                        pmt::pmt_t& info);
+    bool format(int nbytes_in,
+                const unsigned char* input,
+                pmt::pmt_t& output,
+                pmt::pmt_t& info) override;
 
     /*!
      * Parses a header of the form:
@@ -124,15 +124,15 @@ public:
      *        premature return after a bad header could be less than
      *        this.
      */
-    virtual bool parse(int nbits_in,
-                       const unsigned char* input,
-                       std::vector<pmt::pmt_t>& info,
-                       int& nbits_processed);
+    bool parse(int nbits_in,
+               const unsigned char* input,
+               std::vector<pmt::pmt_t>& info,
+               int& nbits_processed) override;
 
     /*!
      * Returns the length of the formatted header in bits.
      */
-    virtual size_t header_nbits() const;
+    size_t header_nbits() const override;
 
     /*!
      * Updates the access code. Must be a string of 1's and 0's and
@@ -188,18 +188,18 @@ protected:
     int d_nbits; //!< num bits processed since reset
 
     //! Access code found, start getting the header
-    virtual void enter_have_sync();
+    void enter_have_sync() override;
 
     //! Header found, setup for pulling in the hard decision bits
-    virtual void enter_have_header(int payload_len);
+    void enter_have_header(int payload_len) override;
 
     //! Verify that the header is valid
-    virtual bool header_ok();
+    bool header_ok() override;
 
     /*! Get info from the header; return payload length and package
      *  rest of data in d_info dictionary.
      */
-    virtual int header_payload();
+    int header_payload() override;
 };
 
 } // namespace digital

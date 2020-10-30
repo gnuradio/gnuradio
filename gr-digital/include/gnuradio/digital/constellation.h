@@ -243,7 +243,7 @@ public:
                      unsigned int dimensionality,
                      bool normalize_points = true);
 
-    unsigned int decision_maker(const gr_complex* sample);
+    unsigned int decision_maker(const gr_complex* sample) override;
     // void calc_metric(gr_complex *sample, float *metric, trellis_metric_type_t type);
     // void calc_euclidean_metric(gr_complex *sample, float *metric);
     // void calc_hard_symbol_metric(gr_complex *sample, float *metric);
@@ -288,9 +288,9 @@ public:
                          unsigned int dimensionality,
                          unsigned int n_sectors);
 
-    ~constellation_sector();
+    ~constellation_sector() override;
 
-    unsigned int decision_maker(const gr_complex* sample);
+    unsigned int decision_maker(const gr_complex* sample) override;
 
 protected:
     virtual unsigned int get_sector(const gr_complex* sample) = 0;
@@ -346,7 +346,7 @@ public:
                                          unsigned int imag_sectors,
                                          float width_real_sectors,
                                          float width_imag_sectors);
-    ~constellation_rect();
+    ~constellation_rect() override;
 
 protected:
     constellation_rect(std::vector<gr_complex> constell,
@@ -357,9 +357,9 @@ protected:
                        float width_real_sectors,
                        float width_imag_sectors);
 
-    unsigned int get_sector(const gr_complex* sample);
+    unsigned int get_sector(const gr_complex* sample) override;
     gr_complex calc_sector_center(unsigned int sector);
-    unsigned int calc_sector_value(unsigned int sector);
+    unsigned int calc_sector_value(unsigned int sector) override;
 
 private:
     unsigned int n_real_sectors;
@@ -403,7 +403,7 @@ public:
                      float width_real_sectors,
                      float width_imag_sectors,
                      std::vector<unsigned int> sector_values);
-    ~constellation_expl_rect();
+    ~constellation_expl_rect() override;
 
 protected:
     constellation_expl_rect(std::vector<gr_complex> constellation,
@@ -415,7 +415,7 @@ protected:
                             float width_imag_sectors,
                             std::vector<unsigned int> sector_values);
 
-    unsigned int calc_sector_value(unsigned int sector)
+    unsigned int calc_sector_value(unsigned int sector) override
     {
         return d_sector_values[sector];
     }
@@ -450,12 +450,12 @@ public:
                      std::vector<int> pre_diff_code,
                      unsigned int n_sectors);
 
-    ~constellation_psk();
+    ~constellation_psk() override;
 
 protected:
-    unsigned int get_sector(const gr_complex* sample);
+    unsigned int get_sector(const gr_complex* sample) override;
 
-    unsigned int calc_sector_value(unsigned int sector);
+    unsigned int calc_sector_value(unsigned int sector) override;
 
     constellation_psk(std::vector<gr_complex> constell,
                       std::vector<int> pre_diff_code,
@@ -487,9 +487,9 @@ public:
     // public constructor
     static sptr make();
 
-    ~constellation_bpsk();
+    ~constellation_bpsk() override;
 
-    unsigned int decision_maker(const gr_complex* sample);
+    unsigned int decision_maker(const gr_complex* sample) override;
 
 protected:
     constellation_bpsk();
@@ -523,9 +523,9 @@ public:
     // public constructor
     static sptr make();
 
-    ~constellation_qpsk();
+    ~constellation_qpsk() override;
 
-    unsigned int decision_maker(const gr_complex* sample);
+    unsigned int decision_maker(const gr_complex* sample) override;
 
 protected:
     constellation_qpsk();
@@ -558,9 +558,9 @@ public:
     // public constructor
     static sptr make();
 
-    ~constellation_dqpsk();
+    ~constellation_dqpsk() override;
 
-    unsigned int decision_maker(const gr_complex* sample);
+    unsigned int decision_maker(const gr_complex* sample) override;
 
 protected:
     constellation_dqpsk();
@@ -595,9 +595,9 @@ public:
     // public constructor
     static sptr make();
 
-    ~constellation_8psk();
+    ~constellation_8psk() override;
 
-    unsigned int decision_maker(const gr_complex* sample);
+    unsigned int decision_maker(const gr_complex* sample) override;
 
 protected:
     constellation_8psk();
@@ -631,9 +631,9 @@ public:
     // public constructor
     static sptr make();
 
-    ~constellation_8psk_natural();
+    ~constellation_8psk_natural() override;
 
-    unsigned int decision_maker(const gr_complex* sample);
+    unsigned int decision_maker(const gr_complex* sample) override;
 
 protected:
     constellation_8psk_natural();
@@ -669,9 +669,9 @@ public:
     // public constructor
     static sptr make();
 
-    ~constellation_16qam();
+    ~constellation_16qam() override;
 
-    unsigned int decision_maker(const gr_complex* sample);
+    unsigned int decision_maker(const gr_complex* sample) override;
 
 protected:
     constellation_16qam();

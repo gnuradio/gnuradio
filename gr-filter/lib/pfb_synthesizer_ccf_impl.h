@@ -53,14 +53,14 @@ public:
     pfb_synthesizer_ccf_impl(unsigned int numchans,
                              const std::vector<float>& taps,
                              bool twox);
-    ~pfb_synthesizer_ccf_impl();
+    ~pfb_synthesizer_ccf_impl() override;
 
-    void set_taps(const std::vector<float>& taps);
-    std::vector<std::vector<float>> taps() const;
-    void print_taps();
+    void set_taps(const std::vector<float>& taps) override;
+    std::vector<std::vector<float>> taps() const override;
+    void print_taps() override;
 
-    void set_channel_map(const std::vector<int>& map);
-    std::vector<int> channel_map() const;
+    void set_channel_map(const std::vector<int>& map) override;
+    std::vector<int> channel_map() const override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

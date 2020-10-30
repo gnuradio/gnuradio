@@ -58,7 +58,7 @@ public slots:
 
 public:
     mywindow();
-    virtual ~mywindow();
+    ~mywindow() override;
 
     // call start() on the topblock
     void start();

@@ -28,10 +28,10 @@ private:
 
 public:
     delay_impl(size_t itemsize, int delay);
-    ~delay_impl();
+    ~delay_impl() override;
 
-    int dly() const { return history() - 1; }
-    void set_dly(int d);
+    int dly() const override { return history() - 1; }
+    void set_dly(int d) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

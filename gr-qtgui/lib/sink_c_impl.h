@@ -76,32 +76,32 @@ public:
                 bool plottime,
                 bool plotconst,
                 QWidget* parent);
-    ~sink_c_impl();
+    ~sink_c_impl() override;
 
     bool check_topology(int ninputs, int noutputs) override;
 
-    void exec_();
-    QWidget* qwidget();
+    void exec_() override;
+    QWidget* qwidget() override;
 
 #ifdef ENABLE_PYTHON
-    PyObject* pyqwidget();
+    PyObject* pyqwidget() override;
 #else
     void* pyqwidget();
 #endif
 
-    void set_fft_size(const int fftsize);
-    int fft_size() const;
+    void set_fft_size(const int fftsize) override;
+    int fft_size() const override;
 
-    void set_frequency_range(const double centerfreq, const double bandwidth);
-    void set_fft_power_db(double min, double max);
-    void enable_rf_freq(bool en);
+    void set_frequency_range(const double centerfreq, const double bandwidth) override;
+    void set_fft_power_db(double min, double max) override;
+    void enable_rf_freq(bool en) override;
 
     // void set_time_domain_axis(double min, double max);
     // void set_constellation_axis(double xmin, double xmax,
     //                            double ymin, double ymax);
     // void set_constellation_pen_size(int size);
 
-    void set_update_time(double t);
+    void set_update_time(double t) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

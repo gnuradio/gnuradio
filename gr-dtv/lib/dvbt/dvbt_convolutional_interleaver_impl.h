@@ -25,7 +25,7 @@ private:
 
 public:
     dvbt_convolutional_interleaver_impl(int nsize, int I, int M);
-    ~dvbt_convolutional_interleaver_impl();
+    ~dvbt_convolutional_interleaver_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

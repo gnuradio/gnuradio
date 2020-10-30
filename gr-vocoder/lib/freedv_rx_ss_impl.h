@@ -46,11 +46,11 @@ private:
 
 public:
     freedv_rx_ss_impl(int mode, float squelch_thresh, int interleave_frames);
-    ~freedv_rx_ss_impl();
+    ~freedv_rx_ss_impl() override;
 
-    void set_squelch_thresh(float squelch_thresh);
-    float squelch_thresh();
-    void set_squelch_en(bool squelch_enabled);
+    void set_squelch_thresh(float squelch_thresh) override;
+    float squelch_thresh() override;
+    void set_squelch_en(bool squelch_enabled) override;
 
     // Where all the action really happens
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;

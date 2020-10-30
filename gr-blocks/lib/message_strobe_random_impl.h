@@ -42,16 +42,16 @@ public:
                                message_strobe_random_distribution_t dist,
                                float mean_ms,
                                float std_ms);
-    ~message_strobe_random_impl();
+    ~message_strobe_random_impl() override;
 
-    void set_msg(pmt::pmt_t msg) { d_msg = msg; }
-    pmt::pmt_t msg() const { return d_msg; }
-    void set_mean(float mean_ms);
-    float mean() const;
-    void set_std(float std_ms);
-    float std() const { return d_std_ms; }
-    void set_dist(message_strobe_random_distribution_t dist) { d_dist = dist; }
-    message_strobe_random_distribution_t dist() const { return d_dist; }
+    void set_msg(pmt::pmt_t msg) override { d_msg = msg; }
+    pmt::pmt_t msg() const override { return d_msg; }
+    void set_mean(float mean_ms) override;
+    float mean() const override;
+    void set_std(float std_ms) override;
+    float std() const override { return d_std_ms; }
+    void set_dist(message_strobe_random_distribution_t dist) override { d_dist = dist; }
+    message_strobe_random_distribution_t dist() const override { return d_dist; }
 };
 
 } /* namespace blocks */

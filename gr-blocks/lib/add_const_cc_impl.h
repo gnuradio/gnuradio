@@ -25,11 +25,11 @@ private:
 public:
     add_const_cc_impl(gr_complex k);
 
-    void setup_rpc();
+    void setup_rpc() override;
 
-    gr_complex k() const { return d_k; }
+    gr_complex k() const override { return d_k; }
 
-    void set_k(gr_complex k);
+    void set_k(gr_complex k) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

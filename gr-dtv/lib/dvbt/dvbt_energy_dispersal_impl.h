@@ -36,7 +36,7 @@ private:
 
 public:
     dvbt_energy_dispersal_impl(int nsize);
-    ~dvbt_energy_dispersal_impl();
+    ~dvbt_energy_dispersal_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

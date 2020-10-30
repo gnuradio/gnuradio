@@ -39,13 +39,13 @@ public:
                                  const std::vector<TAP_T>& taps,
                                  double center_freq,
                                  double sampling_freq);
-    virtual ~freq_xlating_fir_filter_impl();
+    ~freq_xlating_fir_filter_impl() override;
 
-    void set_center_freq(double center_freq);
-    double center_freq() const;
+    void set_center_freq(double center_freq) override;
+    double center_freq() const override;
 
-    void set_taps(const std::vector<TAP_T>& taps);
-    std::vector<TAP_T> taps() const;
+    void set_taps(const std::vector<TAP_T>& taps) override;
+    std::vector<TAP_T> taps() const override;
 
     void handle_set_center_freq(pmt::pmt_t msg);
 

@@ -34,7 +34,7 @@ class WAVELET_API squash_ff_impl : public squash_ff
 public:
     squash_ff_impl(const std::vector<float>& igrid, const std::vector<float>& ogrid);
 
-    ~squash_ff_impl();
+    ~squash_ff_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

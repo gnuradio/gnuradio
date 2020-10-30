@@ -35,11 +35,11 @@ public:
                      io_signature::make(1, 1, sizeof_stream_item))
     {
     }
-    ~null_source_qa_impl() {}
+    ~null_source_qa_impl() override {}
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items)
+             gr_vector_void_star& output_items) override
     {
         void* optr;
         for (size_t n = 0; n < input_items.size(); n++) {
@@ -68,10 +68,10 @@ public:
                      io_signature::make(0, 0, 0))
     {
     }
-    ~null_sink_qa_impl() {}
+    ~null_sink_qa_impl() override {}
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items)
+             gr_vector_void_star& output_items) override
     {
         return noutput_items;
     }

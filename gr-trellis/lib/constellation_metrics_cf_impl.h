@@ -28,7 +28,7 @@ private:
 public:
     constellation_metrics_cf_impl(digital::constellation_sptr constellation,
                                   digital::trellis_metric_type_t TYPE);
-    ~constellation_metrics_cf_impl();
+    ~constellation_metrics_cf_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

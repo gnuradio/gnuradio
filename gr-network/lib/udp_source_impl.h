@@ -67,9 +67,9 @@ public:
                     bool notify_missed,
                     bool source_zeros,
                     bool ipv6);
-    ~udp_source_impl();
+    ~udp_source_impl() override;
 
-    bool stop();
+    bool stop() override;
 
     size_t data_available();
     inline size_t netdata_available();

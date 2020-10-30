@@ -25,7 +25,7 @@ private:
 
 public:
     skiphead_impl(size_t itemsize, uint64_t nitems_to_skip);
-    ~skiphead_impl();
+    ~skiphead_impl() override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

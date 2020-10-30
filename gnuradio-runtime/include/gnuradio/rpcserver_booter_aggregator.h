@@ -23,11 +23,11 @@ class GR_RUNTIME_API rpcserver_booter_aggregator : public virtual rpcserver_boot
 {
 public:
     rpcserver_booter_aggregator();
-    ~rpcserver_booter_aggregator();
+    ~rpcserver_booter_aggregator() override;
 
-    rpcserver_base* i();
-    const std::string& type();
-    const std::vector<std::string> endpoints();
+    rpcserver_base* i() override;
+    const std::string& type() override;
+    const std::vector<std::string> endpoints() override;
 
     const std::vector<std::string>& registeredServers();
 

@@ -35,7 +35,7 @@ private:
     gr_derived_block();
 
 public:
-    ~gr_derived_block();
+    ~gr_derived_block() override;
 };
 
 

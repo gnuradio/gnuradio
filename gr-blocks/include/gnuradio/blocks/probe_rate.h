@@ -40,8 +40,8 @@ public:
 
     virtual double rate() = 0;
 
-    virtual bool start() = 0;
-    virtual bool stop() = 0;
+    bool start() override = 0;
+    bool stop() override = 0;
 };
 
 } /* namespace blocks */

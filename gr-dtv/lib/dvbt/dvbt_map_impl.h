@@ -47,7 +47,7 @@ public:
                   dvbt_hierarchy_t hierarchy,
                   dvbt_transmission_mode_t transmission,
                   float gain);
-    ~dvbt_map_impl();
+    ~dvbt_map_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

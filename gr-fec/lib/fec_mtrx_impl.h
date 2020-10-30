@@ -51,10 +51,10 @@ public:
     const gsl_matrix* H() const;
 
     //! Get the codeword length n
-    unsigned int n() const;
+    unsigned int n() const override;
 
     //! Get the information word length k
-    unsigned int k() const;
+    unsigned int k() const override;
 
     //! Subtract matrices using mod2 operations
     void
@@ -75,7 +75,7 @@ public:
      */
     bool parity_bits_come_last() const;
 
-    virtual ~fec_mtrx_impl();
+    ~fec_mtrx_impl() override;
 };
 } // namespace code
 } // namespace fec

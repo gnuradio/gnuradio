@@ -24,7 +24,7 @@ private:
 
 public:
     tag_share_impl(size_t sizeof_io_item, size_t sizeof_share_item, size_t vlen);
-    ~tag_share_impl();
+    ~tag_share_impl() override;
 
     // Where all the action really happens
     int work(int noutput_items,

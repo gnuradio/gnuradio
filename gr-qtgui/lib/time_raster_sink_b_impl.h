@@ -63,57 +63,57 @@ public:
                             const std::string& name,
                             int nconnections,
                             QWidget* parent = NULL);
-    ~time_raster_sink_b_impl();
+    ~time_raster_sink_b_impl() override;
 
     bool check_topology(int ninputs, int noutputs) override;
 
-    void exec_();
-    QWidget* qwidget();
+    void exec_() override;
+    QWidget* qwidget() override;
 
 #ifdef ENABLE_PYTHON
-    PyObject* pyqwidget();
+    PyObject* pyqwidget() override;
 #else
     void* pyqwidget();
 #endif
 
-    void set_update_time(double t);
-    void set_title(const std::string& title);
-    void set_line_label(unsigned int which, const std::string& label);
-    void set_line_color(unsigned int which, const std::string& color);
-    void set_line_width(unsigned int which, int width);
-    void set_line_style(unsigned int which, Qt::PenStyle style);
-    void set_line_marker(unsigned int which, QwtSymbol::Style marker);
-    void set_line_alpha(unsigned int which, double alpha);
-    void set_color_map(unsigned int which, const int color);
+    void set_update_time(double t) override;
+    void set_title(const std::string& title) override;
+    void set_line_label(unsigned int which, const std::string& label) override;
+    void set_line_color(unsigned int which, const std::string& color) override;
+    void set_line_width(unsigned int which, int width) override;
+    void set_line_style(unsigned int which, Qt::PenStyle style) override;
+    void set_line_marker(unsigned int which, QwtSymbol::Style marker) override;
+    void set_line_alpha(unsigned int which, double alpha) override;
+    void set_color_map(unsigned int which, const int color) override;
 
-    std::string title();
-    std::string line_label(unsigned int which);
-    std::string line_color(unsigned int which);
-    int line_width(unsigned int which);
-    int line_style(unsigned int which);
-    int line_marker(unsigned int which);
-    double line_alpha(unsigned int which);
-    int color_map(unsigned int which);
+    std::string title() override;
+    std::string line_label(unsigned int which) override;
+    std::string line_color(unsigned int which) override;
+    int line_width(unsigned int which) override;
+    int line_style(unsigned int which) override;
+    int line_marker(unsigned int which) override;
+    double line_alpha(unsigned int which) override;
+    int color_map(unsigned int which) override;
 
-    void set_size(int width, int height);
+    void set_size(int width, int height) override;
 
-    void set_samp_rate(const double samp_rate);
-    void set_num_rows(double rows);
-    void set_num_cols(double cols);
+    void set_samp_rate(const double samp_rate) override;
+    void set_num_rows(double rows) override;
+    void set_num_cols(double cols) override;
 
-    double num_rows();
-    double num_cols();
+    double num_rows() override;
+    double num_cols() override;
 
-    void set_multiplier(const std::vector<float>& mult);
-    void set_offset(const std::vector<float>& offset);
+    void set_multiplier(const std::vector<float>& mult) override;
+    void set_offset(const std::vector<float>& offset) override;
 
-    void set_intensity_range(float min, float max);
+    void set_intensity_range(float min, float max) override;
 
-    void enable_menu(bool en);
-    void enable_grid(bool en);
-    void enable_autoscale(bool en);
-    void enable_axis_labels(bool en);
-    void reset();
+    void enable_menu(bool en) override;
+    void enable_grid(bool en) override;
+    void enable_autoscale(bool en) override;
+    void enable_axis_labels(bool en) override;
+    void reset() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

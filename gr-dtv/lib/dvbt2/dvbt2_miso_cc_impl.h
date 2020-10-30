@@ -33,7 +33,7 @@ public:
                        dvb_guardinterval_t guardinterval,
                        int numdatasyms,
                        dvbt2_papr_t paprmode);
-    ~dvbt2_miso_cc_impl();
+    ~dvbt2_miso_cc_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

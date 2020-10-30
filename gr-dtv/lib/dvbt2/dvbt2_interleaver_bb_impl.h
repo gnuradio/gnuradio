@@ -63,7 +63,7 @@ public:
     dvbt2_interleaver_bb_impl(dvb_framesize_t framesize,
                               dvb_code_rate_t rate,
                               dvb_constellation_t constellation);
-    ~dvbt2_interleaver_bb_impl();
+    ~dvbt2_interleaver_bb_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

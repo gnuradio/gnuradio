@@ -26,7 +26,7 @@ private:
 
 public:
     meas_evm_cc_impl(constellation_sptr cons, evm_measurement_t meas_type);
-    ~meas_evm_cc_impl();
+    ~meas_evm_cc_impl() override;
 
     // Where all the action really happens
     int work(int noutput_items,

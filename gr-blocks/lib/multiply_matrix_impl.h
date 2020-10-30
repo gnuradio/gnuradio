@@ -30,10 +30,10 @@ private:
 public:
     multiply_matrix_impl(std::vector<std::vector<T>> A,
                          gr::block::tag_propagation_policy_t tag_propagation_policy);
-    ~multiply_matrix_impl();
+    ~multiply_matrix_impl() override;
 
-    const std::vector<std::vector<T>>& get_A() const { return d_A; };
-    bool set_A(const std::vector<std::vector<T>>& new_A);
+    const std::vector<std::vector<T>>& get_A() const override { return d_A; };
+    bool set_A(const std::vector<std::vector<T>>& new_A) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

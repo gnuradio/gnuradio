@@ -43,7 +43,7 @@ class VectorDisplayPlot : public DisplayPlot
 
 public:
     VectorDisplayPlot(int nplots, QWidget*);
-    virtual ~VectorDisplayPlot();
+    ~VectorDisplayPlot() override;
 
     void setXAxisValues(const double start, const double step = 1.0);
 
@@ -55,9 +55,9 @@ public:
     void clearMaxData();
     void clearMinData();
 
-    void replot();
+    void replot() override;
 
-    void setYaxis(double min, double max);
+    void setYaxis(double min, double max) override;
     double getYMin() const;
     double getYMax() const;
 

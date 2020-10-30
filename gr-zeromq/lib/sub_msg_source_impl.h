@@ -32,7 +32,7 @@ public:
     bool d_finished;
 
     sub_msg_source_impl(char* address, int timeout, bool bind);
-    ~sub_msg_source_impl();
+    ~sub_msg_source_impl() override;
 
     bool start() override;
     bool stop() override;

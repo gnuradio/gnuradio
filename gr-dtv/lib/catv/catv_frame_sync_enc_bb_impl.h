@@ -22,7 +22,7 @@ private:
 
 public:
     catv_frame_sync_enc_bb_impl(catv_constellation_t constellation, int ctrlword);
-    ~catv_frame_sync_enc_bb_impl();
+    ~catv_frame_sync_enc_bb_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

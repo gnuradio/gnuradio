@@ -25,9 +25,9 @@ class GR_RUNTIME_API msg_accepter : public gr::messages::msg_accepter
 {
 public:
     msg_accepter();
-    ~msg_accepter();
+    ~msg_accepter() override;
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg);
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override;
 };
 
 } /* namespace gr */

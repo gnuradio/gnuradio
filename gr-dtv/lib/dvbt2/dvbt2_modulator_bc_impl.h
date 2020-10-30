@@ -31,7 +31,7 @@ public:
     dvbt2_modulator_bc_impl(dvb_framesize_t framesize,
                             dvb_constellation_t constellation,
                             dvbt2_rotation_t rotation);
-    ~dvbt2_modulator_bc_impl();
+    ~dvbt2_modulator_bc_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

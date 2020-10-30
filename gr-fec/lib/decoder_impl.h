@@ -32,8 +32,8 @@ public:
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
                      gr_vector_void_star& output_items) override;
-    int fixed_rate_ninput_to_noutput(int ninput);
-    int fixed_rate_noutput_to_ninput(int noutput);
+    int fixed_rate_ninput_to_noutput(int ninput) override;
+    int fixed_rate_noutput_to_ninput(int noutput) override;
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 };
 

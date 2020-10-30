@@ -59,7 +59,7 @@ public:
                               dvbt2_preamble_t preamble,
                               dvbt2_showlevels_t showlevels,
                               float vclip);
-    ~dvbt2_p1insertion_cc_impl();
+    ~dvbt2_p1insertion_cc_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

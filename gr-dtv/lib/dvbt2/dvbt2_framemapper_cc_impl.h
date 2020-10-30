@@ -199,7 +199,7 @@ public:
                               dvbt2_reservedbiasbits_t reservedbiasbits,
                               dvbt2_l1scrambled_t l1scrambled,
                               dvbt2_inband_t inband);
-    ~dvbt2_framemapper_cc_impl();
+    ~dvbt2_framemapper_cc_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

@@ -33,13 +33,13 @@ public:
                  bool shift,
                  int nthreads = 1);
 
-    void set_nthreads(int n);
-    int nthreads() const;
-    bool set_window(const std::vector<float>& window);
+    void set_nthreads(int n) override;
+    int nthreads() const override;
+    bool set_window(const std::vector<float>& window) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace fft */

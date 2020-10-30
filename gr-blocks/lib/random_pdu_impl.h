@@ -34,7 +34,7 @@ public:
                     unsigned char byte_mask,
                     int length_modulo);
 
-    bool start();
+    bool start() override;
     void output_random();
     void generate_pdu(pmt::pmt_t msg) { output_random(); }
     void generate_pdu() { output_random(); }
