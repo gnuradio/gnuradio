@@ -25,7 +25,7 @@ private:
 public:
     complex_to_interleaved_char_impl(bool vector, float scale_factor);
 
-    virtual void set_scale_factor(float new_value) { d_scalar = new_value; };
+    void set_scale_factor(float new_value) override { d_scalar = new_value; };
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

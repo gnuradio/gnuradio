@@ -101,7 +101,7 @@ public:
     {
     }
 
-    virtual QwtText label(double value) const
+    QwtText label(double value) const override
     {
         return QString("%1").arg(value, 0, 'f', getFrequencyPrecision());
     }

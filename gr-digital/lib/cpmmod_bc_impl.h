@@ -41,14 +41,14 @@ public:
                    int samples_per_sym,
                    int L,
                    double beta = 0.3);
-    ~cpmmod_bc_impl();
+    ~cpmmod_bc_impl() override;
 
-    std::vector<float> taps() const;
-    int type() const;
-    float index() const;
-    int samples_per_sym() const;
-    int length() const;
-    double beta() const;
+    std::vector<float> taps() const override;
+    int type() const override;
+    float index() const override;
+    int samples_per_sym() const override;
+    int length() const override;
+    double beta() const override;
 };
 
 } /* namespace digital */

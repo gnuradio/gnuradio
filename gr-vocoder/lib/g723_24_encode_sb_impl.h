@@ -27,7 +27,7 @@ private:
 
 public:
     g723_24_encode_sb_impl();
-    ~g723_24_encode_sb_impl();
+    ~g723_24_encode_sb_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

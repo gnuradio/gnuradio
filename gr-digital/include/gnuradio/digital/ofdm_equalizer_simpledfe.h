@@ -70,12 +70,12 @@ public:
                              bool input_is_shifted = true,
                              bool enable_soft_output = false);
 
-    ~ofdm_equalizer_simpledfe();
+    ~ofdm_equalizer_simpledfe() override;
 
     void equalize(gr_complex* frame,
                   int n_sym,
                   const std::vector<gr_complex>& initial_taps = std::vector<gr_complex>(),
-                  const std::vector<tag_t>& tags = std::vector<tag_t>());
+                  const std::vector<tag_t>& tags = std::vector<tag_t>()) override;
 
     /*
      * \param fft_len FFT length

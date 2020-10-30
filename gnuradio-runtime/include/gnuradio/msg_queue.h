@@ -37,10 +37,10 @@ public:
     static sptr make(unsigned int limit = 0);
 
     msg_queue(unsigned int limit);
-    ~msg_queue();
+    ~msg_queue() override;
 
     //! Generic msg_handler method: insert the message.
-    void handle(message::sptr msg) { insert_tail(msg); }
+    void handle(message::sptr msg) override { insert_tail(msg); }
 
     /*!
      * \brief Insert message at tail of queue.

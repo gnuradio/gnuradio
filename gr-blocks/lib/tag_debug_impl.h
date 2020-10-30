@@ -33,19 +33,19 @@ public:
     tag_debug_impl(size_t sizeof_stream_item,
                    const std::string& name,
                    const std::string& key_filter = "");
-    ~tag_debug_impl();
+    ~tag_debug_impl() override;
 
-    void setup_rpc();
+    void setup_rpc() override;
 
-    std::vector<tag_t> current_tags();
-    int num_tags();
+    std::vector<tag_t> current_tags() override;
+    int num_tags() override;
 
-    void set_display(bool d);
+    void set_display(bool d) override;
 
-    void set_save_all(bool s);
+    void set_save_all(bool s) override;
 
-    void set_key_filter(const std::string& key_filter);
-    std::string key_filter() const;
+    void set_key_filter(const std::string& key_filter) override;
+    std::string key_filter() const override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

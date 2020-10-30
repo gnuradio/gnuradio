@@ -31,10 +31,10 @@ private:
 
 public:
     burst_tagger_impl(size_t itemsize);
-    ~burst_tagger_impl();
+    ~burst_tagger_impl() override;
 
-    void set_true_tag(const std::string& key, bool value);
-    void set_false_tag(const std::string& key, bool value);
+    void set_true_tag(const std::string& key, bool value) override;
+    void set_false_tag(const std::string& key, bool value) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

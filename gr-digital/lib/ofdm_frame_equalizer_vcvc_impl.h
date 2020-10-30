@@ -27,7 +27,7 @@ private:
 
 protected:
     void parse_length_tags(const std::vector<std::vector<tag_t>>& tags,
-                           gr_vector_int& n_input_items_reqd);
+                           gr_vector_int& n_input_items_reqd) override;
 
 public:
     ofdm_frame_equalizer_vcvc_impl(ofdm_equalizer_base::sptr equalizer,
@@ -35,7 +35,7 @@ public:
                                    const std::string& len_tag_key,
                                    bool propagate_channel_state,
                                    int fixed_frame_len);
-    ~ofdm_frame_equalizer_vcvc_impl();
+    ~ofdm_frame_equalizer_vcvc_impl() override;
 
     int work(int noutput_items,
              gr_vector_int& ninput_items,

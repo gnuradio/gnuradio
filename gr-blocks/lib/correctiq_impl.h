@@ -25,7 +25,7 @@ private:
 
 public:
     correctiq_impl();
-    ~correctiq_impl();
+    ~correctiq_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

@@ -45,7 +45,7 @@ public:
                               std::vector<std::vector<gr_complex>>(),
                           int symbols_skipped = 0,
                           bool input_is_shifted = true);
-    ~ofdm_equalizer_static();
+    ~ofdm_equalizer_static() override;
 
     /*! \brief Divide the input signal with the current channel state.
      *
@@ -57,7 +57,7 @@ public:
     void equalize(gr_complex* frame,
                   int n_sym,
                   const std::vector<gr_complex>& initial_taps = std::vector<gr_complex>(),
-                  const std::vector<tag_t>& tags = std::vector<tag_t>());
+                  const std::vector<tag_t>& tags = std::vector<tag_t>()) override;
 
     /*
      * \param fft_len FFT length

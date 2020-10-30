@@ -38,7 +38,7 @@ public:
                                     dvb_constellation_t constellation,
                                     dvbt_hierarchy_t hierarchy,
                                     dvbt_transmission_mode_t transmission);
-    ~dvbt_bit_inner_interleaver_impl();
+    ~dvbt_bit_inner_interleaver_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

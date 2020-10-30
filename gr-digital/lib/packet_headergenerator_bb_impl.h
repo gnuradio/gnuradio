@@ -23,12 +23,12 @@ private:
 public:
     packet_headergenerator_bb_impl(const packet_header_default::sptr& header_formatter,
                                    const std::string& len_tag_key);
-    ~packet_headergenerator_bb_impl();
+    ~packet_headergenerator_bb_impl() override;
 
-    void set_header_formatter(packet_header_default::sptr header_formatter);
+    void set_header_formatter(packet_header_default::sptr header_formatter) override;
 
     void remove_length_tags(const std::vector<std::vector<tag_t>>& tags){};
-    int calculate_output_stream_length(const gr_vector_int& ninput_items)
+    int calculate_output_stream_length(const gr_vector_int& ninput_items) override
     {
         return d_formatter->header_len();
     };

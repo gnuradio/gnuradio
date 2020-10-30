@@ -26,7 +26,7 @@ private:
 
 public:
     mmse_resampler_ff_impl(float phase_shift, float resamp_ratio);
-    ~mmse_resampler_ff_impl();
+    ~mmse_resampler_ff_impl() override;
 
     void handle_msg(pmt::pmt_t msg);
 
@@ -36,10 +36,10 @@ public:
                      gr_vector_const_void_star& input_items,
                      gr_vector_void_star& output_items) override;
 
-    float mu() const;
-    float resamp_ratio() const;
-    void set_mu(float mu);
-    void set_resamp_ratio(float resamp_ratio);
+    float mu() const override;
+    float resamp_ratio() const override;
+    void set_mu(float mu) override;
+    void set_resamp_ratio(float resamp_ratio) override;
 };
 
 } /* namespace filter */

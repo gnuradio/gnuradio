@@ -24,8 +24,8 @@ class BLOCKS_API repeat_impl : public repeat
 public:
     repeat_impl(size_t itemsize, int d_interp);
 
-    int interpolation() const { return d_interp; }
-    void set_interpolation(int interp);
+    int interpolation() const override { return d_interp; }
+    void set_interpolation(int interp) override;
 
 
     int work(int noutput_items,

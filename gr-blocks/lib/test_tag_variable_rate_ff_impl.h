@@ -28,7 +28,7 @@ protected:
 
 public:
     test_tag_variable_rate_ff_impl(bool update_once = false, double update_step = 0.001);
-    ~test_tag_variable_rate_ff_impl();
+    ~test_tag_variable_rate_ff_impl() override;
 
     // void setup_rpc();
 

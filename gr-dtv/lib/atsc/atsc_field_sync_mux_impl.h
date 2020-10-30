@@ -36,7 +36,7 @@ private:
 
 public:
     atsc_field_sync_mux_impl();
-    ~atsc_field_sync_mux_impl();
+    ~atsc_field_sync_mux_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

@@ -60,27 +60,27 @@ private:
 public:
     ldpc_G_matrix_impl(const std::string filename);
 
-    void encode(unsigned char* outbuffer, const unsigned char* inbuffer) const;
+    void encode(unsigned char* outbuffer, const unsigned char* inbuffer) const override;
 
     void decode(unsigned char* outbuffer,
                 const float* inbuffer,
                 unsigned int frame_size,
-                unsigned int max_iterations) const;
+                unsigned int max_iterations) const override;
 
-    unsigned int n() const { return fec_mtrx_impl::n(); }
+    unsigned int n() const override { return fec_mtrx_impl::n(); }
 
-    unsigned int k() const { return fec_mtrx_impl::k(); }
+    unsigned int k() const override { return fec_mtrx_impl::k(); }
 
     gsl_matrix* generate_H();
 
-    gr::fec::code::fec_mtrx_sptr get_base_sptr();
+    gr::fec::code::fec_mtrx_sptr get_base_sptr() override;
 
     /*!
      * \brief Destructor
      * \details
      * Calls the gsl_matrix_free function to free memory.
      */
-    virtual ~ldpc_G_matrix_impl();
+    ~ldpc_G_matrix_impl() override;
 };
 
 } // namespace code

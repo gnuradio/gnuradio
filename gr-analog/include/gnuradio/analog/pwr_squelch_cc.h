@@ -25,8 +25,8 @@ namespace analog {
 class ANALOG_API pwr_squelch_cc : public squelch_base_cc, virtual public block
 {
 protected:
-    virtual void update_state(const gr_complex& in) = 0;
-    virtual bool mute() const = 0;
+    void update_state(const gr_complex& in) override = 0;
+    bool mute() const override = 0;
 
 public:
     // gr::analog::pwr_squelch_cc::sptr
@@ -48,17 +48,17 @@ public:
      */
     static sptr make(double db, double alpha = 0.0001, int ramp = 0, bool gate = false);
 
-    virtual std::vector<float> squelch_range() const = 0;
+    std::vector<float> squelch_range() const override = 0;
 
     virtual double threshold() const = 0;
     virtual void set_threshold(double db) = 0;
     virtual void set_alpha(double alpha) = 0;
 
-    virtual int ramp() const = 0;
-    virtual void set_ramp(int ramp) = 0;
-    virtual bool gate() const = 0;
-    virtual void set_gate(bool gate) = 0;
-    virtual bool unmuted() const = 0;
+    int ramp() const override = 0;
+    void set_ramp(int ramp) override = 0;
+    bool gate() const override = 0;
+    void set_gate(bool gate) override = 0;
+    bool unmuted() const override = 0;
 };
 
 } /* namespace analog */

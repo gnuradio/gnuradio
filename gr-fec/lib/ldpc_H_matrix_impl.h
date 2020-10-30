@@ -76,28 +76,28 @@ public:
     ldpc_H_matrix_impl(const std::string filename, unsigned int gap);
 
     //! Encode \p inbuffer with LDPC H matrix into \p outbuffer.
-    void encode(unsigned char* outbuffer, const unsigned char* inbuffer) const;
+    void encode(unsigned char* outbuffer, const unsigned char* inbuffer) const override;
 
     //! Decode \p inbuffer with LDPC H matrix into \p outbuffer.
     void decode(unsigned char* outbuffer,
                 const float* inbuffer,
                 unsigned int frame_size,
-                unsigned int max_iterations) const;
+                unsigned int max_iterations) const override;
 
     //! Redefine these here as part of the public interface
-    unsigned int n() const { return fec_mtrx_impl::n(); };
+    unsigned int n() const override { return fec_mtrx_impl::n(); };
 
     //! Redefine these here as part of the public interface
-    unsigned int k() const { return fec_mtrx_impl::k(); };
+    unsigned int k() const override { return fec_mtrx_impl::k(); };
 
-    gr::fec::code::fec_mtrx_sptr get_base_sptr();
+    gr::fec::code::fec_mtrx_sptr get_base_sptr() override;
 
     /*!
      * \brief Destructor
      * \details
      * Calls the gsl_matrix_free function to free memory
      */
-    virtual ~ldpc_H_matrix_impl();
+    ~ldpc_H_matrix_impl() override;
 };
 
 } // namespace code

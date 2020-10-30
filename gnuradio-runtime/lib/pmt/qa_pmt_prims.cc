@@ -482,8 +482,8 @@ class qa_pmt_msg_accepter_nop : public gr::messages::msg_accepter
 {
 public:
     qa_pmt_msg_accepter_nop() {}
-    ~qa_pmt_msg_accepter_nop();
-    void post(pmt::pmt_t, pmt::pmt_t) {}
+    ~qa_pmt_msg_accepter_nop() override;
+    void post(pmt::pmt_t, pmt::pmt_t) override {}
 };
 
 qa_pmt_msg_accepter_nop::~qa_pmt_msg_accepter_nop() {}

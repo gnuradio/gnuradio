@@ -24,7 +24,7 @@ private:
 
 public:
     ival_decimator_impl(int decimation, int data_size);
-    ~ival_decimator_impl();
+    ~ival_decimator_impl() override;
 
     // Where all the action really happens
     int work(int noutput_items,

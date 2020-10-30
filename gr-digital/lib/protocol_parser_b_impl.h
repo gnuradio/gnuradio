@@ -24,7 +24,7 @@ private:
 
 public:
     protocol_parser_b_impl(const header_format_base::sptr& format);
-    ~protocol_parser_b_impl();
+    ~protocol_parser_b_impl() override;
 
     void set_threshold(unsigned int thresh);
     unsigned int threshold() const;

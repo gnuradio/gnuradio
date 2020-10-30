@@ -33,9 +33,9 @@ public:
                      gr_vector_const_void_star& input_items,
                      gr_vector_void_star& output_items) override;
 
-    void set_m(int m);
-    void set_n(int n);
-    void set_offset(int offset);
+    void set_m(int m) override;
+    void set_n(int n) override;
+    void set_offset(int offset) override;
 };
 
 } /* namespace blocks */

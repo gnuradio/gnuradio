@@ -43,14 +43,14 @@ private:
     const std::string d_len_tag_key;
 
 protected:
-    int calculate_output_stream_length(const gr_vector_int& ninput_items);
+    int calculate_output_stream_length(const gr_vector_int& ninput_items) override;
 
 public:
     ofdm_cyclic_prefixer_impl(int fft_len,
                               const std::vector<int>& cp_lengths,
                               int rolloff_len,
                               const std::string& len_tag_key);
-    ~ofdm_cyclic_prefixer_impl();
+    ~ofdm_cyclic_prefixer_impl() override;
 
     int work(int noutput_items,
              gr_vector_int& ninput_items,

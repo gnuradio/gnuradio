@@ -26,7 +26,7 @@ private:
 
 public:
     tagged_stream_align_impl(size_t itemsize, const std::string& lengthtagname);
-    ~tagged_stream_align_impl();
+    ~tagged_stream_align_impl() override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

@@ -23,10 +23,10 @@ class FEC_API ldpc_encoder : virtual public generic_encoder
 public:
     static generic_encoder::sptr make(std::string alist_file);
 
-    virtual double rate() = 0;
-    virtual bool set_frame_size(unsigned int frame_size) = 0;
-    virtual int get_output_size() = 0;
-    virtual int get_input_size() = 0;
+    double rate() override = 0;
+    bool set_frame_size(unsigned int frame_size) override = 0;
+    int get_output_size() override = 0;
+    int get_input_size() override = 0;
 };
 
 } // namespace fec

@@ -29,9 +29,10 @@ public:
     iir_filter_ccd_impl(const std::vector<double>& fftaps,
                         const std::vector<double>& fbtaps,
                         bool oldstyle = true);
-    ~iir_filter_ccd_impl();
+    ~iir_filter_ccd_impl() override;
 
-    void set_taps(const std::vector<double>& fftaps, const std::vector<double>& fbtaps);
+    void set_taps(const std::vector<double>& fftaps,
+                  const std::vector<double>& fbtaps) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

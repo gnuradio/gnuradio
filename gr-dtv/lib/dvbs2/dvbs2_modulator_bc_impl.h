@@ -35,7 +35,7 @@ public:
                             dvb_code_rate_t rate,
                             dvb_constellation_t constellation,
                             dvbs2_interpolation_t interpolation);
-    ~dvbs2_modulator_bc_impl();
+    ~dvbs2_modulator_bc_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

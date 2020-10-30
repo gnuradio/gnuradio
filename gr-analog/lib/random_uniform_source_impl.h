@@ -26,7 +26,7 @@ private:
 
 public:
     random_uniform_source_impl(int minimum, int maximum, int seed);
-    ~random_uniform_source_impl();
+    ~random_uniform_source_impl() override;
 
     // Where all the action really happens
     int work(int noutput_items,

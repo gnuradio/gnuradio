@@ -20,7 +20,7 @@ class binary_slicer_fb_impl : public binary_slicer_fb
 {
 public:
     binary_slicer_fb_impl();
-    ~binary_slicer_fb_impl();
+    ~binary_slicer_fb_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

@@ -71,7 +71,7 @@ public:
         }
     }
 
-    ~LineColorMenu() {}
+    ~LineColorMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -151,7 +151,7 @@ public:
         }
     }
 
-    ~LineWidthMenu() {}
+    ~LineWidthMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -221,7 +221,7 @@ public:
         }
     }
 
-    ~LineStyleMenu() {}
+    ~LineStyleMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -305,7 +305,7 @@ public:
         }
     }
 
-    ~LineMarkerMenu() {}
+    ~LineMarkerMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -378,7 +378,7 @@ public:
         }
     }
 
-    ~MarkerAlphaMenu() {}
+    ~MarkerAlphaMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -437,7 +437,7 @@ public:
         connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
     }
 
-    ~LineTitleAction() {}
+    ~LineTitleAction() override {}
 
 signals:
     void whichTrigger(unsigned int which, const QString& text);
@@ -490,7 +490,7 @@ public:
         connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
     }
 
-    ~OtherAction() {}
+    ~OtherAction() override {}
 
     void setValidator(QValidator* v) { d_text->setValidator(v); }
 
@@ -553,7 +553,7 @@ public:
         connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
     }
 
-    ~OtherDualAction() {}
+    ~OtherDualAction() override {}
 
 signals:
     void whichTrigger(const QString& text0, const QString& text1);
@@ -634,7 +634,7 @@ public:
         }
     }
 
-    ~FFTSizeMenu() {}
+    ~FFTSizeMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -742,7 +742,7 @@ public:
         }
     }
 
-    ~AverageMenu() {}
+    ~AverageMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -808,7 +808,7 @@ public:
         // nop
     }
 
-    ~FFTAverageMenu() {}
+    ~FFTAverageMenu() override {}
 };
 
 /********************************************************************/
@@ -852,7 +852,7 @@ public:
         }
     }
 
-    ~FFTWindowMenu() {}
+    ~FFTWindowMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -945,7 +945,7 @@ public:
         connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
     }
 
-    ~NPointsMenu() {}
+    ~NPointsMenu() override {}
 
 signals:
     void whichTrigger(const int npts);
@@ -1011,7 +1011,7 @@ public:
         d_min_value = QColor("white");
     }
 
-    ~ColorMapMenu() {}
+    ~ColorMapMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -1109,7 +1109,7 @@ public:
         }
     }
 
-    ~TriggerModeMenu() {}
+    ~TriggerModeMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -1182,7 +1182,7 @@ public:
         }
     }
 
-    ~TriggerSlopeMenu() {}
+    ~TriggerSlopeMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -1243,7 +1243,7 @@ public:
         }
     }
 
-    ~TriggerChannelMenu() {}
+    ~TriggerChannelMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -1302,7 +1302,7 @@ public:
         }
     }
 
-    ~NumberLayoutMenu() {}
+    ~NumberLayoutMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -1384,7 +1384,7 @@ public:
         d_min_value = QColor("black");
     }
 
-    ~NumberColorMapMenu() {}
+    ~NumberColorMapMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -1457,7 +1457,7 @@ public:
         connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
     }
 
-    ~PopupMenu() {}
+    ~PopupMenu() override {}
 
     void setText(QString s) { d_text->setText(s); }
 
@@ -1511,7 +1511,7 @@ public:
         connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
     }
 
-    ~ItemFloatAct() {}
+    ~ItemFloatAct() override {}
 
     void setText(float f) { d_text->setText(QString("%1").arg(f)); }
 

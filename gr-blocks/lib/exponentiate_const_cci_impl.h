@@ -24,9 +24,9 @@ private:
 
 public:
     exponentiate_const_cci_impl(int exponent, size_t vlen);
-    ~exponentiate_const_cci_impl();
+    ~exponentiate_const_cci_impl() override;
     bool check_topology(int ninputs, int noutputs) override;
-    void set_exponent(int exponent);
+    void set_exponent(int exponent) override;
 
     // Where all the action really happens
     int work(int noutput_items,

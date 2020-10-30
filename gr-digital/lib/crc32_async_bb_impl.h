@@ -30,7 +30,7 @@ private:
 
 public:
     crc32_async_bb_impl(bool check);
-    ~crc32_async_bb_impl();
+    ~crc32_async_bb_impl() override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

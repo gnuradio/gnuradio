@@ -71,7 +71,7 @@ private:
 public:
     dvbt_ofdm_sym_acquisition_impl(
         int blocks, int fft_length, int occupied_tones, int cp_length, float snr);
-    ~dvbt_ofdm_sym_acquisition_impl();
+    ~dvbt_ofdm_sym_acquisition_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

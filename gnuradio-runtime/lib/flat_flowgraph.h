@@ -33,7 +33,7 @@ public:
     friend GR_RUNTIME_API flat_flowgraph_sptr make_flat_flowgraph();
 
     // Destruct an arbitrary gr::flat_flowgraph
-    virtual ~flat_flowgraph();
+    ~flat_flowgraph() override;
 
     // Wire list of gr::block together in new flat_flowgraph
     void setup_connections();

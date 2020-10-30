@@ -53,7 +53,7 @@ public:
     typedef std::shared_ptr<header_format_counter> sptr;
 
     header_format_counter(const std::string& access_code, int threshold, int bps);
-    virtual ~header_format_counter();
+    ~header_format_counter() override;
 
     /*!
      * Creates a header from the access code and packet length to
@@ -72,15 +72,15 @@ public:
      *        input PDU). Data can be extracted from this for the
      *        header formatting or inserted.
      */
-    virtual bool format(int nbytes_in,
-                        const unsigned char* input,
-                        pmt::pmt_t& output,
-                        pmt::pmt_t& info);
+    bool format(int nbytes_in,
+                const unsigned char* input,
+                pmt::pmt_t& output,
+                pmt::pmt_t& info) override;
 
     /*!
      * Returns the length of the formatted header in bits.
      */
-    virtual size_t header_nbits() const;
+    size_t header_nbits() const override;
 
     /*!
      * Factory to create an async packet header formatter; returns
@@ -101,7 +101,7 @@ protected:
     uint16_t d_counter; //!< keeps track of the number of packets transmitted
 
     //! Verify that the header is valid
-    bool header_ok();
+    bool header_ok() override;
 
     /*! Get info from the header; return payload length and package
      *  rest of data in d_info dictionary.
@@ -112,7 +112,7 @@ protected:
          | access code | pkt len | pkt len | bps | counter | payload |
        \endverbatim
      */
-    int header_payload();
+    int header_payload() override;
 };
 
 } // namespace digital

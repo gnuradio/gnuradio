@@ -100,10 +100,10 @@ public:
      *  calculations.
      */
     mpsk_snr_est_simple(double alpha);
-    ~mpsk_snr_est_simple() {}
+    ~mpsk_snr_est_simple() override {}
 
-    int update(int noutput_items, const gr_complex* input);
-    double snr();
+    int update(int noutput_items, const gr_complex* input) override;
+    double snr() override;
 };
 
 
@@ -133,10 +133,10 @@ public:
      *  calculations.
      */
     mpsk_snr_est_skew(double alpha);
-    ~mpsk_snr_est_skew() {}
+    ~mpsk_snr_est_skew() override {}
 
-    int update(int noutput_items, const gr_complex* input);
-    double snr();
+    int update(int noutput_items, const gr_complex* input) override;
+    double snr() override;
 };
 
 
@@ -169,10 +169,10 @@ public:
      *  calculations.
      */
     mpsk_snr_est_m2m4(double alpha);
-    ~mpsk_snr_est_m2m4() {}
+    ~mpsk_snr_est_m2m4() override {}
 
-    int update(int noutput_items, const gr_complex* input);
-    double snr();
+    int update(int noutput_items, const gr_complex* input) override;
+    double snr() override;
 };
 
 
@@ -223,10 +223,10 @@ public:
      *  \param kw: estimate of the channel noise kurtosis (2 for AWGN)
      */
     snr_est_m2m4(double alpha, double ka, double kw);
-    ~snr_est_m2m4() {}
+    ~snr_est_m2m4() override {}
 
-    int update(int noutput_items, const gr_complex* input);
-    double snr();
+    int update(int noutput_items, const gr_complex* input) override;
+    double snr() override;
 };
 
 
@@ -264,10 +264,10 @@ public:
      *  calculations.
      */
     mpsk_snr_est_svr(double alpha);
-    ~mpsk_snr_est_svr() {}
+    ~mpsk_snr_est_svr() override {}
 
-    int update(int noutput_items, const gr_complex* input);
-    double snr();
+    int update(int noutput_items, const gr_complex* input) override;
+    double snr() override;
 };
 
 } /* namespace digital */

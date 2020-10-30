@@ -24,7 +24,7 @@ private:
 
 public:
     constellation_decoder_cb_impl(constellation_sptr constellation);
-    ~constellation_decoder_cb_impl();
+    ~constellation_decoder_cb_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

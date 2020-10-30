@@ -162,7 +162,7 @@ public:
                      dvb_framesize_t framesize,
                      dvb_code_rate_t rate,
                      dvb_constellation_t constellation);
-    ~dvb_ldpc_bb_impl();
+    ~dvb_ldpc_bb_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

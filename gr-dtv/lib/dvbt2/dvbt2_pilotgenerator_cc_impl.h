@@ -157,7 +157,7 @@ public:
                                  dvbt2_equalization_t equalization,
                                  dvbt2_bandwidth_t bandwidth,
                                  unsigned int vlength);
-    ~dvbt2_pilotgenerator_cc_impl();
+    ~dvbt2_pilotgenerator_cc_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

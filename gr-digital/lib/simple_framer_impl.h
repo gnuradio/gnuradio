@@ -25,7 +25,7 @@ private:
 
 public:
     simple_framer_impl(int payload_bytesize);
-    ~simple_framer_impl();
+    ~simple_framer_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

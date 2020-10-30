@@ -28,7 +28,7 @@ private:
 
 public:
     dvbt_convolutional_deinterleaver_impl(int nsize, int I, int M);
-    ~dvbt_convolutional_deinterleaver_impl();
+    ~dvbt_convolutional_deinterleaver_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

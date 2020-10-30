@@ -66,11 +66,11 @@ private:
 
 public:
     message_debug_impl(bool en_uvec);
-    ~message_debug_impl();
+    ~message_debug_impl() override;
 
-    int num_messages();
-    pmt::pmt_t get_message(int i);
-    void set_vector_print(bool en) { d_en_uvec = en; };
+    int num_messages() override;
+    pmt::pmt_t get_message(int i) override;
+    void set_vector_print(bool en) override { d_en_uvec = en; };
 };
 
 } /* namespace blocks */

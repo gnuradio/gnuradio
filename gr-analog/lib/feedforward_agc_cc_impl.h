@@ -24,7 +24,7 @@ private:
 
 public:
     feedforward_agc_cc_impl(int nsamples, float reference);
-    ~feedforward_agc_cc_impl();
+    ~feedforward_agc_cc_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

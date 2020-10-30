@@ -55,16 +55,19 @@ public:
                                       std::vector<int> frozen_bit_positions,
                                       std::vector<uint8_t> frozen_bit_values,
                                       bool is_packed = false);
-    ~polar_encoder();
+    ~polar_encoder() override;
 
     // FECAPI
-    void generic_work(void* in_buffer, void* out_buffer);
-    double rate() { return (1.0 * get_input_size() / get_output_size()); };
-    int get_input_size() { return num_info_bits() / (d_is_packed ? 8 : 1); };
-    int get_output_size() { return block_size() / (d_is_packed ? 8 : 1); };
-    bool set_frame_size(unsigned int frame_size) { return false; };
-    const char* get_input_conversion() { return d_is_packed ? "pack" : "none"; };
-    const char* get_output_conversion() { return d_is_packed ? "packed_bits" : "none"; };
+    void generic_work(void* in_buffer, void* out_buffer) override;
+    double rate() override { return (1.0 * get_input_size() / get_output_size()); };
+    int get_input_size() override { return num_info_bits() / (d_is_packed ? 8 : 1); };
+    int get_output_size() override { return block_size() / (d_is_packed ? 8 : 1); };
+    bool set_frame_size(unsigned int frame_size) override { return false; };
+    const char* get_input_conversion() override { return d_is_packed ? "pack" : "none"; };
+    const char* get_output_conversion() override
+    {
+        return d_is_packed ? "packed_bits" : "none";
+    };
 
 private:
     polar_encoder(int block_size,

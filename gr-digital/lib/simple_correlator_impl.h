@@ -73,7 +73,7 @@ private:
 
 public:
     simple_correlator_impl(int payload_bytesize);
-    ~simple_correlator_impl();
+    ~simple_correlator_impl() override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

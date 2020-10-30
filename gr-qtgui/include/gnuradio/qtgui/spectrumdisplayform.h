@@ -31,7 +31,7 @@ class SpectrumDisplayForm : public QWidget, public Ui::SpectrumDisplayForm
 
 public:
     SpectrumDisplayForm(QWidget* parent = 0);
-    ~SpectrumDisplayForm();
+    ~SpectrumDisplayForm() override;
 
     void setSystem(SpectrumGUIClass* newSystem,
                    const uint64_t numFFTDataPoints,
@@ -51,8 +51,8 @@ public:
     bool checkClicked();
 
 public slots:
-    void resizeEvent(QResizeEvent* e);
-    void customEvent(QEvent* e);
+    void resizeEvent(QResizeEvent* e) override;
+    void customEvent(QEvent* e) override;
     void avgLineEdit_valueChanged(int valueString);
     void maxHoldCheckBox_toggled(bool newState);
     void minHoldCheckBox_toggled(bool newState);
@@ -63,7 +63,7 @@ public slots:
     void setFrequencyRange(const double newCenterFrequency,
                            const double newStartFrequency,
                            const double newStopFrequency);
-    void closeEvent(QCloseEvent* e);
+    void closeEvent(QCloseEvent* e) override;
     void windowTypeChanged(int newItem);
     void useRFFrequenciesCB(bool useRFFlag);
     void toggleRFFrequencies(bool en);

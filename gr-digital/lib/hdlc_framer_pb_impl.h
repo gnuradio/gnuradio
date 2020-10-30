@@ -30,7 +30,7 @@ private:
 
 public:
     hdlc_framer_pb_impl(const std::string frame_tag_name);
-    ~hdlc_framer_pb_impl();
+    ~hdlc_framer_pb_impl() override;
 
     // Where all the action really happens
     int work(int noutput_items,

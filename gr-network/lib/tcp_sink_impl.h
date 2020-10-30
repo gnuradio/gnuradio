@@ -55,9 +55,9 @@ public:
                   const std::string& host,
                   int port,
                   int sinkmode = TCPSINKMODE_CLIENT);
-    ~tcp_sink_impl();
+    ~tcp_sink_impl() override;
 
-    virtual bool stop();
+    bool stop() override;
 
     void accept_handler(boost::asio::ip::tcp::socket* new_connection,
                         const boost::system::error_code& error);

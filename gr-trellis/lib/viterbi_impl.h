@@ -29,17 +29,17 @@ private:
 
 public:
     viterbi_impl(const fsm& FSM, int K, int S0, int SK);
-    ~viterbi_impl();
+    ~viterbi_impl() override;
 
-    fsm FSM() const { return d_FSM; }
-    int K() const { return d_K; }
-    int S0() const { return d_S0; }
-    int SK() const { return d_SK; }
+    fsm FSM() const override { return d_FSM; }
+    int K() const override { return d_K; }
+    int S0() const override { return d_S0; }
+    int SK() const override { return d_SK; }
 
-    void set_FSM(const fsm& FSM);
-    void set_K(int K);
-    void set_S0(int S0);
-    void set_SK(int SK);
+    void set_FSM(const fsm& FSM) override;
+    void set_K(int K) override;
+    void set_S0(int S0) override;
+    void set_SK(int SK) override;
     // std::vector<int> trace () const { return d_trace; }
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;

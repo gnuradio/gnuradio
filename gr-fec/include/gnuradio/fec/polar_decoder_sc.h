@@ -48,10 +48,10 @@ public:
                                       int num_info_bits,
                                       std::vector<int> frozen_bit_positions,
                                       std::vector<uint8_t> frozen_bit_values);
-    ~polar_decoder_sc();
+    ~polar_decoder_sc() override;
 
     // FECAPI
-    void generic_work(void* in_buffer, void* out_buffer);
+    void generic_work(void* in_buffer, void* out_buffer) override;
 
 private:
     polar_decoder_sc(int block_size,

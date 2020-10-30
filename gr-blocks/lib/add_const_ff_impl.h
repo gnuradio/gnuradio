@@ -25,11 +25,11 @@ private:
 public:
     add_const_ff_impl(float k);
 
-    void setup_rpc();
+    void setup_rpc() override;
 
-    float k() const { return d_k; }
+    float k() const override { return d_k; }
 
-    void set_k(float k);
+    void set_k(float k) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

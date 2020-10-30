@@ -32,7 +32,7 @@ class EyeDisplayPlot : public DisplayPlot
 
 public:
     EyeDisplayPlot(unsigned int nplots, unsigned int curve_index, QWidget* parent);
-    virtual ~EyeDisplayPlot();
+    ~EyeDisplayPlot() override;
 
     void plotNewData(const std::vector<double*> dataPoints,
                      const int64_t numDataPoints,
@@ -41,7 +41,7 @@ public:
                      const std::vector<std::vector<gr::tag_t>>& tags =
                          std::vector<std::vector<gr::tag_t>>());
 
-    void replot();
+    void replot() override;
 
     void stemPlot(bool en);
 
@@ -50,11 +50,11 @@ public:
     const QColor getTagTextColor();
     const QColor getTagBackgroundColor();
     const Qt::BrushStyle getTagBackgroundStyle();
-    void setLineColor(unsigned int which, QColor color);
-    void setLineWidth(unsigned int which, int width);
-    void setLineMarker(unsigned int which, QwtSymbol::Style marker);
-    void setLineStyle(unsigned int which, Qt::PenStyle style);
-    void setMarkerAlpha(unsigned int which, int alpha);
+    void setLineColor(unsigned int which, QColor color) override;
+    void setLineWidth(unsigned int which, int width) override;
+    void setLineMarker(unsigned int which, QwtSymbol::Style marker) override;
+    void setLineStyle(unsigned int which, Qt::PenStyle style) override;
+    void setMarkerAlpha(unsigned int which, int alpha) override;
 
 public slots:
     void setSampleRate(double sr, double units, const std::string& strunits);
@@ -62,8 +62,8 @@ public slots:
     void setAutoScale(bool state);
     void setAutoScaleShot();
 
-    void legendEntryChecked(QwtPlotItem* plotItem, bool on);
-    void legendEntryChecked(const QVariant& plotItem, bool on, int index);
+    void legendEntryChecked(QwtPlotItem* plotItem, bool on) override;
+    void legendEntryChecked(const QVariant& plotItem, bool on, int index) override;
 
     void enableTagMarker(unsigned int which, bool en);
 
@@ -76,7 +76,7 @@ public slots:
     void setTagBackgroundColor(QColor c);
     void setTagBackgroundStyle(Qt::BrushStyle b);
 
-    void setLineLabel(unsigned int which, QString label);
+    void setLineLabel(unsigned int which, QString label) override;
 
 private:
     void _resetXAxisPoints();

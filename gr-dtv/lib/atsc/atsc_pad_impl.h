@@ -19,7 +19,7 @@ class atsc_pad_impl : public atsc_pad
 {
 public:
     atsc_pad_impl();
-    ~atsc_pad_impl();
+    ~atsc_pad_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

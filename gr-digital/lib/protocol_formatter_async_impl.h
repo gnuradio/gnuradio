@@ -28,7 +28,7 @@ private:
 
 public:
     protocol_formatter_async_impl(const header_format_base::sptr& format);
-    ~protocol_formatter_async_impl();
+    ~protocol_formatter_async_impl() override;
 };
 
 } // namespace digital

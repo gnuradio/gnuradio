@@ -27,7 +27,7 @@ private:
 
 public:
     gsm_fr_decode_ps_impl();
-    ~gsm_fr_decode_ps_impl();
+    ~gsm_fr_decode_ps_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

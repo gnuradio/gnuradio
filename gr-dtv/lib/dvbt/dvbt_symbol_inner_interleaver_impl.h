@@ -43,7 +43,7 @@ public:
     dvbt_symbol_inner_interleaver_impl(int nsize,
                                        dvbt_transmission_mode_t transmission,
                                        int direction);
-    ~dvbt_symbol_inner_interleaver_impl();
+    ~dvbt_symbol_inner_interleaver_impl() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

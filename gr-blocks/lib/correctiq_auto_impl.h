@@ -47,7 +47,7 @@ private:
 
 public:
     correctiq_auto_impl(double samp_rate, double freq, float gain, float sync_window);
-    ~correctiq_auto_impl();
+    ~correctiq_auto_impl() override;
 
     double get_freq() const override;
     float get_gain() const override;

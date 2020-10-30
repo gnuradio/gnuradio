@@ -26,7 +26,7 @@ private:
 
 public:
     pub_msg_sink_impl(char* address, int timeout, bool bind);
-    ~pub_msg_sink_impl();
+    ~pub_msg_sink_impl() override;
 
     void handler(pmt::pmt_t msg);
     std::string last_endpoint() override

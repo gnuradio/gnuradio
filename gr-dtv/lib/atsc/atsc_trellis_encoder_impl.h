@@ -37,7 +37,7 @@ private:
 
 public:
     atsc_trellis_encoder_impl();
-    ~atsc_trellis_encoder_impl();
+    ~atsc_trellis_encoder_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

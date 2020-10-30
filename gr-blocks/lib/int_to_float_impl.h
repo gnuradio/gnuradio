@@ -24,8 +24,8 @@ class BLOCKS_API int_to_float_impl : public int_to_float
 public:
     int_to_float_impl(size_t vlen, float scale);
 
-    virtual float scale() const { return d_scale; }
-    virtual void set_scale(float scale) { d_scale = scale; }
+    float scale() const override { return d_scale; }
+    void set_scale(float scale) override { d_scale = scale; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

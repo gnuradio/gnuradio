@@ -55,7 +55,7 @@ public:
                           dvb_constellation_t constellation,
                           dvbt_hierarchy_t hierarchy,
                           dvb_code_rate_t coderate);
-    ~dvbt_inner_coder_impl();
+    ~dvbt_inner_coder_impl() override;
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,

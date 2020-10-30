@@ -29,9 +29,9 @@ class WaterfallDisplayForm : public DisplayForm
 
 public:
     WaterfallDisplayForm(int nplots = 1, QWidget* parent = 0);
-    ~WaterfallDisplayForm();
+    ~WaterfallDisplayForm() override;
 
-    WaterfallDisplayPlot* getPlot();
+    WaterfallDisplayPlot* getPlot() override;
 
     int getFFTSize() const;
     double getTimePerFFT();
@@ -52,9 +52,9 @@ public:
     bool checkClicked();
 
 public slots:
-    void customEvent(QEvent* e);
+    void customEvent(QEvent* e) override;
     void setTimeTitle(const std::string);
-    void setSampleRate(const QString& samprate);
+    void setSampleRate(const QString& samprate) override;
     void setFFTSize(const int);
     void setFFTAverage(const float);
     void setFFTWindowType(const gr::fft::window::win_type);
@@ -72,14 +72,14 @@ public slots:
                      const QColor lowColor = QColor("white"),
                      const QColor highColor = QColor("white"));
 
-    void autoScale(bool en = false);
+    void autoScale(bool en = false) override;
     void setPlotPosHalf(bool half);
     void setTimePerFFT(double t);
     void setUpdateTime(double t);
 
 private slots:
-    void newData(const QEvent* updateEvent);
-    void onPlotPointSelected(const QPointF p);
+    void newData(const QEvent* updateEvent) override;
+    void onPlotPointSelected(const QPointF p) override;
 
 private:
     QIntValidator* d_int_validator;
