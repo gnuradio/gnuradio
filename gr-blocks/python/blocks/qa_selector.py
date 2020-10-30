@@ -25,57 +25,60 @@ class test_selector(gr_unittest.TestCase):
         expected_result = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         expected_drop = ()
 
-        num_inputs = 4; num_outputs = 4
-        input_index = 1; output_index = 2
+        num_inputs = 4
+        num_outputs = 4
+        input_index = 1
+        output_index = 2
 
         op = blocks.selector(gr.sizeof_char, input_index, output_index)
 
         src = []
         dst = []
         for ii in range(num_inputs):
-            src.append( blocks.vector_source_b(src_data))
-            self.tb.connect(src[ii], (op,ii))
+            src.append(blocks.vector_source_b(src_data))
+            self.tb.connect(src[ii], (op, ii))
         for jj in range(num_outputs):
             dst.append(blocks.vector_sink_b())
-            self.tb.connect((op,jj),dst[jj])
+            self.tb.connect((op, jj), dst[jj])
 
-        
         self.tb.run()
 
         dst_data = dst[output_index].data()
 
         self.assertEqual(expected_result, dst_data)
 
-
     def test_select_input(self):
 
-        num_inputs = 4; num_outputs = 4
-        input_index = 1; output_index = 2
+        num_inputs = 4
+        num_outputs = 4
+        input_index = 1
+        output_index = 2
 
         op = blocks.selector(gr.sizeof_char, input_index, output_index)
 
         src = []
         dst = []
         for ii in range(num_inputs):
-            src_data = [ii+1]*10
-            src.append( blocks.vector_source_b(src_data))
-            self.tb.connect(src[ii], (op,ii))
+            src_data = [ii + 1] * 10
+            src.append(blocks.vector_source_b(src_data))
+            self.tb.connect(src[ii], (op, ii))
         for jj in range(num_outputs):
             dst.append(blocks.vector_sink_b())
-            self.tb.connect((op,jj),dst[jj])
+            self.tb.connect((op, jj), dst[jj])
 
-        
         self.tb.run()
 
-        expected_result = [input_index+1]*10
+        expected_result = [input_index + 1] * 10
         dst_data = list(dst[output_index].data())
 
         self.assertEqual(expected_result, dst_data)
-        
+
     def test_dump(self):
 
-        num_inputs = 4; num_outputs = 4
-        input_index = 1; output_index = 2
+        num_inputs = 4
+        num_outputs = 4
+        input_index = 1
+        output_index = 2
         output_not_selected = 3
 
         op = blocks.selector(gr.sizeof_char, input_index, output_index)
@@ -83,14 +86,13 @@ class test_selector(gr_unittest.TestCase):
         src = []
         dst = []
         for ii in range(num_inputs):
-            src_data = [ii+1]*10
-            src.append( blocks.vector_source_b(src_data))
-            self.tb.connect(src[ii], (op,ii))
+            src_data = [ii + 1] * 10
+            src.append(blocks.vector_source_b(src_data))
+            self.tb.connect(src[ii], (op, ii))
         for jj in range(num_outputs):
             dst.append(blocks.vector_sink_b())
-            self.tb.connect((op,jj),dst[jj])
+            self.tb.connect((op, jj), dst[jj])
 
-        
         self.tb.run()
 
         expected_result = []
@@ -98,12 +100,14 @@ class test_selector(gr_unittest.TestCase):
 
         self.assertEqual(expected_result, dst_data)
 
-    def test_not_enabled (self):
+    def test_not_enabled(self):
         src_data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         expected_result = []
 
-        num_inputs = 4; num_outputs = 4
-        input_index = 1; output_index = 2
+        num_inputs = 4
+        num_outputs = 4
+        input_index = 1
+        output_index = 2
 
         op = blocks.selector(gr.sizeof_char, input_index, output_index)
         op.set_enabled(False)
@@ -111,18 +115,16 @@ class test_selector(gr_unittest.TestCase):
         src = []
         dst = []
         for ii in range(num_inputs):
-            src.append( blocks.vector_source_b(src_data))
-            self.tb.connect(src[ii], (op,ii))
+            src.append(blocks.vector_source_b(src_data))
+            self.tb.connect(src[ii], (op, ii))
         for jj in range(num_outputs):
             dst.append(blocks.vector_sink_b())
-            self.tb.connect((op,jj),dst[jj])
+            self.tb.connect((op, jj), dst[jj])
 
-        
         self.tb.run()
 
         dst_data = dst[output_index].data()
         self.assertEqual(expected_result, dst_data)
-
 
     # These tests cannot be run as set_index can only be called after check_topology is called
     # def test_set_indices(self):
@@ -131,7 +133,6 @@ class test_selector(gr_unittest.TestCase):
     #     input_index = 1; output_index = 2
 
     #     op = blocks.selector(gr.sizeof_char, 0, 0)
-
 
     #     src = []
     #     dst = []
@@ -145,7 +146,7 @@ class test_selector(gr_unittest.TestCase):
 
     #     op.set_input_index(input_index)
     #     op.set_output_index(output_index)
-        
+
     #     self.tb.run()
 
     #     expected_result = [input_index+1]*10
@@ -172,7 +173,6 @@ class test_selector(gr_unittest.TestCase):
     #         dst.append(blocks.vector_sink_b())
     #         self.tb.connect((op,jj),dst[jj])
 
-        
     #     self.tb.run()
 
     #     expected_result = [input_index+1]*10
@@ -182,30 +182,39 @@ class test_selector(gr_unittest.TestCase):
 
     def test_float_vector(self):
 
-        num_inputs = 4; num_outputs = 4
-        input_index = 1; output_index = 2
+        num_inputs = 4
+        num_outputs = 4
+        input_index = 1
+        output_index = 2
 
         veclen = 3
 
-        op = blocks.selector(gr.sizeof_float*veclen, input_index, output_index)
+        op = blocks.selector(
+            gr.sizeof_float * veclen,
+            input_index,
+            output_index)
 
         src = []
         dst = []
         for ii in range(num_inputs):
-            src_data = [float(ii)+1]*10*veclen
-            src.append( blocks.vector_source_f(src_data, repeat=False, vlen=veclen))
-            self.tb.connect(src[ii], (op,ii))
+            src_data = [float(ii) + 1] * 10 * veclen
+            src.append(
+                blocks.vector_source_f(
+                    src_data,
+                    repeat=False,
+                    vlen=veclen))
+            self.tb.connect(src[ii], (op, ii))
         for jj in range(num_outputs):
             dst.append(blocks.vector_sink_f(vlen=veclen))
-            self.tb.connect((op,jj),dst[jj])
+            self.tb.connect((op, jj), dst[jj])
 
-        
         self.tb.run()
 
-        expected_result = [float(input_index)+1]*10*veclen
+        expected_result = [float(input_index) + 1] * 10 * veclen
         dst_data = list(dst[output_index].data())
 
         self.assertEqual(expected_result, dst_data)
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_selector)

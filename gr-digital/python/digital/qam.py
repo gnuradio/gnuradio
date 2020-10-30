@@ -29,13 +29,16 @@ _def_differential = True
 # coding is used within but not between each quadrant.
 _def_mod_code = mod_codes.NO_CODE
 
+
 def is_power_of_four(x):
     v = log(x) / log(4)
     return int(v) == v
 
+
 def get_bit(x, n):
     """ Get the n'th bit of integer x (from little end)."""
-    return (x&(0x01 << n)) >> n
+    return (x & (0x01 << n)) >> n
+
 
 def get_bits(x, n, k):
     """ Get the k bits of integer x starting at bit n(from little end)."""
@@ -43,6 +46,7 @@ def get_bits(x, n, k):
     v = x >> n
     # Remove all bits bigger than n+k-1
     return v % pow(2, k)
+
 
 def make_differential_constellation(m, gray_coded):
     """
@@ -71,9 +75,9 @@ def make_differential_constellation(m, gray_coded):
     else:
         i_gcs = dict([(i, i) for i in range(0, side)])
     # The distance between points is found.
-    step = 1 / (side-0.5)
+    step = 1 / (side - 0.5)
 
-    gc_to_x = [(i_gcs[gc]+0.5)*step for gc in range(0, side)]
+    gc_to_x = [(i_gcs[gc] + 0.5) * step for gc in range(0, side)]
 
     # Takes the (x, y) location of the point with the quadrant along
     # with the quadrant number. (x, y) are integers referring to which
@@ -93,15 +97,17 @@ def make_differential_constellation(m, gray_coded):
     # First two bits determine quadrant.
     # Next (k-2)/2 bits determine x position.
     # Following (k-2)/2 bits determine y position.
-    # How x and y relate to real and imag depends on quadrant (see get_c function).
+    # How x and y relate to real and imag depends on quadrant (see get_c
+    # function).
     const_map = []
     for i in range(m):
-        y = get_bits(i, 0, (k-2) // 2)
-        x = get_bits(i, (k-2) // 2, (k-2) // 2)
-        quad = get_bits(i, k-2, 2)
+        y = get_bits(i, 0, (k - 2) // 2)
+        x = get_bits(i, (k - 2) // 2, (k - 2) // 2)
+        quad = get_bits(i, k - 2, 2)
         const_map.append(get_c(x, y, quad))
 
     return const_map
+
 
 def make_non_differential_constellation(m, gray_coded):
     side = int(pow(m, 0.5))
@@ -117,21 +123,22 @@ def make_non_differential_constellation(m, gray_coded):
     else:
         i_gcs = list(range(0, side))
     # The distance between points is found.
-    step = 2.0 / (side-1)
+    step = 2.0 / (side - 1)
 
-    gc_to_x = [-1 + i_gcs[gc]*step for gc in range(0, side)]
+    gc_to_x = [-1 + i_gcs[gc] * step for gc in range(0, side)]
     # First k/2 bits determine x position.
     # Following k/2 bits determine y position.
     const_map = []
     for i in range(m):
         y = gc_to_x[get_bits(i, 0, k // 2)]
         x = gc_to_x[get_bits(i, k // 2, k // 2)]
-        const_map.append(complex(x,y))
+        const_map.append(complex(x, y))
     return const_map
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           QAM constellation
 # /////////////////////////////////////////////////////////////////////////////
+
 
 def qam_constellation(constellation_points=_def_constellation_points,
                       differential=_def_differential,
@@ -154,24 +161,27 @@ def qam_constellation(constellation_points=_def_constellation_points,
     else:
         raise ValueError("Mod code is not implemented for QAM")
     if differential:
-        points = make_differential_constellation(constellation_points, gray_coded=False)
+        points = make_differential_constellation(
+            constellation_points, gray_coded=False)
     else:
-        points = make_non_differential_constellation(constellation_points, gray_coded)
+        points = make_non_differential_constellation(
+            constellation_points, gray_coded)
     side = int(sqrt(constellation_points))
-    width = 2.0 / (side-1)
+    width = 2.0 / (side - 1)
 
     # No pre-diff code
     # Should add one so that we can gray-code the quadrant bits too.
     pre_diff_code = []
     if not large_ampls_to_corners:
         constellation = digital.constellation_rect(points, pre_diff_code, 4,
-                                                        side, side, width, width)
+                                                   side, side, width, width)
     else:
         sector_values = large_ampls_to_corners_mapping(side, points, width)
         constellation = digital.constellation_expl_rect(
             points, pre_diff_code, 4, side, side, width, width, sector_values)
 
     return constellation
+
 
 def find_closest_point(p, qs):
     """
@@ -180,11 +190,12 @@ def find_closest_point(p, qs):
     min_dist = None
     min_i = None
     for i, q in enumerate(qs):
-        dist = abs(q-p)
+        dist = abs(q - p)
         if min_dist is None or dist < min_dist:
             min_dist = dist
             min_i = i
     return min_i
+
 
 def large_ampls_to_corners_mapping(side, points, width):
     """
@@ -222,7 +233,7 @@ def large_ampls_to_corners_mapping(side, points, width):
     # Value in this extra layer will be mapped to the closest corner rather
     # than the closest constellation point.
     extra_layers = 1
-    side = side + extra_layers*2
+    side = side + extra_layers * 2
     # Calculate sector values
     sector_values = []
     for real_x in range(side):
@@ -230,10 +241,10 @@ def large_ampls_to_corners_mapping(side, points, width):
             sector = real_x * side + imag_x
             # If this sector is a normal constellation sector then
             # use the center point.
-            c = ((real_x-side / 2.0+0.5)*width +
-                 (imag_x-side / 2.0+0.5)*width*1j)
-            if (real_x >= extra_layers and real_x < side-extra_layers
-                and imag_x >= extra_layers and imag_x < side-extra_layers):
+            c = ((real_x - side / 2.0 + 0.5) * width +
+                 (imag_x - side / 2.0 + 0.5) * width * 1j)
+            if (real_x >= extra_layers and real_x < side - extra_layers
+                    and imag_x >= extra_layers and imag_x < side - extra_layers):
                 # This is not an edge row/column.  Find closest point.
                 index = find_closest_point(c, points)
             else:
@@ -241,5 +252,6 @@ def large_ampls_to_corners_mapping(side, points, width):
                 index = corner_indices[find_closest_point(c, corner_points)]
             sector_values.append(index)
     return sector_values
+
 
 modulation_utils.add_type_1_constellation('qam', qam_constellation)
