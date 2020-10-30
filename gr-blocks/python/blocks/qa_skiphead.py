@@ -121,4 +121,4 @@ class test_skiphead(gr_unittest.TestCase):
             dst_tags[0].value), "qux", "Tag value is incorrect")
 
 if __name__ == '__main__':
-    gr_unittest.run(test_skiphead, "test_skiphead.xml")
+    gr_unittest.run(test_skiphead)

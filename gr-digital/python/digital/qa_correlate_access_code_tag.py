@@ -147,4 +147,4 @@ class test_correlate_access_code(gr_unittest.TestCase):
         self.assertEqual(result_data[0].offset, len(code))
 
 if __name__ == '__main__':
-    gr_unittest.run(test_correlate_access_code, "test_correlate_access_code_tag.xml")
+    gr_unittest.run(test_correlate_access_code)

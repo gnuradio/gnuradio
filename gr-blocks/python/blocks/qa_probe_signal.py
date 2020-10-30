@@ -49,4 +49,4 @@ class test_probe_signal(gr_unittest.TestCase):
         self.assertAlmostEqual(value[3], output[3], places=6)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_probe_signal, "test_probe_signal.xml")
+    gr_unittest.run(test_probe_signal)

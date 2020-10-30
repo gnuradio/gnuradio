@@ -69,4 +69,4 @@ class test_rms(gr_unittest.TestCase):
         self.assertAlmostEqual(dst_data[-1], expected_data, 4)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_rms, "test_rms.xml")
+    gr_unittest.run(test_rms)

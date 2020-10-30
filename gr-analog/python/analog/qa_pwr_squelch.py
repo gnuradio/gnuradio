@@ -112,5 +112,5 @@ class test_pwr_squelch(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_result, result_data, 4)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_pwr_squelch, "test_pwr_squelch.xml")
+    gr_unittest.run(test_pwr_squelch)
 

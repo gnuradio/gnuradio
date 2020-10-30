@@ -133,4 +133,4 @@ class test_interleave (gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual (expected_result3, dst3.data ())
 
 if __name__ == '__main__':
-    gr_unittest.run(test_interleave, "test_interleave.xml")
+    gr_unittest.run(test_interleave)

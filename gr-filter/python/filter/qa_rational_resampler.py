@@ -241,4 +241,4 @@ class test_rational_resampler (gr_unittest.TestCase):
 
 if __name__ == '__main__':
     # FIXME: Disabled, see ticket:210
-    gr_unittest.run(test_rational_resampler, "test_rational_resampler.xml")
+    gr_unittest.run(test_rational_resampler)

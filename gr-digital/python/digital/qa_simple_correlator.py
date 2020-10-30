@@ -48,4 +48,4 @@ class test_simple_correlator(gr_unittest.TestCase):
         self.assertEqual(expected_result, result_data)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_simple_correlator, "test_simple_correlator.xml")
+    gr_unittest.run(test_simple_correlator)

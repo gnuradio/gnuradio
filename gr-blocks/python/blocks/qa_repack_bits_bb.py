@@ -153,4 +153,4 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
         self.assertEqual(sink.data()[0], expected_data)
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_repack_bits_bb, "qa_repack_bits_bb.xml")
+    gr_unittest.run(qa_repack_bits_bb)

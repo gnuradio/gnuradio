@@ -58,5 +58,5 @@ class test_arg_max(gr_unittest.TestCase):
         self.assertEqual(source, [0,])
 
 if __name__ == '__main__':
-    gr_unittest.run(test_arg_max, "test_arg_max.xml")
+    gr_unittest.run(test_arg_max)
 

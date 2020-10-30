@@ -85,4 +85,4 @@ class test_pfb_synthesizer(gr_unittest.TestCase):
                                             dst_data[2000:2000+Ntest], 4)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_pfb_synthesizer, "test_pfb_synthesizer.xml")
+    gr_unittest.run(test_pfb_synthesizer)

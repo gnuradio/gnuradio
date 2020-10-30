@@ -216,4 +216,4 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(expected_data[-Ntest:], dst_data[-Ntest:], 2)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_pfb_arb_resampler, "test_pfb_arb_resampler.xml")
+    gr_unittest.run(test_pfb_arb_resampler)

@@ -99,5 +99,4 @@ class test_python_message_passing(gr_unittest.TestCase):
             self.assertTrue(pmt.equal(msg_list[i], msg_cons.msg_list[i]))
 
 if __name__ == '__main__':
-    gr_unittest.run(test_python_message_passing,
-                    'test_python_message_passing.xml')
+    gr_unittest.run(test_python_message_passing)

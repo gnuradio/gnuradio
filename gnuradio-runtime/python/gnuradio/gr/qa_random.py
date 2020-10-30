@@ -64,4 +64,4 @@ class test_random(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_random, "test_random.xml")
+    gr_unittest.run(test_random)

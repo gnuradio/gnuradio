@@ -33,5 +33,5 @@ class test_lfsr(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_result, result_data, 5)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_lfsr, "test_lfsr.xml")
+    gr_unittest.run(test_lfsr)
 

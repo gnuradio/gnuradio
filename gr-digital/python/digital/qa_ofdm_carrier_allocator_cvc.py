@@ -240,5 +240,5 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_digital_carrier_allocator_cvc, "qa_digital_carrier_allocator_cvc.xml")
+    gr_unittest.run(qa_digital_carrier_allocator_cvc)
 

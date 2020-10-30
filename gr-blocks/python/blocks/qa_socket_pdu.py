@@ -119,5 +119,5 @@ class qa_socket_pdu (gr_unittest.TestCase):
         self.assertEqual(srcdata, tuple(msg_data))
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_socket_pdu, "qa_socket_pdu.xml")
+    gr_unittest.run(qa_socket_pdu)
 

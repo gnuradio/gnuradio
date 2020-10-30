@@ -165,4 +165,4 @@ class test_max(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_max, "test_max.xml")
+    gr_unittest.run(test_max)

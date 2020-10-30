@@ -180,4 +180,4 @@ class test_boolean_operators (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_boolean_operators, "test_boolean_operators.xml")
+    gr_unittest.run(test_boolean_operators)

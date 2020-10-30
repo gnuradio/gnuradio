@@ -308,4 +308,4 @@ class qa_crc32_bb(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_crc32_bb, "qa_crc32_bb.xml")
+    gr_unittest.run(qa_crc32_bb)

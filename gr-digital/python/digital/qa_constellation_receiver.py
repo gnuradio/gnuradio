@@ -189,4 +189,4 @@ class rec_test_tb(gr.top_block):
         self.connect(src, packer, mod, channel, demod, self.dst)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_constellation_receiver, "test_constellation_receiver.xml")
+    gr_unittest.run(test_constellation_receiver)

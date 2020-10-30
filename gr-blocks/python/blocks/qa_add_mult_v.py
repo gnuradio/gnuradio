@@ -349,4 +349,4 @@ class test_add_mult_v(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_add_mult_v, "test_add_mult_v.xml")
+    gr_unittest.run(test_add_mult_v)

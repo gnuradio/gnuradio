@@ -189,5 +189,4 @@ class test_hier_block2_message_connections(gr_unittest.TestCase):
         self.assert_has_num_subscriptions(hier.block, "test", 0)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_hier_block2_message_connections,
-                    "test_hier_block2_message_connections.xml")
+    gr_unittest.run(test_hier_block2_message_connections)

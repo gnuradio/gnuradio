@@ -113,4 +113,4 @@ if __name__ == '__main__':
     # Test various SNR estimators; we're not using a Gaussian
     # noise source, so these estimates have no real meaning;
     # just a sanity check.
-    gr_unittest.run(test_mpsk_snr_est, "test_mpsk_snr_est.xml")
+    gr_unittest.run(test_mpsk_snr_est)

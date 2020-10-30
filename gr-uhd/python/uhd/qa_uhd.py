@@ -47,4 +47,4 @@ class test_uhd(gr_unittest.TestCase):
         self.assertEqual(sa.channels[1], 0)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_uhd, "test_uhd.xml")
+    gr_unittest.run(test_uhd)

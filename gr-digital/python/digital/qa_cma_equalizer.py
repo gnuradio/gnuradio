@@ -37,4 +37,4 @@ class test_cma_equalizer_fir(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(expected_data[N:], result[N:])
 
 if __name__ == "__main__":
-    gr_unittest.run(test_cma_equalizer_fir, "test_cma_equalizer_fir.xml")
+    gr_unittest.run(test_cma_equalizer_fir)

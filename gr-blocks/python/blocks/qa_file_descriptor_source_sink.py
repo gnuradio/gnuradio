@@ -55,4 +55,4 @@ class test_file_descriptor_source_sink(gr_unittest.TestCase):
         self.assertEqual(len(snk2.tags()), 0)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_file_descriptor_source_sink, "test_file_descriptor_source_sink.xml")
+    gr_unittest.run(test_file_descriptor_source_sink)

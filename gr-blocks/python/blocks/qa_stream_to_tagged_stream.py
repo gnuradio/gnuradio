@@ -38,5 +38,5 @@ class qa_stream_to_tagged_stream (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_stream_to_tagged_stream, "qa_stream_to_tagged_stream.xml")
+    gr_unittest.run(qa_stream_to_tagged_stream)
 

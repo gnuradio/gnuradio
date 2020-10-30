@@ -230,4 +230,4 @@ class test_puncture (gr_unittest.TestCase):
         self.assertEqual(dst_data1, dst_data0)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_puncture, "test_puncture.xml")
+    gr_unittest.run(test_puncture)

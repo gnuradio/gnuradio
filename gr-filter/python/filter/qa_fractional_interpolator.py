@@ -86,4 +86,4 @@ class test_mmse_resampler(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_mmse_resampler, "test_mmse_resampler.xml")
+    gr_unittest.run(test_mmse_resampler)

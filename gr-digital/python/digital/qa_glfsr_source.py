@@ -80,4 +80,4 @@ def auto_correlate(data):
     return R
 
 if __name__ == '__main__':
-    gr_unittest.run(test_glfsr_source, "test_glfsr_source.xml")
+    gr_unittest.run(test_glfsr_source)

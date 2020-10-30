@@ -169,4 +169,4 @@ class test_dtv(gr_unittest.TestCase):
         pass
 
 if __name__ == '__main__':
-    gr_unittest.run(test_dtv, "test_dtv.xml")
+    gr_unittest.run(test_dtv)

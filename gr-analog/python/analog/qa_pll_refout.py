@@ -143,4 +143,4 @@ class test_pll_refout(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 4)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_pll_refout, "test_pll_refout.xml")
+    gr_unittest.run(test_pll_refout)

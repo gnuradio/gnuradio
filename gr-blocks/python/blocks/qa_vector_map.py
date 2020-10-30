@@ -88,5 +88,5 @@ class test_vector_map(gr_unittest.TestCase):
         self.assertEqual(expected_E, dstE.data())
 
 if __name__ == '__main__':
-    gr_unittest.run(test_vector_map, "test_vector_map.xml")
+    gr_unittest.run(test_vector_map)
 

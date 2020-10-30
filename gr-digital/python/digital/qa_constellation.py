@@ -367,4 +367,4 @@ class mod_demod(gr.hier_block2):
         self.connect(*self.blocks)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_constellation, "test_constellation.xml")
+    gr_unittest.run(test_constellation)

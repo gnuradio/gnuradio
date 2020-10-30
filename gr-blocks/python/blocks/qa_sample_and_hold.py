@@ -39,4 +39,4 @@ class test_sample_and_hold(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_result, result, places=6)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_sample_and_hold, "test_sample_and_hold.xml")
+    gr_unittest.run(test_sample_and_hold)

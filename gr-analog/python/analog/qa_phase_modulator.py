@@ -43,5 +43,5 @@ class test_phase_modulator(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(expected_result, result_data, 5)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_phase_modulator, "test_phase_modulator.xml")
+    gr_unittest.run(test_phase_modulator)
 

@@ -35,4 +35,4 @@ class test_affinity(gr_unittest.TestCase):
         self.assertEqual([0,], a)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_affinity, "test_affinity.xml")
+    gr_unittest.run(test_affinity)

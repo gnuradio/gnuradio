@@ -45,4 +45,4 @@ class test_burst_tagger(gr_unittest.TestCase):
         self.assertEqual(False, pmt.to_bool(x[3].value))
 
 if __name__ == '__main__':
-    gr_unittest.run(test_burst_tagger, "test_burst_tagger.xml")
+    gr_unittest.run(test_burst_tagger)

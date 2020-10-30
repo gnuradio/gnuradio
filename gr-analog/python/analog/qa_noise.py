@@ -36,5 +36,5 @@ class test_noise_source(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_noise_source, "test_noise_source.xml")
+    gr_unittest.run(test_noise_source)
 

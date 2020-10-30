@@ -167,4 +167,4 @@ class test_packet_format_fb(gr_unittest.TestCase):
         self.assertEqual(send_str, payload[0:length])
 
 if __name__ == '__main__':
-    gr_unittest.run(test_packet_format_fb, "test_packet_format_fb.xml")
+    gr_unittest.run(test_packet_format_fb)

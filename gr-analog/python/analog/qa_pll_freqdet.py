@@ -147,4 +147,4 @@ class test_pll_freqdet(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_result, dst_data, 3)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_pll_freqdet, "test_pll_freqdet.xml")
+    gr_unittest.run(test_pll_freqdet)

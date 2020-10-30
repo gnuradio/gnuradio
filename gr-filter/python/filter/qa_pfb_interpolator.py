@@ -67,4 +67,4 @@ class test_pfb_interpolator(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(expected_data[-Ntest:], dst_data[-Ntest:], 4)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_pfb_interpolator, "test_pfb_interpolator.xml")
+    gr_unittest.run(test_pfb_interpolator)

@@ -45,5 +45,5 @@ class test_interp_fir_filter(gr_unittest.TestCase):
         self.assertEqual(expected_result[0:L], result_data[0:L])
 
 if __name__ == '__main__':
-    gr_unittest.run(test_interp_fir_filter, "test_interp_fir_filter.xml")
+    gr_unittest.run(test_interp_fir_filter)
 

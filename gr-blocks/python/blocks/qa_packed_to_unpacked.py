@@ -330,5 +330,5 @@ class test_packing(gr_unittest.TestCase):
         self.assertEqual(expected_results, dst.data())
 
 if __name__ == '__main__':
-   gr_unittest.run(test_packing, "test_packing.xml")
+   gr_unittest.run(test_packing)
 

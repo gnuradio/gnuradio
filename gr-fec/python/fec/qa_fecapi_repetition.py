@@ -148,4 +148,4 @@ class test_fecapi_repetition(gr_unittest.TestCase):
         self.assertEqual(data_in, data_out)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_fecapi_repetition, "test_fecapi_repetition.xml")
+    gr_unittest.run(test_fecapi_repetition)

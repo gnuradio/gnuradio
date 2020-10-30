@@ -36,4 +36,4 @@ class test_pn_correlator_cc(gr_unittest.TestCase):
         self.assertEqual(data[-1], (1.0+0j))
 
 if __name__ == '__main__':
-    gr_unittest.run(test_pn_correlator_cc, "test_pn_correlator_cc.xml")
+    gr_unittest.run(test_pn_correlator_cc)

@@ -51,4 +51,4 @@ class test_goertzel(gr_unittest.TestCase):
         self.assertAlmostEqual(expected_result, actual_result, places=4)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_goertzel, "test_goertzel.xml")
+    gr_unittest.run(test_goertzel)

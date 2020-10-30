@@ -291,4 +291,4 @@ class test_block_gateway(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_block_gateway, "test_block_gateway.xml")
+    gr_unittest.run(test_block_gateway)

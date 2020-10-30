@@ -33,4 +33,4 @@ class test_alaw_vocoder (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_alaw_vocoder, "test_alaw_vocoder.xml")
+    gr_unittest.run(test_alaw_vocoder)

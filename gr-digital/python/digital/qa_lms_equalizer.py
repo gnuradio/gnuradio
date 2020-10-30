@@ -40,4 +40,4 @@ class test_lms_dd_equalizer(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(expected_data[N:], result[N:], 5)
 
 if __name__ == "__main__":
-    gr_unittest.run(test_lms_dd_equalizer, "test_lms_dd_equalizer.xml")
+    gr_unittest.run(test_lms_dd_equalizer)
