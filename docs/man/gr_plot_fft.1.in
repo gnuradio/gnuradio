@@ -1,0 +1,37 @@
+.TH GR_PLOT_FFT "1" "@BUILD_DATE_SHORT@" "gr_plot_fft @VERSION@" "User Commands"
+.SH NAME
+gr_plot_fft \- Frequency domain GNU Radio plotting
+.SH SYNOPSIS
+.B gr_plot_fft:
+[\fIoptions\fR] \fIinput_filename\fR
+.SH DESCRIPTION
+Takes a GNU Radio complex binary file and displays the I&Q data versus time as
+well as the frequency domain (FFT) plot. The y\-axis values are plotted
+assuming volts as the amplitude of the I&Q streams and converted into dBm in
+the frequency domain (the 1/N power adjustment out of the FFT is performed
+internally). The script plots a certain block of data at a time, specified on
+the command line as \fB\-B\fR or \fB\-\-block\fR. This value defaults to 1000. The start
+position in the file can be set by specifying \fB\-s\fR or \fB\-\-start\fR and defaults to 0
+(the start of the file). By default, the system assumes a sample rate of 1, so
+in time, each sample is plotted versus the sample number. To set a true time
+and frequency axis, set the sample rate (\fB\-R\fR or \fB\-\-sample\-rate\fR) to the sample
+rate used when capturing the samples.
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+.TP
+\fB\-d\fR DATA_TYPE, \fB\-\-data\-type\fR=\fIDATA_TYPE\fR
+Specify the data type (complex64, float32, (u)int32,
+(u)int16, (u)int8) [default=complex64]
+.TP
+\fB\-B\fR BLOCK, \fB\-\-block\fR=\fIBLOCK\fR
+Specify the block size [default=1000]
+.TP
+\fB\-s\fR START, \fB\-\-start\fR=\fISTART\fR
+Specify where to start in the file [default=0]
+.TP
+\fB\-R\fR SAMPLE_RATE, \fB\-\-sample\-rate\fR=\fISAMPLE_RATE\fR
+Set the sampler rate of the data [default=1.0]
+.SH "SEE ALSO"
+gr_plot_fft_c(1) gr_plot_fft_f(1)

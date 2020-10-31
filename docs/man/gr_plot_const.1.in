@@ -1,0 +1,28 @@
+.TH GR_PLOT_CONST "1" "@BUILD_DATE_SHORT@" "gr_plot_const @VERSION@" "User Commands"
+.SH NAME
+gr_plot_const \- constellation plot of I&Q data using GNU Radio
+.SH SYNOPSIS
+.B gr_plot_const:
+[\fIoptions\fR] \fIinput_filename\fR
+.SH DESCRIPTION
+Takes a GNU Radio complex binary file and displays the I&Q data versus time
+and the constellation plot (I vs. Q). You can set the block size to specify
+how many points to read in at a time and the start position in the file. By
+default, the system assumes a sample rate of 1, so in time, each sample is
+plotted versus the sample number. To set a true time axis, set the sample rate
+(\fB\-R\fR or \fB\-\-sample\-rate\fR) to the sample rate used when capturing the samples.
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+.TP
+\fB\-B\fR BLOCK, \fB\-\-block\fR=\fIBLOCK\fR
+Specify the block size [default=1000]
+.TP
+\fB\-s\fR START, \fB\-\-start\fR=\fISTART\fR
+Specify where to start in the file [default=0]
+.TP
+\fB\-R\fR SAMPLE_RATE, \fB\-\-sample\-rate\fR=\fISAMPLE_RATE\fR
+Set the sampler rate of the data [default=1.0]
+.SH "SEE ALSO"
+gr_plot_char(1)  gr_plot_const(1)  gr_plot_fft_c(1)  gr_plot_fft_f(1)  gr_plot_fft.py(1)  gr_plot_float(1)  gr_plot_int(1)  gr_plot_iq(1)  gr_plot_psd_c(1)  gr_plot_psd_f(1)  gr_plot_qt(1)  gr_plot_short(1)
