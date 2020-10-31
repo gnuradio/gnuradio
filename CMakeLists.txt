@@ -34,6 +34,11 @@ GR_CHECK_BUILD_TYPE(${CMAKE_BUILD_TYPE})
 SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 
+# Set the build date
+string(TIMESTAMP BUILD_DATE "%a, %d %b %Y %H:%M:%SZ" UTC)
+string(TIMESTAMP BUILD_DATE_SHORT "%Y-%m-%d" UTC)
+message(STATUS "Build date set to ${BUILD_DATE}.")
+
 include(GrComponent)
 ########################################################################
 # Setup Boost for global use (within this build)
@@ -248,6 +253,7 @@ SET(GR_DATA_DIR        share CACHE PATH "Base location for data")
 SET(GR_PKG_DATA_DIR    ${GR_DATA_DIR}/${CMAKE_PROJECT_NAME} CACHE PATH "Path to install package data")
 SET(GR_DOC_DIR         ${GR_DATA_DIR}/doc CACHE PATH "Path to install documentation")
 SET(GR_PKG_DOC_DIR     ${GR_DOC_DIR}/${CMAKE_PROJECT_NAME}-${DOCVER} CACHE PATH "Path to install package docs")
+SET(GR_MAN_DIR         ${GR_DATA_DIR}/man CACHE PATH "Path to install man pages")
 SET(GR_LIBEXEC_DIR     libexec CACHE PATH "Path to install libexec files")
 SET(GR_PKG_LIBEXEC_DIR ${GR_LIBEXEC_DIR}/${CMAKE_PROJECT_NAME} CACHE PATH "Path to install package libexec files")
 SET(GRC_BLOCKS_DIR     ${GR_PKG_DATA_DIR}/grc/blocks CACHE PATH "Path to install GRC blocks")
