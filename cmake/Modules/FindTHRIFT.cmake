@@ -1,4 +1,6 @@
-INCLUDE(FindPkgConfig)
+if(NOT PKG_CONFIG_FOUND)
+  INCLUDE(FindPkgConfig)
+endif()
 PKG_CHECK_MODULES(PC_THRIFT thrift)
 
 set(THRIFT_REQ_VERSION "0.9.2")

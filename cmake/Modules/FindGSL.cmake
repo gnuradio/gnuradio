@@ -16,7 +16,9 @@
 #  GSL_LINK_DIRECTORIES = link directories, useful for rpath on Unix
 #  GSL_EXE_LINKER_FLAGS = rpath on Unix
 
-INCLUDE(FindPkgConfig)
+if(NOT PKG_CONFIG_FOUND)
+    INCLUDE(FindPkgConfig)
+endif()
 PKG_CHECK_MODULES(GSL "gsl >= 1.10")
 IF(GSL_FOUND)
     set(GSL_LIBRARY_DIRS ${GSL_LIBDIR})
