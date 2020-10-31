@@ -1,0 +1,49 @@
+.TH UHD_RX_NOGUI "1" "@BUILD_DATE_SHORT@" "uhd_rx_nogui @VERSION@" "User Commands"
+.SH NAME
+uhd_rx_nogui \- GNU Radio receiver
+.SH SYNOPSIS
+.B uhd_rx_nogui.py
+[\fIoptions\fR]
+.SH DESCRIPTION
+Command line GNU Radio receiver that takes signal from a UHD
+peripheral receiver and sends demodulated audio to the sound device.
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+.TP
+\fB\-a\fR ARGS, \fB\-\-args\fR=\fIARGS\fR
+UHD device address args , [default=]
+.TP
+\fB\-\-spec\fR=\fISPEC\fR
+Subdevice of UHD device where appropriate
+.TP
+\fB\-A\fR ANTENNA, \fB\-\-antenna\fR=\fIANTENNA\fR
+select Rx Antenna where appropriate [default=none]
+.TP
+\fB\-f\fR Hz, \fB\-\-frequency\fR=\fIHz\fR
+set receive frequency to Hz [default=none]
+.TP
+\fB\-c\fR Hz, \fB\-\-calibration\fR=\fIHz\fR
+set frequency offset to Hz [default=0.0]
+.TP
+\fB\-g\fR dB, \fB\-\-gain\fR=\fIdB\fR
+set RF gain [default is midpoint]
+.TP
+\fB\-m\fR TYPE, \fB\-\-modulation\fR=\fITYPE\fR
+set modulation type (AM,FM) [default=none]
+.TP
+\fB\-o\fR RATE, \fB\-\-output\-rate\fR=\fIRATE\fR
+set audio output rate to RATE [default=32000]
+.TP
+\fB\-r\fR dB, \fB\-\-rf\-squelch\fR=\fIdB\fR
+set RF squelch to dB [default=\-50.0]
+.TP
+\fB\-p\fR FREQ, \fB\-\-ctcss\fR=\fIFREQ\fR
+set CTCSS squelch to FREQ [default=none]
+.TP
+\fB\-O\fR AUDIO_OUTPUT, \fB\-\-audio\-output\fR=\fIAUDIO_OUTPUT\fR
+pcm device name.  E.g., hw:0,0 or surround51 or
+/dev/dsp
+.SH "SEE ALSO"
+uhd_fft(1) uhd_rx_cfile(1) uhd_siggen(1) uhd_siggen_gui(1)

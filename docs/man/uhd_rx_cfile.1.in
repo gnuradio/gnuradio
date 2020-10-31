@@ -1,0 +1,45 @@
+.TH UHD_RX_CFILE "1" "@BUILD_DATE_SHORT@" "uhd_rx_cfile @VERSION@" "User Commands"
+.SH NAME
+uhd_rx_cfile \- Save UHD received data
+.SH SYNOPSIS
+.B uhd_rx_cfile:
+[\fIoptions\fR] \fIoutput_filename\fR
+.SH DESCRIPTION
+Save I&Q data to a complex file for later use.
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+.TP
+\fB\-a\fR ARGS, \fB\-\-args\fR=\fIARGS\fR
+UHD device address args , [default=]
+.TP
+\fB\-\-spec\fR=\fISPEC\fR
+Subdevice of UHD device where appropriate
+.TP
+\fB\-A\fR ANTENNA, \fB\-\-antenna\fR=\fIANTENNA\fR
+select Rx Antenna where appropriate
+.TP
+\fB\-\-samp\-rate\fR=\fISAMP_RATE\fR
+set sample rate (bandwidth) [default=1000000.0]
+.TP
+\fB\-f\fR FREQ, \fB\-\-freq\fR=\fIFREQ\fR
+set frequency to FREQ
+.TP
+\fB\-g\fR GAIN, \fB\-\-gain\fR=\fIGAIN\fR
+set gain in dB (default is midpoint)
+.TP
+\fB\-s\fR, \fB\-\-output\-shorts\fR
+output interleaved shorts instead of complex floats
+.TP
+\fB\-N\fR NSAMPLES, \fB\-\-nsamples\fR=\fINSAMPLES\fR
+number of samples to collect [default=+inf]
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+verbose output
+.TP
+\fB\-\-lo\-offset\fR=\fILO_OFFSET\fR
+set daughterboard LO offset to OFFSET [default=hw
+default]
+.SH "SEE ALSO"
+uhd_fft(1) uhd_rx_nogui(1) uhd_siggen(1) uhd_siggen_gui(1)

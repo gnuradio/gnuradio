@@ -1,0 +1,15 @@
+.TH DIAL_TONE "1" "@BUILD_DATE_SHORT@" "DIAL_TONE @VERSION@" "User Commands"
+.SH NAME
+dial_tone \- dial tone example
+.SH DESCRIPTION
+GnuRadio Dial Tone example
+.SH OPTIONS
+None
+.PP
+Play a Dial Tone on the sound card output device.
+.SH "SEE ALSO"
+.PP
+The c++ gnuradio example programs are in /usr/bin. There are also many
+Python and GnuRadio Companion examples in /usr/share/gnuradio/examples/...
+.PP
+tags_demo(1) uhd_rx_cfile(1) uhd_rx_nogui(1) uhd_siggen(1) uhd_siggen_gui(1)

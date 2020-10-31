@@ -1,0 +1,65 @@
+.TH UHD_SIGGEN_GUI "1" "@BUILD_DATE_SHORT@" "uhd_siggen_gui @VERSION@" "User Commands"
+.SH NAME
+uhd_siggen_gui \- GNU Radio signal generator using UHD hardware
+.SH SYNOPSIS
+.B uhd_siggen_gui:
+[\fIoptions\fR]
+.SH DESCRIPTION
+GUI to allow UHD supported hardware to be a signal generator.
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+.TP
+\fB\-a\fR ARGS, \fB\-\-args\fR=\fIARGS\fR
+UHD device address args , [default=]
+.TP
+\fB\-\-spec\fR=\fISPEC\fR
+Subdevice of UHD device where appropriate
+.TP
+\fB\-A\fR ANTENNA, \fB\-\-antenna\fR=\fIANTENNA\fR
+select Rx Antenna where appropriate
+.TP
+\fB\-s\fR SAMP_RATE, \fB\-\-samp\-rate\fR=\fISAMP_RATE\fR
+set sample rate (bandwidth) [default=1000000.0]
+.TP
+\fB\-g\fR GAIN, \fB\-\-gain\fR=\fIGAIN\fR
+set gain in dB (default is midpoint)
+.TP
+\fB\-f\fR FREQ, \fB\-\-tx\-freq\fR=\fIFREQ\fR
+Set carrier frequency to FREQ [default=mid\-point]
+.TP
+\fB\-x\fR WAVEFORM_FREQ, \fB\-\-waveform\-freq\fR=\fIWAVEFORM_FREQ\fR
+Set baseband waveform frequency to FREQ [default=0]
+.TP
+\fB\-y\fR WAVEFORM2_FREQ, \fB\-\-waveform2\-freq\fR=\fIWAVEFORM2_FREQ\fR
+Set 2nd waveform frequency to FREQ [default=none]
+.TP
+\fB\-\-sine\fR
+Generate a carrier modulated by a complex sine wave
+.TP
+\fB\-\-const\fR
+Generate a constant carrier
+.TP
+\fB\-\-offset\fR=\fIOFFSET\fR
+Set waveform phase offset to OFFSET [default=0]
+.TP
+\fB\-\-gaussian\fR
+Generate Gaussian random output
+.TP
+\fB\-\-uniform\fR
+Generate Uniform random output
+.TP
+\fB\-\-2tone\fR
+Generate Two Tone signal for IMD testing
+.TP
+\fB\-\-sweep\fR
+Generate a swept sine wave
+.TP
+\fB\-\-amplitude\fR=\fIAMPL\fR
+Set output amplitude to AMPL (0.0\-1.0) [default=0.15]
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Use verbose console output [default=False]
+.SH "SEE ALSO"
+uhd_siggen(1)
