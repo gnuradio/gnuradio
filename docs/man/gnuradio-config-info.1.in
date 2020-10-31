@@ -1,0 +1,33 @@
+.TH GNURADIO-CONFIG-INFO "1" "@BUILD_DATE_SHORT@" "gnuradio-config-info @VERSION@" "User Commands"
+.SH NAME
+gnuradio-config-info \- show details on installed GNU radio
+.SH DESCRIPTION
+.SS "Program options: gnuradio [options]:"
+.TP
+\fB\-h\fR [ \fB\-\-help\fR ]
+print help message
+.TP
+\fB\-\-prefix\fR
+print gnuradio installation prefix
+.TP
+\fB\-\-sysconfdir\fR
+print gnuradio system configuration directory
+.TP
+\fB\-\-prefsdir\fR
+print gnuradio preferences directory
+.TP
+\fB\-\-builddate\fR
+print gnuradio build date (RFC2822 format)
+.TP
+\fB\-v\fR [ \fB\-\-version\fR ]
+print gnuradio version
+.SH "SEE ALSO"
+The full documentation for
+.B GNU Radio
+is in HTML format.  If the
+.B gnuradio-doc
+package is properly installed at your site
+.IP
+.B /usr/share/doc/gnuradio-doc/html/
+.PP
+should give you access to the complete manual.

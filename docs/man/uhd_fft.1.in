@@ -1,0 +1,9 @@
+.TH UHD_FFT "1" "@BUILD_DATE_SHORT@" "uhd_fft @VERSION@" "User Commands"
+.SH NAME
+uhd_fft \- Display spectrum from UHD receiver
+.SH DESCRIPTION
+Show received signal spectrum
+.PP
+Unable to access the X Display, is $DISPLAY set properly?
+.SH "SEE ALSO"
+uhd_rx_cfile(1) uhd_rx_nogui(1) uhd_siggen(1) uhd_siggen_gui(1)

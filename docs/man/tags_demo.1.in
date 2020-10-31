@@ -1,0 +1,34 @@
+.TH TAGS_DEMO "1" "@BUILD_DATE_SHORT@" "TAGS_DEMO @VERSION@" "User Commands"
+.SH NAME
+tags_demo \- GNURadio and UHD tags example
+.SH DESCRIPTION
+Show source timestamps and demonstrate timed bursts on a sink.
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+.TP
+\fB\-\-addr\fR
+the device address in string format
+.TP
+\fB\-\-rate\fR
+the sample rate in samples per second (default=1000000)
+.TP
+\fB\-\-freq\fR
+the center frequency in Hz (defaualt=1000000)
+.TP
+\fB\-\-burst\fR
+the duration of each burst in seconds (defaualt=0.10000000000000001)
+.TP
+\fB\-\-idle\fR
+idle time between bursts in seconds (defaualt=0.050000000000000003)
+.PP
+The tags sink demo block will print USRP source time stamps.
+The tags source demo block will send bursts to the USRP sink.
+Look at the USRP output on a scope to see the timed bursts.
+.SH "SEE ALSO"
+.PP
+The c++ gnuradio example programs are in /usr/bin. There are also many
+Python and GnuRadio Companion examples in /usr/share/gnuradio/examples/...
+.PP
+dial_tone(1) uhd_rx_nogui(1) uhd_siggen(1) uhd_siggen_gui(1)

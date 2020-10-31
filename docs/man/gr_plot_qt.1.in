@@ -1,0 +1,7 @@
+.TH GR_PLOT_QT "1" "@BUILD_DATE_SHORT@" "gr_plot_qt @VERSION@" "User Commands"
+.SH NAME
+gr_plot_qt \- plot data using Qt graphics and GNU Radio
+.SH DESCRIPTION
+Fancy plot display.
+.SH "SEE ALSO"
+gr_plot_char(1)  gr_plot_const(1)  gr_plot_fft_c(1)  gr_plot_fft_f(1)  gr_plot_float(1)  gr_plot_int(1)  gr_plot_iq(1)  gr_plot_psd_c(1)  gr_plot_psd_f(1)  gr_plot_qt(1)  gr_plot_short(1)

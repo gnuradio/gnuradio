@@ -16,7 +16,6 @@ find_package(libunwind)
 ########################################################################
 # Handle the generated constants
 ########################################################################
-string(TIMESTAMP BUILD_DATE "%a, %d %b %Y %H:%M:%S" UTC)
 message(STATUS "Loading build date ${BUILD_DATE} into constants...")
 message(STATUS "Loading version ${VERSION} into constants...")
 

@@ -1,0 +1,16 @@
+.TH GNURADIO "1" "@BUILD_DATE_SHORT@" "gr_modtool @VERSION@" "User Commands"
+.SH NAME
+gr-modtool \- The swiss army knife of module editing
+.SH DESCRIPTION
+When developing a module, there's a lot of boring, monotonous work
+involved: boilerplate code, makefile editing etc. gr-modtool is a
+script which aims to help with all these things by automatically
+editing makefiles, using templates and doing as much work as possible
+for the developer, such that you can jump straight into the DSP
+coding.
+.P
+Note that gr-modtool makes a lot of assumptions on what the code looks
+like. The more your module is custom and has specific changes, the
+less useful gr-modtool becomes.
+.SH SEE ALSO
+https://wiki.gnuradio.org/index.php/OutOfTreeModules

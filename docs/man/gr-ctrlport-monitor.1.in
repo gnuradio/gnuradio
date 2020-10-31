@@ -1,0 +1,39 @@
+.TH GR-CTRLPORT-MONITOR "1" "@BUILD_DATE_SHORT@" "GNU Radio Companion @VERSION@" "User Commands"
+.SH NAME
+gr-ctrlport-monitor \- gnuradio control port gui
+.SH SYNOPSIS
+.B gr-ctrlport-monitor
+[\fIoptions\fR]
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+.TP
+\fB\-H\fR HOST, \fB\-\-host\fR=\fIHOST\fR
+Hostname of ControlPort server.
+.TP
+\fB\-p\fR PORT, \fB\-\-port\fR=\fIPORT\fR
+Port number of host's ControlPort endpoint.
+.TP
+\fB\-i\fR INTERFACES, \fB\-\-interfaces\fR=\fIINTERFACES\fR
+Interfaces to use. [default=['lo']]
+.TP
+\fB\-P\fR PROTOCOL, \fB\-\-protocol\fR=\fIPROTOCOL\fR
+Type of protocol to use (usually tcp). [default=tcp]
+.TP
+\fB\-a\fR APP, \fB\-\-app\fR=\fIAPP\fR
+Name of application [default=gnuradio]
+.PP
+gr\-ctrlport\-monitor: error: no such option: \fB\-\-version\fR
+.SH "SEE ALSO"
+The full documentation for
+.B Usage:
+is maintained as a Texinfo manual.  If the
+.B info
+and
+.B Usage:
+programs are properly installed at your site, the command
+.IP
+.B info Usage:
+.PP
+should give you access to the complete manual.
