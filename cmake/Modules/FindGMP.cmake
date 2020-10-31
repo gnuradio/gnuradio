@@ -1,4 +1,6 @@
-include(FindPkgConfig)
+if(NOT PKG_CONFIG_FOUND)
+    include(FindPkgConfig)
+endif()
 pkg_check_modules(PC_GMP "gmp")
 
 set(GMP_DEFINITIONS ${PC_GMP_CFLAGS_OTHER})
