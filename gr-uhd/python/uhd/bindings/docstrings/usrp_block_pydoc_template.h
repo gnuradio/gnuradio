@@ -207,6 +207,9 @@ static const char* __doc_gr_uhd_cmd_chan_key = R"doc()doc";
 static const char* __doc_gr_uhd_cmd_gain_key = R"doc()doc";
 
 
+static const char* __doc_gr_uhd_cmd_power_key = R"doc()doc";
+
+
 static const char* __doc_gr_uhd_cmd_freq_key = R"doc()doc";
 
 
