@@ -433,6 +433,9 @@ void bind_usrp_block(py::module& m)
     m.def("cmd_gain_key", &::gr::uhd::cmd_gain_key, D(cmd_gain_key));
 
 
+    m.def("cmd_power_key", &::gr::uhd::cmd_power_key, D(cmd_power_key));
+
+
     m.def("cmd_freq_key", &::gr::uhd::cmd_freq_key, D(cmd_freq_key));
 
 
