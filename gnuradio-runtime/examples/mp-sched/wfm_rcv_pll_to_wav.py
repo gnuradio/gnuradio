@@ -8,7 +8,7 @@
 #
 #
 
-from gnuradio import gr, gru, eng_notation, filter
+from gnuradio import gr, eng_notation, filter
 from gnuradio import audio
 from gnuradio import analog
 from gnuradio import blocks

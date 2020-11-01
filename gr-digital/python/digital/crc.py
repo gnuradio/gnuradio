@@ -7,7 +7,6 @@
 #
 #
 
-from gnuradio import gru
 from . import digital_python as digital
 import struct
 
