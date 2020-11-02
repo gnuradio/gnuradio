@@ -611,7 +611,7 @@ class Application(Gtk.Application):
                     main.new_page(file_path, show=(i == 0))
                     self.config.add_recent_file(file_path)
                     main.tool_bar.refresh_submenus()
-                    #main.menu_bar.refresh_submenus()
+                    main.menu.refresh_submenus()
         elif action == Actions.FLOW_GRAPH_OPEN_QSS_THEME:
             file_paths = FileDialogs.OpenQSS(main, self.platform.config.install_prefix +
                                              '/share/gnuradio/themes/').run()
@@ -622,7 +622,9 @@ class Application(Gtk.Application):
         elif action == Actions.FLOW_GRAPH_OPEN_RECENT:
             file_path = str(args[0])[1:-1]
             main.new_page(file_path, show=True)
+            self.config.add_recent_file(file_path)
             main.tool_bar.refresh_submenus()
+            main.menu.refresh_submenus()
         elif action == Actions.FLOW_GRAPH_SAVE:
             #read-only or undefined file path, do save-as
             if page.get_read_only() or not page.file_path:
@@ -655,8 +657,7 @@ class Application(Gtk.Application):
                     page.saved = False
                 self.config.add_recent_file(file_path)
                 main.tool_bar.refresh_submenus()
-                #TODO
-                #main.menu_bar.refresh_submenus()
+                main.menu.refresh_submenus()
         elif action == Actions.FLOW_GRAPH_SAVE_COPY:
             try:
                 if not page.file_path:
@@ -722,6 +723,8 @@ class Application(Gtk.Application):
                             Dialogs.show_missing_xterm(main, xterm)
                         self.config.xterm_missing(xterm)
                     if page.saved and page.file_path:
+                        # Save config before exection
+                        self.config.save()
                         Executor.ExecFlowGraphThread(
                             flow_graph_page=page,
                             xterm_executable=xterm,
