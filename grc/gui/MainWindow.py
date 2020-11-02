@@ -73,7 +73,8 @@ class MainWindow(Gtk.ApplicationWindow):
 
         # This needs to be replaced
         # Have an option for either the application menu or this menu
-        self.menu_bar = Gtk.MenuBar.new_from_model(Bars.Menu())
+        self.menu = Bars.Menu()
+        self.menu_bar = Gtk.MenuBar.new_from_model(self.menu)
         vbox.pack_start(self.menu_bar, False, False, 0)
 
         self.tool_bar = Bars.Toolbar()
