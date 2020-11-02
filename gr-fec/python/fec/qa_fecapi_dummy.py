@@ -29,157 +29,192 @@ class test_fecapi_dummy(gr_unittest.TestCase):
 
     def test_parallelism0_00(self):
         frame_size = 30
-        enc = fec.dummy_encoder_make(frame_size*8)
-        dec = fec.dummy_decoder.make(frame_size*8)
+        enc = fec.dummy_encoder_make(frame_size * 8)
+        dec = fec.dummy_decoder.make(frame_size * 8)
         threading = None
-        self.test = _qa_helper(10*frame_size, enc, dec, threading)
+        self.test = _qa_helper(10 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_in = self.test.snk_input.data()
-        data_out =self.test.snk_output.data()
+        data_out = self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism0_01(self):
         frame_size = 30
-        enc = fec.dummy_encoder_make(frame_size*8)
-        dec = fec.dummy_decoder.make(frame_size*8)
+        enc = fec.dummy_encoder_make(frame_size * 8)
+        dec = fec.dummy_decoder.make(frame_size * 8)
         threading = 'ordinary'
-        self.test = _qa_helper(10*frame_size, enc, dec, threading)
+        self.test = _qa_helper(10 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_in = self.test.snk_input.data()
-        data_out =self.test.snk_output.data()
+        data_out = self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism0_02(self):
         frame_size = 30
-        enc = fec.dummy_encoder_make(frame_size*8)
-        dec = fec.dummy_decoder.make(frame_size*8)
+        enc = fec.dummy_encoder_make(frame_size * 8)
+        dec = fec.dummy_decoder.make(frame_size * 8)
         threading = 'capillary'
-        self.test = _qa_helper(10*frame_size, enc, dec, threading)
+        self.test = _qa_helper(10 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_in = self.test.snk_input.data()
-        data_out =self.test.snk_output.data()
+        data_out = self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism1_00(self):
         frame_size = 30
-        enc = list(map((lambda a: fec.dummy_encoder_make(frame_size*8)), list(range(0,1))))
-        dec = list(map((lambda a: fec.dummy_decoder.make(frame_size*8)), list(range(0,1))))
+        enc = list(
+            map((lambda a: fec.dummy_encoder_make(frame_size * 8)), list(range(0, 1))))
+        dec = list(
+            map((lambda a: fec.dummy_decoder.make(frame_size * 8)), list(range(0, 1))))
         threading = None
-        self.test = _qa_helper(10*frame_size, enc, dec, threading)
+        self.test = _qa_helper(10 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_in = self.test.snk_input.data()
-        data_out =self.test.snk_output.data()
+        data_out = self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism1_01(self):
         frame_size = 30
-        enc = list(map((lambda a: fec.dummy_encoder_make(frame_size*8)), list(range(0,1))))
-        dec = list(map((lambda a: fec.dummy_decoder.make(frame_size*8)), list(range(0,1))))
+        enc = list(
+            map((lambda a: fec.dummy_encoder_make(frame_size * 8)), list(range(0, 1))))
+        dec = list(
+            map((lambda a: fec.dummy_decoder.make(frame_size * 8)), list(range(0, 1))))
         threading = 'ordinary'
-        self.test = _qa_helper(10*frame_size, enc, dec, threading)
+        self.test = _qa_helper(10 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_in = self.test.snk_input.data()
-        data_out =self.test.snk_output.data()
+        data_out = self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism1_02(self):
         frame_size = 300
-        enc = list(map((lambda a: fec.dummy_encoder_make(frame_size*8)), list(range(0,1))))
-        dec = list(map((lambda a: fec.dummy_decoder.make(frame_size*8)), list(range(0,1))))
+        enc = list(
+            map((lambda a: fec.dummy_encoder_make(frame_size * 8)), list(range(0, 1))))
+        dec = list(
+            map((lambda a: fec.dummy_decoder.make(frame_size * 8)), list(range(0, 1))))
         threading = 'capillary'
-        self.test = _qa_helper(10*frame_size, enc, dec, threading)
+        self.test = _qa_helper(10 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_in = self.test.snk_input.data()
-        data_out =self.test.snk_output.data()
+        data_out = self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism1_03(self):
         frame_size = 30
         dims = 10
-        enc = list(map((lambda a: fec.dummy_encoder_make(frame_size*8)), list(range(0,dims))))
-        dec = list(map((lambda a: fec.dummy_decoder.make(frame_size*8)), list(range(0,dims))))
+        enc = list(map((lambda a: fec.dummy_encoder_make(
+            frame_size * 8)), list(range(0, dims))))
+        dec = list(map((lambda a: fec.dummy_decoder.make(
+            frame_size * 8)), list(range(0, dims))))
         threading = 'ordinary'
-        self.test = _qa_helper(dims*frame_size, enc, dec, threading)
+        self.test = _qa_helper(dims * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_in = self.test.snk_input.data()
-        data_out =self.test.snk_output.data()
+        data_out = self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism1_04(self):
         frame_size = 30
         dims = 16
-        enc = list(map((lambda a: fec.dummy_encoder_make(frame_size*8)), list(range(0,dims))))
-        dec = list(map((lambda a: fec.dummy_decoder.make(frame_size*8)), list(range(0,dims))))
+        enc = list(map((lambda a: fec.dummy_encoder_make(
+            frame_size * 8)), list(range(0, dims))))
+        dec = list(map((lambda a: fec.dummy_decoder.make(
+            frame_size * 8)), list(range(0, dims))))
         threading = 'capillary'
-        self.test = _qa_helper(dims*frame_size, enc, dec, threading)
+        self.test = _qa_helper(dims * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_in = self.test.snk_input.data()
-        data_out =self.test.snk_output.data()
+        data_out = self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism1_05(self):
         frame_size = 30
         dims = 5
-        enc = list(map((lambda a: fec.dummy_encoder_make(frame_size*8)), list(range(0,dims))))
+        enc = list(map((lambda a: fec.dummy_encoder_make(
+            frame_size * 8)), list(range(0, dims))))
         #dec = list(map((lambda a: fec.dummy_decoder.make(frame_size*8)), range(0,dims)))
         threading = 'capillary'
 
-        self.assertRaises(AttributeError, lambda: extended_encoder(enc, threading=threading, puncpat="11"))
+        self.assertRaises(
+            AttributeError,
+            lambda: extended_encoder(
+                enc,
+                threading=threading,
+                puncpat="11"))
 
     def test_parallelism1_06(self):
         frame_size = 30
         dims = 5
         #enc = list(map((lambda a: fec.dummy_encoder_make(frame_size*8)), range(0,dims)))
-        dec = list(map((lambda a: fec.dummy_decoder.make(frame_size*8)), list(range(0,dims))))
+        dec = list(map((lambda a: fec.dummy_decoder.make(
+            frame_size * 8)), list(range(0, dims))))
         threading = 'capillary'
 
-        self.assertRaises(AttributeError, lambda: extended_decoder(dec, threading=threading, puncpat="11"))
+        self.assertRaises(
+            AttributeError,
+            lambda: extended_decoder(
+                dec,
+                threading=threading,
+                puncpat="11"))
 
     def test_parallelism2_00(self):
         frame_size = 30
         dims1 = 16
         dims2 = 16
-        enc = list(map((lambda b: list(map((lambda a: fec.dummy_encoder_make(frame_size*8)), list(range(0,dims1))))), list(range(0,dims2))))
+        enc = list(map((lambda b: list(map((lambda a: fec.dummy_encoder_make(
+            frame_size * 8)), list(range(0, dims1))))), list(range(0, dims2))))
         #dec = list(map((lambda b: map((lambda a: fec.dummy_decoder_make(frame_size*8)), range(0,dims1))), range(0,dims2)))
         threading = 'capillary'
 
-        self.assertRaises(AttributeError, lambda: extended_encoder(enc, threading=threading, puncpat="11"))
+        self.assertRaises(
+            AttributeError,
+            lambda: extended_encoder(
+                enc,
+                threading=threading,
+                puncpat="11"))
 
     def test_parallelism2_01(self):
         frame_size = 30
         dims1 = 16
         dims2 = 16
-        dec = list(map((lambda b: list(map((lambda a: fec.dummy_decoder_make(frame_size*8)), list(range(0,dims1))))), list(range(0,dims2))))
+        dec = list(map((lambda b: list(map((lambda a: fec.dummy_decoder_make(
+            frame_size * 8)), list(range(0, dims1))))), list(range(0, dims2))))
         threading = 'capillary'
 
-        self.assertRaises(AttributeError, lambda: extended_decoder(dec, threading=threading, puncpat="11"))
+        self.assertRaises(
+            AttributeError,
+            lambda: extended_decoder(
+                dec,
+                threading=threading,
+                puncpat="11"))
 
     def test_extended_pack_data(self):
-        # test if extended encoder gets correct values for input and output conversion.
+        # test if extended encoder gets correct values for input and output
+        # conversion.
         n_frames = 10
         frame_size = 32
 
@@ -199,15 +234,18 @@ class test_fecapi_dummy(gr_unittest.TestCase):
         tb.connect(src, packer, snk0)
 
         enc_unpacked = fec.dummy_encoder_make(frame_size, False, False)
-        ext_enc_unp = extended_encoder(enc_unpacked, threading='none', puncpat='11')
+        ext_enc_unp = extended_encoder(
+            enc_unpacked, threading='none', puncpat='11')
         tb.connect(src, ext_enc_unp, snk1)
 
         enc_pack = fec.dummy_encoder_make(frame_size // 8, True, False)
-        ext_enc_pack = extended_encoder(enc_pack, threading='none', puncpat='11')
+        ext_enc_pack = extended_encoder(
+            enc_pack, threading='none', puncpat='11')
         tb.connect(src, ext_enc_pack, snk2)
 
         enc_packed_bits = fec.dummy_encoder_make(frame_size // 8, False, True)
-        ext_enc_packed_bits = extended_encoder(enc_packed_bits, threading='none', puncpat='11')
+        ext_enc_packed_bits = extended_encoder(
+            enc_packed_bits, threading='none', puncpat='11')
         tb.connect(packer, ext_enc_packed_bits, snk3)
 
         tb.run()
@@ -226,4 +264,4 @@ class test_fecapi_dummy(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_fecapi_dummy, "test_fecapi_dummy.xml")
+    gr_unittest.run(test_fecapi_dummy)

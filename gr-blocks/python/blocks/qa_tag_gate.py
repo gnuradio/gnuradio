@@ -15,13 +15,13 @@ import pmt
 
 class qa_tag_gate (gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-    def test_001_t (self):
+    def test_001_t(self):
         tag = gr.tag_t()
         tag.key = pmt.string_to_symbol('key')
         tag.value = pmt.from_long(42)
@@ -30,10 +30,10 @@ class qa_tag_gate (gr_unittest.TestCase):
         gate = blocks.tag_gate(gr.sizeof_float, False)
         sink = blocks.vector_sink_f()
         self.tb.connect(src, gate, sink)
-        self.tb.run ()
+        self.tb.run()
         self.assertEqual(len(sink.tags()), 0)
 
-    def test_002_t (self):
+    def test_002_t(self):
         tags = []
         tags.append(gr.tag_t())
         tags[0].key = pmt.string_to_symbol('key')
@@ -50,13 +50,13 @@ class qa_tag_gate (gr_unittest.TestCase):
         src = blocks.vector_source_f(range(20), False, 1, tags)
         gate = blocks.tag_gate(gr.sizeof_float, False)
         gate.set_single_key("key")
-        self.assertEqual(gate.single_key(),"key")
+        self.assertEqual(gate.single_key(), "key")
         sink = blocks.vector_sink_f()
         self.tb.connect(src, gate, sink)
-        self.tb.run ()
+        self.tb.run()
         self.assertEqual(len(sink.tags()), 1)
 
-    def test_003_t (self):
+    def test_003_t(self):
         tags = []
         tags.append(gr.tag_t())
         tags[0].key = pmt.string_to_symbol('key')
@@ -75,10 +75,10 @@ class qa_tag_gate (gr_unittest.TestCase):
         gate.set_single_key("key")
         sink = blocks.vector_sink_f()
         self.tb.connect(src, gate, sink)
-        self.tb.run ()
+        self.tb.run()
         self.assertEqual(len(sink.tags()), 3)
 
-    def test_004_t (self):
+    def test_004_t(self):
         tags = []
         tags.append(gr.tag_t())
         tags[0].key = pmt.string_to_symbol('key')
@@ -96,10 +96,10 @@ class qa_tag_gate (gr_unittest.TestCase):
         gate = blocks.tag_gate(gr.sizeof_float, True)
         sink = blocks.vector_sink_f()
         self.tb.connect(src, gate, sink)
-        self.tb.run ()
+        self.tb.run()
         self.assertEqual(len(sink.tags()), 3)
 
-    def test_005_t (self):
+    def test_005_t(self):
         gate = blocks.tag_gate(gr.sizeof_float, True)
         self.assertEqual(gate.single_key(), "")
         gate.set_single_key("the_key")
@@ -107,6 +107,6 @@ class qa_tag_gate (gr_unittest.TestCase):
         gate.set_single_key("")
         self.assertEqual(gate.single_key(), "")
 
-if __name__ == '__main__':
-    gr_unittest.run(qa_tag_gate, "qa_tag_gate.xml")
 
+if __name__ == '__main__':
+    gr_unittest.run(qa_tag_gate)

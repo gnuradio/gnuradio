@@ -125,4 +125,22 @@ void bind_dvbt2_config(py::module& m)
         .value("BANDWIDTH_8_0_MHZ", ::gr::dtv::BANDWIDTH_8_0_MHZ)   // 4
         .value("BANDWIDTH_10_0_MHZ", ::gr::dtv::BANDWIDTH_10_0_MHZ) // 5
         .export_values();
+
+    py::implicitly_convertible<int, gr::dtv::dvbt2_rotation_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_streamtype_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_inputmode_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_extended_carrier_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_preamble_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_fftsize_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_papr_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_l1constellation_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_pilotpattern_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_version_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_reservedbiasbits_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_l1scrambled_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_misogroup_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_showlevels_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_inband_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_equalization_t>();
+    py::implicitly_convertible<int, gr::dtv::dvbt2_bandwidth_t>();
 }

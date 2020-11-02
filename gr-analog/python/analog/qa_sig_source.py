@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 #
-#Copyright 2004, 2007, 2010, 2012, 2013, 2020 Free Software Foundation, Inc.
+# Copyright 2004, 2007, 2010, 2012, 2013, 2020 Free Software Foundation, Inc.
 #
-#This file is part of GNU Radio
+# This file is part of GNU Radio
 #
-#SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
 #
 
@@ -83,7 +83,7 @@ class test_sig_source(gr_unittest.TestCase):
         tb.connect(op, dst1)
         tb.run()
         dst_data = dst1.data()
-        #Let the python know we are dealing with signed int behind scenes
+        # Let the python know we are dealing with signed int behind scenes
         dst_data_signed = [b if b < 127 else (256 - b) * -1 for b in dst_data]
         self.assertFloatTuplesAlmostEqual(expected_result, dst_data_signed)
 
@@ -118,7 +118,7 @@ class test_sig_source(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_result, dst_data, 5)
 
     def test_sqr_c(self):
-        tb = self.tb  #arg6 is a bit before -PI/2
+        tb = self.tb  # arg6 is a bit before -PI/2
         expected_result = [1j, 1j, 0, 0, 1, 1, 1 + 0j, 1 + 1j, 1j]
         src1 = analog.sig_source_c(8, analog.GR_SQR_WAVE, 1.0, 1.0)
         op = blocks.head(gr.sizeof_gr_complex, 9)
@@ -234,4 +234,4 @@ class test_sig_source(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_sig_source, "test_sig_source.xml")
+    gr_unittest.run(test_sig_source)

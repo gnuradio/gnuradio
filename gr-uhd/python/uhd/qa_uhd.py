@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, uhd
 
+
 class test_uhd(gr_unittest.TestCase):
 
     def setUp(self):
@@ -19,18 +20,18 @@ class test_uhd(gr_unittest.TestCase):
     def tearDown(self):
         self.tb = None
 
-    def test_000_nop (self):
+    def test_000_nop(self):
         """Just see if we can import the module...
         They may not have a UHD device connected, etc.  Don't try to run anything"""
         pass
 
-    def test_time_spec_t (self):
+    def test_time_spec_t(self):
         seconds = 42.0
         time = uhd.time_spec_t(seconds)
-        twice_time = time + time;
-        zero_time = time - time;
-        self.assertEqual(time.get_real_secs() * 2,  seconds * 2 )
-        self.assertEqual(time.get_real_secs() - time.get_real_secs() , 0.0)
+        twice_time = time + time
+        zero_time = time - time
+        self.assertEqual(time.get_real_secs() * 2, seconds * 2)
+        self.assertEqual(time.get_real_secs() - time.get_real_secs(), 0.0)
 
     def test_stream_args_channel_foo(self):
         """
@@ -46,5 +47,6 @@ class test_uhd(gr_unittest.TestCase):
         self.assertEqual(sa.channels[0], 1)
         self.assertEqual(sa.channels[1], 0)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_uhd, "test_uhd.xml")
+    gr_unittest.run(test_uhd)

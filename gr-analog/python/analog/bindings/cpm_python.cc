@@ -51,4 +51,6 @@ void bind_cpm(py::module& m)
                          py::arg("L"),
                          py::arg("beta") = 0.3,
                          D(cpm, phase_response));
+
+    py::implicitly_convertible<int, gr::analog::cpm::cpm_type>();
 }

@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest
 
+
 class test_kludged_imports (gr_unittest.TestCase):
 
     def setUp(self):
@@ -25,4 +26,4 @@ class test_kludged_imports (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_kludged_imports, "test_kludged_imports.xml")
+    gr_unittest.run(test_kludged_imports)

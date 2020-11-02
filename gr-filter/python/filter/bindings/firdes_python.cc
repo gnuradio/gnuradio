@@ -46,6 +46,7 @@ void bind_firdes(py::module& m)
         .value("WIN_FLATTOP", gr::filter::firdes::WIN_FLATTOP)                 // 7
         .export_values();
 
+    py::implicitly_convertible<int, gr::filter::firdes::win_type>();
 
     firdes_class
         .def_static("window",

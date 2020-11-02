@@ -13,8 +13,9 @@ import math
 
 from gnuradio import gr, gr_unittest, analog, blocks
 
+
 def sincos(x):
-    return  math.cos(x) + math.sin(x) * 1j
+    return math.cos(x) + math.sin(x) * 1j
 
 
 class test_frequency_modulator(gr_unittest.TestCase):
@@ -29,7 +30,7 @@ class test_frequency_modulator(gr_unittest.TestCase):
         pi = math.pi
         sensitivity = pi / 4
         src_data = (1.0 / 4, 1.0 / 2, 1.0 / 4, -1.0 / 4, -1.0 / 2, -1 / 4.0)
-        running_sum = (pi / 16, 3*pi/16, pi / 4, 3*pi/16, pi / 16, 0)
+        running_sum = (pi / 16, 3 * pi / 16, pi / 4, 3 * pi / 16, pi / 16, 0)
         expected_result = tuple([sincos(x) for x in running_sum])
         src = blocks.vector_source_f(src_data)
         op = analog.frequency_modulator_fc(sensitivity)
@@ -40,6 +41,6 @@ class test_frequency_modulator(gr_unittest.TestCase):
         result_data = dst.data()
         self.assertComplexTuplesAlmostEqual(expected_result, result_data, 5)
 
-if __name__ == '__main__':
-    gr_unittest.run(test_frequency_modulator, "test_frequency_modulator.xml")
 
+if __name__ == '__main__':
+    gr_unittest.run(test_frequency_modulator)

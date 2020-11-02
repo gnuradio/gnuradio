@@ -13,16 +13,19 @@ from gnuradio import gr, gr_unittest, blocks
 
 import math
 
+
 def sig_source_f(samp_rate, freq, amp, N):
     t = [float(x) / samp_rate for x in range(N)]
-    y = [amp*math.cos(2.*math.pi*freq*x) for x in t]
+    y = [amp * math.cos(2. * math.pi * freq * x) for x in t]
     return y
+
 
 def sig_source_c(samp_rate, freq, amp, N):
     t = [float(x) / samp_rate for x in range(N)]
-    y = [amp*math.cos(2.*math.pi*freq*x) + \
-                1j*amp*math.sin(2.*math.pi*freq*x) for x in t]
+    y = [amp * math.cos(2. * math.pi * freq * x) +
+         1j * amp * math.sin(2. * math.pi * freq * x) for x in t]
     return y
+
 
 class test_rms(gr_unittest.TestCase):
 
@@ -68,5 +71,6 @@ class test_rms(gr_unittest.TestCase):
         dst_data = dst.data()
         self.assertAlmostEqual(dst_data[-1], expected_data, 4)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_rms, "test_rms.xml")
+    gr_unittest.run(test_rms)

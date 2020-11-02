@@ -15,6 +15,7 @@ import time
 
 from gnuradio import gr, gr_unittest, filter, digital, blocks
 
+
 class test_pfb_clock_sync(gr_unittest.TestCase):
 
     def setUp(self):
@@ -35,8 +36,8 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         max_rate_deviation = 0.5
         osps = 1
 
-        ntaps = 11 * int(sps*nfilts)
-        taps = filter.firdes.root_raised_cosine(nfilts, nfilts*sps,
+        ntaps = 11 * int(sps * nfilts)
+        taps = filter.firdes.root_raised_cosine(nfilts, nfilts * sps,
                                                 1.0, excess_bw, ntaps)
 
         self.test = digital.pfb_clock_sync_ccf(sps, loop_bw, taps,
@@ -44,7 +45,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
                                                max_rate_deviation,
                                                osps)
 
-        data = 10000*[complex(1,0), complex(-1,0)]
+        data = 10000 * [complex(1, 0), complex(-1, 0)]
         self.src = blocks.vector_source_c(data, False)
 
         # pulse shaping interpolation filter
@@ -61,7 +62,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         self.tb.connect(self.src, self.rrc_filter, self.test, self.snk)
         self.tb.run()
 
-        expected_result = 10000*[complex(1,0), complex(-1,0)]
+        expected_result = 10000 * [complex(1, 0), complex(-1, 0)]
         dst_data = self.snk.data()
 
         # Only compare last Ncmp samples
@@ -71,11 +72,10 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         expected_result = expected_result[len_e - Ncmp:]
         dst_data = dst_data[len_d - Ncmp:]
 
-        #for e,d in zip(expected_result, dst_data):
+        # for e,d in zip(expected_result, dst_data):
         #    print e, d
 
         self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 1)
-
 
     def test02(self):
         # Test real BPSK sync
@@ -88,8 +88,8 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         max_rate_deviation = 0.5
         osps = 1
 
-        ntaps = 11 * int(sps*nfilts)
-        taps = filter.firdes.root_raised_cosine(nfilts, nfilts*sps,
+        ntaps = 11 * int(sps * nfilts)
+        taps = filter.firdes.root_raised_cosine(nfilts, nfilts * sps,
                                                 1.0, excess_bw, ntaps)
 
         self.test = digital.pfb_clock_sync_fff(sps, loop_bw, taps,
@@ -97,7 +97,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
                                                max_rate_deviation,
                                                osps)
 
-        data = 10000*[1, -1]
+        data = 10000 * [1, -1]
         self.src = blocks.vector_source_f(data, False)
 
         # pulse shaping interpolation filter
@@ -114,7 +114,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         self.tb.connect(self.src, self.rrc_filter, self.test, self.snk)
         self.tb.run()
 
-        expected_result = 10000*[1, -1]
+        expected_result = 10000 * [1, -1]
         dst_data = self.snk.data()
 
         # Only compare last Ncmp samples
@@ -124,11 +124,10 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         expected_result = expected_result[len_e - Ncmp:]
         dst_data = dst_data[len_d - Ncmp:]
 
-        #for e,d in zip(expected_result, dst_data):
+        # for e,d in zip(expected_result, dst_data):
         #    print e, d
 
         self.assertFloatTuplesAlmostEqual(expected_result, dst_data, 1)
-
 
     def test03(self):
         # Test resting of taps
@@ -142,8 +141,8 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         max_rate_deviation = 0.5
         osps = 1
 
-        ntaps = 11 * int(sps*nfilts)
-        taps = filter.firdes.root_raised_cosine(nfilts, nfilts*sps,
+        ntaps = 11 * int(sps * nfilts)
+        taps = filter.firdes.root_raised_cosine(nfilts, nfilts * sps,
                                                 1.0, excess_bw0, ntaps)
 
         self.test = digital.pfb_clock_sync_ccf(sps, loop_bw, taps,
@@ -158,7 +157,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         self.tb.start()
         time.sleep(0.1)
 
-        taps = filter.firdes.root_raised_cosine(nfilts, nfilts*sps,
+        taps = filter.firdes.root_raised_cosine(nfilts, nfilts * sps,
                                                 1.0, excess_bw1, ntaps)
 
         self.test.update_taps(taps)
@@ -180,8 +179,8 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         max_rate_deviation = 0.5
         osps = 1
 
-        ntaps = 11 * int(sps*nfilts)
-        taps = filter.firdes.root_raised_cosine(nfilts, nfilts*sps,
+        ntaps = 11 * int(sps * nfilts)
+        taps = filter.firdes.root_raised_cosine(nfilts, nfilts * sps,
                                                 1.0, excess_bw0, ntaps)
 
         self.test = digital.pfb_clock_sync_fff(sps, loop_bw, taps,
@@ -196,7 +195,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         self.tb.start()
         time.sleep(0.1)
 
-        taps = filter.firdes.root_raised_cosine(nfilts, nfilts*sps,
+        taps = filter.firdes.root_raised_cosine(nfilts, nfilts * sps,
                                                 1.0, excess_bw1, ntaps)
 
         self.test.update_taps(taps)
@@ -208,4 +207,4 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_pfb_clock_sync, "test_pfb_clock_sync.xml")
+    gr_unittest.run(test_pfb_clock_sync)

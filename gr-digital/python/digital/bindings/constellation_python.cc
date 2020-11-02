@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(constellation.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(88a9804617d38b7414a38c6bb77199ae)                     */
+/* BINDTOOL_HEADER_FILE(constellation.h)                                           */
+/* BINDTOOL_HEADER_FILE_HASH(a4bdcaf2db30bfe32e518f4f4b62bafa)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

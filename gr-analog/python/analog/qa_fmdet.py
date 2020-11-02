@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, analog, blocks
 
+
 class test_fmdet_cf(gr_unittest.TestCase):
 
     def setUp(self):
@@ -33,7 +34,7 @@ class test_fmdet_cf(gr_unittest.TestCase):
         op.set_freq_range(fl2, fh2)
         lo = op.freq_low()
         hi = op.freq_high()
-        f  = op.freq()
+        f = op.freq()
         self.assertEqual(fl2, lo)
         self.assertEqual(fh2, hi)
         self.assertEqual(0, f)
@@ -41,7 +42,7 @@ class test_fmdet_cf(gr_unittest.TestCase):
         op.set_scale(scale2)
         s = op.scale()
         b = op.bias()
-        eb = 0.5*scale2*(hi + lo) / (hi - lo);
+        eb = 0.5 * scale2 * (hi + lo) / (hi - lo)
         self.assertEqual(scale2, s)
         self.assertAlmostEqual(eb, b)
 
@@ -59,9 +60,9 @@ class test_fmdet_cf(gr_unittest.TestCase):
         self.tb.run()
 
         result_data = dst.data()[4:N]
-        expected_result = (100-4)*[-0.21755,]
+        expected_result = (100 - 4) * [-0.21755, ]
         self.assertFloatTuplesAlmostEqual(expected_result, result_data, 4)
 
-if __name__ == '__main__':
-    gr_unittest.run(test_fmdet_cf, "test_fmdet_cf.xml")
 
+if __name__ == '__main__':
+    gr_unittest.run(test_fmdet_cf)

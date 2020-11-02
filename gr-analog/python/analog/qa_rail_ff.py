@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, analog, blocks
 
+
 def clip(x, lo, hi):
     if(x < lo):
         return lo
@@ -18,6 +19,7 @@ def clip(x, lo, hi):
         return hi
     else:
         return x
+
 
 class test_rail(gr_unittest.TestCase):
 
@@ -62,6 +64,6 @@ class test_rail(gr_unittest.TestCase):
         result_data = dst.data()
         self.assertFloatTuplesAlmostEqual(expected_result, result_data, 4)
 
-if __name__ == '__main__':
-    gr_unittest.run(test_rail, "test_rail.xml")
 
+if __name__ == '__main__':
+    gr_unittest.run(test_rail)

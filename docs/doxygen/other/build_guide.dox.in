@@ -54,6 +54,7 @@ Other compilers may work, but are not supported.
 
 \subsection dep_docs docs: Building the documentation
 \li doxygen     (>= 1.5)     http://www.stack.nl/~dimitri/doxygen/download.html
+\li MathJax     (>= 2, <3)   https://github.com/mathjax/MathJax-src
 
 \subsection dep_grc grc: The GNU Radio Companion
 \li Cheetah     (>= 2.0)     http://www.cheetahtemplate.org/

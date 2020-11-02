@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, analog, blocks
 
+
 class test_pwr_squelch(gr_unittest.TestCase):
 
     def setUp(self):
@@ -60,7 +61,7 @@ class test_pwr_squelch(gr_unittest.TestCase):
         self.tb.run()
 
         expected_result = src_data
-        expected_result[0:20] = 20*[0,]
+        expected_result[0:20] = 20 * [0, ]
 
         result_data = dst.data()
         self.assertComplexTuplesAlmostEqual(expected_result, result_data, 4)
@@ -91,7 +92,6 @@ class test_pwr_squelch(gr_unittest.TestCase):
         g = op.gate()
         self.assertEqual(gate2, g)
 
-
     def test_pwr_squelch_004(self):
         alpha = 0.0001
         thr = -25
@@ -106,11 +106,11 @@ class test_pwr_squelch(gr_unittest.TestCase):
         self.tb.run()
 
         expected_result = src_data
-        expected_result[0:20] = 20*[0,]
+        expected_result[0:20] = 20 * [0, ]
 
         result_data = dst.data()
         self.assertFloatTuplesAlmostEqual(expected_result, result_data, 4)
 
-if __name__ == '__main__':
-    gr_unittest.run(test_pwr_squelch, "test_pwr_squelch.xml")
 
+if __name__ == '__main__':
+    gr_unittest.run(test_pwr_squelch)

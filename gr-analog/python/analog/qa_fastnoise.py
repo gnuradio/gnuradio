@@ -14,13 +14,13 @@ import numpy
 
 class test_fastnoise_source(gr_unittest.TestCase):
 
-    def setUp (self):
+    def setUp(self):
 
         self.num = 2**22
         self.num_items = 10**6
         self.default_args = {"samples": self.num, "seed": 43, "ampl": 1}
 
-    def tearDown (self):
+    def tearDown(self):
         pass
 
     def run_test_real(self, form):
@@ -28,7 +28,9 @@ class test_fastnoise_source(gr_unittest.TestCase):
         """
         tb = gr.top_block()
         src = analog.fastnoise_source_f(type=form, **self.default_args)
-        head = blocks.head(nitems=self.num_items, sizeof_stream_item=gr.sizeof_float)
+        head = blocks.head(
+            nitems=self.num_items,
+            sizeof_stream_item=gr.sizeof_float)
         sink = blocks.vector_sink_f()
         tb.connect(src, head, sink)
         tb.run()
@@ -39,7 +41,9 @@ class test_fastnoise_source(gr_unittest.TestCase):
         """
         tb = gr.top_block()
         src = analog.fastnoise_source_c(type=form, **self.default_args)
-        head = blocks.head(nitems=self.num_items, sizeof_stream_item=gr.sizeof_gr_complex)
+        head = blocks.head(
+            nitems=self.num_items,
+            sizeof_stream_item=gr.sizeof_gr_complex)
         sink = blocks.vector_sink_c()
         tb.connect(src, head, sink)
         tb.run()
@@ -54,7 +58,7 @@ class test_fastnoise_source(gr_unittest.TestCase):
 
         # mean, variance
         self.assertAlmostEqual(data.mean(), 0, places=2)
-        self.assertAlmostEqual(data.var(), (1-(-1))**2./12, places=3)
+        self.assertAlmostEqual(data.var(), (1 - (-1))**2. / 12, places=3)
 
     def test_001_real_gaussian_moments(self):
         data = self.run_test_real(analog.GR_GAUSSIAN)
@@ -75,10 +79,12 @@ class test_fastnoise_source(gr_unittest.TestCase):
 
         # mean, variance
         self.assertAlmostEqual(data.real.mean(), 0, places=2)
-        self.assertAlmostEqual(data.real.var(), 0.5*(1-(-1))**2./12, places=3)
+        self.assertAlmostEqual(data.real.var(), 0.5 *
+                               (1 - (-1))**2. / 12, places=3)
 
         self.assertAlmostEqual(data.imag.mean(), 0, places=2)
-        self.assertAlmostEqual(data.imag.var(), 0.5*(1-(-1))**2./12, places=3)
+        self.assertAlmostEqual(data.imag.var(), 0.5 *
+                               (1 - (-1))**2. / 12, places=3)
 
     def test_001_complex_gaussian_moments(self):
         data = self.run_test_complex(analog.GR_GAUSSIAN)
@@ -104,24 +110,60 @@ class test_fastnoise_source(gr_unittest.TestCase):
         self.assertTrue(numpy.array_equal(data1, data2))
 
     def test_003_real_uniform_pool(self):
-        src = analog.fastnoise_source_f(type=analog.GR_UNIFORM, **self.default_args)
-        src2 = analog.fastnoise_source_f(type=analog.GR_UNIFORM, **self.default_args)
-        self.assertTrue(numpy.array_equal(numpy.array(src.samples()), numpy.array(src2.samples())))
+        src = analog.fastnoise_source_f(
+            type=analog.GR_UNIFORM, **self.default_args)
+        src2 = analog.fastnoise_source_f(
+            type=analog.GR_UNIFORM, **self.default_args)
+        self.assertTrue(
+            numpy.array_equal(
+                numpy.array(
+                    src.samples()), numpy.array(
+                    src2.samples())))
+
     def test_003_real_gaussian_pool(self):
-        src = analog.fastnoise_source_f(type=analog.GR_GAUSSIAN, **self.default_args)
-        src2 = analog.fastnoise_source_f(type=analog.GR_GAUSSIAN, **self.default_args)
-        self.assertTrue(numpy.array_equal(numpy.array(src.samples()), numpy.array(src2.samples())))
+        src = analog.fastnoise_source_f(
+            type=analog.GR_GAUSSIAN, **self.default_args)
+        src2 = analog.fastnoise_source_f(
+            type=analog.GR_GAUSSIAN, **self.default_args)
+        self.assertTrue(
+            numpy.array_equal(
+                numpy.array(
+                    src.samples()), numpy.array(
+                    src2.samples())))
+
     def test_003_cmplx_gaussian_pool(self):
-        src = analog.fastnoise_source_c(type=analog.GR_GAUSSIAN, **self.default_args)
-        src2 = analog.fastnoise_source_c(type=analog.GR_GAUSSIAN, **self.default_args)
-        self.assertTrue(numpy.array_equal(numpy.array(src.samples()), numpy.array(src2.samples())))
+        src = analog.fastnoise_source_c(
+            type=analog.GR_GAUSSIAN, **self.default_args)
+        src2 = analog.fastnoise_source_c(
+            type=analog.GR_GAUSSIAN, **self.default_args)
+        self.assertTrue(
+            numpy.array_equal(
+                numpy.array(
+                    src.samples()), numpy.array(
+                    src2.samples())))
+
     def test_003_cmplx_uniform_pool(self):
-        src = analog.fastnoise_source_c(type=analog.GR_UNIFORM, **self.default_args)
-        src2 = analog.fastnoise_source_c(type=analog.GR_UNIFORM, **self.default_args)
-        self.assertTrue(numpy.array_equal(numpy.array(src.samples()), numpy.array(src2.samples())))
+        src = analog.fastnoise_source_c(
+            type=analog.GR_UNIFORM, **self.default_args)
+        src2 = analog.fastnoise_source_c(
+            type=analog.GR_UNIFORM, **self.default_args)
+        self.assertTrue(
+            numpy.array_equal(
+                numpy.array(
+                    src.samples()), numpy.array(
+                    src2.samples())))
+
     def test_003_real_laplacian_pool(self):
-        src = analog.fastnoise_source_f(type=analog.GR_LAPLACIAN, **self.default_args)
-        src2 = analog.fastnoise_source_f(type=analog.GR_LAPLACIAN, **self.default_args)
-        self.assertTrue(numpy.array_equal(numpy.array(src.samples()), numpy.array(src2.samples())))
+        src = analog.fastnoise_source_f(
+            type=analog.GR_LAPLACIAN, **self.default_args)
+        src2 = analog.fastnoise_source_f(
+            type=analog.GR_LAPLACIAN, **self.default_args)
+        self.assertTrue(
+            numpy.array_equal(
+                numpy.array(
+                    src.samples()), numpy.array(
+                    src2.samples())))
+
+
 if __name__ == '__main__':
-    gr_unittest.run(test_fastnoise_source, "test_fastnoise_source.xml")
+    gr_unittest.run(test_fastnoise_source)

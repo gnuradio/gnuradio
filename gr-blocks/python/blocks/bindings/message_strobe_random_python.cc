@@ -90,4 +90,6 @@ void bind_message_strobe_random(py::module& m)
         .value("STROBE_GAUSSIAN", ::gr::blocks::STROBE_GAUSSIAN) // 2
         .value("STROBE_UNIFORM", ::gr::blocks::STROBE_UNIFORM)   // 3
         .export_values();
+
+    py::implicitly_convertible<int, ::gr::blocks::message_strobe_random_distribution_t>();
 }

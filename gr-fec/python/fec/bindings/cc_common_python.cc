@@ -27,4 +27,6 @@ void bind_cc_common(py::module& m)
         .value("CC_TRUNCATED", ::CC_TRUNCATED)   // 2
         .value("CC_TAILBITING", ::CC_TAILBITING) // 3
         .export_values();
+
+    py::implicitly_convertible<int, ::_cc_mode_t>();
 }

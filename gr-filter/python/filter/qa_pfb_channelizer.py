@@ -10,12 +10,14 @@
 
 
 from gnuradio import gr, gr_unittest, filter, blocks, analog
-import math, cmath
+import math
+import cmath
+
 
 def sig_source_c(samp_rate, freq, amp, N):
     t = [float(x) / samp_rate for x in range(N)]
-    y = [math.cos(2.*math.pi*freq*x) + \
-                1j*math.sin(2.*math.pi*freq*x) for x in t]
+    y = [math.cos(2. * math.pi * freq * x) +
+         1j * math.sin(2. * math.pi * freq * x) for x in t]
     return y
 
 
@@ -31,7 +33,7 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         # Baseband sampling rate.
         self.fs = 5000
         # Input samp rate to channelizer.
-        self.ifs = self.M*self.fs
+        self.ifs = self.M * self.fs
 
         self.taps = filter.firdes.low_pass_2(
             1, self.ifs, self.fs / 2, self.fs / 10,
@@ -39,7 +41,6 @@ class test_pfb_channelizer(gr_unittest.TestCase):
             window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         self.Ntest = 50
-
 
     def tearDown(self):
         self.tb = None
@@ -74,9 +75,14 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         signals = []
         add = blocks.add_cc()
         for i in range(len(self.freqs)):
-            f = self.freqs[i] + i*self.fs
-            signals.append(analog.sig_source_c(self.ifs, analog.GR_SIN_WAVE, f, 1))
-            tb.connect(signals[i], (add,i))
+            f = self.freqs[i] + i * self.fs
+            signals.append(
+                analog.sig_source_c(
+                    self.ifs,
+                    analog.GR_SIN_WAVE,
+                    f,
+                    1))
+            tb.connect(signals[i], (add, i))
         head = blocks.head(gr.sizeof_gr_complex, self.N)
         snk = blocks.vector_sink_c()
         tb.connect(add, head, snk)
@@ -88,10 +94,10 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         signals = list()
         add = blocks.add_cc()
         for i in range(len(self.freqs)):
-            f = self.freqs[i] + i*self.fs
+            f = self.freqs[i] + i * self.fs
             data = sig_source_c(self.ifs, f, 1, self.N)
             signals.append(blocks.vector_source_c(data))
-            self.tb.connect(signals[i], (add,i))
+            self.tb.connect(signals[i], (add, i))
 
         #s2ss = blocks.stream_to_streams(gr.sizeof_gr_complex, self.M)
 
@@ -122,18 +128,17 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         received = [x / received[0] for x in received]
         self.assertComplexTuplesAlmostEqual(expected, received, 3)
 
-
     def get_freq(self, data):
         freqs = []
         for r1, r2 in zip(data[:-1], data[1:]):
             diff = cmath.phase(r1) - cmath.phase(r2)
             if diff > math.pi:
-                diff -= 2*math.pi
+                diff -= 2 * math.pi
             if diff < -math.pi:
-                diff += 2*math.pi
+                diff += 2 * math.pi
             freqs.append(diff)
         freq = float(sum(freqs)) / len(freqs)
-        freq /= 2*math.pi
+        freq /= 2 * math.pi
         return freq
 
     def get_expected_data(self, L):
@@ -144,14 +149,21 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         delay = int(delay)
 
         # Create a time scale that's delayed to match the filter delay
-        t = [float(x) / self.fs for x in range(delay, L+delay)]
+        t = [float(x) / self.fs for x in range(delay, L + delay)]
 
         # Create known data as complex sinusoids at the different baseband freqs
         # the different channel numbering is due to channelizer output order.
-        expected_data = [[math.cos(2.*math.pi*f*x) +
-                             1j*math.sin(2.*math.pi*f*x) for x in t] for f in self.freqs]
+        expected_data = [[math.cos(2. *
+                                   math.pi *
+                                   f *
+                                   x) +
+                          1j *
+                          math.sin(2. *
+                                   math.pi *
+                                   f *
+                                   x) for x in t] for f in self.freqs]
         return expected_data
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_pfb_channelizer, "test_pfb_channelizer.xml")
+    gr_unittest.run(test_pfb_channelizer)

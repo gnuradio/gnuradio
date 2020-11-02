@@ -13,12 +13,13 @@ import time
 import pmt
 from gnuradio import gr, gr_unittest, blocks
 
+
 class test_flowgraph (gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
     def test_000(self):
@@ -42,6 +43,6 @@ class test_flowgraph (gr_unittest.TestCase):
         data = pmt.u8vector_elements(pmt.cdr(dbg.get_message(0)))
         self.assertEqual([1, 2, 3], data)
 
-if __name__ == '__main__':
-    gr_unittest.run(test_flowgraph, 'test_flowgraph.xml')
 
+if __name__ == '__main__':
+    gr_unittest.run(test_flowgraph)

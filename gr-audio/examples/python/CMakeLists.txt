@@ -12,7 +12,6 @@ GR_PYTHON_INSTALL(PROGRAMS
     audio_play.py
     audio_to_file.py
     dial_tone.py
-    dial_tone_daemon.py
     dial_tone_wav.py
     mono_tone.py
     multi_tone.py

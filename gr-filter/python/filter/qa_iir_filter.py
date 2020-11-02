@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, filter, blocks
 
+
 class test_iir_filter(gr_unittest.TestCase):
 
     def setUp(self):
@@ -50,7 +51,7 @@ class test_iir_filter(gr_unittest.TestCase):
     def test_iir_direct_003(self):
         src_data = (1, 2, 3, 4, 5, 6, 7, 8)
         fftaps = (2, 11)
-        fbtaps = (0,  0)
+        fbtaps = (0, 0)
         expected_result = (2, 15, 28, 41, 54, 67, 80, 93)
         src = blocks.vector_source_f(src_data)
         op = filter.iir_filter_ffd(fftaps, fbtaps)
@@ -64,7 +65,7 @@ class test_iir_filter(gr_unittest.TestCase):
     def test_iir_direct_004(self):
         src_data = (1, 2, 3, 4, 5, 6, 7, 8)
         fftaps = (2, 11)
-        fbtaps = (0,  -1)
+        fbtaps = (0, -1)
         expected_result = (2, 13, 15, 26, 28, 39, 41, 52)
         src = blocks.vector_source_f(src_data)
         op = filter.iir_filter_ffd(fftaps, fbtaps)
@@ -77,8 +78,8 @@ class test_iir_filter(gr_unittest.TestCase):
 
     def test_iir_direct_005(self):
         src_data = (1, 2, 3, 4, 5, 6, 7, 8)
-        fftaps = (2, 11,  0)
-        fbtaps = (0,  -1, 3)
+        fftaps = (2, 11, 0)
+        fbtaps = (0, -1, 3)
         expected_result = (2, 13, 21, 59, 58, 186, 68, 583)
         src = blocks.vector_source_f(src_data)
         op = filter.iir_filter_ffd(fftaps, fbtaps)
@@ -96,8 +97,8 @@ class test_iir_filter(gr_unittest.TestCase):
         fbtaps = (0, -1)
         src = blocks.vector_source_f(src_data)
         op = filter.iir_filter_ffd(fftaps, fbtaps)
-        fftaps = (2, 11,  0)
-        fbtaps = (0,  -1, 3)
+        fftaps = (2, 11, 0)
+        fbtaps = (0, -1, 3)
         op.set_taps(fftaps, fbtaps)
         dst = blocks.vector_sink_f()
         self.tb.connect(src, op)
@@ -108,12 +109,12 @@ class test_iir_filter(gr_unittest.TestCase):
 
     def test_iir_direct_007(self):
         src_data = (1, 2, 3, 4, 5, 6, 7, 8)
-        expected_result = (2,2,5,5,8,8,11,11)
+        expected_result = (2, 2, 5, 5, 8, 8, 11, 11)
         fftaps = (2, 1)
         fbtaps = (0, -1)
         src = blocks.vector_source_f(src_data)
         op = filter.iir_filter_ffd(fftaps, fbtaps)
-        fftaps = (2,0,1)
+        fftaps = (2, 0, 1)
         fbtaps = (0, -1)
         op.set_taps(fftaps, fbtaps)
         dst = blocks.vector_sink_f()
@@ -125,24 +126,40 @@ class test_iir_filter(gr_unittest.TestCase):
 
     def test_iir_direct_008(self):
         src_data = (1, 2, 3, 4, 5, 6, 7, 8)
-        expected_result = (2,4,4,10,18,14,26,56)
+        expected_result = (2, 4, 4, 10, 18, 14, 26, 56)
         fftaps = (2,)
         fbtaps = (0, 1)
         src = blocks.vector_source_f(src_data)
         op = filter.iir_filter_ffd(fftaps, fbtaps)
         fftaps_data = (1)
-        fbtaps = (0,0, -1,3)
+        fbtaps = (0, 0, -1, 3)
         op.set_taps(fftaps, fbtaps)
         dst = blocks.vector_sink_f()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()
         result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data)
 
     def test_iir_ccf_001(self):
-        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
-        expected_result = (2+2j, (6+6j), (12+12j), (20+20j), (30+30j), (42+42j), (56+56j), (72+72j))
+        src_data = (
+            1 + 1j,
+            2 + 2j,
+            3 + 3j,
+            4 + 4j,
+            5 + 5j,
+            6 + 6j,
+            7 + 7j,
+            8 + 8j)
+        expected_result = (
+            2 + 2j,
+            (6 + 6j),
+            (12 + 12j),
+            (20 + 20j),
+            (30 + 30j),
+            (42 + 42j),
+            (56 + 56j),
+            (72 + 72j))
         fftaps = (2,)
         fbtaps = (0, 1)
         src = blocks.vector_source_c(src_data)
@@ -154,11 +171,27 @@ class test_iir_filter(gr_unittest.TestCase):
         self.tb.run()
 
         result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data)
 
     def test_iir_ccf_002(self):
-        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
-        expected_result = (2+2j, (6+6j), (12+12j), (20+20j), (30+30j), (42+42j), (56+56j), (72+72j))
+        src_data = (
+            1 + 1j,
+            2 + 2j,
+            3 + 3j,
+            4 + 4j,
+            5 + 5j,
+            6 + 6j,
+            7 + 7j,
+            8 + 8j)
+        expected_result = (
+            2 + 2j,
+            (6 + 6j),
+            (12 + 12j),
+            (20 + 20j),
+            (30 + 30j),
+            (42 + 42j),
+            (56 + 56j),
+            (72 + 72j))
 
         src = blocks.vector_source_c(src_data)
         op = filter.iir_filter_ccf([1], [1])
@@ -173,12 +206,27 @@ class test_iir_filter(gr_unittest.TestCase):
         self.tb.run()
 
         result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
-
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data)
 
     def test_iir_ccd_001(self):
-        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
-        expected_result = (2+2j, (6+6j), (12+12j), (20+20j), (30+30j), (42+42j), (56+56j), (72+72j))
+        src_data = (
+            1 + 1j,
+            2 + 2j,
+            3 + 3j,
+            4 + 4j,
+            5 + 5j,
+            6 + 6j,
+            7 + 7j,
+            8 + 8j)
+        expected_result = (
+            2 + 2j,
+            (6 + 6j),
+            (12 + 12j),
+            (20 + 20j),
+            (30 + 30j),
+            (42 + 42j),
+            (56 + 56j),
+            (72 + 72j))
         fftaps = (2,)
         fbtaps = (0, 1)
         src = blocks.vector_source_c(src_data)
@@ -190,11 +238,27 @@ class test_iir_filter(gr_unittest.TestCase):
         self.tb.run()
 
         result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data)
 
     def test_iir_ccd_002(self):
-        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
-        expected_result = (2+2j, (6+6j), (12+12j), (20+20j), (30+30j), (42+42j), (56+56j), (72+72j))
+        src_data = (
+            1 + 1j,
+            2 + 2j,
+            3 + 3j,
+            4 + 4j,
+            5 + 5j,
+            6 + 6j,
+            7 + 7j,
+            8 + 8j)
+        expected_result = (
+            2 + 2j,
+            (6 + 6j),
+            (12 + 12j),
+            (20 + 20j),
+            (30 + 30j),
+            (42 + 42j),
+            (56 + 56j),
+            (72 + 72j))
 
         src = blocks.vector_source_c(src_data)
         op = filter.iir_filter_ccd([1], [1])
@@ -209,13 +273,20 @@ class test_iir_filter(gr_unittest.TestCase):
         self.tb.run()
 
         result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
-
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data)
 
     def test_iir_ccc_001(self):
-        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
+        src_data = (
+            1 + 1j,
+            2 + 2j,
+            3 + 3j,
+            4 + 4j,
+            5 + 5j,
+            6 + 6j,
+            7 + 7j,
+            8 + 8j)
         expected_result = (4j, 12j, 24j, 40j, 60j, 84j, 112j, 144j)
-        fftaps = (2+2j,)
+        fftaps = (2 + 2j,)
         fbtaps = (0, 1)
         src = blocks.vector_source_c(src_data)
         op = filter.iir_filter_ccc(fftaps, fbtaps)
@@ -226,17 +297,25 @@ class test_iir_filter(gr_unittest.TestCase):
         self.tb.run()
 
         result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data)
 
     def test_iir_ccc_002(self):
-        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
+        src_data = (
+            1 + 1j,
+            2 + 2j,
+            3 + 3j,
+            4 + 4j,
+            5 + 5j,
+            6 + 6j,
+            7 + 7j,
+            8 + 8j)
         expected_result = (4j, 12j, 24j, 40j, 60j, 84j, 112j, 144j)
 
         src = blocks.vector_source_c(src_data)
         op = filter.iir_filter_ccc([1], [1])
         dst = blocks.vector_sink_c()
 
-        fftaps = (2+2j,)
+        fftaps = (2 + 2j,)
         fbtaps = (0, 1)
         op.set_taps(fftaps, fbtaps)
 
@@ -245,12 +324,20 @@ class test_iir_filter(gr_unittest.TestCase):
         self.tb.run()
 
         result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data)
 
     def test_iir_ccz_001(self):
-        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
+        src_data = (
+            1 + 1j,
+            2 + 2j,
+            3 + 3j,
+            4 + 4j,
+            5 + 5j,
+            6 + 6j,
+            7 + 7j,
+            8 + 8j)
         expected_result = (4j, 12j, 24j, 40j, 60j, 84j, 112j, 144j)
-        fftaps = (2+2j,)
+        fftaps = (2 + 2j,)
         fbtaps = (0, 1)
         src = blocks.vector_source_c(src_data)
         op = filter.iir_filter_ccz(fftaps, fbtaps)
@@ -261,17 +348,25 @@ class test_iir_filter(gr_unittest.TestCase):
         self.tb.run()
 
         result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data)
 
     def test_iir_ccz_002(self):
-        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
+        src_data = (
+            1 + 1j,
+            2 + 2j,
+            3 + 3j,
+            4 + 4j,
+            5 + 5j,
+            6 + 6j,
+            7 + 7j,
+            8 + 8j)
         expected_result = (4j, 12j, 24j, 40j, 60j, 84j, 112j, 144j)
 
         src = blocks.vector_source_c(src_data)
         op = filter.iir_filter_ccz([1], [1])
         dst = blocks.vector_sink_c()
 
-        fftaps = (2+2j,)
+        fftaps = (2 + 2j,)
         fbtaps = (0, 1)
         op.set_taps(fftaps, fbtaps)
 
@@ -280,8 +375,8 @@ class test_iir_filter(gr_unittest.TestCase):
         self.tb.run()
 
         result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data)
+
 
 if __name__ == '__main__':
-    gr_unittest.run(test_iir_filter, "test_iir_filter.xml")
-
+    gr_unittest.run(test_iir_filter)

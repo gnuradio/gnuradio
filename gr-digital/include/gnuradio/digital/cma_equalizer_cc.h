@@ -43,7 +43,7 @@ public:
     /*!
      * Make a CMA Equalizer block
      *
-     * \param num_taps Numer of taps in the equalizer (channel size)
+     * \param num_taps Number of taps in the equalizer (channel size)
      * \param modulus Modulus of the modulated signals
      * \param mu Gain of the update loop
      * \param sps Number of samples per symbol of the input signal

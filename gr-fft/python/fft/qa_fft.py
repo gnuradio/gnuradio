@@ -20,10 +20,71 @@ from gnuradio import gr, gr_unittest, fft, blocks
 # windowed = fft(src_data(:).*hamming(32))
 # reverse_window_shift = ifft(fftshift(forward.*hamming(32)))
 
-primes = (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53,
-          59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131,
-          137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223,
-          227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311)
+primes = (
+    2,
+    3,
+    5,
+    7,
+    11,
+    13,
+    17,
+    19,
+    23,
+    29,
+    31,
+    37,
+    41,
+    43,
+    47,
+    53,
+    59,
+    61,
+    67,
+    71,
+    73,
+    79,
+    83,
+    89,
+    97,
+    101,
+    103,
+    107,
+    109,
+    113,
+    127,
+    131,
+    137,
+    139,
+    149,
+    151,
+    157,
+    163,
+    167,
+    173,
+    179,
+    181,
+    191,
+    193,
+    197,
+    199,
+    211,
+    223,
+    227,
+    229,
+    233,
+    239,
+    241,
+    251,
+    257,
+    263,
+    269,
+    271,
+    277,
+    281,
+    283,
+    293,
+    307,
+    311)
 
 primes_transformed = ((4377 + 4516j),
                       (-1706.1268310546875 + 1638.4256591796875j),
@@ -73,7 +134,8 @@ class test_fft(gr_unittest.TestCase):
                                              abs_eps=1e-9, rel_eps=4e-4)
 
     def test_forward(self):
-        src_data = tuple([complex(primes[2 * i], primes[2 * i + 1]) for i in range(self.fft_size)])
+        src_data = tuple([complex(primes[2 * i], primes[2 * i + 1])
+                          for i in range(self.fft_size)])
         expected_result = primes_transformed
 
         src = blocks.vector_source_c(src_data)
@@ -88,7 +150,8 @@ class test_fft(gr_unittest.TestCase):
 
     def test_reverse(self):
         src_data = tuple([x / self.fft_size for x in primes_transformed])
-        expected_result = tuple([complex(primes[2 * i], primes[2 * i + 1]) for i in range(self.fft_size)])
+        expected_result = tuple(
+            [complex(primes[2 * i], primes[2 * i + 1]) for i in range(self.fft_size)])
 
         src = blocks.vector_source_c(src_data)
         s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
@@ -103,7 +166,8 @@ class test_fft(gr_unittest.TestCase):
     def test_multithreaded(self):
         # Same test as above, only use 2 threads
         src_data = tuple([x / self.fft_size for x in primes_transformed])
-        expected_result = tuple([complex(primes[2 * i], primes[2 * i + 1]) for i in range(self.fft_size)])
+        expected_result = tuple(
+            [complex(primes[2 * i], primes[2 * i + 1]) for i in range(self.fft_size)])
         nthreads = 2
 
         src = blocks.vector_source_c(src_data)
@@ -117,7 +181,8 @@ class test_fft(gr_unittest.TestCase):
         self.assert_fft_ok2(expected_result, result_data)
 
     def test_window(self):
-        src_data = tuple([complex(primes[2 * i], primes[2 * i + 1]) for i in range(self.fft_size)])
+        src_data = tuple([complex(primes[2 * i], primes[2 * i + 1])
+                          for i in range(self.fft_size)])
         expected_result = ((2238.9174 + 2310.4750j),
                            (-1603.7416 - 466.7420j),
                            (116.7449 - 70.8553j),
@@ -210,4 +275,4 @@ class test_fft(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_fft, "test_fft.xml")
+    gr_unittest.run(test_fft)

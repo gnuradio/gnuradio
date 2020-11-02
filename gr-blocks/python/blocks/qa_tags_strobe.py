@@ -13,6 +13,7 @@ from gnuradio import gr, gr_unittest, blocks
 import pmt
 import math
 
+
 class test_tags_strobe(gr_unittest.TestCase):
 
     def setUp(self):
@@ -81,5 +82,6 @@ class test_tags_strobe(gr_unittest.TestCase):
             self.assertEqual(tag.offset, n_expected)
             n_expected += nsamps
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_tags_strobe, "test_tags_strobe.xml")
+    gr_unittest.run(test_tags_strobe)

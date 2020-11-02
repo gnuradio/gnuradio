@@ -36,4 +36,6 @@ void bind_sig_source_waveform(py::module& m)
         .value("GR_TRI_WAVE", gr::analog::GR_TRI_WAVE)     // 104
         .value("GR_SAW_WAVE", gr::analog::GR_SAW_WAVE)     // 105
         .export_values();
+
+    py::implicitly_convertible<int, gr::analog::gr_waveform_t>();
 }

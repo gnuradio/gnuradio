@@ -12,6 +12,7 @@
 from gnuradio import gr, gr_unittest, blocks
 import pmt
 
+
 class test_delay(gr_unittest.TestCase):
 
     def setUp(self):
@@ -24,7 +25,7 @@ class test_delay(gr_unittest.TestCase):
         delta_t = 0
         tb = self.tb
         src_data = [float(x) for x in range(0, 100)]
-        expected_result = list(delta_t*[0.0] + src_data)
+        expected_result = list(delta_t * [0.0] + src_data)
 
         src = blocks.vector_source_f(src_data)
         op = blocks.delay(gr.sizeof_float, delta_t)
@@ -39,7 +40,7 @@ class test_delay(gr_unittest.TestCase):
         delta_t = 10
         tb = self.tb
         src_data = [float(x) for x in range(0, 100)]
-        expected_result = list(delta_t*[0.0] + src_data)
+        expected_result = list(delta_t * [0.0] + src_data)
 
         src = blocks.vector_source_f(src_data)
         op = blocks.delay(gr.sizeof_float, delta_t)
@@ -54,9 +55,13 @@ class test_delay(gr_unittest.TestCase):
         tb = self.tb
         vector_sink = blocks.vector_sink_f(1)
         ref_sink = blocks.vector_sink_f(1)
-        tags_strobe = blocks.tags_strobe(gr.sizeof_float*1, pmt.intern("TEST"), 100, pmt.intern("strobe"))
-        head = blocks.head(gr.sizeof_float*1, 10**5)
-        delay = blocks.delay(gr.sizeof_float*1, 100)
+        tags_strobe = blocks.tags_strobe(
+            gr.sizeof_float * 1,
+            pmt.intern("TEST"),
+            100,
+            pmt.intern("strobe"))
+        head = blocks.head(gr.sizeof_float * 1, 10**5)
+        delay = blocks.delay(gr.sizeof_float * 1, 100)
         tb.connect((delay, 0), (head, 0))
         tb.connect((head, 0), (vector_sink, 0))
         tb.connect((tags_strobe, 0), (delay, 0))
@@ -73,4 +78,4 @@ class test_delay(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_delay, "test_delay.xml")
+    gr_unittest.run(test_delay)

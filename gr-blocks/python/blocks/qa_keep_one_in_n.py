@@ -11,12 +11,13 @@
 
 from gnuradio import gr, gr_unittest, blocks
 
+
 class test_keep_one_in_n(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
     def test_001(self):
@@ -31,4 +32,4 @@ class test_keep_one_in_n(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_keep_one_in_n, "test_integrate.xml")
+    gr_unittest.run(test_keep_one_in_n)

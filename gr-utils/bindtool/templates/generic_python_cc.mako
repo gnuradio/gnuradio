@@ -212,6 +212,8 @@ values = en['values']
 % endfor 
         .export_values()
     ;
+
+    py::implicitly_convertible<int, ${namespace['name']}::${en['name']}>();
 % endfor
 % endif
 

@@ -12,11 +12,13 @@
 import numpy
 from gnuradio import gr, gr_unittest, wavelet, analog, blocks
 import copy
-#import pygsl.wavelet as wavelet # FIXME: pygsl not checked for in config
+# import pygsl.wavelet as wavelet # FIXME: pygsl not checked for in config
 import math
 
+
 def sqr(x):
-    return x*x
+    return x * x
+
 
 def np2(k):
     m = 0
@@ -147,8 +149,8 @@ class test_classify(gr_unittest.TestCase):
         scl = 1.0 / sqr(dwav[0])
         k = 1
         for e in range(len(wvps)):
-            wvps[e] = scl*sqr(dwav[k:k+(0o1<<e)]).sum()
-            k += 0o1<<e
+            wvps[e] = scl * sqr(dwav[k:k + (0o1 << e)]).sum()
+            k += 0o1 << e
 
         src = blocks.vector_source_f(src_data, False, len(src_data))
         kon = wavelet.wvps_ff(len(src_data))
@@ -161,11 +163,12 @@ class test_classify(gr_unittest.TestCase):
         snk_data = dst.data()
 
         sum = 0
-        for (u,v) in zip(snk_data, wvps):
+        for (u, v) in zip(snk_data, wvps):
             w = u - v
             sum += w * w
         sum /= float(len(snk_data))
         assert sum < 1e-6
 
+
 if __name__ == '__main__':
-   gr_unittest.run(test_classify, "test_classify.xml")
+    gr_unittest.run(test_classify)

@@ -20,7 +20,7 @@ import hashlib
 
 class BindingGenerator:
 
-    def __init__(self, prefix, namespace, prefix_include_root, output_dir="", addl_includes="", 
+    def __init__(self, prefix, namespace, prefix_include_root, output_dir="", define_symbols=None, addl_includes= None, 
                     match_include_structure=False, catch_exceptions=True, write_json_output=False, status_output=None,
                     flag_automatic=False, flag_pygccxml=False):
         """Initialize BindingGenerator
@@ -31,6 +31,7 @@ class BindingGenerator:
 
         Keyword arguments:
         output_dir -- path where bindings will be placed
+        define_symbols -- comma separated tuple of defines
         addl_includes -- comma separated list of additional include directories (default "")
         match_include_structure -- 
             If set to False, a bindings/ dir will be placed directly under the specified output_dir
@@ -38,6 +39,7 @@ class BindingGenerator:
         """
 
         self.header_extensions = ['.h', '.hh', '.hpp']
+        self.define_symbols=define_symbols
         self.addl_include = addl_includes
         self.prefix = prefix
         self.namespace = namespace
@@ -151,7 +153,7 @@ class BindingGenerator:
             include_paths = ','.join((include_paths, self.addl_include))
 
         parser = GenericHeaderParser(
-            include_paths=include_paths, file_path=file_to_process)
+            define_symbols = self.define_symbols, include_paths=include_paths, file_path=file_to_process)
         try:
             header_info = parser.get_header_info(self.namespace)
             

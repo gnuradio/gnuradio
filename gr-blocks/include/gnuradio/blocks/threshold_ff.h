@@ -23,7 +23,7 @@ namespace blocks {
  *
  * \details
  * Test the incoming signal against a threshold. If the signal
- * excedes the \p hi value, it will output a 1 until the signal
+ * exceeds the \p hi value, it will output a 1 until the signal
  * falls below the \p lo value.
  */
 class BLOCKS_API threshold_ff : virtual public sync_block

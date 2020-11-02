@@ -31,7 +31,8 @@ class qa_crc32_bb(gr_unittest.TestCase):
             blocks.stream_to_tagged_stream(gr.sizeof_char, 1,
                                            len(data), self.tsb_key), crc, sink)
         self.tb.run()
-        # Check that the packets before crc_check are 4 bytes longer that the input.
+        # Check that the packets before crc_check are 4 bytes longer that the
+        # input.
         self.assertEqual(len(data) + 4, len(sink.data()[0]))
 
     def test_002_crc_equal(self):
@@ -53,7 +54,7 @@ class qa_crc32_bb(gr_unittest.TestCase):
     def test_003_crc_correct_lentag(self):
         tag_name = "length"
         pack_len = 8
-        packets = list(range(pack_len*2))
+        packets = list(range(pack_len * 2))
         tag1 = gr.tag_t()
         tag1.offset = 0
         tag1.key = pmt.string_to_symbol(tag_name)
@@ -132,7 +133,8 @@ class qa_crc32_bb(gr_unittest.TestCase):
             if pmt.symbol_to_string(tag.key) == 'tag1'
         ])
 
-    # NOTE: What follows are the same tests as before but with the packed flag set to False
+    # NOTE: What follows are the same tests as before but with the packed flag
+    # set to False
 
     def test_006_crc_len(self):
         """ Make sure the output of a CRC set is 32 (unpacked) bytes longer than the input. """
@@ -145,7 +147,8 @@ class qa_crc32_bb(gr_unittest.TestCase):
             blocks.stream_to_tagged_stream(gr.sizeof_char, 1,
                                            len(data), self.tsb_key), crc, sink)
         self.tb.run()
-        # Check that the packets before crc_check are 4 bytes longer that the input.
+        # Check that the packets before crc_check are 4 bytes longer that the
+        # input.
         self.assertEqual(len(data) + 32, len(sink.data()[0]))
 
     def test_007_crc_equal(self):
@@ -164,13 +167,15 @@ class qa_crc32_bb(gr_unittest.TestCase):
         # Check that the packets after crc_check are the same as input.
         self.assertEqual(data, sink.data()[0])
 
-    def test_002_crc_equal_unpacked (self):
+    def test_002_crc_equal_unpacked(self):
         """ Test unpacked operation with packed operation
         """
         data = [0, 1, 2, 3, 4, 5, 6, 7, 8]
         src = blocks.vector_source_b(data)
-        unpack1 = blocks.repack_bits_bb(8, 1, self.tsb_key, False, gr.GR_LSB_FIRST)
-        unpack2 = blocks.repack_bits_bb(8, 1, self.tsb_key, False, gr.GR_LSB_FIRST)
+        unpack1 = blocks.repack_bits_bb(
+            8, 1, self.tsb_key, False, gr.GR_LSB_FIRST)
+        unpack2 = blocks.repack_bits_bb(
+            8, 1, self.tsb_key, False, gr.GR_LSB_FIRST)
         crc_unpacked = digital.crc32_bb(False, self.tsb_key, False)
         crc_packed = digital.crc32_bb(False, self.tsb_key, True)
         sink1 = blocks.tsb_vector_sink_b(tsb_key=self.tsb_key)
@@ -212,10 +217,10 @@ class qa_crc32_bb(gr_unittest.TestCase):
         self.tb.run()
         self.assertEqual(sink1.data(), sink2.data())
 
-    def test_008_crc_correct_lentag (self):
+    def test_008_crc_correct_lentag(self):
         tag_name = "length"
         pack_len = 8
-        packets = list(range(pack_len*2))
+        packets = list(range(pack_len * 2))
         tag1 = gr.tag_t()
         tag1.offset = 0
         tag1.key = pmt.string_to_symbol(tag_name)
@@ -308,4 +313,4 @@ class qa_crc32_bb(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_crc32_bb, "qa_crc32_bb.xml")
+    gr_unittest.run(qa_crc32_bb)

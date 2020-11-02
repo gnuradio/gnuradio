@@ -37,6 +37,8 @@ void bind_corr_est_cc(py::module& m)
         .value("THRESHOLD_ABSOLUTE", gr::digital::THRESHOLD_ABSOLUTE) // 1
         .export_values();
 
+    py::implicitly_convertible<int, gr::digital::tm_type>();
+
     py::class_<corr_est_cc,
                gr::sync_block,
                gr::block,

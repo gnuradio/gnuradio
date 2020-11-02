@@ -22,7 +22,7 @@ LOGGER = logging.getLogger(__name__)
 def io_signature(impl_file):
     """
     function to generate the io_signature of the block
-    : returns the io parmaters
+    : returns the io parameters
     """
     parsed_io = {
         "input": {

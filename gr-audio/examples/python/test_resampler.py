@@ -8,7 +8,8 @@
 #
 #
 
-from gnuradio import gr, gru
+import math
+from gnuradio import gr
 from gnuradio import audio
 from gnuradio import filter
 from gnuradio.eng_arg import eng_float, intx
@@ -42,8 +43,8 @@ class my_top_block(gr.top_block):
         input_rate = int(args.input_rate)
         output_rate = int(args.output_rate)
 
-        interp = gru.lcm(input_rate, output_rate) // input_rate
-        decim = gru.lcm(input_rate, output_rate) // output_rate
+        interp = output_rate // math.gcd(input_rate, output_rate)
+        decim = input_rate // math.gcd(input_rate, output_rate)
 
         print("interp =", interp)
         print("decim  =", decim)

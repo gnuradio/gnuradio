@@ -10,7 +10,9 @@
 
 
 from gnuradio import gr, gr_unittest, blocks
-import os, struct
+import os
+import struct
+
 
 class test_tag_file_sink(gr_unittest.TestCase):
 
@@ -21,14 +23,14 @@ class test_tag_file_sink(gr_unittest.TestCase):
         self.tb = None
 
     def test_001(self):
-        src_data = [ 1,  2,  3,  4,  5,  6,  7,  8,  9,  10]
-        trg_data = [-1, -1,  1,  1, -1, -1,  1,  1, -1,  -1]
+        src_data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        trg_data = [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1]
         src = blocks.vector_source_i(src_data)
         trg = blocks.vector_source_s(trg_data)
-        op  = blocks.burst_tagger(gr.sizeof_int)
+        op = blocks.burst_tagger(gr.sizeof_int)
         snk = blocks.tagged_file_sink(gr.sizeof_int, 1)
-        self.tb.connect(src, (op,0))
-        self.tb.connect(trg, (op,1))
+        self.tb.connect(src, (op, 0))
+        self.tb.connect(trg, (op, 1))
         self.tb.connect(op, snk)
         self.tb.run()
 
@@ -56,5 +58,6 @@ class test_tag_file_sink(gr_unittest.TestCase):
         self.assertEqual(idata0, (3, 4))
         self.assertEqual(idata1, (7, 8))
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_tag_file_sink, "test_tag_file_sink.xml")
+    gr_unittest.run(test_tag_file_sink)

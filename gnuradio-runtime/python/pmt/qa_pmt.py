@@ -12,10 +12,11 @@
 import unittest
 import pmt
 
+
 class test_pmt(unittest.TestCase):
 
-    MAXINT32 = (2**31)-1
-    MININT32 = (-MAXINT32)-1
+    MAXINT32 = (2**31) - 1
+    MININT32 = (-MAXINT32) - 1
 
     def setUp(self):
         from ctypes import sizeof, c_long
@@ -204,7 +205,8 @@ class test_pmt(unittest.TestCase):
         out_str = pmt.serialize_str(d)
         self.assertEqual(out_str, in_str)
         in_str = b'\t\x07\x02\x00\x03vec\n\x00\x00\x00\x00\x04\x01\x00\x01\x02\x03\x04\x06'
-        d = pmt.dict_add(pmt.make_dict(), pmt.intern('vec'), pmt.init_u8vector(4, [1, 2, 3, 4]))
+        d = pmt.dict_add(pmt.make_dict(), pmt.intern('vec'),
+                         pmt.init_u8vector(4, [1, 2, 3, 4]))
         out_pmt = pmt.deserialize_str(in_str)
         self.assertTrue(pmt.equal(out_pmt, d))
 
@@ -340,7 +342,7 @@ class test_pmt(unittest.TestCase):
         self.assertEqual(out_vec, in_vec)
 
         # c32_vector SERDES
-        in_vec = [0x01020304-1j, 3.1415+99.99j]
+        in_vec = [0x01020304 - 1j, 3.1415 + 99.99j]
         # old serialization (c32 serialized as c64):
         # in_str = b'\n\n\x00\x00\x00\x02\x01\x00Ap 0@\x00\x00\x00\xbf\xf0\x00\x00\x00\x00\x00\x00@\t!\xca\xc0\x00\x00\x00@X\xff\\ \x00\x00\x00'
         in_str = b'\n\n\x00\x00\x00\x02\x01\x00\xbf\x80\x00\x00K\x81\x01\x82B\xc7\xfa\xe1@I\x0eV'
@@ -349,7 +351,7 @@ class test_pmt(unittest.TestCase):
         # old serialization (c32 serialized as c64):
         # in_str = b'\n\n\x00\x00\x00\x02\x01\x00?\xf0\x00\x00\x00\x00\x00\x00?\xf0\x00\x00\x00\x00\x00\x00?\xc0\x00\x00\x00\x00\x00\x00\xc1c\x12\xcf\xe0\x00\x00\x00'
         in_str = b'\n\n\x00\x00\x00\x02\x01\x00?\x80\x00\x00?\x80\x00\x00\xcb\x18\x96\x7f>\x00\x00\x00'
-        in_vec = [1+1j, .125-9999999j]
+        in_vec = [1 + 1j, .125 - 9999999j]
         out_vec = pmt.c32vector_elements(pmt.deserialize_str(in_str))
         self.assertEqual(out_vec, in_vec)
 
@@ -359,7 +361,7 @@ class test_pmt(unittest.TestCase):
         out_str = pmt.serialize_str(pmt.init_c64vector(len(in_vec), in_vec))
         self.assertEqual(out_str, in_str)
         in_str = b'\n\x0b\x00\x00\x00\x02\x01\x00?\xf0\x00\x00\x00\x00\x00\x00?\xf0\x00\x00\x00\x00\x00\x00?\xc0\x00\x00\x00\x00\x00\x00\xc1c\x12\xcf\xe0\x00\x00\x00'
-        in_vec = [1+1j, .125-9999999j]
+        in_vec = [1 + 1j, .125 - 9999999j]
         out_vec = pmt.c64vector_elements(pmt.deserialize_str(in_str))
         self.assertEqual(out_vec, in_vec)
 

@@ -9,7 +9,6 @@
 #
 
 
-
 import numpy as np
 
 from gnuradio import gr, gr_unittest, blocks
@@ -37,11 +36,13 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
         frozen_bit_positions = np.arange(block_size - num_info_bits)
         frozen_bit_values = np.array([],)
 
-        polar_decoder = fec.polar_decoder_sc.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
+        polar_decoder = fec.polar_decoder_sc.make(
+            block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
 
         self.assertEqual(num_info_bits, polar_decoder.get_output_size())
         self.assertEqual(block_size, polar_decoder.get_input_size())
-        self.assertFloatTuplesAlmostEqual((float(num_info_bits) / block_size, ), (polar_decoder.rate(), ))
+        self.assertFloatTuplesAlmostEqual(
+            (float(num_info_bits) / block_size, ), (polar_decoder.rate(), ))
         self.assertFalse(polar_decoder.set_frame_size(10))
 
     def test_002_one_vector(self):
@@ -49,12 +50,15 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
         block_size = 2 ** block_power
         num_info_bits = 2 ** (block_power - 1)
         num_frozen_bits = block_size - num_info_bits
-        frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
+        frozen_bit_positions = cc.frozen_bit_positions(
+            block_size, num_info_bits, 0.0)
         frozen_bit_values = np.array([0] * num_frozen_bits,)
 
-        bits, gr_data = self.generate_test_data(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, 1, True)
+        bits, gr_data = self.generate_test_data(
+            block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, 1, True)
 
-        polar_decoder = fec.polar_decoder_sc.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
+        polar_decoder = fec.polar_decoder_sc.make(
+            block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
         src = blocks.vector_source_f(gr_data, False)
         dec_block = extended_decoder(polar_decoder, None)
         snk = blocks.vector_sink_b(1)
@@ -72,12 +76,15 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
         block_size = 2 ** block_power
         num_info_bits = 2 ** (block_power - 1)
         num_frozen_bits = block_size - num_info_bits
-        frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
+        frozen_bit_positions = cc.frozen_bit_positions(
+            block_size, num_info_bits, 0.0)
         frozen_bit_values = np.array([0] * num_frozen_bits,)
 
-        bits, gr_data = self.generate_test_data(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, nframes, False)
+        bits, gr_data = self.generate_test_data(
+            block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, nframes, False)
 
-        polar_decoder = fec.polar_decoder_sc.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
+        polar_decoder = fec.polar_decoder_sc.make(
+            block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
         src = blocks.vector_source_f(gr_data, False)
         dec_block = extended_decoder(polar_decoder, None)
         snk = blocks.vector_sink_b(1)
@@ -89,8 +96,19 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
         res = np.array(snk.data()).astype(dtype=int)
         self.assertTupleEqual(tuple(res), tuple(bits))
 
-    def generate_test_data(self, block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, nframes, onlyones):
-        encoder = PolarEncoder(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
+    def generate_test_data(
+            self,
+            block_size,
+            num_info_bits,
+            frozen_bit_positions,
+            frozen_bit_values,
+            nframes,
+            onlyones):
+        encoder = PolarEncoder(
+            block_size,
+            num_info_bits,
+            frozen_bit_positions,
+            frozen_bit_values)
         bits = np.array([], dtype=int)
         data = np.array([], dtype=int)
         for n in range(nframes):
@@ -106,4 +124,4 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_polar_decoder_sc, "test_polar_decoder_sc.xml")
+    gr_unittest.run(test_polar_decoder_sc)
