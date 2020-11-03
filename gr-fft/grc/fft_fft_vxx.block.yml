@@ -28,7 +28,6 @@ parameters:
     dtype: enum
     options: ['True', 'False']
     option_labels: ['Yes', 'No']
-    hide: ${ 'all' if type == 'float' else 'none' }
 -   id: nthreads
     label: Num. Threads
     dtype: int
@@ -52,7 +51,7 @@ templates:
         % if type == "complex":
         fft.fft_vcc(${fft_size}, ${forward}, ${window}, ${shift}, ${nthreads})
         % else:
-        fft.fft_vfc(${fft_size}, ${forward}, ${window}, ${nthreads})
+        fft.fft_vfc(${fft_size}, ${forward}, ${window}, ${shift}, ${nthreads})
         % endif
     callbacks:
     - set_nthreads(${nthreads})
@@ -64,7 +63,7 @@ cpp_templates:
         % if type == "complex":
         this->${id} = fft::fft_vcc::make(${fft_size}, ${forward}, ${window}, ${shift}, ${nthreads});
         % else:
-        this->${id} = fft::fft_vfc::make(${fft_size}, ${forward}, ${window}, ${nthreads});
+        this->${id} = fft::fft_vfc::make(${fft_size}, ${forward}, ${window}, ${shift}, ${nthreads});
         % endif
     link: ['gnuradio-fft']
     callbacks:

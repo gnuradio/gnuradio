@@ -10,8 +10,7 @@
 ########################################################################
 add_library(gnuradio-fft
   fft.cc
-  fft_vcc_fftw.cc
-  fft_vfc_fftw.cc
+  fft_v_fftw.cc
   goertzel_fc_impl.cc
   goertzel.cc
   window.cc

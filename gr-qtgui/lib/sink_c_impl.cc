@@ -92,7 +92,7 @@ sink_c_impl::sink_c_impl(int fftsize,
     // this is usually desired when plotting
     d_shift = true;
 
-    d_fft = new fft::fft_complex(d_fftsize, true);
+    d_fft = new fft::fft_complex_fwd(d_fftsize);
 
     d_index = 0;
     d_residbuf =
@@ -279,7 +279,7 @@ void sink_c_impl::fftresize()
 
         // Reset FFTW plan for new size
         delete d_fft;
-        d_fft = new fft::fft_complex(d_fftsize, true);
+        d_fft = new fft::fft_complex_fwd(d_fftsize);
     }
 }
 

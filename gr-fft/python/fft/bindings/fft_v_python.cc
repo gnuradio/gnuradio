@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(fft_vcc.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(815bbb036e65e51800b2732772a9eaeb)                     */
+/* BINDTOOL_HEADER_FILE(fft_v.h)                                        */
+/* BINDTOOL_HEADER_FILE_HASH(ef3398e963b1b296e309b81721bef8cb)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -23,42 +23,35 @@
 
 namespace py = pybind11;
 
-#include <gnuradio/fft/fft_vcc.h>
+#include <gnuradio/fft/fft_v.h>
 // pydoc.h is automatically generated in the build directory
-#include <fft_vcc_pydoc.h>
+#include <fft_v_pydoc.h>
 
-void bind_fft_vcc(py::module& m)
+
+template <class T, bool forward>
+void bind_fft_v_template(py::module& m, const char* classname)
 {
+    using fft_v_blk = gr::fft::fft_v<T, forward>;
 
-    using fft_vcc = ::gr::fft::fft_vcc;
-
-
-    py::class_<fft_vcc,
+    py::class_<fft_v_blk,
                gr::sync_block,
                gr::block,
                gr::basic_block,
-               std::shared_ptr<fft_vcc>>(m, "fft_vcc", D(fft_vcc))
-
-        .def(py::init(&fft_vcc::make),
+               std::shared_ptr<fft_v_blk>>(m, classname)
+        .def(py::init(&gr::fft::fft_v<T, forward>::make),
              py::arg("fft_size"),
-             py::arg("forward"),
              py::arg("window"),
              py::arg("shift") = false,
-             py::arg("nthreads") = 1,
-             D(fft_vcc, make))
+             py::arg("nthreads") = 1)
+        .def("set_nthreads", &fft_v_blk::set_nthreads, py::arg("n"))
+        .def("nthreads", &fft_v_blk::nthreads)
+        .def("set_window", &fft_v_blk::set_window, py::arg("window"));
+}
 
-
-        .def("set_nthreads",
-             &fft_vcc::set_nthreads,
-             py::arg("n"),
-             D(fft_vcc, set_nthreads))
-
-
-        .def("nthreads", &fft_vcc::nthreads, D(fft_vcc, nthreads))
-
-
-        .def("set_window",
-             &fft_vcc::set_window,
-             py::arg("window"),
-             D(fft_vcc, set_window));
+void bind_fft_v(py::module& m)
+{
+    bind_fft_v_template<gr_complex, true>(m, "fft_vcc_fwd");
+    bind_fft_v_template<gr_complex, false>(m, "fft_vcc_rev");
+    bind_fft_v_template<float, true>(m, "fft_vfc_fwd");
+    bind_fft_v_template<float, false>(m, "fft_vfc_rev");
 }

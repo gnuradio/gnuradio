@@ -37,8 +37,7 @@ pfb_synthesizer_ccf_impl::pfb_synthesizer_ccf_impl(unsigned int numchans,
       d_updated(false),
       d_numchans(numchans),
       d_state(0),
-      d_twox(twox ? 2 : 1),
-      d_fft(d_twox * d_numchans, false)
+      d_twox(twox ? 2 : 1)
 {
     // set up 2x multiplier; if twox==True, set to 2, otherwise to 1
     if (d_numchans % d_twox != 0) {
@@ -61,7 +60,8 @@ pfb_synthesizer_ccf_impl::pfb_synthesizer_ccf_impl(unsigned int numchans,
     set_taps(taps);
 
     // Create the IFFT to handle the input channel rotations
-    std::fill_n(d_fft.get_inbuf(), d_twox * d_numchans, 0);
+    d_fft = new fft::fft_complex_rev(d_twox * d_numchans);
+    std::fill_n(d_fft->get_inbuf(), d_twox * d_numchans, 0);
 
     set_output_multiple(d_numchans);
 }
@@ -206,7 +206,7 @@ void pfb_synthesizer_ccf_impl::set_channel_map(const std::vector<int>& map)
         d_channel_map = map;
 
         // Zero out fft buffer so that unused channels are always 0
-        std::fill_n(d_fft.get_inbuf(), d_twox * d_numchans, 0);
+        std::fill_n(d_fft->get_inbuf(), d_twox * d_numchans, 0);
     }
 }
 
@@ -234,14 +234,14 @@ int pfb_synthesizer_ccf_impl::work(int noutput_items,
         for (n = 0; n < noutput_items / d_numchans; n++) {
             for (i = 0; i < ninputs; i++) {
                 in = (gr_complex*)input_items[i];
-                d_fft.get_inbuf()[d_channel_map[i]] = in[n];
+                d_fft->get_inbuf()[d_channel_map[i]] = in[n];
             }
 
             // spin through IFFT
-            d_fft.execute();
+            d_fft->execute();
 
             for (i = 0; i < d_numchans; i++) {
-                out[i] = d_filters[i].filter(d_fft.get_outbuf()[i]);
+                out[i] = d_filters[i].filter(d_fft->get_outbuf()[i]);
             }
             out += d_numchans;
         }
@@ -253,20 +253,20 @@ int pfb_synthesizer_ccf_impl::work(int noutput_items,
             for (i = 0; i < ninputs; i++) {
                 // in = (gr_complex*)input_items[ninputs-i-1];
                 in = (gr_complex*)input_items[i];
-                d_fft.get_inbuf()[d_channel_map[i]] = in[n];
+                d_fft->get_inbuf()[d_channel_map[i]] = in[n];
             }
 
             // spin through IFFT
-            d_fft.execute();
+            d_fft->execute();
 
             // Output is sum of two filters, but the input buffer to the filters must be
             // circularly shifted by numchans every time through, done by using d_state to
             // determine which IFFT buffer position to pull from.
             for (i = 0; i < d_numchans; i++) {
                 out[i] =
-                    d_filters[i].filter(d_fft.get_outbuf()[d_state * d_numchans + i]);
+                    d_filters[i].filter(d_fft->get_outbuf()[d_state * d_numchans + i]);
                 out[i] += d_filters[d_numchans + i].filter(
-                    d_fft.get_outbuf()[(d_state ^ 1) * d_numchans + i]);
+                    d_fft->get_outbuf()[(d_state ^ 1) * d_numchans + i]);
             }
             d_state ^= 1;
 

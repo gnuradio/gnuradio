@@ -74,7 +74,7 @@ waterfall_sink_f_impl::waterfall_sink_f_impl(int fftsize,
     // this is usually desired when plotting
     d_shift = true;
 
-    d_fft = new fft::fft_complex(d_fftsize, true);
+    d_fft = new fft::fft_complex_fwd(d_fftsize);
     d_fbuf = (float*)volk_malloc(d_fftsize * sizeof(float), volk_get_alignment());
     memset(d_fbuf, 0, d_fftsize * sizeof(float));
 
@@ -390,7 +390,7 @@ void waterfall_sink_f_impl::fftresize()
 
         // Reset FFTW plan for new size
         delete d_fft;
-        d_fft = new fft::fft_complex(d_fftsize, true);
+        d_fft = new fft::fft_complex_fwd(d_fftsize);
 
         d_fft_shift.resize(d_fftsize);
 

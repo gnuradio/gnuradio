@@ -10,6 +10,8 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(
     FILES
+    fft_vcc.py
+    fft_vfc.py
     __init__.py
     logpwrfft.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/fft

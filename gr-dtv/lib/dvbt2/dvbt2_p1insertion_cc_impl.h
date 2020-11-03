@@ -45,7 +45,7 @@ private:
     int imag_positive_threshold_count;
     int imag_negative_threshold_count;
 
-    fft::fft_complex p1_fft;
+    fft::fft_complex_rev p1_fft;
 
     const static int p1_active_carriers[384];
     const static unsigned char s1_modulation_patterns[8][8];

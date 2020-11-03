@@ -231,7 +231,7 @@ private:
     int d_ninput;
     int d_noutput;
 
-    fft::fft_complex ofdm_fft;
+    fft::fft_complex_rev ofdm_fft;
     int ofdm_fft_size;
     float normalization;
 

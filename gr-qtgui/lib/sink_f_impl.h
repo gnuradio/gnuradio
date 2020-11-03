@@ -38,7 +38,7 @@ private:
     const pmt::pmt_t d_port;
 
     bool d_shift;
-    fft::fft_complex* d_fft;
+    fft::fft_complex_fwd* d_fft;
 
     int d_index;
     float* d_residbuf;
