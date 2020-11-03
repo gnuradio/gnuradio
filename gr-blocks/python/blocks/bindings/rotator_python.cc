@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(rotator.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(00766f91fe492a48d5f40aa2082f31ff)                     */
+/* BINDTOOL_HEADER_FILE_HASH(5d52f019c659d77040b16ad7541e4fd2)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -39,6 +39,9 @@ void bind_rotator(py::module& m)
         .def(py::init<gr::blocks::rotator const&>(),
              py::arg("arg0"),
              D(rotator, rotator, 1))
+
+
+        .def("phase", &rotator::phase)
 
 
         .def("set_phase", &rotator::set_phase, py::arg("phase"), D(rotator, set_phase))
