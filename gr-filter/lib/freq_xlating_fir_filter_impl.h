@@ -28,6 +28,7 @@ protected:
     kernel::fir_filter<IN_T, OUT_T, gr_complex> d_composite_fir;
     blocks::rotator d_r;
     double d_center_freq;
+    double d_prev_center_freq;
     double d_sampling_freq;
     bool d_updated;
     const int d_decim;

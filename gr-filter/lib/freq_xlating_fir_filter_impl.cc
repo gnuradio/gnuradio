@@ -44,6 +44,7 @@ freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::freq_xlating_fir_filter_impl(
       d_proto_taps(taps),
       d_composite_fir(decimation, {}),
       d_center_freq(center_freq),
+      d_prev_center_freq(0),
       d_sampling_freq(sampling_freq),
       d_updated(false),
       d_decim(decimation)
@@ -61,6 +62,19 @@ void freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::build_composite_fir()
 {
     std::vector<gr_complex> ctaps(d_proto_taps.size());
 
+    // In order to avoid phase jumps during a retune, adjust the phase
+    // of the rotator. Phase delay of a symmetric, odd length FIR is (N-1)/2.
+    // Scale phase delay by delta omega to get the difference in phase response
+    // caused by retuning. Subtract from the current rotator phase.
+
+    gr_complex phase = d_r.phase();
+    phase /= std::abs(phase);
+    float delta_freq = d_center_freq - d_prev_center_freq;
+    float delta_omega = 2.0 * GR_M_PI * delta_freq / d_sampling_freq;
+    float delta_phase = -delta_omega * (d_proto_taps.size() - 1) / 2.0;
+    phase *= exp(gr_complex(0, delta_phase));
+    d_r.set_phase(phase);
+
     // The basic principle of this block is to perform:
     //    x(t) -> (mult by -fwT0) -> LPF -> decim -> y(t)
     // We switch things up here to:
@@ -76,6 +90,7 @@ void freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::build_composite_fir()
 
     d_composite_fir.set_taps(ctaps);
     d_r.set_phase_incr(exp(gr_complex(0, -fwT0 * this->decimation())));
+    d_prev_center_freq = d_center_freq;
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
