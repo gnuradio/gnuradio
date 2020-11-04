@@ -39,8 +39,9 @@ def sig_source_c(samp_rate, freq, amp, N):
     return y
 
 
-def mix(lo, data):
-    y = [lo_i * data_i for lo_i, data_i in zip(lo, data)]
+def mix(lo, data, phase=0.0):
+    cphase = cmath.exp(1j * phase)
+    y = [lo_i * data_i * cphase for lo_i, data_i in zip(lo, data)]
     return y
 
 
@@ -114,7 +115,8 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 1
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        despun = mix(lo, self.src_data)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 
         src = blocks.vector_source_c(self.src_data)
@@ -132,7 +134,8 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 4
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        despun = mix(lo, self.src_data)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 
         src = blocks.vector_source_c(self.src_data)
@@ -149,7 +152,8 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 1
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        despun = mix(lo, self.src_data)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 
         src = blocks.vector_source_c(self.src_data)
@@ -166,7 +170,8 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 4
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        despun = mix(lo, self.src_data)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 
         src = blocks.vector_source_c(self.src_data)
@@ -183,7 +188,8 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 1
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        despun = mix(lo, self.src_data)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 
         src = blocks.vector_source_f(self.src_data)
@@ -200,7 +206,8 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 4
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        despun = mix(lo, self.src_data)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 
         src = blocks.vector_source_f(self.src_data)
@@ -217,7 +224,8 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 1
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        despun = mix(lo, self.src_data)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 
         src = blocks.vector_source_f(self.src_data)
@@ -234,7 +242,8 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 4
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        despun = mix(lo, self.src_data)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 
         src = blocks.vector_source_f(self.src_data)
