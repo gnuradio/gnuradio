@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2007,2012 Free Software Foundation, Inc.
+# Copyright 2005,2007,2012,2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -49,7 +49,7 @@ class wfm_tx(gr.hier_block2):
         do_interp = audio_rate != quad_rate
 
         if do_interp:
-            interp_factor = quad_rate / audio_rate
+            interp_factor = quad_rate // audio_rate
             interp_taps = filter.optfir.low_pass(interp_factor,   # gain
                                                  quad_rate,       # Fs
                                                  16000,           # passband cutoff
