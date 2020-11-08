@@ -104,9 +104,7 @@ public:
      * \param taps (vector/list of floats) The prototype filter to
      *             populate the filterbank.
      */
-    polyphase_filterbank(unsigned int nfilts,
-                         const std::vector<float>& taps,
-                         bool fft_forward = false);
+    polyphase_filterbank(unsigned int nfilts, const std::vector<float>& taps);
 
     /*!
      * Update the filterbank's filter taps from a prototype
