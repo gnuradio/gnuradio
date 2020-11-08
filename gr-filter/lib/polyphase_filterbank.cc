@@ -19,8 +19,7 @@ namespace gr {
 namespace filter {
 namespace kernel {
 polyphase_filterbank::polyphase_filterbank(unsigned int nfilts,
-                                           const std::vector<float>& taps,
-                                           bool fft_forward)
+                                           const std::vector<float>& taps)
     : d_nfilts(nfilts)
 {
     d_fir_filters.reserve(d_nfilts);
