@@ -42,57 +42,56 @@ class wfm_rcv_pll(gr.hier_block2):
         ##################################################
         self.demod_rate = demod_rate
         self.deemph_tau = deemph_tau
-        self.stereo_carrier_filter_coeffs_0 = stereo_carrier_filter_coeffs_0 = firdes.band_pass(-2.0, demod_rate, 37600, 38400, 400, fft.window.WIN_HAMMING, 6.76)
-        self.stereo_carrier_filter_coeffs = stereo_carrier_filter_coeffs = firdes.complex_band_pass(1.0, demod_rate, 18980, 19020, 1500, fft.window.WIN_HAMMING, 6.76)
+        self.stereo_carrier_filter_coeffs = stereo_carrier_filter_coeffs = firdes.band_pass(-2.0, demod_rate, 37600, 38400, 400, fft.window.WIN_HAMMING, 6.76)
+        self.pilot_carrier_filter_coeffs = pilot_carrier_filter_coeffs = firdes.complex_band_pass(1.0, demod_rate, 18980, 19020, 1500, fft.window.WIN_HAMMING, 6.76)
         self.deviation = deviation = 75000
-        self.audio_filter = audio_filter = firdes.low_pass(1, demod_rate, 15000,1500, fft.window.WIN_HAMMING, 6.76)
+        self.audio_filter_coeffs = audio_filter_coeffs = firdes.low_pass(1, demod_rate, 15000,1500, fft.window.WIN_HAMMING, 6.76)
         self.audio_decim = audio_decim = audio_decimation
         self.audio_rate = audio_rate = demod_rate / audio_decim
-        self.samp_delay = samp_delay = (len(stereo_carrier_filter_coeffs) - 1) // 2 + (len(stereo_carrier_filter_coeffs_0) - 1) // 2
+        self.samp_delay = samp_delay = (len(pilot_carrier_filter_coeffs) - 1) // 2 + (len(stereo_carrier_filter_coeffs) - 1) // 2
 
         ##################################################
         # Blocks
         ##################################################
-        self.fir_filter_xxx_1 = filter.fir_filter_fcc(1, stereo_carrier_filter_coeffs)
-        self.fir_filter_xxx_1.declare_sample_delay(0)
-        self.fft_filter_xxx_3 = filter.fft_filter_fff(1, stereo_carrier_filter_coeffs_0, 1)
-        self.fft_filter_xxx_3.declare_sample_delay(0)
-        self.fft_filter_xxx_2 = filter.fft_filter_fff(audio_decim, audio_filter, 1)
-        self.fft_filter_xxx_2.declare_sample_delay(0)
-        self.fft_filter_xxx_1 = filter.fft_filter_fff(audio_decim, audio_filter, 1)
-        self.fft_filter_xxx_1.declare_sample_delay(0)
-        self.blocks_multiply_xx_2 = blocks.multiply_vff(1)
-        self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
-        self.blocks_complex_to_imag_0 = blocks.complex_to_imag(1)
-        self.blocks_sub_xx_0 = blocks.sub_ff(1)
-        self.blocks_add_xx_0 = blocks.add_vff(1)
-        self.analog_quadrature_demod_cf_0 = analog.quadrature_demod_cf(demod_rate/(2*math.pi*deviation))
-        self.analog_pll_refout_cc_0 = analog.pll_refout_cc(0.001, 2*math.pi * 19200 / demod_rate, 2*math.pi * 18800 / demod_rate)
-        self.analog_fm_deemph_0_0 = analog.fm_deemph(fs=audio_rate, tau=deemph_tau)
-        self.analog_fm_deemph_0 = analog.fm_deemph(fs=audio_rate, tau=deemph_tau)
+        self.pilot_carrier_bpf = filter.fir_filter_fcc(1, pilot_carrier_filter_coeffs)
+        self.pilot_carrier_bpf.declare_sample_delay(0)
+        self.stereo_carrier_bpf = filter.fft_filter_fff(1, stereo_carrier_filter_coeffs, 1)
+        self.stereo_carrier_bpf.declare_sample_delay(0)
+        self.stereo_audio_lpf = filter.fft_filter_fff(audio_decim, audio_filter_coeffs, 1)
+        self.stereo_audio_lpf.declare_sample_delay(0)
+        self.mono_audio_lpf = filter.fft_filter_fff(audio_decim, audio_filter_coeffs, 1)
+        self.mono_audio_lpf.declare_sample_delay(0)
+        self.blocks_stereo_multiply = blocks.multiply_ff(1)
+        self.blocks_pilot_multiply = blocks.multiply_cc(1)
+        self.blocks_complex_to_imag = blocks.complex_to_imag(1)
+        self.blocks_right_sub = blocks.sub_ff(1)
+        self.blocks_left_add = blocks.add_ff(1)
+        self.analog_quadrature_demod_cf = analog.quadrature_demod_cf(demod_rate/(2*math.pi*deviation))
+        self.analog_pll_refout_cc = analog.pll_refout_cc(0.001, 2*math.pi * 19200 / demod_rate, 2*math.pi * 18800 / demod_rate)
+        self.analog_right_fm_deemph = analog.fm_deemph(fs=audio_rate, tau=deemph_tau)
+        self.analog_left_fm_deemph = analog.fm_deemph(fs=audio_rate, tau=deemph_tau)
         self.blocks_delay_0 = blocks.delay(gr.sizeof_float*1, samp_delay)
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.analog_fm_deemph_0, 0), (self, 0))
-        self.connect((self.analog_fm_deemph_0_0, 0), (self, 1))
-        self.connect((self.analog_pll_refout_cc_0, 0), (self.blocks_multiply_xx_0, 1))
-        self.connect((self.analog_pll_refout_cc_0, 0), (self.blocks_multiply_xx_0, 0))
-        self.connect((self.analog_quadrature_demod_cf_0, 0), (self.blocks_delay_0, 0))
-        self.connect((self.blocks_delay_0, 0), (self.blocks_multiply_xx_2, 0))
-        self.connect((self.blocks_delay_0, 0), (self.fft_filter_xxx_1, 0))
-        self.connect((self.analog_quadrature_demod_cf_0, 0), (self.fir_filter_xxx_1, 0))
-        self.connect((self.blocks_add_xx_0, 0), (self.analog_fm_deemph_0, 0))
-        self.connect((self.blocks_sub_xx_0, 0), (self.analog_fm_deemph_0_0, 0))
-        self.connect((self.blocks_complex_to_imag_0, 0), (self.fft_filter_xxx_3, 0))
-        self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_complex_to_imag_0, 0))
-        self.connect((self.blocks_multiply_xx_2, 0), (self.fft_filter_xxx_2, 0)) # L - R path
-        self.connect((self.fft_filter_xxx_1, 0), (self.blocks_add_xx_0, 1))
-        self.connect((self.fft_filter_xxx_1, 0), (self.blocks_sub_xx_0, 0))
-        self.connect((self.fft_filter_xxx_2, 0), (self.blocks_add_xx_0, 0))
-        self.connect((self.fft_filter_xxx_2, 0), (self.blocks_sub_xx_0, 1))
-        self.connect((self.fft_filter_xxx_3, 0), (self.blocks_multiply_xx_2, 1))
-        self.connect((self.fir_filter_xxx_1, 0), (self.analog_pll_refout_cc_0, 0))
-        self.connect((self, 0), (self.analog_quadrature_demod_cf_0, 0))
-
+        self.connect((self.analog_left_fm_deemph, 0), (self, 0))
+        self.connect((self.analog_right_fm_deemph, 0), (self, 1))
+        self.connect((self.analog_pll_refout_cc, 0), (self.blocks_pilot_multiply, 1))
+        self.connect((self.analog_pll_refout_cc, 0), (self.blocks_pilot_multiply, 0))
+        self.connect((self.analog_quadrature_demod_cf, 0), (self.blocks_delay_0, 0))
+        self.connect((self.blocks_delay_0, 0), (self.blocks_stereo_multiply, 0))
+        self.connect((self.blocks_delay_0, 0), (self.mono_audio_lpf, 0))
+        self.connect((self.analog_quadrature_demod_cf, 0), (self.pilot_carrier_bpf, 0))
+        self.connect((self.blocks_left_add, 0), (self.analog_left_fm_deemph, 0))
+        self.connect((self.blocks_right_sub, 0), (self.analog_right_fm_deemph, 0))
+        self.connect((self.blocks_complex_to_imag, 0), (self.stereo_carrier_bpf, 0))
+        self.connect((self.blocks_pilot_multiply, 0), (self.blocks_complex_to_imag, 0))
+        self.connect((self.blocks_stereo_multiply, 0), (self.stereo_audio_lpf, 0)) # L - R path
+        self.connect((self.mono_audio_lpf, 0), (self.blocks_left_add, 1))
+        self.connect((self.mono_audio_lpf, 0), (self.blocks_right_sub, 0))
+        self.connect((self.stereo_audio_lpf, 0), (self.blocks_left_add, 0))
+        self.connect((self.stereo_audio_lpf, 0), (self.blocks_right_sub, 1))
+        self.connect((self.stereo_carrier_bpf, 0), (self.blocks_stereo_multiply, 1))
+        self.connect((self.pilot_carrier_bpf, 0), (self.analog_pll_refout_cc, 0))
+        self.connect((self, 0), (self.analog_quadrature_demod_cf, 0))
