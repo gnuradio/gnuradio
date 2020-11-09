@@ -16,7 +16,7 @@ import os
 try:
     # this might fail if the module is python-only
     from .howto_python import *
-except ImportError:
+except ModuleNotFoundError:
     pass
 
 # import any pure python here
