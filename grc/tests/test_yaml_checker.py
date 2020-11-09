@@ -2,7 +2,7 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
 import yaml
 
@@ -44,7 +44,7 @@ outputs:
 
 templates:
     make: blocks.complex_to_mag_squared(${ vlen })
-    
+
 file_format: 1
 """
 

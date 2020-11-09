@@ -76,7 +76,7 @@ public:
 
     void setIntensityRange(const double minIntensity, const double maxIntensity);
 
-    void replot(void);
+    void replot(void) override;
 
     int getIntensityColorMapType(unsigned int) const;
     int getIntensityColorMapType1() const;

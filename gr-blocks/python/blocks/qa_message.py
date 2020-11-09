@@ -56,7 +56,7 @@ class test_message(gr_unittest.TestCase):
         msg = gr.message_from_string(s)
         self.assertEquals(s.encode('utf8'), msg.to_string())
 
-    ## msg_queue was removed from API in 3.8
+    # msg_queue was removed from API in 3.8
     # def test_200(self):
     #     self.leak_check(self.body_200)
 
@@ -88,7 +88,7 @@ class test_message(gr_unittest.TestCase):
         msg = gr.message(666)
 
     def test_300(self):
-        input_data = [0,1,2,3,4,5,6,7,8,9]
+        input_data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         src = blocks.vector_source_b(input_data)
         dst = blocks.vector_sink_b()
         tb = gr.top_block()
@@ -113,4 +113,4 @@ class test_message(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_message, "test_message.xml")
+    gr_unittest.run(test_message)

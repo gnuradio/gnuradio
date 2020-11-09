@@ -29,7 +29,7 @@ class FreqControlPanel : public QVBoxLayout
 
 public:
     FreqControlPanel(FreqDisplayForm* form);
-    ~FreqControlPanel();
+    ~FreqControlPanel() override;
 
 public slots:
     void notifyAvgSlider(int val);

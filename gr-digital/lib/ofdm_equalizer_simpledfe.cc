@@ -24,16 +24,19 @@ ofdm_equalizer_simpledfe::make(int fft_len,
                                const std::vector<std::vector<gr_complex>>& pilot_symbols,
                                int symbols_skipped,
                                float alpha,
-                               bool input_is_shifted)
+                               bool input_is_shifted,
+                               bool enable_soft_output)
 {
-    return ofdm_equalizer_simpledfe::sptr(new ofdm_equalizer_simpledfe(fft_len,
-                                                                       constellation,
-                                                                       occupied_carriers,
-                                                                       pilot_carriers,
-                                                                       pilot_symbols,
-                                                                       symbols_skipped,
-                                                                       alpha,
-                                                                       input_is_shifted));
+    return ofdm_equalizer_simpledfe::sptr(
+        new ofdm_equalizer_simpledfe(fft_len,
+                                     constellation,
+                                     occupied_carriers,
+                                     pilot_carriers,
+                                     pilot_symbols,
+                                     symbols_skipped,
+                                     alpha,
+                                     input_is_shifted,
+                                     enable_soft_output));
 }
 
 ofdm_equalizer_simpledfe::ofdm_equalizer_simpledfe(
@@ -44,7 +47,8 @@ ofdm_equalizer_simpledfe::ofdm_equalizer_simpledfe(
     const std::vector<std::vector<gr_complex>>& pilot_symbols,
     int symbols_skipped,
     float alpha,
-    bool input_is_shifted)
+    bool input_is_shifted,
+    bool enable_soft_output)
     : ofdm_equalizer_1d_pilots(fft_len,
                                occupied_carriers,
                                pilot_carriers,
@@ -52,7 +56,8 @@ ofdm_equalizer_simpledfe::ofdm_equalizer_simpledfe(
                                symbols_skipped,
                                input_is_shifted),
       d_constellation(constellation),
-      d_alpha(alpha)
+      d_alpha(alpha),
+      d_enable_soft_output(enable_soft_output)
 {
 }
 
@@ -69,6 +74,7 @@ void ofdm_equalizer_simpledfe::equalize(gr_complex* frame,
         d_channel_state = initial_taps;
     }
     gr_complex sym_eq, sym_est;
+    bool enable_soft_output = d_enable_soft_output;
 
     for (int i = 0; i < n_sym; i++) {
         for (int k = 0; k < d_fft_len; k++) {
@@ -92,7 +98,7 @@ void ofdm_equalizer_simpledfe::equalize(gr_complex* frame,
                                                &sym_est);
                 d_channel_state[k] = d_alpha * d_channel_state[k] +
                                      (1 - d_alpha) * frame[i * d_fft_len + k] / sym_est;
-                frame[i * d_fft_len + k] = sym_est;
+                frame[i * d_fft_len + k] = enable_soft_output ? sym_eq : sym_est;
             }
         }
         if (!d_pilot_carriers.empty()) {

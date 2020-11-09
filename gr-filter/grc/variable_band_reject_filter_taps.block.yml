@@ -3,6 +3,11 @@ label: Band-reject Filter Taps
 flags: [ show_id, python, cpp ]
 
 parameters:
+-   id: type
+    label: Tap Type
+    dtype: enum
+    options: [band_reject, complex_band_reject]
+    option_labels: [Real, Complex]
 -   id: gain
     label: Gain
     dtype: float
@@ -31,25 +36,25 @@ parameters:
     label: Beta
     dtype: float
     default: '6.76'
-value: ${ firdes.band_reject(gain, samp_rate, low_cutoff_freq, high_cutoff_freq, width,
+value: ${ getattr(firdes, str(type))(gain, samp_rate, low_cutoff_freq, high_cutoff_freq, width,
     win, beta) }
 
 templates:
     imports: from gnuradio.filter import firdes
     var_make: |-
-        self.${id} = ${id} = firdes.band_reject(${gain}, ${samp_rate}, ${low_cutoff_freq},\
+        self.${id} = ${id} = firdes.${type}(${gain}, ${samp_rate}, ${low_cutoff_freq},\
         ${high_cutoff_freq}, ${width}, ${win}, ${beta})
 
 cpp_templates:
     includes: ['#include <gnuradio/filter/firdes.h>']
     declarations: 'filter::firdes::sptr ${id};'
     var_make: |-
-        this->${id} = ${id} = firdes.band_reject(${gain}, ${samp_rate}, ${low_cutoff_freq},\
+        this->${id} = ${id} = firdes.${type}(${gain}, ${samp_rate}, ${low_cutoff_freq},\
         ${high_cutoff_freq}, ${width}, ${win}, ${beta});
     link: ['gnuradio-filter']
 
 documentation: |-
-    This is a convenience wrapper for calling firdes.band_reject().
+    This is a convenience wrapper for calling firdes.band_reject() or firdes.complex_band_reject().
 
         The beta parameter only applies to the Kaiser window.
 

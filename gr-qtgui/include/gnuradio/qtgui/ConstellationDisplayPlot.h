@@ -26,7 +26,7 @@ class ConstellationDisplayPlot : public DisplayPlot
 
 public:
     ConstellationDisplayPlot(int nplots, QWidget*);
-    virtual ~ConstellationDisplayPlot();
+    ~ConstellationDisplayPlot() override;
 
     void plotNewData(const std::vector<double*> realDataPoints,
                      const std::vector<double*> imagDataPoints,
@@ -39,7 +39,7 @@ public:
                      const int64_t numDataPoints,
                      const double timeInterval);
 
-    void replot();
+    void replot() override;
 
     void set_xaxis(double min, double max);
     void set_yaxis(double min, double max);

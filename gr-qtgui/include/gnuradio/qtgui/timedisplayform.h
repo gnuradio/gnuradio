@@ -29,9 +29,9 @@ class TimeDisplayForm : public DisplayForm
 
 public:
     TimeDisplayForm(int nplots = 1, QWidget* parent = 0);
-    ~TimeDisplayForm();
+    ~TimeDisplayForm() override;
 
-    TimeDomainDisplayPlot* getPlot();
+    TimeDomainDisplayPlot* getPlot() override;
 
     int getNPoints() const;
     gr::qtgui::trigger_mode getTriggerMode() const;
@@ -42,15 +42,15 @@ public:
     std::string getTriggerTagKey() const;
 
 public slots:
-    void customEvent(QEvent* e);
+    void customEvent(QEvent* e) override;
 
     void setSampleRate(const double samprate);
-    void setSampleRate(const QString& samprate);
+    void setSampleRate(const QString& samprate) override;
     void setYaxis(double min, double max);
     void setYLabel(const std::string& label, const std::string& unit = "");
     void setNPoints(const int);
     void setStem(bool en);
-    void autoScale(bool en);
+    void autoScale(bool en) override;
     void autoScaleShot();
     void setSemilogx(bool en);
     void setSemilogy(bool en);
@@ -73,7 +73,7 @@ public slots:
     void teardownControlPanel();
 
 private slots:
-    void newData(const QEvent*);
+    void newData(const QEvent*) override;
     void notifyYAxisPlus();
     void notifyYAxisMinus();
     void notifyYRangePlus();

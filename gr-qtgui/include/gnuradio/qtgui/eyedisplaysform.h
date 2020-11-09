@@ -31,7 +31,7 @@ class QTGUI_API EyeDisplaysForm : public QWidget
 
 public:
     EyeDisplaysForm(int nplots = 1, QWidget* parent = 0);
-    ~EyeDisplaysForm();
+    ~EyeDisplaysForm() override;
 
     void Reset();
     bool isClosed() const;
@@ -39,11 +39,11 @@ public:
     void enableMenu(bool en = true);
 
 public slots:
-    void resizeEvent(QResizeEvent* e);
-    void mousePressEvent(QMouseEvent* e);
-    virtual void customEvent(QEvent* e) = 0;
+    void resizeEvent(QResizeEvent* e) override;
+    void mousePressEvent(QMouseEvent* e) override;
+    void customEvent(QEvent* e) override = 0;
 
-    void closeEvent(QCloseEvent* e);
+    void closeEvent(QCloseEvent* e) override;
 
     void setUpdateTime(double t);
     void setSamplesPerSymbol(int64_t sps);

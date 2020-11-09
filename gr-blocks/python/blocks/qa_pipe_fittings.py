@@ -11,10 +11,11 @@
 
 from gnuradio import gr, gr_unittest, blocks
 
+
 def calc_expected_result(src_data, n):
     assert (len(src_data) % n) == 0
     result = [list() for x in range(n)]
-    #print "len(result) =", len(result)
+    # print "len(result) =", len(result)
     for i in range(len(src_data)):
         (result[i % n]).append(src_data[i])
     return result
@@ -23,7 +24,7 @@ def calc_expected_result(src_data, n):
 class test_pipe_fittings(gr_unittest.TestCase):
 
     def setUp(self):
-        self.tb = gr.top_block ()
+        self.tb = gr.top_block()
 
     def tearDown(self):
         self.tb = None
@@ -37,7 +38,7 @@ class test_pipe_fittings(gr_unittest.TestCase):
         src_data = list(range(src_len))
 
         expected_results = calc_expected_result(src_data, n)
-        #print "expected results: ", expected_results
+        # print "expected results: ", expected_results
         src = blocks.vector_source_i(src_data)
         op = blocks.stream_to_streams(gr.sizeof_int, n)
         self.tb.connect(src, op)
@@ -77,7 +78,7 @@ class test_pipe_fittings(gr_unittest.TestCase):
 
     def test_003(self):
 
-        #Test streams_to_vector (using stream_to_streams & vector_to_stream).
+        # Test streams_to_vector (using stream_to_streams & vector_to_stream).
 
         n = 8
         src_len = n * 8
@@ -100,7 +101,7 @@ class test_pipe_fittings(gr_unittest.TestCase):
 
     def test_004(self):
 
-        #Test vector_to_streams.
+        # Test vector_to_streams.
 
         n = 8
         src_len = n * 8
@@ -123,4 +124,4 @@ class test_pipe_fittings(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_pipe_fittings, "test_pipe_fittings.xml")
+    gr_unittest.run(test_pipe_fittings)

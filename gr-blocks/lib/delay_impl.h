@@ -20,7 +20,7 @@ namespace blocks {
 class delay_impl : public delay
 {
 private:
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     const size_t d_itemsize;
     int d_delta;
@@ -28,15 +28,15 @@ private:
 
 public:
     delay_impl(size_t itemsize, int delay);
-    ~delay_impl();
+    ~delay_impl() override;
 
-    int dly() const { return history() - 1; }
-    void set_dly(int d);
+    int dly() const override { return history() - 1; }
+    void set_dly(int d) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

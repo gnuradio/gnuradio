@@ -26,17 +26,17 @@ private:
 
 public:
     rail_ff_impl(float lo, float hi);
-    ~rail_ff_impl();
+    ~rail_ff_impl() override;
 
-    float lo() const { return d_lo; }
-    float hi() const { return d_hi; }
+    float lo() const override { return d_lo; }
+    float hi() const override { return d_hi; }
 
-    void set_lo(float lo);
-    void set_hi(float hi);
+    void set_lo(float lo) override;
+    void set_hi(float hi) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace analog */

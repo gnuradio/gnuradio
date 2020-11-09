@@ -193,7 +193,7 @@ class Param(Element):
         #########################
         # ID and Enum types (not evaled)
         #########################
-        if dtype in ('id', 'stream_id','name') or self.is_enum():
+        if dtype in ('id', 'stream_id', 'name') or self.is_enum():
             if self.options.attributes:
                 expr = attributed_str(expr)
                 for key, value in self.options.attributes[expr].items():
@@ -242,7 +242,7 @@ class Param(Element):
             # Do not check if file/directory exists, that is a runtime issue
             try:
                 # Do not evaluate multiline strings (code snippets or comments)
-                if dtype not in ['_multiline','_multiline_python_external']:
+                if dtype not in ['_multiline', '_multiline_python_external']:
                     value = self.parent_flowgraph.evaluate(expr)
                     if not isinstance(value, str):
                         raise Exception()

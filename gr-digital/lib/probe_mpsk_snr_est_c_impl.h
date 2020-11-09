@@ -34,38 +34,38 @@ public:
                               int msg_nsamples = 10000,
                               double alpha = 0.001);
 
-    ~probe_mpsk_snr_est_c_impl();
+    ~probe_mpsk_snr_est_c_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
     //! Return the estimated signal-to-noise ratio in decibels
-    double snr();
+    double snr() override;
 
     //! Return the estimated signal power in decibels
-    double signal();
+    double signal() override;
 
     //! Return the estimated noise power in decibels
-    double noise();
+    double noise() override;
 
     //! Return the type of estimator in use
-    snr_est_type_t type() const;
+    snr_est_type_t type() const override;
 
     //! Return how many samples between SNR messages
-    int msg_nsample() const;
+    int msg_nsample() const override;
 
     //! Get the running-average coefficient
-    double alpha() const;
+    double alpha() const override;
 
     //! Set type of estimator to use
-    void set_type(snr_est_type_t t);
+    void set_type(snr_est_type_t t) override;
 
     //! Set the number of samples between SNR messages
-    void set_msg_nsample(int n);
+    void set_msg_nsample(int n) override;
 
     //! Set the running-average coefficient
-    void set_alpha(double alpha);
+    void set_alpha(double alpha) override;
 };
 
 } /* namespace digital */

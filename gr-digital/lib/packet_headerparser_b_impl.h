@@ -25,11 +25,11 @@ private:
 public:
     packet_headerparser_b_impl(
         const gr::digital::packet_header_default::sptr& header_formatter);
-    ~packet_headerparser_b_impl();
+    ~packet_headerparser_b_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace digital

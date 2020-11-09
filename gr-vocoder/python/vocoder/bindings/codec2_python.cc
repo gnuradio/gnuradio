@@ -46,4 +46,6 @@ void bind_codec2(py::module& m)
         .value("MODE_WB", gr::vocoder::codec2::MODE_WB)
 #endif
         .export_values();
+
+    py::implicitly_convertible<int, gr::vocoder::codec2::bit_rate>();
 }

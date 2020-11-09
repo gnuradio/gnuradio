@@ -25,24 +25,24 @@ public:
                               float mu,
                               float gain_mu,
                               float omega_relative_limi);
-    ~clock_recovery_mm_ff_impl();
+    ~clock_recovery_mm_ff_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 
-    float mu() const { return d_mu; }
-    float omega() const { return d_omega; }
-    float gain_mu() const { return d_gain_mu; }
-    float gain_omega() const { return d_gain_omega; }
+    float mu() const override { return d_mu; }
+    float omega() const override { return d_omega; }
+    float gain_mu() const override { return d_gain_mu; }
+    float gain_omega() const override { return d_gain_omega; }
 
-    void set_verbose(bool verbose) { d_verbose = verbose; }
-    void set_gain_mu(float gain_mu) { d_gain_mu = gain_mu; }
-    void set_gain_omega(float gain_omega) { d_gain_omega = gain_omega; }
-    void set_mu(float mu) { d_mu = mu; }
-    void set_omega(float omega);
+    void set_verbose(bool verbose) override { d_verbose = verbose; }
+    void set_gain_mu(float gain_mu) override { d_gain_mu = gain_mu; }
+    void set_gain_omega(float gain_omega) override { d_gain_omega = gain_omega; }
+    void set_mu(float mu) override { d_mu = mu; }
+    void set_omega(float omega) override;
 
 private:
     float d_mu;                   // fractional sample position [0.0, 1.0]

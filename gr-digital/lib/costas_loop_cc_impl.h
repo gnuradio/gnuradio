@@ -126,17 +126,17 @@ private:
 
 public:
     costas_loop_cc_impl(float loop_bw, unsigned int order, bool use_snr = false);
-    ~costas_loop_cc_impl();
+    ~costas_loop_cc_impl() override;
 
-    float error() const { return d_error; };
+    float error() const override { return d_error; };
 
     void handle_set_noise(pmt::pmt_t msg);
 
-    void setup_rpc();
+    void setup_rpc() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace digital */

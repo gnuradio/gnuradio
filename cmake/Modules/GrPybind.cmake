@@ -40,7 +40,11 @@ target_include_directories(${name}_python PUBLIC
     ${PYBIND11_INCLUDE_DIR}
 )
 target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} gnuradio-${MODULE_NAME})
-target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
+   CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
+endif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
+      CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 add_dependencies(${name}_python ${name}_docstrings)
 
 endmacro(GR_PYBIND_MAKE)
@@ -153,7 +157,11 @@ target_include_directories(${name}_python PUBLIC
     ${PYBIND11_INCLUDE_DIR}
 )
 target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} gnuradio-${MODULE_NAME})
-target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
+   CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
+endif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
+      CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 if(NOT SNDFILE_FOUND AND ${name} STREQUAL blocks)
     target_compile_options(${name}_python PRIVATE -DNO_WAVFILE)
 endif()
@@ -182,7 +190,9 @@ foreach(file ${files})
 
     # message(STATUS ${file} ":" ${flag_auto} ":" ${flag_pygccxml} ":" ${header_filename} ":" ${header_file_hash})
 
-    if (NOT ${header_filename} STREQUAL "None")  # If no header filename is specified, don't bother checking for a rebuild
+    # If no header filename is specified (set to empty or "None")
+    #  OR If hash is set to 0, then ignore the check as well
+    if (NOT ${header_filename} STREQUAL "None" AND NOT ${header_file_hash} STREQUAL "0")  
         set(header_full_path ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include/${name}/${header_filename})  # NOTE OOT version does not have gnuradio/ here
         file(MD5 ${header_full_path} calc_hash)
         # message(STATUS ${ii} " " ${calc_hash} " " ${saved_hash})
@@ -201,7 +211,9 @@ foreach(file ${files})
                 message(STATUS "Regenerating Bindings in-place for " ${header_filename})
 
                 file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status)
-                # Automatically regenerate the bindings               
+                # Automatically regenerate the bindings
+                string(REPLACE ";" ","  extra_include_list "${extra_includes}")  #Convert ';' separated extra_includes to ',' separated list format
+                string(REPLACE ";" ","  defines "${define_symbols}")  #Convert ';' separated define_symbols to ',' separated list format
                 add_custom_command( 
                     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}}/${file}
                     COMMAND  "${PYTHON_EXECUTABLE}"
@@ -214,7 +226,8 @@ foreach(file ${files})
                     "--status" ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status 
                     "--flag_automatic" ${flag_auto}
                     "--flag_pygccxml" ${flag_pygccxml}
-                    # "--include" "$<INSTALL_INTERFACE:include>"  #FIXME: Make the pygccxml generation use the source tree headers
+                    "--defines" ${defines} #Add preprocessor defines
+                    "--include" ${extra_include_list} #Some oots may require additional includes
                     COMMENT "Automatic generation of pybind11 bindings for " ${header_full_path})
                 add_custom_target(${file}_regen_bindings ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}}/${file})
                 list(APPEND regen_targets ${file}_regen_bindings)
@@ -277,7 +290,11 @@ target_include_directories(${name}_python PUBLIC
     ${PYBIND11_INCLUDE_DIR}
 )
 target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} gnuradio-${MODULE_NAME})
-target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
+   CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
+endif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
+      CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 add_dependencies(${name}_python ${name}_docstrings ${regen_targets})
 
 endmacro(GR_PYBIND_MAKE_OOT)

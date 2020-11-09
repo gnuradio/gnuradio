@@ -22,12 +22,12 @@ namespace vocoder {
  * \brief FreeDV modulator
  * \ingroup audio_blk
  *
- * Input: Speech (audio) signal as 16-bit shorts, sampling rate 8 kHz.
+ * Input: Speech (audio) signal as 16-bit shorts.
  *
- * Output: Signal (audio) as 16-bit shorts, sampling rate 8 kHz.
+ * Output: Signal (audio) as 16-bit shorts.
  *
  */
-class VOCODER_API freedv_tx_ss : virtual public gr::sync_block
+class VOCODER_API freedv_tx_ss : virtual public gr::block
 {
 public:
     typedef std::shared_ptr<freedv_tx_ss> sptr;

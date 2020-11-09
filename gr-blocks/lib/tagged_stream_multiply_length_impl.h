@@ -28,14 +28,14 @@ public:
     tagged_stream_multiply_length_impl(size_t itemsize,
                                        const std::string& lengthtagname,
                                        double scalar);
-    ~tagged_stream_multiply_length_impl();
+    ~tagged_stream_multiply_length_impl() override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 
-    void set_scalar(double scalar) { d_scalar = scalar; }
+    void set_scalar(double scalar) override { d_scalar = scalar; }
 
     void set_scalar_pmt(pmt::pmt_t msg) { set_scalar(pmt::to_double(msg)); }
 };

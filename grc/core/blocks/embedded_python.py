@@ -2,7 +2,7 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
 
 from ast import literal_eval
@@ -150,7 +150,7 @@ class EPyBlock(Block):
                 param.default = str(value)
             except KeyError:  # need to make a new param
                 param = param_factory(
-                    parent=self,  id=id_, dtype='raw', value=value,
+                    parent=self, id=id_, dtype='raw', value=value,
                     name=id_.replace('_', ' ').title(),
                 )
                 setattr(param, '__epy_param__', True)
@@ -218,7 +218,7 @@ class EPyModule(Block):
         to set parameters of other blocks in your flowgraph.
     """)}
 
-    epy_flags=Block.flags
+    epy_flags = Block.flags
     epy_flags.set(epy_flags.SHOW_ID)
 
     parameters_data = build_params(

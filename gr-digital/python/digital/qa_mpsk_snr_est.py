@@ -13,21 +13,27 @@ import random
 
 from gnuradio import gr, gr_unittest, digital, blocks
 
+
 def random_bit():
     """Create random bits using random() rather than randint(). The latter
     changed for Python 3.2."""
     return random.random() > .5
+
+
 def get_cplx():
     "Return a BPSK symbol (complex)"
-    return complex(2*random_bit() - 1, 0)
+    return complex(2 * random_bit() - 1, 0)
+
+
 def get_n_cplx():
     "Return random, normal-distributed complex number"
-    return complex(random.random()-0.5, random.random()-0.5)
+    return complex(random.random() - 0.5, random.random() - 0.5)
+
 
 class test_mpsk_snr_est(gr_unittest.TestCase):
     def setUp(self):
         self.tb = gr.top_block()
-        random.seed(0) # make repeatable
+        random.seed(0)  # make repeatable
         N = 10000
         self._noise = [get_n_cplx() for _ in range(N)]
         self._bits = [get_cplx() for _ in range(N)]
@@ -38,13 +44,13 @@ class test_mpsk_snr_est(gr_unittest.TestCase):
     def mpsk_snr_est_setup(self, op):
         result = []
         for i in range(1, 6):
-            src_data = [b+(i*n) for b,n in zip(self._bits, self._noise)]
+            src_data = [b + (i * n) for b, n in zip(self._bits, self._noise)]
             src = blocks.vector_source_c(src_data)
             dst = blocks.null_sink(gr.sizeof_gr_complex)
             tb = gr.top_block()
             tb.connect(src, op)
             tb.connect(op, dst)
-            tb.run() # run the graph and wait for it to finish
+            tb.run()  # run the graph and wait for it to finish
 
             result.append(op.snr())
         return result
@@ -93,8 +99,8 @@ class test_mpsk_snr_est(gr_unittest.TestCase):
         expected_result = [8.01, 3.19, 1.97, 2.15, 2.65]
 
         actual_result = []
-        for i in range(1,6):
-            src_data = [b+(i*n) for b,n in zip(self._bits, self._noise)]
+        for i in range(1, 6):
+            src_data = [b + (i * n) for b, n in zip(self._bits, self._noise)]
 
             src = blocks.vector_source_c(src_data)
 
@@ -109,8 +115,9 @@ class test_mpsk_snr_est(gr_unittest.TestCase):
             actual_result.append(op.snr())
         self.assertFloatTuplesAlmostEqual(expected_result, actual_result, 2)
 
+
 if __name__ == '__main__':
     # Test various SNR estimators; we're not using a Gaussian
     # noise source, so these estimates have no real meaning;
     # just a sanity check.
-    gr_unittest.run(test_mpsk_snr_est, "test_mpsk_snr_est.xml")
+    gr_unittest.run(test_mpsk_snr_est)

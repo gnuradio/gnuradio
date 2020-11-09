@@ -29,14 +29,14 @@ public:
     iir_filter_ccz_impl(const std::vector<gr_complexd>& fftaps,
                         const std::vector<gr_complexd>& fbtaps,
                         bool oldstyle = true);
-    ~iir_filter_ccz_impl();
+    ~iir_filter_ccz_impl() override;
 
     void set_taps(const std::vector<gr_complexd>& fftaps,
-                  const std::vector<gr_complexd>& fbtaps);
+                  const std::vector<gr_complexd>& fbtaps) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

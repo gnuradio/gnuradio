@@ -58,7 +58,19 @@ if overloaded:
   overloaded_str = '({} ({}::*)({}))'.format(fcn['return_type'],cls_name,', '.join([f['dtype'] for f in fcn_args]))
 %>\
 % if fcn['name'] != filter_val:
-        ${modvar if isfree else ""}${".def_static" if has_static and not isfree else ".def"}("${fcn['name']}",${overloaded_str}&${cls_name}::${fcn['name']},
+%       if fcn['return_type'] == 'PyObject *': 
+<%
+func = '\n\
+            [](std::shared_ptr<'+cls_name+'> p) {\n\
+               return PyLong_AsLongLong(p->'+fcn_name+'());\n\
+        }'
+%>
+%       else: ## No PyObject pointer 
+<%
+func = overloaded_str+'&'+cls_name+'::'+fcn_name
+%>        
+%       endif                    
+        ${modvar if isfree else ""}${".def_static" if has_static and not isfree else ".def"}("${fcn['name']}",${func},       
 % for arg in fcn_args:
             py::arg("${arg['name']}")${" = " + arg['default'] if arg['default'] else ''},
 % endfor ## args 
@@ -200,6 +212,8 @@ values = en['values']
 % endfor 
         .export_values()
     ;
+
+    py::implicitly_convertible<int, ${namespace['name']}::${en['name']}>();
 % endfor
 % endif
 

@@ -30,9 +30,7 @@ namespace qtgui {
  * and plots them as eye patterns. For each signal, both
  * the signal's I and Q eye patterns are plotted. Eye patterns are
  * 2 symbol's time long. Symbol rate must be an integer multiple of
- * the sample rate to obtain the eye pattern. The \a set_title and
- * \a set_color functions can be used to change the label and color
- * for a given input number.
+ * the sample rate to obtain the eye pattern.
  *
  * Trigger occurs at the beginning of each stream used to plot the
  * eye pattern; whilst a real eye diagram would be triggered with
@@ -63,13 +61,11 @@ public:
      *
      * \param size number of points to plot at once
      * \param samp_rate sample rate (used to set x-axis labels)
-     * \param name title for the plot
      * \param nconnections number of signals connected to sink
      * \param parent a QWidget parent object, if any
      */
     static sptr make(int size,
                      double samp_rate,
-                     const std::string& name,
                      unsigned int nconnections = 1,
                      QWidget* parent = NULL);
 
@@ -86,7 +82,6 @@ public:
     virtual void set_y_label(const std::string& label, const std::string& unit = "") = 0;
     virtual void set_update_time(double t) = 0;
     virtual void set_samp_per_symbol(unsigned int sps) = 0;
-    virtual void set_title(const std::string& title) = 0;
     virtual void set_line_label(unsigned int which, const std::string& line) = 0;
     virtual void set_line_color(unsigned int which, const std::string& color) = 0;
     virtual void set_line_width(unsigned int which, int width) = 0;

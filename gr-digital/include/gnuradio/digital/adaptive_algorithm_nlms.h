@@ -63,7 +63,7 @@ public:
         }
     }
 
-    ~adaptive_algorithm_nlms() {}
+    ~adaptive_algorithm_nlms() override {}
 
     void initialize_taps(std::vector<gr_complex>& taps) override
     {

@@ -56,4 +56,7 @@ void bind_wavfile(py::module& m)
         .value("FORMAT_DOUBLE", ::gr::blocks::FORMAT_DOUBLE) // 7
         .value("FORMAT_VORBIS", ::gr::blocks::FORMAT_VORBIS) // 96
         .export_values();
+
+    py::implicitly_convertible<int, ::gr::blocks::wavfile_format_t>();
+    py::implicitly_convertible<int, ::gr::blocks::wavfile_subformat_t>();
 }

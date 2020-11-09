@@ -139,12 +139,12 @@ namespace gr {
     if blocktype == 'source':
         inputsig = '0, 0, 0'
     else:
-        inputsig = '1, 1/* min, max nr of inputs */, sizeof(input_type)'
+        inputsig = '1 /* min inputs */, 1 /* max inputs */, sizeof(input_type)'
     endif
     if blocktype == 'sink':
         outputsig = '0, 0, 0'
     else:
-        outputsig = '1, 1/* min, max nr of outputs */, sizeof(output_type)'
+        outputsig = '1 /* min outputs */, 1 /*max outputs */, sizeof(output_type)'
     endif
 %>
     /*

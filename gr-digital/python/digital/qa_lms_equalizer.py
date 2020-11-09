@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, digital, blocks
 
+
 class test_lms_dd_equalizer(gr_unittest.TestCase):
 
     def setUp(self):
@@ -30,14 +31,15 @@ class test_lms_dd_equalizer(gr_unittest.TestCase):
     def test_001_identity(self):
         # Constant modulus signal so no adjustments
         const = digital.constellation_qpsk()
-        src_data = const.points()*1000
+        src_data = const.points() * 1000
 
-        N = 100 # settling time
+        N = 100  # settling time
         expected_data = src_data[N:]
         result = self.transform(src_data, 0.1, const)[N:]
 
         N = -500
         self.assertComplexTuplesAlmostEqual(expected_data[N:], result[N:], 5)
 
+
 if __name__ == "__main__":
-    gr_unittest.run(test_lms_dd_equalizer, "test_lms_dd_equalizer.xml")
+    gr_unittest.run(test_lms_dd_equalizer)

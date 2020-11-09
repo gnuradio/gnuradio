@@ -15,20 +15,22 @@ from gnuradio import blocks, zeromq
 from gnuradio import eng_notation
 import threading
 
+
 class qa_zeromq_pub (gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-    def test_001 (self):
+    def test_001(self):
         vlen = 10
         self.rx_data = None
-        src_data = list(range(vlen))*100
+        src_data = list(range(vlen)) * 100
         src = blocks.vector_source_f(src_data, False, vlen)
-        zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_float, vlen, "tcp://127.0.0.1:0")
+        zeromq_pub_sink = zeromq.pub_sink(
+            gr.sizeof_float, vlen, "tcp://127.0.0.1:0")
         address = zeromq_pub_sink.last_endpoint()
         self.tb.connect(src, zeromq_pub_sink)
         self.probe_manager = zeromq.probe_manager()
@@ -42,7 +44,7 @@ class qa_zeromq_pub (gr_unittest.TestCase):
         self.assertFalse(zmq_pull_t.is_alive())
         self.assertFloatTuplesAlmostEqual(self.rx_data, src_data)
 
-    def recv_data (self, data):
+    def recv_data(self, data):
         self.rx_data = data
 
 

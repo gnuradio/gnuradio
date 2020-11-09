@@ -112,7 +112,7 @@ class Port(CorePort, Drawable):
         label_width, label_height = self.label_layout.get_size()
 
         self.width = 2 * Constants.PORT_LABEL_PADDING + label_width / Pango.SCALE
-        self.height = (2 * Constants.PORT_LABEL_PADDING + label_height*(3 if self.dtype == 'bus' else 1) ) / Pango.SCALE
+        self.height = (2 * Constants.PORT_LABEL_PADDING + label_height*(3 if self.dtype == 'bus' else 1)) / Pango.SCALE
         self._label_layout_offsets = [0, Constants.PORT_LABEL_PADDING]
 
         self.height += self.height % 2  # uneven height

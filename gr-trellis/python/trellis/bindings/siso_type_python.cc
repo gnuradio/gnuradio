@@ -29,10 +29,10 @@ namespace py = pybind11;
 
 void bind_siso_type(py::module& m)
 {
-
-
     py::enum_<::gr::trellis::siso_type_t>(m, "siso_type_t")
         .value("TRELLIS_MIN_SUM", ::gr::trellis::TRELLIS_MIN_SUM)         // 200
         .value("TRELLIS_SUM_PRODUCT", ::gr::trellis::TRELLIS_SUM_PRODUCT) // 201
         .export_values();
+
+    py::implicitly_convertible<int, ::gr::trellis::siso_type_t>();
 }

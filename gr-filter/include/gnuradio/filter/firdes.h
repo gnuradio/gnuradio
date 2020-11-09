@@ -186,6 +186,54 @@ public:
                 double attenuation_dB,   // out of band attenuation dB
                 win_type window = WIN_HAMMING,
                 double beta = 6.76); // used only with Kaiser
+    /*!
+     * \brief Use the "window method" to design a complex band-reject FIR
+     * filter.  The normalized width of the transition band is what sets the
+     * number of taps required.  Narrow --> more taps. The window type
+     * determines maximum attenuation and passband ripple.
+     *
+     * \param gain                overall gain of filter (typically 1.0)
+     * \param sampling_freq       sampling freq (Hz)
+     * \param low_cutoff_freq     center of transition band (Hz)
+     * \param high_cutoff_freq    center of transition band (Hz)
+     * \param transition_width    width of transition band (Hz)
+     * \param window              one of firdes::win_type
+     * \param beta                parameter for Kaiser window
+     */
+    static std::vector<gr_complex>
+    complex_band_reject(double gain,
+                        double sampling_freq,
+                        double low_cutoff_freq,
+                        double high_cutoff_freq,
+                        double transition_width, // Hz width of transition band
+                        win_type window = WIN_HAMMING,
+                        double beta = 6.76); // used only with Kaiser
+
+    /*!
+     * \brief Use "window method" to design a complex band-reject FIR filter.
+     * The normalized width of the transition band and the required stop band
+     * attenuation is what sets the number of taps required.  Narrow --> more
+     * taps More attenuation --> more taps. Window type determines maximum
+     * attenuation and passband ripple.
+     *
+     * \param gain                overall gain of filter (typically 1.0)
+     * \param sampling_freq       sampling freq (Hz)
+     * \param low_cutoff_freq     center of transition band (Hz)
+     * \param high_cutoff_freq    center of transition band (Hz)
+     * \param transition_width    width of transition band (Hz)
+     * \param attenuation_dB      out of band attenuation
+     * \param window              one of firdes::win_type
+     * \param beta                parameter for Kaiser window
+     */
+    static std::vector<gr_complex>
+    complex_band_reject_2(double gain,
+                          double sampling_freq,
+                          double low_cutoff_freq,  // Hz beginning transition band
+                          double high_cutoff_freq, // Hz beginning transition band
+                          double transition_width, // Hz width of transition band
+                          double attenuation_dB,   // out of band attenuation dB
+                          win_type window = WIN_HAMMING,
+                          double beta = 6.76); // used only with Kaiser
 
     /*!
      * \brief Use the "window method" to design a complex band-pass FIR

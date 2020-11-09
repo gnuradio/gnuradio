@@ -38,19 +38,19 @@ private:
 
 public:
     moving_average_impl(int length, T scale, int max_iter = 4096, unsigned int vlen = 1);
-    ~moving_average_impl();
+    ~moving_average_impl() override;
 
-    int length() const { return d_new_length; }
-    T scale() const { return d_new_scale; }
+    int length() const override { return d_new_length; }
+    T scale() const override { return d_new_scale; }
     unsigned int vlen() const { return d_vlen; }
 
-    void set_length_and_scale(int length, T scale);
-    void set_length(int length);
-    void set_scale(T scale);
+    void set_length_and_scale(int length, T scale) override;
+    void set_length(int length) override;
+    void set_scale(T scale) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

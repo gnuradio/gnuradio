@@ -30,19 +30,19 @@ private:
     float d_mu;
 
 protected:
-    gr_complex error(const gr_complex& out);
-    void update_tap(gr_complex& tap, const gr_complex& in);
+    gr_complex error(const gr_complex& out) override;
+    void update_tap(gr_complex& tap, const gr_complex& in) override;
 
 public:
     cma_equalizer_cc_impl(int num_taps, float modulus, float mu, int sps);
-    ~cma_equalizer_cc_impl();
+    ~cma_equalizer_cc_impl() override;
 
-    void set_taps(const std::vector<gr_complex>& taps);
-    std::vector<gr_complex> taps() const;
+    void set_taps(const std::vector<gr_complex>& taps) override;
+    std::vector<gr_complex> taps() const override;
 
-    float gain() const { return d_mu; }
+    float gain() const override { return d_mu; }
 
-    void set_gain(float mu)
+    void set_gain(float mu) override
     {
         if (mu < 0.0f || mu > 1.0f) {
             throw std::out_of_range(
@@ -51,9 +51,9 @@ public:
         d_mu = mu;
     }
 
-    float modulus() const { return d_modulus; }
+    float modulus() const override { return d_modulus; }
 
-    void set_modulus(float mod)
+    void set_modulus(float mod) override
     {
         if (mod < 0)
             throw std::out_of_range(
@@ -63,7 +63,7 @@ public:
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace digital */

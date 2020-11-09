@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, analog, blocks
 
+
 class test_ctcss_squelch(gr_unittest.TestCase):
 
     def setUp(self):
@@ -93,6 +94,6 @@ class test_ctcss_squelch(gr_unittest.TestCase):
         result_data = dst.data()
         self.assertFloatTuplesAlmostEqual(expected_result, result_data, 4)
 
-if __name__ == '__main__':
-    gr_unittest.run(test_ctcss_squelch, "test_ctcss_squelch.xml")
 
+if __name__ == '__main__':
+    gr_unittest.run(test_ctcss_squelch)

@@ -20,11 +20,11 @@ class ulaw_decode_bs_impl : public ulaw_decode_bs
 {
 public:
     ulaw_decode_bs_impl();
-    ~ulaw_decode_bs_impl();
+    ~ulaw_decode_bs_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace vocoder */

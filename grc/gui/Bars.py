@@ -53,39 +53,39 @@ TOOLBAR_LIST = [
 
 # The list of actions and categories for the menu bar.
 MENU_BAR_LIST = [
-  ('_File', [
-    [(Actions.FLOW_GRAPH_NEW, 'flow_graph_new_type'), Actions.FLOW_GRAPH_DUPLICATE,
-     Actions.FLOW_GRAPH_OPEN, (Actions.FLOW_GRAPH_OPEN_RECENT, 'flow_graph_recent')],
-    [Actions.FLOW_GRAPH_SAVE, Actions.FLOW_GRAPH_SAVE_AS, Actions.FLOW_GRAPH_SAVE_COPY],
-    [Actions.FLOW_GRAPH_SCREEN_CAPTURE],
-    [Actions.FLOW_GRAPH_CLOSE, Actions.APPLICATION_QUIT]
-  ]),
-  ('_Edit', [
-    [Actions.FLOW_GRAPH_UNDO, Actions.FLOW_GRAPH_REDO],
-    [Actions.BLOCK_CUT, Actions.BLOCK_COPY, Actions.BLOCK_PASTE, Actions.ELEMENT_DELETE, Actions.SELECT_ALL],
-    [Actions.BLOCK_ROTATE_CCW, Actions.BLOCK_ROTATE_CW, ('_Align', Actions.BLOCK_ALIGNMENTS)],
-    [Actions.BLOCK_ENABLE, Actions.BLOCK_DISABLE, Actions.BLOCK_BYPASS],
-    [Actions.BLOCK_PARAM_MODIFY]
-  ]),
-  ('_View', [
-    [Actions.TOGGLE_BLOCKS_WINDOW],
-    [Actions.TOGGLE_CONSOLE_WINDOW, Actions.TOGGLE_SCROLL_LOCK, Actions.SAVE_CONSOLE, Actions.CLEAR_CONSOLE],
-    [Actions.TOGGLE_HIDE_VARIABLES, Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR, Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR],
-    [Actions.TOGGLE_HIDE_DISABLED_BLOCKS, Actions.TOGGLE_AUTO_HIDE_PORT_LABELS, Actions.TOGGLE_SNAP_TO_GRID, Actions.TOGGLE_SHOW_BLOCK_COMMENTS, Actions.TOGGLE_SHOW_BLOCK_IDS,],
-    [Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB],
-    [Actions.ERRORS_WINDOW_DISPLAY, Actions.FIND_BLOCKS],
-  ]),
-  ('_Run', [
-    Actions.FLOW_GRAPH_GEN, Actions.FLOW_GRAPH_EXEC, Actions.FLOW_GRAPH_KILL
-  ]),
-  ('_Tools', [
-    [Actions.TOOLS_RUN_FDESIGN, Actions.FLOW_GRAPH_OPEN_QSS_THEME],
-    [Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY]
-  ]),
-  ('_Help', [
-      [Actions.HELP_WINDOW_DISPLAY, Actions.TYPES_WINDOW_DISPLAY, Actions.KEYBOARD_SHORTCUTS_WINDOW_DISPLAY, Actions.XML_PARSER_ERRORS_DISPLAY], 
-      [Actions.GET_INVOLVED_WINDOW_DISPLAY, Actions.ABOUT_WINDOW_DISPLAY]
-  ])]
+    ('_File', [
+        [(Actions.FLOW_GRAPH_NEW, 'flow_graph_new_type'), Actions.FLOW_GRAPH_DUPLICATE,
+         Actions.FLOW_GRAPH_OPEN, (Actions.FLOW_GRAPH_OPEN_RECENT, 'flow_graph_recent')],
+        [Actions.FLOW_GRAPH_SAVE, Actions.FLOW_GRAPH_SAVE_AS, Actions.FLOW_GRAPH_SAVE_COPY],
+        [Actions.FLOW_GRAPH_SCREEN_CAPTURE],
+        [Actions.FLOW_GRAPH_CLOSE, Actions.APPLICATION_QUIT]
+    ]),
+    ('_Edit', [
+        [Actions.FLOW_GRAPH_UNDO, Actions.FLOW_GRAPH_REDO],
+        [Actions.BLOCK_CUT, Actions.BLOCK_COPY, Actions.BLOCK_PASTE, Actions.ELEMENT_DELETE, Actions.SELECT_ALL],
+        [Actions.BLOCK_ROTATE_CCW, Actions.BLOCK_ROTATE_CW, ('_Align', Actions.BLOCK_ALIGNMENTS)],
+        [Actions.BLOCK_ENABLE, Actions.BLOCK_DISABLE, Actions.BLOCK_BYPASS],
+        [Actions.BLOCK_PARAM_MODIFY]
+    ]),
+    ('_View', [
+        [Actions.TOGGLE_BLOCKS_WINDOW],
+        [Actions.TOGGLE_CONSOLE_WINDOW, Actions.TOGGLE_SCROLL_LOCK, Actions.SAVE_CONSOLE, Actions.CLEAR_CONSOLE],
+        [Actions.TOGGLE_HIDE_VARIABLES, Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR, Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR],
+        [Actions.TOGGLE_HIDE_DISABLED_BLOCKS, Actions.TOGGLE_AUTO_HIDE_PORT_LABELS, Actions.TOGGLE_SNAP_TO_GRID, Actions.TOGGLE_SHOW_BLOCK_COMMENTS, Actions.TOGGLE_SHOW_BLOCK_IDS,],
+        [Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB],
+        [Actions.ERRORS_WINDOW_DISPLAY, Actions.FIND_BLOCKS],
+    ]),
+    ('_Run', [
+        Actions.FLOW_GRAPH_GEN, Actions.FLOW_GRAPH_EXEC, Actions.FLOW_GRAPH_KILL
+    ]),
+    ('_Tools', [
+        [Actions.TOOLS_RUN_FDESIGN, Actions.FLOW_GRAPH_OPEN_QSS_THEME],
+        [Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY]
+    ]),
+    ('_Help', [
+        [Actions.HELP_WINDOW_DISPLAY, Actions.TYPES_WINDOW_DISPLAY, Actions.KEYBOARD_SHORTCUTS_WINDOW_DISPLAY, Actions.XML_PARSER_ERRORS_DISPLAY],
+        [Actions.GET_INVOLVED_WINDOW_DISPLAY, Actions.ABOUT_WINDOW_DISPLAY]
+    ])]
 
 
 # The list of actions for the context menu.
@@ -94,8 +94,8 @@ CONTEXT_MENU_LIST = [
     [Actions.BLOCK_ROTATE_CCW, Actions.BLOCK_ROTATE_CW, Actions.BLOCK_ENABLE, Actions.BLOCK_DISABLE, Actions.BLOCK_BYPASS],
     [("_More", [
         [Actions.BLOCK_CREATE_HIER, Actions.OPEN_HIER],
-        [Actions.BUSSIFY_SOURCES, Actions.BUSSIFY_SINKS]]
-    )],
+        [Actions.BUSSIFY_SOURCES, Actions.BUSSIFY_SINKS]
+    ])],
     [Actions.BLOCK_PARAM_MODIFY],
 ]
 

@@ -38,7 +38,7 @@ public:
         return adaptive_algorithm_lms::sptr(new adaptive_algorithm_lms(cons, step_size));
     }
 
-    ~adaptive_algorithm_lms() {}
+    ~adaptive_algorithm_lms() override {}
 
     void update_taps(gr_complex* taps,
                      const gr_complex* in,

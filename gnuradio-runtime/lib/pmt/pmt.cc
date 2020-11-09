@@ -18,6 +18,7 @@
 #include <pmt/pmt_pool.h>
 #include <stdio.h>
 #include <string.h>
+#include <functional>
 #include <vector>
 
 namespace pmt {
@@ -137,7 +138,7 @@ bool to_bool(pmt_t val)
 
 static const unsigned int get_symbol_hash_table_size()
 {
-    static const unsigned int SYMBOL_HASH_TABLE_SIZE = 701;
+    static const unsigned int SYMBOL_HASH_TABLE_SIZE = 8192;
     return SYMBOL_HASH_TABLE_SIZE;
 }
 
@@ -150,27 +151,11 @@ static std::vector<pmt_t>* get_symbol_hash_table()
 pmt_symbol::pmt_symbol(const std::string& name) : d_name(name) {}
 
 
-static unsigned int hash_string(const std::string& s)
-{
-    unsigned int h = 0;
-    unsigned int g = 0;
-
-    for (std::string::const_iterator p = s.begin(); p != s.end(); ++p) {
-        h = (h << 4) + (*p & 0xff);
-        g = h & 0xf0000000;
-        if (g) {
-            h = h ^ (g >> 24);
-            h = h ^ g;
-        }
-    }
-    return h;
-}
-
 bool is_symbol(const pmt_t& obj) { return obj->is_symbol(); }
 
 pmt_t string_to_symbol(const std::string& name)
 {
-    unsigned hash = hash_string(name) % get_symbol_hash_table_size();
+    unsigned hash = std::hash<std::string>()(name) % get_symbol_hash_table_size();
 
     // Does a symbol with this name already exist?
     for (pmt_t sym = (*get_symbol_hash_table())[hash]; sym; sym = _symbol(sym)->next()) {

@@ -36,10 +36,10 @@ private:
     ldpc_decoder(std::string alist_file, float sigma, int max_iterations);
 
     // plug into the generic fec api
-    int get_history();
-    float get_shift();
+    int get_history() override;
+    float get_shift() override;
     const char* get_conversion();
-    void generic_work(void* inBuffer, void* outbuffer);
+    void generic_work(void* inBuffer, void* outbuffer) override;
     float d_iterations;
     int d_input_size, d_output_size;
     double d_rate;
@@ -49,19 +49,19 @@ private:
     awgn_bp d_spa;
 
 public:
-    ~ldpc_decoder();
+    ~ldpc_decoder() override;
 
-    double rate();
-    bool set_frame_size(unsigned int frame_size);
+    double rate() override;
+    bool set_frame_size(unsigned int frame_size) override;
 
     static generic_decoder::sptr
     make(std::string alist_file, float sigma = 0.5, int max_iterations = 50);
 
-    int get_output_size();
-    int get_input_size();
-    int get_input_item_size();
-    int get_output_item_size();
-    float get_iterations() { return d_iterations; }
+    int get_output_size() override;
+    int get_input_size() override;
+    int get_input_item_size() override;
+    int get_output_item_size() override;
+    float get_iterations() override { return d_iterations; }
 };
 
 } // namespace fec

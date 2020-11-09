@@ -45,45 +45,21 @@ dvbt_demap_impl::dvbt_demap_impl(int nsize,
              gr::dtv::GI_1_32,
              transmission),
       d_nsize(nsize),
-      d_constellation_size(0),
-      d_step(0),
-      d_alpha(0),
-      d_gain(0.0)
+      d_constellation_size(config.d_constellation_size),
+      d_transmission_mode(config.d_transmission_mode),
+      d_step(config.d_step),
+      d_alpha(config.d_alpha),
+      d_gain(gain * config.d_norm),
+      d_constellation_points(d_constellation_size),
+      d_sq_dist(d_constellation_size)
 {
-    // Get parameters from config object
-    d_constellation_size = config.d_constellation_size;
-    d_transmission_mode = config.d_transmission_mode;
-    d_step = config.d_step;
-    d_alpha = config.d_alpha;
-    d_gain = gain * config.d_norm;
-
-    d_constellation_points = (gr_complex*)volk_malloc(
-        sizeof(gr_complex) * d_constellation_size, volk_get_alignment());
-    if (d_constellation_points == NULL) {
-        GR_LOG_FATAL(d_logger,
-                     "DVB-T Demap, cannot allocate memory for d_constellation_points.");
-        throw std::bad_alloc();
-    }
-
-    d_sq_dist =
-        (float*)volk_malloc(sizeof(float) * d_constellation_size, volk_get_alignment());
-    if (d_sq_dist == NULL) {
-        GR_LOG_FATAL(d_logger, "DVB-T Demap, cannot allocate memory for d_sq_dist.");
-        volk_free(d_constellation_points);
-        throw std::bad_alloc();
-    }
-
     make_constellation_points(d_constellation_size, d_step, d_alpha);
 }
 
 /*
  * Our virtual destructor.
  */
-dvbt_demap_impl::~dvbt_demap_impl()
-{
-    volk_free(d_sq_dist);
-    volk_free(d_constellation_points);
-}
+dvbt_demap_impl::~dvbt_demap_impl() {}
 
 void dvbt_demap_impl::make_constellation_points(int size, int step, int alpha)
 {

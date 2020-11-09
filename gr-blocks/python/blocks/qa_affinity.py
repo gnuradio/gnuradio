@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, blocks
 
+
 class test_affinity(gr_unittest.TestCase):
 
     def setUp(self):
@@ -26,13 +27,14 @@ class test_affinity(gr_unittest.TestCase):
         src = blocks.vector_source_f(src_data)
         snk = blocks.vector_sink_f()
 
-        src.set_processor_affinity([0,])
+        src.set_processor_affinity([0, ])
         self.tb.connect(src, snk)
         self.tb.run()
 
         a = src.processor_affinity()
 
-        self.assertEqual([0,], a)
+        self.assertEqual([0, ], a)
+
 
 if __name__ == '__main__':
-    gr_unittest.run(test_affinity, "test_affinity.xml")
+    gr_unittest.run(test_affinity)

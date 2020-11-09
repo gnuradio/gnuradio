@@ -18,20 +18,6 @@
 #include <assert.h>
 #include <stdexcept>
 
-extern "C" {
-void put_next_rx_char(void* callback_state, char c)
-{
-    struct freedv_rx_callback_state* pstate;
-
-    pstate = (struct freedv_rx_callback_state*)callback_state;
-    if (pstate->ftxt != NULL) {
-        // fprintf(pstate->ftxt, "%c\n", c);
-    }
-    return;
-}
-}
-
-
 namespace gr {
 namespace vocoder {
 
@@ -48,6 +34,7 @@ freedv_rx_ss_impl::freedv_rx_ss_impl(int mode,
     : gr::block("vocoder_freedv_rx_ss",
                 io_signature::make(1, 1, sizeof(short)),
                 io_signature::make(1, 1, sizeof(short))),
+      d_port(pmt::mp("text")),
       d_mode(mode),
       d_squelch_thresh(squelch_thresh),
       d_interleave_frames(interleave_frames)
@@ -67,7 +54,8 @@ freedv_rx_ss_impl::freedv_rx_ss_impl(int mode,
 #endif
     freedv_set_snr_squelch_thresh(d_freedv, d_squelch_thresh);
     freedv_set_squelch_en(d_freedv, 0);
-    freedv_set_callback_txt(d_freedv, put_next_rx_char, NULL, (void*)&d_cb_state);
+    freedv_set_callback_txt(d_freedv, put_next_rx_char, NULL, this);
+    message_port_register_out(d_port);
     d_speech_samples = freedv_get_n_speech_samples(d_freedv);
     d_max_modem_samples = freedv_get_n_max_modem_samples(d_freedv);
     d_nin = freedv_nin(d_freedv);
@@ -146,6 +134,18 @@ void freedv_rx_ss_impl::set_squelch_en(bool squelch_enabled)
 }
 
 float freedv_rx_ss_impl::squelch_thresh() { return (d_squelch_thresh); }
+
+void freedv_rx_ss_impl::put_next_rx_char(void* callback_state, char c)
+{
+    freedv_rx_ss_impl* instance = static_cast<freedv_rx_ss_impl*>(callback_state);
+
+    if (c == '\r') {
+        instance->message_port_pub(instance->d_port, pmt::intern(instance->d_rx_str));
+        instance->d_rx_str = "";
+    } else {
+        instance->d_rx_str += c;
+    }
+}
 
 } /* namespace vocoder */
 } /* namespace gr */

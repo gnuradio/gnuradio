@@ -2,7 +2,7 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
 
 import numbers
@@ -70,7 +70,7 @@ class Param(CoreParam):
         tooltip_lines = ['Key: ' + self.key, 'Type: ' + self.dtype]
         if self.is_valid():
             value = self.get_evaluated()
-            if hasattr(value,"__len__"):
+            if hasattr(value, "__len__"):
                 tooltip_lines.append('Length: {}'.format(len(value)))
             value = str(value)
             if len(value) > 100:
@@ -152,5 +152,4 @@ class Param(CoreParam):
         """
         return '<span {foreground} font_desc="{font}"><b>{label}:</b> {value}</span>'.format(
             foreground='foreground="red"' if not self.is_valid() else '', font=Constants.PARAM_FONT,
-            label=Utils.encode(self.name), value=Utils.encode(self.pretty_print().replace('\n', ' '))
-        )
+            label=Utils.encode(self.name), value=Utils.encode(self.pretty_print().replace('\n', ' ')))

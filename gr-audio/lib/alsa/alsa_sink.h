@@ -63,13 +63,13 @@ class alsa_sink : public sink
 
 public:
     alsa_sink(int sampling_rate, const std::string device_name, bool ok_to_block);
-    ~alsa_sink();
+    ~alsa_sink() override;
 
-    bool check_topology(int ninputs, int noutputs);
+    bool check_topology(int ninputs, int noutputs) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
 protected:
     bool write_buffer(const void* buffer, unsigned nframes, unsigned sizeof_frame);

@@ -27,16 +27,16 @@ private:
 
 public:
     tag_gate_impl(size_t item_size, bool propagate_tags);
-    ~tag_gate_impl();
+    ~tag_gate_impl() override;
 
-    void set_propagation(bool propagate_tags);
+    void set_propagation(bool propagate_tags) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
-    void set_single_key(const std::string& single_key);
-    std::string single_key() const;
+    void set_single_key(const std::string& single_key) override;
+    std::string single_key() const override;
 };
 
 } // namespace blocks

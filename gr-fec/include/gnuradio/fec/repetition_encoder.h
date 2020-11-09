@@ -50,12 +50,12 @@ public:
      * value and this function will return false. Otherwise, it
      * returns true.
      */
-    virtual bool set_frame_size(unsigned int frame_size) = 0;
+    bool set_frame_size(unsigned int frame_size) override = 0;
 
     /*!
      * Returns the coding rate of this encoder.
      */
-    virtual double rate() = 0;
+    double rate() override = 0;
 };
 
 } /* namespace code */

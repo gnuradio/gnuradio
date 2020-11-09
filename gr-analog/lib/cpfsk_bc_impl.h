@@ -24,16 +24,16 @@ private:
 
 public:
     cpfsk_bc_impl(float k, float ampl, int samples_per_sym);
-    ~cpfsk_bc_impl();
+    ~cpfsk_bc_impl() override;
 
-    void set_amplitude(float amplitude) { d_ampl = amplitude; }
-    float amplitude() { return d_ampl; }
-    float freq() { return d_freq; }
-    float phase() { return d_phase; }
+    void set_amplitude(float amplitude) override { d_ampl = amplitude; }
+    float amplitude() override { return d_ampl; }
+    float freq() override { return d_freq; }
+    float phase() override { return d_phase; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace analog */

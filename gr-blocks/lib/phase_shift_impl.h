@@ -25,16 +25,16 @@ private:
 
 public:
     phase_shift_impl(float shift, bool is_radians);
-    ~phase_shift_impl();
+    ~phase_shift_impl() override;
 
-    virtual float get_shift() const { return d_shift; }
-    virtual void set_shift(float new_value);
+    float get_shift() const override { return d_shift; }
+    void set_shift(float new_value) override;
 
     void handle_msg_in(pmt::pmt_t msg);
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace blocks

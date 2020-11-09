@@ -25,15 +25,15 @@ private:
 
 public:
     mute_impl(bool mute);
-    ~mute_impl();
+    ~mute_impl() override;
 
-    bool mute() const { return d_mute; }
-    void set_mute(bool mute) { d_mute = mute; }
+    bool mute() const override { return d_mute; }
+    void set_mute(bool mute) override { d_mute = mute; }
     void set_mute_pmt(pmt::pmt_t msg) { set_mute(pmt::to_bool(msg)); }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

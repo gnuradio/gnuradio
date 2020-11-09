@@ -35,7 +35,6 @@ find_dependency(Volk)
 set(ENABLE_PYTHON @ENABLE_PYTHON@ CACHE BOOL "Enable Python & pybind11 Bindings")
 if(${ENABLE_PYTHON})
   set(PYTHON_EXECUTABLE @PYTHON_EXECUTABLE@)
-  set(GR_PYTHON_DIR @GR_PYTHON_DIR@)
   include(GrPython)
 endif()
 

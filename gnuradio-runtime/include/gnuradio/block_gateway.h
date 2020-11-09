@@ -112,8 +112,8 @@ public:
                                         std::string& handler_name) = 0;
 
 protected:
-    virtual bool has_msg_handler(pmt::pmt_t which_port) = 0;
-    virtual void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg) = 0;
+    bool has_msg_handler(pmt::pmt_t which_port) override = 0;
+    void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg) override = 0;
 };
 
 } /* namespace gr */

@@ -49,7 +49,7 @@ public:
     typedef std::shared_ptr<header_format_crc> sptr;
     header_format_crc(const std::string& len_key_name = "packet_len",
                       const std::string& num_key_name = "packet_num");
-    virtual ~header_format_crc();
+    ~header_format_crc() override;
 
     void set_header_num(unsigned header_num) { d_header_number = header_num; };
 
@@ -64,20 +64,20 @@ public:
      *  - Bits 12-23: The header number (counts up everytime this function is called)
      *  - Bit 24-31: 8-Bit CRC
      */
-    virtual bool format(int nbytes_in,
-                        const unsigned char* input,
-                        pmt::pmt_t& output,
-                        pmt::pmt_t& info);
+    bool format(int nbytes_in,
+                const unsigned char* input,
+                pmt::pmt_t& output,
+                pmt::pmt_t& info) override;
 
-    virtual bool parse(int nbits_in,
-                       const unsigned char* input,
-                       std::vector<pmt::pmt_t>& info,
-                       int& nbits_processed);
+    bool parse(int nbits_in,
+               const unsigned char* input,
+               std::vector<pmt::pmt_t>& info,
+               int& nbits_processed) override;
 
     /*!
      * Returns the length of the formatted header in bits.
      */
-    virtual size_t header_nbits() const;
+    size_t header_nbits() const override;
 
     /*!
      * Factory to create an async packet header formatter; returns
@@ -93,12 +93,12 @@ protected:
     boost::crc_optimal<8, 0x07, 0xFF, 0x00, false, false> d_crc_impl;
 
     //! Verify that the header is valid
-    virtual bool header_ok();
+    bool header_ok() override;
 
     /*! Get info from the header; return payload length and package
      *  rest of data in d_info dictionary.
      */
-    virtual int header_payload();
+    int header_payload() override;
 };
 
 } // namespace digital

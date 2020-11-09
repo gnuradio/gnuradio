@@ -31,13 +31,13 @@ private:
 
 public:
     atsc_rs_decoder_impl();
-    ~atsc_rs_decoder_impl();
+    ~atsc_rs_decoder_impl() override;
 
-    void setup_rpc();
+    void setup_rpc() override;
 
-    int num_errors_corrected() const;
-    int num_bad_packets() const;
-    int num_packets() const;
+    int num_errors_corrected() const override;
+    int num_bad_packets() const override;
+    int num_packets() const override;
 
     /*!
      * Decode RS encoded packet.
@@ -47,7 +47,7 @@ public:
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace dtv */

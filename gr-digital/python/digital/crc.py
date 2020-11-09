@@ -7,13 +7,12 @@
 #
 #
 
-from gnuradio import gru
 from . import digital_python as digital
 import struct
 
 def gen_and_append_crc32(s):
     crc = digital.crc32(s)
-    return s + struct.pack(">I", gru.hexint(crc) & 0xFFFFFFFF)
+    return s + struct.pack(">I", crc)
 
 def check_crc32(s):
     if len(s) < 4:

@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# Copyright 2007-2020 Free Software Foundation, Inc.
 #
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
 # Title: FM stereo demod block
-# corrected output ports
-
 
 import math
 
@@ -27,11 +26,15 @@ class wfm_rcv_pll(gr.hier_block2):
 
         Args:
             demod_rate: input sample rate of complex baseband input. (float)
-            audio_decimation: how much to decimate demod_rate to get to audio. (integer)
+            audio_decimation: how much to decimate demod_rate to get to audio. (integer) FIXME: Not actually implemented!
         """
         gr.hier_block2.__init__(self, "wfm_rcv_pll",
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
                                 gr.io_signature(2, 2, gr.sizeof_float))      # Output signature
+
+        if audio_decimation != int(audio_decimation):
+            raise ValueError("audio_decimation needs to be an integer")
+        audio_decimation = int(audio_decimation)
 
         ##################################################
         # Variables

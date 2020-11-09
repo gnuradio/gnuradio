@@ -26,7 +26,7 @@ public:
               int timeout,
               bool pass_tags,
               const std::string& key = "");
-    virtual ~base_impl();
+    ~base_impl() override;
 
 protected:
     std::string last_endpoint();

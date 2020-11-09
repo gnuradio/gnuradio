@@ -64,46 +64,46 @@ public:
                             float max_rate_deviation = 1.5,
                             int osps = 1);
 
-    void setup_rpc();
+    void setup_rpc() override;
 
-    void update_gains();
+    void update_gains() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
-    void update_taps(const std::vector<float>& taps);
+    void update_taps(const std::vector<float>& taps) override;
 
-    std::vector<std::vector<float>> taps() const;
-    std::vector<std::vector<float>> diff_taps() const;
-    std::vector<float> channel_taps(int channel) const;
-    std::vector<float> diff_channel_taps(int channel) const;
-    std::string taps_as_string() const;
-    std::string diff_taps_as_string() const;
+    std::vector<std::vector<float>> taps() const override;
+    std::vector<std::vector<float>> diff_taps() const override;
+    std::vector<float> channel_taps(int channel) const override;
+    std::vector<float> diff_channel_taps(int channel) const override;
+    std::string taps_as_string() const override;
+    std::string diff_taps_as_string() const override;
 
-    void set_loop_bandwidth(float bw);
-    void set_damping_factor(float df);
-    void set_alpha(float alpha);
-    void set_beta(float beta);
-    void set_max_rate_deviation(float m) { d_max_dev = m; }
+    void set_loop_bandwidth(float bw) override;
+    void set_damping_factor(float df) override;
+    void set_alpha(float alpha) override;
+    void set_beta(float beta) override;
+    void set_max_rate_deviation(float m) override { d_max_dev = m; }
 
-    float loop_bandwidth() const;
-    float damping_factor() const;
-    float alpha() const;
-    float beta() const;
-    float clock_rate() const;
+    float loop_bandwidth() const override;
+    float damping_factor() const override;
+    float alpha() const override;
+    float beta() const override;
+    float clock_rate() const override;
 
-    float error() const;
-    float rate() const;
-    float phase() const;
+    float error() const override;
+    float rate() const override;
+    float phase() const override;
 
     /*******************************************************************
      *******************************************************************/
 
-    bool check_topology(int ninputs, int noutputs);
+    bool check_topology(int ninputs, int noutputs) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } /* namespace digital */

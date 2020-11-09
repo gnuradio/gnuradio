@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, blocks
 
+
 class test_mute(gr_unittest.TestCase):
 
     def setUp(self):
@@ -62,16 +63,17 @@ class test_mute(gr_unittest.TestCase):
         self.help_ii((src_data,), expected_result, op)
 
     def test_unmute_cc(self):
-        src_data = [1+5j, 2+5j, 3+5j, 4+5j, 5+5j]
-        expected_result = [1+5j, 2+5j, 3+5j, 4+5j, 5+5j]
+        src_data = [1 + 5j, 2 + 5j, 3 + 5j, 4 + 5j, 5 + 5j]
+        expected_result = [1 + 5j, 2 + 5j, 3 + 5j, 4 + 5j, 5 + 5j]
         op = blocks.mute_cc(False)
         self.help_cc((src_data,), expected_result, op)
 
     def test_unmute_cc(self):
-        src_data = [1+5j, 2+5j, 3+5j, 4+5j, 5+5j]
-        expected_result =[0+0j, 0+0j, 0+0j, 0+0j, 0+0j]
+        src_data = [1 + 5j, 2 + 5j, 3 + 5j, 4 + 5j, 5 + 5j]
+        expected_result = [0 + 0j, 0 + 0j, 0 + 0j, 0 + 0j, 0 + 0j]
         op = blocks.mute_cc(True)
         self.help_cc((src_data,), expected_result, op)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_mute, "test_mute.xml")
+    gr_unittest.run(test_mute)

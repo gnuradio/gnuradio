@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, blocks
 
+
 class test_block_behavior(gr_unittest.TestCase):
 
     def setUp(self):
@@ -30,7 +31,7 @@ class test_block_behavior(gr_unittest.TestCase):
         '''
 
         src = blocks.null_source(gr.sizeof_float)
-        op  = blocks.head(gr.sizeof_float, 100)
+        op = blocks.head(gr.sizeof_float, 100)
         snk = blocks.null_sink(gr.sizeof_float)
 
         maxn_pre = op.max_noutput_items()
@@ -49,7 +50,7 @@ class test_block_behavior(gr_unittest.TestCase):
         '''
 
         src = blocks.null_source(gr.sizeof_float)
-        op  = blocks.head(gr.sizeof_float, 100)
+        op = blocks.head(gr.sizeof_float, 100)
         snk = blocks.null_sink(gr.sizeof_float)
 
         op.set_max_noutput_items(1024)
@@ -64,5 +65,6 @@ class test_block_behavior(gr_unittest.TestCase):
         self.assertEqual(maxn_pre, 1024)
         self.assertEqual(maxn_post, 1024)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_block_behavior, "test_block_behavior.xml")
+    gr_unittest.run(test_block_behavior)

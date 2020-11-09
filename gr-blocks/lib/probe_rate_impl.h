@@ -23,23 +23,23 @@ private:
     const double d_min_update_time;
     boost::posix_time::ptime d_last_update;
     uint64_t d_lastthru;
-    void setup_rpc();
+    void setup_rpc() override;
 
     const pmt::pmt_t d_port;
     const pmt::pmt_t d_dict_avg, d_dict_now;
 
 public:
     probe_rate_impl(size_t itemsize, double update_rate_ms, double alpha = 0.0001);
-    ~probe_rate_impl();
-    void set_alpha(double alpha);
-    double rate();
+    ~probe_rate_impl() override;
+    void set_alpha(double alpha) override;
+    double rate() override;
     double timesincelast();
-    bool start();
-    bool stop();
+    bool start() override;
+    bool stop() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
 }; // end class
 

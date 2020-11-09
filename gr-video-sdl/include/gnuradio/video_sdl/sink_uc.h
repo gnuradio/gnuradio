@@ -22,7 +22,7 @@ namespace video_sdl {
  *
  * input signature is one, two or three streams of uchar.
  * One stream: stream is grey (Y)
- * two streems: first is grey (Y), second is alternating U and V
+ * two streams: first is grey (Y), second is alternating U and V
  * Three streams: first is grey (Y), second is U, third is V
  * Input samples must be in the range [0,255].
  */

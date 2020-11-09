@@ -23,16 +23,16 @@ private:
 
 public:
     add_const_bb_impl(unsigned char k);
-    ~add_const_bb_impl();
+    ~add_const_bb_impl() override;
 
-    void setup_rpc();
+    void setup_rpc() override;
 
-    unsigned char k() const { return d_k; }
-    void set_k(unsigned char k) { d_k = k; }
+    unsigned char k() const override { return d_k; }
+    void set_k(unsigned char k) override { d_k = k; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

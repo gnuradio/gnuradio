@@ -22,30 +22,30 @@ private:
 
     static const int d_lookup_H[126][6];
 
-    int d_nsize;
+    const int d_nsize;
     dvbt_hierarchy_t d_hierarchy;
 
     // constellation
-    int d_v;
+    const int d_v;
     // Bit interleaver block size
     static const int d_bsize;
 
     // Table to keep interleaved indices
-    unsigned char* d_perm;
+    std::vector<unsigned char> d_perm;
 
 public:
     dvbt_bit_inner_interleaver_impl(int nsize,
                                     dvb_constellation_t constellation,
                                     dvbt_hierarchy_t hierarchy,
                                     dvbt_transmission_mode_t transmission);
-    ~dvbt_bit_inner_interleaver_impl();
+    ~dvbt_bit_inner_interleaver_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } // namespace dtv

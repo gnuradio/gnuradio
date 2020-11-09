@@ -29,16 +29,16 @@ public:
     /*******************************************************************
      * Overloads for various scheduler-called functions
      ******************************************************************/
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 
-    bool start(void);
-    bool stop(void);
-    void set_msg_handler_pybind(pmt::pmt_t which_port, std::string& handler_name)
+    bool start(void) override;
+    bool stop(void) override;
+    void set_msg_handler_pybind(pmt::pmt_t which_port, std::string& handler_name) override
     {
         if (msg_queue.find(which_port) == msg_queue.end()) {
             throw std::runtime_error(
@@ -52,7 +52,7 @@ protected:
     typedef std::map<pmt::pmt_t, std::string, pmt::comparator> msg_handlers_pybind_t;
     msg_handlers_pybind_t d_msg_handlers_pybind;
 
-    bool has_msg_handler(pmt::pmt_t which_port)
+    bool has_msg_handler(pmt::pmt_t which_port) override
     {
         if (d_msg_handlers_pybind.find(which_port) != d_msg_handlers_pybind.end()) {
             return true;
@@ -61,7 +61,7 @@ protected:
         }
     }
 
-    void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         // Is there a handler?
         if (d_msg_handlers_pybind.find(which_port) != d_msg_handlers_pybind.end()) {

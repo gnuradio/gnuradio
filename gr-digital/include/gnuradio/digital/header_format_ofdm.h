@@ -55,7 +55,7 @@ public:
                        int bits_per_header_sym = 1,
                        int bits_per_payload_sym = 1,
                        bool scramble_header = false);
-    virtual ~header_format_ofdm();
+    ~header_format_ofdm() override;
 
     /*!
      * \brief Encodes the header information in the given tags into
@@ -68,20 +68,20 @@ public:
      *  - Bits 12-23: The header number (counts up everytime this function is called)
      *  - Bit 24-31: 8-Bit CRC
      */
-    virtual bool format(int nbytes_in,
-                        const unsigned char* input,
-                        pmt::pmt_t& output,
-                        pmt::pmt_t& info);
+    bool format(int nbytes_in,
+                const unsigned char* input,
+                pmt::pmt_t& output,
+                pmt::pmt_t& info) override;
 
-    virtual bool parse(int nbits_in,
-                       const unsigned char* input,
-                       std::vector<pmt::pmt_t>& info,
-                       int& nbits_processed);
+    bool parse(int nbits_in,
+               const unsigned char* input,
+               std::vector<pmt::pmt_t>& info,
+               int& nbits_processed) override;
 
     /*!
      * Returns the length of the formatted header in bits.
      */
-    virtual size_t header_nbits() const;
+    size_t header_nbits() const override;
 
     /*!
      * Factory to create an async packet header formatter; returns
@@ -109,7 +109,7 @@ protected:
     /*! Get info from the header; return payload length and package
      *  rest of data in d_info dictionary.
      */
-    virtual int header_payload();
+    int header_payload() override;
 };
 
 } // namespace digital

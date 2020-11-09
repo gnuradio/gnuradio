@@ -36,4 +36,6 @@ void bind_interpolating_resampler_type(py::module& m)
         .value("IR_PFB_NO_MF", gr::digital::IR_PFB_NO_MF) // 1
         .value("IR_PFB_MF", gr::digital::IR_PFB_MF)       // 2
         .export_values();
+
+    py::implicitly_convertible<int, gr::digital::ir_type>();
 }

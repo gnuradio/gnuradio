@@ -14,16 +14,17 @@ import random
 import pmt
 import time
 
+
 class qa_socket_pdu (gr_unittest.TestCase):
 
-    def setUp (self):
+    def setUp(self):
         random.seed(0)
-        self.tb = gr.top_block ()
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-    def test_001 (self):
+    def test_001(self):
         # Test that blocks can be created and destroyed without hanging
         port = str(random.Random().randint(0, 30000) + 10000)
         self.pdu_send = blocks.socket_pdu("UDP_CLIENT", "localhost", port)
@@ -31,7 +32,7 @@ class qa_socket_pdu (gr_unittest.TestCase):
         self.pdu_send = None
         self.pdu_recv = None
 
-    def test_002 (self):
+    def test_002(self):
         # Send a PDU through a pair of UDP sockets
         port = str(random.Random().randint(0, 30000) + 10000)
         srcdata = (0x64, 0x6f, 0x67, 0x65)
@@ -47,7 +48,7 @@ class qa_socket_pdu (gr_unittest.TestCase):
         self.tb.msg_connect(self.pdu_source, "strobe", self.pdu_send, "pdus")
         self.tb.msg_connect(self.pdu_recv, "pdus", self.dbg, "store")
 
-        self.tb.start ()
+        self.tb.start()
         time.sleep(1)
         self.tb.stop()
         self.tb.wait()
@@ -61,10 +62,26 @@ class qa_socket_pdu (gr_unittest.TestCase):
             msg_data.append(pmt.u8vector_ref(received_data, i))
         self.assertEqual(srcdata, tuple(msg_data))
 
-    def test_003 (self):
+    def test_003(self):
         # Test that block stops when interacting with streaming interface
         port = str(random.Random().randint(0, 30000) + 10000)
-        srcdata = (0x73, 0x75, 0x63, 0x68, 0x74, 0x65, 0x73, 0x74, 0x76, 0x65, 0x72, 0x79, 0x70, 0x61, 0x73, 0x73)
+        srcdata = (
+            0x73,
+            0x75,
+            0x63,
+            0x68,
+            0x74,
+            0x65,
+            0x73,
+            0x74,
+            0x76,
+            0x65,
+            0x72,
+            0x79,
+            0x70,
+            0x61,
+            0x73,
+            0x73)
         tag_dict = {"offset": 0}
         tag_dict["key"] = pmt.intern("len")
         tag_dict["value"] = pmt.from_long(8)
@@ -90,7 +107,7 @@ class qa_socket_pdu (gr_unittest.TestCase):
         #self.tb.connect(pdu_to_ts, head, sink)
         self.tb.run()
 
-    def test_004 (self):
+    def test_004(self):
         # Test that the TCP server can stream PDUs <= the MTU size.
         port = str(random.Random().randint(0, 30000) + 10000)
         mtu = 10000
@@ -118,6 +135,6 @@ class qa_socket_pdu (gr_unittest.TestCase):
             msg_data.append(pmt.u8vector_ref(received_data, i))
         self.assertEqual(srcdata, tuple(msg_data))
 
-if __name__ == '__main__':
-    gr_unittest.run(qa_socket_pdu, "qa_socket_pdu.xml")
 
+if __name__ == '__main__':
+    gr_unittest.run(qa_socket_pdu)

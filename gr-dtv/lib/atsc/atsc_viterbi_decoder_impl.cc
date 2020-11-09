@@ -43,23 +43,20 @@ atsc_viterbi_decoder_impl::atsc_viterbi_decoder_impl()
      */
 
     // the -4 is for the 4 sync symbols
-    int fifo_size = ATSC_DATA_SEGMENT_LENGTH - 4 - viterbi[0].delay();
+    const int fifo_size = ATSC_DATA_SEGMENT_LENGTH - 4 - viterbi[0].delay();
+    fifo.reserve(NCODERS);
     for (int i = 0; i < NCODERS; i++)
-        fifo[i] = new fifo_t(fifo_size);
+        fifo.emplace_back(fifo_size);
 
     reset();
 }
 
-atsc_viterbi_decoder_impl::~atsc_viterbi_decoder_impl()
-{
-    for (int i = 0; i < NCODERS; i++)
-        delete fifo[i];
-}
+atsc_viterbi_decoder_impl::~atsc_viterbi_decoder_impl() {}
 
 void atsc_viterbi_decoder_impl::reset()
 {
     for (int i = 0; i < NCODERS; i++)
-        fifo[i]->reset();
+        fifo[i].reset();
 }
 
 std::vector<float> atsc_viterbi_decoder_impl::decoder_metrics() const
@@ -111,7 +108,7 @@ int atsc_viterbi_decoder_impl::work(int noutput_items,
                 dbindex = dbwhere >> 3;
                 shift = dbwhere & 0x7;
                 out_copy[dbindex] = (out_copy[dbindex] & ~(0x03 << shift)) |
-                                    (fifo[encoder]->stuff(dibits[encoder][k]) << shift);
+                                    (fifo[encoder].stuff(dibits[encoder][k]) << shift);
             } /* Symbols fed into one encoder */
         }     /* Encoders */
 

@@ -46,17 +46,17 @@ public:
                         double noise_seed,
                         bool block_tags);
 
-    ~channel_model2_impl();
+    ~channel_model2_impl() override;
 
-    void setup_rpc();
+    void setup_rpc() override;
 
-    void set_noise_voltage(double noise_voltage);
-    void set_taps(const std::vector<gr_complex>& taps);
-    void set_timing_offset(double epsilon);
+    void set_noise_voltage(double noise_voltage) override;
+    void set_taps(const std::vector<gr_complex>& taps) override;
+    void set_timing_offset(double epsilon) override;
 
-    double noise_voltage() const;
-    std::vector<gr_complex> taps() const;
-    double timing_offset() const;
+    double noise_voltage() const override;
+    std::vector<gr_complex> taps() const override;
+    double timing_offset() const override;
 };
 
 } /* namespace channels */

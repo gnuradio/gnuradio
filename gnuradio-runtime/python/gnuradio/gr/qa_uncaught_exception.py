@@ -80,4 +80,4 @@ class test_uncaught_exception(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_uncaught_exception, "test_uncaught_exception.xml")
+    gr_unittest.run(test_uncaught_exception)

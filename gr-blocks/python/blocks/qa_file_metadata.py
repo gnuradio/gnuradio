@@ -9,18 +9,21 @@
 #
 
 
-import os, math
+import os
+import math
 
 from gnuradio import gr, gr_unittest, blocks
 import pmt
 
 import parse_file_metadata
 
+
 def sig_source_c(samp_rate, freq, amp, N):
     t = [float(x) / samp_rate for x in range(N)]
-    y = [amp*math.cos(2.*math.pi*freq*x) + \
-                1j*amp*math.sin(2.*math.pi*freq*x) for x in t]
+    y = [amp * math.cos(2. * math.pi * freq * x) +
+         1j * amp * math.sin(2. * math.pi * freq * x) for x in t]
     return y
+
 
 class test_file_metadata(gr_unittest.TestCase):
 
@@ -43,7 +46,7 @@ class test_file_metadata(gr_unittest.TestCase):
         extras = pmt.dict_add(extras, key, val)
 
         data = sig_source_c(samp_rate, 1000, 1, N)
-        src  = blocks.vector_source_c(data)
+        src = blocks.vector_source_c(data)
         fsnk = blocks.file_meta_sink(gr.sizeof_gr_complex, outfile,
                                      samp_rate, 1,
                                      blocks.GR_FILE_FLOAT, True,
@@ -81,7 +84,6 @@ class test_file_metadata(gr_unittest.TestCase):
         self.assertEqual(info['rx_rate'], samp_rate)
         self.assertEqual(pmt.to_double(extra_info['samp_rate']), samp_rate)
 
-
         # Test file metadata source
         src.rewind()
         fsrc = blocks.file_meta_source(outfile, False)
@@ -94,7 +96,7 @@ class test_file_metadata(gr_unittest.TestCase):
         self.tb.connect(src, ssnk)
         self.tb.run()
 
-        fsrc.close() 
+        fsrc.close()
         # Test to make sure tags with 'samp_rate' and 'rx_rate' keys
         # were generated and received correctly.
         tags = tsnk.current_tags()
@@ -122,7 +124,7 @@ class test_file_metadata(gr_unittest.TestCase):
         extras = pmt.dict_add(extras, key, val)
 
         data = sig_source_c(samp_rate, 1000, 1, N)
-        src  = blocks.vector_source_c(data)
+        src = blocks.vector_source_c(data)
         fsnk = blocks.file_meta_sink(gr.sizeof_gr_complex, outfile,
                                      samp_rate, 1,
                                      blocks.GR_FILE_FLOAT, True,
@@ -162,7 +164,6 @@ class test_file_metadata(gr_unittest.TestCase):
         self.assertEqual(info['rx_rate'], samp_rate)
         self.assertEqual(pmt.to_double(extra_info['samp_rate']), samp_rate)
 
-
         # Test file metadata source
         src.rewind()
         fsrc = blocks.file_meta_source(outfile, False, detached, outfile_hdr)
@@ -191,5 +192,6 @@ class test_file_metadata(gr_unittest.TestCase):
         os.remove(outfile)
         os.remove(outfile_hdr)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_file_metadata, "test_file_metadata.xml")
+    gr_unittest.run(test_file_metadata)

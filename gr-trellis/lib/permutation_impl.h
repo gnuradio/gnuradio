@@ -30,20 +30,20 @@ public:
                      const std::vector<int>& TABLE,
                      int SYMS_PER_BLOCK,
                      size_t NBYTES);
-    ~permutation_impl();
+    ~permutation_impl() override;
 
-    int K() const { return d_K; }
-    std::vector<int> TABLE() const { return d_TABLE; }
-    int SYMS_PER_BLOCK() const { return d_SYMS_PER_BLOCK; }
-    size_t BYTES_PER_SYMBOL() const { return d_BYTES_PER_SYMBOL; }
+    int K() const override { return d_K; }
+    std::vector<int> TABLE() const override { return d_TABLE; }
+    int SYMS_PER_BLOCK() const override { return d_SYMS_PER_BLOCK; }
+    size_t BYTES_PER_SYMBOL() const override { return d_BYTES_PER_SYMBOL; }
 
-    void set_K(int K);
-    void set_TABLE(const std::vector<int>& table);
-    void set_SYMS_PER_BLOCK(int spb);
+    void set_K(int K) override;
+    void set_TABLE(const std::vector<int>& table) override;
+    void set_SYMS_PER_BLOCK(int spb) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace trellis */

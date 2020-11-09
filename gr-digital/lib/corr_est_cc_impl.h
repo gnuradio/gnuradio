@@ -48,20 +48,20 @@ public:
                      unsigned int mark_delay,
                      float threshold = 0.9,
                      tm_type threshold_method = THRESHOLD_ABSOLUTE);
-    ~corr_est_cc_impl();
+    ~corr_est_cc_impl() override;
 
-    std::vector<gr_complex> symbols() const;
-    void set_symbols(const std::vector<gr_complex>& symbols);
+    std::vector<gr_complex> symbols() const override;
+    void set_symbols(const std::vector<gr_complex>& symbols) override;
 
-    unsigned int mark_delay() const;
-    void set_mark_delay(unsigned int mark_delay);
+    unsigned int mark_delay() const override;
+    void set_mark_delay(unsigned int mark_delay) override;
 
-    float threshold() const;
-    void set_threshold(float threshold);
+    float threshold() const override;
+    void set_threshold(float threshold) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace digital

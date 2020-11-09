@@ -30,12 +30,12 @@ private:
 
 public:
     hdlc_framer_pb_impl(const std::string frame_tag_name);
-    ~hdlc_framer_pb_impl();
+    ~hdlc_framer_pb_impl() override;
 
     // Where all the action really happens
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace digital

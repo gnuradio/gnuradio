@@ -107,9 +107,9 @@ public:
     }
 
 
-    virtual ~QwtXScaleDraw() {}
+    ~QwtXScaleDraw() override {}
 
-    virtual QwtText label(double value) const
+    QwtText label(double value) const override
     {
         if (d_start_value == d_end_value) {
             // no scale was provided.  Default to seconds.
@@ -198,9 +198,9 @@ public:
         }
     }
 
-    virtual ~QwtYScaleDraw() {}
+    ~QwtYScaleDraw() override {}
 
-    virtual QwtText label(double value) const
+    QwtText label(double value) const override
     {
         if (d_start_value == d_end_value) {
             // no scale was provided.  Default to row number.
@@ -297,7 +297,7 @@ public:
         setTrackerMode(QwtPicker::AlwaysOn);
     }
 
-    virtual ~TimeRasterZoomer() {}
+    ~TimeRasterZoomer() override {}
 
     virtual void updateTrackerText() { updateDisplay(); }
 
@@ -309,7 +309,7 @@ public:
 
 protected:
     using QwtPlotZoomer::trackerText;
-    virtual QwtText trackerText(QPoint const& p) const
+    QwtText trackerText(QPoint const& p) const override
     {
         QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
 

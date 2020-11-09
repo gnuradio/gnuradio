@@ -83,7 +83,7 @@ public:
         return conj(conj(tap) - d_step_size * u_n * conj(err));
     }
 
-    ~adaptive_algorithm_cma() {}
+    ~adaptive_algorithm_cma() override {}
 };
 
 } // namespace digital

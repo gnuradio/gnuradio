@@ -58,8 +58,8 @@ public:
                     std::string port,
                     int MTU = 10000,
                     bool tcp_no_delay = false);
-    ~socket_pdu_impl();
-    bool stop();
+    ~socket_pdu_impl() override;
+    bool stop() override;
 };
 
 } /* namespace blocks */

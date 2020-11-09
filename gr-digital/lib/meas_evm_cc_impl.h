@@ -26,12 +26,12 @@ private:
 
 public:
     meas_evm_cc_impl(constellation_sptr cons, evm_measurement_t meas_type);
-    ~meas_evm_cc_impl();
+    ~meas_evm_cc_impl() override;
 
     // Where all the action really happens
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace digital

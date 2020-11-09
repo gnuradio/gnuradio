@@ -28,10 +28,10 @@ class test_puncture (gr_unittest.TestCase):
         for n in range(len(self.src_data) // self.puncsize):
             for i in range(self.puncsize):
                 if _puncpat[i] == 1:
-                    self.expected.append(self.src_data[n*self.puncsize+i]);
+                    self.expected.append(self.src_data[n * self.puncsize + i])
 
     def setUp(self):
-        self.src_data = 10000*list(range(64))
+        self.src_data = 10000 * list(range(64))
         self.tb = gr.top_block()
 
     def tearDown(self):
@@ -47,7 +47,7 @@ class test_puncture (gr_unittest.TestCase):
         self.puncture_setup()
 
         src = blocks.vector_source_b(self.src_data)
-        op  = fec.puncture_bb(self.puncsize, self.puncpat, self.delay)
+        op = fec.puncture_bb(self.puncsize, self.puncpat, self.delay)
         dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op, dst)
@@ -58,7 +58,6 @@ class test_puncture (gr_unittest.TestCase):
             dst_data[i] = int(dst_data[i])
 
         self.assertEqual(self.expected, dst_data)
-
 
     def test_001(self):
         # Test normal operation of the puncture block with a delay
@@ -72,7 +71,7 @@ class test_puncture (gr_unittest.TestCase):
         self.puncture_setup()
 
         src = blocks.vector_source_b(self.src_data)
-        op  = fec.puncture_bb(self.puncsize, self.puncpat, self.delay)
+        op = fec.puncture_bb(self.puncsize, self.puncpat, self.delay)
         dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op, dst)
@@ -83,7 +82,6 @@ class test_puncture (gr_unittest.TestCase):
             dst_data[i] = int(dst_data[i])
 
         self.assertEqual(self.expected, dst_data)
-
 
     def test_002(self):
         # Test scenario where we have defined a puncture pattern with
@@ -96,7 +94,7 @@ class test_puncture (gr_unittest.TestCase):
         self.puncture_setup()
 
         src = blocks.vector_source_b(self.src_data)
-        op  = fec.puncture_bb(self.puncsize, self.puncpat, self.delay)
+        op = fec.puncture_bb(self.puncsize, self.puncpat, self.delay)
         dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op, dst)
@@ -115,13 +113,13 @@ class test_puncture (gr_unittest.TestCase):
         # this should be equivalent to a puncpat of the correct size.
 
         self.puncsize = 4
-        self.puncpat0 = 0x5555 # too many bits set
+        self.puncpat0 = 0x5555  # too many bits set
         self.puncpat1 = 0x55   # num bits = puncsize
         self.delay = 1
 
         src = blocks.vector_source_b(self.src_data)
-        op0  = fec.puncture_bb(self.puncsize, self.puncpat0, self.delay)
-        op1  = fec.puncture_bb(self.puncsize, self.puncpat1, self.delay)
+        op0 = fec.puncture_bb(self.puncsize, self.puncpat0, self.delay)
+        op1 = fec.puncture_bb(self.puncsize, self.puncpat1, self.delay)
         dst0 = blocks.vector_sink_b()
         dst1 = blocks.vector_sink_b()
 
@@ -139,8 +137,6 @@ class test_puncture (gr_unittest.TestCase):
 
         self.assertEqual(dst_data1, dst_data0)
 
-
-
     def test_f_000(self):
         # Test normal operation of the float puncture block
 
@@ -151,7 +147,7 @@ class test_puncture (gr_unittest.TestCase):
         self.puncture_setup()
 
         src = blocks.vector_source_f(self.src_data)
-        op  = fec.puncture_ff(self.puncsize, self.puncpat, self.delay)
+        op = fec.puncture_ff(self.puncsize, self.puncpat, self.delay)
         dst = blocks.vector_sink_f()
 
         self.tb.connect(src, op, dst)
@@ -159,7 +155,6 @@ class test_puncture (gr_unittest.TestCase):
 
         dst_data = list(dst.data())
         self.assertEqual(self.expected, dst_data)
-
 
     def test_f_001(self):
         # Test normal operation of the puncture block with a delay
@@ -173,7 +168,7 @@ class test_puncture (gr_unittest.TestCase):
         self.puncture_setup()
 
         src = blocks.vector_source_f(self.src_data)
-        op  = fec.puncture_ff(self.puncsize, self.puncpat, self.delay)
+        op = fec.puncture_ff(self.puncsize, self.puncpat, self.delay)
         dst = blocks.vector_sink_f()
 
         self.tb.connect(src, op, dst)
@@ -181,7 +176,6 @@ class test_puncture (gr_unittest.TestCase):
 
         dst_data = list(dst.data())
         self.assertEqual(self.expected, dst_data)
-
 
     def test_f_002(self):
         # Test scenariou where we have defined a puncture pattern with
@@ -194,7 +188,7 @@ class test_puncture (gr_unittest.TestCase):
         self.puncture_setup()
 
         src = blocks.vector_source_f(self.src_data)
-        op  = fec.puncture_ff(self.puncsize, self.puncpat, self.delay)
+        op = fec.puncture_ff(self.puncsize, self.puncpat, self.delay)
         dst = blocks.vector_sink_f()
 
         self.tb.connect(src, op, dst)
@@ -210,13 +204,13 @@ class test_puncture (gr_unittest.TestCase):
         # this should be equivalent to a puncpat of the correct size.
 
         self.puncsize = 4
-        self.puncpat0 = 0x5555 # too many bits set
+        self.puncpat0 = 0x5555  # too many bits set
         self.puncpat1 = 0x55   # num bits = puncsize
         self.delay = 1
 
         src = blocks.vector_source_f(self.src_data)
-        op0  = fec.puncture_ff(self.puncsize, self.puncpat0, self.delay)
-        op1  = fec.puncture_ff(self.puncsize, self.puncpat1, self.delay)
+        op0 = fec.puncture_ff(self.puncsize, self.puncpat0, self.delay)
+        op1 = fec.puncture_ff(self.puncsize, self.puncpat1, self.delay)
         dst0 = blocks.vector_sink_f()
         dst1 = blocks.vector_sink_f()
 
@@ -229,5 +223,6 @@ class test_puncture (gr_unittest.TestCase):
 
         self.assertEqual(dst_data1, dst_data0)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_puncture, "test_puncture.xml")
+    gr_unittest.run(test_puncture)

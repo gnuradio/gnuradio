@@ -33,17 +33,17 @@ private:
 
 public:
     wavfile_source_impl(const char* filename, bool repeat);
-    ~wavfile_source_impl();
+    ~wavfile_source_impl() override;
 
-    unsigned int sample_rate() const { return d_h.sample_rate; };
+    unsigned int sample_rate() const override { return d_h.sample_rate; };
 
-    int bits_per_sample() const { return d_h.bytes_per_sample * 8; };
+    int bits_per_sample() const override { return d_h.bytes_per_sample * 8; };
 
-    int channels() const { return d_h.nchans; };
+    int channels() const override { return d_h.nchans; };
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

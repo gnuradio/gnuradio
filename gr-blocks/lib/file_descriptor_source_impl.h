@@ -27,17 +27,17 @@ private:
     unsigned long d_residue_len;
 
 protected:
-    int read_items(char* buf, int nitems);
-    int handle_residue(char* buf, int nbytes_read);
-    void flush_residue() { d_residue_len = 0; }
+    int read_items(char* buf, int nitems) override;
+    int handle_residue(char* buf, int nbytes_read) override;
+    void flush_residue() override { d_residue_len = 0; }
 
 public:
     file_descriptor_source_impl(size_t itemsize, int fd, bool repeat);
-    ~file_descriptor_source_impl();
+    ~file_descriptor_source_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

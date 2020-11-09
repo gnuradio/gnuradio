@@ -25,13 +25,13 @@ private:
 
 public:
     probe_signal_impl();
-    ~probe_signal_impl();
+    ~probe_signal_impl() override;
 
-    T level() const { return d_level; }
+    T level() const override { return d_level; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

@@ -28,11 +28,11 @@ private:
 
 public:
     vco_f_impl(double sampling_rate, double sensitivity, double amplitude);
-    ~vco_f_impl();
+    ~vco_f_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

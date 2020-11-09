@@ -78,7 +78,7 @@ class Block(Element):
         if Flags.HAS_CPP in self.flags and self.enabled and not (self.is_virtual_source() or self.is_virtual_sink()):
             # This is a workaround to allow embedded python blocks/modules to load as there is
             # currently 'cpp' in the flags by default caused by the other built-in blocks
-            if hasattr(self,'cpp_templates'):
+            if hasattr(self, 'cpp_templates'):
                 self.orig_cpp_templates = self.cpp_templates # The original template, in case we have to edit it when transpiling to C++
 
         self.current_bus_structure = {'source': None, 'sink': None}
@@ -147,7 +147,7 @@ class Block(Element):
         ## Bus Logic
         ###############################
 
-        for direc in {'source','sink'}:
+        for direc in {'source', 'sink'}:
             if direc == 'source':
                 ports = self.sources
                 ports_gui = self.filter_bus_port(self.sources)
@@ -185,7 +185,7 @@ class Block(Element):
                 # Add the Bus Ports to the list of ports
                 for i in range(len(struct)):
                     # self.sinks = [port_factory(parent=self, **params) for params in self.inputs_data]
-                    port = self.parent.parent.make_port(self,direction=direc,id=str(len(ports)),label='bus',dtype='bus',bus_struct=struct[i])
+                    port = self.parent.parent.make_port(self, direction=direc, id=str(len(ports)), label='bus', dtype='bus', bus_struct=struct[i])
                     ports.append(port)
 
                     for (saved_port, connection) in zip(removed_bus_ports, removed_bus_connections):
@@ -255,7 +255,7 @@ class Block(Element):
             )
             if block_requires_mode and current_generate_option not in valid_options:
                 self.add_error_message("Can't generate this block in mode: {} ".format(
-                                       repr(current_generate_option)))
+                    repr(current_generate_option)))
 
         check_generate_mode('QT GUI', Flags.NEED_QT_GUI, ('qt_gui', 'hb_qt_gui'))
 

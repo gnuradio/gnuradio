@@ -311,24 +311,24 @@ class Application(Gtk.Application):
             main.new_page()
             flow_graph = main.current_page.flow_graph
             Actions.BLOCK_PASTE()
-            coords = (x_min,y_min)
+            coords = (x_min, y_min)
             flow_graph.move_selected(coords)
 
             # Set flow graph to heir block type
-            top_block  = flow_graph.get_block("top_block")
+            top_block = flow_graph.get_block("top_block")
             top_block.params['generate_options'].set_value('hb')
 
             # this needs to be a unique name
             top_block.params['id'].set_value('new_hier')
 
             # Remove the default samp_rate variable block that is created
-            remove_me  = flow_graph.get_block("samp_rate")
+            remove_me = flow_graph.get_block("samp_rate")
             flow_graph.remove_element(remove_me)
 
             # Add the param blocks along the top of the window
             x_pos = 150
             for param in params:
-                param_id = flow_graph.add_new_block('parameter',(x_pos,10))
+                param_id = flow_graph.add_new_block('parameter', (x_pos, 10))
                 param_block = flow_graph.get_block(param_id)
                 param_block.params['id'].set_value(param)
                 x_pos = x_pos + 100
@@ -356,7 +356,7 @@ class Application(Gtk.Application):
                             pad_sink.dtype = source.dtype
 
                     # connect the pad to the proper sinks
-                    new_connection = flow_graph.connect(source,pad_sink)
+                    new_connection = flow_graph.connect(source, pad_sink)
 
                 elif pad['direction'] == 'source':
                     pad_id = flow_graph.add_new_block('pad_source', pad['coord'])
@@ -443,7 +443,7 @@ class Application(Gtk.Application):
         elif action == Actions.TYPES_WINDOW_DISPLAY:
             Dialogs.show_types(main)
         elif action == Actions.KEYBOARD_SHORTCUTS_WINDOW_DISPLAY:
-            Dialogs.show_keyboard_shortcuts(main)   
+            Dialogs.show_keyboard_shortcuts(main)
         elif action == Actions.ERRORS_WINDOW_DISPLAY:
             Dialogs.ErrorsDialog(main, flow_graph).run_and_destroy()
         elif action == Actions.TOGGLE_CONSOLE_WINDOW:
@@ -610,8 +610,8 @@ class Application(Gtk.Application):
         elif action == Actions.FLOW_GRAPH_OPEN:
             file_paths = args[0] if args[0] else FileDialogs.OpenFlowGraph(main, page.file_path).run()
             if file_paths: # Open a new page for each file, show only the first
-                for i,file_path in enumerate(file_paths):
-                    main.new_page(file_path, show=(i==0))
+                for i, file_path in enumerate(file_paths):
+                    main.new_page(file_path, show=(i == 0))
                     self.config.add_recent_file(file_path)
                     main.tool_bar.refresh_submenus()
                     #main.menu_bar.refresh_submenus()
@@ -713,7 +713,7 @@ class Application(Gtk.Application):
                         self.generator = generator
                     except Exception as e:
                         Messages.send_fail_gen(e)
-                        
+
 
         elif action == Actions.FLOW_GRAPH_EXEC:
             if not page.process:

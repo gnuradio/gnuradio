@@ -57,6 +57,12 @@ static const char* __doc_gr_filter_firdes_band_reject = R"doc()doc";
 static const char* __doc_gr_filter_firdes_band_reject_2 = R"doc()doc";
 
 
+static const char* __doc_gr_filter_firdes_complex_band_reject = R"doc()doc";
+
+
+static const char* __doc_gr_filter_firdes_complex_band_reject_2 = R"doc()doc";
+
+
 static const char* __doc_gr_filter_firdes_hilbert = R"doc()doc";
 
 

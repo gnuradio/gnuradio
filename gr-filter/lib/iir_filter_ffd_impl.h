@@ -29,13 +29,14 @@ public:
     iir_filter_ffd_impl(const std::vector<double>& fftaps,
                         const std::vector<double>& fbtaps,
                         bool oldstyle = true);
-    ~iir_filter_ffd_impl();
+    ~iir_filter_ffd_impl() override;
 
-    void set_taps(const std::vector<double>& fftaps, const std::vector<double>& fbtaps);
+    void set_taps(const std::vector<double>& fftaps,
+                  const std::vector<double>& fbtaps) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

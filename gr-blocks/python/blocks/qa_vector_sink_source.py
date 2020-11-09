@@ -13,6 +13,7 @@ from gnuradio import gr, gr_unittest, blocks
 import pmt
 import math
 
+
 def make_tag(key, value, offset, srcid=None):
     tag = gr.tag_t()
     tag.key = pmt.string_to_symbol(key)
@@ -22,9 +23,11 @@ def make_tag(key, value, offset, srcid=None):
         tag.srcid = pmt.to_pmt(srcid)
     return tag
 
+
 def compare_tags(a, b):
     return a.offset == b.offset and pmt.equal(a.key, b.key) and \
-           pmt.equal(a.value, b.value) and pmt.equal(a.srcid, b.srcid)
+        pmt.equal(a.value, b.value) and pmt.equal(a.srcid, b.srcid)
+
 
 class test_vector_sink_source(gr_unittest.TestCase):
 
@@ -64,7 +67,9 @@ class test_vector_sink_source(gr_unittest.TestCase):
         # Test that we can only make vectors (the I/O type) if the input
         # vector has sufficient size
         src_data = [float(x) for x in range(16)]
-        self.assertRaises(ValueError, lambda : blocks.vector_source_f(src_data, False, 3))
+        self.assertRaises(
+            ValueError, lambda: blocks.vector_source_f(
+                src_data, False, 3))
 
     def test_004(self):
         # Test sending and receiving tagged streams
@@ -91,10 +96,10 @@ class test_vector_sink_source(gr_unittest.TestCase):
         expected_result = src_data + src_data
         src_tags = [make_tag('key', 'val', 0, 'src')]
         expected_tags = [make_tag('key', 'val', 0, 'src'),
-                               make_tag('key', 'val', length, 'src')]
+                         make_tag('key', 'val', length, 'src')]
 
         src = blocks.vector_source_f(src_data, repeat=True, tags=src_tags)
-        head = blocks.head(gr.sizeof_float, 2*length)
+        head = blocks.head(gr.sizeof_float, 2 * length)
         dst = blocks.vector_sink_f()
 
         self.tb.connect(src, head, dst)
@@ -111,7 +116,7 @@ class test_vector_sink_source(gr_unittest.TestCase):
         src_data = [float(x) for x in range(16)]
         expected_result = src_data
 
-        src = blocks.vector_source_f((3,1,4))
+        src = blocks.vector_source_f((3, 1, 4))
         dst = blocks.vector_sink_f()
         src.set_data(src_data)
 
@@ -137,5 +142,4 @@ class test_vector_sink_source(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_vector_sink_source, "test_vector_sink_source.xml")
-
+    gr_unittest.run(test_vector_sink_source)

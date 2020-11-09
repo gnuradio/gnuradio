@@ -27,20 +27,20 @@ private:
 
 public:
     fmdet_cf_impl(float samplerate, float freq_low, float freq_high, float scl);
-    ~fmdet_cf_impl();
+    ~fmdet_cf_impl() override;
 
-    void set_scale(float scl);
-    void set_freq_range(float freq_low, float freq_high);
+    void set_scale(float scl) override;
+    void set_freq_range(float freq_low, float freq_high) override;
 
-    float freq() const { return d_freq; }
-    float freq_high() const { return d_freqhi; }
-    float freq_low() const { return d_freqlo; }
-    float scale() const { return d_scl; }
-    float bias() const { return d_bias; }
+    float freq() const override { return d_freq; }
+    float freq_high() const override { return d_freqhi; }
+    float freq_low() const override { return d_freqlo; }
+    float scale() const override { return d_scl; }
+    float bias() const override { return d_bias; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace analog */

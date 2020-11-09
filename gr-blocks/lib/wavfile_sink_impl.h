@@ -60,7 +60,7 @@ private:
     void close_wav();
 
 protected:
-    bool stop();
+    bool stop() override;
 
 public:
     wavfile_sink_impl(const char* filename,
@@ -69,13 +69,13 @@ public:
                       wavfile_format_t format,
                       wavfile_subformat_t subformat,
                       bool append);
-    ~wavfile_sink_impl();
+    ~wavfile_sink_impl() override;
 
-    bool open(const char* filename);
-    void close();
+    bool open(const char* filename) override;
+    void close() override;
 
-    void set_sample_rate(unsigned int sample_rate);
-    void set_bits_per_sample(int bits_per_sample);
+    void set_sample_rate(unsigned int sample_rate) override;
+    void set_bits_per_sample(int bits_per_sample) override;
     void set_append(bool append) override;
 
     int bits_per_sample();
@@ -83,7 +83,7 @@ public:
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

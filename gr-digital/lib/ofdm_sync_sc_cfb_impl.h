@@ -24,10 +24,10 @@ public:
                           int cp_len,
                           bool use_even_carriers,
                           float threshold);
-    ~ofdm_sync_sc_cfb_impl();
+    ~ofdm_sync_sc_cfb_impl() override;
 
-    virtual void set_threshold(float threshold);
-    virtual float threshold() const;
+    void set_threshold(float threshold) override;
+    float threshold() const override;
 
 private:
     gr::blocks::plateau_detector_fb::sptr d_plateau_detector;

@@ -9,7 +9,6 @@
 #
 
 
-
 from gnuradio import gr, gr_unittest
 from gnuradio import fec
 
@@ -28,16 +27,16 @@ class test_fecapi_cc(gr_unittest.TestCase):
         frame_size = 30
         k = 7
         rate = 2
-        polys = [109,79]
-        enc = fec.cc_encoder_make(frame_size*8, k, rate, polys)
-        dec = fec.cc_decoder.make(frame_size*8, k, rate, polys)
+        polys = [109, 79]
+        enc = fec.cc_encoder_make(frame_size * 8, k, rate, polys)
+        dec = fec.cc_decoder.make(frame_size * 8, k, rate, polys)
         threading = None
-        self.test = _qa_helper(4*frame_size, enc, dec, threading)
+        self.test = _qa_helper(4 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_out = self.test.snk_output.data()
-        data_in  = self.test.snk_input.data()[0:len(data_out)]
+        data_in = self.test.snk_input.data()[0:len(data_out)]
 
         self.assertEqual(data_in, data_out)
 
@@ -45,16 +44,16 @@ class test_fecapi_cc(gr_unittest.TestCase):
         frame_size = 30
         k = 7
         rate = 2
-        polys = [109,79]
-        enc = fec.cc_encoder_make(frame_size*8, k, rate, polys)
-        dec = fec.cc_decoder.make(frame_size*8, k, rate, polys)
+        polys = [109, 79]
+        enc = fec.cc_encoder_make(frame_size * 8, k, rate, polys)
+        dec = fec.cc_decoder.make(frame_size * 8, k, rate, polys)
         threading = 'ordinary'
-        self.test = _qa_helper(5*frame_size, enc, dec, threading)
+        self.test = _qa_helper(5 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_out = self.test.snk_output.data()
-        data_in  = self.test.snk_input.data()[0:len(data_out)]
+        data_in = self.test.snk_input.data()[0:len(data_out)]
 
         self.assertEqual(data_in, data_out)
 
@@ -62,16 +61,16 @@ class test_fecapi_cc(gr_unittest.TestCase):
         frame_size = 30
         k = 7
         rate = 2
-        polys = [109,79]
-        enc = fec.cc_encoder_make(frame_size*8, k, rate, polys)
-        dec = fec.cc_decoder.make(frame_size*8, k, rate, polys)
+        polys = [109, 79]
+        enc = fec.cc_encoder_make(frame_size * 8, k, rate, polys)
+        dec = fec.cc_decoder.make(frame_size * 8, k, rate, polys)
         threading = 'capillary'
-        self.test = _qa_helper(5*frame_size, enc, dec, threading)
+        self.test = _qa_helper(5 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_out = self.test.snk_output.data()
-        data_in  = self.test.snk_input.data()[0:len(data_out)]
+        data_in = self.test.snk_input.data()[0:len(data_out)]
 
         self.assertEqual(data_in, data_out)
 
@@ -79,16 +78,18 @@ class test_fecapi_cc(gr_unittest.TestCase):
         frame_size = 30
         k = 7
         rate = 2
-        polys = [109,79]
-        enc = list(map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys)), list(range(0,1))))
-        dec = list(map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys)), list(range(0,1))))
+        polys = [109, 79]
+        enc = list(map((lambda a: fec.cc_encoder_make(
+            frame_size * 8, k, rate, polys)), list(range(0, 1))))
+        dec = list(map((lambda a: fec.cc_decoder.make(
+            frame_size * 8, k, rate, polys)), list(range(0, 1))))
         threading = None
-        self.test = _qa_helper(5*frame_size, enc, dec, threading)
+        self.test = _qa_helper(5 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_out = self.test.snk_output.data()
-        data_in  = self.test.snk_input.data()[0:len(data_out)]
+        data_in = self.test.snk_input.data()[0:len(data_out)]
 
         self.assertEqual(data_in, data_out)
 
@@ -96,16 +97,18 @@ class test_fecapi_cc(gr_unittest.TestCase):
         frame_size = 30
         k = 7
         rate = 2
-        polys = [109,79]
-        enc = list(map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys)), list(range(0,1))))
-        dec = list(map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys)), list(range(0,1))))
+        polys = [109, 79]
+        enc = list(map((lambda a: fec.cc_encoder_make(
+            frame_size * 8, k, rate, polys)), list(range(0, 1))))
+        dec = list(map((lambda a: fec.cc_decoder.make(
+            frame_size * 8, k, rate, polys)), list(range(0, 1))))
         threading = 'ordinary'
-        self.test = _qa_helper(5*frame_size, enc, dec, threading)
+        self.test = _qa_helper(5 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_out = self.test.snk_output.data()
-        data_in  = self.test.snk_input.data()[0:len(data_out)]
+        data_in = self.test.snk_input.data()[0:len(data_out)]
 
         self.assertEqual(data_in, data_out)
 
@@ -113,16 +116,18 @@ class test_fecapi_cc(gr_unittest.TestCase):
         frame_size = 30
         k = 7
         rate = 2
-        polys = [109,79]
-        enc = list(map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys)), list(range(0,1))))
-        dec = list(map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys)), list(range(0,1))))
+        polys = [109, 79]
+        enc = list(map((lambda a: fec.cc_encoder_make(
+            frame_size * 8, k, rate, polys)), list(range(0, 1))))
+        dec = list(map((lambda a: fec.cc_decoder.make(
+            frame_size * 8, k, rate, polys)), list(range(0, 1))))
         threading = 'capillary'
-        self.test = _qa_helper(5*frame_size, enc, dec, threading)
+        self.test = _qa_helper(5 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_out = self.test.snk_output.data()
-        data_in  = self.test.snk_input.data()[0:len(data_out)]
+        data_in = self.test.snk_input.data()[0:len(data_out)]
 
         self.assertEqual(data_in, data_out)
 
@@ -130,17 +135,19 @@ class test_fecapi_cc(gr_unittest.TestCase):
         frame_size = 30
         k = 7
         rate = 2
-        polys = [109,79]
+        polys = [109, 79]
         mode = fec.CC_TERMINATED
-        enc = list(map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys, mode=mode)), list(range(0,4))))
-        dec = list(map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys, mode=mode)), list(range(0,4))))
+        enc = list(map((lambda a: fec.cc_encoder_make(
+            frame_size * 8, k, rate, polys, mode=mode)), list(range(0, 4))))
+        dec = list(map((lambda a: fec.cc_decoder.make(
+            frame_size * 8, k, rate, polys, mode=mode)), list(range(0, 4))))
         threading = 'capillary'
-        self.test = _qa_helper(4*frame_size, enc, dec, threading)
+        self.test = _qa_helper(4 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_out = self.test.snk_output.data()
-        data_in  = self.test.snk_input.data()[0:len(data_out)]
+        data_in = self.test.snk_input.data()[0:len(data_out)]
 
         self.assertEqual(data_in, data_out)
 
@@ -148,17 +155,19 @@ class test_fecapi_cc(gr_unittest.TestCase):
         frame_size = 30
         k = 7
         rate = 2
-        polys = [109,79]
+        polys = [109, 79]
         mode = fec.CC_TRUNCATED
-        enc = list(map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys, mode=mode)), list(range(0,4))))
-        dec = list(map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys, mode=mode)), list(range(0,4))))
+        enc = list(map((lambda a: fec.cc_encoder_make(
+            frame_size * 8, k, rate, polys, mode=mode)), list(range(0, 4))))
+        dec = list(map((lambda a: fec.cc_decoder.make(
+            frame_size * 8, k, rate, polys, mode=mode)), list(range(0, 4))))
         threading = 'capillary'
-        self.test = _qa_helper(4*frame_size, enc, dec, threading)
+        self.test = _qa_helper(4 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_out = self.test.snk_output.data()
-        data_in  = self.test.snk_input.data()[0:len(data_out)]
+        data_in = self.test.snk_input.data()[0:len(data_out)]
 
         self.assertEqual(data_in, data_out)
 
@@ -166,19 +175,22 @@ class test_fecapi_cc(gr_unittest.TestCase):
         frame_size = 30
         k = 7
         rate = 2
-        polys = [109,79]
+        polys = [109, 79]
         mode = fec.CC_TAILBITING
-        enc = list(map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys, mode=mode)), list(range(0,4))))
-        dec = list(map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys, mode=mode)), list(range(0,4))))
+        enc = list(map((lambda a: fec.cc_encoder_make(
+            frame_size * 8, k, rate, polys, mode=mode)), list(range(0, 4))))
+        dec = list(map((lambda a: fec.cc_decoder.make(
+            frame_size * 8, k, rate, polys, mode=mode)), list(range(0, 4))))
         threading = 'capillary'
-        self.test = _qa_helper(4*frame_size, enc, dec, threading)
+        self.test = _qa_helper(4 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
 
         data_out = self.test.snk_output.data()
-        data_in  = self.test.snk_input.data()[0:len(data_out)]
+        data_in = self.test.snk_input.data()[0:len(data_out)]
 
         self.assertEqual(data_in, data_out)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_fecapi_cc, "test_fecapi_cc.xml")
+    gr_unittest.run(test_fecapi_cc)

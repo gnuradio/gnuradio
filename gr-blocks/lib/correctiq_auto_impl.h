@@ -47,7 +47,7 @@ private:
 
 public:
     correctiq_auto_impl(double samp_rate, double freq, float gain, float sync_window);
-    ~correctiq_auto_impl();
+    ~correctiq_auto_impl() override;
 
     double get_freq() const override;
     float get_gain() const override;
@@ -59,7 +59,7 @@ public:
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace blocks

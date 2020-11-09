@@ -58,11 +58,11 @@ protected:
 
 public:
     framer_sink_1_impl(msg_queue::sptr target_queue);
-    ~framer_sink_1_impl();
+    ~framer_sink_1_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace digital */

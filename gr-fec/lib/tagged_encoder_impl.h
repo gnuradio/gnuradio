@@ -28,13 +28,13 @@ public:
                         size_t output_item_size,
                         const std::string& lengthtagname = "packet_len",
                         int mtu = 1500);
-    ~tagged_encoder_impl();
+    ~tagged_encoder_impl() override;
 
     int work(int noutput_items,
              gr_vector_int& ninput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
-    int calculate_output_stream_length(const gr_vector_int& ninput_items);
+             gr_vector_void_star& output_items) override;
+    int calculate_output_stream_length(const gr_vector_int& ninput_items) override;
 };
 
 } /* namespace fec */

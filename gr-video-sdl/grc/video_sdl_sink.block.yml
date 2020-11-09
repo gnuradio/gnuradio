@@ -32,9 +32,9 @@ parameters:
     default: '0'
 -   id: num_channels
     label: Channels
-    dtype: enum
+    dtype: int
     options: ['1', '2', '3']
-    option_labels: [1 (Grayscale), '2 (Y, alternating pixels U and V)', 3 (YUV)]
+    option_labels: [1 (Grayscale), '2 (Y, U and V 4:2:2)', '3 (YUV 4:4:4)']
     hide: part
 
 inputs:
@@ -62,7 +62,7 @@ documentation: |-
 
     In 1-channel mode, input data is assumed to be grayscale, with each input item mapping to a single pixel.
 
-    In 2-channel mode, the first channel is Y for every pixel while the second channel alternates between pixels values for U and V.
+    In 2-channel mode, the first channel is Y for every pixel while the second channel alternates between pixel values for U and V.
 
     In 3-channel mode, input channels are assumed to be matching triples of YUV values, one byte per pixel, per channel.
 

@@ -14,11 +14,10 @@ import os
 
 # import pybind11 generated symbols into the howto namespace
 try:
+    # this might fail if the module is python-only
     from .howto_python import *
 except ImportError:
-    dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "bindings"))
-    from .howto_python import *
+    pass
 
 # import any pure python here
 #

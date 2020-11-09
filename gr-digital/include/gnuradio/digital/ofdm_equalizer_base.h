@@ -83,10 +83,10 @@ public:
                              const std::vector<std::vector<gr_complex>>& pilot_symbols,
                              int symbols_skipped,
                              bool input_is_shifted);
-    ~ofdm_equalizer_1d_pilots();
+    ~ofdm_equalizer_1d_pilots() override;
 
-    void reset();
-    void get_channel_state(std::vector<gr_complex>& taps);
+    void reset() override;
+    void get_channel_state(std::vector<gr_complex>& taps) override;
 };
 
 } /* namespace digital */

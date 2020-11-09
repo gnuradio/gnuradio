@@ -49,18 +49,10 @@ dvbt_bit_inner_deinterleaver_impl::dvbt_bit_inner_deinterleaver_impl(
              gr::dtv::GI_1_32,
              transmission),
       d_nsize(nsize),
-      d_hierarchy(hierarchy)
+      d_hierarchy(config.d_hierarchy),
+      d_v(config.d_m),
+      d_perm(d_v * d_bsize)
 {
-    d_v = config.d_m;
-    d_hierarchy = config.d_hierarchy;
-
-    d_perm = (unsigned char*)new (std::nothrow) unsigned char[d_v * d_bsize];
-    if (d_perm == NULL) {
-        GR_LOG_FATAL(d_logger,
-                     "Bit Inner Deinterleaver, cannot allocate memory for d_perm.");
-        throw std::bad_alloc();
-    }
-
     // Init permutation table (used for b[e][do])
     for (int i = 0; i < d_bsize * d_v; i++) {
         if (d_hierarchy == NH) {
@@ -82,10 +74,7 @@ dvbt_bit_inner_deinterleaver_impl::dvbt_bit_inner_deinterleaver_impl(
 /*
  * Our virtual destructor.
  */
-dvbt_bit_inner_deinterleaver_impl::~dvbt_bit_inner_deinterleaver_impl()
-{
-    delete[] d_perm;
-}
+dvbt_bit_inner_deinterleaver_impl::~dvbt_bit_inner_deinterleaver_impl() {}
 
 void dvbt_bit_inner_deinterleaver_impl::forecast(int noutput_items,
                                                  gr_vector_int& ninput_items_required)

@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, blocks
 
+
 class test_regenerate(gr_unittest.TestCase):
 
     def setUp(self):
@@ -26,10 +27,50 @@ class test_regenerate(gr_unittest.TestCase):
                 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        expected_result = [0, 0, 0,
-                           1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-                           1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
+        expected_result = [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0]
 
         src = blocks.vector_source_b(data, False)
         regen = blocks.regenerate_bb(5, 2)
@@ -46,20 +87,20 @@ class test_regenerate(gr_unittest.TestCase):
     def test_regen2(self):
         tb = self.tb
 
-        data = 200*[0,]
+        data = 200 * [0, ]
         data[9] = 1
         data[99] = 1
 
-        expected_result = 200*[0,]
-        expected_result[9]   = 1
-        expected_result[19]  = 1
-        expected_result[29]  = 1
-        expected_result[39]  = 1
+        expected_result = 200 * [0, ]
+        expected_result[9] = 1
+        expected_result[19] = 1
+        expected_result[29] = 1
+        expected_result[39] = 1
 
-        expected_result[99]  = 1
-        expected_result[109]  = 1
-        expected_result[119]  = 1
-        expected_result[129]  = 1
+        expected_result[99] = 1
+        expected_result[109] = 1
+        expected_result[119] = 1
+        expected_result[129] = 1
 
         src = blocks.vector_source_b(data, False)
         regen = blocks.regenerate_bb(10, 3)
@@ -67,7 +108,7 @@ class test_regenerate(gr_unittest.TestCase):
 
         tb.connect(src, regen)
         tb.connect(regen, dst)
-        tb.run ()
+        tb.run()
 
         dst_data = dst.data()
 
@@ -75,4 +116,4 @@ class test_regenerate(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_regenerate, "test_regenerate.xml")
+    gr_unittest.run(test_regenerate)

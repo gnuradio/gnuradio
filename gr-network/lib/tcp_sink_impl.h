@@ -55,16 +55,16 @@ public:
                   const std::string& host,
                   int port,
                   int sinkmode = TCPSINKMODE_CLIENT);
-    ~tcp_sink_impl();
+    ~tcp_sink_impl() override;
 
-    virtual bool stop();
+    bool stop() override;
 
     void accept_handler(boost::asio::ip::tcp::socket* new_connection,
                         const boost::system::error_code& error);
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace network

@@ -188,7 +188,34 @@ void file_source_impl::open(const char* filename,
 
     // Rewind to start offset
     if (d_seekable) {
-        if (GR_FSEEK(d_new_fp, start_offset_items * d_itemsize, SEEK_SET) == -1) {
+        auto start_offset = start_offset_items * d_itemsize;
+#ifdef _POSIX_C_SOURCE
+#if _POSIX_C_SOURCE >= 200112L
+        // If supported, tell the OS that we'll be accessing the file sequentially
+        // and that it would be a good idea to start prefetching it
+        auto fd = fileno(d_new_fp);
+        static const std::map<int, const std::string> fadv_errstrings = {
+            { EBADF, "bad file descriptor" },
+            { EINVAL, "invalid advise" },
+            { ESPIPE, "tried to act as if a pipe or similar was a file" }
+        };
+        if (file_size && file_size != INT64_MAX) {
+            if (auto ret = posix_fadvise(
+                    fd, start_offset, file_size - start_offset, POSIX_FADV_SEQUENTIAL)) {
+                GR_LOG_WARN(d_logger,
+                            "failed to advise to read sequentially, " +
+                                fadv_errstrings.at(ret));
+            }
+            if (auto ret = posix_fadvise(
+                    fd, start_offset, file_size - start_offset, POSIX_FADV_WILLNEED)) {
+                GR_LOG_WARN(d_logger,
+                            "failed to advise we'll need file contents soon, " +
+                                fadv_errstrings.at(ret));
+            }
+        }
+#endif
+#endif
+        if (GR_FSEEK(d_new_fp, start_offset, SEEK_SET) == -1) {
             throw std::runtime_error("can't fseek()");
         }
     }

@@ -28,7 +28,7 @@ class EyeDisplayForm : public EyeDisplaysForm
 
 public:
     EyeDisplayForm(int nplots = 1, bool cmplx = false, QWidget* parent = 0);
-    ~EyeDisplayForm();
+    ~EyeDisplayForm() override;
 
     EyeDisplayPlot* getPlot();
     EyeDisplayPlot* getSinglePlot(unsigned int);
@@ -45,14 +45,14 @@ public:
     void setAxisLabels(bool en);
 
 public slots:
-    void customEvent(QEvent* e);
+    void customEvent(QEvent* e) override;
 
     void setSampleRate(const double samprate);
-    void setSampleRate(const QString& samprate);
+    void setSampleRate(const QString& samprate) override;
     void setYaxis(double min, double max);
     void setYLabel(const std::string& label, const std::string& unit = "");
     void setNPoints(const int);
-    void autoScale(bool en);
+    void autoScale(bool en) override;
     void autoScaleShot();
     void tagMenuSlot(bool en);
     void setTagMenu(unsigned int which, bool en);
@@ -73,7 +73,7 @@ public slots:
     void teardownControlPanel();
 
 private slots:
-    void newData(const QEvent*);
+    void newData(const QEvent*) override;
     void notifyYAxisPlus();
     void notifyYAxisMinus();
     void notifyYRangePlus();

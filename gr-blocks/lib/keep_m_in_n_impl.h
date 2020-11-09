@@ -23,7 +23,7 @@ class BLOCKS_API keep_m_in_n_impl : public keep_m_in_n
     int d_offset;
     const int d_itemsize;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
 public:
     keep_m_in_n_impl(size_t itemsize, int m, int n, int offset);
@@ -31,11 +31,11 @@ public:
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 
-    void set_m(int m);
-    void set_n(int n);
-    void set_offset(int offset);
+    void set_m(int m) override;
+    void set_n(int n) override;
+    void set_offset(int offset) override;
 };
 
 } /* namespace blocks */

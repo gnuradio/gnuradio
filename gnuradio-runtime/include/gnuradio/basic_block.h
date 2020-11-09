@@ -131,7 +131,7 @@ protected:
 
 public:
     pmt::pmt_t message_subscribers(pmt::pmt_t port);
-    virtual ~basic_block();
+    ~basic_block() override;
     long unique_id() const { return d_unique_id; }
     long symbolic_id() const { return d_symbolic_id; }
 

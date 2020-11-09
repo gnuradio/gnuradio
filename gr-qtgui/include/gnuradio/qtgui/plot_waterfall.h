@@ -27,7 +27,7 @@ class QwtColorMap;
  * \ingroup qtgui_blk
  *
  * \details
- * A waterfall displays threedimenional data, where the 3rd dimension
+ * A waterfall displays three-dimenional data, where the 3rd dimension
  * (the intensity) is displayed using colors. The colors are calculated
  * from the values using a color map.
  *
@@ -37,7 +37,7 @@ class PlotWaterfall : public QwtPlotRasterItem
 {
 public:
     explicit PlotWaterfall(WaterfallData* data, const QString& title = QString());
-    virtual ~PlotWaterfall();
+    ~PlotWaterfall() override;
 
     const WaterfallData* data() const;
 
@@ -50,7 +50,7 @@ public:
     virtual QSize rasterHint(const QwtDoubleRect&) const;
 #endif
 
-    virtual int rtti() const;
+    int rtti() const override;
 
 protected:
 #if QWT_VERSION < 0x060000
@@ -61,7 +61,7 @@ protected:
     QImage renderImage(const QwtScaleMap& xMap,
                        const QwtScaleMap& yMap,
                        const QRectF& rect,
-                       const QSize& size = QSize(0, 0)) const;
+                       const QSize& size = QSize(0, 0)) const override;
 #endif
 
 private:

@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, blocks
 
+
 class test_logger (gr_unittest.TestCase):
 
     def setUp(self):
@@ -45,9 +46,9 @@ class test_logger (gr_unittest.TestCase):
         # Make sure exception is throw on bogus data
         self.assertRaises(RuntimeError, ns.set_log_level, "11")
 
-
     def test_log_level_for_tb(self):
-        # Test the python API for getting and setting log levels for a top_block
+        # Test the python API for getting and setting log levels for a
+        # top_block
         nsrc = blocks.null_source(4)
         nsnk = blocks.null_sink(4)
         # Set all log levels to a known state
@@ -64,10 +65,12 @@ class test_logger (gr_unittest.TestCase):
         self.assertEqual(nsnk.log_level(), "alert")
 
     def test_log_level_for_hier_block(self):
-        # Test the python API for getting and setting log levels for hier blocks
+        # Test the python API for getting and setting log levels for hier
+        # blocks
         nsrc = blocks.null_source(4)
         nsnk = blocks.null_sink(4)
-        b = blocks.stream_to_vector_decimator(4, 1, 1, 1) # just a random hier block that exists
+        b = blocks.stream_to_vector_decimator(
+            4, 1, 1, 1)  # just a random hier block that exists
         tb = gr.top_block()
         tb.connect(nsrc, b, nsnk)
         tb.set_log_level("debug")
@@ -81,5 +84,6 @@ class test_logger (gr_unittest.TestCase):
         self.assertEqual(nsnk.log_level(), "alert")
         self.assertEqual(b.one_in_n.log_level(), "alert")
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_logger, "test_logger.xml")
+    gr_unittest.run(test_logger)

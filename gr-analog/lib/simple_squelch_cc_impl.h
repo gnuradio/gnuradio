@@ -26,19 +26,19 @@ private:
 
 public:
     simple_squelch_cc_impl(double threshold_db, double alpha);
-    ~simple_squelch_cc_impl();
+    ~simple_squelch_cc_impl() override;
 
-    bool unmuted() const { return d_unmuted; }
+    bool unmuted() const override { return d_unmuted; }
 
-    void set_alpha(double alpha);
-    void set_threshold(double decibels);
+    void set_alpha(double alpha) override;
+    void set_threshold(double decibels) override;
 
-    double threshold() const;
-    std::vector<float> squelch_range() const;
+    double threshold() const override;
+    std::vector<float> squelch_range() const override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace analog */

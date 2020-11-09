@@ -124,4 +124,11 @@ void bind_dvb_config(py::module& m)
         .value("GI_19_128", ::gr::dtv::GI_19_128) // 5
         .value("GI_19_256", ::gr::dtv::GI_19_256) // 6
         .export_values();
+
+    // This will allow enum values to be passed int values
+    py::implicitly_convertible<int, gr::dtv::dvb_standard_t>();
+    py::implicitly_convertible<int, gr::dtv::dvb_code_rate_t>();
+    py::implicitly_convertible<int, gr::dtv::dvb_framesize_t>();
+    py::implicitly_convertible<int, gr::dtv::dvb_constellation_t>();
+    py::implicitly_convertible<int, gr::dtv::dvb_guardinterval_t>();
 }

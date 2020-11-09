@@ -41,6 +41,7 @@ void bind_pdu(py::module& m)
         .value("complex_t", ::gr::blocks::pdu::complex_t) // 2
         .export_values();
 
+    py::implicitly_convertible<int, ::gr::blocks::pdu::vector_type>();
 
     m_pdu.def("pdu_port_id", &::gr::blocks::pdu::pdu_port_id, D(pdu, pdu_port_id));
 

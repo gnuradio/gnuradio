@@ -36,4 +36,6 @@ void bind_metric_type(py::module& m)
         .value("TRELLIS_HARD_SYMBOL", ::gr::digital::TRELLIS_HARD_SYMBOL) // 201
         .value("TRELLIS_HARD_BIT", ::gr::digital::TRELLIS_HARD_BIT)       // 202
         .export_values();
+
+    py::implicitly_convertible<int, ::gr::digital::trellis_metric_type_t>();
 }

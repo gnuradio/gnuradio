@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, blocks
 
+
 class test_probe_signal(gr_unittest.TestCase):
 
     def setUp(self):
@@ -35,7 +36,7 @@ class test_probe_signal(gr_unittest.TestCase):
     def test_002(self):
         vector_length = 10
         repeats = 10
-        value = [0.5+i for i in range(0, vector_length)]
+        value = [0.5 + i for i in range(0, vector_length)]
         src_data = value * repeats
 
         src = blocks.vector_source_f(src_data)
@@ -48,5 +49,6 @@ class test_probe_signal(gr_unittest.TestCase):
         self.assertEqual(len(output), vector_length)
         self.assertAlmostEqual(value[3], output[3], places=6)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_probe_signal, "test_probe_signal.xml")
+    gr_unittest.run(test_probe_signal)

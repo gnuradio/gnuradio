@@ -86,8 +86,8 @@ public:
      * \param wintype type of window to apply (see gr::fft::window::win_type).
      *        By setting bit 16 to one, this block will normalize the window
      *        before applying it. This allows switching between windows without
-     *        sacrifying signal power due to tapering, but it will also amplify
-     *        some samples. See also set_fft_window_normalized().
+     *        sacrificing signal power due to tapering, but it will also
+     *        amplify some samples. See also set_fft_window_normalized().
      * \param fc center frequency of signal (use for x-axis labels)
      * \param bw bandwidth of signal (used to set x-axis labels)
      * \param name title for the plot

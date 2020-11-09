@@ -31,13 +31,13 @@ public:
         setTrackerMode(QwtPicker::AlwaysOn);
     }
 
-    virtual ~ConstellationDisplayZoomer() {}
+    ~ConstellationDisplayZoomer() override {}
 
     virtual void updateTrackerText() { updateDisplay(); }
 
 protected:
     using QwtPlotZoomer::trackerText;
-    virtual QwtText trackerText(const QPoint& p) const
+    QwtText trackerText(const QPoint& p) const override
     {
         QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
         QwtText t(QString("(%1, %2)").arg(dp.x(), 0, 'f', 4).arg(dp.y(), 0, 'f', 4));

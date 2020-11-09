@@ -13,15 +13,18 @@ from gnuradio import gr, gr_unittest, digital, blocks
 import pmt
 
 # See gr-digital/lib/additive_scrambler_bb_impl.cc for reference.
+
+
 def additive_scramble_lfsr(mask, seed, reglen, bpb, data):
     l = digital.lfsr(mask, seed, reglen)
     out = []
     for d in data:
         scramble_word = 0
-        for i in range(0,bpb):
+        for i in range(0, bpb):
             scramble_word ^= l.next_bit() << i
         out.append(d ^ scramble_word)
     return out
+
 
 class test_scrambler(gr_unittest.TestCase):
 
@@ -32,17 +35,19 @@ class test_scrambler(gr_unittest.TestCase):
         self.tb = None
 
     def test_scrambler_descrambler(self):
-        src_data = [1,]*1000
+        src_data = [1, ] * 1000
         src = blocks.vector_source_b(src_data, False)
-        scrambler = digital.scrambler_bb(0x8a, 0x7F, 7)     # CCSDS 7-bit scrambler
+        scrambler = digital.scrambler_bb(
+            0x8a, 0x7F, 7)     # CCSDS 7-bit scrambler
         descrambler = digital.descrambler_bb(0x8a, 0x7F, 7)
         dst = blocks.vector_sink_b()
         self.tb.connect(src, scrambler, descrambler, dst)
         self.tb.run()
-        self.assertEqual(src_data[:-8], dst.data()[8:]) # skip garbage during synchronization
+        # skip garbage during synchronization
+        self.assertEqual(src_data[:-8], dst.data()[8:])
 
     def test_additive_scrambler(self):
-        src_data = [1,]*1000
+        src_data = [1, ] * 1000
         src = blocks.vector_source_b(src_data, False)
         scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7)
         descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7)
@@ -52,7 +57,7 @@ class test_scrambler(gr_unittest.TestCase):
         self.assertEqual(src_data, dst.data())
 
     def test_additive_scrambler_reset(self):
-        src_data = [1,]*200
+        src_data = [1, ] * 200
         src = blocks.vector_source_b(src_data, False)
         scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 50)
         dst = blocks.vector_sink_b()
@@ -62,7 +67,7 @@ class test_scrambler(gr_unittest.TestCase):
         self.assertEqual(output[:50] * 4, output)
 
     def test_additive_scrambler_reset_3bpb(self):
-        src_data = [5,]*200
+        src_data = [5, ] * 200
         src = blocks.vector_source_b(src_data, False)
         scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 50, 3)
         dst = blocks.vector_sink_b()
@@ -72,7 +77,7 @@ class test_scrambler(gr_unittest.TestCase):
         self.assertEqual(output[:50] * 4, output)
 
     def test_additive_scrambler_tags(self):
-        src_data = [1,]*1000
+        src_data = [1, ] * 1000
         src = blocks.vector_source_b(src_data, False)
         scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100)
         descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100)
@@ -86,9 +91,12 @@ class test_scrambler(gr_unittest.TestCase):
         reset_tag3 = gr.tag_t()
         reset_tag3.key = pmt.string_to_symbol(reset_tag_key)
         reset_tag3.offset = 523
-        src = blocks.vector_source_b(src_data, False, 1, (reset_tag1, reset_tag2, reset_tag3))
-        scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100, 1, reset_tag_key)
-        descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100, 1, reset_tag_key)
+        src = blocks.vector_source_b(
+            src_data, False, 1, (reset_tag1, reset_tag2, reset_tag3))
+        scrambler = digital.additive_scrambler_bb(
+            0x8a, 0x7f, 7, 100, 1, reset_tag_key)
+        descrambler = digital.additive_scrambler_bb(
+            0x8a, 0x7f, 7, 100, 1, reset_tag_key)
         dst = blocks.vector_sink_b()
         self.tb.connect(src, scrambler, descrambler, dst)
         self.tb.run()
@@ -106,13 +114,16 @@ class test_scrambler(gr_unittest.TestCase):
         reset_tag3 = gr.tag_t()
         reset_tag3.key = pmt.string_to_symbol(reset_tag_key)
         reset_tag3.offset = 20
-        src = blocks.vector_source_b(src_data * 3, False, 1, (reset_tag1, reset_tag2, reset_tag3))
-        scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 0, 8, reset_tag_key)
+        src = blocks.vector_source_b(
+            src_data * 3, False, 1, (reset_tag1, reset_tag2, reset_tag3))
+        scrambler = digital.additive_scrambler_bb(
+            0x8a, 0x7f, 7, 0, 8, reset_tag_key)
         dst = blocks.vector_sink_b()
         self.tb.connect(src, scrambler, dst)
         self.tb.run()
         expected_data = additive_scramble_lfsr(0x8a, 0x7f, 7, 8, src_data)
         self.assertEqual(expected_data * 3, dst.data())
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_scrambler, "test_scrambler.xml")
+    gr_unittest.run(test_scrambler)

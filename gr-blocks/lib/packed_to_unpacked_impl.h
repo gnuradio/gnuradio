@@ -31,15 +31,18 @@ private:
 
 public:
     packed_to_unpacked_impl(unsigned int bits_per_chunk, endianness_t endianness);
-    ~packed_to_unpacked_impl();
+    ~packed_to_unpacked_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 
-    bool check_topology(int ninputs, int noutputs) { return ninputs == noutputs; }
+    bool check_topology(int ninputs, int noutputs) override
+    {
+        return ninputs == noutputs;
+    }
 };
 
 } /* namespace blocks */

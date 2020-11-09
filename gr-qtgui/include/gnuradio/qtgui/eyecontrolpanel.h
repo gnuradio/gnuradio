@@ -27,7 +27,7 @@ class EyeControlPanel : public QVBoxLayout
 
 public:
     EyeControlPanel(EyeDisplayForm* form);
-    ~EyeControlPanel();
+    ~EyeControlPanel() override;
 
 public slots:
     void toggleAutoScale(bool en);

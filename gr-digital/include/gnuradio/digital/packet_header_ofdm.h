@@ -34,7 +34,7 @@ public:
                        int bits_per_header_sym,
                        int bits_per_payload_sym,
                        bool scramble_header);
-    ~packet_header_ofdm();
+    ~packet_header_ofdm() override;
 
     /*!
      * \brief Header formatter.
@@ -43,8 +43,9 @@ public:
      * optionally scrambles the bits (this is more important for OFDM to avoid
      * PAPR spikes).
      */
-    bool
-    header_formatter(long packet_len, unsigned char* out, const std::vector<tag_t>& tags);
+    bool header_formatter(long packet_len,
+                          unsigned char* out,
+                          const std::vector<tag_t>& tags) override;
 
     /*!
      * \brief Inverse function to header_formatter().
@@ -56,7 +57,7 @@ public:
      * of OFDM symbols and the packet length because a packet might
      * finish mid-OFDM-symbol.
      */
-    bool header_parser(const unsigned char* header, std::vector<tag_t>& tags);
+    bool header_parser(const unsigned char* header, std::vector<tag_t>& tags) override;
 
     /*!
      * \param occupied_carriers See carrier allocator

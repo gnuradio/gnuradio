@@ -27,10 +27,10 @@ private:
 
 public:
     vector_insert_impl(const std::vector<T>& data, int periodicity, int offset);
-    ~vector_insert_impl();
+    ~vector_insert_impl() override;
 
-    void rewind() { d_offset = 0; }
-    void set_data(const std::vector<T>& data)
+    void rewind() override { d_offset = 0; }
+    void set_data(const std::vector<T>& data) override
     {
         d_data = data;
         rewind();
@@ -39,7 +39,7 @@ public:
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

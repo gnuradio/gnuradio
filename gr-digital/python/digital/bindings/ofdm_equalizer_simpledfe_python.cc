@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(ofdm_equalizer_simpledfe.h) */
-/* BINDTOOL_HEADER_FILE_HASH(8091e37dbba4afc0b7a2fd9441996144)                     */
+/* BINDTOOL_HEADER_FILE_HASH(d4fd209e67a0c2a859e58dcea8ee907f)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -47,6 +47,7 @@ void bind_ofdm_equalizer_simpledfe(py::module& m)
              py::arg("symbols_skipped") = 0,
              py::arg("alpha") = 0.10000000000000001,
              py::arg("input_is_shifted") = true,
+             py::arg("enable_soft_output") = false,
              D(ofdm_equalizer_simpledfe, make))
 
 

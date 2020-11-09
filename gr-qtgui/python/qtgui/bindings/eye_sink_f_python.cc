@@ -48,7 +48,6 @@ void bind_eye_sink_f(py::module& m)
         .def(py::init(&eye_sink_f::make),
              py::arg("size"),
              py::arg("samp_rate"),
-             py::arg("name"),
              py::arg("nconnections") = 1,
              py::arg("parent") = nullptr,
              D(eye_sink_f, make))
@@ -90,12 +89,6 @@ void bind_eye_sink_f(py::module& m)
              &eye_sink_f::set_update_time,
              py::arg("t"),
              D(eye_sink_f, set_update_time))
-
-
-        .def("set_title",
-             &eye_sink_f::set_title,
-             py::arg("title"),
-             D(eye_sink_f, set_title))
 
 
         .def("set_line_label",

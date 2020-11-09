@@ -84,4 +84,6 @@ void bind_adaptive_algorithm(py::module& m)
         .value("NLMS", ::gr::digital::adaptive_algorithm_t::NLMS) // 1
         .value("CMA", ::gr::digital::adaptive_algorithm_t::CMA)   // 2
         .export_values();
+
+    py::implicitly_convertible<int, ::gr::digital::adaptive_algorithm_t>();
 }

@@ -29,13 +29,13 @@ public:
     vector_map_impl(size_t item_size,
                     std::vector<size_t> in_vlens,
                     std::vector<std::vector<std::vector<size_t>>> mapping);
-    ~vector_map_impl();
+    ~vector_map_impl() override;
 
-    void set_mapping(std::vector<std::vector<std::vector<size_t>>> mapping);
+    void set_mapping(std::vector<std::vector<std::vector<size_t>>> mapping) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

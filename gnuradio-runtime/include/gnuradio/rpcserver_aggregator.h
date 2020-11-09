@@ -20,17 +20,19 @@ class rpcserver_aggregator : public virtual rpcserver_base
 {
 public:
     rpcserver_aggregator();
-    virtual ~rpcserver_aggregator();
+    ~rpcserver_aggregator() override;
 
     void registerConfigureCallback(const std::string& id,
-                                   const configureCallback_t callback);
-    void unregisterConfigureCallback(const std::string& id);
+                                   const configureCallback_t callback) override;
+    void unregisterConfigureCallback(const std::string& id) override;
 
-    void registerQueryCallback(const std::string& id, const queryCallback_t callback);
-    void unregisterQueryCallback(const std::string& id);
+    void registerQueryCallback(const std::string& id,
+                               const queryCallback_t callback) override;
+    void unregisterQueryCallback(const std::string& id) override;
 
-    void registerHandlerCallback(const std::string& id, const handlerCallback_t callback);
-    void unregisterHandlerCallback(const std::string& id);
+    void registerHandlerCallback(const std::string& id,
+                                 const handlerCallback_t callback) override;
+    void unregisterHandlerCallback(const std::string& id) override;
 
     void registerServer(rpcmanager_base::rpcserver_booter_base_sptr server);
 

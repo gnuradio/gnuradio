@@ -2,7 +2,7 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
 import os
 import configparser
@@ -310,16 +310,16 @@ class FileParam(EntryParam):
         # build the dialog
         if self.param.dtype == 'file_open':
             file_dialog = Gtk.FileChooserDialog(
-                title = 'Open a Data File...',action = Gtk.FileChooserAction.OPEN,
+                title='Open a Data File...', action=Gtk.FileChooserAction.OPEN,
                 transient_for=self._transient_for,
             )
-            file_dialog.add_buttons( 'gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-open' , Gtk.ResponseType.OK )
+            file_dialog.add_buttons('gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-open', Gtk.ResponseType.OK)
         elif self.param.dtype == 'file_save':
             file_dialog = Gtk.FileChooserDialog(
-                title = 'Save a Data File...',action = Gtk.FileChooserAction.SAVE,
+                title='Save a Data File...', action=Gtk.FileChooserAction.SAVE,
                 transient_for=self._transient_for,
             )
-            file_dialog.add_buttons( 'gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-save', Gtk.ResponseType.OK )
+            file_dialog.add_buttons('gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-save', Gtk.ResponseType.OK)
             file_dialog.set_do_overwrite_confirmation(True)
             file_dialog.set_current_name(basename)  # show the current filename
         else:
@@ -343,25 +343,25 @@ class DirectoryParam(FileParam):
         On success, update the entry.
         """
         dirname = self.param.get_evaluated() if self.param.is_valid() else ''
-        
+
         if not os.path.isdir(dirname): # Check if directory exists, if not fall back to workdir
             dirname = os.getcwd()
 
         if self.param.dtype == "dir_select": # Setup directory selection dialog, and fail for unexpected dtype
             dir_dialog = Gtk.FileChooserDialog(
-                title = 'Select a Directory...', action = Gtk.FileChooserAction.SELECT_FOLDER,
-                transient_for = self._transient_for
+                title='Select a Directory...', action=Gtk.FileChooserAction.SELECT_FOLDER,
+                transient_for=self._transient_for
             )
         else:
             raise ValueError("Can't open directory chooser dialog for type " + repr(self.param.dtype))
 
         # Set dialog properties
-        dir_dialog.add_buttons( 'gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-open', Gtk.ResponseType.OK )
+        dir_dialog.add_buttons('gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-open', Gtk.ResponseType.OK)
         dir_dialog.set_current_folder(dirname)
         dir_dialog.set_local_only(True)
         dir_dialog.set_select_multiple(False)
         
-        # Show dialog and update paramter on success
+        # Show dialog and update parameter on success
         if Gtk.ResponseType.OK == dir_dialog.run():
             path = dir_dialog.get_filename()
             self._input.set_text(path)
@@ -370,4 +370,3 @@ class DirectoryParam(FileParam):
 
         # Cleanup dialog
         dir_dialog.destroy()
-

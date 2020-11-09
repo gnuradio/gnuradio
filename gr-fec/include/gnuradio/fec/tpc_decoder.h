@@ -38,14 +38,14 @@ class FEC_API tpc_decoder : public generic_decoder
                 int decoder_type);
 
     // plug into the generic fec api
-    int get_history();
-    float get_shift();
-    int get_input_item_size();
-    int get_output_item_size();
+    int get_history() override;
+    float get_shift() override;
+    int get_input_item_size() override;
+    int get_output_item_size() override;
     const char* get_conversion();
-    void generic_work(void* inBuffer, void* outbuffer);
-    int get_output_size();
-    int get_input_size();
+    void generic_work(void* inBuffer, void* outbuffer) override;
+    int get_output_size() override;
+    int get_input_size() override;
 
     std::vector<int> d_rowpolys;
     std::vector<int> d_colpolys;
@@ -149,9 +149,9 @@ public:
                                       int qval,
                                       int max_iter,
                                       int decoder_type);
-    ~tpc_decoder();
-    double rate() { return (1.0 * get_output_size() / get_input_size()); }
-    bool set_frame_size(unsigned int frame_size) { return false; }
+    ~tpc_decoder() override;
+    double rate() override { return (1.0 * get_output_size() / get_input_size()); }
+    bool set_frame_size(unsigned int frame_size) override { return false; }
 };
 
 } // namespace fec

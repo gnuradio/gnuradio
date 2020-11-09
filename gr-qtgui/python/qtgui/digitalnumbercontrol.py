@@ -260,7 +260,7 @@ class DigitalNumberControl(QFrame):
 
     def setFrequencyNow(self, new_freq):
         # This setFrequency differs from setFrequency() in that it
-        # it updates the display immediately rather than emiting
+        # it updates the display immediately rather than emitting
         # to the message queue as required during msg handling
         if (new_freq >= self.min_freq) and (new_freq <= self.max_freq):
             self.cur_freq = int(new_freq)

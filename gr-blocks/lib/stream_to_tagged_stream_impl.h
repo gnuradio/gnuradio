@@ -30,15 +30,15 @@ public:
                                  unsigned int vlen,
                                  unsigned packet_len,
                                  const std::string& tag_len_key);
-    ~stream_to_tagged_stream_impl();
-    void set_packet_len(unsigned packet_len);
-    void set_packet_len_pmt(unsigned packet_len);
+    ~stream_to_tagged_stream_impl() override;
+    void set_packet_len(unsigned packet_len) override;
+    void set_packet_len_pmt(unsigned packet_len) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
-    bool start();
+    bool start() override;
 };
 
 } // namespace blocks

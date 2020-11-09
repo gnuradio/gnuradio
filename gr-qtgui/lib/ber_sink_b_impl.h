@@ -47,50 +47,50 @@ public:
                     float ber_limit = -7.0,
                     std::vector<std::string> curvenames = std::vector<std::string>(),
                     QWidget* parent = NULL);
-    ~ber_sink_b_impl();
+    ~ber_sink_b_impl() override;
 
-    bool check_topology(int ninputs, int noutputs);
+    bool check_topology(int ninputs, int noutputs) override;
 
-    void exec_();
+    void exec_() override;
     QWidget* qwidget();
 
 #ifdef ENABLE_PYTHON
-    PyObject* pyqwidget();
+    PyObject* pyqwidget() override;
 #else
     void* pyqwidget();
 #endif
 
-    void set_y_axis(double min, double max);
-    void set_x_axis(double min, double max);
+    void set_y_axis(double min, double max) override;
+    void set_x_axis(double min, double max) override;
 
-    void set_update_time(double t);
-    void set_title(const std::string& title);
-    void set_line_label(unsigned int which, const std::string& label);
-    void set_line_color(unsigned int which, const std::string& color);
-    void set_line_width(unsigned int which, int width);
-    void set_line_style(unsigned int which, int style);
-    void set_line_marker(unsigned int which, int marker);
+    void set_update_time(double t) override;
+    void set_title(const std::string& title) override;
+    void set_line_label(unsigned int which, const std::string& label) override;
+    void set_line_color(unsigned int which, const std::string& color) override;
+    void set_line_width(unsigned int which, int width) override;
+    void set_line_style(unsigned int which, int style) override;
+    void set_line_marker(unsigned int which, int marker) override;
 
-    void set_line_alpha(unsigned int which, double alpha);
+    void set_line_alpha(unsigned int which, double alpha) override;
 
-    std::string title();
-    std::string line_label(unsigned int which);
-    std::string line_color(unsigned int which);
-    int line_width(unsigned int which);
-    int line_style(unsigned int which);
-    int line_marker(unsigned int which);
-    double line_alpha(unsigned int which);
+    std::string title() override;
+    std::string line_label(unsigned int which) override;
+    std::string line_color(unsigned int which) override;
+    int line_width(unsigned int which) override;
+    int line_style(unsigned int which) override;
+    int line_marker(unsigned int which) override;
+    double line_alpha(unsigned int which) override;
 
-    void set_size(int width, int height);
+    void set_size(int width, int height) override;
 
-    int nsamps() const;
-    void enable_menu(bool en);
-    void enable_autoscale(bool en);
+    int nsamps() const override;
+    void enable_menu(bool en) override;
+    void enable_autoscale(bool en) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } /* namespace qtgui */

@@ -13,6 +13,7 @@ import cmath
 
 from gnuradio import gr, gr_unittest, analog, blocks
 
+
 class test_quadrature_demod(gr_unittest.TestCase):
 
     def setUp(self):
@@ -28,13 +29,13 @@ class test_quadrature_demod(gr_unittest.TestCase):
         src_data = []
         for i in range(200):
             ti = i / fs
-            src_data.append(cmath.exp(2j*cmath.pi*f*ti))
+            src_data.append(cmath.exp(2j * cmath.pi * f * ti))
 
         # f/fs is a quarter turn per sample.
         # Set the gain based on this to get 1 out.
         gain = 1.0 / (cmath.pi / 4)
 
-        expected_result = [0,] + 199*[1.0]
+        expected_result = [0, ] + 199 * [1.0]
 
         src = blocks.vector_source_c(src_data)
         op = analog.quadrature_demod_cf(gain)
@@ -47,6 +48,6 @@ class test_quadrature_demod(gr_unittest.TestCase):
         result_data = dst.data()
         self.assertComplexTuplesAlmostEqual(expected_result, result_data, 5)
 
-if __name__ == '__main__':
-    gr_unittest.run(test_quadrature_demod, "test_quadrature_demod.xml")
 
+if __name__ == '__main__':
+    gr_unittest.run(test_quadrature_demod)

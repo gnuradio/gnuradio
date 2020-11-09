@@ -58,13 +58,13 @@ class jack_sink : public sink
 
 public:
     jack_sink(int sampling_rate, const std::string device_name, bool ok_to_block);
-    ~jack_sink();
+    ~jack_sink() override;
 
-    bool check_topology(int ninputs, int noutputs);
+    bool check_topology(int ninputs, int noutputs) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace audio */

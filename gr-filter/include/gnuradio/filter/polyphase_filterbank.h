@@ -94,7 +94,7 @@ protected:
     std::vector<kernel::fft_filter_ccf> d_fft_filters;
     std::vector<std::vector<float>> d_taps;
     unsigned int d_taps_per_filter;
-    fft::fft_complex d_fft;
+    fft::fft_complex_rev* d_fft;
 
 public:
     /*!
@@ -103,7 +103,6 @@ public:
      *               channels <EM>M</EM>
      * \param taps (vector/list of floats) The prototype filter to
      *             populate the filterbank.
-     * \param fft_forward (bool) use a forward or inverse FFT (default=false).
      */
     polyphase_filterbank(unsigned int nfilts,
                          const std::vector<float>& taps,

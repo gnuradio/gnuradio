@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, blocks, filter, digital
 
+
 class test_simple_correlator(gr_unittest.TestCase):
 
     def setUp(self):
@@ -30,7 +31,7 @@ class test_simple_correlator(gr_unittest.TestCase):
         # Filter taps to expand the data to oversample by 8
         # Just using a RRC for some basic filter shape
         taps = filter.firdes.root_raised_cosine(8, 8, 1.0, 0.5, 21)
-        
+
         src = blocks.vector_source_b(expected_result)
         frame = digital.simple_framer(4)
         unpack = blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST)
@@ -47,5 +48,6 @@ class test_simple_correlator(gr_unittest.TestCase):
 
         self.assertEqual(expected_result, result_data)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_simple_correlator, "test_simple_correlator.xml")
+    gr_unittest.run(test_simple_correlator)

@@ -27,19 +27,19 @@ protected:
 
 public:
     nop_impl(size_t sizeof_stream_item);
-    ~nop_impl();
+    ~nop_impl() override;
 
-    void setup_rpc();
+    void setup_rpc() override;
 
-    int nmsgs_received() const { return d_nmsgs_recvd; }
+    int nmsgs_received() const override { return d_nmsgs_recvd; }
 
-    int ctrlport_test() const { return d_ctrlport_test; }
-    void set_ctrlport_test(int x) { d_ctrlport_test = x; }
+    int ctrlport_test() const override { return d_ctrlport_test; }
+    void set_ctrlport_test(int x) override { d_ctrlport_test = x; }
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

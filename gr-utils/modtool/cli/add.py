@@ -44,6 +44,7 @@ def cli(**kwargs):
     kwargs['cli'] = True
     self = ModToolAdd(**kwargs)
     click.secho("GNU Radio module name identified: " + self.info['modname'], fg='green')
+    get_blockname(self)
     get_blocktype(self)
     get_lang(self)
     info_lang = {'cpp': 'C++', 'python': 'Python'}[self.info['lang']]
@@ -51,9 +52,7 @@ def cli(**kwargs):
     if ((self.skip_subdirs['lib'] and self.info['lang'] == 'cpp')
             or (self.skip_subdirs['python'] and self.info['lang'] == 'python')):
         raise ModToolException('Missing or skipping relevant subdir.')
-    get_blockname(self)
     click.secho("Block/code identifier: " + self.info['blockname'], fg='green')
-    self.info['fullblockname'] = self.info['modname'] + '_' + self.info['blockname']
     if not self.license_file:
         get_copyrightholder(self)
     self.info['license'] = self.setup_choose_license()
@@ -93,11 +92,12 @@ def get_blockname(self):
             self.info['blockname'] = cli_input("Enter name of block/code (without module name prefix): ")
     if not re.match('^[a-zA-Z0-9_]+$', self.info['blockname']):
         raise ModToolException('Invalid block name.')
+    self.info['fullblockname'] = self.info['modname'] + '_' + self.info['blockname']
+    fname_grc = self.info['fullblockname'] + '.block.yml'
     for block in os.scandir('./grc/'):
         if block.is_file():
             s = block.name
-            present_block = self.info['modname'] + "_" + self.info['blockname'] + ".block.yml"
-            if s == present_block:
+            if s == fname_grc:
                 raise ModToolException('Block Already Present.')
                 
 def get_copyrightholder(self):

@@ -26,19 +26,22 @@ private:
 public:
     chunks_to_symbols_impl(const std::vector<OUT_T>& symbol_table, const int D = 1);
 
-    ~chunks_to_symbols_impl();
+    ~chunks_to_symbols_impl() override;
 
     void handle_set_symbol_table(pmt::pmt_t symbol_table_pmt);
-    void set_symbol_table(const std::vector<OUT_T>& symbol_table);
+    void set_symbol_table(const std::vector<OUT_T>& symbol_table) override;
 
-    int D() const { return d_D; }
-    std::vector<OUT_T> symbol_table() const { return d_symbol_table; }
+    int D() const override { return d_D; }
+    std::vector<OUT_T> symbol_table() const override { return d_symbol_table; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
-    bool check_topology(int ninputs, int noutputs) { return ninputs == noutputs; }
+    bool check_topology(int ninputs, int noutputs) override
+    {
+        return ninputs == noutputs;
+    }
 };
 
 } /* namespace digital */
