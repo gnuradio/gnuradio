@@ -28,8 +28,8 @@ class FILTER_API fir_filter_with_buffer_fff
 {
 private:
     mutable volk::vector<float> d_output; // Temporary storage for one element.
-    const int d_align;
-    const int d_naligned;
+    int d_align;
+    int d_naligned;
     std::vector<float> d_taps;
     unsigned int d_ntaps;
     volk::vector<float> d_buffer_ptr;
@@ -128,8 +128,8 @@ class FILTER_API fir_filter_with_buffer_ccc
 {
 private:
     mutable volk::vector<gr_complex> d_output; // Temporary storage for one element.
-    const int d_align;
-    const int d_naligned;
+    int d_align;
+    int d_naligned;
     std::vector<gr_complex> d_taps;
     unsigned int d_ntaps;
     volk::vector<gr_complex> d_buffer_ptr;
@@ -228,8 +228,8 @@ class FILTER_API fir_filter_with_buffer_ccf
 {
 private:
     mutable volk::vector<gr_complex> d_output; // Temporary storage for one element.
-    const int d_align;
-    const int d_naligned;
+    int d_align;
+    int d_naligned;
     std::vector<float> d_taps;
     unsigned int d_ntaps;
     volk::vector<gr_complex> d_buffer_ptr;
