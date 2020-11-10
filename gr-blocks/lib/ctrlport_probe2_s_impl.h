@@ -37,14 +37,14 @@ public:
                            unsigned int disp_mask);
     ~ctrlport_probe2_s_impl();
 
-    void setup_rpc();
+    void setup_rpc() override;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
-    std::vector<short> get();
+    std::vector<short> get() override;
 
-    void set_length(int len);
-    int length() const;
+    void set_length(int len) override;
+    int length() const override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

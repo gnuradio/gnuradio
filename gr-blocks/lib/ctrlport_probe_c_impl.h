@@ -32,9 +32,9 @@ public:
     ctrlport_probe_c_impl(const std::string& id, const std::string& desc);
     ~ctrlport_probe_c_impl();
 
-    void setup_rpc();
+    void setup_rpc() override;
 
-    std::vector<gr_complex> get();
+    std::vector<gr_complex> get() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
