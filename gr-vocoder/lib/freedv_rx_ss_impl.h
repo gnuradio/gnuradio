@@ -19,30 +19,22 @@ namespace vocoder {
 class freedv_rx_ss_impl : public freedv_rx_ss
 {
 private:
-    short* d_speech_out;
-    short* d_demod_in;
     struct freedv* d_freedv;
-    int d_nin, d_nout, d_frame;
+    int d_nin, d_nout;
     std::string d_rx_str;
     static void put_next_rx_char(void* callback_state, char c);
     const pmt::pmt_t d_port;
     struct MODEM_STATS d_stats;
-    int d_mode;
     int d_sync;
-    int d_total_bits;
     int d_total_bit_errors;
     float d_snr_est;
     float d_squelch_thresh;
     bool d_squelch_en;
     int d_speech_samples;
     int d_max_modem_samples;
-    float d_clock_offset;
-    int d_use_codecrx;
-    int d_interleave_frames;
 #ifdef FREEDV_MODE_700D
     struct freedv_advanced d_adv;
 #endif
-    struct CODEC2* d_c2 = NULL;
 
 public:
     freedv_rx_ss_impl(int mode, float squelch_thresh, int interleave_frames);

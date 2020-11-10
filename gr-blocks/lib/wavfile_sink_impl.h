@@ -25,10 +25,6 @@ private:
     int d_bytes_per_sample_new;
     bool d_append;
 
-    float d_max_sample_val;
-    float d_min_sample_val;
-    float d_normalize_shift;
-    float d_normalize_fac;
     std::vector<float> d_buffer;
 
     SNDFILE* d_fp;

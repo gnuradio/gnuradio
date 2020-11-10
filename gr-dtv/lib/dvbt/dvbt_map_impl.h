@@ -24,8 +24,6 @@ private:
 
     // Constellation size
     const unsigned char d_constellation_size;
-    // Keeps transmission mode
-    const dvbt_transmission_mode_t d_transmission_mode;
     // Step on each axis of the constellation
     const unsigned char d_step;
     // Keep Alpha internally
