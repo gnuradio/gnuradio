@@ -524,7 +524,6 @@ dvbt_viterbi_decoder_impl::dvbt_viterbi_decoder_impl(dvb_constellation_t constel
       d_bsize(bsize),
       d_nsymbols(d_bsize * d_n / d_m),
       d_nbits(2 * d_k * d_bsize),
-      d_nout(d_nbits / 2 / 8),
       d_inbits(d_nbits)
 {
     if (config.d_code_rate_HP == C1_2) {

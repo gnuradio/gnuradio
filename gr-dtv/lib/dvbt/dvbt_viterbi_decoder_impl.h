@@ -93,8 +93,6 @@ private:
     const int d_nsymbols;
     // Number of bits after depuncturing a block (before decoding)
     const int d_nbits;
-    // Number of full packed out bytes
-    const int d_nout;
 
     // Traceback (in bytes)
     int d_ntraceback;

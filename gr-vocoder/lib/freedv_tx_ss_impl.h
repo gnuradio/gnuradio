@@ -19,26 +19,18 @@ namespace vocoder {
 class freedv_tx_ss_impl : public freedv_tx_ss
 {
 private:
-    short* d_speech_in;
-    short* d_mod_out;
     std::string d_tx_str;
     std::string::size_type d_tx_str_offset = 0;
     static char get_next_tx_char(void* callback_state);
     struct freedv* d_freedv;
-    int d_mode;
     std::string d_msg_text;
-    int d_interleave_frames;
-    float d_squelch_thresh;
     int d_speech_samples;
     int d_nom_modem_samples;
-    int d_use_codectx;
-    int d_use_datatx;
     int d_clip;
     int d_tx_bpf;
 #ifdef FREEDV_MODE_700D
     struct freedv_advanced d_adv;
 #endif
-    struct CODEC2* d_c2;
 
 public:
     freedv_tx_ss_impl(int mode, const std::string txt_msg, int interleave_frames);

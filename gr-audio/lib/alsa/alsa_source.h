@@ -50,9 +50,8 @@ class alsa_source : public source
     alsa_internal::hwparam_wrap d_hw_params;
     snd_pcm_format_t d_format;
     unsigned int d_nperiods;
-    unsigned int d_period_time_us;        // microseconds
-    snd_pcm_uframes_t d_period_size = 0;  // in frames
-    unsigned int d_buffer_size_bytes = 0; // sizeof of d_buffer
+    unsigned int d_period_time_us;       // microseconds
+    snd_pcm_uframes_t d_period_size = 0; // in frames
     std::vector<char> d_buffer;
     work_t d_worker = 0;         // the work method to use
     unsigned int d_hw_nchan = 0; // # of configured h/w channels

@@ -34,9 +34,7 @@ freedv_tx_ss_impl::freedv_tx_ss_impl(int mode,
     : block("vocoder_freedv_tx_ss",
             io_signature::make(1, 1, sizeof(short)),
             io_signature::make(1, 1, sizeof(short))),
-      d_mode(mode),
-      d_msg_text(msg_txt),
-      d_interleave_frames(interleave_frames)
+      d_msg_text(msg_txt)
 {
 #ifdef FREEDV_MODE_700D
     if (mode == FREEDV_MODE_700D) {
