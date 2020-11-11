@@ -157,8 +157,8 @@ class Block(CoreBlock, Drawable):
 
         # update the params layout
         if not self.is_dummy_block:
-            markups = [param.format_block_surface_markup()
-                       for param in self.params.values() if (param.hide not in ('all', 'part') or (param.dtype == 'id' and force_show_id))]
+            markups = [param.format_block_surface_markup() for param in self.params.values()
+                       if (param.hide not in ('all', 'part'))]
         else:
             markups = ['<span font_desc="{font}"><b>key: </b>{key}</span>'.format(font=PARAM_FONT, key=self.key)]
 
