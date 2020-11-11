@@ -175,7 +175,7 @@ class PropsDialog(Gtk.Dialog):
 
                 for param in self._block.params.values():
                     if force_show_id and param.dtype == 'id':
-                        param.hide = 'none'
+                        param.hide = 'part'
                     # todo: why do we even rebuild instead of really hiding params?
                     if param.category != category or param.hide == 'all':
                         continue
