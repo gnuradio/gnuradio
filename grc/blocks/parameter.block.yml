@@ -7,10 +7,6 @@ parameters:
     label: Label
     dtype: string
     hide: ${ ('none' if label else 'part') }
--   id: value
-    label: Value
-    dtype: ${ type.type }
-    default: '0'
 -   id: type
     label: Type
     dtype: enum
@@ -19,6 +15,10 @@ parameters:
     option_attributes:
         type: [raw, complex, real, int, int, string]
     hide: ${ ('none' if type else 'part') }
+-   id: value
+    label: Value
+    dtype: ${ type.type }
+    default: '0'
 -   id: short_id
     label: Short ID
     dtype: string
