@@ -1,4 +1,4 @@
-# Copyright 2011-2012,2014,2017 Free Software Foundation, Inc.
+# Copyright 2011-2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -57,10 +57,10 @@ set(GR_CMAKE_MIN_VERSION "3.8.0")
 set(GR_MAKO_MIN_VERSION "0.4.2")
 set(GR_PYTHON_MIN_VERSION "3.6.5")
 set(GR_NUMPY_MIN_VERSION "1.13.0")
-set(GCC_MIN_VERSION "4.8.4")
+set(GCC_MIN_VERSION "5.0.0")
 set(CLANG_MIN_VERSION "3.4.0")
 set(APPLECLANG_MIN_VERSION "500")
-set(MSVC_MIN_VERSION "1800")
+set(MSVC_MIN_VERSION "1900")
 set(VOLK_MIN_VERSION "2.1.0")
 set(PYBIND11_MIN_VERSION "2.4") # pybind11 sets versions like 2.4.dev4, which compares < 2.4.3
 
@@ -125,8 +125,8 @@ ENDIF()
 
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_C_STANDARD 14)
 
 ########################################################################
 # Environment setup

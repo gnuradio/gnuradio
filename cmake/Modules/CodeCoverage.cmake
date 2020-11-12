@@ -78,8 +78,8 @@ IF(NOT GCOV_PATH)
 ENDIF() # NOT GCOV_PATH
 
 IF("${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
-	IF("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS 3)
-		MESSAGE(FATAL_ERROR "Clang version must be 3.0.0 or greater! Aborting...")
+	IF("${CMAKE_CXX_COMPILER_VERSION}" CLANG_MIN_VERSION )
+		MESSAGE(FATAL_ERROR "Clang version must be ${CLANG_MIN_VERSION} or greater! Aborting...")
 	ENDIF()
 ELSEIF(NOT CMAKE_COMPILER_IS_GNUCXX)
 	MESSAGE(FATAL_ERROR "Compiler is not GNU gcc! Aborting...")
