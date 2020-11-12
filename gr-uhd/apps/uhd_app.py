@@ -17,7 +17,7 @@ import argparse
 from gnuradio import eng_arg
 from gnuradio import uhd
 from gnuradio import gr
-from gnuradio import gru
+import msgq_runner
 
 COMMAND_DELAY = .2 # Seconds
 
@@ -269,7 +269,7 @@ class UHDApp:
         if args.show_async_msg:
             self.async_msgq = gr.msg_queue(0)
             self.async_src = uhd.amsg_source("", self.async_msgq)
-            self.async_rcv = gru.msgq_runner(self.async_msgq, self.async_callback)
+            self.async_rcv = msgq_runner.msgq_runner(self.async_msgq, self.async_callback)
 
     def set_gain(self, gain):
         """
