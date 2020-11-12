@@ -203,8 +203,9 @@ class Block(Element):
 
                 # Re-enable the hidden property of the ports
                 for port in ports:
-                    port.hidden = port.stored_hidden_state
-                    port.stored_hidden_state = None
+                    if (port.stored_hidden_state is not None):
+                        port.hidden = port.stored_hidden_state
+                        port.stored_hidden_state = None
 
 
 
@@ -705,6 +706,8 @@ class Block(Element):
             cnt = 0
             idx = 0
             for p in ports:
+                if p.domain == 'message':
+                    continue
                 if cnt > 0:
                     cnt -= 1
                     continue
