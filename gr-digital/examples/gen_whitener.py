@@ -8,9 +8,8 @@
 #
 # 
 
-from gnuradio import gr, gru
+from gnuradio import gr
 from gnuradio import blocks
-from gnuradio.eng_arg import eng_float, intx
 from argparse import ArgumentParser
 import sys
 
