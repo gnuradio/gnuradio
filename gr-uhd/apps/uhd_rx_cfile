@@ -18,11 +18,12 @@ import sys
 import os
 import pmt
 import time
-from gnuradio import gr, gru, eng_notation
+from gnuradio import gr, eng_notation
 from gnuradio import blocks
 from gnuradio import uhd
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
+import msgq_runner
 
 n2s = eng_notation.num_to_str
 COMMAND_DELAY = .2
@@ -193,7 +194,7 @@ class rx_cfile_block(gr.top_block):
         if options.show_async_msg:
             self.async_msgq = gr.msg_queue(0)
             self.async_src = uhd.amsg_source("", self.async_msgq)
-            self.async_rcv = gru.msgq_runner(self.async_msgq, self.async_callback)
+            self.async_rcv = msgq_runner.msgq_runner(self.async_msgq, self.async_callback)
 
     def async_callback(self, msg):
         md = self.async_src.msg_to_async_metadata_t(msg)
