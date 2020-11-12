@@ -9,7 +9,6 @@
 include(GrPython)
 
 add_subdirectory(gr)
-add_subdirectory(gru)
 
 if(ENABLE_GR_CTRLPORT)
   add_subdirectory(ctrlport)
