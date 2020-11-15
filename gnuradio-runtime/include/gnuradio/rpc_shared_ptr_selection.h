@@ -27,7 +27,9 @@
 
 #include "gnuradio/config.h"
 #ifdef GR_RPCSERVER_THRIFT
+#ifdef THRIFT_HAS_VERSION_H
 #include <thrift/version.h>
+#endif
 // to get boost includes, if and only if they're still in Thrift:
 #include <thrift/concurrency/Thread.h>
 #endif
