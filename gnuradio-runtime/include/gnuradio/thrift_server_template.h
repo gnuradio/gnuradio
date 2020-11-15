@@ -23,6 +23,7 @@
 #ifndef THRIFT_SERVER_TEMPLATE_H
 #define THRIFT_SERVER_TEMPLATE_H
 
+#include <gnuradio/config.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/rpc_shared_ptr_selection.h>
@@ -30,7 +31,11 @@
 #include <iostream>
 
 #include "thrift/ControlPort.h"
+#ifdef THRIFT_HAS_THREADFACTORY_H
+#include <thrift/concurrency/ThreadFactory.h>
+#else
 #include <thrift/concurrency/PlatformThreadFactory.h>
+#endif
 #include <thrift/concurrency/ThreadManager.h>
 #include <thrift/server/TSimpleServer.h>
 #include <thrift/server/TThreadPoolServer.h>
@@ -138,9 +143,14 @@ thrift_server_template<TserverBase, TserverClass, TImplClass>::thrift_server_tem
         gr::rpc_sptr<thrift::concurrency::ThreadManager>::t threadManager(
             thrift::concurrency::ThreadManager::newSimpleThreadManager(nthreads));
 
+#ifdef THRIFT_HAS_THREADFACTORY_H
+        threadManager->threadFactory(gr::rpc_sptr<thrift::concurrency::ThreadFactory>::t(
+            new thrift::concurrency::ThreadFactory()));
+#else
         threadManager->threadFactory(
             gr::rpc_sptr<thrift::concurrency::PlatformThreadFactory>::t(
                 new thrift::concurrency::PlatformThreadFactory()));
+#endif
 
         threadManager->start();
 
