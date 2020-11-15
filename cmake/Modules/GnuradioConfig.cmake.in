@@ -47,7 +47,7 @@ find_dependency(Volk)
 set(ENABLE_PYTHON @ENABLE_PYTHON@ CACHE BOOL "Enable Python & SWIG")
 if(${ENABLE_PYTHON})
   set(PYTHON_EXECUTABLE @PYTHON_EXECUTABLE@)
-  set(GR_PYTHON_DIR @GR_PYTHON_DIR@)
+  set(GR_PYTHON_DIR @GR_PYTHON_DIR@ CACHE STRING "Custom OOT Python installation directory")
   include(GrPython)
 endif()
 
