@@ -46,7 +46,7 @@ list(APPEND filter_python_files
     pfb_synthesizer_ccf_python.cc
     pm_remez_python.cc
     polyphase_filterbank_python.cc
-    rational_resampler_base_python.cc
+    rational_resampler_python.cc
     single_pole_iir_python.cc
     single_pole_iir_filter_cc_python.cc
     single_pole_iir_filter_ff_python.cc
