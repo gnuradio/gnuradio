@@ -76,7 +76,7 @@ class test_rational_resampler (gr_unittest.TestCase):
 
         tb = gr.top_block()
         src = blocks.vector_source_f(src_data)
-        op = filter.rational_resampler_base_fff(1, 1, taps)
+        op = filter.rational_resampler_fff(1, 1, taps)
         dst = blocks.vector_sink_f()
         tb.connect(src, op)
         tb.connect(op, dst)
@@ -99,7 +99,7 @@ class test_rational_resampler (gr_unittest.TestCase):
 
         tb = gr.top_block()
         src = blocks.vector_source_f(src_data)
-        op = filter.rational_resampler_base_fff(interpolation, 1, taps)
+        op = filter.rational_resampler_fff(interpolation, 1, taps)
         dst = blocks.vector_sink_f()
         tb.connect(src, op)
         tb.connect(op, dst)
@@ -117,7 +117,7 @@ class test_rational_resampler (gr_unittest.TestCase):
 
         tb = gr.top_block()
         src = blocks.vector_source_f(src_data)
-        op = filter.rational_resampler_base_fff(interpolation, 1, taps)
+        op = filter.rational_resampler_fff(interpolation, 1, taps)
         dst = blocks.vector_sink_f()
         tb.connect(src, op)
         tb.connect(op, dst)
@@ -137,7 +137,7 @@ class test_rational_resampler (gr_unittest.TestCase):
 
         tb = gr.top_block()
         src = blocks.vector_source_f(src_data)
-        op = filter.rational_resampler_base_fff(1, decimation, taps)
+        op = filter.rational_resampler_fff(1, decimation, taps)
         dst = blocks.vector_sink_f()
         tb.connect(src, op)
         tb.connect(op, dst)
@@ -168,7 +168,7 @@ class test_rational_resampler (gr_unittest.TestCase):
 
                     tb = gr.top_block()
                     src = blocks.vector_source_f(src_data)
-                    op = filter.rational_resampler_base_fff(1, decim, taps)
+                    op = filter.rational_resampler_fff(1, decim, taps)
                     dst = blocks.vector_sink_f()
                     tb.connect(src, op, dst)
                     tb.run()
@@ -206,7 +206,7 @@ class test_rational_resampler (gr_unittest.TestCase):
 
                     tb = gr.top_block()
                     src = blocks.vector_source_f(src_data)
-                    op = filter.rational_resampler_base_fff(interp, 1, taps)
+                    op = filter.rational_resampler_fff(interp, 1, taps)
                     dst = blocks.vector_sink_f()
                     tb.connect(src, op, dst)
                     tb.run()
@@ -238,7 +238,7 @@ class test_rational_resampler (gr_unittest.TestCase):
 
         tb = gr.top_block()
         src = blocks.vector_source_f(src_data)
-        op = filter.rational_resampler_base_fff(interp, decimation, taps)
+        op = filter.rational_resampler_fff(interp, decimation, taps)
         dst = blocks.vector_sink_f()
         tb.connect(src, op)
         tb.connect(op, dst)

@@ -15,7 +15,6 @@ GR_PYTHON_INSTALL(
     freq_xlating_fft_filter.py
     optfir.py
     pfb.py
-    rational_resampler.py
     file_taps_loader.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/filter
 )

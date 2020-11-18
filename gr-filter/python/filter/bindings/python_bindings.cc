@@ -58,7 +58,7 @@ void bind_pfb_interpolator_ccf(py::module&);
 void bind_pfb_synthesizer_ccf(py::module&);
 void bind_pm_remez(py::module&);
 void bind_polyphase_filterbank(py::module&);
-void bind_rational_resampler_base(py::module&);
+void bind_rational_resampler(py::module&);
 void bind_single_pole_iir(py::module&);
 void bind_single_pole_iir_filter_cc(py::module&);
 void bind_single_pole_iir_filter_ff(py::module&);
@@ -125,7 +125,7 @@ PYBIND11_MODULE(filter_python, m)
     bind_pfb_synthesizer_ccf(m);
     bind_pm_remez(m);
     bind_polyphase_filterbank(m);
-    bind_rational_resampler_base(m);
+    bind_rational_resampler(m);
     bind_single_pole_iir(m);
     bind_single_pole_iir_filter_cc(m);
     bind_single_pole_iir_filter_ff(m);

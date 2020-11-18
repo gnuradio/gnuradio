@@ -23,7 +23,6 @@ except ImportError:
 
 from .filterbank import *
 from .freq_xlating_fft_filter import *
-from .rational_resampler import *
 from . import pfb
 from . import optfir
 
