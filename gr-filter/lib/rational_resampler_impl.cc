@@ -102,7 +102,6 @@ rational_resampler_impl<IN_T, OUT_T, TAP_T>::rational_resampler_impl(
     : block("rational_resampler<IN_T,OUT_T,TAP_T>",
             io_signature::make(1, 1, sizeof(IN_T)),
             io_signature::make(1, 1, sizeof(OUT_T))),
-      d_history(1),
       d_decimation(decimation)
 {
     if (interpolation == 0) {
