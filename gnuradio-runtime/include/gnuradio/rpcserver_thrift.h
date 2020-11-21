@@ -30,9 +30,6 @@
 class rpcserver_thrift : public virtual rpcserver_base, public GNURadio::ControlPortIf
 {
 public:
-    gr::logger_ptr d_logger;
-    gr::logger_ptr d_debug_logger;
-
     rpcserver_thrift();
     virtual ~rpcserver_thrift();
 
@@ -82,6 +79,9 @@ public:
     virtual void shutdown();
 
 private:
+    static gr::logger_ptr d_logger;
+    static gr::logger_ptr d_debug_logger;
+
     boost::mutex d_callback_map_lock;
 
     typedef std::map<std::string, configureCallback_t> ConfigureCallbackMap_t;
@@ -108,7 +108,7 @@ private:
             msg << _handlerCallback.description
                 << " requires PRIVLVL <= " << _handlerCallback.priv
                 << " to set, currently at: " << cur_priv;
-            GR_LOG_ERROR(logger, msg.str());
+            GR_LOG_ERROR(d_logger, msg.str());
         }
     }
 
@@ -133,7 +133,7 @@ private:
                     msg << "Key " << p.first
                         << " requires PRIVLVL <= " << iter->second.priv
                         << " to set, currently at: " << cur_priv;
-                    GR_LOG_ERROR(logger, msg.str());
+                    GR_LOG_ERROR(d_logger, msg.str());
                 }
             } else {
                 throw apache::thrift::TApplicationException(__FILE__ " " S__LINE__);
@@ -165,12 +165,12 @@ private:
                     msg << "Key " << iter->first
                         << " requires PRIVLVL: <= " << iter->second.priv
                         << " to get, currently at: " << cur_priv;
-                    GR_LOG_ERROR(logger, msg.str());
+                    GR_LOG_ERROR(d_logger, msg.str());
                 }
             } else {
                 std::ostringstream smsgs;
-                msg << "Ctrlport Key called with unregistered key (" << p << ")\n";
-                GR_LOG_ERROR(logger, ss.str());
+                smsgs << "Ctrlport Key called with unregistered key (" << p << ")\n";
+                GR_LOG_ERROR(d_logger, smsgs.str());
                 throw apache::thrift::TApplicationException(__FILE__ " " S__LINE__);
             }
         }
@@ -197,7 +197,7 @@ private:
                 std::ostringstream msg;
                 msg << "Key " << p.first << " requires PRIVLVL: <= " << p.second.priv
                     << " to get, currently at: " << cur_priv;
-                GR_LOG_ERROR(logger, msg.str());
+                GR_LOG_ERROR(d_logger, msg.str());
             }
         }
 
@@ -231,7 +231,7 @@ private:
                 std::ostringstream msg;
                 msg << "Key " << p.first << " requires PRIVLVL: <= " << p.second.priv
                     << " to get, currently at: " << cur_priv;
-                GR_LOG_ERROR(logger, msg.str());
+                GR_LOG_ERROR(d_logger, msg.str());
             }
         }
 
@@ -268,7 +268,7 @@ private:
                     msg << "Key " << iter->first
                         << " requires PRIVLVL: <= " << iter->second.priv
                         << " to get, currently at: " << cur_priv;
-                    GR_LOG_ERROR(logger, msg.str());
+                    GR_LOG_ERROR(d_logger, msg.str());
                 }
             } else {
                 throw apache::thrift::TApplicationException(__FILE__ " " S__LINE__);
