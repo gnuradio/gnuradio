@@ -24,6 +24,12 @@
 #ifndef GR_RPCSERVER_THRIFT
 #cmakedefine GR_RPCSERVER_THRIFT
 #endif
+#ifndef THRIFT_HAS_VERSION_H
+#cmakedefine THRIFT_HAS_VERSION_H
+#endif
+#ifndef THRIFT_HAS_THREADFACTORY_H
+#cmakedefine THRIFT_HAS_THREADFACTORY_H
+#endif
 #ifndef GR_MPLIB_GMP
 #cmakedefine GR_MPLIB_GMP
 #endif

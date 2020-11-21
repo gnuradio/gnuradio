@@ -23,9 +23,13 @@
 
 using namespace rpcpmtconverter;
 
+gr::logger_ptr rpcserver_thrift::d_logger;
+gr::logger_ptr rpcserver_thrift::d_debug_logger;
+
+
 rpcserver_thrift::rpcserver_thrift()
 {
-    gr::configure_default_loggers(logger, debug_logger, "rpcserver_thrift");
+    gr::configure_default_loggers(d_logger, d_debug_logger, "rpcserver_thrift");
     // std::cerr << "rpcserver_thrift::ctor" ;
 }
 
@@ -273,7 +277,7 @@ void rpcserver_thrift::shutdown()
 {
     if (DEBUG) {
         std::ostringstream msg;
-        msg << "shutting down... " << id;
+        msg << "shutting down rpcserver_thrift... ";
         GR_LOG_INFO(d_debug_logger, msg.str());
     }
 }
