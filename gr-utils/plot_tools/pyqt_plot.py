@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -268,4 +268,4 @@ class Ui_MainWindow(object):
         self.action_exit.setText(_translate("MainWindow", "E&xit", None))
         self.action_reload.setText(_translate("MainWindow", "&Reload", None))
 
-from PyQt4 import Qwt5
+from PyQt5 import Qwt

@@ -19,10 +19,10 @@ import sys
 
 try:
     from gnuradio import qtgui
-    from PyQt4 import QtGui, QtCore
+    from PyQt5 import QtGui, QtCore
     import sip
 except ImportError:
-    print("Error: Program requires PyQt4 and gr-qtgui.")
+    print("Error: Program requires PyQt5 and gr-qtgui.")
     sys.exit(1)
 
 try:
@@ -206,7 +206,7 @@ class my_top_block(gr.top_block):
 
         # Get the reference pointer to the SpectrumDisplayForm QWidget
         # Wrap the pointer as a PyQt SIP object
-        #     This can now be manipulated as a PyQt4.QtGui.QWidget
+        #     This can now be manipulated as a PyQt5.QtGui.QWidget
         self.pysink = sip.wrapinstance(self.snk.pyqwidget(), QtGui.QWidget)
 
         self.main_win = main_window(self.pysink, self)
