@@ -128,11 +128,11 @@ when asking for the delay outside of the available range.
 
 The QT GUI blocks require the following dependencies.
 
-\li QtCore (version >= 4.4)
-\li QtGui (version >= 4.4)
-\li QtOpenGL (version >= 4.4)
+\li QtCore (version >= 5.6)
+\li QtGui (version >= 5.6)
+\li QtOpenGL (version >= 5.6)
 \li PyQt5 for Qt5 (version >= 5.0)
-\li Qwt (version >= 5.2)
+\li Qwt (version >= 6.1)
 
 \section qtgui_usage Usage
 
@@ -150,7 +150,7 @@ qapp's "exec_()" function is called. This function is a blocking call
 while the GUI is alive.
 
 \code
-from PyQt4 import Qt
+from PyQt5 import Qt
 from gnuradio import qtgui
 import sys, sip
 

@@ -7,7 +7,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -431,5 +431,5 @@ class Ui_MainWindow(object):
         self.action_open.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+O", None, QtGui.QApplication.UnicodeUTF8))
 
 #from qwt_plot import QwtPlot
-from PyQt4.Qwt5 import QwtPlot
+from PyQt5.Qwt import QwtPlot
 
