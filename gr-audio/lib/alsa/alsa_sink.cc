@@ -55,7 +55,7 @@ static double default_period_time()
 
 static int default_nperiods()
 {
-    return std::max(2L, prefs::singleton()->get_long("audio_alsa", "nperiods", 4));
+    return std::max(2L, prefs::singleton()->get_long("audio_alsa", "nperiods", 32));
 }
 
 // ----------------------------------------------------------------
