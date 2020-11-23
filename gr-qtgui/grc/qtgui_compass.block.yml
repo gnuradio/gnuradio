@@ -95,10 +95,7 @@ templates:
 documentation: |-
     This block takes angle in degrees as input and displays it on a compass.
     Args:
-    update_time: Time-interval between GUI update.
-    min_val: Min. value displayed on the compass.
-    max_val: Max. value displayed on the compass.
-    step: Step-size.
-    arc_bias: Clockwise rotation applied to dial.
-    usemsg: Use the message instead of the stream input.
+    Update Period: Time-interval between GUI update.
+    Min Size (px): Min. size of the compass.
+    Input Type: Use the message instead of the stream input.
 file_format: 1
