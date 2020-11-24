@@ -35,7 +35,14 @@ SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 
 include(GrComponent)
-GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING)
+########################################################################
+# Setup Boost for global use (within this build)
+# Do this before enabling testing support, as it depends
+# on unit_test_framework
+########################################################################
+include(GrBoost)
+GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING
+         Boost_unit_test_framework_FOUND )
 
 # Set the version information here
 SET(VERSION_MAJOR 3)
@@ -309,11 +316,6 @@ configure_file(
 add_custom_target(uninstall
     ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
 )
-
-########################################################################
-# Setup Boost for global use (within this build)
-########################################################################
-include(GrBoost)
 
 ########################################################################
 # Enable python component
