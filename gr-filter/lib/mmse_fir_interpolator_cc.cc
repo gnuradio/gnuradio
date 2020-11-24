@@ -26,7 +26,7 @@ std::vector<kernel::fir_filter_ccf> build_filters()
     filters.reserve(NSTEPS + 1);
     for (int i = 0; i < NSTEPS + 1; i++) {
         std::vector<float> t(&taps[i][0], &taps[i][NTAPS]);
-        filters.emplace_back(1, t);
+        filters.emplace_back(t);
     }
     return filters;
 }

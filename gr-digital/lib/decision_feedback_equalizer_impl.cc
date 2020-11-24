@@ -64,7 +64,6 @@ decision_feedback_equalizer_impl::decision_feedback_equalizer_impl(
                                                                sizeof(unsigned short) }),
                          sps),
       filter::kernel::fir_filter_ccc(
-          sps,
           vector<gr_complex>(num_taps_forward + num_taps_feedback, gr_complex(0, 0))),
       d_num_taps_fwd(num_taps_forward),
       d_num_taps_rev(num_taps_feedback),

@@ -42,7 +42,7 @@ freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::freq_xlating_fir_filter_impl(
                      io_signature::make(1, 1, sizeof(OUT_T)),
                      decimation),
       d_proto_taps(taps),
-      d_composite_fir(decimation, {}),
+      d_composite_fir({}),
       d_center_freq(center_freq),
       d_prev_center_freq(0),
       d_sampling_freq(sampling_freq),

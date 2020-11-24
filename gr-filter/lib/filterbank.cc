@@ -32,7 +32,7 @@ filterbank::filterbank(const std::vector<std::vector<float>>& taps)
     std::vector<float> vtaps(1, 0.0f);
     d_fir_filters.reserve(d_nfilts);
     for (unsigned int i = 0; i < d_nfilts; i++) {
-        d_fir_filters.emplace_back(1, vtaps);
+        d_fir_filters.emplace_back(vtaps);
     }
     // Now, actually set the filters' taps
     set_taps(d_taps);

@@ -29,8 +29,7 @@ kurtotic_equalizer_cc_impl::kurtotic_equalizer_cc_impl(int num_taps, float mu)
                      io_signature::make(1, 1, sizeof(gr_complex)),
                      io_signature::make(1, 1, sizeof(gr_complex)),
                      1),
-      filter::kernel::fir_filter_ccc(1,
-                                     std::vector<gr_complex>(num_taps, gr_complex(0, 0)))
+      filter::kernel::fir_filter_ccc(std::vector<gr_complex>(num_taps, gr_complex(0, 0)))
 {
     set_gain(mu);
     if (num_taps > 0)

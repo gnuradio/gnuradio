@@ -29,7 +29,7 @@ polyphase_filterbank::polyphase_filterbank(unsigned int nfilts,
     // Create an FIR filter for each channel and zero out the taps
     std::vector<float> vtaps(1, 0.0f);
     for (unsigned int i = 0; i < d_nfilts; i++) {
-        d_fir_filters.emplace_back(1, vtaps);
+        d_fir_filters.emplace_back(vtaps);
         d_fft_filters.emplace_back(1, vtaps);
     }
 

@@ -215,10 +215,10 @@ interp_resampler_pfb_no_mf_cc::interp_resampler_pfb_no_mf_cc(bool derivative, in
     for (int src = 0; src <= NSTEPS; src += incr) {
 
         t.assign(&taps[src][0], &taps[src][NTAPS]);
-        d_filters.emplace_back(1, t);
+        d_filters.emplace_back(t);
         if (d_derivative) {
             t.assign(&Dtaps[src][0], &Dtaps[src][DNTAPS]);
-            d_diff_filters.emplace_back(1, t);
+            d_diff_filters.emplace_back(t);
         }
     }
 }
@@ -284,10 +284,10 @@ interp_resampler_pfb_no_mf_ff::interp_resampler_pfb_no_mf_ff(bool derivative, in
     for (int src = 0; src <= NSTEPS; src += incr) {
 
         t.assign(&taps[src][0], &taps[src][NTAPS]);
-        d_filters.emplace_back(1, t);
+        d_filters.emplace_back(t);
         if (d_derivative) {
             t.assign(&Dtaps[src][0], &Dtaps[src][DNTAPS]);
-            d_diff_filters.emplace_back(1, t);
+            d_diff_filters.emplace_back(t);
         }
     }
 }
@@ -414,7 +414,7 @@ interp_resampler_pfb_mf_ccf::interp_resampler_pfb_mf_ccf(const std::vector<float
             if (k < m)
                 d_taps[i][j] = taps[k];
         }
-        d_filters.emplace_back(1, d_taps[i]);
+        d_filters.emplace_back(d_taps[i]);
         if (!d_derivative)
             continue;
 
@@ -424,7 +424,7 @@ interp_resampler_pfb_mf_ccf::interp_resampler_pfb_mf_ccf(const std::vector<float
             if (k < n)
                 d_diff_taps[i][j] = diff_taps[k];
         }
-        d_diff_filters.emplace_back(1, d_diff_taps[i]);
+        d_diff_filters.emplace_back(d_diff_taps[i]);
     }
 }
 
@@ -552,7 +552,7 @@ interp_resampler_pfb_mf_fff::interp_resampler_pfb_mf_fff(const std::vector<float
             if (k < m)
                 d_taps[i][j] = taps[k];
         }
-        d_filters.emplace_back(1, d_taps[i]);
+        d_filters.emplace_back(d_taps[i]);
         if (!d_derivative)
             continue;
 
@@ -562,7 +562,7 @@ interp_resampler_pfb_mf_fff::interp_resampler_pfb_mf_fff(const std::vector<float
             if (k < n)
                 d_diff_taps[i][j] = diff_taps[k];
         }
-        d_diff_filters.emplace_back(1, d_diff_taps[i]);
+        d_diff_filters.emplace_back(d_diff_taps[i]);
     }
 }
 
