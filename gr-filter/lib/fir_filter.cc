@@ -19,8 +19,7 @@ namespace filter {
 namespace kernel {
 
 template <class IN_T, class OUT_T, class TAP_T>
-fir_filter<IN_T, OUT_T, TAP_T>::fir_filter(int decimation, const std::vector<TAP_T>& taps)
-    : d_output(1)
+fir_filter<IN_T, OUT_T, TAP_T>::fir_filter(const std::vector<TAP_T>& taps) : d_output(1)
 {
     d_align = volk_get_alignment();
     d_naligned = std::max((size_t)1, d_align / sizeof(IN_T));

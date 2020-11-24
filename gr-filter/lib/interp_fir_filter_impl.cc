@@ -50,7 +50,7 @@ interp_fir_filter_impl<IN_T, OUT_T, TAP_T>::interp_fir_filter_impl(
 
     d_firs.reserve(interpolation);
     for (unsigned i = 0; i < interpolation; i++) {
-        d_firs.emplace_back(1, dummy_taps);
+        d_firs.emplace_back(dummy_taps);
     }
 
     set_taps(taps);

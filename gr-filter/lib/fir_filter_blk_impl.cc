@@ -35,7 +35,7 @@ fir_filter_blk_impl<IN_T, OUT_T, TAP_T>::fir_filter_blk_impl(
                      io_signature::make(1, 1, sizeof(IN_T)),
                      io_signature::make(1, 1, sizeof(OUT_T)),
                      decimation),
-      d_fir(decimation, taps),
+      d_fir(taps),
       d_updated(false)
 {
     this->set_history(d_fir.ntaps());

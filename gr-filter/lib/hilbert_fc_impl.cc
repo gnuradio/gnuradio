@@ -30,7 +30,7 @@ hilbert_fc_impl::hilbert_fc_impl(unsigned int ntaps, firdes::win_type window, do
                  io_signature::make(1, 1, sizeof(float)),
                  io_signature::make(1, 1, sizeof(gr_complex))),
       d_ntaps(ntaps | 0x1), // ensure ntaps is odd
-      d_hilb(1, firdes::hilbert(d_ntaps, window, beta))
+      d_hilb(firdes::hilbert(d_ntaps, window, beta))
 {
     set_history(d_ntaps);
 

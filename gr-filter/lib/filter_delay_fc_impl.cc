@@ -28,7 +28,7 @@ filter_delay_fc_impl::filter_delay_fc_impl(const std::vector<float>& taps)
                  io_signature::make(1, 2, sizeof(float)),
                  io_signature::make(1, 1, sizeof(gr_complex))),
       d_taps(taps),
-      d_fir(1, taps),
+      d_fir(taps),
       d_delay(d_fir.ntaps() / 2),
       d_update(false)
 {

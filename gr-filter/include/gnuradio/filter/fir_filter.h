@@ -25,7 +25,7 @@ template <class IN_T, class OUT_T, class TAP_T>
 class FILTER_API fir_filter
 {
 public:
-    fir_filter(int decimation, const std::vector<TAP_T>& taps);
+    fir_filter(const std::vector<TAP_T>& taps);
 
     // Disallow copy.
     //

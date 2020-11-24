@@ -53,7 +53,7 @@ rational_resampler_base_impl<IN_T, OUT_T, TAP_T>::rational_resampler_base_impl(
 
     d_firs.reserve(interpolation);
     for (unsigned i = 0; i < interpolation; i++) {
-        d_firs.emplace_back(1, std::vector<TAP_T>());
+        d_firs.emplace_back(std::vector<TAP_T>());
     }
 
     set_taps(taps);

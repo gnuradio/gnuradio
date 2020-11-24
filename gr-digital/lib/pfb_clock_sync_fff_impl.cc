@@ -82,8 +82,8 @@ pfb_clock_sync_fff_impl::pfb_clock_sync_fff_impl(double sps,
     // Create an FIR filter for each channel and zero out the taps
     std::vector<float> vtaps(1, 0);
     for (int i = 0; i < d_nfilters; i++) {
-        d_filters.emplace_back(1, vtaps);
-        d_diff_filters.emplace_back(1, vtaps);
+        d_filters.emplace_back(vtaps);
+        d_diff_filters.emplace_back(vtaps);
     }
 
     // Now, actually set the filters' taps
