@@ -41,7 +41,7 @@
 #include <gnuradio/rpcregisterhelpers.h>
 
 namespace gr {
-
+using namespace boost::placeholders;
 /*!
  * \brief The abstract base class for all signal processing blocks.
  * \ingroup internal
