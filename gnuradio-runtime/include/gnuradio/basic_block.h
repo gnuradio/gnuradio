@@ -33,6 +33,9 @@
 #include <boost/foreach.hpp>
 #include <boost/function.hpp>
 #include <boost/thread/condition_variable.hpp>
+#if (BOOST_VERSION >= 106000)
+#include <boost/bind/bind.hpp>
+#endif
 #include <deque>
 #include <iostream>
 #include <map>
@@ -41,7 +44,9 @@
 #include <gnuradio/rpcregisterhelpers.h>
 
 namespace gr {
+#if (BOOST_VERSION >= 106000)
 using namespace boost::placeholders;
+#endif
 /*!
  * \brief The abstract base class for all signal processing blocks.
  * \ingroup internal
