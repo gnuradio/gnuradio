@@ -41,7 +41,6 @@ public:
     void enableMenu(bool en = true);
 
 public slots:
-    void resizeEvent(QResizeEvent* e) override;
     void mousePressEvent(QMouseEvent* e) override;
     void customEvent(QEvent* e) override = 0;
 

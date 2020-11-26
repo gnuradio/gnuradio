@@ -144,12 +144,6 @@ DisplayForm::~DisplayForm()
     // deleted
 }
 
-void DisplayForm::resizeEvent(QResizeEvent* e)
-{
-    // QSize s = size();
-    // emit d_display_plot->resizeSlot(&s);
-}
-
 void DisplayForm::mousePressEvent(QMouseEvent* e)
 {
     bool ctrloff = Qt::ControlModifier != QApplication::keyboardModifiers();
