@@ -36,7 +36,7 @@ private:
     digital::lfsr d_lfsr;
 
 public:
-    scrambler_bb_impl(int mask, int seed, int len);
+    scrambler_bb_impl(uint64_t mask, uint64_t seed, uint8_t len);
     ~scrambler_bb_impl();
 
     int work(int noutput_items,

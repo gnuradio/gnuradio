@@ -20,8 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-
 from gnuradio import gr, gr_unittest, digital, blocks
+import numpy as np
 import pmt
 
 # See gr-digital/lib/additive_scrambler_bb_impl.cc for reference.
@@ -35,6 +35,10 @@ def additive_scramble_lfsr(mask, seed, reglen, bpb, data):
         out.append(d ^ scramble_word)
     return tuple(out)
 
+def make_mask(*exp):
+    from functools import reduce
+    return reduce(int.__xor__,map(lambda x:2**x,exp)),max(exp)-1
+
 class test_scrambler(gr_unittest.TestCase):
 
     def setUp(self):
@@ -44,24 +48,64 @@ class test_scrambler(gr_unittest.TestCase):
         self.tb = None
 
     def test_scrambler_descrambler(self):
-        src_data = (1,)*1000
+        src_data = np.random.randint(0,2,500,dtype=np.int8)
         src = blocks.vector_source_b(src_data, False)
-        scrambler = digital.scrambler_bb(0x8a, 0x7F, 7)     # CCSDS 7-bit scrambler
-        descrambler = digital.descrambler_bb(0x8a, 0x7F, 7)
+        scrambler = digital.scrambler_bb(0x85, 1, 6)     # p(x) = x^7 + x^2 + 1
+        dst_tap = blocks.vector_sink_b()
+        descrambler = digital.descrambler_bb(0x85, 0b111, 6) # we can use seed 0 here, it is descrambling.
         dst = blocks.vector_sink_b()
         self.tb.connect(src, scrambler, descrambler, dst)
+        self.tb.connect(scrambler, dst_tap)
         self.tb.run()
-        self.assertEqual(tuple(src_data[:-8]), dst.data()[8:]) # skip garbage during synchronization
+        self.assertEqual(tuple(src_data[:-7]), dst.data()[7:]) # skip garbage during synchronization
+        self.assertEqual(tuple(np.convolve(dst_tap.data(),[1,0,0,0,0,1,0,1])%2)[7:-10],
+                tuple(src_data[:-10])) # manual descrambling test
+
+    def test_scrambler_descrambler_big(self):
+        mask,k = make_mask(51,6,0) #p(x) = x^51+x^6+1
+        src_data = np.random.randint(0,2,1000,dtype=np.int8)
+        src = blocks.vector_source_b(src_data, False)
+        scrambler = digital.scrambler_bb(mask, 1, k)     # p(x) = x^7 + x^2 + 1
+        dst_tap = blocks.vector_sink_b()
+        descrambler = digital.descrambler_bb(mask, 0b111, k) # we can use seed 0 here, it is descrambling.
+        dst = blocks.vector_sink_b()
+        self.tb.connect(src, scrambler, descrambler, dst)
+        self.tb.connect(scrambler, dst_tap)
+        self.tb.run()
+        self.assertTrue(np.all(src_data[:-51]==dst.data()[51:])) # skip garbage during synchronization
+        reg = np.zeros(52,np.int8)
+        reg[::-1][(51,6,0),] = 1
+        self.assertTrue(np.all( np.convolve(dst_tap.data(),reg)[51:-60]%2 
+            == src_data[:-60])) # manual descrambling test
 
     def test_additive_scrambler(self):
-        src_data = (1,)*1000
+        mask,k = make_mask(5,3,0) #p(x) = x^5+x^3+1, primitive, LRS of length 2**5-1
+        lrslen = 2**5-1
+        src_data = (1,)*lrslen*2
         src = blocks.vector_source_b(src_data, False)
-        scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7)
-        descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7)
+        scrambler = digital.additive_scrambler_bb(mask, 1, k)
+        dst_tap = blocks.vector_sink_b()
+        descrambler = digital.additive_scrambler_bb(mask, 1, k)
+        dst = blocks.vector_sink_b()
+        self.tb.connect(src, scrambler, descrambler, dst)
+        self.tb.connect(scrambler, dst_tap)
+        self.tb.run()
+        self.assertEqual(src_data, dst.data())
+        tap_data = dst_tap.data()[:lrslen*2]
+        self.assertEqual(tap_data[:lrslen],tap_data[lrslen:]) # The LRS should appear identical and twice
+        res = (np.convolve(tap_data,[1,0,1,0,0,1])%2)[5:-5]
+        self.assertEqual(len(res),sum(res)) # when convolved with mask, only 1's whould be returned.
+
+    def test_additive_scrambler_big(self):
+        mask,k = make_mask(51,3,0) #p(x) = x^51+x^3+1
+        src_data = np.random.randint(0,2,1000,dtype=np.int8).tolist()
+        src = blocks.vector_source_b(src_data, False)
+        scrambler = digital.additive_scrambler_bb(mask, 1, k)
+        descrambler = digital.additive_scrambler_bb(mask, 1, k)
         dst = blocks.vector_sink_b()
         self.tb.connect(src, scrambler, descrambler, dst)
         self.tb.run()
-        self.assertEqual(src_data, dst.data())
+        self.assertEqual(tuple(src_data), tuple(dst.data()))
 
     def test_additive_scrambler_reset(self):
         src_data = (1,)*200

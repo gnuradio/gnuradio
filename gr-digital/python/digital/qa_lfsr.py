@@ -36,11 +36,7 @@ class test_lfsr(gr_unittest.TestCase):
     def test_lfsr_001(self):
         reglen = 8
         l = digital.lfsr(1, 1, reglen)
-
-        result_data = []
-        for i in range(4*(reglen+1)):
-            result_data.append(l.next_bit())
-
+        result_data = [l.next_bit() for _ in range(4*(reglen+1))]
         expected_result = 4*([1,] + reglen*[0,])
         self.assertFloatTuplesAlmostEqual(expected_result, result_data, 5)
 

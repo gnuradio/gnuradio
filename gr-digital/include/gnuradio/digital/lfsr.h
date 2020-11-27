@@ -37,7 +37,7 @@ namespace digital {
  *
  * \details
  * Generates a maximal length pseudo-random sequence of length
- * 2^degree-1
+ * 2^degree-1, if supplied with a primitive polynomial.
  *
  * Constructor: digital::lfsr(int mask, int seed, int reg_len);
  *
@@ -47,9 +47,9 @@ namespace digital {
  *             order bit.
  *
  *             Some common masks might be:
- *              x^4 + x^3 + x^0 = 0x19
- *              x^5 + x^3 + x^0 = 0x29
- *              x^6 + x^5 + x^0 = 0x61
+ *              x^4 + x^3 + x^0 = 0x19, K=3
+ *              x^5 + x^3 + x^0 = 0x29, K=4
+ *              x^6 + x^5 + x^0 = 0x61, K=5
  *
  * \param seed - the initialization vector placed into the
  *             register during initialization. Low order bit
@@ -90,32 +90,26 @@ namespace digital {
 class lfsr
 {
 private:
-    uint32_t d_shift_register;
-    uint32_t d_mask;
-    uint32_t d_seed;
-    uint32_t d_shift_register_length; // less than 32
-
-    static uint32_t popCount(uint32_t x)
-    {
-        uint32_t r = x - ((x >> 1) & 033333333333) - ((x >> 2) & 011111111111);
-        return ((r + (r >> 3)) & 030707070707) % 63;
-    }
+    uint64_t d_shift_register;
+    uint64_t d_mask;
+    uint64_t d_seed;
+    uint64_t d_shift_register_length; // less than 32
 
 public:
-    lfsr(uint32_t mask, uint32_t seed, uint32_t reg_len)
+    lfsr(uint64_t mask, uint64_t seed, uint64_t reg_len)
         : d_shift_register(seed),
           d_mask(mask),
           d_seed(seed),
           d_shift_register_length(reg_len)
     {
-        if (reg_len > 31)
-            throw std::invalid_argument("reg_len must be <= 31");
+        if (reg_len > 63)
+            throw std::invalid_argument("reg_len must be <= 63");
     }
 
     unsigned char next_bit()
     {
         unsigned char output = d_shift_register & 1;
-        unsigned char newbit = popCount(d_shift_register & d_mask) % 2;
+        unsigned char newbit = __builtin_parityl(d_shift_register & d_mask);
         d_shift_register =
             ((d_shift_register >> 1) | (newbit << d_shift_register_length));
         return output;
@@ -124,7 +118,7 @@ public:
     unsigned char next_bit_scramble(unsigned char input)
     {
         unsigned char output = d_shift_register & 1;
-        unsigned char newbit = (popCount(d_shift_register & d_mask) % 2) ^ (input & 1);
+        uint64_t newbit = __builtin_parityl(d_shift_register & d_mask) ^ (input & 1);
         d_shift_register =
             ((d_shift_register >> 1) | (newbit << d_shift_register_length));
         return output;
@@ -132,8 +126,8 @@ public:
 
     unsigned char next_bit_descramble(unsigned char input)
     {
-        unsigned char output = (popCount(d_shift_register & d_mask) % 2) ^ (input & 1);
-        unsigned char newbit = input & 1;
+        unsigned char output = __builtin_parityl(d_shift_register & d_mask) ^ (input & 1);
+        uint64_t newbit = input & 1;
         d_shift_register =
             ((d_shift_register >> 1) | (newbit << d_shift_register_length));
         return output;
@@ -155,7 +149,7 @@ public:
         }
     }
 
-    int mask() const { return d_mask; }
+    uint64_t mask() const { return d_mask; }
 };
 
 } /* namespace digital */
