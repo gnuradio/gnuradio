@@ -37,9 +37,9 @@
 #ifdef _MSC_VER
 #define GR_FSEEK _fseeki64
 #define GR_FTELL _ftelli64
-#define GR_FSTAT _fstat
+#define GR_FSTAT _fstati64
 #define GR_FILENO _fileno
-#define GR_STAT _stat
+#define GR_STAT _stati64
 #define S_ISREG(m) (((m)&S_IFMT) == S_IFREG)
 #else
 #define GR_FSEEK fseeko
