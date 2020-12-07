@@ -58,10 +58,4 @@ void bind_polar_decoder_sc_list(py::module& m)
              D(code, polar_decoder_sc_list, generic_work))
 
         ;
-
-
-    py::module m_code_polar = m_code.def_submodule("polar");
-
-
-    py::module m_polar = m.def_submodule("polar");
 }
