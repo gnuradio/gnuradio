@@ -28,12 +28,32 @@ SET(GR_PKG_FILTER_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/filter)
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_FILTER)
-
 ########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/filter)
 add_subdirectory(lib)
+
+# Check for scipy and pyqtgraph, but don't fail if they don't exist.
+GR_PYTHON_CHECK_MODULE_RAW(
+    "pyqtgraph"
+    "import pyqtgraph"
+    PYQTGRAPH_FOUND
+)
+GR_PYTHON_CHECK_MODULE_RAW(
+    "scipy"
+    "import scipy"
+    SCIPY_FOUND
+)
+
+if(NOT PYQTGRAPH_FOUND OR NOT SCIPY_FOUND)
+    message(WARNING
+        "PyQtGraph and Scipy are required to run the filter design tool, "
+        "but are not detected! Please make sure they are installed on "
+        "the target system."
+    )
+endif(NOT PYQTGRAPH_FOUND OR NOT SCIPY_FOUND)
+
 if(ENABLE_PYTHON)
     add_subdirectory(python/filter)
     add_subdirectory(python/filter/design)
