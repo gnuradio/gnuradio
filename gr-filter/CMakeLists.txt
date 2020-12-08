@@ -28,21 +28,34 @@ SET(GR_PKG_FILTER_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/filter)
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_FILTER)
-
 ########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/filter)
 add_subdirectory(lib)
-if(ENABLE_PYTHON)
-    add_subdirectory(python/filter)
+add_subdirectory(python/filter)
+GR_PYTHON_CHECK_MODULE_RAW(
+    "pyqtgraph"
+    "import pyqtgraph"
+    PYQTGRAPH_FOUND
+)
+GR_PYTHON_CHECK_MODULE_RAW(
+    "scipy"
+    "import scipy"
+    SCIPY_FOUND
+)
+GR_REGISTER_COMPONENT("gr-filterdesign" ENABLE_GR_FILTER_DESIGN
+    ENABLE_PYTHON
+    PYQTGRAPH_FOUND
+    SCIPY_FOUND)
+if(ENABLE_GR_FILTER_DESIGN)
     add_subdirectory(python/filter/design)
     add_subdirectory(python/filter/gui)
     add_subdirectory(apps)
     if(ENABLE_EXAMPLES)
         add_subdirectory(examples)
     endif(ENABLE_EXAMPLES)
-endif(ENABLE_PYTHON)
+endif(ENABLE_GR_FILTER_DESIGN)
 if(ENABLE_GRC)
     add_subdirectory(grc)
 endif(ENABLE_GRC)
