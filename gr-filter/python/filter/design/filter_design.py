@@ -47,12 +47,7 @@ try:
 except ImportError:
     raise SystemExit('Please install pyqtgraph to run this script (http://www.pyqtgraph.org)')
 
-
-try:
-    from gnuradio.filter.pyqt_filter_stacked import Ui_MainWindow
-except ImportError:
-    raise SystemExit('Could not import from pyqt_filter_stacked. Please build with "pyuic5 pyqt_filter_stacked.ui -o pyqt_filter_stacked.py"')
-
+from gnuradio.filter.pyqt_filter_stacked import Ui_MainWindow
 try:
     from gnuradio.filter.banditems import *
 except ImportError:
@@ -804,7 +799,12 @@ class gr_plot_filter(QtGui.QMainWindow):
                         "Root Raised Cosine" :  design_win_rrc,
                         "Gaussian" :  design_win_gaus}
             wintype = self.filterWindows[winstr]
-            taps,params,r = designer[ftype](fs, gain, wintype, self)
+            try:
+                taps,params,r = designer[ftype](fs, gain, wintype, self)
+            except Exception as e:
+                reply = QtGui.QMessageBox.information(self, "FIR design error", e.args[0],
+                                                      QtGui.QMessageBox.Ok)
+                return
         if(r):
             if self.gridview:
                 self.params = params
@@ -902,9 +902,10 @@ class gr_plot_filter(QtGui.QMainWindow):
             try:
                 (self.b, self.a) = signal.iirfilter(order, besselparams, btype=iirbtype.replace(' ', '').lower(),
                                                     analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
-            except StandardError as e:
+            except Exception as e:
                 reply = QtGui.QMessageBox.information(self, "IIR design error", e.args[0],
                                                       QtGui.QMessageBox.Ok)
+                return
 
             (self.z, self.p, self.k) = signal.tf2zpk(self.b, self.a)
 
@@ -914,9 +915,10 @@ class gr_plot_filter(QtGui.QMainWindow):
             try:
                 (self.b, self.a) = signal.iirdesign(params[0], params[1], params[2], params[3],
                                                     analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
-            except StandardError as e:
+            except Exception as e:
                 reply = QtGui.QMessageBox.information(self, "IIR design error", e.args[0],
                                                       QtGui.QMessageBox.Ok)
+                return                                      
 
             (self.z, self.p, self.k) = signal.tf2zpk(self.b, self.a)
             # Create parameters.
