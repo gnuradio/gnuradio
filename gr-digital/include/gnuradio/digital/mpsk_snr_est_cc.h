@@ -36,6 +36,8 @@ namespace digital {
  * designed and proven theoretically under AWGN conditions; some
  * amount of error should be assumed and/or estimated for real
  * channel conditions.
+ *
+ * The estimator is normally placed before clock recovery.
  */
 class DIGITAL_API mpsk_snr_est_cc : virtual public sync_block
 {
@@ -50,7 +52,8 @@ public:
      *  \param tag_nsamples: after this many samples, a tag containing
      *  the SNR (key='snr') will be sent
      *  \param alpha: the update rate of internal running average
-     *  calculations
+     *  calculations. Needs to be between 0 and 1, where higher value
+     *  adjusts faster to new data.
      */
     static sptr make(snr_est_type_t type, int tag_nsamples = 10000, double alpha = 0.001);
 
