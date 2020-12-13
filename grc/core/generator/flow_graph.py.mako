@@ -217,7 +217,7 @@ gr.io_signature.makev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}
         # Connections
         ${'##################################################'}
         % for connection in connections:
-        ${ connection.rstrip() }
+        ${ indent(connection.rstrip()) }
         % endfor
         % endif
 
