@@ -21,6 +21,7 @@ namespace digital {
 /*!
  * \brief Timing synchronizer using polyphase filterbanks
  * \ingroup synchronizers_blk
+ * \ingroup deprecated_blk
  *
  * \details
  * This block performs timing synchronization for PAM signals by

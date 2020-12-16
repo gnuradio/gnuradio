@@ -1,5 +1,6 @@
 id: digital_pfb_clock_sync_xxx
 label: Polyphase Clock Sync
+category: '[Core]/Deprecated'
 flags: [ python, cpp ]
 
 parameters:
