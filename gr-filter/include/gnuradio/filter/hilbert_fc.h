@@ -11,6 +11,7 @@
 #ifndef INCLUDED_FILTER_HILBERT_FC_H
 #define INCLUDED_FILTER_HILBERT_FC_H
 
+#include <gnuradio/fft/window.h>
 #include <gnuradio/filter/api.h>
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/sync_block.h>
@@ -38,11 +39,11 @@ public:
      * Build a Hilbert transformer filter block.
      *
      * \param ntaps The number of taps for the filter.
-     * \param window Window type (see firdes::win_type) to use.
+     * \param window Window type (see fft::window::win_type) to use.
      * \param beta Beta value for a Kaiser window.
      */
     static sptr make(unsigned int ntaps,
-                     firdes::win_type window = firdes::WIN_HAMMING,
+                     fft::window::win_type window = fft::window::win_type::WIN_HAMMING,
                      double beta = 6.76);
 };
 

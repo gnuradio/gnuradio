@@ -14,6 +14,7 @@
 #include <gnuradio/qtgui/sink_c.h>
 
 #include <gnuradio/fft/fft.h>
+#include <gnuradio/fft/window.h>
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/qtgui/SpectrumGUIClass.h>
@@ -29,7 +30,7 @@ private:
     void initialize();
 
     int d_fftsize;
-    filter::firdes::win_type d_wintype;
+    fft::window::win_type d_wintype;
     std::vector<float> d_window;
     double d_center_freq;
     double d_bandwidth;
