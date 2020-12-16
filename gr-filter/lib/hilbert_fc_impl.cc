@@ -13,6 +13,7 @@
 #endif
 
 #include "hilbert_fc_impl.h"
+#include <gnuradio/fft/window.h>
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
@@ -20,12 +21,14 @@ namespace gr {
 namespace filter {
 
 hilbert_fc::sptr
-hilbert_fc::make(unsigned int ntaps, firdes::win_type window, double beta)
+hilbert_fc::make(unsigned int ntaps, fft::window::win_type window, double beta)
 {
     return gnuradio::make_block_sptr<hilbert_fc_impl>(ntaps, window, beta);
 }
 
-hilbert_fc_impl::hilbert_fc_impl(unsigned int ntaps, firdes::win_type window, double beta)
+hilbert_fc_impl::hilbert_fc_impl(unsigned int ntaps,
+                                 fft::window::win_type window,
+                                 double beta)
     : sync_block("hilbert_fc",
                  io_signature::make(1, 1, sizeof(float)),
                  io_signature::make(1, 1, sizeof(gr_complex))),

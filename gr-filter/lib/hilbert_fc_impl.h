@@ -11,6 +11,7 @@
 #ifndef INCLUDED_FILTER_HILBERT_FC_IMPL_H
 #define INCLUDED_FILTER_HILBERT_FC_IMPL_H
 
+#include <gnuradio/fft/window.h>
 #include <gnuradio/filter/fir_filter.h>
 #include <gnuradio/filter/hilbert_fc.h>
 #include <gnuradio/types.h>
@@ -26,7 +27,7 @@ private:
 
 public:
     hilbert_fc_impl(unsigned int ntaps,
-                    firdes::win_type window = firdes::WIN_HAMMING,
+                    fft::window::win_type window = fft::window::WIN_HAMMING,
                     double beta = 6.76);
 
     int work(int noutput_items,
