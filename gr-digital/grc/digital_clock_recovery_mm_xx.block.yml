@@ -1,5 +1,6 @@
 id: digital_clock_recovery_mm_xx
 label: Clock Recovery MM
+category: '[Core]/Deprecated'
 flags: [ python, cpp ]
 
 parameters:

@@ -1,5 +1,6 @@
 id: digital_msk_timing_recovery_cc
 label: MSK Timing Recovery
+category: '[Core]/Deprecated'
 flags: [ python, cpp ]
 
 parameters:
