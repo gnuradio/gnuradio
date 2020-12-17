@@ -10,6 +10,7 @@
 
 from gnuradio import gr, filter
 from gnuradio import blocks
+from gnuradio.fft import window
 import sys
 
 try:
@@ -135,7 +136,7 @@ class my_top_block(gr.top_block):
         thr = blocks.throttle(gr.sizeof_float, 100*fftsize)
         noise = analog.noise_source_f(analog.GR_GAUSSIAN, 0.001)
         add = blocks.add_ff()
-        self.snk1 = qtgui.sink_f(fftsize, filter.firdes.WIN_BLACKMAN_hARRIS,
+        self.snk1 = qtgui.sink_f(fftsize, window.WIN_BLACKMAN_hARRIS,
                                  0, Rs,
                                  "Float Signal Example",
                                  True, True, True, False, None)

@@ -10,6 +10,7 @@
 
 from gnuradio import gr, filter
 from gnuradio import blocks
+from gnuradio.fft import window
 import sys
 
 try:
@@ -144,7 +145,7 @@ class my_top_block(gr.top_block):
         src  = blocks.add_cc()
         channel = channels.channel_model(0.01)
         thr = blocks.throttle(gr.sizeof_gr_complex, 100*npts)
-        self.snk1 = qtgui.freq_sink_c(npts, filter.firdes.WIN_BLACKMAN_hARRIS,
+        self.snk1 = qtgui.freq_sink_c(npts, window.WIN_BLACKMAN_hARRIS,
                                       0, Rs,
                                       "Complex Freq Example", 3, None)
 

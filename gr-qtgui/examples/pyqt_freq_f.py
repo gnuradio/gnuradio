@@ -10,6 +10,7 @@
 
 from gnuradio import gr, filter
 from gnuradio import blocks
+from gnuradio.fft import window
 import sys
 
 try:
@@ -134,7 +135,7 @@ class my_top_block(gr.top_block):
         src2 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f2, 0.1, 0)
         src  = blocks.add_ff()
         thr = blocks.throttle(gr.sizeof_float, 100*npts)
-        self.snk1 = qtgui.freq_sink_f(npts, filter.firdes.WIN_BLACKMAN_hARRIS,
+        self.snk1 = qtgui.freq_sink_f(npts, window.WIN_BLACKMAN_hARRIS,
                                       0, Rs,
                                       "Real freq Example", 3, None)
 

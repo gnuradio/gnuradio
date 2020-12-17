@@ -11,6 +11,7 @@
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
+from gnuradio.fft import window
 import sys, time
 import numpy
 
@@ -46,7 +47,7 @@ class pfb_top_block(gr.top_block):
                                               self._interp*self._fs,
                                               freq2+50, 50,
                                               attenuation_dB=120,
-                                              window=filter.firdes.WIN_BLACKMAN_hARRIS)
+                                              window=window.WIN_BLACKMAN_hARRIS)
 
         # Create a set of taps for the PFB arbitrary resampler
         # The filter size is the number of filters in the filterbank; 32 will give very low side-lobes,
@@ -58,7 +59,7 @@ class pfb_top_block(gr.top_block):
                                                flt_size*self._fs,
                                                freq2+50, 150,
                                                attenuation_dB=120,
-                                               window=filter.firdes.WIN_BLACKMAN_hARRIS)
+                                               window=window.WIN_BLACKMAN_hARRIS)
 
         # Calculate the number of taps per channel for our own information
         tpc = numpy.ceil(float(len(self._taps)) / float(self._interp))
