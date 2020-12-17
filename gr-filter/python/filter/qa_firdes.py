@@ -9,7 +9,7 @@
 #
 
 
-from gnuradio import gr, gr_unittest, filter
+from gnuradio import gr, gr_unittest, fft, filter
 import sys
 
 

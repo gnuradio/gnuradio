@@ -9,7 +9,7 @@
 #
 
 
-from gnuradio import gr, gr_unittest, filter, blocks
+from gnuradio import gr, gr_unittest, fft, filter, blocks
 
 import math
 
