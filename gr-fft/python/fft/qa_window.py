@@ -31,7 +31,7 @@ class test_window(gr_unittest.TestCase):
         Verify window normalization
         """
         win = fft.window.build(
-            fft.win_type.WIN_BLACKMAN_hARRIS,
+            fft.window.WIN_BLACKMAN_hARRIS,
             21,
             normalize=True)
         power = numpy.sum([x * x for x in win]) / len(win)
