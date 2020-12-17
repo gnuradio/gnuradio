@@ -15,7 +15,7 @@ import copy
 import warnings
 from optparse import OptionParser
 
-from gnuradio import filter
+from gnuradio import filter, fft
 
 try:
     import numpy as np

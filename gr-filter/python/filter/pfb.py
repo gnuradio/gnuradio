@@ -14,7 +14,7 @@ import math
 from gnuradio import gr, fft, blocks
 
 from . import optfir
-from . import filter_python as filter
+from . import filter_python as filter, fft
 
 
 class channelizer_ccf(gr.hier_block2):

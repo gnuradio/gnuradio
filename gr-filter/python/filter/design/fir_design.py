@@ -7,7 +7,7 @@
 #
 
 import scipy
-from gnuradio import filter
+from gnuradio import filter, fft
 from PyQt5 import QtGui
 
 

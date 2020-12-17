@@ -11,7 +11,7 @@
 
 from gnuradio import gr
 from gnuradio import blocks
-from gnuradio import filter
+from gnuradio import filter, fft
 from gnuradio.ctrlport.GNURadio import ControlPort
 import sys, time, struct
 

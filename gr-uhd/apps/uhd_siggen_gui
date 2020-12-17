@@ -31,6 +31,7 @@ from gnuradio import analog
 from gnuradio import eng_notation
 from gnuradio import qtgui
 from gnuradio import uhd
+from gnuradio import fft
 from gnuradio.filter import firdes
 from gnuradio.qtgui import Range, RangeWidget
 try:

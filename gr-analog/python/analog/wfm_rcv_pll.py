@@ -12,7 +12,7 @@ import math
 
 from gnuradio import gr
 from gnuradio import blocks
-from gnuradio import filter
+from gnuradio import filter, fft
 from gnuradio.filter import firdes
 from gnuradio import analog
 

@@ -10,7 +10,7 @@
 
 import math
 
-from gnuradio import gr, filter
+from gnuradio import gr, filter, fft
 
 from . import analog_python as analog
 from .fm_emph import fm_deemph
