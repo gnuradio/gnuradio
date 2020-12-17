@@ -31,10 +31,23 @@ void bind_window(py::module& m)
 {
     using window = gr::fft::window;
 
+    py::class_<window, std::shared_ptr<window>> window_class(m, "window", D(window));
 
-    py::class_<window, std::shared_ptr<window>>(m, "window", D(window))
+    py::enum_<gr::fft::window::win_type>(window_class, "win_type")
+        .value("WIN_HAMMING", gr::fft::window::WIN_HAMMING)                 // 0
+        .value("WIN_HANN", gr::fft::window::WIN_HANN)                       // 1
+        .value("WIN_BLACKMAN", gr::fft::window::WIN_BLACKMAN)               // 2
+        .value("WIN_RECTANGULAR", gr::fft::window::WIN_RECTANGULAR)         // 3
+        .value("WIN_KAISER", gr::fft::window::WIN_KAISER)                   // 4
+        .value("WIN_BLACKMAN_hARRIS", gr::fft::window::WIN_BLACKMAN_hARRIS) // 5
+        .value("WIN_BLACKMAN_HARRIS", gr::fft::window::WIN_BLACKMAN_HARRIS) // 5
+        .value("WIN_BARTLETT", gr::fft::window::WIN_BARTLETT)               // 6
+        .value("WIN_FLATTOP", gr::fft::window::WIN_FLATTOP)                 // 7
+        .export_values();
 
+    py::implicitly_convertible<int, gr::fft::window::win_type>();
 
+    window_class
         .def_static("max_attenuation",
                     &window::max_attenuation,
                     py::arg("type"),
@@ -180,19 +193,4 @@ void bind_window(py::module& m)
                     D(window, build))
 
         ;
-
-
-    py::enum_<gr::fft::window::win_type>(m, "win_type")
-        .value("WIN_HAMMING", gr::fft::window::WIN_HAMMING)                 // 0
-        .value("WIN_HANN", gr::fft::window::WIN_HANN)                       // 1
-        .value("WIN_BLACKMAN", gr::fft::window::WIN_BLACKMAN)               // 2
-        .value("WIN_RECTANGULAR", gr::fft::window::WIN_RECTANGULAR)         // 3
-        .value("WIN_KAISER", gr::fft::window::WIN_KAISER)                   // 4
-        .value("WIN_BLACKMAN_hARRIS", gr::fft::window::WIN_BLACKMAN_hARRIS) // 5
-        .value("WIN_BLACKMAN_HARRIS", gr::fft::window::WIN_BLACKMAN_HARRIS) // 5
-        .value("WIN_BARTLETT", gr::fft::window::WIN_BARTLETT)               // 6
-        .value("WIN_FLATTOP", gr::fft::window::WIN_FLATTOP)                 // 7
-        .export_values();
-
-    py::implicitly_convertible<int, gr::fft::window::win_type>();
 }
