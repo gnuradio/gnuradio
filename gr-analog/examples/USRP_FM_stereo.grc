@@ -229,7 +229,7 @@ blocks:
     samp_rate: samp_rate
     type: ccc
     width: '20000'
-    win: fft.window.WIN_HAMMING
+    win: window.WIN_HAMMING
   states:
     bus_sink: false
     bus_source: false
@@ -258,7 +258,7 @@ blocks:
     showports: 'False'
     showrf: 'True'
     type: complex
-    wintype: fft.window.WIN_BLACKMAN_hARRIS
+    wintype: window.WIN_BLACKMAN_hARRIS
   states:
     bus_sink: false
     bus_source: false

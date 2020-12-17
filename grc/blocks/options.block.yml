@@ -135,6 +135,7 @@ templates:
     imports: |-
         from gnuradio import gr
         from gnuradio.filter import firdes
+        from gnuradio.fft import window
         import sys
         import signal
         % if generate_options == 'qt_gui':

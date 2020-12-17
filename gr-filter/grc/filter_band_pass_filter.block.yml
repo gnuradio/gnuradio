@@ -51,9 +51,9 @@ parameters:
 -   id: win
     label: Window
     dtype: raw
-    default: fft.window.WIN_HAMMING
-    options: [fft.window.WIN_HAMMING, fft.window.WIN_HANN, fft.window.WIN_BLACKMAN, fft.window.WIN_RECTANGULAR,
-        fft.window.WIN_KAISER]
+    default: window.WIN_HAMMING
+    options: [window.WIN_HAMMING, window.WIN_HANN, window.WIN_BLACKMAN, window.WIN_RECTANGULAR,
+        window.WIN_KAISER]
     option_labels: [Hamming, Hann, Blackman, Rectangular, Kaiser]
 -   id: beta
     label: Beta
