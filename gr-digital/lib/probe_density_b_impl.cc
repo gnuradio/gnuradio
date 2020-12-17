@@ -19,7 +19,7 @@ namespace digital {
 
 probe_density_b::sptr probe_density_b::make(double alpha)
 {
-    return gnuradio::get_initial_sptr(new probe_density_b_impl(alpha));
+    return gnuradio::make_block_sptr<probe_density_b_impl>(alpha);
 }
 
 probe_density_b_impl::probe_density_b_impl(double alpha)

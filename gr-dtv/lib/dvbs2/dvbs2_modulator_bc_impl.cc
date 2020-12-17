@@ -22,8 +22,8 @@ dvbs2_modulator_bc::sptr dvbs2_modulator_bc::make(dvb_framesize_t framesize,
                                                   dvb_constellation_t constellation,
                                                   dvbs2_interpolation_t interpolation)
 {
-    return gnuradio::get_initial_sptr(
-        new dvbs2_modulator_bc_impl(framesize, rate, constellation, interpolation));
+    return gnuradio::make_block_sptr<dvbs2_modulator_bc_impl>(
+        framesize, rate, constellation, interpolation);
 }
 
 /*

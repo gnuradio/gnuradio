@@ -18,9 +18,9 @@
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/sptr_magic.h>
 #include <gnuradio/thread/thread.h>
-#include <boost/function.hpp>
 #include <boost/thread/condition_variable.hpp>
 #include <deque>
+#include <functional>
 #include <map>
 #include <string>
 
@@ -42,7 +42,7 @@ namespace gr {
 class GR_RUNTIME_API basic_block : public msg_accepter,
                                    public std::enable_shared_from_this<basic_block>
 {
-    typedef boost::function<void(pmt::pmt_t)> msg_handler_t;
+    typedef std::function<void(pmt::pmt_t)> msg_handler_t;
 
 private:
     typedef std::map<pmt::pmt_t, msg_handler_t, pmt::comparator> d_msg_handlers_t;
@@ -131,7 +131,7 @@ protected:
 
 public:
     pmt::pmt_t message_subscribers(pmt::pmt_t port);
-    virtual ~basic_block();
+    ~basic_block() override;
     long unique_id() const { return d_unique_id; }
     long symbolic_id() const { return d_symbolic_id; }
 

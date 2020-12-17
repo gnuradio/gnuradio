@@ -27,12 +27,12 @@ public:
     pdu_to_tagged_stream_impl(pdu::vector_type type,
                               const std::string& lengthtagname = "packet_len");
 
-    int calculate_output_stream_length(const gr_vector_int& ninput_items);
+    int calculate_output_stream_length(const gr_vector_int& ninput_items) override;
 
     int work(int noutput_items,
              gr_vector_int& ninput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

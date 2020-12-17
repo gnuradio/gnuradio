@@ -6,7 +6,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-from __future__ import absolute_import
 
 import os
 import logging
@@ -65,7 +64,7 @@ class MainWindow(Gtk.ApplicationWindow):
         if not icon:
             # Set default window icon
             self.set_icon_from_file(os.path.dirname(os.path.abspath(__file__)) + "/icon.png")
-        else :
+        else:
             # Use gnuradio icon
             self.set_icon(icon.load_icon())
 

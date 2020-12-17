@@ -28,8 +28,8 @@ dvbt_bit_inner_interleaver::make(int nsize,
                                  dvbt_hierarchy_t hierarchy,
                                  dvbt_transmission_mode_t transmission)
 {
-    return gnuradio::get_initial_sptr(new dvbt_bit_inner_interleaver_impl(
-        nsize, constellation, hierarchy, transmission));
+    return gnuradio::make_block_sptr<dvbt_bit_inner_interleaver_impl>(
+        nsize, constellation, hierarchy, transmission);
 }
 
 /*
@@ -50,18 +50,10 @@ dvbt_bit_inner_interleaver_impl::dvbt_bit_inner_interleaver_impl(
              gr::dtv::GI_1_32,
              transmission),
       d_nsize(nsize),
-      d_hierarchy(hierarchy)
+      d_hierarchy(config.d_hierarchy),
+      d_v(config.d_m),
+      d_perm(d_v * d_bsize)
 {
-    d_v = config.d_m;
-    d_hierarchy = config.d_hierarchy;
-
-    d_perm = (unsigned char*)new (std::nothrow) unsigned char[d_v * d_bsize];
-    if (d_perm == NULL) {
-        GR_LOG_FATAL(d_logger,
-                     "Bit Inner Interleaver, cannot allocate memory for d_perm.");
-        throw std::bad_alloc();
-    }
-
     // Init permutation table (used for b[e][do])
     for (int i = 0; i < d_bsize * d_v; i++) {
         if (d_hierarchy == NH) {
@@ -83,7 +75,7 @@ dvbt_bit_inner_interleaver_impl::dvbt_bit_inner_interleaver_impl(
 /*
  * Our virtual destructor.
  */
-dvbt_bit_inner_interleaver_impl::~dvbt_bit_inner_interleaver_impl() { delete[] d_perm; }
+dvbt_bit_inner_interleaver_impl::~dvbt_bit_inner_interleaver_impl() {}
 
 void dvbt_bit_inner_interleaver_impl::forecast(int noutput_items,
                                                gr_vector_int& ninput_items_required)

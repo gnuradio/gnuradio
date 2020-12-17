@@ -34,8 +34,8 @@ time_sink_f::sptr time_sink_f::make(int size,
                                     unsigned int nconnections,
                                     QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(
-        new time_sink_f_impl(size, samp_rate, name, nconnections, parent));
+    return gnuradio::make_block_sptr<time_sink_f_impl>(
+        size, samp_rate, name, nconnections, parent);
 }
 
 time_sink_f_impl::time_sink_f_impl(int size,
@@ -51,6 +51,7 @@ time_sink_f_impl::time_sink_f_impl(int size,
       d_samp_rate(samp_rate),
       d_name(name),
       d_nconnections(nconnections),
+      d_tag_key(pmt::mp("tags")),
       d_parent(parent)
 {
     if (nconnections > 24)
@@ -68,7 +69,7 @@ time_sink_f_impl::time_sink_f_impl(int size,
 
     // setup PDU handling input port
     message_port_register_in(pmt::mp("in"));
-    set_msg_handler(pmt::mp("in"), boost::bind(&time_sink_f_impl::handle_pdus, this, _1));
+    set_msg_handler(pmt::mp("in"), [this](pmt::pmt_t msg) { this->handle_pdus(msg); });
 
     // +1 for the PDU buffer
     for (unsigned int n = 0; n < d_nconnections + 1; n++) {
@@ -605,6 +606,7 @@ void time_sink_f_impl::handle_pdus(pmt::pmt_t msg)
 {
     size_t len;
     pmt::pmt_t dict, samples;
+    std::vector<std::vector<gr::tag_t>> t(1);
 
     // Test to make sure this is either a PDU or a uniform vector of
     // samples. Get the samples PMT and the dictionary if it's a PDU.
@@ -617,6 +619,27 @@ void time_sink_f_impl::handle_pdus(pmt::pmt_t msg)
     } else {
         throw std::runtime_error("time_sink_c: message must be either "
                                  "a PDU or a uniform vector of samples.");
+    }
+
+    // add tag info if it is present in metadata
+    if (pmt::dict_has_key(dict, d_tag_key)) {
+        d_tags.clear();
+        pmt::pmt_t tags = pmt::dict_ref(dict, d_tag_key, pmt::PMT_NIL);
+        int len = pmt::length(tags);
+        for (int i = 0; i < len; i++) {
+            // get tag info from list
+            pmt::pmt_t tup = pmt::vector_ref(tags, i);
+            int tagval = pmt::to_long(pmt::tuple_ref(tup, 0));
+            pmt::pmt_t k = pmt::tuple_ref(tup, 1);
+            pmt::pmt_t v = pmt::tuple_ref(tup, 2);
+
+            // add the tag
+            t[0].push_back(gr::tag_t());
+            t[0][t[0].size() - 1].offset = tagval;
+            t[0][t[0].size() - 1].key = k;
+            t[0][t[0].size() - 1].value = v;
+            t[0][t[0].size() - 1].srcid = pmt::PMT_NIL;
+        }
     }
 
     len = pmt::length(samples);
@@ -637,7 +660,6 @@ void time_sink_f_impl::handle_pdus(pmt::pmt_t msg)
 
         volk_32f_convert_64f(d_buffers[d_nconnections], in, len);
 
-        std::vector<std::vector<gr::tag_t>> t;
         d_qApplication->postEvent(d_main_gui, new TimeUpdateEvent(d_buffers, len, t));
     }
 }

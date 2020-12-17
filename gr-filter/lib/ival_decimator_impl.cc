@@ -21,7 +21,7 @@ namespace filter {
 
 ival_decimator::sptr ival_decimator::make(int decimation, int data_size)
 {
-    return gnuradio::get_initial_sptr(new ival_decimator_impl(decimation, data_size));
+    return gnuradio::make_block_sptr<ival_decimator_impl>(decimation, data_size);
 }
 
 /*
@@ -42,11 +42,6 @@ ival_decimator_impl::ival_decimator_impl(int decimation, int data_size)
     // Make sure we work with pairs of bytes (I and Q as byte)
     gr::block::set_output_multiple(2);
 }
-
-/*
- * Our virtual destructor.
- */
-ival_decimator_impl::~ival_decimator_impl() {}
 
 int ival_decimator_impl::work(int noutput_items,
                               gr_vector_const_void_star& input_items,

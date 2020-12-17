@@ -12,6 +12,7 @@
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/fec_mtrx.h>
 #include <memory>
+#include <string>
 
 namespace gr {
 namespace fec {
@@ -58,14 +59,14 @@ public:
     static sptr make(const std::string filename);
 
     //! Encode \p inbuffer with LDPC H matrix into \p outbuffer.
-    virtual void encode(unsigned char* outbuffer,
-                        const unsigned char* inbuffer) const = 0;
+    void encode(unsigned char* outbuffer,
+                const unsigned char* inbuffer) const override = 0;
 
     //! Decode \p inbuffer with LDPC H matrix into \p outbuffer.
-    virtual void decode(unsigned char* outbuffer,
-                        const float* inbuffer,
-                        unsigned int frame_size,
-                        unsigned int max_iterations) const = 0;
+    void decode(unsigned char* outbuffer,
+                const float* inbuffer,
+                unsigned int frame_size,
+                unsigned int max_iterations) const override = 0;
 
     /*!
      * \brief A pointer to make SWIG work

@@ -11,7 +11,8 @@
 #ifndef INCLUDED_DTV_ATSC_INTERLEAVER_FIFO_H
 #define INCLUDED_DTV_ATSC_INTERLEAVER_FIFO_H
 
-#include <string.h>
+#include <algorithm>
+#include <vector>
 
 namespace gr {
 namespace dtv {
@@ -21,7 +22,6 @@ class interleaver_fifo
 {
 public:
     interleaver_fifo(unsigned int size);
-    ~interleaver_fifo();
 
     //! reset interleaver (flushes contents and resets commutator)
     void reset();
@@ -29,44 +29,33 @@ public:
     //! stuff a symbol into the fifo and return the oldest
     symbol_type stuff(symbol_type input)
     {
-        if (m_size == 0)
+        if (m_fifo.empty())
             return input;
 
         symbol_type retval = m_fifo[m_position];
         m_fifo[m_position] = input;
         m_position++;
-        if (m_position >= m_size)
+        if (m_position >= m_fifo.size())
             m_position = 0;
 
         return retval;
     }
 
 protected:
-    unsigned int m_size;
-    unsigned int m_position;
-    symbol_type* m_fifo;
+    unsigned int m_position = 0;
+    std::vector<symbol_type> m_fifo;
 };
 
 template <class symbol_type>
-interleaver_fifo<symbol_type>::interleaver_fifo(unsigned int size)
+interleaver_fifo<symbol_type>::interleaver_fifo(unsigned int size) : m_fifo(size)
 {
-    m_size = size;
-    m_position = 0;
-    m_fifo = new symbol_type[size];
-    memset(m_fifo, 0, m_size * sizeof(symbol_type));
-}
-
-template <class symbol_type>
-interleaver_fifo<symbol_type>::~interleaver_fifo()
-{
-    delete[] m_fifo;
 }
 
 template <class symbol_type>
 void interleaver_fifo<symbol_type>::reset()
 {
     m_position = 0;
-    memset(m_fifo, 0, m_size * sizeof(symbol_type));
+    std::fill(std::begin(m_fifo), std::end(m_fifo), 0);
 }
 
 } /* namespace dtv */

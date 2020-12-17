@@ -15,7 +15,7 @@
 #include <Python.h>
 #endif
 
-#include <gnuradio/filter/firdes.h>
+#include <gnuradio/fft/window.h>
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/qtgui/trigger_mode.h>
 #include <gnuradio/sync_block.h>
@@ -83,7 +83,11 @@ public:
      * \param fftsize size of the FFT to compute and display. If using
      *        the PDU message port to plot samples, the length of
      *        each PDU must be a multiple of the FFT size.
-     * \param wintype type of window to apply (see gr::fft::window::win_type)
+     * \param wintype type of window to apply (see gr::fft::window::win_type).
+     *        By setting bit 16 to one, this block will normalize the window
+     *        before applying it. This allows switching between windows without
+     *        sacrificing signal power due to tapering, but it will also
+     *        amplify some samples. See also set_fft_window_normalized().
      * \param fc center frequency of signal (use for x-axis labels)
      * \param bw bandwidth of signal (used to set x-axis labels)
      * \param name title for the plot
@@ -114,8 +118,10 @@ public:
     virtual int fft_size() const = 0;
     virtual void set_fft_average(const float fftavg) = 0;
     virtual float fft_average() const = 0;
-    virtual void set_fft_window(const gr::filter::firdes::win_type win) = 0;
-    virtual gr::filter::firdes::win_type fft_window() = 0;
+    virtual void set_fft_window(const gr::fft::window::win_type win) = 0;
+    virtual gr::fft::window::win_type fft_window() = 0;
+    //! If true, normalize window to unit power
+    virtual void set_fft_window_normalized(const bool enable) = 0;
 
     virtual void set_frequency_range(const double centerfreq, const double bandwidth) = 0;
     virtual void set_y_axis(double min, double max) = 0;

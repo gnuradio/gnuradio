@@ -6,12 +6,10 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-from __future__ import absolute_import
 from gi.repository import Gtk, Gdk, GObject, Pango
 
 from . import Actions, Utils, Constants
 from .Dialogs import SimpleTextDisplay
-import six
 
 
 class PropsDialog(Gtk.Dialog):
@@ -67,7 +65,11 @@ class PropsDialog(Gtk.Dialog):
         doc_view.get_buffer().create_tag('b', weight=Pango.Weight.BOLD)
         self._docs_box = Gtk.ScrolledWindow()
         self._docs_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        self._docs_box.add(self._docs_text_display)
+        self._docs_vbox = Gtk.VBox(homogeneous=False, spacing=0)
+        self._docs_box.add(self._docs_vbox)
+        self._docs_link = Gtk.Label(use_markup=True)
+        self._docs_vbox.pack_start(self._docs_link, False, False, 0)
+        self._docs_vbox.pack_end(self._docs_text_display, True, True, 0)
         notebook.append_page(self._docs_box, Gtk.Label(label="Documentation"))
 
         # Generated code for the block
@@ -173,7 +175,7 @@ class PropsDialog(Gtk.Dialog):
 
                 for param in self._block.params.values():
                     if force_show_id and param.dtype == 'id':
-                        param.hide = 'none'
+                        param.hide = 'part'
                     # todo: why do we even rebuild instead of really hiding params?
                     if param.category != category or param.hide == 'all':
                         continue
@@ -210,7 +212,10 @@ class PropsDialog(Gtk.Dialog):
             note = "Wiki Page for this Block: "
             prefix = self._config.wiki_block_docs_url_prefix
             suffix = self._block.label.replace(" ", "_")
-            buf.insert(pos, note + prefix + suffix + '\n\n')
+            href = f'<a href="{prefix+suffix}">Visit Wiki Page</a>'
+            self._docs_link.set_markup(href)
+        else:
+            self._docs_link.set_markup('Out of Tree Block')
 
         docstrings = self._block.documentation.copy()
         if not docstrings:
@@ -233,7 +238,7 @@ class PropsDialog(Gtk.Dialog):
             docstrings = {block_class: docstrings[block_class]}
 
         # show docstring(s) extracted from python sources
-        for cls_name, docstring in six.iteritems(docstrings):
+        for cls_name, docstring in docstrings.items():
             buf.insert_with_tags_by_name(pos, cls_name + '\n', 'b')
             buf.insert(pos, docstring + '\n\n')
         pos.backward_chars(2)

@@ -34,7 +34,7 @@ outputs:
   dtype: sizeof(unsigned char)
 cpp_templates:
   includes: '#include <gnuradio/digital/additive_scrambler_bb.h>'
-  declartions: digital::additive_scrambler_bb::sptr ${id}
+  declarations: digital::additive_scrambler_bb::sptr ${id}
   make: this->${id} = digital::additive_scrambler_bb::make(${mask}, ${seed}, ${len},
     ${count}, ${bits_per_byte})
   link: gnuradio-digital

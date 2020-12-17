@@ -22,7 +22,7 @@ namespace blocks {
 template <class T>
 typename not_blk<T>::sptr not_blk<T>::make(size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new not_blk_impl<T>(vlen));
+    return gnuradio::make_block_sptr<not_blk_impl<T>>(vlen);
 }
 
 template <class T>

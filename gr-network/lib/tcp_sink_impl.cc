@@ -15,7 +15,9 @@
 #include "tcp_sink_impl.h"
 #include <gnuradio/io_signature.h>
 
+#include <chrono>
 #include <sstream>
+#include <thread>
 
 namespace gr {
 namespace network {
@@ -23,8 +25,8 @@ namespace network {
 tcp_sink::sptr tcp_sink::make(
     size_t itemsize, size_t veclen, const std::string& host, int port, int sinkmode)
 {
-    return gnuradio::get_initial_sptr(
-        new tcp_sink_impl(itemsize, veclen, host, port, sinkmode));
+    return gnuradio::make_block_sptr<tcp_sink_impl>(
+        itemsize, veclen, host, port, sinkmode);
 }
 
 /*
@@ -112,7 +114,7 @@ void tcp_sink_impl::run_listener()
             connect(d_initial_connection);
             d_initial_connection = false;
         } else
-            usleep(10);
+            std::this_thread::sleep_for(std::chrono::microseconds(10));
     }
 
     d_thread_running = false;
@@ -208,7 +210,7 @@ bool tcp_sink_impl::stop()
 
     if (d_listener_thread) {
         while (d_thread_running)
-            usleep(5);
+            std::this_thread::sleep_for(std::chrono::microseconds(5));
 
         delete d_listener_thread;
         d_listener_thread = NULL;

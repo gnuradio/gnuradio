@@ -22,7 +22,7 @@ namespace analog {
 
 quadrature_demod_cf::sptr quadrature_demod_cf::make(float gain)
 {
-    return gnuradio::get_initial_sptr(new quadrature_demod_cf_impl(gain));
+    return gnuradio::make_block_sptr<quadrature_demod_cf_impl>(gain);
 }
 
 quadrature_demod_cf_impl::quadrature_demod_cf_impl(float gain)

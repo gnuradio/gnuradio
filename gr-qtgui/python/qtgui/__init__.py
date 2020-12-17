@@ -10,18 +10,17 @@
 '''
 Provides a GUI interface using the QT backend.
 '''
-from __future__ import unicode_literals
 
 # The presence of this file turns this directory into a Python package
 import os
 
 
 try:
-    from .qtgui_swig import *
+    from .qtgui_python import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from .qtgui_swig import *
+    __path__.append(os.path.join(dirname, "bindings"))
+    from .qtgui_python import *
 
 try:
 	import matplotlib.pyplot as plt
@@ -50,3 +49,4 @@ from .graphicoverlay import GrGraphicOverlay
 from .auto_correlator_sink import AutoCorrelatorSink
 from .auto_correlator_sink import AutoCorrelator
 from .auto_correlator_sink import Normalize
+

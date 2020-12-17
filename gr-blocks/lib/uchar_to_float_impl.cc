@@ -21,7 +21,7 @@ namespace blocks {
 
 uchar_to_float::sptr uchar_to_float::make()
 {
-    return gnuradio::get_initial_sptr(new uchar_to_float_impl());
+    return gnuradio::make_block_sptr<uchar_to_float_impl>();
 }
 
 uchar_to_float_impl::uchar_to_float_impl()

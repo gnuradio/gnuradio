@@ -23,7 +23,7 @@ template <class T>
 typename tsb_vector_sink<T>::sptr tsb_vector_sink<T>::make(unsigned int vlen,
                                                            const std::string& tsb_key)
 {
-    return gnuradio::get_initial_sptr(new tsb_vector_sink_impl<T>(vlen, tsb_key));
+    return gnuradio::make_block_sptr<tsb_vector_sink_impl<T>>(vlen, tsb_key);
 }
 
 template <class T>

@@ -43,7 +43,7 @@ namespace blocks {
 
 tagged_file_sink::sptr tagged_file_sink::make(size_t itemsize, double samp_rate)
 {
-    return gnuradio::get_initial_sptr(new tagged_file_sink_impl(itemsize, samp_rate));
+    return gnuradio::make_block_sptr<tagged_file_sink_impl>(itemsize, samp_rate);
 }
 
 tagged_file_sink_impl::tagged_file_sink_impl(size_t itemsize, double samp_rate)

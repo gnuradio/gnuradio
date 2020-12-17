@@ -46,14 +46,14 @@ public:
                           bool adapt_after_training,
                           std::vector<gr_complex> training_sequence,
                           const std::string& training_start_tag);
-    ~linear_equalizer_impl(){};
+    ~linear_equalizer_impl() override{};
 
-    void set_taps(const std::vector<gr_complex>& taps);
-    std::vector<gr_complex> taps() const;
+    void set_taps(const std::vector<gr_complex>& taps) override;
+    std::vector<gr_complex> taps() const override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
     // Same as the work function, but more specific and decoupled from the
     // scheduler-related actions
@@ -65,7 +65,7 @@ public:
         std::vector<unsigned int> training_start_samples = std::vector<unsigned int>(0),
         bool history_included = false,
         gr_complex* taps = nullptr,
-        unsigned short* state = nullptr);
+        unsigned short* state = nullptr) override;
 };
 
 } // namespace digital

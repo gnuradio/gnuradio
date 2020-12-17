@@ -316,6 +316,15 @@ void SpectrumDisplayForm::newFrequencyData(const SpectrumUpdateEvent* spectrumUp
 void SpectrumDisplayForm::resizeEvent(QResizeEvent* e)
 {
     QSize s;
+    s.setWidth(e->size().width() - 40);
+    s.setHeight(e->size().height() - 160);
+    TimeDomainDisplayFrame->resize(s);
+    ConstellationDisplayFrame->resize(s);
+    s.setHeight(e->size().height() - 205);
+    FrequencyPlotDisplayFrame->resize(s);
+    s.setHeight(e->size().height() - 240);
+    WaterfallPlotDisplayFrame->resize(s);
+
     s.setWidth(FrequencyPlotDisplayFrame->width());
     s.setHeight(FrequencyPlotDisplayFrame->height());
     emit _frequencyDisplayPlot->resizeSlot(&s);
@@ -409,11 +418,7 @@ void SpectrumDisplayForm::maxHoldResetBtn_clicked()
 }
 
 
-void SpectrumDisplayForm::tabChanged(int index)
-{
-    // This might be dangerous to call this with NULL
-    resizeEvent(NULL);
-}
+void SpectrumDisplayForm::tabChanged(int index) { update(); }
 
 void SpectrumDisplayForm::setFrequencyRange(const double newCenterFrequency,
                                             const double newStartFrequency,
@@ -638,7 +643,7 @@ void SpectrumDisplayForm::waterfallIntensityColorTypeChanged(int newType)
 {
     QColor lowIntensityColor;
     QColor highIntensityColor;
-    if (newType == INTENSITY_COLOR_MAP_TYPE_USER_DEFINED) {
+    if (newType == gr::qtgui::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED) {
         // Select the Low Intensity Color
         lowIntensityColor = _waterfallDisplayPlot->getUserDefinedLowIntensityColor();
         if (!lowIntensityColor.isValid()) {

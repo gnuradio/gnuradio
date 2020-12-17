@@ -26,17 +26,17 @@ private:
 
 public:
     regenerate_bb_impl(int period, unsigned int max_regen = 500);
-    ~regenerate_bb_impl();
+    ~regenerate_bb_impl() override;
 
-    void set_max_regen(unsigned int regen);
-    void set_period(int period);
+    void set_max_regen(unsigned int regen) override;
+    void set_period(int period) override;
 
-    unsigned int max_regen() const { return d_max_regen; };
-    int period() const { return d_period; };
+    unsigned int max_regen() const override { return d_max_regen; };
+    int period() const override { return d_period; };
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

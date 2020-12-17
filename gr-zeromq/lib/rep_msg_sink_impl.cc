@@ -15,13 +15,14 @@
 #include "rep_msg_sink_impl.h"
 #include "tag_headers.h"
 #include <gnuradio/io_signature.h>
+#include <boost/make_unique.hpp>
 
 namespace gr {
 namespace zeromq {
 
 rep_msg_sink::sptr rep_msg_sink::make(char* address, int timeout, bool bind)
 {
-    return gnuradio::get_initial_sptr(new rep_msg_sink_impl(address, timeout, bind));
+    return gnuradio::make_block_sptr<rep_msg_sink_impl>(address, timeout, bind);
 }
 
 rep_msg_sink_impl::rep_msg_sink_impl(char* address, int timeout, bool bind)
@@ -29,6 +30,8 @@ rep_msg_sink_impl::rep_msg_sink_impl(char* address, int timeout, bool bind)
                 gr::io_signature::make(0, 0, 0),
                 gr::io_signature::make(0, 0, 0)),
       d_timeout(timeout),
+      d_context(1),
+      d_socket(d_context, ZMQ_REP),
       d_port(pmt::mp("in"))
 {
     int major, minor, patch;
@@ -38,32 +41,25 @@ rep_msg_sink_impl::rep_msg_sink_impl(char* address, int timeout, bool bind)
         d_timeout = timeout * 1000;
     }
 
-    d_context = new zmq::context_t(1);
-    d_socket = new zmq::socket_t(*d_context, ZMQ_REP);
-
     int time = 0;
-    d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
+    d_socket.setsockopt(ZMQ_LINGER, &time, sizeof(time));
 
     if (bind) {
-        d_socket->bind(address);
+        d_socket.bind(address);
     } else {
-        d_socket->connect(address);
+        d_socket.connect(address);
     }
 
     message_port_register_in(d_port);
 }
 
-rep_msg_sink_impl::~rep_msg_sink_impl()
-{
-    d_socket->close();
-    delete d_socket;
-    delete d_context;
-}
+rep_msg_sink_impl::~rep_msg_sink_impl() {}
 
 bool rep_msg_sink_impl::start()
 {
     d_finished = false;
-    d_thread = new boost::thread(boost::bind(&rep_msg_sink_impl::readloop, this));
+    d_thread = boost::make_unique<boost::thread>(
+        boost::bind(&rep_msg_sink_impl::readloop, this));
     return true;
 }
 
@@ -83,7 +79,7 @@ void rep_msg_sink_impl::readloop()
 
             // wait for query...
             zmq::pollitem_t items[] = {
-                { static_cast<void*>(*d_socket), 0, ZMQ_POLLIN, 0 }
+                { static_cast<void*>(d_socket), 0, ZMQ_POLLIN, 0 }
             };
             zmq::poll(&items[0], 1, d_timeout);
 
@@ -93,9 +89,9 @@ void rep_msg_sink_impl::readloop()
                 // receive data request
                 zmq::message_t request;
 #if USE_NEW_CPPZMQ_SEND_RECV
-                d_socket->recv(request);
+                d_socket.recv(request);
 #else
-                d_socket->recv(&request);
+                d_socket.recv(&request);
 #endif
 
                 int req_output_items = *(static_cast<int*>(request.data()));
@@ -111,9 +107,9 @@ void rep_msg_sink_impl::readloop()
                 zmq::message_t zmsg(s.size());
                 memcpy(zmsg.data(), s.c_str(), s.size());
 #if USE_NEW_CPPZMQ_SEND_RECV
-                d_socket->send(zmsg, zmq::send_flags::none);
+                d_socket.send(zmsg, zmq::send_flags::none);
 #else
-                d_socket->send(zmsg);
+                d_socket.send(zmsg);
 #endif
             } // if req
         }     // while !empty

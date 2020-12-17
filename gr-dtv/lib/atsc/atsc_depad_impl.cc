@@ -21,7 +21,7 @@ namespace dtv {
 
 atsc_depad::sptr atsc_depad::make()
 {
-    return gnuradio::get_initial_sptr(new atsc_depad_impl());
+    return gnuradio::make_block_sptr<atsc_depad_impl>();
 }
 
 atsc_depad_impl::atsc_depad_impl()

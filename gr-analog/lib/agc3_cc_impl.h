@@ -24,23 +24,23 @@ public:
                  float reference = 1.0,
                  float gain = 1.0,
                  int iir_update_decim = 1);
-    ~agc3_cc_impl();
+    ~agc3_cc_impl() override;
 
-    float attack_rate() const { return d_attack; }
-    float decay_rate() const { return d_decay; }
-    float reference() const { return d_reference; }
-    float gain() const { return d_gain; }
-    float max_gain() const { return d_max_gain; }
+    float attack_rate() const override { return d_attack; }
+    float decay_rate() const override { return d_decay; }
+    float reference() const override { return d_reference; }
+    float gain() const override { return d_gain; }
+    float max_gain() const override { return d_max_gain; }
 
-    void set_attack_rate(float rate) { d_attack = rate; }
-    void set_decay_rate(float rate) { d_decay = rate; }
-    void set_reference(float reference) { d_reference = reference; }
-    void set_gain(float gain) { d_gain = gain; }
-    void set_max_gain(float max_gain) { d_max_gain = max_gain; }
+    void set_attack_rate(float rate) override { d_attack = rate; }
+    void set_decay_rate(float rate) override { d_decay = rate; }
+    void set_reference(float reference) override { d_reference = reference; }
+    void set_gain(float gain) override { d_gain = gain; }
+    void set_max_gain(float max_gain) override { d_max_gain = max_gain; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
 private:
     float d_attack;

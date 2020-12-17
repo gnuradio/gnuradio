@@ -33,15 +33,15 @@ public:
                        bool repeat,
                        unsigned int vlen,
                        const std::vector<tag_t>& tags);
-    ~vector_source_impl();
+    ~vector_source_impl() override;
 
-    void rewind() { d_offset = 0; }
-    void set_data(const std::vector<T>& data, const std::vector<tag_t>& tags);
-    void set_repeat(bool repeat) { d_repeat = repeat; };
+    void rewind() override { d_offset = 0; }
+    void set_data(const std::vector<T>& data, const std::vector<tag_t>& tags) override;
+    void set_repeat(bool repeat) override { d_repeat = repeat; };
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

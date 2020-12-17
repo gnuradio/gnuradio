@@ -47,19 +47,19 @@ public:
                           int filter_size,
                           float bandwidth);
 
-    void set_samples_per_symbol(float sps);
-    void set_rolloff(float rolloff);
-    void set_filter_size(int filter_size);
+    void set_samples_per_symbol(float sps) override;
+    void set_rolloff(float rolloff) override;
+    void set_filter_size(int filter_size) override;
 
-    float samples_per_symbol() const;
-    float rolloff() const;
-    int filter_size() const;
+    float samples_per_symbol() const override;
+    float rolloff() const override;
+    int filter_size() const override;
 
-    void print_taps();
+    void print_taps() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace digital */

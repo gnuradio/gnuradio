@@ -26,8 +26,8 @@ rfnoc_tx_streamer::sptr rfnoc_tx_streamer::make(rfnoc_graph::sptr graph,
                                                 const ::uhd::stream_args_t& stream_args,
                                                 const size_t vlen)
 {
-    return gnuradio::get_initial_sptr(
-        new rfnoc_tx_streamer_impl(graph, num_chans, stream_args, vlen));
+    return gnuradio::make_block_sptr<rfnoc_tx_streamer_impl>(
+        graph, num_chans, stream_args, vlen);
 }
 
 

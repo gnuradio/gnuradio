@@ -24,16 +24,16 @@ private:
 
 public:
     frequency_modulator_fc_impl(float sensitivity);
-    ~frequency_modulator_fc_impl();
+    ~frequency_modulator_fc_impl() override;
 
-    void set_sensitivity(float sens) { d_sensitivity = sens; }
-    float sensitivity() const { return d_sensitivity; }
+    void set_sensitivity(float sens) override { d_sensitivity = sens; }
+    float sensitivity() const override { return d_sensitivity; }
 
-    void setup_rpc();
+    void setup_rpc() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace analog */

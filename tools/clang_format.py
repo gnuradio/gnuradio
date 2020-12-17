@@ -19,7 +19,6 @@ A script that provides:
 2. Has support for checking which files are to be checked.
 3. Supports validating and updating a set of files to the right coding style.
 """
-from __future__ import print_function, absolute_import
 
 import queue
 import difflib

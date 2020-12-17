@@ -11,8 +11,6 @@
 BPSK modulation and demodulation.
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 from math import pi, log
 from cmath import exp
@@ -20,7 +18,7 @@ from cmath import exp
 from gnuradio import gr
 from gnuradio.digital.generic_mod_demod import generic_mod, generic_demod
 from gnuradio.digital.generic_mod_demod import shared_mod_args, shared_demod_args
-from . import digital_swig
+from . import digital_python
 from . import modulation_utils
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -28,14 +26,14 @@ from . import modulation_utils
 # /////////////////////////////////////////////////////////////////////////////
 
 def bpsk_constellation():
-    return digital_swig.constellation_bpsk()
+    return digital_python.constellation_bpsk()
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           DBPSK constellation
 # /////////////////////////////////////////////////////////////////////////////
 
 def dbpsk_constellation():
-    return digital_swig.constellation_dbpsk()
+    return digital_python.constellation_dbpsk()
 
 
 #

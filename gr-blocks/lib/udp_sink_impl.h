@@ -35,16 +35,16 @@ private:
 public:
     udp_sink_impl(
         size_t itemsize, const std::string& host, int port, int payload_size, bool eof);
-    ~udp_sink_impl();
+    ~udp_sink_impl() override;
 
-    int payload_size() { return d_payload_size; }
+    int payload_size() override { return d_payload_size; }
 
-    void connect(const std::string& host, int port);
-    void disconnect();
+    void connect(const std::string& host, int port) override;
+    void disconnect() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

@@ -22,13 +22,12 @@ class moving_averager_c
 {
 public:
     moving_averager_c(int D);
-    ~moving_averager_c();
 
     gr_complex filter(gr_complex x);
     gr_complex delayed_sig() { return d_out; }
 
 private:
-    int d_length;
+    const int d_length;
     gr_complex d_out, d_out_d1, d_out_d2;
     std::deque<gr_complex> d_delay_line;
 };
@@ -38,24 +37,22 @@ class FILTER_API dc_blocker_cc_impl : public dc_blocker_cc
 private:
     int d_length;
     bool d_long_form;
-    moving_averager_c* d_ma_0;
-    moving_averager_c* d_ma_1;
-    moving_averager_c* d_ma_2;
-    moving_averager_c* d_ma_3;
+    moving_averager_c d_ma_0;
+    moving_averager_c d_ma_1;
+    std::unique_ptr<moving_averager_c> d_ma_2;
+    std::unique_ptr<moving_averager_c> d_ma_3;
     std::deque<gr_complex> d_delay_line;
 
 public:
     dc_blocker_cc_impl(int D, bool long_form);
 
-    ~dc_blocker_cc_impl();
-
-    int group_delay();
+    int group_delay() override;
 
     // int set_length(int D);
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

@@ -11,12 +11,14 @@
 
 from gnuradio import gr, gr_unittest, blocks, digital, dtv
 
-import os, pmt
+import os
+import pmt
 from os.path import getsize
 import numpy as np
 
 ts_in_file = os.path.join(os.getenv("srcdir"), "vv009-4kfft.ts")
 complex_out_file = os.path.join(os.getenv("srcdir"), "vv009-4kfft.cfile")
+
 
 class test_dtv(gr_unittest.TestCase):
 
@@ -27,10 +29,11 @@ class test_dtv(gr_unittest.TestCase):
         self.tb = None
 
     def test_000(self):
-        infile  = ts_in_file
+        infile = ts_in_file
         outfile = "vv.cfile"
         testfile = complex_out_file
-        file_source = blocks.file_source(gr.sizeof_char*1, infile, False, 0, 0)
+        file_source = blocks.file_source(
+            gr.sizeof_char * 1, infile, False, 0, 0)
         file_source.set_begin_tag(pmt.PMT_NIL)
         bbheader = dtv.dvb_bbheader_bb(
             dtv.STANDARD_DVBT2,
@@ -97,7 +100,7 @@ class test_dtv(gr_unittest.TestCase):
             dtv.PAPR_TR,
             dtv.VERSION_111,
             dtv.PREAMBLE_T2_SISO
-            )
+        )
         pilotgenerator = dtv.dvbt2_pilotgenerator_cc(
             dtv.CARRIERS_NORMAL,
             dtv.FFTSIZE_4K,
@@ -111,7 +114,7 @@ class test_dtv(gr_unittest.TestCase):
             dtv.EQUALIZATION_OFF,
             dtv.BANDWIDTH_8_0_MHZ,
             4096
-            )
+        )
         paprtr = dtv.dvbt2_paprtr_cc(
             dtv.CARRIERS_NORMAL,
             dtv.FFTSIZE_4K,
@@ -123,7 +126,7 @@ class test_dtv(gr_unittest.TestCase):
             3.0,
             10,
             4096
-            )
+        )
         ofdm_cyclic_prefixer = digital.ofdm_cyclic_prefixer(
             4096,
             4096 + 4096 // 32,
@@ -137,8 +140,8 @@ class test_dtv(gr_unittest.TestCase):
             dtv.PREAMBLE_T2_SISO,
             dtv.SHOWLEVELS_OFF,
             3.01
-            )
-        file_sink = blocks.file_sink(gr.sizeof_gr_complex*1, outfile, False)
+        )
+        file_sink = blocks.file_sink(gr.sizeof_gr_complex * 1, outfile, False)
         file_sink.set_unbuffered(True)
         self.tb.connect(
             file_source,
@@ -161,12 +164,13 @@ class test_dtv(gr_unittest.TestCase):
 
         self.assertEqual(getsize(outfile), getsize(testfile))
 
-        out_data  = np.fromfile(outfile, dtype=np.float32)
+        out_data = np.fromfile(outfile, dtype=np.float32)
         expected_data = np.fromfile(testfile, dtype=np.float32)
         os.remove(outfile)
 
         self.assertFloatTuplesAlmostEqual(out_data, expected_data, 5)
         pass
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_dtv, "test_dtv.xml")
+    gr_unittest.run(test_dtv)

@@ -20,7 +20,7 @@ namespace blocks {
 
 add_const_bb::sptr add_const_bb::make(unsigned char k)
 {
-    return gnuradio::get_initial_sptr(new add_const_bb_impl(k));
+    return gnuradio::make_block_sptr<add_const_bb_impl>(k);
 }
 
 add_const_bb_impl::add_const_bb_impl(unsigned char k)

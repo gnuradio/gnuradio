@@ -16,6 +16,7 @@
 #include "tag_headers.h"
 #include <gnuradio/io_signature.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/make_unique.hpp>
 #include <boost/thread/thread.hpp>
 
 namespace gr {
@@ -23,7 +24,7 @@ namespace zeromq {
 
 sub_msg_source::sptr sub_msg_source::make(char* address, int timeout, bool bind)
 {
-    return gnuradio::get_initial_sptr(new sub_msg_source_impl(address, timeout, bind));
+    return gnuradio::make_block_sptr<sub_msg_source_impl>(address, timeout, bind);
 }
 
 sub_msg_source_impl::sub_msg_source_impl(char* address, int timeout, bool bind)
@@ -31,6 +32,8 @@ sub_msg_source_impl::sub_msg_source_impl(char* address, int timeout, bool bind)
                 gr::io_signature::make(0, 0, 0),
                 gr::io_signature::make(0, 0, 0)),
       d_timeout(timeout),
+      d_context(1),
+      d_socket(d_context, ZMQ_SUB),
       d_port(pmt::mp("out"))
 {
     int major, minor, patch;
@@ -40,31 +43,24 @@ sub_msg_source_impl::sub_msg_source_impl(char* address, int timeout, bool bind)
         d_timeout = timeout * 1000;
     }
 
-    d_context = new zmq::context_t(1);
-    d_socket = new zmq::socket_t(*d_context, ZMQ_SUB);
-
-    d_socket->setsockopt(ZMQ_SUBSCRIBE, "", 0);
+    d_socket.setsockopt(ZMQ_SUBSCRIBE, "", 0);
 
     if (bind) {
-        d_socket->bind(address);
+        d_socket.bind(address);
     } else {
-        d_socket->connect(address);
+        d_socket.connect(address);
     }
 
     message_port_register_out(d_port);
 }
 
-sub_msg_source_impl::~sub_msg_source_impl()
-{
-    d_socket->close();
-    delete d_socket;
-    delete d_context;
-}
+sub_msg_source_impl::~sub_msg_source_impl() {}
 
 bool sub_msg_source_impl::start()
 {
     d_finished = false;
-    d_thread = new boost::thread(boost::bind(&sub_msg_source_impl::readloop, this));
+    d_thread = boost::make_unique<boost::thread>(
+        boost::bind(&sub_msg_source_impl::readloop, this));
     return true;
 }
 
@@ -79,7 +75,7 @@ void sub_msg_source_impl::readloop()
 {
     while (!d_finished) {
 
-        zmq::pollitem_t items[] = { { static_cast<void*>(*d_socket), 0, ZMQ_POLLIN, 0 } };
+        zmq::pollitem_t items[] = { { static_cast<void*>(d_socket), 0, ZMQ_POLLIN, 0 } };
         zmq::poll(&items[0], 1, d_timeout);
 
         //  If we got a reply, process
@@ -88,9 +84,9 @@ void sub_msg_source_impl::readloop()
             // Receive data
             zmq::message_t msg;
 #if USE_NEW_CPPZMQ_SEND_RECV
-            d_socket->recv(msg);
+            d_socket.recv(msg);
 #else
-            d_socket->recv(&msg);
+            d_socket.recv(&msg);
 #endif
             std::string buf(static_cast<char*>(msg.data()), msg.size());
             std::stringbuf sb(buf);

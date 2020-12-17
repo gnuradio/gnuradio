@@ -90,11 +90,11 @@ class FILTER_API polyphase_filterbank
 {
 protected:
     unsigned int d_nfilts;
-    std::vector<kernel::fir_filter_ccf*> d_fir_filters;
-    std::vector<kernel::fft_filter_ccf*> d_fft_filters;
+    std::vector<kernel::fir_filter_ccf> d_fir_filters;
+    std::vector<kernel::fft_filter_ccf> d_fft_filters;
     std::vector<std::vector<float>> d_taps;
     unsigned int d_taps_per_filter;
-    fft::fft_complex* d_fft;
+    fft::fft_complex_rev* d_fft;
 
 public:
     /*!
@@ -103,13 +103,8 @@ public:
      *               channels <EM>M</EM>
      * \param taps (vector/list of floats) The prototype filter to
      *             populate the filterbank.
-     * \param fft_forward (bool) use a forward or inverse FFT (default=false).
      */
-    polyphase_filterbank(unsigned int nfilts,
-                         const std::vector<float>& taps,
-                         bool fft_forward = false);
-
-    ~polyphase_filterbank();
+    polyphase_filterbank(unsigned int nfilts, const std::vector<float>& taps);
 
     /*!
      * Update the filterbank's filter taps from a prototype

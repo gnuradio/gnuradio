@@ -15,6 +15,7 @@
 #include <gnuradio/filter/pfb_decimator_ccf.h>
 #include <gnuradio/filter/polyphase_filterbank.h>
 #include <gnuradio/thread/thread.h>
+#include <volk/volk_alloc.hh>
 
 namespace gr {
 namespace filter {
@@ -28,9 +29,9 @@ private:
     unsigned int d_chan;
     bool d_use_fft_rotator;
     bool d_use_fft_filters;
-    gr_complex* d_rotator;
-    gr_complex* d_tmp;         // used for fft filters
-    gr::thread::mutex d_mutex; // mutex to protect set/work access
+    std::vector<gr_complex> d_rotator;
+    volk::vector<gr_complex> d_tmp; // used for fft filters
+    gr::thread::mutex d_mutex;      // mutex to protect set/work access
 
     inline int work_fir_exp(int noutput_items,
                             gr_vector_const_void_star& input_items,
@@ -52,20 +53,22 @@ public:
                            bool use_fft_rotator = true,
                            bool use_fft_filters = true);
 
-    ~pfb_decimator_ccf_impl();
+    // No copy because d_tmp.
+    pfb_decimator_ccf_impl(const pfb_decimator_ccf_impl&) = delete;
+    pfb_decimator_ccf_impl& operator=(const pfb_decimator_ccf_impl&) = delete;
 
-    void set_taps(const std::vector<float>& taps);
-    void print_taps();
-    std::vector<std::vector<float>> taps() const;
-    void set_channel(const unsigned int channel);
+    void set_taps(const std::vector<float>& taps) override;
+    void print_taps() override;
+    std::vector<std::vector<float>> taps() const override;
+    void set_channel(const unsigned int channel) override;
 
     // Overload to create/destroy d_tmp based on max_noutput_items.
-    bool start();
-    bool stop();
+    bool start() override;
+    bool stop() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

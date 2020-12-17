@@ -21,21 +21,21 @@ private:
     static const int d_NSYNC;
     static const int d_MUX_PKT;
 
-    int d_blocks;
-    int d_I;
-    int d_M;
-    std::vector<std::deque<unsigned char>*> d_shift;
+    const int d_blocks;
+    const int d_I;
+    const int d_M;
+    std::vector<std::deque<unsigned char>> d_shift;
 
 public:
     dvbt_convolutional_deinterleaver_impl(int nsize, int I, int M);
-    ~dvbt_convolutional_deinterleaver_impl();
+    ~dvbt_convolutional_deinterleaver_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } // namespace dtv

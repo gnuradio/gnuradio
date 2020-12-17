@@ -21,7 +21,7 @@ namespace digital {
 
 meas_evm_cc::sptr meas_evm_cc::make(constellation_sptr cons, evm_measurement_t meas_type)
 {
-    return gnuradio::get_initial_sptr(new meas_evm_cc_impl(cons, meas_type));
+    return gnuradio::make_block_sptr<meas_evm_cc_impl>(cons, meas_type);
 }
 
 meas_evm_cc_impl::meas_evm_cc_impl(constellation_sptr cons, evm_measurement_t meas_type)

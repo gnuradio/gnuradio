@@ -5,7 +5,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-from __future__ import absolute_import
 
 import os
 from os.path import expanduser, normpath, expandvars, exists
@@ -25,13 +24,12 @@ class Config(object):
         self._gr_prefs = prefs if prefs else DummyPrefs()
         self.version = version
         self.version_parts = version_parts or version[1:].split('-', 1)[0].split('.')[:3]
+        self.enabled_components = self._gr_prefs.get_string('grc', 'enabled_components', '')
         if name:
             self.name = name
 
     @property
     def block_paths(self):
-        path_list_sep = {'/': ':', '\\': ';'}[os.path.sep]
-
         paths_sources = (
             self.hier_block_lib_dir,
             os.environ.get('GRC_BLOCKS_PATH', ''),
@@ -39,7 +37,7 @@ class Config(object):
             self._gr_prefs.get_string('grc', 'global_blocks_path', ''),
         )
 
-        collected_paths = sum((paths.split(path_list_sep)
+        collected_paths = sum((paths.split(os.pathsep)
                                for paths in paths_sources), [])
 
         valid_paths = [normpath(expanduser(expandvars(path)))

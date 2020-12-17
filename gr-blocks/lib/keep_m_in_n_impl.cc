@@ -20,7 +20,7 @@ namespace blocks {
 
 keep_m_in_n::sptr keep_m_in_n::make(size_t itemsize, int m, int n, int offset)
 {
-    return gnuradio::get_initial_sptr(new keep_m_in_n_impl(itemsize, m, n, offset));
+    return gnuradio::make_block_sptr<keep_m_in_n_impl>(itemsize, m, n, offset);
 }
 
 keep_m_in_n_impl::keep_m_in_n_impl(size_t itemsize, int m, int n, int offset)

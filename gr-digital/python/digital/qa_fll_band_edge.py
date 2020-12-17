@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 #
 # Copyright 2011-2013 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# 
+#
 
-from __future__ import division
 
 import random
 import math
 
 from gnuradio import gr, gr_unittest, digital, filter, blocks, analog
+
 
 class test_fll_band_edge_cc(gr_unittest.TestCase):
 
@@ -27,19 +27,19 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
     def test01(self):
         sps = 4
         rolloff = 0.35
-        bw = 2*math.pi/100.0
+        bw = 2 * math.pi / 100.0
         ntaps = 45
-        
+
         # Create pulse shape filter
         rrc_taps = filter.firdes.root_raised_cosine(
             sps, sps, 1.0, rolloff, ntaps)
 
         # The frequency offset to correct
-        foffset = 0.2 / (2.0*math.pi)
+        foffset = 0.2 / (2.0 * math.pi)
 
         # Create a set of 1's and -1's, pulse shape and interpolate to sps
         random.seed(0)
-        data = [2.0*random.randint(0, 2) - 1.0 for i in range(200)]
+        data = [2.0 * random.randint(0, 2) - 1.0 for i in range(200)]
         self.src = blocks.vector_source_c(data, False)
         self.rrc = filter.interp_fir_filter_ccf(sps, rrc_taps)
 
@@ -56,21 +56,22 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
         self.nsnk_fll = blocks.null_sink(gr.sizeof_gr_complex)
         self.nsnk_phs = blocks.null_sink(gr.sizeof_float)
         self.nsnk_err = blocks.null_sink(gr.sizeof_float)
-        
+
         # Connect the blocks
-        self.tb.connect(self.nco, (self.mix,1))
-        self.tb.connect(self.src, self.rrc, (self.mix,0))
+        self.tb.connect(self.nco, (self.mix, 1))
+        self.tb.connect(self.src, self.rrc, (self.mix, 0))
         self.tb.connect(self.mix, self.fll, self.nsnk_fll)
-        self.tb.connect((self.fll,1), self.vsnk_frq)
-        self.tb.connect((self.fll,2), self.nsnk_phs)
-        self.tb.connect((self.fll,3), self.nsnk_err)
+        self.tb.connect((self.fll, 1), self.vsnk_frq)
+        self.tb.connect((self.fll, 2), self.nsnk_phs)
+        self.tb.connect((self.fll, 3), self.nsnk_err)
         self.tb.run()
-        
+
         N = 700
         dst_data = self.vsnk_frq.data()[N:]
 
-        expected_result = len(dst_data)* [-0.20,]
+        expected_result = len(dst_data) * [-0.20, ]
         self.assertFloatTuplesAlmostEqual(expected_result, dst_data, 4)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_fll_band_edge_cc, "test_fll_band_edge_cc.xml")
+    gr_unittest.run(test_fll_band_edge_cc)

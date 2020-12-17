@@ -20,7 +20,7 @@ namespace analog {
 
 agc_ff::sptr agc_ff::make(float rate, float reference, float gain)
 {
-    return gnuradio::get_initial_sptr(new agc_ff_impl(rate, reference, gain));
+    return gnuradio::make_block_sptr<agc_ff_impl>(rate, reference, gain);
 }
 
 agc_ff_impl::agc_ff_impl(float rate, float reference, float gain)

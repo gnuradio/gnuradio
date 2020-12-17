@@ -36,14 +36,14 @@ private:
 
 public:
     atsc_field_sync_mux_impl();
-    ~atsc_field_sync_mux_impl();
+    ~atsc_field_sync_mux_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } // namespace dtv

@@ -8,9 +8,6 @@
 #
 """ Module to get io_signature of the header block """
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 import re
 import itertools
@@ -25,7 +22,7 @@ LOGGER = logging.getLogger(__name__)
 def io_signature(impl_file):
     """
     function to generate the io_signature of the block
-    : returns the io parmaters
+    : returns the io parameters
     """
     parsed_io = {
         "input": {

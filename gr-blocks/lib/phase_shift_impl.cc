@@ -23,7 +23,7 @@ namespace blocks {
 
 phase_shift::sptr phase_shift::make(float shift, bool is_radians)
 {
-    return gnuradio::get_initial_sptr(new phase_shift_impl(shift, is_radians));
+    return gnuradio::make_block_sptr<phase_shift_impl>(shift, is_radians);
 }
 
 /*

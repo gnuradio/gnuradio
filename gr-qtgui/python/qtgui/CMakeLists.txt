@@ -44,14 +44,21 @@ if(ENABLE_TESTING)
   set(GR_TEST_LIBRARY_DIRS "")
   set(GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
-    ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig	
-    ${CMAKE_BINARY_DIR}/gr-qtgui/swig
     )
+
+  if(LINUX AND NOT DEFINED ENV{DISPLAY})
+    find_program(XVFB_EXECUTABLE xvfb-run)
+    if(XVFB_EXECUTABLE)
+      set(QA_DISPLAY_SERVER "${XVFB_EXECUTABLE}")
+    endif()
+  endif()
 
   include(GrTest)
   file(GLOB py_qa_test_files "qa_*.py")
   foreach(py_qa_test_file ${py_qa_test_files})
     get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
-    GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${py_qa_test_file})
+    GR_ADD_TEST(${py_qa_test_name} ${QA_DISPLAY_SERVER} ${QA_PYTHON_EXECUTABLE} -B ${py_qa_test_file})
   endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)
+
+add_subdirectory(bindings)

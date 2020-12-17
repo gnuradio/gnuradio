@@ -53,7 +53,7 @@ install(FILES
     pfb_decimator_ccf.h
     pfb_interpolator_ccf.h
     pfb_synthesizer_ccf.h
-    rational_resampler_base.h
+    rational_resampler.h
     single_pole_iir_filter_cc.h
     single_pole_iir_filter_ff.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/filter

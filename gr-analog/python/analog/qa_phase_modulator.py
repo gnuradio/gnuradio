@@ -8,14 +8,14 @@
 #
 #
 
-from __future__ import division
 
 import math
 
 from gnuradio import gr, gr_unittest, analog, blocks
 
+
 def sincos(x):
-    return  math.cos(x) + math.sin(x) * 1j
+    return math.cos(x) + math.sin(x) * 1j
 
 
 class test_phase_modulator(gr_unittest.TestCase):
@@ -30,7 +30,7 @@ class test_phase_modulator(gr_unittest.TestCase):
         pi = math.pi
         sensitivity = pi / 4
         src_data = (1.0 / 4, 1.0 / 2, 1.0 / 4, -1.0 / 4, -1.0 / 2, -1 / 4.0)
-        expected_result = tuple([sincos(sensitivity*x) for x in src_data])
+        expected_result = tuple([sincos(sensitivity * x) for x in src_data])
 
         src = blocks.vector_source_f(src_data)
         op = analog.phase_modulator_fc(sensitivity)
@@ -43,6 +43,6 @@ class test_phase_modulator(gr_unittest.TestCase):
         result_data = dst.data()
         self.assertComplexTuplesAlmostEqual(expected_result, result_data, 5)
 
-if __name__ == '__main__':
-    gr_unittest.run(test_phase_modulator, "test_phase_modulator.xml")
 
+if __name__ == '__main__':
+    gr_unittest.run(test_phase_modulator)

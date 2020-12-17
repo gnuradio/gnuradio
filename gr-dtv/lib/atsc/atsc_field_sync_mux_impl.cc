@@ -19,7 +19,7 @@ namespace dtv {
 
 atsc_field_sync_mux::sptr atsc_field_sync_mux::make()
 {
-    return gnuradio::get_initial_sptr(new atsc_field_sync_mux_impl());
+    return gnuradio::make_block_sptr<atsc_field_sync_mux_impl>();
 }
 
 atsc_field_sync_mux_impl::atsc_field_sync_mux_impl()

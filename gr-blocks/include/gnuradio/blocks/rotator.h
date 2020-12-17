@@ -29,6 +29,7 @@ private:
 public:
     rotator() : d_phase(1), d_phase_incr(1), d_counter(0) {}
 
+    gr_complex phase() { return d_phase; }
     void set_phase(gr_complex phase) { d_phase = phase / std::abs(phase); }
     void set_phase_incr(gr_complex incr) { d_phase_incr = incr / std::abs(incr); }
 

@@ -28,13 +28,13 @@ private:
 
 public:
     rotator_cc_impl(double phase_inc = 0.0);
-    ~rotator_cc_impl();
+    ~rotator_cc_impl() override;
 
-    void set_phase_inc(double phase_inc);
+    void set_phase_inc(double phase_inc) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

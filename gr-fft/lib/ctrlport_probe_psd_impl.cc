@@ -21,7 +21,7 @@ namespace fft {
 ctrlport_probe_psd::sptr
 ctrlport_probe_psd::make(const std::string& id, const std::string& desc, int len)
 {
-    return gnuradio::get_initial_sptr(new ctrlport_probe_psd_impl(id, desc, len));
+    return gnuradio::make_block_sptr<ctrlport_probe_psd_impl>(id, desc, len);
 }
 
 ctrlport_probe_psd_impl::ctrlport_probe_psd_impl(const std::string& id,
@@ -33,7 +33,7 @@ ctrlport_probe_psd_impl::ctrlport_probe_psd_impl(const std::string& id,
       d_id(id),
       d_desc(desc),
       d_len(len),
-      d_fft(len, true, 1)
+      d_fft(len, 1)
 {
     set_length(len);
 }

@@ -8,9 +8,6 @@
 #
 """ A tool for generating YAML bindings """
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 from collections import OrderedDict
 
@@ -48,7 +45,7 @@ class GRCYAMLGenerator(object):
         str_ = ', '.join(params_list)
         self._header = (('id', f'{modname}_{blockname}'),
                         ('label', blockname.replace('_', ' ')),
-                        (f'category', '[{modname.capitalize()}]')
+                        (f'category', f'[{modname.capitalize()}]')
                        )
         self._templates = (('imports', f'import {modname}'),
                            ('make', f'{modname}.{blockname}({str_})')

@@ -38,31 +38,31 @@ private:
     void update_fft_params();
 
 protected:
-    virtual void update_state(const float& in);
-    virtual bool mute() const { return d_mute; }
+    void update_state(const float& in) override;
+    bool mute() const override { return d_mute; }
 
 public:
     ctcss_squelch_ff_impl(
         int rate, float freq, float level, int len, int ramp, bool gate);
-    ~ctcss_squelch_ff_impl();
+    ~ctcss_squelch_ff_impl() override;
 
-    std::vector<float> squelch_range() const;
-    float level() const { return d_level; }
-    void set_level(float level);
-    int len() const { return d_len; }
-    float frequency() const { return d_freq; }
-    void set_frequency(float frequency);
+    std::vector<float> squelch_range() const override;
+    float level() const override { return d_level; }
+    void set_level(float level) override;
+    int len() const override { return d_len; }
+    float frequency() const override { return d_freq; }
+    void set_frequency(float frequency) override;
 
-    int ramp() const { return squelch_base_ff_impl::ramp(); }
-    void set_ramp(int ramp) { squelch_base_ff_impl::set_ramp(ramp); }
-    bool gate() const { return squelch_base_ff_impl::gate(); }
-    void set_gate(bool gate) { squelch_base_ff_impl::set_gate(gate); }
-    bool unmuted() const { return squelch_base_ff_impl::unmuted(); }
+    int ramp() const override { return squelch_base_ff_impl::ramp(); }
+    void set_ramp(int ramp) override { squelch_base_ff_impl::set_ramp(ramp); }
+    bool gate() const override { return squelch_base_ff_impl::gate(); }
+    void set_gate(bool gate) override { squelch_base_ff_impl::set_gate(gate); }
+    bool unmuted() const override { return squelch_base_ff_impl::unmuted(); }
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items)
+                     gr_vector_void_star& output_items) override
     {
         return squelch_base_ff_impl::general_work(
             noutput_items, ninput_items, input_items, output_items);

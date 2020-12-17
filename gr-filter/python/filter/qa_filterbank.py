@@ -15,18 +15,20 @@ import math
 
 from gnuradio import gr, gr_unittest, filter, blocks
 
+
 def convolution(A, B):
     """
     Returns a convolution of the A and B vectors of length
     len(A)-len(B).
     """
     rs = []
-    for i in range(len(B)-1, len(A)):
+    for i in range(len(B) - 1, len(A)):
         r = 0
         for j, b in enumerate(B):
-            r += A[i-j] * b
+            r += A[i - j] * b
         rs.append(r)
     return rs
+
 
 class test_filterbank_vcvcf(gr_unittest.TestCase):
 
@@ -56,7 +58,7 @@ class test_filterbank_vcvcf(gr_unittest.TestCase):
         # Generate some random sets of data
         data_sets = []
         for i in range(0, nfilts):
-            data_sets.append([(myrand()-0.5) + (myrand()-0.5)*(0+1j)
+            data_sets.append([(myrand() - 0.5) + (myrand() - 0.5) * (0 + 1j)
                               for k in range(0, ndatapoints)])
         # Join them together to pass to vector_source block
         data = []
@@ -67,20 +69,20 @@ class test_filterbank_vcvcf(gr_unittest.TestCase):
         taps2 = []
         for i in range(0, nfilts):
             if i in zero_filts1:
-                taps1.append([0]*ntaps)
+                taps1.append([0] * ntaps)
             else:
-                taps1.append([myrand()-0.5 for k in range(0, ntaps)])
+                taps1.append([myrand() - 0.5 for k in range(0, ntaps)])
             if i in zero_filts2:
-                taps2.append([0]*ntaps)
+                taps2.append([0] * ntaps)
             else:
-                taps2.append([myrand()-0.5 for k in range(0, ntaps)])
+                taps2.append([myrand() - 0.5 for k in range(0, ntaps)])
 
         # Calculate results with a python-implemented convolution.
         results = []
         results2 = []
         for ds, ts, ts2 in zip(data_sets, taps1, taps2):
-            results.append(convolution(ds[-len(ts):]+ds[:-1], ts))
-            results2.append(convolution(ds[-len(ts):]+ds[:-1], ts2))
+            results.append(convolution(ds[-len(ts):] + ds[:-1], ts))
+            results2.append(convolution(ds[-len(ts):] + ds[:-1], ts2))
         # Convert results from 2D arrays to 1D arrays for ease of comparison.
         comb_results = []
         for rs in zip(*results):
@@ -92,8 +94,9 @@ class test_filterbank_vcvcf(gr_unittest.TestCase):
         src = blocks.vector_source_c(data, True, nfilts)
         fb = filter.filterbank_vcvcf(taps1)
         v2s = blocks.vector_to_stream(gr.sizeof_gr_complex, nfilts)
-        s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, nfilts*ndatapoints)
-        snk = blocks.probe_signal_vc(nfilts*ndatapoints)
+        s2v = blocks.stream_to_vector(
+            gr.sizeof_gr_complex, nfilts * ndatapoints)
+        snk = blocks.probe_signal_vc(nfilts * ndatapoints)
         self.tb.connect(src, fb, v2s, s2v, snk)
         # Run the signal-processing chain.
         self.tb.start()
@@ -101,7 +104,7 @@ class test_filterbank_vcvcf(gr_unittest.TestCase):
         outdata = None
         waittime = 0.001
         # Wait until we have some data.
-        while (not outdata) or outdata[0]==0:
+        while (not outdata) or outdata[0] == 0:
             time.sleep(waittime)
             outdata = snk.level()
         # Apply the second set of taps.
@@ -116,5 +119,6 @@ class test_filterbank_vcvcf(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(comb_results, outdata, 6)
         self.assertComplexTuplesAlmostEqual(comb_results2, outdata2, 6)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_filterbank_vcvcf, "test_filterbank_vcvcf.xml")
+    gr_unittest.run(test_filterbank_vcvcf)

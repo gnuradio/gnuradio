@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 #
 # Copyright 2005,2007,2011 Free Software Foundation, Inc.
 #
@@ -8,13 +7,12 @@ from __future__ import unicode_literals
 #
 #
 
-from gnuradio import gru
-from . import digital_swig as digital
+from . import digital_python as digital
 import struct
 
 def gen_and_append_crc32(s):
     crc = digital.crc32(s)
-    return s + struct.pack(">I", gru.hexint(crc) & 0xFFFFFFFF)
+    return s + struct.pack(">I", crc)
 
 def check_crc32(s):
     if len(s) < 4:

@@ -23,6 +23,7 @@ class FFT_API window
 {
 public:
     enum win_type {
+        WIN_NONE = -1,       //!< don't use a window
         WIN_HAMMING = 0,     //!< Hamming window; max attenuation 53 dB
         WIN_HANN = 1,        //!< Hann window; max attenuation 44 dB
         WIN_BLACKMAN = 2,    //!< Blackman window; max attenuation 74 dB
@@ -330,8 +331,10 @@ public:
      * \param type a gr::fft::win_type index for the type of window.
      * \param ntaps Number of coefficients in the window.
      * \param beta Used only for building Kaiser windows.
+     * \param normalize If true, return a window with unit power
      */
-    static std::vector<float> build(win_type type, int ntaps, double beta);
+    static std::vector<float>
+    build(win_type type, int ntaps, double beta = 6.76, const bool normalize = false);
 };
 
 } /* namespace fft */

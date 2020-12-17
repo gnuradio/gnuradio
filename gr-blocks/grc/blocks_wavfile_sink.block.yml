@@ -15,16 +15,62 @@ parameters:
     label: Sample Rate
     dtype: int
     default: samp_rate
--   id: bits_per_sample
+-   id: format
+    label: Output Format
+    dtype: enum
+    options: [FORMAT_WAV, FORMAT_FLAC, FORMAT_OGG, FORMAT_RF64]
+    option_labels: [WAV, FLAC, Ogg Vorbis, 64-bit WAV]
+    default: FORMAT_WAV
+    option_attributes:
+        hide_wav: [none, all, all, all]
+        hide_flac: [all, none, all, all]
+        hide_ogg: [all, all, none, all]
+        hide_rf64: [all, all, all, none]
+        hide_append: [none, all, all, none]
+        val: [blocks.FORMAT_WAV, blocks.FORMAT_FLAC, blocks.FORMAT_OGG, blocks.FORMAT_RF64]
+-   id: bits_per_sample1
     label: Bits per Sample
-    dtype: int
-    default: '8'
+    dtype: enum
+    options: [FORMAT_PCM_16, FORMAT_PCM_24, FORMAT_PCM_32, FORMAT_PCM_U8, FORMAT_FLOAT, FORMAT_DOUBLE]
+    option_labels: [16-bit, 24-bit, 32-bit, unsigned 8-bit, float, double]
+    default: FORMAT_PCM_16
+    option_attributes:
+        val: [blocks.FORMAT_PCM_16, blocks.FORMAT_PCM_24, blocks.FORMAT_PCM_32, blocks.FORMAT_PCM_U8, blocks.FORMAT_FLOAT, blocks.FORMAT_DOUBLE]
+    hide: ${ format.hide_wav }
+-   id: bits_per_sample2
+    label: Bits per Sample
+    dtype: enum
+    options: [FORMAT_PCM_S8, FORMAT_PCM_16, FORMAT_PCM_24]
+    option_labels: [signed 8-bit, 16-bit, 24-bit]
+    default: FORMAT_PCM_16
+    option_attributes:
+        val: [blocks.FORMAT_PCM_S8, blocks.FORMAT_PCM_16, blocks.FORMAT_PCM_24]
+    hide: ${ format.hide_flac }
+-   id: bits_per_sample3
+    label: Bits per Sample
+    dtype: enum
+    options: [FORMAT_VORBIS]
+    option_labels: [Vorbis]
+    default: FORMAT_VORBIS
+    option_attributes:
+        val: [blocks.FORMAT_VORBIS]
+    hide: ${ format.hide_ogg }
+-   id: bits_per_sample4
+    label: Bits per Sample
+    dtype: enum
+    options: [FORMAT_PCM_16, FORMAT_PCM_24, FORMAT_PCM_32, FORMAT_PCM_U8, FORMAT_FLOAT, FORMAT_DOUBLE]
+    option_labels: [16-bit, 24-bit, 32-bit, unsigned 8-bit, float, double]
+    default: FORMAT_PCM_16
+    option_attributes:
+        val: [blocks.FORMAT_PCM_16, blocks.FORMAT_PCM_24, blocks.FORMAT_PCM_32, blocks.FORMAT_PCM_U8, blocks.FORMAT_FLOAT, blocks.FORMAT_DOUBLE]
+    hide: ${ format.hide_rf64 }
 -   id: append
     label: Append to existing file
     dtype: enum
     default: 'False'
     options: ['True', 'False']
     option_labels: ['Yes', 'No']
+    hide: ${ format.hide_append }
 
 inputs:
 -   domain: stream
@@ -36,7 +82,32 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.wavfile_sink(${file}, ${nchan}, ${samp_rate}, ${bits_per_sample}, ${append})
+    make: |-
+        blocks.wavfile_sink(
+            ${file},
+            ${nchan},
+            ${samp_rate},
+            ${format.val},
+            % if str(format) == 'FORMAT_WAV':
+            ${bits_per_sample1.val},
+            % elif str(format) == 'FORMAT_FLAC':
+            ${bits_per_sample2.val},
+            % elif str(format) == 'FORMAT_OGG':
+            ${bits_per_sample3.val},
+            % elif str(format) == 'FORMAT_RF64':
+            ${bits_per_sample4.val},
+            % endif
+            % if str(format) == 'FORMAT_WAV':
+            ${append}
+            % elif str(format) == 'FORMAT_FLAC':
+            ${False}
+            % elif str(format) == 'FORMAT_OGG':
+            ${False},
+            % elif str(format) == 'FORMAT_RF64':
+            ${append}
+            % endif
+            )
+
     callbacks:
     - open(${file})
 
@@ -44,7 +115,31 @@ cpp_templates:
     includes: ['#include <gnuradio/blocks/wavfile_sink.h>']
     declarations: 'blocks::wavfile_sink::sptr ${id};'
     make: |-
-      this->${id} = blocks::wavfile_sink::make(${file}${'.c_str()' if str(file)[0] != "'" and str(file)[0] != "\"" else ''}, ${nchan}, ${samp_rate}, ${bits_per_sample}, ${append});
+        this->${id} = blocks::wavfile_sink::make(
+            ${file},
+            ${nchan},
+            ${samp_rate},
+            ${format.val},
+            % if str(format) == 'FORMAT_WAV':
+            ${bits_per_sample1.val},
+            % elif str(format) == 'FORMAT_FLAC':
+            ${bits_per_sample2.val},
+            % elif str(format) == 'FORMAT_OGG':
+            ${bits_per_sample3.val},
+            % elif str(format) == 'FORMAT_RF64':
+            ${bits_per_sample4.val},
+            % endif
+            % if str(format) == 'FORMAT_WAV':
+            ${append}
+            % elif str(format) == 'FORMAT_FLAC':
+            ${False}
+            % elif str(format) == 'FORMAT_OGG':
+            ${False},
+            % elif str(format) == 'FORMAT_RF64':
+            ${append}
+            % endif
+            );
+
     callbacks:
     ## TODO Handle std::string type when const char* argument is needed
     - this->${id}->open(${file})

@@ -19,10 +19,8 @@
 # the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-from __future__ import division
-from __future__ import unicode_literals
 from gnuradio import gr, filter
-from . import dtv_swig as dtv
+from . import dtv_python as dtv
 
 # FIXME move these into separate constants module
 ATSC_CHANNEL_BW   = 6.0e6

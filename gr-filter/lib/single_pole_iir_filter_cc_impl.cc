@@ -22,7 +22,7 @@ namespace filter {
 single_pole_iir_filter_cc::sptr single_pole_iir_filter_cc::make(double alpha,
                                                                 unsigned int vlen)
 {
-    return gnuradio::get_initial_sptr(new single_pole_iir_filter_cc_impl(alpha, vlen));
+    return gnuradio::make_block_sptr<single_pole_iir_filter_cc_impl>(alpha, vlen);
 }
 
 single_pole_iir_filter_cc_impl::single_pole_iir_filter_cc_impl(double alpha,
@@ -35,8 +35,6 @@ single_pole_iir_filter_cc_impl::single_pole_iir_filter_cc_impl(double alpha,
 {
     set_taps(alpha);
 }
-
-single_pole_iir_filter_cc_impl::~single_pole_iir_filter_cc_impl() {}
 
 void single_pole_iir_filter_cc_impl::set_taps(double alpha)
 {

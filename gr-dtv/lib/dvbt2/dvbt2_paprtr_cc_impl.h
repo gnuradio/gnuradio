@@ -33,6 +33,8 @@ namespace dtv {
 class dvbt2_paprtr_cc_impl : public dvbt2_paprtr_cc
 {
 private:
+    fft::fft_complex_rev papr_fft;
+    int papr_fft_size;
     int num_symbols;
     int fft_size;
     int left_nulls;
@@ -47,14 +49,14 @@ private:
     int p2_carrier_map[MAX_CARRIERS];
     int data_carrier_map[MAX_CARRIERS];
     int fc_carrier_map[MAX_CARRIERS];
-    gr_complex* ones_freq;
-    gr_complex* ones_time;
-    gr_complex* c;
-    gr_complex* ctemp;
-    float* magnitude;
-    gr_complex* r;
-    gr_complex* rNew;
-    gr_complex* v;
+    volk::vector<gr_complex> ones_freq;
+    volk::vector<gr_complex> ones_time;
+    volk::vector<gr_complex> c;
+    volk::vector<gr_complex> ctemp;
+    volk::vector<float> magnitude;
+    volk::vector<gr_complex> r;
+    volk::vector<gr_complex> rNew;
+    volk::vector<gr_complex> v;
     float alphaLimit[MAX_PAPRTONES];
     float alphaLimitMax[MAX_PAPRTONES];
     int N_P2;
@@ -66,9 +68,6 @@ private:
     int dy;
     int shift;
     void init_pilots(int);
-
-    fft::fft_complex papr_fft;
-    int papr_fft_size;
 
     const static int p2_papr_map_1k[10];
     const static int p2_papr_map_2k[18];
@@ -94,11 +93,12 @@ public:
                          float vclip,
                          int iterations,
                          unsigned int vlength);
-    ~dvbt2_paprtr_cc_impl();
+
+    ~dvbt2_paprtr_cc_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace dtv

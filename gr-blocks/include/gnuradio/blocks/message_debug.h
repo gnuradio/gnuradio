@@ -47,7 +47,7 @@ public:
      * and has three message ports: print, store, and
      * print_pdu.
      */
-    static sptr make();
+    static sptr make(bool en_uvec = true);
 
     /*!
      * \brief Reports the number of messages received by this block.
@@ -68,6 +68,11 @@ public:
      * \return a message at index \p i as a pmt_t.
      */
     virtual pmt::pmt_t get_message(int i) = 0;
+
+    /*!
+     * \brief Enables or disables printing of PDU uniform vector data.
+     */
+    virtual void set_vector_print(bool en) = 0;
 };
 
 } /* namespace blocks */

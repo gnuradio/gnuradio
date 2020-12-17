@@ -29,13 +29,13 @@ private:
 
 public:
     crc32_bb_impl(bool check, const std::string& lengthtagname, bool packed);
-    ~crc32_bb_impl();
+    ~crc32_bb_impl() override;
 
-    int calculate_output_stream_length(const gr_vector_int& ninput_items);
+    int calculate_output_stream_length(const gr_vector_int& ninput_items) override;
     int work(int noutput_items,
              gr_vector_int& ninput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace digital

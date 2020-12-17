@@ -101,6 +101,14 @@ public:
                      const ::uhd::stream_args_t& stream_args,
                      const std::string& tsb_tag_name = "");
 
+    // Also accept a string for the device_addr
+    static sptr make(const std::string& device_addr_str,
+                     const ::uhd::stream_args_t& stream_args,
+                     const std::string& tsb_tag_name = "")
+    {
+        return make(::uhd::device_addr_t(device_addr_str), stream_args, tsb_tag_name);
+    }
+
     /*!
      * Set the start time for outgoing samples.
      * To control when samples are transmitted,
@@ -113,15 +121,6 @@ public:
      * \param time the absolute time for transmission to begin
      */
     virtual void set_start_time(const ::uhd::time_spec_t& time) = 0;
-
-    /*!
-     * Returns identifying information about this USRP's configuration.
-     * Returns motherboard ID, name, and serial.
-     * Returns daughterboard TX ID, subdev name and spec, serial, and antenna.
-     * \param chan channel index 0 to N-1
-     * \return TX info
-     */
-    virtual ::uhd::dict<std::string, std::string> get_usrp_info(size_t chan = 0) = 0;
 
     /*!
      * Get a list of possible LO stage names

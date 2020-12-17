@@ -13,13 +13,13 @@
 
 GF2Vec::GF2Vec(int size) { vec.resize(size); }
 
-void GF2Vec::set_vec(const std::vector<char> in) { vec = in; }
+void GF2Vec::set_vec(const std::vector<uint8_t> in) { vec = in; }
 
-std::vector<char> GF2Vec::get_vec() { return vec; }
+std::vector<uint8_t> GF2Vec::get_vec() { return vec; }
 
 int GF2Vec::size() { return vec.size(); }
 
-char& GF2Vec::operator[](int i) { return vec[i]; }
+uint8_t& GF2Vec::operator[](int i) { return vec[i]; }
 
 GF2Vec operator+(GF2Vec a, GF2Vec b)
 {
@@ -40,7 +40,7 @@ GF2Vec GF2Vec::sub_vector(int from, int to)
     return x;
 }
 
-char operator*(GF2Vec a, GF2Vec b)
+uint8_t operator*(GF2Vec a, GF2Vec b)
 {
     char sum;
     sum = char(0);

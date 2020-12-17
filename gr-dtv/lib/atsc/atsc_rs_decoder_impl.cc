@@ -31,7 +31,7 @@ static const int amount_of_pad = N - ATSC_MPEG_RS_ENCODED_LENGTH; // 48
 
 atsc_rs_decoder::sptr atsc_rs_decoder::make()
 {
-    return gnuradio::get_initial_sptr(new atsc_rs_decoder_impl());
+    return gnuradio::make_block_sptr<atsc_rs_decoder_impl>();
 }
 
 atsc_rs_decoder_impl::atsc_rs_decoder_impl()

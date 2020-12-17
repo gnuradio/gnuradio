@@ -7,17 +7,13 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import unicode_literals
 
 import math
 
 from gnuradio import gr
 from gnuradio import filter
 
-from . import analog_swig as analog
+from . import analog_python as analog
 from .fm_emph import fm_deemph
 
 

@@ -8,9 +8,9 @@
 #
 #
 
-from __future__ import division
 
 from gnuradio import gr, gr_unittest, analog, blocks
+
 
 class test_dpll_bb(gr_unittest.TestCase):
 
@@ -34,7 +34,7 @@ class test_dpll_bb(gr_unittest.TestCase):
         f = op.freq()
         self.assertEqual(1 / period, f)
 
-        d0 = 1.0 - 0.5*f;
+        d0 = 1.0 - 0.5 * f
         d1 = op.decision_threshold()
         self.assertAlmostEqual(d0, d1)
 
@@ -45,7 +45,7 @@ class test_dpll_bb(gr_unittest.TestCase):
         period = 4
         gain = 0.1
 
-        src_data = 10*((period-1)*[0,] + [1,])
+        src_data = 10 * ((period - 1) * [0, ] + [1, ])
         expected_result = src_data
 
         src = blocks.vector_source_b(src_data)
@@ -59,6 +59,6 @@ class test_dpll_bb(gr_unittest.TestCase):
         result_data = dst.data()
         self.assertComplexTuplesAlmostEqual(expected_result, result_data, 4)
 
-if __name__ == '__main__':
-    gr_unittest.run(test_dpll_bb, "test_dpll_bb.xml")
 
+if __name__ == '__main__':
+    gr_unittest.run(test_dpll_bb)

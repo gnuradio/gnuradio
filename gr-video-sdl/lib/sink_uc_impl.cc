@@ -34,8 +34,8 @@ sink_uc::sptr sink_uc::make(double framerate,
                             int dst_width,
                             int dst_height)
 {
-    return gnuradio::get_initial_sptr(
-        new sink_uc_impl(framerate, width, height, format, dst_width, dst_height));
+    return gnuradio::make_block_sptr<sink_uc_impl>(
+        framerate, width, height, format, dst_width, dst_height);
 }
 
 sink_uc_impl::sink_uc_impl(double framerate,
@@ -195,7 +195,7 @@ int sink_uc_impl::copy_plane_to_surface(int plane,
     unsigned char* dst_pixels_2 = (unsigned char*)d_image->pixels[second_dst_plane];
     dst_pixels_2 = &dst_pixels_2[current_line * d_image->pitches[second_dst_plane]];
 
-    int src_width = (0 == plane || 12 == plane || 1122 == plane) ? d_width : d_width / 2;
+    int src_width = d_width;
     int noutput_items_produced = 0;
     int max_height = (0 == plane) ? d_height - 1 : d_height / 2 - 1;
 

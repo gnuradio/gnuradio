@@ -37,7 +37,7 @@ parameters:
 -   id: extra_dict
     label: Extra Dict.
     dtype: raw
-    default: '""'
+    default: pmt.make_dict()
 -   id: detached
     label: Detached
     dtype: bool

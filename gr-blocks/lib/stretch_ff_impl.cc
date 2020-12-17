@@ -20,7 +20,7 @@ namespace blocks {
 
 stretch_ff::sptr stretch_ff::make(float lo, size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new stretch_ff_impl(lo, vlen));
+    return gnuradio::make_block_sptr<stretch_ff_impl>(lo, vlen);
 }
 
 stretch_ff_impl::stretch_ff_impl(float lo, size_t vlen)

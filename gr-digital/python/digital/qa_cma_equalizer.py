@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, digital, blocks
 
+
 class test_cma_equalizer_fir(gr_unittest.TestCase):
 
     def setUp(self):
@@ -29,12 +30,13 @@ class test_cma_equalizer_fir(gr_unittest.TestCase):
 
     def test_001_identity(self):
         # Constant modulus signal so no adjustments
-        src_data      = (1+0j, 0+1j, -1+0j, 0-1j)*1000
+        src_data = (1 + 0j, 0 + 1j, -1 + 0j, 0 - 1j) * 1000
         expected_data = src_data
         result = self.transform(src_data)
 
         N = -500
         self.assertComplexTuplesAlmostEqual(expected_data[N:], result[N:])
 
+
 if __name__ == "__main__":
-    gr_unittest.run(test_cma_equalizer_fir, "test_cma_equalizer_fir.xml")
+    gr_unittest.run(test_cma_equalizer_fir)

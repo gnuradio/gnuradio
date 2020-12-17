@@ -24,15 +24,15 @@ private:
 
 public:
     stretch_ff_impl(float lo, size_t vlen);
-    ~stretch_ff_impl();
+    ~stretch_ff_impl() override;
 
-    float lo() const { return d_lo; }
-    void set_lo(float lo) { d_lo = lo; }
-    size_t vlen() const { return d_vlen; }
+    float lo() const override { return d_lo; }
+    void set_lo(float lo) override { d_lo = lo; }
+    size_t vlen() const override { return d_vlen; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

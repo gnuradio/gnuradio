@@ -11,8 +11,6 @@
 """
 Run synthetic.py for npipes in [1,16], nstages in [1,16]
 """
-from __future__ import division
-from __future__ import unicode_literals
 
 import re
 import sys

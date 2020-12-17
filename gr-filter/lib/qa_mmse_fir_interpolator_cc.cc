@@ -15,7 +15,7 @@
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/filter/mmse_fir_interpolator_cc.h>
 #include <gnuradio/math.h>
-#include <volk/volk.h>
+#include <volk/volk_alloc.hh>
 #include <boost/test/unit_test.hpp>
 #include <cmath>
 #include <cstdint>
@@ -46,8 +46,7 @@ static gr_complex test_fcn(double index)
 BOOST_AUTO_TEST_CASE(t1)
 {
     static const unsigned N = 100;
-    gr_complex* input =
-        (gr_complex*)volk_malloc((N + 10) * sizeof(gr_complex), volk_get_alignment());
+    volk::vector<gr_complex> input(N + 10);
 
     for (unsigned i = 0; i < N + 10; i++)
         input[i] = test_fcn((double)i);
@@ -64,7 +63,6 @@ BOOST_AUTO_TEST_CASE(t1)
             // printf ("%9.6f  %9.6f  %9.6f\n", expected, actual, expected - actual);
         }
     }
-    volk_free(input);
 }
 
 /*

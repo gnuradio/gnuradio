@@ -58,13 +58,13 @@ class jack_source : public source
 
 public:
     jack_source(int sampling_rate, const std::string device_name, bool ok_to_block);
-    ~jack_source();
+    ~jack_source() override;
 
-    bool check_topology(int ninputs, int noutputs);
+    bool check_topology(int ninputs, int noutputs) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace audio */

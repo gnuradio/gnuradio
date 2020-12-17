@@ -2,9 +2,8 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
-from __future__ import absolute_import
 
 import numbers
 
@@ -31,6 +30,9 @@ class Param(CoreParam):
         dtype = self.dtype
         if dtype in ('file_open', 'file_save'):
             input_widget_cls = ParamWidgets.FileParam
+
+        elif dtype == 'dir_select':
+            input_widget_cls = ParamWidgets.DirectoryParam
 
         elif dtype == 'enum':
             input_widget_cls = ParamWidgets.EnumParam
@@ -67,7 +69,10 @@ class Param(CoreParam):
         errors = self.get_error_messages()
         tooltip_lines = ['Key: ' + self.key, 'Type: ' + self.dtype]
         if self.is_valid():
-            value = str(self.get_evaluated())
+            value = self.get_evaluated()
+            if hasattr(value, "__len__"):
+                tooltip_lines.append('Length: {}'.format(len(value)))
+            value = str(value)
             if len(value) > 100:
                 value = '{}...{}'.format(value[:50], value[-50:])
             tooltip_lines.append('Value: ' + value)
@@ -147,5 +152,4 @@ class Param(CoreParam):
         """
         return '<span {foreground} font_desc="{font}"><b>{label}:</b> {value}</span>'.format(
             foreground='foreground="red"' if not self.is_valid() else '', font=Constants.PARAM_FONT,
-            label=Utils.encode(self.name), value=Utils.encode(self.pretty_print().replace('\n', ' '))
-        )
+            label=Utils.encode(self.name), value=Utils.encode(self.pretty_print().replace('\n', ' ')))

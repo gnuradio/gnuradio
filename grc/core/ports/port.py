@@ -2,9 +2,8 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
-from __future__ import absolute_import
 
 from . import _virtual_connections
 
@@ -41,7 +40,7 @@ class Port(Element):
             busses = [p for p in self.parent.ports() if p._dir == self._dir and p.dtype == 'bus']
             bus_structure = self.parent.current_bus_structure[self._dir]
             bus_index = len(busses)
-            if len(bus_structure) > bus_index: 
+            if len(bus_structure) > bus_index:
                 number = str(len(busses)) + '#' + str(len(bus_structure[bus_index]))
                 label = dtype + number
             else:
@@ -208,21 +207,21 @@ class Port(Element):
         for con in self.parent_flowgraph.connections:
             #TODO clean this up - but how to get past this validation
             # things don't compare simply with an x in y because
-            # bus ports are created differently.  
+            # bus ports are created differently.
             port_in_con = False
             if self.dtype == 'bus':
                 if self.is_sink:
                     if (self.parent.name == con.sink_port.parent.name and
-                       self.name == con.sink_port.name):
-                            port_in_con = True
+                            self.name == con.sink_port.name):
+                        port_in_con = True
                 elif self.is_source:
                     if (self.parent.name == con.source_port.parent.name and
-                       self.name == con.source_port.name):
-                            port_in_con = True
-            
+                            self.name == con.source_port.name):
+                        port_in_con = True
+
                 if port_in_con:
                     yield con
-                    
+
             else:
                 if self in con and (enabled is None or enabled == con.enabled):
                     yield con
@@ -244,4 +243,3 @@ class Port(Element):
                 bus_index = busses.index(self)
                 ports = filter(lambda a: ports.index(a) in bus_structure[bus_index], ports)
             return ports
-

@@ -7,12 +7,10 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 from .base import ModTool, ModToolException, get_block_candidates
 from .add import ModToolAdd
+from .bind import ModToolGenBindings
 from .disable import ModToolDisable
 from .info import ModToolInfo
 from .makeyaml import ModToolMakeYAML, yaml_generator

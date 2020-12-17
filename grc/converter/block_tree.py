@@ -2,12 +2,11 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 """
 Converter for legacy block tree definitions in XML format
 """
 
-from __future__ import absolute_import, print_function
 
 from ..core.io import yaml
 from . import xml

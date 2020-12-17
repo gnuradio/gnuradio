@@ -28,28 +28,28 @@ private:
 
 public:
     fading_model_impl(unsigned int N, float fDTs, bool LOS, float K, uint32_t seed);
-    ~fading_model_impl();
-    void setup_rpc();
+    ~fading_model_impl() override;
+    void setup_rpc() override;
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
-    virtual float fDTs() { return d_fader.d_fDTs; }
-    virtual float K() { return d_fader.d_K; }
-    virtual float step() { return d_fader.d_step; }
+    float fDTs() override { return d_fader.d_fDTs; }
+    float K() override { return d_fader.d_K; }
+    float step() override { return d_fader.d_step; }
 
-    virtual void set_fDTs(float fDTs)
+    void set_fDTs(float fDTs) override
     {
         d_fader.d_fDTs = fDTs;
         d_fader.d_step = powf(0.00125 * fDTs, 1.1);
     }
-    virtual void set_K(float K)
+    void set_K(float K) override
     {
         d_fader.d_K = K;
         d_fader.scale_los = sqrtf(d_fader.d_K) / sqrtf(d_fader.d_K + 1);
         d_fader.scale_nlos = (1 / sqrtf(d_fader.d_K + 1));
     }
-    virtual void set_step(float step) { d_fader.d_step = step; }
+    void set_step(float step) override { d_fader.d_step = step; }
 };
 
 } /* namespace channels */

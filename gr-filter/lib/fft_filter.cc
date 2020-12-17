@@ -217,8 +217,8 @@ void fft_filter_ccc::compute_sizes(int ntaps)
 
     // compute new plans
     if (d_fftsize != old_fftsize) {
-        d_fwdfft = boost::make_unique<fft::fft_complex>(d_fftsize, true, d_nthreads);
-        d_invfft = boost::make_unique<fft::fft_complex>(d_fftsize, false, d_nthreads);
+        d_fwdfft = boost::make_unique<fft::fft_complex_fwd>(d_fftsize, d_nthreads);
+        d_invfft = boost::make_unique<fft::fft_complex_rev>(d_fftsize, d_nthreads);
         d_xformed_taps.resize(d_fftsize);
     }
 }
@@ -349,8 +349,8 @@ void fft_filter_ccf::compute_sizes(int ntaps)
 
     // compute new plans
     if (d_fftsize != old_fftsize) {
-        d_fwdfft = boost::make_unique<fft::fft_complex>(d_fftsize, true, d_nthreads);
-        d_invfft = boost::make_unique<fft::fft_complex>(d_fftsize, false, d_nthreads);
+        d_fwdfft = boost::make_unique<fft::fft_complex_fwd>(d_fftsize, d_nthreads);
+        d_invfft = boost::make_unique<fft::fft_complex_rev>(d_fftsize, d_nthreads);
         d_xformed_taps.resize(d_fftsize);
     }
 }

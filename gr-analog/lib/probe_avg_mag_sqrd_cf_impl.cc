@@ -21,8 +21,7 @@ namespace analog {
 
 probe_avg_mag_sqrd_cf::sptr probe_avg_mag_sqrd_cf::make(double threshold_db, double alpha)
 {
-    return gnuradio::get_initial_sptr(
-        new probe_avg_mag_sqrd_cf_impl(threshold_db, alpha));
+    return gnuradio::make_block_sptr<probe_avg_mag_sqrd_cf_impl>(threshold_db, alpha);
 }
 
 probe_avg_mag_sqrd_cf_impl::probe_avg_mag_sqrd_cf_impl(double threshold_db, double alpha)

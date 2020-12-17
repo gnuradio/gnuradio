@@ -12,6 +12,7 @@
 from gnuradio import gr, gr_unittest, blocks
 import math
 
+
 class test_null_sink_source(gr_unittest.TestCase):
 
     def setUp(self):
@@ -29,6 +30,6 @@ class test_null_sink_source(gr_unittest.TestCase):
         self.tb.connect(src, hed, dst)
         self.tb.run()
 
-if __name__ == '__main__':
-    gr_unittest.run(test_null_sink_source, "test_null_sink_source.xml")
 
+if __name__ == '__main__':
+    gr_unittest.run(test_null_sink_source)

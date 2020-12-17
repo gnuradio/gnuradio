@@ -21,8 +21,7 @@ namespace blocks {
 tagged_stream_align::sptr tagged_stream_align::make(size_t itemsize,
                                                     const std::string& lengthtagname)
 {
-    return gnuradio::get_initial_sptr(
-        new tagged_stream_align_impl(itemsize, lengthtagname));
+    return gnuradio::make_block_sptr<tagged_stream_align_impl>(itemsize, lengthtagname);
 }
 
 tagged_stream_align_impl::tagged_stream_align_impl(size_t itemsize,

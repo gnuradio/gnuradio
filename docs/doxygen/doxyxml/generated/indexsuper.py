@@ -4,15 +4,11 @@
 # Generated Thu Jun 11 18:43:54 2009 by generateDS.py.
 #
 
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import sys
 
 from xml.dom import minidom
 from xml.dom import Node
-
-import six
 
 #
 # User methods
@@ -68,7 +64,7 @@ def showIndent(outfile, level):
         outfile.write('    ')
 
 def quote_xml(inStr):
-    s1 = (isinstance(inStr, six.string_types) and inStr or
+    s1 = (isinstance(inStr, str) and inStr or
           '%s' % inStr)
     s1 = s1.replace('&', '&amp;')
     s1 = s1.replace('<', '&lt;')
@@ -76,7 +72,7 @@ def quote_xml(inStr):
     return s1
 
 def quote_attrib(inStr):
-    s1 = (isinstance(inStr, six.string_types) and inStr or
+    s1 = (isinstance(inStr, str) and inStr or
           '%s' % inStr)
     s1 = s1.replace('&', '&amp;')
     s1 = s1.replace('<', '&lt;')

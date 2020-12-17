@@ -27,20 +27,20 @@ private:
 
 public:
     probe_avg_mag_sqrd_cf_impl(double threshold_db, double alpha);
-    ~probe_avg_mag_sqrd_cf_impl();
+    ~probe_avg_mag_sqrd_cf_impl() override;
 
-    bool unmuted() const { return d_unmuted; }
-    double level() const { return d_level; }
+    bool unmuted() const override { return d_unmuted; }
+    double level() const override { return d_level; }
 
-    double threshold() const;
+    double threshold() const override;
 
-    void set_alpha(double alpha);
-    void set_threshold(double decibels);
-    void reset();
+    void set_alpha(double alpha) override;
+    void set_threshold(double decibels) override;
+    void reset() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace analog */

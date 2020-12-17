@@ -6,9 +6,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-from __future__ import absolute_import
-import six
-
 from gi.repository import Gtk, Gdk, GObject
 
 from . import Actions, Utils, Constants
@@ -21,7 +18,7 @@ def _format_doc(doc):
     docs = []
     if doc.get(''):
         docs += doc.get('').splitlines() + ['']
-    for block_name, docstring in six.iteritems(doc):
+    for block_name, docstring in doc.items():
         docs.append('--- {0} ---'.format(block_name))
         docs += docstring.splitlines()
         docs.append('')
@@ -122,7 +119,7 @@ class BlockTreeWindow(Gtk.VBox):
 
     def repopulate(self):
         self.clear()
-        for block in six.itervalues(self.platform.blocks):
+        for block in self.platform.blocks.values():
             if block.category:
                 self.add_block(block)
         self.expand_module_in_tree()

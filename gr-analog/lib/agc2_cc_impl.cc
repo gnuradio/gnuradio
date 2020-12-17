@@ -22,8 +22,8 @@ namespace analog {
 agc2_cc::sptr
 agc2_cc::make(float attack_rate, float decay_rate, float reference, float gain)
 {
-    return gnuradio::get_initial_sptr(
-        new agc2_cc_impl(attack_rate, decay_rate, reference, gain));
+    return gnuradio::make_block_sptr<agc2_cc_impl>(
+        attack_rate, decay_rate, reference, gain);
 }
 
 agc2_cc_impl::agc2_cc_impl(float attack_rate,

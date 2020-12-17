@@ -44,21 +44,21 @@ private:
     static constexpr int INPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
 
     single_viterbi_t viterbi[NCODERS];
-    fifo_t* fifo[NCODERS];
+    std::vector<fifo_t> fifo;
 
 public:
     atsc_viterbi_decoder_impl();
-    ~atsc_viterbi_decoder_impl();
+    ~atsc_viterbi_decoder_impl() override;
 
-    void setup_rpc();
+    void setup_rpc() override;
 
     void reset();
 
-    std::vector<float> decoder_metrics() const;
+    std::vector<float> decoder_metrics() const override;
 
-    virtual int work(int noutput_items,
-                     gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace dtv */

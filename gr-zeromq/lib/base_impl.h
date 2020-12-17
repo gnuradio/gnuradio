@@ -26,12 +26,12 @@ public:
               int timeout,
               bool pass_tags,
               const std::string& key = "");
-    virtual ~base_impl();
+    ~base_impl() override;
 
 protected:
     std::string last_endpoint();
-    zmq::context_t* d_context;
-    zmq::socket_t* d_socket;
+    zmq::context_t d_context;
+    zmq::socket_t d_socket;
     size_t d_vsize;
     int d_timeout;
     bool d_pass_tags;

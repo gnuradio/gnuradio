@@ -75,7 +75,7 @@ blocks:
     gui_hint: ''
     label: ''
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '1'
@@ -96,7 +96,7 @@ blocks:
     gui_hint: ''
     label: ''
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: int
     start: '-35'
     step: '1'
@@ -117,7 +117,7 @@ blocks:
     gui_hint: ''
     label: ''
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: int
     start: '0'
     step: '1'
@@ -556,7 +556,7 @@ blocks:
     clock_source6: ''
     clock_source7: ''
     comment: ''
-    dev_addr: '"send_frame_size=65536,num_send_frames=128,master_clock_rate=" + str(symbol_rate*4)'
+    dev_addr: '"send_frame_size=8192,num_send_frames=128,master_clock_rate=" + str(symbol_rate*4)'
     dev_args: '""'
     gain0: tx_gain
     gain1: '0'

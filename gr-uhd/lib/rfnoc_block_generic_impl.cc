@@ -26,9 +26,9 @@ rfnoc_block_generic::make(rfnoc_graph::sptr graph,
                           const int device_select,
                           const int block_select)
 {
-    return gnuradio::get_initial_sptr(
-        new rfnoc_block_generic_impl(rfnoc_block::make_block_ref(
-            graph, block_args, block_name, device_select, block_select)));
+    return gnuradio::make_block_sptr<rfnoc_block_generic_impl>(
+        rfnoc_block::make_block_ref(
+            graph, block_args, block_name, device_select, block_select));
 }
 
 rfnoc_block_generic_impl::rfnoc_block_generic_impl(

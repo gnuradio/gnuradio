@@ -28,8 +28,8 @@ typename burst_shaper<T>::sptr burst_shaper<T>::make(const std::vector<T>& taps,
                                                      bool insert_phasing,
                                                      const std::string& length_tag_name)
 {
-    return gnuradio::get_initial_sptr(new burst_shaper_impl<T>(
-        taps, pre_padding, post_padding, insert_phasing, length_tag_name));
+    return gnuradio::make_block_sptr<burst_shaper_impl<T>>(
+        taps, pre_padding, post_padding, insert_phasing, length_tag_name);
 }
 
 template <class T>

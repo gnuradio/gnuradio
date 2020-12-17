@@ -29,9 +29,8 @@ tcp_connection::sptr tcp_connection::make(boost::asio::io_service& io_service,
 tcp_connection::tcp_connection(boost::asio::io_service& io_service,
                                int MTU /*= 10000*/,
                                bool no_delay /*=false*/)
-    : d_socket(io_service), d_block(NULL), d_no_delay(no_delay)
+    : d_socket(io_service), d_buf(MTU), d_block(NULL), d_no_delay(no_delay)
 {
-    d_buf.resize(MTU);
     try {
         d_socket.set_option(boost::asio::ip::tcp::no_delay(no_delay));
     } catch (...) {
@@ -45,10 +44,10 @@ void tcp_connection::send(pmt::pmt_t vector)
     size_t len = pmt::blob_length(vector);
 
     // Asio async_write() requires the buffer to remain valid until the handler is called.
-    std::shared_ptr<char[]> txbuf(new char[len]);
+    auto txbuf = std::make_shared<std::vector<char>>(len);
 
     size_t temp = 0;
-    memcpy(txbuf.get(), pmt::uniform_vector_elements(vector, temp), len);
+    memcpy(txbuf->data(), pmt::uniform_vector_elements(vector, temp), len);
 
     size_t offset = 0;
     while (offset < len) {
@@ -58,12 +57,8 @@ void tcp_connection::send(pmt::pmt_t vector)
         size_t send_len = std::min((len - offset), d_buf.size());
         boost::asio::async_write(
             d_socket,
-            boost::asio::buffer(txbuf.get() + offset, send_len),
-            boost::bind(&tcp_connection::handle_write,
-                        this,
-                        txbuf,
-                        boost::asio::placeholders::error,
-                        boost::asio::placeholders::bytes_transferred));
+            boost::asio::buffer(txbuf->data() + offset, send_len),
+            [txbuf](const boost::system::error_code& error, size_t bytes_transferred) {});
         offset += send_len;
     }
 }

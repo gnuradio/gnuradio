@@ -6,9 +6,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-from __future__ import absolute_import
-
-import six
 
 from gi.repository import Gtk, GObject
 
@@ -62,7 +59,7 @@ class ParserErrorsDialog(Gtk.Dialog):
         """set up data model"""
         self.tree_store.clear()
         self._error_logs = error_logs
-        for filename, errors in six.iteritems(error_logs):
+        for filename, errors in error_logs.items():
             parent = self.tree_store.append(None, [str(filename)])
             try:
                 with open(filename, 'r') as fp:

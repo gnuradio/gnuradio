@@ -29,8 +29,8 @@ namespace blocks {
 udp_sink::sptr udp_sink::make(
     size_t itemsize, const std::string& host, int port, int payload_size, bool eof)
 {
-    return gnuradio::get_initial_sptr(
-        new udp_sink_impl(itemsize, host, port, payload_size, eof));
+    return gnuradio::make_block_sptr<udp_sink_impl>(
+        itemsize, host, port, payload_size, eof);
 }
 
 udp_sink_impl::udp_sink_impl(

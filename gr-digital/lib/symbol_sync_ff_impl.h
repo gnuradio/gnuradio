@@ -33,39 +33,39 @@ public:
                         ir_type interp_type,
                         int n_filters,
                         const std::vector<float>& taps);
-    ~symbol_sync_ff_impl();
+    ~symbol_sync_ff_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 
     // Symbol Clock Tracking and Estimation
-    float loop_bandwidth() const { return d_clock->get_loop_bandwidth(); }
-    float damping_factor() const { return d_clock->get_damping_factor(); }
-    float ted_gain() const { return d_clock->get_ted_gain(); }
-    float alpha() const { return d_clock->get_alpha(); }
-    float beta() const { return d_clock->get_beta(); }
+    float loop_bandwidth() const override { return d_clock.get_loop_bandwidth(); }
+    float damping_factor() const override { return d_clock.get_damping_factor(); }
+    float ted_gain() const override { return d_clock.get_ted_gain(); }
+    float alpha() const override { return d_clock.get_alpha(); }
+    float beta() const override { return d_clock.get_beta(); }
 
-    void set_loop_bandwidth(float omega_n_norm)
+    void set_loop_bandwidth(float omega_n_norm) override
     {
-        d_clock->set_loop_bandwidth(omega_n_norm);
+        d_clock.set_loop_bandwidth(omega_n_norm);
     }
-    void set_damping_factor(float zeta) { d_clock->set_damping_factor(zeta); }
-    void set_ted_gain(float ted_gain) { d_clock->set_ted_gain(ted_gain); }
-    void set_alpha(float alpha) { d_clock->set_alpha(alpha); }
-    void set_beta(float beta) { d_clock->set_beta(beta); }
+    void set_damping_factor(float zeta) override { d_clock.set_damping_factor(zeta); }
+    void set_ted_gain(float ted_gain) override { d_clock.set_ted_gain(ted_gain); }
+    void set_alpha(float alpha) override { d_clock.set_alpha(alpha); }
+    void set_beta(float beta) override { d_clock.set_beta(beta); }
 
 private:
     // Timing Error Detector
-    timing_error_detector* d_ted;
+    std::unique_ptr<timing_error_detector> d_ted;
 
     // Symbol Clock Tracking and Estimation
-    clock_tracking_loop* d_clock;
+    clock_tracking_loop d_clock;
 
     // Interpolator and Interpolator Positioning and Alignment
-    interpolating_resampler_fff* d_interp;
+    std::unique_ptr<interpolating_resampler_fff> d_interp;
 
     // Block Internal Clocks
     // 4 clocks that run synchronously, aligned to the Symbol Clock:

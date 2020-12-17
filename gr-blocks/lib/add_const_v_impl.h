@@ -24,12 +24,12 @@ class BLOCKS_API add_const_v_impl : public add_const_v<T>
 public:
     add_const_v_impl(std::vector<T> k);
 
-    std::vector<T> k() const { return d_k; }
-    void set_k(std::vector<T> k) { d_k = k; }
+    std::vector<T> k() const override { return d_k; }
+    void set_k(std::vector<T> k) override { d_k = k; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

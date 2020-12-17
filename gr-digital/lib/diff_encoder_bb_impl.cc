@@ -20,7 +20,7 @@ namespace digital {
 
 diff_encoder_bb::sptr diff_encoder_bb::make(unsigned int modulus)
 {
-    return gnuradio::get_initial_sptr(new diff_encoder_bb_impl(modulus));
+    return gnuradio::make_block_sptr<diff_encoder_bb_impl>(modulus);
 }
 
 diff_encoder_bb_impl::diff_encoder_bb_impl(unsigned int modulus)

@@ -23,8 +23,7 @@ namespace blocks {
 selector::sptr
 selector::make(size_t itemsize, unsigned int input_index, unsigned int output_index)
 {
-    return gnuradio::get_initial_sptr(
-        new selector_impl(itemsize, input_index, output_index));
+    return gnuradio::make_block_sptr<selector_impl>(itemsize, input_index, output_index);
 }
 
 selector_impl::selector_impl(size_t itemsize,
@@ -49,6 +48,8 @@ selector_impl::selector_impl(size_t itemsize,
     message_port_register_in(pmt::mp("oindex"));
     set_msg_handler(pmt::mp("oindex"),
                     [this](pmt::pmt_t msg) { this->handle_msg_output_index(msg); });
+
+    set_tag_propagation_policy(TPP_CUSTOM);
 }
 
 selector_impl::~selector_impl() {}
@@ -125,8 +126,9 @@ void selector_impl::forecast(int noutput_items, gr_vector_int& ninput_items_requ
 {
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++) {
-        ninput_items_required[i] = noutput_items;
+        ninput_items_required[i] = 0;
     }
+    ninput_items_required[d_input_index] = noutput_items;
 }
 
 bool selector_impl::check_topology(int ninputs, int noutputs)
@@ -150,8 +152,20 @@ int selector_impl::general_work(int noutput_items,
     const uint8_t** in = (const uint8_t**)&input_items[0];
     uint8_t** out = (uint8_t**)&output_items[0];
 
+
     gr::thread::scoped_lock l(d_mutex);
     if (d_enabled) {
+        auto nread = nitems_read(d_input_index);
+        auto nwritten = nitems_written(d_output_index);
+
+        std::vector<tag_t> tags;
+        get_tags_in_window(tags, d_input_index, 0, noutput_items);
+
+        for (auto tag : tags) {
+            tag.offset -= (nread - nwritten);
+            add_item_tag(d_output_index, tag);
+        }
+
         std::copy(in[d_input_index],
                   in[d_input_index] + noutput_items * d_itemsize,
                   out[d_output_index]);

@@ -8,9 +8,6 @@
 #
 #
 
-from __future__ import absolute_import
-from __future__ import division
-
 
 import numpy as np
 
@@ -35,14 +32,17 @@ class test_polar_encoder(gr_unittest.TestCase):
     def test_001_setup(self):
         block_size = 16
         num_info_bits = 8
-        frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
+        frozen_bit_positions = cc.frozen_bit_positions(
+            block_size, num_info_bits, 0.0)
         frozen_bit_values = np.array([],)
 
-        polar_encoder = fec.polar_encoder.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
+        polar_encoder = fec.polar_encoder.make(
+            block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
 
         self.assertEqual(block_size, polar_encoder.get_output_size())
         self.assertEqual(num_info_bits, polar_encoder.get_input_size())
-        self.assertFloatTuplesAlmostEqual((float(num_info_bits) / block_size, ), (polar_encoder.rate(), ))
+        self.assertFloatTuplesAlmostEqual(
+            (float(num_info_bits) / block_size, ), (polar_encoder.rate(), ))
         self.assertFalse(polar_encoder.set_frame_size(10))
 
     def test_002_work_function_packed(self):
@@ -50,7 +50,8 @@ class test_polar_encoder(gr_unittest.TestCase):
         block_size = 256
         num_info_bits = block_size // 2
 
-        data, ref, polar_encoder = self.get_test_data(block_size, num_info_bits, 1, is_packed)
+        data, ref, polar_encoder = self.get_test_data(
+            block_size, num_info_bits, 1, is_packed)
         src = blocks.vector_source_b(data, False)
         enc_block = extended_encoder(polar_encoder, None, '11')
         snk = blocks.vector_sink_b(1)
@@ -66,7 +67,8 @@ class test_polar_encoder(gr_unittest.TestCase):
         block_size = 256
         num_info_bits = block_size // 2
 
-        data, ref, polar_encoder = self.get_test_data(block_size, num_info_bits, 1, is_packed)
+        data, ref, polar_encoder = self.get_test_data(
+            block_size, num_info_bits, 1, is_packed)
         src = blocks.vector_source_b(data, False)
         enc_block = extended_encoder(polar_encoder, None, '11')
         snk = blocks.vector_sink_b(1)
@@ -83,7 +85,8 @@ class test_polar_encoder(gr_unittest.TestCase):
         block_size = 1024
         num_info_bits = block_size // 8
 
-        data, ref, polar_encoder = self.get_test_data(block_size, num_info_bits, num_blocks, is_packed)
+        data, ref, polar_encoder = self.get_test_data(
+            block_size, num_info_bits, num_blocks, is_packed)
         src = blocks.vector_source_b(data, False)
         enc_block = extended_encoder(polar_encoder, None, '11')
         snk = blocks.vector_sink_b(1)
@@ -97,9 +100,14 @@ class test_polar_encoder(gr_unittest.TestCase):
     def get_test_data(self, block_size, num_info_bits, num_blocks, is_packed):
         # helper function to set up test data and together with encoder object.
         num_frozen_bits = block_size - num_info_bits
-        frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
+        frozen_bit_positions = cc.frozen_bit_positions(
+            block_size, num_info_bits, 0.0)
         frozen_bit_values = np.array([0] * num_frozen_bits,)
-        python_encoder = PolarEncoder(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
+        python_encoder = PolarEncoder(
+            block_size,
+            num_info_bits,
+            frozen_bit_positions,
+            frozen_bit_values)
 
         data = np.array([], dtype=int)
         ref = np.array([], dtype=int)
@@ -107,9 +115,14 @@ class test_polar_encoder(gr_unittest.TestCase):
             d = np.random.randint(2, size=num_info_bits)
             data = np.append(data, d)
             ref = np.append(ref, python_encoder.encode(d))
-        polar_encoder = fec.polar_encoder.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, is_packed)
+        polar_encoder = fec.polar_encoder.make(
+            block_size,
+            num_info_bits,
+            frozen_bit_positions,
+            frozen_bit_values,
+            is_packed)
         return data, ref, polar_encoder
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_polar_encoder, "test_polar_encoder.xml")
+    gr_unittest.run(test_polar_encoder)

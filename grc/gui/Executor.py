@@ -2,9 +2,8 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
-from __future__ import absolute_import
 
 import os
 import shlex
@@ -57,7 +56,10 @@ class ExecFlowGraphThread(threading.Thread):
         # When in no gui mode on linux, use a graphical terminal (looks nice)
         xterm_executable = find_executable(self.xterm_executable)
         if generator.generate_options == 'no_gui' and xterm_executable:
-            run_command_args = [xterm_executable, '-e', run_command]
+            if ('gnome-terminal' in xterm_executable):
+                run_command_args = [xterm_executable, '--'] + run_command_args
+            else:
+                run_command_args = [xterm_executable, '-e', run_command]
 
         # this does not reproduce a shell executable command string, if a graphical
         # terminal is used. Passing run_command though shlex_quote would do it but

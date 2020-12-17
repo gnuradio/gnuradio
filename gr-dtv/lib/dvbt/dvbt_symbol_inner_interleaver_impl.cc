@@ -78,8 +78,8 @@ int dvbt_symbol_inner_interleaver_impl::calculate_R(int i)
 dvbt_symbol_inner_interleaver::sptr dvbt_symbol_inner_interleaver::make(
     int nsize, dvbt_transmission_mode_t transmission, int direction)
 {
-    return gnuradio::get_initial_sptr(
-        new dvbt_symbol_inner_interleaver_impl(nsize, transmission, direction));
+    return gnuradio::make_block_sptr<dvbt_symbol_inner_interleaver_impl>(
+        nsize, transmission, direction);
 }
 
 /*
@@ -96,28 +96,16 @@ dvbt_symbol_inner_interleaver_impl::dvbt_symbol_inner_interleaver_impl(
              gr::dtv::C1_2,
              gr::dtv::GI_1_32,
              transmission),
+      d_symbols_per_frame(config.d_symbols_per_frame),
+      d_transmission_mode(config.d_transmission_mode),
       d_nsize(nsize),
       d_direction(direction),
-      d_fft_length(0),
-      d_payload_length(0),
-      d_symbol_index(0)
+      d_fft_length(config.d_fft_length),
+      d_payload_length(config.d_payload_length),
+      d_h(d_fft_length)
 {
-    d_symbols_per_frame = config.d_symbols_per_frame;
-    d_transmission_mode = config.d_transmission_mode;
-    d_fft_length = config.d_fft_length;
-    d_payload_length = config.d_payload_length;
-    d_direction = direction;
-
     // Verify if transmission mode matches with size of block
     assert(d_payload_length == d_nsize);
-
-    // Allocate memory for h vector
-    d_h = new (std::nothrow) int[d_fft_length];
-    if (d_h == NULL) {
-        GR_LOG_FATAL(d_logger,
-                     "Symbol Inner Interleaver, cannot allocate memory for d_h.");
-        throw std::bad_alloc();
-    }
 
     // Setup bit permutation vectors
     if (d_transmission_mode == T2k) {
@@ -135,10 +123,7 @@ dvbt_symbol_inner_interleaver_impl::dvbt_symbol_inner_interleaver_impl(
 /*
  * Our virtual destructor.
  */
-dvbt_symbol_inner_interleaver_impl::~dvbt_symbol_inner_interleaver_impl()
-{
-    delete[] d_h;
-}
+dvbt_symbol_inner_interleaver_impl::~dvbt_symbol_inner_interleaver_impl() {}
 
 void dvbt_symbol_inner_interleaver_impl::forecast(int noutput_items,
                                                   gr_vector_int& ninput_items_required)

@@ -9,18 +9,16 @@
 '''
 Blocks and utilities for analog modulation and demodulation.
 '''
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 # The presence of this file turns this directory into a Python package
 import os
 
 try:
-    from .analog_swig import *
+    from .analog_python import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from .analog_swig import *
+    __path__.append(os.path.join(dirname, "bindings"))
+    from .analog_python import *
 
 from .am_demod import *
 from .fm_demod import *

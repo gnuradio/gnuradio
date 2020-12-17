@@ -2,11 +2,7 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
-
-from __future__ import absolute_import
-
-import six
+#
 
 
 class Evaluated(object):
@@ -55,7 +51,7 @@ class Evaluated(object):
     def __set__(self, instance, value):
         attribs = instance.__dict__
         value = value or self.default
-        if isinstance(value, six.string_types) and value.startswith('${') and value.endswith('}'):
+        if isinstance(value, str) and value.startswith('${') and value.endswith('}'):
             attribs[self.name_raw] = value[2:-1].strip()
             attribs.pop(self.name, None)  # reset previous eval result
         else:
@@ -69,7 +65,7 @@ class Evaluated(object):
 
 class EvaluatedEnum(Evaluated):
     def __init__(self, allowed_values, default=None, name=None):
-        if isinstance(allowed_values, six.string_types):
+        if isinstance(allowed_values, str):
             allowed_values = set(allowed_values.split())
         self.allowed_values = allowed_values
         default = default if default is not None else next(iter(self.allowed_values))

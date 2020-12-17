@@ -8,8 +8,6 @@
 #
 #
 
-from __future__ import absolute_import
-from __future__ import division
 
 import numpy as np
 
@@ -37,22 +35,27 @@ class test_polar_decoder_sc_systematic(gr_unittest.TestCase):
         num_info_bits = 8
         frozen_bit_positions = np.arange(block_size - num_info_bits)
 
-        polar_decoder = fec.polar_decoder_sc_systematic.make(block_size, num_info_bits, frozen_bit_positions)
+        polar_decoder = fec.polar_decoder_sc_systematic.make(
+            block_size, num_info_bits, frozen_bit_positions)
 
         self.assertEqual(num_info_bits, polar_decoder.get_output_size())
         self.assertEqual(block_size, polar_decoder.get_input_size())
-        self.assertFloatTuplesAlmostEqual((float(num_info_bits) / block_size, ), (polar_decoder.rate(), ))
+        self.assertFloatTuplesAlmostEqual(
+            (float(num_info_bits) / block_size, ), (polar_decoder.rate(), ))
         self.assertFalse(polar_decoder.set_frame_size(10))
 
     def test_002_one_vector(self):
         block_power = 4
         block_size = 2 ** block_power
         num_info_bits = block_size // 2
-        frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
+        frozen_bit_positions = cc.frozen_bit_positions(
+            block_size, num_info_bits, 0.0)
 
-        bits, gr_data = self.generate_test_data(block_size, num_info_bits, frozen_bit_positions, 1, False)
+        bits, gr_data = self.generate_test_data(
+            block_size, num_info_bits, frozen_bit_positions, 1, False)
 
-        polar_decoder = fec.polar_decoder_sc_systematic.make(block_size, num_info_bits, frozen_bit_positions)
+        polar_decoder = fec.polar_decoder_sc_systematic.make(
+            block_size, num_info_bits, frozen_bit_positions)
         src = blocks.vector_source_f(gr_data, False)
         dec_block = extended_decoder(polar_decoder, None)
         snk = blocks.vector_sink_b(1)
@@ -69,11 +72,14 @@ class test_polar_decoder_sc_systematic(gr_unittest.TestCase):
         block_power = 8
         block_size = 2 ** block_power
         num_info_bits = block_size // 2
-        frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
+        frozen_bit_positions = cc.frozen_bit_positions(
+            block_size, num_info_bits, 0.0)
 
-        bits, gr_data = self.generate_test_data(block_size, num_info_bits, frozen_bit_positions, nframes, False)
+        bits, gr_data = self.generate_test_data(
+            block_size, num_info_bits, frozen_bit_positions, nframes, False)
 
-        polar_decoder = fec.polar_decoder_sc_systematic.make(block_size, num_info_bits, frozen_bit_positions)
+        polar_decoder = fec.polar_decoder_sc_systematic.make(
+            block_size, num_info_bits, frozen_bit_positions)
         src = blocks.vector_source_f(gr_data, False)
         dec_block = extended_decoder(polar_decoder, None)
         snk = blocks.vector_sink_b(1)
@@ -85,9 +91,19 @@ class test_polar_decoder_sc_systematic(gr_unittest.TestCase):
         res = np.array(snk.data()).astype(dtype=int)
         self.assertTupleEqual(tuple(res), tuple(bits))
 
-    def generate_test_data(self, block_size, num_info_bits, frozen_bit_positions, nframes, onlyones):
+    def generate_test_data(
+            self,
+            block_size,
+            num_info_bits,
+            frozen_bit_positions,
+            nframes,
+            onlyones):
         frozen_bit_values = np.zeros(block_size - num_info_bits, dtype=int)
-        encoder = PolarEncoder(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
+        encoder = PolarEncoder(
+            block_size,
+            num_info_bits,
+            frozen_bit_positions,
+            frozen_bit_values)
         bits = np.array([], dtype=int)
         data = np.array([], dtype=int)
         for n in range(nframes):

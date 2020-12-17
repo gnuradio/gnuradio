@@ -25,8 +25,8 @@ tagged_decoder::sptr tagged_decoder::make(generic_decoder::sptr my_decoder,
                                           const std::string& lengthtagname,
                                           int mtu)
 {
-    return gnuradio::get_initial_sptr(new tagged_decoder_impl(
-        my_decoder, input_item_size, output_item_size, lengthtagname, mtu));
+    return gnuradio::make_block_sptr<tagged_decoder_impl>(
+        my_decoder, input_item_size, output_item_size, lengthtagname, mtu);
 }
 
 tagged_decoder_impl::tagged_decoder_impl(generic_decoder::sptr my_decoder,

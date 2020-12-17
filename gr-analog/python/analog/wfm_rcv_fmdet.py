@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006,2012-2013 Free Software Foundation, Inc.
+# Copyright 2005,2006,2012-2013,2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -7,9 +7,6 @@
 #
 #
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import unicode_literals
 
 import math
 
@@ -17,7 +14,7 @@ from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
 
-from . import analog_swig as analog
+from . import analog_python as analog
 from .fm_emph import fm_deemph
 
 
@@ -37,6 +34,11 @@ class wfm_rcv_fmdet(gr.hier_block2):
         gr.hier_block2.__init__(self, "wfm_rcv_fmdet",
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
                                 gr.io_signature(2, 2, gr.sizeof_float))      # Output signature
+        
+        if audio_decimation != int(audio_decimation):
+            raise ValueError("audio_decimation needs to be an integer")
+        audio_decimation = int(audio_decimation)
+
         lowfreq = -125e3 / demod_rate
         highfreq = 125e3 / demod_rate
         audio_rate = demod_rate / audio_decimation

@@ -21,7 +21,7 @@ namespace blocks {
 
 copy::sptr copy::make(size_t itemsize)
 {
-    return gnuradio::get_initial_sptr(new copy_impl(itemsize));
+    return gnuradio::make_block_sptr<copy_impl>(itemsize);
 }
 
 copy_impl::copy_impl(size_t itemsize)
@@ -32,7 +32,7 @@ copy_impl::copy_impl(size_t itemsize)
       d_enabled(true)
 {
     message_port_register_in(pmt::mp("en"));
-    set_msg_handler(pmt::mp("en"), boost::bind(&copy_impl::handle_enable, this, _1));
+    set_msg_handler(pmt::mp("en"), [this](pmt::pmt_t msg) { this->handle_enable(msg); });
 }
 
 copy_impl::~copy_impl() {}

@@ -35,16 +35,16 @@ sink_f::sptr sink_f::make(int fftsize,
                           bool plotconst,
                           QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(new sink_f_impl(fftsize,
-                                                      wintype,
-                                                      fc,
-                                                      bw,
-                                                      name,
-                                                      plotfreq,
-                                                      plotwaterfall,
-                                                      plottime,
-                                                      plotconst,
-                                                      parent));
+    return gnuradio::make_block_sptr<sink_f_impl>(fftsize,
+                                                  wintype,
+                                                  fc,
+                                                  bw,
+                                                  name,
+                                                  plotfreq,
+                                                  plotwaterfall,
+                                                  plottime,
+                                                  plotconst,
+                                                  parent);
 }
 
 sink_f_impl::sink_f_impl(int fftsize,
@@ -83,7 +83,7 @@ sink_f_impl::sink_f_impl(int fftsize,
     // double-clicked
     message_port_register_out(d_port);
     message_port_register_in(d_port);
-    set_msg_handler(d_port, boost::bind(&sink_f_impl::handle_set_freq, this, _1));
+    set_msg_handler(d_port, [this](pmt::pmt_t msg) { this->handle_set_freq(msg); });
 
     d_main_gui = NULL;
 
@@ -91,7 +91,7 @@ sink_f_impl::sink_f_impl(int fftsize,
     // this is usually desired when plotting
     d_shift = true;
 
-    d_fft = new fft::fft_complex(d_fftsize, true);
+    d_fft = new fft::fft_complex_fwd(d_fftsize);
 
     d_index = 0;
     d_residbuf = (float*)volk_malloc(d_fftsize * sizeof(float), volk_get_alignment());
@@ -273,7 +273,7 @@ void sink_f_impl::fftresize()
 
         // Reset FFTW plan for new size
         delete d_fft;
-        d_fft = new fft::fft_complex(d_fftsize, true);
+        d_fft = new fft::fft_complex_fwd(d_fftsize);
     }
 }
 

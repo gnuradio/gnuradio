@@ -2,11 +2,7 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
-
-from __future__ import absolute_import
-
-import six
+#
 
 
 class Flags(object):
@@ -23,7 +19,7 @@ class Flags(object):
     def __init__(self, flags=None):
         if flags is None:
             flags = set()
-        if isinstance(flags, six.string_types):
+        if isinstance(flags, str):
             flags = (f.strip() for f in flags.replace(',', '').split())
         self.data = set(flags)
 

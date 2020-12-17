@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 #
 # Copyright 2010,2013 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# 
+#
 
 
 import numpy
 
 from gnuradio import gr, gr_unittest, digital, analog, blocks
+
 
 class test_cpm(gr_unittest.TestCase):
 
@@ -33,11 +34,18 @@ class test_cpm(gr_unittest.TestCase):
         self.tb.connect(src, cpm, arg, sink)
         self.tb.run()
 
-        symbol_phases = numpy.array(sink.data()[sps*L-1::sps])
+        symbol_phases = numpy.array(sink.data()[sps * L - 1::sps])
         phase_diff = numpy.mod(numpy.subtract(symbol_phases[1:], symbol_phases[:-1]),
-                               (2*numpy.pi,) * (len(symbol_phases)-1))
-        self.assertFloatTuplesAlmostEqual(tuple(phase_diff), (0.5 * numpy.pi,) * len(phase_diff), 5,
-                                          msg="Phase shift was not correct for CPM method " + name)
+                               (2 * numpy.pi,) * (len(symbol_phases) - 1))
+        self.assertFloatTuplesAlmostEqual(
+            tuple(phase_diff),
+            (0.5 *
+             numpy.pi,
+             ) *
+            len(phase_diff),
+            5,
+            msg="Phase shift was not correct for CPM method " +
+            name)
 
     def test_001_lrec(self):
         self.do_check_phase_shift(analog.cpm.LRC, 'LREC')
@@ -64,11 +72,15 @@ class test_cpm(gr_unittest.TestCase):
         self.tb.connect(src, gmsk, arg, sink)
         self.tb.run()
 
-        symbol_phases = numpy.array(sink.data()[sps*L-1::sps])
+        symbol_phases = numpy.array(sink.data()[sps * L - 1::sps])
         phase_diff = numpy.mod(numpy.subtract(symbol_phases[1:], symbol_phases[:-1]),
-                               (2*numpy.pi,) * (len(symbol_phases)-1))
-        self.assertFloatTuplesAlmostEqual(tuple(phase_diff), (0.5 * numpy.pi,) * len(phase_diff), 5,
-                                          msg="Phase shift was not correct for GMSK")
+                               (2 * numpy.pi,) * (len(symbol_phases) - 1))
+        self.assertFloatTuplesAlmostEqual(
+            tuple(phase_diff),
+            (0.5 * numpy.pi,
+             ) * len(phase_diff),
+            5,
+            msg="Phase shift was not correct for GMSK")
 
     def test_phase_response(self):
         phase_response = analog.cpm.phase_response(analog.cpm.LREC, 2, 4)
@@ -76,5 +88,4 @@ class test_cpm(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_cpm, "test_cpm.xml")
-
+    gr_unittest.run(test_cpm)

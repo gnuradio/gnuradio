@@ -8,8 +8,6 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import unicode_literals
 from gnuradio import gr, filter
 from gnuradio import blocks
 import sys
@@ -137,7 +135,7 @@ class my_top_block(gr.top_block):
         thr = blocks.throttle(gr.sizeof_float, 100*npts)
         self.snk1 = qtgui.waterfall_sink_f(npts, filter.firdes.WIN_BLACKMAN_hARRIS,
                                            0, Rs,
-                                           "Real Waterfall Example", 2)
+                                           "Real Waterfall Example", 2, None)
         self.snk1.set_color_map(0, qtgui.INTENSITY_COLOR_MAP_TYPE_COOL)
         self.snk1.set_color_map(1, qtgui.INTENSITY_COLOR_MAP_TYPE_COOL)
 

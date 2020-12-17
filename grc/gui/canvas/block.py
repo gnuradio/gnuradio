@@ -6,11 +6,9 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-from __future__ import absolute_import, division
 
 import math
 
-import six
 from gi.repository import Gtk, Pango, PangoCairo
 
 from . import colors
@@ -124,7 +122,7 @@ class Block(CoreBlock, Drawable):
             port_separation = PORT_SEPARATION if not has_busses else ports[0].height + PORT_SPACING
             offset = (self.height - (len(ports) - 1) * port_separation - ports[0].height) / 2
             for port in ports:
-                port.create_shapes()            
+                port.create_shapes()
                 port.coordinate = {
                     0: (+self.width, offset),
                     90: (offset, -port.width),
@@ -154,13 +152,13 @@ class Block(CoreBlock, Drawable):
             )
         )
         title_width, title_height = title_layout.get_size()
- 
+
         force_show_id = Actions.TOGGLE_SHOW_BLOCK_IDS.get_active()
 
         # update the params layout
         if not self.is_dummy_block:
-            markups = [param.format_block_surface_markup()
-                for param in self.params.values() if (param.hide not in ('all', 'part') or (param.dtype == 'id' and force_show_id))]
+            markups = [param.format_block_surface_markup() for param in self.params.values()
+                       if (param.hide not in ('all', 'part'))]
         else:
             markups = ['<span font_desc="{font}"><b>key: </b>{key}</span>'.format(font=PARAM_FONT, key=self.key)]
 
@@ -187,7 +185,7 @@ class Block(CoreBlock, Drawable):
                 min_height = 2 * PORT_BORDER_SEPARATION + sum(
                     port.height + PORT_SPACING for port in ports if port.dtype == 'bus'
                     ) - PORT_SPACING
-            
+
             else:
                 if ports:
                     min_height -= ports[-1].height
@@ -345,7 +343,7 @@ class Block(CoreBlock, Drawable):
         type_templates = ' '.join(p.dtype for p in self.params.values()) + ' '
         type_templates += ' '.join(p.get_raw('dtype') for p in (self.sinks + self.sources))
         type_param = None
-        for key, param in six.iteritems(self.params):
+        for key, param in self.params.items():
             if not param.is_enum():
                 continue
             # Priority to the type controller
@@ -382,7 +380,7 @@ class Block(CoreBlock, Drawable):
         # Concat the nports string from the private nports settings of all ports
         nports_str = ' '.join(str(port.get_raw('multiplicity')) for port in self.ports())
         # Modify all params whose keys appear in the nports string
-        for key, param in six.iteritems(self.params):
+        for key, param in self.params.items():
             if param.is_enum() or param.key not in nports_str:
                 continue
             # Try to increment the port controller by direction
@@ -395,4 +393,3 @@ class Block(CoreBlock, Drawable):
                 # Should we be logging something here
                 pass
         return changed
-

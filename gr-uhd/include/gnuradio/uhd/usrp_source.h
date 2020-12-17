@@ -58,6 +58,16 @@ public:
                      const ::uhd::stream_args_t& stream_args,
                      const bool issue_stream_cmd_on_start = true);
 
+    static sptr make(const std::string& device_addr_str,
+                     const ::uhd::stream_args_t& stream_args,
+                     const bool issue_stream_cmd_on_start = true)
+    {
+        return make(::uhd::device_addr_t(device_addr_str),
+                    stream_args,
+                    issue_stream_cmd_on_start);
+    }
+
+
     /*!
      * Set the start time for incoming samples.
      * To control when samples are received,
@@ -108,16 +118,6 @@ public:
      *                   but higher CPU load.
      */
     virtual void set_recv_timeout(const double timeout, const bool one_packet = true) = 0;
-
-    /*!
-     * Returns identifying information about this USRP's configuration.
-     * Returns motherboard ID, name, and serial.
-     * Returns daughterboard RX ID, subdev name and spec, serial, and antenna.
-     * \param chan channel index 0 to N-1
-     * \return RX info
-     */
-    virtual ::uhd::dict<std::string, std::string> get_usrp_info(size_t chan = 0) = 0;
-
 
     /*!
      * Get a list of possible LO stage names

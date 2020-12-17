@@ -55,13 +55,13 @@ public:
     make(int block_size, int num_info_bits, std::vector<int> frozen_bit_positions);
 
     // FECAPI
-    void generic_work(void* in_buffer, void* out_buffer);
-    double rate() { return (1.0 * get_input_size() / get_output_size()); };
-    int get_input_size() { return num_info_bits(); };
-    int get_output_size() { return block_size(); };
-    bool set_frame_size(unsigned int frame_size) { return false; };
+    void generic_work(void* in_buffer, void* out_buffer) override;
+    double rate() override { return (1.0 * get_input_size() / get_output_size()); };
+    int get_input_size() override { return num_info_bits(); };
+    int get_output_size() override { return block_size(); };
+    bool set_frame_size(unsigned int frame_size) override { return false; };
 
-    ~polar_encoder_systematic();
+    ~polar_encoder_systematic() override;
 
 private:
     polar_encoder_systematic(int block_size,
@@ -70,7 +70,7 @@ private:
 
     void bit_reverse_and_reset_frozen_bits(unsigned char* outbuf,
                                            const unsigned char* inbuf);
-    unsigned char* d_volk_syst_intermediate;
+    volk::vector<unsigned char> d_volk_syst_intermediate;
 };
 
 } // namespace code

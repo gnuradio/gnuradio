@@ -53,15 +53,15 @@ public:
                           bool detached_header = false,
                           const std::string& hdr_filename = "");
 
-    ~file_meta_source_impl();
+    ~file_meta_source_impl() override;
 
-    bool open(const std::string& filename, const std::string& hdr_filename = "");
-    void close();
-    void do_update();
+    bool open(const std::string& filename, const std::string& hdr_filename = "") override;
+    void close() override;
+    void do_update() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

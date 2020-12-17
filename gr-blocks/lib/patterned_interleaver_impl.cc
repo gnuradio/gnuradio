@@ -21,7 +21,7 @@ namespace blocks {
 patterned_interleaver::sptr patterned_interleaver::make(size_t itemsize,
                                                         std::vector<int> pattern)
 {
-    return gnuradio::get_initial_sptr(new patterned_interleaver_impl(itemsize, pattern));
+    return gnuradio::make_block_sptr<patterned_interleaver_impl>(itemsize, pattern);
 }
 
 patterned_interleaver_impl::patterned_interleaver_impl(size_t itemsize,

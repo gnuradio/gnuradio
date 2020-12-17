@@ -10,12 +10,11 @@
 '''
 Processing blocks for wavelet transforms.
 '''
-from __future__ import unicode_literals
 import os
 
 try:
-    from .wavelet_swig import *
+    from .wavelet_python import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from .wavelet_swig import *
+    __path__.append(os.path.join(dirname, "bindings"))
+    from .wavelet_python import *

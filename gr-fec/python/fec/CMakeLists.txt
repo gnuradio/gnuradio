@@ -34,16 +34,9 @@ add_subdirectory(polar)
 if(ENABLE_TESTING)
 
 list(APPEND GR_TEST_PYTHON_DIRS
-    ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python 
     ${CMAKE_BINARY_DIR}/gr-fec/python
-    ${CMAKE_BINARY_DIR}/gr-fec/swig
     ${CMAKE_BINARY_DIR}/gr-blocks/python
-    ${CMAKE_BINARY_DIR}/gr-blocks/swig
-    ${CMAKE_BINARY_DIR}/gr-fft/swig
-    ${CMAKE_BINARY_DIR}/gr-analog/swig
-    ${CMAKE_BINARY_DIR}/gr-digital/swig
-    ${CMAKE_BINARY_DIR}/gr-filter/swig	
 )
 
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-fec)
@@ -65,3 +58,5 @@ foreach(py_qa_test_file ${py_qa_test_files})
 endforeach(py_qa_test_file)
 
 endif(ENABLE_TESTING)
+
+add_subdirectory(bindings)

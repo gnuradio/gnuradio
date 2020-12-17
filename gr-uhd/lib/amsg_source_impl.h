@@ -18,7 +18,7 @@ class amsg_source_impl : public amsg_source
 {
 public:
     amsg_source_impl(const ::uhd::device_addr_t& device_addr, msg_queue::sptr msgq);
-    ~amsg_source_impl();
+    ~amsg_source_impl() override;
 
     void recv_loop();
     void post(message::sptr msg);

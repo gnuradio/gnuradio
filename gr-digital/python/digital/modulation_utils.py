@@ -10,7 +10,6 @@
 Miscellaneous utilities for managing mods and demods, as well as other items
 useful in dealing with generalized handling of different modulations and demods.
 """
-from __future__ import unicode_literals
 
 import inspect
 
@@ -70,9 +69,9 @@ def extract_kwargs_from_options(function, excluded_args, options):
     """
     
     # Try this in C++ ;)
-    args, varargs, varkw, defaults = inspect.getargspec(function)
+    spec = inspect.getfullargspec(function)
     d = {}
-    for kw in [a for a in args if a not in excluded_args]:
+    for kw in [a for a in spec.args if a not in excluded_args]:
         if hasattr(options, kw):
             if getattr(options, kw) is not None:
                 d[kw] = getattr(options, kw)

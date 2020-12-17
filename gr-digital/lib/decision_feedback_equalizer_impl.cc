@@ -32,14 +32,14 @@ decision_feedback_equalizer::make(unsigned num_taps_forward,
                                   std::vector<gr_complex> training_sequence,
                                   const std::string& training_start_tag)
 {
-    return gnuradio::get_initial_sptr(
-        new decision_feedback_equalizer_impl(num_taps_forward,
-                                             num_taps_feedback,
-                                             sps,
-                                             alg,
-                                             adapt_after_training,
-                                             training_sequence,
-                                             training_start_tag));
+    return gnuradio::make_block_sptr<decision_feedback_equalizer_impl>(
+        num_taps_forward,
+        num_taps_feedback,
+        sps,
+        alg,
+        adapt_after_training,
+        training_sequence,
+        training_start_tag);
 }
 
 /*
@@ -64,7 +64,6 @@ decision_feedback_equalizer_impl::decision_feedback_equalizer_impl(
                                                                sizeof(unsigned short) }),
                          sps),
       filter::kernel::fir_filter_ccc(
-          sps,
           vector<gr_complex>(num_taps_forward + num_taps_feedback, gr_complex(0, 0))),
       d_num_taps_fwd(num_taps_forward),
       d_num_taps_rev(num_taps_feedback),

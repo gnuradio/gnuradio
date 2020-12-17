@@ -24,18 +24,18 @@ private:
 
 public:
     threshold_ff_impl(float lo, float hi, float initial_state = 0);
-    ~threshold_ff_impl();
+    ~threshold_ff_impl() override;
 
-    float lo() const { return d_lo; }
-    void set_lo(float lo) { d_lo = lo; }
-    float hi() const { return d_hi; }
-    void set_hi(float hi) { d_hi = hi; }
-    float last_state() const { return d_last_state; }
-    void set_last_state(float last_state) { d_last_state = last_state; }
+    float lo() const override { return d_lo; }
+    void set_lo(float lo) override { d_lo = lo; }
+    float hi() const override { return d_hi; }
+    void set_hi(float hi) override { d_hi = hi; }
+    float last_state() const override { return d_last_state; }
+    void set_last_state(float last_state) override { d_last_state = last_state; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

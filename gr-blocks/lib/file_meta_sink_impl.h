@@ -60,17 +60,17 @@ public:
                         size_t max_segment_size = 1000000,
                         pmt::pmt_t extra_dict = pmt::make_dict(),
                         bool detached_header = false);
-    ~file_meta_sink_impl();
+    ~file_meta_sink_impl() override;
 
-    bool open(const std::string& filename);
-    void close();
-    void do_update();
+    bool open(const std::string& filename) override;
+    void close() override;
+    void do_update() override;
 
-    void set_unbuffered(bool unbuffered) { d_unbuffered = unbuffered; }
+    void set_unbuffered(bool unbuffered) override { d_unbuffered = unbuffered; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

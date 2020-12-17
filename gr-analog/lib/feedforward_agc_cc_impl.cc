@@ -21,7 +21,7 @@ namespace analog {
 
 feedforward_agc_cc::sptr feedforward_agc_cc::make(int nsamples, float reference)
 {
-    return gnuradio::get_initial_sptr(new feedforward_agc_cc_impl(nsamples, reference));
+    return gnuradio::make_block_sptr<feedforward_agc_cc_impl>(nsamples, reference);
 }
 
 feedforward_agc_cc_impl::feedforward_agc_cc_impl(int nsamples, float reference)

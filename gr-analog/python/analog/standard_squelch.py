@@ -1,5 +1,3 @@
-from __future__ import division
-from __future__ import unicode_literals
 #
 # Copyright 2005,2007,2012 Free Software Foundation, Inc.
 #

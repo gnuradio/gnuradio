@@ -15,13 +15,13 @@ from gnuradio import fec
 
 class test_ccsds_27 (gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-    def xtest_ccsds_27 (self):
+    def xtest_ccsds_27(self):
         src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
         expected = (0, 0, 0, 0, 1, 2, 3, 4, 5, 6)
         src = blocks.vector_source_b(src_data)
@@ -38,4 +38,4 @@ class test_ccsds_27 (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_ccsds_27, "test_ccsds_27.xml")
+    gr_unittest.run(test_ccsds_27)

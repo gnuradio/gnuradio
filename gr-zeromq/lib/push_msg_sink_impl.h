@@ -21,19 +21,19 @@ class push_msg_sink_impl : public push_msg_sink
 {
 private:
     float d_timeout;
-    zmq::context_t* d_context;
-    zmq::socket_t* d_socket;
+    zmq::context_t d_context;
+    zmq::socket_t d_socket;
 
 public:
     push_msg_sink_impl(char* address, int timeout, bool bind);
-    ~push_msg_sink_impl();
+    ~push_msg_sink_impl() override;
 
     void handler(pmt::pmt_t msg);
     std::string last_endpoint() override
     {
         char addr[256];
         size_t addr_len = sizeof(addr);
-        d_socket->getsockopt(ZMQ_LAST_ENDPOINT, addr, &addr_len);
+        d_socket.getsockopt(ZMQ_LAST_ENDPOINT, addr, &addr_len);
         return std::string(addr, addr_len - 1);
     }
 };

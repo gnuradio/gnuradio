@@ -23,14 +23,14 @@ private:
 
 public:
     quadrature_demod_cf_impl(float gain);
-    ~quadrature_demod_cf_impl();
+    ~quadrature_demod_cf_impl() override;
 
-    void set_gain(float gain) { d_gain = gain; }
-    float gain() const { return d_gain; }
+    void set_gain(float gain) override { d_gain = gain; }
+    float gain() const override { return d_gain; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace analog */

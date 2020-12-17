@@ -2,9 +2,8 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
-from __future__ import absolute_import
 
 from . import Block, register_build_in
 
@@ -20,7 +19,7 @@ class DummyBlock(Block):
 
     def __init__(self, parent, missing_block_id, parameters, **_):
         self.key = missing_block_id
-        self.parameters_data = build_params([],False, False,self.flags, self.key)
+        self.parameters_data = build_params([], False, False, self.flags, self.key)
         super(DummyBlock, self).__init__(parent=parent)
 
         param_factory = self.parent_platform.make_param

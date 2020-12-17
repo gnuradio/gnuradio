@@ -10,6 +10,7 @@
 
 #include <gnuradio/rpcserver_aggregator.h>
 #include <gnuradio/rpcserver_booter_base.h>
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>

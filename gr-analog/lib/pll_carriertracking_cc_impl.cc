@@ -24,8 +24,8 @@ namespace analog {
 pll_carriertracking_cc::sptr
 pll_carriertracking_cc::make(float loop_bw, float max_freq, float min_freq)
 {
-    return gnuradio::get_initial_sptr(
-        new pll_carriertracking_cc_impl(loop_bw, max_freq, min_freq));
+    return gnuradio::make_block_sptr<pll_carriertracking_cc_impl>(
+        loop_bw, max_freq, min_freq);
 }
 
 pll_carriertracking_cc_impl::pll_carriertracking_cc_impl(float loop_bw,

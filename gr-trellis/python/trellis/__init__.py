@@ -9,16 +9,15 @@
 '''
 Blocks and utilities for trellis coding and related.
 '''
-from __future__ import unicode_literals
 
 # The presence of this file turns this directory into a Python package
 import os
 
 try:
-    from .trellis_swig import *
+    from .trellis_python import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from .trellis_swig import *
+    __path__.append(os.path.join(dirname, "bindings"))
+    from .trellis_python import *
 
 # import any pure python here

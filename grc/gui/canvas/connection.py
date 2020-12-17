@@ -6,7 +6,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-from __future__ import absolute_import, division
 
 from argparse import Namespace
 from math import pi

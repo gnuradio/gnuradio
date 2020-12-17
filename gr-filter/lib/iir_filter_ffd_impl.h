@@ -21,7 +21,7 @@ class FILTER_API iir_filter_ffd_impl : public iir_filter_ffd
 {
 private:
     bool d_updated;
-    kernel::iir_filter<float, float, double, double>* d_iir;
+    kernel::iir_filter<float, float, double, double> d_iir;
     std::vector<double> d_new_fftaps;
     std::vector<double> d_new_fbtaps;
 
@@ -29,13 +29,13 @@ public:
     iir_filter_ffd_impl(const std::vector<double>& fftaps,
                         const std::vector<double>& fbtaps,
                         bool oldstyle = true);
-    ~iir_filter_ffd_impl();
 
-    void set_taps(const std::vector<double>& fftaps, const std::vector<double>& fbtaps);
+    void set_taps(const std::vector<double>& fftaps,
+                  const std::vector<double>& fbtaps) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

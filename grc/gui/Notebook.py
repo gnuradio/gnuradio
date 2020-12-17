@@ -6,7 +6,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-from __future__ import absolute_import
 import os
 import logging
 
@@ -115,12 +114,15 @@ class Page(Gtk.HBox):
         self.drawing_area = DrawingArea(flow_graph)
         flow_graph.drawing_area = self.drawing_area
 
+        self.viewport = Gtk.Viewport()
+        self.viewport.add(self.drawing_area)
+
         self.scrolled_window = Gtk.ScrolledWindow()
         self.scrolled_window.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
         self.scrolled_window.set_policy(Gtk.PolicyType.ALWAYS, Gtk.PolicyType.ALWAYS)
         self.scrolled_window.connect('key-press-event', self._handle_scroll_window_key_press)
 
-        self.scrolled_window.add(self.drawing_area)
+        self.scrolled_window.add(self.viewport)
         self.pack_start(self.scrolled_window, True, True, 0)
         self.show_all()
 

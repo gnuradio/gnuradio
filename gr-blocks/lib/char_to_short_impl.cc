@@ -21,7 +21,7 @@ namespace blocks {
 
 char_to_short::sptr char_to_short::make(size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new char_to_short_impl(vlen));
+    return gnuradio::make_block_sptr<char_to_short_impl>(vlen);
 }
 
 char_to_short_impl::char_to_short_impl(size_t vlen)

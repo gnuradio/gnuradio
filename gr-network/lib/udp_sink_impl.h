@@ -65,13 +65,13 @@ public:
                   int header_type = HEADERTYPE_NONE,
                   int payloadsize = 1472,
                   bool send_eof = true);
-    ~udp_sink_impl();
+    ~udp_sink_impl() override;
 
-    bool stop();
+    bool stop() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace network

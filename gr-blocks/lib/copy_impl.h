@@ -24,22 +24,22 @@ private:
 
 public:
     copy_impl(size_t itemsize);
-    ~copy_impl();
+    ~copy_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
-    bool check_topology(int ninputs, int noutputs);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    bool check_topology(int ninputs, int noutputs) override;
 
     void handle_enable(pmt::pmt_t msg);
 
-    void setup_rpc();
+    void setup_rpc() override;
 
-    void set_enabled(bool enable) { d_enabled = enable; }
-    bool enabled() const { return d_enabled; }
+    void set_enabled(bool enable) override { d_enabled = enable; }
+    bool enabled() const override { return d_enabled; }
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

@@ -30,8 +30,8 @@ edit_box_msg::sptr edit_box_msg::make(data_type_t type,
                                       const std::string& key,
                                       QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(
-        new edit_box_msg_impl(type, value, label, is_pair, is_static, key, parent));
+    return gnuradio::make_block_sptr<edit_box_msg_impl>(
+        type, value, label, is_pair, is_static, key, parent);
 }
 
 edit_box_msg_impl::edit_box_msg_impl(data_type_t type,
@@ -88,7 +88,11 @@ edit_box_msg_impl::edit_box_msg_impl(data_type_t type,
             d_key->setEnabled(false);
 
             QFontMetrics fm = d_key->fontMetrics();
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 11, 0))
+            int width = 15 + fm.horizontalAdvance(key_text);
+#else
             int width = 15 + fm.width(key_text);
+#endif
 
             d_key->setFixedWidth(width);
 
@@ -145,7 +149,7 @@ edit_box_msg_impl::edit_box_msg_impl(data_type_t type,
     message_port_register_out(d_port);
     message_port_register_in(pmt::mp("val"));
 
-    set_msg_handler(pmt::mp("val"), boost::bind(&edit_box_msg_impl::set_value, this, _1));
+    set_msg_handler(pmt::mp("val"), [this](pmt::pmt_t msg) { this->set_value(msg); });
 }
 
 edit_box_msg_impl::~edit_box_msg_impl()

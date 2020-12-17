@@ -22,7 +22,7 @@ iir_filter_ccz::sptr iir_filter_ccz::make(const std::vector<gr_complexd>& fftaps
                                           const std::vector<gr_complexd>& fbtaps,
                                           bool oldstyle)
 {
-    return gnuradio::get_initial_sptr(new iir_filter_ccz_impl(fftaps, fbtaps, oldstyle));
+    return gnuradio::make_block_sptr<iir_filter_ccz_impl>(fftaps, fbtaps, oldstyle);
 }
 
 iir_filter_ccz_impl::iir_filter_ccz_impl(const std::vector<gr_complexd>& fftaps,
@@ -32,13 +32,10 @@ iir_filter_ccz_impl::iir_filter_ccz_impl(const std::vector<gr_complexd>& fftaps,
     : sync_block("iir_filter_ccz",
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::make(1, 1, sizeof(gr_complex))),
-      d_updated(false)
+      d_updated(false),
+      d_iir(fftaps, fbtaps, oldstyle)
 {
-    d_iir = new kernel::iir_filter<gr_complex, gr_complex, gr_complexd, gr_complexd>(
-        fftaps, fbtaps, oldstyle);
 }
-
-iir_filter_ccz_impl::~iir_filter_ccz_impl() { delete d_iir; }
 
 void iir_filter_ccz_impl::set_taps(const std::vector<gr_complexd>& fftaps,
                                    const std::vector<gr_complexd>& fbtaps)
@@ -56,11 +53,11 @@ int iir_filter_ccz_impl::work(int noutput_items,
     gr_complex* out = (gr_complex*)output_items[0];
 
     if (d_updated) {
-        d_iir->set_taps(d_new_fftaps, d_new_fbtaps);
+        d_iir.set_taps(d_new_fftaps, d_new_fbtaps);
         d_updated = false;
     }
 
-    d_iir->filter_n(out, in, noutput_items);
+    d_iir.filter_n(out, in, noutput_items);
     return noutput_items;
 };
 

@@ -40,7 +40,7 @@ private:
     }
 
 protected:
-    virtual gr_complex error(const gr_complex& out)
+    gr_complex error(const gr_complex& out) override
     {
         // p = E[|z|^2]
         // q = E[z^2]
@@ -67,18 +67,18 @@ protected:
         return gr_complex(re, im);
     }
 
-    virtual void update_tap(gr_complex& tap, const gr_complex& in)
+    void update_tap(gr_complex& tap, const gr_complex& in) override
     {
         tap += d_mu * in * d_error;
     }
 
 public:
     kurtotic_equalizer_cc_impl(int num_taps, float mu);
-    ~kurtotic_equalizer_cc_impl();
+    ~kurtotic_equalizer_cc_impl() override;
 
-    float gain() const { return d_mu; }
+    float gain() const override { return d_mu; }
 
-    void set_gain(float mu)
+    void set_gain(float mu) override
     {
         if (mu < 0)
             throw std::out_of_range(
@@ -88,7 +88,7 @@ public:
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace digital */

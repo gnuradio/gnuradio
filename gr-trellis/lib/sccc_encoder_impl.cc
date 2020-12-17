@@ -28,8 +28,8 @@ sccc_encoder<IN_T, OUT_T>::make(const fsm& FSMo,
                                 const interleaver& INTERLEAVER,
                                 int blocklength)
 {
-    return gnuradio::get_initial_sptr(new sccc_encoder_impl<IN_T, OUT_T>(
-        FSMo, STo, FSMi, STi, INTERLEAVER, blocklength));
+    return gnuradio::make_block_sptr<sccc_encoder_impl<IN_T, OUT_T>>(
+        FSMo, STo, FSMi, STi, INTERLEAVER, blocklength);
 }
 
 template <class IN_T, class OUT_T>

@@ -22,7 +22,7 @@ namespace analog {
 
 phase_modulator_fc::sptr phase_modulator_fc::make(double sensitivity)
 {
-    return gnuradio::get_initial_sptr(new phase_modulator_fc_impl(sensitivity));
+    return gnuradio::make_block_sptr<phase_modulator_fc_impl>(sensitivity);
 }
 
 phase_modulator_fc_impl::phase_modulator_fc_impl(double sensitivity)

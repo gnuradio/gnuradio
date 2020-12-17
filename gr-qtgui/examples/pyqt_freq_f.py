@@ -8,8 +8,6 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import unicode_literals
 from gnuradio import gr, filter
 from gnuradio import blocks
 import sys
@@ -138,7 +136,7 @@ class my_top_block(gr.top_block):
         thr = blocks.throttle(gr.sizeof_float, 100*npts)
         self.snk1 = qtgui.freq_sink_f(npts, filter.firdes.WIN_BLACKMAN_hARRIS,
                                       0, Rs,
-                                      "Real freq Example", 3)
+                                      "Real freq Example", 3, None)
 
         self.connect(src1, (src,0))
         self.connect(src2, (src,1))

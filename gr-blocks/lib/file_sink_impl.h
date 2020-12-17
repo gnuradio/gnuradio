@@ -23,11 +23,11 @@ private:
 
 public:
     file_sink_impl(size_t itemsize, const char* filename, bool append = false);
-    ~file_sink_impl();
+    ~file_sink_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
     bool stop() override;
 };

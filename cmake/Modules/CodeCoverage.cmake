@@ -78,8 +78,8 @@ IF(NOT GCOV_PATH)
 ENDIF() # NOT GCOV_PATH
 
 IF("${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
-	IF("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS 3)
-		MESSAGE(FATAL_ERROR "Clang version must be 3.0.0 or greater! Aborting...")
+	IF("${CMAKE_CXX_COMPILER_VERSION}" CLANG_MIN_VERSION )
+		MESSAGE(FATAL_ERROR "Clang version must be ${CLANG_MIN_VERSION} or greater! Aborting...")
 	ENDIF()
 ELSEIF(NOT CMAKE_COMPILER_IS_GNUCXX)
 	MESSAGE(FATAL_ERROR "Compiler is not GNU gcc! Aborting...")
@@ -124,7 +124,7 @@ FUNCTION(SETUP_TARGET_FOR_COVERAGE _targetname _testrunner _outputname)
 
 		# Capturing lcov counters and generating report
 		COMMAND ${LCOV_PATH} --directory . --capture --output-file ${coverage_info}
-		COMMAND ${LCOV_PATH} --remove ${coverage_info} 'tests/*' '/usr/*' 'swig/*' '*/swig/*' '*/qa_*' --output-file ${coverage_cleaned}
+		COMMAND ${LCOV_PATH} --remove ${coverage_info} 'tests/*' '/usr/*' '*/qa_*' --output-file ${coverage_cleaned}
 		COMMAND ${GENHTML_PATH} -o ${_outputname} ${coverage_cleaned}
 		# Don't remove fragments so CI can upload them to codecov
 

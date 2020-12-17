@@ -20,7 +20,7 @@ namespace blocks {
 
 add_const_ss::sptr add_const_ss::make(short k)
 {
-    return gnuradio::get_initial_sptr(new add_const_ss_impl(k));
+    return gnuradio::make_block_sptr<add_const_ss_impl>(k);
 }
 
 add_const_ss_impl::add_const_ss_impl(short k)

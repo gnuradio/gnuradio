@@ -22,6 +22,8 @@ namespace blocks {
 class message_debug_impl : public message_debug
 {
 private:
+    bool d_en_uvec;
+
     /*!
      * \brief Messages received in this port are printed to stdout.
      *
@@ -63,11 +65,12 @@ private:
     std::vector<pmt::pmt_t> d_messages;
 
 public:
-    message_debug_impl();
-    ~message_debug_impl();
+    message_debug_impl(bool en_uvec);
+    ~message_debug_impl() override;
 
-    int num_messages();
-    pmt::pmt_t get_message(int i);
+    int num_messages() override;
+    pmt::pmt_t get_message(int i) override;
+    void set_vector_print(bool en) override { d_en_uvec = en; };
 };
 
 } /* namespace blocks */

@@ -53,12 +53,12 @@ GR_RUNTIME_API test_sptr make_test(const std::string& name = std::string("test")
 class GR_RUNTIME_API test : public block
 {
 public:
-    ~test() {}
+    ~test() override {}
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 
     // ----------------------------------------------------------------
     //		override these to define your behavior
@@ -74,7 +74,7 @@ public:
      * number of data items required on each input stream. The
      * estimate doesn't have to be exact, but should be close.
      */
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required)
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override
     {
         unsigned ninputs = ninput_items_required.size();
         for (unsigned i = 0; i < ninputs; i++)
@@ -103,7 +103,7 @@ public:
      * This check is in addition to the constraints specified by the
      * input and output gr::io_signatures.
      */
-    bool check_topology(int ninputs, int noutputs) { return d_check_topology; }
+    bool check_topology(int ninputs, int noutputs) override { return d_check_topology; }
 
     // ----------------------------------------------------------------
     /*
@@ -119,7 +119,7 @@ public:
      * returns true.  Generally speaking, you don't need to override
      * this.
      */
-    int fixed_rate_ninput_to_noutput(int ninput)
+    int fixed_rate_ninput_to_noutput(int ninput) override
     {
         return (int)((double)ninput / relative_rate());
     }
@@ -129,7 +129,7 @@ public:
      * required to produce noutput. N.B. this is only defined if
      * fixed_rate returns true.
      */
-    int fixed_rate_noutput_to_ninput(int noutput)
+    int fixed_rate_noutput_to_ninput(int noutput) override
     {
         return (int)((double)noutput * relative_rate());
     }
@@ -205,19 +205,8 @@ protected:
          consume_type_t cons_type,
          produce_type_t prod_type);
 
-    friend GR_RUNTIME_API test_sptr make_test(const std::string& name,
-                                              int min_inputs,
-                                              int max_inputs,
-                                              unsigned int sizeof_input_item,
-                                              int min_outputs,
-                                              int max_outputs,
-                                              unsigned int sizeof_output_item,
-                                              unsigned int history,
-                                              unsigned int output_multiple,
-                                              double relative_rate,
-                                              bool fixed_rate,
-                                              consume_type_t cons_type,
-                                              produce_type_t prod_type);
+    template <typename T, typename... Args>
+    friend std::shared_ptr<T> gnuradio::make_block_sptr(Args&&... args);
 };
 
 } /* namespace gr */

@@ -21,7 +21,7 @@ namespace blocks {
 
 complex_to_mag_squared::sptr complex_to_mag_squared::make(size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new complex_to_mag_squared_impl(vlen));
+    return gnuradio::make_block_sptr<complex_to_mag_squared_impl>(vlen);
 }
 
 complex_to_mag_squared_impl::complex_to_mag_squared_impl(size_t vlen)

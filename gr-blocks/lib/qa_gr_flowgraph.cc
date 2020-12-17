@@ -35,11 +35,11 @@ public:
                      io_signature::make(1, 1, sizeof_stream_item))
     {
     }
-    ~null_source_qa_impl() {}
+    ~null_source_qa_impl() override {}
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items)
+             gr_vector_void_star& output_items) override
     {
         void* optr;
         for (size_t n = 0; n < input_items.size(); n++) {
@@ -51,7 +51,7 @@ public:
 };
 null_qa_source::sptr null_qa_source::make(size_t sizeof_stream_item)
 {
-    return gnuradio::get_initial_sptr(new null_source_qa_impl(sizeof_stream_item));
+    return gnuradio::make_block_sptr<null_source_qa_impl>(sizeof_stream_item);
 }
 class null_qa_sink : virtual public sync_block
 {
@@ -68,17 +68,17 @@ public:
                      io_signature::make(0, 0, 0))
     {
     }
-    ~null_sink_qa_impl() {}
+    ~null_sink_qa_impl() override {}
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items)
+             gr_vector_void_star& output_items) override
     {
         return noutput_items;
     }
 };
 null_qa_sink::sptr null_qa_sink::make(size_t sizeof_stream_item)
 {
-    return gnuradio::get_initial_sptr(new null_sink_qa_impl(sizeof_stream_item));
+    return gnuradio::make_block_sptr<null_sink_qa_impl>(sizeof_stream_item);
 }
 } /* namespace blocks */
 } /* namespace gr */

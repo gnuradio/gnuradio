@@ -27,8 +27,7 @@ typename vector_source<T>::sptr vector_source<T>::make(const std::vector<T>& dat
                                                        unsigned int vlen,
                                                        const std::vector<tag_t>& tags)
 {
-    return gnuradio::get_initial_sptr(
-        new vector_source_impl<T>(data, repeat, vlen, tags));
+    return gnuradio::make_block_sptr<vector_source_impl<T>>(data, repeat, vlen, tags);
 }
 
 template <class T>

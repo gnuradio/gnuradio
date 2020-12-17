@@ -22,7 +22,7 @@ namespace blocks {
 template <class T>
 typename min_blk<T>::sptr min_blk<T>::make(size_t vlen, size_t vlen_out)
 {
-    return gnuradio::get_initial_sptr(new min_blk_impl<T>(vlen, vlen_out));
+    return gnuradio::make_block_sptr<min_blk_impl<T>>(vlen, vlen_out);
 }
 
 template <class T>

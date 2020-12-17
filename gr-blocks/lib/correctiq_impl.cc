@@ -18,10 +18,7 @@
 namespace gr {
 namespace blocks {
 
-correctiq::sptr correctiq::make()
-{
-    return gnuradio::get_initial_sptr(new correctiq_impl());
-}
+correctiq::sptr correctiq::make() { return gnuradio::make_block_sptr<correctiq_impl>(); }
 
 /*
  * The private constructor

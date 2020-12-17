@@ -27,16 +27,15 @@ private:
 
 public:
     filterbank_vcvcf_impl(const std::vector<std::vector<float>>& taps);
-    ~filterbank_vcvcf_impl();
 
-    void set_taps(const std::vector<std::vector<float>>& taps);
-    void print_taps();
-    std::vector<std::vector<float>> taps() const;
+    void set_taps(const std::vector<std::vector<float>>& taps) override;
+    void print_taps() override;
+    std::vector<std::vector<float>> taps() const override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

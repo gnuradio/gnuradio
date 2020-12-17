@@ -21,7 +21,7 @@ namespace blocks {
 
 complex_to_real::sptr complex_to_real::make(size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new complex_to_real_impl(vlen));
+    return gnuradio::make_block_sptr<complex_to_real_impl>(vlen);
 }
 
 complex_to_real_impl::complex_to_real_impl(size_t vlen)

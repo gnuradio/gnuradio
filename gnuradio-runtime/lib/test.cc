@@ -34,19 +34,19 @@ test_sptr make_test(const std::string& name,
                     consume_type_t cons_type,
                     produce_type_t prod_type)
 {
-    return gnuradio::get_initial_sptr(new test(name,
-                                               min_inputs,
-                                               max_inputs,
-                                               sizeof_input_item,
-                                               min_outputs,
-                                               max_outputs,
-                                               sizeof_output_item,
-                                               history,
-                                               output_multiple,
-                                               relative_rate,
-                                               fixed_rate,
-                                               cons_type,
-                                               prod_type));
+    return gnuradio::make_block_sptr<test>(name,
+                                           min_inputs,
+                                           max_inputs,
+                                           sizeof_input_item,
+                                           min_outputs,
+                                           max_outputs,
+                                           sizeof_output_item,
+                                           history,
+                                           output_multiple,
+                                           relative_rate,
+                                           fixed_rate,
+                                           cons_type,
+                                           prod_type);
 }
 
 test::test(const std::string& name,

@@ -24,7 +24,7 @@ template <class T>
 typename noise_source<T>::sptr
 noise_source<T>::make(noise_type_t type, float ampl, long seed)
 {
-    return gnuradio::get_initial_sptr(new noise_source_impl<T>(type, ampl, seed));
+    return gnuradio::make_block_sptr<noise_source_impl<T>>(type, ampl, seed);
 }
 
 template <class T>

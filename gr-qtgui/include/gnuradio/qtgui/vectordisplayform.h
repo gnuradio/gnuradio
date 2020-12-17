@@ -28,9 +28,9 @@ class VectorDisplayForm : public DisplayForm
 
 public:
     VectorDisplayForm(int nplots = 1, QWidget* parent = 0);
-    ~VectorDisplayForm();
+    ~VectorDisplayForm() override;
 
-    VectorDisplayPlot* getPlot();
+    VectorDisplayPlot* getPlot() override;
 
     int getVecSize() const;
     float getVecAverage() const;
@@ -46,7 +46,7 @@ public:
     bool checkClicked();
 
 public slots:
-    void customEvent(QEvent* e);
+    void customEvent(QEvent* e) override;
 
     void setVecSize(const int);
     void setVecAverage(const float);
@@ -55,13 +55,13 @@ public slots:
     void setYaxis(double min, double max);
     void setYMax(const QString& m);
     void setYMin(const QString& m);
-    void autoScale(bool en);
+    void autoScale(bool en) override;
     void clearMaxHold();
     void clearMinHold();
 
 private slots:
-    void newData(const QEvent* updateEvent);
-    void onPlotPointSelected(const QPointF p);
+    void newData(const QEvent* updateEvent) override;
+    void onPlotPointSelected(const QPointF p) override;
 
 private:
     uint64_t d_num_real_data_points;

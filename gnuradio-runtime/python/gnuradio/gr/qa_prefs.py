@@ -8,10 +8,9 @@
 #
 #
 
-from __future__ import print_function
-
 
 from gnuradio import gr, gr_unittest
+
 
 class test_prefs (gr_unittest.TestCase):
 
@@ -22,7 +21,9 @@ class test_prefs (gr_unittest.TestCase):
         self.assertFalse(p.has_option('doesnt', 'exist'))
 
         # At the time these tests are run, there is not necessarily a default
-        # configuration on the build system, so not much to do with testing here
+        # configuration on the build system, so not much to do with testing
+        # here
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_prefs)

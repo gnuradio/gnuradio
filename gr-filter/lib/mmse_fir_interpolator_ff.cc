@@ -19,21 +19,20 @@
 namespace gr {
 namespace filter {
 
-mmse_fir_interpolator_ff::mmse_fir_interpolator_ff()
+namespace {
+std::vector<kernel::fir_filter_fff> build_filters()
 {
-    filters.resize(NSTEPS + 1);
-
+    std::vector<kernel::fir_filter_fff> filters;
+    filters.reserve(NSTEPS + 1);
     for (int i = 0; i < NSTEPS + 1; i++) {
         std::vector<float> t(&taps[i][0], &taps[i][NTAPS]);
-        filters[i] = new kernel::fir_filter_fff(1, t);
+        filters.emplace_back(t);
     }
+    return filters;
 }
+} // namespace
 
-mmse_fir_interpolator_ff::~mmse_fir_interpolator_ff()
-{
-    for (int i = 0; i < NSTEPS + 1; i++)
-        delete filters[i];
-}
+mmse_fir_interpolator_ff::mmse_fir_interpolator_ff() : filters(build_filters()) {}
 
 unsigned mmse_fir_interpolator_ff::ntaps() const { return NTAPS; }
 
@@ -47,7 +46,7 @@ float mmse_fir_interpolator_ff::interpolate(const float input[], float mu) const
         throw std::runtime_error("mmse_fir_interpolator_ff: imu out of bounds.");
     }
 
-    float r = filters[imu]->filter(input);
+    float r = filters[imu].filter(input);
     return r;
 }
 

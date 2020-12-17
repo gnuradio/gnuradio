@@ -24,7 +24,7 @@ namespace digital {
  *
  * \details
  * Decode a constellation's points from a complex space to
- * (unpacked) bits based on the map of the \p consetllation
+ * index of constellation symbol based on the map of the \p constellation
  * object.
  */
 class DIGITAL_API constellation_decoder_cb : virtual public block

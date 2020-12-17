@@ -20,7 +20,7 @@ namespace blocks {
 
 tag_gate::sptr tag_gate::make(size_t item_size, bool propagate_tags)
 {
-    return gnuradio::get_initial_sptr(new tag_gate_impl(item_size, propagate_tags));
+    return gnuradio::make_block_sptr<tag_gate_impl>(item_size, propagate_tags);
 }
 
 tag_gate_impl::tag_gate_impl(size_t item_size, bool propagate_tags)

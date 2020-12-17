@@ -28,7 +28,7 @@ typename metrics<T>::sptr metrics<T>::make(int O,
                                            const std::vector<T>& TABLE,
                                            digital::trellis_metric_type_t TYPE)
 {
-    return gnuradio::get_initial_sptr(new metrics_impl<T>(O, D, TABLE, TYPE));
+    return gnuradio::make_block_sptr<metrics_impl<T>>(O, D, TABLE, TYPE);
 }
 
 template <class T>

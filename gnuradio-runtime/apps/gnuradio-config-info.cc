@@ -29,7 +29,9 @@ int main(int argc, char** argv)
         (format("Program options: %1% [options]") % argv[0]).str());
     po::variables_map vm;
 
+    // clang-format off
     desc.add_options()("help,h", "print help message")(
+        "print-all", "print all information")(
         "prefix", "print GNU Radio installation prefix")(
         "sysconfdir", "print GNU Radio system configuration directory")(
         "prefsdir", "print GNU Radio preferences directory")(
@@ -40,6 +42,7 @@ int main(int argc, char** argv)
         "cc", "print GNU Radio C compiler version")(
         "cxx", "print GNU Radio C++ compiler version")(
         "cflags", "print GNU Radio CFLAGS")("version,v", "print GNU Radio version");
+    // clang-format on
 
     try {
         po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -56,37 +59,40 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    if (vm.count("prefix"))
+    bool print_all = vm.count("print-all");
+
+    if (vm.count("prefix") || print_all)
         std::cout << gr::prefix() << std::endl;
 
-    if (vm.count("sysconfdir"))
+    if (vm.count("sysconfdir") || print_all)
         std::cout << gr::sysconfdir() << std::endl;
 
-    if (vm.count("prefsdir"))
+    if (vm.count("prefsdir") || print_all)
         std::cout << gr::prefsdir() << std::endl;
 
-    if (vm.count("userprefsdir"))
+    if (vm.count("userprefsdir") || print_all)
         std::cout << gr::userconf_path() << std::endl;
 
+    // Not included in print all due to verbosity
     if (vm.count("prefs"))
         std::cout << gr::prefs::singleton()->to_string() << std::endl;
 
-    if (vm.count("builddate"))
+    if (vm.count("builddate") || print_all)
         std::cout << gr::build_date() << std::endl;
 
-    if (vm.count("enabled-components"))
+    if (vm.count("enabled-components") || print_all)
         std::cout << gr::build_time_enabled_components() << std::endl;
 
-    if (vm.count("version"))
+    if (vm.count("version") || print_all)
         std::cout << gr::version() << std::endl;
 
-    if (vm.count("cc"))
+    if (vm.count("cc") || print_all)
         std::cout << gr::c_compiler() << std::endl;
 
-    if (vm.count("cxx"))
+    if (vm.count("cxx") || print_all)
         std::cout << gr::cxx_compiler() << std::endl;
 
-    if (vm.count("cflags"))
+    if (vm.count("cflags") || print_all)
         std::cout << gr::compiler_flags() << std::endl;
 
     return 0;

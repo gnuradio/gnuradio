@@ -55,7 +55,7 @@ static double default_period_time()
 
 static int default_nperiods()
 {
-    return std::max(2L, prefs::singleton()->get_long("audio_alsa", "nperiods", 4));
+    return std::max(2L, prefs::singleton()->get_long("audio_alsa", "nperiods", 32));
 }
 
 // ----------------------------------------------------------------
@@ -65,18 +65,9 @@ alsa_sink::alsa_sink(int sampling_rate, const std::string device_name, bool ok_t
           "audio_alsa_sink", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
       d_sampling_rate(sampling_rate),
       d_device_name(device_name.empty() ? default_device_name() : device_name),
-      d_pcm_handle(0),
-      d_hw_params((snd_pcm_hw_params_t*)(new char[snd_pcm_hw_params_sizeof()])),
-      d_sw_params((snd_pcm_sw_params_t*)(new char[snd_pcm_sw_params_sizeof()])),
       d_nperiods(default_nperiods()),
       d_period_time_us((unsigned int)(default_period_time() * 1e6)),
-      d_period_size(0),
-      d_buffer_size_bytes(0),
-      d_buffer(0),
-      d_worker(0),
       d_special_case_mono_to_stereo(false),
-      d_nunderuns(0),
-      d_nsuspends(0),
       d_ok_to_block(ok_to_block)
 {
     CHATTY_DEBUG = prefs::singleton()->get_bool("audio_alsa", "verbose", false);
@@ -87,14 +78,15 @@ alsa_sink::alsa_sink(int sampling_rate, const std::string device_name, bool ok_t
     // open the device for playback
     int attempts = 10;
     while ((error != 0) && (attempts-- > 0)) {
-        error = snd_pcm_open(
-            &d_pcm_handle, d_device_name.c_str(), SND_PCM_STREAM_PLAYBACK, 0);
+        snd_pcm_t* t = nullptr;
+        error = snd_pcm_open(&t, d_device_name.c_str(), SND_PCM_STREAM_PLAYBACK, 0);
+        d_pcm_handle.set(t);
         if (error < 0) {
             boost::this_thread::sleep(boost::posix_time::milliseconds(10));
         }
     }
     if (ok_to_block == false)
-        snd_pcm_nonblock(d_pcm_handle, 1);
+        snd_pcm_nonblock(d_pcm_handle.get(), 1);
     if (error < 0) {
         GR_LOG_ERROR(d_logger,
                      boost::format("[%1%]: %2%") % (d_device_name) %
@@ -103,17 +95,17 @@ alsa_sink::alsa_sink(int sampling_rate, const std::string device_name, bool ok_t
     }
 
     // Fill params with a full configuration space for a PCM.
-    error = snd_pcm_hw_params_any(d_pcm_handle, d_hw_params);
+    error = snd_pcm_hw_params_any(d_pcm_handle.get(), d_hw_params.get());
     if (error < 0)
         bail("broken configuration for playback", error);
 
     if (CHATTY_DEBUG)
-        gri_alsa_dump_hw_params(d_pcm_handle, d_hw_params, stdout);
+        gri_alsa_dump_hw_params(d_pcm_handle.get(), d_hw_params.get(), stdout);
 
     // now that we know how many channels the h/w can handle, set input signature
     unsigned int umin_chan, umax_chan;
-    snd_pcm_hw_params_get_channels_min(d_hw_params, &umin_chan);
-    snd_pcm_hw_params_get_channels_max(d_hw_params, &umax_chan);
+    snd_pcm_hw_params_get_channels_min(d_hw_params.get(), &umin_chan);
+    snd_pcm_hw_params_get_channels_max(d_hw_params.get(), &umax_chan);
     int min_chan = std::min(umin_chan, 1000U);
     int max_chan = std::min(umax_chan, 1000U);
 
@@ -138,12 +130,12 @@ alsa_sink::alsa_sink(int sampling_rate, const std::string device_name, bool ok_t
     // snd_pcm_access_mask_set(access_mask, SND_PCM_ACCESS_RW_NONINTERLEAVED);
 
     if ((error = snd_pcm_hw_params_set_access_mask(
-             d_pcm_handle, d_hw_params, access_mask)) < 0)
+             d_pcm_handle.get(), d_hw_params.get(), access_mask)) < 0)
         bail("failed to set access mask", error);
 
     // set sample format
-    if (!gri_alsa_pick_acceptable_format(d_pcm_handle,
-                                         d_hw_params,
+    if (!gri_alsa_pick_acceptable_format(d_pcm_handle.get(),
+                                         d_hw_params.get(),
                                          acceptable_formats,
                                          NELEMS(acceptable_formats),
                                          &d_format,
@@ -154,14 +146,14 @@ alsa_sink::alsa_sink(int sampling_rate, const std::string device_name, bool ok_t
     // sampling rate
     unsigned int orig_sampling_rate = d_sampling_rate;
     if ((error = snd_pcm_hw_params_set_rate_near(
-             d_pcm_handle, d_hw_params, &d_sampling_rate, 0)) < 0)
+             d_pcm_handle.get(), d_hw_params.get(), &d_sampling_rate, 0)) < 0)
         bail("failed to set rate near", error);
 
     if (orig_sampling_rate != d_sampling_rate) {
         GR_LOG_INFO(d_logger,
                     boost::format("[%1%]: unable to support sampling rate %2%\n\tCard "
                                   "requested %3% instead.") %
-                        snd_pcm_name(d_pcm_handle) % orig_sampling_rate %
+                        snd_pcm_name(d_pcm_handle.get()) % orig_sampling_rate %
                         d_sampling_rate);
     }
 
@@ -172,8 +164,8 @@ alsa_sink::alsa_sink(int sampling_rate, const std::string device_name, bool ok_t
      * period in units of time (typically 1ms).
      */
     unsigned int min_nperiods, max_nperiods;
-    snd_pcm_hw_params_get_periods_min(d_hw_params, &min_nperiods, &dir);
-    snd_pcm_hw_params_get_periods_max(d_hw_params, &max_nperiods, &dir);
+    snd_pcm_hw_params_get_periods_min(d_hw_params.get(), &min_nperiods, &dir);
+    snd_pcm_hw_params_get_periods_max(d_hw_params.get(), &max_nperiods, &dir);
 
     unsigned int orig_nperiods = d_nperiods;
     d_nperiods = std::min(std::max(min_nperiods, d_nperiods), max_nperiods);
@@ -181,18 +173,19 @@ alsa_sink::alsa_sink(int sampling_rate, const std::string device_name, bool ok_t
     // adjust period time so that total buffering remains more-or-less constant
     d_period_time_us = (d_period_time_us * orig_nperiods) / d_nperiods;
 
-    error = snd_pcm_hw_params_set_periods(d_pcm_handle, d_hw_params, d_nperiods, 0);
+    error = snd_pcm_hw_params_set_periods(
+        d_pcm_handle.get(), d_hw_params.get(), d_nperiods, 0);
     if (error < 0)
         bail("set_periods failed", error);
 
     dir = 0;
     error = snd_pcm_hw_params_set_period_time_near(
-        d_pcm_handle, d_hw_params, &d_period_time_us, &dir);
+        d_pcm_handle.get(), d_hw_params.get(), &d_period_time_us, &dir);
     if (error < 0)
         bail("set_period_time_near failed", error);
 
     dir = 0;
-    error = snd_pcm_hw_params_get_period_size(d_hw_params, &d_period_size, &dir);
+    error = snd_pcm_hw_params_get_period_size(d_hw_params.get(), &d_period_size, &dir);
     if (error < 0)
         bail("get_period_size failed", error);
 
@@ -210,18 +203,18 @@ bool alsa_sink::check_topology(int ninputs, int noutputs)
     // Check the state of the stream
     // Ensure that the pcm is in a state where we can still mess with the hw_params
     snd_pcm_state_t state;
-    state = snd_pcm_state(d_pcm_handle);
+    state = snd_pcm_state(d_pcm_handle.get());
     if (state == SND_PCM_STATE_RUNNING)
         return true; // If stream is running, don't change any parameters
     else if (state == SND_PCM_STATE_XRUN)
         snd_pcm_prepare(
-            d_pcm_handle); // Prepare stream on underrun, and we can set parameters;
+            d_pcm_handle.get()); // Prepare stream on underrun, and we can set parameters;
 
     bool special_case = nchan == 1 && d_special_case_mono_to_stereo;
     if (special_case)
         nchan = 2;
 
-    err = snd_pcm_hw_params_set_channels(d_pcm_handle, d_hw_params, nchan);
+    err = snd_pcm_hw_params_set_channels(d_pcm_handle.get(), d_hw_params.get(), nchan);
 
     if (err < 0) {
         output_error_msg("set_channels failed", err);
@@ -229,14 +222,14 @@ bool alsa_sink::check_topology(int ninputs, int noutputs)
     }
 
     // set the parameters into the driver...
-    err = snd_pcm_hw_params(d_pcm_handle, d_hw_params);
+    err = snd_pcm_hw_params(d_pcm_handle.get(), d_hw_params.get());
     if (err < 0) {
         output_error_msg("snd_pcm_hw_params failed", err);
         return false;
     }
 
     // get current s/w params
-    err = snd_pcm_sw_params_current(d_pcm_handle, d_sw_params);
+    err = snd_pcm_sw_params_current(d_pcm_handle.get(), d_sw_params.get());
     if (err < 0)
         bail("snd_pcm_sw_params_current", err);
 
@@ -244,24 +237,22 @@ bool alsa_sink::check_topology(int ninputs, int noutputs)
     // it's buffers half way full. This helps avoid audio underruns.
 
     err = snd_pcm_sw_params_set_start_threshold(
-        d_pcm_handle, d_sw_params, d_nperiods * d_period_size / 2);
+        d_pcm_handle.get(), d_sw_params.get(), d_nperiods * d_period_size / 2);
     if (err < 0)
         bail("snd_pcm_sw_params_set_start_threshold", err);
 
     // store the s/w params
-    err = snd_pcm_sw_params(d_pcm_handle, d_sw_params);
+    err = snd_pcm_sw_params(d_pcm_handle.get(), d_sw_params.get());
     if (err < 0)
         bail("snd_pcm_sw_params", err);
 
-    d_buffer_size_bytes = d_period_size * nchan * snd_pcm_format_size(d_format, 1);
-
-    d_buffer = new char[d_buffer_size_bytes];
+    d_buffer.resize(d_period_size * nchan * snd_pcm_format_size(d_format, 1));
 
     if (CHATTY_DEBUG) {
         GR_LOG_DEBUG(d_debug_logger,
                      boost::format("[%1%]: sample resolution = %2% bits") %
-                         snd_pcm_name(d_pcm_handle) %
-                         snd_pcm_hw_params_get_sbits(d_hw_params));
+                         snd_pcm_name(d_pcm_handle.get()) %
+                         snd_pcm_hw_params_get_sbits(d_hw_params.get()));
     }
 
     switch (d_format) {
@@ -285,16 +276,7 @@ bool alsa_sink::check_topology(int ninputs, int noutputs)
     return true;
 }
 
-alsa_sink::~alsa_sink()
-{
-    if (snd_pcm_state(d_pcm_handle) == SND_PCM_STATE_RUNNING)
-        snd_pcm_drop(d_pcm_handle);
-
-    snd_pcm_close(d_pcm_handle);
-    delete[]((char*)d_hw_params);
-    delete[]((char*)d_sw_params);
-    delete[] d_buffer;
-}
+alsa_sink::~alsa_sink() {}
 
 int alsa_sink::work(int noutput_items,
                     gr_vector_const_void_star& input_items,
@@ -318,12 +300,12 @@ int alsa_sink::work_s16(int noutput_items,
 
     unsigned int nchan = input_items.size();
     const float** in = (const float**)&input_items[0];
-    sample_t* buf = (sample_t*)d_buffer;
+    sample_t* buf = reinterpret_cast<sample_t*>(d_buffer.data());
     int bi;
     int n;
 
     unsigned int sizeof_frame = nchan * sizeof(sample_t);
-    assert(d_buffer_size_bytes == d_period_size * sizeof_frame);
+    assert(d_buffer.size() == d_period_size * sizeof_frame);
 
     for (n = 0; n < noutput_items; n += d_period_size) {
         // process one period of data
@@ -357,12 +339,12 @@ int alsa_sink::work_s32(int noutput_items,
 
     unsigned int nchan = input_items.size();
     const float** in = (const float**)&input_items[0];
-    sample_t* buf = (sample_t*)d_buffer;
+    sample_t* buf = reinterpret_cast<sample_t*>(d_buffer.data());
     int bi;
     int n;
 
     unsigned int sizeof_frame = nchan * sizeof(sample_t);
-    assert(d_buffer_size_bytes == d_period_size * sizeof_frame);
+    assert(d_buffer.size() == d_period_size * sizeof_frame);
 
     for (n = 0; n < noutput_items; n += d_period_size) {
         // process one period of data
@@ -398,12 +380,12 @@ int alsa_sink::work_s16_1x2(int noutput_items,
     assert(input_items.size() == 1);
     static const unsigned int nchan = 2;
     const float** in = (const float**)&input_items[0];
-    sample_t* buf = (sample_t*)d_buffer;
+    sample_t* buf = reinterpret_cast<sample_t*>(d_buffer.data());
     int bi;
     int n;
 
     unsigned int sizeof_frame = nchan * sizeof(sample_t);
-    assert(d_buffer_size_bytes == d_period_size * sizeof_frame);
+    assert(d_buffer.size() == d_period_size * sizeof_frame);
 
     for (n = 0; n < noutput_items; n += d_period_size) {
         // process one period of data
@@ -438,12 +420,12 @@ int alsa_sink::work_s32_1x2(int noutput_items,
     assert(input_items.size() == 1);
     static unsigned int nchan = 2;
     const float** in = (const float**)&input_items[0];
-    sample_t* buf = (sample_t*)d_buffer;
+    sample_t* buf = reinterpret_cast<sample_t*>(d_buffer.data());
     int bi;
     int n;
 
     unsigned int sizeof_frame = nchan * sizeof(sample_t);
-    assert(d_buffer_size_bytes == d_period_size * sizeof_frame);
+    assert(d_buffer.size() == d_period_size * sizeof_frame);
 
     for (n = 0; n < noutput_items; n += d_period_size) {
         // process one period of data
@@ -469,7 +451,7 @@ bool alsa_sink::write_buffer(const void* vbuffer, unsigned nframes, unsigned siz
     const unsigned char* buffer = (const unsigned char*)vbuffer;
 
     while (nframes > 0) {
-        int r = snd_pcm_writei(d_pcm_handle, buffer, nframes);
+        int r = snd_pcm_writei(d_pcm_handle.get(), buffer, nframes);
         if (r == -EAGAIN) {
             if (d_ok_to_block == true)
                 continue; // try again
@@ -479,7 +461,7 @@ bool alsa_sink::write_buffer(const void* vbuffer, unsigned nframes, unsigned siz
             // we need to have an lvalue, async pitfall!
             auto future_local = std::async(::fputs, "aU", stderr);
 
-            if ((r = snd_pcm_prepare(d_pcm_handle)) < 0) {
+            if ((r = snd_pcm_prepare(d_pcm_handle.get())) < 0) {
                 output_error_msg("snd_pcm_prepare failed. Can't recover from underrun",
                                  r);
                 return false;
@@ -490,7 +472,7 @@ bool alsa_sink::write_buffer(const void* vbuffer, unsigned nframes, unsigned siz
         else if (r == -ESTRPIPE) { // h/w is suspended (whatever that means)
                                    // This is apparently related to power management
             d_nsuspends++;
-            if ((r = snd_pcm_resume(d_pcm_handle)) < 0) {
+            if ((r = snd_pcm_resume(d_pcm_handle.get())) < 0) {
                 output_error_msg("failed to resume from suspend", r);
                 return false;
             }
@@ -512,8 +494,8 @@ bool alsa_sink::write_buffer(const void* vbuffer, unsigned nframes, unsigned siz
 void alsa_sink::output_error_msg(const char* msg, int err)
 {
     GR_LOG_ERROR(d_logger,
-                 boost::format("[%1%]: %2%: %3%") % snd_pcm_name(d_pcm_handle) % msg %
-                     snd_strerror(err));
+                 boost::format("[%1%]: %2%: %3%") % snd_pcm_name(d_pcm_handle.get()) %
+                     msg % snd_strerror(err));
 }
 
 void alsa_sink::bail(const char* msg, int err)

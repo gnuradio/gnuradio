@@ -8,7 +8,6 @@
 #
 #
 
-from __future__ import division
 
 from collections import deque
 
@@ -31,14 +30,14 @@ class test_depuncture (gr_unittest.TestCase):
         for n in range(len(self.src_data) // (self.puncsize - self.puncholes)):
             for i in range(self.puncsize):
                 if _puncpat[i] == 1:
-                    self.expected.append(self.src_data[k]);
-                    k+=1
+                    self.expected.append(self.src_data[k])
+                    k += 1
                 else:
                     self.expected.append(self.sym)
 
     def setUp(self):
-        self.src_data = 2000*list(range(64))
-        self.tb = gr.top_block ()
+        self.src_data = 2000 * list(range(64))
+        self.tb = gr.top_block()
 
     def tearDown(self):
         self.tb = None
@@ -55,8 +54,8 @@ class test_depuncture (gr_unittest.TestCase):
         self.depuncture_setup()
 
         src = blocks.vector_source_b(self.src_data)
-        op  = fec.depuncture_bb(self.puncsize, self.puncpat,
-                                self.delay, self.sym)
+        op = fec.depuncture_bb(self.puncsize, self.puncpat,
+                               self.delay, self.sym)
         dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op, dst)
@@ -80,8 +79,8 @@ class test_depuncture (gr_unittest.TestCase):
         self.depuncture_setup()
 
         src = blocks.vector_source_b(self.src_data)
-        op  = fec.depuncture_bb(self.puncsize, self.puncpat,
-                                self.delay, self.sym)
+        op = fec.depuncture_bb(self.puncsize, self.puncpat,
+                               self.delay, self.sym)
         dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op, dst)
@@ -106,8 +105,8 @@ class test_depuncture (gr_unittest.TestCase):
         self.depuncture_setup()
 
         src = blocks.vector_source_b(self.src_data)
-        op  = fec.depuncture_bb(self.puncsize, self.puncpat,
-                                self.delay, self.sym)
+        op = fec.depuncture_bb(self.puncsize, self.puncpat,
+                               self.delay, self.sym)
         dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op, dst)
@@ -126,16 +125,16 @@ class test_depuncture (gr_unittest.TestCase):
         # this should be equivalent to a puncpat of the correct size.
 
         self.puncsize = 4
-        self.puncpat0 = 0x5555 # too many bits set
+        self.puncpat0 = 0x5555  # too many bits set
         self.puncpat1 = 0x55   # num bits = puncsize
         self.delay = 1
         self.sym = 0
 
         src = blocks.vector_source_b(self.src_data)
-        op0  = fec.depuncture_bb(self.puncsize, self.puncpat0,
-                                 self.delay, self.sym)
-        op1  = fec.depuncture_bb(self.puncsize, self.puncpat1,
-                                 self.delay, self.sym)
+        op0 = fec.depuncture_bb(self.puncsize, self.puncpat0,
+                                self.delay, self.sym)
+        op1 = fec.depuncture_bb(self.puncsize, self.puncpat1,
+                                self.delay, self.sym)
         dst0 = blocks.vector_sink_b()
         dst1 = blocks.vector_sink_b()
 
@@ -166,8 +165,8 @@ class test_depuncture (gr_unittest.TestCase):
         self.depuncture_setup()
 
         src = blocks.vector_source_b(self.src_data)
-        op  = fec.depuncture_bb(self.puncsize, self.puncpat,
-                                self.delay)
+        op = fec.depuncture_bb(self.puncsize, self.puncpat,
+                               self.delay)
         dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op, dst)
@@ -179,5 +178,6 @@ class test_depuncture (gr_unittest.TestCase):
 
         self.assertEqual(self.expected, dst_data)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_depuncture, "test_depuncture.xml")
+    gr_unittest.run(test_depuncture)

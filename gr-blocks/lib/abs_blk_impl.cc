@@ -22,7 +22,7 @@ namespace blocks {
 template <class T>
 typename abs_blk<T>::sptr abs_blk<T>::make(size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new abs_blk_impl<T>(vlen));
+    return gnuradio::make_block_sptr<abs_blk_impl<T>>(vlen);
 }
 
 template <class T>

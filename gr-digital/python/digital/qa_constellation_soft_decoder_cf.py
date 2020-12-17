@@ -13,6 +13,7 @@ from gnuradio import gr, gr_unittest, digital, blocks
 from math import sqrt
 from numpy import random, vectorize
 
+
 class test_constellation_soft_decoder(gr_unittest.TestCase):
 
     def setUp(self):
@@ -42,8 +43,8 @@ class test_constellation_soft_decoder(gr_unittest.TestCase):
         self.tb.run()
 
         actual_result = dst.data()  # fetch the contents of the sink
-        #print "actual result", actual_result
-        #print "expected result", expected_result
+        # print "actual result", actual_result
+        # print "expected result", expected_result
         self.assertFloatTuplesAlmostEqual(expected_result, actual_result, 5)
 
     def helper_no_lut(self, prec, src_data, const_gen, const_sd_gen):
@@ -63,8 +64,8 @@ class test_constellation_soft_decoder(gr_unittest.TestCase):
         self.tb.run()
 
         actual_result = dst.data()  # fetch the contents of the sink
-        #print "actual result", actual_result
-        #print "expected result", expected_result
+        # print "actual result", actual_result
+        # print "expected result", expected_result
 
         # Double vs. float precision issues between Python and C++, so
         # use only 4 decimals in comparisons.
@@ -72,90 +73,142 @@ class test_constellation_soft_decoder(gr_unittest.TestCase):
 
     def test_constellation_soft_decoder_cf_bpsk_3(self):
         prec = 3
-        src_data = (-1.0 - 1.0j,  1.0 - 1.0j, -1.0 + 1.0j,  1.0 + 1.0j,
-                    -2.0 - 2.0j,  2.0 - 2.0j, -2.0 + 2.0j,  2.0 + 2.0j,
-                    -0.2 - 0.2j,  0.2 - 0.2j, -0.2 + 0.2j,  0.2 + 0.2j,
-                     0.3 + 0.4j,  0.1 - 1.2j, -0.8 - 0.1j, -0.4 + 0.8j,
-                     0.8 + 1.0j, -0.5 + 0.1j,  0.1 + 1.2j, -1.7 - 0.9j)
-        self.helper_with_lut(prec, src_data, digital.psk_2_0x0, digital.sd_psk_2_0x0)
+        src_data = (-1.0 - 1.0j, 1.0 - 1.0j, -1.0 + 1.0j, 1.0 + 1.0j,
+                    -2.0 - 2.0j, 2.0 - 2.0j, -2.0 + 2.0j, 2.0 + 2.0j,
+                    -0.2 - 0.2j, 0.2 - 0.2j, -0.2 + 0.2j, 0.2 + 0.2j,
+                    0.3 + 0.4j, 0.1 - 1.2j, -0.8 - 0.1j, -0.4 + 0.8j,
+                    0.8 + 1.0j, -0.5 + 0.1j, 0.1 + 1.2j, -1.7 - 0.9j)
+        self.helper_with_lut(
+            prec,
+            src_data,
+            digital.psk_2_0x0,
+            digital.sd_psk_2_0x0)
 
     def test_constellation_soft_decoder_cf_bpsk_8(self):
         prec = 8
-        src_data = (-1.0 - 1.0j,  1.0 - 1.0j, -1.0 + 1.0j,  1.0 + 1.0j,
-                    -2.0 - 2.0j,  2.0 - 2.0j, -2.0 + 2.0j,  2.0 + 2.0j,
-                    -0.2 - 0.2j,  0.2 - 0.2j, -0.2 + 0.2j,  0.2 + 0.2j,
-                     0.3 + 0.4j,  0.1 - 1.2j, -0.8 - 0.1j, -0.4 + 0.8j,
-                     0.8 + 1.0j, -0.5 + 0.1j,  0.1 + 1.2j, -1.7 - 0.9j)
-        self.helper_with_lut(prec, src_data, digital.psk_2_0x0, digital.sd_psk_2_0x0)
+        src_data = (-1.0 - 1.0j, 1.0 - 1.0j, -1.0 + 1.0j, 1.0 + 1.0j,
+                    -2.0 - 2.0j, 2.0 - 2.0j, -2.0 + 2.0j, 2.0 + 2.0j,
+                    -0.2 - 0.2j, 0.2 - 0.2j, -0.2 + 0.2j, 0.2 + 0.2j,
+                    0.3 + 0.4j, 0.1 - 1.2j, -0.8 - 0.1j, -0.4 + 0.8j,
+                    0.8 + 1.0j, -0.5 + 0.1j, 0.1 + 1.2j, -1.7 - 0.9j)
+        self.helper_with_lut(
+            prec,
+            src_data,
+            digital.psk_2_0x0,
+            digital.sd_psk_2_0x0)
 
     def test_constellation_soft_decoder_cf_bpsk_8_rand(self):
         prec = 8
-        src_data = vectorize(complex)(2*random.randn(100), 2*random.randn(100))
-        self.helper_with_lut(prec, src_data, digital.psk_2_0x0, digital.sd_psk_2_0x0)
+        src_data = vectorize(complex)(
+            2 * random.randn(100), 2 * random.randn(100))
+        self.helper_with_lut(
+            prec,
+            src_data,
+            digital.psk_2_0x0,
+            digital.sd_psk_2_0x0)
 
     def test_constellation_soft_decoder_cf_bpsk_8_rand2(self):
         prec = 8
-        src_data = vectorize(complex)(2*random.randn(100), 2*random.randn(100))
-        self.helper_no_lut(prec, src_data, digital.psk_2_0x0, digital.sd_psk_2_0x0)
+        src_data = vectorize(complex)(
+            2 * random.randn(100), 2 * random.randn(100))
+        self.helper_no_lut(
+            prec,
+            src_data,
+            digital.psk_2_0x0,
+            digital.sd_psk_2_0x0)
 
     def test_constellation_soft_decoder_cf_qpsk_3(self):
         prec = 3
-        src_data = (-1.0 - 1.0j,  1.0 - 1.0j, -1.0 + 1.0j,  1.0 + 1.0j,
-                    -2.0 - 2.0j,  2.0 - 2.0j, -2.0 + 2.0j,  2.0 + 2.0j,
-                    -0.2 - 0.2j,  0.2 - 0.2j, -0.2 + 0.2j,  0.2 + 0.2j,
-                     0.3 + 0.4j,  0.1 - 1.2j, -0.8 - 0.1j, -0.4 + 0.8j,
-                     0.8 + 1.0j, -0.5 + 0.1j,  0.1 + 1.2j, -1.7 - 0.9j)
-        self.helper_with_lut(prec, src_data, digital.psk_4_0x0_0_1, digital.sd_psk_4_0x0_0_1)
+        src_data = (-1.0 - 1.0j, 1.0 - 1.0j, -1.0 + 1.0j, 1.0 + 1.0j,
+                    -2.0 - 2.0j, 2.0 - 2.0j, -2.0 + 2.0j, 2.0 + 2.0j,
+                    -0.2 - 0.2j, 0.2 - 0.2j, -0.2 + 0.2j, 0.2 + 0.2j,
+                    0.3 + 0.4j, 0.1 - 1.2j, -0.8 - 0.1j, -0.4 + 0.8j,
+                    0.8 + 1.0j, -0.5 + 0.1j, 0.1 + 1.2j, -1.7 - 0.9j)
+        self.helper_with_lut(
+            prec,
+            src_data,
+            digital.psk_4_0x0_0_1,
+            digital.sd_psk_4_0x0_0_1)
 
     def test_constellation_soft_decoder_cf_qpsk_8(self):
         prec = 8
-        src_data = (-1.0 - 1.0j,  1.0 - 1.0j, -1.0 + 1.0j,  1.0 + 1.0j,
-                    -2.0 - 2.0j,  2.0 - 2.0j, -2.0 + 2.0j,  2.0 + 2.0j,
-                    -0.2 - 0.2j,  0.2 - 0.2j, -0.2 + 0.2j,  0.2 + 0.2j,
-                     0.3 + 0.4j,  0.1 - 1.2j, -0.8 - 0.1j, -0.4 + 0.8j,
-                     0.8 + 1.0j, -0.5 + 0.1j,  0.1 + 1.2j, -1.7 - 0.9j)
-        self.helper_with_lut(prec, src_data, digital.psk_4_0x0_0_1, digital.sd_psk_4_0x0_0_1)
+        src_data = (-1.0 - 1.0j, 1.0 - 1.0j, -1.0 + 1.0j, 1.0 + 1.0j,
+                    -2.0 - 2.0j, 2.0 - 2.0j, -2.0 + 2.0j, 2.0 + 2.0j,
+                    -0.2 - 0.2j, 0.2 - 0.2j, -0.2 + 0.2j, 0.2 + 0.2j,
+                    0.3 + 0.4j, 0.1 - 1.2j, -0.8 - 0.1j, -0.4 + 0.8j,
+                    0.8 + 1.0j, -0.5 + 0.1j, 0.1 + 1.2j, -1.7 - 0.9j)
+        self.helper_with_lut(
+            prec,
+            src_data,
+            digital.psk_4_0x0_0_1,
+            digital.sd_psk_4_0x0_0_1)
 
     def test_constellation_soft_decoder_cf_qpsk_8_rand(self):
         prec = 8
-        src_data = vectorize(complex)(2*random.randn(100), 2*random.randn(100))
-        self.helper_with_lut(prec, src_data, digital.psk_4_0x0_0_1, digital.sd_psk_4_0x0_0_1)
+        src_data = vectorize(complex)(
+            2 * random.randn(100), 2 * random.randn(100))
+        self.helper_with_lut(
+            prec,
+            src_data,
+            digital.psk_4_0x0_0_1,
+            digital.sd_psk_4_0x0_0_1)
 
     def test_constellation_soft_decoder_cf_qpsk_8_rand2(self):
         prec = 8
-        src_data = vectorize(complex)(2*random.randn(100), 2*random.randn(100))
-        self.helper_no_lut(prec, src_data, digital.psk_4_0x0_0_1, digital.sd_psk_4_0x0_0_1)
+        src_data = vectorize(complex)(
+            2 * random.randn(100), 2 * random.randn(100))
+        self.helper_no_lut(
+            prec,
+            src_data,
+            digital.psk_4_0x0_0_1,
+            digital.sd_psk_4_0x0_0_1)
 
     def test_constellation_soft_decoder_cf_qam16_3(self):
         prec = 3
-        src_data = (-1.0 - 1.0j,  1.0 - 1.0j, -1.0 + 1.0j,  1.0 + 1.0j,
-                    -2.0 - 2.0j,  2.0 - 2.0j, -2.0 + 2.0j,  2.0 + 2.0j,
-                    -0.2 - 0.2j,  0.2 - 0.2j, -0.2 + 0.2j,  0.2 + 0.2j,
-                     0.3 + 0.4j,  0.1 - 1.2j, -0.8 - 0.1j, -0.4 + 0.8j,
-                     0.8 + 1.0j, -0.5 + 0.1j,  0.1 + 1.2j, -1.7 - 0.9j)
-        self.helper_with_lut(prec, src_data, digital.qam_16_0x0_0_1_2_3, digital.sd_qam_16_0x0_0_1_2_3)
+        src_data = (-1.0 - 1.0j, 1.0 - 1.0j, -1.0 + 1.0j, 1.0 + 1.0j,
+                    -2.0 - 2.0j, 2.0 - 2.0j, -2.0 + 2.0j, 2.0 + 2.0j,
+                    -0.2 - 0.2j, 0.2 - 0.2j, -0.2 + 0.2j, 0.2 + 0.2j,
+                    0.3 + 0.4j, 0.1 - 1.2j, -0.8 - 0.1j, -0.4 + 0.8j,
+                    0.8 + 1.0j, -0.5 + 0.1j, 0.1 + 1.2j, -1.7 - 0.9j)
+        self.helper_with_lut(
+            prec,
+            src_data,
+            digital.qam_16_0x0_0_1_2_3,
+            digital.sd_qam_16_0x0_0_1_2_3)
 
     def test_constellation_soft_decoder_cf_qam16_8(self):
         prec = 8
-        src_data = (-1.0 - 1.0j,  1.0 - 1.0j, -1.0 + 1.0j,  1.0 + 1.0j,
-                    -2.0 - 2.0j,  2.0 - 2.0j, -2.0 + 2.0j,  2.0 + 2.0j,
-                    -0.2 - 0.2j,  0.2 - 0.2j, -0.2 + 0.2j,  0.2 + 0.2j,
-                     0.3 + 0.4j,  0.1 - 1.2j, -0.8 - 0.1j, -0.4 + 0.8j,
-                     0.8 + 1.0j, -0.5 + 0.1j,  0.1 + 1.2j, -1.7 - 0.9j)
-        self.helper_with_lut(prec, src_data, digital.qam_16_0x0_0_1_2_3, digital.sd_qam_16_0x0_0_1_2_3)
+        src_data = (-1.0 - 1.0j, 1.0 - 1.0j, -1.0 + 1.0j, 1.0 + 1.0j,
+                    -2.0 - 2.0j, 2.0 - 2.0j, -2.0 + 2.0j, 2.0 + 2.0j,
+                    -0.2 - 0.2j, 0.2 - 0.2j, -0.2 + 0.2j, 0.2 + 0.2j,
+                    0.3 + 0.4j, 0.1 - 1.2j, -0.8 - 0.1j, -0.4 + 0.8j,
+                    0.8 + 1.0j, -0.5 + 0.1j, 0.1 + 1.2j, -1.7 - 0.9j)
+        self.helper_with_lut(
+            prec,
+            src_data,
+            digital.qam_16_0x0_0_1_2_3,
+            digital.sd_qam_16_0x0_0_1_2_3)
 
     def test_constellation_soft_decoder_cf_qam16_8_rand(self):
         prec = 8
-        src_data = vectorize(complex)(2*random.randn(100), 2*random.randn(100))
-        self.helper_with_lut(prec, src_data, digital.qam_16_0x0_0_1_2_3, digital.sd_qam_16_0x0_0_1_2_3)
+        src_data = vectorize(complex)(
+            2 * random.randn(100), 2 * random.randn(100))
+        self.helper_with_lut(
+            prec,
+            src_data,
+            digital.qam_16_0x0_0_1_2_3,
+            digital.sd_qam_16_0x0_0_1_2_3)
 
     def test_constellation_soft_decoder_cf_qam16_8_rand2(self):
         prec = 8
         #src_data = vectorize(complex)(2*random.randn(100), 2*random.randn(100))
-        src_data = vectorize(complex)(2*random.randn(2), 2*random.randn(2))
-        self.helper_no_lut(prec, src_data, digital.qam_16_0x0_0_1_2_3, digital.sd_qam_16_0x0_0_1_2_3)
+        src_data = vectorize(complex)(2 * random.randn(2), 2 * random.randn(2))
+        self.helper_no_lut(
+            prec,
+            src_data,
+            digital.qam_16_0x0_0_1_2_3,
+            digital.sd_qam_16_0x0_0_1_2_3)
 
 
 if __name__ == '__main__':
-    #gr_unittest.run(test_constellation_soft_decoder, "test_constellation_soft_decoder.xml")
     gr_unittest.run(test_constellation_soft_decoder)

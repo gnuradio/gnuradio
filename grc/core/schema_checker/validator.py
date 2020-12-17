@@ -2,11 +2,8 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
-from __future__ import print_function
-
-import six
 
 from .utils import Message, Spec
 
@@ -43,7 +40,7 @@ class Validator(object):
             self._check_var_key_dict(data, *scheme)
 
     def _check_var_key_dict(self, data, key_type, value_scheme):
-        for key, value in six.iteritems(data):
+        for key, value in data.items():
             if not isinstance(key, key_type):
                 self._error('Key type {!r} for {!r} not in valid types'.format(
                     type(value).__name__, key))
@@ -54,7 +51,7 @@ class Validator(object):
                     type(value).__name__, key))
 
     def _check_dict(self, data, scheme):
-        for key, (types_, required, item_scheme) in six.iteritems(scheme):
+        for key, (types_, required, item_scheme) in scheme.items():
             try:
                 value = data[key]
             except KeyError:

@@ -26,14 +26,14 @@ dvbt2_freqinterleaver_cc::make(dvbt2_extended_carrier_t carriermode,
                                dvbt2_version_t version,
                                dvbt2_preamble_t preamble)
 {
-    return gnuradio::get_initial_sptr(new dvbt2_freqinterleaver_cc_impl(carriermode,
-                                                                        fftsize,
-                                                                        pilotpattern,
-                                                                        guardinterval,
-                                                                        numdatasyms,
-                                                                        paprmode,
-                                                                        version,
-                                                                        preamble));
+    return gnuradio::make_block_sptr<dvbt2_freqinterleaver_cc_impl>(carriermode,
+                                                                    fftsize,
+                                                                    pilotpattern,
+                                                                    guardinterval,
+                                                                    numdatasyms,
+                                                                    paprmode,
+                                                                    version,
+                                                                    preamble);
 }
 
 /*

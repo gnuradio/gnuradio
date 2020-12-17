@@ -24,12 +24,12 @@ class BLOCKS_API float_to_int_impl : public float_to_int
 public:
     float_to_int_impl(size_t vlen, float scale);
 
-    virtual float scale() const { return d_scale; }
-    virtual void set_scale(float scale) { d_scale = scale; }
+    float scale() const override { return d_scale; }
+    void set_scale(float scale) override { d_scale = scale; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

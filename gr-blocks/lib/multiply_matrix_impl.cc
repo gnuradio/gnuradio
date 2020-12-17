@@ -203,8 +203,7 @@ multiply_matrix<T>::make(std::vector<std::vector<T>> A,
     if (A.empty() || A[0].empty()) {
         throw std::invalid_argument("matrix A has invalid dimensions.");
     }
-    return gnuradio::get_initial_sptr(
-        new multiply_matrix_impl<T>(A, tag_propagation_policy));
+    return gnuradio::make_block_sptr<multiply_matrix_impl<T>>(A, tag_propagation_policy);
 }
 
 template <>
@@ -223,9 +222,7 @@ multiply_matrix_impl<gr_complex>::multiply_matrix_impl(
 
     pmt::pmt_t port_name = pmt::string_to_symbol("set_A");
     message_port_register_in(port_name);
-    set_msg_handler(
-        port_name,
-        boost::bind(&multiply_matrix_impl<gr_complex>::msg_handler_A, this, _1));
+    set_msg_handler(port_name, [this](pmt::pmt_t msg) { this->msg_handler_A(msg); });
 }
 
 template <>
@@ -244,8 +241,7 @@ multiply_matrix_impl<float>::multiply_matrix_impl(
 
     pmt::pmt_t port_name = pmt::string_to_symbol("set_A");
     message_port_register_in(port_name);
-    set_msg_handler(port_name,
-                    boost::bind(&multiply_matrix_impl<float>::msg_handler_A, this, _1));
+    set_msg_handler(port_name, [this](pmt::pmt_t msg) { this->msg_handler_A(msg); });
 }
 
 

@@ -18,7 +18,7 @@ namespace dtv {
 
 atsc_interleaver::sptr atsc_interleaver::make()
 {
-    return gnuradio::get_initial_sptr(new atsc_interleaver_impl());
+    return gnuradio::make_block_sptr<atsc_interleaver_impl>();
 }
 
 atsc_interleaver_impl::atsc_interleaver_impl()

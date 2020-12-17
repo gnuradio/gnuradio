@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012,2018 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2018,2020 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -37,26 +37,31 @@ public:
                     double ampl,
                     T offset = 0,
                     float phase = 0);
-    ~sig_source_impl();
+    ~sig_source_impl() override;
 
-    virtual int work(int noutput_items,
-                     gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items) override;
 
-    double sampling_freq() const { return d_sampling_freq; }
-    gr_waveform_t waveform() const { return d_waveform; }
-    double frequency() const { return d_frequency; }
-    double amplitude() const { return d_ampl; }
-    T offset() const { return d_offset; }
-    float phase() const { return d_nco.get_phase(); }
+    double sampling_freq() const override { return d_sampling_freq; }
+    gr_waveform_t waveform() const override { return d_waveform; }
+    double frequency() const override { return d_frequency; }
+    double amplitude() const override { return d_ampl; }
+    T offset() const override { return d_offset; }
+    float phase() const override { return d_nco.get_phase(); }
 
-    void set_sampling_freq(double sampling_freq);
-    void set_waveform(gr_waveform_t waveform);
-    void set_frequency_msg(pmt::pmt_t msg);
-    void set_frequency(double frequency);
-    void set_amplitude(double ampl);
-    void set_offset(T offset);
-    void set_phase(float phase);
+    void set_sampling_freq(double sampling_freq) override;
+    void set_waveform(gr_waveform_t waveform) override;
+
+    // Message handlers
+    //!\brief deprecated handler. Use "cmd" port instead.
+    void set_freq_msg(pmt::pmt_t msg);
+    void set_cmd_msg(pmt::pmt_t msg);
+
+    void set_frequency(double frequency) override;
+    void set_amplitude(double ampl) override;
+    void set_offset(T offset) override;
+    void set_phase(float phase) override;
 };
 
 } /* namespace analog */

@@ -24,14 +24,14 @@ private:
 
 public:
     protocol_parser_b_impl(const header_format_base::sptr& format);
-    ~protocol_parser_b_impl();
+    ~protocol_parser_b_impl() override;
 
     void set_threshold(unsigned int thresh);
     unsigned int threshold() const;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace digital

@@ -30,24 +30,24 @@ private:
     boost::condition_variable condition_buffer_ready;
 
     std::vector<gr_complex> d_buffer;
-    gr::fft::fft_complex d_fft;
+    gr::fft::fft_complex_fwd d_fft;
 
 public:
     ctrlport_probe_psd_impl(const std::string& id, const std::string& desc, int len);
     ~ctrlport_probe_psd_impl();
 
-    void setup_rpc();
+    void setup_rpc() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
-    std::vector<gr_complex> get();
+    std::vector<gr_complex> get() override;
 
-    void set_length(int len);
-    int length() const;
+    void set_length(int len) override;
+    int length() const override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace fft

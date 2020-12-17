@@ -21,7 +21,7 @@ namespace uhd {
  * Any GNU Radio block that is meant to control an RFNoC block
  * should be derived from this class.
  */
-class UHD_API rfnoc_block : public gr::block
+class GR_UHD_API rfnoc_block : public gr::block
 {
 protected:
     // \param block_ref A reference to the underlying block controller
@@ -34,7 +34,7 @@ public:
 
     //! Factory function to create a UHD block controller reference
     //
-    // \param graph Refernce to the flowgraph's RFNoC graph
+    // \param graph Reference to the flowgraph's RFNoC graph
     // \param block_args Block args
     // \param block_name Block name (e.g. "DDC")
     // \param device_select Device index (motherboard index)

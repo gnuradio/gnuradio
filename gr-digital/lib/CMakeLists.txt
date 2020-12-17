@@ -20,6 +20,7 @@ add_library(gnuradio-digital
     cma_equalizer_cc_impl.cc
     constellation.cc
     constellation_decoder_cb_impl.cc
+    constellation_encoder_bc_impl.cc
     constellation_receiver_cb_impl.cc
     constellation_soft_decoder_cf_impl.cc
     corr_est_cc_impl.cc

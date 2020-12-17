@@ -18,7 +18,7 @@ namespace dtv {
 
 catv_randomizer_bb::sptr catv_randomizer_bb::make(catv_constellation_t constellation)
 {
-    return gnuradio::get_initial_sptr(new catv_randomizer_bb_impl(constellation));
+    return gnuradio::make_block_sptr<catv_randomizer_bb_impl>(constellation);
 }
 
 /*

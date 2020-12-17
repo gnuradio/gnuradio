@@ -24,7 +24,7 @@ parameters:
     default: '1024'
 -   id: disp_mask
     label: Display Mask
-    dtype: int
+    dtype: raw
     default: gr.DISPTIME
     options: [gr.DISPXY | gr.DISPOPTSCATTER, gr.DISPTIME, gr.DISPPSD, gr.DISPSPEC,
         gr.DISPRAST]

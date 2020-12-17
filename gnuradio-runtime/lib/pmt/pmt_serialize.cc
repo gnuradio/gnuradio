@@ -21,7 +21,7 @@
 
 namespace pmt {
 
-static pmt_t parse_pair(std::streambuf& sb);
+static pmt_t parse_pair(std::streambuf& sb, uint8_t type);
 
 // ----------------------------------------------------------------
 // output primitives
@@ -279,7 +279,7 @@ tail_recursion:
     }
 
     if (is_pair(obj)) {
-        ok = serialize_untagged_u8(PST_PAIR, sb);
+        ok = serialize_untagged_u8(is_dict(obj) ? PST_DICT : PST_PAIR, sb);
         ok &= serialize(car(obj), sb);
         if (!ok)
             return false;
@@ -570,7 +570,10 @@ pmt_t deserialize(std::streambuf& sb)
         return from_long(u64);
 
     case PST_PAIR:
-        return parse_pair(sb);
+        return parse_pair(sb, PST_PAIR);
+
+    case PST_DICT:
+        return parse_pair(sb, PST_DICT);
 
     case PST_DOUBLE:
         if (!deserialize_untagged_f64(&f64, sb))
@@ -694,7 +697,6 @@ pmt_t deserialize(std::streambuf& sb)
         }
     }
 
-    case PST_DICT:
     case PST_COMMENT:
         throw notimplemented("pmt::deserialize: tag value = ", from_long(tag));
 
@@ -730,9 +732,9 @@ pmt_t deserialize_str(std::string s)
  * This is a mostly non-recursive implementation that allows us to
  * deserialize very long lists w/o exhausting the evaluation stack.
  *
- * On entry we've already eaten the PST_PAIR tag.
+ * On entry we've already eaten the PST_PAIR or PST_DICT tag.
  */
-pmt_t parse_pair(std::streambuf& sb)
+pmt_t parse_pair(std::streambuf& sb, uint8_t type)
 {
     uint8_t tag;
     pmt_t val, expr, lastnptr, nptr;
@@ -744,7 +746,11 @@ pmt_t parse_pair(std::streambuf& sb)
     while (1) {
         expr = deserialize(sb); // read the car
 
-        nptr = cons(expr, PMT_NIL); // build new cell
+        if (type == PST_DICT)
+            nptr = dcons(expr, PMT_NIL); // build new cell
+        else
+            nptr = cons(expr, PMT_NIL); // build new cell
+
         if (is_null(lastnptr))
             val = nptr;
         else

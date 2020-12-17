@@ -8,9 +8,6 @@
 #
 ''' All the templates for skeleton files (needed by ModToolAdd) '''
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 from datetime import datetime
 
@@ -92,10 +89,6 @@ namespace gr {
 # C++ file of a GR block
 Templates['block_impl_cpp'] = '''/* -*- c++ -*- */
 ${str_to_fancyc_comment(license)}
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <gnuradio/io_signature.h>
 % if blocktype == 'noblock':
 #include <${include_dir_prefix}/${blockname}.h>
@@ -115,32 +108,43 @@ namespace gr {
     {
     }
 % else:
+  % if blocktype != "source":
+    #pragma message("set the following appropriately and remove this warning")
+    using input_type = float;
+  % endif
+  % if blocktype != "sink":
+    #pragma message("set the following appropriately and remove this warning")
+    using output_type = float;
+  % endif
     ${blockname}::sptr
     ${blockname}::make(${strip_default_values(arglist)})
     {
-      return gnuradio::get_initial_sptr
-        (new ${blockname}_impl(${strip_arg_types(arglist)}));
+      return gnuradio::make_block_sptr<${blockname}_impl>(
+        ${strip_arg_types(arglist)});
     }
 
 <%
     if blocktype == 'decimator':
-        decimation = ', <+decimation+>'
+    #pragma message("set the following appropriately and remove this warning")
+        decimation = ', 2 /*<+decimation+>*/'
     elif blocktype == 'interpolator':
-        decimation = ', <+interpolation+>'
+    #pragma message("set the following appropriately and remove this warning")
+        decimation = ', 2 /*<+interpolation+>*/'
     elif blocktype == 'tagged_stream':
-        decimation = ', <+len_tag_key+>'
+    #pragma message("set the following appropriately and remove this warning")
+        decimation = ', /*<+len_tag_key+>*/'
     else:
         decimation = ''
     endif
     if blocktype == 'source':
         inputsig = '0, 0, 0'
     else:
-        inputsig = '<+MIN_IN+>, <+MAX_IN+>, sizeof(<+ITYPE+>)'
+        inputsig = '1 /* min inputs */, 1 /* max inputs */, sizeof(input_type)'
     endif
     if blocktype == 'sink':
         outputsig = '0, 0, 0'
     else:
-        outputsig = '<+MIN_OUT+>, <+MAX_OUT+>, sizeof(<+OTYPE+>)'
+        outputsig = '1 /* min outputs */, 1 /*max outputs */, sizeof(output_type)'
     endif
 %>
     /*
@@ -171,6 +175,7 @@ namespace gr {
     void
     ${blockname}_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
+    #pragma message("implement a forecast that fills in how many items on each input you need to produce noutput_items and remove this warning")
       /* <+forecast+> e.g. ninput_items_required[0] = noutput_items */
     }
 
@@ -180,9 +185,14 @@ namespace gr {
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
-      const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
-      <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+    % if blocktype != 'source':
+      const input_type *in = reinterpret_cast<const input_type*>(input_items[0]);
+    % endif
+    % if blocktype != 'sink':
+      output_type *out = reinterpret_cast<output_type*>(output_items[0]);
+    % endif
 
+      #pragma message("Implement the signal processing in your block and remove this warning")
       // Do <+signal processing+>
       // Tell runtime system how many input items we consumed on
       // each input stream.
@@ -195,7 +205,8 @@ namespace gr {
     int
     ${blockname}_impl::calculate_output_stream_length(const gr_vector_int &ninput_items)
     {
-      int noutput_items = /* <+set this+> */;
+      #pragma message("set the following appropriately and remove this warning")
+      int noutput_items = 0;
       return noutput_items ;
     }
 
@@ -205,9 +216,14 @@ namespace gr {
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
-      const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
-      <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+    % if blocktype != 'source':
+      const input_type *in = reinterpret_cast<const input_type*>(input_items[0]);
+    % endif
+    % if blocktype != 'sink':
+      output_type *out = reinterpret_cast<output_type*>(output_items[0]);
+    % endif
 
+      #pragma message("Implement the signal processing in your block and remove this warning")
       // Do <+signal processing+>
 
       // Tell runtime system how many output items we produced.
@@ -221,12 +237,13 @@ namespace gr {
         gr_vector_void_star &output_items)
     {
     % if blocktype != 'source':
-      const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
+      const input_type *in = reinterpret_cast<const input_type*>(input_items[0]);
     % endif
     % if blocktype != 'sink':
-      <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+      output_type *out = reinterpret_cast<output_type*>(output_items[0]);
     % endif
 
+      #pragma message("Implement the signal processing in your block and remove this warning")
       // Do <+signal processing+>
 
       // Tell runtime system how many output items we produced.
@@ -407,10 +424,6 @@ class ${blockname}(${parenttype}):
 # C++ file for QA (Boost UTF style)
 Templates['qa_cpp_boostutf'] = '''/* -*- c++ -*- */
 ${str_to_fancyc_comment(license)}
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <${include_dir_prefix}/${blockname}.h>
 #include <gnuradio/attributes.h>
 #include <boost/test/unit_test.hpp>
@@ -418,7 +431,7 @@ ${str_to_fancyc_comment(license)}
 namespace gr {
   namespace ${modname} {
 
-    BOOST_AUTO_TEST_CASE(test_${blockname}_t1)
+    BOOST_AUTO_TEST_CASE(test_${blockname}_replace_with_specific_test_name)
     {
       // Put test here
     }
@@ -484,9 +497,16 @@ Templates['qa_python'] = '''#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ${str_to_python_comment(license)}
 from gnuradio import gr, gr_unittest
-from gnuradio import blocks
+# from gnuradio import blocks
 % if lang == 'cpp':
-import ${modname}_swig as ${modname}
+try:
+    from ${modname} import ${blockname}
+except ImportError:
+    import os
+    import sys
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    sys.path.append(os.path.join(dirname, "bindings"))
+    from ${modname} import ${blockname}
 % else:
 from ${blockname} import ${blockname}
 % endif
@@ -499,7 +519,11 @@ class qa_${blockname}(gr_unittest.TestCase):
     def tearDown(self):
         self.tb = None
 
-    def test_001_t(self):
+    def test_instance(self):
+        # FIXME: Test will fail until you pass sensible arguments to the constructor
+        instance = ${blockname}()
+
+    def test_001_descriptive_test_name(self):
         # set up fg
         self.tb.run()
         # check data
@@ -523,12 +547,13 @@ templates:
 #     * label (label shown in the GUI)
 #     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
 parameters:
-- id: ...
-  label: ...
-  dtype: ...
-- id: ...
-  label: ...
-  dtype: ...
+- id: parametername_replace_me
+  label: FIX ME:
+  dtype: string
+  value: You need to fill in your grc/${modname}_${blockname}.block.yaml
+#- id: ...
+#  label: ...
+#  dtype: ...
 
 #  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
 #  Keys include:
@@ -538,46 +563,28 @@ parameters:
 #      * vlen (optional - data stream vector length. Default is 1)
 #      * optional (optional - set to 1 for optional inputs. Default is 0)
 inputs:
-- label: ...
-  domain: ...
-  dtype: ...
-  vlen: ...
-  optional: ...
+#- label: ...
+#  domain: ...
+#  dtype: ...
+#  vlen: ...
+#  optional: ...
 
 outputs:
-- label: ...
-  domain: ...
-  dtype: ...
-  vlen: ...
-  optional: ...
+#- label: ...
+#  domain: ...
+#  dtype: ...
+#  vlen: ...
+#  optional: ...
 
 #  'file_format' specifies the version of the GRC yml format used in the file
 #  and should usually not be changed.
 file_format: 1
 '''
 
-# SWIG string
-Templates['swig_block_magic'] = """% if version == '36':
-% if blocktype != 'noblock':
-GR_SWIG_BLOCK_MAGIC(${modname}, ${blockname});
-% endif
-%%include "${modname}_${blockname}.h"
-% else:
-%%include "${include_dir_prefix}/${blockname}.h"
-    % if blocktype != 'noblock':
-GR_SWIG_BLOCK_MAGIC2(${modname}, ${blockname});
-    % endif
-% endif
-"""
-
 ## Old stuff
 # C++ file of a GR block
 Templates['block_cpp36'] = '''/* -*- c++ -*- */
 ${str_to_fancyc_comment(license)}
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 % if blocktype != 'noblock':
 #include <gr_io_signature.h>
 % endif

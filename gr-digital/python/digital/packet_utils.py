@@ -7,35 +7,30 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
 
+import math
 import struct
 
 import numpy
-import six
 
-from gnuradio import gru
 from . import crc
 
 
 def conv_packed_binary_string_to_1_0_string(s):
     """
-    '\xAF' --> '10101111'
+    b'\xAF' --> '10101111'
     """
     r = []
     for ch in s:
-        x = ord(ch)
         for i in range(7,-1,-1):
-            t = (x >> i) & 0x1
+            t = (ch >> i) & 0x1
             r.append(t)
 
     return ''.join([chr(x + ord('0')) for x in r])
 
 def conv_1_0_string_to_packed_binary_string(s):
     """
-    '10101111' -> ('\xAF', False)
+    '10101111' -> (b'\xAF', False)
 
     Basically the inverse of conv_packed_binary_string_to_1_0_string,
     but also returns a flag indicating if we had to pad with leading zeros
@@ -60,15 +55,15 @@ def conv_1_0_string_to_packed_binary_string(s):
         t = 0
         for j in range(8):
             t = (t << 1) | (ord(s[i + j]) - ord('0'))
-        r.append(chr(t))
+        r.append(t)
         i += 8
-    return (''.join(r), padded)
+    return (bytes(r), padded)
 
 
 default_access_code = \
-  conv_packed_binary_string_to_1_0_string('\xAC\xDD\xA4\xE2\xF2\x8C\x20\xFC')
+  conv_packed_binary_string_to_1_0_string(b'\xAC\xDD\xA4\xE2\xF2\x8C\x20\xFC')
 default_preamble = \
-  conv_packed_binary_string_to_1_0_string('\xA4\xF2')
+  conv_packed_binary_string_to_1_0_string(b'\xA4\xF2')
 
 def is_1_0_string(s):
     if not isinstance(s, str):
@@ -171,7 +166,7 @@ def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
         number of bytes of padding to append.
     """
     modulus = 128
-    byte_modulus = gru.lcm(modulus // 8, samples_per_symbol) * bits_per_symbol // samples_per_symbol
+    byte_modulus = (modulus // 8) // math.gcd(modulus // 8, samples_per_symbol) * bits_per_symbol
     r = pkt_byte_len % byte_modulus
     if r == 0:
         return 0

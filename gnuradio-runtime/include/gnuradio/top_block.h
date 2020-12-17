@@ -28,8 +28,9 @@ GR_RUNTIME_API top_block_sptr make_top_block(const std::string& name,
 class GR_RUNTIME_API top_block : public hier_block2
 {
 private:
-    friend GR_RUNTIME_API top_block_sptr make_top_block(const std::string& name,
-                                                        bool catch_exceptions);
+    template <typename T, typename... Args>
+    friend std::shared_ptr<T> gnuradio::make_block_sptr(Args&&... args);
+
 
     std::unique_ptr<top_block_impl> d_impl;
 
@@ -37,7 +38,7 @@ protected:
     top_block(const std::string& name, bool catch_exceptions = true);
 
 public:
-    ~top_block();
+    ~top_block() override;
 
     /*!
      * \brief The simple interface to running a flowgraph.
@@ -91,7 +92,7 @@ public:
      * thread (E.g., block::work method) or deadlock will occur
      * when reconfiguration happens.
      */
-    virtual void lock();
+    void lock() override;
 
     /*!
      * Unlock a flowgraph in preparation for reconfiguration. When an
@@ -102,7 +103,7 @@ public:
      * (E.g., block::work method) or deadlock will occur when
      * reconfiguration happens.
      */
-    virtual void unlock();
+    void unlock() override;
 
     /*!
      * Returns a string that lists the edge connections in the
@@ -129,7 +130,7 @@ public:
 
     top_block_sptr to_top_block(); // Needed for Python type coercion
 
-    void setup_rpc();
+    void setup_rpc() override;
 };
 
 inline top_block_sptr cast_to_top_block_sptr(basic_block_sptr block)

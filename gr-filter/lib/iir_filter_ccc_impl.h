@@ -21,7 +21,7 @@ class FILTER_API iir_filter_ccc_impl : public iir_filter_ccc
 {
 private:
     bool d_updated;
-    kernel::iir_filter<gr_complex, gr_complex, gr_complex, gr_complex>* d_iir;
+    kernel::iir_filter<gr_complex, gr_complex, gr_complex, gr_complex> d_iir;
     std::vector<gr_complex> d_new_fftaps;
     std::vector<gr_complex> d_new_fbtaps;
 
@@ -29,14 +29,13 @@ public:
     iir_filter_ccc_impl(const std::vector<gr_complex>& fftaps,
                         const std::vector<gr_complex>& fbtaps,
                         bool oldstyle = true);
-    ~iir_filter_ccc_impl();
 
     void set_taps(const std::vector<gr_complex>& fftaps,
-                  const std::vector<gr_complex>& fbtaps);
+                  const std::vector<gr_complex>& fbtaps) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

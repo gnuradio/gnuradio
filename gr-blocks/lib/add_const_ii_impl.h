@@ -24,14 +24,14 @@ private:
 public:
     add_const_ii_impl(int k);
 
-    void setup_rpc();
+    void setup_rpc() override;
 
-    int k() const { return d_k; }
-    void set_k(int k) { d_k = k; }
+    int k() const override { return d_k; }
+    void set_k(int k) override { d_k = k; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

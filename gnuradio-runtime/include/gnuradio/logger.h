@@ -352,13 +352,12 @@ private:
 
     void set_config4rpc(std::string set) { printf("Set string was:%s\n", set.c_str()); }
 
-    /*! \brief destructor stops watch thread before exits */
-    ~logger_config() { stop_watch(); }
-
     /*! \brief Instance getter for singleton. Only used by class. */
     static logger_config& get_instance(void);
 
 public:
+    /*! \brief destructor stops watch thread before exits */
+    ~logger_config() { stop_watch(); }
     /*! \brief Getter for config filename */
     static std::string get_filename();
     /*! \brief Getter for watch period */

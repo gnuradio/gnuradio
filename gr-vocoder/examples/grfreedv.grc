@@ -1,6 +1,7 @@
 options:
   parameters:
     author: A. Maitland Bottoms
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -22,9 +23,11 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: GNU Radio FreeDV
-    window_size: ''
   states:
-    coordinate: [8, 8]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 4.0]
     rotation: 0
     state: enabled
 
@@ -35,7 +38,10 @@ blocks:
     comment: ''
     value: '8000'
   states:
-    coordinate: [8, 160]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 164.0]
     rotation: 0
     state: enabled
 - name: squelch
@@ -45,7 +51,7 @@ blocks:
     gui_hint: ''
     label: squelch slider
     min_len: '256'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '-127'
     step: '1'
@@ -53,7 +59,10 @@ blocks:
     value: '-120'
     widget: counter_slider
   states:
-    coordinate: [232, 16]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 4.0]
     rotation: 0
     state: enabled
 - name: audio_sink_0
@@ -67,7 +76,10 @@ blocks:
     ok_to_block: 'True'
     samp_rate: samp_rate
   states:
-    coordinate: [1152, 220.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1192, 204.0]
     rotation: 0
     state: enabled
 - name: audio_source_0
@@ -83,6 +95,9 @@ blocks:
     ok_to_block: 'True'
     samp_rate: '48000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 300.0]
     rotation: 0
     state: enabled
@@ -97,9 +112,25 @@ blocks:
     scale: '32768'
     vlen: '1'
   states:
-    coordinate: [456, 220.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [416, 220.0]
     rotation: 0
     state: enabled
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1104, 288.0]
+    rotation: 0
+    state: true
 - name: blocks_short_to_float_0
   id: blocks_short_to_float
   parameters:
@@ -111,7 +142,10 @@ blocks:
     scale: '32768'
     vlen: '1'
   states:
-    coordinate: [1008, 220.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1024, 204.0]
     rotation: 0
     state: enabled
 - name: blocks_wavfile_source_0
@@ -126,7 +160,10 @@ blocks:
     nchan: '1'
     repeat: 'True'
   states:
-    coordinate: [120, 164.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [176, 164.0]
     rotation: 0
     state: disabled
 - name: rational_resampler_xxx_0
@@ -143,7 +180,10 @@ blocks:
     taps: ''
     type: fff
   states:
-    coordinate: [232, 276.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [200, 276.0]
     rotation: 0
     state: enabled
 - name: vocoder_freedv_rx_ss_0
@@ -159,7 +199,10 @@ blocks:
     squelch_enable: 'True'
     squelch_thresh: squelch
   states:
-    coordinate: [816, 196.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 196.0]
     rotation: 0
     state: enabled
 - name: vocoder_freedv_tx_ss_0
@@ -176,7 +219,10 @@ blocks:
     tx_bpf_val: 'True'
     txt_msg: '''GNU Radio'''
   states:
-    coordinate: [608, 188.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 188.0]
     rotation: 0
     state: enabled
 
@@ -187,6 +233,7 @@ connections:
 - [blocks_wavfile_source_0, '0', blocks_float_to_short_0, '0']
 - [rational_resampler_xxx_0, '0', blocks_float_to_short_0, '0']
 - [vocoder_freedv_rx_ss_0, '0', blocks_short_to_float_0, '0']
+- [vocoder_freedv_rx_ss_0, text, blocks_message_debug_0, print]
 - [vocoder_freedv_tx_ss_0, '0', vocoder_freedv_rx_ss_0, '0']
 
 metadata:

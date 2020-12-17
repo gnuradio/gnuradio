@@ -27,8 +27,8 @@ pfb_channelizer_ccf::sptr pfb_channelizer_ccf::make(unsigned int nfilts,
                                                     const std::vector<float>& taps,
                                                     float oversample_rate)
 {
-    return gnuradio::get_initial_sptr(
-        new pfb_channelizer_ccf_impl(nfilts, taps, oversample_rate));
+    return gnuradio::make_block_sptr<pfb_channelizer_ccf_impl>(
+        nfilts, taps, oversample_rate);
 }
 
 pfb_channelizer_ccf_impl::pfb_channelizer_ccf_impl(unsigned int nfilts,
@@ -37,7 +37,7 @@ pfb_channelizer_ccf_impl::pfb_channelizer_ccf_impl(unsigned int nfilts,
     : block("pfb_channelizer_ccf",
             io_signature::make(nfilts, nfilts, sizeof(gr_complex)),
             io_signature::make(1, nfilts, sizeof(gr_complex))),
-      polyphase_filterbank(nfilts, taps, false),
+      polyphase_filterbank(nfilts, taps),
       d_updated(false),
       d_oversample_rate(oversample_rate)
 {
@@ -71,7 +71,7 @@ pfb_channelizer_ccf_impl::pfb_channelizer_ccf_impl(unsigned int nfilts,
     // with the first and put it into the fft object properly for
     // the same effect.
     d_rate_ratio = (int)rintf(d_nfilts / d_oversample_rate);
-    d_idxlut = new int[d_nfilts];
+    d_idxlut.resize(d_nfilts);
     for (unsigned int i = 0; i < d_nfilts; i++) {
         d_idxlut[i] = d_nfilts - ((i + d_rate_ratio) % d_nfilts) - 1;
     }
@@ -90,8 +90,6 @@ pfb_channelizer_ccf_impl::pfb_channelizer_ccf_impl(unsigned int nfilts,
     // only send tags from in[i] -> out[i].
     set_tag_propagation_policy(TPP_ONE_TO_ONE);
 }
-
-pfb_channelizer_ccf_impl::~pfb_channelizer_ccf_impl() { delete[] d_idxlut; }
 
 void pfb_channelizer_ccf_impl::set_taps(const std::vector<float>& taps)
 {
@@ -162,7 +160,7 @@ int pfb_channelizer_ccf_impl::general_work(int noutput_items,
         last = i;
         while (i >= 0) {
             in = (gr_complex*)input_items[j];
-            d_fft->get_inbuf()[d_idxlut[j]] = d_fir_filters[i]->filter(&in[n]);
+            d_fft->get_inbuf()[d_idxlut[j]] = d_fir_filters[i].filter(&in[n]);
             j++;
             i--;
         }
@@ -170,7 +168,7 @@ int pfb_channelizer_ccf_impl::general_work(int noutput_items,
         i = d_nfilts - 1;
         while (i > last) {
             in = (gr_complex*)input_items[j];
-            d_fft->get_inbuf()[d_idxlut[j]] = d_fir_filters[i]->filter(&in[n - 1]);
+            d_fft->get_inbuf()[d_idxlut[j]] = d_fir_filters[i].filter(&in[n - 1]);
             j++;
             i--;
         }

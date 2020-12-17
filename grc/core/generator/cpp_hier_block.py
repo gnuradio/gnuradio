@@ -1,7 +1,6 @@
 import collections
 import os
 
-import six
 import codecs
 
 from .cpp_top_block import CppTopBlockGenerator
@@ -81,7 +80,7 @@ class CppHierBlockGenerator(CppTopBlockGenerator):
             self._flow_graph.get_option('id').replace('_', ' ').title()
         )
         data['category'] = self._flow_graph.get_option('category')
-        data['flags'] = [ 'cpp' ]
+        data['flags'] = ['cpp']
 
         # Parameters
         data['parameters'] = []
@@ -174,7 +173,7 @@ class CppQtHierBlockGenerator(CppHierBlockGenerator):
         block_n = collections.OrderedDict()
 
         # insert flags after category
-        for key, value in six.iteritems(n['block']):
+        for key, value in n['block'].items():
             block_n[key] = value
             if key == 'category':
                 block_n['flags'] = 'need_qt_gui'

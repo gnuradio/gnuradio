@@ -35,18 +35,18 @@ public:
                       int STi,
                       const interleaver& INTERLEAVER,
                       int blocklength);
-    ~sccc_encoder_impl();
+    ~sccc_encoder_impl() override;
 
-    fsm FSMo() const { return d_FSMo; }
-    int STo() const { return d_STo; }
-    fsm FSMi() const { return d_FSMi; }
-    int STi() const { return d_STi; }
-    interleaver INTERLEAVER() const { return d_INTERLEAVER; }
-    int blocklength() const { return d_blocklength; }
+    fsm FSMo() const override { return d_FSMo; }
+    int STo() const override { return d_STo; }
+    fsm FSMi() const override { return d_FSMi; }
+    int STi() const override { return d_STi; }
+    interleaver INTERLEAVER() const override { return d_INTERLEAVER; }
+    int blocklength() const override { return d_blocklength; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace trellis */

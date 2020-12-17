@@ -188,7 +188,7 @@ void basic_block::insert_tail(pmt::pmt_t which_port, pmt::pmt_t msg)
     msg_queue_ready[which_port]->notify_one();
 
     // wake up thread if BLKD_IN or BLKD_OUT
-    global_block_registry.notify_blk(alias());
+    global_block_registry.notify_blk(d_symbol_name);
 }
 
 pmt::pmt_t basic_block::delete_head_nowait(pmt::pmt_t which_port)

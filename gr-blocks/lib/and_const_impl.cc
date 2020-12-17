@@ -22,7 +22,7 @@ namespace blocks {
 template <class T>
 typename and_const<T>::sptr and_const<T>::make(T k)
 {
-    return gnuradio::get_initial_sptr(new and_const_impl<T>(k));
+    return gnuradio::make_block_sptr<and_const_impl<T>>(k);
 }
 
 template <class T>

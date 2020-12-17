@@ -27,8 +27,8 @@ hier_block2_sptr make_hier_block2(const std::string& name,
                                   gr::io_signature::sptr input_signature,
                                   gr::io_signature::sptr output_signature)
 {
-    return gnuradio::get_initial_sptr(
-        new hier_block2(name, input_signature, output_signature));
+    return gnuradio::make_block_sptr<hier_block2>(
+        name, input_signature, output_signature);
 }
 
 hier_block2::hier_block2() {}

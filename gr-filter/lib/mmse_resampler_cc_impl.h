@@ -22,24 +22,23 @@ class FILTER_API mmse_resampler_cc_impl : public mmse_resampler_cc
 private:
     double d_mu;
     double d_mu_inc;
-    mmse_fir_interpolator_cc* d_resamp;
+    const mmse_fir_interpolator_cc d_resamp;
 
 public:
     mmse_resampler_cc_impl(float phase_shift, float resamp_ratio);
-    ~mmse_resampler_cc_impl();
 
     void handle_msg(pmt::pmt_t msg);
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 
-    float mu() const;
-    float resamp_ratio() const;
-    void set_mu(float mu);
-    void set_resamp_ratio(float resamp_ratio);
+    float mu() const override;
+    float resamp_ratio() const override;
+    void set_mu(float mu) override;
+    void set_resamp_ratio(float resamp_ratio) override;
 };
 
 } /* namespace filter */

@@ -20,7 +20,7 @@ namespace digital {
 
 map_bb::sptr map_bb::make(const std::vector<int>& map)
 {
-    return gnuradio::get_initial_sptr(new map_bb_impl(map));
+    return gnuradio::make_block_sptr<map_bb_impl>(map);
 }
 
 map_bb_impl::map_bb_impl(const std::vector<int>& map)

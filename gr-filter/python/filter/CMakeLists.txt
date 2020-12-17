@@ -15,7 +15,6 @@ GR_PYTHON_INSTALL(
     freq_xlating_fft_filter.py
     optfir.py
     pfb.py
-    rational_resampler.py
     file_taps_loader.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/filter
 )
@@ -29,11 +28,6 @@ if(ENABLE_TESTING)
   set(GR_TEST_LIBRARY_DIRS "")
   set(GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
-    ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig
-    ${CMAKE_BINARY_DIR}/gr-blocks/swig
-    ${CMAKE_BINARY_DIR}/gr-fft/swig
-    ${CMAKE_BINARY_DIR}/gr-analog/swig
-    ${CMAKE_BINARY_DIR}/gr-filter/swig
     )
 
   include(GrTest)
@@ -43,3 +37,5 @@ if(ENABLE_TESTING)
     GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${py_qa_test_file})
   endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)
+
+add_subdirectory(bindings)

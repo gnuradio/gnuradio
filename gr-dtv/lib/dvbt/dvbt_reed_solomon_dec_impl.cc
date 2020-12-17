@@ -24,8 +24,8 @@ static const int N = (1 << rs_init_symsize) - 1; // 255
 dvbt_reed_solomon_dec::sptr dvbt_reed_solomon_dec::make(
     int p, int m, int gfpoly, int n, int k, int t, int s, int blocks)
 {
-    return gnuradio::get_initial_sptr(
-        new dvbt_reed_solomon_dec_impl(p, m, gfpoly, n, k, t, s, blocks));
+    return gnuradio::make_block_sptr<dvbt_reed_solomon_dec_impl>(
+        p, m, gfpoly, n, k, t, s, blocks);
 }
 
 /*

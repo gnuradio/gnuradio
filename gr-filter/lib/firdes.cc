@@ -395,6 +395,98 @@ firdes::complex_band_pass(double gain,
 }
 
 //
+//  === Complex Band Reject ===
+//
+
+vector<gr_complex>
+firdes::complex_band_reject_2(double gain,
+                              double sampling_freq,
+                              double low_cutoff_freq,  // Hz center of transition band
+                              double high_cutoff_freq, // Hz center of transition band
+                              double transition_width, // Hz width of transition band
+                              double attenuation_dB,   // attenuation dB
+                              win_type window_type,
+                              double beta) // used only with Kaiser
+{
+    sanity_check_2f_c(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
+
+    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, beta);
+
+    // construct the truncated ideal impulse response times the window function
+
+    vector<gr_complex> taps(ntaps);
+    vector<float> hptaps(ntaps);
+    vector<float> w = window(window_type, ntaps, beta);
+
+    hptaps = high_pass_2(gain,
+                         sampling_freq,
+                         (high_cutoff_freq - low_cutoff_freq) / 2,
+                         transition_width,
+                         attenuation_dB,
+                         window_type,
+                         beta);
+
+    gr_complex* optr = &taps[0];
+    float* iptr = &hptaps[0];
+    float freq = GR_M_PI * (high_cutoff_freq + low_cutoff_freq) / sampling_freq;
+    float phase = 0;
+    if (hptaps.size() & 01) {
+        phase = -freq * (hptaps.size() >> 1);
+    } else
+        phase = -freq / 2.0 * ((1 + 2 * hptaps.size()) >> 1);
+
+    for (unsigned int i = 0; i < hptaps.size(); i++) {
+        *optr++ = gr_complex(*iptr * cos(phase), *iptr * sin(phase));
+        iptr++, phase += freq;
+    }
+
+    return taps;
+}
+
+vector<gr_complex>
+firdes::complex_band_reject(double gain,
+                            double sampling_freq,
+                            double low_cutoff_freq,  // Hz center of transition band
+                            double high_cutoff_freq, // Hz center of transition band
+                            double transition_width, // Hz width of transition band
+                            win_type window_type,
+                            double beta) // used only with Kaiser
+{
+    sanity_check_2f_c(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
+
+    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, beta);
+
+    // construct the truncated ideal impulse response times the window function
+
+    vector<gr_complex> taps(ntaps);
+    vector<float> hptaps(ntaps);
+    vector<float> w = window(window_type, ntaps, beta);
+
+    hptaps = high_pass(gain,
+                       sampling_freq,
+                       (high_cutoff_freq - low_cutoff_freq) / 2,
+                       transition_width,
+                       window_type,
+                       beta);
+
+    gr_complex* optr = &taps[0];
+    float* iptr = &hptaps[0];
+    float freq = GR_M_PI * (high_cutoff_freq + low_cutoff_freq) / sampling_freq;
+    float phase = 0;
+    if (hptaps.size() & 01) {
+        phase = -freq * (hptaps.size() >> 1);
+    } else
+        phase = -freq / 2.0 * ((1 + 2 * hptaps.size()) >> 1);
+
+    for (unsigned int i = 0; i < hptaps.size(); i++) {
+        *optr++ = gr_complex(*iptr * cos(phase), *iptr * sin(phase));
+        iptr++, phase += freq;
+    }
+
+    return taps;
+}
+
+//
 //	=== Band Reject ===
 //
 

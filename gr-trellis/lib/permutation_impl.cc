@@ -25,8 +25,8 @@ permutation::sptr permutation::make(int K,
                                     int SYMS_PER_BLOCK,
                                     size_t BYTES_PER_SYMBOL)
 {
-    return gnuradio::get_initial_sptr(
-        new permutation_impl(K, TABLE, SYMS_PER_BLOCK, BYTES_PER_SYMBOL));
+    return gnuradio::make_block_sptr<permutation_impl>(
+        K, TABLE, SYMS_PER_BLOCK, BYTES_PER_SYMBOL);
 }
 
 permutation_impl::permutation_impl(int K,

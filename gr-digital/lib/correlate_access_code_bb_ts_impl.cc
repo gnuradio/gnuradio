@@ -26,8 +26,8 @@ namespace digital {
 correlate_access_code_bb_ts::sptr correlate_access_code_bb_ts::make(
     const std::string& access_code, int threshold, const std::string& tag_name)
 {
-    return gnuradio::get_initial_sptr(
-        new correlate_access_code_bb_ts_impl(access_code, threshold, tag_name));
+    return gnuradio::make_block_sptr<correlate_access_code_bb_ts_impl>(
+        access_code, threshold, tag_name);
 }
 
 
@@ -90,6 +90,7 @@ unsigned long long correlate_access_code_bb_ts_impl::access_code() const
 inline void correlate_access_code_bb_ts_impl::enter_search()
 {
     d_state = STATE_SYNC_SEARCH;
+    d_data_reg_bits = 0;
 }
 
 inline void correlate_access_code_bb_ts_impl::enter_have_sync()
@@ -137,8 +138,12 @@ int correlate_access_code_bb_ts_impl::general_work(int noutput_items,
             while (count < noutput_items) {
                 // shift in new data
                 d_data_reg = (d_data_reg << 1) | ((in[count++]) & 0x1);
-
-                // compute hamming distance between desired access code and current data
+                if (d_data_reg_bits + 1 < d_len) {
+                    d_data_reg_bits++;
+                    continue;
+                }
+                // compute hamming distance between desired access code and current
+                // data
                 uint64_t wrong_bits = 0;
                 uint64_t nwrong = d_threshold + 1;
 

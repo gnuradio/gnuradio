@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief This block will shift the incoming signal by the specified amount.
- * Shift can be specified in either radians or degress which is configurable
+ * Shift can be specified in either radians or degrees which is configurable
  * in the constructor.
  *
  * This block functions like a multiply const, but with the const limited to

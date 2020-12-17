@@ -12,6 +12,7 @@
 #define INCLUDED_FEC_CC_DECODER_IMPL_H
 
 #include <gnuradio/fec/cc_decoder.h>
+#include <volk/volk_alloc.hh>
 #include <map>
 #include <string>
 
@@ -23,12 +24,12 @@ class FEC_API cc_decoder_impl : public cc_decoder
 {
 private:
     // plug into the generic fec api
-    int get_output_size();
-    int get_input_size();
-    int get_history();
-    float get_shift();
-    int get_input_item_size();
-    const char* get_input_conversion();
+    int get_output_size() override;
+    int get_input_size() override;
+    int get_history() override;
+    float get_shift() override;
+    int get_input_item_size() override;
+    const char* get_input_conversion() override;
     // const char* get_output_conversion();
 
     // everything else...
@@ -42,7 +43,7 @@ private:
                           unsigned int tailsize);
     int find_endstate();
 
-    unsigned char* Branchtab;
+    volk::vector<unsigned char> d_branchtab;
     unsigned char Partab[256];
 
 
@@ -57,9 +58,8 @@ private:
     cc_mode_t d_mode;
     int d_padding;
 
-    struct v* d_vp;
-    unsigned char* d_managed_in;
-    unsigned int d_managed_in_size;
+    struct v d_vp;
+    volk::vector<unsigned char> d_managed_in;
     int d_numstates;
     int d_decision_t_size;
     int* d_start_state;
@@ -83,11 +83,15 @@ public:
                     int end_state = -1,
                     cc_mode_t mode = CC_STREAMING,
                     bool padded = false);
-    ~cc_decoder_impl();
+    ~cc_decoder_impl() override;
 
-    void generic_work(void* inbuffer, void* outbuffer);
-    bool set_frame_size(unsigned int frame_size);
-    double rate();
+    // Disable copy because of the raw pointers.
+    cc_decoder_impl(const cc_decoder_impl&) = delete;
+    cc_decoder_impl& operator=(const cc_decoder_impl&) = delete;
+
+    void generic_work(void* inbuffer, void* outbuffer) override;
+    bool set_frame_size(unsigned int frame_size) override;
+    double rate() override;
 };
 
 } /* namespace code */

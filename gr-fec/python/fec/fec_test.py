@@ -8,9 +8,6 @@
 #
 #
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import unicode_literals
 from gnuradio.fec.bitflip import read_bitlist
 from gnuradio import gr, blocks, analog
 import math

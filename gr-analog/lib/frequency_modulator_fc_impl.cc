@@ -23,7 +23,7 @@ namespace analog {
 
 frequency_modulator_fc::sptr frequency_modulator_fc::make(float sensitivity)
 {
-    return gnuradio::get_initial_sptr(new frequency_modulator_fc_impl(sensitivity));
+    return gnuradio::make_block_sptr<frequency_modulator_fc_impl>(sensitivity);
 }
 
 frequency_modulator_fc_impl::frequency_modulator_fc_impl(float sensitivity)

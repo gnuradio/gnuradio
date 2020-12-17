@@ -28,7 +28,7 @@ parameters:
     default: '0'
 -   id: mode
     label: Streaming Behavior
-    dtype: int
+    dtype: raw
     options: ['fec.CC_STREAMING', 'fec.CC_TERMINATED', 'fec.CC_TAILBITING', 'fec.CC_TRUNCATED']
     option_labels: [Streaming, Terminated, Tailbiting, Truncated]
 value: ${ fec.ccsds_encoder_make(framebits, state_start, mode) }

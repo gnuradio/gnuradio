@@ -33,7 +33,7 @@ namespace blocks {
 tuntap_pdu::sptr tuntap_pdu::make(std::string dev, int MTU, bool istunflag)
 {
 #if (defined(linux) || defined(__linux) || defined(__linux__))
-    return gnuradio::get_initial_sptr(new tuntap_pdu_impl(dev, MTU, istunflag));
+    return gnuradio::make_block_sptr<tuntap_pdu_impl>(dev, MTU, istunflag);
 #else
     throw std::runtime_error("tuntap_pdu not implemented on this platform");
 #endif
@@ -49,7 +49,7 @@ tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU, bool istunflag)
     // make the tuntap
     char dev_cstr[1024];
     memset(dev_cstr, 0x00, 1024);
-    strncpy(dev_cstr, dev.c_str(), std::min(sizeof(dev_cstr), dev.size()));
+    strncpy(dev_cstr, dev.c_str(), std::min(sizeof(dev_cstr) - 1, dev.size()));
 
     bool istun = d_istunflag;
     if (istun) {
@@ -86,7 +86,7 @@ tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU, bool istunflag)
 
     // set up input message port
     message_port_register_in(pdu::pdu_port_id());
-    set_msg_handler(pdu::pdu_port_id(), boost::bind(&tuntap_pdu_impl::send, this, _1));
+    set_msg_handler(pdu::pdu_port_id(), [this](pmt::pmt_t msg) { this->send(msg); });
 }
 
 int tuntap_pdu_impl::tun_alloc(char* dev, int flags)
@@ -150,7 +150,7 @@ int tuntap_pdu_impl::set_mtu(const char* dev, int MTU)
 
     /* preparation of the struct ifr, of type "struct ifreq" */
     memset(&ifr, 0, sizeof(ifr));
-    strncpy(ifr.ifr_name, dev, IFNAMSIZ);
+    strncpy(ifr.ifr_name, dev, IFNAMSIZ - 1);
     ifr.ifr_addr.sa_family = AF_INET; /* address family */
     ifr.ifr_mtu = MTU;
 

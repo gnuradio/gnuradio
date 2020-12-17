@@ -19,5 +19,7 @@ install(
     noise_power.grc
     fm_rx.grc
     fm_tx.grc
+    USRP_FM_stereo.grc
+    sig_source_msg_ports.grc
     DESTINATION ${GR_PKG_ANALOG_EXAMPLES_DIR}
 )

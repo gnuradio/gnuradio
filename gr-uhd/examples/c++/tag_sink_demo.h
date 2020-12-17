@@ -26,7 +26,7 @@ public:
 
     int work(int ninput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items)
+             gr_vector_void_star& output_items) override
     {
         // grab all "rx time" tags in this work call
         const uint64_t samp0_count = this->nitems_read(0);

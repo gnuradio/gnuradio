@@ -144,12 +144,6 @@ DisplayForm::~DisplayForm()
     // deleted
 }
 
-void DisplayForm::resizeEvent(QResizeEvent* e)
-{
-    // QSize s = size();
-    // emit d_display_plot->resizeSlot(&s);
-}
-
 void DisplayForm::mousePressEvent(QMouseEvent* e)
 {
     bool ctrloff = Qt::ControlModifier != QApplication::keyboardModifiers();
@@ -302,7 +296,7 @@ void DisplayForm::setAxisLabels(bool en)
 
 void DisplayForm::saveFigure()
 {
-    QPixmap qpix = QPixmap::grabWidget(this);
+    QPixmap qpix = this->grab();
 
     QString types = QString(tr("JPEG file (*.jpg);;Portable Network Graphics file "
                                "(*.png);;Bitmap file (*.bmp);;TIFF file (*.tiff)"));

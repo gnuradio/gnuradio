@@ -119,7 +119,7 @@ gr.io_signature(0, 0, 0)\
     % elif len(io_sigs) == 1:
 gr.io_signature(1, 1, ${size_strs[0]})\
     % else:
-gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}])\
+gr.io_signature.makev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}])\
     % endif
 </%def>\
     def __init__(${param_str}):
@@ -281,7 +281,7 @@ ${indent(snip['def'])}
 snippet_sections = ['main_after_init', 'main_after_start', 'main_after_stop']
 snippets = {}
 for section in snippet_sections:
-    snippets[section] = flow_graph.get_snippets_dict(section) 
+    snippets[section] = flow_graph.get_snippets_dict(section)
 %>
 \
 %for section in snippet_sections:

@@ -66,17 +66,17 @@ header_payload_demux::make(int header_len,
                            const std::vector<std::string>& special_tags,
                            const size_t header_padding)
 {
-    return gnuradio::get_initial_sptr(new header_payload_demux_impl(header_len,
-                                                                    items_per_symbol,
-                                                                    guard_interval,
-                                                                    length_tag_key,
-                                                                    trigger_tag_key,
-                                                                    output_symbols,
-                                                                    itemsize,
-                                                                    timing_tag_key,
-                                                                    samp_rate,
-                                                                    special_tags,
-                                                                    header_padding));
+    return gnuradio::make_block_sptr<header_payload_demux_impl>(header_len,
+                                                                items_per_symbol,
+                                                                guard_interval,
+                                                                length_tag_key,
+                                                                trigger_tag_key,
+                                                                output_symbols,
+                                                                itemsize,
+                                                                timing_tag_key,
+                                                                samp_rate,
+                                                                special_tags,
+                                                                header_padding);
 }
 
 header_payload_demux_impl::header_payload_demux_impl(
@@ -138,9 +138,8 @@ header_payload_demux_impl::header_payload_demux_impl(
     }
     set_tag_propagation_policy(TPP_DONT);
     message_port_register_in(msg_port_id());
-    set_msg_handler(
-        msg_port_id(),
-        boost::bind(&header_payload_demux_impl::parse_header_data_msg, this, _1));
+    set_msg_handler(msg_port_id(),
+                    [this](pmt::pmt_t msg) { this->parse_header_data_msg(msg); });
     for (size_t i = 0; i < special_tags.size(); i++) {
         d_special_tags.push_back(pmt::string_to_symbol(special_tags[i]));
         d_special_tags_last_value.push_back(pmt::PMT_NIL);

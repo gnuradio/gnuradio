@@ -24,14 +24,14 @@ private:
 
 public:
     head_impl(size_t sizeof_stream_item, uint64_t nitems);
-    ~head_impl();
+    ~head_impl() override;
 
-    void reset() { d_ncopied_items = 0; }
-    void set_length(uint64_t nitems) { d_nitems = nitems; }
+    void reset() override { d_ncopied_items = 0; }
+    void set_length(uint64_t nitems) override { d_nitems = nitems; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

@@ -40,9 +40,9 @@ private:
 
 public:
     pll_refout_cc_impl(float loop_bw, float max_freq, float min_freq);
-    ~pll_refout_cc_impl();
+    ~pll_refout_cc_impl() override;
 
-    void set_loop_bandwidth(float bw);
+    void set_loop_bandwidth(float bw) override;
     void set_damping_factor(float df);
     void set_alpha(float alpha);
     void set_beta(float beta);
@@ -62,7 +62,7 @@ public:
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace analog */

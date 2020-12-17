@@ -44,17 +44,17 @@ public:
                      bool repeat,
                      uint64_t offset,
                      uint64_t len);
-    ~file_source_impl();
+    ~file_source_impl() override;
 
-    bool seek(int64_t seek_point, int whence);
-    void open(const char* filename, bool repeat, uint64_t offset, uint64_t len);
-    void close();
+    bool seek(int64_t seek_point, int whence) override;
+    void open(const char* filename, bool repeat, uint64_t offset, uint64_t len) override;
+    void close() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
-    void set_begin_tag(pmt::pmt_t val);
+    void set_begin_tag(pmt::pmt_t val) override;
 };
 
 } /* namespace blocks */

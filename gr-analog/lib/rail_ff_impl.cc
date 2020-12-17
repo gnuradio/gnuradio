@@ -21,7 +21,7 @@ namespace analog {
 
 rail_ff::sptr rail_ff::make(float lo, float hi)
 {
-    return gnuradio::get_initial_sptr(new rail_ff_impl(lo, hi));
+    return gnuradio::make_block_sptr<rail_ff_impl>(lo, hi);
 }
 
 rail_ff_impl::rail_ff_impl(float lo, float hi)

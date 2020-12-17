@@ -31,22 +31,22 @@ private:
 
 public:
     fastnoise_source_impl(noise_type_t type, float ampl, long seed, long samples);
-    ~fastnoise_source_impl();
+    ~fastnoise_source_impl() override;
 
-    T sample();
-    T sample_unbiased();
-    const std::vector<T>& samples() const;
+    T sample() override;
+    T sample_unbiased() override;
+    const std::vector<T>& samples() const override;
 
-    void set_type(noise_type_t type);
-    void set_amplitude(float ampl);
+    void set_type(noise_type_t type) override;
+    void set_amplitude(float ampl) override;
     void generate();
 
-    noise_type_t type() const { return d_type; }
-    float amplitude() const { return d_ampl; }
+    noise_type_t type() const override { return d_type; }
+    float amplitude() const override { return d_ampl; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace analog

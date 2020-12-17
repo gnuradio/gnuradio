@@ -26,13 +26,13 @@ class HistogramDisplayPlot : public DisplayPlot
 
 public:
     HistogramDisplayPlot(unsigned int nplots, QWidget*);
-    virtual ~HistogramDisplayPlot();
+    ~HistogramDisplayPlot() override;
 
     void plotNewData(const std::vector<double*> dataPoints,
                      const uint64_t numDataPoints,
                      const double timeInterval);
 
-    void replot();
+    void replot() override;
 
 public slots:
     void setAutoScale(bool state);
@@ -42,12 +42,12 @@ public slots:
     void setAccumulate(bool en);
     bool getAccumulate() const;
 
-    void setMarkerAlpha(unsigned int which, int alpha);
-    int getMarkerAlpha(unsigned int which) const;
-    void setLineColor(unsigned int which, QColor color);
+    void setMarkerAlpha(unsigned int which, int alpha) override;
+    int getMarkerAlpha(unsigned int which) const override;
+    void setLineColor(unsigned int which, QColor color) override;
 
     void setNumBins(unsigned int bins);
-    void setXaxis(double min, double max);
+    void setXaxis(double min, double max) override;
 
     void clear();
 

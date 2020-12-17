@@ -5,7 +5,7 @@ flags: [ show_id ]
 parameters:
 -   id: channel
     label: Channel
-    dtype: string
+    dtype: raw
     default: polar.CHANNEL_TYPE_BEC
     options: [polar.CHANNEL_TYPE_BEC, polar.CHANNEL_TYPE_AWGN]
     option_labels: [BEC, AWGN]

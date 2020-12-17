@@ -1,5 +1,3 @@
-from __future__ import division
-from __future__ import unicode_literals
 #
 # Copyright 2008 Free Software Foundation, Inc.
 #
@@ -13,8 +11,8 @@ from gnuradio import gr
 from gnuradio import blocks
 import sys, math
 
-from . import fft_swig as fft
-from .fft_swig import window
+from . import fft_python as fft
+from .fft_python import window
 
 try:
     from gnuradio import filter

@@ -73,7 +73,7 @@ private:
     void init_prbs(void);
     void init_pilots(void);
 
-    fft::fft_complex ofdm_fft;
+    fft::fft_complex_rev ofdm_fft;
     int ofdm_fft_size;
 
     const static unsigned char pn_sequence_table[CHIPS / 8];
@@ -157,14 +157,14 @@ public:
                                  dvbt2_equalization_t equalization,
                                  dvbt2_bandwidth_t bandwidth,
                                  unsigned int vlength);
-    ~dvbt2_pilotgenerator_cc_impl();
+    ~dvbt2_pilotgenerator_cc_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } // namespace dtv

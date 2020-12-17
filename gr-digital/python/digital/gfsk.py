@@ -10,10 +10,6 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import unicode_literals
 
 # See gnuradio-examples/python/digital for examples
 
@@ -23,7 +19,7 @@ from gnuradio import gr
 from gnuradio import analog
 from gnuradio import blocks, filter
 from . import modulation_utils
-from . import digital_swig as digital
+from . import digital_python as digital
 
 
 # default values (used in __init__ and add_options)

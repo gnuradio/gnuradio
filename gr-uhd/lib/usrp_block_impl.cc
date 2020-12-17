@@ -36,6 +36,11 @@ const pmt::pmt_t gr::uhd::cmd_gain_key()
     static const pmt::pmt_t val = pmt::mp("gain");
     return val;
 }
+const pmt::pmt_t gr::uhd::cmd_power_key()
+{
+    static const pmt::pmt_t val = pmt::mp("power_dbm");
+    return val;
+}
 const pmt::pmt_t gr::uhd::cmd_freq_key()
 {
     static const pmt::pmt_t val = pmt::mp("freq");
@@ -125,7 +130,7 @@ usrp_block_impl::usrp_block_impl(const ::uhd::device_addr_t& device_addr,
     // Set up message ports:
     message_port_register_in(pmt::mp("command"));
     set_msg_handler(pmt::mp("command"),
-                    boost::bind(&usrp_block_impl::msg_handler_command, this, _1));
+                    [this](pmt::pmt_t msg) { this->msg_handler_command(msg); });
 
 // cuz we lazy:
 #define REGISTER_CMD_HANDLER(key, _handler) \
@@ -134,6 +139,7 @@ usrp_block_impl::usrp_block_impl(const ::uhd::device_addr_t& device_addr,
     // Register default command handlers:
     REGISTER_CMD_HANDLER(cmd_freq_key(), _cmd_handler_freq);
     REGISTER_CMD_HANDLER(cmd_gain_key(), _cmd_handler_gain);
+    REGISTER_CMD_HANDLER(cmd_power_key(), _cmd_handler_power);
     REGISTER_CMD_HANDLER(cmd_lo_offset_key(), _cmd_handler_looffset);
     REGISTER_CMD_HANDLER(cmd_tune_key(), _cmd_handler_tune);
     REGISTER_CMD_HANDLER(cmd_lo_freq_key(), _cmd_handler_lofreq);
@@ -487,22 +493,22 @@ void usrp_block_impl::msg_handler_command(pmt::pmt_t msg)
     }
     // End of legacy backward compat code.
 
-    // Turn pair into dict
+    // pmt_dict is a subclass of pmt_pair. Make sure we use pmt_pair!
+    // Old behavior was that these checks were interchangeable. Be aware of this change!
+    if (!(pmt::is_dict(msg)) && pmt::is_pair(msg)) {
+        GR_LOG_DEBUG(
+            d_logger,
+            boost::format(
+                "Command message is pair, converting to dict: '%s': car(%s), cdr(%s)") %
+                msg % pmt::car(msg) % pmt::cdr(msg));
+        msg = pmt::dict_add(pmt::make_dict(), pmt::car(msg), pmt::cdr(msg));
+    }
+
+    // Make sure, we use dicts!
     if (!pmt::is_dict(msg)) {
         GR_LOG_ERROR(d_logger,
                      boost::format("Command message is neither dict nor pair: %s") % msg);
         return;
-    }
-
-    // OK, here comes the horrible part. Pairs pass is_dict(), but they're not dicts. Such
-    // dicks.
-    try {
-        // This will fail if msg is a pair:
-        pmt::pmt_t keys = pmt::dict_keys(msg);
-    } catch (const pmt::wrong_type& e) {
-        // So we fix it:
-        GR_LOG_DEBUG(d_debug_logger, boost::format("Converting pair to dict: %s") % msg);
-        msg = pmt::dict_add(pmt::make_dict(), pmt::car(msg), pmt::cdr(msg));
     }
 
     /*** Start the actual message processing *************************/
@@ -647,6 +653,21 @@ void usrp_block_impl::_cmd_handler_gain(const pmt::pmt_t& gain_,
     }
 
     set_gain(gain, chan);
+}
+
+void usrp_block_impl::_cmd_handler_power(const pmt::pmt_t& power_dbm_,
+                                         int chan,
+                                         const pmt::pmt_t& msg)
+{
+    double power_dbm = pmt::to_double(power_dbm_);
+    if (chan == -1) {
+        for (size_t i = 0; i < _nchan; i++) {
+            set_power_reference(power_dbm, i);
+        }
+        return;
+    }
+
+    set_power_reference(power_dbm, chan);
 }
 
 void usrp_block_impl::_cmd_handler_antenna(const pmt::pmt_t& ant,

@@ -6,7 +6,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-from __future__ import absolute_import
 
 from sys import platform
 import os
@@ -14,7 +13,6 @@ import numbers
 
 from gi.repository import GLib
 import cairo
-import six
 
 from .canvas.colors import FLOWGRAPH_BACKGROUND_COLOR
 from . import Constants
@@ -96,16 +94,7 @@ def num_to_str(num):
 
 
 def encode(value):
-    """Make sure that we pass only valid utf-8 strings into markup_escape_text.
-
-    Older versions of glib seg fault if the last byte starts a multi-byte
-    character.
-    """
-    if six.PY2:
-        valid_utf8 = value.decode('utf-8', errors='replace').encode('utf-8')
-    else:
-        valid_utf8 = value
-    return GLib.markup_escape_text(valid_utf8)
+    return GLib.markup_escape_text(value)
 
 
 def make_screenshot(flow_graph, file_path, transparent_bg=False):

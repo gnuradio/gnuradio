@@ -24,7 +24,7 @@ namespace channels {
 class CHANNELS_API selective_fading_model_impl : public selective_fading_model
 {
 private:
-    std::vector<gr::channels::flat_fader_impl*> d_faders;
+    std::vector<gr::channels::flat_fader_impl> d_faders;
     std::vector<float> d_delays;
     std::vector<float> d_mags;
     sincostable d_sintable;
@@ -38,36 +38,41 @@ public:
                                 std::vector<float> delays,
                                 std::vector<float> mags,
                                 int ntaps);
-    ~selective_fading_model_impl();
-    void setup_rpc();
+    ~selective_fading_model_impl() override;
+
+    // Disallow copy. This is a heavy object.
+    selective_fading_model_impl(const selective_fading_model_impl&) = delete;
+    selective_fading_model_impl& operator=(const selective_fading_model_impl&) = delete;
+
+    void setup_rpc() override;
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
     std::vector<gr_complex> d_taps;
 
-    virtual float fDTs() { return d_faders[0]->d_fDTs; }
-    virtual float K() { return d_faders[0]->d_K; }
-    virtual float step() { return d_faders[0]->d_step; }
+    float fDTs() override { return d_faders[0].d_fDTs; }
+    float K() override { return d_faders[0].d_K; }
+    float step() override { return d_faders[0].d_step; }
 
-    virtual void set_fDTs(float fDTs)
+    void set_fDTs(float fDTs) override
     {
-        for (const auto& fader : d_faders) {
-            fader->d_fDTs = fDTs;
-            fader->d_step = powf(0.00125 * fDTs, 1.1);
+        for (auto& fader : d_faders) {
+            fader.d_fDTs = fDTs;
+            fader.d_step = powf(0.00125 * fDTs, 1.1);
         }
     }
-    virtual void set_K(float K)
+    void set_K(float K) override
     {
-        for (const auto& fader : d_faders) {
-            fader->d_K = K;
-            fader->scale_los = sqrtf(fader->d_K) / sqrtf(fader->d_K + 1);
-            fader->scale_nlos = (1 / sqrtf(fader->d_K + 1));
+        for (auto& fader : d_faders) {
+            fader.d_K = K;
+            fader.scale_los = sqrtf(fader.d_K) / sqrtf(fader.d_K + 1);
+            fader.scale_nlos = (1 / sqrtf(fader.d_K + 1));
         }
     }
-    virtual void set_step(float step)
+    void set_step(float step) override
     {
-        for (const auto& fader : d_faders) {
-            fader->d_step = step;
+        for (auto& fader : d_faders) {
+            fader.d_step = step;
         }
     }
 };

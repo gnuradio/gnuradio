@@ -89,7 +89,7 @@ public:
      * \param delay Delayed the puncturing pattern by shifting it
      * \param symbol The symbol to reinsert into the stream (def=127)
      */
-    static sptr make(int puncsize, int puncpat, int delay = 0, char symbol = 127);
+    static sptr make(int puncsize, int puncpat, int delay = 0, uint8_t symbol = 127);
 };
 
 } /* namespace fec */

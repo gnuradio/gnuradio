@@ -22,8 +22,8 @@ packet_headergenerator_bb::sptr
 packet_headergenerator_bb::make(const packet_header_default::sptr& header_formatter,
                                 const std::string& len_tag_key)
 {
-    return gnuradio::get_initial_sptr(
-        new packet_headergenerator_bb_impl(header_formatter, len_tag_key));
+    return gnuradio::make_block_sptr<packet_headergenerator_bb_impl>(header_formatter,
+                                                                     len_tag_key);
 }
 
 
@@ -32,8 +32,8 @@ packet_headergenerator_bb::make(long header_len, const std::string& len_tag_key)
 {
     const packet_header_default::sptr header_formatter(
         new packet_header_default(header_len, len_tag_key));
-    return gnuradio::get_initial_sptr(
-        new packet_headergenerator_bb_impl(header_formatter, len_tag_key));
+    return gnuradio::make_block_sptr<packet_headergenerator_bb_impl>(header_formatter,
+                                                                     len_tag_key);
 }
 
 

@@ -6,9 +6,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-from __future__ import absolute_import
 
-import six
 import logging
 
 from gi.repository import Gtk, Gdk, Gio, GLib, GObject
@@ -573,6 +571,11 @@ ABOUT_WINDOW_DISPLAY = actions.register(
     label='_About',
     tooltip='About this program',
     icon_name='help-about',
+)
+GET_INVOLVED_WINDOW_DISPLAY = actions.register("app.get",
+    label='_Get Involved',
+    tooltip='Get involved in the community - instructions',
+    icon_name='help-faq',
 )
 HELP_WINDOW_DISPLAY = actions.register(
     "app.help",

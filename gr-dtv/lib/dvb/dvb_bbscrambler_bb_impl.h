@@ -29,11 +29,11 @@ public:
     dvb_bbscrambler_bb_impl(dvb_standard_t standard,
                             dvb_framesize_t framesize,
                             dvb_code_rate_t rate);
-    ~dvb_bbscrambler_bb_impl();
+    ~dvb_bbscrambler_bb_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace dtv

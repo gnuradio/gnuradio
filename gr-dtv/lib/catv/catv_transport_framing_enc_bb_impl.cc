@@ -18,7 +18,7 @@ namespace dtv {
 
 catv_transport_framing_enc_bb::sptr catv_transport_framing_enc_bb::make()
 {
-    return gnuradio::get_initial_sptr(new catv_transport_framing_enc_bb_impl());
+    return gnuradio::make_block_sptr<catv_transport_framing_enc_bb_impl>();
 }
 
 /*

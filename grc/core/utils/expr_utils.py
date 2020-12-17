@@ -6,11 +6,8 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-from __future__ import absolute_import, print_function
 
 import string
-
-import six
 
 
 def expr_replace(expr, replace_dict):
@@ -185,7 +182,7 @@ def _get_graph(exprs):
     var_graph = _graph()
     for var in vars:
         var_graph.add_node(var)
-    for var, expr in six.iteritems(exprs):
+    for var, expr in exprs.items():
         for dep in get_variable_dependencies(expr, vars):
             if dep != var:
                 var_graph.add_edge(dep, var)

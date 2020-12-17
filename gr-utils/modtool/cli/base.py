@@ -8,9 +8,6 @@
 #
 """ Base CLI module """
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 import os
 import sys
@@ -118,8 +115,8 @@ def common_params(func):
                   help="Base directory of the module. Defaults to the cwd.")
     @click.option('--skip-lib', is_flag=True,
                   help="Don't do anything in the lib/ subdirectory.")
-    @click.option('--skip-swig', is_flag=True,
-                  help="Don't do anything in the swig/ subdirectory.")
+    @click.option('--skip-pybind', is_flag=True,
+                  help="Don't do anything in the python/bindings/ subdirectory.")
     @click.option('--skip-python', is_flag=True,
                   help="Don't do anything in the python/ subdirectory.")
     @click.option('--skip-grc', is_flag=True,

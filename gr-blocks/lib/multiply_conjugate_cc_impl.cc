@@ -21,7 +21,7 @@ namespace blocks {
 
 multiply_conjugate_cc::sptr multiply_conjugate_cc::make(size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new multiply_conjugate_cc_impl(vlen));
+    return gnuradio::make_block_sptr<multiply_conjugate_cc_impl>(vlen);
 }
 
 multiply_conjugate_cc_impl::multiply_conjugate_cc_impl(size_t vlen)

@@ -31,18 +31,18 @@ public:
                      pmt::pmt_t value,
                      uint64_t nsamps,
                      pmt::pmt_t key);
-    ~tags_strobe_impl();
+    ~tags_strobe_impl() override;
 
-    void set_value(pmt::pmt_t value);
-    void set_key(pmt::pmt_t key);
-    pmt::pmt_t value() const { return d_tag.value; }
-    pmt::pmt_t key() const { return d_tag.key; }
-    void set_nsamps(uint64_t nsamps);
-    uint64_t nsamps() const { return d_nsamps; }
+    void set_value(pmt::pmt_t value) override;
+    void set_key(pmt::pmt_t key) override;
+    pmt::pmt_t value() const override { return d_tag.value; }
+    pmt::pmt_t key() const override { return d_tag.key; }
+    void set_nsamps(uint64_t nsamps) override;
+    uint64_t nsamps() const override { return d_nsamps; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

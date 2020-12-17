@@ -29,19 +29,19 @@ private:
 
 public:
     throttle_impl(size_t itemsize, double samples_per_sec, bool ignore_tags = true);
-    ~throttle_impl();
+    ~throttle_impl() override;
 
     // Overloading gr::block::start to reset timer
-    bool start();
+    bool start() override;
 
-    void setup_rpc();
+    void setup_rpc() override;
 
-    void set_sample_rate(double rate);
-    double sample_rate() const;
+    void set_sample_rate(double rate) override;
+    double sample_rate() const override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

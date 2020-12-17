@@ -22,7 +22,7 @@ namespace filter {
 class FILTER_API pfb_arb_resampler_ccf_impl : public pfb_arb_resampler_ccf
 {
 private:
-    kernel::pfb_arb_resampler_ccf* d_resamp;
+    kernel::pfb_arb_resampler_ccf d_resamp;
     bool d_updated;
     gr::thread::mutex d_mutex; // mutex to protect set/work access
 
@@ -31,30 +31,28 @@ public:
                                const std::vector<float>& taps,
                                unsigned int filter_size);
 
-    ~pfb_arb_resampler_ccf_impl();
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void set_taps(const std::vector<float>& taps) override;
+    std::vector<std::vector<float>> taps() const override;
+    void print_taps() override;
 
-    void set_taps(const std::vector<float>& taps);
-    std::vector<std::vector<float>> taps() const;
-    void print_taps();
+    void set_rate(float rate) override;
+    void set_phase(float ph) override;
+    float phase() const override;
 
-    void set_rate(float rate);
-    void set_phase(float ph);
-    float phase() const;
+    unsigned int interpolation_rate() const override;
+    unsigned int decimation_rate() const override;
+    float fractional_rate() const override;
+    unsigned int taps_per_filter() const override;
 
-    unsigned int interpolation_rate() const;
-    unsigned int decimation_rate() const;
-    float fractional_rate() const;
-    unsigned int taps_per_filter() const;
-
-    int group_delay() const;
-    float phase_offset(float freq, float fs);
+    int group_delay() const override;
+    float phase_offset(float freq, float fs) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

@@ -28,19 +28,19 @@ class HistogramDisplayForm : public DisplayForm
 
 public:
     HistogramDisplayForm(int nplots = 1, QWidget* parent = 0);
-    ~HistogramDisplayForm();
+    ~HistogramDisplayForm() override;
 
-    HistogramDisplayPlot* getPlot();
+    HistogramDisplayPlot* getPlot() override;
 
     int getNPoints() const;
 
 public slots:
-    void customEvent(QEvent* e);
+    void customEvent(QEvent* e) override;
 
     void setYaxis(double min, double max);
     void setXaxis(double min, double max);
     void setNPoints(const int);
-    void autoScale(bool en);
+    void autoScale(bool en) override;
     void setSemilogx(bool en);
     void setSemilogy(bool en);
 
@@ -50,7 +50,7 @@ public slots:
     void autoScaleX();
 
 private slots:
-    void newData(const QEvent*);
+    void newData(const QEvent*) override;
 
 private:
     QIntValidator* d_int_validator;

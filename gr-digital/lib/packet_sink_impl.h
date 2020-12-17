@@ -65,14 +65,14 @@ public:
     packet_sink_impl(const std::vector<unsigned char>& sync_vector,
                      msg_queue::sptr target_queue,
                      int threshold = -1);
-    ~packet_sink_impl();
+    ~packet_sink_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
     //! return true if we detect carrier
-    bool carrier_sensed() const { return d_state != STATE_SYNC_SEARCH; }
+    bool carrier_sensed() const override { return d_state != STATE_SYNC_SEARCH; }
 };
 
 } /* namespace digital */

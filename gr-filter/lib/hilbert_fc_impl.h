@@ -22,18 +22,16 @@ class FILTER_API hilbert_fc_impl : public hilbert_fc
 {
 private:
     unsigned int d_ntaps;
-    kernel::fir_filter_fff* d_hilb;
+    kernel::fir_filter_fff d_hilb;
 
 public:
     hilbert_fc_impl(unsigned int ntaps,
                     firdes::win_type window = firdes::WIN_HAMMING,
                     double beta = 6.76);
 
-    ~hilbert_fc_impl();
-
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

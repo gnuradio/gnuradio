@@ -19,8 +19,8 @@ namespace dtv {
 catv_frame_sync_enc_bb::sptr
 catv_frame_sync_enc_bb::make(catv_constellation_t constellation, int ctrlword)
 {
-    return gnuradio::get_initial_sptr(
-        new catv_frame_sync_enc_bb_impl(constellation, ctrlword));
+    return gnuradio::make_block_sptr<catv_frame_sync_enc_bb_impl>(constellation,
+                                                                  ctrlword);
 }
 
 /*

@@ -28,13 +28,12 @@ private:
 
 public:
     single_pole_iir_filter_cc_impl(double alpha, unsigned int vlen);
-    ~single_pole_iir_filter_cc_impl();
 
-    void set_taps(double alpha);
+    void set_taps(double alpha) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */
