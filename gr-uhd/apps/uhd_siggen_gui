@@ -292,7 +292,7 @@ class uhd_siggen_gui(Qt.QWidget):
         if self._sg.args.show_freq_sink:
             self.qtgui_freq_sink_x_0 = qtgui.freq_sink_c(
                 1024, #size
-                firdes.WIN_BLACKMAN_hARRIS, #wintype
+                fft.window.WIN_BLACKMAN_hARRIS, #wintype
                 self.freq_coarse + self.freq_fine, #fc
                 self.samp_rate, #bw
                 "", #name

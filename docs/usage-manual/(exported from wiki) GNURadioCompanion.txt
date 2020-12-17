@@ -185,7 +185,7 @@ Note: Most blocks with a taps parameter automatically import the firdes module. 
 Enter the following into the taps parameter of a filter block:
 
 <pre>
-firdes.low_pass(1.0, samp_rate, 1000, 100, firdes.WIN_HAMMING)
+firdes.low_pass(1.0, samp_rate, 1000, 100, fft.window.WIN_HAMMING)
 </pre>
 === Use Taps from a File ===
 
