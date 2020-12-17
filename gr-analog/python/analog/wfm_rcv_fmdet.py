@@ -12,7 +12,7 @@ import math
 
 from gnuradio import gr
 from gnuradio import blocks
-from gnuradio import filter
+from gnuradio import filter, fft
 
 from . import analog_python as analog
 from .fm_emph import fm_deemph

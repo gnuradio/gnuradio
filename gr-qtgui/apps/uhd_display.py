@@ -9,7 +9,7 @@
 #
 
 from gnuradio import gr
-from gnuradio import filter
+from gnuradio import filter, fft
 from gnuradio import blocks
 from gnuradio import uhd
 from gnuradio import eng_notation
