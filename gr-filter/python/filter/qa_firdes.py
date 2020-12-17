@@ -151,7 +151,7 @@ class test_firdes(gr_unittest.TestCase):
                       0.5732954144477844, 0.0,
                       0.08335155993700027, 0.0,
                       0.010056184604763985)
-        new_taps = filter.firdes.hilbert(11, filter.firdes.WIN_HAMMING)
+        new_taps = filter.firdes.hilbert(11, fft.window.WIN_HAMMING)
         self.assertFloatTuplesAlmostEqual(known_taps, new_taps, 5)
 
     def test_root_raised_cosine(self):

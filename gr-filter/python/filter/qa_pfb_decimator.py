@@ -28,7 +28,7 @@ def run_test(tb, channel, fft_rotate, fft_filter):
 
     taps = filter.firdes.low_pass_2(1, ifs, fs / 2, fs / 10,
                                     attenuation_dB=80,
-                                    window=filter.firdes.WIN_BLACKMAN_hARRIS)
+                                    window=fft.window.WIN_BLACKMAN_hARRIS)
 
     signals = list()
     add = blocks.add_cc()

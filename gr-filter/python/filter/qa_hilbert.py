@@ -48,7 +48,7 @@ class test_hilbert(gr_unittest.TestCase):
         data = sig_source_f(sampling_freq, sampling_freq * 0.10, 1.0, N)
         src1 = blocks.vector_source_f(data)
 
-        taps = filter.firdes.hilbert(ntaps, filter.firdes.WIN_HAMMING)
+        taps = filter.firdes.hilbert(ntaps, fft.window.WIN_HAMMING)
         expected_result = fir_filter(data, taps)
 
         hilb = filter.hilbert_fc(ntaps)

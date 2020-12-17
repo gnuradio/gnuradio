@@ -488,12 +488,12 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         self.gui.nTapsEdit.setText("0")
 
-        self.filterWindows = {"Hamming Window" : filter.firdes.WIN_HAMMING,
-                              "Hann Window" : filter.firdes.WIN_HANN,
-                              "Blackman Window" : filter.firdes.WIN_BLACKMAN,
-                              "Rectangular Window" : filter.firdes.WIN_RECTANGULAR,
-                              "Kaiser Window" : filter.firdes.WIN_KAISER,
-                              "Blackman-harris Window" : filter.firdes.WIN_BLACKMAN_hARRIS}
+        self.filterWindows = {"Hamming Window" : fft.window.WIN_HAMMING,
+                              "Hann Window" : fft.window.WIN_HANN,
+                              "Blackman Window" : fft.window.WIN_BLACKMAN,
+                              "Rectangular Window" : fft.window.WIN_RECTANGULAR,
+                              "Kaiser Window" : fft.window.WIN_KAISER,
+                              "Blackman-harris Window" : fft.window.WIN_BLACKMAN_hARRIS}
         self.EQUIRIPPLE_FILT = 6 # const for equiripple filter window types.
 
 

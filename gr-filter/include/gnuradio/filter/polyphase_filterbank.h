@@ -75,7 +75,7 @@ namespace kernel {
  * unity.
  *
  *    <B><EM>self._taps = filter.firdes.low_pass_2(1, fs, BW, TB,
- *       attenuation_dB=ATT, window=filter.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
+ *       attenuation_dB=ATT, window=fft.window.WIN_BLACKMAN_hARRIS)</EM></B>
  *
  * More on the theory of polyphase filterbanks can be found in
  * the following book:

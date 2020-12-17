@@ -66,7 +66,7 @@ class nbfm_rx(gr.hier_block2):
                                             quad_rate,      # sampling rate
                                             2.7e3,          # Audio LPF cutoff
                                             0.5e3,          # Transition band
-                                            filter.firdes.WIN_HAMMING)  # filter type
+                                            fft.window.WIN_HAMMING)  # filter type
 
         print("len(audio_taps) =", len(audio_taps))
 

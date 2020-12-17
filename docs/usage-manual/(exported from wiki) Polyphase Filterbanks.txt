@@ -49,7 +49,7 @@ filter that is then split up between the N channels of the PFB.
     self._M = 9              # Number of channels to channelize
     self._taps = filter.firdes.low_pass_2(1, self._fs, 475.50, 50,
                                           attenuation_dB=100,
-                                          window=filter.firdes.WIN_BLACKMAN_hARRIS)
+                                          window=fft.window.WIN_BLACKMAN_hARRIS)
 
 In this example, the signal into the channelizer is sampled at 9 ksps
 (complex, so 9 kHz of bandwidth). The filter uses 9 channels, so each

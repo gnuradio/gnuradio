@@ -60,7 +60,7 @@ class wfm_rcv_fmdet(gr.hier_block2):
                                               demod_rate,   # sampling rate
                                               15000 ,
                                               width_of_transition_band,
-                                              filter.firdes.WIN_HAMMING)
+                                              fft.window.WIN_HAMMING)
 
         # input: float; output: float
         self.audio_filter = filter.fir_filter_fff(audio_decimation, audio_coeffs)
@@ -78,7 +78,7 @@ class wfm_rcv_fmdet(gr.hier_block2):
                                                 -19020,
                                                 -18980,
                                                 width_of_transition_band,
-                                                filter.firdes.WIN_HAMMING)
+                                                fft.window.WIN_HAMMING)
 
             #print "len stereo carrier filter = ",len(stereo_carrier_filter_coeffs)
             #print "stereo carrier filter ", stereo_carrier_filter_coeffs
@@ -94,7 +94,7 @@ class wfm_rcv_fmdet(gr.hier_block2):
                                                 38000-15000 / 2,
                                                 38000+15000 / 2,
                                                 width_of_transition_band,
-                                                filter.firdes.WIN_HAMMING)
+                                                fft.window.WIN_HAMMING)
             #print "len stereo dsbsc filter = ",len(stereo_dsbsc_filter_coeffs)
             #print "stereo dsbsc filter ", stereo_dsbsc_filter_coeffs
 
@@ -115,7 +115,7 @@ class wfm_rcv_fmdet(gr.hier_block2):
                                                 57000 - 1500,
                                                 57000 + 1500,
                                                 width_of_transition_band,
-                                                filter.firdes.WIN_HAMMING)
+                                                fft.window.WIN_HAMMING)
             #print "len stereo dsbsc filter = ",len(stereo_dsbsc_filter_coeffs)
             #print "stereo dsbsc filter ", stereo_dsbsc_filter_coeffs
             # construct overlap add filter system from coefficients for stereo carrier
