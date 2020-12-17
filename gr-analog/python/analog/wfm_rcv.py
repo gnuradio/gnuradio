@@ -57,7 +57,7 @@ class wfm_rcv(gr.hier_block2):
                                               quad_rate,      # sampling rate
                                               audio_rate / 2 - width_of_transition_band,
                                               width_of_transition_band,
-                                              filter.firdes.WIN_HAMMING)
+                                              fft.window.WIN_HAMMING)
         # input: float; output: float
         self.audio_filter = filter.fir_filter_fff(audio_decimation, audio_coeffs)
 

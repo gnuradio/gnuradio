@@ -45,7 +45,7 @@ namespace filter {
  * overall increase in power).
  *
  *   <B><EM>self._taps = filter.firdes.low_pass_2(interp, interp*fs, BW, TB,
- *      attenuation_dB=ATT, window=filter.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
+ *      attenuation_dB=ATT, window=fft.window.WIN_BLACKMAN_hARRIS)</EM></B>
  *
  * The PFB interpolator code takes the taps generated above and
  * builds a set of filters. The set contains <EM>interp</EM>

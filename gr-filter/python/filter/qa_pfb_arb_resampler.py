@@ -46,7 +46,7 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
             fs / 2,
             fs / 10,
             attenuation_dB=80,
-            window=filter.firdes.WIN_BLACKMAN_hARRIS)
+            window=fft.window.WIN_BLACKMAN_hARRIS)
 
         freq = 121.213
         data = sig_source_f(fs, freq, 1, N)
@@ -88,7 +88,7 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
             fs / 2,
             fs / 10,
             attenuation_dB=80,
-            window=filter.firdes.WIN_BLACKMAN_hARRIS)
+            window=fft.window.WIN_BLACKMAN_hARRIS)
 
         freq = 211.123
         data = sig_source_c(fs, freq, 1, N)
@@ -143,7 +143,7 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
             fs / 4,
             fs / 10,
             attenuation_dB=80,
-            window=filter.firdes.WIN_BLACKMAN_hARRIS)
+            window=fft.window.WIN_BLACKMAN_hARRIS)
 
         freq = 211.123
         data = sig_source_c(fs, freq, 1, N)
@@ -199,7 +199,7 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
             400,
             fs / 10,
             attenuation_dB=80,
-            window=filter.firdes.WIN_BLACKMAN_hARRIS)
+            window=fft.window.WIN_BLACKMAN_hARRIS)
 
         freq = 211.123
         data = sig_source_c(fs, freq, 1, N)
@@ -255,7 +255,7 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
             400,
             fs / 10,
             attenuation_dB=80,
-            window=filter.firdes.WIN_BLACKMAN_hARRIS)
+            window=fft.window.WIN_BLACKMAN_hARRIS)
 
         freq = 211.123
         data = sig_source_c(fs, freq, 1, N)

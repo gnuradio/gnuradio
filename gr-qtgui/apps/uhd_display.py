@@ -182,7 +182,7 @@ class my_top_block(gr.top_block):
         self._fftsize = options.fft_size
 
         self.snk = qtgui.sink_c(options.fft_size,
-                                filter.firdes.WIN_BLACKMAN_hARRIS,
+                                fft.window.WIN_BLACKMAN_hARRIS,
                                 self._freq, self._bandwidth,
                                 "UHD Display",
                                 True, True, True, False)
