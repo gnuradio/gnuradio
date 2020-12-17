@@ -10,6 +10,7 @@
 
 from gnuradio import gr, filter
 from gnuradio import blocks
+from gnuradio.fft import window
 import sys
 
 try:
@@ -147,7 +148,7 @@ class my_top_block(gr.top_block):
         channel = channels.channel_model(0.01)
         thr = blocks.throttle(gr.sizeof_gr_complex, 100*npts)
         filt = filter.fft_filter_ccc(1, taps)
-        self.snk1 = qtgui.waterfall_sink_c(npts, filter.firdes.WIN_BLACKMAN_hARRIS,
+        self.snk1 = qtgui.waterfall_sink_c(npts, window.WIN_BLACKMAN_hARRIS,
                                            0, Rs,
                                            "Complex Waterfall Example", 2, None)
         self.snk1.set_color_map(0, qtgui.INTENSITY_COLOR_MAP_TYPE_COOL)

@@ -11,6 +11,7 @@
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
+from gnuradio.fft import window
 from gnuradio import analog
 from gnuradio import channels
 import sys, math, time
@@ -82,7 +83,7 @@ class fmtest(gr.top_block):
         self._chan_rate = self._if_rate / self._M
         self._taps = filter.firdes.low_pass_2(1, self._if_rate, bw, t_bw,
                                               attenuation_dB=100,
-                                              window=filter.firdes.WIN_BLACKMAN_hARRIS)
+                                              window=window.WIN_BLACKMAN_hARRIS)
         tpc = math.ceil(float(len(self._taps)) / float(self._M))
 
         print("Number of taps:     ", len(self._taps))

@@ -14,6 +14,7 @@ from gnuradio import filter
 from gnuradio import analog
 from gnuradio import audio
 from gnuradio.filter import firdes
+from gnuradio.fft import window
 import sys, math
 
 # Create a top_block
@@ -49,7 +50,7 @@ class build_graph(gr.top_block):
                                         15e3,               # low pass cutoff freq
                                         1e3,                # width of trans. band
                                         60,                 # stop band attenuaton
-                                        firdes.WIN_KAISER)
+                                        window.WIN_KAISER)
 
         # Build the resampler and filter
         resamp_filter = filter.pfb_arb_resampler_fff(resamp_rate,

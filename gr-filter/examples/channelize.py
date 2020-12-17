@@ -11,6 +11,7 @@
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
+from gnuradio.fft import window
 import sys, time
 import numpy
 
@@ -39,7 +40,7 @@ class pfb_top_block(gr.top_block):
         # Create a set of taps for the PFB channelizer
         self._taps = filter.firdes.low_pass_2(1, self._ifs, 475.50, 50,
                                               attenuation_dB=100,
-                                              window=filter.firdes.WIN_BLACKMAN_hARRIS)
+                                              window=window.WIN_BLACKMAN_hARRIS)
 
         # Calculate the number of taps per channel for our own information
         tpc = numpy.ceil(float(len(self._taps)) / float(self._M))

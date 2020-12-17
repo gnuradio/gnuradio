@@ -13,6 +13,7 @@
 #endif
 
 #include "rational_resampler_impl.h"
+#include <gnuradio/fft/window.h>
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/integer_math.h>
 #include <gnuradio/io_signature.h>
@@ -62,7 +63,7 @@ std::vector<TAP_T> design_resampler_filter(const unsigned interpolation,
                             interpolation,       /* Fs */
                             mid_transition_band, /* trans mid point */
                             trans_width,         /* transition width */
-                            firdes::WIN_KAISER,
+                            fft::window::WIN_KAISER,
                             beta); /* beta*/
 }
 
