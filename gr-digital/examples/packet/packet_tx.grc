@@ -194,7 +194,7 @@ blocks:
     post_padding: filt_delay
     pre_padding: '0'
     type: complex
-    window: firdes.window(firdes.WIN_HANN, 20, 0)
+    window: firdes.window(fft.window.WIN_HANN, 20, 0)
   states:
     bus_sink: false
     bus_source: false

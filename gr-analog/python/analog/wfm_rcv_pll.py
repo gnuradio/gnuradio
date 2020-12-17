@@ -42,10 +42,10 @@ class wfm_rcv_pll(gr.hier_block2):
         self.samp_rate = samp_rate = 3840000
         self.rf_decim = rf_decim = 10
         self.demod_rate = demod_rate = (int)(samp_rate/rf_decim)
-        self.stereo_carrier_filter_coeffs_0 = stereo_carrier_filter_coeffs_0 = firdes.band_pass(1.0, demod_rate, 37600, 38400, 400, firdes.WIN_HAMMING, 6.76)
-        self.stereo_carrier_filter_coeffs = stereo_carrier_filter_coeffs = firdes.complex_band_pass(1.0, demod_rate, 18980, 19020, 1500, firdes.WIN_HAMMING, 6.76)
+        self.stereo_carrier_filter_coeffs_0 = stereo_carrier_filter_coeffs_0 = firdes.band_pass(1.0, demod_rate, 37600, 38400, 400, fft.window.WIN_HAMMING, 6.76)
+        self.stereo_carrier_filter_coeffs = stereo_carrier_filter_coeffs = firdes.complex_band_pass(1.0, demod_rate, 18980, 19020, 1500, fft.window.WIN_HAMMING, 6.76)
         self.deviation = deviation = 75000
-        self.audio_filter = audio_filter = firdes.low_pass(1, demod_rate, 15000,1500, firdes.WIN_HAMMING, 6.76)
+        self.audio_filter = audio_filter = firdes.low_pass(1, demod_rate, 15000,1500, fft.window.WIN_HAMMING, 6.76)
         self.audio_decim = audio_decim = (int)(demod_rate/48000)
 
         ##################################################

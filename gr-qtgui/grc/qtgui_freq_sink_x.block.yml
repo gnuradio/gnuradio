@@ -33,9 +33,9 @@ parameters:
 -   id: wintype
     label: Window Type
     dtype: enum
-    default: firdes.WIN_BLACKMAN_hARRIS
-    options: [firdes.WIN_BLACKMAN_hARRIS, firdes.WIN_HAMMING, firdes.WIN_HANN, firdes.WIN_BLACKMAN,
-        firdes.WIN_RECTANGULAR, firdes.WIN_KAISER, firdes.WIN_FLATTOP]
+    default: fft.window.WIN_BLACKMAN_hARRIS
+    options: [fft.window.WIN_BLACKMAN_hARRIS, fft.window.WIN_HAMMING, fft.window.WIN_HANN, fft.window.WIN_BLACKMAN,
+        fft.window.WIN_RECTANGULAR, fft.window.WIN_KAISER, fft.window.WIN_FLATTOP]
     option_labels: [Blackman-harris, Hamming, Hann, Blackman, Rectangular, Kaiser,
         Flat-top]
     hide: part
