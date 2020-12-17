@@ -228,7 +228,7 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
         self.top_grid_layout.addWidget(self.display, 0, 0, 1, 4)
         self.qtgui_waterfall_sink_x_0 = qtgui.waterfall_sink_c(
             self.fft_size, #size
-            fft.win_type.WIN_BLACKMAN_hARRIS, #wintype
+            fft.window.WIN_BLACKMAN_hARRIS, #wintype
             self.freq, #fc
             self.samp_rate, #bw
             "", #name
@@ -279,7 +279,7 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
         self.display_grid_layout_2.addWidget(self._qtgui_time_sink_x_0_win, 0, 0, 1, 4)
         self.qtgui_freq_sink_x_0 = qtgui.freq_sink_c(
             self.fft_size, #size
-            fft.win_type.WIN_BLACKMAN_hARRIS, #wintype
+            fft.window.WIN_BLACKMAN_hARRIS, #wintype
             self.freq, #fc
             self.samp_rate, #bw
             "", #name
