@@ -44,8 +44,9 @@ int atsc_fpll_impl::work(int noutput_items,
     constexpr float alpha = 0.01;
     constexpr float beta = alpha * alpha / 4.0;
 
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    float* out = (float*)output_items[0];
+    auto in = static_cast<const gr_complex*>(input_items[0]);
+    auto out = static_cast<float*>(output_items[0]);
+
     float a_cos, a_sin;
     float x;
     gr_complex result, filtered;

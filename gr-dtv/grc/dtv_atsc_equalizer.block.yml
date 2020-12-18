@@ -4,13 +4,13 @@ flags: [ python, cpp ]
 
 inputs:
 -   domain: stream
-    dtype: byte
-    vlen: 4096
+    dtype: float
+    vlen: 832
 
 outputs:
 -   domain: stream
-    dtype: byte
-    vlen: 4096
+    dtype: float
+    vlen: 832
 
 templates:
     imports: from gnuradio import dtv

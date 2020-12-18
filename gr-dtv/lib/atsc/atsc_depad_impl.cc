@@ -25,10 +25,11 @@ atsc_depad::sptr atsc_depad::make()
 }
 
 atsc_depad_impl::atsc_depad_impl()
-    : gr::sync_interpolator("atsc_depad",
-                            io_signature::make(1, 1, sizeof(atsc_mpeg_packet)),
-                            io_signature::make(1, 1, sizeof(unsigned char)),
-                            ATSC_MPEG_PKT_LENGTH)
+    : gr::sync_interpolator(
+          "atsc_depad",
+          io_signature::make(1, 1, ATSC_MPEG_PKT_LENGTH * sizeof(uint8_t)),
+          io_signature::make(1, 1, sizeof(uint8_t)),
+          ATSC_MPEG_PKT_LENGTH)
 {
 }
 
@@ -36,13 +37,15 @@ int atsc_depad_impl::work(int noutput_items,
                           gr_vector_const_void_star& input_items,
                           gr_vector_void_star& output_items)
 {
-    const atsc_mpeg_packet* in = (const atsc_mpeg_packet*)input_items[0];
-    unsigned char* out = (unsigned char*)output_items[0];
+    auto in = static_cast<const uint8_t*>(input_items[0]);
+    auto out = static_cast<uint8_t*>(output_items[0]);
 
     int i;
 
     for (i = 0; i < noutput_items / ATSC_MPEG_PKT_LENGTH; i++)
-        memcpy(&out[i * ATSC_MPEG_PKT_LENGTH], in[i].data, ATSC_MPEG_PKT_LENGTH);
+        memcpy(&out[i * ATSC_MPEG_PKT_LENGTH],
+               &in[i * ATSC_MPEG_PKT_LENGTH],
+               ATSC_MPEG_PKT_LENGTH);
 
     return i * ATSC_MPEG_PKT_LENGTH;
 }

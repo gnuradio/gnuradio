@@ -11,6 +11,7 @@
 install(FILES
     api.h
     atsc_consts.h
+    atsc_plinfo.h
     atsc_deinterleaver.h
     atsc_depad.h
     atsc_derandomizer.h

@@ -35,35 +35,38 @@ atsc_rs_decoder::sptr atsc_rs_decoder::make()
 }
 
 atsc_rs_decoder_impl::atsc_rs_decoder_impl()
-    : gr::sync_block("dtv_atsc_rs_decoder",
-                     io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)),
-                     io_signature::make(1, 1, sizeof(atsc_mpeg_packet_no_sync)))
+    : gr::sync_block(
+          "dtv_atsc_rs_decoder",
+          io_signature::make(1, 1, sizeof(uint8_t) * ATSC_MPEG_RS_ENCODED_LENGTH),
+          io_signature::make(1, 1, sizeof(uint8_t) * ATSC_MPEG_PKT_LENGTH))
 {
     d_rs = init_rs_char(
         rs_init_symsize, rs_init_gfpoly, rs_init_fcr, rs_init_prim, rs_init_nroots);
     assert(d_rs != 0);
-    d_nerrors_corrrected_count = 0;
+    d_nerrors_corrected_count = 0;
     d_bad_packet_count = 0;
     d_total_packets = 0;
+
+    set_tag_propagation_policy(TPP_CUSTOM);
 }
 
-int atsc_rs_decoder_impl::decode(atsc_mpeg_packet_no_sync& out,
-                                 const atsc_mpeg_packet_rs_encoded& in)
+int atsc_rs_decoder_impl::decode(uint8_t* out, const uint8_t* in)
 {
     unsigned char tmp[N];
     int ncorrections;
 
-    assert((int)(amount_of_pad + sizeof(in.data)) == N);
+    // assert((int)(amount_of_pad + sizeof(in.data)) == N);
+    assert((int)(amount_of_pad + ATSC_MPEG_RS_ENCODED_LENGTH) == N);
 
     // add missing prefix zero padding to message
     memset(tmp, 0, amount_of_pad);
-    memcpy(&tmp[amount_of_pad], in.data, sizeof(in.data));
+    memcpy(&tmp[amount_of_pad], in, ATSC_MPEG_RS_ENCODED_LENGTH);
 
     // correct message...
     ncorrections = decode_rs_char(d_rs, tmp, 0, 0);
 
     // copy corrected message to output, skipping prefix zero padding
-    memcpy(out.data, &tmp[amount_of_pad], sizeof(out.data));
+    memcpy(out, &tmp[amount_of_pad], ATSC_MPEG_PKT_LENGTH);
 
     return ncorrections;
 }
@@ -77,7 +80,7 @@ atsc_rs_decoder_impl::~atsc_rs_decoder_impl()
 
 int atsc_rs_decoder_impl::num_errors_corrected() const
 {
-    return d_nerrors_corrrected_count;
+    return d_nerrors_corrected_count;
 }
 
 int atsc_rs_decoder_impl::num_bad_packets() const { return d_bad_packet_count; }
@@ -88,29 +91,44 @@ int atsc_rs_decoder_impl::work(int noutput_items,
                                gr_vector_const_void_star& input_items,
                                gr_vector_void_star& output_items)
 {
-    const atsc_mpeg_packet_rs_encoded* in =
-        (const atsc_mpeg_packet_rs_encoded*)input_items[0];
-    atsc_mpeg_packet_no_sync* out = (atsc_mpeg_packet_no_sync*)output_items[0];
+    auto in = static_cast<const uint8_t*>(input_items[0]);
+    auto out = static_cast<uint8_t*>(output_items[0]);
 
+    std::vector<tag_t> tags;
+    auto tag_pmt = pmt::intern("plinfo");
     for (int i = 0; i < noutput_items; i++) {
-        assert(in[i].pli.regular_seg_p());
-        out[i].pli = in[i].pli; // copy pipeline info...
-
-        int nerrors_corrrected = decode(out[i], in[i]);
-        out[i].pli.set_transport_error(nerrors_corrrected == -1);
-        if (nerrors_corrrected == -1) {
-            d_bad_packet_count++;
-            d_nerrors_corrrected_count +=
-                10; // lower bound estimate; most this RS can fix
+        plinfo pli_in;
+        get_tags_in_window(tags, 0, i, i + 1, tag_pmt);
+        if (tags.size() > 0) {
+            pli_in.from_tag_value(pmt::to_uint64(tags[0].value));
         } else {
-            d_nerrors_corrrected_count += nerrors_corrrected;
+            throw std::runtime_error(
+                "Atsc Viterbi Decoder: Plinfo Tag not found on sample");
         }
+
+        assert(pli_in.regular_seg_p());
+
+        plinfo pli_out = pli_in; // copy pipeline info...
+
+
+        int nerrors_corrected =
+            decode(&out[i * ATSC_MPEG_PKT_LENGTH], &in[i * ATSC_MPEG_RS_ENCODED_LENGTH]);
+        pli_out.set_transport_error(nerrors_corrected == -1);
+        if (nerrors_corrected == -1) {
+            d_bad_packet_count++;
+            d_nerrors_corrected_count += 10; // lower bound estimate; most this RS can fix
+        } else {
+            d_nerrors_corrected_count += nerrors_corrected;
+        }
+
+        add_item_tag(
+            0, nitems_written(0) + i, tag_pmt, pmt::from_uint64(pli_out.get_tag_value()));
 
         d_total_packets++;
 #if 0
         if (d_total_packets > 1000) {
           GR_LOG_INFO(d_logger, boost::format("Error rate: %1%\tPacket error rate: %2%") \
-                       % ((float)d_nerrors_corrrected_count/(ATSC_MPEG_DATA_LENGTH*d_total_packets))
+                       % ((float)d_nerrors_corrected_count/(ATSC_MPEG_PKT_LENGTH*d_total_packets))
                        % ((float)d_bad_packet_count/d_total_packets));
         }
 #endif

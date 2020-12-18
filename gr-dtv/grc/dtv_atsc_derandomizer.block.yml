@@ -5,12 +5,12 @@ flags: [ python, cpp ]
 inputs:
 -   domain: stream
     dtype: byte
-    vlen: 256
+    vlen: 188
 
 outputs:
 -   domain: stream
     dtype: byte
-    vlen: 256
+    vlen: 188
 
 templates:
     imports: from gnuradio import dtv

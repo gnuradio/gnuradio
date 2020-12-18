@@ -71,7 +71,6 @@ void atsc_trellis_encoder_impl::encode(atsc_data_segment out[NCODERS],
     // copy input into contiguous temporary buffer
     for (int i = 0; i < NCODERS; i++) {
         assert(in[i].pli.regular_seg_p());
-        plinfo::sanity_check(in[i].pli);
         memcpy(&in_copy[i * INPUT_SIZE / NCODERS],
                &in[i].data[0],
                ATSC_MPEG_RS_ENCODED_LENGTH * sizeof(in_copy[0]));
@@ -91,7 +90,6 @@ void atsc_trellis_encoder_impl::encode(atsc_data_segment out[NCODERS],
         // copy pipeline info
         out[i].pli = in[i].pli;
 
-        plinfo::sanity_check(out[i].pli);
         assert(out[i].pli.regular_seg_p());
     }
 }
