@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Copyright 2012-2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
@@ -7,9 +7,6 @@
 #
 #
 
-
-import sys
-import numpy
 import random
 import numpy
 
@@ -21,9 +18,9 @@ def shift_tuple(vec, N):
     """ Shifts a vector by N elements. Fills up with zeros. """
     if N > 0:
         return (0,) * N + tuple(vec[0:-N])
-    else:
-        N = -N
-        return tuple(vec[N:]) + (0,) * N
+    # else:
+    N = -N
+    return tuple(vec[N:]) + (0,) * N
 
 
 def rand_range(min_val, max_val):
@@ -103,7 +100,7 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
         for tag in tags:
             if pmt.symbol_to_string(tag.key) == 'ofdm_sync_carr_offset':
                 carr_offset_hat = pmt.to_long(tag.value)
-                self.assertEqual(pmt.to_long(tag.value), carr_offset)
+                self.assertEqual(carr_offset_hat, carr_offset)
 
     def test_003_channel_no_carroffset(self):
         """ Add a channel, check if it's correctly estimated """
@@ -215,12 +212,7 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
         self.assertEqual(chan_est, chanest_exp)
         self.assertEqual(
             sink.data(),
-            list(
-                numpy.multiply(
-                    shift_tuple(
-                        data_symbol,
-                        carr_offset),
-                    channel)))
+            list(numpy.multiply(shift_tuple(data_symbol, carr_offset), channel)))
 
     def test_999_all_at_once(self):
         """docstring for test_999_all_at_once"""
@@ -306,15 +298,9 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
                 shift_tuple(sync_sym2, carr_offset) + \
                 shift_tuple(data_sym, carr_offset)
             channel = [
-                rand_range(
-                    min_chan_ampl,
-                    max_chan_ampl) *
-                numpy.exp(
-                    1j *
-                    rand_range(
-                        0,
-                        2 *
-                        numpy.pi)) for x in range(fft_len)]
+                rand_range(min_chan_ampl, max_chan_ampl) *
+                numpy.exp(1j * rand_range(0, 2 * numpy.pi))
+                for x in range(fft_len)]
             src = blocks.vector_source_c(tx_data, False, fft_len)
             chan = blocks.multiply_const_vcc(channel)
             noise = analog.noise_source_c(analog.GR_GAUSSIAN, wgn_amplitude)
@@ -323,8 +309,8 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
             sink = blocks.vector_sink_c(fft_len)
             top_block.connect(src, chan, (add, 0), chanest, sink)
             top_block.connect(
-                noise, blocks.stream_to_vector(
-                    gr.sizeof_gr_complex, fft_len), (add, 1))
+                noise,
+                blocks.stream_to_vector(gr.sizeof_gr_complex, fft_len), (add, 1))
             top_block.run()
             channel_est = None
             carr_offset_hat = 0
@@ -341,15 +327,11 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
             shifted_carrier_mask = shift_tuple(carrier_mask, carr_offset)
             for i in range(fft_len):
                 if shifted_carrier_mask[i] and channel_est[i]:
-                    self.assertAlmostEqual(
-                        channel[i], channel_est[i], places=0)
+                    self.assertAlmostEqual(channel[i], channel_est[i], places=0)
                     rx_sym_est[i] = (sink.data()[i] / channel_est[i]).real
-            return (
-                carr_offset, list(
-                    shift_tuple(
-                        rx_sym_est, -carr_offset_hat)))
+            return carr_offset, list(shift_tuple(rx_sym_est, -carr_offset_hat))
         bit_errors = 0
-        for k in range(n_iter):
+        for _ in range(n_iter):
             sync_sym = [(random.randint(0, 1) * 2 - 1) * syncsym_mask[i]
                         for i in range(fft_len)]
             ref_sym = [(random.randint(0, 1) * 2 - 1) * carrier_mask[i]
@@ -357,7 +339,7 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
             data_sym = [(random.randint(0, 1) * 2 - 1) * carrier_mask[i]
                         for i in range(fft_len)]
             data_sym[26] = 1
-            (carr_offset, rx_sym) = run_flow_graph(sync_sym, ref_sym, data_sym)
+            (_, rx_sym) = run_flow_graph(sync_sym, ref_sym, data_sym)
             rx_sym_est = [0, ] * fft_len
             for i in range(fft_len):
                 if carrier_mask[i] == 0:
