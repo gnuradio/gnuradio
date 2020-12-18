@@ -289,6 +289,9 @@ public:
      * \param rotational_symmetry Number of rotations around unit circle that have the
      * same representation. \param dimensionality Number of z-axis dimensions to the
      * constellation \param n_sectors Number of sectors in the constellation.
+     * \param normalization Use AMPLITUDE_NORMALIZATION to normalize points to
+     * mean(abs(points))=1 (default), POWER_NORMALIZATION to normalize points
+     * to mean(abs(points)^2)=1 or NO_NORMALIZATION to keep the original amplitude.
      */
     constellation_sector(std::vector<gr_complex> constell,
                          std::vector<int> pre_diff_code,
@@ -346,7 +349,9 @@ public:
      * in to. \param imag_sectors Number of sectors the imag axis is split in to. \param
      * width_real_sectors width of each real sector to calculate decision boundaries.
      * \param width_imag_sectors width of each imag sector to calculate decision
-     * boundaries.
+     * boundaries. \param normalization Use AMPLITUDE_NORMALIZATION to normalize points
+     * to mean(abs(points))=1 (default), POWER_NORMALIZATION to normalize points to
+     * mean(abs(points)^2)=1 or NO_NORMALIZATION to keep the original amplitude.
      */
     static constellation_rect::sptr
     make(std::vector<gr_complex> constell,
