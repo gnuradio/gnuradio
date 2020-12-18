@@ -13,8 +13,8 @@ inputs:
 
 outputs:
 -   domain: stream
-    dtype: byte
-    vlen: 4096
+    dtype: float
+    vlen: 832
 
 templates:
     imports: from gnuradio import dtv

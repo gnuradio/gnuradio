@@ -9,6 +9,7 @@
 # Setup library
 ########################################################################
 add_library(gnuradio-dtv
+  atsc/atsc_plinfo.cc
   atsc/atsc_deinterleaver_impl.cc
   atsc/atsc_depad_impl.cc
   atsc/atsc_derandomizer_impl.cc

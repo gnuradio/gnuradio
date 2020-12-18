@@ -34,7 +34,7 @@ atsc_sync::sptr atsc_sync::make(float rate)
 atsc_sync_impl::atsc_sync_impl(float rate)
     : gr::block("dtv_atsc_sync",
                 io_signature::make(1, 1, sizeof(float)),
-                io_signature::make(1, 1, sizeof(atsc_soft_data_segment))),
+                io_signature::make(1, 1, ATSC_DATA_SEGMENT_LENGTH * sizeof(float))),
       d_rx_clock_to_symbol_freq(rate / ATSC_SYMBOL_RATE),
       d_si(0)
 {
@@ -82,14 +82,14 @@ int atsc_sync_impl::general_work(int noutput_items,
                                  gr_vector_const_void_star& input_items,
                                  gr_vector_void_star& output_items)
 {
-    const float* in = (const float*)input_items[0];
-    atsc_soft_data_segment* soft_data_segment_out =
-        (atsc_soft_data_segment*)output_items[0];
+    const float* in = static_cast<const float*>(input_items[0]);
+    float* out = static_cast<float*>(output_items[0]);
 
     float interp_sample;
 
     // amount actually consumed
     d_si = 0;
+
 
     for (d_output_produced = 0; d_output_produced < noutput_items &&
                                 (d_si + (int)d_interp.ntaps()) < ninput_items[0];) {
@@ -150,8 +150,6 @@ int atsc_sync_impl::general_work(int noutput_items,
             //                   d_sample_mem[best_correlation_index - 1] -
             //                   d_sample_mem[best_correlation_index];
 
-            // printf( "d_timing_adjust = %f\n", d_timing_adjust );
-
             int corr_count = best_correlation_index;
 
             d_timing_adjust = -d_sample_mem[corr_count--];
@@ -180,8 +178,9 @@ int atsc_sync_impl::general_work(int noutput_items,
             d_data_mem[d_symbol_index] = interp_sample;
 
             if (d_symbol_index >= (ATSC_DATA_SEGMENT_LENGTH - 1)) {
-                for (int i = 0; i < ATSC_DATA_SEGMENT_LENGTH; i++)
-                    soft_data_segment_out[d_output_produced].data[i] = d_data_mem[i];
+                memcpy(&out[d_output_produced * ATSC_DATA_SEGMENT_LENGTH],
+                       d_data_mem,
+                       ATSC_DATA_SEGMENT_LENGTH * sizeof(float));
                 d_output_produced++;
             }
         }

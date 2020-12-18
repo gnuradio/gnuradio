@@ -5,7 +5,7 @@ flags: [ python, cpp ]
 inputs:
 -   domain: stream
     dtype: byte
-    vlen: 256
+    vlen: 188
 
 outputs:
 -   domain: stream

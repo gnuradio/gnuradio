@@ -53,13 +53,12 @@ void atsc_randomize::randomize(atsc_mpeg_packet_no_sync& out, const atsc_mpeg_pa
         out.data[i] = in.data[i + 1] ^ output_and_clk();
 }
 
-void atsc_randomize::derandomize(atsc_mpeg_packet& out,
-                                 const atsc_mpeg_packet_no_sync& in)
+void atsc_randomize::derandomize(uint8_t* out, const uint8_t* in)
 {
-    out.data[0] = MPEG_SYNC_BYTE; // add sync byte to beginning of packet
+    out[0] = MPEG_SYNC_BYTE; // add sync byte to beginning of packet
 
     for (int i = 0; i < ATSC_MPEG_DATA_LENGTH; i++)
-        out.data[i + 1] = in.data[i] ^ output_and_clk();
+        out[i + 1] = in[i] ^ output_and_clk();
 }
 
 

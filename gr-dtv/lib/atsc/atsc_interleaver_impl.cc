@@ -64,7 +64,6 @@ int atsc_interleaver_impl::work(int noutput_items,
 
     for (int i = 0; i < noutput_items; i++) {
         assert(in[i].pli.regular_seg_p());
-        plinfo::sanity_check(in[i].pli);
 
         out[i].pli = in[i].pli;                // copy pipeline info
         if (in[i].pli.first_regular_seg_p()) { // reset commutator if required

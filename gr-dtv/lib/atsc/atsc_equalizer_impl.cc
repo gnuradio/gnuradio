@@ -52,8 +52,8 @@ static void init_field_sync_common(float* p, int mask)
 
 atsc_equalizer_impl::atsc_equalizer_impl()
     : gr::block("dtv_atsc_equalizer",
-                io_signature::make(1, 1, sizeof(atsc_soft_data_segment)),
-                io_signature::make(1, 1, sizeof(atsc_soft_data_segment)))
+                io_signature::make(1, 1, ATSC_DATA_SEGMENT_LENGTH * sizeof(float)),
+                io_signature::make(1, 1, ATSC_DATA_SEGMENT_LENGTH * sizeof(float)))
 {
     init_field_sync_common(training_sequence1, 0);
     init_field_sync_common(training_sequence2, 1);
@@ -64,6 +64,8 @@ atsc_equalizer_impl::atsc_equalizer_impl()
 
     const int alignment_multiple = volk_get_alignment() / sizeof(float);
     set_alignment(std::max(1, alignment_multiple));
+
+    set_tag_propagation_policy(TPP_CUSTOM); // use manual tag propagation
 }
 
 atsc_equalizer_impl::~atsc_equalizer_impl() {}
@@ -114,17 +116,30 @@ int atsc_equalizer_impl::general_work(int noutput_items,
                                       gr_vector_const_void_star& input_items,
                                       gr_vector_void_star& output_items)
 {
-    const atsc_soft_data_segment* in = (const atsc_soft_data_segment*)input_items[0];
-    atsc_soft_data_segment* out = (atsc_soft_data_segment*)output_items[0];
+    auto in = static_cast<const float*>(input_items[0]);
+    auto out = static_cast<float*>(output_items[0]);
 
     int output_produced = 0;
     int i = 0;
 
+    std::vector<tag_t> tags;
+    auto tag_pmt = pmt::intern("plinfo");
+
+    plinfo pli_in;
     if (d_buff_not_filled) {
         memset(&data_mem[0], 0, NPRETAPS * sizeof(float));
-        memcpy(&data_mem[NPRETAPS], in[i].data, ATSC_DATA_SEGMENT_LENGTH * sizeof(float));
-        d_flags = in[i].pli._flags;
-        d_segno = in[i].pli._segno;
+        memcpy(&data_mem[NPRETAPS],
+               in + i * ATSC_DATA_SEGMENT_LENGTH,
+               ATSC_DATA_SEGMENT_LENGTH * sizeof(float));
+        get_tags_in_window(tags, 0, 0, 1, tag_pmt);
+        if (tags.size() > 0) {
+            pli_in.from_tag_value(pmt::to_uint64(tags[0].value));
+            d_flags = pli_in.flags();
+            d_segno = pli_in.segno();
+        } else {
+            throw std::runtime_error("Atsc Equalizer: Plinfo Tag not found on sample");
+        }
+
         d_buff_not_filled = false;
         i++;
     }
@@ -132,36 +147,44 @@ int atsc_equalizer_impl::general_work(int noutput_items,
     for (; i < noutput_items; i++) {
 
         memcpy(&data_mem[ATSC_DATA_SEGMENT_LENGTH + NPRETAPS],
-               in[i].data,
+               in + i * ATSC_DATA_SEGMENT_LENGTH,
                (NTAPS - NPRETAPS) * sizeof(float));
 
         if (d_segno == -1) {
             if (d_flags & 0x0010) {
                 adaptN(data_mem, training_sequence2, data_mem2, KNOWN_FIELD_SYNC_LENGTH);
-                // filterN(&data_mem[KNOWN_FIELD_SYNC_LENGTH], data_mem2,
-                // ATSC_DATA_SEGMENT_LENGTH - KNOWN_FIELD_SYNC_LENGTH);
             } else if (!(d_flags & 0x0010)) {
                 adaptN(data_mem, training_sequence1, data_mem2, KNOWN_FIELD_SYNC_LENGTH);
-                // filterN(&data_mem[KNOWN_FIELD_SYNC_LENGTH], data_mem2,
-                // ATSC_DATA_SEGMENT_LENGTH - KNOWN_FIELD_SYNC_LENGTH);
             }
         } else {
             filterN(data_mem, data_mem2, ATSC_DATA_SEGMENT_LENGTH);
 
-            memcpy(out[output_produced].data,
+            memcpy(&out[output_produced * ATSC_DATA_SEGMENT_LENGTH],
                    data_mem2,
                    ATSC_DATA_SEGMENT_LENGTH * sizeof(float));
 
-            out[output_produced].pli._flags = d_flags;
-            out[output_produced].pli._segno = d_segno;
+            plinfo pli_out(d_flags, d_segno);
+            add_item_tag(0,
+                         nitems_written(0) + output_produced,
+                         tag_pmt,
+                         pmt::from_uint64(pli_out.get_tag_value()));
+
             output_produced++;
         }
 
         memcpy(data_mem, &data_mem[ATSC_DATA_SEGMENT_LENGTH], NPRETAPS * sizeof(float));
-        memcpy(&data_mem[NPRETAPS], in[i].data, ATSC_DATA_SEGMENT_LENGTH * sizeof(float));
+        memcpy(&data_mem[NPRETAPS],
+               in + i * ATSC_DATA_SEGMENT_LENGTH,
+               ATSC_DATA_SEGMENT_LENGTH * sizeof(float));
 
-        d_flags = in[i].pli._flags;
-        d_segno = in[i].pli._segno;
+        get_tags_in_window(tags, 0, i, i + 1, tag_pmt);
+        if (tags.size() > 0) {
+            pli_in.from_tag_value(pmt::to_uint64(tags[0].value));
+            d_flags = pli_in.flags();
+            d_segno = pli_in.segno();
+        } else {
+            throw std::runtime_error("Atsc Equalizer: Plinfo Tag not found on sample");
+        }
     }
 
     consume_each(noutput_items);

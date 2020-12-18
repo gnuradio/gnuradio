@@ -12,6 +12,7 @@
 #define INCLUDED_ATSC_RANDOMIZE_H
 
 #include "atsc_types.h"
+#include <stdint.h>
 
 namespace gr {
 namespace dtv {
@@ -33,7 +34,7 @@ public:
     void randomize(atsc_mpeg_packet_no_sync& out, const atsc_mpeg_packet& in);
 
     //! derandomize (de-whiten) mpeg packet and add leading MPEG-2 sync byte
-    void derandomize(atsc_mpeg_packet& out, const atsc_mpeg_packet_no_sync& in);
+    void derandomize(uint8_t* out, const uint8_t* in);
 
     unsigned int state() const { return d_state; }
 

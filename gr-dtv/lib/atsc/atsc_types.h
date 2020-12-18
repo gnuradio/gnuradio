@@ -15,150 +15,10 @@
 #include <cassert>
 #include <cstring>
 
+#include <gnuradio/dtv/atsc_plinfo.h>
+
 namespace gr {
 namespace dtv {
-
-/*!
- * \brief pipeline info that flows with data
- *
- * Not all modules need all the info
- */
-class plinfo
-{
-public:
-    plinfo() : _flags(0), _segno(0) {}
-
-    // accessors
-
-    bool field_sync1_p() const { return (_flags & fl_field_sync1) != 0; }
-    bool field_sync2_p() const { return (_flags & fl_field_sync2) != 0; }
-    bool field_sync_p() const { return field_sync1_p() || field_sync2_p(); }
-
-    bool regular_seg_p() const { return (_flags & fl_regular_seg) != 0; }
-
-    bool in_field1_p() const { return (_flags & fl_field2) == 0; }
-    bool in_field2_p() const { return (_flags & fl_field2) != 0; }
-
-    bool first_regular_seg_p() const { return (_flags & fl_first_regular_seg) != 0; }
-
-    bool transport_error_p() const { return (_flags & fl_transport_error) != 0; }
-
-    unsigned int segno() const { return _segno; }
-    unsigned int flags() const { return _flags; }
-
-    // setters
-
-    void set_field_sync1()
-    {
-        _segno = 0;
-        _flags = fl_field_sync1;
-    }
-
-    void set_field_sync2()
-    {
-        _segno = 0;
-        _flags = fl_field_sync2 | fl_field2;
-    }
-
-    void set_regular_seg(bool field2, int segno)
-    {
-        // assert (0 <= segno && segno < ATSC_DSEGS_PER_FIELD);
-        _segno = segno;
-        _flags = fl_regular_seg;
-        if (segno == 0)
-            _flags |= fl_first_regular_seg;
-        if (segno >= ATSC_DSEGS_PER_FIELD)
-            _flags |= fl_transport_error;
-        if (field2)
-            _flags |= fl_field2;
-    }
-
-    void set_transport_error(bool error)
-    {
-        if (error)
-            _flags |= fl_transport_error;
-        else
-            _flags &= ~fl_transport_error;
-    }
-
-    // overload equality operator
-    bool operator==(const plinfo& other) const
-    {
-        return (_flags == other._flags && _segno == other._segno);
-    }
-
-    bool operator!=(const plinfo& other) const
-    {
-        return !(_flags == other._flags && _segno == other._segno);
-    }
-
-    /*!
-     * Set \p OUT such that it reflects a \p NSEGS_OF_DELAY
-     * pipeline delay from \p IN.
-     */
-    static void delay(plinfo& out, const plinfo& in, int nsegs_of_delay)
-    {
-        assert(in.regular_seg_p());
-        assert(nsegs_of_delay >= 0);
-
-        int s = in.segno();
-        if (in.in_field2_p())
-            s += ATSC_DSEGS_PER_FIELD;
-
-        s -= nsegs_of_delay;
-        if (s < 0)
-            s += 2 * ATSC_DSEGS_PER_FIELD;
-
-        // assert (0 <= s && s < 2 * ATSC_DSEGS_PER_FIELD);
-
-        if (s < ATSC_DSEGS_PER_FIELD)
-            out.set_regular_seg(false, s); // field 1
-        else
-            out.set_regular_seg(true, s - ATSC_DSEGS_PER_FIELD); // field 2
-    }
-
-    /*!
-     * confirm that \p X is plausible
-     */
-    static void sanity_check(const plinfo& in)
-    {
-        // basic sanity checks...
-        // assert (x.segno () >= 0);
-        // assert (x.segno () < (unsigned) ATSC_DSEGS_PER_FIELD);
-        // assert ((x.flags () & ~0x3f) == 0);
-
-        // assert (x.regular_seg_p () ^ x.field_sync_p ());
-        // assert ((x.segno () != 0) ^ x.first_regular_seg_p ());
-    }
-
-    unsigned short _flags; // bitmask
-    short _segno;          // segment number [-1,311] -1 is the field sync segment
-
-protected:
-    // these three are mutually exclusive
-    //     This is a regular data segment.
-    static constexpr int fl_regular_seg = 0x0001;
-    //	 This is a field sync segment, for 1st half of a field.
-    static constexpr int fl_field_sync1 = 0x0002;
-    //	 This is a field sync segment, for 2nd half of a field.
-    static constexpr int fl_field_sync2 = 0x0004;
-
-    // This bit is on ONLY when fl_regular_seg is set AND when this is
-    // the first regular data segment AFTER a field sync segment.  This
-    // segment causes various processing modules to reset.
-    static constexpr int fl_first_regular_seg = 0x0008;
-
-    // which field are we in?
-    static constexpr int fl_field2 = 0x0010; // else field 1
-
-    // This bit is set when Reed-Solomon decoding detects an error that it
-    // can't correct.  Note that other error detection (e.g. Viterbi) do not
-    // set it, since Reed-Solomon will correct many of those.  This bit is
-    // then copied into the final Transport Stream packet so that MPEG
-    // software can see that the 188-byte data segment has been corrupted.
-    static constexpr int fl_transport_error = 0x0020;
-};
-
 
 class atsc_mpeg_packet
 {
@@ -255,17 +115,6 @@ public:
     plinfo pli;
     float data[ATSC_DATA_SEGMENT_LENGTH];
     unsigned char _pad_[NPAD]; // pad to power of 2 (4096)
-
-    // overload equality operator
-    bool operator==(const atsc_data_segment& other) const
-    {
-        return std::memcmp(data, other.data, sizeof(data)) == 0;
-    }
-
-    bool operator!=(const atsc_data_segment& other) const
-    {
-        return !(std::memcmp(data, other.data, sizeof(data)) == 0);
-    }
 };
 
 } /* namespace dtv */
