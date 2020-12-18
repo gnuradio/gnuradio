@@ -49,11 +49,17 @@ typedef std::shared_ptr<constellation> constellation_sptr;
 class DIGITAL_API constellation : public std::enable_shared_from_this<constellation>
 {
 public:
+    enum normalization_t {
+        NO_NORMALIZATION,
+        POWER_NORMALIZATION,
+        AMPLITUDE_NORMALIZATION,
+    };
+
     constellation(std::vector<gr_complex> constell,
                   std::vector<int> pre_diff_code,
                   unsigned int rotational_symmetry,
                   unsigned int dimensionality,
-                  bool normalize_points = true);
+                  normalization_t normalization = AMPLITUDE_NORMALIZATION);
     constellation();
     virtual ~constellation();
 
@@ -233,15 +239,17 @@ public:
      * \param pre_diff_code List of alphabet symbols (before applying any differential
      *                      coding) (order of list matches constell)
      * \param rotational_symmetry Number of rotations around unit circle that have the
-     * same representation. \param dimensionality Number of dimensions to the
-     * constellation. \param normalize_points Normalize constellation points to
-     * mean(abs(points))=1 (default is true)
+     * same representation.
+     * \param dimensionality Number of dimensions to the constellation.
+     * \param normalization Use AMPLITUDE_NORMALIZATION to normalize points to
+     * mean(abs(points))=1 (default), POWER_NORMALIZATION to normalize points
+     * to mean(abs(points)^2)=1 or NO_NORMALIZATION to keep the original amplitude.
      */
     static sptr make(std::vector<gr_complex> constell,
                      std::vector<int> pre_diff_code,
                      unsigned int rotational_symmetry,
                      unsigned int dimensionality,
-                     bool normalize_points = true);
+                     normalization_t normalization = AMPLITUDE_NORMALIZATION);
 
     unsigned int decision_maker(const gr_complex* sample) override;
     // void calc_metric(gr_complex *sample, float *metric, trellis_metric_type_t type);
@@ -253,7 +261,7 @@ protected:
                            std::vector<int> pre_diff_code,
                            unsigned int rotational_symmetry,
                            unsigned int dimensionality,
-                           bool nomalize_points = true);
+                           normalization_t normalization = AMPLITUDE_NORMALIZATION);
 };
 
 
@@ -286,7 +294,8 @@ public:
                          std::vector<int> pre_diff_code,
                          unsigned int rotational_symmetry,
                          unsigned int dimensionality,
-                         unsigned int n_sectors);
+                         unsigned int n_sectors,
+                         normalization_t normalization = AMPLITUDE_NORMALIZATION);
 
     ~constellation_sector() override;
 
@@ -339,13 +348,15 @@ public:
      * \param width_imag_sectors width of each imag sector to calculate decision
      * boundaries.
      */
-    static constellation_rect::sptr make(std::vector<gr_complex> constell,
-                                         std::vector<int> pre_diff_code,
-                                         unsigned int rotational_symmetry,
-                                         unsigned int real_sectors,
-                                         unsigned int imag_sectors,
-                                         float width_real_sectors,
-                                         float width_imag_sectors);
+    static constellation_rect::sptr
+    make(std::vector<gr_complex> constell,
+         std::vector<int> pre_diff_code,
+         unsigned int rotational_symmetry,
+         unsigned int real_sectors,
+         unsigned int imag_sectors,
+         float width_real_sectors,
+         float width_imag_sectors,
+         normalization_t normalization = AMPLITUDE_NORMALIZATION);
     ~constellation_rect() override;
 
 protected:
@@ -355,7 +366,8 @@ protected:
                        unsigned int real_sectors,
                        unsigned int imag_sectors,
                        float width_real_sectors,
-                       float width_imag_sectors);
+                       float width_imag_sectors,
+                       normalization_t normalization = AMPLITUDE_NORMALIZATION);
 
     unsigned int get_sector(const gr_complex* sample) override;
     gr_complex calc_sector_center(unsigned int sector);
