@@ -1,0 +1,110 @@
+name: 'Make Test'
+on:
+  push:
+    branches:
+      - maint-3.9
+  pull_request:
+    branches:
+      - maint-3.9
+jobs:
+  check-formatting:
+    name: Check C++ Formatting
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - uses: gnuradio/clang-format-lint-action@v0.5-4
+      with:
+        source: '.'
+        exclude: './volk'
+        extensions: 'h,hpp,cpp,cc'
+  # All of these shall depend on the formatting check (needs: check-formatting)
+  ubuntu-20_04:
+    name: Ubuntu 20.04
+    needs: check-formatting
+    runs-on: ubuntu-20.04
+    container:
+      image: 'gnuradio/ci-ubuntu-20.04-3.9:0.3'
+      volumes:
+        - build_data:/build
+      options: --cpus 2
+    steps:
+    - uses: actions/checkout@v2
+      name: Checkout Project
+    - name: CMake
+      run: 'cd /build && cmake ${GITHUB_WORKSPACE}'
+    - name: Make
+      run: 'cd /build && make -j2'
+    - name: Make Test
+      run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_header_payload_demux|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
+  ubuntu-18_04:
+    name: Ubuntu 18.04
+    needs: check-formatting
+    runs-on: ubuntu-20.04 # This can run on whatever
+    container:
+      image: 'gnuradio/ci-ubuntu-18.04-3.9:1.0'
+      volumes:
+        - build_data:/build
+      options: --cpus 2
+    steps:
+    - uses: actions/checkout@v2
+      name: Checkout Project
+    - name: CMake
+      run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
+    - name: Make
+      run: 'cd /build && make -j2'
+    - name: Make Test
+      run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_header_payload_demux|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
+  fedora33:
+    name: Fedora 33
+    needs: check-formatting
+    runs-on: ubuntu-20.04 # This can run on whatever
+    container:
+      image: 'gnuradio/ci-fedora-33-3.9:1.0'
+      volumes:
+        - build_data:/build
+      options: --cpus 2
+    steps:
+    - uses: actions/checkout@v2
+      name: Checkout Project
+    - name: CMake
+      run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
+    - name: Make
+      run: 'cd /build && make -j2'
+    - name: Make Test
+      run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_header_payload_demux|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
+  centos8_3:
+    name: Centos 8.3
+    needs: check-formatting
+    runs-on: ubuntu-20.04 # This can run on whatever
+    container:
+      image: 'gnuradio/ci-centos-8.3-3.9:1.0'
+      volumes:
+        - build_data:/build
+      options: --cpus 2
+    steps:
+    - uses: actions/checkout@v2
+      name: Checkout Project
+    - name: CMake
+      run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF -DBoost_unit_test_framework_FOUND=ON'
+    - name: Make
+      run: 'cd /build && make -j2'
+    - name: Make Test
+      run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_header_payload_demux|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
+  debian10:
+    name: Debian 10
+    needs: check-formatting
+    runs-on: ubuntu-20.04 # This can run on whatever
+    container:
+      image: 'gnuradio/ci-debian-10-3.9:1.0'
+      volumes:
+        - build_data:/build
+      options: --cpus 2
+    steps:
+    - uses: actions/checkout@v2
+      name: Checkout Project
+    - name: CMake
+      run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF -DBoost_unit_test_framework_FOUND=ON'
+    - name: Make
+      run: 'cd /build && make -j2'
+    - name: Make Test
+      run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_header_payload_demux|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
