@@ -136,15 +136,15 @@ class ToggleSwitch(QFrame):
         painter.setBrush(brush)
         painter.setPen(QPen(QColor('white'), 0))
         if self.curState:
-            painter.drawEllipse(2, 2, size.height() - 4, size.height() - 4)
-        else:
             painter.drawEllipse(center_x+2, 2, size.height() - 4, size.height() - 4)
+        else:
+            painter.drawEllipse(2, 2, size.height() - 4, size.height() - 4)
 
     def mousePressEvent(self, event):
         if event.x() <= self.size().width()/2:
-            self.setState(True)
-        else:
             self.setState(False)
+        else:
+            self.setState(True)
 
         super().update()
 
