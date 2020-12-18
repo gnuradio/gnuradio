@@ -66,6 +66,7 @@ public:
      * \param interpolation The integer interpolation rate of the filter
      * \param decimation The integer decimation rate of the filter
      * \param taps The filter taps to control images and aliases
+     * \param fractional_bw The fractional bandwidth of the filter (0 to 0.5)
      */
     static sptr make(unsigned interpolation,
                      unsigned decimation,
