@@ -31,7 +31,7 @@ try:
     from PyQt5 import QtWidgets, Qt
     import sip
 except ImportError:
-    sys.stderr.write("Error: Program requires PyQt5 and gr-qtgui.\n")
+    sys.stderr.write("Error: Program requires PyQt4 and gr-qtgui.\n")
     sys.exit(1)
 
 try:

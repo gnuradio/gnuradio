@@ -244,7 +244,7 @@ class RangeWidget(QtWidgets.QWidget):
 
 
 if __name__ == "__main__":
-    from PyQt5 import Qt
+    from PyQt4 import Qt
     import sys
 
     def valueChanged(frequency):

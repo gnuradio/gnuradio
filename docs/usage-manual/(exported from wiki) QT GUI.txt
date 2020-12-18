@@ -122,11 +122,11 @@ when asking for the delay outside of the available range.
 
 The QT GUI blocks require the following dependencies.
 
-# QtCore (version >= 5.0)
-# QtGui (version >= 5.0)
-# QtOpenGL (version >= 5.0)
-# PyQt5 for Qt5 (version >= 5.0)
-# Qwt (version >= 6.1)
+# QtCore (version >= 4.4)
+# QtGui (version >= 4.4)
+# QtOpenGL (version >= 4.4)
+# PyQt4 for Qt4 (version >= 4.4)
+# Qwt (version >= 5.2)
 
 == Usage ==
 
@@ -143,7 +143,7 @@ non-blocking call to launch the main thread of the flowgraph), the
 qapp's "exec_()" function is called. This function is a blocking call
 while the GUI is alive.
 
-from PyQt5 import Qt
+from PyQt4 import Qt
 from gnuradio import qtgui
 import sys, sip
  
