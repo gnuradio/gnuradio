@@ -52,16 +52,16 @@ SET(VERSION_PATCH git)
 include(GrVersion) #setup version info
 
 # Minimum dependency versions for central dependencies:
-set(GR_BOOST_MIN_VERSION "1.58")
-set(GR_CMAKE_MIN_VERSION "3.8.0")
-set(GR_MAKO_MIN_VERSION "0.4.2")
-set(GR_PYTHON_MIN_VERSION "3.6.5")
-set(GR_NUMPY_MIN_VERSION "1.13.0")
-set(GCC_MIN_VERSION "5.0.0")
-set(CLANG_MIN_VERSION "3.4.0")
-set(APPLECLANG_MIN_VERSION "500")
-set(MSVC_MIN_VERSION "1900")
-set(VOLK_MIN_VERSION "2.1.0")
+set(GR_BOOST_MIN_VERSION "1.71")      ## Debian Bullseye / Ubuntu 20.04
+set(GR_CMAKE_MIN_VERSION "3.16.3")    ## 20.04
+set(GR_MAKO_MIN_VERSION "1.1.0")      ## 20.04
+set(GR_PYTHON_MIN_VERSION "3.8.2")    ## 20.04
+set(GR_NUMPY_MIN_VERSION "1.17.4")    ## 20.04
+set(GCC_MIN_VERSION "10.2.0")         ## 20.04 and Bullseye ship this as gcc-10
+set(CLANG_MIN_VERSION "11.0.0")       ## Bullseye / 20.04
+set(APPLECLANG_MIN_VERSION "1100")    ## corresponds to clang version above
+set(MSVC_MIN_VERSION "1914")          ## OK C++17 support
+set(VOLK_MIN_VERSION "2.4.1")         ## First version with working CPU feature support
 set(PYBIND11_MIN_VERSION "2.4") # pybind11 sets versions like 2.4.dev4, which compares < 2.4.3
 
 # Enable generation of compile_commands.json for code completion engines
