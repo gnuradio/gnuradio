@@ -16,6 +16,7 @@
 #include <gnuradio/expj.h>
 #include <gnuradio/io_signature.h>
 #include <cstdio>
+#include <memory>
 
 namespace gr {
 namespace digital {
@@ -162,10 +163,10 @@ void fll_band_edge_cc_impl::design_filter(float samps_per_sym,
 
     // Set the history to ensure enough input items for each filter
     set_history(filter_size + 1);
-    d_filter_upper.reset(
-        new gr::filter::kernel::fir_filter_with_buffer_ccc(d_taps_upper));
-    d_filter_lower.reset(
-        new gr::filter::kernel::fir_filter_with_buffer_ccc(d_taps_lower));
+    d_filter_upper =
+        std::make_unique<gr::filter::kernel::fir_filter_with_buffer_ccc>(d_taps_upper);
+    d_filter_lower =
+        std::make_unique<gr::filter::kernel::fir_filter_with_buffer_ccc>(d_taps_lower);
 }
 
 void fll_band_edge_cc_impl::print_taps()
