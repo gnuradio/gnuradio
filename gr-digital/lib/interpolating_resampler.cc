@@ -14,8 +14,8 @@
 
 #include "interpolating_resampler.h"
 #include <gnuradio/math.h>
-#include <boost/make_unique.hpp>
 #include <deque>
+#include <memory>
 #include <stdexcept>
 
 namespace gr {
@@ -98,11 +98,11 @@ std::unique_ptr<interpolating_resampler_ccf> interpolating_resampler_ccf::make(
 {
     switch (type) {
     case IR_MMSE_8TAP:
-        return boost::make_unique<interp_resampler_mmse_8tap_cc>(derivative);
+        return std::make_unique<interp_resampler_mmse_8tap_cc>(derivative);
     case IR_PFB_NO_MF:
-        return boost::make_unique<interp_resampler_pfb_no_mf_cc>(derivative, nfilts);
+        return std::make_unique<interp_resampler_pfb_no_mf_cc>(derivative, nfilts);
     case IR_PFB_MF:
-        return boost::make_unique<interp_resampler_pfb_mf_ccf>(taps, nfilts, derivative);
+        return std::make_unique<interp_resampler_pfb_mf_ccf>(taps, nfilts, derivative);
     case IR_NONE:
         return nullptr;
     }
@@ -117,11 +117,11 @@ std::unique_ptr<interpolating_resampler_fff> interpolating_resampler_fff::make(
 {
     switch (type) {
     case IR_MMSE_8TAP:
-        return boost::make_unique<interp_resampler_mmse_8tap_ff>(derivative);
+        return std::make_unique<interp_resampler_mmse_8tap_ff>(derivative);
     case IR_PFB_NO_MF:
-        return boost::make_unique<interp_resampler_pfb_no_mf_ff>(derivative, nfilts);
+        return std::make_unique<interp_resampler_pfb_no_mf_ff>(derivative, nfilts);
     case IR_PFB_MF:
-        return boost::make_unique<interp_resampler_pfb_mf_fff>(taps, nfilts, derivative);
+        return std::make_unique<interp_resampler_pfb_mf_fff>(taps, nfilts, derivative);
     case IR_NONE:
         return nullptr;
     }
@@ -135,7 +135,7 @@ interp_resampler_mmse_8tap_cc::interp_resampler_mmse_8tap_cc(bool derivative)
     : interpolating_resampler_ccf(IR_MMSE_8TAP, derivative)
 {
     if (d_derivative) {
-        d_interp_diff = boost::make_unique<filter::mmse_interp_differentiator_cc>();
+        d_interp_diff = std::make_unique<filter::mmse_interp_differentiator_cc>();
     }
 }
 
@@ -161,7 +161,7 @@ interp_resampler_mmse_8tap_ff::interp_resampler_mmse_8tap_ff(bool derivative)
     : interpolating_resampler_fff(IR_MMSE_8TAP, derivative)
 {
     if (d_derivative) {
-        d_interp_diff = boost::make_unique<filter::mmse_interp_differentiator_ff>();
+        d_interp_diff = std::make_unique<filter::mmse_interp_differentiator_ff>();
     }
 }
 

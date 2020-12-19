@@ -16,8 +16,8 @@
 #include "tag_headers.h"
 #include <gnuradio/io_signature.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/make_unique.hpp>
 #include <boost/thread/thread.hpp>
+#include <memory>
 
 namespace gr {
 namespace zeromq {
@@ -60,7 +60,7 @@ req_msg_source_impl::~req_msg_source_impl() {}
 bool req_msg_source_impl::start()
 {
     d_finished = false;
-    d_thread = boost::make_unique<boost::thread>(
+    d_thread = std::make_unique<boost::thread>(
         boost::bind(&req_msg_source_impl::readloop, this));
     return true;
 }

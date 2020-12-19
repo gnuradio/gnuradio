@@ -14,8 +14,8 @@
 
 #include "probe_mpsk_snr_est_c_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/make_unique.hpp>
 #include <cstdio>
+#include <memory>
 
 namespace gr {
 namespace digital {
@@ -25,13 +25,13 @@ std::unique_ptr<mpsk_snr_est> choose_type(snr_est_type_t t, double alpha)
 {
     switch (t) {
     case (SNR_EST_SIMPLE):
-        return boost::make_unique<mpsk_snr_est_simple>(alpha);
+        return std::make_unique<mpsk_snr_est_simple>(alpha);
     case (SNR_EST_SKEW):
-        return boost::make_unique<mpsk_snr_est_skew>(alpha);
+        return std::make_unique<mpsk_snr_est_skew>(alpha);
     case (SNR_EST_M2M4):
-        return boost::make_unique<mpsk_snr_est_m2m4>(alpha);
+        return std::make_unique<mpsk_snr_est_m2m4>(alpha);
     case (SNR_EST_SVR):
-        return boost::make_unique<mpsk_snr_est_svr>(alpha);
+        return std::make_unique<mpsk_snr_est_svr>(alpha);
     }
     throw std::invalid_argument("probe_mpsk_snr_est_c_impl: unknown type specified.");
 }
