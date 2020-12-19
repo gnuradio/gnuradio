@@ -14,8 +14,8 @@
 
 #include "dc_blocker_cc_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/make_unique.hpp>
 #include <cstdio>
+#include <memory>
 
 namespace gr {
 namespace filter {
@@ -59,8 +59,8 @@ dc_blocker_cc_impl::dc_blocker_cc_impl(int D, bool long_form)
       d_ma_1(D)
 {
     if (d_long_form) {
-        d_ma_2 = boost::make_unique<moving_averager_c>(D);
-        d_ma_3 = boost::make_unique<moving_averager_c>(D);
+        d_ma_2 = std::make_unique<moving_averager_c>(D);
+        d_ma_3 = std::make_unique<moving_averager_c>(D);
         d_delay_line = std::deque<gr_complex>(d_length - 1, gr_complex(0, 0));
     }
 }

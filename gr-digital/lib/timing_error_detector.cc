@@ -14,7 +14,7 @@
 
 #include "timing_error_detector.h"
 #include <gnuradio/math.h>
-#include <boost/make_unique.hpp>
+#include <memory>
 #include <stdexcept>
 
 namespace gr {
@@ -27,23 +27,23 @@ timing_error_detector::make(enum ted_type type, constellation_sptr constellation
     case TED_NONE:
         return nullptr;
     case TED_MUELLER_AND_MULLER:
-        return boost::make_unique<ted_mueller_and_muller>(constellation);
+        return std::make_unique<ted_mueller_and_muller>(constellation);
     case TED_MOD_MUELLER_AND_MULLER:
-        return boost::make_unique<ted_mod_mueller_and_muller>(constellation);
+        return std::make_unique<ted_mod_mueller_and_muller>(constellation);
     case TED_ZERO_CROSSING:
-        return boost::make_unique<ted_zero_crossing>(constellation);
+        return std::make_unique<ted_zero_crossing>(constellation);
     case TED_GARDNER:
-        return boost::make_unique<ted_gardner>();
+        return std::make_unique<ted_gardner>();
     case TED_EARLY_LATE:
-        return boost::make_unique<ted_early_late>();
+        return std::make_unique<ted_early_late>();
     case TED_DANDREA_AND_MENGALI_GEN_MSK:
-        return boost::make_unique<ted_generalized_msk>();
+        return std::make_unique<ted_generalized_msk>();
     case TED_SIGNAL_TIMES_SLOPE_ML:
-        return boost::make_unique<ted_signal_times_slope_ml>();
+        return std::make_unique<ted_signal_times_slope_ml>();
     case TED_SIGNUM_TIMES_SLOPE_ML:
-        return boost::make_unique<ted_signum_times_slope_ml>();
+        return std::make_unique<ted_signum_times_slope_ml>();
     case TED_MENGALI_AND_DANDREA_GMSK:
-        return boost::make_unique<ted_gaussian_msk>();
+        return std::make_unique<ted_gaussian_msk>();
     }
     return nullptr;
 }
