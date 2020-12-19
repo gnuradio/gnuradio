@@ -20,8 +20,8 @@
 
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
-#include <boost/make_unique.hpp>
 #include <algorithm>
+#include <memory>
 #include <stdexcept>
 
 namespace gr {
@@ -96,7 +96,7 @@ void logger_config::load_config(std::string filename, unsigned int watch_period)
         logger_configured = logger_load_config(instance.filename);
         // Start watch if required
         if (instance.watch_period > 0) {
-            instance.watch_thread = boost::make_unique<boost::thread>(
+            instance.watch_thread = std::make_unique<boost::thread>(
                 watch_file, instance.filename, instance.watch_period);
         }
     }

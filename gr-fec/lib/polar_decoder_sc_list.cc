@@ -16,9 +16,9 @@
 #include <gnuradio/fec/polar_decoder_sc_list.h>
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
-#include <boost/make_unique.hpp>
 #include <algorithm>
 #include <cmath>
+#include <memory>
 
 namespace gr {
 namespace fec {
@@ -44,7 +44,7 @@ polar_decoder_sc_list::polar_decoder_sc_list(int max_list_size,
                                              std::vector<uint8_t> frozen_bit_values)
     : polar_decoder_common(
           block_size, num_info_bits, frozen_bit_positions, frozen_bit_values),
-      d_scl(boost::make_unique<polar::scl_list>(max_list_size, block_size, block_power()))
+      d_scl(std::make_unique<polar::scl_list>(max_list_size, block_size, block_power()))
 {
 }
 

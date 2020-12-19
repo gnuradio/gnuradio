@@ -21,7 +21,6 @@
 #include <block_executor.h>
 #include <stdio.h>
 #include <boost/format.hpp>
-#include <boost/make_unique.hpp>
 #include <boost/thread.hpp>
 #include <iostream>
 #include <limits>
