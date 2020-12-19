@@ -13,7 +13,7 @@
  */
 
 #include <gnuradio/thread/thread_group.h>
-#include <boost/make_unique.hpp>
+#include <memory>
 
 namespace gr {
 namespace thread {
@@ -26,7 +26,7 @@ boost::thread* thread_group::create_thread(const boost::function0<void>& threadf
 {
     // No scoped_lock required here since the only "shared data" that's
     // modified here occurs inside add_thread which does scoped_lock.
-    auto thrd = boost::make_unique<boost::thread>(threadfunc);
+    auto thrd = std::make_unique<boost::thread>(threadfunc);
     auto thrdp = thrd.get();
     add_thread(std::move(thrd));
     return thrdp;

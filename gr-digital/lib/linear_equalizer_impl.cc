@@ -16,7 +16,7 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/misc.h>
 #include <volk/volk.h>
-#include <boost/smart_ptr/make_unique.hpp>
+#include <memory>
 #include <vector>
 
 #include "adaptive_algorithms.h"
@@ -114,7 +114,7 @@ int linear_equalizer_impl::equalize(const gr_complex* input_samples,
         samples = input_samples;
     } else {
         in_prepended_history =
-            boost::make_unique<std::vector<gr_complex>>(num_inputs + d_num_taps - 1);
+            std::make_unique<std::vector<gr_complex>>(num_inputs + d_num_taps - 1);
         std::copy(input_samples,
                   input_samples + num_inputs,
                   in_prepended_history->begin() + d_num_taps - 1);

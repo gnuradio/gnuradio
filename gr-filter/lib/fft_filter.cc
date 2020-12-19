@@ -15,9 +15,9 @@
 #include <gnuradio/filter/fft_filter.h>
 #include <gnuradio/logger.h>
 #include <volk/volk.h>
-#include <boost/smart_ptr/make_unique.hpp>
 #include <cstring>
 #include <iostream>
+#include <memory>
 
 namespace gr {
 namespace filter {
@@ -86,8 +86,8 @@ void fft_filter_fff::compute_sizes(int ntaps)
 
     // compute new plans
     if (d_fftsize != old_fftsize) {
-        d_fwdfft = boost::make_unique<fft::fft_real_fwd>(d_fftsize);
-        d_invfft = boost::make_unique<fft::fft_real_rev>(d_fftsize);
+        d_fwdfft = std::make_unique<fft::fft_real_fwd>(d_fftsize);
+        d_invfft = std::make_unique<fft::fft_real_rev>(d_fftsize);
         d_xformed_taps.resize(d_fftsize / 2 + 1);
     }
 }
@@ -217,8 +217,8 @@ void fft_filter_ccc::compute_sizes(int ntaps)
 
     // compute new plans
     if (d_fftsize != old_fftsize) {
-        d_fwdfft = boost::make_unique<fft::fft_complex_fwd>(d_fftsize, d_nthreads);
-        d_invfft = boost::make_unique<fft::fft_complex_rev>(d_fftsize, d_nthreads);
+        d_fwdfft = std::make_unique<fft::fft_complex_fwd>(d_fftsize, d_nthreads);
+        d_invfft = std::make_unique<fft::fft_complex_rev>(d_fftsize, d_nthreads);
         d_xformed_taps.resize(d_fftsize);
     }
 }
@@ -349,8 +349,8 @@ void fft_filter_ccf::compute_sizes(int ntaps)
 
     // compute new plans
     if (d_fftsize != old_fftsize) {
-        d_fwdfft = boost::make_unique<fft::fft_complex_fwd>(d_fftsize, d_nthreads);
-        d_invfft = boost::make_unique<fft::fft_complex_rev>(d_fftsize, d_nthreads);
+        d_fwdfft = std::make_unique<fft::fft_complex_fwd>(d_fftsize, d_nthreads);
+        d_invfft = std::make_unique<fft::fft_complex_rev>(d_fftsize, d_nthreads);
         d_xformed_taps.resize(d_fftsize);
     }
 }

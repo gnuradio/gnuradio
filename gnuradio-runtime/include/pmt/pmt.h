@@ -80,7 +80,6 @@ public:
 
 /*!
  * \brief typedef for shared pointer (transparent reference counting).
- * See http://www.boost.org/libs/smart_ptr/smart_ptr.htm
  */
 typedef std::shared_ptr<pmt_base> pmt_t;
 
