@@ -539,7 +539,6 @@ CONFIGURE_FILE(
 # Use TIMESTAMP to be compatible with reproducible builds
 # and put in in the cache so configure_file sees it
 string(TIMESTAMP BUILD_DATE "%a, %d %b %Y %H:%M:%S")
-set(BUILD_DATE ${BUILD_DATE} CACHE INTERNAL "Build date")
 message(STATUS "Loading build date ${BUILD_DATE} into constants...")
 message(STATUS "Loading version ${VERSION} into constants...")
 
