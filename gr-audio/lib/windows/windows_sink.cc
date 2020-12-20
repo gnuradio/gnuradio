@@ -330,10 +330,10 @@ int windows_sink::open_waveout_device(void)
         char err_msg[50];
         waveOutGetErrorText(supported, err_msg, 50);
         GR_LOG_INFO(d_debug_logger, boost::format("format error: %s") % err_msg);
-        GR_LOG_ERROR(
-            d_logger,
-            boost::format("Requested audio format is not supported by device driver: %d") %
-                GetLastError());
+        GR_LOG_ERROR(d_logger,
+                     boost::format(
+                         "Requested audio format is not supported by device driver: %d") %
+                         GetLastError());
         return -1;
     }
 
