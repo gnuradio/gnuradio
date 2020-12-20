@@ -46,7 +46,7 @@ GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING
 
 # Set the version information here
 SET(VERSION_MAJOR 3)
-SET(VERSION_API   9)
+SET(VERSION_API   10)
 SET(VERSION_ABI   0)
 SET(VERSION_PATCH git)
 include(GrVersion) #setup version info
