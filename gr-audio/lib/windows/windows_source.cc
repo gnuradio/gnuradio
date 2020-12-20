@@ -93,7 +93,7 @@ windows_source::windows_source(int sampling_freq, const std::string device_name)
     gr::logger_ptr logger, debug_logger;
     if (open_wavein_device() < 0) {
         GR_LOG_ERROR(logger,
-                     boost::format("open_wavein_device() failed %s") % strerror(errno));
+                     boost::format("open_wavein_device() failed: %d") % GetLastError());
         throw std::runtime_error("audio_windows_source:open_wavein_device() failed");
     } else {
         GR_LOG_INFO(d_debug_logger, "Opened windows wavein device");
@@ -109,8 +109,8 @@ windows_source::windows_source(int sampling_freq, const std::string device_name)
         MMRESULT w_result = waveInPrepareHeader(d_h_wavein, lp_buffer, sizeof(WAVEHDR));
         if (w_result != 0) {
             GR_LOG_ERROR(logger,
-                         boost::format("Failed to waveInPrepareHeader %s") %
-                             strerror(errno));
+                         boost::format("Failed to waveInPrepareHeader: %d") %
+                             GetLastError());
             throw std::runtime_error("open_wavein_device() failed");
         }
         waveInAddBuffer(d_h_wavein, lp_buffer, sizeof(WAVEHDR));
@@ -248,8 +248,8 @@ UINT windows_source::find_device(std::string szDeviceName)
                 if (waveInGetDevCaps(i, &woc, sizeof(woc)) != MMSYSERR_NOERROR) {
                     GR_LOG_ERROR(logger,
                                  boost::format("Could not retrieve wave out device "
-                                               "capabilities for device %s") %
-                                     strerror(errno));
+                                               "capabilities for device: %d") %
+                                     GetLastError());
                     return -1;
                 }
                 if (woc.szPname == szDeviceName) {
@@ -269,8 +269,8 @@ UINT windows_source::find_device(std::string szDeviceName)
         }
     } else {
         GR_LOG_ERROR(logger,
-                     boost::format("No WaveIn devices present or accessible: %s") %
-                         strerror(errno));
+                     boost::format("No WaveIn devices present or accessible: %d") %
+                         GetLastError());
     }
     return result;
 }
@@ -309,8 +309,8 @@ int windows_source::open_wavein_device(void)
         GR_LOG_INFO(d_debug_logger, boost::format("format error: %s") % err_msg);
         GR_LOG_ERROR(logger,
                      boost::format(
-                         "Requested audio format is not supported by device driver: %s") %
-                         strerror(errno));
+                         "Requested audio format is not supported by device driver: %d") %
+                         GetLastError());
         return -1;
     }
 
@@ -324,8 +324,8 @@ int windows_source::open_wavein_device(void)
 
     if (result) {
         GR_LOG_ERROR(logger,
-                     boost::format("Failed to open waveform output device: %s") %
-                         strerror(errno));
+                     boost::format("Failed to open waveform output device: %d") %
+                         GetLastError());
         return -1;
     }
     return 0;
@@ -339,8 +339,8 @@ static void CALLBACK read_wavein(
         if (!dwInstance) {
             gr::logger_ptr logger;
             GR_LOG_ERROR(logger,
-                         boost::format("callback function missing buffer queue: %s") %
-                             strerror(errno));
+                         boost::format("callback function missing buffer queue: %d") %
+                             GetLastError());
         }
         LPWAVEHDR lp_wave_hdr = (LPWAVEHDR)dwParam1; // The new audio data
         boost::lockfree::spsc_queue<LPWAVEHDR>* q =
