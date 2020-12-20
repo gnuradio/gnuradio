@@ -122,7 +122,7 @@ void basic_vco(float* output, const float* input)
 
 void native_vco(float* output, const float* input)
 {
-    gr::blocks::vco<float, float> vco;
+    gr::vco<float, float> vco;
 
     for (int j = 0; j < ITERATIONS / BLOCK_SIZE; j++) {
         vco.cos(output, input, BLOCK_SIZE, K, AMPLITUDE);
@@ -131,7 +131,7 @@ void native_vco(float* output, const float* input)
 
 void fxpt_vco(float* output, const float* input)
 {
-    gr::blocks::fxpt_vco vco;
+    gr::fxpt_vco vco;
 
     for (int j = 0; j < ITERATIONS / BLOCK_SIZE; j++) {
         vco.cos(output, input, BLOCK_SIZE, K, AMPLITUDE);
