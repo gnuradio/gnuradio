@@ -91,7 +91,7 @@ windows_sink::windows_sink(int sampling_freq,
     d_wave_write_event = CreateEvent(NULL, FALSE, FALSE, NULL);
     if (open_waveout_device() < 0) {
         GR_LOG_ERROR(d_logger,
-                     boost::format("open_waveout_device() failed: %s") % strerror(errno));
+                     boost::format("open_waveout_device() failed: %d") % GetLastError());
         throw std::runtime_error("audio_windows_sink:open_waveout_device() failed");
     } else {
         GR_LOG_INFO(d_debug_logger, "Opened windows waveout device");
@@ -184,8 +184,8 @@ int windows_sink::work(int noutput_items,
                                      d_buffers[i]->dwFlags);
                 }
                 GR_LOG_ERROR(d_logger,
-                             boost::format("no audio buffers available: %s") %
-                                 strerror(errno));
+                             boost::format("no audio buffers available: %d") %
+                                 GetLastError());
                 return -1;
             }
         }
@@ -214,7 +214,7 @@ int windows_sink::work(int noutput_items,
             break;
         }
         if (write_waveout(chosen_header) < 0) {
-            GR_LOG_ERROR(d_logger, boost::format("write failed: %s") % strerror(errno));
+            GR_LOG_ERROR(d_logger, boost::format("write failed: %d") % GetLastError());
         }
         samples_sent += samples_tosend;
     }
@@ -272,8 +272,8 @@ UINT windows_sink::find_device(std::string szDeviceName)
                 if (waveOutGetDevCaps(i, &woc, sizeof(woc)) != MMSYSERR_NOERROR) {
                     GR_LOG_ERROR(d_logger,
                                  boost::format("Could not retrieve wave out device "
-                                               "capabilities for %s device") %
-                                     strerror(errno));
+                                               "capabilities for device: %d") %
+                                     GetLastError());
                     return -1;
                 }
                 if (woc.szPname == szDeviceName) {
@@ -294,8 +294,8 @@ UINT windows_sink::find_device(std::string szDeviceName)
         }
     } else {
         GR_LOG_ERROR(d_logger,
-                     boost::format("No WaveOut devices present or accessible: %s") %
-                         strerror(errno));
+                     boost::format("No WaveOut devices present or accessible: %d") %
+                         GetLastError());
     }
     return result;
 }
@@ -332,8 +332,8 @@ int windows_sink::open_waveout_device(void)
         GR_LOG_INFO(d_debug_logger, boost::format("format error: %s") % err_msg);
         GR_LOG_ERROR(
             d_logger,
-            boost::format("Requested audio format is not supported by device %s driver") %
-                strerror(errno));
+            boost::format("Requested audio format is not supported by device driver: %d") %
+                GetLastError());
         return -1;
     }
 
@@ -347,8 +347,8 @@ int windows_sink::open_waveout_device(void)
 
     if (result) {
         GR_LOG_ERROR(d_logger,
-                     boost::format("Failed to open waveform output device. %s") %
-                         strerror(errno));
+                     boost::format("Failed to open waveform output device: %d") %
+                         GetLastError());
         return -1;
     }
 
@@ -367,16 +367,16 @@ int windows_sink::write_waveout(LPWAVEHDR lp_wave_hdr)
     w_result = waveOutPrepareHeader(d_h_waveout, lp_wave_hdr, sizeof(WAVEHDR));
     if (w_result != 0) {
         GR_LOG_ERROR(d_logger,
-                     boost::format("Failed to waveOutPrepareHeader %s") %
-                         strerror(errno));
+                     boost::format("Failed to waveOutPrepareHeader: %d") %
+                         GetLastError());
         return -1;
     }
 
     w_result = waveOutWrite(d_h_waveout, lp_wave_hdr, sizeof(WAVEHDR));
     if (w_result != 0) {
         GR_LOG_ERROR(d_logger,
-                     boost::format("Failed to write block to device %s") %
-                         strerror(errno));
+                     boost::format("Failed to write block to device: %d") %
+                         GetLastError());
         switch (w_result) {
         case MMSYSERR_INVALHANDLE:
             GR_LOG_ERROR(d_logger, "Specified device handle is invalid");
