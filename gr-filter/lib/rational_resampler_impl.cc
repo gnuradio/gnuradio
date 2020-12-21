@@ -102,8 +102,7 @@ rational_resampler_impl<IN_T, OUT_T, TAP_T>::rational_resampler_impl(
     float fractional_bw)
     : block("rational_resampler<IN_T,OUT_T,TAP_T>",
             io_signature::make(1, 1, sizeof(IN_T)),
-            io_signature::make(1, 1, sizeof(OUT_T))),
-      d_decimation(decimation)
+            io_signature::make(1, 1, sizeof(OUT_T)))
 {
     if (interpolation == 0) {
         throw std::out_of_range(
@@ -145,6 +144,8 @@ rational_resampler_impl<IN_T, OUT_T, TAP_T>::rational_resampler_impl(
     } else {
         staps = taps;
     }
+
+    d_decimation = decimation;
 
     this->set_relative_rate(uint64_t{ interpolation }, uint64_t{ decimation });
     this->set_output_multiple(1);
