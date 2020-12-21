@@ -31,7 +31,7 @@ parameters:
     hide: ${ ( 'none' if str(type) == "calcdist" else 'all') }
 -   id: normalization
     label: Normalization Type
-    dtype: int
+    dtype: raw
     default: digital.constellation.AMPLITUDE_NORMALIZATION
     options: [digital.constellation.NO_NORMALIZATION, digital.constellation.POWER_NORMALIZATION, digital.constellation.AMPLITUDE_NORMALIZATION]
     option_labels: [None, Power, Amplitude]
@@ -46,6 +46,7 @@ parameters:
     dtype: raw
     default: None
     hide: ${ ('part' if str(soft_dec_lut) == 'None' else 'none') }
+
 value: ${ digital.constellation_calcdist(const_points, sym_map, rot_sym, dims, normalization) if (str(type) == "calcdist") else getattr(digital,'constellation_'+str(type))()  }
 
 
@@ -54,7 +55,7 @@ templates:
     var_make: |-
         % if str(type) == "calcdist":
         self.${id} = ${id} = digital.constellation_calcdist(${const_points}, ${sym_map},
-        ${rot_sym}, ${dims}).base()
+        ${rot_sym}, ${dims}, ${normalization}).base()
         % else:
         self.${id} = ${id} = digital.constellation_${type}().base()
         % endif
