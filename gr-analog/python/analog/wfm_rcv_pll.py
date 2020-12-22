@@ -17,7 +17,7 @@ from gnuradio.filter import firdes
 from gnuradio import analog
 
 class wfm_rcv_pll(gr.hier_block2):
-    def __init__(self, demod_rate, audio_decimation):
+    def __init__(self, demod_rate, audio_decimation, deemph_tau):
         """
         Hierarchical block for demodulating a broadcast FM signal.
 
@@ -27,6 +27,7 @@ class wfm_rcv_pll(gr.hier_block2):
         Args:
             demod_rate: input sample rate of complex baseband input. (float)
             audio_decimation: how much to decimate demod_rate to get to audio. (integer)
+            deemph_tau: deemphasis ime constant in seconds (75us in US, 50us in EUR). (float)
         """
         gr.hier_block2.__init__(self, "wfm_rcv_pll",
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
@@ -40,11 +41,13 @@ class wfm_rcv_pll(gr.hier_block2):
         # Variables
         ##################################################
         self.demod_rate = demod_rate
+        self.deemph_tau = deemph_tau
         self.stereo_carrier_filter_coeffs_0 = stereo_carrier_filter_coeffs_0 = firdes.band_pass(-2.0, demod_rate, 37600, 38400, 400, fft.window.WIN_HAMMING, 6.76)
         self.stereo_carrier_filter_coeffs = stereo_carrier_filter_coeffs = firdes.complex_band_pass(1.0, demod_rate, 18980, 19020, 1500, fft.window.WIN_HAMMING, 6.76)
         self.deviation = deviation = 75000
         self.audio_filter = audio_filter = firdes.low_pass(1, demod_rate, 15000,1500, fft.window.WIN_HAMMING, 6.76)
         self.audio_decim = audio_decim = audio_decimation
+        self.audio_rate = audio_rate = demod_rate / audio_decim
         self.samp_delay = samp_delay = (len(stereo_carrier_filter_coeffs) - 1) // 2 + (len(stereo_carrier_filter_coeffs_0) - 1) // 2
 
         ##################################################
@@ -65,8 +68,8 @@ class wfm_rcv_pll(gr.hier_block2):
         self.blocks_add_xx_0 = blocks.add_vff(1)
         self.analog_quadrature_demod_cf_0 = analog.quadrature_demod_cf(demod_rate/(2*math.pi*deviation))
         self.analog_pll_refout_cc_0 = analog.pll_refout_cc(0.001, 2*math.pi * 19200 / demod_rate, 2*math.pi * 18800 / demod_rate)
-        self.analog_fm_deemph_0_0 = analog.fm_deemph(fs=demod_rate//audio_decim, tau=75e-6)
-        self.analog_fm_deemph_0 = analog.fm_deemph(fs=demod_rate//audio_decim, tau=75e-6)
+        self.analog_fm_deemph_0_0 = analog.fm_deemph(fs=audio_rate, tau=deemph_tau)
+        self.analog_fm_deemph_0 = analog.fm_deemph(fs=audio_rate, tau=deemph_tau)
         self.blocks_delay_0 = blocks.delay(gr.sizeof_float*1, samp_delay)
 
         ##################################################
