@@ -66,7 +66,7 @@ class channelizer_ccf(gr.hier_block2):
         ripple = 0.1
         while True:
             try:
-                taps = optfir.low_pass(1, self._nchans, bw, bw+tb, ripple, atten)
+                taps = optfir.low_pass(1, numchans, bw, bw+tb, ripple, atten)
                 return taps
             except RuntimeError:
                 ripple += 0.01
