@@ -1,0 +1,20 @@
+id: message_message_counter
+label: Message Counter
+category: '[Core]/Message Tools'
+
+parameters:
+-   id: name
+    label: Name
+    dtype: string
+
+inputs:
+-   domain: message
+    id: msg
+
+templates:
+    imports: |-
+        import pmt
+        from gnuradio import message
+    make: message.message_counter( ${name} )
+
+file_format: 1

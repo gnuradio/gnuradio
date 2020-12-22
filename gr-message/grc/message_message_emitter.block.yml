@@ -1,0 +1,24 @@
+id: message_message_emitter
+label: Message Emitter
+category: '[Core]/Message Tools'
+
+parameters:
+-   id: msg
+    label: Message
+    dtype: raw
+    default: pmt.PMT_NIL
+
+outputs:
+-   domain: message
+    id: msg
+    optional: true
+
+templates:
+    imports: |-
+        import pmt
+        from gnuradio import message
+    make: message.message_emitter(${msg})
+    callbacks:
+    - set_msg(msg)
+
+file_format: 1
