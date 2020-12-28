@@ -237,10 +237,15 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
     def mouseReleaseEvent(self, e):
         super(self.__class__, self).mouseReleaseEvent(e)
 
+    def mousePressEvent(self, e):
+        self.moveToTop()
+        super(self.__class__, self).mousePressEvent(e)
+
     def mouseDoubleClickEvent(self, e):
         print("DETECTED DOUBLE CLICK!")
         super(self.__class__, self).mouseDoubleClickEvent(e)
 
-
-
+    def moveToTop(self):
+        # TODO: Is there a simpler way to do this?
+        self.setZValue(self.parent.getMaxZValue() + 1)
 
