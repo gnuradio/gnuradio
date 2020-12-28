@@ -134,6 +134,7 @@ class Block(QtWidgets.QGraphicsItem):
 
 
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
+        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
 
 
         '''
@@ -157,10 +158,15 @@ class Block(QtWidgets.QGraphicsItem):
         font.setBold(True)
 
         # Draw main rectangle
-        painter.setPen(QtGui.QPen(2))
+        if self.isSelected():
+            painter.setPen(QtGui.QPen(QtGui.QColor(0x42, 0xD4, 0xF5)))
+        else:
+            painter.setPen(QtGui.QPen(QtGui.QColor(0x00, 0x00, 0x00)))
+
         painter.setBrush(QtGui.QBrush(QtGui.QColor(0xFA, 0xF8, 0xE0)))
         ARC = 10
         painter.drawRoundedRect(self.x, self.y, self.width-1, self.height, ARC, ARC);
+        painter.setPen(QtGui.QPen(1))
 
         # Draw block label text
         painter.setFont(font)
