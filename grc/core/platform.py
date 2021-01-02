@@ -357,7 +357,7 @@ class Platform(Element):
         return data
 
     def save_flow_graph(self, filename, flow_graph):
-        data = flow_graph.export_data()
+        data = flow_graph.scene.export_data()
 
         try:
             data['connections'] = [
