@@ -475,9 +475,17 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def enable_triggered(self):
         log.debug('enable')
+        for block in self.flowgraph.scene.selectedItems():
+            # TODO: Don't enable connections
+            block.state = 'enabled'
+            block.update()
 
     def disable_triggered(self):
         log.debug('disable')
+        for block in self.flowgraph.scene.selectedItems():
+            # TODO: Don't disable connections
+            block.state = 'disabled'
+            block.update()
 
     def execute_triggered(self):
         log.debug('execute')
