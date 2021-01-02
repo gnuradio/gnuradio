@@ -368,6 +368,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                                filter='Flow Graph Files (*.grc);;All files (*.*)')
         return filename
 
+    def save(self):
+        Save = QtWidgets.QFileDialog.getSaveFileName
+        filename, filtr = Save(self, self.actions['save'].statusTip(),
+                               filter='Flow Graph Files (*.grc);;All files (*.*)')
+        return filename
+
     # Overridden methods
     def addDockWidget(self, location, widget):
         ''' Adds a dock widget to the view. '''
@@ -418,7 +424,16 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.debug('save')
 
     def save_as_triggered(self):
-        log.debug('save')
+        log.debug('save as')
+        filename = self.save()
+
+        if filename:
+            try:
+                self.platform.save_flow_graph(filename, self.flowgraph)
+            except IOError:
+                log.error('Save failed')
+
+        log.info(filename)
 
     def close_triggered(self):
         log.debug('close')
