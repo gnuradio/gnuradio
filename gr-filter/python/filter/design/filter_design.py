@@ -1977,9 +1977,9 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.mfilterCoeff.setText(fcoeff)
 
     def action_save_dialog(self):
-        filename = QtGui.QFileDialog.getSaveFileName(self, "Save CSV Filter File", ".", "")
+        filename, _filter = QtGui.QFileDialog.getSaveFileName(self, "Save CSV Filter File", ".", "")
         try:
-            handle = open(filename, "wb")
+            handle = open(filename, "w")
         except IOError:
             reply = QtGui.QMessageBox.information(self, 'File Name',
                                                   ("Could not save to file: %s" % filename),
@@ -1996,19 +1996,19 @@ class gr_plot_filter(QtGui.QMainWindow):
         for k in list(self.params.keys()):
             csvhandle.writerow([k, self.params[k]])
         if self.iir:
-            csvhandle.writerow(["b",] + list(self.b))
-            csvhandle.writerow(["a",] + list(self.a))
+            csvhandle.writerow(["b",] + [str(_b) for _b in self.b])
+            csvhandle.writerow(["a",] + [str(_a) for _a in self.a])
         else:
-            csvhandle.writerow(["taps",] + list(self.taps))
+            csvhandle.writerow(["taps",] + [str(_tap) for _tap in self.taps])
         handle.close()
 
     def action_open_dialog(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self, "Open CSV Filter File", ".", "")
+        filename, _filter = QtGui.QFileDialog.getOpenFileName(self, "Open CSV Filter File", ".", "")
         if(len(filename) == 0):
             return
 
         try:
-            handle = open(filename, "rb")
+            handle = open(filename, "r")
         except IOError:
             reply = QtGui.QMessageBox.information(self, 'File Name',
                                                   ("Could not open file: %s" % filename),
@@ -2123,6 +2123,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.gui.gausSymbolRateEdit.setText(str(params["srate"]))
                 self.gui.gausBTEdit.setText(str(params["bt"]))
                 self.gui.gausNumTapsEdit.setText(str(params["ntaps"]))
+
         else:
             self.iir = True
             self.b, self.a = b_a["b"],b_a["a"]
