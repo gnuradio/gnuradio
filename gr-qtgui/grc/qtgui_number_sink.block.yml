@@ -241,6 +241,7 @@ templates:
         import sip
     callbacks:
     - set_update_time(${update_time})
+    - set_average(${avg})
     make: |-
         <%
             win = 'self._%s_win'%id
