@@ -32,9 +32,9 @@ class Config(object):
     def block_paths(self):
         paths_sources = (
             self.hier_block_lib_dir,
-            os.environ.get('GRC_BLOCKS_PATH', ''),
-            self._gr_prefs.get_string('grc', 'local_blocks_path', ''),
             self._gr_prefs.get_string('grc', 'global_blocks_path', ''),
+            self._gr_prefs.get_string('grc', 'local_blocks_path', ''),
+            os.environ.get('GRC_BLOCKS_PATH', ''),
         )
 
         collected_paths = sum((paths.split(os.pathsep)
