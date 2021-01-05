@@ -15,6 +15,7 @@ from .Config import Config
 from .components.flowgraph import Flowgraph
 from .components import canvas
 from .components.canvas.block import Block
+from .components.canvas.port import Port
 from .components.canvas.connection import Connection
 from ..core.platform import Platform as CorePlatform
 from ..core.utils.backports import ChainMap
@@ -63,7 +64,7 @@ class Platform(CorePlatform):
                               for key, cls in CorePlatform.block_classes_build_in.items()}
     block_classes = ChainMap({}, block_classes_build_in)
 
-    #port_classes = {key: Port.make_cls_with_base(cls)
-    #                for key, cls in CorePlatform.port_classes.items()}
+    port_classes = {key: Port.make_cls_with_base(cls)
+                    for key, cls in CorePlatform.port_classes.items()}
     #param_classes = {key: Param.make_cls_with_base(cls)
     #                 for key, cls in CorePlatform.param_classes.items()}
