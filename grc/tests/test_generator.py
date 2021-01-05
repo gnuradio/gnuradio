@@ -15,16 +15,19 @@ from grc.core.platform import Platform
 
 def test_generator():
     # c&p form compiler code.
-    # todo: make this independent from installed GR
     grc_file = path.join(path.dirname(__file__), 'resources', 'test_compiler.grc')
     out_dir = tempfile.gettempdir()
+    block_paths = [
+        path.join(path.dirname(__file__), '../../grc/blocks'),
+        path.join(path.dirname(__file__), '../../gr-blocks/grc')
+    ]
 
     platform = Platform(
         name='GNU Radio Companion Compiler',
         prefs=None,
         version='0.0.0',
     )
-    platform.build_library()
+    platform.build_library(block_paths)
 
     flow_graph = platform.make_flow_graph(grc_file)
     flow_graph.rewrite()
