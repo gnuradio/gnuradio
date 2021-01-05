@@ -99,6 +99,11 @@ parameters:
     hide: part
 value: ${ value }
 
+asserts:
+- ${ (int(num_opts) != 0) or (labels == [] or len(labels) == len(options)) }
+- ${ int(num_opts) != 0 or (value in options) }
+- ${ int(num_opts) == 0 or (value in [option0, option1, option2, option3, option4 ]) }
+
 templates:
     imports: |-
         from PyQt5 import Qt
@@ -109,30 +114,35 @@ templates:
     - self._${id}_callback(${id})
     make: |-
         <%
-            all_options = [ option0, option1, option2, option3, option4 ][:int(num_opts)]
-            all_labels = [ label0, label1, label2, label3, label4 ][:int(num_opts)]
+            if int(num_opts) > 0:
+                all_options = [ option0(), option1(), option2(), option3(), option4() ][:int(num_opts)]
+                all_labels = [ label0(), label1(), label2(), label3(), label4() ][:int(num_opts)]
+            else:
+                all_options = options()
+                all_labels = labels()
+
+            # Make sure these are lists
+            if not isinstance(all_options, list):
+                all_options = [all_options]
+            if not isinstance(all_labels, list):
+                all_labels = [all_labels]
+
+            use_labels = True
+            if len(all_labels) == 0:
+                use_labels = False
+            else:
+                # replace blank labels with their respective options
+                for i, label_ in enumerate(all_labels):
+                    if label_ == "''" or label_ == "":
+                        all_labels[i] = str(all_options[i])
         %>\
         # Create the options list
-        % if int(num_opts):
-        self._${id}_options = (\
-        % for ch in all_options:
-        ${ch}, \
-        % endfor
-        )
-        % else:
-        self._${id}_options = ${options}
-        % endif
+        self._${id}_options = ${all_options}
         # Create the labels list
-        % if int(num_opts):
-        self._${id}_labels = (\
-        % for lbl in all_labels:
-        ${lbl}, \
-        % endfor
-        )
-        % elif labels:
-        self._${id}_labels = ${labels}
+        % if use_labels:
+        self._${id}_labels = ${all_labels}
         % else:
-        self._${id}_map(str, self._${id}_options)
+        self._${id}_labels = map(str, self._${id}_options)
         % endif
         # Create the combo box
         % if widget == 'combo_box':
@@ -140,7 +150,11 @@ templates:
             win = 'self._%s_tool_bar'%id
         %>\
         ${win} = Qt.QToolBar(self)
-        ${win}.addWidget(Qt.QLabel(${(label if (len(label) - 2 > 0) else repr(id))} + ": "))
+        % if len(label) - 2 > 0:
+        ${win}.addWidget(Qt.QLabel(${label} + ": "))
+        % else:
+        ${win}.addWidget(Qt.QLabel("${id}: "))
+        % endif
         self._${id}_combo_box = Qt.QComboBox()
         ${win}.addWidget(self._${id}_combo_box)
         for _label in self._${id}_labels: self._${id}_combo_box.addItem(_label)
