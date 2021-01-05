@@ -117,7 +117,11 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         #super(self.__class__, self).__init__(parent, **n)
         CoreBlock.__init__(self, parent)
         QtWidgets.QGraphicsItem.__init__(self)
-        
+
+        port_factory = self.parent.platform.make_port
+        self.sinks = [port_factory(parent=self, **params) for params in self.inputs_data]
+        self.sources = [port_factory(parent=self, **params) for params in self.outputs_data]
+
         #self.__dict__.update(attrib)
         #self.params = params
         #self.x = attrib['_coordinate'][0]
@@ -132,6 +136,16 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         #self.block_key = block_key
         #self.block_label = block_label
         self.block_label = self.key
+
+        offset = 0
+        for source in self.sources:
+            source.y_offset += offset
+            offset += 20
+
+        offset = 0
+        for sink in self.sinks:
+            sink.y_offset += offset
+            offset += 20
 
         # figure out height of block based on how many params there are
         i = 30
@@ -195,7 +209,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         if self.isSelected():
             pen = QtGui.QPen(QtGui.QColor(0x00, 0x00, 0xFF))
         else:
-            pen =QtGui.QPen(QtGui.QColor(0x61, 0x61, 0x61))
+            pen = QtGui.QPen(QtGui.QColor(0x61, 0x61, 0x61))
 
         pen.setWidth(3)
         painter.setPen(pen)
@@ -232,7 +246,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
     def boundingRect(self): # required to have
         x, y = tuple(self.states['coordinate'])
-        return QtCore.QRectF(x, y, self.width, self.height) # same as the rectangle we draw
+        return QtCore.QRectF(x-1.5, y-1.5, self.width+3, self.height+3) # same as the rectangle we draw, but with a 0.5*pen width margin
 
     def mouseReleaseEvent(self, e):
         super(self.__class__, self).mouseReleaseEvent(e)

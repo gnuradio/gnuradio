@@ -59,7 +59,6 @@ class Block(Element):
         """Make a new block from nested data."""
         super(Block, self).__init__(parent)
         param_factory = self.parent_platform.make_param
-        port_factory = self.parent_platform.make_port
 
         self.params = collections.OrderedDict(
             (data['id'], param_factory(parent=self, **data))
@@ -68,10 +67,8 @@ class Block(Element):
         if self.key == 'options':
             self.params['id'].hide = 'part'
 
-        self.sinks = [port_factory(parent=self, **params)
-                      for params in self.inputs_data]
-        self.sources = [port_factory(parent=self, **params)
-                        for params in self.outputs_data]
+        self.sinks = []
+        self.sources = []
 
         self.active_sources = []  # on rewrite
         self.active_sinks = []  # on rewrite
