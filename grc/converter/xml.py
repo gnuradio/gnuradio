@@ -50,8 +50,11 @@ def load_lxml(filename, document_type_def=None):
 def load_stdlib(filename, document_type_def=None):
     """Load block description from xml file"""
 
-    with open(filename, 'rb') as xml_file:
-        data = xml_file.read().decode('utf-8')
+    if isinstance(filename, str):
+        with open(filename, 'rb') as xml_file:
+            data = xml_file.read().decode('utf-8')
+    else: # Already opened
+        data = filename.read().decode('utf-8')
 
     try:
         element = etree.fromstring(data)

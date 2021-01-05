@@ -21,7 +21,7 @@ def test_flow_graph_converter():
 def test_flow_graph_converter_with_fp():
     filename = path.join(path.dirname(__file__), 'resources', 'test_compiler.grc')
 
-    with open(filename) as fp:
+    with open(filename, 'rb') as fp:
         data = flow_graph.from_xml(fp)
 
     flow_graph.dump(data, sys.stdout)
