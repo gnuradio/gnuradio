@@ -99,6 +99,9 @@ parameters:
     hide: part
 value: ${ value }
 
+asserts:
+- ${ labels == [] or len(labels) == len(options) }
+
 templates:
     imports: |-
         from PyQt5 import Qt
@@ -125,14 +128,14 @@ templates:
         # Create the labels list
         % if int(num_opts):
         self._${id}_labels = (\
-        % for lbl in all_labels:
-        ${lbl}, \
+        % for i, lbl in enumerate(all_labels):
+        ${lbl if lbl else "str(self._${id}_options[${i}]),"}
         % endfor
         )
-        % elif labels:
+        % elif labels != "[]":
         self._${id}_labels = ${labels}
         % else:
-        self._${id}_map(str, self._${id}_options)
+        self._${id}_labels = map(str, self._${id}_options)
         % endif
         # Create the combo box
         % if widget == 'combo_box':
