@@ -117,6 +117,10 @@ class HierBlockGenerator(TopBlockGenerator):
             )
         else:
             t['make'] = '{cls}()'.format(cls=block_id)
+        # Self-connect if there aren't any ports
+        if not data['inputs'] and not data['outputs']:
+            t['make'] += '\nself.connect(self.${id})'
+
         # Callback data
         t['callbacks'] = [
             'set_{key}(${{ {key} }})'.format(key=param_block.name) for param_block in parameters
