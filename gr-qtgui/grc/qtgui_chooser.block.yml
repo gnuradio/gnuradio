@@ -100,7 +100,8 @@ parameters:
 value: ${ value }
 
 asserts:
-- ${ labels == [] or len(labels) == len(options) }
+- ${ int(num_opts) != 0 or (labels == [] or len(labels) == len(options)) }
+- ${ value in options }
 
 templates:
     imports: |-
