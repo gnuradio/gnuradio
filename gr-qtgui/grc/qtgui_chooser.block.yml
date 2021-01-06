@@ -112,28 +112,25 @@ templates:
     - self._${id}_callback(${id})
     make: |-
         <%
-            all_options = [ option0, option1, option2, option3, option4 ][:int(num_opts)]
-            all_labels = [ label0, label1, label2, label3, label4 ][:int(num_opts)]
+            if int(num_opts) > 0:
+                all_options = [ option0(), option1(), option2(), option3(), option4() ][:int(num_opts)]
+                all_labels = [ label0(), label1(), label2(), label3(), label4() ][:int(num_opts)]
+            else:
+                # The parentheses make sure they are lists
+                all_options = options()
+                all_labels = labels()
+
+            # all_labels is empty or all elements are the same
+            if len(all_labels) == 0 or len(all_labels) == all_labels.count(all_labels[0]):
+                use_labels = False
+            else:
+                use_labels = True
         %>\
         # Create the options list
-        % if int(num_opts):
-        self._${id}_options = (\
-        % for ch in all_options:
-        ${ch}, \
-        % endfor
-        )
-        % else:
-        self._${id}_options = ${options}
-        % endif
+        self._${id}_options = ${all_options}
         # Create the labels list
-        % if int(num_opts):
-        self._${id}_labels = (\
-        % for i, lbl in enumerate(all_labels):
-        ${lbl if lbl else "str(self._${id}_options[${i}]),"}
-        % endfor
-        )
-        % elif labels != "[]":
-        self._${id}_labels = ${labels}
+        % if use_labels:
+        self._${id}_labels = ${all_labels}
         % else:
         self._${id}_labels = map(str, self._${id}_options)
         % endif
