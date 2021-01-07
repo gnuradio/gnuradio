@@ -14,7 +14,7 @@ parameters:
 -   id: lengths
     label: Lengths
     dtype: int_vector
-    default: 1, 1
+    default: (1, 1)
 -   id: num_outputs
     label: Num Outputs
     dtype: int
