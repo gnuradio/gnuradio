@@ -14,10 +14,9 @@
 #include <regex>
 #include <stdexcept>
 
-#include <cxxabi.h>
-
 #ifdef HAVE_LIBUNWIND
 #define UNW_LOCAL_ONLY
+#include <cxxabi.h>
 #include <libunwind.h>
 #include <cstdio>
 #include <cstdlib>
