@@ -86,8 +86,12 @@ endif(WIN32)
 include(GrPython)
 if(ENABLE_PYTHON)
   target_compile_definitions(gnuradio-qtgui PUBLIC -DENABLE_PYTHON)
-  target_link_libraries(gnuradio-qtgui PUBLIC
-    Python::Python
+  # INTERFACE/PRIVATE split so users of the library can choose how to link to Python
+  # (importantly, extension modules can avoid linking against Python and resolve
+  #  their own Python symbols at runtime through the Python interpreter's linking)
+  target_link_libraries(gnuradio-qtgui
+    INTERFACE Python::Module
+    PRIVATE Python::Python
   )
 endif(ENABLE_PYTHON)
 

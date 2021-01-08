@@ -39,7 +39,7 @@ target_include_directories(${name}_python PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include
     ${PYBIND11_INCLUDE_DIR}
 )
-target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} gnuradio-${MODULE_NAME})
+target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} Python::Module gnuradio-${MODULE_NAME})
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
    CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
@@ -156,7 +156,7 @@ target_include_directories(${name}_python PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include
     ${PYBIND11_INCLUDE_DIR}
 )
-target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} gnuradio-${MODULE_NAME})
+target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} Python::Module gnuradio-${MODULE_NAME})
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
    CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
@@ -289,7 +289,7 @@ target_include_directories(${name}_python PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include
     ${PYBIND11_INCLUDE_DIR}
 )
-target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} gnuradio-${MODULE_NAME})
+target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} Python::Module gnuradio-${MODULE_NAME})
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
    CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
