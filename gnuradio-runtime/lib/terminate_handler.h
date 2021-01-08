@@ -13,7 +13,7 @@
 #include <gnuradio/api.h>
 
 namespace gr {
-void install_terminate_handler() GR_RUNTIME_API;
+GR_RUNTIME_API void install_terminate_handler();
 }
 
 #endif /* INCLUDED_TERMINATE_HANDLER_H */
