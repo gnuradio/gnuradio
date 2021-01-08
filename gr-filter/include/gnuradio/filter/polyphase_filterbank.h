@@ -106,6 +106,8 @@ public:
      */
     polyphase_filterbank(unsigned int nfilts, const std::vector<float>& taps);
 
+    polyphase_filterbank(polyphase_filterbank&&) = default;
+
     /*!
      * Update the filterbank's filter taps from a prototype
      * filter.
