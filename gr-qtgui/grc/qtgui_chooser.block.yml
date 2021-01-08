@@ -131,10 +131,10 @@ templates:
             if len(all_labels) == 0:
                 use_labels = False
             else:
-                # discard all labels if one of them is blank
-                for label_ in all_labels:
+                # replace blank labels with their respective options
+                for i, label_ in enumerate(all_labels):
                     if label_ == "''" or label_ == "":
-                        use_labels = False
+                        all_labels[i] = str(all_options[i])
         %>\
         # Create the options list
         self._${id}_options = ${all_options}
