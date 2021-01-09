@@ -311,9 +311,13 @@ void file_meta_sink_impl::update_last_header_inline()
     pmt::pmt_t s = pmt::from_uint64(seg_size);
     update_header(mp("bytes"), s);
     update_header(mp("strt"), pmt::from_uint64(METADATA_HEADER_SIZE + d_extra_size));
-    fseek(d_fp, -seg_size - hdrlen, SEEK_CUR);
+    if (fseek(d_fp, -seg_size - hdrlen, SEEK_CUR) == -1) {
+        throw std::runtime_error("fseek() failed.");
+    }
     write_header(d_fp, d_header, d_extra);
-    fseek(d_fp, seg_size, SEEK_CUR);
+    if (fseek(d_fp, seg_size, SEEK_CUR) == -1) {
+        throw std::runtime_error("fseek() failed.");
+    }
 }
 
 void file_meta_sink_impl::update_last_header_detached()
@@ -325,7 +329,9 @@ void file_meta_sink_impl::update_last_header_detached()
     pmt::pmt_t s = pmt::from_uint64(seg_size);
     update_header(mp("bytes"), s);
     update_header(mp("strt"), pmt::from_uint64(METADATA_HEADER_SIZE + d_extra_size));
-    fseek(d_hdr_fp, -hdrlen, SEEK_CUR);
+    if (fseek(d_hdr_fp, -hdrlen, SEEK_CUR) == -1) {
+        throw std::runtime_error("fseek() failed.");
+    }
     write_header(d_hdr_fp, d_header, d_extra);
 }
 
