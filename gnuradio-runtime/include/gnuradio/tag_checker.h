@@ -12,6 +12,7 @@
 #define INCLUDED_GR_RUNTIME_TAG_CHECKER_H
 
 #include <gnuradio/tags.h>
+#include <algorithm>
 #include <vector>
 
 namespace gr {
