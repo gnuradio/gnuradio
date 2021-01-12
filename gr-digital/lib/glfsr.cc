@@ -14,7 +14,7 @@
 namespace gr {
 namespace digital {
 
-static uint32_t s_polynomial_masks[] = {
+static uint64_t s_polynomial_masks[] = {
     0x00000000,
     0x00000001, // x^1 + 1
     0x00000003, // x^2 + x^1 + 1
@@ -52,11 +52,10 @@ static uint32_t s_polynomial_masks[] = {
 
 glfsr::~glfsr() {}
 
-uint32_t glfsr::glfsr_mask(unsigned int degree)
+uint64_t glfsr::glfsr_mask(unsigned int degree)
 {
-    if (degree < 1 || degree > 32)
-        throw std::runtime_error(
-            "glfsr::glfsr_mask(): degree must be between 1 and 32 inclusive");
+    if (degree < 1 || degree > 64)
+        throw std::runtime_error("glfsr::glfsr_mask(): must be 1 <= degree <= 64");
     return s_polynomial_masks[degree];
 }
 

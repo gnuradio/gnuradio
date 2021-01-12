@@ -37,6 +37,7 @@ GR_PYTHON_INSTALL(
     FILES
     utils/__init__.py
     utils/gray_code.py
+    utils/lfsr.py
     utils/mod_codes.py
     utils/alignment.py
     utils/tagged_streams.py

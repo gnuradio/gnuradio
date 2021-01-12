@@ -18,22 +18,22 @@
 namespace gr {
 namespace digital {
 
-additive_scrambler_bb::sptr additive_scrambler_bb::make(int mask,
-                                                        int seed,
-                                                        int len,
-                                                        int count,
-                                                        int bits_per_byte,
+additive_scrambler_bb::sptr additive_scrambler_bb::make(uint64_t mask,
+                                                        uint64_t seed,
+                                                        uint8_t len,
+                                                        int64_t count,
+                                                        uint8_t bits_per_byte,
                                                         const std::string& reset_tag_key)
 {
     return gnuradio::make_block_sptr<additive_scrambler_bb_impl>(
         mask, seed, len, count, bits_per_byte, reset_tag_key);
 }
 
-additive_scrambler_bb_impl::additive_scrambler_bb_impl(int mask,
-                                                       int seed,
-                                                       int len,
-                                                       int count,
-                                                       int bits_per_byte,
+additive_scrambler_bb_impl::additive_scrambler_bb_impl(uint64_t mask,
+                                                       uint64_t seed,
+                                                       uint8_t len,
+                                                       int64_t count,
+                                                       uint8_t bits_per_byte,
                                                        const std::string& reset_tag_key)
     : sync_block("additive_scrambler_bb",
                  io_signature::make(1, 1, sizeof(unsigned char)),
@@ -56,25 +56,26 @@ additive_scrambler_bb_impl::additive_scrambler_bb_impl(int mask,
 
 additive_scrambler_bb_impl::~additive_scrambler_bb_impl() {}
 
-int additive_scrambler_bb_impl::mask() const { return d_lfsr.mask(); }
+uint64_t additive_scrambler_bb_impl::mask() const { return d_lfsr.mask(); }
 
-int additive_scrambler_bb_impl::seed() const { return d_seed; }
+uint64_t additive_scrambler_bb_impl::seed() const { return d_seed; }
 
-int additive_scrambler_bb_impl::len() const { return d_len; }
+uint8_t additive_scrambler_bb_impl::len() const { return d_len; }
 
-int additive_scrambler_bb_impl::count() const { return d_count; }
+int64_t additive_scrambler_bb_impl::count() const { return d_count; }
 
-int additive_scrambler_bb_impl::_get_next_reset_index(int noutput_items,
-                                                      int last_reset_index /* = -1 */)
+int64_t
+additive_scrambler_bb_impl::_get_next_reset_index(int64_t noutput_items,
+                                                  int64_t last_reset_index /* = -1 */)
 {
-    int reset_index =
+    int64_t reset_index =
         noutput_items; // This is a value that gets never reached in the for loop
     if (d_count == -1) {
         std::vector<gr::tag_t> tags;
         get_tags_in_range(
             tags, 0, nitems_read(0), nitems_read(0) + noutput_items, d_reset_tag_key);
         for (unsigned i = 0; i < tags.size(); i++) {
-            int reset_pos = tags[i].offset - nitems_read(0);
+            int64_t reset_pos = tags[i].offset - nitems_read(0);
             if (reset_pos < reset_index && reset_pos > last_reset_index) {
                 reset_index = reset_pos;
             }

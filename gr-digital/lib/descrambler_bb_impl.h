@@ -23,8 +23,8 @@ private:
     digital::lfsr d_lfsr;
 
 public:
-    descrambler_bb_impl(int mask, int seed, int len);
-    ~descrambler_bb_impl() override;
+    descrambler_bb_impl(uint64_t mask, uint64_t seed, uint8_t len);
+    ~descrambler_bb_impl();
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

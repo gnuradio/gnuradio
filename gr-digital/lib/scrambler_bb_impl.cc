@@ -18,12 +18,12 @@
 namespace gr {
 namespace digital {
 
-scrambler_bb::sptr scrambler_bb::make(int mask, int seed, int len)
+scrambler_bb::sptr scrambler_bb::make(uint64_t mask, uint64_t seed, uint8_t len)
 {
     return gnuradio::make_block_sptr<scrambler_bb_impl>(mask, seed, len);
 }
 
-scrambler_bb_impl::scrambler_bb_impl(int mask, int seed, int len)
+scrambler_bb_impl::scrambler_bb_impl(uint64_t mask, uint64_t seed, uint8_t len)
     : sync_block("scrambler_bb",
                  io_signature::make(1, 1, sizeof(unsigned char)),
                  io_signature::make(1, 1, sizeof(unsigned char))),
