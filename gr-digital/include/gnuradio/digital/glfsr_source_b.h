@@ -40,11 +40,11 @@ public:
      */
     static sptr make(unsigned int degree,
                      bool repeat = true,
-                     uint32_t mask = 0x0,
-                     uint32_t seed = 0x1);
+                     uint64_t mask = 0x0,
+                     uint64_t seed = 0x1);
 
-    virtual uint32_t period() const = 0;
-    virtual uint32_t mask() const = 0;
+    virtual uint64_t period() const = 0;
+    virtual uint64_t mask() const = 0;
 };
 
 } /* namespace digital */

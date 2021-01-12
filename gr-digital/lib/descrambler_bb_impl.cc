@@ -18,12 +18,12 @@
 namespace gr {
 namespace digital {
 
-descrambler_bb::sptr descrambler_bb::make(int mask, int seed, int len)
+descrambler_bb::sptr descrambler_bb::make(uint64_t mask, uint64_t seed, uint8_t len)
 {
     return gnuradio::make_block_sptr<descrambler_bb_impl>(mask, seed, len);
 }
 
-descrambler_bb_impl::descrambler_bb_impl(int mask, int seed, int len)
+descrambler_bb_impl::descrambler_bb_impl(uint64_t mask, uint64_t seed, uint8_t len)
     : sync_block("descrambler_bb",
                  io_signature::make(1, 1, sizeof(unsigned char)),
                  io_signature::make(1, 1, sizeof(unsigned char))),

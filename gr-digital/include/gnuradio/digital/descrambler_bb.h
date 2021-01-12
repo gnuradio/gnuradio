@@ -39,7 +39,7 @@ public:
      * \param seed     Initial shift register contents
      * \param len      Shift register length
      */
-    static sptr make(int mask, int seed, int len);
+    static sptr make(uint64_t mask, uint64_t seed, uint8_t len);
 };
 
 } /* namespace digital */

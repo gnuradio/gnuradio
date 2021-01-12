@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(glfsr.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(4299ef7303d0f404e97b16abb6de32ee)                     */
+/* BINDTOOL_HEADER_FILE(glfsr.h)                                                   */
+/* BINDTOOL_HEADER_FILE_HASH(0a9a03db1fc3d6a7b81b009e620c41c2)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -35,7 +35,7 @@ void bind_glfsr(py::module& m)
 
     py::class_<glfsr, std::shared_ptr<glfsr>>(m, "glfsr", D(glfsr))
 
-        .def(py::init<uint32_t, uint32_t>(),
+        .def(py::init<uint64_t, uint64_t>(),
              py::arg("mask"),
              py::arg("seed"),
              D(glfsr, glfsr, 0))

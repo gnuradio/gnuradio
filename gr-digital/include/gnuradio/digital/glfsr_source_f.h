@@ -30,7 +30,7 @@ public:
     /*!
      * Make a Galois LFSR pseudo-random source block.
      *
-     * \param degree Degree of shift register must be in [1, 32]. If mask
+     * \param degree Degree of shift register must be in [1, 64]. If mask
      *               is 0, the degree determines a default mask (see
      *               digital_impl_glfsr.cc for the mapping).
      * \param repeat Set to repeat sequence.
@@ -39,10 +39,10 @@ public:
      * \param seed   Initial setting for values in shift register.
      */
     static sptr
-    make(unsigned int degree, bool repeat = true, uint32_t mask = 0, uint32_t seed = 1);
+    make(unsigned int degree, bool repeat = true, uint64_t mask = 0, uint64_t seed = 1);
 
-    virtual uint32_t period() const = 0;
-    virtual uint32_t mask() const = 0;
+    virtual uint64_t period() const = 0;
+    virtual uint64_t mask() const = 0;
 };
 
 } /* namespace digital */

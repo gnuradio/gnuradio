@@ -55,18 +55,18 @@ public:
      * \param reset_tag_key When a tag with this key is detected, the shift register is
      * reset (when this is set, count is ignored!)
      */
-    static sptr make(int mask,
-                     int seed,
-                     int len,
-                     int count = 0,
-                     int bits_per_byte = 1,
+    static sptr make(uint64_t mask,
+                     uint64_t seed,
+                     uint8_t len,
+                     int64_t count = 0,
+                     uint8_t bits_per_byte = 1,
                      const std::string& reset_tag_key = "");
 
-    virtual int mask() const = 0;
-    virtual int seed() const = 0;
-    virtual int len() const = 0;
-    virtual int count() const = 0;
-    virtual int bits_per_byte() = 0;
+    virtual uint64_t mask() const = 0;
+    virtual uint64_t seed() const = 0;
+    virtual uint8_t len() const = 0;
+    virtual int64_t count() const = 0;
+    virtual uint8_t bits_per_byte() = 0;
 };
 
 } /* namespace digital */
