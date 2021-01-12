@@ -139,8 +139,8 @@ class test_peak_detector2(gr_unittest.TestCase):
         dst_data = dst.data()
         dst_avg = avg.data()
 
-        self.assertEqual(tuple(expected_result_peak), dst_data)
-        self.assertFloatTuplesAlmostEqual(tuple(expected_result_average[1:]), dst_avg)
+        self.assertEqual(expected_result_peak, dst_data)
+        self.assertFloatTuplesAlmostEqual(expected_result_average[1:], dst_avg)
 
 if __name__ == '__main__':
     gr_unittest.run(test_peak_detector2)
