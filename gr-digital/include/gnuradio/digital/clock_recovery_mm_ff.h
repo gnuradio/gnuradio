@@ -19,7 +19,9 @@ namespace digital {
 
 /*!
  * \brief Mueller and Müller (M&M) based clock recovery block with float input, float
- * output. \ingroup synchronizers_blk
+ * output.
+ * \ingroup synchronizers_blk
+ * \ingroup deprecated_blk
  *
  * \details
  * This implements the Mueller and Müller (M&M) discrete-time
@@ -57,7 +59,7 @@ class DIGITAL_API clock_recovery_mm_ff : virtual public block
 {
 public:
     // gr::digital::clock_recovery_mm_ff::sptr
-    typedef boost::shared_ptr<clock_recovery_mm_ff> sptr;
+    typedef std::shared_ptr<clock_recovery_mm_ff> sptr;
 
     /*!
      * Make a M&M clock recovery block.

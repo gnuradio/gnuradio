@@ -34,7 +34,7 @@ namespace blocks {
 class BLOCKS_API throttle : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<throttle> sptr;
+    typedef std::shared_ptr<throttle> sptr;
 
     static sptr make(size_t itemsize, double samples_per_sec, bool ignore_tags = true);
 

@@ -18,28 +18,14 @@
 #include <assert.h>
 #include <stdexcept>
 
-extern "C" {
-void put_next_rx_char(void* callback_state, char c)
-{
-    struct freedv_rx_callback_state* pstate;
-
-    pstate = (struct freedv_rx_callback_state*)callback_state;
-    if (pstate->ftxt != NULL) {
-        // fprintf(pstate->ftxt, "%c\n", c);
-    }
-    return;
-}
-}
-
-
 namespace gr {
 namespace vocoder {
 
 freedv_rx_ss::sptr
 freedv_rx_ss::make(int mode, float squelch_thresh, int interleave_frames)
 {
-    return gnuradio::get_initial_sptr(
-        new freedv_rx_ss_impl(mode, squelch_thresh, interleave_frames));
+    return gnuradio::make_block_sptr<freedv_rx_ss_impl>(
+        mode, squelch_thresh, interleave_frames);
 }
 
 freedv_rx_ss_impl::freedv_rx_ss_impl(int mode,
@@ -48,9 +34,8 @@ freedv_rx_ss_impl::freedv_rx_ss_impl(int mode,
     : gr::block("vocoder_freedv_rx_ss",
                 io_signature::make(1, 1, sizeof(short)),
                 io_signature::make(1, 1, sizeof(short))),
-      d_mode(mode),
-      d_squelch_thresh(squelch_thresh),
-      d_interleave_frames(interleave_frames)
+      d_port(pmt::mp("text")),
+      d_squelch_thresh(squelch_thresh)
 {
 #ifdef FREEDV_MODE_700D
     if (mode == FREEDV_MODE_700D) {
@@ -67,7 +52,8 @@ freedv_rx_ss_impl::freedv_rx_ss_impl(int mode,
 #endif
     freedv_set_snr_squelch_thresh(d_freedv, d_squelch_thresh);
     freedv_set_squelch_en(d_freedv, 0);
-    freedv_set_callback_txt(d_freedv, put_next_rx_char, NULL, (void*)&d_cb_state);
+    freedv_set_callback_txt(d_freedv, put_next_rx_char, NULL, this);
+    message_port_register_out(d_port);
     d_speech_samples = freedv_get_n_speech_samples(d_freedv);
     d_max_modem_samples = freedv_get_n_max_modem_samples(d_freedv);
     d_nin = freedv_nin(d_freedv);
@@ -82,11 +68,9 @@ freedv_rx_ss_impl::~freedv_rx_ss_impl()
     if (freedv_get_test_frames(d_freedv)) {
         total_bits = freedv_get_total_bits(d_freedv);
         total_bit_errors = freedv_get_total_bit_errors(d_freedv);
-        fprintf(stderr,
-                "bits: %d errors: %d BER: %3.2f\n",
-                total_bits,
-                total_bit_errors,
-                (1.0 * total_bit_errors) / total_bits);
+        GR_LOG_ERROR(d_logger,
+                     boost::format("bits: %d errors: %d BER: %3.2f") % total_bits %
+                         total_bit_errors % ((1.0 * total_bit_errors) / total_bits));
     }
     freedv_close(d_freedv);
 }
@@ -148,6 +132,18 @@ void freedv_rx_ss_impl::set_squelch_en(bool squelch_enabled)
 }
 
 float freedv_rx_ss_impl::squelch_thresh() { return (d_squelch_thresh); }
+
+void freedv_rx_ss_impl::put_next_rx_char(void* callback_state, char c)
+{
+    freedv_rx_ss_impl* instance = static_cast<freedv_rx_ss_impl*>(callback_state);
+
+    if (c == '\r') {
+        instance->message_port_pub(instance->d_port, pmt::intern(instance->d_rx_str));
+        instance->d_rx_str = "";
+    } else {
+        instance->d_rx_str += c;
+    }
+}
 
 } /* namespace vocoder */
 } /* namespace gr */

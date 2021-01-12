@@ -65,7 +65,7 @@ std::string usrp_sink_impl::get_subdev_spec(size_t mboard)
 
 void usrp_sink_impl::set_samp_rate(double rate)
 {
-    BOOST_FOREACH (const size_t chan, _stream_args.channels) {
+    for (const auto& chan : _stream_args.channels) {
         _dev->set_tx_rate(rate, chan);
     }
     _sample_rate = this->get_samp_rate();
@@ -185,6 +185,66 @@ std::vector<std::string> usrp_sink_impl::get_gain_names(size_t chan)
 {
     chan = _stream_args.channels[chan];
     return _dev->get_tx_gain_range(name, chan);
+}
+
+bool usrp_sink_impl::has_power_reference(size_t chan)
+{
+#ifdef UHD_USRP_MULTI_USRP_POWER_LEVEL
+    if (chan >= _stream_args.channels.size()) {
+        throw std::out_of_range("Invalid channel: " + std::to_string(chan));
+    }
+    const size_t dev_chan = _stream_args.channels[chan];
+    return _dev->has_tx_power_reference(dev_chan);
+#else
+    GR_LOG_WARN(d_logger,
+                "UHD version 4.0 or greater required for power reference API. ");
+    return false;
+#endif
+}
+
+void usrp_sink_impl::set_power_reference(double power_dbm, size_t chan)
+{
+#ifdef UHD_USRP_MULTI_USRP_POWER_LEVEL
+    if (chan >= _stream_args.channels.size()) {
+        throw std::out_of_range("Invalid channel: " + std::to_string(chan));
+    }
+    const size_t dev_chan = _stream_args.channels[chan];
+    _dev->set_tx_power_reference(power_dbm, dev_chan);
+#else
+    GR_LOG_ERROR(d_logger,
+                 "UHD version 4.0 or greater required for power reference API.");
+    throw std::runtime_error("not implemented in this version");
+#endif
+}
+
+double usrp_sink_impl::get_power_reference(size_t chan)
+{
+#ifdef UHD_USRP_MULTI_USRP_POWER_LEVEL
+    if (chan >= _stream_args.channels.size()) {
+        throw std::out_of_range("Invalid channel: " + std::to_string(chan));
+    }
+    const size_t dev_chan = _stream_args.channels[chan];
+    return _dev->get_tx_power_reference(dev_chan);
+#else
+    GR_LOG_ERROR(d_logger,
+                 "UHD version 4.0 or greater required for power reference API.");
+    throw std::runtime_error("not implemented in this version");
+#endif
+}
+
+::uhd::meta_range_t usrp_sink_impl::get_power_range(size_t chan)
+{
+#ifdef UHD_USRP_MULTI_USRP_POWER_LEVEL
+    if (chan >= _stream_args.channels.size()) {
+        throw std::out_of_range("Invalid channel: " + std::to_string(chan));
+    }
+    const size_t dev_chan = _stream_args.channels[chan];
+    return _dev->get_tx_power_range(dev_chan);
+#else
+    GR_LOG_ERROR(d_logger,
+                 "UHD version 4.0 or greater required for power reference API.");
+    throw std::runtime_error("not implemented in this version");
+#endif
 }
 
 void usrp_sink_impl::set_antenna(const std::string& ant, size_t chan)
@@ -388,7 +448,7 @@ int usrp_sink_impl::work(int noutput_items,
             // There is a tag gap since no length_tag was found immediately following
             // the last sample of the previous burst. Drop samples until the next
             // length_tag is found. Notify the user of the tag gap.
-            std::cerr << "tG" << std::flush;
+            GR_LOG_ERROR(d_logger, "tG");
             // increment the timespec by the number of samples dropped
             _metadata.time_spec += ::uhd::time_spec_t(0, ninput_items, _sample_rate);
             return ninput_items;
@@ -413,7 +473,7 @@ int usrp_sink_impl::work(int noutput_items,
         GR_LOG_DEBUG(d_debug_logger,
                      boost::format("Executing %d pending commands.") %
                          _pending_cmds.size());
-        BOOST_FOREACH (const pmt::pmt_t& cmd_pmt, _pending_cmds) {
+        for (const auto& cmd_pmt : _pending_cmds) {
             msg_handler_command(cmd_pmt);
         }
         _pending_cmds.clear();
@@ -440,7 +500,7 @@ void usrp_sink_impl::tag_work(int& ninput_items)
     // For commands that are in the middle of the burst:
     std::vector<pmt::pmt_t> commands_in_burst; // Store the command
     uint64_t in_burst_cmd_offset = 0;          // Store its position
-    BOOST_FOREACH (const tag_t& my_tag, _tags) {
+    for (const auto& my_tag : _tags) {
         const uint64_t my_tag_count = my_tag.offset;
         const pmt::pmt_t& key = my_tag.key;
         const pmt::pmt_t& value = my_tag.value;
@@ -504,7 +564,7 @@ void usrp_sink_impl::tag_work(int& ninput_items)
             // preempted. Set the items remaining counter to the new burst length. Notify
             // the user of the tag preemption.
             else if (_nitems_to_send > 0) {
-                std::cerr << "tP" << std::flush;
+                GR_LOG_ERROR(d_logger, "tP");
             }
             _nitems_to_send = pmt::to_long(value);
             _metadata.start_of_burst = true;
@@ -521,14 +581,13 @@ void usrp_sink_impl::tag_work(int& ninput_items)
          */
         else if (pmt::equal(key, FREQ_KEY) && my_tag_count == samp0_count) {
             // If it's on the first sample, immediately do the tune:
-            GR_LOG_DEBUG(d_debug_logger,
-                         boost::format("Received tx_freq on start of burst."));
+            GR_LOG_DEBUG(d_debug_logger, "Received tx_freq on start of burst.");
             pmt::pmt_t freq_cmd = pmt::make_dict();
             freq_cmd = pmt::dict_add(freq_cmd, cmd_freq_key(), value);
             msg_handler_command(freq_cmd);
         } else if (pmt::equal(key, FREQ_KEY)) {
             // If it's not on the first sample, queue this command and only tx until here:
-            GR_LOG_DEBUG(d_debug_logger, boost::format("Received tx_freq mid-burst."));
+            GR_LOG_DEBUG(d_debug_logger, "Received tx_freq mid-burst.");
             pmt::pmt_t freq_cmd = pmt::make_dict();
             freq_cmd = pmt::dict_add(freq_cmd, cmd_freq_key(), value);
             commands_in_burst.push_back(freq_cmd);
@@ -566,7 +625,7 @@ void usrp_sink_impl::tag_work(int& ninput_items)
             // ...then it's in the middle of a burst, only send() until before the tag
             max_count = in_burst_cmd_offset;
         } else if (in_burst_cmd_offset < max_count) {
-            BOOST_FOREACH (const pmt::pmt_t& cmd_pmt, commands_in_burst) {
+            for (const auto& cmd_pmt : commands_in_burst) {
                 _pending_cmds.push_back(cmd_pmt);
             }
         }

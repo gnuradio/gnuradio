@@ -2,20 +2,21 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
-from __future__ import absolute_import
 
 import os
 import shlex
 import subprocess
 import threading
 import time
+from pathlib import Path
 from distutils.spawn import find_executable
 
 from gi.repository import GLib
 
 from ..core import Messages
+from . import Utils
 
 
 class ExecFlowGraphThread(threading.Thread):
@@ -55,15 +56,21 @@ class ExecFlowGraphThread(threading.Thread):
         # When in no gui mode on linux, use a graphical terminal (looks nice)
         xterm_executable = find_executable(self.xterm_executable)
         if generator.generate_options == 'no_gui' and xterm_executable:
-            run_command_args = [xterm_executable, '-e', run_command]
+            if ('gnome-terminal' in xterm_executable):
+                run_command_args = [xterm_executable, '--'] + run_command_args
+            else:
+                run_command_args = [xterm_executable, '-e', run_command]
 
         # this does not reproduce a shell executable command string, if a graphical
         # terminal is used. Passing run_command though shlex_quote would do it but
         # it looks really ugly and confusing in the console panel.
         Messages.send_start_exec(' '.join(run_command_args))
 
+        dirname = Path(generator.file_path).parent
+
         return subprocess.Popen(
             args=run_command_args,
+            cwd=dirname,
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             shell=False, universal_newlines=True
         )
@@ -83,11 +90,13 @@ class ExecFlowGraphThread(threading.Thread):
 
         xterm_executable = find_executable(self.xterm_executable)
 
-        run_command_args = ['cmake .. &&', 'make && ', xterm_executable, '-e', run_command]
-        Messages.send_start_exec(' '.join(run_command_args))
+        nproc = Utils.get_cmake_nproc()
+
+        run_command_args = f'cmake .. && cmake --build . -j{nproc} && cd ../.. && {xterm_executable} -e {run_command}'
+        Messages.send_start_exec(run_command_args)
 
         return subprocess.Popen(
-            args=' '.join(run_command_args),
+            args=run_command_args,
             cwd=builddir,
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             shell=True, universal_newlines=True

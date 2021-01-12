@@ -26,11 +26,11 @@ class GrGraphicItem(gr.sync_block, QLabel):
     filename as a string in a message to change the image on the fly.
     overlays can also be added by passing in a message with a
     dictionary of a list of dictionaries in the car portion of the
-    message.  Each dicationary should have the following keys:
+    message.  Each dictionary should have the following keys:
     'filename','x','y', and an optional 'scalefactor'.
     Setting the x/y attributes to -1,-1 will remove an overlay.
     Otherwise items are indexed by filename and can be animated
-    throughout the backgound image.
+    throughout the background image.
     """
     def __init__(self, image_file, scaleImage=True, fixedSize=False, setWidth=0, setHeight=0):
         gr.sync_block.__init__(self, name="GrGraphicsItem", in_sig=None, out_sig=None)

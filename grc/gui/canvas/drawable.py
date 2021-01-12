@@ -6,10 +6,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-from __future__ import absolute_import
 from ..Constants import LINE_SELECT_SENSITIVITY
-
-from six.moves import zip
 
 
 class Drawable(object):

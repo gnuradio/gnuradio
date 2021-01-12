@@ -8,9 +8,8 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import unicode_literals
 from gnuradio import gr, filter
+from gnuradio.fft import window
 from gnuradio import blocks
 import sys
 
@@ -146,10 +145,10 @@ class my_top_block(gr.top_block):
         src  = blocks.add_cc()
         channel = channels.channel_model(0.001)
         thr = blocks.throttle(gr.sizeof_gr_complex, 100*fftsize)
-        self.snk1 = qtgui.sink_c(fftsize, filter.firdes.WIN_BLACKMAN_hARRIS,
+        self.snk1 = qtgui.sink_c(fftsize, window.WIN_BLACKMAN_hARRIS,
                                  0, Rs,
                                  "Complex Signal Example",
-                                 True, True, True, False)
+                                 True, True, True, False, None)
 
         self.connect(src1, (src,0))
         self.connect(src2, (src,1))

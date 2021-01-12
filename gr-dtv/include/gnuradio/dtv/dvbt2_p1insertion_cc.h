@@ -27,7 +27,7 @@ namespace dtv {
 class DTV_API dvbt2_p1insertion_cc : virtual public gr::block
 {
 public:
-    typedef boost::shared_ptr<dvbt2_p1insertion_cc> sptr;
+    typedef std::shared_ptr<dvbt2_p1insertion_cc> sptr;
 
     /*!
      * \brief Create a P1 symbol inserter.

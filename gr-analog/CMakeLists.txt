@@ -16,7 +16,6 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-analog" ENABLE_GR_ANALOG
     Boost_FOUND
-    ENABLE_VOLK
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_BLOCKS
     ENABLE_GR_FFT
@@ -37,10 +36,11 @@ add_subdirectory(include/gnuradio/analog)
 add_subdirectory(lib)
 add_subdirectory(docs)
 if(ENABLE_PYTHON)
-    add_subdirectory(swig)
     add_subdirectory(python/analog)
-    add_subdirectory(examples)
-    add_subdirectory(examples/tags)
+    if(ENABLE_EXAMPLES)
+        add_subdirectory(examples)
+        add_subdirectory(examples/tags)
+    endif(ENABLE_EXAMPLES)
 endif(ENABLE_PYTHON)
 if(ENABLE_GRC)
     add_subdirectory(grc)

@@ -115,8 +115,6 @@ public:
 
     iir_filter() : d_latest_n(0), d_latest_m(0) {}
 
-    ~iir_filter() {}
-
     /*!
      * \brief compute a single output value.
      * \returns the filtered input value.

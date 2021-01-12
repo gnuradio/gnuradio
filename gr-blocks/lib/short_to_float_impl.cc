@@ -21,7 +21,7 @@ namespace blocks {
 
 short_to_float::sptr short_to_float::make(size_t vlen, float scale)
 {
-    return gnuradio::get_initial_sptr(new short_to_float_impl(vlen, scale));
+    return gnuradio::make_block_sptr<short_to_float_impl>(vlen, scale);
 }
 
 short_to_float_impl::short_to_float_impl(size_t vlen, float scale)

@@ -1,93 +1,44 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2011-2013 Free Software Foundation, Inc.
+ * Copyright 2013,2020 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
  */
-
 #include "block_gateway_impl.h"
+#include <pybind11/embed.h>
+
 #include <gnuradio/io_signature.h>
-#include <boost/bind.hpp>
 #include <iostream>
 
 namespace gr {
 
-/***********************************************************************
- * Helper routines
- **********************************************************************/
-template <typename OutType, typename InType>
-void copy_pointers(OutType& out, const InType& in)
-{
-    out.resize(in.size());
-    for (size_t i = 0; i < in.size(); i++) {
-        out[i] = (void*)(in[i]);
-    }
-}
-
-
-block_gateway::sptr block_gateway::make(feval_ll* handler,
+block_gateway::sptr block_gateway::make(const py::object& p,
                                         const std::string& name,
                                         gr::io_signature::sptr in_sig,
-                                        gr::io_signature::sptr out_sig,
-                                        const block_gw_work_type work_type,
-                                        const unsigned factor)
+                                        gr::io_signature::sptr out_sig)
 {
-    return block_gateway::sptr(
-        new block_gateway_impl(handler, name, in_sig, out_sig, work_type, factor));
+    return block_gateway::sptr(new block_gateway_impl(p, name, in_sig, out_sig));
 }
 
-block_gateway_impl::block_gateway_impl(feval_ll* handler,
+block_gateway_impl::block_gateway_impl(const py::handle& p,
                                        const std::string& name,
                                        gr::io_signature::sptr in_sig,
-                                       gr::io_signature::sptr out_sig,
-                                       const block_gw_work_type work_type,
-                                       const unsigned factor)
-    : block(name, in_sig, out_sig), _handler(handler), _work_type(work_type)
+                                       gr::io_signature::sptr out_sig)
+    : block(name, in_sig, out_sig)
 {
-    switch (_work_type) {
-    case GR_BLOCK_GW_WORK_GENERAL:
-        _decim = 1;  // not relevant, but set anyway
-        _interp = 1; // not relevant, but set anyway
-        break;
-
-    case GR_BLOCK_GW_WORK_SYNC:
-        _decim = 1;
-        _interp = 1;
-        this->set_fixed_rate(true);
-        break;
-
-    case GR_BLOCK_GW_WORK_DECIM:
-        _decim = factor;
-        _interp = 1;
-        break;
-
-    case GR_BLOCK_GW_WORK_INTERP:
-        _decim = 1;
-        _interp = factor;
-        this->set_output_multiple(_interp);
-        break;
-    }
+    _py_handle = p;
 }
 
 void block_gateway_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
 {
-    switch (_work_type) {
-    case GR_BLOCK_GW_WORK_GENERAL:
-        _message.action = block_gw_message_type::ACTION_FORECAST;
-        _message.forecast_args_noutput_items = noutput_items;
-        _message.forecast_args_ninput_items_required = ninput_items_required;
-        _handler->calleval(0);
-        ninput_items_required = _message.forecast_args_ninput_items_required;
-        return;
+    py::gil_scoped_acquire acquire;
 
-    default:
-        unsigned ninputs = ninput_items_required.size();
-        for (unsigned i = 0; i < ninputs; i++)
-            ninput_items_required[i] = fixed_rate_noutput_to_ninput(noutput_items);
-        return;
-    }
+    py::object ret_ninput_items_required =
+        _py_handle.attr("handle_forecast")(noutput_items, ninput_items_required.size());
+    ninput_items_required = ret_ninput_items_required.cast<std::vector<int>>();
 }
 
 int block_gateway_impl::general_work(int noutput_items,
@@ -95,63 +46,29 @@ int block_gateway_impl::general_work(int noutput_items,
                                      gr_vector_const_void_star& input_items,
                                      gr_vector_void_star& output_items)
 {
-    switch (_work_type) {
-    case GR_BLOCK_GW_WORK_GENERAL:
-        _message.action = block_gw_message_type::ACTION_GENERAL_WORK;
-        _message.general_work_args_noutput_items = noutput_items;
-        _message.general_work_args_ninput_items = ninput_items;
-        copy_pointers(_message.general_work_args_input_items, input_items);
-        _message.general_work_args_output_items = output_items;
-        _handler->calleval(0);
-        return _message.general_work_args_return_value;
+    py::gil_scoped_acquire acquire;
 
-    default:
-        int r = work(noutput_items, input_items, output_items);
-        if (r > 0)
-            consume_each(r * _decim / _interp);
-        return r;
-    }
-}
+    py::object ret = _py_handle.attr("handle_general_work")(
+        noutput_items, ninput_items, input_items, output_items);
 
-int block_gateway_impl::work(int noutput_items,
-                             gr_vector_const_void_star& input_items,
-                             gr_vector_void_star& output_items)
-{
-    _message.action = block_gw_message_type::ACTION_WORK;
-    _message.work_args_ninput_items = fixed_rate_noutput_to_ninput(noutput_items);
-    if (_message.work_args_ninput_items == 0)
-        return -1;
-    _message.work_args_noutput_items = noutput_items;
-    copy_pointers(_message.work_args_input_items, input_items);
-    _message.work_args_output_items = output_items;
-    _handler->calleval(0);
-    return _message.work_args_return_value;
-}
-
-int block_gateway_impl::fixed_rate_noutput_to_ninput(int noutput_items)
-{
-    return (noutput_items * _decim / _interp) + history() - 1;
-}
-
-int block_gateway_impl::fixed_rate_ninput_to_noutput(int ninput_items)
-{
-    return std::max(0, ninput_items - (int)history() + 1) * _interp / _decim;
+    return ret.cast<int>();
+    ;
 }
 
 bool block_gateway_impl::start(void)
 {
-    _message.action = block_gw_message_type::ACTION_START;
-    _handler->calleval(0);
-    return _message.start_args_return_value;
+    py::gil_scoped_acquire acquire;
+
+    py::object ret = _py_handle.attr("start")();
+    return ret.cast<bool>();
 }
 
 bool block_gateway_impl::stop(void)
 {
-    _message.action = block_gw_message_type::ACTION_STOP;
-    _handler->calleval(0);
-    return _message.stop_args_return_value;
-}
+    py::gil_scoped_acquire acquire;
 
-block_gw_message_type& block_gateway_impl::block_message(void) { return _message; }
+    py::object ret = _py_handle.attr("stop")();
+    return ret.cast<bool>();
+}
 
 } /* namespace gr */

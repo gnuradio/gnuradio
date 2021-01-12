@@ -1,5 +1,6 @@
 id: dtv_dvbt_ofdm_sym_acquisition
 label: OFDM Symbol Acquisition
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -40,5 +41,17 @@ templates:
     imports: from gnuradio import dtv
     make: dtv.dvbt_ofdm_sym_acquisition(1, ${fft_length}, ${occupied_tones}, ${cp_length},
         ${snr})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbt_ofdm_sym_acquisition.h>']
+    declarations: 'dtv::dvbt_ofdm_sym_acquisition::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbt_ofdm_sym_acquisition::make(
+            1,
+            ${fft_length},
+            ${occupied_tones},
+            ${cp_length},
+            ${snr});
+    link: ['gnuradio-dtv']
 
 file_format: 1

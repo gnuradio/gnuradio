@@ -46,7 +46,9 @@ usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t& device_addr,
     _samp_rate = this->get_samp_rate();
     _samps_per_packet = 1;
     register_msg_cmd_handler(cmd_tag_key(),
-                             boost::bind(&usrp_source_impl::_cmd_handler_tag, this, _1));
+                             [this](const pmt::pmt_t& tag, const int, const pmt::pmt_t&) {
+                                 this->_cmd_handler_tag(tag);
+                             });
 }
 
 usrp_source_impl::~usrp_source_impl() {}
@@ -69,7 +71,7 @@ std::string usrp_source_impl::get_subdev_spec(size_t mboard)
 
 void usrp_source_impl::set_samp_rate(double rate)
 {
-    BOOST_FOREACH (const size_t chan, _stream_args.channels) {
+    for (const auto& chan : _stream_args.channels) {
         _dev->set_rx_rate(rate, chan);
     }
     _samp_rate = this->get_samp_rate();
@@ -201,6 +203,65 @@ std::vector<std::string> usrp_source_impl::get_gain_names(size_t chan)
 {
     chan = _stream_args.channels[chan];
     return _dev->get_rx_gain_range(name, chan);
+}
+
+bool usrp_source_impl::has_power_reference(size_t chan)
+{
+#ifdef UHD_USRP_MULTI_USRP_POWER_LEVEL
+    if (chan >= _stream_args.channels.size()) {
+        throw std::out_of_range("Invalid channel: " + std::to_string(chan));
+    }
+    const size_t dev_chan = _stream_args.channels[chan];
+    return _dev->has_rx_power_reference(dev_chan);
+#else
+    GR_LOG_WARN(d_logger, "UHD version 4.0 or greater required for power reference API.");
+    return false;
+#endif
+}
+
+void usrp_source_impl::set_power_reference(double power_dbm, size_t chan)
+{
+#ifdef UHD_USRP_MULTI_USRP_POWER_LEVEL
+    if (chan >= _stream_args.channels.size()) {
+        throw std::out_of_range("Invalid channel: " + std::to_string(chan));
+    }
+    const size_t dev_chan = _stream_args.channels[chan];
+    _dev->set_rx_power_reference(power_dbm, dev_chan);
+#else
+    GR_LOG_ERROR(d_logger,
+                 "UHD version 4.0 or greater required for power reference API.");
+    throw std::runtime_error("not implemented in this version");
+#endif
+}
+
+double usrp_source_impl::get_power_reference(size_t chan)
+{
+#ifdef UHD_USRP_MULTI_USRP_POWER_LEVEL
+    if (chan >= _stream_args.channels.size()) {
+        throw std::out_of_range("Invalid channel: " + std::to_string(chan));
+    }
+    const size_t dev_chan = _stream_args.channels[chan];
+    return _dev->get_rx_power_reference(dev_chan);
+#else
+    GR_LOG_ERROR(d_logger,
+                 "UHD version 4.0 or greater required for power reference API.");
+    throw std::runtime_error("not implemented in this version");
+#endif
+}
+
+::uhd::meta_range_t usrp_source_impl::get_power_range(size_t chan)
+{
+#ifdef UHD_USRP_MULTI_USRP_POWER_LEVEL
+    if (chan >= _stream_args.channels.size()) {
+        throw std::out_of_range("Invalid channel: " + std::to_string(chan));
+    }
+    const size_t dev_chan = _stream_args.channels[chan];
+    return _dev->get_rx_power_range(dev_chan);
+#else
+    GR_LOG_ERROR(d_logger,
+                 "UHD version 4.0 or greater required for power reference API.");
+    throw std::runtime_error("not implemented in this version");
+#endif
 }
 
 void usrp_source_impl::set_antenna(const std::string& ant, size_t chan)

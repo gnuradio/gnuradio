@@ -22,22 +22,21 @@ class FILTER_API mmse_interpolator_ff_impl : public mmse_interpolator_ff
 private:
     double d_mu;
     double d_mu_inc;
-    mmse_fir_interpolator_ff* d_interp;
+    mmse_fir_interpolator_ff d_interp;
 
 public:
     mmse_interpolator_ff_impl(float phase_shift, float interp_ratio);
-    ~mmse_interpolator_ff_impl();
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 
-    float mu() const;
-    float interp_ratio() const;
-    void set_mu(float mu);
-    void set_interp_ratio(float interp_ratio);
+    float mu() const override;
+    float interp_ratio() const override;
+    void set_mu(float mu) override;
+    void set_interp_ratio(float interp_ratio) override;
 };
 
 } /* namespace filter */

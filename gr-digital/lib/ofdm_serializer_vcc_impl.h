@@ -33,8 +33,8 @@ protected:
      * Calculate the number of scalar complex symbols given a number of
      * OFDM symbols.
      */
-    int calculate_output_stream_length(const gr_vector_int& ninput_items);
-    void update_length_tags(int n_produced, int n_ports);
+    int calculate_output_stream_length(const gr_vector_int& ninput_items) override;
+    void update_length_tags(int n_produced, int n_ports) override;
 
 public:
     ofdm_serializer_vcc_impl(int fft_len,
@@ -44,12 +44,12 @@ public:
                              int symbols_skipped,
                              const std::string& carr_offset_key,
                              bool input_is_shifted);
-    ~ofdm_serializer_vcc_impl();
+    ~ofdm_serializer_vcc_impl() override;
 
     int work(int noutput_items,
              gr_vector_int& ninput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace digital

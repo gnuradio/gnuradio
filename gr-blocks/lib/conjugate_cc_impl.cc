@@ -21,7 +21,7 @@ namespace blocks {
 
 conjugate_cc::sptr conjugate_cc::make()
 {
-    return gnuradio::get_initial_sptr(new conjugate_cc_impl());
+    return gnuradio::make_block_sptr<conjugate_cc_impl>();
 }
 
 conjugate_cc_impl::conjugate_cc_impl()

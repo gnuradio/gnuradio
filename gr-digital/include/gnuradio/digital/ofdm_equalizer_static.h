@@ -34,7 +34,7 @@ namespace digital {
 class DIGITAL_API ofdm_equalizer_static : public ofdm_equalizer_1d_pilots
 {
 public:
-    typedef boost::shared_ptr<ofdm_equalizer_static> sptr;
+    typedef std::shared_ptr<ofdm_equalizer_static> sptr;
 
     ofdm_equalizer_static(int fft_len,
                           const std::vector<std::vector<int>>& occupied_carriers =
@@ -45,7 +45,7 @@ public:
                               std::vector<std::vector<gr_complex>>(),
                           int symbols_skipped = 0,
                           bool input_is_shifted = true);
-    ~ofdm_equalizer_static();
+    ~ofdm_equalizer_static() override;
 
     /*! \brief Divide the input signal with the current channel state.
      *
@@ -57,7 +57,7 @@ public:
     void equalize(gr_complex* frame,
                   int n_sym,
                   const std::vector<gr_complex>& initial_taps = std::vector<gr_complex>(),
-                  const std::vector<tag_t>& tags = std::vector<tag_t>());
+                  const std::vector<tag_t>& tags = std::vector<tag_t>()) override;
 
     /*
      * \param fft_len FFT length

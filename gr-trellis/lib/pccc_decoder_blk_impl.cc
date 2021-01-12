@@ -34,16 +34,16 @@ pccc_decoder_blk<T>::make(const fsm& FSM1,
                           int repetitions,
                           siso_type_t SISO_TYPE)
 {
-    return gnuradio::get_initial_sptr(new pccc_decoder_blk_impl<T>(FSM1,
-                                                                   ST10,
-                                                                   ST1K,
-                                                                   FSM2,
-                                                                   ST20,
-                                                                   ST2K,
-                                                                   INTERLEAVER,
-                                                                   blocklength,
-                                                                   repetitions,
-                                                                   SISO_TYPE));
+    return gnuradio::make_block_sptr<pccc_decoder_blk_impl<T>>(FSM1,
+                                                               ST10,
+                                                               ST1K,
+                                                               FSM2,
+                                                               ST20,
+                                                               ST2K,
+                                                               INTERLEAVER,
+                                                               blocklength,
+                                                               repetitions,
+                                                               SISO_TYPE);
 }
 
 template <class T>

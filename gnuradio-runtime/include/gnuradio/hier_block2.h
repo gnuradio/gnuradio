@@ -34,25 +34,26 @@ class GR_RUNTIME_API hier_block2 : public basic_block
 {
 private:
     friend class hier_block2_detail;
-    friend GR_RUNTIME_API hier_block2_sptr
-    make_hier_block2(const std::string& name,
-                     gr::io_signature::sptr input_signature,
-                     gr::io_signature::sptr output_signature);
+    template <typename T, typename... Args>
+    friend std::shared_ptr<T> gnuradio::make_block_sptr(Args&&... args);
 
     /*!
-     * \brief Private implementation details of gr::hier_block2
+     * \brief Private implementation details of gr::hier_block2.
+     *
+     * This is a pointer in order to not break ABI when implementation object
+     * changes.
      */
-    hier_block2_detail* d_detail;
+    std::unique_ptr<hier_block2_detail> d_detail;
 
 
 protected:
-    hier_block2(void) {} // allows pure virtual interface sub-classes
+    hier_block2(); // allows pure virtual interface sub-classes
     hier_block2(const std::string& name,
                 gr::io_signature::sptr input_signature,
                 gr::io_signature::sptr output_signature);
 
 public:
-    virtual ~hier_block2();
+    ~hier_block2() override;
 
     /*!
      * \brief typedef for object returned from self().
@@ -202,22 +203,22 @@ public:
 
     hier_block2_sptr to_hier_block2(); // Needed for Python type coercion
 
-    bool has_msg_port(pmt::pmt_t which_port)
+    bool has_msg_port(pmt::pmt_t which_port) override
     {
         return message_port_is_hier(which_port) || basic_block::has_msg_port(which_port);
     }
 
-    bool message_port_is_hier(pmt::pmt_t port_id)
+    bool message_port_is_hier(pmt::pmt_t port_id) override
     {
         return message_port_is_hier_in(port_id) || message_port_is_hier_out(port_id);
     }
 
-    bool message_port_is_hier_in(pmt::pmt_t port_id)
+    bool message_port_is_hier_in(pmt::pmt_t port_id) override
     {
         return pmt::list_has(hier_message_ports_in, port_id);
     }
 
-    bool message_port_is_hier_out(pmt::pmt_t port_id)
+    bool message_port_is_hier_out(pmt::pmt_t port_id) override
     {
         return pmt::list_has(hier_message_ports_out, port_id);
     }
@@ -252,12 +253,12 @@ public:
      *
      * \param mask a vector of ints of the core numbers available to this block.
      */
-    void set_processor_affinity(const std::vector<int>& mask);
+    void set_processor_affinity(const std::vector<int>& mask) override;
 
     /*!
      * \brief Remove processor affinity for all blocks in hier_block2.
      */
-    void unset_processor_affinity();
+    void unset_processor_affinity() override;
 
     /*!
      * \brief Get the current processor affinity.
@@ -268,7 +269,7 @@ public:
      * interface. If any block has been individually set, then this
      * call could be misleading.
      */
-    std::vector<int> processor_affinity();
+    std::vector<int> processor_affinity() override;
 
     /*!
      * \brief Set the logger's output level.
@@ -288,12 +289,12 @@ public:
      * \li fatal
      * \li emerg
      */
-    void set_log_level(std::string level);
+    void set_log_level(std::string level) override;
 
     /*!
      * \brief Get the logger's output level
      */
-    std::string log_level();
+    std::string log_level() override;
 
     /*!
      * \brief Get if all block min buffers should be set.
@@ -319,7 +320,7 @@ GR_RUNTIME_API std::string dot_graph(hier_block2_sptr hierblock2);
 
 inline hier_block2_sptr cast_to_hier_block2_sptr(basic_block_sptr block)
 {
-    return boost::dynamic_pointer_cast<hier_block2, basic_block>(block);
+    return std::dynamic_pointer_cast<hier_block2, basic_block>(block);
 }
 
 } /* namespace gr */

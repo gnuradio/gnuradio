@@ -27,7 +27,7 @@ class BLOCKS_API null_sink : virtual public sync_block
 {
 public:
     // gr::blocks::null_sink::sptr
-    typedef boost::shared_ptr<null_sink> sptr;
+    typedef std::shared_ptr<null_sink> sptr;
 
     /*!
      * Build a null sink block.

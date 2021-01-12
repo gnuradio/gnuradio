@@ -22,7 +22,7 @@ namespace blocks {
 template <class T>
 typename probe_signal<T>::sptr probe_signal<T>::make()
 {
-    return gnuradio::get_initial_sptr(new probe_signal_impl<T>());
+    return gnuradio::make_block_sptr<probe_signal_impl<T>>();
 }
 
 template <class T>

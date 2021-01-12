@@ -23,8 +23,8 @@ template <class IN_T, class OUT_T, class TAP_T>
 typename fir_filter_blk<IN_T, OUT_T, TAP_T>::sptr
 fir_filter_blk<IN_T, OUT_T, TAP_T>::make(int decimation, const std::vector<TAP_T>& taps)
 {
-    return gnuradio::get_initial_sptr(
-        new fir_filter_blk_impl<IN_T, OUT_T, TAP_T>(decimation, taps));
+    return gnuradio::make_block_sptr<fir_filter_blk_impl<IN_T, OUT_T, TAP_T>>(decimation,
+                                                                              taps);
 }
 
 
@@ -34,34 +34,28 @@ fir_filter_blk_impl<IN_T, OUT_T, TAP_T>::fir_filter_blk_impl(
     : sync_decimator("fir_filter_blk<IN_T,OUT_T,TAP_T>",
                      io_signature::make(1, 1, sizeof(IN_T)),
                      io_signature::make(1, 1, sizeof(OUT_T)),
-                     decimation)
+                     decimation),
+      d_fir(taps),
+      d_updated(false)
 {
-    d_fir = new kernel::fir_filter<IN_T, OUT_T, TAP_T>(decimation, taps);
-    d_updated = false;
-    this->set_history(d_fir->ntaps());
+    this->set_history(d_fir.ntaps());
 
     const int alignment_multiple = volk_get_alignment() / sizeof(float);
     this->set_alignment(std::max(1, alignment_multiple));
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-fir_filter_blk_impl<IN_T, OUT_T, TAP_T>::~fir_filter_blk_impl()
-{
-    delete d_fir;
-}
-
-template <class IN_T, class OUT_T, class TAP_T>
 void fir_filter_blk_impl<IN_T, OUT_T, TAP_T>::set_taps(const std::vector<TAP_T>& taps)
 {
     gr::thread::scoped_lock l(this->d_setlock);
-    d_fir->set_taps(taps);
+    d_fir.set_taps(taps);
     d_updated = true;
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
 std::vector<TAP_T> fir_filter_blk_impl<IN_T, OUT_T, TAP_T>::taps() const
 {
-    return d_fir->taps();
+    return d_fir.taps();
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
@@ -75,15 +69,15 @@ int fir_filter_blk_impl<IN_T, OUT_T, TAP_T>::work(int noutput_items,
     OUT_T* out = (OUT_T*)output_items[0];
 
     if (d_updated) {
-        this->set_history(d_fir->ntaps());
+        this->set_history(d_fir.ntaps());
         d_updated = false;
         return 0; // history requirements may have changed.
     }
 
     if (this->decimation() == 1) {
-        d_fir->filterN(out, in, noutput_items);
+        d_fir.filterN(out, in, noutput_items);
     } else {
-        d_fir->filterNdec(out, in, noutput_items, this->decimation());
+        d_fir.filterNdec(out, in, noutput_items, this->decimation());
     }
 
     return noutput_items;

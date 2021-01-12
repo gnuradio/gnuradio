@@ -12,7 +12,7 @@ Author: ${flow_graph.get_option('author')}
 % if flow_graph.get_option('description'):
 Description: ${flow_graph.get_option('description')}
 % endif
-GNU Radio version: ${version}
+GNU Radio version: ${config.version}
 ********************/
 
 /********************

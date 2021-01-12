@@ -46,7 +46,7 @@ template <class IN_T, class OUT_T, class TAP_T>
 class FILTER_API fir_filter_blk : virtual public sync_decimator
 {
 public:
-    typedef boost::shared_ptr<fir_filter_blk<IN_T, OUT_T, TAP_T>> sptr;
+    typedef std::shared_ptr<fir_filter_blk<IN_T, OUT_T, TAP_T>> sptr;
 
     /*!
      * \brief FIR filter with IN_T input, OUT_T output, and TAP_T taps

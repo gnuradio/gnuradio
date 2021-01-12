@@ -8,9 +8,9 @@
 #
 #
 
-from __future__ import division
 
 from gnuradio import gr, gr_unittest, analog, blocks
+
 
 class test_simple_squelch(gr_unittest.TestCase):
 
@@ -48,11 +48,11 @@ class test_simple_squelch(gr_unittest.TestCase):
         self.tb.run()
 
         expected_result = src_data
-        expected_result[0:20] = 20*[0,]
+        expected_result[0:20] = 20 * [0, ]
 
         result_data = dst.data()
         self.assertComplexTuplesAlmostEqual(expected_result, result_data, 4)
 
-if __name__ == '__main__':
-    gr_unittest.run(test_simple_squelch, "test_simple_squelch.xml")
 
+if __name__ == '__main__':
+    gr_unittest.run(test_simple_squelch)

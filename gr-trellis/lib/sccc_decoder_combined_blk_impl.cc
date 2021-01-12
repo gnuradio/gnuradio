@@ -37,21 +37,21 @@ sccc_decoder_combined_blk<IN_T, OUT_T>::make(const fsm& FSMo,
                                              digital::trellis_metric_type_t METRIC_TYPE,
                                              float scaling)
 {
-    return gnuradio::get_initial_sptr(
-        new sccc_decoder_combined_blk_impl<IN_T, OUT_T>(FSMo,
-                                                        STo0,
-                                                        SToK,
-                                                        FSMi,
-                                                        STi0,
-                                                        STiK,
-                                                        INTERLEAVER,
-                                                        blocklength,
-                                                        repetitions,
-                                                        SISO_TYPE,
-                                                        D,
-                                                        TABLE,
-                                                        METRIC_TYPE,
-                                                        scaling));
+    return gnuradio::make_block_sptr<sccc_decoder_combined_blk_impl<IN_T, OUT_T>>(
+        FSMo,
+        STo0,
+        SToK,
+        FSMi,
+        STi0,
+        STiK,
+        INTERLEAVER,
+        blocklength,
+        repetitions,
+        SISO_TYPE,
+        D,
+        TABLE,
+        METRIC_TYPE,
+        scaling);
 }
 
 template <class IN_T, class OUT_T>

@@ -27,11 +27,9 @@ template <class IN_T, class OUT_T>
 class TRELLIS_API encoder : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<encoder<IN_T, OUT_T>> sptr;
+    typedef std::shared_ptr<encoder<IN_T, OUT_T>> sptr;
 
-    static sptr make(const fsm& FSM, int ST);
-
-    static sptr make(const fsm& FSM, int ST, int K);
+    static sptr make(const fsm& FSM, int ST, int K = 0);
 
     virtual fsm FSM() const = 0;
     virtual int ST() const = 0;

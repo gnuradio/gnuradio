@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2013 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2013,2020 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -11,7 +11,9 @@
 #ifndef INCLUDED_GR_WAVFILE_SINK_IMPL_H
 #define INCLUDED_GR_WAVFILE_SINK_IMPL_H
 
+#include <gnuradio/blocks/wavfile.h>
 #include <gnuradio/blocks/wavfile_sink.h>
+#include <sndfile.h> // for SNDFILE
 
 namespace gr {
 namespace blocks {
@@ -19,26 +21,19 @@ namespace blocks {
 class wavfile_sink_impl : public wavfile_sink
 {
 private:
-    unsigned d_sample_rate;
-    int d_nchans;
-    unsigned d_sample_count;
-    int d_bytes_per_sample;
+    wav_header_info d_h;
     int d_bytes_per_sample_new;
-    int d_max_sample_val;
-    int d_min_sample_val;
-    int d_normalize_shift;
-    int d_normalize_fac;
+    bool d_append;
 
-    FILE* d_fp;
-    FILE* d_new_fp;
+    std::vector<float> d_buffer;
+
+    SNDFILE* d_fp;
+    SNDFILE* d_new_fp;
     bool d_updated;
     boost::mutex d_mutex;
 
-    /*!
-     * \brief Convert a sample value within [-1;+1] to a corresponding
-     *  short integer value
-     */
-    short convert_to_short(float sample);
+    static constexpr int s_items_size = 8192;
+    static constexpr int s_max_channels = 24;
 
     /*!
      * \brief If any file changes have occurred, update now. This is called
@@ -46,6 +41,11 @@ private:
      * hand.
      */
     void do_update();
+
+    /*!
+     * \brief Implementation of set_bits_per_sample without mutex lock.
+     */
+    void set_bits_per_sample_unlocked(int bits_per_sample);
 
     /*!
      * \brief Writes information to the WAV header which is not available
@@ -56,27 +56,30 @@ private:
     void close_wav();
 
 protected:
-    bool stop();
+    bool stop() override;
 
 public:
     wavfile_sink_impl(const char* filename,
                       int n_channels,
                       unsigned int sample_rate,
-                      int bits_per_sample);
-    ~wavfile_sink_impl();
+                      wavfile_format_t format,
+                      wavfile_subformat_t subformat,
+                      bool append);
+    ~wavfile_sink_impl() override;
 
-    bool open(const char* filename);
-    void close();
+    bool open(const char* filename) override;
+    void close() override;
 
-    void set_sample_rate(unsigned int sample_rate);
-    void set_bits_per_sample(int bits_per_sample);
+    void set_sample_rate(unsigned int sample_rate) override;
+    void set_bits_per_sample(int bits_per_sample) override;
+    void set_append(bool append) override;
 
     int bits_per_sample();
     unsigned int sample_rate();
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

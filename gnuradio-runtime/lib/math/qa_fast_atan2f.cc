@@ -25,19 +25,19 @@
 
 BOOST_AUTO_TEST_CASE(t1)
 {
-    static const unsigned int N = 100;
+    static const int N = 100;
     float c_atan2;
     float gr_atan2f;
 
     for (float i = -N / 2; i < N / 2; i++) {
-        for (float j = -N / 2; i < N / 2; i++) {
+        for (float j = -N / 2; j < N / 2; j++) {
             float x = i / 10.0;
             float y = j / 10.0;
             c_atan2 = atan2(y, x);
 
             gr_atan2f = gr::fast_atan2f(y, x);
 
-            BOOST_CHECK_CLOSE(c_atan2, gr_atan2f, 0.0);
+            BOOST_CHECK_CLOSE(c_atan2, gr_atan2f, 0.001);
         }
     }
 }

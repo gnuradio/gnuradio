@@ -61,8 +61,8 @@ class test_keep_m_in_n(gr_unittest.TestCase):
             self.assertEqual(
                 sorted(
                     list(range(i, 100, 5)) +
-                    list(range((i+1) % 5, 100, 5)) +
-                    list(range((i+2) % 5, 100, 5))
+                    list(range((i + 1) % 5, 100, 5)) +
+                    list(range((i + 2) % 5, 100, 5))
                 ),
                 list(snk[i].data())
             )
@@ -82,7 +82,8 @@ class test_keep_m_in_n(gr_unittest.TestCase):
 
         with self.assertRaises(RuntimeError) as cm:
             blocks.keep_m_in_n(8, 2, 5, -1)
-        self.assertEqual(str(cm.exception), 'keep_m_in_n: offset (-1) must be >= 0')
+        self.assertEqual(str(cm.exception),
+                         'keep_m_in_n: offset (-1) must be >= 0')
 
         with self.assertRaises(RuntimeError) as cm:
             blocks.keep_m_in_n(8, 2, 5, 5)
@@ -90,4 +91,4 @@ class test_keep_m_in_n(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_keep_m_in_n, "test_keep_m_in_n.xml")
+    gr_unittest.run(test_keep_m_in_n)

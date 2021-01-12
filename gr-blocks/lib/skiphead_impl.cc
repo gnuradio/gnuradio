@@ -21,7 +21,7 @@ namespace blocks {
 
 skiphead::sptr skiphead::make(size_t itemsize, uint64_t nitems_to_skip)
 {
-    return gnuradio::get_initial_sptr(new skiphead_impl(itemsize, nitems_to_skip));
+    return gnuradio::make_block_sptr<skiphead_impl>(itemsize, nitems_to_skip);
 }
 
 skiphead_impl::skiphead_impl(size_t itemsize, uint64_t nitems_to_skip)

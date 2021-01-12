@@ -23,7 +23,6 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
-#include <boost/foreach.hpp>
 #include <boost/program_options.hpp>
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
@@ -73,13 +72,13 @@ std::vector<std::string> prefs::_sys_prefs_filenames()
 
 void prefs::_read_files(const std::vector<std::string>& filenames)
 {
-    BOOST_FOREACH (std::string fname, filenames) {
+    for (const auto& fname : filenames) {
         std::ifstream infile(fname.c_str());
         if (infile.good()) {
             try {
                 po::basic_parsed_options<char_t> parsed =
                     po::parse_config_file(infile, po::options_description(), true);
-                BOOST_FOREACH (po::basic_option<char_t> o, (parsed.options)) {
+                for (const auto& o : parsed.options) {
                     std::string okey = o.string_key;
                     size_t pos = okey.find(".");
                     std::string section, key;

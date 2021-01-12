@@ -24,7 +24,7 @@ private:
     std::vector<T> d_data;
     bool d_repeat;
     unsigned int d_offset;
-    unsigned int d_vlen;
+    const unsigned int d_vlen;
     bool d_settags;
     std::vector<tag_t> d_tags;
 
@@ -33,15 +33,15 @@ public:
                        bool repeat,
                        unsigned int vlen,
                        const std::vector<tag_t>& tags);
-    ~vector_source_impl();
+    ~vector_source_impl() override;
 
-    void rewind() { d_offset = 0; }
-    void set_data(const std::vector<T>& data, const std::vector<tag_t>& tags);
-    void set_repeat(bool repeat) { d_repeat = repeat; };
+    void rewind() override { d_offset = 0; }
+    void set_data(const std::vector<T>& data, const std::vector<tag_t>& tags) override;
+    void set_repeat(bool repeat) override { d_repeat = repeat; };
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

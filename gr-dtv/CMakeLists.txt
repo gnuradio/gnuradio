@@ -21,7 +21,6 @@ GR_REGISTER_COMPONENT("gr-dtv" ENABLE_GR_DTV
     ENABLE_GR_ANALOG
     ENABLE_GR_FILTER
     ENABLE_GR_FEC
-    ENABLE_VOLK
 )
 
 SET(GR_PKG_DTV_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/dtv)
@@ -37,9 +36,10 @@ if(ENABLE_GR_DTV)
 add_subdirectory(include/gnuradio/dtv)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
-    add_subdirectory(swig)
     add_subdirectory(python/dtv)
-    add_subdirectory(examples)
+    if(ENABLE_EXAMPLES)
+        add_subdirectory(examples)
+    endif(ENABLE_EXAMPLES)
     add_subdirectory(apps)
 endif(ENABLE_PYTHON)
 if(ENABLE_GRC)

@@ -14,7 +14,7 @@
 #include <gnuradio/fec/api.h>
 #include <gnuradio/logger.h>
 #include <boost/format.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace gr {
 namespace fec {
@@ -60,7 +60,7 @@ public:
     std::string alias() { return (boost::format("%s%d") % d_name % unique_id()).str(); }
 
 public:
-    typedef boost::shared_ptr<generic_decoder> sptr;
+    typedef std::shared_ptr<generic_decoder> sptr;
 
     generic_decoder(void){};
     generic_decoder(std::string name);

@@ -48,7 +48,7 @@ class QTGUI_API const_sink_c : virtual public sync_block
 {
 public:
     // gr::qtgui::const_sink_c::sptr
-    typedef boost::shared_ptr<const_sink_c> sptr;
+    typedef std::shared_ptr<const_sink_c> sptr;
 
     /*!
      * \brief Build a constellation plot sink.

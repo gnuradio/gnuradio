@@ -53,15 +53,15 @@ file_meta_sink::sptr file_meta_sink::make(size_t itemsize,
                                           pmt::pmt_t extra_dict,
                                           bool detached_header)
 {
-    return gnuradio::get_initial_sptr(new file_meta_sink_impl(itemsize,
-                                                              filename,
-                                                              samp_rate,
-                                                              relative_rate,
-                                                              type,
-                                                              complex,
-                                                              max_segment_size,
-                                                              extra_dict,
-                                                              detached_header));
+    return gnuradio::make_block_sptr<file_meta_sink_impl>(itemsize,
+                                                          filename,
+                                                          samp_rate,
+                                                          relative_rate,
+                                                          type,
+                                                          complex,
+                                                          max_segment_size,
+                                                          extra_dict,
+                                                          detached_header);
 }
 
 file_meta_sink_impl::file_meta_sink_impl(size_t itemsize,
@@ -155,7 +155,7 @@ bool file_meta_sink_impl::_open(FILE** fp, const char* filename)
     if ((fd = ::open(filename,
                      O_WRONLY | O_CREAT | O_TRUNC | OUR_O_LARGEFILE | OUR_O_BINARY,
                      0664)) < 0) {
-        perror(filename);
+        GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
         return false;
     }
 
@@ -165,7 +165,7 @@ bool file_meta_sink_impl::_open(FILE** fp, const char* filename)
     }
 
     if ((*fp = fdopen(fd, "wb")) == NULL) {
-        perror(filename);
+        GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
         ::close(fd); // don't leak file descriptor if fdopen fails.
     }
 
@@ -299,9 +299,13 @@ void file_meta_sink_impl::update_last_header_inline()
     pmt::pmt_t s = pmt::from_uint64(seg_size);
     update_header(mp("bytes"), s);
     update_header(mp("strt"), pmt::from_uint64(METADATA_HEADER_SIZE + d_extra_size));
-    fseek(d_fp, -seg_size - hdrlen, SEEK_CUR);
+    if (fseek(d_fp, -seg_size - hdrlen, SEEK_CUR) == -1) {
+        throw std::runtime_error("fseek() failed.");
+    }
     write_header(d_fp, d_header, d_extra);
-    fseek(d_fp, seg_size, SEEK_CUR);
+    if (fseek(d_fp, seg_size, SEEK_CUR) == -1) {
+        throw std::runtime_error("fseek() failed.");
+    }
 }
 
 void file_meta_sink_impl::update_last_header_detached()
@@ -313,7 +317,9 @@ void file_meta_sink_impl::update_last_header_detached()
     pmt::pmt_t s = pmt::from_uint64(seg_size);
     update_header(mp("bytes"), s);
     update_header(mp("strt"), pmt::from_uint64(METADATA_HEADER_SIZE + d_extra_size));
-    fseek(d_hdr_fp, -hdrlen, SEEK_CUR);
+    if (fseek(d_hdr_fp, -hdrlen, SEEK_CUR) == -1) {
+        throw std::runtime_error("fseek() failed.");
+    }
     write_header(d_hdr_fp, d_header, d_extra);
 }
 

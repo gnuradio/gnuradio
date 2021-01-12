@@ -20,6 +20,7 @@ namespace digital {
 /*!
  * \brief Implements a kurtosis-based adaptive equalizer on complex stream
  * \ingroup equalizers_blk
+ * \ingroup deprecated_blk
  *
  * \details
  * Warning: This block does not yet work.
@@ -36,7 +37,7 @@ protected:
 
 public:
     // gr::digital::kurtotic_equalizer_cc::sptr
-    typedef boost::shared_ptr<kurtotic_equalizer_cc> sptr;
+    typedef std::shared_ptr<kurtotic_equalizer_cc> sptr;
 
     static sptr make(int num_taps, float mu);
 

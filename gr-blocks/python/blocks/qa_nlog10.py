@@ -11,12 +11,13 @@
 
 from gnuradio import gr, gr_unittest, blocks
 
+
 class test_nlog10(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
     def test_001(self):
@@ -25,12 +26,11 @@ class test_nlog10(gr_unittest.TestCase):
         src = blocks.vector_source_f(src_data)
         op = blocks.nlog10_ff(10)
         dst = blocks.vector_sink_f()
-        self.tb.connect (src, op, dst)
+        self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual (expected_result, result_data, 5)
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data, 5)
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_nlog10, "test_nlog10.xml")
-
+    gr_unittest.run(test_nlog10)

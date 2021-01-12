@@ -32,15 +32,13 @@ private:
 public:
     pfb_interpolator_ccf_impl(unsigned int interp, const std::vector<float>& taps);
 
-    ~pfb_interpolator_ccf_impl();
-
-    void set_taps(const std::vector<float>& taps);
-    void print_taps();
-    std::vector<std::vector<float>> taps() const;
+    void set_taps(const std::vector<float>& taps) override;
+    void print_taps() override;
+    std::vector<std::vector<float>> taps() const override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

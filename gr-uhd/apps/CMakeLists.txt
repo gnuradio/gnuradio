@@ -14,6 +14,7 @@ GR_PYTHON_INSTALL(
     FILES
     uhd_siggen_base.py
     uhd_app.py
+    msgq_runner.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/uhd
 )
 

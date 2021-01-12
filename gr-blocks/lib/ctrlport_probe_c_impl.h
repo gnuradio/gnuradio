@@ -23,8 +23,8 @@ class ctrlport_probe_c_impl : public ctrlport_probe_c
 private:
     boost::shared_mutex ptrlock;
 
-    std::string d_id;
-    std::string d_desc;
+    const std::string d_id;
+    const std::string d_desc;
     const gr_complex* d_ptr;
     size_t d_ptrLen;
 
@@ -32,13 +32,13 @@ public:
     ctrlport_probe_c_impl(const std::string& id, const std::string& desc);
     ~ctrlport_probe_c_impl();
 
-    void setup_rpc();
+    void setup_rpc() override;
 
-    std::vector<gr_complex> get();
+    std::vector<gr_complex> get() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

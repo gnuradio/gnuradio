@@ -16,7 +16,6 @@ Args:
     options: result of command argument parsing (optparse.Values)
 """
 
-from __future__ import unicode_literals
 
 RPCMethods = {'thrift': 'Apache Thrift',
              #'ice': 'Zeroc ICE'

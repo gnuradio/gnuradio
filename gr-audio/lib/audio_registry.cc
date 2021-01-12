@@ -10,7 +10,6 @@
 #include "audio_registry.h"
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
-#include <boost/foreach.hpp>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -133,16 +132,20 @@ static void do_arch_warning(const std::string& arch)
 {
     if (arch == "auto")
         return; // no warning when arch not specified
-    std::cerr << "Could not find audio architecture \"" << arch << "\" in registry."
-              << std::endl;
-    std::cerr << "    Defaulting to the first available architecture..." << std::endl;
+
+    gr::logger_ptr logger, debug_logger;
+    gr::configure_default_loggers(logger, debug_logger, "audio_registry");
+    std::ostringstream msg;
+    msg << "Could not find audio architecture \"" << arch << "\" in registry.";
+    msg << " Defaulting to the first available architecture.";
+    GR_LOG_ERROR(logger, msg.str());
 }
 
 source::sptr
 source::make(int sampling_rate, const std::string device_name, bool ok_to_block)
 {
     gr::logger_ptr logger, debug_logger;
-    configure_default_loggers(logger, debug_logger, "audio source");
+    configure_default_loggers(logger, debug_logger, "audio_source");
 
     if (get_source_registry().empty()) {
         throw std::runtime_error("no available audio source factories");
@@ -151,7 +154,7 @@ source::make(int sampling_rate, const std::string device_name, bool ok_to_block)
     std::string arch = default_arch_name();
     source_entry_t entry = get_source_registry().front();
 
-    BOOST_FOREACH (const source_entry_t& e, get_source_registry()) {
+    for (const auto& e : get_source_registry()) {
         if (e.prio > entry.prio)
             entry = e; // entry is highest prio
         if (arch != e.arch)
@@ -159,7 +162,7 @@ source::make(int sampling_rate, const std::string device_name, bool ok_to_block)
         return e.source(sampling_rate, device_name, ok_to_block);
     }
 
-    GR_LOG_INFO(logger, boost::format("Audio source arch: %1%") % (entry.arch));
+    GR_LOG_INFO(debug_logger, boost::format("Audio source arch: %1%") % (entry.arch));
     return entry.source(sampling_rate, device_name, ok_to_block);
 }
 
@@ -175,7 +178,7 @@ sink::sptr sink::make(int sampling_rate, const std::string device_name, bool ok_
     std::string arch = default_arch_name();
     sink_entry_t entry = get_sink_registry().front();
 
-    BOOST_FOREACH (const sink_entry_t& e, get_sink_registry()) {
+    for (const sink_entry_t& e : get_sink_registry()) {
         if (e.prio > entry.prio)
             entry = e; // entry is highest prio
         if (arch != e.arch)
@@ -184,7 +187,7 @@ sink::sptr sink::make(int sampling_rate, const std::string device_name, bool ok_
     }
 
     do_arch_warning(arch);
-    GR_LOG_INFO(logger, boost::format("Audio sink arch: %1%") % (entry.arch));
+    GR_LOG_INFO(debug_logger, boost::format("Audio sink arch: %1%") % (entry.arch));
     return entry.sink(sampling_rate, device_name, ok_to_block);
 }
 

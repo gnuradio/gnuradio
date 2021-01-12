@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -8,19 +8,18 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import unicode_literals
 from gnuradio.filter import filter_design
 from gnuradio import gr, filter
+from gnuradio.fft import window
 from gnuradio import blocks
 import sys
 
 try:
     from gnuradio import qtgui
-    from PyQt4 import QtGui, QtCore
+    from PyQt5 import QtGui, QtCore
     import sip
 except ImportError:
-    sys.stderr.write("Error: Program requires PyQt4 and gr-qtgui.\n")
+    sys.stderr.write("Error: Program requires PyQt5 and gr-qtgui.\n")
     sys.exit(1)
 
 
@@ -62,7 +61,7 @@ class my_top_block(gr.top_block):
         channel = channels.channel_model(0.01)
         self.filt = filter.fft_filter_ccc(1, self.filt_taps)
         thr = blocks.throttle(gr.sizeof_gr_complex, 100*npts)
-        self.snk1 = qtgui.freq_sink_c(npts, filter.firdes.WIN_BLACKMAN_hARRIS,
+        self.snk1 = qtgui.freq_sink_c(npts, window.WIN_BLACKMAN_hARRIS,
                                       0, Rs,
                                       "Complex Freq Example", 1)
 
@@ -74,7 +73,7 @@ class my_top_block(gr.top_block):
         pyQt  = self.snk1.pyqwidget()
 
         # Wrap the pointer as a PyQt SIP object
-        # This can now be manipulated as a PyQt4.QtGui.QWidget
+        # This can now be manipulated as a PyQt5.QtGui.QWidget
         pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
         pyWin.show()
 

@@ -18,7 +18,6 @@ include(GrComponent)
 find_package(GSL)
 
 GR_REGISTER_COMPONENT("gr-fec" ENABLE_GR_FEC
-    ENABLE_VOLK
     Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_BLOCKS
@@ -37,14 +36,15 @@ if(ENABLE_GR_FEC)
 add_subdirectory(include/gnuradio/fec)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
-    add_subdirectory(swig)
     add_subdirectory(python/fec)
     add_subdirectory(python/fec/LDPC)
+    if(ENABLE_EXAMPLES)
+	    add_subdirectory(examples)
+    endif(ENABLE_EXAMPLES)
 endif(ENABLE_PYTHON)
 if(ENABLE_GRC)
     add_subdirectory(grc)
 endif(ENABLE_GRC)
-add_subdirectory(examples)
 add_subdirectory(docs)
 add_subdirectory(ldpc_alist)
 

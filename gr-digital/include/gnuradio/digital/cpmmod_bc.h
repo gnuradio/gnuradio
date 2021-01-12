@@ -38,7 +38,7 @@ class DIGITAL_API cpmmod_bc : virtual public hier_block2
 {
 public:
     // gr::digital::cpmmod_bc::sptr
-    typedef boost::shared_ptr<cpmmod_bc> sptr;
+    typedef std::shared_ptr<cpmmod_bc> sptr;
 
     /*!
      * Make CPM modulator block.

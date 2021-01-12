@@ -14,7 +14,7 @@
 #include <gnuradio/api.h>
 #include <gnuradio/rpcserver_aggregator.h>
 #include <gnuradio/rpcserver_booter_base.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <string>
 
 class rpcserver_server;
@@ -23,11 +23,11 @@ class GR_RUNTIME_API rpcserver_booter_aggregator : public virtual rpcserver_boot
 {
 public:
     rpcserver_booter_aggregator();
-    ~rpcserver_booter_aggregator();
+    ~rpcserver_booter_aggregator() override;
 
-    rpcserver_base* i();
-    const std::string& type();
-    const std::vector<std::string> endpoints();
+    rpcserver_base* i() override;
+    const std::string& type() override;
+    const std::vector<std::string> endpoints() override;
 
     const std::vector<std::string>& registeredServers();
 
@@ -37,7 +37,7 @@ protected:
 
 private:
     std::string d_type;
-    boost::shared_ptr<rpcserver_aggregator> server;
+    std::shared_ptr<rpcserver_aggregator> server;
 };
 
 #endif /* RPCSERVER_BOOTER_AGGREGATOR */

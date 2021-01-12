@@ -20,16 +20,16 @@ class BLOCKS_API complex_to_interleaved_short_impl : public complex_to_interleav
 {
 private:
     float d_scalar;
-    bool d_vector;
+    const bool d_vector;
 
 public:
     complex_to_interleaved_short_impl(bool vector, float scale_factor);
 
-    virtual void set_scale_factor(float new_value) { d_scalar = new_value; };
+    void set_scale_factor(float new_value) override { d_scalar = new_value; };
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

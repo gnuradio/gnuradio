@@ -48,7 +48,7 @@ class FILTER_API interp_fir_filter : virtual public sync_interpolator
 {
 public:
     // gr::filter::interp_fir_filter::sptr
-    typedef boost::shared_ptr<interp_fir_filter> sptr;
+    typedef std::shared_ptr<interp_fir_filter> sptr;
 
     /*!
      * \brief Interpolating FIR filter with IN_T input, OUT_T output, and TAP_T taps

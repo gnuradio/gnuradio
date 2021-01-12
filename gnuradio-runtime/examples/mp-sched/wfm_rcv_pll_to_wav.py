@@ -8,9 +8,7 @@
 #
 #
 
-from __future__ import division
-from __future__ import unicode_literals
-from gnuradio import gr, gru, eng_notation, filter
+from gnuradio import gr, eng_notation, filter
 from gnuradio import audio
 from gnuradio import analog
 from gnuradio import blocks
@@ -66,7 +64,8 @@ class wfm_rx_block (gr.top_block):
 
         # wave file as final sink
         if 1:
-            sink = blocks.wavfile_sink(args.output_file, 2, int(audio_rate), 16)
+            sink = blocks.wavfile_sink(args.output_file, 2, int(audio_rate),
+                                       blocks.FORMAT_WAV, blocks.FORMAT_PCM_16)
         else:
             sink = audio.sink (int (audio_rate),
                                args.audio_output,

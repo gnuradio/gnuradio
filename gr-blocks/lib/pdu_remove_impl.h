@@ -24,7 +24,7 @@ private:
 public:
     pdu_remove_impl(pmt::pmt_t k);
     void handle_msg(pmt::pmt_t msg);
-    void set_key(pmt::pmt_t key) { d_k = key; };
+    void set_key(pmt::pmt_t key) override { d_k = key; };
 };
 
 } /* namespace blocks */

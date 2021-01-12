@@ -31,24 +31,24 @@ public:
                  int D,
                  const std::vector<T>& TABLE,
                  digital::trellis_metric_type_t TYPE);
-    ~metrics_impl();
+    ~metrics_impl() override;
 
-    int O() const { return d_O; }
-    int D() const { return d_D; }
-    digital::trellis_metric_type_t TYPE() const { return d_TYPE; }
-    std::vector<T> TABLE() const { return d_TABLE; }
+    int O() const override { return d_O; }
+    int D() const override { return d_D; }
+    digital::trellis_metric_type_t TYPE() const override { return d_TYPE; }
+    std::vector<T> TABLE() const override { return d_TABLE; }
 
-    void set_O(int O);
-    void set_D(int D);
-    void set_TYPE(digital::trellis_metric_type_t type);
-    void set_TABLE(const std::vector<T>& table);
+    void set_O(int O) override;
+    void set_D(int D) override;
+    void set_TYPE(digital::trellis_metric_type_t type) override;
+    void set_TABLE(const std::vector<T>& table) override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } /* namespace trellis */

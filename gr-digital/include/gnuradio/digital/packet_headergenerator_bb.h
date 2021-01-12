@@ -32,7 +32,7 @@ namespace digital {
 class DIGITAL_API packet_headergenerator_bb : virtual public tagged_stream_block
 {
 public:
-    typedef boost::shared_ptr<packet_headergenerator_bb> sptr;
+    typedef std::shared_ptr<packet_headergenerator_bb> sptr;
 
     /* \param header_formatter A header formatter object.
      * \param len_tag_key Length tag key. Note that for header generation,

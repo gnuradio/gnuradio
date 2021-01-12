@@ -23,8 +23,6 @@ if(ENABLE_TESTING)
 
 list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gr-uhd/python
-    ${CMAKE_BINARY_DIR}/gr-uhd/swig
-    ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python 	
 )
 
@@ -37,3 +35,5 @@ foreach(py_qa_test_file ${py_qa_test_files})
     GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${py_qa_test_file})
 endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)
+
+add_subdirectory(bindings)

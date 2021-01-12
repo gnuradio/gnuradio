@@ -21,7 +21,7 @@ namespace blocks {
 
 char_to_float::sptr char_to_float::make(size_t vlen, float scale)
 {
-    return gnuradio::get_initial_sptr(new char_to_float_impl(vlen, scale));
+    return gnuradio::make_block_sptr<char_to_float_impl>(vlen, scale);
 }
 
 char_to_float_impl::char_to_float_impl(size_t vlen, float scale)

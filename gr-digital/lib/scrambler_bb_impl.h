@@ -25,11 +25,11 @@ private:
 
 public:
     scrambler_bb_impl(int mask, int seed, int len);
-    ~scrambler_bb_impl();
+    ~scrambler_bb_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace digital */

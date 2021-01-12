@@ -25,7 +25,7 @@ class ANALOG_API rail_ff : virtual public sync_block
 {
 public:
     // gr::analog::rail_ff::sptr
-    typedef boost::shared_ptr<rail_ff> sptr;
+    typedef std::shared_ptr<rail_ff> sptr;
 
     /*!
      * Build a rail block.

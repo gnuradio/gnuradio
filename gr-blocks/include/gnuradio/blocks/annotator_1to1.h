@@ -38,7 +38,7 @@ class BLOCKS_API annotator_1to1 : virtual public sync_block
 {
 public:
     // gr::blocks::annotator_1to1::sptr
-    typedef boost::shared_ptr<annotator_1to1> sptr;
+    typedef std::shared_ptr<annotator_1to1> sptr;
 
     static sptr make(int when, size_t sizeof_stream_item);
 

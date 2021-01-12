@@ -23,21 +23,21 @@ private:
 
 public:
     probe_density_b_impl(double alpha);
-    ~probe_density_b_impl();
+    ~probe_density_b_impl() override;
 
     /*!
      * \brief Returns the current density value
      */
-    double density() const { return d_density; }
+    double density() const override { return d_density; }
 
     /*!
      * \brief Set the average filter constant
      */
-    void set_alpha(double alpha);
+    void set_alpha(double alpha) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace digital */

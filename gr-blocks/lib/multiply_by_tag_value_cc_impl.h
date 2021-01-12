@@ -25,15 +25,15 @@ private:
 
 public:
     multiply_by_tag_value_cc_impl(const std::string& tag_name, size_t vlen);
-    ~multiply_by_tag_value_cc_impl();
+    ~multiply_by_tag_value_cc_impl() override;
 
-    gr_complex k() const;
+    gr_complex k() const override;
 
-    void setup_rpc();
+    void setup_rpc() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

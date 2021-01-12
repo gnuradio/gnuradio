@@ -6,8 +6,6 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import unicode_literals
 
 try:
     from PyQt5 import Qt, QtCore, QtGui

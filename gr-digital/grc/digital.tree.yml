@@ -4,9 +4,9 @@
   - digital_descrambler_bb
   - digital_scrambler_bb
 - Equalizers:
-  - digital_cma_equalizer_cc
-  - digital_lms_dd_equalizer_cc
-  - digital_kurtotic_equalizer_cc
+  - variable_adaptive_algorithm
+  - digital_linear_equalizer
+  - digital_decision_feedback_equalizer
 - Measurement Tools:
   - digital_mpsk_snr_est_cc
   - digital_probe_density_b
@@ -55,6 +55,7 @@
   - digital_binary_slicer_fb
   - digital_chunks_to_symbols_xx
   - digital_constellation_decoder_cb
+  - digital_constellation_encoder_bc
   - digital_constellation_receiver_cb
   - digital_constellation_soft_decoder_cf
   - digital_diff_decoder_bb
@@ -62,10 +63,8 @@
   - digital_diff_phasor_cc
   - digital_map_bb
 - Synchronizers:
-  - digital_clock_recovery_mm_xx
   - digital_costas_loop_cc
   - digital_fll_band_edge_cc
-  - digital_pfb_clock_sync_xxx
   - digital_pn_correlator_cc
   - digital_symbol_sync_xx
   - digital_corr_est_cc

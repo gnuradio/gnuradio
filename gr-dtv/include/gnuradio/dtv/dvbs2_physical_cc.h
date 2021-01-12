@@ -27,7 +27,7 @@ namespace dtv {
 class DTV_API dvbs2_physical_cc : virtual public gr::block
 {
 public:
-    typedef boost::shared_ptr<dvbs2_physical_cc> sptr;
+    typedef std::shared_ptr<dvbs2_physical_cc> sptr;
 
     /*!
      * \brief Create a DVB-S2 physical layer framer.

@@ -24,7 +24,7 @@ namespace audio {
 class GR_AUDIO_API source : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<source> sptr;
+    typedef std::shared_ptr<source> sptr;
 
     /*!
      * Creates a source from an audio device at a specified

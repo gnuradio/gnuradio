@@ -7,17 +7,13 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import unicode_literals
 
 import math
 
 from gnuradio import gr
-from gnuradio import filter
+from gnuradio import filter, fft
 
-from . import analog_swig as analog
+from . import analog_python as analog
 from .fm_emph import fm_deemph
 
 
@@ -70,7 +66,7 @@ class nbfm_rx(gr.hier_block2):
                                             quad_rate,      # sampling rate
                                             2.7e3,          # Audio LPF cutoff
                                             0.5e3,          # Transition band
-                                            filter.firdes.WIN_HAMMING)  # filter type
+                                            fft.window.WIN_HAMMING)  # filter type
 
         print("len(audio_taps) =", len(audio_taps))
 

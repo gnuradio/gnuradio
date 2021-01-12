@@ -21,6 +21,7 @@ namespace digital {
 /*!
  * \brief Least-Mean-Square Decision Directed Equalizer (complex in/out)
  * \ingroup equalizers_blk
+ * \ingroup deprecated_blk
  *
  * \details
  * This block implements an LMS-based decision-directed equalizer.
@@ -60,7 +61,7 @@ protected:
 
 public:
     // gr::digital::lms_dd_equalizer_cc::sptr
-    typedef boost::shared_ptr<lms_dd_equalizer_cc> sptr;
+    typedef std::shared_ptr<lms_dd_equalizer_cc> sptr;
 
     /*!
      * Make an LMS decision-directed equalizer

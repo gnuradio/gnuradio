@@ -2,9 +2,8 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
-from __future__ import absolute_import, division
 
 import re
 from os import path
@@ -51,8 +50,11 @@ def load_lxml(filename, document_type_def=None):
 def load_stdlib(filename, document_type_def=None):
     """Load block description from xml file"""
 
-    with open(filename, 'rb') as xml_file:
-        data = xml_file.read().decode('utf-8')
+    if isinstance(filename, str):
+        with open(filename, 'rb') as xml_file:
+            data = xml_file.read().decode('utf-8')
+    else: # Already opened
+        data = filename.read().decode('utf-8')
 
     try:
         element = etree.fromstring(data)

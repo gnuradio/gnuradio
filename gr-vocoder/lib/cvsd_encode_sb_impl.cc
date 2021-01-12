@@ -28,8 +28,8 @@ cvsd_encode_sb::sptr cvsd_encode_sb::make(short min_step,
                                           short pos_accum_max,
                                           short neg_accum_max)
 {
-    return gnuradio::get_initial_sptr(new cvsd_encode_sb_impl(
-        min_step, max_step, step_decay, accum_decay, K, J, pos_accum_max, neg_accum_max));
+    return gnuradio::make_block_sptr<cvsd_encode_sb_impl>(
+        min_step, max_step, step_decay, accum_decay, K, J, pos_accum_max, neg_accum_max);
 }
 
 cvsd_encode_sb_impl::cvsd_encode_sb_impl(short min_step,

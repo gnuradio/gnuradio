@@ -37,17 +37,17 @@ public:
                                int count = 0,
                                int bits_per_byte = 1,
                                const std::string& reset_tag_key = "");
-    ~additive_scrambler_bb_impl();
+    ~additive_scrambler_bb_impl() override;
 
-    int mask() const;
-    int seed() const;
-    int len() const;
-    int count() const;
-    int bits_per_byte() { return d_bits_per_byte; };
+    int mask() const override;
+    int seed() const override;
+    int len() const override;
+    int count() const override;
+    int bits_per_byte() override { return d_bits_per_byte; };
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace digital */

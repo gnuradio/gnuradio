@@ -20,7 +20,6 @@ class BLOCKS_API interleaved_short_to_complex_impl : public interleaved_short_to
 {
 private:
     float d_scalar;
-    bool d_vector;
     bool d_swap;
 
 public:
@@ -28,13 +27,13 @@ public:
                                       bool swap = false,
                                       float scale_factor = 1.0f);
 
-    void set_swap(bool swap);
+    void set_swap(bool swap) override;
 
-    virtual void set_scale_factor(float new_value) { d_scalar = new_value; };
+    void set_scale_factor(float new_value) override { d_scalar = new_value; };
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

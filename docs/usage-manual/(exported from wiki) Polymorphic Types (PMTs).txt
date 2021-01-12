@@ -3,21 +3,23 @@
     <ns>0</ns>
     <id>3478</id>
     <revision>
-      <id>4292</id>
-      <parentid>4157</parentid>
-      <timestamp>2018-06-26T19:45:45Z</timestamp>
+      <id>6781</id>
+      <parentid>6780</parentid>
+      <timestamp>2020-03-20T01:28:28Z</timestamp>
       <contributor>
         <username>777arc</username>
         <id>632</id>
       </contributor>
+      <comment>/* Vectors */</comment>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="16713">== Introduction ==
+      <text xml:space="preserve" bytes="17533">[[Category:Usage Manual]]
+== Introduction ==
 
 Polymorphic Types are opaque data types that are designed as generic
 containers of data that can be safely passed around between blocks and
 threads in GNU Radio. They are heavily used in the stream tags and
-message passing interfaces. The most complete list of PMT function is,
+message passing interfaces. In a sense, PMTs are a way to extend C++' strict typing with something more flexible. The most complete list of PMT function is,
 of course, the source code, specifically the header file [https://gnuradio.org/doc/doxygen/pmt_8h.html pmt.h]. This page summarizes the most important features and points of PMTs.
 
 Let's dive straight into some Python code and see how we can use
@@ -274,8 +276,8 @@ to get more information on what each does.
 * pmt_t pmt::dict_values(pmt_t dict)
 
 This example does some basic manipulations of PMT dictionaries in
-Python. Notice that we pass the dictionary \a a and return the results
-to \a a. This still creates a new dictionary and removes the local
+Python. Notice that we pass the dictionary ''a'' and return the results
+to ''a''. This still creates a new dictionary and removes the local
 reference to the old dictionary. This just keeps our number of
 variables small.
 
@@ -339,7 +341,15 @@ both signed and unsigned.
 
 Vectors have a well-defined interface that allows us to make, set,
 get, and fill them. We can also get the length of a vector with
-pmt::length.
+pmt::length, or in Python:
+
+ pmt_t p1 = pmt_integer(1);
+ pmt_t p2 = pmt_integer(2);
+ pmt_t p3 = pmt_integer(3);
+ 
+ pmt_t p_list = pmt_list3(p1, p2, p3);
+ 
+ pmt_length(p_list);  // Returns 3
 
 For standard vectors, these functions look like:
 
@@ -388,6 +398,16 @@ objects. They are manipulated using the following functions:
 * pmt_t pmt::cdr(const pmt_t &pair): get the cdr of the pair (second object)
 * void pmt::set_car(pmt_t pair, pmt_t value): Stores value in the car field
 * void pmt::set_cdr(pmt_t pair, pmt_t value): Stores value in the cdr field
+
+And in Python we have:
+<syntaxhighlight lang="python">
+ pmt.is_pair(pair_obj) # Return True if is a pair, else False (warning: also returns True for a dict)
+ pmt.cons(x, y) # Return a newly allocated pair whose car is x and whose cdr is y
+ pmt.car(pair_obj) # If is a pair, return the car, otherwise raise wrong_type
+ pmt.cdr(pair_obj) # If is a pair, return the cdr, otherwise raise wrong_type
+ pmt.set_car(pair_obj, value) # Store value in car field
+ pmt.set_cdr(pair_obj, value) # Store value in cdr field
+</syntaxhighlight>
 
 == Serializing and Deserializing ==
 
@@ -467,7 +487,7 @@ Two functions capture most of this functionality:
  pmt.to_pmt    # Converts a python object to a PMT.
  pmt.to_python # Converts a PMT into a python object.
 </syntaxhighlight></text>
-      <sha1>c6dsjnpwev158d0di49ehocrpenc40z</sha1>
+      <sha1>6hbhl1y9zc4tlse9yp8hlf6n0m519m6</sha1>
     </revision>
   </page>
 </mediawiki>

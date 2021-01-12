@@ -45,7 +45,7 @@ private:
     int imag_positive_threshold_count;
     int imag_negative_threshold_count;
 
-    fft::fft_complex p1_fft;
+    fft::fft_complex_rev p1_fft;
 
     const static int p1_active_carriers[384];
     const static unsigned char s1_modulation_patterns[8][8];
@@ -59,14 +59,14 @@ public:
                               dvbt2_preamble_t preamble,
                               dvbt2_showlevels_t showlevels,
                               float vclip);
-    ~dvbt2_p1insertion_cc_impl();
+    ~dvbt2_p1insertion_cc_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } // namespace dtv

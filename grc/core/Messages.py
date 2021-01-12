@@ -2,10 +2,9 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
 
-from __future__ import absolute_import
 
 import traceback
 import sys
@@ -56,15 +55,14 @@ def send_init(platform):
           "Block paths:\n\t{paths}\n"
     send(msg.format(
         config=platform.config,
-        paths="\n\t".join(platform.config.block_paths))
-    )
+        paths="\n\t".join(platform.config.block_paths)))
 
 
 def send_xml_errors_if_any(xml_failures):
     if xml_failures:
         send('\nXML parser: Found {0} erroneous XML file{1} while loading the '
              'block tree (see "Help/Parser errors" for details)\n'.format(
-                    len(xml_failures), 's' if len(xml_failures) > 1 else ''))
+                 len(xml_failures), 's' if len(xml_failures) > 1 else ''))
 
 
 def send_start_load(file_path):

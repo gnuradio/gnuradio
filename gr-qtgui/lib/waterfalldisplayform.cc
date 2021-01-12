@@ -84,9 +84,9 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
     connect(
         d_avgmenu, SIGNAL(whichTrigger(float)), this, SLOT(setFFTAverage(const float)));
     connect(d_winmenu,
-            SIGNAL(whichTrigger(gr::filter::firdes::win_type)),
+            SIGNAL(whichTrigger(gr::fft::window::win_type)),
             this,
-            SLOT(setFFTWindowType(const gr::filter::firdes::win_type)));
+            SLOT(setFFTWindowType(const gr::fft::window::win_type)));
 
     PopupMenu* maxintmenu = new PopupMenu("Int. Max", this);
     d_menu->addAction(maxintmenu);
@@ -155,7 +155,7 @@ int WaterfallDisplayForm::getFFTSize() const { return d_fftsize; }
 
 float WaterfallDisplayForm::getFFTAverage() const { return d_fftavg; }
 
-gr::filter::firdes::win_type WaterfallDisplayForm::getFFTWindowType() const
+gr::fft::window::win_type WaterfallDisplayForm::getFFTWindowType() const
 {
     return d_fftwintype;
 }
@@ -199,7 +199,7 @@ void WaterfallDisplayForm::setFFTAverage(const float newavg)
     getPlot()->replot();
 }
 
-void WaterfallDisplayForm::setFFTWindowType(const gr::filter::firdes::win_type newwin)
+void WaterfallDisplayForm::setFFTWindowType(const gr::fft::window::win_type newwin)
 {
     d_fftwintype = newwin;
     d_winmenu->getActionFromWindow(newwin)->setChecked(true);

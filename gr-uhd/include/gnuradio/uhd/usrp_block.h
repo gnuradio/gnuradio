@@ -20,6 +20,7 @@ namespace uhd {
 
 GR_UHD_API const pmt::pmt_t cmd_chan_key();
 GR_UHD_API const pmt::pmt_t cmd_gain_key();
+GR_UHD_API const pmt::pmt_t cmd_power_key();
 GR_UHD_API const pmt::pmt_t cmd_freq_key();
 GR_UHD_API const pmt::pmt_t cmd_lo_offset_key();
 GR_UHD_API const pmt::pmt_t cmd_tune_key();
@@ -228,6 +229,65 @@ public:
      */
     virtual ::uhd::gain_range_t get_gain_range(const std::string& name,
                                                size_t chan = 0) = 0;
+
+    /*! Query if this device is capable of absolute power levels
+     *
+     * If true, the set_power_reference() and get_power_reference() APIs can be
+     * used as well.
+     * Note that if the underlying UHD version doesn't support power APIs, a
+     * warning will be printed, and the return value is always false.
+     *
+     * \param chan the channel index 0 to N-1
+     * \returns true if there is a power reference API available for this channel
+     */
+    virtual bool has_power_reference(size_t chan = 0) = 0;
+
+    /*! Set the absolute power reference level for this channel
+     *
+     * Note that this API is available for certain devices only, and only if
+     * calibration data is available. Refer to the UHD manual for greater
+     * detail: https://files.ettus.com/manual/page_power.html
+     *
+     * In a nutshell, using the power reference will configure the device such
+     * that a full-scale signal (0 dBFS) corresponds to a signal at the
+     * antenna connector of \p power_dbm.
+     * After calling this function, the device will attempt to keep the power
+     * level constant after retuning, which means the gain level may be changed
+     * after a re-tune.
+     *
+     * The device may coerce the available power level (for example, if the
+     * requested power level is not achievable by the device). The coerced
+     * value may be read by calling get_power_reference().
+     *
+     * \param power_dbm The power reference level in dBm
+     * \param chan the channel index 0 to N-1
+     * \throws std::runtime_error if the underlying UHD version does not support
+     *         the power API.
+     */
+    virtual void set_power_reference(double power_dbm, size_t chan = 0) = 0;
+
+    /*! Return the absolute power reference level for this channel
+     *
+     * Note that this API is only available for certain devices, and assuming
+     * the existence of calibration data. Refer to the UHD manual for greater
+     * detail: https://files.ettus.com/manual/page_compat.html
+     *
+     * See also set_power_reference().
+     *
+     * \param chan the channel index 0 to N-1
+     * \throws std::runtime_error if the underlying UHD version does not support
+     *         the power API.
+     */
+    virtual double get_power_reference(size_t chan = 0) = 0;
+
+    /*! Return the available power range
+     *
+     * \param chan the channel index 0 to N-1
+     * \return the power range in dBm
+     * \throws std::runtime_error if the underlying UHD version does not support
+     *         the power API.
+     */
+    virtual ::uhd::meta_range_t get_power_range(size_t chan = 0) = 0;
 
     /*!
      * Set the antenna to use for a given channel.
@@ -572,6 +632,15 @@ public:
      * @return the filter object
      */
     virtual ::uhd::filter_info_base::sptr get_filter(const std::string& path) = 0;
+
+    /*!
+     * Returns identifying information about this USRP's configuration.
+     * Returns motherboard ID, name, and serial.
+     * Returns daughterboard TX ID, subdev name and spec, serial, and antenna.
+     * \param chan channel index 0 to N-1
+     * \return TX info
+     */
+    virtual ::uhd::dict<std::string, std::string> get_usrp_info(size_t chan = 0) = 0;
 };
 
 } /* namespace uhd */

@@ -6,9 +6,6 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
 
 import sys
 import os
@@ -18,7 +15,7 @@ import copy
 import warnings
 from optparse import OptionParser
 
-from gnuradio import filter
+from gnuradio import filter, fft
 
 try:
     import numpy as np
@@ -26,19 +23,17 @@ except ImportError:
     raise SystemExit('Please install NumPy to run this script (https://www.np.org/)')
 
 try:
-    from numpy.fft import fftpack as fft_detail
+    import numpy.fft as fft_detail
 except ImportError:
-
-    print('Could not import fftpack, trying pocketfft')
-    # Numpy changed fft implementation in version 1.17
-    # from fftpack to pocketfft
-    try:
-        from numpy.fft import pocketfft as fft_detail
-    except ImportError:
-        raise SystemExit('Could not import fft implementation of numpy')
+    raise SystemExit('Could not import fft implementation of numpy')
     
 try:
-    from scipy import poly1d, signal
+    from numpy import poly1d
+except ImportError:
+    raise SystemExit('Please install NumPy to run this script (https://www.np.org)')
+
+try:
+    from scipy import signal
 except ImportError:
     raise SystemExit('Please install SciPy to run this script (https://www.scipy.org)')
 
@@ -493,12 +488,12 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         self.gui.nTapsEdit.setText("0")
 
-        self.filterWindows = {"Hamming Window" : filter.firdes.WIN_HAMMING,
-                              "Hann Window" : filter.firdes.WIN_HANN,
-                              "Blackman Window" : filter.firdes.WIN_BLACKMAN,
-                              "Rectangular Window" : filter.firdes.WIN_RECTANGULAR,
-                              "Kaiser Window" : filter.firdes.WIN_KAISER,
-                              "Blackman-harris Window" : filter.firdes.WIN_BLACKMAN_hARRIS}
+        self.filterWindows = {"Hamming Window" : fft.window.WIN_HAMMING,
+                              "Hann Window" : fft.window.WIN_HANN,
+                              "Blackman Window" : fft.window.WIN_BLACKMAN,
+                              "Rectangular Window" : fft.window.WIN_RECTANGULAR,
+                              "Kaiser Window" : fft.window.WIN_KAISER,
+                              "Blackman-harris Window" : fft.window.WIN_BLACKMAN_hARRIS}
         self.EQUIRIPPLE_FILT = 6 # const for equiripple filter window types.
 
 
@@ -982,9 +977,8 @@ class gr_plot_filter(QtGui.QMainWindow):
 #            self.update_group_curves()
 
     def get_fft(self, fs, taps, Npts):
-        Ts = 1.0 / fs
         fftpts = fft_detail.fft(taps, Npts)
-        self.freq = np.arange(0, fs, 1.0 / (Npts*Ts))
+        self.freq = np.linspace(start=0, stop=fs, num=Npts, endpoint=False)
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
             self.fftdB = 20.0*np.log10(abs(fftpts))
@@ -1004,10 +998,10 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         # Set Data.
         if(type(self.taps[0]) == scipy.complex128):
-            self.rcurve.setData(scipy.arange(ntaps), self.taps.real)
-            self.icurve.setData(scipy.arange(ntaps), self.taps.imag)
+            self.rcurve.setData(np.arange(ntaps), self.taps.real)
+            self.icurve.setData(np.arange(ntaps), self.taps.imag)
         else:
-            self.rcurve.setData(scipy.arange(ntaps), self.taps)
+            self.rcurve.setData(np.arange(ntaps), self.taps)
             self.icurve.setData([],[]);
 
         if self.mttaps:
@@ -1023,11 +1017,11 @@ class gr_plot_filter(QtGui.QMainWindow):
                                                 np.dstack((np.zeros(self.taps.imag.shape[0], dtype=int),
                                                             self.taps.imag)).flatten())
 
-                self.mtimecurve_i.setData(scipy.arange(ntaps), self.taps.imag)
+                self.mtimecurve_i.setData(np.arange(ntaps), self.taps.imag)
 
             else:
-                self.mtimecurve.setData(scipy.arange(ntaps), self.taps)
-                self.mtimecurve_stems.setData(np.repeat(scipy.arange(ntaps), 2),
+                self.mtimecurve.setData(np.arange(ntaps), self.taps)
+                self.mtimecurve_stems.setData(np.repeat(np.arange(ntaps), 2),
                                                 np.dstack((np.zeros(self.taps.shape[0], dtype=int),
                                                         self.taps)).flatten())
 
@@ -1072,13 +1066,13 @@ class gr_plot_filter(QtGui.QMainWindow):
                                               np.dstack((np.zeros(stepres.imag.shape[0], dtype=int),
                                                          stepres.imag)).flatten())
 
-            self.steprescurve_i.setData(scipy.arange(ntaps), stepres.imag)
+            self.steprescurve_i.setData(np.arange(ntaps), stepres.imag)
         else:
-            self.steprescurve_stems.setData(np.repeat(scipy.arange(ntaps), 2),
+            self.steprescurve_stems.setData(np.repeat(np.arange(ntaps), 2),
                                             np.dstack((np.zeros(stepres.shape[0], dtype=int),
                                                        stepres)).flatten())
 
-            self.steprescurve.setData(scipy.arange(ntaps), stepres)
+            self.steprescurve.setData(np.arange(ntaps), stepres)
             self.steprescurve_i_stems.setData([],[])
             self.steprescurve_i.setData([],[])
 
@@ -1095,13 +1089,13 @@ class gr_plot_filter(QtGui.QMainWindow):
                                                 np.dstack((np.zeros(stepres.imag.shape[0], dtype=int),
                                                             stepres.imag)).flatten())
 
-                self.mtimecurve_i.setData(scipy.arange(ntaps), stepres.imag)
+                self.mtimecurve_i.setData(np.arange(ntaps), stepres.imag)
             else:
-                self.mtimecurve_stems.setData(np.repeat(scipy.arange(ntaps), 2),
+                self.mtimecurve_stems.setData(np.repeat(np.arange(ntaps), 2),
                                                 np.dstack((np.zeros(stepres.shape[0], dtype=int),
                                                         stepres)).flatten())
 
-                self.mtimecurve.setData(scipy.arange(ntaps), stepres)
+                self.mtimecurve.setData(np.arange(ntaps), stepres)
                 self.mtimecurve_i_stems.setData([],[])
                 self.mtimecurve_i.setData([],[])
 
@@ -1141,9 +1135,9 @@ class gr_plot_filter(QtGui.QMainWindow):
                                              np.dstack((np.zeros(impres.imag.shape[0], dtype=int),
                                                         impres.imag)).flatten())
 
-            self.imprescurve_i.setData(scipy.arange(ntaps), impres.imag)
+            self.imprescurve_i.setData(np.arange(ntaps), impres.imag)
         else:
-            self.imprescurve_stems.setData(np.repeat(scipy.arange(ntaps), 2),
+            self.imprescurve_stems.setData(np.repeat(np.arange(ntaps), 2),
                                            np.dstack((np.zeros(impres.shape[0], dtype=int),
                                                       impres)).flatten())
 
@@ -1160,13 +1154,13 @@ class gr_plot_filter(QtGui.QMainWindow):
                                                 np.dstack((np.zeros(impres.imag.shape[0], dtype=int),
                                                             impres.imag)).flatten())
 
-                self.mtimecurve_i.setData(scipy.arange(ntaps), impres.imag)
+                self.mtimecurve_i.setData(np.arange(ntaps), impres.imag)
             else:
-                self.mtimecurve_stems.setData(np.repeat(scipy.arange(ntaps), 2),
+                self.mtimecurve_stems.setData(np.repeat(np.arange(ntaps), 2),
                                             np.dstack((np.zeros(impres.shape[0], dtype=int),
                                                         impres)).flatten())
 
-                self.mtimecurve.setData(scipy.arange(ntaps), impres)
+                self.mtimecurve.setData(np.arange(ntaps), impres)
                 self.mtimecurve_i_stems.setData([],[])
                 self.mtimecurve_i.setData([],[])
 

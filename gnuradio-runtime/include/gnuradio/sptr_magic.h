@@ -6,13 +6,17 @@
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
+ * The magic here is a way of constructing std::shared_ptr<> to blocks, in a way
+ * that allows the constructors of those blocks to reference them.
+ * This is only used for blocks that derive from hier_blocks2, so that they can
+ * create and connect sub-blocks in their constructor.
  */
 
 #ifndef INCLUDED_GR_RUNTIME_SPTR_MAGIC_H
 #define INCLUDED_GR_RUNTIME_SPTR_MAGIC_H
 
 #include <gnuradio/api.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace gr {
 class basic_block;
@@ -25,7 +29,7 @@ namespace detail {
 class GR_RUNTIME_API sptr_magic
 {
 public:
-    static boost::shared_ptr<gr::basic_block> fetch_initial_sptr(gr::basic_block* p);
+    static std::shared_ptr<gr::basic_block> fetch_initial_sptr(gr::basic_block* p);
     static void create_and_stash_initial_sptr(gr::hier_block2* p);
     static void cancel_initial_sptr(gr::hier_block2* p);
 };
@@ -33,13 +37,24 @@ public:
 
 /*
  * \brief New!  Improved!  Standard method to get/create the
- * boost::shared_ptr for a block.
+ * std::shared_ptr for a block.
  */
 template <class T>
-boost::shared_ptr<T> get_initial_sptr(T* p)
+std::shared_ptr<T> get_initial_sptr(T* p)
 {
-    return boost::dynamic_pointer_cast<T, gr::basic_block>(
+    return std::dynamic_pointer_cast<T, gr::basic_block>(
         detail::sptr_magic::fetch_initial_sptr(p));
+}
+
+/*
+ * \brief GNU Radio version of std::make_shared<> that also provides magic. For
+ * blocks that don't reference self() in any constructor it's equivalent to
+ * std::make_shared<>.
+ */
+template <typename T, typename... Args>
+std::shared_ptr<T> make_block_sptr(Args&&... args)
+{
+    return get_initial_sptr(new T(std::forward<Args>(args)...));
 }
 } // namespace gnuradio
 

@@ -27,7 +27,7 @@ const float polar_decoder_common::D_LLR_FACTOR = -2.19722458f;
 polar_decoder_common::polar_decoder_common(int block_size,
                                            int num_info_bits,
                                            std::vector<int> frozen_bit_positions,
-                                           std::vector<char> frozen_bit_values)
+                                           std::vector<uint8_t> frozen_bit_values)
     : polar_common(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values),
       d_frozen_bit_counter(0)
 {

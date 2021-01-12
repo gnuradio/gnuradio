@@ -32,18 +32,18 @@ dvbt2_pilotgenerator_cc::make(dvbt2_extended_carrier_t carriermode,
                               dvbt2_bandwidth_t bandwidth,
                               unsigned int vlength)
 {
-    return gnuradio::get_initial_sptr(new dvbt2_pilotgenerator_cc_impl(carriermode,
-                                                                       fftsize,
-                                                                       pilotpattern,
-                                                                       guardinterval,
-                                                                       numdatasyms,
-                                                                       paprmode,
-                                                                       version,
-                                                                       preamble,
-                                                                       misogroup,
-                                                                       equalization,
-                                                                       bandwidth,
-                                                                       vlength));
+    return gnuradio::make_block_sptr<dvbt2_pilotgenerator_cc_impl>(carriermode,
+                                                                   fftsize,
+                                                                   pilotpattern,
+                                                                   guardinterval,
+                                                                   numdatasyms,
+                                                                   paprmode,
+                                                                   version,
+                                                                   preamble,
+                                                                   misogroup,
+                                                                   equalization,
+                                                                   bandwidth,
+                                                                   vlength);
 }
 
 /*
@@ -70,7 +70,7 @@ dvbt2_pilotgenerator_cc_impl::dvbt2_pilotgenerator_cc_impl(
       carrier_mode(carriermode),
       papr_mode(paprmode),
       equalization_enable(equalization),
-      ofdm_fft(vlength, false, 1),
+      ofdm_fft(vlength, 1),
       ofdm_fft_size(vlength)
 {
     int step, ki;

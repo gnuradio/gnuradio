@@ -26,7 +26,7 @@ namespace dtv {
 class DTV_API dvbs2_interleaver_bb : virtual public gr::block
 {
 public:
-    typedef boost::shared_ptr<dvbs2_interleaver_bb> sptr;
+    typedef std::shared_ptr<dvbs2_interleaver_bb> sptr;
 
     /*!
      * \brief Create a DVB-S2 bit interleaver.

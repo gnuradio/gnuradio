@@ -2,15 +2,14 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
-from __future__ import absolute_import
 
 import sys
 import textwrap
 from distutils.spawn import find_executable
 
-from gi.repository import Gtk, GLib
+from gi.repository import Gtk, GLib, Gdk
 
 from . import Utils, Actions, Constants
 from ..core import Messages
@@ -130,16 +129,16 @@ class TextDisplay(SimpleTextDisplay):
         """Create a popup menu for the scroll lock and clear functions"""
         menu.append(Gtk.SeparatorMenuItem())
 
-        lock = Gtk.CheckMenuItem(label = "Scroll Lock")
+        lock = Gtk.CheckMenuItem(label="Scroll Lock")
         menu.append(lock)
         lock.set_active(self.scroll_lock)
         lock.connect('activate', self.scroll_back_cb, view)
 
-        save = Gtk.ImageMenuItem(label = Gtk.STOCK_SAVE)
+        save = Gtk.ImageMenuItem(label="Save Console")
         menu.append(save)
         save.connect('activate', self.save_cb, view)
 
-        clear = Gtk.ImageMenuItem(label = Gtk.STOCK_CLEAR)
+        clear = Gtk.ImageMenuItem(label="Clear Console")
         menu.append(clear)
         clear.connect('activate', self.clear_cb, view)
         menu.show_all()
@@ -204,6 +203,7 @@ class ErrorsDialog(Gtk.Dialog):
             modal=True,
             destroy_with_parent=True,
         )
+        self.clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         self.add_buttons(Gtk.STOCK_OK, Gtk.ResponseType.ACCEPT)
         self.set_size_request(750, Constants.MIN_DIALOG_HEIGHT)
         self.set_border_width(10)
@@ -212,6 +212,7 @@ class ErrorsDialog(Gtk.Dialog):
         self.update(flowgraph)
 
         self.treeview = Gtk.TreeView(model=self.store)
+        self.treeview.connect("button_press_event", self.mouse_click)
         for i, column_title in enumerate(["Block", "Aspect", "Message"]):
             renderer = Gtk.CellRendererText()
             column = Gtk.TreeViewColumn(column_title, renderer, text=i)
@@ -249,6 +250,20 @@ class ErrorsDialog(Gtk.Dialog):
         self.hide()
         return response
 
+    def mouse_click(self, _, event):
+        """ Handle mouse click, so user can copy the error message """
+        if event.button == 3:
+            path_info = self.treeview.get_path_at_pos(event.x, event.y)
+            if path_info is not None:
+                path, col, _, _ = path_info
+                self.treeview.grab_focus()
+                self.treeview.set_cursor(path, col, 0)
+
+            selection = self.treeview.get_selection()
+            (model, iterator) = selection.get_selected()
+            self.clipboard.set_text(model[iterator][2], -1)
+            print(model[iterator][2])
+
 
 def show_about(parent, config):
     ad = Gtk.AboutDialog(transient_for=parent)
@@ -277,18 +292,78 @@ def show_help(parent):
     markup = textwrap.dedent("""\
         <b>Usage Tips</b>
         \n\
-        <u>Add block</u>: drag and drop or double click a block in the block selection window.
+        <u>Add block</u>: drag and drop or double click a block in the block
+       selection window.
         <u>Rotate block</u>: Select a block, press left/right on the keyboard.
         <u>Change type</u>: Select a block, press up/down on the keyboard.
         <u>Edit parameters</u>: double click on a block in the flow graph.
-        <u>Make connection</u>: click on the source port of one block, then click on the sink port of another block.
-        <u>Remove connection</u>: select the connection and press delete, or drag the connection.
+        <u>Make connection</u>: click on the source port of one block, then
+       click on the sink port of another block.
+        <u>Remove connection</u>: select the connection and press delete, or
+       drag the connection.
         \n\
-        * See the menu for other keyboard shortcuts.\
+        *Press Ctrl+K or see menu for Keyboard - Shortcuts
+        \
     """)
+    markup = markup.replace("Ctrl", Utils.get_modifier_key())
 
     MessageDialogWrapper(
         parent, Gtk.MessageType.INFO, Gtk.ButtonsType.CLOSE, title='Help', markup=markup
+    ).run_and_destroy()
+
+def show_keyboard_shortcuts(parent):
+    """ Display keyboard shortcut-keys. """
+    markup = textwrap.dedent("""\
+    <b>Keyboard Shortcuts</b>
+    \n\
+    <u>Ctrl+N</u>: Create a new flowgraph.
+    <u>Ctrl+O</u>: Open an existing flowgraph.
+    <u>Ctrl+S</u>: Save the current flowgraph or save as for new.
+    <u>Ctrl+W</u>: Close the current flowgraph.
+    <u>Ctrl+Z</u>: Undo a change to the flowgraph.
+    <u>Ctrl+Y</u>: Redo a change to the flowgraph.
+    <u>Ctrl+A</u>: Selects all blocks and connections.
+    <u>Ctrl+P</u>: Screen Capture of the Flowgraph.
+    <u>Ctrl+Shift+P</u>: Save the console output to file.
+    <u>Ctrl+L</u>: Clear the console.
+    <u>Ctrl+E</u>: Show variable editor.
+    <u>Ctrl+F</u>: Search for a block by name.
+    <u>Ctrl+Q</u>: Quit.
+    <u>F1</u>    : Help menu.
+    <u>F5</u>    : Generate the Flowgraph.
+    <u>F6</u>    : Execute the Flowgraph.
+    <u>F7</u>    : Kill the Flowgraph.
+    <u>Ctrl+Shift+S</u>: Save as the current flowgraph.
+    <u>Ctrl+Shift+D</u>: Create a duplicate of current flow graph.
+
+    <u>Ctrl+X/C/V</u>: Edit-cut/copy/paste.
+    <u>Ctrl+D/B/R</u>: Toggle visibility of disabled blocks or
+            connections/block tree widget/console.
+    <u>Shift+T/M/B/L/C/R</u>: Vertical Align Top/Middle/Bottom and
+            Horizontal Align Left/Center/Right respectively of the
+            selected block.
+    \
+    """)
+    markup = markup.replace("Ctrl", Utils.get_modifier_key())
+
+    MessageDialogWrapper(
+        parent, Gtk.MessageType.INFO, Gtk.ButtonsType.CLOSE, title='Keyboard - Shortcuts', markup=markup
+    ).run_and_destroy()
+
+
+def show_get_involved(parent):
+    """Get Involved Instructions"""
+    markup = textwrap.dedent("""\
+    <b>Welcome to GNU Radio Community!</b>
+    \n\
+    For more details on contributing to GNU Radio and getting engaged with our great community visit <a href="https://wiki.gnuradio.org/index.php/HowToGetInvolved">here</a>.
+    \n\
+    You can also join our <a href="https://chat.gnuradio.org/">Matrix chat server</a>, IRC Channel (#gnuradio) or contact through our <a href="https://lists.gnu.org/mailman/listinfo/discuss-gnuradio">mailing list (discuss-gnuradio)</a>.
+    \
+    """)
+
+    MessageDialogWrapper(
+        parent, Gtk.MessageType.QUESTION, Gtk.ButtonsType.CLOSE, title='Get - Involved', markup=markup
     ).run_and_destroy()
 
 

@@ -48,8 +48,8 @@ file_meta_source::sptr file_meta_source::make(const std::string& filename,
                                               bool detached_header,
                                               const std::string& hdr_filename)
 {
-    return gnuradio::get_initial_sptr(
-        new file_meta_source_impl(filename, repeat, detached_header, hdr_filename));
+    return gnuradio::make_block_sptr<file_meta_source_impl>(
+        filename, repeat, detached_header, hdr_filename);
 }
 
 file_meta_source_impl::file_meta_source_impl(const std::string& filename,
@@ -263,7 +263,7 @@ bool file_meta_source_impl::_open(FILE** fp, const char* filename)
     int fd;
 
     if ((fd = ::open(filename, O_RDONLY | OUR_O_LARGEFILE | OUR_O_BINARY)) < 0) {
-        perror(filename);
+        GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
         return false;
     }
 
@@ -273,7 +273,7 @@ bool file_meta_source_impl::_open(FILE** fp, const char* filename)
     }
 
     if ((*fp = fdopen(fd, "rb")) == NULL) {
-        perror(filename);
+        GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
         ::close(fd); // don't leak file descriptor if fdopen fails.
     }
 

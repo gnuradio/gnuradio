@@ -29,6 +29,10 @@
   - blocks_message_strobe_random
   - blocks_tags_strobe
   - blocks_test_tag_variable_rate_ff
+- Deprecated:
+  - blocks_tcp_server_sink
+  - blocks_udp_source
+  - blocks_udp_sink
 - File Operators:
   - blocks_wavfile_source
   - blocks_wavfile_sink
@@ -104,6 +108,7 @@
   - blocks_copy
   - blocks_selector
   - blocks_nop
+  - blocks_phase_shift
   - xmlrpc_server
   - xmlrpc_client
 - Modulators:
@@ -112,9 +117,6 @@
 - Networking Tools:
   - blocks_tuntap_pdu
   - blocks_socket_pdu
-  - blocks_tcp_server_sink
-  - blocks_udp_source
-  - blocks_udp_sink
 - Peak Detectors:
   - blocks_burst_tagger
   - blocks_peak_detector_xb
@@ -125,6 +127,7 @@
   - blocks_interleave
   - blocks_keep_m_in_n
   - blocks_keep_one_in_n
+  - blocks_stream_demux
   - blocks_stream_mux
   - blocks_stream_to_streams
   - blocks_stream_to_vector

@@ -2,16 +2,12 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
-from __future__ import absolute_import
 
 import ast
 import collections
 import textwrap
-
-import six
-from six.moves import range
 
 from .. import Constants
 from ..base import Element
@@ -77,7 +73,7 @@ class Param(Element):
         options.attributes = collections.defaultdict(dict)
 
         padding = [''] * max(len(values), len(labels))
-        attributes = {key: value + padding for key, value in six.iteritems(attributes)}
+        attributes = {key: value + padding for key, value in attributes.items()}
 
         for i, option in enumerate(values):
             # Test against repeated keys
@@ -90,7 +86,7 @@ class Param(Element):
                 label = str(option)
             # Store the option
             options[option] = label
-            options.attributes[option] = {attrib: values[i] for attrib, values in six.iteritems(attributes)}
+            options.attributes[option] = {attrib: values[i] for attrib, values in attributes.items()}
 
         default = next(iter(options)) if options else ''
         if not self.value:
@@ -197,7 +193,7 @@ class Param(Element):
         #########################
         # ID and Enum types (not evaled)
         #########################
-        if dtype in ('id', 'stream_id','name') or self.is_enum():
+        if dtype in ('id', 'stream_id', 'name') or self.is_enum():
             if self.options.attributes:
                 expr = attributed_str(expr)
                 for key, value in self.options.attributes[expr].items():
@@ -242,11 +238,11 @@ class Param(Element):
         #########################
         # String Types
         #########################
-        elif dtype in ('string', 'file_open', 'file_save', '_multiline', '_multiline_python_external'):
+        elif dtype in ('string', 'file_open', 'file_save', 'dir_select', '_multiline', '_multiline_python_external'):
             # Do not check if file/directory exists, that is a runtime issue
             try:
                 # Do not evaluate multiline strings (code snippets or comments)
-                if dtype not in ['_multiline','_multiline_python_external']:
+                if dtype not in ['_multiline', '_multiline_python_external']:
                     value = self.parent_flowgraph.evaluate(expr)
                     if not isinstance(value, str):
                         raise Exception()
@@ -293,7 +289,7 @@ class Param(Element):
         self._init = True
         value = self.get_value()
         # String types
-        if self.dtype in ('string', 'file_open', 'file_save', '_multiline', '_multiline_python_external'):
+        if self.dtype in ('string', 'file_open', 'file_save', 'dir_select', '_multiline', '_multiline_python_external'):
             if not self._init:
                 self.evaluate()
             return repr(value) if self._stringify_flag else value

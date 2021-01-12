@@ -1,5 +1,6 @@
 id: dtv_dvbt_bit_inner_deinterleaver
 label: Bit Inner Deinterleaver
+flags: [ python, cpp ]
 
 parameters:
 -   id: constellation
@@ -42,5 +43,18 @@ templates:
     imports: from gnuradio import dtv
     make: dtv.dvbt_bit_inner_deinterleaver(${transmission_mode.payload_length}, ${constellation.val},
         ${hierarchy.val}, ${transmission_mode.val})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbt_bit_inner_deinterleaver.h>']
+    declarations: 'dtv::dvbt_bit_inner_deinterleaver::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbt_bit_inner_deinterleaver::make(
+            ${transmission_mode.payload_length},
+            ${constellation.val},
+            ${hierarchy.val},
+            ${transmission_mode.val});
+    link: ['gnuradio-dtv']
+    translations:
+        dtv\.: 'dtv::'
 
 file_format: 1

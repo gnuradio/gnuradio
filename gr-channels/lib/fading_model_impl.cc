@@ -18,7 +18,7 @@ namespace channels {
 fading_model::sptr
 fading_model::make(unsigned int N, float fDTs, bool LOS, float K, uint32_t seed)
 {
-    return gnuradio::get_initial_sptr(new fading_model_impl(N, fDTs, LOS, K, seed));
+    return gnuradio::make_block_sptr<fading_model_impl>(N, fDTs, LOS, K, seed);
 }
 
 // Block constructor

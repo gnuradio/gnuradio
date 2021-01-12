@@ -31,7 +31,7 @@ class TRELLIS_API pccc_decoder_blk : virtual public block
 {
 public:
     // gr::trellis::pccc_decoder_blk::sptr
-    typedef boost::shared_ptr<pccc_decoder_blk<T>> sptr;
+    typedef std::shared_ptr<pccc_decoder_blk<T>> sptr;
 
     static sptr make(const fsm& FSM1,
                      int ST10,

@@ -201,7 +201,7 @@ blocks:
     nfilts: nfilts
     rrate: resamp_rate
     samp_delay: '0'
-    taps: firdes.low_pass_2(volume*nfilts, nfilts*in_rate, 15e3, 1e3, 60, firdes.WIN_KAISER)
+    taps: firdes.low_pass_2(volume*nfilts, nfilts*in_rate, 15e3, 1e3, 60, window.WIN_KAISER)
     type: fff
   states:
     bus_sink: false
@@ -280,7 +280,7 @@ blocks:
     width7: '1'
     width8: '1'
     width9: '1'
-    wintype: firdes.WIN_BLACKMAN_hARRIS
+    wintype: window.WIN_BLACKMAN_hARRIS
     ymax: '10'
     ymin: '-140'
   states:
@@ -360,7 +360,7 @@ blocks:
     width7: '1'
     width8: '1'
     width9: '1'
-    wintype: firdes.WIN_BLACKMAN_hARRIS
+    wintype: window.WIN_BLACKMAN_hARRIS
     ymax: '10'
     ymin: '-140'
   states:
@@ -440,7 +440,7 @@ blocks:
     width7: '1'
     width8: '1'
     width9: '1'
-    wintype: firdes.WIN_BLACKMAN_hARRIS
+    wintype: window.WIN_BLACKMAN_hARRIS
     ymax: '10'
     ymin: '-140'
   states:

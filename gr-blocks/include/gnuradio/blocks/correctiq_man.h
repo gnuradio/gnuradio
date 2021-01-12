@@ -27,7 +27,7 @@ namespace blocks {
 class BLOCKS_API correctiq_man : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<correctiq_man> sptr;
+    typedef std::shared_ptr<correctiq_man> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of correctiq::correctiq_man.
@@ -38,8 +38,8 @@ public:
      * creating new instances.
      */
 
-    virtual float get_real() = 0;
-    virtual float get_imag() = 0;
+    virtual float get_real() const = 0;
+    virtual float get_imag() const = 0;
 
     virtual void set_real(float newValue) = 0;
     virtual void set_imag(float newValue) = 0;

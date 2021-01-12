@@ -12,8 +12,6 @@
 #include "dvb_defines.h"
 
 #include <gnuradio/dtv/dvb_ldpc_bb.h>
-#include <boost/smart_ptr.hpp>
-
 
 namespace gr {
 namespace dtv {
@@ -164,14 +162,14 @@ public:
                      dvb_framesize_t framesize,
                      dvb_code_rate_t rate,
                      dvb_constellation_t constellation);
-    ~dvb_ldpc_bb_impl();
+    ~dvb_ldpc_bb_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } // namespace dtv

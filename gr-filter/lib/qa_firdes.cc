@@ -134,7 +134,7 @@ const static float t6_exp[] = { // bandpass
 
 BOOST_AUTO_TEST_CASE(t1)
 {
-    vector<float> taps = firdes::low_pass(1.0, 8000, 1750, 500, firdes::WIN_HAMMING);
+    vector<float> taps = firdes::low_pass(1.0, 8000, 1750, 500, fft::window::WIN_HAMMING);
 
     // std::cout << "ntaps: " << taps.size() << std::endl;
     // print_taps(std::cout, taps);
@@ -148,7 +148,8 @@ BOOST_AUTO_TEST_CASE(t1)
 
 BOOST_AUTO_TEST_CASE(t2)
 {
-    vector<float> taps = firdes::high_pass(1.0, 8000, 1750, 500, firdes::WIN_HAMMING);
+    vector<float> taps =
+        firdes::high_pass(1.0, 8000, 1750, 500, fft::window::WIN_HAMMING);
 
     // std::cout << "ntaps: " << taps.size() << std::endl;
     // print_taps(std::cout, taps);
@@ -168,7 +169,7 @@ BOOST_AUTO_TEST_CASE(t3)
                                            5.75e6 - (5.28e6 / 2),
                                            5.75e6 + (5.28e6 / 2),
                                            0.62e6,
-                                           firdes::WIN_HAMMING);
+                                           fft::window::WIN_HAMMING);
 
     // std::cout << "ntaps: " << taps.size() << std::endl;
     // print_taps(std::cout, taps);
@@ -184,7 +185,7 @@ BOOST_AUTO_TEST_CASE(t3)
 BOOST_AUTO_TEST_CASE(t4)
 {
     vector<float> taps =
-        firdes::low_pass_2(1.0, 8000, 1750, 500, 66, firdes::WIN_HAMMING);
+        firdes::low_pass_2(1.0, 8000, 1750, 500, 66, fft::window::WIN_HAMMING);
 
     // std::cout << "ntaps: " << taps.size() << std::endl;
     // print_taps(std::cout, taps);
@@ -199,7 +200,7 @@ BOOST_AUTO_TEST_CASE(t4)
 BOOST_AUTO_TEST_CASE(t5)
 {
     vector<float> taps =
-        firdes::high_pass_2(1.0, 8000, 1750, 500, 66, firdes::WIN_HAMMING);
+        firdes::high_pass_2(1.0, 8000, 1750, 500, 66, fft::window::WIN_HAMMING);
 
     // std::cout << "ntaps: " << taps.size() << std::endl;
     // print_taps(std::cout, taps);
@@ -220,7 +221,7 @@ BOOST_AUTO_TEST_CASE(t6)
                                              5.75e6 + (5.28e6 / 2),
                                              0.62e6,
                                              66,
-                                             firdes::WIN_HAMMING);
+                                             fft::window::WIN_HAMMING);
 
     // std::cout << "ntaps: " << taps.size() << std::endl;
     // print_taps(std::cout, taps);

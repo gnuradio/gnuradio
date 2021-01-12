@@ -13,10 +13,11 @@
 #endif
 
 #include <gnuradio/filter/fft_filter.h>
+#include <gnuradio/logger.h>
 #include <volk/volk.h>
-#include <boost/smart_ptr/make_unique.hpp>
 #include <cstring>
 #include <iostream>
+#include <memory>
 
 namespace gr {
 namespace filter {
@@ -29,6 +30,7 @@ fft_filter_fff::fft_filter_fff(int decimation,
                                int nthreads)
     : d_fftsize(-1), d_decimation(decimation), d_nthreads(nthreads)
 {
+    gr::configure_default_loggers(d_logger, d_debug_logger, "fft_filter_fff");
     set_taps(taps);
 }
 
@@ -76,14 +78,16 @@ void fft_filter_fff::compute_sizes(int ntaps)
     d_nsamples = d_fftsize - d_ntaps + 1;
 
     if (VERBOSE) {
-        std::cerr << "fft_filter_fff: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
-                  << " nsamples = " << d_nsamples << std::endl;
+        std::ostringstream msg;
+        msg << "fft_filter_fff: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
+            << " nsamples = " << d_nsamples;
+        GR_LOG_ALERT(d_logger, msg.str());
     }
 
     // compute new plans
     if (d_fftsize != old_fftsize) {
-        d_fwdfft = boost::make_unique<fft::fft_real_fwd>(d_fftsize);
-        d_invfft = boost::make_unique<fft::fft_real_rev>(d_fftsize);
+        d_fwdfft = std::make_unique<fft::fft_real_fwd>(d_fftsize);
+        d_invfft = std::make_unique<fft::fft_real_rev>(d_fftsize);
         d_xformed_taps.resize(d_fftsize / 2 + 1);
     }
 }
@@ -157,6 +161,7 @@ fft_filter_ccc::fft_filter_ccc(int decimation,
                                int nthreads)
     : d_fftsize(-1), d_decimation(decimation), d_nthreads(nthreads)
 {
+    gr::configure_default_loggers(d_logger, d_debug_logger, "fft_filter_ccc");
     set_taps(taps);
 }
 
@@ -204,14 +209,16 @@ void fft_filter_ccc::compute_sizes(int ntaps)
     d_nsamples = d_fftsize - d_ntaps + 1;
 
     if (VERBOSE) {
-        std::cerr << "fft_filter_ccc: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
-                  << " nsamples = " << d_nsamples << std::endl;
+        std::ostringstream msg;
+        msg << "fft_filter_ccc: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
+            << " nsamples = " << d_nsamples;
+        GR_LOG_ALERT(d_logger, msg.str());
     }
 
     // compute new plans
     if (d_fftsize != old_fftsize) {
-        d_fwdfft = boost::make_unique<fft::fft_complex>(d_fftsize, true, d_nthreads);
-        d_invfft = boost::make_unique<fft::fft_complex>(d_fftsize, false, d_nthreads);
+        d_fwdfft = std::make_unique<fft::fft_complex_fwd>(d_fftsize, d_nthreads);
+        d_invfft = std::make_unique<fft::fft_complex_rev>(d_fftsize, d_nthreads);
         d_xformed_taps.resize(d_fftsize);
     }
 }
@@ -286,6 +293,7 @@ fft_filter_ccf::fft_filter_ccf(int decimation,
                                int nthreads)
     : d_fftsize(-1), d_decimation(decimation), d_nthreads(nthreads)
 {
+    gr::configure_default_loggers(d_logger, d_debug_logger, "fft_filter_ccf");
     set_taps(taps);
 }
 
@@ -333,14 +341,16 @@ void fft_filter_ccf::compute_sizes(int ntaps)
     d_nsamples = d_fftsize - d_ntaps + 1;
 
     if (VERBOSE) {
-        std::cerr << "fft_filter_ccf: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
-                  << " nsamples = " << d_nsamples << std::endl;
+        std::ostringstream msg;
+        msg << "fft_filter_ccf: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
+            << " nsamples = " << d_nsamples;
+        GR_LOG_ALERT(d_logger, msg.str());
     }
 
     // compute new plans
     if (d_fftsize != old_fftsize) {
-        d_fwdfft = boost::make_unique<fft::fft_complex>(d_fftsize, true, d_nthreads);
-        d_invfft = boost::make_unique<fft::fft_complex>(d_fftsize, false, d_nthreads);
+        d_fwdfft = std::make_unique<fft::fft_complex_fwd>(d_fftsize, d_nthreads);
+        d_invfft = std::make_unique<fft::fft_complex_rev>(d_fftsize, d_nthreads);
         d_xformed_taps.resize(d_fftsize);
     }
 }

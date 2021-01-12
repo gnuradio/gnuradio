@@ -31,7 +31,7 @@ class BLOCKS_API char_to_short : virtual public sync_block
 {
 public:
     // gr::blocks::char_to_short_ff::sptr
-    typedef boost::shared_ptr<char_to_short> sptr;
+    typedef std::shared_ptr<char_to_short> sptr;
 
     static sptr make(size_t vlen = 1);
 };

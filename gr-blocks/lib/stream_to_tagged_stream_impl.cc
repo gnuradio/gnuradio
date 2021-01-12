@@ -25,8 +25,8 @@ stream_to_tagged_stream::make(size_t itemsize,
                               unsigned packet_len,
                               const std::string& len_tag_key)
 {
-    return gnuradio::get_initial_sptr(
-        new stream_to_tagged_stream_impl(itemsize, vlen, packet_len, len_tag_key));
+    return gnuradio::make_block_sptr<stream_to_tagged_stream_impl>(
+        itemsize, vlen, packet_len, len_tag_key);
 }
 
 stream_to_tagged_stream_impl::stream_to_tagged_stream_impl(size_t itemsize,

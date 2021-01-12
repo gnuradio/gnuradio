@@ -8,12 +8,10 @@
 #
 #
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 from gnuradio import gr, blocks
 
-from . import fec_swig as fec
+from . import fec_python as fec
 from .threaded_encoder import threaded_encoder
 from .capillary_threaded_encoder import capillary_threaded_encoder
 from .bitflip import read_bitlist

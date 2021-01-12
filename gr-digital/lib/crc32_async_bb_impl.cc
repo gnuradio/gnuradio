@@ -21,7 +21,7 @@ namespace digital {
 
 crc32_async_bb::sptr crc32_async_bb::make(bool check)
 {
-    return gnuradio::get_initial_sptr(new crc32_async_bb_impl(check));
+    return gnuradio::make_block_sptr<crc32_async_bb_impl>(check);
 }
 
 crc32_async_bb_impl::crc32_async_bb_impl(bool check)
@@ -36,9 +36,9 @@ crc32_async_bb_impl::crc32_async_bb_impl(bool check)
     message_port_register_out(d_out_port);
 
     if (check)
-        set_msg_handler(d_in_port, boost::bind(&crc32_async_bb_impl::check, this, _1));
+        set_msg_handler(d_in_port, [this](pmt::pmt_t msg) { this->check(msg); });
     else
-        set_msg_handler(d_in_port, boost::bind(&crc32_async_bb_impl::calc, this, _1));
+        set_msg_handler(d_in_port, [this](pmt::pmt_t msg) { this->calc(msg); });
 }
 
 crc32_async_bb_impl::~crc32_async_bb_impl() {}
@@ -52,23 +52,21 @@ void crc32_async_bb_impl::calc(pmt::pmt_t msg)
     unsigned int crc;
     size_t pkt_len(0);
     const uint8_t* bytes_in = pmt::u8vector_elements(bytes, pkt_len);
-    uint8_t* bytes_out =
-        (uint8_t*)volk_malloc(4 + pkt_len * sizeof(uint8_t), volk_get_alignment());
+    std::vector<uint8_t> bytes_out(4 + pkt_len);
 
     d_crc_impl.reset();
     d_crc_impl.process_bytes(bytes_in, pkt_len);
     crc = d_crc_impl();
-    memcpy((void*)bytes_out, (const void*)bytes_in, pkt_len);
-    memcpy((void*)(bytes_out + pkt_len),
+    memcpy((void*)bytes_out.data(), (const void*)bytes_in, pkt_len);
+    memcpy((void*)(bytes_out.data() + pkt_len),
            &crc,
            4); // FIXME big-endian/little-endian, this might be wrong
 
     pmt::pmt_t output = pmt::init_u8vector(
         pkt_len + 4,
-        bytes_out); // this copies the values from bytes_out into the u8vector
+        bytes_out.data()); // this copies the values from bytes_out into the u8vector
     pmt::pmt_t msg_pair = pmt::cons(meta, output);
     message_port_pub(d_out_port, msg_pair);
-    volk_free(bytes_out);
 }
 
 void crc32_async_bb_impl::check(pmt::pmt_t msg)

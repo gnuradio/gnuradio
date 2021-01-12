@@ -19,7 +19,9 @@ namespace digital {
 
 /*!
  * \brief Mueller and Müller (M&M) based clock recovery block with complex input, complex
- * output. \ingroup synchronizers_blk
+ * output.
+ * \ingroup synchronizers_blk
+ * \ingroup deprecated_blk
  *
  * \details
  * This implements the Mueller and Müller (M&M) discrete-time
@@ -60,7 +62,7 @@ class DIGITAL_API clock_recovery_mm_cc : virtual public block
 {
 public:
     // gr::digital::clock_recovery_mm_cc::sptr
-    typedef boost::shared_ptr<clock_recovery_mm_cc> sptr;
+    typedef std::shared_ptr<clock_recovery_mm_cc> sptr;
 
     /*!
      * Make a M&M clock recovery block.

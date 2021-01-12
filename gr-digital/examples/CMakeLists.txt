@@ -97,3 +97,10 @@ install(
     packet/uhd_packet_tx_tun.grc
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/packet
 )
+
+# Equalizers
+GR_PYTHON_INSTALL(PROGRAMS
+    equalizers/linear_equalizer_compare.grc
+    equalizers/le_vs_dfe.grc
+    DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/equalizers
+)

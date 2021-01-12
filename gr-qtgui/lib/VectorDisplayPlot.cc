@@ -50,7 +50,7 @@ public:
 
 protected:
     using QwtPlotZoomer::trackerText;
-    virtual QwtText trackerText(QPoint const& p) const
+    QwtText trackerText(QPoint const& p) const override
     {
         QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
         QwtText t(QString("%1 %2, %3 %4")

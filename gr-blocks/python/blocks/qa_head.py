@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, blocks
 
+
 class test_head(gr_unittest.TestCase):
 
     def setUp(self):
@@ -20,8 +21,8 @@ class test_head(gr_unittest.TestCase):
         self.tb = None
 
     def test_head(self):
-        src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-        expected_result = (1, 2, 3, 4)
+        src_data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        expected_result = [1, 2, 3, 4]
         src1 = blocks.vector_source_i(src_data)
         op = blocks.head(gr.sizeof_int, 4)
         dst1 = blocks.vector_sink_i()
@@ -31,5 +32,6 @@ class test_head(gr_unittest.TestCase):
         dst_data = dst1.data()
         self.assertEqual(expected_result, dst_data)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_head, "test_head.xml")
+    gr_unittest.run(test_head)

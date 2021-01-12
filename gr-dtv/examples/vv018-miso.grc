@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -22,8 +23,10 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: ''
-    window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 11]
     rotation: 0
     state: enabled
@@ -35,6 +38,9 @@ blocks:
     comment: ''
     value: 429e6
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [176, 12]
     rotation: 0
     state: enabled
@@ -44,6 +50,9 @@ blocks:
     comment: ''
     value: (8000000.0) * 8 / 7
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 75]
     rotation: 0
     state: enabled
@@ -54,7 +63,7 @@ blocks:
     gui_hint: ''
     label: ''
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '0.5'
@@ -62,6 +71,9 @@ blocks:
     value: '50'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [176, 60.0]
     rotation: 0
     state: enabled
@@ -77,6 +89,9 @@ blocks:
     unbuffered: 'False'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [592, 364]
     rotation: 0
     state: disabled
@@ -92,6 +107,9 @@ blocks:
     unbuffered: 'False'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [592, 556]
     rotation: 0
     state: disabled
@@ -111,6 +129,9 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [344, 108.0]
     rotation: 180
     state: enabled
@@ -126,6 +147,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [592, 508]
     rotation: 0
     state: enabled
@@ -141,6 +165,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [592, 444]
     rotation: 0
     state: enabled
@@ -157,6 +184,9 @@ blocks:
     rolloff: '0'
     tagname: ''
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [48, 524.0]
     rotation: 0
     state: enabled
@@ -173,6 +203,9 @@ blocks:
     rolloff: '0'
     tagname: ''
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [48, 444.0]
     rotation: 0
     state: enabled
@@ -198,6 +231,9 @@ blocks:
     standard: STANDARD_DVBT2
     tsrate: '4000000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [344, 4.0]
     rotation: 0
     state: enabled
@@ -218,6 +254,9 @@ blocks:
     rate5: C1_4
     standard: STANDARD_DVBT2
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [656, 20.0]
     rotation: 0
     state: enabled
@@ -238,6 +277,9 @@ blocks:
     rate5: C1_4
     standard: STANDARD_DVBT2
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [888, 20.0]
     rotation: 0
     state: enabled
@@ -259,6 +301,9 @@ blocks:
     rate5: C1_4
     standard: STANDARD_DVBT2
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1120, 20.0]
     rotation: 0
     state: enabled
@@ -275,6 +320,9 @@ blocks:
     minoutbuf: '0'
     tiblocks: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [576, 100.0]
     rotation: 180
     state: enabled
@@ -310,6 +358,9 @@ blocks:
     tiblocks: '1'
     version: VERSION_111
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [48, 156.0]
     rotation: 0
     state: enabled
@@ -332,6 +383,9 @@ blocks:
     preamble2: PREAMBLE_T2_SISO
     version: VERSION_111
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [344, 212.0]
     rotation: 0
     state: enabled
@@ -347,6 +401,9 @@ blocks:
     minoutbuf: '0'
     rate: C5_6
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1120, 108.0]
     rotation: 180
     state: enabled
@@ -367,6 +424,9 @@ blocks:
     pilotpattern: PILOT_PP2
     version: VERSION_111
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [696, 220.0]
     rotation: 0
     state: enabled
@@ -382,6 +442,9 @@ blocks:
     minoutbuf: '0'
     rotation: ROTATION_ON
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [840, 108.0]
     rotation: 180
     state: enabled
@@ -404,6 +467,9 @@ blocks:
     vclip: '3.3'
     version: VERSION_111
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [312, 500.0]
     rotation: 0
     state: enabled
@@ -426,6 +492,9 @@ blocks:
     vclip: '3.3'
     version: VERSION_111
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [312, 364.0]
     rotation: 0
     state: enabled
@@ -451,6 +520,9 @@ blocks:
     preamble2: PREAMBLE_T2_SISO
     version: VERSION_111
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1072, 380.0]
     rotation: 0
     state: enabled
@@ -476,6 +548,9 @@ blocks:
     preamble2: PREAMBLE_T2_SISO
     version: VERSION_111
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1072, 188.0]
     rotation: 0
     state: enabled
@@ -590,7 +665,7 @@ blocks:
     clock_source6: ''
     clock_source7: ''
     comment: ''
-    dev_addr: '"send_frame_size=65536,num_send_frames=128,master_clock_rate=" + str(samp_rate*2)'
+    dev_addr: '"send_frame_size=8192,num_send_frames=128,master_clock_rate=" + str(samp_rate*2)'
     dev_args: '""'
     gain0: tx_gain
     gain1: tx_gain
@@ -749,6 +824,9 @@ blocks:
     time_source7: ''
     type: fc32
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [816, 412.0]
     rotation: 0
     state: enabled

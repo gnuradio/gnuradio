@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -10,13 +10,22 @@
 ########################################################################
 include(GrBoost)
 
+find_package(SNDFILE)
+
+if(NOT SNDFILE_FOUND)
+    message(STATUS "")
+    message(STATUS "********************* WARNING!!! *********************")
+    message(STATUS "libsndfile1-dev is required to compile wavfile blocks.")
+    message(STATUS "Wav File Sink and Source blocks will not be available.")
+    message(STATUS "******************************************************")
+endif()
+
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-blocks" ENABLE_GR_BLOCKS
     Boost_FOUND
-    ENABLE_VOLK
     ENABLE_GNURADIO_RUNTIME
 )
 
@@ -35,9 +44,10 @@ add_subdirectory(lib)
 #endif(ENABLE_TESTING)
 if(ENABLE_PYTHON)
      add_subdirectory(python/blocks)
-     add_subdirectory(swig)
      add_subdirectory(docs)
-     add_subdirectory(examples)
+     if(ENABLE_EXAMPLES)
+         add_subdirectory(examples)
+     endif(ENABLE_EXAMPLES)
 endif(ENABLE_PYTHON)
 if(ENABLE_GRC)
     add_subdirectory(grc)

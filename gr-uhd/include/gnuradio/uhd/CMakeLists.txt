@@ -19,6 +19,7 @@ install(FILES
 
 if (ENABLE_UHD_RFNOC)
     install(FILES
+        rfnoc_block.h
         rfnoc_block_generic.h
         rfnoc_ddc.h
         rfnoc_duc.h

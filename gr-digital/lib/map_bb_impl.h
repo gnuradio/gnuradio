@@ -26,14 +26,14 @@ private:
 
 public:
     map_bb_impl(const std::vector<int>& map);
-    ~map_bb_impl();
+    ~map_bb_impl() override;
 
-    void set_map(const std::vector<int>& map);
-    std::vector<int> map() const;
+    void set_map(const std::vector<int>& map) override;
+    std::vector<int> map() const override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace digital */

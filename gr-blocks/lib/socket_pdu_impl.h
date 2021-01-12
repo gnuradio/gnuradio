@@ -31,23 +31,23 @@ private:
     std::vector<tcp_connection::sptr> d_tcp_connections;
     void handle_tcp_read(const boost::system::error_code& error,
                          size_t bytes_transferred);
-    bool d_tcp_no_delay;
+    const bool d_tcp_no_delay;
 
     // TCP server specific
-    boost::shared_ptr<boost::asio::ip::tcp::acceptor> d_acceptor_tcp;
+    std::shared_ptr<boost::asio::ip::tcp::acceptor> d_acceptor_tcp;
     void start_tcp_accept();
     void tcp_server_send(pmt::pmt_t msg);
     void handle_tcp_accept(tcp_connection::sptr new_connection,
                            const boost::system::error_code& error);
 
     // TCP client specific
-    boost::shared_ptr<boost::asio::ip::tcp::socket> d_tcp_socket;
+    std::shared_ptr<boost::asio::ip::tcp::socket> d_tcp_socket;
     void tcp_client_send(pmt::pmt_t msg);
 
     // UDP specific
     boost::asio::ip::udp::endpoint d_udp_endpoint;
     boost::asio::ip::udp::endpoint d_udp_endpoint_other;
-    boost::shared_ptr<boost::asio::ip::udp::socket> d_udp_socket;
+    std::shared_ptr<boost::asio::ip::udp::socket> d_udp_socket;
     void handle_udp_read(const boost::system::error_code& error,
                          size_t bytes_transferred);
     void udp_send(pmt::pmt_t msg);
@@ -58,8 +58,8 @@ public:
                     std::string port,
                     int MTU = 10000,
                     bool tcp_no_delay = false);
-    ~socket_pdu_impl();
-    bool stop();
+    ~socket_pdu_impl() override;
+    bool stop() override;
 };
 
 } /* namespace blocks */

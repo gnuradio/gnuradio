@@ -1,5 +1,6 @@
 id: fft_ctrlport_probe_psd
 label: Ctrlport Probe PSD
+flags: [ python, cpp ]
 
 parameters:
 -   id: name
@@ -22,6 +23,14 @@ inputs:
 templates:
     imports: from gnuradio import fft
     make: fft.ctrlport_probe_psd(${name}, ${desc}, ${len})
+    callbacks:
+    - set_length(${len})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/fft/ctrlport_probe_psd.h>' ]
+    declarations: 'fft::ctrlport_probe_psd::sptr ${id};'
+    make: 'this->${id} = fft::ctrlport_probe_psd::make(${name}, ${desc}, ${len});'
+    link: ['gnuradio-fft']
     callbacks:
     - set_length(${len})
 

@@ -6,13 +6,13 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-from __future__ import absolute_import
 
+from sys import platform
+import os
 import numbers
 
 from gi.repository import GLib
 import cairo
-import six
 
 from .canvas.colors import FLOWGRAPH_BACKGROUND_COLOR
 from . import Constants
@@ -94,16 +94,7 @@ def num_to_str(num):
 
 
 def encode(value):
-    """Make sure that we pass only valid utf-8 strings into markup_escape_text.
-
-    Older versions of glib seg fault if the last byte starts a multi-byte
-    character.
-    """
-    if six.PY2:
-        valid_utf8 = value.decode('utf-8', errors='replace').encode('utf-8')
-    else:
-        valid_utf8 = value
-    return GLib.markup_escape_text(valid_utf8)
+    return GLib.markup_escape_text(value)
 
 
 def make_screenshot(flow_graph, file_path, transparent_bg=False):
@@ -152,3 +143,42 @@ def scale(coor, reverse=False):
 def scale_scalar(coor, reverse=False):
     factor = Constants.DPI_SCALING if not reverse else 1 / Constants.DPI_SCALING
     return int(coor * factor)
+
+def get_modifier_key(angle_brackets=False):
+    """
+    Get the modifier key based on platform.
+
+    Args:
+        angle_brackets: if return the modifier key with <> or not
+
+    Returns:
+        return the string with the modifier key
+    """
+    if platform == "darwin":
+        if angle_brackets:
+            return "<Meta>"
+        else:
+            return "Meta"
+    else:
+        if angle_brackets:
+            return "<Ctrl>"
+        else:
+            return "Ctrl"
+
+
+_nproc = None
+def get_cmake_nproc():
+    """ Get number of cmake processes for C++ flowgraphs """
+    global _nproc # Cached result
+    if _nproc:
+        return _nproc
+    try:
+        # See https://docs.python.org/3.8/library/os.html#os.cpu_count
+        _nproc = len(os.sched_getaffinity(0))
+    except:
+        _nproc = os.cpu_count()
+    if not _nproc:
+        _nproc = 1
+
+    _nproc = max(_nproc//2 - 1, 1)
+    return _nproc

@@ -16,7 +16,7 @@
 #include <gnuradio/prefs.h>
 #include <gnuradio/thread/thread.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/scoped_ptr.hpp>
+#include <memory>
 
 namespace {
 // Time, in milliseconds, to wait between checks to the Thrift runtime to see if
@@ -51,7 +51,7 @@ public:
     // Stores the generated endpoint string after the Thrift runtime has initialized.
     std::string d_endpointStr;
     // Thread to execute the Thrift runtime's blocking serve() function.
-    boost::shared_ptr<gr::thread::thread> d_start_thrift_thread;
+    std::shared_ptr<gr::thread::thread> d_start_thrift_thread;
 };
 
 /*!
@@ -114,7 +114,7 @@ protected:
     /*!
      * Reference to the Thrift runtime.
      */
-    boost::scoped_ptr<apache::thrift::server::TServer> d_thriftserver;
+    std::unique_ptr<apache::thrift::server::TServer> d_thriftserver;
 
     /*!
      * Max number of attempts when checking the Thrift runtime for
@@ -171,7 +171,7 @@ private:
 
     // Pointer to the structure containing statically allocated
     // state information for the applicaiton_base singleton.
-    static boost::scoped_ptr<thrift_application_base_impl> p_impl;
+    static std::unique_ptr<thrift_application_base_impl> p_impl;
 
     // Mutex to protect the endpoint string.
     gr::thread::mutex d_lock;

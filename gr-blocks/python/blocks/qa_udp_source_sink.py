@@ -20,7 +20,7 @@ from threading import Timer, Thread
 
 def recv_data(sock, result):
     while True:
-        data = sock.recv(4*1000)
+        data = sock.recv(4 * 1000)
         if len(data) == 0:
             break
         real_data = numpy.frombuffer(data, dtype=numpy.float32)
@@ -45,7 +45,7 @@ class test_udp_sink_source(gr_unittest.TestCase):
 
         n_data = 16
         src_data = [x for x in range(n_data)]
-        expected_result = tuple(src_data)
+        expected_result = src_data
         src = blocks.vector_source_s(src_data, False)
         udp_snd = blocks.udp_sink(gr.sizeof_short, 'localhost', port)
         self.tb_snd.connect(src, udp_snd)
@@ -53,18 +53,16 @@ class test_udp_sink_source(gr_unittest.TestCase):
         self.tb_snd.run()
         udp_snd.disconnect()
 
-
-        udp_snd.connect('localhost', port+1)
+        udp_snd.connect('localhost', port + 1)
         src.rewind()
         self.tb_snd.run()
-
 
     def test_sink_001(self):
         port = 65520
 
         n_data = 100
         src_data = [float(x) for x in range(n_data)]
-        expected_result = tuple(src_data)
+        expected_result = src_data
 
         recvsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         recvsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -78,20 +76,19 @@ class test_udp_sink_source(gr_unittest.TestCase):
         udp_snd = blocks.udp_sink(gr.sizeof_float, '127.0.0.1', port)
         self.tb_snd.connect(src, udp_snd)
 
-
         self.tb_snd.run()
         udp_snd.disconnect()
         t.join()
         recvsock.close()
 
-        self.assertEqual(expected_result, tuple(result))
+        self.assertEqual(expected_result, result)
 
     def test_source_001(self):
         port = 65520
 
         n_data = 100
         src_data = [float(x) for x in range(n_data)]
-        expected_result = tuple(src_data)
+        expected_result = src_data
         send_data = numpy.array(src_data, dtype=numpy.float32)
         send_data = send_data.tobytes()
 
@@ -108,11 +105,9 @@ class test_udp_sink_source(gr_unittest.TestCase):
         sendsock.sendto(b'', ('127.0.0.1', port))
         self.tb_rcv.wait()
         sendsock.close()
-        recv_data = tuple(dst.data())
+        recv_data = dst.data()
 
         self.assertEqual(expected_result, recv_data)
-
-
 
     def test_003(self):
         port = 65530
@@ -125,7 +120,7 @@ class test_udp_sink_source(gr_unittest.TestCase):
 
         n_data = 16
         src_data = [float(x) for x in range(n_data)]
-        expected_result = tuple(src_data)
+        expected_result = src_data
         src = blocks.vector_source_f(src_data)
         dst = blocks.vector_sink_f()
 
@@ -137,7 +132,7 @@ class test_udp_sink_source(gr_unittest.TestCase):
         self.tb_snd.run()
         udp_snd.disconnect()
         self.timeout = False
-        q = Timer(2.0,self.stop_rcv)
+        q = Timer(2.0, self.stop_rcv)
         q.start()
         self.tb_rcv.wait()
         q.cancel()
@@ -149,8 +144,8 @@ class test_udp_sink_source(gr_unittest.TestCase):
     def stop_rcv(self):
         self.timeout = True
         self.tb_rcv.stop()
-        #print "tb_rcv stopped by Timer"
+        # print "tb_rcv stopped by Timer"
+
 
 if __name__ == '__main__':
-    gr_unittest.run(test_udp_sink_source, "test_udp_sink_source.xml")
-
+    gr_unittest.run(test_udp_sink_source)

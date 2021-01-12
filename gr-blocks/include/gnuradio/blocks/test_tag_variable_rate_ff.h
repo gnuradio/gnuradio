@@ -47,7 +47,7 @@ class BLOCKS_API test_tag_variable_rate_ff : virtual public block
 {
 public:
     // gr::blocks::test_tag_variable_rate_ff::sptr
-    typedef boost::shared_ptr<test_tag_variable_rate_ff> sptr;
+    typedef std::shared_ptr<test_tag_variable_rate_ff> sptr;
 
     /*!
      * Build a test_tag_variable_rate_ff block.

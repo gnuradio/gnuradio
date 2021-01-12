@@ -14,14 +14,13 @@
 
 #include "dpll_bb_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cstdio>
 
 namespace gr {
 namespace analog {
 
 dpll_bb::sptr dpll_bb::make(float period, float gain)
 {
-    return gnuradio::get_initial_sptr(new dpll_bb_impl(period, gain));
+    return gnuradio::make_block_sptr<dpll_bb_impl>(period, gain);
 }
 
 dpll_bb_impl::dpll_bb_impl(float period, float gain)
@@ -34,13 +33,6 @@ dpll_bb_impl::dpll_bb_impl(float period, float gain)
     d_pulse_frequency = 1.0 / period;
     d_gain = gain;
     d_decision_threshold = 1.0 - 0.5 * d_pulse_frequency;
-#if 0
-      fprintf(stderr,"frequency = %f period = %f gain = %f threshold = %f\n",
-	      d_pulse_frequency,
-	      period,
-	      d_gain,
-	      d_decision_threshold);
-#endif
 }
 
 dpll_bb_impl::~dpll_bb_impl() {}

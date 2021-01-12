@@ -41,8 +41,8 @@ parameters:
 -   id: orient
     label: Orientation
     dtype: enum
-    default: Qt.Horizontal
-    options: [Qt.Horizontal, Qt.Vertical]
+    default: QtCore.Qt.Horizontal
+    options: [QtCore.Qt.Horizontal, QtCore.Qt.Vertical]
     option_labels: [Horizontal, Vertical]
     option_attributes:
         minfcn: [setMinimumWidth, setMinimumHeight]
@@ -64,7 +64,9 @@ asserts:
 - ${start <= stop}
 
 templates:
-    imports: from gnuradio.qtgui import Range, RangeWidget
+    imports: |- 
+        from gnuradio.qtgui import Range, RangeWidget
+        from PyQt5 import QtCore
     var_make: self.${id} = ${id} = ${value}
     callbacks:
     - self.set_${id}(${value})
@@ -74,7 +76,7 @@ templates:
             range = 'self._%s_range'%id
         %>\
         ${range} = Range(${start}, ${stop}, ${step}, ${value}, ${min_len})
-        ${win} = RangeWidget(${range}, self.set_${id}, ${(label if (len(label) - 2 > 0) else repr(id))}, "${widget}", ${rangeType})
+        ${win} = RangeWidget(${range}, self.set_${id}, ${(label if (len(label) - 2 > 0) else repr(id))}, "${widget}", ${rangeType}, ${orient})
         ${gui_hint() % win}
 
 documentation: |-

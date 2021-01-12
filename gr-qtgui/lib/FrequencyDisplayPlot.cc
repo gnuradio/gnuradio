@@ -39,20 +39,24 @@ public:
 
     void setUnitType(const std::string& type) { d_unitType = type; }
 
+    void setYUnit(const std::string& unit) { d_y_unit = unit; }
+
 protected:
     using QwtPlotZoomer::trackerText;
-    virtual QwtText trackerText(QPoint const& p) const
+    QwtText trackerText(QPoint const& p) const override
     {
         QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
-        QwtText t(QString("%1 %2, %3 dB")
+        QwtText t(QString("%1 %2, %3 %4")
                       .arg(dp.x(), 0, 'f', getFrequencyPrecision())
                       .arg(d_unitType.c_str())
-                      .arg(dp.y(), 0, 'f', 2));
+                      .arg(dp.y(), 0, 'f', 2)
+                      .arg(d_y_unit.c_str()));
         return t;
     }
 
 private:
     std::string d_unitType;
+    std::string d_y_unit = "dB";
 };
 
 
@@ -373,10 +377,10 @@ void FrequencyDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                        _npoints_in * sizeof(double));
 
                 for (int64_t point = 0; point < _npoints_in; point++) {
-                    if (dataPoints[n][point] < d_min_fft_data[point]) {
+                    if (dataPoints[n][point + _in_index] < d_min_fft_data[point]) {
                         d_min_fft_data[point] = dataPoints[n][point + _in_index];
                     }
-                    if (dataPoints[n][point] > d_max_fft_data[point]) {
+                    if (dataPoints[n][point + _in_index] > d_max_fft_data[point]) {
                         d_max_fft_data[point] = dataPoints[n][point + _in_index];
                     }
 
@@ -553,6 +557,7 @@ void FrequencyDisplayPlot::setYLabel(const std::string& label, const std::string
     if (unit.length() > 0)
         l += " (" + unit + ")";
     setAxisTitle(QwtPlot::yLeft, QString(l.c_str()));
+    static_cast<FreqDisplayZoomer*>(d_zoomer)->setYUnit(unit);
 }
 
 void FrequencyDisplayPlot::setMinFFTColor(QColor c)

@@ -57,50 +57,52 @@ public:
                      graph_t graph_type = NUM_GRAPH_HORIZ,
                      int nconnections = 1,
                      QWidget* parent = NULL);
-    ~number_sink_impl();
+    ~number_sink_impl() override;
 
-    bool check_topology(int ninputs, int noutputs);
+    bool check_topology(int ninputs, int noutputs) override;
 
-    void exec_();
-    QWidget* qwidget();
+    void exec_() override;
+    QWidget* qwidget() override;
 
 #ifdef ENABLE_PYTHON
-    PyObject* pyqwidget();
+    PyObject* pyqwidget() override;
 #else
     void* pyqwidget();
 #endif
 
-    void set_update_time(double t);
-    void set_average(const float avg);
-    void set_graph_type(const graph_t type);
-    void set_color(unsigned int which, const std::string& min, const std::string& max);
-    void set_color(unsigned int which, int min, int max);
-    void set_label(unsigned int which, const std::string& label);
-    void set_min(unsigned int which, float min);
-    void set_max(unsigned int which, float max);
-    void set_title(const std::string& title);
-    void set_unit(unsigned int which, const std::string& unit);
-    void set_factor(unsigned int which, float factor);
+    void set_update_time(double t) override;
+    void set_average(const float avg) override;
+    void set_graph_type(const graph_t type) override;
+    void set_color(unsigned int which,
+                   const std::string& min,
+                   const std::string& max) override;
+    void set_color(unsigned int which, int min, int max) override;
+    void set_label(unsigned int which, const std::string& label) override;
+    void set_min(unsigned int which, float min) override;
+    void set_max(unsigned int which, float max) override;
+    void set_title(const std::string& title) override;
+    void set_unit(unsigned int which, const std::string& unit) override;
+    void set_factor(unsigned int which, float factor) override;
 
-    float average() const;
-    graph_t graph_type() const;
-    std::string color_min(unsigned int which) const;
-    std::string color_max(unsigned int which) const;
-    std::string label(unsigned int which) const;
-    float min(unsigned int which) const;
-    float max(unsigned int which) const;
-    std::string title() const;
-    std::string unit(unsigned int which) const;
-    float factor(unsigned int which) const;
+    float average() const override;
+    graph_t graph_type() const override;
+    std::string color_min(unsigned int which) const override;
+    std::string color_max(unsigned int which) const override;
+    std::string label(unsigned int which) const override;
+    float min(unsigned int which) const override;
+    float max(unsigned int which) const override;
+    std::string title() const override;
+    std::string unit(unsigned int which) const override;
+    float factor(unsigned int which) const override;
 
-    void enable_menu(bool en);
-    void enable_autoscale(bool en = true);
+    void enable_menu(bool en) override;
+    void enable_autoscale(bool en = true) override;
 
-    void reset();
+    void reset() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace qtgui */

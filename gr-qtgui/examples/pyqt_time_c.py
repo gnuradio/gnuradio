@@ -8,8 +8,6 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 import sys
@@ -147,7 +145,7 @@ class my_top_block(gr.top_block):
         channel = channels.channel_model(0.01)
         thr = blocks.throttle(gr.sizeof_gr_complex, 100*npts)
         self.snk1 = qtgui.time_sink_c(npts, Rs,
-                                      "Complex Time Example", 1)
+                                      "Complex Time Example", 1, None)
 
         self.connect(src1, (src,0))
         self.connect(src2, (src,1))

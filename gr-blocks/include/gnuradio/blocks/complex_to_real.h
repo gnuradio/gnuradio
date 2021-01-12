@@ -18,14 +18,14 @@ namespace gr {
 namespace blocks {
 
 /*!
- * \brief Produces the real part (as a float0 of a complex stream.
+ * \brief Produces the real part (as a float) of a complex stream.
  * \ingroup type_converters_blk
  */
 class BLOCKS_API complex_to_real : virtual public sync_block
 {
 public:
     // gr::blocks::complex_to_real_ff::sptr
-    typedef boost::shared_ptr<complex_to_real> sptr;
+    typedef std::shared_ptr<complex_to_real> sptr;
 
     /*!
      * Build a complex to real part block.

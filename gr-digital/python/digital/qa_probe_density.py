@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 #
 # Copyright 2012,2013 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# 
+#
 
-from __future__ import print_function
 
 from gnuradio import gr, gr_unittest, digital, blocks
+
 
 class test_probe_density(gr_unittest.TestCase):
 
@@ -30,7 +30,6 @@ class test_probe_density(gr_unittest.TestCase):
 
         result_data = op.density()
         self.assertEqual(expected_data, result_data)
-
 
     def test_002(self):
         src_data = [1, 1, 1, 1]
@@ -55,6 +54,6 @@ class test_probe_density(gr_unittest.TestCase):
         print(result_data)
         self.assertAlmostEqual(expected_data, result_data, 5)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_probe_density, "test_probe_density.xml")
-        
+    gr_unittest.run(test_probe_density)

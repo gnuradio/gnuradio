@@ -20,7 +20,7 @@ namespace digital {
 class glfsr_source_f_impl : public glfsr_source_f
 {
 private:
-    glfsr* d_glfsr;
+    glfsr d_glfsr;
 
     bool d_repeat;
     uint32_t d_index;
@@ -31,14 +31,14 @@ public:
                         bool repeat = true,
                         uint32_t mask = 0,
                         uint32_t seed = 0x1);
-    ~glfsr_source_f_impl();
+    ~glfsr_source_f_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
-    uint32_t period() const { return d_length; }
-    uint32_t mask() const;
+    uint32_t period() const override { return d_length; }
+    uint32_t mask() const override;
 };
 
 } /* namespace digital */

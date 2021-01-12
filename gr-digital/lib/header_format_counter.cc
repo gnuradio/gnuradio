@@ -15,7 +15,7 @@
 #include <gnuradio/digital/header_format_counter.h>
 #include <gnuradio/math.h>
 #include <string.h>
-#include <volk/volk.h>
+#include <volk/volk_alloc.hh>
 #include <iomanip>
 #include <iostream>
 
@@ -45,9 +45,10 @@ bool header_format_counter::format(int nbytes_in,
                                    pmt::pmt_t& info)
 
 {
-    uint8_t* bytes_out = (uint8_t*)volk_malloc(header_nbytes(), volk_get_alignment());
+    // Creating the output pmt copies data; free our own here when done.
+    volk::vector<uint8_t> bytes_out(header_nbytes());
 
-    header_buffer header(bytes_out);
+    header_buffer header(bytes_out.data());
     header.add_field64(d_access_code, d_access_code_len);
     header.add_field16((uint16_t)(nbytes_in));
     header.add_field16((uint16_t)(nbytes_in));
@@ -55,10 +56,7 @@ bool header_format_counter::format(int nbytes_in,
     header.add_field16((uint16_t)(d_counter));
 
     // Package output data into a PMT vector
-    output = pmt::init_u8vector(header_nbytes(), bytes_out);
-
-    // Creating the output pmt copies data; free our own here.
-    volk_free(bytes_out);
+    output = pmt::init_u8vector(header_nbytes(), bytes_out.data());
 
     d_counter++;
 

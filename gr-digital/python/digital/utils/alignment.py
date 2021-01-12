@@ -29,8 +29,6 @@ This module contains functions for aligning sequences.
 (100, -20)
 
 """
-from __future__ import division
-from __future__ import unicode_literals
 
 import random
 

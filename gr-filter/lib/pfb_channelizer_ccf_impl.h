@@ -26,7 +26,7 @@ class FILTER_API pfb_channelizer_ccf_impl : public pfb_channelizer_ccf,
 private:
     bool d_updated;
     float d_oversample_rate;
-    int* d_idxlut;
+    std::vector<int> d_idxlut;
     int d_rate_ratio;
     int d_output_multiple;
     std::vector<int> d_channel_map;
@@ -37,19 +37,17 @@ public:
                              const std::vector<float>& taps,
                              float oversample_rate);
 
-    ~pfb_channelizer_ccf_impl();
+    void set_taps(const std::vector<float>& taps) override;
+    void print_taps() override;
+    std::vector<std::vector<float>> taps() const override;
 
-    void set_taps(const std::vector<float>& taps);
-    void print_taps();
-    std::vector<std::vector<float>> taps() const;
-
-    void set_channel_map(const std::vector<int>& map);
-    std::vector<int> channel_map() const;
+    void set_channel_map(const std::vector<int>& map) override;
+    std::vector<int> channel_map() const override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

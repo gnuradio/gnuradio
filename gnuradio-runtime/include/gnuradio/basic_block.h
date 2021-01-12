@@ -13,16 +13,14 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/io_signature.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/msg_accepter.h>
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/sptr_magic.h>
 #include <gnuradio/thread/thread.h>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/foreach.hpp>
-#include <boost/function.hpp>
 #include <boost/thread/condition_variable.hpp>
 #include <deque>
-#include <iostream>
+#include <functional>
 #include <map>
 #include <string>
 
@@ -42,9 +40,9 @@ namespace gr {
  * processing functions.
  */
 class GR_RUNTIME_API basic_block : public msg_accepter,
-                                   public boost::enable_shared_from_this<basic_block>
+                                   public std::enable_shared_from_this<basic_block>
 {
-    typedef boost::function<void(pmt::pmt_t)> msg_handler_t;
+    typedef std::function<void(pmt::pmt_t)> msg_handler_t;
 
 private:
     typedef std::map<pmt::pmt_t, msg_handler_t, pmt::comparator> d_msg_handlers_t;
@@ -54,7 +52,7 @@ private:
     typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator> msg_queue_map_t;
     typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator>::iterator
         msg_queue_map_itr;
-    std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::comparator>
+    std::map<pmt::pmt_t, std::shared_ptr<boost::condition_variable>, pmt::comparator>
         msg_queue_ready;
 
     gr::thread::mutex mutex; //< protects all vars
@@ -75,6 +73,11 @@ protected:
     std::string d_symbol_alias;
     vcolor d_color;
     bool d_rpc_set;
+
+    /*! Used by blocks to access the logger system.
+     */
+    gr::logger_ptr d_logger;       //! Default logger
+    gr::logger_ptr d_debug_logger; //! Verbose logger
 
     msg_queue_map_t msg_queue;
     std::vector<rpcbasic_sptr> d_rpc_vars; // container for all RPC variables
@@ -128,7 +131,7 @@ protected:
 
 public:
     pmt::pmt_t message_subscribers(pmt::pmt_t port);
-    virtual ~basic_block();
+    ~basic_block() override;
     long unique_id() const { return d_unique_id; }
     long symbolic_id() const { return d_symbolic_id; }
 
@@ -226,7 +229,7 @@ public:
     bool empty_p()
     {
         bool rv = true;
-        BOOST_FOREACH (msg_queue_map_t::value_type& i, msg_queue) {
+        for (const auto& i : msg_queue) {
             rv &= msg_queue[i.first].empty();
         }
         return rv;
@@ -240,7 +243,7 @@ public:
     bool empty_handled_p()
     {
         bool rv = true;
-        BOOST_FOREACH (msg_queue_map_t::value_type& i, msg_queue) {
+        for (const auto& i : msg_queue) {
             rv &= empty_handled_p(i.first);
         }
         return rv;
@@ -292,7 +295,7 @@ public:
      * store them. Each block has a vector to do this, and these never
      * need to be accessed again once they are registered with the RPC
      * backend. This function takes a
-     * boost::shared_sptr<rpcbasic_base> so that when the block is
+     * std::shared_sptr<rpcbasic_base> so that when the block is
      * deleted, all RPC registered variables are cleaned up.
      *
      * \param s an rpcbasic_sptr of the new RPC variable register to store.

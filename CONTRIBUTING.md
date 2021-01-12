@@ -23,12 +23,22 @@ list, answers on Stack Overflow, Wiki page edits, examples... We very much
 appreciate those. However, this document is specifically about contributing
 code.
 
-## CLA filed?
+## DCO Signed?
 
-The GNU Radio codebase's copyright belongs to the Free Software Foundation. Any
-submission that gets merged must therefore be assigned to the FSF. Exceptions
-are small or obvious changes (< 10 lines, typically) or documentation changes.
-See also [What's this Copyright Assignment?][cla].
+Any code contributions going into GNU Radio will become part of a GPL-licensed,
+open source repository. It is therefore imperative that code submissions belong
+to the authors, and that submitters have the authority to merge that code into
+the public GNU Radio codebase.
+
+For that purpose, we use the [Developer's Certificate of Origin](DCO.txt). It
+is the same document used by other projects. Signing the DCO states that there
+are no legal reasons to not merge your code.
+
+To sign the DCO, suffix your git commits with a "Signed-off-by" line. When
+using the command line, you can use `git commit -s` to automatically add this
+line. If there were multiple authors of the code, or other types of
+stakeholders, make sure that all are listed, each with a separate Signed-off-by
+line.
 
 ## Coding Guidelines
 
@@ -79,6 +89,5 @@ please follow existing examples regarding their command line arguments, and
 reuse them.
 
 [grep1]: https://github.com/gnuradio/greps/blob/master/grep-0001-coding-guidelines.md
-[cla]: https://wiki.gnuradio.org/index.php/Development#What.27s_this_Copyright_Assignment.3F
 [wikicontrib]: https://wiki.gnuradio.org/index.php/Development
 [gr-devs]: https://github.com/orgs/gnuradio/teams/gr-devs

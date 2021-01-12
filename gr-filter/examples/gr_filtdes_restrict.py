@@ -8,14 +8,12 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import unicode_literals
 from gnuradio.filter import filter_design
 import sys
 try:
-    from PyQt4 import Qt, QtCore, QtGui
+    from PyQt5 import Qt, QtCore, QtGui
 except ImportError:
-    print("Please install PyQt4 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)")
+    print("Please install PyQt5 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)")
     raise SystemExit(1)
 
 

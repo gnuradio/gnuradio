@@ -1,5 +1,6 @@
 id: dtv_atsc_deinterleaver
 label: ATSC Deinterleaver
+flags: [ python, cpp ]
 
 inputs:
 -   domain: stream
@@ -14,5 +15,11 @@ outputs:
 templates:
     imports: from gnuradio import dtv
     make: dtv.atsc_deinterleaver()
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/atsc_deinterleaver.h>']
+    declarations: 'dtv::atsc_deinterleaver::sptr ${id};'
+    make: 'this->${id} = dtv::atsc_deinterleaver::make();'
+    link: ['gnuradio-dtv']
 
 file_format: 1

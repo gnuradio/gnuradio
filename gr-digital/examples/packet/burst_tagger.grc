@@ -100,7 +100,7 @@ blocks:
     post_padding: '20'
     pre_padding: '0'
     type: complex
-    window: firdes.window(firdes.WIN_HANN, 50, 0)
+    window: firdes.window(window.WIN_HANN, 50, 0)
   states:
     coordinate: [696, 75]
     rotation: 0
@@ -118,7 +118,7 @@ blocks:
     post_padding: '20'
     pre_padding: '0'
     type: complex
-    window: firdes.window(firdes.WIN_HANN, 50, 0)
+    window: firdes.window(window.WIN_HANN, 50, 0)
   states:
     coordinate: [696, 203]
     rotation: 0

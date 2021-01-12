@@ -15,7 +15,7 @@
 
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/fft/fft_shift.h>
-#include <gnuradio/filter/firdes.h>
+#include <gnuradio/fft/window.h>
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/qtgui/waterfalldisplayform.h>
 
@@ -25,14 +25,14 @@ namespace qtgui {
 class QTGUI_API waterfall_sink_c_impl : public waterfall_sink_c
 {
 private:
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     void initialize();
 
     int d_fftsize;
     fft::fft_shift<float> d_fft_shift;
     float d_fftavg;
-    filter::firdes::win_type d_wintype;
+    fft::window::win_type d_wintype;
     std::vector<float> d_window;
     double d_center_freq;
     double d_bandwidth;
@@ -44,7 +44,7 @@ private:
     const pmt::pmt_t d_port_bw;
 
     bool d_shift;
-    fft::fft_complex* d_fft;
+    fft::fft_complex_fwd* d_fft;
 
     int d_index;
     std::vector<gr_complex*> d_residbufs;
@@ -85,58 +85,58 @@ public:
                           const std::string& name,
                           int nconnections,
                           QWidget* parent = NULL);
-    ~waterfall_sink_c_impl();
+    ~waterfall_sink_c_impl() override;
 
-    bool check_topology(int ninputs, int noutputs);
+    bool check_topology(int ninputs, int noutputs) override;
 
-    void exec_();
-    QWidget* qwidget();
+    void exec_() override;
+    QWidget* qwidget() override;
 
 #ifdef ENABLE_PYTHON
-    PyObject* pyqwidget();
+    PyObject* pyqwidget() override;
 #else
     void* pyqwidget();
 #endif
 
-    void clear_data();
+    void clear_data() override;
 
-    void set_fft_size(const int fftsize);
-    int fft_size() const;
-    void set_fft_average(const float fftavg);
-    float fft_average() const;
-    void set_fft_window(const gr::filter::firdes::win_type win);
-    gr::filter::firdes::win_type fft_window();
+    void set_fft_size(const int fftsize) override;
+    int fft_size() const override;
+    void set_fft_average(const float fftavg) override;
+    float fft_average() const override;
+    void set_fft_window(const gr::fft::window::win_type win) override;
+    gr::fft::window::win_type fft_window() override;
 
-    void set_frequency_range(const double centerfreq, const double bandwidth);
-    void set_intensity_range(const double min, const double max);
+    void set_frequency_range(const double centerfreq, const double bandwidth) override;
+    void set_intensity_range(const double min, const double max) override;
 
-    void set_update_time(double t);
-    void set_time_per_fft(double t);
-    void set_title(const std::string& title);
-    void set_time_title(const std::string& title);
-    void set_line_label(unsigned int which, const std::string& label);
-    void set_line_alpha(unsigned int which, double alpha);
-    void set_color_map(unsigned int which, const int color);
+    void set_update_time(double t) override;
+    void set_time_per_fft(double t) override;
+    void set_title(const std::string& title) override;
+    void set_time_title(const std::string& title) override;
+    void set_line_label(unsigned int which, const std::string& label) override;
+    void set_line_alpha(unsigned int which, double alpha) override;
+    void set_color_map(unsigned int which, const int color) override;
 
-    std::string title();
-    std::string line_label(unsigned int which);
-    double line_alpha(unsigned int which);
-    int color_map(unsigned int which);
+    std::string title() override;
+    std::string line_label(unsigned int which) override;
+    double line_alpha(unsigned int which) override;
+    int color_map(unsigned int which) override;
 
-    void set_size(int width, int height);
+    void set_size(int width, int height) override;
 
-    void auto_scale();
-    double min_intensity(unsigned int which);
-    double max_intensity(unsigned int which);
+    void auto_scale() override;
+    double min_intensity(unsigned int which) override;
+    double max_intensity(unsigned int which) override;
 
-    void enable_menu(bool en);
-    void enable_grid(bool en);
-    void disable_legend();
-    void enable_axis_labels(bool en);
+    void enable_menu(bool en) override;
+    void enable_grid(bool en) override;
+    void disable_legend() override;
+    void enable_axis_labels(bool en) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace qtgui */

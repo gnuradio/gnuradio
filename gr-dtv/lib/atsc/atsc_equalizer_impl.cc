@@ -23,7 +23,7 @@ namespace dtv {
 
 atsc_equalizer::sptr atsc_equalizer::make()
 {
-    return gnuradio::get_initial_sptr(new atsc_equalizer_impl());
+    return gnuradio::make_block_sptr<atsc_equalizer_impl>();
 }
 
 static float bin_map(int bit) { return bit ? +5 : -5; }

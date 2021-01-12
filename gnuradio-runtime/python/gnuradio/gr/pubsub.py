@@ -14,8 +14,6 @@ Abstract GNU Radio publisher/subscriber interface
 This is a proof of concept implementation, will likely change significantly.
 """
 
-from __future__ import print_function
-from __future__ import unicode_literals
 
 class pubsub(dict):
     def __init__(self):

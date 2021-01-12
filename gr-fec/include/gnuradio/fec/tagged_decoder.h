@@ -15,7 +15,7 @@
 #include <gnuradio/fec/generic_decoder.h>
 #include <gnuradio/tagged_stream_block.h>
 #include <boost/shared_array.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace gr {
 namespace fec {
@@ -53,7 +53,7 @@ namespace fec {
 class FEC_API tagged_decoder : virtual public tagged_stream_block
 {
 public:
-    typedef boost::shared_ptr<tagged_decoder> sptr;
+    typedef std::shared_ptr<tagged_decoder> sptr;
     typedef boost::shared_array<unsigned char> buf_sptr;
 
     /*!
@@ -74,11 +74,11 @@ public:
                      const std::string& lengthtagname = "packet_len",
                      int mtu = 1500);
 
-    virtual int work(int noutput_items,
-                     gr_vector_int& ninput_items,
-                     gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items) = 0;
-    virtual int calculate_output_stream_length(const gr_vector_int& ninput_items) = 0;
+    int work(int noutput_items,
+             gr_vector_int& ninput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items) override = 0;
+    int calculate_output_stream_length(const gr_vector_int& ninput_items) override = 0;
 };
 
 } /* namespace fec */

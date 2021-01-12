@@ -71,67 +71,67 @@ public:
                      const std::string& name,
                      unsigned int nconnections,
                      QWidget* parent = NULL);
-    ~time_sink_c_impl();
+    ~time_sink_c_impl() override;
 
-    bool check_topology(int ninputs, int noutputs);
+    bool check_topology(int ninputs, int noutputs) override;
 
-    void exec_();
-    QWidget* qwidget();
+    void exec_() override;
+    QWidget* qwidget() override;
 
 #ifdef ENABLE_PYTHON
-    PyObject* pyqwidget();
+    PyObject* pyqwidget() override;
 #else
     void* pyqwidget();
 #endif
 
-    void set_y_axis(double min, double max);
-    void set_y_label(const std::string& label, const std::string& unit = "");
-    void set_update_time(double t);
-    void set_title(const std::string& title);
-    void set_line_label(unsigned int which, const std::string& label);
-    void set_line_color(unsigned int which, const std::string& color);
-    void set_line_width(unsigned int which, int width);
-    void set_line_style(unsigned int which, int style);
-    void set_line_marker(unsigned int which, int marker);
-    void set_nsamps(const int size);
-    void set_samp_rate(const double samp_rate);
-    void set_line_alpha(unsigned int which, double alpha);
+    void set_y_axis(double min, double max) override;
+    void set_y_label(const std::string& label, const std::string& unit = "") override;
+    void set_update_time(double t) override;
+    void set_title(const std::string& title) override;
+    void set_line_label(unsigned int which, const std::string& label) override;
+    void set_line_color(unsigned int which, const std::string& color) override;
+    void set_line_width(unsigned int which, int width) override;
+    void set_line_style(unsigned int which, int style) override;
+    void set_line_marker(unsigned int which, int marker) override;
+    void set_nsamps(const int size) override;
+    void set_samp_rate(const double samp_rate) override;
+    void set_line_alpha(unsigned int which, double alpha) override;
     void set_trigger_mode(trigger_mode mode,
                           trigger_slope slope,
                           float level,
                           float delay,
                           int channel,
-                          const std::string& tag_key = "");
+                          const std::string& tag_key = "") override;
 
-    std::string title();
-    std::string line_label(unsigned int which);
-    std::string line_color(unsigned int which);
-    int line_width(unsigned int which);
-    int line_style(unsigned int which);
-    int line_marker(unsigned int which);
-    double line_alpha(unsigned int which);
+    std::string title() override;
+    std::string line_label(unsigned int which) override;
+    std::string line_color(unsigned int which) override;
+    int line_width(unsigned int which) override;
+    int line_style(unsigned int which) override;
+    int line_marker(unsigned int which) override;
+    double line_alpha(unsigned int which) override;
 
-    void set_size(int width, int height);
+    void set_size(int width, int height) override;
 
-    int nsamps() const;
+    int nsamps() const override;
 
-    void enable_menu(bool en);
-    void enable_grid(bool en);
-    void enable_autoscale(bool en);
-    void enable_stem_plot(bool en);
-    void enable_semilogx(bool en);
-    void enable_semilogy(bool en);
-    void enable_control_panel(bool en);
-    void enable_tags(unsigned int which, bool en);
-    void enable_tags(bool en);
-    void enable_axis_labels(bool en);
-    void disable_legend();
+    void enable_menu(bool en) override;
+    void enable_grid(bool en) override;
+    void enable_autoscale(bool en) override;
+    void enable_stem_plot(bool en) override;
+    void enable_semilogx(bool en) override;
+    void enable_semilogy(bool en) override;
+    void enable_control_panel(bool en) override;
+    void enable_tags(unsigned int which, bool en) override;
+    void enable_tags(bool en) override;
+    void enable_axis_labels(bool en) override;
+    void disable_legend() override;
 
-    void reset();
+    void reset() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace qtgui */

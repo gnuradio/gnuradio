@@ -1,5 +1,6 @@
 id: dtv_dvbs2_modulator_bc
 label: DVB-S2X Modulator
+flags: [ python, cpp ]
 
 parameters:
 -   id: framesize
@@ -107,5 +108,24 @@ templates:
             % endif
             ${constellation.val},
             ${interpolation.val})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbs2_modulator_bc.h>']
+    declarations: 'dtv::dvbs2_modulator_bc::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbs2_modulator_bc::make(
+            ${framesize.val},
+            % if str(framesize) == 'FECFRAME_NORMAL':
+            ${rate1.val},
+            % elif str(framesize) == 'FECFRAME_MEDIUM':
+            ${rate2.val},
+            % else:
+            ${rate3.val},
+            % endif
+            ${constellation.val},
+            ${interpolation.val});
+    link: ['gnuradio-dtv']
+    translations:
+        dtv\.: 'dtv::'
 
 file_format: 1

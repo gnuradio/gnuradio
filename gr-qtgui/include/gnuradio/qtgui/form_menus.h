@@ -71,7 +71,7 @@ public:
         }
     }
 
-    ~LineColorMenu() {}
+    ~LineColorMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -151,7 +151,7 @@ public:
         }
     }
 
-    ~LineWidthMenu() {}
+    ~LineWidthMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -221,7 +221,7 @@ public:
         }
     }
 
-    ~LineStyleMenu() {}
+    ~LineStyleMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -305,7 +305,7 @@ public:
         }
     }
 
-    ~LineMarkerMenu() {}
+    ~LineMarkerMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -378,7 +378,7 @@ public:
         }
     }
 
-    ~MarkerAlphaMenu() {}
+    ~MarkerAlphaMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -437,7 +437,7 @@ public:
         connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
     }
 
-    ~LineTitleAction() {}
+    ~LineTitleAction() override {}
 
 signals:
     void whichTrigger(unsigned int which, const QString& text);
@@ -490,7 +490,7 @@ public:
         connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
     }
 
-    ~OtherAction() {}
+    ~OtherAction() override {}
 
     void setValidator(QValidator* v) { d_text->setValidator(v); }
 
@@ -553,7 +553,7 @@ public:
         connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
     }
 
-    ~OtherDualAction() {}
+    ~OtherDualAction() override {}
 
 signals:
     void whichTrigger(const QString& text0, const QString& text1);
@@ -634,7 +634,7 @@ public:
         }
     }
 
-    ~FFTSizeMenu() {}
+    ~FFTSizeMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -742,7 +742,7 @@ public:
         }
     }
 
-    ~AverageMenu() {}
+    ~AverageMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -808,7 +808,7 @@ public:
         // nop
     }
 
-    ~FFTAverageMenu() {}
+    ~FFTAverageMenu() override {}
 };
 
 /********************************************************************/
@@ -852,7 +852,7 @@ public:
         }
     }
 
-    ~FFTWindowMenu() {}
+    ~FFTWindowMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -864,32 +864,32 @@ public:
             throw std::runtime_error("FFTWindowMenu::getAction: which out of range.");
     }
 
-    QAction* getActionFromWindow(gr::filter::firdes::win_type type)
+    QAction* getActionFromWindow(gr::fft::window::win_type type)
     {
         int which = 0;
         switch (static_cast<int>(type)) {
-        case ((gr::filter::firdes::WIN_NONE)):
+        case ((gr::fft::window::WIN_NONE)):
             which = 0;
             break;
-        case ((gr::filter::firdes::WIN_HAMMING)):
+        case ((gr::fft::window::WIN_HAMMING)):
             which = 1;
             break;
-        case ((gr::filter::firdes::WIN_HANN)):
+        case ((gr::fft::window::WIN_HANN)):
             which = 2;
             break;
-        case ((gr::filter::firdes::WIN_BLACKMAN)):
+        case ((gr::fft::window::WIN_BLACKMAN)):
             which = 3;
             break;
-        case ((gr::filter::firdes::WIN_BLACKMAN_hARRIS)):
+        case ((gr::fft::window::WIN_BLACKMAN_hARRIS)):
             which = 4;
             break;
-        case ((gr::filter::firdes::WIN_RECTANGULAR)):
+        case ((gr::fft::window::WIN_RECTANGULAR)):
             which = 5;
             break;
-        case ((gr::filter::firdes::WIN_KAISER)):
+        case ((gr::fft::window::WIN_KAISER)):
             which = 6;
             break;
-        case ((gr::filter::firdes::WIN_FLATTOP)):
+        case ((gr::fft::window::WIN_FLATTOP)):
             which = 7;
             break;
         }
@@ -897,20 +897,17 @@ public:
     }
 
 signals:
-    void whichTrigger(const gr::filter::firdes::win_type type);
+    void whichTrigger(const gr::fft::window::win_type type);
 
 public slots:
-    void getNone() { emit whichTrigger(gr::filter::firdes::WIN_NONE); }
-    void getHamming() { emit whichTrigger(gr::filter::firdes::WIN_HAMMING); }
-    void getHann() { emit whichTrigger(gr::filter::firdes::WIN_HANN); }
-    void getBlackman() { emit whichTrigger(gr::filter::firdes::WIN_BLACKMAN); }
-    void getBlackmanharris()
-    {
-        emit whichTrigger(gr::filter::firdes::WIN_BLACKMAN_hARRIS);
-    }
-    void getRectangular() { emit whichTrigger(gr::filter::firdes::WIN_RECTANGULAR); }
-    void getKaiser() { emit whichTrigger(gr::filter::firdes::WIN_KAISER); }
-    void getFlattop() { emit whichTrigger(gr::filter::firdes::WIN_FLATTOP); }
+    void getNone() { emit whichTrigger(gr::fft::window::WIN_NONE); }
+    void getHamming() { emit whichTrigger(gr::fft::window::WIN_HAMMING); }
+    void getHann() { emit whichTrigger(gr::fft::window::WIN_HANN); }
+    void getBlackman() { emit whichTrigger(gr::fft::window::WIN_BLACKMAN); }
+    void getBlackmanharris() { emit whichTrigger(gr::fft::window::WIN_BLACKMAN_hARRIS); }
+    void getRectangular() { emit whichTrigger(gr::fft::window::WIN_RECTANGULAR); }
+    void getKaiser() { emit whichTrigger(gr::fft::window::WIN_KAISER); }
+    void getFlattop() { emit whichTrigger(gr::fft::window::WIN_FLATTOP); }
 
 private:
     QList<QAction*> d_act;
@@ -948,7 +945,7 @@ public:
         connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
     }
 
-    ~NPointsMenu() {}
+    ~NPointsMenu() override {}
 
 signals:
     void whichTrigger(const int npts);
@@ -1014,7 +1011,7 @@ public:
         d_min_value = QColor("white");
     }
 
-    ~ColorMapMenu() {}
+    ~ColorMapMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -1035,16 +1032,28 @@ signals:
 public slots:
     void getMultiColor()
     {
-        emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR);
+        emit whichTrigger(d_which, gr::qtgui::INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR);
     }
-    void getWhiteHot() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_WHITE_HOT); }
-    void getBlackHot() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_BLACK_HOT); }
+    void getWhiteHot()
+    {
+        emit whichTrigger(d_which, gr::qtgui::INTENSITY_COLOR_MAP_TYPE_WHITE_HOT);
+    }
+    void getBlackHot()
+    {
+        emit whichTrigger(d_which, gr::qtgui::INTENSITY_COLOR_MAP_TYPE_BLACK_HOT);
+    }
     void getIncandescent()
     {
-        emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_INCANDESCENT);
+        emit whichTrigger(d_which, gr::qtgui::INTENSITY_COLOR_MAP_TYPE_INCANDESCENT);
     }
-    void getSunset() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_SUNSET); }
-    void getCool() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_COOL); }
+    void getSunset()
+    {
+        emit whichTrigger(d_which, gr::qtgui::INTENSITY_COLOR_MAP_TYPE_SUNSET);
+    }
+    void getCool()
+    {
+        emit whichTrigger(d_which, gr::qtgui::INTENSITY_COLOR_MAP_TYPE_COOL);
+    }
     // void getOther(d_which, const QString &min_str, const QString &max_str)
     void getOther()
     {
@@ -1056,8 +1065,10 @@ public slots:
         d_min_value = QColorDialog::getColor(d_min_value, this);
         d_max_value = QColorDialog::getColor(d_max_value, this);
 
-        emit whichTrigger(
-            d_which, INTENSITY_COLOR_MAP_TYPE_USER_DEFINED, d_min_value, d_max_value);
+        emit whichTrigger(d_which,
+                          gr::qtgui::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED,
+                          d_min_value,
+                          d_max_value);
     }
 
 private:
@@ -1098,7 +1109,7 @@ public:
         }
     }
 
-    ~TriggerModeMenu() {}
+    ~TriggerModeMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -1171,7 +1182,7 @@ public:
         }
     }
 
-    ~TriggerSlopeMenu() {}
+    ~TriggerSlopeMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -1232,7 +1243,7 @@ public:
         }
     }
 
-    ~TriggerChannelMenu() {}
+    ~TriggerChannelMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -1291,7 +1302,7 @@ public:
         }
     }
 
-    ~NumberLayoutMenu() {}
+    ~NumberLayoutMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -1373,7 +1384,7 @@ public:
         d_min_value = QColor("black");
     }
 
-    ~NumberColorMapMenu() {}
+    ~NumberColorMapMenu() override {}
 
     int getNumActions() const { return d_act.size(); }
 
@@ -1446,7 +1457,7 @@ public:
         connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
     }
 
-    ~PopupMenu() {}
+    ~PopupMenu() override {}
 
     void setText(QString s) { d_text->setText(s); }
 
@@ -1500,7 +1511,7 @@ public:
         connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
     }
 
-    ~ItemFloatAct() {}
+    ~ItemFloatAct() override {}
 
     void setText(float f) { d_text->setText(QString("%1").arg(f)); }
 

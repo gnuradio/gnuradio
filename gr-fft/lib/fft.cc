@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2008,2011,2012 Free Software Foundation, Inc.
+ * Copyright 2003,2008,2011,2012,2020 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -47,13 +47,6 @@ namespace fft {
 static boost::mutex wisdom_thread_mutex;
 boost::interprocess::file_lock wisdom_lock;
 static bool wisdom_lock_init_done = false; // Modify while holding 'wisdom_thread_mutex'
-
-gr_complex* malloc_complex(int size)
-{
-    return (gr_complex*)volk_malloc(sizeof(gr_complex) * size, volk_get_alignment());
-}
-
-void free(void* b) { volk_free(b); }
 
 boost::mutex& planner::mutex()
 {
@@ -109,7 +102,10 @@ static void import_wisdom()
         int r = fftwf_import_wisdom_from_file(fp);
         fclose(fp);
         if (!r) {
-            fprintf(stderr, "gr::fft: can't import wisdom from %s\n", filename.c_str());
+            gr::logger_ptr logger, debug_logger;
+            gr::configure_default_loggers(logger, debug_logger, "fft::import_wisdom");
+            GR_LOG_ERROR(logger,
+                         boost::format("can't import wisdom from %s") % filename.c_str());
         }
     }
 }
@@ -136,16 +132,21 @@ static void export_wisdom()
         fftwf_export_wisdom_to_file(fp);
         fclose(fp);
     } else {
-        fprintf(stderr, "fft_impl_fftw: ");
-        perror(filename.c_str());
+        gr::logger_ptr logger, debug_logger;
+        gr::configure_default_loggers(logger, debug_logger, "fft::export_wisdom");
+        GR_LOG_ERROR(logger,
+                     boost::format("%s: %s") % filename.c_str() % strerror(errno));
     }
 }
 
 // ----------------------------------------------------------------
 
-fft_complex::fft_complex(int fft_size, bool forward, int nthreads)
+
+template <class T, bool forward>
+fft<T, forward>::fft(int fft_size, int nthreads)
     : d_nthreads(nthreads), d_inbuf(fft_size), d_outbuf(fft_size)
 {
+    gr::configure_default_loggers(d_logger, d_debug_logger, "fft_complex");
     // Hold global mutex during plan construction and destruction.
     planner::scoped_lock lock(planner::mutex());
 
@@ -160,21 +161,57 @@ fft_complex::fft_complex(int fft_size, bool forward, int nthreads)
     lock_wisdom();
     import_wisdom(); // load prior wisdom from disk
 
-    d_plan = fftwf_plan_dft_1d(fft_size,
-                               reinterpret_cast<fftwf_complex*>(d_inbuf.data()),
-                               reinterpret_cast<fftwf_complex*>(d_outbuf.data()),
-                               forward ? FFTW_FORWARD : FFTW_BACKWARD,
-                               FFTW_MEASURE);
-
+    initialize_plan(fft_size);
     if (d_plan == NULL) {
-        fprintf(stderr, "gr::fft: error creating plan\n");
-        throw std::runtime_error("fftwf_plan_dft_1d failed");
+        GR_LOG_ERROR(d_logger, "creating plan failed");
+        throw std::runtime_error("Creating fftw plan failed");
     }
     export_wisdom(); // store new wisdom to disk
     unlock_wisdom();
 }
 
-fft_complex::~fft_complex()
+template <>
+void fft<gr_complex, true>::initialize_plan(int fft_size)
+{
+    d_plan = fftwf_plan_dft_1d(fft_size,
+                               reinterpret_cast<fftwf_complex*>(d_inbuf.data()),
+                               reinterpret_cast<fftwf_complex*>(d_outbuf.data()),
+                               FFTW_FORWARD,
+                               FFTW_MEASURE);
+}
+
+template <>
+void fft<gr_complex, false>::initialize_plan(int fft_size)
+{
+    d_plan = fftwf_plan_dft_1d(fft_size,
+                               reinterpret_cast<fftwf_complex*>(d_inbuf.data()),
+                               reinterpret_cast<fftwf_complex*>(d_outbuf.data()),
+                               FFTW_BACKWARD,
+                               FFTW_MEASURE);
+}
+
+
+template <>
+void fft<float, true>::initialize_plan(int fft_size)
+{
+    d_plan = fftwf_plan_dft_r2c_1d(fft_size,
+                                   d_inbuf.data(),
+                                   reinterpret_cast<fftwf_complex*>(d_outbuf.data()),
+                                   FFTW_MEASURE);
+}
+
+template <>
+void fft<float, false>::initialize_plan(int fft_size)
+{
+    d_plan = fftwf_plan_dft_c2r_1d(fft_size,
+                                   reinterpret_cast<fftwf_complex*>(d_inbuf.data()),
+                                   d_outbuf.data(),
+                                   FFTW_MEASURE);
+}
+
+
+template <class T, bool forward>
+fft<T, forward>::~fft()
 {
     // Hold global mutex during plan construction and destruction.
     planner::scoped_lock lock(planner::mutex());
@@ -182,7 +219,8 @@ fft_complex::~fft_complex()
     fftwf_destroy_plan((fftwf_plan)d_plan);
 }
 
-void fft_complex::set_nthreads(int n)
+template <class T, bool forward>
+void fft<T, forward>::set_nthreads(int n)
 {
     if (n <= 0) {
         throw std::out_of_range("gr::fft: invalid number of threads");
@@ -194,120 +232,16 @@ void fft_complex::set_nthreads(int n)
 #endif
 }
 
-void fft_complex::execute() { fftwf_execute((fftwf_plan)d_plan); }
-
-// ----------------------------------------------------------------
-
-fft_real_fwd::fft_real_fwd(int fft_size, int nthreads)
-    : d_nthreads(nthreads), d_inbuf(fft_size), d_outbuf(fft_size / 2 + 1)
+template <class T, bool forward>
+void fft<T, forward>::execute()
 {
-    // Hold global mutex during plan construction and destruction.
-    planner::scoped_lock lock(planner::mutex());
-
-    static_assert(sizeof(fftwf_complex) == sizeof(gr_complex),
-                  "The size of fftwf_complex is not equal to gr_complex");
-
-    if (fft_size <= 0) {
-        throw std::out_of_range("gr::fft: invalid fft_size");
-    }
-
-    config_threading(nthreads);
-    lock_wisdom();
-    import_wisdom(); // load prior wisdom from disk
-
-    d_plan = fftwf_plan_dft_r2c_1d(fft_size,
-                                   d_inbuf.data(),
-                                   reinterpret_cast<fftwf_complex*>(d_outbuf.data()),
-                                   FFTW_MEASURE);
-
-    if (d_plan == NULL) {
-        fprintf(stderr, "gr::fft::fft_real_fwd: error creating plan\n");
-        throw std::runtime_error("fftwf_plan_dft_r2c_1d failed");
-    }
-    export_wisdom(); // store new wisdom to disk
-    unlock_wisdom();
+    fftwf_execute((fftwf_plan)d_plan);
 }
 
-fft_real_fwd::~fft_real_fwd()
-{
-    // Hold global mutex during plan construction and destruction.
-    planner::scoped_lock lock(planner::mutex());
 
-    fftwf_destroy_plan((fftwf_plan)d_plan);
-}
-
-void fft_real_fwd::set_nthreads(int n)
-{
-    if (n <= 0) {
-        throw std::out_of_range(
-            "gr::fft::fft_real_fwd::set_nthreads: invalid number of threads");
-    }
-    d_nthreads = n;
-
-#ifdef FFTW3F_THREADS
-    fftwf_plan_with_nthreads(d_nthreads);
-#endif
-}
-
-void fft_real_fwd::execute() { fftwf_execute((fftwf_plan)d_plan); }
-
-// ----------------------------------------------------------------
-
-fft_real_rev::fft_real_rev(int fft_size, int nthreads)
-    : d_nthreads(nthreads), d_inbuf(fft_size / 2 + 1), d_outbuf(fft_size)
-{
-    // Hold global mutex during plan construction and destruction.
-    planner::scoped_lock lock(planner::mutex());
-
-    static_assert(sizeof(fftwf_complex) == sizeof(gr_complex),
-                  "The size of fftwf_complex is not equal to gr_complex");
-
-    if (fft_size <= 0) {
-        throw std::out_of_range("gr::fft::fft_real_rev: invalid fft_size");
-    }
-
-    config_threading(nthreads);
-    lock_wisdom();
-    import_wisdom(); // load prior wisdom from disk
-
-    // FIXME If there's ever a chance that the planning functions
-    // will be called in multiple threads, we've got to ensure single
-    // threaded access.  They are not thread-safe.
-    d_plan = fftwf_plan_dft_c2r_1d(fft_size,
-                                   reinterpret_cast<fftwf_complex*>(d_inbuf.data()),
-                                   d_outbuf.data(),
-                                   FFTW_MEASURE);
-
-    if (d_plan == NULL) {
-        fprintf(stderr, "gr::fft::fft_real_rev: error creating plan\n");
-        throw std::runtime_error("fftwf_plan_dft_c2r_1d failed");
-    }
-    export_wisdom(); // store new wisdom to disk
-    unlock_wisdom();
-}
-
-fft_real_rev::~fft_real_rev()
-{
-    // Hold global mutex during plan construction and destruction.
-    planner::scoped_lock lock(planner::mutex());
-
-    fftwf_destroy_plan((fftwf_plan)d_plan);
-}
-
-void fft_real_rev::set_nthreads(int n)
-{
-    if (n <= 0) {
-        throw std::out_of_range(
-            "gr::fft::fft_real_rev::set_nthreads: invalid number of threads");
-    }
-    d_nthreads = n;
-
-#ifdef FFTW3F_THREADS
-    fftwf_plan_with_nthreads(d_nthreads);
-#endif
-}
-
-void fft_real_rev::execute() { fftwf_execute((fftwf_plan)d_plan); }
-
+template class fft<gr_complex, true>;
+template class fft<gr_complex, false>;
+template class fft<float, true>;
+template class fft<float, false>;
 } /* namespace fft */
 } /* namespace gr */

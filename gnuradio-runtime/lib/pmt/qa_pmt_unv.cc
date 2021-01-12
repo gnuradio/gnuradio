@@ -324,6 +324,8 @@ BOOST_AUTO_TEST_CASE(test_f32vector)
     BOOST_CHECK_EQUAL(float(0), wr[0]);
     BOOST_CHECK_EQUAL(s1, wr[1]);
     BOOST_CHECK_EQUAL(s2, wr[2]);
+
+    BOOST_CHECK_EQUAL(pmt::write_string(v1), "#[0.000000 20.000000 30.000000]");
 }
 BOOST_AUTO_TEST_CASE(test_f64vector)
 {
@@ -358,6 +360,9 @@ BOOST_AUTO_TEST_CASE(test_f64vector)
     BOOST_CHECK_EQUAL(double(0), wr[0]);
     BOOST_CHECK_EQUAL(s1, wr[1]);
     BOOST_CHECK_EQUAL(s2, wr[2]);
+
+    BOOST_CHECK_EQUAL(pmt::write_string(v1),
+                      "#[0.000000000000000 20.000000000000000 30.000000000000000]");
 }
 BOOST_AUTO_TEST_CASE(test_c32vector)
 {

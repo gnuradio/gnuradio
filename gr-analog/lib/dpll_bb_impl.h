@@ -25,19 +25,19 @@ private:
 
 public:
     dpll_bb_impl(float period, float gain);
-    ~dpll_bb_impl();
+    ~dpll_bb_impl() override;
 
-    void set_gain(float gain) { d_gain = gain; }
-    void set_decision_threshold(float thresh) { d_decision_threshold = thresh; }
+    void set_gain(float gain) override { d_gain = gain; }
+    void set_decision_threshold(float thresh) override { d_decision_threshold = thresh; }
 
-    float gain() const { return d_gain; }
-    float freq() const { return d_pulse_frequency; }
-    float phase() const { return d_pulse_phase; }
-    float decision_threshold() const { return d_decision_threshold; }
+    float gain() const override { return d_gain; }
+    float freq() const override { return d_pulse_frequency; }
+    float phase() const override { return d_pulse_phase; }
+    float decision_threshold() const override { return d_decision_threshold; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace analog */

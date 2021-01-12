@@ -23,8 +23,8 @@ rfnoc_tx_radio::sptr rfnoc_tx_radio::make(rfnoc_graph::sptr graph,
                                           const int device_select,
                                           const int instance)
 {
-    return gnuradio::get_initial_sptr(new rfnoc_tx_radio_impl(rfnoc_block::make_block_ref(
-        graph, block_args, "Radio", device_select, instance, MAX_RADIO_REFS)));
+    return gnuradio::make_block_sptr<rfnoc_tx_radio_impl>(rfnoc_block::make_block_ref(
+        graph, block_args, "Radio", device_select, instance, MAX_RADIO_REFS));
 }
 
 

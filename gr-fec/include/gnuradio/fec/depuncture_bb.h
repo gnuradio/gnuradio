@@ -79,7 +79,7 @@ class FEC_API depuncture_bb : virtual public block
 {
 public:
     // gr::fec::depuncture_bb::sptr
-    typedef boost::shared_ptr<depuncture_bb> sptr;
+    typedef std::shared_ptr<depuncture_bb> sptr;
 
     /*!
      * \brief Constructs a depuncture block.
@@ -89,7 +89,7 @@ public:
      * \param delay Delayed the puncturing pattern by shifting it
      * \param symbol The symbol to reinsert into the stream (def=127)
      */
-    static sptr make(int puncsize, int puncpat, int delay = 0, char symbol = 127);
+    static sptr make(int puncsize, int puncpat, int delay = 0, uint8_t symbol = 127);
 };
 
 } /* namespace fec */

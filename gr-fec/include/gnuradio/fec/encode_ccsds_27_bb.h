@@ -38,7 +38,7 @@ class FEC_API encode_ccsds_27_bb : virtual public sync_interpolator
 {
 public:
     // gr::fec::encode_ccsds_27_bb::sptr
-    typedef boost::shared_ptr<encode_ccsds_27_bb> sptr;
+    typedef std::shared_ptr<encode_ccsds_27_bb> sptr;
 
     static sptr make();
 };

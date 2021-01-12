@@ -82,15 +82,15 @@ class AutoCorrelator(gr.hier_block2):
         fac = fft.fft_vcc(self.fac_size, True, ())
 
         complex2Mag = blocks.complex_to_mag(self.fac_size)
-        self.avg = filter.single_pole_iir_filter_ff_make(1.0, self.fac_size)
+        self.avg = filter.single_pole_iir_filter_ff(1.0, self.fac_size)
 
         fac_fac   = fft.fft_vfc(self.fac_size, True, ())
-        fac_c2mag = blocks.complex_to_mag_make(fac_size)
+        fac_c2mag = blocks.complex_to_mag(fac_size)
 
         # There's a note in Baz's block about needing to add 3 dB to each bin but the DC bin, however it was never implemented
         n = 20
         k = -20 * math.log10(self.fac_size)
-        log = blocks.nlog10_ff_make(n, self.fac_size, k)
+        log = blocks.nlog10_ff(n, self.fac_size, k)
 
         if use_db:
             self.connect(self, streamToVec, self.one_in_n, fac, complex2Mag, fac_fac, fac_c2mag, self.avg, log, self)
@@ -114,7 +114,7 @@ class AutoCorrelatorSink(gr.hier_block2):
         autoCorr = AutoCorrelator(sample_rate, fac_size, fac_decimation, use_db)
         vecToStream = blocks.vector_to_stream(gr.sizeof_float, self.fac_size)
 
-        self.timeSink = qtgui.time_sink_f(self.fac_size/2, sample_rate, title, 1)
+        self.timeSink = qtgui.time_sink_f(self.fac_size//2, sample_rate, title, 1, None)
         self.timeSink.enable_grid(grid)
         self.timeSink.set_y_axis(yMin, yMax)
         self.timeSink.enable_autoscale(autoScale)

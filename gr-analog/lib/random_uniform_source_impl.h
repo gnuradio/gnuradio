@@ -22,16 +22,16 @@ template <class T>
 class random_uniform_source_impl : public random_uniform_source<T>
 {
 private:
-    gr::random* d_rng;
+    gr::random d_rng;
 
 public:
     random_uniform_source_impl(int minimum, int maximum, int seed);
-    ~random_uniform_source_impl();
+    ~random_uniform_source_impl() override;
 
     // Where all the action really happens
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
     int random_value();
 };

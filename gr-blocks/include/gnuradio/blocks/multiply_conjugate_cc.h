@@ -25,7 +25,7 @@ class BLOCKS_API multiply_conjugate_cc : virtual public sync_block
 {
 public:
     // gr::blocks::multiply_conjugate_cc::sptr
-    typedef boost::shared_ptr<multiply_conjugate_cc> sptr;
+    typedef std::shared_ptr<multiply_conjugate_cc> sptr;
 
     /*!
      * \brief Multiplies a streams by the conjugate of a second stream

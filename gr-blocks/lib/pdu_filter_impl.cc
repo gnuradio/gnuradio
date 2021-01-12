@@ -21,7 +21,7 @@ namespace blocks {
 
 pdu_filter::sptr pdu_filter::make(pmt::pmt_t k, pmt::pmt_t v, bool invert)
 {
-    return gnuradio::get_initial_sptr(new pdu_filter_impl(k, v, invert));
+    return gnuradio::make_block_sptr<pdu_filter_impl>(k, v, invert);
 }
 
 pdu_filter_impl::pdu_filter_impl(pmt::pmt_t k, pmt::pmt_t v, bool invert)
@@ -33,7 +33,7 @@ pdu_filter_impl::pdu_filter_impl(pmt::pmt_t k, pmt::pmt_t v, bool invert)
     message_port_register_out(pdu::pdu_port_id());
     message_port_register_in(pdu::pdu_port_id());
     set_msg_handler(pdu::pdu_port_id(),
-                    boost::bind(&pdu_filter_impl::handle_msg, this, _1));
+                    [this](pmt::pmt_t msg) { this->handle_msg(msg); });
 }
 
 void pdu_filter_impl::handle_msg(pmt::pmt_t pdu)

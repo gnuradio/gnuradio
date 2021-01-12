@@ -13,46 +13,59 @@
 #
 
 
-import sys, time, random, numpy, re
+import sys
+import time
+import random
+import numpy
+import re
 from gnuradio import gr, gr_unittest, blocks
 
 from gnuradio.ctrlport import GNURadio
 from gnuradio import ctrlport
 import os
 
+
 def get1():
     return "success"
+
 
 def get2():
     return "failure"
 
+
 class inc_class(object):
     def __init__(self):
         self.val = 1
+
     def pp(self):
-        self.val = self.val+1
+        self.val = self.val + 1
         return self.val
 
+
 get3 = inc_class()
+
 
 def get4():
     random.seed(0)
     rv = random.random()
     return rv
 
+
 def get5():
     numpy.random.seed(0)
-    samp_t = numpy.random.randn(24)+1j*numpy.random.randn(24);
-    samp_f = numpy.fft.fft(samp_t);
-    log_pow_f = 20*numpy.log10(numpy.abs(samp_f))
+    samp_t = numpy.random.randn(24) + 1j * numpy.random.randn(24)
+    samp_f = numpy.fft.fft(samp_t)
+    log_pow_f = 20 * numpy.log10(numpy.abs(samp_f))
     rv = list(log_pow_f)
-    return rv;
+    return rv
+
 
 def get6():
     numpy.random.seed(0)
-    samp_t = numpy.random.randn(1024)+1j*numpy.random.randn(1024);
+    samp_t = numpy.random.randn(1024) + 1j * numpy.random.randn(1024)
     rv = list(samp_t)
-    return rv;
+    return rv
+
 
 class test_cpp_py_binding(gr_unittest.TestCase):
 
@@ -84,14 +97,26 @@ class test_cpp_py_binding(gr_unittest.TestCase):
                                gr.DISPNULL)
         v4.activate(get4)
 
-        v5 = gr.RPC_get_vector_float("pyland", "fvec", "unit_5_float_vector",
-                                     "Python Exported Float Vector", [], [], [],
-                                     gr.DISPTIME | gr.DISPOPTCPLX)
+        v5 = gr.RPC_get_vector_float(
+            "pyland",
+            "fvec",
+            "unit_5_float_vector",
+            "Python Exported Float Vector",
+            [],
+            [],
+            [],
+            gr.DISPTIME | gr.DISPOPTCPLX)
         v5.activate(get5)
 
-        v6 = gr.RPC_get_vector_gr_complex("pyland", "cvec", "unit_6_gr_complex_vector",
-                                          "Python Exported Complex Vector", [], [], [],
-                                          gr.DISPXY | gr.DISPOPTSCATTER)
+        v6 = gr.RPC_get_vector_gr_complex(
+            "pyland",
+            "cvec",
+            "unit_6_gr_complex_vector",
+            "Python Exported Complex Vector",
+            [],
+            [],
+            [],
+            gr.DISPXY | gr.DISPOPTSCATTER)
         v6.activate(get6)
 
         # print some variables locally
@@ -105,7 +130,7 @@ class test_cpp_py_binding(gr_unittest.TestCase):
 
         val = get3.pp()
         rval = v3.get()
-        self.assertEqual(val+1, rval)
+        self.assertEqual(val + 1, rval)
 
         val = get4()
         rval = v4.get()
@@ -120,11 +145,11 @@ class test_cpp_py_binding(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(val, rval, 5)
 
     def test_002(self):
-        data = list(range(1,9))
+        data = list(range(1, 9))
 
         self.src = blocks.vector_source_c(data)
-        self.p1 = blocks.ctrlport_probe_c("aaa","C++ exported variable")
-        self.p2 = blocks.ctrlport_probe_c("bbb","C++ exported variable")
+        self.p1 = blocks.ctrlport_probe_c("aaa", "C++ exported variable")
+        self.p2 = blocks.ctrlport_probe_c("bbb", "C++ exported variable")
         probe_name = self.p2.alias()
 
         self.tb.connect(self.src, self.p1)
@@ -146,7 +171,8 @@ class test_cpp_py_binding(gr_unittest.TestCase):
 
         # Initialize a simple ControlPort client from endpoint
         from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
-        radiosys = GNURadioControlPortClient(hostname, portnum, rpcmethod='thrift')
+        radiosys = GNURadioControlPortClient(
+            hostname, portnum, rpcmethod='thrift')
         radio = radiosys.client
 
         # Get all exported knobs
@@ -157,5 +183,6 @@ class test_cpp_py_binding(gr_unittest.TestCase):
 
         self.tb.stop()
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_cpp_py_binding, "test_cpp_py_binding.xml")
+    gr_unittest.run(test_cpp_py_binding)

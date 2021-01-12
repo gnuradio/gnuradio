@@ -48,18 +48,18 @@ public:
     static generic_decoder::sptr
     make(int block_size, int num_info_bits, std::vector<int> frozen_bit_positions);
 
-    ~polar_decoder_sc_systematic();
+    ~polar_decoder_sc_systematic() override;
 
     // FECAPI
-    void generic_work(void* in_buffer, void* out_buffer);
+    void generic_work(void* in_buffer, void* out_buffer) override;
 
 private:
     polar_decoder_sc_systematic(int block_size,
                                 int num_info_bits,
                                 std::vector<int> frozen_bit_positions);
-    float* d_llr_vec;
-    unsigned char* d_u_hat_vec;
-    unsigned char* d_frame_vec;
+    volk::vector<float> d_llr_vec;
+    volk::vector<unsigned char> d_u_hat_vec;
+    volk::vector<unsigned char> d_frame_vec;
     unsigned char retrieve_bit_from_llr(float llr, const int pos);
     void sc_decode(float* llrs, unsigned char* u);
     void extract_info_bits_reversed(unsigned char* outbuf, const unsigned char* inbuf);

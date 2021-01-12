@@ -22,7 +22,7 @@ namespace video_sdl {
  *
  * input signature is one, two or three streams of uchar.
  * One stream: stream is grey (Y)
- * two streems: first is grey (Y), second is alternating U and V
+ * two streams: first is grey (Y), second is alternating U and V
  * Three streams: first is grey (Y), second is U, third is V
  * Input samples must be in the range [0,255].
  */
@@ -30,7 +30,7 @@ class VIDEO_SDL_API sink_uc : virtual public sync_block
 {
 public:
     // gr::video_sdl::sink_uc::sptr
-    typedef boost::shared_ptr<sink_uc> sptr;
+    typedef std::shared_ptr<sink_uc> sptr;
 
     static sptr make(double framerate,
                      int width,

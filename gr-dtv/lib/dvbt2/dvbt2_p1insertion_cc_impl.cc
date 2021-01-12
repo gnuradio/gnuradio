@@ -27,8 +27,8 @@ dvbt2_p1insertion_cc::make(dvbt2_extended_carrier_t carriermode,
                            dvbt2_showlevels_t showlevels,
                            float vclip)
 {
-    return gnuradio::get_initial_sptr(new dvbt2_p1insertion_cc_impl(
-        carriermode, fftsize, guardinterval, numdatasyms, preamble, showlevels, vclip));
+    return gnuradio::make_block_sptr<dvbt2_p1insertion_cc_impl>(
+        carriermode, fftsize, guardinterval, numdatasyms, preamble, showlevels, vclip);
 }
 
 /*
@@ -57,7 +57,7 @@ dvbt2_p1insertion_cc_impl::dvbt2_p1insertion_cc_impl(dvbt2_extended_carrier_t ca
       real_negative_threshold_count(0),
       imag_positive_threshold_count(0),
       imag_negative_threshold_count(0),
-      p1_fft(1024, false, 1)
+      p1_fft(1024, 1)
 {
     int s1, s2, index = 0;
     int p1_fft_size = 1024;

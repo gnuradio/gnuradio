@@ -60,16 +60,16 @@ templates:
 
 cpp_templates:
     includes: ['#include <gnuradio/filter/pfb_synthesizer_ccf.h>']
-    declarations: 'pfb::synthesizer_ccf::sptr ${id};'
+    declarations: 'gr::filter::pfb_synthesizer_ccf::sptr ${id};'
     make: |-
-        std::vector<float> taps = {${str(taps)[1:-1]}};
+        std::vector<float> taps = {${str(eval(taps))[1:-1]}};
         std::vector<int> ch_map = {${str(ch_map)[1:-1]}};
-        this->${id} = pfb::synthesizer_ccf::make(
+        this->${id} = gr::filter::pfb_synthesizer_ccf::make(
             ${numchans},
             taps,
             ${twox});
-        this->${id}.set_channel_map(${ch_map});
-        this->${id}.declare_sample_delay(${samp_delay});
+        this->${id}->set_channel_map(ch_map);
+        this->${id}->declare_sample_delay(${samp_delay});
     link: ['gnuradio-filter']
     callbacks:
     - set_taps(taps)

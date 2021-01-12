@@ -8,8 +8,6 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 import sys
@@ -53,7 +51,7 @@ class my_top_block(gr.top_block):
         thr = blocks.throttle(gr.sizeof_float, 50000)
         hed = blocks.head(gr.sizeof_float, 10000000)
         self.snk1 = qtgui.time_raster_sink_f(fs, nrows, ncols, [], [],
-                                             "Float Time Raster Example", 2)
+                                             "Float Time Raster Example", 2, None)
 
         self.connect(src0, thr, (self.snk1, 0))
         self.connect(src1, (self.snk1, 1))

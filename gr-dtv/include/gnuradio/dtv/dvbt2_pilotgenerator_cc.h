@@ -27,7 +27,7 @@ namespace dtv {
 class DTV_API dvbt2_pilotgenerator_cc : virtual public gr::block
 {
 public:
-    typedef boost::shared_ptr<dvbt2_pilotgenerator_cc> sptr;
+    typedef std::shared_ptr<dvbt2_pilotgenerator_cc> sptr;
 
     /*!
      * \brief Create a DVB-T2 pilot generator.

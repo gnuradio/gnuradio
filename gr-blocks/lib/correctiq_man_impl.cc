@@ -19,9 +19,13 @@
 namespace gr {
 namespace blocks {
 
+namespace {
+constexpr int default_const_buffer = 8192;
+}
+
 correctiq_man::sptr correctiq_man::make(float real, float imag)
 {
-    return gnuradio::get_initial_sptr(new correctiq_man_impl(real, imag));
+    return gnuradio::make_block_sptr<correctiq_man_impl>(real, imag);
 }
 
 /*
@@ -31,14 +35,10 @@ correctiq_man_impl::correctiq_man_impl(float real, float imag)
     : gr::sync_block("correctiq_man",
                      gr::io_signature::make(1, 1, sizeof(gr_complex)),
                      gr::io_signature::make(1, 1, sizeof(gr_complex))),
-      d_avg_real(real),
-      d_avg_img(imag),
-      d_buffer_size(8192),
-      d_volk_const_buffer(NULL)
+      d_k(real, imag),
+      d_volk_const_buffer(default_const_buffer)
 {
-    d_k = gr_complex(d_avg_real, d_avg_img);
-
-    set_const_buffer(d_buffer_size);
+    set_const_buffer(default_const_buffer);
 
     message_port_register_in(pmt::mp("set_real"));
     set_msg_handler(pmt::mp("set_real"),
@@ -51,53 +51,35 @@ correctiq_man_impl::correctiq_man_impl(float real, float imag)
 /*
  * Our virtual destructor.
  */
-correctiq_man_impl::~correctiq_man_impl()
-{
-    if (d_volk_const_buffer)
-        volk_free(d_volk_const_buffer);
-}
+correctiq_man_impl::~correctiq_man_impl() {}
 
 void correctiq_man_impl::set_const_buffer(int new_size)
 {
-    d_buffer_size = new_size;
-
-    if (d_volk_const_buffer) {
-        volk_free(d_volk_const_buffer);
-    }
-
-    d_volk_const_buffer = reinterpret_cast<gr_complex*>(
-        volk_malloc(sizeof(gr_complex) * d_buffer_size, volk_get_alignment()));
-
+    d_volk_const_buffer.resize(new_size);
     fill_const_buffer();
 }
 
 void correctiq_man_impl::fill_const_buffer()
 {
-    gr_complex* tmp_ptr = d_volk_const_buffer;
-
-    for (int i = 0; i < d_buffer_size; i++) {
-        *tmp_ptr++ = d_k;
-    }
+    std::fill(std::begin(d_volk_const_buffer), std::end(d_volk_const_buffer), d_k);
 }
 
-float correctiq_man_impl::get_real() { return d_avg_real; }
-float correctiq_man_impl::get_imag() { return d_avg_img; }
+float correctiq_man_impl::get_real() const { return d_k.real(); }
+float correctiq_man_impl::get_imag() const { return d_k.imag(); }
 
-void correctiq_man_impl::set_real(float new_value)
+void correctiq_man_impl::set_real(float real)
 {
     gr::thread::scoped_lock guard(d_setlock);
 
-    d_avg_real = new_value;
-    d_k = gr_complex(d_avg_real, d_avg_img);
+    d_k = gr_complex(real, d_k.imag());
     fill_const_buffer();
 }
 
-void correctiq_man_impl::set_imag(float new_value)
+void correctiq_man_impl::set_imag(float imag)
 {
     gr::thread::scoped_lock guard(d_setlock);
 
-    d_avg_img = new_value;
-    d_k = gr_complex(d_avg_real, d_avg_img);
+    d_k = gr_complex(d_k.real(), imag);
     fill_const_buffer();
 }
 
@@ -151,7 +133,7 @@ int correctiq_man_impl::work(int noutput_items,
 {
     gr::thread::scoped_lock guard(d_setlock);
 
-    if (noutput_items > d_buffer_size)
+    if (noutput_items > static_cast<int>(d_volk_const_buffer.size()))
         set_const_buffer(noutput_items);
 
     // Inputs are complex but we're casting as floats to leverage volk
@@ -159,7 +141,7 @@ int correctiq_man_impl::work(int noutput_items,
     float* out = (float*)output_items[0];
 
     volk_32f_x2_add_32f(
-        out, in, reinterpret_cast<float*>(d_volk_const_buffer), 2 * noutput_items);
+        out, in, reinterpret_cast<float*>(d_volk_const_buffer.data()), 2 * noutput_items);
 
     // Tell runtime system how many output items we produced.
     return noutput_items;

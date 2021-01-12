@@ -29,11 +29,11 @@ class WAVELET_API wavelet_ff_impl : public wavelet_ff
 public:
     wavelet_ff_impl(int size, int order, bool forward);
 
-    ~wavelet_ff_impl();
+    ~wavelet_ff_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace wavelet */

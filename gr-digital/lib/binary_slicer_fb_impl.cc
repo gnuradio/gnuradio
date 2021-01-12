@@ -22,7 +22,7 @@ namespace digital {
 
 binary_slicer_fb::sptr binary_slicer_fb::make()
 {
-    return gnuradio::get_initial_sptr(new binary_slicer_fb_impl());
+    return gnuradio::make_block_sptr<binary_slicer_fb_impl>();
 }
 
 binary_slicer_fb_impl::binary_slicer_fb_impl()

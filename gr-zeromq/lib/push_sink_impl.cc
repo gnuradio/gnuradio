@@ -22,8 +22,8 @@ namespace zeromq {
 push_sink::sptr push_sink::make(
     size_t itemsize, size_t vlen, char* address, int timeout, bool pass_tags, int hwm)
 {
-    return gnuradio::get_initial_sptr(
-        new push_sink_impl(itemsize, vlen, address, timeout, pass_tags, hwm));
+    return gnuradio::make_block_sptr<push_sink_impl>(
+        itemsize, vlen, address, timeout, pass_tags, hwm);
 }
 
 push_sink_impl::push_sink_impl(
@@ -41,7 +41,7 @@ int push_sink_impl::work(int noutput_items,
                          gr_vector_void_star& output_items)
 {
     // Poll with a timeout (FIXME: scheduler can't wait for us)
-    zmq::pollitem_t itemsout[] = { { static_cast<void*>(*d_socket), 0, ZMQ_POLLOUT, 0 } };
+    zmq::pollitem_t itemsout[] = { { static_cast<void*>(d_socket), 0, ZMQ_POLLOUT, 0 } };
     zmq::poll(&itemsout[0], 1, d_timeout);
 
     // If we can send something, do it

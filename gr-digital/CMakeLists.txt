@@ -16,7 +16,6 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-digital" ENABLE_GR_DIGITAL
     Boost_FOUND
-    ENABLE_VOLK
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_FFT
     ENABLE_GR_FILTER
@@ -38,9 +37,10 @@ add_subdirectory(include/gnuradio/digital)
 add_subdirectory(lib)
 add_subdirectory(docs)
 if(ENABLE_PYTHON)
-    add_subdirectory(swig)
     add_subdirectory(python/digital)
-    add_subdirectory(examples)
+    if(ENABLE_EXAMPLES)
+        add_subdirectory(examples)
+    endif(ENABLE_EXAMPLES)
 endif(ENABLE_PYTHON)
 if(ENABLE_GRC)
     add_subdirectory(grc)

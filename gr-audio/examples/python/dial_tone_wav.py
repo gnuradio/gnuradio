@@ -10,7 +10,6 @@
 
 # GNU Radio example program to record a dial tone to a WAV file
 
-from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio.eng_arg import eng_float
@@ -43,7 +42,8 @@ class my_top_block(gr.top_block):
         src1 = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 440, ampl)
         head0 = blocks.head(gr.sizeof_float, int(args.samples))
         head1 = blocks.head(gr.sizeof_float, int(args.samples))
-        dst = blocks.wavfile_sink(args.file_name[0], 2, int(args.sample_rate), 16)
+        dst = blocks.wavfile_sink(args.file_name[0], 2, int(args.sample_rate),
+                                  blocks.FORMAT_WAV, blocks.FORMAT_PCM_16)
 
         self.connect(src0, head0, (dst, 0))
         self.connect(src1, head1, (dst, 1))

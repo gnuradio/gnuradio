@@ -1,5 +1,6 @@
 id: digital_lms_dd_equalizer_cc
 label: LMS DD Equalizer
+category: '[Core]/Deprecated'
 flags: [ python, cpp ]
 
 parameters:

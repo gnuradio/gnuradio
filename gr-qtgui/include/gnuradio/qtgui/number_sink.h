@@ -54,7 +54,7 @@ class QTGUI_API number_sink : virtual public sync_block
 {
 public:
     // gr::qtgui::number_sink::sptr
-    typedef boost::shared_ptr<number_sink> sptr;
+    typedef std::shared_ptr<number_sink> sptr;
 
     /*!
      * \brief Build a number sink

@@ -17,7 +17,7 @@
 namespace gr {
 namespace dtv {
 
-static const int DIBITS_PER_BYTE = 4;
+static constexpr int DIBITS_PER_BYTE = 4;
 
 #define SEGOF(x) ((x) / ((SEGMENT_SIZE + 1) * DIBITS_PER_BYTE))
 #define SYMOF(x) (((x) % ((SEGMENT_SIZE + 1) * DIBITS_PER_BYTE)) - 4)
@@ -37,7 +37,7 @@ static const int bit2[8] = { 0, 99, 2, 98, 4, 97, 6, 96 };
 
 atsc_trellis_encoder::sptr atsc_trellis_encoder::make()
 {
-    return gnuradio::get_initial_sptr(new atsc_trellis_encoder_impl());
+    return gnuradio::make_block_sptr<atsc_trellis_encoder_impl>();
 }
 
 atsc_trellis_encoder_impl::atsc_trellis_encoder_impl()
@@ -65,8 +65,8 @@ void atsc_trellis_encoder_impl::encode(atsc_data_segment out[NCODERS],
     unsigned char out_copy[OUTPUT_SIZE];
     unsigned char in_copy[INPUT_SIZE];
 
-    assert(sizeof(in_copy) == sizeof(in[0].data) * NCODERS);
-    assert(sizeof(out_copy) == sizeof(out[0].data) * NCODERS);
+    static_assert(sizeof(in_copy) == sizeof(in[0].data) * NCODERS, "wrong type size");
+    static_assert(sizeof(out_copy) == sizeof(out[0].data) * NCODERS, "wrong type size");
 
     // copy input into contiguous temporary buffer
     for (int i = 0; i < NCODERS; i++) {
@@ -207,7 +207,8 @@ void atsc_trellis_encoder_impl::encode_helper(unsigned char output[OUTPUT_SIZE],
     }         /* Chunks */
 
     /* Check up on ourselves */
-    assert(0 == (INPUT_SIZE * DIBITS_PER_BYTE) % NCODERS);
+    static_assert(0 == (INPUT_SIZE * DIBITS_PER_BYTE) % NCODERS,
+                  "size not divisible by NCODERS");
     assert(OUTPUT_SIZE == out - output);
     assert(NCODERS - ENCODER_SEG_BUMP == encoder);
 }

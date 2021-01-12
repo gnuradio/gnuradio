@@ -12,7 +12,7 @@
 #define INCLUDED_PATTERNED_INTERLEAVER_IMPL_H
 
 #include <gnuradio/blocks/patterned_interleaver.h>
-#include <boost/foreach.hpp>
+#include <algorithm>
 
 namespace gr {
 namespace blocks {
@@ -25,18 +25,17 @@ public:
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 
-    int pattern_max(std::vector<int> pattern)
+    static int pattern_max(std::vector<int> pattern)
     {
-        int mval(0);
-        BOOST_FOREACH (int i, pattern) {
-            mval = std::max(mval, i);
+        if (pattern.empty()) {
+            return 0;
         }
-        return mval;
+        return *std::max_element(pattern.begin(), pattern.end());
     }
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     std::vector<int> d_pattern;
     std::vector<int> d_counts;

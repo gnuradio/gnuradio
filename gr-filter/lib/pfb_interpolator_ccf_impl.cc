@@ -21,7 +21,7 @@ namespace filter {
 pfb_interpolator_ccf::sptr pfb_interpolator_ccf::make(unsigned int interp,
                                                       const std::vector<float>& taps)
 {
-    return gnuradio::get_initial_sptr(new pfb_interpolator_ccf_impl(interp, taps));
+    return gnuradio::make_block_sptr<pfb_interpolator_ccf_impl>(interp, taps);
 }
 
 
@@ -37,8 +37,6 @@ pfb_interpolator_ccf_impl::pfb_interpolator_ccf_impl(unsigned int interp,
 {
     set_history(d_taps_per_filter);
 }
-
-pfb_interpolator_ccf_impl::~pfb_interpolator_ccf_impl() {}
 
 void pfb_interpolator_ccf_impl::set_taps(const std::vector<float>& taps)
 {
@@ -72,7 +70,7 @@ int pfb_interpolator_ccf_impl::work(int noutput_items,
 
     while (i < noutput_items) {
         for (unsigned int j = 0; j < d_rate; j++) {
-            out[i] = d_fir_filters[j]->filter(&in[count]);
+            out[i] = d_fir_filters[j].filter(&in[count]);
             i++;
         }
         count++;

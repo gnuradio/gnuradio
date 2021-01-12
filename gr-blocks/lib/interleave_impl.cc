@@ -20,7 +20,7 @@ namespace blocks {
 
 interleave::sptr interleave::make(size_t itemsize, unsigned int blocksize)
 {
-    return gnuradio::get_initial_sptr(new interleave_impl(itemsize, blocksize));
+    return gnuradio::make_block_sptr<interleave_impl>(itemsize, blocksize);
 }
 
 interleave_impl::interleave_impl(size_t itemsize, unsigned int blocksize)

@@ -18,8 +18,8 @@ namespace blocks {
 
 class BLOCKS_API nlog10_ff_impl : public nlog10_ff
 {
-    float d_n_log2_10;
-    float d_10_k_n;
+    const float d_n_log2_10;
+    const float d_10_k_n;
     const size_t d_vlen;
 
 public:
@@ -27,7 +27,7 @@ public:
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

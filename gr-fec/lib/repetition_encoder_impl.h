@@ -23,9 +23,9 @@ class FEC_API repetition_encoder_impl : public repetition_encoder
 {
 private:
     // plug into the generic fec api
-    void generic_work(void* inbuffer, void* outbuffer);
-    int get_output_size();
-    int get_input_size();
+    void generic_work(void* inbuffer, void* outbuffer) override;
+    int get_output_size() override;
+    int get_input_size() override;
 
     unsigned int d_max_frame_size;
     unsigned int d_frame_size;
@@ -33,10 +33,10 @@ private:
 
 public:
     repetition_encoder_impl(int frame_size, int rep);
-    ~repetition_encoder_impl();
+    ~repetition_encoder_impl() override;
 
-    bool set_frame_size(unsigned int frame_size);
-    double rate();
+    bool set_frame_size(unsigned int frame_size) override;
+    double rate() override;
 };
 
 } /* namespace code */

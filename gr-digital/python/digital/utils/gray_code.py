@@ -8,8 +8,6 @@
 #
 #
 
-from __future__ import division
-from __future__ import unicode_literals
 class GrayCodeGenerator(object):
     """
     Generates and caches gray codes.

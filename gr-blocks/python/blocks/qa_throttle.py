@@ -23,7 +23,7 @@ class test_throttle(gr_unittest.TestCase):
         self.tb = None
 
     def test_throttling(self):
-        src_data = (1, 2, 3)
+        src_data = [1, 2, 3]
         src = blocks.vector_source_c(src_data)
         thr = blocks.throttle(gr.sizeof_gr_complex, 10)
         dst = blocks.vector_sink_c()
@@ -41,7 +41,7 @@ class test_throttle(gr_unittest.TestCase):
         self.assertEqual(src_data, dst_data)
 
     def test_rx_rate_tag(self):
-        src_data = (1, 2, 3, 4, 5, 6)
+        src_data = [1, 2, 3, 4, 5, 6]
         tag = gr.tag_t()
         tag.key = pmt.string_to_symbol("rx_rate")
         tag.value = pmt.to_pmt(20)

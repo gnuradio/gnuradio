@@ -20,11 +20,11 @@ class null_source_impl : public null_source
 {
 public:
     null_source_impl(size_t sizeof_stream_item);
-    ~null_source_impl();
+    ~null_source_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

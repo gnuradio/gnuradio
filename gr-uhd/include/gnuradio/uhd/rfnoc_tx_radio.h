@@ -19,7 +19,7 @@ namespace uhd {
 /*! RFNoC TX Radio
  *
  * This wraps a radio block into GNU Radio. Note: When doing TX and RX in the
- * same flow graph, simply crate an rfnoc_rx_radio and an rfnoc_tx_radio with
+ * same flow graph, simply create an rfnoc_rx_radio and an rfnoc_tx_radio with
  * the same block ID.
  *
  * \ingroup uhd_blk
@@ -27,7 +27,7 @@ namespace uhd {
 class GR_UHD_API rfnoc_tx_radio : virtual public rfnoc_block
 {
 public:
-    typedef boost::shared_ptr<rfnoc_tx_radio> sptr;
+    typedef std::shared_ptr<rfnoc_tx_radio> sptr;
 
     /*!
      * \param graph Reference to the underlying rfnoc_graph object

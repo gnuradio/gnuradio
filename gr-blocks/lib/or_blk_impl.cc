@@ -21,7 +21,7 @@ namespace blocks {
 template <class T>
 typename or_blk<T>::sptr or_blk<T>::make(size_t vlen)
 {
-    return gnuradio::get_initial_sptr(new or_blk_impl<T>(vlen));
+    return gnuradio::make_block_sptr<or_blk_impl<T>>(vlen);
 }
 
 template <class T>
@@ -53,9 +53,8 @@ int or_blk_impl<T>::work(int noutput_items,
     return noutput_items;
 }
 
-template class or_blk<short>;
-template class or_blk<int>;
-template class or_blk<char>;
-
+template class or_blk<std::uint8_t>;
+template class or_blk<std::int16_t>;
+template class or_blk<std::int32_t>;
 } /* namespace blocks */
 } /* namespace gr */

@@ -2,9 +2,8 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
-from __future__ import absolute_import, print_function
 
 from codecs import open
 from collections import namedtuple
@@ -12,9 +11,6 @@ import os
 import logging
 from itertools import chain
 import re
-
-import six
-from six.moves import range
 
 from . import (
     Messages, Constants,
@@ -30,7 +26,6 @@ from .FlowGraph import FlowGraph
 from .Connection import Connection
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
 
 
 class Platform(Element):
@@ -171,7 +166,7 @@ class Platform(Element):
                     Messages.flowgraph_error_file = file_path
                     continue
 
-        for key, block in six.iteritems(self.blocks):
+        for key, block in self.blocks.items():
             category = self._block_categories.get(key, block.category)
             if not category:
                 continue
@@ -200,7 +195,7 @@ class Platform(Element):
 
     def _save_docstring_extraction_result(self, block_id, docstrings):
         docs = {}
-        for match, docstring in six.iteritems(docstrings):
+        for match, docstring in docstrings.items():
             if not docstring or match.endswith('_sptr'):
                 continue
             docs[match] = docstring.replace('\n\n', '\n').strip()
@@ -281,22 +276,22 @@ class Platform(Element):
         path = []
 
         def load_category(name, elements):
-            if not isinstance(name, six.string_types):
+            if not isinstance(name, str):
                 log.debug('Invalid name %r', name)
                 return
             path.append(name)
             for element in utils.to_list(elements):
-                if isinstance(element, six.string_types):
+                if isinstance(element, str):
                     block_id = element
                     self._block_categories[block_id] = list(path)
                 elif isinstance(element, dict):
-                    load_category(*next(six.iteritems(element)))
+                    load_category(*next(iter(element.items())))
                 else:
                     log.debug('Ignoring some elements of %s', name)
             path.pop()
 
         try:
-            module_name, categories = next(six.iteritems(data))
+            module_name, categories = next(iter(data.items()))
         except (AttributeError, StopIteration):
             log.warning('no valid data found')
         else:

@@ -8,8 +8,6 @@
 #
 #
 
-from __future__ import division
-from __future__ import unicode_literals
 from gnuradio import gr, eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser

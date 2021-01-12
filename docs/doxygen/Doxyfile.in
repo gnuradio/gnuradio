@@ -174,11 +174,7 @@ STRIP_FROM_INC_PATH    = @CMAKE_SOURCE_DIR@/gnuradio-runtime/include \
                          @CMAKE_SOURCE_DIR@/gr-wavelet/include \
                          @CMAKE_BINARY_DIR@/gr-wavelet/include \
                          @CMAKE_SOURCE_DIR@/gr-zeromq/include \
-                         @CMAKE_BINARY_DIR@/gr-zeromq/include \
-                         @CMAKE_SOURCE_DIR@/volk/include \
-                         @CMAKE_BINARY_DIR@/volk/include \
-                         @CMAKE_SOURCE_DIR@/volk/tmpl \
-                         @CMAKE_BINARY_DIR@/volk/tmpl
+                         @CMAKE_BINARY_DIR@/gr-zeromq/include
 
 # If the SHORT_NAMES tag is set to YES, doxygen will generate much shorter
 # (but less readable) file names. This can be useful if your file system
@@ -235,13 +231,6 @@ TAB_SIZE               = 8
 # You can put \n's in the value part of an alias to insert newlines.
 
 ALIASES                =
-
-# This tag can be used to specify a number of word-keyword mappings (TCL only).
-# A mapping has the form "name=value". For example adding
-# "class=itcl::class" will allow you to use the command class in the
-# itcl::class meaning.
-
-TCL_SUBST              =
 
 # Set the OPTIMIZE_OUTPUT_FOR_C tag to YES if your project consists of C
 # sources only. Doxygen will then generate output that is more tailored for C.
@@ -726,27 +715,22 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = @abs_top_srcdir@/volk \
-                         @abs_top_builddir@/volk \
-                         @abs_top_builddir@/cmake/msvc \
+EXCLUDE                = @abs_top_builddir@/cmake/msvc \
                          @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/docs/doxygen/xml \
                          @abs_top_builddir@/docs/doxygen/other/doxypy.py \
                          @abs_top_srcdir@/docs/doxygen/other/shared_ptr_docstub.h \
                          @abs_top_builddir@/dtools \
                          @abs_top_builddir@/gnuradio-runtime/lib/runtime/gr_error_handler.cc \
-                         @abs_top_builddir@/gnuradio-runtime/swig \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading.py \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading_23.py \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading_24.py \
                          @abs_top_builddir@/gr-trellis/doc \
-                         @abs_top_builddir@/gr-trellis/swig/trellis_swig.py \
-                         @abs_top_builddir@/gr-video-sdl/swig/video_sdl_swig.py \
                          @abs_top_builddir@/grc \
                          @abs_top_builddir@/_CPack_Packages \
                          @abs_top_srcdir@/cmake \
-                         @abs_top_srcdir@/gr-utils/python/modtool/gr-newmod \
-                         @abs_top_builddir@/gr-utils/python/modtool/gr-newmod \
+                         @abs_top_srcdir@/gr-utils/modtool/templates/gr-newmod \
+                         @abs_top_builddir@/gr-utils/modtool/templates/gr-newmod \
                          @abs_top_srcdir@/docs/doxygen/doxyxml/example \
                          @abs_top_srcdir@/gnuradio-runtime/lib \
                          @abs_top_builddir@/gnuradio-runtime/lib \
@@ -793,10 +777,7 @@ EXCLUDE                = @abs_top_srcdir@/volk \
                          @abs_top_srcdir@/gr-wavelet/lib \
                          @abs_top_builddir@/gr-wavelet/lib \
                          @abs_top_srcdir@/gr-zeromq/lib \
-                         @abs_top_builddir@/gr-zeromq/lib \
-                         @abs_top_srcdir@/volk/cmake/msvc \
-                         @abs_top_builddir@/volk/cmake/msvc \
-                         @abs_top_srcdir@/volk/kernels/volk/volk_8u_conv_k7_r2puppet_8u.h
+                         @abs_top_builddir@/gr-zeromq/lib
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
@@ -828,8 +809,6 @@ EXCLUDE_PATTERNS       = */.deps/* \
 
 EXCLUDE_SYMBOLS        = ad9862 \
                          numpy \
-                         *swig* \
-                         *Swig* \
                          *my_top_block* \
                          *my_graph* \
                          *app_top_block* \
@@ -1323,14 +1302,14 @@ FORMULA_TRANSPARENT    = YES
 # output. When enabled you may also need to install MathJax separately and
 # configure the path to it using the MATHJAX_RELPATH option.
 
-USE_MATHJAX            = NO
+USE_MATHJAX            = @enable_mathjax@
 
 # When MathJax is enabled you can set the default output format to be used for
 # the MathJax output. Supported types are HTML-CSS, NativeMML (i.e. MathML) and
 # SVG. The default value is HTML-CSS, which is slower, but has the best
 # compatibility.
 
-MATHJAX_FORMAT         = HTML-CSS
+MATHJAX_FORMAT         = SVG
 
 # When MathJax is enabled you need to specify the location relative to the
 # HTML output directory using the MATHJAX_RELPATH option. The destination
@@ -1342,12 +1321,12 @@ MATHJAX_FORMAT         = HTML-CSS
 # However, it is strongly recommended to install a local
 # copy of MathJax from http://www.mathjax.org before deployment.
 
-MATHJAX_RELPATH        = http://cdn.mathjax.org/mathjax/latest
+MATHJAX_RELPATH        = @MATHJAX2_PATH@
 
 # The MATHJAX_EXTENSIONS tag can be used to specify one or MathJax extension
 # names that should be enabled during MathJax rendering.
 
-MATHJAX_EXTENSIONS     =
+MATHJAX_EXTENSIONS     = TeX/AMSmath TeX/AMSsymbols
 
 # The MATHJAX_CODEFILE tag can be used to specify a file with javascript
 # pieces of code that will be used on startup of the MathJax code.
@@ -1923,7 +1902,7 @@ DIRECTORY_GRAPH        = NO
 # HTML_FILE_EXTENSION to xhtml in order to make the SVG files
 # visible in IE 9+ (other browsers do not have this requirement).
 
-DOT_IMAGE_FORMAT       = png
+DOT_IMAGE_FORMAT       = svg
 
 # If DOT_IMAGE_FORMAT is set to svg, then this option can be set to YES to
 # enable generation of interactive SVG images that allow zooming and panning.
@@ -1959,7 +1938,7 @@ MSCFILE_DIRS           =
 # DOT_GRAPH_MAX_NODES then the graph will not be shown at all. Also note
 # that the size of a graph can be further restricted by MAX_DOT_GRAPH_DEPTH.
 
-DOT_GRAPH_MAX_NODES    = 500
+DOT_GRAPH_MAX_NODES    = 600
 
 # The MAX_DOT_GRAPH_DEPTH tag can be used to set the maximum depth of the
 # graphs generated by dot. A depth value of 3 means that only nodes reachable

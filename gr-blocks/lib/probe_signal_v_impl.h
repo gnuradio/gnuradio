@@ -22,17 +22,17 @@ class probe_signal_v_impl : public probe_signal_v<T>
 {
 private:
     std::vector<T> d_level;
-    size_t d_size;
+    const size_t d_size;
 
 public:
     probe_signal_v_impl(size_t size);
-    ~probe_signal_v_impl();
+    ~probe_signal_v_impl() override;
 
-    std::vector<T> level() const { return d_level; }
+    std::vector<T> level() const override { return d_level; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

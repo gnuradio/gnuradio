@@ -23,8 +23,7 @@ using namespace filter::kernel;
 cma_equalizer_cc::sptr
 cma_equalizer_cc::make(int num_taps, float modulus, float mu, int sps)
 {
-    return gnuradio::get_initial_sptr(
-        new cma_equalizer_cc_impl(num_taps, modulus, mu, sps));
+    return gnuradio::make_block_sptr<cma_equalizer_cc_impl>(num_taps, modulus, mu, sps);
 }
 
 cma_equalizer_cc_impl::cma_equalizer_cc_impl(int num_taps,
@@ -35,7 +34,7 @@ cma_equalizer_cc_impl::cma_equalizer_cc_impl(int num_taps,
                      io_signature::make(1, 1, sizeof(gr_complex)),
                      io_signature::make(1, 1, sizeof(gr_complex)),
                      sps),
-      fir_filter_ccc(sps, std::vector<gr_complex>(num_taps, gr_complex(0, 0))),
+      fir_filter_ccc(std::vector<gr_complex>(num_taps, gr_complex(0, 0))),
       d_new_taps(num_taps, gr_complex(0, 0)),
       d_updated(false),
       d_error(gr_complex(0, 0))

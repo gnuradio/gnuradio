@@ -35,7 +35,6 @@ GR_REGISTER_COMPONENT("gr-qtgui" ENABLE_GR_QTGUI
     Boost_FOUND
     QT_FOUND
     QWT_FOUND
-    ENABLE_VOLK
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_FFT
     ENABLE_GR_FILTER
@@ -56,11 +55,14 @@ if(ENABLE_GR_QTGUI)
 add_subdirectory(include/gnuradio/qtgui)
 add_subdirectory(lib)
 add_subdirectory(docs)
-add_subdirectory(examples/c++)
+if (ENABLE_GR_ANALOG AND ENABLE_EXAMPLES)
+    add_subdirectory(examples/c++)
+endif(ENABLE_GR_ANALOG AND ENABLE_EXAMPLES)
 if(ENABLE_PYTHON)
-    add_subdirectory(swig)
     add_subdirectory(python/qtgui)
-    add_subdirectory(examples)
+    if (ENABLE_EXAMPLES)
+        add_subdirectory(examples)
+    endif(ENABLE_EXAMPLES)
     add_subdirectory(apps)
 endif(ENABLE_PYTHON)
 if(ENABLE_GRC)

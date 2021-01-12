@@ -40,7 +40,7 @@ class ANALOG_API pll_carriertracking_cc : virtual public sync_block,
 {
 public:
     // gr::analog::pll_carriertracking_cc::sptr
-    typedef boost::shared_ptr<pll_carriertracking_cc> sptr;
+    typedef std::shared_ptr<pll_carriertracking_cc> sptr;
 
     /* \brief Make a carrier tracking PLL block.
      *
@@ -54,7 +54,7 @@ public:
     virtual bool squelch_enable(bool) = 0;
     virtual float set_lock_threshold(float) = 0;
 
-    virtual void set_loop_bandwidth(float bw) = 0;
+    void set_loop_bandwidth(float bw) override = 0;
     virtual void set_damping_factor(float df) = 0;
     virtual void set_alpha(float alpha) = 0;
     virtual void set_beta(float beta) = 0;

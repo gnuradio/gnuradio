@@ -8,12 +8,10 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import unicode_literals
 
 from gnuradio import gr
 from gnuradio import blocks
-from gnuradio import filter
+from gnuradio import filter, fft
 from gnuradio.ctrlport.GNURadio import ControlPort
 import sys, time, struct
 
@@ -282,7 +280,7 @@ class GrDataPlotterPsdC(GrDataPlotParent):
         self._iscomplex = True
 
         self._npts = 2048
-        self._wintype = filter.firdes.WIN_BLACKMAN_hARRIS
+        self._wintype = fft.window.WIN_BLACKMAN_hARRIS
         self._fc = 0
 
         self._setup(1)
@@ -315,7 +313,7 @@ class GrDataPlotterPsdF(GrDataPlotParent):
         self._iscomplex = False
 
         self._npts = 2048
-        self._wintype = filter.firdes.WIN_BLACKMAN_hARRIS
+        self._wintype = fft.window.WIN_BLACKMAN_hARRIS
         self._fc = 0
 
         self._setup(1)

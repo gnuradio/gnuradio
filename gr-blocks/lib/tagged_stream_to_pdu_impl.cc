@@ -22,7 +22,7 @@ namespace blocks {
 tagged_stream_to_pdu::sptr tagged_stream_to_pdu::make(pdu::vector_type type,
                                                       const std::string& lengthtagname)
 {
-    return gnuradio::get_initial_sptr(new tagged_stream_to_pdu_impl(type, lengthtagname));
+    return gnuradio::make_block_sptr<tagged_stream_to_pdu_impl>(type, lengthtagname);
 }
 
 tagged_stream_to_pdu_impl::tagged_stream_to_pdu_impl(pdu::vector_type type,

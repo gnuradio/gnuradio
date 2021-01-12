@@ -21,7 +21,7 @@ namespace analog {
 
 agc_cc::sptr agc_cc::make(float rate, float reference, float gain)
 {
-    return gnuradio::get_initial_sptr(new agc_cc_impl(rate, reference, gain));
+    return gnuradio::make_block_sptr<agc_cc_impl>(rate, reference, gain);
 }
 
 agc_cc_impl::agc_cc_impl(float rate, float reference, float gain)

@@ -21,8 +21,6 @@ class peak_detector2_fb_impl : public peak_detector2_fb
 private:
     float d_threshold_factor_rise;
     int d_look_ahead;
-    int d_peak_ind;
-    float d_peak_val;
     float d_alpha;
     float d_avg;
     bool d_found;
@@ -31,19 +29,19 @@ private:
 
 public:
     peak_detector2_fb_impl(float threshold_factor_rise, int look_ahead, float alpha);
-    ~peak_detector2_fb_impl();
+    ~peak_detector2_fb_impl() override;
 
-    void set_threshold_factor_rise(float thr);
-    void set_look_ahead(int look);
-    void set_alpha(float alpha);
+    void set_threshold_factor_rise(float thr) override;
+    void set_look_ahead(int look) override;
+    void set_alpha(float alpha) override;
 
-    float threshold_factor_rise() { return d_threshold_factor_rise; }
-    int look_ahead() { return d_look_ahead; }
-    float alpha() { return d_alpha; }
+    float threshold_factor_rise() override { return d_threshold_factor_rise; }
+    int look_ahead() override { return d_look_ahead; }
+    float alpha() override { return d_alpha; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

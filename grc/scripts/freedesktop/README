@@ -17,4 +17,4 @@ As a solution, icons are also installed under the gnome theme.
 
 *.png files - these are the icons of various sizes
 *.desktop files - these are the menu items for grc executables
-*.xml file - this is the mime type for the saved flow graphs
+*.yml (*.xml) file - this is the mime type for the saved flow graphs (and legacy flow graphs)

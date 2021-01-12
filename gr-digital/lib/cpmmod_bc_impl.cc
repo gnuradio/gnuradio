@@ -20,14 +20,14 @@ namespace digital {
 cpmmod_bc::sptr cpmmod_bc::make(
     analog::cpm::cpm_type type, float h, int samples_per_sym, int L, double beta)
 {
-    return gnuradio::get_initial_sptr(new cpmmod_bc_impl(
-        "cpmmod_bc", (analog::cpm::cpm_type)type, h, samples_per_sym, L, beta));
+    return gnuradio::make_block_sptr<cpmmod_bc_impl>(
+        "cpmmod_bc", (analog::cpm::cpm_type)type, h, samples_per_sym, L, beta);
 }
 
 cpmmod_bc::sptr cpmmod_bc::make_gmskmod_bc(int samples_per_sym, int L, double beta)
 {
-    return gnuradio::get_initial_sptr(new cpmmod_bc_impl(
-        "gmskmod_bc", analog::cpm::GAUSSIAN, 0.5, samples_per_sym, L, beta));
+    return gnuradio::make_block_sptr<cpmmod_bc_impl>(
+        "gmskmod_bc", analog::cpm::GAUSSIAN, 0.5, samples_per_sym, L, beta);
 }
 
 cpmmod_bc_impl::cpmmod_bc_impl(const std::string& name,

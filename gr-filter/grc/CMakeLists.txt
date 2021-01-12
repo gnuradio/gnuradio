@@ -29,7 +29,6 @@ install(FILES
     filter_pfb_interpolator.block.yml
     filter_pfb_synthesizer.block.yml
     filter_rational_resampler_xxx.block.yml
-    filter_rational_resampler_base_xxx.block.yml
     filter_single_pole_iir_filter_xx.block.yml
     filter_low_pass_filter.block.yml
     filter_high_pass_filter.block.yml

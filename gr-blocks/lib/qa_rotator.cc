@@ -59,8 +59,8 @@ BOOST_AUTO_TEST_CASE(t2)
     static const unsigned int N = 100000;
 
     gr::blocks::rotator r;
-    gr_complex* input = new gr_complex[N];
-    gr_complex* output = new gr_complex[N];
+    std::vector<gr_complex> input(N);
+    std::vector<gr_complex> output(N);
 
     double phase_incr = 2 * GR_M_PI / 1003;
     double phase = 0;
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(t2)
         input[i] = gr_complex(1.0f, 0.0f);
 
     // Rotate it
-    r.rotateN(output, input, N);
+    r.rotateN(output.data(), input.data(), N);
 
     // Compare with expected result
     for (unsigned i = 0; i < N; i++) {
@@ -86,7 +86,4 @@ BOOST_AUTO_TEST_CASE(t2)
         if (phase >= 2 * GR_M_PI)
             phase -= 2 * GR_M_PI;
     }
-
-    delete[] output;
-    delete[] input;
 }

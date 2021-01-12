@@ -24,12 +24,12 @@ private:
 public:
     protocol_formatter_bb_impl(const header_format_base::sptr& format,
                                const std::string& len_tag_key);
-    ~protocol_formatter_bb_impl();
+    ~protocol_formatter_bb_impl() override;
 
-    void set_header_format(header_format_base::sptr& format);
+    void set_header_format(header_format_base::sptr& format) override;
 
     void remove_length_tags(const std::vector<std::vector<tag_t>>& tags){};
-    int calculate_output_stream_length(const gr_vector_int& ninput_items)
+    int calculate_output_stream_length(const gr_vector_int& ninput_items) override
     {
         return d_format->header_nbytes();
     };
@@ -37,7 +37,7 @@ public:
     int work(int noutput_items,
              gr_vector_int& ninput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace digital

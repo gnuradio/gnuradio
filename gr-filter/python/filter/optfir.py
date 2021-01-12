@@ -15,13 +15,10 @@ For a great intro to how all this stuff works, see section 6.6 of
 and Barrie W. Jervis, Adison-Wesley, 1993.  ISBN 0-201-54413-X.
 '''
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
 
 
 import math, cmath
-from . import filter_swig as filter
+from . import filter_python as filter
 
 # ----------------------------------------------------------------
 
@@ -103,6 +100,32 @@ def complex_band_pass (gain, Fs, freq_sb1, freq_pb1, freq_pb2, freq_sb2,
     taps = [s*t for s,t in zip(spinner, lptaps)]
     return taps
 
+def complex_band_reject (gain, Fs, freq_pb1, freq_sb1, freq_sb2, freq_pb2,
+                       passband_ripple_db, stopband_atten_db,
+                       nextra_taps=2):
+    """
+    Builds a band reject filter with complex taps by making an HPF and
+    spinning it up to the right center frequency
+
+    Args:
+        gain: Filter gain in the passband (linear)
+        Fs: Sampling rate (sps)
+        freq_pb1: End of pass band (in Hz)
+        freq_sb1: Start of stop band (in Hz)
+        freq_sb2: End of stop band (in Hz)
+        freq_pb2: Start of pass band (in Hz)
+        passband_ripple_db: Pass band ripple in dB (should be small, < 1)
+        stopband_atten_db: Stop band attenuation in dB (should be large, >= 60)
+        nextra_taps: Extra taps to use in the filter (default=2)
+    """
+    center_freq = (freq_sb2 + freq_sb1) / 2.0
+    hp_pb = (freq_pb2 - center_freq) / 1.0
+    hp_sb = freq_sb2 - center_freq
+    hptaps = high_pass(gain, Fs, hp_sb, hp_pb, passband_ripple_db,
+                      stopband_atten_db, nextra_taps)
+    spinner = [cmath.exp(2j*cmath.pi*center_freq/Fs*i) for i in range(len(hptaps))]
+    taps = [s*t for s,t in zip(spinner, hptaps)]
+    return taps
 
 def band_reject (gain, Fs, freq_pb1, freq_sb1, freq_sb2, freq_pb2,
                  passband_ripple_db, stopband_atten_db,

@@ -20,9 +20,6 @@ Of course, expect the maximum value for BER to be one order of
 magnitude below what you chose for N_BITS.
 """
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
 
 
 import math

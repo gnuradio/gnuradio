@@ -13,13 +13,14 @@ import os
 import tempfile
 import pmt
 
+
 class test_file_descriptor_source_sink(gr_unittest.TestCase):
 
-    def setUp (self):
+    def setUp(self):
         os.environ['GR_CONF_CONTROLPORT_ON'] = 'False'
-        self.tb = gr.top_block ()
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
     def test_file_descriptor(self):
@@ -54,5 +55,6 @@ class test_file_descriptor_source_sink(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_result, result_data)
         self.assertEqual(len(snk2.tags()), 0)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_file_descriptor_source_sink, "test_file_descriptor_source_sink.xml")
+    gr_unittest.run(test_file_descriptor_source_sink)

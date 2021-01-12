@@ -27,17 +27,17 @@ class noise_source_impl : public noise_source<T>
 
 public:
     noise_source_impl(noise_type_t type, float ampl, long seed = 0);
-    ~noise_source_impl();
+    ~noise_source_impl() override;
 
-    void set_type(noise_type_t type);
-    void set_amplitude(float ampl);
+    void set_type(noise_type_t type) override;
+    void set_amplitude(float ampl) override;
 
-    noise_type_t type() const { return d_type; }
-    float amplitude() const { return d_ampl; }
+    noise_type_t type() const override { return d_type; }
+    float amplitude() const override { return d_ampl; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace analog

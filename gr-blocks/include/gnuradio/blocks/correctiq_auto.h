@@ -29,7 +29,7 @@ namespace blocks {
 class BLOCKS_API correctiq_auto : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<correctiq_auto> sptr;
+    typedef std::shared_ptr<correctiq_auto> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of correctiq::correctiq_auto.
@@ -40,8 +40,8 @@ public:
      * creating new instances.
      */
 
-    virtual double get_freq() = 0;
-    virtual float get_gain() = 0;
+    virtual double get_freq() const = 0;
+    virtual float get_gain() const = 0;
 
     virtual void set_freq(double newValue) = 0;
     virtual void set_gain(float newValue) = 0;

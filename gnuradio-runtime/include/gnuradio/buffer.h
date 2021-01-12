@@ -12,11 +12,13 @@
 #define INCLUDED_GR_RUNTIME_BUFFER_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/tags.h>
 #include <gnuradio/thread/thread.h>
 #include <boost/weak_ptr.hpp>
 #include <map>
+#include <memory>
 
 namespace gr {
 
@@ -44,6 +46,9 @@ GR_RUNTIME_API buffer_sptr make_buffer(int nitems,
 class GR_RUNTIME_API buffer
 {
 public:
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
+
     virtual ~buffer();
 
     /*!
@@ -148,17 +153,17 @@ private:
                                                                int delay);
 
 protected:
-    char* d_base;           // base address of buffer
+    char* d_base;           // base address of buffer inside d_vmcircbuf.
     unsigned int d_bufsize; // in items
 
     // Keep track of maximum sample delay of any reader; Only prune tags past this.
     unsigned d_max_reader_delay;
 
 private:
-    gr::vmcircbuf* d_vmcircbuf;
+    std::unique_ptr<gr::vmcircbuf> d_vmcircbuf;
     size_t d_sizeof_item; // in bytes
     std::vector<buffer_reader*> d_readers;
-    boost::weak_ptr<block> d_link; // block that writes to this buffer
+    std::weak_ptr<block> d_link; // block that writes to this buffer
 
     //
     // The mutex protects d_write_index, d_abs_write_offset, d_done, d_item_tags
@@ -333,10 +338,10 @@ private:
                                                                int delay);
 
     buffer_sptr d_buffer;
-    unsigned int d_read_index;     // in items [0,d->buffer.d_bufsize)
-    uint64_t d_abs_read_offset;    // num items seen since the start
-    boost::weak_ptr<block> d_link; // block that reads via this buffer reader
-    unsigned d_attr_delay;         // sample delay attribute for tag propagation
+    unsigned int d_read_index;   // in items [0,d->buffer.d_bufsize)
+    uint64_t d_abs_read_offset;  // num items seen since the start
+    std::weak_ptr<block> d_link; // block that reads via this buffer reader
+    unsigned d_attr_delay;       // sample delay attribute for tag propagation
 
     //! constructor is private.  Use gr::buffer::add_reader to create instances
     buffer_reader(buffer_sptr buffer, unsigned int read_index, block_sptr link);

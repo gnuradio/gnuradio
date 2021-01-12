@@ -1,4 +1,4 @@
-# Copyright 2011-2012,2014,2017 Free Software Foundation, Inc.
+# Copyright 2011-2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -35,49 +35,40 @@ SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 
 include(GrComponent)
-GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING)
+########################################################################
+# Setup Boost for global use (within this build)
+# Do this before enabling testing support, as it depends
+# on unit_test_framework
+########################################################################
+include(GrBoost)
+GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING
+         Boost_unit_test_framework_FOUND )
 
 # Set the version information here
 SET(VERSION_MAJOR 3)
-SET(VERSION_API   9)
+SET(VERSION_API   10)
 SET(VERSION_ABI   0)
-SET(VERSION_PATCH 0-git)
+SET(VERSION_PATCH git)
 include(GrVersion) #setup version info
 
 # Minimum dependency versions for central dependencies:
-set(GR_BOOST_MIN_VERSION "1.53")
-set(GR_SWIG_MIN_VERSION "3.0.8")
-set(GR_CMAKE_MIN_VERSION "3.5.1")
+set(GR_BOOST_MIN_VERSION "1.58")
+set(GR_CMAKE_MIN_VERSION "3.8.0")
 set(GR_MAKO_MIN_VERSION "0.4.2")
 set(GR_PYTHON_MIN_VERSION "3.6.5")
-set(GCC_MIN_VERSION "4.8.4")
+set(GR_NUMPY_MIN_VERSION "1.13.0")
+set(GCC_MIN_VERSION "5.0.0")
 set(CLANG_MIN_VERSION "3.4.0")
 set(APPLECLANG_MIN_VERSION "500")
-set(MSVC_MIN_VERSION "1800")
+set(MSVC_MIN_VERSION "1900")
+set(VOLK_MIN_VERSION "2.1.0")
+set(PYBIND11_MIN_VERSION "2.4") # pybind11 sets versions like 2.4.dev4, which compares < 2.4.3
 
 # Enable generation of compile_commands.json for code completion engines
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Set wiki block docs url prefix used in grc-docs.conf (block name gets appended to end of this string)
 set(GRC_DOCS_URL_PREFIX "https://wiki.gnuradio.org/index.php/")
-
-########################################################################
-# Configure CMake policies
-########################################################################
-# This will suppress developer warnings during the cmake process that can occur
-# if a newer cmake version than the minimum is used.
-if(POLICY CMP0026)
-    cmake_policy(SET CMP0026 NEW)
-endif()
-if(POLICY CMP0043)
-    cmake_policy(SET CMP0043 NEW)
-endif()
-if(POLICY CMP0045)
-    cmake_policy(SET CMP0045 NEW)
-endif()
-if(POLICY CMP0046)
-    cmake_policy(SET CMP0046 NEW)
-endif()
 
 ########################################################################
 # Compiler version setup
@@ -134,7 +125,7 @@ ENDIF()
 
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_C_STANDARD 11)
 
 ########################################################################
@@ -166,6 +157,12 @@ include(CMakeOverloads)
 # Compiler specific setup
 ########################################################################
 include(GrMiscUtils) #compiler flag check
+
+include(TestBigEndian)
+TEST_BIG_ENDIAN(GR_IS_BIG_ENDIAN)
+if(GR_IS_BIG_ENDIAN)
+    add_definitions(-DGR_IS_BIG_ENDIAN)
+endif(GR_IS_BIG_ENDIAN)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
    CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -321,31 +318,37 @@ add_custom_target(uninstall
 )
 
 ########################################################################
-# Setup Boost for global use (within this build)
-########################################################################
-include(GrBoost)
-
-########################################################################
 # Enable python component
 ########################################################################
 include(GrPython)
-GR_PYTHON_CHECK_MODULE("six - python 2 and 3 compatibility library" six "True" SIX_FOUND)
-find_package(SWIG)
+GR_PYTHON_CHECK_MODULE(
+    "numpy"
+    numpy
+    "LooseVersion(numpy.__version__) >= LooseVersion('${GR_NUMPY_MIN_VERSION}')"
+    NUMPY_FOUND)
+# Needed for automatic regeneration of some bindings
+GR_PYTHON_CHECK_MODULE_RAW(
+    "pygccxml"
+    "import pygccxml"
+    PYGCCXML_FOUND
+    )
 
-if(SWIG_FOUND)
-    SET(SWIG_VERSION_CHECK FALSE)
-    if("${SWIG_VERSION}" VERSION_EQUAL ${GR_SWIG_MIN_VERSION} OR
-       "${SWIG_VERSION}" VERSION_GREATER ${GR_SWIG_MIN_VERSION})
-        SET(SWIG_VERSION_CHECK TRUE)
-    endif()
-endif(SWIG_FOUND)
+
+find_package(pybind11 REQUIRED)
+IF(${pybind11_VERSION} VERSION_LESS ${PYBIND11_MIN_VERSION})
+    message(FATAL_ERROR "pybind11 version ${pybind11_VERSION} < ${PYBIND11_MIN_VERSION}")
+ENDIF()
+
+execute_process(
+    COMMAND "${PYTHON_EXECUTABLE}" -c
+    "try:\n import numpy\n import os\n inc_path = numpy.get_include()\n if os.path.exists(os.path.join(inc_path, 'numpy', 'arrayobject.h')):\n  print(inc_path, end='')\nexcept:\n pass"
+    OUTPUT_VARIABLE PYTHON_NUMPY_INCLUDE_DIR)
 
 include(GrComponent)
 GR_REGISTER_COMPONENT("python-support" ENABLE_PYTHON
     PYTHONLIBS_FOUND
-    SWIG_FOUND
-    SWIG_VERSION_CHECK
-    SIX_FOUND
+    pybind11_FOUND
+    NUMPY_FOUND
 )
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Coverage")
@@ -353,69 +356,32 @@ if(${CMAKE_BUILD_TYPE} STREQUAL "Coverage")
   setup_target_for_coverage(coverage "ctest || exit 0" coverage)
 endif()
 
+########################################################################
+# Enable/disable examples
+########################################################################
+OPTION(ENABLE_EXAMPLES "Enable examples" ON)
 
 ########################################################################
-# Setup volk as a subproject
+# Detect and configure VOLK
 ########################################################################
 message(STATUS "")
 message(STATUS "Configuring VOLK support...")
-
-OPTION(ENABLE_INTERNAL_VOLK "Enable internal VOLK only" ON)
-UNSET(Volk_FOUND)
-if(NOT ENABLE_INTERNAL_VOLK)
-    find_package(Volk)
-    set(GR_VOLK_LIB "Volk::volk")
-    if(NOT Volk_FOUND)
-        message(STATUS "  External VOLK not found; checking internal.")
-    endif()
-endif()
-if(NOT Volk_FOUND)
-    find_file(INTREE_VOLK_FOUND
-        volk/volk_common.h
-        PATHS ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
-        NO_DEFAULT_PATH
-        NO_CMAKE_FIND_ROOT_PATH
-    )
-
-    if(NOT INTREE_VOLK_FOUND)
-        message(STATUS "  VOLK submodule is not checked out.")
-        message(STATUS "  To check out the VOLK submodule, use:")
-        message(STATUS "    git pull --recurse-submodules=on")
-        message(STATUS "    git submodule update --init")
-        if(ENABLE_INTERNAL_VOLK)
-            message(STATUS "  External VOLK disabled.")
-        endif()
-        message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
-        message(STATUS "")
-        message(FATAL_ERROR "VOLK required but not found.")
-    endif()
-
-    add_subdirectory(volk)
-    # if the above command returns, then VOLK is enabled
-
-    include(GrComponent)
-    GR_REGISTER_COMPONENT("volk" ENABLE_VOLK)
-
-    SET(VOLK_INCLUDE_DIRS
-        ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
-        ${CMAKE_CURRENT_BINARY_DIR}/volk/include
-    )
-
-    set(GR_VOLK_LIB "volk")
-
-    SET(VOLK_INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_PREFIX}/lib)
-    SET(VOLK_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include)
+find_package(Volk REQUIRED)
+message(STATUS "  Found VOLK:")
+message(STATUS "  * Version: ${Volk_VERSION}")
+message(STATUS "  * Libraries: ${VOLK_LIBRARIES}")
+message(STATUS "  * Includes: ${VOLK_INCLUDE_DIRS}")
+if("${Volk_VERSION}" STREQUAL "")
+  message(WARNING "Empty VOLK version string. Assuming compatibility. Good luck!")
 else()
-    message(STATUS "  An external VOLK has been found and will be used for build.")
-    SET(ENABLE_VOLK TRUE)
+  if("${Volk_VERSION}" VERSION_LESS ${VOLK_MIN_VERSION})
+    message(FATAL_ERROR "VOLK version ${Volk_VERSION} < ${VOLK_MIN_VERSION}")
+  endif()
+endif()
 
-    get_filename_component(VOLK_INSTALL_LIBRARY_DIR "${VOLK_LIBRARIES}" DIRECTORY)
-    SET(VOLK_INSTALL_INCLUDE_DIR ${VOLK_INCLUDE_DIRS})
-endif(NOT Volk_FOUND)
-
-message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
-
-# Handle logging
+########################################################################
+# Configure Log4CPP
+########################################################################
 find_package(LOG4CPP REQUIRED)
 
 ########################################################################
@@ -448,13 +414,18 @@ install(
     DESTINATION ${GR_PKG_DOC_DIR}
 )
 
+install(
+    FILES .clang-format
+    RENAME clang-format.conf
+    DESTINATION ${GR_PKG_DATA_DIR}
+)
+
 ########################################################################
 # The following dependency libraries are needed by all gr modules:
 ########################################################################
 list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
     ${CMAKE_SOURCE_DIR}/gnuradio-runtime/python
-    ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig
 )
 
 
@@ -467,6 +438,7 @@ list(APPEND GR_TEST_PYTHON_DIRS
 
 # gnuradio-runtime/include/gnuradio/block.h needs a define to tell it which
 # multiprecision arithmetic library header to include
+include(FindPkgConfig)
 find_package(MPLIB)
 add_definitions(${MPLIB_DEFINITIONS})
 
@@ -499,6 +471,7 @@ add_subdirectory(gr-video-sdl)
 add_subdirectory(gr-vocoder)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-zeromq)
+add_subdirectory(gr-network)
 
 # Defining GR_CTRLPORT for gnuradio/config.h
 if(ENABLE_GR_CTRLPORT)
@@ -544,6 +517,7 @@ install(
   DESTINATION ${CMAKE_MODULES_DIR}/gnuradio
 )
 
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/grc/grc.conf "enabled_components = ${_gr_enabled_components}")
 
 ########################################################################
 # Print summary

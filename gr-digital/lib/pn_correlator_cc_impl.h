@@ -20,17 +20,17 @@ namespace digital {
 class pn_correlator_cc_impl : public pn_correlator_cc
 {
 private:
-    int d_len;
+    const int d_len;
     float d_pn;
-    glfsr* d_reference;
+    glfsr d_reference;
 
 public:
     pn_correlator_cc_impl(int degree, int mask = 0, int seed = 1);
-    ~pn_correlator_cc_impl();
+    ~pn_correlator_cc_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace digital */

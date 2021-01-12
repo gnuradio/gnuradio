@@ -23,7 +23,7 @@ class WaterfallData : public QwtRasterData
 {
 public:
     WaterfallData(const double, const double, const uint64_t, const unsigned int);
-    virtual ~WaterfallData();
+    ~WaterfallData() override;
 
     virtual void reset();
     virtual void copy(const WaterfallData*);
@@ -38,7 +38,7 @@ public:
     virtual void setRange(const QwtDoubleInterval&);
 #endif
 
-    virtual double value(double x, double y) const;
+    double value(double x, double y) const override;
 
     virtual uint64_t getNumFFTPoints() const;
     virtual void addFFTData(const double*, const uint64_t, const int);

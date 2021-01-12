@@ -59,7 +59,7 @@ namespace digital {
 class DIGITAL_API ofdm_carrier_allocator_cvc : virtual public tagged_stream_block
 {
 public:
-    typedef boost::shared_ptr<ofdm_carrier_allocator_cvc> sptr;
+    typedef std::shared_ptr<ofdm_carrier_allocator_cvc> sptr;
 
     virtual std::string len_tag_key() = 0;
     virtual const int fft_len() = 0;

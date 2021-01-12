@@ -20,20 +20,18 @@ class dvbt_map_impl : public dvbt_map
 private:
     const dvbt_configure config;
 
-    int d_nsize;
+    const int d_nsize;
 
     // Constellation size
-    unsigned char d_constellation_size;
-    // Keeps transmission mode
-    dvbt_transmission_mode_t d_transmission_mode;
+    const unsigned char d_constellation_size;
     // Step on each axis of the constellation
-    unsigned char d_step;
+    const unsigned char d_step;
     // Keep Alpha internally
-    unsigned char d_alpha;
+    const unsigned char d_alpha;
     // Gain for the complex values
-    float d_gain;
+    const float d_gain;
 
-    gr_complex* d_constellation_points;
+    std::vector<gr_complex> d_constellation_points;
 
     void make_constellation_points(int size, int step, int alpha);
     gr_complex find_constellation_point(int val);
@@ -47,14 +45,14 @@ public:
                   dvbt_hierarchy_t hierarchy,
                   dvbt_transmission_mode_t transmission,
                   float gain);
-    ~dvbt_map_impl();
+    ~dvbt_map_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } // namespace dtv

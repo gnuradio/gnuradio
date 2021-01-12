@@ -8,15 +8,12 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 import weakref
 
 from gnuradio import gr
 
-from . import fec_swig as fec
+from . import fec_python as fec
 from .bitflip import read_bitlist
 
 

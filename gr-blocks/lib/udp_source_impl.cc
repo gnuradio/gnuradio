@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <memory>
 #include <stdexcept>
 
 namespace gr {
@@ -30,8 +31,8 @@ const int udp_source_impl::BUF_SIZE_PAYLOADS =
 udp_source::sptr udp_source::make(
     size_t itemsize, const std::string& ipaddr, int port, int payload_size, bool eof)
 {
-    return gnuradio::get_initial_sptr(
-        new udp_source_impl(itemsize, ipaddr, port, payload_size, eof));
+    return gnuradio::make_block_sptr<udp_source_impl>(
+        itemsize, ipaddr, port, payload_size, eof);
 }
 
 udp_source_impl::udp_source_impl(
@@ -42,13 +43,11 @@ udp_source_impl::udp_source_impl(
       d_payload_size(payload_size),
       d_eof(eof),
       d_connected(false),
+      d_rxbuf(4 * payload_size),
+      d_residbuf(BUF_SIZE_PAYLOADS * payload_size),
       d_residual(0),
       d_sent(0)
 {
-    // Give us some more room to play.
-    d_rxbuf = new char[4 * d_payload_size];
-    d_residbuf = new char[BUF_SIZE_PAYLOADS * d_payload_size];
-
     connect(host, port);
 }
 
@@ -56,9 +55,6 @@ udp_source_impl::~udp_source_impl()
 {
     if (d_connected)
         disconnect();
-
-    delete[] d_rxbuf;
-    delete[] d_residbuf;
 }
 
 void udp_source_impl::connect(const std::string& host, int port)
@@ -78,7 +74,7 @@ void udp_source_impl::connect(const std::string& host, int port)
             d_host, s_port, boost::asio::ip::resolver_query_base::passive);
         d_endpoint = *resolver.resolve(query);
 
-        d_socket = new boost::asio::ip::udp::socket(d_io_service);
+        d_socket = std::make_unique<boost::asio::ip::udp::socket>(d_io_service);
         d_socket->open(d_endpoint.protocol());
 
         boost::asio::socket_base::reuse_address roption(true);
@@ -105,7 +101,7 @@ void udp_source_impl::disconnect()
     d_udp_thread.join();
 
     d_socket->close();
-    delete d_socket;
+    d_socket.reset();
 
     d_connected = false;
 }
@@ -120,7 +116,7 @@ int udp_source_impl::get_port(void)
 void udp_source_impl::start_receive()
 {
     d_socket->async_receive_from(
-        boost::asio::buffer((void*)d_rxbuf, d_payload_size),
+        boost::asio::buffer((void*)d_rxbuf.data(), d_payload_size),
         d_endpoint_rcvd,
         boost::bind(&udp_source_impl::handle_read,
                     this,
@@ -150,7 +146,9 @@ void udp_source_impl::handle_read(const boost::system::error_code& error,
                 } else {
                     // otherwise, copy received data into local buffer for
                     // copying later.
-                    memcpy(d_residbuf + d_residual, d_rxbuf, bytes_transferred);
+                    memcpy(d_residbuf.data() + d_residual,
+                           d_rxbuf.data(),
+                           bytes_transferred);
                     d_residual += bytes_transferred;
                 }
             }
@@ -185,7 +183,7 @@ int udp_source_impl::work(int noutput_items,
     int bytes_to_send = std::min<int>(d_itemsize * noutput_items, bytes_left_in_buffer);
 
     // Copy the received data in the residual buffer to the output stream
-    memcpy(out, d_residbuf + d_sent, bytes_to_send);
+    memcpy(out, d_residbuf.data() + d_sent, bytes_to_send);
     int nitems = bytes_to_send / d_itemsize;
 
     // Keep track of where we are if we don't have enough output

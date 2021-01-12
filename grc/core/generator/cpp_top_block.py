@@ -72,7 +72,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
             'parameters': parameters,
             'monitors': monitors,
             'generate_options': self._generate_options,
-            'version': platform.config.version
+            'config': platform.config
         }
 
         if not os.path.exists(self.file_path):
@@ -250,7 +250,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
                 {r"gr\.sizeof_([\w_]+)": r"sizeof(\1)"}
             )
             for key in translations:
-                make = re.sub(key.replace("\\\\", "\\"), translations[key],make)
+                make = re.sub(key.replace("\\\\", "\\"), translations[key], make)
                 declarations = declarations.replace(key, translations[key])
             if make:
                 blocks_make.append((block, make, declarations))
@@ -272,11 +272,11 @@ class CppTopBlockGenerator(TopBlockGenerator):
                 variables.remove(var)
 
         # If the type is 'raw', we'll need to evaluate the variable to infer the type.
-        # Create an executable fragment of code containing all 'raw' variables in 
+        # Create an executable fragment of code containing all 'raw' variables in
         # order to infer the lvalue types.
         #
         # Note that this differs from using ast.literal_eval() as literal_eval evaluates one 
-        # variable at a time. The code fragment below evaluates all varaibles together which 
+        # variable at a time. The code fragment below evaluates all variables together which 
         # allows the variables to reference each other (i.e. a = b * c).
         prog = 'def get_decl_types():\n'
         prog += '\tvar_types = {}\n'
@@ -314,7 +314,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
 
                 # Update the 'var_make' entry in the cpp_templates dictionary
                 d = param.cpp_templates
-                cpp_expr = d['var_make'].replace('${value}', cpp_cmplx) 
+                cpp_expr = d['var_make'].replace('${value}', cpp_cmplx)
                 d.update({'var_make':cpp_expr})
                 param.cpp_templates = d
 
@@ -432,7 +432,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
                 porta = con.source_port
                 portb = con.sink_port
                 fg = self._flow_graph
-                             
+
                 if porta.dtype == 'bus' and portb.dtype == 'bus':
                     # which bus port is this relative to the bus structure
                     if len(porta.bus_structure) == len(portb.bus_structure):

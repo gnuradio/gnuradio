@@ -65,15 +65,15 @@ private:
 
 public:
     check_lfsr_32k_s_impl();
-    ~check_lfsr_32k_s_impl();
+    ~check_lfsr_32k_s_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
-    long ntotal() const { return d_ntotal; }
-    long nright() const { return d_nright; }
-    long runlength() const { return d_runlength; }
+    long ntotal() const override { return d_ntotal; }
+    long nright() const override { return d_nright; }
+    long runlength() const override { return d_runlength; }
 };
 
 } /* namespace blocks */

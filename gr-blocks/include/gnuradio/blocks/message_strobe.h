@@ -29,7 +29,7 @@ class BLOCKS_API message_strobe : virtual public block
 {
 public:
     // gr::blocks::message_strobe::sptr
-    typedef boost::shared_ptr<message_strobe> sptr;
+    typedef std::shared_ptr<message_strobe> sptr;
 
     /*!
      * Make a message stobe block to send message \p msg every \p

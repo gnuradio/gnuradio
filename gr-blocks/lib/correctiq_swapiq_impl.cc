@@ -20,7 +20,7 @@ namespace blocks {
 
 swap_iq::sptr swap_iq::make(int datatype, int datasize)
 {
-    return gnuradio::get_initial_sptr(new swap_iq_impl(datatype, datasize));
+    return gnuradio::make_block_sptr<swap_iq_impl>(datatype, datasize);
 }
 
 /*
@@ -29,10 +29,9 @@ swap_iq::sptr swap_iq::make(int datatype, int datasize)
 swap_iq_impl::swap_iq_impl(int datatype, int datasize)
     : gr::sync_block("swap_iq",
                      gr::io_signature::make(1, 1, datasize),
-                     gr::io_signature::make(1, 1, datasize))
+                     gr::io_signature::make(1, 1, datasize)),
+      d_datatype(datatype)
 {
-    d_datatype = datatype;
-
     if (d_datatype != SWAPTYPE_FLOATCOMPLEX) {
         gr::block::set_output_multiple(2); // Make sure we work with pairs
     }

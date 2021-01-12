@@ -25,7 +25,7 @@ class FILTER_API mmse_interpolator_cc : virtual public block
 {
 public:
     // gr::filter::mmse_interpolator_cc::sptr
-    typedef boost::shared_ptr<mmse_interpolator_cc> sptr;
+    typedef std::shared_ptr<mmse_interpolator_cc> sptr;
 
     /*!
      * \brief Build the interpolating MMSE filter (complex input, complex output)

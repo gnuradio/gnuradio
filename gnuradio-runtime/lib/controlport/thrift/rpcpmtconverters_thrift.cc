@@ -9,6 +9,7 @@
 
 #include "thrift/gnuradio_types.h"
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/rpcpmtconverters_thrift.h>
 #include <boost/assign/ptr_map_inserter.hpp>
 #include <iostream>
@@ -109,8 +110,12 @@ GNURadio::Knob rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
         result.value.__set_a_c32vector(z);
         return result;
     } else {
-        std::cerr << "Error: Don't know how to handle Knob Type (from): " << knob
-                  << std::endl;
+        // FIXME: Don't get loggers every time we need to log something.
+        gr::logger_ptr logger, debug_logger;
+        gr::configure_default_loggers(logger, debug_logger, "rpcpmtconverter");
+        std::ostringstream msg;
+        msg << "ERROR Don't know how to handle Knob Type (from): " << knob;
+        GR_LOG_ERROR(logger, msg.str());
         assert(0);
     }
     return GNURadio::Knob();
@@ -250,7 +255,12 @@ rpcpmtconverter::to_pmt_reg<TO_PMT_F>::to_pmt_reg(To_PMT& instance,
 
 pmt::pmt_t rpcpmtconverter::to_pmt_f::operator()(const GNURadio::Knob& knob)
 {
-    std::cerr << "Error: Don't know how to handle Knob Type: " << knob.type << std::endl;
+    // FIXME: Don't get loggers every time we need to log something.
+    gr::logger_ptr logger, debug_logger;
+    gr::configure_default_loggers(logger, debug_logger, "rpcpmtconverter");
+    std::ostringstream msg;
+    msg << "ERROR Don't know how to handle Knob Type (from): " << knob.type;
+    GR_LOG_ERROR(debug_logger, msg.str());
     assert(0);
     return pmt::pmt_t();
 }

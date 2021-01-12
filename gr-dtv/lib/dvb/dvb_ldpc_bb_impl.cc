@@ -21,8 +21,8 @@ dvb_ldpc_bb::sptr dvb_ldpc_bb::make(dvb_standard_t standard,
                                     dvb_code_rate_t rate,
                                     dvb_constellation_t constellation)
 {
-    return gnuradio::get_initial_sptr(
-        new dvb_ldpc_bb_impl(standard, framesize, rate, constellation));
+    return gnuradio::make_block_sptr<dvb_ldpc_bb_impl>(
+        standard, framesize, rate, constellation);
 }
 
 /*
@@ -595,8 +595,6 @@ int dvb_ldpc_bb_impl::general_work(int noutput_items,
             p = &puncturing_buffer[nbch];
             b = &out[i + nbch];
         }
-        // First zero all the parity bits
-        memset(p, 0, sizeof(unsigned char) * plen);
 
         // copy the information bits
         memcpy(&out[i], &in[consumed], sizeof(unsigned char) * nbch);

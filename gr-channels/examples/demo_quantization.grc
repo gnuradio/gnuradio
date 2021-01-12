@@ -205,7 +205,7 @@ blocks:
     samp_rate: samp_rate
     type: fir_filter_fff
     width: bw/5.0
-    win: firdes.WIN_HANN
+    win: window.WIN_HANN
   states:
     coordinate: [192, 196.0]
     rotation: 0
@@ -349,7 +349,7 @@ blocks:
     width7: '1'
     width8: '1'
     width9: '1'
-    wintype: firdes.WIN_BLACKMAN_hARRIS
+    wintype: window.WIN_BLACKMAN_hARRIS
     ymax: '10'
     ymin: '-140'
   states:

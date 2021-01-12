@@ -27,6 +27,9 @@ install(FILES gnuradio-grc.desktop DESTINATION share/applications)
 # Install mime
 install(FILES gnuradio-grc.xml DESTINATION share/mime/packages)
 
+# Install appstream / metainfo file
+install(FILES org.gnuradio.grc.metainfo.xml DESTINATION share/metainfo)
+
 # Install icons
 install(FILES grc-icon-256.png DESTINATION share/icons/hicolor/256x256/apps RENAME gnuradio-grc.png)
 install(FILES grc-icon-128.png DESTINATION share/icons/hicolor/128x128/apps RENAME gnuradio-grc.png)
@@ -55,3 +58,10 @@ if(UNIX AND HAVE_XDG_UTILS)
     )
     endif(ENABLE_POSTINSTALL)
 endif(UNIX AND HAVE_XDG_UTILS)
+
+if(UNIX AND ENABLE_TESTING)
+    find_program(APPSTREAMCLI appstreamcli)
+    if(APPSTREAMCLI)
+        GR_ADD_TEST(metainfo_test "${APPSTREAMCLI}" validate "${CMAKE_CURRENT_SOURCE_DIR}/org.gnuradio.grc.metainfo.xml")
+    endif(APPSTREAMCLI)
+endif(UNIX AND ENABLE_TESTING)   

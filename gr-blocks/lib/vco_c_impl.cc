@@ -21,8 +21,7 @@ namespace blocks {
 
 vco_c::sptr vco_c::make(double sampling_rate, double sensitivity, double amplitude)
 {
-    return gnuradio::get_initial_sptr(
-        new vco_c_impl(sampling_rate, sensitivity, amplitude));
+    return gnuradio::make_block_sptr<vco_c_impl>(sampling_rate, sensitivity, amplitude);
 }
 
 vco_c_impl::vco_c_impl(double sampling_rate, double sensitivity, double amplitude)

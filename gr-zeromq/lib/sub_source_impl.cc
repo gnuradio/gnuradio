@@ -27,8 +27,8 @@ sub_source::sptr sub_source::make(size_t itemsize,
                                   int hwm,
                                   const std::string& key)
 {
-    return gnuradio::get_initial_sptr(
-        new sub_source_impl(itemsize, vlen, address, timeout, pass_tags, hwm, key));
+    return gnuradio::make_block_sptr<sub_source_impl>(
+        itemsize, vlen, address, timeout, pass_tags, hwm, key);
 }
 
 sub_source_impl::sub_source_impl(size_t itemsize,
@@ -44,7 +44,7 @@ sub_source_impl::sub_source_impl(size_t itemsize,
       base_source_impl(ZMQ_SUB, itemsize, vlen, address, timeout, pass_tags, hwm, key)
 {
     /* Subscribe */
-    d_socket->setsockopt(ZMQ_SUBSCRIBE, key.c_str(), key.size());
+    d_socket.setsockopt(ZMQ_SUBSCRIBE, key.c_str(), key.size());
 }
 
 int sub_source_impl::work(int noutput_items,

@@ -51,30 +51,30 @@ public:
                                    const std::vector<IN_T>& TABLE,
                                    digital::trellis_metric_type_t METRIC_TYPE,
                                    float scaling);
-    ~sccc_decoder_combined_blk_impl();
+    ~sccc_decoder_combined_blk_impl() override;
 
-    fsm FSMo() const { return d_FSMo; }
-    fsm FSMi() const { return d_FSMi; }
-    int STo0() const { return d_STo0; }
-    int SToK() const { return d_SToK; }
-    int STi0() const { return d_STi0; }
-    int STiK() const { return d_STiK; }
-    interleaver INTERLEAVER() const { return d_INTERLEAVER; }
-    int blocklength() const { return d_blocklength; }
-    int repetitions() const { return d_repetitions; }
-    int D() const { return d_D; }
-    std::vector<IN_T> TABLE() const { return d_TABLE; }
-    digital::trellis_metric_type_t METRIC_TYPE() const { return d_METRIC_TYPE; }
-    siso_type_t SISO_TYPE() const { return d_SISO_TYPE; }
-    float scaling() const { return d_scaling; }
-    void set_scaling(float scaling);
+    fsm FSMo() const override { return d_FSMo; }
+    fsm FSMi() const override { return d_FSMi; }
+    int STo0() const override { return d_STo0; }
+    int SToK() const override { return d_SToK; }
+    int STi0() const override { return d_STi0; }
+    int STiK() const override { return d_STiK; }
+    interleaver INTERLEAVER() const override { return d_INTERLEAVER; }
+    int blocklength() const override { return d_blocklength; }
+    int repetitions() const override { return d_repetitions; }
+    int D() const override { return d_D; }
+    std::vector<IN_T> TABLE() const override { return d_TABLE; }
+    digital::trellis_metric_type_t METRIC_TYPE() const override { return d_METRIC_TYPE; }
+    siso_type_t SISO_TYPE() const override { return d_SISO_TYPE; }
+    float scaling() const override { return d_scaling; }
+    void set_scaling(float scaling) override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } /* namespace trellis */

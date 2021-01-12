@@ -23,13 +23,13 @@ packet_headerparser_b::sptr packet_headerparser_b::make(long header_len,
 {
     const packet_header_default::sptr header_formatter(
         new packet_header_default(header_len, len_tag_key));
-    return gnuradio::get_initial_sptr(new packet_headerparser_b_impl(header_formatter));
+    return gnuradio::make_block_sptr<packet_headerparser_b_impl>(header_formatter);
 }
 
 packet_headerparser_b::sptr packet_headerparser_b::make(
     const gr::digital::packet_header_default::sptr& header_formatter)
 {
-    return gnuradio::get_initial_sptr(new packet_headerparser_b_impl(header_formatter));
+    return gnuradio::make_block_sptr<packet_headerparser_b_impl>(header_formatter);
 }
 
 packet_headerparser_b_impl::packet_headerparser_b_impl(

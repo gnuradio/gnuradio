@@ -21,8 +21,8 @@ rfnoc_ddc::sptr rfnoc_ddc::make(rfnoc_graph::sptr graph,
                                 const int device_select,
                                 const int instance)
 {
-    return gnuradio::get_initial_sptr(new rfnoc_ddc_impl(
-        rfnoc_block::make_block_ref(graph, block_args, "DDC", device_select, instance)));
+    return gnuradio::make_block_sptr<rfnoc_ddc_impl>(
+        rfnoc_block::make_block_ref(graph, block_args, "DDC", device_select, instance));
 }
 
 

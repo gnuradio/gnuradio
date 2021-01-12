@@ -39,7 +39,7 @@ class BLOCKS_API max_blk : virtual public sync_block
 {
 public:
     // gr::blocks::max_blk::sptr
-    typedef boost::shared_ptr<max_blk<T>> sptr;
+    typedef std::shared_ptr<max_blk<T>> sptr;
 
     static sptr make(size_t vlen, size_t vlen_out = 1);
 };

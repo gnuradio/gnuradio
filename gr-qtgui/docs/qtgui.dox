@@ -29,6 +29,8 @@ purposes. These include:
 
 \li Time Domain (gr::qtgui::time_sink_c and gr::qtgui::time_sink_f):
 x-axis is time, y-axis is amplitude.
+\li Eye pattern (gr::qtgui::eye_sink_c and gr::qtgui::eye_sink_f):
+x-axis is time, y-axis is amplitude.
 \li Frequency Domain or PSD (gr::qtgui::freq_sink_c and
 gr::qtgui::freq_sink_f): x-axis is frequency, y-axis is magnitude in
 dB.
@@ -44,7 +46,7 @@ the data stream.
 \li Combined Sink (gr::qtgui::sink_c and gr::qtgui::sink_f): combines
 time, frequency, waterfall, and constellation plots into one widget.
 
-The time domain, frequency domain, and waterfall have both a complex
+The time domain, eye pattern, frequency domain, and waterfall have both a complex
 and a floating point block. The constellation plot only makes sense
 with complex inputs. The time raster plots accept bits and floats.
 
@@ -88,11 +90,11 @@ FFT averaging.
 
 \subsection qtgui_menu_trigger Triggering Menu for Time Plots
 
-The time plots have triggering capabilities. Triggering can happen
-when the signal of a specific channel crosses (positive or negative
-slope) a certain level threshold. Or triggering can be done off a
-specific stream tag such that whenever a tag of a given key is found,
-the scope will trigger.
+The time plots and eye pattern plots have triggering capabilities. 
+Triggering can happen when the signal of a specific channel crosses 
+(positive or negative slope) a certain level threshold. Or triggering 
+can be done off a specific stream tag such that whenever a tag of a 
+given key is found, the scope will trigger.
 
 In the signal level mode, the trigger can be either 'auto' or 'normal'
 where the latter will only trigger when the event is seen. The 'auto'
@@ -126,11 +128,11 @@ when asking for the delay outside of the available range.
 
 The QT GUI blocks require the following dependencies.
 
-\li QtCore (version >= 4.4)
-\li QtGui (version >= 4.4)
-\li QtOpenGL (version >= 4.4)
+\li QtCore (version >= 5.6)
+\li QtGui (version >= 5.6)
+\li QtOpenGL (version >= 5.6)
 \li PyQt5 for Qt5 (version >= 5.0)
-\li Qwt (version >= 5.2)
+\li Qwt (version >= 6.1)
 
 \section qtgui_usage Usage
 
@@ -148,7 +150,7 @@ qapp's "exec_()" function is called. This function is a blocking call
 while the GUI is alive.
 
 \code
-from PyQt4 import Qt
+from PyQt5 import Qt
 from gnuradio import qtgui
 import sys, sip
 

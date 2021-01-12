@@ -27,8 +27,8 @@ conv_bit_corr_bb::sptr conv_bit_corr_bb::make(std::vector<unsigned long long> co
                                               int flush,
                                               float thresh)
 {
-    return gnuradio::get_initial_sptr(
-        new conv_bit_corr_bb_impl(correlator, corr_sym, corr_len, cut, flush, thresh));
+    return gnuradio::make_block_sptr<conv_bit_corr_bb_impl>(
+        correlator, corr_sym, corr_len, cut, flush, thresh);
 }
 
 conv_bit_corr_bb_impl::conv_bit_corr_bb_impl(std::vector<unsigned long long> correlator,
@@ -127,7 +127,7 @@ int conv_bit_corr_bb_impl::general_work(int noutput_items,
     uint8_t* score_in = (uint8_t*)input_items[0];
 
     // counting on  1:1 forecast + history to provide enough ninput_items... may need to
-    // insert check printf("%d, %d, %d\n", ninput_items[0], noutput_items, d_counter);
+    // insert check printf("%d, %d, %d", ninput_items[0], noutput_items, d_counter);
     int correlation_cycles =
         (noutput_items / output_multiple() <= static_cast<int>(d_counter))
             ? noutput_items / output_multiple()
@@ -180,14 +180,14 @@ int conv_bit_corr_bb_impl::general_work(int noutput_items,
                     d_acquire = k;
                     d_lane = i + 1;
                     d_op = 1;
-                    // printf("winner: lane %u, punc_cycle %u, pos/neg corr %d\n", i, k,
+                    // printf("winner: lane %u, punc_cycle %u, pos/neg corr %d", i, k,
                     // d_op);
                     break;
                 } else if (d_acc[i * (d_corr_sym) + k] > (d_cut - d_thresh)) {
                     d_acquire = k;
                     d_lane = i + 1;
                     d_op = -1;
-                    // printf("winner: lane %u, punc_cycle %u, pos/neg corr %d\n", i, k,
+                    // printf("winner: lane %u, punc_cycle %u, pos/neg corr %d", i, k,
                     // d_op);
                     break;
                 }
@@ -215,7 +215,7 @@ int conv_bit_corr_bb_impl::general_work(int noutput_items,
     // states are set
 
     if (d_produce) {
-        // printf("producing\n");
+        // printf("producing");
         unsigned char* out = (unsigned char*)output_items[0];
         memcpy(out,
                &(in[d_acquire]),
@@ -243,7 +243,7 @@ float conv_bit_corr_bb_impl::data_garble_rate(int taps, float target)
     answer = 0.5 * (1 - pow(base, expo));
 
     if ((errno == EDOM) || (errno == ERANGE)) {
-        fprintf(stderr, "Out of range errors while computing garble rate.\n");
+        GR_LOG_ERROR(d_logger, "Out of range errors while computing garble rate.");
         exit(-1);
     }
     return answer;

@@ -23,8 +23,8 @@ dvbs2_physical_cc::sptr dvbs2_physical_cc::make(dvb_framesize_t framesize,
                                                 dvbs2_pilots_t pilots,
                                                 int goldcode)
 {
-    return gnuradio::get_initial_sptr(
-        new dvbs2_physical_cc_impl(framesize, rate, constellation, pilots, goldcode));
+    return gnuradio::make_block_sptr<dvbs2_physical_cc_impl>(
+        framesize, rate, constellation, pilots, goldcode);
 }
 
 /*

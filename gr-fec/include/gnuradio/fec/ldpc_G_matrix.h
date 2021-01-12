@@ -11,8 +11,8 @@
 
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/fec_mtrx.h>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
+#include <string>
 
 namespace gr {
 namespace fec {
@@ -40,10 +40,10 @@ namespace code {
  * ldpc_bit_flip_decoder classes.
  */
 class FEC_API ldpc_G_matrix : virtual public fec_mtrx,
-                              public boost::enable_shared_from_this<ldpc_G_matrix>
+                              public std::enable_shared_from_this<ldpc_G_matrix>
 {
 public:
-    typedef boost::shared_ptr<ldpc_G_matrix> sptr;
+    typedef std::shared_ptr<ldpc_G_matrix> sptr;
 
     /*!
      * \brief Constructor given alist file
@@ -59,14 +59,14 @@ public:
     static sptr make(const std::string filename);
 
     //! Encode \p inbuffer with LDPC H matrix into \p outbuffer.
-    virtual void encode(unsigned char* outbuffer,
-                        const unsigned char* inbuffer) const = 0;
+    void encode(unsigned char* outbuffer,
+                const unsigned char* inbuffer) const override = 0;
 
     //! Decode \p inbuffer with LDPC H matrix into \p outbuffer.
-    virtual void decode(unsigned char* outbuffer,
-                        const float* inbuffer,
-                        unsigned int frame_size,
-                        unsigned int max_iterations) const = 0;
+    void decode(unsigned char* outbuffer,
+                const float* inbuffer,
+                unsigned int frame_size,
+                unsigned int max_iterations) const override = 0;
 
     /*!
      * \brief A pointer to make SWIG work

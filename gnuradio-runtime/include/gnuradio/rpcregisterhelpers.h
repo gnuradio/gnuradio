@@ -21,7 +21,7 @@
 
 // Fixes circular dependency issue before including block_registry.h
 class rpcbasic_base;
-typedef boost::shared_ptr<rpcbasic_base> rpcbasic_sptr;
+typedef std::shared_ptr<rpcbasic_base> rpcbasic_sptr;
 
 #include <gnuradio/block_registry.h>
 
@@ -42,9 +42,9 @@ public:
     {
         ;
     }
-    ~rpcextractor_base() { ; }
+    ~rpcextractor_base() override { ; }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         (void)which_port;
         (void)msg;
@@ -62,9 +62,9 @@ class rpcextractor_base<T, void> : public virtual gr::messages::msg_accepter
 {
 public:
     rpcextractor_base(T* source, void (T::*func)()) : _source(source), _func(func) { ; }
-    ~rpcextractor_base() { ; }
+    ~rpcextractor_base() override { ; }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
     {
         (void)which_port;
         (void)msg;
@@ -107,7 +107,7 @@ public:
     rpcinserter_base(T* source, Tfrom (T::*func)()) : _source(source), _func(func) { ; }
     rpcinserter_base() { ; }
 
-    pmt::pmt_t retrieve()
+    pmt::pmt_t retrieve() override
     {
         assert(0);
         return pmt::pmt_t();
@@ -163,9 +163,12 @@ public:
     {
         ;
     }
-    ~rpchandler_base() { ; }
+    ~rpchandler_base() override { ; }
 
-    void post(pmt::pmt_t which_port, pmt::pmt_t msg) { _source->post(which_port, msg); }
+    void post(pmt::pmt_t which_port, pmt::pmt_t msg) override
+    {
+        _source->post(which_port, msg);
+    }
 
 protected:
     T* _source;
@@ -899,7 +902,7 @@ struct rpcbasic_register_set : public rpcbasic_base {
 #endif
     }
 
-    ~rpcbasic_register_set()
+    ~rpcbasic_register_set() override
     {
 #ifdef GR_RPCSERVER_ENABLED
         rpcmanager::get()->i()->unregisterConfigureCallback(d_id);
@@ -1044,7 +1047,7 @@ struct rpcbasic_register_trigger : public rpcbasic_base {
 #endif
     }
 
-    ~rpcbasic_register_trigger()
+    ~rpcbasic_register_trigger() override
     {
 #ifdef GR_RPCSERVER_ENABLED
         rpcmanager::get()->i()->unregisterConfigureCallback(d_id);
@@ -1319,7 +1322,7 @@ public:
 #endif
     }
 
-    ~rpcbasic_register_get()
+    ~rpcbasic_register_get() override
     {
 #ifdef GR_RPCSERVER_ENABLED
         rpcmanager::get()->i()->unregisterQueryCallback(d_id);
@@ -1641,7 +1644,7 @@ public:
 #endif
     }
 
-    ~rpcbasic_register_handler()
+    ~rpcbasic_register_handler() override
     {
 #ifdef GR_RPCSERVER_ENABLED
         rpcmanager::get()->i()->unregisterHandlerCallback(d_id);

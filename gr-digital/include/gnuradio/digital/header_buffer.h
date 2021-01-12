@@ -71,8 +71,7 @@ namespace digital {
  * As simple example of using this class in transmit mode:
  *
  * \verbatim
- uint8_t* buffer = (uint8_t*)volk_malloc(header_nbytes(),
-                                         volk_get_alignment());
+ volk::vector<uint8_t> buffer(header_nbytes());
 
  header_buffer hdr(buffer);
  hdr.add_field64(sync_word, sync_word_len);
@@ -81,8 +80,6 @@ namespace digital {
  hdr.add_field8(header_options);
 
  // Do something with the header
-
- volk_free(buffer);
  \endverbatim
  *
  * In this example, the header contains four fields:

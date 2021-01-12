@@ -21,7 +21,7 @@ namespace vocoder {
 
 g721_decode_bs::sptr g721_decode_bs::make()
 {
-    return gnuradio::get_initial_sptr(new g721_decode_bs_impl());
+    return gnuradio::make_block_sptr<g721_decode_bs_impl>();
 }
 
 g721_decode_bs_impl::g721_decode_bs_impl()

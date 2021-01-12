@@ -25,8 +25,8 @@ typename interp_fir_filter<IN_T, OUT_T, TAP_T>::sptr
 interp_fir_filter<IN_T, OUT_T, TAP_T>::make(unsigned interpolation,
                                             const std::vector<TAP_T>& taps)
 {
-    return gnuradio::get_initial_sptr(
-        new interp_fir_filter_impl<IN_T, OUT_T, TAP_T>(interpolation, taps));
+    return gnuradio::make_block_sptr<interp_fir_filter_impl<IN_T, OUT_T, TAP_T>>(
+        interpolation, taps);
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
@@ -36,8 +36,7 @@ interp_fir_filter_impl<IN_T, OUT_T, TAP_T>::interp_fir_filter_impl(
                         io_signature::make(1, 1, sizeof(IN_T)),
                         io_signature::make(1, 1, sizeof(OUT_T)),
                         interpolation),
-      d_updated(false),
-      d_firs(interpolation)
+      d_updated(false)
 {
     if (interpolation == 0) {
         throw std::out_of_range("interp_fir_filter_impl: interpolation must be > 0");
@@ -49,20 +48,13 @@ interp_fir_filter_impl<IN_T, OUT_T, TAP_T>::interp_fir_filter_impl(
 
     std::vector<TAP_T> dummy_taps;
 
+    d_firs.reserve(interpolation);
     for (unsigned i = 0; i < interpolation; i++) {
-        d_firs[i] = new kernel::fir_filter<IN_T, OUT_T, TAP_T>(1, dummy_taps);
+        d_firs.emplace_back(dummy_taps);
     }
 
     set_taps(taps);
     install_taps(d_new_taps);
-}
-
-template <class IN_T, class OUT_T, class TAP_T>
-interp_fir_filter_impl<IN_T, OUT_T, TAP_T>::~interp_fir_filter_impl()
-{
-    for (unsigned i = 0; i < this->interpolation(); i++) {
-        delete d_firs[i];
-    }
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
@@ -104,7 +96,7 @@ void interp_fir_filter_impl<IN_T, OUT_T, TAP_T>::install_taps(
     }
 
     for (unsigned n = 0; n < nfilters; n++) {
-        d_firs[n]->set_taps(xtaps[n]);
+        d_firs[n].set_taps(xtaps[n]);
     }
 
     this->set_history(nt);
@@ -136,7 +128,7 @@ int interp_fir_filter_impl<IN_T, OUT_T, TAP_T>::work(
 
     for (int i = 0; i < ni; i++) {
         for (int nf = 0; nf < nfilters; nf++) {
-            out[nf] = d_firs[nf]->filter(&in[i]);
+            out[nf] = d_firs[nf].filter(&in[i]);
         }
         out += nfilters;
     }

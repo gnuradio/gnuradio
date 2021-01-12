@@ -9,7 +9,6 @@
 
 #include <gnuradio/io_signature.h>
 #include <gnuradio/sync_block.h>
-#include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <complex>
 #include <iostream>
@@ -81,7 +80,7 @@ public:
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items)
+             gr_vector_void_star& output_items) override
     {
         // load the output with a constant
         std::complex<float>* output =

@@ -22,8 +22,7 @@ namespace fec {
 
 ber_bf::sptr ber_bf::make(bool test_mode, int berminerrors, float ber_limit)
 {
-    return gnuradio::get_initial_sptr(
-        new ber_bf_impl(test_mode, berminerrors, ber_limit));
+    return gnuradio::make_block_sptr<ber_bf_impl>(test_mode, berminerrors, ber_limit);
 }
 
 ber_bf_impl::ber_bf_impl(bool test_mode, int berminerrors, float ber_limit)

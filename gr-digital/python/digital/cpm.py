@@ -10,10 +10,6 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import unicode_literals
 
 # See gnuradio-examples/python/digital for examples
 
@@ -24,7 +20,7 @@ import numpy
 from gnuradio import gr, filter
 from gnuradio import analog
 from gnuradio import blocks
-from . import digital_swig
+from . import digital_python
 from . import modulation_utils
 
 
@@ -117,7 +113,7 @@ class cpm_mod(gr.hier_block2):
 
 
         # Turn it into symmetric PAM data.
-        self.pam = digital_swig.chunks_to_symbols_bf(self.sym_alphabet,1)
+        self.pam = digital_python.chunks_to_symbols_bf(self.sym_alphabet,1)
 
         # Generate pulse (sum of taps = samples_per_symbol/2)
         if cpm_type == 0: # CPFSK

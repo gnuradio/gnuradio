@@ -26,7 +26,7 @@ class DIGITAL_API simple_correlator : virtual public block
 {
 public:
     // gr::digital::simple_correlator::sptr
-    typedef boost::shared_ptr<simple_correlator> sptr;
+    typedef std::shared_ptr<simple_correlator> sptr;
 
     static sptr make(int payload_bytesize);
 };

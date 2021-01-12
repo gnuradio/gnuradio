@@ -23,9 +23,9 @@ class FEC_API cc_encoder_impl : public cc_encoder
 {
 private:
     // plug into the generic fec api
-    void generic_work(void* inbuffer, void* outbuffer);
-    int get_output_size();
-    int get_input_size();
+    void generic_work(void* inbuffer, void* outbuffer) override;
+    int get_output_size() override;
+    int get_input_size() override;
 
     // everything else...
     unsigned char Partab[256];
@@ -51,10 +51,10 @@ public:
                     int start_state = 0,
                     cc_mode_t mode = CC_STREAMING,
                     bool padded = false);
-    ~cc_encoder_impl();
+    ~cc_encoder_impl() override;
 
-    bool set_frame_size(unsigned int frame_size);
-    double rate();
+    bool set_frame_size(unsigned int frame_size) override;
+    double rate() override;
 };
 
 } /* namespace code */

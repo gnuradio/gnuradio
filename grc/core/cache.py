@@ -2,16 +2,13 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
-from __future__ import absolute_import, print_function, unicode_literals
 
 from io import open
 import json
 import logging
 import os
-
-import six
 
 from .io import yaml
 
@@ -80,10 +77,8 @@ class Cache(object):
 
 def byteify(data):
     if isinstance(data, dict):
-        return {byteify(key): byteify(value) for key, value in six.iteritems(data)}
+        return {byteify(key): byteify(value) for key, value in data.items()}
     elif isinstance(data, list):
         return [byteify(element) for element in data]
-    elif isinstance(data, six.text_type) and six.PY2:
-        return data.encode('utf-8')
     else:
         return data

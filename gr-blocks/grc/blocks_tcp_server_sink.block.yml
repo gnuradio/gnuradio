@@ -1,5 +1,5 @@
 id: blocks_tcp_server_sink
-label: TCP Server Sink
+label: TCP Server Sink (Deprecated)
 flags: [ python, cpp ]
 
 parameters:
@@ -47,5 +47,8 @@ cpp_templates:
     translations:
         'True': 'true'
         'False': 'false'
+
+documentation: |-
+    This block has been deprecated and replaced with more capable TCP source/sink blocks in Networking Tools.
 
 file_format: 1

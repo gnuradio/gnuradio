@@ -21,9 +21,9 @@ class rep_msg_sink_impl : public rep_msg_sink
 {
 private:
     int d_timeout;
-    zmq::context_t* d_context;
-    zmq::socket_t* d_socket;
-    boost::thread* d_thread;
+    zmq::context_t d_context;
+    zmq::socket_t d_socket;
+    std::unique_ptr<boost::thread> d_thread;
     bool d_finished;
 
     const pmt::pmt_t d_port;
@@ -31,8 +31,8 @@ private:
     void readloop();
 
 public:
-    rep_msg_sink_impl(char* address, int timeout);
-    ~rep_msg_sink_impl();
+    rep_msg_sink_impl(char* address, int timeout, bool bind);
+    ~rep_msg_sink_impl() override;
 
     bool start() override;
     bool stop() override;
@@ -41,7 +41,7 @@ public:
     {
         char addr[256];
         size_t addr_len = sizeof(addr);
-        d_socket->getsockopt(ZMQ_LAST_ENDPOINT, addr, &addr_len);
+        d_socket.getsockopt(ZMQ_LAST_ENDPOINT, addr, &addr_len);
         return std::string(addr, addr_len - 1);
     }
 };

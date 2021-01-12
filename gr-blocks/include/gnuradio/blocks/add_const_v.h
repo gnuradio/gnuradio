@@ -27,7 +27,7 @@ class BLOCKS_API add_const_v : virtual public sync_block
 {
 
 public:
-    typedef boost::shared_ptr<add_const_v<T>> sptr;
+    typedef std::shared_ptr<add_const_v<T>> sptr;
 
     /*!
      * \brief Create an instance of add_const_v

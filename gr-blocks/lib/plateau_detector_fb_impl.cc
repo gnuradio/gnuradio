@@ -20,7 +20,7 @@ namespace blocks {
 
 plateau_detector_fb::sptr plateau_detector_fb::make(int max_len, float threshold)
 {
-    return gnuradio::get_initial_sptr(new plateau_detector_fb_impl(max_len, threshold));
+    return gnuradio::make_block_sptr<plateau_detector_fb_impl>(max_len, threshold);
 }
 
 plateau_detector_fb_impl::plateau_detector_fb_impl(int max_len, float threshold)

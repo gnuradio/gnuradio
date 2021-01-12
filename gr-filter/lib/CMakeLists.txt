@@ -50,7 +50,7 @@ add_library(gnuradio-filter
   pfb_decimator_ccf_impl.cc
   pfb_interpolator_ccf_impl.cc
   pfb_synthesizer_ccf_impl.cc
-  rational_resampler_base_impl.cc
+  rational_resampler_impl.cc
   single_pole_iir_filter_cc_impl.cc
   single_pole_iir_filter_ff_impl.cc
 )
@@ -59,7 +59,7 @@ target_link_libraries(gnuradio-filter PUBLIC
     gnuradio-runtime
     gnuradio-fft
     gnuradio-blocks
-    ${GR_VOLK_LIB}
+    Volk::volk
 )
 
 target_include_directories(gnuradio-filter

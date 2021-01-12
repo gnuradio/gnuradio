@@ -20,6 +20,7 @@ namespace digital {
 /*!
  * \brief MSK/GMSK timing recovery
  * \ingroup synchronizers_blk
+ * \ingroup deprecated_blk
  *
  * This block performs timing synchronization on CPM modulations using a
  * fourth-order nonlinearity feedback method which is non-data-aided. The
@@ -34,7 +35,7 @@ namespace digital {
 class DIGITAL_API msk_timing_recovery_cc : virtual public gr::block
 {
 public:
-    typedef boost::shared_ptr<msk_timing_recovery_cc> sptr;
+    typedef std::shared_ptr<msk_timing_recovery_cc> sptr;
 
     /*!
      * \brief Make an MSK timing recovery block.

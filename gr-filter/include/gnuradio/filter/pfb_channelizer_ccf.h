@@ -68,7 +68,7 @@ namespace filter {
  * is the gain of the filter, which we specify here as unity.
  *
  *    <B><EM>self._taps = filter.firdes.low_pass_2(1, fs, BW, TB,
- *       attenuation_dB=ATT, window=filter.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
+ *       attenuation_dB=ATT, window=fft.window.WIN_BLACKMAN_hARRIS)</EM></B>
  *
  * The filter output can also be oversampled. The oversampling rate
  * is the ratio of the the actual output sampling rate to the normal
@@ -101,7 +101,7 @@ class FILTER_API pfb_channelizer_ccf : virtual public block
 {
 public:
     // gr::filter::pfb_channelizer_ccf::sptr
-    typedef boost::shared_ptr<pfb_channelizer_ccf> sptr;
+    typedef std::shared_ptr<pfb_channelizer_ccf> sptr;
 
     /*!
      * Build the polyphase filterbank decimator.

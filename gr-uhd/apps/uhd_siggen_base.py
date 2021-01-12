@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # Copyright 2008,2009,2011,2012,2015 Free Software Foundation, Inc.
 #
@@ -11,10 +11,8 @@
 Provide a base flow graph for USRP signal generators.
 """
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
 import math
+import sys
 try:
     from uhd_app import UHDApp
 except ImportError:
@@ -23,6 +21,9 @@ from gnuradio import gr, uhd, eng_notation, eng_arg
 from gnuradio import analog
 from gnuradio import blocks
 from gnuradio.gr.pubsub import pubsub
+
+# PyLint can't reliably detect C++ exports in modules, so let's disable that
+# pylint: disable=no-member
 
 DESC_KEY = 'desc'
 SAMP_RATE_KEY = 'samp_rate'
@@ -37,10 +38,7 @@ WAVEFORM_FREQ_KEY = 'waveform_freq'
 WAVEFORM_OFFSET_KEY = 'waveform_offset'
 WAVEFORM2_FREQ_KEY = 'waveform2_freq'
 FREQ_RANGE_KEY = 'freq_range'
-GAIN_RANGE_KEY = 'gain_range'
 TYPE_KEY = 'type'
-
-n2s = eng_notation.num_to_str
 
 WAVEFORMS = {
     analog.GR_CONST_WAVE : "Constant",
@@ -56,9 +54,25 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
     GUI-unaware GNU Radio flowgraph.  This may be used either with command
     line applications or GUI applications.
     """
+    MIN_AMP_POWER_MODE = .001
+
     def __init__(self, args):
         gr.top_block.__init__(self)
         pubsub.__init__(self)
+        if not 0.0 <= args.amplitude <= 1.0:
+            raise ValueError(
+                "Invalid value for amplitude: {}. Must be in [0.0, 1.0]"
+                .format(args.amplitude))
+        # If the power argument is given, we need to turn that into a power
+        # *reference* level. This is a bit of a hack because we're assuming
+        # knowledge of UHDApp (i.e. we're leaking abstractions). But it's simple
+        # and harmless enough.
+        if args.power:
+            if args.amplitude < self.MIN_AMP_POWER_MODE:
+                raise RuntimeError(
+                    "[ERROR] Invalid amplitude: In power mode, amplitude must be "
+                    "larger than {}!".format(self.MIN_AMP_POWER_MODE))
+            args.power -= 20 * math.log10(args.amplitude)
         UHDApp.__init__(self, args=args, prefix="UHD-SIGGEN")
         self.extra_sink = None
 
@@ -69,8 +83,8 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
 
         # Initialize device:
         self.setup_usrp(
-                ctor=uhd.usrp_sink,
-                args=args,
+            ctor=uhd.usrp_sink,
+            args=args,
         )
         print("[UHD-SIGGEN] UHD Signal Generator")
         print("[UHD-SIGGEN] UHD Version: {ver}".format(ver=uhd.get_version_string()))
@@ -82,8 +96,7 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
         self.publish(SAMP_RATE_KEY, lambda: self.usrp.get_samp_rate())
         self.publish(DESC_KEY, lambda: self.usrp_description)
         self.publish(FREQ_RANGE_KEY, lambda: self.usrp.get_freq_range(self.channels[0]))
-        self.publish(GAIN_RANGE_KEY, lambda: self.usrp.get_gain_range(self.channels[0]))
-        self.publish(GAIN_KEY, lambda: self.usrp.get_gain(self.channels[0]))
+        self.publish(GAIN_KEY, lambda: self.get_gain_or_power())
 
         self[SAMP_RATE_KEY] = args.samp_rate
         self[TX_FREQ_KEY] = args.freq
@@ -96,12 +109,13 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
 
         #subscribe set methods
         self.subscribe(SAMP_RATE_KEY, self.set_samp_rate)
-        self.subscribe(GAIN_KEY, self.set_gain)
+        self.subscribe(GAIN_KEY, self.set_gain_or_power)
         self.subscribe(TX_FREQ_KEY, self.set_freq)
         self.subscribe(AMPLITUDE_KEY, self.set_amplitude)
         self.subscribe(WAVEFORM_FREQ_KEY, self.set_waveform_freq)
         self.subscribe(WAVEFORM2_FREQ_KEY, self.set_waveform2_freq)
         self.subscribe(TYPE_KEY, self.set_waveform)
+        self.subscribe(RF_FREQ_KEY, self.update_gain_range)
 
         #force update on pubsub keys
         for key in (SAMP_RATE_KEY, GAIN_KEY, TX_FREQ_KEY,
@@ -153,7 +167,6 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
             self._src2.set_frequency(freq)
         elif self[TYPE_KEY] == "sweep":
             self._src1.set_frequency(freq)
-        return True
 
     def set_waveform(self, waveform_type):
         """
@@ -162,13 +175,13 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
         self.vprint("Selecting waveform...")
         self.lock()
         self.disconnect_all()
-        if waveform_type == analog.GR_SIN_WAVE or waveform_type == analog.GR_CONST_WAVE:
-            self._src = analog.sig_source_c(self[SAMP_RATE_KEY],      # Sample rate
-                                            waveform_type,                # Waveform waveform_type
-                                            self[WAVEFORM_FREQ_KEY], # Waveform frequency
-                                            self[AMPLITUDE_KEY],     # Waveform amplitude
-                                            self[WAVEFORM_OFFSET_KEY])        # Waveform offset
-        elif waveform_type == analog.GR_GAUSSIAN or waveform_type == analog.GR_UNIFORM:
+        if waveform_type in (analog.GR_SIN_WAVE, analog.GR_CONST_WAVE):
+            self._src = analog.sig_source_c(self[SAMP_RATE_KEY],       # Sample rate
+                                            waveform_type,             # Waveform waveform_type
+                                            self[WAVEFORM_FREQ_KEY],   # Waveform frequency
+                                            self[AMPLITUDE_KEY],       # Waveform amplitude
+                                            self[WAVEFORM_OFFSET_KEY]) # Waveform offset
+        elif waveform_type in (analog.GR_GAUSSIAN, analog.GR_UNIFORM):
             self._src = analog.noise_source_c(waveform_type, self[AMPLITUDE_KEY])
         elif waveform_type == "2tone":
             self._src1 = analog.sig_source_c(self[SAMP_RATE_KEY],
@@ -209,6 +222,7 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
             self.connect(self._src, self.extra_sink)
         self.unlock()
         self.vprint("Set baseband modulation to:", WAVEFORMS[waveform_type])
+        n2s = eng_notation.num_to_str
         if waveform_type == analog.GR_SIN_WAVE:
             self.vprint("Modulation frequency: %sHz" % (n2s(self[WAVEFORM_FREQ_KEY]),))
             self.vprint("Initial phase:", self[WAVEFORM_OFFSET_KEY])
@@ -216,7 +230,8 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
             self.vprint("Tone 1: %sHz" % (n2s(self[WAVEFORM_FREQ_KEY]),))
             self.vprint("Tone 2: %sHz" % (n2s(self[WAVEFORM2_FREQ_KEY]),))
         elif waveform_type == "sweep":
-            self.vprint("Sweeping across %sHz to %sHz" % (n2s(-self[WAVEFORM_FREQ_KEY] / 2.0), n2s(self[WAVEFORM_FREQ_KEY] / 2.0)))
+            self.vprint("Sweeping across {} Hz to {} Hz".format(
+                n2s(-self[WAVEFORM_FREQ_KEY] / 2.0), n2s(self[WAVEFORM_FREQ_KEY] / 2.0)))
             self.vprint("Sweep rate: %sHz" % (n2s(self[WAVEFORM2_FREQ_KEY]),))
         self.vprint("TX amplitude:", self[AMPLITUDE_KEY])
 
@@ -237,7 +252,50 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
         else:
             return True # Waveform not yet set
         self.vprint("Set amplitude to:", amplitude)
+        self.update_gain_range()
         return True
+
+    def get_gain_or_power(self):
+        """
+        Depending on gain type, return either a power level or the current gain
+        """
+        if self.gain_type == self.GAIN_TYPE_GAIN:
+            return self.usrp.get_gain(self.channels[0])
+        return self.usrp.get_power_reference(self.channels[0]) \
+                    + 20 * math.log10(self[AMPLITUDE_KEY])
+
+    def set_gain_or_power(self, gain_or_power):
+        """
+        Call this if a gain or power value changed, but you're not sure which it
+        is.
+
+        If it's a power, we subtract the signal offset to generate a reference
+        power.
+        """
+        if self.gain_type == self.GAIN_TYPE_POWER:
+            self.set_power_reference(
+                gain_or_power - 20 * math.log10(self[AMPLITUDE_KEY]))
+        else:
+            self.set_gain(gain_or_power)
+
+    def update_gain_range(self):
+        """
+        Update self.gain_range.
+        """
+        if self.gain_type == self.GAIN_TYPE_POWER:
+            if self[AMPLITUDE_KEY] < self.MIN_AMP_POWER_MODE:
+                raise RuntimeError(
+                    "[ERROR] Invalid amplitude: In power mode, amplitude must be "
+                    "larger than {}!".format(self.MIN_AMP_POWER_MODE))
+            power_range = self.usrp.get_power_range(self.channels[0])
+            ampl_offset = 20 * math.log10(self[AMPLITUDE_KEY])
+            self.gain_range = uhd.meta_range(
+                math.floor(power_range.start() + ampl_offset),
+                math.ceil(power_range.stop() + ampl_offset),
+                power_range.step()
+            )
+            self.vprint("Updated power range to {:.2f} ... {:.2f} dBm.".format(
+                self.gain_range.start(), self.gain_range.stop()))
 
 
 def setup_argparser():
@@ -245,29 +303,34 @@ def setup_argparser():
     Create argument parser for signal generator.
     """
     parser = UHDApp.setup_argparser(
-            description="USRP Signal Generator.",
-            tx_or_rx="Tx",
+        description="USRP Signal Generator.",
+        tx_or_rx="Tx",
     )
     group = parser.add_argument_group('Siggen Arguments')
+    group.add_argument("-m", "--amplitude", type=eng_arg.eng_float, default=0.15,
+                       help="Set output amplitude to AMPL (0.0-1.0). Note that "
+                            "if --power is given, UHD will attempt to match the "
+                            "output power regardless of the amplitude.",
+                       metavar="AMPL")
     group.add_argument("-x", "--waveform-freq", type=eng_arg.eng_float, default=0.0,
-                      help="Set baseband waveform frequency to FREQ")
+                       help="Set baseband waveform frequency to FREQ")
     group.add_argument("-y", "--waveform2-freq", type=eng_arg.eng_float, default=0.0,
-                      help="Set 2nd waveform frequency to FREQ")
+                       help="Set 2nd waveform frequency to FREQ")
     group.add_argument("--sine", dest="type", action="store_const", const=analog.GR_SIN_WAVE,
-                      help="Generate a carrier modulated by a complex sine wave",
-                      default=analog.GR_SIN_WAVE)
+                       help="Generate a carrier modulated by a complex sine wave",
+                       default=analog.GR_SIN_WAVE)
     group.add_argument("--const", dest="type", action="store_const", const=analog.GR_CONST_WAVE,
-                      help="Generate a constant carrier")
+                       help="Generate a constant carrier")
     group.add_argument("--offset", type=eng_arg.eng_float, default=0,
-                      help="Set waveform phase offset to OFFSET", metavar="OFFSET")
+                       help="Set waveform phase offset to OFFSET", metavar="OFFSET")
     group.add_argument("--gaussian", dest="type", action="store_const", const=analog.GR_GAUSSIAN,
-                      help="Generate Gaussian random output")
+                       help="Generate Gaussian random output")
     group.add_argument("--uniform", dest="type", action="store_const", const=analog.GR_UNIFORM,
-                      help="Generate Uniform random output")
+                       help="Generate Uniform random output")
     group.add_argument("--2tone", dest="type", action="store_const", const="2tone",
-                      help="Generate Two Tone signal for IMD testing")
+                       help="Generate Two Tone signal for IMD testing")
     group.add_argument("--sweep", dest="type", action="store_const", const="sweep",
-                      help="Generate a swept sine wave")
+                       help="Generate a swept sine wave")
     return parser
 
 def main():
@@ -281,7 +344,7 @@ def main():
         tb = USRPSiggen(args)
     except RuntimeError as ex:
         print(ex)
-        exit(1)
+        sys.exit(1)
     tb.start()
     input('[UHD-SIGGEN] Press Enter to quit:\n')
     tb.stop()

@@ -32,7 +32,7 @@ class ANALOG_API noise_source : virtual public sync_block
 {
 public:
     // gr::analog::noise_source::sptr
-    typedef boost::shared_ptr<noise_source<T>> sptr;
+    typedef std::shared_ptr<noise_source<T>> sptr;
 
     /*! Build a noise source
      * \param type the random distribution to use (see

@@ -13,7 +13,6 @@
 #include <gnuradio/digital/api.h>
 #include <gnuradio/gr_complex.h>
 #include <gnuradio/tags.h>
-#include <boost/enable_shared_from_this.hpp>
 
 namespace gr {
 namespace digital {
@@ -24,13 +23,13 @@ namespace digital {
  * \ingroup equalizers_blk
  */
 class DIGITAL_API ofdm_equalizer_base
-    : public boost::enable_shared_from_this<ofdm_equalizer_base>
+    : public std::enable_shared_from_this<ofdm_equalizer_base>
 {
 protected:
     int d_fft_len;
 
 public:
-    typedef boost::shared_ptr<ofdm_equalizer_base> sptr;
+    typedef std::shared_ptr<ofdm_equalizer_base> sptr;
 
     ofdm_equalizer_base(int fft_len);
     virtual ~ofdm_equalizer_base();
@@ -76,7 +75,7 @@ protected:
     std::vector<gr_complex> d_channel_state;
 
 public:
-    typedef boost::shared_ptr<ofdm_equalizer_1d_pilots> sptr;
+    typedef std::shared_ptr<ofdm_equalizer_1d_pilots> sptr;
 
     ofdm_equalizer_1d_pilots(int fft_len,
                              const std::vector<std::vector<int>>& occupied_carriers,
@@ -84,10 +83,10 @@ public:
                              const std::vector<std::vector<gr_complex>>& pilot_symbols,
                              int symbols_skipped,
                              bool input_is_shifted);
-    ~ofdm_equalizer_1d_pilots();
+    ~ofdm_equalizer_1d_pilots() override;
 
-    void reset();
-    void get_channel_state(std::vector<gr_complex>& taps);
+    void reset() override;
+    void get_channel_state(std::vector<gr_complex>& taps) override;
 };
 
 } /* namespace digital */

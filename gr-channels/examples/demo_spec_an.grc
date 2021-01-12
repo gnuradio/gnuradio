@@ -286,7 +286,7 @@ blocks:
     width7: '1'
     width8: '1'
     width9: '1'
-    wintype: firdes.WIN_FLATTOP
+    wintype: window.WIN_FLATTOP
     ymax: '10'
     ymin: '-140'
   states:

@@ -29,11 +29,11 @@ private:
 
 public:
     codec2_decode_ps_impl(int mode, int samples_per_frame, int bits_per_frame);
-    ~codec2_decode_ps_impl();
+    ~codec2_decode_ps_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace vocoder */

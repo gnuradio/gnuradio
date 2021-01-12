@@ -191,7 +191,7 @@
   <customwidget>
    <class>QwtPlot</class>
    <extends>QFrame</extends>
-   <header>PyQt4.Qwt5.Qwt</header>
+   <header>PyQt5.Qwt5.Qwt</header>
   </customwidget>
  </customwidgets>
  <resources/>

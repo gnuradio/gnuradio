@@ -54,11 +54,11 @@ public:
                                   dvbt2_papr_t paprmode,
                                   dvbt2_version_t version,
                                   dvbt2_preamble_t preamble);
-    ~dvbt2_freqinterleaver_cc_impl();
+    ~dvbt2_freqinterleaver_cc_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace dtv

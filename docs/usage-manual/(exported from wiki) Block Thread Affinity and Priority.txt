@@ -3,17 +3,17 @@
     <ns>0</ns>
     <id>3489</id>
     <revision>
-      <id>4226</id>
-      <parentid>4225</parentid>
-      <timestamp>2018-06-11T05:08:53Z</timestamp>
+      <id>4873</id>
+      <parentid>4226</parentid>
+      <timestamp>2019-03-12T22:43:51Z</timestamp>
       <contributor>
         <username>777arc</username>
         <id>632</id>
       </contributor>
-      <comment>/* Setting Affinity for a gr::hier_block2 */</comment>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="4603">== Block Thread Affinity ==
+      <text xml:space="preserve" bytes="4629">[[Category:Usage Manual]]
+== Block Thread Affinity ==
 
 In the thread-per-block scheduler, you can set the block's core
 affinity. Each block can be pinned to a group cores or be set back
@@ -123,7 +123,7 @@ sched_get_priority_max and may only allow 32 distinct values to be
 set.
 
 NOTE: Not available on Windows or OSX.</text>
-      <sha1>aj61n4ohuw7m8gm3g0j4qaa5eamqvpm</sha1>
+      <sha1>pwx0q0pno6nkzeprixgaxmmzhayfmk2</sha1>
     </revision>
   </page>
 </mediawiki>

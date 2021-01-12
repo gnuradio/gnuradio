@@ -38,8 +38,8 @@ namespace qtgui {
 number_sink::sptr number_sink::make(
     size_t itemsize, float average, graph_t graph_type, int nconnections, QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(
-        new number_sink_impl(itemsize, average, graph_type, nconnections, parent));
+    return gnuradio::make_block_sptr<number_sink_impl>(
+        itemsize, average, graph_type, nconnections, parent);
 }
 
 number_sink_impl::number_sink_impl(
@@ -99,6 +99,7 @@ void number_sink_impl::initialize()
     }
 
     d_main_gui = new NumberDisplayForm(d_nconnections, d_type, d_parent);
+    d_main_gui->setAverage(d_average);
 
     // initialize update time to 10 times a second
     set_update_time(0.1);
@@ -135,6 +136,7 @@ void number_sink_impl::set_average(const float avg)
         d_avg_value[n] = 0;
         d_iir[n].set_taps(d_average);
     }
+    d_main_gui->setAverage(avg);
 }
 
 void number_sink_impl::set_graph_type(const graph_t type)

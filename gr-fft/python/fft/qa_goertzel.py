@@ -8,11 +8,11 @@
 #
 #
 
-from __future__ import division
 
 from math import pi, cos
 
 from gnuradio import gr, gr_unittest, fft, blocks
+
 
 class test_goertzel(gr_unittest.TestCase):
 
@@ -23,7 +23,7 @@ class test_goertzel(gr_unittest.TestCase):
         self.tb = None
 
     def make_tone_data(self, rate, freq):
-        return [cos(2*pi*x*freq/rate) for x in range(rate)]
+        return [cos(2 * pi * x * freq / rate) for x in range(rate)]
 
     def transform(self, src_data, rate, freq):
         src = blocks.vector_source_f(src_data, False)
@@ -33,7 +33,7 @@ class test_goertzel(gr_unittest.TestCase):
         self.tb.run()
         return dst.data()
 
-    def test_001(self): # Measure single tone magnitude
+    def test_001(self):  # Measure single tone magnitude
         rate = 8000
         freq = 100
         bin = freq
@@ -42,7 +42,7 @@ class test_goertzel(gr_unittest.TestCase):
         actual_result = abs(self.transform(src_data, rate, bin)[0])
         self.assertAlmostEqual(expected_result, actual_result, places=4)
 
-    def test_002(self): # Measure off frequency magnitude
+    def test_002(self):  # Measure off frequency magnitude
         rate = 8000
         freq = 100
         bin = freq / 2
@@ -51,5 +51,6 @@ class test_goertzel(gr_unittest.TestCase):
         actual_result = abs(self.transform(src_data, rate, bin)[0])
         self.assertAlmostEqual(expected_result, actual_result, places=4)
 
+
 if __name__ == '__main__':
-    gr_unittest.run(test_goertzel, "test_goertzel.xml")
+    gr_unittest.run(test_goertzel)

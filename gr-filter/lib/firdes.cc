@@ -21,9 +21,9 @@ using std::vector;
 namespace gr {
 namespace filter {
 
-std::vector<float> firdes::window(win_type type, int ntaps, double beta)
+std::vector<float> firdes::window(fft::window::win_type type, int ntaps, double beta)
 {
-    return fft::window::build(static_cast<fft::window::win_type>(type), ntaps, beta);
+    return fft::window::build(type, ntaps, beta);
 }
 
 //
@@ -35,7 +35,7 @@ vector<float> firdes::low_pass_2(double gain,
                                  double cutoff_freq,   // Hz BEGINNING of transition band
                                  double transition_width, // Hz width of transition band
                                  double attenuation_dB,   // attenuation dB
-                                 win_type window_type,
+                                 fft::window::win_type window_type,
                                  double beta) // used only with Kaiser
 {
     sanity_check_1f(sampling_freq, cutoff_freq, transition_width);
@@ -78,7 +78,7 @@ vector<float> firdes::low_pass(double gain,
                                double sampling_freq,
                                double cutoff_freq,      // Hz center of transition band
                                double transition_width, // Hz width of transition band
-                               win_type window_type,
+                               fft::window::win_type window_type,
                                double beta) // used only with Kaiser
 {
     sanity_check_1f(sampling_freq, cutoff_freq, transition_width);
@@ -128,7 +128,7 @@ vector<float> firdes::high_pass_2(double gain,
                                   double cutoff_freq,      // Hz center of transition band
                                   double transition_width, // Hz width of transition band
                                   double attenuation_dB,   // attenuation dB
-                                  win_type window_type,
+                                  fft::window::win_type window_type,
                                   double beta) // used only with Kaiser
 {
     sanity_check_1f(sampling_freq, cutoff_freq, transition_width);
@@ -172,7 +172,7 @@ vector<float> firdes::high_pass(double gain,
                                 double sampling_freq,
                                 double cutoff_freq,      // Hz center of transition band
                                 double transition_width, // Hz width of transition band
-                                win_type window_type,
+                                fft::window::win_type window_type,
                                 double beta) // used only with Kaiser
 {
     sanity_check_1f(sampling_freq, cutoff_freq, transition_width);
@@ -221,7 +221,7 @@ vector<float> firdes::band_pass_2(double gain,
                                   double high_cutoff_freq, // Hz center of transition band
                                   double transition_width, // Hz width of transition band
                                   double attenuation_dB,   // attenuation dB
-                                  win_type window_type,
+                                  fft::window::win_type window_type,
                                   double beta) // used only with Kaiser
 {
     sanity_check_2f(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
@@ -264,7 +264,7 @@ vector<float> firdes::band_pass(double gain,
                                 double low_cutoff_freq,  // Hz center of transition band
                                 double high_cutoff_freq, // Hz center of transition band
                                 double transition_width, // Hz width of transition band
-                                win_type window_type,
+                                fft::window::win_type window_type,
                                 double beta) // used only with Kaiser
 {
     sanity_check_2f(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
@@ -314,7 +314,7 @@ firdes::complex_band_pass_2(double gain,
                             double high_cutoff_freq, // Hz center of transition band
                             double transition_width, // Hz width of transition band
                             double attenuation_dB,   // attenuation dB
-                            win_type window_type,
+                            fft::window::win_type window_type,
                             double beta) // used only with Kaiser
 {
     sanity_check_2f_c(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
@@ -357,7 +357,7 @@ firdes::complex_band_pass(double gain,
                           double low_cutoff_freq,  // Hz center of transition band
                           double high_cutoff_freq, // Hz center of transition band
                           double transition_width, // Hz width of transition band
-                          win_type window_type,
+                          fft::window::win_type window_type,
                           double beta) // used only with Kaiser
 {
     sanity_check_2f_c(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
@@ -395,6 +395,98 @@ firdes::complex_band_pass(double gain,
 }
 
 //
+//  === Complex Band Reject ===
+//
+
+vector<gr_complex>
+firdes::complex_band_reject_2(double gain,
+                              double sampling_freq,
+                              double low_cutoff_freq,  // Hz center of transition band
+                              double high_cutoff_freq, // Hz center of transition band
+                              double transition_width, // Hz width of transition band
+                              double attenuation_dB,   // attenuation dB
+                              fft::window::win_type window_type,
+                              double beta) // used only with Kaiser
+{
+    sanity_check_2f_c(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
+
+    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, beta);
+
+    // construct the truncated ideal impulse response times the window function
+
+    vector<gr_complex> taps(ntaps);
+    vector<float> hptaps(ntaps);
+    vector<float> w = window(window_type, ntaps, beta);
+
+    hptaps = high_pass_2(gain,
+                         sampling_freq,
+                         (high_cutoff_freq - low_cutoff_freq) / 2,
+                         transition_width,
+                         attenuation_dB,
+                         window_type,
+                         beta);
+
+    gr_complex* optr = &taps[0];
+    float* iptr = &hptaps[0];
+    float freq = GR_M_PI * (high_cutoff_freq + low_cutoff_freq) / sampling_freq;
+    float phase = 0;
+    if (hptaps.size() & 01) {
+        phase = -freq * (hptaps.size() >> 1);
+    } else
+        phase = -freq / 2.0 * ((1 + 2 * hptaps.size()) >> 1);
+
+    for (unsigned int i = 0; i < hptaps.size(); i++) {
+        *optr++ = gr_complex(*iptr * cos(phase), *iptr * sin(phase));
+        iptr++, phase += freq;
+    }
+
+    return taps;
+}
+
+vector<gr_complex>
+firdes::complex_band_reject(double gain,
+                            double sampling_freq,
+                            double low_cutoff_freq,  // Hz center of transition band
+                            double high_cutoff_freq, // Hz center of transition band
+                            double transition_width, // Hz width of transition band
+                            fft::window::win_type window_type,
+                            double beta) // used only with Kaiser
+{
+    sanity_check_2f_c(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
+
+    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, beta);
+
+    // construct the truncated ideal impulse response times the window function
+
+    vector<gr_complex> taps(ntaps);
+    vector<float> hptaps(ntaps);
+    vector<float> w = window(window_type, ntaps, beta);
+
+    hptaps = high_pass(gain,
+                       sampling_freq,
+                       (high_cutoff_freq - low_cutoff_freq) / 2,
+                       transition_width,
+                       window_type,
+                       beta);
+
+    gr_complex* optr = &taps[0];
+    float* iptr = &hptaps[0];
+    float freq = GR_M_PI * (high_cutoff_freq + low_cutoff_freq) / sampling_freq;
+    float phase = 0;
+    if (hptaps.size() & 01) {
+        phase = -freq * (hptaps.size() >> 1);
+    } else
+        phase = -freq / 2.0 * ((1 + 2 * hptaps.size()) >> 1);
+
+    for (unsigned int i = 0; i < hptaps.size(); i++) {
+        *optr++ = gr_complex(*iptr * cos(phase), *iptr * sin(phase));
+        iptr++, phase += freq;
+    }
+
+    return taps;
+}
+
+//
 //	=== Band Reject ===
 //
 
@@ -405,7 +497,7 @@ firdes::band_reject_2(double gain,
                       double high_cutoff_freq, // Hz center of transition band
                       double transition_width, // Hz width of transition band
                       double attenuation_dB,   // attenuation dB
-                      win_type window_type,
+                      fft::window::win_type window_type,
                       double beta) // used only with Kaiser
 {
     sanity_check_2f(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
@@ -449,7 +541,7 @@ vector<float> firdes::band_reject(double gain,
                                   double low_cutoff_freq,  // Hz center of transition band
                                   double high_cutoff_freq, // Hz center of transition band
                                   double transition_width, // Hz width of transition band
-                                  win_type window_type,
+                                  fft::window::win_type window_type,
                                   double beta) // used only with Kaiser
 {
     sanity_check_2f(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
@@ -492,7 +584,8 @@ vector<float> firdes::band_reject(double gain,
 // Hilbert Transform
 //
 
-vector<float> firdes::hilbert(unsigned int ntaps, win_type windowtype, double beta)
+vector<float>
+firdes::hilbert(unsigned int ntaps, fft::window::win_type windowtype, double beta)
 {
     if (!(ntaps & 1))
         throw std::out_of_range("Hilbert:  Must have odd number of taps");
@@ -571,6 +664,7 @@ vector<float> firdes::root_raised_cosine(
         } else {
             if (alpha == 1) {
                 taps[i] = -1;
+                scale += taps[i];
                 continue;
             }
             x3 = (1 - alpha) * x1;
@@ -609,11 +703,10 @@ int firdes::compute_ntaps_windes(
 
 int firdes::compute_ntaps(double sampling_freq,
                           double transition_width,
-                          win_type window_type,
+                          fft::window::win_type window_type,
                           double beta)
 {
-    double a = fft::window::max_attenuation(
-        static_cast<fft::window::win_type>(window_type), beta);
+    double a = fft::window::max_attenuation(window_type, beta);
     int ntaps = (int)(a * sampling_freq / (22.0 * transition_width));
     if ((ntaps & 1) == 0) // if even...
         ntaps++;          // ...make odd

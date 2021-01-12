@@ -14,6 +14,8 @@
 
 #include <gnuradio/fft/window.h>
 #include <gnuradio/math.h>
+#include <algorithm>
+#include <numeric>
 #include <stdexcept>
 
 namespace gr {
@@ -316,8 +318,66 @@ std::vector<float> window::riemann(int ntaps)
     return taps;
 }
 
-std::vector<float> window::build(win_type type, int ntaps, double beta)
+std::vector<float> window::tukey(int ntaps, float a)
 {
+    if ((a < 0) || (a > 1))
+        throw std::out_of_range("window::tukey: alpha must be between 0 and 1");
+
+    float N = static_cast<float>(ntaps - 1);
+
+    float aN = a * N;
+    float p1 = aN / 2.0;
+    float mid = midn(ntaps);
+    std::vector<float> taps(ntaps);
+    for (int i = 0; i < mid; i++) {
+        if (abs(i) < p1) {
+            taps[i] = 0.5 * (1.0 - cos((2 * GR_M_PI * i) / (aN)));
+            taps[ntaps - 1 - i] = taps[i];
+        } else {
+            taps[i] = 1.0;
+            taps[ntaps - i - 1] = 1.0;
+        }
+    }
+    return taps;
+}
+
+std::vector<float> window::gaussian(int ntaps, float sigma)
+{
+    if (sigma <= 0)
+        throw std::out_of_range("window::gaussian: sigma must be > 0");
+
+    float a = 2 * sigma * sigma;
+    double m1 = midm1(ntaps);
+    std::vector<float> taps(ntaps);
+    for (int i = 0; i < midn(ntaps); i++) {
+        float N = (i - m1);
+        taps[i] = exp(-(N * N / a));
+        taps[ntaps - 1 - i] = taps[i];
+    }
+    return taps;
+}
+
+std::vector<float>
+window::build(win_type type, int ntaps, double beta, const bool normalize)
+{
+    // If we want a normalized window, we get a non-normalized one first, then
+    // normalize it here:
+    if (normalize) {
+        auto win = build(type, ntaps, beta, false);
+        const double pwr_acc = // sum(win**2) / len(win)
+            std::accumulate(win.cbegin(),
+                            win.cend(),
+                            0.0,
+                            [](const double a, const double b) { return a + b * b; }) /
+            win.size();
+        const float norm_fac = static_cast<float>(std::sqrt(pwr_acc));
+        std::transform(win.begin(), win.end(), win.begin(), [norm_fac](const float tap) {
+            return tap / norm_fac;
+        });
+        return win;
+    }
+
+    // Create non-normalized window:
     switch (type) {
     case WIN_RECTANGULAR:
         return rectangular(ntaps);

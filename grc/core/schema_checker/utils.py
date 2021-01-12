@@ -1,7 +1,5 @@
 import collections
 
-import six
-
 Spec = collections.namedtuple('Spec', 'types required item_scheme')
 
 
@@ -15,9 +13,6 @@ def expand(**kwargs):
                         item_scheme=spec.item_scheme)
         return spec
     return {key: expand_spec(value) for key, value in kwargs.items()}
-
-
-str_ = six.string_types
 
 
 class Message(collections.namedtuple('Message', 'path type message')):

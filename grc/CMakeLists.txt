@@ -13,13 +13,6 @@ include(GrPython)
 message(STATUS "")
 
 GR_PYTHON_CHECK_MODULE_RAW(
-    "python3 >= ${GR_PYTHON_MIN_VERSION}"
-    "import sys; \
-    assert '.'.join([str(x) for x in sys.version_info[:3]]) >= '${GR_PYTHON_MIN_VERSION}'"
-    PYTHON_MIN_VER_FOUND
-)
-
-GR_PYTHON_CHECK_MODULE_RAW(
     "PyYAML >= 3.10"
     "import yaml; assert yaml.__version__ >= '3.11'"
     PYYAML_FOUND
@@ -68,7 +61,6 @@ GR_PYTHON_CHECK_MODULE_RAW(
 include(GrComponent)
 if(NOT CMAKE_CROSSCOMPILING)
     set(grc_python_deps
-        PYTHON_MIN_VER_FOUND
         PYYAML_FOUND
         MAKO_FOUND
         PYGI_FOUND

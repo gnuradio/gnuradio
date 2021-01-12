@@ -13,6 +13,7 @@ import math
 
 from gnuradio import gr, gr_unittest, digital
 
+
 class test_lfsr(gr_unittest.TestCase):
 
     def setUp(self):
@@ -26,12 +27,12 @@ class test_lfsr(gr_unittest.TestCase):
         l = digital.lfsr(1, 1, reglen)
 
         result_data = []
-        for i in range(4*(reglen+1)):
+        for i in range(4 * (reglen + 1)):
             result_data.append(l.next_bit())
 
-        expected_result = 4*([1,] + reglen*[0,])
+        expected_result = 4 * ([1, ] + reglen * [0, ])
         self.assertFloatTuplesAlmostEqual(expected_result, result_data, 5)
 
-if __name__ == '__main__':
-    gr_unittest.run(test_lfsr, "test_lfsr.xml")
 
+if __name__ == '__main__':
+    gr_unittest.run(test_lfsr)

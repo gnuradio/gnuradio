@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012,2013,2015 Free Software Foundation, Inc.
+# Copyright 2012,2013,2015,2020 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -14,12 +14,11 @@ outputs single precision complex float values or complex short values
 (interleaved 16 bit signed short integers).
 """
 
-from __future__ import print_function
 import sys
 import os
 import pmt
 import time
-from gnuradio import gr, gru, eng_notation
+from gnuradio import gr, eng_notation
 from gnuradio import blocks
 from gnuradio import uhd
 from gnuradio.eng_option import eng_option
@@ -194,7 +193,7 @@ class rx_cfile_block(gr.top_block):
         if options.show_async_msg:
             self.async_msgq = gr.msg_queue(0)
             self.async_src = uhd.amsg_source("", self.async_msgq)
-            self.async_rcv = gru.msgq_runner(self.async_msgq, self.async_callback)
+            self.async_rcv = uhd.msgq_runner(self.async_msgq, self.async_callback)
 
     def async_callback(self, msg):
         md = self.async_src.msg_to_async_metadata_t(msg)

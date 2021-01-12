@@ -13,7 +13,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/ConfigChecks.cmake)
 ########################################################################
 # Setup library
 ########################################################################
-add_library(gnuradio-blocks
+set(BLOCKS_SOURCES
     abs_blk_impl.cc
     add_blk_impl.cc
     add_const_v_impl.cc
@@ -35,6 +35,7 @@ add_library(gnuradio-blocks
     not_blk_impl.cc
     packed_to_unpacked_impl.cc
     peak_detector_impl.cc
+    phase_shift_impl.cc
     probe_signal_impl.cc
     probe_signal_v_impl.cc
     sample_and_hold_impl.cc
@@ -52,7 +53,6 @@ add_library(gnuradio-blocks
     file_sink_base.cc
     pack_k_bits.cc
     unpack_k_bits.cc
-    wavfile.cc
     add_const_bb_impl.cc
     add_const_ss_impl.cc
     add_const_ii_impl.cc
@@ -61,7 +61,6 @@ add_library(gnuradio-blocks
     annotator_1to1_impl.cc
     annotator_alltoall_impl.cc
     annotator_raw_impl.cc
-    bin_statistics_f_impl.cc
     burst_tagger_impl.cc
     char_to_float_impl.cc
     char_to_short_impl.cc
@@ -136,6 +135,7 @@ add_library(gnuradio-blocks
     short_to_float_impl.cc
     skiphead_impl.cc
     socket_pdu_impl.cc
+    stream_demux_impl.cc
     stream_mux_impl.cc
     stream_pdu_base.cc
     stream_to_streams_impl.cc
@@ -169,14 +169,29 @@ add_library(gnuradio-blocks
     vector_map_impl.cc
     vector_to_stream_impl.cc
     vector_to_streams_impl.cc
-    wavfile_sink_impl.cc
-    wavfile_source_impl.cc
     )
 
-target_link_libraries(gnuradio-blocks
-  gnuradio-runtime
-  ${GR_VOLK_LIB}
-  )
+if (SNDFILE_FOUND)
+    set(BLOCKS_SOURCES ${BLOCKS_SOURCES}
+        wavfile_sink_impl.cc
+        wavfile_source_impl.cc
+    )
+endif()
+
+add_library(gnuradio-blocks ${BLOCKS_SOURCES})
+
+set(BLOCKS_LIBS
+    gnuradio-runtime
+    Volk::volk
+    )
+
+if (SNDFILE_FOUND)
+    set(BLOCKS_LIBS ${BLOCKS_LIBS}
+        sndfile::sndfile
+    )
+endif()
+
+target_link_libraries(gnuradio-blocks ${BLOCKS_LIBS})
 
 target_include_directories(gnuradio-blocks
   PUBLIC
@@ -212,7 +227,11 @@ IF(MSVC)
 ENDIF(MSVC)
 
 if(BUILD_SHARED_LIBS)
-  GR_LIBRARY_FOO(gnuradio-blocks)
+    if (SNDFILE_FOUND)
+        GR_LIBRARY_FOO(gnuradio-blocks SNDFILE)
+    else()
+        GR_LIBRARY_FOO(gnuradio-blocks)
+    endif()
 endif()
 
 ########################################################################

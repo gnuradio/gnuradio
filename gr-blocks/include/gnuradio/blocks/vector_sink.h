@@ -28,7 +28,7 @@ class BLOCKS_API vector_sink : virtual public sync_block
 {
 public:
     // gr::blocks::vector_sink::sptr
-    typedef boost::shared_ptr<vector_sink<T>> sptr;
+    typedef std::shared_ptr<vector_sink<T>> sptr;
 
     /*!
      * \brief Make a new instance of the vector source, and return a shared pointer to it.

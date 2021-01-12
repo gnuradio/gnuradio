@@ -243,7 +243,7 @@ public:
     basic_block_vector_t topological_sort(basic_block_vector_t& blocks);
 
     /*!
-     * \brief Calculate vector of disjoint graph partions
+     * \brief Calculate vector of disjoint graph partitions
      * \return vector of disjoint vectors of topologically sorted blocks
      */
     std::vector<basic_block_vector_t> partition();

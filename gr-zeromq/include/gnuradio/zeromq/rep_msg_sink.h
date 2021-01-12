@@ -30,16 +30,18 @@ namespace zeromq {
 class ZEROMQ_API rep_msg_sink : virtual public gr::block
 {
 public:
-    typedef boost::shared_ptr<rep_msg_sink> sptr;
+    typedef std::shared_ptr<rep_msg_sink> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of zeromq::rep_msg_sink.
      *
      * \param address  ZMQ socket address specifier
      * \param timeout  Receive timeout in milliseconds, default is 100ms, 1us increments
+     * \param bind     If true this block will bind to the address, otherwise it will
+     * connect; the default is to bind
      *
      */
-    static sptr make(char* address, int timeout = 100);
+    static sptr make(char* address, int timeout = 100, bool bind = true);
 
     /*!
      * \brief Return a std::string of ZMQ_LAST_ENDPOINT from the underlying ZMQ socket.

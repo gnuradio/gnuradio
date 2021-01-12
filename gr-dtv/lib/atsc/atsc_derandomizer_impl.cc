@@ -21,7 +21,7 @@ namespace dtv {
 
 atsc_derandomizer::sptr atsc_derandomizer::make()
 {
-    return gnuradio::get_initial_sptr(new atsc_derandomizer_impl());
+    return gnuradio::make_block_sptr<atsc_derandomizer_impl>();
 }
 
 atsc_derandomizer_impl::atsc_derandomizer_impl()

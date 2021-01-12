@@ -13,21 +13,12 @@
 #endif
 #include "vmcircbuf.h"
 #include <gnuradio/buffer.h>
+#include <gnuradio/integer_math.h>
 #include <gnuradio/math.h>
 #include <assert.h>
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
-
-// the following header is deprecated as of Boost 1.66.0, and the
-// other API was introduced in Boost 1.58.0. Since we still support
-// Boost back to 1.54.0, use the older API if pre-1.5.80 and otherwise
-// use the newer API.
-#if (BOOST_VERSION < 105800)
-#include <boost/math/common_factor_rt.hpp>
-#else
-#include <boost/integer/common_factor_rt.hpp>
-#endif
 
 namespace gr {
 
@@ -47,7 +38,7 @@ static long s_buffer_reader_count = 0;
  both want pointers to each other, and unless we do something, we'll
  never delete any of them because of the circular structure.
  They'll always have a reference count of at least one.  We could
- use boost::weak_ptr's from gr::buffer to gr::buffer_reader but that
+ use std::weak_ptr's from gr::buffer to gr::buffer_reader but that
  introduces it's own problems.  (gr::buffer_reader's destructor needs
  to call gr::buffer::drop_reader, but has no easy way to get a
  shared_ptr to itself.)
@@ -68,13 +59,9 @@ static long s_buffer_reader_count = 0;
  *
  *     type_size * nitems == k * page_size
  */
-static long minimum_buffer_items(long type_size, long page_size)
+static inline long minimum_buffer_items(long type_size, long page_size)
 {
-#if (BOOST_VERSION < 105800)
-    return page_size / boost::math::gcd(type_size, page_size);
-#else
-    return page_size / boost::integer::gcd(type_size, page_size);
-#endif
+    return page_size / GR_GCD(type_size, page_size);
 }
 
 
@@ -82,7 +69,6 @@ buffer::buffer(int nitems, size_t sizeof_item, block_sptr link)
     : d_base(0),
       d_bufsize(0),
       d_max_reader_delay(0),
-      d_vmcircbuf(0),
       d_sizeof_item(sizeof_item),
       d_link(link),
       d_write_index(0),
@@ -90,6 +76,7 @@ buffer::buffer(int nitems, size_t sizeof_item, block_sptr link)
       d_done(false),
       d_last_min_items_read(0)
 {
+    gr::configure_default_loggers(d_logger, d_debug_logger, "buffer");
     if (!allocate_buffer(nitems, sizeof_item))
         throw std::bad_alloc();
 
@@ -103,7 +90,6 @@ buffer_sptr make_buffer(int nitems, size_t sizeof_item, block_sptr link)
 
 buffer::~buffer()
 {
-    delete d_vmcircbuf;
     assert(d_readers.size() == 0);
     s_buffer_count--;
 }
@@ -128,21 +114,24 @@ bool buffer::allocate_buffer(int nitems, size_t sizeof_item)
     // This only happens if sizeof_item is not a power of two.
 
     if (nitems > 2 * orig_nitems && nitems * (int)sizeof_item > granularity) {
-        std::cerr << "gr::buffer::allocate_buffer: warning: tried to allocate\n"
-                  << "   " << orig_nitems << " items of size " << sizeof_item
-                  << ". Due to alignment requirements\n"
-                  << "   " << nitems
-                  << " were allocated.  If this isn't OK, consider padding\n"
-                  << "   your structure to a power-of-two bytes.\n"
-                  << "   On this platform, our allocation granularity is " << granularity
-                  << " bytes.\n";
+        auto msg =
+            str(boost::format(
+                    "allocate_buffer: tried to allocate"
+                    "   %d items of size %d. Due to alignment requirements"
+                    "   %d were allocated.  If this isn't OK, consider padding"
+                    "   your structure to a power-of-two bytes."
+                    "   On this platform, our allocation granularity is %d bytes.") %
+                orig_nitems % sizeof_item % nitems % granularity);
+        GR_LOG_WARN(d_logger, msg.c_str());
     }
 
     d_bufsize = nitems;
-    d_vmcircbuf = gr::vmcircbuf_sysconfig::make(d_bufsize * d_sizeof_item);
+    d_vmcircbuf.reset(gr::vmcircbuf_sysconfig::make(d_bufsize * d_sizeof_item));
     if (d_vmcircbuf == 0) {
-        std::cerr << "gr::buffer::allocate_buffer: failed to allocate buffer of size "
-                  << d_bufsize * d_sizeof_item / 1024 << " KB\n";
+        std::ostringstream msg;
+        msg << "gr::buffer::allocate_buffer: failed to allocate buffer of size "
+            << d_bufsize * d_sizeof_item / 1024 << " KB";
+        GR_LOG_ERROR(d_logger, msg.str());
         return false;
     }
 

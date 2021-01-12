@@ -22,8 +22,8 @@ namespace blocks {
 random_pdu::sptr
 random_pdu::make(int min_items, int max_items, unsigned char byte_mask, int length_modulo)
 {
-    return gnuradio::get_initial_sptr(
-        new random_pdu_impl(min_items, max_items, byte_mask, length_modulo));
+    return gnuradio::make_block_sptr<random_pdu_impl>(
+        min_items, max_items, byte_mask, length_modulo);
 }
 
 random_pdu_impl::random_pdu_impl(int min_items,
@@ -39,7 +39,7 @@ random_pdu_impl::random_pdu_impl(int min_items,
     message_port_register_out(pdu::pdu_port_id());
     message_port_register_in(pmt::mp("generate"));
     set_msg_handler(pmt::mp("generate"),
-                    boost::bind(&random_pdu_impl::generate_pdu, this, _1));
+                    [this](pmt::pmt_t msg) { this->generate_pdu(msg); });
     if (length_modulo < 1)
         throw std::runtime_error("length_module must be >= 1");
     if (max_items < length_modulo)

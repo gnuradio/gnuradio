@@ -19,17 +19,17 @@ namespace dtv {
 class dvbt_convolutional_interleaver_impl : public dvbt_convolutional_interleaver
 {
 private:
-    int d_I;
-    int d_M;
-    std::vector<std::deque<unsigned char>*> d_shift;
+    const int d_I;
+    const int d_M;
+    std::vector<std::deque<unsigned char>> d_shift;
 
 public:
     dvbt_convolutional_interleaver_impl(int nsize, int I, int M);
-    ~dvbt_convolutional_interleaver_impl();
+    ~dvbt_convolutional_interleaver_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace dtv

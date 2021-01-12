@@ -27,8 +27,8 @@ ofdm_cyclic_prefixer::sptr ofdm_cyclic_prefixer::make(size_t input_size,
     int fft_len = input_size;
     std::vector<int> cp_lengths(
         1, static_cast<int>(output_size - input_size)); // Cast to silence compiler :(
-    return gnuradio::get_initial_sptr(
-        new ofdm_cyclic_prefixer_impl(fft_len, cp_lengths, rolloff_len, len_tag_key));
+    return gnuradio::make_block_sptr<ofdm_cyclic_prefixer_impl>(
+        fft_len, cp_lengths, rolloff_len, len_tag_key);
 }
 
 ofdm_cyclic_prefixer::sptr ofdm_cyclic_prefixer::make(int fft_len,
@@ -36,8 +36,8 @@ ofdm_cyclic_prefixer::sptr ofdm_cyclic_prefixer::make(int fft_len,
                                                       int rolloff_len,
                                                       const std::string& len_tag_key)
 {
-    return gnuradio::get_initial_sptr(
-        new ofdm_cyclic_prefixer_impl(fft_len, cp_lengths, rolloff_len, len_tag_key));
+    return gnuradio::make_block_sptr<ofdm_cyclic_prefixer_impl>(
+        fft_len, cp_lengths, rolloff_len, len_tag_key);
 }
 
 ofdm_cyclic_prefixer_impl::ofdm_cyclic_prefixer_impl(int fft_len,

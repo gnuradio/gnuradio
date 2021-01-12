@@ -43,12 +43,14 @@ namespace digital {
  *
  * Some calibration is required to convert dBx of the signal and
  * noise power estimates to real measurements, such as dBm.
+ *
+ * The estimator is normally placed before clock recovery.
  */
 class DIGITAL_API probe_mpsk_snr_est_c : virtual public sync_block
 {
 public:
     // gr::digital::probe_mpsk_snr_est_c::sptr
-    typedef boost::shared_ptr<probe_mpsk_snr_est_c> sptr;
+    typedef std::shared_ptr<probe_mpsk_snr_est_c> sptr;
 
     /*! Make an MPSK SNR probe.
      *
@@ -59,7 +61,8 @@ public:
      *  \param msg_nsamples: [not implemented yet] after this many
      *   samples, a message containing the SNR (key='snr') will be sent
      *  \param alpha: the update rate of internal running average
-     *   calculations.
+     *   calculations. Needs to be between 0 and 1, where higher value
+     *   adjusts faster to new data.
      */
     static sptr make(snr_est_type_t type, int msg_nsamples = 10000, double alpha = 0.001);
 

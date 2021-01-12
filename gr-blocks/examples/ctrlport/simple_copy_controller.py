@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from __future__ import unicode_literals
 import sys
 import pmt
 from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
@@ -13,8 +12,7 @@ if(len(args) < 4):
 hostname = args[1]
 portnum = int(args[2])
 msg = args[3].lower()
-argv = [None, hostname, portnum]
-radiosys = GNURadioControlPortClient(argv=argv, rpcmethod='thrift')
+radiosys = GNURadioControlPortClient(host=hostname, port=portnum, rpcmethod='thrift')
 radio = radiosys.client
 
 if(msg == 'true'):

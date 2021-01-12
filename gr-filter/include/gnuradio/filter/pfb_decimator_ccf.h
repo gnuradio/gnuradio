@@ -58,7 +58,7 @@ namespace filter {
  * unity.
  *
  *   <B><EM>self._taps = filter.firdes.low_pass_2(1, fs, BW, TB,
- *      attenuation_dB=ATT, window=filter.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
+ *      attenuation_dB=ATT, window=fft.window.WIN_BLACKMAN_hARRIS)</EM></B>
  *
  * The PFB decimator code takes the taps generated above and
  * builds a set of filters. The set contains <EM>decim</EM>
@@ -80,7 +80,7 @@ class FILTER_API pfb_decimator_ccf : virtual public sync_block
 {
 public:
     // gr::filter::pfb_decimator_ccf::sptr
-    typedef boost::shared_ptr<pfb_decimator_ccf> sptr;
+    typedef std::shared_ptr<pfb_decimator_ccf> sptr;
 
     /*!
      * Build the polyphase filterbank decimator.

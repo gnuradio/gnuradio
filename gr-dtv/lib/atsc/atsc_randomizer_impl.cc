@@ -19,7 +19,7 @@ namespace dtv {
 
 atsc_randomizer::sptr atsc_randomizer::make()
 {
-    return gnuradio::get_initial_sptr(new atsc_randomizer_impl());
+    return gnuradio::make_block_sptr<atsc_randomizer_impl>();
 }
 
 atsc_randomizer_impl::atsc_randomizer_impl()

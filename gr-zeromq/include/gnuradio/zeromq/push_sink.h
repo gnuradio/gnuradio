@@ -32,7 +32,7 @@ namespace zeromq {
 class ZEROMQ_API push_sink : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<push_sink> sptr;
+    typedef std::shared_ptr<push_sink> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of gr::zeromq::push_sink

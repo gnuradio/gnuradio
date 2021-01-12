@@ -12,17 +12,15 @@
 '''
 Blocks and utilities for digital TV module.
 '''
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 import os
 
 try:
-    from .dtv_swig import *
+    from .dtv_python import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from .dtv_swig import *
+    __path__.append(os.path.join(dirname, "bindings"))
+    from .dtv_python import *
 
 # Import pure python code here
 from .atsc_rx import *

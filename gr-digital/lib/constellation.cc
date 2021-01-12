@@ -32,7 +32,7 @@ constellation::constellation(std::vector<gr_complex> constell,
                              std::vector<int> pre_diff_code,
                              unsigned int rotational_symmetry,
                              unsigned int dimensionality,
-                             bool normalize_points)
+                             normalization_t normalization)
     : d_constellation(constell),
       d_pre_diff_code(pre_diff_code),
       d_rotational_symmetry(rotational_symmetry),
@@ -46,18 +46,39 @@ constellation::constellation(std::vector<gr_complex> constell,
       d_lut_scale(0)
 {
     unsigned int constsize = d_constellation.size();
-    if (normalize_points) {
-        // Scale constellation points so that average magnitude is 1.
-        float summed_mag = 0;
+    float summed_mag = 0;
+    switch (normalization) {
+    case NO_NORMALIZATION:
+        break;
+
+    case POWER_NORMALIZATION:
+        // Scale constellation points so that average power is 1.
         for (unsigned int i = 0; i < constsize; i++) {
             gr_complex c = d_constellation[i];
-            summed_mag += sqrt(c.real() * c.real() + c.imag() * c.imag());
+            summed_mag += std::norm(c);
+        }
+        d_scalefactor = constsize / sqrt(summed_mag);
+        for (unsigned int i = 0; i < constsize; i++) {
+            d_constellation[i] = d_constellation[i] * d_scalefactor;
+        }
+        break;
+
+    case AMPLITUDE_NORMALIZATION:
+        // Scale constellation points so that average magnitude is 1.
+        for (unsigned int i = 0; i < constsize; i++) {
+            gr_complex c = d_constellation[i];
+            summed_mag += std::abs(c);
         }
         d_scalefactor = constsize / summed_mag;
         for (unsigned int i = 0; i < constsize; i++) {
             d_constellation[i] = d_constellation[i] * d_scalefactor;
         }
+        break;
+
+    default:
+        throw std::runtime_error("Invalid constellation normalization type.");
     }
+
     if (pre_diff_code.empty())
         d_apply_pre_diff_code = false;
     else if (pre_diff_code.size() != constsize)
@@ -370,19 +391,19 @@ constellation_calcdist::make(std::vector<gr_complex> constell,
                              std::vector<int> pre_diff_code,
                              unsigned int rotational_symmetry,
                              unsigned int dimensionality,
-                             bool normalize_points)
+                             normalization_t normalization)
 {
     return constellation_calcdist::sptr(new constellation_calcdist(
-        constell, pre_diff_code, rotational_symmetry, dimensionality, normalize_points));
+        constell, pre_diff_code, rotational_symmetry, dimensionality, normalization));
 }
 
 constellation_calcdist::constellation_calcdist(std::vector<gr_complex> constell,
                                                std::vector<int> pre_diff_code,
                                                unsigned int rotational_symmetry,
                                                unsigned int dimensionality,
-                                               bool normalize_points)
+                                               normalization_t normalization)
     : constellation(
-          constell, pre_diff_code, rotational_symmetry, dimensionality, normalize_points)
+          constell, pre_diff_code, rotational_symmetry, dimensionality, normalization)
 {
 }
 
@@ -401,8 +422,10 @@ constellation_sector::constellation_sector(std::vector<gr_complex> constell,
                                            std::vector<int> pre_diff_code,
                                            unsigned int rotational_symmetry,
                                            unsigned int dimensionality,
-                                           unsigned int n_sectors)
-    : constellation(constell, pre_diff_code, rotational_symmetry, dimensionality),
+                                           unsigned int n_sectors,
+                                           normalization_t normalization)
+    : constellation(
+          constell, pre_diff_code, rotational_symmetry, dimensionality, normalization),
       n_sectors(n_sectors)
 {
 }
@@ -435,7 +458,8 @@ constellation_rect::sptr constellation_rect::make(std::vector<gr_complex> conste
                                                   unsigned int real_sectors,
                                                   unsigned int imag_sectors,
                                                   float width_real_sectors,
-                                                  float width_imag_sectors)
+                                                  float width_imag_sectors,
+                                                  normalization_t normalization)
 {
     return constellation_rect::sptr(new constellation_rect(constell,
                                                            pre_diff_code,
@@ -443,7 +467,8 @@ constellation_rect::sptr constellation_rect::make(std::vector<gr_complex> conste
                                                            real_sectors,
                                                            imag_sectors,
                                                            width_real_sectors,
-                                                           width_imag_sectors));
+                                                           width_imag_sectors,
+                                                           normalization));
 }
 
 constellation_rect::constellation_rect(std::vector<gr_complex> constell,
@@ -452,9 +477,14 @@ constellation_rect::constellation_rect(std::vector<gr_complex> constell,
                                        unsigned int real_sectors,
                                        unsigned int imag_sectors,
                                        float width_real_sectors,
-                                       float width_imag_sectors)
-    : constellation_sector(
-          constell, pre_diff_code, rotational_symmetry, 1, real_sectors * imag_sectors),
+                                       float width_imag_sectors,
+                                       normalization_t normalization)
+    : constellation_sector(constell,
+                           pre_diff_code,
+                           rotational_symmetry,
+                           1,
+                           real_sectors * imag_sectors,
+                           normalization),
       n_real_sectors(real_sectors),
       n_imag_sectors(imag_sectors),
       d_width_real_sectors(width_real_sectors),

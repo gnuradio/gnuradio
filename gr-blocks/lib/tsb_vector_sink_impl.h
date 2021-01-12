@@ -23,20 +23,20 @@ class tsb_vector_sink_impl : public tsb_vector_sink<T>
 private:
     std::vector<std::vector<T>> d_data;
     std::vector<tag_t> d_tags;
-    unsigned int d_vlen;
+    const unsigned int d_vlen;
 
 public:
     tsb_vector_sink_impl(unsigned int vlen, const std::string& tsb_key);
-    ~tsb_vector_sink_impl();
+    ~tsb_vector_sink_impl() override;
 
-    void reset() { d_data.clear(); }
-    std::vector<std::vector<T>> data() const;
-    std::vector<tag_t> tags() const;
+    void reset() override { d_data.clear(); }
+    std::vector<std::vector<T>> data() const override;
+    std::vector<tag_t> tags() const override;
 
     int work(int noutput_items,
              gr_vector_int& ninput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } // namespace blocks

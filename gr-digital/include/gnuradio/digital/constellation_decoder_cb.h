@@ -24,14 +24,14 @@ namespace digital {
  *
  * \details
  * Decode a constellation's points from a complex space to
- * (unpacked) bits based on the map of the \p consetllation
+ * index of constellation symbol based on the map of the \p constellation
  * object.
  */
 class DIGITAL_API constellation_decoder_cb : virtual public block
 {
 public:
     // gr::digital::constellation_decoder_cb::sptr
-    typedef boost::shared_ptr<constellation_decoder_cb> sptr;
+    typedef std::shared_ptr<constellation_decoder_cb> sptr;
 
     /*!
      * \brief Make constellation decoder block.

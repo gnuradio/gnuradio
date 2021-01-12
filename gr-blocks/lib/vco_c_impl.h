@@ -20,19 +20,19 @@ namespace blocks {
 class vco_c_impl : public vco_c
 {
 private:
-    double d_sampling_rate;
-    double d_sensitivity;
-    double d_amplitude;
+    const double d_sampling_rate;
+    const double d_sensitivity;
+    const double d_amplitude;
     double d_k;
     gr::fxpt_vco d_vco;
 
 public:
     vco_c_impl(double sampling_rate, double sensitivity, double amplitude);
-    ~vco_c_impl();
+    ~vco_c_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

@@ -6,7 +6,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-from __future__ import absolute_import
 
 import os
 import logging
@@ -65,7 +64,7 @@ class MainWindow(Gtk.ApplicationWindow):
         if not icon:
             # Set default window icon
             self.set_icon_from_file(os.path.dirname(os.path.abspath(__file__)) + "/icon.png")
-        else :
+        else:
             # Use gnuradio icon
             self.set_icon(icon.load_icon())
 
@@ -332,7 +331,6 @@ class MainWindow(Gtk.ApplicationWindow):
         self.notebook.remove_page(self.notebook.page_num(self.page_to_be_closed))
         if ensure and self.notebook.get_n_pages() == 0:
             self.new_page() #no pages, make a new one
-            self.current_page.saved = False
         self.page_to_be_closed = None #set the page to be closed back to None
         return True
 
@@ -362,6 +360,10 @@ class MainWindow(Gtk.ApplicationWindow):
                 foreground='black' if page.saved else 'red', ro=' (ro)' if page.get_read_only() else '',
                 title=Utils.encode(file_name or NEW_FLOGRAPH_TITLE),
             ))
+            fpath = page.file_path
+            if not fpath:
+                fpath = '(unsaved)'
+            page.set_tooltip(fpath)
         # show/hide notebook tabs
         self.notebook.set_show_tabs(len(self.get_pages()) > 1)
 

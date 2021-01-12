@@ -37,7 +37,7 @@ class CHANNELS_API dynamic_channel_model : virtual public hier_block2
 {
 public:
     // gr::channels::dynamic_channel_model::sptr
-    typedef boost::shared_ptr<dynamic_channel_model> sptr;
+    typedef std::shared_ptr<dynamic_channel_model> sptr;
 
     /*! \brief Build the dynamic channel simulator.
      *

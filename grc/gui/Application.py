@@ -7,7 +7,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 
-from __future__ import absolute_import, print_function
 
 import logging
 import os
@@ -132,7 +131,6 @@ class Application(Gtk.Application):
                     main.new_page(file_path, show=file_path_to_show == file_path)
             if not main.current_page:
                 main.new_page()  # ensure that at least a blank page exists
-                main.current_page.saved = False
 
             main.btwin.search_entry.hide()
 
@@ -313,24 +311,24 @@ class Application(Gtk.Application):
             main.new_page()
             flow_graph = main.current_page.flow_graph
             Actions.BLOCK_PASTE()
-            coords = (x_min,y_min)
+            coords = (x_min, y_min)
             flow_graph.move_selected(coords)
 
             # Set flow graph to heir block type
-            top_block  = flow_graph.get_block("top_block")
+            top_block = flow_graph.get_block("top_block")
             top_block.params['generate_options'].set_value('hb')
 
             # this needs to be a unique name
             top_block.params['id'].set_value('new_hier')
 
             # Remove the default samp_rate variable block that is created
-            remove_me  = flow_graph.get_block("samp_rate")
+            remove_me = flow_graph.get_block("samp_rate")
             flow_graph.remove_element(remove_me)
 
             # Add the param blocks along the top of the window
             x_pos = 150
             for param in params:
-                param_id = flow_graph.add_new_block('parameter',(x_pos,10))
+                param_id = flow_graph.add_new_block('parameter', (x_pos, 10))
                 param_block = flow_graph.get_block(param_id)
                 param_block.params['id'].set_value(param)
                 x_pos = x_pos + 100
@@ -358,7 +356,7 @@ class Application(Gtk.Application):
                             pad_sink.dtype = source.dtype
 
                     # connect the pad to the proper sinks
-                    new_connection = flow_graph.connect(source,pad_sink)
+                    new_connection = flow_graph.connect(source, pad_sink)
 
                 elif pad['direction'] == 'source':
                     pad_id = flow_graph.add_new_block('pad_source', pad['coord'])
@@ -440,8 +438,12 @@ class Application(Gtk.Application):
             Dialogs.show_about(main, self.platform.config)
         elif action == Actions.HELP_WINDOW_DISPLAY:
             Dialogs.show_help(main)
+        elif action == Actions.GET_INVOLVED_WINDOW_DISPLAY:
+            Dialogs.show_get_involved(main)
         elif action == Actions.TYPES_WINDOW_DISPLAY:
             Dialogs.show_types(main)
+        elif action == Actions.KEYBOARD_SHORTCUTS_WINDOW_DISPLAY:
+            Dialogs.show_keyboard_shortcuts(main)
         elif action == Actions.ERRORS_WINDOW_DISPLAY:
             Dialogs.ErrorsDialog(main, flow_graph).run_and_destroy()
         elif action == Actions.TOGGLE_CONSOLE_WINDOW:
@@ -542,11 +544,8 @@ class Application(Gtk.Application):
                     response = self.dialog.run()
                     if response in (Gtk.ResponseType.APPLY, Gtk.ResponseType.ACCEPT):
                         page.state_cache.save_new_state(flow_graph.export_data())
-                        ### Following  lines force an complete update of io ports
-                        n = page.state_cache.get_current_state()
-                        flow_graph.import_data(n)
+                        ### Following  line forces a complete update of io ports
                         flow_graph_update()
-
                         page.saved = False
                     else:  # restore the current state
                         n = page.state_cache.get_current_state()
@@ -594,7 +593,6 @@ class Application(Gtk.Application):
         ##################################################
         elif action == Actions.FLOW_GRAPH_NEW:
             main.new_page()
-            main.current_page.saved = False
             args = (GLib.Variant('s', 'qt_gui'),)
             flow_graph = main.current_page.flow_graph
             flow_graph.options_block.params['generate_options'].set_value(str(args[0])[1:-1])
@@ -609,8 +607,8 @@ class Application(Gtk.Application):
         elif action == Actions.FLOW_GRAPH_OPEN:
             file_paths = args[0] if args[0] else FileDialogs.OpenFlowGraph(main, page.file_path).run()
             if file_paths: # Open a new page for each file, show only the first
-                for i,file_path in enumerate(file_paths):
-                    main.new_page(file_path, show=(i==0))
+                for i, file_path in enumerate(file_paths):
+                    main.new_page(file_path, show=(i == 0))
                     self.config.add_recent_file(file_path)
                     main.tool_bar.refresh_submenus()
                     #main.menu_bar.refresh_submenus()
@@ -700,6 +698,7 @@ class Application(Gtk.Application):
         # Gen/Exec/Stop
         ##################################################
         elif action == Actions.FLOW_GRAPH_GEN:
+            self.generator = None
             if not page.process:
                 if not page.saved or not page.file_path:
                     Actions.FLOW_GRAPH_SAVE()  # only save if file path missing or not saved
@@ -708,23 +707,25 @@ class Application(Gtk.Application):
                     try:
                         Messages.send_start_gen(generator.file_path)
                         generator.write()
+                        self.generator = generator
                     except Exception as e:
                         Messages.send_fail_gen(e)
-                else:
-                    self.generator = None
+
+
         elif action == Actions.FLOW_GRAPH_EXEC:
             if not page.process:
                 Actions.FLOW_GRAPH_GEN()
-                xterm = self.platform.config.xterm_executable
-                if self.config.xterm_missing() != xterm:
-                    if not os.path.exists(xterm):
-                        Dialogs.show_missing_xterm(main, xterm)
-                    self.config.xterm_missing(xterm)
-                if page.saved and page.file_path:
-                    Executor.ExecFlowGraphThread(
-                        flow_graph_page=page,
-                        xterm_executable=xterm,
-                        callback=self.update_exec_stop
+                if self.generator:
+                    xterm = self.platform.config.xterm_executable
+                    if self.config.xterm_missing() != xterm:
+                        if not os.path.exists(xterm):
+                            Dialogs.show_missing_xterm(main, xterm)
+                        self.config.xterm_missing(xterm)
+                    if page.saved and page.file_path:
+                        Executor.ExecFlowGraphThread(
+                            flow_graph_page=page,
+                            xterm_executable=xterm,
+                            callback=self.update_exec_stop
                     )
         elif action == Actions.FLOW_GRAPH_KILL:
             if page.process:
@@ -745,7 +746,6 @@ class Application(Gtk.Application):
             main.update_pages()
 
         elif action == Actions.FIND_BLOCKS:
-            flow_graph.unselect()
             main.update_panel_visibility(main.BLOCKS, True)
             main.btwin.search_entry.show()
             main.btwin.search_entry.grab_focus()

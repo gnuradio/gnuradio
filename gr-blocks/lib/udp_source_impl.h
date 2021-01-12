@@ -15,6 +15,7 @@
 #include <gnuradio/thread/thread.h>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
+#include <memory>
 
 namespace gr {
 namespace blocks {
@@ -22,12 +23,12 @@ namespace blocks {
 class udp_source_impl : public udp_source
 {
 private:
-    size_t d_itemsize;
-    int d_payload_size; // maximum transmission unit (packet length)
-    bool d_eof;         // look for an EOF signal
-    bool d_connected;   // are we connected?
-    char* d_rxbuf;      // get UDP buffer items
-    char* d_residbuf;   // hold buffer between calls
+    const size_t d_itemsize;
+    int d_payload_size;           // maximum transmission unit (packet length)
+    const bool d_eof;             // look for an EOF signal
+    bool d_connected;             // are we connected?
+    std::vector<char> d_rxbuf;    // get UDP buffer items
+    std::vector<char> d_residbuf; // hold buffer between calls
     ssize_t d_residual; // hold information about number of bytes stored in residbuf
     ssize_t d_sent;     // track how much of d_residbuf we've outputted
 
@@ -37,7 +38,7 @@ private:
     std::string d_host;
     unsigned short d_port;
 
-    boost::asio::ip::udp::socket* d_socket;
+    std::unique_ptr<boost::asio::ip::udp::socket> d_socket;
     boost::asio::ip::udp::endpoint d_endpoint;
     boost::asio::ip::udp::endpoint d_endpoint_rcvd;
     boost::asio::io_service d_io_service;
@@ -53,17 +54,17 @@ private:
 public:
     udp_source_impl(
         size_t itemsize, const std::string& host, int port, int payload_size, bool eof);
-    ~udp_source_impl();
+    ~udp_source_impl() override;
 
-    void connect(const std::string& host, int port);
-    void disconnect();
+    void connect(const std::string& host, int port) override;
+    void disconnect() override;
 
-    int payload_size() { return d_payload_size; }
-    int get_port();
+    int payload_size() override { return d_payload_size; }
+    int get_port() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

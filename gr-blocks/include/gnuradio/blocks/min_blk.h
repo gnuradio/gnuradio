@@ -38,7 +38,7 @@ template <class T>
 class BLOCKS_API min_blk : virtual public sync_block
 {
 public:
-    typedef boost::shared_ptr<min_blk<T>> sptr;
+    typedef std::shared_ptr<min_blk<T>> sptr;
 
     static sptr make(size_t vlen, size_t vlen_out = 1);
 };

@@ -27,13 +27,13 @@ private:
 
 public:
     rms_ff_impl(double alpha = 0.0001);
-    ~rms_ff_impl();
+    ~rms_ff_impl() override;
 
-    void set_alpha(double alpha);
+    void set_alpha(double alpha) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

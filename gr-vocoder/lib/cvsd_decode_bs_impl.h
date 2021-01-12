@@ -61,20 +61,20 @@ public:
                         int J = 4,
                         short pos_accum_max = 32767,
                         short neg_accum_max = -32767);
-    ~cvsd_decode_bs_impl();
+    ~cvsd_decode_bs_impl() override;
 
-    short min_step() { return d_min_step; }
-    short max_step() { return d_max_step; }
-    double step_decay() { return d_step_decay; }
-    double accum_decay() { return d_accum_decay; }
-    int K() { return d_K; }
-    int J() { return d_J; }
-    short pos_accum_max() { return d_pos_accum_max; }
-    short neg_accum_max() { return d_neg_accum_max; }
+    short min_step() override { return d_min_step; }
+    short max_step() override { return d_max_step; }
+    double step_decay() override { return d_step_decay; }
+    double accum_decay() override { return d_accum_decay; }
+    int K() override { return d_K; }
+    int J() override { return d_J; }
+    short pos_accum_max() override { return d_pos_accum_max; }
+    short neg_accum_max() override { return d_neg_accum_max; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace vocoder */

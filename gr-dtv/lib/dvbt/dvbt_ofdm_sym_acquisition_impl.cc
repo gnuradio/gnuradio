@@ -21,6 +21,14 @@
 namespace gr {
 namespace dtv {
 
+namespace {
+float calculate_rho(float snr)
+{
+    snr = pow(10, snr / 10.0);
+    return snr / (snr + 1.0);
+}
+} // namespace
+
 int dvbt_ofdm_sym_acquisition_impl::peak_detect_init(float threshold_factor_rise,
                                                      float alpha)
 {
@@ -216,8 +224,8 @@ void dvbt_ofdm_sym_acquisition_impl::derotate(const gr_complex* in, gr_complex* 
 dvbt_ofdm_sym_acquisition::sptr dvbt_ofdm_sym_acquisition::make(
     int blocks, int fft_length, int occupied_tones, int cp_length, float snr)
 {
-    return gnuradio::get_initial_sptr(new dvbt_ofdm_sym_acquisition_impl(
-        blocks, fft_length, occupied_tones, cp_length, snr));
+    return gnuradio::make_block_sptr<dvbt_ofdm_sym_acquisition_impl>(
+        blocks, fft_length, occupied_tones, cp_length, snr);
 }
 
 /*
@@ -230,101 +238,22 @@ dvbt_ofdm_sym_acquisition_impl::dvbt_ofdm_sym_acquisition_impl(
             io_signature::make(1, 1, sizeof(gr_complex) * blocks * fft_length)),
       d_fft_length(fft_length),
       d_cp_length(cp_length),
-      d_snr(snr),
-      d_phase(0.0),
-      d_phaseinc(0.0),
-      d_cp_found(0),
-      d_nextphaseinc(0),
-      d_nextpos(0),
-      d_initial_acquisition(0),
-      d_cp_start(0),
-      d_to_consume(0),
-      d_to_out(0),
-      d_consumed(0),
-      d_out(0)
+      d_rho(calculate_rho(snr)),
+      d_conj(2 * d_fft_length + d_cp_length),
+      d_norm(2 * d_fft_length + d_cp_length),
+      d_corr(2 * d_fft_length + d_cp_length),
+      d_gamma(d_fft_length),
+      d_lambda(d_fft_length),
+      d_derot(d_fft_length + d_cp_length)
 {
     set_relative_rate(1, (uint64_t)(d_cp_length + d_fft_length));
-
-    d_snr = pow(10, d_snr / 10.0);
-    d_rho = d_snr / (d_snr + 1.0);
-
-    d_gamma =
-        (gr_complex*)volk_malloc(sizeof(gr_complex) * d_fft_length, volk_get_alignment());
-    if (d_gamma == NULL) {
-        GR_LOG_FATAL(d_logger,
-                     "OFDM Symbol Acquisition, cannot allocate memory for d_gamma.");
-        throw std::bad_alloc();
-    }
-
-    d_lambda = (float*)volk_malloc(sizeof(float) * d_fft_length, volk_get_alignment());
-    if (d_lambda == NULL) {
-        GR_LOG_FATAL(d_logger,
-                     "OFDM Symbol Acquisition, cannot allocate memory for d_lambda.");
-        volk_free(d_gamma);
-        throw std::bad_alloc();
-    }
-
-    d_derot = (gr_complex*)volk_malloc(sizeof(gr_complex) * (d_fft_length + d_cp_length),
-                                       volk_get_alignment());
-    if (d_derot == NULL) {
-        GR_LOG_FATAL(d_logger,
-                     "OFDM Symbol Acquisition, cannot allocate memory for d_derot.");
-        volk_free(d_lambda);
-        volk_free(d_gamma);
-        throw std::bad_alloc();
-    }
-
-    d_conj = (gr_complex*)volk_malloc(
-        sizeof(gr_complex) * (2 * d_fft_length + d_cp_length), volk_get_alignment());
-    if (d_conj == NULL) {
-        GR_LOG_FATAL(d_logger,
-                     "OFDM Symbol Acquisition, cannot allocate memory for d_conj.");
-        volk_free(d_derot);
-        volk_free(d_lambda);
-        volk_free(d_gamma);
-        throw std::bad_alloc();
-    }
-
-    d_norm = (float*)volk_malloc(sizeof(float) * (2 * d_fft_length + d_cp_length),
-                                 volk_get_alignment());
-    if (d_norm == NULL) {
-        GR_LOG_FATAL(d_logger,
-                     "OFDM Symbol Acquisition, cannot allocate memory for d_norm.");
-        volk_free(d_conj);
-        volk_free(d_derot);
-        volk_free(d_lambda);
-        volk_free(d_gamma);
-        throw std::bad_alloc();
-    }
-
-    d_corr = (gr_complex*)volk_malloc(
-        sizeof(gr_complex) * (2 * d_fft_length + d_cp_length), volk_get_alignment());
-    if (d_corr == NULL) {
-        GR_LOG_FATAL(d_logger,
-                     "OFDM Symbol Acquisition, cannot allocate memory for d_corr.");
-        volk_free(d_norm);
-        volk_free(d_conj);
-        volk_free(d_derot);
-        volk_free(d_lambda);
-        volk_free(d_gamma);
-        throw std::bad_alloc();
-    }
-
     peak_detect_init(0.3, 0.9);
 }
 
 /*
  * Our virtual destructor.
  */
-dvbt_ofdm_sym_acquisition_impl::~dvbt_ofdm_sym_acquisition_impl()
-{
-    volk_free(d_corr);
-    volk_free(d_norm);
-    volk_free(d_conj);
-    volk_free(d_derot);
-    volk_free(d_lambda);
-    volk_free(d_gamma);
-}
+dvbt_ofdm_sym_acquisition_impl::~dvbt_ofdm_sym_acquisition_impl() {}
 
 void dvbt_ofdm_sym_acquisition_impl::forecast(int noutput_items,
                                               gr_vector_int& ninput_items_required)

@@ -26,23 +26,23 @@ private:
     int d_ninput;
     int d_noutput;
 
-    int d_reg;
+    int d_reg = 0;
 
     // Code rate k/n
-    int d_k;
-    int d_n;
+    const int d_k;
+    const int d_n;
     // Constellation with m
-    int d_m;
+    const int d_m;
 
     // input block size in bytes
-    int d_in_bs;
+    const int d_in_bs;
     // bit input buffer
-    unsigned char* d_in_buff;
+    std::vector<unsigned char> d_in_buff;
 
     // output block size in bytes
-    int d_out_bs;
+    const int d_out_bs;
     // bit output buffer
-    unsigned char* d_out_buff;
+    std::vector<unsigned char> d_out_buff;
 
     inline void generate_codeword(unsigned char in, int& x, int& y);
     inline void generate_punctured_code(dvb_code_rate_t coderate,
@@ -55,13 +55,13 @@ public:
                           dvb_constellation_t constellation,
                           dvbt_hierarchy_t hierarchy,
                           dvb_code_rate_t coderate);
-    ~dvbt_inner_coder_impl();
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    ~dvbt_inner_coder_impl() override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } // namespace dtv

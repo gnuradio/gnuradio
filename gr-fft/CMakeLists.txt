@@ -18,7 +18,6 @@ find_package(FFTW3f)
 include(GrComponent)
 
 GR_REGISTER_COMPONENT("gr-fft" ENABLE_GR_FFT
-    ENABLE_VOLK
     Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_BLOCKS
@@ -36,7 +35,6 @@ if(ENABLE_GR_FFT)
 add_subdirectory(include/gnuradio/fft)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
-    add_subdirectory(swig)
     add_subdirectory(python/fft)
 endif(ENABLE_PYTHON)
 if(ENABLE_GRC)

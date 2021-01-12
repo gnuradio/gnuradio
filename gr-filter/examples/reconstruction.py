@@ -8,12 +8,10 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
 from gnuradio import gr, digital
 from gnuradio import filter
 from gnuradio import blocks
+from gnuradio.fft import window
 import sys
 import numpy
 
@@ -46,7 +44,7 @@ def main():
     tb = 400
     proto_taps = filter.firdes.low_pass_2(1, nchans*fs,
                                           bw, tb, 80,
-                                          filter.firdes.WIN_BLACKMAN_hARRIS)
+                                          window.WIN_BLACKMAN_hARRIS)
     print("Filter length: ", len(proto_taps))
 
 

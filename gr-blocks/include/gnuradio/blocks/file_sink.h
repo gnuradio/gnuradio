@@ -26,7 +26,7 @@ class BLOCKS_API file_sink : virtual public sync_block, virtual public file_sink
 {
 public:
     // gr::blocks::file_sink::sptr
-    typedef boost::shared_ptr<file_sink> sptr;
+    typedef std::shared_ptr<file_sink> sptr;
 
     /*!
      * \brief Make a file sink.

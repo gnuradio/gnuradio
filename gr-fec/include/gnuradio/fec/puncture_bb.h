@@ -78,7 +78,7 @@ class FEC_API puncture_bb : virtual public block
 {
 public:
     // gr::fec::puncture_bb::sptr
-    typedef boost::shared_ptr<puncture_bb> sptr;
+    typedef std::shared_ptr<puncture_bb> sptr;
 
     /*!
      * \brief Constructs a puncture block for unpacked bits.

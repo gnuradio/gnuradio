@@ -58,7 +58,7 @@ blocks:
     samp_rate: samp_rate
     type: band_pass
     width: transition
-    win: firdes.WIN_HAMMING
+    win: window.WIN_HAMMING
   states:
     coordinate: [696, 35]
     rotation: 0
@@ -73,7 +73,7 @@ blocks:
     low_cutoff_freq: bp_low
     samp_rate: samp_rate
     width: transition
-    win: firdes.WIN_HAMMING
+    win: window.WIN_HAMMING
   states:
     coordinate: [872, 36.0]
     rotation: 0
@@ -105,7 +105,7 @@ blocks:
     gain: '1.0'
     samp_rate: samp_rate
     width: transition
-    win: firdes.WIN_HAMMING
+    win: window.WIN_HAMMING
   states:
     coordinate: [536, 35]
     rotation: 0
@@ -128,7 +128,7 @@ blocks:
     gain: '1.0'
     samp_rate: samp_rate
     width: transition
-    win: firdes.WIN_HAMMING
+    win: window.WIN_HAMMING
   states:
     coordinate: [376, 35]
     rotation: 0
@@ -333,7 +333,7 @@ blocks:
     width7: '1'
     width8: '1'
     width9: '1'
-    wintype: firdes.WIN_BLACKMAN_hARRIS
+    wintype: window.WIN_BLACKMAN_hARRIS
     ymax: '10'
     ymin: '-140'
   states:

@@ -7,9 +7,6 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
 
 from gnuradio import gr, filter
 import math
@@ -118,12 +115,6 @@ class fm_deemph(gr.hier_block2):
         ataps = [      1.0,      -p1 ]
 
         # Since H(s = 0) = 1.0, then H(z = 1) = 1.0 and has 0 dB gain at DC
-
-        if 0:
-            print("btaps =", btaps)
-            print("ataps =", ataps)
-            global plot1
-            plot1 = gru.gnuplot_freqz(gru.freqz(btaps, ataps), fs, True)
 
         deemph = filter.iir_filter_ffd(btaps, ataps, False)
         self.connect(self, deemph, self)
@@ -282,12 +273,6 @@ class fm_preemph(gr.hier_block2):
 
         btaps = [ g * b0 * 1.0, g * b0 * -z1 ]
         ataps = [          1.0,          -p1 ]
-
-        if 0:
-            print("btaps =", btaps)
-            print("ataps =", ataps)
-            global plot2
-            plot2 = gru.gnuplot_freqz(gru.freqz(btaps, ataps), fs, True)
 
         preemph = filter.iir_filter_ffd(btaps, ataps, False)
         self.connect(self, preemph, self)

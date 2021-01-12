@@ -18,7 +18,7 @@ namespace dtv {
 
 catv_reed_solomon_enc_bb::sptr catv_reed_solomon_enc_bb::make()
 {
-    return gnuradio::get_initial_sptr(new catv_reed_solomon_enc_bb_impl());
+    return gnuradio::make_block_sptr<catv_reed_solomon_enc_bb_impl>();
 }
 
 /*

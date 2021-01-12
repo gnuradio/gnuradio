@@ -18,6 +18,7 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <stdio.h>
+#include <type_traits>
 #include <iostream>
 #include <stdexcept>
 
@@ -126,7 +127,7 @@ jack_source::jack_source(int sampling_rate,
 
     set_output_multiple(d_jack_buffer_size);
 
-    assert(sizeof(float) == sizeof(sample_t));
+    static_assert(std::is_same<float, sample_t>::value, "sample_t must be float");
     set_output_signature(io_signature::make(1, MAX_PORTS, sizeof(sample_t)));
 
     jack_nframes_t sample_rate = jack_get_sample_rate(d_jack_client);

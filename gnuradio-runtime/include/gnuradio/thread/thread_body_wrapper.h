@@ -13,6 +13,7 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/thread/basic_error_handler.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/thread/thread.h>
 #include <exception>
 #include <iostream>
@@ -29,6 +30,8 @@ private:
     F d_f;
     std::string d_name;
     bool d_catch_exceptions;
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
     static std::shared_ptr<basic_error_handler> errorHandler;
 
 public:
@@ -37,6 +40,7 @@ public:
                                  bool catch_exceptions = true)
         : d_f(f), d_name(name), d_catch_exceptions(catch_exceptions)
     {
+        gr::configure_default_loggers(d_logger, d_debug_logger, "thread_body_wrapper");
     }
 
     static void register_error_handler(std::shared_ptr<basic_error_handler> handler)
@@ -61,15 +65,18 @@ public:
                         std::string("thread[") + d_name + std::string("]: ") + e.what();
                     errorHandler->addError(err);
                 }
-                std::cerr << "thread[" << d_name << "]: " << e.what() << std::endl;
+                std::ostringstream msg;
+                msg << "ERROR thread[" << d_name << "]: " << e.what();
+                GR_LOG_ERROR(d_logger, msg.str());
             } catch (...) {
                 if (errorHandler) {
                     std::string err = std::string("thread[") + d_name +
                                       std::string("]: caught unrecognized exception");
                     errorHandler->addError(err);
                 }
-                std::cerr << "thread[" << d_name << "]: "
-                          << "caught unrecognized exception\n";
+                std::ostringstream msg;
+                msg << "ERROR thread[" << d_name << "]: caught unrecognized exception";
+                GR_LOG_ERROR(d_logger, msg.str());
             }
 
         } else {

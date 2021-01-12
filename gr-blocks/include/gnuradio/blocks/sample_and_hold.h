@@ -25,14 +25,14 @@ namespace blocks {
  *
  * \details
  * Samples the data stream (input stream 0) and holds the value if
- * the control signal is 1 (intput stream 1).
+ * the control signal is 1 (input stream 1).
  */
 template <class T>
 class BLOCKS_API sample_and_hold : virtual public sync_block
 {
 public:
     // gr::blocks::sample_and_hold::sptr
-    typedef boost::shared_ptr<sample_and_hold<T>> sptr;
+    typedef std::shared_ptr<sample_and_hold<T>> sptr;
 
     static sptr make();
 };

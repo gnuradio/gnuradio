@@ -8,10 +8,6 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
 
 import numpy as np
 
@@ -40,11 +36,17 @@ class test_polar_decoder_sc_list(gr_unittest.TestCase):
         frozen_bit_positions = np.arange(block_size - num_info_bits)
         frozen_bit_values = np.array([],)
 
-        polar_decoder = fec.polar_decoder_sc_list.make(max_list_size, block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
+        polar_decoder = fec.polar_decoder_sc_list.make(
+            max_list_size,
+            block_size,
+            num_info_bits,
+            frozen_bit_positions,
+            frozen_bit_values)
 
         self.assertEqual(num_info_bits, polar_decoder.get_output_size())
         self.assertEqual(block_size, polar_decoder.get_input_size())
-        self.assertFloatTuplesAlmostEqual((float(num_info_bits) / block_size, ), (polar_decoder.rate(), ))
+        self.assertFloatTuplesAlmostEqual(
+            (float(num_info_bits) / block_size, ), (polar_decoder.rate(), ))
         self.assertFalse(polar_decoder.set_frame_size(10))
 
     def test_002_one_vector(self):
@@ -54,15 +56,25 @@ class test_polar_decoder_sc_list(gr_unittest.TestCase):
         num_info_bits = 2 ** (expo - 1)
         max_list_size = 2 ** (expo - 2)
         num_frozen_bits = block_size - num_info_bits
-        frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
+        frozen_bit_positions = cc.frozen_bit_positions(
+            block_size, num_info_bits, 0.0)
         frozen_bit_values = np.array([0] * num_frozen_bits,)
 
         bits = np.random.randint(2, size=num_info_bits)
-        encoder = PolarEncoder(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
+        encoder = PolarEncoder(
+            block_size,
+            num_info_bits,
+            frozen_bit_positions,
+            frozen_bit_values)
         data = encoder.encode(bits)
         gr_data = 2.0 * data - 1.0
 
-        polar_decoder = fec.polar_decoder_sc_list.make(max_list_size, block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
+        polar_decoder = fec.polar_decoder_sc_list.make(
+            max_list_size,
+            block_size,
+            num_info_bits,
+            frozen_bit_positions,
+            frozen_bit_values)
         src = blocks.vector_source_f(gr_data, False)
         dec_block = extended_decoder(polar_decoder, None)
         snk = blocks.vector_sink_b(1)
@@ -88,10 +100,15 @@ class test_polar_decoder_sc_list(gr_unittest.TestCase):
         num_info_bits = 2 ** (expo - 1)
         max_list_size = 2 ** (expo - 2)
         num_frozen_bits = block_size - num_info_bits
-        frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
+        frozen_bit_positions = cc.frozen_bit_positions(
+            block_size, num_info_bits, 0.0)
         frozen_bit_values = np.array([0] * num_frozen_bits,)
 
-        encoder = PolarEncoder(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
+        encoder = PolarEncoder(
+            block_size,
+            num_info_bits,
+            frozen_bit_positions,
+            frozen_bit_values)
 
         ref = np.array([], dtype=int)
         data = np.array([], dtype=int)
@@ -102,7 +119,12 @@ class test_polar_decoder_sc_list(gr_unittest.TestCase):
             ref = np.append(ref, b)
         gr_data = 2.0 * data - 1.0
 
-        polar_decoder = fec.polar_decoder_sc_list.make(max_list_size, block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
+        polar_decoder = fec.polar_decoder_sc_list.make(
+            max_list_size,
+            block_size,
+            num_info_bits,
+            frozen_bit_positions,
+            frozen_bit_values)
         src = blocks.vector_source_f(gr_data, False)
         dec_block = extended_decoder(polar_decoder, None)
         snk = blocks.vector_sink_b(1)
@@ -116,4 +138,4 @@ class test_polar_decoder_sc_list(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_polar_decoder_sc_list, "test_polar_decoder_sc_list.xml")
+    gr_unittest.run(test_polar_decoder_sc_list)

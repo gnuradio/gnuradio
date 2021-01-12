@@ -9,6 +9,14 @@ include(GrMiscUtils)
 gr_check_hdr_n_def(sys/resource.h HAVE_SYS_RESOURCE_H)
 
 ########################################################################
+# Look for libunwind
+########################################################################
+find_package(libunwind)
+if(libunwind_FOUND)
+    add_definitions(-DHAVE_LIBUNWIND)
+endif(libunwind_FOUND)
+
+########################################################################
 # Handle the generated constants
 ########################################################################
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c
@@ -22,7 +30,6 @@ message(STATUS "Loading version ${VERSION} into constants...")
 string(REPLACE "\\" "\\\\" prefix "${prefix}")
 string(REPLACE "\\" "\\\\" SYSCONFDIR "${SYSCONFDIR}")
 string(REPLACE "\\" "\\\\" GR_PREFSDIR "${GR_PREFSDIR}")
-
 
 #########################################################################
 # Include subdirs rather to populate to the sources lists.
@@ -47,7 +54,6 @@ add_library(gnuradio-runtime
   block_gateway_impl.cc
   block_registry.cc
   buffer.cc
-  feval.cc
   flat_flowgraph.cc
   flowgraph.cc
   hier_block2.cc
@@ -73,6 +79,7 @@ add_library(gnuradio-runtime
   sync_interpolator.cc
   sys_paths.cc
   tagged_stream_block.cc
+  terminate_handler.cc
   test.cc
   top_block.cc
   top_block_impl.cc
@@ -188,7 +195,7 @@ endif(ENABLE_GR_CTRLPORT)
 
 target_link_libraries(gnuradio-runtime PUBLIC
   gnuradio-pmt
-  ${GR_VOLK_LIB}
+  Volk::volk
   Boost::program_options
   Boost::filesystem
   Boost::system
@@ -196,11 +203,16 @@ target_link_libraries(gnuradio-runtime PUBLIC
   Boost::thread
   Log4Cpp::log4cpp
   MPLib::mplib
+  ${PYTHON_LIBRARIES}
+  ${libunwind_LIBRARIES}
   )
 
 target_include_directories(gnuradio-runtime
   PUBLIC
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+    ${PYTHON_INCLUDE_DIR}
+    ${PYTHON_NUMPY_INCLUDE_DIR}
+    ${pybind11_INCLUDE_DIR}
+    $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
   PRIVATE

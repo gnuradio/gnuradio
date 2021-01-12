@@ -24,7 +24,7 @@ class GR_RUNTIME_API vmcircbuf_sysv_shm : public gr::vmcircbuf
 {
 public:
     vmcircbuf_sysv_shm(int size);
-    virtual ~vmcircbuf_sysv_shm();
+    ~vmcircbuf_sysv_shm() override;
 };
 
 /*!
@@ -38,19 +38,19 @@ private:
 public:
     static gr::vmcircbuf_factory* singleton();
 
-    virtual const char* name() const { return "gr::vmcircbuf_sysv_shm_factory"; }
+    const char* name() const override { return "gr::vmcircbuf_sysv_shm_factory"; }
 
     /*!
      * \brief return granularity of mapping, typically equal to page size
      */
-    virtual int granularity();
+    int granularity() override;
 
     /*!
      * \brief return a gr::vmcircbuf, or 0 if unable.
      *
      * Call this to create a doubly mapped circular buffer.
      */
-    virtual gr::vmcircbuf* make(int size);
+    gr::vmcircbuf* make(int size) override;
 };
 
 } /* namespace gr */

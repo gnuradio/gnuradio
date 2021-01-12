@@ -31,7 +31,7 @@ class CHANNELS_API fading_model : virtual public sync_block
 {
 public:
     // gr::channels::channel_model::sptr
-    typedef boost::shared_ptr<fading_model> sptr;
+    typedef std::shared_ptr<fading_model> sptr;
 
     /*! \brief Build the channel simulator.
      *

@@ -10,18 +10,26 @@
 '''
 Provides a GUI interface using the QT backend.
 '''
-from __future__ import unicode_literals
 
 # The presence of this file turns this directory into a Python package
 import os
 
 
 try:
-    from .qtgui_swig import *
+    from .qtgui_python import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from .qtgui_swig import *
+    __path__.append(os.path.join(dirname, "bindings"))
+    from .qtgui_python import *
+
+try:
+	import matplotlib.pyplot as plt
+	from .distanceradar import DistanceRadar
+	from .azelplot import AzElPlot
+except ImportError:
+	from gnuradio import gr
+	gr.log.warn("Matplotlib is a required dependency to use DistanceRadar and AzElPlot."
+                "  Please install matplotlib to use these blocks (https://matplotlib.org/)")
 
 from .range import Range, RangeWidget
 from . import util
@@ -29,8 +37,6 @@ from . import util
 from .compass import GrCompass
 from .togglebutton import ToggleButton
 from .msgpushbutton import MsgPushButton
-from .distanceradar import DistanceRadar
-from .azelplot import AzElPlot
 from .msgcheckbox import MsgCheckBox
 from .digitalnumbercontrol import MsgDigitalNumberControl
 from .dialcontrol import GrDialControl

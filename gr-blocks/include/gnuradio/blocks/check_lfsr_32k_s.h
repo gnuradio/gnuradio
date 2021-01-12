@@ -30,7 +30,7 @@ class BLOCKS_API check_lfsr_32k_s : virtual public sync_block
 {
 public:
     // gr::blocks::check_lfsr_32k_s::sptr
-    typedef boost::shared_ptr<check_lfsr_32k_s> sptr;
+    typedef std::shared_ptr<check_lfsr_32k_s> sptr;
 
     static sptr make();
 

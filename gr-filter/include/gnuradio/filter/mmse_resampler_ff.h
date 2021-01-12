@@ -31,7 +31,7 @@ class FILTER_API mmse_resampler_ff : virtual public block
 {
 public:
     // gr::filter::mmse_resampler_ff::sptr
-    typedef boost::shared_ptr<mmse_resampler_ff> sptr;
+    typedef std::shared_ptr<mmse_resampler_ff> sptr;
 
     /*!
      * \brief Build the resampling MMSE filter (float input, float output)

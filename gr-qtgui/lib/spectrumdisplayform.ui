@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>712</width>
-    <height>560</height>
+    <height>575</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -163,7 +163,7 @@
    <item row="0" column="0" colspan="4">
     <widget class="QTabWidget" name="SpectrumTypeTab">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="FrequencyPage">
       <attribute name="title">
@@ -304,7 +304,7 @@
         <widget class="QLabel" name="textLabel1">
          <property name="maximumSize">
           <size>
-           <width>130</width>
+           <width>170</width>
            <height>16777215</height>
           </size>
          </property>
@@ -330,7 +330,10 @@
          <property name="focusPolicy">
           <enum>Qt::ClickFocus</enum>
          </property>
-         <property name="valid">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="valid" stdset="0">
           <bool>true</bool>
          </property>
         </widget>
@@ -375,14 +378,17 @@
            <height>0</height>
           </size>
          </property>
-         <property name="valid">
-          <bool>true</bool>
-         </property>
          <property name="mouseTracking">
           <bool>true</bool>
          </property>
          <property name="focusPolicy">
           <enum>Qt::ClickFocus</enum>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="valid" stdset="0">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -406,7 +412,7 @@
         <widget class="QPushButton" name="WaterfallAutoScaleBtn">
          <property name="maximumSize">
           <size>
-           <width>80</width>
+           <width>100</width>
            <height>16777215</height>
           </size>
          </property>
@@ -517,11 +523,11 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
- <customwidget>
+  <customwidget>
    <class>QwtSlider</class>
    <extends>QWidget</extends>
    <header>qwt_slider.h</header>
- </customwidget>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>SpectrumTypeTab</tabstop>

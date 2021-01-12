@@ -25,7 +25,7 @@ class BLOCKS_API stream_to_vector : virtual public sync_decimator
 {
 public:
     // gr::blocks::stream_to_vector::sptr
-    typedef boost::shared_ptr<stream_to_vector> sptr;
+    typedef std::shared_ptr<stream_to_vector> sptr;
 
     /*!
      * Make a stream-to-vector block.

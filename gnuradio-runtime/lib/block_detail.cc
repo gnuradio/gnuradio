@@ -14,6 +14,7 @@
 
 #include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
+#include <gnuradio/logger.h>
 #include <iostream>
 
 namespace gr {
@@ -50,6 +51,7 @@ block_detail::block_detail(unsigned int ninputs, unsigned int noutputs)
 {
     s_ncurrently_allocated++;
     d_pc_start_time = gr::high_res_timer_now();
+    gr::configure_default_loggers(d_logger, d_debug_logger, "block_detail");
 }
 
 block_detail::~block_detail()
@@ -220,7 +222,7 @@ void block_detail::set_processor_affinity(const std::vector<int>& mask)
         try {
             gr::thread::thread_bind_to_processor(thread, mask);
         } catch (std::runtime_error& e) {
-            std::cerr << "set_processor_affinity: invalid mask." << std::endl;
+            GR_LOG_ERROR(d_logger, "set_processor_affinity: invalid mask.");
         }
     }
 }

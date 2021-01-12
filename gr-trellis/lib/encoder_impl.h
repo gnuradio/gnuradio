@@ -28,21 +28,21 @@ private:
 
 public:
     encoder_impl(const fsm& FSM, int ST, int K, bool B);
-    ~encoder_impl();
+    ~encoder_impl() override;
 
-    fsm FSM() const
+    fsm FSM() const override
     {
         return d_FSM;
         ;
     }
-    int ST() const { return d_ST; }
-    int K() const { return d_K; }
-    void set_FSM(const fsm& FSM);
-    void set_ST(int ST);
-    void set_K(int K);
+    int ST() const override { return d_ST; }
+    int K() const override { return d_K; }
+    void set_FSM(const fsm& FSM) override;
+    void set_ST(int ST) override;
+    void set_K(int K) override;
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace trellis */

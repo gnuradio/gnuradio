@@ -44,36 +44,36 @@ public:
                          int D,
                          const std::vector<float>& TABLE,
                          digital::trellis_metric_type_t TYPE);
-    ~siso_combined_f_impl();
+    ~siso_combined_f_impl() override;
 
-    fsm FSM() const { return d_FSM; }
-    int K() const { return d_K; }
-    int S0() const { return d_S0; }
-    int SK() const { return d_SK; }
-    bool POSTI() const { return d_POSTI; }
-    bool POSTO() const { return d_POSTO; }
-    siso_type_t SISO_TYPE() const { return d_SISO_TYPE; }
-    int D() const { return d_D; }
-    std::vector<float> TABLE() const { return d_TABLE; }
-    digital::trellis_metric_type_t TYPE() const { return d_TYPE; }
+    fsm FSM() const override { return d_FSM; }
+    int K() const override { return d_K; }
+    int S0() const override { return d_S0; }
+    int SK() const override { return d_SK; }
+    bool POSTI() const override { return d_POSTI; }
+    bool POSTO() const override { return d_POSTO; }
+    siso_type_t SISO_TYPE() const override { return d_SISO_TYPE; }
+    int D() const override { return d_D; }
+    std::vector<float> TABLE() const override { return d_TABLE; }
+    digital::trellis_metric_type_t TYPE() const override { return d_TYPE; }
 
-    void set_FSM(const fsm& FSM);
-    void set_K(int K);
-    void set_S0(int S0);
-    void set_SK(int SK);
-    void set_POSTI(bool POSTI);
-    void set_POSTO(bool POSTO);
-    void set_SISO_TYPE(trellis::siso_type_t type);
-    void set_D(int D);
-    void set_TABLE(const std::vector<float>& table);
-    void set_TYPE(digital::trellis_metric_type_t type);
+    void set_FSM(const fsm& FSM) override;
+    void set_K(int K) override;
+    void set_S0(int S0) override;
+    void set_SK(int SK) override;
+    void set_POSTI(bool POSTI) override;
+    void set_POSTO(bool POSTO) override;
+    void set_SISO_TYPE(trellis::siso_type_t type) override;
+    void set_D(int D) override;
+    void set_TABLE(const std::vector<float>& table) override;
+    void set_TYPE(digital::trellis_metric_type_t type) override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items);
+                     gr_vector_void_star& output_items) override;
 };
 
 } /* namespace trellis */

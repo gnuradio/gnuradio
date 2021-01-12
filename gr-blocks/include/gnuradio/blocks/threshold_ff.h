@@ -23,14 +23,14 @@ namespace blocks {
  *
  * \details
  * Test the incoming signal against a threshold. If the signal
- * excedes the \p hi value, it will output a 1 until the signal
+ * exceeds the \p hi value, it will output a 1 until the signal
  * falls below the \p lo value.
  */
 class BLOCKS_API threshold_ff : virtual public sync_block
 {
 public:
     // gr::blocks::threshold_ff::sptr
-    typedef boost::shared_ptr<threshold_ff> sptr;
+    typedef std::shared_ptr<threshold_ff> sptr;
 
     /* \brief Create a threadshold block.
      * \param lo Threshold input signal needs to drop below to

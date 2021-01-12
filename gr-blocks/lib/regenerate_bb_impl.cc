@@ -20,7 +20,7 @@ namespace blocks {
 
 regenerate_bb::sptr regenerate_bb::make(int period, unsigned int max_regen)
 {
-    return gnuradio::get_initial_sptr(new regenerate_bb_impl(period, max_regen));
+    return gnuradio::make_block_sptr<regenerate_bb_impl>(period, max_regen);
 }
 
 regenerate_bb_impl::regenerate_bb_impl(int period, unsigned int max_regen)

@@ -44,7 +44,7 @@ class DIGITAL_API symbol_sync_cc : virtual public block
 {
 public:
     // gr::digital::symbol_sync_cc::sptr
-    typedef boost::shared_ptr<symbol_sync_cc> sptr;
+    typedef std::shared_ptr<symbol_sync_cc> sptr;
 
     /*!
      * Make a Symbol Synchronizer block.
@@ -224,7 +224,7 @@ public:
      *
      * Damping factor of the 2nd order loop transfer function.
      * When a new damping factor is set, the gains, alpha and beta,
-     * of the loop are automatcally recalculated.
+     * of the loop are automatically recalculated.
      *
      * \param zeta    loop damping factor
      */
@@ -243,7 +243,7 @@ public:
      * properly from the desired input loop bandwidth and damping factor.
      *
      * When a new ted_gain is set, the gains, alpha and beta,
-     * of the loop are automatcally recalculated.
+     * of the loop are automatically recalculated.
      *
      * \param ted_gain    expected gain of the timing error detector
      */

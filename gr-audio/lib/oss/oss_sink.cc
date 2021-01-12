@@ -52,8 +52,9 @@ oss_sink::oss_sink(int sampling_rate, const std::string device_name, bool ok_to_
       d_chunk_size(0)
 {
     if ((d_fd = open(d_device_name.c_str(), O_WRONLY)) < 0) {
-        fprintf(stderr, "audio_oss_sink: ");
-        perror(d_device_name.c_str());
+        GR_LOG_ERROR(d_logger,
+                     boost::format("opening device %s: %s") % d_device_name %
+                         strerror(errno));
         throw std::runtime_error("audio_oss_sink");
     }
 
@@ -68,31 +69,36 @@ oss_sink::oss_sink(int sampling_rate, const std::string device_name, bool ok_to_
     int format = AFMT_S16_NE;
     int orig_format = format;
     if (ioctl(d_fd, SNDCTL_DSP_SETFMT, &format) < 0) {
-        std::cerr << "audio_oss_sink: " << d_device_name << " ioctl failed\n";
-        perror(d_device_name.c_str());
+        GR_LOG_ERROR(d_logger,
+                     boost::format("%s ioctl failed: %s") % d_device_name %
+                         strerror(errno));
         throw std::runtime_error("audio_oss_sink");
     }
 
     if (format != orig_format) {
-        fprintf(stderr, "audio_oss_sink: unable to support format %d\n", orig_format);
-        fprintf(stderr, "  card requested %d instead.\n", format);
+        GR_LOG_ERROR(
+            d_logger,
+            boost::format("%s unable to support format %d. card requested %d instead.") %
+                orig_format % format);
     }
 
     // set to stereo no matter what.  Some hardware only does stereo
     int channels = 2;
     if (ioctl(d_fd, SNDCTL_DSP_CHANNELS, &channels) < 0 || channels != 2) {
-        perror("audio_oss_sink: could not set STEREO mode");
+        GR_LOG_ERROR(d_logger,
+                     boost::format("could not set STEREO mode: %s") % strerror(errno));
         throw std::runtime_error("audio_oss_sink");
     }
 
     // set sampling freq
     int sf = sampling_rate;
     if (ioctl(d_fd, SNDCTL_DSP_SPEED, &sf) < 0) {
-        std::cerr << "audio_oss_sink: " << d_device_name << ": invalid sampling_rate "
-                  << sampling_rate << "\n";
+        GR_LOG_ERROR(d_logger,
+                     boost::format("%s: invalid sampling_rate %d") % d_device_name %
+                         sampling_rate);
         sampling_rate = 8000;
         if (ioctl(d_fd, SNDCTL_DSP_SPEED, &sf) < 0) {
-            std::cerr << "audio_oss_sink: failed to set sampling_rate to 8000\n";
+            GR_LOG_ERROR(d_logger, "failed to set sampling_rate to 8000");
             throw std::runtime_error("audio_oss_sink");
         }
     }
@@ -121,7 +127,7 @@ int oss_sink::work(int noutput_items,
             }
             f0 += d_chunk_size;
             if (write(d_fd, d_buffer, 2 * d_chunk_size * sizeof(short)) < 0)
-                perror("audio_oss_sink: write");
+                GR_LOG_ERROR(d_logger, boost::format("write %s") % strerror(errno));
         }
         break;
 
@@ -137,7 +143,7 @@ int oss_sink::work(int noutput_items,
             f0 += d_chunk_size;
             f1 += d_chunk_size;
             if (write(d_fd, d_buffer, 2 * d_chunk_size * sizeof(short)) < 0)
-                perror("audio_oss_sink: write");
+                GR_LOG_ERROR(d_logger, boost::format("write %s") % strerror(errno));
         }
         break;
     }

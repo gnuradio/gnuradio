@@ -22,7 +22,7 @@ namespace blocks {
 template <class T>
 typename sample_and_hold<T>::sptr sample_and_hold<T>::make()
 {
-    return gnuradio::get_initial_sptr(new sample_and_hold_impl<T>());
+    return gnuradio::make_block_sptr<sample_and_hold_impl<T>>();
 }
 
 template <class T>

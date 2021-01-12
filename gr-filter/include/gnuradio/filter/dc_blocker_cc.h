@@ -46,7 +46,7 @@ class FILTER_API dc_blocker_cc : virtual public sync_block
 {
 public:
     // gr::filter::dc_blocker_cc::sptr
-    typedef boost::shared_ptr<dc_blocker_cc> sptr;
+    typedef std::shared_ptr<dc_blocker_cc> sptr;
 
     /*!
      * Make a DC blocker block.

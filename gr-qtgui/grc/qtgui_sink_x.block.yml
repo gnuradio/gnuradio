@@ -21,10 +21,10 @@ parameters:
     default: '1024'
 -   id: wintype
     label: Window Type
-    dtype: int
-    default: firdes.WIN_BLACKMAN_hARRIS
-    options: [firdes.WIN_BLACKMAN_hARRIS, firdes.WIN_HAMMING, firdes.WIN_HANN, firdes.WIN_BLACKMAN,
-        firdes.WIN_RECTANGULAR, firdes.WIN_KAISER]
+    dtype: enum
+    default: window.WIN_BLACKMAN_hARRIS
+    options: [window.WIN_BLACKMAN_hARRIS, window.WIN_HAMMING, window.WIN_HANN, window.WIN_BLACKMAN,
+        window.WIN_RECTANGULAR, window.WIN_KAISER]
     option_labels: [Blackman-harris, Hamming, Hann, Blackman, Rectangular, Kaiser]
     hide: part
 -   id: fc
@@ -120,7 +120,8 @@ templates:
             ${plotfreq}, #plotfreq
             ${plotwaterfall}, #plotwaterfall
             ${plottime}, #plottime
-            ${plotconst} #plotconst
+            ${plotconst}, #plotconst
+            None # parent
         )
         self.${id}.set_update_time(1.0/${rate})
         ${win} = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)

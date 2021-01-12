@@ -25,12 +25,12 @@ class BLOCKS_API and_const_impl : public and_const<T>
 public:
     and_const_impl(T k);
 
-    T k() const { return d_k; }
-    void set_k(T k) { d_k = k; }
+    T k() const override { return d_k; }
+    void set_k(T k) override { d_k = k; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace blocks */

@@ -338,7 +338,7 @@ blocks:
     post_padding: '10'
     pre_padding: '10'
     type: complex
-    window: firdes.window(firdes.WIN_HANN, 50, 0)
+    window: firdes.window(window.WIN_HANN, 50, 0)
   states:
     bus_sink: false
     bus_source: false
@@ -567,7 +567,7 @@ blocks:
     width7: '1'
     width8: '1'
     width9: '1'
-    wintype: firdes.WIN_BLACKMAN_hARRIS
+    wintype: window.WIN_BLACKMAN_hARRIS
     ymax: '10'
     ymin: '-140'
   states:

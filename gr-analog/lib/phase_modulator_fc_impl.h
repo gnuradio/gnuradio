@@ -24,17 +24,17 @@ private:
 
 public:
     phase_modulator_fc_impl(double sensitivity);
-    ~phase_modulator_fc_impl();
+    ~phase_modulator_fc_impl() override;
 
-    double sensitivity() const { return d_sensitivity; }
-    double phase() const { return d_phase; }
+    double sensitivity() const override { return d_sensitivity; }
+    double phase() const override { return d_phase; }
 
-    void set_sensitivity(double s) { d_sensitivity = s; }
-    void set_phase(double p) { d_phase = p; }
+    void set_sensitivity(double s) override { d_sensitivity = s; }
+    void set_phase(double p) override { d_phase = p; }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace analog */

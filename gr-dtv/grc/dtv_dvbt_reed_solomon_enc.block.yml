@@ -1,5 +1,6 @@
 id: dtv_dvbt_reed_solomon_enc
 label: Reed-Solomon Encoder
+flags: [ python, cpp ]
 
 parameters:
 -   id: p
@@ -49,5 +50,20 @@ templates:
     imports: from gnuradio import dtv
     make: dtv.dvbt_reed_solomon_enc(${p}, ${m}, ${gfpoly}, ${n}, ${k}, ${t}, ${s},
         ${blocks})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbt_reed_solomon_enc.h>']
+    declarations: 'dtv::dvbt_reed_solomon_enc::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbt_reed_solomon_enc::make(
+            ${p},
+            ${m},
+            ${gfpoly},
+            ${n},
+            ${k},
+            ${t},
+            ${s},
+            ${blocks});
+    link: ['gnuradio-dtv']
 
 file_format: 1

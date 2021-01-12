@@ -54,7 +54,7 @@ class FILTER_API single_pole_iir_filter_ff : virtual public sync_block
 {
 public:
     // gr::filter::single_pole_iir_filter_ff::sptr
-    typedef boost::shared_ptr<single_pole_iir_filter_ff> sptr;
+    typedef std::shared_ptr<single_pole_iir_filter_ff> sptr;
 
     static sptr make(double alpha, unsigned int vlen = 1);
 

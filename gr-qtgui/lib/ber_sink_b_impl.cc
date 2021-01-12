@@ -30,8 +30,8 @@ ber_sink_b::sptr ber_sink_b::make(std::vector<float> esnos,
                                   std::vector<std::string> curvenames,
                                   QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(new ber_sink_b_impl(
-        esnos, curves, ber_min_errors, ber_limit, curvenames, parent));
+    return gnuradio::make_block_sptr<ber_sink_b_impl>(
+        esnos, curves, ber_min_errors, ber_limit, curvenames, parent);
 }
 
 ber_sink_b_impl::ber_sink_b_impl(std::vector<float> esnos,

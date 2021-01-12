@@ -24,7 +24,7 @@ class FILTER_API interp_fir_filter_impl : public interp_fir_filter<IN_T, OUT_T, 
 {
 private:
     bool d_updated;
-    std::vector<kernel::fir_filter<IN_T, OUT_T, TAP_T>*> d_firs;
+    std::vector<kernel::fir_filter<IN_T, OUT_T, TAP_T>> d_firs;
     std::vector<TAP_T> d_new_taps;
 
     void install_taps(const std::vector<TAP_T>& taps);
@@ -32,14 +32,12 @@ private:
 public:
     interp_fir_filter_impl(unsigned interpolation, const std::vector<TAP_T>& taps);
 
-    ~interp_fir_filter_impl();
-
-    void set_taps(const std::vector<TAP_T>& taps);
-    std::vector<TAP_T> taps() const;
+    void set_taps(const std::vector<TAP_T>& taps) override;
+    std::vector<TAP_T> taps() const override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 };
 
 } /* namespace filter */

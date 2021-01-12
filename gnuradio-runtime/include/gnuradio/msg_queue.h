@@ -32,15 +32,15 @@ class GR_RUNTIME_API msg_queue : public msg_handler
     unsigned int d_limit; // max # of messages in queue.  0 -> unbounded
 
 public:
-    typedef boost::shared_ptr<msg_queue> sptr;
+    typedef std::shared_ptr<msg_queue> sptr;
 
     static sptr make(unsigned int limit = 0);
 
     msg_queue(unsigned int limit);
-    ~msg_queue();
+    ~msg_queue() override;
 
     //! Generic msg_handler method: insert the message.
-    void handle(message::sptr msg) { insert_tail(msg); }
+    void handle(message::sptr msg) override { insert_tail(msg); }
 
     /*!
      * \brief Insert message at tail of queue.

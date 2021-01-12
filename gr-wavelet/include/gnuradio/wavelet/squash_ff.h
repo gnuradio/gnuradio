@@ -26,7 +26,7 @@ class WAVELET_API squash_ff : virtual public sync_block
 {
 public:
     // gr::wavelet::squash_ff::sptr
-    typedef boost::shared_ptr<squash_ff> sptr;
+    typedef std::shared_ptr<squash_ff> sptr;
 
     /*!
      * \param igrid

@@ -20,11 +20,15 @@
 namespace gr {
 namespace blocks {
 
+namespace {
+constexpr int default_const_buffer = 8192;
+}
+
 correctiq_auto::sptr
 correctiq_auto::make(double samp_rate, double freq, float gain, float sync_window)
 {
-    return gnuradio::get_initial_sptr(
-        new correctiq_auto_impl(samp_rate, freq, gain, sync_window));
+    return gnuradio::make_block_sptr<correctiq_auto_impl>(
+        samp_rate, freq, gain, sync_window);
 }
 
 /*
@@ -37,22 +41,14 @@ correctiq_auto_impl::correctiq_auto_impl(double samp_rate,
     : gr::sync_block("correctiq_auto",
                      gr::io_signature::make(1, 1, sizeof(gr_complex)),
                      gr::io_signature::make(1, 1, sizeof(gr_complex))),
-      d_avg_real(0.0),
-      d_avg_img(0.0),
-      d_ratio(1e-05f),
       d_samp_rate(samp_rate),
       d_freq(freq),
       d_gain(gain),
       d_sync_window(sync_window),
-      d_synchronized(false),
-      d_buffer_size(8192),
-      d_volk_const_buffer(NULL)
+      d_max_sync_samples((long)(d_samp_rate * (double)d_sync_window)),
+      d_volk_const_buffer(default_const_buffer)
 {
-    d_max_sync_samples = (long)(d_samp_rate * (double)d_sync_window);
-
-    set_const_buffer(d_buffer_size);
-    d_k = gr_complex(0.0, 0.0);
-    fill_const_buffer();
+    set_const_buffer(default_const_buffer);
 
     message_port_register_in(pmt::mp("rsync"));
     set_msg_handler(pmt::mp("rsync"),
@@ -108,38 +104,22 @@ void correctiq_auto_impl::handle_resync(pmt::pmt_t msg)
 /*
  * Our virtual destructor.
  */
-correctiq_auto_impl::~correctiq_auto_impl()
-{
-    if (d_volk_const_buffer)
-        volk_free(d_volk_const_buffer);
-}
+correctiq_auto_impl::~correctiq_auto_impl() {}
 
 void correctiq_auto_impl::set_const_buffer(int new_size)
 {
-    d_buffer_size = new_size;
-
-    if (d_volk_const_buffer) {
-        volk_free(d_volk_const_buffer);
-    }
-
-    d_volk_const_buffer = reinterpret_cast<gr_complex*>(
-        volk_malloc(sizeof(gr_complex) * d_buffer_size, volk_get_alignment()));
-
+    d_volk_const_buffer.resize(new_size);
     fill_const_buffer();
 }
 
 void correctiq_auto_impl::fill_const_buffer()
 {
-    gr_complex* tmp_ptr = d_volk_const_buffer;
-
-    for (int i = 0; i < d_buffer_size; i++) {
-        *tmp_ptr++ = d_k;
-    }
+    std::fill(std::begin(d_volk_const_buffer), std::end(d_volk_const_buffer), d_k);
 }
 
-double correctiq_auto_impl::get_freq() { return d_freq; }
+double correctiq_auto_impl::get_freq() const { return d_freq; }
 
-float correctiq_auto_impl::get_gain() { return d_gain; }
+float correctiq_auto_impl::get_gain() const { return d_gain; }
 
 void correctiq_auto_impl::set_freq(double new_value)
 {
@@ -171,15 +151,17 @@ int correctiq_auto_impl::work(int noutput_items,
             out[i].imag(in[i].imag() - d_avg_img);
         }
     } else {
-        if (noutput_items > d_buffer_size)
+        if (noutput_items > static_cast<int>(d_volk_const_buffer.size()))
             set_const_buffer(noutput_items);
 
         // Inputs are complex but we're casting as floats to leverage volk
         const float* in = (const float*)input_items[0];
         float* out = (float*)output_items[0];
 
-        volk_32f_x2_add_32f(
-            out, in, reinterpret_cast<float*>(d_volk_const_buffer), 2 * noutput_items);
+        volk_32f_x2_add_32f(out,
+                            in,
+                            reinterpret_cast<float*>(d_volk_const_buffer.data()),
+                            2 * noutput_items);
     }
 
     if (!d_synchronized && (d_sync_counter >= d_max_sync_samples)) {

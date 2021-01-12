@@ -15,36 +15,35 @@
 #include "pmt/pmt_serial_tags.h"
 #include "pmt_int.h"
 #include <pmt/pmt.h>
+#include <boost/endian/conversion.hpp>
 #include <limits>
 #include <vector>
 
 namespace pmt {
 
-static pmt_t parse_pair(std::streambuf& sb);
+static pmt_t parse_pair(std::streambuf& sb, uint8_t type);
 
 // ----------------------------------------------------------------
 // output primitives
 // ----------------------------------------------------------------
 
-static bool serialize_untagged_u8(unsigned int i, std::streambuf& sb)
+static bool serialize_untagged_u8(uint8_t i, std::streambuf& sb)
 {
     return sb.sputc((i >> 0) & 0xff) != std::streambuf::traits_type::eof();
 }
 
 // always writes big-endian
-static bool serialize_untagged_u16(unsigned int i, std::streambuf& sb)
+static bool serialize_untagged_u16(uint16_t i, std::streambuf& sb)
 {
-    sb.sputc((i >> 8) & 0xff);
-    return sb.sputc((i >> 0) & 0xff) != std::streambuf::traits_type::eof();
+    boost::endian::native_to_big_inplace(i);
+    return sb.sputn((char*)&i, sizeof(i)) != std::streambuf::traits_type::eof();
 }
 
 // always writes big-endian
-static bool serialize_untagged_u32(unsigned int i, std::streambuf& sb)
+static bool serialize_untagged_u32(uint32_t i, std::streambuf& sb)
 {
-    sb.sputc((i >> 24) & 0xff);
-    sb.sputc((i >> 16) & 0xff);
-    sb.sputc((i >> 8) & 0xff);
-    return sb.sputc((i >> 0) & 0xff) != std::streambuf::traits_type::eof();
+    boost::endian::native_to_big_inplace(i);
+    return sb.sputn((char*)&i, sizeof(i)) != std::streambuf::traits_type::eof();
 }
 
 static bool serialize_untagged_f64(double i, std::streambuf& sb)
@@ -55,34 +54,60 @@ static bool serialize_untagged_f64(double i, std::streambuf& sb)
     } iu_t;
     iu_t iu;
     iu.id = i;
-    sb.sputc((iu.ii >> 56) & 0xff);
-    sb.sputc((iu.ii >> 48) & 0xff);
-    sb.sputc((iu.ii >> 40) & 0xff);
-    sb.sputc((iu.ii >> 32) & 0xff);
-    sb.sputc((iu.ii >> 24) & 0xff);
-    sb.sputc((iu.ii >> 16) & 0xff);
-    sb.sputc((iu.ii >> 8) & 0xff);
-    return sb.sputc((iu.ii >> 0) & 0xff) != std::streambuf::traits_type::eof();
+    boost::endian::native_to_big_inplace(iu.ii);
+    return sb.sputn((char*)&iu.ii, sizeof(iu.ii)) != std::streambuf::traits_type::eof();
 }
-
 
 // always writes big-endian
 static bool serialize_untagged_u64(uint64_t i, std::streambuf& sb)
 {
-    sb.sputc((i >> 56) & 0xff);
-    sb.sputc((i >> 48) & 0xff);
-    sb.sputc((i >> 40) & 0xff);
-    sb.sputc((i >> 32) & 0xff);
-    sb.sputc((i >> 24) & 0xff);
-    sb.sputc((i >> 16) & 0xff);
-    sb.sputc((i >> 8) & 0xff);
-    return sb.sputc((i >> 0) & 0xff) != std::streambuf::traits_type::eof();
+    boost::endian::native_to_big_inplace(i);
+    return sb.sputn((char*)&i, sizeof(i)) != std::streambuf::traits_type::eof();
+}
+
+// always writes big-endian
+static bool
+serialize_untagged_u8_array(const uint8_t* data, size_t length, std::streambuf& sb)
+{
+    return sb.sputn((char*)data, length) != std::streambuf::traits_type::eof();
+}
+
+static bool
+serialize_untagged_u16_array(const uint16_t* data, size_t length, std::streambuf& sb)
+{
+    std::vector<uint16_t> bedata(length);
+    for (size_t i = 0; i < length; i++) {
+        bedata[i] = boost::endian::native_to_big(data[i]);
+    }
+    return sb.sputn((char*)&bedata[0], length * sizeof(uint16_t)) !=
+           std::streambuf::traits_type::eof();
+}
+
+static bool
+serialize_untagged_u32_array(const uint32_t* data, size_t length, std::streambuf& sb)
+{
+    std::vector<uint32_t> bedata(length);
+    for (size_t i = 0; i < length; i++) {
+        bedata[i] = boost::endian::native_to_big(data[i]);
+    }
+    return sb.sputn((char*)&bedata[0], length * sizeof(uint32_t)) !=
+           std::streambuf::traits_type::eof();
+}
+
+static bool
+serialize_untagged_u64_array(const uint64_t* data, size_t length, std::streambuf& sb)
+{
+    std::vector<uint64_t> bedata(length);
+    for (size_t i = 0; i < length; i++) {
+        bedata[i] = boost::endian::native_to_big(data[i]);
+    }
+    return sb.sputn((char*)&bedata[0], length * sizeof(uint64_t)) !=
+           std::streambuf::traits_type::eof();
 }
 
 // ----------------------------------------------------------------
 // input primitives
 // ----------------------------------------------------------------
-
 
 // always reads big-endian
 static bool deserialize_untagged_u8(uint8_t* ip, std::streambuf& sb)
@@ -101,15 +126,10 @@ static bool deserialize_untagged_u8(uint8_t* ip, std::streambuf& sb)
 static bool deserialize_untagged_u16(uint16_t* ip, std::streambuf& sb)
 {
     std::streambuf::traits_type::int_type t;
-    int i;
+    t = sb.sgetn((char*)ip, sizeof(uint16_t));
+    sb.pubseekoff(sizeof(uint16_t), std::ios_base::cur);
+    boost::endian::big_to_native_inplace(*ip);
 
-    t = sb.sbumpc();
-    i = t & 0xff;
-
-    t = sb.sbumpc();
-    i = (i << 8) | (t & 0xff);
-
-    *ip = i;
     return t != std::streambuf::traits_type::eof();
 }
 
@@ -117,19 +137,10 @@ static bool deserialize_untagged_u16(uint16_t* ip, std::streambuf& sb)
 static bool deserialize_untagged_u32(uint32_t* ip, std::streambuf& sb)
 {
     std::streambuf::traits_type::int_type t;
-    int i;
+    t = sb.sgetn((char*)ip, sizeof(uint32_t));
+    sb.pubseekoff(sizeof(uint32_t), std::ios_base::cur);
+    boost::endian::big_to_native_inplace(*ip);
 
-    t = sb.sbumpc();
-    i = t & 0xff;
-
-    t = sb.sbumpc();
-    i = (i << 8) | (t & 0xff);
-    t = sb.sbumpc();
-    i = (i << 8) | (t & 0xff);
-    t = sb.sbumpc();
-    i = (i << 8) | (t & 0xff);
-
-    *ip = i;
     return t != std::streambuf::traits_type::eof();
 }
 
@@ -137,27 +148,10 @@ static bool deserialize_untagged_u32(uint32_t* ip, std::streambuf& sb)
 static bool deserialize_untagged_u64(uint64_t* ip, std::streambuf& sb)
 {
     std::streambuf::traits_type::int_type t;
-    uint64_t i;
+    t = sb.sgetn((char*)ip, sizeof(uint64_t));
+    sb.pubseekoff(sizeof(uint64_t), std::ios_base::cur);
+    boost::endian::big_to_native_inplace(*ip);
 
-    t = sb.sbumpc();
-    i = t & 0xff;
-
-    t = sb.sbumpc();
-    i = (i << 8) | (t & 0xff);
-    t = sb.sbumpc();
-    i = (i << 8) | (t & 0xff);
-    t = sb.sbumpc();
-    i = (i << 8) | (t & 0xff);
-    t = sb.sbumpc();
-    i = (i << 8) | (t & 0xff);
-    t = sb.sbumpc();
-    i = (i << 8) | (t & 0xff);
-    t = sb.sbumpc();
-    i = (i << 8) | (t & 0xff);
-    t = sb.sbumpc();
-    i = (i << 8) | (t & 0xff);
-
-    *ip = i;
     return t != std::streambuf::traits_type::eof();
 }
 
@@ -171,26 +165,11 @@ static bool deserialize_untagged_f64(double* ip, std::streambuf& sb)
     } iu_t;
 
     iu_t iu;
-
-    t = sb.sbumpc();
-    iu.ii = t & 0xff;
-
-    t = sb.sbumpc();
-    iu.ii = (iu.ii << 8) | (t & 0xff);
-    t = sb.sbumpc();
-    iu.ii = (iu.ii << 8) | (t & 0xff);
-    t = sb.sbumpc();
-    iu.ii = (iu.ii << 8) | (t & 0xff);
-    t = sb.sbumpc();
-    iu.ii = (iu.ii << 8) | (t & 0xff);
-    t = sb.sbumpc();
-    iu.ii = (iu.ii << 8) | (t & 0xff);
-    t = sb.sbumpc();
-    iu.ii = (iu.ii << 8) | (t & 0xff);
-    t = sb.sbumpc();
-    iu.ii = (iu.ii << 8) | (t & 0xff);
-
+    t = sb.sgetn((char*)&iu, sizeof(uint64_t));
+    sb.pubseekoff(sizeof(uint64_t), std::ios_base::cur);
+    boost::endian::big_to_native_inplace(iu.ii);
     *ip = iu.id;
+
     return t != std::streambuf::traits_type::eof();
 }
 
@@ -211,6 +190,63 @@ static bool deserialize_tuple(pmt_t* tuple, std::streambuf& sb)
     return ok;
 }
 
+// always reads big-endian
+static bool deserialize_untagged_u8_vector(std::vector<uint8_t>& data,
+                                           size_t nitems,
+                                           std::streambuf& sb)
+{
+    std::streambuf::traits_type::int_type t;
+    data.resize(nitems);
+    t = sb.sgetn((char*)&data[0], nitems);
+    sb.pubseekoff(nitems, std::ios_base::cur);
+
+    return t != std::streambuf::traits_type::eof();
+}
+
+static bool deserialize_untagged_u16_vector(std::vector<uint16_t>& data,
+                                            size_t nitems,
+                                            std::streambuf& sb)
+{
+    std::streambuf::traits_type::int_type t;
+    data.resize(nitems);
+    t = sb.sgetn((char*)&data[0], nitems * sizeof(uint16_t));
+    sb.pubseekoff(sizeof(uint16_t) * nitems, std::ios_base::cur);
+    for (size_t i = 0; i < nitems; i++) {
+        boost::endian::big_to_native_inplace(data[i]);
+    }
+
+    return t != std::streambuf::traits_type::eof();
+}
+
+static bool deserialize_untagged_u32_vector(std::vector<uint32_t>& data,
+                                            size_t nitems,
+                                            std::streambuf& sb)
+{
+    std::streambuf::traits_type::int_type t;
+    data.resize(nitems);
+    t = sb.sgetn((char*)&data[0], nitems * sizeof(uint32_t));
+    sb.pubseekoff(sizeof(uint32_t) * nitems, std::ios_base::cur);
+    for (size_t i = 0; i < nitems; i++) {
+        boost::endian::big_to_native_inplace(data[i]);
+    }
+
+    return t != std::streambuf::traits_type::eof();
+}
+
+static bool deserialize_untagged_u64_vector(std::vector<uint64_t>& data,
+                                            size_t nitems,
+                                            std::streambuf& sb)
+{
+    std::streambuf::traits_type::int_type t;
+    data.resize(nitems);
+    t = sb.sgetn((char*)&data[0], nitems * sizeof(uint64_t));
+    sb.pubseekoff(sizeof(uint64_t) * nitems, std::ios_base::cur);
+    for (size_t i = 0; i < nitems; i++) {
+        boost::endian::big_to_native_inplace(data[i]);
+    }
+
+    return t != std::streambuf::traits_type::eof();
+}
 
 /*
  * Write portable byte-serial representation of \p obj to \p sb
@@ -238,13 +274,12 @@ tail_recursion:
         size_t len = s.size();
         ok = serialize_untagged_u8(PST_SYMBOL, sb);
         ok &= serialize_untagged_u16(len, sb);
-        for (size_t i = 0; i < len; i++)
-            ok &= serialize_untagged_u8(s[i], sb);
+        ok &= serialize_untagged_u8_array((const uint8_t*)s.c_str(), len, sb);
         return ok;
     }
 
     if (is_pair(obj)) {
-        ok = serialize_untagged_u8(PST_PAIR, sb);
+        ok = serialize_untagged_u8(is_dict(obj) ? PST_DICT : PST_PAIR, sb);
         ok &= serialize(car(obj), sb);
         if (!ok)
             return false;
@@ -315,9 +350,7 @@ tail_recursion:
             for (size_t i = 0; i < npad; i++) {
                 ok &= serialize_untagged_u8(0, sb);
             }
-            for (size_t i = 0; i < vec_len; i++) {
-                ok &= serialize_untagged_u8(u8vector_ref(obj, i), sb);
-            }
+            ok &= serialize_untagged_u8_array(&u8vector_elements(obj)[0], vec_len, sb);
             return ok;
         }
 
@@ -329,9 +362,9 @@ tail_recursion:
             for (size_t i = 0; i < npad; i++) {
                 ok &= serialize_untagged_u8(0, sb);
             }
-            for (size_t i = 0; i < vec_len; i++) {
-                ok &= serialize_untagged_u8(s8vector_ref(obj, i), sb);
-            }
+            ok &= serialize_untagged_u8_array(
+                (uint8_t*)&s8vector_elements(obj)[0], vec_len, sb);
+
             return ok;
         }
 
@@ -343,9 +376,7 @@ tail_recursion:
             for (size_t i = 0; i < npad; i++) {
                 ok &= serialize_untagged_u8(0, sb);
             }
-            for (size_t i = 0; i < vec_len; i++) {
-                ok &= serialize_untagged_u16(u16vector_ref(obj, i), sb);
-            }
+            ok &= serialize_untagged_u16_array(&u16vector_elements(obj)[0], vec_len, sb);
             return ok;
         }
 
@@ -357,9 +388,8 @@ tail_recursion:
             for (size_t i = 0; i < npad; i++) {
                 ok &= serialize_untagged_u8(0, sb);
             }
-            for (size_t i = 0; i < vec_len; i++) {
-                ok &= serialize_untagged_u16(s16vector_ref(obj, i), sb);
-            }
+            ok &= serialize_untagged_u16_array(
+                (uint16_t*)&s16vector_elements(obj)[0], vec_len, sb);
             return ok;
         }
 
@@ -371,9 +401,7 @@ tail_recursion:
             for (size_t i = 0; i < npad; i++) {
                 ok &= serialize_untagged_u8(0, sb);
             }
-            for (size_t i = 0; i < vec_len; i++) {
-                ok &= serialize_untagged_u32(u32vector_ref(obj, i), sb);
-            }
+            ok &= serialize_untagged_u32_array(&u32vector_elements(obj)[0], vec_len, sb);
             return ok;
         }
 
@@ -385,9 +413,8 @@ tail_recursion:
             for (size_t i = 0; i < npad; i++) {
                 ok &= serialize_untagged_u8(0, sb);
             }
-            for (size_t i = 0; i < vec_len; i++) {
-                ok &= serialize_untagged_u32(s32vector_ref(obj, i), sb);
-            }
+            ok &= serialize_untagged_u32_array(
+                (uint32_t*)&s32vector_elements(obj)[0], vec_len, sb);
             return ok;
         }
 
@@ -399,9 +426,7 @@ tail_recursion:
             for (size_t i = 0; i < npad; i++) {
                 ok &= serialize_untagged_u8(0, sb);
             }
-            for (size_t i = 0; i < vec_len; i++) {
-                ok &= serialize_untagged_u64(u64vector_ref(obj, i), sb);
-            }
+            ok &= serialize_untagged_u64_array(&u64vector_elements(obj)[0], vec_len, sb);
             return ok;
         }
 
@@ -413,9 +438,8 @@ tail_recursion:
             for (size_t i = 0; i < npad; i++) {
                 ok &= serialize_untagged_u8(0, sb);
             }
-            for (size_t i = 0; i < vec_len; i++) {
-                ok &= serialize_untagged_u64(s64vector_ref(obj, i), sb);
-            }
+            ok &= serialize_untagged_u64_array(
+                (uint64_t*)&s64vector_elements(obj)[0], vec_len, sb);
             return ok;
         }
 
@@ -427,9 +451,8 @@ tail_recursion:
             for (size_t i = 0; i < npad; i++) {
                 ok &= serialize_untagged_u8(0, sb);
             }
-            for (size_t i = 0; i < vec_len; i++) {
-                ok &= serialize_untagged_f64(f32vector_ref(obj, i), sb);
-            }
+            ok &= serialize_untagged_u32_array(
+                (uint32_t*)&f32vector_elements(obj)[0], vec_len, sb);
             return ok;
         }
 
@@ -441,9 +464,8 @@ tail_recursion:
             for (size_t i = 0; i < npad; i++) {
                 ok &= serialize_untagged_u8(0, sb);
             }
-            for (size_t i = 0; i < vec_len; i++) {
-                ok &= serialize_untagged_f64(f64vector_ref(obj, i), sb);
-            }
+            ok &= serialize_untagged_u64_array(
+                (uint64_t*)&f64vector_elements(obj)[0], vec_len, sb);
             return ok;
         }
 
@@ -455,11 +477,10 @@ tail_recursion:
             for (size_t i = 0; i < npad; i++) {
                 ok &= serialize_untagged_u8(0, sb);
             }
-            for (size_t i = 0; i < vec_len; i++) {
-                std::complex<float> c = c32vector_ref(obj, i);
-                ok &= serialize_untagged_f64(c.real(), sb);
-                ok &= serialize_untagged_f64(c.imag(), sb);
-            }
+            // Note that if endianness causes byte swap that real/imag will also be
+            // swapped
+            ok &= serialize_untagged_u64_array(
+                (uint64_t*)&c32vector_elements(obj)[0], vec_len, sb);
             return ok;
         }
 
@@ -471,11 +492,9 @@ tail_recursion:
             for (size_t i = 0; i < npad; i++) {
                 ok &= serialize_untagged_u8(0, sb);
             }
-            for (size_t i = 0; i < vec_len; i++) {
-                std::complex<double> c = c64vector_ref(obj, i);
-                ok &= serialize_untagged_f64(c.real(), sb);
-                ok &= serialize_untagged_f64(c.imag(), sb);
-            }
+            // No known portable 128 bit swap function, so double the length
+            ok &= serialize_untagged_u64_array(
+                (uint64_t*)&c64vector_elements(obj)[0], vec_len * 2, sb);
             return ok;
         }
     }
@@ -551,7 +570,10 @@ pmt_t deserialize(std::streambuf& sb)
         return from_long(u64);
 
     case PST_PAIR:
-        return parse_pair(sb);
+        return parse_pair(sb, PST_PAIR);
+
+    case PST_DICT:
+        return parse_pair(sb, PST_DICT);
 
     case PST_DOUBLE:
         if (!deserialize_untagged_f64(&f64, sb))
@@ -588,6 +610,10 @@ pmt_t deserialize(std::streambuf& sb)
     case PST_UNIFORM_VECTOR: {
         uint8_t utag, npad;
         uint32_t nitems;
+        std::vector<uint8_t> u8v;
+        std::vector<uint16_t> u16v;
+        std::vector<uint32_t> u32v;
+        std::vector<uint64_t> u64v;
 
         if (!deserialize_untagged_u8(&utag, sb))
             return PMT_EOF;
@@ -599,110 +625,69 @@ pmt_t deserialize(std::streambuf& sb)
         for (size_t i = 0; i < npad; i++)
             deserialize_untagged_u8(&u8, sb);
 
+
         switch (utag) {
         case (UVI_U8): {
-            pmt_t vec = make_u8vector(nitems, 0);
-            for (uint32_t i = 0; i < nitems; i++) {
-                deserialize_untagged_u8(&u8, sb);
-                u8vector_set(vec, i, u8);
-            }
+            deserialize_untagged_u8_vector(u8v, nitems, sb);
+            pmt_t vec = init_u8vector(nitems, &u8v[0]);
             return vec;
         }
         case (UVI_S8): {
-            pmt_t vec = make_s8vector(nitems, 0);
-            for (uint32_t i = 0; i < nitems; i++) {
-                deserialize_untagged_u8(&u8, sb);
-                s8vector_set(vec, i, u8);
-            }
+            deserialize_untagged_u8_vector(u8v, nitems, sb);
+            pmt_t vec = init_s8vector(nitems, (int8_t*)&u8v[0]);
             return vec;
         }
         case (UVI_U16): {
-            pmt_t vec = make_u16vector(nitems, 0);
-            for (uint32_t i = 0; i < nitems; i++) {
-                deserialize_untagged_u16(&u16, sb);
-                u16vector_set(vec, i, u16);
-            }
+            deserialize_untagged_u16_vector(u16v, nitems, sb);
+            pmt_t vec = init_u16vector(nitems, &u16v[0]);
             return vec;
         }
         case (UVI_S16): {
-            pmt_t vec = make_s16vector(nitems, 0);
-            for (uint32_t i = 0; i < nitems; i++) {
-                deserialize_untagged_u16(&u16, sb);
-                s16vector_set(vec, i, u16);
-            }
+            deserialize_untagged_u16_vector(u16v, nitems, sb);
+            pmt_t vec = init_s16vector(nitems, (int16_t*)&u16v[0]);
             return vec;
         }
         case (UVI_U32): {
-            pmt_t vec = make_u32vector(nitems, 0);
-            for (uint32_t i = 0; i < nitems; i++) {
-                deserialize_untagged_u32(&u32, sb);
-                u32vector_set(vec, i, u32);
-            }
+            deserialize_untagged_u32_vector(u32v, nitems, sb);
+            pmt_t vec = init_u32vector(nitems, &u32v[0]);
             return vec;
         }
         case (UVI_S32): {
-            pmt_t vec = make_s32vector(nitems, 0);
-            for (uint32_t i = 0; i < nitems; i++) {
-                deserialize_untagged_u32(&u32, sb);
-                s32vector_set(vec, i, u32);
-            }
+            deserialize_untagged_u32_vector(u32v, nitems, sb);
+            pmt_t vec = init_s32vector(nitems, (int32_t*)&u32v[0]);
             return vec;
         }
         case (UVI_U64): {
-            pmt_t vec = make_u64vector(nitems, 0);
-            for (uint32_t i = 0; i < nitems; i++) {
-                deserialize_untagged_u64(&u64, sb);
-                u64vector_set(vec, i, u64);
-            }
+            deserialize_untagged_u64_vector(u64v, nitems, sb);
+            pmt_t vec = init_u64vector(nitems, &u64v[0]);
             return vec;
         }
         case (UVI_S64): {
-            pmt_t vec = make_s64vector(nitems, 0);
-            for (uint32_t i = 0; i < nitems; i++) {
-                deserialize_untagged_u64(&u64, sb);
-                s64vector_set(vec, i, u64);
-            }
+            deserialize_untagged_u64_vector(u64v, nitems, sb);
+            pmt_t vec = init_s64vector(nitems, (int64_t*)&u64v[0]);
             return vec;
         }
         case (UVI_F32): {
-            pmt_t vec = make_f32vector(nitems, 0);
-            for (uint32_t i = 0; i < nitems; i++) {
-                deserialize_untagged_f64(&f64, sb);
-                f32vector_set(vec, i, static_cast<float>(f64));
-            }
+            deserialize_untagged_u32_vector(u32v, nitems, sb);
+            pmt_t vec = init_f32vector(nitems, (float*)&u32v[0]);
             return vec;
         }
         case (UVI_F64): {
-            pmt_t vec = make_f64vector(nitems, 0);
-            for (uint32_t i = 0; i < nitems; i++) {
-                deserialize_untagged_f64(&f64, sb);
-                f64vector_set(vec, i, f64);
-            }
+            deserialize_untagged_u64_vector(u64v, nitems, sb);
+            pmt_t vec = init_f64vector(nitems, (double*)&u64v[0]);
             return vec;
         }
         case (UVI_C32): {
-            pmt_t vec = make_c32vector(nitems, 0);
-            for (uint32_t i = 0; i < nitems; i++) {
-                float re, im;
-                deserialize_untagged_f64(&f64, sb);
-                re = static_cast<float>(f64);
-                deserialize_untagged_f64(&f64, sb);
-                im = static_cast<float>(f64);
-                c32vector_set(vec, i, std::complex<float>(re, im));
-            }
+            // Data was serialized as uint64, so do the same here
+            deserialize_untagged_u64_vector(u64v, nitems, sb);
+            pmt_t vec = init_c32vector(nitems, (std::complex<float>*)&u64v[0]);
             return vec;
         }
 
         case (UVI_C64): {
-            pmt_t vec = make_c64vector(nitems, 0);
-            for (uint32_t i = 0; i < nitems; i++) {
-                double re, im;
-                deserialize_untagged_f64(&f64, sb);
-                re = f64;
-                deserialize_untagged_f64(&f64, sb);
-                im = f64;
-                c64vector_set(vec, i, std::complex<double>(re, im));
-            }
+            // Do 64 bits at a time, so we need to double length
+            deserialize_untagged_u64_vector(u64v, 2 * nitems, sb);
+            pmt_t vec = init_c64vector(nitems, (std::complex<double>*)&u64v[0]);
             return vec;
         }
 
@@ -712,7 +697,6 @@ pmt_t deserialize(std::streambuf& sb)
         }
     }
 
-    case PST_DICT:
     case PST_COMMENT:
         throw notimplemented("pmt::deserialize: tag value = ", from_long(tag));
 
@@ -725,7 +709,6 @@ error:
     throw exception("pmt::deserialize: malformed input stream", PMT_F);
 }
 
-
 /*
  * provide a simple string accessor to the serialized pmt form
  */
@@ -736,7 +719,6 @@ std::string serialize_str(pmt_t obj)
     return sb.str();
 }
 
-
 /*
  * provide a simple string accessor to the deserialized pmt form
  */
@@ -746,14 +728,13 @@ pmt_t deserialize_str(std::string s)
     return deserialize(sb);
 }
 
-
 /*
  * This is a mostly non-recursive implementation that allows us to
  * deserialize very long lists w/o exhausting the evaluation stack.
  *
- * On entry we've already eaten the PST_PAIR tag.
+ * On entry we've already eaten the PST_PAIR or PST_DICT tag.
  */
-pmt_t parse_pair(std::streambuf& sb)
+pmt_t parse_pair(std::streambuf& sb, uint8_t type)
 {
     uint8_t tag;
     pmt_t val, expr, lastnptr, nptr;
@@ -765,7 +746,11 @@ pmt_t parse_pair(std::streambuf& sb)
     while (1) {
         expr = deserialize(sb); // read the car
 
-        nptr = cons(expr, PMT_NIL); // build new cell
+        if (type == PST_DICT)
+            nptr = dcons(expr, PMT_NIL); // build new cell
+        else
+            nptr = cons(expr, PMT_NIL); // build new cell
+
         if (is_null(lastnptr))
             val = nptr;
         else

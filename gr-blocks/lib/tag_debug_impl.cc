@@ -24,8 +24,8 @@ tag_debug::sptr tag_debug::make(size_t sizeof_stream_item,
                                 const std::string& name,
                                 const std::string& key_filter)
 {
-    return gnuradio::get_initial_sptr(
-        new tag_debug_impl(sizeof_stream_item, name, key_filter));
+    return gnuradio::make_block_sptr<tag_debug_impl>(
+        sizeof_stream_item, name, key_filter);
 }
 
 tag_debug_impl::tag_debug_impl(size_t sizeof_stream_item,

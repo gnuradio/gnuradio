@@ -30,20 +30,20 @@ dynamic_channel_model::sptr dynamic_channel_model::make(double samp_rate,
                                                         double noise_amp,
                                                         double noise_seed)
 {
-    return gnuradio::get_initial_sptr(new dynamic_channel_model_impl(samp_rate,
-                                                                     sro_std_dev,
-                                                                     sro_max_dev,
-                                                                     cfo_std_dev,
-                                                                     cfo_max_dev,
-                                                                     N,
-                                                                     doppler_freq,
-                                                                     LOS_model,
-                                                                     K,
-                                                                     delays,
-                                                                     mags,
-                                                                     ntaps_mpath,
-                                                                     noise_amp,
-                                                                     noise_seed));
+    return gnuradio::make_block_sptr<dynamic_channel_model_impl>(samp_rate,
+                                                                 sro_std_dev,
+                                                                 sro_max_dev,
+                                                                 cfo_std_dev,
+                                                                 cfo_max_dev,
+                                                                 N,
+                                                                 doppler_freq,
+                                                                 LOS_model,
+                                                                 K,
+                                                                 delays,
+                                                                 mags,
+                                                                 ntaps_mpath,
+                                                                 noise_amp,
+                                                                 noise_seed);
 }
 
 // Hierarchical block constructor

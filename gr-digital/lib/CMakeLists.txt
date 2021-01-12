@@ -20,6 +20,7 @@ add_library(gnuradio-digital
     cma_equalizer_cc_impl.cc
     constellation.cc
     constellation_decoder_cb_impl.cc
+    constellation_encoder_bc_impl.cc
     constellation_receiver_cb_impl.cc
     constellation_soft_decoder_cf_impl.cc
     corr_est_cc_impl.cc
@@ -33,6 +34,7 @@ add_library(gnuradio-digital
     crc32.cc
     crc32_bb_impl.cc
     crc32_async_bb_impl.cc
+    decision_feedback_equalizer_impl.cc
     descrambler_bb_impl.cc
     diff_decoder_bb_impl.cc
     diff_encoder_bb_impl.cc
@@ -47,8 +49,10 @@ add_library(gnuradio-digital
     header_buffer.cc
     header_payload_demux_impl.cc
     kurtotic_equalizer_cc_impl.cc
+    linear_equalizer_impl.cc
     lms_dd_equalizer_cc_impl.cc
     map_bb_impl.cc
+    meas_evm_cc_impl.cc
     modulate_vector.cc
     mpsk_snr_est.cc
     mpsk_snr_est_cc_impl.cc
@@ -95,7 +99,7 @@ target_link_libraries(gnuradio-digital PUBLIC
     gnuradio-blocks
     gnuradio-analog
     Boost::boost
-    ${GR_VOLK_LIB}
+    Volk::volk
 )
 
 
@@ -140,3 +144,4 @@ if(ENABLE_TESTING)
     )
   endforeach(qa_file)
 endif(ENABLE_TESTING)
+

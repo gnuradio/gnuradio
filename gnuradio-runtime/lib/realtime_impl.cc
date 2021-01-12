@@ -12,6 +12,8 @@
 #include <config.h>
 #endif
 
+#include <gnuradio/logger.h>
+#include <gnuradio/prefs.h>
 #include <gnuradio/realtime_impl.h>
 
 #ifdef HAVE_SCHED_H
@@ -42,7 +44,7 @@ static int rescale_virtual_pri(int virtual_pri, int min_real_pri, int max_real_p
     float rmax = min_real_pri + (0.75 * (max_real_pri - min_real_pri));
     float m = (rmax - rmin) / (rt_priority_max() - rt_priority_min());
     float y = m * (virtual_pri - rt_priority_min()) + rmin;
-    int y_int = static_cast<int>(rint(y));
+    int y_int = static_cast<int>(rintf(y));
     return std::max(min_real_pri, std::min(max_real_pri, y_int));
 }
 
@@ -109,8 +111,12 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
         if (result == EPERM) // N.B., return value, not errno
             return RT_NO_PRIVS;
         else {
-            fprintf(stderr,
-                    "pthread_setschedparam: failed to set real time priority: %s\n",
+            gr::logger_ptr logger, debug_logger;
+            gr::configure_default_loggers(logger, debug_logger, "realtime_impl");
+            GR_LOG_ERROR(
+                logger,
+                boost::format(
+                    "pthread_setschedparam: failed to set real time priority: %s") %
                     strerror(result));
             return RT_OTHER_ERROR;
         }
@@ -148,7 +154,11 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
         if (errno == EPERM)
             return RT_NO_PRIVS;
         else {
-            perror("sched_setscheduler: failed to set real time priority");
+            gr::logger_ptr logger, debug_logger;
+            gr::configure_default_loggers(logger, debug_logger, "realtime_impl");
+            GR_LOG_ERROR(
+                logger,
+                boost::format("sched_setscheduler: failed to set real time priority."));
             return RT_OTHER_ERROR;
         }
     }

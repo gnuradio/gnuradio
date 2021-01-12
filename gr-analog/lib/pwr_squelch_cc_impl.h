@@ -27,32 +27,32 @@ private:
     filter::single_pole_iir<double, double, double> d_iir;
 
 protected:
-    virtual void update_state(const gr_complex& in);
-    virtual bool mute() const { return d_pwr < d_threshold; }
+    void update_state(const gr_complex& in) override;
+    bool mute() const override { return d_pwr < d_threshold; }
 
 public:
     pwr_squelch_cc_impl(double db,
                         double alpha = 0.0001,
                         int ramp = 0,
                         bool gate = false);
-    ~pwr_squelch_cc_impl();
+    ~pwr_squelch_cc_impl() override;
 
-    std::vector<float> squelch_range() const;
+    std::vector<float> squelch_range() const override;
 
-    double threshold() const { return 10 * log10(d_threshold); }
-    void set_threshold(double db);
-    void set_alpha(double alpha);
+    double threshold() const override { return 10 * log10(d_threshold); }
+    void set_threshold(double db) override;
+    void set_alpha(double alpha) override;
 
-    int ramp() const { return squelch_base_cc_impl::ramp(); }
-    void set_ramp(int ramp) { squelch_base_cc_impl::set_ramp(ramp); }
-    bool gate() const { return squelch_base_cc_impl::gate(); }
-    void set_gate(bool gate) { squelch_base_cc_impl::set_gate(gate); }
-    bool unmuted() const { return squelch_base_cc_impl::unmuted(); }
+    int ramp() const override { return squelch_base_cc_impl::ramp(); }
+    void set_ramp(int ramp) override { squelch_base_cc_impl::set_ramp(ramp); }
+    bool gate() const override { return squelch_base_cc_impl::gate(); }
+    void set_gate(bool gate) override { squelch_base_cc_impl::set_gate(gate); }
+    bool unmuted() const override { return squelch_base_cc_impl::unmuted(); }
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
-                     gr_vector_void_star& output_items)
+                     gr_vector_void_star& output_items) override
     {
         return squelch_base_cc_impl::general_work(
             noutput_items, ninput_items, input_items, output_items);

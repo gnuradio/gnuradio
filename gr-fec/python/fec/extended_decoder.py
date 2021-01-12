@@ -8,14 +8,10 @@
 #
 #
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import unicode_literals
 
 from gnuradio import gr, blocks, digital
 
-from . import fec_swig as fec
+from . import fec_python as fec
 
 from .bitflip import *
 from .threaded_decoder import threaded_decoder

@@ -28,7 +28,7 @@ namespace dtv {
 class DTV_API catv_trellis_enc_bb : virtual public gr::block
 {
 public:
-    typedef boost::shared_ptr<catv_trellis_enc_bb> sptr;
+    typedef std::shared_ptr<catv_trellis_enc_bb> sptr;
 
     /*!
      * \brief Create an ITU-T J.83B Trellis Encoder.

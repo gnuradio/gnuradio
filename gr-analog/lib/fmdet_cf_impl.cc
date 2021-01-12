@@ -22,8 +22,7 @@ namespace analog {
 fmdet_cf::sptr
 fmdet_cf::make(float samplerate, float freq_low, float freq_high, float scl)
 {
-    return gnuradio::get_initial_sptr(
-        new fmdet_cf_impl(samplerate, freq_low, freq_high, scl));
+    return gnuradio::make_block_sptr<fmdet_cf_impl>(samplerate, freq_low, freq_high, scl);
 }
 
 fmdet_cf_impl::fmdet_cf_impl(float samplerate, float freq_low, float freq_high, float scl)

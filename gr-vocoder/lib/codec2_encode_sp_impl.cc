@@ -37,8 +37,8 @@ codec2_encode_sp::sptr codec2_encode_sp::make(int mode)
     bits_per_frame = codec2_bits_per_frame(codec2);
     codec2_destroy(codec2);
 
-    return gnuradio::get_initial_sptr(
-        new codec2_encode_sp_impl(mode, samples_per_frame, bits_per_frame));
+    return gnuradio::make_block_sptr<codec2_encode_sp_impl>(
+        mode, samples_per_frame, bits_per_frame);
 }
 
 codec2_encode_sp_impl::codec2_encode_sp_impl(int mode,

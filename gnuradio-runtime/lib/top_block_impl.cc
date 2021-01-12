@@ -14,7 +14,9 @@
 
 #include "flat_flowgraph.h"
 #include "scheduler_tpb.h"
+#include "terminate_handler.h"
 #include "top_block_impl.h"
+#include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/top_block.h>
 
@@ -57,8 +59,12 @@ make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_except
                 }
             }
             if (factory == 0) {
-                std::cerr << "warning: Invalid GR_SCHEDULER environment variable value \""
-                          << v << "\".  Using \"" << scheduler_table[0].name << "\"\n";
+                gr::logger_ptr logger, debug_logger;
+                gr::configure_default_loggers(logger, debug_logger, "top_block_impl");
+                std::ostringstream msg;
+                msg << "Invalid GR_SCHEDULER environment variable value \"" << v
+                    << "\".  Using \"" << scheduler_table[0].name << "\"";
+                GR_LOG_WARN(logger, msg.str());
                 factory = scheduler_table[0].f;
             }
         }
@@ -74,13 +80,17 @@ top_block_impl::top_block_impl(top_block* owner, bool catch_exceptions = true)
       d_retry_wait(false),
       d_catch_exceptions(catch_exceptions)
 {
+    install_terminate_handler();
+    gr::configure_default_loggers(d_logger, d_debug_logger, "top_block_impl");
 }
 
 top_block_impl::~top_block_impl()
 {
     if (d_lock_count) {
-        std::cerr << "error: destroying locked block." << std::endl;
+        GR_LOG_ERROR(d_logger, "destroying locked block.");
     }
+    // NOTE: Investigate the sensibility of setting a raw pointer to zero at the end of
+    // destructor
     d_owner = 0;
 }
 
