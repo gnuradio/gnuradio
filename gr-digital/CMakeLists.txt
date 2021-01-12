@@ -30,6 +30,11 @@ SET(GR_PKG_DIGITAL_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/digital)
 ########################################################################
 if(ENABLE_GR_DIGITAL)
 
+# Set HAVE_BUILTIN_PARITYL for use in scrambler if compiler is GNU
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    add_definitions(-DHAVE_BUILTIN_PARITYL)
+endif()
+
 ########################################################################
 # Add subdirectories
 ########################################################################
