@@ -223,4 +223,9 @@ int top_block_impl::max_noutput_items() { return d_max_noutput_items; }
 
 void top_block_impl::set_max_noutput_items(int nmax) { d_max_noutput_items = nmax; }
 
+void top_block_impl::register_error_handler(std::shared_ptr<basic_error_handler> handler)
+{
+    d_error_handler = handler;
+}
+
 } /* namespace gr */

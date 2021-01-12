@@ -21,6 +21,7 @@
 #include <iostream>
 
 namespace gr {
+
 top_block_sptr make_top_block(const std::string& name, bool catch_exceptions)
 {
     return gnuradio::get_initial_sptr(new top_block(name, catch_exceptions));
@@ -175,6 +176,12 @@ void top_block::setup_rpc()
                                                   DISPNULL)));
     rpc_set();
 #endif /* GR_CTRLPORT */
+}
+
+
+void top_block::register_error_handler(std::shared_ptr<basic_error_handler> handler)
+{
+    d_impl->register_error_handler(handler);
 }
 
 } /* namespace gr */

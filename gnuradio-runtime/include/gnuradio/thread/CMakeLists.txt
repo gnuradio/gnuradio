@@ -12,5 +12,6 @@ install(FILES
   thread.h
   thread_body_wrapper.h
   thread_group.h
+  basic_error_handler.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/thread
 )
