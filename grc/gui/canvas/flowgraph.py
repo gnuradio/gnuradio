@@ -493,6 +493,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
     def _drawables(self):
         # todo: cache that
         show_comments = Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active()
+        hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
         for element in self._elements_to_draw:
             if element.is_block and show_comments and element.enabled:
                 yield element.draw_comment
@@ -502,7 +503,8 @@ class FlowGraph(CoreFlowgraph, Drawable):
             if element not in self.selected_elements:
                 yield element.draw
         for element in self.selected_elements:
-            yield element.draw
+            if element.enabled or not hide_disabled_blocks:
+                yield element.draw
 
     def draw(self, cr):
         """Draw blocks connections comment and select rectangle"""
