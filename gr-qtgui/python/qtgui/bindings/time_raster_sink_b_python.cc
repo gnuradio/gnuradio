@@ -76,6 +76,31 @@ void bind_time_raster_sink_b(py::module& m)
             },
             D(time_raster_sink_b, pyqwidget))
 
+        .def("set_x_range",
+             &time_raster_sink_b::set_x_range,
+             py::arg("min"),
+             py::arg("max"),
+             D(time_raster_sink_b, set_x_range))
+
+
+        .def("set_x_label",
+             &time_raster_sink_b::set_x_label,
+             py::arg("label"),
+             D(time_raster_sink_b, set_x_label))
+
+
+        .def("set_y_range",
+             &time_raster_sink_b::set_y_range,
+             py::arg("min"),
+             py::arg("max"),
+             D(time_raster_sink_b, set_y_range))
+
+
+        .def("set_y_label",
+             &time_raster_sink_b::set_y_label,
+             py::arg("label"),
+             D(time_raster_sink_b, set_y_label))
+
 
         .def("set_update_time",
              &time_raster_sink_b::set_update_time,

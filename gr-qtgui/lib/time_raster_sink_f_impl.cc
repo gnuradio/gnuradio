@@ -153,6 +153,26 @@ PyObject* time_raster_sink_f_impl::pyqwidget()
 void* time_raster_sink_f_impl::pyqwidget() { return NULL; }
 #endif
 
+void time_raster_sink_f_impl::set_x_label(const std::string& label)
+{
+    d_main_gui->setXLabel(label);
+}
+
+void time_raster_sink_f_impl::set_x_range(double start, double end)
+{
+    d_main_gui->setXAxis(start, end);
+}
+
+void time_raster_sink_f_impl::set_y_label(const std::string& label)
+{
+    d_main_gui->setYLabel(label);
+}
+
+void time_raster_sink_f_impl::set_y_range(double start, double end)
+{
+    d_main_gui->setYAxis(start, end);
+}
+
 void time_raster_sink_f_impl::set_update_time(double t)
 {
     // convert update time to ticks
