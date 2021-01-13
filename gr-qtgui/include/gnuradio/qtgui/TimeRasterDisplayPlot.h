@@ -50,6 +50,10 @@ public:
     void setNumCols(double cols);
     void setAlpha(unsigned int which, int alpha);
     void setSampleRate(double samprate);
+    void setXLabel(const std::string& label);
+    void setXAxis(double start, double end);
+    void setYLabel(const std::string& label);
+    void setYAxis(double start, double end);
 
     double numRows() const;
     double numCols() const;
@@ -100,6 +104,13 @@ private:
     QColor d_high_intensity;
 
     int d_color_bar_title_font_size;
+
+    std::string d_x_label;
+    double d_x_start_value;
+    double d_x_end_value;
+    std::string d_y_label;
+    double d_y_start_value;
+    double d_y_end_value;
 };
 
 #endif /* TIMERASTER_DISPLAY_PLOT_H */

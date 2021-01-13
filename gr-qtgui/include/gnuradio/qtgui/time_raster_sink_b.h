@@ -84,6 +84,10 @@ public:
     virtual void* pyqwidget() = 0;
 #endif
 
+    virtual void set_x_label(const std::string& label) = 0;
+    virtual void set_x_range(double start, double end) = 0;
+    virtual void set_y_label(const std::string& label) = 0;
+    virtual void set_y_range(double start, double end) = 0;
     virtual void set_update_time(double t) = 0;
     virtual void set_title(const std::string& title) = 0;
     virtual void set_line_label(unsigned int which, const std::string& label) = 0;
