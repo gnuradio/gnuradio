@@ -13,11 +13,11 @@ parameters:
 -   id: taps
     label: Filter taps
     dtype: float_vector
-value: ${ digital.modulate_vector_bc(mod .to_basic_block(), data, taps) }
+value: ${ digital.modulate_vector_bc(mod.to_basic_block(), data, taps) }
 
 templates:
     imports: from gnuradio import digital
-    var_make: self.${id} = ${id} = digital.modulate_vector_bc(${mod} .to_basic_block(),
+    var_make: self.${id} = ${id} = digital.modulate_vector_bc(${mod}.to_basic_block(),
         ${data}, ${taps})
 
 cpp_templates:
@@ -26,7 +26,7 @@ cpp_templates:
     var_make: |-
         std::vector<int> data = {${str(data)[1:-1]}};
         std::vector<float> taps = {${str(taps)[1:-1]}};
-        this->${id} = ${id} = digital::modulate_vector_bc(${mod} .to_basic_block(),
+        this->${id} = ${id} = digital::modulate_vector_bc(${mod}.to_basic_block(),
         data, taps);
     link: ['gnuradio-digital']
 
