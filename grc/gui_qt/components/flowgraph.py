@@ -134,6 +134,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 block.states['coordinate'] = attrib['_coordinate']
                 block.params['id'].set_value(id)
                 self.addItem(block)
+                block.moveToTop()
 
                 event.setDropAction(Qt.CopyAction)
                 event.accept()
