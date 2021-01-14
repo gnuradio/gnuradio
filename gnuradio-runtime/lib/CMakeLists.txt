@@ -19,10 +19,7 @@ endif(libunwind_FOUND)
 ########################################################################
 # Handle the generated constants
 ########################################################################
-execute_process(COMMAND ${PYTHON_EXECUTABLE} -c
-    "import time;print(time.strftime('%a, %d %b %Y %H:%M:%S', time.gmtime()))"
-    OUTPUT_VARIABLE BUILD_DATE OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+string(TIMESTAMP BUILD_DATE "%a, %d %b %Y %H:%M:%S" UTC)
 message(STATUS "Loading build date ${BUILD_DATE} into constants...")
 message(STATUS "Loading version ${VERSION} into constants...")
 
