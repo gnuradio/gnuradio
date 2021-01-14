@@ -200,7 +200,7 @@ def main():
     # TODO: parser.add_argument('--config')
 
     # Logging support
-    parser.add_argument('--log', choices=['debug', 'info', 'warning', 'error', 'critical'], default='warning')
+    parser.add_argument('--log', choices=['debug', 'info', 'warning', 'error', 'critical'], default='debug')
     # TODO: parser.add_argument('--log-output')
 
     # Graphics framework (QT or GTK)
