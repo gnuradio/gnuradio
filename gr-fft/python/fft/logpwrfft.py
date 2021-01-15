@@ -12,6 +12,7 @@ from gnuradio import blocks
 import sys, math
 
 from . import fft_python as fft
+from . import fft_vfc, fft_vcc
 from .fft_python import window
 
 try:
@@ -152,7 +153,7 @@ class logpwrfft_f(_logpwrfft_base):
         """
         _name = "logpwrfft_f"
         _item_size = gr.sizeof_float
-        _fft_block = (fft.fft_vfc, )
+        _fft_block = (fft_vfc, )
 
 class logpwrfft_c(_logpwrfft_base):
         """
@@ -160,4 +161,4 @@ class logpwrfft_c(_logpwrfft_base):
         """
         _name = "logpwrfft_c"
         _item_size = gr.sizeof_gr_complex
-        _fft_block = (fft.fft_vcc, )
+        _fft_block = (fft_vcc, )
