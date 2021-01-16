@@ -31,6 +31,7 @@ class GR_RUNTIME_API fxpt
 {
     static constexpr int WORDBITS = 32;
     static constexpr int NBITS = 10;
+    static constexpr uint32_t ACCUM_MASK = ((1 << (WORDBITS - NBITS)) - 1);
     static const float s_sine_table[1 << NBITS][2];
     static const float PI;
     static const float TAU;
@@ -55,7 +56,7 @@ public:
     {
         uint32_t ux = x;
         int index = ux >> (WORDBITS - NBITS);
-        return s_sine_table[index][0] * (ux >> 1) + s_sine_table[index][1];
+        return s_sine_table[index][0] * (ux & ACCUM_MASK) + s_sine_table[index][1];
     }
 
     /*
@@ -65,7 +66,7 @@ public:
     {
         uint32_t ux = x + 0x40000000;
         int index = ux >> (WORDBITS - NBITS);
-        return s_sine_table[index][0] * (ux >> 1) + s_sine_table[index][1];
+        return s_sine_table[index][0] * (ux & ACCUM_MASK) + s_sine_table[index][1];
     }
 
     /*
@@ -75,11 +76,11 @@ public:
     {
         uint32_t ux = x;
         int sin_index = ux >> (WORDBITS - NBITS);
-        *s = s_sine_table[sin_index][0] * (ux >> 1) + s_sine_table[sin_index][1];
+        *s = s_sine_table[sin_index][0] * (ux & ACCUM_MASK) + s_sine_table[sin_index][1];
 
         ux = x + 0x40000000;
         int cos_index = ux >> (WORDBITS - NBITS);
-        *c = s_sine_table[cos_index][0] * (ux >> 1) + s_sine_table[cos_index][1];
+        *c = s_sine_table[cos_index][0] * (ux & ACCUM_MASK) + s_sine_table[cos_index][1];
 
         return;
     }
