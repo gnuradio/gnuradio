@@ -194,7 +194,6 @@ if(MSVC)
         -D_CRT_SECURE_NO_DEPRECATE
         -D_CRT_NONSTDC_NO_DEPRECATE
     )
-    add_definitions(-DHAVE_CONFIG_H)
     add_compile_options(/MP) #build with multiple processors
     add_compile_options(/bigobj) #allow for larger object files
 endif(MSVC)

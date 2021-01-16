@@ -15,6 +15,7 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
 - C++17
   - requires MSVC 1914 (Microsoft VS 2017 15.7)
+- Windows build: removed unnecessary MSVC-specific system include overrides
 
 ### Added
 
