@@ -9,7 +9,7 @@
  */
 
 #include "usrp_block_impl.h"
-#include <boost/make_shared.hpp>
+#include <chrono>
 
 using namespace gr::uhd;
 
