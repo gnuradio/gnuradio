@@ -16,16 +16,18 @@
 #include <gnuradio/math.h>
 #include <gnuradio/vco.h>
 
-#include <sys/time.h>
-#include <unistd.h>
 
 #ifdef HAVE_SYS_RESOURCE_H
+/* from man gtrusage
+ "including <sys/time.h> is not required these days"
+ So, we don't */
 #include <sys/resource.h>
 #endif
 
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <ctime>
 
 #define ITERATIONS 5000000
 #define BLOCK_SIZE (10 * 1000) // fits in cache
@@ -66,7 +68,7 @@ static void benchmark(void test(float* x, const float* y),
         exit(1);
     }
 #else
-    clock_start = (double)clock() * (1000000. / CLOCKS_PER_SEC);
+    clock_start = (double)std::clock() * (1000000. / CLOCKS_PER_SEC);
 #endif
     // do the actual work
 
@@ -90,7 +92,7 @@ static void benchmark(void test(float* x, const float* y),
 
     double total = user + sys;
 #else
-    clock_end = (double)clock() * (1000000. / CLOCKS_PER_SEC);
+    clock_end = (double)std::clock() * (1000000. / CLOCKS_PER_SEC);
     double total = clock_end - clock_start;
 #endif
 
