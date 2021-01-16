@@ -179,12 +179,12 @@ int udp_source_impl::work(int noutput_items,
         return d_residual;
     }
 
-    int bytes_left_in_buffer = (int)(d_residual - d_sent);
-    int bytes_to_send = std::min<int>(d_itemsize * noutput_items, bytes_left_in_buffer);
+    const std::ptrdiff_t bytes_left_in_buffer = d_residual - d_sent;
+    auto bytes_to_send =
+        std::min<std::ptrdiff_t>(d_itemsize * noutput_items, bytes_left_in_buffer);
 
     // Copy the received data in the residual buffer to the output stream
     memcpy(out, d_residbuf.data() + d_sent, bytes_to_send);
-    int nitems = bytes_to_send / d_itemsize;
 
     // Keep track of where we are if we don't have enough output
     // space to send all the data in the residbuf.
@@ -195,7 +195,7 @@ int udp_source_impl::work(int noutput_items,
         d_sent += bytes_to_send;
     }
 
-    return nitems;
+    return bytes_to_send / d_itemsize;
 }
 
 } /* namespace blocks */

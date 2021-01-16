@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <cstddef>
 #include <cstdio>
 #include <stdexcept>
 
@@ -53,9 +54,7 @@ int file_descriptor_sink_impl::work(int noutput_items,
     unsigned long byte_size = noutput_items * d_itemsize;
 
     while (byte_size > 0) {
-        ssize_t r;
-
-        r = write(d_fd, inbuf, byte_size);
+        auto r = write(d_fd, inbuf, byte_size);
         if (r == -1) {
             if (errno == EINTR)
                 continue;
