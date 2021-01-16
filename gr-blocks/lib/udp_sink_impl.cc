@@ -18,7 +18,7 @@
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
-#include <cstdio>
+#include <cstddef>
 #include <cstring>
 #include <memory>
 #include <stdexcept>
@@ -101,13 +101,15 @@ int udp_sink_impl::work(int noutput_items,
                         gr_vector_void_star& output_items)
 {
     const char* in = (const char*)input_items[0];
-    ssize_t r = 0, bytes_sent = 0, bytes_to_send = 0;
-    ssize_t total_size = noutput_items * d_itemsize;
+    size_t r = 0;
+    std::ptrdiff_t bytes_sent = 0, bytes_to_send = 0;
+    const size_t total_size = noutput_items * d_itemsize;
 
     gr::thread::scoped_lock guard(d_mutex); // protect d_socket
 
-    while (bytes_sent < total_size) {
-        bytes_to_send = std::min((ssize_t)d_payload_size, (total_size - bytes_sent));
+    while (bytes_sent < static_cast<std::ptrdiff_t>(total_size)) {
+        bytes_to_send = std::min(static_cast<std::ptrdiff_t>(d_payload_size),
+                                 static_cast<std::ptrdiff_t>(total_size - bytes_sent));
 
         if (d_connected) {
             try {
