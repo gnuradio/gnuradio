@@ -72,7 +72,7 @@ void portaudio_sink::create_ringbuffer(void)
 
 void portaudio_underrun_notification(gr::logger_ptr logger)
 {
-    ssize_t r = ::write(2, "aU", 2);
+    auto r = ::write(2, "aU", 2);
     if (r == -1) {
         GR_LOG_ERROR(logger, "portaudio_source_callback write error to stderr.");
     }

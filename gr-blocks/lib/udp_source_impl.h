@@ -15,6 +15,7 @@
 #include <gnuradio/thread/thread.h>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
+#include <cstddef>
 #include <memory>
 
 namespace gr {
@@ -29,8 +30,9 @@ private:
     bool d_connected;             // are we connected?
     std::vector<char> d_rxbuf;    // get UDP buffer items
     std::vector<char> d_residbuf; // hold buffer between calls
-    ssize_t d_residual; // hold information about number of bytes stored in residbuf
-    ssize_t d_sent;     // track how much of d_residbuf we've outputted
+    std::ptrdiff_t
+        d_residual; // hold information about number of bytes stored in residbuf
+    size_t d_sent;  // track how much of d_residbuf we've outputted
 
     static const int
         BUF_SIZE_PAYLOADS; //!< The d_residbuf size in multiples of d_payload_size
