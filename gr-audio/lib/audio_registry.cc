@@ -50,7 +50,7 @@ static std::vector<source_entry_t>& get_source_registry(void)
 
 #ifdef WIN32_FOUND
         s_registry.push_back(
-            register_source(REG_PRIO_HIGH, "windows", windows_source_fcn));
+            register_source(REG_PRIO_LOW, "windows", windows_source_fcn));
 #endif /* WIN32_FOUND */
 
         src_reg = true;
