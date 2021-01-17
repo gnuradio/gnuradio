@@ -9,6 +9,12 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
 ## [3.10.0.0] - Unreleased
 
+### Changed
+
+#### Project Scope
+
+- C++17
+  - requires MSVC 1914 (Microsoft VS 2017 15.7)
 
 ## [3.9.0.0] - 2020-01-17
 
