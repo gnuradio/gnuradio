@@ -61,7 +61,7 @@ set(GR_NUMPY_MIN_VERSION "1.13.3")    ## Version in Ubuntu 18.04LTS
 set(GCC_MIN_VERSION "8.3.0")          ## debian buster
 set(CLANG_MIN_VERSION "11.0.0")       ## debian bullseye, Fedora 33
 set(APPLECLANG_MIN_VERSION "1100")    ## same as clang 11.0.0, in Xcode11
-set(MSVC_MIN_VERSION "1910")          ## VS2017 15.0, for full-ish C++14 support
+set(MSVC_MIN_VERSION "1914")          ## VS2017 15.7, for full-ish C++17 support
 set(VOLK_MIN_VERSION "2.4.1")         ## first version with CPU features
 set(PYBIND11_MIN_VERSION "2.4") # pybind11 sets versions like 2.4.dev4, which compares < 2.4.3
 
@@ -126,7 +126,7 @@ ENDIF()
 
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
 ########################################################################
