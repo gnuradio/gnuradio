@@ -7,14 +7,117 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
-## [3.9.0.0] - Unreleased
+## [3.10.0.0] - Unreleased
+
+
+## [3.9.0.0] - 2020-01-17
 
 ### Changed
 
 #### Project Scope
 
+- **We now require commits to be signed off (DCO)**; this means you have to
+attach `-s` to your `git commit` command line
+- License headers now SPDX format
+- C++14
+ - use C++11 facilities in a lot of places where Boost was still used,
+   especially smart pointers, range loops
+ - lambdas where `boost::bind` was used
+- C11
+- Dependency versions:
+  - Python 3.6.5
+  - numpy 1.13.3
+  - VOLK 2.4.1
+  - CMake 3.10.2
+  - Boost 1.65
+  - Mako 1.0.7
+  - PyBind11 2.4.3
+- Compiler options:
+  - GCC 8.3.0
+  - Clang 11.0.0 / Apple Clang 1100
+  - MSVC 1910 (Microsoft VS 2017 15.0)
+- VOLK now "regular" dependency, not in-tree submodule
+- numpy now also a CMake-checked hard dependency for Python support
+- Exception Handling: throw by value, catch by reference (clang-tidy check)
+- C++11: Emplace in vectors where you can; brings performance boni, but not
+  included in clang-tidy-checks
+- Further clang-tidy based code optimizations:
+- empty() instead of size() == 0
+- override where overriding virtual functions (which we do a lot)
 - Logging: removed all `std::cerr` and `fprintf(stderr,…)` by GNU Radio logging
 - Logging: Changed logging format for many multiline error logs
+- purged `snprintf`, `printf` logging
+- There were a lot of places where a malloc'ed object was used internally, where
+  that was inappropriate. Using simple instance-holding fields now.
+- `const` for members that were only set at construction time is now desired,
+  and implemented in most places
+- `const` -> `constexp` in a lot of places.
+- `assert` -> `static_assert`
+- An exception-throwing block will now terminate the flow graph process,
+  configurable through `top_block`
+- `gr-utils` cleanup, folder restructuring
+- config version checks installed CMake file will accept "at least this version"
+  now
+- PyBind11 replaces SWIG
+  - Full tree conversion from SWIG to Pybind11 bindings
+- Doxygen now uses MathJax, full LaTeX installation no longer required
+
+**NOTE**: Most of the changes above change the generally preferred coding style
+in a lot of situations.
+
+#### GRC
+
+- start flowgraph in folder where it resides
+
+#### gnuradio-runtime
+
+- When calculating offsets in non-integer rate FEC, `lround`
+- default seed for `gr::random` now actually as documented time-dependent
+- loggers moved from `gr::block` to `gr::basic_block`
+- PMT serialization
+- PMT dicts no longer indistinguishable from pairs
+- PMT symbol hashing no longer suffers under oddball own implementations
+
+#### gr-audio
+
+- Increased ALSA buffer nperiods
+
+#### gr-blocks
+
+- `add`, `add_const` VOLK'ized, templated
+  - this seems to break things in other places, even if it proves to be
+    mathematically identical
+- `wavfile` infrastructure: `libsndfile` now dependency
+
+#### gr-digital
+
+- `transcendental` block: default to 32 bit float complex, not double
+- Linear equalizer: separate adaptive algorithm, allows for using e.g. trained
+  sequences instead of the classical LMS, CMA
+- DFE: better structure for decision history
+
+#### gr-dtv
+
+- LDPC encoder: template functions instead of `#define`d macros
+- LDPC encoder: smaller tables through `uint16_t` for index tables
+
+#### gr-fec
+
+- API `uint8_t`, not `char`
+
+#### gr-fft
+
+- FFT blocks/functions templatized
+
+#### gr-filter
+
+- logging format
+- `rational_resampler_base` -> `rational_resampler`
+
+#### gr-uhd
+
+- Required UHD version bumped to 3.9.7
+- logging format
 
 ### Deprecated
 
@@ -22,11 +125,293 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
 - `sig_source`: `freq` port will be removed in the future
 
-### Added 
+#### gr-audio
+
+- `audio-sink`, `-source`: Windows audio sink/source deprecated, the portaudio
+sink/source works even better under windows anyway
+
+#### gr-digital
+
+- In favor of `symbol_sync`, deprecate:
+  - `clock_recovery_mm`
+  - `msk_timing_recovery`
+  - `pfb_clock_sync`
+
+### Added
+
+#### Project Scope
+
+- C++ Generation all over the place
+- PyBind bindings + generator
+- Github actions
+- Reproducible builds-compatible CMake TIMESTAMP
+
+#### gnuradio-runtime
+
+- `block_gateway`: `set_max_output_buffer`
+- `GR_PREFS_PATH` environment variable sensitivity to configure the path to the
+  config file
+- `gnuradio-config-info --print-all`
+
+#### GRC
+
+- option to toggle ID visibilities globally
+- Validation check for QT GUI hints
+- Python snippets
+
+#### block header parsing tool
+
+- block header parsing tool (GSoC 2019)
+
+#### gr_modtool
+
+- option to convert blacklisted files
+
 #### gr-analog
 
 - `sig_source`: `cmd` port adds support for dicts, setting of frequency,
-  amplitude, offset and phase parameters
+amplitude, offset and phase parameters
+
+#### gr-blocks
+
+- `selector` now has control message ports
+- Rotator-based freq shift convenience wrapper
+- Message-to-Variable and vice versa blocks
+- DC Spike removal
+- IQ Swap
+- Complex to interleaved char / short: scaling option
+- Delay block: control message port
+- Phase Shift block with message port
+- `wavfile_sink`, `_source` can now deal with a lot of audio formats:
+  uncompressed WAV/AIFF, µ- and A-law compressed audio, OGG/Vorbis, FLAC, even
+  octave files
+- Stream Demux, which demuxes streams according to lengths vector
+- `rotator`: `phase()` getter
+
+#### gr-digital
+
+- OFDM: multiple CP lengths
+- `ofdm_equalizer_simpledfe`: `enable_soft_output`
+- Constellation Encoder
+- Constellation: normalization options
+
+#### gr-fec
+
+- `{en,de}code_rs_8`, `{en,de}code_rs_ccsds`: Reed-Solomon en- and decoders
+
+#### gr-fft
+
+- Windows:
+  - Gaussian
+  - Flat Top
+  - Tukey
+- Window build() call now with default beta
+
+#### gr-filter
+
+- GRC: File taps loader block
+- Low pass FFT filter convenience wrapper
+- ichar / ishort decimator
+- phase continuity for `freq_xlating_fir_filter`
+
+#### gr-network
+
+- `gr-network`: a whole new networking blocks module!
+  - TCP
+  - UDP
+- Much better lockup/multithreading support than 3.7-era `blks2` nightmare
+  infrastructure :)
+
+
+#### gr-qtgui
+
+- Azimuth/Elevation plot
+- Autocorrelation plot
+- Compass visualization
+- Dial control
+- Gauge: dial, level
+- Distance plot
+- LED-like indicator
+- Message-passing check box
+- Message-passing numeric control
+- Message-passing push button
+- Toggle Button
+- Eye sink
+- Vertical slider
+
+#### gr-uhd
+
+- Filter API
+- UHD 4.0 support
+- Power Reference API
+- Bidirectional setting messages on both sink, source
+
+#### gr-vocoder
+
+- Codec2 dev branch support
+- FreeDV: In/output rates can differ
+- FreeDV: text message output
+
+#### gr-zeromq
+
+- C++ GRC templates
+- Tag filtering for tag-forwarding blocks
+
+### Removed
+
+#### Project Scope
+
+- VOLK is no longer a submodule
+- Sphinx: consolidate into doxygen, or wiki-maintained block list.
+- Python 2
+- SWIG
+- `gru` python module
+
+#### gnuradio-runtime
+
+- `circular_file.cc`
+- `math/common_factor.hpp`
+
+#### gr-blocks
+
+- `bin_statistics_f`
+- `log2_const`
+
+#### gr-digital
+
+- PFB clock sync: `set_taps`
+- deprecated old OFDM infrastructur
+  - `ofdm_frame_acquisition`
+  - `ofdm_frame_sink`
+  - `ofdm_insert_preamble`
+  - `ofdm_sync_fixed`
+  - `ofdm_sync_pn`
+  - `ofdm_sync_pnac`
+  - `ofdm_sync_ml`
+  - `ofdm_receiver`
+- `digital_voice`
+
+#### gr-fft
+
+- `malloc_float`, `_double`: rely on VOLK
+- Goertzel: dtor superfluous
+
+#### gr-filter
+
+- deprecated window function duplicates (use them from gr-fft!)
+
+### Fixed
+
+#### Project Scope
+
+- CMake: Qwt, Log4Cpp detection
+- ctrlport strings unicodified
+- Freedesktop install script was not executed
+- Redundant icons installed
+- Path substitution on Windows was backslash-broken
+- YAML definitions: more than I can count
+- Cross-building: py interpreter at runtime != build time
+
+#### gnuradio-runtime
+
+- ctrlport: unholy stored reference to stack-allocated object removed
+- Sine table generation for fixed point math
+- `gr_unittest`: `floatAlmostEqual` had a lot of false passes due abuse of
+  `all()`
+- `get_tags_in_range` for `delay < (end-start)`
+- Premature tag pruning
+- release flattened flowgraph after stopping, fixes restartability/shutdown
+  problem
+- PMT serialization portability
+- latency issue caused by setting block alias on msg block
+- Windows logging errors
+- ctrlport: Thrift >= 0.13 broke
+
+#### GRC
+
+- Tab widget ID visibilities
+- A lot of YAML templates
+- Default setting in qtgui chooser restored
+- Boolean parameters no longer switch buttons
+- Nested namespace handling
+- Don't rely on set ordering in tests
+- configparser import
+- input box color theme on dark themes
+- Search box typing doesn't inadvertedly interact with the rest of GRC anymore
+
+#### gr_modtool
+
+- Empty argument lists allowed
+- Boost UTF replaced CppUnit, this needed to be done here, too
+
+#### gr-analog
+
+- `wfm` left/right, filters
+
+#### gr-audio
+
+- portaudio: lock acquisition was improper
+
+#### gr-blocks
+
+- Throttle now uses monotonic clock
+- Tag debug only saved last `work` call's tags
+- File sink flushes on `stop`
+- `gr_read_file_metadata.py` used to lose `rx_time` precision
+- File source big file handling under Windows
+- `file_*`: `fseek` errors used to be ignored
+
+#### gr-digital
+
+- `map_bb`: thread safety, buffer overflows
+- `additive_scrambler`: reset was broken
+- Constellation scalefactor wasn't always initialized
+- long-standing `qa_header_payload_demux` bug addressed by waiting for both RX
+  and TX, not only either
+- false triggers in `correlate_access_code`
+
+#### gr-dtv
+
+- rate mismatch in ATSC flowgraphs
+
+#### gr-fec
+
+- `async_decoder` Heap corruption
+- `cc_encoder`: constraint length K > 8 led to wrong output
+
+#### gr-fft
+
+- thread safety of copy assignment/ctor
+- log power FFT Python
+
+#### gr-filter
+
+- `variable_band_pass_filter` GRC complex taps input
+- RRC filter gain for alpha = 1
+
+#### gr-qtgui
+
+- Remove copies of image data in returns by using move semantics
+- Remove bogus overriding in drawing functions of `plot_raster`, `_waterfall`
+- Edit MSG box: don't require key to be set
+- Don't check for Python2 libs
+- Number Sink ignored averaging setting
+
+#### gr-uhd
+
+- UHD apps: Py3 fixes
+- USRP blocks: multichannel objects not properly populating channels
+
+#### gr-video-sdl
+
+- YUV formats fixed
+
+#### gr-zeromq
+
+- Don't depend on deprecated ZMQ functionality (fix warnings, include what you
+  use)
+- Unhandled exceptions now handled, much calmer
+- Avoid infinite blocking in `tb.stop()` by using `ZMQ_LINGER`
 
 ## [3.8.0.0] - 2019-08-09
 
