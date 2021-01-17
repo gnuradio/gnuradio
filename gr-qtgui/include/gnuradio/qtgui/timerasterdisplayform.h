@@ -58,6 +58,11 @@ public slots:
     void setSampleRate(const double samprate);
     void setSampleRate(const QString& rate) override;
 
+    void setXAxis(double min, double max);
+    void setXLabel(const std::string& label);
+    void setYAxis(double min, double max);
+    void setYLabel(const std::string& label);
+
     void setIntensityRange(const double minIntensity, const double maxIntensity);
     void setMaxIntensity(const QString& m);
     void setMinIntensity(const QString& m);

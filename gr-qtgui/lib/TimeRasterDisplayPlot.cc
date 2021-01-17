@@ -19,6 +19,7 @@
 #include <qwt_plot_layout.h>
 #include <qwt_scale_draw.h>
 #include <QColor>
+#include <cmath>
 #include <iostream>
 
 #if QWT_VERSION < 0x060100
@@ -38,15 +39,92 @@ namespace pt = boost::posix_time;
  **********************************************************************/
 class QwtXScaleDraw : public QwtScaleDraw, public TimeScaleData
 {
+protected:
+    double d_start_value;
+    double d_end_value;
+    double d_delta_value;
+    int d_max_scale;
+    double d_ten_scale;
+    std::string d_units;
+
 public:
-    QwtXScaleDraw() : QwtScaleDraw(), TimeScaleData() {}
+    QwtXScaleDraw(double start_value = 0.0, double end_value = 0.0, int max_scale = 1024)
+        : QwtScaleDraw(),
+          TimeScaleData(),
+          d_start_value(start_value),
+          d_end_value(end_value),
+          d_max_scale(max_scale),
+          d_ten_scale(1.0)
+    {
+        d_delta_value = d_end_value - d_start_value;
+
+        if ((d_delta_value != 0.0f) && (d_start_value > 0.0f || d_end_value > 0.0f)) {
+            double test_value;
+            if (d_start_value > 0.0f) {
+                test_value = d_start_value;
+            } else {
+                test_value = d_end_value;
+            }
+
+            double units10 = floor(log10(test_value));
+
+            d_ten_scale = pow(10, units10);
+
+            // We'll get positive units for d_start_value >= 1.0, negative for
+            // 0<d_start_value<1.0
+            int units3 = int(floor(units10 / 3.0));
+            d_ten_scale = pow(10, units3 * 3);
+
+            switch (units3) {
+            case 1:
+                d_units = "K";
+                break;
+            case 2:
+                d_units = "M";
+                break;
+            case 3:
+                d_units = "G";
+                break;
+            case 4:
+                d_units = "T";
+                break;
+            case 5:
+                d_units = "P";
+                break;
+            case -1:
+                d_units = "m";
+                break;
+            case -2:
+                d_units = "u";
+                break;
+            case -3:
+                d_units = "n";
+                break;
+            case -4:
+                d_units = "p";
+                break;
+            }
+        }
+    }
+
 
     ~QwtXScaleDraw() override {}
 
     QwtText label(double value) const override
     {
-        double secs = double(value * getSecondsPerLine());
-        return QwtText(QString::number(secs, 'f', 2));
+        if (d_start_value == d_end_value) {
+            // no scale was provided.  Default to seconds.
+            double secs = double(value * getSecondsPerLine());
+            return QwtText(QString::number(secs, 'f', 2));
+        } else {
+            // User-defined scale provided.
+            double x_label =
+                d_start_value + (double)value / (double)d_max_scale * d_delta_value;
+
+            // scale for units tag
+            x_label /= d_ten_scale;
+            return QwtText(QString("").sprintf("%.3f%s", x_label, d_units.c_str()));
+        }
     }
 
     virtual void initiateUpdate()
@@ -63,15 +141,81 @@ public:
 class QwtYScaleDraw : public QwtScaleDraw
 {
 public:
-    QwtYScaleDraw() : QwtScaleDraw(), d_rows(0) {}
+    QwtYScaleDraw(double start_value = 0.0, double end_value = 0.0, int max_scale = 1024)
+        : QwtScaleDraw(),
+          d_rows(max_scale),
+          d_start_value(start_value),
+          d_end_value(end_value),
+          d_max_scale(max_scale),
+          d_ten_scale(1.0)
+    {
+        d_delta_value = d_end_value - d_start_value;
+
+        if ((d_delta_value != 0.0f) && (d_start_value > 0.0f || d_end_value > 0.0f)) {
+            double test_value;
+            if (d_start_value > 0.0f) {
+                test_value = d_start_value;
+            } else {
+                test_value = d_end_value;
+            }
+
+            double units10 = floor(log10(test_value));
+
+            d_ten_scale = pow(10, units10);
+
+            // We'll get positive units for d_start_value >= 1.0, negative for
+            // 0<d_start_value<1.0
+            int units3 = int(floor(units10 / 3.0));
+            d_ten_scale = pow(10, units3 * 3);
+
+            switch (units3) {
+            case 1:
+                d_units = "K";
+                break;
+            case 2:
+                d_units = "M";
+                break;
+            case 3:
+                d_units = "G";
+                break;
+            case 4:
+                d_units = "T";
+                break;
+            case 5:
+                d_units = "P";
+                break;
+            case -1:
+                d_units = "m";
+                break;
+            case -2:
+                d_units = "u";
+                break;
+            case -3:
+                d_units = "n";
+                break;
+            case -4:
+                d_units = "p";
+                break;
+            }
+        }
+    }
 
     ~QwtYScaleDraw() override {}
 
     QwtText label(double value) const override
     {
-        if (d_rows > 0)
-            value = d_rows - value;
-        return QwtText(QString::number(value, 'f', 0));
+        if (d_start_value == d_end_value) {
+            // no scale was provided.  Default to row number.
+            return QwtText(QString("").sprintf("%.0f", value));
+        } else {
+            // User-defined scale provided.
+            double y_label =
+                d_start_value + (double)value / (double)d_rows * d_delta_value;
+
+            // scale for units tag
+            y_label /= d_ten_scale;
+            return QwtText(QString("").sprintf("%.3f%s", y_label, d_units.c_str()));
+        }
     }
 
     virtual void initiateUpdate()
@@ -85,6 +229,13 @@ public:
 
 private:
     double d_rows;
+
+    double d_start_value;
+    double d_end_value;
+    double d_delta_value;
+    int d_max_scale;
+    double d_ten_scale;
+    std::string d_units;
 };
 
 class TimePrecisionClass
@@ -117,25 +268,54 @@ public:
     TimeRasterZoomer(QwtPlotCanvas* canvas,
                      double rows,
                      double cols,
-                     const unsigned int timePrecision)
+                     const unsigned int timePrecision,
+                     double x_start_value = 0.0,
+                     double x_end_value = 0.0,
+                     double y_start_value = 0.0,
+                     double y_end_value = 0.0)
 #else  /* QWT_VERSION < 0x060100 */
     TimeRasterZoomer(QWidget* canvas,
                      double rows,
                      double cols,
-                     const unsigned int timePrecision)
+                     const unsigned int timePrecision,
+                     double x_start_value = 0.0,
+                     double x_end_value = 0.0,
+                     double y_start_value = 0.0,
+                     double y_end_value = 0.0)
 #endif /* QWT_VERSION < 0x060100 */
         : QwtPlotZoomer(canvas),
           TimePrecisionClass(timePrecision),
           TimeScaleData(),
           d_rows(static_cast<double>(rows)),
-          d_cols(static_cast<double>(cols))
+          d_cols(static_cast<double>(cols)),
+          d_x_start_value(x_start_value),
+          d_x_end_value(x_end_value),
+          d_y_start_value(y_start_value),
+          d_y_end_value(y_end_value)
     {
+        d_x_delta_value = d_x_end_value - d_x_start_value;
+        d_y_delta_value = d_y_end_value - d_y_start_value;
+
         setTrackerMode(QwtPicker::AlwaysOn);
     }
 
     ~TimeRasterZoomer() override {}
 
     virtual void updateTrackerText() { updateDisplay(); }
+
+    void setXAxis(double min, double max)
+    {
+        d_x_start_value = min;
+        d_x_end_value = max;
+        d_x_delta_value = max - min;
+    }
+
+    void setYAxis(double min, double max)
+    {
+        d_y_start_value = min;
+        d_y_end_value = max;
+        d_y_delta_value = max - min;
+    }
 
     void setUnitType(const std::string& type) { d_unitType = type; }
 
@@ -148,19 +328,50 @@ protected:
     QwtText trackerText(QPoint const& p) const override
     {
         QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
-        double x = dp.x() * getSecondsPerLine();
-        // double y = dp.y() * getSecondsPerLine() * d_cols;
-        double y = floor(d_rows - dp.y());
-        QwtText t(QString("%1 %2, %3")
-                      .arg(x, 0, 'f', getTimePrecision())
-                      .arg(d_unitType.c_str())
-                      .arg(y, 0, 'f', 0));
-        return t;
+
+        if (d_x_start_value == d_x_end_value) {
+            // Original seconds in hover text
+            double x = dp.x() * getSecondsPerLine();
+            double y = dp.y();
+
+            if (d_y_start_value != d_y_end_value) {
+                y = d_y_start_value + y / (double)d_rows * d_y_delta_value;
+            }
+
+            QwtText t(QString("%1 %2, %3")
+                          .arg(x, 0, 'f', getTimePrecision())
+                          .arg(d_unitType.c_str())
+                          .arg(y, 0, 'f', 0));
+            return t;
+        } else {
+            // Hover based on user-defined scale
+            double x = dp.x();
+            double y = dp.y();
+            if (d_y_start_value != d_y_end_value) {
+                y = d_y_start_value + y / (double)d_rows * d_y_delta_value;
+            }
+
+            double x_label = d_x_start_value + x / (double)d_cols * d_x_delta_value;
+            if ((d_y_delta_value > 999.0) or (d_y_delta_value <= 1.0)) {
+                QwtText t(QString(QString("").sprintf("%.2f, %.2e", x_label, y)));
+                return t;
+            } else {
+                QwtText t(QString(QString("").sprintf("%.2f, %.0f", x_label, y)));
+                return t;
+            }
+        }
     }
 
 private:
     std::string d_unitType;
     double d_rows, d_cols;
+    double d_x_start_value;
+    double d_x_end_value;
+    double d_x_delta_value;
+    double d_y_start_value;
+    double d_y_end_value;
+    double d_y_delta_value;
+    int d_max_scale;
 };
 
 /*********************************************************************
@@ -168,7 +379,13 @@ private:
  *********************************************************************/
 TimeRasterDisplayPlot::TimeRasterDisplayPlot(
     int nplots, double samp_rate, double rows, double cols, QWidget* parent)
-    : DisplayPlot(nplots, parent)
+    : DisplayPlot(nplots, parent),
+      d_x_label(""),
+      d_x_start_value(0.0),
+      d_x_end_value(0.0),
+      d_y_label(""),
+      d_y_start_value(0.0),
+      d_y_end_value(0.0)
 {
     d_zoomer = NULL; // need this for proper init
 
@@ -180,8 +397,10 @@ TimeRasterDisplayPlot::TimeRasterDisplayPlot(
     d_numPoints = d_cols;
     d_color_bar_title_font_size = 18;
 
-    setAxisScaleDraw(QwtPlot::xBottom, new QwtXScaleDraw());
-    setAxisScaleDraw(QwtPlot::yLeft, new QwtYScaleDraw());
+    setAxisScaleDraw(QwtPlot::xBottom,
+                     new QwtXScaleDraw(d_x_start_value, d_x_end_value, cols));
+    setAxisScaleDraw(QwtPlot::yLeft,
+                     new QwtYScaleDraw(d_y_start_value, d_y_end_value, rows));
 
     for (unsigned int i = 0; i < d_nplots; ++i) {
         d_data.push_back(new TimeRasterData(d_rows, d_cols));
@@ -205,7 +424,14 @@ TimeRasterDisplayPlot::TimeRasterDisplayPlot(
     // MidButton for the panning
     // RightButton: zoom out by 1
     // Ctrl+RighButton: zoom out to full size
-    d_zoomer = new TimeRasterZoomer(canvas(), d_rows, d_cols, 0);
+    d_zoomer = new TimeRasterZoomer(canvas(),
+                                    d_rows,
+                                    d_cols,
+                                    0,
+                                    d_x_start_value,
+                                    d_x_end_value,
+                                    d_y_start_value,
+                                    d_y_end_value);
 #if QWT_VERSION < 0x060000
     d_zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
 #endif
@@ -255,12 +481,22 @@ void TimeRasterDisplayPlot::reset()
 
     QwtXScaleDraw* xScale = (QwtXScaleDraw*)axisScaleDraw(QwtPlot::xBottom);
     xScale->setSecondsPerLine(sec_per_samp);
-    setAxisTitle(QwtPlot::xBottom, QString("Time (%1)").arg(strunits[iunit].c_str()));
+    if (d_x_label.length() > 0) {
+        setAxisTitle(QwtPlot::xBottom, QString(d_x_label.c_str()));
+    } else {
+        setAxisTitle(QwtPlot::xBottom, QString("Time (%1)").arg(strunits[iunit].c_str()));
+    }
     xScale->initiateUpdate();
+
+    if (d_y_label.length() > 0) {
+        setAxisTitle(QwtPlot::yLeft, d_y_label.c_str());
+    }
 
     // Load up the new base zoom settings
     if (d_zoomer) {
         double display_units = 4;
+        ((TimeRasterZoomer*)d_zoomer)->setXAxis(d_x_start_value, d_x_end_value);
+        ((TimeRasterZoomer*)d_zoomer)->setYAxis(d_y_start_value, d_y_end_value);
         ((TimeRasterZoomer*)d_zoomer)->setColumns(d_cols);
         ((TimeRasterZoomer*)d_zoomer)->setRows(d_rows);
         ((TimeRasterZoomer*)d_zoomer)->setSecondsPerLine(sec_per_samp);
@@ -299,6 +535,36 @@ void TimeRasterDisplayPlot::setAlpha(unsigned int which, int alpha)
 void TimeRasterDisplayPlot::setSampleRate(double samprate)
 {
     d_samp_rate = samprate;
+    reset();
+}
+
+void TimeRasterDisplayPlot::setXAxis(double min, double max)
+{
+    d_x_start_value = min;
+    d_x_end_value = max;
+    setAxisScaleDraw(QwtPlot::xBottom,
+                     new QwtXScaleDraw(d_x_start_value, d_x_end_value, d_cols));
+    reset();
+}
+
+void TimeRasterDisplayPlot::setXLabel(const std::string& label)
+{
+    d_x_label = label;
+    reset();
+}
+
+void TimeRasterDisplayPlot::setYAxis(double min, double max)
+{
+    d_y_start_value = min;
+    d_y_end_value = max;
+    setAxisScaleDraw(QwtPlot::yLeft,
+                     new QwtYScaleDraw(d_y_start_value, d_y_end_value, d_rows));
+    reset();
+}
+
+void TimeRasterDisplayPlot::setYLabel(const std::string& label)
+{
+    d_y_label = label;
     reset();
 }
 
