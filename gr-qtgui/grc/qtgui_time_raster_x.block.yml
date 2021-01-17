@@ -31,6 +31,36 @@ parameters:
     label: Num. Cols
     dtype: int
     default: 256
+-   id: x_label
+    label: X-Axis Label
+    dtype: string
+    default: '""'
+    hide: part
+-   id: x_start_value
+    label: X-Axis Start Value
+    dtype: float
+    default: 0.0
+    hide: part
+-   id: x_end_value
+    label: X-Axis End Value
+    dtype: float
+    default: 0.0
+    hide: part
+-   id: y_label
+    label: Y-Axis Label
+    dtype: string
+    default: '""'
+    hide: part
+-   id: y_start_value
+    label: Y-Axis Start Value
+    dtype: float
+    default: 0.0
+    hide: part
+-   id: y_end_value
+    label: Y-Axis End Value
+    dtype: float
+    default: 0.0
+    hide: part
 -   id: grid
     label: Grid
     dtype: enum
@@ -243,6 +273,10 @@ templates:
         self.${id}.set_intensity_range(${zmin}, ${zmax})
         self.${id}.enable_grid(${grid})
         self.${id}.enable_axis_labels(${axislabels})
+        self.${id}.set_x_label(${x_label})
+        self.${id}.set_x_range(${x_start_value}, ${x_end_value})
+        self.${id}.set_y_label(${y_label})
+        self.${id}.set_y_range(${y_start_value}, ${y_end_value})
 
         labels = [${label1}, ${label2}, ${label3}, ${label4}, ${label5},
             ${label6}, ${label7}, ${label8}, ${label9}, ${label10}]
@@ -264,5 +298,7 @@ templates:
 
 documentation: |-
     The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+    
+    Note that for user-defined axis values, numbers will be scaled to their power of 10 3-unit grouping (e.g. Giga, Mega, Kilo, milli, nano (u), pico) and appended with the first letter descriptor for a more concise display. 
 
 file_format: 1

@@ -177,6 +177,30 @@ void TimeRasterDisplayForm::customEvent(QEvent* e)
     }
 }
 
+void TimeRasterDisplayForm::setXAxis(double min, double max)
+{
+    getPlot()->setXAxis(min, max);
+    getPlot()->replot();
+}
+
+void TimeRasterDisplayForm::setXLabel(const std::string& label)
+{
+    getPlot()->setXLabel(label);
+    getPlot()->replot();
+}
+
+void TimeRasterDisplayForm::setYAxis(double min, double max)
+{
+    getPlot()->setYAxis(min, max);
+    getPlot()->replot();
+}
+
+void TimeRasterDisplayForm::setYLabel(const std::string& label)
+{
+    getPlot()->setYLabel(label);
+    getPlot()->replot();
+}
+
 void TimeRasterDisplayForm::setNumRows(double rows)
 {
     getPlot()->setNumRows(rows);

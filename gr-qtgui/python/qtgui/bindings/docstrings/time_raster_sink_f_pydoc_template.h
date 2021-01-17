@@ -36,6 +36,18 @@ static const char* __doc_gr_qtgui_time_raster_sink_f_qwidget = R"doc()doc";
 static const char* __doc_gr_qtgui_time_raster_sink_f_pyqwidget = R"doc()doc";
 
 
+static const char* __doc_gr_qtgui_time_raster_sink_f_set_x_label = R"doc()doc";
+
+
+static const char* __doc_gr_qtgui_time_raster_sink_f_set_x_range = R"doc()doc";
+
+
+static const char* __doc_gr_qtgui_time_raster_sink_f_set_y_label = R"doc()doc";
+
+
+static const char* __doc_gr_qtgui_time_raster_sink_f_set_y_range = R"doc()doc";
+
+
 static const char* __doc_gr_qtgui_time_raster_sink_f_set_update_time = R"doc()doc";
 
 
