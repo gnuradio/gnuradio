@@ -24,6 +24,7 @@
 #include <gnuradio/fec/api.h>
 #include <boost/shared_ptr.hpp>
 #include <cstdlib>
+#include <string>
 
 namespace gr {
 namespace fec {
