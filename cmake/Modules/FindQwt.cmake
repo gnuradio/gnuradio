@@ -13,7 +13,7 @@ find_path(QWT_INCLUDE_DIRS
   HINTS
   ${PC_QWT_INCLUDEDIR}
   ${CMAKE_INSTALL_PREFIX}/include/qwt
-  ${CMAKE_PREFIX_PATH}/include/qwt
+  list(APPEND ${CMAKE_PREFIX_PATH} /include/qwt)
   PATHS
   /usr/local/include/qwt-${QWT_QT_VERSION}
   /usr/local/include/qwt
