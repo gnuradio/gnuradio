@@ -12,10 +12,10 @@
 #define INCLUDED_PMT_H
 
 #include <pmt/api.h>
-#include <stdint.h>
 #include <boost/any.hpp>
 #include <boost/noncopyable.hpp>
 #include <complex>
+#include <cstdint>
 #include <iosfwd>
 #include <memory>
 #include <stdexcept>

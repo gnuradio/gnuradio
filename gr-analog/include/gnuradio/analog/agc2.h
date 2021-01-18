@@ -13,7 +13,7 @@
 
 #include <gnuradio/analog/api.h>
 #include <gnuradio/gr_complex.h>
-#include <math.h>
+#include <cmath>
 
 namespace gr {
 namespace analog {

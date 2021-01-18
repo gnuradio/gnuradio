@@ -15,9 +15,9 @@
 #include "depuncture_bb_impl.h"
 #include <gnuradio/io_signature.h>
 #include <pmt/pmt.h>
-#include <stdio.h>
 #include <volk/volk.h>
 #include <boost/bind.hpp>
+#include <cstdio>
 #include <string>
 
 namespace gr {

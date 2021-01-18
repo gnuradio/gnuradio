@@ -21,9 +21,9 @@
 #include "portaudio_source.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <stdio.h>
-#include <string.h>
 #include <unistd.h>
+#include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <stdexcept>
 #ifdef _MSC_VER

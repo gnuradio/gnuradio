@@ -12,7 +12,7 @@
 #define INCLUDED_ALSA_IMPL_H
 
 #include <alsa/asoundlib.h>
-#include <stdio.h>
+#include <cstdio>
 
 void gri_alsa_dump_hw_params(snd_pcm_t* pcm, snd_pcm_hw_params_t* hwparams, FILE* fp);
 

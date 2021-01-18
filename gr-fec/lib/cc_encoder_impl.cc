@@ -15,11 +15,11 @@
 #include "cc_encoder_impl.h"
 #include <gnuradio/fec/cc_common.h>
 #include <gnuradio/fec/generic_encoder.h>
-#include <math.h>
-#include <stdio.h>
 #include <volk/volk.h>
 #include <volk/volk_typedefs.h>
 #include <boost/assign/list_of.hpp>
+#include <cmath>
+#include <cstdio>
 #include <sstream>
 #include <vector>
 

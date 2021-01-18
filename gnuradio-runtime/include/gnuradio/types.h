@@ -12,13 +12,13 @@
 #define INCLUDED_GR_TYPES_H
 
 #include <gnuradio/api.h>
-#include <stddef.h> // size_t
+#include <cstddef> // size_t
 #include <memory>
 #include <vector>
 
 #include <gnuradio/gr_complex.h>
 
-#include <stdint.h>
+#include <cstdint>
 
 typedef std::vector<int> gr_vector_int;
 typedef std::vector<unsigned int> gr_vector_uint;

@@ -11,7 +11,7 @@
 #ifndef GF2VEC_H
 #define GF2VEC_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 
 class GF2Vec

@@ -15,7 +15,7 @@
 #include "chunks_to_symbols_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/tag_checker.h>
-#include <assert.h>
+#include <cassert>
 
 namespace gr {
 namespace digital {

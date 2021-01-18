@@ -14,10 +14,10 @@
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/tags.h>
-#include <stdint.h>
 #include <QEvent>
 #include <QString>
 #include <complex>
+#include <cstdint>
 #include <vector>
 
 static constexpr int SpectrumUpdateEventType = 10005;

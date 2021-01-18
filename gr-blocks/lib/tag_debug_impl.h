@@ -13,7 +13,7 @@
 
 #include <gnuradio/blocks/tag_debug.h>
 #include <gnuradio/thread/thread.h>
-#include <stddef.h>
+#include <cstddef>
 
 namespace gr {
 namespace blocks {

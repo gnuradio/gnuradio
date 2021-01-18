@@ -14,7 +14,7 @@
 
 #include "portaudio_impl.h"
 #include <portaudio.h>
-#include <string.h>
+#include <cstring>
 
 namespace gr {
 namespace audio {

@@ -23,7 +23,7 @@
 #define ALIST_H
 
 #include <gnuradio/fec/api.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <sstream>

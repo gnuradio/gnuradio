@@ -15,10 +15,10 @@
 #include "local_sighandler.h"
 #include "vmcircbuf.h"
 #include "vmcircbuf_prefs.h"
-#include <assert.h>
-#include <stdio.h>
-#include <string.h>
 #include <boost/format.hpp>
+#include <cassert>
+#include <cstdio>
+#include <cstring>
 #include <stdexcept>
 #include <vector>
 

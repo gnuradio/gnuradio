@@ -17,11 +17,11 @@
 #include <gnuradio/buffer.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
-#include <assert.h>
 #include <block_executor.h>
-#include <stdio.h>
 #include <boost/format.hpp>
 #include <boost/thread.hpp>
+#include <cassert>
+#include <cstdio>
 #include <iostream>
 #include <limits>
 

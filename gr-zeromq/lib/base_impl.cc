@@ -88,7 +88,7 @@ int base_sink_impl::send_message(const void* in_buf,
                                  const uint64_t in_offset)
 {
     /* Send key if it exists */
-    if (d_key.size() > 0) {
+    if (!d_key.empty()) {
         zmq::message_t key_message(d_key.size());
         memcpy(key_message.data(), d_key.data(), d_key.size());
 #if USE_NEW_CPPZMQ_SEND_RECV
@@ -217,7 +217,7 @@ bool base_source_impl::load_message(bool wait)
 
     /* Throw away key and get the first message. Avoid blocking if a multi-part
      * message is not sent */
-    if (d_key.size() > 0 && !more) {
+    if (!d_key.empty() && !more) {
         int64_t is_multipart;
         d_socket.getsockopt(ZMQ_RCVMORE, &is_multipart, &more_len);
 

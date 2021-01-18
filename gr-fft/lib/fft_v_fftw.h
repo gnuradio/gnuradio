@@ -33,7 +33,7 @@ public:
                bool shift,
                int nthreads = 1);
 
-    ~fft_v_fftw() {}
+    ~fft_v_fftw() override {}
 
     void set_nthreads(int n) override;
     int nthreads() const override;

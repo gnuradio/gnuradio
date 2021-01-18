@@ -15,7 +15,7 @@
 #include <gnuradio/rpcserver_base.h>
 #include <gnuradio/rpcserver_booter_base.h>
 #include <gnuradio/rpcserver_selector.h>
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 #include <sstream>
 

@@ -10,9 +10,9 @@
 
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/gr_complex.h>
-#include <stdio.h>
-#include <string.h>
 #include <boost/test/unit_test.hpp>
+#include <cstdio>
+#include <cstring>
 #include <iomanip>
 #include <iostream>
 

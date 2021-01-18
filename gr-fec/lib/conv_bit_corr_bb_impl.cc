@@ -15,7 +15,7 @@
 #include "conv_bit_corr_bb_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/messages/msg_passing.h>
-#include <stdio.h>
+#include <cstdio>
 
 namespace gr {
 namespace fec {

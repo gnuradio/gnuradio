@@ -11,8 +11,8 @@
 #ifndef TIMERASTER_GLOBAL_DATA_HPP
 #define TIMERASTER_GLOBAL_DATA_HPP
 
-#include <inttypes.h>
 #include <qwt_raster_data.h>
+#include <cinttypes>
 
 #if QWT_VERSION >= 0x060000
 #include <qwt_compat.h>

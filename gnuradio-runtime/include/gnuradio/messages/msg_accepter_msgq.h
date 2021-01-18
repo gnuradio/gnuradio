@@ -29,7 +29,7 @@ protected:
 
 public:
     msg_accepter_msgq(msg_queue_sptr msgq);
-    ~msg_accepter_msgq();
+    virtual ~msg_accepter_msgq();
 
     virtual void post(pmt::pmt_t msg);
 

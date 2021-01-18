@@ -14,11 +14,10 @@
 
 #include "file_descriptor_sink_impl.h"
 #include <gnuradio/io_signature.h>
-#include <errno.h>
 #include <fcntl.h>
-#include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <cerrno>
 #include <cstdio>
 #include <stdexcept>
 

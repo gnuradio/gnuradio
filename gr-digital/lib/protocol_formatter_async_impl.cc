@@ -14,8 +14,8 @@
 
 #include "protocol_formatter_async_impl.h"
 #include <gnuradio/io_signature.h>
-#include <stdio.h>
 #include <volk/volk_alloc.hh>
+#include <cstdio>
 
 namespace gr {
 namespace digital {

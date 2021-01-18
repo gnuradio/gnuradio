@@ -18,10 +18,10 @@
 #include <gnuradio/digital/header_format_default.h>
 #include <gnuradio/expj.h>
 #include <gnuradio/xoroshiro128p.h>
-#include <stdio.h>
 #include <volk/volk_alloc.hh>
 #include <boost/test/unit_test.hpp>
 #include <cmath>
+#include <cstdio>
 
 static void
 xoroshiro_fill_buffer(uint8_t* buffer, unsigned int length, uint64_t seed = 42)

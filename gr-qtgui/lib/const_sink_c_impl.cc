@@ -17,8 +17,8 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <qwt_symbol.h>
-#include <string.h>
 #include <volk/volk.h>
+#include <cstring>
 
 namespace gr {
 namespace qtgui {

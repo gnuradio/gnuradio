@@ -15,7 +15,7 @@
 #include <gnuradio/dtv/atsc_fpll.h>
 #include <gnuradio/filter/single_pole_iir.h>
 #include <gnuradio/nco.h>
-#include <stdio.h>
+#include <cstdio>
 
 namespace gr {
 namespace dtv {

@@ -15,7 +15,7 @@
 
 #include "packed_to_unpacked_impl.h"
 #include <gnuradio/io_signature.h>
-#include <assert.h>
+#include <cassert>
 
 namespace gr {
 namespace blocks {
