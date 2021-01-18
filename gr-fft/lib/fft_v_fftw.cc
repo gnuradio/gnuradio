@@ -13,9 +13,9 @@
 #endif
 
 #include "fft_v_fftw.h"
-#include <math.h>
-#include <string.h>
 #include <volk/volk.h>
+#include <cmath>
+#include <cstring>
 
 namespace gr {
 namespace fft {

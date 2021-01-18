@@ -15,8 +15,8 @@
 
 #include "mute_impl.h"
 #include <gnuradio/io_signature.h>
-#include <string.h>
 #include <algorithm>
+#include <cstring>
 
 namespace gr {
 namespace blocks {

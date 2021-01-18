@@ -14,7 +14,7 @@
 
 #include "permutation_impl.h"
 #include <gnuradio/io_signature.h>
-#include <string.h>
+#include <cstring>
 #include <iostream>
 
 namespace gr {

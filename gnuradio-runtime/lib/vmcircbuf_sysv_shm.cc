@@ -13,10 +13,10 @@
 #endif
 
 #include "vmcircbuf_sysv_shm.h"
-#include <assert.h>
 #include <fcntl.h>
-#include <stdlib.h>
 #include <unistd.h>
+#include <cassert>
+#include <cstdlib>
 #include <stdexcept>
 #ifdef HAVE_SYS_IPC_H
 #include <sys/ipc.h>
@@ -25,8 +25,8 @@
 #include <sys/shm.h>
 #endif
 #include "pagesize.h"
-#include <errno.h>
-#include <stdio.h>
+#include <cerrno>
+#include <cstdio>
 
 #define MAX_SYSV_SHM_ATTEMPTS 3
 

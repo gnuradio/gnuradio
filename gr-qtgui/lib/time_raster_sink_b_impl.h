@@ -76,10 +76,10 @@ public:
     void* pyqwidget();
 #endif
 
-    void set_x_label(const std::string& label);
-    void set_x_range(double start, double end);
-    void set_y_label(const std::string& label);
-    void set_y_range(double start, double end);
+    void set_x_label(const std::string& label) override;
+    void set_x_range(double start, double end) override;
+    void set_y_label(const std::string& label) override;
+    void set_y_range(double start, double end) override;
     void set_update_time(double t) override;
     void set_title(const std::string& title) override;
     void set_line_label(unsigned int which, const std::string& label) override;

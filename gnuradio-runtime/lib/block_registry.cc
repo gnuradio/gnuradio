@@ -13,7 +13,7 @@
 #include <gnuradio/block_detail.h>
 #include <gnuradio/block_registry.h>
 #include <gnuradio/tpb_detail.h>
-#include <stdio.h>
+#include <cstdio>
 
 gr::block_registry global_block_registry;
 

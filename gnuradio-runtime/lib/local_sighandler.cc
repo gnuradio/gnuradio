@@ -13,9 +13,9 @@
 #endif
 
 #include "local_sighandler.h"
-#include <stdio.h>
-#include <string.h>
 #include <boost/format.hpp>
+#include <cstdio>
+#include <cstring>
 #include <stdexcept>
 
 namespace gr {

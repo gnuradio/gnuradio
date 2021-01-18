@@ -14,7 +14,7 @@
 
 #include "vco_c_impl.h"
 #include <gnuradio/io_signature.h>
-#include <math.h>
+#include <cmath>
 
 namespace gr {
 namespace blocks {

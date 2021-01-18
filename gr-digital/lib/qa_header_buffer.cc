@@ -14,9 +14,9 @@
 
 #include <gnuradio/attributes.h>
 #include <gnuradio/digital/header_buffer.h>
-#include <stdio.h>
 #include <volk/volk_alloc.hh>
 #include <boost/test/unit_test.hpp>
+#include <cstdio>
 
 BOOST_AUTO_TEST_CASE(test_add8)
 {

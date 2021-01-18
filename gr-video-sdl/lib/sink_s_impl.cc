@@ -15,11 +15,11 @@
 #include "sink_s_impl.h"
 #include <gnuradio/io_signature.h>
 #include <fcntl.h>
-#include <stdio.h>
-#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <stdexcept>
 

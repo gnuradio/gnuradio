@@ -66,7 +66,7 @@ linear_equalizer_impl::linear_equalizer_impl(unsigned num_taps,
       d_updated(false),
       d_training_sample(0)
 {
-    if (training_start_tag == "" || training_sequence.empty()) {
+    if (training_start_tag.empty() || training_sequence.empty()) {
         d_training_state = equalizer_state_t::DD;
     } else {
         d_training_state = equalizer_state_t::IDLE;
@@ -134,7 +134,7 @@ int linear_equalizer_impl::equalize(const gr_complex* input_samples,
             state[i] = (unsigned short)d_training_state;
         }
 
-        if (training_start_samples.size() > 0 &&
+        if (!training_start_samples.empty() &&
             tag_index < training_start_samples.size()) {
             unsigned int tag_sample = training_start_samples[tag_index];
             if (tag_sample >= j && tag_sample < (j + decimation())) {

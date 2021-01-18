@@ -14,8 +14,8 @@
 
 #include "peak_detector_impl.h"
 #include <gnuradio/io_signature.h>
-#include <string.h>
 #include <type_traits>
+#include <cstring>
 #include <limits>
 
 namespace gr {

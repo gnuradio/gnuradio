@@ -11,8 +11,8 @@
 #define INCLUDED_DIGITAL_HEADER_BUFFER_H
 
 #include <gnuradio/digital/api.h>
-#include <stdint.h>
-#include <stdlib.h>
+#include <cstdint>
+#include <cstdlib>
 #include <vector>
 
 namespace gr {

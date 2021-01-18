@@ -24,7 +24,7 @@
 #include <qwt_scale_engine.h>
 #include <qwt_scale_widget.h>
 #include <qwt_symbol.h>
-#include <stdint.h>
+#include <cstdint>
 #include <cstdio>
 #include <vector>
 

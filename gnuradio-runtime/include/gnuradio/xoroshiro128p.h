@@ -19,7 +19,7 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
+#include <cstdint>
 
 /*! \brief rotating left shift helper
  * According to the original authors, this will on most platforms reduce to a single

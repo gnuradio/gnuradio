@@ -12,7 +12,7 @@
 
 #include "dvbt_map_impl.h"
 #include <gnuradio/io_signature.h>
-#include <math.h>
+#include <cmath>
 #include <complex>
 
 namespace gr {

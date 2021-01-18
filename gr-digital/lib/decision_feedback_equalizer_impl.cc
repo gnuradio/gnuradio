@@ -82,7 +82,7 @@ decision_feedback_equalizer_impl::decision_feedback_equalizer_impl(
     // not reversed at this point
     d_new_taps[0] = gr_complex(1.0, 0.0); // help things along with initialized taps
 
-    if (training_start_tag == "" || training_sequence.empty()) {
+    if (training_start_tag.empty() || training_sequence.empty()) {
         d_training_state = equalizer_state_t::DD;
     } else {
         d_training_state = equalizer_state_t::IDLE;
@@ -206,7 +206,7 @@ int decision_feedback_equalizer_impl::equalize(
         if (state)
             state[i] = (unsigned short)d_training_state;
 
-        if (training_start_samples.size() > 0 &&
+        if (!training_start_samples.empty() &&
             tag_index < training_start_samples.size()) {
             int tag_sample = training_start_samples[tag_index];
             if (tag_sample >= j && tag_sample < (j + (int)decimation())) {

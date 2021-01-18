@@ -12,7 +12,7 @@
 
 #include "dvbt_inner_coder_impl.h"
 #include <gnuradio/io_signature.h>
-#include <assert.h>
+#include <cassert>
 
 namespace gr {
 namespace dtv {

@@ -20,7 +20,7 @@
 #include <qwt_symbol.h>
 #include <volk/volk.h>
 
-#include <string.h>
+#include <cstring>
 
 namespace gr {
 namespace qtgui {

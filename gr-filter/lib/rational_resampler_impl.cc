@@ -114,13 +114,13 @@ rational_resampler_impl<IN_T, OUT_T, TAP_T>::rational_resampler_impl(
     }
 
     // If taps are not specified, we need to design them based on fractional_bw
-    if (taps.size() == 0 && fractional_bw <= 0) {
+    if (taps.empty() && fractional_bw <= 0) {
         fractional_bw = 0.4;
     }
 
     auto d = GR_GCD(interpolation, decimation);
 
-    if (taps.size() && (d > 1)) {
+    if (!taps.empty() && (d > 1)) {
         GR_LOG_INFO(
             d_logger,
             boost::format(
@@ -131,7 +131,7 @@ rational_resampler_impl<IN_T, OUT_T, TAP_T>::rational_resampler_impl(
     }
 
     std::vector<TAP_T> staps;
-    if (taps.size() == 0) {
+    if (taps.empty()) {
         if (fractional_bw <= 0) {
             fractional_bw = 0.4;
         }

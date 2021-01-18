@@ -16,8 +16,8 @@
 #include "vector_insert_impl.h"
 #include <gnuradio/block.h>
 #include <gnuradio/io_signature.h>
-#include <stdio.h>
 #include <algorithm>
+#include <cstdio>
 #include <stdexcept>
 
 namespace gr {

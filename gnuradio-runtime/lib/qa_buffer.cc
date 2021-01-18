@@ -15,8 +15,8 @@
 
 #include <gnuradio/buffer.h>
 #include <gnuradio/random.h>
-#include <stdlib.h>
 #include <boost/test/unit_test.hpp>
+#include <cstdlib>
 
 
 static void leak_check(void f())
