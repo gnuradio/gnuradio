@@ -332,7 +332,7 @@ void EyeDisplaysForm::setAxisLabels(bool en)
 
 void EyeDisplaysForm::saveFigure()
 {
-    QPixmap qpix = QPixmap::grabWidget(this);
+    QPixmap qpix = grab();
 
     QString types = QString(tr("JPEG file (*.jpg);;Portable Network Graphics file "
                                "(*.png);;Bitmap file (*.bmp);;TIFF file (*.tiff)"));
