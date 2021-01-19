@@ -14,6 +14,8 @@
 
 #include <gnuradio/constants.h>
 #include <stdlib.h>
+#include <boost/dll/runtime_symbol_info.hpp>
+#include <boost/filesystem/path.hpp>
 
 namespace gr {
 
@@ -24,29 +26,30 @@ const std::string prefix()
     if (prefix != NULL)
         return prefix;
 
-    return "@prefix@";
+    boost::filesystem::path prefix_rel_lib = "@prefix_relative_to_lib@";
+    boost::filesystem::path gr_runtime_lib_path = boost::dll::this_line_location();
+    // Normalize before decomposing path so result is reliable
+    boost::filesystem::path prefix_path =
+        gr_runtime_lib_path.lexically_normal().parent_path() / prefix_rel_lib;
+    return prefix_path.lexically_normal().string();
 }
 
 const std::string sysconfdir()
 {
-    // Provide the sysconfdir in terms of prefix()
-    // when the "GR_PREFIX" environment var is specified.
-    if (getenv("GR_PREFIX") != NULL) {
-        return prefix() + "/@GR_CONF_DIR@";
-    }
+    boost::filesystem::path sysconfdir_rel_prefix = "@SYSCONFDIR_relative_to_prefix@";
+    boost::filesystem::path prefix_path = prefix();
+    boost::filesystem::path sysconfdir_path = prefix_path / sysconfdir_rel_prefix;
 
-    return "@SYSCONFDIR@";
+    return sysconfdir_path.lexically_normal().string();
 }
 
 const std::string prefsdir()
 {
-    // Provide the prefsdir in terms of sysconfdir()
-    // when the "GR_PREFIX" environment var is specified.
-    if (getenv("GR_PREFIX") != NULL) {
-        return sysconfdir() + "/@CMAKE_PROJECT_NAME@/conf.d";
-    }
+    boost::filesystem::path prefsdir_rel_prefix = "@GR_PREFSDIR_relative_to_prefix@";
+    boost::filesystem::path prefix_path = prefix();
+    boost::filesystem::path prefsdir_path = prefix_path / prefsdir_rel_prefix;
 
-    return "@GR_PREFSDIR@";
+    return prefsdir_path.lexically_normal().string();
 }
 
 const std::string build_date() { return "@BUILD_DATE@"; }
