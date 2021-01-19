@@ -23,10 +23,6 @@ string(TIMESTAMP BUILD_DATE "%a, %d %b %Y %H:%M:%S" UTC)
 message(STATUS "Loading build date ${BUILD_DATE} into constants...")
 message(STATUS "Loading version ${VERSION} into constants...")
 
-#double escape for windows backslash path separators
-string(REPLACE "\\" "\\\\" prefix "${prefix}")
-string(REPLACE "\\" "\\\\" SYSCONFDIR "${SYSCONFDIR}")
-string(REPLACE "\\" "\\\\" GR_PREFSDIR "${GR_PREFSDIR}")
 
 #Generate the constants file, now that we actually know which components will be enabled.
 configure_file(
