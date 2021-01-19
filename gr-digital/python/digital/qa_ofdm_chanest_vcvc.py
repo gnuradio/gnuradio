@@ -303,14 +303,12 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
                 for x in range(fft_len)]
             src = blocks.vector_source_c(tx_data, False, fft_len)
             chan = blocks.multiply_const_vcc(channel)
-            noise = analog.noise_source_c(analog.GR_GAUSSIAN, wgn_amplitude)
+            noise = blocks.vector_source_c(numpy.random.normal(0,wgn_amplitude,(len(tx_data),)), False, fft_len)
             add = blocks.add_cc(fft_len)
             chanest = digital.ofdm_chanest_vcvc(sync_sym1, sync_sym2, 1)
             sink = blocks.vector_sink_c(fft_len)
             top_block.connect(src, chan, (add, 0), chanest, sink)
-            top_block.connect(
-                noise,
-                blocks.stream_to_vector(gr.sizeof_gr_complex, fft_len), (add, 1))
+            top_block.connect(noise, (add, 1))
             top_block.run()
             channel_est = None
             carr_offset_hat = 0
