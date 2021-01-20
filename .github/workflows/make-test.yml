@@ -16,7 +16,7 @@ jobs:
       with:
         source: '.'
         exclude: './volk'
-        extensions: 'h,hpp,cpp,cc'
+        extensions: 'h,hpp,cpp,cc,cc.in'
   # All of these shall depend on the formatting check (needs: check-formatting)
   ubuntu-20_04:
     name: Ubuntu 20.04
