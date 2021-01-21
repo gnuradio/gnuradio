@@ -60,7 +60,7 @@ private:
     int d_ntaps;
     int d_nsamples;
     int d_fftsize; // fftsize = ntaps + nsamples - 1
-    const int d_decimation;
+    int d_decimation;
     std::unique_ptr<fft::fft_real_fwd> d_fwdfft; // forward "plan"
     std::unique_ptr<fft::fft_real_rev> d_invfft; // inverse "plan"
     int d_nthreads;                              // number of FFTW threads to use
@@ -173,7 +173,7 @@ private:
     int d_ntaps;
     int d_nsamples;
     int d_fftsize; // fftsize = ntaps + nsamples - 1
-    const int d_decimation;
+    int d_decimation;
     std::unique_ptr<fft::fft_complex_fwd> d_fwdfft; // forward "plan"
     std::unique_ptr<fft::fft_complex_rev> d_invfft; // inverse "plan"
     int d_nthreads;                                 // number of FFTW threads to use
@@ -286,7 +286,7 @@ private:
     int d_ntaps;
     int d_nsamples;
     int d_fftsize; // fftsize = ntaps + nsamples - 1
-    const int d_decimation;
+    int d_decimation;
     std::unique_ptr<fft::fft_complex_fwd> d_fwdfft; // forward "plan"
     std::unique_ptr<fft::fft_complex_rev> d_invfft; // inverse "plan"
     int d_nthreads;                                 // number of FFTW threads to use
