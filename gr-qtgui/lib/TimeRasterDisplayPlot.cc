@@ -146,7 +146,6 @@ public:
           d_rows(max_scale),
           d_start_value(start_value),
           d_end_value(end_value),
-          d_max_scale(max_scale),
           d_ten_scale(1.0)
     {
         d_delta_value = d_end_value - d_start_value;
@@ -233,7 +232,6 @@ private:
     double d_start_value;
     double d_end_value;
     double d_delta_value;
-    int d_max_scale;
     double d_ten_scale;
     std::string d_units;
 };
@@ -371,7 +369,6 @@ private:
     double d_y_start_value;
     double d_y_end_value;
     double d_y_delta_value;
-    int d_max_scale;
 };
 
 /*********************************************************************
