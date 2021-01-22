@@ -25,8 +25,8 @@
 
 #include <gnuradio/trellis/api.h>
 #include <iosfwd>
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace gr {
 namespace trellis {
