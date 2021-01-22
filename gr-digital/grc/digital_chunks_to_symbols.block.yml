@@ -16,7 +16,7 @@ parameters:
     options: [complex, float]
     option_attributes:
         fcn: [c, f]
-        table: [complex_vector, real_vector]
+        table: [complex_vector, float_vector]
     hide: part
 -   id: symbol_table
     label: Symbol Table
