@@ -22,10 +22,14 @@ namespace fft {
 class FFT_API window
 {
 public:
+    // illegal value for any window that requires a parameter
+    static constexpr double INVALID_WIN_PARAM = -1;
+
     enum win_type {
         WIN_NONE = -1,       //!< don't use a window
         WIN_HAMMING = 0,     //!< Hamming window; max attenuation 53 dB
         WIN_HANN = 1,        //!< Hann window; max attenuation 44 dB
+        WIN_HANNING = 1,     //!< alias to WIN_HANN
         WIN_BLACKMAN = 2,    //!< Blackman window; max attenuation 74 dB
         WIN_RECTANGULAR = 3, //!< Basic rectangular window; max attenuation 21 dB
         WIN_KAISER = 4, //!< Kaiser window; max attenuation see window::max_attenuation
@@ -34,30 +38,52 @@ public:
             5,            //!< alias to WIN_BLACKMAN_hARRIS for capitalization consistency
         WIN_BARTLETT = 6, //!< Barlett (triangular) window; max attenuation 26 dB
         WIN_FLATTOP = 7,  //!< flat top window; useful in FFTs; max attenuation 93 dB
+        WIN_NUTTALL = 8,  //!< Nuttall window; max attenuation 114 dB
+        WIN_BLACKMAN_NUTTALL = 8, //!< Nuttall window; max attenuation 114 dB
+        WIN_NUTTALL_CFD =
+            9, //!< Nuttall continuous-first-derivative window; max attenuation 112 dB
+        WIN_WELCH = 10,  //!< Welch window; max attenuation 31 dB
+        WIN_PARZEN = 11, //!< Parzen window; max attenuation 56 dB
+        WIN_EXPONENTIAL =
+            12, //!< Exponential window; max attenuation see window::max_attenuation
+        WIN_RIEMANN = 13, //!< Riemann window; max attenuation 39 dB
+        WIN_GAUSSIAN =
+            14,         //!< Gaussian window; max attenuation see window::max_attenuation
+        WIN_TUKEY = 15, //!< Tukey window; max attenuation see window::max_attenuation
     };
 
     /*!
      * \brief Given a window::win_type, this tells you the maximum
-     * attenuation you can expect.
+     * attenuation (really the maximum approximation error) you can expect.
      *
      * \details
-     * For most windows, this is a set value. For the Kaiser window,
-     * the attenuation is based on the value of beta. The actual
-     * relationship is a piece-wise exponential relationship to
-     * calculate beta from the desired attenuation and can be found
-     * on page 542 of Oppenheim and Schafer (Discrete-Time Signal
-     * Processing, 3rd edition). To simplify this function to solve
-     * for A given beta, we use a linear form that is exact for
-     * attenuation >= 50 dB.
+     * For most windows, this is a set value. For the Kaiser, Exponential, Gaussian, and
+     * Tukey windows, the attenuation is based on the value of a provided parameter.
      *
-     * For an attenuation of 50 dB, beta = 4.55.
+     * For the Kaiser window the actual relationship is a piece-wise exponential
+     * relationship to calculate beta from the desired attenuation and can be found on
+     * page 542 of Oppenheim and Schafer (Discrete-Time Signal Processing, 3rd edition).
+     * To simplify this function to solve for A given beta, we use a linear form that is
+     * exact for attenuation >= 50 dB. For an attenuation of 50 dB, beta = 4.55; for an
+     * attenuation of 70 dB, beta = 6.76.
      *
-     * For an attenuation of 70 dB, beta = 6.76.
+     * Exponential attenuation is complicated to measure due to the irregular error ripple
+     * structure, but it ranges between 23 and 26 dB depending on the decay factor; 26 dB
+     * is a good bound.
+     *
+     * The Gaussian window should not be used for window based filter construction;
+     * instead there is a dedicated gaussian filter construction fuction. There is no
+     * meaningful way to measure approximation error 'delta' as shown in Fig 7.23 of
+     * Oppenheim and Schafer (Discrete-Time Signal Processing, 3rd edition).
+     *
+     * Tukey windows provide attenuation that varies non-linearily between Rectangular (21
+     * dB) and Hann (44 dB) windows.
      *
      * \param type The window::win_type enumeration of the window type.
-     * \param beta Beta value only used for the Kaiser window.
+     * \param param Parameter value used for Kaiser (beta), Exponential (d), Gaussian
+     * (sigma) and Tukey (alpha) window creation.
      */
-    static double max_attenuation(win_type type, double beta = 6.76);
+    static double max_attenuation(win_type type, double param = INVALID_WIN_PARAM);
 
     /*!
      * \brief Helper function to build cosine-based windows. 3-coefficient version.
@@ -330,11 +356,11 @@ public:
      *
      * \param type a gr::fft::win_type index for the type of window.
      * \param ntaps Number of coefficients in the window.
-     * \param beta Used only for building Kaiser windows.
+     * \param param Parameter value used for Kaiser (beta), Exponential (d), Gaussian (sigma) and Tukey (alpha) window creation.
      * \param normalize If true, return a window with unit power
      */
     static std::vector<float>
-    build(win_type type, int ntaps, double beta = 6.76, const bool normalize = false);
+    build(win_type type, int ntaps, double param = INVALID_WIN_PARAM, const bool normalize = false);
 };
 
 } /* namespace fft */

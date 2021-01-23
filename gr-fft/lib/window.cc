@@ -50,7 +50,7 @@ double freq(int ntaps) { return 2.0 * GR_M_PI / ntaps; }
 
 double rate(int ntaps) { return 1.0 / (ntaps >> 1); }
 
-double window::max_attenuation(win_type type, double beta)
+double window::max_attenuation(win_type type, double param)
 {
     switch (type) {
     case (WIN_HAMMING):
@@ -66,7 +66,7 @@ double window::max_attenuation(win_type type, double beta)
         return 21;
         break;
     case (WIN_KAISER):
-        return (beta / 0.1102 + 8.7);
+        return (param / 0.1102 + 8.7);
         break;
     case (WIN_BLACKMAN_hARRIS):
         return 92;
@@ -77,6 +77,33 @@ double window::max_attenuation(win_type type, double beta)
     case (WIN_FLATTOP):
         return 93;
         break;
+    case WIN_NUTTALL:
+        return 114;
+    case WIN_NUTTALL_CFD:
+        return 112;
+    case WIN_WELCH:
+        return 31;
+    case WIN_PARZEN:
+        return 56;
+    case WIN_EXPONENTIAL:
+        // varies slightly depending on the decay factor, but this is a safe return value
+        return 26;
+    case WIN_RIEMANN:
+        return 39;
+    case WIN_GAUSSIAN:
+        // not meaningful for gaussian windows, but return something reasonable
+        return 100;
+    case WIN_TUKEY:
+        // low end is a rectangular window, attenuation exponentialy approaches Hann
+        // piecewise linear estimate, determined empirically via curve fitting, median
+        // error is less than 0.5dB and maximum error is 2.5dB; the returned value will
+        // never be less than expected attenuation to ensure that window designed filters
+        // are never below expected quality.
+        if (param > 0.9)
+            return ((param - 0.9) * 135 + 30.5);
+        else if (param > 0.7)
+            return ((param - 0.6) * 20 + 24);
+        return (param * 5 + 21);
     default:
         throw std::out_of_range("window::max_attenuation: unknown window type provided.");
     }
@@ -358,12 +385,12 @@ std::vector<float> window::gaussian(int ntaps, float sigma)
 }
 
 std::vector<float>
-window::build(win_type type, int ntaps, double beta, const bool normalize)
+window::build(win_type type, int ntaps, double param, const bool normalize)
 {
     // If we want a normalized window, we get a non-normalized one first, then
     // normalize it here:
     if (normalize) {
-        auto win = build(type, ntaps, beta, false);
+        auto win = build(type, ntaps, param, false);
         const double pwr_acc = // sum(win**2) / len(win)
             std::accumulate(win.cbegin(),
                             win.cend(),
@@ -390,11 +417,27 @@ window::build(win_type type, int ntaps, double beta, const bool normalize)
     case WIN_BLACKMAN_hARRIS:
         return blackman_harris(ntaps);
     case WIN_KAISER:
-        return kaiser(ntaps, beta);
+        return kaiser(ntaps, param);
     case WIN_BARTLETT:
         return bartlett(ntaps);
     case WIN_FLATTOP:
         return flattop(ntaps);
+    case WIN_NUTTALL:
+        return nuttall(ntaps);
+    case WIN_NUTTALL_CFD:
+        return nuttall_cfd(ntaps);
+    case WIN_WELCH:
+        return welch(ntaps);
+    case WIN_PARZEN:
+        return parzen(ntaps);
+    case WIN_EXPONENTIAL:
+        return exponential(ntaps, param);
+    case WIN_RIEMANN:
+        return riemann(ntaps);
+    case WIN_GAUSSIAN:
+        return gaussian(ntaps, param);
+    case WIN_TUKEY:
+        return tukey(ntaps, param);
     default:
         throw std::out_of_range("window::build: type out of range");
     }
