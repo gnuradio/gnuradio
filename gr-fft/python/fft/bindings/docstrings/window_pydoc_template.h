@@ -105,4 +105,10 @@ static const char* __doc_gr_fft_window_exponential = R"doc()doc";
 static const char* __doc_gr_fft_window_riemann = R"doc()doc";
 
 
+static const char* __doc_gr_fft_window_tukey = R"doc()doc";
+
+
+static const char* __doc_gr_fft_window_gaussian = R"doc()doc";
+
+
 static const char* __doc_gr_fft_window_build = R"doc()doc";

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2020,2021 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(window.h)                                                  */
-/* BINDTOOL_HEADER_FILE_HASH(73ef06fc08edcb7fd595af5ab8bd2911)                     */
+/* BINDTOOL_HEADER_FILE_HASH(d14efc888c380b1b74cdd63716a3892a)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -192,6 +192,17 @@ void bind_window(py::module& m)
 
 
         .def_static("riemann", &window::riemann, py::arg("ntaps"), D(window, riemann))
+
+
+        .def_static(
+            "tukey", &window::tukey, py::arg("ntaps"), py::arg("alpha"), D(window, tukey))
+
+
+        .def_static("gaussian",
+                    &window::gaussian,
+                    py::arg("ntaps"),
+                    py::arg("sigma"),
+                    D(window, gaussian))
 
 
         .def_static("build",
