@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2007,2008,2012,2013,2018 Free Software Foundation, Inc.
+ * Copyright 2002,2007,2008,2012,2013,2018,2021 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -55,28 +55,21 @@ double window::max_attenuation(win_type type, double param)
     switch (type) {
     case (WIN_HAMMING):
         return 53;
-        break;
     case (WIN_HANN):
         return 44;
-        break;
     case (WIN_BLACKMAN):
         return 74;
-        break;
     case (WIN_RECTANGULAR):
         return 21;
-        break;
     case (WIN_KAISER):
+        // linear approximation
         return (param / 0.1102 + 8.7);
-        break;
     case (WIN_BLACKMAN_hARRIS):
         return 92;
-        break;
     case (WIN_BARTLETT):
         return 27;
-        break;
     case (WIN_FLATTOP):
         return 93;
-        break;
     case WIN_NUTTALL:
         return 114;
     case WIN_NUTTALL_CFD:
@@ -91,7 +84,7 @@ double window::max_attenuation(win_type type, double param)
     case WIN_RIEMANN:
         return 39;
     case WIN_GAUSSIAN:
-        // not meaningful for gaussian windows, but return something reasonable
+        // value not meaningful for gaussian windows, but return something reasonable
         return 100;
     case WIN_TUKEY:
         // low end is a rectangular window, attenuation exponentialy approaches Hann
@@ -345,14 +338,14 @@ std::vector<float> window::riemann(int ntaps)
     return taps;
 }
 
-std::vector<float> window::tukey(int ntaps, float a)
+std::vector<float> window::tukey(int ntaps, float alpha)
 {
-    if ((a < 0) || (a > 1))
+    if ((alpha < 0) || (alpha > 1))
         throw std::out_of_range("window::tukey: alpha must be between 0 and 1");
 
     float N = static_cast<float>(ntaps - 1);
 
-    float aN = a * N;
+    float aN = alpha * N;
     float p1 = aN / 2.0;
     float mid = midn(ntaps);
     std::vector<float> taps(ntaps);
