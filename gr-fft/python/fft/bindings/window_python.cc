@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(window.h)                                                  */
-/* BINDTOOL_HEADER_FILE_HASH(de72e082a5bc1eeed7c4b3221025eb02)                     */
+/* BINDTOOL_HEADER_FILE_HASH(a44a323c53d5dd52382d240afdd4b984)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -34,25 +34,25 @@ void bind_window(py::module& m)
     py::class_<window, std::shared_ptr<window>> window_class(m, "window", D(window));
 
     py::enum_<gr::fft::window::win_type>(window_class, "win_type")
-        .value("WIN_HAMMING", gr::fft::window::WIN_HAMMING)                     // 0
-        .value("WIN_HANN", gr::fft::window::WIN_HANN)                           // 1
-        .value("WIN_HANNING", gr::fft::window::WIN_HANNING)                     // 1
-        .value("WIN_BLACKMAN", gr::fft::window::WIN_BLACKMAN)                   // 2
-        .value("WIN_RECTANGULAR", gr::fft::window::WIN_RECTANGULAR)             // 3
-        .value("WIN_KAISER", gr::fft::window::WIN_KAISER)                       // 4
-        .value("WIN_BLACKMAN_hARRIS", gr::fft::window::WIN_BLACKMAN_hARRIS)     // 5
-        .value("WIN_BLACKMAN_HARRIS", gr::fft::window::WIN_BLACKMAN_HARRIS)     // 5
-        .value("WIN_BARTLETT", gr::fft::window::WIN_BARTLETT)                   // 6
-        .value("WIN_FLATTOP", gr::fft::window::WIN_FLATTOP)                     // 7
-        .value("WIN_NUTTALL", gr::fft::window::WIN_NUTTALL)                     // 8
-        .value("WIN_BLACKMAN_NUTTALL", gr::fft::window::WIN_BLACKMAN_NUTTALL)   // 8
-        .value("WIN_NUTTALL_CFD", gr::fft::window::WIN_NUTTALL_CFD)             // 9
-        .value("WIN_WELCH", gr::fft::window::WIN_WELCH)                         // 10
-        .value("WIN_PARZEN", gr::fft::window::WIN_PARZEN)                       // 11
-        .value("WIN_EXPONENTIAL", gr::fft::window::WIN_EXPONENTIAL)             // 12
-        .value("WIN_RIEMANN", gr::fft::window::WIN_RIEMANN)                     // 13
-        .value("WIN_GAUSSIAN", gr::fft::window::WIN_GAUSSIAN)                   // 14
-        .value("WIN_TUKEY", gr::fft::window::WIN_TUKEY)                         // 15
+        .value("WIN_HAMMING", gr::fft::window::WIN_HAMMING)                   // 0
+        .value("WIN_HANN", gr::fft::window::WIN_HANN)                         // 1
+        .value("WIN_HANNING", gr::fft::window::WIN_HANNING)                   // 1
+        .value("WIN_BLACKMAN", gr::fft::window::WIN_BLACKMAN)                 // 2
+        .value("WIN_RECTANGULAR", gr::fft::window::WIN_RECTANGULAR)           // 3
+        .value("WIN_KAISER", gr::fft::window::WIN_KAISER)                     // 4
+        .value("WIN_BLACKMAN_hARRIS", gr::fft::window::WIN_BLACKMAN_hARRIS)   // 5
+        .value("WIN_BLACKMAN_HARRIS", gr::fft::window::WIN_BLACKMAN_HARRIS)   // 5
+        .value("WIN_BARTLETT", gr::fft::window::WIN_BARTLETT)                 // 6
+        .value("WIN_FLATTOP", gr::fft::window::WIN_FLATTOP)                   // 7
+        .value("WIN_NUTTALL", gr::fft::window::WIN_NUTTALL)                   // 8
+        .value("WIN_BLACKMAN_NUTTALL", gr::fft::window::WIN_BLACKMAN_NUTTALL) // 8
+        .value("WIN_NUTTALL_CFD", gr::fft::window::WIN_NUTTALL_CFD)           // 9
+        .value("WIN_WELCH", gr::fft::window::WIN_WELCH)                       // 10
+        .value("WIN_PARZEN", gr::fft::window::WIN_PARZEN)                     // 11
+        .value("WIN_EXPONENTIAL", gr::fft::window::WIN_EXPONENTIAL)           // 12
+        .value("WIN_RIEMANN", gr::fft::window::WIN_RIEMANN)                   // 13
+        .value("WIN_GAUSSIAN", gr::fft::window::WIN_GAUSSIAN)                 // 14
+        .value("WIN_TUKEY", gr::fft::window::WIN_TUKEY)                       // 15
         .export_values();
 
     py::implicitly_convertible<int, gr::fft::window::win_type>();
@@ -192,6 +192,17 @@ void bind_window(py::module& m)
 
 
         .def_static("riemann", &window::riemann, py::arg("ntaps"), D(window, riemann))
+
+
+        .def_static(
+            "tukey", &window::tukey, py::arg("ntaps"), py::arg("alpha"), D(window, tukey))
+
+
+        .def_static("gaussian",
+                    &window::gaussian,
+                    py::arg("ntaps"),
+                    py::arg("sigma"),
+                    D(window, gaussian))
 
 
         .def_static("build",
