@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(hilbert_fc.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(3f5ee100c05bf0b167c39a017a65b9eb)                     */
+/* BINDTOOL_HEADER_FILE_HASH(041e266d5e3108f725118a1f581b43f8)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -41,6 +41,6 @@ void bind_hilbert_fc(py::module& m)
         .def(py::init(&hilbert_fc::make),
              py::arg("ntaps"),
              py::arg("window") = ::gr::fft::window::win_type::WIN_HAMMING,
-             py::arg("beta") = 6.7599999999999998,
+             py::arg("param") = 6.7599999999999998,
              D(hilbert_fc, make));
 }
