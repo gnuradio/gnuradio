@@ -350,7 +350,7 @@ protected:
             }
 
             double x_label = d_x_start_value + x / (double)d_cols * d_x_delta_value;
-            if ((d_y_delta_value > 999.0) or (d_y_delta_value <= 1.0)) {
+            if ((d_y_delta_value > 999.0) || (d_y_delta_value <= 1.0)) {
                 QwtText t(QString(QString("").asprintf("%.2f, %.2e", x_label, y)));
                 return t;
             } else {
