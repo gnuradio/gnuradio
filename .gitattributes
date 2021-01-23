@@ -7,3 +7,11 @@
 *.m4	-crlf
 *.ac	-crlf
 *.scm	-crlf
+#
+# In GNURadio 3.9, pybind11 compares hash values of headers and source
+# files against knowns values.  Conversion of values to CRLF on checkout
+# break those checks so keep LF values when files are subject to said checks
+#
+*.h    text eol=lf
+*.c    text eol=lf
+*.cc   text eol=lf
