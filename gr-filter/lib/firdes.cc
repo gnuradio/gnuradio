@@ -21,9 +21,9 @@ using std::vector;
 namespace gr {
 namespace filter {
 
-std::vector<float> firdes::window(fft::window::win_type type, int ntaps, double beta)
+std::vector<float> firdes::window(fft::window::win_type type, int ntaps, double param)
 {
-    return fft::window::build(type, ntaps, beta);
+    return fft::window::build(type, ntaps, param);
 }
 
 //
@@ -36,7 +36,7 @@ vector<float> firdes::low_pass_2(double gain,
                                  double transition_width, // Hz width of transition band
                                  double attenuation_dB,   // attenuation dB
                                  fft::window::win_type window_type,
-                                 double beta) // used only with Kaiser
+                                 double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_1f(sampling_freq, cutoff_freq, transition_width);
 
@@ -46,7 +46,7 @@ vector<float> firdes::low_pass_2(double gain,
     // [sin(x)/x for the low pass case]
 
     vector<float> taps(ntaps);
-    vector<float> w = window(window_type, ntaps, beta);
+    vector<float> w = window(window_type, ntaps, param);
 
     int M = (ntaps - 1) / 2;
     double fwT0 = 2 * GR_M_PI * cutoff_freq / sampling_freq;
@@ -79,17 +79,16 @@ vector<float> firdes::low_pass(double gain,
                                double cutoff_freq,      // Hz center of transition band
                                double transition_width, // Hz width of transition band
                                fft::window::win_type window_type,
-                               double beta) // used only with Kaiser
+                               double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_1f(sampling_freq, cutoff_freq, transition_width);
 
-    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, beta);
-
+    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, param);
     // construct the truncated ideal impulse response
     // [sin(x)/x for the low pass case]
 
     vector<float> taps(ntaps);
-    vector<float> w = window(window_type, ntaps, beta);
+    vector<float> w = window(window_type, ntaps, param);
 
     int M = (ntaps - 1) / 2;
     double fwT0 = 2 * GR_M_PI * cutoff_freq / sampling_freq;
@@ -129,7 +128,7 @@ vector<float> firdes::high_pass_2(double gain,
                                   double transition_width, // Hz width of transition band
                                   double attenuation_dB,   // attenuation dB
                                   fft::window::win_type window_type,
-                                  double beta) // used only with Kaiser
+                                  double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_1f(sampling_freq, cutoff_freq, transition_width);
 
@@ -138,7 +137,7 @@ vector<float> firdes::high_pass_2(double gain,
     // construct the truncated ideal impulse response times the window function
 
     vector<float> taps(ntaps);
-    vector<float> w = window(window_type, ntaps, beta);
+    vector<float> w = window(window_type, ntaps, param);
 
     int M = (ntaps - 1) / 2;
     double fwT0 = 2 * GR_M_PI * cutoff_freq / sampling_freq;
@@ -173,16 +172,16 @@ vector<float> firdes::high_pass(double gain,
                                 double cutoff_freq,      // Hz center of transition band
                                 double transition_width, // Hz width of transition band
                                 fft::window::win_type window_type,
-                                double beta) // used only with Kaiser
+                                double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_1f(sampling_freq, cutoff_freq, transition_width);
 
-    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, beta);
+    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, param);
 
     // construct the truncated ideal impulse response times the window function
 
     vector<float> taps(ntaps);
-    vector<float> w = window(window_type, ntaps, beta);
+    vector<float> w = window(window_type, ntaps, param);
 
     int M = (ntaps - 1) / 2;
     double fwT0 = 2 * GR_M_PI * cutoff_freq / sampling_freq;
@@ -222,14 +221,14 @@ vector<float> firdes::band_pass_2(double gain,
                                   double transition_width, // Hz width of transition band
                                   double attenuation_dB,   // attenuation dB
                                   fft::window::win_type window_type,
-                                  double beta) // used only with Kaiser
+                                  double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
 
     int ntaps = compute_ntaps_windes(sampling_freq, transition_width, attenuation_dB);
 
     vector<float> taps(ntaps);
-    vector<float> w = window(window_type, ntaps, beta);
+    vector<float> w = window(window_type, ntaps, param);
 
     int M = (ntaps - 1) / 2;
     double fwT0 = 2 * GR_M_PI * low_cutoff_freq / sampling_freq;
@@ -265,16 +264,16 @@ vector<float> firdes::band_pass(double gain,
                                 double high_cutoff_freq, // Hz center of transition band
                                 double transition_width, // Hz width of transition band
                                 fft::window::win_type window_type,
-                                double beta) // used only with Kaiser
+                                double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
 
-    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, beta);
+    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, param);
 
     // construct the truncated ideal impulse response times the window function
 
     vector<float> taps(ntaps);
-    vector<float> w = window(window_type, ntaps, beta);
+    vector<float> w = window(window_type, ntaps, param);
 
     int M = (ntaps - 1) / 2;
     double fwT0 = 2 * GR_M_PI * low_cutoff_freq / sampling_freq;
@@ -315,7 +314,7 @@ firdes::complex_band_pass_2(double gain,
                             double transition_width, // Hz width of transition band
                             double attenuation_dB,   // attenuation dB
                             fft::window::win_type window_type,
-                            double beta) // used only with Kaiser
+                            double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f_c(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
 
@@ -323,7 +322,7 @@ firdes::complex_band_pass_2(double gain,
 
     vector<gr_complex> taps(ntaps);
     vector<float> lptaps(ntaps);
-    vector<float> w = window(window_type, ntaps, beta);
+    vector<float> w = window(window_type, ntaps, param);
 
     lptaps = low_pass_2(gain,
                         sampling_freq,
@@ -331,7 +330,7 @@ firdes::complex_band_pass_2(double gain,
                         transition_width,
                         attenuation_dB,
                         window_type,
-                        beta);
+                        param);
 
     gr_complex* optr = &taps[0];
     float* iptr = &lptaps[0];
@@ -358,24 +357,24 @@ firdes::complex_band_pass(double gain,
                           double high_cutoff_freq, // Hz center of transition band
                           double transition_width, // Hz width of transition band
                           fft::window::win_type window_type,
-                          double beta) // used only with Kaiser
+                          double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f_c(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
 
-    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, beta);
+    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, param);
 
     // construct the truncated ideal impulse response times the window function
 
     vector<gr_complex> taps(ntaps);
     vector<float> lptaps(ntaps);
-    vector<float> w = window(window_type, ntaps, beta);
+    vector<float> w = window(window_type, ntaps, param);
 
     lptaps = low_pass(gain,
                       sampling_freq,
                       (high_cutoff_freq - low_cutoff_freq) / 2,
                       transition_width,
                       window_type,
-                      beta);
+                      param);
 
     gr_complex* optr = &taps[0];
     float* iptr = &lptaps[0];
@@ -406,17 +405,17 @@ firdes::complex_band_reject_2(double gain,
                               double transition_width, // Hz width of transition band
                               double attenuation_dB,   // attenuation dB
                               fft::window::win_type window_type,
-                              double beta) // used only with Kaiser
+                              double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f_c(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
 
-    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, beta);
+    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, param);
 
     // construct the truncated ideal impulse response times the window function
 
     vector<gr_complex> taps(ntaps);
     vector<float> hptaps(ntaps);
-    vector<float> w = window(window_type, ntaps, beta);
+    vector<float> w = window(window_type, ntaps, param);
 
     hptaps = high_pass_2(gain,
                          sampling_freq,
@@ -424,7 +423,7 @@ firdes::complex_band_reject_2(double gain,
                          transition_width,
                          attenuation_dB,
                          window_type,
-                         beta);
+                         param);
 
     gr_complex* optr = &taps[0];
     float* iptr = &hptaps[0];
@@ -450,24 +449,24 @@ firdes::complex_band_reject(double gain,
                             double high_cutoff_freq, // Hz center of transition band
                             double transition_width, // Hz width of transition band
                             fft::window::win_type window_type,
-                            double beta) // used only with Kaiser
+                            double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f_c(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
 
-    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, beta);
+    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, param);
 
     // construct the truncated ideal impulse response times the window function
 
     vector<gr_complex> taps(ntaps);
     vector<float> hptaps(ntaps);
-    vector<float> w = window(window_type, ntaps, beta);
+    vector<float> w = window(window_type, ntaps, param);
 
     hptaps = high_pass(gain,
                        sampling_freq,
                        (high_cutoff_freq - low_cutoff_freq) / 2,
                        transition_width,
                        window_type,
-                       beta);
+                       param);
 
     gr_complex* optr = &taps[0];
     float* iptr = &hptaps[0];
@@ -498,7 +497,7 @@ firdes::band_reject_2(double gain,
                       double transition_width, // Hz width of transition band
                       double attenuation_dB,   // attenuation dB
                       fft::window::win_type window_type,
-                      double beta) // used only with Kaiser
+                      double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
 
@@ -507,7 +506,7 @@ firdes::band_reject_2(double gain,
     // construct the truncated ideal impulse response times the window function
 
     vector<float> taps(ntaps);
-    vector<float> w = window(window_type, ntaps, beta);
+    vector<float> w = window(window_type, ntaps, param);
 
     int M = (ntaps - 1) / 2;
     double fwT0 = 2 * GR_M_PI * low_cutoff_freq / sampling_freq;
@@ -542,16 +541,16 @@ vector<float> firdes::band_reject(double gain,
                                   double high_cutoff_freq, // Hz center of transition band
                                   double transition_width, // Hz width of transition band
                                   fft::window::win_type window_type,
-                                  double beta) // used only with Kaiser
+                                  double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
 
-    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, beta);
+    int ntaps = compute_ntaps(sampling_freq, transition_width, window_type, param);
 
     // construct the truncated ideal impulse response times the window function
 
     vector<float> taps(ntaps);
-    vector<float> w = window(window_type, ntaps, beta);
+    vector<float> w = window(window_type, ntaps, param);
 
     int M = (ntaps - 1) / 2;
     double fwT0 = 2 * GR_M_PI * low_cutoff_freq / sampling_freq;
@@ -585,13 +584,13 @@ vector<float> firdes::band_reject(double gain,
 //
 
 vector<float>
-firdes::hilbert(unsigned int ntaps, fft::window::win_type windowtype, double beta)
+firdes::hilbert(unsigned int ntaps, fft::window::win_type windowtype, double param)
 {
     if (!(ntaps & 1))
         throw std::out_of_range("Hilbert:  Must have odd number of taps");
 
     vector<float> taps(ntaps);
-    vector<float> w = window(windowtype, ntaps, beta);
+    vector<float> w = window(windowtype, ntaps, param);
     unsigned int h = (ntaps - 1) / 2;
     float gain = 0;
     for (unsigned int i = 1; i <= h; i++) {
@@ -704,9 +703,9 @@ int firdes::compute_ntaps_windes(
 int firdes::compute_ntaps(double sampling_freq,
                           double transition_width,
                           fft::window::win_type window_type,
-                          double beta)
+                          double param)
 {
-    double a = fft::window::max_attenuation(window_type, beta);
+    double a = fft::window::max_attenuation(window_type, param);
     int ntaps = (int)(a * sampling_freq / (22.0 * transition_width));
     if ((ntaps & 1) == 0) // if even...
         ntaps++;          // ...make odd

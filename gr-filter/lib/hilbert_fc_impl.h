@@ -28,7 +28,7 @@ private:
 public:
     hilbert_fc_impl(unsigned int ntaps,
                     fft::window::win_type window = fft::window::WIN_HAMMING,
-                    double beta = 6.76);
+                    double param = 6.76);
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

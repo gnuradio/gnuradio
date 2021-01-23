@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(firdes.h)                                                  */
-/* BINDTOOL_HEADER_FILE_HASH(afeccb5d25e3c88b1dcfc23d3542ec0b)                     */
+/* BINDTOOL_HEADER_FILE_HASH(10cf0c4b9664ba7e2931c2375c13c68c)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -38,7 +38,7 @@ void bind_firdes(py::module& m)
                     &firdes::window,
                     py::arg("type"),
                     py::arg("ntaps"),
-                    py::arg("beta"),
+                    py::arg("param"),
                     D(firdes, window))
 
 
@@ -49,7 +49,7 @@ void bind_firdes(py::module& m)
                     py::arg("cutoff_freq"),
                     py::arg("transition_width"),
                     py::arg("window") = ::gr::fft::window::win_type::WIN_HAMMING,
-                    py::arg("beta") = 6.7599999999999998,
+                    py::arg("param") = 6.7599999999999998,
                     D(firdes, low_pass))
 
 
@@ -61,7 +61,7 @@ void bind_firdes(py::module& m)
                     py::arg("transition_width"),
                     py::arg("attenuation_dB"),
                     py::arg("window") = ::gr::fft::window::win_type::WIN_HAMMING,
-                    py::arg("beta") = 6.7599999999999998,
+                    py::arg("param") = 6.7599999999999998,
                     D(firdes, low_pass_2))
 
 
@@ -72,7 +72,7 @@ void bind_firdes(py::module& m)
                     py::arg("cutoff_freq"),
                     py::arg("transition_width"),
                     py::arg("window") = ::gr::fft::window::win_type::WIN_HAMMING,
-                    py::arg("beta") = 6.7599999999999998,
+                    py::arg("param") = 6.7599999999999998,
                     D(firdes, high_pass))
 
 
@@ -84,7 +84,7 @@ void bind_firdes(py::module& m)
                     py::arg("transition_width"),
                     py::arg("attenuation_dB"),
                     py::arg("window") = ::gr::fft::window::win_type::WIN_HAMMING,
-                    py::arg("beta") = 6.7599999999999998,
+                    py::arg("param") = 6.7599999999999998,
                     D(firdes, high_pass_2))
 
 
@@ -96,7 +96,7 @@ void bind_firdes(py::module& m)
                     py::arg("high_cutoff_freq"),
                     py::arg("transition_width"),
                     py::arg("window") = ::gr::fft::window::win_type::WIN_HAMMING,
-                    py::arg("beta") = 6.7599999999999998,
+                    py::arg("param") = 6.7599999999999998,
                     D(firdes, band_pass))
 
 
@@ -109,7 +109,7 @@ void bind_firdes(py::module& m)
                     py::arg("transition_width"),
                     py::arg("attenuation_dB"),
                     py::arg("window") = ::gr::fft::window::win_type::WIN_HAMMING,
-                    py::arg("beta") = 6.7599999999999998,
+                    py::arg("param") = 6.7599999999999998,
                     D(firdes, band_pass_2))
 
 
@@ -121,7 +121,7 @@ void bind_firdes(py::module& m)
                     py::arg("high_cutoff_freq"),
                     py::arg("transition_width"),
                     py::arg("window") = ::gr::fft::window::win_type::WIN_HAMMING,
-                    py::arg("beta") = 6.7599999999999998,
+                    py::arg("param") = 6.7599999999999998,
                     D(firdes, complex_band_pass))
 
 
@@ -134,7 +134,7 @@ void bind_firdes(py::module& m)
                     py::arg("transition_width"),
                     py::arg("attenuation_dB"),
                     py::arg("window") = ::gr::fft::window::win_type::WIN_HAMMING,
-                    py::arg("beta") = 6.7599999999999998,
+                    py::arg("param") = 6.7599999999999998,
                     D(firdes, complex_band_pass_2))
 
 
@@ -146,7 +146,7 @@ void bind_firdes(py::module& m)
                     py::arg("high_cutoff_freq"),
                     py::arg("transition_width"),
                     py::arg("window") = ::gr::fft::window::win_type::WIN_HAMMING,
-                    py::arg("beta") = 6.7599999999999998,
+                    py::arg("param") = 6.7599999999999998,
                     D(firdes, band_reject))
 
 
@@ -159,7 +159,7 @@ void bind_firdes(py::module& m)
                     py::arg("transition_width"),
                     py::arg("attenuation_dB"),
                     py::arg("window") = ::gr::fft::window::win_type::WIN_HAMMING,
-                    py::arg("beta") = 6.7599999999999998,
+                    py::arg("param") = 6.7599999999999998,
                     D(firdes, band_reject_2))
 
 
@@ -171,7 +171,7 @@ void bind_firdes(py::module& m)
                     py::arg("high_cutoff_freq"),
                     py::arg("transition_width"),
                     py::arg("window") = ::gr::fft::window::win_type::WIN_HAMMING,
-                    py::arg("beta") = 6.7599999999999998,
+                    py::arg("param") = 6.7599999999999998,
                     D(firdes, complex_band_reject))
 
 
@@ -184,7 +184,7 @@ void bind_firdes(py::module& m)
                     py::arg("transition_width"),
                     py::arg("attenuation_dB"),
                     py::arg("window") = ::gr::fft::window::win_type::WIN_HAMMING,
-                    py::arg("beta") = 6.7599999999999998,
+                    py::arg("param") = 6.7599999999999998,
                     D(firdes, complex_band_reject_2))
 
 
@@ -192,7 +192,7 @@ void bind_firdes(py::module& m)
                     &firdes::hilbert,
                     py::arg("ntaps") = 19,
                     py::arg("windowtype") = ::gr::fft::window::win_type::WIN_RECTANGULAR,
-                    py::arg("beta") = 6.7599999999999998,
+                    py::arg("param") = 6.7599999999999998,
                     D(firdes, hilbert))
 
 
