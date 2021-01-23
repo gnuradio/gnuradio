@@ -195,9 +195,17 @@ public:
     static std::vector<float> blackmanharris(int ntaps, int atten = 92);
 
     /*!
-     * \brief Build a Nuttall (or Blackman-Nuttall) window.
+     * \brief Build a minimum 4-term Nuttall (or Blackman-Nuttall) window, referred to by
+     * Heinzel G. et al. as a Nuttall4c window.
      *
-     * See: http://en.wikipedia.org/wiki/Window_function#Blackman.E2.80.93Nuttall_window
+     * See: A.H. Nuttall: 'Some windows with very good sidelobe behaviour', IEEE Trans. on
+     * Acoustics, Speech and Signal Processing, Vol ASSP-29, figure 15
+     *
+     * See: 'Spectrum and spectral density estimation by the Discrete Fourier transform
+     * (DFT), including a comprehensive list of window functions and some new flat-top
+     * windows', February 15, 2002 https://holometer.fnal.gov/GH_FFT.pdf
+     *
+     * Also: http://en.wikipedia.org/wiki/Window_function#Blackman.E2.80.93Nuttall_window
      *
      * \param ntaps Number of coefficients in the window.
      */
@@ -221,9 +229,17 @@ public:
     static std::vector<float> blackman_nuttal(int ntaps);
 
     /*!
-     * \brief Build a Nuttall continuous first derivative window.
+     * \brief Build a Nuttall 4-term continuous first derivative window, referred to by
+     * Heinzel G. et al. as a Nuttall4b window
      *
-     * See:
+     * See: A.H. Nuttall: 'Some windows with very good sidelobe behaviour', IEEE Trans. on
+     * Acoustics, Speech and Signal Processing, Vol ASSP-29, figure 12
+     *
+     * See: 'Spectrum and spectral density estimation by the Discrete Fourier transform
+     * (DFT), including a comprehensive list of window functions and some new flat-top
+     * windows', February 15, 2002 https://holometer.fnal.gov/GH_FFT.pdf
+     *
+     * Also:
      * http://en.wikipedia.org/wiki/Window_function#Nuttall_window.2C_continuous_first_derivative
      *
      * \param ntaps Number of coefficients in the window.
