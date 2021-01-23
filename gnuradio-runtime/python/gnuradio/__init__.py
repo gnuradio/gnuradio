@@ -13,6 +13,19 @@ GNU Radio is licensed under the GNU General Public License (GPL) version 3. All 
 
 import os
 
+# python3.8 and up need to have the dll search path set
+# https://docs.python.org/3/whatsnew/3.8.html#bpo-36085-whatsnew
+if os.name == 'nt' and hasattr(os, 'add_dll_directory'):
+    root_dir = __file__
+    for i in range(5): #limit search depth
+        root_dir = os.path.dirname(root_dir)
+        bin_dir = os.path.join(root_dir, 'bin')
+        if os.path.exists(bin_dir):
+            try: os.add_dll_directory(bin_dir)
+            except Exception as ex:
+                print('add_dll_directory(%s): %s'%(bin_dir, ex))
+            break
+
 # Check if the gnuradio package is installed or whether we're attempting to import it from
 # the build directory.
 path_ending = os.path.join('gnuradio-runtime', 'python', 'gnuradio', '__init__.py')
