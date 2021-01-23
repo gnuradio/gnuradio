@@ -42,10 +42,11 @@ add_subdirectory(pmt)
 #Generate sine table header file for Math part of library
 set(MATH_SINE_TABLE_HEADER ${CMAKE_CURRENT_BINARY_DIR}/math/generated/sine_table.h)
 set(MATH_SINE_TABLE_GENERATOR ${CMAKE_CURRENT_SOURCE_DIR}/math/gen_sine_table.py)
+execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/math/generated")
 add_custom_command(
   DEPENDS ${MATH_SINE_TABLE_GENERATOR}
   OUTPUT ${MATH_SINE_TABLE_HEADER}
-  COMMAND ${PYTHON_EXECUTABLE} ${MATH_SINE_TABLE_GENERATOR} | install -D /dev/stdin ${MATH_SINE_TABLE_HEADER}
+  COMMAND ${PYTHON_EXECUTABLE} ${MATH_SINE_TABLE_GENERATOR} > ${MATH_SINE_TABLE_HEADER}
 )
 
 add_library(gnuradio-runtime
