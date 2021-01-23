@@ -21,19 +21,19 @@ namespace gr {
 namespace filter {
 
 hilbert_fc::sptr
-hilbert_fc::make(unsigned int ntaps, fft::window::win_type window, double beta)
+hilbert_fc::make(unsigned int ntaps, fft::window::win_type window, double param)
 {
-    return gnuradio::make_block_sptr<hilbert_fc_impl>(ntaps, window, beta);
+    return gnuradio::make_block_sptr<hilbert_fc_impl>(ntaps, window, param);
 }
 
 hilbert_fc_impl::hilbert_fc_impl(unsigned int ntaps,
                                  fft::window::win_type window,
-                                 double beta)
+                                 double param)
     : sync_block("hilbert_fc",
                  io_signature::make(1, 1, sizeof(float)),
                  io_signature::make(1, 1, sizeof(gr_complex))),
       d_ntaps(ntaps | 0x1), // ensure ntaps is odd
-      d_hilb(firdes::hilbert(d_ntaps, window, beta))
+      d_hilb(firdes::hilbert(d_ntaps, window, param))
 {
     set_history(d_ntaps);
 

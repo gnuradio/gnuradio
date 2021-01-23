@@ -40,7 +40,8 @@ public:
      *
      * \param ntaps The number of taps for the filter.
      * \param window Window type (see fft::window::win_type) to use.
-     * \param beta Beta value for a Kaiser window.
+     * \param beta Parameter value for Kaiser, Exp., Gaussian, Tukey windows, the name
+     * `beta` is used for API compatibility but will be changed to `param` in 3.10.
      */
     static sptr make(unsigned int ntaps,
                      fft::window::win_type window = fft::window::win_type::WIN_HAMMING,
