@@ -20,8 +20,21 @@ Signal Generator App
 # Generated: Sun Jun 28 17:21:28 2015
 ##################################################
 
+# I prefer grouping the imports myself in this case, due to all the special cases
+# pylint: disable=wrong-import-order
+# pylint: disable=wrong-import-position
+# pylint: disable=ungrouped-imports
 import sys
+if __name__ == '__main__':
+    import ctypes
+    if sys.platform.startswith('linux'):
+        try:
+            X11 = ctypes.cdll.LoadLibrary('libX11.so')
+            X11.XInitThreads()
+        except:
+            print("Warning: failed to XInitThreads()")
 import threading
+import signal
 import time
 import math
 from PyQt5 import Qt
@@ -32,7 +45,6 @@ from gnuradio import eng_notation
 from gnuradio import qtgui
 from gnuradio import uhd
 from gnuradio import fft
-from gnuradio.filter import firdes
 from gnuradio.qtgui import Range, RangeWidget
 try:
     import uhd_siggen_base as uhd_siggen
@@ -227,10 +239,12 @@ class uhd_siggen_gui(Qt.QWidget):
         self.samp_rate = self._sg[uhd_siggen.SAMP_RATE_KEY]
         self._samp_rate_tool_bar = Qt.QToolBar(self)
         self._samp_rate_tool_bar.addWidget(Qt.QLabel("Sampling Rate: "))
-        self._samp_rate_line_edit = Qt.QLineEdit(eng_notation.num_to_str(self._sg[uhd_siggen.SAMP_RATE_KEY]))
+        self._samp_rate_line_edit = Qt.QLineEdit(
+            eng_notation.num_to_str(self._sg[uhd_siggen.SAMP_RATE_KEY]))
         self._samp_rate_tool_bar.addWidget(self._samp_rate_line_edit)
         self._samp_rate_line_edit.returnPressed.connect(
-            lambda: self.set_samp_rate(eng_notation.str_to_num(str(self._samp_rate_line_edit.text())))
+            lambda: self.set_samp_rate(eng_notation.str_to_num(
+                str(self._samp_rate_line_edit.text())))
         )
         self.top_grid_layout.addWidget(self._samp_rate_tool_bar, 7, 0, 1, 2)
         _sync_phases_push_button = Qt.QPushButton("Sync LOs")
@@ -250,7 +264,8 @@ class uhd_siggen_gui(Qt.QWidget):
             Qt.Q_ARG("int", self._ant_options.index(i))
         )
         self._ant_callback(self.usrp.get_antenna(self._sg.channels[0]))
-        self._ant_combo_box.currentIndexChanged.connect(lambda i: self.set_ant(self._ant_options[i]))
+        self._ant_combo_box.currentIndexChanged.connect(
+            lambda i: self.set_ant(self._ant_options[i]))
         self.top_grid_layout.addWidget(self._ant_tool_bar, 7, 4, 1, 1)
         # Labels + Lock Sensors
         self._lo_locked_probe_0_tool_bar = Qt.QToolBar(self)
@@ -277,14 +292,16 @@ class uhd_siggen_gui(Qt.QWidget):
         self._label_rf_freq_tool_bar = Qt.QToolBar(self)
         self._label_rf_freq_formatter = lambda x: x
         self._label_rf_freq_tool_bar.addWidget(Qt.QLabel("LO freq: "))
-        self._label_rf_freq_label = Qt.QLabel(str(self._label_rf_freq_formatter(self.label_rf_freq)))
+        self._label_rf_freq_label = \
+            Qt.QLabel(str(self._label_rf_freq_formatter(self.label_rf_freq)))
         self._label_rf_freq_tool_bar.addWidget(self._label_rf_freq_label)
         self.top_grid_layout.addWidget(self._label_rf_freq_tool_bar, 8, 1, 1, 1)
         self.label_dsp_freq = self._sg.tr.actual_dsp_freq
         self._label_dsp_freq_tool_bar = Qt.QToolBar(self)
         self._label_dsp_freq_formatter = lambda x: x
         self._label_dsp_freq_tool_bar.addWidget(Qt.QLabel("DSP Freq: "))
-        self._label_dsp_freq_label = Qt.QLabel(str(self._label_dsp_freq_formatter(self.label_dsp_freq)))
+        self._label_dsp_freq_label = \
+            Qt.QLabel(str(self._label_dsp_freq_formatter(self.label_dsp_freq)))
         self._label_dsp_freq_tool_bar.addWidget(self._label_dsp_freq_label)
         self.top_grid_layout.addWidget(self._label_dsp_freq_tool_bar, 8, 2, 1, 1)
         ##################################################
@@ -327,6 +344,8 @@ class uhd_siggen_gui(Qt.QWidget):
         """ Qt closeEvent() """
         self.settings = Qt.QSettings("GNU Radio", "uhd_siggen_gui")
         self.settings.setValue("geometry", self.saveGeometry())
+        self._sg.stop()
+        self._sg.wait()
         event.accept()
 
     def stop(self):
@@ -484,24 +503,16 @@ def main():
     qapp = Qt.QApplication(sys.argv)
     siggen_gui = uhd_siggen_gui(args)
     siggen_gui.show()
-    def quitting():
-        print("\nStopping flowgraph...")
+    # pylint: disable=unused-argument
+    def sig_handler(sig=None, frame=None):
         siggen_gui.stop()
-    qapp.aboutToQuit.connect(quitting)
+        Qt.QApplication.quit()
+    signal.signal(signal.SIGINT, sig_handler)
+    signal.signal(signal.SIGTERM, sig_handler)
+    timer = Qt.QTimer()
+    timer.start(500)
+    timer.timeout.connect(lambda: None)
     qapp.exec_()
-    siggen_gui = None #to clean up Qt widgets
-
-def x11_init_threads():
-    " If on X11, init threads "
-    if sys.platform.startswith('linux'):
-        try:
-            # pylint: disable=import-outside-toplevel
-            import ctypes
-            x11 = ctypes.cdll.LoadLibrary('libX11.so')
-            x11.XInitThreads()
-        except:
-            print("Warning: failed to XInitThreads()")
 
 if __name__ == '__main__':
-    x11_init_threads()
     main()
