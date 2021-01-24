@@ -24,13 +24,23 @@ UHD FFT: Simple Spectrum Analyzer for UHD.
 
 # I prefer grouping the imports myself in this case, due to all the special cases
 # pylint: disable=wrong-import-order
+# pylint: disable=wrong-import-position
 # pylint: disable=ungrouped-imports
 
-import ctypes
 import sys
+if __name__ == '__main__':
+    import ctypes
+    if sys.platform.startswith('linux'):
+        try:
+            X11 = ctypes.cdll.LoadLibrary('libX11.so')
+            X11.XInitThreads()
+        except:
+            print("Warning: failed to XInitThreads()")
+
 import threading
 import time
 import math
+import signal
 from PyQt5 import Qt
 import sip # Needs to be imported after PyQt5, could fail otherwise
 from gnuradio import eng_notation
@@ -100,10 +110,10 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.chan0_lo_locked = chan0_lo_locked = uhd.sensor_value("", False, "", "")
+        self.chan0_lo_locked = uhd.sensor_value("", False, "", "")
         self.usrp_device_info = "[No USRP Device Info Found!]"
         self.uhd_version_info = uhd.get_version_string()
-        self.lo_locked_probe = chan0_lo_locked.to_bool()
+        self.lo_locked_probe = self.chan0_lo_locked.to_bool()
         self.fft_average = 1.0
         if args.avg_alpha is not None:
             if args.avg_alpha < 0.0 or args.avg_alpha > 1.0:
@@ -441,11 +451,16 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
         self.connect(src_port1, (multiplier, 0), blocks.complex_to_arg(), dst_port)
         self.connect(src_port2, blocks.conjugate_cc(), (multiplier, 1))
 
+    # This is a Qt name:
+    # pylint: disable=invalid-name
     def closeEvent(self, event):
         """ Execute when window closes """
         self.settings = Qt.QSettings("GNU Radio", "uhd_fft")
         self.settings.setValue("geometry", self.saveGeometry())
+        self.stop()
+        self.wait()
         event.accept()
+    # pylint: enable=invalid-name
 
     def set_antenna(self, antenna):
         """ Execute when antenna changes """
@@ -557,26 +572,21 @@ def main():
     """
     args = setup_argparser().parse_args()
     qapp = Qt.QApplication(sys.argv)
-    tb = uhd_fft(args)
-    tb.start()
-    tb.show()
-    def quitting():
-        """
-        Action ('Slot' in Qt lingo) to close the flow graph when the Qt window
-        is closed.
-        """
-        print("\nStopping flowgraph...")
-        tb.stop()
-        tb.wait()
-    qapp.aboutToQuit.connect(quitting)
+    top_block = uhd_fft(args)
+    top_block.start()
+    top_block.show()
+    # Make sure SIGINT/SIGTERM handling is enabled
+    # pylint: disable=unused-argument
+    def sig_handler(sig=None, frame=None):
+        top_block.stop()
+        top_block.wait()
+        Qt.QApplication.quit()
+    signal.signal(signal.SIGINT, sig_handler)
+    signal.signal(signal.SIGTERM, sig_handler)
+    timer = Qt.QTimer()
+    timer.start(500)
+    timer.timeout.connect(lambda: None)
     qapp.exec_()
-    tb = None #to clean up Qt widgets
 
 if __name__ == '__main__':
-    if sys.platform.startswith('linux'):
-        try:
-            X11 = ctypes.cdll.LoadLibrary('libX11.so')
-            X11.XInitThreads()
-        except:
-            print("Warning: failed to XInitThreads()")
     main()
