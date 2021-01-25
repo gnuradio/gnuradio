@@ -108,6 +108,8 @@ public:
 
     polyphase_filterbank(polyphase_filterbank&&) = default;
 
+    virtual ~polyphase_filterbank() = default;
+
     /*!
      * Update the filterbank's filter taps from a prototype
      * filter.
