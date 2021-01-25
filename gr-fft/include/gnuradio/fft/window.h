@@ -214,21 +214,11 @@ public:
     static std::vector<float> nuttall(int ntaps);
 
     /*!
-     * Deprecated: use nuttall window instead.
-     */
-    static std::vector<float> nuttal(int ntaps);
-
-    /*!
      * \brief Alias to the Nuttall window.
      *
      * \param ntaps Number of coefficients in the window.
      */
     static std::vector<float> blackman_nuttall(int ntaps);
-
-    /*!
-     * Deprecated: use blackman_nuttall window instead.
-     */
-    static std::vector<float> blackman_nuttal(int ntaps);
 
     /*!
      * \brief Build a Nuttall 4-term continuous first derivative window, referred to by
@@ -247,11 +237,6 @@ public:
      * \param ntaps Number of coefficients in the window.
      */
     static std::vector<float> nuttall_cfd(int ntaps);
-
-    /*!
-     * Deprecated: use nuttall_cfd window instead.
-     */
-    static std::vector<float> nuttal_cfd(int ntaps);
 
     /*!
      * \brief Build a flat top window per the SRS specification
