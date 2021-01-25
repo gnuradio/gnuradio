@@ -23,7 +23,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <cstdio>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {
@@ -162,7 +161,8 @@ int oss_source::work(int noutput_items,
             break;
 
         default:
-            assert(0);
+            GR_LOG_ERROR(d_logger, "not mono nor stereo");
+            throw std::runtime_error("not mono nor stereo");
         }
 
         ntogo -= result_nitems;
