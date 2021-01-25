@@ -11,6 +11,7 @@
 #include <gnuradio/rpcmanager.h>
 #include <cassert>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 
 rpcmanager::rpcmanager() { ; }
@@ -31,7 +32,7 @@ rpcserver_booter_base* rpcmanager::get()
 void rpcmanager::register_booter(rpcserver_booter_base* booter)
 {
     if (make_aggregator && !aggregator_registered) {
-        aggregator.reset(new rpcserver_booter_aggregator());
+        aggregator = std::make_unique<rpcserver_booter_aggregator>();
         aggregator_registered = true;
     }
 
