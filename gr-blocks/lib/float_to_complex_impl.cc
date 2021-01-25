@@ -15,6 +15,7 @@
 #include "float_to_complex_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
+#include <stdexcept>
 
 namespace gr {
 namespace blocks {
@@ -56,7 +57,8 @@ int float_to_complex_impl::work(int noutput_items,
     }
 
     default:
-        assert(0);
+        GR_LOG_ERROR(d_logger, "not 1 or 2 input streams");
+        throw std::runtime_error("break of iosig contract");
     }
 
     return noutput_items;
