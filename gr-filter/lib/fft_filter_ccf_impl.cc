@@ -15,7 +15,6 @@
 #include "fft_filter_ccf_impl.h"
 #include <gnuradio/io_signature.h>
 
-#include <cassert>
 #include <cmath>
 #include <stdexcept>
 
