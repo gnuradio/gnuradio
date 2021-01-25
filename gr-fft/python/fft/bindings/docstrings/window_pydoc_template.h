@@ -69,19 +69,10 @@ static const char* __doc_gr_fft_window_blackmanharris = R"doc()doc";
 static const char* __doc_gr_fft_window_nuttall = R"doc()doc";
 
 
-static const char* __doc_gr_fft_window_nuttal = R"doc()doc";
-
-
 static const char* __doc_gr_fft_window_blackman_nuttall = R"doc()doc";
 
 
-static const char* __doc_gr_fft_window_blackman_nuttal = R"doc()doc";
-
-
 static const char* __doc_gr_fft_window_nuttall_cfd = R"doc()doc";
-
-
-static const char* __doc_gr_fft_window_nuttal_cfd = R"doc()doc";
 
 
 static const char* __doc_gr_fft_window_flattop = R"doc()doc";

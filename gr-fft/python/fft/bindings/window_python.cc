@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(window.h)                                                  */
-/* BINDTOOL_HEADER_FILE_HASH(a44a323c53d5dd52382d240afdd4b984)                     */
+/* BINDTOOL_HEADER_FILE_HASH(4de3c97757728a4acfbd8b1c29181431)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -142,27 +142,14 @@ void bind_window(py::module& m)
         .def_static("nuttall", &window::nuttall, py::arg("ntaps"), D(window, nuttall))
 
 
-        .def_static("nuttal", &window::nuttal, py::arg("ntaps"), D(window, nuttal))
-
-
         .def_static("blackman_nuttall",
                     &window::blackman_nuttall,
                     py::arg("ntaps"),
                     D(window, blackman_nuttall))
 
 
-        .def_static("blackman_nuttal",
-                    &window::blackman_nuttal,
-                    py::arg("ntaps"),
-                    D(window, blackman_nuttal))
-
-
         .def_static(
             "nuttall_cfd", &window::nuttall_cfd, py::arg("ntaps"), D(window, nuttall_cfd))
-
-
-        .def_static(
-            "nuttal_cfd", &window::nuttal_cfd, py::arg("ntaps"), D(window, nuttal_cfd))
 
 
         .def_static("flattop", &window::flattop, py::arg("ntaps"), D(window, flattop))
