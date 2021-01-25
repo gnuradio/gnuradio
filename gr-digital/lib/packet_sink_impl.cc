@@ -190,7 +190,8 @@ int packet_sink_impl::work(int noutput_items,
             break;
 
         default:
-            assert(0);
+            GR_LOG_ERROR(d_logger, "Unknown packet sink state encountered");
+            throw std::runtime_error("unknown packet sink state");
         } // switch
     }     // while
 
