@@ -155,7 +155,7 @@ void EyeDisplaysForm::resizeEvent(QResizeEvent* e)
 void EyeDisplaysForm::mousePressEvent(QMouseEvent* e)
 {
     bool ctrloff = Qt::ControlModifier != QApplication::keyboardModifiers();
-    if ((e->button() == Qt::MidButton) && ctrloff && (d_menu_on)) {
+    if ((e->button() == Qt::MiddleButton) && ctrloff && (d_menu_on)) {
         if (d_stop_state == false)
             d_stop_act->setText(tr("Stop"));
         else
