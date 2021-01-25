@@ -184,7 +184,7 @@ void rpcserver_thrift::getKnobs(GNURadio::KnobMap& _return,
                                 const GNURadio::KnobIDList& knobs)
 {
     boost::mutex::scoped_lock lock(d_callback_map_lock);
-    if (knobs.size() == 0) {
+    if (knobs.empty()) {
         std::for_each(d_getcallbackmap.begin(),
                       d_getcallbackmap.end(),
                       get_all_f<QueryCallbackMap_t::value_type,
@@ -202,7 +202,7 @@ void rpcserver_thrift::getRe(GNURadio::KnobMap& _return,
                              const GNURadio::KnobIDList& knobs)
 {
     boost::mutex::scoped_lock lock(d_callback_map_lock);
-    if (knobs.size() == 0) {
+    if (knobs.empty()) {
         std::for_each(d_getcallbackmap.begin(),
                       d_getcallbackmap.end(),
                       get_all_f<QueryCallbackMap_t::value_type,
@@ -228,7 +228,7 @@ void rpcserver_thrift::properties(GNURadio::KnobPropMap& _return,
                                   const GNURadio::KnobIDList& knobs)
 {
     boost::mutex::scoped_lock lock(d_callback_map_lock);
-    if (knobs.size() == 0) {
+    if (knobs.empty()) {
         std::for_each(
             d_getcallbackmap.begin(),
             d_getcallbackmap.end(),
