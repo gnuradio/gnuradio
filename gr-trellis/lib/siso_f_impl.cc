@@ -14,7 +14,6 @@
 
 #include "siso_f_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cassert>
 #include <iostream>
 #include <stdexcept>
 

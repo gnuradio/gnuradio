@@ -14,7 +14,6 @@
 
 #include "vmcircbuf_mmap_tmpfile.h"
 #include <unistd.h>
-#include <cassert>
 #include <cstdlib>
 #include <stdexcept>
 #ifdef HAVE_SYS_TYPES_H

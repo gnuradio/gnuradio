@@ -16,7 +16,6 @@
 #include "vmcircbuf.h"
 #include "vmcircbuf_prefs.h"
 #include <boost/format.hpp>
-#include <cassert>
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
