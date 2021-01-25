@@ -24,8 +24,6 @@
 #include "pagesize.h"
 #include "vmcircbuf_createfilemapping.h"
 #include <boost/format.hpp>
-#include <cerrno>
-#include <cstdio>
 
 namespace gr {
 
