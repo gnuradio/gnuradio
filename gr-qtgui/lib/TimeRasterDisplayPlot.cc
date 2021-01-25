@@ -123,7 +123,7 @@ public:
 
             // scale for units tag
             x_label /= d_ten_scale;
-            return QwtText(QString("").sprintf("%.3f%s", x_label, d_units.c_str()));
+            return QwtText(QString("").asprintf("%.3f%s", x_label, d_units.c_str()));
         }
     }
 
@@ -205,7 +205,7 @@ public:
     {
         if (d_start_value == d_end_value) {
             // no scale was provided.  Default to row number.
-            return QwtText(QString("").sprintf("%.0f", value));
+            return QwtText(QString("").asprintf("%.0f", value));
         } else {
             // User-defined scale provided.
             double y_label =
@@ -213,7 +213,7 @@ public:
 
             // scale for units tag
             y_label /= d_ten_scale;
-            return QwtText(QString("").sprintf("%.3f%s", y_label, d_units.c_str()));
+            return QwtText(QString("").asprintf("%.3f%s", y_label, d_units.c_str()));
         }
     }
 
@@ -351,10 +351,10 @@ protected:
 
             double x_label = d_x_start_value + x / (double)d_cols * d_x_delta_value;
             if ((d_y_delta_value > 999.0) or (d_y_delta_value <= 1.0)) {
-                QwtText t(QString(QString("").sprintf("%.2f, %.2e", x_label, y)));
+                QwtText t(QString(QString("").asprintf("%.2f, %.2e", x_label, y)));
                 return t;
             } else {
-                QwtText t(QString(QString("").sprintf("%.2f, %.0f", x_label, y)));
+                QwtText t(QString(QString("").asprintf("%.2f, %.0f", x_label, y)));
                 return t;
             }
         }
