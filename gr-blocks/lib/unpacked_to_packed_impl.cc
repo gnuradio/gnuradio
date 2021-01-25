@@ -15,7 +15,8 @@
 
 #include "unpacked_to_packed_impl.h"
 #include <gnuradio/io_signature.h>
-#include <assert.h>
+#include <boost/format.hpp>
+#include <stdexcept>
 
 namespace gr {
 namespace blocks {
@@ -39,8 +40,12 @@ unpacked_to_packed_impl<T>::unpacked_to_packed_impl(unsigned int bits_per_chunk,
       d_endianness(endianness),
       d_index(0)
 {
-    assert(bits_per_chunk <= d_bits_per_type);
-    assert(bits_per_chunk > 0);
+    if (bits_per_chunk > d_bits_per_type) {
+        GR_LOG_ERROR(this->d_logger,
+                     boost::format("Requested to put %d in a %d bit chunk") %
+                         bits_per_chunk % d_bits_per_type);
+        throw std::domain_error("can't have more bits in chunk than in output type");
+    }
 
     this->set_relative_rate((uint64_t)bits_per_chunk, (uint64_t)this->d_bits_per_type);
 }
@@ -83,7 +88,6 @@ int unpacked_to_packed_impl<T>::general_work(int noutput_items,
 {
     unsigned int index_tmp = d_index;
 
-    assert(input_items.size() == output_items.size());
     const int nstreams = input_items.size();
 
     for (int m = 0; m < nstreams; m++) {
@@ -122,7 +126,8 @@ int unpacked_to_packed_impl<T>::general_work(int noutput_items,
             break;
 
         default:
-            assert(0);
+            GR_LOG_ERROR(this->d_logger, "unknown endianness");
+            throw std::runtime_error("unknown endianness");
         }
     }
 
