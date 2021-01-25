@@ -271,7 +271,8 @@ bool alsa_sink::check_topology(int ninputs, int noutputs)
         break;
 
     default:
-        assert(0);
+        GR_LOG_ERROR(d_logger, "unknown PCM format");
+        throw std::runtime_error("unknown PCM format");
     }
     return true;
 }
@@ -282,8 +283,6 @@ int alsa_sink::work(int noutput_items,
                     gr_vector_const_void_star& input_items,
                     gr_vector_void_star& output_items)
 {
-    assert((noutput_items % d_period_size) == 0);
-
     // this is a call through a pointer to a method...
     return (this->*d_worker)(noutput_items, input_items, output_items);
 }
@@ -305,7 +304,6 @@ int alsa_sink::work_s16(int noutput_items,
     int n;
 
     unsigned int sizeof_frame = nchan * sizeof(sample_t);
-    assert(d_buffer.size() == d_period_size * sizeof_frame);
 
     for (n = 0; n < noutput_items; n += d_period_size) {
         // process one period of data
@@ -344,7 +342,6 @@ int alsa_sink::work_s32(int noutput_items,
     int n;
 
     unsigned int sizeof_frame = nchan * sizeof(sample_t);
-    assert(d_buffer.size() == d_period_size * sizeof_frame);
 
     for (n = 0; n < noutput_items; n += d_period_size) {
         // process one period of data
@@ -385,7 +382,6 @@ int alsa_sink::work_s16_1x2(int noutput_items,
     int n;
 
     unsigned int sizeof_frame = nchan * sizeof(sample_t);
-    assert(d_buffer.size() == d_period_size * sizeof_frame);
 
     for (n = 0; n < noutput_items; n += d_period_size) {
         // process one period of data
@@ -425,7 +421,6 @@ int alsa_sink::work_s32_1x2(int noutput_items,
     int n;
 
     unsigned int sizeof_frame = nchan * sizeof(sample_t);
-    assert(d_buffer.size() == d_period_size * sizeof_frame);
 
     for (n = 0; n < noutput_items; n += d_period_size) {
         // process one period of data

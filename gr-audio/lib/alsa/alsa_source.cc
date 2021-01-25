@@ -17,8 +17,6 @@
 #include "alsa_source.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <cstdio>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {
@@ -250,7 +248,8 @@ bool alsa_source::check_topology(int ninputs, int noutputs)
         break;
 
     default:
-        assert(0);
+        GR_LOG_ERROR(d_logger, "unknown PCM format");
+        throw std::runtime_error("unknown PCM format");
     }
 
     return true;
@@ -260,9 +259,6 @@ int alsa_source::work(int noutput_items,
                       gr_vector_const_void_star& input_items,
                       gr_vector_void_star& output_items)
 {
-    assert((noutput_items % d_period_size) == 0);
-    assert(noutput_items != 0);
-
     // this is a call through a pointer to a method...
     return (this->*d_worker)(noutput_items, input_items, output_items);
 }
@@ -283,7 +279,6 @@ int alsa_source::work_s16(int noutput_items,
     int bi;
 
     unsigned int sizeof_frame = d_hw_nchan * sizeof(sample_t);
-    assert(d_buffer.size() == d_period_size * sizeof_frame);
 
     // To minimize latency, return at most a single period's worth of samples.
     // [We could also read the first one in a blocking mode and subsequent
@@ -321,7 +316,6 @@ int alsa_source::work_s16_2x1(int noutput_items,
     assert(output_items.size() == 1);
 
     unsigned int sizeof_frame = d_hw_nchan * sizeof(sample_t);
-    assert(d_buffer.size() == d_period_size * sizeof_frame);
 
     // To minimize latency, return at most a single period's worth of samples.
     // [We could also read the first one in a blocking mode and subsequent
@@ -356,7 +350,6 @@ int alsa_source::work_s32(int noutput_items,
     int bi;
 
     unsigned int sizeof_frame = d_hw_nchan * sizeof(sample_t);
-    assert(d_buffer.size() == d_period_size * sizeof_frame);
 
     // To minimize latency, return at most a single period's worth of samples.
     // [We could also read the first one in a blocking mode and subsequent
@@ -394,7 +387,6 @@ int alsa_source::work_s32_2x1(int noutput_items,
     assert(output_items.size() == 1);
 
     unsigned int sizeof_frame = d_hw_nchan * sizeof(sample_t);
-    assert(d_buffer.size() == d_period_size * sizeof_frame);
 
     // To minimize latency, return at most a single period's worth of samples.
     // [We could also read the first one in a blocking mode and subsequent
