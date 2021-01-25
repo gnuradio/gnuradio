@@ -114,7 +114,7 @@ int portaudio_sink_callback(const void* inputBuffer,
     }
 
     else { // underrun
-        std::async(&portaudio_underrun_notification, self->d_logger);
+        auto future_local = std::async(&portaudio_underrun_notification, self->d_logger);
         // FIXME we should transfer what we've got and pad the rest
         memset(outputBuffer, 0, nreqd_samples * sizeof(sample_t));
 
