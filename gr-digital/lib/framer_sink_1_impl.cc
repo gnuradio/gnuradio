@@ -14,7 +14,7 @@
 
 #include "framer_sink_1_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cstdio>
+#include <stdexcept>
 #include <string>
 
 namespace gr {
@@ -157,7 +157,8 @@ int framer_sink_1_impl::work(int noutput_items,
             break;
 
         default:
-            assert(0);
+            GR_LOG_ERROR(d_logger, "Unknown framer sink state encountered");
+            throw std::runtime_error("unknown framer sink state");
         } // switch
 
     } // while
