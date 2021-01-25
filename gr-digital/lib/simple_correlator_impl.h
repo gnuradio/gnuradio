@@ -13,6 +13,7 @@
 
 #include <gnuradio/digital/simple_correlator.h>
 
+// To enable tracing to the debug logger, un-comment the following line
 //#define	DEBUG_SIMPLE_CORRELATOR
 
 namespace gr {
@@ -40,10 +41,6 @@ private:
     float d_avgbuf[AVG_PERIOD];
     float d_avg;
     float d_accum;
-
-#ifdef DEBUG_SIMPLE_CORRELATOR
-    FILE* d_debug_fp; // binary log file
-#endif
 
     inline int slice(float x) { return x >= d_avg ? 1 : 0; }
 

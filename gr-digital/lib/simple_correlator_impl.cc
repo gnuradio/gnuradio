@@ -16,8 +16,6 @@
 #include <gnuradio/blocks/count_bits.h>
 #include <gnuradio/digital/simple_framer_sync.h>
 #include <gnuradio/io_signature.h>
-#include <cassert>
-#include <cstdio>
 #include <cstring>
 #include <stdexcept>
 
@@ -48,20 +46,15 @@ simple_correlator_impl::simple_correlator_impl(int payload_bytesize)
     d_avbi = 0;
     d_accum = 0.0;
     d_avg = 0.0;
-    for (int i = 0; i < AVG_PERIOD; i++)
+    for (int i = 0; i < AVG_PERIOD; i++) {
         d_avgbuf[i] = 0.0;
+    }
 
-#ifdef DEBUG_SIMPLE_CORRELATOR
-    d_debug_fp = fopen("corr.log", "w");
-#endif
     enter_looking();
 }
 
 simple_correlator_impl::~simple_correlator_impl()
 {
-#ifdef DEBUG_SIMPLE_CORRELATOR
-    fclose(d_debug_fp);
-#endif
     delete[] d_bitbuf;
     delete[] d_pktbuf;
 }
@@ -143,8 +136,8 @@ int simple_correlator_impl::general_work(int noutput_items,
 #ifdef DEBUG_SIMPLE_CORRELATOR
     struct debug_data {
         float raw_data;
-        float sampled;
-        float enter_locked;
+        bool sampled;
+        bool enter_locked;
     } debug_data;
 #endif
 
@@ -152,8 +145,8 @@ int simple_correlator_impl::general_work(int noutput_items,
 
 #ifdef DEBUG_SIMPLE_CORRELATOR
         debug_data.raw_data = in[n];
-        debug_data.sampled = 0.0;
-        debug_data.enter_locked = 0.0;
+        debug_data.sampled = false;
+        debug_data.enter_locked = false;
 #endif
 
         switch (d_state) {
@@ -161,7 +154,7 @@ int simple_correlator_impl::general_work(int noutput_items,
             if (d_osi == d_center_osi) {
 
 #ifdef DEBUG_SIMPLE_CORRELATOR
-                debug_data.sampled = 1.0;
+                debug_data.sampled = true;
 #endif
                 decision = slice(in[n]);
 
@@ -195,16 +188,20 @@ int simple_correlator_impl::general_work(int noutput_items,
                 // no longer seeing good PN code, compute center of goodness
                 enter_locked();
 #ifdef DEBUG_SIMPLE_CORRELATOR
-                debug_data.enter_locked = 1.0;
+                debug_data.enter_locked = true;
 #endif
             }
             break;
         default:
-            assert(0);
+            GR_LOG_ERROR(d_logger, "Unknown simple correlator state encountered");
+            throw std::runtime_error("unknown simple correlator state");
         }
 
 #ifdef DEBUG_SIMPLE_CORRELATOR
-        fwrite(&debug_data, sizeof(debug_data), 1, d_debug_fp);
+        GR_LOG_TRACE(d_debug_logger,
+                     (boost::format("%e %c%c") % debug_data.raw_data %
+                      (debug_data.sampled ? 'S' : ' ') %
+                      (debug_data.enter_locked ? 'L' : ' ')));
 #endif
 
         d_osi = add_index(d_osi, 1);
