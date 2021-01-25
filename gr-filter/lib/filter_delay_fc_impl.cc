@@ -14,6 +14,7 @@
 
 #include "filter_delay_fc_impl.h"
 #include <volk/volk.h>
+#include <stdexcept>
 
 namespace gr {
 namespace filter {
@@ -77,7 +78,8 @@ int filter_delay_fc_impl::work(int noutput_items,
         break;
 
     default:
-        assert(0);
+        GR_LOG_ERROR(d_logger, "not 1 or 2 input streams");
+        throw std::runtime_error("break of iosig contract");
     }
 
     return noutput_items;
