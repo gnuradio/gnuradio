@@ -44,7 +44,7 @@ DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
 
     d_panner = new QwtPlotPanner(canvas());
     d_panner->setAxisEnabled(QwtPlot::yRight, false);
-    d_panner->setMouseButton(Qt::MidButton, Qt::ControlModifier);
+    d_panner->setMouseButton(Qt::MiddleButton, Qt::ControlModifier);
 
     // emit the position of clicks on widget
     d_picker = new QwtDblClickPlotPicker(canvas());
