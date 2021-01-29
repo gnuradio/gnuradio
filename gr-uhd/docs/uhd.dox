@@ -118,7 +118,7 @@ The object is of type pmt::dict and has the same fields as uhd::tune_request_t:
 - `dsp_freq_policy`: policy for DSP tuning. Should be a string "A" (automatic), "M" (manual) or "N" (none). If not set, defaults to "A".
 - `rf_freq`: the rf frequency as pmt double type.
 - `rf_freq_policy`: policy for RF tuning. Should be a string "A" (automatic), "M" (manual) or "N" (none). If not set, defaults to "A".
-- `target_freq`: target frequency (for automatic runing) as pmt double type
+- `target_freq`: target frequency (for automatic running) as pmt double type
 - `args`: string containing additional arguments, for example for integer N tuning.
 
 Example:
