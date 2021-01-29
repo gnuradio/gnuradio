@@ -16,7 +16,6 @@
 #include <uhd/rfnoc/mb_controller.hpp>
 #include <uhd/rfnoc_graph.hpp>
 #include <unordered_map>
-#include <boost/make_shared.hpp>
 #include <atomic>
 #include <stdexcept>
 
@@ -105,7 +104,7 @@ public:
         return streamer;
     }
 
-    void commit()
+    void commit() override
     {
         if (!_commit_called.exchange(true)) {
             _graph->commit();
@@ -114,14 +113,14 @@ public:
 
     std::string get_block_id(const std::string& block_name,
                              const int device_select,
-                             const int block_select)
+                             const int block_select) override
     {
         std::string block_hint = block_name;
         if (device_select >= 0) {
-            block_hint = str(boost::format("%d/%s") % device_select % block_hint);
+            block_hint = std::to_string(device_select) + "/" + block_hint;
         }
         if (block_select >= 0) {
-            block_hint = str(boost::format("%s#%d") % block_hint % block_select);
+            block_hint = block_hint + "#" + std::to_string(block_select);
         }
 
         auto block_ids = _graph->find_blocks(block_hint);
