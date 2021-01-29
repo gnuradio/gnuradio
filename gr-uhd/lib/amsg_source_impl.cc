@@ -10,7 +10,6 @@
 
 #include "amsg_source_impl.h"
 #include "gr_uhd_common.h"
-#include <boost/bind.hpp>
 
 namespace gr {
 namespace uhd {
@@ -32,7 +31,7 @@ amsg_source_impl::amsg_source_impl(const ::uhd::device_addr_t& device_addr,
     : _msgq(msgq), _running(true)
 {
     _dev = ::uhd::usrp::multi_usrp::make(device_addr);
-    _amsg_thread = gr::thread::thread(boost::bind(&amsg_source_impl::recv_loop, this));
+    _amsg_thread = gr::thread::thread([this]() { this->recv_loop(); });
 }
 
 amsg_source_impl::~amsg_source_impl()

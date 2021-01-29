@@ -9,7 +9,6 @@
 
 #include <gnuradio/io_signature.h>
 #include <gnuradio/sync_block.h>
-#include <boost/format.hpp>
 #include <complex>
 #include <iostream>
 
