@@ -29,7 +29,7 @@
  27
  28      # CHANNEL
  29      isi = filter.fir_filter_fff(1,channel)
- 30      add = blocs.add_ff()
+ 30      add = blocks.add_ff()
  31      noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
  32
  33      # RX
