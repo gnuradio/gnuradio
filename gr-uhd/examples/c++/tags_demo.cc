@@ -13,13 +13,15 @@
 #include <gnuradio/uhd/usrp_sink.h>
 #include <gnuradio/uhd/usrp_source.h>
 #include <uhd/utils/safe_main.hpp>
-#include <boost/make_shared.hpp>
+#include <boost/format.hpp>
 #include <boost/program_options.hpp>
-#include <boost/thread/thread.hpp> //sleep
+#include <chrono>
 #include <csignal>
 #include <iostream>
+#include <thread>
 
 namespace po = boost::program_options;
+using namespace std::chrono_literals;
 
 /***********************************************************************
  * Signal handlers
@@ -127,8 +129,8 @@ int UHD_SAFE_MAIN(int argc, char* argv[])
     //------------------------------------------------------------------
     std::signal(SIGINT, &sig_int_handler);
     std::cout << "press ctrl + c to exit" << std::endl;
-    while (not stop_signal_called) {
-        boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+    while (!stop_signal_called) {
+        std::this_thread::sleep_for(100ms);
     }
 
     //------------------------------------------------------------------

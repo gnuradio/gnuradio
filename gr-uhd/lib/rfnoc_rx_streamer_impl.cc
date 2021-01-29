@@ -15,6 +15,7 @@
 #include <gnuradio/io_signature.h>
 #include <uhd/convert.hpp>
 #include <uhd/rfnoc/node.hpp>
+#include <boost/format.hpp>
 
 const pmt::pmt_t EOB_KEY = pmt::string_to_symbol("rx_eob");
 const pmt::pmt_t CMD_TIME_KEY = pmt::mp("time");
