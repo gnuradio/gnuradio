@@ -723,7 +723,7 @@ class Application(Gtk.Application):
                             Dialogs.show_missing_xterm(main, xterm)
                         self.config.xterm_missing(xterm)
                     if page.saved and page.file_path:
-                        # Save config before exection
+                        # Save config before execution
                         self.config.save()
                         Executor.ExecFlowGraphThread(
                             flow_graph_page=page,

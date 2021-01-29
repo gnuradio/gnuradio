@@ -72,7 +72,7 @@ public:
      * is a good bound.
      *
      * The Gaussian window should not be used for window based filter construction;
-     * instead there is a dedicated gaussian filter construction fuction. There is no
+     * instead there is a dedicated gaussian filter construction function. There is no
      * meaningful way to measure approximation error 'delta' as shown in Fig 7.23 of
      * Oppenheim and Schafer (Discrete-Time Signal Processing, 3rd edition).
      *
