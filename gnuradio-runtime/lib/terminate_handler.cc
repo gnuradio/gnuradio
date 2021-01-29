@@ -88,7 +88,7 @@ void terminate_handler_impl()
         std::cerr << "Got std::logic_error" << std::endl;
         std::cerr << e.what() << std::endl;
     } catch (const std::ios_base::failure& e) {
-        std::cerr << "Got std::ios_base::falure" << std::endl;
+        std::cerr << "Got std::ios_base::failure" << std::endl;
         std::cerr << e.what() << std::endl;
     } catch (const std::system_error& e) {
         std::cerr << "Got std::system_error" << std::endl;
