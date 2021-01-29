@@ -87,7 +87,7 @@ double window::max_attenuation(win_type type, double param)
         // value not meaningful for gaussian windows, but return something reasonable
         return 100;
     case WIN_TUKEY:
-        // low end is a rectangular window, attenuation exponentialy approaches Hann
+        // low end is a rectangular window, attenuation exponentially approaches Hann
         // piecewise linear estimate, determined empirically via curve fitting, median
         // error is less than 0.5dB and maximum error is 2.5dB; the returned value will
         // never be less than expected attenuation to ensure that window designed filters

@@ -27,7 +27,7 @@ class QwtColorMap;
  * \ingroup qtgui_blk
  *
  * \details
- * A waterfall displays three-dimenional data, where the 3rd dimension
+ * A waterfall displays three-dimensional data, where the 3rd dimension
  * (the intensity) is displayed using colors. The colors are calculated
  * from the values using a color map.
  *
