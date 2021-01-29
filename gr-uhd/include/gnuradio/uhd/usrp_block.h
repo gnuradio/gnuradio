@@ -14,6 +14,7 @@
 #include <gnuradio/sync_block.h>
 #include <gnuradio/uhd/api.h>
 #include <uhd/usrp/multi_usrp.hpp>
+#include <cstdint>
 
 namespace gr {
 namespace uhd {
@@ -585,8 +586,8 @@ public:
      */
     virtual void set_gpio_attr(const std::string& bank,
                                const std::string& attr,
-                               const boost::uint32_t value,
-                               const boost::uint32_t mask = 0xffffffff,
+                               const uint32_t value,
+                               const uint32_t mask = 0xffffffff,
                                const size_t mboard = 0) = 0;
 
     /*!
@@ -605,9 +606,9 @@ public:
      * \param mboard the motherboard index 0 to M-1
      * \return the value set for this attribute
      */
-    virtual boost::uint32_t get_gpio_attr(const std::string& bank,
-                                          const std::string& attr,
-                                          const size_t mboard = 0) = 0;
+    virtual uint32_t get_gpio_attr(const std::string& bank,
+                                   const std::string& attr,
+                                   const size_t mboard = 0) = 0;
 
     /*!
      * Enumerate the available filters in the signal path.

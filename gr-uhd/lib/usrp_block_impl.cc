@@ -10,10 +10,14 @@
 
 #include "usrp_block_impl.h"
 #include <chrono>
+#include <thread>
 
 using namespace gr::uhd;
+using namespace std::chrono_literals;
 
-const double usrp_block_impl::LOCK_TIMEOUT = 1.5;
+namespace {
+constexpr auto LOCK_TIMEOUT = 1.5s;
+}
 
 /**********************************************************************
  * Structors
@@ -200,36 +204,23 @@ bool usrp_block_impl::_wait_for_locked_sensor(std::vector<std::string> sensor_na
                                               get_sensor_fn_t get_sensor_fn)
 {
     if (std::find(sensor_names.begin(), sensor_names.end(), sensor_name) ==
-        sensor_names.end())
+        sensor_names.end()) {
         return true;
-
-    boost::system_time start = boost::get_system_time();
-    boost::system_time first_lock_time;
-
-    while (true) {
-        if ((not first_lock_time.is_not_a_date_time()) and
-            (boost::get_system_time() >
-             (first_lock_time +
-              boost::posix_time::seconds(static_cast<long>(LOCK_TIMEOUT))))) {
-            break;
-        }
-
-        if (get_sensor_fn(sensor_name).to_bool()) {
-            if (first_lock_time.is_not_a_date_time())
-                first_lock_time = boost::get_system_time();
-        } else {
-            first_lock_time = boost::system_time(); // reset to 'not a date time'
-
-            if (boost::get_system_time() >
-                (start + boost::posix_time::seconds(static_cast<long>(LOCK_TIMEOUT)))) {
-                return false;
-            }
-        }
-
-        boost::this_thread::sleep(boost::posix_time::milliseconds(100));
     }
 
-    return true;
+    const auto start = std::chrono::steady_clock::now();
+    const auto timeout = start + LOCK_TIMEOUT;
+
+    while (std::chrono::steady_clock::now() < timeout) {
+        if (get_sensor_fn(sensor_name).to_bool()) {
+            return true;
+        }
+
+        std::this_thread::sleep_for(100ms);
+    }
+
+    // One last try:
+    return get_sensor_fn(sensor_name).to_bool();
 }
 
 bool usrp_block_impl::_unpack_chan_command(std::string& command,
@@ -387,9 +378,9 @@ std::vector<std::string> usrp_block_impl::get_gpio_banks(const size_t mboard)
 #endif
 }
 
-boost::uint32_t usrp_block_impl::get_gpio_attr(const std::string& bank,
-                                               const std::string& attr,
-                                               const size_t mboard)
+uint32_t usrp_block_impl::get_gpio_attr(const std::string& bank,
+                                        const std::string& attr,
+                                        const size_t mboard)
 {
 #ifdef UHD_USRP_MULTI_USRP_GPIO_API
     return _dev->get_gpio_attr(bank, attr, mboard);
@@ -460,8 +451,8 @@ void usrp_block_impl::set_user_register(const uint8_t addr,
 
 void usrp_block_impl::set_gpio_attr(const std::string& bank,
                                     const std::string& attr,
-                                    const boost::uint32_t value,
-                                    const boost::uint32_t mask,
+                                    const uint32_t value,
+                                    const uint32_t mask,
                                     const size_t mboard)
 {
 #ifdef UHD_USRP_MULTI_USRP_GPIO_API

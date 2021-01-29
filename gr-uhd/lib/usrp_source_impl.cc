@@ -10,10 +10,8 @@
 
 #include "gr_uhd_common.h"
 #include "usrp_source_impl.h"
-#include <boost/format.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/thread/thread.hpp>
-#include <iostream>
+#include <mutex>
 #include <stdexcept>
 
 namespace gr {
@@ -486,7 +484,7 @@ void usrp_source_impl::set_recv_timeout(const double timeout, const bool one_pac
 
 bool usrp_source_impl::start(void)
 {
-    boost::recursive_mutex::scoped_lock lock(d_mutex);
+    std::lock_guard<std::recursive_mutex> lock(d_mutex);
     if (not _rx_stream) {
         _rx_stream = _dev->get_rx_stream(_stream_args);
         _samps_per_packet = _rx_stream->get_max_num_samps();
@@ -532,7 +530,7 @@ void usrp_source_impl::flush(void)
 
 bool usrp_source_impl::stop(void)
 {
-    boost::recursive_mutex::scoped_lock lock(d_mutex);
+    std::lock_guard<std::recursive_mutex> lock(d_mutex);
     this->issue_stream_cmd(::uhd::stream_cmd_t::STREAM_MODE_STOP_CONTINUOUS);
     this->flush();
 
@@ -592,7 +590,7 @@ int usrp_source_impl::work(int noutput_items,
                            gr_vector_const_void_star& input_items,
                            gr_vector_void_star& output_items)
 {
-    boost::recursive_mutex::scoped_lock lock(d_mutex);
+    std::lock_guard<std::recursive_mutex> lock(d_mutex);
     boost::this_thread::disable_interruption disable_interrupt;
     // In order to allow for low-latency:
     // We receive all available packets without timeout.
@@ -634,11 +632,8 @@ int usrp_source_impl::work(int noutput_items,
         return work(noutput_items, input_items, output_items);
 
     default:
-        // GR_LOG_WARN(d_logger, boost::format("USRP Source Block caught rx error: %d") %
-        // _metadata.strerror());
         GR_LOG_WARN(d_logger,
-                    boost::format("USRP Source Block caught rx error code: %d") %
-                        _metadata.error_code);
+                    "USRP Source Block caught rx error: " + _metadata.strerror());
         return num_samps;
     }
 

@@ -34,8 +34,6 @@ public:
     typedef std::function<::uhd::sensor_value_t(const std::string&)> get_sensor_fn_t;
     typedef std::function<void(const pmt::pmt_t&, int, const pmt::pmt_t&)> cmd_handler_t;
 
-    static const double LOCK_TIMEOUT;
-
     /**********************************************************************
      * Public API calls (see usrp_block.h for docs)
      **********************************************************************/
@@ -52,9 +50,9 @@ public:
     ::uhd::time_spec_t get_time_last_pps(size_t mboard) override;
     ::uhd::usrp::multi_usrp::sptr get_device(void) override;
     std::vector<std::string> get_gpio_banks(const size_t mboard) override;
-    boost::uint32_t get_gpio_attr(const std::string& bank,
-                                  const std::string& attr,
-                                  const size_t mboard = 0) override;
+    uint32_t get_gpio_attr(const std::string& bank,
+                           const std::string& attr,
+                           const size_t mboard = 0) override;
     size_t get_num_mboards() override;
     std::vector<std::string> get_filter_names(const std::string& search_mask) override;
     ::uhd::filter_info_base::sptr get_filter(const std::string& path) override;
@@ -72,8 +70,8 @@ public:
     void clear_command_time(size_t mboard) override;
     void set_gpio_attr(const std::string& bank,
                        const std::string& attr,
-                       const boost::uint32_t value,
-                       const boost::uint32_t mask,
+                       const uint32_t value,
+                       const uint32_t mask,
                        const size_t mboard) override;
     void set_filter(const std::string& path,
                     ::uhd::filter_info_base::sptr filter) override;
