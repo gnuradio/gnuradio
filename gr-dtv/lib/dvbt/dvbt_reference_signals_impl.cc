@@ -572,7 +572,7 @@ int dvbt_pilot_gen::get_current_tpilot() const { return d_tps_carriers[d_tpilot_
 
 gr_complex dvbt_pilot_gen::get_tpilot_value(int tpilot)
 {
-    // TODO - it can be calculated at the beginnning
+    // TODO - it can be calculated at the beginning
     if (d_symbol_index == 0) {
         d_tps_carriers_val[d_tpilot_index] = gr_complex(2 * (0.5 - d_wk[tpilot]), 0);
     } else {

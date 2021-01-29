@@ -58,7 +58,7 @@ templates:
 documentation: |-
     This block creates a variable check box. Leave the label blank to use the variable id as the label.
 
-    A check box selects between two values of similar type. Te values do not necessarily need to be of boolean type.
+    A check box selects between two values of similar type. The values do not necessarily need to be of boolean type.
 
     The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
 

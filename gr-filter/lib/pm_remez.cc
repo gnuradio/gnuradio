@@ -536,7 +536,7 @@ static void freq_sample(int N, double A[], double h[], int symm)
  *
  * INPUT:
  * ------
- * int    r     - 1/2 the number of filter coeffiecients
+ * int    r     - 1/2 the number of filter coefficients
  * int    Ext[] - Indexes to extremal frequencies [r+1]
  * double E[]   - Error function on the dense grid [gridsize]
  *

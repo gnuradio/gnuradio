@@ -51,7 +51,6 @@ public:
      * attenuation >= 50 dB.
      *
      * For an attenuation of 50 dB, beta = 4.55.
-     *
      * For an attenuation of 70 dB, beta = 6.76.
      *
      * \param type The window::win_type enumeration of the window type.
