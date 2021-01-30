@@ -833,8 +833,8 @@ void usrp_block_impl::_cmd_handler_tune(const pmt::pmt_t& tune,
     pmt::pmt_t direction =
         pmt::dict_ref(msg,
                       cmd_direction_key(),
-                      pmt::PMT_NIL // Anything except "TX" or "RX will default to the
-                                   // messaged block direction"
+                      pmt::PMT_NIL // Anything except "TX" or "RX" will default to the
+                                   // messaged block direction
         );
 
     double freq = pmt::to_double(pmt::car(tune));
@@ -847,6 +847,14 @@ void usrp_block_impl::_cmd_handler_mtune(const pmt::pmt_t& tune,
                                          int chan,
                                          const pmt::pmt_t& msg)
 {
+    // See if a direction was specified
+    pmt::pmt_t direction =
+        pmt::dict_ref(msg,
+                      cmd_direction_key(),
+                      pmt::PMT_NIL // Anything except "TX" or "RX" will default to the
+                                   // messaged block direction
+        );
+
     ::uhd::tune_request_t new_tune_request;
     if (pmt::dict_has_key(tune, pmt::mp("dsp_freq"))) {
         new_tune_request.dsp_freq =
@@ -887,7 +895,7 @@ void usrp_block_impl::_cmd_handler_mtune(const pmt::pmt_t& tune,
             pmt::symbol_to_string(pmt::dict_ref(tune, pmt::mp("args"), pmt::mp(""))));
     }
 
-    _update_curr_tune_req(new_tune_request, chan);
+    _update_curr_tune_req(new_tune_request, chan, direction);
 }
 
 void usrp_block_impl::_cmd_handler_bw(const pmt::pmt_t& bw,
