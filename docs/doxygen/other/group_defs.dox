@@ -43,6 +43,7 @@
 /*! \defgroup ofdm_blk OFDM Blocks */
 /*! \defgroup packet_operators_blk Packet/Frame Operators */
 /*! \defgroup peak_detectors_blk Peak Detectors */
+/*! \defgroup pdu_blk PDU Operators */
 /*! \defgroup qtgui_blk QT Graphical Interfaces */
 /*! \defgroup resamplers_blk Resamplers */
 /*! \defgroup stream_operators_blk Streams Operators */

@@ -1,0 +1,28 @@
+id: pdu_pdu_split
+label: PDU Split
+category: '[Core]/PDU'
+
+parameters:
+-   id: pass_empty
+    label: Empty
+    dtype: enum
+    options: ['False', 'True']
+    option_labels: [Drop, Print]
+
+inputs:
+-   domain: message
+    id: pdus
+
+outputs:
+-   domain: message
+    id: dict
+    optional: true
+-   domain: message
+    id: data
+    optional: true
+
+templates:
+    imports: from gnuradio import pdu
+    make: pdu.pdu_split(${pass_empty})
+
+file_format: 1

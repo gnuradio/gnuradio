@@ -161,6 +161,8 @@ STRIP_FROM_INC_PATH    = @CMAKE_SOURCE_DIR@/gnuradio-runtime/include \
                          @CMAKE_BINARY_DIR@/gr-fft/include \
                          @CMAKE_SOURCE_DIR@/gr-filter/include \
                          @CMAKE_BINARY_DIR@/gr-filter/include \
+                         @CMAKE_SOURCE_DIR@/gr-pdu/include \
+                         @CMAKE_BINARY_DIR@/gr-pdu/include \
                          @CMAKE_SOURCE_DIR@/gr-qtgui/include \
                          @CMAKE_BINARY_DIR@/gr-qtgui/include \
                          @CMAKE_SOURCE_DIR@/gr-trellis/include \
@@ -725,6 +727,7 @@ EXCLUDE                = @abs_top_builddir@/cmake/msvc \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading.py \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading_23.py \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading_24.py \
+                         @abs_top_builddir@/gr-pdu/doc \
                          @abs_top_builddir@/gr-trellis/doc \
                          @abs_top_builddir@/grc \
                          @abs_top_builddir@/_CPack_Packages \
@@ -760,6 +763,8 @@ EXCLUDE                = @abs_top_builddir@/cmake/msvc \
                          @abs_top_builddir@/gr-filter/lib \
                          @abs_top_srcdir@/gr-fft/lib \
                          @abs_top_builddir@/gr-fft/lib \
+                         @abs_top_srcdir@/gr-pdu/lib \
+                         @abs_top_builddir@/gr-pdu/lib \
                          @abs_top_srcdir@/gr-qtgui/lib \
                          @abs_top_builddir@/gr-qtgui/lib \
                          @abs_top_srcdir@/gr-trellis/lib \
