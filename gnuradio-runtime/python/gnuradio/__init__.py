@@ -56,4 +56,5 @@ if path.endswith(path_ending):
     __path__.append(os.path.join(build_path, 'gr-fec', 'python'))
     __path__.append(os.path.join(build_path, 'gr-utils'))
     __path__.append(os.path.join(build_path, 'gr-uhd', 'python'))
+    __path__.append(os.path.join(build_path, 'gr-pdu', 'python'))
     __path__.append(os.path.join(build_path, 'gr-zeromq', 'python'))
