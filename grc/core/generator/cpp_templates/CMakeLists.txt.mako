@@ -13,7 +13,7 @@
 
 <%
 class_name = flow_graph.get_option('id')
-version_list = config.version.split(".")
+version_list = config.version_parts
 short_version = '.'.join(version_list[0:2])
 %>\
 
