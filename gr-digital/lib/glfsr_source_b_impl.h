@@ -37,8 +37,8 @@ public:
              gr_vector_const_void_star& input_items,
              gr_vector_void_star& output_items) override;
 
-    uint64_t period() const { return d_length; }
-    uint64_t mask() const;
+    uint64_t period() const override { return d_length; }
+    uint64_t mask() const override;
 };
 
 } /* namespace digital */
