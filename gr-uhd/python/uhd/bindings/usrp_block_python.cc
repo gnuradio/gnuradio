@@ -23,6 +23,7 @@ void bind_usrp_block(py::module& m)
     using usrp_block = ::gr::uhd::usrp_block;
 
     m.attr("ALL_MBOARDS") = py::int_(::uhd::usrp::multi_usrp::ALL_MBOARDS);
+    m.attr("ALL_LOS") = py::str(::uhd::usrp::multi_usrp::ALL_LOS);
 
     py::class_<usrp_block,
                gr::sync_block,
