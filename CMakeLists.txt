@@ -296,7 +296,7 @@ SET(GR_THEMES_DIR      ${GR_PKG_DATA_DIR}/themes CACHE PATH "Path to install QTG
 # Special exception if prefix is /usr so we don't make a /usr/etc.
 SET(GR_CONF_DIR etc CACHE PATH "Path to install config files")
 string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "/usr" isusr)
-if(isusr)
+if(isusr OR MSVC)
   SET(SYSCONFDIR "/${GR_CONF_DIR}" CACHE PATH "System configuration directory")
 else(isusr)
   SET(SYSCONFDIR "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}" CACHE PATH "System configuration directory" FORCE)
@@ -322,8 +322,8 @@ file(TO_NATIVE_PATH "${CMAKE_INSTALL_PREFIX}"           prefix)
 file(TO_NATIVE_PATH "\${prefix}"                        exec_prefix)
 file(TO_NATIVE_PATH "\${exec_prefix}/${GR_LIBRARY_DIR}" libdir)
 file(TO_NATIVE_PATH "\${prefix}/${GR_INCLUDE_DIR}"      includedir)
-file(TO_NATIVE_PATH "${SYSCONFDIR}"                     SYSCONFDIR)
-file(TO_NATIVE_PATH "${GR_PREFSDIR}"                    GR_PREFSDIR)
+file(TO_CMAKE_PATH "${SYSCONFDIR}"                     SYSCONFDIR)
+file(TO_CMAKE_PATH "${GR_PREFSDIR}"                    GR_PREFSDIR)
 
 ########################################################################
 # On Apple only, set install name and use rpath correctly, if not already set

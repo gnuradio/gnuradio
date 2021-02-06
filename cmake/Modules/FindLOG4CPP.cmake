@@ -17,7 +17,7 @@ find_path(LOG4CPP_INCLUDE_DIR log4cpp/Category.hh
   /opt/local/include
 )
 
-set(LOG4CPP_NAMES log4cpp)
+set(LOG4CPP_NAMES log4cpp orocos-log4cpp)
 find_library(LOG4CPP_LIBRARY
   NAMES ${LOG4CPP_NAMES}
   PATHS /usr/lib /usr/lib64 /usr/local/lib  /usr/local/lib64 /opt/local/lib /opt/local/lib64
