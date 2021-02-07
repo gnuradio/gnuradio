@@ -14,7 +14,6 @@
 
 #include "nop_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/bind.hpp>
 
 namespace gr {
 namespace blocks {
