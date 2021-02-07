@@ -64,14 +64,18 @@ ldpc_decoder_make = ldpc_decoder.make
 tpc_encoder_make = tpc_encoder.make
 tpc_decoder_make = tpc_decoder.make
 
-ldpc_H_matrix = code.ldpc_H_matrix
-ldpc_G_matrix = code.ldpc_G_matrix
-ldpc_par_mtrx_encoder = code.ldpc_par_mtrx_encoder
-ldpc_par_mtrx_encoder_make = ldpc_par_mtrx_encoder.make
-ldpc_par_mtrx_encoder_make_H = ldpc_par_mtrx_encoder.make_H
-ldpc_gen_mtrx_encoder = code.ldpc_gen_mtrx_encoder
-ldpc_gen_mtrx_encoder_make = code.ldpc_gen_mtrx_encoder.make
-ldpc_bit_flip_decoder = code.ldpc_bit_flip_decoder
+try:
+    ldpc_H_matrix = code.ldpc_H_matrix
+    ldpc_G_matrix = code.ldpc_G_matrix
+    ldpc_par_mtrx_encoder = code.ldpc_par_mtrx_encoder
+    ldpc_par_mtrx_encoder_make = ldpc_par_mtrx_encoder.make
+    ldpc_par_mtrx_encoder_make_H = ldpc_par_mtrx_encoder.make_H
+    ldpc_gen_mtrx_encoder = code.ldpc_gen_mtrx_encoder
+    ldpc_gen_mtrx_encoder_make = code.ldpc_gen_mtrx_encoder.make
+    ldpc_bit_flip_decoder = code.ldpc_bit_flip_decoder
+except AttributeError:
+    pass    
+
 polar_decoder_sc = code.polar_decoder_sc
 polar_decoder_sc_list = code.polar_decoder_sc_list
 polar_decoder_sc_systematic = code.polar_decoder_sc_systematic

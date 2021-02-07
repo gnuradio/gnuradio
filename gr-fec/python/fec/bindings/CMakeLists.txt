@@ -70,5 +70,7 @@ GR_PYBIND_MAKE_CHECK_HASH(fec
    "${fec_python_files}") 
 
 target_link_libraries(fec_python PUBLIC gnuradio-runtime gnuradio-blocks)
-
+if(GSL_FOUND)
+    target_compile_definitions(fec_python PUBLIC -DHAVE_GSL)
+endif(GSL_FOUND)
 install(TARGETS fec_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec COMPONENT pythonapi)
