@@ -33,18 +33,20 @@ void bind_dummy_decoder(py::module&);
 void bind_dummy_encoder(py::module&);
 void bind_encode_ccsds_27_bb(py::module&);
 void bind_encoder(py::module&);
-void bind_fec_mtrx(py::module&);
 void bind_generic_decoder(py::module&);
 void bind_generic_encoder(py::module&);
 void bind_gf2mat(py::module&);
 void bind_gf2vec(py::module&);
+#ifdef HAVE_GSL
+void bind_fec_mtrx(py::module&);
 void bind_ldpc_G_matrix(py::module&);
 void bind_ldpc_H_matrix(py::module&);
 void bind_ldpc_bit_flip_decoder(py::module&);
-void bind_ldpc_decoder(py::module&);
-void bind_ldpc_encoder(py::module&);
 void bind_ldpc_gen_mtrx_encoder(py::module&);
 void bind_ldpc_par_mtrx_encoder(py::module&);
+#endif
+void bind_ldpc_decoder(py::module&);
+void bind_ldpc_encoder(py::module&);
 void bind_maxstar(py::module&);
 void bind_polar_common(py::module&);
 void bind_polar_decoder_common(py::module&);
@@ -104,16 +106,18 @@ PYBIND11_MODULE(fec_python, m)
     bind_dummy_decoder(m);
     bind_dummy_encoder(m);
     bind_encode_ccsds_27_bb(m);
-    bind_fec_mtrx(m);
     // bind_gf2mat(m);
     // bind_gf2vec(m);
+#ifdef HAVE_GSL
+    bind_fec_mtrx(m);
     bind_ldpc_G_matrix(m);
     bind_ldpc_H_matrix(m);
     bind_ldpc_bit_flip_decoder(m);
-    bind_ldpc_decoder(m);
-    bind_ldpc_encoder(m);
     bind_ldpc_gen_mtrx_encoder(m);
     bind_ldpc_par_mtrx_encoder(m);
+#endif
+    bind_ldpc_decoder(m);
+    bind_ldpc_encoder(m);
     // bind_maxstar(m);
     bind_polar_common(m);
     bind_polar_decoder_common(m);
