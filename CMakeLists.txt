@@ -57,7 +57,6 @@ SET(VERSION_PATCH git)
 include(GrVersion) #setup version info
 
 # Minimum dependency versions for central dependencies:
-
 set(GR_BOOST_MIN_VERSION "1.65")      ## Version in Ubuntu 18.04LTS
 set(GR_CMAKE_MIN_VERSION "3.10.2")    ## Version in Ubuntu 18.04LTS
 set(GR_MAKO_MIN_VERSION "1.0.7")      ## debian buster, 18.04LTS
