@@ -27,6 +27,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       name: Checkout Project
+      with:
+        submodules: 'recursive'
     - name: CMake
       run: 'cd /build && cmake ${GITHUB_WORKSPACE}'
     - name: Make Docs
