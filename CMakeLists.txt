@@ -60,7 +60,7 @@ include(GrVersion) #setup version info
 set(GR_BOOST_MIN_VERSION "1.53")
 set(GR_SWIG_MIN_VERSION "3.0.8")
 set(GR_CMAKE_MIN_VERSION "3.5.1")
-set(GR_MAKO_MIN_VERSION "0.4.2")
+set(GR_MAKO_MIN_VERSION "0.9.1")
 set(GR_PYTHON_MIN_VERSION "2.7.6")
 set(GR_PYTHON3_MIN_VERSION "3.6.5")
 set(GCC_MIN_VERSION "4.8.4")
