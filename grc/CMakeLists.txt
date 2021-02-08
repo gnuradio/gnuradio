@@ -13,7 +13,7 @@ include(GrPython)
 message(STATUS "")
 
 GR_PYTHON_CHECK_MODULE_RAW(
-    "PyYAML >= 3.10"
+    "PyYAML >= 3.11"
     "import yaml; assert yaml.__version__ >= '3.11'"
     PYYAML_FOUND
 )
