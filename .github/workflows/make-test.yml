@@ -17,6 +17,20 @@ jobs:
         source: '.'
         exclude: './volk'
         extensions: 'h,hpp,cpp,cc,cc.in'
+  doxygen:
+    name: Doxygen
+    runs-on: ubuntu-20.04 # This can run on whatever
+    container:
+      image: 'gnuradio/ci-ubuntu-20.04-3.9:0.3'
+      volumes:
+        - build_data:/build
+    steps:
+    - uses: actions/checkout@v2
+      name: Checkout Project
+    - name: CMake
+      run: 'cd /build && cmake ${GITHUB_WORKSPACE}'
+    - name: Make Docs
+      run: 'cd /build && make doxygen_target'
   # All of these shall depend on the formatting check (needs: check-formatting)
   ubuntu-20_04:
     name: Ubuntu 20.04
@@ -31,7 +45,7 @@ jobs:
     - uses: actions/checkout@v2
       name: Checkout Project
     - name: CMake
-      run: 'cd /build && cmake ${GITHUB_WORKSPACE}'
+      run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
     - name: Make
       run: 'cd /build && make -j2'
     - name: Make Test
