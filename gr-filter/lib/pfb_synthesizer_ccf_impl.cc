@@ -79,7 +79,6 @@ void pfb_synthesizer_ccf_impl::set_taps(const std::vector<float>& taps)
 
     // Because we keep our own buffers inside the filters, we don't
     // need history.
-    set_history(1);
     d_updated = true;
 }
 
