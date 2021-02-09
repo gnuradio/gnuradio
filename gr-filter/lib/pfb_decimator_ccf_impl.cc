@@ -54,7 +54,6 @@ pfb_decimator_ccf_impl::pfb_decimator_ccf_impl(unsigned int decim,
     set_relative_rate(1, (uint64_t)decim);
 
     if (d_use_fft_filters) {
-        set_history(1);
         set_output_multiple(d_fft_filters[0].filtersize() - d_fft_filters[0].ntaps() + 1);
     } else {
         set_history(d_taps_per_filter);
