@@ -37,8 +37,6 @@ fft_filter_ccc_impl::fft_filter_ccc_impl(int decimation,
       d_updated(false),
       d_filter(decimation, taps, nthreads)
 {
-    set_history(1);
-
     d_new_taps = taps;
     d_nsamples = d_filter.set_taps(taps);
     set_output_multiple(d_nsamples);
