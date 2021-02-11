@@ -47,9 +47,9 @@ tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU, bool istunflag)
       d_istunflag(istunflag)
 {
     // make the tuntap
-    char dev_cstr[1024];
-    memset(dev_cstr, 0x00, 1024);
-    strncpy(dev_cstr, dev.c_str(), std::min(sizeof(dev_cstr) - 1, dev.size()));
+    char dev_cstr[IFNAMSIZ];
+    memset(dev_cstr, 0x00, IFNAMSIZ);
+    strncpy(dev_cstr, dev.c_str(), std::min(IFNAMSIZ - 1, dev.size()));
 
     bool istun = d_istunflag;
     if (istun) {
