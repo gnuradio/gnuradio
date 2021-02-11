@@ -47,9 +47,10 @@ tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU, bool istunflag)
       d_istunflag(istunflag)
 {
     // make the tuntap
-    char dev_cstr[1024];
-    memset(dev_cstr, 0x00, 1024);
-    strncpy(dev_cstr, dev.c_str(), std::min(sizeof(dev_cstr) - 1, dev.size()));
+    char dev_cstr[IFNAMSIZ];
+    memset(dev_cstr, 0x00, IFNAMSIZ);
+    strncpy(dev_cstr, dev.c_str(), IFNAMSIZ);
+    dev_cstr[IFNAMSIZ - 1] = '\0';
 
     bool istun = d_istunflag;
     if (istun) {
@@ -150,7 +151,8 @@ int tuntap_pdu_impl::set_mtu(const char* dev, int MTU)
 
     /* preparation of the struct ifr, of type "struct ifreq" */
     memset(&ifr, 0, sizeof(ifr));
-    strncpy(ifr.ifr_name, dev, IFNAMSIZ - 1);
+    strncpy(ifr.ifr_name, dev, IFNAMSIZ);
+    ifr.ifr_name[IFNAMSIZ - 1] = '\0';
     ifr.ifr_addr.sa_family = AF_INET; /* address family */
     ifr.ifr_mtu = MTU;
 
