@@ -113,8 +113,8 @@ symbol_sync_ff_impl::symbol_sync_ff_impl(enum ted_type detector_type,
 
     if (d_interps_per_symbol > sps)
         GR_LOG_WARN(d_logger,
-                    boost::format("block performing more interopolations per "
-                                  "symbol (%3f) than input samples per symbol"
+                    boost::format("block performing more interpolations per "
+                                  "symbol (%3f) than input samples per symbol "
                                   "(%3f). Consider reducing osps or "
                                   "increasing sps") %
                         d_interps_per_symbol % sps);
