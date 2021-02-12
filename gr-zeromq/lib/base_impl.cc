@@ -210,10 +210,16 @@ bool base_source_impl::load_message(bool wait)
 
     /* Get the message */
 #if USE_NEW_CPPZMQ_SEND_RECV
-    d_socket.recv(d_msg);
+    const bool ok = bool(d_socket.recv(d_msg));
 #else
-    d_socket.recv(&d_msg);
+    const bool ok = d_socket.recv(&d_msg);
 #endif
+    if (!ok) {
+        // This shouldn't happen since we polled POLLIN, but ZMQ wants us to check
+        // the return value.
+        GR_LOG_WARN(d_logger, "Failed to recv() message.");
+        return false;
+    }
 
     /* Throw away key and get the first message. Avoid blocking if a multi-part
      * message is not sent */
@@ -222,14 +228,18 @@ bool base_source_impl::load_message(bool wait)
         d_socket.getsockopt(ZMQ_RCVMORE, &is_multipart, &more_len);
 
         d_msg.rebuild();
-        if (is_multipart)
+        if (is_multipart) {
 #if USE_NEW_CPPZMQ_SEND_RECV
-            d_socket.recv(d_msg);
+            const bool multi_ok = bool(d_socket.recv(d_msg));
 #else
-            d_socket.recv(&d_msg);
+            const bool multi_ok = d_socket.recv(&d_msg);
 #endif
-        else
+            if (!multi_ok) {
+                GR_LOG_ERROR(d_logger, "Failure to receive multi-part message.");
+            }
+        } else {
             return false;
+        }
     }
     /* Parse header from the first (or only) message of a multi-part message */
     if (d_pass_tags && !more) {
@@ -246,10 +256,8 @@ bool base_source_impl::load_message(bool wait)
 
     /* Each message must contain an integer multiple of data vectors */
     if ((d_msg.size() - d_consumed_bytes) % d_vsize != 0) {
-        throw std::runtime_error(
-            boost::str(boost::format("Incompatible vector sizes: "
-                                     "need a multiple of %1% bytes per message") %
-                       d_vsize));
+        throw std::runtime_error("Incompatible vector sizes: need a multiple of " +
+                                 std::to_string(d_vsize) + " bytes per message");
     }
 
     /* We got one ! */
@@ -258,5 +266,3 @@ bool base_source_impl::load_message(bool wait)
 
 } /* namespace zeromq */
 } /* namespace gr */
-
-// vim: ts=2 sw=2 expandtab

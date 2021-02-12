@@ -59,10 +59,15 @@ int rep_sink_impl::work(int noutput_items,
         /* Get and parse the request */
         zmq::message_t request;
 #if USE_NEW_CPPZMQ_SEND_RECV
-        d_socket.recv(request);
+        bool ok = bool(d_socket.recv(request));
 #else
-        d_socket.recv(&request);
+        bool ok = d_socket.recv(&request);
 #endif
+        if (!ok) {
+            // Should not happen, we've checked POLLIN.
+            GR_LOG_ERROR(d_logger, "Failed to receive message.");
+            break;
+        }
 
         int nitems_send = noutput_items - done;
         if (request.size() >= sizeof(uint32_t)) {

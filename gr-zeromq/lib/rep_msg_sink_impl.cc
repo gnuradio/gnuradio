@@ -89,10 +89,15 @@ void rep_msg_sink_impl::readloop()
                 // receive data request
                 zmq::message_t request;
 #if USE_NEW_CPPZMQ_SEND_RECV
-                d_socket.recv(request);
+                const bool ok = bool(d_socket.recv(request));
 #else
-                d_socket.recv(&request);
+                const bool ok = d_socket.recv(&request);
 #endif
+                if (!ok) {
+                    // Should not happen, we've checked POLLIN.
+                    GR_LOG_ERROR(d_logger, "Failed to receive message.");
+                    break; // Fall back to re-check d_finished
+                }
 
                 int req_output_items = *(static_cast<int*>(request.data()));
                 if (req_output_items != 1)
