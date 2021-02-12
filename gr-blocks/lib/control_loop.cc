@@ -83,9 +83,9 @@ void control_loop::set_beta(float beta)
 void control_loop::set_frequency(float freq)
 {
     if (freq > d_max_freq)
-        d_freq = d_min_freq;
-    else if (freq < d_min_freq)
         d_freq = d_max_freq;
+    else if (freq < d_min_freq)
+        d_freq = d_min_freq;
     else
         d_freq = freq;
 }
