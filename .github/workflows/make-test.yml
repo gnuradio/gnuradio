@@ -6,6 +6,7 @@ on:
   pull_request:
     branches:
       - maint-3.9
+      - werror-39
 jobs:
   check-formatting:
     name: Check C++ Formatting
@@ -45,9 +46,11 @@ jobs:
     - uses: actions/checkout@v2
       name: Checkout Project
     - name: CMake
+      env:
+        CXXFLAGS: -Werror
       run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
     - name: Make
-      run: 'cd /build && make -j2'
+      run: 'cd /build && make -j2 -k'
     - name: Make Test
       run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_header_payload_demux|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
   ubuntu-18_04:
@@ -63,9 +66,11 @@ jobs:
     - uses: actions/checkout@v2
       name: Checkout Project
     - name: CMake
+      env:
+        CXXFLAGS: -Werror
       run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
     - name: Make
-      run: 'cd /build && make -j2'
+      run: 'cd /build && make -j2 -k'
     - name: Make Test
       run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_header_payload_demux|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
   fedora33:
