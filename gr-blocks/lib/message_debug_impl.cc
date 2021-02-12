@@ -52,6 +52,11 @@ void message_debug_impl::store(pmt::pmt_t msg)
 
 void message_debug_impl::print_pdu(pmt::pmt_t pdu)
 {
+    if (pmt::is_null(pdu) || !pmt::is_pair(pdu)) {
+        GR_LOG_WARN(d_logger, "Non PDU type message received. Dropping.");
+        return;
+    }
+
     pmt::pmt_t meta = pmt::car(pdu);
     pmt::pmt_t vector = pmt::cdr(pdu);
     std::cout << "* MESSAGE DEBUG PRINT PDU VERBOSE *\n";
