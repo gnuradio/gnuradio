@@ -31,7 +31,8 @@ def make_tag(key, value, offset):
 class HeaderToMessageBlock(gr.sync_block):
     """
     Helps with testing the HPD. Receives a header, stores it, posts
-    a predetermined message.
+    a predetermined message. forecast() is not currently working in
+    Python, so use a local buffer to accumulate header data.
     """
 
     def __init__(self, itemsize, header_len, messages):
@@ -45,13 +46,16 @@ class HeaderToMessageBlock(gr.sync_block):
         self.message_port_register_out(pmt.intern('header_data'))
         self.messages = messages
         self.msg_count = 0
+        self.buf = []
 
     def work(self, input_items, output_items):
         """Where the magic happens."""
-        for _ in range(len(input_items[0]) // self.header_len):
+        self.buf.extend(input_items[0])
+        for _ in range(len(self.buf) // self.header_len):
             msg = self.messages[self.msg_count] or False
             self.message_port_pub(pmt.intern('header_data'), pmt.to_pmt(msg))
             self.msg_count += 1
+            del self.buf[:self.header_len]
         output_items[0][:] = input_items[0][:]
         return len(input_items[0])
 
@@ -426,8 +430,8 @@ class qa_header_payload_demux (gr_unittest.TestCase):
             time.sleep(.2)
         self.tb.stop()
         self.tb.wait()
-        self.assertEqual(header_sink.data(), header)
-        self.assertEqual(payload_sink.data(), payload * n_symbols)
+        self.assertEqual(header_sink.data(), list(header))
+        self.assertEqual(payload_sink.data(), list(payload * n_symbols))
         ptags_header = []
         for tag in header_sink.tags():
             ptag = gr.tag_to_python(tag)
