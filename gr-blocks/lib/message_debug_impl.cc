@@ -60,7 +60,8 @@ void message_debug_impl::store(pmt::pmt_t msg)
 
 void message_debug_impl::print_pdu(pmt::pmt_t pdu)
 {
-    if (pmt::is_null(pdu) || !pmt::is_pair(pdu)) {
+    if (!pmt::is_pdu(pdu)) {
+        GR_LOG_WARN(d_logger, "Non PDU type message received. Dropping.");
         return;
     }
 
