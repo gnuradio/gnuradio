@@ -27,7 +27,7 @@ def design_win_lpf(fs, gain, wintype, mainwin):
         try:
             taps = filter.firdes.low_pass_2(gain, fs, pb, tb,
                                             atten, wintype)
-        except RuntimeError as e:
+        except (RuntimeError, IndexError)  as e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
                                                   e.args[0], QtGui.QMessageBox.Ok)
             return ([], [], ret)
