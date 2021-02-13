@@ -909,15 +909,15 @@ class gr_plot_filter(QtGui.QMainWindow):
             if iirbtype == "Low Pass" or iirbtype == "High Pass":
                 besselparams.append(float(self.gui.iirbesselcritEdit1.text()))
             else:
-                besselparams.append(getfloat(self.gui.iirbesselcritEdit1.text()))
-                besselparams.append(getfloat(self.gui.iirbesselcritEdit2.text()))
+                besselparams.append(float(self.gui.iirbesselcritEdit1.text()))
+                besselparams.append(float(self.gui.iirbesselcritEdit2.text()))
 
             order = int(self.gui.besselordEdit.text())
 
             try:
                 (self.b, self.a) = signal.iirfilter(order, besselparams, btype=iirbtype.replace(' ', '').lower(),
                                                     analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
-            except StandardError as e:
+            except Exception as e:
                 reply = QtGui.QMessageBox.information(self, "IIR design error", e.args[0],
                                                       QtGui.QMessageBox.Ok)
 
@@ -929,7 +929,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             try:
                 (self.b, self.a) = signal.iirdesign(params[0], params[1], params[2], params[3],
                                                     analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
-            except StandardError as e:
+            except Exception as e:
                 reply = QtGui.QMessageBox.information(self, "IIR design error", e.args[0],
                                                       QtGui.QMessageBox.Ok)
 
@@ -2180,7 +2180,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.iirfilterTypeComboBox.setCurrentIndex(iirft[params["filttype"]])
             self.gui.iirfilterBandComboBox.setCurrentIndex(bandpos[params["bandtype"]])
             if params["filttype"] == "bessel":
-                critfreq = map(float, params["critfreq"][1:-1].split(','))
+                critfreq = [float(x) for x in params["critfreq"][1:-1].split(',')]
                 self.gui.besselordEdit.setText(str(params["filtord"]))
                 self.gui.iirbesselcritEdit1.setText(str(critfreq[0]))
                 self.gui.iirbesselcritEdit2.setText(str(critfreq[1]))
