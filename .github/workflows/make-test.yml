@@ -49,7 +49,7 @@ jobs:
     - name: Make
       run: 'cd /build && make -j2'
     - name: Make Test
-      run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_header_payload_demux|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
+      run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
   fedora33:
     name: Fedora 33
     needs: check-formatting
@@ -67,7 +67,7 @@ jobs:
     - name: Make
       run: 'cd /build && make -j2'
     - name: Make Test
-      run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_header_payload_demux|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
+      run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
   centos8_3:
     name: Centos 8.3
     needs: check-formatting
@@ -85,7 +85,7 @@ jobs:
     - name: Make
       run: 'cd /build && make -j2'
     - name: Make Test
-      run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_header_payload_demux|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
+      run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
   debian10:
     name: Debian 10
     needs: check-formatting
@@ -103,4 +103,4 @@ jobs:
     - name: Make
       run: 'cd /build && make -j2'
     - name: Make Test
-      run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_header_payload_demux|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
+      run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
