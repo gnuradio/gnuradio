@@ -36,6 +36,7 @@ void bind_constellation_receiver_cb(py::module& m)
     py::class_<constellation_receiver_cb,
                gr::block,
                gr::basic_block,
+               gr::blocks::control_loop,
                std::shared_ptr<constellation_receiver_cb>>(
         m, "constellation_receiver_cb", D(constellation_receiver_cb))
 

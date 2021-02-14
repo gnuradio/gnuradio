@@ -121,6 +121,7 @@ PYBIND11_MODULE(digital_python, m)
 
     // Allow access to base block methods
     py::module::import("gnuradio.gr");
+    py::module::import("gnuradio.blocks");
 
     bind_adaptive_algorithm(m);
     bind_adaptive_algorithm_cma(m);
