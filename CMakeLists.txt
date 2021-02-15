@@ -68,7 +68,8 @@ set(CLANG_MIN_VERSION "11.0.0")       ## debian bullseye, Fedora 33
 set(APPLECLANG_MIN_VERSION "1100")    ## same as clang 11.0.0, in Xcode11
 set(MSVC_MIN_VERSION "1914")          ## VS2017 15.7, for full-ish C++17 support
 set(VOLK_MIN_VERSION "2.4.1")         ## first version with CPU features
-set(PYBIND11_MIN_VERSION "2.4") # pybind11 sets versions like 2.4.dev4, which compares < 2.4.3
+set(PYBIND11_MIN_VERSION "2.4")       # pybind11 sets versions like 2.4.dev4, which compares < 2.4.3
+set(GR_THRIFT_MIN_VERSION "0.13")
 
 # Enable generation of compile_commands.json for code completion engines
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
