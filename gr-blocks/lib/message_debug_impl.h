@@ -30,7 +30,8 @@ private:
      * This port receives messages from the scheduler's message
      * handling mechanism and prints it to stdout. This message
      * handler function is only meant to be used by the scheduler to
-     * handle messages posted to port 'print'.
+     * handle messages posted to port 'print'. If the message is a
+     * PDU, special formatting will be applied.
      *
      * \param msg A pmt message passed from the scheduler's message handling.
      */
@@ -38,6 +39,8 @@ private:
 
     /*!
      * \brief PDU formatted messages received in this port are printed to stdout.
+     *
+     * DEPRECATED as of 3.10 use print() for all printing!
      *
      * This port receives messages from the scheduler's message
      * handling mechanism and prints it to stdout. This message
