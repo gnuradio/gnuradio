@@ -49,13 +49,6 @@ void bind_sync_decimator(py::module& m)
              D(sync_decimator, set_decimation))
 
 
-        .def("forecast",
-             &sync_decimator::forecast,
-             py::arg("noutput_items"),
-             py::arg("ninput_items_required"),
-             D(sync_decimator, forecast))
-
-
         .def("general_work",
              &sync_decimator::general_work,
              py::arg("noutput_items"),
