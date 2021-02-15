@@ -63,12 +63,5 @@ void bind_encoder(py::module& m)
              py::arg("noutput"),
              D(encoder, fixed_rate_noutput_to_ninput))
 
-
-        .def("forecast",
-             &encoder::forecast,
-             py::arg("noutput_items"),
-             py::arg("ninput_items_required"),
-             D(encoder, forecast))
-
         ;
 }

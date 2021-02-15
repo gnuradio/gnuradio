@@ -52,13 +52,6 @@ void bind_sync_interpolator(py::module& m)
              D(sync_interpolator, set_interpolation))
 
 
-        .def("forecast",
-             &sync_interpolator::forecast,
-             py::arg("noutput_items"),
-             py::arg("ninput_items_required"),
-             D(sync_interpolator, forecast))
-
-
         .def("general_work",
              &sync_interpolator::general_work,
              py::arg("noutput_items"),

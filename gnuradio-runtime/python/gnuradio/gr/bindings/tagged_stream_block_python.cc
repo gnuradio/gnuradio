@@ -40,13 +40,6 @@ void bind_tagged_stream_block(py::module& m)
         m, "tagged_stream_block", D(tagged_stream_block))
 
 
-        .def("forecast",
-             &tagged_stream_block::forecast,
-             py::arg("noutput_items"),
-             py::arg("ninput_items_required"),
-             D(tagged_stream_block, forecast))
-
-
         .def("check_topology",
              &tagged_stream_block::check_topology,
              py::arg("ninputs"),
