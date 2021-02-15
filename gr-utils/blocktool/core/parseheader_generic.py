@@ -59,7 +59,7 @@ class GenericHeaderParser(BlockTool):
         if (include_paths):
             self.include_paths = [p.strip() for p in include_paths.split(',')]
         if not os.path.isfile(file_path):
-            raise BlockToolException('file does not exist')
+            raise BlockToolException('file', file_path, 'does not exist')
         file_path = os.path.abspath(file_path)
         self.target_file = file_path
 
