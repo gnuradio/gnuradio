@@ -60,8 +60,10 @@ class qa_zeromq_req_msg_source(gr_unittest.TestCase):
         """Test receiving of valid PMT messages"""
         msg = pmt.to_pmt('test_valid_pmt')
         self.send_messages([msg])
-
-        time.sleep(0.1)
+        for _ in range(10):
+            if self.message_debug.num_messages() > 0:
+                break
+            time.sleep(0.2)
         self.assertEqual(1, self.message_debug.num_messages())
         self.assertTrue(pmt.equal(msg, self.message_debug.get_message(0)))
 
