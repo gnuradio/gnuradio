@@ -138,7 +138,7 @@ OPTION(ENABLE_CTRLPORT_THRIFT "Enable ControlPort Thrift support" ON)
 
 if(ENABLE_CTRLPORT_THRIFT)
 # Look if Thrift is installed and use it as a ControlPort backend.
-FIND_PACKAGE(THRIFT)
+FIND_PACKAGE(THRIFT ${GR_THRIFT_MIN_VERSION})
 
 if(THRIFT_FOUND)
 list(APPEND EXTRA_DEPS "THRIFT")
