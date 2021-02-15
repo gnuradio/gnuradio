@@ -138,27 +138,13 @@ void usrp_source_impl::set_gain(double gain, const std::string& name, size_t cha
 
 void usrp_source_impl::set_rx_agc(const bool enable, size_t chan)
 {
-#if UHD_VERSION >= 30803
     chan = _stream_args.channels[chan];
     return _dev->set_rx_agc(enable, chan);
-#else
-    throw std::runtime_error("not implemented in this version");
-#endif
 }
 
 void usrp_source_impl::set_normalized_gain(double norm_gain, size_t chan)
 {
-#ifdef UHD_USRP_MULTI_USRP_NORMALIZED_GAIN
     _dev->set_normalized_rx_gain(norm_gain, chan);
-#else
-    if (norm_gain > 1.0 || norm_gain < 0.0) {
-        throw std::runtime_error("Normalized gain out of range, must be in [0, 1].");
-    }
-    ::uhd::gain_range_t gain_range = get_gain_range(chan);
-    double abs_gain =
-        (norm_gain * (gain_range.stop() - gain_range.start())) + gain_range.start();
-    set_gain(abs_gain, chan);
-#endif
 }
 
 double usrp_source_impl::get_gain(size_t chan)
@@ -175,19 +161,7 @@ double usrp_source_impl::get_gain(const std::string& name, size_t chan)
 
 double usrp_source_impl::get_normalized_gain(size_t chan)
 {
-#ifdef UHD_USRP_MULTI_USRP_NORMALIZED_GAIN
     return _dev->get_normalized_rx_gain(chan);
-#else
-    ::uhd::gain_range_t gain_range = get_gain_range(chan);
-    double norm_gain =
-        (get_gain(chan) - gain_range.start()) / (gain_range.stop() - gain_range.start());
-    // Avoid rounding errors:
-    if (norm_gain > 1.0)
-        return 1.0;
-    if (norm_gain < 0.0)
-        return 0.0;
-    return norm_gain;
-#endif
 }
 
 std::vector<std::string> usrp_source_impl::get_gain_names(size_t chan)
@@ -414,11 +388,7 @@ void usrp_source_impl::set_dc_offset(const std::complex<double>& offset, size_t 
 void usrp_source_impl::set_auto_iq_balance(const bool enable, size_t chan)
 {
     chan = _stream_args.channels[chan];
-#ifdef UHD_USRP_MULTI_USRP_FRONTEND_IQ_AUTO_API
     return _dev->set_rx_iq_balance(enable, chan);
-#else
-    throw std::runtime_error("not implemented in this version");
-#endif
 }
 
 
@@ -465,14 +435,7 @@ void usrp_source_impl::set_start_time(const ::uhd::time_spec_t& time)
 
 void usrp_source_impl::issue_stream_cmd(const ::uhd::stream_cmd_t& cmd)
 {
-// This is a new define in UHD 3.6 which is used to separate 3.6 and pre 3.6
-#ifdef INCLUDED_UHD_UTILS_MSG_TASK_HPP
     _rx_stream->issue_stream_cmd(cmd);
-#else
-    for (size_t i = 0; i < _stream_args.channels.size(); i++) {
-        _dev->issue_stream_cmd(cmd, _stream_args.channels[i]);
-    }
-#endif
     _tag_now = true;
 }
 

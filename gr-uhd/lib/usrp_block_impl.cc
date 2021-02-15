@@ -371,50 +371,30 @@ void usrp_block_impl::set_clock_rate(double rate, size_t mboard)
 
 std::vector<std::string> usrp_block_impl::get_gpio_banks(const size_t mboard)
 {
-#ifdef UHD_USRP_MULTI_USRP_GPIO_API
     return _dev->get_gpio_banks(mboard);
-#else
-    throw std::runtime_error("not implemented in this version");
-#endif
 }
 
 uint32_t usrp_block_impl::get_gpio_attr(const std::string& bank,
                                         const std::string& attr,
                                         const size_t mboard)
 {
-#ifdef UHD_USRP_MULTI_USRP_GPIO_API
-    return _dev->get_gpio_attr(bank, attr, mboard);
-#else
     throw std::runtime_error("not implemented in this version");
-#endif
 }
 
 std::vector<std::string> usrp_block_impl::get_filter_names(const std::string& search_mask)
 {
-#ifdef UHD_USRP_MULTI_FILTER_API
     return _dev->get_filter_names(search_mask);
-#else
-    throw std::runtime_error("not implemented in this version");
-#endif
 }
 
 ::uhd::filter_info_base::sptr usrp_block_impl::get_filter(const std::string& path)
 {
-#ifdef UHD_USRP_MULTI_FILTER_API
     return _dev->get_filter(path);
-#else
-    throw std::runtime_error("not implemented in this version");
-#endif
 }
 
 void usrp_block_impl::set_filter(const std::string& path,
                                  ::uhd::filter_info_base::sptr filter)
 {
-#ifdef UHD_USRP_MULTI_FILTER_API
     _dev->set_filter(path, filter);
-#else
-    throw std::runtime_error("not implemented in this version");
-#endif
 }
 
 void usrp_block_impl::set_time_now(const ::uhd::time_spec_t& time_spec, size_t mboard)
@@ -455,11 +435,7 @@ void usrp_block_impl::set_gpio_attr(const std::string& bank,
                                     const uint32_t mask,
                                     const size_t mboard)
 {
-#ifdef UHD_USRP_MULTI_USRP_GPIO_API
     return _dev->set_gpio_attr(bank, attr, value, mask, mboard);
-#else
-    throw std::runtime_error("not implemented in this version");
-#endif
 }
 
 ::uhd::usrp::multi_usrp::sptr usrp_block_impl::get_device(void) { return _dev; }
