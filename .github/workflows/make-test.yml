@@ -45,9 +45,11 @@ jobs:
     - uses: actions/checkout@v2
       name: Checkout Project
     - name: CMake
+      env:
+        CXXFLAGS: -Werror
       run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
     - name: Make
-      run: 'cd /build && make -j2'
+      run: 'cd /build && make -j2 -k'
     - name: Make Test
       run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
   fedora33:
@@ -81,9 +83,11 @@ jobs:
     - uses: actions/checkout@v2
       name: Checkout Project
     - name: CMake
+      env:
+        CXXFLAGS: -Werror
       run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF -DBoost_unit_test_framework_FOUND=ON'
     - name: Make
-      run: 'cd /build && make -j2'
+      run: 'cd /build && make -j2 -k'
     - name: Make Test
       run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
   debian10:
@@ -99,8 +103,10 @@ jobs:
     - uses: actions/checkout@v2
       name: Checkout Project
     - name: CMake
+      env:
+        CXXFLAGS: -Werror
       run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF -DBoost_unit_test_framework_FOUND=ON'
     - name: Make
-      run: 'cd /build && make -j2'
+      run: 'cd /build && make -j2 -k'
     - name: Make Test
       run: 'cd /build && ctest --output-on-failure -E "qa_uhd|qa_uncaught_exception|qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_file_taps_loader|qa_qtgui"'
