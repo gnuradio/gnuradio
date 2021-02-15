@@ -113,7 +113,7 @@ void req_msg_source_impl::readloop()
             if (!ok) {
                 // Should not happen, we've checked POLLIN.
                 GR_LOG_ERROR(d_logger, "Failed to receive message.");
-                std::this_thread::sleep_for(100ms);
+                std::this_thread::sleep_for(100us);
                 continue;
             }
 
@@ -127,7 +127,7 @@ void req_msg_source_impl::readloop()
             }
 
         } else {
-            std::this_thread::sleep_for(100ms);
+            std::this_thread::sleep_for(100us);
         }
     }
 }
