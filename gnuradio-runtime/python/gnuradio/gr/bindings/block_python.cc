@@ -66,13 +66,6 @@ void bind_block(py::module& m)
         .def("fixed_rate", &block::fixed_rate, D(block, fixed_rate))
 
 
-        .def("forecast",
-             &block::forecast,
-             py::arg("noutput_items"),
-             py::arg("ninput_items_required"),
-             D(block, forecast))
-
-
         .def("general_work",
              &block::general_work,
              py::arg("noutput_items"),

@@ -45,13 +45,6 @@ void bind_sync_block(py::module& m)
              D(sync_block, work))
 
 
-        .def("forecast",
-             &sync_block::forecast,
-             py::arg("noutput_items"),
-             py::arg("ninput_items_required"),
-             D(sync_block, forecast))
-
-
         .def("general_work",
              &sync_block::general_work,
              py::arg("noutput_items"),
