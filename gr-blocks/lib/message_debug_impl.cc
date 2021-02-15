@@ -46,34 +46,13 @@ void message_debug_impl::print(pmt::pmt_t msg)
 {
     std::stringstream sout;
 
-    sout << "******* MESSAGE DEBUG PRINT ********" << std::endl
-         << pmt::write_string(msg) << std::endl
-         << "************************************" << std::endl;
-    std::cout << sout.str();
-}
+    if (pmt::is_pdu(msg)) {
+        pmt::pmt_t meta = pmt::car(msg);
+        pmt::pmt_t vector = pmt::cdr(msg);
 
-void message_debug_impl::store(pmt::pmt_t msg)
-{
-    gr::thread::scoped_lock guard(d_mutex);
-    d_messages.push_back(msg);
-}
+        sout << "***** VERBOSE PDU DEBUG PRINT ******" << std::endl
+             << pmt::write_string(meta) << std::endl;
 
-void message_debug_impl::print_pdu(pmt::pmt_t pdu)
-{
-    if (!pmt::is_pdu(pdu)) {
-        GR_LOG_WARN(d_logger, "Non PDU type message received. Dropping.");
-        return;
-    }
-
-    std::stringstream sout;
-
-    pmt::pmt_t meta = pmt::car(pdu);
-    pmt::pmt_t vector = pmt::cdr(pdu);
-
-    sout << "***** VERBOSE PDU DEBUG PRINT ******" << std::endl
-         << pmt::write_string(meta) << std::endl;
-
-    if (pmt::is_uniform_vector(vector)) {
         size_t len = pmt::blob_length(vector);
         if (d_en_uvec) {
             sout << "pdu length = " << len << " bytes" << std::endl
@@ -93,12 +72,34 @@ void message_debug_impl::print_pdu(pmt::pmt_t pdu)
         } else {
             sout << "pdu length = " << len << " bytes (printing disabled)" << std::endl;
         }
+
     } else {
-        sout << "Message CDR is not a uniform vector..." << std::endl;
+        sout << "******* MESSAGE DEBUG PRINT ********" << std::endl
+             << pmt::write_string(msg) << std::endl;
     }
 
     sout << "************************************" << std::endl;
     std::cout << sout.str();
+}
+
+void message_debug_impl::store(pmt::pmt_t msg)
+{
+    gr::thread::scoped_lock guard(d_mutex);
+    d_messages.push_back(msg);
+}
+
+// ! DEPRECATED as of 3.10 use print() for all printing!
+void message_debug_impl::print_pdu(pmt::pmt_t pdu)
+{
+    if (pmt::is_pdu(pdu)) {
+        GR_LOG_INFO(d_logger,
+                    "The `print_pdu` port is deprecated and will be removed; forwarding "
+                    "to `print`.");
+        this->print(pdu);
+    } else {
+        GR_LOG_INFO(d_logger, "The `print_pdu` port is deprecated and will be removed.");
+        GR_LOG_WARN(d_logger, "Non PDU type message received. Dropping.");
+    }
 }
 
 int message_debug_impl::num_messages() { return (int)d_messages.size(); }
