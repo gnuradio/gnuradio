@@ -7,7 +7,7 @@
  *
  */
 #include "pydoc_macros.h"
-#define D(...) DOC(gr,soapy, __VA_ARGS__ )
+#define D(...) DOC(gr, soapy, __VA_ARGS__)
 /*
   This file contains placeholders for docstrings for the Python bindings.
   Do not edit! These were automatically extracted during the binding process
@@ -15,61 +15,58 @@
  */
 
 
- 
- static const char *__doc_gr_soapy_source = R"doc()doc";
+static const char* __doc_gr_soapy_source = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_source_0 = R"doc()doc";
+static const char* __doc_gr_soapy_source_source_0 = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_source_1 = R"doc()doc";
+static const char* __doc_gr_soapy_source_source_1 = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_make = R"doc()doc";
+static const char* __doc_gr_soapy_source_make = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_get_antennas = R"doc()doc";
+static const char* __doc_gr_soapy_source_get_antennas = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_set_gain_0 = R"doc()doc";
+static const char* __doc_gr_soapy_source_set_gain_0 = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_set_gain_1 = R"doc()doc";
+static const char* __doc_gr_soapy_source_set_gain_1 = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_set_frequency_0 = R"doc()doc";
+static const char* __doc_gr_soapy_source_set_frequency_0 = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_set_frequency_1 = R"doc()doc";
+static const char* __doc_gr_soapy_source_set_frequency_1 = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_set_agc = R"doc()doc";
+static const char* __doc_gr_soapy_source_set_agc = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_set_sample_rate = R"doc()doc";
+static const char* __doc_gr_soapy_source_set_sample_rate = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_set_bandwidth = R"doc()doc";
+static const char* __doc_gr_soapy_source_set_bandwidth = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_set_antenna = R"doc()doc";
+static const char* __doc_gr_soapy_source_set_antenna = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_set_dc_offset = R"doc()doc";
+static const char* __doc_gr_soapy_source_set_dc_offset = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_set_dc_removal = R"doc()doc";
+static const char* __doc_gr_soapy_source_set_dc_removal = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_set_frequency_correction = R"doc()doc";
+static const char* __doc_gr_soapy_source_set_frequency_correction = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_set_iq_balance = R"doc()doc";
+static const char* __doc_gr_soapy_source_set_iq_balance = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_set_master_clock_rate = R"doc()doc";
+static const char* __doc_gr_soapy_source_set_master_clock_rate = R"doc()doc";
 
 
- static const char *__doc_gr_soapy_source_set_clock_source = R"doc()doc";
-
-  
+static const char* __doc_gr_soapy_source_set_clock_source = R"doc()doc";

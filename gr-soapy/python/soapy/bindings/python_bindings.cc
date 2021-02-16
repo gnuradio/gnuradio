@@ -14,17 +14,8 @@
 
 namespace py = pybind11;
 
-// Headers for binding functions
-/**************************************/
-/* The following comment block is used for
-/* gr_modtool to insert function prototypes
-/* Please do not delete
-/**************************************/
-// BINDING_FUNCTION_PROTOTYPES(
-    void bind_source(py::module& m);
-    void bind_sink(py::module& m);
-// ) END BINDING_FUNCTION_PROTOTYPES
-
+void bind_source(py::module& m);
+void bind_sink(py::module& m);
 
 // We need this hack because import_array() returns NULL
 // for newer Python versions.
@@ -45,13 +36,6 @@ PYBIND11_MODULE(soapy_python, m)
     // Allow access to base block methods
     py::module::import("gnuradio.gr");
 
-    /**************************************/
-    /* The following comment block is used for
-    /* gr_modtool to insert binding function calls
-    /* Please do not delete
-    /**************************************/
-    // BINDING_FUNCTION_CALLS(
     bind_source(m);
     bind_sink(m);
-    // ) END BINDING_FUNCTION_CALLS
 }
