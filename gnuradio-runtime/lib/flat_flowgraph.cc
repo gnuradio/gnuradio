@@ -27,7 +27,8 @@ namespace gr {
 // 32Kbyte buffer size between blocks
 #define GR_FIXED_BUFFER_SIZE (32 * (1L << 10))
 
-static const unsigned int s_fixed_buffer_size = GR_FIXED_BUFFER_SIZE;
+static const unsigned int s_fixed_buffer_size =
+    prefs::singleton()->get_long("DEFAULT", "buffer_size", GR_FIXED_BUFFER_SIZE);
 
 flat_flowgraph_sptr make_flat_flowgraph()
 {
