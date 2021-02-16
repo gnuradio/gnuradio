@@ -10,7 +10,6 @@
 
 
 import numpy
-from numpy.fft import fftpack
 
 try:
     from pylab import Button, connect, draw, figure, figtext, get_current_fig_manager, show, rcParams, ceil
@@ -85,7 +84,7 @@ class plot_fft_base(object):
 
     def dofft(self, iq):
         N = len(iq)
-        iq_fft = numpy.fft.fftshift(fftpack.fft(iq))       # fft and shift axis
+        iq_fft = numpy.fft.fftshift(numpy.fft.fft(iq))       # fft and shift axis
         iq_fft = 20*numpy.log10(abs((iq_fft+1e-15) / N)) # convert to decibels, adjust power
         # adding 1e-15 (-300 dB) to protect against value errors if an item in iq_fft is 0
         return iq_fft

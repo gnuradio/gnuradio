@@ -15,7 +15,6 @@ from gnuradio.ctrlport.GNURadioControlPortClient import (
     GNURadioControlPortClient, TTransportException,
 )
 import numpy
-from numpy.fft import fftpack
 
 """
 If a host is running the ATSC receiver chain with ControlPort
@@ -104,7 +103,7 @@ class atsc_ctrlport_monitor(object):
 
         fs = 6.25e6
         freq = numpy.linspace(-fs / 2, fs / 2, 10000)
-        H = numpy.fft.fftshift(fftpack.fft(eqdata.value, 10000))
+        H = numpy.fft.fftshift(numpy.fft.fft(eqdata.value, 10000))
         HdB = 20.0*numpy.log10(abs(H))
         psd.set_ydata(HdB)
         psd.set_xdata(freq)
