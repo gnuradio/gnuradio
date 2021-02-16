@@ -9,7 +9,9 @@
 ########################################################################
 # Setup library
 ########################################################################
-include(GrPlatform) #define LIB_SUFFIX
+include(GrPlatform)
+
+#define LIB_SUFFIX
 
 list(APPEND soapy_sources
     source_impl.cc
@@ -24,17 +26,12 @@ endif(NOT soapy_sources)
 
 add_library(gnuradio-soapy SHARED ${soapy_sources})
 
-target_link_libraries(gnuradio-soapy 
-    gnuradio::gnuradio-runtime 
-    gnuradio::gnuradio-blocks
-    ${Boost_LIBRARIES} 
-    ${SoapySDR_LIBRARIES}
+target_link_libraries(gnuradio-soapy
+    PUBLIC gnuradio-runtime
+    PUBLIC ${Boost_LIBRARIES} 
+    PUBLIC ${SoapySDR_LIBRARIES}
 )
-target_include_directories(gnuradio-soapy
-    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/>
-    PUBLIC $<INSTALL_INTERFACE:include>
-  )
+
 set_target_properties(gnuradio-soapy PROPERTIES DEFINE_SYMBOL "gnuradio_soapy_EXPORTS")
 
 if(APPLE)
@@ -43,11 +40,25 @@ if(APPLE)
     )
 endif(APPLE)
 
+#Add Windows DLL resource file if using MSVC
+if (MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-soapy.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-soapy.rc
+    @ONLY)
+
+    target_sources(gnuradio-soapy PRIVATE
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-soapy.rc
+    )
+endif (MSVC)
+
 ########################################################################
 # Install built library files
 ########################################################################
 include(GrMiscUtils)
-GR_LIBRARY_FOO(gnuradio-soapy ${SoapySDR_LIBRARIES})
+GR_LIBRARY_FOO(gnuradio-soapy)
 
 ########################################################################
 # Print summary
@@ -63,8 +74,7 @@ include(GrTest)
 # If your unit tests require special include paths, add them here
 #include_directories()
 # List all files that contain Boost.UTF unit tests here
-list(APPEND test_soapy_sources
-)
+list(APPEND test_soapy_sources)
 
 # Anything we need to link to for the unit tests go here
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-soapy ${Boost_LIBRARIES})

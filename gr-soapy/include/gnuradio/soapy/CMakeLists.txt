@@ -9,8 +9,8 @@
 ########################################################################
 # Install public header files
 ########################################################################
-install(FILES
-    api.h
-    source.h
-    sink.h DESTINATION include/soapy
+SET(gr_soapy_install_files api.h source.h sink.h)
+
+install(FILES ${gr_soapy_install_files}
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/soapy
 )

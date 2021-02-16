@@ -25,13 +25,10 @@ endif()
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-soapy" ENABLE_GR_SOAPY
     Boost_FOUND
-    SOAPYSDR_FOUND
+    SoapySDR_FOUND
     ENABLE_GNURADIO_RUNTIME
-    ENABLE_GR_FILTER
-    ENABLE_GR_BLOCKS
-    ENABLE_GR_ANALOG
 )
-SET(GR_PKG_UHD_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/uhd)
+SET(GR_PKG_SOAPY_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/soapy)
 
 ########################################################################
 # Begin conditional configuration
