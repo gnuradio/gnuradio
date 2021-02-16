@@ -1,0 +1,14 @@
+This is the GNU Radio Soapy package. It is the interface to the Soapy
+library to connect to and send and receive data between the Ettus
+Research, LLC product line. To use the Soapy blocks, the Python
+namespaces is in gnuradio.soapy, which would be normally imported
+as:
+
+    from gnuradio import soapy
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using:
+
+    help(soapy)
+
