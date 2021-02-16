@@ -24,8 +24,6 @@ except ImportError:
     print("Error: could not from matplotlib import pyplot (http://matplotlib.sourceforge.net/)")
     sys.exit(1)
 
-from numpy.fft import fftpack
-
 class example_timing(gr.top_block):
     def __init__(self, N, sps, rolloff, ntaps, bw, noise,
                  foffset, toffset, poffset, mode=0):
@@ -179,7 +177,7 @@ def main():
         s32.set_title("FFT of Differential Filters")
 
         for i,d in enumerate(diff_taps):
-            D = 20.0*numpy.log10(1e-20+abs(numpy.fft.fftshift(fftpack.fft(d, 10000))))
+            D = 20.0*numpy.log10(1e-20+abs(numpy.fft.fftshift(numpy.fft.fft(d, 10000))))
             s31.plot(t[i::nfilts].real, d, "-o")
             s32.plot(D)
         s32.set_ylim([-120, 10])
@@ -226,4 +224,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-
