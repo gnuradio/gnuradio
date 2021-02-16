@@ -9,6 +9,8 @@ verbose = False
 # the queue by popping messages from the front.
 max_messages = 8192
 
+# Block output buffer size in bytes.
+#buffer_size = 32768
 
 [LOG]
 # Levels can be (case insensitive):
