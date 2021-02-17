@@ -6,7 +6,10 @@ on:
   pull_request:
     branches:
       - master
+      - gha/linux-matrix
 jobs:
+  # We start with checking C++ formatting. No one gets free CPU cycles if they
+  # can't use clang-format.
   check-formatting:
     name: Check C++ Formatting
     runs-on: ubuntu-20.04
@@ -17,6 +20,7 @@ jobs:
         source: '.'
         exclude: './volk'
         extensions: 'h,hpp,cpp,cc,cc.in'
+  # Doxygen gets built separately. It has a lot of output and its own weirdness.
   doxygen:
     name: Doxygen
     runs-on: ubuntu-20.04 # This can run on whatever
@@ -31,13 +35,38 @@ jobs:
       run: 'cd /build && cmake ${GITHUB_WORKSPACE}'
     - name: Make Docs
       run: 'cd /build && make doxygen_target'
+  linux-docker:
   # All of these shall depend on the formatting check (needs: check-formatting)
-  ubuntu-20_04:
-    name: Ubuntu 20.04
     needs: check-formatting
     runs-on: ubuntu-20.04
+    # The GH default is 360 minutes (it's also the max as of Feb-2021). However
+    # we should fail sooner. The only reason to exceed this time is if a test
+    # hangs.
+    timeout-minutes: 120
+    strategy:
+      # Enabling fail-fast would kill all Dockers if one of them fails. We want
+      # maximum output.
+      fail-fast: false
+      matrix:
+        # For every distro we want to test here, add one key 'distro' with a
+        # descriptive name, and one key 'containerid' with the name of the
+        # container (i.e., what you want to docker-pull)
+        include:
+          - distro: 'Ubuntu 20.04'
+            containerid: 'gnuradio/ci-ubuntu-20.04-3.9:0.3'
+            cxxflags: -Werror
+          - distro: 'Fedora 33'
+            containerid: 'gnuradio/ci-fedora-33-3.9:1.0'
+            cxxflags: ''
+          - distro: 'CentOS 8.3'
+            containerid: 'gnuradio/ci-centos-8.3-3.9:1.0'
+            cxxflags: -Werror
+          - distro: 'Debian 10'
+            containerid: 'gnuradio/ci-debian-10-3.9:1.0'
+            cxxflags: -Werror
+    name: ${{ matrix.distro }}
     container:
-      image: 'gnuradio/ci-ubuntu-20.04-3.9:0.3'
+      image: ${{ matrix.containerid }}
       volumes:
         - build_data:/build
       options: --cpus 2
@@ -46,65 +75,7 @@ jobs:
       name: Checkout Project
     - name: CMake
       env:
-        CXXFLAGS: -Werror
-      run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
-    - name: Make
-      run: 'cd /build && make -j2 -k'
-    - name: Make Test
-      run: 'cd /build && ctest --output-on-failure -E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
-  fedora33:
-    name: Fedora 33
-    needs: check-formatting
-    runs-on: ubuntu-20.04 # This can run on whatever
-    container:
-      image: 'gnuradio/ci-fedora-33-3.9:1.0'
-      volumes:
-        - build_data:/build
-      options: --cpus 2
-    steps:
-    - uses: actions/checkout@v2
-      name: Checkout Project
-    - name: CMake
-      run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
-    - name: Make
-      run: 'cd /build && make -j2'
-    - name: Make Test
-      run: 'cd /build && ctest --output-on-failure -E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
-  centos8_3:
-    name: Centos 8.3
-    needs: check-formatting
-    runs-on: ubuntu-20.04 # This can run on whatever
-    container:
-      image: 'gnuradio/ci-centos-8.3-3.9:1.0'
-      volumes:
-        - build_data:/build
-      options: --cpus 2
-    steps:
-    - uses: actions/checkout@v2
-      name: Checkout Project
-    - name: CMake
-      env:
-        CXXFLAGS: -Werror
-      run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF -DBoost_unit_test_framework_FOUND=ON'
-    - name: Make
-      run: 'cd /build && make -j2 -k'
-    - name: Make Test
-      run: 'cd /build && ctest --output-on-failure -E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
-  debian10:
-    name: Debian 10
-    needs: check-formatting
-    runs-on: ubuntu-20.04 # This can run on whatever
-    container:
-      image: 'gnuradio/ci-debian-10-3.9:1.0'
-      volumes:
-        - build_data:/build
-      options: --cpus 2
-    steps:
-    - uses: actions/checkout@v2
-      name: Checkout Project
-    - name: CMake
-      env:
-        CXXFLAGS: -Werror
+        CXXFLAGS: ${{ matrix.cxxflags }}
       run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF -DBoost_unit_test_framework_FOUND=ON'
     - name: Make
       run: 'cd /build && make -j2 -k'
