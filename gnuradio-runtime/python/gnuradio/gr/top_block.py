@@ -7,14 +7,13 @@
 #
 #
 
+import time
+import threading
 
 from .gr_python import (top_block_pb,
     top_block_wait_unlocked, top_block_run_unlocked,
     top_block_start_unlocked, top_block_stop_unlocked,
     top_block_unlock_unlocked) #, dot_graph_tb)
-
-from .hier_block2 import hier_block2
-import threading
 
 from .hier_block2 import hier_block2
 
@@ -67,7 +66,7 @@ class _top_block_waiter(threading.Thread):
 # This makes a 'has-a' relationship to look like an 'is-a' one.
 #
 # It allows Python classes to subclass this one, while passing through
-# method calls to the C++ class shared pointer from SWIG.
+# method calls to the C++ class shared pointer.
 #
 # It also allows us to intercept method calls if needed.
 #
@@ -103,12 +102,15 @@ class top_block(hier_block2):
         """
         top_block_stop_unlocked(self._impl)
 
-    def run(self, max_noutput_items=10000000):
+    def run(self, max_noutput_items=10000000, **kwargs):
         """
         Start the flowgraph with the given number of output items and wait.
+
+        This function internally calls wait(), and allows the same arguments as
+        wait().
         """
         self.start(max_noutput_items)
-        self.wait()
+        self.wait(**kwargs)
 
     def unlock(self):
         """
@@ -116,10 +118,38 @@ class top_block(hier_block2):
         """
         top_block_unlock_unlocked(self._impl)
 
-    def wait(self):
+    def wait(self, precondition=None, precond_timeout=5.0, precond_pollint=.2):
         """
         Wait for the flowgraph to finish running
+
+        Note that unlike the C++ version, this also accepts a precondition for
+        terminating the flowgraph. Before anything happens, this method will
+        poll 'precondition' (which has to be a callable and return a Boolean)
+        every precond_pollint seconds, but no longer than precond_timeout.
+
+        If the precondition is not met within precond_timeout, a RuntimeError is
+        raised.
+
+        The purpose of the precondition check is to handle events that the
+        scheduler can't know about. For example, if a unit test is going to
+        receive several messages before terminating, the scheduler might be idle
+        between messages, and going straight to the normal wait procedure might
+        cause the flow graph to terminate prematurely.
         """
+        stop_time = time.time() + precond_timeout
+        precondition = (lambda: True) if precondition is None else precondition
+        if not callable(precondition):
+            raise RuntimeError(
+                "wait() precondition is not callable!")
+        precond_met = False
+        while time.time() <= stop_time:
+            if precondition():
+                precond_met = True
+                break
+            time.sleep(precond_pollint)
+        if not precond_met:
+            raise RuntimeError(
+                "Unable to meet precondition on time in top_block.wait()!")
         _top_block_waiter(self._impl).wait(self.handle_sigint)
 
     # def dot_graph(self):
