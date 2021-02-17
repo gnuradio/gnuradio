@@ -30,7 +30,7 @@ SET(GR_PKG_SOAPY_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/soapy)
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_SOAPY)
-message(STATUS "  SOAPY Version: ${SOAPY_VERSION}")
+message(STATUS "  SOAPY Version: ${SoapySDR_VERSION}")
 
 ########################################################################
 # Add subdirectories
