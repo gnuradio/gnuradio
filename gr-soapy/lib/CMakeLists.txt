@@ -9,41 +9,20 @@
 ########################################################################
 # Setup library
 ########################################################################
-include(GrPlatform)
-
-#define LIB_SUFFIX
-
-list(APPEND soapy_sources
-    source_impl.cc
-    sink_impl.cc
+add_library(gnuradio-soapy
+  source_impl.cc
+  sink_impl.cc
 )
 
-set(soapy_sources "${soapy_sources}" PARENT_SCOPE)
-if(NOT soapy_sources)
-    MESSAGE(STATUS "No C++ sources... skipping lib/")
-    return()
-endif(NOT soapy_sources)
-
-add_library(gnuradio-soapy SHARED ${soapy_sources})
-
-target_link_libraries(gnuradio-soapy
-    PUBLIC gnuradio-runtime
-    PUBLIC ${Boost_LIBRARIES} 
-    PUBLIC ${SoapySDR_LIBRARIES}
+target_link_libraries(gnuradio-soapy PUBLIC
+    gnuradio-runtime
+    ${SoapySDR_LIBRARIES}
 )
 
-target_include_directories(gnuradio-soapy
-    PUBLIC $<INSTALL_INTERFACE:include>
-    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+target_include_directories(gnuradio-soapy PUBLIC
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
 )
-
-set_target_properties(gnuradio-soapy PROPERTIES DEFINE_SYMBOL "gnuradio_soapy_EXPORTS")
-
-if(APPLE)
-    set_target_properties(gnuradio-soapy PROPERTIES
-        INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
-    )
-endif(APPLE)
 
 #Add Windows DLL resource file if using MSVC
 if (MSVC)
@@ -59,38 +38,29 @@ if (MSVC)
     )
 endif (MSVC)
 
-########################################################################
-# Install built library files
-########################################################################
-include(GrMiscUtils)
-GR_LIBRARY_FOO(gnuradio-soapy)
+if(BUILD_SHARED_LIBS)
+  GR_LIBRARY_FOO(gnuradio-soapy SoapySDR)
+endif()
 
-########################################################################
-# Print summary
-########################################################################
-message(STATUS "Using install prefix: ${CMAKE_INSTALL_PREFIX}")
-message(STATUS "Building for version: ${VERSION} / ${LIBVER}")
+if(ENABLE_TESTING)
+  include(GrTest)
 
-########################################################################
-# Build and register unit test
-########################################################################
-include(GrTest)
+  # If your unit tests require special include paths, add them here
+  #include_directories()
+  # List all files that contain Boost.UTF unit tests here
+  list(APPEND test_soapy_sources)
 
-# If your unit tests require special include paths, add them here
-#include_directories()
-# List all files that contain Boost.UTF unit tests here
-list(APPEND test_soapy_sources)
+  # Anything we need to link to for the unit tests go here
+  list(APPEND GR_TEST_TARGET_DEPS gnuradio-soapy ${Boost_LIBRARIES})
 
-# Anything we need to link to for the unit tests go here
-list(APPEND GR_TEST_TARGET_DEPS gnuradio-soapy ${Boost_LIBRARIES})
-
-if(NOT test_soapy_sources)
+  if(NOT test_soapy_sources)
     MESSAGE(STATUS "No C++ unit tests... skipping")
     return()
-endif(NOT test_soapy_sources)
+  endif(NOT test_soapy_sources)
 
-foreach(qa_file ${test_soapy_sources})
+  foreach(qa_file ${test_soapy_sources})
     GR_ADD_CPP_TEST("soapy_${qa_file}"
         ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
     )
-endforeach(qa_file)
+  endforeach(qa_file)
+endif()
