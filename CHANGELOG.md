@@ -16,6 +16,13 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 - C++17
   - requires MSVC 1914 (Microsoft VS 2017 15.7)
 
+### Added
+
+#### Misc.
+
+- dtools: Added run-clang-tidy-on-codebase, which does what the name suggests,
+  then updates all bindtool hashes, and commits everything appropriately
+
 ## [3.9.0.0] - 2020-01-17
 
 ### Changed
