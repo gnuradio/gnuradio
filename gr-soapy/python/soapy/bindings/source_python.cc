@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(source.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(d8e6630c46e64c786670bda45fa29f82)                     */
+/* BINDTOOL_HEADER_FILE_HASH(1bc3c7623940898f7de621b3dfdeecc3)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -23,7 +23,7 @@
 
 namespace py = pybind11;
 
-#include <soapy/source.h>
+#include <gnuradio/soapy/source.h>
 // pydoc.h is automatically generated in the build directory
 #include <source_pydoc.h>
 

@@ -410,7 +410,7 @@ asserts:
 
 templates:
     imports: |-
-      import soapy
+      from gnuradio import soapy
       import distutils
       from distutils import util
     make: |

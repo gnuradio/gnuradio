@@ -263,7 +263,7 @@ asserts:
 - ${ nchan > 0 }
 
 templates:
-    imports: import soapy
+    imports: from gnuradio import soapy
     make: |-
         None
         if "${devname}" == 'custom':

@@ -11,7 +11,7 @@
 #ifndef INCLUDED_SOAPY_SOURCE_IMPL_H
 #define INCLUDED_SOAPY_SOURCE_IMPL_H
 
-#include <soapy/source.h>
+#include <gnuradio/soapy/source.h>
 #include <boost/bind.hpp>
 #include <boost/thread/mutex.hpp>
 

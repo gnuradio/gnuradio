@@ -12,7 +12,7 @@
 #define INCLUDED_SOAPY_SOURCE_H
 
 #include <gnuradio/sync_block.h>
-#include <soapy/api.h>
+#include <gnuradio/soapy/api.h>
 #include <cstdint>
 #include <string>
 #include <vector>

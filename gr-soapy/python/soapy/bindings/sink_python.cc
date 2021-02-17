@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(84dd6498f56f9fca3c69ad21cd7ce06f)                     */
+/* BINDTOOL_HEADER_FILE_HASH(2711ed90bb6fe3b1dac889640c1f1fe7)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -23,7 +23,7 @@
 
 namespace py = pybind11;
 
-#include <soapy/sink.h>
+#include <gnuradio/soapy/sink.h>
 // pydoc.h is automatically generated in the build directory
 #include <sink_pydoc.h>
 

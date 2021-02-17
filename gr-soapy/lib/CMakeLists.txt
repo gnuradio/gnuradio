@@ -32,6 +32,11 @@ target_link_libraries(gnuradio-soapy
     PUBLIC ${SoapySDR_LIBRARIES}
 )
 
+target_include_directories(gnuradio-soapy
+    PUBLIC $<INSTALL_INTERFACE:include>
+    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+)
+
 set_target_properties(gnuradio-soapy PROPERTIES DEFINE_SYMBOL "gnuradio_soapy_EXPORTS")
 
 if(APPLE)
