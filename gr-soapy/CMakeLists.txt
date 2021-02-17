@@ -13,11 +13,7 @@ include(GrBoost)
 ########################################################################
 # External dependencies 
 ########################################################################
-find_package(SoapySDR REQUIRED)
-
-if(NOT SoapySDR_FOUND)
-    message(FATAL_ERROR "SoapySDR required to compile gr-soapy")
-endif()
+find_package(SoapySDR)
 
 ########################################################################
 # Register component
