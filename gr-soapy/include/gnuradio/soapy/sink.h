@@ -10,8 +10,8 @@
 #ifndef INCLUDED_SOAPY_SINK_H
 #define INCLUDED_SOAPY_SINK_H
 
-#include <gnuradio/sync_block.h>
 #include <gnuradio/soapy/api.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
 namespace soapy {

@@ -11,8 +11,8 @@
 #ifndef INCLUDED_SOAPY_SOURCE_H
 #define INCLUDED_SOAPY_SOURCE_H
 
-#include <gnuradio/sync_block.h>
 #include <gnuradio/soapy/api.h>
+#include <gnuradio/sync_block.h>
 #include <cstdint>
 #include <string>
 #include <vector>
