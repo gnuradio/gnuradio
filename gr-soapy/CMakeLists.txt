@@ -37,17 +37,16 @@ message(STATUS "  SOAPY Version: ${SoapySDR_VERSION}")
 ########################################################################
 add_subdirectory(include/gnuradio/soapy)
 add_subdirectory(lib)
-add_subdirectory(docs)
 if(ENABLE_EXAMPLES)
     add_subdirectory(examples/grc)
 endif(ENABLE_EXAMPLES)
 if(ENABLE_PYTHON)
     add_subdirectory(python/soapy)
-    add_subdirectory(apps)
 endif(ENABLE_PYTHON)
 if(ENABLE_GRC)
-    add_subdirectory(grc)
+  add_subdirectory(grc)
 endif(ENABLE_GRC)
+add_subdirectory(docs)
 
 ########################################################################
 # Create Pkg Config File
