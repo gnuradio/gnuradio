@@ -6,7 +6,6 @@ on:
   pull_request:
     branches:
       - master
-      - qa-uhd
 jobs:
   check-formatting:
     name: Check C++ Formatting
