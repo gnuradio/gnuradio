@@ -7,8 +7,6 @@
 #
 #
 
-
-import time
 import random
 
 from gnuradio import gr, gr_unittest, blocks, digital
@@ -48,7 +46,7 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         self.tb.connect(src, parser)
         self.tb.msg_connect(parser, "header_data", sink, "store")
         self.tb.start()
-        time.sleep(1)
+        self.waitFor(lambda: sink.num_messages() == 3)
         self.tb.stop()
         self.tb.wait()
         self.assertEqual(sink.num_messages(), 3)
@@ -79,7 +77,7 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         self.tb.connect(src, header_gen, header_parser)
         self.tb.msg_connect(header_parser, "header_data", sink, "store")
         self.tb.start()
-        time.sleep(1)
+        self.waitFor(lambda: sink.num_messages() == N)
         self.tb.stop()
         self.tb.wait()
         self.assertEqual(sink.num_messages(), N)
@@ -120,7 +118,7 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         self.tb.connect(src, parser)
         self.tb.msg_connect(parser, "header_data", sink, "store")
         self.tb.start()
-        time.sleep(1)
+        self.waitFor(lambda: sink.num_messages() == 2)
         self.tb.stop()
         self.tb.wait()
         self.assertEqual(sink.num_messages(), 2)
@@ -161,17 +159,15 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         self.tb.connect(src, header_gen, header_parser)
         self.tb.msg_connect(header_parser, "header_data", sink, "store")
         self.tb.start()
-        time.sleep(1)
+        self.waitFor(lambda: sink.num_messages() == 2)
         self.tb.stop()
         self.tb.wait()
         msg = pmt.to_python(sink.get_message(0))
         self.assertEqual(
-            msg, {
-                'packet_len': packet_length, 'packet_num': 0, 'frame_len': 4})
+            msg, {'packet_len': packet_length, 'packet_num': 0, 'frame_len': 4})
         msg = pmt.to_python(sink.get_message(1))
         self.assertEqual(
-            msg, {
-                'packet_len': packet_length, 'packet_num': 1, 'frame_len': 4})
+            msg, {'packet_len': packet_length, 'packet_num': 1, 'frame_len': 4})
 
 
 if __name__ == '__main__':
