@@ -50,7 +50,7 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         self.tb.start()
         time.sleep(1)
         self.tb.stop()
-        self.tb.wait()
+        self.tb.wait(precondition=lambda: sink.num_messages() == 3)
         self.assertEqual(sink.num_messages(), 3)
         msg1 = pmt.to_python(sink.get_message(0))
         msg2 = pmt.to_python(sink.get_message(1))
@@ -81,7 +81,7 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         self.tb.start()
         time.sleep(1)
         self.tb.stop()
-        self.tb.wait()
+        self.tb.wait(precondition=lambda: sink.num_messages() == N)
         self.assertEqual(sink.num_messages(), N)
         for i in range(N):
             msg = pmt.to_python(sink.get_message(i))
@@ -122,7 +122,7 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         self.tb.start()
         time.sleep(1)
         self.tb.stop()
-        self.tb.wait()
+        self.tb.wait(precondition=lambda: sink.num_messages() == 2)
         self.assertEqual(sink.num_messages(), 2)
         msg1 = pmt.to_python(sink.get_message(0))
         msg2 = pmt.to_python(sink.get_message(1))
@@ -163,7 +163,7 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         self.tb.start()
         time.sleep(1)
         self.tb.stop()
-        self.tb.wait()
+        self.tb.wait(precondition=lambda: sink.num_messages() >= 2)
         msg = pmt.to_python(sink.get_message(0))
         self.assertEqual(
             msg, {
