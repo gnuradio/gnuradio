@@ -399,7 +399,7 @@ void bind_usrp_block(py::module& m)
 
         .def("get_filter_names",
              &usrp_block::get_filter_names,
-             py::arg("search_mask") = "",
+             py::arg("chan") = 0,
              D(usrp_block, get_filter_names))
 
 
@@ -407,12 +407,14 @@ void bind_usrp_block(py::module& m)
              &usrp_block::set_filter,
              py::arg("path"),
              py::arg("filter"),
+             py::arg("chan") = 0,
              D(usrp_block, set_filter))
 
 
         .def("get_filter",
              &usrp_block::get_filter,
              py::arg("path"),
+             py::arg("chan") = 0,
              D(usrp_block, get_filter))
 
         .def(

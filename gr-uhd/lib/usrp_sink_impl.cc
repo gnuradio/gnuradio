@@ -394,6 +394,44 @@ std::vector<std::string> usrp_sink_impl::get_sensor_names(size_t chan)
     return _dev->get_tx_dboard_iface(chan);
 }
 
+#if UHD_VERSION >= 4000000
+std::vector<std::string> usrp_sink_impl::get_filter_names(const size_t chan)
+{
+    return _dev->get_tx_filter_names(chan);
+}
+
+::uhd::filter_info_base::sptr usrp_sink_impl::get_filter(const std::string& path,
+                                                         const size_t chan)
+{
+    return _dev->get_tx_filter(path, chan);
+}
+
+void usrp_sink_impl::set_filter(const std::string& path,
+                                ::uhd::filter_info_base::sptr filter,
+                                const size_t chan)
+{
+    _dev->set_tx_filter(path, filter, chan);
+}
+#else
+std::vector<std::string> usrp_sink_impl::get_filter_names(const size_t /*chan*/)
+{
+    return _dev->get_filter_names("tx");
+}
+
+::uhd::filter_info_base::sptr usrp_sink_impl::get_filter(const std::string& path,
+                                                         const size_t /*chan*/)
+{
+    return _dev->get_filter(path);
+}
+
+void usrp_sink_impl::set_filter(const std::string& path,
+                                ::uhd::filter_info_base::sptr filter,
+                                const size_t /*chan*/)
+{
+    _dev->set_filter(path, filter);
+}
+#endif
+
 void usrp_sink_impl::set_stream_args(const ::uhd::stream_args_t& stream_args)
 {
     _update_stream_args(stream_args);
