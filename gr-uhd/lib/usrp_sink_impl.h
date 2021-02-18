@@ -81,6 +81,9 @@ public:
     bool get_lo_export_enabled(const std::string& name, size_t chan) override;
     double get_lo_freq(const std::string& name, size_t chan) override;
     ::uhd::freq_range_t get_lo_freq_range(const std::string& name, size_t chan) override;
+    std::vector<std::string> get_filter_names(const size_t chan) override;
+    ::uhd::filter_info_base::sptr get_filter(const std::string& path,
+                                             const size_t chan) override;
 
     void set_subdev_spec(const std::string& spec, size_t mboard) override;
     std::string get_subdev_spec(size_t mboard) override;
@@ -106,6 +109,9 @@ public:
                                const std::string& name = ALL_LOS,
                                size_t chan = 0) override;
     double set_lo_freq(double freq, const std::string& name, size_t chan) override;
+    void set_filter(const std::string& path,
+                    ::uhd::filter_info_base::sptr filter,
+                    const size_t chan) override;
 
     bool start(void) override;
     bool stop(void) override;
