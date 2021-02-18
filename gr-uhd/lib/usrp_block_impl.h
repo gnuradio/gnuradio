@@ -54,8 +54,6 @@ public:
                            const std::string& attr,
                            const size_t mboard = 0) override;
     size_t get_num_mboards() override;
-    std::vector<std::string> get_filter_names(const std::string& search_mask) override;
-    ::uhd::filter_info_base::sptr get_filter(const std::string& path) override;
 
     // Setters
     void set_time_source(const std::string& source, const size_t mboard) override;
@@ -73,8 +71,6 @@ public:
                        const uint32_t value,
                        const uint32_t mask,
                        const size_t mboard) override;
-    void set_filter(const std::string& path,
-                    ::uhd::filter_info_base::sptr filter) override;
 
     // RPC
     void setup_rpc() override;
