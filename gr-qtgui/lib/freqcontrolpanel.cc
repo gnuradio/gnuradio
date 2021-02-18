@@ -111,7 +111,8 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm* form) : QVBoxLayout(), d_par
     // Set up the box for other items
     d_extras_box = new QGroupBox("Extras");
     d_extras_layout = new QVBoxLayout;
-    d_stop_button = new QPushButton("Stop");
+    d_stop_button = new QPushButton(
+        QApplication::style()->standardIcon(QStyle::SP_MediaStop), "Stop");
     d_stop_button->setCheckable(true);
 
     // Set up the boxes into the layout
@@ -188,7 +189,12 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm* form) : QVBoxLayout(), d_par
             d_parent,
             SLOT(notifyTriggerLevelMinus()));
 
+    // Handle the start/stop button
+    // Call the base class' stop function when they press the button
     connect(d_stop_button, SIGNAL(pressed(void)), d_parent, SLOT(setStop(void)));
+    // Updated the button state regardless of who changed it
+    connect(d_stop_button, SIGNAL(toggled(bool)), this, SLOT(updateStopLabel(bool)));
+    // Update the button if someone else changes it
     connect(
         this, SIGNAL(signalToggleStopButton(void)), d_stop_button, SLOT(toggle(void)));
 }
@@ -266,3 +272,14 @@ void FreqControlPanel::toggleTriggerMode(gr::qtgui::trigger_mode mode)
 }
 
 void FreqControlPanel::toggleStopButton() { emit signalToggleStopButton(); }
+
+void FreqControlPanel::updateStopLabel(bool on)
+{
+    if (on) {
+        d_stop_button->setText("Start");
+        d_stop_button->setIcon(QApplication::style()->standardIcon(QStyle::SP_MediaPlay));
+    } else {
+        d_stop_button->setText("Stop");
+        d_stop_button->setIcon(QApplication::style()->standardIcon(QStyle::SP_MediaStop));
+    }
+}

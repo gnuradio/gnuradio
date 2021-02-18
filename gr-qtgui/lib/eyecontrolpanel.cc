@@ -76,7 +76,8 @@ EyeControlPanel::EyeControlPanel(EyeDisplayForm* form) : QVBoxLayout(), d_parent
     d_extras_box = new QGroupBox("Extras");
     d_extras_layout = new QVBoxLayout;
     d_autoscale_button = new QPushButton("Autoscale");
-    d_stop_button = new QPushButton("Stop");
+    d_stop_button = new QPushButton(
+        QApplication::style()->standardIcon(QStyle::SP_MediaStop), "Stop");
     d_stop_button->setCheckable(true);
 
     // Set up the boxes into the layout
@@ -141,7 +142,12 @@ EyeControlPanel::EyeControlPanel(EyeDisplayForm* form) : QVBoxLayout(), d_parent
 
     connect(
         d_autoscale_button, SIGNAL(pressed(void)), d_parent, SLOT(autoScaleShot(void)));
+
+    // Handle the start/stop button
+    // Call the base class' stop function when they press the button
     connect(d_stop_button, SIGNAL(pressed(void)), d_parent, SLOT(setStop(void)));
+    // Updated the button state regardless of who changed it
+    connect(d_stop_button, SIGNAL(toggled(bool)), this, SLOT(updateStopLabel(bool)));
     connect(
         this, SIGNAL(signalToggleStopButton(void)), d_stop_button, SLOT(toggle(void)));
 }
@@ -173,3 +179,14 @@ void EyeControlPanel::toggleTriggerSlope(gr::qtgui::trigger_slope slope)
 }
 
 void EyeControlPanel::toggleStopButton() { emit signalToggleStopButton(); }
+
+void EyeControlPanel::updateStopLabel(bool on)
+{
+    if (on) {
+        d_stop_button->setText("Start");
+        d_stop_button->setIcon(QApplication::style()->standardIcon(QStyle::SP_MediaPlay));
+    } else {
+        d_stop_button->setText("Stop");
+        d_stop_button->setIcon(QApplication::style()->standardIcon(QStyle::SP_MediaStop));
+    }
+}
