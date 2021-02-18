@@ -45,6 +45,7 @@ public slots:
     void toggleTriggerMode(gr::qtgui::trigger_mode mode);
 
     void toggleStopButton();
+    void updateStopLabel(bool on);
 
 signals:
     void signalAvgSlider(float val);
