@@ -381,22 +381,6 @@ uint32_t usrp_block_impl::get_gpio_attr(const std::string& bank,
     throw std::runtime_error("not implemented in this version");
 }
 
-std::vector<std::string> usrp_block_impl::get_filter_names(const std::string& search_mask)
-{
-    return _dev->get_filter_names(search_mask);
-}
-
-::uhd::filter_info_base::sptr usrp_block_impl::get_filter(const std::string& path)
-{
-    return _dev->get_filter(path);
-}
-
-void usrp_block_impl::set_filter(const std::string& path,
-                                 ::uhd::filter_info_base::sptr filter)
-{
-    _dev->set_filter(path, filter);
-}
-
 void usrp_block_impl::set_time_now(const ::uhd::time_spec_t& time_spec, size_t mboard)
 {
     return _dev->set_time_now(time_spec, mboard);
