@@ -30,13 +30,18 @@ private:
     const std::string d_name;
     int d_nconnections;
 
-    int d_index;
-    std::vector<double*> d_residbufs;
+    int d_index = 0;
+    std::vector<volk::vector<double>> d_residbufs;
 
-    int d_argc;
-    char* d_argv;
+    // Required now for Qt; argc must be greater than 0 and argv
+    // must have at least one valid character. Must be valid through
+    // life of the qApplication:
+    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
+    char d_zero = 0;
+    int d_argc = 1;
+    char* d_argv = &d_zero;
     QWidget* d_parent;
-    HistogramDisplayForm* d_main_gui;
+    HistogramDisplayForm* d_main_gui = nullptr;
 
     gr::high_res_timer_type d_update_time;
     gr::high_res_timer_type d_last_time;
@@ -55,6 +60,12 @@ public:
                           int nconnections,
                           QWidget* parent = NULL);
     ~histogram_sink_f_impl() override;
+
+    // Disallow copy/move because of the raw pointers.
+    histogram_sink_f_impl(const histogram_sink_f_impl&) = delete;
+    histogram_sink_f_impl& operator=(const histogram_sink_f_impl&) = delete;
+    histogram_sink_f_impl(histogram_sink_f_impl&&) = delete;
+    histogram_sink_f_impl& operator=(histogram_sink_f_impl&&) = delete;
 
     bool check_topology(int ninputs, int noutputs) override;
 

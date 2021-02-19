@@ -28,8 +28,14 @@ class QTGUI_API edit_box_msg_impl : public QObject, public edit_box_msg
     Q_OBJECT
 
 private:
-    int d_argc;
-    char* d_argv;
+    // Required now for Qt; argc must be greater than 0 and argv
+    // must have at least one valid character. Must be valid through
+    // life of the qApplication:
+    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
+    char d_zero = 0;
+    int d_argc = 1;
+    char* d_argv = &d_zero;
+
     data_type_t d_type;
     bool d_is_pair;
     bool d_is_static;

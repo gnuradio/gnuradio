@@ -61,10 +61,8 @@ ber_sink_b_impl::ber_sink_b_impl(std::vector<float> esnos,
     d_total_errors.reserve(curves * esnos.size());
 
     for (int j = 0; j < curves; j++) {
-        d_esno_buffers.push_back(
-            (double*)volk_malloc(esnos.size() * sizeof(double), volk_get_alignment()));
-        d_ber_buffers.push_back(
-            (double*)volk_malloc(esnos.size() * sizeof(double), volk_get_alignment()));
+        d_esno_buffers.emplace_back(esnos.size());
+        d_ber_buffers.emplace_back(esnos.size());
 
         for (int i = 0; i < d_nconnections; i++) {
             d_esno_buffers[j][i] = esnos[i];
@@ -75,10 +73,8 @@ ber_sink_b_impl::ber_sink_b_impl(std::vector<float> esnos,
     }
 
     // Now add the known curves
-    d_esno_buffers.push_back(
-        (double*)volk_malloc(esnos.size() * sizeof(double), volk_get_alignment()));
-    d_ber_buffers.push_back(
-        (double*)volk_malloc(esnos.size() * sizeof(double), volk_get_alignment()));
+    d_esno_buffers.emplace_back(esnos.size());
+    d_ber_buffers.emplace_back(esnos.size());
     for (size_t i = 0; i < esnos.size(); i++) {
         double e = pow(10.0, esnos[i] / 10.0);
         d_esno_buffers[curves][i] = esnos[i];
@@ -113,11 +109,6 @@ ber_sink_b_impl::~ber_sink_b_impl()
 {
     if (!d_main_gui->isClosed()) {
         d_main_gui->close();
-    }
-
-    for (unsigned int i = 0; i < d_esno_buffers.size(); i++) {
-        volk_free(d_esno_buffers[i]);
-        volk_free(d_ber_buffers[i]);
     }
 }
 

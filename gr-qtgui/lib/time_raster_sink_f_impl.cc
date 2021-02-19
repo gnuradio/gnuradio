@@ -50,38 +50,22 @@ time_raster_sink_f_impl::time_raster_sink_f_impl(double samp_rate,
                  io_signature::make(0, 0, 0)),
       d_name(name),
       d_nconnections(nconnections),
-      d_parent(parent),
       d_rows(rows),
       d_cols(cols),
+      d_icols(static_cast<int>(ceil(d_cols))),
+      d_tmpflt(d_icols),
+      d_parent(parent),
       d_mult(std::vector<float>(nconnections + 1, 1)),
       d_offset(std::vector<float>(nconnections + 1, 0)),
       d_samp_rate(samp_rate)
 {
-    // Required now for Qt; argc must be greater than 0 and argv
-    // must have at least one valid character. Must be valid through
-    // life of the qApplication:
-    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
-    d_argc = 1;
-    d_argv = new char;
-    d_argv[0] = '\0';
-
-    d_main_gui = NULL;
-
-    d_index = 0;
-
     // setup PDU handling input port
     message_port_register_in(pmt::mp("in"));
     set_msg_handler(pmt::mp("in"), [this](pmt::pmt_t msg) { this->handle_pdus(msg); });
 
-    d_icols = static_cast<int>(ceil(d_cols));
-    d_tmpflt = (float*)volk_malloc(d_icols * sizeof(float), volk_get_alignment());
-    memset(d_tmpflt, 0, d_icols * sizeof(float));
-
     // +1 for the PDU buffer
     for (int i = 0; i < d_nconnections + 1; i++) {
-        d_residbufs.push_back(
-            (double*)volk_malloc(d_icols * sizeof(double), volk_get_alignment()));
-        memset(d_residbufs[i], 0, d_icols * sizeof(double));
+        d_residbufs.emplace_back(d_icols);
     }
 
     set_multiplier(mult);
@@ -94,13 +78,6 @@ time_raster_sink_f_impl::~time_raster_sink_f_impl()
 {
     if (!d_main_gui->isClosed())
         d_main_gui->close();
-
-    volk_free(d_tmpflt);
-    for (int i = 0; i < d_nconnections + 1; i++) {
-        volk_free(d_residbufs[i]);
-    }
-
-    delete d_argv;
 }
 
 bool time_raster_sink_f_impl::check_topology(int ninputs, int noutputs)
@@ -250,15 +227,12 @@ void time_raster_sink_f_impl::set_num_cols(double cols)
         d_cols = cols;
         d_icols = static_cast<int>(ceil(d_cols));
 
-        volk_free(d_tmpflt);
-        d_tmpflt = (float*)volk_malloc(d_icols * sizeof(float), volk_get_alignment());
-        memset(d_tmpflt, 0, d_icols * sizeof(float));
+        d_tmpflt.clear();
+        d_tmpflt.resize(d_icols);
 
         for (int i = 0; i < d_nconnections + 1; i++) {
-            volk_free(d_residbufs[i]);
-            d_residbufs[i] =
-                (double*)volk_malloc(d_icols * sizeof(double), volk_get_alignment());
-            memset(d_residbufs[i], 0, d_icols * sizeof(double));
+            d_residbufs[i].clear();
+            d_residbufs[i].resize(d_icols);
         }
         reset();
     }
@@ -383,11 +357,11 @@ int time_raster_sink_f_impl::work(int noutput_items,
                 in = (const float*)input_items[idx++];
 
                 // Scale and add offset
-                volk_32f_s32f_multiply_32f(d_tmpflt, &in[j], d_mult[n], resid);
+                volk_32f_s32f_multiply_32f(d_tmpflt.data(), &in[j], d_mult[n], resid);
                 for (unsigned int s = 0; s < resid; s++)
                     d_tmpflt[s] = d_tmpflt[s] + d_offset[n];
 
-                volk_32f_convert_64f_u(&d_residbufs[n][d_index], d_tmpflt, resid);
+                volk_32f_convert_64f_u(&d_residbufs[n][d_index], d_tmpflt.data(), resid);
             }
 
             // Update the plot if its time
@@ -407,11 +381,11 @@ int time_raster_sink_f_impl::work(int noutput_items,
                 in = (const float*)input_items[idx++];
 
                 // Scale and add offset
-                volk_32f_s32f_multiply_32f(d_tmpflt, &in[j], d_mult[n], datasize);
+                volk_32f_s32f_multiply_32f(d_tmpflt.data(), &in[j], d_mult[n], datasize);
                 for (unsigned int s = 0; s < datasize; s++)
                     d_tmpflt[s] = d_tmpflt[s] + d_offset[n];
 
-                volk_32f_convert_64f(&d_residbufs[n][d_index], d_tmpflt, datasize);
+                volk_32f_convert_64f(&d_residbufs[n][d_index], d_tmpflt.data(), datasize);
             }
             d_index += datasize;
             j += datasize;
@@ -464,14 +438,15 @@ void time_raster_sink_f_impl::handle_pdus(pmt::pmt_t msg)
         for (int r = 0; r < irows; r++) {
             // Scale and add offset
             int cpy_len = std::min(static_cast<size_t>(d_cols), len - idx);
-            memset(d_residbufs[d_nconnections], 0, d_cols * sizeof(double));
+            memset(d_residbufs[d_nconnections].data(), 0, d_cols * sizeof(double));
             volk_32f_s32f_multiply_32f(
-                d_tmpflt, &in[idx], d_mult[d_nconnections], cpy_len);
+                d_tmpflt.data(), &in[idx], d_mult[d_nconnections], cpy_len);
             for (int c = 0; c < cpy_len; c++) {
                 d_tmpflt[c] = d_tmpflt[c] + d_offset[d_nconnections];
             }
 
-            volk_32f_convert_64f_u(d_residbufs[d_nconnections], d_tmpflt, cpy_len);
+            volk_32f_convert_64f_u(
+                d_residbufs[d_nconnections].data(), d_tmpflt.data(), cpy_len);
 
             d_qApplication->postEvent(d_main_gui,
                                       new TimeRasterUpdateEvent(d_residbufs, d_cols));

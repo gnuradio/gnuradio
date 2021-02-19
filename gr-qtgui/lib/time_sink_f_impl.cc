@@ -57,29 +57,14 @@ time_sink_f_impl::time_sink_f_impl(int size,
     if (nconnections > 24)
         throw std::runtime_error("time_sink_f only supports up to 24 inputs");
 
-    // Required now for Qt; argc must be greater than 0 and argv
-    // must have at least one valid character. Must be valid through
-    // life of the qApplication:
-    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
-    d_argc = 1;
-    d_argv = new char;
-    d_argv[0] = '\0';
-
-    d_main_gui = NULL;
-
     // setup PDU handling input port
     message_port_register_in(pmt::mp("in"));
     set_msg_handler(pmt::mp("in"), [this](pmt::pmt_t msg) { this->handle_pdus(msg); });
 
     // +1 for the PDU buffer
     for (unsigned int n = 0; n < d_nconnections + 1; n++) {
-        d_buffers.push_back(
-            (double*)volk_malloc(d_buffer_size * sizeof(double), volk_get_alignment()));
-        memset(d_buffers[n], 0, d_buffer_size * sizeof(double));
-
-        d_fbuffers.push_back(
-            (float*)volk_malloc(d_buffer_size * sizeof(float), volk_get_alignment()));
-        memset(d_fbuffers[n], 0, d_buffer_size * sizeof(float));
+        d_buffers.emplace_back(d_buffer_size);
+        d_fbuffers.emplace_back(d_buffer_size);
     }
 
     // Set alignment properties for VOLK
@@ -101,14 +86,7 @@ time_sink_f_impl::~time_sink_f_impl()
 {
     if (!d_main_gui->isClosed())
         d_main_gui->close();
-
     // d_main_gui is a qwidget destroyed with its parent
-    for (unsigned int n = 0; n < d_nconnections + 1; n++) {
-        volk_free(d_buffers[n]);
-        volk_free(d_fbuffers[n]);
-    }
-
-    delete d_argv;
 }
 
 bool time_sink_f_impl::check_topology(int ninputs, int noutputs)
@@ -298,15 +276,10 @@ void time_sink_f_impl::set_nsamps(const int newsize)
 
         // Resize buffers and replace data
         for (unsigned int n = 0; n < d_nconnections + 1; n++) {
-            volk_free(d_buffers[n]);
-            d_buffers[n] = (double*)volk_malloc(d_buffer_size * sizeof(double),
-                                                volk_get_alignment());
-            memset(d_buffers[n], 0, d_buffer_size * sizeof(double));
-
-            volk_free(d_fbuffers[n]);
-            d_fbuffers[n] =
-                (float*)volk_malloc(d_buffer_size * sizeof(float), volk_get_alignment());
-            memset(d_fbuffers[n], 0, d_buffer_size * sizeof(float));
+            d_buffers[n].clear();
+            d_buffers[n].resize(d_buffer_size);
+            d_fbuffers[n].clear();
+            d_fbuffers[n].resize(d_buffer_size);
         }
 
         // If delay was set beyond the new boundary, pull it back.
@@ -385,7 +358,7 @@ void time_sink_f_impl::_reset()
             // represents data that might have to be plotted again if a
             // trigger occurs and we have a trigger delay set.  The tail
             // section is between (d_end-d_trigger_delay) and d_end.
-            memmove(d_fbuffers[n],
+            memmove(d_fbuffers[n].data(),
                     &d_fbuffers[n][d_end - d_trigger_delay],
                     d_trigger_delay * sizeof(float));
 
@@ -580,7 +553,7 @@ int time_sink_f_impl::work(int noutput_items,
         // Copy data to be plotted to start of buffers.
         for (n = 0; n < d_nconnections; n++) {
             // memmove(d_buffers[n], &d_buffers[n][d_start], d_size*sizeof(double));
-            volk_32f_convert_64f(d_buffers[n], &d_fbuffers[n][d_start], d_size);
+            volk_32f_convert_64f(d_buffers[n].data(), &d_fbuffers[n][d_start], d_size);
         }
 
         // Plot if we are able to update
@@ -658,7 +631,7 @@ void time_sink_f_impl::handle_pdus(pmt::pmt_t msg)
 
         set_nsamps(len);
 
-        volk_32f_convert_64f(d_buffers[d_nconnections], in, len);
+        volk_32f_convert_64f(d_buffers[d_nconnections].data(), in, len);
 
         d_qApplication->postEvent(d_main_gui, new TimeUpdateEvent(d_buffers, len, t));
     }

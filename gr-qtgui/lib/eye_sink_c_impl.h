@@ -15,6 +15,8 @@
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/qtgui/eyedisplayform.h>
 
+#include <volk/volk_alloc.hh>
+
 namespace gr {
 namespace qtgui {
 
@@ -30,14 +32,19 @@ private:
     const pmt::pmt_t d_tag_key;
 
     int d_index, d_start, d_end;
-    std::vector<gr_complex*> d_cbuffers;
-    std::vector<double*> d_buffers;
+    std::vector<volk::vector<gr_complex>> d_cbuffers;
+    std::vector<volk::vector<double>> d_buffers;
     std::vector<std::vector<gr::tag_t>> d_tags;
 
-    int d_argc;
-    char* d_argv;
+    // Required now for Qt; argc must be greater than 0 and argv
+    // must have at least one valid character. Must be valid through
+    // life of the qApplication:
+    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
+    char d_zero = 0;
+    int d_argc = 1;
+    char* d_argv = &d_zero;
     QWidget* d_parent;
-    EyeDisplayForm* d_main_gui;
+    EyeDisplayForm* d_main_gui = nullptr;
 
     gr::high_res_timer_type d_update_time;
     gr::high_res_timer_type d_last_time;
@@ -69,6 +76,12 @@ public:
                     unsigned int nconnections,
                     QWidget* parent = NULL);
     ~eye_sink_c_impl() override;
+
+    // Disallow copy/move because of the raw pointers.
+    eye_sink_c_impl(const eye_sink_c_impl&) = delete;
+    eye_sink_c_impl& operator=(const eye_sink_c_impl&) = delete;
+    eye_sink_c_impl(eye_sink_c_impl&&) = delete;
+    eye_sink_c_impl& operator=(eye_sink_c_impl&&) = delete;
 
     bool check_topology(int ninputs, int noutputs) override;
 

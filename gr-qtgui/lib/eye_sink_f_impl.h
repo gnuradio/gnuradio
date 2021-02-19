@@ -27,15 +27,22 @@ private:
     double d_samp_rate;
     unsigned int d_nconnections;
 
-    int d_index, d_start, d_end;
-    std::vector<float*> d_fbuffers;
-    std::vector<double*> d_buffers;
+    int d_index = 0;
+    int d_start;
+    int d_end;
+    std::vector<volk::vector<float>> d_fbuffers;
+    std::vector<volk::vector<double>> d_buffers;
     std::vector<std::vector<gr::tag_t>> d_tags;
 
-    int d_argc;
-    char* d_argv;
+    // Required now for Qt; argc must be greater than 0 and argv
+    // must have at least one valid character. Must be valid through
+    // life of the qApplication:
+    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
+    char d_zero = 0;
+    int d_argc = 1;
+    char* d_argv = &d_zero;
     QWidget* d_parent;
-    EyeDisplayForm* d_main_gui;
+    EyeDisplayForm* d_main_gui = nullptr;
     gr::high_res_timer_type d_update_time;
     gr::high_res_timer_type d_last_time;
 
@@ -66,6 +73,12 @@ public:
                     unsigned int nconnections,
                     QWidget* parent = NULL);
     ~eye_sink_f_impl() override;
+
+    // Disallow copy/move because of the raw pointers.
+    eye_sink_f_impl(const eye_sink_f_impl&) = delete;
+    eye_sink_f_impl& operator=(const eye_sink_f_impl&) = delete;
+    eye_sink_f_impl(eye_sink_f_impl&&) = delete;
+    eye_sink_f_impl& operator=(eye_sink_f_impl&&) = delete;
 
     bool check_topology(int ninputs, int noutputs) override;
 

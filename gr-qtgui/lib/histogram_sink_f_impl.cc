@@ -55,27 +55,13 @@ histogram_sink_f_impl::histogram_sink_f_impl(int size,
       d_nconnections(nconnections),
       d_parent(parent)
 {
-    // Required now for Qt; argc must be greater than 0 and argv
-    // must have at least one valid character. Must be valid through
-    // life of the qApplication:
-    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
-    d_argc = 1;
-    d_argv = new char;
-    d_argv[0] = '\0';
-
-    d_main_gui = NULL;
-
-    d_index = 0;
-
     // setup PDU handling input port
     message_port_register_in(pmt::mp("in"));
     set_msg_handler(pmt::mp("in"), [this](pmt::pmt_t msg) { this->handle_pdus(msg); });
 
     // +1 for the PDU buffer
     for (int i = 0; i < d_nconnections + 1; i++) {
-        d_residbufs.push_back(
-            (double*)volk_malloc(d_size * sizeof(double), volk_get_alignment()));
-        memset(d_residbufs[i], 0, d_size * sizeof(double));
+        d_residbufs.emplace_back(d_size);
     }
 
     // Set alignment properties for VOLK
@@ -89,13 +75,6 @@ histogram_sink_f_impl::~histogram_sink_f_impl()
 {
     if (!d_main_gui->isClosed())
         d_main_gui->close();
-
-    // d_main_gui is a qwidget destroyed with its parent
-    for (int i = 0; i < d_nconnections + 1; i++) {
-        volk_free(d_residbufs[i]);
-    }
-
-    delete d_argv;
 }
 
 bool histogram_sink_f_impl::check_topology(int ninputs, int noutputs)
@@ -244,11 +223,8 @@ void histogram_sink_f_impl::set_nsamps(const int newsize)
     if (newsize != d_size) {
         // Resize residbuf and replace data
         for (int i = 0; i < d_nconnections + 1; i++) {
-            volk_free(d_residbufs[i]);
-            d_residbufs[i] =
-                (double*)volk_malloc(newsize * sizeof(double), volk_get_alignment());
-
-            memset(d_residbufs[i], 0, newsize * sizeof(double));
+            d_residbufs[i].clear();
+            d_residbufs[i].resize(newsize);
         }
 
         // Set new size and reset buffer index
@@ -392,7 +368,7 @@ void histogram_sink_f_impl::handle_pdus(pmt::pmt_t msg)
         int idx = 0;
         for (int n = 0; n < nplots; n++) {
             int size = std::min(d_size, (int)(len - idx));
-            volk_32f_convert_64f_u(d_residbufs[d_nconnections], &in[idx], size);
+            volk_32f_convert_64f_u(d_residbufs[d_nconnections].data(), &in[idx], size);
 
             d_qApplication->postEvent(d_main_gui,
                                       new HistogramUpdateEvent(d_residbufs, size));

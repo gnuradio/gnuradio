@@ -137,7 +137,16 @@ public:
     virtual int nsamps() const = 0;
     virtual void reset() = 0;
 
+    // Disallow copy/move because of the pointer.
+    const_sink_c(const const_sink_c&) = delete;
+    const_sink_c& operator=(const const_sink_c&) = delete;
+    const_sink_c(const_sink_c&&) = delete;
+    const_sink_c& operator=(const_sink_c&&) = delete;
+
     QApplication* d_qApplication;
+
+protected:
+    const_sink_c() = default;
 };
 
 } /* namespace qtgui */

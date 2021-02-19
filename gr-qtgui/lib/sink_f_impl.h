@@ -38,21 +38,28 @@ private:
 
     const pmt::pmt_t d_port;
 
-    bool d_shift;
-    fft::fft_complex_fwd* d_fft;
+    // Perform fftshift operation;
+    // this is usually desired when plotting
+    bool d_shift = true;
+    std::unique_ptr<fft::fft_complex_fwd> d_fft;
 
-    int d_index;
-    float* d_residbuf;
-    float* d_magbuf;
+    int d_index = 0;
+    volk::vector<float> d_residbuf;
+    volk::vector<float> d_magbuf;
 
     bool d_plotfreq, d_plotwaterfall, d_plottime, d_plotconst;
 
     double d_update_time;
 
-    int d_argc;
-    char* d_argv;
+    // Required now for Qt; argc must be greater than 0 and argv
+    // must have at least one valid character. Must be valid through
+    // life of the qApplication:
+    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
+    char zero = 0;
+    int d_argc = 1;
+    char* d_argv = &zero;
     QWidget* d_parent;
-    SpectrumGUIClass* d_main_gui;
+    SpectrumGUIClass d_main_gui;
 
     void windowreset();
     void buildwindow();
@@ -76,6 +83,11 @@ public:
                 bool plotconst,
                 QWidget* parent);
     ~sink_f_impl() override;
+    // Disallow copy/move because of the pointers.
+    sink_f_impl(const sink_f_impl&) = delete;
+    sink_f_impl(sink_f_impl&&) = delete;
+    sink_f_impl& operator=(const sink_f_impl&) = delete;
+    sink_f_impl& operator=(sink_f_impl&&) = delete;
 
     bool check_topology(int ninputs, int noutputs) override;
 
