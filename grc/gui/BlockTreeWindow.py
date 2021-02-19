@@ -77,6 +77,7 @@ class BlockTreeWindow(Gtk.VBox):
         self.search_entry.connect('changed', self._update_search_tree)
         self.search_entry.connect('key-press-event', self._handle_search_key_press)
         self.pack_start(self.search_entry, False, False, 0)
+        self.search_entry.connect('focus-in-event', self._clear_search_entry)
 
         # make the tree model for holding blocks and a temporary one for search results
         self.treestore = Gtk.TreeStore(GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
@@ -197,6 +198,9 @@ class BlockTreeWindow(Gtk.VBox):
     ############################################################
     ## Event Handlers
     ############################################################
+    def _clear_search_entry(self, widget, comp):
+        widget.set_text('')
+
     def _handle_icon_event(self, widget, icon, event):
         if icon == Gtk.EntryIconPosition.PRIMARY:
             pass
