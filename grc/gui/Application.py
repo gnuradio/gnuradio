@@ -132,7 +132,6 @@ class Application(Gtk.Application):
             if not main.current_page:
                 main.new_page()  # ensure that at least a blank page exists
 
-            main.btwin.search_entry.hide()
 
             """
             Only disable certain actions on startup. Each of these actions are
