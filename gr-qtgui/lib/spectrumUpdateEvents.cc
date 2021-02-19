@@ -13,49 +13,32 @@
 
 #include <gnuradio/qtgui/spectrumUpdateEvents.h>
 
-SpectrumUpdateEvent::SpectrumUpdateEvent(const float* fftPoints,
+SpectrumUpdateEvent::SpectrumUpdateEvent(const float* fft_points,
                                          const uint64_t numFFTDataPoints,
-                                         const double* realTimeDomainPoints,
-                                         const double* imagTimeDomainPoints,
-                                         const uint64_t numTimeDomainDataPoints,
+                                         const double* real_time_domain_points,
+                                         const double* imag_time_domain_points,
+                                         const uint64_t num_time_domain_points,
                                          const gr::high_res_timer_type dataTimestamp,
                                          const bool repeatDataFlag,
                                          const bool lastOfMultipleUpdateFlag,
                                          const gr::high_res_timer_type generatedTimestamp,
                                          const int droppedFFTFrames)
-    : QEvent(QEvent::Type(SpectrumUpdateEventType))
+    : QEvent(QEvent::Type(SpectrumUpdateEventType)),
+      d_fft_points(fft_points, fft_points + numFFTDataPoints),
+      d_real_data_time_domain_points(real_time_domain_points,
+                                     real_time_domain_points + num_time_domain_points),
+      d_imag_data_time_domain_points(imag_time_domain_points,
+                                     imag_time_domain_points + num_time_domain_points)
 {
-    if (numFFTDataPoints < 1) {
-        _numFFTDataPoints = 1;
-    } else {
-        _numFFTDataPoints = numFFTDataPoints;
+    if (d_fft_points.empty()) {
+        d_fft_points.resize(1);
     }
 
-    if (numTimeDomainDataPoints < 1) {
-        _numTimeDomainDataPoints = 1;
-    } else {
-        _numTimeDomainDataPoints = numTimeDomainDataPoints;
+    if (num_time_domain_points == 0) {
+        d_real_data_time_domain_points.resize(1);
+        d_imag_data_time_domain_points.resize(1);
     }
 
-    _fftPoints = new float[_numFFTDataPoints];
-    _fftPoints[0] = 0;
-    memcpy(_fftPoints, fftPoints, numFFTDataPoints * sizeof(float));
-
-    _realDataTimeDomainPoints = new double[_numTimeDomainDataPoints];
-    memset(_realDataTimeDomainPoints, 0x0, _numTimeDomainDataPoints * sizeof(double));
-    if (numTimeDomainDataPoints > 0) {
-        memcpy(_realDataTimeDomainPoints,
-               realTimeDomainPoints,
-               numTimeDomainDataPoints * sizeof(double));
-    }
-
-    _imagDataTimeDomainPoints = new double[_numTimeDomainDataPoints];
-    memset(_imagDataTimeDomainPoints, 0x0, _numTimeDomainDataPoints * sizeof(double));
-    if (numTimeDomainDataPoints > 0) {
-        memcpy(_imagDataTimeDomainPoints,
-               imagTimeDomainPoints,
-               numTimeDomainDataPoints * sizeof(double));
-    }
     _dataTimestamp = dataTimestamp;
     _repeatDataFlag = repeatDataFlag;
     _lastOfMultipleUpdateFlag = lastOfMultipleUpdateFlag;
@@ -63,30 +46,25 @@ SpectrumUpdateEvent::SpectrumUpdateEvent(const float* fftPoints,
     _droppedFFTFrames = droppedFFTFrames;
 }
 
-SpectrumUpdateEvent::~SpectrumUpdateEvent()
-{
-    delete[] _fftPoints;
-    delete[] _realDataTimeDomainPoints;
-    delete[] _imagDataTimeDomainPoints;
-}
+SpectrumUpdateEvent::~SpectrumUpdateEvent() {}
 
-const float* SpectrumUpdateEvent::getFFTPoints() const { return _fftPoints; }
+const float* SpectrumUpdateEvent::getFFTPoints() const { return d_fft_points.data(); }
 
 const double* SpectrumUpdateEvent::getRealTimeDomainPoints() const
 {
-    return _realDataTimeDomainPoints;
+    return d_real_data_time_domain_points.data();
 }
 
 const double* SpectrumUpdateEvent::getImagTimeDomainPoints() const
 {
-    return _imagDataTimeDomainPoints;
+    return d_imag_data_time_domain_points.data();
 }
 
-uint64_t SpectrumUpdateEvent::getNumFFTDataPoints() const { return _numFFTDataPoints; }
+uint64_t SpectrumUpdateEvent::getNumFFTDataPoints() const { return d_fft_points.size(); }
 
 uint64_t SpectrumUpdateEvent::getNumTimeDomainDataPoints() const
 {
-    return _numTimeDomainDataPoints;
+    return d_real_data_time_domain_points.size();
 }
 
 gr::high_res_timer_type SpectrumUpdateEvent::getDataTimestamp() const
