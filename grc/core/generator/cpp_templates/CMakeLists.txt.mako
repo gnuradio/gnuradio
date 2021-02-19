@@ -55,7 +55,7 @@ target_link_libraries(${class_name}
     gnuradio::gnuradio-blocks
     % for link in links:
     % if link:
-    ${link.replace("gnuradio-", "gnuradio::gnuradio-")}
+    ${link}
     % endif
     % endfor
 
