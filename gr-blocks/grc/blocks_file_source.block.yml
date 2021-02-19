@@ -60,7 +60,7 @@ templates:
 cpp_templates:
     includes: ['#include <gnuradio/blocks/file_source.h>']
     declarations: 'blocks::file_source::sptr ${id};'
-    make: 'this->${id} =blocks::file_source::make(${type.size}*${vlen}, "${file[1:-1]}", ${repeat}, ${offset}, ${length});'
+    make: 'this->${id} =blocks::file_source::make(${type.size}*${vlen}, ${file}, ${repeat}, ${offset}, ${length});'
     callbacks:
     - open(${file}, ${repeat})
     translations:
