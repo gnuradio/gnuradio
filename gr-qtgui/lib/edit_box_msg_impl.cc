@@ -45,14 +45,6 @@ edit_box_msg_impl::edit_box_msg_impl(data_type_t type,
       QObject(parent),
       d_port(pmt::mp("msg"))
 {
-    // Required now for Qt; argc must be greater than 0 and argv
-    // must have at least one valid character. Must be valid through
-    // life of the qApplication:
-    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
-    d_argc = 1;
-    d_argv = new char;
-    d_argv[0] = '\0';
-
     if (qApp != NULL) {
         d_qApplication = qApp;
     } else {

@@ -31,13 +31,18 @@ private:
     int d_nconnections;
 
     int d_index, d_start, d_end;
-    std::vector<double*> d_buffers;
+    std::vector<volk::vector<double>> d_buffers;
     std::vector<std::vector<gr::tag_t>> d_tags;
 
-    int d_argc;
-    char* d_argv;
+    // Required now for Qt; argc must be greater than 0 and argv
+    // must have at least one valid character. Must be valid through
+    // life of the qApplication:
+    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
+    char d_zero = 0;
+    int d_argc = 1;
+    char* d_argv = &d_zero;
     QWidget* d_parent;
-    NumberDisplayForm* d_main_gui;
+    NumberDisplayForm* d_main_gui = nullptr;
 
     std::vector<float> d_avg_value;
     std::vector<filter::single_pole_iir<float, float, float>> d_iir;

@@ -16,6 +16,8 @@
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/qtgui/constellationdisplayform.h>
 
+#include <volk/volk_alloc.hh>
+
 namespace gr {
 namespace qtgui {
 
@@ -24,10 +26,10 @@ class QTGUI_API ber_sink_b_impl : public ber_sink_b
 private:
     void initialize();
 
-    std::vector<double*> d_esno_buffers;
-    std::vector<double*> d_ber_buffers;
+    std::vector<volk::vector<double>> d_esno_buffers;
+    std::vector<volk::vector<double>> d_ber_buffers;
 
-    ConstellationDisplayForm* d_main_gui;
+    ConstellationDisplayForm* d_main_gui = nullptr;
     gr::high_res_timer_type d_update_time;
     std::vector<int> d_total_errors;
     int d_ber_min_errors;
@@ -48,6 +50,12 @@ public:
                     std::vector<std::string> curvenames = std::vector<std::string>(),
                     QWidget* parent = NULL);
     ~ber_sink_b_impl() override;
+
+    // Disallow copy/move because of the raw pointers.
+    ber_sink_b_impl(const ber_sink_b_impl&) = delete;
+    ber_sink_b_impl& operator=(const ber_sink_b_impl&) = delete;
+    ber_sink_b_impl(ber_sink_b_impl&&) = delete;
+    ber_sink_b_impl& operator=(ber_sink_b_impl&&) = delete;
 
     bool check_topology(int ninputs, int noutputs) override;
 

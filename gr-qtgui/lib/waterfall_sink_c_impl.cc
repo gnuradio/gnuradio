@@ -60,44 +60,18 @@ waterfall_sink_c_impl::waterfall_sink_c_impl(int fftsize,
       d_nrows(200),
       d_port(pmt::mp("freq")),
       d_port_bw(pmt::mp("bw")),
+      d_fft(std::make_unique<fft::fft_complex_fwd>(fftsize)),
+      d_fbuf(fftsize),
       d_parent(parent)
 {
-    // Required now for Qt; argc must be greater than 0 and argv
-    // must have at least one valid character. Must be valid through
-    // life of the qApplication:
-    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
-    d_argc = 1;
-    d_argv = new char;
-    d_argv[0] = '\0';
-
-    d_main_gui = NULL;
-
-    // Perform fftshift operation;
-    // this is usually desired when plotting
-    d_shift = true;
-
-    d_fft = new fft::fft_complex_fwd(d_fftsize);
-    d_fbuf = (float*)volk_malloc(d_fftsize * sizeof(float), volk_get_alignment());
-    memset(d_fbuf, 0, d_fftsize * sizeof(float));
-
-    d_index = 0;
     // save the last "connection" for the PDU memory
-    for (int i = 0; i < d_nconnections; i++) {
-        d_residbufs.push_back((gr_complex*)volk_malloc(d_fftsize * sizeof(gr_complex),
-                                                       volk_get_alignment()));
-        d_magbufs.push_back(
-            (double*)volk_malloc(d_fftsize * sizeof(double), volk_get_alignment()));
-        std::fill_n(d_residbufs[i], d_fftsize, 0);
-        memset(d_magbufs[i], 0, d_fftsize * sizeof(double));
+    for (int i = 0; i < d_nconnections + 1; i++) {
+        d_residbufs.emplace_back(d_fftsize);
+        d_magbufs.emplace_back(d_fftsize);
     }
 
-    d_residbufs.push_back(
-        (gr_complex*)volk_malloc(d_fftsize * sizeof(gr_complex), volk_get_alignment()));
-    d_pdu_magbuf =
-        (double*)volk_malloc(d_fftsize * sizeof(double) * d_nrows, volk_get_alignment());
-    d_magbufs.push_back(d_pdu_magbuf);
-    memset(d_pdu_magbuf, 0, d_fftsize * sizeof(double) * d_nrows);
-    std::fill_n(d_residbufs[d_nconnections], d_fftsize, 0);
+    d_residbufs.emplace_back(d_fftsize);
+    d_pdu_magbuf = d_magbufs[d_magbufs.size() - 1].data();
 
     buildwindow();
 
@@ -122,15 +96,6 @@ waterfall_sink_c_impl::~waterfall_sink_c_impl()
 {
     if (!d_main_gui->isClosed())
         d_main_gui->close();
-
-    for (int i = 0; i < (int)d_residbufs.size(); i++) {
-        volk_free(d_residbufs[i]);
-        volk_free(d_magbufs[i]);
-    }
-    delete d_fft;
-    volk_free(d_fbuf);
-
-    delete d_argv;
 }
 
 bool waterfall_sink_c_impl::check_topology(int ninputs, int noutputs)
@@ -348,31 +313,13 @@ void waterfall_sink_c_impl::fftresize()
     if (newfftsize != d_fftsize) {
 
         // Resize residbuf and replace data
-        for (int i = 0; i < d_nconnections; i++) {
-            volk_free(d_residbufs[i]);
-            volk_free(d_magbufs[i]);
-
-            d_residbufs[i] = (gr_complex*)volk_malloc(newfftsize * sizeof(gr_complex),
-                                                      volk_get_alignment());
-            d_magbufs[i] =
-                (double*)volk_malloc(newfftsize * sizeof(double), volk_get_alignment());
-
-            std::fill_n(d_residbufs[i], newfftsize, 0);
-            memset(d_magbufs[i], 0, newfftsize * sizeof(double));
+        for (int i = 0; i < d_nconnections + 1; i++) {
+            d_residbufs[i].clear();
+            d_residbufs[i].resize(newfftsize);
+            d_magbufs[i].clear();
+            d_magbufs[i].resize(newfftsize);
         }
-
-        // Handle the PDU buffers separately because of the different
-        // size requirement of the pdu_magbuf.
-        volk_free(d_residbufs[d_nconnections]);
-        volk_free(d_pdu_magbuf);
-
-        d_residbufs[d_nconnections] = (gr_complex*)volk_malloc(
-            newfftsize * sizeof(gr_complex), volk_get_alignment());
-        d_pdu_magbuf = (double*)volk_malloc(newfftsize * sizeof(double) * d_nrows,
-                                            volk_get_alignment());
-        d_magbufs[d_nconnections] = d_pdu_magbuf;
-        std::fill_n(d_residbufs[d_nconnections], newfftsize, 0);
-        memset(d_pdu_magbuf, 0, newfftsize * sizeof(double) * d_nrows);
+        d_pdu_magbuf = d_magbufs[d_magbufs.size() - 1].data();
 
         // Set new fft size and reset buffer index
         // (throws away any currently held data, but who cares?)
@@ -383,14 +330,12 @@ void waterfall_sink_c_impl::fftresize()
         buildwindow();
 
         // Reset FFTW plan for new size
-        delete d_fft;
-        d_fft = new fft::fft_complex_fwd(d_fftsize);
+        d_fft = std::make_unique<fft::fft_complex_fwd>(d_fftsize);
 
         d_fft_shift.resize(d_fftsize);
 
-        volk_free(d_fbuf);
-        d_fbuf = (float*)volk_malloc(d_fftsize * sizeof(float), volk_get_alignment());
-        memset(d_fbuf, 0, d_fftsize * sizeof(float));
+        d_fbuf.clear();
+        d_fbuf.resize(d_fftsize);
 
         d_last_time = 0;
     }
@@ -453,9 +398,11 @@ int waterfall_sink_c_impl::work(int noutput_items,
                 for (int n = 0; n < d_nconnections; n++) {
                     // Fill up residbuf with d_fftsize number of items
                     in = (const gr_complex*)input_items[n];
-                    memcpy(d_residbufs[n] + d_index, &in[j], sizeof(gr_complex) * resid);
+                    memcpy(d_residbufs[n].data() + d_index,
+                           &in[j],
+                           sizeof(gr_complex) * resid);
 
-                    fft(d_fbuf, d_residbufs[n], d_fftsize);
+                    fft(d_fbuf.data(), d_residbufs[n].data(), d_fftsize);
                     for (int x = 0; x < d_fftsize; x++) {
                         d_magbufs[n][x] = (double)((1.0 - d_fftavg) * d_magbufs[n][x] +
                                                    (d_fftavg)*d_fbuf[x]);
@@ -476,7 +423,9 @@ int waterfall_sink_c_impl::work(int noutput_items,
         else {
             for (int n = 0; n < d_nconnections; n++) {
                 in = (const gr_complex*)input_items[n];
-                memcpy(d_residbufs[n] + d_index, &in[j], sizeof(gr_complex) * datasize);
+                memcpy(d_residbufs[n].data() + d_index,
+                       &in[j],
+                       sizeof(gr_complex) * datasize);
             }
             d_index += datasize;
             j += datasize;
@@ -544,15 +493,16 @@ void waterfall_sink_c_impl::handle_pdus(pmt::pmt_t msg)
         size_t max = std::min(d_fftsize, static_cast<int>(len));
         for (size_t i = 0; j < d_nrows; i += stride) {
             // Clear residbufs if len < d_fftsize
-            std::fill_n(d_residbufs[d_nconnections], d_fftsize, 0x00);
+            std::fill_n(d_residbufs[d_nconnections].data(), d_fftsize, 0x00);
 
             // Copy in as much of the input samples as we can
-            memcpy(
-                d_residbufs[d_nconnections], &in[min], sizeof(gr_complex) * (max - min));
+            memcpy(d_residbufs[d_nconnections].data(),
+                   &in[min],
+                   sizeof(gr_complex) * (max - min));
 
             // Apply the window and FFT; copy data into the PDU
             // magnitude buffer.
-            fft(d_fbuf, d_residbufs[d_nconnections], d_fftsize);
+            fft(d_fbuf.data(), d_residbufs[d_nconnections].data(), d_fftsize);
             for (int x = 0; x < d_fftsize; x++) {
                 d_pdu_magbuf[j * d_fftsize + x] = (double)d_fbuf[x];
             }

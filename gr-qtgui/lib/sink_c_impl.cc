@@ -24,6 +24,10 @@
 namespace gr {
 namespace qtgui {
 
+namespace {
+constexpr uint64_t maxBufferSize = 32768;
+}
+
 sink_c::sptr sink_c::make(int fftsize,
                           int wintype,
                           double fc,
@@ -66,52 +70,28 @@ sink_c_impl::sink_c_impl(int fftsize,
       d_bandwidth(bw),
       d_name(name),
       d_port(pmt::mp("freq")),
+      d_fft(std::make_unique<fft::fft_complex_fwd>(d_fftsize)),
+      d_residbuf(d_fftsize),
+      d_magbuf(d_fftsize),
       d_plotfreq(plotfreq),
       d_plotwaterfall(plotwaterfall),
       d_plottime(plottime),
       d_plotconst(plotconst),
-      d_parent(parent)
+      d_parent(parent),
+      d_main_gui(maxBufferSize, d_fftsize, d_center_freq, -d_bandwidth, d_bandwidth)
 {
-    // Required now for Qt; argc must be greater than 0 and argv
-    // must have at least one valid character. Must be valid through
-    // life of the qApplication:
-    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
-    d_argc = 1;
-    d_argv = new char;
-    d_argv[0] = '\0';
-
     // setup output message port to post frequency when display is
     // double-clicked
     message_port_register_out(d_port);
     message_port_register_in(d_port);
     set_msg_handler(d_port, [this](pmt::pmt_t msg) { this->handle_set_freq(msg); });
 
-    d_main_gui = NULL;
-
-    // Perform fftshift operation;
-    // this is usually desired when plotting
-    d_shift = true;
-
-    d_fft = new fft::fft_complex_fwd(d_fftsize);
-
-    d_index = 0;
-    d_residbuf =
-        (gr_complex*)volk_malloc(d_fftsize * sizeof(gr_complex), volk_get_alignment());
-    d_magbuf = (float*)volk_malloc(d_fftsize * sizeof(float), volk_get_alignment());
-
     buildwindow();
 
     initialize();
 }
 
-sink_c_impl::~sink_c_impl()
-{
-    delete d_main_gui;
-    delete d_fft;
-    delete d_argv;
-    volk_free(d_residbuf);
-    volk_free(d_magbuf);
-}
+sink_c_impl::~sink_c_impl() {}
 
 bool sink_c_impl::check_topology(int ninputs, int noutputs) { return ninputs == 1; }
 
@@ -142,15 +122,11 @@ void sink_c_impl::initialize()
         throw std::runtime_error("sink_c_impl: Received bad center frequency.");
     }
 
-    uint64_t maxBufferSize = 32768;
-    d_main_gui = new SpectrumGUIClass(
-        maxBufferSize, d_fftsize, d_center_freq, -d_bandwidth, d_bandwidth);
-
-    d_main_gui->setDisplayTitle(d_name);
-    d_main_gui->setWindowType((int)d_wintype);
+    d_main_gui.setDisplayTitle(d_name);
+    d_main_gui.setWindowType((int)d_wintype);
     set_fft_size(d_fftsize);
 
-    d_main_gui->openSpectrumWindow(
+    d_main_gui.openSpectrumWindow(
         d_parent, d_plotfreq, d_plotwaterfall, d_plottime, d_plotconst);
 
     // initialize update time to 10 times a second
@@ -162,12 +138,12 @@ void sink_c_impl::initialize()
 
 void sink_c_impl::exec_() { d_qApplication->exec(); }
 
-QWidget* sink_c_impl::qwidget() { return d_main_gui->qwidget(); }
+QWidget* sink_c_impl::qwidget() { return d_main_gui.qwidget(); }
 
 #ifdef ENABLE_PYTHON
 PyObject* sink_c_impl::pyqwidget()
 {
-    PyObject* w = PyLong_FromVoidPtr((void*)d_main_gui->qwidget());
+    PyObject* w = PyLong_FromVoidPtr((void*)d_main_gui.qwidget());
     PyObject* retarg = Py_BuildValue("N", w);
     return retarg;
 }
@@ -178,7 +154,7 @@ void* sink_c_impl::pyqwidget() { return NULL; }
 void sink_c_impl::set_fft_size(const int fftsize)
 {
     d_fftsize = fftsize;
-    d_main_gui->setFFTSize(fftsize);
+    d_main_gui.setFFTSize(fftsize);
 }
 
 int sink_c_impl::fft_size() const { return d_fftsize; }
@@ -187,41 +163,41 @@ void sink_c_impl::set_frequency_range(const double centerfreq, const double band
 {
     d_center_freq = centerfreq;
     d_bandwidth = bandwidth;
-    d_main_gui->setFrequencyRange(d_center_freq, -d_bandwidth, d_bandwidth);
+    d_main_gui.setFrequencyRange(d_center_freq, -d_bandwidth, d_bandwidth);
 }
 
 void sink_c_impl::set_fft_power_db(double min, double max)
 {
-    d_main_gui->setFrequencyAxis(min, max);
+    d_main_gui.setFrequencyAxis(min, max);
 }
 
-void sink_c_impl::enable_rf_freq(bool en) { d_main_gui->enableRFFreq(en); }
+void sink_c_impl::enable_rf_freq(bool en) { d_main_gui.enableRFFreq(en); }
 
 /*
 void
 sink_c_impl::set_time_domain_axis(double min, double max)
 {
-  d_main_gui->setTimeDomainAxis(min, max);
+  d_main_gui.setTimeDomainAxis(min, max);
 }
 
 void
 sink_c_impl::set_constellation_axis(double xmin, double xmax,
                                     double ymin, double ymax)
 {
-  d_main_gui->setConstellationAxis(xmin, xmax, ymin, ymax);
+  d_main_gui.setConstellationAxis(xmin, xmax, ymin, ymax);
 }
 
 void
 sink_c_impl::set_constellation_pen_size(int size)
 {
-  d_main_gui->setConstellationPenSize(size);
+  d_main_gui.setConstellationPenSize(size);
 }
 */
 
 void sink_c_impl::set_update_time(double t)
 {
     d_update_time = t * gr::high_res_timer_tps();
-    d_main_gui->setUpdateTime(t);
+    d_main_gui.setUpdateTime(t);
 }
 
 void sink_c_impl::fft(float* data_out, const gr_complex* data_in, int size)
@@ -240,7 +216,7 @@ void sink_c_impl::fft(float* data_out, const gr_complex* data_in, int size)
 void sink_c_impl::windowreset()
 {
     fft::window::win_type newwintype;
-    newwintype = (fft::window::win_type)d_main_gui->getWindowType();
+    newwintype = (fft::window::win_type)d_main_gui.getWindowType();
     if (d_wintype != newwintype) {
         d_wintype = newwintype;
         buildwindow();
@@ -257,17 +233,13 @@ void sink_c_impl::buildwindow()
 
 void sink_c_impl::fftresize()
 {
-    int newfftsize = d_main_gui->getFFTSize();
+    int newfftsize = d_main_gui.getFFTSize();
 
     if (newfftsize != d_fftsize) {
 
         // Resize residbuf and replace data
-        volk_free(d_residbuf);
-        d_residbuf = (gr_complex*)volk_malloc(newfftsize * sizeof(gr_complex),
-                                              volk_get_alignment());
-
-        volk_free(d_magbuf);
-        d_magbuf = (float*)volk_malloc(newfftsize * sizeof(float), volk_get_alignment());
+        d_residbuf.resize(newfftsize);
+        d_magbuf.resize(newfftsize);
 
         // Set new fft size and reset buffer index
         // (throws away any currently held data, but who cares?)
@@ -278,15 +250,14 @@ void sink_c_impl::fftresize()
         buildwindow();
 
         // Reset FFTW plan for new size
-        delete d_fft;
-        d_fft = new fft::fft_complex_fwd(d_fftsize);
+        d_fft = std::make_unique<fft::fft_complex_fwd>(d_fftsize);
     }
 }
 
 void sink_c_impl::check_clicked()
 {
-    if (d_main_gui->checkClicked()) {
-        double freq = d_main_gui->getClickedFreq();
+    if (d_main_gui.checkClicked()) {
+        double freq = d_main_gui.getClickedFreq();
         message_port_pub(d_port, pmt::cons(d_port, pmt::from_double(freq)));
     }
 }
@@ -333,26 +304,26 @@ int sink_c_impl::general_work(int noutput_items,
             const gr::high_res_timer_type currentTime = gr::high_res_timer_now();
 
             // Fill up residbuf with d_fftsize number of items
-            memcpy(d_residbuf + d_index, &in[j], sizeof(gr_complex) * resid);
+            memcpy(d_residbuf.data() + d_index, &in[j], sizeof(gr_complex) * resid);
             d_index = 0;
 
             j += resid;
-            fft(d_magbuf, d_residbuf, d_fftsize);
+            fft(d_magbuf.data(), d_residbuf.data(), d_fftsize);
 
-            d_main_gui->updateWindow(true,
-                                     d_magbuf,
-                                     d_fftsize,
-                                     NULL,
-                                     0,
-                                     (float*)d_residbuf,
-                                     d_fftsize,
-                                     currentTime,
-                                     true);
+            d_main_gui.updateWindow(true,
+                                    d_magbuf.data(),
+                                    d_fftsize,
+                                    NULL,
+                                    0,
+                                    reinterpret_cast<float*>(d_residbuf.data()),
+                                    d_fftsize,
+                                    currentTime,
+                                    true);
             d_update_active = false;
         }
         // Otherwise, copy what we received into the residbuf for next time
         else {
-            memcpy(d_residbuf + d_index, &in[j], sizeof(gr_complex) * datasize);
+            memcpy(d_residbuf.data() + d_index, &in[j], sizeof(gr_complex) * datasize);
             d_index += datasize;
             j += datasize;
         }

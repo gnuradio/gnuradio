@@ -60,16 +60,6 @@ number_sink_impl::number_sink_impl(
         d_iir[n].set_taps(d_average);
     }
 
-    // Required now for Qt; argc must be greater than 0 and argv
-    // must have at least one valid character. Must be valid through
-    // life of the qApplication:
-    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
-    d_argc = 1;
-    d_argv = new char;
-    d_argv[0] = '\0';
-
-    d_main_gui = NULL;
-
     // Set alignment properties for VOLK
     const int alignment_multiple = volk_get_alignment() / d_itemsize;
     set_alignment(std::max(1, alignment_multiple));

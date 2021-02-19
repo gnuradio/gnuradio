@@ -29,16 +29,21 @@ private:
     const std::string d_name;
     int d_nconnections;
 
-    int d_index;
-    std::vector<double*> d_residbufs;
+    int d_index = 0;
+    std::vector<volk::vector<double>> d_residbufs;
 
     float d_scale;
-    float* d_tmpflt;
+    volk::vector<float> d_tmpflt;
 
-    int d_argc;
-    char* d_argv;
+    // Required now for Qt; argc must be greater than 0 and argv
+    // must have at least one valid character. Must be valid through
+    // life of the qApplication:
+    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
+    char d_zero = 0;
+    int d_argc = 1;
+    char* d_argv = &d_zero;
     QWidget* d_parent;
-    TimeRasterDisplayForm* d_main_gui;
+    TimeRasterDisplayForm* d_main_gui = nullptr;
 
     int d_icols;
     double d_rows, d_cols;

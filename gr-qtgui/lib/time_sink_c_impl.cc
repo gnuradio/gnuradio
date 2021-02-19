@@ -56,32 +56,18 @@ time_sink_c_impl::time_sink_c_impl(int size,
     if (nconnections > 12)
         throw std::runtime_error("time_sink_c only supports up to 12 inputs");
 
-    // Required now for Qt; argc must be greater than 0 and argv
-    // must have at least one valid character. Must be valid through
-    // life of the qApplication:
-    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
-    d_argc = 1;
-    d_argv = new char;
-    d_argv[0] = '\0';
-
-    d_main_gui = NULL;
-
     // setup PDU handling input port
     message_port_register_in(pmt::mp("in"));
     set_msg_handler(pmt::mp("in"), [this](pmt::pmt_t msg) { this->handle_pdus(msg); });
 
     // +2 for the PDU message buffers
     for (unsigned int n = 0; n < d_nconnections + 2; n++) {
-        d_buffers.push_back(
-            (double*)volk_malloc(d_buffer_size * sizeof(double), volk_get_alignment()));
-        memset(d_buffers[n], 0, d_buffer_size * sizeof(double));
+        d_buffers.emplace_back(d_buffer_size);
     }
 
     // We don't use cbuffers with the PDU message handling capabilities.
     for (unsigned int n = 0; n < d_nconnections / 2; n++) {
-        d_cbuffers.push_back((gr_complex*)volk_malloc(d_buffer_size * sizeof(gr_complex),
-                                                      volk_get_alignment()));
-        std::fill_n(d_cbuffers[n], d_buffer_size, 0);
+        d_cbuffers.emplace_back(d_buffer_size);
     }
 
     // Set alignment properties for VOLK
@@ -103,16 +89,6 @@ time_sink_c_impl::~time_sink_c_impl()
 {
     if (!d_main_gui->isClosed())
         d_main_gui->close();
-
-    // d_main_gui is a qwidget destroyed with its parent
-    for (unsigned int n = 0; n < d_nconnections + 2; n++) {
-        volk_free(d_buffers[n]);
-    }
-    for (unsigned int n = 0; n < d_nconnections / 2; n++) {
-        volk_free(d_cbuffers[n]);
-    }
-
-    delete d_argv;
 }
 
 bool time_sink_c_impl::check_topology(int ninputs, int noutputs)
@@ -302,17 +278,10 @@ void time_sink_c_impl::set_nsamps(const int newsize)
 
         // Resize buffers and replace data
         for (unsigned int n = 0; n < d_nconnections + 2; n++) {
-            volk_free(d_buffers[n]);
-            d_buffers[n] = (double*)volk_malloc(d_buffer_size * sizeof(double),
-                                                volk_get_alignment());
-            memset(d_buffers[n], 0, d_buffer_size * sizeof(double));
-        }
-
-        for (unsigned int n = 0; n < d_nconnections / 2; n++) {
-            volk_free(d_cbuffers[n]);
-            d_cbuffers[n] = (gr_complex*)volk_malloc(d_buffer_size * sizeof(gr_complex),
-                                                     volk_get_alignment());
-            std::fill_n(d_cbuffers[n], d_buffer_size, 0);
+            d_buffers[n].clear();
+            d_buffers[n].resize(d_buffer_size);
+            d_cbuffers[n].clear();
+            d_cbuffers[n].resize(d_buffer_size);
         }
 
         // If delay was set beyond the new boundary, pull it back.
@@ -391,7 +360,7 @@ void time_sink_c_impl::_reset()
             // represents data that might have to be plotted again if a
             // trigger occurs and we have a trigger delay set.  The tail
             // section is between (d_end-d_trigger_delay) and d_end.
-            memmove(d_cbuffers[n],
+            memmove(d_cbuffers[n].data(),
                     &d_cbuffers[n][d_end - d_trigger_delay],
                     d_trigger_delay * sizeof(gr_complex));
 
@@ -588,8 +557,8 @@ int time_sink_c_impl::work(int noutput_items,
     if ((d_triggered) && (d_index == d_end)) {
         // Copy data to be plotted to start of buffers.
         for (n = 0; n < d_nconnections / 2; n++) {
-            volk_32fc_deinterleave_64f_x2(d_buffers[2 * n + 0],
-                                          d_buffers[2 * n + 1],
+            volk_32fc_deinterleave_64f_x2(d_buffers[2 * n + 0].data(),
+                                          d_buffers[2 * n + 1].data(),
                                           &d_cbuffers[n][d_start],
                                           d_size);
         }
@@ -671,8 +640,8 @@ void time_sink_c_impl::handle_pdus(pmt::pmt_t msg)
 
         set_nsamps(len);
 
-        volk_32fc_deinterleave_64f_x2(d_buffers[2 * d_nconnections + 0],
-                                      d_buffers[2 * d_nconnections + 1],
+        volk_32fc_deinterleave_64f_x2(d_buffers[2 * d_nconnections + 0].data(),
+                                      d_buffers[2 * d_nconnections + 1].data(),
                                       in,
                                       len);
 

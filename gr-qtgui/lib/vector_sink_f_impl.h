@@ -37,13 +37,17 @@ private:
     const pmt::pmt_t d_port;
     const pmt::pmt_t d_msg; //< Key of outgoing messages
 
-    std::vector<double*> d_magbufs;
+    std::vector<volk::vector<double>> d_magbufs;
 
-
-    int d_argc;
-    char* d_argv;
+    // Required now for Qt; argc must be greater than 0 and argv
+    // must have at least one valid character. Must be valid through
+    // life of the qApplication:
+    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
+    char d_zero = 0;
+    int d_argc = 1;
+    char* d_argv = &d_zero;
     QWidget* d_parent;
-    VectorDisplayForm* d_main_gui;
+    VectorDisplayForm* d_main_gui = nullptr;
 
     gr::high_res_timer_type d_update_time;
     gr::high_res_timer_type d_last_time;
@@ -65,6 +69,13 @@ public:
                        int nconnections,
                        QWidget* parent = NULL);
     ~vector_sink_f_impl() override;
+
+    // Disallow copy/move because raw pointers.
+    vector_sink_f_impl(const vector_sink_f_impl&) = delete;
+    vector_sink_f_impl(vector_sink_f_impl&&) = delete;
+    vector_sink_f_impl& operator=(const vector_sink_f_impl&) = delete;
+    vector_sink_f_impl& operator=(vector_sink_f_impl&&) = delete;
+
 
     bool check_topology(int ninputs, int noutputs) override;
 
