@@ -194,6 +194,17 @@ class TopBlockGenerator(object):
         ]
 
         blocks = expr_utils.sort_objects(blocks, operator.attrgetter('name'), _get_block_sort_text)
+
+        # Ordering blocks : blocks with GUI Hint must be processed first to avoid PyQT5 superposing blocks
+        for block in blocks:
+            try:
+                block.without_gui_hint = (block.params['gui_hint'].get_value()=='')
+            except KeyError:
+                # No gui hint
+                block.without_gui_hint = True
+                pass
+        blocks = sorted(blocks, key=lambda block: block.without_gui_hint)
+
         blocks_make = []
         for block in blocks:
             make = block.templates.render('make')
@@ -307,7 +318,7 @@ class TopBlockGenerator(object):
                 porta = con.source_port
                 portb = con.sink_port
                 fg = self._flow_graph
-                             
+
                 if porta.dtype == 'bus' and portb.dtype == 'bus':
                     # which bus port is this relative to the bus structure
                     if len(porta.bus_structure) == len(portb.bus_structure):
@@ -318,8 +329,8 @@ class TopBlockGenerator(object):
                                 parent=self, source=hidden_porta, sink=hidden_portb)
                             code = template.render(make_port_sig=make_port_sig, source=hidden_porta, sink=hidden_portb)
                             rendered.append(code)
-                            
 
-            
+
+
 
         return rendered
