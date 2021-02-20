@@ -196,6 +196,18 @@ class TopBlockGenerator(object):
         ]
 
         blocks = expr_utils.sort_objects(blocks, operator.attrgetter('name'), _get_block_sort_text)
+
+        # Ordering blocks : blocks with GUI Hint must be processed first to avoid PyQT5 superposing blocks
+        for block in blocks:
+            try:
+                block.without_gui_hint = (block.params['gui_hint'].get_value()=='')
+            except KeyError:
+                # No gui hint
+                block.without_gui_hint = True
+                pass
+
+        blocks = sorted(blocks, key=lambda block: block.without_gui_hint)
+
         blocks_make = []
         for block in blocks:
             make = block.templates.render('make')
