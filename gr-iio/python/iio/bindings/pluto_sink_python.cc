@@ -32,8 +32,8 @@ void bind_pluto_sink(py::module& m)
 
     using pluto_sink = gr::iio::pluto_sink;
 
-
-    py::class_<pluto_sink, std::shared_ptr<pluto_sink>>(m, "pluto_sink", D(pluto_sink))
+    py::class_<pluto_sink, gr::hier_block2, gr::basic_block, std::shared_ptr<pluto_sink>>(
+        m, "pluto_sink", D(pluto_sink))
 
         .def(py::init(&pluto_sink::make),
              py::arg("uri"),

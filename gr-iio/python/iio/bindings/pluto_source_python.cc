@@ -33,8 +33,10 @@ void bind_pluto_source(py::module& m)
     using pluto_source = gr::iio::pluto_source;
 
 
-    py::class_<pluto_source, std::shared_ptr<pluto_source>>(
-        m, "pluto_source", D(pluto_source))
+    py::class_<pluto_source,
+               gr::hier_block2,
+               gr::basic_block,
+               std::shared_ptr<pluto_source>>(m, "pluto_source", D(pluto_source))
 
         .def(py::init(&pluto_source::make),
              py::arg("uri"),
