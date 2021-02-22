@@ -283,6 +283,15 @@ cpp_templates:
       ${'%'} endif
       ${'%'} endif
       % endfor
+      this->${'$'}{id}->set_samp_rate(${'$'}{samp_rate});
+      ${'%'} if sync == 'sync':
+      this->${'$'}{id}->set_time_unknown_pps(::uhd::time_spec_t());
+      ${'%'} elif sync == 'pc_clock':
+      this->${'$'}{id}->set_time_now(::uhd::time_spec_t(time(NULL)), ::uhd::usrp::multi_usrp::ALL_MBOARDS);
+      ${'%'} else:
+      // No synchronization enforced.
+      ${'%'} endif
+
       % for n in range(max_nchan):
       ${'%'} if context.get('nchan')() > ${n}:
       this->${'$'}{id}->set_center_freq(${'$'}{${'center_freq' + str(n)}}, ${n});
@@ -325,13 +334,8 @@ cpp_templates:
       ${'%'} if clock_rate():
       this->${'$'}{id}->set_clock_rate(${'$'}{clock_rate}, ::uhd::usrp::multi_usrp::ALL_MBOARDS);
       ${'%'} endif
-      this->${'$'}{id}->set_samp_rate(${'$'}{samp_rate});
-      ${'%'} if sync == 'sync':
-      this->${'$'}{id}->set_time_unknown_pps(::uhd::time_spec_t());
-      ${'%'} elif sync == 'pc_clock':
-      this->${'$'}{id}->set_time_now(::uhd::time_spec_t(time(NULL)), ::uhd::usrp::multi_usrp::ALL_MBOARDS);
-      ${'%'} else:
-      // No synchronization enforced.
+      ${'%'} if start_time() >= 0.0:
+      this->${'$'}{id}->set_start_time(::uhd::time_spec_t(${'$'}{float(start_time)}));
       ${'%'} endif
     link: ['gnuradio-uhd uhd']
     callbacks:
