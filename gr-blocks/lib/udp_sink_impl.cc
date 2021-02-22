@@ -107,10 +107,9 @@ int udp_sink_impl::work(int noutput_items,
 
     gr::thread::scoped_lock guard(d_mutex); // protect d_socket
 
-    while (bytes_sent < total_size) {
-        bytes_to_send = bytes_to_send =
-            std::min(static_cast<std::ptrdiff_t>(d_payload_size),
-                     static_cast<std::ptrdiff_t>(total_size - bytes_sent));
+    while (bytes_sent < static_cast<std::ptrdiff_t>(total_size)) {
+        bytes_to_send = std::min(static_cast<std::ptrdiff_t>(d_payload_size),
+                                 static_cast<std::ptrdiff_t>(total_size - bytes_sent));
 
         if (d_connected) {
             try {
