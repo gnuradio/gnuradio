@@ -1,0 +1,207 @@
+id: iio_fmcomms5_source
+label: FMComms5 Source
+flags: [ throttle ]
+
+parameters:
+-   id: uri
+    label: IIO context URI
+    dtype: string
+    default: 'local:'
+
+-   id: frequency1
+    label: LO Frequency (RX1/RX2)
+    dtype: int
+    default: 2400000000
+
+-   id: frequency2
+    label: LO Frequency (RX3/RX4)
+    dtype: int
+    default: 2400000000
+
+-   id: samplerate
+    label: Sample Rate
+    dtype: int
+    default: 2084000
+
+-   id: bandwidth
+    label: RF Bandwidth
+    dtype: int
+    default: 20000000
+
+-   id: buffer_size
+    label: Buffer size
+    dtype: int
+    default: 0x8000
+
+-   id: rx1_en
+    label: RX1 Enabled
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: rx2_en
+    label: RX2 Enabled
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: rx3_en
+    label: RX3 Enabled
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: rx4_en
+    label: RX4 Enabled
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: quadrature
+    label: Quadrature
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: rfdc
+    label: RF DC Correction
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: bbdc
+    label: BB DC Correction
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: gain1
+    label: Gain Mode (RX1)
+    dtype: enum
+    default: "'manual'"
+    options: ["'manual'", "'slow_attack'", "'fast_attack'", "'hybrid'"]
+    option_labels: ['Manual', 'Slow Attack', 'Fast Attack', 'Hybrid']
+    hide: ${ ('none' if rx1_en else 'all') }
+
+-   id: manual_gain1
+    label: Manual Gain (RX1)(dB)
+    dtype: float
+    default: 64
+    hide: ${ ('none' if ((gain1 == "'manual'") and (rx1_en)) else 'all') }
+
+-   id: gain2
+    label: Gain Mode (RX2)
+    dtype: enum
+    default: "'manual'"
+    options: ["'manual'", "'slow_attack'", "'fast_attack'", "'hybrid'"]
+    option_labels: ['Manual', 'Slow Attack', 'Fast Attack', 'Hybrid']
+    hide: ${ ('none' if rx2_en else 'all') }
+
+-   id: manual_gain2
+    label: Manual Gain (RX2)(dB)
+    dtype: float
+    default: 64
+    hide: ${ ('none' if ((gain2 == "'manual'") and (rx2_en)) else 'all') }
+
+-   id: gain3
+    label: Gain Mode (RX3)
+    dtype: enum
+    default: "'manual'"
+    options: ["'manual'", "'slow_attack'", "'fast_attack'", "'hybrid'"]
+    option_labels: ['Manual', 'Slow Attack', 'Fast Attack', 'Hybrid']
+    hide: ${ ('none' if rx3_en else 'all') }
+
+-   id: manual_gain3
+    label: Manual Gain (RX3)(dB)
+    dtype: float
+    default: 64
+    hide: ${ ('none' if ((gain3 == "'manual'") and (rx3_en)) else 'all') }
+
+-   id: gain4
+    label: Gain Mode (RX4)
+    dtype: enum
+    default: "'manual'"
+    options: ["'manual'", "'slow_attack'", "'fast_attack'", "'hybrid'"]
+    option_labels: ['Manual', 'Slow Attack', 'Fast Attack', 'Hybrid']
+    hide: ${ ('none' if rx4_en else 'all') }
+
+-   id: manual_gain4
+    label: Manual Gain (RX4)(dB)
+    dtype: float
+    default: 64
+    hide: ${ ('none' if ((gain4 == "'manual'") and (rx4_en)) else 'all') }
+
+-   id: rf_port_select
+    label: RF Port Select
+    dtype: enum
+    default: "'A_BALANCED'"
+    options: ["'A_BALANCED'", "'B_BALANCED'", "'C_BALANCED'", "'A_N'", "'A_P'", "'B_N'", "'B_P'", "'C_N'", "'C_P'", "'TX_MONITOR1'", "'TX_MONITOR2'", "'TX_MONITOR1_2'"]
+    option_labels: ['A_BALANCED', 'B_BALANCED', 'C_BALANCED', 'A_N', 'A_P', 'B_N', 'B_P', 'C_N', 'C_P', 'TX_MONITOR1', 'TX_MONITOR2', 'TX_MONITOR1_2']
+
+-   id: filter_source
+    category: Filter
+    label: Filter Configuration
+    dtype: enum
+    default: "'Auto'"
+    options: ["'Off'", "'Auto'", "'File'", "'Design'"]
+    option_labels: ['Off', 'Auto', 'File', 'Design']
+
+-   id: filter
+    category: Filter
+    label: Filter
+    dtype: file_open
+    default: ''
+    hide: ${ ('none' if filter_source == "'File'" else 'all') }
+
+-   id: fpass
+    category: Filter
+    label: Fpass (Hz)
+    dtype: float
+    default: samp_rate/4
+    hide: ${ ('none' if filter_source == "'Design'" else 'all') }
+
+-   id: fstop
+    category: Filter
+    label: Fstop (Hz)
+    dtype: float
+    default: samp_rate/3
+    hide: ${ ('none' if filter_source == "'Design'" else 'all') }
+
+-   id: bandwidth
+    category: Filter
+    label: RF Bandwidth (Hz)
+    dtype: int
+    default: 20000000
+    hide: ${ ('all' if filter_source == "'File'" else 'none') }
+
+outputs:
+-   domain: stream
+    dtype: complex
+    multiplicity: ${ sum([rx1_en, rx2_en, rx3_en, rx4_en]) }
+
+asserts:
+- ${ sum([rx1_en, rx2_en, rx3_en, rx4_en]) > 0 }
+- ${ ((samplerate>=2084000) or (filter_source!="'Off'")) }
+- ${ ((filter_source!="'File'") or (len(filter)>0)) }
+- ${ ((samplerate<=61440000) and (samplerate>=520833)) }
+- ${ ((bandwidth<=52000000) and (bandwidth>=200000)) }
+- ${ ((frequency1<=6000000000) and (frequency1>=70000000)) }
+- ${ ((frequency2<=6000000000) and (frequency2>=70000000)) }
+- ${ ((filter_source!="'Design'")  or (fpass<=samplerate)) }
+- ${ ((filter_source!="'Design'")  or (fstop<=samplerate)) }
+- ${ ((filter_source!="'Design'")  or (fstop>fpass)) }
+
+templates:
+    imports: from gnuradio import iio
+    make: iio.fmcomms5_source_f32c(${uri}, ${frequency1}, ${frequency2}, ${samplerate}, ${bandwidth}, ${rx1_en}, ${rx2_en}, ${rx3_en}, ${rx4_en}, ${buffer_size}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${gain2}, ${manual_gain2}, ${gain3}, ${manual_gain3}, ${gain4}, ${manual_gain4}, ${rf_port_select}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
+    callbacks:
+    - set_params(${frequency1}, ${frequency2}, ${samplerate}, ${bandwidth}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${gain2}, ${manual_gain2}, ${gain3}, ${manual_gain3}, ${gain4}, ${manual_gain4}, ${rf_port_select}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
+
+file_format: 1
