@@ -1,0 +1,116 @@
+id: iio_pluto_source
+label: PlutoSDR Source
+flags: [ throttle ]
+
+parameters:
+-   id: uri
+    label: IIO context URI
+    dtype: string
+    default: ''
+
+-   id: frequency
+    label: LO Frequency
+    dtype: int
+    default: 2400000000
+
+-   id: samplerate
+    label: Sample Rate
+    dtype: int
+    default: samp_rate
+
+-   id: buffer_size
+    label: Buffer size
+    dtype: int
+    default: 0x8000
+
+-   id: quadrature
+    label: Quadrature
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: rfdc
+    label: RF DC Correction
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: bbdc
+    label: BB DC Correction
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: gain1
+    label: Gain Mode (RX1)
+    dtype: enum
+    default: "'slow_attack'"
+    options: ["'manual'", "'slow_attack'", "'fast_attack'", "'hybrid'"]
+    option_labels: ['Manual', 'Slow Attack', 'Fast Attack', 'Hybrid']
+
+-   id: manual_gain1
+    label: Manual Gain (RX1)(dB)
+    dtype: float
+    default: 64
+    hide: ${ ('none' if gain1 == "'manual'" else 'all') }
+
+-   id: filter_source
+    category: Filter
+    label: Filter Configuration
+    dtype: enum
+    default: "'Auto'"
+    options: ["'Off'", "'Auto'", "'File'", "'Design'"]
+    option_labels: ['Off', 'Auto', 'File', 'Design']
+
+-   id: filter
+    category: Filter
+    label: Filter
+    dtype: file_open
+    default: ''
+    hide: ${ ('none' if filter_source == "'File'" else 'all') }
+
+-   id: fpass
+    category: Filter
+    label: Fpass (Hz)
+    dtype: float
+    default: samp_rate/4
+    hide: ${ ('none' if filter_source == "'Design'" else 'all') }
+
+-   id: fstop
+    category: Filter
+    label: Fstop (Hz)
+    dtype: float
+    default: samp_rate/3
+    hide: ${ ('none' if filter_source == "'Design'" else 'all') }
+
+-   id: bandwidth
+    category: Filter
+    label: RF Bandwidth (Hz)
+    dtype: int
+    default: 20000000
+    hide: ${ ('all' if filter_source == "'File'" else 'none') }
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+asserts:
+- ${ ((samplerate>=2084000) or (filter_source!="'Off'")) }
+- ${ ((filter_source!="'File'") or (len(filter)>0)) }
+- ${ ((samplerate<=61440000) and (samplerate>=65105)) }
+- ${ ((bandwidth<=52000000) and (bandwidth>=200000)) }
+- ${ ((frequency<=6000000000) and (frequency>=70000000)) }
+- ${ ((filter_source!="'Design'")  or (fpass<=samplerate)) }
+- ${ ((filter_source!="'Design'")  or (fstop<=samplerate)) }
+- ${ ((filter_source!="'Design'")  or (fstop>fpass)) }
+
+templates:
+    imports: from gnuradio import iio
+    make: iio.pluto_source(${uri}, ${frequency}, ${samplerate}, ${bandwidth}, ${buffer_size}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
+    callbacks:
+      - set_params(${frequency}, ${samplerate}, ${bandwidth}, ${buffer_size}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
+
+file_format: 1

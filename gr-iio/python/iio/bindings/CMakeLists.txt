@@ -1,0 +1,31 @@
+include(GrPybind)
+
+########################################################################
+# Python Bindings
+########################################################################
+
+list(APPEND iio_python_files
+    attr_sink_python.cc
+    attr_source_python.cc
+    attr_updater_python.cc
+    dds_control_python.cc
+    device_sink_python.cc
+    device_source_python.cc
+    fmcomms2_sink_f32c_python.cc
+    fmcomms2_sink_python.cc
+    fmcomms2_source_f32c_python.cc
+    fmcomms2_source_python.cc
+    fmcomms5_sink_f32c_python.cc
+    fmcomms5_sink_python.cc
+    fmcomms5_source_f32c_python.cc
+    fmcomms5_source_python.cc
+    pluto_sink_python.cc
+    pluto_source_python.cc
+    python_bindings.cc)
+
+GR_PYBIND_MAKE_CHECK_HASH(iio
+   ../../..
+   gr::iio
+   "${iio_python_files}")
+
+install(TARGETS iio_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/iio COMPONENT pythonapi)
