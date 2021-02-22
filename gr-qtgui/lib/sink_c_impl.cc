@@ -173,27 +173,6 @@ void sink_c_impl::set_fft_power_db(double min, double max)
 
 void sink_c_impl::enable_rf_freq(bool en) { d_main_gui.enableRFFreq(en); }
 
-/*
-void
-sink_c_impl::set_time_domain_axis(double min, double max)
-{
-  d_main_gui.setTimeDomainAxis(min, max);
-}
-
-void
-sink_c_impl::set_constellation_axis(double xmin, double xmax,
-                                    double ymin, double ymax)
-{
-  d_main_gui.setConstellationAxis(xmin, xmax, ymin, ymax);
-}
-
-void
-sink_c_impl::set_constellation_pen_size(int size)
-{
-  d_main_gui.setConstellationPenSize(size);
-}
-*/
-
 void sink_c_impl::set_update_time(double t)
 {
     d_update_time = t * gr::high_res_timer_tps();

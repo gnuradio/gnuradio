@@ -102,11 +102,6 @@ public:
     virtual void set_fft_power_db(double min, double max) = 0;
     virtual void enable_rf_freq(bool en) = 0;
 
-    // void set_time_domain_axis(double min, double max);
-    // void set_constellation_axis(double xmin, double xmax,
-    //                            double ymin, double ymax);
-    // void set_constellation_pen_size(int size);
-
     virtual void set_update_time(double t) = 0;
 
     QApplication* d_qApplication;

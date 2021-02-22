@@ -106,11 +106,6 @@ public:
     void set_fft_power_db(double min, double max) override;
     void enable_rf_freq(bool en) override;
 
-    // void set_time_domain_axis(double min, double max);
-    // void set_constellation_axis(double xmin, double xmax,
-    //                            double ymin, double ymax);
-    // void set_constellation_pen_size(int size);
-
     void set_update_time(double t) override;
 
     int general_work(int noutput_items,
