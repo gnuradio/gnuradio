@@ -89,7 +89,8 @@ public:
      * \param sps               Samples per symbol
      * \param mark_delay        tag marking delay in samples after the
      *                          corr_start tag
-     * \param threshold         Threshold of correlator, i.e, 1-PFA. Default is 0.9.
+     * \param threshold         Threshold of correlator, i.e, 1-PFA. 
+                                Default is 0.9.
      * \param threshold_method  Method for computing threshold.
      *
      */
