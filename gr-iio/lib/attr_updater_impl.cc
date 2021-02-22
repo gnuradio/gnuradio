@@ -13,6 +13,8 @@
 
 #include "attr_updater_impl.h"
 #include <gnuradio/io_signature.h>
+#include <chrono>
+#include <thread>
 
 namespace gr {
 namespace iio {
@@ -103,8 +105,7 @@ bool attr_updater_impl::stop()
 void attr_updater_impl::run()
 {
     while (!d_finished) {
-        boost::this_thread::sleep(
-            boost::posix_time::milliseconds(static_cast<long>(d_interval_ms)));
+        std::this_thread::sleep_for(std::chrono::milliseconds(d_interval_ms));
         if (d_finished) {
             return;
         }
