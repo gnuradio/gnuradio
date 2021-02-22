@@ -1,0 +1,52 @@
+id: iio_attr_sink
+label: IIO Attribute Sink
+flags: [ python ]
+
+parameters:
+-   id: uri
+    label: IIO context URI
+    dtype: string
+    default: 'local:'
+
+-   id: device
+    label: Device Name/ID
+    dtype: string
+
+-   id: attr_type
+    label: Attribute Type
+    dtype: enum
+    default: "'Channel'"
+    options: ['0', '1', '2', '3', '4']
+    option_labels: ['Channel', 'Device', 'Device Buffer', 'Device Debug', 'Register']
+
+-   id: required_enable
+    label: Required Enable
+    dtype: bool
+    default: False
+    hide: ${ ('part' if (attr_type == '4') else 'all') }
+
+-   id: output
+    label: Input/Output
+    dtype: enum
+    default: "'Input'"
+    options: ['False', 'True']
+    option_labels: ['Input', 'Output']
+    hide: ${ ('part' if (attr_type == '0') else 'all') }
+
+-   id: channel
+    label: Channel Name
+    dtype: string
+    default: ""
+    hide: ${ ('none' if attr_type == '0' else 'all') }
+
+inputs:
+-   domain: message
+    id: attr
+
+templates:
+    imports: from gnuradio import iio
+    make: iio.attr_sink(${uri}, ${device}, ${channel}, ${attr_type}, ${output}, ${required_enable})
+
+documentation: https://wiki.analog.com/resources/tools-software/linux-software/gnuradio
+
+file_format: 1
