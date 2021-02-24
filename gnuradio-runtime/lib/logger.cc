@@ -56,11 +56,10 @@ unsigned int logger_config::get_watch_period()
 // Method to watch config file for changes
 void logger_config::watch_file(std::string filename, unsigned int watch_period)
 {
-    std::time_t last_write(boost::filesystem::last_write_time(filename));
-    std::time_t current_time(0);
+    auto last_write = std::filesystem::last_write_time(filename);
     while (true) {
         try {
-            current_time = boost::filesystem::last_write_time(filename);
+            auto current_time = std::filesystem::last_write_time(filename);
             if (current_time > last_write) {
                 // std::cout<<"GNURadio Reloading logger
                 // configuration:"<<filename<<std::endl;

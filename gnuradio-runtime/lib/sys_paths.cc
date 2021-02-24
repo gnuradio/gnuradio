@@ -10,8 +10,7 @@
 #include <gnuradio/sys_paths.h>
 #include <cstdio>  //P_tmpdir (maybe)
 #include <cstdlib> //getenv
-
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 
 namespace gr {
 
@@ -58,7 +57,7 @@ std::string __userconf_path()
 
     // First determine if there is an environment variable specifying the prefs path
     path = getenv("GR_PREFS_PATH");
-    boost::filesystem::path p;
+    std::filesystem::path p;
     if (path) {
         p = path;
     } else {

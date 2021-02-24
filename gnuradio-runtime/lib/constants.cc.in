@@ -15,7 +15,7 @@
 #include <gnuradio/constants.h>
 #include <stdlib.h>
 #include <boost/dll/runtime_symbol_info.hpp>
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 
 namespace gr {
 
@@ -26,28 +26,28 @@ const std::string prefix()
     if (prefix != NULL)
         return prefix;
 
-    boost::filesystem::path prefix_rel_lib = "@prefix_relative_to_lib@";
-    boost::filesystem::path gr_runtime_lib_path = boost::dll::this_line_location();
+    std::filesystem::path prefix_rel_lib = "@prefix_relative_to_lib@";
+    std::filesystem::path gr_runtime_lib_path = boost::dll::this_line_location().string();
     // Normalize before decomposing path so result is reliable
-    boost::filesystem::path prefix_path =
+    std::filesystem::path prefix_path =
         gr_runtime_lib_path.lexically_normal().parent_path() / prefix_rel_lib;
     return prefix_path.lexically_normal().string();
 }
 
 const std::string sysconfdir()
 {
-    boost::filesystem::path sysconfdir_rel_prefix = "@SYSCONFDIR_relative_to_prefix@";
-    boost::filesystem::path prefix_path = prefix();
-    boost::filesystem::path sysconfdir_path = prefix_path / sysconfdir_rel_prefix;
+    std::filesystem::path sysconfdir_rel_prefix = "@SYSCONFDIR_relative_to_prefix@";
+    std::filesystem::path prefix_path = prefix();
+    std::filesystem::path sysconfdir_path = prefix_path / sysconfdir_rel_prefix;
 
     return sysconfdir_path.lexically_normal().string();
 }
 
 const std::string prefsdir()
 {
-    boost::filesystem::path prefsdir_rel_prefix = "@GR_PREFSDIR_relative_to_prefix@";
-    boost::filesystem::path prefix_path = prefix();
-    boost::filesystem::path prefsdir_path = prefix_path / prefsdir_rel_prefix;
+    std::filesystem::path prefsdir_rel_prefix = "@GR_PREFSDIR_relative_to_prefix@";
+    std::filesystem::path prefix_path = prefix();
+    std::filesystem::path prefsdir_path = prefix_path / prefsdir_rel_prefix;
 
     return prefsdir_path.lexically_normal().string();
 }

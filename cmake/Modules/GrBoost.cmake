@@ -17,7 +17,6 @@ set(__INCLUDED_GR_BOOST_CMAKE TRUE)
 set(BOOST_REQUIRED_COMPONENTS
     date_time
     program_options
-    filesystem
     system
     regex
     thread
