@@ -16,7 +16,6 @@ find_dependency(MPLIB)
 set(BOOST_REQUIRED_COMPONENTS
     date_time
     program_options
-    filesystem
     system
     regex
     thread

@@ -17,15 +17,13 @@
 #ifndef _MSC_VER
 #include <unistd.h>
 #endif
+#include <filesystem>
 #include <string>
-
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
 
 static std::string get_unittest_path(const std::string& filename)
 {
-    boost::filesystem::path path = boost::filesystem::current_path() / ".unittests";
-    if (!boost::filesystem::is_directory(path))
-        boost::filesystem::create_directory(path);
+    std::filesystem::path path = std::filesystem::current_path() / ".unittests";
+    if (!std::filesystem::is_directory(path))
+        std::filesystem::create_directory(path);
     return (path / filename).string();
 }
