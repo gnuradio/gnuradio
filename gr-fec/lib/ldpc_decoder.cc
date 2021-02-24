@@ -17,6 +17,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstring> // for memcpy
+#include <filesystem>
 #include <sstream>
 #include <vector>
 
@@ -33,7 +34,7 @@ ldpc_decoder::make(std::string alist_file, float sigma, int max_iterations)
 ldpc_decoder::ldpc_decoder(std::string alist_file, float sigma, int max_iterations)
     : generic_decoder("ldpc_decoder")
 {
-    if (!boost::filesystem::exists(alist_file))
+    if (!std::filesystem::exists(alist_file))
         throw std::runtime_error("Bad AList file name!");
 
     d_list.read(alist_file.c_str());

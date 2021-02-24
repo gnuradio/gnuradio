@@ -17,14 +17,12 @@
 #include <gnuradio/sys_paths.h>
 
 #include <algorithm>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
 #include <boost/program_options.hpp>
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 namespace po = boost::program_options;
 typedef std::ifstream::char_type char_t;
 
@@ -141,7 +139,7 @@ void prefs::save()
 {
     std::string conf = to_string();
     fs::path userconf = fs::path(gr::userconf_path()) / "config.conf";
-    fs::ofstream fout(userconf);
+    std::ofstream fout(userconf);
     fout << conf;
     fout.close();
 }

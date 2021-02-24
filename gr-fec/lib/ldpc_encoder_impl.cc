@@ -14,6 +14,7 @@
 #include <algorithm> // for std::reverse
 #include <cstdio>
 #include <cstring> // for memcpy
+#include <filesystem>
 #include <sstream>
 
 namespace gr {
@@ -26,7 +27,7 @@ generic_encoder::sptr ldpc_encoder::make(std::string alist_file)
 
 ldpc_encoder_impl::ldpc_encoder_impl(std::string alist_file)
 {
-    if (!boost::filesystem::exists(alist_file)) {
+    if (!std::filesystem::exists(alist_file)) {
         throw std::runtime_error("Bad AList file name!");
     }
 

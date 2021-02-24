@@ -21,10 +21,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
-namespace fs = boost::filesystem;
+#include <filesystem>
+namespace fs = std::filesystem;
 
 namespace gr {
 
