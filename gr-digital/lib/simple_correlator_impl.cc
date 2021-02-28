@@ -34,18 +34,10 @@ simple_correlator_impl::simple_correlator_impl(int payload_bytesize)
             io_signature::make(1, 1, sizeof(float)),
             io_signature::make(1, 1, sizeof(unsigned char))),
       d_payload_bytesize(payload_bytesize),
-      d_state(ST_LOOKING),
-      d_osi(0),
-      d_transition_osi(0),
-      d_center_osi(0),
       d_bblen((payload_bytesize + GRSF_PAYLOAD_OVERHEAD) * GRSF_BITS_PER_BYTE),
-      d_bitbuf(new unsigned char[d_bblen]),
-      d_pktbuf(new unsigned char[d_bblen / GRSF_BITS_PER_BYTE]),
-      d_bbi(0)
+      d_bitbuf(d_bblen),
+      d_pktbuf(d_bblen / GRSF_BITS_PER_BYTE)
 {
-    d_avbi = 0;
-    d_accum = 0.0;
-    d_avg = 0.0;
     for (int i = 0; i < AVG_PERIOD; i++) {
         d_avgbuf[i] = 0.0;
     }
@@ -53,11 +45,7 @@ simple_correlator_impl::simple_correlator_impl(int payload_bytesize)
     enter_looking();
 }
 
-simple_correlator_impl::~simple_correlator_impl()
-{
-    delete[] d_bitbuf;
-    delete[] d_pktbuf;
-}
+simple_correlator_impl::~simple_correlator_impl() {}
 
 void simple_correlator_impl::enter_looking()
 {
@@ -162,7 +150,7 @@ int simple_correlator_impl::general_work(int noutput_items,
                 d_bbi++;
                 if (d_bbi >= d_bblen) {
                     // printf("got whole packet\n");
-                    packit(d_pktbuf, d_bitbuf, d_bbi);
+                    packit(d_pktbuf.data(), d_bitbuf.data(), d_bbi);
                     // printf("seqno %3d\n", d_pktbuf[0]);
                     memcpy(out, &d_pktbuf[GRSF_PAYLOAD_OVERHEAD], d_payload_bytesize);
                     enter_looking();
