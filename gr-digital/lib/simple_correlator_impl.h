@@ -26,21 +26,21 @@ private:
     enum state_t { ST_LOOKING, ST_UNDER_THRESHOLD, ST_LOCKED };
 
     int d_payload_bytesize;
-    state_t d_state;
-    unsigned int d_osi;            // over sample index [0,OVERSAMPLE-1]
-    unsigned int d_transition_osi; // first index where Hamming dist < thresh
-    unsigned int d_center_osi;     // center of bit
+    state_t d_state = ST_LOOKING;
+    unsigned int d_osi = 0;            // over sample index [0,OVERSAMPLE-1]
+    unsigned int d_transition_osi = 0; // first index where Hamming dist < thresh
+    unsigned int d_center_osi = 0;     // center of bit
     unsigned long long int d_shift_reg[OVERSAMPLE];
-    int d_bblen;             // length of bitbuf
-    unsigned char* d_bitbuf; // demodulated bits
-    unsigned char* d_pktbuf; // temp packet buf
-    int d_bbi;               // bitbuf index
+    int d_bblen;                         // length of bitbuf
+    std::vector<unsigned char> d_bitbuf; // demodulated bits
+    std::vector<unsigned char> d_pktbuf; // temp packet buf
+    int d_bbi = 0;                       // bitbuf index
 
     static const int AVG_PERIOD = 512; // must be power of 2 (for freq offset correction)
-    int d_avbi;
+    int d_avbi = 0;
     float d_avgbuf[AVG_PERIOD];
-    float d_avg;
-    float d_accum;
+    float d_avg = 0.0;
+    float d_accum = 0.0;
 
     inline int slice(float x) { return x >= d_avg ? 1 : 0; }
 
