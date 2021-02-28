@@ -19,6 +19,24 @@
 namespace gr {
 namespace digital {
 
+namespace {
+unsigned int crc_ccitt(unsigned char* data, size_t len)
+{
+    unsigned int POLY = 0x8408; // reflected 0x1021
+    unsigned short crc = 0xFFFF;
+    for (size_t i = 0; i < len; i++) {
+        crc ^= data[i];
+        for (size_t j = 0; j < 8; j++) {
+            if (crc & 0x01)
+                crc = (crc >> 1) ^ POLY;
+            else
+                crc = (crc >> 1);
+        }
+    }
+    return crc ^ 0xFFFF;
+}
+} // namespace
+
 hdlc_deframer_bp::sptr hdlc_deframer_bp::make(int length_min = 32, int length_max = 500)
 {
     return gnuradio::make_block_sptr<hdlc_deframer_bp_impl>(length_min, length_max);
@@ -44,22 +62,6 @@ hdlc_deframer_bp_impl::hdlc_deframer_bp_impl(int length_min, int length_max)
  * Our virtual destructor.
  */
 hdlc_deframer_bp_impl::~hdlc_deframer_bp_impl() {}
-
-unsigned int hdlc_deframer_bp_impl::crc_ccitt(unsigned char* data, size_t len)
-{
-    unsigned int POLY = 0x8408; // reflected 0x1021
-    unsigned short crc = 0xFFFF;
-    for (size_t i = 0; i < len; i++) {
-        crc ^= data[i];
-        for (size_t j = 0; j < 8; j++) {
-            if (crc & 0x01)
-                crc = (crc >> 1) ^ POLY;
-            else
-                crc = (crc >> 1);
-        }
-    }
-    return crc ^ 0xFFFF;
-}
 
 int hdlc_deframer_bp_impl::work(int noutput_items,
                                 gr_vector_const_void_star& input_items,
