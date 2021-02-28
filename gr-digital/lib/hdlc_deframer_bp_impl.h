@@ -21,10 +21,10 @@ class hdlc_deframer_bp_impl : public hdlc_deframer_bp
 private:
     size_t d_length_min;
     size_t d_length_max;
-    size_t d_ones;
-    size_t d_bytectr;
-    size_t d_bitctr;
-    unsigned char* d_pktbuf;
+    size_t d_ones = 0;
+    size_t d_bytectr = 0;
+    size_t d_bitctr = 0;
+    std::vector<unsigned char> d_pktbuf;
 
     const pmt::pmt_t d_port;
 
