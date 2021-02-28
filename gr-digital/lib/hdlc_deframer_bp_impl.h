@@ -28,8 +28,6 @@ private:
 
     const pmt::pmt_t d_port;
 
-    unsigned int crc_ccitt(unsigned char* data, size_t len);
-
 public:
     hdlc_deframer_bp_impl(int length_min, int length_max);
     ~hdlc_deframer_bp_impl() override;
