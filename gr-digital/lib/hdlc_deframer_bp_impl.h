@@ -19,8 +19,8 @@ namespace digital {
 class hdlc_deframer_bp_impl : public hdlc_deframer_bp
 {
 private:
-    size_t d_length_min;
-    size_t d_length_max;
+    const size_t d_length_min;
+    const size_t d_length_max;
     size_t d_ones = 0;
     size_t d_bytectr = 0;
     size_t d_bitctr = 0;

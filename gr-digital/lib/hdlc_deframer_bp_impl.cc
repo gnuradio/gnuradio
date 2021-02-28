@@ -20,9 +20,9 @@ namespace gr {
 namespace digital {
 
 namespace {
-unsigned int crc_ccitt(unsigned char* data, size_t len)
+unsigned int crc_ccitt(const unsigned char* data, size_t len)
 {
-    unsigned int POLY = 0x8408; // reflected 0x1021
+    const unsigned int POLY = 0x8408; // reflected 0x1021
     unsigned short crc = 0xFFFF;
     for (size_t i = 0; i < len; i++) {
         crc ^= data[i];
