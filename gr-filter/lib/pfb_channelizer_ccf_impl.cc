@@ -160,7 +160,7 @@ int pfb_channelizer_ccf_impl::general_work(int noutput_items,
         last = i;
         while (i >= 0) {
             in = (gr_complex*)input_items[j];
-            d_fft->get_inbuf()[d_idxlut[j]] = d_fir_filters[i].filter(&in[n]);
+            d_fft.get_inbuf()[d_idxlut[j]] = d_fir_filters[i].filter(&in[n]);
             j++;
             i--;
         }
@@ -168,7 +168,7 @@ int pfb_channelizer_ccf_impl::general_work(int noutput_items,
         i = d_nfilts - 1;
         while (i > last) {
             in = (gr_complex*)input_items[j];
-            d_fft->get_inbuf()[d_idxlut[j]] = d_fir_filters[i].filter(&in[n - 1]);
+            d_fft.get_inbuf()[d_idxlut[j]] = d_fir_filters[i].filter(&in[n - 1]);
             j++;
             i--;
         }
@@ -176,12 +176,12 @@ int pfb_channelizer_ccf_impl::general_work(int noutput_items,
         n += (i + d_rate_ratio) >= (int)d_nfilts;
 
         // despin through FFT
-        d_fft->execute();
+        d_fft.execute();
 
         // Send to output channels
         for (unsigned int nn = 0; nn < noutputs; nn++) {
             out = (gr_complex*)output_items[nn];
-            out[oo] = d_fft->get_outbuf()[d_channel_map[nn]];
+            out[oo] = d_fft.get_outbuf()[d_channel_map[nn]];
         }
         oo++;
     }

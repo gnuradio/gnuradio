@@ -94,7 +94,9 @@ protected:
     std::vector<kernel::fft_filter_ccf> d_fft_filters;
     std::vector<std::vector<float>> d_taps;
     unsigned int d_taps_per_filter;
-    fft::fft_complex_rev* d_fft;
+
+    // The FFT to handle the output de-spinning of the channels.
+    fft::fft_complex_rev d_fft;
 
 public:
     /*!
