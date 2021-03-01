@@ -95,9 +95,22 @@ void bind_uhd_types(py::module& m)
     py::class_<stream_cmd_t>(m, "stream_cmd_t")
         .def(py::init<stream_cmd_t::stream_mode_t>())
         // Properties
+        .def_readwrite("stream_mode", &stream_cmd_t::stream_mode)
         .def_readwrite("num_samps", &stream_cmd_t::num_samps)
         .def_readwrite("time_spec", &stream_cmd_t::time_spec)
         .def_readwrite("stream_now", &stream_cmd_t::stream_now);
+
+    // ::uhd::stream_cmd_t::stream_mode_t
+    py::enum_<stream_cmd_t::stream_mode_t>(m, "stream_mode_t")
+        .value("STREAM_MODE_START_CONTINUOUS",
+               stream_cmd_t::stream_mode_t::STREAM_MODE_START_CONTINUOUS)
+        .value("STREAM_MODE_STOP_CONTINUOUS",
+               stream_cmd_t::stream_mode_t::STREAM_MODE_STOP_CONTINUOUS)
+        .value("STREAM_MODE_NUM_SAMPS_AND_DONE",
+               stream_cmd_t::stream_mode_t::STREAM_MODE_NUM_SAMPS_AND_DONE)
+        .value("STREAM_MODE_NUM_SAMPS_AND_MORE",
+               stream_cmd_t::stream_mode_t::STREAM_MODE_NUM_SAMPS_AND_MORE)
+        .export_values();
 
     // ::uhd::meta_range_t
     using meta_range_t = ::uhd::meta_range_t;
