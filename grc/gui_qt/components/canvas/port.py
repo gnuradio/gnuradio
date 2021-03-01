@@ -35,6 +35,12 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         QtWidgets.QGraphicsItem.__init__(self, parent)
         self.y_offset = 0
         self.setZValue(100)
+        if self._dir == "sink":
+            self.setPos(-15, 0)
+        else:
+            self.setPos(parent.width, 0)
+
+        self.setFlag(QtWidgets.QGraphicsItem.ItemSendsScenePositionChanges)
 
     def _update_colors(self):
         """
@@ -46,6 +52,11 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         """
         pass
 
+    def itemChange(self, change, value):
+        for conn in self.connections():
+            conn.updateLine()
+        return QtWidgets.QGraphicsLineItem.itemChange(self, change, value)
+
     def create_shapes(self):
         """Create new areas and labels for the port."""
         pass
@@ -56,10 +67,7 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
 
     def boundingRect(self):
         x, y = tuple(self.parent.states['coordinate'])
-        if self._dir == "sink":
-            return QtCore.QRectF(x-15, y+15+self.y_offset, 15, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
-        else:
-            return QtCore.QRectF(x+self.parent.width, y+15+self.y_offset, 15, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
+        return QtCore.QRectF(0, 0, 15, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
 
     def paint(self, painter, option, widget):
         """
@@ -69,9 +77,9 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         pen = QtGui.QPen(1)
         painter.setPen(pen)
         painter.setBrush(QtGui.QBrush(QtGui.QColor(0x03, 0xFC, 0xF8)))
-        if self._dir == "sink":
-            rect = QtCore.QRectF(x-15, y+15+self.y_offset, 15, 15)
-        else:
-            rect = QtCore.QRectF(x+self.parent.width, y+15+self.y_offset, 15, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
+
+        rect = QtCore.QRectF(0, 0, 15, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
         painter.drawRect(rect)
+        for connection in self.connections():
+            connection.update()
 

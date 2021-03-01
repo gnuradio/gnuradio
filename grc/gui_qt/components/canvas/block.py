@@ -118,9 +118,6 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         CoreBlock.__init__(self, parent)
         QtWidgets.QGraphicsItem.__init__(self)
 
-        port_factory = self.parent.platform.make_port
-        self.sinks = [port_factory(parent=self, **params) for params in self.inputs_data]
-        self.sources = [port_factory(parent=self, **params) for params in self.outputs_data]
 
         #self.__dict__.update(attrib)
         #self.params = params
@@ -137,6 +134,10 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         #self.block_label = block_label
         self.block_label = self.key
 
+
+        x,y = self.coordinate
+        self.setPos(x, y)
+
         offset = 0
         for source in self.sources:
             source.y_offset += offset
@@ -149,15 +150,15 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
         # figure out height of block based on how many params there are
         i = 30
-        
+
         for key, item in self.params.items():
             value = item.value
             if value is not None and item.hide == 'none':
                 i+= 20
-        
+
         self.height = i
 
-        
+
         # figure out width of block based on widest line of text
         fm = QtGui.QFontMetrics(QtGui.QFont('Helvetica', 10))
         largest_width = fm.width(self.label)/1.5
@@ -172,27 +173,26 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                     largest_width = fm.width(key + ': ') # the keys need a little more margin
         self.width = largest_width*2 + 15 # the *2 is because we only measured half the width, the + 15 is margin
 
+        port_factory = self.parent.platform.make_port
+        self.sinks = [port_factory(parent=self, **params) for params in self.inputs_data]
+        self.sources = [port_factory(parent=self, **params) for params in self.outputs_data]
+
+        offset = 0
+        for sink in self.sinks:
+            sink.moveBy(0, 15+offset)
+            offset += 20
+        offset = 0
+
+        for source in self.sources:
+            source.moveBy(0, 15+offset)
+            offset += 20
 
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
 
-
-        '''
-        layout = QtWidgets.QVBoxLayout()
-        layout.setSpacing(0)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.addWidget(BlockTitle(block_key))
-        layout.addWidget(BlockParams(params))
-        self.setLayout(layout)
-
-        palette = self.palette()
-        palette.setColor(self.backgroundRole(), Qt.transparent)
-        self.setAutoFillBackground(True)
-        self.setPalette(palette)
-        '''
-
     def paint(self, painter, option, widget):
-        x, y = tuple(self.states['coordinate'])
+        x,y = (self.x(), self.y())
+        self.states['coordinate'] = (x,y)
         # Set font
         font = QtGui.QFont('Helvetica', 10)
         #font.setStretch(70) # makes it more condensed
@@ -222,13 +222,13 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
             painter.setBrush(QtGui.QBrush(QtGui.QColor(0xCC, 0xCC, 0xCC)))
 
         ARC = 10
-        painter.drawRoundedRect(x, y, self.width-1, self.height, ARC, ARC);
+        painter.drawRoundedRect(0, 0, self.width, self.height, ARC, ARC);
         painter.setPen(QtGui.QPen(1))
 
         # Draw block label text
         painter.setFont(font)
-        painter.drawText(QtCore.QRectF(x, y - self.height/2 + 10, self.width, self.height), Qt.AlignCenter, self.label)  # NOTE the 3rd/4th arg in  QRectF seems to set the bounding box of the text, so if there is ever any clipping, thats why
-        
+        painter.drawText(QtCore.QRectF(0, 0 - self.height/2 + 10, self.width, self.height), Qt.AlignCenter, self.label)  # NOTE the 3rd/4th arg in  QRectF seems to set the bounding box of the text, so if there is ever any clipping, thats why
+
         # Draw param text
         y_offset = 30 # params start 30 down from the top of the box
         for key, item in self.params.items():
@@ -238,15 +238,21 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                     value = value[:LONG_VALUE-3] + '...'
                 font.setBold(True)
                 painter.setFont(font)
-                painter.drawText(QtCore.QRectF(x - self.width/2, y + y_offset, self.width, self.height), Qt.AlignRight, key + ': ')
+                painter.drawText(QtCore.QRectF(0 - self.width/2, 0 + y_offset, self.width, self.height), Qt.AlignRight, key + ': ')
                 font.setBold(False)
                 painter.setFont(font)
-                painter.drawText(QtCore.QRectF(x + self.width/2, y + y_offset, self.width, self.height), Qt.AlignLeft, value)
+                painter.drawText(QtCore.QRectF(0 + self.width/2, 0 + y_offset, self.width, self.height), Qt.AlignLeft, value)
                 y_offset += 20
 
+        for source in self.sources:
+            source.update()
+        for sink in self.sinks:
+            sink.update()
+
     def boundingRect(self): # required to have
-        x, y = tuple(self.states['coordinate'])
-        return QtCore.QRectF(x-1.5, y-1.5, self.width+3, self.height+3) # same as the rectangle we draw, but with a 0.5*pen width margin
+        x,y = (self.x(), self.y())
+        self.states['coordinate'] = (x,y)
+        return QtCore.QRectF(0, 0, self.width+3, self.height+3) # same as the rectangle we draw, but with a 0.5*pen width margin
 
     def mouseReleaseEvent(self, e):
         super(self.__class__, self).mouseReleaseEvent(e)
@@ -258,6 +264,11 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
     def mouseDoubleClickEvent(self, e):
         print("DETECTED DOUBLE CLICK!")
         super(self.__class__, self).mouseDoubleClickEvent(e)
+
+    def import_data(self, name, states, parameters, **_):
+        CoreBlock.import_data(self, name, states, parameters, **_)
+        x,y = tuple(states['coordinate'])
+        self.setPos(x, y)
 
     def moveToTop(self):
         # TODO: Is there a simpler way to do this?
