@@ -132,6 +132,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 
                 block = self.new_block(block_key, attrib=attrib)
                 block.states['coordinate'] = attrib['_coordinate']
+                block.setPos(cursor_pos.x(), cursor_pos.y())
                 block.params['id'].set_value(id)
                 self.addItem(block)
                 block.moveToTop()
