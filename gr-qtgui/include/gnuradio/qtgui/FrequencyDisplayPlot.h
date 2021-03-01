@@ -132,7 +132,7 @@ private:
     void _resetXAxisPoints();
     void _autoScale(double bottom, double top);
 
-    std::vector<double*> d_ydata;
+    std::vector<std::vector<double>> d_ydata;
 
     QwtPlotCurve* d_min_fft_plot_curve;
     QwtPlotCurve* d_max_fft_plot_curve;
@@ -149,12 +149,12 @@ private:
     bool d_marker_noise_floor_amplitude_visible;
     QColor d_marker_cf_color;
 
-    double d_start_frequency;
-    double d_stop_frequency;
+    double d_start_frequency = -1;
+    double d_stop_frequency = 1;
     double d_center_frequency;
-    double d_ymax;
-    double d_ymin;
-    bool d_half_freq;
+    double d_ymax = 10;
+    double d_ymin = -120;
+    bool d_half_freq = false;
 
     QwtPlotMarker* d_lower_intensity_marker;
     QwtPlotMarker* d_upper_intensity_marker;
@@ -163,18 +163,18 @@ private:
     QwtPlotMarker* d_marker_noise_floor_amplitude;
     QwtPlotMarker* d_marker_cf;
 
-    double* d_xdata;
+    std::vector<double> d_xdata;
     int d_xdata_multiplier;
 
-    double* d_min_fft_data;
-    double* d_max_fft_data;
+    std::vector<double> d_min_fft_data;
+    std::vector<double> d_max_fft_data;
 
     double d_peak_frequency;
     double d_peak_amplitude;
 
     double d_noise_floor_amplitude;
 
-    bool d_autoscale_shot;
+    bool d_autoscale_shot = false;
 
     QwtPlotMarker* d_trigger_line;
 };

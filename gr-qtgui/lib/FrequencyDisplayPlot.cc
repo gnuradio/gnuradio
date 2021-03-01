@@ -66,21 +66,11 @@ private:
 FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
     : DisplayPlot(nplots, parent)
 {
-    d_start_frequency = -1;
-    d_stop_frequency = 1;
-
     d_numPoints = 0;
-    d_min_fft_data = new double[d_numPoints];
-    d_max_fft_data = new double[d_numPoints];
-    d_xdata = new double[d_numPoints];
-    d_half_freq = false;
-    d_autoscale_shot = false;
 
     setAxisTitle(QwtPlot::xBottom, "Frequency (Hz)");
     setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(0));
 
-    d_ymin = -120;
-    d_ymax = 10;
     setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
     setAxisScale(QwtPlot::yLeft, d_ymin, d_ymax);
     setAxisTitle(QwtPlot::yLeft, "Relative Gain (dB)");
@@ -95,8 +85,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
     // Create a curve for each input
     // Automatically deleted when parent is deleted
     for (unsigned int i = 0; i < d_nplots; ++i) {
-        d_ydata.push_back(new double[d_numPoints]);
-        memset(d_ydata[i], 0x0, d_numPoints * sizeof(double));
+        d_ydata.emplace_back(d_numPoints);
 
         d_plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
         d_plot_curve[i]->attach(this);
@@ -107,10 +96,10 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
                                           QSize(7, 7));
 
 #if QWT_VERSION < 0x060000
-        d_plot_curve[i]->setRawData(d_xdata, d_ydata[i], d_numPoints);
+        d_plot_curve[i]->setRawData(d_xdata.data(), d_ydata[i].data(), d_numPoints);
         d_plot_curve[i]->setSymbol(*symbol);
 #else
-        d_plot_curve[i]->setRawSamples(d_xdata, d_ydata[i], d_numPoints);
+        d_plot_curve[i]->setRawSamples(d_xdata.data(), d_ydata[i].data(), d_numPoints);
         d_plot_curve[i]->setSymbol(symbol);
 #endif
         setLineColor(i, default_colors[i]);
@@ -122,9 +111,10 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
     const QColor default_min_fft_color = Qt::magenta;
     setMinFFTColor(default_min_fft_color);
 #if QWT_VERSION < 0x060000
-    d_min_fft_plot_curve->setRawData(d_xdata, d_min_fft_data, d_numPoints);
+    d_min_fft_plot_curve->setRawData(d_xdata.data(), d_min_fft_data.data(), d_numPoints);
 #else
-    d_min_fft_plot_curve->setRawSamples(d_xdata, d_min_fft_data, d_numPoints);
+    d_min_fft_plot_curve->setRawSamples(
+        d_xdata.data(), d_min_fft_data.data(), d_numPoints);
 #endif
     d_min_fft_plot_curve->setVisible(false);
     d_min_fft_plot_curve->setZ(0);
@@ -134,9 +124,10 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
     QColor default_max_fft_color = Qt::darkYellow;
     setMaxFFTColor(default_max_fft_color);
 #if QWT_VERSION < 0x060000
-    d_max_fft_plot_curve->setRawData(d_xdata, d_max_fft_data, d_numPoints);
+    d_max_fft_plot_curve->setRawData(d_xdata.data(), d_max_fft_data.data(), d_numPoints);
 #else
-    d_max_fft_plot_curve->setRawSamples(d_xdata, d_max_fft_data, d_numPoints);
+    d_max_fft_plot_curve->setRawSamples(
+        d_xdata.data(), d_max_fft_data.data(), d_numPoints);
 #endif
     d_max_fft_plot_curve->setVisible(false);
     d_max_fft_plot_curve->setZ(0);
@@ -153,7 +144,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
     setMarkerUpperIntensityColor(default_marker_upper_intensity_color);
     d_upper_intensity_marker->attach(this);
 
-    memset(d_xdata, 0x0, d_numPoints * sizeof(double));
+    std::fill(std::begin(d_xdata), std::end(d_xdata), 0);
 
     for (int64_t number = 0; number < d_numPoints; number++) {
         d_min_fft_data[number] = 200.0;
@@ -233,14 +224,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
     replot();
 }
 
-FrequencyDisplayPlot::~FrequencyDisplayPlot()
-{
-    for (unsigned int i = 0; i < d_nplots; ++i)
-        delete[] d_ydata[i];
-    delete[] d_max_fft_data;
-    delete[] d_min_fft_data;
-    delete[] d_xdata;
-}
+FrequencyDisplayPlot::~FrequencyDisplayPlot() {}
 
 void FrequencyDisplayPlot::setYaxis(double min, double max)
 {
@@ -340,29 +324,31 @@ void FrequencyDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
             if (_npoints_in != d_numPoints) {
                 d_numPoints = _npoints_in;
 
-                delete[] d_min_fft_data;
-                delete[] d_max_fft_data;
-                delete[] d_xdata;
-                d_xdata = new double[d_numPoints];
-                d_min_fft_data = new double[d_numPoints];
-                d_max_fft_data = new double[d_numPoints];
+                d_xdata.resize(d_numPoints);
+                d_min_fft_data.resize(d_numPoints);
+                d_max_fft_data.resize(d_numPoints);
 
                 for (unsigned int i = 0; i < d_nplots; ++i) {
-                    delete[] d_ydata[i];
-                    d_ydata[i] = new double[d_numPoints];
+                    d_ydata[i].resize(d_numPoints);
 
 #if QWT_VERSION < 0x060000
-                    d_plot_curve[i]->setRawData(d_xdata, d_ydata[i], d_numPoints);
+                    d_plot_curve[i]->setRawData(
+                        d_xdata.data(), d_ydata[i].data(), d_numPoints);
 #else
-                    d_plot_curve[i]->setRawSamples(d_xdata, d_ydata[i], d_numPoints);
+                    d_plot_curve[i]->setRawSamples(
+                        d_xdata.data(), d_ydata[i].data(), d_numPoints);
 #endif
                 }
 #if QWT_VERSION < 0x060000
-                d_min_fft_plot_curve->setRawData(d_xdata, d_min_fft_data, d_numPoints);
-                d_max_fft_plot_curve->setRawData(d_xdata, d_max_fft_data, d_numPoints);
+                d_min_fft_plot_curve->setRawData(
+                    d_xdata.data(), d_min_fft_data.data(), d_numPoints);
+                d_max_fft_plot_curve->setRawData(
+                    d_xdata.data(), d_max_fft_data.data(), d_numPoints);
 #else
-                d_min_fft_plot_curve->setRawSamples(d_xdata, d_min_fft_data, d_numPoints);
-                d_max_fft_plot_curve->setRawSamples(d_xdata, d_max_fft_data, d_numPoints);
+                d_min_fft_plot_curve->setRawSamples(
+                    d_xdata.data(), d_min_fft_data.data(), d_numPoints);
+                d_max_fft_plot_curve->setRawSamples(
+                    d_xdata.data(), d_max_fft_data.data(), d_numPoints);
 #endif
                 _resetXAxisPoints();
                 clearMaxData();
@@ -372,7 +358,7 @@ void FrequencyDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
             double bottom = 1e20, top = -1e20;
             for (unsigned int n = 0; n < d_nplots; ++n) {
 
-                memcpy(d_ydata[n],
+                memcpy(d_ydata[n].data(),
                        &(dataPoints[n][_in_index]),
                        _npoints_in * sizeof(double));
 
@@ -433,16 +419,12 @@ void FrequencyDisplayPlot::plotNewData(const double* dataPoints,
 
 void FrequencyDisplayPlot::clearMaxData()
 {
-    for (int64_t number = 0; number < d_numPoints; number++) {
-        d_max_fft_data[number] = d_ymin;
-    }
+    std::fill(std::begin(d_max_fft_data), std::end(d_max_fft_data), d_ymin);
 }
 
 void FrequencyDisplayPlot::clearMinData()
 {
-    for (int64_t number = 0; number < d_numPoints; number++) {
-        d_min_fft_data[number] = d_ymax;
-    }
+    std::fill(std::begin(d_min_fft_data), std::end(d_min_fft_data), d_ymax);
 }
 
 void FrequencyDisplayPlot::_autoScale(double bottom, double top)
