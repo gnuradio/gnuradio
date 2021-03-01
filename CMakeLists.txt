@@ -1,4 +1,4 @@
-# Copyright 2011-2020 Free Software Foundation, Inc.
+# Copyright 2011-2021 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -47,7 +47,7 @@ include(GrComponent)
 ########################################################################
 include(GrBoost)
 GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING
-         Boost_unit_test_framework_FOUND )
+         Boost_UNIT_TEST_FRAMEWORK_FOUND )
 
 # Set the version information here
 SET(VERSION_MAJOR 3)

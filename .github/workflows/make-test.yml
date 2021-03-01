@@ -75,7 +75,7 @@ jobs:
     - name: CMake
       env:
         CXXFLAGS: ${{ matrix.cxxflags }}
-      run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF -DBoost_unit_test_framework_FOUND=ON'
+      run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
     - name: Make
       run: 'cd /build && make -j2 -k'
     - name: Make Test
