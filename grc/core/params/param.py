@@ -392,7 +392,10 @@ class Param(Element):
             else:
                 layout = '{tab}_grid_layout_{index}'.format(tab=tab, index=index)
         else:
-            layout = 'top_grid_layout'
+            if not pos:
+                layout = 'top_layout'
+            else:
+                layout = 'top_grid_layout'
 
         widget = '%s'  # to be fill-out in the mail template
 
