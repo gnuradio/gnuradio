@@ -28,6 +28,13 @@ public:
     HistogramDisplayPlot(unsigned int nplots, QWidget*);
     ~HistogramDisplayPlot() override;
 
+    // Disallow copy/move because of the raw QT pointers.
+    // They are handled by QT.
+    HistogramDisplayPlot(const HistogramDisplayPlot&) = delete;
+    HistogramDisplayPlot(HistogramDisplayPlot&&) = delete;
+    HistogramDisplayPlot& operator=(const HistogramDisplayPlot&) = delete;
+    HistogramDisplayPlot& operator=(HistogramDisplayPlot&&) = delete;
+
     void plotNewData(const std::vector<double*> dataPoints,
                      const uint64_t numDataPoints,
                      const double timeInterval);
@@ -55,17 +62,17 @@ private:
     void _resetXAxisPoints(double left, double right);
     void _autoScaleY(double bottom, double top);
 
-    double* d_xdata;
-    std::vector<double*> d_ydata;
-
-    unsigned int d_bins;
-    bool d_accum;
+    unsigned int d_bins = 100;
+    bool d_accum = false;
     double d_xmin, d_xmax, d_left, d_right;
     double d_width;
 
-    bool d_semilogx;
-    bool d_semilogy;
-    bool d_autoscalex_state;
+    std::vector<double> d_xdata;
+    std::vector<std::vector<double>> d_ydata;
+
+    bool d_semilogx = false;
+    bool d_semilogy = false;
+    bool d_autoscalex_state = true;
 };
 
 #endif /* HISTOGRAM_DISPLAY_PLOT_H */

@@ -88,15 +88,8 @@ private:
  * Main Time domain plotter widget
  **********************************************************************/
 HistogramDisplayPlot::HistogramDisplayPlot(unsigned int nplots, QWidget* parent)
-    : DisplayPlot(nplots, parent)
+    : DisplayPlot(nplots, parent), d_xdata(d_bins)
 {
-    d_bins = 100;
-    d_accum = false;
-
-    // Initialize x-axis data array
-    d_xdata = new double[d_bins];
-    memset(d_xdata, 0x0, d_bins * sizeof(double));
-
     d_zoomer = new HistogramDisplayZoomer(canvas(), 0);
 
 #if QWT_VERSION < 0x060000
@@ -111,10 +104,7 @@ HistogramDisplayPlot::HistogramDisplayPlot(unsigned int nplots, QWidget* parent)
     d_zoomer->setRubberBandPen(c);
     d_zoomer->setTrackerPen(c);
 
-    d_semilogx = false;
-    d_semilogy = false;
     d_autoscale_state = true;
-    d_autoscalex_state = false;
 
     setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
     setXaxis(-1, 1);
@@ -133,8 +123,7 @@ HistogramDisplayPlot::HistogramDisplayPlot(unsigned int nplots, QWidget* parent)
     // Setup dataPoints and plot vectors
     // Automatically deleted when parent is deleted
     for (unsigned int i = 0; i < d_nplots; ++i) {
-        d_ydata.push_back(new double[d_bins]);
-        memset(d_ydata[i], 0, d_bins * sizeof(double));
+        d_ydata.emplace_back(d_bins);
 
         d_plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
         d_plot_curve[i]->attach(this);
@@ -150,10 +139,10 @@ HistogramDisplayPlot::HistogramDisplayPlot(unsigned int nplots, QWidget* parent)
             QwtSymbol::NoSymbol, QBrush(colors[i]), QPen(colors[i]), QSize(7, 7));
 
 #if QWT_VERSION < 0x060000
-        d_plot_curve[i]->setRawData(d_xdata, d_ydata[i], d_bins);
+        d_plot_curve[i]->setRawData(d_xdata.data(), d_ydata[i].data(), d_bins);
         d_plot_curve[i]->setSymbol(*symbol);
 #else
-        d_plot_curve[i]->setRawSamples(d_xdata, d_ydata[i], d_bins);
+        d_plot_curve[i]->setRawSamples(d_xdata.data(), d_ydata[i].data(), d_bins);
         d_plot_curve[i]->setSymbol(symbol);
 #endif
     }
@@ -163,10 +152,6 @@ HistogramDisplayPlot::HistogramDisplayPlot(unsigned int nplots, QWidget* parent)
 
 HistogramDisplayPlot::~HistogramDisplayPlot()
 {
-    for (unsigned int i = 0; i < d_nplots; ++i)
-        delete[] d_ydata[i];
-    delete[] d_xdata;
-
     // d_zoomer and _panner deleted when parent deleted
 }
 
@@ -213,10 +198,10 @@ void HistogramDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                 }
             }
 
-            double height = *std::max_element(d_ydata[0], d_ydata[0] + d_bins);
-            for (unsigned int n = 1; n < d_nplots; ++n) {
+            auto height = std::numeric_limits<double>::lowest();
+            for (const auto& dy : d_ydata) {
                 height =
-                    std::max(height, *std::max_element(d_ydata[n], d_ydata[n] + d_bins));
+                    std::max(height, *std::max_element(std::begin(dy), std::end(dy)));
             }
 
             if (d_autoscale_state)
@@ -409,19 +394,17 @@ void HistogramDisplayPlot::setNumBins(unsigned int bins)
 {
     d_bins = bins;
 
-    delete[] d_xdata;
-    d_xdata = new double[d_bins];
+    d_xdata.resize(d_bins);
     _resetXAxisPoints(d_left, d_right);
 
     for (unsigned int i = 0; i < d_nplots; ++i) {
-        delete[] d_ydata[i];
-        d_ydata[i] = new double[d_bins];
-        memset(d_ydata[i], 0, d_bins * sizeof(double));
+        d_ydata[i].clear();
+        d_ydata[i].resize(d_bins);
 
 #if QWT_VERSION < 0x060000
-        d_plot_curve[i]->setRawData(d_xdata, d_ydata[i], d_bins);
+        d_plot_curve[i]->setRawData(d_xdata.data(), d_ydata[i].data(), d_bins);
 #else
-        d_plot_curve[i]->setRawSamples(d_xdata, d_ydata[i], d_bins);
+        d_plot_curve[i]->setRawSamples(d_xdata.data(), d_ydata[i].data(), d_bins);
 #endif
     }
 }
@@ -430,8 +413,8 @@ void HistogramDisplayPlot::setNumBins(unsigned int bins)
 void HistogramDisplayPlot::clear()
 {
     if (!d_stop) {
-        for (unsigned int n = 0; n < d_nplots; ++n) {
-            memset(d_ydata[n], 0, d_bins * sizeof(double));
+        for (auto& d : d_ydata) {
+            std::fill(std::begin(d), std::end(d), 0.0);
         }
     }
 }
