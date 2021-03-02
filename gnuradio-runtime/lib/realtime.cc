@@ -12,13 +12,14 @@
 #include <config.h>
 #endif
 
+#include "realtime_impl.h"
 #include <gnuradio/realtime.h>
 
 namespace gr {
 
 rt_status_t enable_realtime_scheduling()
 {
-    return gr::impl::enable_realtime_scheduling();
+    return gr::realtime::enable_realtime_scheduling();
 }
 
 } /* namespace gr */
