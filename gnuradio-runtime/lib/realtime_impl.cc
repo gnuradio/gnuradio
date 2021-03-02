@@ -12,9 +12,9 @@
 #include <config.h>
 #endif
 
+#include "realtime_impl.h"
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
-#include <gnuradio/realtime_impl.h>
 
 #ifdef HAVE_SCHED_H
 #include <sched.h>
@@ -32,7 +32,7 @@
 #include <pthread.h>
 
 namespace gr {
-namespace impl {
+namespace realtime {
 
 /*!
  * Rescale our virtual priority so that it maps to the middle 1/2 of
@@ -42,13 +42,13 @@ static int rescale_virtual_pri(int virtual_pri, int min_real_pri, int max_real_p
 {
     float rmin = min_real_pri + (0.25 * (max_real_pri - min_real_pri));
     float rmax = min_real_pri + (0.75 * (max_real_pri - min_real_pri));
-    float m = (rmax - rmin) / (rt_priority_max() - rt_priority_min());
-    float y = m * (virtual_pri - rt_priority_min()) + rmin;
+    float m = (rmax - rmin) / (s_rt_priority_max - s_rt_priority_min);
+    float y = m * (virtual_pri - s_rt_priority_min) + rmin;
     int y_int = static_cast<int>(rintf(y));
     return std::max(min_real_pri, std::min(max_real_pri, y_int));
 }
 
-} // namespace impl
+} // namespace realtime
 } // namespace gr
 
 #endif
@@ -59,7 +59,7 @@ static int rescale_virtual_pri(int virtual_pri, int min_real_pri, int max_real_p
 #include <windows.h>
 
 namespace gr {
-namespace impl {
+namespace realtime {
 
 rt_status_t enable_realtime_scheduling(rt_sched_param p)
 {
@@ -73,7 +73,7 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
                          THREAD_PRIORITY_BELOW_NORMAL, THREAD_PRIORITY_NORMAL,
                          THREAD_PRIORITY_ABOVE_NORMAL, THREAD_PRIORITY_HIGHEST,
                          THREAD_PRIORITY_TIME_CRITICAL };
-    const double priority = double(p.priority) / (rt_priority_max() - rt_priority_min());
+    const double priority = double(p.priority) / (s_rt_priority_max - s_rt_priority_min);
     size_t pri_index = size_t((priority + 1.0) * 6 / 2.0); // -1 -> 0, +1 -> 6
     pri_index %= sizeof(priorities) / sizeof(*priorities); // range check
 
@@ -85,13 +85,13 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
     return RT_OK;
 }
 
-} // namespace impl
+} // namespace realtime
 } // namespace gr
 
 #elif defined(HAVE_PTHREAD_SETSCHEDPARAM)
 
 namespace gr {
-namespace impl {
+namespace realtime {
 
 rt_status_t enable_realtime_scheduling(rt_sched_param p)
 {
@@ -126,14 +126,14 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
     return RT_OK;
 }
 
-} // namespace impl
+} // namespace realtime
 } // namespace gr
 
 
 #elif defined(HAVE_SCHED_SETSCHEDULER)
 
 namespace gr {
-namespace impl {
+namespace realtime {
 
 rt_status_t enable_realtime_scheduling(rt_sched_param p)
 {
@@ -167,17 +167,17 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
     return RT_OK;
 }
 
-} // namespace impl
+} // namespace realtime
 } // namespace gr
 
 #else
 
 namespace gr {
-namespace impl {
+namespace realtime {
 
 rt_status_t enable_realtime_scheduling(rt_sched_param p) { return RT_NOT_IMPLEMENTED; }
 
-} // namespace impl
+} // namespace realtime
 } // namespace gr
 
 #endif
