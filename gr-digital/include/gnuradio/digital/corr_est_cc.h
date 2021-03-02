@@ -92,7 +92,7 @@ public:
      * \param threshold         Threshold of correlator.
      *                          The meaning of this parameter depends on the threshold
      *                          method used. For DYNAMIC threshold method, this parameter 
-     *                          is actually 1 -	Probability of False Alarm (under some inaccurate assumptions). 
+     *                          is actually 1 - Probability of False Alarm (under some inaccurate assumptions). 
      *                          The code performs the check |r[k]|^2 + |r[k+1]|^2 <> -log(1-threshold)*2*E,
      *                          where r[k] is the correlated incoming signal,
      *                          and E is the average sample energy of the correlated signal.
