@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(realtime.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(3a8add4fc688853c32e8c4c8f8e51d0e)                     */
+/* BINDTOOL_HEADER_FILE_HASH(4fe8778231103a1a91b8032daec80655)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -29,12 +29,18 @@ namespace py = pybind11;
 
 void bind_realtime(py::module& m)
 {
-
+    py::enum_<::gr::rt_status_t>(m, "rt_status_t")
+        .value("RT_OK", ::gr::RT_OK)                           // 0
+        .value("RT_NOT_IMPLEMENTED", ::gr::RT_NOT_IMPLEMENTED) // 1
+        .value("RT_NO_PRIVS", ::gr::RT_NO_PRIVS)               // 2
+        .value("RT_OTHER_ERROR", ::gr::RT_OTHER_ERROR)         // 3
+        .export_values();
+    py::enum_<::gr::rt_sched_policy>(m, "rt_sched_policy")
+        .value("RT_SCHED_RR", ::gr::RT_SCHED_RR)     // 0
+        .value("RT_SCHED_FIFO", ::gr::RT_SCHED_FIFO) // 1
+        .export_values();
 
     m.def("enable_realtime_scheduling",
           &::gr::enable_realtime_scheduling,
           D(enable_realtime_scheduling));
-
-
-    py::module m_impl = m.def_submodule("impl");
 }
