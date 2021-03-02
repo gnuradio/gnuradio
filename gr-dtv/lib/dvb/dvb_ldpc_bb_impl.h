@@ -35,7 +35,8 @@ private:
     int ldpc_lut_index[FRAME_SIZE_NORMAL];
     void ldpc_lookup_generate(void);
 
-    uint16_t** ldpc_lut;
+    std::vector<uint16_t*> ldpc_lut; // Pointers into ldpc_lut_data.
+    std::vector<uint16_t> ldpc_lut_data;
 
     template <typename entry_t, size_t rows, size_t cols>
     void ldpc_bf(entry_t (&table)[rows][cols])
@@ -75,9 +76,10 @@ private:
          * see
          * https://stackoverflow.com/questions/29375797/copy-2d-array-using-memcpy/29375830#29375830
          */
-        ldpc_lut = new uint16_t*[pbits];
-        ldpc_lut[0] = new uint16_t[pbits * max_lut_arraysize];
-        ldpc_lut[0][0] = 1;
+        ldpc_lut.resize(pbits);
+        ldpc_lut_data.resize(pbits * max_lut_arraysize);
+        ldpc_lut_data[0] = 1;
+        ldpc_lut[0] = ldpc_lut_data.data();
         for (unsigned int i = 1; i < pbits; i++) {
             ldpc_lut[i] = ldpc_lut[i - 1] + max_lut_arraysize;
             ldpc_lut[i][0] = 1;
@@ -163,6 +165,12 @@ public:
                      dvb_code_rate_t rate,
                      dvb_constellation_t constellation);
     ~dvb_ldpc_bb_impl() override;
+
+    // Disallow copy/move because of the raw pointers.
+    dvb_ldpc_bb_impl(const dvb_ldpc_bb_impl&) = delete;
+    dvb_ldpc_bb_impl(dvb_ldpc_bb_impl&&) = delete;
+    dvb_ldpc_bb_impl& operator=(const dvb_ldpc_bb_impl&) = delete;
+    dvb_ldpc_bb_impl& operator=(dvb_ldpc_bb_impl&&) = delete;
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

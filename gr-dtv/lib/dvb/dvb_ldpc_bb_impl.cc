@@ -353,11 +353,7 @@ dvb_ldpc_bb_impl::dvb_ldpc_bb_impl(dvb_standard_t standard,
 /*
  * Our virtual destructor.
  */
-dvb_ldpc_bb_impl::~dvb_ldpc_bb_impl()
-{
-    delete[] ldpc_lut[0];
-    delete[] ldpc_lut;
-}
+dvb_ldpc_bb_impl::~dvb_ldpc_bb_impl() {}
 
 void dvb_ldpc_bb_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
 {
