@@ -31,7 +31,7 @@ endif(MSVC)
 target_link_libraries(gnuradio-wavelet PUBLIC
     gnuradio-runtime
     gnuradio-blocks
-    gsl::gsl
+    GSL::gsl
 )
 
 target_include_directories(gnuradio-wavelet
