@@ -11,8 +11,9 @@
 #ifndef INCLUDED_SOAPY_SOURCE_IMPL_H
 #define INCLUDED_SOAPY_SOURCE_IMPL_H
 
+#include <functional>
+
 #include <gnuradio/soapy/source.h>
-#include <boost/thread/mutex.hpp>
 
 #include <SoapySDR/Device.hpp>
 #include <SoapySDR/Modules.hpp>

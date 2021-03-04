@@ -528,10 +528,8 @@ int sink_impl::work(int noutput_items,
         }
     }
 
-    boost::this_thread::disable_interruption disable_interrupt;
     int write =
         d_device->writeStream(d_stream, &input_items[0], ninput_items, flags, timeNs);
-    boost::this_thread::restore_interruption restore_interrupt(disable_interrupt);
 
     // Tell runtime system how many output items we produced.
     if (write < 0) {

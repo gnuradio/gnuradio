@@ -11,15 +11,16 @@
 #ifndef INCLUDED_SOAPY_SINK_IMPL_H
 #define INCLUDED_SOAPY_SINK_IMPL_H
 
+#include <functional>
+
 #include <gnuradio/soapy/sink.h>
-#include <boost/thread/mutex.hpp>
 
 #include <SoapySDR/Device.hpp>
 #include <SoapySDR/Modules.hpp>
 #include <SoapySDR/Registry.hpp>
 #include <SoapySDR/Version.hpp>
 
-typedef boost::function<void(pmt::pmt_t, size_t)> cmd_handler_t;
+typedef std::function<void(pmt::pmt_t, size_t)> cmd_handler_t;
 
 namespace gr {
 namespace soapy {

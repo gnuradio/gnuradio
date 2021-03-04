@@ -659,10 +659,8 @@ int source_impl::work(int noutput_items,
     long long int time_ns = 0;
     int flags = 0;
     while (1) {
-        boost::this_thread::disable_interruption disable_interrupt;
         int read = d_device->readStream(
             d_stream, output_items.data(), noutput_items, flags, time_ns);
-        boost::this_thread::restore_interruption restore_interrupt(disable_interrupt);
         if (read >= 0) {
             return read;
         }
