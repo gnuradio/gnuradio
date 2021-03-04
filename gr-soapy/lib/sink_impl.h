@@ -12,7 +12,6 @@
 #define INCLUDED_SOAPY_SINK_IMPL_H
 
 #include <gnuradio/soapy/sink.h>
-#include <boost/bind.hpp>
 #include <boost/thread/mutex.hpp>
 
 #include <SoapySDR/Device.hpp>

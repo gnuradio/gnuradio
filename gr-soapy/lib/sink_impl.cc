@@ -143,18 +143,22 @@ sink_impl::sink_impl(size_t nchan,
 
     message_port_register_in(d_message_port);
     set_msg_handler(d_message_port,
-                    boost::bind(&sink_impl::msg_handler_command, this, _1));
-
-    register_msg_cmd_handler(
-        CMD_FREQ_KEY, boost::bind(&sink_impl::cmd_handler_frequency, this, _1, _2));
-    register_msg_cmd_handler(CMD_GAIN_KEY,
-                             boost::bind(&sink_impl::cmd_handler_gain, this, _1, _2));
-    register_msg_cmd_handler(
-        CMD_RATE_KEY, boost::bind(&sink_impl::cmd_handler_samp_rate, this, _1, _2));
-    register_msg_cmd_handler(CMD_BW_KEY,
-                             boost::bind(&sink_impl::cmd_handler_bw, this, _1, _2));
-    register_msg_cmd_handler(CMD_ANTENNA_KEY,
-                             boost::bind(&sink_impl::cmd_handler_antenna, this, _1, _2));
+                    [this](pmt::pmt_t msg) { this->msg_handler_command(msg); });
+    register_msg_cmd_handler(CMD_FREQ_KEY, [this](pmt::pmt_t val, size_t chann) {
+        this->cmd_handler_frequency(val, chann);
+    });
+    register_msg_cmd_handler(CMD_GAIN_KEY, [this](pmt::pmt_t val, size_t chann) {
+        this->cmd_handler_gain(val, chann);
+    });
+    register_msg_cmd_handler(CMD_RATE_KEY, [this](pmt::pmt_t val, size_t chann) {
+        this->cmd_handler_samp_rate(val, chann);
+    });
+    register_msg_cmd_handler(CMD_BW_KEY, [this](pmt::pmt_t val, size_t chann) {
+        this->cmd_handler_bw(val, chann);
+    });
+    register_msg_cmd_handler(CMD_ANTENNA_KEY, [this](pmt::pmt_t val, size_t chann) {
+        this->cmd_handler_antenna(val, chann);
+    });
 
     /*
      * Limit max samples per call to MTU, however some devices like PlutoSDR
