@@ -4,7 +4,7 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
-#
+# 
 #
 
 """
@@ -253,5 +253,37 @@ def large_ampls_to_corners_mapping(side, points, width):
             sector_values.append(index)
     return sector_values
 
+# /////////////////////////////////////////////////////////////////////////////
+#                           QAM modulation
+# /////////////////////////////////////////////////////////////////////////////
+
+
+class qam_mod(generic_mod):
+    """
+    Hierarchical block for RRC-filtered QAM modulation.
+
+    The input is a byte stream (unsigned char), treated as a series of packed
+    symbols. Symbols are grouped from MSB to LSB.
+
+    The output is the complex modulated signal at baseband, with a given number
+    of samples per symbol.
+
+    If "Samples/Symbol" is 2, and "Number of Constellation Points" is 4, a
+    single byte contains four symbols, and will produce eight samples.
+
+    Args:
+        constellation_points: Number of constellation points (must be a power of two) (integer).
+        mod_code: Whether to use a gray_code (digital.mod_codes.GRAY_CODE) or not (digital.mod_codes.NO_CODE).
+        differential: Whether to use differential encoding (boolean).
+    """
+    # See generic_mod for additional arguments
+    __doc__ += shared_mod_args
+    def __init__(self, constellation_points = _def_constellation_points,
+                      differential = _def_differential,
+                      mod_code = _def_mod_code,
+                 *args, **kwargs):
+        constellation = qam_constellation(constellation_points, differential, mod_code)
+        super(qam_mod, self).__init__(constellation, differential, *args, **kwargs)
 
 modulation_utils.add_type_1_constellation('qam', qam_constellation)
+modulation_utils.add_type_1_constellation('qam', qam_mod)
