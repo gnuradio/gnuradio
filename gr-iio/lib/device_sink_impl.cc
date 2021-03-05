@@ -16,6 +16,8 @@
 #include <gnuradio/io_signature.h>
 
 #include <cstdio>
+#include <string>
+#include <vector>
 
 namespace gr {
 namespace iio {
