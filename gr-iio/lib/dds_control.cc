@@ -13,8 +13,11 @@
 
 #include "dds_control.h"
 #include <gnuradio/io_signature.h>
+
 #include <cstdio>
 #include <iostream>
+#include <string>
+#include <vector>
 
 namespace gr {
 namespace iio {
