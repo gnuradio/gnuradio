@@ -10,12 +10,12 @@
 #ifndef INCLUDED_IIO_FMCOMMS2_SOURCE_IMPL_H
 #define INCLUDED_IIO_FMCOMMS2_SOURCE_IMPL_H
 
-#include <string>
-#include <vector>
-
+#include "device_source_impl.h"
 #include <gnuradio/iio/fmcomms2_source.h>
 
-#include "device_source_impl.h"
+#include <string>
+#include <thread>
+#include <vector>
 
 namespace gr {
 namespace iio {
@@ -25,7 +25,7 @@ class fmcomms2_source_impl : public fmcomms2_source, public device_source_impl
 private:
     std::vector<std::string>
     get_channels_vector(bool ch1_en, bool ch2_en, bool ch3_en, bool ch4_en);
-    boost::thread overflow_thd;
+    std::thread overflow_thd;
     void check_overflow(void);
 
 public:

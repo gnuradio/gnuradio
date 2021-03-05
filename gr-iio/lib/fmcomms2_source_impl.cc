@@ -11,15 +11,16 @@
 #include "config.h"
 #endif
 
-#include <cstdio>
-
 #include "fmcomms2_source_impl.h"
-#include <gnuradio/io_signature.h>
-
 #include <gnuradio/blocks/float_to_complex.h>
 #include <gnuradio/blocks/short_to_float.h>
-
+#include <gnuradio/io_signature.h>
 #include <ad9361.h>
+
+#include <cstdio>
+#include <string>
+#include <thread>
+#include <vector>
 
 #define MIN_RATE 520333
 #define DECINT_RATIO 8
@@ -216,7 +217,7 @@ fmcomms2_source_impl::fmcomms2_source_impl(struct iio_context* ctx,
                Fpass,
                Fstop);
 
-    overflow_thd = boost::thread(&fmcomms2_source_impl::check_overflow, this);
+    overflow_thd = std::thread(&fmcomms2_source_impl::check_overflow, this);
 }
 
 fmcomms2_source_impl::~fmcomms2_source_impl() { overflow_thd.join(); }
