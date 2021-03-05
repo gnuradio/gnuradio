@@ -10,12 +10,15 @@
 #ifndef INCLUDED_IIO_DEVICE_SOURCE_IMPL_H
 #define INCLUDED_IIO_DEVICE_SOURCE_IMPL_H
 
-#include <string>
-#include <vector>
-
 #include <gnuradio/iio/device_source.h>
 #include <iio.h>
-#include <boost/thread.hpp>
+
+#include <condition_variable>
+#include <cstdio>
+#include <mutex>
+#include <string>
+#include <thread>
+#include <vector>
 
 namespace gr {
 namespace iio {
@@ -25,8 +28,9 @@ struct ctxInfo {
     struct iio_context* ctx;
     int count;
 };
+
+static std::mutex ctx_mutex;
 static std::vector<ctxInfo> contexts;
-static boost::mutex ctx_mutex;
 
 typedef std::vector<ctxInfo>::iterator ctx_it;
 
@@ -35,14 +39,14 @@ class device_source_impl : public device_source
 private:
     void channel_read(const struct iio_channel* chn, void* dst, size_t len);
 
-    boost::mutex iio_mutex;
-    boost::condition_variable iio_cond, iio_cond2;
+    /*std::condition_variable iio_cond, iio_cond2;*/
+    std::mutex iio_mutex;
+    std::thread refill_thd;
+
     unsigned long items_in_buffer;
     off_t byte_offset;
     volatile bool please_refill_buffer;
     pmt::pmt_t port_id;
-
-    boost::thread refill_thd;
 
     unsigned long timeout;
 

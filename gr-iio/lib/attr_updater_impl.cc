@@ -13,7 +13,9 @@
 
 #include "attr_updater_impl.h"
 #include <gnuradio/io_signature.h>
+
 #include <chrono>
+#include <string>
 #include <thread>
 
 namespace gr {

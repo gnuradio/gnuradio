@@ -8,9 +8,10 @@
  */
 
 #include "pluto_source_impl.h"
-
 #include <iio.h>
-#include <stdio.h>
+
+#include <cstdio>
+#include <string>
 
 namespace gr {
 namespace iio {
