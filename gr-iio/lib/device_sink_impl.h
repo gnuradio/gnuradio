@@ -10,11 +10,12 @@
 #ifndef INCLUDED_IIO_DEVICE_SINK_IMPL_H
 #define INCLUDED_IIO_DEVICE_SINK_IMPL_H
 
-#include <string>
-#include <vector>
-
 #include <gnuradio/iio/device_sink.h>
 #include <iio.h>
+
+#include <cstdio>
+#include <string>
+#include <vector>
 
 namespace gr {
 namespace iio {

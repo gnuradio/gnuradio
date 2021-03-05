@@ -10,11 +10,12 @@
 #ifndef INCLUDED_IIO_ATTR_SINK_IMPL_H
 #define INCLUDED_IIO_ATTR_SINK_IMPL_H
 
+#include "device_source_impl.h"
 #include <gnuradio/iio/attr_sink.h>
 #include <iio.h>
 #include <pmt/pmt.h>
 
-#include "device_source_impl.h"
+#include <string>
 
 namespace gr {
 namespace iio {

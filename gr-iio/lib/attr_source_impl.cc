@@ -14,11 +14,12 @@
 #include "attr_source_impl.h"
 #include <gnuradio/io_signature.h>
 #include <boost/lexical_cast.hpp>
-#include <boost/thread/thread.hpp>
+
 #include <chrono>
+#include <cstdio>
+#include <string>
 #include <thread>
 #include <vector>
-
 
 namespace gr {
 namespace iio {

@@ -17,7 +17,9 @@
 
 #include <cstdio>
 #include <fstream>
+#include <mutex>
 #include <string>
+#include <vector>
 
 namespace gr {
 namespace iio {
@@ -97,7 +99,7 @@ void device_source_impl::set_params(const std::vector<std::string>& params)
 
 void device_source_impl::set_buffer_size(unsigned int _buffer_size)
 {
-    boost::unique_lock<boost::mutex> lock(iio_mutex);
+    std::unique_lock<std::mutex> lock(iio_mutex);
 
     if (buf && this->buffer_size != _buffer_size) {
         iio_buffer_destroy(buf);
@@ -220,7 +222,7 @@ device_source_impl::device_source_impl(struct iio_context* ctx,
 void device_source_impl::remove_ctx_history(struct iio_context* ctx_from_block,
                                             bool destroy_ctx)
 {
-    boost::lock_guard<boost::mutex> lock(ctx_mutex);
+    std::lock_guard<std::mutex> lock(ctx_mutex);
 
     for (ctx_it it = contexts.begin(); it != contexts.end(); ++it) {
         if (it->ctx == ctx_from_block) {

@@ -10,13 +10,9 @@
 #ifndef INCLUDED_IIO_PLUTO_SINK_IMPL_H
 #define INCLUDED_IIO_PLUTO_SINK_IMPL_H
 
-#include <string>
-#include <vector>
-
+#include "device_sink_impl.h"
 #include <gnuradio/iio/fmcomms2_sink.h>
 #include <gnuradio/iio/pluto_sink.h>
-
-#include "device_sink_impl.h"
 
 namespace gr {
 namespace iio {
