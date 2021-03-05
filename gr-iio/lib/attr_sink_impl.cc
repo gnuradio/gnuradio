@@ -14,8 +14,10 @@
 #include "attr_sink_impl.h"
 #include <gnuradio/io_signature.h>
 #include <boost/lexical_cast.hpp>
+
 #include <cstdio>
 #include <iostream>
+#include <string>
 
 namespace gr {
 namespace iio {

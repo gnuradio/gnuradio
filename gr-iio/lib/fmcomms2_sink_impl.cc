@@ -11,16 +11,18 @@
 #include "config.h"
 #endif
 
-#include <cstdio>
-
 #include "device_source_impl.h"
 #include "fmcomms2_sink_impl.h"
-#include <gnuradio/io_signature.h>
-
 #include <gnuradio/blocks/complex_to_float.h>
 #include <gnuradio/blocks/float_to_short.h>
-
+#include <gnuradio/io_signature.h>
 #include <ad9361.h>
+
+#include <cstdio>
+#include <mutex>
+#include <string>
+#include <thread>
+#include <vector>
 
 #define OVERFLOW_CHECK_PERIOD_MS 1000
 
@@ -193,12 +195,12 @@ fmcomms2_sink_impl::fmcomms2_sink_impl(struct iio_context* ctx,
                Fstop);
 
     stop_thread = false;
-    underflow_thd = boost::thread(&fmcomms2_sink_impl::check_underflow, this);
+    underflow_thd = std::thread(&fmcomms2_sink_impl::check_underflow, this);
 }
 
 fmcomms2_sink_impl::~fmcomms2_sink_impl()
 {
-    boost::unique_lock<boost::mutex> lock(uf_mutex);
+    std::unique_lock<std::mutex> lock(uf_mutex);
     stop_thread = true;
     lock.unlock();
     underflow_thd.join();
@@ -208,7 +210,7 @@ void fmcomms2_sink_impl::check_underflow(void)
 {
     uint32_t status;
     int ret;
-    boost::unique_lock<boost::mutex> lock(uf_mutex, boost::defer_lock);
+    std::unique_lock<std::mutex> lock(uf_mutex, std::defer_lock);
 
     // Clear status registers
     iio_device_reg_write(dev, 0x80000088, 0x6);
