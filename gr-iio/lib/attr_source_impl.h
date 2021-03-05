@@ -10,10 +10,11 @@
 #ifndef INCLUDED_IIO_ATTR_SOURCE_IMPL_H
 #define INCLUDED_IIO_ATTR_SOURCE_IMPL_H
 
-#include <gnuradio/iio/attr_source.h>
-#include <vector>
-
 #include "device_source_impl.h"
+#include <gnuradio/iio/attr_source.h>
+
+#include <cstdio>
+#include <string>
 
 namespace gr {
 namespace iio {

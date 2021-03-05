@@ -10,12 +10,11 @@
 #ifndef INCLUDED_IIO_FMCOMMS5_SOURCE_IMPL_H
 #define INCLUDED_IIO_FMCOMMS5_SOURCE_IMPL_H
 
-#include <string>
-#include <vector>
-
+#include "device_source_impl.h"
 #include <gnuradio/iio/fmcomms5_source.h>
 
-#include "device_source_impl.h"
+#include <string>
+#include <vector>
 
 namespace gr {
 namespace iio {

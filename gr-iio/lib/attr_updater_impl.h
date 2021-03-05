@@ -13,6 +13,7 @@
 #include <gnuradio/iio/attr_updater.h>
 
 #include <mutex>
+#include <string>
 
 namespace gr {
 namespace iio {
@@ -23,7 +24,6 @@ private:
     const std::string d_attribute;
     std::string d_value;
     const pmt::pmt_t d_port;
-    bool d_update_on_change;
     unsigned int d_interval_ms;
     bool d_finished;
     bool d_updated;

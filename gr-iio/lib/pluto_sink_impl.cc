@@ -9,8 +9,9 @@
 
 #include "pluto_sink_impl.h"
 #include "pluto_source_impl.h"
-
 #include <iio.h>
+
+#include <string>
 
 namespace gr {
 namespace iio {
