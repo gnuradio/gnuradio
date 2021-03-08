@@ -205,11 +205,15 @@ templates:
         self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
         ${'%'} endif
         ${'%'} endif  # if rx_agc${n} != 'Enabled'
-        ${'%'} if context.get('dc_offs_enb${n}')():
-        self.${'$'}{id}.set_auto_dc_offset(${'$'}{${'dc_offs_enb' + str(n)}}, ${n})
+        ${'%'} if context.get('dc_offs_enb${n}')() in ('auto', 'disabled'):
+        self.${'$'}{id}.set_auto_dc_offset(${'$'}{True if ${'dc_offs_enb' + str(n)} == 'auto' else False}, ${n})
+        ${'%'} elif context.get('dc_offs_enb${n}')() == 'manual':
+        self.${'$'}{id}.set_dc_offset(${'$'}{${'dc_offs' + str(n)}}, ${n})
         ${'%'} endif
-        ${'%'} if context.get('iq_imbal_enb${n}')():
-        self.${'$'}{id}.set_auto_iq_balance(${'$'}{${'iq_imbal_enb' + str(n)}}, ${n})
+        ${'%'} if context.get('iq_imbal_enb${n}')() in ('auto', 'disabled'):
+        self.${'$'}{id}.set_auto_iq_balance(${'$'}{True if ${'iq_imbal_enb' + str(n)} == 'auto' else False}, ${n})
+        ${'%'} elif context.get('iq_imbal_enb${n}')() == 'manual':
+        self.${'$'}{id}.set_iq_balance(${'$'}{${'iq_imbal' + str(n)}}, ${n})
         ${'%'} endif
         % else:
         ${'%'} if context.get('gain_type' + '${n}')() == 'normalized':
@@ -525,15 +529,29 @@ PARAMS_TMPL = """
 -   id: dc_offs_enb${n}
     label: 'Ch${n}: Enable DC Offset Correction'
     category: FE Corrections
-    dtype: raw
-    default: '""'
+    dtype: enum
+    options: [default, auto, disabled, manual]
+    option_labels: [Default, Automatic, Disabled, Manual]
     hide: ${'$'}{ 'all' if not nchan > ${n} else 'part'}
+-   id: dc_offs${n}
+    label: 'Ch${n}: DC Offset Correction Value'
+    category: FE Corrections
+    dtype: complex
+    default: 0+0j
+    hide: ${'$'}{ 'all' if not dc_offs_enb${n} == 'manual' else 'part'}
 -   id: iq_imbal_enb${n}
     label: 'Ch${n}: Enable IQ Imbalance Correction'
     category: FE Corrections
-    dtype: raw
-    default: '""'
+    dtype: enum
+    options: [default, auto, disabled, manual]
+    option_labels: [Default, Automatic, Disabled, Manual]
     hide: ${'$'}{ 'all' if not nchan > ${n} else 'part'}
+-   id: iq_imbal${n}
+    label: 'Ch${n}: IQ imbalance Correction Value'
+    category: FE Corrections
+    dtype: complex
+    default: 0+0j
+    hide: ${'$'}{ 'all' if not iq_imbal_enb${n} == 'manual' else 'part'}
 % endif
 """
 
