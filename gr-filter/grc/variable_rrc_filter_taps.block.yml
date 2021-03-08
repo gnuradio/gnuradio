@@ -29,6 +29,8 @@ templates:
     var_make: |-
         self.${id} = ${id} = firdes.root_raised_cosine(${gain}, ${samp_rate},\
         ${sym_rate}, ${alpha}, ${ntaps})
+    callbacks:
+    - self.set_${id}(firdes.root_raised_cosine(${gain}, ${samp_rate}, ${sym_rate}, ${alpha}, ${ntaps}))
 
 cpp_templates:
     includes: ['#include <gnuradio/filter/firdes.h>']
