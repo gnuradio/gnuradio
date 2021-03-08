@@ -97,9 +97,10 @@ int atsc_viterbi_decoder_impl::work(int noutput_items,
         /* Build a continuous symbol buffer for each encoder */
         for (unsigned int encoder = 0; encoder < NCODERS; encoder++)
             for (unsigned int k = 0; k < enco_which_max; k++)
-                symbols[encoder][k] = in[(i + (enco_which_syms[encoder][k] / 832)) *
-                                             ATSC_DATA_SEGMENT_LENGTH +
-                                         enco_which_syms[encoder][k] % 832];
+                symbols[encoder][k] =
+                    in[(i + (enco_which_syms[encoder][k] / ATSC_DATA_SEGMENT_LENGTH)) *
+                           ATSC_DATA_SEGMENT_LENGTH +
+                       enco_which_syms[encoder][k] % ATSC_DATA_SEGMENT_LENGTH];
 
 
         /* Now run each of the 12 Viterbi decoders over their subset of
@@ -130,8 +131,8 @@ int atsc_viterbi_decoder_impl::work(int noutput_items,
                 throw std::runtime_error("No plinfo on tag");
             }
 
-            memcpy(&out[(i * NCODERS + j) * ATSC_MPEG_RS_ENCODED_LENGTH],
-                   &out_copy[j * OUTPUT_SIZE / NCODERS],
+            memcpy(&out[(i + j) * ATSC_MPEG_RS_ENCODED_LENGTH],
+                   &out_copy[j * ATSC_MPEG_RS_ENCODED_LENGTH],
                    ATSC_MPEG_RS_ENCODED_LENGTH * sizeof(out_copy[0]));
 
             plinfo pli_out;
