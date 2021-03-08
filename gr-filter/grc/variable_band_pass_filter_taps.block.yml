@@ -44,6 +44,8 @@ templates:
     var_make: |-
         self.${id} = ${id} = firdes.${type}(${gain}, ${samp_rate}, ${low_cutoff_freq}, \
         ${high_cutoff_freq}, ${width}, ${win}, ${beta})
+    callbacks:
+    - self.set_${id}(firdes.${type}(${gain}, ${samp_rate}, ${low_cutoff_freq}, ${high_cutoff_freq}, ${width}, ${win}, ${beta}))
 
 cpp_templates:
     includes: ['#include <gnuradio/filter/firdes.h>']
