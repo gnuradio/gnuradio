@@ -311,8 +311,8 @@ float ted_generalized_msk::compute_error_cf()
 {
     gr_complex u;
 
-    u = (d_input[0] * d_input[0] * conj(d_input[2] * d_input[2])) -
-        (d_input[1] * d_input[1] * conj(d_input[3] * d_input[3]));
+    u = (d_input[1] * d_input[1] * conj(d_input[5] * d_input[5])) -
+        (d_input[3] * d_input[3] * conj(d_input[7] * d_input[7]));
 
     return gr::branchless_clip(u.real(), 3.0f);
 }
@@ -321,8 +321,8 @@ float ted_generalized_msk::compute_error_ff()
 {
     float u;
 
-    u = (d_input[0].real() * d_input[0].real() * d_input[2].real() * d_input[2].real()) -
-        (d_input[1].real() * d_input[1].real() * d_input[3].real() * d_input[3].real());
+    u = (d_input[1].real() * d_input[1].real() * d_input[5].real() * d_input[5].real()) -
+        (d_input[3].real() * d_input[3].real() * d_input[7].real() * d_input[7].real());
 
     return gr::branchless_clip(u, 3.0f);
 }

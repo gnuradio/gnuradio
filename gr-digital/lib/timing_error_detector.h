@@ -379,7 +379,7 @@ public:
      */
     ted_generalized_msk()
         : timing_error_detector(
-              TED_DANDREA_AND_MENGALI_GEN_MSK, 2, 4, false, false, constellation_sptr())
+              TED_DANDREA_AND_MENGALI_GEN_MSK, 4, 8, false, false, constellation_sptr())
     {
     }
     ~ted_generalized_msk() override{};
