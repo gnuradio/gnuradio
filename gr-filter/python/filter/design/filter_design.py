@@ -2047,9 +2047,10 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.filterGainEdit.setText(str(params["gain"]))
 
             # Set up GUI parameters for each filter type.
+            checkbox_entry=int(eval('fft.window.'+params["wintype"]))
             if(params["filttype"] == "lpf"):
                 self.gui.filterTypeComboBox.setCurrentIndex(0)
-                self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+                self.gui.filterDesignTypeComboBox.setCurrentIndex(checkbox_entry)
 
                 self.gui.endofLpfPassBandEdit.setText(str(params["pbend"]))
                 self.gui.startofLpfStopBandEdit.setText(str(params["sbstart"]))
@@ -2058,7 +2059,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                     self.gui.lpfPassBandRippleEdit.setText(str(params["ripple"]))
             elif(params["filttype"] == "bpf"):
                 self.gui.filterTypeComboBox.setCurrentIndex(1)
-                self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+                self.gui.filterDesignTypeComboBox.setCurrentIndex(checkbox_entry)
 
                 self.gui.startofBpfPassBandEdit.setText(str(params["pbstart"]))
                 self.gui.endofBpfPassBandEdit.setText(str(params["pbend"]))
@@ -2068,7 +2069,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                     self.gui.bpfPassBandRippleEdit.setText(str(params["ripple"]))
             elif(params["filttype"] == "cbpf"):
                 self.gui.filterTypeComboBox.setCurrentIndex(2)
-                self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+                self.gui.filterDesignTypeComboBox.setCurrentIndex(checkbox_entry)
 
                 self.gui.startofBpfPassBandEdit.setText(str(params["pbstart"]))
                 self.gui.endofBpfPassBandEdit.setText(str(params["pbend"]))
@@ -2078,7 +2079,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                     self.gui.bpfPassBandRippleEdit.setText(str(params["ripple"]))
             elif(params["filttype"] == "bnf"):
                 self.gui.filterTypeComboBox.setCurrentIndex(3)
-                self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+                self.gui.filterDesignTypeComboBox.setCurrentIndex(checkbox_entry)
 
                 self.gui.startofBnfStopBandEdit.setText(str(params["sbstart"]))
                 self.gui.endofBnfStopBandEdit.setText(str(params["sbend"]))
@@ -2088,7 +2089,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                     self.gui.bnfPassBandRippleEdit.setText(str(params["ripple"]))
             elif(params["filttype"] == "hpf"):
                 self.gui.filterTypeComboBox.setCurrentIndex(4)
-                self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+                self.gui.filterDesignTypeComboBox.setCurrentIndex(checkbox_entry)
 
                 self.gui.endofHpfStopBandEdit.setText(str(params["sbend"]))
                 self.gui.startofHpfPassBandEdit.setText(str(params["pbstart"]))
@@ -2097,14 +2098,14 @@ class gr_plot_filter(QtGui.QMainWindow):
                     self.gui.hpfPassBandRippleEdit.setText(str(params["ripple"]))
             elif(params["filttype"] == "rrc"):
                 self.gui.filterTypeComboBox.setCurrentIndex(5)
-                self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+                self.gui.filterDesignTypeComboBox.setCurrentIndex(checkbox_entry)
 
                 self.gui.rrcSymbolRateEdit.setText(str(params["srate"]))
                 self.gui.rrcAlphaEdit.setText(str(params["alpha"]))
                 self.gui.rrcNumTapsEdit.setText(str(params["ntaps"]))
             elif(params["filttype"] == "gaus"):
                 self.gui.filterTypeComboBox.setCurrentIndex(6)
-                self.gui.filterDesignTypeComboBox.setCurrentIndex(int(params["wintype"]))
+                self.gui.filterDesignTypeComboBox.setCurrentIndex(checkbox_entry)
 
                 self.gui.gausSymbolRateEdit.setText(str(params["srate"]))
                 self.gui.gausBTEdit.setText(str(params["bt"]))
