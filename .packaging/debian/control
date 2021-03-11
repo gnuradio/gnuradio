@@ -1,0 +1,380 @@
+Source: gnuradio
+Section: comm
+Priority: optional
+Maintainer: A. Maitland Bottoms <bottoms@debian.org>
+Build-Depends: cmake,
+               debhelper (>= 12~),
+               dh-python,
+               doxygen,
+	            gir1.2-gtk-3.0,
+	            gir1.2-pango-1.0,
+	            graphviz,
+               libasound2-dev,
+               libboost-date-time-dev,
+               libboost-dev,
+               libboost-filesystem-dev,
+               libboost-program-options-dev,
+               libboost-regex-dev,
+               libboost-system-dev,
+               libboost-test-dev,
+               libboost-thread-dev,
+               libcodec2-dev (>=0.8),
+               libfftw3-dev,
+               libfontconfig1-dev,
+	            libgmp-dev,
+               libgsl-dev (>= 2.0),
+               libgsm1-dev,
+               libjack-jackd2-dev,
+               liblog4cpp5-dev,
+               liborc-0.4-dev,
+               libpangocairo-1.0-0,
+               libportaudio2,
+               libpulse-dev,
+	            libqwt-qt5-dev,
+               libsdl1.2-dev,
+               libsndfile1-dev,
+	            libthrift-dev [amd64 arm64 armel armhf i386],
+               libuhd-dev (>=3.13.1) [!hurd-i386],
+               libusb-1.0-0-dev [!kfreebsd-any],
+               libusb2-dev [kfreebsd-any],
+	            libvolk2-dev,
+               libxi-dev,
+               libxrender-dev,
+               libzmq3-dev [!hurd-i386] | libzmq-dev [!hurd-i386],
+               pkg-config,
+               portaudio19-dev,
+               pybind11-dev (>=2.4.3),
+	            python3-click,
+	            python3-click-plugins,
+               python3-dev,
+	            python3-gi,
+	            python3-gi-cairo,
+               python3-lxml,
+               python3-mako,
+               python3-numpy,
+               python3-opengl,
+	            python3-pyqt5 [!hurd-i386],
+               python3-scipy,
+	            python3-yaml,
+               python3-zmq [!hurd-i386],
+	            qt5-qmake,
+	            qtbase5-dev,
+	            qttools5-dev,
+	            thrift-compiler [amd64 arm64 armel armhf i386],
+               xmlto
+Standards-Version: 4.4.0
+Homepage: http://gnuradio.org/
+Vcs-Browser: https://github.com/gnuradio/pkg-gnuradio
+Vcs-Git: https://github.com/gnuradio/pkg-gnuradio.git
+
+Package: gnuradio
+Architecture: any
+Depends: libcanberra-gtk-module,
+         libcanberra-gtk3-module,
+         libvolk2-bin,
+         python3-click,
+         python3-click-plugins,
+         python3-gi,
+         python3-gi-cairo,
+         python3-lxml,
+         python3-mako,
+         python3-numpy,
+         python3-opengl,
+	      python3-pyqt5 [!hurd-i386],
+	      python3-pyqtgraph,
+         python3-sip,
+	      python3-yaml,
+         python3-zmq [!hurd-i386],
+         ${misc:Depends},
+         ${python3:Depends},
+         ${shlibs:Depends}
+Recommends: gnuradio-dev,
+            python3-matplotlib,
+	         python3-networkx,
+            python3-qwt-qt5,
+            python3-scipy,
+            rtl-sdr,
+            uhd-host
+Suggests: gr-fosphor, gr-osmosdr
+Multi-Arch: foreign
+Description: GNU Radio Software Radio Toolkit
+ GNU Radio provides signal processing blocks to implement software
+ radios. It can be used with readily-available low-cost external RF
+ hardware to create software-defined radios, or without hardware in a
+ simulation-like environment. It is widely used in hobbyist, academic
+ and commercial environments to support both wireless communications
+ research and real-world radio systems.
+ .
+ GNU Radio applications are primarily written using the Python
+ programming language, while the supplied performance-critical signal
+ processing path is implemented in C++ using processor floating-point
+ extensions, where available. Thus, the developer is able to implement
+ real-time, high-throughput radio systems in a simple-to-use,
+ rapid-application-development environment.
+ .
+ While not primarily a simulation tool, GNU Radio does support
+ development of signal processing algorithms using pre-recorded or
+ generated data, avoiding the need for actual RF hardware.
+ .
+ This package contains the gnuradio-companion, a graphical tool for
+ creating signal flow graphs and generating flow-graph source code.
+ Also included are a variety of tools and utility programs.
+
+Package: gnuradio-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Multi-Arch: foreign
+Description: GNU Software Defined Radio toolkit documentation
+ Documentation for the GNU Radio software defined radio system
+ in html and xml form.
+ .
+ Part of the main gnuradio build.
+
+Package: gnuradio-dev
+Section: libdevel
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
+Multi-Arch: same
+Depends: gnuradio (= ${binary:Version}),
+         libboost-date-time-dev,
+         libboost-filesystem-dev,
+         libboost-program-options-dev,
+         libboost-regex-dev,
+         libboost-system-dev,
+         libboost-test-dev,
+         libboost-thread-dev,
+         libfftw3-dev,
+         libgmp-dev,
+         libgsm1-dev,
+         liblog4cpp5-dev,
+         libvolk2-dev,
+         python3-dev,
+         ${misc:Depends}
+Suggests: cmake, qtbase5-dev, libqwt-qt5-dev, pkg-config, pybind11-dev
+Description: GNU Software Defined Radio toolkit development
+ Header files for the GNU Radio software defined radio system.
+ Since GNU Radio is a framework for development of SDR
+ applications, you are likely to need this installed.
+ .
+ Part of the main gnuradio build.
+
+# Package: libgnuradio-analog
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio analog functions
+#  Library for handling analog signal processing functions.
+#  These functions are also in gnuradio-core.
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-audio
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio audio functions
+#  This is the gr-audio library, used to connect to audio sources
+#  (mic-in) and sinks (speaker-out) ports on a computer. The underlying
+#  hardware driver is system and OS dependent and this module should
+#  automatically discover the correct one to use.  Part of the main
+#  gnuradio build.
+
+# Package: libgnuradio-blocks
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio blocks functions
+#  Some non-signal processing blocks.
+#  These functions are also in gnuradio-core.
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-channels
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio channels functions
+#  Some channel oriented processing blocks.
+#  These functions are also in gnuradio-core.
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-digital
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio digital communications functions
+#  All the functions for doing digital modulation and demodulation,
+#  including bpsk, qpsk, gmsk and ofdm signals.
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-dtv
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio digital TV signal processing blocks
+#  ATSC support, gr-atsc ported to a new framework, as well as
+#  DVB-S2, DVB-T, DVB-T2 digital video broadcast standards.
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-fec
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio forward error correction support
+#  Handle forward error correction processing in gnuradio.
+#  Implements the GNU Radio FEC API, supporting encoders and
+#  decoders for no-op dummmy, repetition, and convolutional classes.
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-fft
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio fast Fourier transform functions
+#  Library for Fourier transform techniques used in gnuradio.
+#  Uses single precision FFT from libfftw3-single3.
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-filter
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio filter functions
+#  Library of filter blocks used in gnuradio. Implements
+#  FIR, IIR and FFT filters, as well as Polyphase filterbank and
+#  PFB arbitrary resampler methods.
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-network
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio network transport functions
+#  Library for network transport, TCP, UDP functions.
+
+# Package: libgnuradio-pmt
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio pmt container library
+#  Polymorphic Types are opaque data types that are designed as generic
+#  containers of data that can be safely passed around between blocks
+#  and threads in GNU Radio.
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-qtgui
+# Section: libs
+# Architecture: kfreebsd-any linux-any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio Qt graphical user interface functions
+#  QT-based graphical sinks for gnuradio applications.
+#  Implements opengl, raster and native plotting methods, and
+#  supports a QT Style Sheet (QSS) file to adjust the look.
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-runtime
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio core runtime
+#  Top level component library. Defines core blocks. Handles
+#  settings for logging, performance counters, and control port.
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-trellis
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio trellis modulation functions
+#  Library for trellis coding modulation, including the Viterbi
+#  Algorithm, Concatenated Coding and Turbo Decoding
+#  based upon finite state machine (FSM) class.
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-uhd
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio universal hardware driver functions
+#  The gnuradio interface to the UHD library to connect to and send and
+#  receive data between to the Ettus Research, LLC product line -
+#  including the USRP family of software radio peripheral devices.
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-video-sdl
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio video functions
+#  Library for handling SDL (Simple DirectMedia Layer) video data.
+#  Implements input and output blocks.
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-vocoder
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio vocoder functions
+#  Library of vocoder blocks, including ulaw, alaw, gsm and codec2.
+#  Debian uses external libraries for gsm and codec2.
+#  .
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-wavelet
+# Section: libs
+# Architecture: any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio wavelet functions
+#  Library of Daubechies wavelet function blocks.
+#  wvps computes the Wavelet Power Spectrum from
+#  a set of wavelet coefficients.
+#  .
+#  Part of the main gnuradio build.
+
+# Package: libgnuradio-zeromq
+# Section: libs
+# Architecture: kfreebsd-any linux-any
+# Pre-Depends: ${misc:Pre-Depends}
+# Depends: ${misc:Depends}, ${shlibs:Depends}
+# Multi-Arch: same
+# Description: gnuradio zeromq functions
+#  0MQ messaging library support. Provide network socket
+#  endpoints for gnuradio data and message streams.
+#  PUB/SUB, PUSH/PULL, REP/REQ models supported.
+#  .
+#  Part of the main gnuradio build.
