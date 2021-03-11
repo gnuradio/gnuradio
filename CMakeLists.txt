@@ -34,6 +34,11 @@ GR_CHECK_BUILD_TYPE(${CMAKE_BUILD_TYPE})
 SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 
+# Set the build date
+string(TIMESTAMP BUILD_DATE "%a, %d %b %Y %H:%M:%SZ" UTC)
+string(TIMESTAMP BUILD_DATE_SHORT "%Y-%m-%d" UTC)
+message(STATUS "Build date set to ${BUILD_DATE}.")
+
 include(GrComponent)
 ########################################################################
 # Setup Boost for global use (within this build)
