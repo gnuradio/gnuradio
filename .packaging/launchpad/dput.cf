@@ -1,0 +1,13 @@
+[ftp-master]
+fqdn = ppa.launchpad.net
+method = ftp
+incoming = ~gnuradio/ubuntu/gnuradio-master/
+login = anonymous
+allow_unsigned_uploads = 0
+
+[ftp-maint-3.9]
+fqdn = ppa.launchpad.net
+method = ftp
+incoming = ~gnuradio/ubuntu/gnuradio-maint-3.9/
+login = anonymous
+allow_unsigned_uploads = 0
