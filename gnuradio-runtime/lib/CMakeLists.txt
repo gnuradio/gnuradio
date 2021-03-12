@@ -218,6 +218,9 @@ target_link_libraries(gnuradio-runtime PUBLIC
     Python::Python
   )
 
+# Address linker issues with std::filesystem on Centos 8 and Debian
+target_link_libraries(gnuradio-runtime PUBLIC $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,9.0>>:stdc++fs>)
+
 target_include_directories(gnuradio-runtime
   PUBLIC
     ${PYTHON_NUMPY_INCLUDE_DIR}
