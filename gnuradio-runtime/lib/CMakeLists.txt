@@ -232,6 +232,9 @@ target_include_directories(gnuradio-runtime
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
+# constants.cc includes boost::dll headers, force them to use std::filesystem
+target_compile_definitions(gnuradio-runtime PRIVATE BOOST_DLL_USE_STD_FS)
+
   if(ENABLE_GR_CTRLPORT)
     target_compile_definitions(gnuradio-runtime PUBLIC GR_CTRLPORT)
   endif()
