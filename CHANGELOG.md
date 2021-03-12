@@ -2,10 +2,127 @@
 All notable changes to GNU Radio will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic
-Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html),
+starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
+
+## [3.8.3.0] - 2021-03-17
+
+API is compatible with C++ code written against previous v3.8 releases.
+
+ABI (link time) compatibility is not guaranteed. Out-of-tree C++ code
+linked to previous v3.8 releases should be rebuilt against this version.
+
+### Changed
+
+#### Project Scope
+
+- Preference file path may be set using the `GR_PREFS_PATH` environment variable
+- Lower message latency, previously slow when block aliases were used
+- PMT: `is_dict()` no longer returns True for PMT pairs, only for PMT dicts
+- Util gnuradio-config-info gets --print-all for those that want it all
+- Allow Thrift versions up thorugh 0.13
+- (internal) Build system improvements and fixes
+- (internal) Reduce Boost usage by replacing bind() with lambdas supported in C++11
+
+#### OOT Support
+
+- Allow override of gr python dir by setting `-DGR_PYTHON_DIR`
+- Modtool will not try to add duplicate block names in a module
+- Modtool can non-interactively add blocks with no parameters (`--argument-list=""`)
+- Modtool will use current installation prefix instead of /usr/local as source of templates
+
+#### GRC
+
+- Better handling of gui hints, avoid hiding widgets in cases where some have GUI hints and some do not
+- Dark theme detection fix
+- Add window size option for bokeh gui
+
+#### gr-audio
+
+- ALSA nperiods default increased to 32 frames to reduce drops (can be set in conf file under the `audio_alsa` section)
+
+#### gr-blocks
+
+- File Source handles EOF properly in non-seekable files (e.g., pipes)
+- File Source handles large files on Windows
+- Several bounds checking and boundary condition improvements
+
+#### gr-digital
+
+- MSK timing error detector improvement
+- Improvements to correlation estimator example
+- Correlate Access Code will not trigger until it receives enough bits to compare to the access code
+
+#### gr-dtv
+
+- Performance improvements
+
+#### gr-filter
+
+- Filter designer works with Qt5 and Python3
+- Taps blocks (e.g., Low Pass Filter Taps) now propagate parameter changes
+
+#### gr-qtgui
+
+- Chooser label defaults now correct
+- Frequency Sink max hold plot for half spectrum width option shows correctly
+- Number Sink honors setting of 'avg' more consistently
+
+#### gr-uhd
+
+- Add start time parameter to GRC blocks
+- Add message handler for GPIO control messages
+- Additional master clock rates in GRC blocks
+- UHD source sends tags on center frequency change
+
+#### gr-video-sdl
+
+- Correct YUV format options
+
+#### gr-zeromq
+
+- Connections no longer hang when flowgraph stops and other end is still connected (`ZMQ_LINGER` now set)
+- Receipt of bad PMTs logged (instead of exception)
+
+### Contributors
+At LEAST the following authors contributed to this release.
+
+- alekhgupta1441 <alekhgupta1441@gmail.com>
+- A. Maitland Bottoms <bottoms@debian.org>
+- Christophe Seguinot <christophe.seguinot@univ-lille.fr>
+- Clayton Smith <argilo@gmail.com>
+- David Pi <david.pinho@gmail.com>
+- Derek Kozel <derek@bitstovolts.com>
+- Doron Behar <doron.behar@gmail.com>
+- duggabe <barry@dcsmail.net>
+- elms <elms@freshred.net>
+- gnieboer <gnieboer@corpcomm.net>
+- Håkon Vågsether <hauk142@gmail.com>
+- Huang Rui <vowstar@gmail.com>
+- Jacob Gilbert <mrjacobagilbert@gmail.com>
+- Jeff Long <willcode4@gmail.com>
+- Johannes Demel <demel@ant.uni-bremen.de>
+- Marcus Müller <mmueller@gnuradio.org>
+- Martin Braun <martin@gnuradio.org>
+- Matt Mills <mmills@2bn.net>
+- Michael Dickens <michael.dickens@ettus.com>
+- mormj <mormjb@gmail.com>
+- Nick Foster <bistromath@gmail.com>
+- Nick Østergaard <oe.nick@gmail.com>
+- Niki <niki@aveer.io>
+- Notou <barthy42@laposte.net>
+- rear1019 <rear1019@posteo.de>
+- Ron Economos <w6rz@comcast.net>
+- Ryan Volz <ryan.volz@gmail.com>
+- Sam Schmidt <samuel.schmidt.ee@gmail.com>
+- Sebastian Koslowski <sebastian.koslowski@gmail.com>
+- Steve Lunsford <lunsford-stephen@vast-inc.com>
+- Thomas Habets <thomas@habets.se>
+- Vasil Velichkov <vvvelichkov@gmail.com>
+- Volker Schroer
+- Zackery Spytz <zspytz@gmail.com>
 
 ## [3.8.2.0] - 2020-08-21
 
