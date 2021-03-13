@@ -22,6 +22,7 @@ GR_PYTHON_INSTALL(PROGRAMS
 install(
     FILES
     burst_shaper.grc
+    mpsk_stage6.grc
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}
 )
 
