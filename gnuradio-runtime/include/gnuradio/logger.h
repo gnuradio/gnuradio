@@ -24,7 +24,6 @@ typedef int mode_t;
 #endif
 
 #include <gnuradio/api.h>
-#include <assert.h>
 #include <log4cpp/Category.hh>
 #include <log4cpp/FileAppender.hh>
 #include <log4cpp/OstreamAppender.hh>
@@ -32,10 +31,11 @@ typedef int mode_t;
 #include <log4cpp/PropertyConfigurator.hh>
 #include <log4cpp/RollingFileAppender.hh>
 #include <pmt/pmt.h>
-#include <time.h>
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/thread.hpp>
+#include <cassert>
+#include <ctime>
 #include <iostream>
 #include <memory>
 

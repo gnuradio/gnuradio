@@ -15,7 +15,6 @@
 #include "file_meta_sink_impl.h"
 #include <gnuradio/io_signature.h>
 #include <fcntl.h>
-#include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cstdio>

@@ -7,7 +7,7 @@
  */
 
 #include "atsc_basic_trellis_encoder.h"
-#include <assert.h>
+#include <cassert>
 
 namespace gr {
 namespace dtv {

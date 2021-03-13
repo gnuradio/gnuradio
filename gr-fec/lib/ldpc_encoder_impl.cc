@@ -9,11 +9,11 @@
  */
 
 #include "ldpc_encoder_impl.h"
-#include <stdio.h>
-#include <string.h> // for memcpy
 #include <volk/volk.h>
 #include <boost/assign/list_of.hpp>
 #include <algorithm> // for std::reverse
+#include <cstdio>
+#include <cstring> // for memcpy
 #include <sstream>
 
 namespace gr {

@@ -16,8 +16,8 @@
 
 #include <gnuradio/blocks/unpack_k_bits.h>
 #include <gnuradio/fec/api.h>
-#include <stdint.h>
 #include <volk/volk_alloc.hh>
+#include <cstdint>
 #include <vector>
 
 // Forward declaration for those objects. SWIG doesn't like them to be #include'd.

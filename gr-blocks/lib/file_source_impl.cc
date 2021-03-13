@@ -16,7 +16,6 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/thread/thread.h>
 #include <fcntl.h>
-#include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cstdio>

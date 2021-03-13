@@ -15,7 +15,7 @@
 #include <gnuradio/qtgui/DisplayPlot.h>
 #include <gnuradio/qtgui/waterfallGlobalData.h>
 #include <qwt_plot_spectrogram.h>
-#include <stdint.h>
+#include <cstdint>
 #include <cstdio>
 #include <vector>
 

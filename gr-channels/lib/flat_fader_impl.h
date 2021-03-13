@@ -15,7 +15,7 @@
 #include <gnuradio/fxpt.h>
 #include <gnuradio/io_signature.h>
 
-#include <stdint.h>
+#include <cstdint>
 #include <random>
 
 // FASTSINCOS:  0 = slow native,  1 = gr::fxpt impl,  2 = sincostable.h

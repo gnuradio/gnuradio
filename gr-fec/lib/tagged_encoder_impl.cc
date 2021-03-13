@@ -14,7 +14,7 @@
 
 #include "tagged_encoder_impl.h"
 #include <gnuradio/io_signature.h>
-#include <stdio.h>
+#include <cstdio>
 
 namespace gr {
 namespace fec {

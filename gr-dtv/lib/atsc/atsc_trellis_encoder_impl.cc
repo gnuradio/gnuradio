@@ -12,7 +12,7 @@
 
 #include "atsc_trellis_encoder_impl.h"
 #include "gnuradio/dtv/atsc_consts.h"
-#include <stdio.h>
+#include <cstdio>
 
 namespace gr {
 namespace dtv {

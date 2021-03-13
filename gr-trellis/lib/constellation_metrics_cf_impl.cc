@@ -14,7 +14,7 @@
 
 #include "constellation_metrics_cf_impl.h"
 #include <gnuradio/io_signature.h>
-#include <assert.h>
+#include <cassert>
 #include <iostream>
 #include <stdexcept>
 

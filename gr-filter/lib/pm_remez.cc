@@ -31,7 +31,7 @@
 
 #include <gnuradio/filter/pm_remez.h>
 #include <gnuradio/logger.h>
-#include <assert.h>
+#include <cassert>
 #include <cmath>
 #include <iostream>
 

@@ -18,7 +18,8 @@
 #include <gnuradio/prefs.h>
 #include <errno.h>
 #include <stdio.h>
-#include <string.h>
+#include <cstddef>
+#include <cstring>
 #include <memory>
 #include <stdexcept>
 

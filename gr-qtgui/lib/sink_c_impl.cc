@@ -19,7 +19,7 @@
 
 #include <volk/volk.h>
 
-#include <string.h>
+#include <cstring>
 
 namespace gr {
 namespace qtgui {

@@ -14,8 +14,8 @@
 #include <gnuradio/digital/api.h>
 #include <gnuradio/digital/constellation.h>
 #include <gnuradio/math.h>
-#include <math.h>
 #include <algorithm>
+#include <cmath>
 #include <vector>
 
 namespace gr {

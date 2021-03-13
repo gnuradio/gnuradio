@@ -14,7 +14,7 @@
 
 #include "g721_decode_bs_impl.h"
 #include <gnuradio/io_signature.h>
-#include <limits.h>
+#include <climits>
 
 namespace gr {
 namespace vocoder {

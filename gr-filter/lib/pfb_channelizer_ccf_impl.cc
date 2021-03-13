@@ -14,7 +14,7 @@
 
 #include "pfb_channelizer_ccf_impl.h"
 #include <gnuradio/io_signature.h>
-#include <stdio.h>
+#include <cstdio>
 
 #ifdef _MSC_VER
 #define round(number) number < 0.0 ? ceil(number - 0.5) : floor(number + 0.5)

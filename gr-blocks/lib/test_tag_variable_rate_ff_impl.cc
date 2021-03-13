@@ -15,8 +15,8 @@
 #include "test_tag_variable_rate_ff_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/xoroshiro128p.h>
-#include <stdint.h>
-#include <string.h>
+#include <cstdint>
+#include <cstring>
 #include <iomanip>
 #include <iostream>
 #include <stdexcept>

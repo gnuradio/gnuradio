@@ -14,7 +14,7 @@
 
 #include "wvps_ff_impl.h"
 #include <gnuradio/io_signature.h>
-#include <string.h>
+#include <cstring>
 
 namespace gr {
 namespace wavelet {

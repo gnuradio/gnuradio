@@ -8,9 +8,9 @@
  */
 
 #include <gnuradio/math.h>
-#include <stdio.h>
 #include <boost/test/unit_test.hpp>
 #include <cmath>
+#include <cstdio>
 
 BOOST_AUTO_TEST_CASE(test_binary_slicer1)
 {

@@ -20,11 +20,11 @@
 #include <sched.h>
 #endif
 
-#include <errno.h>
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
 #include <algorithm>
+#include <cerrno>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
 
 #include <iostream>
 

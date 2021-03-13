@@ -11,6 +11,6 @@
 #ifndef INCLUDED_AUDIO_JACK_IMPL_H
 #define INCLUDED_AUDIO_JACK_IMPL_H
 
-#include <stdio.h>
+#include <cstdio>
 
 #endif /* INCLUDED_AUDIO_JACK_IMPL_H */

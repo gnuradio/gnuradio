@@ -12,6 +12,7 @@
 #define INCLUDED_ATSC_RANDOMIZE_H
 
 #include "atsc_types.h"
+#include <stdint.h>
 
 namespace gr {
 namespace dtv {

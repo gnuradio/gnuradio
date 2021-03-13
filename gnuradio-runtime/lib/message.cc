@@ -13,8 +13,8 @@
 #endif
 
 #include <gnuradio/message.h>
-#include <assert.h>
-#include <string.h>
+#include <cassert>
+#include <cstring>
 
 namespace gr {
 

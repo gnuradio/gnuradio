@@ -16,10 +16,10 @@
 #include <gnuradio/io_signature.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <stdexcept>
 
