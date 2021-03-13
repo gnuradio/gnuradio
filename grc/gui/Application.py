@@ -754,6 +754,12 @@ class Application(Gtk.Application):
                 else:
                     main.btwin.search_entry.show()
                     main.btwin.search_entry.grab_focus()
+            else:
+                main.update_panel_visibility(main.BLOCKS, True)
+                main.btwin.search_entry.show()
+                main.btwin.search_entry.grab_focus()
+                Actions.TOGGLE_BLOCKS_WINDOW.set_active(True);
+
 
         elif action == Actions.OPEN_HIER:
             for b in flow_graph.selected_blocks():
