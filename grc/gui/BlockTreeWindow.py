@@ -77,7 +77,6 @@ class BlockTreeWindow(Gtk.VBox):
         self.search_entry.connect('changed', self._update_search_tree)
         self.search_entry.connect('key-press-event', self._handle_search_key_press)
         self.pack_start(self.search_entry, False, False, 0)
-        self.search_entry.connect('button-release-event', self._select_all_text)
 
         # make the tree model for holding blocks and a temporary one for search results
         self.treestore = Gtk.TreeStore(GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
@@ -198,15 +197,11 @@ class BlockTreeWindow(Gtk.VBox):
     ############################################################
     ## Event Handlers
     ############################################################
-    def _select_all_text(self, widget, comp):
-        widget.select_region(0, -1)
-
     def _handle_icon_event(self, widget, icon, event):
         if icon == Gtk.EntryIconPosition.PRIMARY:
             pass
         elif icon == Gtk.EntryIconPosition.SECONDARY:
             widget.set_text('')
-            self.search_entry.hide()
 
     def _update_search_tree(self, widget):
         key = widget.get_text().lower()
@@ -249,13 +244,12 @@ class BlockTreeWindow(Gtk.VBox):
         elif event.keyval == Gdk.KEY_Escape:
             # reset the search
             self.search_entry.set_text('')
-            self.search_entry.hide()
 
         elif (event.get_state() & Gdk.ModifierType.CONTROL_MASK and event.keyval == Gdk.KEY_f) \
               or event.keyval == Gdk.KEY_slash:
             # propagation doesn't work although treeview search is disabled =(
             # manually trigger action...
-            Actions.FIND_BLOCKS.activate()
+            Actions.TOGGLE_SEARCH.activate()
 
         elif event.get_state() & Gdk.ModifierType.CONTROL_MASK and event.keyval == Gdk.KEY_b:
             # ugly...
