@@ -25,9 +25,9 @@
 #endif
 #include "pagesize.h"
 #include <gnuradio/sys_paths.h>
-#include <errno.h>
-#include <stdio.h>
 #include <boost/format.hpp>
+#include <cerrno>
+#include <cstdio>
 
 namespace gr {
 

@@ -23,8 +23,8 @@
 #include <boost/range/adaptor/transformed.hpp>
 #include <boost/range/numeric.hpp>
 
-#include <string.h>
 #include <algorithm>
+#include <cstring>
 
 namespace gr {
 namespace qtgui {

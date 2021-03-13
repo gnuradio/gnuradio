@@ -11,8 +11,8 @@
 #endif
 
 #include "fec_mtrx_impl.h"
-#include <math.h>
 #include <algorithm>
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <sstream>

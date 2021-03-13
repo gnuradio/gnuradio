@@ -15,6 +15,7 @@
 #include <gnuradio/thread/thread.h>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
+#include <cstddef>
 #include <memory>
 
 namespace gr {

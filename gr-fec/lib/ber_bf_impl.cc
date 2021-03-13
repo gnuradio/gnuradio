@@ -14,8 +14,8 @@
 
 #include "ber_bf_impl.h"
 #include <gnuradio/io_signature.h>
-#include <math.h>
 #include <volk/volk.h>
+#include <cmath>
 
 namespace gr {
 namespace fec {

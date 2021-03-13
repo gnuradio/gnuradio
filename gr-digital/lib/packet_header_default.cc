@@ -12,7 +12,7 @@
 #endif
 
 #include <gnuradio/digital/packet_header_default.h>
-#include <string.h>
+#include <cstring>
 
 namespace gr {
 namespace digital {

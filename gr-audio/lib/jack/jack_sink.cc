@@ -17,7 +17,7 @@
 #include "jack_sink.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 #include <stdexcept>
 

@@ -14,7 +14,7 @@
 #include <gnuradio/api.h>
 #include <gnuradio/gr_complex.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <ctime>
 #include <random>
 

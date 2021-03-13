@@ -16,7 +16,7 @@
 #include <gnuradio/io_signature.h>
 
 #include <assert.h>
-#include <math.h>
+#include <cmath>
 #include <stdexcept>
 
 namespace gr {

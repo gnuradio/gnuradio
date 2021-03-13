@@ -12,7 +12,7 @@
 #define VECTOR_DISPLAY_PLOT_HPP
 
 #include <gnuradio/qtgui/DisplayPlot.h>
-#include <stdint.h>
+#include <cstdint>
 #include <cstdio>
 #include <vector>
 

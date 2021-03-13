@@ -13,8 +13,8 @@
 
 #include <gnuradio/digital/header_format_default.h>
 #include <gnuradio/math.h>
-#include <string.h>
 #include <volk/volk_alloc.hh>
+#include <cstring>
 #include <iostream>
 
 namespace gr {

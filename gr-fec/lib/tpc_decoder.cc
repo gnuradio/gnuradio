@@ -12,14 +12,14 @@
 #include <gnuradio/fec/tpc_decoder.h>
 #include <volk/volk.h>
 
-#include <math.h>
-#include <stdio.h>
 #include <boost/assign/list_of.hpp>
+#include <cmath>
+#include <cstdio>
 #include <sstream>
 #include <vector>
 
-#include <string.h>  // for memcpy
 #include <algorithm> // for std::reverse
+#include <cstring>   // for memcpy
 
 #include <gnuradio/fec/maxstar.h>
 

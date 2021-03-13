@@ -12,7 +12,7 @@
 #include "config.h"
 #endif
 
-#include <float.h>
+#include <cfloat>
 #include <vector>
 
 #include "agc3_cc_impl.h"

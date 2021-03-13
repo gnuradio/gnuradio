@@ -14,7 +14,7 @@
 
 #include <gnuradio/fec/generic_encoder.h>
 #include <gnuradio/prefs.h>
-#include <stdio.h>
+#include <cstdio>
 
 namespace gr {
 namespace fec {

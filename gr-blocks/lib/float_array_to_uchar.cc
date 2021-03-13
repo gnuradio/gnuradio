@@ -14,7 +14,7 @@
 
 #define _ISOC9X_SOURCE
 #include "float_array_to_uchar.h"
-#include <math.h>
+#include <cmath>
 
 static const int MIN_UCHAR = 0;
 static const int MAX_UCHAR = 255;

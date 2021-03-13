@@ -14,10 +14,10 @@
 
 #include "tagged_file_sink_impl.h"
 #include <gnuradio/io_signature.h>
-#include <errno.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <cerrno>
 #include <iostream>
 #include <stdexcept>
 

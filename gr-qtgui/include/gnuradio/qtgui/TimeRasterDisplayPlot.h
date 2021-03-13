@@ -16,7 +16,7 @@
 #include <gnuradio/qtgui/plot_raster.h>
 #include <gnuradio/qtgui/timeRasterGlobalData.h>
 #include <qwt_plot_rasteritem.h>
-#include <stdint.h>
+#include <cstdint>
 #include <cstdio>
 #include <vector>
 

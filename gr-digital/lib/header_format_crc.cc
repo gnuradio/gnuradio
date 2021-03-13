@@ -13,8 +13,8 @@
 
 #include <gnuradio/digital/header_buffer.h>
 #include <gnuradio/digital/header_format_crc.h>
-#include <string.h>
 #include <volk/volk_alloc.hh>
+#include <cstring>
 
 namespace gr {
 namespace digital {

@@ -16,7 +16,7 @@
 #include <gnuradio/io_signature.h>
 #include <stdexcept>
 
-#include <stdio.h>
+#include <cstdio>
 
 // NB in this version, only Daubechies wavelets
 // order is wavelet length, even, 2...20

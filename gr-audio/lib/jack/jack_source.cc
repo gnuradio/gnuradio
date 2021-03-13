@@ -17,8 +17,8 @@
 #include "jack_source.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <stdio.h>
 #include <type_traits>
+#include <cstdio>
 #include <iostream>
 #include <stdexcept>
 

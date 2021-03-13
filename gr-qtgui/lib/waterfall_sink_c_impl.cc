@@ -20,8 +20,8 @@
 #include <qwt_symbol.h>
 #include <volk/volk.h>
 
-#include <string.h>
 #include <algorithm>
+#include <cstring>
 #include <iostream>
 
 namespace gr {

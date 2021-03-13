@@ -16,7 +16,6 @@
 #include <gnuradio/math.h>
 #include <gnuradio/vco.h>
 
-#include <sys/time.h>
 #include <unistd.h>
 
 #ifdef HAVE_SYS_RESOURCE_H
@@ -26,6 +25,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <ctime>
 
 #define ITERATIONS 5000000
 #define BLOCK_SIZE (10 * 1000) // fits in cache

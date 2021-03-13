@@ -12,7 +12,7 @@
 #define INCLUDED_GR_LOCAL_SIGHANDLER_H
 
 #ifdef HAVE_SIGNAL_H
-#include <signal.h>
+#include <csignal>
 #endif
 
 #include <gnuradio/api.h>

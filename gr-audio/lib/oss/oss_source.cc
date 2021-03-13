@@ -17,12 +17,12 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <fcntl.h>
-#include <stdio.h>
 #include <sys/ioctl.h>
 #include <sys/soundcard.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <cstdio>
 #include <iostream>
 #include <stdexcept>
 

@@ -15,12 +15,12 @@
 #include "tcp_server_sink_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/thread/thread.h>
-#include <stdio.h>
-#include <string.h>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
 #include <algorithm>
+#include <cstdio>
+#include <cstring>
 #include <memory>
 #include <stdexcept>
 

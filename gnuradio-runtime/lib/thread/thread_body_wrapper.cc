@@ -16,10 +16,10 @@
 #include <gnuradio/thread/thread_body_wrapper.h>
 
 #ifdef HAVE_SIGNAL_H
-#include <signal.h>
+#include <csignal>
 #endif
 
-#include <stdio.h>
+#include <cstdio>
 
 namespace gr {
 namespace thread {
