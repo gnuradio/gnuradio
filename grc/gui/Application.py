@@ -747,10 +747,14 @@ class Application(Gtk.Application):
             # Force a redraw of the graph, by getting the current state and re-importing it
             main.update_pages()
 
-        elif action == Actions.FIND_BLOCKS:
-            main.update_panel_visibility(main.BLOCKS, True)
-            main.btwin.search_entry.show()
-            main.btwin.search_entry.grab_focus()
+        elif action == Actions.TOGGLE_SEARCH:
+            if main.btwin.is_visible():
+                if main.btwin.search_entry.is_visible():
+                    main.btwin.search_entry.hide()
+                else:
+                    main.btwin.search_entry.show()
+                    main.btwin.search_entry.grab_focus()
+
         elif action == Actions.OPEN_HIER:
             for b in flow_graph.selected_blocks():
                 grc_source = b.extra_data.get('grc_source', '')
@@ -817,7 +821,7 @@ class Application(Gtk.Application):
         Actions.BUSSIFY_SOURCES.set_enabled(bool(selected_blocks))
         Actions.BUSSIFY_SINKS.set_enabled(bool(selected_blocks))
         Actions.RELOAD_BLOCKS.enable()
-        Actions.FIND_BLOCKS.enable()
+        Actions.TOGGLE_SEARCH.enable()
 
         self.update_exec_stop()
 

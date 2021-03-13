@@ -646,10 +646,10 @@ RELOAD_BLOCKS = actions.register("app.reload_blocks",
                                  label='Reload _Blocks',
                                  tooltip='Reload Blocks',
                                  icon_name='view-refresh')
-FIND_BLOCKS = actions.register(
-    "win.find_blocks",
-    label='_Find Blocks',
-    tooltip='Search for a block by name (and key)',
+TOGGLE_SEARCH = actions.register(
+    "win.toggle_search",
+    label='_Toggle Search',
+    tooltip='Hide/Show search box',
     icon_name='edit-find',
     keypresses=["<Ctrl>f", "slash"],
 )
