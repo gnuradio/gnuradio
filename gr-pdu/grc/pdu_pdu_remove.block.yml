@@ -1,0 +1,29 @@
+id: pdu_pdu_remove
+label: PDU Remove
+flags: [ python ]
+
+parameters:
+-   id: k
+    label: Key
+    dtype: raw
+    default: pmt.intern("key")
+
+inputs:
+-   domain: message
+    id: pdus
+    optional: true
+
+outputs:
+-   domain: message
+    id: pdus
+    optional: true
+
+templates:
+    imports: |-
+        from gnuradio import pdu
+        import pmt
+    make: pdu.pdu_remove(${k})
+    callbacks:
+    - set_key(${k})
+
+file_format: 1

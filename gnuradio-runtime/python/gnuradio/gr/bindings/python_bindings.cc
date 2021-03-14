@@ -52,6 +52,7 @@ void bind_msg_queue(py::module&);
 void bind_msg_handler(py::module&);
 void bind_msg_queue(py::module&);
 void bind_nco(py::module&);
+void bind_pdu(py::module&);
 void bind_prefs(py::module&);
 // void bind_pycallback_object(py::module&);
 void bind_random(py::module&);
@@ -152,6 +153,7 @@ PYBIND11_MODULE(gr_python, m)
 
 
     bind_nco(m);
+    bind_pdu(m);
     bind_prefs(m);
     // // bind_pycallback_object(m);
     bind_random(m);

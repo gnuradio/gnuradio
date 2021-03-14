@@ -28,3 +28,15 @@ static const char* __doc_gr_pdu_PMTCONSTSTR__msg = R"doc()doc";
 
 
 static const char* __doc_gr_pdu_PMTCONSTSTR__pdus = R"doc()doc";
+
+
+static const char* __doc_gr_pdu_itemsize = R"doc()doc";
+
+
+static const char* __doc_gr_pdu_type_matches = R"doc()doc";
+
+
+static const char* __doc_gr_pdu_make_pdu_vector = R"doc()doc";
+
+
+static const char* __doc_gr_pdu_type_from_pmt = R"doc()doc";

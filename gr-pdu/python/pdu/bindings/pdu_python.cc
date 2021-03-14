@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pdu.h)                                                     */
-/* BINDTOOL_HEADER_FILE_HASH(34ae96025ac87967432c6b7092d1fd60)                     */
+/* BINDTOOL_HEADER_FILE_HASH(15f56dfddfda75e396a0b32cca7b7b3d)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -31,6 +31,15 @@ void bind_pdu(py::module& m)
 {
 
 
+    py::enum_<::gr::pdu::vector_type>(m, "vector_type")
+        .value("byte_t", ::gr::pdu::byte_t)       // 0
+        .value("float_t", ::gr::pdu::float_t)     // 1
+        .value("complex_t", ::gr::pdu::complex_t) // 2
+        .export_values();
+
+    py::implicitly_convertible<int, ::gr::pdu::vector_type>();
+
+
     m.def("PMTCONSTSTR__data", &::gr::pdu::PMTCONSTSTR__data, D(PMTCONSTSTR__data));
 
 
@@ -43,5 +52,27 @@ void bind_pdu(py::module& m)
     m.def("PMTCONSTSTR__msg", &::gr::pdu::PMTCONSTSTR__msg, D(PMTCONSTSTR__msg));
 
 
-    m.def("PMTCONSTSTR__pdu", &::gr::pdu::PMTCONSTSTR__pdus, D(PMTCONSTSTR__pdus));
+    m.def("PMTCONSTSTR__pdus", &::gr::pdu::PMTCONSTSTR__pdus, D(PMTCONSTSTR__pdus));
+
+
+    m.def("itemsize", &::gr::pdu::itemsize, py::arg("type"), D(itemsize));
+
+
+    m.def("type_matches",
+          &::gr::pdu::type_matches,
+          py::arg("type"),
+          py::arg("v"),
+          D(type_matches));
+
+
+    m.def("make_pdu_vector",
+          &::gr::pdu::make_pdu_vector,
+          py::arg("type"),
+          py::arg("buf"),
+          py::arg("items"),
+          D(make_pdu_vector));
+
+
+    m.def(
+        "type_from_pmt", &::gr::pdu::type_from_pmt, py::arg("vector"), D(type_from_pmt));
 }

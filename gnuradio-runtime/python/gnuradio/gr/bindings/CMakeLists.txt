@@ -42,6 +42,7 @@ messages/msg_queue_python.cc
     msg_handler_python.cc
     msg_queue_python.cc
     nco_python.cc
+    pdu_python.cc
     prefs_python.cc
     # pycallback_object_python.cc
     random_python.cc
@@ -81,7 +82,7 @@ messages/msg_queue_python.cc
     # xoroshiro128p_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE_CHECK_HASH(gr 
+GR_PYBIND_MAKE_CHECK_HASH(gr
    ../../../..
    gr::gr
    "${gr_python_files}")

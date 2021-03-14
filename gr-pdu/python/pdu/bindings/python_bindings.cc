@@ -15,8 +15,14 @@
 
 namespace py = pybind11;
 
-void bind_pdu_split(py::module&);
 void bind_pdu(py::module&);
+void bind_pdu_filter(py::module&);
+void bind_pdu_remove(py::module&);
+void bind_pdu_set(py::module&);
+void bind_pdu_split(py::module&);
+void bind_pdu_to_tagged_stream(py::module&);
+void bind_random_pdu(py::module&);
+void bind_tagged_stream_to_pdu(py::module&);
 
 // We need this hack because import_array() returns NULL
 // for newer Python versions.
@@ -37,6 +43,12 @@ PYBIND11_MODULE(pdu_python, m)
     // Allow access to base block methods
     py::module::import("gnuradio.gr");
 
-    bind_pdu_split(m);
     bind_pdu(m);
+    bind_pdu_filter(m);
+    bind_pdu_remove(m);
+    bind_pdu_set(m);
+    bind_pdu_split(m);
+    bind_pdu_to_tagged_stream(m);
+    bind_random_pdu(m);
+    bind_tagged_stream_to_pdu(m);
 }

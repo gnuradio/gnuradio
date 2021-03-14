@@ -1,0 +1,37 @@
+id: pdu_pdu_to_tagged_stream
+label: PDU to Tagged Stream
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Item Type
+    dtype: enum
+    options: [byte, complex, float]
+    option_attributes:
+        tv: [pdu.byte_t, pdu.complex_t, pdu.float_t]
+    hide: part
+-   id: tag
+    label: Length tag name
+    dtype: string
+    default: packet_len
+
+inputs:
+-   domain: message
+    id: pdus
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import pdu
+    make: pdu.pdu_to_tagged_stream(${type.tv}, ${tag})
+
+cpp_templates:
+    includes: ['#include <gnuradio/pdu/pdu_to_tagged_stream.h>']
+    declarations: 'pdu::pdu_to_tagged_stream::sptr ${id};'
+    make: 'this->${id} = pdu::pdu_to_tagged_stream::make(${type.tv}, ${tag});'
+    translations:
+        pdu.: 'pdu::'
+
+file_format: 1
