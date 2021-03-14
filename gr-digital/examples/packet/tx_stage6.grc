@@ -212,8 +212,8 @@ blocks:
     coordinate: [24, 99]
     rotation: 0
     state: enabled
-- name: blocks_pdu_to_tagged_stream_0
-  id: blocks_pdu_to_tagged_stream
+- name: pdu_pdu_to_tagged_stream_0
+  id: pdu_pdu_to_tagged_stream
   parameters:
     affinity: ''
     alias: ''
@@ -229,8 +229,8 @@ blocks:
     coordinate: [312, 291]
     rotation: 0
     state: enabled
-- name: blocks_pdu_to_tagged_stream_0_0
-  id: blocks_pdu_to_tagged_stream
+- name: pdu_pdu_to_tagged_stream_0_0
+  id: pdu_pdu_to_tagged_stream
   parameters:
     affinity: ''
     alias: ''
@@ -246,8 +246,8 @@ blocks:
     coordinate: [312, 219]
     rotation: 0
     state: enabled
-- name: blocks_random_pdu_0
-  id: blocks_random_pdu
+- name: pdu_random_pdu_0
+  id: pdu_random_pdu
   parameters:
     affinity: ''
     alias: ''
@@ -736,10 +736,10 @@ blocks:
     state: enabled
 
 connections:
-- [blocks_message_strobe_0, strobe, blocks_random_pdu_0, generate]
-- [blocks_pdu_to_tagged_stream_0, '0', blocks_repack_bits_bb_0_0, '0']
-- [blocks_pdu_to_tagged_stream_0_0, '0', blocks_repack_bits_bb_0, '0']
-- [blocks_random_pdu_0, pdus, digital_crc32_async_bb_1, in]
+- [blocks_message_strobe_0, strobe, pdu_random_pdu_0, generate]
+- [pdu_pdu_to_tagged_stream_0, '0', blocks_repack_bits_bb_0_0, '0']
+- [pdu_pdu_to_tagged_stream_0_0, '0', blocks_repack_bits_bb_0, '0']
+- [pdu_random_pdu_0, pdus, digital_crc32_async_bb_1, in]
 - [blocks_repack_bits_bb_0, '0', digital_map_bb_1, '0']
 - [blocks_repack_bits_bb_0_0, '0', digital_map_bb_1_0, '0']
 - [blocks_tagged_stream_mux_0, '0', digital_burst_shaper_xx_0, '0']
@@ -749,8 +749,8 @@ connections:
 - [digital_crc32_async_bb_1, out, digital_protocol_formatter_async_0, in]
 - [digital_map_bb_1, '0', digital_chunks_to_symbols_xx_0, '0']
 - [digital_map_bb_1_0, '0', digital_chunks_to_symbols_xx_0_0, '0']
-- [digital_protocol_formatter_async_0, header, blocks_pdu_to_tagged_stream_0_0, pdus]
-- [digital_protocol_formatter_async_0, payload, blocks_pdu_to_tagged_stream_0, pdus]
+- [digital_protocol_formatter_async_0, header, pdu_pdu_to_tagged_stream_0_0, pdus]
+- [digital_protocol_formatter_async_0, payload, pdu_pdu_to_tagged_stream_0, pdus]
 - [pfb_arb_resampler_xxx_0, '0', qtgui_freq_sink_x_0, '0']
 - [pfb_arb_resampler_xxx_0, '0', qtgui_time_sink_x_0, '0']
 - [rx_mod_header, '0', blocks_tagged_stream_mux_0, '0']

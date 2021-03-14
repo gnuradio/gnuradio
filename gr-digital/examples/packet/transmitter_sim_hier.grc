@@ -370,8 +370,8 @@ blocks:
     coordinate: [56, 211]
     rotation: 0
     state: enabled
-- name: blocks_random_pdu_0
-  id: blocks_random_pdu
+- name: pdu_random_pdu_0
+  id: pdu_random_pdu
   parameters:
     affinity: ''
     alias: ''
@@ -736,8 +736,8 @@ blocks:
     state: enabled
 
 connections:
-- [blocks_message_strobe_0, strobe, blocks_random_pdu_0, generate]
-- [blocks_random_pdu_0, pdus, packet_tx_0, in]
+- [blocks_message_strobe_0, strobe, pdu_random_pdu_0, generate]
+- [pdu_random_pdu_0, pdus, packet_tx_0, in]
 - [fir_filter_xxx_0, '0', qtgui_const_sink_x_0, '0']
 - [fir_filter_xxx_0, '0', qtgui_freq_sink_x_0, '0']
 - [fir_filter_xxx_0, '0', qtgui_time_sink_x_1, '0']

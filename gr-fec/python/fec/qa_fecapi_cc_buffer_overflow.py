@@ -10,7 +10,7 @@
 
 from gnuradio import gr, gr_unittest
 from gnuradio import fec
-from gnuradio import blocks, analog
+from gnuradio import blocks, analog, pdu
 
 # This test tries to checks for the kind of buffer overflows in the
 # FECAPI convolutional decoder that were fixed in #2965
@@ -24,7 +24,7 @@ class test_fecapi_cc_buffer_overflow(gr_unittest.TestCase):
         head = blocks.head(gr.sizeof_float, self.n_frames * frame_len)
         tag = blocks.stream_to_tagged_stream(
             gr.sizeof_float, 1, frame_len, "packet_len")
-        stream2pdu = blocks.tagged_stream_to_pdu(blocks.float_t, 'packet_len')
+        stream2pdu = pdu.tagged_stream_to_pdu(gr.types.float_t, 'packet_len')
 
         viterbi = fec.cc_decoder.make(
             frame_len // 2, 7, 2, [79, -109], 0, -1, fec.CC_TERMINATED, False)

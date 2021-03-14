@@ -190,9 +190,9 @@ The following examples exist to showcase how to control each stage of
 the transmit processing.
 
 - tx_stage0.grc: simple creation of PDUs to input into the
-  transmitter. By default, this generates \ref gr::blocks::random_pdu
+  transmitter. By default, this generates \ref gr::pdu::random_pdu
   "random PDUs" for testing. However, we can switch in the \ref
-  gr::blocks::tuntap_pdu "TUNTAP PDU" block to create a tun or tap
+  gr::network::tuntap_pdu "TUNTAP PDU" block to create a tun or tap
   device as the input of samples from some OS application. Note that
   you will need root privileges to create a tun/tap device and
   configure it.

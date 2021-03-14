@@ -175,8 +175,8 @@ blocks:
     coordinate: [24, 293]
     rotation: 0
     state: enabled
-- name: blocks_pdu_to_tagged_stream_0
-  id: blocks_pdu_to_tagged_stream
+- name: pdu_pdu_to_tagged_stream_0
+  id: pdu_pdu_to_tagged_stream
   parameters:
     affinity: ''
     alias: ''
@@ -189,8 +189,8 @@ blocks:
     coordinate: [56, 132]
     rotation: 0
     state: enabled
-- name: blocks_pdu_to_tagged_stream_0_0
-  id: blocks_pdu_to_tagged_stream
+- name: pdu_pdu_to_tagged_stream_0_0
+  id: pdu_pdu_to_tagged_stream
   parameters:
     affinity: ''
     alias: ''
@@ -203,8 +203,8 @@ blocks:
     coordinate: [64, 420]
     rotation: 0
     state: enabled
-- name: blocks_random_pdu_0
-  id: blocks_random_pdu
+- name: pdu_random_pdu_0
+  id: pdu_random_pdu
   parameters:
     affinity: ''
     alias: ''
@@ -337,17 +337,17 @@ blocks:
     state: enabled
 
 connections:
-- [blocks_message_strobe_0, strobe, blocks_random_pdu_0, generate]
-- [blocks_pdu_to_tagged_stream_0, '0', blocks_repack_bits_bb_0, '0']
-- [blocks_pdu_to_tagged_stream_0_0, '0', digital_protocol_formatter_bb_0, '0']
-- [blocks_random_pdu_0, pdus, digital_crc32_async_bb_1, in]
+- [blocks_message_strobe_0, strobe, pdu_random_pdu_0, generate]
+- [pdu_pdu_to_tagged_stream_0, '0', blocks_repack_bits_bb_0, '0']
+- [pdu_pdu_to_tagged_stream_0_0, '0', digital_protocol_formatter_bb_0, '0']
+- [pdu_random_pdu_0, pdus, digital_crc32_async_bb_1, in]
 - [blocks_repack_bits_bb_0, '0', digital_protocol_parser_b_0, '0']
 - [blocks_repack_bits_bb_0_0, '0', blocks_tag_debug_0, '0']
 - [blocks_repack_bits_bb_0_0, '0', digital_protocol_parser_b_0_0, '0']
-- [digital_crc32_async_bb_1, out, blocks_pdu_to_tagged_stream_0_0, pdus]
+- [digital_crc32_async_bb_1, out, pdu_pdu_to_tagged_stream_0_0, pdus]
 - [digital_crc32_async_bb_1, out, digital_protocol_formatter_async_0, in]
 - [digital_protocol_formatter_async_0, header, blocks_message_debug_0, print_pdu]
-- [digital_protocol_formatter_async_0, header, blocks_pdu_to_tagged_stream_0, pdus]
+- [digital_protocol_formatter_async_0, header, pdu_pdu_to_tagged_stream_0, pdus]
 - [digital_protocol_formatter_bb_0, '0', blocks_repack_bits_bb_0_0, '0']
 - [digital_protocol_parser_b_0, info, blocks_message_debug_0_0, print]
 - [digital_protocol_parser_b_0_0, info, blocks_message_debug_0_0_0, print]

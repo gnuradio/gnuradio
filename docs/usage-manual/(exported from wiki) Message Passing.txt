@@ -168,7 +168,7 @@ can call a block's gr::basic_block::_post method directly and pass it a
 message. So any block with an input message port can receive messages
 from the outside in this way.
 
-The following example uses a gr::blocks::pdu_to_tagged_stream block
+The following example uses a gr::pdu::pdu_to_tagged_stream block
 as the source block to a flowgraph. Its purpose is to wait for
 messages as PDUs posted to it and convert them to a normal stream. The
 payload will be sent on as a normal stream while the meta data will be
@@ -229,7 +229,7 @@ However, there are some very good reasons to stick to this format:
 
 The following is snippets of code from blocks currently in GNU Radio
 that take advantage of message passing. We will be using
-gr::blocks::message_debug and gr::blocks::tagged_stream_to_pdu below
+gr::blocks::message_debug and gr::pdu::tagged_stream_to_pdu below
 to show setting up both input and output message passing capabilities.
 
 The gr::blocks::message_debug block is used for debugging the message
@@ -284,7 +284,7 @@ The function simply takes in the PMT message and prints it. The method
 pmt::print is a function in the PMT library to print the
 PMT in a friendly and (mostly) pretty manner.
 
-The gr::blocks::tagged_stream_to_pdu block only defines a single
+The gr::pdu::tagged_stream_to_pdu block only defines a single
 output message port. In this case, its constructor contains the line:
 
  {
@@ -306,7 +306,7 @@ dictionary while the data segment is a PMT uniform vector of either
 bytes, floats, or complex values.
 
 In the end, when a PDU message is ready, the block calls its
-gr::blocks::tagged_stream_to_pdu_impl::send_message function that is
+gr::pdu::tagged_stream_to_pdu_impl::send_message function that is
 shown below.
 
 <syntaxhighlight lang="cpp">
@@ -335,14 +335,14 @@ is published that is important to this discussion. Here, the block
 posts the PDU message to any subscribers by calling
 gr::basic_block::message_port_pub publishing method.
 
-There is similarly a gr::blocks::pdu_to_tagged_stream block that essentially
+There is similarly a gr::pdu::pdu_to_tagged_stream block that essentially
 does the opposite. It acts as a source to a flowgraph and waits for
 PDU messages to be posted to it on its input port ''pdus''. It extracts
 the metadata and data and processes them. The metadata dictionary is
 split up into key:value pairs and stream tags are created out of
 them. The data is then converted into an output stream of items and
 passed along. The next section describes how PDUs can be passed into a
-flowgraph using the gr::blocks::pdu_to_tagged_stream block.
+flowgraph using the gr::pdu::pdu_to_tagged_stream block.
 
 === Python ===
 

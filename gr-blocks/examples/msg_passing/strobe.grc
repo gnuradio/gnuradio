@@ -83,8 +83,8 @@ blocks:
     coordinate: [56, 180.0]
     rotation: 0
     state: enabled
-- name: blocks_pdu_to_tagged_stream_0
-  id: blocks_pdu_to_tagged_stream
+- name: pdu_pdu_to_tagged_stream_1
+  id: pdu_pdu_to_tagged_stream
   parameters:
     affinity: ''
     alias: ''
@@ -97,8 +97,8 @@ blocks:
     coordinate: [272, 188.0]
     rotation: 0
     state: enabled
-- name: blocks_tagged_stream_to_pdu_0
-  id: blocks_tagged_stream_to_pdu
+- name: pdu_tagged_stream_to_pdu_0
+  id: pdu_tagged_stream_to_pdu
   parameters:
     affinity: ''
     alias: ''
@@ -113,11 +113,11 @@ blocks:
     state: enabled
 
 connections:
-- [blocks_copy_0, '0', blocks_tagged_stream_to_pdu_0, '0']
+- [blocks_copy_0, '0', pdu_tagged_stream_to_pdu_0, '0']
 - [blocks_message_strobe_0, strobe, blocks_message_debug_0, print]
-- [blocks_message_strobe_0_0, strobe, blocks_pdu_to_tagged_stream_0, pdus]
-- [blocks_pdu_to_tagged_stream_0, '0', blocks_copy_0, '0']
-- [blocks_tagged_stream_to_pdu_0, pdus, blocks_message_debug_0, print_pdu]
+- [blocks_message_strobe_0_0, strobe, pdu_pdu_to_tagged_stream_1, pdus]
+- [pdu_pdu_to_tagged_stream_1, '0', blocks_copy_0, '0']
+- [pdu_tagged_stream_to_pdu_0, pdus, blocks_message_debug_0, print_pdu]
 
 metadata:
   file_format: 1

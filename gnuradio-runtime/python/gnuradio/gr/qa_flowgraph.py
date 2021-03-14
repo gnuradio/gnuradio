@@ -11,7 +11,7 @@
 
 import time
 import pmt
-from gnuradio import gr, gr_unittest, blocks
+from gnuradio import gr, gr_unittest, blocks, pdu
 
 
 class test_flowgraph (gr_unittest.TestCase):
@@ -27,7 +27,7 @@ class test_flowgraph (gr_unittest.TestCase):
         self.tb.start()
         self.tb.lock()
 
-        rem = blocks.pdu_remove(pmt.intern('foo'))
+        rem = pdu.pdu_remove(pmt.intern('foo'))
         dbg = blocks.message_debug()
         self.tb.msg_connect((rem, 'pdus'), (dbg, 'store'))
 

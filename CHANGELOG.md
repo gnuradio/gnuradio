@@ -11,6 +11,15 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
 ### Changed
 
+- Moved PDU blocks from gr-blocks to gr-network and gr-pdu
+   - Compatibility shim included to allow access to these blocks from gr-blocks
+     but these are deprecated from the gr-blocks namespace and the shim is
+     scheduled for removal in 3.11.
+- gr::blocks::pdu namespace has been reorganized in gr
+   - PDU vector types are accessible in gr::types
+   - PDU functions are accessible in gr::pdu
+   - Common msg port names are accessible in gr::ports
+
 #### Project Scope
 
 - C++17
@@ -18,6 +27,8 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 - Windows build: removed unnecessary MSVC-specific system include overrides
 
 ### Added
+
+- New in-tree module gr-pdu
 
 #### Misc.
 

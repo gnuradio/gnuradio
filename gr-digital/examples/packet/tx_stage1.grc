@@ -53,8 +53,8 @@ blocks:
     coordinate: [32, 156.0]
     rotation: 0
     state: enabled
-- name: blocks_random_pdu_0
-  id: blocks_random_pdu
+- name: pdu_random_pdu_0
+  id: pdu_random_pdu
   parameters:
     affinity: ''
     alias: ''
@@ -84,9 +84,9 @@ blocks:
     state: enabled
 
 connections:
-- [blocks_message_strobe_0, strobe, blocks_random_pdu_0, generate]
-- [blocks_random_pdu_0, pdus, blocks_message_debug_0, print_pdu]
-- [blocks_random_pdu_0, pdus, digital_crc32_async_bb_1, in]
+- [blocks_message_strobe_0, strobe, pdu_random_pdu_0, generate]
+- [pdu_random_pdu_0, pdus, blocks_message_debug_0, print_pdu]
+- [pdu_random_pdu_0, pdus, digital_crc32_async_bb_1, in]
 - [digital_crc32_async_bb_1, out, blocks_message_debug_0, print_pdu]
 
 metadata:

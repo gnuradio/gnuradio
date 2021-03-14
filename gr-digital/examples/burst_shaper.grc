@@ -99,8 +99,8 @@ blocks:
     coordinate: [704, 388.0]
     rotation: 0
     state: enabled
-- name: blocks_tagged_stream_to_pdu_0
-  id: blocks_tagged_stream_to_pdu
+- name: pdu_tagged_stream_to_pdu_0
+  id: pdu_tagged_stream_to_pdu
   parameters:
     affinity: ''
     alias: ''
@@ -113,8 +113,8 @@ blocks:
     coordinate: [704, 188.0]
     rotation: 0
     state: enabled
-- name: blocks_tagged_stream_to_pdu_1
-  id: blocks_tagged_stream_to_pdu
+- name: pdu_tagged_stream_to_pdu_1
+  id: pdu_tagged_stream_to_pdu
   parameters:
     affinity: ''
     alias: ''
@@ -253,12 +253,12 @@ blocks:
     state: enabled
 
 connections:
-- [blocks_tagged_stream_to_pdu_0, pdus, blocks_message_debug_0, print]
-- [blocks_tagged_stream_to_pdu_1, pdus, blocks_message_debug_0_0, print]
+- [pdu_tagged_stream_to_pdu_0, pdus, blocks_message_debug_0, print]
+- [pdu_tagged_stream_to_pdu_1, pdus, blocks_message_debug_0_0, print]
 - [blocks_throttle_0, '0', blocks_tag_debug_0, '0']
-- [blocks_throttle_0, '0', blocks_tagged_stream_to_pdu_0, '0']
+- [blocks_throttle_0, '0', pdu_tagged_stream_to_pdu_0, '0']
 - [blocks_throttle_0_0, '0', blocks_tag_debug_0_0, '0']
-- [blocks_throttle_0_0, '0', blocks_tagged_stream_to_pdu_1, '0']
+- [blocks_throttle_0_0, '0', pdu_tagged_stream_to_pdu_1, '0']
 - [blocks_vector_source_x_0, '0', digital_burst_shaper_xx_0_0, '0']
 - [blocks_vector_source_x_0_0, '0', digital_burst_shaper_xx_0, '0']
 - [digital_burst_shaper_xx_0, '0', blocks_throttle_0, '0']

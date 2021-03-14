@@ -104,11 +104,6 @@ list(APPEND blocks_python_files
     pack_k_bits_bb_python.cc
     packed_to_unpacked_python.cc
     patterned_interleaver_python.cc
-    pdu_python.cc
-    pdu_filter_python.cc
-    pdu_remove_python.cc
-    pdu_set_python.cc
-    pdu_to_tagged_stream_python.cc
     peak_detector_python.cc
     peak_detector2_fb_python.cc
     phase_shift_python.cc
@@ -116,7 +111,6 @@ list(APPEND blocks_python_files
     probe_rate_python.cc
     probe_signal_python.cc
     probe_signal_v_python.cc
-    random_pdu_python.cc
     regenerate_bb_python.cc
     repack_bits_bb_python.cc
     repeat_python.cc
@@ -129,7 +123,6 @@ list(APPEND blocks_python_files
     short_to_char_python.cc
     short_to_float_python.cc
     skiphead_python.cc
-    socket_pdu_python.cc
     stream_demux_python.cc
     stream_mux_python.cc
     stream_to_streams_python.cc
@@ -146,7 +139,6 @@ list(APPEND blocks_python_files
     tagged_stream_align_python.cc
     tagged_stream_multiply_length_python.cc
     tagged_stream_mux_python.cc
-    tagged_stream_to_pdu_python.cc
     tags_strobe_python.cc
     tcp_server_sink_python.cc
     test_tag_variable_rate_ff_python.cc
@@ -154,7 +146,6 @@ list(APPEND blocks_python_files
     throttle_python.cc
     transcendental_python.cc
     tsb_vector_sink_python.cc
-    tuntap_pdu_python.cc
     uchar_to_float_python.cc
     udp_sink_python.cc
     udp_source_python.cc

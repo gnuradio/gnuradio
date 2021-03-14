@@ -68,8 +68,8 @@ blocks:
     coordinate: [736, 444.0]
     rotation: 0
     state: enabled
-- name: blocks_pdu_to_tagged_stream_0
-  id: blocks_pdu_to_tagged_stream
+- name: pdu_pdu_to_tagged_stream_0
+  id: pdu_pdu_to_tagged_stream
   parameters:
     affinity: ''
     alias: ''
@@ -85,8 +85,8 @@ blocks:
     coordinate: [544, 252.0]
     rotation: 0
     state: enabled
-- name: blocks_pdu_to_tagged_stream_0_0
-  id: blocks_pdu_to_tagged_stream
+- name: pdu_pdu_to_tagged_stream_0_0
+  id: pdu_pdu_to_tagged_stream
   parameters:
     affinity: ''
     alias: ''
@@ -635,8 +635,8 @@ blocks:
     state: enabled
 
 connections:
-- [blocks_pdu_to_tagged_stream_0, '0', blocks_repack_bits_bb_0_0, '0']
-- [blocks_pdu_to_tagged_stream_0_0, '0', blocks_repack_bits_bb_0, '0']
+- [pdu_pdu_to_tagged_stream_0, '0', blocks_repack_bits_bb_0_0, '0']
+- [pdu_pdu_to_tagged_stream_0_0, '0', blocks_repack_bits_bb_0, '0']
 - [blocks_repack_bits_bb_0, '0', digital_map_bb_1, '0']
 - [blocks_repack_bits_bb_0_0, '0', digital_map_bb_1_0, '0']
 - [blocks_tagged_stream_multiply_length_0, '0', pad_sink_0, '0']
@@ -651,9 +651,9 @@ connections:
 - [digital_map_bb_1, '0', digital_chunks_to_symbols_xx_0, '0']
 - [digital_map_bb_1_0, '0', digital_chunks_to_symbols_xx_0_0, '0']
 - [digital_protocol_formatter_async_0, header, fec_async_encoder_0_0, in]
-- [digital_protocol_formatter_async_0, payload, blocks_pdu_to_tagged_stream_0, pdus]
+- [digital_protocol_formatter_async_0, payload, pdu_pdu_to_tagged_stream_0, pdus]
 - [fec_async_encoder_0, out, digital_protocol_formatter_async_0, in]
-- [fec_async_encoder_0_0, out, blocks_pdu_to_tagged_stream_0_0, pdus]
+- [fec_async_encoder_0_0, out, pdu_pdu_to_tagged_stream_0_0, pdus]
 - [pad_source_0, out, digital_crc32_async_bb_1, in]
 - [pfb_arb_resampler_xxx_0, '0', blocks_tagged_stream_multiply_length_0, '0']
 - [rx_mod_header, '0', blocks_tagged_stream_mux_0, '0']

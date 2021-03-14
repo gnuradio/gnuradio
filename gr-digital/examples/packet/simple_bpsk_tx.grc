@@ -193,8 +193,8 @@ blocks:
     coordinate: [1072, 332.0]
     rotation: 0
     state: enabled
-- name: blocks_pdu_to_tagged_stream_0
-  id: blocks_pdu_to_tagged_stream
+- name: pdu_pdu_to_tagged_stream_0
+  id: pdu_pdu_to_tagged_stream
   parameters:
     affinity: ''
     alias: ''
@@ -207,8 +207,8 @@ blocks:
     coordinate: [192, 244.0]
     rotation: 180
     state: enabled
-- name: blocks_random_pdu_0
-  id: blocks_random_pdu
+- name: pdu_random_pdu_0
+  id: pdu_random_pdu
   parameters:
     affinity: ''
     alias: ''
@@ -883,15 +883,15 @@ blocks:
     state: disabled
 
 connections:
-- [blocks_message_strobe_0, strobe, blocks_random_pdu_0, generate]
+- [blocks_message_strobe_0, strobe, pdu_random_pdu_0, generate]
 - [blocks_multiply_const_vxx_0, '0', blocks_tag_debug_0, '0']
 - [blocks_multiply_const_vxx_0, '0', qtgui_const_sink_x_0, '0']
 - [blocks_multiply_const_vxx_0, '0', qtgui_freq_sink_x_0, '0']
 - [blocks_multiply_const_vxx_0, '0', qtgui_time_sink_x_1, '0']
 - [blocks_multiply_const_vxx_0, '0', uhd_usrp_sink_0, '0']
-- [blocks_pdu_to_tagged_stream_0, '0', blocks_unpack_k_bits_bb_0, '0']
-- [blocks_random_pdu_0, pdus, blocks_message_debug_0, print_pdu]
-- [blocks_random_pdu_0, pdus, blocks_pdu_to_tagged_stream_0, pdus]
+- [pdu_pdu_to_tagged_stream_0, '0', blocks_unpack_k_bits_bb_0, '0']
+- [pdu_random_pdu_0, pdus, blocks_message_debug_0, print_pdu]
+- [pdu_random_pdu_0, pdus, pdu_pdu_to_tagged_stream_0, pdus]
 - [blocks_tagged_stream_multiply_length_0, '0', fir_filter_xxx_0, '0']
 - [blocks_unpack_k_bits_bb_0, '0', digital_chunks_to_symbols_xx_0, '0']
 - [digital_chunks_to_symbols_xx_0, '0', interp_fir_filter_xxx_0, '0']
