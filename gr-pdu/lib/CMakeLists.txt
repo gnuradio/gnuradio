@@ -9,8 +9,14 @@
 # Setup library
 ########################################################################
 add_library(gnuradio-pdu
-    pdu_split_impl.cc
     pdu.cc
+    pdu_filter_impl.cc
+    pdu_remove_impl.cc
+    pdu_set_impl.cc
+    pdu_split_impl.cc
+    pdu_to_tagged_stream_impl.cc
+    random_pdu_impl.cc
+    tagged_stream_to_pdu_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC

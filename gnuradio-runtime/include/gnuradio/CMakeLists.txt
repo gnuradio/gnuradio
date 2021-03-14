@@ -40,6 +40,7 @@ install(FILES
   msg_handler.h
   msg_queue.h
   nco.h
+  pdu.h
   prefs.h
   pycallback_object.h
   random.h

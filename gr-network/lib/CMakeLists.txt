@@ -13,7 +13,11 @@ include(GrPlatform)
 #define LIB_SUFFIX
 
 list(APPEND network_sources 
+    socket_pdu_impl.cc
+    stream_pdu_base.cc
+    tcp_connection.cc
     tcp_sink_impl.cc
+    tuntap_pdu_impl.cc
     udp_sink_impl.cc
     udp_source_impl.cc
 )

@@ -9,18 +9,10 @@
 #
 
 
-from gnuradio import gr, gr_unittest
-from gnuradio import blocks
+from gnuradio import gr, gr_unittest, blocks, pdu
 import pmt
 import time
-try:
-    from gnuradio import pdu
-except ImportError:
-    import os
-    import sys
-    dirname, filename = os.path.split(os.path.abspath(__file__))
-    sys.path.append(os.path.join(dirname, "bindings"))
-    from gnuradio import pdu
+
 
 class qa_pdu_split (gr_unittest.TestCase):
 
@@ -36,7 +28,7 @@ class qa_pdu_split (gr_unittest.TestCase):
         d2 = blocks.message_debug()
 
         self.tb.msg_connect((split, 'dict'), (d1, 'store'))
-        self.tb.msg_connect((split, 'data'), (d2, 'store'))
+        self.tb.msg_connect((split, 'vec'), (d2, 'store'))
 
         in_meta1 = pmt.dict_add(pmt.make_dict(), pmt.intern('num'), pmt.from_long(4))
         in_meta2 = pmt.dict_add(pmt.make_dict(), pmt.intern('n'), pmt.from_long(99))
@@ -63,9 +55,9 @@ class qa_pdu_split (gr_unittest.TestCase):
         split = pdu.pdu_split(True)
         d1 = blocks.message_debug()
         d2 = blocks.message_debug()
-        
+
         self.tb.msg_connect((split, 'dict'), (d1, 'store'))
-        self.tb.msg_connect((split, 'data'), (d2, 'store'))
+        self.tb.msg_connect((split, 'vec'), (d2, 'store'))
 
         in_meta1 = pmt.dict_add(pmt.make_dict(), pmt.intern('num'), pmt.from_long(4))
         in_meta2 = pmt.dict_add(pmt.make_dict(), pmt.intern('n'), pmt.from_long(99))

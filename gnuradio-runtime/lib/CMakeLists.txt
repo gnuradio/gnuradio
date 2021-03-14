@@ -72,6 +72,7 @@ add_library(gnuradio-runtime
   msg_handler.cc
   msg_queue.cc
   pagesize.cc
+  pdu.cc
   prefs.cc
   realtime.cc
   realtime_impl.cc

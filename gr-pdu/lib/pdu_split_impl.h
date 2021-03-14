@@ -21,11 +21,17 @@ class pdu_split_impl : public pdu_split
 private:
     const bool d_pass_empty_data;
 
+    /*!
+     * \brief PDU formatted messages received in this port are split into theier
+     * dictionary and vector which are each emitted on separate output ports.
+     *
+     * \param pdu A PDU message passed from the scheduler's message handling.
+     */
+    void handle_pdu(pmt::pmt_t pdu);
+
 public:
     pdu_split_impl(const bool pass_empty_data);
-    ~pdu_split_impl();
-
-    void handle_pdu(pmt::pmt_t pdu);
+    ~pdu_split_impl() override;
 };
 
 } // namespace pdu

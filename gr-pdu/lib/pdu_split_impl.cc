@@ -14,7 +14,7 @@
 
 #include "pdu_split_impl.h"
 #include <gnuradio/io_signature.h>
-#include <gnuradio/pdu/pdu.h>
+#include <gnuradio/pdu.h>
 
 namespace gr {
 namespace pdu {
@@ -28,11 +28,11 @@ pdu_split_impl::pdu_split_impl(const bool pass_empty_data)
     : gr::block("pdu_split", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
       d_pass_empty_data(pass_empty_data)
 {
-    message_port_register_in(PMTCONSTSTR__pdus());
-    set_msg_handler(PMTCONSTSTR__pdus(),
+    message_port_register_in(msgport_names::pdus());
+    set_msg_handler(msgport_names::pdus(),
                     [this](pmt::pmt_t msg) { this->handle_pdu(msg); });
-    message_port_register_out(PMTCONSTSTR__dict());
-    message_port_register_out(PMTCONSTSTR__data());
+    message_port_register_out(msgport_names::dict());
+    message_port_register_out(msgport_names::vec());
 }
 
 pdu_split_impl::~pdu_split_impl() {}
@@ -49,11 +49,11 @@ void pdu_split_impl::handle_pdu(pmt::pmt_t pdu)
     pmt::pmt_t data = pmt::cdr(pdu);
 
     if ((!pmt::equal(meta, pmt::PMT_NIL)) | d_pass_empty_data) {
-        message_port_pub(PMTCONSTSTR__dict(), meta);
+        message_port_pub(msgport_names::dict(), meta);
     }
 
     if (pmt::length(data) | d_pass_empty_data) {
-        message_port_pub(PMTCONSTSTR__data(), data);
+        message_port_pub(msgport_names::vec(), data);
     }
 }
 

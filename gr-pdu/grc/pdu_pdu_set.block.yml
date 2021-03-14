@@ -1,0 +1,34 @@
+id: pdu_pdu_set
+label: PDU Set
+flags: [ python ]
+
+parameters:
+-   id: k
+    label: Key
+    dtype: raw
+    default: pmt.intern("key")
+-   id: v
+    label: Value
+    dtype: raw
+    default: pmt.intern("value")
+
+inputs:
+-   domain: message
+    id: pdus
+    optional: true
+
+outputs:
+-   domain: message
+    id: pdus
+    optional: true
+
+templates:
+    imports: |-
+        from gnuradio import pdu
+        import pmt
+    make: pdu.pdu_set(${k}, ${v})
+    callbacks:
+    - set_key(${k})
+    - set_val(${v})
+
+file_format: 1
