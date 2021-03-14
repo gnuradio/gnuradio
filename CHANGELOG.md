@@ -7,6 +7,129 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.9.1.0] - 2021-03-17 "Luck-O-The-Radio"
+
+API is compatible with C++ code written against previous v3.9 releases.
+
+ABI (link time) compatibility is not guaranteed. Out-of-tree C++ code
+linked to previous v3.9 releases should be rebuilt against this version.
+
+### Project Scope
+- (internal) Build system improvements and fixes
+- (internal) Use C++14 features instead of Boost where possible
+- Fewer compiler warnings (due to fixed code, not removal of warnings!)
+
+### OOT Support
+- cmake: standard FindGSL used in lieu of custom one, so OOTs should no longer
+  copy this module from the GNU Radio tree if needed
+- modtool: better exception/error handling
+- modtool: will non-interactively add blocks with no parameters
+  (`--argument-list=""`)
+- PyBind11 header hash hotfixer
+  (gr-utils/bindtool/scripts/binding-hash-hotfixer.zsh) makes life easier
+
+### GRC
+- Block param values can be shown as expressions and/or evaluated values. Under
+  the View menu, see "Show parameter ..." options.
+- Better handling of gui hints, avoid hiding widgets in cases where some have
+GUI hints and some do not
+- Ensure that strings are valid utf8 when evaluating parameters
+- Save embedded python blocks/modules to hier_block_directory
+- Save config and update recent file sub-menu before executing flowgraph
+- Revert to previous "block id" display behavior
+- Fix drag n' drop issue with Quartz (macOS) backend
+- C++ generated code: remove gnuradio prefix from linked libraries
+- Python generated code: prefix generated modules with flowgraph id
+- connect() will be called for hier blocks even if they don't have ports
+- Check for PyYAML 3.11 (was checking for 3.10 even though 3.11 was required)
+
+### gnuradio-runtime
+- Default buffer size can be adjusted by setting `buffer_size` in the
+`[Default]` section of the GNU Radio config file. Otherwise, the longstanding
+  default of `32768` is used.
+- Windows/Python: add DLL search path, as required by newer versions of Python
+
+### gr-audio
+- Windows: reduce priority of Windows native audio to LOW, preferring Portaudio
+
+### gr-blocks
+- Message Debug: prints warning when a non-PDU message is received on the
+  Print PDU port
+- File Source handles EOF properly in non-seekable files (e.g., pipes)
+- Several bounds checking and boundary condition improvements
+- Remove DC Spike AutoSync algorithm fixed
+
+### gr-digital
+- MSK timing error detector improvement
+- Python bindings include control_loop parent class in child class
+- Correlation Estimator parameter `threshold` well documented
+
+### gr-fft
+- New window types: Nuttall, Blackman Nuttall, Nuttall CFD, Welch, Parzen,
+  Exponential, Riemann, Gaussian and Tukey
+
+### gr-filter
+- Taps blocks (e.g., Low Pass Filter Taps) now propagate parameter changes
+- Filter Designer: IIR/Band Pass/Bessel works
+
+### gr-qtgui
+- Add toggling label and icon on plot play/stop button
+- Time Raster Sink: axis labels and ranges are configurable
+- Qt Chooser: label improvements
+
+### gr-uhd
+- `set_filter()` adds `chan` parameter
+- Python generated code improved for FE corrections
+- Allow control of frequency and gain in both directions at the same moment
+- Add command handler for mtune ("manual tune")
+- Add GPIO control via messages
+- Add start time param to GRC blocks
+- Support streaming modes: `STREAM_MODE_START_CONTINUOUS`,
+  `STREAM_MODE_STOP_CONTINUOUS`, `STREAM_MODE_NUM_SAMPS_AND_DONE`,
+  `STREAM_MODE_NUM_SAMPS_AND_MORE`
+- Documentation improvements
+- Tag sink demo example
+- Better logging of over/underflows, time errors and time tags
+- Added Python binding for ALL_LOS (all local oscillators)
+- `uhd_fft` application X11/Qt related cleanups
+
+### QA
+- `waitFor(condition, ...)` available for tests that use timeouts
+
+### Contributors
+At LEAST the following authors contributed to this release.
+
+- Artem Pisarenko <artem.k.pisarenko@gmail.com>
+- Christophe Seguinot <christophe.seguinot@univ-lille.fr>
+- Daniel Estévez <daniel@destevez.net>
+- David Pi <david.pinho@gmail.com>
+- Emmanuel Blot <emmanuel.blot@free.fr>
+- gnieboer <gnieboer@corpcomm.net>
+- Håkon Vågsether <hauk142@gmail.com>
+- Ipsit <mmkipsit@gmail.com>
+- Jacob Gilbert <jacob.gilbert@protonmail.com>
+- Jason Uher <jason.uher@jhuapl.edu>
+- Jeff Long <willcode4@gmail.com>
+- Jason Uher <jason.uher@jhuapl.edu>
+- Jeppe Ledet-Pedersen <jlp@satlab.com>
+- Josh Blum <josh@joshknows.com>
+- Josh Morman <jmorman@perspectalabs.com>
+- karel <5636152+karel@users.noreply.github.com>
+- luz paz <luzpaz@users.noreply.github.com>
+- Marcus Müller <mmueller@gnuradio.org>
+- Martin Braun <martin@gnuradio.org>
+- Nick Foster <bistromath@gmail.com>
+- Niki <niki@aveer.io>
+- rear1019 <rear1019@posteo.de>
+- Ron Economos <w6rz@comcast.net>
+- Ryan Volz <ryan.volz@gmail.com>
+- Sebastian Koslowski <sebastian.koslowski@gmail.com>
+- Terry May <terrydmay@gmail.com>
+- Vasilis Tsiligiannis <acinonyx@openwrt.gr>
+- Victor Wollesen <victor.w@pervices.com>
+- Volker Schroer
+- Zackery Spytz <zspytz@gmail.com>
+
 ## [3.9.0.0] - 2020-01-17
 
 The future is not set, there is no fate but what we make for ourselves. In this
