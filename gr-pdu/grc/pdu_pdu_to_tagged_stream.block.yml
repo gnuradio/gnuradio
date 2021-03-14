@@ -8,7 +8,7 @@ parameters:
     dtype: enum
     options: [byte, complex, float]
     option_attributes:
-        tv: [pdu.byte_t, pdu.complex_t, pdu.float_t]
+        tv: [gr.types.byte_t, gr.types.complex_t, gr.types.float_t]
     hide: part
 -   id: tag
     label: Length tag name
@@ -24,7 +24,7 @@ outputs:
     dtype: ${ type }
 
 templates:
-    imports: from gnuradio import pdu
+    imports: from gnuradio import gr, pdu
     make: pdu.pdu_to_tagged_stream(${type.tv}, ${tag})
 
 cpp_templates:

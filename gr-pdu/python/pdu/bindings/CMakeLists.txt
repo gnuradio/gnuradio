@@ -6,7 +6,6 @@ include(GrPybind)
 
 list(APPEND pdu_python_files
     pdu_filter_python.cc
-    pdu_python.cc
     pdu_remove_python.cc
     pdu_set_python.cc
     pdu_split_python.cc
@@ -15,8 +14,8 @@ list(APPEND pdu_python_files
     tagged_stream_to_pdu_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE_CHECK_HASH(pdu 
-   ../../.. 
+GR_PYBIND_MAKE_CHECK_HASH(pdu
+   ../../..
    gr::pdu
    "${pdu_python_files}")
 

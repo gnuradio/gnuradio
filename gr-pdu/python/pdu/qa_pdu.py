@@ -26,8 +26,8 @@ class test_pdu(gr_unittest.TestCase):
         # Just run some data through and make sure it doesn't puke.
         src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
-        src = pdu.pdu_to_tagged_stream(pdu.byte_t)
-        snk3 = pdu.tagged_stream_to_pdu(pdu.byte_t)
+        src = pdu.pdu_to_tagged_stream(gr.types.byte_t)
+        snk3 = pdu.tagged_stream_to_pdu(gr.types.byte_t)
         snk2 = blocks.vector_sink_b()
         snk = blocks.tag_debug(1, "test")
         snk.set_display(False)
@@ -80,7 +80,7 @@ class test_pdu(gr_unittest.TestCase):
     def test_001(self):
         # Test the overflow buffer in pdu_to_tagged_stream
         src_data = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
-        src = pdu.pdu_to_tagged_stream(pdu.float_t)
+        src = pdu.pdu_to_tagged_stream(gr.types.float_t)
         snk = blocks.vector_sink_f()
 
         self.tb.connect(src, snk)
@@ -114,7 +114,7 @@ class test_pdu(gr_unittest.TestCase):
             vlen=1,
             packet_len=packet_len,
             len_tag_key="packet_len")
-        ts2pdu = pdu.tagged_stream_to_pdu(pdu.float_t, "packet_len")
+        ts2pdu = pdu.tagged_stream_to_pdu(gr.types.float_t, "packet_len")
         dbg = blocks.message_debug()
         self.tb.connect(src, s2ts, ts2pdu)
         self.tb.msg_connect(ts2pdu, "pdus", dbg, "store")

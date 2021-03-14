@@ -15,7 +15,6 @@
 
 namespace py = pybind11;
 
-void bind_pdu(py::module&);
 void bind_pdu_filter(py::module&);
 void bind_pdu_remove(py::module&);
 void bind_pdu_set(py::module&);
@@ -43,7 +42,6 @@ PYBIND11_MODULE(pdu_python, m)
     // Allow access to base block methods
     py::module::import("gnuradio.gr");
 
-    bind_pdu(m);
     bind_pdu_filter(m);
     bind_pdu_remove(m);
     bind_pdu_set(m);
