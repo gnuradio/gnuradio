@@ -119,7 +119,7 @@ def get_copyrightholder(self):
 
 def get_arglist(self):
     """ Get the argument list of the block to be added """
-    if self.info['arglist'] is not None:
+    if not self.info['arglist']:
         self.info['arglist'] = click.prompt(click.style(
             'Enter valid argument list, including default arguments: \n',
             fg='cyan'),
