@@ -123,11 +123,13 @@ float correctiq_auto_impl::get_gain() const { return d_gain; }
 
 void correctiq_auto_impl::set_freq(double new_value)
 {
+    d_freq = new_value;
     trigger_resync("Frequency change detected");
 }
 
 void correctiq_auto_impl::set_gain(float new_value)
 {
+    d_gain = new_value;
     trigger_resync("Gain change detected");
 }
 
@@ -158,10 +160,10 @@ int correctiq_auto_impl::work(int noutput_items,
         const float* in = (const float*)input_items[0];
         float* out = (float*)output_items[0];
 
-        volk_32f_x2_add_32f(out,
-                            in,
-                            reinterpret_cast<float*>(d_volk_const_buffer.data()),
-                            2 * noutput_items);
+        volk_32f_x2_subtract_32f(out,
+                                 in,
+                                 reinterpret_cast<float*>(d_volk_const_buffer.data()),
+                                 2 * noutput_items);
     }
 
     if (!d_synchronized && (d_sync_counter >= d_max_sync_samples)) {
