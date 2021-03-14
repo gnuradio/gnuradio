@@ -10,7 +10,6 @@
 ########################################################################
 install(FILES
     api.h
-    pdu.h
     pdu_filter.h
     pdu_remove.h
     pdu_set.h

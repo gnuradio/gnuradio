@@ -9,7 +9,6 @@
 # Setup library
 ########################################################################
 add_library(gnuradio-pdu
-    pdu.cc
     pdu_filter_impl.cc
     pdu_remove_impl.cc
     pdu_set_impl.cc
