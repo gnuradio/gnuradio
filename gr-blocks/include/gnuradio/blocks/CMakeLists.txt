@@ -112,13 +112,7 @@ install(FILES
     or_blk.h
     pack_k_bits_bb.h
     patterned_interleaver.h
-    pdu.h
-    pdu_filter.h
-    pdu_set.h
-    pdu_remove.h
-    pdu_to_tagged_stream.h
     peak_detector2_fb.h
-    random_pdu.h
     plateau_detector_fb.h
     probe_rate.h
     regenerate_bb.h
@@ -130,7 +124,6 @@ install(FILES
     short_to_char.h
     short_to_float.h
     skiphead.h
-    socket_pdu.h
     stream_demux.h
     stream_mux.h
     stream_to_streams.h
@@ -146,14 +139,12 @@ install(FILES
     tagged_stream_align.h
     tagged_stream_mux.h
     tagged_stream_multiply_length.h
-    tagged_stream_to_pdu.h
     tags_strobe.h
     tcp_server_sink.h
     test_tag_variable_rate_ff.h
     threshold_ff.h
     throttle.h
     transcendental.h
-    tuntap_pdu.h
     uchar_to_float.h
     udp_sink.h
     udp_source.h

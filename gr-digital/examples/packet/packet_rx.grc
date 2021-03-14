@@ -183,8 +183,8 @@ blocks:
     coordinate: [1320, 496.0]
     rotation: 180
     state: enabled
-- name: blocks_tagged_stream_to_pdu_0
-  id: blocks_tagged_stream_to_pdu
+- name: pdu_tagged_stream_to_pdu_0
+  id: pdu_tagged_stream_to_pdu
   parameters:
     affinity: ''
     alias: ''
@@ -694,8 +694,8 @@ blocks:
 
 connections:
 - [blocks_multiply_by_tag_value_cc_0, '0', digital_pfb_clock_sync_xxx_0, '0']
-- [blocks_tagged_stream_multiply_length_0, '0', blocks_tagged_stream_to_pdu_0, '0']
-- [blocks_tagged_stream_to_pdu_0, pdus, fec_async_decoder_0, in]
+- [blocks_tagged_stream_multiply_length_0, '0', pdu_tagged_stream_to_pdu_0, '0']
+- [pdu_tagged_stream_to_pdu_0, pdus, fec_async_decoder_0, in]
 - [digital_constellation_soft_decoder_cf_0, '0', blocks_tagged_stream_multiply_length_0,
   '0']
 - [digital_constellation_soft_decoder_cf_0_0, '0', fec_generic_decoder_0, '0']

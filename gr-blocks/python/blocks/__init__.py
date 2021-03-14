@@ -35,3 +35,6 @@ multiply_vcc = multiply_cc
 multiply_vff = multiply_ff
 multiply_vii = multiply_ii
 multiply_vss = multiply_ss
+
+# Compatibility layer for transition to gr-pdu. Scheduled for removal in 3.11.
+from .pdu_compatibility import *

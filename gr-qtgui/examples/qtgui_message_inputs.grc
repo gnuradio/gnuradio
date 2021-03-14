@@ -188,8 +188,8 @@ blocks:
     coordinate: [456, 388.0]
     rotation: 0
     state: enabled
-- name: blocks_tagged_stream_to_pdu_0
-  id: blocks_tagged_stream_to_pdu
+- name: pdu_tagged_stream_to_pdu_0
+  id: pdu_tagged_stream_to_pdu
   parameters:
     affinity: ''
     alias: ''
@@ -202,8 +202,8 @@ blocks:
     coordinate: [688, 132.0]
     rotation: 0
     state: enabled
-- name: blocks_tagged_stream_to_pdu_1
-  id: blocks_tagged_stream_to_pdu
+- name: pdu_tagged_stream_to_pdu_1
+  id: pdu_tagged_stream_to_pdu
   parameters:
     affinity: ''
     alias: ''
@@ -972,17 +972,17 @@ connections:
 - [analog_sig_source_x_1, '0', blocks_add_xx_1, '1']
 - [blocks_add_xx_0, '0', blocks_throttle_0, '0']
 - [blocks_add_xx_1, '0', blocks_throttle_1, '0']
-- [blocks_stream_to_tagged_stream_0, '0', blocks_tagged_stream_to_pdu_0, '0']
-- [blocks_stream_to_tagged_stream_1, '0', blocks_tagged_stream_to_pdu_1, '0']
-- [blocks_tagged_stream_to_pdu_0, pdus, qtgui_const_sink_x_0, in]
-- [blocks_tagged_stream_to_pdu_0, pdus, qtgui_freq_sink_x_0, in]
-- [blocks_tagged_stream_to_pdu_0, pdus, qtgui_time_sink_x_0, in]
-- [blocks_tagged_stream_to_pdu_0, pdus, qtgui_waterfall_sink_x_0, in]
-- [blocks_tagged_stream_to_pdu_1, pdus, qtgui_freq_sink_x_1, in]
-- [blocks_tagged_stream_to_pdu_1, pdus, qtgui_histogram_sink_x_0, in]
-- [blocks_tagged_stream_to_pdu_1, pdus, qtgui_time_raster_sink_x_0, in]
-- [blocks_tagged_stream_to_pdu_1, pdus, qtgui_time_sink_x_0_0, in]
-- [blocks_tagged_stream_to_pdu_1, pdus, qtgui_waterfall_sink_x_1, in]
+- [blocks_stream_to_tagged_stream_0, '0', pdu_tagged_stream_to_pdu_0, '0']
+- [blocks_stream_to_tagged_stream_1, '0', pdu_tagged_stream_to_pdu_1, '0']
+- [pdu_tagged_stream_to_pdu_0, pdus, qtgui_const_sink_x_0, in]
+- [pdu_tagged_stream_to_pdu_0, pdus, qtgui_freq_sink_x_0, in]
+- [pdu_tagged_stream_to_pdu_0, pdus, qtgui_time_sink_x_0, in]
+- [pdu_tagged_stream_to_pdu_0, pdus, qtgui_waterfall_sink_x_0, in]
+- [pdu_tagged_stream_to_pdu_1, pdus, qtgui_freq_sink_x_1, in]
+- [pdu_tagged_stream_to_pdu_1, pdus, qtgui_histogram_sink_x_0, in]
+- [pdu_tagged_stream_to_pdu_1, pdus, qtgui_time_raster_sink_x_0, in]
+- [pdu_tagged_stream_to_pdu_1, pdus, qtgui_time_sink_x_0_0, in]
+- [pdu_tagged_stream_to_pdu_1, pdus, qtgui_waterfall_sink_x_1, in]
 - [blocks_throttle_0, '0', blocks_stream_to_tagged_stream_0, '0']
 - [blocks_throttle_1, '0', blocks_stream_to_tagged_stream_1, '0']
 

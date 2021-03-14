@@ -168,8 +168,8 @@ blocks:
     coordinate: [992, 252.0]
     rotation: 0
     state: enabled
-- name: blocks_pdu_to_tagged_stream_0
-  id: blocks_pdu_to_tagged_stream
+- name: pdu_pdu_to_tagged_stream_0
+  id: pdu_pdu_to_tagged_stream
   parameters:
     affinity: ''
     alias: ''
@@ -185,8 +185,8 @@ blocks:
     coordinate: [560, 164.0]
     rotation: 0
     state: enabled
-- name: blocks_pdu_to_tagged_stream_0_0
-  id: blocks_pdu_to_tagged_stream
+- name: pdu_pdu_to_tagged_stream_0_0
+  id: pdu_pdu_to_tagged_stream
   parameters:
     affinity: ''
     alias: ''
@@ -261,8 +261,8 @@ blocks:
     coordinate: [56, 283]
     rotation: 180
     state: enabled
-- name: blocks_tagged_stream_to_pdu_0
-  id: blocks_tagged_stream_to_pdu
+- name: pdu_tagged_stream_to_pdu_0
+  id: pdu_tagged_stream_to_pdu
   parameters:
     affinity: ''
     alias: ''
@@ -493,17 +493,17 @@ connections:
 - [analog_random_source_x_0, '0', blocks_throttle_0, '0']
 - [blocks_char_to_float_0_1, '0', qtgui_time_sink_x_0, '0']
 - [blocks_char_to_float_0_1_0, '0', qtgui_time_sink_x_0, '1']
-- [blocks_pdu_to_tagged_stream_0, '0', blocks_repack_bits_bb_0, '0']
-- [blocks_pdu_to_tagged_stream_0_0, '0', blocks_repack_bits_bb_0_0, '0']
+- [pdu_pdu_to_tagged_stream_0, '0', blocks_repack_bits_bb_0, '0']
+- [pdu_pdu_to_tagged_stream_0_0, '0', blocks_repack_bits_bb_0_0, '0']
 - [blocks_repack_bits_bb_0, '0', blocks_char_to_float_0_1, '0']
 - [blocks_repack_bits_bb_0_0, '0', blocks_char_to_float_0_1_0, '0']
-- [blocks_stream_to_tagged_stream_0_0, '0', blocks_tagged_stream_to_pdu_0, '0']
-- [blocks_tagged_stream_to_pdu_0, pdus, fec_async_encoder_0, in]
-- [blocks_tagged_stream_to_pdu_0, pdus, fec_async_encoder_0_0, in]
+- [blocks_stream_to_tagged_stream_0_0, '0', pdu_tagged_stream_to_pdu_0, '0']
+- [pdu_tagged_stream_to_pdu_0, pdus, fec_async_encoder_0, in]
+- [pdu_tagged_stream_to_pdu_0, pdus, fec_async_encoder_0_0, in]
 - [blocks_throttle_0, '0', blocks_stream_to_tagged_stream_0_0, '0']
 - [blocks_vector_source_x_0_1_0, '0', blocks_throttle_0, '0']
-- [fec_async_encoder_0, out, blocks_pdu_to_tagged_stream_0, pdus]
-- [fec_async_encoder_0_0, out, blocks_pdu_to_tagged_stream_0_0, pdus]
+- [fec_async_encoder_0, out, pdu_pdu_to_tagged_stream_0, pdus]
+- [fec_async_encoder_0_0, out, pdu_pdu_to_tagged_stream_0_0, pdus]
 
 metadata:
   file_format: 1

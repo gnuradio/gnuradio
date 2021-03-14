@@ -358,8 +358,8 @@ blocks:
     coordinate: [528, 307]
     rotation: 0
     state: enabled
-- name: blocks_tuntap_pdu_0
-  id: blocks_tuntap_pdu
+- name: network_tuntap_pdu_0
+  id: network_tuntap_pdu
   parameters:
     affinity: ''
     alias: ''
@@ -1184,7 +1184,7 @@ connections:
 - [packet_rx_0, '0', qtgui_const_sink_x_0_0_0, '0']
 - [packet_rx_0, '1', qtgui_time_sink_x_1_0_0_1, '0']
 - [packet_rx_0, pkt out, blocks_message_debug_0, print_pdu]
-- [packet_rx_0, pkt out, blocks_tuntap_pdu_0, pdus]
+- [packet_rx_0, pkt out, network_tuntap_pdu_0, pdus]
 - [uhd_usrp_source_0, '0', blocks_multiply_const_vxx_0, '0']
 - [uhd_usrp_source_0, '0', blocks_multiply_const_vxx_1, '0']
 - [uhd_usrp_source_0, '0', digital_fll_band_edge_cc_0, '0']
