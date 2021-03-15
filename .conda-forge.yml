@@ -1,0 +1,48 @@
+# This file defines the configuration for building conda packages with CI.
+# The actual files for running the CI are created/updated by "conda-smithy".
+# You should edit only this file and the recipe files (in recipe_dir, below)
+# and not any of the automatically-generated files in e.g. .ci_support,
+# .scripts, or .github/workflows/conda-build.yml.
+
+# To update the generated conda CI files after a change here or in the recipe,
+# or because of updates to conda-smithy, run
+#
+#   conda-smithy rerender --feedstock_config .conda-forge.yml -c auto
+#   git rm -f .github/workflows/automerge.yml .github/workflows/webservices.yml .circleci/config.yml
+#   git commit --amend -s
+#
+# which will automatically commit any changes.
+# ***** RUN THE ABOVE TO CHECK FOR UPDATES WHENEVER EDITS ARE MADE HERE *****
+
+# The CI will build conda packages for commits and pull requests, and it will
+# upload the packages to Anaconda Cloud on commits to the branch specified
+# in the configuration below. The channel and label that the packages are
+# uploaded to are set in the recipe directory in conda_build_config.yaml.
+# Uploads to Anaconda Cloud also require an API token to be set to the
+# BINSTAR_TOKEN environment variable. Documentation for token generation:
+# https://docs.anaconda.com/anacondaorg/user-guide/tasks/work-with-accounts/#creating-access-tokens
+# To populate BINSTAR_TOKEN for CI jobs, add the token as a secret, e.g.:
+# https://docs.github.com/en/actions/reference/encrypted-secrets
+
+# See https://conda-forge.org/docs/maintainer/conda_forge_yml.html for
+# documentation on possible keys and values.
+
+clone_depth: 0
+github_actions:
+  store_build_artifacts: true
+provider:
+  linux: github_actions
+  osx: github_actions
+  win: github_actions
+recipe_dir: .packaging/conda_recipe
+# skip unnecessary files since this is not a full-fledged conda-forge feedstock
+skip_render:
+  - README.md
+  - LICENSE.txt
+  - .gitattributes
+  - .gitignore
+  - build-locally.py
+  - LICENSE
+# enable uploads to Anaconda Cloud from specified branches only
+# ***** UPDATE THIS FOR MAINTENANCE BRANCHES ********************************
+upload_on_branch: master

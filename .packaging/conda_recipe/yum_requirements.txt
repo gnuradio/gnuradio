@@ -1,0 +1,14 @@
+mesa-libGL
+mesa-dri-drivers
+libselinux
+libudev
+libX11
+libXcomposite
+libXcursor
+libXdamage
+libXext
+libXfixes
+libXi
+libXinerama
+libXrandr
+libXxf86vm

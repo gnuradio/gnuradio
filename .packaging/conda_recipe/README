@@ -1,0 +1,19 @@
+Users
+*****
+
+This recipe is primarily used for CI builds, although it is possible to use it
+locally from a checked-out git repository with "conda-build".
+
+Developers
+**********
+
+CI builds use this recipe and the settings in ../../.conda-forge.yml. Any changes
+to the recipe should be accompanied by running
+
+    conda-smithy rerender --feedstock_config .conda-forge.yml -c auto
+    git rm -f .github/workflows/automerge.yml .github/workflows/webservices.yml .circleci/config.yml
+    git commit --amend -s
+
+so that the generated build scripts are updated when necessary.
+
+Consult the .conda-forge.yml file for additional documentation.
