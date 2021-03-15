@@ -1,0 +1,186 @@
+{% set name = "gnuradio-dev" %}
+{% set version = (environ.get('GIT_DESCRIBE_TAG', 'untagged')|string|replace('-','_')|replace('v','')|replace('git','')) + '.dev' + environ.get('GIT_DESCRIBE_NUMBER', '0') + '+' + environ.get('GIT_DESCRIBE_HASH', 'local') %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  git_url: {{ environ.get('FEEDSTOCK_ROOT', '../..') }}
+
+build:
+  number: 0
+  skip: true  # [py!=38]
+  entry_points:
+    - gnuradio-companion = gnuradio.grc.main:main  # [win]
+    - gr_filter_design = gnuradio.filter.filter_design:main  # [win]
+    - gr_modtool = gnuradio.modtool.cli.base:cli  # [win]
+    - grcc = gnuradio.grc.compiler:main  # [win]
+    - uhd_siggen = gnuradio.uhd.uhd_siggen_base:main  # [win]
+  run_exports:
+    - {{ pin_subpackage('gnuradio-dev', max_pin='x.x.x') }}
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake >=3.8
+    - ninja
+    - pkg-config  # [not win]
+    # cross-compilation requirements
+    - python                              # [build_platform != target_platform]
+    - cross-python_{{ target_platform }}  # [build_platform != target_platform]
+    - pybind11                            # [build_platform != target_platform]
+    - numpy                               # [build_platform != target_platform]
+    # libudev needed to link against libusb through uhd on linux
+    # libudev is on its own in CentOS 6, packaged with systemd in CentOS 7
+    - {{ cdt('libudev-devel') }}  # [linux and cdt_name=='cos6']
+    - {{ cdt('systemd-devel') }}  # [linux and cdt_name=='cos7']
+   # below are needed to link with Qt for qtgui
+    - {{ cdt('libice') }}  # [linux]
+    - {{ cdt('libselinux') }}  # [linux]
+    - {{ cdt('libsm') }}  # [linux]
+    - {{ cdt('libx11') }}  # [linux]
+    - {{ cdt('libxau') }}  # [linux]
+    - {{ cdt('libxcb') }}  # [linux]
+    - {{ cdt('libxdamage') }}  # [linux]
+    - {{ cdt('libxext') }}  # [linux]
+    - {{ cdt('libxfixes') }}  # [linux]
+    - {{ cdt('libxrender') }}  # [linux]
+    - {{ cdt('libxxf86vm') }}  # [linux]
+    - {{ cdt('libuuid') }}  # [linux]
+    - {{ cdt('mesa-dri-drivers') }}  # [linux]
+    - {{ cdt('mesa-libgl-devel') }}  # [linux]
+  host:
+    - boost-cpp
+    - click
+    - click-plugins
+    # use codec2 1.0.0 because 1.0.1 has header which fails on Windows (complex.h)
+    - codec2 1.0.0*
+    - fftw
+    - gmp  # [not win]
+    - gsl
+    # blas needed to link with gsl
+    - libcblas  # [linux]
+    - libsndfile
+    - libthrift  # [not win]
+    - log4cpp
+    - mako
+    - mpir  # [win]
+    - numpy
+    - pip  # [win]
+    - pybind11
+    - pybind11-abi
+    - python
+    - thrift  # [not win]
+    - volk
+  # gnuradio.audio
+    - alsa-lib  # [linux]
+    - portaudio
+  # gnuradio companion
+    - gtk3
+    - lxml
+    - pygobject
+    - pyyaml
+  # gnuradio.iio
+    - libiio
+    - libad9361-iio
+  # gnuradio.qtgui
+    - pyqt
+    - qt
+    - qwt <6.2
+  # gnuradio.soapy
+    - soapysdr
+  # gnuradio.uhd
+    - uhd
+  # gnuradio.video_sdl
+    - sdl
+  # gnuradio.zeromq
+    - cppzmq
+    - zeromq
+  # below needed only to run tests in host environment
+    - pyzmq
+  run:
+    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx and x86_64]
+    - boost-cpp
+    - click
+    - click-plugins
+    - fftw
+    - lxml
+    - mako
+    - menuinst  # [win]
+    - numpy
+    - {{ pin_compatible('portaudio') }}
+    - pygobject
+    - pyqt
+    - python
+    - pyyaml
+    - pyzmq
+    - {{ pin_compatible('qwt', max_pin='x.x') }}
+    # need setuptools because modtool uses pkg_resources
+    - setuptools
+    - thrift  # [not win]
+  run_constrained:
+  # conflict with the non-dev conda-forge packages
+  # by constraining to non-existent version
+    - gnuradio-core ==9999999999
+    - gnuradio-grc ==9999999999
+    - gnuradio-qtgui ==9999999999
+    - gnuradio-soapy ==9999999999
+    - gnuradio-uhd ==9999999999
+    - gnuradio-video-sdl ==9999999999
+    - gnuradio-zeromq ==9999999999
+
+test:
+  commands:
+    - gnuradio-config-info -v --prefix --sysconfdir --prefsdir --userprefsdir --prefs --builddate --enabled-components --cc --cxx --cflags
+    - gr_modtool --help
+  imports:
+    - gnuradio.analog
+    - gnuradio.audio
+    - gnuradio.blocks
+    - gnuradio.channels
+    - gnuradio.digital
+    - gnuradio.dtv
+    - gnuradio.fec
+    - gnuradio.fft
+    - gnuradio.filter
+    - gnuradio.gr
+    - gnuradio.iio
+    - gnuradio.network
+    - gnuradio.pdu
+    - gnuradio.qtgui
+    - gnuradio.soapy
+    - gnuradio.trellis
+    - gnuradio.uhd
+    - gnuradio.video_sdl
+    - gnuradio.vocoder
+    - gnuradio.wavelet
+    - gnuradio.zeromq
+    - pmt
+
+about:
+  home: https://gnuradio.org/
+  license: GPL-3.0-or-later
+  license_file: COPYING
+  summary: The free and open software radio ecosystem
+  description: >
+    GNU Radio is a free software development toolkit that provides the signal
+    processing runtime and processing blocks to implement software radios using
+    readily-available, low-cost external RF hardware and commodity processors.
+    It is widely used in hobbyist, academic and commercial environments to
+    support wireless communications research as well as to implement real-world
+    radio systems.
+
+    GNU Radio applications are primarily written using the Python programming
+    language, while the supplied, performance-critical signal processing path
+    is implemented in C++ using processor floating point extensions where
+    available. Thus, the developer is able to implement real-time, high-
+    throughput radio systems in a simple-to-use, rapid-application-development
+    environment.
+  doc_url: https://gnuradio.org/doc/doxygen/
+  dev_url: https://github.com/gnuradio/gnuradio
+
+extra:
+  recipe-maintainers:
+    - ryanvolz
