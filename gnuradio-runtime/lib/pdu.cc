@@ -58,7 +58,7 @@ const pmt::pmt_t vec()
     return val;
 }
 
-} /* namespace ports */
+} /* namespace msgport_names */
 
 namespace pdu {
 
@@ -67,6 +67,10 @@ size_t itemsize(types::vector_type type)
     switch (type) {
     case types::byte_t:
         return sizeof(char);
+    case types::short_t:
+        return sizeof(short);
+    case types::int_t:
+        return sizeof(int);
     case types::float_t:
         return sizeof(float);
     case types::complex_t:
@@ -81,6 +85,10 @@ bool type_matches(types::vector_type type, pmt::pmt_t v)
     switch (type) {
     case types::byte_t:
         return pmt::is_u8vector(v);
+    case types::short_t:
+        return pmt::is_s16vector(v);
+    case types::int_t:
+        return pmt::is_s32vector(v);
     case types::float_t:
         return pmt::is_f32vector(v);
     case types::complex_t:
@@ -95,6 +103,10 @@ pmt::pmt_t make_pdu_vector(types::vector_type type, const uint8_t* buf, size_t i
     switch (type) {
     case types::byte_t:
         return pmt::init_u8vector(items, buf);
+    case types::short_t:
+        return pmt::init_s16vector(items, (const short*)buf);
+    case types::int_t:
+        return pmt::init_s32vector(items, (const int*)buf);
     case types::float_t:
         return pmt::init_f32vector(items, (const float*)buf);
     case types::complex_t:
@@ -108,6 +120,10 @@ types::vector_type type_from_pmt(pmt::pmt_t vector)
 {
     if (pmt::is_u8vector(vector))
         return types::byte_t;
+    if (pmt::is_s16vector(vector))
+        return types::short_t;
+    if (pmt::is_s32vector(vector))
+        return types::int_t;
     if (pmt::is_f32vector(vector))
         return types::float_t;
     if (pmt::is_c32vector(vector))

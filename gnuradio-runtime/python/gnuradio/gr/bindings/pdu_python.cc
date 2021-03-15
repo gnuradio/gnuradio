@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pdu.h)                                                     */
-/* BINDTOOL_HEADER_FILE_HASH(2b56328d8782d0a1816df04928cd83c5)                     */
+/* BINDTOOL_HEADER_FILE_HASH(d5f32198890a9b1099e6b7ed492650f9)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -34,8 +34,10 @@ void bind_pdu(py::module& m)
 
     py::enum_<::gr::types::vector_type>(m_types, "vector_type")
         .value("byte_t", ::gr::types::byte_t)       // 0
-        .value("float_t", ::gr::types::float_t)     // 1
-        .value("complex_t", ::gr::types::complex_t) // 2
+        .value("short_t", ::gr::types::short_t)     // 1
+        .value("int_t", ::gr::types::int_t)         // 2
+        .value("float_t", ::gr::types::float_t)     // 3
+        .value("complex_t", ::gr::types::complex_t) // 4
         .export_values();
 
     py::implicitly_convertible<int, ::gr::types::vector_type>();

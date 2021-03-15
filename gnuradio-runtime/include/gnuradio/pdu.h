@@ -26,10 +26,10 @@ GR_RUNTIME_API const pmt::pmt_t msg();
 GR_RUNTIME_API const pmt::pmt_t pdu();
 GR_RUNTIME_API const pmt::pmt_t pdus(); // compatibility, use of pdu() preferred
 GR_RUNTIME_API const pmt::pmt_t vec();
-} /* namespace ports */
+} /* namespace msgport_names */
 
 namespace types {
-enum vector_type { byte_t, float_t, complex_t };
+enum vector_type { byte_t, short_t, int_t, float_t, complex_t };
 } /* namespace types */
 
 namespace pdu {
