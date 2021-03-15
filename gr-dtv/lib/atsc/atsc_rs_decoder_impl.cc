@@ -37,8 +37,10 @@ atsc_rs_decoder::sptr atsc_rs_decoder::make()
 atsc_rs_decoder_impl::atsc_rs_decoder_impl()
     : gr::sync_block(
           "dtv_atsc_rs_decoder",
-          io_signature::make(1, 1, sizeof(uint8_t) * ATSC_MPEG_RS_ENCODED_LENGTH),
-          io_signature::make(1, 1, sizeof(uint8_t) * ATSC_MPEG_PKT_LENGTH))
+          io_signature::make2(
+              2, 2, sizeof(uint8_t) * ATSC_MPEG_RS_ENCODED_LENGTH, sizeof(plinfo)),
+          io_signature::make2(
+              2, 2, sizeof(uint8_t) * ATSC_MPEG_PKT_LENGTH, sizeof(plinfo)))
 {
     d_rs = init_rs_char(
         rs_init_symsize, rs_init_gfpoly, rs_init_fcr, rs_init_prim, rs_init_nroots);
@@ -46,8 +48,6 @@ atsc_rs_decoder_impl::atsc_rs_decoder_impl()
     d_nerrors_corrected_count = 0;
     d_bad_packet_count = 0;
     d_total_packets = 0;
-
-    set_tag_propagation_policy(TPP_CUSTOM);
 }
 
 int atsc_rs_decoder_impl::decode(uint8_t* out, const uint8_t* in)
@@ -93,36 +93,23 @@ int atsc_rs_decoder_impl::work(int noutput_items,
 {
     auto in = static_cast<const uint8_t*>(input_items[0]);
     auto out = static_cast<uint8_t*>(output_items[0]);
+    auto plin = static_cast<const plinfo*>(input_items[1]);
+    auto plout = static_cast<plinfo*>(output_items[1]);
 
-    std::vector<tag_t> tags;
-    auto tag_pmt = pmt::intern("plinfo");
     for (int i = 0; i < noutput_items; i++) {
-        plinfo pli_in;
-        get_tags_in_window(tags, 0, i, i + 1, tag_pmt);
-        if (tags.size() > 0) {
-            pli_in.from_tag_value(pmt::to_uint64(tags[0].value));
-        } else {
-            throw std::runtime_error(
-                "Atsc Viterbi Decoder: Plinfo Tag not found on sample");
-        }
+        assert(plin[i].regular_seg_p());
 
-        assert(pli_in.regular_seg_p());
-
-        plinfo pli_out = pli_in; // copy pipeline info...
-
+        plout[i] = plin[i]; // copy pipeline info...
 
         int nerrors_corrected =
             decode(&out[i * ATSC_MPEG_PKT_LENGTH], &in[i * ATSC_MPEG_RS_ENCODED_LENGTH]);
-        pli_out.set_transport_error(nerrors_corrected == -1);
+        plout[i].set_transport_error(nerrors_corrected == -1);
         if (nerrors_corrected == -1) {
             d_bad_packet_count++;
             d_nerrors_corrected_count += 10; // lower bound estimate; most this RS can fix
         } else {
             d_nerrors_corrected_count += nerrors_corrected;
         }
-
-        add_item_tag(
-            0, nitems_written(0) + i, tag_pmt, pmt::from_uint64(pli_out.get_tag_value()));
 
         d_total_packets++;
 #if 0

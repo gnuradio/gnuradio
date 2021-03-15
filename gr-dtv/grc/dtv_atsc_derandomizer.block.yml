@@ -6,7 +6,11 @@ inputs:
 -   domain: stream
     dtype: byte
     vlen: 188
-
+-   domain: stream
+    label: plinfo
+    dtype: short
+    vlen: 2
+    
 outputs:
 -   domain: stream
     dtype: byte

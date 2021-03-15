@@ -27,8 +27,10 @@ atsc_deinterleaver::sptr atsc_deinterleaver::make()
 atsc_deinterleaver_impl::atsc_deinterleaver_impl()
     : gr::sync_block(
           "atsc_deinterleaver",
-          io_signature::make(1, 1, ATSC_MPEG_RS_ENCODED_LENGTH * sizeof(uint8_t)),
-          io_signature::make(1, 1, ATSC_MPEG_RS_ENCODED_LENGTH * sizeof(uint8_t))),
+          io_signature::make2(
+              2, 2, ATSC_MPEG_RS_ENCODED_LENGTH * sizeof(uint8_t), sizeof(plinfo)),
+          io_signature::make2(
+              2, 2, ATSC_MPEG_RS_ENCODED_LENGTH * sizeof(uint8_t), sizeof(plinfo))),
       alignment_fifo(156)
 {
     m_fifo.reserve(s_interleavers);
@@ -37,8 +39,6 @@ atsc_deinterleaver_impl::atsc_deinterleaver_impl()
         m_fifo.emplace_back((s_interleavers - 1 - i) * 4);
 
     sync();
-
-    set_tag_propagation_policy(TPP_CUSTOM);
 }
 
 atsc_deinterleaver_impl::~atsc_deinterleaver_impl() {}
@@ -57,31 +57,20 @@ int atsc_deinterleaver_impl::work(int noutput_items,
 {
     auto in = static_cast<const uint8_t*>(input_items[0]);
     auto out = static_cast<uint8_t*>(output_items[0]);
+    auto plin = static_cast<const plinfo*>(input_items[1]);
+    auto plout = static_cast<plinfo*>(output_items[1]);
 
-    std::vector<tag_t> tags;
-    auto tag_pmt = pmt::intern("plinfo");
+
     for (int i = 0; i < noutput_items; i++) {
-        plinfo pli_in;
-        get_tags_in_window(tags, 0, i, i + 1, tag_pmt);
-        if (tags.size() > 0) {
-            pli_in.from_tag_value(pmt::to_uint64(tags[0].value));
-        } else {
-            throw std::runtime_error(
-                "Atsc Deinterleaver: Plinfo Tag not found on sample");
-        }
-
-        assert(pli_in.regular_seg_p());
+        assert(plin[i].regular_seg_p());
 
         // reset commutator if required using INPUT pipeline info
-        if (pli_in.first_regular_seg_p())
+        if (plin[i].first_regular_seg_p())
             sync();
 
         // remap OUTPUT pipeline info to reflect all data segment end-to-end delay
-        plinfo pli_out;
-        plinfo::delay(pli_out, pli_in, s_interleavers);
-
-        add_item_tag(
-            0, nitems_written(0) + i, tag_pmt, pmt::from_uint64(pli_out.get_tag_value()));
+        plout[i] = plinfo();
+        plinfo::delay(plout[i], plin[i], s_interleavers);
 
         // now do the actual deinterleaving
         for (unsigned int j = 0; j < ATSC_MPEG_RS_ENCODED_LENGTH; j++) {
