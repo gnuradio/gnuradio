@@ -189,7 +189,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [872, 556.0]
+    coordinate: [904, 556.0]
     rotation: 0
     state: enabled
 - name: dc_blocker_xx_0
@@ -222,7 +222,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [144, 576.0]
+    coordinate: [120, 576.0]
     rotation: 0
     state: enabled
 - name: dtv_atsc_depad_0
@@ -237,7 +237,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [736, 576.0]
+    coordinate: [752, 588.0]
     rotation: 0
     state: enabled
 - name: dtv_atsc_derandomizer_0
@@ -870,14 +870,19 @@ connections:
 - [agc, '0', dtv_atsc_sync_0, '0']
 - [dc_blocker_xx_0, '0', agc, '0']
 - [dtv_atsc_deinterleaver_0, '0', dtv_atsc_rs_decoder_0, '0']
+- [dtv_atsc_deinterleaver_0, '1', dtv_atsc_rs_decoder_0, '1']
 - [dtv_atsc_depad_0, '0', blocks_file_sink_0, '0']
 - [dtv_atsc_derandomizer_0, '0', dtv_atsc_depad_0, '0']
 - [dtv_atsc_equalizer_0, '0', dtv_atsc_viterbi_decoder_0, '0']
+- [dtv_atsc_equalizer_0, '1', dtv_atsc_viterbi_decoder_0, '1']
 - [dtv_atsc_fpll_0, '0', dc_blocker_xx_0, '0']
 - [dtv_atsc_fs_checker_0, '0', dtv_atsc_equalizer_0, '0']
+- [dtv_atsc_fs_checker_0, '1', dtv_atsc_equalizer_0, '1']
 - [dtv_atsc_rs_decoder_0, '0', dtv_atsc_derandomizer_0, '0']
+- [dtv_atsc_rs_decoder_0, '1', dtv_atsc_derandomizer_0, '1']
 - [dtv_atsc_sync_0, '0', dtv_atsc_fs_checker_0, '0']
 - [dtv_atsc_viterbi_decoder_0, '0', dtv_atsc_deinterleaver_0, '0']
+- [dtv_atsc_viterbi_decoder_0, '1', dtv_atsc_deinterleaver_0, '1']
 - [filter_fft_rrc_filter_0, '0', dtv_atsc_fpll_0, '0']
 - [filter_fft_rrc_filter_0, '0', usrp_freq_sink, '1']
 - [u, '0', filter_fft_rrc_filter_0, '0']
