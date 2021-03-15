@@ -16,6 +16,9 @@
 #include <chrono>
 #include <climits>
 #include <stdexcept>
+#include <thread>
+
+using namespace std::chrono_literals;
 
 namespace gr {
 namespace uhd {
@@ -752,10 +755,11 @@ void usrp_sink_impl::async_event_loop()
     auto time_msg = boost::format("In the last %d ms, %d cmd time errors occurred.");
 
     while (_async_event_loop_running) {
-        while (!_dev->get_device()->recv_async_msg(metadata, 0.1)) {
-            if (!_async_event_loop_running) {
-                return;
-            }
+        // The Tx Streamer does not exist until start() was called. After that,
+        // we poll it with a 100ms timeout for async messages.
+        if (!_tx_stream || !_tx_stream->recv_async_msg(metadata, 0.1)) {
+            std::this_thread::sleep_for(100ms);
+            continue;
         }
 
         pmt::pmt_t event_list = pmt::PMT_NIL;
