@@ -44,7 +44,7 @@ private:
     unsigned short d_flags;
     short d_segno;
 
-    bool d_buff_not_filled;
+    bool d_buff_not_filled = true;
 
 public:
     atsc_equalizer_impl();

@@ -36,9 +36,9 @@ atsc_fs_checker::sptr atsc_fs_checker::make()
 atsc_fs_checker_impl::atsc_fs_checker_impl()
     : gr::block("dtv_atsc_fs_checker",
                 io_signature::make(1, 1, ATSC_DATA_SEGMENT_LENGTH * sizeof(float)),
-                io_signature::make(1, 1, ATSC_DATA_SEGMENT_LENGTH * sizeof(float)))
+                io_signature::make2(
+                    2, 2, ATSC_DATA_SEGMENT_LENGTH * sizeof(float), sizeof(plinfo)))
 {
-    gr::configure_default_loggers(d_logger, d_debug_logger, "dtv_atsc_fs_checker");
     reset();
 }
 
@@ -59,12 +59,11 @@ int atsc_fs_checker_impl::general_work(int noutput_items,
                                        gr_vector_const_void_star& input_items,
                                        gr_vector_void_star& output_items)
 {
-    const float* in = static_cast<const float*>(input_items[0]);
-    float* out = static_cast<float*>(output_items[0]);
+    auto in = static_cast<const float*>(input_items[0]);
+    auto out = static_cast<float*>(output_items[0]);
+    auto out_pl = static_cast<plinfo*>(output_items[1]);
 
     int output_produced = 0;
-
-    auto tag_pmt = pmt::intern("plinfo");
 
     for (int i = 0; i < noutput_items; i++) {
         // check for a hit on the PN 511 pattern
@@ -114,12 +113,7 @@ int atsc_fs_checker_impl::general_work(int noutput_items,
                 d_field_num = 0;
                 d_segment_num = 0;
             } else {
-                add_item_tag(0,
-                             nitems_written(0) + output_produced,
-                             tag_pmt,
-                             pmt::from_uint64(pli_out.get_tag_value()));
-
-                output_produced++;
+                out_pl[output_produced++] = pli_out;
             }
         }
     }
