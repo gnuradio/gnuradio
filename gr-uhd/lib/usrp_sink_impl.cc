@@ -23,8 +23,11 @@
 #include "gr_uhd_common.h"
 #include "usrp_sink_impl.h"
 #include <gnuradio/io_signature.h>
+#include <boost/thread/thread.hpp> // for Boost thread interruption disabling
+#include <chrono>
 #include <climits>
 #include <stdexcept>
+#include <thread>
 
 namespace gr {
 namespace uhd {
@@ -77,7 +80,7 @@ std::string usrp_sink_impl::get_subdev_spec(size_t mboard)
 
 void usrp_sink_impl::set_samp_rate(double rate)
 {
-    BOOST_FOREACH (const size_t chan, _stream_args.channels) {
+    for (const auto& chan : _stream_args.channels) {
         _dev->set_tx_rate(rate, chan);
     }
     _sample_rate = this->get_samp_rate();
@@ -423,8 +426,8 @@ int usrp_sink_impl::work(int noutput_items,
     // Some post-processing tasks if we actually transmitted the entire burst
     if (not _pending_cmds.empty() && num_sent == size_t(ninput_items)) {
         GR_LOG_DEBUG(d_debug_logger,
-                     boost::format("Executing %d pending commands.") %
-                         _pending_cmds.size());
+                     "Executing " + std::to_string(_pending_cmds.size()) +
+                         " pending commands.");
         BOOST_FOREACH (const pmt::pmt_t& cmd_pmt, _pending_cmds) {
             msg_handler_command(cmd_pmt);
         }
@@ -533,14 +536,13 @@ void usrp_sink_impl::tag_work(int& ninput_items)
          */
         else if (pmt::equal(key, FREQ_KEY) && my_tag_count == samp0_count) {
             // If it's on the first sample, immediately do the tune:
-            GR_LOG_DEBUG(d_debug_logger,
-                         boost::format("Received tx_freq on start of burst."));
+            GR_LOG_DEBUG(d_debug_logger, "Received tx_freq on start of burst.");
             pmt::pmt_t freq_cmd = pmt::make_dict();
             freq_cmd = pmt::dict_add(freq_cmd, cmd_freq_key(), value);
             msg_handler_command(freq_cmd);
         } else if (pmt::equal(key, FREQ_KEY)) {
             // If it's not on the first sample, queue this command and only tx until here:
-            GR_LOG_DEBUG(d_debug_logger, boost::format("Received tx_freq mid-burst."));
+            GR_LOG_DEBUG(d_debug_logger, "Received tx_freq mid-burst.");
             pmt::pmt_t freq_cmd = pmt::make_dict();
             freq_cmd = pmt::dict_add(freq_cmd, cmd_freq_key(), value);
             commands_in_burst.push_back(freq_cmd);
@@ -664,10 +666,25 @@ void usrp_sink_impl::async_event_loop()
     md_t metadata;
 
     while (_async_event_loop_running) {
-        while (!_dev->get_device()->recv_async_msg(metadata, 0.1)) {
-            if (!_async_event_loop_running) {
-                return;
-            }
+        // In UHD version 3.6.0, the tx_stream::recv_async_msg() call was
+        // introduced. However, we don't have a great way of checking for what
+        // version specifically without using CMake.
+        // Until UHD 3.9, it was pretty much the same whether or not the
+        // multi_usrp or the tx_stream version was called. So we use the
+        // UHD_VERSION macro that was introduced in UHD 3.9 to check for that.
+        // Note that from UHD 4.0, the multi_usrp call is deprecated and we
+        // shouldn't use it at all any more. This version of GNU Radio works
+        // with UHD all the way down to 3.5.5, hence this version-mangling.
+#ifdef UHD_VERSION
+#define UHD_RECV_ASYNC_MSG_CALL _tx_stream->recv_async_msg
+#else
+#define UHD_RECV_ASYNC_MSG_CALL _dev->get_device()->recv_async_msg
+#endif
+        // The Tx Streamer does not exist until start() was called. After that,
+        // we poll it with a 100ms timeout for async messages.
+        if (!_tx_stream || !UHD_RECV_ASYNC_MSG_CALL(metadata, 0.1)) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            continue;
         }
 
         pmt::pmt_t event_list = pmt::PMT_NIL;
