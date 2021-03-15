@@ -66,5 +66,16 @@ class atsc_rx(gr.hier_block2):
         dep = dtv.atsc_depad()
 
         # Connect pipeline
-        self.connect(self, rx_filt, pll, dcr, agc, btl, fsc, equ)
-        self.connect(equ, vit, dei, rsd, der, dep, self)
+        self.connect(self, rx_filt, pll, dcr, agc, btl, fsc)
+        self.connect((fsc,0),(equ,0))
+        self.connect((fsc,1),(equ,1))
+        self.connect((equ,0),(vit,0))
+        self.connect((equ,1),(vit,1))
+        self.connect((vit,0),(dei,0))
+        self.connect((vit,1),(dei,1))
+        self.connect((dei,0),(rsd,0))
+        self.connect((dei,1),(rsd,1))
+        self.connect((rsd,0),(der,0))
+        self.connect((rsd,1),(der,1))
+        self.connect((der,0),(dep,0))
+        self.connect((dep,0),(self,0))
