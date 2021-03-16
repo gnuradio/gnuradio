@@ -178,7 +178,7 @@ class Param(CoreParam):
                 Utils.encode(self.truncate(self.value)) + "</i>"
 
             if(display_value != ""):  # We are already displaying the value
-                display_value = expr_string+"="+display_value
+                display_value = expr_string + "=" + display_value
             else:
                 display_value = expr_string
 
