@@ -61,17 +61,12 @@ waterfall_sink_c_impl::waterfall_sink_c_impl(int fftsize,
       d_port(pmt::mp("freq")),
       d_port_bw(pmt::mp("bw")),
       d_fft(std::make_unique<fft::fft_complex_fwd>(fftsize)),
+      d_residbufs(d_nconnections + 1), // One extra "connection" for the PDU memory.
+      d_magbufs(d_nconnections + 1),   // One extra "connection" for the PDU memory.
       d_fbuf(fftsize),
       d_parent(parent)
 {
-    // save the last "connection" for the PDU memory
-    for (int i = 0; i < d_nconnections + 1; i++) {
-        d_residbufs.emplace_back(d_fftsize);
-        d_magbufs.emplace_back(d_fftsize);
-    }
-
-    d_residbufs.emplace_back(d_fftsize);
-    d_pdu_magbuf = d_magbufs[d_magbufs.size() - 1].data();
+    resize_bufs(d_fftsize);
 
     buildwindow();
 
@@ -303,6 +298,24 @@ void waterfall_sink_c_impl::buildwindow()
     }
 }
 
+void waterfall_sink_c_impl::resize_bufs(int size)
+{
+    // Resize residbuf and replace data.
+    for (auto& buf : d_residbufs) {
+        buf.clear();
+        buf.resize(size);
+    }
+    for (auto& mag : d_magbufs) {
+        mag.clear();
+        mag.resize(size);
+    }
+
+    // Expand PDU buffer to required size.
+    auto& last_magbuf = d_magbufs[d_magbufs.size() - 1];
+    last_magbuf.resize(size * d_nrows);
+    d_pdu_magbuf = last_magbuf.data();
+}
+
 void waterfall_sink_c_impl::fftresize()
 {
     gr::thread::scoped_lock lock(d_setlock);
@@ -311,15 +324,7 @@ void waterfall_sink_c_impl::fftresize()
     d_fftavg = d_main_gui->getFFTAverage();
 
     if (newfftsize != d_fftsize) {
-
-        // Resize residbuf and replace data
-        for (int i = 0; i < d_nconnections + 1; i++) {
-            d_residbufs[i].clear();
-            d_residbufs[i].resize(newfftsize);
-            d_magbufs[i].clear();
-            d_magbufs[i].resize(newfftsize);
-        }
-        d_pdu_magbuf = d_magbufs[d_magbufs.size() - 1].data();
+        resize_bufs(newfftsize);
 
         // Set new fft size and reset buffer index
         // (throws away any currently held data, but who cares?)

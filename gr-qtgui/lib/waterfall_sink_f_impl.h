@@ -70,6 +70,7 @@ private:
     void windowreset();
     void buildwindow();
     void fftresize();
+    void resize_bufs(int size);
     void check_clicked();
     void fft(float* data_out, const float* data_in, int size);
 
