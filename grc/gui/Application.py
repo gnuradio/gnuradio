@@ -192,6 +192,8 @@ class Application(Gtk.Application):
                 Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR,
                 Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR,
                 Actions.TOGGLE_HIDE_VARIABLES,
+                Actions.TOGGLE_SHOW_PARAMETER_EXPRESSION,
+                Actions.TOGGLE_SHOW_PARAMETER_EVALUATION,
                 Actions.TOGGLE_SHOW_BLOCK_IDS,
             ):
                 action.set_enabled(True)
@@ -490,6 +492,14 @@ class Application(Gtk.Application):
             action.save_to_preferences()
             for page in main.get_pages():
                 flow_graph_update(page.flow_graph)
+        elif action == Actions.TOGGLE_SHOW_PARAMETER_EXPRESSION:
+            action.set_active(not action.get_active())
+            action.save_to_preferences()
+            flow_graph_update()
+        elif action == Actions.TOGGLE_SHOW_PARAMETER_EVALUATION:
+            action.set_active(not action.get_active())
+            action.save_to_preferences()
+            flow_graph_update()
         elif action == Actions.TOGGLE_HIDE_VARIABLES:
             action.set_active(not action.get_active())
             active = action.get_active()
