@@ -12,8 +12,8 @@
 #define DTV_INCLUDED_ATSC_PLINFO_H
 
 #include <gnuradio/dtv/atsc_consts.h>
-#include <boost/endian/conversion.hpp>
 #include <cassert>
+#include <cstdint>
 #include <cstring>
 
 #include <gnuradio/dtv/api.h>
@@ -37,20 +37,6 @@ public:
      *
      */
     void reset();
-
-    /**
-     * @brief Load the flags and segno from an endian safe value that came over the tags
-     *
-     * @param tag_value
-     */
-    void from_tag_value(uint32_t tag_value);
-
-    /**
-     * @brief Return an endian safe value containing the flags and segno
-     *
-     * @return uint32_t
-     */
-    uint32_t get_tag_value() const;
 
     // accessors
     bool field_sync1_p() const;
