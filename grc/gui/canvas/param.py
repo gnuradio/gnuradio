@@ -168,7 +168,7 @@ class Param(CoreParam):
         display_value = ""
 
         # Include the value defined by the user (after evaluation)
-        if (not is_evaluated or show_value or not show_expr):
+        if not is_evaluated or show_value or not show_expr:
             display_value += Utils.encode(
                 self.pretty_print().replace('\n', ' '))
 
