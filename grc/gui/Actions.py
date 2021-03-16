@@ -455,6 +455,20 @@ TOGGLE_HIDE_VARIABLES = actions.register(
     preference_name='hide_variables',
     default=False,
 )
+TOGGLE_SHOW_PARAMETER_EXPRESSION = actions.register(
+    "win.show_param_expression",
+    label='Show parameter expressions in block',
+    tooltip='Display the expression that defines a parameter inside the block',
+    preference_name='show_param_expression',
+    default=False,
+)
+TOGGLE_SHOW_PARAMETER_EVALUATION = actions.register(
+    "win.show_param_expression_value",
+    label='Show parameter value in block',
+    tooltip='Display the evaluated value of a parameter expressions inside the block',
+    preference_name='show_param_expression_value',
+    default=True,
+)
 TOGGLE_SHOW_BLOCK_IDS = actions.register(
     "win.show_block_ids",
     label='Show All Block IDs',
