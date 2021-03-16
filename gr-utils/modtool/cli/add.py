@@ -27,7 +27,7 @@ from .base import common_params, block_name, run, cli_input, ModToolException
               help="File containing the license header for every source code file.")
 @click.option('--copyright',
               help="Name of the copyright holder (you or your company) MUST be a quoted string.")
-@click.option('--argument-list', default="",
+@click.option('--argument-list', default=None,
               help="The argument list for the constructor and make functions.")
 @click.option('--add-python-qa', is_flag=True, default=None,
               help="If given, Python QA code is automatically added if possible.")
@@ -119,7 +119,7 @@ def get_copyrightholder(self):
 
 def get_arglist(self):
     """ Get the argument list of the block to be added """
-    if self.info['arglist'] is not None:
+    if self.info['arglist'] is None:
         self.info['arglist'] = click.prompt(click.style(
             'Enter valid argument list, including default arguments: \n',
             fg='cyan'),
