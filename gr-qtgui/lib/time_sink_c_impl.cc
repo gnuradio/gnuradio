@@ -56,10 +56,6 @@ time_sink_c_impl::time_sink_c_impl(int size,
     if (nconnections > 12)
         throw std::runtime_error("time_sink_c only supports up to 12 inputs");
 
-    // setup PDU handling input port
-    message_port_register_in(pmt::mp("in"));
-    set_msg_handler(pmt::mp("in"), [this](pmt::pmt_t msg) { this->handle_pdus(msg); });
-
     // +2 for the PDU message buffers
     for (unsigned int n = 0; n < d_nconnections + 2; n++) {
         d_buffers.emplace_back(d_buffer_size);
@@ -69,6 +65,10 @@ time_sink_c_impl::time_sink_c_impl(int size,
     for (unsigned int n = 0; n < d_nconnections / 2; n++) {
         d_cbuffers.emplace_back(d_buffer_size);
     }
+
+    // setup PDU handling input port
+    message_port_register_in(pmt::mp("in"));
+    set_msg_handler(pmt::mp("in"), [this](pmt::pmt_t msg) { this->handle_pdus(msg); });
 
     // Set alignment properties for VOLK
     const int alignment_multiple = volk_get_alignment() / sizeof(gr_complex);
@@ -277,11 +277,14 @@ void time_sink_c_impl::set_nsamps(const int newsize)
         d_buffer_size = 2 * d_size;
 
         // Resize buffers and replace data
-        for (unsigned int n = 0; n < d_nconnections + 2; n++) {
-            d_buffers[n].clear();
-            d_buffers[n].resize(d_buffer_size);
-            d_cbuffers[n].clear();
-            d_cbuffers[n].resize(d_buffer_size);
+        for (auto& buf : d_buffers) {
+            buf.clear();
+            buf.resize(d_buffer_size);
+        }
+
+        for (auto& cbuf : d_cbuffers) {
+            cbuf.clear();
+            cbuf.resize(d_buffer_size);
         }
 
         // If delay was set beyond the new boundary, pull it back.
