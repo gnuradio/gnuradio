@@ -173,7 +173,7 @@ class Param(CoreParam):
                 self.pretty_print().replace('\n', ' '))
 
         # Include the expression that was evaluated to get the value
-        if (is_evaluated and show_expr):
+        if is_evaluated and show_expr:
             expr_string = "<i>" + \
                 Utils.encode(self.truncate(self.value)) + "</i>"
 
