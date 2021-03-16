@@ -22,18 +22,6 @@ void plinfo::reset()
     d_segno = 0;
 }
 
-void plinfo::from_tag_value(uint32_t tag_value)
-{
-    auto native_val = boost::endian::big_to_native(tag_value);
-    d_flags = (native_val >> 16) & 0xFFFF;
-    d_segno = native_val & 0xFFFF;
-}
-
-uint32_t plinfo::get_tag_value() const
-{
-    return boost::endian::native_to_big(((d_flags & 0xFFFF) << 16) | (d_segno & 0xFFFF));
-}
-
 // accessors
 bool plinfo::field_sync1_p() const { return (d_flags & fl_field_sync1) != 0; }
 bool plinfo::field_sync2_p() const { return (d_flags & fl_field_sync2) != 0; }
