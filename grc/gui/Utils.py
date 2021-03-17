@@ -137,7 +137,7 @@ def make_screenshot(flow_graph, file_path, transparent_bg=False):
 
 def scale(coor, reverse=False):
     factor = Constants.DPI_SCALING if not reverse else 1 / Constants.DPI_SCALING
-    return tuple(int(max(0,x) * factor) for x in coor)
+    return tuple(int(x * factor) for x in coor)
 
 
 def scale_scalar(coor, reverse=False):
