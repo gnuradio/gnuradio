@@ -98,8 +98,7 @@ tcp_sink_impl::tcp_sink_impl(
         // In this mode, we're starting a local port listener and waiting
         // for inbound connections.
         d_start_new_listener = true;
-        d_listener_thread =
-            new boost::thread(boost::bind(&tcp_sink_impl::run_listener, this));
+        d_listener_thread = new boost::thread([this] { run_listener(); });
     }
 }
 
