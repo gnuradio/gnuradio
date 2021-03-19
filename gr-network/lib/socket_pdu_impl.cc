@@ -136,7 +136,7 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
     } else
         throw std::runtime_error("gr::pdu:socket_pdu: unknown socket type");
 
-    d_thread = gr::thread::thread(boost::bind(&socket_pdu_impl::run_io_service, this));
+    d_thread = gr::thread::thread([this] { run_io_service(); });
     d_started = true;
 }
 
