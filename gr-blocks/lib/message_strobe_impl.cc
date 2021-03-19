@@ -41,7 +41,7 @@ message_strobe_impl::~message_strobe_impl() {}
 bool message_strobe_impl::start()
 {
     d_finished = false;
-    d_thread = gr::thread::thread(std::bind(&message_strobe_impl::run, this));
+    d_thread = gr::thread::thread([this] { run(); });
 
     return block::start();
 }

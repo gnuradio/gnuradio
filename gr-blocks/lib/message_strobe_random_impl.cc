@@ -50,7 +50,7 @@ message_strobe_random_impl::message_strobe_random_impl(
 {
     // set up ports
     message_port_register_out(d_port);
-    d_thread = gr::thread::thread(std::bind(&message_strobe_random_impl::run, this));
+    d_thread = gr::thread::thread([this] { run(); });
 
     message_port_register_in(pmt::mp("set_msg"));
     set_msg_handler(pmt::mp("set_msg"), [this](pmt::pmt_t msg) { this->set_msg(msg); });
