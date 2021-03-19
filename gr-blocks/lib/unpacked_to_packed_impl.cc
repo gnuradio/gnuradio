@@ -40,14 +40,14 @@ unpacked_to_packed_impl<T>::unpacked_to_packed_impl(unsigned int bits_per_chunk,
       d_endianness(endianness),
       d_index(0)
 {
-    if (bits_per_chunk > d_bits_per_type) {
+    if (bits_per_chunk > bits_per_type()) {
         GR_LOG_ERROR(this->d_logger,
                      boost::format("Requested to put %d in a %d bit chunk") %
-                         bits_per_chunk % d_bits_per_type);
+                         bits_per_chunk % bits_per_type());
         throw std::domain_error("can't have more bits in chunk than in output type");
     }
 
-    this->set_relative_rate((uint64_t)bits_per_chunk, (uint64_t)this->d_bits_per_type);
+    this->set_relative_rate((uint64_t)bits_per_chunk, (uint64_t)bits_per_type());
 }
 
 template <class T>
@@ -60,7 +60,7 @@ void unpacked_to_packed_impl<T>::forecast(int noutput_items,
                                           gr_vector_int& ninput_items_required)
 {
     const int input_required =
-        (int)ceil((d_index + noutput_items * 1.0 * d_bits_per_type) / d_bits_per_chunk);
+        (int)ceil((d_index + noutput_items * 1.0 * bits_per_type()) / d_bits_per_chunk);
     const unsigned ninputs = ninput_items_required.size();
     for (unsigned int i = 0; i < ninputs; i++) {
         ninput_items_required[i] = input_required;
@@ -98,14 +98,14 @@ int unpacked_to_packed_impl<T>::general_work(int noutput_items,
         // per stream processing
 
         // assert((ninput_items[m]-d_index)*d_bits_per_chunk >=
-        // noutput_items*d_bits_per_type);
+        // noutput_items*bits_per_type());
 
         switch (d_endianness) {
 
         case GR_MSB_FIRST:
             for (int i = 0; i < noutput_items; i++) {
                 T tmp = 0;
-                for (unsigned int j = 0; j < d_bits_per_type; j++) {
+                for (unsigned int j = 0; j < bits_per_type(); j++) {
                     tmp = (tmp << 1) | get_bit_be1(in, index_tmp, d_bits_per_chunk);
                     index_tmp++;
                 }
@@ -116,9 +116,9 @@ int unpacked_to_packed_impl<T>::general_work(int noutput_items,
         case GR_LSB_FIRST:
             for (int i = 0; i < noutput_items; i++) {
                 unsigned long tmp = 0;
-                for (unsigned int j = 0; j < d_bits_per_type; j++) {
+                for (unsigned int j = 0; j < bits_per_type(); j++) {
                     tmp = (tmp >> 1) | (get_bit_be1(in, index_tmp, d_bits_per_chunk)
-                                        << (d_bits_per_type - 1));
+                                        << (bits_per_type() - 1));
                     index_tmp++;
                 }
                 out[i] = tmp;
