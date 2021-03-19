@@ -45,7 +45,6 @@ private:
 
     // Perform fftshift operation;
     // this is usually desired when plotting
-    bool d_shift = true;
     std::unique_ptr<fft::fft_complex_fwd> d_fft;
 
     int d_index = 0;
