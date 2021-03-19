@@ -59,8 +59,6 @@ private:
     std::vector<float> d_fft_points;
     std::vector<double> d_real_data_time_domain_points;
     std::vector<double> d_imag_data_time_domain_points;
-    uint64_t _numFFTDataPoints;
-    uint64_t _numTimeDomainDataPoints;
     gr::high_res_timer_type _dataTimestamp;
     bool _repeatDataFlag;
     bool _lastOfMultipleUpdateFlag;
