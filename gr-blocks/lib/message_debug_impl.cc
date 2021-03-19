@@ -104,7 +104,11 @@ void message_debug_impl::print_pdu(const pmt::pmt_t& pdu)
     }
 }
 
-size_t message_debug_impl::num_messages() { return d_messages.size(); }
+size_t message_debug_impl::num_messages()
+{
+    gr::thread::scoped_lock guard(d_mutex);
+    return d_messages.size();
+}
 
 pmt::pmt_t message_debug_impl::get_message(size_t i)
 {
