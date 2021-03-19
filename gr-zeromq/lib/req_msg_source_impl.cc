@@ -15,7 +15,6 @@
 #include "req_msg_source_impl.h"
 #include "tag_headers.h"
 #include <gnuradio/io_signature.h>
-#include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
 #include <chrono>
 #include <memory>
@@ -62,8 +61,7 @@ req_msg_source_impl::~req_msg_source_impl() {}
 bool req_msg_source_impl::start()
 {
     d_finished = false;
-    d_thread = std::make_unique<boost::thread>(
-        boost::bind(&req_msg_source_impl::readloop, this));
+    d_thread = std::make_unique<boost::thread>([this] { readloop(); });
     return true;
 }
 
