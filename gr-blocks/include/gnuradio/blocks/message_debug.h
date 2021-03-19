@@ -52,7 +52,7 @@ public:
     /*!
      * \brief Reports the number of messages received by this block.
      */
-    virtual int num_messages() = 0;
+    virtual size_t num_messages() = 0;
 
     /*!
      * \brief Get a message (as a PMT) from the message vector at index \p i.
@@ -67,7 +67,7 @@ public:
      *
      * \return a message at index \p i as a pmt_t.
      */
-    virtual pmt::pmt_t get_message(int i) = 0;
+    virtual pmt::pmt_t get_message(size_t i) = 0;
 
     /*!
      * \brief Enables or disables printing of PDU uniform vector data.
