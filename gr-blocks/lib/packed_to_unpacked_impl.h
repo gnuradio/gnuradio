@@ -24,7 +24,7 @@ private:
     const unsigned int d_bits_per_chunk;
     const endianness_t d_endianness;
     unsigned int d_index;
-    static constexpr unsigned int d_bits_per_type = sizeof(T) * 8;
+    static constexpr unsigned int bits_per_type() { return (sizeof(T) * 8); }
     static unsigned int log2_l_type();
     unsigned int get_bit_le(const T* in_vector, unsigned int bit_addr);
     unsigned int get_bit_be(const T* in_vector, unsigned int bit_addr);

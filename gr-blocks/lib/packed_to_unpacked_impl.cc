@@ -38,14 +38,14 @@ packed_to_unpacked_impl<T>::packed_to_unpacked_impl(unsigned int bits_per_chunk,
       d_endianness(endianness),
       d_index(0)
 {
-    if (bits_per_chunk > d_bits_per_type) {
+    if (bits_per_chunk > bits_per_type()) {
         GR_LOG_ERROR(this->d_logger,
                      boost::format("Requested to get %d out of a %d bit chunk") %
-                         bits_per_chunk % d_bits_per_type);
+                         bits_per_chunk % bits_per_type());
         throw std::domain_error("can't have more bits in chunk than in output type");
     }
 
-    this->set_relative_rate((uint64_t)this->d_bits_per_type, (uint64_t)bits_per_chunk);
+    this->set_relative_rate((uint64_t)bits_per_type(), (uint64_t)bits_per_chunk);
 }
 
 template <class T>
@@ -57,8 +57,8 @@ template <class T>
 void packed_to_unpacked_impl<T>::forecast(int noutput_items,
                                           gr_vector_int& ninput_items_required)
 {
-    const int input_required = (int)ceil((d_index + noutput_items * d_bits_per_chunk) /
-                                         (1.0 * this->d_bits_per_type));
+    const int input_required =
+        (int)ceil((d_index + noutput_items * d_bits_per_chunk) / (1.0 * bits_per_type()));
     const unsigned ninputs = ninput_items_required.size();
     for (unsigned int i = 0; i < ninputs; i++) {
         ninput_items_required[i] = input_required;
@@ -85,7 +85,7 @@ unsigned int packed_to_unpacked_impl<T>::get_bit_le(const T* in_vector,
                                                     unsigned int bit_addr)
 {
     const T x = in_vector[bit_addr >> this->log2_l_type()];
-    return (x >> (bit_addr & (this->d_bits_per_type - 1))) & 1;
+    return (x >> (bit_addr & (bits_per_type() - 1))) & 1;
 }
 
 template <class T>
@@ -93,9 +93,7 @@ unsigned int packed_to_unpacked_impl<T>::get_bit_be(const T* in_vector,
                                                     unsigned int bit_addr)
 {
     const T x = in_vector[bit_addr >> this->log2_l_type()];
-    return (x >>
-            ((this->d_bits_per_type - 1) - (bit_addr & (this->d_bits_per_type - 1)))) &
-           1;
+    return (x >> ((bits_per_type() - 1) - (bit_addr & (bits_per_type() - 1)))) & 1;
 }
 
 template <class T>
@@ -144,7 +142,7 @@ int packed_to_unpacked_impl<T>::general_work(int noutput_items,
 
     d_index = index_tmp;
     this->consume_each(d_index >> this->log2_l_type());
-    d_index = d_index & (this->d_bits_per_type - 1);
+    d_index = d_index & (bits_per_type() - 1);
     // printf("got to end\n");
     return noutput_items;
 }
