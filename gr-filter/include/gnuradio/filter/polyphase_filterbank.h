@@ -108,8 +108,6 @@ public:
      */
     polyphase_filterbank(unsigned int nfilts, const std::vector<float>& taps);
 
-    polyphase_filterbank(polyphase_filterbank&&) = default;
-
     virtual ~polyphase_filterbank() = default;
 
     /*!
