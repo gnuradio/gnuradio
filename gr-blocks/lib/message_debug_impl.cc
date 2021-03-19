@@ -102,13 +102,13 @@ void message_debug_impl::print_pdu(pmt::pmt_t pdu)
     }
 }
 
-int message_debug_impl::num_messages() { return (int)d_messages.size(); }
+size_t message_debug_impl::num_messages() { return d_messages.size(); }
 
-pmt::pmt_t message_debug_impl::get_message(int i)
+pmt::pmt_t message_debug_impl::get_message(size_t i)
 {
     gr::thread::scoped_lock guard(d_mutex);
 
-    if ((size_t)i >= d_messages.size()) {
+    if (i >= d_messages.size()) {
         throw std::runtime_error("message_debug: index for message out of bounds.");
     }
 
