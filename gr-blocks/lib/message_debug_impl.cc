@@ -30,25 +30,27 @@ message_debug_impl::message_debug_impl(bool en_uvec)
       d_en_uvec(en_uvec)
 {
     message_port_register_in(pmt::mp("print"));
-    set_msg_handler(pmt::mp("print"), [this](pmt::pmt_t msg) { this->print(msg); });
+    set_msg_handler(pmt::mp("print"),
+                    [this](const pmt::pmt_t& msg) { this->print(msg); });
 
     message_port_register_in(pmt::mp("store"));
-    set_msg_handler(pmt::mp("store"), [this](pmt::pmt_t msg) { this->store(msg); });
+    set_msg_handler(pmt::mp("store"),
+                    [this](const pmt::pmt_t& msg) { this->store(msg); });
 
     message_port_register_in(pmt::mp("print_pdu"));
     set_msg_handler(pmt::mp("print_pdu"),
-                    [this](pmt::pmt_t msg) { this->print_pdu(msg); });
+                    [this](const pmt::pmt_t& msg) { this->print_pdu(msg); });
 }
 
 message_debug_impl::~message_debug_impl() {}
 
-void message_debug_impl::print(pmt::pmt_t msg)
+void message_debug_impl::print(const pmt::pmt_t& msg)
 {
     std::stringstream sout;
 
     if (pmt::is_pdu(msg)) {
-        pmt::pmt_t meta = pmt::car(msg);
-        pmt::pmt_t vector = pmt::cdr(msg);
+        const auto& meta = pmt::car(msg);
+        const auto& vector = pmt::cdr(msg);
 
         sout << "***** VERBOSE PDU DEBUG PRINT ******" << std::endl
              << pmt::write_string(meta) << std::endl;
@@ -82,14 +84,14 @@ void message_debug_impl::print(pmt::pmt_t msg)
     std::cout << sout.str();
 }
 
-void message_debug_impl::store(pmt::pmt_t msg)
+void message_debug_impl::store(const pmt::pmt_t& msg)
 {
     gr::thread::scoped_lock guard(d_mutex);
     d_messages.push_back(msg);
 }
 
 // ! DEPRECATED as of 3.10 use print() for all printing!
-void message_debug_impl::print_pdu(pmt::pmt_t pdu)
+void message_debug_impl::print_pdu(const pmt::pmt_t& pdu)
 {
     if (pmt::is_pdu(pdu)) {
         GR_LOG_INFO(d_logger,
