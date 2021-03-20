@@ -202,8 +202,8 @@ void thrift_application_base<TserverBase, TserverClass>::start_application()
             "thrift", "init_attempts", d_default_max_init_attempts));
 
     if (!p_impl->d_application_initialized) {
-        p_impl->d_start_thrift_thread.reset(
-            (new gr::thread::thread([app = d_application] { app->start_thrift(); })));
+        p_impl->d_start_thrift_thread = std::make_shared<gr::thread::thread>(
+            [app = d_application] { app->start_thrift(); });
 
         bool app_started(false);
         for (unsigned int attempts(0); (!app_started && attempts < max_init_attempts);
