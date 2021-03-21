@@ -1,6 +1,6 @@
 id: pdu_pdu_split
 label: PDU Split
-category: '[Core]/PDU'
+flags: [ python ]
 
 parameters:
 -   id: pass_empty
@@ -11,14 +11,14 @@ parameters:
 
 inputs:
 -   domain: message
-    id: pdus
+    id: pdu
 
 outputs:
 -   domain: message
     id: dict
     optional: true
 -   domain: message
-    id: data
+    id: vec
     optional: true
 
 templates:
