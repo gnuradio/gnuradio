@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(random.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(95215055c6ad6f78b88d532d3994d29a)                     */
+/* BINDTOOL_HEADER_FILE_HASH(489c2917f344c75e2001d0c670de7784)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -29,8 +29,33 @@ namespace py = pybind11;
 
 void bind_random(py::module& m)
 {
-
+    using xoroshiro128p_prng = ::gr::xoroshiro128p_prng;
     using random = ::gr::random;
+
+
+    py::class_<xoroshiro128p_prng, std::shared_ptr<xoroshiro128p_prng>>(
+        m, "xoroshiro128p_prng", D(xoroshiro128p_prng))
+
+        .def(py::init<uint64_t>(),
+             py::arg("init"),
+             D(xoroshiro128p_prng, xoroshiro128p_prng, 0))
+        .def(py::init<gr::xoroshiro128p_prng const&>(),
+             py::arg("arg0"),
+             D(xoroshiro128p_prng, xoroshiro128p_prng, 1))
+
+
+        .def_static("min", &xoroshiro128p_prng::min, D(xoroshiro128p_prng, min))
+
+
+        .def_static("max", &xoroshiro128p_prng::max, D(xoroshiro128p_prng, max))
+
+
+        .def("seed",
+             &xoroshiro128p_prng::seed,
+             py::arg("seed"),
+             D(xoroshiro128p_prng, seed))
+
+        .def("__call__", &xoroshiro128p_prng::operator());
 
 
     py::class_<random, std::shared_ptr<random>>(m, "random", D(random))
