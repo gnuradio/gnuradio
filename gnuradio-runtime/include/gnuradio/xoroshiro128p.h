@@ -16,10 +16,12 @@
 #ifndef INCLUDED_XOROSHIRO128P_H
 #define INCLUDED_XOROSHIRO128P_H
 #ifdef __cplusplus
+#include <cstdint>
 extern "C" {
+#else
+#include <stdint.h>
 #endif
 
-#include <cstdint>
 
 /*! \brief rotating left shift helper
  * According to the original authors, this will on most platforms reduce to a single
