@@ -35,7 +35,7 @@ void bind_random(py::module& m)
 
     py::class_<random, std::shared_ptr<random>>(m, "random", D(random))
 
-        .def(py::init<unsigned int, int, int>(),
+        .def(py::init<uint64_t, int64_t, int64_t>(),
              py::arg("seed") = 0,
              py::arg("min_integer") = 0,
              py::arg("max_integer") = 2,
