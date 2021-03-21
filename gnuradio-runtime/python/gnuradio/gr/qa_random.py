@@ -63,6 +63,42 @@ class test_random(gr_unittest.TestCase):
         self.assertGreaterEqual(minimum, np.min(rnd_vals))
         self.assertLess(np.max(rnd_vals), maximum)
 
+    def test_005_xoroshiro128p_seed_stability(self):
+        """
+        Test that seeding is stable.
+        It's basically an API break if it isn't.
+
+        We simply check for the first value of a sequence
+        being the same as it was when the module was integrated.
+        """
+        rng = gr.xoroshiro128p_prng(42)
+        self.assertEqual(3520422898491873512, rng())
+
+    def test_006_xoroshiro128p_reproducibility(self):
+        """
+        Make sure two RNGs with the same seed yield the same
+        sequence
+        """
+        seed = 123456
+        N = 10000
+        rng1 = gr.xoroshiro128p_prng(123456)
+        rng2 = gr.xoroshiro128p_prng(123456)
+        self.assertSequenceEqual(
+            tuple(rng1() for _ in range(N)),
+            tuple(rng2() for _ in range(N)))
+
+    def test_007_xoroshiro128p_range(self):
+        """
+        Check bounds.
+        Check whether a long sequence of values are within that bounds.
+        """
+        N = 10**6
+
+        self.assertEqual(gr.xoroshiro128p_prng.min(), 0)
+        self.assertEqual(gr.xoroshiro128p_prng.max(), 2**64-1)
+        rng = gr.xoroshiro128p_prng(42)
+        arr = all((0 <= rng() <= 2**64 - 1 for _ in range(N)))
+        self.assertTrue(arr)
 
 if __name__ == '__main__':
     gr_unittest.run(test_random)

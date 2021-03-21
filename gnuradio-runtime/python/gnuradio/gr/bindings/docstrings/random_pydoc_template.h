@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2021 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -13,6 +13,24 @@
   Do not edit! These were automatically extracted during the binding process
   and will be overwritten during the build process
  */
+
+
+static const char* __doc_gr_xoroshiro128p_prng = R"doc()doc";
+
+
+static const char* __doc_gr_xoroshiro128p_prng_xoroshiro128p_prng_0 = R"doc()doc";
+
+
+static const char* __doc_gr_xoroshiro128p_prng_xoroshiro128p_prng_1 = R"doc()doc";
+
+
+static const char* __doc_gr_xoroshiro128p_prng_min = R"doc()doc";
+
+
+static const char* __doc_gr_xoroshiro128p_prng_max = R"doc()doc";
+
+
+static const char* __doc_gr_xoroshiro128p_prng_seed = R"doc()doc";
 
 
 static const char* __doc_gr_random = R"doc()doc";
