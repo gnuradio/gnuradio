@@ -35,13 +35,12 @@
 
 namespace gr {
 
-random::random(unsigned int seed, int min_integer, int max_integer)
-    : d_rng(), d_integer_dis(0, 1)
+random::random(uint64_t seed, int64_t min_integer, int64_t max_integer)
+    : d_rng(seed), d_integer_dis(0, 1)
 {
     d_gauss_stored = false; // set gasdev (gauss distributed numbers) on calculation state
 
     // Setup random number generators
-    reseed(seed); // set seed for random number generator
     set_integer_limits(min_integer, max_integer);
 }
 
@@ -51,7 +50,7 @@ random::~random() {}
  * Seed is initialized with time if the given seed is 0. Otherwise the seed is taken
  * directly. Sets the seed for the random number generator.
  */
-void random::reseed(unsigned int seed)
+void random::reseed(uint64_t seed)
 {
     d_seed = seed;
     if (d_seed == 0) {
@@ -63,17 +62,17 @@ void random::reseed(unsigned int seed)
     }
 }
 
-void random::set_integer_limits(const int minimum, const int maximum)
+void random::set_integer_limits(int64_t minimum, int64_t maximum)
 {
     // boost expects integer limits defined as [minimum, maximum] which is unintuitive.
     // use the expected half open interval behavior! [minimum, maximum)!
-    d_integer_dis = std::uniform_int_distribution<>(minimum, maximum - 1);
+    d_integer_dis = std::uniform_int_distribution<int64_t>(minimum, maximum - 1);
 }
 
 /*!
  * Uniform random integers in the range set by 'set_integer_limits' [min, max).
  */
-int random::ran_int() { return d_integer_dis(d_rng); }
+int64_t random::ran_int() { return d_integer_dis(d_rng); }
 
 /*
  * Returns uniformly distributed numbers in [0,1) taken from boost.random using a Mersenne
