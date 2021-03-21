@@ -13,13 +13,52 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/xoroshiro128p.h>
 
-#include <cstdlib>
-#include <ctime>
+#include <limits>
 #include <random>
 
 namespace gr {
 
+/*!
+ * \brief wrapper for XOROSHIRO128+ PRNG for use in std::distributions
+ * Fulfills C++ named requirements for UniformRandomBitGenerator
+ * \ingroup math_blk
+ */
+class GR_RUNTIME_API xoroshiro128p_prng
+{
+public:
+    using result_type = uint64_t; //! \brief value type is uint64
+
+private:
+    result_type state[2];
+
+public:
+    /*!
+     * \brief minimum value
+     */
+    static constexpr result_type min() { return std::numeric_limits<result_type>::min(); }
+    /*!
+     * \brief maximum value
+     */
+    static constexpr result_type max() { return std::numeric_limits<result_type>::max(); }
+
+    /*!
+     * \brief constructor. Expects a seed.
+     */
+    xoroshiro128p_prng(uint64_t init) { seed(init); }
+
+
+    /*!
+     * \brief yield a random value and advance state
+     */
+    result_type operator()() { return xoroshiro128p_next(state); }
+
+    /*!
+     * \brief set new seed
+     */
+    void seed(uint64_t seed) { xoroshiro128p_seed(state, seed); }
+};
 /*!
  * \brief pseudo random number generator
  * \ingroup math_blk
@@ -31,32 +70,32 @@ protected:
     bool d_gauss_stored;
     float d_gauss_value;
 
-    std::mt19937 d_rng; // mersenne twister as random number generator
+    xoroshiro128p_prng d_rng; // mersenne twister as random number generator
     std::uniform_real_distribution<float>
         d_uniform; // choose uniform distribution, default is [0,1)
-    std::uniform_int_distribution<> d_integer_dis;
+    std::uniform_int_distribution<int64_t> d_integer_dis;
 
 public:
-    random(unsigned int seed = 0, int min_integer = 0, int max_integer = 2);
+    random(uint64_t seed = 0, int64_t min_integer = 0, int64_t max_integer = 2);
     ~random();
 
     /*!
      * \brief Change the seed for the initialized number generator. seed = 0 initializes
      * the random number generator with the system time.
      */
-    void reseed(unsigned int seed);
+    void reseed(uint64_t seed);
 
     /*!
      * set minimum and maximum for integer random number generator.
      * Limits are [minimum, maximum)
      * Default: [0, std::numeric_limits< IntType >::max)]
      */
-    void set_integer_limits(const int minimum, const int maximum);
+    void set_integer_limits(int64_t minimum, int64_t maximum);
 
     /*!
      * Uniform random integers in the range set by 'set_integer_limits' [min, max).
      */
-    int ran_int();
+    int64_t ran_int();
 
     /*!
      * \brief Uniform random numbers in the range [0.0, 1.0)

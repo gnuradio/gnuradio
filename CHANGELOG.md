@@ -32,6 +32,10 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 - `fastnoise_source`: Use a simple bitmask if the random pool length is a power
   of 2 to determine indices, instead of `%`, which consumed considerable CPU
 
+#### gnuradio-runtime
+
+- `gr::random` uses xoroshiro128+ internally, takes `uint64_t` seed
+
 ### Added
 
 - New in-tree module gr-pdu
