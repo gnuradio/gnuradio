@@ -75,8 +75,6 @@ void basic_block::message_port_register_in(pmt::pmt_t port_id)
         throw std::runtime_error("message_port_register_in: bad port id");
     }
     msg_queue[port_id] = msg_queue_t();
-    msg_queue_ready[port_id] =
-        std::shared_ptr<boost::condition_variable>(new boost::condition_variable());
 }
 
 pmt::pmt_t basic_block::message_ports_in()
@@ -176,8 +174,7 @@ void basic_block::insert_tail(pmt::pmt_t which_port, pmt::pmt_t msg)
 {
     gr::thread::scoped_lock guard(mutex);
 
-    if ((msg_queue.find(which_port) == msg_queue.end()) ||
-        (msg_queue_ready.find(which_port) == msg_queue_ready.end())) {
+    if (msg_queue.find(which_port) == msg_queue.end()) {
         GR_LOG_ERROR(d_logger,
                      std::string("attempted insertion on invalid queue ") +
                          pmt::symbol_to_string(which_port));
@@ -185,7 +182,6 @@ void basic_block::insert_tail(pmt::pmt_t which_port, pmt::pmt_t msg)
     }
 
     msg_queue[which_port].push_back(msg);
-    msg_queue_ready[which_port]->notify_one();
 
     // wake up thread if BLKD_IN or BLKD_OUT
     global_block_registry.notify_blk(d_symbol_name);
