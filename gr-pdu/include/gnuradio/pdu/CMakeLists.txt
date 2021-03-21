@@ -10,6 +10,7 @@
 ########################################################################
 install(FILES
     api.h
+    add_system_time.h
     pdu_filter.h
     pdu_remove.h
     pdu_set.h
@@ -17,6 +18,7 @@ install(FILES
     pdu_to_tagged_stream.h
     random_pdu.h
     tagged_stream_to_pdu.h
+    time_delta.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/pdu
 )
 

@@ -27,7 +27,7 @@ private:
      *
      * \param pdu A PDU message passed from the scheduler's message handling.
      */
-    void handle_pdu(pmt::pmt_t pdu);
+    void handle_pdu(const pmt::pmt_t& pdu);
 
 public:
     pdu_split_impl(const bool pass_empty_data);

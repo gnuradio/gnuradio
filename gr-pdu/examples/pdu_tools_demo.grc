@@ -1,0 +1,377 @@
+options:
+  parameters:
+    author: J. Gilbert
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: 2021 J. Gilbert
+    description: Example usage of a range of PDU tools.
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: pdu_tools_demo
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: PDU Tools Example
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [24, 20.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: interval
+  id: variable
+  parameters:
+    comment: ''
+    value: '0.400'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [456, 20.0]
+    rotation: 0
+    state: true
+- name: timekey
+  id: variable
+  parameters:
+    comment: ''
+    value: pmt.intern("SYS_TIME")
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 460.0]
+    rotation: 0
+    state: true
+- name: val
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: KEY1 Metadata Value
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '0.1'
+    stop: '500.0'
+    value: '123.4'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 20.0]
+    rotation: 0
+    state: true
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: Print out the metadata dictionary.
+    en_uvec: 'True'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 728.0]
+    rotation: 0
+    state: true
+- name: blocks_message_strobe_0
+  id: blocks_message_strobe
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: Emits pmt.PMT_T
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    msg: pmt.PMT_T
+    period: int(interval*1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [56, 252.0]
+    rotation: 0
+    state: true
+- name: note_0
+  id: note
+  parameters:
+    alias: ''
+    comment: 'Normally, some PDU processing
+
+      would be done here for the time
+
+      benchmarks to be applied over.'
+    note: README
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [512, 532.0]
+    rotation: 0
+    state: true
+- name: note_0_0
+  id: note
+  parameters:
+    alias: ''
+    comment: 'This flowgraph highlights a number of useful PDU tools together.
+
+      This flowgraph is not intended to do anything particularily useful
+
+      other than serve as a reference / demonstration.'
+    note: SUMMARY
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [616, 20.0]
+    rotation: 0
+    state: true
+- name: pdu_add_system_time_0
+  id: pdu_add_system_time
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: 'This block will add the system
+
+      time to the PDU metadata as a
+
+      double precision float. The time
+
+      key can be set by the user.'
+    key: timekey
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 532.0]
+    rotation: 0
+    state: true
+- name: pdu_pdu_set_0
+  id: pdu_pdu_set
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: 'This block will add a key/value pair
+
+      to the PDU metadata dictionary.'
+    k: pmt.intern("KEY1")
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    v: pmt.from_double(val)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [720, 252.0]
+    rotation: 0
+    state: true
+- name: pdu_pdu_split_0
+  id: pdu_pdu_split
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: 'The PDU will be split into its metadata dictionary
+
+      and uniform vector, which will then be emitted as
+
+      dict/uvec PMT messages respectively.'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    pass_empty: 'False'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [280, 808.0]
+    rotation: 0
+    state: true
+- name: pdu_random_pdu_0
+  id: pdu_random_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: 'This block will emit a random PDU with
+
+      an empty dictionary each time it
+
+      receives an input message. The input
+
+      message composition does not matter.'
+    length_modulo: '256'
+    mask: '0xFF'
+    maxoutbuf: '0'
+    maxsize: '4096'
+    minoutbuf: '0'
+    minsize: '2048'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [320, 236.0]
+    rotation: 0
+    state: true
+- name: pdu_time_delta_0
+  id: pdu_time_delta
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: "This block calculates the ms that have \nelapsed between when the time\
+      \ key\nwas added and now, and print statistics\nwhen the flowgraph stops."
+    delta_key: pmt.intern("time_delta_ms")
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    time_key: timekey
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [752, 524.0]
+    rotation: 0
+    state: true
+- name: qtgui_time_raster_sink_x_0
+  id: qtgui_time_raster_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    axislabels: 'True'
+    color1: '0'
+    color10: '0'
+    color2: '0'
+    color3: '0'
+    color4: '0'
+    color5: '0'
+    color6: '0'
+    color7: '0'
+    color8: '0'
+    color9: '0'
+    comment: Colors for fun.
+    grid: 'False'
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    mult: '[]'
+    name: '"This Plot Is Not Meaningful"'
+    ncols: '128'
+    nconnections: '1'
+    nrows: '256'
+    offset: '[]'
+    samp_rate: '1'
+    type: msg_byte
+    update_time: '0.10'
+    x_end_value: '0.0'
+    x_label: '""'
+    x_start_value: '0.0'
+    y_end_value: '0.0'
+    y_label: '""'
+    y_start_value: '0.0'
+    zmax: '127'
+    zmin: '-128'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [904, 820.0]
+    rotation: 0
+    state: true
+- name: virtual_sink_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: x
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1048, 260.0]
+    rotation: 0
+    state: true
+- name: virtual_sink_1
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: y
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1056, 532.0]
+    rotation: 0
+    state: true
+- name: virtual_source_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: x
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 532.0]
+    rotation: 0
+    state: true
+- name: virtual_source_1
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: y
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 820.0]
+    rotation: 0
+    state: true
+
+connections:
+- [blocks_message_strobe_0, strobe, pdu_random_pdu_0, generate]
+- [pdu_add_system_time_0, pdu, pdu_time_delta_0, pdu]
+- [pdu_pdu_set_0, pdus, virtual_sink_0, '0']
+- [pdu_pdu_split_0, dict, blocks_message_debug_0, print]
+- [pdu_pdu_split_0, vec, qtgui_time_raster_sink_x_0, in]
+- [pdu_random_pdu_0, pdus, pdu_pdu_set_0, pdus]
+- [pdu_time_delta_0, pdu, virtual_sink_1, '0']
+- [virtual_source_0, '0', pdu_add_system_time_0, pdu]
+- [virtual_source_1, '0', pdu_pdu_split_0, pdu]
+
+metadata:
+  file_format: 1
