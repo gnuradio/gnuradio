@@ -511,22 +511,22 @@ void usrp_block_impl::msg_handler_command(pmt::pmt_t msg)
     }
     // End of legacy backward compat code.
 
-    // Turn pair into dict
+    // pmt_dict is a subclass of pmt_pair. Make sure we use pmt_pair!
+    // Old behavior was that these checks were interchangeable. Be aware of this change!
+    if (!(pmt::is_dict(msg)) && pmt::is_pair(msg)) {
+        GR_LOG_DEBUG(
+            d_logger,
+            boost::format(
+                "Command message is pair, converting to dict: '%s': car(%s), cdr(%s)") %
+                msg % pmt::car(msg) % pmt::cdr(msg));
+        msg = pmt::dict_add(pmt::make_dict(), pmt::car(msg), pmt::cdr(msg));
+    }
+
+    // Make sure, we use dicts!
     if (!pmt::is_dict(msg)) {
         GR_LOG_ERROR(d_logger,
                      boost::format("Command message is neither dict nor pair: %s") % msg);
         return;
-    }
-
-    // OK, here comes the horrible part. Pairs pass is_dict(), but they're not dicts. Such
-    // dicks.
-    try {
-        // This will fail if msg is a pair:
-        pmt::pmt_t keys = pmt::dict_keys(msg);
-    } catch (const pmt::wrong_type& e) {
-        // So we fix it:
-        GR_LOG_DEBUG(d_debug_logger, boost::format("Converting pair to dict: %s") % msg);
-        msg = pmt::dict_add(pmt::make_dict(), pmt::car(msg), pmt::cdr(msg));
     }
 
     /*** Start the actual message processing *************************/
