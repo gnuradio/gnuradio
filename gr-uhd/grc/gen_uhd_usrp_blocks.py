@@ -52,8 +52,8 @@ parameters:
 -   id: sync
     label: Sync
     dtype: enum
-    options: [sync, pc_clock, none]
-    option_labels: [Unknown PPS, PC Clock, No Sync]
+    options: [sync, pc_clock, pc_clock_next_pps, gps_time, none]
+    option_labels: [Unknown PPS, PC Clock, PC Clock on Next PPS, GPS Time on Next PPS, No Sync]
     hide: ${'$'}{ 'none' if sync else 'part'}
 -   id: start_time
     label: Start Time (seconds)
@@ -177,6 +177,22 @@ templates:
         self.${'$'}{id}.set_time_unknown_pps(uhd.time_spec(0))
         ${'%'} elif sync == 'pc_clock':
         self.${'$'}{id}.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
+        ${'%'} elif sync == 'pc_clock_next_pps':
+        _last_pps_time = self.${'$'}{id}.get_time_last_pps().get_real_secs()
+        # Poll get_time_last_pps() every 50 ms until a change is seen
+        while(self.${'$'}{id}.get_time_last_pps().get_real_secs() == _last_pps_time):
+            time.sleep(0.05)
+        # Set the time to PC time on next PPS
+        self.${'$'}{id}.set_time_next_pps(uhd.time_spec(int(time.time()) + 1.0))
+        # Sleep 1 second to ensure next PPS has come
+        time.sleep(1)
+        ${'%'} elif sync == 'gps_time':
+        # Set the time to GPS time on next PPS
+        # get_mboard_sensor("gps_time") returns just after the PPS edge,
+        # thus add one second and set the time on the next PPS
+        self.${'$'}{id}.set_time_next_pps(uhd.time_spec(self.${'$'}{id}.get_mboard_sensor("gps_time").to_int() + 1.0))
+        # Sleep 1 second to ensure next PPS has come
+        time.sleep(1)
         ${'%'} else:
         # No synchronization enforced.
         ${'%'} endif
