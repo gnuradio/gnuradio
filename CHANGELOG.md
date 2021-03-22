@@ -32,7 +32,7 @@ linked to previous v3.9 releases should be rebuilt against this version.
 - Block param values can be shown as expressions and/or evaluated values. Under
   the View menu, see "Show parameter ..." options.
 - Better handling of gui hints, avoid hiding widgets in cases where some have
-GUI hints and some do not
+  GUI hints and some do not
 - Ensure that strings are valid utf8 when evaluating parameters
 - Save embedded python blocks/modules to hier_block_directory
 - Save config and update recent file sub-menu before executing flowgraph
@@ -78,6 +78,14 @@ GUI hints and some do not
 - Qt Chooser: label improvements
 
 ### gr-uhd
+- DEPRECATION: UHD blocks currently accept control messages (e.g. for
+  frequency change) as PMT pairs and tuples, in addition to the intended
+  PMT dict format. In v3.11, only the dict format will be accepted.
+- Command note: `freq` messages in this version must be dicts. Additionally,
+  the `direction` key must be present and set to `TX` or `RX`.
+  Python example: `pmt.to_pmt({'freq':100e6,'direction':'RX'})`
+  The original behavior may be restored in an update, but code should be
+  converted to use the dict format in preparation for future versions.
 - `set_filter()` adds `chan` parameter
 - Python generated code improved for FE corrections
 - Allow control of frequency and gain in both directions at the same moment
