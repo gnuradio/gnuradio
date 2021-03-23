@@ -47,7 +47,7 @@ class test_tcp_sink(gr_unittest.TestCase):
             blocks.file_descriptor_source(
                 self.itemsize, fd), dst)
         self.tb_rcv.run()
-        self.assertEqual(self.data, dst.data())
+        self.assertSequenceEqual(self.data, dst.data())
 
     def test_001(self):
         self.addr = '127.0.0.1'
