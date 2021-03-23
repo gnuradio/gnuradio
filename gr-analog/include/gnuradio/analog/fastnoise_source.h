@@ -49,7 +49,7 @@ public:
      * \param samples Number of samples to pre-generate
      */
     static sptr
-    make(noise_type_t type, float ampl, long seed = 0, long samples = 1024 * 16);
+    make(noise_type_t type, float ampl, uint64_t seed = 0, size_t samples = 1024 * 16);
     virtual T sample() = 0;
     virtual T sample_unbiased() = 0;
     virtual const std::vector<T>& samples() const = 0;

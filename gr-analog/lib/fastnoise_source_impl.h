@@ -30,7 +30,7 @@ private:
     uint64_t d_state[2];
 
 public:
-    fastnoise_source_impl(noise_type_t type, float ampl, long seed, long samples);
+    fastnoise_source_impl(noise_type_t type, float ampl, uint64_t seed, size_t samples);
     ~fastnoise_source_impl() override;
 
     T sample() override;

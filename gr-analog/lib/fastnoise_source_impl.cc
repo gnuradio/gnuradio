@@ -24,7 +24,7 @@ namespace analog {
 
 template <class T>
 typename fastnoise_source<T>::sptr
-fastnoise_source<T>::make(noise_type_t type, float ampl, long seed, long samples)
+fastnoise_source<T>::make(noise_type_t type, float ampl, uint64_t seed, size_t samples)
 {
     return gnuradio::make_block_sptr<fastnoise_source_impl<T>>(type, ampl, seed, samples);
 }
@@ -32,16 +32,16 @@ fastnoise_source<T>::make(noise_type_t type, float ampl, long seed, long samples
 template <>
 void fastnoise_source_impl<gr_complex>::generate()
 {
-    int noutput_items = d_samples.size();
+    size_t noutput_items = d_samples.size();
     switch (d_type) {
     case GR_UNIFORM:
-        for (int i = 0; i < noutput_items; i++)
+        for (size_t i = 0; i < noutput_items; i++)
             d_samples[i] = gr_complex(d_ampl * ((d_rng.ran1() * 2.0) - 1.0),
                                       d_ampl * ((d_rng.ran1() * 2.0) - 1.0));
         break;
 
     case GR_GAUSSIAN:
-        for (int i = 0; i < noutput_items; i++)
+        for (size_t i = 0; i < noutput_items; i++)
             d_samples[i] = d_ampl * d_rng.rayleigh_complex();
         break;
     default:
@@ -52,8 +52,8 @@ void fastnoise_source_impl<gr_complex>::generate()
 template <class T>
 fastnoise_source_impl<T>::fastnoise_source_impl(noise_type_t type,
                                                 float ampl,
-                                                long seed,
-                                                long samples)
+                                                uint64_t seed,
+                                                size_t samples)
     : sync_block("fastnoise_source",
                  io_signature::make(0, 0, 0),
                  io_signature::make(1, 1, sizeof(T))),
@@ -62,7 +62,7 @@ fastnoise_source_impl<T>::fastnoise_source_impl(noise_type_t type,
       d_rng(seed)
 {
     d_samples.resize(samples);
-    xoroshiro128p_seed(d_state, (uint64_t)seed);
+    xoroshiro128p_seed(d_state, seed);
     generate();
 }
 
@@ -70,8 +70,8 @@ fastnoise_source_impl<T>::fastnoise_source_impl(noise_type_t type,
 template <>
 fastnoise_source_impl<gr_complex>::fastnoise_source_impl(noise_type_t type,
                                                          float ampl,
-                                                         long seed,
-                                                         long samples)
+                                                         uint64_t seed,
+                                                         size_t samples)
     : sync_block("fastnoise_source",
                  io_signature::make(0, 0, 0),
                  io_signature::make(1, 1, sizeof(gr_complex))),
@@ -117,25 +117,25 @@ void fastnoise_source_impl<gr_complex>::set_amplitude(float ampl)
 template <class T>
 void fastnoise_source_impl<T>::generate()
 {
-    int noutput_items = d_samples.size();
+    size_t noutput_items = d_samples.size();
     switch (d_type) {
     case GR_UNIFORM:
-        for (int i = 0; i < noutput_items; i++)
+        for (size_t i = 0; i < noutput_items; i++)
             d_samples[i] = (T)(d_ampl * ((d_rng.ran1() * 2.0) - 1.0));
         break;
 
     case GR_GAUSSIAN:
-        for (int i = 0; i < noutput_items; i++)
+        for (size_t i = 0; i < noutput_items; i++)
             d_samples[i] = (T)(d_ampl * d_rng.gasdev());
         break;
 
     case GR_LAPLACIAN:
-        for (int i = 0; i < noutput_items; i++)
+        for (size_t i = 0; i < noutput_items; i++)
             d_samples[i] = (T)(d_ampl * d_rng.laplacian());
         break;
 
     case GR_IMPULSE: // FIXME changeable impulse settings
-        for (int i = 0; i < noutput_items; i++)
+        for (size_t i = 0; i < noutput_items; i++)
             d_samples[i] = (T)(d_ampl * d_rng.impulse(9));
         break;
     default:
