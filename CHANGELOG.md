@@ -26,6 +26,12 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
   - requires MSVC 1914 (Microsoft VS 2017 15.7)
 - Windows build: removed unnecessary MSVC-specific system include overrides
 
+#### gr-analog
+
+- `fastnoise_source`: Use `uint64_t` seed API, use `size_t` for vector length/indices
+- `fastnoise_source`: Use a simple bitmask if the random pool length is a power
+  of 2 to determine indices, instead of `%`, which consumed considerable CPU
+
 ### Added
 
 - New in-tree module gr-pdu

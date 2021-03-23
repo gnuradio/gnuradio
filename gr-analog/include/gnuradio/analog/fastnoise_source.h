@@ -46,7 +46,8 @@ public:
      * \param seed seed for random generators. Note that for uniform
      *        and Gaussian distributions, this should be a negative
      *        number.
-     * \param samples Number of samples to pre-generate
+     * \param samples Number of samples to pre-generate. For performance
+     *        reasons, prefer a power of 2.
      */
     static sptr
     make(noise_type_t type, float ampl, uint64_t seed = 0, size_t samples = 1024 * 16);
