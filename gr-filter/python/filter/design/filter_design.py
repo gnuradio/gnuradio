@@ -1978,8 +1978,13 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             csvhandle.writerow(["restype","fir"])
 
+        enum_params = ('wintype',)
         for k in list(self.params.keys()):
-            csvhandle.writerow([k, self.params[k]])
+            # For enum fields, save the value, not the name.
+            if k in enum_params:
+                csvhandle.writerow([k, self.params[k].value])
+            else:
+                csvhandle.writerow([k, self.params[k]])
         if self.iir:
             csvhandle.writerow(["b",] + list(self.b))
             csvhandle.writerow(["a",] + list(self.a))
@@ -2047,7 +2052,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.filterGainEdit.setText(str(params["gain"]))
 
             # Set up GUI parameters for each filter type.
-            checkbox_entry=int(eval('fft.window.'+params["wintype"]))
+            checkbox_entry = int(params["wintype"])
             if(params["filttype"] == "lpf"):
                 self.gui.filterTypeComboBox.setCurrentIndex(0)
                 self.gui.filterDesignTypeComboBox.setCurrentIndex(checkbox_entry)
