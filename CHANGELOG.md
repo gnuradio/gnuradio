@@ -26,6 +26,10 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
   - requires MSVC 1914 (Microsoft VS 2017 15.7)
 - Windows build: removed unnecessary MSVC-specific system include overrides
 
+#### gnuradio-runtime
+
+- `gr::random` uses xoroshiro128+ internally, takes `uint64_t` seed
+
 ### Added
 
 - New in-tree module gr-pdu
