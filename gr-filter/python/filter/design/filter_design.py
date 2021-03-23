@@ -802,7 +802,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                         "Half Band" : design_win_hb,
                         "Root Raised Cosine" :  design_win_rrc,
                         "Gaussian" :  design_win_gaus}
-            wintype = self.filterWindows[winstr]
+            wintype = int(self.filterWindows[winstr])
             taps,params,r = designer[ftype](fs, gain, wintype, self)
         if(r):
             if self.gridview:
