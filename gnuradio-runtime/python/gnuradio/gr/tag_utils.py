@@ -19,15 +19,6 @@ def tag_to_python(tag):
     newtag.srcid = pmt.to_python(tag.srcid)
     return newtag
 
-def tag_to_pmt(tag):
-    """ Convert a Python-readable object to a stream tag """
-    newtag = gr.tag_t()
-    newtag.offset = tag.offset
-    newtag.key = pmt.to_python(tag.key)
-    newtag.value = pmt.from_python(tag.value)
-    newtag.srcid = pmt.from_python(tag.srcid)
-    return newtag
-
 def python_to_tag(tag_struct):
     """
     Convert a Python list/tuple/dictionary to a stream tag.
