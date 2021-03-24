@@ -32,7 +32,7 @@
 
 namespace gr {
 
-vmcircbuf_mmap_tmpfile::vmcircbuf_mmap_tmpfile(int size) : gr::vmcircbuf(size)
+vmcircbuf_mmap_tmpfile::vmcircbuf_mmap_tmpfile(size_t size) : gr::vmcircbuf(size)
 {
 #if !defined(HAVE_MMAP)
     GR_LOG_ERROR(d_logger, "mmap or mkstemp is not available");
@@ -170,7 +170,7 @@ gr::vmcircbuf_factory* vmcircbuf_mmap_tmpfile_factory::singleton()
 
 int vmcircbuf_mmap_tmpfile_factory::granularity() { return gr::pagesize(); }
 
-gr::vmcircbuf* vmcircbuf_mmap_tmpfile_factory::make(int size)
+gr::vmcircbuf* vmcircbuf_mmap_tmpfile_factory::make(size_t size)
 {
     try {
         return new vmcircbuf_mmap_tmpfile(size);

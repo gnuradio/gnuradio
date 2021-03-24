@@ -31,7 +31,7 @@
 
 namespace gr {
 
-vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size) : gr::vmcircbuf(size)
+vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(size_t size) : gr::vmcircbuf(size)
 {
 #if !defined(HAVE_SYS_SHM_H)
     GR_LOG_ERROR(d_logger, "sysv shared memory is not available");
@@ -178,7 +178,7 @@ gr::vmcircbuf_factory* vmcircbuf_sysv_shm_factory::singleton()
 
 int vmcircbuf_sysv_shm_factory::granularity() { return gr::pagesize(); }
 
-gr::vmcircbuf* vmcircbuf_sysv_shm_factory::make(int size)
+gr::vmcircbuf* vmcircbuf_sysv_shm_factory::make(size_t size)
 {
     try {
         return new vmcircbuf_sysv_shm(size);

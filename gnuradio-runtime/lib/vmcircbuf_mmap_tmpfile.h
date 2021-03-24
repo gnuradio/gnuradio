@@ -23,7 +23,7 @@ namespace gr {
 class GR_RUNTIME_API vmcircbuf_mmap_tmpfile : public gr::vmcircbuf
 {
 public:
-    vmcircbuf_mmap_tmpfile(int size);
+    vmcircbuf_mmap_tmpfile(size_t size);
     ~vmcircbuf_mmap_tmpfile() override;
 };
 
@@ -50,7 +50,7 @@ public:
      *
      * Call this to create a doubly mapped circular buffer.
      */
-    gr::vmcircbuf* make(int size) override;
+    gr::vmcircbuf* make(size_t size) override;
 };
 
 } /* namespace gr */
