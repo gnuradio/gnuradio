@@ -28,7 +28,7 @@ class GR_RUNTIME_API vmcircbuf_createfilemapping : public gr::vmcircbuf
 {
 public:
     // CREATORS
-    vmcircbuf_createfilemapping(int size);
+    vmcircbuf_createfilemapping(size_t size);
     ~vmcircbuf_createfilemapping() override;
 #ifdef HAVE_CREATEFILEMAPPING
 private:
@@ -64,7 +64,7 @@ public:
      *
      * Call this to create a doubly mapped circular buffer.
      */
-    gr::vmcircbuf* make(int size) override;
+    gr::vmcircbuf* make(size_t size) override;
 };
 
 } /* namespace gr */
