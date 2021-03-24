@@ -87,8 +87,8 @@ void test_decimate(unsigned int decimate)
     volk::vector<o_type> actual_output(OUTPUT_LEN);
     volk::vector<tap_type> taps(MAX_TAPS);
 
-    for (int n = 0; n <= MAX_TAPS; n++) {
-        for (int ol = 0; ol <= OUTPUT_LEN; ol++) {
+    for (int n = 1; n < MAX_TAPS; n++) {
+        for (int ol = 1; ol <= OUTPUT_LEN; ol++) {
 
             // build random test case
             random_floats(input.data(), INPUT_LEN);
@@ -107,7 +107,7 @@ void test_decimate(unsigned int decimate)
             }
 
             // build filter
-            vector<tap_type> f1_taps(&taps[0], &taps[n]);
+            vector<tap_type> f1_taps(taps.data(), taps.data() + n);
             kernel::fir_filter_with_buffer_fff f1(f1_taps);
 
             // zero the output, then do the filtering
@@ -178,8 +178,8 @@ void test_decimate(unsigned int decimate)
     volk::vector<o_type> actual_output(OUTPUT_LEN);
     volk::vector<tap_type> taps(MAX_TAPS);
 
-    for (int n = 0; n <= MAX_TAPS; n++) {
-        for (int ol = 0; ol <= OUTPUT_LEN; ol++) {
+    for (int n = 1; n < MAX_TAPS; n++) {
+        for (int ol = 1; ol <= OUTPUT_LEN; ol++) {
 
             // build random test case
             random_complex(input.data(), INPUT_LEN);
@@ -267,8 +267,8 @@ void test_decimate(unsigned int decimate)
     volk::vector<o_type> actual_output(OUTPUT_LEN);
     volk::vector<tap_type> taps(MAX_TAPS);
 
-    for (int n = 0; n <= MAX_TAPS; n++) {
-        for (int ol = 0; ol <= OUTPUT_LEN; ol++) {
+    for (int n = 1; n < MAX_TAPS; n++) {
+        for (int ol = 1; ol <= OUTPUT_LEN; ol++) {
 
             // build random test case
             random_complex(input.data(), INPUT_LEN);

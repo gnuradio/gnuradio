@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
+#include <stdexcept>
 
 namespace gr {
 namespace filter {
@@ -35,6 +36,9 @@ fir_filter_with_buffer_fff::fir_filter_with_buffer_fff(const std::vector<float>&
 void fir_filter_with_buffer_fff::set_taps(const std::vector<float>& taps)
 {
     d_ntaps = (int)taps.size();
+    if (d_ntaps < 1) {
+        throw std::runtime_error("Need at least 1 tap");
+    }
     d_taps = taps;
     std::reverse(d_taps.begin(), d_taps.end());
 
@@ -140,6 +144,9 @@ fir_filter_with_buffer_ccc::fir_filter_with_buffer_ccc(
 void fir_filter_with_buffer_ccc::set_taps(const std::vector<gr_complex>& taps)
 {
     d_ntaps = (int)taps.size();
+    if (d_ntaps < 1) {
+        throw std::runtime_error("Need at least 1 tap");
+    }
     d_taps = taps;
     std::reverse(d_taps.begin(), d_taps.end());
 
@@ -244,6 +251,9 @@ fir_filter_with_buffer_ccf::fir_filter_with_buffer_ccf(const std::vector<float>&
 void fir_filter_with_buffer_ccf::set_taps(const std::vector<float>& taps)
 {
     d_ntaps = (int)taps.size();
+    if (d_ntaps < 1) {
+        throw std::runtime_error("Need at least 1 tap");
+    }
     d_taps = taps;
     std::reverse(d_taps.begin(), d_taps.end());
 
