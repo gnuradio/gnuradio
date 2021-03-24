@@ -1,0 +1,26 @@
+#!/usr/bin/make -f
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+export DEB_HOST_MULTIARCH
+
+%:
+	dh $@ --with python3
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DLIB_SUFFIX="/$(DEB_HOST_MULTIARCH)" -DPYTHON_EXECUTABLE:STRING="/usr/bin/python3" -DENABLE_INTERNAL_VOLK=OFF -DENABLE_PYTHON=ON
+
+override_dh_python3:
+	dh_python3 --no-ext-rename
+
+override_dh_auto_test:
+	mkdir debian/test
+	mkdir debian/test/.gnuradio
+	- if case "$(DEB_BUILD_ARCH)" in *"i386"*) false;; *) true;; esac; then HOME=$(CURDIR)/debian/test dh_auto_test -- ARGS+='--timeout 10 -E systematic' ; fi
+	rm -rf debian/test
+
+override_dh_acc:
+	- dh_acc $@
+	- cat logs/gnuradio-dev/*/log.txt
+
+override_dh_installmime:
+	dh_installmime
+	rm -f debian/gnuradio/usr/share/mime/packages/gnuradio.xml
