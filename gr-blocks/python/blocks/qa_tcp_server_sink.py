@@ -15,7 +15,7 @@ import socket
 from time import sleep
 
 from threading import Timer
-from multiprocessing import Process
+from multiprocessing import Process, Queue
 
 
 class test_tcp_sink(gr_unittest.TestCase):
@@ -29,36 +29,42 @@ class test_tcp_sink(gr_unittest.TestCase):
         self.tb_rcv = None
         self.tb_snd = None
 
-    def _tcp_client(self):
-        dst = blocks.vector_sink_s()
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        for t in (0, 0.2):
-            # wait until server listens
-            sleep(t)
-            try:
-                sock.connect((self.addr, self.port))
-            except socket.error as e:
-                if e.errno != 111:
-                    raise
-                continue
-            break
-        fd = os.dup(sock.fileno())
-        self.tb_rcv.connect(
-            blocks.file_descriptor_source(
-                self.itemsize, fd), dst)
-        self.tb_rcv.run()
-        self.assertSequenceEqual(self.data, dst.data())
+    def _tcp_client(self, queue):
+        try:
+            dst = blocks.vector_sink_s()
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            for t in (0, 0.2):
+                # wait until server listens
+                sleep(t)
+                try:
+                    sock.connect((self.addr, self.port))
+                except socket.error as e:
+                    if e.errno != 111:
+                        raise
+                    continue
+                break
+            fd = os.dup(sock.fileno())
+            self.tb_rcv.connect(
+                blocks.file_descriptor_source(
+                    self.itemsize, fd), dst)
+            self.tb_rcv.run()
+            self.assertEqual(self.data, dst.data())
+        except BaseException as ex:
+            queue.put(ex)
+            raise ex
+        queue.put(None)
 
     def test_001(self):
         self.addr = '127.0.0.1'
         self.port = 65510
         self.itemsize = gr.sizeof_short
         n_data = 16
-        self.data = tuple([x for x in range(n_data)])
+        self.data = [x for x in range(n_data)]
 
-# tcp_server_sink blocks until client does not connect, start client
-# process first
-        p = Process(target=self._tcp_client)
+        # tcp_server_sink blocks until client does not connect, start client
+        # process first
+        queue = Queue()
+        p = Process(target=self._tcp_client, args=(queue,))
         p.start()
 
         src = blocks.vector_source_s(self.data, False)
@@ -69,6 +75,9 @@ class test_tcp_sink(gr_unittest.TestCase):
         self.tb_snd.run()
         del tcp_snd
         self.tb_snd = None
+        q_content = queue.get()
+        if q_content:
+            raise q_content
         p.join()
 
     def stop_rcv(self):
