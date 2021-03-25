@@ -42,9 +42,12 @@ template <>
 void fastnoise_source_impl<gr_complex>::generate()
 {
     size_t noutput_items = d_samples.size();
-    GR_LOG_INFO(d_logger,
-                boost::format("Generating %d complex values. This might take a while.") %
-                    noutput_items);
+    if (noutput_items >= 1 << 23) {
+        GR_LOG_INFO(
+            d_logger,
+            boost::format("Generating %d complex values. This might take a while.") %
+                noutput_items);
+    }
 
     switch (d_type) {
     case GR_UNIFORM:
@@ -145,9 +148,11 @@ template <class T>
 void fastnoise_source_impl<T>::generate()
 {
     size_t noutput_items = d_samples.size();
-    GR_LOG_INFO(this->d_logger,
-                boost::format("Generating %d values. This might take a while.") %
-                    noutput_items);
+    if (noutput_items >= 1 << 23) {
+        GR_LOG_INFO(this->d_logger,
+                    boost::format("Generating %d values. This might take a while.") %
+                        noutput_items);
+    }
     switch (d_type) {
     case GR_UNIFORM:
         for (size_t i = 0; i < noutput_items; i++)
