@@ -17,7 +17,6 @@ add_library(gnuradio-digital
     clock_recovery_mm_cc_impl.cc
     clock_recovery_mm_ff_impl.cc
     clock_tracking_loop.cc
-    cma_equalizer_cc_impl.cc
     constellation.cc
     constellation_decoder_cb_impl.cc
     constellation_encoder_bc_impl.cc
@@ -48,9 +47,7 @@ add_library(gnuradio-digital
     hdlc_framer_pb_impl.cc
     header_buffer.cc
     header_payload_demux_impl.cc
-    kurtotic_equalizer_cc_impl.cc
     linear_equalizer_impl.cc
-    lms_dd_equalizer_cc_impl.cc
     map_bb_impl.cc
     meas_evm_cc_impl.cc
     modulate_vector.cc
