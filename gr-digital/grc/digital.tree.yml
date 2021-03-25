@@ -68,5 +68,3 @@
   - digital_corr_est_cc
 - Waveform Generators:
   - digital_glfsr_source_x
-- Deprecated:
-  - digital_correlate_access_code_bb
