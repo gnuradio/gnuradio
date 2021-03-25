@@ -44,8 +44,6 @@ void bind_mmse_fir_interpolator_cc(py::module&);
 void bind_mmse_fir_interpolator_ff(py::module&);
 void bind_mmse_interp_differentiator_cc(py::module&);
 void bind_mmse_interp_differentiator_ff(py::module&);
-void bind_mmse_interpolator_cc(py::module&);
-void bind_mmse_interpolator_ff(py::module&);
 void bind_mmse_resampler_cc(py::module&);
 void bind_mmse_resampler_ff(py::module&);
 void bind_pfb_arb_resampler(py::module&);
@@ -111,8 +109,6 @@ PYBIND11_MODULE(filter_python, m)
     bind_mmse_fir_interpolator_ff(m);
     bind_mmse_interp_differentiator_cc(m);
     bind_mmse_interp_differentiator_ff(m);
-    bind_mmse_interpolator_cc(m);
-    bind_mmse_interpolator_ff(m);
     bind_mmse_resampler_cc(m);
     bind_mmse_resampler_ff(m);
     bind_pfb_arb_resampler(m);
