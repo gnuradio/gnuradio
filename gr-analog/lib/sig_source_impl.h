@@ -54,8 +54,6 @@ public:
     void set_waveform(gr_waveform_t waveform) override;
 
     // Message handlers
-    //!\brief deprecated handler. Use "cmd" port instead.
-    void set_freq_msg(pmt::pmt_t msg);
     void set_cmd_msg(pmt::pmt_t msg);
 
     void set_frequency(double frequency) override;
