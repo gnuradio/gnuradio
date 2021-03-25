@@ -28,13 +28,13 @@ namespace gr {
 class GR_RUNTIME_API vmcircbuf
 {
 protected:
-    int d_size;
+    size_t d_size;
     char* d_base;
     logger_ptr d_logger;
     logger_ptr d_debug_logger;
 
     // CREATORS
-    vmcircbuf(int size) : d_size(size), d_base(0)
+    vmcircbuf(size_t size) : d_size(size), d_base(0)
     {
         gr::configure_default_loggers(d_logger, d_debug_logger, "gr::vmcircbuf");
     };
