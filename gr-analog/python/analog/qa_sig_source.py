@@ -203,7 +203,11 @@ class test_sig_source(gr_unittest.TestCase):
         self.assertAlmostEqual(src.frequency(), 1.0)
 
         frequency = 3.0
-        src._post(pmt.to_pmt('freq'), pmt.from_double(frequency))
+        src._post(
+            pmt.to_pmt('cmd'),
+            pmt.to_pmt({
+                "freq": frequency
+            }))
         self.tb.run()
 
         self.assertAlmostEqual(src.frequency(), frequency)
@@ -220,7 +224,7 @@ class test_sig_source(gr_unittest.TestCase):
         offset = -1.0
 
         src._post(
-            pmt.to_pmt('freq'),
+            pmt.to_pmt('cmd'),
             pmt.to_pmt({
                 "freq": frequency,
                 "ampl": amplitude,
