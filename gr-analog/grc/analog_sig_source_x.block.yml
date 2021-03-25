@@ -44,10 +44,6 @@ inputs:
     id: cmd
     optional: true
 
--   domain: message
-    id: freq
-    optional: true
-
 outputs:
 -   domain: stream
     dtype: ${ type }
