@@ -145,14 +145,11 @@ set(BLOCKS_SOURCES
     threshold_ff_impl.cc
     throttle_impl.cc
     transcendental_impl.cc
-    tcp_server_sink_impl.cc
     tag_gate_impl.cc
     tagged_stream_align_impl.cc
     tagged_stream_mux_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
-    udp_sink_impl.cc
-    udp_source_impl.cc
     unpack_k_bits_bb_impl.cc
     vco_f_impl.cc
     vco_c_impl.cc
