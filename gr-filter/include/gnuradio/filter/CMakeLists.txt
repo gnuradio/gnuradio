@@ -35,8 +35,6 @@ install(FILES
     fft_filter_ccf.h
     fft_filter_fff.h
     freq_xlating_fir_filter.h
-    mmse_interpolator_cc.h
-    mmse_interpolator_ff.h
     mmse_resampler_cc.h
     mmse_resampler_ff.h
     hilbert_fc.h

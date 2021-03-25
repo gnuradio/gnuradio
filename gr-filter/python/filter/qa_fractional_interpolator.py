@@ -43,7 +43,7 @@ class test_mmse_resampler(gr_unittest.TestCase):
         freq = 10
         data = sig_source_f(fs, freq, 1, N)
         signal = blocks.vector_source_f(data)
-        op = filter.mmse_interpolator_ff(0, rrate)
+        op = filter.mmse_resampler_ff(0, rrate)
         snk = blocks.vector_sink_f()
 
         self.tb.connect(signal, op, snk)
@@ -69,7 +69,7 @@ class test_mmse_resampler(gr_unittest.TestCase):
         freq = 10
         data = sig_source_c(fs, freq, 1, N)
         signal = blocks.vector_source_c(data)
-        op = filter.mmse_interpolator_cc(0.0, rrate)
+        op = filter.mmse_resampler_cc(0.0, rrate)
         snk = blocks.vector_sink_c()
 
         self.tb.connect(signal, op, snk)

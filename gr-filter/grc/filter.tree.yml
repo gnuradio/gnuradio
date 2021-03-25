@@ -22,7 +22,6 @@
   - single_pole_iir_filter_xx
 - Resamplers:
   - mmse_resampler_xx
-  - mmse_interpolator_xx
   - pfb_arb_resampler_xxx
   - rational_resampler_xxx
   - ival_decimator
