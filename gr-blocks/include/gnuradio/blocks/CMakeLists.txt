@@ -140,14 +140,11 @@ install(FILES
     tagged_stream_mux.h
     tagged_stream_multiply_length.h
     tags_strobe.h
-    tcp_server_sink.h
     test_tag_variable_rate_ff.h
     threshold_ff.h
     throttle.h
     transcendental.h
     uchar_to_float.h
-    udp_sink.h
-    udp_source.h
     unpack_k_bits_bb.h
     vco_f.h
     vco_c.h
