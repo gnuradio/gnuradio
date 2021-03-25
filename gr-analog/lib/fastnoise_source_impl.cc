@@ -24,6 +24,13 @@
 namespace gr {
 namespace analog {
 
+bool constexpr is_pwr_of_two(size_t value)
+{
+    // simple binary trick: an integer x is power of 2 if x-1 is all 1s, but only below
+    // the old 1-position.
+    // also, zero is not a power of two
+    return value && !(value & (value - 1));
+}
 template <class T>
 typename fastnoise_source<T>::sptr
 fastnoise_source<T>::make(noise_type_t type, float ampl, uint64_t seed, size_t samples)
@@ -66,9 +73,7 @@ fastnoise_source_impl<T>::fastnoise_source_impl(noise_type_t type,
       d_type(type),
       d_ampl(ampl),
       d_rng(seed),
-      // simple binary trick: an integer x is power of 2 if x-1 is all 1s, but only below
-      // the old 1-position
-      d_bitmask((samples && !(samples & (samples - 1))) ? samples - 1 : 0)
+      d_bitmask(is_pwr_of_two(samples) ? samples - 1 : 0)
 {
     if (!d_bitmask) {
         GR_LOG_INFO(this->d_logger,
@@ -93,9 +98,7 @@ fastnoise_source_impl<gr_complex>::fastnoise_source_impl(noise_type_t type,
       d_type(type),
       d_ampl(ampl / sqrtf(2.0f)),
       d_rng(seed),
-      // simple binary trick: an integer x is power of 2 if x-1 is all 1s, but only below
-      // the old 1-position
-      d_bitmask((samples && !(samples & (samples - 1))) ? samples - 1 : 0)
+      d_bitmask(is_pwr_of_two(samples) ? samples - 1 : 0)
 {
     if (!d_bitmask) {
         GR_LOG_INFO(d_logger,
