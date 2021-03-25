@@ -15,7 +15,6 @@ list(APPEND digital_python_files
     chunks_to_symbols_python.cc
     clock_recovery_mm_cc_python.cc
     clock_recovery_mm_ff_python.cc
-    cma_equalizer_cc_python.cc
     constellation_python.cc
     constellation_decoder_cb_python.cc
     constellation_encoder_bc_python.cc
@@ -52,10 +51,8 @@ list(APPEND digital_python_files
     header_format_ofdm_python.cc
     header_payload_demux_python.cc
     interpolating_resampler_type_python.cc
-    kurtotic_equalizer_cc_python.cc
     lfsr_python.cc
     linear_equalizer_python.cc
-    lms_dd_equalizer_cc_python.cc
     map_bb_python.cc
     meas_evm_cc_python.cc
     metric_type_python.cc

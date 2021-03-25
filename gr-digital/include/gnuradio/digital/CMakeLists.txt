@@ -20,7 +20,6 @@ install(FILES
     chunks_to_symbols.h
     clock_recovery_mm_cc.h
     clock_recovery_mm_ff.h
-    cma_equalizer_cc.h
     constellation.h
     constellation_decoder_cb.h
     constellation_encoder_bc.h
@@ -51,10 +50,8 @@ install(FILES
     hdlc_framer_pb.h
     header_buffer.h
     header_payload_demux.h
-    kurtotic_equalizer_cc.h
     lfsr.h
     linear_equalizer.h
-    lms_dd_equalizer_cc.h
     map_bb.h
     metric_type.h
     modulate_vector.h
