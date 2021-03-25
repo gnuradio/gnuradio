@@ -105,22 +105,42 @@ class qa_linear_equalizer(gr_unittest.TestCase):
     def tearDown(self):
         self.tb = None
 
-    def transform(self, src_data, gain, const):
-        SRC = blocks.vector_source_c(src_data, False)
-        EQU = digital.lms_dd_equalizer_cc(4, gain, 1, const.base())
-        DST = blocks.vector_sink_c()
-        self.tb.connect(SRC, EQU, DST)
+    def transform(self, src_data, const, alg):
+        src = blocks.vector_source_c(src_data, False)
+        leq = digital.linear_equalizer(
+            4,
+            1,
+            alg,
+            True, 
+            [],
+            '')
+        dst = blocks.vector_sink_c()
+        self.tb.connect(src, leq, dst)
         self.tb.run()
-        return DST.data()
+        return dst.data()
 
-    def test_001_identity(self):
+    def test_001_identity_lms(self):
         # Constant modulus signal so no adjustments
         const = digital.constellation_qpsk()
         src_data = const.points() * 1000
+        alg = digital.adaptive_algorithm_lms(const, .1).base()
 
         N = 100  # settling time
         expected_data = src_data[N:]
-        result = self.transform(src_data, 0.1, const)[N:]
+        result = self.transform(src_data, const, alg)[N:]
+
+        N = -500
+        self.assertComplexTuplesAlmostEqual(expected_data[N:], result[N:], 5)
+
+    def test_002_identity_cma(self):
+        # Constant modulus signal so no adjustments
+        const = digital.constellation_qpsk()
+        src_data = const.points() * 1000
+        alg = digital.adaptive_algorithm_cma(const, .001, 4).base()
+
+        N = 100  # settling time
+        expected_data = src_data[N:]
+        result = self.transform(src_data, const, alg)[N:]
 
         N = -500
         self.assertComplexTuplesAlmostEqual(expected_data[N:], result[N:], 5)
