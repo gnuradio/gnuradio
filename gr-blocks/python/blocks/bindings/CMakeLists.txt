@@ -140,15 +140,12 @@ list(APPEND blocks_python_files
     tagged_stream_multiply_length_python.cc
     tagged_stream_mux_python.cc
     tags_strobe_python.cc
-    tcp_server_sink_python.cc
     test_tag_variable_rate_ff_python.cc
     threshold_ff_python.cc
     throttle_python.cc
     transcendental_python.cc
     tsb_vector_sink_python.cc
     uchar_to_float_python.cc
-    udp_sink_python.cc
-    udp_source_python.cc
     unpack_k_bits_python.cc
     unpack_k_bits_bb_python.cc
     unpacked_to_packed_python.cc
