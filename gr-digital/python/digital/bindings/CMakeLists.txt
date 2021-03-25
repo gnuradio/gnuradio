@@ -83,9 +83,6 @@ list(APPEND digital_python_files
     protocol_formatter_bb_python.cc
     protocol_parser_b_python.cc
     scrambler_bb_python.cc
-    simple_correlator_python.cc
-    simple_framer_python.cc
-    simple_framer_sync_python.cc
     symbol_sync_cc_python.cc
     symbol_sync_ff_python.cc
     timing_error_detector_type_python.cc

@@ -41,8 +41,6 @@
   - digital_packet_sink
   - digital_hdlc_framer_pb
   - digital_hdlc_deframer_bp
-  - digital_simple_framer
-  - digital_simple_correlator
 - OFDM:
   - digital_ofdm_carrier_allocator_cvc
   - digital_ofdm_chanest_vcvc
@@ -72,5 +70,3 @@
   - digital_glfsr_source_x
 - Deprecated:
   - digital_correlate_access_code_bb
-  - digital_simple_framer
-  - digital_simple_correlator

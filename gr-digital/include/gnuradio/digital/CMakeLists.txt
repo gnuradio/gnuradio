@@ -86,9 +86,6 @@ install(FILES
     probe_density_b.h
     probe_mpsk_snr_est_c.h
     scrambler_bb.h
-    simple_correlator.h
-    simple_framer.h
-    simple_framer_sync.h
     interpolating_resampler_type.h
     symbol_sync_cc.h
     symbol_sync_ff.h
