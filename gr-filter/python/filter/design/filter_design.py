@@ -124,6 +124,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.gui.fselectComboBox.removeItem(ind)
 
         self.gui.action_save.triggered.connect(self.action_save_dialog)
+        self.gui.action_save.setEnabled(False)
         self.gui.action_open.triggered.connect(self.action_open_dialog)
 
         self.gui.filterTypeComboBox.currentIndexChanged['const QString&'].connect(self.changed_filter_type)
@@ -836,6 +837,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.mpzPlot.insertZeros(zeros)
         self.gui.mpzPlot.insertPoles(poles)
         self.update_fcoeff()
+        self.gui.action_save.setEnabled(True)
         # self.set_drawideal()
         # Return taps if callback is enabled.
         if self.callback:
@@ -947,7 +949,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.update_fcoeff()
         self.gui.nTapsEdit.setText("-")
         self.params = iirparams
-
+        self.gui.action_save.setEnabled(True)
         # Return api_object if callback is enabled.
         if self.callback:
             retobj = ApiObject()
