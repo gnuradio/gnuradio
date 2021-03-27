@@ -19,6 +19,7 @@ add_library(gnuradio-iio
 
 target_include_directories(gnuradio-iio
   PUBLIC
+  ${LIBIIO_INCLUDE_DIR}
   $<INSTALL_INTERFACE:include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
   )

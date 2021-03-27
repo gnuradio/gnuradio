@@ -10,7 +10,7 @@
 ########################################################################
 include(GrBoost)
 
-find_package(AD9361 QUIET)
+find_package(AD9361)
 find_package(IIO)
 
 set(GR_IIO_DEPENDENCIES
@@ -21,6 +21,9 @@ set(GR_IIO_DEPENDENCIES
 
 if (LIBAD9361_FOUND)
   list(APPEND GR_IIO_DEPENDENCIES LIBAD9361_FOUND)
+  add_compile_definitions(HAS_LIBAD9361=1)
+else()
+message(STATUS "Lib AD9361 not found. Builiding without this lib. Some modules will be missing")
 endif()
 
 ########################################################################
