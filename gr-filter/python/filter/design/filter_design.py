@@ -586,7 +586,6 @@ class gr_plot_filter(QtGui.QMainWindow):
 
 
     def changed_fselect(self, ftype):
-        strftype = ftype
         if(ftype == "FIR"):
             self.gui.iirfilterTypeComboBox.hide()
             self.gui.iirfilterBandComboBox.hide()
@@ -615,42 +614,48 @@ class gr_plot_filter(QtGui.QMainWindow):
 #self.design()
 
     def set_order(self, ftype):
-        strftype = ftype
         if(ftype == "Bessel"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
+            self.changed_iirfilter_band(self.gui.iirfilterBandComboBox.currentText())
         else:
             self.changed_iirfilter_band(self.gui.iirfilterBandComboBox.currentText())
 
 #self.design()
 
     def changed_iirfilter_band(self, ftype):
-        strftype = ftype
         iirftype = self.gui.iirfilterTypeComboBox.currentText()
         if(ftype == "Low Pass"):
             if(iirftype == "Bessel"):
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
+                self.gui.iirbesselcritLabel2.hide()
+                self.gui.iirbesselcritEdit2.hide()
             else:
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirlpfPage)
         elif(ftype == "Band Pass"):
             if(iirftype == "Bessel"):
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
+                self.gui.iirbesselcritLabel2.show()
+                self.gui.iirbesselcritEdit2.show()
             else:
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbpfPage)
         elif(ftype == "Band Stop"):
             if(iirftype == "Bessel"):
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
+                self.gui.iirbesselcritLabel2.show()
+                self.gui.iirbesselcritEdit2.show()
             else:
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbsfPage)
         elif(ftype == "High Pass"):
             if(iirftype == "Bessel"):
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
+                self.gui.iirbesselcritLabel2.hide()
+                self.gui.iirbesselcritEdit2.hide()
             else:
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirhpfPage)
 
 #self.design()
 
     def changed_filter_type(self, ftype):
-        strftype = ftype
         if(ftype == "Low Pass"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firlpfPage)
             self.remove_bandview()
