@@ -28,8 +28,7 @@ and displays the frequency response.
 
 class atsc_ctrlport_monitor(object):
     def __init__(self, host, port):
-        argv = [None, host, port]
-        radiosys = GNURadioControlPortClient(argv=argv, rpcmethod='thrift')
+        radiosys = GNURadioControlPortClient(host=host, port=port, rpcmethod='thrift')
         self.radio = radiosys.client
         print(self.radio)
 
