@@ -99,11 +99,6 @@ def convert_connection(data):
     snk_blk_id = data.findtext('sink_block_id')
     snk_port_id = data.findtext('sink_key')
 
-    if src_port_id.isdigit():
-        src_port_id = src_port_id
-    if snk_port_id.isdigit():
-        snk_port_id = snk_port_id
-
     return yaml.ListFlowing([src_blk_id, src_port_id, snk_blk_id, snk_port_id])
 
 
