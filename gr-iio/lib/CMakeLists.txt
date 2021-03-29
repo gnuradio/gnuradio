@@ -41,6 +41,7 @@ if(libad9361_FOUND)
     pluto_source_impl.cc
   )
   target_link_libraries(gnuradio-iio PUBLIC libad9361::ad9361)
+  target_compile_definitions(gnuradio-iio PUBLIC -DGR_IIO_LIBAD9361)
 endif(libad9361_FOUND)
 
 #Add Windows DLL resource file if using MSVC
