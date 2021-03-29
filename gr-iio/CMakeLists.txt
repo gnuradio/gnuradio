@@ -19,15 +19,15 @@ set(GR_IIO_DEPENDENCIES
   ENABLE_GR_BLOCKS
   libiio_FOUND)
 
-if(libad9361_FOUND)
-  list(APPEND GR_IIO_DEPENDENCIES libad9361_FOUND)
-endif()
-
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-iio" ENABLE_GR_IIO ${GR_IIO_DEPENDENCIES})
+
+if(libad9361_FOUND)
+  GR_APPEND_SUBCOMPONENT("libad9361")
+endif()
 
 SET(GR_PKG_IIO_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/iio)
 
