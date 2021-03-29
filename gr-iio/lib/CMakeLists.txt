@@ -25,13 +25,13 @@ target_include_directories(gnuradio-iio
 
 target_link_libraries(gnuradio-iio PUBLIC
   gnuradio-runtime
-  ${LIBIIO_LIBRARIES}
+  libiio::iio
   ${GR_VOLK_LIB}
   PRIVATE
   gnuradio-blocks
 )
 
-if(LIBAD9361_FOUND)
+if(libad9361_FOUND)
   target_sources(gnuradio-iio PRIVATE
     fmcomms2_sink_impl.cc
     fmcomms2_source_impl.cc
@@ -40,9 +40,8 @@ if(LIBAD9361_FOUND)
     pluto_sink_impl.cc
     pluto_source_impl.cc
   )
-  target_include_directories(gnuradio-iio PUBLIC ${LIBAD9361_INCLUDE_DIRS})
-  target_link_libraries(gnuradio-iio PUBLIC ${LIBAD9361_LIBRARIES})
-endif(LIBAD9361_FOUND)
+  target_link_libraries(gnuradio-iio PUBLIC libad9361::ad9361)
+endif(libad9361_FOUND)
 
 #Add Windows DLL resource file if using MSVC
 if(MSVC)
