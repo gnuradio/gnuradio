@@ -11,6 +11,10 @@ list(APPEND iio_python_files
     dds_control_python.cc
     device_sink_python.cc
     device_source_python.cc
+    python_bindings.cc)
+
+if(${libad9361_FOUND})
+list(APPEND iio_python_files
     fmcomms2_sink_f32c_python.cc
     fmcomms2_sink_python.cc
     fmcomms2_source_f32c_python.cc
@@ -20,8 +24,8 @@ list(APPEND iio_python_files
     fmcomms5_source_f32c_python.cc
     fmcomms5_source_python.cc
     pluto_sink_python.cc
-    pluto_source_python.cc
-    python_bindings.cc)
+    pluto_source_python.cc)
+endif(${libad9361_FOUND})
 
 GR_PYBIND_MAKE_CHECK_HASH(iio
    ../../..
