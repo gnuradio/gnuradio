@@ -476,8 +476,8 @@ void bind_usrp_block(py::module& m)
     m.def("cmd_tag_key", &::gr::uhd::cmd_tag_key, D(cmd_tag_key));
 
 
-    m.def("ant_direction_rx", &::gr::uhd::ant_direction_rx, D(ant_direction_rx));
+    m.def("direction_rx", &::gr::uhd::direction_rx, D(direction_rx));
 
 
-    m.def("ant_direction_tx", &::gr::uhd::ant_direction_tx, D(ant_direction_tx));
+    m.def("direction_tx", &::gr::uhd::direction_tx, D(direction_tx));
 }

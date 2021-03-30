@@ -122,12 +122,12 @@ const pmt::pmt_t gr::uhd::cmd_gpio_key()
     return val;
 }
 
-const pmt::pmt_t gr::uhd::ant_direction_rx()
+const pmt::pmt_t gr::uhd::direction_rx()
 {
     static const pmt::pmt_t val = pmt::mp("RX");
     return val;
 }
-const pmt::pmt_t gr::uhd::ant_direction_tx()
+const pmt::pmt_t gr::uhd::direction_tx()
 {
     static const pmt::pmt_t val = pmt::mp("TX");
     return val;
@@ -291,14 +291,14 @@ void usrp_block_impl::_set_center_freq_from_internals_allchans()
     while (_rx_chans_to_tune.any()) {
         // This resets() bits, so this loop should not run indefinitely
         chan = _rx_chans_to_tune.find_first();
-        _set_center_freq_from_internals(chan, ant_direction_rx());
+        _set_center_freq_from_internals(chan, direction_rx());
         _rx_chans_to_tune.reset(chan);
     }
 
     while (_tx_chans_to_tune.any()) {
         // This resets() bits, so this loop should not run indefinitely
         chan = _tx_chans_to_tune.find_first();
-        _set_center_freq_from_internals(chan, ant_direction_tx());
+        _set_center_freq_from_internals(chan, direction_tx());
         _tx_chans_to_tune.reset(chan);
     }
 }
@@ -581,7 +581,7 @@ void usrp_block_impl::_update_curr_tune_req(::uhd::tune_request_t& tune_req,
         return;
     }
 
-    if (pmt::eqv(direction, ant_direction_rx())) {
+    if (pmt::eqv(direction, direction_rx())) {
         if (tune_req.target_freq != _curr_rx_tune_req[chan].target_freq ||
             tune_req.rf_freq_policy != _curr_rx_tune_req[chan].rf_freq_policy ||
             tune_req.rf_freq != _curr_rx_tune_req[chan].rf_freq ||
@@ -637,7 +637,7 @@ void usrp_block_impl::_cmd_handler_looffset(const pmt::pmt_t& lo_offset,
 
     double lo_offs = pmt::to_double(lo_offset);
     ::uhd::tune_request_t new_tune_request;
-    if (pmt::eqv(direction, ant_direction_rx())) {
+    if (pmt::eqv(direction, direction_rx())) {
         new_tune_request = _curr_rx_tune_req[chan];
     } else {
         new_tune_request = _curr_tx_tune_req[chan];
@@ -845,7 +845,7 @@ void usrp_block_impl::_cmd_handler_lofreq(const pmt::pmt_t& lofreq,
     }
 
     ::uhd::tune_request_t new_tune_request;
-    if (pmt::eqv(direction, ant_direction_rx())) {
+    if (pmt::eqv(direction, direction_rx())) {
         new_tune_request = _curr_rx_tune_req[chan];
     } else {
         new_tune_request = _curr_tx_tune_req[chan];
@@ -882,7 +882,7 @@ void usrp_block_impl::_cmd_handler_dspfreq(const pmt::pmt_t& dspfreq,
     }
 
     ::uhd::tune_request_t new_tune_request;
-    if (pmt::eqv(direction, ant_direction_rx())) {
+    if (pmt::eqv(direction, direction_rx())) {
         new_tune_request = _curr_rx_tune_req[chan];
     } else {
         new_tune_request = _curr_tx_tune_req[chan];
@@ -902,7 +902,7 @@ usrp_block_impl::get_cmd_or_default_direction(const pmt::pmt_t& cmd) const
 
     // if the direction key exists and is either "TX" or "RX", return that
     if (pmt::is_symbol(dir) &&
-        (pmt::eqv(dir, ant_direction_rx()) || pmt::eqv(dir, ant_direction_tx()))) {
+        (pmt::eqv(dir, direction_rx()) || pmt::eqv(dir, direction_tx()))) {
         return dir;
     }
     // otherwise return the direction key for the block that received the cmd

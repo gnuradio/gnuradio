@@ -147,7 +147,7 @@ private:
 
     std::recursive_mutex d_mutex;
 
-    const pmt::pmt_t _direction() const override { return ant_direction_rx(); };
+    const pmt::pmt_t _direction() const override { return direction_rx(); };
 };
 
 } /* namespace uhd */
