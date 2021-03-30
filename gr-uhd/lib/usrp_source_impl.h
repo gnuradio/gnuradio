@@ -146,6 +146,8 @@ private:
     double _samp_rate;
 
     std::recursive_mutex d_mutex;
+
+    const pmt::pmt_t _direction() const override { return ant_direction_rx(); };
 };
 
 } /* namespace uhd */
