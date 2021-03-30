@@ -143,7 +143,7 @@ private:
     void async_event_loop();
     gr::thread::thread _async_event_thread;
 
-    const pmt::pmt_t _direction() const override { return ant_direction_tx(); };
+    const pmt::pmt_t _direction() const override { return direction_tx(); };
 };
 
 } /* namespace uhd */

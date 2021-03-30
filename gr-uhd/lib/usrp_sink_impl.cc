@@ -98,7 +98,7 @@ usrp_sink_impl::set_center_freq(const ::uhd::tune_request_t tune_request, size_t
 ::uhd::tune_result_t usrp_sink_impl::_set_center_freq_from_internals(size_t chan,
                                                                      pmt::pmt_t direction)
 {
-    if (pmt::eqv(direction, ant_direction_rx())) {
+    if (pmt::eqv(direction, direction_rx())) {
         // TODO: what happens if the RX device is not instantiated? Catch error?
         _rx_chans_to_tune.reset(chan);
         return _dev->set_rx_freq(_curr_rx_tune_req[chan], _stream_args.channels[chan]);
@@ -123,7 +123,7 @@ double usrp_sink_impl::get_center_freq(size_t chan)
 void usrp_sink_impl::set_gain(double gain, size_t chan, pmt::pmt_t direction)
 {
     chan = _stream_args.channels[chan];
-    if (pmt::eqv(direction, ant_direction_rx())) {
+    if (pmt::eqv(direction, direction_rx())) {
         return _dev->set_rx_gain(gain, chan);
     } else {
         return _dev->set_tx_gain(gain, chan);

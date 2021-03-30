@@ -246,7 +246,7 @@ static const char* __doc_gr_uhd_cmd_direction_key = R"doc()doc";
 static const char* __doc_gr_uhd_cmd_tag_key = R"doc()doc";
 
 
-static const char* __doc_gr_uhd_ant_direction_rx = R"doc()doc";
+static const char* __doc_gr_uhd_direction_rx = R"doc()doc";
 
 
-static const char* __doc_gr_uhd_ant_direction_tx = R"doc()doc";
+static const char* __doc_gr_uhd_direction_tx = R"doc()doc";

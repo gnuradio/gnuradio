@@ -38,8 +38,8 @@ GR_UHD_API const pmt::pmt_t cmd_tag_key();
 GR_UHD_API const pmt::pmt_t cmd_gpio_key();
 GR_UHD_API const pmt::pmt_t cmd_pc_clock_resync_key();
 
-GR_UHD_API const pmt::pmt_t ant_direction_rx();
-GR_UHD_API const pmt::pmt_t ant_direction_tx();
+GR_UHD_API const pmt::pmt_t direction_rx();
+GR_UHD_API const pmt::pmt_t direction_tx();
 
 /*! Base class for USRP blocks.
  * \ingroup uhd_blk
