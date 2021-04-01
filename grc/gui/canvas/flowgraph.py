@@ -359,7 +359,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
             min_x, min_y = min(min_x, x), min(min_y, y)
 
         # Sanitize delta_coordinate so that blocks don't move to negative coordinate
-        delta_coordinate = (max(delta_coordinate[0],-min_x), max(delta_coordinate[1], -min_y))
+        delta_coordinate = max(delta_coordinate[0],-min_x), max(delta_coordinate[1], -min_y)
 
         # Move selected blocks     
         for selected_block in blocks:
