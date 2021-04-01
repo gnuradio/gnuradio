@@ -362,7 +362,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
         delta_coordinate = (max(delta_coordinate[0],-min_x), max(delta_coordinate[1], -min_y))
 
         # Move selected blocks     
-        for selected_block in self.selected_blocks():
+        for selected_block in blocks:
             selected_block.move(delta_coordinate)
             self.element_moved = True
 
