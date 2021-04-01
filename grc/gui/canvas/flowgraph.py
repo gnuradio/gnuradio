@@ -351,7 +351,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
         # Determine selected blocks top left coordinate
         blocks = list(self.selected_blocks())
         if not blocks:
-            return False
+            return
 
         min_x, min_y  = self.selected_block.coordinate
         for selected_block in blocks:
