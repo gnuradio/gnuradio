@@ -34,6 +34,12 @@ public:
     EyeDisplayPlot(unsigned int nplots, unsigned int curve_index, QWidget* parent);
     ~EyeDisplayPlot() override;
 
+    // Disable copy&move because of raw QT pointers.
+    EyeDisplayPlot(const EyeDisplayPlot&) = delete;
+    EyeDisplayPlot(EyeDisplayPlot&&) = delete;
+    EyeDisplayPlot& operator=(const EyeDisplayPlot&) = delete;
+    EyeDisplayPlot& operator=(EyeDisplayPlot&&) = delete;
+
     void plotNewData(const std::vector<double*> dataPoints,
                      const int64_t numDataPoints,
                      int d_sps,
@@ -82,16 +88,15 @@ private:
     void _resetXAxisPoints();
     void _autoScale(double bottom, double top);
 
-    std::vector<double*> d_ydata;
+    std::vector<std::vector<double>> d_ydata;
 
-    double* d_xdata;
+    std::vector<double> d_xdata;
 
     double d_sample_rate;
 
     unsigned int d_curve_index;
-    unsigned int nplots;
-    int d_sps;
-    unsigned int d_numPointsPerPeriod;
+    int d_sps = 4;
+    unsigned int d_numPointsPerPeriod = 2 * d_sps + 1;
     unsigned int d_numPeriods;
 
     bool d_autoscale_shot;

@@ -97,18 +97,12 @@ EyeDisplayPlot::EyeDisplayPlot(unsigned int nplots,
                                QWidget* parent)
     : DisplayPlot(1, parent)
 {
-
     d_numPoints = 1024;
     d_nplots = nplots;
-
-    d_sps = 4;
-
-    d_numPointsPerPeriod = 2 * d_sps + 1;
     d_numPeriods = std::floor((d_numPoints - 1) / 2 / d_sps);
 
-    d_xdata = new double[d_numPointsPerPeriod];
+    d_xdata.resize(d_numPointsPerPeriod);
     d_curve_index = curve_index;
-    memset(d_xdata, 0x0, d_numPointsPerPeriod * sizeof(double));
 
     d_tag_text_color = Qt::black;
     d_tag_background_color = Qt::white;
@@ -159,8 +153,7 @@ EyeDisplayPlot::EyeDisplayPlot(unsigned int nplots,
     // Setup dataPoints and plot vectors
     // Automatically deleted when parent is deleted
     for (unsigned int i = 0; i < d_numPeriods; ++i) {
-        d_ydata.push_back(new double[d_numPointsPerPeriod]);
-        memset(d_ydata[i], 0x0, d_numPointsPerPeriod * sizeof(double));
+        d_ydata.emplace_back(d_numPointsPerPeriod);
         d_plot_curve.push_back(
             new QwtPlotCurve(QString("Eye [Data %1]").arg(d_curve_index)));
         d_plot_curve[i]->attach(this);
@@ -173,10 +166,12 @@ EyeDisplayPlot::EyeDisplayPlot(unsigned int nplots,
                                           QSize(7, 7));
 
 #if QWT_VERSION < 0x060000
-        d_plot_curve[i]->setRawData(d_xdata, d_ydata[i], d_numPointsPerPeriod);
+        d_plot_curve[i]->setRawData(
+            d_xdata.data(), d_ydata[i].data(), d_numPointsPerPeriod);
         d_plot_curve[i]->setSymbol(*symbol);
 #else
-        d_plot_curve[i]->setRawSamples(d_xdata, d_ydata[i], d_numPointsPerPeriod);
+        d_plot_curve[i]->setRawSamples(
+            d_xdata.data(), d_ydata[i].data(), d_numPointsPerPeriod);
         d_plot_curve[i]->setSymbol(symbol);
 #endif
     }
@@ -207,12 +202,6 @@ EyeDisplayPlot::~EyeDisplayPlot()
 {
 
     // Delete d_ydata set used by this EyeDisplayPlot
-    delete[] d_ydata[d_curve_index];
-
-    // Delete d_xdata once (it is used by some EyeDisplayPlot)
-    if (d_curve_index == 0)
-        delete[] d_xdata;
-
     // d_zoomer and _panner deleted when parent deleted
 }
 
@@ -240,15 +229,15 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                 // clear d_plot_curve, d_xdata, d_ydata
                 d_plot_curve.clear();
                 d_ydata.clear();
-                delete[] d_xdata;
-                d_xdata = new double[(1 + d_numPointsPerPeriod)];
+                d_xdata.resize(1 + d_numPointsPerPeriod);
                 _resetXAxisPoints();
 
                 // New data structure and data
                 for (unsigned int i = 0; i < d_numPeriods; ++i) {
                     int64_t time_index = i * (d_numPointsPerPeriod - 1);
-                    d_ydata.push_back(new double[d_numPointsPerPeriod]);
-                    memcpy(d_ydata[i],
+                    d_ydata.emplace_back(d_numPointsPerPeriod);
+                    // TODO: init copy.
+                    memcpy(d_ydata[i].data(),
                            &(dataPoints[d_curve_index][time_index]),
                            d_numPointsPerPeriod * sizeof(double));
                     d_plot_curve.push_back(
@@ -264,11 +253,11 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 
 #if QWT_VERSION < 0x060000
                     d_plot_curve[i]->setRawData(
-                        d_xdata, d_ydata[i], d_numPointsPerPeriod);
+                        d_xdata.data(), d_ydata[i].data(), d_numPointsPerPeriod);
                     d_plot_curve[i]->setSymbol(*symbol);
 #else
                     d_plot_curve[i]->setRawSamples(
-                        d_xdata, d_ydata[i], d_numPointsPerPeriod);
+                        d_xdata.data(), d_ydata[i].data(), d_numPointsPerPeriod);
                     d_plot_curve[i]->setSymbol(symbol);
 #endif
                 }
@@ -276,7 +265,7 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                 // New data
                 for (unsigned int i = 0; i < d_numPeriods; ++i) {
                     int64_t time_index = i * (d_numPointsPerPeriod - 1);
-                    memcpy(d_ydata[i],
+                    memcpy(d_ydata[i].data(),
                            &(dataPoints[d_curve_index][time_index]),
                            d_numPointsPerPeriod * sizeof(double));
                 }
