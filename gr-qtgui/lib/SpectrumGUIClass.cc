@@ -126,9 +126,7 @@ void SpectrumGUIClass::setDisplayTitle(const std::string newString)
 bool SpectrumGUIClass::getWindowOpenFlag()
 {
     gr::thread::scoped_lock lock(d_mutex);
-    bool returnFlag = false;
-    returnFlag = _windowOpennedFlag;
-    return returnFlag;
+    return _windowOpennedFlag;
 }
 
 
