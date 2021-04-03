@@ -43,7 +43,7 @@ public:
     virtual uint64_t getNumFFTPoints() const;
     virtual void addFFTData(const double*, const uint64_t, const int);
 
-    virtual double* getSpectrumDataBuffer() const;
+    virtual const double* getSpectrumDataBuffer() const;
     virtual void setSpectrumDataBuffer(const double*);
 
     virtual int getNumLinesToUpdate() const;
@@ -51,7 +51,7 @@ public:
     virtual void incrementNumLinesToUpdate();
 
 protected:
-    double* _spectrumData;
+    std::vector<double> _spectrumData;
     uint64_t _fftPoints;
     uint64_t _historyLength;
     int _numLinesToUpdate;
