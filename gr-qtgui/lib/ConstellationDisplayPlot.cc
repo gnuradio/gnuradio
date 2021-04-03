@@ -88,10 +88,8 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
     // Setup dataPoints and plot vectors
     // Automatically deleted when parent is deleted
     for (unsigned int i = 0; i < d_nplots; ++i) {
-        d_real_data.push_back(new double[d_numPoints]);
-        d_imag_data.push_back(new double[d_numPoints]);
-        memset(d_real_data[i], 0x0, d_numPoints * sizeof(double));
-        memset(d_imag_data[i], 0x0, d_numPoints * sizeof(double));
+        d_real_data.emplace_back(d_numPoints);
+        d_imag_data.emplace_back(d_numPoints);
 
         d_plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
         d_plot_curve[i]->attach(this);
@@ -101,10 +99,12 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
             QwtSymbol::NoSymbol, QBrush(colors[i]), QPen(colors[i]), QSize(7, 7));
 
 #if QWT_VERSION < 0x060000
-        d_plot_curve[i]->setRawData(d_real_data[i], d_imag_data[i], d_numPoints);
+        d_plot_curve[i]->setRawData(
+            d_real_data[i].data(), d_imag_data[i].data(), d_numPoints);
         d_plot_curve[i]->setSymbol(*symbol);
 #else
-        d_plot_curve[i]->setRawSamples(d_real_data[i], d_imag_data[i], d_numPoints);
+        d_plot_curve[i]->setRawSamples(
+            d_real_data[i].data(), d_imag_data[i].data(), d_numPoints);
         d_plot_curve[i]->setSymbol(symbol);
 #endif
 
@@ -115,11 +115,6 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
 
 ConstellationDisplayPlot::~ConstellationDisplayPlot()
 {
-    for (unsigned int i = 0; i < d_nplots; ++i) {
-        delete[] d_real_data[i];
-        delete[] d_imag_data[i];
-    }
-
     // d_plot_curves deleted when parent deleted
     // d_zoomer and d_panner deleted when parent deleted
 }
@@ -162,24 +157,26 @@ void ConstellationDisplayPlot::plotNewData(const std::vector<double*> realDataPo
                 d_numPoints = numDataPoints;
 
                 for (unsigned int i = 0; i < d_nplots; ++i) {
-                    delete[] d_real_data[i];
-                    delete[] d_imag_data[i];
-                    d_real_data[i] = new double[d_numPoints];
-                    d_imag_data[i] = new double[d_numPoints];
+                    d_real_data[i].resize(d_numPoints);
+                    d_imag_data[i].resize(d_numPoints);
 
 #if QWT_VERSION < 0x060000
                     d_plot_curve[i]->setRawData(
-                        d_real_data[i], d_imag_data[i], d_numPoints);
+                        d_real_data[i].data(), d_imag_data[i].data(), d_numPoints);
 #else
                     d_plot_curve[i]->setRawSamples(
-                        d_real_data[i], d_imag_data[i], d_numPoints);
+                        d_real_data[i].data(), d_imag_data[i].data(), d_numPoints);
 #endif
                 }
             }
 
             for (unsigned int i = 0; i < d_nplots; ++i) {
-                memcpy(d_real_data[i], realDataPoints[i], numDataPoints * sizeof(double));
-                memcpy(d_imag_data[i], imagDataPoints[i], numDataPoints * sizeof(double));
+                memcpy(d_real_data[i].data(),
+                       realDataPoints[i],
+                       numDataPoints * sizeof(double));
+                memcpy(d_imag_data[i].data(),
+                       imagDataPoints[i],
+                       numDataPoints * sizeof(double));
             }
 
             if (d_autoscale_state) {

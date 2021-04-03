@@ -52,8 +52,8 @@ public slots:
 private:
     void _autoScale(double bottom, double top);
 
-    std::vector<double*> d_real_data;
-    std::vector<double*> d_imag_data;
+    std::vector<std::vector<double>> d_real_data;
+    std::vector<std::vector<double>> d_imag_data;
 
     int64_t d_pen_size;
 };
