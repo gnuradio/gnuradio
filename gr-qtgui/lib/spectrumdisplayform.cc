@@ -16,25 +16,25 @@
 
 #include <cmath>
 
-SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent) : QWidget(parent)
+namespace {
+constexpr int default_fft_size = 1024;
+}
+
+SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
+    : QWidget(parent),
+      _averagedValues(default_fft_size),
+      _realFFTDataPoints(default_fft_size),
+      _intValidator(this),
+      displayTimer(this)
 {
     setupUi(this);
 
-    d_clicked = false;
-    d_clicked_freq = 0;
-
-    _systemSpecifiedFlag = false;
-    _intValidator = new QIntValidator(this);
-    _intValidator->setBottom(0);
+    _intValidator.setBottom(0);
     _frequencyDisplayPlot = new FrequencyDisplayPlot(1, FrequencyPlotDisplayFrame);
     _waterfallDisplayPlot = new WaterfallDisplayPlot(1, WaterfallPlotDisplayFrame);
     _timeDomainDisplayPlot = new TimeDomainDisplayPlot(2, TimeDomainDisplayFrame);
     _constellationDisplayPlot =
         new ConstellationDisplayPlot(1, ConstellationDisplayFrame);
-    _numRealDataPoints = 1024;
-    _realFFTDataPoints = new double[_numRealDataPoints];
-    _averagedValues = new double[_numRealDataPoints];
-    _historyVector = new std::vector<double*>;
 
     _timeDomainDisplayPlot->setLineLabel(0, "real");
     _timeDomainDisplayPlot->setLineLabel(1, "imag");
@@ -56,7 +56,6 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent) : QWidget(parent)
     WaterfallMaximumIntensitySlider->setOrientation(Qt::Horizontal);
     WaterfallMinimumIntensitySlider->setOrientation(Qt::Horizontal);
 
-    _peakFrequency = 0;
     _peakAmplitude = -HUGE_VAL;
 
     _noiseFloorAmplitude = -HUGE_VAL;
@@ -87,12 +86,8 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent) : QWidget(parent)
     toggleTabTime(false);
     toggleTabConstellation(false);
 
-    _historyEntry = 0;
-    _historyEntryCount = 0;
-
     // Create a timer to update plots at the specified rate
-    displayTimer = new QTimer(this);
-    connect(displayTimer, SIGNAL(timeout()), this, SLOT(updateGuiTimer()));
+    connect(&displayTimer, SIGNAL(timeout()), this, SLOT(updateGuiTimer()));
 
     // Connect double click signals up
     connect(_frequencyDisplayPlot,
@@ -122,19 +117,8 @@ SpectrumDisplayForm::~SpectrumDisplayForm()
 
     // Don't worry about deleting Display Plots - they are deleted when parents are
     // deleted
-    delete _intValidator;
 
-    delete[] _realFFTDataPoints;
-    delete[] _averagedValues;
-
-    for (unsigned int count = 0; count < _historyVector->size(); count++) {
-        delete[] _historyVector->operator[](count);
-    }
-
-    delete _historyVector;
-
-    displayTimer->stop();
-    delete displayTimer;
+    displayTimer.stop();
 }
 
 void SpectrumDisplayForm::setSystem(SpectrumGUIClass* newSystem,
@@ -235,7 +219,7 @@ void SpectrumDisplayForm::newFrequencyData(const SpectrumUpdateEvent* spectrumUp
     // amplitude, peak freq.
     double sum_mean, peak_ampl;
     int peak_bin;
-    fftshift_and_sum(_realFFTDataPoints,
+    fftshift_and_sum(_realFFTDataPoints.data(),
                      fftMagDataPoints,
                      numFFTDataPoints,
                      sum_mean,
@@ -275,7 +259,7 @@ void SpectrumDisplayForm::newFrequencyData(const SpectrumUpdateEvent* spectrumUp
     if (lastOfMultipleUpdatesFlag) {
         int tabindex = SpectrumTypeTab->currentIndex();
         if (tabindex == d_plot_fft) {
-            _frequencyDisplayPlot->plotNewData(_averagedValues,
+            _frequencyDisplayPlot->plotNewData(_averagedValues.data(),
                                                numFFTDataPoints,
                                                _noiseFloorAmplitude,
                                                _peakFrequency,
@@ -297,7 +281,7 @@ void SpectrumDisplayForm::newFrequencyData(const SpectrumUpdateEvent* spectrumUp
         if (!repeatDataFlag) {
             if (tabindex == d_plot_waterfall) {
                 _waterfallDisplayPlot->plotNewData(
-                    _realFFTDataPoints,
+                    _realFFTDataPoints.data(),
                     numFFTDataPoints,
                     d_update_time,
                     dataTimestamp,
@@ -453,54 +437,51 @@ void SpectrumDisplayForm::setFrequencyRange(const double newCenterFrequency,
     }
 }
 
-int SpectrumDisplayForm::getAverageCount() { return _historyVector->size(); }
+int SpectrumDisplayForm::getAverageCount() { return _historyVector.size(); }
 
 void SpectrumDisplayForm::setAverageCount(const int newCount)
 {
     if (newCount > -1) {
-        if (newCount != static_cast<int>(_historyVector->size())) {
-            std::vector<double*>::iterator pos;
-            while (newCount < static_cast<int>(_historyVector->size())) {
-                pos = _historyVector->begin();
-                delete[](*pos);
-                _historyVector->erase(pos);
+        if (newCount != static_cast<int>(_historyVector.size())) {
+            while (newCount < static_cast<int>(_historyVector.size())) {
+                _historyVector.pop_front();
             }
 
-            while (newCount > static_cast<int>(_historyVector->size())) {
-                _historyVector->push_back(new double[_numRealDataPoints]);
+            while (newCount > static_cast<int>(_historyVector.size())) {
+                _historyVector.emplace_back(_realFFTDataPoints.size());
             }
             averageDataReset();
         }
     }
 }
 
-void SpectrumDisplayForm::_averageHistory(const double* newBuffer)
+void SpectrumDisplayForm::_averageHistory(const std::vector<double>& newBuffer)
 {
-    if (_numRealDataPoints > 0) {
-        if (!_historyVector->empty()) {
-            memcpy(_historyVector->operator[](_historyEntry),
-                   newBuffer,
-                   _numRealDataPoints * sizeof(double));
+    if (!_realFFTDataPoints.empty()) {
+        if (!_historyVector.empty()) {
+            std::copy(std::begin(newBuffer),
+                      std::end(newBuffer),
+                      std::begin(_historyVector[_historyEntry]));
 
             // Increment the next location to store data
-            _historyEntryCount++;
-            if (_historyEntryCount > static_cast<int>(_historyVector->size())) {
-                _historyEntryCount = _historyVector->size();
-            }
+            _historyEntryCount =
+                std::min(_historyEntryCount + 1, static_cast<int>(_historyVector.size()));
             _historyEntry += 1;
-            _historyEntry = _historyEntry % _historyVector->size();
+            _historyEntry = _historyEntry % _historyVector.size();
 
             // Total up and then average the values
             double sum;
-            for (uint64_t location = 0; location < _numRealDataPoints; location++) {
+            for (uint64_t location = 0; location < _realFFTDataPoints.size();
+                 location++) {
                 sum = 0;
                 for (int number = 0; number < _historyEntryCount; number++) {
-                    sum += _historyVector->operator[](number)[location];
+                    sum += _historyVector[number][location];
                 }
                 _averagedValues[location] = sum / static_cast<double>(_historyEntryCount);
             }
         } else {
-            memcpy(_averagedValues, newBuffer, _numRealDataPoints * sizeof(double));
+            std::copy(
+                std::begin(newBuffer), std::end(newBuffer), std::begin(_averagedValues));
         }
     }
 }
@@ -509,16 +490,12 @@ void SpectrumDisplayForm::resizeBuffers(const uint64_t numFFTDataPoints,
                                         const uint64_t /*numTimeDomainDataPoints*/)
 {
     // Convert from Complex to Real for certain Displays
-    if (_numRealDataPoints != numFFTDataPoints) {
-        _numRealDataPoints = numFFTDataPoints;
-        delete[] _realFFTDataPoints;
-        delete[] _averagedValues;
+    if (_realFFTDataPoints.size() != numFFTDataPoints) {
+        _realFFTDataPoints.clear();
+        _realFFTDataPoints.resize(numFFTDataPoints);
+        _averagedValues.resize(numFFTDataPoints);
 
-        _realFFTDataPoints = new double[_numRealDataPoints];
-        _averagedValues = new double[_numRealDataPoints];
-        memset(_realFFTDataPoints, 0x0, _numRealDataPoints * sizeof(double));
-
-        const int historySize = _historyVector->size();
+        const int historySize = _historyVector.size();
         setAverageCount(0); // Clear the existing history
         setAverageCount(historySize);
 
@@ -538,8 +515,7 @@ void SpectrumDisplayForm::averageDataReset()
 {
     _historyEntry = 0;
     _historyEntryCount = 0;
-
-    memset(_averagedValues, 0x0, _numRealDataPoints * sizeof(double));
+    std::fill(std::begin(_averagedValues), std::end(_averagedValues), 0.0);
 
     maxHoldResetBtn_clicked();
     minHoldResetBtn_clicked();
@@ -753,7 +729,7 @@ void SpectrumDisplayForm::setUpdateTime(double t)
 {
     d_update_time = t;
     // QTimer class takes millisecond input
-    displayTimer->start(d_update_time * 1000);
+    displayTimer.start(d_update_time * 1000);
 }
 
 void SpectrumDisplayForm::onFFTPlotPointSelected(const QPointF p)

@@ -33,6 +33,12 @@ public:
     SpectrumDisplayForm(QWidget* parent = 0);
     ~SpectrumDisplayForm() override;
 
+    // Disable copy/move because of QT raw pointers.
+    SpectrumDisplayForm(const SpectrumDisplayForm&) = delete;
+    SpectrumDisplayForm(SpectrumDisplayForm&&) = delete;
+    SpectrumDisplayForm& operator=(const SpectrumDisplayForm&) = delete;
+    SpectrumDisplayForm& operator=(SpectrumDisplayForm&&) = delete;
+
     void setSystem(SpectrumGUIClass* newSystem,
                    const uint64_t numFFTDataPoints,
                    const uint64_t numTimeDomainDataPoints);
@@ -97,31 +103,30 @@ signals:
     void plotPointSelected(const QPointF p, int type);
 
 private:
-    void _averageHistory(const double* newBuffer);
+    void _averageHistory(const std::vector<double>& newBuffer);
 
-    int _historyEntryCount;
-    int _historyEntry;
-    std::vector<double*>* _historyVector;
-    double* _averagedValues;
-    uint64_t _numRealDataPoints;
-    double* _realFFTDataPoints;
-    QIntValidator* _intValidator;
+    int _historyEntryCount = 0;
+    int _historyEntry = 0;
+    std::deque<std::vector<double>> _historyVector;
+    std::vector<double> _averagedValues;
+    std::vector<double> _realFFTDataPoints;
+    QIntValidator _intValidator;
     FrequencyDisplayPlot* _frequencyDisplayPlot;
     WaterfallDisplayPlot* _waterfallDisplayPlot;
     TimeDomainDisplayPlot* _timeDomainDisplayPlot;
     ConstellationDisplayPlot* _constellationDisplayPlot;
     SpectrumGUIClass* _system;
-    bool _systemSpecifiedFlag;
+    bool _systemSpecifiedFlag = false;
     double _centerFrequency;
     double _startFrequency;
     double _noiseFloorAmplitude;
-    double _peakFrequency;
+    double _peakFrequency = 0;
     double _peakAmplitude;
     double _stopFrequency;
 
     double d_units;
-    bool d_clicked;
-    double d_clicked_freq;
+    bool d_clicked = false;
+    double d_clicked_freq = 0;
 
     // SpectrumUpdateEvent _lastSpectrumEvent;
 
@@ -131,7 +136,7 @@ private:
     int d_plot_time;
     int d_plot_constellation;
 
-    QTimer* displayTimer;
+    QTimer displayTimer;
     double d_update_time;
 };
 
