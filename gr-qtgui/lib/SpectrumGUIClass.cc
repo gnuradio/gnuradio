@@ -25,30 +25,13 @@ SpectrumGUIClass::SpectrumGUIClass(const uint64_t maxDataSize,
                                    const double newCenterFrequency,
                                    const double newStartFrequency,
                                    const double newStopFrequency)
+    : _dataPoints(std::max(static_cast<int64_t>(maxDataSize), static_cast<int64_t>(2))),
+      _centerFrequency(newCenterFrequency),
+      _startFrequency(newStartFrequency),
+      _stopFrequency(newStopFrequency),
+      _lastDataPointCount(_dataPoints),
+      _fftSize(fftSize)
 {
-    _dataPoints = maxDataSize;
-    if (_dataPoints < 2) {
-        _dataPoints = 2;
-    }
-    _lastDataPointCount = _dataPoints;
-
-    _fftSize = fftSize;
-
-    _pendingGUIUpdateEventsCount = 0;
-    _droppedEntriesCount = 0;
-
-    _centerFrequency = newCenterFrequency;
-    _startFrequency = newStartFrequency;
-    _stopFrequency = newStopFrequency;
-
-    _windowType = 5;
-
-    _lastGUIUpdateTime = 0;
-
-    _windowOpennedFlag = false;
-    _fftBuffersCreatedFlag = false;
-
-    _powerValue = 1;
 }
 
 SpectrumGUIClass::~SpectrumGUIClass()
@@ -59,12 +42,6 @@ SpectrumGUIClass::~SpectrumGUIClass()
     // if(getWindowOpenFlag()){
     // delete _spectrumDisplayForm;
     //}
-
-    if (_fftBuffersCreatedFlag) {
-        delete[] _fftPoints;
-        delete[] _realTimeDomainPoints;
-        delete[] _imagTimeDomainPoints;
-    }
 }
 
 void SpectrumGUIClass::openSpectrumWindow(QWidget* parent,
@@ -77,15 +54,10 @@ void SpectrumGUIClass::openSpectrumWindow(QWidget* parent,
 
     if (!_windowOpennedFlag) {
 
-        if (!_fftBuffersCreatedFlag) {
-            _fftPoints = new float[_dataPoints];
-            _realTimeDomainPoints = new double[_dataPoints];
-            _imagTimeDomainPoints = new double[_dataPoints];
-            _fftBuffersCreatedFlag = true;
-
-            memset(_fftPoints, 0x0, _dataPoints * sizeof(float));
-            memset(_realTimeDomainPoints, 0x0, _dataPoints * sizeof(double));
-            memset(_imagTimeDomainPoints, 0x0, _dataPoints * sizeof(double));
+        if (_fftPoints.empty()) {
+            _fftPoints.resize(_dataPoints);
+            _realTimeDomainPoints.resize(_dataPoints);
+            _imagTimeDomainPoints.resize(_dataPoints);
         }
 
         // Called from the Event Thread
@@ -225,7 +197,7 @@ void SpectrumGUIClass::updateWindow(const bool updateDisplayFlag,
 
     if (updateDisplayFlag) {
         if ((fftBuffer != NULL) && (bufferSize > 0)) {
-            memcpy(_fftPoints, fftBuffer, bufferSize * sizeof(float));
+            std::copy(fftBuffer, fftBuffer + bufferSize, std::begin(_fftPoints));
         }
 
         // ALL OF THIS SHIT SHOULD BE COMBINED WITH THE FFTSHIFT
@@ -234,18 +206,19 @@ void SpectrumGUIClass::updateWindow(const bool updateDisplayFlag,
         if ((realTimeDomainData != NULL) && (realTimeDomainDataSize > 0)) {
             const float* realTimeDomainDataPtr = realTimeDomainData;
 
-            double* realTimeDomainPointsPtr = _realTimeDomainPoints;
+            double* realTimeDomainPointsPtr = _realTimeDomainPoints.data();
             timeDomainBufferSize = realTimeDomainDataSize;
 
-            memset(_imagTimeDomainPoints, 0x0, realTimeDomainDataSize * sizeof(double));
+            std::fill(
+                std::begin(_imagTimeDomainPoints), std::end(_imagTimeDomainPoints), 0.0);
             for (uint64_t number = 0; number < realTimeDomainDataSize; number++) {
                 *realTimeDomainPointsPtr++ = *realTimeDomainDataPtr++;
             }
         }
 
         if ((complexTimeDomainData != NULL) && (complexTimeDomainDataSize > 0)) {
-            volk_32fc_deinterleave_64f_x2(_realTimeDomainPoints,
-                                          _imagTimeDomainPoints,
+            volk_32fc_deinterleave_64f_x2(_realTimeDomainPoints.data(),
+                                          _imagTimeDomainPoints.data(),
                                           (const lv_32fc_t*)complexTimeDomainData,
                                           complexTimeDomainDataSize);
             timeDomainBufferSize = complexTimeDomainDataSize;
@@ -273,10 +246,10 @@ void SpectrumGUIClass::updateWindow(const bool updateDisplayFlag,
         // Draw the Data
         incrementPendingGUIUpdateEvents();
         qApp->postEvent(_spectrumDisplayForm,
-                        new SpectrumUpdateEvent(_fftPoints,
+                        new SpectrumUpdateEvent(_fftPoints.data(),
                                                 bufferSize,
-                                                _realTimeDomainPoints,
-                                                _imagTimeDomainPoints,
+                                                _realTimeDomainPoints.data(),
+                                                _imagTimeDomainPoints.data(),
                                                 timeDomainBufferSize,
                                                 timestamp,
                                                 repeatDataFlag,

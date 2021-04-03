@@ -40,6 +40,13 @@ public:
                      const double newStartFrequency,
                      const double newStopFrequency);
     ~SpectrumGUIClass();
+
+    // Disable copy/move because of raw QT pointers.
+    SpectrumGUIClass(const SpectrumGUIClass&) = delete;
+    SpectrumGUIClass(SpectrumGUIClass&&) = delete;
+    SpectrumGUIClass& operator=(const SpectrumGUIClass&) = delete;
+    SpectrumGUIClass& operator=(SpectrumGUIClass&&) = delete;
+
     void reset();
 
     void openSpectrumWindow(QWidget*,
@@ -105,27 +112,26 @@ public:
 protected:
 private:
     gr::thread::mutex d_mutex;
-    int64_t _dataPoints;
+    const int64_t _dataPoints;
     std::string _title;
     double _centerFrequency;
     double _startFrequency;
     double _stopFrequency;
-    float _powerValue;
-    bool _windowOpennedFlag;
-    int _windowType;
+    float _powerValue = 1;
+    bool _windowOpennedFlag = false;
+    int _windowType = 5;
     int64_t _lastDataPointCount;
     int _fftSize;
-    gr::high_res_timer_type _lastGUIUpdateTime;
-    unsigned int _pendingGUIUpdateEventsCount;
-    int _droppedEntriesCount;
-    bool _fftBuffersCreatedFlag;
+    gr::high_res_timer_type _lastGUIUpdateTime = 0;
+    unsigned int _pendingGUIUpdateEventsCount = 0;
+    int _droppedEntriesCount = 0;
     double _updateTime;
 
-    SpectrumDisplayForm* _spectrumDisplayForm;
+    SpectrumDisplayForm* _spectrumDisplayForm = nullptr; // Deleted by QT.
 
-    float* _fftPoints;
-    double* _realTimeDomainPoints;
-    double* _imagTimeDomainPoints;
+    std::vector<float> _fftPoints;
+    std::vector<double> _realTimeDomainPoints;
+    std::vector<double> _imagTimeDomainPoints;
 };
 
 #endif /* SPECTRUM_GUI_CLASS_HPP */
