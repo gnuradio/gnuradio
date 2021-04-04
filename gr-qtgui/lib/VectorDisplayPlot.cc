@@ -66,22 +66,22 @@ private:
     QString d_y_units; //!< Units on y-Axis (e.g. V)
 };
 
+namespace {
+constexpr int default_numpoints = 1024;
+}
 
 /***********************************************************************
  * Main frequency display plotter widget
  **********************************************************************/
 VectorDisplayPlot::VectorDisplayPlot(int nplots, QWidget* parent)
-    : DisplayPlot(nplots, parent), d_x_axis_label("x"), d_y_axis_label("y")
+    : DisplayPlot(nplots, parent),
+      d_xdata(default_numpoints),
+      d_x_axis_label("x"),
+      d_y_axis_label("y"),
+      d_min_vec_data(default_numpoints),
+      d_max_vec_data(default_numpoints)
 {
-    d_numPoints = 1024;
-    d_x_axis_start = 0;
-    d_x_axis_step = 1.0;
-    d_ymin = -10;
-    d_ymax = 10;
-
-    d_min_vec_data = new double[d_numPoints];
-    d_max_vec_data = new double[d_numPoints];
-    d_xdata = new double[d_numPoints];
+    d_numPoints = default_numpoints;
 
     setAxisTitle(QwtPlot::xBottom, d_x_axis_label);
     setAxisScale(QwtPlot::xBottom, d_x_axis_start, d_numPoints - 1);
@@ -100,8 +100,7 @@ VectorDisplayPlot::VectorDisplayPlot(int nplots, QWidget* parent)
     // Create a curve for each input
     // Automatically deleted when parent is deleted
     for (unsigned int i = 0; i < d_nplots; ++i) {
-        d_ydata.push_back(new double[d_numPoints]);
-        memset(d_ydata[i], 0x0, d_numPoints * sizeof(double));
+        d_ydata.emplace_back(d_numPoints);
 
         d_plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
         d_plot_curve[i]->attach(this);
@@ -112,10 +111,10 @@ VectorDisplayPlot::VectorDisplayPlot(int nplots, QWidget* parent)
                                           QSize(7, 7));
 
 #if QWT_VERSION < 0x060000
-        d_plot_curve[i]->setRawData(d_xdata, d_ydata[i], d_numPoints);
+        d_plot_curve[i]->setRawData(d_xdata.data(), d_ydata[i].data(), d_numPoints);
         d_plot_curve[i]->setSymbol(*symbol);
 #else
-        d_plot_curve[i]->setRawSamples(d_xdata, d_ydata[i], d_numPoints);
+        d_plot_curve[i]->setRawSamples(d_xdata.data(), d_ydata[i].data(), d_numPoints);
         d_plot_curve[i]->setSymbol(symbol);
 #endif
         setLineColor(i, default_colors[i]);
@@ -127,9 +126,10 @@ VectorDisplayPlot::VectorDisplayPlot(int nplots, QWidget* parent)
     const QColor default_min_fft_color = Qt::magenta;
     setMinVecColor(default_min_fft_color);
 #if QWT_VERSION < 0x060000
-    d_min_vec_plot_curve->setRawData(d_xdata, d_min_vec_data, d_numPoints);
+    d_min_vec_plot_curve->setRawData(d_xdata.data(), d_min_vec_data.data(), d_numPoints);
 #else
-    d_min_vec_plot_curve->setRawSamples(d_xdata, d_min_vec_data, d_numPoints);
+    d_min_vec_plot_curve->setRawSamples(
+        d_xdata.data(), d_min_vec_data.data(), d_numPoints);
 #endif
     d_min_vec_plot_curve->setVisible(false);
     d_min_vec_plot_curve->setZ(0);
@@ -139,9 +139,10 @@ VectorDisplayPlot::VectorDisplayPlot(int nplots, QWidget* parent)
     QColor default_max_fft_color = Qt::darkYellow;
     setMaxVecColor(default_max_fft_color);
 #if QWT_VERSION < 0x060000
-    d_max_vec_plot_curve->setRawData(d_xdata, d_max_vec_data, d_numPoints);
+    d_max_vec_plot_curve->setRawData(d_xdata.data(), d_max_vec_data.data(), d_numPoints);
 #else
-    d_max_vec_plot_curve->setRawSamples(d_xdata, d_max_vec_data, d_numPoints);
+    d_max_vec_plot_curve->setRawSamples(
+        d_xdata.data(), d_max_vec_data.data(), d_numPoints);
 #endif
     d_max_vec_plot_curve->setVisible(false);
     d_max_vec_plot_curve->setZ(0);
@@ -158,7 +159,7 @@ VectorDisplayPlot::VectorDisplayPlot(int nplots, QWidget* parent)
     setMarkerUpperIntensityColor(default_marker_upper_intensity_color);
     d_upper_intensity_marker->attach(this);
 
-    memset(d_xdata, 0x0, d_numPoints * sizeof(double));
+    std::fill(std::begin(d_xdata), std::end(d_xdata), 0.0);
 
     for (int64_t number = 0; number < d_numPoints; number++) {
         d_min_vec_data[number] = 1e6;
@@ -209,14 +210,7 @@ VectorDisplayPlot::VectorDisplayPlot(int nplots, QWidget* parent)
     replot();
 }
 
-VectorDisplayPlot::~VectorDisplayPlot()
-{
-    for (unsigned int i = 0; i < d_nplots; ++i)
-        delete[] d_ydata[i];
-    delete[] d_max_vec_data;
-    delete[] d_min_vec_data;
-    delete[] d_xdata;
-}
+VectorDisplayPlot::~VectorDisplayPlot() {}
 
 void VectorDisplayPlot::setYaxis(double min, double max)
 {
@@ -294,29 +288,31 @@ void VectorDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
             if (numDataPoints != d_numPoints) {
                 d_numPoints = numDataPoints;
 
-                delete[] d_min_vec_data;
-                delete[] d_max_vec_data;
-                delete[] d_xdata;
-                d_xdata = new double[d_numPoints];
-                d_min_vec_data = new double[d_numPoints];
-                d_max_vec_data = new double[d_numPoints];
+                d_xdata.resize(d_numPoints);
+                d_min_vec_data.resize(d_numPoints);
+                d_max_vec_data.resize(d_numPoints);
 
                 for (unsigned int i = 0; i < d_nplots; ++i) {
-                    delete[] d_ydata[i];
-                    d_ydata[i] = new double[d_numPoints];
+                    d_ydata[i].resize(d_numPoints);
 
 #if QWT_VERSION < 0x060000
-                    d_plot_curve[i]->setRawData(d_xdata, d_ydata[i], d_numPoints);
+                    d_plot_curve[i]->setRawData(
+                        d_xdata.data(), d_ydata[i].data(), d_numPoints);
 #else
-                    d_plot_curve[i]->setRawSamples(d_xdata, d_ydata[i], d_numPoints);
+                    d_plot_curve[i]->setRawSamples(
+                        d_xdata.data(), d_ydata[i].data(), d_numPoints);
 #endif
                 }
 #if QWT_VERSION < 0x060000
-                d_min_vec_plot_curve->setRawData(d_xdata, d_min_vec_data, d_numPoints);
-                d_max_vec_plot_curve->setRawData(d_xdata, d_max_vec_data, d_numPoints);
+                d_min_vec_plot_curve->setRawData(
+                    d_xdata.data(), d_min_vec_data.data(), d_numPoints);
+                d_max_vec_plot_curve->setRawData(
+                    d_xdata.data(), d_max_vec_data.data(), d_numPoints);
 #else
-                d_min_vec_plot_curve->setRawSamples(d_xdata, d_min_vec_data, d_numPoints);
-                d_max_vec_plot_curve->setRawSamples(d_xdata, d_max_vec_data, d_numPoints);
+                d_min_vec_plot_curve->setRawSamples(
+                    d_xdata.data(), d_min_vec_data.data(), d_numPoints);
+                d_max_vec_plot_curve->setRawSamples(
+                    d_xdata.data(), d_max_vec_data.data(), d_numPoints);
 #endif
                 _resetXAxisPoints();
                 clearMaxData();
@@ -326,7 +322,7 @@ void VectorDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
             double bottom = 1e20, top = -1e20;
             for (unsigned int n = 0; n < d_nplots; ++n) {
 
-                memcpy(d_ydata[n], dataPoints[n], numDataPoints * sizeof(double));
+                memcpy(d_ydata[n].data(), dataPoints[n], numDataPoints * sizeof(double));
 
                 for (int64_t point = 0; point < numDataPoints; point++) {
                     if (dataPoints[n][point] < d_min_vec_data[point]) {
