@@ -35,6 +35,12 @@ public:
     TimeDomainDisplayPlot(int nplots, QWidget*);
     ~TimeDomainDisplayPlot() override;
 
+    // Disable move/delete because of raw QT pointers.
+    TimeDomainDisplayPlot(const TimeDomainDisplayPlot&) = delete;
+    TimeDomainDisplayPlot(TimeDomainDisplayPlot&&) = delete;
+    TimeDomainDisplayPlot& operator=(const TimeDomainDisplayPlot&) = delete;
+    TimeDomainDisplayPlot& operator=(TimeDomainDisplayPlot&&) = delete;
+
     void plotNewData(const std::vector<double*> dataPoints,
                      const int64_t numDataPoints,
                      const double timeInterval,
@@ -77,8 +83,8 @@ private:
     void _resetXAxisPoints();
     void _autoScale(double bottom, double top);
 
-    std::vector<double*> d_ydata;
-    double* d_xdata;
+    std::vector<std::vector<double>> d_ydata;
+    std::vector<double> d_xdata;
 
     double d_sample_rate;
 
@@ -89,9 +95,9 @@ private:
     std::vector<std::vector<QwtPlotMarker*>> d_tag_markers;
     std::vector<bool> d_tag_markers_en;
 
-    QColor d_tag_text_color;
-    QColor d_tag_background_color;
-    Qt::BrushStyle d_tag_background_style;
+    QColor d_tag_text_color = Qt::black;
+    QColor d_tag_background_color = Qt::white;
+    Qt::BrushStyle d_tag_background_style = Qt::NoBrush;
 
     QwtPlotMarker* d_trigger_lines[2];
 };
