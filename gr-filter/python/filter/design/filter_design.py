@@ -1988,6 +1988,16 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             csvhandle.writerow(["taps",] + list(self.taps))
         handle.close()
+        self.gui.action_save.setEnabled(False)
+        # Iterate through all plots and delete the curves
+        for window in self.plots.values():
+            window.drop_plotdata()
+        # Clear filter coeffs
+        self.gui.filterCoeff.setText("")
+        self.gui.mfilterCoeff.setText("")
+        # Clear poles and zeros plot
+        self.gui.pzPlot.clear()
+        self.replot_all()
 
     def action_open_dialog(self):
         file_dialog_output = QtGui.QFileDialog.getOpenFileName(self, "Open CSV Filter File", ".", "")
