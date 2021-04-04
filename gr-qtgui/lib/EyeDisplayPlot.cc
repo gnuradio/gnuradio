@@ -235,11 +235,9 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                 // New data structure and data
                 for (unsigned int i = 0; i < d_numPeriods; ++i) {
                     int64_t time_index = i * (d_numPointsPerPeriod - 1);
-                    d_ydata.emplace_back(d_numPointsPerPeriod);
-                    // TODO: init copy.
-                    memcpy(d_ydata[i].data(),
-                           &(dataPoints[d_curve_index][time_index]),
-                           d_numPointsPerPeriod * sizeof(double));
+                    d_ydata.emplace_back(
+                        &dataPoints[d_curve_index][time_index],
+                        &dataPoints[d_curve_index][time_index + d_numPointsPerPeriod]);
                     d_plot_curve.push_back(
                         new QwtPlotCurve(QString("Eye [Data %1]").arg(d_curve_index)));
                     d_plot_curve[i]->attach(this);
