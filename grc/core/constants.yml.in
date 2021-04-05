@@ -1,0 +1,8 @@
+# Copyright 2021 Ryan Volz
+#
+# This file is part of GNU Radio
+#
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+# For constants to be loaded by Constants.py that are configured at build time
+GRC_BLOCKS_DIR: "@GRC_BLOCKS_DIR@"

@@ -38,7 +38,8 @@ def main(args=None):
         name='GNU Radio Companion Compiler',
         prefs=gr.prefs(),
         version=gr.version(),
-        version_parts=(gr.major_version(), gr.api_version(), gr.minor_version())
+        version_parts=(gr.major_version(), gr.api_version(), gr.minor_version()),
+        install_prefix=gr.prefix(),
     )
     platform.build_library()
 

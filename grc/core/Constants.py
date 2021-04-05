@@ -12,13 +12,25 @@ import numbers
 import stat
 
 import numpy
+import yaml
 
+
+DATA_DIR = os.path.dirname(__file__)
+
+try:
+    with open(os.path.join(DATA_DIR, "constants.yml"), "r") as f:
+        _yaml_constants = yaml.safe_load(f)
+except (OSError, yaml.YAMLError):
+    _yaml_constants = {}
 
 # Data files
-DATA_DIR = os.path.dirname(__file__)
 BLOCK_DTD = os.path.join(DATA_DIR, 'block.dtd')
 DEFAULT_FLOW_GRAPH = os.path.join(DATA_DIR, 'default_flow_graph.grc')
 DEFAULT_HIER_BLOCK_LIB_DIR = os.path.expanduser('~/.grc_gnuradio')
+GRC_BLOCKS_DIR = os.path.normpath(
+    _yaml_constants.get("GRC_BLOCKS_DIR", os.path.join(DATA_DIR, "..", "blocks"))
+)
+
 
 CACHE_FILE = os.path.expanduser('~/.cache/grc_gnuradio/cache.json')
 

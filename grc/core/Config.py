@@ -6,7 +6,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 
 import os
-from os.path import expanduser, normpath, expandvars, exists
+from os.path import expanduser, expandvars, exists, normpath, join
 from collections import OrderedDict
 
 from . import Constants
@@ -19,9 +19,10 @@ class Config(object):
 
     hier_block_lib_dir = os.environ.get('GRC_HIER_PATH', Constants.DEFAULT_HIER_BLOCK_LIB_DIR)
 
-    def __init__(self, version, version_parts=None, name=None, prefs=None):
+    def __init__(self, version, install_prefix, version_parts=None, name=None, prefs=None):
         self._gr_prefs = prefs if prefs else DummyPrefs()
         self.version = version
+        self.install_prefix = install_prefix
         self.version_parts = version_parts or version[1:].split('-', 1)[0].split('.')[:3]
         self.enabled_components = self._gr_prefs.get_string('grc', 'enabled_components', '')
         if name:
@@ -29,12 +30,14 @@ class Config(object):
 
     @property
     def block_paths(self):
-        paths_sources = (
+        paths_sources = [
             self.hier_block_lib_dir,
             os.environ.get('GRC_BLOCKS_PATH', ''),
             self._gr_prefs.get_string('grc', 'local_blocks_path', ''),
-            self._gr_prefs.get_string('grc', 'global_blocks_path', ''),
-        )
+            normpath(join(self.install_prefix, Constants.GRC_BLOCKS_DIR)),
+        ]
+        if self.install_prefix == "/usr":
+            paths_sources.append(normpath(join("/usr/local", Constants.GRC_BLOCKS_DIR)))
 
         collected_paths = sum((paths.split(os.pathsep)
                                for paths in paths_sources), [])

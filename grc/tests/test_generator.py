@@ -26,6 +26,7 @@ def test_generator():
         name='GNU Radio Companion Compiler',
         prefs=None,
         version='0.0.0',
+        install_prefix='',
     )
     platform.build_library(block_paths)
 

@@ -30,9 +30,8 @@ class Config(CoreConfig):
     gui_prefs_file = os.environ.get(
         'GRC_PREFS_PATH', os.path.expanduser('~/.gnuradio/grc.conf'))
 
-    def __init__(self, install_prefix, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         CoreConfig.__init__(self, *args, **kwargs)
-        self.install_prefix = install_prefix
         Constants.update_font_size(self.font_size)
 
         self.parser = configparser.ConfigParser()

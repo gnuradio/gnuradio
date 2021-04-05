@@ -80,14 +80,8 @@ GR_REGISTER_COMPONENT("gnuradio-companion" ENABLE_GRC
 if(ENABLE_GRC)
 
 ########################################################################
-# Create and install the grc and grc-docs conf file
+# Create and install the grc and grc-docs conf files and constants YAML
 ########################################################################
-file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_BLOCKS_DIR} blocksdir)
-if(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
-    # linux binary installs: append blocks dir with prefix /usr/local
-    set(blocksdir ${blocksdir}:/usr/local/${GRC_BLOCKS_DIR})
-endif(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
-
 if(UNIX)
     find_program(GRC_XTERM_EXE
         NAMES xterminal-emulator gnome-terminal konsole xterm
@@ -119,6 +113,13 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/00-grc-docs.conf
     DESTINATION ${GR_PREFSDIR}
+)
+
+configure_file(core/constants.yml.in core/constants.yml @ONLY)
+
+install(
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/core/constants.yml"
+    DESTINATION "${GR_PYTHON_DIR}/gnuradio/grc/core"
 )
 
 ########################################################################
