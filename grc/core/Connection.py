@@ -90,6 +90,11 @@ class Connection(Element):
             self.add_error_message('No connection known between domains "{}" and "{}"'
                                    ''.format(*self.type))
 
+        source_dtype = self.source_port.dtype
+        sink_dtype = self.sink_port.dtype
+        if source_dtype != sink_dtype:
+            self.add_error_message('Source IO type "{}" does not match sink IO type "{}".'.format(source_dtype, sink_dtype))
+
         source_size = self.source_port.item_size
         sink_size = self.sink_port.item_size
         if source_size != sink_size:
