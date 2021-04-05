@@ -89,6 +89,10 @@ windows_sink::windows_sink(int sampling_freq,
         (wave_format.wBitsPerSample / 8); // room for 16-bit audio on two channels.
 
     d_wave_write_event = CreateEvent(NULL, FALSE, FALSE, NULL);
+    if (!d_wave_write_event) {
+        GR_LOG_ERROR(d_logger, "CreateEvent() failed");
+        throw std::runtime_error("CreateEvent() failed");
+    }
     if (open_waveout_device() < 0) {
         GR_LOG_ERROR(d_logger,
                      boost::format("open_waveout_device() failed: %s") % strerror(errno));

@@ -227,6 +227,12 @@ protected:
 
     //! Stores the individual command handlers
     ::uhd::dict<pmt::pmt_t, cmd_handler_t> _msg_cmd_handlers;
+
+    //! Will check a command for a direction key, if it does not exist this will use
+    // the default value for the block via _direction() defined below
+    const pmt::pmt_t get_cmd_or_default_direction(const pmt::pmt_t& cmd) const;
+    //! Block direction overloaded by block impl to return "RX"/"TX" for source/sink
+    virtual const pmt::pmt_t _direction() const = 0;
 };
 
 } /* namespace uhd */

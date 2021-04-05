@@ -551,6 +551,13 @@ CONFIGURE_FILE(
   ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime/include/gnuradio/config.h
 )
 
+# Re-generate the constants file, now that we actually know which components will be enabled.
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-runtime/lib/constants.cc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime/lib/constants.cc
+    ESCAPE_QUOTES
+@ONLY)
+
 # Install config.h in include/gnuradio
 install(
     FILES

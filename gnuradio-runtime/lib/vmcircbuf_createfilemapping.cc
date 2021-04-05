@@ -49,7 +49,8 @@ static void werror(char* where, DWORD last_error)
 #endif
 
 
-vmcircbuf_createfilemapping::vmcircbuf_createfilemapping(int size) : gr::vmcircbuf(size)
+vmcircbuf_createfilemapping::vmcircbuf_createfilemapping(size_t size)
+    : gr::vmcircbuf(size)
 {
     gr::configure_default_loggers(
         d_logger, d_debug_logger, "vmcircbuf_createfilemapping");
@@ -195,7 +196,7 @@ int vmcircbuf_createfilemapping_factory::granularity()
 #endif
 }
 
-gr::vmcircbuf* vmcircbuf_createfilemapping_factory::make(int size)
+gr::vmcircbuf* vmcircbuf_createfilemapping_factory::make(size_t size)
 {
     try {
         return new vmcircbuf_createfilemapping(size);

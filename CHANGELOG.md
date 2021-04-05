@@ -30,6 +30,13 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
 - `gr::random` uses xoroshiro128+ internally, takes `uint64_t` seed
 
+#### gr-analog
+
+- `fastnoise_source`: Use `uint64_t` seed API, use `size_t` for vector length/indices
+- `fastnoise_source`: Use a simple bitmask if the random pool length is a power
+  of 2 to determine indices, instead of `%`, which consumed considerable CPU
+
+
 ### Added
 
 - New in-tree module gr-pdu

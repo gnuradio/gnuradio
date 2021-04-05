@@ -7,6 +7,7 @@
 
 install(
   FILES
+  pdu_tools_demo.grc
   DESTINATION ${GR_PKG_DATA_DIR}/examples/pdu
 )
 

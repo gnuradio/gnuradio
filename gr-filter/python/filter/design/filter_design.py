@@ -108,6 +108,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.gui.fselectComboBox.removeItem(ind)
 
         self.gui.action_save.triggered.connect(self.action_save_dialog)
+        self.gui.action_save.setEnabled(False)
         self.gui.action_open.triggered.connect(self.action_open_dialog)
 
         self.gui.filterTypeComboBox.currentIndexChanged['const QString&'].connect(self.changed_filter_type)
@@ -585,7 +586,6 @@ class gr_plot_filter(QtGui.QMainWindow):
 
 
     def changed_fselect(self, ftype):
-        strftype = ftype
         if(ftype == "FIR"):
             self.gui.iirfilterTypeComboBox.hide()
             self.gui.iirfilterBandComboBox.hide()
@@ -614,42 +614,48 @@ class gr_plot_filter(QtGui.QMainWindow):
 #self.design()
 
     def set_order(self, ftype):
-        strftype = ftype
         if(ftype == "Bessel"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
+            self.changed_iirfilter_band(self.gui.iirfilterBandComboBox.currentText())
         else:
             self.changed_iirfilter_band(self.gui.iirfilterBandComboBox.currentText())
 
 #self.design()
 
     def changed_iirfilter_band(self, ftype):
-        strftype = ftype
         iirftype = self.gui.iirfilterTypeComboBox.currentText()
         if(ftype == "Low Pass"):
             if(iirftype == "Bessel"):
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
+                self.gui.iirbesselcritLabel2.hide()
+                self.gui.iirbesselcritEdit2.hide()
             else:
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirlpfPage)
         elif(ftype == "Band Pass"):
             if(iirftype == "Bessel"):
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
+                self.gui.iirbesselcritLabel2.show()
+                self.gui.iirbesselcritEdit2.show()
             else:
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbpfPage)
         elif(ftype == "Band Stop"):
             if(iirftype == "Bessel"):
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
+                self.gui.iirbesselcritLabel2.show()
+                self.gui.iirbesselcritEdit2.show()
             else:
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbsfPage)
         elif(ftype == "High Pass"):
             if(iirftype == "Bessel"):
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirbesselPage)
+                self.gui.iirbesselcritLabel2.hide()
+                self.gui.iirbesselcritEdit2.hide()
             else:
                 self.gui.filterTypeWidget.setCurrentWidget(self.gui.iirhpfPage)
 
 #self.design()
 
     def changed_filter_type(self, ftype):
-        strftype = ftype
         if(ftype == "Low Pass"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firlpfPage)
             self.remove_bandview()
@@ -820,6 +826,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.mpzPlot.insertZeros(zeros)
         self.gui.mpzPlot.insertPoles(poles)
         self.update_fcoeff()
+        self.gui.action_save.setEnabled(True)
         # self.set_drawideal()
         # Return taps if callback is enabled.
         if self.callback:
@@ -931,7 +938,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.update_fcoeff()
         self.gui.nTapsEdit.setText("-")
         self.params = iirparams
-
+        self.gui.action_save.setEnabled(True)
         # Return api_object if callback is enabled.
         if self.callback:
             retobj = ApiObject()
@@ -1986,6 +1993,16 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             csvhandle.writerow(["taps",] + list(self.taps))
         handle.close()
+        self.gui.action_save.setEnabled(False)
+        # Iterate through all plots and delete the curves
+        for window in self.plots.values():
+            window.drop_plotdata()
+        # Clear filter coeffs
+        self.gui.filterCoeff.setText("")
+        self.gui.mfilterCoeff.setText("")
+        # Clear poles and zeros plot
+        self.gui.pzPlot.clear()
+        self.replot_all()
 
     def action_open_dialog(self):
         file_dialog_output = QtGui.QFileDialog.getOpenFileName(self, "Open CSV Filter File", ".", "")

@@ -1,0 +1,27 @@
+id: pdu_add_system_time
+label: Add System Time
+flags: [ python ]
+
+parameters:
+-   id: key
+    label: Key
+    dtype: raw
+    default: pmt.intern("system_time")
+
+inputs:
+-   domain: message
+    id: pdu
+    optional: true
+
+outputs:
+-   domain: message
+    id: pdu
+    optional: true
+
+templates:
+    imports: |-
+        from gnuradio import pdu
+        import pmt
+    make: pdu.add_system_time(${key})
+
+file_format: 1
