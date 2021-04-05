@@ -168,6 +168,7 @@ function(GR_PYTHON_INSTALL)
     install(
       FILES ${GR_PYTHON_INSTALL_FILES}
       DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
+      ${GR_PYTHON_INSTALL_UNPARSED_ARGUMENTS}
     )
 
         #create a list of all generated files
@@ -228,6 +229,7 @@ function(GR_PYTHON_INSTALL)
     install(
       DIRECTORY ${GR_PYTHON_INSTALL_DIRECTORY}
       DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
+      ${GR_PYTHON_INSTALL_UNPARSED_ARGUMENTS}
     )
 
 
@@ -334,6 +336,7 @@ function(GR_PYTHON_INSTALL)
 
             install(PROGRAMS ${pyexefile} RENAME ${pyfile_name}
                 DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
+                ${GR_PYTHON_INSTALL_UNPARSED_ARGUMENTS}
             )
         endforeach(pyfile)
 
