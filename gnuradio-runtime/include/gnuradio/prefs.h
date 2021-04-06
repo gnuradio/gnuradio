@@ -14,15 +14,10 @@
 #include <gnuradio/api.h>
 #include <gnuradio/thread/thread.h>
 #include <map>
+#include <mutex>
 #include <string>
 
 namespace gr {
-
-typedef std::map<std::string, std::map<std::string, std::string>> config_map_t;
-typedef std::map<std::string, std::map<std::string, std::string>>::iterator
-    config_map_itr;
-typedef std::map<std::string, std::string> config_map_elem_t;
-typedef std::map<std::string, std::string>::iterator config_map_elem_itr;
 
 /*!
  * \brief Base class for representing user preferences a la windows INI files.
@@ -51,8 +46,6 @@ public:
      * \endcode
      */
     prefs();
-
-    virtual ~prefs();
 
     /*!
      * If specifying a file name, this opens that specific
@@ -155,7 +148,7 @@ protected:
 
 private:
     std::mutex d_mutex;
-    config_map_t d_config_map;
+    std::map<std::string, std::map<std::string, std::string>> d_config_map;
 };
 
 } /* namespace gr */
