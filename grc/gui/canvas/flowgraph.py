@@ -347,7 +347,22 @@ class FlowGraph(CoreFlowgraph, Drawable):
         Args:
             delta_coordinate: the change in coordinates
         """
-        for selected_block in self.selected_blocks():
+
+        # Determine selected blocks top left coordinate
+        blocks = list(self.selected_blocks())
+        if not blocks:
+            return
+
+        min_x, min_y  = self.selected_block.coordinate
+        for selected_block in blocks:
+            x, y = selected_block.coordinate
+            min_x, min_y = min(min_x, x), min(min_y, y)
+
+        # Sanitize delta_coordinate so that blocks don't move to negative coordinate
+        delta_coordinate = max(delta_coordinate[0],-min_x), max(delta_coordinate[1], -min_y)
+
+        # Move selected blocks     
+        for selected_block in blocks:
             selected_block.move(delta_coordinate)
             self.element_moved = True
 
