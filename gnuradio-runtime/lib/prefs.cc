@@ -20,6 +20,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <mutex>
 
 #include <boost/program_options.hpp>
 namespace fs = std::filesystem;
@@ -107,6 +108,7 @@ void prefs::_read_files(const std::vector<std::string>& filenames)
                 // value of a basic_option is always a std::vector<string>; we only
                 // allow single values, so:
                 std::string value = o.value[0];
+                std::lock_guard<std::mutex> lk(d_mutex);
                 d_config_map[section][key] = value;
             }
         } catch (std::exception& e) {
@@ -129,6 +131,7 @@ std::string prefs::to_string()
     config_map_itr sections;
     config_map_elem_itr options;
     std::stringstream s;
+    std::lock_guard<std::mutex> lk(d_mutex);
 
     for (sections = d_config_map.begin(); sections != d_config_map.end(); sections++) {
         s << "[" << sections->first << "]" << std::endl;
@@ -166,6 +169,7 @@ bool prefs::has_section(const std::string& section)
 {
     std::string s = section;
     stolower(s);
+    std::lock_guard<std::mutex> lk(d_mutex);
     return d_config_map.count(s) > 0;
 }
 
@@ -183,6 +187,7 @@ bool prefs::has_option(const std::string& section, const std::string& option)
     std::string o = option;
     stolower(o);
 
+    std::lock_guard<std::mutex> lk(d_mutex);
     config_map_itr sec = d_config_map.find(s);
     return sec->second.count(o) > 0;
 }
@@ -206,6 +211,7 @@ const std::string prefs::get_string(const std::string& section,
     std::string o = option;
     stolower(o);
 
+    std::lock_guard<std::mutex> lk(d_mutex);
     config_map_itr sec = d_config_map.find(s);
     config_map_elem_itr opt = sec->second.find(o);
     return opt->second;
@@ -259,12 +265,12 @@ void prefs::set_general(const std::string& section,
     stolower(s);
     std::string o = option;
     stolower(o);
-    std::map<std::string, std::string> opt_map = d_config_map[s];
 
     std::stringstream sstr;
     sstr << val;
-    opt_map[o] = sstr.str();
-    d_config_map[s] = opt_map;
+
+    std::lock_guard<std::mutex> lk(d_mutex);
+    d_config_map[s][o] = sstr.str();
 }
 
 void prefs::set_bool(const std::string& section, const std::string& option, bool val)
