@@ -20,7 +20,6 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <mutex>
 
 #include <boost/program_options.hpp>
 namespace fs = std::filesystem;
@@ -49,11 +48,6 @@ prefs* prefs::singleton()
 }
 
 prefs::prefs() { _read_files(_sys_prefs_filenames()); }
-
-prefs::~prefs()
-{
-    // nop
-}
 
 std::vector<std::string> prefs::_sys_prefs_filenames()
 {
@@ -128,16 +122,13 @@ void prefs::add_config_file(const std::string& configfile)
 
 std::string prefs::to_string()
 {
-    config_map_itr sections;
-    config_map_elem_itr options;
     std::stringstream s;
     std::lock_guard<std::mutex> lk(d_mutex);
 
-    for (sections = d_config_map.begin(); sections != d_config_map.end(); sections++) {
-        s << "[" << sections->first << "]" << std::endl;
-        for (options = sections->second.begin(); options != sections->second.end();
-             options++) {
-            s << options->first << " = " << options->second << std::endl;
+    for (const auto& sections : d_config_map) {
+        s << "[" << sections.first << "]" << std::endl;
+        for (const auto& options : sections.second) {
+            s << options.first << " = " << options.second << std::endl;
         }
         s << std::endl;
     }
@@ -170,7 +161,7 @@ bool prefs::has_section(const std::string& section)
     std::string s = section;
     stolower(s);
     std::lock_guard<std::mutex> lk(d_mutex);
-    return d_config_map.count(s) > 0;
+    return d_config_map.find(s) != d_config_map.end();
 }
 
 bool prefs::has_option(const std::string& section, const std::string& option)
@@ -188,8 +179,8 @@ bool prefs::has_option(const std::string& section, const std::string& option)
     stolower(o);
 
     std::lock_guard<std::mutex> lk(d_mutex);
-    config_map_itr sec = d_config_map.find(s);
-    return sec->second.count(o) > 0;
+    const auto& sec = d_config_map[s];
+    return sec.find(o) != sec.end();
 }
 
 // get_string needs specialization because it can have spaces.
@@ -212,9 +203,7 @@ const std::string prefs::get_string(const std::string& section,
     stolower(o);
 
     std::lock_guard<std::mutex> lk(d_mutex);
-    config_map_itr sec = d_config_map.find(s);
-    config_map_elem_itr opt = sec->second.find(o);
-    return opt->second;
+    return d_config_map[s][o];
 }
 
 // get_bool() needs specialization because there are multiple text strings for true/false
