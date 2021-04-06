@@ -154,7 +154,7 @@ protected:
     void set_general(const std::string& section, const std::string& option, const T& val);
 
 private:
-    // TODO: add back and actually use: gr::thread::mutex d_mutex;
+    std::mutex d_mutex;
     config_map_t d_config_map;
 };
 
