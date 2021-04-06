@@ -138,14 +138,31 @@ std::string prefs::to_string()
 
 void prefs::save()
 {
-    // TODO: write the settings in an error-safe way, by writing to a tempfile and
-    // atomically renaming.
-    std::string conf = to_string();
-    fs::path userconf = fs::path(gr::userconf_path()) / "config.conf";
-    std::ofstream fout(userconf);
+    const std::string conf = to_string();
+
+    // Write temp file.
+    const fs::path tmp = fs::path(gr::userconf_path()) / "config.conf.tmp";
+    std::ofstream fout(tmp);
     fout << conf;
     fout.close();
-    // TODO: throw on error?
+    if (!fout.good()) {
+        const std::string write_err = strerror(errno);
+        {
+            std::error_code err;
+            fs::remove(tmp, err);
+            if (err) {
+                std::cerr << "Failed to remove temp file: " << err << std::endl;
+            }
+        }
+        throw std::runtime_error("failed to write updated config: " + write_err);
+    }
+
+    // Atomic rename.
+    const fs::path userconf = fs::path(gr::userconf_path()) / "config.conf";
+    fs::rename(tmp, userconf);
+    // If fs::rename() fails, we'll leak the tempfile and throw. That's fine.
+    // If the user wants it (it was written successfully) they can have it.
+    // Or it'll be overwritten on the next save.
 }
 
 char* prefs::option_to_env(std::string section, std::string option)
@@ -161,7 +178,7 @@ bool prefs::has_section(const std::string& section)
     std::string s = section;
     stolower(s);
     std::lock_guard<std::mutex> lk(d_mutex);
-    return d_config_map.find(s) != d_config_map.end();
+    return d_config_map.count(s) > 0;
 }
 
 bool prefs::has_option(const std::string& section, const std::string& option)
