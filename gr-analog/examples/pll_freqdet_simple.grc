@@ -1,0 +1,352 @@
+options:
+  parameters:
+    author: "Marcus M\xFCller"
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: '2021'
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: pll_freqdet_simple
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Showcasing the PLL Freq Det
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [24, 20.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: freq
+  id: variable_qtgui_range
+  parameters:
+    comment: 'Frequency Adjustment
+
+      Widget'
+    gui_hint: ''
+    label: Frequency / Hz
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: -samp_rate/2
+    step: samp_rate/1e3
+    stop: samp_rate/2
+    value: '1'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [24, 340.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 1e5
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [192, 20.0]
+    rotation: 0
+    state: enabled
+- name: analog_pll_freqdet_cf_0
+  id: analog_pll_freqdet_cf
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max_freq: pi
+    maxoutbuf: '0'
+    min_freq: -pi
+    minoutbuf: '0'
+    w: pi/10
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [456, 188.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1'
+    comment: 'Adjustable Frequency
+
+      Signal Source'
+    freq: freq
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [24, 164.0]
+    rotation: 0
+    state: true
+- name: blocks_multiply_const_vxx_0
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: "Output is phase/sample,\nso divide by 2\u03C0 to get a\nrelative frequency\n\
+      \u2208[-1/2,1/2],"
+    const: 1/(2*pi)
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [696, 204.0]
+    rotation: 0
+    state: true
+- name: blocks_multiply_const_vxx_1
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: "multiply by sampling\nrate to get absolute \nfrequency\n\u2208[-f_s/2,\
+      \ f_s/2]"
+    const: samp_rate
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [888, 204.0]
+    rotation: 0
+    state: true
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: "Only slows down\nprocessing of \nsamples (for easier\nvisualization)"
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [248, 204.0]
+    rotation: 0
+    state: true
+- name: import_0
+  id: import
+  parameters:
+    alias: from math import pi
+    comment: "Gives us the\n\u03C0 constant as \"pi\""
+    imports: from math import pi
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [296, 20.0]
+    rotation: 0
+    state: true
+- name: qtgui_number_sink_0
+  id: qtgui_number_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    autoscale: 'False'
+    avg: '0'
+    color1: ("black", "black")
+    color10: ("black", "black")
+    color2: ("black", "black")
+    color3: ("black", "black")
+    color4: ("black", "black")
+    color5: ("black", "black")
+    color6: ("black", "black")
+    color7: ("black", "black")
+    color8: ("black", "black")
+    color9: ("black", "black")
+    comment: ''
+    factor1: '1'
+    factor10: '1'
+    factor2: '1'
+    factor3: '1'
+    factor4: '1'
+    factor5: '1'
+    factor6: '1'
+    factor7: '1'
+    factor8: '1'
+    factor9: '1'
+    graph_type: qtgui.NUM_GRAPH_HORIZ
+    gui_hint: ''
+    label1: '"Phase advancement per sample"'
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    max: pi
+    min: -pi
+    name: '""'
+    nconnections: '1'
+    type: float
+    unit1: rad
+    unit10: ''
+    unit2: ''
+    unit3: ''
+    unit4: ''
+    unit5: ''
+    unit6: ''
+    unit7: ''
+    unit8: ''
+    unit9: ''
+    update_time: '0.10'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [696, 60.0]
+    rotation: 0
+    state: true
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Frequency
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'False'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: '200'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Frequency
+    ymax: 0.55*samp_rate
+    ymin: -0.55*samp_rate
+    yunit: '"Hz"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1048, 188.0]
+    rotation: 0
+    state: true
+
+connections:
+- [analog_pll_freqdet_cf_0, '0', blocks_multiply_const_vxx_0, '0']
+- [analog_pll_freqdet_cf_0, '0', qtgui_number_sink_0, '0']
+- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
+- [blocks_multiply_const_vxx_0, '0', blocks_multiply_const_vxx_1, '0']
+- [blocks_multiply_const_vxx_1, '0', qtgui_time_sink_x_0, '0']
+- [blocks_throttle_0, '0', analog_pll_freqdet_cf_0, '0']
+
+metadata:
+  file_format: 1
