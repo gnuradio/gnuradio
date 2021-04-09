@@ -1,16 +1,16 @@
 id: analog_pll_refout_cc
-label: PLL Ref Out
+label: PLL Carrier Regeneration
 flags: [ python, cpp ]
 
 parameters:
 -   id: w
     label: Loop Bandwidth
     dtype: real
--   id: max_freq
-    label: Max Freq
-    dtype: real
 -   id: min_freq
-    label: Min Freq
+    label: Min Phase/sample
+    dtype: real
+-   id: max_freq
+    label: Max Phase/sample
     dtype: real
 
 inputs:
