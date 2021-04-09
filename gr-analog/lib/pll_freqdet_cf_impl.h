@@ -12,32 +12,12 @@
 #define INCLUDED_ANALOG_PLL_FREQDET_CF_IMPL_H
 
 #include <gnuradio/analog/pll_freqdet_cf.h>
-#include <gnuradio/math.h>
 
 namespace gr {
 namespace analog {
 
 class pll_freqdet_cf_impl : public pll_freqdet_cf
 {
-private:
-    float mod_2pi(float in)
-    {
-        if (in > GR_M_PI)
-            return in - (2.0 * GR_M_PI);
-        else if (in < -GR_M_PI)
-            return in + (2.0 * GR_M_PI);
-        else
-            return in;
-    }
-
-    float phase_detector(gr_complex sample, float ref_phase)
-    {
-        float sample_phase;
-        sample_phase = gr::fast_atan2f(sample.imag(), sample.real());
-        return mod_2pi(sample_phase - ref_phase);
-    }
-
-
 public:
     pll_freqdet_cf_impl(float loop_bw, float max_freq, float min_freq);
     ~pll_freqdet_cf_impl() override;
