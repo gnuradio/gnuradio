@@ -8,6 +8,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 
 from .base import Element
+from .Constants import ALIAS_OF
 from .utils.descriptors import lazy_property
 
 
@@ -92,7 +93,7 @@ class Connection(Element):
 
         source_dtype = self.source_port.dtype
         sink_dtype = self.sink_port.dtype
-        if source_dtype != sink_dtype:
+        if source_dtype != sink_dtype and source_dtype != ALIAS_OF.get(sink_dtype):
             self.add_error_message('Source IO type "{}" does not match sink IO type "{}".'.format(source_dtype, sink_dtype))
 
         source_size = self.source_port.item_size
