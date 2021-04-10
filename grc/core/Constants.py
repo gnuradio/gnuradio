@@ -115,5 +115,21 @@ ALIAS_TYPES = {
     'bits':    (1, GRC_COLOR_PURPLE_A100),
 }
 
+ALIAS_OF = {
+    'complex': 'fc32',
+    'float': 'f32',
+    'int': 's32',
+    'short': 's16',
+    'byte': 's8',
+    'bits': 'bit',
+
+    'fc32': 'complex',
+    'f32': 'float',
+    's32': 'int',
+    's16': 'short',
+    's8': 'byte',
+    'bit': 'bits',
+}
+
 TYPE_TO_SIZEOF = {key: sizeof for name, key, sizeof, color in CORE_TYPES}
 TYPE_TO_SIZEOF.update((key, sizeof) for key, (sizeof, _) in ALIAS_TYPES.items())
