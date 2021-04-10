@@ -116,12 +116,12 @@ def build_params(params_raw, have_inputs, have_outputs, flags, block_id):
         if param_id in params:
             raise Exception('Param id "{}" is not unique'.format(param_id))
 
-        if 'option_attributes' in param_data:
-            _validate_option_attributes(param_data, block_id)
-
         base_key = param_data.get('base_key', None)
         param_data_ext = base_params_n.get(base_key, {}).copy()
         param_data_ext.update(param_data)
+
+        if 'option_attributes' in param_data:
+            _validate_option_attributes(param_data_ext, block_id)
 
         add_param(**param_data_ext)
         base_params_n[param_id] = param_data_ext
