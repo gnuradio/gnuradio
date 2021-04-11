@@ -13,7 +13,7 @@ from .. import Constants
 
 
 # Blacklist certain ids, its not complete, but should help
-ID_BLACKLIST = ['self', 'options', 'gr', 'math', 'firdes', 'default'] + dir(builtins)
+ID_BLACKLIST = ['self', 'default'] + dir(builtins)
 try:
     from gnuradio import gr
     ID_BLACKLIST.extend(attr for attr in dir(gr.top_block()) if not attr.startswith('_'))
@@ -32,19 +32,18 @@ def validates(*dtypes):
         return func
     return decorator
 
-
 class ValidateError(Exception):
     """Raised by validate functions"""
 
 
 @validates('id')
-def validate_block_id(param):
+def validate_block_id(param,black_listed_ids):
     value = param.value
     # Can python use this as a variable?
     if not re.match(r'^[a-z|A-Z]\w*$', value):
         raise ValidateError('ID "{}" must begin with a letter and may contain letters, numbers, '
                             'and underscores.'.format(value))
-    if value in ID_BLACKLIST:
+    if value in (black_listed_ids + ID_BLACKLIST):
         raise ValidateError('ID "{}" is blacklisted.'.format(value))
     block_names = [block.name for block in param.parent_flowgraph.iter_enabled_blocks()]
     # Id should only appear once, or zero times if block is disabled
@@ -56,7 +55,7 @@ def validate_block_id(param):
 
 
 @validates('name')
-def validate_name(param):
+def validate_name(param,black_listed_ids):
     # Name of a function or other block that will be generated literally not as a string
     value = param.value
 
@@ -69,7 +68,7 @@ def validate_name(param):
 
 
 @validates('stream_id')
-def validate_stream_id(param):
+def validate_stream_id(param,black_listed_ids):
     value = param.value
     stream_ids = [
         block.params['stream_id'].value
@@ -86,7 +85,7 @@ def validate_stream_id(param):
 
 
 @validates('complex', 'real', 'float', 'int')
-def validate_scalar(param):
+def validate_scalar(param,black_listed_ids):
     valid_types = Constants.PARAM_TYPE_MAP[param.dtype]
     if not isinstance(param.get_evaluated(), valid_types):
         raise ValidateError('Expression {!r} is invalid for type {!r}.'.format(
@@ -94,7 +93,7 @@ def validate_scalar(param):
 
 
 @validates('complex_vector', 'real_vector', 'float_vector', 'int_vector')
-def validate_vector(param):
+def validate_vector(param,black_listed_ids):
     # todo: check vector types
 
     if param.get_evaluated() is None:
@@ -106,7 +105,7 @@ def validate_vector(param):
             param.get_evaluated(), param.dtype))
 
 @validates('gui_hint')
-def validate_gui_hint(param):
+def validate_gui_hint(param,black_listed_ids):
     try:
         param.parse_gui_hint(param.value)
     except Exception as e:
