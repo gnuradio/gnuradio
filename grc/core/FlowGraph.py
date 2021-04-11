@@ -44,6 +44,7 @@ class FlowGraph(Element):
 
         self._eval_cache = {}
         self.namespace = {}
+        self.imported_names = []
 
         self.grc_file_path = ''
 
@@ -190,6 +191,16 @@ class FlowGraph(Element):
         except Exception as e:
             raise ValueError("Can't parse run command {!r}: {}".format(run_command, e))
 
+    def get_imported_names(self):
+        """
+        Get a lis of imported names.
+        These names may not be used as id's
+
+        Returns:
+            a list of imported names
+        """
+        return self.imported_names
+
     ##############################################
     # Access Elements
     ##############################################
@@ -228,6 +239,8 @@ class FlowGraph(Element):
             except Exception:
                 log.exception('Failed to evaluate import expression "{0}"'.format(expr), exc_info=True)
                 pass
+
+        self.imported_names = list(namespace.keys())
 
         for id, expr in self.get_python_modules():
             try:
