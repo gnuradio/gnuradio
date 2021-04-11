@@ -156,7 +156,7 @@ class Param(Element):
         validator = dtypes.validators.get(self.dtype, None)
         if self._init and validator:
             try:
-                validator(self)
+                validator(self,self.parent_flowgraph.get_imported_names())
             except dtypes.ValidateError as e:
                 self.add_error_message(str(e))
 
