@@ -84,6 +84,7 @@ set(GR_COMPONENTS
   audio
   channels
   pdu
+  iio
   qtgui
   trellis
   uhd
