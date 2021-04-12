@@ -6,6 +6,14 @@
 #
 
 ########################################################################
+# Setup compatibility checks and defines
+########################################################################
+include(GrMiscUtils)
+include(CheckCXXSourceCompiles)
+GR_CHECK_HDR_N_DEF(io.h HAVE_IO_H)
+CHECK_INCLUDE_FILE_CXX(windows.h HAVE_WINDOWS_H)
+
+########################################################################
 #Setup library
 ########################################################################
 add_library(gnuradio-network
@@ -21,8 +29,13 @@ add_library(gnuradio-network
 target_link_libraries(gnuradio-network PUBLIC gnuradio-runtime)
 target_include_directories(gnuradio-network
     PUBLIC $<INSTALL_INTERFACE:include>
-    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include> 
-) 
+    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+)
+
+if(HAVE_WINDOWS_H)
+    target_compile_definitions(gnuradio-network PRIVATE -DHAVE_WINDOWS_H)
+    target_link_libraries(gnuradio-network PRIVATE ws2_32 wsock32)
+endif()
 
 #Add Windows DLL resource file if using MSVC
 if (MSVC)
