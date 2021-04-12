@@ -241,13 +241,9 @@ target_compile_definitions(gnuradio-runtime PRIVATE BOOST_DLL_USE_STD_FS)
   endif()
 
 
-#Add libraries for winsock2.h on Windows
-check_include_file_cxx(windows.h HAVE_WINDOWS_H)
-if(HAVE_WINDOWS_H)
-    target_compile_definitions(gnuradio-runtime PUBLIC -DHAVE_WINDOWS_H -DUSING_WINSOCK -DWIN32_LEAN_AND_MEAN)
-    message(STATUS "Adding windows libs to gnuradio runtime libs...")
-    target_link_libraries(gnuradio-runtime PUBLIC ws2_32 wsock32)
-endif(HAVE_WINDOWS_H)
+if(WIN32)
+    target_compile_definitions(gnuradio-runtime PUBLIC -DWIN32_LEAN_AND_MEAN)
+endif(WIN32)
 
 #need to link with librt on ubuntu 11.10 for shm_*
 if((LINUX) OR (CMAKE_SYSTEM_NAME STREQUAL "kFreeBSD"))
