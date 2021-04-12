@@ -8,7 +8,8 @@
 ########################################################################
 # Setup compatibility checks and defines
 ########################################################################
-include(${CMAKE_CURRENT_SOURCE_DIR}/ConfigChecks.cmake)
+include(GrMiscUtils)
+GR_CHECK_HDR_N_DEF(io.h HAVE_IO_H)
 
 ########################################################################
 # Setup library
