@@ -139,8 +139,6 @@ void TimeRasterData::setRange(const QwtDoubleInterval& newRange)
 
 double TimeRasterData::value(double x, double y) const
 {
-    double returnValue = 0.0;
-
 #if QWT_VERSION < 0x060000
     double top = boundingRect().top();
     double bottom = top - boundingRect().height();
@@ -158,13 +156,13 @@ double TimeRasterData::value(double x, double y) const
 
     double _y = floor(top - y);
     double _loc = _y * (d_cols) + x + d_resid;
-    auto location = static_cast<ssize_t>(_loc);
+    const auto location = static_cast<size_t>(_loc);
 
-    if ((location > -1) && (location < static_cast<ssize_t>(d_data.size()))) {
-        returnValue = d_data[location];
+    if (location < d_data.size()) {
+        return d_data[location];
     }
 
-    return returnValue;
+    return 0.0;
 }
 
 void TimeRasterData::incrementResidual()
