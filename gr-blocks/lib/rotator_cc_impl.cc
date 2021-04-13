@@ -85,12 +85,6 @@ int rotator_cc_impl::work(int noutput_items,
     gr::thread::scoped_lock l(d_mutex);
     const gr_complex* in = (const gr_complex*)input_items[0];
     gr_complex* out = (gr_complex*)output_items[0];
-
-#if 0
-      for (int i=0; i<noutput_items; i++)
-      	out[i] = d_r.rotate(in[i]);
-#else
-
     const uint64_t n_written = nitems_written(0);
 
     if (d_inc_update_queue.empty()) {
@@ -134,7 +128,6 @@ int rotator_cc_impl::work(int noutput_items,
                     in + nprocessed_items,
                     (noutput_items - nprocessed_items));
     }
-#endif
 
     return noutput_items;
 }
