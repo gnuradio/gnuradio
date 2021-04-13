@@ -86,6 +86,7 @@ int rotator_cc_impl::work(int noutput_items,
     const gr_complex* in = (const gr_complex*)input_items[0];
     gr_complex* out = (gr_complex*)output_items[0];
     const uint64_t n_written = nitems_written(0);
+    static const pmt::pmt_t phase_inc_tag_key = pmt::intern("rot_phase_inc");
 
     if (d_inc_update_queue.empty()) {
         d_r.rotateN(out, in, noutput_items);
@@ -118,7 +119,7 @@ int rotator_cc_impl::work(int noutput_items,
             if (d_tag_inc_updates) {
                 add_item_tag(0,
                              next_update.offset,
-                             pmt::string_to_symbol("rot_phase_inc"),
+                             phase_inc_tag_key,
                              pmt::from_float(next_update.phase_inc));
             }
         }
