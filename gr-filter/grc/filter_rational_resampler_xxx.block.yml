@@ -52,7 +52,7 @@ templates:
         % else:
                 taps=[],
         % endif
-        % if float(fbw) != 0:
+        % if fbw:
                 fractional_bw=${fbw})
         % else:
                 fractional_bw=-1.0)
