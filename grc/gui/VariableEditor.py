@@ -182,11 +182,16 @@ class VariableEditor(Gtk.VBox):
                 if block.is_variable:
                     # Evaluate the params
                     for key in block.params:
-                        evaluated = str(block.params[key].evaluate())
-                        # ensure that evaluated is a UTF-8 string
-                        # Old PMTs could produce non-UTF-8 strings
-                        evaluated = evaluated.encode('utf-8', 'backslashreplace').decode('utf-8')
-                        self.set_tooltip_text(evaluated)
+                        try: 
+                            evaluated = str(block.params[key].evaluate())
+                            # ensure that evaluated is a UTF-8 string
+                            # Old PMTs could produce non-UTF-8 strings
+                            evaluated = evaluated.encode('utf-8', 'backslashreplace').decode('utf-8')
+                            self.set_tooltip_text(evaluated)
+                        except Exception as error:
+                            block.params[key].add_error_message(str(error))
+                            self.set_tooltip_text(str(error))
+                            pass
 
                     # Evaluate the block value
                     try:
@@ -195,6 +200,11 @@ class VariableEditor(Gtk.VBox):
                     except Exception as error:
                         self.set_tooltip_text(str(error))
                         pass
+                    
+                    # Mark this variable block in red in case of error
+                    if not block.is_valid(): 
+                        block.create_labels()
+                        block.create_shapes()
 
         # Always set the text value.
         sp('text', value)
