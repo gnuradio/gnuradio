@@ -122,6 +122,42 @@ target_sources(gnuradio-runtime PRIVATE
   ${MATH_SINE_TABLE_HEADER}
   )
 
+target_link_libraries(gnuradio-runtime PUBLIC
+  gnuradio-pmt
+  Volk::volk
+  Boost::program_options
+  Boost::filesystem
+  Boost::system
+  Boost::regex
+  Boost::thread
+  Log4Cpp::log4cpp
+  MPLib::mplib
+  ${libunwind_LIBRARIES}
+  # INTERFACE/PRIVATE split so users of the library can choose how to link to Python
+  # (importantly, extension modules can avoid linking against Python and resolve
+  #  their own Python symbols at runtime through the Python interpreter's linking)
+  INTERFACE
+    Python::Module
+  PRIVATE
+    Python::Python
+  )
+
+target_include_directories(gnuradio-runtime
+  PUBLIC
+    ${PYTHON_NUMPY_INCLUDE_DIR}
+    ${pybind11_INCLUDE_DIR}
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+
+target_compile_definitions(gnuradio-runtime PUBLIC ${MPLIB_DEFINITIONS})
+
+########################################################################
+# Add controlport stuff to gnuradio-runtime
+########################################################################
 # Controlport
 if(ENABLE_GR_CTRLPORT)
 
@@ -178,6 +214,8 @@ target_link_libraries(gnuradio-runtime PUBLIC
   Thrift::thrift
   )
 
+target_compile_definitions(gnuradio-runtime PUBLIC GR_CTRLPORT)
+
 # Add install rule to move example Thrift configuration file into a
 # documentation directory
 install(
@@ -188,10 +226,6 @@ install(
 endif(THRIFT_FOUND)
 endif(ENABLE_CTRLPORT_THRIFT)
 
-########################################################################
-# Add controlport stuff to gnuradio-runtime
-########################################################################
-
 # Save the number of backends for testing against later
 set(
   CTRLPORT_BACKENDS ${CTRLPORT_BACKENDS}
@@ -200,41 +234,38 @@ set(
 
 endif(ENABLE_GR_CTRLPORT)
 
-target_link_libraries(gnuradio-runtime PUBLIC
-  gnuradio-pmt
-  Volk::volk
-  Boost::program_options
-  Boost::filesystem
-  Boost::system
-  Boost::regex
-  Boost::thread
-  Log4Cpp::log4cpp
-  MPLib::mplib
-  ${libunwind_LIBRARIES}
-  # INTERFACE/PRIVATE split so users of the library can choose how to link to Python
-  # (importantly, extension modules can avoid linking against Python and resolve
-  #  their own Python symbols at runtime through the Python interpreter's linking)
-  INTERFACE
-    Python::Module
-  PRIVATE
-    Python::Python
+########################################################################
+# Add misc conditional includes/definitions to gnuradio-runtime
+########################################################################
+
+if(ENABLE_PERFORMANCE_COUNTERS)
+  target_compile_definitions(gnuradio-runtime PUBLIC -DGR_PERFORMANCE_COUNTERS)
+endif()
+
+if(GR_IS_BIG_ENDIAN)
+  target_compile_definitions(gnuradio-runtime PUBLIC -DGR_IS_BIG_ENDIAN)
+endif(GR_IS_BIG_ENDIAN)
+
+if(MSVC)
+  target_compile_definitions(gnuradio-runtime PUBLIC
+    # Minimum version: "Windows Server 2003 with SP1, Windows XP with SP2"
+    -D_WIN32_WINNT=0x0502
+    # disables stupidity and enables std::min and std::max
+    -DNOMINMAX
+    # stop all kinds of compatibility warnings
+    -D_SCL_SECURE_NO_WARNINGS
+    -D_CRT_SECURE_NO_WARNINGS
+    -D_CRT_SECURE_NO_DEPRECATE
+    -D_CRT_NONSTDC_NO_DEPRECATE
   )
+endif(MSVC)
 
-target_include_directories(gnuradio-runtime
-  PUBLIC
-    ${PYTHON_NUMPY_INCLUDE_DIR}
-    ${pybind11_INCLUDE_DIR}
-    $<INSTALL_INTERFACE:include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-
-  if(ENABLE_GR_CTRLPORT)
-    target_compile_definitions(gnuradio-runtime PUBLIC GR_CTRLPORT)
-  endif()
-
+if(WIN32)
+  target_compile_definitions(gnuradio-runtime PUBLIC -D_USE_MATH_DEFINES)
+  if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    target_compile_definitions(gnuradio-runtime PUBLIC -DMS_WIN64)
+  endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+endif(WIN32)
 
 if(WIN32)
     target_compile_definitions(gnuradio-runtime PUBLIC -DWIN32_LEAN_AND_MEAN)
