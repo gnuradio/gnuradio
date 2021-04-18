@@ -34,6 +34,12 @@ FONT_COLOR = get_color('#000000')
 MISSING_BLOCK_BACKGROUND_COLOR = get_color('#FFF2F2')
 MISSING_BLOCK_BORDER_COLOR = get_color('#FF0000')
 
+# Deprecated blocks
+# a light warm yellow
+BLOCK_DEPRECATED_BACKGROUND_COLOR = get_color('#FED86B')
+# orange
+BLOCK_DEPRECATED_BORDER_COLOR = get_color('#FF540B')
+
 # Flow graph color constants
 FLOWGRAPH_BACKGROUND_COLOR = get_color('#FFFFFF')
 COMMENT_BACKGROUND_COLOR = get_color('#F3F3F3')
