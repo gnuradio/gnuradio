@@ -165,9 +165,6 @@ include(GrMiscUtils) #compiler flag check
 
 include(TestBigEndian)
 TEST_BIG_ENDIAN(GR_IS_BIG_ENDIAN)
-if(GR_IS_BIG_ENDIAN)
-    add_definitions(-DGR_IS_BIG_ENDIAN)
-endif(GR_IS_BIG_ENDIAN)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
    CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -183,26 +180,10 @@ endif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
 
 if(MSVC)
     include_directories(${CMAKE_SOURCE_DIR}/cmake/msvc) #missing headers
-    add_definitions(-D_USE_MATH_DEFINES) #enables math constants on all supported versions of MSVC
-    add_definitions(-D_WIN32_WINNT=0x0502) #Minimum version: "Windows Server 2003 with SP1, Windows XP with SP2"
-    add_definitions(-DNOMINMAX) #disables stupidity and enables std::min and std::max
-    add_definitions( #stop all kinds of compatibility warnings
-        -D_SCL_SECURE_NO_WARNINGS
-        -D_CRT_SECURE_NO_WARNINGS
-        -D_CRT_SECURE_NO_DEPRECATE
-        -D_CRT_NONSTDC_NO_DEPRECATE
-    )
     add_definitions(-DHAVE_CONFIG_H)
     add_compile_options(/MP) #build with multiple processors
     add_compile_options(/bigobj) #allow for larger object files
 endif(MSVC)
-
-if(WIN32)
-    add_definitions(-D_USE_MATH_DEFINES)
-    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-        add_definitions(-DMS_WIN64)
-    endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
-endif(WIN32)
 
 # Record Compiler Info for record
 STRING(TOUPPER ${CMAKE_BUILD_TYPE} GRCBTU)
@@ -274,7 +255,6 @@ OPTION(ENABLE_PERFORMANCE_COUNTERS "Enable block performance counters" ON)
 if(ENABLE_PERFORMANCE_COUNTERS)
   message(STATUS "ADDING PERF COUNTERS")
   SET(GR_PERFORMANCE_COUNTERS True)
-  add_definitions(-DGR_PERFORMANCE_COUNTERS)
 else(ENABLE_PERFORMANCE_COUNTERS)
   SET(GR_PERFORMANCE_COUNTERS False)
   message(STATUS "NO PERF COUNTERS")
@@ -456,7 +436,6 @@ list(APPEND GR_TEST_PYTHON_DIRS
 # multiprecision arithmetic library header to include
 include(FindPkgConfig)
 find_package(MPLIB)
-add_definitions(${MPLIB_DEFINITIONS})
 
 ########################################################################
 # Post-Install tasks are tasks that are usually not executed during
@@ -492,7 +471,6 @@ add_subdirectory(gr-network)
 # Defining GR_CTRLPORT for gnuradio/config.h
 if(ENABLE_GR_CTRLPORT)
   SET(GR_CTRLPORT True)
-  add_definitions(-DGR_CTRLPORT)
 
   if(CTRLPORT_BACKENDS GREATER 0)
     SET(GR_RPCSERVER_ENABLED True)
