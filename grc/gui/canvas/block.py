@@ -1,5 +1,6 @@
 """
 Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright 2020-2021 GNU Radio Contributors
 This file is part of GNU Radio
 
 SPDX-License-Identifier: GPL-2.0-or-later
@@ -95,17 +96,38 @@ class Block(CoreBlock, Drawable):
         self.states['rotation'] = rot
 
     def _update_colors(self):
-        self._bg_color = (
-            colors.MISSING_BLOCK_BACKGROUND_COLOR if self.is_dummy_block else
-            colors.BLOCK_BYPASSED_COLOR if self.state == 'bypassed' else
-            colors.BLOCK_ENABLED_COLOR if self.state == 'enabled' else
-            colors.BLOCK_DISABLED_COLOR
-        )
+        def get_bg():
+            """
+            Get the background color for this block
+
+            Explicit is better than a chain of if/else expressions,
+            so this was extracted into a nested function.
+            """
+            if self.is_dummy_block:
+                return colors.MISSING_BLOCK_BACKGROUND_COLOR
+            if self.state == 'bypassed':
+                return colors.BLOCK_BYPASSED_COLOR
+            if self.state == 'enabled':
+                if self.deprecated:
+                    return colors.BLOCK_DEPRECATED_BACKGROUND_COLOR
+                return colors.BLOCK_ENABLED_COLOR
+            return colors.BLOCK_DISABLED_COLOR
+
+        def get_border():
+            """
+            Get the border color for this block
+            """
+            if self.is_dummy_block:
+                return colors.MISSING_BLOCK_BORDER_COLOR
+            if self.deprecated:
+                return colors.BLOCK_DEPRECATED_BORDER_COLOR
+            if self.state == 'enabled':
+                return colors.BORDER_COLOR
+            return colors.BORDER_COLOR_DISABLED
+
+        self._bg_color = get_bg()
         self._font_color[-1] = 1.0 if self.state == 'enabled' else 0.4
-        self._border_color = (
-            colors.MISSING_BLOCK_BORDER_COLOR if self.is_dummy_block else
-            colors.BORDER_COLOR_DISABLED if not self.state == 'enabled' else colors.BORDER_COLOR
-        )
+        self._border_color = get_border()
 
     def create_shapes(self):
         """Update the block, parameters, and ports when a change occurs."""
