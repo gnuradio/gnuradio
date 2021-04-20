@@ -61,7 +61,7 @@ jobs:
             containerid: 'gnuradio/ci:centos-8.3-3.9'
             cxxflags: -Werror
           - distro: 'Debian 10'
-            containerid: 'gnuradio/ci-debian-10-3.9:1.0'
+            containerid: 'gnuradio/ci:debian-10-3.9'
             cxxflags: -Werror
     name: ${{ matrix.distro }}
     container:
