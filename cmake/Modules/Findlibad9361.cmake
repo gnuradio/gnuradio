@@ -52,7 +52,7 @@ pkg_check_modules(PC_libad9361 QUIET libad9361)
 
 find_path(libad9361_INCLUDE_DIR
   NAMES ad9361.h
-  HINTS ${PC_libiio_INCLUDE_DIRS}
+  HINTS ${PC_libad9361_INCLUDE_DIRS}
   PATHS /usr/include
         /usr/local/include
         /opt/local/include
