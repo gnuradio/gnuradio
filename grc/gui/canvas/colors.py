@@ -12,6 +12,8 @@ from gi.repository import Gtk, Gdk, cairo
 
 from .. import Constants
 
+from typing import Tuple
+
 
 def get_color(color_code):
     color = Gdk.RGBA()
@@ -20,6 +22,16 @@ def get_color(color_code):
     # chars_per_color = 2 if len(color_code) > 4 else 1
     # offsets = range(1, 3 * chars_per_color + 1, chars_per_color)
     # return tuple(int(color_code[o:o + 2], 16) / 255.0 for o in offsets)
+
+
+def get_hexcolor(color_tuple: Tuple[float, float, float]):
+    """
+    Converts a tuple (r,g,b)∈[0,1]³ to an RGB hexcode #000000…#FFFFFF
+    """
+    r, g, b, *rest = (int(val * 0xFF) for val in color_tuple)
+    assert len(rest) <= 1
+    return f"#{r:02X}{b:02X}{g:02X}"
+
 
 #################################################################################
 # fg colors
