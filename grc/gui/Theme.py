@@ -39,6 +39,12 @@ class State(Flag):
 
 
 DEFAULT_THEME = {
+    "Element": {
+        "default": {
+            "font-family": "Sans",
+            "font-size": 8,
+        },
+    },
     "Flowgraph": {
         "default": {
             "background-color": "#FFFFFF"
@@ -48,7 +54,10 @@ DEFAULT_THEME = {
         "default": {
             "border-color": "#616161",
             "color": "#000000",
-            "background-color": "#F1ECFF"
+            "background-color": "#F1ECFF",
+            "font-family": "Sans",
+            "font-size": 8,
+            "padding": 7,
         },
         "disabled": {
             "background-color": "#CCCCCC",
@@ -78,7 +87,24 @@ DEFAULT_THEME = {
     },
     "Port": {
         "default": {
-            "background-color": "#FFFFFF"
+            "background-color": "#FFFFFF",
+            "font-size": 8,
+            "padding": 2
+        }
+    },
+    "Param": {
+        "default": {
+            "font-size": 7.5,
+        }
+    },
+    "Comment": {
+        "default": {
+            "color": "#404040",
+            "font-size": 8,
+            "font-family": "Sans",
+        },
+        "disabled": {
+            "color": "#808080"
         }
     }
 }
@@ -168,6 +194,11 @@ class ThemeEngine(object):
         """
 
         type_specific = None
+        if isinstance(objtype, str):
+            try:
+                type_specific = self.dict[objtype]
+            except KeyError:
+                return default
         if isinstance(objtype, Element):
             objtype = type(objtype)
         if isinstance(objtype, type):
@@ -178,7 +209,7 @@ class ThemeEngine(object):
                         break
                     type_specific = self.dict[classname]
                     break
-                except KeyError as key_err:
+                except KeyError:
                     continue
 
         if not type_specific:

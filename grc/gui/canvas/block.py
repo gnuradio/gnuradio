@@ -11,12 +11,13 @@ import math
 
 from gi.repository import Gtk, Pango, PangoCairo
 
-from . import colors
 from .drawable import Drawable
-from .. import Actions, Utils, Constants
+from .. import Actions, Utils
+from ..Theme import Theme, State
+from .colors import get_hexcolor
 from ..Constants import (
-    BLOCK_LABEL_PADDING, PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
-    PORT_BORDER_SEPARATION, BLOCK_FONT, PARAM_FONT
+    PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
+    PORT_BORDER_SEPARATION
 )
 from ...core import utils
 from ...core.blocks import Block as CoreBlock
@@ -44,8 +45,12 @@ class Block(CoreBlock, Drawable):
         self._comment_layout = None
 
         self._area = []
-        self._border_color = self._bg_color = colors.BLOCK_ENABLED_COLOR
-        self._font_color = list(colors.FONT_COLOR)
+
+        def theme(prop, *args, **kwargs):
+            return Theme.get_property(prop, self, *args, **kwargs)
+
+        self._theme = theme
+        self._update_theming()
 
     @property
     def coordinate(self):
@@ -95,19 +100,35 @@ class Block(CoreBlock, Drawable):
         self.states['rotation'] = rot
 
     def notify(self):
-        self._update_colors()
-    def _update_colors(self):
-        self._bg_color = (
-            colors.MISSING_BLOCK_BACKGROUND_COLOR if self.is_dummy_block else
-            colors.BLOCK_BYPASSED_COLOR if self.state == 'bypassed' else
-            colors.BLOCK_ENABLED_COLOR if self.state == 'enabled' else
-            colors.BLOCK_DISABLED_COLOR
-        )
-        self._font_color[-1] = 1.0 if self.state == 'enabled' else 0.4
-        self._border_color = (
-            colors.MISSING_BLOCK_BORDER_COLOR if self.is_dummy_block else
-            colors.BORDER_COLOR_DISABLED if not self.state == 'enabled' else colors.BORDER_COLOR
-        )
+        self._update_theming()
+
+    def _update_theming(self):
+        statecomb = []
+        if self.is_dummy_block:
+            statecomb.append(State.MISSING)
+        if self.state == "bypassed":
+            statecomb.append(State.BYPASSED)
+        elif self.state != "enabled":
+            statecomb.append(State.DISABLED)
+        if self.highlighted:
+            statecomb.append(State.SELECTED)
+        state = State.reduce(statecomb)
+
+        self._bg_color = self._theme("background-color", state)
+        self._font_color = self._theme("color", state)
+
+        self._border_color = self._theme("border-color", state)
+
+        self._font_family = self._theme("font-family", state)
+        self._font_size = int(float(self._theme("font-size", state)) * 1000)
+
+        self._comment_color = Theme.get_property("color", "Comment", state)
+        self._comment_family = Theme.get_property("font-family", "Comment",
+                                                  state)
+        self._comment_size = int(
+            float(Theme.get_property("font-size", "Comment", state)) * 1000)
+
+        self._padding = int(self._theme("padding", state))
 
     def create_shapes(self):
         """Update the block, parameters, and ports when a change occurs."""
@@ -148,11 +169,11 @@ class Block(CoreBlock, Drawable):
             PangoCairo.update_layout(cr, params_layout)
 
         title_layout.set_markup(
-            '<span {foreground} font_desc="{font}"><b>{label}</b></span>'.format(
-                foreground='foreground="red"' if not self.is_valid() else '', font=BLOCK_FONT,
-                label=Utils.encode(self.label)
-            )
-        )
+            f'<span weight="bold" '
+            f'foreground="{get_hexcolor(self._font_color[:3])}" '
+            f'font_family="{self._font_family}" '
+            f'size="{self._font_size}" >'
+            f'{Utils.encode(self.label)}</span>')
         title_width, title_height = title_layout.get_size()
 
         force_show_id = Actions.TOGGLE_SHOW_BLOCK_IDS.get_active()
@@ -162,7 +183,10 @@ class Block(CoreBlock, Drawable):
             markups = [param.format_block_surface_markup()
                        for param in self.params.values() if (param.hide not in ('all', 'part') or (param.dtype == 'id' and force_show_id))]
         else:
-            markups = ['<span font_desc="{font}"><b>key: </b>{key}</span>'.format(font=PARAM_FONT, key=self.key)]
+            markups = [
+                f'<span font_family="{self._font_family}" '
+                f'size="{self._font_size}"><b>key: </b>{self.key}</span>'
+            ]
 
         params_layout.set_spacing(LABEL_SEPARATION * Pango.SCALE)
         params_layout.set_markup('\n'.join(markups))
@@ -174,10 +198,10 @@ class Block(CoreBlock, Drawable):
             label_height += LABEL_SEPARATION + params_height / Pango.SCALE
 
         # calculate width and height needed
-        width = label_width + 2 * BLOCK_LABEL_PADDING
-        height = label_height + 2 * BLOCK_LABEL_PADDING
+        width = label_width + 2 * self._padding
+        height = label_height + 2 * self._padding
 
-        self._update_colors()
+        self._update_theming()
         self.create_port_labels()
 
         def get_min_height_for_ports(ports):
@@ -223,20 +247,25 @@ class Block(CoreBlock, Drawable):
         markups = []
 
         # Show the flow graph complexity on the top block if enabled
-        if Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY.get_active() and self.key == "options":
+        show_complexity = Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY.get_active()
+        if show_complexity and self.key == "options":
             complexity = utils.flow_graph_complexity.calculate(self.parent)
             markups.append(
-                '<span foreground="#444" size="medium" font_desc="{font}">'
-                '<b>Complexity: {num}bal</b></span>'.format(num=Utils.num_to_str(complexity), font=BLOCK_FONT)
-            )
+                f'<span foreground="{get_hexcolor(self._comment_color)}" '
+                f'font_family="{self._comment_family}" '
+                f'size="{self._comment_size}">'
+                f'<b>Complexity: {Utils.num_to_str(complexity)}bal</b></span>')
         comment = self.comment  # Returns None if there are no comments
         if comment:
             if markups:
                 markups.append('<span></span>')
 
-            markups.append('<span foreground="{foreground}" font_desc="{font}">{comment}</span>'.format(
-                foreground='#444' if self.enabled else '#888', font=BLOCK_FONT, comment=Utils.encode(comment)
-            ))
+            markups.append(
+                f'<span foreground="{get_hexcolor(self._comment_color)}" '
+                f'font_family="{self._comment_family}" '
+                f'size="{self._comment_size}">'
+                f'{Utils.encode(comment)}</span>'
+            )
         if markups:
             layout = self._comment_layout = Gtk.DrawingArea().create_pango_layout('')
             layout.set_markup(''.join(markups))
@@ -247,7 +276,6 @@ class Block(CoreBlock, Drawable):
         """
         Draw the signal block with label and inputs/outputs.
         """
-        border_color = colors.HIGHLIGHT_COLOR if self.highlighted else self._border_color
         cr.translate(*self.coordinate)
 
         for port in self.active_ports():  # ports first
@@ -258,7 +286,7 @@ class Block(CoreBlock, Drawable):
         cr.rectangle(*self._area)
         cr.set_source_rgba(*self._bg_color)
         cr.fill_preserve()
-        cr.set_source_rgba(*border_color)
+        cr.set_source_rgba(*self._border_color)
         cr.stroke()
 
         # title and params label
@@ -299,9 +327,9 @@ class Block(CoreBlock, Drawable):
         x, y = self.coordinate
 
         if self.is_horizontal():
-            y += self.height + BLOCK_LABEL_PADDING
+            y += self.height + self._padding
         else:
-            x += self.height + BLOCK_LABEL_PADDING
+            x += self.height + self._padding
 
         cr.save()
         cr.translate(x, y)
@@ -323,9 +351,9 @@ class Block(CoreBlock, Drawable):
         if not self._comment_layout:
             return x, y, x, y
         if self.is_horizontal():
-            y += self.height + BLOCK_LABEL_PADDING
+            y += self.height + self._padding
         else:
-            x += self.height + BLOCK_LABEL_PADDING
+            x += self.height + self._padding
         w, h = self._comment_layout.get_pixel_size()
         return x, y, x + w, y + h
 
