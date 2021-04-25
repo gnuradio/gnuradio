@@ -94,6 +94,8 @@ class Block(CoreBlock, Drawable):
         """
         self.states['rotation'] = rot
 
+    def notify(self):
+        self._update_colors()
     def _update_colors(self):
         self._bg_color = (
             colors.MISSING_BLOCK_BACKGROUND_COLOR if self.is_dummy_block else

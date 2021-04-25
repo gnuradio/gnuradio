@@ -469,6 +469,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
         # update highlighting
         for element in elements:
             element.highlighted = element in selected_elements
+            element.notify()
 
     ###########################################################################
     # Draw stuff

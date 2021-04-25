@@ -167,3 +167,9 @@ class Drawable(object):
 
     def mouse_out(self):
         pass
+
+    def notify(self):
+        """
+        Implement this if you want to be notified when
+        Element state changes
+        """
