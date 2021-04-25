@@ -30,7 +30,7 @@ target_link_libraries(gnuradio-iio PUBLIC
   PRIVATE
   gnuradio-blocks
 )
-
+set(iio_deps "libiio")
 if(libad9361_FOUND)
   target_sources(gnuradio-iio PRIVATE
     fmcomms2_sink_impl.cc
@@ -42,6 +42,7 @@ if(libad9361_FOUND)
   )
   target_link_libraries(gnuradio-iio PUBLIC libad9361::ad9361)
   target_compile_definitions(gnuradio-iio PUBLIC -DGR_IIO_LIBAD9361)
+  list(APPEND iio_deps "libad9361")
 endif(libad9361_FOUND)
 
 #Add Windows DLL resource file if using MSVC
@@ -59,5 +60,5 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-  GR_LIBRARY_FOO(gnuradio-iio IIO)
+  GR_LIBRARY_FOO(gnuradio-iio ${iio_deps})
 endif()
