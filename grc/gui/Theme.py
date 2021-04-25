@@ -11,6 +11,8 @@ from typing import Union, Iterable
 from ..core.base import Element
 from .canvas.colors import get_color
 
+from .defaulttheme import DEFAULT_THEME
+
 
 class State(Flag):
     """
@@ -29,88 +31,19 @@ class State(Flag):
                | UNSPECIFIED_ERROR | MISSING)
 
     @staticmethod
-    def reduce(iter: Iterable):
-        if not iter:
+    def reduce(iterable: Iterable):
+        """
+        reduce an iterable of states to the combined state
+        """
+        if not iterable:
             return State.DEFAULT
-        sumstate = iter[0]
-        for state in iter:
+        sumstate = iterable[0]
+        for state in iterable:
             sumstate = sumstate | state
         return sumstate
 
 
-DEFAULT_THEME = {
-    "Element": {
-        "default": {
-            "font-family": "Sans",
-            "font-size": 8,
-        },
-    },
-    "Flowgraph": {
-        "default": {
-            "background-color": "#FFFFFF"
-        }
-    },
-    "Block": {
-        "default": {
-            "border-color": "#616161",
-            "color": "#000000",
-            "background-color": "#F1ECFF",
-            "font-family": "Sans",
-            "font-size": 8,
-            "padding": 7,
-        },
-        "disabled": {
-            "background-color": "#CCCCCC",
-            "border-color": "#888888",
-            "color": "#333333"
-        },
-        "bypassed": {
-            "background-color": "#F4FF81"
-        },
-        "selected": {
-            "border-color": "#00FFFF"
-        },
-        "missing": {
-            "background-color": "#F4FF81"
-        }
-    },
-    "Connection": {
-        "default": {
-            "color": "#000000"
-        },
-        "disabled": {
-            "color": "#BBBBBB"
-        },
-        "invalid_connection": {
-            "color": "#FF0000"
-        }
-    },
-    "Port": {
-        "default": {
-            "background-color": "#FFFFFF",
-            "font-size": 8,
-            "padding": 2
-        }
-    },
-    "Param": {
-        "default": {
-            "font-size": 7.5,
-        }
-    },
-    "Comment": {
-        "default": {
-            "color": "#404040",
-            "font-size": 8,
-            "font-family": "Sans",
-        },
-        "disabled": {
-            "color": "#808080"
-        }
-    }
-}
-
-
-class ThemeEngine(object):
+class ThemeEngine:
     """
     Theming Engine.
 
@@ -182,23 +115,21 @@ class ThemeEngine(object):
                 self.dict[typename][sumstate] = stateprops
 
         self.get_property.cache_clear()
+        self.get_type_specific_dict.cache_clear()
 
     @cache
-    def get_property(self,
-                     property: str,
-                     objtype: Union[Element, type, str],
-                     state: State = State.DEFAULT,
-                     default=None):
+    def get_type_specific_dict(self, objtype: Union[Element, type, str]):
         """
-        Get the property
-        """
+        Retrieve the type-specific dict
 
+        This got refactored out to improve caching
+        """
         type_specific = None
         if isinstance(objtype, str):
             try:
                 type_specific = self.dict[objtype]
             except KeyError:
-                return default
+                return None
         if isinstance(objtype, Element):
             objtype = type(objtype)
         if isinstance(objtype, type):
@@ -211,7 +142,19 @@ class ThemeEngine(object):
                     break
                 except KeyError:
                     continue
+        return type_specific
 
+    @cache
+    def get_property(self,
+                     property: str,
+                     objtype: Union[Element, type, str],
+                     state: State = State.DEFAULT,
+                     default=None):
+        """
+        Get the property
+        """
+
+        type_specific = self.get_type_specific_dict(objtype)
         if not type_specific:
             return default
 
