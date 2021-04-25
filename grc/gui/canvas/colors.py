@@ -1,5 +1,7 @@
 """
 Copyright 2008,2013 Free Software Foundation, Inc.
+Copyright 2021 Marcus Müller
+
 This file is part of GNU Radio
 
 SPDX-License-Identifier: GPL-2.0-or-later
@@ -7,21 +9,30 @@ SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 
-from gi.repository import Gtk, Gdk, cairo
-# import pycairo
+from gi.repository import Gdk
 
 from .. import Constants
 
 from typing import Tuple
 
 
-def get_color(color_code):
-    color = Gdk.RGBA()
-    color.parse(color_code)
-    return color.red, color.green, color.blue, color.alpha
-    # chars_per_color = 2 if len(color_code) > 4 else 1
-    # offsets = range(1, 3 * chars_per_color + 1, chars_per_color)
-    # return tuple(int(color_code[o:o + 2], 16) / 255.0 for o in offsets)
+def get_color(color_code: str):
+    if not color_code.startswith("#"):
+        color = Gdk.RGBA()
+        color.parse(color_code)
+        return color.red, color.green, color.blue, color.alpha
+
+    color_code = color_code[1:]
+    a = 0xFF
+    if len(color_code) == 8:
+        a = int(color_code[-2], 16)
+        color_code = color_code[:-2]
+    if len(color_code) == 6:
+        r = int(color_code[0:2], 16)
+        g = int(color_code[2:4], 16)
+        b = int(color_code[4:6], 16)
+        return r / 255, g / 255, b / 255, a / 255
+    raise Exception(f"invalid color: {color_code}")
 
 
 def get_hexcolor(color_tuple: Tuple[float, float, float]):
@@ -115,4 +126,3 @@ LIGHT_THEME_STYLES = b"""
 
                         #enum_custom           { background-color: #EEEEEE; }
                     """
-
