@@ -16,7 +16,7 @@ import logging
 
 from gnuradio import gr
 from ..tools import SCMRepoFactory
-from .base import ModTool, ModToolException
+from .base import ModTool, ModToolException, validate_name
 
 logger = logging.getLogger(__name__)
 
@@ -39,8 +39,7 @@ class ModToolNewModule(ModTool):
         """ Validates the arguments """
         if not self.info['modname']:
             raise ModToolException('Module name not specified.')
-        if not re.match('[a-zA-Z0-9_]+$', self.info['modname']):
-            raise ModToolException('Invalid module name.')
+        validate_name('module', self.info['modname'])
         try:
             os.stat(self.dir)
         except OSError:
