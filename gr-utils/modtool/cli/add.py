@@ -15,7 +15,7 @@ import getpass
 
 import click
 
-from ..core import ModToolAdd
+from ..core import ModToolAdd, validate_name
 from ..tools import SequenceCompleter, ask_yes_no
 from .base import common_params, block_name, run, cli_input, ModToolException
 
@@ -90,8 +90,7 @@ def get_blockname(self):
     if not self.info['blockname'] or self.info['blockname'].isspace():
         while not self.info['blockname'] or self.info['blockname'].isspace():
             self.info['blockname'] = cli_input("Enter name of block/code (without module name prefix): ")
-    if not re.match('^[a-zA-Z0-9_]+$', self.info['blockname']):
-        raise ModToolException('Invalid block name.')
+    validate_name('block', self.info['blockname'])
     self.info['fullblockname'] = self.info['modname'] + '_' + self.info['blockname']
     fname_grc = self.info['fullblockname'] + '.block.yml'
     for block in os.scandir('./grc/'):
