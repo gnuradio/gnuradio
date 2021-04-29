@@ -8,7 +8,7 @@
 #
 
 
-from .base import ModTool, ModToolException, get_block_candidates
+from .base import ModTool, ModToolException, get_block_candidates, validate_name
 from .add import ModToolAdd
 from .bind import ModToolGenBindings
 from .disable import ModToolDisable

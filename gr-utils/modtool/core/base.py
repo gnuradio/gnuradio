@@ -44,6 +44,12 @@ class ModToolException(Exception):
     pass
 
 
+def validate_name(kind, name):
+    """ Checks that block, module etc names are alphanumeric. """
+    if not re.fullmatch('[a-zA-Z0-9_]+', name):
+        raise ModToolException("Invalid {} name '{}': names can only contain letters, numbers and underscores".format(kind, name))
+
+
 class ModTool(object):
     """ Base class for all modtool command classes. """
     name = 'base'
