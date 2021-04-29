@@ -16,7 +16,7 @@ import subprocess
 
 from ..tools import render_template, append_re_line_sequence, CMakeFileEditor, CPPFileEditor, code_generator
 from ..templates import Templates
-from .base import ModTool, ModToolException
+from .base import ModTool, ModToolException, validate_name
 from gnuradio.bindtool import BindingGenerator
 from gnuradio import gr
 
@@ -72,8 +72,7 @@ class ModToolAdd(ModTool):
             raise ModToolException('Tagged Stream Blocks for Python currently unsupported')            
         if self.info['blockname'] is None:
             raise ModToolException('Blockname not specified.')
-        if not re.match('^[a-zA-Z0-9_]+$', self.info['blockname']):
-            raise ModToolException('Invalid block name.')
+        validate_name('block', self.info['blockname'])
         if not isinstance(self.add_py_qa, bool):
             raise ModToolException('Expected a boolean value for add_python_qa.')
         if not isinstance(self.add_cc_qa, bool):
