@@ -13,7 +13,7 @@ import os
 import re
 import logging
 
-from .base import get_block_candidates, ModTool, ModToolException
+from .base import get_block_candidates, ModTool, ModToolException, validate_name
 
 logger = logging.getLogger(__name__)
 
@@ -33,8 +33,7 @@ class ModToolRename(ModTool):
         ModTool._validate(self)
         if not self.info['oldname']:
             raise ModToolException('Old block name (blockname) not specified.')
-        if not re.match('[a-zA-Z0-9_]+', self.info['oldname']):
-            raise ModToolException('Invalid block name.')
+        validate_name('old block', self.info['oldname'])
         block_candidates = get_block_candidates()
         if self.info['oldname'] not in block_candidates:
             choices = [x for x in block_candidates if self.info['oldname'] in x]
@@ -43,8 +42,7 @@ class ModToolRename(ModTool):
             raise ModToolException("Blockname for renaming does not exists!")
         if not self.info['newname']:
             raise ModToolException('New blockname (new_name) not specified.')
-        if not re.match('[a-zA-Z0-9_]+', self.info['newname']):
-            raise ModToolException('Invalid new block name.')
+        validate_name('new block', self.info['newname'])
 
     def assign(self):
         self.info['fullnewname'] = self.info['modname'] + '_' + self.info['newname']
