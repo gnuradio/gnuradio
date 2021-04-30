@@ -349,7 +349,7 @@ def argument_parser():
 def main(top_block_cls=${class_name}, options=None):
     % if parameters:
     if options is None:
-        options = argument_parser().parse_args()
+        options, _ = argument_parser().parse_known_args()
     % endif
     % if flow_graph.get_option('realtime_scheduling'):
     if gr.enable_realtime_scheduling() != gr.RT_OK:
