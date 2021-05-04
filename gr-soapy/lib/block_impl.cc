@@ -236,6 +236,11 @@ void block_impl::validate_channel(size_t channel) const
     }
 }
 
+void block_impl::set_frontend_mapping(const std::string& mapping)
+{
+    d_device->setFrontendMapping(d_direction, mapping);
+}
+
 void block_impl::set_sample_rate(size_t channel, double sample_rate)
 {
     validate_channel(channel);
@@ -264,6 +269,11 @@ void block_impl::set_sample_rate(size_t channel, double sample_rate)
     d_device->setSampleRate(d_direction, channel, sample_rate);
 }
 
+double block_impl::get_sample_rate(size_t channel) const
+{
+    return d_device->getSampleRate(d_direction, channel);
+}
+
 void block_impl::set_frequency(size_t channel, double frequency)
 {
     validate_channel(channel);
@@ -287,10 +297,20 @@ void block_impl::set_frequency(size_t channel, const std::string& name, double f
     }
 }
 
+double block_impl::get_frequency(size_t channel) const
+{
+    return d_device->getFrequency(d_direction, channel);
+}
+
 void block_impl::set_bandwidth(size_t channel, double bandwidth)
 {
     validate_channel(channel);
     d_device->setBandwidth(d_direction, channel, bandwidth);
+}
+
+double block_impl::get_bandwidth(size_t channel) const
+{
+    return d_device->getBandwidth(d_direction, channel);
 }
 
 std::vector<std::string> block_impl::list_antennas(int channel) const
@@ -324,6 +344,11 @@ void block_impl::set_antenna(const size_t channel, const std::string& name)
     d_device->setAntenna(d_direction, channel, name);
 }
 
+std::string block_impl::get_antenna(size_t channel) const
+{
+    return d_device->getAntenna(d_direction, channel);
+}
+
 bool block_impl::has_gain_mode(size_t channel) const
 {
     validate_channel(channel);
@@ -341,7 +366,12 @@ void block_impl::set_gain_mode(size_t channel, bool enable)
     d_device->setGainMode(d_direction, channel, enable);
 }
 
-void block_impl::set_gain(size_t channel, float gain)
+bool block_impl::get_gain_mode(size_t channel) const
+{
+    return d_device->getGainMode(d_direction, channel);
+}
+
+void block_impl::set_gain(size_t channel, double gain)
 {
     validate_channel(channel);
     SoapySDR::Range rGain = d_device->getGainRange(d_direction, channel);
@@ -356,7 +386,7 @@ void block_impl::set_gain(size_t channel, float gain)
     d_device->setGain(d_direction, channel, gain);
 }
 
-void block_impl::set_gain(size_t channel, const std::string& name, float gain)
+void block_impl::set_gain(size_t channel, const std::string& name, double gain)
 {
     validate_channel(channel);
 
@@ -376,6 +406,11 @@ void block_impl::set_gain(size_t channel, const std::string& name, float gain)
     }
 
     d_device->setGain(d_direction, channel, name, gain);
+}
+
+double block_impl::get_gain(size_t channel) const
+{
+    return d_device->getGain(d_direction, channel);
 }
 
 bool block_impl::has_frequency_correction(size_t channel) const
@@ -399,6 +434,11 @@ void block_impl::set_frequency_correction(size_t channel, double freq_correction
     }
 }
 
+double block_impl::get_frequency_correction(size_t channel) const
+{
+    return d_device->getFrequencyCorrection(d_direction, channel);
+}
+
 bool block_impl::has_dc_offset_mode(size_t channel) const
 {
     validate_channel(channel);
@@ -418,13 +458,18 @@ void block_impl::set_dc_offset_mode(size_t channel, bool automatic)
     d_device->setDCOffsetMode(d_direction, channel, automatic);
 }
 
+bool block_impl::get_dc_offset_mode(size_t channel) const
+{
+    return d_device->getDCOffsetMode(d_direction, channel);
+}
+
 bool block_impl::has_dc_offset(size_t channel) const
 {
     validate_channel(channel);
     return d_device->hasDCOffset(d_direction, channel);
 }
 
-void block_impl::set_dc_offset(size_t channel, gr_complexd dc_offset)
+void block_impl::set_dc_offset(size_t channel, const gr_complexd& dc_offset)
 {
     validate_channel(channel);
 
@@ -448,13 +493,18 @@ void block_impl::set_dc_offset(size_t channel, gr_complexd dc_offset)
     d_device->setDCOffset(d_direction, channel, dc_offset);
 }
 
+gr_complexd block_impl::get_dc_offset(size_t channel) const
+{
+    return d_device->getDCOffset(d_direction, channel);
+}
+
 bool block_impl::has_iq_balance(size_t channel) const
 {
     validate_channel(channel);
     return d_device->hasIQBalance(d_direction, channel);
 }
 
-void block_impl::set_iq_balance(size_t channel, gr_complexd iq_balance)
+void block_impl::set_iq_balance(size_t channel, const gr_complexd& iq_balance)
 {
     validate_channel(channel);
 
@@ -478,71 +528,14 @@ void block_impl::set_iq_balance(size_t channel, gr_complexd iq_balance)
     d_device->setIQBalance(d_direction, channel, iq_balance);
 }
 
+gr_complexd block_impl::get_iq_balance(size_t channel) const
+{
+    return d_device->getIQBalance(d_direction, channel);
+}
+
 void block_impl::set_master_clock_rate(double clock_rate)
 {
     d_device->setMasterClockRate(clock_rate);
-}
-
-void block_impl::set_clock_source(const std::string& clock_source)
-{
-    d_device->setClockSource(clock_source);
-}
-
-/* End public API implementation */
-
-void block_impl::set_frontend_mapping(const std::string& mapping)
-{
-    d_device->setFrontendMapping(d_direction, mapping);
-}
-
-double block_impl::get_frequency(size_t channel) const
-{
-    return d_device->getFrequency(d_direction, channel);
-}
-
-double block_impl::get_gain(size_t channel) const
-{
-    return d_device->getGain(d_direction, channel);
-}
-
-bool block_impl::get_gain_mode(size_t channel) const
-{
-    return d_device->getGainMode(d_direction, channel);
-}
-
-double block_impl::get_sample_rate(size_t channel) const
-{
-    return d_device->getSampleRate(d_direction, channel);
-}
-
-double block_impl::get_bandwidth(size_t channel) const
-{
-    return d_device->getBandwidth(d_direction, channel);
-}
-
-std::string block_impl::get_antenna(size_t channel) const
-{
-    return d_device->getAntenna(d_direction, channel);
-}
-
-std::complex<double> block_impl::get_dc_offset(size_t channel) const
-{
-    return d_device->getDCOffset(d_direction, channel);
-}
-
-bool block_impl::get_dc_offset_mode(size_t channel) const
-{
-    return d_device->getDCOffsetMode(d_direction, channel);
-}
-
-double block_impl::get_frequency_correction(size_t channel) const
-{
-    return d_device->getFrequencyCorrection(d_direction, channel);
-}
-
-std::complex<double> block_impl::get_iq_balance(size_t channel) const
-{
-    return d_device->getIQBalance(d_direction, channel);
 }
 
 double block_impl::get_master_clock_rate() const
@@ -550,7 +543,14 @@ double block_impl::get_master_clock_rate() const
     return d_device->getMasterClockRate();
 }
 
+void block_impl::set_clock_source(const std::string& clock_source)
+{
+    d_device->setClockSource(clock_source);
+}
+
 std::string block_impl::get_clock_source() const { return d_device->getClockSource(); }
+
+/* End public API implementation */
 
 void block_impl::cmd_handler_frequency(pmt::pmt_t val, size_t channel)
 {
