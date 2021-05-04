@@ -10,6 +10,7 @@
 ########################################################################
 include(GrMiscUtils)
 GR_CHECK_HDR_N_DEF(io.h HAVE_IO_H)
+CHECK_INCLUDE_FILE_CXX(windows.h HAVE_WINDOWS_H)
 
 ########################################################################
 # Setup library
@@ -192,13 +193,18 @@ if (SNDFILE_FOUND)
     )
 endif()
 
-target_link_libraries(gnuradio-blocks ${BLOCKS_LIBS})
+target_link_libraries(gnuradio-blocks PUBLIC ${BLOCKS_LIBS})
 
 target_include_directories(gnuradio-blocks
   PUBLIC
   $<INSTALL_INTERFACE:include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
   )
+
+if(HAVE_WINDOWS_H)
+    target_compile_definitions(gnuradio-blocks PRIVATE -DHAVE_WINDOWS_H)
+    target_link_libraries(gnuradio-blocks PRIVATE ws2_32 wsock32)
+endif()
 
 set_source_files_properties(file_source_impl.cc PROPERTIES COMPILE_FLAGS -D_FILE_OFFSET_BITS=64)
 
