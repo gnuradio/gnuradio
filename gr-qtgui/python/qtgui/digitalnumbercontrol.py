@@ -354,12 +354,12 @@ class MsgDigitalNumberControl(gr.sync_block, LabeledDigitalNumberControl):
     def click_callback(self, new_value):
         self.call_var_callback(new_value)
 
-        self.message_port_pub(pmt.intern("valueout"), pmt.cons(pmt.intern(self.outputmsgname), pmt.from_float(float(new_value))))
+        self.message_port_pub(pmt.intern("valueout"), pmt.cons(pmt.intern(self.outputmsgname), pmt.from_double(float(new_value))))
 
     def setValue(self, new_val):
         self.setFrequency(new_val)
 
-        self.message_port_pub(pmt.intern("valueout"), pmt.cons(pmt.intern(self.outputmsgname), pmt.from_float(float(self.getFrequency()))))
+        self.message_port_pub(pmt.intern("valueout"), pmt.cons(pmt.intern(self.outputmsgname), pmt.from_double(float(self.getFrequency()))))
 
     def getValue(self):
         self.getFrequency()
