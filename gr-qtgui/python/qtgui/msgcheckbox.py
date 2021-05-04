@@ -93,7 +93,7 @@ class MsgCheckBox(gr.sync_block, QFrame):
             elif type(self.pressReleasedDict['Pressed']) == float:
                 self.message_port_pub(pmt.intern("state"),
                     pmt.cons(pmt.intern(self.outputmsgname),
-                    pmt.from_float(self.pressReleasedDict['Pressed'])))
+                    pmt.from_double(self.pressReleasedDict['Pressed'])))
             else:
                 self.message_port_pub(pmt.intern("state"),
                     pmt.cons(pmt.intern(self.outputmsgname),
@@ -112,7 +112,7 @@ class MsgCheckBox(gr.sync_block, QFrame):
             elif type(self.pressReleasedDict['Released']) == float:
                 self.message_port_pub(pmt.intern("state"),
                     pmt.cons(pmt.intern(self.outputmsgname),
-                    pmt.from_float(self.pressReleasedDict['Released'])))
+                    pmt.from_double(self.pressReleasedDict['Released'])))
             else:
                 self.message_port_pub(pmt.intern("state"),
                     pmt.cons(pmt.intern(self.outputmsgname),
