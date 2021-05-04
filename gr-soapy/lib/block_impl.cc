@@ -558,7 +558,7 @@ void block_impl::cmd_handler_frequency(pmt::pmt_t val, size_t channel)
         GR_LOG_WARN(d_logger, "soapy: freq must be float/int");
         return;
     }
-    set_frequency(channel, pmt::to_float(val));
+    set_frequency(channel, pmt::to_double(val));
 }
 
 void block_impl::cmd_handler_gain(pmt::pmt_t val, size_t channel)
@@ -576,7 +576,7 @@ void block_impl::cmd_handler_samp_rate(pmt::pmt_t val, size_t channel)
         GR_LOG_WARN(d_logger, "soapy: rate must be float/int");
         return;
     }
-    set_sample_rate(channel, pmt::to_float(val));
+    set_sample_rate(channel, pmt::to_double(val));
 }
 
 void block_impl::cmd_handler_bw(pmt::pmt_t val, size_t channel)
@@ -585,7 +585,7 @@ void block_impl::cmd_handler_bw(pmt::pmt_t val, size_t channel)
         GR_LOG_WARN(d_logger, "soapy: bw must be float/int");
         return;
     }
-    set_bandwidth(channel, pmt::to_float(val));
+    set_bandwidth(channel, pmt::to_double(val));
 }
 
 void block_impl::cmd_handler_antenna(pmt::pmt_t val, size_t channel)
