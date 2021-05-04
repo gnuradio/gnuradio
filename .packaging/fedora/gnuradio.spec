@@ -76,6 +76,7 @@ BuildRequires:	qwt-qt5-devel
 BuildRequires:	SDL-devel
 BuildRequires:	thrift
 BuildRequires:	uhd-devel
+BuildRequires:	SoapySDR-devel
 BuildRequires:	xdg-utils
 BuildRequires:	xmlto
 BuildRequires:	zeromq-devel
