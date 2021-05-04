@@ -93,139 +93,56 @@ public:
 
     /*** Begin public API implementation ***/
 
+    void set_frontend_mapping(const std::string& frontend_mapping);
+
     void set_sample_rate(size_t channel, double sample_rate) override;
+    double get_sample_rate(size_t channel) const override;
 
     void set_frequency(size_t channel, double frequency) override;
     void
     set_frequency(size_t channel, const std::string& name, double frequency) override;
+    double get_frequency(size_t channel) const override;
 
     void set_bandwidth(size_t channel, double bandwidth) override;
+    double get_bandwidth(size_t channel) const override;
 
     std::vector<std::string> list_antennas(int channel) const override;
     void set_antenna(size_t channel, const std::string& name) override;
+    std::string get_antenna(size_t channel) const override;
 
     bool has_gain_mode(size_t channel) const override;
     void set_gain_mode(size_t channel, bool enable) override;
+    bool get_gain_mode(size_t channel) const override;
 
-    void set_gain(size_t channel, float gain) override;
-    void set_gain(size_t channel, const std::string& name, float gain) override;
+    void set_gain(size_t channel, double gain) override;
+    void set_gain(size_t channel, const std::string& name, double gain) override;
+    double get_gain(size_t channel) const override;
 
     bool has_frequency_correction(size_t channel) const override;
     void set_frequency_correction(size_t channel, double freq_correction) override;
+    double get_frequency_correction(size_t channel) const override;
 
     bool has_dc_offset_mode(size_t channel) const override;
     void set_dc_offset_mode(size_t channel, bool automatic) override;
+    bool get_dc_offset_mode(size_t channel) const override;
 
     bool has_dc_offset(size_t channel) const override;
-    void set_dc_offset(size_t channel, gr_complexd dc_offset) override;
+    void set_dc_offset(size_t channel, const gr_complexd& dc_offset) override;
+    gr_complexd get_dc_offset(size_t channel) const override;
 
     bool has_iq_balance(size_t channel) const override;
-    void set_iq_balance(size_t channel, gr_complexd iq_balance) override;
+    void set_iq_balance(size_t channel, const gr_complexd& iq_balance) override;
+    gr_complexd get_iq_balance(size_t channel) const override;
 
     void set_master_clock_rate(double clock_rate) override;
+    double get_master_clock_rate() const override;
+
     void set_clock_source(const std::string& clock_source) override;
+    std::string get_clock_source() const override;
 
     /*** End public API implementation ***/
 
 protected:
-    /*!
-     * Set the frontend mapping of available DSP units to RF frontends.
-     * This mapping controls channel mapping and channel availability.
-     * \param frontend_mapping a vendor-specific mapping string
-     */
-    void set_frontend_mapping(const std::string& frontend_mapping);
-
-    /**
-     * Checks if the specified gain type for the given channel is
-     * available
-     * @param channel an available channel on the device
-     * @param name an available gain on the device
-     * @return true if the gain setting exists, false otherwise
-     */
-    bool gain_available(size_t channel, const std::string& name) const;
-
-    /*!
-     * Get the down conversion frequency of the chain.
-     * \param channel an available channel on the device
-     * \return the center frequency in Hz
-     */
-    double get_frequency(size_t channel) const;
-
-    /*!
-     * Get the overall value of the gain elements in a chain
-     * \param channel an available channel on the device
-     * \return the value of the gain in dB
-     */
-    double get_gain(size_t channel) const;
-
-    /*!
-     * Get the automatic gain mode on the RX chain.
-     * \param channel an available channel on the device
-     * \return true for automatic gain setting
-     */
-    bool get_gain_mode(size_t channel) const;
-
-    /*!
-     * Get the baseband sample rate of the RX chain.
-     * \param channel an available channel on the device
-     * \return the sample rate in samples per second
-     */
-    double get_sample_rate(size_t channel) const;
-
-    /*!
-     * Get baseband filter width of the RX chain.
-     * \param channel an available channel on the device
-     * \return the baseband filter width in Hz
-     */
-    double get_bandwidth(size_t channel) const;
-
-    /*!
-     * Get the selected antenna on RX chain.
-     * \param channel an available channel on the device
-     * \return the name of the selected antenna
-     */
-    std::string get_antenna(size_t channel) const;
-
-    /*!
-     * Get the DC offset correction.
-     * \param channel an available channel on the device
-     * \return the relative correction (1.0 max)
-     */
-    std::complex<double> get_dc_offset(size_t channel) const;
-
-    /*!
-     * Get the automatic DC offset correction mode.
-     * \param channel an available channel on the device
-     * \return true for automatic offset correction
-     */
-    bool get_dc_offset_mode(size_t channel) const;
-
-    /*!
-     * Get the frequency correction value.
-     * \param channel an available channel on the device
-     * \return the correction value in PPM
-     */
-    double get_frequency_correction(size_t channel) const;
-
-    /*!
-     * Get the IQ balance correction.
-     * \param channel an available channel on the device
-     * \return the relative correction (1.0 max)
-     */
-    std::complex<double> get_iq_balance(size_t channel) const;
-
-    /*!
-     * Get the master clock rate of the device.
-     * \return the clock rate in Hz
-     */
-    double get_master_clock_rate() const;
-
-    /*!
-     * Get the clock source of the device
-     * \return the name of the clock source
-     */
-    std::string get_clock_source() const;
-
     /*** Begin message handlers ***/
 
     /*!
