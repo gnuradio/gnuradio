@@ -18,6 +18,7 @@ gr-zeromq/docs/README.zeromq
 gr-channels/docs/README.channels
 dtools/README
 gr-uhd/docs/README.uhd
+gr-soapy/docs/README.soapy
 gr-digital/docs/README.digital
 gr-blocks/docs/README.blocks
 gr-filter/lib/gen_interpolator_taps/README
