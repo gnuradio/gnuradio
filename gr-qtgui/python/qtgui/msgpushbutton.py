@@ -47,7 +47,7 @@ class MsgPushButton(gr.sync_block, Qt.QPushButton):
                 pmt.cons(pmt.intern(self.msgName), pmt.from_long(self.msgValue)))
         elif type(self.msgValue) == float:
             self.message_port_pub(pmt.intern("pressed"),
-                pmt.cons(pmt.intern(self.msgName), pmt.from_float(self.msgValue)))
+                pmt.cons(pmt.intern(self.msgName), pmt.from_double(self.msgValue)))
         elif type(self.msgValue) == str:
             self.message_port_pub(pmt.intern("pressed"),
                 pmt.cons(pmt.intern(self.msgName), pmt.intern(self.msgValue)))

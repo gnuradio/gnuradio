@@ -135,7 +135,7 @@ class GrDialControl(gr.sync_block, LabeledDialControl):
 
         if self.isFloat:
             self.message_port_pub(pmt.intern("value"), pmt.cons(pmt.intern(self.outputmsgname),
-                                                                pmt.from_float(new_value)))
+                                                                pmt.from_double(new_value)))
         else:
             self.message_port_pub(pmt.intern("value"), pmt.cons(pmt.intern(self.outputmsgname),
                                                                 pmt.from_long(new_value)))
