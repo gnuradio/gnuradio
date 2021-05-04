@@ -15,7 +15,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(block.h)                                                   */
-/* BINDTOOL_HEADER_FILE_HASH(71e34807041a696c5b9f1c362f2097ff)                     */
+/* BINDTOOL_HEADER_FILE_HASH(6e911ed08a9560fda459b0de000e210a)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -38,11 +38,23 @@ void bind_block(py::module& m)
         m, "block", D(block))
 
 
+        .def("set_frontend_mapping",
+             &block::set_frontend_mapping,
+             py::arg("frontend_mapping"),
+             D(block, set_frontend_mapping))
+
+
         .def("set_sample_rate",
              &block::set_sample_rate,
              py::arg("channel"),
              py::arg("sample_rate"),
              D(block, set_sample_rate))
+
+
+        .def("get_sample_rate",
+             &block::get_sample_rate,
+             py::arg("channel"),
+             D(block, get_sample_rate))
 
 
         .def("set_frequency",
@@ -60,11 +72,23 @@ void bind_block(py::module& m)
              D(block, set_frequency, 1))
 
 
+        .def("get_frequency",
+             &block::get_frequency,
+             py::arg("channel"),
+             D(block, get_frequency))
+
+
         .def("set_bandwidth",
              &block::set_bandwidth,
              py::arg("channel"),
              py::arg("bandwidth"),
              D(block, set_bandwidth))
+
+
+        .def("get_bandwidth",
+             &block::get_bandwidth,
+             py::arg("channel"),
+             D(block, get_bandwidth))
 
 
         .def("list_antennas",
@@ -80,6 +104,10 @@ void bind_block(py::module& m)
              D(block, set_antenna))
 
 
+        .def(
+            "get_antenna", &block::get_antenna, py::arg("channel"), D(block, get_antenna))
+
+
         .def("has_gain_mode",
              &block::has_gain_mode,
              py::arg("channel"),
@@ -93,19 +121,34 @@ void bind_block(py::module& m)
              D(block, set_gain_mode))
 
 
+        .def("get_gain_mode",
+             &block::get_gain_mode,
+             py::arg("channel"),
+             D(block, get_gain_mode))
+
+
         .def("set_gain",
-             (void (block::*)(size_t, float)) & block::set_gain,
+             (void (block::*)(size_t, double)) & block::set_gain,
              py::arg("channel"),
              py::arg("gain"),
              D(block, set_gain, 0))
 
 
         .def("set_gain",
-             (void (block::*)(size_t, const std::string&, float)) & block::set_gain,
+             (void (block::*)(size_t, const std::string&, double)) & block::set_gain,
              py::arg("channel"),
              py::arg("name"),
              py::arg("gain"),
              D(block, set_gain, 1))
+
+
+        .def("get_gain", &block::get_gain, py::arg("channel"), D(block, get_gain))
+
+
+        .def("has_frequency_correction",
+             &block::has_frequency_correction,
+             py::arg("channel"),
+             D(block, has_frequency_correction))
 
 
         .def("has_frequency_correction",
@@ -121,6 +164,12 @@ void bind_block(py::module& m)
              D(block, set_frequency_correction))
 
 
+        .def("get_frequency_correction",
+             &block::get_frequency_correction,
+             py::arg("channel"),
+             D(block, get_frequency_correction))
+
+
         .def("has_dc_offset_mode",
              &block::has_dc_offset_mode,
              py::arg("channel"),
@@ -132,6 +181,12 @@ void bind_block(py::module& m)
              py::arg("channel"),
              py::arg("automatic"),
              D(block, set_dc_offset_mode))
+
+
+        .def("get_dc_offset_mode",
+             &block::get_dc_offset_mode,
+             py::arg("channel"),
+             D(block, get_dc_offset_mode))
 
 
         .def("has_dc_offset",
@@ -147,6 +202,12 @@ void bind_block(py::module& m)
              D(block, set_dc_offset))
 
 
+        .def("get_dc_offset",
+             &block::get_dc_offset,
+             py::arg("channel"),
+             D(block, get_dc_offset))
+
+
         .def("has_iq_balance",
              &block::has_iq_balance,
              py::arg("channel"),
@@ -160,16 +221,30 @@ void bind_block(py::module& m)
              D(block, set_iq_balance))
 
 
+        .def("get_iq_balance",
+             &block::get_iq_balance,
+             py::arg("channel"),
+             D(block, get_iq_balance))
+
+
         .def("set_master_clock_rate",
              &block::set_master_clock_rate,
              py::arg("clock_rate"),
              D(block, set_master_clock_rate))
 
 
+        .def("get_master_clock_rate",
+             &block::get_master_clock_rate,
+             D(block, get_master_clock_rate))
+
+
         .def("set_clock_source",
              &block::set_clock_source,
              py::arg("clock_source"),
              D(block, set_clock_source))
+
+
+        .def("get_clock_source", &block::get_clock_source, D(block, get_clock_source))
 
         ;
 }
