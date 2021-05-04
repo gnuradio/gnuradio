@@ -18,6 +18,7 @@ usr/lib/*/libgnuradio-network.so.*
 usr/lib/*/libgnuradio-pmt.so.*
 usr/lib/*/libgnuradio-qtgui.so.*
 usr/lib/*/libgnuradio-runtime.so.*
+usr/lib/*/libgnuradio-soapy.so.*
 usr/lib/*/libgnuradio-trellis.so.*
 usr/lib/*/libgnuradio-uhd.so.*
 usr/lib/*/libgnuradio-video-sdl.so.*

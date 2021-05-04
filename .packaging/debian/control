@@ -61,7 +61,8 @@ Build-Depends: cmake,
 	            qtbase5-dev,
 	            qttools5-dev,
 	            thrift-compiler [amd64 arm64 armel armhf i386],
-               xmlto
+               xmlto,
+               libsoapysdr-dev
 Standards-Version: 4.4.0
 Homepage: http://gnuradio.org/
 Vcs-Browser: https://github.com/gnuradio/pkg-gnuradio
@@ -94,7 +95,8 @@ Recommends: gnuradio-dev,
             python3-qwt-qt5,
             python3-scipy,
             rtl-sdr,
-            uhd-host
+            uhd-host,
+            libsoapysdr0.7
 Suggests: gr-fosphor, gr-osmosdr
 Multi-Arch: foreign
 Description: GNU Radio Software Radio Toolkit
