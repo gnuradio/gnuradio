@@ -267,7 +267,7 @@ dvb_ldpc_bb_impl::dvb_ldpc_bb_impl(dvb_standard_t standard,
             break;
         case C1_5_VLSNR_SF2:
             nbch = 2680;
-            q_val = 135;
+            q_val = 36;
             frame_size -= SHORT_PUNCTURING_SET1;
             frame_size_real -= SHORT_PUNCTURING_SET1;
             Xs = 560;
@@ -284,7 +284,7 @@ dvb_ldpc_bb_impl::dvb_ldpc_bb_impl(dvb_standard_t standard,
             break;
         case C1_5_VLSNR:
             nbch = 3240;
-            q_val = 135;
+            q_val = 36;
             frame_size -= SHORT_PUNCTURING_SET2;
             frame_size_real -= SHORT_PUNCTURING_SET2;
             P = 10;
@@ -300,7 +300,7 @@ dvb_ldpc_bb_impl::dvb_ldpc_bb_impl(dvb_standard_t standard,
             break;
         case C1_3_VLSNR:
             nbch = 5400;
-            q_val = 120;
+            q_val = 30;
             frame_size -= SHORT_PUNCTURING_SET2;
             frame_size_real -= SHORT_PUNCTURING_SET2;
             P = 8;
