@@ -67,7 +67,7 @@ templates:
       tune_args = ['']
       settings = ['']
 
-      self.${id} = soapy.sink(dev, "${type}", 1, ${dev_args),
+      self.${id} = soapy.sink(dev, "${type}", 1, ${dev_args},
                                 stream_args, tune_args, settings)
       self.${id}.set_sample_rate(0, ${samp_rate})
       self.${id}.set_bandwidth(0, ${bandwidth})
