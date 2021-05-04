@@ -21,5 +21,7 @@ install(FILES
     soapy_bladerf_source.block.yml
     soapy_bladerf_sink.block.yml
     soapy_sdrplay_source.block.yml
+    soapy_custom_source.block.yml
+    soapy_custom_sink.block.yml
     DESTINATION share/gnuradio/grc/blocks
 )
