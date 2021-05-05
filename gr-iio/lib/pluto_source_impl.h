@@ -51,10 +51,15 @@ public:
     virtual void set_quadrature(bool quadrature);
     virtual void set_rfdc(bool rfdc);
     virtual void set_bbdc(bool bbdc);
-    virtual void set_filter_source(const std::string& filter_source);
-    virtual void set_filter_filename(const std::string& filter_filename);
-    virtual void set_fpass(float fpass);
-    virtual void set_fstop(float fstop);
+
+    // virtual void set_filter_source(const std::string& filter_source);
+    // virtual void set_filter_filename(const std::string& filter_filename);
+    // virtual void set_fpass(float fpass);
+    // virtual void set_fstop(float fstop);
+    virtual void set_filter_params(const std::string& filter_source,
+                                   const std::string& filter_filename = "",
+                                   float fpass = 0.0,
+                                   float fstop = 0.0);
 };
 
 } // namespace iio
