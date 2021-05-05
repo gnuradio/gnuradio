@@ -13,6 +13,8 @@
 #include "block_impl.h"
 #include <gnuradio/io_signature.h>
 #include <SoapySDR/Formats.h>
+#include <SoapySDR/Version.hpp>
+#include <boost/format.hpp>
 #include <cmath>
 #include <numeric>
 
@@ -22,6 +24,23 @@ static bool arg_info_has_key(const SoapySDR::ArgInfoList& info_list,
     return std::any_of(info_list.begin(),
                        info_list.end(),
                        [key](const SoapySDR::ArgInfo& info) { return info.key == key; });
+}
+
+static void check_abi(void)
+{
+    const std::string buildtime_abi = SOAPY_SDR_ABI_VERSION;
+    const std::string runtime_abi = SoapySDR::getABIVersion();
+
+    if (buildtime_abi != runtime_abi) {
+        throw std::runtime_error(str(
+            boost::format(
+                "\nGR-Soapy detected ABI compatibility mismatch with SoapySDR library.\n"
+                "GR-Soapy was built against ABI: %s,\n"
+                "but the SoapySDR library reports ABI: %s\n"
+                "Suggestion: install an ABI compatible version of SoapySDR,\n"
+                "or rebuild GR-Soapy component against this ABI version.\n") %
+            buildtime_abi % runtime_abi));
+    }
 }
 
 namespace gr {
@@ -50,6 +69,8 @@ block_impl::block_impl(int direction,
       d_stream_args(stream_args),
       d_channels(nchan)
 {
+    check_abi();
+
     // Channel list
     std::iota(std::begin(d_channels), std::end(d_channels), 0);
 
