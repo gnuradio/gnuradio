@@ -31,18 +31,23 @@ public:
 
     static std::string get_uri();
 
-    void set_params(unsigned long long frequency,
-                    unsigned long samplerate,
-                    unsigned long bandwidth,
-                    bool quadrature,
-                    bool rfdc,
-                    bool bbdc,
-                    const char* gain,
-                    double gain_value,
-                    const char* filter_source,
-                    const char* filter_filename,
-                    float Fpass,
-                    float Fstop);
+    // void set_params(unsigned long long frequency,
+    //                 unsigned long samplerate,
+    //                 unsigned long bandwidth,
+    //                 bool quadrature,
+    //                 bool rfdc,
+    //                 bool bbdc,
+    //                 const char* gain,
+    //                 double gain_value,
+    //                 const char* filter_source,
+    //                 const char* filter_filename,
+    //                 float Fpass,
+    //                 float Fstop);
+
+    virtual void set_frequency(unsigned long long frequency);
+    virtual void set_samplerate(unsigned long samplerate);
+    virtual void set_gain_mode(const std::string& mode);
+    virtual void set_gain(double gain);
 };
 
 } // namespace iio
