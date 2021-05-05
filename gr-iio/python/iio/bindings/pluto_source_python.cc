@@ -51,14 +51,15 @@ void bind_pluto_source(py::module& m)
         .def("set_quadrature", &pluto_source::set_quadrature, py::arg("quadrature"))
         .def("set_rfdc", &pluto_source::set_rfdc, py::arg("rfdc"))
         .def("set_bbdc", &pluto_source::set_bbdc, py::arg("bbdc"))
-        .def("set_filter_source",
-             &pluto_source::set_filter_source,
-             py::arg("filter_source"))
-        .def("set_filter_filename",
-             &pluto_source::set_filter_filename,
-             py::arg("filter_filename"))
-        .def("set_fpass", &pluto_source::set_fpass, py::arg("fpass"))
-        .def("set_fstop", &pluto_source::set_fstop, py::arg("fstop"))
+        //    .def("set_filter_source",
+        //         &pluto_source::set_filter_source,
+        //         py::arg("filter_source"))
+        //    .def("set_filter_filename",
+        //         &pluto_source::set_filter_filename,
+        //         py::arg("filter_filename"))
+        //    .def("set_fpass", &pluto_source::set_fpass, py::arg("fpass"))
+        //    .def("set_fstop", &pluto_source::set_fstop, py::arg("fstop"))
+        .def("set_filter_params", &pluto_source::set_filter_params)
 
         ;
 }
