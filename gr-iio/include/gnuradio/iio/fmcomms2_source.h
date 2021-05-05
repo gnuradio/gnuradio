@@ -34,99 +34,9 @@ class IIO_API fmcomms2_source : virtual public gr::sync_block
 public:
     typedef std::shared_ptr<fmcomms2_source> sptr;
 
-    // /*!
-    //  * \brief Return a shared_ptr to a new instance of iio::fmcomms2_source.
-    //  *
-    //  * \param uri  String of the context uri
-    //  * \param frequency  Long long of LO frequency in Hz
-    //  * \param samplerate  Long of sample rate in samples per second
-    //  * \param bandwidth  Long of bandwidth of front-end analog filter  in
-    //  *                   in Hz
-    //  * \param ch1_en  Boolean enable channel 1
-    //  * \param ch2_en  Boolean enable channel 2
-    //  * \param ch3_en  Boolean enable channel 3
-    //  * \param ch4_en  Boolean enable channel 4
-    //  * \param quadrature  Boolean enable RX quadrature tracking
-    //  * \param rfdc  Boolean enable RX RF DC tracking
-    //  * \param bbdc  Boolean enable RX Baseband DC tracking
-    //  * \param buffer_size  Long of number of samples in buffer to send to device
-    //  * \param rf_port_select  String of name of port to use for TX output mux
-    //  *        with options:
-    //  *        - 'A_BALANCED'
-    //  *        - 'B_BALANCED'
-    //  *        - 'C_BALANCED'
-    //  *        - 'A_N'
-    //  *        - 'A_P'
-    //  *        - 'B_N'
-    //  *        - 'B_P'
-    //  *        - 'C_N'
-    //  *        - 'C_P'
-    //  *        - 'TX_MONITOR1'
-    //  *        - 'TX_MONITOR2'
-    //  *        - 'TX_MONITOR1_2'
-    //  * \param gain1  String of gain mode for channel 1 with options:
-    //  *        - 'manual'
-    //  *        - 'slow_attack'
-    //  *        - 'fast_attack'
-    //  *        - 'hybrid'
-    //  * \param gain1_value  Double of RX channel 1 gain in dB [0, 76]
-    //  * \param gain2  String of gain mode for channel 1 with options:
-    //  *        - 'manual'
-    //  *        - 'slow_attack'
-    //  *        - 'fast_attack'
-    //  *        - 'hybrid'
-    //  * \param gain2_value  Double of RX channel 2 gain in dB [0, 76]
-    //  * \param filter_source  String which selects filter configuration with
-    //  *        options:
-    //  *        - 'Off': Disable filter
-    //  *        - 'Auto': Use auto-generated filters
-    //  *        - 'File': Use provide filter filter in filter_filename input
-    //  *        - 'Design': Create filter from Fpass, Fstop, samplerate, and
-    //  *                  bandwidth parameters
-    //  * \param filter_filename  String of path to filter file
-    //  * \param Fpass Float of edge of passband frequency in Hz for designed FIR
-    //  * \param Fstop Float of edge of stopband frequency in Hz for designed FIR
-    //  */
-    // static sptr make(const std::string& uri,
-    //                  unsigned long long frequency,
-    //                  unsigned long samplerate,
-    //                  unsigned long bandwidth,
-    //                  bool ch1_en,
-    //                  bool ch2_en,
-    //                  bool ch3_en,
-    //                  bool ch4_en,
-    //                  unsigned long buffer_size,
-    //                  bool quadrature,
-    //                  bool rfdc,
-    //                  bool bbdc,
-    //                  const char* gain1,
-    //                  double gain1_value,
-    //                  const char* gain2,
-    //                  double gain2_value,
-    //                  const char* rf_port_select,
-    //                  const char* filter_source = "",
-    //                  const char* filter_filename = "",
-    //                  float Fpass = 0.0,
-    //                  float Fstop = 0.0);
     static sptr make(const std::string& uri,
                      const std::vector<bool>& ch_en,
                      unsigned long buffer_size);
-
-    // virtual void set_params(unsigned long long frequency,
-    //                         unsigned long samplerate,
-    //                         unsigned long bandwidth,
-    //                         bool quadrature,
-    //                         bool rfdc,
-    //                         bool bbdc,
-    //                         const char* gain1,
-    //                         double gain1_value,
-    //                         const char* gain2,
-    //                         double gain2_value,
-    //                         const char* rf_port_select,
-    //                         const char* filter_source = "",
-    //                         const char* filter_filename = "",
-    //                         float Fpass = 0.0,
-    //                         float Fstop = 0.0) = 0;
 
     virtual void set_frequency(unsigned long long frequency) = 0;
     virtual void set_samplerate(unsigned long samplerate) = 0;
