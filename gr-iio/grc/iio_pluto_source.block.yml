@@ -109,8 +109,30 @@ asserts:
 
 templates:
     imports: from gnuradio import iio
-    make: iio.pluto_source(${uri}, ${frequency}, ${samplerate}, ${bandwidth}, ${buffer_size}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
+    make: | 
+        iio.pluto_source(${uri}, ${buffer_size})
+        self.${id}.set_frequency(${frequency})
+        self.${id}.set_samplerate(${samplerate})
+        self.${id}.set_gain_mode(${gain1})
+        self.${id}.set_gain(${manual_gain1})
+        self.${id}.set_quadrature(${quadrature})
+        self.${id}.set_rfdc(${rfdc})
+        self.${id}.set_bbdc(${bbdc})
+        self.${id}.set_filter_source(${filter_source})
+        self.${id}.set_filter_filename(${filter})
+        self.${id}.set_fpass(${fpass})
+        self.${id}.set_fstop(${fstop})
     callbacks:
-      - set_params(${frequency}, ${samplerate}, ${bandwidth}, ${buffer_size}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
+        - set_frequency(${frequency})
+        - set_samplerate(${samplerate})
+        - set_gain_mode(${gain1})
+        - set_gain(${manual_gain1})
+        - set_quadrature(${quadrature})
+        - set_rfdc(${rfdc})
+        - set_bbdc(${bbdc})
+        - set_filter_source(${filter_source})
+        - set_filter_filename(${filter})
+        - set_fpass(${fpass})
+        - set_fstop(${fstop})
 
 file_format: 1
