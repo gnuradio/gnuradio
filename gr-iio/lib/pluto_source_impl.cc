@@ -167,16 +167,25 @@ void pluto_source_impl::set_bbdc(bool bbdc)
 {
     fmcomms2_source_f32c::set_quadrature(bbdc);
 }
-void pluto_source_impl::set_filter_source(const std::string& filter_source)
+// void pluto_source_impl::set_filter_source(const std::string& filter_source)
+// {
+//     fmcomms2_source_f32c::set_filter_source(filter_source);
+// }
+// void pluto_source_impl::set_filter_filename(const std::string& filter_filename)
+// {
+//     fmcomms2_source_f32c::set_filter_filename(filter_filename);
+// }
+// void pluto_source_impl::set_fpass(float fpass) {
+// fmcomms2_source_f32c::set_fpass(fpass); } void pluto_source_impl::set_fstop(float
+// fstop) { fmcomms2_source_f32c::set_fstop(fstop); }
+
+void pluto_source_impl::set_filter_params(const std::string& filter_source,
+                                          const std::string& filter_filename,
+                                          float fpass,
+                                          float fstop)
 {
-    fmcomms2_source_f32c::set_filter_source(filter_source);
-}
-void pluto_source_impl::set_filter_filename(const std::string& filter_filename)
-{
-    fmcomms2_source_f32c::set_filter_filename(filter_filename);
-}
-void pluto_source_impl::set_fpass(float fpass) { fmcomms2_source_f32c::set_fpass(fpass); }
-void pluto_source_impl::set_fstop(float fstop) { fmcomms2_source_f32c::set_fstop(fstop); }
+    fmcomms2_source_f32c::set_filter_params(filter_source, filter_filename, fpass, fstop);
+};
 
 } // namespace iio
 } // namespace gr

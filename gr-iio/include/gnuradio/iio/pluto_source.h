@@ -35,10 +35,14 @@ public:
     virtual void set_quadrature(bool quadrature) = 0;
     virtual void set_rfdc(bool rfdc) = 0;
     virtual void set_bbdc(bool bbdc) = 0;
-    virtual void set_filter_source(const std::string& filter_source) = 0;
-    virtual void set_filter_filename(const std::string& filter_filename) = 0;
-    virtual void set_fpass(float fpass) = 0;
-    virtual void set_fstop(float fstop) = 0;
+    // virtual void set_filter_source(const std::string& filter_source) = 0;
+    // virtual void set_filter_filename(const std::string& filter_filename) = 0;
+    // virtual void set_fpass(float fpass) = 0;
+    // virtual void set_fstop(float fstop) = 0;
+    virtual void set_filter_params(const std::string& filter_source,
+                                   const std::string& filter_filename = "",
+                                   float fpass = 0.0,
+                                   float fstop = 0.0) = 0;
 };
 } // namespace iio
 } // namespace gr
