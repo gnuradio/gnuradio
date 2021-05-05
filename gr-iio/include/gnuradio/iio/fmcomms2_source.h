@@ -45,10 +45,14 @@ public:
     virtual void set_quadrature(bool quadrature) = 0;
     virtual void set_rfdc(bool rfdc) = 0;
     virtual void set_bbdc(bool bbdc) = 0;
-    virtual void set_filter_source(const std::string& filter_source) = 0;
-    virtual void set_filter_filename(const std::string& filter_filename) = 0;
-    virtual void set_fpass(float fpass) = 0;
-    virtual void set_fstop(float fstop) = 0;
+    // virtual void set_filter_source(const std::string& filter_source) = 0;
+    // virtual void set_filter_filename(const std::string& filter_filename) = 0;
+    // virtual void set_fpass(float fpass) = 0;
+    // virtual void set_fstop(float fstop) = 0;
+    virtual void set_filter_params(const std::string& filter_source,
+                                   const std::string& filter_filename = "",
+                                   float fpass = 0.0,
+                                   float fstop = 0.0) = 0;
 };
 
 /*!
@@ -97,16 +101,23 @@ public:
     }
     virtual void set_rfdc(bool rfdc) { fmcomms2_block->set_rfdc(rfdc); }
     virtual void set_bbdc(bool bbdc) { fmcomms2_block->set_bbdc(bbdc); }
-    virtual void set_filter_source(const std::string& filter_source)
+    // virtual void set_filter_source(const std::string& filter_source)
+    // {
+    //     fmcomms2_block->set_filter_source(filter_source);
+    // }
+    // virtual void set_filter_filename(const std::string& filter_filename)
+    // {
+    //     fmcomms2_block->set_filter_filename(filter_filename);
+    // }
+    // virtual void set_fpass(float fpass) { fmcomms2_block->set_fpass(fpass); }
+    // virtual void set_fstop(float fstop) { fmcomms2_block->set_fstop(fstop); }
+    virtual void set_filter_params(const std::string& filter_source,
+                                   const std::string& filter_filename = "",
+                                   float fpass = 0.0,
+                                   float fstop = 0.0)
     {
-        fmcomms2_block->set_filter_source(filter_source);
+        fmcomms2_block->set_filter_params(filter_source, filter_filename, fpass, fstop);
     }
-    virtual void set_filter_filename(const std::string& filter_filename)
-    {
-        fmcomms2_block->set_filter_filename(filter_filename);
-    }
-    virtual void set_fpass(float fpass) { fmcomms2_block->set_fpass(fpass); }
-    virtual void set_fstop(float fstop) { fmcomms2_block->set_fstop(fstop); }
 
 private:
     fmcomms2_source::sptr fmcomms2_block;

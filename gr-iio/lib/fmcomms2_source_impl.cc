@@ -276,24 +276,37 @@ void fmcomms2_source_impl::set_bbdc(bool bbdc)
     device_source_impl::set_params(params);
     d_bbdc = bbdc;
 }
-void fmcomms2_source_impl::set_filter_source(const std::string& filt_config)
+// void fmcomms2_source_impl::set_filter_source(const std::string& filt_config)
+// {
+//     d_filter_source = filt_config;
+//     update_dependent_params();
+// }
+// void fmcomms2_source_impl::set_filter_filename(const std::string& filter_filename)
+// {
+//     d_filter_filename = filter_filename;
+//     update_dependent_params();
+// }
+// void fmcomms2_source_impl::set_fpass(float fpass)
+// {
+//     d_fpass = fpass;
+//     update_dependent_params();
+// }
+// void fmcomms2_source_impl::set_fstop(float fstop)
+// {
+//     d_fstop = fstop;
+//     update_dependent_params();
+// }
+
+void fmcomms2_source_impl::set_filter_params(const std::string& filter_source,
+                                             const std::string& filter_filename,
+                                             float fpass,
+                                             float fstop)
 {
-    d_filter_source = filt_config;
-    update_dependent_params();
-}
-void fmcomms2_source_impl::set_filter_filename(const std::string& filter_filename)
-{
+    d_filter_source = filter_source;
     d_filter_filename = filter_filename;
-    update_dependent_params();
-}
-void fmcomms2_source_impl::set_fpass(float fpass)
-{
     d_fpass = fpass;
-    update_dependent_params();
-}
-void fmcomms2_source_impl::set_fstop(float fstop)
-{
     d_fstop = fstop;
+
     update_dependent_params();
 }
 
