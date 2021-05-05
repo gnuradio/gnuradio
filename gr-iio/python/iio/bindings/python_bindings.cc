@@ -21,14 +21,14 @@ void bind_attr_sink(py::module& m);
 void bind_dds_control(py::module& m);
 void bind_attr_updater(py::module& m);
 #ifdef GR_IIO_LIBAD9361
-void bind_fmcomms2_sink(py::module& m);
-void bind_fmcomms2_sink_f32c(py::module& m);
-void bind_fmcomms5_sink(py::module& m);
-void bind_fmcomms5_sink_f32c(py::module& m);
-void bind_fmcomms2_source(py::module& m);
-void bind_fmcomms2_source_f32c(py::module& m);
-void bind_fmcomms5_source(py::module& m);
-void bind_fmcomms5_source_f32c(py::module& m);
+// void bind_fmcomms2_sink(py::module& m);
+// void bind_fmcomms2_sink_f32c(py::module& m);
+// void bind_fmcomms5_sink(py::module& m);
+// void bind_fmcomms5_sink_f32c(py::module& m);
+// void bind_fmcomms2_source(py::module& m);
+// void bind_fmcomms2_source_f32c(py::module& m);
+// void bind_fmcomms5_source(py::module& m);
+// void bind_fmcomms5_source_f32c(py::module& m);
 void bind_pluto_sink(py::module& m);
 void bind_pluto_source(py::module& m);
 #endif
@@ -59,15 +59,15 @@ PYBIND11_MODULE(iio_python, m)
     bind_dds_control(m);
     bind_attr_updater(m);
 #ifdef GR_IIO_LIBAD9361
-    bind_fmcomms2_sink(m);
-    bind_fmcomms2_sink_f32c(m);
-    bind_fmcomms5_sink(m);
-    bind_fmcomms5_sink_f32c(m);
+    // bind_fmcomms2_sink(m);
+    // bind_fmcomms2_sink_f32c(m);
+    // bind_fmcomms5_sink(m);
+    // bind_fmcomms5_sink_f32c(m);
     bind_pluto_sink(m);
-    bind_fmcomms2_source(m);
-    bind_fmcomms2_source_f32c(m);
-    bind_fmcomms5_source(m);
-    bind_fmcomms5_source_f32c(m);
+    // bind_fmcomms2_source(m);
+    // bind_fmcomms2_source_f32c(m);
+    // bind_fmcomms5_source(m);
+    // bind_fmcomms5_source_f32c(m);
     bind_pluto_source(m);
 #endif
 }
