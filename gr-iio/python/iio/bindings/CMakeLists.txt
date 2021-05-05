@@ -15,14 +15,14 @@ list(APPEND iio_python_files
 
 if(${libad9361_FOUND})
 list(APPEND iio_python_files
-    fmcomms2_sink_f32c_python.cc
-    fmcomms2_sink_python.cc
-    fmcomms2_source_f32c_python.cc
-    fmcomms2_source_python.cc
-    fmcomms5_sink_f32c_python.cc
-    fmcomms5_sink_python.cc
-    fmcomms5_source_f32c_python.cc
-    fmcomms5_source_python.cc
+    # fmcomms2_sink_f32c_python.cc
+    # fmcomms2_sink_python.cc
+    # fmcomms2_source_f32c_python.cc
+    # fmcomms2_source_python.cc
+    # fmcomms5_sink_f32c_python.cc
+    # fmcomms5_sink_python.cc
+    # fmcomms5_source_f32c_python.cc
+    # fmcomms5_source_python.cc
     pluto_sink_python.cc
     pluto_source_python.cc)
 endif(${libad9361_FOUND})

@@ -35,8 +35,6 @@ if(libad9361_FOUND)
   target_sources(gnuradio-iio PRIVATE
     fmcomms2_sink_impl.cc
     fmcomms2_source_impl.cc
-    fmcomms5_sink_impl.cc
-    fmcomms5_source_impl.cc
     pluto_sink_impl.cc
     pluto_source_impl.cc
   )
