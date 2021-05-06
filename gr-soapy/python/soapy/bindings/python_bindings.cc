@@ -14,6 +14,7 @@
 
 namespace py = pybind11;
 
+void bind_soapy_types(py::module& m);
 void bind_block(py::module& m);
 void bind_source(py::module& m);
 void bind_sink(py::module& m);
@@ -37,6 +38,7 @@ PYBIND11_MODULE(soapy_python, m)
     // Allow access to base block methods
     py::module::import("gnuradio.gr");
 
+    bind_soapy_types(m);
     bind_block(m);
     bind_source(m);
     bind_sink(m);
