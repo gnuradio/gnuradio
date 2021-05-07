@@ -11,6 +11,7 @@
 
 #include <gnuradio/block.h>
 #include <gnuradio/soapy/api.h>
+#include <gnuradio/soapy/soapy_types.h>
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -29,6 +30,24 @@ public:
     virtual void set_frontend_mapping(const std::string& frontend_mapping) = 0;
 
     /*!
+     * Get the frontend mapping of available DSP units to RF frontends.
+     * This mapping describes channel mapping and channel availability.
+     * \return a vendor-specific mapping string
+     */
+    virtual std::string get_frontend_mapping() const = 0;
+
+    /*!
+     * Query a dictionary of available channel information.
+     * This dictionary can any number of values like
+     * decoder type, version, available functions...
+     * This information can be displayed to the user
+     * to help identify the instantiated channel.
+     * \param channel an available channel on the device
+     * \return channel information
+     */
+    virtual kwargs_t get_channel_info(size_t channel) const = 0;
+
+    /*!
      * Set sample rate
      * \param channel an available channel
      * \param sample_rate samples per second
@@ -41,6 +60,13 @@ public:
      * \return the sample rate in samples per second
      */
     virtual double get_sample_rate(size_t channel) const = 0;
+
+    /*!
+     * Get the range of possible baseband sample rates.
+     * \param channel an available channel on the device
+     * \return a list of sample rate ranges in samples per second
+     */
+    virtual range_list_t get_sample_rate_range(size_t channel) const = 0;
 
     /*!
      * Set device center frequency
@@ -65,6 +91,38 @@ public:
     virtual double get_frequency(size_t channel) const = 0;
 
     /*!
+     * Get the frequency of a tunable element in the chain.
+     * \param channel an available channel on the device
+     * \param name the name of a tunable element
+     * \return the tunable element's frequency in Hz
+     */
+    virtual double get_frequency(size_t channel, const std::string& name) const = 0;
+
+    /*!
+     * List available tunable elements in the chain.
+     * Elements should be in order RF to baseband.
+     * \param channel an available channel
+     * \return a list of tunable elements by name
+     */
+    virtual std::vector<std::string> list_frequencies(size_t channel) const = 0;
+
+    /*!
+     * Get the range of overall frequency values.
+     * \param channel an available channel on the device
+     * \return a list of frequency ranges in Hz
+     */
+    virtual range_list_t get_frequency_range(size_t channel) const = 0;
+
+    /*!
+     * Get the range of tunable values for the specified element.
+     * \param channel an available channel on the device
+     * \param name the name of a tunable element
+     * \return a list of frequency ranges in Hz
+     */
+    virtual range_list_t get_frequency_range(size_t channel,
+                                             const std::string& name) const = 0;
+
+    /*!
      * Set filter bandwidth
      * \param channel an available channel
      * \param bandwidth filter width in Hz
@@ -77,6 +135,13 @@ public:
      * \return the baseband filter width in Hz
      */
     virtual double get_bandwidth(size_t channel) const = 0;
+
+    /*!
+     * Get the range of possible baseband filter widths.
+     * \param channel an available channel on the device
+     * \return a list of bandwidth ranges in Hz
+     */
+    virtual range_list_t get_bandwidth_range(size_t channel) const = 0;
 
     /*!
      * List available antennas for a channel
@@ -120,6 +185,14 @@ public:
     virtual bool get_gain_mode(size_t channel) const = 0;
 
     /*!
+     * List available amplification elements.
+     * Elements should be in order RF to baseband.
+     * \param channel an available channel
+     * \return a list of gain string names
+     */
+    virtual std::vector<std::string> list_gains(size_t channel) const = 0;
+
+    /*!
      * Set overall gain
      * The gain will be distributed automatically across available
      * elements according to Soapy API.
@@ -142,6 +215,29 @@ public:
      * \return the value of the gain in dB
      */
     virtual double get_gain(size_t channel) const = 0;
+
+    /*!
+     * Get the value of an individual amplification element in a chain.
+     * \param channel an available channel on the device
+     * \param name the name of an amplification element
+     * \return the value of the gain in dB
+     */
+    virtual double get_gain(size_t channel, const std::string& name) const = 0;
+
+    /*!
+     * Get the overall range of possible gain values.
+     * \param channel an available channel on the device
+     * \return a list of gain ranges in dB
+     */
+    virtual range_t get_gain_range(size_t channel) const = 0;
+
+    /*!
+     * Get the range of possible gain values for a specific element.
+     * \param channel an available channel on the device
+     * \param name the name of an amplification element
+     * \return a list of gain ranges in dB
+     */
+    virtual range_t get_gain_range(size_t channel, const std::string& name) const = 0;
 
     /*!
      * Return whether frequency correction is supported
@@ -234,6 +330,18 @@ public:
      * \return the clock rate in Hz
      */
     virtual double get_master_clock_rate() const = 0;
+
+    /*!
+     * Get the range of available master clock rates.
+     * \return a list of clock rate ranges in Hz
+     */
+    virtual range_list_t get_master_clock_rates() const = 0;
+
+    /*!
+     * Get the list of available clock sources.
+     * \return a list of clock source names
+     */
+    virtual std::vector<std::string> list_clock_sources() const = 0;
 
     /*!
      * Set the clock source
