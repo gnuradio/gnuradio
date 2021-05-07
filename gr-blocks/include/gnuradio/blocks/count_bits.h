@@ -13,6 +13,8 @@
 
 #include <gnuradio/blocks/api.h>
 
+#include <cstdint>
+
 namespace gr {
 namespace blocks {
 
@@ -26,7 +28,7 @@ BLOCKS_API unsigned int count_bits16(unsigned int x);
 BLOCKS_API unsigned int count_bits32(unsigned int x);
 
 //! return number of set bits in a 64-bit word
-BLOCKS_API unsigned int count_bits64(unsigned long long int x);
+BLOCKS_API unsigned int count_bits64(uint64_t x);
 
 } /* namespace blocks */
 } /* namespace gr */
