@@ -15,7 +15,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(block.h)                                                   */
-/* BINDTOOL_HEADER_FILE_HASH(6e911ed08a9560fda459b0de000e210a)                     */
+/* BINDTOOL_HEADER_FILE_HASH(7742c1003b34ca79350bfaa736f25ce2)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -44,6 +44,11 @@ void bind_block(py::module& m)
              D(block, set_frontend_mapping))
 
 
+        .def("get_frontend_mapping",
+             &block::get_frontend_mapping,
+             D(block, get_frontend_mapping))
+
+
         .def("set_sample_rate",
              &block::set_sample_rate,
              py::arg("channel"),
@@ -55,6 +60,12 @@ void bind_block(py::module& m)
              &block::get_sample_rate,
              py::arg("channel"),
              D(block, get_sample_rate))
+
+
+        .def("get_sample_rate_range",
+             &block::get_sample_rate_range,
+             py::arg("channel"),
+             D(block, get_sample_rate_range))
 
 
         .def("set_frequency",
@@ -73,9 +84,36 @@ void bind_block(py::module& m)
 
 
         .def("get_frequency",
-             &block::get_frequency,
+             (double (block::*)(size_t) const) & block::get_frequency,
              py::arg("channel"),
-             D(block, get_frequency))
+             D(block, get_frequency, 0))
+
+
+        .def("get_frequency",
+             (double (block::*)(size_t, const std::string&) const) & block::get_frequency,
+             py::arg("channel"),
+             py::arg("name"),
+             D(block, get_frequency, 1))
+
+
+        .def("list_frequencies",
+             &block::list_frequencies,
+             py::arg("channel"),
+             D(block, list_frequencies))
+
+
+        .def("get_frequency_range",
+             (SoapySDR::RangeList(block::*)(size_t) const) & block::get_frequency_range,
+             py::arg("channel"),
+             D(block, get_frequency_range, 0))
+
+
+        .def("get_frequency_range",
+             (SoapySDR::RangeList(block::*)(size_t, const std::string&) const) &
+                 block::get_frequency_range,
+             py::arg("channel"),
+             py::arg("name"),
+             D(block, get_frequency_range, 1))
 
 
         .def("set_bandwidth",
@@ -89,6 +127,12 @@ void bind_block(py::module& m)
              &block::get_bandwidth,
              py::arg("channel"),
              D(block, get_bandwidth))
+
+
+        .def("get_bandwidth_range",
+             &block::get_bandwidth_range,
+             py::arg("channel"),
+             D(block, get_bandwidth_range))
 
 
         .def("list_antennas",
@@ -127,6 +171,9 @@ void bind_block(py::module& m)
              D(block, get_gain_mode))
 
 
+        .def("list_gains", &block::list_gains, py::arg("channel"), D(block, list_gains))
+
+
         .def("set_gain",
              (void (block::*)(size_t, double)) & block::set_gain,
              py::arg("channel"),
@@ -142,13 +189,31 @@ void bind_block(py::module& m)
              D(block, set_gain, 1))
 
 
-        .def("get_gain", &block::get_gain, py::arg("channel"), D(block, get_gain))
-
-
-        .def("has_frequency_correction",
-             &block::has_frequency_correction,
+        .def("get_gain",
+             (double (block::*)(size_t) const) & block::get_gain,
              py::arg("channel"),
-             D(block, has_frequency_correction))
+             D(block, get_gain, 0))
+
+
+        .def("get_gain",
+             (double (block::*)(size_t, const std::string&) const) & block::get_gain,
+             py::arg("channel"),
+             py::arg("name"),
+             D(block, get_gain, 1))
+
+
+        .def("get_gain_range",
+             (SoapySDR::Range(block::*)(size_t) const) & block::get_gain_range,
+             py::arg("channel"),
+             D(block, get_gain_range, 0))
+
+
+        .def("get_gain_range",
+             (SoapySDR::Range(block::*)(size_t, const std::string&) const) &
+                 block::get_gain_range,
+             py::arg("channel"),
+             py::arg("name"),
+             D(block, get_gain_range, 1))
 
 
         .def("has_frequency_correction",
@@ -236,6 +301,16 @@ void bind_block(py::module& m)
         .def("get_master_clock_rate",
              &block::get_master_clock_rate,
              D(block, get_master_clock_rate))
+
+
+        .def("get_master_clock_rates",
+             &block::get_master_clock_rates,
+             D(block, get_master_clock_rate))
+
+
+        .def("list_clock_sources",
+             &block::list_clock_sources,
+             D(block, list_clock_sources))
 
 
         .def("set_clock_source",

@@ -44,7 +44,7 @@ private:
     std::vector<size_t> d_channels;
     std::string d_soapy_type;
     std::map<pmt::pmt_t, cmd_handler_t> d_cmd_handlers;
-    std::vector<SoapySDR::Kwargs> d_tune_args;
+    kwargs_list_t d_tune_args;
 
     void register_msg_cmd_handler(const pmt::pmt_t& cmd, cmd_handler_t handler);
 
@@ -93,18 +93,28 @@ public:
 
     /*** Begin public API implementation ***/
 
-    void set_frontend_mapping(const std::string& frontend_mapping);
+    void set_frontend_mapping(const std::string& frontend_mapping) override;
+    std::string get_frontend_mapping() const override;
+
+    kwargs_t get_channel_info(size_t channel) const override;
 
     void set_sample_rate(size_t channel, double sample_rate) override;
     double get_sample_rate(size_t channel) const override;
+    range_list_t get_sample_rate_range(size_t channel) const override;
 
     void set_frequency(size_t channel, double frequency) override;
     void
     set_frequency(size_t channel, const std::string& name, double frequency) override;
     double get_frequency(size_t channel) const override;
+    double get_frequency(size_t channel, const std::string& name) const override;
+    std::vector<std::string> list_frequencies(size_t channel) const override;
+    range_list_t get_frequency_range(size_t channel) const override;
+    range_list_t get_frequency_range(size_t channel,
+                                     const std::string& name) const override;
 
     void set_bandwidth(size_t channel, double bandwidth) override;
     double get_bandwidth(size_t channel) const override;
+    range_list_t get_bandwidth_range(size_t channel) const override;
 
     std::vector<std::string> list_antennas(int channel) const override;
     void set_antenna(size_t channel, const std::string& name) override;
@@ -114,9 +124,13 @@ public:
     void set_gain_mode(size_t channel, bool enable) override;
     bool get_gain_mode(size_t channel) const override;
 
+    std::vector<std::string> list_gains(size_t channel) const override;
     void set_gain(size_t channel, double gain) override;
     void set_gain(size_t channel, const std::string& name, double gain) override;
     double get_gain(size_t channel) const override;
+    double get_gain(size_t channel, const std::string& name) const override;
+    range_t get_gain_range(size_t channel) const override;
+    range_t get_gain_range(size_t channel, const std::string& name) const override;
 
     bool has_frequency_correction(size_t channel) const override;
     void set_frequency_correction(size_t channel, double freq_correction) override;
@@ -136,7 +150,9 @@ public:
 
     void set_master_clock_rate(double clock_rate) override;
     double get_master_clock_rate() const override;
+    range_list_t get_master_clock_rates() const override;
 
+    std::vector<std::string> list_clock_sources() const override;
     void set_clock_source(const std::string& clock_source) override;
     std::string get_clock_source() const override;
 

@@ -18,12 +18,14 @@
 #include <cmath>
 #include <numeric>
 
-static bool arg_info_has_key(const SoapySDR::ArgInfoList& info_list,
-                             const std::string& key)
+namespace gr {
+namespace soapy {
+
+static bool arg_info_has_key(const arginfo_list_t& info_list, const std::string& key)
 {
-    return std::any_of(info_list.begin(),
-                       info_list.end(),
-                       [key](const SoapySDR::ArgInfo& info) { return info.key == key; });
+    return std::any_of(info_list.begin(), info_list.end(), [key](const arginfo_t& info) {
+        return info.key == key;
+    });
 }
 
 static void check_abi(void)
@@ -42,9 +44,6 @@ static void check_abi(void)
             buildtime_abi % runtime_abi));
     }
 }
-
-namespace gr {
-namespace soapy {
 
 const pmt::pmt_t CMD_CHAN_KEY = pmt::mp("chan");
 const pmt::pmt_t CMD_FREQ_KEY = pmt::mp("freq");
@@ -96,11 +95,11 @@ block_impl::block_impl(int direction,
         throw std::invalid_argument(name() + ": Invalid IO type");
     }
 
-    SoapySDR::Kwargs dev_kwargs = SoapySDR::KwargsFromString(device + ", " + dev_args);
+    kwargs_t dev_kwargs = SoapySDR::KwargsFromString(device + ", " + dev_args);
     d_device = device_ptr_t(SoapySDR::Device::make(dev_kwargs));
 
     /* Some of the arguments maybe device settings, so we need to re-apply them */
-    SoapySDR::ArgInfoList supported_settings = d_device->getSettingInfo();
+    arginfo_list_t supported_settings = d_device->getSettingInfo();
     for (const auto& arg : dev_kwargs) {
         for (const auto& supported : supported_settings) {
             if (supported.key == arg.first) {
@@ -120,9 +119,8 @@ block_impl::block_impl(int direction,
      * Validate stream arguments for all channels
      */
     for (const auto channel : d_channels) {
-        SoapySDR::ArgInfoList supported_args =
-            d_device->getStreamArgsInfo(d_direction, channel);
-        SoapySDR::Kwargs stream_kwargs = SoapySDR::KwargsFromString(stream_args);
+        arginfo_list_t supported_args = d_device->getStreamArgsInfo(d_direction, channel);
+        kwargs_t stream_kwargs = SoapySDR::KwargsFromString(stream_args);
 
         for (const auto& arg : stream_kwargs) {
             if (!arg_info_has_key(supported_args, arg.first)) {
@@ -135,12 +133,12 @@ block_impl::block_impl(int direction,
 
     /* Validate tuning arguments for each channel */
     for (const auto channel : d_channels) {
-        SoapySDR::ArgInfoList supported_args =
+        arginfo_list_t supported_args =
             d_device->getFrequencyArgsInfo(d_direction, channel);
 
         /* If single set of args, apply to all channels */
         const size_t arg_idx = tune_args.size() == 1 ? 0 : channel;
-        SoapySDR::Kwargs tune_kwargs = SoapySDR::KwargsFromString(tune_args[arg_idx]);
+        kwargs_t tune_kwargs = SoapySDR::KwargsFromString(tune_args[arg_idx]);
 
         for (const auto& arg : tune_kwargs) {
             if (!arg_info_has_key(supported_args, arg.first)) {
@@ -154,13 +152,12 @@ block_impl::block_impl(int direction,
 
     /* Validate and apply other settings to each channel */
     for (const auto channel : d_channels) {
-        SoapySDR::ArgInfoList supported_settings =
+        arginfo_list_t supported_settings =
             d_device->getSettingInfo(d_direction, channel);
 
         /* If single set of args, apply to all channels */
         const size_t arg_idx = other_settings.size() == 1 ? 0 : channel;
-        SoapySDR::Kwargs settings_kwargs =
-            SoapySDR::KwargsFromString(other_settings[arg_idx]);
+        kwargs_t settings_kwargs = SoapySDR::KwargsFromString(other_settings[arg_idx]);
 
         /*
          * Before applying the setting, make a last check if the setting
@@ -262,6 +259,17 @@ void block_impl::set_frontend_mapping(const std::string& mapping)
     d_device->setFrontendMapping(d_direction, mapping);
 }
 
+std::string block_impl::get_frontend_mapping() const
+{
+    return d_device->getFrontendMapping(d_direction);
+}
+
+kwargs_t block_impl::get_channel_info(size_t channel) const
+{
+    validate_channel(channel);
+    return d_device->getChannelInfo(d_direction, channel);
+}
+
 void block_impl::set_sample_rate(size_t channel, double sample_rate)
 {
     validate_channel(channel);
@@ -269,7 +277,7 @@ void block_impl::set_sample_rate(size_t channel, double sample_rate)
     /* Validate and set sample rate */
     bool accept_samp_rate = false;
 
-    SoapySDR::RangeList sps_range = d_device->getSampleRateRange(d_direction, channel);
+    range_list_t sps_range = d_device->getSampleRateRange(d_direction, channel);
 
     for (auto range : sps_range) {
         if ((sample_rate >= range.minimum()) && (sample_rate <= range.maximum())) {
@@ -292,7 +300,14 @@ void block_impl::set_sample_rate(size_t channel, double sample_rate)
 
 double block_impl::get_sample_rate(size_t channel) const
 {
+    validate_channel(channel);
     return d_device->getSampleRate(d_direction, channel);
+}
+
+range_list_t block_impl::get_sample_rate_range(size_t channel) const
+{
+    validate_channel(channel);
+    return d_device->getSampleRateRange(d_direction, channel);
 }
 
 void block_impl::set_frequency(size_t channel, double frequency)
@@ -320,7 +335,33 @@ void block_impl::set_frequency(size_t channel, const std::string& name, double f
 
 double block_impl::get_frequency(size_t channel) const
 {
+    validate_channel(channel);
     return d_device->getFrequency(d_direction, channel);
+}
+
+double block_impl::get_frequency(size_t channel, const std::string& name) const
+{
+    validate_channel(channel);
+    return d_device->getFrequency(d_direction, channel, name);
+}
+
+std::vector<std::string> block_impl::list_frequencies(size_t channel) const
+{
+    validate_channel(channel);
+    return d_device->listFrequencies(d_direction, channel);
+}
+
+range_list_t block_impl::get_frequency_range(size_t channel) const
+{
+    validate_channel(channel);
+    return d_device->getFrequencyRange(d_direction, channel);
+}
+
+range_list_t block_impl::get_frequency_range(size_t channel,
+                                             const std::string& name) const
+{
+    validate_channel(channel);
+    return d_device->getFrequencyRange(d_direction, channel, name);
 }
 
 void block_impl::set_bandwidth(size_t channel, double bandwidth)
@@ -331,7 +372,14 @@ void block_impl::set_bandwidth(size_t channel, double bandwidth)
 
 double block_impl::get_bandwidth(size_t channel) const
 {
+    validate_channel(channel);
     return d_device->getBandwidth(d_direction, channel);
+}
+
+range_list_t block_impl::get_bandwidth_range(size_t channel) const
+{
+    validate_channel(channel);
+    return d_device->getBandwidthRange(d_direction, channel);
 }
 
 std::vector<std::string> block_impl::list_antennas(int channel) const
@@ -367,6 +415,7 @@ void block_impl::set_antenna(const size_t channel, const std::string& name)
 
 std::string block_impl::get_antenna(size_t channel) const
 {
+    validate_channel(channel);
     return d_device->getAntenna(d_direction, channel);
 }
 
@@ -389,13 +438,20 @@ void block_impl::set_gain_mode(size_t channel, bool enable)
 
 bool block_impl::get_gain_mode(size_t channel) const
 {
+    validate_channel(channel);
     return d_device->getGainMode(d_direction, channel);
+}
+
+std::vector<std::string> block_impl::list_gains(size_t channel) const
+{
+    validate_channel(channel);
+    return d_device->listGains(d_direction, channel);
 }
 
 void block_impl::set_gain(size_t channel, double gain)
 {
     validate_channel(channel);
-    SoapySDR::Range rGain = d_device->getGainRange(d_direction, channel);
+    range_t rGain = d_device->getGainRange(d_direction, channel);
 
     if (gain < rGain.minimum() || gain > rGain.maximum()) {
         GR_LOG_WARN(d_logger,
@@ -419,7 +475,7 @@ void block_impl::set_gain(size_t channel, const std::string& name, double gain)
     }
 
     /* Validate gain value */
-    SoapySDR::Range rGain = d_device->getGainRange(d_direction, channel, name);
+    range_t rGain = d_device->getGainRange(d_direction, channel, name);
     if (gain < rGain.minimum() || gain > rGain.maximum()) {
         GR_LOG_WARN(d_logger,
                     boost::format("Gain %s out of range: %d <= gain <= %d") % name %
@@ -431,7 +487,26 @@ void block_impl::set_gain(size_t channel, const std::string& name, double gain)
 
 double block_impl::get_gain(size_t channel) const
 {
+    validate_channel(channel);
     return d_device->getGain(d_direction, channel);
+}
+
+double block_impl::get_gain(size_t channel, const std::string& name) const
+{
+    validate_channel(channel);
+    return d_device->getGain(d_direction, channel, name);
+}
+
+range_t block_impl::get_gain_range(size_t channel) const
+{
+    validate_channel(channel);
+    return d_device->getGainRange(d_direction, channel);
+}
+
+range_t block_impl::get_gain_range(size_t channel, const std::string& name) const
+{
+    validate_channel(channel);
+    return d_device->getGainRange(d_direction, channel, name);
 }
 
 bool block_impl::has_frequency_correction(size_t channel) const
@@ -457,6 +532,7 @@ void block_impl::set_frequency_correction(size_t channel, double freq_correction
 
 double block_impl::get_frequency_correction(size_t channel) const
 {
+    validate_channel(channel);
     return d_device->getFrequencyCorrection(d_direction, channel);
 }
 
@@ -481,6 +557,7 @@ void block_impl::set_dc_offset_mode(size_t channel, bool automatic)
 
 bool block_impl::get_dc_offset_mode(size_t channel) const
 {
+    validate_channel(channel);
     return d_device->getDCOffsetMode(d_direction, channel);
 }
 
@@ -516,6 +593,7 @@ void block_impl::set_dc_offset(size_t channel, const gr_complexd& dc_offset)
 
 gr_complexd block_impl::get_dc_offset(size_t channel) const
 {
+    validate_channel(channel);
     return d_device->getDCOffset(d_direction, channel);
 }
 
@@ -551,6 +629,7 @@ void block_impl::set_iq_balance(size_t channel, const gr_complexd& iq_balance)
 
 gr_complexd block_impl::get_iq_balance(size_t channel) const
 {
+    validate_channel(channel);
     return d_device->getIQBalance(d_direction, channel);
 }
 
@@ -562,6 +641,16 @@ void block_impl::set_master_clock_rate(double clock_rate)
 double block_impl::get_master_clock_rate() const
 {
     return d_device->getMasterClockRate();
+}
+
+range_list_t block_impl::get_master_clock_rates() const
+{
+    return d_device->getMasterClockRates();
+}
+
+std::vector<std::string> block_impl::list_clock_sources() const
+{
+    return d_device->listClockSources();
 }
 
 void block_impl::set_clock_source(const std::string& clock_source)
