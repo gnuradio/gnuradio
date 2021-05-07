@@ -14,6 +14,8 @@
 
 namespace py = pybind11;
 
+#include <gnuradio/soapy/soapy_types.h>
+
 #include <SoapySDR/Types.hpp>
 #include <SoapySDR/Version.h>
 
@@ -90,18 +92,18 @@ inline std::string setting_to_string<bool>(const bool& setting)
 
 void bind_soapy_types(py::module& m)
 {
-    py::class_<SoapySDR::Range>(m, "range")
+    py::class_<gr::soapy::range_t>(m, "range_t")
         // Constructors
         .def(py::init<>())
         .def(py::init<double, double>())
         .def(py::init<double, double, double>())
 
         // Methods
-        .def("minimum", &SoapySDR::Range::minimum)
-        .def("maximum", &SoapySDR::Range::maximum)
-        .def("step", &SoapySDR::Range::step)
+        .def("minimum", &gr::soapy::range_t::minimum)
+        .def("maximum", &gr::soapy::range_t::maximum)
+        .def("step", &gr::soapy::range_t::step)
 
-        .def("__str__", [](const SoapySDR::Range& range) -> std::string {
+        .def("__str__", [](const gr::soapy::range_t& range) -> std::string {
             std::string ret = "(minimum: )";
             ret += std::to_string(range.minimum());
             ret += ", maximum: ";
@@ -113,34 +115,33 @@ void bind_soapy_types(py::module& m)
             return ret;
         });
 
-    // decltype needed because the "type" field is an anonymous enum
-    py::enum_<decltype(SoapySDR::ArgInfo::type)>(m, "argtype")
-        .value("BOOL", SoapySDR::ArgInfo::BOOL)
-        .value("INT", SoapySDR::ArgInfo::INT)
-        .value("FLOAT", SoapySDR::ArgInfo::FLOAT)
-        .value("STRING", SoapySDR::ArgInfo::STRING)
+    py::enum_<gr::soapy::argtype_t>(m, "argtype_t")
+        .value("BOOL", gr::soapy::arginfo_t::BOOL)
+        .value("INT", gr::soapy::arginfo_t::INT)
+        .value("FLOAT", gr::soapy::arginfo_t::FLOAT)
+        .value("STRING", gr::soapy::arginfo_t::STRING)
         .export_values();
 
-    py::class_<SoapySDR::ArgInfo>(m, "arginfo")
+    py::class_<gr::soapy::arginfo_t>(m, "arginfo_t")
         // Constructors
         .def(py::init<>())
 
         // Properties
-        .def_readwrite("key", &SoapySDR::ArgInfo::key)
+        .def_readwrite("key", &gr::soapy::arginfo_t::key)
         .def_property(
             "value",
-            [](const SoapySDR::ArgInfo& arginfo) -> py::object {
+            [](const gr::soapy::arginfo_t& arginfo) -> py::object {
                 py::object ret;
                 switch (arginfo.type) {
-                case SoapySDR::ArgInfo::BOOL:
+                case gr::soapy::arginfo_t::BOOL:
                     ret = py::bool_(string_to_setting<bool>(arginfo.value));
                     break;
 
-                case SoapySDR::ArgInfo::INT:
+                case gr::soapy::arginfo_t::INT:
                     ret = py::int_(string_to_setting<int>(arginfo.value));
                     break;
 
-                case SoapySDR::ArgInfo::FLOAT:
+                case gr::soapy::arginfo_t::FLOAT:
                     ret = py::float_(string_to_setting<double>(arginfo.value));
                     break;
 
@@ -152,31 +153,31 @@ void bind_soapy_types(py::module& m)
                 return ret;
             },
             // So we can implicitly convert to Soapy's convention
-            [](SoapySDR::ArgInfo& arginfo, py::object obj) -> void {
+            [](gr::soapy::arginfo_t& arginfo, py::object obj) -> void {
                 if (py::isinstance<py::bool_>(obj)) {
                     arginfo.value = setting_to_string(bool(py::cast<py::bool_>(obj)));
-                    arginfo.type = SoapySDR::ArgInfo::BOOL;
+                    arginfo.type = gr::soapy::arginfo_t::BOOL;
                 } else if (py::isinstance<py::int_>(obj)) {
                     arginfo.value = setting_to_string(int(py::cast<py::int_>(obj)));
-                    arginfo.type = SoapySDR::ArgInfo::INT;
+                    arginfo.type = gr::soapy::arginfo_t::INT;
                 } else if (py::isinstance<py::float_>(obj)) {
                     arginfo.value = setting_to_string(double(py::cast<py::float_>(obj)));
-                    arginfo.type = SoapySDR::ArgInfo::FLOAT;
+                    arginfo.type = gr::soapy::arginfo_t::FLOAT;
                 } else {
                     arginfo.value = py::str(obj);
-                    arginfo.type = SoapySDR::ArgInfo::STRING;
+                    arginfo.type = gr::soapy::arginfo_t::STRING;
                 }
             })
 
-        .def_readwrite("name", &SoapySDR::ArgInfo::name)
-        .def_readwrite("description", &SoapySDR::ArgInfo::description)
-        .def_readwrite("units", &SoapySDR::ArgInfo::units)
-        .def_readwrite("type", &SoapySDR::ArgInfo::type)
-        .def_readwrite("range", &SoapySDR::ArgInfo::range)
-        .def_readwrite("options", &SoapySDR::ArgInfo::options)
-        .def_readwrite("option_names", &SoapySDR::ArgInfo::optionNames)
+        .def_readwrite("name", &gr::soapy::arginfo_t::name)
+        .def_readwrite("description", &gr::soapy::arginfo_t::description)
+        .def_readwrite("units", &gr::soapy::arginfo_t::units)
+        .def_readwrite("type", &gr::soapy::arginfo_t::type)
+        .def_readwrite("range", &gr::soapy::arginfo_t::range)
+        .def_readwrite("options", &gr::soapy::arginfo_t::options)
+        .def_readwrite("option_names", &gr::soapy::arginfo_t::optionNames)
 
-        .def("__str__", [](const SoapySDR::ArgInfo& arginfo) -> std::string {
+        .def("__str__", [](const gr::soapy::arginfo_t& arginfo) -> std::string {
             return (arginfo.key + "=" + arginfo.value);
         });
 }
