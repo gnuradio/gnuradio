@@ -40,10 +40,13 @@ class ValidateError(Exception):
 def validate_block_id(param,black_listed_ids):
     value = param.value
     # Can python use this as a variable?
+
     if not re.match(r'^[a-z|A-Z]\w*$', value):
         raise ValidateError('ID "{}" must begin with a letter and may contain letters, numbers, '
                             'and underscores.'.format(value))
-    if value in (black_listed_ids + ID_BLACKLIST):
+    if value in (black_listed_ids + ID_BLACKLIST) and \
+        not getattr(param.parent_block, 'exempt_from_id_validation', False):
+        # Grant blacklist exemption to epy blocks and modules
         raise ValidateError('ID "{}" is blacklisted.'.format(value))
     block_names = [block.name for block in param.parent_flowgraph.iter_enabled_blocks()]
     # Id should only appear once, or zero times if block is disabled
