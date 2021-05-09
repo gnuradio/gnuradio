@@ -81,6 +81,7 @@ class EPyBlock(Block):
 
     key = 'epy_block'
     label = 'Python Block'
+    exempt_from_id_validation = True  # Exempt epy block from blacklist id validation
     documentation = {'': DOC}
 
     parameters_data = build_params(
@@ -209,6 +210,7 @@ class EPyBlock(Block):
 class EPyModule(Block):
     key = 'epy_module'
     label = 'Python Module'
+    exempt_from_id_validation = True  # Exempt epy module from blacklist id validation
     documentation = {'': dedent("""
         This block lets you embed a python module in your flowgraph.
 
