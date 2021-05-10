@@ -22,14 +22,15 @@ class pluto_sink_impl : public pluto_sink, public fmcomms2_sink_f32c
 public:
     explicit pluto_sink_impl(fmcomms2_sink::sptr block);
 
-    void set_params(unsigned long long frequency,
-                    unsigned long samplerate,
-                    unsigned long bandwidth,
-                    double attenuation,
-                    const char* filter_source,
-                    const char* filter_filename,
-                    float Fpass,
-                    float Fstop);
+    virtual void set_frequency(unsigned long long frequency);
+    virtual void set_bandwidth(unsigned long bandwidth);
+    virtual void set_samplerate(unsigned long samplerate);
+    virtual void set_attenuation(double attenuation);
+    virtual void set_filter_params(const std::string& filter_source,
+                                   const std::string& filter_filename = "",
+                                   float fpass = 0.0,
+                                   float fstop = 0.0);
+
 };
 
 } // namespace iio

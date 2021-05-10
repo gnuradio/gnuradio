@@ -34,83 +34,20 @@ class IIO_API fmcomms2_sink : virtual public gr::sync_block
 public:
     typedef std::shared_ptr<fmcomms2_sink> sptr;
 
-    /*!
-     * \brief Return a shared_ptr to a new instance of iio::fmcomms2_sink.
-     *
-     * \param uri  String of the context uri
-     * \param frequency  Long long of LO frequency in Hz
-     * \param samplerate  Long of sample rate in samples per second
-     * \param bandwidth  Long of bandwidth of front-end analog filter  in
-     *                   in Hz
-     * \param ch1_en  Boolean enable channel 1
-     * \param ch2_en  Boolean enable channel 2
-     * \param ch3_en  Boolean enable channel 3
-     * \param ch4_en  Boolean enable channel 4
-     * \param buffer_size  Long of number of samples in buffer to send to device
-     * \param cyclic Boolean when True sends first buffer_size number of samples
-     *        to hardware which is repeated in the hardware itself. Future
-     *        samples are ignored.
-     * \param rf_port_select  String of name of port to use for TX output mux
-     *        with options: 'A', 'B'
-     * \param attenuation1  Double of TX channel 1 attenuation in dB [0, 90]
-     * \param attenuation2  Double of TX channel 2 attenuation in dB [0, 90]
-     * \param filter_source  String which selects filter configuration with
-     *        options:
-     *        - 'Off': Disable filter
-     *        - 'Auto': Use auto-generated filters
-     *        - 'File': Use provide filter filter in filter_filename input
-     *        - 'Design': Create filter from Fpass, Fstop, samplerate, and
-     *                  bandwidth parameters
-     * \param filter_filename  String of path to filter file
-     * \param Fpass Float of edge of passband frequency in Hz for designed FIR
-     * \param Fstop Float of edge of stopband frequency in Hz for designed FIR
-     */
     static sptr make(const std::string& uri,
-                     unsigned long long frequency,
-                     unsigned long samplerate,
-                     unsigned long bandwidth,
-                     bool ch1_en,
-                     bool ch2_en,
-                     bool ch3_en,
-                     bool ch4_en,
+                     const std::vector<bool>& ch_en,
                      unsigned long buffer_size,
-                     bool cyclic,
-                     const char* rf_port_select,
-                     double attenuation1,
-                     double attenuation2,
-                     const char* filter_source = "",
-                     const char* filter_filename = "",
-                     float Fpass = 0.0,
-                     float Fstop = 0.0);
+                     bool cyclic);
 
-    static sptr make_from(struct iio_context* ctx,
-                          unsigned long long frequency,
-                          unsigned long samplerate,
-                          unsigned long bandwidth,
-                          bool ch1_en,
-                          bool ch2_en,
-                          bool ch3_en,
-                          bool ch4_en,
-                          unsigned long buffer_size,
-                          bool cyclic,
-                          const char* rf_port_select,
-                          double attenuation1,
-                          double attenuation2,
-                          const char* filter_source = "",
-                          const char* filter_filename = "",
-                          float Fpass = 0.0,
-                          float Fstop = 0.0);
-
-    virtual void set_params(unsigned long long frequency,
-                            unsigned long samplerate,
-                            unsigned long bandwidth,
-                            const char* rf_port_select,
-                            double attenuation1,
-                            double attenuation2,
-                            const char* filter_source = "",
-                            const char* filter_filename = "",
-                            float Fpass = 0.0,
-                            float Fstop = 0.0) = 0;
+    virtual void set_bandwidth(unsigned long bandwidth) = 0;
+    virtual void set_rf_port_select(const std::string& rf_port_select) = 0;
+    virtual void set_frequency(unsigned long long frequency) = 0;
+    virtual void set_samplerate(unsigned long samplerate) = 0;
+    virtual void set_attenuation(size_t chan, double gain) = 0;
+    virtual void set_filter_params(const std::string& filter_source,
+                                   const std::string& filter_filename = "",
+                                   float fpass = 0.0,
+                                   float fstop = 0.0) = 0;
 };
 
 /*!
@@ -127,94 +64,41 @@ class IIO_API fmcomms2_sink_f32c : virtual public gr::hier_block2
 public:
     typedef std::shared_ptr<fmcomms2_sink_f32c> sptr;
 
-    /*!
-     * \brief Return a shared_ptr to a new instance of iio::fmcomms2_sink.
-     *
-     * \param uri  String of the context uri
-     * \param frequency  Long long of LO frequency in Hz
-     * \param samplerate  Long of sample rate in samples per second
-     * \param bandwidth  Long of bandwidth of front-end analog filter  in
-     *                   in Hz
-     * \param tx1_en  Boolean enable channel 1
-     * \param tx2_en  Boolean enable channel 2
-     * \param buffer_size  Long of number of samples in buffer to send to device
-     * \param cyclic Boolean when True sends first buffer_size number of samples
-     *        to hardware which is repeated in the hardware itself. Future
-     *        samples are ignored.
-     * \param rf_port_select  String of name of port to use for TX output mux
-     *        with options: 'A', 'B'
-     * \param attenuation1  Double of TX channel 1 attenuation in dB [0, 90]
-     * \param attenuation2  Double of TX channel 2 attenuation in dB [0, 90]
-     * \param filter_source  String which selects filter configuration with
-     *        options:
-     *        - 'Off': Disable filter
-     *        - 'Auto': Use auto-generated filters
-     *        - 'File': Use provide filter filter in filter_filename input
-     *        - 'Design': Create filter from Fpass, Fstop, samplerate, and
-     *                  bandwidth parameters
-     * \param filter_filename  String of path to filter file
-     * \param Fpass Float of edge of passband frequency in Hz for designed FIR
-     * \param Fstop Float of edge of stopband frequency in Hz for designed FIR
-     */
     static sptr make(const std::string& uri,
-                     unsigned long long frequency,
-                     unsigned long samplerate,
-                     unsigned long bandwidth,
-                     bool tx1_en,
-                     bool tx2_en,
+                     const std::vector<bool>& ch_en,
                      unsigned long buffer_size,
-                     bool cyclic,
-                     const char* rf_port_select,
-                     double attenuation1,
-                     double attenuation2,
-                     const char* filter_source = "",
-                     const char* filter_filename = "",
-                     float Fpass = 0.0,
-                     float Fstop = 0.0)
+                     bool cyclic)
     {
-        fmcomms2_sink::sptr block = fmcomms2_sink::make(uri,
-                                                        frequency,
-                                                        samplerate,
-                                                        bandwidth,
-                                                        tx1_en,
-                                                        tx1_en,
-                                                        tx2_en,
-                                                        tx2_en,
-                                                        buffer_size,
-                                                        cyclic,
-                                                        rf_port_select,
-                                                        attenuation1,
-                                                        attenuation2,
-                                                        filter_source,
-                                                        filter_filename,
-                                                        Fpass,
-                                                        Fstop);
+        fmcomms2_sink::sptr block = fmcomms2_sink::make(uri, ch_en, buffer_size, cyclic);
 
-        return gnuradio::get_initial_sptr(new fmcomms2_sink_f32c(tx1_en, tx2_en, block));
+        return gnuradio::get_initial_sptr(new fmcomms2_sink_f32c(
+            (ch_en.size() > 0 && ch_en[0]), (ch_en.size() > 1 && ch_en[1]), block));
     }
 
-    void set_params(unsigned long long frequency,
-                    unsigned long samplerate,
-                    unsigned long bandwidth,
-                    const char* rf_port_select,
-                    double attenuation1,
-                    double attenuation2,
-                    const char* filter_source = "",
-                    const char* filter_filename = "",
-                    float Fpass = 0.0,
-                    float Fstop = 0.0)
+    virtual void set_bandwidth(unsigned long bandwidth)
     {
-        fmcomms2_block->set_params(frequency,
-                                   samplerate,
-                                   bandwidth,
-                                   rf_port_select,
-                                   attenuation1,
-                                   attenuation2,
-                                   filter_source,
-                                   filter_filename,
-                                   Fpass,
-                                   Fstop);
+        fmcomms2_block->set_bandwidth(bandwidth);
     }
+    virtual void set_frequency(unsigned long long frequency)
+    {
+        fmcomms2_block->set_frequency(frequency);
+    }
+    virtual void set_samplerate(unsigned long samplerate)
+    {
+        fmcomms2_block->set_samplerate(samplerate);
+    }
+    virtual void set_attenuation(size_t chan, double attenuation)
+    {
+        fmcomms2_block->set_attenuation(chan, attenuation);
+    }
+    virtual void set_filter_params(const std::string& filter_source,
+                                   const std::string& filter_filename = "",
+                                   float fpass = 0.0,
+                                   float fstop = 0.0)
+    {
+        fmcomms2_block->set_filter_params(filter_source, filter_filename, fpass, fstop);
+    }
+
 
 private:
     fmcomms2_sink::sptr fmcomms2_block;
