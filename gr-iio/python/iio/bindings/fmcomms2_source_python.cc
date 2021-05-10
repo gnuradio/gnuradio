@@ -45,24 +45,5 @@ void bind_fmcomms2_source(py::module& m)
              py::arg("buffer_size"),
              D(fmcomms2_source, make))
 
-        //    .def("set_params",
-        //         &fmcomms2_source::set_params,
-        //         py::arg("longfrequency"),
-        //         py::arg("samplerate"),
-        //         py::arg("bandwidth"),
-        //         py::arg("quadrature"),
-        //         py::arg("rfdc"),
-        //         py::arg("bbdc"),
-        //         py::arg("gain1"),
-        //         py::arg("gain1_value"),
-        //         py::arg("gain2"),
-        //         py::arg("gain2_value"),
-        //         py::arg("rf_port_select"),
-        //         py::arg("filter_source") = "",
-        //         py::arg("filter_filename") = "",
-        //         py::arg("Fpass") = 0.0,
-        //         py::arg("Fstop") = 0.0,
-        //         D(fmcomms2_source, set_params))
-
         ;
 }
