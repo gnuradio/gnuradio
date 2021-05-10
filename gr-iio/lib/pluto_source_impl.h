@@ -31,19 +31,6 @@ public:
 
     static std::string get_uri();
 
-    // void set_params(unsigned long long frequency,
-    //                 unsigned long samplerate,
-    //                 unsigned long bandwidth,
-    //                 bool quadrature,
-    //                 bool rfdc,
-    //                 bool bbdc,
-    //                 const char* gain,
-    //                 double gain_value,
-    //                 const char* filter_source,
-    //                 const char* filter_filename,
-    //                 float Fpass,
-    //                 float Fstop);
-
     virtual void set_frequency(unsigned long long frequency);
     virtual void set_samplerate(unsigned long samplerate);
     virtual void set_gain_mode(const std::string& mode);
@@ -52,10 +39,6 @@ public:
     virtual void set_rfdc(bool rfdc);
     virtual void set_bbdc(bool bbdc);
 
-    // virtual void set_filter_source(const std::string& filter_source);
-    // virtual void set_filter_filename(const std::string& filter_filename);
-    // virtual void set_fpass(float fpass);
-    // virtual void set_fstop(float fstop);
     virtual void set_filter_params(const std::string& filter_source,
                                    const std::string& filter_filename = "",
                                    float fpass = 0.0,
