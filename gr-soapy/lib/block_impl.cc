@@ -28,6 +28,67 @@ static bool arg_info_has_key(const arginfo_list_t& info_list, const std::string&
     });
 }
 
+template <typename T>
+static inline bool vector_contains(const std::vector<T>& vec, const std::string& elem)
+{
+    return (std::find(vec.begin(), vec.end(), elem) != vec.end());
+}
+
+static inline bool value_in_range(const range_t& range, double value)
+{
+    return (value >= range.minimum()) && (value <= range.maximum());
+}
+
+static inline bool value_in_ranges(const range_list_t& ranges, double value)
+{
+    return std::any_of(ranges.begin(), ranges.end(), [value](const range_t& range) {
+        return value_in_range(range, value);
+    });
+}
+
+static std::string string_vector_to_string(const std::vector<std::string>& vec)
+{
+    if (vec.empty())
+        return "[]";
+
+    std::string str = "[";
+    for (const auto& vecStr : vec) {
+        str += vecStr;
+        str += ", ";
+    }
+    str.erase(str.length() - 2, 2);
+
+    str += "]";
+
+    return str;
+}
+
+static std::string range_to_string(const range_t& range)
+{
+    const auto min = range.minimum();
+    const auto max = range.maximum();
+
+    if (min == max)
+        return std::to_string(min);
+    else
+        return "[" + std::to_string(min) + ", " + std::to_string(max) + "]";
+}
+
+static std::string ranges_to_string(const range_list_t& ranges)
+{
+    if (ranges.empty())
+        return "[]";
+
+    std::string str;
+    for (const auto& range : ranges) {
+        str += range_to_string(range);
+        str += ", ";
+    }
+    str.erase(str.length() - 2, 2);
+
+    return str;
+}
+
 static void check_abi(void)
 {
     const std::string buildtime_abi = SOAPY_SDR_ABI_VERSION;
@@ -118,7 +179,7 @@ block_impl::block_impl(int direction,
     /*
      * Validate stream arguments for all channels
      */
-    for (const auto channel : d_channels) {
+    for (const auto& channel : d_channels) {
         arginfo_list_t supported_args = d_device->getStreamArgsInfo(d_direction, channel);
         kwargs_t stream_kwargs = SoapySDR::KwargsFromString(stream_args);
 
@@ -132,7 +193,7 @@ block_impl::block_impl(int direction,
     }
 
     /* Validate tuning arguments for each channel */
-    for (const auto channel : d_channels) {
+    for (const auto& channel : d_channels) {
         arginfo_list_t supported_args =
             d_device->getFrequencyArgsInfo(d_direction, channel);
 
@@ -151,7 +212,7 @@ block_impl::block_impl(int direction,
     }
 
     /* Validate and apply other settings to each channel */
-    for (const auto channel : d_channels) {
+    for (const auto& channel : d_channels) {
         arginfo_list_t supported_settings =
             d_device->getSettingInfo(d_direction, channel);
 
@@ -274,24 +335,13 @@ void block_impl::set_sample_rate(size_t channel, double sample_rate)
 {
     validate_channel(channel);
 
-    /* Validate and set sample rate */
-    bool accept_samp_rate = false;
-
     range_list_t sps_range = d_device->getSampleRateRange(d_direction, channel);
 
-    for (auto range : sps_range) {
-        if ((sample_rate >= range.minimum()) && (sample_rate <= range.maximum())) {
-            accept_samp_rate = true;
-            break;
-        }
-    }
-    if (!accept_samp_rate) {
+    if (!value_in_ranges(sps_range, sample_rate)) {
         std::string msg = name() + ": Unsupported sample rate (" +
-                          std::to_string(sample_rate) + ").  Rate must be in the range";
-        for (auto range : sps_range) {
-            msg += " [" + std::to_string(range.minimum()) + ", " +
-                   std::to_string(range.maximum()) + "]";
-        }
+                          std::to_string(sample_rate) + ").  Rate must be in the range ";
+        msg += ranges_to_string(sps_range);
+
         throw std::invalid_argument(msg);
     }
 
@@ -323,7 +373,7 @@ void block_impl::set_frequency(size_t channel, const std::string& name, double f
 
     // Set frequency for specified element, silently ignoring a non-existant
     // element if frequency is zero.
-    if (std::find(freqs.begin(), freqs.end(), name) != freqs.end()) {
+    if (vector_contains(freqs, name)) {
         d_device->setFrequency(d_direction, channel, name, frequency);
     } else if (std::fpclassify(std::abs(frequency)) != FP_ZERO) {
         throw std::invalid_argument(
@@ -398,15 +448,12 @@ void block_impl::set_antenna(const size_t channel, const std::string& name)
         return;
     }
 
-    if (std::find(antennas.begin(), antennas.end(), name) == antennas.end()) {
+    if (!vector_contains(antennas, name)) {
         std::string msg = this->name() + ": Antenna " + name + " at channel " +
                           std::to_string(channel) + " is not supported. " +
-                          "Available antennas are: [";
-        for (const auto& antenna : antennas) {
-            msg += antenna + ", ";
-        }
-        msg.erase(msg.length() - 2, 2);
-        msg += "]";
+                          "Available antennas are: ";
+        msg += string_vector_to_string(antennas);
+
         throw std::invalid_argument(msg);
     }
 
@@ -453,7 +500,7 @@ void block_impl::set_gain(size_t channel, double gain)
     validate_channel(channel);
     range_t rGain = d_device->getGainRange(d_direction, channel);
 
-    if (gain < rGain.minimum() || gain > rGain.maximum()) {
+    if (!value_in_range(rGain, gain)) {
         GR_LOG_WARN(d_logger,
                     boost::format("Gain out of range: %d <= gain <= %d") %
                         rGain.minimum() % rGain.maximum());
@@ -469,14 +516,14 @@ void block_impl::set_gain(size_t channel, const std::string& name, double gain)
 
     /* Validate gain name */
     std::vector<std::string> gains = d_device->listGains(d_direction, channel);
-    if (std::find(gains.begin(), gains.end(), name) == gains.end()) {
+    if (!vector_contains(gains, name)) {
         throw std::invalid_argument(this->name() + ": Unknown gain " + name +
                                     " for channel " + std::to_string(channel));
     }
 
     /* Validate gain value */
     range_t rGain = d_device->getGainRange(d_direction, channel, name);
-    if (gain < rGain.minimum() || gain > rGain.maximum()) {
+    if (!value_in_range(rGain, gain)) {
         GR_LOG_WARN(d_logger,
                     boost::format("Gain %s out of range: %d <= gain <= %d") % name %
                         rGain.minimum() % rGain.maximum());
@@ -635,6 +682,16 @@ gr_complexd block_impl::get_iq_balance(size_t channel) const
 
 void block_impl::set_master_clock_rate(double clock_rate)
 {
+    const auto clock_rates = d_device->getMasterClockRates();
+
+    if (!value_in_ranges(clock_rates, clock_rate)) {
+        std::string msg = "Unsupported clock rate (";
+        msg += std::to_string(clock_rate);
+        msg += "). Clock rate must be in the range ";
+        msg += ranges_to_string(clock_rates);
+
+        throw std::invalid_argument(msg);
+    }
     d_device->setMasterClockRate(clock_rate);
 }
 
@@ -655,6 +712,16 @@ std::vector<std::string> block_impl::list_clock_sources() const
 
 void block_impl::set_clock_source(const std::string& clock_source)
 {
+    const auto clock_sources = d_device->listClockSources();
+
+    if (!vector_contains(clock_sources, clock_source)) {
+        std::string msg = "Invalid clock source (" + clock_source + ").";
+        msg += "Valid clock sources: ";
+        msg += string_vector_to_string(clock_sources);
+
+        throw std::invalid_argument(msg);
+    }
+
     d_device->setClockSource(clock_source);
 }
 
