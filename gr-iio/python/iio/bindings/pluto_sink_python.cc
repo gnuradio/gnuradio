@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pluto_sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(156bd835e28cf4f40bb68897fe691a94)                     */
+/* BINDTOOL_HEADER_FILE_HASH(77a3e9488a182e3353f347c1179d0e9b)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -37,29 +37,14 @@ void bind_pluto_sink(py::module& m)
 
         .def(py::init(&pluto_sink::make),
              py::arg("uri"),
-             py::arg("longfrequency"),
-             py::arg("samplerate"),
-             py::arg("bandwidth"),
              py::arg("buffer_size"),
              py::arg("cyclic"),
-             py::arg("attenuation"),
-             py::arg("filter_source") = "",
-             py::arg("filter_filename") = "",
-             py::arg("Fpass") = 0.0,
-             py::arg("Fstop") = 0.0,
              D(pluto_sink, make))
 
-        .def("set_params",
-             &pluto_sink::set_params,
-             py::arg("longfrequency"),
-             py::arg("samplerate"),
-             py::arg("bandwidth"),
-             py::arg("attenuation"),
-             py::arg("filter_source") = "",
-             py::arg("filter_filename") = "",
-             py::arg("Fpass") = 0.0,
-             py::arg("Fstop") = 0.0,
-             D(pluto_sink, set_params))
-
+        .def("set_bandwidth", &pluto_sink::set_bandwidth, py::arg("longbandwidth"))
+        .def("set_frequency", &pluto_sink::set_frequency, py::arg("longfrequency"))
+        .def("set_samplerate", &pluto_sink::set_samplerate, py::arg("samplerate"))
+        .def("set_gain", &pluto_sink::set_attenuation, py::arg("attenuation_value"))
+        .def("set_filter_params", &pluto_sink::set_filter_params)
         ;
 }

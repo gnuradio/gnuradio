@@ -16,36 +16,14 @@
 namespace gr {
 namespace iio {
 
-pluto_sink::sptr pluto_sink::make(const std::string& uri,
-                                  unsigned long long frequency,
-                                  unsigned long samplerate,
-                                  unsigned long bandwidth,
-                                  unsigned long buffer_size,
-                                  bool cyclic,
-                                  double attenuation,
-                                  const char* filter_source,
-                                  const char* filter_filename,
-                                  float Fpass,
-                                  float Fstop)
+pluto_sink::sptr
+pluto_sink::make(const std::string& uri, unsigned long buffer_size, bool cyclic)
 {
     fmcomms2_sink::sptr block =
         fmcomms2_sink::make(uri.empty() ? pluto_source_impl::get_uri() : uri,
-                            frequency,
-                            samplerate,
-                            bandwidth,
-                            true,
-                            true,
-                            false,
-                            false,
+                            { true, true, false, false },
                             buffer_size,
-                            cyclic,
-                            "A",
-                            attenuation,
-                            0.0,
-                            filter_source,
-                            filter_filename,
-                            Fpass,
-                            Fstop);
+                            cyclic);
 
     return gnuradio::get_initial_sptr(new pluto_sink_impl(block));
 }
@@ -58,26 +36,30 @@ pluto_sink_impl::pluto_sink_impl(fmcomms2_sink::sptr block)
 {
 }
 
-void pluto_sink_impl::set_params(unsigned long long frequency,
-                                 unsigned long samplerate,
-                                 unsigned long bandwidth,
-                                 double attenuation,
-                                 const char* filter_source,
-                                 const char* filter_filename,
-                                 float Fpass,
-                                 float Fstop)
+void pluto_sink_impl::set_frequency(unsigned long long frequency)
 {
-    fmcomms2_sink_f32c::set_params(frequency,
-                                   samplerate,
-                                   bandwidth,
-                                   "A",
-                                   attenuation,
-                                   0.0,
-                                   filter_source,
-                                   filter_filename,
-                                   Fpass,
-                                   Fstop);
+    fmcomms2_sink_f32c::set_frequency(frequency);
 }
+void pluto_sink_impl::set_bandwidth(unsigned long bandwidth)
+{
+    fmcomms2_sink_f32c::set_bandwidth(bandwidth);
+}
+void pluto_sink_impl::set_samplerate(unsigned long samplerate)
+{
+    fmcomms2_sink_f32c::set_samplerate(samplerate);
+}
+void pluto_sink_impl::set_attenuation(double attenuation)
+{
+    fmcomms2_sink_f32c::set_attenuation(0, attenuation);
+}
+void pluto_sink_impl::set_filter_params(const std::string& filter_source,
+                                        const std::string& filter_filename,
+                                        float fpass,
+                                        float fstop)
+{
+    fmcomms2_sink_f32c::set_filter_params(filter_source, filter_filename, fpass, fstop);
+}
+
 
 } // namespace iio
 } // namespace gr
