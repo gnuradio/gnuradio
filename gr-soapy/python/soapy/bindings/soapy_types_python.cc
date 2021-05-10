@@ -104,7 +104,7 @@ void bind_soapy_types(py::module& m)
         .def("step", &gr::soapy::range_t::step)
 
         .def("__str__", [](const gr::soapy::range_t& range) -> std::string {
-            std::string ret = "(minimum: )";
+            std::string ret = "(minimum: ";
             ret += std::to_string(range.minimum());
             ret += ", maximum: ";
             ret += std::to_string(range.maximum());
