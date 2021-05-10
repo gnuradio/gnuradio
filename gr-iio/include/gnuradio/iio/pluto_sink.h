@@ -30,46 +30,20 @@ public:
      * \brief Return a shared_ptr to a new instance of iio::fmcomms2_sink.
      *
      * \param uri  String of the context uri
-     * \param frequency  Long long of LO frequency in Hz
-     * \param samplerate  Long of sample rate in samples per second
-     * \param bandwidth  Long of bandwidth of front-end analog filter  in
-     *                   in Hz
      * \param buffer_size  Long of number of samples in buffer to send to device
-     * \param cyclic Boolean when True sends first buffer_size number of samples
-     *        to hardware which is repeated in the hardware itself. Future
-     *        samples are ignored.
-     * \param attenuation  Double of TX channel attenuation in dB [0, 90]
-     * \param filter_source  String which selects filter configuration with
-     *        options:
-     *        - 'Off': Disable filter
-     *        - 'Auto': Use auto-generated filters
-     *        - 'File': Use provide filter filter in filter_filename input
-     *        - 'Design': Create filter from Fpass, Fstop, samplerate, and
-     *                  bandwidth parameters
-     * \param filter_filename  String of path to filter file
-     * \param Fpass Float of edge of passband frequency in Hz for designed FIR
-     * \param Fstop Float of edge of stopband frequency in Hz for designed FIR
      */
     static sptr make(const std::string& uri,
-                     unsigned long long frequency,
-                     unsigned long samplerate,
-                     unsigned long bandwidth,
                      unsigned long buffer_size,
-                     bool cyclic,
-                     double attenuation,
-                     const char* filter_source = "",
-                     const char* filter_filename = "",
-                     float Fpass = 0.0,
-                     float Fstop = 0.0);
+                     bool cyclic);
 
-    virtual void set_params(unsigned long long frequency,
-                            unsigned long samplerate,
-                            unsigned long bandwidth,
-                            double attenuation,
-                            const char* filter_source = "",
-                            const char* filter_filename = "",
-                            float Fpass = 0.0,
-                            float Fstop = 0.0) = 0;
+    virtual void set_frequency(unsigned long long frequency) = 0;
+    virtual void set_bandwidth(unsigned long bandwidth) = 0;
+    virtual void set_samplerate(unsigned long samplerate) = 0;
+    virtual void set_attenuation(double attenuation) = 0;
+    virtual void set_filter_params(const std::string& filter_source,
+                                   const std::string& filter_filename = "",
+                                   float fpass = 0.0,
+                                   float fstop = 0.0) = 0;
 };
 
 } // namespace iio

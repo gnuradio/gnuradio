@@ -87,8 +87,18 @@ asserts:
 
 templates:
     imports: from gnuradio import iio
-    make: iio.pluto_sink(${uri}, ${frequency}, ${samplerate}, ${bandwidth}, ${buffer_size}, ${cyclic}, ${attenuation1}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
+    make: | 
+        iio.pluto_sink(${uri}, ${buffer_size}, ${cyclic})
+        self.${id}.set_bandwidth(${bandwidth})
+        self.${id}.set_frequency(${frequency})
+        self.${id}.set_samplerate(${samplerate})
+        self.${id}.set_gain(${attenuation1})
+        self.${id}.set_filter_params(${filter_source}, ${filter}, ${fpass}, ${fstop})
     callbacks:
-      - set_params(${frequency}, ${samplerate}, ${bandwidth}, ${buffer_size}, ${cyclic}, ${attenuation1}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
+        - set_bandwidth(${bandwidth})
+        - set_frequency(${frequency})
+        - set_samplerate(${samplerate})
+        - set_attenuation(${attenuation1})
+        - set_filter_params(${filter_source}, ${filter}, ${fpass}, ${fstop})
 
 file_format: 1

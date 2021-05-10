@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pluto_source.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(ce5e82aa7eba375ff96bedbdb1b6cfbb)                     */
+/* BINDTOOL_HEADER_FILE_HASH(bdb6a1ffc20099440210c3ac917cc008)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -32,7 +32,6 @@ void bind_pluto_source(py::module& m)
 
     using pluto_source = gr::iio::pluto_source;
 
-
     py::class_<pluto_source,
                gr::hier_block2,
                gr::basic_block,
@@ -43,7 +42,6 @@ void bind_pluto_source(py::module& m)
              py::arg("buffer_size"),
              D(pluto_source, make))
 
-
         .def("set_frequency", &pluto_source::set_frequency, py::arg("longfrequency"))
         .def("set_samplerate", &pluto_source::set_samplerate, py::arg("samplerate"))
         .def("set_gain_mode", &pluto_source::set_gain_mode, py::arg("mode"))
@@ -51,14 +49,6 @@ void bind_pluto_source(py::module& m)
         .def("set_quadrature", &pluto_source::set_quadrature, py::arg("quadrature"))
         .def("set_rfdc", &pluto_source::set_rfdc, py::arg("rfdc"))
         .def("set_bbdc", &pluto_source::set_bbdc, py::arg("bbdc"))
-        //    .def("set_filter_source",
-        //         &pluto_source::set_filter_source,
-        //         py::arg("filter_source"))
-        //    .def("set_filter_filename",
-        //         &pluto_source::set_filter_filename,
-        //         py::arg("filter_filename"))
-        //    .def("set_fpass", &pluto_source::set_fpass, py::arg("fpass"))
-        //    .def("set_fstop", &pluto_source::set_fstop, py::arg("fstop"))
         .def("set_filter_params", &pluto_source::set_filter_params)
 
         ;
