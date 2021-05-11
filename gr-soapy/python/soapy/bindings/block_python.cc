@@ -15,8 +15,10 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(block.h)                                                   */
-/* BINDTOOL_HEADER_FILE_HASH(7742c1003b34ca79350bfaa736f25ce2)                     */
+/* BINDTOOL_HEADER_FILE_HASH(6aea02a7cec962d25665546a614ee437)                     */
 /***********************************************************************************/
+
+#include "soapy_common.h"
 
 #include <pybind11/complex.h>
 #include <pybind11/pybind11.h>
@@ -27,6 +29,24 @@ namespace py = pybind11;
 #include <gnuradio/soapy/block.h>
 // pydoc.h is automatically generated in the build directory
 #include <block_pydoc.h>
+
+#include <algorithm>
+#include <cassert>
+
+// Assumption: we've validated that this key exists,
+// probably through get_setting_info.
+static gr::soapy::arginfo_t
+get_specific_arginfo(const gr::soapy::arginfo_list_t& arginfo_list,
+                     const std::string& key)
+{
+    auto iter = std::find_if(
+        arginfo_list.begin(),
+        arginfo_list.end(),
+        [&key](const gr::soapy::arginfo_t& arginfo) { return (arginfo.key == key); });
+    assert(iter != arginfo_list.end());
+
+    return (*iter);
+}
 
 void bind_block(py::module& m)
 {
@@ -103,13 +123,14 @@ void bind_block(py::module& m)
 
 
         .def("get_frequency_range",
-             (SoapySDR::RangeList(block::*)(size_t) const) & block::get_frequency_range,
+             (gr::soapy::range_list_t(block::*)(size_t) const) &
+                 block::get_frequency_range,
              py::arg("channel"),
              D(block, get_frequency_range, 0))
 
 
         .def("get_frequency_range",
-             (SoapySDR::RangeList(block::*)(size_t, const std::string&) const) &
+             (gr::soapy::range_list_t(block::*)(size_t, const std::string&) const) &
                  block::get_frequency_range,
              py::arg("channel"),
              py::arg("name"),
@@ -203,13 +224,13 @@ void bind_block(py::module& m)
 
 
         .def("get_gain_range",
-             (SoapySDR::Range(block::*)(size_t) const) & block::get_gain_range,
+             (gr::soapy::range_t(block::*)(size_t) const) & block::get_gain_range,
              py::arg("channel"),
              D(block, get_gain_range, 0))
 
 
         .def("get_gain_range",
-             (SoapySDR::Range(block::*)(size_t, const std::string&) const) &
+             (gr::soapy::range_t(block::*)(size_t, const std::string&) const) &
                  block::get_gain_range,
              py::arg("channel"),
              py::arg("name"),
@@ -321,5 +342,103 @@ void bind_block(py::module& m)
 
         .def("get_clock_source", &block::get_clock_source, D(block, get_clock_source))
 
-        ;
+        .def("list_sensors",
+             (std::vector<std::string>(block::*)() const) & block::list_sensors,
+             D(block, list_sensors, 0))
+
+        .def("get_sensor_info",
+             (gr::soapy::arginfo_t(block::*)(const std::string&) const) &
+                 block::get_sensor_info,
+             py::arg("key"),
+             D(block, get_sensor_info, 0))
+
+        .def(
+            "read_sensor",
+            [](const block& self, const std::string& key) -> py::object {
+                const auto arginfo = self.get_sensor_info(key);
+
+                return cast_string_to_arginfo_type(arginfo.type, arginfo.value);
+            },
+            py::arg("key"),
+            D(block, read_sensor, 0))
+
+        .def("list_sensors",
+             (std::vector<std::string>(block::*)(size_t) const) & block::list_sensors,
+             py::arg("channel"),
+             D(block, list_sensors, 1))
+
+        .def("get_sensor_info",
+             (gr::soapy::arginfo_t(block::*)(size_t, const std::string&) const) &
+                 block::get_sensor_info,
+             py::arg("channel"),
+             py::arg("key"),
+             D(block, get_sensor_info, 1))
+
+        .def(
+            "read_sensor",
+            [](const block& self, size_t channel, const std::string& key) -> py::object {
+                const auto arginfo = self.get_sensor_info(channel, key);
+
+                return cast_string_to_arginfo_type(arginfo.type, arginfo.value);
+            },
+            py::arg("channel"),
+            py::arg("key"),
+            D(block, read_sensor, 1))
+
+        .def("get_setting_info",
+             (gr::soapy::arginfo_list_t(block::*)() const) & block::get_setting_info,
+             D(block, get_setting_info, 0))
+
+        .def(
+            "write_setting",
+            [](block& self, const std::string& key, py::object value) -> void {
+                auto setting_info = cast_pyobject_to_arginfo_string(value);
+
+                self.write_setting(key, setting_info.value);
+            },
+            py::arg("key"),
+            py::arg("value"),
+            D(block, write_setting, 0))
+
+        .def(
+            "read_setting",
+            [](const block& self, const std::string& key) -> py::object {
+                const auto setting_info =
+                    get_specific_arginfo(self.get_setting_info(), key);
+
+                return cast_string_to_arginfo_type(setting_info.type, setting_info.value);
+            },
+            py::arg("key"),
+            D(block, read_setting, 0))
+
+        .def("get_setting_info",
+             (gr::soapy::arginfo_list_t(block::*)(size_t) const) &
+                 block::get_setting_info,
+             py::arg("channel"),
+             D(block, get_setting_info, 0))
+
+        .def(
+            "write_setting",
+            [](block& self, size_t channel, const std::string& key, py::object value)
+                -> void {
+                auto setting_info = cast_pyobject_to_arginfo_string(value);
+
+                self.write_setting(channel, key, setting_info.value);
+            },
+            py::arg("channel"),
+            py::arg("key"),
+            py::arg("value"),
+            D(block, write_setting, 0))
+
+        .def(
+            "read_setting",
+            [](const block& self, size_t channel, const std::string& key) -> py::object {
+                const auto setting_info =
+                    get_specific_arginfo(self.get_setting_info(channel), key);
+
+                return cast_string_to_arginfo_type(setting_info.type, setting_info.value);
+            },
+            py::arg("channel"),
+            py::arg("key"),
+            D(block, read_setting, 0));
 }

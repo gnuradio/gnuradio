@@ -727,6 +727,119 @@ void block_impl::set_clock_source(const std::string& clock_source)
 
 std::string block_impl::get_clock_source() const { return d_device->getClockSource(); }
 
+std::vector<std::string> block_impl::list_sensors() const
+{
+    return d_device->listSensors();
+}
+
+arginfo_t block_impl::get_sensor_info(const std::string& key) const
+{
+    const auto sensors = d_device->listSensors();
+
+    if (vector_contains(sensors, key)) {
+        return d_device->getSensorInfo(key);
+    } else {
+        throw std::invalid_argument("Invalid sensor: " + key);
+    }
+}
+
+std::string block_impl::read_sensor(const std::string& key) const
+{
+    const auto sensors = d_device->listSensors();
+
+    if (vector_contains(sensors, key)) {
+        return d_device->readSensor(key);
+    } else {
+        throw std::invalid_argument("Invalid sensor: " + key);
+    }
+}
+
+std::vector<std::string> block_impl::list_sensors(size_t channel) const
+{
+    validate_channel(channel);
+    return d_device->listSensors(d_direction, channel);
+}
+
+arginfo_t block_impl::get_sensor_info(size_t channel, const std::string& key) const
+{
+    validate_channel(channel);
+    const auto sensors = d_device->listSensors(d_direction, channel);
+
+    if (vector_contains(sensors, key)) {
+        return d_device->getSensorInfo(d_direction, channel, key);
+    } else {
+        throw std::invalid_argument("Invalid sensor: " + key);
+    }
+}
+
+std::string block_impl::read_sensor(size_t channel, const std::string& key) const
+{
+    validate_channel(channel);
+    const auto sensors = d_device->listSensors(d_direction, channel);
+
+    if (vector_contains(sensors, key)) {
+        return d_device->readSensor(d_direction, channel, key);
+    } else {
+        throw std::invalid_argument("Invalid sensor: " + key);
+    }
+}
+
+arginfo_list_t block_impl::get_setting_info() const { return d_device->getSettingInfo(); }
+
+void block_impl::write_setting(const std::string& key, const std::string& value)
+{
+    const auto setting_info = d_device->getSettingInfo();
+
+    if (arg_info_has_key(setting_info, key)) {
+        d_device->writeSetting(key, value);
+    } else {
+        throw std::invalid_argument("Invalid setting: " + key);
+    }
+}
+
+std::string block_impl::read_setting(const std::string& key) const
+{
+    const auto setting_info = d_device->getSettingInfo();
+
+    if (arg_info_has_key(setting_info, key)) {
+        return d_device->readSetting(key);
+    } else {
+        throw std::invalid_argument("Invalid setting: " + key);
+    }
+}
+
+arginfo_list_t block_impl::get_setting_info(size_t channel) const
+{
+    validate_channel(channel);
+    return d_device->getSettingInfo(d_direction, channel);
+}
+
+void block_impl::write_setting(size_t channel,
+                               const std::string& key,
+                               const std::string& value)
+{
+    validate_channel(channel);
+    const auto setting_info = d_device->getSettingInfo(d_direction, channel);
+
+    if (arg_info_has_key(setting_info, key)) {
+        d_device->writeSetting(d_direction, channel, key, value);
+    } else {
+        throw std::invalid_argument("Invalid setting: " + key);
+    }
+}
+
+std::string block_impl::read_setting(size_t channel, const std::string& key) const
+{
+    validate_channel(channel);
+    const auto setting_info = d_device->getSettingInfo(d_direction, channel);
+
+    if (arg_info_has_key(setting_info, key)) {
+        return d_device->readSetting(d_direction, channel, key);
+    } else {
+        throw std::invalid_argument("Invalid setting: " + key);
+    }
+}
+
 /* End public API implementation */
 
 void block_impl::cmd_handler_frequency(pmt::pmt_t val, size_t channel)
