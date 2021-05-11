@@ -166,3 +166,39 @@ static const char* __doc_gr_soapy_block_set_clock_source = R"doc()doc";
 
 
 static const char* __doc_gr_soapy_block_get_clock_source = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_list_sensors_0 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_get_sensor_info_0 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_read_sensor_0 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_list_sensors_1 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_get_sensor_info_1 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_read_sensor_1 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_get_setting_info_0 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_write_setting_0 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_read_setting_0 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_get_setting_info_1 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_write_setting_1 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_read_setting_1 = R"doc()doc";

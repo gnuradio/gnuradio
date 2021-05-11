@@ -354,6 +354,103 @@ public:
      * \return the name of the clock source
      */
     virtual std::string get_clock_source() const = 0;
+
+    /*!
+     * List the available global readback sensors.
+     * A sensor can represent a reference lock, RSSI, temperature.
+     * \return a list of available sensor string names
+     */
+    virtual std::vector<std::string> list_sensors() const = 0;
+
+    /*!
+     * Get meta-information about a sensor.
+     * Example: displayable name, type, range.
+     * \param key the ID name of an available sensor
+     * \return meta-information about a sensor
+     */
+    virtual arginfo_t get_sensor_info(const std::string& key) const = 0;
+
+    /*!
+     * Readback a global sensor given the name.
+     * The value returned is a string which can represent
+     * a boolean ("true"/"false"), an integer, or float.
+     * \param key the ID name of an available sensor
+     * \return the current value of the sensor
+     */
+    virtual std::string read_sensor(const std::string& key) const = 0;
+
+    /*!
+     * List the available channel readback sensors.
+     * A sensor can represent a reference lock, RSSI, temperature.
+     * \param channel an available channel on the device
+     * \return a list of available sensor string names
+     */
+    virtual std::vector<std::string> list_sensors(size_t channel) const = 0;
+
+    /*!
+     * Get meta-information about a channel sensor.
+     * Example: displayable name, type, range.
+     * \param channel an available channel on the device
+     * \param key the ID name of an available sensor
+     * \return meta-information about a sensor
+     */
+    virtual arginfo_t get_sensor_info(size_t channel, const std::string& key) const = 0;
+
+    /*!
+     * Readback a channel sensor given the name.
+     * The value returned is a string which can represent
+     * a boolean ("true"/"false"), an integer, or float.
+     * \param channel an available channel on the device
+     * \param key the ID name of an available sensor
+     * \return the current value of the sensor
+     */
+    virtual std::string read_sensor(size_t channel, const std::string& key) const = 0;
+
+    /*!
+     * Describe the allowed keys and values used for settings.
+     * \return a list of argument info structures
+     */
+    virtual arginfo_list_t get_setting_info() const = 0;
+
+    /*!
+     * Write an arbitrary setting on the device.
+     * The interpretation is up the implementation.
+     * \param key the setting identifier
+     * \param value the setting value
+     */
+    virtual void write_setting(const std::string& key, const std::string& value) = 0;
+
+    /*!
+     * Read an arbitrary setting on the device.
+     * \param key the setting identifier
+     * \return the setting value
+     */
+    virtual std::string read_setting(const std::string& key) const = 0;
+
+    /*!
+     * Describe the allowed keys and values used for channel settings.
+     * \param channel an available channel on the device
+     * \return a list of argument info structures
+     */
+    virtual arginfo_list_t get_setting_info(size_t channel) const = 0;
+
+    /*!
+     * Write an arbitrary channel setting on the device.
+     * The interpretation is up the implementation.
+     * \param channel an available channel on the device
+     * \param key the setting identifier
+     * \param value the setting value
+     */
+    virtual void
+    write_setting(size_t channel, const std::string& key, const std::string& value) = 0;
+
+    /*!
+     * Read an arbitrary channel setting on the device.
+     * \param channel an available channel on the device
+     * \param key the setting identifier
+     * \return the setting value
+     */
+    virtual std::string read_setting(size_t channel, const std::string& key) const = 0;
 };
 
 } // namespace soapy
