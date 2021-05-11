@@ -13,6 +13,7 @@ include(GrPybind)
 
 list(APPEND soapy_python_files
     block_python.cc
+    soapy_common.cc
     soapy_types_python.cc
     source_python.cc
     sink_python.cc

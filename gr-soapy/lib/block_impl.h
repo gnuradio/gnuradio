@@ -156,6 +156,23 @@ public:
     void set_clock_source(const std::string& clock_source) override;
     std::string get_clock_source() const override;
 
+    std::vector<std::string> list_sensors() const override;
+    arginfo_t get_sensor_info(const std::string& key) const override;
+    std::string read_sensor(const std::string& key) const override;
+    std::vector<std::string> list_sensors(size_t channel) const override;
+    arginfo_t get_sensor_info(size_t channel, const std::string& key) const override;
+    std::string read_sensor(size_t channel, const std::string& key) const override;
+
+    virtual arginfo_list_t get_setting_info() const override;
+    virtual void write_setting(const std::string& key, const std::string& value) override;
+    virtual std::string read_setting(const std::string& key) const override;
+    virtual arginfo_list_t get_setting_info(size_t channel) const override;
+    virtual void write_setting(size_t channel,
+                               const std::string& key,
+                               const std::string& value) override;
+    virtual std::string read_setting(size_t channel,
+                                     const std::string& key) const override;
+
     /*** End public API implementation ***/
 
 protected:
