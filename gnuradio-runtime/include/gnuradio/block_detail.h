@@ -12,6 +12,8 @@
 #define INCLUDED_GR_RUNTIME_BLOCK_DETAIL_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/buffer.h>
+#include <gnuradio/buffer_reader.h>
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/runtime_types.h>
@@ -192,6 +194,19 @@ public:
      * \param priority the new thread priority to set
      */
     int set_thread_priority(int priority);
+
+    /*!
+     * Post general_work() cleanup to decrement the active counts for all inputs
+     * and outputs.
+     */
+    void post_work_cleanup()
+    {
+        // Decrement active counts for all inputs and outputs
+        for (int i = 0; i < noutputs(); i++)
+            output(i)->decrement_active();
+        for (int i = 0; i < ninputs(); i++)
+            input(i)->buffer()->decrement_active();
+    }
 
     bool threaded;                  // set if thread is currently running.
     gr::thread::gr_thread_t thread; // portable thread handle

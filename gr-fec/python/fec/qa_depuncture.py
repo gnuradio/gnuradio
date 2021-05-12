@@ -65,7 +65,7 @@ class test_depuncture (gr_unittest.TestCase):
         for i in range(len(dst_data)):
             dst_data[i] = int(dst_data[i])
 
-        self.assertEqual(self.expected, dst_data)
+        self.assertSequenceEqualGR(self.expected, dst_data)
 
     def test_001(self):
         # Test normal operation of the depuncture block with a delay
@@ -90,7 +90,7 @@ class test_depuncture (gr_unittest.TestCase):
         for i in range(len(dst_data)):
             dst_data[i] = int(dst_data[i])
 
-        self.assertEqual(self.expected, dst_data)
+        self.assertSequenceEqualGR(self.expected, dst_data)
 
     def test_002(self):
         # Test scenario where we have defined a puncture pattern with
@@ -116,7 +116,7 @@ class test_depuncture (gr_unittest.TestCase):
         for i in range(len(dst_data)):
             dst_data[i] = int(dst_data[i])
 
-        self.assertEqual(self.expected, dst_data)
+        self.assertSequenceEqualGR(self.expected, dst_data)
 
     def test_003(self):
         # Test scenario where we have defined a puncture pattern with
@@ -150,7 +150,7 @@ class test_depuncture (gr_unittest.TestCase):
         for i in range(len(dst_data1)):
             dst_data1[i] = int(dst_data1[i])
 
-        self.assertEqual(dst_data1, dst_data0)
+        self.assertSequenceEqualGR(dst_data1, dst_data0)
 
     def test_004(self):
         # Test normal operation of the depuncture block without
@@ -176,7 +176,7 @@ class test_depuncture (gr_unittest.TestCase):
         for i in range(len(dst_data)):
             dst_data[i] = int(dst_data[i])
 
-        self.assertEqual(self.expected, dst_data)
+        self.assertSequenceEqualGR(self.expected, dst_data)
 
 
 if __name__ == '__main__':

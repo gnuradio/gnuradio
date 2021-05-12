@@ -20,7 +20,12 @@ install(FILES
   block_gateway.h
   block_registry.h
   buffer.h
+  buffer_double_mapped.h
+  buffer_reader.h
+  buffer_reader_sm.h
+  buffer_single_mapped.h
   constants.h
+  buffer_type.h
   endianness.h
   expj.h
   flowgraph.h

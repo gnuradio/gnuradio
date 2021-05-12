@@ -20,7 +20,7 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-#define VERBOSE 0
+#define VERBOSE 1
 
 BOOST_AUTO_TEST_CASE(t0)
 {
@@ -250,6 +250,7 @@ BOOST_AUTO_TEST_CASE(t10_reconfig_max_output_buffer)
 
     // Reconfigure with gr_head in the middle
     tb->lock();
+
     gr::block_sptr nop = gr::blocks::nop::make(sizeof(int));
     nop->set_max_output_buffer(4000);
     tb->disconnect(src, 0, dst, 0);

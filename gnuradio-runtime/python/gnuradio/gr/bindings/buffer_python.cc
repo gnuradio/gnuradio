@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(buffer.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(69b17e66fac6e29f860466846a64feab)                     */
+/* BINDTOOL_HEADER_FILE(buffer.h)                                                  */
+/* BINDTOOL_HEADER_FILE_HASH(e5247f4fe5b5873c66eed72880194981)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -25,6 +25,7 @@ namespace py = pybind11;
 
 #include <gnuradio/block.h>
 #include <gnuradio/buffer.h>
+#include <gnuradio/buffer_reader.h>
 // pydoc.h is automatically generated in the build directory
 #include <buffer_pydoc.h>
 

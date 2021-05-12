@@ -26,8 +26,8 @@ class extended_encoder(gr.hier_block2):
         self.blocks=[]
         self.puncpat=puncpat
 
-        if(type(encoder_obj_list) == list):
-            if(type(encoder_obj_list[0]) == list):
+        if (type(encoder_obj_list) == list):
+            if (type(encoder_obj_list[0]) == list):
                 gr.log.info("fec.extended_encoder: Parallelism must be 1.")
                 raise AttributeError
         else:

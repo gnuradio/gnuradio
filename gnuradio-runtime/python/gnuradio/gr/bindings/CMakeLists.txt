@@ -17,6 +17,7 @@ messages/msg_queue_python.cc
     block_gateway_python.cc
     # block_registry_python.cc
     buffer_python.cc
+    buffer_reader_python.cc
     constants_python.cc
     endianness_python.cc
     expj_python.cc

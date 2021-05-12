@@ -36,7 +36,7 @@ class test_fecapi_repetition(gr_unittest.TestCase):
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
 
-        self.assertEqual(data_in, data_out)
+        self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism0_01(self):
         frame_size = 30
@@ -51,7 +51,7 @@ class test_fecapi_repetition(gr_unittest.TestCase):
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
 
-        self.assertEqual(data_in, data_out)
+        self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism0_02(self):
         frame_size = 30
@@ -66,7 +66,7 @@ class test_fecapi_repetition(gr_unittest.TestCase):
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
 
-        self.assertEqual(data_in, data_out)
+        self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism1_00(self):
         frame_size = 30
@@ -83,7 +83,7 @@ class test_fecapi_repetition(gr_unittest.TestCase):
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
 
-        self.assertEqual(data_in, data_out)
+        self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism1_01(self):
         frame_size = 30
@@ -100,7 +100,7 @@ class test_fecapi_repetition(gr_unittest.TestCase):
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
 
-        self.assertEqual(data_in, data_out)
+        self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism1_02(self):
         frame_size = 300
@@ -117,7 +117,7 @@ class test_fecapi_repetition(gr_unittest.TestCase):
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
 
-        self.assertEqual(data_in, data_out)
+        self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism1_03(self):
         frame_size = 30
@@ -135,7 +135,7 @@ class test_fecapi_repetition(gr_unittest.TestCase):
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
 
-        self.assertEqual(data_in, data_out)
+        self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism1_04(self):
         frame_size = 30
@@ -153,7 +153,7 @@ class test_fecapi_repetition(gr_unittest.TestCase):
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
 
-        self.assertEqual(data_in, data_out)
+        self.assertSequenceEqualGR(data_in, data_out)
 
 
 if __name__ == '__main__':

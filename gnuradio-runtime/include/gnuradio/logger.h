@@ -40,7 +40,7 @@ namespace gr {
  * \brief GR_LOG macros
  * \ingroup logging
  *
- * These macros wrap the standard LOG4CPP_LEVEL macros.  The availablie macros
+ * These macros wrap the standard LOG4CPP_LEVEL macros.  The available macros
  * are:
  *  LOG_DEBUG
  *  LOG_INFO
