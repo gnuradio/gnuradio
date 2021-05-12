@@ -1,5 +1,7 @@
 include(GrPython)
 
+find_package(pybind11 REQUIRED)
+
 macro(GR_PYBIND_MAKE name updir filter files) 
 
 configure_file(${CMAKE_SOURCE_DIR}/docs/doxygen/pydoc_macros.h ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
@@ -32,14 +34,12 @@ else(ENABLE_DOXYGEN)
     add_custom_target(${name}_docstrings ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/docstring_status)
 endif(ENABLE_DOXYGEN)
 
-target_include_directories(${name}_python PUBLIC
+target_include_directories(${name}_python PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${PYTHON_NUMPY_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include
-    ${pybind11_INCLUDE_DIR}
 )
-target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} Python::Module gnuradio-${MODULE_NAME})
+target_link_libraries(${name}_python PRIVATE ${Boost_LIBRARIES} pybind11::pybind11 Python::Module Python::NumPy gnuradio-${MODULE_NAME})
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
    CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
@@ -149,14 +149,12 @@ else(ENABLE_DOXYGEN)
     add_custom_target(${name}_docstrings ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/docstring_status)
 endif(ENABLE_DOXYGEN)
 
-target_include_directories(${name}_python PUBLIC
+target_include_directories(${name}_python PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${PYTHON_NUMPY_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include
-    ${pybind11_INCLUDE_DIR}
 )
-target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} Python::Module gnuradio-${MODULE_NAME})
+target_link_libraries(${name}_python PRIVATE ${Boost_LIBRARIES} pybind11::pybind11 Python::Module Python::NumPy gnuradio-${MODULE_NAME})
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
    CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates
@@ -282,14 +280,12 @@ else(ENABLE_DOXYGEN)
     add_custom_target(${name}_docstrings ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/docstring_status)
 endif(ENABLE_DOXYGEN)
 
-target_include_directories(${name}_python PUBLIC
+target_include_directories(${name}_python PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${PYTHON_NUMPY_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include
-    ${pybind11_INCLUDE_DIR}
 )
-target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} Python::Module gnuradio-${MODULE_NAME})
+target_link_libraries(${name}_python PRIVATE ${Boost_LIBRARIES} pybind11::pybind11 Python::Module Python::NumPy gnuradio-${MODULE_NAME})
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
    CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(${name}_python PRIVATE -Wno-unused-variable) # disable warnings for docstring templates

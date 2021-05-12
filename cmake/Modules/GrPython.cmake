@@ -80,6 +80,26 @@ else()
     endif(APPLE)
 endif(WIN32)
 
+# Find NumPy but duplicate behavior/variable names of FindPython in CMake 3.14+
+# (to facilitate a future transition)
+execute_process(
+    COMMAND "${PYTHON_EXECUTABLE}" -c
+    "try:\n import numpy\n import os\n inc_path = numpy.get_include()\n if os.path.exists(os.path.join(inc_path, 'numpy', 'arrayobject.h')):\n  print(inc_path, end='')\nexcept:\n pass"
+    OUTPUT_VARIABLE NUMPY_INCLUDE_DIR
+)
+# advanced cache variable that the user should set to override the numpy include dir
+set(Python_NumPy_INCLUDE_DIR ${NUMPY_INCLUDE_DIR} CACHE FILEPATH "NumPy include directory")
+mark_as_advanced(Python_NumPy_INCLUDE_DIR)
+# output used by modern FindPython, duplicate the behavior
+set(Python_NumPy_INCLUDE_DIRS ${Python_NumPy_INCLUDE_DIR})
+
+# target for building with NumPy
+add_library(Python::NumPy INTERFACE IMPORTED)
+set_target_properties(Python::NumPy PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${Python_NumPy_INCLUDE_DIRS}"
+)
+target_link_libraries(Python::NumPy INTERFACE Python::Module)
+
 
 ########################################################################
 # Check for the existence of a python module:
