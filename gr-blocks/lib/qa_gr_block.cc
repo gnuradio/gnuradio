@@ -15,6 +15,7 @@
 #include <gnuradio/block.h>
 #include <gnuradio/blocks/null_sink.h>
 #include <gnuradio/blocks/null_source.h>
+#include <gnuradio/buffer_reader.h>
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_CASE(t0)

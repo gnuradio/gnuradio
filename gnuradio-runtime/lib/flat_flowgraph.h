@@ -78,8 +78,7 @@ public:
 private:
     flat_flowgraph();
 
-    block_detail_sptr allocate_block_detail(basic_block_sptr block);
-    buffer_sptr allocate_buffer(basic_block_sptr block, int port);
+    void allocate_block_detail(basic_block_sptr block);
     void connect_block_inputs(basic_block_sptr block);
 
     /* When reusing a flowgraph's blocks, this call makes sure all of

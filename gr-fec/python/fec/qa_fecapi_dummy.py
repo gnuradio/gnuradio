@@ -26,7 +26,7 @@ class test_fecapi_dummy(gr_unittest.TestCase):
 
     def tearDown(self):
         self.tb = None
-
+        
     def test_parallelism0_00(self):
         frame_size = 30
         enc = fec.dummy_encoder_make(frame_size * 8)
@@ -39,7 +39,7 @@ class test_fecapi_dummy(gr_unittest.TestCase):
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
 
-        self.assertEqual(data_in, data_out)
+        self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism0_01(self):
         frame_size = 30
@@ -52,8 +52,8 @@ class test_fecapi_dummy(gr_unittest.TestCase):
 
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
-
-        self.assertEqual(data_in, data_out)
+        
+        self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism0_02(self):
         frame_size = 30
@@ -66,8 +66,8 @@ class test_fecapi_dummy(gr_unittest.TestCase):
 
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
-
-        self.assertEqual(data_in, data_out)
+        
+        self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism1_00(self):
         frame_size = 30
@@ -83,7 +83,7 @@ class test_fecapi_dummy(gr_unittest.TestCase):
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
 
-        self.assertEqual(data_in, data_out)
+        self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism1_01(self):
         frame_size = 30
@@ -99,7 +99,7 @@ class test_fecapi_dummy(gr_unittest.TestCase):
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
 
-        self.assertEqual(data_in, data_out)
+        self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism1_02(self):
         frame_size = 300
@@ -111,11 +111,10 @@ class test_fecapi_dummy(gr_unittest.TestCase):
         self.test = _qa_helper(10 * frame_size, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
-
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
-
-        self.assertEqual(data_in, data_out)
+        
+        self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism1_03(self):
         frame_size = 30
@@ -132,7 +131,7 @@ class test_fecapi_dummy(gr_unittest.TestCase):
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
 
-        self.assertEqual(data_in, data_out)
+        self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism1_04(self):
         frame_size = 30
@@ -149,7 +148,7 @@ class test_fecapi_dummy(gr_unittest.TestCase):
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
 
-        self.assertEqual(data_in, data_out)
+        self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism1_05(self):
         frame_size = 30
@@ -257,10 +256,10 @@ class test_fecapi_dummy(gr_unittest.TestCase):
 
         data = list(data)
         packed_data = list(packed_data)
-        self.assertListEqual(packed_data, r0)
-        self.assertListEqual(data, r1)
-        self.assertListEqual(packed_data, r2)
-        self.assertListEqual(data, r3)
+        self.assertSequenceEqualGR(packed_data, r0)
+        self.assertSequenceEqualGR(data, r1)
+        self.assertSequenceEqualGR(packed_data, r2)
+        self.assertSequenceEqualGR(data, r3)
 
 
 if __name__ == '__main__':

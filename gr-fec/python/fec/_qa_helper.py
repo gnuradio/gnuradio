@@ -46,8 +46,8 @@ class _qa_helper(gr.top_block):
         self.threading = threading
 
         self.ext_encoder = extended_encoder(enc, threading=self.threading, puncpat=self.puncpat)
-        self.ext_decoder= extended_decoder(dec, threading=self.threading, ann=None,
-                                           puncpat=self.puncpat, integration_period=10000)
+        self.ext_decoder = extended_decoder(dec, threading=self.threading, ann=None,
+                                            puncpat=self.puncpat, integration_period=10000)
 
         self.src = blocks.vector_source_b(data_size*[0, 1, 2, 3, 5, 7, 9, 13, 15, 25, 31, 45, 63, 95, 127], False)
         self.unpack = blocks.unpack_k_bits_bb(8)

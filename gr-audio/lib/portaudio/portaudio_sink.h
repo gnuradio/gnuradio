@@ -12,6 +12,7 @@
 
 #include <gnuradio/audio/sink.h>
 #include <gnuradio/buffer.h>
+#include <gnuradio/buffer_reader.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/thread/thread.h>
 #include <portaudio.h>
