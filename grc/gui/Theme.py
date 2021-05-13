@@ -5,17 +5,25 @@ This file is part of GNU Radio
 SPDX-License-Identifier: GPL-2.0-or-later
 """
 
-from enum import Flag, auto
-from functools import cache
-from typing import Union, Iterable
 from ..core.base import Element
-from typing import Tuple
 from .defaulttheme import DEFAULT_THEME
+from .Config import Config
 
+from enum import Flag, auto
+from typing import Union, Iterable, Tuple
 # TODO: Don't import Gdk to parse non-#C0FFEE colors
 import gi
 gi.require_version('Gdk', '3.0')
 from gi.repository import Gdk
+try:
+    from functools import cache
+except ImportError:
+    # We'd prefer cache, but that's only available in Python > 3.9
+    # lru_cache is pretty similar
+    from functools import lru_cache
+
+    def cache(userfunction):
+        return lru_cache(userfunction, maxsize=None)
 
 
 def get_color(color_code: str):
