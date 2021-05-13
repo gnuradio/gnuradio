@@ -9,9 +9,41 @@ from enum import Flag, auto
 from functools import cache
 from typing import Union, Iterable
 from ..core.base import Element
-from .canvas.colors import get_color
-
+from typing import Tuple
 from .defaulttheme import DEFAULT_THEME
+
+# TODO: Don't import Gdk to parse non-#C0FFEE colors
+import gi
+gi.require_version('Gdk', '3.0')
+from gi.repository import Gdk
+
+
+def get_color(color_code: str):
+    if not color_code.startswith("#"):
+        color = Gdk.RGBA()
+        color.parse(color_code)
+        return color.red, color.green, color.blue, color.alpha
+
+    color_code = color_code[1:]
+    a = 0xFF
+    if len(color_code) == 8:
+        a = int(color_code[-2], 16)
+        color_code = color_code[:-2]
+    if len(color_code) == 6:
+        r = int(color_code[0:2], 16)
+        g = int(color_code[2:4], 16)
+        b = int(color_code[4:6], 16)
+        return r / 255, g / 255, b / 255, a / 255
+    raise Exception(f"invalid color: {color_code}")
+
+
+def get_hexcolor(color_tuple: Tuple[float, float, float]):
+    """
+    Converts a tuple (r,g,b)∈[0,1]³ to an RGB hexcode #000000…#FFFFFF
+    """
+    r, g, b, *rest = (int(val * 0xFF) for val in color_tuple)
+    assert len(rest) <= 1
+    return f"#{r:02X}{b:02X}{g:02X}"
 
 
 class State(Flag):

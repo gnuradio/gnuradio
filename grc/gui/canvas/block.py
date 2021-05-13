@@ -6,6 +6,15 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
+from .drawable import Drawable
+from .. import Actions, Utils
+from ..Theme import Theme, State, get_hexcolor
+from ..Constants import (
+    PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
+    PORT_BORDER_SEPARATION
+)
+from ...core import utils
+from ...core.blocks import Block as CoreBlock
 
 import math
 
@@ -13,17 +22,6 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
 from gi.repository import Gtk, Pango, PangoCairo
-
-from .drawable import Drawable
-from .. import Actions, Utils
-from ..Theme import Theme, State
-from .colors import get_hexcolor
-from ..Constants import (
-    PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
-    PORT_BORDER_SEPARATION
-)
-from ...core import utils
-from ...core.blocks import Block as CoreBlock
 
 
 class Block(CoreBlock, Drawable):

@@ -8,41 +8,8 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-
-from gi.repository import Gdk
-
 from .. import Constants
-
-from typing import Tuple
-
-
-def get_color(color_code: str):
-    if not color_code.startswith("#"):
-        color = Gdk.RGBA()
-        color.parse(color_code)
-        return color.red, color.green, color.blue, color.alpha
-
-    color_code = color_code[1:]
-    a = 0xFF
-    if len(color_code) == 8:
-        a = int(color_code[-2], 16)
-        color_code = color_code[:-2]
-    if len(color_code) == 6:
-        r = int(color_code[0:2], 16)
-        g = int(color_code[2:4], 16)
-        b = int(color_code[4:6], 16)
-        return r / 255, g / 255, b / 255, a / 255
-    raise Exception(f"invalid color: {color_code}")
-
-
-def get_hexcolor(color_tuple: Tuple[float, float, float]):
-    """
-    Converts a tuple (r,g,b)∈[0,1]³ to an RGB hexcode #000000…#FFFFFF
-    """
-    r, g, b, *rest = (int(val * 0xFF) for val in color_tuple)
-    assert len(rest) <= 1
-    return f"#{r:02X}{b:02X}{g:02X}"
-
+from ..Theme import get_color
 
 #################################################################################
 # fg colors
@@ -74,14 +41,16 @@ CONNECTION_ERROR_COLOR = get_color('#FF0000')
 
 DEFAULT_DOMAIN_COLOR = get_color('#777777')
 
-
 #################################################################################
 # port colors
 #################################################################################
 
-PORT_TYPE_TO_COLOR = {key: get_color(color) for name, key, sizeof, color in Constants.CORE_TYPES}
-PORT_TYPE_TO_COLOR.update((key, get_color(color)) for key, (_, color) in Constants.ALIAS_TYPES.items())
-
+PORT_TYPE_TO_COLOR = {
+    key: get_color(color)
+    for name, key, sizeof, color in Constants.CORE_TYPES
+}
+PORT_TYPE_TO_COLOR.update((key, get_color(color))
+                          for key, (_, color) in Constants.ALIAS_TYPES.items())
 
 #################################################################################
 # param box colors
