@@ -109,6 +109,15 @@ class Config(CoreConfig):
         self._gr_prefs.set_string("qtgui", "qss", value)
         self._gr_prefs.save()
 
+    @property
+    def theme_file(self):
+        return self._gr_prefs.get_string('grc', 'theme_file', '')
+
+    @theme_file.setter
+    def theme_file(self, value):
+        return self._gr_prefs.set_string('grc', 'theme_file', value)
+        self._gr_prefs.save()
+
     ##### Originally from Preferences.py #####
     def main_window_size(self, size=None):
         if size is None:
