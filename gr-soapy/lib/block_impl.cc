@@ -106,6 +106,7 @@ static void check_abi(void)
     }
 }
 
+// TODO: messages for full 0.8 support
 const pmt::pmt_t CMD_CHAN_KEY = pmt::mp("chan");
 const pmt::pmt_t CMD_FREQ_KEY = pmt::mp("freq");
 const pmt::pmt_t CMD_GAIN_KEY = pmt::mp("gain");
@@ -315,6 +316,12 @@ void block_impl::validate_channel(size_t channel) const
     }
 }
 
+std::string block_impl::get_driver_key() const { return d_device->getDriverKey(); }
+
+std::string block_impl::get_hardware_key() const { return d_device->getHardwareKey(); }
+
+kwargs_t block_impl::get_hardware_info() const { return d_device->getHardwareInfo(); }
+
 void block_impl::set_frontend_mapping(const std::string& mapping)
 {
     d_device->setFrontendMapping(d_direction, mapping);
@@ -412,6 +419,12 @@ range_list_t block_impl::get_frequency_range(size_t channel,
 {
     validate_channel(channel);
     return d_device->getFrequencyRange(d_direction, channel, name);
+}
+
+arginfo_list_t block_impl::get_frequency_args_info(size_t channel) const
+{
+    validate_channel(channel);
+    return d_device->getFrequencyArgsInfo(d_direction, channel);
 }
 
 void block_impl::set_bandwidth(size_t channel, double bandwidth)
@@ -680,6 +693,56 @@ gr_complexd block_impl::get_iq_balance(size_t channel) const
     return d_device->getIQBalance(d_direction, channel);
 }
 
+bool block_impl::has_iq_balance_mode(size_t channel) const
+{
+    validate_channel(channel);
+
+#ifdef SOAPY_SDR_API_HAS_IQ_BALANCE_MODE
+    return d_device->hasIQBalanceMode(d_direction, channel);
+#else
+    (void)channel;
+    throw std::runtime_error(
+        "Automatic IQ imbalance correction API not implemented in this version");
+#endif
+}
+
+void block_impl::set_iq_balance_mode(size_t channel, bool automatic)
+{
+    validate_channel(channel);
+
+#ifdef SOAPY_SDR_API_HAS_IQ_BALANCE_MODE
+    if (!has_iq_balance_mode(channel)) {
+        throw std::invalid_argument(
+            this->name() + ": Channel " + std::to_string(channel) +
+            " does not support automatic IQ imbalance correction");
+    }
+    d_device->setIQBalanceMode(d_direction, channel, automatic);
+#else
+    (void)channel;
+    (void)automatic;
+    throw std::runtime_error(
+        "Automatic IQ imbalance correction API not implemented in this version");
+#endif
+}
+
+bool block_impl::get_iq_balance_mode(size_t channel) const
+{
+    validate_channel(channel);
+
+#ifdef SOAPY_SDR_API_HAS_IQ_BALANCE_MODE
+    if (!has_iq_balance_mode(channel)) {
+        throw std::invalid_argument(
+            this->name() + ": Channel " + std::to_string(channel) +
+            " does not support automatic IQ imbalance correction");
+    }
+    return d_device->getIQBalanceMode(d_direction, channel);
+#else
+    (void)channel;
+    throw std::runtime_error(
+        "Automatic IQ imbalance correction API not implemented in this version");
+#endif
+}
+
 void block_impl::set_master_clock_rate(double clock_rate)
 {
     const auto clock_rates = d_device->getMasterClockRates();
@@ -705,6 +768,66 @@ range_list_t block_impl::get_master_clock_rates() const
     return d_device->getMasterClockRates();
 }
 
+void block_impl::set_reference_clock_rate(double clock_rate)
+{
+#ifdef SOAPY_SDR_API_HAS_REF_CLOCK_RATE_API
+    const auto clock_rates = d_device->getReferenceClockRates();
+
+    if (!value_in_ranges(clock_rates, clock_rate)) {
+        std::string msg = "Unsupported clock rate (";
+        msg += std::to_string(clock_rate);
+        msg += "). Clock rate must be in the range ";
+        msg += ranges_to_string(clock_rates);
+
+        throw std::invalid_argument(msg);
+    }
+    d_device->setReferenceClockRate(clock_rate);
+#else
+    (void)clock_rate;
+    throw std::runtime_error("Reference clock API not implemented in this version");
+#endif
+}
+
+double block_impl::get_reference_clock_rate() const
+{
+#ifdef SOAPY_SDR_API_HAS_REF_CLOCK_RATE_API
+    return d_device->getReferenceClockRate();
+#else
+    throw std::runtime_error("Reference clock API not implemented in this version");
+#endif
+}
+
+range_list_t block_impl::get_reference_clock_rates() const
+{
+#ifdef SOAPY_SDR_API_HAS_REF_CLOCK_RATE_API
+    return d_device->getReferenceClockRates();
+#else
+    throw std::runtime_error("Reference clock API not implemented in this version");
+#endif
+}
+
+std::vector<std::string> block_impl::list_time_sources() const
+{
+    return d_device->listTimeSources();
+}
+
+void block_impl::set_time_source(const std::string& time_source)
+{
+    const auto time_sources = d_device->listTimeSources();
+
+    if (!vector_contains(time_sources, time_source)) {
+        std::string msg = "Invalid time source (" + time_source + ").";
+        msg += "Valid time sources: ";
+        msg += string_vector_to_string(time_sources);
+
+        throw std::invalid_argument(msg);
+    }
+
+    d_device->setTimeSource(time_source);
+}
+
+std::string block_impl::get_time_source() const { return d_device->getTimeSource(); }
+
 std::vector<std::string> block_impl::list_clock_sources() const
 {
     return d_device->listClockSources();
@@ -726,6 +849,41 @@ void block_impl::set_clock_source(const std::string& clock_source)
 }
 
 std::string block_impl::get_clock_source() const { return d_device->getClockSource(); }
+
+bool block_impl::has_hardware_time(const std::string& what) const
+{
+    return d_device->hasHardwareTime(what);
+}
+
+long long block_impl::get_hardware_time(const std::string& what) const
+{
+    if (!has_hardware_time(what)) {
+        std::string msg =
+            this->name() + ": device does not support querying hardware time";
+        if (!what.empty()) {
+            msg += " (";
+            msg += what;
+            msg += ")";
+        }
+
+        throw std::invalid_argument(msg);
+    }
+    return d_device->getHardwareTime(what);
+}
+
+void block_impl::set_hardware_time(long long timeNs, const std::string& what)
+{
+    if (!has_hardware_time(what)) {
+        std::string msg =
+            this->name() + ": device does not support querying hardware time";
+        if (!what.empty()) {
+            msg += " (" + what + ")";
+        }
+
+        throw std::invalid_argument(msg);
+    }
+    d_device->setHardwareTime(timeNs, what);
+}
 
 std::vector<std::string> block_impl::list_sensors() const
 {
@@ -784,6 +942,54 @@ std::string block_impl::read_sensor(size_t channel, const std::string& key) cons
     }
 }
 
+std::vector<std::string> block_impl::list_register_interfaces() const
+{
+    return d_device->listRegisterInterfaces();
+}
+
+void block_impl::write_register(const std::string& name, unsigned addr, unsigned value)
+{
+    const auto register_interfaces = list_register_interfaces();
+    if (!vector_contains(register_interfaces, name)) {
+        throw std::invalid_argument(this->name() + ": invalid register interface (" +
+                                    name + ")");
+    }
+    d_device->writeRegister(name, addr, value);
+}
+
+unsigned block_impl::read_register(const std::string& name, unsigned addr) const
+{
+    const auto register_interfaces = list_register_interfaces();
+    if (!vector_contains(register_interfaces, name)) {
+        throw std::invalid_argument(this->name() + ": invalid register interface (" +
+                                    name + ")");
+    }
+    return d_device->readRegister(name, addr);
+}
+
+void block_impl::write_registers(const std::string& name,
+                                 unsigned addr,
+                                 const std::vector<unsigned>& value)
+{
+    const auto register_interfaces = list_register_interfaces();
+    if (!vector_contains(register_interfaces, name)) {
+        throw std::invalid_argument(this->name() + ": invalid register interface (" +
+                                    name + ")");
+    }
+    d_device->writeRegisters(name, addr, value);
+}
+
+std::vector<unsigned>
+block_impl::read_registers(const std::string& name, unsigned addr, size_t length) const
+{
+    const auto register_interfaces = list_register_interfaces();
+    if (!vector_contains(register_interfaces, name)) {
+        throw std::invalid_argument(this->name() + ": invalid register interface (" +
+                                    name + ")");
+    }
+    return d_device->readRegisters(name, addr, length);
+}
+
 arginfo_list_t block_impl::get_setting_info() const { return d_device->getSettingInfo(); }
 
 void block_impl::write_setting(const std::string& key, const std::string& value)
@@ -840,6 +1046,112 @@ std::string block_impl::read_setting(size_t channel, const std::string& key) con
     }
 }
 
+std::vector<std::string> block_impl::list_gpio_banks() const
+{
+    return d_device->listGPIOBanks();
+}
+
+void block_impl::write_gpio(const std::string& bank, unsigned value)
+{
+    const auto gpio_banks = list_gpio_banks();
+    if (!vector_contains(gpio_banks, bank)) {
+        throw std::invalid_argument(this->name() + ": invalid GPIO bank (" + bank + ")");
+    }
+    d_device->writeGPIO(bank, value);
+}
+
+void block_impl::write_gpio(const std::string& bank, unsigned value, unsigned mask)
+{
+    const auto gpio_banks = list_gpio_banks();
+    if (!vector_contains(gpio_banks, bank)) {
+        throw std::invalid_argument(this->name() + ": invalid GPIO bank (" + bank + ")");
+    }
+    d_device->writeGPIO(bank, value, mask);
+}
+
+unsigned block_impl::read_gpio(const std::string& bank) const
+{
+    const auto gpio_banks = list_gpio_banks();
+
+    if (!vector_contains(gpio_banks, bank)) {
+        throw std::invalid_argument(this->name() + ": invalid GPIO bank (" + bank + ")");
+    }
+    return d_device->readGPIO(bank);
+}
+
+void block_impl::write_gpio_dir(const std::string& bank, unsigned dir)
+{
+    const auto gpio_banks = list_gpio_banks();
+    if (!vector_contains(gpio_banks, bank)) {
+        throw std::invalid_argument(this->name() + ": invalid GPIO bank (" + bank + ")");
+    }
+    d_device->writeGPIODir(bank, dir);
+}
+
+void block_impl::write_gpio_dir(const std::string& bank, unsigned dir, unsigned mask)
+{
+    const auto gpio_banks = list_gpio_banks();
+    if (!vector_contains(gpio_banks, bank)) {
+        throw std::invalid_argument(this->name() + ": invalid GPIO bank (" + bank + ")");
+    }
+    d_device->writeGPIODir(bank, dir, mask);
+}
+
+unsigned block_impl::read_gpio_dir(const std::string& bank) const
+{
+    const auto gpio_banks = list_gpio_banks();
+
+    if (!vector_contains(gpio_banks, bank)) {
+        throw std::invalid_argument(this->name() + ": invalid GPIO bank (" + bank + ")");
+    }
+    return d_device->readGPIODir(bank);
+}
+
+void block_impl::write_i2c(int addr, const std::string& data)
+{
+    d_device->writeI2C(addr, data);
+}
+
+std::string block_impl::read_i2c(int addr, size_t num_bytes)
+{
+    return d_device->readI2C(addr, num_bytes);
+}
+
+unsigned block_impl::transact_spi(int addr, unsigned data, size_t num_bits)
+{
+    return d_device->transactSPI(addr, data, num_bits);
+}
+
+std::vector<std::string> block_impl::list_uarts() const { return d_device->listUARTs(); }
+
+void block_impl::write_uart(const std::string& which, const std::string& data)
+{
+    const auto uarts = list_uarts();
+
+    if (!vector_contains(uarts, which)) {
+        std::string msg = "Invalid UART (" + which + ").";
+        msg += "Valid UARTs: ";
+        msg += string_vector_to_string(uarts);
+
+        throw std::invalid_argument(msg);
+    }
+    d_device->writeUART(which, data);
+}
+
+std::string block_impl::read_uart(const std::string& which, long timeout_us) const
+{
+    const auto uarts = list_uarts();
+
+    if (!vector_contains(uarts, which)) {
+        std::string msg = "Invalid UART (" + which + ").";
+        msg += "Valid UARTs: ";
+        msg += string_vector_to_string(uarts);
+
+        throw std::invalid_argument(msg);
+    }
+    return d_device->readUART(which, timeout_us);
+}
+
 /* End public API implementation */
 
 void block_impl::cmd_handler_frequency(pmt::pmt_t val, size_t channel)
@@ -857,7 +1169,7 @@ void block_impl::cmd_handler_gain(pmt::pmt_t val, size_t channel)
         GR_LOG_WARN(d_logger, "soapy: gain must be float/int");
         return;
     }
-    set_gain(channel, pmt::to_float(val));
+    set_gain(channel, pmt::to_double(val));
 }
 
 void block_impl::cmd_handler_samp_rate(pmt::pmt_t val, size_t channel)
