@@ -93,6 +93,10 @@ public:
 
     /*** Begin public API implementation ***/
 
+    std::string get_driver_key() const override;
+    std::string get_hardware_key() const override;
+    kwargs_t get_hardware_info() const override;
+
     void set_frontend_mapping(const std::string& frontend_mapping) override;
     std::string get_frontend_mapping() const override;
 
@@ -111,6 +115,7 @@ public:
     range_list_t get_frequency_range(size_t channel) const override;
     range_list_t get_frequency_range(size_t channel,
                                      const std::string& name) const override;
+    arginfo_list_t get_frequency_args_info(size_t channel) const override;
 
     void set_bandwidth(size_t channel, double bandwidth) override;
     double get_bandwidth(size_t channel) const override;
@@ -148,13 +153,28 @@ public:
     void set_iq_balance(size_t channel, const gr_complexd& iq_balance) override;
     gr_complexd get_iq_balance(size_t channel) const override;
 
+    bool has_iq_balance_mode(size_t channel) const override;
+    void set_iq_balance_mode(size_t channel, bool automatic) override;
+    bool get_iq_balance_mode(size_t channel) const override;
+
     void set_master_clock_rate(double clock_rate) override;
     double get_master_clock_rate() const override;
     range_list_t get_master_clock_rates() const override;
 
+    void set_reference_clock_rate(double rate) override;
+    double get_reference_clock_rate() const override;
+    range_list_t get_reference_clock_rates() const override;
+
     std::vector<std::string> list_clock_sources() const override;
     void set_clock_source(const std::string& clock_source) override;
     std::string get_clock_source() const override;
+
+    std::vector<std::string> list_time_sources() const override;
+    void set_time_source(const std::string& source) override;
+    std::string get_time_source() const override;
+    bool has_hardware_time(const std::string& what) const override;
+    long long get_hardware_time(const std::string& what) const override;
+    void set_hardware_time(long long timeNs, const std::string& what) override;
 
     std::vector<std::string> list_sensors() const override;
     arginfo_t get_sensor_info(const std::string& key) const override;
@@ -162,6 +182,15 @@ public:
     std::vector<std::string> list_sensors(size_t channel) const override;
     arginfo_t get_sensor_info(size_t channel, const std::string& key) const override;
     std::string read_sensor(size_t channel, const std::string& key) const override;
+
+    std::vector<std::string> list_register_interfaces() const override;
+    void write_register(const std::string& name, unsigned addr, unsigned value) override;
+    unsigned read_register(const std::string& name, unsigned addr) const override;
+    void write_registers(const std::string& name,
+                         unsigned addr,
+                         const std::vector<unsigned>& value) override;
+    std::vector<unsigned>
+    read_registers(const std::string& name, unsigned addr, size_t length) const override;
 
     virtual arginfo_list_t get_setting_info() const override;
     virtual void write_setting(const std::string& key, const std::string& value) override;
@@ -172,6 +201,23 @@ public:
                                const std::string& value) override;
     virtual std::string read_setting(size_t channel,
                                      const std::string& key) const override;
+
+    std::vector<std::string> list_gpio_banks() const override;
+    void write_gpio(const std::string& bank, unsigned value) override;
+    void write_gpio(const std::string& bank, unsigned value, unsigned mask) override;
+    unsigned read_gpio(const std::string& bank) const override;
+    void write_gpio_dir(const std::string& bank, unsigned dir) override;
+    void write_gpio_dir(const std::string& bank, unsigned dir, unsigned mask) override;
+    unsigned read_gpio_dir(const std::string& bank) const override;
+
+    void write_i2c(int addr, const std::string& data) override;
+    std::string read_i2c(int addr, size_t num_bytes) override;
+
+    unsigned transact_spi(int addr, unsigned data, size_t num_bits) override;
+
+    std::vector<std::string> list_uarts() const override;
+    void write_uart(const std::string& which, const std::string& data) override;
+    std::string read_uart(const std::string& which, long timeout_us) const override;
 
     /*** End public API implementation ***/
 
