@@ -7,7 +7,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 from ..core.base import Element
 from .defaulttheme import DEFAULT_THEME
-from .Config import Config
 
 from enum import Flag, auto
 from typing import Union, Iterable, Tuple
