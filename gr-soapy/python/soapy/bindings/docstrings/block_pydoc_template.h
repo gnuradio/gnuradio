@@ -27,6 +27,15 @@ static const char* __doc_gr_soapy_block_block_1 = R"doc()doc";
 static const char* __doc_gr_soapy_block_make = R"doc()doc";
 
 
+static const char* __doc_gr_soapy_block_get_driver_key = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_get_hardware_key = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_get_hardware_info = R"doc()doc";
+
+
 static const char* __doc_gr_soapy_block_set_frontend_mapping = R"doc()doc";
 
 
@@ -64,6 +73,9 @@ static const char* __doc_gr_soapy_block_get_frequency_range_0 = R"doc()doc";
 
 
 static const char* __doc_gr_soapy_block_get_frequency_range_1 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_get_frequency_args_info = R"doc()doc";
 
 
 static const char* __doc_gr_soapy_block_set_bandwidth = R"doc()doc";
@@ -150,6 +162,15 @@ static const char* __doc_gr_soapy_block_set_iq_balance = R"doc()doc";
 static const char* __doc_gr_soapy_block_get_iq_balance = R"doc()doc";
 
 
+static const char* __doc_gr_soapy_block_has_iq_balance_mode = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_set_iq_balance_mode = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_get_iq_balance_mode = R"doc()doc";
+
+
 static const char* __doc_gr_soapy_block_set_master_clock_rate = R"doc()doc";
 
 
@@ -159,6 +180,15 @@ static const char* __doc_gr_soapy_block_get_master_clock_rate = R"doc()doc";
 static const char* __doc_gr_soapy_block_get_master_clock_rates = R"doc()doc";
 
 
+static const char* __doc_gr_soapy_block_set_reference_clock_rate = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_get_reference_clock_rate = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_get_reference_clock_rates = R"doc()doc";
+
+
 static const char* __doc_gr_soapy_block_list_clock_sources = R"doc()doc";
 
 
@@ -166,6 +196,24 @@ static const char* __doc_gr_soapy_block_set_clock_source = R"doc()doc";
 
 
 static const char* __doc_gr_soapy_block_get_clock_source = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_list_time_sources = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_set_time_source = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_get_time_source = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_has_hardware_time = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_get_hardware_time = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_set_hardware_time = R"doc()doc";
 
 
 static const char* __doc_gr_soapy_block_list_sensors_0 = R"doc()doc";
@@ -186,6 +234,21 @@ static const char* __doc_gr_soapy_block_get_sensor_info_1 = R"doc()doc";
 static const char* __doc_gr_soapy_block_read_sensor_1 = R"doc()doc";
 
 
+static const char* __doc_gr_soapy_block_list_register_interfaces = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_write_register = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_read_register = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_write_registers = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_read_registers = R"doc()doc";
+
+
 static const char* __doc_gr_soapy_block_get_setting_info_0 = R"doc()doc";
 
 
@@ -202,3 +265,42 @@ static const char* __doc_gr_soapy_block_write_setting_1 = R"doc()doc";
 
 
 static const char* __doc_gr_soapy_block_read_setting_1 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_list_gpio_banks = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_write_gpio_0 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_write_gpio_1 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_read_gpio = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_write_gpio_dir_0 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_write_gpio_dir_1 = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_read_gpio_dir = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_write_i2c = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_read_i2c = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_transact_spi = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_list_uarts = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_write_uart = R"doc()doc";
+
+
+static const char* __doc_gr_soapy_block_read_uart = R"doc()doc";
