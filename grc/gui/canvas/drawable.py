@@ -7,7 +7,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 from ..Constants import LINE_SELECT_SENSITIVITY
-
+from ..Theme import Theme
 
 class Drawable(object):
     """
@@ -33,6 +33,12 @@ class Drawable(object):
 
         self._bounding_rects = []
         self._bounding_points = []
+
+        def theme(prop, *args, **kwargs):
+            return Theme.get_property(prop, self, *args, **kwargs)
+
+        self._theme = theme
+        self.update_theming()
 
     def is_horizontal(self, rotation=None):
         """
@@ -172,4 +178,10 @@ class Drawable(object):
         """
         Implement this if you want to be notified when
         Element state changes
+        """
+
+    def update_theming(self):
+        """
+        Implement this if you want to recalculate your theming when anything
+        about the Theme changes.
         """

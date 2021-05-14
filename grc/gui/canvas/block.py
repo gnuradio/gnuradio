@@ -47,11 +47,6 @@ class Block(CoreBlock, Drawable):
 
         self._area = []
 
-        def theme(prop, *args, **kwargs):
-            return Theme.get_property(prop, self, *args, **kwargs)
-
-        self._theme = theme
-        self._update_theming()
 
     @property
     def coordinate(self):
@@ -101,9 +96,9 @@ class Block(CoreBlock, Drawable):
         self.states['rotation'] = rot
 
     def notify(self):
-        self._update_theming()
+        self.update_theming()
 
-    def _update_theming(self):
+    def update_theming(self):
         statecomb = []
         if self.is_dummy_block:
             statecomb.append(State.MISSING)
@@ -202,7 +197,7 @@ class Block(CoreBlock, Drawable):
         width = label_width + 2 * self._padding
         height = label_height + 2 * self._padding
 
-        self._update_theming()
+        self.update_theming()
         self.create_port_labels()
 
         def get_min_height_for_ports(ports):
