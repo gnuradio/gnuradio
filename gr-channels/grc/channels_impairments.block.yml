@@ -3,7 +3,7 @@ label: HW Impairments
 
 parameters:
 -   id: phase_noise_mag
-    label: Phase Noise Mag.
+    label: Phase Noise Mag. (dB)
     dtype: float
     default: '0'
 -   id: magbal
