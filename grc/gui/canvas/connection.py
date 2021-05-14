@@ -13,6 +13,7 @@ from math import pi
 from . import colors
 from .drawable import Drawable
 from .. import Utils
+from ..Theme import State
 from ..Constants import (
     CONNECTOR_ARROW_BASE,
     CONNECTOR_ARROW_HEIGHT,
@@ -142,14 +143,18 @@ class Connection(CoreConnection, Drawable):
             self._make_path(cr)
             self._current_coordinates = new_coordinates
 
-        color1, color2 = (
-            None if color is None else
-            colors.HIGHLIGHT_COLOR if self.highlighted else
-            colors.CONNECTION_DISABLED_COLOR if not self.enabled else
-            colors.CONNECTION_ERROR_COLOR if not self.is_valid() else
-            color
-            for color in (self._color1, self._color2)
-        )
+        statecombination = []
+        if not self.enabled:
+            statecombination.append(State.DISABLED)
+        if not self.is_valid():
+            statecombination.append(State.INVALID_CONNECTION)
+        if self.highlighted:
+            statecombination.append(State.SELECTED)
+        state = State.reduce(statecombination)
+
+        color1 = self._color1 if state == State.DEFAULT else self._theme("color", state)
+        color2 = self._color2 if state == State.DEFAULT else self._theme("color", state)
+
 
         cr.translate(*self.coordinate)
         cr.set_line_width(self._line_width_factor * cr.get_line_width())
