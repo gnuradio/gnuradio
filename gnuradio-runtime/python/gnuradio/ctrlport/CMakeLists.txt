@@ -51,6 +51,10 @@ if(THRIFT_FOUND)
     COMMAND ${THRIFT_BIN} --gen py -out ${CMAKE_CURRENT_BINARY_DIR}/ ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/controlport/thrift/gnuradio.thrift
   )
 
+  add_custom_target(ctrlport_thrift_python ALL
+    DEPENDS ${thrift_targets}
+  )
+
   GR_PYTHON_INSTALL(
     FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/RPCConnectionThrift.py
