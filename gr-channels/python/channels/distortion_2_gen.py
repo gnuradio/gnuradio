@@ -59,5 +59,3 @@ class distortion_2_gen(gr.hier_block2):
     def set_beta(self, beta):
         self.beta = beta
         self.blocks_multiply_const_vxx_0.set_k((self.beta, ))
-
-
