@@ -16,12 +16,12 @@ libfind_pkg_check_modules(ALSA_PKGCONF alsa)
 
 find_path(ALSA_INCLUDE_DIR
   NAMES alsa/version.h
-  PATHS ${ALSA_PKGCONF_INCLUDE_DIRS}
+  HINTS ${ALSA_PKGCONF_INCLUDE_DIRS}
 )
 
 find_library(ALSA_LIBRARY
   NAMES asound
-  PATHS ${ALSA_PKGCONF_LIBRARY_DIRS}
+  HINTS ${ALSA_PKGCONF_LIBRARY_DIRS}
 )
 
 # Extract the version number

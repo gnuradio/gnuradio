@@ -44,11 +44,14 @@ else()
   find_file(MATHJAX2_JS_PATH
       NAMES
         MathJax.js
-      PATHS
+      HINTS
         "${MATHJAX2_ROOT}"
-        /usr/share/mathjax2/
-        /usr/share/javascript/mathjax/
-        /usr/local/share/javascript/mathjax/
+      PATHS
+        /usr/share
+        /usr/local/share
+      PATH_SUFFIXES
+        mathjax2
+        javascript/mathjax
   )
 
   get_filename_component(MATHJAX2_PATH ${MATHJAX2_JS_PATH} DIRECTORY)
