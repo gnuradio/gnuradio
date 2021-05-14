@@ -11,13 +11,14 @@ import sys
 import os
 
 from .Config import Config
+from .Theme import Theme
 from . import canvas
 from ..core.platform import Platform as CorePlatform
 from ..core.utils.backports import ChainMap
 
 
 class Platform(CorePlatform):
-
+    Theme = Theme
     def __init__(self, *args, **kwargs):
         CorePlatform.__init__(self, *args, **kwargs)
 
@@ -27,6 +28,12 @@ class Platform(CorePlatform):
             os.mkdir(os.path.dirname(gui_prefs_file))
 
         self._move_old_pref_file()
+
+        theme_file = self.config.theme_file
+        if len(theme_file):
+            import yaml
+            data = yaml.safe_load(open(theme_file))
+            self.Theme.load(data)
 
     def get_prefs_file(self):
         return self.config.gui_prefs_file
