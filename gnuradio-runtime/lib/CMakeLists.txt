@@ -176,18 +176,11 @@ target_sources(gnuradio-runtime PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_selector.cc
 )
 
-OPTION(ENABLE_CTRLPORT_THRIFT "Enable ControlPort Thrift support" ON)
-
 if(ENABLE_CTRLPORT_THRIFT)
-# Look if Thrift is installed and use it as a ControlPort backend.
-FIND_PACKAGE(THRIFT ${GR_THRIFT_MIN_VERSION})
-
-if(THRIFT_FOUND)
-list(APPEND EXTRA_DEPS "THRIFT")
 MATH(EXPR CTRLPORT_BACKENDS "${CTRLPORT_BACKENDS} + 1")
 
 # Indicate thrift as an installed backend in the cmake summary.
-message(STATUS "Found and enabling Thrift backend to ControlPort")
+message(STATUS "Enabling Thrift backend to ControlPort")
 GR_APPEND_SUBCOMPONENT("thrift")
 
 # Run Thrift To compile C++ and Python files
@@ -215,7 +208,7 @@ target_sources(gnuradio-runtime PRIVATE
   # add files built by compiling gnuradio.thrift
   ${gnuradio_thrift_generated_sources}
   )
-target_link_libraries(gnuradio-runtime PUBLIC
+target_link_libraries(gnuradio-runtime PRIVATE
   Thrift::thrift
   )
 
@@ -228,7 +221,6 @@ install(
   DESTINATION ${GR_PKG_DOC_DIR}/config
 )
 
-endif(THRIFT_FOUND)
 endif(ENABLE_CTRLPORT_THRIFT)
 
 # Save the number of backends for testing against later
@@ -321,13 +313,7 @@ if(TRY_SHM_VMCIRCBUF)
     target_compile_definitions(gnuradio-runtime PRIVATE -DTRY_SHM_VMCIRCBUF )
 endif(TRY_SHM_VMCIRCBUF)
 
-set(EXTRA_DEPS "")
-if(ENABLE_CTRLPORT_THRIFT)
-  if(THRIFT_FOUND)
-    list(APPEND EXTRA_DEPS THRIFT)
-  endif()
-endif()
-gr_library_foo(gnuradio-runtime ${EXTRA_DEPS})
+gr_library_foo(gnuradio-runtime)
 
 
 ########################################################################
