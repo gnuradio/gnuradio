@@ -1221,43 +1221,6 @@ void bind_pmt(py::module& m)
           py::arg("v"),
           D(c64vector_elements, 1));
 
-    // The following functions are not implemented in pmt.cc
-    // m.def("pmt_u8vector_elements",&pmt::pmt_u8vector_elements,
-    //     py::arg("v")
-    // );
-    // m.def("pmt_s8vector_elements",&pmt::pmt_s8vector_elements,
-    //     py::arg("v")
-    // );
-    // m.def("pmt_u16vector_elements",&pmt::pmt_u16vector_elements,
-    //     py::arg("v")
-    // );
-    // m.def("pmt_s16vector_elements",&pmt::pmt_s16vector_elements,
-    //     py::arg("v")
-    // );
-    // m.def("pmt_u32vector_elements",&pmt::pmt_u32vector_elements,
-    //     py::arg("v")
-    // );
-    // m.def("pmt_s32vector_elements",&pmt::pmt_s32vector_elements,
-    //     py::arg("v")
-    // );
-    // m.def("pmt_u64vector_elements",&pmt::pmt_u64vector_elements,
-    //     py::arg("v")
-    // );
-    // m.def("pmt_s64vector_elements",&pmt::pmt_s64vector_elements,
-    //     py::arg("v")
-    // );
-    // m.def("pmt_f32vector_elements",&pmt::pmt_f32vector_elements,
-    //     py::arg("v")
-    // );
-    // m.def("pmt_f64vector_elements",&pmt::pmt_f64vector_elements,
-    //     py::arg("v")
-    // );
-    // m.def("pmt_c32vector_elements",&pmt::pmt_c32vector_elements,
-    //     py::arg("v")
-    // );
-    // m.def("pmt_c64vector_elements",&pmt::pmt_c64vector_elements,
-    //     py::arg("v")
-    // );
     m.def("uniform_vector_writable_elements",
           &::pmt::uniform_vector_writable_elements,
           py::arg("v"),
