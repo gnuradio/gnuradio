@@ -648,42 +648,6 @@ static const char* __doc_pmt_c32vector_elements_1 = R"doc()doc";
 static const char* __doc_pmt_c64vector_elements_1 = R"doc()doc";
 
 
-static const char* __doc_pmt_pmt_u8vector_elements = R"doc()doc";
-
-
-static const char* __doc_pmt_pmt_s8vector_elements = R"doc()doc";
-
-
-static const char* __doc_pmt_pmt_u16vector_elements = R"doc()doc";
-
-
-static const char* __doc_pmt_pmt_s16vector_elements = R"doc()doc";
-
-
-static const char* __doc_pmt_pmt_u32vector_elements = R"doc()doc";
-
-
-static const char* __doc_pmt_pmt_s32vector_elements = R"doc()doc";
-
-
-static const char* __doc_pmt_pmt_u64vector_elements = R"doc()doc";
-
-
-static const char* __doc_pmt_pmt_s64vector_elements = R"doc()doc";
-
-
-static const char* __doc_pmt_pmt_f32vector_elements = R"doc()doc";
-
-
-static const char* __doc_pmt_pmt_f64vector_elements = R"doc()doc";
-
-
-static const char* __doc_pmt_pmt_c32vector_elements = R"doc()doc";
-
-
-static const char* __doc_pmt_pmt_c64vector_elements = R"doc()doc";
-
-
 static const char* __doc_pmt_uniform_vector_writable_elements = R"doc()doc";
 
 
