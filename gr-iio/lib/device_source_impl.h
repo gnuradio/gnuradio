@@ -93,11 +93,12 @@ public:
 
     static struct iio_context* get_context(const std::string& uri);
     static bool load_fir_filter(std::string& filter, struct iio_device* phy);
-    int handle_decimation_interpolation(unsigned long samplerate,
+    static int handle_decimation_interpolation(unsigned long samplerate,
                                         const char* channel_name,
                                         const char* attr_name,
                                         struct iio_device* dev,
-                                        bool disable_dec);
+                                        bool disable_dec,
+                                        bool output_chan);
 };
 
 } // namespace iio
