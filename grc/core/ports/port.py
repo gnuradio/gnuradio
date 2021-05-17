@@ -92,6 +92,7 @@ class Port(Element):
         return not self.dtype
 
     def validate(self):
+        del self._error_messages[:]
         Element.validate(self)
         platform = self.parent_platform
 

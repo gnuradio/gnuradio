@@ -180,21 +180,7 @@ class VariableEditor(Gtk.VBox):
             else:
                 # Evaluate and show the value (if it is a variable)
                 if block.is_variable:
-                    # Evaluate the params
-                    for key in block.params:
-                        evaluated = str(block.params[key].evaluate())
-                        # ensure that evaluated is a UTF-8 string
-                        # Old PMTs could produce non-UTF-8 strings
-                        evaluated = evaluated.encode('utf-8', 'backslashreplace').decode('utf-8')
-                        self.set_tooltip_text(evaluated)
-
-                    # Evaluate the block value
-                    try:
-                        evaluated = str(eval(block.value, block.parent.namespace, block.namespace))
-                        self.set_tooltip_text(evaluated)
-                    except Exception as error:
-                        self.set_tooltip_text(str(error))
-                        pass
+                    value = str(block.evaluate(block.value))
 
         # Always set the text value.
         sp('text', value)
