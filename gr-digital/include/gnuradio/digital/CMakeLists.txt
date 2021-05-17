@@ -33,7 +33,6 @@ install(FILES
     correlate_access_code_ff_ts.h
     costas_loop_cc.h
     cpmmod_bc.h
-    crc32.h
     crc32_bb.h
     crc32_async_bb.h
     decision_feedback_equalizer.h
