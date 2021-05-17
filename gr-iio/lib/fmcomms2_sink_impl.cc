@@ -24,6 +24,8 @@
 #include <thread>
 #include <vector>
 
+#define MIN_RATE 520333
+#define DECINT_RATIO 8
 #define OVERFLOW_CHECK_PERIOD_MS 1000
 
 using namespace gr::blocks;
@@ -184,6 +186,21 @@ void fmcomms2_sink_impl::set_frequency(unsigned long long frequency)
 }
 void fmcomms2_sink_impl::set_samplerate(unsigned long samplerate)
 {
+    std::vector<std::string> params;
+    if (samplerate < MIN_RATE) {
+        int ret;
+        samplerate = samplerate * DECINT_RATIO;
+        ret = device_source_impl::handle_decimation_interpolation(
+            samplerate, "voltage0", "sampling_frequency", dev, false, true);
+        if (ret < 0)
+            samplerate = samplerate / 8;
+    } else // Disable decimation filter if on
+    {
+        device_source_impl::handle_decimation_interpolation(
+            samplerate, "voltage0", "sampling_frequency", dev, true, true);
+    }
+
+    device_source_impl::set_params(this->phy, params);
     d_samplerate = samplerate;
     update_dependent_params();
 }
@@ -206,28 +223,37 @@ void fmcomms2_sink_impl::set_attenuation(size_t chan, double attenuation)
 
 void fmcomms2_sink_impl::update_dependent_params()
 {
-    bool is_fmcomms4 = !iio_device_find_channel(phy, "voltage1", false);
     std::vector<std::string> params;
-
-    bool auto_filter = false;
-    if (d_filter_filename != "")
-        auto_filter = false;
-
-    if (!auto_filter) {
-        params.push_back("out_voltage_sampling_frequency=" +
-                         boost::to_string(d_samplerate));
-    }
-
-    device_source_impl::set_params(this->phy, params);
-
-    if (auto_filter) {
+    // Set rate configuration
+    if (d_filter_source.compare("Off") == 0) {
+        params.push_back("out_voltage_sampling_frequency=" + std::to_string(d_samplerate));
+        params.push_back("out_voltage_rf_bandwidth=" + std::to_string(d_bandwidth));
+    } else if (d_filter_source.compare("Auto") == 0) {
         int ret = ad9361_set_bb_rate(phy, d_samplerate);
         if (ret) {
             throw std::runtime_error("Unable to set BB rate");
+            params.push_back("out_voltage_rf_bandwidth=" + std::to_string(d_bandwidth));
         }
-    } else if (d_filter_filename != "") {
-        if (!device_source_impl::load_fir_filter(d_filter_filename, phy))
+    } else if (d_filter_source.compare("File") == 0) {
+        std::string filt(d_filter_filename);
+        if (!device_source_impl::load_fir_filter(filt, phy))
             throw std::runtime_error("Unable to load filter file");
+    } else if (d_filter_source.compare("Design") == 0) {
+        int ret = ad9361_set_bb_rate_custom_filter_manual(
+            phy, d_samplerate, d_fpass, d_fstop, d_bandwidth, d_bandwidth);
+        if (ret) {
+            throw std::runtime_error("Unable to set BB rate");
+        }
+    } else
+        throw std::runtime_error("Unknown filter configuration");
+
+    device_source_impl::set_params(this->phy, params);
+    // Filters can only be disabled after the sample rate has been set
+    if (d_filter_source.compare("Off") == 0) {
+        int ret = ad9361_set_trx_fir_enable(phy, false);
+        if (ret) {
+            throw std::runtime_error("Unable to disable filters");
+        }
     }
 }
 
