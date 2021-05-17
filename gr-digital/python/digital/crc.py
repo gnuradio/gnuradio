@@ -5,21 +5,28 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-#
+"""
+Backward-compatible wrapper for CRC32
+"""
 
-from . import digital_python as digital
+import zlib
 import struct
 
-def gen_and_append_crc32(s):
-    crc = digital.crc32(s)
-    return s + struct.pack(">I", crc)
+def gen_and_append_crc32(data):
+    """
+    Return a binary string with its CRC appended
+    """
+    return data + struct.pack(">I", zlib.crc32(data))
 
-def check_crc32(s):
-    if len(s) < 4:
+def check_crc32(data):
+    """
+    Check if the byte string 's' has a valid CRC on its last four bytes
+
+    Returns a tuple (is CRC valid, string-without-CRC).
+    """
+    if len(data) < 4:
         return (False, '')
-    msg = s[:-4]
-    #print "msg = '%s'" % (msg,)
-    actual = digital.crc32(msg)
-    (expected,) = struct.unpack(">I", s[-4:])
-    # print "actual =", hex(actual), "expected =", hex(expected)
+    msg = data[:-4] # Message without the CRC
+    actual = zlib.crc32(msg)
+    (expected,) = struct.unpack(">I", data[-4:])
     return (actual == expected, msg)
