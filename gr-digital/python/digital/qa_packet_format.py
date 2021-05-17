@@ -59,8 +59,7 @@ class test_packet_format_fb(gr_unittest.TestCase):
         header = bytes(result_hdr)
         payload = bytes(result_pld)
 
-        access_code = packet_utils.conv_1_0_string_to_packed_binary_string(
-            packet_utils.default_access_code)[0]
+        access_code = packet_utils.default_access_code_binary
         rx_access_code = header[0:len(access_code)]
 
         length = len(send_str)
@@ -152,8 +151,7 @@ class test_packet_format_fb(gr_unittest.TestCase):
         header = bytes(result_hdr)
         payload = bytes(result_pld)
 
-        access_code = packet_utils.conv_1_0_string_to_packed_binary_string(
-            packet_utils.default_access_code)[0]
+        access_code = packet_utils.default_access_code_binary
         rx_access_code = header[0:len(access_code)]
 
         length = len(send_str)
