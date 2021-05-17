@@ -375,7 +375,8 @@ int device_source_impl::handle_decimation_interpolation(unsigned long samplerate
                                                         const char* channel_name,
                                                         const char* attr_name,
                                                         struct iio_device* dev,
-                                                        bool disable_dec)
+                                                        bool disable_dec,
+                                                        bool output_chan)
 {
     int ret;
     struct iio_channel* chan;
@@ -386,7 +387,7 @@ int device_source_impl::handle_decimation_interpolation(unsigned long samplerate
     an.append("_available");
 
     // Get ranges
-    chan = iio_device_find_channel(dev, channel_name, false);
+    chan = iio_device_find_channel(dev, channel_name, output_chan);
     if (chan == NULL)
         return -1; // Channel doesn't exist so the dec/int filters probably don't exist
 
