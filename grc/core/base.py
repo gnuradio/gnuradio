@@ -34,8 +34,6 @@ class Element(object):
         Validate this element and call validate on all children.
         Call this base method before adding error messages in the subclass.
         """
-        del self._error_messages[:]
-
         for child in self.children():
             child.validate()
 
@@ -88,6 +86,7 @@ class Element(object):
         Rewrite this element and call rewrite on all children.
         Call this base method before rewriting the element.
         """
+        del self._error_messages[:]
         for child in self.children():
             child.rewrite()
 
