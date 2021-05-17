@@ -207,13 +207,13 @@ void fmcomms2_source_impl::set_samplerate(unsigned long samplerate)
         int ret;
         samplerate = samplerate * DECINT_RATIO;
         ret = device_source_impl::handle_decimation_interpolation(
-            samplerate, "voltage0", "sampling_frequency", dev, false);
+            samplerate, "voltage0", "sampling_frequency", dev, false, false);
         if (ret < 0)
             samplerate = samplerate / 8;
     } else // Disable decimation filter if on
     {
         device_source_impl::handle_decimation_interpolation(
-            samplerate, "voltage0", "sampling_frequency", dev, true);
+            samplerate, "voltage0", "sampling_frequency", dev, true, false);
     }
 
     device_source_impl::set_params(params);
