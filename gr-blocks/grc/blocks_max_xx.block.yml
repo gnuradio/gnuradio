@@ -16,12 +16,12 @@ parameters:
     default: '1'
     hide: part
 -   id: vlen
-    label: Input Vec Length
+    label: Input Vector Length
     dtype: int
     default: '1'
     hide: ${ 'part' if vlen == 1 else 'none' }
 -   id: vlen_out
-    label: Output Vec Length
+    label: Output Vector Length
     dtype: int
     default: '1'
     hide: ${ 'part' if vlen == 1 else 'none' }
