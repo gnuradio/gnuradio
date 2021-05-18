@@ -29,9 +29,9 @@ def have_dark_theme():
     config.read(os.path.expanduser(Constants.GTK_SETTINGS_INI_PATH))
     prefer_dark = config.get(
         'Settings', Constants.GTK_INI_PREFER_DARK_KEY, fallback=None)
-    if prefer_dark in ('1', 'yes', 'true', 'on'):
-        theme_name = config.get(
-            'Settings', Constants.GTK_INI_THEME_NAME_KEY, fallback=None)
+    theme_name = config.get(
+        'Settings', Constants.GTK_INI_THEME_NAME_KEY, fallback=None)
+    if prefer_dark in ('1', 'yes', 'true', 'on') or is_dark_theme(theme_name):
         return True
     try:
         theme = subprocess.check_output(
