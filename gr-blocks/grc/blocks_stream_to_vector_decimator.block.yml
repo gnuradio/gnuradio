@@ -16,11 +16,11 @@ parameters:
     dtype: real
     default: samp_rate
 -   id: vec_rate
-    label: Vec Rate
+    label: Vector Rate
     dtype: real
     default: '30'
 -   id: vlen
-    label: Vec Length
+    label: Vector Length
     dtype: int
     default: '1024'
     hide: ${ 'part' if vlen == 1 else 'none' }

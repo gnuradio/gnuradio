@@ -17,7 +17,7 @@ parameters:
     default: '2'
     hide: part
 -   id: vlen
-    label: Vec Length
+    label: Vector Length
     dtype: int
     default: '1'
     hide: ${ 'part' if vlen == 1 else 'none' }
