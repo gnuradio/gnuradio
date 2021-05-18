@@ -41,7 +41,7 @@ parameters:
     options: ['False', 'True']
     option_labels: ['No', 'Yes']
 -   id: vlen
-    label: Vec Length
+    label: Vector Length
     dtype: int
     default: '1'
     hide: ${ 'part' if vlen == 1 else 'none' }
