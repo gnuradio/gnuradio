@@ -7,7 +7,7 @@ parameters:
     label: Tag Name
     dtype: string
 -   id: vlen
-    label: Vec Length
+    label: Vector Length
     dtype: int
     default: '1'
 
