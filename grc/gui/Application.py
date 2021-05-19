@@ -554,7 +554,7 @@ class Application(Gtk.Application):
                     response = self.dialog.run()
                     if response in (Gtk.ResponseType.APPLY, Gtk.ResponseType.ACCEPT):
                         page.state_cache.save_new_state(flow_graph.export_data())
-                        ### Following  line forces a complete update of io ports
+                        ### Following line forces a complete update of io ports
                         flow_graph_update()
                         page.saved = False
                     else:  # restore the current state
