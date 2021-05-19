@@ -198,10 +198,10 @@ class TopBlockGenerator(object):
         blocks = expr_utils.sort_objects(blocks, operator.attrgetter('name'), _get_block_sort_text)
 
         # Ordering blocks : blocks with GUI Hint must be processed first to avoid PyQT5 superposing blocks
+        # The block must have a GUI HINT, but the hint may be empty
         def without_gui_hint(block):
-            hint = block.params.get('gui_hint')
-            return hint is None or not hint.get_value()
-
+            return block.params.get('gui_hint') is None
+ 
         blocks.sort(key=without_gui_hint)
 
         blocks_make = []
