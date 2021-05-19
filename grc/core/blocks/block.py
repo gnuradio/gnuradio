@@ -213,6 +213,7 @@ class Block(Element):
         for port in ports:
             if hasattr(port, 'master_port'):  # Not a master port and no left-over clones
                 port.dtype = port.master_port.dtype
+                port.vlen = port.master_port.vlen
                 continue
             nports = port.multiplicity
             for clone in port.clones[nports-1:]:
