@@ -44,6 +44,7 @@ def print_proper(element):
         return element.name
     return f"{element.parent.name} - {element}"
 
+@pytest.mark.examples
 @pytest.mark.parametrize("example", gather_examples())
 def test_all_examples(example):
     global BLOCK_PATHS
