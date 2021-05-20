@@ -6,6 +6,7 @@ on:
   pull_request:
     branches:
       - master
+      - feature/gr-iio
 jobs:
   # We start with checking C++ formatting. No one gets free CPU cycles if they
   # can't use clang-format.
