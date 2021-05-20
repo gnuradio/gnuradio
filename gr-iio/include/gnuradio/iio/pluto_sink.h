@@ -32,9 +32,7 @@ public:
      * \param uri  String of the context uri
      * \param buffer_size  Long of number of samples in buffer to send to device
      */
-    static sptr make(const std::string& uri,
-                     unsigned long buffer_size,
-                     bool cyclic);
+    static sptr make(const std::string& uri, unsigned long buffer_size, bool cyclic);
 
     virtual void set_frequency(unsigned long long frequency) = 0;
     virtual void set_bandwidth(unsigned long bandwidth) = 0;

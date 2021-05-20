@@ -45,6 +45,5 @@ void bind_pluto_sink(py::module& m)
         .def("set_frequency", &pluto_sink::set_frequency, py::arg("longfrequency"))
         .def("set_samplerate", &pluto_sink::set_samplerate, py::arg("samplerate"))
         .def("set_gain", &pluto_sink::set_attenuation, py::arg("attenuation_value"))
-        .def("set_filter_params", &pluto_sink::set_filter_params)
-        ;
+        .def("set_filter_params", &pluto_sink::set_filter_params);
 }

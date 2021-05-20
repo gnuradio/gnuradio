@@ -30,7 +30,6 @@ public:
                                    const std::string& filter_filename = "",
                                    float fpass = 0.0,
                                    float fstop = 0.0);
-
 };
 
 } // namespace iio

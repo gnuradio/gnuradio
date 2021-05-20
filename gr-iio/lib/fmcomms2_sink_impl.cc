@@ -226,7 +226,8 @@ void fmcomms2_sink_impl::update_dependent_params()
     std::vector<std::string> params;
     // Set rate configuration
     if (d_filter_source.compare("Off") == 0) {
-        params.push_back("out_voltage_sampling_frequency=" + std::to_string(d_samplerate));
+        params.push_back("out_voltage_sampling_frequency=" +
+                         std::to_string(d_samplerate));
         params.push_back("out_voltage_rf_bandwidth=" + std::to_string(d_bandwidth));
     } else if (d_filter_source.compare("Auto") == 0) {
         int ret = ad9361_set_bb_rate(phy, d_samplerate);
