@@ -110,9 +110,9 @@ static void check_abi(void)
 const pmt::pmt_t CMD_CHAN_KEY = pmt::mp("chan");
 const pmt::pmt_t CMD_FREQ_KEY = pmt::mp("freq");
 const pmt::pmt_t CMD_GAIN_KEY = pmt::mp("gain");
-const pmt::pmt_t CMD_ANTENNA_KEY = pmt::mp("ant");
+const pmt::pmt_t CMD_ANTENNA_KEY = pmt::mp("antenna");
 const pmt::pmt_t CMD_RATE_KEY = pmt::mp("rate");
-const pmt::pmt_t CMD_BW_KEY = pmt::mp("bw");
+const pmt::pmt_t CMD_BW_KEY = pmt::mp("bandwidth");
 
 /*
  * The private constructor
