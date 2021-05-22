@@ -40,8 +40,6 @@ public:
 private:
     void flush();
 
-    //! Number of streaming channels
-    const size_t d_num_chans;
     //! Bytes per item (e.g. 4 for sc16)
     const size_t d_itemsize;
     //! Input vector length
