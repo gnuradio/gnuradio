@@ -9,9 +9,9 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 from gi.repository import Gtk, Gdk
 
-from .canvas.colors import FLOWGRAPH_BACKGROUND_COLOR
 from . import Constants
 from . import Actions
+from .Theme import Theme
 
 
 class DrawingArea(Gtk.DrawingArea):
@@ -188,7 +188,8 @@ class DrawingArea(Gtk.DrawingArea):
         width = widget.get_allocated_width()
         height = widget.get_allocated_height()
 
-        cr.set_source_rgba(*FLOWGRAPH_BACKGROUND_COLOR)
+        cr.set_source_rgba(
+            *Theme.get_property("background-color", "Flowgraph"))
         cr.rectangle(0, 0, width, height)
         cr.fill()
 
