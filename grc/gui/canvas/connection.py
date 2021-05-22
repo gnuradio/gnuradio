@@ -152,9 +152,11 @@ class Connection(CoreConnection, Drawable):
             statecombination.append(State.SELECTED)
         state = State.reduce(statecombination)
 
-        color1 = self._color1 if state == State.DEFAULT else self._theme("color", state)
-        color2 = self._color2 if state == State.DEFAULT else self._theme("color", state)
-
+        color1, color2 = self._color1, self._color2
+        if color1 is not None and state != State.DEFAULT:
+            color1 = self._theme("color", state)
+        if color2 is not None and state != State.DEFAULT:
+            color2 = self._theme("color", state)
 
         cr.translate(*self.coordinate)
         cr.set_line_width(self._line_width_factor * cr.get_line_width())
