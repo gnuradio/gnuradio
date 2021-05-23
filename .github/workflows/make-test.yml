@@ -52,13 +52,13 @@ jobs:
         # container (i.e., what you want to docker-pull)
         include:
           - distro: 'Ubuntu 20.04'
-            containerid: 'gnuradio/ci-ubuntu-20.04-3.9:0.3'
+            containerid: 'gnuradio/ci:ubuntu-20.04-3.9'
             cxxflags: -Werror
           - distro: 'Fedora 33'
-            containerid: 'gnuradio/ci-fedora-33-3.9:1.0'
+            containerid: 'gnuradio/ci:fedora-33-3.9'
             cxxflags: ''
           - distro: 'CentOS 8.3'
-            containerid: 'gnuradio/ci-centos-8.3-3.9:1.0'
+            containerid: 'gnuradio/ci:centos-8.3-3.9'
             cxxflags: -Werror
           - distro: 'Debian 10'
             containerid: 'gnuradio/ci-debian-10-3.9:1.0'
