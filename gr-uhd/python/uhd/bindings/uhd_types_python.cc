@@ -142,8 +142,7 @@ void bind_uhd_types(py::module& m)
     // ::uhd::tune_request_t
     using tune_request_t = ::uhd::tune_request_t;
     py::class_<tune_request_t> tune_request(m, "tune_request_t");
-    tune_request
-        .def(py::init<double, double>())
+    tune_request.def(py::init<double, double>())
         .def(py::init<double>(), py::arg("target_freq") = 0.0)
         .def_readwrite("target_freq", &tune_request_t::target_freq)
         .def_readwrite("rf_freq_policy", &tune_request_t::rf_freq_policy)
