@@ -9,7 +9,7 @@
 
 
 import numpy as np
-from .helper_functions import *
+from .helper_functions import bit_reverse_vector, is_power_of_two
 
 '''
 PolarCommon holds value checks and common initializer code for both Encoder and Decoder.
