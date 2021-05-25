@@ -71,7 +71,7 @@ parameters:
     label: 'Ch0: Center Freq (Hz)'
     category: RF Options
     dtype: real
-    default: freq
+    default: 'freq'
 
   - id: freq_correction0
     label: 'Ch0: Frequency Correction'
@@ -134,7 +134,7 @@ parameters:
     label: 'Ch1: Center Freq (Hz)'
     category: RF Options
     dtype: real
-    default: freq
+    default: 'freq'
     hide: ${ 'none' if nchan > 1 else 'all' }
 
   - id: freq_correction1
