@@ -26,14 +26,14 @@ parameters:
     label: Bandwidth (0=auto)
     category: RF Options
     dtype: float
-    default: 0
+    default: '0'
     hide: part
 
   - id: center_freq
     label: 'Center Freq (Hz)'
     category: RF Options
     dtype: real
-    default: freq
+    default: 'freq'
 
   - id: amp
     label: 'Amp On (+14 dB)'
