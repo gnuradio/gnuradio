@@ -74,49 +74,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 496]
-    rotation: 0
-    state: enabled
-- name: vga1_gain
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: ''
-    label: ''
-    min_len: '200'
-    orient: QtCore.Qt.Horizontal
-    rangeType: int
-    start: '-35'
-    step: '1'
-    stop: '-4'
-    value: '-8'
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [8, 496]
-    rotation: 0
-    state: enabled
-- name: vga2_gain
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: ''
-    label: ''
-    min_len: '200'
-    orient: QtCore.Qt.Horizontal
-    rangeType: int
-    start: '0'
-    step: '1'
-    stop: '25'
-    value: '10'
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [120, 496]
+    coordinate: [112, 76.0]
     rotation: 0
     state: enabled
 - name: blocks_file_source_0
@@ -157,7 +115,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [64, 388.0]
+    coordinate: [712, 356.0]
     rotation: 0
     state: enabled
 - name: dtv_dvbt_bit_inner_interleaver_0
@@ -175,7 +133,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [888, 212.0]
+    coordinate: [384, 228.0]
     rotation: 180
     state: enabled
 - name: dtv_dvbt_convolutional_interleaver_0
@@ -193,8 +151,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1152, 76.0]
-    rotation: 0
+    coordinate: [1016, 220.0]
+    rotation: 180
     state: enabled
 - name: dtv_dvbt_energy_dispersal_0
   id: dtv_dvbt_energy_dispersal
@@ -209,7 +167,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [624, 92.0]
+    coordinate: [720, 92.0]
     rotation: 0
     state: enabled
 - name: dtv_dvbt_inner_coder_0
@@ -229,7 +187,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1136, 188.0]
+    coordinate: [688, 204.0]
     rotation: 180
     state: enabled
 - name: dtv_dvbt_map_0
@@ -248,8 +206,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [352, 196.0]
-    rotation: 180
+    coordinate: [64, 348.0]
+    rotation: 0
     state: enabled
 - name: dtv_dvbt_reed_solomon_enc_0
   id: dtv_dvbt_reed_solomon_enc
@@ -271,7 +229,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [880, 36.0]
+    coordinate: [1040, 36.0]
     rotation: 0
     state: enabled
 - name: dtv_dvbt_reference_signals_0
@@ -295,8 +253,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [64, 140.0]
-    rotation: 180
+    coordinate: [384, 308.0]
+    rotation: 0
     state: enabled
 - name: dtv_dvbt_symbol_inner_interleaver_0
   id: dtv_dvbt_symbol_inner_interleaver
@@ -312,9 +270,46 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [632, 212.0]
+    coordinate: [64, 228.0]
     rotation: 180
     state: enabled
+- name: soapy_custom_sink_0
+  id: soapy_custom_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    antenna0: TX
+    antenna1: ''
+    bandwidth0: '8000000'
+    bandwidth1: '0'
+    center_freq0: center_freq
+    center_freq1: '0'
+    comment: ''
+    dc_offset0: '0'
+    dc_offset1: '0'
+    dev_args: ''
+    driver: ''
+    freq_correction0: '0'
+    freq_correction1: '0'
+    gain0: tx_gain
+    gain1: '0'
+    iq_balance0: '0'
+    iq_balance1: '0'
+    nchan: '1'
+    samp_rate: samp_rate
+    settings0: ''
+    settings1: ''
+    stream_args: ''
+    tune_args0: ''
+    tune_args1: ''
+    type: fc32
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1024, 444.0]
+    rotation: 0
+    state: true
 - name: uhd_usrp_sink_0
   id: uhd_usrp_sink
   parameters:
@@ -460,6 +455,38 @@ blocks:
     gain7: '0'
     gain8: '0'
     gain9: '0'
+    gain_type0: default
+    gain_type1: default
+    gain_type10: default
+    gain_type11: default
+    gain_type12: default
+    gain_type13: default
+    gain_type14: default
+    gain_type15: default
+    gain_type16: default
+    gain_type17: default
+    gain_type18: default
+    gain_type19: default
+    gain_type2: default
+    gain_type20: default
+    gain_type21: default
+    gain_type22: default
+    gain_type23: default
+    gain_type24: default
+    gain_type25: default
+    gain_type26: default
+    gain_type27: default
+    gain_type28: default
+    gain_type29: default
+    gain_type3: default
+    gain_type30: default
+    gain_type31: default
+    gain_type4: default
+    gain_type5: default
+    gain_type6: default
+    gain_type7: default
+    gain_type8: default
+    gain_type9: default
     len_tag_name: ''
     lo_export0: 'False'
     lo_export1: 'False'
@@ -528,38 +555,6 @@ blocks:
     maxoutbuf: ''
     minoutbuf: ''
     nchan: '1'
-    norm_gain0: 'False'
-    norm_gain1: 'False'
-    norm_gain10: 'False'
-    norm_gain11: 'False'
-    norm_gain12: 'False'
-    norm_gain13: 'False'
-    norm_gain14: 'False'
-    norm_gain15: 'False'
-    norm_gain16: 'False'
-    norm_gain17: 'False'
-    norm_gain18: 'False'
-    norm_gain19: 'False'
-    norm_gain2: 'False'
-    norm_gain20: 'False'
-    norm_gain21: 'False'
-    norm_gain22: 'False'
-    norm_gain23: 'False'
-    norm_gain24: 'False'
-    norm_gain25: 'False'
-    norm_gain26: 'False'
-    norm_gain27: 'False'
-    norm_gain28: 'False'
-    norm_gain29: 'False'
-    norm_gain3: 'False'
-    norm_gain30: 'False'
-    norm_gain31: 'False'
-    norm_gain4: 'False'
-    norm_gain5: 'False'
-    norm_gain6: 'False'
-    norm_gain7: 'False'
-    norm_gain8: 'False'
-    norm_gain9: 'False'
     num_mboards: '1'
     otw: ''
     samp_rate: samp_rate
@@ -572,6 +567,7 @@ blocks:
     sd_spec6: ''
     sd_spec7: ''
     show_lo_controls: 'False'
+    start_time: '-1.0'
     stream_args: ''
     stream_chans: '[]'
     sync: none
@@ -588,12 +584,13 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [984, 348.0]
+    coordinate: [1016, 324.0]
     rotation: 0
-    state: enabled
+    state: disabled
 
 connections:
 - [blocks_file_source_0, '0', dtv_dvbt_energy_dispersal_0, '0']
+- [digital_ofdm_cyclic_prefixer_0, '0', soapy_custom_sink_0, '0']
 - [digital_ofdm_cyclic_prefixer_0, '0', uhd_usrp_sink_0, '0']
 - [dtv_dvbt_bit_inner_interleaver_0, '0', dtv_dvbt_symbol_inner_interleaver_0, '0']
 - [dtv_dvbt_convolutional_interleaver_0, '0', dtv_dvbt_inner_coder_0, '0']
