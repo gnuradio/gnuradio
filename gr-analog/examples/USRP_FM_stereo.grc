@@ -150,6 +150,7 @@ blocks:
     alias: ''
     audio_decimation: audio_decim
     comment: ''
+    deemph_tau: 75e-6
     maxoutbuf: '0'
     minoutbuf: '0'
     quad_rate: (int)(samp_rate/rf_decim)
@@ -157,7 +158,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [488, 168.0]
+    coordinate: [552, 180.0]
     rotation: 0
     state: true
 - name: audio_sink_0
@@ -174,7 +175,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [864, 168.0]
+    coordinate: [1064, 184.0]
     rotation: 0
     state: true
 - name: blocks_multiply_const_vxx_0_0
@@ -192,7 +193,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [696, 164.0]
+    coordinate: [816, 164.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_vxx_0_0_0
@@ -210,7 +211,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [704, 252.0]
+    coordinate: [816, 228.0]
     rotation: 0
     state: enabled
 - name: filter_fft_low_pass_filter_0
@@ -234,7 +235,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [296, 124.0]
+    coordinate: [312, 140.0]
     rotation: 0
     state: true
 - name: qtgui_sink_x_0
@@ -263,7 +264,50 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [472, 276.0]
+    coordinate: [552, 292.0]
+    rotation: 0
+    state: true
+- name: soapy_custom_source_0
+  id: soapy_custom_source
+  parameters:
+    affinity: ''
+    agc0: 'False'
+    agc1: 'False'
+    alias: ''
+    antenna0: RX
+    antenna1: ''
+    bandwidth0: '0'
+    bandwidth1: '0'
+    center_freq0: center_freq
+    center_freq1: '0'
+    comment: ''
+    dc_offset0: '0'
+    dc_offset1: '0'
+    dc_removal0: 'True'
+    dc_removal1: 'True'
+    dev_args: ''
+    driver: ''
+    freq_correction0: '0'
+    freq_correction1: '0'
+    gain0: rf_gain
+    gain1: '0'
+    iq_balance0: '0'
+    iq_balance1: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nchan: '1'
+    samp_rate: samp_rate
+    settings0: ''
+    settings1: ''
+    stream_args: ''
+    tune_args0: ''
+    tune_args1: ''
+    type: fc32
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 292.0]
     rotation: 0
     state: true
 - name: uhd_usrp_source_0
@@ -377,38 +421,70 @@ blocks:
     clock_source6: ''
     clock_source7: ''
     comment: ''
-    dc_offs_enb0: '""'
-    dc_offs_enb1: '""'
-    dc_offs_enb10: '""'
-    dc_offs_enb11: '""'
-    dc_offs_enb12: '""'
-    dc_offs_enb13: '""'
-    dc_offs_enb14: '""'
-    dc_offs_enb15: '""'
-    dc_offs_enb16: '""'
-    dc_offs_enb17: '""'
-    dc_offs_enb18: '""'
-    dc_offs_enb19: '""'
-    dc_offs_enb2: '""'
-    dc_offs_enb20: '""'
-    dc_offs_enb21: '""'
-    dc_offs_enb22: '""'
-    dc_offs_enb23: '""'
-    dc_offs_enb24: '""'
-    dc_offs_enb25: '""'
-    dc_offs_enb26: '""'
-    dc_offs_enb27: '""'
-    dc_offs_enb28: '""'
-    dc_offs_enb29: '""'
-    dc_offs_enb3: '""'
-    dc_offs_enb30: '""'
-    dc_offs_enb31: '""'
-    dc_offs_enb4: '""'
-    dc_offs_enb5: '""'
-    dc_offs_enb6: '""'
-    dc_offs_enb7: '""'
-    dc_offs_enb8: '""'
-    dc_offs_enb9: '""'
+    dc_offs0: 0+0j
+    dc_offs1: 0+0j
+    dc_offs10: 0+0j
+    dc_offs11: 0+0j
+    dc_offs12: 0+0j
+    dc_offs13: 0+0j
+    dc_offs14: 0+0j
+    dc_offs15: 0+0j
+    dc_offs16: 0+0j
+    dc_offs17: 0+0j
+    dc_offs18: 0+0j
+    dc_offs19: 0+0j
+    dc_offs2: 0+0j
+    dc_offs20: 0+0j
+    dc_offs21: 0+0j
+    dc_offs22: 0+0j
+    dc_offs23: 0+0j
+    dc_offs24: 0+0j
+    dc_offs25: 0+0j
+    dc_offs26: 0+0j
+    dc_offs27: 0+0j
+    dc_offs28: 0+0j
+    dc_offs29: 0+0j
+    dc_offs3: 0+0j
+    dc_offs30: 0+0j
+    dc_offs31: 0+0j
+    dc_offs4: 0+0j
+    dc_offs5: 0+0j
+    dc_offs6: 0+0j
+    dc_offs7: 0+0j
+    dc_offs8: 0+0j
+    dc_offs9: 0+0j
+    dc_offs_enb0: default
+    dc_offs_enb1: default
+    dc_offs_enb10: default
+    dc_offs_enb11: default
+    dc_offs_enb12: default
+    dc_offs_enb13: default
+    dc_offs_enb14: default
+    dc_offs_enb15: default
+    dc_offs_enb16: default
+    dc_offs_enb17: default
+    dc_offs_enb18: default
+    dc_offs_enb19: default
+    dc_offs_enb2: default
+    dc_offs_enb20: default
+    dc_offs_enb21: default
+    dc_offs_enb22: default
+    dc_offs_enb23: default
+    dc_offs_enb24: default
+    dc_offs_enb25: default
+    dc_offs_enb26: default
+    dc_offs_enb27: default
+    dc_offs_enb28: default
+    dc_offs_enb29: default
+    dc_offs_enb3: default
+    dc_offs_enb30: default
+    dc_offs_enb31: default
+    dc_offs_enb4: default
+    dc_offs_enb5: default
+    dc_offs_enb6: default
+    dc_offs_enb7: default
+    dc_offs_enb8: default
+    dc_offs_enb9: default
     dev_addr: ''
     dev_args: '""'
     gain0: rf_gain
@@ -443,38 +519,102 @@ blocks:
     gain7: '0'
     gain8: '0'
     gain9: '0'
-    iq_imbal_enb0: '""'
-    iq_imbal_enb1: '""'
-    iq_imbal_enb10: '""'
-    iq_imbal_enb11: '""'
-    iq_imbal_enb12: '""'
-    iq_imbal_enb13: '""'
-    iq_imbal_enb14: '""'
-    iq_imbal_enb15: '""'
-    iq_imbal_enb16: '""'
-    iq_imbal_enb17: '""'
-    iq_imbal_enb18: '""'
-    iq_imbal_enb19: '""'
-    iq_imbal_enb2: '""'
-    iq_imbal_enb20: '""'
-    iq_imbal_enb21: '""'
-    iq_imbal_enb22: '""'
-    iq_imbal_enb23: '""'
-    iq_imbal_enb24: '""'
-    iq_imbal_enb25: '""'
-    iq_imbal_enb26: '""'
-    iq_imbal_enb27: '""'
-    iq_imbal_enb28: '""'
-    iq_imbal_enb29: '""'
-    iq_imbal_enb3: '""'
-    iq_imbal_enb30: '""'
-    iq_imbal_enb31: '""'
-    iq_imbal_enb4: '""'
-    iq_imbal_enb5: '""'
-    iq_imbal_enb6: '""'
-    iq_imbal_enb7: '""'
-    iq_imbal_enb8: '""'
-    iq_imbal_enb9: '""'
+    gain_type0: default
+    gain_type1: default
+    gain_type10: default
+    gain_type11: default
+    gain_type12: default
+    gain_type13: default
+    gain_type14: default
+    gain_type15: default
+    gain_type16: default
+    gain_type17: default
+    gain_type18: default
+    gain_type19: default
+    gain_type2: default
+    gain_type20: default
+    gain_type21: default
+    gain_type22: default
+    gain_type23: default
+    gain_type24: default
+    gain_type25: default
+    gain_type26: default
+    gain_type27: default
+    gain_type28: default
+    gain_type29: default
+    gain_type3: default
+    gain_type30: default
+    gain_type31: default
+    gain_type4: default
+    gain_type5: default
+    gain_type6: default
+    gain_type7: default
+    gain_type8: default
+    gain_type9: default
+    iq_imbal0: 0+0j
+    iq_imbal1: 0+0j
+    iq_imbal10: 0+0j
+    iq_imbal11: 0+0j
+    iq_imbal12: 0+0j
+    iq_imbal13: 0+0j
+    iq_imbal14: 0+0j
+    iq_imbal15: 0+0j
+    iq_imbal16: 0+0j
+    iq_imbal17: 0+0j
+    iq_imbal18: 0+0j
+    iq_imbal19: 0+0j
+    iq_imbal2: 0+0j
+    iq_imbal20: 0+0j
+    iq_imbal21: 0+0j
+    iq_imbal22: 0+0j
+    iq_imbal23: 0+0j
+    iq_imbal24: 0+0j
+    iq_imbal25: 0+0j
+    iq_imbal26: 0+0j
+    iq_imbal27: 0+0j
+    iq_imbal28: 0+0j
+    iq_imbal29: 0+0j
+    iq_imbal3: 0+0j
+    iq_imbal30: 0+0j
+    iq_imbal31: 0+0j
+    iq_imbal4: 0+0j
+    iq_imbal5: 0+0j
+    iq_imbal6: 0+0j
+    iq_imbal7: 0+0j
+    iq_imbal8: 0+0j
+    iq_imbal9: 0+0j
+    iq_imbal_enb0: default
+    iq_imbal_enb1: default
+    iq_imbal_enb10: default
+    iq_imbal_enb11: default
+    iq_imbal_enb12: default
+    iq_imbal_enb13: default
+    iq_imbal_enb14: default
+    iq_imbal_enb15: default
+    iq_imbal_enb16: default
+    iq_imbal_enb17: default
+    iq_imbal_enb18: default
+    iq_imbal_enb19: default
+    iq_imbal_enb2: default
+    iq_imbal_enb20: default
+    iq_imbal_enb21: default
+    iq_imbal_enb22: default
+    iq_imbal_enb23: default
+    iq_imbal_enb24: default
+    iq_imbal_enb25: default
+    iq_imbal_enb26: default
+    iq_imbal_enb27: default
+    iq_imbal_enb28: default
+    iq_imbal_enb29: default
+    iq_imbal_enb3: default
+    iq_imbal_enb30: default
+    iq_imbal_enb31: default
+    iq_imbal_enb4: default
+    iq_imbal_enb5: default
+    iq_imbal_enb6: default
+    iq_imbal_enb7: default
+    iq_imbal_enb8: default
+    iq_imbal_enb9: default
     lo_export0: 'False'
     lo_export1: 'False'
     lo_export10: 'False'
@@ -542,38 +682,6 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     nchan: '1'
-    norm_gain0: 'False'
-    norm_gain1: 'False'
-    norm_gain10: 'False'
-    norm_gain11: 'False'
-    norm_gain12: 'False'
-    norm_gain13: 'False'
-    norm_gain14: 'False'
-    norm_gain15: 'False'
-    norm_gain16: 'False'
-    norm_gain17: 'False'
-    norm_gain18: 'False'
-    norm_gain19: 'False'
-    norm_gain2: 'False'
-    norm_gain20: 'False'
-    norm_gain21: 'False'
-    norm_gain22: 'False'
-    norm_gain23: 'False'
-    norm_gain24: 'False'
-    norm_gain25: 'False'
-    norm_gain26: 'False'
-    norm_gain27: 'False'
-    norm_gain28: 'False'
-    norm_gain29: 'False'
-    norm_gain3: 'False'
-    norm_gain30: 'False'
-    norm_gain31: 'False'
-    norm_gain4: 'False'
-    norm_gain5: 'False'
-    norm_gain6: 'False'
-    norm_gain7: 'False'
-    norm_gain8: 'False'
-    norm_gain9: 'False'
     num_mboards: '1'
     otw: ''
     rx_agc0: Disabled
@@ -618,6 +726,7 @@ blocks:
     sd_spec6: ''
     sd_spec7: ''
     show_lo_controls: 'False'
+    start_time: '-1.0'
     stream_args: ''
     stream_chans: '[]'
     sync: none
@@ -634,9 +743,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [72, 132.0]
+    coordinate: [40, 156.0]
     rotation: 0
-    state: true
+    state: disabled
 
 connections:
 - [analog_wfm_rcv_pll_0, '0', blocks_multiply_const_vxx_0_0, '0']
@@ -645,6 +754,7 @@ connections:
 - [blocks_multiply_const_vxx_0_0_0, '0', audio_sink_0, '1']
 - [filter_fft_low_pass_filter_0, '0', analog_wfm_rcv_pll_0, '0']
 - [filter_fft_low_pass_filter_0, '0', qtgui_sink_x_0, '0']
+- [soapy_custom_source_0, '0', filter_fft_low_pass_filter_0, '0']
 - [uhd_usrp_source_0, '0', filter_fft_low_pass_filter_0, '0']
 
 metadata:
