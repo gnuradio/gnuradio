@@ -33,7 +33,7 @@ parameters:
     label: 'Center Freq (Hz)'
     category: RF Options
     dtype: real
-    default: freq
+    default: 'freq'
 
   - id: gain
     label: 'RF Gain (0dB - 89dB)'

@@ -127,14 +127,14 @@ parameters:
     label: 'Ch1: Antenna'
     category: RF Options
     dtype: string
-    default: 'TX'
+    default: ''
     hide: ${ 'part' if nchan > 1 else 'all' }
 
   - id: center_freq1
     label: 'Ch1: Center Freq (Hz)'
     category: RF Options
     dtype: real
-    default: 'freq'
+    default: '0'
     hide: ${ 'none' if nchan > 1 else 'all' }
 
   - id: freq_correction1
@@ -148,7 +148,7 @@ parameters:
     label: 'Ch1: Overall Gain Value'
     category: RF Options
     dtype: real
-    default: '10'
+    default: '0'
     hide: ${ 'part' if nchan > 1 else 'all' }
 
   - id: dc_offset1
