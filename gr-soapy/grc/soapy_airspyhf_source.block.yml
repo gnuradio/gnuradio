@@ -20,13 +20,13 @@ parameters:
   - id: samp_rate
     label: Sample Rate
     dtype: float
-    default: samp_rate
+    default: 'samp_rate'
 
   - id: center_freq
     label: 'Center Freq (Hz)'
     category: RF Options
     dtype: real
-    default: freq
+    default: 'freq'
 
   - id: freq_correction
     label: 'Frequency Correction (PPM)'
