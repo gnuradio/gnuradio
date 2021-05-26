@@ -27,6 +27,9 @@ static const char* __doc_gr_fast_atan2f_0 = R"doc()doc";
 static const char* __doc_gr_fast_atan2f_1 = R"doc()doc";
 
 
+static const char* __doc_gr_nyquist_fold = R"doc()doc";
+
+
 static const char* __doc_gr_branchless_clip = R"doc()doc";
 
 

@@ -73,6 +73,18 @@ GR_RUNTIME_API float fast_atan2f(float y, float x);
 
 static inline float fast_atan2f(gr_complex z) { return fast_atan2f(z.imag(), z.real()); }
 
+/*!
+ * \brief Perform *modified* nyquist folding calculation
+ *
+ * The use of this function is best illustated with a small example:
+ * Imagine you want to receive a signal at f = 2.4 GHz, and your converter
+ * runs at f_s = 4 GHz. The frequency that our NCO should run at is therefore
+ * f_nco = f_s / 2 + (f_s/2 - f_c) = 1.6 GHz. Additionally, this function will
+ * compensate the spectral inversion by returning a negative f_nco = -1.6 GHz
+ * when necessary.
+ */
+GR_RUNTIME_API double nyquist_fold(double f, double f_s);
+
 /* This bounds x by +/- clip without a branch */
 static inline float branchless_clip(float x, float clip)
 {

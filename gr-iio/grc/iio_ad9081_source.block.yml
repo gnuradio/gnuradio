@@ -1,0 +1,316 @@
+id: iio_ad9081_source
+label: AD9081 Source
+flags: [ python, throttle ]
+
+parameters:
+- id: uri
+  label: IIO context URI
+  dtype: string
+  default: ''
+
+- id: buffer_size
+  label: Buffer size
+  dtype: int
+  default: 0x8000
+
+- id: filter_file
+  label: Filter Configuration File
+  dtype: file_open
+  default: ""
+  optional: true
+  hide: part
+
+- id: nyquist_zone
+  label: Nyquist Zone
+  dtype: bool
+  default: 'True'
+  options: ['False', 'True']
+  option_labels: ['Even', 'Odd']
+
+- id: ch0_en
+  label: Channel 0
+  dtype: bool
+  default: 'False'
+  options: ['False', 'True']
+  option_labels: ['Disabled', 'Enabled']
+  category: Channels
+  hide: ${( "none" if ch0_en else "part" )}
+
+- id: ch1_en
+  label: Channel 1
+  dtype: bool
+  default: 'False'
+  options: ['False', 'True']
+  option_labels: ['Disabled', 'Enabled']
+  category: Channels
+  hide: ${( "none" if ch1_en else "part" )}
+
+- id: ch2_en
+  label: Channel 2
+  dtype: bool
+  default: 'False'
+  options: ['False', 'True']
+  option_labels: ['Disabled', 'Enabled']
+  category: Channels
+  hide: ${( "none" if ch2_en else "part" )}
+
+- id: ch3_en
+  label: Channel 3
+  dtype: bool
+  default: 'False'
+  options: ['False', 'True']
+  option_labels: ['Disabled', 'Enabled']
+  category: Channels
+  hide: ${( "none" if ch3_en else "part" )}
+
+- id: ch4_en
+  label: Channel 4
+  dtype: bool
+  default: 'False'
+  options: ['False', 'True']
+  option_labels: ['Disabled', 'Enabled']
+  category: Channels
+  hide: ${( "none" if ch4_en else "part" )}
+
+- id: ch5_en
+  label: Channel 5
+  dtype: bool
+  default: 'False'
+  options: ['False', 'True']
+  option_labels: ['Disabled', 'Enabled']
+  category: Channels
+  hide: ${( "none" if ch5_en else "part" )}
+
+- id: ch6_en
+  label: Channel 6
+  dtype: bool
+  default: 'False'
+  options: ['False', 'True']
+  option_labels: ['Disabled', 'Enabled']
+  category: Channels
+  hide: ${( "none" if ch6_en else "part" )}
+
+- id: ch7_en
+  label: Channel 7
+  dtype: bool
+  default: 'False'
+  options: ['False', 'True']
+  option_labels: ['Disabled', 'Enabled']
+  category: Channels
+  hide: ${( "none" if ch7_en else "part" )}
+
+- id: main_freq_0
+  label: "Main NCO 0 Frequency [Hz]"
+  dtype: float
+  default: 1000000000
+  category: Coarse DDC
+
+- id: main_phase_0
+  label: "Main NCO 0 Phase [rad]"
+  dtype: float
+  default: 0
+  category: Coarse DDC
+  hide: part
+
+- id: main_freq_1
+  label: "Main NCO 1 Frequency [Hz]"
+  dtype: float
+  default: 1000000000
+  category: Coarse DDC
+
+- id: main_phase_1
+  label: "Main NCO 1 Phase [rad]"
+  dtype: float
+  default: 0
+  category: Coarse DDC
+  hide: part
+
+- id: main_freq_2
+  label: "Main NCO 2 Frequency [Hz]"
+  dtype: float
+  default: 1000000000
+  category: Coarse DDC
+
+- id: main_phase_2
+  label: "Main NCO 2 Phase [rad]"
+  dtype: float
+  default: 0
+  category: Coarse DDC
+  hide: part
+
+- id: main_freq_3
+  label: "Main NCO 3 Frequency [Hz]"
+  dtype: float
+  default: 1000000000
+  category: Coarse DDC
+
+- id: main_phase_3
+  label: "Main NCO 3 Phase [rad]"
+  dtype: float
+  default: 0
+  category: Coarse DDC
+  hide: part
+
+- id: channel_freq_0
+  label: "Channel NCO 0 Frequency [Hz]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+- id: channel_phase_0
+  label: "Channel NCO 0 Phase [rad]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+- id: channel_freq_1
+  label: "Channel NCO 1 Frequency [Hz]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+- id: channel_phase_1
+  label: "Channel NCO 1 Phase [rad]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+- id: channel_freq_2
+  label: "Channel NCO 2 Frequency [Hz]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+- id: channel_phase_2
+  label: "Channel NCO 2 Phase [rad]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+- id: channel_freq_3
+  label: "Channel NCO 3 Frequency [Hz]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+- id: channel_phase_3
+  label: "Channel NCO 3 Phase [rad]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+- id: channel_freq_4
+  label: "Channel NCO 4 Frequency [Hz]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+- id: channel_phase_4
+  label: "Channel NCO 4 Phase [rad]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+- id: channel_freq_5
+  label: "Channel NCO 5 Frequency [Hz]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+- id: channel_phase_5
+  label: "Channel NCO 5 Phase [rad]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+- id: channel_freq_6
+  label: "Channel NCO 6 Frequency [Hz]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+- id: channel_phase_6
+  label: "Channel NCO 6 Phase [rad]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+- id: channel_freq_7
+  label: "Channel NCO 7 Frequency [Hz]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+- id: channel_phase_7
+  label: "Channel NCO 7 Phase [rad]"
+  dtype: float
+  default: 0
+  category: Fine DDC
+  hide: part
+
+
+outputs:
+- domain: stream
+  dtype: complex
+  multiplicity: ${ sum([eval(f"ch{i}_en") for i in range(8)]) }
+
+asserts:
+- ${( sum([eval(f"ch{i}_en") for i in range(8)]) > 0 )}
+
+templates:
+    imports: |-
+      from gnuradio import iio
+    make: |-
+      iio.ad9081_source(${uri}, [${ch0_en}, ${ch1_en}, ${ch2_en}, ${ch3_en}, ${ch4_en}, ${ch5_en}, ${ch6_en}, ${ch7_en}], ${buffer_size})
+      for i,f,p in zip(range(4), [${main_freq_0}, ${main_freq_1}, ${main_freq_2}, ${main_freq_3}], [${main_phase_0}, ${main_phase_1}, ${main_phase_2}, ${main_phase_3}]):
+          self.${id}.set_main_nco_freq(i, f)
+          self.${id}.set_main_nco_phase(i, p)
+      for i,f,p in zip(range(8), [${channel_freq_0}, ${channel_freq_1}, ${channel_freq_2}, ${channel_freq_3}, ${channel_freq_4}, ${channel_freq_5}, ${channel_freq_6}, ${channel_freq_7}], [${channel_phase_0}, ${channel_phase_1}, ${channel_phase_2}, ${channel_phase_3}, ${channel_phase_4}, ${channel_phase_5}, ${channel_phase_6}, ${channel_phase_7}]):
+          self.${id}.set_channel_nco_freq(i, f)
+          self.${id}.set_channel_nco_phase(i, p)
+      self.${id}.set_filter_source_file(${filter_file})
+      self.${id}.set_nyquist_zone(${nyquist_zone})
+    callbacks:
+      - set_main_nco_freq(0, ${main_freq_0})
+      - set_main_nco_phase(0, ${main_phase_0})
+      - set_main_nco_freq(1, ${main_freq_1})
+      - set_main_nco_phase(1, ${main_phase_1})
+      - set_main_nco_freq(2, ${main_freq_2})
+      - set_main_nco_phase(2, ${main_phase_2})
+      - set_main_nco_freq(3, ${main_freq_3})
+      - set_main_nco_phase(3, ${main_phase_3})
+      - set_channel_nco_freq(0, ${channel_freq_0})
+      - set_channel_nco_phase(0, ${channel_phase_0})
+      - set_channel_nco_freq(1, ${channel_freq_1})
+      - set_channel_nco_phase(1, ${channel_phase_1})
+      - set_channel_nco_freq(2, ${channel_freq_2})
+      - set_channel_nco_phase(2, ${channel_phase_2})
+      - set_channel_nco_freq(3, ${channel_freq_3})
+      - set_channel_nco_phase(3, ${channel_phase_3})
+      - set_channel_nco_freq(4, ${channel_freq_4})
+      - set_channel_nco_phase(4, ${channel_phase_4})
+      - set_channel_nco_freq(5, ${channel_freq_5})
+      - set_channel_nco_phase(5, ${channel_phase_5})
+      - set_channel_nco_freq(6, ${channel_freq_6})
+      - set_channel_nco_phase(6, ${channel_phase_6})
+      - set_channel_nco_freq(7, ${channel_freq_7})
+      - set_channel_nco_phase(7, ${channel_phase_7})
+      - set_nyquist_zone(${nyquist_zone})
+      - set_filter_source(${filter_file})
+
+file_format: 1

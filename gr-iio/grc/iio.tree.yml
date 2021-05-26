@@ -10,3 +10,6 @@
   - 'PlutoSDR':
     - iio_pluto_source
     - iio_pluto_sink
+  - 'AD9081':
+    - iio_ad9081_source
+    - iio_ad9081_sink

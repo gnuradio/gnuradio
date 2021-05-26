@@ -10,6 +10,9 @@
 # Setup library
 ########################################################################
 add_library(gnuradio-iio
+  ad9081_source_impl.cc
+  ad9081_sink_impl.cc
+  ad9081_common.cc
   attr_sink_impl.cc
   attr_source_impl.cc
   attr_updater_impl.cc

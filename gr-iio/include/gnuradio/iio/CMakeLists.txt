@@ -18,6 +18,8 @@ install(FILES
   device_source.h
   dds_control.h
   iio_types.h
+  ad9081_source.h
+  ad9081_sink.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/iio
 )
 if(libad9361_SUFFICIENT)

@@ -36,6 +36,8 @@ typedef std::vector<ctxInfo>::iterator ctx_it;
 
 class device_source_impl : public device_source
 {
+    friend class ad9081_source_impl;
+
 private:
     void channel_read(const struct iio_channel* chn, void* dst, size_t len);
 

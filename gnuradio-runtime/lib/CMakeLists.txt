@@ -117,6 +117,7 @@ target_sources(gnuradio-runtime PRIVATE
 target_include_directories(gnuradio-runtime PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/math)
 target_sources(gnuradio-runtime PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/math/fast_atan2f.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/math/nyquist_fold.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/math/fxpt.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/math/random.cc
   ${MATH_SINE_TABLE_HEADER}
