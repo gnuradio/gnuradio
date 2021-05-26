@@ -134,7 +134,7 @@ class Platform(Element):
         # converter.run()
         # logging.info('XML converter done.')
 
-        with Cache(Constants.CACHE_FILE) as cache:
+        with Cache(Constants.CACHE_FILE, version = self.config.version) as cache:
             for file_path in self._iter_files_in_block_path(path):
 
                 if file_path.endswith('.block.yml'):
