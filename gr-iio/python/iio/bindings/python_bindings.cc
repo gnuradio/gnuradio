@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2020,2021 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -21,6 +21,9 @@ void bind_device_sink(py::module& m);
 void bind_attr_sink(py::module& m);
 void bind_dds_control(py::module& m);
 void bind_attr_updater(py::module& m);
+void bind_ad9081_source(py::module& m);
+void bind_ad9081_sink(py::module& m);
+void bind_ad9081_common(py::module& m);
 #ifdef GR_IIO_LIBAD9361
 // void bind_fmcomms2_sink(py::module& m);
 // void bind_fmcomms2_sink_f32c(py::module& m);
@@ -60,6 +63,9 @@ PYBIND11_MODULE(iio_python, m)
     bind_attr_sink(m);
     bind_dds_control(m);
     bind_attr_updater(m);
+    bind_ad9081_source(m);
+    bind_ad9081_sink(m);
+    bind_ad9081_common(m);
 #ifdef GR_IIO_LIBAD9361
     // bind_fmcomms2_sink(m);
     // bind_fmcomms2_sink_f32c(m);

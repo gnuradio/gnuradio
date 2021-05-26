@@ -24,5 +24,8 @@ install(FILES
   iio_types.h
   pluto_sink.h
   pluto_source.h
+  ad9081_source.h
+  ad9081_sink.h
+  ad9081_common.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/iio
 )
