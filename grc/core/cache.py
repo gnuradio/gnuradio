@@ -4,8 +4,6 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
 
-
-from io import open
 import json
 import logging
 import os
