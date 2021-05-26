@@ -71,12 +71,3 @@ class Cache(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.save()
-
-
-def byteify(data):
-    if isinstance(data, dict):
-        return {byteify(key): byteify(value) for key, value in data.items()}
-    elif isinstance(data, list):
-        return [byteify(element) for element in data]
-    else:
-        return data
