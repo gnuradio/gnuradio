@@ -308,11 +308,8 @@ class FlowGraph(Element):
         """
         if block_id == 'options':
             return self.options_block
-        try:
-            block = self.parent_platform.make_block(self, block_id, **kwargs)
-            self.blocks.append(block)
-        except KeyError:
-            block = None
+        block = self.parent_platform.make_block(self, block_id, **kwargs)
+        self.blocks.append(block)
         return block
 
     def connect(self, porta, portb):
