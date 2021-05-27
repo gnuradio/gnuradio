@@ -159,6 +159,9 @@ class FlowGraph(CoreFlowgraph, Drawable):
         )
         # get the new block
         block = self.new_block(key)
+        if block is None:
+            Messages.send('>>> No block found with key "' + key + '".\n')
+            return None
         block.coordinate = coor
         block.params['id'].set_value(id)
         Actions.ELEMENT_CREATE()
