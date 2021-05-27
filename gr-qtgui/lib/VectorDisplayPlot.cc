@@ -369,9 +369,10 @@ void VectorDisplayPlot::clearMinData()
 
 void VectorDisplayPlot::_autoScale(double bottom, double top)
 {
-    // Auto scale the y-axis with a margin of 10 dB on either side.
-    d_ymin = bottom - 10;
-    d_ymax = top + 10;
+    // Auto scale the y-axis with a margin of 1% on either side
+    double margin = (top - bottom) / 100;
+    d_ymin = bottom - margin;
+    d_ymax = top + margin;
     setYaxis(d_ymin, d_ymax);
 }
 
