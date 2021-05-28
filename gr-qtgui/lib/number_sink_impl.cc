@@ -67,13 +67,7 @@ number_sink_impl::number_sink_impl(
     initialize();
 }
 
-number_sink_impl::~number_sink_impl()
-{
-    // if(!d_main_gui->isClosed())
-    //  d_main_gui->close();
-
-    delete d_argv;
-}
+number_sink_impl::~number_sink_impl() {}
 
 bool number_sink_impl::check_topology(int ninputs, int noutputs)
 {
