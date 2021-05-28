@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pluto_sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(72f9b82baa98ee0a683ce764485d3038)                     */
+/* BINDTOOL_HEADER_FILE_HASH(aa52205d9bbe164e8713a0769dfd68e7)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -45,5 +45,7 @@ void bind_pluto_sink(py::module& m)
         .def("set_frequency", &pluto_sink::set_frequency, py::arg("longfrequency"))
         .def("set_samplerate", &pluto_sink::set_samplerate, py::arg("samplerate"))
         .def("set_gain", &pluto_sink::set_attenuation, py::arg("attenuation_value"))
-        .def("set_filter_params", &pluto_sink::set_filter_params);
+        .def("set_filter_params", &pluto_sink::set_filter_params)
+        .def(
+            "set_len_tag_key", &pluto_sink::set_len_tag_key, py::arg("len_tag_key") = "");
 }

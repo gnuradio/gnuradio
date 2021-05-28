@@ -36,6 +36,10 @@ pluto_sink_impl::pluto_sink_impl(fmcomms2_sink::sptr block)
 {
 }
 
+void pluto_sink_impl::set_len_tag_key(const std::string& len_tag_key)
+{
+    fmcomms2_sink_f32c::set_len_tag_key(len_tag_key);
+}
 void pluto_sink_impl::set_frequency(unsigned long long frequency)
 {
     fmcomms2_sink_f32c::set_frequency(frequency);

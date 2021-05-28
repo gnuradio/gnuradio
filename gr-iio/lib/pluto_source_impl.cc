@@ -73,6 +73,10 @@ pluto_source_impl::pluto_source_impl(fmcomms2_source::sptr block)
 {
 }
 
+void pluto_source_impl::set_len_tag_key(const std::string& len_tag_key)
+{
+    fmcomms2_source_f32c::set_len_tag_key(len_tag_key);
+}
 void pluto_source_impl::set_frequency(unsigned long long frequency)
 {
     fmcomms2_source_f32c::set_frequency(frequency);

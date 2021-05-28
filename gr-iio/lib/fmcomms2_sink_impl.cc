@@ -101,6 +101,11 @@ fmcomms2_sink_impl::~fmcomms2_sink_impl()
     underflow_thd.join();
 }
 
+void fmcomms2_sink_impl::set_len_tag_key(const std::string& str)
+{
+    device_sink_impl::set_len_tag_key(str);
+}
+
 void fmcomms2_sink_impl::check_underflow(void)
 {
     uint32_t status;

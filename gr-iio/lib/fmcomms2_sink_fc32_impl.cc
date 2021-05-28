@@ -58,6 +58,11 @@ fmcomms2_sink_f32c::sptr fmcomms2_sink_f32c::make(const std::string& uri,
         (ch_en.size() > 0 && ch_en[0]), (ch_en.size() > 1 && ch_en[1]), block));
 }
 
+
+void fmcomms2_sink_f32c::set_len_tag_key(const std::string& len_tag_key)
+{
+    fmcomms2_block->set_len_tag_key(len_tag_key);
+}
 void fmcomms2_sink_f32c::set_bandwidth(unsigned long bandwidth)
 {
     fmcomms2_block->set_bandwidth(bandwidth);

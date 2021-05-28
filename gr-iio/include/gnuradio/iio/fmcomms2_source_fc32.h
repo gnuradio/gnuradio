@@ -38,6 +38,8 @@ public:
     static sptr make(const std::string& uri,
                      const std::vector<bool>& ch_en,
                      unsigned long buffer_size);
+
+    virtual void set_len_tag_key(const std::string& len_tag_key);
     virtual void set_frequency(unsigned long long frequency);
     virtual void set_samplerate(unsigned long samplerate);
     virtual void set_gain_mode(size_t chan, const std::string& mode);

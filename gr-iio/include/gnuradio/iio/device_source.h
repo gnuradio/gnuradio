@@ -67,7 +67,17 @@ public:
                           unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
                           unsigned int decimation = 0);
 
+    /*!
+     * \brief Key of the packet length tag. If empty no tag will be emitted
+     */
+    virtual void set_len_tag_key(const std::string& len_tag_key) = 0;
+
+    /*!
+     * \brief Number of samples to be put into each IIO
+     *        buffered passed to hardware.
+     */
     virtual void set_buffer_size(unsigned int buffer_size) = 0;
+
     virtual void set_timeout_ms(unsigned long timeout) = 0;
 };
 

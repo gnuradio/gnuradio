@@ -3,49 +3,57 @@ label: IIO Device Source
 flags: [ python ]
 
 parameters:
--   id: uri
+  - id: uri
     label: IIO context URI
     dtype: string
     default: 'local:'
 
--   id: device
+  - id: device
     label: Device Name/ID
     dtype: string
 
--   id: device_phy
+  - id: device_phy
     label: PHY Device Name/ID
     dtype: string
 
--   id: channels
+  - id: channels
     label: Channels
     dtype: raw
     default: []
 
--   id: buffer_size
+  - id: buffer_size
     label: Buffer size
     dtype: int
     default: 0x8000
 
--   id: decimation
+  - id: decimation
     label: Decimation
     dtype: int
     default: 1
 
--   id: params
+  - id: params
     label: Parameters
     dtype: raw
     default: []
 
+  - id: len_tag_key
+    label: Packet Length Tag
+    dtype: string
+    default: packet_len
+    hide: part
+
 outputs:
--   domain: stream
+  - domain: stream
     dtype: short
     multiplicity: ${ len(channels) }
--   domain: message
+  - domain: message
     id: msg
     optional: true
 
 templates:
-    imports: from gnuradio import iio
-    make: iio.device_source(${uri}, ${device}, ${channels}, ${device_phy}, ${params}, ${buffer_size}, ${decimation} - 1)
+  imports: from gnuradio import iio
+  make: |
+    iio.device_source(${uri}, ${device}, ${channels}, ${device_phy}, ${params}, ${buffer_size}, ${decimation} - 1)
+    self.${id}.set_len_tag_key(${len_tag_key})
 
 file_format: 1

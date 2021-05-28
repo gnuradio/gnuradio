@@ -163,6 +163,11 @@ void fmcomms2_source_impl::update_dependent_params()
     }
 }
 
+void fmcomms2_source_impl::set_len_tag_key(const std::string& len_tag_key)
+{
+    device_source_impl::set_len_tag_key(len_tag_key);
+}
+
 void fmcomms2_source_impl::set_frequency(unsigned long long frequency)
 {
     std::vector<std::string> params;

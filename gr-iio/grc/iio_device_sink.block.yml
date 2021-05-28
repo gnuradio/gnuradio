@@ -3,56 +3,71 @@ label: IIO Device Sink
 flags: [ python ]
 
 parameters:
--   id: uri
+  - id: uri
     label: IIO context URI
     dtype: string
     default: 'local:'
 
--   id: device
+  - id: device
     label: Device Name/ID
     dtype: string
 
--   id: device_phy
+  - id: device_phy
     label: PHY Device Name/ID
     dtype: string
 
--   id: channels
+  - id: channels
     label: Channels
     dtype: raw
     default: []
 
--   id: buffer_size
+  - id: buffer_size
     label: Buffer size
     dtype: int
     default: 0x8000
 
--   id: interpolation
+  - id: interpolation
     label: Interpolation
     dtype: int
     default: 1
 
--   id: cyclic
+  - id: cyclic
     label: Cyclic
     dtype: bool
     default: 'False'
     options: ['False', 'True']
     option_labels: ['False', 'True']
 
--   id: params
+  - id: params
     label: Parameters
     dtype: raw
     default: []
 
+  - id: tagged_input
+    label: Tagged Input
+    dtype: bool
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+    hide: part
+
+  - id: len_tag_key
+    label: Packet Length Tag
+    dtype: string
+    hide: ${( 'part' if tagged_input else 'all' )}
+
 inputs:
--   domain: stream
+  - domain: stream
     dtype: short
     multiplicity: ${ len(channels) }
 
 asserts:
-- ${ len(channels) > 0 }
+  - ${( len(channels) > 0 )}
 
 templates:
-    imports: from gnuradio import iio
-    make: iio.device_sink(${uri}, ${device}, ${channels}, ${device_phy}, ${params}, ${buffer_size}, ${interpolation} - 1, ${cyclic})
+  imports: from gnuradio import iio
+  make: |
+    iio.device_sink(${uri}, ${device}, ${channels}, ${device_phy}, ${params}, ${buffer_size}, ${interpolation} - 1, ${cyclic})
+    self.${id}.set_len_tag_key(${len_tag_key})
 
 file_format: 1
