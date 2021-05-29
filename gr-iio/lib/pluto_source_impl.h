@@ -23,9 +23,6 @@ namespace iio {
 
 class pluto_source_impl : public pluto_source, public fmcomms2_source_f32c
 {
-private:
-    // void update_rate(unsigned long samplerate)
-
 public:
     explicit pluto_source_impl(fmcomms2_source::sptr block);
 
