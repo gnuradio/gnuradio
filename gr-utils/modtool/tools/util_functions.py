@@ -117,6 +117,20 @@ def get_modname():
     except AttributeError:
         return None
 
+def get_block_names(pattern, modname):
+    """ Return a list of block names belonging to modname that matches the regex pattern. """
+    blocknames = []
+    reg = re.compile(pattern)
+    fname_re = re.compile(r'[a-zA-Z]\w+\.\w{1,5}$')
+    with open(f'include/{modname}/CMakeLists.txt', 'r') as f:
+        for line in f.read().splitlines():
+            if len(line.strip()) == 0 or line.strip()[0] == '#':
+                continue
+            for word in re.split('[ /)(\t\n\r\f\v]', line):
+                if fname_re.match(word) and reg.search(word):
+                    blocknames.append(word.strip('.h'))
+    return blocknames
+
 def is_number(s):
     """ Return True if the string s contains a number. """
     try:
