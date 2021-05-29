@@ -22,7 +22,7 @@ except ImportError:
 else:
     have_bindtool = True
 
-from ..tools import ParserCCBlock, CMakeFileEditor, ask_yes_no
+from ..tools import ParserCCBlock, CMakeFileEditor, ask_yes_no, get_block_names
 from .base import ModTool, ModToolException
 
 from gnuradio import gr
@@ -58,9 +58,18 @@ class ModToolGenBindings(ModTool):
 
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", category=DeprecationWarning)
-            file_to_process = os.path.join(self.dir, self.info['includedir'], self.info['blockname'] + '.h')
-
+            blocknames_to_process = []
+            if self.info['blockname']:
+                # A complete block name was given
+                blocknames_to_process.append(self.info['blockname'])
+            elif self.info['pattern']:
+                # A regex resembling one or several blocks were given
+                blocknames_to_process = get_block_names(self.info['pattern'], self.info['modname'])
+            else:
+                raise ModToolException("No block name or regex was specified!")
             bg = BindingGenerator(prefix=gr.prefix(), namespace=[
                                   'gr', self.info['modname']], prefix_include_root=self.info['modname'], output_dir=os.path.join(self.dir, 'python'),
                                    define_symbols=self.info['define_symbols'], addl_includes=self.info['addl_includes'])
-            bg.gen_file_binding(file_to_process)
+            files_to_process = [os.path.join(self.dir, self.info['includedir'], f'{blockname}.h') for blockname in blocknames_to_process]
+            for file_to_process in files_to_process:
+                bg.gen_file_binding(file_to_process)
