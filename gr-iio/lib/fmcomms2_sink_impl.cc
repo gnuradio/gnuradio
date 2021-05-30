@@ -165,7 +165,7 @@ void fmcomms2_sink_impl::check_underflow(void)
 void fmcomms2_sink_impl::set_bandwidth(unsigned long bandwidth)
 {
     std::vector<std::string> params;
-    params.push_back("out_voltage_rf_bandwidth=" + boost::to_string(bandwidth));
+    params.push_back("out_voltage_rf_bandwidth=" + std::to_string(bandwidth));
     device_source_impl::set_params(this->phy, params);
     d_bandwidth = bandwidth;
 }
@@ -173,14 +173,14 @@ void fmcomms2_sink_impl::set_bandwidth(unsigned long bandwidth)
 void fmcomms2_sink_impl::set_rf_port_select(const std::string& rf_port_select)
 {
     std::vector<std::string> params;
-    params.push_back("out_voltage0_rf_port_select=" + boost::to_string(rf_port_select));
+    params.push_back("out_voltage0_rf_port_select=" + rf_port_select);
     device_source_impl::set_params(this->phy, params);
     d_rf_port_select = rf_port_select;
 }
 void fmcomms2_sink_impl::set_frequency(unsigned long long frequency)
 {
     std::vector<std::string> params;
-    params.push_back("out_altvoltage1_TX_LO_frequency=" + boost::to_string(frequency));
+    params.push_back("out_altvoltage1_TX_LO_frequency=" + std::to_string(frequency));
     device_source_impl::set_params(this->phy, params);
     d_frequency = frequency;
 }
