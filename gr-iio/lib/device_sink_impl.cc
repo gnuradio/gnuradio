@@ -138,7 +138,7 @@ device_sink_impl::device_sink_impl(struct iio_context* ctx,
 
     buf = iio_device_create_buffer(dev, buffer_size, cyclic);
     if (!buf)
-        throw std::runtime_error("Unable to create buffer: " + boost::to_string(-errno));
+        throw std::runtime_error("Unable to create buffer: " + std::to_string(-errno));
 }
 
 /*

@@ -304,25 +304,25 @@ void fmcomms5_source_impl::set_params(struct iio_device* phy_device,
     std::string gain2_str(gain2);
     int ret;
 
-    params.push_back("out_altvoltage0_RX_LO_frequency=" + boost::to_string(frequency));
-    params.push_back("in_voltage_quadrature_tracking_en=" + boost::to_string(quadrature));
-    params.push_back("in_voltage_rf_dc_offset_tracking_en=" + boost::to_string(rfdc));
-    params.push_back("in_voltage_bb_dc_offset_tracking_en=" + boost::to_string(bbdc));
-    params.push_back("in_voltage0_gain_control_mode=" + boost::to_string(gain1));
+    params.push_back("out_altvoltage0_RX_LO_frequency=" + std::to_string(frequency));
+    params.push_back("in_voltage_quadrature_tracking_en=" + std::to_string(quadrature));
+    params.push_back("in_voltage_rf_dc_offset_tracking_en=" + std::to_string(rfdc));
+    params.push_back("in_voltage_bb_dc_offset_tracking_en=" + std::to_string(bbdc));
+    params.push_back("in_voltage0_gain_control_mode=" + std::to_string(gain1));
     if (gain1_str.compare("manual") == 0)
-        params.push_back("in_voltage0_hardwaregain=" + boost::to_string(gain1_value));
-    params.push_back("in_voltage1_gain_control_mode=" + boost::to_string(gain2));
+        params.push_back("in_voltage0_hardwaregain=" + std::to_string(gain1_value));
+    params.push_back("in_voltage1_gain_control_mode=" + std::to_string(gain2));
     if (gain2_str.compare("manual") == 0)
-        params.push_back("in_voltage1_hardwaregain=" + boost::to_string(gain2_value));
-    params.push_back("in_voltage0_rf_port_select=" + boost::to_string(port_select));
+        params.push_back("in_voltage1_hardwaregain=" + std::to_string(gain2_value));
+    params.push_back("in_voltage0_rf_port_select=" + std::to_string(port_select));
 
     // Set rate configuration
     std::string filt_config(filter_source);
     if (filt_config.compare("Off") == 0) {
-        params.push_back("in_voltage_sampling_frequency=" + boost::to_string(samplerate));
-        params.push_back("in_voltage_rf_bandwidth=" + boost::to_string(bandwidth));
+        params.push_back("in_voltage_sampling_frequency=" + std::to_string(samplerate));
+        params.push_back("in_voltage_rf_bandwidth=" + std::to_string(bandwidth));
     } else if (filt_config.compare("Auto") == 0) {
-        params.push_back("in_voltage_rf_bandwidth=" + boost::to_string(bandwidth));
+        params.push_back("in_voltage_rf_bandwidth=" + std::to_string(bandwidth));
         ret = ad9361_set_bb_rate(phy_device, samplerate);
         if (ret)
             throw std::runtime_error("Unable to set BB rate");
