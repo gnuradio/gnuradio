@@ -22,7 +22,7 @@ target_include_directories(gnuradio-iio
   $<INSTALL_INTERFACE:include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
   )
-
+set(iio_deps "libiio")
 target_link_libraries(gnuradio-iio PUBLIC
   gnuradio-runtime
   libiio::iio
@@ -42,6 +42,7 @@ if(libad9361_FOUND)
   )
   target_link_libraries(gnuradio-iio PUBLIC libad9361::ad9361)
   target_compile_definitions(gnuradio-iio PUBLIC -DGR_IIO_LIBAD9361)
+  list(APPEND iio_deps "libad9361")
 endif(libad9361_FOUND)
 
 #Add Windows DLL resource file if using MSVC
@@ -59,5 +60,5 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-  GR_LIBRARY_FOO(gnuradio-iio IIO)
+  GR_LIBRARY_FOO(gnuradio-iio ${iio_deps})
 endif()
