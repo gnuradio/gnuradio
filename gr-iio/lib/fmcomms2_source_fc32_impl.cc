@@ -48,8 +48,8 @@ fmcomms2_source_f32c::fmcomms2_source_f32c(bool rx1_en,
 }
 
 fmcomms2_source_f32c::sptr fmcomms2_source_f32c::make(const std::string& uri,
-                                const std::vector<bool>& ch_en,
-                                unsigned long buffer_size)
+                                                      const std::vector<bool>& ch_en,
+                                                      unsigned long buffer_size)
 {
     fmcomms2_source::sptr block = fmcomms2_source::make(uri, ch_en, buffer_size);
 
