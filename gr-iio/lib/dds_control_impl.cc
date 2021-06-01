@@ -11,7 +11,7 @@
 #include "config.h"
 #endif
 
-#include "dds_control.h"
+#include "dds_control_impl.h"
 #include <gnuradio/io_signature.h>
 
 #include <cstdio>
