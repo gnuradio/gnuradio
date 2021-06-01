@@ -13,7 +13,7 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(fmcomms2_sink.h)                                           */
+/* BINDTOOL_HEADER_FILE(fmcomms2_sink_fc32.h)                                      */
 /* BINDTOOL_HEADER_FILE_HASH(9f2679554149aa23caf1ccb4b0ddd02c)                     */
 /***********************************************************************************/
 
@@ -23,7 +23,7 @@
 
 namespace py = pybind11;
 
-#include <gnuradio/iio/fmcomms2_sink.h>
+#include <gnuradio/iio/fmcomms2_sink_fc32.h>
 // pydoc.h is automatically generated in the build directory
 #include <fmcomms2_sink_f32c_pydoc.h>
 

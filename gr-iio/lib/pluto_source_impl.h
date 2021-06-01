@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-#include <gnuradio/iio/fmcomms2_source.h>
+#include <gnuradio/iio/fmcomms2_source_fc32.h>
 #include <gnuradio/iio/pluto_source.h>
 
 #include "device_source_impl.h"
