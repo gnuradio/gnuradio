@@ -11,7 +11,7 @@
 #define INCLUDED_IIO_PLUTO_SINK_IMPL_H
 
 #include "device_sink_impl.h"
-#include <gnuradio/iio/fmcomms2_sink.h>
+#include <gnuradio/iio/fmcomms2_sink_fc32.h>
 #include <gnuradio/iio/pluto_sink.h>
 
 namespace gr {

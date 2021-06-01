@@ -13,8 +13,6 @@
 
 #include "device_source_impl.h"
 #include "fmcomms2_sink_impl.h"
-#include <gnuradio/blocks/complex_to_float.h>
-#include <gnuradio/blocks/float_to_short.h>
 #include <gnuradio/io_signature.h>
 #include <ad9361.h>
 
@@ -28,36 +26,8 @@
 #define DECINT_RATIO 8
 #define OVERFLOW_CHECK_PERIOD_MS 1000
 
-using namespace gr::blocks;
-
 namespace gr {
 namespace iio {
-
-fmcomms2_sink_f32c::fmcomms2_sink_f32c(bool tx1_en,
-                                       bool tx2_en,
-                                       fmcomms2_sink::sptr sink_block)
-    : hier_block2("fmcomms2_sink_f32c",
-                  io_signature::make((int)tx1_en + (int)tx2_en,
-                                     (int)tx1_en + (int)tx2_en,
-                                     sizeof(gr_complex)),
-                  io_signature::make(0, 0, 0)),
-      fmcomms2_block(sink_block)
-{
-    basic_block_sptr hier = shared_from_this();
-    unsigned int num_streams = (int)tx1_en + (int)tx2_en;
-
-    for (unsigned int i = 0; i < num_streams; i++) {
-        float_to_short::sptr f2s1 = float_to_short::make(1, 32768.0);
-        float_to_short::sptr f2s2 = float_to_short::make(1, 32768.0);
-        complex_to_float::sptr c2f = complex_to_float::make();
-
-        connect(hier, i, c2f, 0);
-        connect(c2f, 0, f2s1, 0);
-        connect(c2f, 1, f2s2, 0);
-        connect(f2s1, 0, sink_block, i * 2);
-        connect(f2s2, 0, sink_block, i * 2 + 1);
-    }
-}
 
 fmcomms2_sink::sptr fmcomms2_sink::make(const std::string& uri,
                                         const std::vector<bool>& ch_en,
