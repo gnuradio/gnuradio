@@ -12,7 +12,7 @@ add_library(gnuradio-iio
   attr_sink_impl.cc
   attr_source_impl.cc
   attr_updater_impl.cc
-  dds_control.cc
+  dds_control_impl.cc
   device_sink_impl.cc
   device_source_impl.cc
 )
