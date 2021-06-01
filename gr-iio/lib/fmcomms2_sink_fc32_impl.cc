@@ -48,9 +48,9 @@ fmcomms2_sink_f32c::fmcomms2_sink_f32c(bool tx1_en,
 }
 
 fmcomms2_sink_f32c::sptr fmcomms2_sink_f32c::make(const std::string& uri,
-                              const std::vector<bool>& ch_en,
-                              unsigned long buffer_size,
-                              bool cyclic)
+                                                  const std::vector<bool>& ch_en,
+                                                  unsigned long buffer_size,
+                                                  bool cyclic)
 {
     fmcomms2_sink::sptr block = fmcomms2_sink::make(uri, ch_en, buffer_size, cyclic);
 

@@ -13,8 +13,8 @@
 
 #include <gnuradio/hier_block2.h>
 #include <gnuradio/iio/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/iio/fmcomms2_source.h>
+#include <gnuradio/sync_block.h>
 
 #include "device_source.h"
 
@@ -49,6 +49,7 @@ public:
                                    const std::string& filter_filename = "",
                                    float fpass = 0.0,
                                    float fstop = 0.0);
+
 private:
     fmcomms2_source::sptr fmcomms2_block;
 
