@@ -13,8 +13,8 @@
 
 #include <gnuradio/hier_block2.h>
 #include <gnuradio/iio/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/iio/fmcomms2_sink.h>
+#include <gnuradio/sync_block.h>
 
 #include "device_sink.h"
 
