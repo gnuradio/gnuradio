@@ -67,7 +67,6 @@ blocks:
     channel: voltage0
     device: ad9361-phy
     output: 'False'
-    required_enable: 'False'
     uri: uri
   states:
     coordinate: [920, 202]
@@ -82,7 +81,6 @@ blocks:
     channel: voltage0
     device: ad9361-phy
     output: 'False'
-    required_enable: 'False'
     samples_per_update: '1024'
     type: '1'
     update_interval_ms: '1'
@@ -100,7 +98,6 @@ blocks:
     channel: voltage0
     device: ad9361-phy
     output: 'False'
-    required_enable: 'False'
     samples_per_update: '1024'
     type: '1'
     update_interval_ms: '1'

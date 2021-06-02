@@ -45,13 +45,6 @@ parameters:
     default: int("0x123",0)
     hide: ${ ('none' if attr_type == '3' else 'all') }
 
--   id: required_enable
-    label: Required Enable
-    dtype: bool
-    default: False
-    options: ['False', 'True']
-    hide: ${ ('part' if (attr_type == '3') else 'all') }
-
 -   id: type
     label: Data Type
     dtype: enum
@@ -78,7 +71,7 @@ outputs:
 
 templates:
     imports: from gnuradio import iio
-    make: iio.attr_source(${uri}, ${device}, ${channel}, ${attribute}, ${update_interval_ms}, ${samples_per_update}, ${type}, ${attr_type}, ${output}, ${address}, ${required_enable})
+    make: iio.attr_source(${uri}, ${device}, ${channel}, ${attribute}, ${update_interval_ms}, ${samples_per_update}, ${type}, ${attr_type}, ${output}, ${address})
 
 documentation: https://wiki.analog.com/resources/tools-software/linux-software/gnuradio
 

@@ -28,7 +28,6 @@ private:
     std::string uri;
     int type;
     bool output;
-    bool required_enable;
 
 protected:
     struct iio_context* ctx;
@@ -40,8 +39,7 @@ public:
                    const std::string& device,
                    const std::string& channel,
                    int type,
-                   bool output,
-                   bool required_enable);
+                   bool output);
     ~attr_sink_impl();
 
     void write_attribute(pmt::pmt_t pdu);

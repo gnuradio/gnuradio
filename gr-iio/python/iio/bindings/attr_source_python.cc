@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(attr_source.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(7750ad16326387730e3d6b2e08657fe3)                     */
+/* BINDTOOL_HEADER_FILE_HASH(c0d8bf09addaac93b6e256b264107907)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -50,7 +50,6 @@ void bind_attr_source(py::module& m)
              py::arg("attr_type"),
              py::arg("output"),
              py::arg("address"),
-             py::arg("required_enable"),
              D(attr_source, make))
 
         ;

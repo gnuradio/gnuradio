@@ -33,7 +33,6 @@ private:
     bool output;
     int ret;
     uint32_t address;
-    bool required_enable;
 
 protected:
     struct iio_context* ctx;
@@ -50,8 +49,7 @@ public:
                      int data_type,
                      int attr_type,
                      bool output,
-                     uint32_t address,
-                     bool required_enable);
+                     uint32_t address);
     ~attr_source_impl();
 
     // Where all the action really happens
