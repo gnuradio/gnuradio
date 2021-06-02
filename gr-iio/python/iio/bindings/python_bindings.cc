@@ -14,6 +14,7 @@
 
 namespace py = pybind11;
 
+void bind_iio_types(py::module& m);
 void bind_device_source(py::module& m);
 void bind_attr_source(py::module& m);
 void bind_device_sink(py::module& m);
@@ -52,6 +53,7 @@ PYBIND11_MODULE(iio_python, m)
     // Allow access to base block methods
     py::module::import("gnuradio.gr");
 
+    bind_iio_types(m);
     bind_device_source(m);
     bind_attr_source(m);
     bind_device_sink(m);

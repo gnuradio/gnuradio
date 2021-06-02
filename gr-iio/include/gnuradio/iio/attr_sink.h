@@ -13,6 +13,7 @@
 
 #include <gnuradio/block.h>
 #include <gnuradio/iio/api.h>
+#include <gnuradio/iio/iio_types.h>
 
 namespace gr {
 namespace iio {
@@ -50,7 +51,7 @@ public:
     static sptr make(const std::string& uri,
                      const std::string& device,
                      const std::string& channel,
-                     int type,
+                     attr_type_t type,
                      bool output);
 };
 

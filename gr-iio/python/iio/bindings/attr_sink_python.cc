@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(attr_sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(b90e35f4bd70ab60f0b97fb7365cc184)                     */
+/* BINDTOOL_HEADER_FILE_HASH(af10d6bf9323d8daebc375088593bf10)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
