@@ -12,6 +12,7 @@
 #define INCLUDED_IIO_ATTR_SOURCE_H
 
 #include <gnuradio/iio/api.h>
+#include <gnuradio/iio/iio_types.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
@@ -42,14 +43,14 @@ public:
      *        attribute reads
      * \param samples_per_update  Integer number of samples to collect before
      *        block returns
-     * \param data_type  Integer which selects what data type to output for
+     * \param data_type  Enum which selects what data type to output for
      *        received data:
      *        0: double
      *        1: float
      *        2: long long
      *        3: int
      *        4: uint8
-     * \param attr_type  Integer determining attribute type:
+     * \param attr_type  Enum determining attribute type:
      *        0: Channel attribute
      *        1: Device attribute
      *        2: Device debug attribute
@@ -62,8 +63,8 @@ public:
                      const std::string& attribute,
                      int update_interval_ms,
                      int samples_per_update,
-                     int data_type,
-                     int attr_type,
+                     data_type_t data_type,
+                     attr_type_t attr_type,
                      bool output,
                      uint32_t address);
 };

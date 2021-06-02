@@ -26,7 +26,7 @@ private:
     std::string device;
     std::string channel;
     std::string uri;
-    int type;
+    attr_type_t type;
     bool output;
 
 protected:
@@ -38,7 +38,7 @@ public:
     attr_sink_impl(const std::string& uri,
                    const std::string& device,
                    const std::string& channel,
-                   int type,
+                   attr_type_t type,
                    bool output);
     ~attr_sink_impl();
 
