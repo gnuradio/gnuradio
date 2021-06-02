@@ -30,8 +30,8 @@ attr_source::sptr attr_source::make(const std::string& uri,
                                     const std::string& attribute,
                                     int update_interval_ms,
                                     int samples_per_update,
-                                    int data_type,
-                                    int attr_type,
+                                    data_type_t data_type,
+                                    attr_type_t attr_type,
                                     bool output,
                                     uint32_t address)
 {
@@ -47,26 +47,26 @@ attr_source::sptr attr_source::make(const std::string& uri,
                                                            address));
 }
 
-size_t attr_source_impl::type_sizeof(int data_type, int attr_type)
+size_t attr_source_impl::type_sizeof(data_type_t data_type, attr_type_t attr_type)
 {
     size_t dsize = 0;
-    if (attr_type == 3)
+    if (attr_type == attr_type_t::DEVICE_DEBUG)
         dsize = sizeof(int);
     else {
         switch (data_type) {
-        case 0:
+        case data_type_t::DOUBLE:
             dsize = sizeof(double);
             break;
-        case 1:
+        case data_type_t::FLOAT:
             dsize = sizeof(float);
             break;
-        case 2:
+        case data_type_t::LONGLONG:
             dsize = sizeof(long long);
             break;
-        case 3:
+        case data_type_t::INT:
             dsize = sizeof(int);
             break;
-        case 4:
+        case data_type_t::UINT8:
             dsize = sizeof(uint8_t);
             break;
         }
@@ -83,8 +83,8 @@ attr_source_impl::attr_source_impl(const std::string& uri,
                                    const std::string& attribute,
                                    int update_interval_ms,
                                    int samples_per_update,
-                                   int data_type,
-                                   int attr_type,
+                                   data_type_t data_type,
+                                   attr_type_t attr_type,
                                    bool output,
                                    uint32_t address)
     : gr::sync_block("attr_source",
@@ -111,7 +111,7 @@ attr_source_impl::attr_source_impl(const std::string& uri,
         throw std::runtime_error("Device not found");
     }
     // Channel only needed for channel attributes
-    if (attr_type == 0) {
+    if (attr_type == attr_type_t::CHANNEL) {
         chan = iio_device_find_channel(dev, channel.c_str(), output);
         if (!chan) {
             iio_context_destroy(ctx);
@@ -144,10 +144,10 @@ void attr_source_impl::get_register_data(uint32_t address, int* value)
 void attr_source_impl::get_attribute_data(const std::string& attribute, double* value)
 {
     switch (attr_type) {
-    case 0:
+    case attr_type_t::CHANNEL:
         ret = iio_channel_attr_read_double(chan, attribute.c_str(), value);
         break;
-    case 1:
+    case attr_type_t::DEVICE:
         ret = iio_device_attr_read_double(dev, attribute.c_str(), value);
         break;
     default:
@@ -161,10 +161,10 @@ void attr_source_impl::get_attribute_data(const std::string& attribute, float* v
 {
     double dvalue;
     switch (attr_type) {
-    case 0:
+    case attr_type_t::CHANNEL:
         ret = iio_channel_attr_read_double(chan, attribute.c_str(), &dvalue);
         break;
-    case 1:
+    case attr_type_t::DEVICE:
         ret = iio_device_attr_read_double(dev, attribute.c_str(), &dvalue);
         break;
     default:
@@ -178,10 +178,10 @@ void attr_source_impl::get_attribute_data(const std::string& attribute, float* v
 void attr_source_impl::get_attribute_data(const std::string& attribute, long long* value)
 {
     switch (attr_type) {
-    case 0:
+    case attr_type_t::CHANNEL:
         ret = iio_channel_attr_read_longlong(chan, attribute.c_str(), value);
         break;
-    case 1:
+    case attr_type_t::DEVICE:
         ret = iio_device_attr_read_longlong(dev, attribute.c_str(), value);
         break;
     default:
@@ -195,10 +195,10 @@ void attr_source_impl::get_attribute_data(const std::string& attribute, int* val
 {
     long long llvalue;
     switch (attr_type) {
-    case 0:
+    case attr_type_t::CHANNEL:
         ret = iio_channel_attr_read_longlong(chan, attribute.c_str(), &llvalue);
         break;
-    case 1:
+    case attr_type_t::DEVICE:
         ret = iio_device_attr_read_longlong(dev, attribute.c_str(), &llvalue);
         break;
     default:
@@ -213,10 +213,10 @@ void attr_source_impl::get_attribute_data(const std::string& attribute, uint8_t*
 {
     bool bvalue;
     switch (attr_type) {
-    case 0:
+    case attr_type_t::CHANNEL:
         ret = iio_channel_attr_read_bool(chan, attribute.c_str(), &bvalue);
         break;
-    case 1:
+    case attr_type_t::DEVICE:
         ret = iio_device_attr_read_bool(dev, attribute.c_str(), &bvalue);
         break;
     default:
@@ -238,23 +238,23 @@ int attr_source_impl::work(int noutput_items,
 
     for (sample = 0; sample < samples_per_update; sample++) {
         std::this_thread::sleep_for(std::chrono::milliseconds(update_interval_ms));
-        if (attr_type == 3)
+        if (attr_type == attr_type_t::DEVICE_DEBUG)
             get_register_data(address, (((int*)out) + sample));
         else {
             switch (data_type) {
-            case 0:
+            case data_type_t::DOUBLE:
                 get_attribute_data(attribute, ((double*)out + sample));
                 break;
-            case 1:
+            case data_type_t::FLOAT:
                 get_attribute_data(attribute, ((float*)out + sample));
                 break;
-            case 2:
+            case data_type_t::LONGLONG:
                 get_attribute_data(attribute, ((long long*)out + sample));
                 break;
-            case 3:
+            case data_type_t::INT:
                 get_attribute_data(attribute, ((int*)out + sample));
                 break;
-            case 4:
+            case data_type_t::UINT8:
                 get_attribute_data(attribute, ((uint8_t*)out + sample));
                 break;
             }
