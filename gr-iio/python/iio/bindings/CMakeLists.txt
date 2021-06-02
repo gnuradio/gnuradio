@@ -11,6 +11,7 @@ list(APPEND iio_python_files
     dds_control_python.cc
     device_sink_python.cc
     device_source_python.cc
+    iio_types_python.cc
     python_bindings.cc)
 
 if(${libad9361_FOUND})

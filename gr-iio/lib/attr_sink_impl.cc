@@ -25,7 +25,7 @@ namespace iio {
 attr_sink::sptr attr_sink::make(const std::string& uri,
                                 const std::string& device,
                                 const std::string& channel,
-                                int type,
+                                attr_type_t type,
                                 bool output)
 {
     return gnuradio::get_initial_sptr(
@@ -38,7 +38,7 @@ attr_sink::sptr attr_sink::make(const std::string& uri,
 attr_sink_impl::attr_sink_impl(const std::string& uri,
                                const std::string& device,
                                const std::string& channel,
-                               int type,
+                               attr_type_t type,
                                bool output)
     : gr::block(
           "attr_sink", gr::io_signature::make(0, 0, 0), gr::io_signature::make(0, 0, 0)),
@@ -59,7 +59,7 @@ attr_sink_impl::attr_sink_impl(const std::string& uri,
         throw std::runtime_error("Device not found");
     }
 
-    if (type == 0) {
+    if (type == attr_type_t::CHANNEL) {
         chan = iio_device_find_channel(dev, channel.c_str(), output);
         if (!chan) {
             iio_context_destroy(ctx);
@@ -96,16 +96,16 @@ void attr_sink_impl::write_attribute(pmt::pmt_t pdu)
             pmt::symbol_to_string(pmt::dict_ref(pdu, pmt::nth(k, keys), pmt::PMT_NIL));
 
         switch (type) {
-        case 0:
+        case attr_type_t::CHANNEL:
             ret = iio_channel_attr_write(chan, attribute.c_str(), value.c_str());
             break;
-        case 1:
+        case attr_type_t::DEVICE:
             ret = iio_device_attr_write(dev, attribute.c_str(), value.c_str());
             break;
-        case 2:
+        case attr_type_t::DEVICE_BUFFER:
             ret = iio_device_buffer_attr_write(dev, attribute.c_str(), value.c_str());
             break;
-        case 3:
+        case attr_type_t::DEVICE_DEBUG:
             ret = iio_device_debug_attr_write(dev, attribute.c_str(), value.c_str());
             break;
         default: // case 4:

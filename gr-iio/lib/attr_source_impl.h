@@ -28,8 +28,8 @@ private:
     std::string attribute;
     int update_interval_ms;
     int samples_per_update;
-    int attr_type;
-    int data_type;
+    attr_type_t attr_type;
+    data_type_t data_type;
     bool output;
     int ret;
     uint32_t address;
@@ -46,8 +46,8 @@ public:
                      const std::string& attribute,
                      int update_interval_ms,
                      int samples_per_update,
-                     int data_type,
-                     int attr_type,
+                     data_type_t data_type,
+                     attr_type_t attr_type,
                      bool output,
                      uint32_t address);
     ~attr_source_impl();
@@ -57,7 +57,7 @@ public:
              gr_vector_const_void_star& input_items,
              gr_vector_void_star& output_items);
 
-    size_t type_sizeof(int data_type, int attr_type);
+    size_t type_sizeof(data_type_t data_type, attr_type_t attr_type);
     void get_attribute_data(const std::string& attribute, double* value);
     void get_attribute_data(const std::string& attribute, float* value);
     void get_attribute_data(const std::string& attribute, long long* value);
