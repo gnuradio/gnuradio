@@ -147,10 +147,7 @@
       <key>address</key>
       <value>int("0x123",0)</value>
     </param>
-    <param>
-      <key>required_enable</key>
-      <value>False</value>
-    </param>
+
     <param>
       <key>samples_per_update</key>
       <value>32</value>
@@ -230,10 +227,7 @@
       <key>address</key>
       <value>int("0x123",0)</value>
     </param>
-    <param>
-      <key>required_enable</key>
-      <value>False</value>
-    </param>
+
     <param>
       <key>samples_per_update</key>
       <value>32</value>
@@ -313,10 +307,7 @@
       <key>address</key>
       <value>int("0x123",0)</value>
     </param>
-    <param>
-      <key>required_enable</key>
-      <value>False</value>
-    </param>
+
     <param>
       <key>samples_per_update</key>
       <value>32</value>
@@ -396,10 +387,7 @@
       <key>address</key>
       <value>int("0x123",0)</value>
     </param>
-    <param>
-      <key>required_enable</key>
-      <value>False</value>
-    </param>
+
     <param>
       <key>samples_per_update</key>
       <value>32</value>
