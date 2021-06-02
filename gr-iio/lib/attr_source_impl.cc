@@ -33,8 +33,7 @@ attr_source::sptr attr_source::make(const std::string& uri,
                                     int data_type,
                                     int attr_type,
                                     bool output,
-                                    uint32_t address,
-                                    bool required_enable)
+                                    uint32_t address)
 {
     return gnuradio::get_initial_sptr(new attr_source_impl(uri,
                                                            device,
@@ -45,8 +44,7 @@ attr_source::sptr attr_source::make(const std::string& uri,
                                                            data_type,
                                                            attr_type,
                                                            output,
-                                                           address,
-                                                           required_enable));
+                                                           address));
 }
 
 size_t attr_source_impl::type_sizeof(int data_type, int attr_type)
@@ -88,8 +86,7 @@ attr_source_impl::attr_source_impl(const std::string& uri,
                                    int data_type,
                                    int attr_type,
                                    bool output,
-                                   uint32_t address,
-                                   bool required_enable)
+                                   uint32_t address)
     : gr::sync_block("attr_source",
                      gr::io_signature::make(0, 0, 0),
                      gr::io_signature::make(1, -1, type_sizeof(data_type, attr_type))),
@@ -102,8 +99,7 @@ attr_source_impl::attr_source_impl(const std::string& uri,
       attr_type(attr_type),
       data_type(data_type),
       output(output),
-      address(address),
-      required_enable(required_enable)
+      address(address)
 {
     ctx = device_source_impl::get_context(uri);
     if (!ctx)
@@ -120,20 +116,6 @@ attr_source_impl::attr_source_impl(const std::string& uri,
         if (!chan) {
             iio_context_destroy(ctx);
             throw std::runtime_error("Channel not found");
-        }
-    }
-
-    // Required for MathWorks generated IP
-    if ((attr_type == 3) && required_enable) {
-        int ret = iio_device_attr_write(dev, "reg_access", "enabled");
-
-        if (ret < 0) {
-            char error[1024];
-            sprintf(error,
-                    "Failed to enabled register for device: %s [%d]",
-                    device.c_str(),
-                    ret);
-            throw std::runtime_error(error);
         }
     }
 

@@ -26,11 +26,10 @@ attr_sink::sptr attr_sink::make(const std::string& uri,
                                 const std::string& device,
                                 const std::string& channel,
                                 int type,
-                                bool output,
-                                bool required_enable)
+                                bool output)
 {
     return gnuradio::get_initial_sptr(
-        new attr_sink_impl(uri, device, channel, type, output, required_enable));
+        new attr_sink_impl(uri, device, channel, type, output));
 }
 
 /*
@@ -40,16 +39,14 @@ attr_sink_impl::attr_sink_impl(const std::string& uri,
                                const std::string& device,
                                const std::string& channel,
                                int type,
-                               bool output,
-                               bool required_enable)
+                               bool output)
     : gr::block(
           "attr_sink", gr::io_signature::make(0, 0, 0), gr::io_signature::make(0, 0, 0)),
       device(device),
       channel(channel),
       uri(uri),
       type(type),
-      output(output),
-      required_enable(required_enable)
+      output(output)
 {
 
     ctx = device_source_impl::get_context(uri);
@@ -67,21 +64,6 @@ attr_sink_impl::attr_sink_impl(const std::string& uri,
         if (!chan) {
             iio_context_destroy(ctx);
             throw std::runtime_error("Channel not found");
-        }
-    }
-
-    // Required for MathWorks generated IP
-    if ((type == 4) && required_enable) {
-        // int ret = iio_device_debug_attr_write(dev, "direct_reg_access", "enabled");
-        int ret = iio_device_attr_write(dev, "reg_access", "enabled");
-
-        if (ret < 0) {
-            char error[1024];
-            sprintf(error,
-                    "Failed to enabled register for device: %s [%d]",
-                    device.c_str(),
-                    ret);
-            throw std::runtime_error(error);
         }
     }
 

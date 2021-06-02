@@ -46,16 +46,12 @@ public:
      *        3: Device debug attribute
      *        4: Direct register access
      * \param output Boolean when True if channel attribute is an output
-     * \param required_enable Boolean when True if an extra register_access
-     *        attribute write is required for use a register. This is required
-     *        for MathWorks generated IP.
      */
     static sptr make(const std::string& uri,
                      const std::string& device,
                      const std::string& channel,
                      int type,
-                     bool output,
-                     bool required_enable);
+                     bool output);
 };
 
 } // namespace iio

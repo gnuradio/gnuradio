@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(attr_sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(2f43dea87847934b54d7b782a0d9dd2f)                     */
+/* BINDTOOL_HEADER_FILE_HASH(b90e35f4bd70ab60f0b97fb7365cc184)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -42,7 +42,6 @@ void bind_attr_sink(py::module& m)
              py::arg("channel"),
              py::arg("type"),
              py::arg("output"),
-             py::arg("required_enable"),
              D(attr_sink, make))
 
         ;
