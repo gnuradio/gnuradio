@@ -60,7 +60,7 @@ if(ENABLE_TESTING)
   include(GrTest)
 
   list(APPEND test_gr_fft_sources
-    qa_fft_shift
+    qa_fft_shift.cc
   )
   list(APPEND GR_TEST_TARGET_DEPS gnuradio-fft)
 
