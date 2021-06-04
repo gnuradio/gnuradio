@@ -1,5 +1,6 @@
 """
 Copyright 2008-2016 Free Software Foundation, Inc.
+Copyright 2021 GNU Radio contributors
 This file is part of GNU Radio
 
 SPDX-License-Identifier: GPL-2.0-or-later
@@ -20,7 +21,7 @@ BLOCK_DTD = os.path.join(DATA_DIR, 'block.dtd')
 DEFAULT_FLOW_GRAPH = os.path.join(DATA_DIR, 'default_flow_graph.grc')
 DEFAULT_HIER_BLOCK_LIB_DIR = os.path.expanduser('~/.grc_gnuradio')
 
-CACHE_FILE = os.path.expanduser('~/.cache/grc_gnuradio/cache.json')
+CACHE_FILE = os.path.expanduser('~/.cache/grc_gnuradio/cache_v2.json')
 
 BLOCK_DESCRIPTION_FILE_FORMAT_VERSION = 1
 # File format versions:
