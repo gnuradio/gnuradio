@@ -271,7 +271,7 @@ cpp_templates:
             ${reservedbiasbits.val},
             ${l1scrambled.val},
             ${inband.val});
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

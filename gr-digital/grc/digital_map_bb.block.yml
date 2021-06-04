@@ -26,6 +26,6 @@ cpp_templates:
     make: |-
         std::vector<int> map = {${str(map)[1:-1]}};
         this->${id} = digital::map_bb::make(map);
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

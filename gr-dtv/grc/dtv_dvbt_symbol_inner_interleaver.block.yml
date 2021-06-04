@@ -42,7 +42,7 @@ cpp_templates:
             ${transmission_mode.payload_length},
             ${transmission_mode.val},
             ${direction.val});
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

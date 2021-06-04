@@ -41,7 +41,7 @@ cpp_templates:
             ${type},
             ${tag_nsamples},
             ${alpha});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     callbacks:
     - set_type(${type})
     - set_tag_nsamples(${tag_nsamples})

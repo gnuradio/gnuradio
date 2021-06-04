@@ -24,7 +24,7 @@ templates:
 cpp_templates:
     includes: ['#include <gnuradio/analog/phase_modulator_fc.h>']
     make: 'this->${id} = analog::phase_modulator_fc::make(${sensitivity});'
-    link: ['gnuradio-analog']
+    link: ['gnuradio::gnuradio-analog']
     callbacks:
     - set_sensitivity(${sensitivity})
 

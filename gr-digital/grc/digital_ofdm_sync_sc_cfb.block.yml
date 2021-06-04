@@ -52,7 +52,7 @@ cpp_templates:
             ${cp_len},
             ${use_even_carriers},
             ${threshold});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     callbacks:
     - set_threshold(${threshold})
     translations:

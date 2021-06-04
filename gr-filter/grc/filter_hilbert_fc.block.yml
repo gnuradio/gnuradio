@@ -41,6 +41,6 @@ cpp_templates:
             ${num_taps},
             ${win},
             ${beta});
-    link: ['gnuradio-filter']
+    link: ['gnuradio::gnuradio-filter']
 
 file_format: 1

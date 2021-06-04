@@ -50,7 +50,7 @@ cpp_templates:
             ${gain},
             ${limit},
             ${osps});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     callbacks:
     - set_gain(${gain})
     - set_sps(${sps})

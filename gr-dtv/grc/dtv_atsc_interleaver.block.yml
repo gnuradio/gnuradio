@@ -20,6 +20,6 @@ cpp_templates:
     includes: ['#include <gnuradio/dtv/atsc_interleaver.h>']
     declarations: 'dtv::atsc_interleaver::sptr ${id};'
     make: 'this->${id} = dtv::atsc_interleaver::make();'
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
 
 file_format: 1

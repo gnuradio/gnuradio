@@ -30,7 +30,7 @@ cpp_templates:
     includes: [ '#include <gnuradio/fft/ctrlport_probe_psd.h>' ]
     declarations: 'fft::ctrlport_probe_psd::sptr ${id};'
     make: 'this->${id} = fft::ctrlport_probe_psd::make(${name}, ${desc}, ${len});'
-    link: ['gnuradio-fft']
+    link: ['gnuradio::gnuradio-fft']
     callbacks:
     - set_length(${len})
 

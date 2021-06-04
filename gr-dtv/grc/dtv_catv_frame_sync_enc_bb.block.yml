@@ -31,7 +31,7 @@ cpp_templates:
     includes: ['#include <gnuradio/dtv/catv_frame_sync_enc_bb.h>']
     declarations: 'dtv::catv_frame_sync_enc_bb::sptr ${id};'
     make: 'this->${id} = dtv::catv_frame_sync_enc_bb::make(${constellation.val}, ${ctrlword});'
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: "dtv::"
 

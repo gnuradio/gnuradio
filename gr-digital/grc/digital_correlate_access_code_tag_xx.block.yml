@@ -46,7 +46,7 @@ cpp_templates:
             ${access_code},
             ${threshold},
             ${tagname});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     callbacks:
     - set_access_code(${access_code})
     - set_threshold(${threshold})

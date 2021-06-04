@@ -133,7 +133,7 @@ cpp_templates:
             ${resamp_type}, 
             ${nfilters},
             pfb_mf_taps);
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     callbacks:
     - set_loop_bandwidth(${loop_bw})
     - set_damping_factor(${damping})

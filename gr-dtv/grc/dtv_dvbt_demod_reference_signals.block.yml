@@ -108,7 +108,7 @@ cpp_templates:
             ${transmission_mode.val},
             ${include_cell_id.val},
             ${cell_id});
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

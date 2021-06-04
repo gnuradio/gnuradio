@@ -55,7 +55,7 @@ cpp_templates:
             ${hierarchy.val},
             ${transmission_mode.val},
             ${gain});
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

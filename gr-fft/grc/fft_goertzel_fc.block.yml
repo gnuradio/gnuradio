@@ -35,7 +35,7 @@ cpp_templates:
     includes: [ '#include <gnuradio/fft/goertzel_fc.h>' ]
     declarations: 'fft::goertzel_fc::sptr ${id};'
     make: 'this->${id} = fft::goertzel_fc::make(${rate}, ${len}, ${freq});'
-    link: ['gnuradio-fft']
+    link: ['gnuradio::gnuradio-fft']
     callbacks:
     - set_freq(${freq})
     - set_rate(${rate})

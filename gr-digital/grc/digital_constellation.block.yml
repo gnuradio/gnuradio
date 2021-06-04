@@ -82,6 +82,6 @@ cpp_templates:
         % elif str(soft_dec_lut) != "None":
         this->${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision});
         % endif
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

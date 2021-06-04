@@ -89,7 +89,7 @@ cpp_templates:
             ${decim},
             taps,
             ${fbw});
-    link: ['gnuradio-filter']
+    link: ['gnuradio::gnuradio-filter']
     callbacks:
     - set_taps(${taps})
 

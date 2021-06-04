@@ -57,7 +57,7 @@ cpp_templates:
             fftaps,
             fbtaps,
             ${oldstyle});
-    link: ['gnuradio-filter']
+    link: ['gnuradio::gnuradio-filter']
     callbacks:
     - set_taps(fftaps, fbtaps)
     translations:

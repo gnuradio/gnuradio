@@ -22,6 +22,6 @@ cpp_templates:
     includes: ['#include <gnuradio/digital/packet_headerparser_b.h>']
     declarations: 'digital::packet_headerparser_b::sptr ${id};'
     make: 'this->${id} = digital::packet_headerparser_b::make(${header_formatter});'
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

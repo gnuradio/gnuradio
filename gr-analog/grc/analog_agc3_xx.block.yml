@@ -67,6 +67,6 @@ cpp_templates:
     - set_reference(${reference})
     - set_gain(${gain})
     - set_max_gain(${max_gain})
-    link: ['gnuradio-analog']
+    link: ['gnuradio::gnuradio-analog']
 
 file_format: 1

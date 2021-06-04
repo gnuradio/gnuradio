@@ -31,6 +31,6 @@ cpp_templates:
     callbacks:
     - set_threshold(${threshold})
     - set_alpha(${alpha})
-    link: ['gnuradio-analog']
+    link: ['gnuradio::gnuradio-analog']
 
 file_format: 1

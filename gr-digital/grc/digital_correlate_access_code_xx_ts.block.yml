@@ -43,6 +43,6 @@ cpp_templates:
             ${access_code},
             ${threshold},
             ${tagname});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

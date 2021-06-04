@@ -45,7 +45,7 @@ cpp_templates:
         this->${id} = filter::mmse_resampler_${type.fcn}::make(
             ${phase_shift},
             ${resamp_ratio});
-    link: ['gnuradio-filter']
+    link: ['gnuradio::gnuradio-filter']
     callbacks:
     - set_resamp_ratio(${resamp_ratio})
 

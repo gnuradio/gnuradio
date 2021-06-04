@@ -121,7 +121,7 @@ cpp_templates:
             ${constellation.val},
             ${pilots.val},
             ${goldcode});
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

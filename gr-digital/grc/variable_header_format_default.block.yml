@@ -39,6 +39,6 @@ cpp_templates:
         this->${id} = ${id} = digital::header_format_default(${access_code},\
         ${threshold}, ${bps});
         % endif
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1
