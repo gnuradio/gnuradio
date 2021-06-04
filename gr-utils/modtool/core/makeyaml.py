@@ -93,9 +93,29 @@ class ModToolMakeYAML(ModTool):
         files = sorted(glob.glob(f"{path}/{path_glob}"))
         files_filt = []
         logger.info(f"Searching for matching files in {path}/:")
-        for f in files:
-            if re.search(self.info['pattern'], os.path.basename(f)) is not None:
-                files_filt.append(f)
+        if self.info['blockname']:
+            # ensure the blockname given is not confused with similarly named blocks
+            blockname_pattern = ''
+            if path == 'python':
+                blockname_pattern = f"^(qa_)?{self.info['blockname']}.py$"
+            elif path == 'python/bindings':
+                blockname_pattern = f"^{self.info['blockname']}_python.cc$"
+            elif path == 'python/bindings/docstrings':
+                blockname_pattern = f"^{self.info['blockname']}_pydoc_template.h$"
+            elif path == 'lib':
+                blockname_pattern = f"^{self.info['blockname']}_impl(\\.h|\\.cc)$"
+            elif path == self.info['includedir']:
+                blockname_pattern = f"^{self.info['blockname']}.h$"
+            elif path == 'grc':
+                blockname_pattern = f"^{self.info['modname']}_{self.info['blockname']}.block.yml$"
+            for f in files:
+                if re.search(blockname_pattern, os.path.basename(f)) is not None:
+                    files_filt.append(f)
+        elif self.info['pattern']:
+            # search for block names matching a given regex pattern
+            for f in files:
+                if re.search(self.info['pattern'], os.path.basename(f)) is not None:
+                    files_filt.append(f)
         if len(files_filt) == 0:
             logger.info("None found.")
         return files_filt
