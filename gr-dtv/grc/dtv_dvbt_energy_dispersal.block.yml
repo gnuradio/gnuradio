@@ -30,6 +30,6 @@ cpp_templates:
     declarations: 'dtv::dvbt_energy_dispersal::sptr ${id};'
     make: |-
         this->${id} = dtv::dvbt_energy_dispersal::make(${nsize});
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
 
 file_format: 1

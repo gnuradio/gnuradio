@@ -48,7 +48,7 @@ cpp_templates:
             ${samples_per_symbol},
             ${L},
             ${beta});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     translations:
         analog.cpm.: 'analog::cpm::'
 

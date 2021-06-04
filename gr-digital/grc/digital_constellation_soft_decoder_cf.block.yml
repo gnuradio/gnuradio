@@ -24,6 +24,6 @@ cpp_templates:
     declarations: 'digital::constellation_soft_decoder_cf::sptr ${id};'
     make: |-
         this->${id} = digital::constellation_soft_decoder_cf::make(${constellation});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

@@ -23,6 +23,6 @@ cpp_templates:
     includes: ['#include <gnuradio/digital/hdlc_framer_pb.h>']
     declarations: 'digital::hdlc_framer_pb::sptr ${id};'
     make: 'this->${id} = digital::hdlc_framer_pb::make(${frame_tag_name});'
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

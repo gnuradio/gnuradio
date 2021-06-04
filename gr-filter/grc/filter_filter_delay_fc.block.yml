@@ -31,6 +31,6 @@ cpp_templates:
         std::vector<float> taps = {${str(taps)[1:-1]}};
         this->${id} = filter::fft_filter_${type}::make(
             taps);
-    link: ['gnuradio-filter']
+    link: ['gnuradio::gnuradio-filter']
 
 file_format: 1

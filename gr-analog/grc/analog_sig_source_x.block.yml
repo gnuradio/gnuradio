@@ -71,7 +71,7 @@ cpp_templates:
     - set_amplitude(${amp})
     - set_offset(${offset})
     - set_phase(${phase})
-    link: ['gnuradio-analog']
+    link: ['gnuradio::gnuradio-analog']
     translations:
         analog\.: 'analog::'
 

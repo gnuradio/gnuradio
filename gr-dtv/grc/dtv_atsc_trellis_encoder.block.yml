@@ -20,6 +20,6 @@ cpp_templates:
     includes: ['#include <gnuradio/dtv/atsc_trellis_encoder.h>']
     declarations: 'dtv::atsc_trellis_encoder::sptr ${id};'
     make: 'this->${id} = dtv::atsc_trellis_encoder::make();'
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
 
 file_format: 1

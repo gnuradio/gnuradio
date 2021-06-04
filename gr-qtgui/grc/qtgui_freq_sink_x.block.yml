@@ -463,7 +463,7 @@ cpp_templates:
     - set_update_time(${update_time})
     - set_y_axis(${ymin}, ${ymax})
     - this->${id}.set_trigger_mode(${tr_mode}, ${tr_level}, ${tr_chan}, ${tr_tag})
-    link: ['gnuradio-qtgui', 'Qt5::Widgets']
+    link: ['gnuradio::gnuradio-qtgui', 'Qt5::Widgets']
     make:  |-
         this->${id} = qtgui::${type.fcn}::make(
             ${fftsize}, // size
@@ -521,7 +521,6 @@ cpp_templates:
         firdes.: 'filter::firdes::'
         'True': 'true'
         'False': 'false'
-        qtgui.: 'qtgui::'
 
 documentation: |-
     The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.

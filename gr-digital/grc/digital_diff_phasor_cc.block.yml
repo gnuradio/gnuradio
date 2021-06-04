@@ -19,6 +19,6 @@ cpp_templates:
     declarations: 'digital::diff_phasor_cc::sptr ${id};'
     make: |-
         this->${id} = digital::diff_phasor_cc::make();
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

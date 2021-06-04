@@ -42,7 +42,7 @@ cpp_templates:
     includes: ['#include <gnuradio/dtv/dvbt2_interleaver_bb.h>']
     declarations: 'dtv::dvbt2_interleaver_bb::sptr ${id};'
     make: 'this->${id} = dtv::dvbt2_interleaver_bb::make(${framesize.val}, ${rate.val}, ${constellation.val});'
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

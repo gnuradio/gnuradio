@@ -64,7 +64,7 @@ cpp_templates:
             ${eq_noise_red_len},
             ${max_carr_offset},
             ${force_one_symbol});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     translations:
         'True': 'true'
         'False': 'false'

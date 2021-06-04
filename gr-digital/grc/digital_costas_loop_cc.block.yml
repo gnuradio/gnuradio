@@ -54,7 +54,7 @@ cpp_templates:
             ${w},
             ${order},
             ${use_snr});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     callbacks:
     - set_loop_bandwidth(${w})
     translations:

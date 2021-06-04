@@ -39,7 +39,7 @@ cpp_templates:
             ${check},
             ${lengthtagname},
             ${packed});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     translations:
         'True': 'true'
         'False': 'false'

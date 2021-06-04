@@ -43,7 +43,7 @@ cpp_templates:
     includes: [ '#include <gnuradio/audio/sink.h>' ]
     declarations: 'audio::sink::sptr ${id};'
     make: 'this->${id} = audio::sink::make(${samp_rate}, ${device_name}, ${ok_to_block});'
-    link: ['gnuradio-audio']
+    link: ['gnuradio::gnuradio-audio']
     translations:
         "'": '"'
         'True': 'true'

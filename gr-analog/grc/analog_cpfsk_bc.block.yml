@@ -34,7 +34,7 @@ cpp_templates:
     make: 'this->${id} = analog::cpfsk_bc::make(${k}, ${amplitude}, ${samples_per_symbol});'
     callbacks:
     - set_amplitude(${amplitude})
-    link: ['gnuradio-analog']
+    link: ['gnuradio::gnuradio-analog']
 
 
 file_format: 1

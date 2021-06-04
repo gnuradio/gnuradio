@@ -37,7 +37,7 @@ cpp_templates:
     includes: ['#include <gnuradio/filter/dc_blocker_${type}.h>']
     declarations: 'filter::dc_blocker_${type}::sptr ${id};'
     make: 'this->${id} = filter::dc_blocker_${type}::make(${length}, ${long_form});'
-    link: ['gnuradio-filter']
+    link: ['gnuradio::gnuradio-filter']
     translations:
         'True': 'true'
         'False': 'false'

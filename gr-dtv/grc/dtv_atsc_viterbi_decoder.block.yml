@@ -28,6 +28,6 @@ cpp_templates:
     includes: ['#include <gnuradio/dtv/atsc_viterbi_decoder.h>']
     declarations: 'dtv::atsc_viterbi_decoder::sptr ${id};'
     make: 'this->${id} = dtv::atsc_viterbi_decoder::make();'
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
 
 file_format: 1

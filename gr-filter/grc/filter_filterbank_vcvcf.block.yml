@@ -30,7 +30,7 @@ cpp_templates:
     make: |-
         this->${id} = filter::filterbank_vcvcf::make( 
             ${taps});
-    link: ['gnuradio-filter']
+    link: ['gnuradio::gnuradio-filter']
     callbacks:
     - set_taps(${taps})
 

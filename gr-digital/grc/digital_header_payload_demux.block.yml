@@ -107,7 +107,7 @@ cpp_templates:
             ${samp_rate},
             ${special_tags},
             ${header_padding});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     translations:
         'True': 'true'
         'False': 'false'

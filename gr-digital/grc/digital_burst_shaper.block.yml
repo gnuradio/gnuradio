@@ -63,7 +63,7 @@ cpp_templates:
             ${post_padding},
             ${insert_phasing},
             ${length_tag_name});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     translations:
         'True': 'true'
         'False': 'false'

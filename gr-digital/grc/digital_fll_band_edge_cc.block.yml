@@ -60,7 +60,7 @@ cpp_templates:
             ${rolloff},
             ${filter_size},
             ${w});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     callbacks:
     - set_loop_bandwidth(${w})
 

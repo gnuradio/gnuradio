@@ -40,6 +40,6 @@ cpp_templates:
     declarations: 'dtv::dvbt_convolutional_interleaver::sptr ${id};'
     make: |-
         this->${id} = dtv::dvbt_convolutional_interleaver::make(${blocks}, ${I}, ${M});
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
 
 file_format: 1

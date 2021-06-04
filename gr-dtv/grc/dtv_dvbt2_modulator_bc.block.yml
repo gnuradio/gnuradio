@@ -42,7 +42,7 @@ cpp_templates:
     declarations: 'dtv::dvbt2_modulator_bc::sptr ${id};'
     make: |-
         this->${id} = dtv::dvbt2_modulator_bc::make(${framesize.val}, ${constellation.val}, ${rotation.val});
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

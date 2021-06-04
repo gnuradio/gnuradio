@@ -20,6 +20,6 @@ cpp_templates:
     declarations: 'digital::framer_sink_1::sptr ${id};'
     make: |-
         this->${id} = digital::framer_sink_1::make(${target_queue});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

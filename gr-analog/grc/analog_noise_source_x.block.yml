@@ -42,7 +42,7 @@ cpp_templates:
     callbacks:
     - set_type(${noise_type})
     - set_amplitude(${amp})
-    link: ['gnuradio-analog']
+    link: ['gnuradio::gnuradio-analog']
     translations:
         analog.: 'analog::'
 

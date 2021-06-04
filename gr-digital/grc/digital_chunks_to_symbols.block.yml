@@ -69,7 +69,7 @@ cpp_templates:
         this->${id} = digital::chunks_to_symbols_${in_type.fcn}${out_type.fcn}::make(
             symbol_table,
             ${dimension});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     callbacks:
     - set_symbol_table(symbol_table)
 

@@ -25,6 +25,6 @@ cpp_templates:
     includes: ['#include <gnuradio/dtv/atsc_fs_checker.h>']
     declarations: 'dtv::atsc_fs_checker::sptr ${id};'
     make: 'this->${id} = dtv::atsc_fs_checker::make();'
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
 
 file_format: 1
