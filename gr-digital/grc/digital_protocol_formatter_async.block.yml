@@ -28,6 +28,6 @@ cpp_templates:
     includes: ['#include <gnuradio/digital/protocol_formatter_async.h>']
     declarations: 'digital::protocol_formatter_async::sptr ${id};'
     make: 'this->${id} = digital::protocol_formatter_async::make(${format});'
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

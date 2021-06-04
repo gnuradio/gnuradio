@@ -60,7 +60,7 @@ cpp_templates:
         ${pass_tags}, 
         ${hwm},
         ${key});
-    link: ['gnuradio-zeromq']      
+    link: ['gnuradio::gnuradio-zeromq']      
     translations:
       'True': 'true'
       'False': 'false'

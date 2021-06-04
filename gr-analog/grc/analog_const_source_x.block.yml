@@ -32,6 +32,6 @@ cpp_templates:
     make: 'this->${id} = analog::sig_source_${type.fcn}::make(0, analog::GR_CONST_WAVE, 0, 0, ${const});'
     callbacks:
     - set_offset(${const})
-    link: ['gnuradio-analog']
+    link: ['gnuradio::gnuradio-analog']
 
 file_format: 1

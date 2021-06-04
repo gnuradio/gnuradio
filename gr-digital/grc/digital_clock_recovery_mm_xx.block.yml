@@ -60,7 +60,7 @@ cpp_templates:
             ${mu},
             ${gain_mu},
             ${omega_relative_limit});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     callbacks:
     - set_omega(${omega})
     - set_gain_omega(${gain_omega})

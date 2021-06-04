@@ -53,7 +53,7 @@ cpp_templates:
             ${constellation.val},
             ${hierarchy.val},
             ${transmission_mode.val});
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

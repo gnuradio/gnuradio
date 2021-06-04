@@ -54,7 +54,7 @@ cpp_templates:
             ${len_tag_key},
             ${propagate_channel_state},
             ${fixed_frame_len});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     translations:
         'True': 'true'
         'False': 'false'

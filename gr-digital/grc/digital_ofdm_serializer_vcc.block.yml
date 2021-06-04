@@ -61,7 +61,7 @@ cpp_templates:
             ${symbols_skipped},
             ${carr_offset_key},
             ${input_is_shifted});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     translations:
         'True': 'true'
         'False': 'false'

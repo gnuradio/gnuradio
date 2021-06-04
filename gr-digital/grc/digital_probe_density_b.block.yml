@@ -26,7 +26,7 @@ cpp_templates:
     includes: ['#include <gnuradio/digital/probe_density_b.h>']
     declarations: 'digital::probe_density_b::sptr ${id};'
     make: 'this->${id} = digital::probe_density_b::make(${alpha});'
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     callbacks:
     - set_alpha(${alpha})
 

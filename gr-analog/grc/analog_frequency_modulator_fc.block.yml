@@ -27,6 +27,6 @@ cpp_templates:
     make: 'this->${id} = analog::frequency_modulator_fc::make(${sensitivity});'
     callbacks:
     - set_sensitivity(${sensitivity})
-    link: ['gnuradio-analog']
+    link: ['gnuradio::gnuradio-analog']
 
 file_format: 1

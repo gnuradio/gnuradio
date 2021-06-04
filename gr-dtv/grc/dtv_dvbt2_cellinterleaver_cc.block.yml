@@ -44,7 +44,7 @@ cpp_templates:
     declarations: 'dtv::dvbt2_cellinterleaver_cc::sptr ${id};'
     make: 'this->${id} = dtv::dvbt2_cellinterleaver_cc::make(${framesize.val},
         ${constellation.val}, ${fecblocks}, ${tiblocks});'
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

@@ -204,7 +204,7 @@ cpp_templates:
             ${inband.val},
             ${fecblocks},
             ${tsrate});
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

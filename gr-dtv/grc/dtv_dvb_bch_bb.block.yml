@@ -161,7 +161,7 @@ cpp_templates:
             % endif
             % endif
             );
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

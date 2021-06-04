@@ -27,6 +27,6 @@ cpp_templates:
     includes: ['#include <gnuradio/digital/protocol_formatter_bb.h>']
     declarations: 'digital::protocol_formatter_bb::sptr ${id};'
     make: 'this->${id} = digital::protocol_formatter_bb::make(${format}, ${len_tag_key});'
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

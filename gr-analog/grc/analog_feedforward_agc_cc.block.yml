@@ -27,6 +27,6 @@ templates:
 cpp_templates:
     includes: ['#include <gnuradio/analog/feedforward_agc_cc.h>']
     make: 'this->${id} = analog::feedforward_agc_cc::make(${num_samples}, ${reference});'
-    link: ['gnuradio-analog']
+    link: ['gnuradio::gnuradio-analog']
 
 file_format: 1

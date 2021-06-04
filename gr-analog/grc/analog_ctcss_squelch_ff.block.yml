@@ -49,7 +49,7 @@ cpp_templates:
     callbacks:
     - set_level(${level})
     - set_frequency(${freq})
-    link: ['gnuradio-analog']
+    link: ['gnuradio::gnuradio-analog']
     translations:
         'True': 'true'
         'False': 'false'

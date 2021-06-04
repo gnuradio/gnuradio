@@ -169,7 +169,7 @@ cpp_templates:
             % endif
             % endif
             ${constellation.val});
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

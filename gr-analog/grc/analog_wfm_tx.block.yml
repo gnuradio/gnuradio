@@ -42,6 +42,6 @@ cpp_templates:
     includes: [ '#include <gnuradio/analog/frequency_modulator_fc.h>', '#include <boost/math/constants/constants.hpp>' ]
     declarations: gr::analog::frequency_modulator_fc::sptr ${id};
     make: this->${id} = gr::analog::frequency_modulator_fc::make(2 * boost::math::constants::pi<double>() * ${max_dev} / ${quad_rate});
-    link: ['gnuradio-analog']          
+    link: ['gnuradio::gnuradio-analog']          
       
 file_format: 1

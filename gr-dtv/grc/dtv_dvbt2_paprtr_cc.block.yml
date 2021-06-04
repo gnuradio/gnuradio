@@ -135,7 +135,7 @@ cpp_templates:
             ${iterations},
             ${fftsize.vlength}
             );
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

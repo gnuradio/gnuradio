@@ -53,7 +53,7 @@ cpp_templates:
     var_make: |-
         this->${id} = ${id} = firdes.${type}(${gain}, ${samp_rate}, ${low_cutoff_freq}, \
         ${high_cutoff_freq}, ${width}, ${win}, ${beta});
-    link: ['gnuradio-filter']
+    link: ['gnuradio::gnuradio-filter']
 
 documentation: |-
     This is a convenience wrapper for calling firdes.band_pass() or firdes.complex_band_pass()

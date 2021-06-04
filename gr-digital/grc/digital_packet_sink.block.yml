@@ -31,6 +31,6 @@ cpp_templates:
             sync_vector,
             ${target_queue},
             ${threshold});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

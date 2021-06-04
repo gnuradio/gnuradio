@@ -145,7 +145,7 @@ cpp_templates:
             ${showlevels.val},
             ${vclip}
             );
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

@@ -81,7 +81,7 @@ cpp_templates:
             ${init_phase},
             ${max_dev},
             ${osps});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     callbacks:
     - update_taps(taps)
     - set_loop_bandwidth(${loop_bw})

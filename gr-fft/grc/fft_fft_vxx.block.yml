@@ -65,7 +65,7 @@ cpp_templates:
         % else:
         this->${id} = fft::fft_vfc::make(${fft_size}, ${forward}, ${window}, ${shift}, ${nthreads});
         % endif
-    link: ['gnuradio-fft']
+    link: ['gnuradio::gnuradio-fft']
     callbacks:
     - set_nthreads(${nthreads})
     translations:

@@ -29,7 +29,7 @@ cpp_templates:
     make: |-
         this->${id} = digital::crc32_async_bb::make(
             ${check});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     translations:
         'True': 'true'
         'False': 'false'

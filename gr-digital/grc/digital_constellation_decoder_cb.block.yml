@@ -23,6 +23,6 @@ cpp_templates:
     includes: ['#include <gnuradio/digital/constellation_decoder_cb.h>']
     declarations: 'digital::constellation_decoder_cb::sptr ${id};'
     make: 'this->${id} = digital::constellation_decoder_cb::make(${constellation});'
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

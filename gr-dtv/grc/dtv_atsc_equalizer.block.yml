@@ -28,6 +28,6 @@ cpp_templates:
     includes: ['#include <gnuradio/dtv/atsc_equalizer.h>']
     declarations: 'dtv::atsc_equalizer::sptr ${id};'
     make: 'this->${id} = dtv::atsc_equalizer::make();'
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
 
 file_format: 1

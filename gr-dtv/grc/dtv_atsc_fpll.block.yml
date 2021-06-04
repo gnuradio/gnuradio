@@ -23,6 +23,6 @@ cpp_templates:
     includes: ['#include <gnuradio/dtv/atsc_fpll.h>']
     declarations: 'dtv::atsc_fpll::sptr ${id};'
     make: 'this->${id} = dtv::atsc_fpll::make(${rate});'
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
 
 file_format: 1
