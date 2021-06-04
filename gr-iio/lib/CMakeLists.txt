@@ -1,4 +1,5 @@
 # Copyright 2021 Free Software Foundation, Inc.
+# Copyright 2021 GNU Radio Contributors
 #
 # This file is part of GNU Radio
 #
@@ -31,7 +32,7 @@ target_link_libraries(gnuradio-iio PUBLIC
   gnuradio-blocks
 )
 
-if(libad9361_FOUND)
+if(libad9361_SUFFICIENT)
   target_sources(gnuradio-iio PRIVATE
     fmcomms2_sink_impl.cc
     fmcomms2_source_impl.cc
@@ -43,7 +44,7 @@ if(libad9361_FOUND)
   target_link_libraries(gnuradio-iio PUBLIC libad9361::ad9361)
   target_compile_definitions(gnuradio-iio PUBLIC -DGR_IIO_LIBAD9361)
   list(APPEND iio_deps "libad9361")
-endif(libad9361_FOUND)
+endif(libad9361_SUFFICIENT)
 
 #Add Windows DLL resource file if using MSVC
 if(MSVC)
