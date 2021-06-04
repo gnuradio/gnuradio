@@ -28,6 +28,7 @@ ${inc}
 #include <QWidget>
 #include <QGridLayout>
 #include <QSettings>
+#include <QApplication>
 % endif
 
 % if parameters:
