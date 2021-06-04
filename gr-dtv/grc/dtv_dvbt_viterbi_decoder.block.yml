@@ -58,7 +58,7 @@ cpp_templates:
             ${hierarchy.val},
             ${code_rate.val},
             ${block_size});
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

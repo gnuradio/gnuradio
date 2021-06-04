@@ -124,7 +124,7 @@ cpp_templates:
             % endif
             ${constellation.val},
             ${interpolation.val});
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

@@ -67,6 +67,6 @@ cpp_templates:
             ${loop_bw},
             ${fmin},
             ${fmax}));
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

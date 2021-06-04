@@ -61,7 +61,7 @@ cpp_templates:
             ${sync_words},
             ${len_tag_key},
             ${output_is_shifted});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
     translations:
         'True': 'true'
         'False': 'false'

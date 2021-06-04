@@ -36,6 +36,6 @@ cpp_templates:
             ${mask},
             ${seed},
             ${len});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

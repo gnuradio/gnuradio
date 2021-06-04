@@ -102,7 +102,7 @@ cpp_templates:
                 ${width},
                 ${win},
                 ${beta}));
-    link: ['gnuradio-filter']
+    link: ['gnuradio::gnuradio-filter']
     callbacks:
     - set_taps(firdes::${type.fcn}(${gain}, ${samp_rate}, ${low_cutoff_freq}, ${high_cutoff_freq},
         ${width}, ${win}, ${beta}))

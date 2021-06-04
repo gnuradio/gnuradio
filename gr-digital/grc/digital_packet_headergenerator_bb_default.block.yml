@@ -30,6 +30,6 @@ cpp_templates:
         this->${id} = digital::packet_headergenerator_bb::make(
             ${header_len},
             ${len_tag_key});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

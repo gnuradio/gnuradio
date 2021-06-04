@@ -52,6 +52,6 @@ cpp_templates:
             count=${count},
             bits_per_byte=${bits_per_byte},
             reset_tag_key=${reset_tag_key});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

@@ -31,6 +31,6 @@ cpp_templates:
     callbacks:
     - set_lo(${lo})
     - set_hi(${hi})
-    link: ['gnuradio-analog']
+    link: ['gnuradio::gnuradio-analog']
 
 file_format: 1

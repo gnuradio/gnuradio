@@ -24,6 +24,6 @@ cpp_templates:
     includes: ['#include <gnuradio/digital/protocol_parser_b.h>']
     declarations: 'digital::protocol_parser_b::sptr ${id};'
     make: 'this->${id} = fft::ctrlport_probe_psd::make(${format});'
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

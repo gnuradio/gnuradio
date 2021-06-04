@@ -307,7 +307,7 @@ cpp_templates:
     callbacks:
     - set_frequency_range(${fc}, ${bw})
     - set_update_time(${update_time})
-    link: ['gnuradio-qtgui', 'Qt5::Widgets']
+    link: ['gnuradio::gnuradio-qtgui', 'Qt5::Widgets']
     make: |-
         this->${id} = qtgui::${type.fcn}::make(
             ${fftsize}, // size

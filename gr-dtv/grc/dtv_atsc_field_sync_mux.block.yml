@@ -20,6 +20,6 @@ cpp_templates:
     includes: ['#include <gnuradio/dtv/atsc_field_sync_mux.h>']
     declarations: 'dtv::atsc_field_sync_mux::sptr ${id};'
     make: 'this->${id} = dtv::atsc_field_sync_mux::make();'
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
 
 file_format: 1

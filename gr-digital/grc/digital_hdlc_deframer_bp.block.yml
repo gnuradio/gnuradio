@@ -31,6 +31,6 @@ cpp_templates:
         this->${id} = digital::hdlc_deframer_bp::make(
             ${min},
             ${max});
-    link: ['gnuradio-digital']
+    link: ['gnuradio::gnuradio-digital']
 
 file_format: 1

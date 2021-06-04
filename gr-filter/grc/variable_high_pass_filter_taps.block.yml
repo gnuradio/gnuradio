@@ -44,7 +44,7 @@ cpp_templates:
     var_make: |-
         this->${id} = ${id} = firdes.high_pass(${gain}, ${samp_rate}, ${cutoff_freq},\
         ${width}, ${win}, ${beta});
-    link: ['gnuradio-filter']
+    link: ['gnuradio::gnuradio-filter']
 
 documentation: |-
     This variable is a convenience wrapper around a call to firdes.high_pass(...).

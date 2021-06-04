@@ -31,6 +31,6 @@ cpp_templates:
     includes: [ '#include <gnuradio/zeromq/req_msg_source.h>' ]
     declarations: gr::zeromq::req_msg_source::sptr ${id};
     make: this->${id} = gr::zeromq::req_msg_source::make(const_cast<char *>(${address}${'.c_str())' if str(address)[0] not in '"\'' else ')'}, ${timeout});
-    link: ['gnuradio-zeromq']      
+    link: ['gnuradio::gnuradio-zeromq']      
 
 file_format: 1

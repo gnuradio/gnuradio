@@ -60,7 +60,7 @@ cpp_templates:
             ${decim}, 
             taps);
         this->${id}.declare_sample_delay(${samp_delay});
-    link: ['gnuradio-filter']
+    link: ['gnuradio::gnuradio-filter']
     callbacks:
     - set_taps(taps)
 

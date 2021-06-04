@@ -31,6 +31,6 @@ cpp_templates:
     includes: [ '#include <gnuradio/zeromq/pub_msg_sink.h>' ]
     declarations: gr::zeromq::pub_msg_sink::sptr ${id};
     make: this->${id} = gr::zeromq::pub_msg_sink::make(const_cast<char *>(${address}${'.c_str())' if str(address)[0] not in '"\'' else ')'}, ${timeout});
-    link: ['gnuradio-zeromq']      
+    link: ['gnuradio::gnuradio-zeromq']      
 
 file_format: 1

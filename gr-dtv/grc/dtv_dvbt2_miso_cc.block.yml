@@ -110,7 +110,7 @@ cpp_templates:
             ${paprmode2.val}
             % endif
             );
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 

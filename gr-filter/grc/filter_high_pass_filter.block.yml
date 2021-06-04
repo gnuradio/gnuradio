@@ -88,7 +88,7 @@ cpp_templates:
                 ${width},
                 ${win},
                 ${beta}));
-    link: ['gnuradio-filter']
+    link: ['gnuradio::gnuradio-filter']
     callbacks:
     - set_taps(firdes::high_pass(${gain}, ${samp_rate}, ${cutoff_freq}, ${width}, ${win},
         ${beta}))

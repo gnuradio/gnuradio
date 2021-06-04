@@ -151,7 +151,7 @@ cpp_templates:
     ## Attempt to replicate logic of Python gui_hint() method
     this->top_grid_layout->addWidget(${id + '->qwidget()' + (', ' + str(gui_hint)[1:-1] if len(gui_hint) > 2 else '')});
 
-  link: ['gnuradio-qtgui', 'Qt5Widgets', 'Qt5Core']
+  link: ['gnuradio::gnuradio-qtgui', 'Qt5Widgets', 'Qt5Core']
   translations:
     'True': 'true'
     'False': 'false'

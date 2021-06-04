@@ -59,7 +59,7 @@ cpp_templates:
         ${timeout}, 
         ${pass_tags}, 
         ${hwm});
-    link: ['gnuradio-zeromq']      
+    link: ['gnuradio::gnuradio-zeromq']      
     translations:
       'True': 'true'
       'False': 'false'

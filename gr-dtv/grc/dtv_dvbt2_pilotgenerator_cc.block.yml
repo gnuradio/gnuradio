@@ -178,7 +178,7 @@ cpp_templates:
             ${bandwidth.val},
             ${fftsize.vlength}
             );
-    link: ['gnuradio-dtv']
+    link: ['gnuradio::gnuradio-dtv']
     translations:
         dtv\.: 'dtv::'
 
