@@ -73,8 +73,10 @@ class ModToolRename(ModTool):
         self._run_file_replace(ccfile, old, new)
         self._run_file_replace(hfile, old, new)
         self._run_file_replace(hfile, old.upper(), new.upper())  # take care of include guards
-        self._run_cmakelists('./lib/', old, new)
-        self._run_file_rename('./lib/', old, new)
+        self._run_cmakelists('./lib/', old, new, '_impl.cc')
+        self._run_cmakelists('./lib/', old, new, '_impl.h')
+        self._run_file_rename('./lib/', old, new, '_impl.cc')
+        self._run_file_rename('./lib/', old, new, '_impl.h')
         self._run_cpp_qa(module, old, new)
 
     def _run_cpp_qa(self, module, old, new):
@@ -88,7 +90,8 @@ class ModToolRename(ModTool):
             filename = 'qa_' + old + '.h'
             self._run_file_replace(path + filename, old, new)
             self._run_file_replace(path + filename, old.upper(), new.upper())
-            self._run_file_rename(path, 'qa_' + old, 'qa_' + new)
+            self._run_file_rename(path, 'qa_' + old, 'qa_' + new, '.cc')
+            self._run_file_rename(path, 'qa_' + old, 'qa_' + new, '.h')
         else:
             logger.info("No C++ QA code detected, skipping...")
 
@@ -97,8 +100,8 @@ class ModToolRename(ModTool):
         filename = path + old + '.h'
         self._run_file_replace(filename, old, new)
         self._run_file_replace(filename, old.upper(), new.upper())  # take care of include guards
-        self._run_cmakelists(path, old, new)
-        self._run_file_rename(path, old, new)
+        self._run_cmakelists(path, old, new, '.h')
+        self._run_file_rename(path, old, new, '.h')
 
     def _run_python(self, module, old, new):
         path = './python/'
@@ -108,8 +111,8 @@ class ModToolRename(ModTool):
             logger.info("Python block detected, renaming...")
             filename = old + '.py'
             self._run_file_replace(path + filename, old, new)
-            self._run_cmakelists(path, old, new)
-            self._run_file_rename(path, old, new)
+            self._run_cmakelists(path, old, new, '.py')
+            self._run_file_rename(path, old, new, '.py')
         else:
             logger.info("Not a Python block, nothing to do here...")
 
@@ -117,8 +120,8 @@ class ModToolRename(ModTool):
         path = './python/bindings/'
         filename = path + old + '_python.cc'
         self._run_file_replace(filename, old, new)
-        self._run_file_rename(path, old, new)
-        self._run_cmakelists(path, old, new)
+        self._run_file_rename(path, old, new, '_python.cc')
+        self._run_cmakelists(path, old, new, '_python.cc')
         # update the hash in the new file
         import hashlib
         hasher = hashlib.md5()
@@ -136,36 +139,43 @@ class ModToolRename(ModTool):
             file_txt = re.sub(oldhash, newhash, file_txt)
         with open(newfilename, "w") as f:
             f.write(file_txt)
-       
+
+        filename = path + 'python_bindings.cc'
+        self._run_file_replace(filename, ' bind_' + old + '\\(', ' bind_' + new + '(')
+
         path = './python/bindings/docstrings/'
         filename = path + old + '_pydoc_template.h'
         self._run_file_replace(filename, old, new)
-        self._run_file_rename(path, old, new)
+        self._run_file_rename(path, old, new, '_pydoc_template.h')
 
     def _run_python_qa(self, module, old, new):
         new = 'qa_' + new
         old = 'qa_' + old
         filename = './python/' + old + '.py'
         self._run_file_replace(filename, old, new)
-        self._run_cmakelists('./python/', old, new)
-        self._run_file_rename('./python/', old, new)
+        self._run_cmakelists('./python/', old, new, '.py')
+        self._run_file_rename('./python/', old, new, '.py')
 
     def _run_grc_rename(self, module, old, new):
-        grcfile = './grc/' + module + '_' + old + '.yml'
+        grcfile = './grc/' + module + '_' + old + '.block.yml'
         self._run_file_replace(grcfile, old, new)
-        self._run_cmakelists('./grc/', old, new)
-        self._run_file_rename('./grc/', module + '_' + old, module + '_' + new)
+        self._run_cmakelists('./grc/', module + '_' + old, module + '_' + new, '.block.yml')
+        self._run_file_rename('./grc/', module + '_' + old, module + '_' + new, '.block.yml')
 
-    def _run_cmakelists(self, path, first, second):
+    def _run_cmakelists(self, path, first, second, suffix):
         filename = path + 'CMakeLists.txt'
-        nsubs = self._run_file_replace(filename, first, second)
+        # space character and suffix ensures similiarly named blocks are not mixed up
+        nsubs = self._run_file_replace(filename, ' ' + first + suffix, ' ' + second + suffix)
         if nsubs < 1:
             logger.info(f"'{first}' wasn't in '{filename}'.")
 
-    def _run_file_rename(self, path, old, new):
+    def _run_file_rename(self, path, old, new, suffix):
+        old = old + suffix
+        new = new + suffix
+        old_regex = '^' + old
         files = os.listdir(path)
         for file in files:
-            if file.find(old) > -1 and file.find(old) < 3:
+            if re.search(old_regex, file):
                 nl = file.replace(old, new)
                 src = path + file
                 dst = path + nl
