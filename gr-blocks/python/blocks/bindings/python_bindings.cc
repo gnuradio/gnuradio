@@ -299,6 +299,7 @@ PYBIND11_MODULE(blocks_python, m)
     bind_pdu_to_tagged_stream(m);
     bind_peak_detector(m);
     bind_peak_detector2_fb(m);
+    bind_phase_shift(m);
     bind_plateau_detector_fb(m);
     bind_probe_rate(m);
     bind_probe_signal(m);
