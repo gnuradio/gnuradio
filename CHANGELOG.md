@@ -87,6 +87,7 @@ The SoapySDR framework and Soapy driver modules are not maintained by the GNU Ra
 - In-tree packaging files for DEB and RPM, used with Launchpad and COPR
 - Added man pages for GNU Radio tools
 - Test code generation for all in-tree GRC examples
+- In GrPybind.cmake, `PYBIND11_INCLUDE_DIR` (incorrect) was changed to `pybind11_INCLUDE_DIR`
 
 ### Contributors
 At LEAST the following authors contributed to this release. Note that only authors of commits are included here. A number of people contribute in other ways, including code review, documentation and testing.

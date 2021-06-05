@@ -37,7 +37,7 @@ target_include_directories(${name}_python PUBLIC
     ${PYTHON_NUMPY_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include
-    ${PYBIND11_INCLUDE_DIR}
+    ${pybind11_INCLUDE_DIR}
 )
 target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} Python::Module gnuradio-${MODULE_NAME})
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
@@ -154,7 +154,7 @@ target_include_directories(${name}_python PUBLIC
     ${PYTHON_NUMPY_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include
-    ${PYBIND11_INCLUDE_DIR}
+    ${pybind11_INCLUDE_DIR}
 )
 target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} Python::Module gnuradio-${MODULE_NAME})
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
@@ -287,7 +287,7 @@ target_include_directories(${name}_python PUBLIC
     ${PYTHON_NUMPY_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include
-    ${PYBIND11_INCLUDE_DIR}
+    ${pybind11_INCLUDE_DIR}
 )
 target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} Python::Module gnuradio-${MODULE_NAME})
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
