@@ -32,6 +32,10 @@ target_link_libraries(gnuradio-zeromq PUBLIC
   ZeroMQ::ZeroMQ
 )
 
+if(ENABLE_COMMON_PCH)
+  target_link_libraries(gnuradio-zeromq PRIVATE common-precompiled-headers)
+endif()
+
 target_include_directories(gnuradio-zeromq
   PUBLIC
   $<INSTALL_INTERFACE:include>

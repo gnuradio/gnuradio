@@ -77,6 +77,10 @@ target_link_libraries(gnuradio-dtv PUBLIC
     Volk::volk
     )
 
+if(ENABLE_COMMON_PCH)
+  target_link_libraries(gnuradio-dtv PRIVATE common-precompiled-headers)
+endif()
+
 target_include_directories(gnuradio-dtv
   PUBLIC
   $<INSTALL_INTERFACE:include>

@@ -34,6 +34,10 @@ target_link_libraries(gnuradio-wavelet PUBLIC
     GSL::gsl
 )
 
+if(ENABLE_COMMON_PCH)
+  target_link_libraries(gnuradio-wavelet PRIVATE common-precompiled-headers)
+endif()
+
 target_include_directories(gnuradio-wavelet
   PUBLIC $<INSTALL_INTERFACE:include>
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>

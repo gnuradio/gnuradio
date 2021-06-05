@@ -83,6 +83,10 @@ if (WIN32)
   )
 endif(WIN32)
 
+if(ENABLE_COMMON_PCH)
+  target_link_libraries(gnuradio-qtgui PRIVATE common-precompiled-headers)
+endif()
+
 include(GrPython)
 if(ENABLE_PYTHON)
   target_compile_definitions(gnuradio-qtgui PUBLIC -DENABLE_PYTHON)
