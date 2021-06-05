@@ -53,7 +53,7 @@ jobs:
         include:
           - distro: 'Ubuntu 20.04'
             containerid: 'gnuradio/ci:ubuntu-20.04-3.9'
-            cxxflags: -Werror
+            cxxflags: -Werror -Wno-error=invalid-pch
           - distro: 'Fedora 33'
             containerid: 'gnuradio/ci:fedora-33-3.9'
             cxxflags: ''
