@@ -96,6 +96,9 @@ target_link_libraries(gnuradio-digital PUBLIC
     Volk::volk
 )
 
+if(ENABLE_COMMON_PCH)
+  target_link_libraries(gnuradio-digital PRIVATE common-precompiled-headers)
+endif()
 
 target_include_directories(gnuradio-digital
   PUBLIC $<INSTALL_INTERFACE:include>

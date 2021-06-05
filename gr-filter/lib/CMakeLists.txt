@@ -53,12 +53,17 @@ add_library(gnuradio-filter
   single_pole_iir_filter_ff_impl.cc
 )
 
+
 target_link_libraries(gnuradio-filter PUBLIC
     gnuradio-runtime
     gnuradio-fft
     gnuradio-blocks
     Volk::volk
 )
+
+if(ENABLE_COMMON_PCH)
+  target_link_libraries(gnuradio-filter PRIVATE common-precompiled-headers)
+endif()
 
 target_include_directories(gnuradio-filter
   PUBLIC
