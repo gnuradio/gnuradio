@@ -50,18 +50,17 @@ class Cache(object):
     def load(self):
         try:
             self.need_cache_write = False
-            logger.debug(f"Loading block cache from: {self.cache_file}")
+            logger.debug("Loading block cache from: {}".format(self.cache_file))
             with open(self.cache_file, encoding='utf-8') as cache_file:
                 cache = json.load(cache_file)
             cacheversion = cache.get("version", None)
-            logger.debug(f"Cache version {cacheversion}")
+            logger.debug("Cache version {}".format(cacheversion))
             self._cachetime = cache.get("cached-at", 0)
             if cacheversion == self.version:
                 logger.debug("Loaded block cache")
                 self.cache = cache["cache"]
             else:
-                logger.info(f"Outdated cache {self.cache_file} found, "
-                            "will be overwritten.")
+                logger.info("Outdated cache found, will be overwritten.")
                 raise ValueError()
         except (IOError, ValueError):
             self.need_cache_write = True
@@ -74,7 +73,8 @@ class Cache(object):
                 cached = self.cache[filename]
                 if int(cached["cached-at"]+0.5) >= modtime:
                     return cached["data"]
-                logger.info(f"Cache for {filename} outdated, loading yaml")
+                logger.info("Cache for {} outdated, loading yaml".format(
+                    filename))
             except KeyError:
                 pass
 
