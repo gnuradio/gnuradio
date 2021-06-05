@@ -160,6 +160,14 @@ target_compile_definitions(gnuradio-runtime PUBLIC ${MPLIB_DEFINITIONS})
 # constants.cc includes boost::dll headers, force them to use std::filesystem
 target_compile_definitions(gnuradio-runtime PRIVATE BOOST_DLL_USE_STD_FS)
 
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
+  target_precompile_headers(
+    gnuradio-runtime
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/sync_block.h
+    )
+endif()
+
 ########################################################################
 # Add controlport stuff to gnuradio-runtime
 ########################################################################
