@@ -69,7 +69,11 @@ cpp_templates:
         QObject::connect(this->_${id}_line_edit, &QLineEdit::returnPressed, this, [this] () {this->set_${id}(this->_${id}_line_edit->text().toInt());});
 
         this->top_layout->addWidget(this->_${id}_tool_bar);
-
+        % if  len(gui_hint) > 0:
+        this->top_grid_layout->addWidget(this->_${id}_tool_bar,${gui_hint});
+        % else:
+        this->top_layout->addWidget(this->_${id}_tool_bar);
+        % endif
 documentation: |-
     This block creates a variable with a text entry box. Leave the label blank to use the variable id as the label.
 

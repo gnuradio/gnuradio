@@ -516,7 +516,12 @@ cpp_templates:
         }
 
         _${id}_win = this->${id}->qwidget();
+        % if  len(gui_hint) > 0:
+        this->top_grid_layout->addWidget(_${id}_win,${gui_hint});
+        % else:
         this->top_layout->addWidget(_${id}_win);
+        % endif
+
     translations:
         firdes.: 'filter::firdes::'
         'True': 'true'
