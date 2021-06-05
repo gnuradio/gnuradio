@@ -462,12 +462,12 @@ cpp_templates:
     - set_frequency_range(${fc}, ${bw})
     - set_update_time(${update_time})
     - set_y_axis(${ymin}, ${ymax})
-    - this->${id}.set_trigger_mode(${tr_mode}, ${tr_level}, ${tr_chan}, ${tr_tag})
+    - this->${id}.set_trigger_mode(${tr_mode.replace('qtgui.','gr::qtgui::')}, ${tr_level}, ${tr_chan}, ${tr_tag})
     link: ['gnuradio::gnuradio-qtgui', 'Qt5::Widgets']
     make:  |-
         this->${id} = qtgui::${type.fcn}::make(
             ${fftsize}, // size
-            ${wintype}, // wintype
+            gr::fft::${wintype.replace('window.', 'window::')}, //wintype
             ${fc}, // fc
             ${bw}, // bw
             ${name}, // name
@@ -488,7 +488,7 @@ cpp_templates:
         this->${id}->set_update_time(${update_time});
         this->${id}->set_y_axis(${ymin}, ${ymax});
         this->${id}->set_y_label("${label.strip("'")}", "${units.strip("'")}");
-        this->${id}->set_trigger_mode(${tr_mode}, ${tr_level}, ${tr_chan}, ${tr_tag});
+        this->${id}->set_trigger_mode(${tr_mode.replace('qtgui.','gr::qtgui::')}, ${tr_level}, ${tr_chan}, ${tr_tag});
         this->${id}->enable_autoscale(${autoscale});
         this->${id}->enable_grid(${grid});
         this->${id}->set_fft_average(${average});

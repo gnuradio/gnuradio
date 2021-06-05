@@ -137,7 +137,7 @@ cpp_templates:
   make: |-
     ${id} = gr::qtgui::${type.fcn}::make(
             ${fftsize}, //fftsize
-            gr::filter::${wintype.replace('.', '::win_type::')}, //wintype
+            gr::fft::${wintype.replace('window.', 'window::')}, //wintype
             ${fc}, //fc
             ${bw}, //bw
             ${name}, //name
