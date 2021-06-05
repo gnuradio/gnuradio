@@ -311,7 +311,7 @@ cpp_templates:
     make: |-
         this->${id} = qtgui::${type.fcn}::make(
             ${fftsize}, // size
-            ${wintype}, // wintype
+            gr::fft::${wintype.replace('window.', 'window::')}, //wintype
             ${fc}, // fc
             ${bw}, // bw
             ${name}, // name
