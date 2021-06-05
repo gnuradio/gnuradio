@@ -41,11 +41,19 @@ add_library(gnuradio-analog
     sig_source_impl.cc
     simple_squelch_cc_impl.cc
     )
+
+if(ENABLE_COMMON_PCH)
+  set(PRIVATE_LIBS common-precompiled-headers)
+endif()
+
 target_link_libraries(gnuradio-analog PUBLIC
-    gnuradio-runtime
-    gnuradio-blocks
-    gnuradio-filter
-)
+  gnuradio-runtime
+  gnuradio-blocks
+  gnuradio-filter
+  PRIVATE
+  ${PRIVATE_LIBS}
+  )
+
 target_include_directories(gnuradio-analog
   PUBLIC
   $<INSTALL_INTERFACE:include>

@@ -30,6 +30,10 @@ target_link_libraries(gnuradio-vocoder PUBLIC
     gnuradio-runtime
 )
 
+if(ENABLE_COMMON_PCH)
+  target_link_libraries(gnuradio-vocoder PRIVATE common-precompiled-headers)
+endif()
+
 if(LIBCODEC2_FOUND)
   target_sources(gnuradio-vocoder PRIVATE
     codec2.cc

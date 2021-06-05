@@ -27,6 +27,10 @@ target_link_libraries(gnuradio-channels PUBLIC
     gnuradio-blocks
 )
 
+if(ENABLE_COMMON_PCH)
+  target_link_libraries(gnuradio-channels PRIVATE common-precompiled-headers)
+endif()
+
 target_include_directories(gnuradio-channels
   PUBLIC
   $<INSTALL_INTERFACE:include>
