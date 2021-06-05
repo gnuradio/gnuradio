@@ -156,6 +156,22 @@ target_include_directories(${name}_python PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include
     ${pybind11_INCLUDE_DIR}
 )
+
+# Precompile the pybind11 header
+# This should speed up building of the python bindings at least in larger modules
+# This functionality is only available in CMake >= 3.16
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
+  target_precompile_headers(
+    ${name}_python
+    PRIVATE
+    ${pybind11_INCLUDE_DIR}/pybind11/pybind11.h
+    ${pybind11_INCLUDE_DIR}/pybind11/embed.h
+    ${pybind11_INCLUDE_DIR}/pybind11/complex.h
+    ${pybind11_INCLUDE_DIR}/pybind11/operators.h
+    ${pybind11_INCLUDE_DIR}/pybind11/stl.h
+)
+endif()
+
 target_link_libraries(${name}_python PUBLIC ${Boost_LIBRARIES} Python::Module gnuradio-${MODULE_NAME})
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
    CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
