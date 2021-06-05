@@ -178,7 +178,16 @@ if (SNDFILE_FOUND)
     )
 endif()
 
-target_link_libraries(gnuradio-blocks ${BLOCKS_LIBS})
+if(ENABLE_COMMON_PCH)
+  set(PRIVATE_LIBS common-precompiled-headers)
+endif()
+
+target_link_libraries(gnuradio-blocks
+  PUBLIC
+  ${BLOCKS_LIBS}
+  PRIVATE
+  ${PRIVATE_LIBS}
+  )
 
 target_include_directories(gnuradio-blocks
   PUBLIC
