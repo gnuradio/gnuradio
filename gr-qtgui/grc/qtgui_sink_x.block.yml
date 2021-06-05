@@ -149,7 +149,11 @@ cpp_templates:
     ${id}->set_update_time(1.0/${rate});   
     ${id}->enable_rf_freq(${showrf});
     ## Attempt to replicate logic of Python gui_hint() method
-    this->top_grid_layout->addWidget(${id + '->qwidget()' + (', ' + str(gui_hint)[1:-1] if len(gui_hint) > 2 else '')});
+    % if  len(gui_hint) > 0:
+    this->top_grid_layout->addWidget(${id + '->qwidget()'},${gui_hint});
+    % else:
+    this->top_layout->addWidget(${id + '->qwidget()'});
+    % endif
 
   link: ['gnuradio::gnuradio-qtgui', 'Qt5Widgets', 'Qt5Core']
   translations:
