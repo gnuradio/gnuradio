@@ -34,6 +34,36 @@ GR_REGISTER_COMPONENT("gnuradio-runtime" ENABLE_GNURADIO_RUNTIME
 get_filename_component(GNURADIO_RUNTIME_PYTHONPATH
     ${CMAKE_SOURCE_DIR}/python ABSOLUTE
 )
+########################################################################
+# Setup precompiled header pseudo-component
+########################################################################
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
+  set(GR_CMAKE_HAS_PCH ${CMAKE_VERSION})
+endif()
+
+GR_REGISTER_COMPONENT("common-precompiled-headers" ENABLE_COMMON_PCH
+  ENABLE_GNURADIO_RUNTIME
+  GR_CMAKE_HAS_PCH
+  )
+
+if(ENABLE_COMMON_PCH)
+  add_library(common-precompiled-headers
+    STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/dummy.cc
+    )
+  target_include_directories(common-precompiled-headers
+    PUBLIC
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+    )
+
+  target_precompile_headers(
+    common-precompiled-headers
+    PUBLIC
+    $<$<COMPILE_LANGUAGE:CXX>:$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/gnuradio/top_block.h>>
+    )
+endif()
 
 ########################################################################
 # Register controlport component
