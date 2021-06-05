@@ -20,6 +20,10 @@ target_link_libraries(gnuradio-soapy PUBLIC
     ${SoapySDR_LIBRARIES}
 )
 
+if(ENABLE_COMMON_PCH)
+  target_link_libraries(gnuradio-soapy PRIVATE common-precompiled-headers)
+endif()
+
 target_include_directories(gnuradio-soapy PUBLIC
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
