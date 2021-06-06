@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2012 Free Software Foundation, Inc.
+ * Copyright 2021 Daniel Estevez <daniel@destevez.net>
  *
  * This file is part of GNU Radio
  *
@@ -12,6 +13,7 @@
 #define INCLUDED_GR_DIFF_DECODER_BB_H
 
 #include <gnuradio/digital/api.h>
+#include <gnuradio/digital/diff_coding_type.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
@@ -35,8 +37,10 @@ public:
      * Make a differential decoder block.
      *
      * \param modulus Modulus of code's alphabet
+     * \param coding Differential coding type
      */
-    static sptr make(unsigned int modulus);
+    static sptr make(unsigned int modulus,
+                     enum diff_coding_type coding = DIFF_DIFFERENTIAL);
 };
 
 } /* namespace digital */

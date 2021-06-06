@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2012 Free Software Foundation, Inc.
+ * Copyright 2021 Daniel Estevez <daniel@destevez.net>
  *
  * This file is part of GNU Radio
  *
@@ -20,7 +21,8 @@ namespace digital {
 class diff_decoder_bb_impl : public diff_decoder_bb
 {
 public:
-    diff_decoder_bb_impl(unsigned int modulus);
+    diff_decoder_bb_impl(unsigned int modulus,
+                         enum diff_coding_type coding = DIFF_DIFFERENTIAL);
     ~diff_decoder_bb_impl() override;
 
     int work(int noutput_items,
@@ -28,7 +30,8 @@ public:
              gr_vector_void_star& output_items) override;
 
 private:
-    unsigned int d_modulus;
+    const unsigned int d_modulus;
+    const enum diff_coding_type d_coding;
 };
 
 } /* namespace digital */
