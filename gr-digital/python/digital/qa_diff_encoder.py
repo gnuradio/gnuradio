@@ -31,46 +31,18 @@ class test_diff_encoder(gr_unittest.TestCase):
         self.tb = None
 
     def test_diff_encdec_000(self):
-        random.seed(0)
-        modulus = 2
-        src_data = make_random_int_list(1000, 0, modulus - 1)
-        expected_result = src_data
-        src = blocks.vector_source_b(src_data)
-        enc = digital.diff_encoder_bb(modulus)
-        dec = digital.diff_decoder_bb(modulus)
-        dst = blocks.vector_sink_b()
-        self.tb.connect(src, enc, dec, dst)
-        self.tb.run()               # run the graph and wait for it to finish
-        actual_result = dst.data()  # fetch the contents of the sink
-        self.assertEqual(expected_result, actual_result)
-
-    def test_diff_encdec_001(self):
-        random.seed(0)
-        modulus = 4
-        src_data = make_random_int_list(1000, 0, modulus - 1)
-        expected_result = src_data
-        src = blocks.vector_source_b(src_data)
-        enc = digital.diff_encoder_bb(modulus)
-        dec = digital.diff_decoder_bb(modulus)
-        dst = blocks.vector_sink_b()
-        self.tb.connect(src, enc, dec, dst)
-        self.tb.run()               # run the graph and wait for it to finish
-        actual_result = dst.data()  # fetch the contents of the sink
-        self.assertEqual(expected_result, actual_result)
-
-    def test_diff_encdec_002(self):
-        random.seed(0)
-        modulus = 8
-        src_data = make_random_int_list(40000, 0, modulus - 1)
-        expected_result = src_data
-        src = blocks.vector_source_b(src_data)
-        enc = digital.diff_encoder_bb(modulus)
-        dec = digital.diff_decoder_bb(modulus)
-        dst = blocks.vector_sink_b()
-        self.tb.connect(src, enc, dec, dst)
-        self.tb.run()               # run the graph and wait for it to finish
-        actual_result = dst.data()  # fetch the contents of the sink
-        self.assertEqual(expected_result, actual_result)
+        for modulus in (2, 4, 8):
+            with self.subTest(modulus=modulus):
+                src_data = make_random_int_list(40000, 0, modulus - 1)
+                expected_result = src_data
+                src = blocks.vector_source_b(src_data)
+                enc = digital.diff_encoder_bb(modulus)
+                dec = digital.diff_decoder_bb(modulus)
+                dst = blocks.vector_sink_b()
+                self.tb.connect(src, enc, dec, dst)
+                self.tb.run()  # run the graph and wait for it to finish
+                actual_result = dst.data()  # fetch the contents of the sink
+                self.assertEqual(expected_result, actual_result)
 
 
 if __name__ == '__main__':
