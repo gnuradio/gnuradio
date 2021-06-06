@@ -42,6 +42,7 @@ void bind_crc32_async_bb(py::module&);
 void bind_crc32_bb(py::module&);
 void bind_decision_feedback_equalizer(py::module&);
 void bind_descrambler_bb(py::module&);
+void bind_diff_coding_type(py::module&);
 void bind_diff_decoder_bb(py::module&);
 void bind_diff_encoder_bb(py::module&);
 void bind_diff_phasor_cc(py::module&);
@@ -143,6 +144,7 @@ PYBIND11_MODULE(digital_python, m)
     bind_crc32_bb(m);
     bind_decision_feedback_equalizer(m);
     bind_descrambler_bb(m);
+    bind_diff_coding_type(m);
     bind_diff_decoder_bb(m);
     bind_diff_encoder_bb(m);
     bind_diff_phasor_cc(m);

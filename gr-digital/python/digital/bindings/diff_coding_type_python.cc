@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2021 Daniel Estevez <daniel@destevez.net>
  *
  * This file is part of GNU Radio
  *
@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(diff_encoder_bb.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(866ae99d6fc12353e8d45ba2424bcecd)                     */
+/* BINDTOOL_HEADER_FILE(diff_coding_type.h)                                        */
+/* BINDTOOL_HEADER_FILE_HASH(d2a67d2eacf4d643b8df9d240a971837)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -23,27 +23,18 @@
 
 namespace py = pybind11;
 
-#include <gnuradio/digital/diff_encoder_bb.h>
+#include <gnuradio/digital/diff_coding_type.h>
 // pydoc.h is automatically generated in the build directory
-#include <diff_encoder_bb_pydoc.h>
+#include <diff_coding_type_pydoc.h>
 
-void bind_diff_encoder_bb(py::module& m)
+void bind_diff_coding_type(py::module& m)
 {
 
-    using diff_encoder_bb = ::gr::digital::diff_encoder_bb;
 
+    py::enum_<::gr::digital::diff_coding_type>(m, "diff_coding_type")
+        .value("DIFF_DIFFERENTIAL", ::gr::digital::DIFF_DIFFERENTIAL) // 0
+        .value("DIFF_NRZI", ::gr::digital::DIFF_NRZI)                 // 1
+        .export_values();
 
-    py::class_<diff_encoder_bb,
-               gr::sync_block,
-               gr::block,
-               gr::basic_block,
-               std::shared_ptr<diff_encoder_bb>>(m, "diff_encoder_bb", D(diff_encoder_bb))
-
-        .def(py::init(&diff_encoder_bb::make),
-             py::arg("modulus"),
-             py::arg("coding") = ::gr::digital::DIFF_DIFFERENTIAL,
-             D(diff_encoder_bb, make))
-
-
-        ;
+    py::implicitly_convertible<int, ::gr::digital::diff_coding_type>();
 }
