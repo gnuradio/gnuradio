@@ -39,6 +39,7 @@ install(FILES
     crc32_async_bb.h
     decision_feedback_equalizer.h
     descrambler_bb.h
+    diff_coding_type.h
     diff_decoder_bb.h
     diff_encoder_bb.h
     diff_phasor_cc.h
