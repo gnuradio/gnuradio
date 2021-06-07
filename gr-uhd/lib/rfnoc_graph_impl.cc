@@ -37,7 +37,7 @@ public:
                  const size_t src_block_port,
                  const std::string& dst_block_id,
                  const size_t dst_block_port,
-                 const bool skip_property_propagation)
+                 const bool skip_property_propagation) override
     {
         if (_tx_streamers.count(src_block_id)) {
             if (_rx_streamers.count(dst_block_id)) {
@@ -65,7 +65,7 @@ public:
 
     void connect(const std::string& block1,
                  const std::string& block2,
-                 bool skip_property_propagation)
+                 bool skip_property_propagation) override
     {
         connect(block1, 0, block2, 0, skip_property_propagation);
     }
@@ -85,7 +85,7 @@ public:
 
 
     ::uhd::rx_streamer::sptr create_rx_streamer(const size_t num_ports,
-                                                const stream_args_t& args)
+                                                const stream_args_t& args) override
     {
         auto streamer = _graph->create_rx_streamer(num_ports, args);
         const std::string streamer_id =
@@ -95,7 +95,7 @@ public:
     }
 
     ::uhd::tx_streamer::sptr create_tx_streamer(const size_t num_ports,
-                                                const stream_args_t& args)
+                                                const stream_args_t& args) override
     {
         auto streamer = _graph->create_tx_streamer(num_ports, args);
         const std::string streamer_id =
@@ -145,18 +145,18 @@ public:
         return block_ids.front().to_string();
     }
 
-    void set_time_source(const std::string& source, const size_t mb_index)
+    void set_time_source(const std::string& source, const size_t mb_index) override
     {
         _graph->get_mb_controller(mb_index)->set_time_source(source);
     }
 
-    void set_clock_source(const std::string& source, const size_t mb_index)
+    void set_clock_source(const std::string& source, const size_t mb_index) override
     {
         _graph->get_mb_controller(mb_index)->set_clock_source(source);
     }
 
     ::uhd::rfnoc::noc_block_base::sptr get_block_ref(const std::string& block_id,
-                                                     const size_t max_ref_count)
+                                                     const size_t max_ref_count) override
     {
         std::lock_guard<std::mutex> l(_block_ref_mutex);
         if (max_ref_count == 0) {

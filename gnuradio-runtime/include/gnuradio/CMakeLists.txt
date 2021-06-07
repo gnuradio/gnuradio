@@ -72,11 +72,11 @@ install(FILES
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio
 )
 
-if(THRIFT_FOUND)
-install(FILES
-  rpcserver_booter_thrift.h
-  thrift_application_base.h
-  thrift_server_template.h
-  DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-)
-endif(THRIFT_FOUND)
+if(ENABLE_CTRLPORT_THRIFT)
+  install(FILES
+    rpcserver_booter_thrift.h
+    thrift_application_base.h
+    thrift_server_template.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
+  )
+endif(ENABLE_CTRLPORT_THRIFT)

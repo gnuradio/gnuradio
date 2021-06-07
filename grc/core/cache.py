@@ -4,11 +4,10 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
 
-
-from io import open
 import json
 import logging
 import os
+import time
 
 from .io import yaml
 
@@ -17,9 +16,11 @@ logger = logging.getLogger(__name__)
 
 class Cache(object):
 
-    def __init__(self, filename):
+    def __init__(self, filename, version = None):
         self.cache_file = filename
+        self.version = version
         self.cache = {}
+        self._cachetime = None
         self.need_cache_write = True
         self._accessed_items = set()
         try:
@@ -33,24 +34,41 @@ class Cache(object):
 
     def load(self):
         try:
-            logger.debug("Loading block cache from: {}".format(self.cache_file))
-            with open(self.cache_file, encoding='utf-8') as cache_file:
-                self.cache = json.load(cache_file)
             self.need_cache_write = False
+            logger.debug(f"Loading block cache from: {self.cache_file}")
+            with open(self.cache_file, encoding='utf-8') as cache_file:
+                cache = json.load(cache_file)
+            cacheversion = cache.get("version", None)
+            logger.debug(f"Cache version {cacheversion}")
+            self._cachetime = cache.get("cached-at", 0)
+            if cacheversion == self.version:
+                logger.debug("Loaded block cache")
+                self.cache = cache["cache"]
+            else:
+                logger.info(f"Outdated cache {self.cache_file} found, "
+                            "will be overwritten.")
+                raise ValueError()
         except (IOError, ValueError):
             self.need_cache_write = True
 
     def get_or_load(self, filename):
         self._accessed_items.add(filename)
-        if os.path.getmtime(filename) <= self._converter_mtime:
+        modtime = os.path.getmtime(filename)
+        if modtime <= self._converter_mtime:
             try:
-                return self.cache[filename]
+                cached = self.cache[filename]
+                if int(cached["cached-at"]+0.5) >= modtime:
+                    return cached["data"]
+                logger.info(f"Cache for {filename} outdated, loading yaml")
             except KeyError:
                 pass
 
         with open(filename, encoding='utf-8') as fp:
             data = yaml.safe_load(fp)
-        self.cache[filename] = data
+        self.cache[filename] = {
+            "cached-at": int(time.time()),
+            "data": data
+        }
         self.need_cache_write = True
         return data
 
@@ -61,7 +79,13 @@ class Cache(object):
         logger.debug('Saving %d entries to json cache', len(self.cache))
         # Dumping to binary file is only supported for Python3 >= 3.6
         with open(self.cache_file, 'w', encoding='utf8') as cache_file:
-            cache_file.write(json.dumps(self.cache, ensure_ascii=False))
+            cache_content = {
+                "version": self.version,
+                "cached-at": self._cachetime,
+                "cache": self.cache
+            }
+            cache_file.write(
+                json.dumps(cache_content, ensure_ascii=False))
 
     def prune(self):
         for filename in (set(self.cache) - self._accessed_items):
@@ -73,12 +97,3 @@ class Cache(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.save()
-
-
-def byteify(data):
-    if isinstance(data, dict):
-        return {byteify(key): byteify(value) for key, value in data.items()}
-    elif isinstance(data, list):
-        return [byteify(element) for element in data]
-    else:
-        return data

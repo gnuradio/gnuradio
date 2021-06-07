@@ -57,7 +57,7 @@ std::vector<std::string> prefs::_sys_prefs_filenames()
     if (fs::is_directory(dir)) {
         for (const auto& p : fs::directory_iterator(dir)) {
             if (p.path().extension() == ".conf")
-                fnames.push_back(p.path());
+                fnames.push_back(p.path().string());
         }
         std::sort(fnames.begin(), fnames.end());
     }
