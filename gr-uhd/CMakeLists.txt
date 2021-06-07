@@ -12,10 +12,11 @@ include(GrBoost)
 
 find_package(UHD "3.9.7")
 if ("${UHD_VERSION}" VERSION_GREATER_EQUAL "4")
-    set(ENABLE_UHD_RFNOC TRUE)
+    set(UHD_FOUR_POINT_OH_RFNOC TRUE)
 else()
-    set(ENABLE_UHD_RFNOC FALSE)
+  set(UHD_FOUR_POINT_OH_RFNOC FALSE)
 endif()
+
 
 ########################################################################
 # Register component
@@ -31,12 +32,16 @@ GR_REGISTER_COMPONENT("gr-uhd" ENABLE_GR_UHD
 )
 SET(GR_PKG_UHD_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/uhd)
 
+GR_REGISTER_COMPONENT("gr-uhd UHD 4.0 RFNoC" ENABLE_UHD_RFNOC
+  ENABLE_GR_UHD
+  UHD_FOUR_POINT_OH_RFNOC
+  )
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_UHD)
 message(STATUS "  UHD Version: ${UHD_VERSION}")
-message(STATUS "  UHD 4.0 RFNoC enabled: ${ENABLE_UHD_RFNOC}")
 
 ########################################################################
 # Add subdirectories
