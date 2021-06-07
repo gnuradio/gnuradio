@@ -7,11 +7,11 @@
 #
 
 
-
 from .encoder import PolarEncoder
 from .decoder import PolarDecoder
 from . import channel_construction as cc
-from .helper_functions import *
+import numpy as np
+from .helper_functions import power_of_2_int
 
 import matplotlib.pyplot as plt
 
@@ -21,7 +21,8 @@ def get_frozen_bit_position():
     # frozenbitposition = np.array((0, 1, 2, 3, 4, 5, 8, 9), dtype=int)
     m = 256
     n_frozen = m // 2
-    frozenbitposition = cc.get_frozen_bit_indices_from_z_parameters(cc.bhattacharyya_bounds(0.0, m), n_frozen)
+    frozenbitposition = cc.get_frozen_bit_indices_from_z_parameters(
+        cc.bhattacharyya_bounds(0.0, m), n_frozen)
     print(frozenbitposition)
     return frozenbitposition
 
@@ -39,7 +40,13 @@ def test_enc_dec_chain():
         encoded = encoder.encode(bits)
         rx = decoder.decode(encoded)
         if not is_equal(bits, rx):
-            raise ValueError('Test #', i, 'failed, input and output differ', bits, '!=', rx)
+            raise ValueError(
+                'Test #',
+                i,
+                'failed, input and output differ',
+                bits,
+                '!=',
+                rx)
             return
 
 
@@ -47,7 +54,12 @@ def is_equal(first, second):
     if not (first == second).all():
         result = first == second
         for i in range(len(result)):
-            print('{0:4}: {1:2} == {2:1} = {3}'.format(i, first[i], second[i], result[i]))
+            print(
+                '{0:4}: {1:2} == {2:1} = {3}'.format(
+                    i,
+                    first[i],
+                    second[i],
+                    result[i]))
         return False
     return True
 
@@ -96,7 +108,8 @@ def test_1024_rate_1_code():
         bits = np.random.randint(2, size=k)
         tx = encoder.encode(bits)
         np.random.shuffle(possible_indices)
-        tx[possible_indices[0:num_transitions]] = (tx[possible_indices[0:num_transitions]] + 1) % 2
+        tx[possible_indices[0:num_transitions]] = (
+            tx[possible_indices[0:num_transitions]] + 1) % 2
         rx = tx
         recv = decoder.decode(rx)
         channel_counter += (bits == recv)
@@ -124,10 +137,14 @@ def channel_analysis():
     channel_counter = np.load(filename)
     print(np.min(channel_counter), np.max(channel_counter))
     channel_counter[0] = np.min(channel_counter)
-    good_indices = find_good_indices(channel_counter, channel_counter.size // 2)
+    good_indices = find_good_indices(
+        channel_counter, channel_counter.size // 2)
     info_bit_positions = np.where(good_indices > 0)
     print(info_bit_positions)
-    frozen_bit_positions = np.delete(np.arange(channel_counter.size), info_bit_positions)
+    frozen_bit_positions = np.delete(
+        np.arange(
+            channel_counter.size),
+        info_bit_positions)
     print(frozen_bit_positions)
     np.save('frozen_bit_positions_n256_k128_p0.11.npy', frozen_bit_positions)
     good_indices *= 2000
@@ -184,7 +201,8 @@ def merge_stage_n(init_mask):
     n_elems = len(init_mask) - (len(init_mask) % 2)
     for e in range(0, n_elems, 2):
         if init_mask[e]['size'] == init_mask[e + 1]['size']:
-            if (init_mask[e]['type'] == 'ZERO' or init_mask[e]['type'] == 'ONE') and init_mask[e]['type'] == init_mask[e + 1]['type']:
+            if (init_mask[e]['type'] == 'ZERO' or init_mask[e]['type'] ==
+                    'ONE') and init_mask[e]['type'] == init_mask[e + 1]['type']:
                 t = init_mask[e]['type']
                 v = init_mask[e]['value']
                 v.extend(init_mask[e + 1]['value'])
@@ -291,7 +309,8 @@ def find_decoder_subframes(frozen_mask):
             print('--------------------------')
         ll = l
         sub_t = sub_mask[i]
-        print('{0:4} lock {1:4} value: {2} in sub {3}'.format(i, 2 ** (l + 1), v, t))
+        print('{0:4} lock {1:4} value: {2} in sub {3}'.format(
+            i, 2 ** (l + 1), v, t))
 
 
 def systematic_encoder_decoder_chain_test():
@@ -299,7 +318,8 @@ def systematic_encoder_decoder_chain_test():
     block_size = int(2 ** 8)
     info_bit_size = block_size // 2
     ntests = 100
-    frozenbitposition = cc.get_frozen_bit_indices_from_z_parameters(cc.bhattacharyya_bounds(0.0, block_size), block_size - info_bit_size)
+    frozenbitposition = cc.get_frozen_bit_indices_from_z_parameters(
+        cc.bhattacharyya_bounds(0.0, block_size), block_size - info_bit_size)
     encoder = PolarEncoder(block_size, info_bit_size, frozenbitposition)
     decoder = PolarDecoder(block_size, info_bit_size, frozenbitposition)
     for i in range(ntests):

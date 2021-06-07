@@ -18,7 +18,9 @@ for an overview of different approaches
 
 from scipy.optimize import fsolve
 from scipy.special import erfc
-from .helper_functions import *
+import numpy as np
+from .helper_functions import (bhattacharyya_parameter, bit_reverse_vector,
+                               power_of_2_int, show_progress_bar)
 from .channel_construction_bec import bhattacharyya_bounds
 
 
@@ -43,7 +45,7 @@ def codeword_lambda(y, s):
 
 
 def instantanious_capacity_callable():
-    return lambda x : 1 - np.log2(1 + x) + (x * np.log2(x) / (1 + x))
+    return lambda x: 1 - np.log2(1 + x) + (x * np.log2(x) / (1 + x))
 
 
 def instantanious_capacity(x):
@@ -77,7 +79,8 @@ def discretize_awgn(mu, design_snr):
     tpm = np.zeros((2, mu))
     for j in range(mu):
         tpm[0][j] = q_function(factor + a[j]) - q_function(factor + a[j + 1])
-        tpm[1][j] = q_function(-1. * factor + a[j]) - q_function(-1. * factor + a[j + 1])
+        tpm[1][j] = q_function(-1. * factor + a[j]) - \
+            q_function(-1. * factor + a[j + 1])
 
     tpm = tpm[::-1]
     tpm[0] = tpm[0][::-1]
@@ -86,7 +89,8 @@ def discretize_awgn(mu, design_snr):
 
 
 def instant_capacity_delta_callable():
-    return lambda a, b: -1. * (a + b) * np.log2((a + b) / 2) + a * np.log2(a) + b * np.log2(b)
+    return lambda a, b: -1. * (a + b) * np.log2((a + b) / 2) + \
+        a * np.log2(a) + b * np.log2(b)
 
 
 def capacity_delta_callable():
@@ -102,16 +106,21 @@ def quantize_to_size(tpm, mu):
         print('WARNING: This channel gets too small!')
 
     # lambda works on vectors just fine. Use Numpy vector awesomeness.
-    delta_i_vec = calculate_delta_I(tpm[0, 0:-1], tpm[1, 0:-1], tpm[0, 1:], tpm[1, 1:])
+    delta_i_vec = calculate_delta_I(
+        tpm[0, 0:-1], tpm[1, 0:-1], tpm[0, 1:], tpm[1, 1:])
 
     for i in range(L - mu):
         d = np.argmin(delta_i_vec)
         ap = tpm[0, d] + tpm[0, d + 1]
         bp = tpm[1, d] + tpm[1, d + 1]
         if d > 0:
-            delta_i_vec[d - 1] = calculate_delta_I(tpm[0, d - 1], tpm[1, d - 1], ap, bp)
+            delta_i_vec[d - 1] = calculate_delta_I(tpm[0, d - 1],
+                                                   tpm[1, d - 1],
+                                                   ap, bp)
         if d < delta_i_vec.size - 1:
-            delta_i_vec[d + 1] = calculate_delta_I(ap, bp, tpm[0, d + 1], tpm[1, d + 1])
+            delta_i_vec[d + 1] = calculate_delta_I(ap, bp,
+                                                   tpm[0, d + 1],
+                                                   tpm[1, d + 1])
         delta_i_vec = np.delete(delta_i_vec, d)
         tpm = np.delete(tpm, d, axis=1)
         tpm[0, d] = ap
@@ -132,7 +141,11 @@ def tal_vardy_tpm_algorithm(block_size, design_snr, mu):
     channels[0] = discretize_awgn(mu, design_snr) * 2
 
     print('Constructing polar code with Tal-Vardy algorithm')
-    print('(block_size = {0}, design SNR = {1}, mu = {2}'.format(block_size, design_snr, 2 * mu))
+    print(
+        '(block_size = {0}, design SNR = {1}, mu = {2}'.format(
+            block_size,
+            design_snr,
+            2 * mu))
     show_progress_bar(0, block_size)
     for j in range(0, block_power):
         u = 2 ** j
@@ -158,7 +171,8 @@ def tal_vardy_tpm_algorithm(block_size, design_snr, mu):
 
 def merge_lr_based(q, mu):
     lrs = q[0] / q[1]
-    vals, indices, inv_indices = np.unique(lrs, return_index=True, return_inverse=True)
+    vals, indices, inv_indices = np.unique(
+        lrs, return_index=True, return_inverse=True)
     # compare [1] (20). Ordering of representatives according to LRs.
     temp = np.zeros((2, len(indices)), dtype=float)
     if vals.size < mu:

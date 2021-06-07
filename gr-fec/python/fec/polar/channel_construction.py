@@ -15,11 +15,12 @@ foundational paper for polar codes.
 from .channel_construction_bec import calculate_bec_channel_capacities
 from .channel_construction_bec import design_snr_to_bec_eta
 from .channel_construction_bec import bhattacharyya_bounds
-from .helper_functions import *
+import numpy as np
 try:
     from .channel_construction_awgn import tal_vardy_tpm_algorithm
 except ImportError:
     print("SciPy missing. Overwrite Tal-Vardy algorithm with BEC approximation")
+
     def tal_vardy_tpm_algorithm(block_size, design_snr, mu):
         return bhattacharyya_bounds(design_snr, block_size)
 
@@ -67,7 +68,8 @@ def frozen_bit_positions(block_size, info_size, design_snr=0.0):
 
 def generate_filename(block_size, design_snr, mu):
     filename = "polar_code_z_parameters_N" + str(int(block_size))
-    filename += "_SNR" + str(float(design_snr)) + "_MU" + str(int(mu)) + ".polar"
+    filename += "_SNR" + str(float(design_snr)) + \
+        "_MU" + str(int(mu)) + ".polar"
     return filename
 
 
@@ -84,7 +86,12 @@ def default_dir():
     return path
 
 
-def save_z_parameters(z_params, block_size, design_snr, mu, alt_construction_method='Tal-Vardy algorithm'):
+def save_z_parameters(
+        z_params,
+        block_size,
+        design_snr,
+        mu,
+        alt_construction_method='Tal-Vardy algorithm'):
     path = default_dir()
     filename = generate_filename(block_size, design_snr, mu)
     header = Z_PARAM_FIRST_HEADER_LINE + "\n"
