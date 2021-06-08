@@ -65,30 +65,33 @@ class extended_tagged_decoder(gr.hier_block2):
     }
 
     def __init__(
+        self,
+        decoder_obj_list,
+        ann=None,
+        puncpat="11",
+        integration_period=10000,
+        flush=None,
+        rotator=None,
+        lentagname=None,
+        mtu=1500,
+    ):
+        gr.hier_block2.__init__(
             self,
-            decoder_obj_list,
-            ann=None,
-            puncpat='11',
-            integration_period=10000,
-            flush=None,
-            rotator=None,
-            lentagname=None,
-            mtu=1500):
-        gr.hier_block2.__init__(self, "extended_decoder",
-                                gr.io_signature(1, 1, gr.sizeof_float),
-                                gr.io_signature(1, 1, gr.sizeof_char))
+            "extended_decoder",
+            gr.io_signature(1, 1, gr.sizeof_float),
+            gr.io_signature(1, 1, gr.sizeof_char),
+        )
         self.blocks = []
         self.ann = ann
         self.puncpat = puncpat
         self.flush = flush
 
-        if(isinstance(decoder_obj_list, list)):
+        if isinstance(decoder_obj_list, list):
             # This block doesn't handle parallelism of > 1
             # We could just grab encoder [0][0], but we don't want to encourage
             # this.
-            if(isinstance(decoder_obj_list[0], list)):
-                gr.log.info(
-                    "fec.extended_tagged_decoder: Parallelism must be 1.")
+            if isinstance(decoder_obj_list[0], list):
+                gr.log.info("fec.extended_tagged_decoder: Parallelism must be 1.")
                 raise AttributeError
 
             decoder_obj = decoder_obj_list[0]
@@ -100,14 +103,16 @@ class extended_tagged_decoder(gr.hier_block2):
         # If lentagname is None, fall back to using the non tagged
         # stream version
         if isinstance(lentagname, str):
-            if(lentagname.lower() == 'none'):
+            if lentagname.lower() == "none":
                 lentagname = None
 
         message_collector_connected = False
 
         # anything going through the annihilator needs shifted, uchar vals
-        if fec.get_decoder_input_conversion(decoder_obj) == "uchar" or \
-           fec.get_decoder_input_conversion(decoder_obj) == "packed_bits":
+        if (
+            fec.get_decoder_input_conversion(decoder_obj) == "uchar"
+            or fec.get_decoder_input_conversion(decoder_obj) == "packed_bits"
+        ):
             self.blocks.append(blocks.multiply_const_ff(48.0))
 
         if fec.get_shift(decoder_obj) != 0.0:
@@ -115,8 +120,10 @@ class extended_tagged_decoder(gr.hier_block2):
         elif fec.get_decoder_input_conversion(decoder_obj) == "packed_bits":
             self.blocks.append(blocks.add_const_ff(128.0))
 
-        if fec.get_decoder_input_conversion(decoder_obj) == "uchar" or \
-           fec.get_decoder_input_conversion(decoder_obj) == "packed_bits":
+        if (
+            fec.get_decoder_input_conversion(decoder_obj) == "uchar"
+            or fec.get_decoder_input_conversion(decoder_obj) == "packed_bits"
+        ):
             self.blocks.append(blocks.float_to_uchar())
 
         const_index = 0  # index that corresponds to mod order for specinvert purposes
@@ -130,32 +137,32 @@ class extended_tagged_decoder(gr.hier_block2):
             for i in fec.read_big_bitlist(ann):
                 cat.append(i)
 
-            synd_garble = .49
+            synd_garble = 0.49
             idx_list = sorted(self.garbletable.keys())
             for i in idx_list:
-                if 1.0 / self.ann.count('1') >= i:
+                if 1.0 / self.ann.count("1") >= i:
                     synd_garble = self.garbletable[i]
             print(
-                'using syndrom garble threshold ' +
-                str(synd_garble) +
-                'for conv_bit_corr_bb')
-            print('ceiling: .0335 data garble rate')
+                "using syndrom garble threshold "
+                + str(synd_garble)
+                + "for conv_bit_corr_bb"
+            )
+            print("ceiling: .0335 data garble rate")
             self.blocks.append(
                 fec.conv_bit_corr_bb(
                     cat,
-                    len(puncpat) -
-                    puncpat.count('0'),
+                    len(puncpat) - puncpat.count("0"),
                     len(ann),
                     integration_period,
                     flush,
-                    synd_garble))
+                    synd_garble,
+                )
+            )
 
-        if self.puncpat != '11':
+        if self.puncpat != "11":
             self.blocks.append(
-                fec.depuncture_bb(
-                    len(puncpat),
-                    read_bitlist(puncpat),
-                    0))
+                fec.depuncture_bb(len(puncpat), read_bitlist(puncpat), 0)
+            )
 
         if fec.get_decoder_input_conversion(decoder_obj) == "packed_bits":
             self.blocks.append(blocks.uchar_to_float())
@@ -164,12 +171,14 @@ class extended_tagged_decoder(gr.hier_block2):
             self.blocks.append(blocks.unpacked_to_packed_bb(1, 0))
 
         else:
-            if(not lentagname):
+            if not lentagname:
                 self.blocks.append(
                     fec.decoder(
                         decoder_obj,
                         fec.get_decoder_input_item_size(decoder_obj),
-                        fec.get_decoder_output_item_size(decoder_obj)))
+                        fec.get_decoder_output_item_size(decoder_obj),
+                    )
+                )
             else:
                 self.blocks.append(
                     fec.tagged_decoder(
@@ -177,12 +186,12 @@ class extended_tagged_decoder(gr.hier_block2):
                         fec.get_decoder_input_item_size(decoder_obj),
                         fec.get_decoder_output_item_size(decoder_obj),
                         lentagname,
-                        mtu))
+                        mtu,
+                    )
+                )
 
         if fec.get_decoder_output_conversion(decoder_obj) == "unpack":
-            self.blocks.append(
-                blocks.packed_to_unpacked_bb(
-                    1, gr.GR_MSB_FIRST))
+            self.blocks.append(blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST))
 
         self.connect((self, 0), (self.blocks[0], 0))
         self.connect((self.blocks[-1], 0), (self, 0))

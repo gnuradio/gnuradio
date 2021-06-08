@@ -10,9 +10,9 @@
 import numpy as np
 from .helper_functions import bit_reverse_vector, is_power_of_two
 
-'''
+"""
 PolarCommon holds value checks and common initializer code for both Encoder and Decoder.
-'''
+"""
 
 
 class PolarCommon(object):
@@ -23,25 +23,30 @@ class PolarCommon(object):
             frozenbits = np.zeros(n - k, dtype=np.int)
         if not len(frozenbits) == n - k:
             raise ValueError(
-                "len(frozenbits)={0} is not equal to n-k={1}!".format(len(frozenbits), n - k))
+                "len(frozenbits)={0} is not equal to n-k={1}!".format(
+                    len(frozenbits), n - k
+                )
+            )
         if not frozenbits.dtype == np.int:
             frozenbits = frozenbits.astype(dtype=int)
         if not len(frozen_bit_position) == (n - k):
             raise ValueError(
                 "len(frozen_bit_position)={0} is not equal to n-k={1}!".format(
-                    len(frozen_bit_position), n - k))
+                    len(frozen_bit_position), n - k
+                )
+            )
         if not frozen_bit_position.dtype == np.int:
             frozen_bit_position = frozen_bit_position.astype(dtype=int)
 
         self.bit_reverse_positions = self._vector_bit_reversed(
-            np.arange(n, dtype=int), int(np.log2(n)))
+            np.arange(n, dtype=int), int(np.log2(n))
+        )
         self.N = n
         self.power = int(np.log2(self.N))
         self.K = k
         self.frozenbits = frozenbits
         self.frozen_bit_position = frozen_bit_position
-        self.info_bit_position = np.delete(
-            np.arange(self.N), self.frozen_bit_position)
+        self.info_bit_position = np.delete(np.arange(self.N), self.frozen_bit_position)
 
     def _insert_frozen_bits(self, u):
         prototype = np.empty(self.N, dtype=int)
