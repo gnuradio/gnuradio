@@ -13,41 +13,42 @@
 #endif
 
 #include <gnuradio/constants.h>
-#include <stdlib.h>
 #include <boost/dll/runtime_symbol_info.hpp>
+#include <cstdlib>
 #include <filesystem>
 
-namespace gr {
+using std::filesystem::path;
 
+namespace gr {
 const std::string prefix()
 {
     // Use "GR_PREFIX" environment variable when specified
-    const char* prefix = getenv("GR_PREFIX");
+    const char* prefix = std::getenv("GR_PREFIX");
     if (prefix != NULL)
         return prefix;
 
-    std::filesystem::path prefix_rel_lib = "@prefix_relative_to_lib@";
-    std::filesystem::path gr_runtime_lib_path = boost::dll::this_line_location().string();
+    path prefix_rel_lib = "@prefix_relative_to_lib@";
+    path gr_runtime_lib_path = boost::dll::this_line_location().string();
     // Canonize before decomposing path so result is reliable and without symlinks
-    std::filesystem::path canonical_lib_path = std::filesystem::canonical(gr_runtime_lib_path);
-    std::filesystem::path prefix_path = canonical_lib_path.parent_path() / prefix_rel_lib;
+    path canonical_lib_path = std::filesystem::canonical(gr_runtime_lib_path);
+    path prefix_path = canonical_lib_path.parent_path() / prefix_rel_lib;
     return prefix_path.lexically_normal().string();
 }
 
 const std::string sysconfdir()
 {
-    std::filesystem::path sysconfdir_rel_prefix = "@SYSCONFDIR_relative_to_prefix@";
-    std::filesystem::path prefix_path = prefix();
-    std::filesystem::path sysconfdir_path = prefix_path / sysconfdir_rel_prefix;
+    path sysconfdir_rel_prefix = "@SYSCONFDIR_relative_to_prefix@";
+    path prefix_path = prefix();
+    path sysconfdir_path = prefix_path / sysconfdir_rel_prefix;
 
     return sysconfdir_path.lexically_normal().string();
 }
 
 const std::string prefsdir()
 {
-    std::filesystem::path prefsdir_rel_prefix = "@GR_PREFSDIR_relative_to_prefix@";
-    std::filesystem::path prefix_path = prefix();
-    std::filesystem::path prefsdir_path = prefix_path / prefsdir_rel_prefix;
+    path prefsdir_rel_prefix = "@GR_PREFSDIR_relative_to_prefix@";
+    path prefix_path = prefix();
+    path prefsdir_path = prefix_path / prefsdir_rel_prefix;
 
     return prefsdir_path.lexically_normal().string();
 }
