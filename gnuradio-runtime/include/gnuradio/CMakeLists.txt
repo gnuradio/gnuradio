@@ -57,7 +57,6 @@ install(FILES
   sys_paths.h
   tag_checker.h
   types.h
-  unittests.h
   rpccallbackregister_base.h
   rpcmanager_base.h
   rpcmanager.h
