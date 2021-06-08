@@ -92,7 +92,7 @@ templates:
         self.${id}.set_bandwidth(${bandwidth})
         self.${id}.set_frequency(${frequency})
         self.${id}.set_samplerate(${samplerate})
-        self.${id}.set_gain(${attenuation1})
+        self.${id}.set_attenuation(${attenuation1})
         self.${id}.set_filter_params(${filter_source}, ${filter}, ${fpass}, ${fstop})
     callbacks:
         - set_bandwidth(${bandwidth})
