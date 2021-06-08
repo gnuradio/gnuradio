@@ -11,6 +11,8 @@
 
 #include <SoapySDR/Types.hpp>
 #include <SoapySDR/Version.h>
+#include <stdexcept>
+#include <string>
 
 // SoapySDR doesn't have an API define for SettingToString, so we need
 // to check the version. 0.8 is the first tagged version to have this
@@ -49,22 +51,20 @@ static inline T string_to_setting(const std::string& str)
 }
 
 // Copied from SoapySDR 0.8
+//! convert empty and "false" strings to false, integers to their truthness
 template <>
 inline bool string_to_setting<bool>(const std::string& str)
 {
-    if (str == SOAPY_SDR_TRUE)
+    if (str.empty() || str == SOAPY_SDR_FALSE) {
+        return false;
+    }
+    if (str == SOAPY_SDR_TRUE) {
         return true;
-    if (str == SOAPY_SDR_FALSE)
-        return false;
-
-    // zeros and empty strings are false
-    if (str == "0")
-        return false;
-    if (str == "0.0")
-        return false;
-    if (str == "")
-        return false;
-
+    }
+    try {
+        return static_cast<bool>(std::stod(str));
+    } catch (std::invalid_argument& e) {
+    }
     // other values are true
     return true;
 }
