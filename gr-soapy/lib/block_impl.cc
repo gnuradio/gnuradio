@@ -457,7 +457,7 @@ void block_impl::set_antenna(const size_t channel, const std::string& name)
     std::vector<std::string> antennas = d_device->listAntennas(d_direction, channel);
 
     // Ignore call if there are no antennas.
-    if (antennas.size() == 0) {
+    if (antennas.empty()) {
         return;
     }
 

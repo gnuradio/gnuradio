@@ -62,7 +62,7 @@ inline bool string_to_setting<bool>(const std::string& str)
         return false;
     if (str == "0.0")
         return false;
-    if (str == "")
+    if (str.empty())
         return false;
 
     // other values are true
