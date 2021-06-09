@@ -18,7 +18,9 @@ for an overview of different approaches
 
 from scipy.optimize import fsolve
 from scipy.special import erfc
-from .helper_functions import *
+import numpy as np
+from .helper_functions import (bhattacharyya_parameter, bit_reverse_vector,
+                               power_of_2_int, show_progress_bar)
 from .channel_construction_bec import bhattacharyya_bounds
 
 

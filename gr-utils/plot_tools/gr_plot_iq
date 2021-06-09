@@ -11,7 +11,8 @@
 import numpy
 
 try:
-    from pylab import *
+    from pylab import (Button, connect, draw, figtext, figure,
+                       get_current_fig_manager, plot, rcParams, show)
 except ImportError:
     print("Please install Python Matplotlib (http://matplotlib.sourceforge.net/) and \
            Python TkInter https://wiki.python.org/moin/TkInter to run this script")
