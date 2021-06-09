@@ -13,7 +13,7 @@ from gnuradio import gr, blocks, digital
 
 from . import fec_python as fec
 
-from .bitflip import *
+from .bitflip import read_bitlist
 
 
 class extended_tagged_decoder(gr.hier_block2):

@@ -11,7 +11,8 @@
 from .encoder import PolarEncoder
 from .decoder import PolarDecoder
 from . import channel_construction as cc
-from .helper_functions import *
+import numpy as np
+from .helper_functions import power_of_2_int
 
 import matplotlib.pyplot as plt
 

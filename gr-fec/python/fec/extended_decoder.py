@@ -13,7 +13,7 @@ from gnuradio import gr, blocks, digital
 
 from . import fec_python as fec
 
-from .bitflip import *
+from .bitflip import read_bitlist
 from .threaded_decoder import threaded_decoder
 from .capillary_threaded_decoder import capillary_threaded_decoder
 
