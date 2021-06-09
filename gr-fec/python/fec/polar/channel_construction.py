@@ -6,20 +6,22 @@
 #
 #
 
-'''
+"""
 [0] Erdal Arikan: 'Channel Polarization: A Method for Constructing Capacity-Achieving Codes for Symmetric Binary-Input Memoryless Channels', 2009
 foundational paper for polar codes.
-'''
+"""
 
 
 from .channel_construction_bec import calculate_bec_channel_capacities
 from .channel_construction_bec import design_snr_to_bec_eta
 from .channel_construction_bec import bhattacharyya_bounds
 import numpy as np
+
 try:
     from .channel_construction_awgn import tal_vardy_tpm_algorithm
 except ImportError:
     print("SciPy missing. Overwrite Tal-Vardy algorithm with BEC approximation")
+
     def tal_vardy_tpm_algorithm(block_size, design_snr, mu):
         return bhattacharyya_bounds(design_snr, block_size)
 
@@ -59,7 +61,7 @@ def get_frozen_bit_mask(frozen_indices, block_size):
 
 def frozen_bit_positions(block_size, info_size, design_snr=0.0):
     if not design_snr > -1.5917:
-        print('bad value for design_nsr, must be > -1.5917! default=0.0')
+        print("bad value for design_nsr, must be > -1.5917! default=0.0")
         design_snr = 0.0
     eta = design_snr_to_bec_eta(design_snr)
     return get_bec_frozen_indices(block_size, block_size - info_size, eta)
@@ -74,6 +76,7 @@ def generate_filename(block_size, design_snr, mu):
 def default_dir():
     dir_def = "~/.gnuradio/polar/"
     import os
+
     path = os.path.expanduser(dir_def)
 
     try:
@@ -84,7 +87,9 @@ def default_dir():
     return path
 
 
-def save_z_parameters(z_params, block_size, design_snr, mu, alt_construction_method='Tal-Vardy algorithm'):
+def save_z_parameters(
+    z_params, block_size, design_snr, mu, alt_construction_method="Tal-Vardy algorithm"
+):
     path = default_dir()
     filename = generate_filename(block_size, design_snr, mu)
     header = Z_PARAM_FIRST_HEADER_LINE + "\n"
@@ -101,6 +106,7 @@ def load_z_parameters(block_size, design_snr, mu):
     filename = generate_filename(block_size, design_snr, mu)
     full_file = path + filename
     import os
+
     if not os.path.isfile(full_file):
         z_params = tal_vardy_tpm_algorithm(block_size, design_snr, mu)
         save_z_parameters(z_params, block_size, design_snr, mu)
@@ -110,7 +116,7 @@ def load_z_parameters(block_size, design_snr, mu):
 
 def main():
     np.set_printoptions(precision=3, linewidth=150)
-    print('channel construction Bhattacharyya bounds by Arikan')
+    print("channel construction Bhattacharyya bounds by Arikan")
     n = 10
     m = 2 ** n
     k = m // 2
@@ -123,10 +129,11 @@ def main():
 
     if 0:
         import matplotlib.pyplot as plt
+
         plt.plot(z_params)
         plt.plot(z_bounds)
         plt.show()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
