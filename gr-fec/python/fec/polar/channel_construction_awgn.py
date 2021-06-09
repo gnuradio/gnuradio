@@ -7,20 +7,24 @@
 #
 
 
-'''
+"""
 Based on 2 papers:
 [1] Ido Tal, Alexander Vardy: 'How To Construct Polar Codes', 2013
 for an in-depth description of a widely used algorithm for channel construction.
 
 [2] Harish Vangala, Emanuele Viterbo, Yi Hong: 'A Comparative Study of Polar Code Constructions for the AWGN Channel', 2015
 for an overview of different approaches
-'''
+"""
 
 from scipy.optimize import fsolve
 from scipy.special import erfc
 import numpy as np
-from .helper_functions import (bhattacharyya_parameter, bit_reverse_vector,
-                               power_of_2_int, show_progress_bar)
+from .helper_functions import (
+    bhattacharyya_parameter,
+    bit_reverse_vector,
+    power_of_2_int,
+    show_progress_bar,
+)
 from .channel_construction_bec import bhattacharyya_bounds
 
 
@@ -45,7 +49,7 @@ def codeword_lambda(y, s):
 
 
 def instantanious_capacity_callable():
-    return lambda x : 1 - np.log2(1 + x) + (x * np.log2(x) / (1 + x))
+    return lambda x: 1 - np.log2(1 + x) + (x * np.log2(x) / (1 + x))
 
 
 def instantanious_capacity(x):
@@ -54,11 +58,11 @@ def instantanious_capacity(x):
 
 def q_function(x):
     # Q(x) = (1 / sqrt(2 * pi) ) * integral (x to inf) exp(- x ^ 2 / 2) dx
-    return .5 * erfc(x / np.sqrt(2))
+    return 0.5 * erfc(x / np.sqrt(2))
 
 
 def discretize_awgn(mu, design_snr):
-    '''
+    """
     needed for Binary-AWGN channels.
     in [1] described in Section VI
     in [2] described as a function of the same name.
@@ -68,18 +72,20 @@ def discretize_awgn(mu, design_snr):
     2. split into mu intervals.
     3. find corresponding output alphabet values y of likelihood ratio function lambda(y) inserted into C(x)
     4. Calculate probability for each value given that a '0' or '1' is was transmitted.
-    '''
+    """
     s = 10 ** (design_snr / 10)
     a = np.zeros(mu + 1, dtype=float)
     a[-1] = np.inf
     for i in range(1, mu):
-        a[i] = solve_capacity(1. * i / mu, s)
+        a[i] = solve_capacity(1.0 * i / mu, s)
 
     factor = np.sqrt(2 * s)
     tpm = np.zeros((2, mu))
     for j in range(mu):
         tpm[0][j] = q_function(factor + a[j]) - q_function(factor + a[j + 1])
-        tpm[1][j] = q_function(-1. * factor + a[j]) - q_function(-1. * factor + a[j + 1])
+        tpm[1][j] = q_function(-1.0 * factor + a[j]) - q_function(
+            -1.0 * factor + a[j + 1]
+        )
 
     tpm = tpm[::-1]
     tpm[0] = tpm[0][::-1]
@@ -88,7 +94,11 @@ def discretize_awgn(mu, design_snr):
 
 
 def instant_capacity_delta_callable():
-    return lambda a, b: -1. * (a + b) * np.log2((a + b) / 2) + a * np.log2(a) + b * np.log2(b)
+    return (
+        lambda a, b: -1.0 * (a + b) * np.log2((a + b) / 2)
+        + a * np.log2(a)
+        + b * np.log2(b)
+    )
 
 
 def capacity_delta_callable():
@@ -101,7 +111,7 @@ def quantize_to_size(tpm, mu):
     calculate_delta_I = capacity_delta_callable()
     L = np.shape(tpm)[1]
     if not mu < L:
-        print('WARNING: This channel gets too small!')
+        print("WARNING: This channel gets too small!")
 
     # lambda works on vectors just fine. Use Numpy vector awesomeness.
     delta_i_vec = calculate_delta_I(tpm[0, 0:-1], tpm[1, 0:-1], tpm[0, 1:], tpm[1, 1:])
@@ -133,8 +143,12 @@ def tal_vardy_tpm_algorithm(block_size, design_snr, mu):
     channels = np.zeros((block_size, 2, mu))
     channels[0] = discretize_awgn(mu, design_snr) * 2
 
-    print('Constructing polar code with Tal-Vardy algorithm')
-    print('(block_size = {0}, design SNR = {1}, mu = {2}'.format(block_size, design_snr, 2 * mu))
+    print("Constructing polar code with Tal-Vardy algorithm")
+    print(
+        "(block_size = {0}, design SNR = {1}, mu = {2}".format(
+            block_size, design_snr, 2 * mu
+        )
+    )
     show_progress_bar(0, block_size)
     for j in range(0, block_power):
         u = 2 ** j
@@ -153,8 +167,8 @@ def tal_vardy_tpm_algorithm(block_size, design_snr, mu):
     z = z[bit_reverse_vector(np.arange(block_size), block_power)]
     z = upper_bound_z_params(z, block_size, design_snr)
     show_progress_bar(block_size, block_size)
-    print('')
-    print('channel construction DONE')
+    print("")
+    print("channel construction DONE")
     return z
 
 
@@ -239,7 +253,7 @@ def normalize_q(q, tpm):
 
 
 def main():
-    print('channel construction AWGN main')
+    print("channel construction AWGN main")
     n = 8
     m = 2 ** n
     design_snr = 0.0
@@ -250,9 +264,10 @@ def main():
 
     if 0:
         import matplotlib.pyplot as plt
+
         plt.plot(z_params)
         plt.show()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
