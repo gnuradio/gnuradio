@@ -11,7 +11,17 @@
 import numpy
 
 try:
-    from pylab import *
+    from pylab import (
+        Button,
+        ceil,
+        connect,
+        draw,
+        figtext,
+        figure,
+        get_current_fig_manager,
+        rcParams,
+        searchsorted,
+        show)
     from matplotlib.font_manager import fontManager, FontProperties
 except ImportError:
     print("Please install Python Matplotlib (http://matplotlib.sourceforge.net/) and \
