@@ -58,6 +58,8 @@ def test_all_examples(example):
     )
     platform.build_library(BLOCK_PATHS)
 
+    platform.trusted_flowgraphs.add(example.path)
+
     flow_graph = platform.make_flow_graph(example.path)
     flow_graph.rewrite()
     flow_graph.validate()

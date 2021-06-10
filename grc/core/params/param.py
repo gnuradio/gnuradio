@@ -7,10 +7,12 @@
 
 import ast
 import collections
+import numbers
 import textwrap
 
 from .. import Constants
 from ..base import Element
+from ..errors import TrustError
 from ..utils.descriptors import Evaluated, EvaluatedEnum, setup_names
 
 from . import dtypes
@@ -46,6 +48,11 @@ class Param(Element):
         # end of args ########################################################
 
         self._evaluated = None
+
+        # the evaluated value stored in grc-file
+        self._saved_evaluated = None
+        self._using_saved = True
+
         self._stringify_flag = False
         self._lisitify_flag = False
         self.hostage_cells = set()
@@ -123,6 +130,9 @@ class Param(Element):
         # Must be a string
         self.value = str(value)
 
+    def set_evaluated(self, value):
+        self._evaluated = value
+
     def set_default(self, value):
         if self.default == self.value:
             self.set_value(value)
@@ -154,7 +164,7 @@ class Param(Element):
             self.add_error_message('Type "{}" is not a possible type.'.format(self.dtype))
 
         validator = dtypes.validators.get(self.dtype, None)
-        if self._init and validator:
+        if self._init and validator and not self.parent_flowgraph.view_only:
             try:
                 validator(self,self.parent_flowgraph.get_imported_names())
             except dtypes.ValidateError as e:
@@ -176,6 +186,73 @@ class Param(Element):
         except ValueError:
             return False
 
+    ##################################################
+    # Truncate helper method
+    ##################################################
+    def truncate(self, string, style=0):
+        max_len = max(27 - len(self.name), 3)
+        if len(string) > max_len:
+            if style < 0:  # Front truncate
+                string = '...' + string[3-max_len:]
+            elif style == 0:  # Center truncate
+                string = string[:max_len//2 - 3] + '...' + string[-max_len//2:]
+            elif style > 0:  # Rear truncate
+                string = string[:max_len-3] + '...'
+        return string
+
+
+    def pretty_print(self):
+        """
+        Get the repr (nice string format) for this param.
+
+        Returns:
+         the string representation
+        """
+
+        from ...gui import Utils
+        ##################################################
+        # Simple conditions
+        ##################################################
+        value = self.get_value()
+        if not self.is_valid():
+            return self.truncate(value)
+        if value in self.options:
+            return self.options[value]  # its name
+
+        ##################################################
+        # Split up formatting by type
+        ##################################################
+        # Default center truncate
+        truncate = 0
+        e = self.get_evaluated()
+        t = self.dtype
+        if isinstance(e, bool):
+            return str(e)
+        elif isinstance(e, numbers.Complex):
+            dt_str = Utils.num_to_str(e)
+        elif isinstance(e, Constants.VECTOR_TYPES):
+            # Vector types
+            if len(e) > 8:
+                # Large vectors use code
+                dt_str = self.get_value()
+                truncate = 1
+            else:
+                # Small vectors use eval
+                dt_str = ', '.join(map(Utils.num_to_str, e))
+        elif t in ('file_open', 'file_save'):
+            dt_str = self.get_value()
+            truncate = -1
+        else:
+            # Other types
+            dt_str = str(e)
+            # ensure that value is a UTF-8 string
+            # Old PMTs could produce non-UTF-8 strings
+            dt_str = dt_str.encode('utf-8', 'backslashreplace').decode('utf-8')
+
+        # Done
+        return self.truncate(dt_str, truncate)
+
+
     def evaluate(self):
         """
         Evaluate the value.
@@ -189,6 +266,12 @@ class Param(Element):
         dtype = self.dtype
         expr = self.get_value()
         scale_factor = self.scale_factor
+
+        if self.parent_flowgraph.view_only:
+            if not self._using_saved:
+                raise TrustError(f"Missing cached value for expression {expr} in {repr(self)}")
+            self._evaluated = self._saved_evaluated
+            return self._saved_evaluated
 
         #########################
         # ID and Enum types (not evaled)

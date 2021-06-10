@@ -20,6 +20,8 @@ from ._templates import MakoTemplates
 from ._flags import Flags
 
 from ..base import Element
+from ..Constants import YAML_TYPES
+from ..errors import TrustError
 from ..utils.descriptors import lazy_property
 
 def _get_elem(iterable, key):
@@ -85,6 +87,8 @@ class Block(Element):
 
         self.current_bus_structure = {'source': None, 'sink': None}
 
+        self._eval_cache = {}
+
     def get_bus_structure(self, direction):
         if direction == 'source':
             bus_structure = self.bus_structure_source
@@ -133,16 +137,17 @@ class Block(Element):
         # namespaces may have changed, update them
         self.block_namespace.clear()
         imports = ""
-        try:
-            imports = self.templates.render('imports')
-            exec(imports, self.block_namespace)
-        except ImportError:
-            # We do not have a good way right now to determine if an import is for a
-            # hier block, these imports will fail as they are not in the search path
-            # this is ok behavior, unfortunately we could be hiding other import bugs
-            pass
-        except Exception:
-            self.add_error_message(f'Failed to evaluate import expression {imports!r}')
+        if not self.parent_flowgraph.view_only:
+            try:
+                imports = self.templates.render('imports')
+                exec(imports, self.block_namespace)
+            except ImportError:
+                # We do not have a good way right now to determine if an import is for a
+                # hier block, these imports will fail as they are not in the search path
+                # this is ok behavior, unfortunately we could be hiding other import bugs
+                pass
+            except Exception:
+                self.add_error_message(f'Failed to evaluate import expression {imports!r}')
 
     def update_bus_logic(self):
         ###############################
@@ -626,7 +631,13 @@ class Block(Element):
         return {key: param.template_arg for key, param in self.params.items()}
 
     def evaluate(self, expr):
-        return self.parent_flowgraph.evaluate(expr, self.namespace)
+        if not self.parent_flowgraph.view_only:
+            self._eval_cache[expr] = self.parent_flowgraph.evaluate(expr, self.namespace)
+
+        try:
+            return self._eval_cache[expr]
+        except KeyError:
+            raise TrustError(f"Missing cached value for expression {expr} in {repr(self)}")
 
     ##############################################
     # Import/Export Methods
@@ -642,14 +653,37 @@ class Block(Element):
         if self.key != 'options':
             data['name'] = self.name
             data['id'] = self.key
+
         data['parameters'] = collections.OrderedDict(sorted(
             (param_id, param.value) for param_id, param in self.params.items()
             if (param_id != 'id' or self.key == 'options')
         ))
+
         data['states'] = collections.OrderedDict(sorted(self.states.items()))
+
+        def get_param_repr(param):
+            if param.dtype in YAML_TYPES:
+                return param.get_evaluated()
+            else:
+                return param.pretty_print()
+
+        data['evaluated'] = collections.OrderedDict(sorted(
+            (param_id, get_param_repr(param)) for param_id, param in self.params.items()
+        ))
+
+        def get_expr_repr(expr):
+            if type(expr).__name__ in YAML_TYPES:
+                return expr
+            else:
+                return str(expr)
+
+        data['expressions'] = collections.OrderedDict(sorted(
+            (expr, get_expr_repr(val)) for expr, val in self._eval_cache.items()
+        ))
+
         return data
 
-    def import_data(self, name, states, parameters, **_):
+    def import_data(self, name, states, parameters, evaluated=None, expressions=None, **_):
         """
         Import this block's params from nested data.
         Any param keys that do not exist will be ignored.
@@ -658,6 +692,8 @@ class Block(Element):
         """
         self.params['id'].value = name
         self.states.update(states)
+        if expressions:
+            self._eval_cache = expressions
 
         def get_hash():
             return hash(tuple(hash(v) for v in self.params.values()))
@@ -667,6 +703,11 @@ class Block(Element):
             for key, value in parameters.items():
                 try:
                     self.params[key].set_value(value)
+                    if evaluated:
+                        try:
+                            self.params[key]._saved_evaluated = evaluated[key]
+                        except KeyError:
+                            self.params[key]._using_saved = False
                 except KeyError:
                     continue
             # Store hash and call rewrite

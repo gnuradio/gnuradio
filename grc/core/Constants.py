@@ -55,6 +55,15 @@ PARAM_TYPE_NAMES = {
     'import',
 }
 
+# Set of types accepted by PyYAML
+YAML_TYPES = PARAM_TYPE_NAMES - {'raw', 'complex', 'complex_vector'}
+# Add python data types
+YAML_TYPES = YAML_TYPES.union({
+    'int', 'float',
+    'str', 'bool',
+    'list', 'tuple', 'dict', 'set'
+})
+
 PARAM_TYPE_MAP = {
     'complex': numbers.Complex,
     'float': numbers.Real,

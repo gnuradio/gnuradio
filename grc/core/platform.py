@@ -43,6 +43,7 @@ class Platform(Element):
             callback_finished=lambda: self.block_docstrings_loaded_callback()
         )
 
+        self.trusted_flowgraphs = set()
         self.blocks = self.block_classes
         self.domains = {}
         self.connection_templates = {}
@@ -84,6 +85,8 @@ class Platform(Element):
         try:
             flow_graph = self.make_flow_graph()
             flow_graph.grc_file_path = file_path
+            if file_path in self.trusted_flowgraphs:
+                flow_graph.view_only = False
             # Other, nested hier_blocks might be auto-loaded here
             flow_graph.import_data(self.parse_flow_graph(file_path))
             flow_graph.rewrite()
@@ -412,6 +415,8 @@ class Platform(Element):
 
     def make_flow_graph(self, from_filename=None):
         fg = self.FlowGraph(parent=self)
+        if from_filename in self.trusted_flowgraphs:
+            fg.view_only = False
         if from_filename:
             data = self.parse_flow_graph(from_filename)
             fg.grc_file_path = from_filename
