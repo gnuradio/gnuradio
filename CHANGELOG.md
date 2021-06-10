@@ -7,7 +7,7 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
-## [3.9.2.0] - 2021-06-03
+## [3.9.2.0] - 2021-06-10
 
 ### Changed
 
