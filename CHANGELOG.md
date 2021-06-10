@@ -7,7 +7,7 @@ starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
-## [3.8.3.1] - 2021-06-02
+## [3.8.3.1] - 2021-06-10
 
 This is a PATCH level revision. The API is compatible with C++ code written for previous v3.8 releases. ABI (shared library signature) is intended to be compatible, so code linked against v3.8.3.0 should not require recompilation.
 
