@@ -246,7 +246,10 @@ class MainWindow(Gtk.ApplicationWindow):
             if file_path: Messages.send_start_load(file_path)
             flow_graph = self._platform.make_flow_graph()
             flow_graph.grc_file_path = file_path
-            #print flow_graph
+
+            if not file_path or file_path in self._platform.trusted_flowgraphs:
+                flow_graph.view_only = False
+
             page = Page(
                 self,
                 flow_graph=flow_graph,

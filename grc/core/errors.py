@@ -16,3 +16,6 @@ class BlockLoadError(GRCError):
 
 class TemplateError(BlockLoadError):
     """Mako Template Error"""
+
+class TrustError(GRCError):
+    """Trust error in View-Only Mode Error"""

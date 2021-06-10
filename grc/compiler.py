@@ -28,6 +28,8 @@ def argument_parser():
                         help="Run the program after compiling [default=%(default)s]")
     parser.add_argument(metavar="GRC_FILE", dest='grc_files', nargs='+',
                         help=".grc file to compile")
+    parser.add_argument("-t", "--trusted", action="store_true", default=True,
+                        help="Trust the .grc file to compile")
     return parser
 
 
@@ -55,6 +57,9 @@ def main(args=None):
     for grc_file in args.grc_files:
         os.path.exists(grc_file) or exit('Error: missing ' + grc_file)
         Messages.send('\n')
+
+        if args.trusted:
+            platform.trusted_flowgraphs.add(str(grc_file))
 
         flow_graph, file_path = platform.load_and_generate_flow_graph(
             os.path.abspath(grc_file), os.path.abspath(out_dir))

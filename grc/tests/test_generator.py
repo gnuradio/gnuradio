@@ -28,6 +28,7 @@ def test_generator():
         version='0.0.0',
     )
     platform.build_library(block_paths)
+    platform.trusted_flowgraphs.add(str(grc_file))
 
     flow_graph = platform.make_flow_graph(grc_file)
     flow_graph.rewrite()

@@ -18,7 +18,8 @@ def test_compiler(capsys):
         output=tempfile.gettempdir(),
         user_lib_dir=False,
         grc_files=[path.join(path.dirname(__file__), 'resources', 'test_compiler.grc')],
-        run=True
+        run=True,
+        trusted=True
     )
 
     main(args)

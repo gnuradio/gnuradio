@@ -48,6 +48,8 @@ class FlowGraph(Element):
 
         self.grc_file_path = ''
 
+        self.view_only = True
+
     def __str__(self):
         return 'FlowGraph - {}({})'.format(self.get_option('title'), self.get_option('id'))
 
@@ -222,7 +224,8 @@ class FlowGraph(Element):
         """
         Flag the namespace to be renewed.
         """
-        self.renew_namespace()
+        if not self.view_only:
+            self.renew_namespace()
         Element.rewrite(self)
 
     def renew_namespace(self):
@@ -286,10 +289,13 @@ class FlowGraph(Element):
         # Evaluate
         if not expr:
             raise Exception('Cannot evaluate empty statement.')
-        if namespace is not None:
-            return eval(expr, namespace, local_namespace)
+        if not self.view_only:
+            if namespace is not None:
+                return eval(expr, namespace, local_namespace)
+            else:
+                return self._eval_cache.setdefault(expr, eval(expr, self.namespace, local_namespace))
         else:
-            return self._eval_cache.setdefault(expr, eval(expr, self.namespace, local_namespace))
+            return None
 
     ##############################################
     # Add/remove stuff
