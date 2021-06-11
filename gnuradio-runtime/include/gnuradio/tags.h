@@ -33,15 +33,15 @@ struct GR_RUNTIME_API tag_t {
     //! ignore this.
     std::vector<long> marked_deleted;
 
-    /*!
-     * Comparison function to test which tag, \p x or \p y, came
-     * first in time
-     */
-    static inline bool offset_compare(const tag_t& x, const tag_t& y)
+    //! Comparison function to test which tag, \p x or \p y, came first in time
+    friend inline bool operator<(const tag_t& x, const tag_t& y)
     {
         return x.offset < y.offset;
     }
+    //! Comparison function to test which tag, \p x or \p y, came first in time
+    static inline bool offset_compare(const tag_t& x, const tag_t& y) { return x < y; }
 
+    //! equality comparison. Compares all details, except marked_delete
     inline bool operator==(const tag_t& t) const
     {
         return (t.key == key) && (t.value == value) && (t.srcid == srcid) &&
@@ -56,6 +56,7 @@ struct GR_RUNTIME_API tag_t {
     {
     }
 
+    //! Copy constructor; constructs identical tag, but doesn't copy marked_delete
     tag_t(const tag_t& rhs)
         : offset(rhs.offset), key(rhs.key), value(rhs.value), srcid(rhs.srcid)
     {
