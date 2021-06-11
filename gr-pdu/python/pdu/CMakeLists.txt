@@ -11,6 +11,7 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
+    pdu_lambda.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/pdu
 )
 

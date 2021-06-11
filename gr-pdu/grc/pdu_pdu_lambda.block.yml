@@ -1,0 +1,41 @@
+id: pdu_pdu_lambda
+label: PDU Lambda
+flags: [ python ]
+
+parameters:
+-   id: fn
+    label: Function
+    dtype: raw
+    default: 'lambda x: x*10'
+-   id: metadict
+    label: Mode
+    dtype: enum
+    options: [Metadata, Uniform Vector]
+    option_attributes:
+        mode: [True, False]
+    default: True
+    hide: part
+-   id: key
+    label: Key
+    dtype: raw
+    default: 'pmt.intern("key")'
+    hide: ${ 'none' if metadict.mode else 'all' }
+
+inputs:
+-   id: pdu
+    domain: message
+    optional: true
+
+outputs:
+- id: pdu
+    domain: message
+    optional: true
+
+templates:
+    imports: import pylambda, pmt, numpy as np
+    make: pylambda.pdu_lambda(${fn}, ${metadict.mode}, ${key})
+    callbacks:
+    - set_fn(${fn})
+    - set_fn(${key})
+
+file_format: 1

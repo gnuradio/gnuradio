@@ -15,6 +15,15 @@
 #include <pmt/pmt.h>
 
 namespace gr {
+namespace metadata_keys {
+
+const pmt::pmt_t pdu_num()
+{
+    static const pmt::pmt_t val = pmt::mp("pdu_num");
+    return val;
+}
+
+} /* namespace metadata_keys */
 namespace msgport_names {
 
 const pmt::pmt_t bpdu()

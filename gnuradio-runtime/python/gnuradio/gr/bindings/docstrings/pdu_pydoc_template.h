@@ -15,6 +15,9 @@
  */
 
 
+static const char* __doc_gr_metadata_keys_pdu_num = R"doc()doc";
+
+
 static const char* __doc_gr_msgport_names_bpdu = R"doc()doc";
 
 

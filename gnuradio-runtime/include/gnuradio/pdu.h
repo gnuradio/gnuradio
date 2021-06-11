@@ -16,6 +16,10 @@
 #include <pmt/pmt.h>
 
 namespace gr {
+namespace metadata_keys {
+GR_RUNTIME_API const pmt::pmt_t pdu_num();
+} /* namespace metadata_keys */
+
 namespace msgport_names {
 // static const PMT interned string getters for standard port names
 GR_RUNTIME_API const pmt::pmt_t bpdu();
