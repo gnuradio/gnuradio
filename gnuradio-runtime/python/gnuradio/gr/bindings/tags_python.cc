@@ -1,5 +1,6 @@
 /*
  * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2021 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -14,10 +15,11 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(tags.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(73eb73e445943e224cdbae24b0b0ab76)                     */
+/* BINDTOOL_HEADER_FILE_HASH(25435955fa46de2924e0b648c4f8dd43)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
+#include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
@@ -43,6 +45,8 @@ void bind_tags(py::module& m)
                     py::arg("x"),
                     py::arg("y"),
                     D(tag_t, offset_compare))
+
+        .def(py::self < py::self, D(tag_t, offset_compare))
 
         .def_readwrite("offset", &tag_t::offset)
         .def_readwrite("key", &tag_t::key)
