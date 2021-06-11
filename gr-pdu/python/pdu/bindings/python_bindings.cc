@@ -23,6 +23,7 @@ void bind_pdu_split(py::module&);
 void bind_pdu_to_tagged_stream(py::module&);
 void bind_random_pdu(py::module&);
 void bind_tagged_stream_to_pdu(py::module&);
+void bind_take_skip_to_pdu(py::module&);
 void bind_time_delta(py::module&);
 
 // We need this hack because import_array() returns NULL
@@ -52,5 +53,6 @@ PYBIND11_MODULE(pdu_python, m)
     bind_pdu_to_tagged_stream(m);
     bind_random_pdu(m);
     bind_tagged_stream_to_pdu(m);
+    bind_take_skip_to_pdu(m);
     bind_time_delta(m);
 }

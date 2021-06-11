@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pdu.h)                                                     */
-/* BINDTOOL_HEADER_FILE_HASH(d5f32198890a9b1099e6b7ed492650f9)                     */
+/* BINDTOOL_HEADER_FILE_HASH(e6887fee8ea637d80f0ed7b6f2ffc552)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -41,6 +41,12 @@ void bind_pdu(py::module& m)
         .export_values();
 
     py::implicitly_convertible<int, ::gr::types::vector_type>();
+
+
+    py::module m_metadata_keys = m.def_submodule("metadata_keys");
+
+    m_metadata_keys.def(
+        "pdu_num", &::gr::metadata_keys::pdu_num, D(metadata_keys, pdu_num));
 
 
     py::module m_msgport_names = m.def_submodule("msgport_names");

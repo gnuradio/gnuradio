@@ -21,3 +21,4 @@ except ImportError:
     from .pdu_python import *
 
 # import any pure python here
+from .pdu_lambda import pdu_lambda
