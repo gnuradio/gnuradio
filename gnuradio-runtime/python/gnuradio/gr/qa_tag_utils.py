@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
 # Copyright 2007,2010 Free Software Foundation, Inc.
+# Copyright 2021 Marcus Müller
 #
 # This file is part of GNU Radio
 #
@@ -31,6 +32,24 @@ class test_tag_utils (gr_unittest.TestCase):
         self.assertEqual(pt.key, 'key')
         self.assertEqual(pt.value, 23)
         self.assertEqual(pt.offset, 10)
+
+    def test_comparison(self):
+        t = gr.tag_t()
+        t.offset = 10
+        t.key = pmt.string_to_symbol('key')
+        t.value = pmt.from_long(23)
+        t.srcid = pmt.from_bool(False)
+
+        t2 = gr.tag_t()
+        t2.offset = 100
+        t2.key = pmt.string_to_symbol('aaa')
+        t2.value = pmt.from_long(230)
+        t2.srcid = pmt.from_bool(True)
+        self.assertTrue(t < t2)
+        self.assertTrue(t == t)
+        self.assertTrue(t != t2)
+        self.assertFalse(t > t2)
+        self.assertFalse(t < t)
 
     def test_002(self):
         offset = 10
@@ -75,20 +94,19 @@ class test_tag_utils (gr_unittest.TestCase):
             t.srcid = srcid
             tags.append(t)
 
-        for k, t in zip(sorted(offsets),
-                        sorted(tags, key=gr.tag_t_offset_compare_key())):
+        for k, t in zip(sorted(offsets), sorted(tags)):
             self.assertEqual(t.offset, k)
             self.assertTrue(pmt.equal(t.key, key))
             self.assertTrue(pmt.equal(t.value, pmt.from_long(k)))
             self.assertTrue(pmt.equal(t.srcid, srcid))
 
-        tmin = min(tags, key=gr.tag_t_offset_compare_key())
+        tmin = min(tags)
         self.assertEqual(tmin.offset, min(offsets))
         self.assertTrue(pmt.equal(tmin.key, key))
         self.assertTrue(pmt.equal(tmin.value, pmt.from_long(min(offsets))))
         self.assertTrue(pmt.equal(tmin.srcid, srcid))
 
-        tmax = max(tags, key=gr.tag_t_offset_compare_key())
+        tmax = max(tags)
         self.assertEqual(tmax.offset, max(offsets))
         self.assertTrue(pmt.equal(tmax.key, key))
         self.assertTrue(pmt.equal(tmax.value, pmt.from_long(max(offsets))))
@@ -96,5 +114,4 @@ class test_tag_utils (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    print('hi')
     gr_unittest.run(test_tag_utils)

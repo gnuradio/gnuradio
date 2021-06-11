@@ -99,36 +99,3 @@ def python_to_tag(tag_struct):
         return tag
     else:
         return None
-
-def tag_t_offset_compare_key():
-    """
-    Convert a tag_t.offset_compare function into a key=function
-    This method is modeled after functools.cmp_to_key(_func_).
-    It can be used by functions that accept a key function, such as
-    sorted(), min(), max(), etc. to compare tags by their offsets,
-    e.g., sorted(tag_list, key=gr.tag_t.offset_compare_key()).
-    """
-    class K(object):
-        def __init__(self, obj, *args):
-            self.obj = obj
-        def __lt__(self, other):
-            # x.offset < y.offset
-            return gr.tag_t.offset_compare(self.obj, other.obj)
-        def __gt__(self, other):
-            # y.offset < x.offset
-            return gr.tag_t.offset_compare(other.obj, self.obj)
-        def __eq__(self, other):
-            # not (x.offset < y.offset) and not (y.offset < x.offset)
-            return not gr.tag_t.offset_compare(self.obj, other.obj) and \
-                   not gr.tag_t.offset_compare(other.obj, self.obj)
-        def __le__(self, other):
-            # not (y.offset < x.offset)
-            return not gr.tag_t.offset_compare(other.obj, self.obj)
-        def __ge__(self, other):
-            # not (x.offset < y.offset)
-            return not gr.tag_t.offset_compare(self.obj, other.obj)
-        def __ne__(self, other):
-            # (x.offset < y.offset) or (y.offset < x.offset)
-            return gr.tag_t.offset_compare(self.obj, other.obj) or \
-                   gr.tag_t.offset_compare(other.obj, self.obj)
-    return K
