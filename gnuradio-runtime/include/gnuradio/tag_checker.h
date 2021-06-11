@@ -29,7 +29,7 @@ public:
     tag_checker(std::vector<tag_t>& tags) : d_has_next_tag(false), d_next_tag_index(0)
     {
         d_tags = tags;
-        std::sort(d_tags.begin(), d_tags.end(), &gr::tag_t::offset_compare);
+        std::sort(d_tags.begin(), d_tags.end());
         if (!d_tags.empty()) {
             d_has_next_tag = true;
             d_next_tag = tags[0];
