@@ -18,7 +18,6 @@
 #include <gnuradio/blocks/null_source.h>
 #include <gnuradio/top_block.h>
 #include <boost/test/unit_test.hpp>
-#include <iostream>
 
 #define VERBOSE 0
 

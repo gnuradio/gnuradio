@@ -15,7 +15,6 @@
 #include "message_debug_impl.h"
 #include <gnuradio/io_signature.h>
 #include <cstdio>
-#include <iostream>
 
 namespace gr {
 namespace blocks {
