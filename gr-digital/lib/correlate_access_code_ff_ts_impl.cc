@@ -18,7 +18,6 @@
 #include <volk/volk.h>
 #include <boost/format.hpp>
 #include <cstdio>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {
