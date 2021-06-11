@@ -362,8 +362,7 @@ class qa_burst_shaper (gr_unittest.TestCase):
 
         # checks
         self.assertFloatTuplesAlmostEqual(sink.data(), expected, 6)
-        for x, y in zip(sorted(sink.tags(), key=gr.tag_t_offset_compare_key()),
-                        sorted(etags, key=gr.tag_t_offset_compare_key())):
+        for x, y in zip(sorted(sink.tags()), sorted(etags)):
             self.assertTrue(compare_tags(x, y))
 
 
