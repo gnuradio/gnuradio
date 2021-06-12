@@ -9,12 +9,7 @@
  */
 
 #include <gnuradio/filter/firdes.h>
-#include <gnuradio/gr_complex.h>
 #include <boost/test/unit_test.hpp>
-#include <cstdio>
-#include <cstring>
-#include <iomanip>
-#include <iostream>
 
 namespace gr {
 namespace filter {
