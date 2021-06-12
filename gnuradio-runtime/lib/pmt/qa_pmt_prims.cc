@@ -12,7 +12,6 @@
 #include <pmt/api.h> //reason: suppress warnings
 #include <boost/format.hpp>
 #include <boost/test/unit_test.hpp>
-#include <cstdio>
 #include <cstring>
 #include <sstream>
 

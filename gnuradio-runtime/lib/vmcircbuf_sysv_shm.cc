@@ -25,7 +25,6 @@
 #endif
 #include "pagesize.h"
 #include <cerrno>
-#include <cstdio>
 
 #define MAX_SYSV_SHM_ATTEMPTS 3
 

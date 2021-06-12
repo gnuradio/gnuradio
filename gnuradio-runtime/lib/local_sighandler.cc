@@ -14,7 +14,6 @@
 
 #include "local_sighandler.h"
 #include <boost/format.hpp>
-#include <cstdio>
 #include <cstring>
 #include <stdexcept>
 
