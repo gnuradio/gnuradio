@@ -19,8 +19,18 @@
 #endif
 
 #include <gnuradio/logger.h>
+
 #include <gnuradio/prefs.h>
+
+#include <log4cpp/FileAppender.hh>
+#include <log4cpp/OstreamAppender.hh>
+#include <log4cpp/PatternLayout.hh>
+#include <log4cpp/PropertyConfigurator.hh>
+#include <log4cpp/RollingFileAppender.hh>
+#include <boost/thread.hpp>
+
 #include <algorithm>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
