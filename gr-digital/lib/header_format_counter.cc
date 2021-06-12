@@ -15,8 +15,7 @@
 #include <gnuradio/digital/header_format_counter.h>
 #include <gnuradio/math.h>
 #include <volk/volk_alloc.hh>
-#include <cstring>
-#include <iomanip>
+#include <string>
 
 namespace gr {
 namespace digital {

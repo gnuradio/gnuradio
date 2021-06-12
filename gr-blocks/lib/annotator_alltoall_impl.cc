@@ -15,7 +15,6 @@
 #include "annotator_alltoall_impl.h"
 #include <gnuradio/io_signature.h>
 #include <cstring>
-#include <iomanip>
 
 namespace gr {
 namespace blocks {

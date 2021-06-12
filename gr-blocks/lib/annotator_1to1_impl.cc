@@ -15,7 +15,7 @@
 #include "annotator_1to1_impl.h"
 #include <gnuradio/io_signature.h>
 #include <cstring>
-#include <iomanip>
+#include <sstream>
 
 namespace gr {
 namespace blocks {
