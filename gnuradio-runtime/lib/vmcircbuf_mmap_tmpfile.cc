@@ -28,7 +28,6 @@
 #include <fcntl.h>
 #include <boost/format.hpp>
 #include <cerrno>
-#include <cstdio>
 #include <cstring>
 
 namespace gr {

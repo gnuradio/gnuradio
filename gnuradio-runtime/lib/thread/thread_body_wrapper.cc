@@ -19,7 +19,6 @@
 #include <csignal>
 #endif
 
-#include <cstdio>
 
 namespace gr {
 namespace thread {
