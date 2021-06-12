@@ -23,20 +23,16 @@ typedef int mode_t;
 #include <sys/types.h>
 #endif
 
+// Since this file is included in *all* gr::blocks, please make sure this list of includes
+// keeps as short as possible; if anything is needed only by the implementation in
+// buffer.cc, then only include it there
 #include <gnuradio/api.h>
 #include <log4cpp/Category.hh>
-#include <log4cpp/FileAppender.hh>
-#include <log4cpp/OstreamAppender.hh>
-#include <log4cpp/PatternLayout.hh>
-#include <log4cpp/PropertyConfigurator.hh>
-#include <log4cpp/RollingFileAppender.hh>
-#include <pmt/pmt.h>
 #include <boost/format.hpp>
 #include <boost/thread.hpp>
 #include <cassert>
-#include <ctime>
-#include <filesystem>
 #include <memory>
+
 
 namespace gr {
 
