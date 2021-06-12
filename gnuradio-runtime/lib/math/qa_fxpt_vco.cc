@@ -17,8 +17,6 @@
 #include <unistd.h>
 #include <boost/test/unit_test.hpp>
 #include <cmath>
-#include <cstdio>
-#include <iostream>
 
 static const float SIN_COS_TOLERANCE = 1e-5;
 
@@ -56,8 +54,6 @@ BOOST_AUTO_TEST_CASE(t0)
         max_phase_error =
             max_d(max_phase_error, ref_vco.get_phase() - new_vco.get_phase());
     }
-    // printf ("Fxpt  max error %.9f, max phase error %.9f\n", max_error,
-    // max_phase_error);
 }
 
 BOOST_AUTO_TEST_CASE(t1)
@@ -83,8 +79,6 @@ BOOST_AUTO_TEST_CASE(t1)
         max_error = max_d(max_error, ref_block[i] - new_block[i]);
     }
     BOOST_CHECK(std::abs(ref_vco.get_phase() - new_vco.get_phase()) <= SIN_COS_TOLERANCE);
-    // printf ("Fxpt  max error %.9f, max phase error %.9f\n", max_error,
-    // ref_vco.get_phase()-new_vco.get_phase());
 }
 
 
@@ -111,6 +105,4 @@ BOOST_AUTO_TEST_CASE(t2)
         max_error = max_d(max_error, abs(ref_block[i] - new_block[i]));
     }
     BOOST_CHECK(std::abs(ref_vco.get_phase() - new_vco.get_phase()) <= SIN_COS_TOLERANCE);
-    // printf ("Fxpt  max error %.9f, max phase error %.9f\n", max_error,
-    // ref_vco.get_phase()-new_vco.get_phase());
 }
