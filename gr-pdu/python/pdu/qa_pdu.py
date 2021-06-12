@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
 # Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2021 Marcus Müller
 #
 # This file is part of GNU Radio
 #
@@ -22,10 +23,8 @@ class test_pdu(gr_unittest.TestCase):
     def tearDown(self):
         self.tb = None
 
-    def test_000(self):
+    def test_001_just_run_data(self):
         # Just run some data through and make sure it doesn't puke.
-        src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-
         src = pdu.pdu_to_tagged_stream(gr.types.byte_t)
         snk3 = pdu.tagged_stream_to_pdu(gr.types.byte_t)
         snk2 = blocks.vector_sink_b()
@@ -77,7 +76,7 @@ class test_pdu(gr_unittest.TestCase):
         self.assertEqual(actual_data, list(result_data))
         self.assertEqual(actual_data, msg_data)
 
-    def test_001(self):
+    def test_002_overflow(self):
         # Test the overflow buffer in pdu_to_tagged_stream
         src_data = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
         src = pdu.pdu_to_tagged_stream(gr.types.float_t)
@@ -97,7 +96,7 @@ class test_pdu(gr_unittest.TestCase):
 
         self.assertEqual(src_data, list(snk.data()))
 
-    def test_002_tags_plus_data(self):
+    def test_003_tags_plus_data(self):
         packet_len = 16
         src_data = list(range(packet_len))
         tag1 = gr.tag_t()
@@ -126,6 +125,24 @@ class test_pdu(gr_unittest.TestCase):
         self.assertEqual(metadata, {'eggs': 42, 'spam': 23})
         self.assertFloatTuplesAlmostEqual(tuple(vector), src_data)
 
+    def test_004_legacy_pdu_handling(self):
+        self.tb.start()
+        self.tb.lock()
+        rem = pdu.pdu_remove(pmt.intern('foo'))
+        dbg = blocks.message_debug()
+        self.tb.msg_connect((rem, 'pdus'), (dbg, 'store'))
+
+        self.tb.unlock()
+
+        msg = pmt.cons(pmt.PMT_NIL, pmt.init_u8vector(3, (1, 2, 3)))
+        rem.to_basic_block()._post(pmt.intern('pdus'), msg)
+        time.sleep(0.2)
+
+        self.tb.stop()
+
+        self.assertEqual(dbg.num_messages(), 1)
+        data = pmt.u8vector_elements(pmt.cdr(dbg.get_message(0)))
+        self.assertEqual([1, 2, 3], data)
 
 if __name__ == '__main__':
     gr_unittest.run(test_pdu)

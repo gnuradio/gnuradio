@@ -1,4 +1,5 @@
 # Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2021 Marcus Müller
 #
 # This file is part of GNU Radio
 #
@@ -32,9 +33,25 @@ if(ENABLE_TESTING)
     )
   include(GrTest)
   file(GLOB py_qa_test_files "qa_*.py")
+  set(py_qa_test_files
+    qa_flowgraph.py
+    qa_prefs.py
+    qa_random.py
+    qa_tag_utils.py
+    )
+  # This is a check for whether gr-blocks is enabled
+  if(ENABLE_DEFAULT OR ENABLE_GR_BLOCKS)
+    list(APPEND py_qa_test_files
+      qa_hier_block2.py
+      qa_uncaught_exception.py
+      )
+  else()
+    message(STATUS "gr-blocks not enabled: Disabling hier block and uncaught exception test")
+  endif()
+
   foreach(py_qa_test_file ${py_qa_test_files})
     get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
-    GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${py_qa_test_file})
+    GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${CMAKE_CURRENT_SOURCE_DIR}/${py_qa_test_file})
   endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)
 
