@@ -19,9 +19,12 @@
 #include <sstream>
 #include <stdexcept>
 
+// TODO: Replace with GNU Radio logging
+#include <iostream>
+
 namespace gr {
 
-#define HIER_BLOCK2_DETAIL_DEBUG 0
+constexpr bool HIER_BLOCK2_DETAIL_DEBUG = false;
 
 hier_block2_detail::hier_block2_detail(hier_block2* owner)
     : d_owner(owner), d_parent_detail(0), d_fg(make_flowgraph())

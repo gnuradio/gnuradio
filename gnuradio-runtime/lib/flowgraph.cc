@@ -17,9 +17,12 @@
 #include <sstream>
 #include <stdexcept>
 
+// TODO: Replace with GNU Radio logging
+#include <iostream>
+
 namespace gr {
 
-#define FLOWGRAPH_DEBUG 0
+constexpr bool FLOWGRAPH_DEBUG = false;
 
 edge::~edge() {}
 

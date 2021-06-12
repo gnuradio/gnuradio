@@ -36,7 +36,6 @@ typedef int mode_t;
 #include <cassert>
 #include <ctime>
 #include <filesystem>
-#include <iostream>
 #include <memory>
 
 namespace gr {
