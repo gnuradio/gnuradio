@@ -15,7 +15,6 @@
 #include "annotator_raw_impl.h"
 #include <gnuradio/io_signature.h>
 #include <cstring>
-#include <iomanip>
 #include <stdexcept>
 
 using namespace pmt;
