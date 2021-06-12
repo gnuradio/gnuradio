@@ -16,7 +16,6 @@
 #include <qwt_legend.h>
 #include <qwt_scale_draw.h>
 #include <QColor>
-#include <iostream>
 
 class ConstellationDisplayZoomer : public QwtPlotZoomer
 {

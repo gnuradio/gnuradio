@@ -16,7 +16,6 @@
 #include <gnuradio/logger.h>
 #include <volk/volk.h>
 #include <cstring>
-#include <iostream>
 #include <memory>
 
 namespace gr {

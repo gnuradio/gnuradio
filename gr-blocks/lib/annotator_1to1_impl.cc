@@ -16,7 +16,6 @@
 #include <gnuradio/io_signature.h>
 #include <cstring>
 #include <iomanip>
-#include <iostream>
 
 namespace gr {
 namespace blocks {

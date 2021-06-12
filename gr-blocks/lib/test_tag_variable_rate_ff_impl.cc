@@ -18,7 +18,6 @@
 #include <cstdint>
 #include <cstring>
 #include <iomanip>
-#include <iostream>
 #include <stdexcept>
 
 using namespace pmt;

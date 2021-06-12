@@ -14,7 +14,6 @@
 #include <QMessageBox>
 #include <QSpacerItem>
 #include <cmath>
-#include <iostream>
 
 FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
     : DisplayForm(nplots, parent)

@@ -20,7 +20,6 @@
 #include <boost/math/special_functions/round.hpp>
 #include <QColor>
 #include <cmath>
-#include <iostream>
 
 #ifdef _MSC_VER
 #define copysign _copysign

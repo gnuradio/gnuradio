@@ -16,7 +16,6 @@
 #include "pccc_decoder_blk_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/trellis/core_algorithms.h>
-#include <iostream>
 
 namespace gr {
 namespace trellis {

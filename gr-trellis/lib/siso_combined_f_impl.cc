@@ -14,7 +14,6 @@
 
 #include "siso_combined_f_impl.h"
 #include <gnuradio/io_signature.h>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {

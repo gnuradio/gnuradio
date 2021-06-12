@@ -14,7 +14,6 @@
 #include <QMessageBox>
 
 #include <cmath>
-#include <iostream>
 
 WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
     : DisplayForm(nplots, parent)

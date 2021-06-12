@@ -11,7 +11,6 @@
 #include <gnuradio/rpcregisterhelpers.h>
 #include <pythread.h>
 #include <boost/format.hpp>
-#include <iostream>
 
 enum pyport_t { PYPORT_STRING, PYPORT_FLOAT };
 

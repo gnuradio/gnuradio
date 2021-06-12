@@ -10,7 +10,6 @@
 #include "audio_registry.h"
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
-#include <iostream>
 #include <stdexcept>
 #include <vector>
 

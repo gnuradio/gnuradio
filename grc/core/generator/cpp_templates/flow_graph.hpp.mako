@@ -31,7 +31,6 @@ ${inc}
 % endif
 
 % if parameters:
-#include <iostream>
 #include <boost/program_options.hpp>
 % endif
 

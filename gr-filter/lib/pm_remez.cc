@@ -33,7 +33,6 @@
 #include <gnuradio/logger.h>
 #include <cassert>
 #include <cmath>
-#include <iostream>
 
 #ifndef LOCAL_BUFFER
 #include <vector>

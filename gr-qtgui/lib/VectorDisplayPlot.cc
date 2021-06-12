@@ -17,7 +17,6 @@
 #include <qwt_legend.h>
 #include <qwt_scale_draw.h>
 #include <QColor>
-#include <iostream>
 
 #if QWT_VERSION < 0x060100
 #include <qwt_legend_item.h>

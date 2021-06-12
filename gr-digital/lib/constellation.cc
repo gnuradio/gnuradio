@@ -21,7 +21,6 @@
 
 #include <cfloat>
 #include <cstdlib>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {

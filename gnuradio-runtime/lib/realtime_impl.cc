@@ -26,7 +26,6 @@
 #include <cstdio>
 #include <cstring>
 
-#include <iostream>
 
 #if defined(HAVE_PTHREAD_SETSCHEDPARAM) || defined(HAVE_SCHED_SETSCHEDULER)
 #include <pthread.h>

@@ -17,7 +17,6 @@
 #include <qpainter.h>
 #include <qpen.h>
 
-#include <iostream>
 
 #if QWT_VERSION < 0x060000
 #include "qwt_double_interval.h"

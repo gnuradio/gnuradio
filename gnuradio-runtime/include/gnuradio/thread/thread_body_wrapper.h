@@ -15,7 +15,6 @@
 #include <gnuradio/logger.h>
 #include <gnuradio/thread/thread.h>
 #include <exception>
-#include <iostream>
 
 namespace gr {
 namespace thread {

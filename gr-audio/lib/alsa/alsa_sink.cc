@@ -19,7 +19,6 @@
 #include <gnuradio/prefs.h>
 #include <cstdio>
 #include <future>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {
