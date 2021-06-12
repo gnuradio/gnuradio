@@ -15,7 +15,6 @@
 
 #include <cmath>
 #include <cstdio>
-#include <iostream>
 
 TimeRasterData::TimeRasterData(const double rows, const double cols)
 #if QWT_VERSION < 0x060000

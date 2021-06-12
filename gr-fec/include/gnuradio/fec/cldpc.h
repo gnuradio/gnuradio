@@ -11,7 +11,6 @@
 #ifndef LDPC_H
 #define LDPC_H
 
-#include <iostream>
 #include <vector>
 
 #include "gnuradio/fec/alist.h"

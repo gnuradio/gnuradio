@@ -18,7 +18,6 @@
 #include <boost/test/unit_test.hpp>
 #include <cmath>
 #include <cstdio>
-#include <iostream>
 
 static const float SIN_COS_TOLERANCE = 1e-5;
 

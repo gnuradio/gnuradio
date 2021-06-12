@@ -16,7 +16,6 @@
 #include <gnuradio/flowgraph.h>
 #include <gnuradio/hier_block2.h>
 #include <gnuradio/io_signature.h>
-#include <iostream>
 #include <memory>
 
 namespace gr {

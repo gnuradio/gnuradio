@@ -13,7 +13,6 @@
 #include <QMessageBox>
 
 #include <cmath>
-#include <iostream>
 
 HistogramDisplayForm::HistogramDisplayForm(int nplots, QWidget* parent)
     : DisplayForm(nplots, parent)

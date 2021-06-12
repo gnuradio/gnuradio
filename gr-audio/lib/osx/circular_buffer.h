@@ -13,7 +13,6 @@
 
 #include <gnuradio/logger.h>
 #include <gnuradio/thread/thread.h>
-#include <iostream>
 #include <stdexcept>
 
 #ifndef DO_DEBUG

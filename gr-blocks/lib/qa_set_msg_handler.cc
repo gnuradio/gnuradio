@@ -20,7 +20,6 @@
 #include <gnuradio/top_block.h>
 #include <boost/test/unit_test.hpp>
 #include <boost/thread/thread.hpp>
-#include <iostream>
 
 /*
  * The gr::block::nop block has been instrumented so that it counts

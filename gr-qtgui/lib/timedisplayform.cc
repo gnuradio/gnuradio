@@ -16,7 +16,6 @@
 #include <QSpacerItem>
 
 #include <cmath>
-#include <iostream>
 
 
 TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)

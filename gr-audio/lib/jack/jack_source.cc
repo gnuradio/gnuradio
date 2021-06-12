@@ -19,7 +19,6 @@
 #include <gnuradio/prefs.h>
 #include <type_traits>
 #include <cstdio>
-#include <iostream>
 #include <stdexcept>
 
 #ifndef NO_PTHREAD

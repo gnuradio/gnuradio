@@ -18,7 +18,6 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <cstdio>
-#include <iostream>
 #include <stdexcept>
 
 #ifndef NO_PTHREAD

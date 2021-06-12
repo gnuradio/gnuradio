@@ -15,7 +15,6 @@
 #include <gnuradio/math.h>
 #include <volk/volk_alloc.hh>
 #include <cstring>
-#include <iostream>
 
 namespace gr {
 namespace digital {

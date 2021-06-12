@@ -28,7 +28,6 @@
 #include "gf2mat.h"
 #include <gnuradio/fec/api.h>
 #include <cmath>
-#include <iostream>
 #include <vector>
 
 class FEC_API awgn_bp

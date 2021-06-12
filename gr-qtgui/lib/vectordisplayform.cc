@@ -13,7 +13,6 @@
 #include <QMessageBox>
 
 #include <cmath>
-#include <iostream>
 
 VectorDisplayForm::VectorDisplayForm(int nplots, QWidget* parent)
     : DisplayForm(nplots, parent)

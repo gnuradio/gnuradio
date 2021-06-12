@@ -18,7 +18,6 @@
 #include <gnuradio/rpcserver_base.h>
 #include <boost/format.hpp>
 #include <boost/thread/mutex.hpp>
-#include <iostream>
 #include <map>
 #include <sstream>
 #include <string>

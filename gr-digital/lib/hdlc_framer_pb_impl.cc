@@ -15,7 +15,6 @@
 #include "hdlc_framer_pb_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/tags.h>
-#include <iostream>
 
 namespace gr {
 namespace digital {

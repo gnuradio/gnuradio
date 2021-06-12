@@ -18,7 +18,6 @@
 #include <gnuradio/prefs.h>
 #include <gnuradio/top_block.h>
 #include <unistd.h>
-#include <iostream>
 #include <memory>
 
 namespace gr {

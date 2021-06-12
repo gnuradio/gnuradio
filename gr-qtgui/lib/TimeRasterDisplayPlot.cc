@@ -20,7 +20,6 @@
 #include <qwt_scale_draw.h>
 #include <QColor>
 #include <cmath>
-#include <iostream>
 
 #if QWT_VERSION < 0x060100
 #include <qwt_legend_item.h>

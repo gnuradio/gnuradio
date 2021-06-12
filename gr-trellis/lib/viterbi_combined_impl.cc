@@ -14,7 +14,6 @@
 
 #include "viterbi_combined_impl.h"
 #include <gnuradio/io_signature.h>
-#include <iostream>
 
 namespace gr {
 namespace trellis {

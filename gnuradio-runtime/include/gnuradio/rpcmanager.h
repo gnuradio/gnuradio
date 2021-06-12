@@ -14,7 +14,6 @@
 #include <gnuradio/api.h>
 #include <gnuradio/rpcmanager_base.h>
 #include <gnuradio/rpcserver_booter_aggregator.h>
-#include <iostream>
 #include <memory>
 
 class GR_RUNTIME_API rpcmanager : public virtual rpcmanager_base
