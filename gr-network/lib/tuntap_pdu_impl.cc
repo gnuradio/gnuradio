@@ -74,13 +74,13 @@ tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU, bool istunflag)
     }
 
 
-    std::cout << boost::format("Allocated virtual ethernet interface: %s\n"
+    GR_LOG_WARN(d_logger,
+                (boost::format("Allocated virtual ethernet interface: %s\n"
                                "You must now use ifconfig to set its IP address. E.g.,\n"
                                "  $ sudo ifconfig %s 192.168.200.1\n"
                                "Be sure to use a different address in the same subnet "
                                "for each machine.\n") %
-                     dev % dev
-              << std::endl;
+                 dev % dev));
 
     // set up output message port
     message_port_register_out(msgport_names::pdus());
