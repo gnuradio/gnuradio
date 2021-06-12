@@ -17,6 +17,7 @@
 #include <volk/volk.h>
 
 #include <cstdio>
+#include <iostream>
 
 namespace gr {
 namespace fec {
@@ -166,6 +167,7 @@ void polar_decoder_common::extract_info_bits(unsigned char* output,
 void polar_decoder_common::print_pretty_llr_vector(const float* llr_vec) const
 {
     for (int row = 0; row < block_size(); row++) {
+        // FIXME this is an interesting mixture of iostream and stdio
         std::cout << row << "->" << int(bit_reverse(row, block_power())) << ":\t";
         for (int stage = 0; stage < block_power() + 1; stage++) {
             printf("%+4.2f, ", llr_vec[(stage * block_size()) + row]);
