@@ -9,6 +9,11 @@
  */
 
 #include <gnuradio/fec/alist.h>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
 
 alist::alist(const char* fname) : data_ok(false) { read(fname); }
 
