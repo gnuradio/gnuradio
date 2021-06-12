@@ -21,6 +21,7 @@
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
 #include <algorithm>
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 
