@@ -13,7 +13,6 @@
 #include <pmt/pmt.h>
 #include <boost/format.hpp>
 #include <boost/test/unit_test.hpp>
-#include <cstdio>
 #include <cstring>
 #include <sstream>
 

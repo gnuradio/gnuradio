@@ -8,7 +8,6 @@
  */
 
 #include <gnuradio/sys_paths.h>
-#include <cstdio>  //P_tmpdir (maybe)
 #include <cstdlib> //getenv
 #include <filesystem>
 
