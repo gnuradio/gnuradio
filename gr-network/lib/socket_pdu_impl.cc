@@ -212,8 +212,9 @@ void socket_pdu_impl::handle_tcp_accept(tcp_connection::sptr new_connection,
         new_connection->start(this);
         d_tcp_connections.push_back(new_connection);
         start_tcp_accept();
-    } else
-        std::cout << error << std::endl;
+    } else {
+        GR_LOG_ERROR(d_logger, error);
+    }
 }
 
 void socket_pdu_impl::tcp_client_send(pmt::pmt_t msg)
