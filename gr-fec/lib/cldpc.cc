@@ -9,6 +9,7 @@
  */
 
 #include <gnuradio/fec/cldpc.h>
+#include <iostream>
 #include <stdexcept>
 
 cldpc::cldpc(const GF2Mat X)
