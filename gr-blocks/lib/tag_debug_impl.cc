@@ -14,7 +14,6 @@
 
 #include "tag_debug_impl.h"
 #include <gnuradio/io_signature.h>
-#include <iomanip>
 #include <iostream>
 
 namespace gr {

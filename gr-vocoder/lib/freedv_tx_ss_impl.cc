@@ -15,7 +15,6 @@
 #include "freedv_tx_ss_impl.h"
 
 #include <gnuradio/io_signature.h>
-#include <iomanip>
 #include <stdexcept>
 
 namespace gr {
