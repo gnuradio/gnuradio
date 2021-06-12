@@ -22,6 +22,8 @@
 #include <gnuradio/top_block.h>
 #include <boost/test/unit_test.hpp>
 
+// FIXME use logging
+#include <iostream>
 
 // ----------------------------------------------------------------
 
