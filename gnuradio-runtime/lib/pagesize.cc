@@ -17,7 +17,6 @@
 
 #include "pagesize.h"
 #include <unistd.h>
-#include <cstdio>
 
 namespace gr {
 
