@@ -18,7 +18,6 @@
 #include <pmt/pmt_pool.h>
 #include <cstdio>
 #include <cstring>
-#include <functional>
 #include <vector>
 
 namespace pmt {
