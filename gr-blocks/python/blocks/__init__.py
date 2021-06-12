@@ -37,4 +37,8 @@ multiply_vii = multiply_ii
 multiply_vss = multiply_ss
 
 # Compatibility layer for transition to gr-pdu. Scheduled for removal in 3.11.
-from .pdu_compatibility import *
+# This can fail if we're not building PDU tools
+try:
+    from .pdu_compatibility import *
+except ImportError:
+    pass

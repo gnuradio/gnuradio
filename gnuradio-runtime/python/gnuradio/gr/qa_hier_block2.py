@@ -1,5 +1,6 @@
 #
 # Copyright 2014 Free Software Foundation, Inc.
+# Copyright 2021 Marcus Müller
 #
 # This file is part of GNU Radio
 #
@@ -9,7 +10,7 @@
 
 import time
 
-from gnuradio import gr_unittest, blocks, gr, analog
+from gnuradio import gr_unittest, blocks, gr
 from gnuradio.gr.hier_block2 import _multiple_endpoints, _optional_endpoints
 import pmt
 
@@ -102,40 +103,43 @@ class test_hier_block2(gr_unittest.TestCase):
         with self.assertRaises(ValueError):
             self.multi(self.Block(), 5)
 
-    def test_010(self):
-        s, h, k = analog.sig_source_c(44100, analog.GR_COS_WAVE, 440, 1.0, 0.0), blocks.head(
-            gr.sizeof_gr_complex, 1000), test_hblk([gr.sizeof_gr_complex], 0)
+    def test_010_end_with_head(self):
+        import math
+        exp = 1j * 440 / 44100
+        src = blocks.vector_source_c([math.e**(exp*n) for n in range(10**6)])
+        head = blocks.head(gr.sizeof_gr_complex, 1000)
+        test = test_hblk([gr.sizeof_gr_complex], 0)
         tb = gr.top_block()
-        tb.connect(s, h, k)
+        tb.connect(src, head, test)
         tb.run()
 
-    def test_011(self):
-        s, st, h, k = analog.sig_source_c(
-            44100, analog.GR_COS_WAVE, 440, 1.0, 0.0), blocks.message_strobe(
-            pmt.PMT_NIL, 100), blocks.head(
-            gr.sizeof_gr_complex, 1000), test_hblk(
-                [
-                    gr.sizeof_gr_complex], 1)
+    def test_011_test_message_connect(self):
+        import math
+        exp = 1j * 440 / 44100
+        src = blocks.vector_source_c([math.e**(exp*n) for n in range(10**6)])
+        strobe = blocks.message_strobe(pmt.PMT_NIL, 100)
+        head = blocks.head(gr.sizeof_gr_complex, 1000)
+        test = test_hblk([gr.sizeof_gr_complex], 1)
         tb = gr.top_block()
-        tb.connect(s, h, k)
-        tb.msg_connect(st, "strobe", k, "msg_in")
+        tb.connect(src, head, test)
+        tb.msg_connect(strobe, "strobe", test, "msg_in")
         tb.start()
-        time.sleep(1)
+        time.sleep(0.5)
         tb.stop()
         tb.wait()
 
     def test_012(self):
-        s, st, h, k = analog.sig_source_c(
-            44100, analog.GR_COS_WAVE, 440, 1.0, 0.0), blocks.message_strobe(
-            pmt.PMT_NIL, 100), blocks.head(
-            gr.sizeof_gr_complex, 1000), test_hblk(
-                [
-                    gr.sizeof_gr_complex], 16)
+        import math
+        exp = 1j * 440 / 44100
+        src = blocks.vector_source_c([math.e**(exp*n) for n in range(10**6)])
+        strobe = blocks.message_strobe(pmt.PMT_NIL, 100)
+        head = blocks.head(gr.sizeof_gr_complex, 1000)
+        test = test_hblk([gr.sizeof_gr_complex], 16)
         tb = gr.top_block()
-        tb.connect(s, h, k)
-        tb.msg_connect(st, "strobe", k, "msg_in")
+        tb.connect(src, head, test)
+        tb.msg_connect(strobe, "strobe", test, "msg_in")
         tb.start()
-        time.sleep(1)
+        time.sleep(0.5)
         tb.stop()
         tb.wait()
 
