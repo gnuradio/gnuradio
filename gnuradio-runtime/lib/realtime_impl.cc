@@ -79,8 +79,6 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
     // set the thread priority on the thread
     if (SetThreadPriority(GetCurrentThread(), priorities[pri_index]) == 0)
         return RT_OTHER_ERROR;
-
-    // printf("SetPriorityClass + SetThreadPriority\n");
     return RT_OK;
 }
 
@@ -100,7 +98,7 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
     int pri = rescale_virtual_pri(p.priority, min_real_pri, max_real_pri);
 
     // FIXME check hard and soft limits with getrlimit, and limit the value we ask for.
-    // fprintf(stderr, "pthread_setschedparam: policy = %d, pri = %d\n", policy, pri);
+    // log: "pthread_setschedparam: policy = %d, pri = %d\n", policy, pri
 
     struct sched_param param;
     memset(&param, 0, sizeof(param));
@@ -120,8 +118,6 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
             return RT_OTHER_ERROR;
         }
     }
-
-    // printf("SCHED_FIFO enabled with priority = %d\n", pri);
     return RT_OK;
 }
 
@@ -142,7 +138,7 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
     int pri = rescale_virtual_pri(p.priority, min_real_pri, max_real_pri);
 
     // FIXME check hard and soft limits with getrlimit, and limit the value we ask for.
-    // fprintf(stderr, "sched_setscheduler: policy = %d, pri = %d\n", policy, pri);
+    // log: "sched_setscheduler: policy = %d, pri = %d\n", policy, pri
 
     int pid = 0; // this process
     struct sched_param param;
@@ -161,8 +157,6 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
             return RT_OTHER_ERROR;
         }
     }
-
-    // printf("SCHED_FIFO enabled with priority = %d\n", pri);
     return RT_OK;
 }
 
