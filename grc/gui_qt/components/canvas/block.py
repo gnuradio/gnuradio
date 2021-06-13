@@ -252,7 +252,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
     def boundingRect(self): # required to have
         x,y = (self.x(), self.y())
         self.states['coordinate'] = (x,y)
-        return QtCore.QRectF(0, 0, self.width+3, self.height+3) # same as the rectangle we draw, but with a 0.5*pen width margin
+        return QtCore.QRectF(-2.5, -2.5, self.width+5, self.height+5) # margin to avoid artifacts
 
     def mouseReleaseEvent(self, e):
         super(self.__class__, self).mouseReleaseEvent(e)
