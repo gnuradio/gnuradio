@@ -225,6 +225,8 @@ class Flowgraph(QtWidgets.QGraphicsView, base.Component): # added base.Component
 
         self.scene = FlowgraphScene()
 
+        self.scalefactor = 1.0
+
         self.setSceneRect(0,0,DEFAULT_MAX_X, DEFAULT_MAX_Y)
         if filename is not None:
             self.readFile(filename)
@@ -310,10 +312,25 @@ class Flowgraph(QtWidgets.QGraphicsView, base.Component): # added base.Component
         self.setSceneRect(0,0,DEFAULT_MAX_X, DEFAULT_MAX_Y)
 
     def wheelEvent(self,  event):
-        factor = 1.1;
+        factor = 1.1
+
         if event.angleDelta().y() < 0:
             factor = 1.0 / factor
-        self.scale(factor, factor)
+
+        new_scalefactor = self.scalefactor * factor
+
+        if new_scalefactor > 0.25 and new_scalefactor < 2.5:
+            self.scalefactor = new_scalefactor
+            self.setTransformationAnchor(QtWidgets.QGraphicsView.NoAnchor)
+            self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)
+
+            oldPos = self.mapToScene(event.pos())
+
+            self.scale(factor, factor)
+            newPos = self.mapToScene(event.pos())
+
+            delta = newPos - oldPos
+            self.translate(delta.x(), delta.y())
 
     def mousePressEvent(self,  event):
         if event.button() == Qt.LeftButton:
