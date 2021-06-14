@@ -17,17 +17,16 @@ INCLUDE(FindPackageHandleStandardArgs)
 pkg_check_modules(LIBGSM_PKG QUIET gsm)
 
 find_path(LIBGSM_INCLUDE_DIR NAMES gsm.h
+  HINTS ${LIBGSM_PKG_INCLUDE_DIRS}
   PATHS
-  ${LIBGSM_PKG_INCLUDE_DIRS}
-  /usr/local/include/gsm
   /usr/local/include
-  /usr/include/gsm
   /usr/include
+  PATH_SUFFIXES gsm
   )
 
 find_library(LIBGSM_LIBRARIES NAMES gsm
+  HINTS ${LIBGSM_PKG_LIBRARY_DIRS}
   PATHS
-  ${LIBGSM_PKG_LIBRARY_DIRS}
   /usr/local/lib
   /usr/lib
   )

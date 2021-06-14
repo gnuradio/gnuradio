@@ -33,7 +33,7 @@ GR_PYTHON_INSTALL(
     PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 )
 
-if(THRIFT_FOUND)
+if(ENABLE_CTRLPORT_THRIFT)
 
   list(APPEND thrift_targets
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/__init__.py
@@ -51,6 +51,10 @@ if(THRIFT_FOUND)
     COMMAND ${THRIFT_BIN} --gen py -out ${CMAKE_CURRENT_BINARY_DIR}/ ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/controlport/thrift/gnuradio.thrift
   )
 
+  add_custom_target(ctrlport_thrift_python ALL
+    DEPENDS ${thrift_targets}
+  )
+
   GR_PYTHON_INSTALL(
     FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/RPCConnectionThrift.py
@@ -63,4 +67,4 @@ if(THRIFT_FOUND)
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/GNURadio
   )
 
-endif(THRIFT_FOUND)
+endif(ENABLE_CTRLPORT_THRIFT)

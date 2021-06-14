@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(diff_decoder_bb.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(3814f3ba5b3a9425eae5611e1a4876ec)                     */
+/* BINDTOOL_HEADER_FILE_HASH(92f143bcb3f067b3cdf8292a75956d31)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -41,6 +41,7 @@ void bind_diff_decoder_bb(py::module& m)
 
         .def(py::init(&diff_decoder_bb::make),
              py::arg("modulus"),
+             py::arg("nrzi") = ::gr::digital::DIFF_DIFFERENTIAL,
              D(diff_decoder_bb, make))
 
 

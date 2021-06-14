@@ -20,7 +20,6 @@ install(FILES
     chunks_to_symbols.h
     clock_recovery_mm_cc.h
     clock_recovery_mm_ff.h
-    cma_equalizer_cc.h
     constellation.h
     constellation_decoder_cb.h
     constellation_encoder_bc.h
@@ -34,11 +33,11 @@ install(FILES
     correlate_access_code_ff_ts.h
     costas_loop_cc.h
     cpmmod_bc.h
-    crc32.h
     crc32_bb.h
     crc32_async_bb.h
     decision_feedback_equalizer.h
     descrambler_bb.h
+    diff_coding_type.h
     diff_decoder_bb.h
     diff_encoder_bb.h
     diff_phasor_cc.h
@@ -51,10 +50,8 @@ install(FILES
     hdlc_framer_pb.h
     header_buffer.h
     header_payload_demux.h
-    kurtotic_equalizer_cc.h
     lfsr.h
     linear_equalizer.h
-    lms_dd_equalizer_cc.h
     map_bb.h
     metric_type.h
     modulate_vector.h
@@ -89,9 +86,6 @@ install(FILES
     probe_density_b.h
     probe_mpsk_snr_est_c.h
     scrambler_bb.h
-    simple_correlator.h
-    simple_framer.h
-    simple_framer_sync.h
     interpolating_resampler_type.h
     symbol_sync_cc.h
     symbol_sync_ff.h

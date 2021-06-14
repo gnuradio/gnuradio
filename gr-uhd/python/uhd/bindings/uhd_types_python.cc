@@ -141,8 +141,8 @@ void bind_uhd_types(py::module& m)
 
     // ::uhd::tune_request_t
     using tune_request_t = ::uhd::tune_request_t;
-    py::class_<tune_request_t>(m, "tune_request_t")
-        .def(py::init<double, double>())
+    py::class_<tune_request_t> tune_request(m, "tune_request_t");
+    tune_request.def(py::init<double, double>())
         .def(py::init<double>(), py::arg("target_freq") = 0.0)
         .def_readwrite("target_freq", &tune_request_t::target_freq)
         .def_readwrite("rf_freq_policy", &tune_request_t::rf_freq_policy)
@@ -151,6 +151,13 @@ void bind_uhd_types(py::module& m)
         .def_readwrite("dsp_freq", &tune_request_t::dsp_freq)
         .def_readwrite("args", &tune_request_t::args);
 
+    // ::uhd::tune_request_t::policy_t
+    using policy_t = ::uhd::tune_request_t::policy_t;
+    py::enum_<policy_t>(tune_request, "policy_t")
+        .value("POLICY_NONE", policy_t::POLICY_NONE)
+        .value("POLICY_AUTO", policy_t::POLICY_AUTO)
+        .value("POLICY_MANUAL", policy_t::POLICY_MANUAL)
+        .export_values();
 
     // ::uhd::sensor_value_t
     using sensor_value_t = uhd::sensor_value_t;

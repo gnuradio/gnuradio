@@ -56,28 +56,11 @@ sig_source_impl<T>::sig_source_impl(double sampling_freq,
     this->message_port_register_in(pmt::mp("cmd"));
     this->set_msg_handler(pmt::mp("cmd"),
                           [this](pmt::pmt_t msg) { this->set_cmd_msg(msg); });
-    this->message_port_register_in(pmt::mp("freq"));
-    this->set_msg_handler(pmt::mp("freq"),
-                          [this](pmt::pmt_t msg) { this->set_freq_msg(msg); });
 }
 
 template <class T>
 sig_source_impl<T>::~sig_source_impl()
 {
-}
-
-template <class T>
-void sig_source_impl<T>::set_freq_msg(pmt::pmt_t msg)
-{
-    GR_LOG_INFO(this->d_logger,
-                "The `freq` port is deprecated and will be removed. Forwarding this "
-                "message to the `cmd` handler.");
-    if (pmt::is_number(msg)) {
-        // if plain number, then interpret it as frequency
-        set_frequency(pmt::to_double(msg));
-        return;
-    }
-    set_cmd_msg(msg);
 }
 
 template <class T>

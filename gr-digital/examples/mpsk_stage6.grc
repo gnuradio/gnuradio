@@ -170,7 +170,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1136, 500.0]
+    coordinate: [1144, 404.0]
     rotation: 0
     state: enabled
 - name: qpsk
@@ -283,6 +283,23 @@ blocks:
     coordinate: [872, 500.0]
     rotation: 0
     state: enabled
+- name: variable_adaptive_algorithm_0
+  id: variable_adaptive_algorithm
+  parameters:
+    comment: ''
+    cons: qpsk
+    delta: '10.0'
+    ffactor: '0.99'
+    modulus: '4'
+    step_size: '.0001'
+    type: cma
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [968, 404.0]
+    rotation: 0
+    state: true
 - name: analog_random_source_x_0
   id: analog_random_source_x
   parameters:
@@ -479,25 +496,6 @@ blocks:
     coordinate: [288, 532.0]
     rotation: 0
     state: enabled
-- name: digital_cma_equalizer_cc_0
-  id: digital_cma_equalizer_cc
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    modulus: '1'
-    mu: eq_gain
-    num_taps: '15'
-    sps: '2'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1080, 68.0]
-    rotation: 0
-    state: enabled
 - name: digital_constellation_decoder_cb_0
   id: digital_constellation_decoder_cb
   parameters:
@@ -551,7 +549,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1064, 264.0]
+    coordinate: [1096, 264.0]
     rotation: 180
     state: enabled
 - name: digital_diff_decoder_bb_0
@@ -569,6 +567,27 @@ blocks:
     bus_structure: null
     coordinate: [528, 260.0]
     rotation: 180
+    state: enabled
+- name: digital_linear_equalizer_0
+  id: digital_linear_equalizer
+  parameters:
+    adapt_after_training: 'True'
+    affinity: ''
+    alg: variable_adaptive_algorithm_0
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_taps: '15'
+    sps: '2'
+    training_sequence: '[ ]'
+    training_start_tag: corr_est
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1072, 64.0]
+    rotation: 0
     state: enabled
 - name: digital_map_bb_0
   id: digital_map_bb
@@ -609,6 +628,25 @@ blocks:
     coordinate: [824, 92.0]
     rotation: 0
     state: enabled
+- name: note_0
+  id: note
+  parameters:
+    alias: ''
+    comment: 'The CMA equalizer has been
+
+      replaced by a Linear Equalizer
+
+      and an Adaptive Algorithm for
+
+      version 3.9'
+    note: CMA equalizer replaced
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1144, 532.0]
+    rotation: 0
+    state: true
 - name: qtgui_const_sink_x_0
   id: qtgui_const_sink_x
   parameters:
@@ -698,7 +736,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1088, 196.0]
+    coordinate: [1096, 188.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -941,15 +979,15 @@ connections:
 - [blocks_unpack_k_bits_bb_0, '0', blocks_char_to_float_0_0, '0']
 - [blocks_unpack_k_bits_bb_0_0, '0', blocks_char_to_float_0_0_0, '0']
 - [channels_channel_model_0, '0', digital_pfb_clock_sync_xxx_0, '0']
-- [digital_cma_equalizer_cc_0, '0', digital_costas_loop_cc_0, '0']
 - [digital_constellation_decoder_cb_0, '0', blocks_char_to_float_0, '0']
 - [digital_constellation_decoder_cb_0, '0', digital_diff_decoder_bb_0, '0']
 - [digital_constellation_modulator_0, '0', blocks_throttle_0, '0']
 - [digital_costas_loop_cc_0, '0', digital_constellation_decoder_cb_0, '0']
 - [digital_costas_loop_cc_0, '0', qtgui_const_sink_x_0, '0']
 - [digital_diff_decoder_bb_0, '0', digital_map_bb_0, '0']
+- [digital_linear_equalizer_0, '0', digital_costas_loop_cc_0, '0']
 - [digital_map_bb_0, '0', blocks_unpack_k_bits_bb_0, '0']
-- [digital_pfb_clock_sync_xxx_0, '0', digital_cma_equalizer_cc_0, '0']
+- [digital_pfb_clock_sync_xxx_0, '0', digital_linear_equalizer_0, '0']
 
 metadata:
   file_format: 1

@@ -32,11 +32,11 @@ the mailing list and post your new questions there.
 
 The recommended way to install GNU Radio on most platforms is using available binary package distributions. 
 
-The following command is for Debian, Ubuntu, and derivatives. It will install Release 3.7 with Python2. 
+The following command is for Debian, Ubuntu, and derivatives. Consult your distribution information to obtain the version of GNU Radio which is included.
 
     sudo apt install gnuradio
 
-For other operating systems, see [Installing from Binaries](https://wiki.gnuradio.org/index.php/InstallingGR#From_Binaries)
+For other operating systems and versions, see [Installing from Binaries](https://wiki.gnuradio.org/index.php/InstallingGR#From_Binaries)
 
 ### PyBOMBS
 

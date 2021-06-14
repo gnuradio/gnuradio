@@ -84,6 +84,7 @@ set(GR_COMPONENTS
   audio
   channels
   pdu
+  iio
   qtgui
   trellis
   uhd
@@ -92,6 +93,7 @@ set(GR_COMPONENTS
   wavelet
   zeromq
   network
+  soapy
   )
 
 foreach(target ${GR_COMPONENTS})

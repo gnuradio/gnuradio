@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(diff_encoder_bb.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(e817d23aac894b3563101df2958577de)                     */
+/* BINDTOOL_HEADER_FILE_HASH(866ae99d6fc12353e8d45ba2424bcecd)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -41,6 +41,7 @@ void bind_diff_encoder_bb(py::module& m)
 
         .def(py::init(&diff_encoder_bb::make),
              py::arg("modulus"),
+             py::arg("coding") = ::gr::digital::DIFF_DIFFERENTIAL,
              D(diff_encoder_bb, make))
 
 

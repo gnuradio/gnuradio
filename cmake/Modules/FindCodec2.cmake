@@ -17,17 +17,16 @@ INCLUDE(FindPackageHandleStandardArgs)
 pkg_check_modules(LIBCODEC2_PKG QUIET codec2)
 
 find_path(LIBCODEC2_INCLUDE_DIR NAMES codec2.h
+  HINTS ${LIBCODEC2_PKG_INCLUDE_DIRS}
   PATHS
-  ${LIBCODEC2_PKG_INCLUDE_DIRS}
-  /usr/include/codec2
   /usr/include
-  /usr/local/include/codec2
   /usr/local/include
+  PATH_SUFFIXES codec2
   )
 
-find_library(LIBCODEC2_LIBRARIES NAMES codec2
+find_library(LIBCODEC2_LIBRARIES NAMES codec2 libcodec2
+  HINTS ${LIBCODEC2_PKG_LIBRARY_DIRS}
   PATHS
-  ${LIBCODEC2_PKG_LIBRARY_DIRS}
   /usr/lib
   /usr/local/lib
   )

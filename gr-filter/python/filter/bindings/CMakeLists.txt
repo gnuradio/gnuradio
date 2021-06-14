@@ -32,8 +32,6 @@ list(APPEND filter_python_files
     mmse_fir_interpolator_ff_python.cc
     mmse_interp_differentiator_cc_python.cc
     mmse_interp_differentiator_ff_python.cc
-    mmse_interpolator_cc_python.cc
-    mmse_interpolator_ff_python.cc
     mmse_resampler_cc_python.cc
     mmse_resampler_ff_python.cc
     pfb_arb_resampler_python.cc

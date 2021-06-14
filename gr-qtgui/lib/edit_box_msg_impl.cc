@@ -146,7 +146,6 @@ edit_box_msg_impl::edit_box_msg_impl(data_type_t type,
 
 edit_box_msg_impl::~edit_box_msg_impl()
 {
-    delete d_argv;
     delete d_group;
     delete d_hlayout;
     delete d_vlayout;

@@ -134,7 +134,7 @@ class Platform(Element):
         # converter.run()
         # logging.info('XML converter done.')
 
-        with Cache(Constants.CACHE_FILE) as cache:
+        with Cache(Constants.CACHE_FILE, version = self.config.version) as cache:
             for file_path in self._iter_files_in_block_path(path):
 
                 if file_path.endswith('.block.yml'):
@@ -179,7 +179,20 @@ class Platform(Element):
 
         self._docstring_extractor.finish()
         # self._docstring_extractor.wait()
-        utils.hide_bokeh_gui_options_if_not_installed(self.blocks['options'])
+        if 'options' not in self.blocks:
+            # we didn't find one of the built-in blocks ("options")
+            # which probably means the GRC blocks path is bad
+            errstr = (
+                "Failed to find built-in GRC blocks (specifically, the "
+                "'options' block). Ensure your GRC block paths are correct "
+                "and at least one points to your prefix installation:"
+            )
+            errstr = "\n".join([errstr] + (path or self.config.block_paths))
+            raise RuntimeError(errstr)
+        else:
+            # might have some cleanup to do on the options block in particular
+            utils.hide_bokeh_gui_options_if_not_installed(self.blocks['options'])
+
 
     def _iter_files_in_block_path(self, path=None, ext='yml'):
         """Iterator for block descriptions and category trees"""

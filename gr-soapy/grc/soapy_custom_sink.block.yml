@@ -1,0 +1,261 @@
+id: soapy_custom_sink
+label: Soapy Custom Sink
+flags: [python,throttle]
+
+parameters:
+  - id: driver
+    label: Driver
+    dtype: string
+    default: ''
+
+  - id: type
+    label: Input Type
+    dtype: enum
+    options: [fc32, sc16, sc8]
+    option_labels: [Complex Float32, Complex Int16, Complex Byte]
+    option_attributes:
+      type: [fc32, sc16, sc8]
+    hide: part
+
+  - id: nchan
+    label: Num Channels
+    dtype: int
+    default: '1'
+    hide: part
+
+  - id: dev_args
+    label: Device arguments
+    dtype: string
+    hide: ${'part' if not dev_args else 'none'}
+
+  - id: stream_args
+    label: Stream arguments
+    dtype: string
+    hide: part
+
+  - id: samp_rate
+    label: Sample Rate
+    dtype: float
+    default: 'samp_rate'
+
+  # Channel 0
+  - id: tune_args0
+    label: 'Ch0: Tune arguments'
+    category: RF Options
+    dtype: string
+    default: ''
+    hide: part
+
+  - id: settings0
+    label: 'Ch0: Other settings'
+    category: RF Options
+    dtype: string
+    default: ''
+    hide: part
+
+  - id: bandwidth0
+    label: 'Ch0: Bandwidth (Hz)'
+    category: RF Options
+    dtype: real
+    default: '0'
+    hide: part
+
+  - id: antenna0
+    label: 'Ch0: Antenna'
+    category: RF Options
+    dtype: string
+    default: 'TX'
+    hide: part
+
+  - id: center_freq0
+    label: 'Ch0: Center Freq (Hz)'
+    category: RF Options
+    dtype: real
+    default: 'freq'
+
+  - id: freq_correction0
+    label: 'Ch0: Frequency Correction'
+    category: RF Options
+    dtype: real
+    default: '0'
+    hide: part
+
+  - id: gain0
+    label: 'Ch0: Overall Gain Value'
+    category: RF Options
+    dtype: real
+    default: '10'
+    hide: part
+
+  - id: dc_offset0
+    label: 'Ch0: DC Offset'
+    category: RF Options
+    dtype: complex
+    default: '0'
+    hide: part
+
+  - id: iq_balance0
+    label: 'Ch0: IQ Balance Correction'
+    category: RF Options
+    dtype: complex
+    default: '0'
+    hide: part
+
+  # Channel 1
+  - id: tune_args1
+    label: 'Ch1: Tune arguments'
+    category: RF Options
+    dtype: string
+    default: ''
+    hide: ${ 'part' if nchan > 1 else 'all' }
+
+  - id: settings1
+    label: 'Ch1: Other settings'
+    category: RF Options
+    dtype: string
+    default: ''
+    hide: ${ 'part' if nchan > 1 else 'all' }
+
+  - id: bandwidth1
+    label: 'Ch1: Bandwidth (Hz)'
+    category: RF Options
+    dtype: real
+    default: '0'
+    hide: ${ 'part' if nchan > 1 else 'all' }
+
+  - id: antenna1
+    label: 'Ch1: Antenna'
+    category: RF Options
+    dtype: string
+    default: ''
+    hide: ${ 'part' if nchan > 1 else 'all' }
+
+  - id: center_freq1
+    label: 'Ch1: Center Freq (Hz)'
+    category: RF Options
+    dtype: real
+    default: '0'
+    hide: ${ 'none' if nchan > 1 else 'all' }
+
+  - id: freq_correction1
+    label: 'Ch1: Frequency Correction'
+    category: RF Options
+    dtype: real
+    default: '0'
+    hide: ${ 'part' if nchan > 1 else 'all' }
+
+  - id: gain1
+    label: 'Ch1: Overall Gain Value'
+    category: RF Options
+    dtype: real
+    default: '0'
+    hide: ${ 'part' if nchan > 1 else 'all' }
+
+  - id: dc_offset1
+    label: 'Ch1: DC Offset'
+    category: RF Options
+    dtype: complex
+    default: '0'
+    hide: ${ 'part' if nchan > 1 else 'all' }
+
+  - id: iq_balance1
+    label: 'Ch1: IQ Balance Correction'
+    category: RF Options
+    dtype: complex
+    default: '0'
+    hide: ${ 'part' if nchan > 1 else 'all' }
+
+inputs:
+  - domain: stream
+    dtype: ${ type.type }
+    multiplicity: ${ nchan }
+
+  - domain: message
+    id: cmd
+    optional: true
+
+asserts:
+  - ${ nchan in (1,2) }
+
+templates:
+  imports: from gnuradio import soapy
+  make: |
+      None
+      dev = 'driver=' + ${driver}
+      ##
+      ##
+      stream_args = ${stream_args}
+      ##
+      % if context.get('nchan')() == 1:
+      tune_args = [${tune_args0}]
+      % else:
+      tune_args = [${tune_args0}, ${tune_args1}]
+      % endif
+      ##
+      % if context.get('nchan')() == 1:
+      settings = [${settings0}]
+      % else:
+      settings = [${settings0}, ${settings1}]
+      % endif
+      ##
+      self.${id} = soapy.sink(dev, "${type}",
+                              ${nchan}, ${dev_args},
+                              stream_args, tune_args, settings)
+      self.${id}.set_sample_rate(0, ${samp_rate})
+      ##
+      self.${id}.set_bandwidth(0, ${bandwidth0})
+      self.${id}.set_antenna(0, ${antenna0})
+      self.${id}.set_frequency(0, ${center_freq0})
+      self.${id}.set_frequency_correction(0, ${freq_correction0})
+      self.${id}.set_gain(0, ${gain0})
+      self.${id}.set_dc_offset(0, ${dc_offset0})
+      self.${id}.set_iq_balance(0, ${iq_balance0})
+      ##
+      % if context.get('nchan')() > 1:
+      self.${id}.set_bandwidth(1, ${bandwidth1})
+      self.${id}.set_antenna(1, ${antenna1})
+      self.${id}.set_frequency(1, ${center_freq1})
+      self.${id}.set_frequency_correction(1, ${freq_correction1})
+      self.${id}.set_gain(1, ${gain1})
+      self.${id}.set_dc_offset(1, ${dc_offset1})
+      self.${id}.set_iq_balance(1, ${iq_balance1})
+      % endif
+
+  callbacks:
+    - set_bandwidth(0, ${bandwidth0})
+    - set_antenna(0, ${antenna0})
+    - set_frequency(0, ${center_freq0})
+    - set_frequency_correction(0, ${freq_correction0})
+    - set_gain(0, ${gain0})
+    - set_dc_offset(0, ${dc_offset0})
+    - set_iq_balance(0, ${iq_balance0})
+    - |
+      % if context.get('nchan')() > 1:
+      set_bandwidth(1, ${bandwidth1})
+      % endif
+    - |
+      % if context.get('nchan')() > 1:
+      set_antenna(1, ${antenna1})
+      % endif
+    - |
+      % if context.get('nchan')() > 1:
+      set_frequency(1, ${center_freq1})
+      % endif
+    - |
+      % if context.get('nchan')() > 1:
+      set_frequency_correction(1, ${freq_correction1})
+      % endif
+    - |
+      % if context.get('nchan')() > 1:
+      set_gain(1, ${gain1})
+      % endif
+    - |
+      % if context.get('nchan')() > 1:
+      set_dc_offset(1, $ {dc_offset1})
+      % endif
+    - |
+      % if context.get('nchan')() > 1:
+      set_iq_balance(1, ${iq_balance1})
+      % endif
+
+file_format: 1

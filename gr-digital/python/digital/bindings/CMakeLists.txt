@@ -15,7 +15,6 @@ list(APPEND digital_python_files
     chunks_to_symbols_python.cc
     clock_recovery_mm_cc_python.cc
     clock_recovery_mm_ff_python.cc
-    cma_equalizer_cc_python.cc
     constellation_python.cc
     constellation_decoder_cb_python.cc
     constellation_encoder_bc_python.cc
@@ -29,11 +28,11 @@ list(APPEND digital_python_files
     correlate_access_code_tag_ff_python.cc
     costas_loop_cc_python.cc
     cpmmod_bc_python.cc
-    crc32_python.cc
     crc32_async_bb_python.cc
     crc32_bb_python.cc
     decision_feedback_equalizer_python.cc
     descrambler_bb_python.cc
+    diff_coding_type_python.cc
     diff_decoder_bb_python.cc
     diff_encoder_bb_python.cc
     diff_phasor_cc_python.cc
@@ -52,10 +51,8 @@ list(APPEND digital_python_files
     header_format_ofdm_python.cc
     header_payload_demux_python.cc
     interpolating_resampler_type_python.cc
-    kurtotic_equalizer_cc_python.cc
     lfsr_python.cc
     linear_equalizer_python.cc
-    lms_dd_equalizer_cc_python.cc
     map_bb_python.cc
     meas_evm_cc_python.cc
     metric_type_python.cc
@@ -86,9 +83,6 @@ list(APPEND digital_python_files
     protocol_formatter_bb_python.cc
     protocol_parser_b_python.cc
     scrambler_bb_python.cc
-    simple_correlator_python.cc
-    simple_framer_python.cc
-    simple_framer_sync_python.cc
     symbol_sync_cc_python.cc
     symbol_sync_ff_python.cc
     timing_error_detector_type_python.cc

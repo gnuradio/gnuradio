@@ -35,7 +35,6 @@ from .qpsk import *
 from .gmsk import *
 from .gfsk import *
 from .cpm import *
-from .crc import *
 from .modulation_utils import *
 from .ofdm_txrx import ofdm_tx, ofdm_rx
 from .soft_dec_lut_gen import *

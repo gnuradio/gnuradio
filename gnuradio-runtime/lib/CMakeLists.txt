@@ -122,84 +122,6 @@ target_sources(gnuradio-runtime PRIVATE
   ${MATH_SINE_TABLE_HEADER}
   )
 
-# Controlport
-if(ENABLE_GR_CTRLPORT)
-
-# Keep track of the number of backends ControlPort supports
-SET(CTRLPORT_BACKENDS 0)
-
-target_sources(gnuradio-runtime PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcmanager.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_aggregator.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_booter_aggregator.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_selector.cc
-)
-
-OPTION(ENABLE_CTRLPORT_THRIFT "Enable ControlPort Thrift support" ON)
-
-if(ENABLE_CTRLPORT_THRIFT)
-# Look if Thrift is installed and use it as a ControlPort backend.
-FIND_PACKAGE(THRIFT ${GR_THRIFT_MIN_VERSION})
-
-if(THRIFT_FOUND)
-list(APPEND EXTRA_DEPS "THRIFT")
-MATH(EXPR CTRLPORT_BACKENDS "${CTRLPORT_BACKENDS} + 1")
-
-# Indicate thrift as an installed backend in the cmake summary.
-message(STATUS "Found and enabling Thrift backend to ControlPort")
-GR_APPEND_SUBCOMPONENT("thrift")
-
-# Run Thrift To compile C++ and Python files
-message(STATUS "Running thrift to build C++ bindings")
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/)
-
-list(APPEND gnuradio_thrift_generated_sources
-  ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/gnuradio_types.cpp
-  ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/gnuradio_constants.cpp
-  ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/ControlPort.cpp
-  )
-add_custom_command(
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/gnuradio.thrift
-  OUTPUT ${gnuradio_thrift_generated_sources}
-  COMMAND ${THRIFT_BIN} --gen cpp -out ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/ ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/gnuradio.thrift
-  )
-
-target_include_directories(gnuradio-runtime PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/controlport>)
-
-target_sources(gnuradio-runtime PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/rpcserver_thrift.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/rpcpmtconverters_thrift.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/rpcserver_booter_thrift.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/thrift_application_base.cc
-  # add files built by compiling gnuradio.thrift
-  ${gnuradio_thrift_generated_sources}
-  )
-target_link_libraries(gnuradio-runtime PUBLIC
-  Thrift::thrift
-  )
-
-# Add install rule to move example Thrift configuration file into a
-# documentation directory
-install(
-  FILES ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/thrift.conf.example
-  DESTINATION ${GR_PKG_DOC_DIR}/config
-)
-
-endif(THRIFT_FOUND)
-endif(ENABLE_CTRLPORT_THRIFT)
-
-########################################################################
-# Add controlport stuff to gnuradio-runtime
-########################################################################
-
-# Save the number of backends for testing against later
-set(
-  CTRLPORT_BACKENDS ${CTRLPORT_BACKENDS}
-  CACHE INTERNAL "Number of ControlPort backends available"
-)
-
-endif(ENABLE_GR_CTRLPORT)
-
 target_link_libraries(gnuradio-runtime PUBLIC
   gnuradio-pmt
   Volk::volk
@@ -233,21 +155,118 @@ target_include_directories(gnuradio-runtime
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
+target_compile_definitions(gnuradio-runtime PUBLIC ${MPLIB_DEFINITIONS})
+
 # constants.cc includes boost::dll headers, force them to use std::filesystem
 target_compile_definitions(gnuradio-runtime PRIVATE BOOST_DLL_USE_STD_FS)
 
-  if(ENABLE_GR_CTRLPORT)
-    target_compile_definitions(gnuradio-runtime PUBLIC GR_CTRLPORT)
-  endif()
+########################################################################
+# Add controlport stuff to gnuradio-runtime
+########################################################################
+# Controlport
+if(ENABLE_GR_CTRLPORT)
 
+# Keep track of the number of backends ControlPort supports
+SET(CTRLPORT_BACKENDS 0)
 
-#Add libraries for winsock2.h on Windows
-check_include_file_cxx(windows.h HAVE_WINDOWS_H)
-if(HAVE_WINDOWS_H)
-    target_compile_definitions(gnuradio-runtime PUBLIC -DHAVE_WINDOWS_H -DUSING_WINSOCK -DWIN32_LEAN_AND_MEAN)
-    message(STATUS "Adding windows libs to gnuradio runtime libs...")
-    target_link_libraries(gnuradio-runtime PUBLIC ws2_32 wsock32)
-endif(HAVE_WINDOWS_H)
+target_sources(gnuradio-runtime PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcmanager.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_aggregator.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_booter_aggregator.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_selector.cc
+)
+
+if(ENABLE_CTRLPORT_THRIFT)
+MATH(EXPR CTRLPORT_BACKENDS "${CTRLPORT_BACKENDS} + 1")
+
+# Indicate thrift as an installed backend in the cmake summary.
+message(STATUS "Enabling Thrift backend to ControlPort")
+GR_APPEND_SUBCOMPONENT("thrift")
+
+# Run Thrift To compile C++ and Python files
+message(STATUS "Running thrift to build C++ bindings")
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/)
+
+list(APPEND gnuradio_thrift_generated_sources
+  ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/gnuradio_types.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/gnuradio_constants.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/ControlPort.cpp
+  )
+add_custom_command(
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/gnuradio.thrift
+  OUTPUT ${gnuradio_thrift_generated_sources}
+  COMMAND ${THRIFT_BIN} --gen cpp -out ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/ ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/gnuradio.thrift
+  )
+
+target_include_directories(gnuradio-runtime PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/controlport>)
+
+target_sources(gnuradio-runtime PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/rpcserver_thrift.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/rpcpmtconverters_thrift.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/rpcserver_booter_thrift.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/thrift_application_base.cc
+  # add files built by compiling gnuradio.thrift
+  ${gnuradio_thrift_generated_sources}
+  )
+target_link_libraries(gnuradio-runtime PRIVATE
+  Thrift::thrift
+  )
+
+target_compile_definitions(gnuradio-runtime PUBLIC GR_CTRLPORT)
+
+# Add install rule to move example Thrift configuration file into a
+# documentation directory
+install(
+  FILES ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/thrift.conf.example
+  DESTINATION ${GR_PKG_DOC_DIR}/config
+)
+
+endif(ENABLE_CTRLPORT_THRIFT)
+
+# Save the number of backends for testing against later
+set(
+  CTRLPORT_BACKENDS ${CTRLPORT_BACKENDS}
+  CACHE INTERNAL "Number of ControlPort backends available"
+)
+
+endif(ENABLE_GR_CTRLPORT)
+
+########################################################################
+# Add misc conditional includes/definitions to gnuradio-runtime
+########################################################################
+
+if(ENABLE_PERFORMANCE_COUNTERS)
+  target_compile_definitions(gnuradio-runtime PUBLIC -DGR_PERFORMANCE_COUNTERS)
+endif()
+
+if(GR_IS_BIG_ENDIAN)
+  target_compile_definitions(gnuradio-runtime PUBLIC -DGR_IS_BIG_ENDIAN)
+endif(GR_IS_BIG_ENDIAN)
+
+if(MSVC)
+  target_compile_definitions(gnuradio-runtime PUBLIC
+    # Minimum version: "Windows Server 2003 with SP1, Windows XP with SP2"
+    -D_WIN32_WINNT=0x0502
+    # disables stupidity and enables std::min and std::max
+    -DNOMINMAX
+    # stop all kinds of compatibility warnings
+    -D_SCL_SECURE_NO_WARNINGS
+    -D_CRT_SECURE_NO_WARNINGS
+    -D_CRT_SECURE_NO_DEPRECATE
+    -D_CRT_NONSTDC_NO_DEPRECATE
+  )
+endif(MSVC)
+
+if(WIN32)
+  target_compile_definitions(gnuradio-runtime PUBLIC -D_USE_MATH_DEFINES)
+  if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    target_compile_definitions(gnuradio-runtime PUBLIC -DMS_WIN64)
+  endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+endif(WIN32)
+
+if(WIN32)
+    target_compile_definitions(gnuradio-runtime PUBLIC -DWIN32_LEAN_AND_MEAN)
+endif(WIN32)
 
 #need to link with librt on ubuntu 11.10 for shm_*
 if((LINUX) OR (CMAKE_SYSTEM_NAME STREQUAL "kFreeBSD"))
@@ -294,13 +313,7 @@ if(TRY_SHM_VMCIRCBUF)
     target_compile_definitions(gnuradio-runtime PRIVATE -DTRY_SHM_VMCIRCBUF )
 endif(TRY_SHM_VMCIRCBUF)
 
-set(EXTRA_DEPS "")
-if(ENABLE_CTRLPORT_THRIFT)
-  if(THRIFT_FOUND)
-    list(APPEND EXTRA_DEPS THRIFT)
-  endif()
-endif()
-gr_library_foo(gnuradio-runtime ${EXTRA_DEPS})
+gr_library_foo(gnuradio-runtime)
 
 
 ########################################################################

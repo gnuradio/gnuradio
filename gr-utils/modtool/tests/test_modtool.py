@@ -239,12 +239,20 @@ class TestModToolCore(unittest.TestCase):
         test_dict['directory'] = module_dir
         # Missing 2 arguments blockname, new_name
         self.assertRaises(ModToolException, ModToolRename(**test_dict).run)
+
         test_dict['blockname'] = 'square_ff'
         # Missing argument new_name
         self.assertRaises(ModToolException, ModToolRename(**test_dict).run)
+
         test_dict['new_name'] = '//#'
         # Invalid new block name!
+        expected_message = "Invalid new block name '//#': names can only contain letters, numbers and underscores"
+        self.assertRaisesRegex(ModToolException, expected_message, ModToolRename(**test_dict).run)
+
+        test_dict['new_name'] = 'non-alpha-chars-like-hyphen-are-not-allowed'
+        # Invalid new block name!
         self.assertRaises(ModToolException, ModToolRename(**test_dict).run)
+
         test_dict['new_name'] = None
         # New Block name not specified
         self.assertRaises(ModToolException, ModToolRename(**test_dict).run)

@@ -18,7 +18,8 @@ set(MPIR_PC_ADD_CFLAGS "-I${MPIR_INCLUDE_DIR}")
 
 find_library(
     MPIRXX_LIBRARY
-    NAMES mpirxx
+    # mpirxx is bundled into mpir.lib with MSVC
+    NAMES mpirxx mpir.lib
     HINTS ${PC_MPIR_LIBDIR}
     PATHS ${CMAKE_INSTALL_PREFIX}/lib
           ${CMAKE_INSTALL_PREFIX}/lib64

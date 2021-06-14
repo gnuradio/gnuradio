@@ -1,16 +1,16 @@
 id: analog_pll_freqdet_cf
-label: PLL Freq Det
+label: PLL Frequency Detector
 flags: [ python, cpp ]
 
 parameters:
 -   id: w
     label: Loop Bandwidth
     dtype: real
--   id: max_freq
-    label: Max Freq
-    dtype: real
 -   id: min_freq
-    label: Min Freq
+    label: Min Phase/sample
+    dtype: real
+-   id: max_freq
+    label: Max Phase/sample
     dtype: real
 
 inputs:

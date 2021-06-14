@@ -44,6 +44,15 @@ GR_REGISTER_COMPONENT("gr-ctrlport" ENABLE_GR_CTRLPORT
   ENABLE_GNURADIO_RUNTIME
 )
 
+# find thrift quietly to determine whether it should be enabled by default
+find_package(THRIFT ${GR_THRIFT_MIN_VERSION} QUIET)
+option(ENABLE_CTRLPORT_THRIFT "Enable ControlPort Thrift support" ${THRIFT_FOUND})
+
+if(ENABLE_CTRLPORT_THRIFT)
+  # ensure we have thrift, loudly, since it is enabled
+  find_package(THRIFT ${GR_THRIFT_MIN_VERSION} REQUIRED)
+endif()
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################

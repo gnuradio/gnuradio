@@ -26,11 +26,26 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
   - requires MSVC 1914 (Microsoft VS 2017 15.7)
 - Windows build: removed unnecessary MSVC-specific system include overrides
 
+#### gr-blocks
+
+- Remove deprecated networking blocks: `udp_source`, `udp_sink`, `tcp_server_sink`; replaced
+  in 3.9 with more capable blocks in `gr-network`
+
 #### gr-analog
 
 - `fastnoise_source`: Use `uint64_t` seed API, use `size_t` for vector length/indices
 - `fastnoise_source`: Use a simple bitmask if the random pool length is a power
   of 2 to determine indices, instead of `%`, which consumed considerable CPU
+- `sig_source`: Remove deprecated `freq` message port of signal source block; Use `cmd` port instead
+
+### gr-filter
+
+- Remove deprecated `mmse_interpolator` block; Replaced previously by `mmse_resampler`
+
+### gr-digital
+
+- Remove deprecated simple_{correlator,framer}
+- Remove deprecated cma, lms, kurtotic equalizers; replaced in 3.9 by `linear_equalizer`
 
 #### gnuradio-runtime
 

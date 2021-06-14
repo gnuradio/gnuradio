@@ -1,0 +1,102 @@
+id: soapy_sdrplay_source
+label: Soapy SDRPlay Source
+flags: [python, throttle]
+
+parameters:
+  - id: type
+    label: Output Type
+    dtype: enum
+    options: [fc32, sc16, sc8]
+    option_labels: [Complex Float32, Complex Int16, Complex Byte]
+    option_attributes:
+      type: [fc32, sc16, sc8]
+    hide: part
+
+  - id: dev_args
+    label: Device arguments
+    dtype: string
+    hide: ${'part' if not dev_args else 'none'}
+
+  - id: samp_rate
+    label: Sample Rate
+    dtype: float
+    default: 'samp_rate'
+
+  - id: bandwidth
+    label: Bandwidth
+    category: RF Options
+    dtype: float
+    default: '0.0'
+    hide: part
+
+  - id: antenna
+    label: Antenna
+    dtype: string
+    default: 'RX'
+    hide: part
+
+  - id: center_freq
+    label: 'Center Freq (Hz)'
+    category: RF Options
+    dtype: real
+    default: 'freq'
+
+  - id: freq_correction
+    label: 'Frequency Correction (PPM)'
+    category: RF Options
+    dtype: real
+    default: '0'
+    hide: part
+
+  - id: agc
+    label: 'AGC'
+    category: RF Options
+    dtype: bool
+    default: 'False'
+    hide: part
+
+  - id: gain
+    label: 'RF Gain (-47dB - 0dB)'
+    category: RF Options
+    dtype: real
+    default: '-20'
+    hide: ${'all' if agc else 'part'}
+
+inputs:
+  - domain: message
+    id: cmd
+    optional: true
+
+outputs:
+  - domain: stream
+    dtype: ${ type.type }
+    multiplicity: 1
+
+templates:
+  imports: from gnuradio import soapy
+  make: |
+      None
+      dev = 'driver=sdrplay'
+      stream_args = ''
+      tune_args = ['']
+      settings = ['']
+
+      self.${id} = soapy.source(dev, "${type}", 1, ${dev_args},
+                                stream_args, tune_args, settings)
+      self.${id}.set_sample_rate(0, ${samp_rate})
+      self.${id}.set_bandwidth(0, ${bandwidth})
+      self.${id}.set_antenna(0, ${antenna})
+      self.${id}.set_gain_mode(0, ${agc})
+      self.${id}.set_frequency(0, ${center_freq})
+      self.${id}.set_frequency_correction(0, ${freq_correction})
+      self.${id}.set_gain(0, min(max(-${gain}, 0.0), 47.0))
+  callbacks:
+    - set_sample_rate(0, ${samp_rate})
+    - set_bandwidth(0, ${bandwidth})
+    - set_antenna(0, ${antenna})
+    - set_gain_mode(0, ${agc})
+    - set_frequency(0, ${center_freq})
+    - set_frequency_correction(0, ${freq_correction})
+    - set_gain(0, min(max(-${gain}, 0.0), 47.0))
+
+file_format: 1

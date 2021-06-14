@@ -1,5 +1,6 @@
 """
 Copyright 2008-2020 Free Software Foundation, Inc.
+Copyright 2021 GNU Radio contributors
 This file is part of GNU Radio
 
 SPDX-License-Identifier: GPL-2.0-or-later
@@ -37,7 +38,7 @@ class Block(Element):
 
     key = ''
     label = ''
-    category = ''
+    category = []
     vtype = '' # This is only used for variables when we want C++ output
     flags = Flags('')
     documentation = {'': ''}
@@ -74,6 +75,7 @@ class Block(Element):
 
         self.states = {'state': True, 'bus_source': False, 'bus_sink': False, 'bus_structure': None}
         self.block_namespace = {}
+        self.deprecated = self.is_deprecated()
 
         if Flags.HAS_CPP in self.flags and self.enabled and not (self.is_virtual_source() or self.is_virtual_sink()):
             # This is a workaround to allow embedded python blocks/modules to load as there is
@@ -213,6 +215,7 @@ class Block(Element):
         for port in ports:
             if hasattr(port, 'master_port'):  # Not a master port and no left-over clones
                 port.dtype = port.master_port.dtype
+                port.vlen = port.master_port.vlen
                 continue
             nports = port.multiplicity
             for clone in port.clones[nports-1:]:
@@ -434,8 +437,8 @@ class Block(Element):
                 if _vtype == None:
                     _vtype = type(evaluated)
             except ValueError or SyntaxError as excp:
-                    if _vtype == None:
-                        print(excp)
+                if _vtype == None:
+                    print(excp)
 
             if _vtype in [int, float, bool, list, dict, str, complex]:
                 if _vtype == (int or long):
@@ -511,8 +514,8 @@ class Block(Element):
                 val_str += self.get_cpp_value(element) + ', '
 
             if len(val_str) > 1:
-              # truncate to trim superfluous ', ' from the end
-              val_str = val_str[0:-2]
+                # truncate to trim superfluous ', ' from the end
+                val_str = val_str[0:-2]
 
             return val_str + '}'
 
@@ -523,8 +526,8 @@ class Block(Element):
                 val_str += '{' + self.get_cpp_value(key) + ', ' + self.get_cpp_value(pyval[key]) + '}, '
 
             if len(val_str) > 1:
-              # truncate to trim superfluous ', ' from the end
-              val_str = val_str[0:-2]
+                # truncate to trim superfluous ', ' from the end
+                val_str = val_str[0:-2]
 
             return val_str + '}'
 
@@ -538,6 +541,26 @@ class Block(Element):
 
     def is_virtual_source(self):
         return self.key == 'virtual_source'
+
+    def is_deprecated(self):
+        """
+        Check whether the block is deprecated.
+
+        For now, we just check the category name for presence of "deprecated".
+
+        As it might be desirable in the future to have such "tags" be stored
+        explicitly, we're taking the detour of introducing a property.
+        """
+        if not self.category:
+            return False
+
+        try:
+            return any("deprecated".casefold() in cat.casefold()
+                       for cat in self.category)
+        except Exception as exception:
+            print(exception.message)
+        return False
+
 
     # Block bypassing
     def get_bypassed(self):

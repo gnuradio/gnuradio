@@ -14,15 +14,10 @@
 #include <gnuradio/api.h>
 #include <gnuradio/thread/thread.h>
 #include <map>
+#include <mutex>
 #include <string>
 
 namespace gr {
-
-typedef std::map<std::string, std::map<std::string, std::string>> config_map_t;
-typedef std::map<std::string, std::map<std::string, std::string>>::iterator
-    config_map_itr;
-typedef std::map<std::string, std::string> config_map_elem_t;
-typedef std::map<std::string, std::string>::iterator config_map_elem_itr;
 
 /*!
  * \brief Base class for representing user preferences a la windows INI files.
@@ -51,8 +46,6 @@ public:
      * \endcode
      */
     prefs();
-
-    virtual ~prefs();
 
     /*!
      * If specifying a file name, this opens that specific
@@ -83,76 +76,79 @@ public:
     /*!
      * \brief Does \p section exist?
      */
-    virtual bool has_section(const std::string& section);
+    bool has_section(const std::string& section);
 
     /*!
      * \brief Does \p option exist?
      */
-    virtual bool has_option(const std::string& section, const std::string& option);
+    bool has_option(const std::string& section, const std::string& option);
 
     /*!
      * \brief If option exists return associated value; else
      * default_val.
      */
-    virtual const std::string get_string(const std::string& section,
-                                         const std::string& option,
-                                         const std::string& default_val);
+    const std::string get_string(const std::string& section,
+                                 const std::string& option,
+                                 const std::string& default_val);
 
     /*!
      * \brief Set or add a string \p option to \p section with value
      * \p val.
      */
-    virtual void set_string(const std::string& section,
-                            const std::string& option,
-                            const std::string& val);
+    void set_string(const std::string& section,
+                    const std::string& option,
+                    const std::string& val);
 
     /*!
      * \brief If option exists and value can be converted to bool,
      * return it; else default_val.
      */
-    virtual bool
+    bool
     get_bool(const std::string& section, const std::string& option, bool default_val);
 
     /*!
      * \brief Set or add a bool \p option to \p section with value \p val.
      */
-    virtual void
-    set_bool(const std::string& section, const std::string& option, bool val);
+    void set_bool(const std::string& section, const std::string& option, bool val);
 
     /*!
      * \brief If option exists and value can be converted to long,
      * return it; else default_val.
      */
-    virtual long
+    long
     get_long(const std::string& section, const std::string& option, long default_val);
 
     /*!
      * \brief Set or add a long \p option to \p section with value \p val.
      */
-    virtual void
-    set_long(const std::string& section, const std::string& option, long val);
+    void set_long(const std::string& section, const std::string& option, long val);
 
     /*!
      * \brief If option exists and value can be converted to double,
      * return it; else default_val.
      */
-    virtual double
+    double
     get_double(const std::string& section, const std::string& option, double default_val);
 
     /*!
      * \brief Set or add a double \p option to \p section with value \p val.
      */
-    virtual void
-    set_double(const std::string& section, const std::string& option, double val);
+    void set_double(const std::string& section, const std::string& option, double val);
 
 protected:
-    virtual std::vector<std::string> _sys_prefs_filenames();
-    virtual void _read_files(const std::vector<std::string>& filenames);
-    virtual char* option_to_env(std::string section, std::string option);
+    std::vector<std::string> _sys_prefs_filenames();
+    void _read_files(const std::vector<std::string>& filenames);
+    char* option_to_env(std::string section, std::string option);
+    template <typename T>
+    T get_general(const std::string& section,
+                  const std::string& option,
+                  const T& default_val);
+    template <typename T>
+    void set_general(const std::string& section, const std::string& option, const T& val);
 
 private:
-    gr::thread::mutex d_mutex;
-    config_map_t d_config_map;
+    std::mutex d_mutex;
+    std::map<std::string, std::map<std::string, std::string>> d_config_map;
 };
 
 } /* namespace gr */
