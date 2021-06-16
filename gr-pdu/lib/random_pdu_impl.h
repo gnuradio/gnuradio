@@ -12,7 +12,6 @@
 #define INCLUDED_PDU_RANDOM_PDU_IMPL_H
 
 #include <gnuradio/pdu/random_pdu.h>
-#include <boost/generator_iterator.hpp>
 
 #include <random>
 

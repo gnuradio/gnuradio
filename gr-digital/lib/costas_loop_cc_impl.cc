@@ -17,7 +17,6 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 #include <gnuradio/sincos.h>
-#include <boost/format.hpp>
 
 namespace gr {
 namespace digital {
