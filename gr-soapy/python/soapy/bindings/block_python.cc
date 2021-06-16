@@ -15,7 +15,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(block.h)                                                   */
-/* BINDTOOL_HEADER_FILE_HASH(4de2fe0c995edc3d14d7f4dde4bbb1db)                     */
+/* BINDTOOL_HEADER_FILE_HASH(6326cce2f22e30ab332ef966343f4a50)                     */
 /***********************************************************************************/
 
 #include "soapy_common.h"
