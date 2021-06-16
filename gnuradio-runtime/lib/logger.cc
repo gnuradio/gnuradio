@@ -27,6 +27,7 @@
 #include <log4cpp/PatternLayout.hh>
 #include <log4cpp/PropertyConfigurator.hh>
 #include <log4cpp/RollingFileAppender.hh>
+#include <boost/format.hpp>
 #include <boost/thread.hpp>
 
 #include <algorithm>
