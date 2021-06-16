@@ -10,6 +10,7 @@
 #ifndef EYE_DISPLAY_PLOT_C
 #define EYE_DISPLAY_PLOT_C
 
+#include "TimePrecisionClass.h"
 #include <gnuradio/qtgui/EyeDisplayPlot.h>
 
 #include <qwt_legend.h>
@@ -19,23 +20,6 @@
 #include <cmath>
 #include <iostream>
 
-class TimePrecisionClass
-{
-public:
-    TimePrecisionClass(const int timePrecision) { d_timePrecision = timePrecision; }
-
-    virtual ~TimePrecisionClass() {}
-
-    virtual unsigned int getTimePrecision() const { return d_timePrecision; }
-
-    virtual void setTimePrecision(const unsigned int newPrecision)
-    {
-        d_timePrecision = newPrecision;
-    }
-
-protected:
-    unsigned int d_timePrecision;
-};
 
 class EyeDisplayZoomer : public QwtPlotZoomer, public TimePrecisionClass
 {
