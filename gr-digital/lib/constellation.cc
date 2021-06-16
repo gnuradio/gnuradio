@@ -17,8 +17,8 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 
-#include <boost/format.hpp>
 
+#include <cassert>
 #include <cfloat>
 #include <cstdlib>
 #include <stdexcept>

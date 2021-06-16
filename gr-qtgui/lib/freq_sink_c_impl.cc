@@ -20,8 +20,6 @@
 #include <qwt_symbol.h>
 #include <volk/volk.h>
 
-#include <boost/range/adaptor/transformed.hpp>
-#include <boost/range/numeric.hpp>
 
 #include <algorithm>
 #include <cstring>

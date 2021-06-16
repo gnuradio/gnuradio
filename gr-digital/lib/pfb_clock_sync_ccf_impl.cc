@@ -19,8 +19,6 @@
 #include "pfb_clock_sync_ccf_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
-#include <boost/format.hpp>
-#include <boost/math/special_functions/round.hpp>
 
 namespace gr {
 namespace digital {

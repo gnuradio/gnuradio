@@ -13,7 +13,6 @@
 #include <gnuradio/digital/api.h>
 #include <gnuradio/digital/header_format_crc.h>
 #include <pmt/pmt.h>
-#include <boost/crc.hpp>
 
 namespace gr {
 namespace digital {
