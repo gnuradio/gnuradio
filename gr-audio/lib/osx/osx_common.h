@@ -12,6 +12,7 @@
 #define INCLUDED_AUDIO_OSX_COMMON_H
 
 #include <gnuradio/audio/osx_impl.h>
+#include <boost/format.hpp>
 
 namespace gr {
 namespace audio {

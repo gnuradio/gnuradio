@@ -22,6 +22,7 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <unistd.h>
+#include <boost/format.hpp>
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>

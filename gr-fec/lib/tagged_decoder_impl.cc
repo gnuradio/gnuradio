@@ -14,6 +14,7 @@
 
 #include "tagged_decoder_impl.h"
 #include <gnuradio/io_signature.h>
+#include <boost/format.hpp>
 #include <cstdio>
 
 namespace gr {

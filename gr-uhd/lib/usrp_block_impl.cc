@@ -9,6 +9,7 @@
  */
 
 #include "usrp_block_impl.h"
+#include <boost/format.hpp>
 #include <chrono>
 #include <thread>
 

@@ -17,7 +17,7 @@
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/integer_math.h>
 #include <gnuradio/io_signature.h>
-#include <volk/volk.h>
+#include <boost/format.hpp>
 #include <stdexcept>
 
 namespace gr {

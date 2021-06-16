@@ -15,6 +15,7 @@
 #include "protocol_formatter_bb_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
+#include <boost/format.hpp>
 #include <cstdio>
 
 namespace gr {

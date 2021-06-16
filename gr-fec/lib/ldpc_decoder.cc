@@ -12,6 +12,7 @@
 #include <gnuradio/fec/ldpc_decoder.h>
 #include <gnuradio/fec/maxstar.h>
 #include <volk/volk.h>
+#include <boost/format.hpp>
 #include <algorithm> // for std::reverse
 #include <cmath>
 #include <cstdio>

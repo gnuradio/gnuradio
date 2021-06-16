@@ -15,6 +15,7 @@
 
 #include "packed_to_unpacked_impl.h"
 #include <gnuradio/io_signature.h>
+#include <boost/format.hpp>
 #include <stdexcept>
 
 namespace gr {
