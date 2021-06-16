@@ -15,6 +15,7 @@
 #include "freedv_rx_ss_impl.h"
 
 #include <gnuradio/io_signature.h>
+#include <boost/format.hpp>
 #include <stdexcept>
 
 namespace gr {
