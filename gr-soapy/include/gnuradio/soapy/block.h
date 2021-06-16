@@ -351,7 +351,6 @@ public:
 
     /*!
      * Does the device support automatic frontend IQ balance correction?
-     * \param direction the channel direction RX or TX
      * \param channel an available channel on the device
      * \return true if IQ balance corrections are supported
      */
