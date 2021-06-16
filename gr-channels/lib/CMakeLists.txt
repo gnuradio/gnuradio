@@ -25,7 +25,6 @@ target_link_libraries(gnuradio-channels PUBLIC
     gnuradio-filter
     gnuradio-analog
     gnuradio-blocks
-    Boost::boost
 )
 
 target_include_directories(gnuradio-channels
