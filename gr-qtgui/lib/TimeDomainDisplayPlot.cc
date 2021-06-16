@@ -11,31 +11,13 @@
 #ifndef TIME_DOMAIN_DISPLAY_PLOT_C
 #define TIME_DOMAIN_DISPLAY_PLOT_C
 
+#include "TimePrecisionClass.h"
 #include <gnuradio/qtgui/TimeDomainDisplayPlot.h>
 
 #include <qwt_legend.h>
 #include <qwt_scale_draw.h>
 #include <QColor>
 #include <cmath>
-
-class TimePrecisionClass
-{
-public:
-    TimePrecisionClass(const int timePrecision) { d_timePrecision = timePrecision; }
-
-    virtual ~TimePrecisionClass() {}
-
-    virtual unsigned int getTimePrecision() const { return d_timePrecision; }
-
-    virtual void setTimePrecision(const unsigned int newPrecision)
-    {
-        d_timePrecision = newPrecision;
-    }
-
-protected:
-    unsigned int d_timePrecision;
-};
-
 
 class TimeDomainDisplayZoomer : public QwtPlotZoomer, public TimePrecisionClass
 {

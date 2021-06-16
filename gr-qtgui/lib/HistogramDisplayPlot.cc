@@ -11,6 +11,7 @@
 #ifndef HISTOGRAM_DISPLAY_PLOT_C
 #define HISTOGRAM_DISPLAY_PLOT_C
 
+#include "TimePrecisionClass.h"
 #include <gnuradio/qtgui/HistogramDisplayPlot.h>
 
 #include <gnuradio/math.h>
@@ -23,25 +24,6 @@
 #ifdef _MSC_VER
 #define copysign _copysign
 #endif
-
-class TimePrecisionClass
-{
-public:
-    TimePrecisionClass(const int timeprecision) { d_time_precision = timeprecision; }
-
-    virtual ~TimePrecisionClass() {}
-
-    virtual unsigned int getTimePrecision() const { return d_time_precision; }
-
-    virtual void setTimePrecision(const unsigned int newprecision)
-    {
-        d_time_precision = newprecision;
-    }
-
-protected:
-    unsigned int d_time_precision;
-};
-
 
 class HistogramDisplayZoomer : public QwtPlotZoomer, public TimePrecisionClass
 {
