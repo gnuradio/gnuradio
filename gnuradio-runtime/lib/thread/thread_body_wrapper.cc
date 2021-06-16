@@ -14,6 +14,7 @@
 
 #include <gnuradio/logger.h>
 #include <gnuradio/thread/thread_body_wrapper.h>
+#include <boost/format.hpp>
 
 #ifdef HAVE_SIGNAL_H
 #include <csignal>
