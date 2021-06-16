@@ -14,7 +14,6 @@
 
 #include <qwt_legend.h>
 #include <qwt_scale_draw.h>
-#include <volk/volk.h>
 #include <QColor>
 #include <cmath>
 
