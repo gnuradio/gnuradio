@@ -8,8 +8,6 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-include(GrBoost)
-
 find_package(GSL)
 
 ########################################################################
@@ -18,7 +16,6 @@ find_package(GSL)
 include(GrComponent)
 
 GR_REGISTER_COMPONENT("gr-wavelet" ENABLE_GR_WAVELET
-    Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_BLOCKS
     ENABLE_GR_ANALOG
