@@ -16,7 +16,6 @@
 #include <gnuradio/math.h>
 #include <qwt_legend.h>
 #include <qwt_scale_draw.h>
-#include <volk/volk.h>
 #include <boost/math/special_functions/round.hpp>
 #include <QColor>
 #include <cmath>
