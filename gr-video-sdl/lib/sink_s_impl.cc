@@ -18,11 +18,11 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <boost/format.hpp>
 #include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <stdexcept>
-
 
 namespace gr {
 namespace video_sdl {
