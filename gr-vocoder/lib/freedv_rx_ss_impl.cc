@@ -16,6 +16,7 @@
 
 #include <gnuradio/io_signature.h>
 #include <assert.h>
+#include <boost/format.hpp>
 #include <stdexcept>
 
 namespace gr {
