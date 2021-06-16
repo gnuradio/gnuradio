@@ -11,7 +11,7 @@
 #endif
 
 #include "ldpc_gen_mtrx_encoder_impl.h"
-#include <sstream>
+#include <boost/format.hpp>
 
 namespace gr {
 namespace fec {

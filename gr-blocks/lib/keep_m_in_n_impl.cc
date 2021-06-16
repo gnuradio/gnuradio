@@ -14,6 +14,7 @@
 
 #include "keep_m_in_n_impl.h"
 #include <gnuradio/io_signature.h>
+#include <boost/format.hpp>
 
 namespace gr {
 namespace blocks {

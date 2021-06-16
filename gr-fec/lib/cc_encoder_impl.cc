@@ -17,6 +17,7 @@
 #include <gnuradio/fec/generic_encoder.h>
 #include <volk/volk.h>
 #include <volk/volk_typedefs.h>
+#include <boost/format.hpp>
 #include <cmath>
 #include <cstdio>
 #include <sstream>

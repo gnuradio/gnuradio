@@ -17,6 +17,7 @@
 
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
+#include <boost/format.hpp>
 #include <stdexcept>
 
 namespace gr {

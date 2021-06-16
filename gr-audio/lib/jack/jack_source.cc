@@ -18,6 +18,7 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <type_traits>
+#include <boost/format.hpp>
 #include <cstdio>
 #include <stdexcept>
 

@@ -15,6 +15,7 @@
 #include "wavfile_source_impl.h"
 #include <gnuradio/io_signature.h>
 #include <sys/types.h>
+#include <boost/format.hpp>
 #include <stdexcept>
 
 namespace gr {

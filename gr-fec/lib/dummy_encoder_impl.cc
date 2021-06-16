@@ -15,6 +15,7 @@
 #include "dummy_encoder_impl.h"
 #include <gnuradio/fec/generic_encoder.h>
 #include <volk/volk.h>
+#include <boost/format.hpp>
 #include <sstream>
 
 namespace gr {

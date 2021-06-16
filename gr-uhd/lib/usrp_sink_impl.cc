@@ -12,6 +12,7 @@
 #include "usrp_sink_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
+#include <boost/format.hpp>
 #include <boost/thread/thread.hpp>
 #include <chrono>
 #include <climits>

@@ -31,7 +31,7 @@ public:
     int my_id;
     int unique_id();
     std::string d_name;
-    std::string alias() { return (boost::format("%s%d") % d_name % unique_id()).str(); }
+    std::string alias();
 
 public:
     typedef std::shared_ptr<generic_encoder> sptr;

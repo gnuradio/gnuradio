@@ -14,6 +14,7 @@
 
 #include "framer_sink_1_impl.h"
 #include <gnuradio/io_signature.h>
+#include <boost/format.hpp>
 #include <cstdio>
 #include <string>
 
