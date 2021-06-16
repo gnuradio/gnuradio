@@ -15,6 +15,7 @@
 #include "vmcircbuf_sysv_shm.h"
 #include <fcntl.h>
 #include <unistd.h>
+#include <boost/format.hpp>
 #include <cstdlib>
 #include <stdexcept>
 #ifdef HAVE_SYS_IPC_H

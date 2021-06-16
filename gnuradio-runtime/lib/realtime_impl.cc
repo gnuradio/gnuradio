@@ -20,6 +20,7 @@
 #include <sched.h>
 #endif
 
+#include <boost/format.hpp>
 #include <algorithm>
 #include <cerrno>
 #include <cmath>

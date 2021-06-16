@@ -10,6 +10,7 @@
 
 #include <gnuradio/rpcserver_booter_thrift.h>
 #include <gnuradio/rpcserver_thrift.h>
+#include <boost/format.hpp>
 
 #include <boost/asio/ip/host_name.hpp>
 

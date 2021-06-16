@@ -15,6 +15,7 @@
 #include "tpb_thread_body.h"
 #include <gnuradio/prefs.h>
 #include <pmt/pmt.h>
+#include <boost/format.hpp>
 #include <boost/thread.hpp>
 #include <iostream>
 
