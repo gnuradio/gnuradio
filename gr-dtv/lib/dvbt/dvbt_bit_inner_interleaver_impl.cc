@@ -13,6 +13,8 @@
 #include "dvbt_bit_inner_interleaver_impl.h"
 #include <gnuradio/io_signature.h>
 
+#include <boost/format.hpp>
+
 #define MAX_MODULATION_ORDER 6
 #define INTERLEAVER_BLOCK_SIZE 126
 
