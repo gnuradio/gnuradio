@@ -18,7 +18,6 @@
 #include <gnuradio/prefs.h>
 
 #include <qwt_symbol.h>
-#include <volk/volk.h>
 
 #include <cstring>
 
