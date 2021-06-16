@@ -11,6 +11,7 @@
 #include <gnuradio/logger.h>
 #include <gnuradio/trellis/base.h>
 #include <gnuradio/trellis/fsm.h>
+#include <boost/format.hpp>
 #include <cmath>
 #include <cstdlib>
 #include <fstream>
