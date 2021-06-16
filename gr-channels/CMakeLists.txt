@@ -8,7 +8,6 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-include(GrBoost)
 
 ########################################################################
 # Register component
@@ -16,7 +15,6 @@ include(GrBoost)
 include(GrComponent)
 
 GR_REGISTER_COMPONENT("gr-channels" ENABLE_GR_CHANNELS
-    Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_BLOCKS
     ENABLE_GR_FFT
