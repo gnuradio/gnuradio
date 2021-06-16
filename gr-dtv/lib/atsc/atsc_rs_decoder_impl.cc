@@ -16,6 +16,8 @@
 #include "gnuradio/dtv/atsc_consts.h"
 #include <gnuradio/io_signature.h>
 
+#include <boost/format.hpp>
+
 namespace gr {
 namespace dtv {
 
