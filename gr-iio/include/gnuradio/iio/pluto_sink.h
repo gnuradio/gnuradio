@@ -31,6 +31,7 @@ public:
      *
      * \param uri  String of the context uri
      * \param buffer_size  Long of number of samples in buffer to send to device
+     * \param cyclic Boolean when True sends first buffer_size number of samples
      */
     static sptr make(const std::string& uri, unsigned long buffer_size, bool cyclic);
 
