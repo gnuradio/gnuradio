@@ -21,6 +21,7 @@
 #include <qwt_symbol.h>
 #include <volk/volk.h>
 
+#include <boost/format.hpp>
 #include <algorithm>
 #include <cstring>
 

@@ -16,6 +16,7 @@
 #include <gnuradio/io_signature.h>
 #include <pmt/pmt.h>
 #include <volk/volk.h>
+#include <boost/format.hpp>
 #include <cstdio>
 #include <string>
 

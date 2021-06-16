@@ -16,6 +16,7 @@
 #include <gnuradio/integer_math.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
+#include <boost/format.hpp>
 #include <stdexcept>
 
 namespace gr {

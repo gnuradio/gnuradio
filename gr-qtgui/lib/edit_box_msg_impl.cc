@@ -17,6 +17,7 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/qtgui/utils.h>
+#include <boost/format.hpp>
 #include <sstream>
 
 namespace gr {

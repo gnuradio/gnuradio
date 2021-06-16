@@ -14,6 +14,7 @@
 
 #include "ctrlport_probe2_b_impl.h"
 #include <gnuradio/io_signature.h>
+#include <boost/format.hpp>
 
 namespace gr {
 namespace blocks {

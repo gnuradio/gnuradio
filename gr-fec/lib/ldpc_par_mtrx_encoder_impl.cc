@@ -10,11 +10,11 @@
 
 #include "ldpc_par_mtrx_encoder_impl.h"
 #include <volk/volk.h>
+#include <boost/format.hpp>
 #include <algorithm> // for std::reverse
 #include <cmath>
 #include <cstdio>
 #include <cstring> // for memcpy
-#include <sstream>
 #include <vector>
 
 namespace gr {

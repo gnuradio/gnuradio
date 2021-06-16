@@ -15,6 +15,7 @@
 #include "wavfile_sink_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/thread/thread.h>
+#include <boost/format.hpp>
 #include <cstring>
 #include <stdexcept>
 

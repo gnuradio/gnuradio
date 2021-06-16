@@ -14,6 +14,7 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 #include <volk/volk.h>
+#include <boost/format.hpp>
 #include <cmath>
 
 #ifdef HAVE_CONFIG_H

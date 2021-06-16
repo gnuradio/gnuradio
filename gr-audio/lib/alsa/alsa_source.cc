@@ -17,6 +17,7 @@
 #include "alsa_source.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
+#include <boost/format.hpp>
 #include <cstdio>
 #include <stdexcept>
 

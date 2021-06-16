@@ -16,6 +16,8 @@
 #include <gnuradio/logger.h>
 
 #include "alsa_impl.h"
+
+#include <boost/format.hpp>
 #include <algorithm>
 
 static snd_pcm_access_t access_types[] = { SND_PCM_ACCESS_MMAP_INTERLEAVED,

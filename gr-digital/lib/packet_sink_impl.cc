@@ -15,6 +15,7 @@
 #include "packet_sink_impl.h"
 #include <gnuradio/blocks/count_bits.h>
 #include <gnuradio/io_signature.h>
+#include <boost/format.hpp>
 #include <cstring>
 
 namespace gr {

@@ -14,6 +14,7 @@
 
 #include "ccsds_encoder_impl.h"
 #include <gnuradio/fec/generic_encoder.h>
+#include <boost/format.hpp>
 #include <cstdio>
 
 #include <gnuradio/fec/viterbi.h>
