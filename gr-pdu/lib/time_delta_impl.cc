@@ -14,6 +14,7 @@
 #include "time_delta_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/pdu.h>
+#include <boost/format.hpp>
 
 namespace gr {
 namespace pdu {
