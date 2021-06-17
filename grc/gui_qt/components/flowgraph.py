@@ -54,6 +54,8 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         self.isPanning    = False
         self.mousePressed = False
         
+        self.newConnection = None
+        self.startPort = None
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls:
@@ -145,6 +147,15 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             event.ignore()
 
     def mousePressEvent(self,  event):
+        item = self.itemAt(event.scenePos(), QtGui.QTransform())
+        if item:
+            if item.is_port:
+                self.startPort = item
+                self.newConnection = QtWidgets.QGraphicsLineItem(QtCore.QLineF(event.scenePos(), event.scenePos()))
+                self.newConnection.setPen(QtGui.QPen(1))
+                self.addItem(self.newConnection)
+                # TODO: Create new connection
+                print("clicked a port")
         if event.button() == Qt.LeftButton:
             self.mousePressed = True
             if self.isPanning:
@@ -155,6 +166,11 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 super(FlowgraphScene, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
+        if self.newConnection:
+            print(self.newConnection)
+            newConnection_ = QtCore.QLineF(self.newConnection.line().p1(), event.scenePos())
+            self.newConnection.setLine(newConnection_)
+
         if self.mousePressed and self.isPanning:
             newPos = event.pos()
             diff = newPos - self.dragPos
@@ -171,6 +187,16 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             super(FlowgraphScene, self).mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
+        print("droppedscene")
+        if self.newConnection:
+            print(self.newConnection)
+            self.removeItem(self.newConnection)
+            self.newConnection = None
+            item = self.itemAt(event.scenePos(), QtGui.QTransform())
+            if item:
+                if item.is_port:
+                    print("Connected two ports together!")
+
         if event.button() == Qt.LeftButton:
             if event.modifiers() & Qt.ControlModifier:
                 #self.setCursor(Qt.OpenHandCursor)
