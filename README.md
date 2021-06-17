@@ -1,3 +1,10 @@
+## How to run the Qt version of GRC 
+
+- checkout the `feature-grc-qt` branch
+- build and install like usual (see instructions on the master branch)
+- navigate to the project root, run `python -m grc --qt`
+
+
 <p align="center">
 <img src="https://github.com/gnuradio/gnuradio/blob/main/docs/gnuradio.png" width="75%" />
 </p>
