@@ -12,6 +12,7 @@
 #define INCLUDED_GNURADIO_HIGH_RES_TIMER_H
 
 #include <gnuradio/api.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 ////////////////////////////////////////////////////////////////////////
 // Use architecture defines to determine the implementation
@@ -123,8 +124,6 @@ inline gr::high_res_timer_type gr::high_res_timer_tps(void)
 
 ////////////////////////////////////////////////////////////////////////
 #ifdef GNURADIO_HRT_USE_MICROSEC_CLOCK
-#include <boost/date_time/posix_time/posix_time.hpp>
-
 inline gr::high_res_timer_type gr::high_res_timer_now(void)
 {
     static const boost::posix_time::ptime epoch(boost::posix_time::from_time_t(0));
@@ -143,8 +142,6 @@ inline gr::high_res_timer_type gr::high_res_timer_tps(void)
 #endif
 
 ////////////////////////////////////////////////////////////////////////
-#include <boost/date_time/posix_time/posix_time.hpp>
-
 inline gr::high_res_timer_type gr::high_res_timer_epoch(void)
 {
     static const double hrt_ticks_per_utc_ticks =

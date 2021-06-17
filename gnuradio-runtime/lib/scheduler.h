@@ -14,7 +14,7 @@
 #include "flat_flowgraph.h"
 #include <gnuradio/api.h>
 #include <gnuradio/block.h>
-#include <boost/utility.hpp>
+#include <boost/core/noncopyable.hpp>
 
 namespace gr {
 
