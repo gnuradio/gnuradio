@@ -14,7 +14,6 @@
 
 #include "dummy_decoder_impl.h"
 #include <volk/volk.h>
-#include <boost/assign/list_of.hpp>
 #include <cmath>
 #include <cstdio>
 #include <sstream>
