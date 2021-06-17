@@ -14,7 +14,6 @@
 
 #include "cc_decoder_impl.h"
 #include <volk/volk.h>
-#include <boost/assign/list_of.hpp>
 #include <cmath>
 #include <cstdio>
 #include <sstream>
@@ -119,8 +118,8 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
         d_SUBSHIFT = 0;
     }
 
-    std::map<std::string, conv_kernel> yp_kernel =
-        boost::assign::map_list_of("k=7r=2", volk_8u_x4_conv_k7_r2_8u);
+    std::map<std::string, conv_kernel> yp_kernel = { { "k=7r=2",
+                                                       volk_8u_x4_conv_k7_r2_8u } };
 
     std::string k_ = "k=";
     std::string r_ = "r=";
