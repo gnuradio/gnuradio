@@ -28,7 +28,6 @@ typedef int mode_t;
 // buffer.cc, then only include it there
 #include <gnuradio/api.h>
 #include <log4cpp/Category.hh>
-#include <boost/format.hpp>
 #include <boost/thread.hpp>
 #include <cassert>
 #include <memory>
