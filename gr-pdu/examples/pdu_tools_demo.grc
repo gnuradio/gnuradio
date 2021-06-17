@@ -77,7 +77,29 @@ blocks:
     coordinate: [216, 20.0]
     rotation: 0
     state: true
-- name: blocks_message_debug_0
+- name: add_sys_time
+  id: pdu_add_system_time
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: 'This block will add the system
+
+      time to the PDU metadata as a
+
+      double precision float. The time
+
+      key can be set by the user.'
+    key: timekey
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 532.0]
+    rotation: 0
+    state: true
+- name: msg_dbg
   id: blocks_message_debug
   parameters:
     affinity: ''
@@ -91,7 +113,7 @@ blocks:
     coordinate: [584, 728.0]
     rotation: 0
     state: true
-- name: blocks_message_strobe_0
+- name: msg_strobe
   id: blocks_message_strobe
   parameters:
     affinity: ''
@@ -108,7 +130,7 @@ blocks:
     coordinate: [56, 252.0]
     rotation: 0
     state: true
-- name: note_0
+- name: note
   id: note
   parameters:
     alias: ''
@@ -142,29 +164,7 @@ blocks:
     coordinate: [616, 20.0]
     rotation: 0
     state: true
-- name: pdu_add_system_time_0
-  id: pdu_add_system_time
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: 'This block will add the system
-
-      time to the PDU metadata as a
-
-      double precision float. The time
-
-      key can be set by the user.'
-    key: timekey
-    maxoutbuf: '0'
-    minoutbuf: '0'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [240, 532.0]
-    rotation: 0
-    state: true
-- name: pdu_pdu_set_0
+- name: pdu_set
   id: pdu_pdu_set
   parameters:
     affinity: ''
@@ -183,7 +183,7 @@ blocks:
     coordinate: [720, 252.0]
     rotation: 0
     state: true
-- name: pdu_pdu_split_0
+- name: pdu_split
   id: pdu_pdu_split
   parameters:
     affinity: ''
@@ -203,7 +203,7 @@ blocks:
     coordinate: [280, 808.0]
     rotation: 0
     state: true
-- name: pdu_random_pdu_0
+- name: random_pdu
   id: pdu_random_pdu
   parameters:
     affinity: ''
@@ -225,10 +225,10 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [320, 236.0]
+    coordinate: [336, 236.0]
     rotation: 0
     state: true
-- name: pdu_time_delta_0
+- name: time_delta
   id: pdu_time_delta
   parameters:
     affinity: ''
@@ -246,7 +246,7 @@ blocks:
     coordinate: [752, 524.0]
     rotation: 0
     state: true
-- name: qtgui_time_raster_sink_x_0
+- name: time_raster
   id: qtgui_time_raster_sink_x
   parameters:
     affinity: ''
@@ -309,7 +309,7 @@ blocks:
     coordinate: [904, 820.0]
     rotation: 0
     state: true
-- name: virtual_sink_0
+- name: vs0
   id: virtual_sink
   parameters:
     alias: ''
@@ -322,20 +322,7 @@ blocks:
     coordinate: [1048, 260.0]
     rotation: 0
     state: true
-- name: virtual_sink_1
-  id: virtual_sink
-  parameters:
-    alias: ''
-    comment: ''
-    stream_id: y
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1056, 532.0]
-    rotation: 0
-    state: true
-- name: virtual_source_0
+- name: vs1
   id: virtual_source
   parameters:
     alias: ''
@@ -348,7 +335,20 @@ blocks:
     coordinate: [48, 532.0]
     rotation: 0
     state: true
-- name: virtual_source_1
+- name: vs2
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: y
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1056, 532.0]
+    rotation: 0
+    state: true
+- name: vs3
   id: virtual_source
   parameters:
     alias: ''
@@ -363,15 +363,15 @@ blocks:
     state: true
 
 connections:
-- [blocks_message_strobe_0, strobe, pdu_random_pdu_0, generate]
-- [pdu_add_system_time_0, pdu, pdu_time_delta_0, pdu]
-- [pdu_pdu_set_0, pdus, virtual_sink_0, '0']
-- [pdu_pdu_split_0, dict, blocks_message_debug_0, print]
-- [pdu_pdu_split_0, vec, qtgui_time_raster_sink_x_0, in]
-- [pdu_random_pdu_0, pdus, pdu_pdu_set_0, pdus]
-- [pdu_time_delta_0, pdu, virtual_sink_1, '0']
-- [virtual_source_0, '0', pdu_add_system_time_0, pdu]
-- [virtual_source_1, '0', pdu_pdu_split_0, pdu]
+- [add_sys_time, pdu, time_delta, pdu]
+- [msg_strobe, strobe, random_pdu, generate]
+- [pdu_set, pdus, vs0, '0']
+- [pdu_split, dict, msg_dbg, print]
+- [pdu_split, vec, time_raster, in]
+- [random_pdu, pdus, pdu_set, pdus]
+- [time_delta, pdu, vs2, '0']
+- [vs1, '0', add_sys_time, pdu]
+- [vs3, '0', pdu_split, pdu]
 
 metadata:
   file_format: 1
