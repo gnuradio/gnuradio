@@ -17,6 +17,7 @@
 #include <gnuradio/block_registry.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/prefs.h>
+#include <pmt/pmt.h>
 #include <iostream>
 #include <stdexcept>
 
@@ -597,7 +598,15 @@ void block::system_handler(pmt::pmt_t msg)
     // std::cout << "system_handler " << msg << "\n";
     pmt::pmt_t op = pmt::car(msg);
     if (pmt::eqv(op, d_pmt_done)) {
-        d_finished = pmt::to_long(pmt::cdr(msg));
+        auto value = pmt::cdr(msg);
+        if (pmt::is_bool(value)) {
+            d_finished = pmt::to_bool(value);
+        } else if (pmt::is_number(value)) {
+            d_finished = pmt::to_long(pmt::cdr(msg));
+        } else {
+            std::cout << "WARNING: bad message value on system port!\n";
+            return;
+        }
         global_block_registry.notify_blk(d_symbol_name);
     } else {
         std::cout << "WARNING: bad message op on system port!\n";
@@ -634,7 +643,7 @@ void block::notify_msg_neighbors()
 
             currlist = pmt::cdr(currlist);
             basic_block_sptr blk = global_block_registry.block_lookup(block);
-            blk->post(d_system_port, pmt::cons(d_pmt_done, pmt::mp(true)));
+            blk->post(d_system_port, pmt::cons(d_pmt_done, pmt::from_bool(true)));
         }
     }
 }
