@@ -33,6 +33,7 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
         self._line_path = None
 
     def updateLine(self):
+        self._line.clear()
         self._line.moveTo(self.source.scenePos())
         c1 = self.source.scenePos() + QtCore.QPointF(200, 0)
         c2 = self.sink.scenePos() - QtCore.QPointF(200, 0)
