@@ -40,6 +40,11 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         else:
             self.setPos(parent.width, 0)
 
+        if self._dir == "sink":
+            self.connection_point = self.scenePos() + QtCore.QPointF(0.0, 15.0 / 2.0)
+        else:
+            self.connection_point = self.scenePos() + QtCore.QPointF(15.0, 15.0 / 2.0)
+
         self.setFlag(QtWidgets.QGraphicsItem.ItemSendsScenePositionChanges)
 
     def _update_colors(self):
@@ -53,6 +58,10 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         pass
 
     def itemChange(self, change, value):
+        if self._dir == "sink":
+            self.connection_point = self.scenePos() + QtCore.QPointF(0.0, 15.0 / 2.0)
+        else:
+            self.connection_point = self.scenePos() + QtCore.QPointF(15.0, 15.0 / 2.0)
         for conn in self.connections():
             conn.updateLine()
         return QtWidgets.QGraphicsLineItem.itemChange(self, change, value)
