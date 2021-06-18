@@ -40,3 +40,8 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
         self._line.cubicTo(c1, c2, self.sink.scenePos())
         self.setPath(self._line)
 
+    def paint(self, painter, option, widget):
+        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+        super(self.__class__, self).paint(painter, option, widget)
+
+
