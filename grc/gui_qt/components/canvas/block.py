@@ -244,11 +244,6 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                 painter.drawText(QtCore.QRectF(0 + self.width/2, 0 + y_offset, self.width, self.height), Qt.AlignLeft, value)
                 y_offset += 20
 
-        for source in self.sources:
-            source.update()
-        for sink in self.sinks:
-            sink.update()
-
     def boundingRect(self): # required to have
         x,y = (self.x(), self.y())
         self.states['coordinate'] = (x,y)
