@@ -557,7 +557,7 @@ class Application(Gtk.Application):
                         ### Following line forces a complete update of io ports
                         flow_graph_update()
                         page.saved = False
-                    else:  # restore the current state
+                    if response in (Gtk.ResponseType.REJECT, Gtk.ResponseType.ACCEPT):
                         n = page.state_cache.get_current_state()
                         flow_graph.import_data(n)
                         flow_graph_update()
