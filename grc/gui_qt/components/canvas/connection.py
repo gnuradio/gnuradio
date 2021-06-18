@@ -16,10 +16,10 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
 
         #self._line = QtCore.QLineF(source.scenePos(), sink.scenePos())
         self._line = QtGui.QPainterPath()
-        self._line.moveTo(source.scenePos())
-        c1 = source.scenePos() + QtCore.QPointF(10, 0)
-        c2 = sink.scenePos() - QtCore.QPointF(10, 0)
-        self._line.cubicTo(c1, c2, sink.scenePos())
+        self._line.moveTo(source.connection_point)
+        c1 = source.connection_point + QtCore.QPointF(200, 0)
+        c2 = sink.connection_point - QtCore.QPointF(200, 0)
+        self._line.cubicTo(c1, c2, sink.connection_point)
         self.setPath(self._line)
 
         self._line_width_factor = 1.0
@@ -34,10 +34,10 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
 
     def updateLine(self):
         self._line.clear()
-        self._line.moveTo(self.source.scenePos())
-        c1 = self.source.scenePos() + QtCore.QPointF(200, 0)
-        c2 = self.sink.scenePos() - QtCore.QPointF(200, 0)
-        self._line.cubicTo(c1, c2, self.sink.scenePos())
+        self._line.moveTo(self.source.connection_point)
+        c1 = self.source.connection_point + QtCore.QPointF(200, 0)
+        c2 = self.sink.connection_point - QtCore.QPointF(200, 0)
+        self._line.cubicTo(c1, c2, self.sink.connection_point)
         self.setPath(self._line)
 
     def paint(self, painter, option, widget):
