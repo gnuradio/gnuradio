@@ -38,6 +38,9 @@ parameters:
         window.WIN_RECTANGULAR, window.WIN_KAISER, window.WIN_FLATTOP]
     option_labels: [Blackman-harris, Hamming, Hann, Blackman, Rectangular, Kaiser,
         Flat-top]
+    option_attributes:
+        cpp_opts: [fft::window::WIN_BLACKMAN_hARRIS, fft::window::WIN_HAMMING, fft::window::WIN_HANN, fft::window::WIN_BLACKMAN,
+        fft::window::WIN_RECTANGULAR, fft::window::WIN_KAISER, fft::window::WIN_FLATTOP]
     hide: part
 -   id: norm_window
     label: Normalize Window Power
@@ -121,6 +124,8 @@ parameters:
     default: qtgui.TRIG_MODE_FREE
     options: [qtgui.TRIG_MODE_FREE, qtgui.TRIG_MODE_AUTO, qtgui.TRIG_MODE_NORM, qtgui.TRIG_MODE_TAG]
     option_labels: [Free, Auto, Normal, Tag]
+    option_attributes:
+        cpp_opts: [qtgui::TRIG_MODE_FREE, qtgui::TRIG_MODE_AUTO, qtgui::TRIG_MODE_NORM, qtgui::TRIG_MODE_TAG]
     hide: part
 -   id: tr_level
     label: Trigger Level
@@ -462,12 +467,12 @@ cpp_templates:
     - set_frequency_range(${fc}, ${bw})
     - set_update_time(${update_time})
     - set_y_axis(${ymin}, ${ymax})
-    - this->${id}.set_trigger_mode(${tr_mode.replace('qtgui.','gr::qtgui::')}, ${tr_level}, ${tr_chan}, ${tr_tag})
+    - this->${id}.set_trigger_mode(${tr_mode.cpp_opts}, ${tr_level}, ${tr_chan}, ${tr_tag})
     link: ['gnuradio::gnuradio-qtgui', 'Qt5::Widgets']
     make:  |-
         this->${id} = qtgui::${type.fcn}::make(
             ${fftsize}, // size
-            gr::fft::${wintype.replace('window.', 'window::')}, //wintype
+            ${wintype.cpp_opts}, // wintype
             ${fc}, // fc
             ${bw}, // bw
             ${name}, // name
@@ -523,7 +528,6 @@ cpp_templates:
         % endif
 
     translations:
-        firdes.: 'filter::firdes::'
         'True': 'true'
         'False': 'false'
 
