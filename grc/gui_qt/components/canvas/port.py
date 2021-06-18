@@ -80,6 +80,4 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
 
         rect = QtCore.QRectF(0, 0, 15, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
         painter.drawRect(rect)
-        for connection in self.connections():
-            connection.update()
 
