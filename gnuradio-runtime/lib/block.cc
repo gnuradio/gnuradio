@@ -8,6 +8,7 @@
  *
  */
 
+#include <cxxabi.h>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -595,23 +596,50 @@ void block::reset_perf_counters()
 
 void block::system_handler(pmt::pmt_t msg)
 {
-    // std::cout << "system_handler " << msg << "\n";
-    pmt::pmt_t op = pmt::car(msg);
-    if (pmt::eqv(op, d_pmt_done)) {
-        auto value = pmt::cdr(msg);
+    // check whether message is cons or dict
+    if (pmt::is_pair(msg)) {
+        // cons
+        // TODO: DEPRECATE sending pmt::cons in favor of dict
+        auto op = pmt::car(msg);
+
+        if (pmt::eqv(op, d_pmt_done)) {
+            auto value = pmt::cdr(msg);
+            // check whether the finishedness is bool or numeric
+            if (pmt::is_bool(value)) {
+                d_finished = pmt::to_bool(value);
+            } else {
+                try {
+                    // TODO DEPRECATE passing of numbers as finishedness
+                    d_finished = pmt::to_long(pmt::cdr(msg));
+                } catch (pmt::wrong_type& e) {
+                    std::cout << "WARNING: bad message value on system port: " << e.what()
+                              << "\n";
+                    return;
+                }
+            }
+        } else {
+            std::cout << "WARNING: bad message op on system port: " << op << "\n";
+        }
+    } else if (pmt::is_dict(msg)) {
+        // dict
+        auto value = pmt::dict_ref(msg, d_pmt_done, pmt::PMT_NIL);
+
         if (pmt::is_bool(value)) {
             d_finished = pmt::to_bool(value);
-        } else if (pmt::is_number(value)) {
-            d_finished = pmt::to_long(pmt::cdr(msg));
         } else {
-            std::cout << "WARNING: bad message value on system port!\n";
+            std::cout << "WARNING: bad message op in dict on system port!\n";
             return;
         }
-        global_block_registry.notify_blk(d_symbol_name);
+
     } else {
-        std::cout << "WARNING: bad message op on system port!\n";
+        // neither legacy pair nor dict
+        std::cout << "WARNING: bad message on system port!\n";
         pmt::print(msg);
+        return;
     }
+
+    // finally, notify neighbors
+    global_block_registry.notify_blk(d_symbol_name);
 }
 
 void block::set_log_level(std::string level) { logger_set_level(d_logger, level); }
@@ -643,7 +671,8 @@ void block::notify_msg_neighbors()
 
             currlist = pmt::cdr(currlist);
             basic_block_sptr blk = global_block_registry.block_lookup(block);
-            blk->post(d_system_port, pmt::cons(d_pmt_done, pmt::from_bool(true)));
+            blk->post(d_system_port,
+                      pmt::dict_add(pmt::make_dict(), d_pmt_done, pmt::PMT_T));
         }
     }
 }
