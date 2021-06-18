@@ -191,6 +191,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions['delete'] = Action(Icons('edit-delete'), _("delete"), self,
                                    shortcut=Keys.Delete, statusTip=_("delete-tooltip"))
 
+        actions['select_all'] = Action(Icons('edit-select_all'), _("select_all"), self,
+                                   shortcut=Keys.SelectAll, statusTip=_("select_all-tooltip"))
+
         actions['rotate_ccw'] = Action(Icons('object-rotate-left'), _("rotate_ccw"), self,
                                        shortcut=Keys.MoveToPreviousChar,
                                        statusTip=_("rotate_ccw-tooltip"))
@@ -198,6 +201,26 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions['rotate_cw'] = Action(Icons('object-rotate-right'), _("rotate_cw"), self,
                                       shortcut=Keys.MoveToNextChar,
                                       statusTip=_("rotate_cw-tooltip"))
+
+        actions['enable'] = Action("Enable", self)
+        actions['disable'] = Action("Disable", self)
+        actions['bypass'] = Action("Bypass", self)
+
+        actions['vertical_align_top'] = Action("Vertical Align Top", self)
+        actions['vertical_align_middle'] = Action("Vertical Align Middle", self)
+        actions['vertical_align_bottom'] = Action("Vertical Align Bottom", self)
+
+        actions['horizontal_align_left'] = Action("Horizontal Align Left", self)
+        actions['horizontal_align_center'] = Action("Horizontal Align Center", self)
+        actions['horizontal_align_right'] = Action("Horizontal Align Right", self)
+
+        actions['create_hier'] = Action("Create hier block", self)
+        actions['open_hier'] = Action("Open hier block", self)
+        actions['toggle_source_bus'] = Action("Toggle source bus", self)
+        actions['toggle_sink_bus'] = Action("Toggle sink bus", self)
+
+        actions['properties'] = Action(Icons('document-properties'), _("flowgraph-properties"),
+                                       self, statusTip=_("flowgraph-properties-tooltip"))
 
         # View Actions
         actions['errors'] = Action(Icons('dialog-error'), _("errors"), self, shortcut='E',
@@ -229,11 +252,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         actions['types'] = Action("Types", self)
 
-        actions['enable'] = Action("Enable", self)
-        actions['disable'] = Action("Disable", self)
 
-        actions['properties'] = Action(Icons('document-properties'), _("flowgraph-properties"),
-                                       self, statusTip=_("flowgraph-properties-tooltip"))
 
         actions['preferences'] = Action(Icons('preferences-system'), _("preferences"), self,
                                         statusTip=_("preferences-tooltip"))
@@ -282,12 +301,36 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         edit.addAction(actions['copy'])
         edit.addAction(actions['paste'])
         edit.addAction(actions['delete'])
+        edit.addAction(actions['select_all'])
         edit.addSeparator()
         edit.addAction(actions['rotate_ccw'])
         edit.addAction(actions['rotate_cw'])
+
+        align = Menu("&Align")
+        menus['align'] = align
+        align.addAction(actions['vertical_align_top'])
+        align.addAction(actions['vertical_align_middle'])
+        align.addAction(actions['vertical_align_bottom'])
+        align.addSeparator()
+        align.addAction(actions['horizontal_align_left'])
+        align.addAction(actions['horizontal_align_center'])
+        align.addAction(actions['horizontal_align_right'])
+
+        edit.addMenu(align)
         edit.addSeparator()
         edit.addAction(actions['enable'])
         edit.addAction(actions['disable'])
+        edit.addAction(actions['bypass'])
+        edit.addSeparator()
+
+        more = Menu("&More")
+        menus['more'] = more
+        more.addAction(actions['create_hier'])
+        more.addAction(actions['open_hier'])
+        more.addAction(actions['toggle_source_bus'])
+        more.addAction(actions['toggle_sink_bus'])
+
+        edit.addMenu(more)
         edit.addAction(actions['properties'])
         menus['edit'] = edit
 
