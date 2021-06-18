@@ -198,6 +198,8 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         #font.setStretch(70) # makes it more condensed
         font.setBold(True)
 
+        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+
         # Draw main rectangle
         if self.isSelected():
             painter.setPen(QtGui.QPen(QtGui.QColor(0x42, 0xD4, 0xF5)))
