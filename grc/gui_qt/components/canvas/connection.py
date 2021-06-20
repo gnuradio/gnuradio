@@ -44,11 +44,11 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
     def paint(self, painter, option, widget):
         painter.setRenderHint(QtGui.QPainter.Antialiasing)
 
-        pen = QtGui.QPen(1)
         if self.isSelected():
             pen = QtGui.QPen(QtGui.QColor(0x00, 0x00, 0xFF))
         else:
             pen = QtGui.QPen(QtGui.QColor(0x61, 0x61, 0x61))
+        pen.setWidth(2)
         painter.setPen(pen)
         painter.drawPath(self._line)
 
