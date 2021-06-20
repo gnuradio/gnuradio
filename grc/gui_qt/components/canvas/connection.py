@@ -52,4 +52,7 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
         painter.setPen(pen)
         painter.drawPath(self._line)
 
+    def mouseDoubleClickEvent(self, e):
+        self.parent.connections.remove(self)
+        self.parent.removeItem(self)
 
