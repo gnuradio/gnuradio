@@ -32,7 +32,7 @@ throttle::sptr throttle::make(size_t itemsize, double samples_per_sec, bool igno
 throttle_impl::throttle_impl(size_t itemsize, double samples_per_second, bool ignore_tags)
     : sync_block("throttle",
                  io_signature::make(1, 1, itemsize),
-                 io_signature::make(1, 1, itemsize)),
+                 io_signature::make(0, 1, itemsize)),
       d_itemsize(itemsize),
       d_ignore_tags(ignore_tags)
 {
@@ -78,8 +78,12 @@ int throttle_impl::work(int noutput_items,
 
     // copy all samples output[i] <= input[i]
     const char* in = (const char*)input_items[0];
-    char* out = (char*)output_items[0];
-    std::memcpy(out, in, noutput_items * d_itemsize);
+
+    // iff we have a connected output, then copy
+    if (!output_items.empty()) {
+        char* out = reinterpret_cast<char*>(output_items[0]);
+        std::memcpy(out, in, noutput_items * d_itemsize);
+    }
     d_total_samples += noutput_items;
 
     auto now = std::chrono::steady_clock::now();
