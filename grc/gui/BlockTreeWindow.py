@@ -30,19 +30,19 @@ NAME_INDEX, KEY_INDEX, DOC_INDEX = range(3)
 
 def _format_doc(doc):
     docs = []
-    if doc.get(''):
-        docs += doc.get('').splitlines() + ['']
+    #if doc.get(''):
+    #    docs += doc.get('').splitlines() + ['']
     for block_name, docstring in six.iteritems(doc):
-        docs.append('--- {0} ---'.format(block_name))
+        docs.append(format(block_name))
         docs += docstring.splitlines()
         docs.append('')
     out = ''
     for n, line in enumerate(docs[:-1]):
-        if n:
+        if n>1:
             out += '\n'
         out += Utils.encode(line)
-        if n > 10 or len(out) > 500:
-            out += '\n...'
+        if n > 40 or len(out) > 2000:
+            out += '\n >>>>> continued...'
             break
     return out or 'undocumented'
 
