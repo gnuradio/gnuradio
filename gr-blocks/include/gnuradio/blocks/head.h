@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2009,2012,2013 Free Software Foundation, Inc.
+ * Copyright 2021 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -19,11 +20,17 @@ namespace gr {
 namespace blocks {
 
 /*!
- * \brief copies the first N items to the output then signals done
+ * \brief stop after processing the first N items
  * \ingroup misc_blk
  *
  * \details
- * Useful for building test cases
+ * Useful for building test cases, this block consumes only N items from its input, and
+ * copies them to its output, if that is connected.
+ *
+ * You can hence use this block in series with your sample flow if you want a block
+ * downstream of it to be tested with an exact number of input items; or you can put it in
+ * parallel to your data path, so that it stops at most one buffer size after the
+ * specified number of items has been produced upstream.
  */
 class BLOCKS_API head : virtual public sync_block
 {
