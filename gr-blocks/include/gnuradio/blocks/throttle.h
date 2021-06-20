@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2005-2011,2013 Free Software Foundation, Inc.
+ * Copyright 2021 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -30,6 +31,13 @@ namespace blocks {
  * precisely controlling the rate of samples. That should be
  * controlled by a source or sink tied to sample clock. E.g., a
  * USRP or audio card.
+ *
+ * You can insert this block "in series" with your sample flow, in which case it  does a
+ * throttled copy of input to output. Alternatively, you can not connect its output and
+ * just connect this block's input in parallel to an existing block in your flow graph. In
+ * that case, Throttle will limit the rate at which samples are consumed; especially at
+ * higher rates, where the copying overhead might be significant, this is functionally not
+ * different to copying at a limited rate.
  */
 class BLOCKS_API throttle : virtual public sync_block
 {
