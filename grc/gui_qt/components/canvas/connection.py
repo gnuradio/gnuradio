@@ -31,6 +31,7 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
         self._arrow_rotation = 0.0  # rotation of the arrow in radians
         self._current_cr = None  # for what_is_selected() of curved line
         self._line_path = None
+        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
 
     def updateLine(self):
         self._line.clear()
@@ -42,6 +43,13 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
 
     def paint(self, painter, option, widget):
         painter.setRenderHint(QtGui.QPainter.Antialiasing)
-        super(self.__class__, self).paint(painter, option, widget)
+
+        pen = QtGui.QPen(1)
+        if self.isSelected():
+            pen = QtGui.QPen(QtGui.QColor(0x00, 0x00, 0xFF))
+        else:
+            pen = QtGui.QPen(QtGui.QColor(0x61, 0x61, 0x61))
+        painter.setPen(pen)
+        painter.drawPath(self._line)
 
 
