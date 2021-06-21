@@ -12,9 +12,9 @@
 #define INCLUDED_THREAD_BODY_WRAPPER_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/basic_error_handler.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/thread/thread.h>
-#include <gnuradio/basic_error_handler.h>
 #include <exception>
 
 namespace gr {
@@ -41,7 +41,7 @@ public:
     {
         gr::configure_default_loggers(d_logger, d_debug_logger, "thread_body_wrapper");
     }
-    
+
     static void register_error_handler(std::shared_ptr<basic_error_handler> handler)
     {
         errorHandler = handler;

@@ -12,8 +12,8 @@
 #define INCLUDED_GR_TOP_BLOCK_H
 
 #include <gnuradio/api.h>
-#include <gnuradio/hier_block2.h>
 #include <gnuradio/basic_error_handler.h>
+#include <gnuradio/hier_block2.h>
 
 namespace gr {
 
@@ -132,7 +132,7 @@ public:
     top_block_sptr to_top_block(); // Needed for Python type coercion
 
     void setup_rpc() override;
-    
+
     //!  register error handler for getting exceptions in c++ api
     void register_error_handler(std::shared_ptr<basic_error_handler> handler);
 };

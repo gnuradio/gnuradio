@@ -13,8 +13,8 @@
 
 #include "scheduler.h"
 #include <gnuradio/api.h>
-#include <gnuradio/thread/thread.h>
 #include <gnuradio/basic_error_handler.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
 
@@ -60,7 +60,7 @@ public:
 
     // Set the maximum number of noutput_items in the flowgraph
     void set_max_noutput_items(int nmax);
-    
+
     // Register error handler
     void register_error_handler(std::shared_ptr<basic_error_handler> handler);
 

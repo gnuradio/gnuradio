@@ -13,9 +13,10 @@
 
 #include "flat_flowgraph.h"
 #include <gnuradio/api.h>
+#include <gnuradio/basic_error_handler.h>
 #include <gnuradio/block.h>
 #include <boost/utility.hpp>
-#include <gnuradio/basic_error_handler.h>
+
 
 namespace gr {
 
@@ -51,7 +52,7 @@ public:
      * \brief Block until the graph is done.
      */
     virtual void wait() = 0;
-    
+
     /*!
      * \brief register error handler for c++ api to handle exceptions.
      */
