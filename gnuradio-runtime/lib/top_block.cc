@@ -175,4 +175,9 @@ void top_block::setup_rpc()
 #endif /* GR_CTRLPORT */
 }
 
+void top_block::register_error_handler(std::shared_ptr<basic_error_handler> handler)
+{
+    d_impl->register_error_handler(handler);
+}
+
 } /* namespace gr */

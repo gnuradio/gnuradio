@@ -15,6 +15,7 @@
 #include <gnuradio/api.h>
 #include <gnuradio/block.h>
 #include <boost/utility.hpp>
+#include <gnuradio/basic_error_handler.h>
 
 namespace gr {
 
@@ -50,6 +51,14 @@ public:
      * \brief Block until the graph is done.
      */
     virtual void wait() = 0;
+    
+    /*!
+     * \brief register error handler for c++ api to handle exceptions.
+     */
+    static void register_error_handler(std::shared_ptr<basic_error_handler> handler);
+
+protected:
+    static std::shared_ptr<basic_error_handler> errorHandler;
 };
 
 } /* namespace gr */

@@ -68,6 +68,7 @@ install(FILES
   rpcserver_booter_base.h
   rpcserver_selector.h
   xoroshiro128p.h
+  basic_error_handler.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio
 )
 

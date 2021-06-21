@@ -72,6 +72,7 @@ scheduler_tpb::scheduler_tpb(flat_flowgraph_sptr ffg,
 
     // Fire off a thead for each block
 
+    thread::thread_body_wrapper<tpb_container>::register_error_handler(errorHandler);
     for (size_t i = 0; i < blocks.size(); i++) {
         std::stringstream name;
         name << "thread-per-block[" << i << "]: " << blocks[i];
