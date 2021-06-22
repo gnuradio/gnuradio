@@ -47,6 +47,7 @@ public:
              gr_vector_void_star& output_items);
 
     void update_dependent_params();
+    virtual void set_len_tag_key(const std::string& len_tag_key);
     virtual void set_bandwidth(unsigned long bandwidth);
     virtual void set_rf_port_select(const std::string& rf_port_select);
     virtual void set_frequency(unsigned long long frequency);

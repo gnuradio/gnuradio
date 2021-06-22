@@ -50,6 +50,8 @@ private:
 
     unsigned long timeout;
 
+    pmt::pmt_t d_len_tag_key;
+
     void refill_thread();
 
 protected:
@@ -72,10 +74,13 @@ public:
                        const std::vector<std::string>& params,
                        unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
                        unsigned int decimation = 0);
+
     ~device_source_impl();
 
     static void set_params(struct iio_device* phy,
                            const std::vector<std::string>& params);
+
+    void set_len_tag_key(const std::string& len_tag_key) override;
 
     void set_params(const std::vector<std::string>& params);
     void set_buffer_size(unsigned int buffer_size);

@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(device_source.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(09eb30139a946becee62a26128da7dc7)                     */
+/* BINDTOOL_HEADER_FILE(device_source.h)                                           */
+/* BINDTOOL_HEADER_FILE_HASH(b7f9efa65ce300b5fd707cfb59d62529)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -58,6 +58,11 @@ void bind_device_source(py::module& m)
              &device_source::set_timeout_ms,
              py::arg("timeout"),
              D(device_source, set_timeout_ms))
+
+        .def(
+            "set_len_tag_key",
+            [](device_source& src, const std::string& str) { src.set_len_tag_key(str); },
+            py::arg("len_tag_key") = "")
 
         ;
 }

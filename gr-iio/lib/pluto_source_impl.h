@@ -28,6 +28,7 @@ public:
 
     static std::string get_uri();
 
+    virtual void set_len_tag_key(const std::string& len_tag_key) override;
     virtual void set_frequency(unsigned long long frequency);
     virtual void set_samplerate(unsigned long samplerate);
     virtual void set_gain_mode(const std::string& mode);

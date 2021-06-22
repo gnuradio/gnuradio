@@ -43,6 +43,11 @@ parameters:
     dtype: raw
     default: []
 
+-   id: len_tag_key
+    label: Packet Length Tag
+    dtype: string
+    hide: ${( 'part' )}
+
 inputs:
 -   domain: stream
     dtype: short
@@ -52,7 +57,9 @@ asserts:
 - ${ len(channels) > 0 }
 
 templates:
-    imports: from gnuradio import iio
-    make: iio.device_sink(${uri}, ${device}, ${channels}, ${device_phy}, ${params}, ${buffer_size}, ${interpolation} - 1, ${cyclic})
+  imports: from gnuradio import iio
+  make: |
+    iio.device_sink(${uri}, ${device}, ${channels}, ${device_phy}, ${params}, ${buffer_size}, ${interpolation} - 1, ${cyclic})
+    self.${id}.set_len_tag_key(${len_tag_key})
 
 file_format: 1

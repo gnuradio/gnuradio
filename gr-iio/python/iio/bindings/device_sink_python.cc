@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(device_sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(a18ca2be4b936386305f32fb9ea40ade)                     */
+/* BINDTOOL_HEADER_FILE(device_sink.h)                                             */
+/* BINDTOOL_HEADER_FILE_HASH(cc567f6efacc47c8e6dd89985dd33c3f)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -49,6 +49,11 @@ void bind_device_sink(py::module& m)
              py::arg("interpolation") = 0,
              py::arg("cyclic") = false,
              D(device_sink, make))
+
+        .def(
+            "set_len_tag_key",
+            [](device_sink& sink, const std::string& str) { sink.set_len_tag_key(str); },
+            py::arg("len_tag_key") = "")
 
         ;
 }

@@ -57,6 +57,12 @@ parameters:
     default: 64
     hide: ${ ('none' if gain1 == "'manual'" else 'all') }
 
+-   id: len_tag_key
+    label: Packet Length Tag
+    dtype: string
+    default: packet_len
+    hide: part
+
 -   id: filter_source
     category: Filter
     label: Filter Configuration
@@ -103,14 +109,15 @@ asserts:
 - ${ ((samplerate<=61440000) and (samplerate>=65105)) }
 - ${ ((bandwidth<=52000000) and (bandwidth>=200000)) }
 - ${ ((frequency<=6000000000) and (frequency>=70000000)) }
-- ${ ((filter_source!="'Design'")  or (fpass<=samplerate)) }
-- ${ ((filter_source!="'Design'")  or (fstop<=samplerate)) }
-- ${ ((filter_source!="'Design'")  or (fstop>fpass)) }
+- ${ ((filter_source!="'Design'") or (fpass<=samplerate)) }
+- ${ ((filter_source!="'Design'") or (fstop<=samplerate)) }
+- ${ ((filter_source!="'Design'") or (fstop>fpass)) }
 
 templates:
     imports: from gnuradio import iio
-    make: | 
+    make: |
         iio.pluto_source(${uri}, ${buffer_size})
+        self.${id}.set_len_tag_key(${len_tag_key})
         self.${id}.set_frequency(${frequency})
         self.${id}.set_samplerate(${samplerate})
         self.${id}.set_gain_mode(${gain1})

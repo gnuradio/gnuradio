@@ -24,6 +24,7 @@ class device_sink_impl : public device_sink
 {
 private:
     void channel_write(const struct iio_channel* chn, const void* src, size_t len);
+    std::vector<tag_t> d_tags;
 
 protected:
     struct iio_context* ctx;
@@ -33,6 +34,7 @@ protected:
     unsigned int interpolation;
     unsigned int buffer_size;
     bool destroy_ctx;
+    pmt::pmt_t d_len_tag_key;
 
 public:
     device_sink_impl(struct iio_context* ctx,
@@ -44,9 +46,12 @@ public:
                      unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
                      unsigned int interpolation = 0,
                      bool cyclic = false);
+
     ~device_sink_impl();
 
     void set_params(const std::vector<std::string>& params);
+
+    void set_len_tag_key(const std::string& len_tag_key) override;
 
     // Where all the action really happens
     int work(int noutput_items,

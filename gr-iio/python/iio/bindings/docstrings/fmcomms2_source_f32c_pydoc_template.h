@@ -19,3 +19,5 @@ static const char* __doc_gr_iio_fmcomms2_source_f32c = R"doc()doc";
 static const char* __doc_gr_iio_fmcomms2_source_f32c_make = R"doc()doc";
 
 static const char* __doc_gr_iio_fmcomms2_source_f32c_set_params = R"doc()doc";
+
+static const char* __doc_gr_iio_fmcomms2_source_f32c_set_len_tag_key = R"doc()doc";

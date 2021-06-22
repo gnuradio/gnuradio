@@ -97,6 +97,15 @@ void device_source_impl::set_params(const std::vector<std::string>& params)
     set_params(this->phy, params);
 }
 
+void device_source_impl::set_len_tag_key(const std::string& len_tag_key)
+{
+    if (!len_tag_key.size()) {
+        d_len_tag_key = pmt::PMT_NIL;
+    } else {
+        d_len_tag_key = pmt::string_to_symbol(len_tag_key);
+    }
+}
+
 void device_source_impl::set_buffer_size(unsigned int _buffer_size)
 {
     std::unique_lock<std::mutex> lock(iio_mutex);
@@ -166,6 +175,7 @@ device_source_impl::device_source_impl(struct iio_context* ctx,
                      gr::io_signature::make(1, -1, sizeof(short))),
       port_id(pmt::mp("msg")),
       timeout(100),
+      d_len_tag_key(pmt::PMT_NIL),
       ctx(ctx),
       buf(NULL),
       buffer_size(buffer_size),
@@ -290,12 +300,22 @@ int device_source_impl::work(int noutput_items,
             return 0;
 
         byte_offset = 0;
+
+        // Tag start of new packet
+        if (d_len_tag_key != pmt::PMT_NIL) {
+            for (size_t i = 0; i < output_items.size(); i += 2) {
+                this->add_item_tag(i,
+                                   this->nitems_written(0),
+                                   this->d_len_tag_key,
+                                   pmt::from_long(items_in_buffer));
+            }
+        }
     }
 
     // Process samples
     unsigned long items = std::min(items_in_buffer, (unsigned long)noutput_items);
 
-    for (unsigned int i = 0; i < output_items.size(); i++)
+    for (size_t i = 0; i < output_items.size(); i++)
         channel_read(channel_list[i], output_items[i], items * sizeof(short));
 
     items_in_buffer -= items;

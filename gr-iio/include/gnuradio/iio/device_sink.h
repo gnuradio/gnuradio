@@ -14,6 +14,8 @@
 #include <gnuradio/iio/api.h>
 #include <gnuradio/sync_block.h>
 
+#include <string>
+
 #define DEFAULT_BUFFER_SIZE 0x8000
 
 extern "C" {
@@ -71,6 +73,18 @@ public:
                           unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
                           unsigned int interpolation = 0,
                           bool cyclic = false);
+
+    /*!
+     * The key of the tag that indicates packet length.
+     * When not empty, samples are expected as "packets" and
+     * must be tagged as such, i.e. the first sample of a packet needs to be
+     * tagged with the corresponding length of that packet.
+     * Note, packet size MUST be equal to buffer_size / (1+interpolation),
+     * otherwise a runtime_error will be thrown. This is a deliberate design
+     * choice, because all other options would result in potentially unexpected
+     * behavior.
+     */
+    virtual void set_len_tag_key(const std::string& len_tag_key) = 0;
 };
 
 } // namespace iio

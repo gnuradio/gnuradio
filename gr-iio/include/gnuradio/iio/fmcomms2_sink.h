@@ -39,6 +39,18 @@ public:
                      unsigned long buffer_size,
                      bool cyclic);
 
+    /*!
+     * The key of the tag that indicates packet length.
+     * When not empty, samples are expected as "packets" and
+     * must be tagged as such, i.e. the first sample of a packet needs to be
+     * tagged with the corresponding length of that packet.
+     * Note, packet size MUST be equal to buffer_size / (1+interpolation),
+     * otherwise a runtime_error will be thrown. This is a deliberate design
+     * choice, because all other options would result in potentially unexpected
+     * behavior.
+     */
+    virtual void set_len_tag_key(const std::string& val = "") = 0;
+
     virtual void set_bandwidth(unsigned long bandwidth) = 0;
     virtual void set_rf_port_select(const std::string& rf_port_select) = 0;
     virtual void set_frequency(unsigned long long frequency) = 0;
