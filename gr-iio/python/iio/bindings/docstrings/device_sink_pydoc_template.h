@@ -17,3 +17,5 @@
 static const char* __doc_gr_iio_device_sink = R"doc()doc";
 
 static const char* __doc_gr_iio_device_sink_make = R"doc()doc";
+
+static const char* __doc_gr_iio_device_sink_set_len_tag_key = R"doc()doc";

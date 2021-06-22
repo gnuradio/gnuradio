@@ -19,3 +19,5 @@ static const char* __doc_gr_iio_fmcomms2_sink = R"doc()doc";
 static const char* __doc_gr_iio_fmcomms2_sink_make = R"doc()doc";
 
 static const char* __doc_gr_iio_fmcomms2_sink_set_params = R"doc()doc";
+
+static const char* __doc_gr_iio_fmcomms2_sink_set_len_tag_key = R"doc()doc";

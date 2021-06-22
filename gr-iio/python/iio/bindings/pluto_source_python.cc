@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pluto_source.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(bdb6a1ffc20099440210c3ac917cc008)                     */
+/* BINDTOOL_HEADER_FILE_HASH(f73fc3ad843eb6f61c8a520ee3d68f8f)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -50,6 +50,6 @@ void bind_pluto_source(py::module& m)
         .def("set_rfdc", &pluto_source::set_rfdc, py::arg("rfdc"))
         .def("set_bbdc", &pluto_source::set_bbdc, py::arg("bbdc"))
         .def("set_filter_params", &pluto_source::set_filter_params)
-
-        ;
+        .def("set_len_tag_key", &pluto_source::set_len_tag_key, py::arg("len_tag_key"));
+    ;
 }

@@ -31,10 +31,21 @@ public:
      *
      * \param uri  String of the context uri
      * \param buffer_size  Long of number of samples in buffer to send to device
-     * \param cyclic Boolean when True sends first buffer_size number of samples
+     * \param cyclic Boolean, the first packet is repeated indefinitely when set
      */
     static sptr make(const std::string& uri, unsigned long buffer_size, bool cyclic);
 
+    /*!
+     * The key of the tag that indicates packet length.
+     * When not empty, samples are expected as "packets" and
+     * must be tagged as such, i.e. the first sample of a packet needs to be
+     * tagged with the corresponding length of that packet.
+     * Note, packet size MUST be equal to buffer_size / (1+interpolation),
+     * otherwise a runtime_error will be thrown. This is a deliberate design
+     * choice, because all other options would result in potentially unexpected
+     * behavior.
+     */
+    virtual void set_len_tag_key(const std::string& val) = 0;
     virtual void set_frequency(unsigned long long frequency) = 0;
     virtual void set_bandwidth(unsigned long bandwidth) = 0;
     virtual void set_samplerate(unsigned long samplerate) = 0;

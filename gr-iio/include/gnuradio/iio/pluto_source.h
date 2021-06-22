@@ -28,6 +28,11 @@ public:
 
     static sptr make(const std::string& uri, unsigned long buffer_size);
 
+    /*!
+     * \brief Key of the packet length tag. If empty no tag will be emitted
+     */
+    virtual void set_len_tag_key(const std::string& val) = 0;
+
     virtual void set_frequency(unsigned long long frequency) = 0;
     virtual void set_samplerate(unsigned long samplerate) = 0;
     virtual void set_gain_mode(const std::string& mode) = 0;

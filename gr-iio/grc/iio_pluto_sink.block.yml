@@ -35,6 +35,11 @@ parameters:
     dtype: float
     default: 10.0
 
+-   id: len_tag_key
+    label: Packet Length Tag
+    dtype: string
+    hide: ${( 'part' )}
+
 -   id: filter_source
     category: Filter
     label: Filter Configuration
@@ -81,14 +86,15 @@ asserts:
 - ${ ((samplerate<=61440000) and (samplerate>=65105)) }
 - ${ ((bandwidth<=40000000) and (bandwidth>=200000)) }
 - ${ ((frequency<=6000000000) and (frequency>=47000000)) }
-- ${ ((filter_source!="'Design'")  or (fpass<=samplerate)) }
-- ${ ((filter_source!="'Design'")  or (fstop<=samplerate)) }
-- ${ ((filter_source!="'Design'")  or (fstop>fpass)) }
+- ${ ((filter_source!="'Design'") or (fpass<=samplerate)) }
+- ${ ((filter_source!="'Design'") or (fstop<=samplerate)) }
+- ${ ((filter_source!="'Design'") or (fstop>fpass)) }
 
 templates:
     imports: from gnuradio import iio
-    make: | 
+    make: |
         iio.pluto_sink(${uri}, ${buffer_size}, ${cyclic})
+        self.${id}.set_len_tag_key(${len_tag_key})
         self.${id}.set_bandwidth(${bandwidth})
         self.${id}.set_frequency(${frequency})
         self.${id}.set_samplerate(${samplerate})
