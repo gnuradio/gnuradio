@@ -67,7 +67,6 @@ ${class_name}::${class_name} (${param_str}) ${initializer_str} {
 % if blocks:
 // Blocks:
 % for blk, blk_make, declarations in blocks:
-    {
         ${doubleindent(blk_make)}
 ##      % if 'alias' in blk.params and blk.params['alias'].get_evaluated():
 ##      ${blk.name}.set_block_alias("${blk.params['alias'].get_evaluated()}")
@@ -81,7 +80,7 @@ ${class_name}::${class_name} (${param_str}) ${initializer_str} {
 ##      % if len(blk.sources) > 0 and 'maxoutbuf' in blk.params and int(blk.params['maxoutbuf'].get_evaluated()) > 0:
 ##      ${blk.name}.set_max_output_buffer(${blk.params['maxoutbuf'].get_evaluated()})
 ##      % endif
-    }
+
 % endfor
 % endif
 

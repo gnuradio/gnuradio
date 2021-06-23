@@ -12,7 +12,10 @@
 #define INCLUDED_QTGUI_WATERFALL_SINK_F_H
 
 #ifdef ENABLE_PYTHON
-#include <Python.h>
+#pragma push_macro("slots")
+#undef slots
+#include "Python.h"
+#pragma pop_macro("slots")
 #endif
 
 #include <gnuradio/fft/window.h>
