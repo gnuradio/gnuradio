@@ -90,6 +90,11 @@ class Application(QtWidgets.QApplication):
           /home/seth/.grc_gnuradio
         Loading: \"/home/seth/Dev/persistent-ew/gnuradio/target/flex_rx.grc\"
         '''
+
+        config = platform.config
+        paths="\n\t".join(platform.config.block_paths)
+        welcome = f"<<< Welcome to {config.name} {config.version} >>>\n\n" \
+                  f"Block paths:\n\t{paths}\n"
         log.info(textwrap.dedent(welcome))
 
 
