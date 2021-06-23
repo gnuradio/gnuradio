@@ -153,9 +153,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
         for key, item in self.params.items():
             value = item.value
-            print(f"\nblock {self.label} key {key}, val {value}, hide {item.hide} ", end="")
             if value is not None and item.hide == 'none':
-                print("ACTIVE", end="")
                 i+= 20
 
         self.height = i
