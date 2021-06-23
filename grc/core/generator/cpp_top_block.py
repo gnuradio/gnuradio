@@ -222,9 +222,9 @@ class CppTopBlockGenerator(TopBlockGenerator):
         fg = self._flow_graph
         parameters = fg.get_parameters()
 
-        # List of blocks not including variables and imports and parameters and disabled
+        # List of blocks not including variables and parameters and disabled
         def _get_block_sort_text(block):
-            code = block.cpp_templates.render('make').replace(block.name, ' ')
+            code = block.cpp_templates.render('declarations')
             try:
                 code += block.params['gui_hint'].get_value()  # Newer gui markup w/ qtgui
             except:
