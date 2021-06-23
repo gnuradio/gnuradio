@@ -165,9 +165,9 @@ class Console(QtWidgets.QDockWidget, base.Component):
 
         # File Actions
         actions['save'] = Action(Icons("document-save"), _("save"), self,
-                                 shortcut=Keys.New, statusTip=_("save-tooltip"))
+                                statusTip=_("save-tooltip"))
         actions['clear'] = Action(Icons("document-close"), _("clear"), self,
-                                  shortcut=Keys.Open, statusTip=_("clear-tooltip"))
+                                statusTip=_("clear-tooltip"))
         actions['show_level'] = Action(_("show-level"), self, statusTip=_("show-level"), checkable=True, checked=True)
         actions['show_level'].setChecked = False  # Apparently, the checked named argument doesn't work
 
