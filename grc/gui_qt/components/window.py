@@ -156,7 +156,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                                   shortcut=Keys.Close, statusTip=_("close-tooltip"))
 
         actions['close_all'] = Action(Icons("window-close"), _("close_all"), self,
-                                      shortcut=Keys.Close, statusTip=_("close_all-tooltip"))
+                                      statusTip=_("close_all-tooltip"))
         actions['save'] = Action(Icons("document-save"), _("save"), self,
                                  shortcut=Keys.Save, statusTip=_("save-tooltip"))
 
