@@ -55,6 +55,9 @@ public:
     std::vector<size_t> d_max_output_buffer;
     std::vector<size_t> d_min_output_buffer;
 
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
+
 private:
     // Private implementation data
     hier_block2* d_owner;
