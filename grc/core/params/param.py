@@ -403,20 +403,40 @@ class Param(Element):
             row, col, row_span, col_span = parse_pos()
             collision_detection(row, col, row_span, col_span)
 
-            widget_str = textwrap.dedent("""
-                self.{layout}.addWidget({widget}, {row}, {col}, {row_span}, {col_span})
-                for r in range({row}, {row_end}):
-                    self.{layout}.setRowStretch(r, 1)
-                for c in range({col}, {col_end}):
-                    self.{layout}.setColumnStretch(c, 1)
-            """.strip('\n')).format(
-                layout=layout, widget=widget,
-                row=row, row_span=row_span, row_end=row+row_span,
-                col=col, col_span=col_span, col_end=col+col_span,
-            )
+            if self.parent_flowgraph.get_option('output_language') == 'python':
+                widget_str = textwrap.dedent("""
+                    self.{layout}.addWidget({widget}, {row}, {col}, {row_span}, {col_span})
+                    for r in range({row}, {row_end}):
+                        self.{layout}.setRowStretch(r, 1)
+                    for c in range({col}, {col_end}):
+                        self.{layout}.setColumnStretch(c, 1)
+                """.strip('\n')).format(
+                    layout=layout, widget=widget,
+                    row=row, row_span=row_span, row_end=row+row_span,
+                    col=col, col_span=col_span, col_end=col+col_span,
+                )
+            elif self.parent_flowgraph.get_option('output_language') == 'cpp':
+                widget_str = textwrap.dedent("""
+                    {layout}->addWidget({widget}, {row}, {col}, {row_span}, {col_span});
+                    for(int r = {row};r < {row_end}; r++)
+                        {layout}->setRowStretch(r, 1);
+                    for(int c = {col}; c <{col_end}; c++)
+                        {layout}->setColumnStretch(c, 1);
+                """.strip('\n')).format(
+                    layout=layout, widget=widget,
+                    row=row, row_span=row_span, row_end=row+row_span,
+                    col=col, col_span=col_span, col_end=col+col_span,
+                )
+            else:
+                widget_str = ''
 
         else:
-            widget_str = 'self.{layout}.addWidget({widget})'.format(layout=layout, widget=widget)
+            if self.parent_flowgraph.get_option('output_language') == 'python':
+                widget_str = 'self.{layout}.addWidget({widget})'.format(layout=layout, widget=widget)
+            elif self.parent_flowgraph.get_option('output_language') == 'cpp':
+                widget_str = '{layout}->addWidget({widget});'.format(layout=layout, widget=widget)
+            else:
+                widget_str = ''
 
         return widget_str
 
