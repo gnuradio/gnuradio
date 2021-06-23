@@ -38,12 +38,13 @@ templates:
 
 cpp_templates:
     includes: ['#include <gnuradio/analog/noise_source.h>']
+    declarations: 'analog::noise_source_${type.fcn}::sptr ${id};'
     make: 'this->${id} = analog::noise_source_${type.fcn}::make(${noise_type}, ${amp}, ${seed});'
     callbacks:
     - set_type(${noise_type})
     - set_amplitude(${amp})
     link: ['gnuradio::gnuradio-analog']
     translations:
-        analog.: 'analog::'
+        analog\.: 'analog::'
 
 file_format: 1
