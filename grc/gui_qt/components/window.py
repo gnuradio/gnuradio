@@ -131,7 +131,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         initial_state = self.platform.parse_flow_graph("")
         self.flowgraph.scene.import_data(initial_state)
         log.debug("Adding flowgraph view")
-        self.new_tab(self.flowgraph)
+        self.tabWidget = QtWidgets.QTabWidget()
+        self.tabWidget.setTabsClosable(True)
+        #TODO: Don't close if the tab has not been saved
+        self.tabWidget.tabCloseRequested.connect(lambda index: self.tabWidget.removeTab(index))
+        self.tabWidget.addTab(self.flowgraph, "Untitled")
+        self.setCentralWidget(self.tabWidget)
+        #self.new_tab(self.flowgraph)
 
     '''def show(self):
         log.debug("Showing main window")
@@ -458,10 +464,11 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         if filename:
             log.info("Opening flowgraph ({0})".format(filename))
-            self.flowgraph = Flowgraph(self)
+            new_flowgraph = Flowgraph(self)
             initial_state = self.platform.parse_flow_graph(filename)
-            self.flowgraph.scene.import_data(initial_state)
-            self.new_tab(self.flowgraph)
+            new_flowgraph.scene.import_data(initial_state)
+            self.tabWidget.addTab(new_flowgraph, "new")
+            self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
 
     def save_triggered(self):
         log.debug('save')
