@@ -533,7 +533,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def about_qt_triggered(self):
         log.debug('about_qt')
-        self.aboutQt()
+        QtWidgets.QApplication.instance().aboutQt()
 
     def properties_triggered(self):
         log.debug('properties')
