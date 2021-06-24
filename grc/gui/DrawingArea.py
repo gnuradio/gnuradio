@@ -154,7 +154,7 @@ class DrawingArea(Gtk.DrawingArea):
 
     def _update_size(self):
         w, h = self._flow_graph.get_extents()[2:]
-        self.set_size_request(w * self.zoom_factor + 100, h * self.zoom_factor + 100)
+        self.set_size_request(w * 2 * self.zoom_factor + 100, h * 2 * self.zoom_factor + 100)
 
     def _auto_scroll(self, event):
         x, y = event.x, event.y
