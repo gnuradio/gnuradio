@@ -94,6 +94,7 @@ class Application(QtWidgets.QApplication):
         config = platform.config
         paths="\n\t".join(platform.config.block_paths)
         welcome = f"<<< Welcome to {config.name} {config.version} >>>\n\n" \
+                  f"Preferences file: {config.gui_prefs_file}\n" \
                   f"Block paths:\n\t{paths}\n"
         log.info(textwrap.dedent(welcome))
 
