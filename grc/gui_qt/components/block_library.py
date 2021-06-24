@@ -72,7 +72,16 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         #library.headerItem().setText(0, "Blocks")
         self._library = library
 
+        # TODO: Needs to be subclassed
+        search_bar = QtWidgets.QLineEdit()
+        search_bar.setPlaceholderText("Find a block")
+        self._search_bar = search_bar
+
+
+
         # Add widgets to the component
+        layout.addWidget(search_bar)
+        layout.addSpacing(5)
         layout.addWidget(library)
         container.setLayout(layout)
         self.setWidget(container)
@@ -86,8 +95,15 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         ### Loading blocks
 
         # Keep as a separate function so it can be called at a later point (Reloading blocks)
+        self._block_labels = []
         self._block_tree = self.load_blocks()
         self.populate_tree(self._block_tree)
+
+        # TODO: The completer must probably be subclassed to work with the TreeView
+        completer = QtWidgets.QCompleter(self._block_labels)
+        completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
+        completer.setFilterMode(QtCore.Qt.MatchContains)
+        self._search_bar.setCompleter(completer)
 
         # TODO: Move to the base controller and set actions as class attributes
         # Automatically create the actions, menus and toolbars.
@@ -177,6 +193,7 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
                 # Sub_tree should now point at the final node of the block_tree that contains the block
                 # Add a reference to the block object to the proper subtree
                 sub_tree[block.label] = block
+                self._block_labels.append(block.label)
         # Save a reference to the block tree in case it is needed later
         self._block_tree = block_tree
         return block_tree
