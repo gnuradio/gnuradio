@@ -526,6 +526,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def find_triggered(self):
         log.debug('find block')
+        self._app().BlockLibrary._search_bar.setFocus()
 
     def about_triggered(self):
         log.debug('about')
