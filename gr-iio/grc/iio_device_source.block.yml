@@ -1,6 +1,6 @@
 id: iio_device_source
 label: IIO Device Source
-flags: [ python ]
+flags: [ python, throttle ]
 
 parameters:
 -   id: uri
