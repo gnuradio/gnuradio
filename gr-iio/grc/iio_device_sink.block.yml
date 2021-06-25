@@ -1,6 +1,6 @@
 id: iio_device_sink
 label: IIO Device Sink
-flags: [ python ]
+flags: [ python, throttle ]
 
 parameters:
 -   id: uri

@@ -1,6 +1,6 @@
 id: iio_pluto_sink
 label: PlutoSDR Sink
-flags: [ python ]
+flags: [ python, throttle ]
 
 parameters:
 -   id: uri

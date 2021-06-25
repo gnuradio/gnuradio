@@ -1,6 +1,6 @@
 id: iio_fmcomms5_sink
 label: FMComms5 Sink
-flags: [ python ]
+flags: [ python, throttle ]
 
 parameters:
 -   id: uri

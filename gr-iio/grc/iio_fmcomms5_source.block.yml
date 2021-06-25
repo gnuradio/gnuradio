@@ -1,6 +1,6 @@
 id: iio_fmcomms5_source
 label: FMComms5 Source
-flags: [ throttle ]
+flags: [ python, throttle ]
 
 parameters:
 -   id: uri

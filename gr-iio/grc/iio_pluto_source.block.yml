@@ -1,6 +1,6 @@
 id: iio_pluto_source
 label: PlutoSDR Source
-flags: [ throttle ]
+flags: [ python, throttle ]
 
 parameters:
 -   id: uri
