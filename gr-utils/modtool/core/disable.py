@@ -67,7 +67,7 @@ class ModToolDisable(ModTool):
                 ed.write()
                 self.scm.mark_file_updated(self._file['qalib'])
             elif self.info['version'] == '38':
-                fname_qa_cc = f'qa_{self._info["blockname"]}.cc'
+                fname_qa_cc = f'qa_{self.info["blockname"]}.cc'
                 cmake.comment_out_lines(fname_qa_cc)
             elif self.info['version'] == '36':
                 cmake.comment_out_lines('add_executable.*'+fname)
@@ -97,7 +97,24 @@ class ModToolDisable(ModTool):
             except IOError:
                 continue
             logger.info(f"Traversing {subdir}...")
-            filenames = cmake.find_filenames_match(self.info['pattern'])
+            filenames = []
+            if self.info['blockname']:
+                if subdir == 'python':
+                    blockname_pattern = f"^(qa_)?{self.info['blockname']}.py$"
+                elif subdir == 'python/bindings':
+                    blockname_pattern = f"^{self.info['blockname']}_python.cc$"
+                elif subdir == 'python/bindings/docstrings':
+                    blockname_pattern = f"^{self.info['blockname']}_pydoc_template.h$"
+                elif subdir == 'lib':
+                    blockname_pattern = f"^{self.info['blockname']}_impl(\\.h|\\.cc)$"
+                elif subdir == self.info['includedir']:
+                    blockname_pattern = f"^{self.info['blockname']}.h$"
+                elif subdir == 'grc':
+                    blockname_pattern = f"^{self.info['modname']}_{self.info['blockname']}.block.yml$"
+                if blockname_pattern:
+                    filenames = cmake.find_filenames_match(blockname_pattern)
+            elif self.info['pattern']:
+                filenames = cmake.find_filenames_match(self.info['pattern'])
             yes = self.info['yes']
             for fname in filenames:
                 file_disabled = False
