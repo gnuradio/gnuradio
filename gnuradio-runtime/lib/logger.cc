@@ -153,6 +153,31 @@ logger_ptr logger_get_logger(std::string name)
     }
 }
 
+logger_ptr logger_get_configured_logger(const std::string& name)
+{
+    if (log4cpp::Category::exists(name))
+        return &log4cpp::Category::getInstance(name);
+
+    prefs* p = prefs::singleton();
+    std::string config_file = p->get_string("LOG", "log_config", "");
+    std::string log_level = p->get_string("LOG", "log_level", "off");
+    std::string log_file = p->get_string("LOG", "log_file", "");
+
+    GR_LOG_GETLOGGER(LOG, "gr_log." + name);
+    GR_LOG_SET_LEVEL(LOG, log_level);
+
+    if (!log_file.empty()) {
+        if (log_file == "stdout") {
+            GR_LOG_SET_CONSOLE_APPENDER(LOG, "stdout", "gr::log :%p: %c{1} - %m%n");
+        } else if (log_file == "stderr") {
+            GR_LOG_SET_CONSOLE_APPENDER(LOG, "stderr", "gr::log :%p: %c{1} - %m%n");
+        } else {
+            GR_LOG_SET_FILE_APPENDER(LOG, log_file, true, "%r :%p: %c{1} - %m%n");
+        }
+    }
+    return LOG;
+}
+
 bool logger_load_config(const std::string& config_filename)
 {
     if (!config_filename.empty()) {

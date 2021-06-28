@@ -61,12 +61,18 @@ typedef log4cpp::Category* logger_ptr;
 
 #define GR_LOG_ASSIGN_LOGPTR(logger, name) logger = gr::logger_get_logger(name)
 
+#define GR_LOG_ASSIGN_CONFIGURED_LOGPTR(logger, name) \
+    logger = gr::logger_get_configured_logger(name)
+
 #define GR_CONFIG_LOGGER(config) gr::logger_config::load_config(config)
 
 #define GR_CONFIG_AND_WATCH_LOGGER(config, period) \
     gr::logger_config::load_config(config, period)
 
 #define GR_LOG_GETLOGGER(logger, name) gr::logger_ptr logger = gr::logger_get_logger(name)
+
+#define GR_LOG_GET_CONFIGURED_LOGGER(logger, name) \
+    gr::logger_ptr logger = gr::logger_get_configured_logger(name)
 
 #define GR_SET_LEVEL(name, level)                            \
     {                                                        \
@@ -377,6 +383,19 @@ public:
  * \param name Name of the logger for which a pointer is requested
  */
 GR_RUNTIME_API logger_ptr logger_get_logger(std::string name);
+
+/*!
+ * \brief Retrieve a pointer to a fully configured logger by name
+ *
+ * Retrieves a logger pointer.
+ * This method differs from logger_get_logger in that it configures the logger to
+ * reflect the current gnuradio configuration, including log level and log output file.
+ *
+ * \p name.
+ *
+ * \param name Name of the logger for which a pointer is requested
+ */
+GR_RUNTIME_API logger_ptr logger_get_configured_logger(const std::string& name);
 
 /*!
  * \brief Load logger's configuration file.
