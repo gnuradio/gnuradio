@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(logger.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(b071f4deb18875805b73952a7aa43389)                     */
+/* BINDTOOL_HEADER_FILE(logger.h)                                                  */
+/* BINDTOOL_HEADER_FILE_HASH(eaf28bcaeb7c34dc0fca3fdd4a9860c0)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -100,6 +100,9 @@ void bind_logger(py::module& m)
           py::arg("name"),
           py::arg("alias"));
     m.def("logger_get_logger", &gr::logger_get_logger, py::arg("name"));
+    m.def("logger_get_configured_logger",
+          &gr::logger_get_configured_logger,
+          py::arg("name"));
     m.def("logger_load_config", &gr::logger_load_config, py::arg("config_filename") = "");
     m.def("gr_logger_reset_config", &gr_logger_reset_config);
     m.def("logger_set_level",
