@@ -15,8 +15,6 @@
 #include <gnuradio/io_signature.h>
 #include <boost/lexical_cast.hpp>
 
-#include <cstdio>
-#include <iostream>
 #include <string>
 
 namespace gr {
@@ -114,7 +112,7 @@ void attr_sink_impl::write_attribute(pmt::pmt_t pdu)
                 uint32_t value32 = boost::lexical_cast<uint32_t>(value);
                 ret = iio_device_reg_write(dev, address, value32);
             } catch (const boost::bad_lexical_cast& e) {
-                std::cerr << e.what() << '\n';
+                GR_LOG_WARN(d_logger, e.what());
             }
             break;
         }

@@ -13,7 +13,6 @@
 #include <gnuradio/iio/device_sink.h>
 #include <iio.h>
 
-#include <cstdio>
 #include <string>
 #include <vector>
 
