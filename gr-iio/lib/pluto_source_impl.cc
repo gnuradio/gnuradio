@@ -10,7 +10,6 @@
 #include "pluto_source_impl.h"
 #include <iio.h>
 
-#include <cstdio>
 #include <string>
 
 namespace gr {

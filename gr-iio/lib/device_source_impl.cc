@@ -15,7 +15,8 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/thread/thread.h>
 
-#include <cstdio>
+#include <boost/format.hpp>
+
 #include <fstream>
 #include <mutex>
 #include <string>
@@ -58,6 +59,8 @@ device_source::sptr device_source::make_from(struct iio_context* ctx,
 void device_source_impl::set_params(struct iio_device* phy,
                                     const std::vector<std::string>& params)
 {
+    static GR_LOG_GET_CONFIGURED_LOGGER(logger, "iio::device::set_params");
+
     for (std::vector<std::string>::const_iterator it = params.begin(); it != params.end();
          ++it) {
         struct iio_channel* chn = NULL;
@@ -67,7 +70,8 @@ void device_source_impl::set_params(struct iio_device* phy,
 
         pos = it->find('=');
         if (pos == std::string::npos) {
-            std::cerr << "Misformed line: " << *it << std::endl;
+            GR_LOG_WARN(logger,
+                        boost::format("Malformed parameter update line: %s") % *it);
             continue;
         }
 
@@ -76,7 +80,7 @@ void device_source_impl::set_params(struct iio_device* phy,
 
         ret = iio_device_identify_filename(phy, key.c_str(), &chn, &attr);
         if (ret) {
-            std::cerr << "Parameter not recognized: " << key << std::endl;
+            GR_LOG_WARN(logger, boost::format("Parameter not recognized: %s") % key);
             continue;
         }
 
@@ -87,7 +91,8 @@ void device_source_impl::set_params(struct iio_device* phy,
         else
             ret = iio_device_debug_attr_write(phy, attr, val.c_str());
         if (ret < 0) {
-            std::cerr << "Unable to write attribute " << key << ": " << ret << std::endl;
+            GR_LOG_WARN(logger,
+                        boost::format("Unable to write attribute %s: %d") % key % ret);
         }
     }
 }
@@ -288,9 +293,8 @@ int device_source_impl::work(int noutput_items,
 
                 char buf[256];
                 iio_strerror(-ret, buf, sizeof(buf));
-                std::string error(buf);
 
-                std::cerr << "Unable to refill buffer: " << error << std::endl;
+                GR_LOG_WARN(d_logger, boost::format("Unable to refill buffer: %s") % buf);
             }
             return -1;
         }
@@ -390,7 +394,6 @@ bool device_source_impl::load_fir_filter(std::string& filter, struct iio_device*
     return ret > 0;
 }
 
-
 int device_source_impl::handle_decimation_interpolation(unsigned long samplerate,
                                                         const char* channel_name,
                                                         const char* attr_name,
@@ -402,6 +405,8 @@ int device_source_impl::handle_decimation_interpolation(unsigned long samplerate
     struct iio_channel* chan;
     char buff[128];
     unsigned long long min, max;
+
+    static GR_LOG_GET_CONFIGURED_LOGGER(logger, "iio::device::handle_decint");
 
     std::string an(attr_name);
     an.append("_available");
@@ -423,7 +428,7 @@ int device_source_impl::handle_decimation_interpolation(unsigned long samplerate
 
     ret = iio_channel_attr_write_longlong(chan, "sampling_frequency", min);
     if (ret < 0)
-        std::cerr << "Unable to write attribute sampling_frequency\n";
+        GR_LOG_WARN(logger, "Unable to write attribute sampling_frequency!");
 
     return ret;
 }

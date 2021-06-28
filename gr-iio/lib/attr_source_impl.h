@@ -13,7 +13,6 @@
 #include "device_source_impl.h"
 #include <gnuradio/iio/attr_source.h>
 
-#include <cstdio>
 #include <string>
 
 namespace gr {

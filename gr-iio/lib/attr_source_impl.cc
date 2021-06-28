@@ -13,10 +13,10 @@
 
 #include "attr_source_impl.h"
 #include <gnuradio/io_signature.h>
+#include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <chrono>
-#include <cstdio>
 #include <string>
 #include <thread>
 #include <vector>
@@ -130,7 +130,7 @@ attr_source_impl::~attr_source_impl() {}
 void attr_source_impl::check(int ret)
 {
     if (ret < 0)
-        std::cerr << "Reading parameter failed: " << ret << std::endl;
+        GR_LOG_WARN(d_logger, boost::format("Reading parameter failed: %d") % ret);
 }
 
 void attr_source_impl::get_register_data(uint32_t address, int* value)

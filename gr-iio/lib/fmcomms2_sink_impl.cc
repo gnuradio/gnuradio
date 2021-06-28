@@ -16,7 +16,6 @@
 #include <gnuradio/io_signature.h>
 #include <ad9361.h>
 
-#include <cstdio>
 #include <mutex>
 #include <string>
 #include <thread>
