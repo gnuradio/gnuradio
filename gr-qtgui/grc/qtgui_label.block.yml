@@ -1,6 +1,6 @@
 id: variable_qtgui_label
 label: QT GUI Label
-flags: [ show_id, python ]
+flags: [ show_id, python, cpp ]
 
 parameters:
 -   id: label
@@ -38,9 +38,9 @@ templates:
         from gnuradio import eng_notation
     var_make: self.${id} = ${id} = ${value}
     callbacks:
-    - self.set_${id}(self._${id}_formatter(${value}))
+    - self.set_${id}(${value})
     - Qt.QMetaObject.invokeMethod(self._${id}_label, "setText", Qt.Q_ARG("QString",
-        ${id}))
+        str(self._${id}_formatter(${id}))))
     make: |-
         <%
             win = 'self._%s_tool_bar'%id
@@ -52,9 +52,26 @@ templates:
         else:
             self._${id}_formatter = lambda x: ${type.str}(x)
 
-        ${win}.addWidget(Qt.QLabel(${(label if (len(label) - 2 > 0) else repr(id))} + ": "))
+        ${win}.addWidget(Qt.QLabel(${(label if (len(label) - 2 > 0) else repr(id))}))
         self._${id}_label = Qt.QLabel(str(self._${id}_formatter(self.${id})))
         self._${id}_tool_bar.addWidget(self._${id}_label)
+        ${gui_hint() % win}
+
+cpp_templates:
+    includes: [ '#include <QLabel>','#include <QMetaObject>', '#include <QString>' ]
+    declarations: QLabel *_${id}_label;
+    var_make: ${id} = ${value};
+    callbacks:
+    - set_${id}(${value})
+    - QMetaObject::invokeMethod(this->_${id}_label, "setText", Q_ARG(QString, QString("${label.strip("'")}\%1").arg(${id})))
+    link: ['gnuradio::gnuradio-qtgui']
+    make: |-
+        <%
+            win = 'this->_%s_label'%id
+        %>\
+        // Todo: use formatter
+        this->_${id}_label = new QLabel(QString("${(label.strip("'") if (len(label) - 2 > 0) else repr(id))}") +QString(": ") + QString("%1").arg(${value}));
+
         ${gui_hint() % win}
 
 documentation: |-
