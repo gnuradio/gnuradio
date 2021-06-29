@@ -1,6 +1,6 @@
 id: variable_qtgui_check_box
 label: QT GUI Check Box
-flags: [ show_id, python ]
+flags: [ show_id, python, cpp ]
 
 parameters:
 -   id: label
@@ -15,6 +15,7 @@ parameters:
     option_labels: [Float, Integer, String, Boolean, Any]
     option_attributes:
         conv: [float, int, str, bool, eval]
+        cpp_opts: [double,int,std::string,double,double]
     hide: part
 -   id: value
     label: Default Value
@@ -55,6 +56,27 @@ templates:
         ${win}.stateChanged.connect(lambda i: self.set_${id}(self._${id}_choices[bool(i)]))
         ${gui_hint() % win}
 
+cpp_templates:
+  includes: ['#include <QCheckBox>']
+  declarations: |-
+    QCheckBox *_${id};
+    ${type.cpp_opts} _${id}_values[2] = {${false},${true}};
+  var_make: ${id} = ${value};
+  callbacks:
+  - set_${id}(${value})
+
+  make: |-
+      <%
+          win = '_%s'%id
+      %>
+      ${win} = new QCheckBox("${(label.strip("'") if (len(label) - 2 > 0) else repr(id))}");
+      if ( ${value} == ${true} ) {
+          ${win}->setCheckState(Qt::Checked);
+      }
+
+      QObject::connect(${win},&QCheckBox::stateChanged, this, [this] () {this->set_${id}(_${id}_values[${win}->checkState()/2]);});
+
+      ${gui_hint() % win}
 documentation: |-
     This block creates a variable check box. Leave the label blank to use the variable id as the label.
 

@@ -146,7 +146,7 @@ cpp_templates:
             ${wintype.cpp_opts}, // wintype
             ${fc}, //fc
             ${bw}, //bw
-            ${name}, //name
+            "${name.strip("'").strip('"')}", //name
             ${plotfreq}, //plotfreq
             ${plotwaterfall}, //plotwaterfall
             ${plottime}, //plottime
