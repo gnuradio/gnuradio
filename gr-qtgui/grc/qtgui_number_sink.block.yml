@@ -1,6 +1,6 @@
 id: qtgui_number_sink
 label: QT GUI Number Sink
-flags: [ python ]
+flags: [ show_id, python, cpp ]
 
 parameters:
 -   id: name
@@ -33,6 +33,8 @@ parameters:
     dtype: enum
     options: [qtgui.NUM_GRAPH_HORIZ, qtgui.NUM_GRAPH_VERT, qtgui.NUM_GRAPH_NONE]
     option_labels: [Horizontal, Vertical, None]
+    option_attributes:
+        cpp_opts: [qtgui::NUM_GRAPH_HORIZ, qtgui::NUM_GRAPH_VERT, qtgui::NUM_GRAPH_NONE]
 -   id: nconnections
     label: Number of Inputs
     category: General
@@ -280,6 +282,56 @@ templates:
         ${win} = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)
         ${gui_hint() % win}
 
+cpp_templates:
+    includes: ['#include <gnuradio/qtgui/number_sink.h>', '#include <gnuradio/qtgui/qtgui_types.h>' ]
+    declarations: 'qtgui::number_sink::sptr ${id};'
+    callbacks:
+    - set_update_time(${update_time})
+    - set_average(${avg})
+
+    link: ['gnuradio::gnuradio-qtgui']
+    make: |-
+        <%
+            win = '_%s_win'%id
+        %>\
+        ${id} = qtgui::number_sink::make(
+            ${type.size},
+            ${avg},
+            ${graph_type.cpp_opts},
+            ${nconnections},
+            nullptr // parent
+        );
+        ${id}->set_update_time(${update_time});
+        ${id}->set_title(${name});
+        {
+            std::string labels[10] = {"${label1.strip("'")}", "${label2.strip("'")}", "${label3.strip("'")}", "${label4.strip("'")}", "${label5.strip("'")}",
+                "${label6.strip("'")}", "${label7.strip("'")}", "${label8.strip("'")}", "${label9.strip("'")}", "${label10.strip("'")}"};
+            std::string colors[10] = {${color1}, ${color2}, ${color3}, ${color4}, ${color5},
+                ${color6}, ${color7}, ${color8}, ${color9}, ${color10}};
+            std::string units[10] ={"${unit1.strip("'")}", "${unit2.strip("'")}", "${unit3.strip("'")}", "${unit4.strip("'")}", "${unit5.strip("'")}",
+                "${unit6.strip("'")}", "${unit7.strip("'")}", "${unit8.strip("'")}", "${unit9.strip("'")}", "${unit10.strip("'")}"};
+            int factor[10] ={${factor1}, ${factor2}, ${factor3}, ${factor4}, ${factor5},
+                             ${factor6}, ${factor7}, ${factor8}, ${factor9}, ${factor10}};
+            for (int i = 0; i < ${nconnections} ; i++ ) {
+                ${id}->set_min(i, ${min});
+                ${id}->set_max(i, ${max});
+                ${id}->set_color(i, colors[i][0], colors[i][1]);
+                if (labels[i].length() == 0)
+                    ${id}->set_label(i, "Data "+std::to_string(i));
+                else
+                    ${id}->set_label(i, labels[i]);
+                ${id}->set_unit(i, units[i]);
+                ${id}->set_factor(i, factor[i]);
+            }
+         }
+         ${id}->enable_autoscale(${autoscale});
+         QWidget* _${id}_win;
+        _${id}_win = this->${id}->qwidget();
+
+        ${gui_hint() % win}
+    translations:
+        'True': 'true'
+        'False': 'false'
 documentation: |-
     The GUI hint can be used to position the widget within the application.     The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span].     Both the tab specification and the grid position are optional.
 
