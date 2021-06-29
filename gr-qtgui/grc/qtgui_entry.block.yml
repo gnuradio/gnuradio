@@ -59,8 +59,11 @@ cpp_templates:
     - set_${id}(${value})
     - QMetaObject::invokeMethod(this->_${id}_line_edit, "setText", Q_ARG(QString,
         QString::number(${id})))
-    link: ['gnuradio::gnuradio-qtgui', 'Qt5::Widgets']
+    link: ['gnuradio::gnuradio-qtgui']
     make: |-
+        <%
+            win = 'this->_%s_tool_bar'%id
+        %>
         this->_${id}_tool_bar = new QToolBar();
         this->_${id}_label = new QLabel(QString::fromStdString(std::string("${label.strip("'")}")+ std::string(":")));
         this->_${id}_tool_bar->addWidget(_${id}_label);
@@ -68,12 +71,7 @@ cpp_templates:
         this->_${id}_tool_bar->addWidget(this->_${id}_line_edit);
         QObject::connect(this->_${id}_line_edit, &QLineEdit::returnPressed, this, [this] () {this->set_${id}(this->_${id}_line_edit->text().toInt());});
 
-        this->top_layout->addWidget(this->_${id}_tool_bar);
-        % if  len(gui_hint) > 0:
-        this->top_grid_layout->addWidget(this->_${id}_tool_bar,${gui_hint});
-        % else:
-        this->top_layout->addWidget(this->_${id}_tool_bar);
-        % endif
+        ${gui_hint() % win}
 documentation: |-
     This block creates a variable with a text entry box. Leave the label blank to use the variable id as the label.
 
