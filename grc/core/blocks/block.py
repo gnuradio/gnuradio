@@ -106,7 +106,8 @@ class Block(Element):
         """
         Add and remove ports to adjust for the nports.
         """
-        Element.rewrite(self)
+        if self.enabled:
+            Element.rewrite(self)
 
         def rekey(ports):
             """Renumber non-message/message ports"""
