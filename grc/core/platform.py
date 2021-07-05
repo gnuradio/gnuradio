@@ -346,9 +346,11 @@ class Platform(Element):
 
         return data
 
-    def save_flow_graph(self, filename, flow_graph):
+    def save_flow_graph(self, filename, flow_graph, data=None):
         data = flow_graph.export_data()
+        self.save_flow_graph_data(filename, data)
 
+    def save_flow_graph_data(self, filename, data):
         try:
             data['connections'] = [yaml.ListFlowing(i) for i in data['connections']]
         except KeyError:

@@ -1,0 +1,312 @@
+options:
+  parameters:
+    author: ''
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: default_
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Not titled yet
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+  evaluated:
+    author: ''
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: default_
+    max_nouts: 0
+    output_language: python
+    placement:
+    - 0
+    - 0
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: true
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Not titled yet
+  expressions:
+    ('all' if generate_options != 'qt_gui' else ('none' if qt_qss_theme else 'part')): part
+    ('all' if generate_options not in ('qt_gui', 'bokeh_gui') else ('part' if run else 'none')): part
+    ('all' if generate_options.startswith('hb') else 'part'): part
+    ('all' if generate_options.startswith('hb') else ('none' if max_nouts else 'part')): part
+    ('all' if generate_options.startswith('hb') else ('none' if realtime_scheduling else 'part')): part
+    ('none' if author else 'part'): part
+    ('none' if copyright else 'part'): part
+    ('none' if description else 'part'): part
+    ('none' if generate_options == 'no_gui' else 'all'): all
+    ('none' if generate_options.startswith('hb') else 'all'): all
+    ('none' if title else 'part'): none
+    ('part' if generate_options == 'bokeh_gui' else 'all'): all
+    ('part' if output_language == 'cpp' else 'all'): all
+    all(i >= 0 for i in placement): true
+    len(placement) == 4 or len(placement) == 2: true
+    not window_size or 300 <= window_size[0] <= 4096: true
+    not window_size or 300 <= window_size[1] <= 4096: true
+    not window_size or len(window_size) == 2: true
+
+blocks:
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 12]
+    rotation: 0
+    state: enabled
+  evaluated:
+    comment: ''
+    id: samp_rate
+    value: 32k
+  expressions:
+    value: 32000
+- name: variable_constellation_0
+  id: variable_constellation
+  parameters:
+    comment: ''
+    const_points: '[-1-1j, -1+1j, 1+1j, 1-1j]'
+    dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    precision: '8'
+    rot_sym: '4'
+    soft_dec_lut: None
+    sym_map: '[0, 1, 3, 2]'
+    type: calcdist
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 36.0]
+    rotation: 0
+    state: true
+  evaluated:
+    comment: ''
+    const_points: '...1-1j'
+    dims: 1
+    id: variable_constellation_0
+    normalization: Amplitude
+    precision: 8
+    rot_sym: 4
+    soft_dec_lut: None
+    sym_map:
+    - 0
+    - 1
+    - 3
+    - 2
+    type: calcdist
+  expressions:
+    ( 'none' if str(type) == "calcdist" else 'all'): none
+    ('part' if str(soft_dec_lut) == 'None' else 'none'): part
+    ? digital.constellation_calcdist(const_points, sym_map, rot_sym, dims, normalization)
+      if (str(type) == "calcdist") else getattr(digital,'constellation_'+str(type))()
+    : <gnuradio.digital.digital_python.constellation_calcdist object at 0x7f0369873f30>
+- name: analog_random_source_x_0
+  id: analog_random_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max: '2'
+    maxoutbuf: '0'
+    min: '0'
+    minoutbuf: '0'
+    num_samps: '1000'
+    repeat: 'True'
+    type: int
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [152, 148.0]
+    rotation: 0
+    state: true
+  evaluated:
+    affinity: []
+    alias: ''
+    comment: ''
+    id: analog_random_source_x_0
+    max: 2
+    maxoutbuf: 0
+    min: 0
+    minoutbuf: 0
+    num_samps: 1000
+    repeat: 'True'
+    type: int
+  expressions:
+    type: int
+- name: analog_random_uniform_source_x_0
+  id: analog_random_uniform_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maximum: ''
+    maxoutbuf: '0'
+    minimum: ''
+    minoutbuf: '0'
+    seed: '0'
+    type: int
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [152, 276.0]
+    rotation: 0
+    state: true
+  evaluated:
+    affinity: []
+    alias: ''
+    comment: ''
+    id: analog_random_uniform_source_x_0
+    maximum: 0
+    maxoutbuf: 0
+    minimum: 0
+    minoutbuf: 0
+    seed: 0
+    type: int
+  expressions:
+    type: int
+- name: blocks_null_sink_0
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: 2*3-4
+    type: int
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [912, 232.0]
+    rotation: 0
+    state: true
+  evaluated:
+    affinity: []
+    alias: ''
+    bus_structure_sink: '[0]'
+    comment: ''
+    id: blocks_null_sink_0
+    num_inputs: 2
+    type: int
+    vlen: 1
+  expressions:
+    '''part'' if vlen == 1 else ''none''': part
+    num_inputs: 2
+    num_inputs >= 1: true
+    type: int
+    vlen: 1
+    vlen > 0: true
+- name: blocks_selector_0
+  id: blocks_selector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    enabled: 'True'
+    input_index: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: round(pi)
+    num_outputs: 8//3
+    output_index: '0'
+    showports: 'True'
+    type: int
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [600, 204.0]
+    rotation: 0
+    state: true
+  evaluated:
+    affinity: []
+    alias: ''
+    comment: ''
+    enabled: true
+    id: blocks_selector_0
+    input_index: 0
+    maxoutbuf: 0
+    minoutbuf: 0
+    num_inputs: 3
+    num_outputs: 2
+    output_index: 0
+    showports: true
+    type: int
+    vlen: 1
+  expressions:
+    '''part'' if vlen == 1 else ''none''': part
+    num_inputs: 3
+    num_outputs: 2
+    showports: true
+    type: int
+    vlen: 1
+    vlen > 0: true
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: from math import pi
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [544, 52.0]
+    rotation: 0
+    state: true
+  evaluated:
+    alias: ''
+    comment: ''
+    id: import_0
+    imports:
+    - pi
+  expressions: {}
+
+connections:
+- [analog_random_source_x_0, '0', blocks_selector_0, '0']
+- [analog_random_source_x_0, '0', blocks_selector_0, '1']
+- [analog_random_uniform_source_x_0, '0', blocks_selector_0, '2']
+- [blocks_selector_0, '0', blocks_null_sink_0, '0']
+- [blocks_selector_0, '1', blocks_null_sink_0, '1']
+
+metadata:
+  file_format: 1
