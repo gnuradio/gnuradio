@@ -27,12 +27,12 @@ def read_alist_file(filename):
 
   myfile    = open(filename,'r')
   data      = myfile.readlines()
-  size      = string.split(data[0])
+  size      = data[0].split()
   numCols   = int(size[0])
   numRows   = int(size[1])
   H = zeros((numRows,numCols))
   for lineNumber in arange(4,4+numCols):
-    indices = string.split(data[lineNumber])
+    indices = data[lineNumber].split()
     for index in indices:
       H[int(index)-1,lineNumber-4] = 1
       # The subsequent lines in the file list the indices for where
@@ -70,12 +70,12 @@ def write_alist_file(filename, H, verbose=0):
     rowWeight = nonzeros.shape[1]
     if rowWeight > maxRowWeight:
       maxRowWeight = rowWeight
-      tempstring1 = tempstring1 + repr(rowWeight) + ' '
+    tempstring1 = tempstring1 + repr(rowWeight) + ' '
     for tempArray in nonzeros:
       for index in tempArray:
         tempstring2 = tempstring2 + repr(index+1) + ' '
-        tempstring2 = tempstring2 + '\n'
-        tempstring1 = tempstring1 + '\n'
+    tempstring2 = tempstring2 + '\n'
+  tempstring1 = tempstring1 + '\n'
 
   tempstring3 = ''
   tempstring4 = ''
@@ -85,12 +85,12 @@ def write_alist_file(filename, H, verbose=0):
     colWeight = nonzeros.shape[1]
     if colWeight > maxColWeight:
       maxColWeight = colWeight
-      tempstring3 = tempstring3 + repr(colWeight) + ' '
+    tempstring3 = tempstring3 + repr(colWeight) + ' '
     for tempArray in nonzeros:
       for index in tempArray:
         tempstring4 = tempstring4 + repr(index+1) + ' '
-        tempstring4 = tempstring4 + '\n'
-        tempstring3 = tempstring3 + '\n'
+    tempstring4 = tempstring4 + '\n'
+  tempstring3 = tempstring3 + '\n'
 
   tempstring = repr(maxColWeight) + ' ' + repr(maxRowWeight) + '\n'
   # write out max column and row weights
@@ -228,7 +228,7 @@ def greedy_upper_triangulation(H, verbose=0):
     numRows    = size[0]
     numCols    = size[1]
 
-    minResidualDegrees = zeros((1,numCols))
+    minResidualDegrees = zeros((1,numCols), dtype=int)
 
     for colNum in arange(numCols):
       nonZeroElements = array(H_residual[:,colNum].nonzero())
@@ -306,8 +306,8 @@ def greedy_upper_triangulation(H, verbose=0):
         while sub_index < (m - rowInH_t):
           Htemp[m-sub_index-1,:] = H_t[m-sub_index,:]
           sub_index = sub_index+1
-          H_t = Htemp.copy()
-          Htemp = H_t.copy()
+        H_t = Htemp.copy()
+        Htemp = H_t.copy()
 
       # Save temp H as new H_t.
       H_t = Htemp.copy()
@@ -370,7 +370,7 @@ def greedy_upper_triangulation(H, verbose=0):
   while iterationCount < maxIterations:
     if verbose > 1:
       print('iterationCount:', iterationCount)
-      tempH = H_t.copy()
+    tempH = H_t.copy()
 
     shuffle(columnsToShuffle)
     shuffle(rowsToShuffle)
@@ -584,7 +584,7 @@ def get_full_rank_H_matrix(H, verbose=False):
 
   return newH
 
-def get_best_matrix(H, numIterations=100, verbose=False):
+def get_best_matrix(H, numIterations=100, verbose=0):
   """
   This function will run the Greedy Upper Triangulation algorithm
   for numIterations times, looking for the lowest possible gap.
@@ -596,7 +596,7 @@ def get_best_matrix(H, numIterations=100, verbose=False):
   while index <= numIterations:
     if verbose:
       print('--- In get_best_matrix, iteration:', index)
-      index += 1
+    index += 1
     try:
       ret = greedy_upper_triangulation(H, verbose)
     except ValueError as e:
