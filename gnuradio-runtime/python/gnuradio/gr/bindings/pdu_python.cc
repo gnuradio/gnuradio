@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pdu.h)                                                     */
-/* BINDTOOL_HEADER_FILE_HASH(562b6c641c014996cd7a94b2252030d1)                     */
+/* BINDTOOL_HEADER_FILE_HASH(6772caeddffe60c0c16148f68d21654f)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -48,6 +48,12 @@ void bind_pdu(py::module& m)
     m_metadata_keys.def(
         "pdu_num", &::gr::metadata_keys::pdu_num, D(metadata_keys, pdu_num));
 
+    m_metadata_keys.def(
+        "rx_time", &::gr::metadata_keys::rx_time, D(metadata_keys, rx_time));
+
+    m_metadata_keys.def(
+        "sys_time", &::gr::metadata_keys::sys_time, D(metadata_keys, sys_time));
+
     m_metadata_keys.def("tx_eob", &::gr::metadata_keys::tx_eob, D(metadata_keys, tx_eob));
 
     m_metadata_keys.def(
@@ -61,7 +67,14 @@ void bind_pdu(py::module& m)
     m_msgport_names.def("bpdu", &::gr::msgport_names::bpdu, D(msgport_names, bpdu));
 
 
+    m_msgport_names.def("conf", &::gr::msgport_names::conf, D(msgport_names, conf));
+
+
     m_msgport_names.def("cpdu", &::gr::msgport_names::cpdu, D(msgport_names, cpdu));
+
+
+    m_msgport_names.def(
+        "detects", &::gr::msgport_names::detects, D(msgport_names, detects));
 
 
     m_msgport_names.def("dict", &::gr::msgport_names::dict, D(msgport_names, dict));

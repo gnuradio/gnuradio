@@ -13,6 +13,7 @@ list(APPEND pdu_python_files
     pdu_to_stream_python.cc
     pdu_to_tagged_stream_python.cc
     random_pdu_python.cc
+    tags_to_pdu_python.cc
     tagged_stream_to_pdu_python.cc
     take_skip_to_pdu_python.cc
     time_delta_python.cc

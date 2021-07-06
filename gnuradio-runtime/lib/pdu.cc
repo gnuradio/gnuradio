@@ -22,6 +22,16 @@ const pmt::pmt_t pdu_num()
     static const pmt::pmt_t val = pmt::mp("pdu_num");
     return val;
 }
+const pmt::pmt_t rx_time()
+{
+    static const pmt::pmt_t val = pmt::mp("rx_time");
+    return val;
+}
+const pmt::pmt_t sys_time()
+{
+    static const pmt::pmt_t val = pmt::mp("sys_time");
+    return val;
+}
 const pmt::pmt_t tx_eob()
 {
     static const pmt::pmt_t val = pmt::mp("tx_eob");
@@ -47,9 +57,19 @@ const pmt::pmt_t bpdu()
     static const pmt::pmt_t val = pmt::mp("bpdu");
     return val;
 }
+const pmt::pmt_t conf()
+{
+    static const pmt::pmt_t val = pmt::mp("conf");
+    return val;
+}
 const pmt::pmt_t cpdu()
 {
     static const pmt::pmt_t val = pmt::mp("cpdu");
+    return val;
+}
+const pmt::pmt_t detects()
+{
+    static const pmt::pmt_t val = pmt::mp("detects");
     return val;
 }
 const pmt::pmt_t dict()

@@ -18,6 +18,8 @@
 namespace gr {
 namespace metadata_keys {
 GR_RUNTIME_API const pmt::pmt_t pdu_num();
+GR_RUNTIME_API const pmt::pmt_t rx_time();
+GR_RUNTIME_API const pmt::pmt_t sys_time();
 GR_RUNTIME_API const pmt::pmt_t tx_eob();
 GR_RUNTIME_API const pmt::pmt_t tx_time();
 GR_RUNTIME_API const pmt::pmt_t tx_sob();
@@ -26,12 +28,14 @@ GR_RUNTIME_API const pmt::pmt_t tx_sob();
 namespace msgport_names {
 // static const PMT interned string getters for standard port names
 GR_RUNTIME_API const pmt::pmt_t bpdu();
+GR_RUNTIME_API const pmt::pmt_t conf();
 GR_RUNTIME_API const pmt::pmt_t cpdu();
+GR_RUNTIME_API const pmt::pmt_t detects();
 GR_RUNTIME_API const pmt::pmt_t dict();
 GR_RUNTIME_API const pmt::pmt_t fpdu();
 GR_RUNTIME_API const pmt::pmt_t msg();
 GR_RUNTIME_API const pmt::pmt_t pdu();
-GR_RUNTIME_API const pmt::pmt_t pdus(); // compatibility, use of pdu() preferred
+GR_RUNTIME_API const pmt::pmt_t pdus();
 GR_RUNTIME_API const pmt::pmt_t vec();
 } /* namespace msgport_names */
 
