@@ -191,7 +191,7 @@ blocks:
     coordinate: [104, 276.0]
     rotation: 180
     state: enabled
-- name: note_0
+- name: note
   id: note
   parameters:
     alias: ''

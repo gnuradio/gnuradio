@@ -22,8 +22,24 @@ const pmt::pmt_t pdu_num()
     static const pmt::pmt_t val = pmt::mp("pdu_num");
     return val;
 }
+const pmt::pmt_t tx_eob()
+{
+    static const pmt::pmt_t val = pmt::mp("tx_eob");
+    return val;
+}
+const pmt::pmt_t tx_time()
+{
+    static const pmt::pmt_t val = pmt::mp("tx_time");
+    return val;
+}
+const pmt::pmt_t tx_sob()
+{
+    static const pmt::pmt_t val = pmt::mp("tx_sob");
+    return val;
+}
 
 } /* namespace metadata_keys */
+
 namespace msgport_names {
 
 const pmt::pmt_t bpdu()

@@ -18,6 +18,15 @@
 static const char* __doc_gr_metadata_keys_pdu_num = R"doc()doc";
 
 
+static const char* __doc_gr_metadata_keys_tx_eob = R"doc()doc";
+
+
+static const char* __doc_gr_metadata_keys_tx_time = R"doc()doc";
+
+
+static const char* __doc_gr_metadata_keys_tx_sob = R"doc()doc";
+
+
 static const char* __doc_gr_msgport_names_bpdu = R"doc()doc";
 
 

@@ -20,6 +20,7 @@ void bind_pdu_filter(py::module&);
 void bind_pdu_remove(py::module&);
 void bind_pdu_set(py::module&);
 void bind_pdu_split(py::module&);
+void bind_pdu_to_stream(py::module&);
 void bind_pdu_to_tagged_stream(py::module&);
 void bind_random_pdu(py::module&);
 void bind_tagged_stream_to_pdu(py::module&);
@@ -50,6 +51,7 @@ PYBIND11_MODULE(pdu_python, m)
     bind_pdu_remove(m);
     bind_pdu_set(m);
     bind_pdu_split(m);
+    bind_pdu_to_stream(m);
     bind_pdu_to_tagged_stream(m);
     bind_random_pdu(m);
     bind_tagged_stream_to_pdu(m);

@@ -15,6 +15,7 @@ install(FILES
     pdu_remove.h
     pdu_set.h
     pdu_split.h
+    pdu_to_stream.h
     pdu_to_tagged_stream.h
     random_pdu.h
     tagged_stream_to_pdu.h

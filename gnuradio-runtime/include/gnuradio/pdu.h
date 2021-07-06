@@ -18,6 +18,9 @@
 namespace gr {
 namespace metadata_keys {
 GR_RUNTIME_API const pmt::pmt_t pdu_num();
+GR_RUNTIME_API const pmt::pmt_t tx_eob();
+GR_RUNTIME_API const pmt::pmt_t tx_time();
+GR_RUNTIME_API const pmt::pmt_t tx_sob();
 } /* namespace metadata_keys */
 
 namespace msgport_names {
