@@ -17,6 +17,7 @@ add_library(gnuradio-pdu
     pdu_to_stream_impl.cc
     pdu_to_tagged_stream_impl.cc
     random_pdu_impl.cc
+    tags_to_pdu_impl.cc
     tagged_stream_to_pdu_impl.cc
     take_skip_to_pdu_impl.cc
     time_delta_impl.cc

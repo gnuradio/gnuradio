@@ -18,6 +18,7 @@ install(FILES
     pdu_to_stream.h
     pdu_to_tagged_stream.h
     random_pdu.h
+    tags_to_pdu.h
     tagged_stream_to_pdu.h
     take_skip_to_pdu.h
     time_delta.h
