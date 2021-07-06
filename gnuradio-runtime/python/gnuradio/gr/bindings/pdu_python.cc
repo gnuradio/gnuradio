@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pdu.h)                                                     */
-/* BINDTOOL_HEADER_FILE_HASH(e6887fee8ea637d80f0ed7b6f2ffc552)                     */
+/* BINDTOOL_HEADER_FILE_HASH(562b6c641c014996cd7a94b2252030d1)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -47,6 +47,13 @@ void bind_pdu(py::module& m)
 
     m_metadata_keys.def(
         "pdu_num", &::gr::metadata_keys::pdu_num, D(metadata_keys, pdu_num));
+
+    m_metadata_keys.def("tx_eob", &::gr::metadata_keys::tx_eob, D(metadata_keys, tx_eob));
+
+    m_metadata_keys.def(
+        "tx_time", &::gr::metadata_keys::tx_time, D(metadata_keys, tx_time));
+
+    m_metadata_keys.def("tx_sob", &::gr::metadata_keys::tx_sob, D(metadata_keys, tx_sob));
 
 
     py::module m_msgport_names = m.def_submodule("msgport_names");

@@ -10,6 +10,7 @@ list(APPEND pdu_python_files
     pdu_remove_python.cc
     pdu_set_python.cc
     pdu_split_python.cc
+    pdu_to_stream_python.cc
     pdu_to_tagged_stream_python.cc
     random_pdu_python.cc
     tagged_stream_to_pdu_python.cc
