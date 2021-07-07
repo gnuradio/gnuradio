@@ -803,11 +803,17 @@ class FlowGraph(CoreFlowgraph, Drawable):
         x, y = coordinate
         if not self.drawing_area.ctrl_mask:
             X, Y = self.coordinate
-            dX, dY = int(x - X), int(y - Y)
-            active = Actions.TOGGLE_SNAP_TO_GRID.get_active() or self.drawing_area.mod1_mask
-            if not active or abs(dX) >= Constants.CANVAS_GRID_SIZE or abs(dY) >= Constants.CANVAS_GRID_SIZE:
+            dX, dY = x - X, y - Y
+
+            if Actions.TOGGLE_SNAP_TO_GRID.get_active() or self.drawing_area.mod1_mask:
+                dX, dY = int(round(dX / Constants.CANVAS_GRID_SIZE)), int(round(dY / Constants.CANVAS_GRID_SIZE))
+                dX, dY = dX * Constants.CANVAS_GRID_SIZE, dY * Constants.CANVAS_GRID_SIZE
+            else:
+                dX, dY = int(round(dX)), int(round(dY))
+
+            if dX != 0 or dY != 0:
                 self.move_selected((dX, dY))
-                self.coordinate = (x, y)
+                self.coordinate = (X+dX, Y+dY)
                 redraw = True
         return redraw
 
