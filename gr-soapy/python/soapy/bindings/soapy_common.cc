@@ -7,81 +7,12 @@
  *
  */
 
+#include "setting_string_conversion.h"
 #include "soapy_common.h"
 
 #include <SoapySDR/Types.hpp>
 #include <SoapySDR/Version.h>
-#include <stdexcept>
 #include <string>
-
-// SoapySDR doesn't have an API define for SettingToString, so we need
-// to check the version. 0.8 is the first tagged version to have this
-// functionality.
-#if SOAPY_SDR_API_VERSION >= 0x080000
-
-template <typename T>
-static inline T string_to_setting(const std::string& str)
-{
-    return SoapySDR::StringToSetting<T>(str);
-}
-
-template <typename T>
-static inline std::string setting_to_string(const T& setting)
-{
-    return SoapySDR::SettingToString<T>(setting);
-}
-
-#else
-
-// Copied from SoapySDR 0.8
-#define SOAPY_SDR_TRUE "true"
-#define SOAPY_SDR_FALSE "false"
-
-#include <sstream>
-
-template <typename T>
-static inline T string_to_setting(const std::string& str)
-{
-    std::stringstream sstream(str);
-    T setting;
-
-    sstream >> setting;
-
-    return setting;
-}
-
-// Copied from SoapySDR 0.8
-//! convert empty and "false" strings to false, integers to their truthness
-template <>
-inline bool string_to_setting<bool>(const std::string& str)
-{
-    if (str.empty() || str == SOAPY_SDR_FALSE) {
-        return false;
-    }
-    if (str == SOAPY_SDR_TRUE) {
-        return true;
-    }
-    try {
-        return static_cast<bool>(std::stod(str));
-    } catch (std::invalid_argument& e) {
-    }
-    // other values are true
-    return true;
-}
-
-template <typename T>
-static inline std::string setting_to_string(const T& setting)
-{
-    return std::to_string(setting);
-}
-
-template <>
-inline std::string setting_to_string<bool>(const bool& setting)
-{
-    return setting ? SOAPY_SDR_TRUE : SOAPY_SDR_FALSE;
-}
-
-#endif
 
 py::object cast_string_to_arginfo_type(gr::soapy::argtype_t argtype,
                                        const std::string& str)
@@ -89,15 +20,15 @@ py::object cast_string_to_arginfo_type(gr::soapy::argtype_t argtype,
     py::object ret;
     switch (argtype) {
     case SoapySDR::ArgInfo::BOOL:
-        ret = py::bool_(string_to_setting<bool>(str));
+        ret = py::bool_(gr::soapy::string_to_setting<bool>(str));
         break;
 
     case SoapySDR::ArgInfo::INT:
-        ret = py::int_(string_to_setting<int>(str));
+        ret = py::int_(gr::soapy::string_to_setting<int>(str));
         break;
 
     case SoapySDR::ArgInfo::FLOAT:
-        ret = py::float_(string_to_setting<double>(str));
+        ret = py::float_(gr::soapy::string_to_setting<double>(str));
         break;
 
     default:
@@ -113,13 +44,13 @@ setting_info cast_pyobject_to_arginfo_string(py::object obj)
     setting_info info;
 
     if (py::isinstance<py::bool_>(obj)) {
-        info.value = setting_to_string(bool(py::cast<py::bool_>(obj)));
+        info.value = gr::soapy::setting_to_string(bool(py::cast<py::bool_>(obj)));
         info.type = SoapySDR::ArgInfo::BOOL;
     } else if (py::isinstance<py::int_>(obj)) {
-        info.value = setting_to_string(int(py::cast<py::int_>(obj)));
+        info.value = gr::soapy::setting_to_string(int(py::cast<py::int_>(obj)));
         info.type = SoapySDR::ArgInfo::INT;
     } else if (py::isinstance<py::float_>(obj)) {
-        info.value = setting_to_string(double(py::cast<py::float_>(obj)));
+        info.value = gr::soapy::setting_to_string(double(py::cast<py::float_>(obj)));
         info.type = SoapySDR::ArgInfo::FLOAT;
     } else {
         info.value = py::str(obj);
