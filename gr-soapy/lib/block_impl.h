@@ -269,6 +269,25 @@ protected:
      */
     void cmd_handler_antenna(pmt::pmt_t val, size_t channel);
 
+    void cmd_handler_gain_mode(pmt::pmt_t val, size_t channel);
+    void cmd_handler_frequency_correction(pmt::pmt_t val, size_t channel);
+    void cmd_handler_dc_offset_mode(pmt::pmt_t val, size_t channel);
+    void cmd_handler_dc_offset(pmt::pmt_t val, size_t channel);
+    void cmd_handler_iq_balance(pmt::pmt_t val, size_t channel);
+    void cmd_handler_iq_balance_mode(pmt::pmt_t val, size_t channel);
+    void cmd_handler_master_clock_rate(pmt::pmt_t val, size_t);
+    void cmd_handler_reference_clock_rate(pmt::pmt_t val, size_t);
+    void cmd_handler_clock_source(pmt::pmt_t val, size_t);
+    void cmd_handler_time_source(pmt::pmt_t val, size_t);
+    void cmd_handler_hardware_time(pmt::pmt_t val, size_t);
+    void cmd_handler_register(pmt::pmt_t val, size_t);
+    void cmd_handler_registers(pmt::pmt_t val, size_t);
+    void cmd_handler_setting(pmt::pmt_t val, size_t channel);
+    void cmd_handler_gpio(pmt::pmt_t val, size_t);
+    void cmd_handler_gpio_dir(pmt::pmt_t val, size_t);
+    void cmd_handler_i2c(pmt::pmt_t val, size_t);
+    void cmd_handler_uart(pmt::pmt_t val, size_t);
+
     /*** End message handlers ***/
 };
 
