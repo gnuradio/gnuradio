@@ -216,7 +216,7 @@ class FlowGraph(Element):
         return elements
 
     def children(self):
-        return itertools.chain(self.iter_enabled_blocks(), self.connections)
+        return itertools.chain(self.blocks, self.connections)
 
     def rewrite(self):
         """
@@ -227,6 +227,7 @@ class FlowGraph(Element):
 
     def renew_namespace(self):
         namespace = {}
+        self.namespace.clear()
         # Load imports
         for expr in self.imports():
             try:
