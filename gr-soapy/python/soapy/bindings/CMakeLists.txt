@@ -11,6 +11,9 @@ include(GrPybind)
 # Python Bindings
 ########################################################################
 
+# For setting string conversions
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../lib)
+
 list(APPEND soapy_python_files
     block_python.cc
     soapy_common.cc
