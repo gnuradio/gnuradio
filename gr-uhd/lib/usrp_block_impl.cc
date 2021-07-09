@@ -728,8 +728,9 @@ void usrp_block_impl::_cmd_handler_gpio(const pmt::pmt_t& gpio_attr,
         pmt::symbol_to_string(pmt::dict_ref(gpio_attr, pmt::mp("bank"), pmt::mp("")));
     std::string attr =
         pmt::symbol_to_string(pmt::dict_ref(gpio_attr, pmt::mp("attr"), pmt::mp("")));
-    uint32_t value = pmt::to_double(pmt::dict_ref(gpio_attr, pmt::mp("value"), 0));
-    uint32_t mask = pmt::to_double(pmt::dict_ref(gpio_attr, pmt::mp("mask"), 0));
+    uint32_t value =
+        pmt::to_double(pmt::dict_ref(gpio_attr, pmt::mp("value"), pmt::mp(0)));
+    uint32_t mask = pmt::to_double(pmt::dict_ref(gpio_attr, pmt::mp("mask"), pmt::mp(0)));
 
     set_gpio_attr(bank, attr, value, mask, mboard);
 }
@@ -775,15 +776,15 @@ void usrp_block_impl::_cmd_handler_mtune(const pmt::pmt_t& tune,
     ::uhd::tune_request_t new_tune_request;
     if (pmt::dict_has_key(tune, pmt::mp("dsp_freq"))) {
         new_tune_request.dsp_freq =
-            pmt::to_double(pmt::dict_ref(tune, pmt::mp("dsp_freq"), 0));
+            pmt::to_double(pmt::dict_ref(tune, pmt::mp("dsp_freq"), pmt::mp(0)));
     }
     if (pmt::dict_has_key(tune, pmt::mp("rf_freq"))) {
         new_tune_request.rf_freq =
-            pmt::to_double(pmt::dict_ref(tune, pmt::mp("rf_freq"), 0));
+            pmt::to_double(pmt::dict_ref(tune, pmt::mp("rf_freq"), pmt::mp(0)));
     }
     if (pmt::dict_has_key(tune, pmt::mp("target_freq"))) {
         new_tune_request.target_freq =
-            pmt::to_double(pmt::dict_ref(tune, pmt::mp("target_freq"), 0));
+            pmt::to_double(pmt::dict_ref(tune, pmt::mp("target_freq"), pmt::mp(0)));
     }
     if (pmt::dict_has_key(tune, pmt::mp("dsp_freq_policy"))) {
         std::string policy = pmt::symbol_to_string(
