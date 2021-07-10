@@ -122,6 +122,7 @@
   - blocks_stream_to_vector_decimator
   - blocks_vector_to_stream
   - blocks_vector_to_streams
+  - blocks_matrix_interleaver
   - blocks_patterned_interleaver
   - blocks_endian_swap
   - blocks_vector_insert_x
