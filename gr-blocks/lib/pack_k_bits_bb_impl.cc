@@ -31,6 +31,8 @@ pack_k_bits_bb_impl::pack_k_bits_bb_impl(unsigned k)
                      k),
       d_pack(k)
 {
+    d_k = k;
+    set_tag_propagation_policy(TPP_CUSTOM);
 }
 
 int pack_k_bits_bb_impl::work(int noutput_items,
@@ -40,7 +42,21 @@ int pack_k_bits_bb_impl::work(int noutput_items,
     const unsigned char* in = (const unsigned char*)input_items[0];
     unsigned char* out = (unsigned char*)output_items[0];
 
+    std::vector<tag_t> wintags; // Temp variable to store tags for prop
+
+    // GR_LOG_DEBUG(d_logger, boost::format("Packing Outputs"));
     d_pack.pack(out, in, noutput_items);
+
+    // Propagate tags
+    get_tags_in_range(wintags, 0, nitems_read(0), nitems_read(0) + (noutput_items * d_k));
+
+    // GR_LOG_DEBUG(d_logger, boost::format("Propagating tags"));
+    std::vector<tag_t>::iterator t;
+    for (t = wintags.begin(); t != wintags.end(); t++) {
+        tag_t new_tag = *t;
+        new_tag.offset = std::floor((double)new_tag.offset / d_k);
+        add_item_tag(0, new_tag);
+    }
 
     return noutput_items;
 }
