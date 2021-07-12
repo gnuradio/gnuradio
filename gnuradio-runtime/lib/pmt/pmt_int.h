@@ -12,6 +12,7 @@
 
 #include <pmt/pmt.h>
 #include <boost/any.hpp>
+#include <boost/limits.hpp>
 
 /*
  * EVERYTHING IN THIS FILE IS PRIVATE TO THE IMPLEMENTATION!
