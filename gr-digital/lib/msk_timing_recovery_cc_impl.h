@@ -14,7 +14,6 @@
 #include <gnuradio/digital/msk_timing_recovery_cc.h>
 #include <gnuradio/filter/fir_filter_with_buffer.h>
 #include <gnuradio/filter/mmse_fir_interpolator_cc.h>
-#include <boost/circular_buffer.hpp>
 
 namespace gr {
 namespace digital {

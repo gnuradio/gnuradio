@@ -15,7 +15,6 @@
 #include "scheduler_tpb.h"
 #include "tpb_thread_body.h"
 #include <gnuradio/thread/thread_body_wrapper.h>
-#include <boost/make_shared.hpp>
 #include <sstream>
 
 namespace gr {
