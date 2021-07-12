@@ -26,6 +26,7 @@
 - Packet Operators:
   - digital_correlate_access_code_tag_xx
   - digital_correlate_access_code_xx_ts
+  - digital_crc16_async_bb
   - digital_crc32_bb
   - digital_crc32_async_bb
   - digital_framer_sink_1
