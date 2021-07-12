@@ -35,6 +35,7 @@ install(FILES
     costas_loop_cc.h
     cpmmod_bc.h
     crc32.h
+    crc16_async_bb.h
     crc32_bb.h
     crc32_async_bb.h
     decision_feedback_equalizer.h
