@@ -23,7 +23,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <cstdio>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {

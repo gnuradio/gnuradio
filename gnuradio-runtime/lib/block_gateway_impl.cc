@@ -11,7 +11,6 @@
 #include <pybind11/embed.h>
 
 #include <gnuradio/io_signature.h>
-#include <iostream>
 
 namespace gr {
 

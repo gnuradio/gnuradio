@@ -16,7 +16,6 @@
 #include <QSpacerItem>
 
 #include <cmath>
-#include <iostream>
 
 EyeDisplayForm::EyeDisplayForm(int nplots, bool cmplx, QWidget* parent)
     : EyeDisplaysForm(nplots, parent)

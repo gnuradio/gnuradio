@@ -15,7 +15,6 @@
 #include <QColor>
 #include <QDebug>
 #include <cmath>
-#include <iostream>
 #include <stdexcept>
 
 DisplayPlot::DisplayPlot(int nplots, QWidget* parent)

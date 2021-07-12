@@ -11,7 +11,6 @@
 #include "channel_model2_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
-#include <iostream>
 
 namespace gr {
 namespace channels {

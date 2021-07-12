@@ -14,7 +14,6 @@
 
 #include <gnuradio/io_signature.h>
 #include <algorithm>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {

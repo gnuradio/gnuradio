@@ -19,7 +19,6 @@
 #include <volk/volk.h>
 #include <QColor>
 #include <cmath>
-#include <iostream>
 
 class TimeDomainDisplayZoomer : public QwtPlotZoomer, public TimePrecisionClass
 {

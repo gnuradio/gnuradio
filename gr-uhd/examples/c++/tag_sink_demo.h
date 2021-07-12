@@ -12,7 +12,6 @@
 #include <gnuradio/sync_block.h>
 #include <boost/format.hpp>
 #include <complex>
-#include <iostream>
 
 class tag_sink_demo : public gr::sync_block
 {

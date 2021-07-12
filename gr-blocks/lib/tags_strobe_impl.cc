@@ -20,7 +20,6 @@
 #include <sys/types.h>
 #include <cstdio>
 #include <cstring>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {

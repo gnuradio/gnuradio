@@ -15,7 +15,6 @@
 #include "siso_f_impl.h"
 #include <gnuradio/io_signature.h>
 #include <assert.h>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {

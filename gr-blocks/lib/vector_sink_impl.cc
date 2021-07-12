@@ -17,7 +17,6 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/thread/thread.h>
 #include <algorithm>
-#include <iostream>
 
 namespace gr {
 namespace blocks {

@@ -12,7 +12,6 @@
 #include <gnuradio/logger.h>
 #include <gnuradio/rpcpmtconverters_thrift.h>
 #include <boost/assign/ptr_map_inserter.hpp>
-#include <iostream>
 
 GNURadio::Knob rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
 {

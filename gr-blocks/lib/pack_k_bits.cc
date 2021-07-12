@@ -13,7 +13,6 @@
 #endif
 
 #include <gnuradio/blocks/pack_k_bits.h>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {

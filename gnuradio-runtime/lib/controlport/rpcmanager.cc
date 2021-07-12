@@ -10,7 +10,6 @@
 
 #include <gnuradio/rpcmanager.h>
 #include <cassert>
-#include <iostream>
 #include <stdexcept>
 
 rpcmanager::rpcmanager() { ; }

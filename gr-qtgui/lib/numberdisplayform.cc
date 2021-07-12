@@ -15,7 +15,6 @@
 #include <QMessageBox>
 
 #include <cmath>
-#include <iostream>
 
 NumberDisplayForm::NumberDisplayForm(int nplots, gr::qtgui::graph_t type, QWidget* parent)
     : QWidget(parent)

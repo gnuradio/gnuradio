@@ -15,7 +15,6 @@
 #include "protocol_parser_b_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {

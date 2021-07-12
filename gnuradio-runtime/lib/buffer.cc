@@ -17,7 +17,6 @@
 #include <gnuradio/math.h>
 #include <algorithm>
 #include <cassert>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {
