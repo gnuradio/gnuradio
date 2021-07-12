@@ -16,7 +16,6 @@
 #include <gnuradio/io_signature.h>
 #include <cstring>
 #include <iomanip>
-#include <iostream>
 #include <stdexcept>
 
 using namespace pmt;

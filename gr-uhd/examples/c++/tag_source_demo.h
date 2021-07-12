@@ -10,7 +10,6 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/sync_block.h>
 #include <complex>
-#include <iostream>
 
 class tag_source_demo : public gr::sync_block
 {

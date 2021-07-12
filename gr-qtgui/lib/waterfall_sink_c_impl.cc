@@ -22,7 +22,6 @@
 
 #include <algorithm>
 #include <cstring>
-#include <iostream>
 
 namespace gr {
 namespace qtgui {

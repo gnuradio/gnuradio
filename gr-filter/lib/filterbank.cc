@@ -14,7 +14,6 @@
 
 #include <gnuradio/filter/filterbank.h>
 #include <cstdio>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {

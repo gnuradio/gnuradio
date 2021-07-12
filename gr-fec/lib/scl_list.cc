@@ -12,7 +12,6 @@
 #include <volk/volk.h>
 #include <algorithm>
 #include <cstring>
-#include <iostream>
 
 namespace gr {
 namespace fec {

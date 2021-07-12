@@ -21,7 +21,6 @@
 #include <boost/format.hpp>
 #include <cstdio>
 #include <cstring>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {

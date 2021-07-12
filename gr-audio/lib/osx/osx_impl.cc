@@ -18,7 +18,6 @@
 #include <gnuradio/logger.h>
 
 #include <algorithm>
-#include <iostream>
 #include <locale>
 #include <stdexcept>
 

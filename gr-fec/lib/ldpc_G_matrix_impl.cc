@@ -12,7 +12,6 @@
 #include "ldpc_G_matrix_impl.h"
 #include <cmath>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <vector>
 

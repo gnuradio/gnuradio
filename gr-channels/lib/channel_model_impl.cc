@@ -10,7 +10,6 @@
 
 #include "channel_model_impl.h"
 #include <gnuradio/io_signature.h>
-#include <iostream>
 
 namespace gr {
 namespace channels {
