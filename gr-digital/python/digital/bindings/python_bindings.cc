@@ -38,6 +38,7 @@ void bind_correlate_access_code_tag_bb(py::module&);
 void bind_correlate_access_code_tag_ff(py::module&);
 void bind_costas_loop_cc(py::module&);
 void bind_cpmmod_bc(py::module&);
+void bind_crc16_async_bb(py::module&);
 void bind_crc32_async_bb(py::module&);
 void bind_crc32_bb(py::module&);
 void bind_decision_feedback_equalizer(py::module&);
@@ -140,6 +141,7 @@ PYBIND11_MODULE(digital_python, m)
     bind_correlate_access_code_tag_ff(m);
     bind_costas_loop_cc(m);
     bind_cpmmod_bc(m);
+    bind_crc16_async_bb(m);
     bind_crc32_async_bb(m);
     bind_crc32_bb(m);
     bind_decision_feedback_equalizer(m);
