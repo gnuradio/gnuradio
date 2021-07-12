@@ -16,6 +16,7 @@
 #include <gnuradio/gr_complex.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
+#include <assert.h>
 
 
 #include <cfloat>
