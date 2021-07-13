@@ -548,7 +548,7 @@ int time_sink_c_impl::work(int noutput_items,
 
         uint64_t nr = nitems_read(n);
         std::vector<gr::tag_t> tags;
-        get_tags_in_range(tags, n, nr, nr + nitems);
+        get_tags_in_range(tags, n, nr, nr + nitems + 1);
         for (size_t t = 0; t < tags.size(); t++) {
             tags[t].offset = tags[t].offset - nr + (d_index - d_start - 1);
         }
