@@ -46,7 +46,7 @@ HIER_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP
 
 PARAM_TYPE_NAMES = {
     'raw', 'enum',
-    'complex', 'real', 'float', 'int',
+    'complex', 'real', 'float', 'int', 'short', 'byte',
     'complex_vector', 'real_vector', 'float_vector', 'int_vector',
     'hex', 'string', 'bool',
     'file_open', 'file_save', 'dir_select', '_multiline', '_multiline_python_external',
