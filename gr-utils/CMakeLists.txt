@@ -10,7 +10,11 @@
 ########################################################################
 include(GrPython)
 
-GR_PYTHON_CHECK_MODULE("Mako >= ${GR_MAKO_MIN_VERSION}" mako "mako.__version__ >= '${GR_MAKO_MIN_VERSION}'" MAKO_FOUND)
+GR_PYTHON_CHECK_MODULE(
+  "Mako >= ${GR_MAKO_MIN_VERSION}"
+  mako
+  "LooseVersion(mako.__version__) >= LooseVersion('${GR_MAKO_MIN_VERSION}')"
+  MAKO_FOUND)
 
 GR_PYTHON_CHECK_MODULE_RAW(
   "click"
