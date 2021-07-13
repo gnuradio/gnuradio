@@ -42,12 +42,8 @@ def main(args=None):
     )
     platform.build_library()
 
-    out_dir = args.output if not args.user_lib_dir else platform.config.hier_block_lib_dir
-    if os.path.exists(out_dir):
-        pass  # all is well
-    elif args.save_to_lib:
-        os.mkdir(out_dir)  # create missing hier_block lib directory
-    else:
+    output_dir = args.output if not args.user_lib_dir else platform.config.hier_block_lib_dir
+    if not os.path.exists(output_dir):
         exit('Error: Invalid output directory')
 
     Messages.send_init(platform)
@@ -57,7 +53,7 @@ def main(args=None):
         Messages.send('\n')
 
         flow_graph, file_path = platform.load_and_generate_flow_graph(
-            os.path.abspath(grc_file), os.path.abspath(out_dir))
+            os.path.abspath(grc_file), os.path.abspath(output_dir))
         if not file_path:
             exit('Compilation error')
     if file_path and args.run:

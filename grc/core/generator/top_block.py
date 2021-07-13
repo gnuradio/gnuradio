@@ -26,7 +26,7 @@ class TopBlockGenerator(object):
 
         Args:
             flow_graph: the flow graph object
-            output_dir: the path to write the file to
+            output_dir: the path for written files
         """
 
         self._flow_graph = FlowGraphProxy(flow_graph)

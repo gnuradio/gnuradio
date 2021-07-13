@@ -73,7 +73,7 @@ class Platform(Element):
             if os.path.exists(os.path.normpath(file_path)):
                 return file_path
 
-    def load_and_generate_flow_graph(self, file_path, out_path=None, hier_only=False):
+    def load_and_generate_flow_graph(self, file_path, out_dir=None, hier_only=False):
         """Loads a flow graph from file and generates it"""
         Messages.set_indent(len(self._auto_hier_block_generate_chain))
         Messages.send('>>> Loading: {}\n'.format(file_path))
@@ -101,17 +101,16 @@ class Platform(Element):
             Messages.set_indent(len(self._auto_hier_block_generate_chain))
 
         try:
-            generator = self.Generator(flow_graph, out_path or file_path)
+            if flow_graph.get_option('generate_options').startswith('hb'):
+                generator = self.Generator(flow_graph, out_dir)
+            else:
+                generator = self.Generator(flow_graph, out_dir or file_path)
             Messages.send('>>> Generating: {}\n'.format(generator.file_path))
             generator.write()
         except Exception as e:
             Messages.send('>>> Generate Error: {}: {}\n'.format(file_path, str(e)))
             return None, None
 
-        if flow_graph.get_option('generate_options').startswith('hb'):
-            # self.load_block_xml(generator.file_path_xml)
-            # TODO: implement yml output for hier blocks
-            pass
         return flow_graph, generator.file_path
 
     def build_library(self, path=None):
