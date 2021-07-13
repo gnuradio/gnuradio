@@ -8,7 +8,7 @@ parameters:
     dtype: enum
     options: [complex, float, int, short, byte]
     option_attributes:
-        const_type: [complex, real, int, short, gr.sizeof_char]
+        const_type: [complex, real, int, short, byte]
         fcn: [c, f, i, s, b]
     hide: part
 -   id: const

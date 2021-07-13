@@ -203,7 +203,7 @@ class Param(Element):
         #########################
         # Numeric Types
         #########################
-        elif dtype in ('raw', 'complex', 'real', 'float', 'int', 'hex', 'bool'):
+        elif dtype in ('raw', 'complex', 'real', 'float', 'int', 'short', 'byte', 'hex', 'bool'):
             if expr:
                 try:
                     if isinstance(expr, str) and self.is_float(expr[:-1]):
