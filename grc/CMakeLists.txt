@@ -18,9 +18,10 @@ GR_PYTHON_CHECK_MODULE_RAW(
     PYYAML_FOUND
 )
 
-GR_PYTHON_CHECK_MODULE_RAW(
+GR_PYTHON_CHECK_MODULE(
     "mako >= ${GR_MAKO_MIN_VERSION}"
-    "import mako; assert mako.__version__ >= '${GR_MAKO_MIN_VERSION}'"
+    mako
+    "LooseVersion(mako.__version__) >= LooseVersion('${GR_MAKO_MIN_VERSION}')"
     MAKO_FOUND
 )
 
