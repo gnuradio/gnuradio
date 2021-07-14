@@ -28,21 +28,25 @@ def read_alist_file(filename):
   http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
   """
 
-  myfile = open(filename, 'r')
-  data = myfile.readlines()
-  size = data[0].split()
-  numCols = int(size[0])
-  numRows = int(size[1])
-  H = zeros((numRows, numCols))
-  for lineNumber in np.arange(4, 4 + numCols):
-    indices = data[lineNumber].split()
-    for index in indices:
-      H[int(index) - 1, lineNumber - 4] = 1
-      # The subsequent lines in the file list the indices for where
-      # the 1s are in the rows, but this is redundant
-      # information.
+  with open(filename, 'r') as myfile:
+    data = myfile.readlines()
+    numCols, numRows = parse_alist_header(data[0])
+    H = zeros((numRows, numCols))
+    # The locations of 1s starts in the 5th line of the file
+    for lineNumber in np.arange(4, 4 + numCols):
+      indices = data[lineNumber].split()
+      for index in indices:
+        H[int(index) - 1, lineNumber - 4] = 1
+        # The subsequent lines in the file list the indices for where
+        # the 1s are in the rows, but this is redundant
+        # information.
 
-  return H
+    return H
+
+
+def parse_alist_header(header):
+  size = header.split()
+  return int(size[0]), int(size[1])
 
 
 def write_alist_file(filename, H, verbose=0):
@@ -51,64 +55,55 @@ def write_alist_file(filename, H, verbose=0):
   matrix. The format of alist files is described at:
   http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
   """
+  with open(filename, 'w') as myfile:
 
-  try:
-    myfile = open(filename, 'w')
-  except EnvironmentError:
-    # This is an api, we should be using a logging interface and not
-    # terminating the application directly.
-    sys.stderr.write("Could not open output file '{0}'".format(filename))
-    sys.exit(1)
+    numRows = H.shape[0]
+    numCols = H.shape[1]
 
-  numRows = H.shape[0]
-  numCols = H.shape[1]
+    tempstring = repr(numCols) + ' ' + repr(numRows) + '\n'
+    myfile.write(tempstring)
 
-  tempstring = repr(numCols) + ' ' + repr(numRows) + '\n'
-  myfile.write(tempstring)
+    tempstring1 = ''
+    tempstring2 = ''
+    maxRowWeight = 0
+    for rowNum in np.arange(numRows):
+      nonzeros = array(H[rowNum, :].nonzero())
+      rowWeight = nonzeros.shape[1]
+      if rowWeight > maxRowWeight:
+        maxRowWeight = rowWeight
+      tempstring1 = tempstring1 + repr(rowWeight) + ' '
+      for tempArray in nonzeros:
+        for index in tempArray:
+          tempstring2 = tempstring2 + repr(index + 1) + ' '
+      tempstring2 = tempstring2 + '\n'
+    tempstring1 = tempstring1 + '\n'
 
-  tempstring1 = ''
-  tempstring2 = ''
-  maxRowWeight = 0
-  for rowNum in np.arange(numRows):
-    nonzeros = array(H[rowNum, :].nonzero())
-    rowWeight = nonzeros.shape[1]
-    if rowWeight > maxRowWeight:
-      maxRowWeight = rowWeight
-    tempstring1 = tempstring1 + repr(rowWeight) + ' '
-    for tempArray in nonzeros:
-      for index in tempArray:
-        tempstring2 = tempstring2 + repr(index + 1) + ' '
-    tempstring2 = tempstring2 + '\n'
-  tempstring1 = tempstring1 + '\n'
+    tempstring3 = ''
+    tempstring4 = ''
+    maxColWeight = 0
+    for colNum in np.arange(numCols):
+      nonzeros = array(H[:, colNum].nonzero())
+      colWeight = nonzeros.shape[1]
+      if colWeight > maxColWeight:
+        maxColWeight = colWeight
+      tempstring3 = tempstring3 + repr(colWeight) + ' '
+      for tempArray in nonzeros:
+        for index in tempArray:
+          tempstring4 = tempstring4 + repr(index + 1) + ' '
+      tempstring4 = tempstring4 + '\n'
+    tempstring3 = tempstring3 + '\n'
 
-  tempstring3 = ''
-  tempstring4 = ''
-  maxColWeight = 0
-  for colNum in np.arange(numCols):
-    nonzeros = array(H[:, colNum].nonzero())
-    colWeight = nonzeros.shape[1]
-    if colWeight > maxColWeight:
-      maxColWeight = colWeight
-    tempstring3 = tempstring3 + repr(colWeight) + ' '
-    for tempArray in nonzeros:
-      for index in tempArray:
-        tempstring4 = tempstring4 + repr(index + 1) + ' '
-    tempstring4 = tempstring4 + '\n'
-  tempstring3 = tempstring3 + '\n'
-
-  tempstring = repr(maxColWeight) + ' ' + repr(maxRowWeight) + '\n'
-  # write out max column and row weights
-  myfile.write(tempstring)
-  # write out all of the column weights
-  myfile.write(tempstring3)
-  # write out all of the row weights
-  myfile.write(tempstring1)
-  # write out the nonzero indices for each column
-  myfile.write(tempstring4)
-  # write out the nonzero indices for each row
-  myfile.write(tempstring2)
-  # close the file
-  myfile.close()
+    tempstring = repr(maxColWeight) + ' ' + repr(maxRowWeight) + '\n'
+    # write out max column and row weights
+    myfile.write(tempstring)
+    # write out all of the column weights
+    myfile.write(tempstring3)
+    # write out all of the row weights
+    myfile.write(tempstring1)
+    # write out the nonzero indices for each column
+    myfile.write(tempstring4)
+    # write out the nonzero indices for each row
+    myfile.write(tempstring2)
 
 
 class LDPC_matrix(object):
