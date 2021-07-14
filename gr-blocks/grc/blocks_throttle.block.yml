@@ -35,6 +35,7 @@ outputs:
 -   domain: stream
     dtype: ${ type }
     vlen: ${ vlen }
+    optional: true
 
 asserts:
 - ${ vlen > 0 }
