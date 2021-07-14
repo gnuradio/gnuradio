@@ -73,6 +73,7 @@ class EvaluatedEnum(Evaluated):
 
     def default_eval_func(self, instance):
         value = super(EvaluatedEnum, self).default_eval_func(instance)
+
         if value not in self.allowed_values:
             instance.add_error_message("Value '{}' not in allowed values".format(value))
             return self.default

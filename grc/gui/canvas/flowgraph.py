@@ -66,6 +66,8 @@ class FlowGraph(CoreFlowgraph, Drawable):
                 main_window = window
                 break
 
+        self.main_window = main_window
+
         self.drawing_area = None
         # important vars dealing with mouse event tracking
         self.element_moved = False
@@ -84,6 +86,8 @@ class FlowGraph(CoreFlowgraph, Drawable):
         self._new_connection = None
         self._elements_to_draw = []
         self._external_updaters = {}
+
+        self.trigger_trust_prompt = False
 
     def _get_unique_id(self, base_id=''):
         """

@@ -637,7 +637,7 @@ class Block(Element):
         try:
             return self._eval_cache[expr]
         except KeyError:
-            raise TrustError(f"Missing cached value for expression {expr} in {repr(self)}")
+            self.parent_flowgraph.trigger_trust_prompt = True
 
     ##############################################
     # Import/Export Methods

@@ -269,7 +269,7 @@ class Param(Element):
 
         if self.parent_flowgraph.view_only:
             if not self._using_saved:
-                raise TrustError(f"Missing cached value for expression {expr} in {repr(self)}")
+                self.parent_flowgraph.trigger_trust_prompt = True
             self._evaluated = self._saved_evaluated
             return self._saved_evaluated
 

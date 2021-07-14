@@ -49,6 +49,7 @@ class FlowGraph(Element):
         self.grc_file_path = ''
 
         self.view_only = True
+        self.initial_state = None
 
     def __str__(self):
         return 'FlowGraph - {}({})'.format(self.get_option('title'), self.get_option('id'))
@@ -219,6 +220,11 @@ class FlowGraph(Element):
 
     def children(self):
         return itertools.chain(self.blocks, self.connections)
+
+    def reset_to_initial_state(self):
+        if self.initial_state:
+            self.import_data(self.initial_state)
+            self.update()
 
     def rewrite(self):
         """
@@ -468,10 +474,12 @@ class FlowGraph(Element):
                 self.connect(source_port, sink_port)
 
         except (KeyError, LookupError) as e:
-            Messages.send_error_load(
-                'Connection between {}({}) and {}({}) could not be made.\n\t{}'.format(
-                    src_blk_id, src_port_id, snk_blk_id, snk_port_id, e))
-            had_connect_errors = True
+            # hide connection errors caused by missing view-only values
+            if self.view_only and not self.trigger_trust_prompt:
+                Messages.send_error_load(
+                    'Connection between {}({}) and {}({}) could not be made.\n\t{}'.format(
+                        src_blk_id, src_port_id, snk_blk_id, snk_port_id, e))
+                had_connect_errors = True
 
         for block in self.blocks:
             if block.is_dummy_block:

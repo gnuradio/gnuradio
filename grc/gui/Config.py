@@ -36,7 +36,7 @@ class Config(CoreConfig):
         Constants.update_font_size(self.font_size)
 
         self.parser = configparser.ConfigParser()
-        for section in ['main', 'files_open', 'files_recent']:
+        for section in ['main', 'files_open', 'files_recent', 'files_trusted']:
             try:
                 self.parser.add_section(section)
             except Exception as e:
@@ -133,6 +133,12 @@ class Config(CoreConfig):
         except (AttributeError, configparser.Error):
             files = []
         return files
+
+    def get_trusted_files(self):
+        return self.get_file_list('files_trusted')
+
+    def set_trusted_files(self, files):
+        return self.set_file_list('files_trusted', files)
 
     def get_open_files(self):
         return self.get_file_list('files_open')

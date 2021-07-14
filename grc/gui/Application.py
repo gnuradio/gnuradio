@@ -121,11 +121,53 @@ class Application(Gtk.Application):
             fg.namespace.clear()
             fg.update()
 
+        non_view_only_actions = {
+            Actions.FLOW_GRAPH_SAVE,
+            Actions.FLOW_GRAPH_SAVE_AS,
+            Actions.FLOW_GRAPH_SAVE_COPY,
+            Actions.ELEMENT_CREATE,
+            Actions.ELEMENT_DELETE,
+            Actions.BLOCK_ENABLE,
+            Actions.BLOCK_DISABLE,
+            Actions.BLOCK_CREATE_HIER,
+            Actions.BLOCK_PASTE,
+            Actions.FLOW_GRAPH_GEN,
+            Actions.FLOW_GRAPH_EXEC,
+            Actions.FLOW_GRAPH_KILL
+        }
+
+        if (flow_graph and
+                flow_graph.view_only and
+                action in non_view_only_actions):
+            flow_graph.view_only = Dialogs.trust_prompt(main,
+                self.config,
+                flow_graph,
+                Constants.TRUST_PROMPT_ACTION_MESSAGE)
+
+            if flow_graph.view_only:
+                flow_graph.reset_to_initial_state()
+                return
+            else:
+                flow_graph_update()
+
         ##################################################
         # Initialize/Quit
         ##################################################
         if action == Actions.APPLICATION_INITIALIZE:
             log.debug("APPLICATION_INITIALIZE")
+
+            view_only_action = Actions.TOGGLE_VIEW_ONLY_MODE
+            view_only_action.set_enabled(True)
+            if hasattr(view_only_action, 'load_from_preferences'):
+                view_only_action.load_from_preferences()
+
+            if not view_only_action.get_active():
+                self.platform.view_only_mode = False
+
+            for file_path in self.config.get_trusted_files():
+                if os.path.exists(file_path):
+                    self.platform.trusted_flowgraphs.add(file_path)
+
             file_path_to_show = self.config.file_open()
             for file_path in (self.init_file_paths or self.config.get_open_files()):
                 if os.path.exists(file_path):
@@ -493,6 +535,12 @@ class Application(Gtk.Application):
             action.save_to_preferences()
             for page in main.get_pages():
                 flow_graph_update(page.flow_graph)
+
+        elif action == Actions.TOGGLE_VIEW_ONLY_MODE:
+            action.set_active(not action.get_active())
+            action.save_to_preferences()
+        elif action == Actions.MANAGE_TRUST:
+            Dialogs.TrustManagerDialog(main, self.config, self.platform).run_and_destroy()
         elif action == Actions.TOGGLE_SHOW_PARAMETER_EXPRESSION:
             action.set_active(not action.get_active())
             action.save_to_preferences()

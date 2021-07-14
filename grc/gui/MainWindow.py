@@ -12,13 +12,13 @@ import logging
 
 from gi.repository import Gtk, Gdk, GObject
 
-from . import Bars, Actions, Utils
+from . import Bars, Actions, Utils, Constants
 from .BlockTreeWindow import BlockTreeWindow
 from .Console import Console
 from .VariableEditor import VariableEditor
 from .Constants import \
     NEW_FLOGRAPH_TITLE, DEFAULT_CONSOLE_WINDOW_WIDTH
-from .Dialogs import TextDisplay, MessageDialogWrapper
+from .Dialogs import TextDisplay, MessageDialogWrapper, trust_prompt
 from .Notebook import Notebook, Page
 
 from ..core import Messages
@@ -247,7 +247,7 @@ class MainWindow(Gtk.ApplicationWindow):
             flow_graph = self._platform.make_flow_graph()
             flow_graph.grc_file_path = file_path
 
-            if not file_path or file_path in self._platform.trusted_flowgraphs:
+            if not file_path or self._platform.is_trusted(file_path):
                 flow_graph.view_only = False
 
             page = Page(
@@ -255,6 +255,20 @@ class MainWindow(Gtk.ApplicationWindow):
                 flow_graph=flow_graph,
                 file_path=file_path,
             )
+
+            # prompt if incomplete flow graph
+            if flow_graph.view_only and flow_graph.trigger_trust_prompt:
+                flow_graph.view_only = trust_prompt(self,
+                    self.config,
+                    flow_graph,
+                    Constants.TRUST_PROMPT_MISSING_VALUES)
+                if flow_graph.view_only:
+                    self.current_page = page
+                    self.close_page()
+                    return
+                else:
+                    flow_graph.reset_to_initial_state()
+
             if getattr(Messages, 'flowgraph_error') is not None:
                 Messages.send(
                     ">>> Check: {}\n>>> FlowGraph Error: {}\n".format(
@@ -360,9 +374,10 @@ class MainWindow(Gtk.ApplicationWindow):
         # set tab titles
         for page in self.get_pages():
             file_name = os.path.splitext(os.path.basename(page.file_path))[0]
-            page.set_markup('<span foreground="{foreground}">{title}{ro}</span>'.format(
+            page.set_markup('<span foreground="{foreground}">{view_only}{title}{ro}</span>'.format(
                 foreground='black' if page.saved else 'red', ro=' (ro)' if page.get_read_only() else '',
                 title=Utils.encode(file_name or NEW_FLOGRAPH_TITLE),
+                view_only='[View-Only] ' if page.view_only_flowgraph else '',
             ))
             fpath = page.file_path
             if not fpath:

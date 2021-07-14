@@ -92,8 +92,10 @@ class Page(Gtk.HBox):
 
         # import the file
         initial_state = flow_graph.parent_platform.parse_flow_graph(file_path)
+        flow_graph.initial_state = initial_state
         flow_graph.import_data(initial_state)
         self.state_cache = StateCache(initial_state)
+        self.view_only_flowgraph = flow_graph.view_only
 
         # tab box to hold label and close button
         self.label = Gtk.Label()

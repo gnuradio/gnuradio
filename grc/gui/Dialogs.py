@@ -9,11 +9,13 @@ import sys
 import textwrap
 from distutils.spawn import find_executable
 
-from gi.repository import Gtk, GLib, Gdk
+from gi.repository import Gtk, GLib, Gdk, Pango
 
 from . import Utils, Actions, Constants
 from ..core import Messages
 
+from enum import IntEnum
+import ast
 
 class SimpleTextDisplay(Gtk.TextView):
     """
@@ -452,3 +454,288 @@ def choose_editor(parent, config):
     if editor == '':
         Messages.send('>>> No editor selected.\n')
     return editor
+
+class TrustAnswer(IntEnum):
+    DO_NOT_TRUST = 1
+    TRUST_ONCE = 2
+    TRUST_FOREVER = 3
+
+def trust_prompt(parent, config, flowgraph, message):
+    """
+    Get user response from a trust prompt dialog.
+    Return false if user trusts the flow graph, else return true.
+    """
+    response = TrustPrompt(parent, flowgraph, message).run_and_destroy()
+
+    if response == TrustAnswer.TRUST_FOREVER:
+        files = config.get_trusted_files()
+        files.append(flowgraph.grc_file_path)
+        config.set_trusted_files(files)
+
+    return not response in (TrustAnswer.TRUST_ONCE, TrustAnswer.TRUST_FOREVER)
+
+class TrustPrompt(Gtk.Dialog):
+    """ Prompt the user to trust the flow graph (once or forever)."""
+
+    def __init__(self, parent, flowgraph, message):
+        """
+        TrustPrompt constructor.
+        Args:
+            flowgraph: the flowgraph which should be trusted
+            message: the message text displayed by the prompt
+        """
+        Gtk.Dialog.__init__(
+            self,
+            title='Do you trust this flowgraph?',
+            transient_for=parent,
+            modal=True,
+            destroy_with_parent=True,
+        )
+
+        buttons = (
+            'Trust once', TrustAnswer.TRUST_ONCE,
+            'Trust forever', TrustAnswer.TRUST_FOREVER,
+            Gtk.STOCK_CANCEL, TrustAnswer.DO_NOT_TRUST
+        )
+
+        self.flowgraph = flowgraph
+
+        self.add_buttons(*buttons)
+        self.dialog_height = 300
+        self.set_size_request(Constants.MIN_DIALOG_WIDTH, self.dialog_height)
+        self.set_border_width(10)
+        self.counter = 0
+
+        # show first so Gtk sets dialog width and wraps text accordingly
+        self.show_all()
+
+        message_label = Gtk.Label(message)
+        message_label.set_line_wrap(True)
+
+        href = 'https://wiki.gnuradio.org/index.php/GRC:_View-Only_Mode'
+        wiki_link = f'<a href="{href}">More information</a>'
+        wiki_link_label = Gtk.Label(use_markup=True)
+        wiki_link_label.set_markup(wiki_link)
+
+        self.store = Gtk.ListStore(str, str, str)
+        self.treeview = Gtk.TreeView(model=self.store)
+        for i, column_title in enumerate(["Expression", "Origin", "Name"]):
+            renderer = Gtk.CellRendererText()
+            renderer.set_property("ellipsize", Pango.EllipsizeMode.END)
+            column = Gtk.TreeViewColumn(column_title, renderer, text=i)
+            column.set_sort_column_id(i)  # liststore id matches treeview id
+
+            if i == 0:
+                column.set_expand(True)
+            if i > 0:
+                column.set_fixed_width(100)
+
+            column.set_resizable(True)
+            self.treeview.append_column(column)
+
+        self.scrollable = Gtk.ScrolledWindow()
+        self.scrollable.set_vexpand(True)
+        self.scrollable.add(self.treeview)
+
+        self.counter_label = Gtk.Label()
+        self.counter_label.set_xalign(0.0)
+
+        self.overview_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.overview_box.pack_start(self.scrollable, True, True, 0)
+        self.overview_box.pack_start(self.counter_label, False, True, 10)
+
+        self.expander = Gtk.Expander(label="Expression Overview")
+        self.expander.add(self.overview_box)
+        self.expander.connect('activate', self.show_overview)
+
+        self.vbox.pack_start(message_label, False, True, 10)
+        self.vbox.pack_start(wiki_link_label, False, True, 10)
+        self.vbox.pack_start(self.expander, False, True, 10)
+
+        self.show_all()
+
+    def is_literal(self, value):
+        try:
+            ast.literal_eval(value)
+            return True
+        except Exception:
+            return False
+
+    def show_overview(self, widget):
+        """ Fill the prompt's expression overview with values fetched from the flowgraph """
+        self.set_size_request(Constants.MIN_DIALOG_WIDTH, 500)
+        self.store.clear()
+        self.counter = 0
+
+        params = []
+        imports = []
+        blocks = []
+
+        for block in self.flowgraph.blocks:
+            imps = block.templates.render('imports')
+            if imps:
+                imports += [(imps, block.name)]
+
+            if block._eval_cache:
+                for expr in block._eval_cache.keys():
+                    if expr and not self.is_literal(expr):
+                        blocks += [(expr, block.name)]
+
+            for _, param in block.params.items():
+                value = param.to_code()
+                if value and not self.is_literal(value):
+                    # surround non-code with quotes
+                    try:
+                        ast.parse(value)
+                    except SyntaxError:
+                        value = repr(value)
+
+                    name = block.name + "." + param.name
+                    params += [(value, name)]
+
+        for value, name in params:
+            self.store.append([value, "FLOW GRAPH", name])
+        for value, name in imports:
+            self.store.append([value, "BLOCK DEFINITION", name])
+        for value, name in blocks:
+            self.store.append([value, "BLOCK DEFINITION", name])
+
+        self.counter = len(params) + len(imports) + len(blocks)
+        self.counter_label.set_text(f"Number of expressions: {self.counter}")
+
+    def run_and_destroy(self):
+        response = self.run()
+        self.hide()
+        return response
+
+class TrustManagerAnswer(IntEnum):
+    ADD = 1
+    ADD_DIR = 2
+    REMOVE = 3
+    CANCEL = 4
+
+class TrustManagerDialog(Gtk.Dialog):
+    """ Add or remove trusted flowgraphs or directories """
+
+    def __init__(self, parent, config, platform):
+        """
+        Create a modal trust manage dialog.
+
+        Args:
+            config: the GRC config object
+        """
+        self.config = config
+        self.platform = platform
+
+        Gtk.Dialog.__init__(
+            self,
+            title='Manage trusted flowgraphs',
+            transient_for=parent,
+            modal=True,
+            destroy_with_parent=True,
+        )
+
+        buttons = (
+            'Add flow graph', TrustManagerAnswer.ADD,
+            'Add directory', TrustManagerAnswer.ADD_DIR,
+            'Remove', TrustManagerAnswer.REMOVE,
+            Gtk.STOCK_CANCEL, TrustManagerAnswer.CANCEL
+        )
+        self.add_buttons(*buttons)
+        self.connect('response', self._handle_response)
+        self.set_size_request(Constants.MIN_DIALOG_WIDTH, Constants.MIN_DIALOG_HEIGHT)
+        self.set_border_width(10)
+
+        self.store = Gtk.ListStore(str)
+        self.treeview = Gtk.TreeView(model=self.store)
+
+        for file in config.get_trusted_files():
+            self.store.append([file])
+
+        for i, column_title in enumerate(['Path']):
+            renderer = Gtk.CellRendererText()
+            renderer.set_property("ellipsize", Pango.EllipsizeMode.END)
+            column = Gtk.TreeViewColumn(column_title, renderer, text=i)
+            self.treeview.append_column(column)
+
+        self.scrollable = Gtk.ScrolledWindow()
+        self.scrollable.set_vexpand(True)
+        self.scrollable.add(self.treeview)
+
+        self.vbox.pack_start(self.scrollable, True, True, 0)
+        self.show_all()
+
+    def _handle_response(self, widget, response):
+        files = self.config.get_trusted_files()
+
+        if response == TrustManagerAnswer.ADD:
+            file_dialog = Gtk.FileChooserDialog(
+                'Select grc-files to trust', None,
+                Gtk.FileChooserAction.OPEN,
+                ('gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-open', Gtk.ResponseType.OK),
+                transient_for=self
+            )
+            file_dialog.set_select_multiple(True)
+            file_dialog.set_local_only(True)
+            grc_filter = Gtk.FileFilter()
+            grc_filter.add_pattern("*.grc")
+            file_dialog.add_filter(grc_filter)
+
+            try:
+                if file_dialog.run() == Gtk.ResponseType.OK:
+                    files_to_add = file_dialog.get_filenames()
+            finally:
+                file_dialog.hide()
+
+            files += files_to_add
+
+        elif response == TrustManagerAnswer.ADD_DIR:
+            file_dialog = Gtk.FileChooserDialog(
+                'Select a directory to trust', None,
+                Gtk.FileChooserAction.SELECT_FOLDER,
+                ('gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-open', Gtk.ResponseType.OK),
+                transient_for=self
+            )
+            file_dialog.set_local_only(True)
+
+            try:
+                if file_dialog.run() == Gtk.ResponseType.OK:
+                    files_to_add = file_dialog.get_filenames()
+            finally:
+                file_dialog.hide()
+
+            files += files_to_add
+
+        elif response == TrustManagerAnswer.REMOVE:
+            tm, ti = self.treeview.get_selection().get_selected()
+            path = tm.get_value(ti, 0)
+
+            try:
+                files.remove(path)
+                tm.remove(ti)
+                self.platform.trusted_flowgraphs.discard(path)
+            except ValueError:
+                pass
+        else:
+            return False
+
+        self.store.clear()
+
+        files = list(set(files))
+        for file in files:
+            self.treeview.get_model().append([file])
+            self.platform.trusted_flowgraphs.add(file)
+
+        self.config.set_trusted_files(files)
+        self.config.save()
+
+        return True
+
+    def run_and_destroy(self):
+        response = self.run()
+
+        while response in (TrustManagerAnswer.ADD, TrustManagerAnswer.ADD_DIR, TrustManagerAnswer.REMOVE):
+            response = self.run()
+
+        self.hide()
+        return response

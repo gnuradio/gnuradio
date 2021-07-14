@@ -44,6 +44,8 @@ class Platform(Element):
         )
 
         self.trusted_flowgraphs = set()
+        self.view_only_mode = True
+
         self.blocks = self.block_classes
         self.domains = {}
         self.connection_templates = {}
@@ -57,6 +59,19 @@ class Platform(Element):
 
     def __str__(self):
         return 'Platform - {}'.format(self.config.name)
+
+    def is_trusted(self, grc_file):
+        if not grc_file:
+            return False
+
+        for path in self.trusted_flowgraphs:
+            if path == grc_file:
+                return True
+            if (os.path.isdir(path) and
+                grc_file.startswith(os.path.abspath(path) + os.sep)):
+                    return True
+
+        return False
 
     @staticmethod
     def find_file_in_paths(filename, paths, cwd):
@@ -85,7 +100,7 @@ class Platform(Element):
         try:
             flow_graph = self.make_flow_graph()
             flow_graph.grc_file_path = file_path
-            if file_path in self.trusted_flowgraphs:
+            if self.is_trusted(file_path):
                 flow_graph.view_only = False
             # Other, nested hier_blocks might be auto-loaded here
             flow_graph.import_data(self.parse_flow_graph(file_path))
@@ -417,7 +432,7 @@ class Platform(Element):
 
     def make_flow_graph(self, from_filename=None):
         fg = self.FlowGraph(parent=self)
-        if from_filename in self.trusted_flowgraphs:
+        if not self.view_only_mode or self.is_trusted(from_filename):
             fg.view_only = False
         if from_filename:
             data = self.parse_flow_graph(from_filename)

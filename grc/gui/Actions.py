@@ -522,6 +522,18 @@ TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY = actions.register(
     preference_name='show_flowgraph_complexity',
     default=False,
 )
+TOGGLE_VIEW_ONLY_MODE = actions.register(
+    "win.view_only_mode",
+    label='Enable View-Only Mode',
+    tooltip="Open untrusted flow graphs in View-Only Mode",
+    preference_name='view_only_mode',
+    default=False,
+)
+MANAGE_TRUST= actions.register(
+    "app.manage_trust",
+    label='Manage Trust',
+    tooltip='Manage trusted flowgraphs',
+)
 BLOCK_CREATE_HIER = actions.register(
     "win.block_create_hier",
     label='C_reate Hier',

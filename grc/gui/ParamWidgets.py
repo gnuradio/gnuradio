@@ -12,6 +12,7 @@ from gi.repository import Gtk, Gdk
 
 from . import Constants
 from . import Utils
+from . import Dialogs
 from .canvas.colors import LIGHT_THEME_STYLES, DARK_THEME_STYLES
 
 
@@ -129,6 +130,18 @@ class InputParam(Gtk.HBox):
         self._update_gui()
 
     def _handle_key_press(self, widget, event):
+        # show trust prompt if in view-only mode
+        fg = self.param.parent_flowgraph
+        if fg.view_only:
+            fg.view_only = Dialogs.trust_prompt(fg.main_window,
+                fg.parent_platform.config,
+                fg,
+                Constants.TRUST_PROMPT_ACTION_MESSAGE)
+            if not fg.view_only:
+                fg.reset_to_initial_state()
+            else:
+                return True
+
         if event.keyval == Gdk.KEY_Return and event.get_state() & Gdk.ModifierType.CONTROL_MASK:
             self._apply_change(widget, event)
             return True

@@ -58,6 +58,7 @@ MENU_BAR_LIST = [
          Actions.FLOW_GRAPH_OPEN, (Actions.FLOW_GRAPH_OPEN_RECENT, 'flow_graph_recent')],
         [Actions.FLOW_GRAPH_SAVE, Actions.FLOW_GRAPH_SAVE_AS, Actions.FLOW_GRAPH_SAVE_COPY],
         [Actions.FLOW_GRAPH_SCREEN_CAPTURE],
+        [Actions.TOGGLE_VIEW_ONLY_MODE, Actions.MANAGE_TRUST],
         [Actions.FLOW_GRAPH_CLOSE, Actions.APPLICATION_QUIT]
     ]),
     ('_Edit', [
