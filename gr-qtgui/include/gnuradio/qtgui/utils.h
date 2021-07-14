@@ -54,6 +54,6 @@ public:
     transition(const QwtEventPattern& eventPattern, const QEvent* e) override;
 };
 
-void check_set_qss(QApplication* app);
+QTGUI_API void check_set_qss(QApplication* app);
 
 #endif /* INCLUDED_QTGUI_UTILS_H */
