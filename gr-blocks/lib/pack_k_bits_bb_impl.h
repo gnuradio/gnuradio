@@ -22,6 +22,8 @@ class pack_k_bits_bb_impl : public pack_k_bits_bb
 private:
     const kernel::pack_k_bits d_pack;
 
+    unsigned d_k;
+
 public:
     pack_k_bits_bb_impl(unsigned k);
 
