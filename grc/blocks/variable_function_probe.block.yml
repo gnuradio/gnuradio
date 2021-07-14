@@ -35,7 +35,13 @@ templates:
         def _${id}_probe():
           while True:
             <% obj = 'self' + ('.' + block_id if block_id else '') %>
-            val = ${obj}.${function_name}(${function_args})
+            <%
+            if function_args:
+                function_args_impr = ','.join(list('self.' + function_arg.strip() for function_arg in function_args.split(',')))
+            else:
+                function_args_impr = ''
+            %>
+            val = ${obj}.${function_name}(${function_args_impr})
             try:
               try:
                 self.doc.add_next_tick_callback(functools.partial(self.set_${id},val))
