@@ -220,10 +220,12 @@ void fmcomms2_source_impl::set_gain(size_t chan, double gain_value)
     std::vector<std::string> params;
 
     if (d_gain_mode[chan].compare("manual") == 0) {
-        // params.push_back("in_voltage" + std::to_string(chan) +
-        //                  "_gain_control_mode=" + d_gain_mode[chan]);
+        std::string gain_string = std::to_string(gain_value);
+        std::string::size_type idx = gain_string.find(',');
+        if (idx != std::string::npos) // found , as decimal separator, so change to .
+            gain_string.replace(idx, 1, ".");
         params.push_back("in_voltage" + std::to_string(chan) +
-                         "_hardwaregain=" + std::to_string(gain_value));
+                         "_hardwaregain=" + gain_string);
     }
     device_source_impl::set_params(params);
     d_gain_value[chan] = gain_value;

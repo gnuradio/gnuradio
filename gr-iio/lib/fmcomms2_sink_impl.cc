@@ -185,9 +185,11 @@ void fmcomms2_sink_impl::set_attenuation(size_t chan, double attenuation)
         throw std::runtime_error("Channel out of range for this device");
     }
     std::vector<std::string> params;
-
-    params.push_back("out_voltage" + std::to_string(chan) +
-                     "_hardwaregain=" + std::to_string(-attenuation));
+    std::string att_value = std::to_string(-attenuation);
+    std::string::size_type idx = att_value.find(',');
+    if (idx != std::string::npos) // found , as decimal separator, so change to .
+        att_value.replace(idx, 1, ".");
+    params.push_back("out_voltage" + std::to_string(chan) + "_hardwaregain=" + att_value);
 
 
     device_source_impl::set_params(this->phy, params);
