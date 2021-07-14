@@ -92,7 +92,8 @@ void device_source_impl::set_params(struct iio_device* phy,
             ret = iio_device_debug_attr_write(phy, attr, val.c_str());
         if (ret < 0) {
             GR_LOG_WARN(logger,
-                        boost::format("Unable to write attribute %s: %d") % key % ret);
+                        boost::format("Unable to write attribute %s: %d %s") % key % ret %
+                            val);
         }
     }
 }
