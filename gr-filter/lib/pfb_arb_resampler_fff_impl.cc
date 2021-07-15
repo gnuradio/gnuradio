@@ -39,6 +39,10 @@ pfb_arb_resampler_fff_impl::pfb_arb_resampler_fff_impl(float rate,
 
     set_history(d_resamp.taps_per_filter());
     set_relative_rate(rate);
+    if (rate >= 1.0f) {
+        unsigned output_multiple = std::max<int>(rate, filter_size);
+        set_output_multiple(output_multiple);
+    }
 }
 
 void pfb_arb_resampler_fff_impl::forecast(int noutput_items,
