@@ -16,7 +16,7 @@ parameters:
     options: ['False', 'True']
     option_labels: [Rayleigh/NLOS, Rician/LOS]
     option_attributes:
-        hide_K: [all, '']
+        hide_K: [all, none]
 -   id: K
     label: Rician factor (K)
     dtype: real

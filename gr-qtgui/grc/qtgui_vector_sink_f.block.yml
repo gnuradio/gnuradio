@@ -37,12 +37,12 @@ parameters:
     label: X-Axis Units
     dtype: string
     default: '""'
-    hide: '''part'''
+    hide: part
 -   id: y_units
     label: Y-Axis Units
     dtype: string
     default: '""'
-    hide: '''part'''
+    hide: part
 -   id: ref_level
     label: Ref Level
     dtype: real
