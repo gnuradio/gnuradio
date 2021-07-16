@@ -9,7 +9,7 @@ parameters:
     options: [c, f, cf]
     option_labels: [Complex, Float, Complex->Float]
     option_attributes:
-        hide: [all, all, '']
+        hide: [all, all, none]
         input: [complex, float, complex]
         optional: ['1', '1', '0']
     hide: part
