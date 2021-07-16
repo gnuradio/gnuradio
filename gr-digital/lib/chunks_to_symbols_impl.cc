@@ -106,26 +106,49 @@ int chunks_to_symbols_impl<IN_T, OUT_T>::work(int noutput_items,
 
         // per tag: all the samples leading up to this tag can be handled straightforward
         // with the current settings
-        for (const auto& tag : tags) {
-            for (; in_count < tag.offset; ++in_count) {
+        if (d_D == 1) {
+            for (const auto& tag : tags) {
+                for (; in_count < tag.offset; ++in_count) {
+                    auto key = static_cast<unsigned int>(*in);
+                    *out = d_symbol_table[key];
+                    ++out;
+                    ++in;
+                }
+                if (tag.key == symbol_table_key) {
+                    handle_set_symbol_table(tag.value);
+                }
+            }
+
+            // after the last tag, continue working on the remaining items
+            for (; in < reinterpret_cast<const IN_T*>(input_items[m]) + noutput_items;
+                 ++in) {
+                auto key = static_cast<unsigned int>(*in);
+                *out = d_symbol_table[key];
+                ++out;
+            }
+        } else { // the multi-dimensional case
+            for (const auto& tag : tags) {
+                for (; in_count < tag.offset; ++in_count) {
+                    auto key = static_cast<unsigned int>(*in) * d_D;
+                    for (unsigned int idx = 0; idx < d_D; ++idx) {
+                        *out = d_symbol_table[key + idx];
+                        ++out;
+                    }
+                    ++in;
+                }
+                if (tag.key == symbol_table_key) {
+                    handle_set_symbol_table(tag.value);
+                }
+            }
+
+            // after the last tag, continue working on the remaining items
+            for (; in < reinterpret_cast<const IN_T*>(input_items[m]) + noutput_items;
+                 ++in) {
                 auto key = static_cast<unsigned int>(*in) * d_D;
                 for (unsigned int idx = 0; idx < d_D; ++idx) {
                     *out = d_symbol_table[key + idx];
                     ++out;
                 }
-                ++in;
-            }
-            if (tag.key == symbol_table_key) {
-                handle_set_symbol_table(tag.value);
-            }
-        }
-
-        // after the last tag, continue working on the remaining items
-        for (; in < reinterpret_cast<const IN_T*>(input_items[m]) + noutput_items; ++in) {
-            auto key = static_cast<unsigned int>(*in) * d_D;
-            for (unsigned int idx = 0; idx < d_D; ++idx) {
-                *out = d_symbol_table[key + idx];
-                ++out;
             }
         }
     }
