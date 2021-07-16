@@ -546,11 +546,12 @@ templates:
 #     * id (makes the value accessible as keyname, e.g. in the make entry)
 #     * label (label shown in the GUI)
 #     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#     * default
 parameters:
 - id: parametername_replace_me
   label: FIX ME:
   dtype: string
-  value: You need to fill in your grc/${modname}_${blockname}.block.yaml
+  default: You need to fill in your grc/${modname}_${blockname}.block.yaml
 #- id: ...
 #  label: ...
 #  dtype: ...
