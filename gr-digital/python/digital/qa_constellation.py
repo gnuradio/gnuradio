@@ -12,6 +12,7 @@
 import random
 import math
 from cmath import exp, pi, log, sqrt
+import numpy
 
 from gnuradio import gr, gr_unittest, digital, blocks
 from gnuradio.digital.utils import mod_codes
@@ -195,7 +196,19 @@ class test_constellation(gr_unittest.TestCase):
                 data = dst.data()
                 # Don't worry about cut off data for now.
                 first = constellation.bits_per_symbol()
-                self.assertEqual(self.src_data[first:len(data)], data[first:])
+                equality = all(numpy.equal(self.src_data[first:len(data)],
+                                           data[first:]))
+                if not equality:
+                    msg = "Constellations mismatched. " + \
+                        f"{type(constellation)}; " + \
+                        f"Differential? {differential}; " + \
+                        f"{len(constellation.points())} " +\
+                        "Constellation points: " + \
+                        f"{constellation.points()};"
+                    self.assertEqual(self.src_data[first:len(data)],
+                                     data[first:],
+                                     msg=msg)
+
 
     def test_soft_qpsk_gen(self):
         prec = 8
