@@ -56,6 +56,50 @@ class test_chunks_to_symbols(gr_unittest.TestCase):
         actual_result = dst.data()
         self.assertEqual(expected_result, actual_result)
 
+    def test_bf_2d(self):
+        maxval = 4
+        dimensions = 2
+        const = list(range(maxval * dimensions))
+        src_data = [v * 13 % maxval for v in range(maxval)]
+        expected_result = []
+        for data in src_data:
+            for i in range(dimensions):
+                expected_result += [const[data * dimensions + i]]
+
+        self.assertEqual(len(src_data) * dimensions, len(expected_result))
+        src = blocks.vector_source_b(src_data)
+        op = digital.chunks_to_symbols_bf(const, dimensions)
+
+        dst = blocks.vector_sink_f()
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()
+
+        actual_result = dst.data()
+        self.assertEqual(expected_result, actual_result)
+
+    def test_bf_3d(self):
+        maxval = 48
+        dimensions = 3
+        const = list(range(maxval * dimensions))
+        src_data = [v * 13 % maxval for v in range(maxval)]
+        expected_result = []
+        for data in src_data:
+            for i in range(dimensions):
+                expected_result += [const[data * dimensions + i]]
+
+        self.assertEqual(len(src_data) * dimensions, len(expected_result))
+        src = blocks.vector_source_b(src_data)
+        op = digital.chunks_to_symbols_bf(const, dimensions)
+
+        dst = blocks.vector_sink_f()
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()
+
+        actual_result = dst.data()
+        self.assertEqual(expected_result, actual_result)
+
     def test_ic_003(self):
         const = [1 + 0j, 0 + 1j,
                  -1 + 0j, 0 - 1j]
