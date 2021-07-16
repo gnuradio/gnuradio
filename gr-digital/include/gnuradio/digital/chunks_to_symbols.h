@@ -51,9 +51,9 @@ public:
      * \param symbol_table: list that maps chunks to symbols.
      * \param D: dimension of table.
      */
-    static sptr make(const std::vector<OUT_T>& symbol_table, const int D = 1);
+    static sptr make(const std::vector<OUT_T>& symbol_table, const unsigned int D = 1);
 
-    virtual int D() const = 0;
+    virtual unsigned int D() const = 0;
     virtual std::vector<OUT_T> symbol_table() const = 0;
     virtual void set_symbol_table(const std::vector<OUT_T>& symbol_table) = 0;
 };

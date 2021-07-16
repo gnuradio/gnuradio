@@ -12,6 +12,7 @@
 #define CHUNKS_TO_SYMBOLS_IMPL_H
 
 #include <gnuradio/digital/chunks_to_symbols.h>
+#include <pmt/pmt.h>
 
 namespace gr {
 namespace digital {
@@ -20,18 +21,20 @@ template <class IN_T, class OUT_T>
 class chunks_to_symbols_impl : public chunks_to_symbols<IN_T, OUT_T>
 {
 private:
-    const int d_D;
+    const unsigned int d_D;
     std::vector<OUT_T> d_symbol_table;
+    const pmt::pmt_t symbol_table_key;
 
 public:
-    chunks_to_symbols_impl(const std::vector<OUT_T>& symbol_table, const int D = 1);
+    chunks_to_symbols_impl(const std::vector<OUT_T>& symbol_table,
+                           const unsigned int D = 1);
 
     ~chunks_to_symbols_impl() override;
 
-    void handle_set_symbol_table(pmt::pmt_t symbol_table_pmt);
+    void handle_set_symbol_table(const pmt::pmt_t& symbol_table_pmt);
     void set_symbol_table(const std::vector<OUT_T>& symbol_table) override;
 
-    int D() const override { return d_D; }
+    unsigned int D() const override { return d_D; }
     std::vector<OUT_T> symbol_table() const override { return d_symbol_table; }
 
     int work(int noutput_items,
