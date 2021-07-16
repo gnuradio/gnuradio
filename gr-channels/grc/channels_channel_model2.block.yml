@@ -25,7 +25,7 @@ parameters:
     options: ['True', 'False']
     option_labels: ['Yes', 'No']
     option_attributes:
-        hide_block: ['', part]
+        hide_block: [none, part]
     hide: ${ block_tags.hide_block }
 
 inputs:
