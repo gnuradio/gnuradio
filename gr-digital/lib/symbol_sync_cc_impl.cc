@@ -174,7 +174,6 @@ void symbol_sync_cc_impl::collect_tags(uint64_t nitems_rd, int count)
     // d_tags is used for manual tag propagation.
     d_new_tags.clear();
     get_tags_in_range(d_new_tags, 0, nitems_rd, nitems_rd + count);
-    std::sort(d_new_tags.begin(), d_new_tags.end(), tag_t::offset_compare);
     d_tags.insert(d_tags.end(), d_new_tags.begin(), d_new_tags.end());
     std::sort(d_tags.begin(), d_tags.end(), tag_t::offset_compare);
 }
