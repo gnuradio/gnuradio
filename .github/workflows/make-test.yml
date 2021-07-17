@@ -59,7 +59,7 @@ jobs:
             cxxflags: ''
           - distro: 'Fedora 34'
             containerid: 'gnuradio/ci:fedora-34-3.9'
-            cxxflags: ''
+            cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
           - distro: 'CentOS 8.3'
             containerid: 'gnuradio/ci:centos-8.3-3.9'
             cxxflags: ''
