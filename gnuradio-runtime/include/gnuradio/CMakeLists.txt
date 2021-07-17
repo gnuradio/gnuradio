@@ -56,7 +56,6 @@ install(FILES
   sync_decimator.h
   sync_interpolator.h
   sys_paths.h
-  tag_checker.h
   types.h
   rpccallbackregister_base.h
   rpcmanager_base.h

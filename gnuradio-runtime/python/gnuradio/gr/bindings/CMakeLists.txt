@@ -67,7 +67,6 @@ messages/msg_queue_python.cc
     sync_decimator_python.cc
     sync_interpolator_python.cc
     sys_paths_python.cc
-    tag_checker_python.cc
     tagged_stream_block_python.cc
     tags_python.cc
     # thread_python.cc
