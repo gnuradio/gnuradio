@@ -45,25 +45,26 @@ constellation::constellation(std::vector<gr_complex> constell,
       d_lut_scale(0)
 {
     unsigned int constsize = d_constellation.size();
-    float summed_mag = 0;
     switch (normalization) {
-    case NO_NORMALIZATION:
+    case NO_NORMALIZATION: {
         break;
-
-    case POWER_NORMALIZATION:
+    }
+    case POWER_NORMALIZATION: {
         // Scale constellation points so that average power is 1.
+        float summed_power = 0;
         for (unsigned int i = 0; i < constsize; i++) {
             gr_complex c = d_constellation[i];
-            summed_mag += std::norm(c);
+            summed_power += std::norm(c);
         }
-        d_scalefactor = constsize / sqrt(summed_mag);
+        d_scalefactor = sqrt(constsize / summed_power);
         for (unsigned int i = 0; i < constsize; i++) {
             d_constellation[i] = d_constellation[i] * d_scalefactor;
         }
         break;
-
-    case AMPLITUDE_NORMALIZATION:
+    }
+    case AMPLITUDE_NORMALIZATION: {
         // Scale constellation points so that average magnitude is 1.
+        float summed_mag = 0;
         for (unsigned int i = 0; i < constsize; i++) {
             gr_complex c = d_constellation[i];
             summed_mag += std::abs(c);
@@ -73,7 +74,7 @@ constellation::constellation(std::vector<gr_complex> constell,
             d_constellation[i] = d_constellation[i] * d_scalefactor;
         }
         break;
-
+    }
     default:
         throw std::runtime_error("Invalid constellation normalization type.");
     }
@@ -131,14 +132,10 @@ float constellation::get_distance(unsigned int index, const gr_complex* sample)
 
 unsigned int constellation::get_closest_point(const gr_complex* sample)
 {
+    float min_euclid_dist = get_distance(0, sample);
     unsigned int min_index = 0;
-    float min_euclid_dist;
-    float euclid_dist;
-
-    min_euclid_dist = get_distance(0, sample);
-    min_index = 0;
     for (unsigned int j = 1; j < d_arity; j++) {
-        euclid_dist = get_distance(j, sample);
+        float euclid_dist = get_distance(j, sample);
         if (euclid_dist < min_euclid_dist) {
             min_euclid_dist = euclid_dist;
             min_index = j;
