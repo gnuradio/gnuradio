@@ -16,7 +16,8 @@ import numpy
 
 from gnuradio import gr, gr_unittest, digital, blocks
 from gnuradio.digital.utils import mod_codes
-from gnuradio.digital import psk, qam, qamlike
+from gnuradio.digital import constellation, psk, qam, qamlike
+import numpy as np
 
 tested_mod_codes = (mod_codes.NO_CODE, mod_codes.GRAY_CODE)
 
@@ -177,6 +178,26 @@ class test_constellation(gr_unittest.TestCase):
 
     def tearDown(self):
         pass
+
+    def test_normalization(self):
+        rot_sym = 1
+        side = 2
+        width = 2
+        # Test a couple of basic constellations
+        for constel_points, code in (digital.psk_4_0(), digital.qam_16_0()):
+            constel = digital.constellation_rect(constel_points, code, rot_sym,
+                                                 side, side, width, width,
+                                                 constellation.POWER_NORMALIZATION)
+
+            points = np.array(constel.points())
+            avg_power = np.sum(abs(points)**2) / len(points)
+            self.assertAlmostEqual(avg_power, 1.0, 6)
+            constel = digital.constellation_rect(constel_points, code, rot_sym,
+                                                 side, side, width, width,
+                                                 constellation.AMPLITUDE_NORMALIZATION)
+            points = np.array(constel.points())
+            avg_amp = np.sum(abs(points)) / len(points)
+            self.assertAlmostEqual(avg_amp, 1.0, 6)
 
     def test_hard_decision(self):
         for constellation, differential in tested_constellations():
