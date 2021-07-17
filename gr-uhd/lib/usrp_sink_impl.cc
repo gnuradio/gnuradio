@@ -516,7 +516,7 @@ int usrp_sink_impl::work(int noutput_items,
 void usrp_sink_impl::tag_work(int& ninput_items)
 {
     // the for loop below assumes tags sorted by count low -> high
-    std::sort(_tags.begin(), _tags.end(), tag_t::offset_compare);
+    // This is OK since get_tags_in_range returns sorted tags
 
     // extract absolute sample counts
     const uint64_t samp0_count = this->nitems_read(0);
