@@ -28,7 +28,7 @@ jobs:
         include:
           - distro: 'Fedora 33'
             containerid: 'gnuradio/ci:fedora-33-3.9'
-            cxxflags: -Werror
+            cxxflags: -Werror -Wno-error=deprecated-declarations
     name: ${{ matrix.distro }}
     container:
       image: ${{ matrix.containerid }}
