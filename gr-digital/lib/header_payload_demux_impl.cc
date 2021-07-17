@@ -380,7 +380,6 @@ int header_payload_demux_impl::find_trigger_signal(int skip_items,
                           base_offset + max_rel_offset,
                           d_trigger_tag_key);
         if (!tags.empty()) {
-            std::sort(tags.begin(), tags.end(), tag_t::offset_compare);
             const int tag_rel_offset = tags[0].offset - base_offset;
             if (tag_rel_offset < rel_offset) {
                 rel_offset = tag_rel_offset;
@@ -521,7 +520,6 @@ void header_payload_demux_impl::update_special_tags(uint64_t range_start,
         std::vector<tag_t> tags;
         get_tags_in_range(tags, PORT_INPUTDATA, range_start, range_end, d_timing_key);
         if (!tags.empty()) {
-            std::sort(tags.begin(), tags.end(), tag_t::offset_compare);
             d_last_time = tags.back().value;
             d_last_time_offset = tags.back().offset;
         }
@@ -536,7 +534,8 @@ void header_payload_demux_impl::update_special_tags(uint64_t range_start,
                           range_start,
                           range_end,
                           d_special_tags[i]);
-        std::sort(tags.begin(), tags.end(), tag_t::offset_compare);
+        // TODO / FIXME this loop seems lacking reason (just use the last value)
+        // However, not fixing this on the fly without understanding it.
         for (size_t t = 0; t < tags.size(); t++) {
             d_special_tags_last_value[i] = tags[t].value;
         }
