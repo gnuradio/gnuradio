@@ -77,7 +77,6 @@ void bind_sync_block(py::module&);
 void bind_sync_decimator(py::module&);
 void bind_sync_interpolator(py::module&);
 void bind_sys_paths(py::module&);
-void bind_tag_checker(py::module&);
 void bind_tagged_stream_block(py::module&);
 void bind_tags(py::module&);
 // void bind_thread(py::module&);
@@ -178,7 +177,6 @@ PYBIND11_MODULE(gr_python, m)
     bind_sync_decimator(m);
     bind_sync_interpolator(m);
     bind_sys_paths(m);
-    bind_tag_checker(m);
     bind_tagged_stream_block(m);
     bind_tags(m);
     // // bind_thread(m);
