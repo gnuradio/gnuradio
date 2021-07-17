@@ -17,7 +17,11 @@
 
 namespace gr {
 
-class tag_checker
+/*!
+ * \brief deprecated class that was used to go through unsorted tag vectors
+ * \deprecated tag_checker serves no purpose and will be removed in 3.10
+ */
+class [[deprecated("tag_checker will be removed in 3.10")]] tag_checker
 {
 private:
     std::vector<tag_t> d_tags;
@@ -26,7 +30,7 @@ private:
     unsigned int d_next_tag_index;
 
 public:
-    tag_checker(std::vector<tag_t>& tags) : d_has_next_tag(false), d_next_tag_index(0)
+    tag_checker(std::vector<tag_t> & tags) : d_has_next_tag(false), d_next_tag_index(0)
     {
         d_tags = tags;
         std::sort(d_tags.begin(), d_tags.end());
@@ -38,7 +42,7 @@ public:
 
     ~tag_checker(){};
 
-    void get_tags(std::vector<tag_t>& tag_list, unsigned int offset)
+    void get_tags(std::vector<tag_t> & tag_list, unsigned int offset)
     {
         while (d_has_next_tag && (offset >= d_next_tag.offset)) {
             if (offset == d_next_tag.offset) {
