@@ -27,11 +27,11 @@ pluto_source::sptr pluto_source::make(const std::string& uri, unsigned long buff
 
 std::string pluto_source_impl::get_uri()
 {
-    struct iio_scan_context* ctx = iio_create_scan_context("usb", 0);
+    iio_scan_context* ctx = iio_create_scan_context("usb", 0);
     if (!ctx)
         throw std::runtime_error("Unable to create scan context");
 
-    struct iio_context_info** info;
+    iio_context_info** info;
     int ret = iio_scan_context_get_info_list(ctx, &info);
     if (ret < 0) {
         iio_scan_context_destroy(ctx);

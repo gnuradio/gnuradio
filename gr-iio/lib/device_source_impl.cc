@@ -44,7 +44,7 @@ device_source::sptr device_source::make(const std::string& uri,
                                decimation));
 }
 
-device_source::sptr device_source::make_from(struct iio_context* ctx,
+device_source::sptr device_source::make_from(iio_context* ctx,
                                              const std::string& device,
                                              const std::vector<std::string>& channels,
                                              const std::string& device_phy,
@@ -56,14 +56,14 @@ device_source::sptr device_source::make_from(struct iio_context* ctx,
         ctx, false, device, channels, device_phy, params, buffer_size, decimation));
 }
 
-void device_source_impl::set_params(struct iio_device* phy,
+void device_source_impl::set_params(iio_device* phy,
                                     const std::vector<std::string>& params)
 {
     static GR_LOG_GET_CONFIGURED_LOGGER(logger, "iio::device::set_params");
 
     for (std::vector<std::string>::const_iterator it = params.begin(); it != params.end();
          ++it) {
-        struct iio_channel* chn = NULL;
+        iio_channel* chn = NULL;
         const char* attr = NULL;
         size_t pos;
         int ret;
@@ -132,9 +132,9 @@ void device_source_impl::set_timeout_ms(unsigned long _timeout)
     this->timeout = _timeout;
 }
 
-struct iio_context* device_source_impl::get_context(const std::string& uri)
+iio_context* device_source_impl::get_context(const std::string& uri)
 {
-    struct iio_context* ctx;
+    iio_context* ctx;
 
     // Check if we have a context with the same URI open
     if (!contexts.empty()) {
@@ -168,7 +168,7 @@ struct iio_context* device_source_impl::get_context(const std::string& uri)
 /*
  * The private constructor
  */
-device_source_impl::device_source_impl(struct iio_context* ctx,
+device_source_impl::device_source_impl(iio_context* ctx,
                                        bool destroy_ctx,
                                        const std::string& device,
                                        const std::vector<std::string>& channels,
@@ -208,7 +208,7 @@ device_source_impl::device_source_impl(struct iio_context* ctx,
 
     if (channels.empty()) {
         for (i = 0; i < nb_channels; i++) {
-            struct iio_channel* chn = iio_device_get_channel(dev, i);
+            iio_channel* chn = iio_device_get_channel(dev, i);
 
             iio_channel_enable(chn);
             channel_list.push_back(chn);
@@ -217,7 +217,7 @@ device_source_impl::device_source_impl(struct iio_context* ctx,
         for (std::vector<std::string>::const_iterator it = channels.begin();
              it != channels.end();
              ++it) {
-            struct iio_channel* chn = iio_device_find_channel(dev, it->c_str(), false);
+            iio_channel* chn = iio_device_find_channel(dev, it->c_str(), false);
             if (!chn) {
                 if (destroy_ctx)
                     iio_context_destroy(ctx);
@@ -235,8 +235,7 @@ device_source_impl::device_source_impl(struct iio_context* ctx,
     message_port_register_out(port_id);
 }
 
-void device_source_impl::remove_ctx_history(struct iio_context* ctx_from_block,
-                                            bool destroy_ctx)
+void device_source_impl::remove_ctx_history(iio_context* ctx_from_block, bool destroy_ctx)
 {
     std::lock_guard<std::mutex> lock(ctx_mutex);
 
@@ -264,9 +263,7 @@ device_source_impl::~device_source_impl()
     remove_ctx_history(ctx, destroy_ctx);
 }
 
-void device_source_impl::channel_read(const struct iio_channel* chn,
-                                      void* dst,
-                                      size_t len)
+void device_source_impl::channel_read(const iio_channel* chn, void* dst, size_t len)
 {
     uintptr_t src_ptr, dst_ptr = (uintptr_t)dst, end = dst_ptr + len;
     unsigned int length = iio_channel_get_data_format(chn)->length / 8;
@@ -358,7 +355,7 @@ bool device_source_impl::stop()
     return true;
 }
 
-bool device_source_impl::load_fir_filter(std::string& filter, struct iio_device* phy)
+bool device_source_impl::load_fir_filter(std::string& filter, iio_device* phy)
 {
     if (filter.empty() || !iio_device_find_attr(phy, "filter_fir_config"))
         return false;
@@ -398,12 +395,12 @@ bool device_source_impl::load_fir_filter(std::string& filter, struct iio_device*
 int device_source_impl::handle_decimation_interpolation(unsigned long samplerate,
                                                         const char* channel_name,
                                                         const char* attr_name,
-                                                        struct iio_device* dev,
+                                                        iio_device* dev,
                                                         bool disable_dec,
                                                         bool output_chan)
 {
     int ret;
-    struct iio_channel* chan;
+    iio_channel* chan;
     char buff[128];
     unsigned long long min, max;
 

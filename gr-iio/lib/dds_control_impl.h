@@ -31,8 +31,8 @@ private:
     std::string d_uri;
 
 protected:
-    struct iio_context* d_ctx;
-    struct iio_device* d_dev;
+    iio_context* d_ctx;
+    iio_device* d_dev;
 
 public:
     dds_control_impl(const std::string& uri,

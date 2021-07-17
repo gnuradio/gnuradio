@@ -22,21 +22,21 @@ namespace iio {
 class device_sink_impl : public device_sink
 {
 private:
-    void channel_write(const struct iio_channel* chn, const void* src, size_t len);
+    void channel_write(const iio_channel* chn, const void* src, size_t len);
     std::vector<tag_t> d_tags;
 
 protected:
-    struct iio_context* ctx;
-    struct iio_device *dev, *phy;
-    struct iio_buffer* buf;
-    std::vector<struct iio_channel*> channel_list;
+    iio_context* ctx;
+    iio_device *dev, *phy;
+    iio_buffer* buf;
+    std::vector<iio_channel*> channel_list;
     unsigned int interpolation;
     unsigned int buffer_size;
     bool destroy_ctx;
     pmt::pmt_t d_len_tag_key;
 
 public:
-    device_sink_impl(struct iio_context* ctx,
+    device_sink_impl(iio_context* ctx,
                      bool destroy_ctx,
                      const std::string& device,
                      const std::vector<std::string>& channels,

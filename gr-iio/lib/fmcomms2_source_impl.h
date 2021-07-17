@@ -30,7 +30,7 @@ private:
     void check_overflow(void);
 
 public:
-    fmcomms2_source_impl(struct iio_context* ctx,
+    fmcomms2_source_impl(iio_context* ctx,
                          const std::vector<bool>& ch_en,
                          unsigned long buffer_size);
 

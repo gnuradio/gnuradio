@@ -24,7 +24,7 @@ namespace iio {
 
 struct ctxInfo {
     std::string uri;
-    struct iio_context* ctx;
+    iio_context* ctx;
     int count;
 };
 
@@ -36,7 +36,7 @@ typedef std::vector<ctxInfo>::iterator ctx_it;
 class device_source_impl : public device_source
 {
 private:
-    void channel_read(const struct iio_channel* chn, void* dst, size_t len);
+    void channel_read(const iio_channel* chn, void* dst, size_t len);
 
     /*std::condition_variable iio_cond, iio_cond2;*/
     std::mutex iio_mutex;
@@ -54,10 +54,10 @@ private:
     void refill_thread();
 
 protected:
-    struct iio_context* ctx;
-    struct iio_device *dev, *phy;
-    struct iio_buffer* buf;
-    std::vector<struct iio_channel*> channel_list;
+    iio_context* ctx;
+    iio_device *dev, *phy;
+    iio_buffer* buf;
+    std::vector<iio_channel*> channel_list;
     unsigned int buffer_size;
     unsigned int decimation;
     bool destroy_ctx;
@@ -65,7 +65,7 @@ protected:
 
 
 public:
-    device_source_impl(struct iio_context* ctx,
+    device_source_impl(iio_context* ctx,
                        bool destroy_ctx,
                        const std::string& device,
                        const std::vector<std::string>& channels,
@@ -76,8 +76,7 @@ public:
 
     ~device_source_impl();
 
-    static void set_params(struct iio_device* phy,
-                           const std::vector<std::string>& params);
+    static void set_params(iio_device* phy, const std::vector<std::string>& params);
 
     void set_len_tag_key(const std::string& len_tag_key) override;
 
@@ -93,14 +92,14 @@ public:
     bool start();
     bool stop();
 
-    static void remove_ctx_history(struct iio_context* ctx, bool destroy_ctx);
+    static void remove_ctx_history(iio_context* ctx, bool destroy_ctx);
 
-    static struct iio_context* get_context(const std::string& uri);
-    static bool load_fir_filter(std::string& filter, struct iio_device* phy);
+    static iio_context* get_context(const std::string& uri);
+    static bool load_fir_filter(std::string& filter, iio_device* phy);
     static int handle_decimation_interpolation(unsigned long samplerate,
                                                const char* channel_name,
                                                const char* attr_name,
-                                               struct iio_device* dev,
+                                               iio_device* dev,
                                                bool disable_dec,
                                                bool output_chan);
 };

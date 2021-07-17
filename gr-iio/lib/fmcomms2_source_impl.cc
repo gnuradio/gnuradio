@@ -67,7 +67,7 @@ fmcomms2_source_impl::get_channels_vector(const std::vector<bool>& ch_en)
 }
 
 
-fmcomms2_source_impl::fmcomms2_source_impl(struct iio_context* ctx,
+fmcomms2_source_impl::fmcomms2_source_impl(iio_context* ctx,
                                            const std::vector<bool>& ch_en,
                                            unsigned long buffer_size)
     : gr::sync_block("fmcomms2_source",

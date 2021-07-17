@@ -59,7 +59,7 @@ public:
                      unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
                      unsigned int decimation = 0);
 
-    static sptr make_from(struct iio_context* ctx,
+    static sptr make_from(iio_context* ctx,
                           const std::string& device,
                           const std::vector<std::string>& channels,
                           const std::string& device_phy,

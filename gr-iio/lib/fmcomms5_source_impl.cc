@@ -116,7 +116,7 @@ fmcomms5_source::sptr fmcomms5_source::make(const std::string& uri,
                                  Fstop));
 }
 
-fmcomms5_source::sptr fmcomms5_source::make_from(struct iio_context* ctx,
+fmcomms5_source::sptr fmcomms5_source::make_from(iio_context* ctx,
                                                  unsigned long long frequency1,
                                                  unsigned long long frequency2,
                                                  unsigned long samplerate,
@@ -209,7 +209,7 @@ std::vector<std::string> fmcomms5_source_impl::get_channels_vector(bool ch1_en,
     return channels;
 }
 
-fmcomms5_source_impl::fmcomms5_source_impl(struct iio_context* ctx,
+fmcomms5_source_impl::fmcomms5_source_impl(iio_context* ctx,
                                            bool destroy_ctx,
                                            unsigned long long frequency1,
                                            unsigned long long frequency2,
@@ -281,7 +281,7 @@ fmcomms5_source_impl::fmcomms5_source_impl(struct iio_context* ctx,
                Fstop);
 }
 
-void fmcomms5_source_impl::set_params(struct iio_device* phy_device,
+void fmcomms5_source_impl::set_params(iio_device* phy_device,
                                       unsigned long long frequency,
                                       unsigned long samplerate,
                                       unsigned long bandwidth,

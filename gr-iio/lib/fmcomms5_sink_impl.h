@@ -24,9 +24,9 @@ class fmcomms5_sink_impl : public fmcomms5_sink, public device_sink_impl
 private:
     bool cyclic;
     unsigned long samplerate;
-    struct iio_device* phy2;
+    iio_device* phy2;
 
-    static void set_params(struct iio_device* phy_device,
+    static void set_params(iio_device* phy_device,
                            unsigned long long frequency,
                            unsigned long samplerate,
                            unsigned long bandwidth,
@@ -48,7 +48,7 @@ private:
                                                  bool ch8_en);
 
 public:
-    fmcomms5_sink_impl(struct iio_context* ctx,
+    fmcomms5_sink_impl(iio_context* ctx,
                        bool destroy_ctx,
                        unsigned long long frequency1,
                        unsigned long long frequency2,
