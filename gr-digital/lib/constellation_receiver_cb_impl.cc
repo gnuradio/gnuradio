@@ -8,6 +8,8 @@
  *
  */
 
+#include <cstddef>
+#include <cstdint>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -16,13 +18,11 @@
 #include <gnuradio/expj.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
-#include <gnuradio/tag_checker.h>
 #include <stdexcept>
 
 namespace gr {
 namespace digital {
 
-#define VERBOSE_MM 0     // Used for debugging symbol timing loop
 #define VERBOSE_COSTAS 0 // Used for debugging phase and frequency tracking
 
 constellation_receiver_cb::sptr constellation_receiver_cb::make(
@@ -32,15 +32,17 @@ constellation_receiver_cb::sptr constellation_receiver_cb::make(
         constell, loop_bw, fmin, fmax);
 }
 
-static const std::vector<int> iosig = {
-    sizeof(char), sizeof(float), sizeof(float), sizeof(float), sizeof(gr_complex)
-};
-
 constellation_receiver_cb_impl::constellation_receiver_cb_impl(
     constellation_sptr constellation, float loop_bw, float fmin, float fmax)
     : block("constellation_receiver_cb",
             io_signature::make(1, 1, sizeof(gr_complex)),
-            io_signature::makev(1, 5, iosig)),
+            io_signature::makev(1,
+                                5,
+                                { sizeof(char),
+                                  sizeof(float),
+                                  sizeof(float),
+                                  sizeof(float),
+                                  sizeof(gr_complex) })),
       blocks::control_loop(loop_bw, fmax, fmin),
       d_constellation(constellation)
 {
@@ -92,6 +94,8 @@ void constellation_receiver_cb_impl::handle_set_constellation(
         constellation_sptr constellation =
             boost::any_cast<constellation_sptr>(constellation_any);
         set_constellation(constellation);
+    } else {
+        GR_LOG_ERROR(d_logger, "Received constellation that is not a PMT any; skipping.");
     }
 }
 
@@ -100,6 +104,8 @@ void constellation_receiver_cb_impl::handle_rotate_phase(pmt::pmt_t rotation)
     if (pmt::is_real(rotation)) {
         const double phase = pmt::to_double(rotation);
         d_phase += phase;
+    } else {
+        GR_LOG_ERROR(d_logger, "Received rotation value that is not real; skipping.");
     }
 }
 
@@ -113,57 +119,85 @@ int constellation_receiver_cb_impl::general_work(int noutput_items,
                                                  gr_vector_const_void_star& input_items,
                                                  gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    unsigned char* out = (unsigned char*)output_items[0];
-
-    int i = 0;
-
-    float phase_error;
-    unsigned int sym_value;
-    gr_complex sample, nco;
-
-    float *out_err = 0, *out_phase = 0, *out_freq = 0;
-    gr_complex* out_symbol;
-    if (output_items.size() == 5) {
-        out_err = (float*)output_items[1];
-        out_phase = (float*)output_items[2];
-        out_freq = (float*)output_items[3];
-        out_symbol = (gr_complex*)output_items[4];
-    }
+    const auto in = reinterpret_cast<const gr_complex*>(input_items[0]);
+    auto out = reinterpret_cast<std::uint8_t*>(output_items[0]);
+    size_t idx = 0;
 
     std::vector<tag_t> tags;
-    get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + ninput_items[0]);
-    tag_checker tchecker(tags);
+    auto offset = nitems_read(0);
 
-    while ((i < noutput_items) && (i < ninput_items[0])) {
+    get_tags_in_range(tags, 0, offset, offset + ninput_items[0]);
+    if (output_items.size() == 5) {
+        auto out_err = reinterpret_cast<float*>(output_items[1]);
+        auto out_phase = reinterpret_cast<float*>(output_items[2]);
+        auto out_freq = reinterpret_cast<float*>(output_items[3]);
+        auto out_symbol = reinterpret_cast<gr_complex*>(output_items[4]);
 
-        std::vector<tag_t> tags_now;
-        tchecker.get_tags(tags_now, i + nitems_read(0));
-        for (unsigned int j = 0; j < tags_now.size(); j++) {
-            tag_t tag = tags_now[j];
+        for (const auto& tag : tags) {
+            for (; idx < tag.offset - offset; ++idx) {
+                auto nco =
+                    gr_expj(d_phase); // NCO value for derotating the current sample
+                auto sample = in[idx] * nco; // downconverted symbol
+
+                float phase_error;
+                unsigned int sym_value =
+                    d_constellation->decision_maker_pe(&sample, &phase_error);
+                phase_error_tracking(phase_error); // corrects phase and frequency offsets
+
+                out[idx] = sym_value;
+                out_err[idx] = phase_error;
+                out_phase[idx] = d_phase;
+                out_freq[idx] = d_freq;
+                out_symbol[idx] = sample;
+            }
             dispatch_msg(tag.key, tag.value);
         }
+        for (; idx < static_cast<unsigned int>(noutput_items); ++idx) {
+            auto nco = gr_expj(d_phase); // NCO value for derotating the current sample
+            auto sample = in[idx] * nco; // downconverted symbol
 
-        sample = in[i];
-        nco = gr_expj(d_phase); // get the NCO value for derotating the current sample
-        sample = nco * sample;  // get the downconverted symbol
+            float phase_error;
+            unsigned int sym_value =
+                d_constellation->decision_maker_pe(&sample, &phase_error);
+            phase_error_tracking(phase_error); // corrects phase and frequency offsets
 
-        sym_value = d_constellation->decision_maker_pe(&sample, &phase_error);
-        phase_error_tracking(phase_error); // corrects phase and frequency offsets
-
-        out[i] = sym_value;
-
-        if (output_items.size() == 5) {
-            out_err[i] = phase_error;
-            out_phase[i] = d_phase;
-            out_freq[i] = d_freq;
-            out_symbol[i] = sample;
+            out[idx] = sym_value;
+            out_err[idx] = phase_error;
+            out_phase[idx] = d_phase;
+            out_freq[idx] = d_freq;
+            out_symbol[idx] = sample;
         }
-        i++;
+    } else {
+        for (const auto& tag : tags) {
+            for (; idx < tag.offset - offset; ++idx) {
+                auto nco =
+                    gr_expj(d_phase); // NCO value for derotating the current sample
+                auto sample = in[idx] * nco; // downconverted symbol
+
+                float phase_error;
+                unsigned int sym_value =
+                    d_constellation->decision_maker_pe(&sample, &phase_error);
+                phase_error_tracking(phase_error); // corrects phase and frequency offsets
+
+                out[idx] = sym_value;
+            }
+            dispatch_msg(tag.key, tag.value);
+        }
+        for (; idx < static_cast<unsigned int>(noutput_items); ++idx) {
+            auto nco = gr_expj(d_phase); // NCO value for derotating the current sample
+            auto sample = in[idx] * nco; // downconverted symbol
+
+            float phase_error;
+            unsigned int sym_value =
+                d_constellation->decision_maker_pe(&sample, &phase_error);
+            phase_error_tracking(phase_error); // corrects phase and frequency offsets
+            out[idx] = sym_value;
+        }
     }
 
-    consume_each(i);
-    return i;
+
+    consume_each(noutput_items);
+    return noutput_items;
 }
 
 void constellation_receiver_cb_impl::setup_rpc()
