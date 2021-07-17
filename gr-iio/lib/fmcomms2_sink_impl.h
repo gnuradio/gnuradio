@@ -35,7 +35,7 @@ private:
     void check_underflow(void);
 
 public:
-    fmcomms2_sink_impl(struct iio_context* ctx,
+    fmcomms2_sink_impl(iio_context* ctx,
                        const std::vector<bool>& ch_en,
                        unsigned long buffer_size,
                        bool cyclic);

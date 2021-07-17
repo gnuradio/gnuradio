@@ -51,14 +51,14 @@ dds_control_impl::dds_control_impl(const std::string& uri,
 {
     int k, chans;
     unsigned int ku = 0, count = 0;
-    struct iio_channel* chan;
+    iio_channel* chan;
 
     d_ctx = device_source_impl::get_context(uri);
     if (!d_ctx)
         throw std::runtime_error("Unable to create context");
 
     int d = iio_context_get_devices_count(d_ctx);
-    struct iio_device* dev;
+    iio_device* dev;
     const char* name;
     // Find dds device
     for (k = 0; k < d; k++) {
@@ -95,7 +95,7 @@ void dds_control_impl::set_dds_confg(std::vector<long> frequencies,
 {
     int ret, chans, k, dds_indx = 0, enable_indx = 0, enable = 0;
     unsigned int ku;
-    struct iio_channel* chan;
+    iio_channel* chan;
 
     // Check vector sizes
     if ((frequencies.size() != phases.size()) || (phases.size() != scales.size()))

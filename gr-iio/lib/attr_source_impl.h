@@ -34,9 +34,9 @@ private:
     uint32_t address;
 
 protected:
-    struct iio_context* ctx;
-    struct iio_device* dev;
-    struct iio_channel* chan;
+    iio_context* ctx;
+    iio_device* dev;
+    iio_channel* chan;
 
 public:
     attr_source_impl(const std::string& uri,

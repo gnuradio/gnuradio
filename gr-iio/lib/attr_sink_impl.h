@@ -30,9 +30,9 @@ private:
     bool output;
 
 protected:
-    struct iio_context* ctx;
-    struct iio_device* dev;
-    struct iio_channel* chan;
+    iio_context* ctx;
+    iio_device* dev;
+    iio_channel* chan;
 
 public:
     attr_sink_impl(const std::string& uri,

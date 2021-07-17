@@ -44,7 +44,7 @@ device_sink::sptr device_sink::make(const std::string& uri,
                              cyclic));
 }
 
-device_sink::sptr device_sink::make_from(struct iio_context* ctx,
+device_sink::sptr device_sink::make_from(iio_context* ctx,
                                          const std::string& device,
                                          const std::vector<std::string>& channels,
                                          const std::string& device_phy,
@@ -72,7 +72,7 @@ void device_sink_impl::set_params(const std::vector<std::string>& params)
 /*
  * The private constructor
  */
-device_sink_impl::device_sink_impl(struct iio_context* ctx,
+device_sink_impl::device_sink_impl(iio_context* ctx,
                                    bool destroy_ctx,
                                    const std::string& device,
                                    const std::vector<std::string>& channels,
@@ -114,7 +114,7 @@ device_sink_impl::device_sink_impl(struct iio_context* ctx,
 
     if (channels.empty()) {
         for (i = 0; i < nb_channels; i++) {
-            struct iio_channel* chn = iio_device_get_channel(dev, i);
+            iio_channel* chn = iio_device_get_channel(dev, i);
 
             iio_channel_enable(chn);
             channel_list.push_back(chn);
@@ -123,7 +123,7 @@ device_sink_impl::device_sink_impl(struct iio_context* ctx,
         for (std::vector<std::string>::const_iterator it = channels.begin();
              it != channels.end();
              ++it) {
-            struct iio_channel* chn = iio_device_find_channel(dev, it->c_str(), true);
+            iio_channel* chn = iio_device_find_channel(dev, it->c_str(), true);
             if (!chn) {
                 if (destroy_ctx)
                     iio_context_destroy(ctx);
@@ -153,9 +153,7 @@ device_sink_impl::~device_sink_impl()
     device_source_impl::remove_ctx_history(ctx, destroy_ctx);
 }
 
-void device_sink_impl::channel_write(const struct iio_channel* chn,
-                                     const void* src,
-                                     size_t len)
+void device_sink_impl::channel_write(const iio_channel* chn, const void* src, size_t len)
 {
     uintptr_t dst_ptr, src_ptr = (uintptr_t)src, end = src_ptr + len;
     unsigned int length = iio_channel_get_data_format(chn)->length / 8;

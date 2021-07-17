@@ -135,7 +135,7 @@ public:
                      float Fpass = 0.0,
                      float Fstop = 0.0);
 
-    static sptr make_from(struct iio_context* ctx,
+    static sptr make_from(iio_context* ctx,
                           unsigned long long frequency1,
                           unsigned long long frequency2,
                           unsigned long samplerate,

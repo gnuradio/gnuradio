@@ -65,7 +65,7 @@ public:
                      unsigned int interpolation = 0,
                      bool cyclic = false);
 
-    static sptr make_from(struct iio_context* ctx,
+    static sptr make_from(iio_context* ctx,
                           const std::string& device,
                           const std::vector<std::string>& channels,
                           const std::string& device_phy,
