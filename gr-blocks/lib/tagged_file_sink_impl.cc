@@ -75,9 +75,6 @@ int tagged_file_sink_impl::work(int noutput_items,
 
     std::vector<tag_t> all_tags;
     get_tags_in_range(all_tags, 0, start_N, end_N);
-
-    std::sort(all_tags.begin(), all_tags.end(), tag_t::offset_compare);
-
     std::vector<tag_t>::iterator vitr = all_tags.begin();
 
     // Look for a time tag and initialize d_timeval.
