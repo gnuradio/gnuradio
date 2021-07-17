@@ -114,7 +114,8 @@ int burst_shaper_impl<T>::general_work(int noutput_items,
 
     std::vector<tag_t> length_tags;
     this->get_tags_in_window(length_tags, 0, 0, ninput_items[0], d_length_tag_key);
-    std::sort(length_tags.rbegin(), length_tags.rend(), tag_t::offset_compare);
+    auto tags_start = length_tags.begin();
+    const auto tags_end = length_tags.end();
 
     while (nwritten < noutput_items) {
         // Only check the nread condition if we are actually reading
@@ -133,11 +134,11 @@ int burst_shaper_impl<T>::general_work(int noutput_items,
         nspace = noutput_items - nwritten;
         switch (d_state) {
         case (STATE_WAIT):
-            if (!length_tags.empty()) {
-                d_length_tag_offset = length_tags.back().offset;
+            if (tags_start != tags_end) {
+                d_length_tag_offset = tags_start->offset;
                 curr_tag_index = (int)(d_length_tag_offset - this->nitems_read(0));
-                d_ncopy = pmt::to_long(length_tags.back().value);
-                length_tags.pop_back();
+                d_ncopy = pmt::to_long(tags_start->value);
+                tags_start++;
                 nskip = curr_tag_index - nread;
                 add_length_tag(nwritten);
                 propagate_tags(curr_tag_index, nwritten, 1, false);
