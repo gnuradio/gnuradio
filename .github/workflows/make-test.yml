@@ -79,4 +79,4 @@ jobs:
     - name: Make
       run: 'cd /build && make -j2 -k'
     - name: Make Test
-      run: 'cd /build && ctest --output-on-failure -E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
+      run: 'cd /build && ctest --output-on-failure -E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui|metainfo_test"'
