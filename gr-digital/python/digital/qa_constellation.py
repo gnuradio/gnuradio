@@ -117,8 +117,8 @@ def slicer(x):
     for xi in x:
         if(xi < 0):
             ret.append(0.0)
-    else:
-        ret.append(1.0)
+        else:
+            ret.append(1.0)
     return ret
 
 

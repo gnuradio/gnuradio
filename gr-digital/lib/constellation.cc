@@ -243,14 +243,14 @@ void constellation::gen_soft_dec_lut(int precision, float npwr)
     d_soft_dec_lut.clear();
     d_lut_scale = powf(2.0f, static_cast<float>(precision));
 
-    // We know we've normalized the constellation, so the min/max
-    // dimensions in either direction are scaled to +/-1.
-    float maxd = 1.0f;
-    float step = (2.0f * maxd) / (d_lut_scale - 1);
-    float y = -maxd;
-    while (y < maxd + step) {
-        float x = -maxd;
-        while (x < maxd + step) {
+    // We assume the constellation is symmetrical and has no offset
+    // Search for the largest coordinate
+    max_min_axes();
+    float step = (2.0f * d_re_max) / (d_lut_scale - 1);
+    float y = -d_re_max;
+    while (y < d_re_max + step) {
+        float x = -d_re_max;
+        while (x < d_re_max + step) {
             gr_complex pt = gr_complex(x, y);
             d_soft_dec_lut.push_back(calc_soft_dec(pt, npwr));
             x += step;
@@ -323,19 +323,19 @@ std::vector<std::vector<float>> constellation::soft_dec_lut() { return d_soft_de
 std::vector<float> constellation::soft_decision_maker(gr_complex sample)
 {
     if (has_soft_dec_lut()) {
-        // Clip to just below 1 --> at 1, we can overflow the index
+        // Clip to just below re_max --> at re_max, we can overflow the index
         // that will put us in the next row of the 2D LUT.
-        float xre = branchless_clip(sample.real(), 0.99);
-        float xim = branchless_clip(sample.imag(), 0.99);
+        float xre = branchless_clip(sample.real(), d_re_max - 0.001);
+        float xim = branchless_clip(sample.imag(), d_re_max - 0.001);
 
         // We normalize the constellation in the ctor, so we know that
-        // the maximum dimensions go from -1 to +1. We can infer the x
+        // the maximum dimensions go from -d_re_max to +d_re_max. We can infer the x
         // and y scale directly.
-        float scale = d_lut_scale / (2.0f);
+        float scale = d_lut_scale / (2.0f * d_re_max);
 
         // Convert the clipped x and y samples to nearest index offset
-        xre = floorf((1.0f + xre) * scale);
-        xim = floorf((1.0f + xim) * scale);
+        xre = floorf((d_re_max + xre) * scale);
+        xim = floorf((d_re_max + xim) * scale);
         int index = static_cast<int>(d_lut_scale * xim + xre);
 
         int max_index = d_lut_scale * d_lut_scale;
