@@ -7,6 +7,7 @@
 
 install(
   FILES
+  matrix_interleaver.grc
   matrix_multiplexer.grc
   peak_detector2.grc
   py_snippets_demo.grc
