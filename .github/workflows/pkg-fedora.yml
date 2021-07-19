@@ -26,8 +26,8 @@ jobs:
         # descriptive name, and one key 'containerid' with the name of the
         # container (i.e., what you want to docker-pull)
         include:
-          - distro: 'Fedora 33'
-            containerid: 'gnuradio/ci:fedora-33-3.9'
+          - distro: 'Fedora 34'
+            containerid: 'ghcr.io/gnuradio/ci:fedora-34-3.9'
             cxxflags: -Werror
     name: ${{ matrix.distro }}
     container:
