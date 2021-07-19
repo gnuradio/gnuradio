@@ -11,6 +11,7 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
+    matrix_interleaver.py
     parse_file_metadata.py
     stream_to_vector_decimator.py
     msg_pair_to_var.py
