@@ -26,8 +26,29 @@ source_template = Template(filename=SOURCE_TEMPLATE)
 cmake_template = Template(filename=CMAKE_TEMPLATE)
 
 
-class CppTopBlockGenerator(TopBlockGenerator):
+class CppTopBlockGenerator(object):
 
+    def __init__(self, flow_graph, output_dir):
+        """
+        Initialize the top block generator object.
+
+        Args:
+            flow_graph: the flow graph object
+            output_dir: the path for written files
+        """
+
+        self._flow_graph = FlowGraphProxy(flow_graph)
+        self._generate_options = self._flow_graph.get_option('generate_options')
+
+        self._mode = TOP_BLOCK_FILE_MODE
+        # Handle the case where the directory is read-only
+        # In this case, use the system's temp directory
+        if not os.access(output_dir, os.W_OK):
+            output_dir = tempfile.gettempdir()
+        filename = self._flow_graph.get_option('id')
+        self.file_path = os.path.join(output_dir, filename)
+        self.output_dir = output_dir
+        
     def write(self):
         """create directory, generate output and write it to files"""
         self._warnings()
