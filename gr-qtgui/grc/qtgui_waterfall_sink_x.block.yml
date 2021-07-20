@@ -39,8 +39,8 @@ parameters:
     option_labels: [Blackman-harris, Hamming, Hann, Blackman, Rectangular, Kaiser,
         Flat-top]
     option_attributes:
-        cpp_opts: [fft::window::WIN_BLACKMAN_hARRIS, fft::window::WIN_HAMMING, fft::window::WIN_HANN, fft::window::WIN_BLACKMAN,
-        fft::window::WIN_RECTANGULAR, fft::window::WIN_KAISER, fft::window::WIN_FLATTOP]
+        cpp_opts: ["fft::window::WIN_BLACKMAN_hARRIS", "fft::window::WIN_HAMMING", "fft::window::WIN_HANN", "fft::window::WIN_BLACKMAN",
+        "fft::window::WIN_RECTANGULAR", "fft::window::WIN_KAISER", "fft::window::WIN_FLATTOP"]
     hide: part
 -   id: fc
     label: Center Frequency (Hz)
