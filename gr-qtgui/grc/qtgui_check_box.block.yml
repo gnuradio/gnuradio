@@ -15,7 +15,7 @@ parameters:
     option_labels: [Float, Integer, String, Boolean, Any]
     option_attributes:
         conv: [float, int, str, bool, eval]
-        cpp_opts: [double,int,std::string,double,double]
+        cpp_opts: [double,int,"std::string",double,double]
     hide: part
 -   id: value
     label: Default Value
