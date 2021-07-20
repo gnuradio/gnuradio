@@ -27,7 +27,7 @@ inputs:
     optional: true
 
 outputs:
-- id: pdu
+-   id: pdu
     domain: message
     optional: true
 
