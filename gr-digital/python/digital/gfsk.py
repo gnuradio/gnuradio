@@ -28,6 +28,7 @@ _def_sensitivity = 1
 _def_bt = 0.35
 _def_verbose = False
 _def_log = False
+_def_do_unpack = True
 
 _def_gain_mu = None
 _def_mu = 0.5
@@ -50,7 +51,8 @@ class gfsk_mod(gr.hier_block2):
                  sensitivity=_def_sensitivity,
                  bt=_def_bt,
                  verbose=_def_verbose,
-                 log=_def_log):
+                 log=_def_log,
+                 do_unpack=_def_do_unpack):
         """
         Hierarchical block for Gaussian Frequency Shift Key (GFSK)
         modulation.
@@ -63,6 +65,7 @@ class gfsk_mod(gr.hier_block2):
             bt: Gaussian filter bandwidth * symbol time (float)
             verbose: Print information about modulator? (bool)
             debug: Print modualtion data to files? (bool)
+            unpack: Unpack input byte stream? (bool)
         """
 
         gr.hier_block2.__init__(self, "gfsk_mod",
@@ -80,9 +83,10 @@ class gfsk_mod(gr.hier_block2):
         ntaps = 4 * samples_per_symbol			# up to 3 bits in filter at once
         #sensitivity = (pi / 2) / samples_per_symbol	# phase change per bit = pi / 2
 
+        
+
         # Turn it into NRZ data.
         #self.nrz = digital.bytes_to_syms()
-        self.unpack = blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST)
         self.nrz = digital.chunks_to_symbols_bf([-1, 1])
 
         # Form Gaussian filter
@@ -111,7 +115,11 @@ class gfsk_mod(gr.hier_block2):
             self._setup_logging()
 
         # Connect & Initialize base class
-        self.connect(self, self.unpack, self.nrz, self.gaussian_filter, self.fmmod, self.amp, self)
+        if do_unpack:
+            self.unpack = blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST)
+            self.connect(self, self.unpack, self.nrz, self.gaussian_filter, self.fmmod, self.amp, self)
+        else:
+            self.connect(self, self.nrz, self.gaussian_filter, self.fmmod, self.amp, self)
 
     def samples_per_symbol(self):
         return self._samples_per_symbol
