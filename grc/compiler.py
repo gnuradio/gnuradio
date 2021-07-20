@@ -43,8 +43,11 @@ def main(args=None):
     platform.build_library()
 
     output_dir = args.output if not args.user_lib_dir else platform.config.hier_block_lib_dir
-    if not os.path.exists(output_dir):
-        exit('Error: Invalid output directory')
+    try:
+        # recursive mkdir: os.makedirs doesn't work with .. paths, resolve with realpath
+        os.makedirs(os.path.realpath(output_dir), exists_ok=True)
+    except Exception as e:
+        exit(str(e))
 
     Messages.send_init(platform)
     flow_graph = file_path = None
