@@ -45,7 +45,7 @@ def main(args=None):
     output_dir = args.output if not args.user_lib_dir else platform.config.hier_block_lib_dir
     try:
         # recursive mkdir: os.makedirs doesn't work with .. paths, resolve with realpath
-        os.makedirs(os.path.realpath(output_dir), exists_ok=True)
+        os.makedirs(os.path.realpath(output_dir), exist_ok=True)
     except Exception as e:
         exit(str(e))
 
