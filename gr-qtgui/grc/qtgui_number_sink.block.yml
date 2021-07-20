@@ -34,7 +34,7 @@ parameters:
     options: [qtgui.NUM_GRAPH_HORIZ, qtgui.NUM_GRAPH_VERT, qtgui.NUM_GRAPH_NONE]
     option_labels: [Horizontal, Vertical, None]
     option_attributes:
-        cpp_opts: [qtgui::NUM_GRAPH_HORIZ, qtgui::NUM_GRAPH_VERT, qtgui::NUM_GRAPH_NONE]
+        cpp_opts: ["qtgui::NUM_GRAPH_HORIZ", "qtgui::NUM_GRAPH_VERT", "qtgui::NUM_GRAPH_NONE"]
 -   id: nconnections
     label: Number of Inputs
     category: General
