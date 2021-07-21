@@ -29,10 +29,10 @@ class test_constellation_soft_decoder(gr_unittest.TestCase):
         lut = digital.soft_dec_table_generator(const_sd_gen, prec, Es)
         expected_result = list()
         for s in src_data:
-            res = digital.calc_soft_dec_from_table(s, lut, prec, sqrt(2.0))
+            res = digital.calc_soft_dec_from_table(s, lut, prec, Es)
             expected_result += res
 
-        cnst = digital.constellation_calcdist(cnst_pts, code, 2, 1)
+        cnst = digital.constellation_calcdist(cnst_pts, code, 2, 1, digital.constellation.NO_NORMALIZATION)
         cnst.set_soft_dec_lut(lut, int(prec))
         src = blocks.vector_source_c(src_data)
         op = digital.constellation_soft_decoder_cf(cnst.base())
