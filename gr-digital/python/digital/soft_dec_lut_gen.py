@@ -147,7 +147,7 @@ def calc_soft_dec_from_table(sample, table, prec, Es=1.0):
     maxd = Es*numpy.sqrt(2.0)/2.0
     scale = (lut_scale) / (2.0*maxd)
 
-    alpha = 0.99 # to keep index within bounds
+    alpha = 0.999 # to keep index within bounds
     xre = sample.real
     xim = sample.imag
     xre = ((maxd + min(alpha*maxd, max(-alpha*maxd, xre))) * scale)
