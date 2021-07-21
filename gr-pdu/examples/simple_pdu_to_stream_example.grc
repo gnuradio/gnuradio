@@ -96,7 +96,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [872, 212.0]
+    coordinate: [832, 212.0]
     rotation: 0
     state: true
 - name: note
@@ -116,6 +116,24 @@ blocks:
     coordinate: [624, 12.0]
     rotation: 0
     state: true
+- name: pdu2stream
+  id: pdu_pdu_to_stream_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    depth: '64'
+    early_behavior: pdu.EARLY_BURST_APPEND
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 212.0]
+    rotation: 0
+    state: true
 - name: pdu_set
   id: pdu_pdu_set
   parameters:
@@ -131,24 +149,6 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [360, 204.0]
-    rotation: 0
-    state: true
-- name: pdu_to_stream
-  id: pdu_pdu_to_stream_X
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    depth: '64'
-    early_behavior: pdu.EARLY_BURST_APPEND
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    type: complex
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [600, 212.0]
     rotation: 0
     state: true
 - name: strobe
@@ -223,7 +223,7 @@ blocks:
     marker9: '-1'
     name: '""'
     nconnections: '1'
-    size: N*2
+    size: int(N*1.98)
     srate: samp_rate
     stemplot: 'False'
     style1: '1'
@@ -262,14 +262,14 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1128, 196.0]
+    coordinate: [1040, 196.0]
     rotation: 0
     state: true
 
 connections:
 - [multiply, '0', time_sink, '0']
-- [pdu_set, pdus, pdu_to_stream, pdus]
-- [pdu_to_stream, '0', multiply, '0']
+- [pdu2stream, '0', multiply, '0']
+- [pdu_set, pdus, pdu2stream, pdus]
 - [strobe, strobe, pdu_set, pdus]
 
 metadata:

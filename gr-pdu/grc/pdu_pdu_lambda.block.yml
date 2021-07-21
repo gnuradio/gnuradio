@@ -10,16 +10,16 @@ parameters:
 -   id: metadict
     label: Mode
     dtype: enum
-    options: [Metadata, Uniform Vector]
+    options: [Metadata, Uniform Vector, Raw Message]
     option_attributes:
-        mode: [True, False]
+        mode: ['"META"', '"UVEC"', '"RAW"']
     default: True
     hide: part
 -   id: key
     label: Key
     dtype: raw
     default: 'pmt.intern("key")'
-    hide: ${ 'none' if metadict.mode else 'all' }
+    hide: ${ 'none' if metadict.mode == 'META' else 'all' }
 
 inputs:
 -   id: pdu
@@ -32,8 +32,10 @@ outputs:
     optional: true
 
 templates:
-    imports: import pylambda, pmt, numpy as np
-    make: pylambda.pdu_lambda(${fn}, ${metadict.mode}, ${key})
+    imports: |-
+        from gnuradio import pdu
+        import pmt, numpy as np
+    make: pdu.pdu_lambda(${fn}, ${metadict.mode}, ${key})
     callbacks:
     - set_fn(${fn})
     - set_fn(${key})

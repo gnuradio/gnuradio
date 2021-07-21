@@ -87,27 +87,29 @@ blocks:
     rotation: 0
     state: enabled
 - name: lambda1
-  id: pylambda_message_lambda
+  id: pdu_pdu_lambda
   parameters:
     affinity: ''
     alias: ''
     comment: ''
-    fn: 'lambda msg: pmt.cons(pmt.make_dict(), msg)'
+    fn: 'lambda x: pmt.cons(pmt.make_dict(), x)'
+    key: ''
     maxoutbuf: '0'
+    metadict: Raw Message
     minoutbuf: '0'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [104, 356.0]
+    coordinate: [376, 164.0]
     rotation: 0
     state: true
 - name: lambda2
-  id: pylambda_pdu_lambda
+  id: pdu_pdu_lambda
   parameters:
     affinity: ''
     alias: ''
-    comment: Scale Metadata
+    comment: ''
     fn: 'lambda x: x*l'
     key: pmt.intern("distance")
     maxoutbuf: '0'
@@ -117,17 +119,17 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [536, 236.0]
+    coordinate: [392, 324.0]
     rotation: 0
     state: true
 - name: lambda3
-  id: pylambda_pdu_lambda
+  id: pdu_pdu_lambda
   parameters:
     affinity: ''
     alias: ''
-    comment: Scale uniform vector
+    comment: ''
     fn: 'lambda x: x*k'
-    key: ''
+    key: pmt.intern("key")
     maxoutbuf: '0'
     metadict: Uniform Vector
     minoutbuf: '0'
@@ -135,7 +137,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [752, 356.0]
+    coordinate: [712, 196.0]
     rotation: 0
     state: true
 - name: msg_dbg
@@ -149,8 +151,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1072, 264.0]
-    rotation: 0
+    coordinate: [728, 264.0]
+    rotation: 180
     state: enabled
 - name: msg_edit
   id: qtgui_edit_box_msg
@@ -171,8 +173,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [104, 148.0]
-    rotation: 0
+    coordinate: [104, 244.0]
+    rotation: 180
     state: true
 - name: msg_strobe
   id: blocks_message_strobe
@@ -182,14 +184,14 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    msg: pmt.PMT_NIL
+    msg: pmt.cons(pmt.make_dict(), pmt.PMT_NIL)
     period: '1000'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [104, 276.0]
-    rotation: 180
+    coordinate: [128, 156.0]
+    rotation: 0
     state: enabled
 - name: note
   id: note
@@ -226,16 +228,16 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [400, 348.0]
-    rotation: 0
+    coordinate: [432, 236.0]
+    rotation: 180
     state: true
 
 connections:
-- [lambda1, msg, pdu_set, pdus]
+- [lambda1, pdu, pdu_set, pdus]
 - [lambda2, pdu, lambda3, pdu]
 - [lambda3, pdu, msg_dbg, print]
 - [msg_edit, msg, msg_strobe, set_msg]
-- [msg_strobe, strobe, lambda1, msg]
+- [msg_strobe, strobe, lambda1, pdu]
 - [pdu_set, pdus, lambda2, pdu]
 
 metadata:

@@ -186,6 +186,43 @@ blocks:
     coordinate: [1048, 356.0]
     rotation: 0
     state: enabled
+- name: lambda1
+  id: pdu_pdu_lambda
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fn: 'lambda x: k * np.complex64(np.exp(2*np.pi * 1j  * x * x * (0.05 * (np.random.randint(40)-19.5)
+      / len(x)) ))'
+    key: pmt.intern("key")
+    maxoutbuf: '0'
+    metadict: Uniform Vector
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [376, 356.0]
+    rotation: 0
+    state: enabled
+- name: lambda2
+  id: pdu_pdu_lambda
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fn: 'lambda x: np.float32(np.unwrap(np.angle(x[1:]) - np.angle(x[:-1])))'
+    key: pmt.intern("key")
+    maxoutbuf: '0'
+    metadict: Uniform Vector
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [720, 356.0]
+    rotation: 0
+    state: enabled
 - name: note
   id: note
   parameters:
@@ -205,45 +242,8 @@ blocks:
     coordinate: [592, 12.0]
     rotation: 0
     state: true
-- name: pdu_lambda1
-  id: pylambda_pdu_lambda
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: Generate Random Chirp
-    fn: 'lambda x: k * np.complex64(np.exp(2*np.pi * 1j  * x * x * (0.05 * (np.random.randint(40)-19.5)
-      / len(x)) ))'
-    key: pmt.intern("key")
-    maxoutbuf: '0'
-    metadict: Uniform Vector
-    minoutbuf: '0'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [360, 324.0]
-    rotation: 0
-    state: true
-- name: pdu_lambda2
-  id: pylambda_pdu_lambda
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: Frequency Demod
-    fn: 'lambda x: np.float32(np.unwrap(np.angle(x[1:]) - np.angle(x[:-1])))'
-    key: pmt.intern("key")
-    maxoutbuf: '0'
-    metadict: Uniform Vector
-    minoutbuf: '0'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [736, 364.0]
-    rotation: 0
-    state: enabled
-- name: pdu_to_stream
-  id: pdu_pdu_to_stream_X
+- name: pdu2stream
+  id: pdu_pdu_to_stream_x
   parameters:
     affinity: ''
     alias: ''
@@ -257,7 +257,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [744, 268.0]
+    coordinate: [744, 212.0]
     rotation: 0
     state: true
 - name: stream_time_sink
@@ -371,7 +371,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [64, 316.0]
+    coordinate: [72, 340.0]
     rotation: 0
     state: true
 - name: time_sink
@@ -468,7 +468,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [360, 244.0]
+    coordinate: [368, 260.0]
     rotation: 180
     state: true
 - name: uhd_sink
@@ -806,19 +806,19 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [360, 164.0]
+    coordinate: [368, 180.0]
     rotation: 180
     state: true
 
 connections:
-- [pdu_lambda1, pdu, pdu_lambda2, pdu]
-- [pdu_lambda1, pdu, pdu_to_stream, pdus]
-- [pdu_lambda1, pdu, time_sink, in]
-- [pdu_lambda1, pdu, waterfall, in]
-- [pdu_lambda2, pdu, demod_time_sink, in]
-- [pdu_to_stream, '0', stream_time_sink, '0']
-- [pdu_to_stream, '0', uhd_sink, '0']
-- [strobe, strobe, pdu_lambda1, pdu]
+- [lambda1, pdu, lambda2, pdu]
+- [lambda1, pdu, pdu2stream, pdus]
+- [lambda1, pdu, time_sink, in]
+- [lambda1, pdu, waterfall, in]
+- [lambda2, pdu, demod_time_sink, in]
+- [pdu2stream, '0', stream_time_sink, '0']
+- [pdu2stream, '0', uhd_sink, '0']
+- [strobe, strobe, lambda1, pdu]
 
 metadata:
   file_format: 1
