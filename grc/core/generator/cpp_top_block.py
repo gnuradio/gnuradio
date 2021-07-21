@@ -49,6 +49,27 @@ class CppTopBlockGenerator(object):
         self.file_path = os.path.join(output_dir, filename)
         self.output_dir = output_dir
         
+    def _warnings(self):
+        throttling_blocks = [b for b in self._flow_graph.get_enabled_blocks()
+                                if b.flags.throttle]
+        if not throttling_blocks and not self._generate_options.startswith('hb'):
+            Messages.send_warning("This flow graph may not have flow control: "
+                                    "no audio or RF hardware blocks found. "
+                                    "Add a Misc->Throttle block to your flow "
+                                    "graph to avoid CPU congestion.")
+        if len(throttling_blocks) > 1:
+            keys = set([b.key for b in throttling_blocks])
+            if len(keys) > 1 and 'blocks_throttle' in keys:
+                Messages.send_warning("This flow graph contains a throttle "
+                                        "block and another rate limiting block, "
+                                        "e.g. a hardware source or sink. "
+                                        "This is usually undesired. Consider "
+                                        "removing the throttle block.")
+
+        deprecated_block_keys = {b.name for b in self._flow_graph.get_enabled_blocks() if b.flags.deprecated}
+        for key in deprecated_block_keys:
+            Messages.send_warning("The block {!r} is deprecated.".format(key))
+
     def write(self):
         """create directory, generate output and write it to files"""
         self._warnings()
