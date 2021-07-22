@@ -25,7 +25,7 @@ class test_constellation_soft_decoder(gr_unittest.TestCase):
 
     def helper_with_lut(self, prec, src_data, const_gen, const_sd_gen):
         cnst_pts, code = const_gen()
-        Es = max([abs(c) for c in cnst_pts])
+        Es = max([abs(c) if c.real != c else abs(c)*sqrt(2) for c in cnst_pts])
         lut = digital.soft_dec_table_generator(const_sd_gen, prec, Es)
         expected_result = list()
         for s in src_data:
