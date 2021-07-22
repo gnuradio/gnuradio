@@ -247,10 +247,11 @@ void constellation::gen_soft_dec_lut(int precision, float npwr)
     // Search for the largest coordinate
     max_min_axes();
     float step = (2.0f * d_re_max) / (d_lut_scale - 1);
+    float step_2 = step / 2;
     float y = -d_re_max;
-    while (y < d_re_max + step) {
+    while (y < d_re_max + step_2) {
         float x = -d_re_max;
-        while (x < d_re_max + step) {
+        while (x < d_re_max + step_2) {
             gr_complex pt = gr_complex(x, y);
             d_soft_dec_lut.push_back(calc_soft_dec(pt, npwr));
             x += step;
