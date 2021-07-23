@@ -20,7 +20,7 @@ namespace digital {
 class DIGITAL_API adaptive_algorithm_cma : public adaptive_algorithm
 {
 public:
-    typedef std::shared_ptr<adaptive_algorithm_cma> sptr;
+    typedef boost::shared_ptr<adaptive_algorithm_cma> sptr;
 
 private:
     const float d_step_size;

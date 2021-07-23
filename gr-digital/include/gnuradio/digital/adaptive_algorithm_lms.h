@@ -21,7 +21,7 @@ namespace digital {
 class DIGITAL_API adaptive_algorithm_lms : public adaptive_algorithm
 {
 public:
-    typedef std::shared_ptr<adaptive_algorithm_lms> sptr;
+    typedef boost::shared_ptr<adaptive_algorithm_lms> sptr;
 
 private:
     const float d_step_size;
