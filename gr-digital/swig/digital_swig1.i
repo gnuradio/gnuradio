@@ -53,7 +53,6 @@
 #include "gnuradio/digital/hdlc_deframer_bp.h"
 #include "gnuradio/digital/hdlc_framer_pb.h"
 #include "gnuradio/digital/header_payload_demux.h"
-#include "gnuradio/digital/kurtotic_equalizer_cc.h"
 #include "gnuradio/digital/lfsr.h"
 #include "gnuradio/digital/map_bb.h"
 #include "gnuradio/digital/metric_type.h"
@@ -77,7 +76,6 @@
 %include "gnuradio/digital/hdlc_deframer_bp.h"
 %include "gnuradio/digital/hdlc_framer_pb.h"
 %include "gnuradio/digital/header_payload_demux.h"
-%include "gnuradio/digital/kurtotic_equalizer_cc.h"
 %include "gnuradio/digital/lfsr.h"
 %include "gnuradio/digital/map_bb.h"
 %include "gnuradio/digital/metric_type.h"
@@ -105,6 +103,5 @@ GR_SWIG_BLOCK_MAGIC2(digital, glfsr_source_f);
 GR_SWIG_BLOCK_MAGIC2(digital, hdlc_deframer_bp);
 GR_SWIG_BLOCK_MAGIC2(digital, hdlc_framer_pb);
 GR_SWIG_BLOCK_MAGIC2(digital, header_payload_demux);
-GR_SWIG_BLOCK_MAGIC2(digital, kurtotic_equalizer_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, map_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, msk_timing_recovery_cc);

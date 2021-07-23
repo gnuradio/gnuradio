@@ -38,7 +38,6 @@
 
 %{
 #include "gnuradio/digital/binary_slicer_fb.h"
-#include "gnuradio/digital/cma_equalizer_cc.h"
 #include "gnuradio/digital/constellation.h"
 #include "gnuradio/digital/constellation_decoder_cb.h"
 #include "gnuradio/digital/constellation_receiver_cb.h"
@@ -55,7 +54,6 @@
 #include "gnuradio/digital/crc32_bb.h"
 #include "gnuradio/digital/crc32_async_bb.h"
 #include "gnuradio/digital/descrambler_bb.h"
-#include "gnuradio/digital/lms_dd_equalizer_cc.h"
 #include "gnuradio/digital/ofdm_carrier_allocator_cvc.h"
 #include "gnuradio/digital/ofdm_chanest_vcvc.h"
 #include "gnuradio/digital/ofdm_cyclic_prefixer.h"
@@ -68,7 +66,6 @@
 %}
 
 %include "gnuradio/digital/binary_slicer_fb.h"
-%include "gnuradio/digital/cma_equalizer_cc.h"
 %include "gnuradio/digital/constellation.h"
 %include "gnuradio/digital/constellation_decoder_cb.h"
 %include "gnuradio/digital/constellation_receiver_cb.h"
@@ -85,7 +82,6 @@
 %include "gnuradio/digital/crc32_bb.h"
 %include "gnuradio/digital/crc32_async_bb.h"
 %include "gnuradio/digital/descrambler_bb.h"
-%include "gnuradio/digital/lms_dd_equalizer_cc.h"
 %include "gnuradio/digital/ofdm_carrier_allocator_cvc.h"
 %include "gnuradio/digital/ofdm_chanest_vcvc.h"
 %include "gnuradio/digital/ofdm_cyclic_prefixer.h"
@@ -97,7 +93,6 @@
 %include "gnuradio/digital/ofdm_sync_sc_cfb.h"
 
 GR_SWIG_BLOCK_MAGIC2(digital, binary_slicer_fb);
-GR_SWIG_BLOCK_MAGIC2(digital, cma_equalizer_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, constellation_decoder_cb);
 GR_SWIG_BLOCK_MAGIC2(digital, constellation_receiver_cb);
 GR_SWIG_BLOCK_MAGIC2(digital, constellation_soft_decoder_cf);
@@ -112,7 +107,6 @@ GR_SWIG_BLOCK_MAGIC2(digital, crc32_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, crc32_async_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, cpmmod_bc);
 GR_SWIG_BLOCK_MAGIC2(digital, descrambler_bb);
-GR_SWIG_BLOCK_MAGIC2(digital, lms_dd_equalizer_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_carrier_allocator_cvc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_chanest_vcvc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_cyclic_prefixer);
