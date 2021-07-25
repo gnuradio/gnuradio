@@ -135,7 +135,7 @@ class generic_mod(gr.hier_block2):
         # Remove the filter transient at the beginning of the transmission
         if truncate:
             fsps = float(self._samples_per_symbol)
-            len_filt_delay = (ntaps_per_filt*fsps*fsps-fsps)/2.0 # Length of delay through rrc filter
+            len_filt_delay = int((ntaps_per_filt*fsps*fsps-fsps)/2.0) # Length of delay through rrc filter
             self.skiphead = blocks.skiphead(gr.sizeof_gr_complex*1, len_filt_delay)
 
         # Connect
