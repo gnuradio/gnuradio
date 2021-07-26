@@ -139,6 +139,6 @@ cpp_templates:
     - set_damping_factor(${damping})
     - set_ted_gain(${ted_gain})
     translations:
-        digital.: 'digital::'
+        digital\.: 'digital::'
 
 file_format: 1
