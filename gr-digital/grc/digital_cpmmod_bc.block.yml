@@ -50,6 +50,6 @@ cpp_templates:
             ${beta});
     link: ['gnuradio::gnuradio-digital']
     translations:
-        analog.cpm.: 'analog::cpm::'
+        analog\.cpm\.: 'analog::cpm::'
 
 file_format: 1

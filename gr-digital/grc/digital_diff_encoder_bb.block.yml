@@ -36,6 +36,6 @@ cpp_templates:
         this->${id} = digital::diff_encoder_bb::make(${modulus if coding.force_modulus == '-1' else coding.force_modulus}, ${coding});
     link: ['gnuradio::gnuradio-digital']
     translations:
-        digital.DIFF: 'digital::DIFF'
+        digital\.DIFF: 'digital::DIFF'
 
 file_format: 1
