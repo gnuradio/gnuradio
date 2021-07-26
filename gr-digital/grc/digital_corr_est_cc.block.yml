@@ -57,6 +57,6 @@ cpp_templates:
     - set_mark_delay(${mark_delay})
     - set_threshold(${threshold})
     translations:
-        digital.: 'digital::'
+        digital\.: 'digital::'
 
 file_format: 1

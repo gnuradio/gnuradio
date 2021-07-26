@@ -52,7 +52,7 @@ cpp_templates:
     callbacks:
     - set_k_and_l(${k},${l})
     translations:
-        gr.: ''
+        gr\.: ''
         'True': 'true'
         'False': 'false'
 file_format: 1

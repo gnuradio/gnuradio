@@ -71,6 +71,6 @@ cpp_templates:
     translations:
         'True': 'true'
         'False': 'false'
-        'window.': 'fft::window::'
+        'window\.': 'fft::window::'
 
 file_format: 1
