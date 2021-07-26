@@ -47,7 +47,7 @@ cpp_templates:
     callbacks:
     - set_length(${len})
     translations:
-        gr.: ''
+        gr\.: ''
 
 
 documentation: |-

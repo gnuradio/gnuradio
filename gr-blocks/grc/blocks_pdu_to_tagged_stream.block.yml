@@ -32,6 +32,6 @@ cpp_templates:
     declarations: 'blocks::pdu_to_tagged_stream::sptr ${id};'
     make: 'this->${id} = blocks::pdu_to_tagged_stream::make(${type.tv}, ${tag});'
     translations:
-        blocks.: 'blocks::'
+        blocks\.: 'blocks::'
 
 file_format: 1

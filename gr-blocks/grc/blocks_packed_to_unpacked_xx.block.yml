@@ -48,6 +48,6 @@ cpp_templates:
     declarations: 'blocks::packed_to_unpacked_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::packed_to_unpacked_${type.fcn}::make(${bits_per_chunk}, ${endianness});'
     translations:
-        gr.: ''
+        gr\.: ''
 
 file_format: 1

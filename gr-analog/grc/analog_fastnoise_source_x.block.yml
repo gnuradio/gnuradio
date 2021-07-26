@@ -48,7 +48,7 @@ cpp_templates:
     - set_amplitude(${amp})
     link: ['gnuradio::gnuradio-analog']
     translations:
-        analog.: 'analog::'
+        analog\.: 'analog::'
 
 documentation: |-
     The fast noise source works by pre-generating a pool of random variates taken from the specified distribution.  At runtime, samples are then uniform randomly chosen from this pool which is a very fast operation.
