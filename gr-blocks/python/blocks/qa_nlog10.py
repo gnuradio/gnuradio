@@ -29,7 +29,7 @@ class test_nlog10(gr_unittest.TestCase):
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual(expected_result, result_data, 5)
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data, 4)
 
 
 if __name__ == '__main__':
