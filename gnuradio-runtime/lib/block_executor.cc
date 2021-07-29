@@ -59,9 +59,11 @@ static int min_available_space(block* m,
                                int min_noutput_items,
                                int& output_idx)
 {
+#if ENABLE_LOGGING
     gr::logger_ptr logger;
     gr::logger_ptr debug_logger;
     gr::configure_default_loggers(logger, debug_logger, "min_available_space");
+#endif
 
     int min_space = std::numeric_limits<int>::max();
     if (min_noutput_items == 0)
@@ -285,7 +287,7 @@ block_executor::state block_executor::run_one_iteration()
 
         // determine the minimum available output space
         output_idx = 0;
-    out_try_again:
+    blkd_out_try_again:
         noutput_items = min_available_space(
             m, d, m->output_multiple(), m->min_noutput_items(), output_idx);
         noutput_items = std::min(noutput_items, max_noutput_items);
@@ -312,7 +314,7 @@ block_executor::state block_executor::run_one_iteration()
                         msg << m << " -- BLKD_OUT -- ([1] try again idx: " << output_idx
                             << ")";
                         GR_LOG_INFO(d_debug_logger, msg.str()););
-                    goto out_try_again;
+                    goto blkd_out_try_again;
                 }
             } else {
                 return BLKD_OUT;
@@ -329,7 +331,6 @@ block_executor::state block_executor::run_one_iteration()
         d_input_done.resize(d->ninputs());
         d_output_items.resize(0);
         d_start_nitems_read.resize(d->ninputs());
-        //        LOG(GR_LOG_INFO(d_debug_logger, "sink"););
         LOG(std::ostringstream msg; msg << m << " -- sink";
             GR_LOG_INFO(d_debug_logger, msg.str()););
 
@@ -367,7 +368,6 @@ block_executor::state block_executor::run_one_iteration()
             GR_LOG_INFO(d_debug_logger, msg.str()););
 
         if (noutput_items == 0) { // we're blocked on input
-            //            LOG(GR_LOG_INFO(d_debug_logger, "BLKD_IN"););
             LOG(std::ostringstream msg; msg << m << " -- BLKD_IN";
                 GR_LOG_INFO(d_debug_logger, msg.str()));
             return BLKD_IN;
@@ -400,7 +400,7 @@ block_executor::state block_executor::run_one_iteration()
 
         // determine the minimum available output space
         output_idx = 0;
-    out_try_again2:
+    blkd_out_try_again2:
         noutput_items = min_available_space(
             m, d, m->output_multiple(), m->min_noutput_items(), output_idx);
         if (ENABLE_LOGGING) {
@@ -415,7 +415,6 @@ block_executor::state block_executor::run_one_iteration()
             goto were_done;
 
         if (noutput_items == 0) { // we're output blocked
-            //            LOG(GR_LOG_INFO(d_debug_logger, "BLKD_OUT"););
             LOG(std::ostringstream msg; msg << m << " -- BLKD_OUT";
                 GR_LOG_INFO(d_debug_logger, msg.str()));
 
@@ -435,7 +434,7 @@ block_executor::state block_executor::run_one_iteration()
                         msg << m << " -- BLKD_OUT -- ([2] try again idx: " << output_idx
                             << ")";
                         GR_LOG_INFO(d_debug_logger, msg.str()););
-                    goto out_try_again2;
+                    goto blkd_out_try_again2;
                 }
             } else {
                 return BLKD_OUT;
@@ -531,10 +530,6 @@ block_executor::state block_executor::run_one_iteration()
                 GR_LOG_INFO(d_debug_logger, msg.str()));
 
             buffer_reader_sptr in_buf = d->input(i);
-
-            LOG(std::ostringstream msg;
-                msg << m << " (t: " << this << ") -- pre-callback";
-                GR_LOG_DEBUG(d_debug_logger, msg.str()));
 
             if (in_buf->input_blkd_cb_ready(d_ninput_items_required[i])) {
                 gr::custom_lock lock(std::ref(*in_buf->mutex()), in_buf->buffer());
@@ -681,8 +676,8 @@ block_executor::state block_executor::run_one_iteration()
                 GR_LOG_DEBUG(d_debug_logger, msg.str()););
             gr::custom_lock lock(std::ref(*out_buf->mutex()), out_buf);
             out_buf->output_blocked_callback(m->output_multiple(), true);
-            LOG(std::ostringstream msg; msg << m << " -- NO OUTPUT -- [" << i
-                                            << "] -- OUTPUT BLOCKED CBACK: " << rc;
+            LOG(std::ostringstream msg;
+                msg << m << " -- NO OUTPUT -- [" << i << "] -- OUTPUT BLOCKED CBACK ";
                 GR_LOG_DEBUG(d_debug_logger, msg.str()););
         }
 
@@ -692,7 +687,6 @@ block_executor::state block_executor::run_one_iteration()
     GR_LOG_ERROR(d_logger, "invalid state while going through iteration state machine");
 
 were_done:
-    //    LOG(GR_LOG_INFO(d_debug_logger, "we're done"););
     LOG(std::ostringstream msg; msg << m << " -- we're done";
         GR_LOG_INFO(d_debug_logger, msg.str()));
     d->set_done(true);

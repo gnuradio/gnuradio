@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(buffer.h)                                                  */
-/* BINDTOOL_HEADER_FILE_HASH(e34c34f70f65bbc7dfbc45adcadf7796)                     */
+/* BINDTOOL_HEADER_FILE(buffer_type.h)                                        */
+/* BINDTOOL_HEADER_FILE_HASH(0b679f644e232dd519bb812b93c8c0e3)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -23,30 +23,19 @@
 
 namespace py = pybind11;
 
-#include <gnuradio/block.h>
-#include <gnuradio/buffer.h>
-#include <gnuradio/buffer_reader.h>
+#include <gnuradio/buffer_type.h>
 // pydoc.h is automatically generated in the build directory
-#include <buffer_pydoc.h>
+#include <buffer_type_pydoc.h>
 
-void bind_buffer(py::module& m)
+// NOTE: buffer_type is really a typedef of const buffer_type_base& so
+// buffer_type_base is used below because that's the type we really care about
+void bind_buffer_type(py::module& m)
 {
 
-    using buffer = ::gr::buffer;
-    using buffer_reader = ::gr::buffer_reader;
+    using buffer_type_base = ::gr::buffer_type_base;
 
 
-    py::class_<buffer, std::shared_ptr<buffer>>(m, "buffer", D(buffer));
+    py::class_<buffer_type_base>(m, "buffer_type_base", D(buffer_type_base))
 
-
-    py::class_<buffer_reader, std::shared_ptr<buffer_reader>>(
-        m, "buffer_reader", D(buffer_reader));
-
-    m.def("buffer_ncurrently_allocated",
-          &::gr::buffer_ncurrently_allocated,
-          D(buffer_ncurrently_allocated));
-
-    m.def("buffer_reader_ncurrently_allocated",
-          &::gr::buffer_reader_ncurrently_allocated,
-          D(buffer_reader_ncurrently_allocated));
+        .def("name", &buffer_type_base::name, D(buffer_type_base, name));
 }

@@ -36,23 +36,25 @@ static inline long minimum_buffer_items(long type_size, long page_size)
     return page_size / GR_GCD(type_size, page_size);
 }
 
+buffer_type buffer_double_mapped::type(buftype_DEFAULT_NON_CUSTOM{});
 
 buffer_double_mapped::buffer_double_mapped(int nitems,
                                            size_t sizeof_item,
                                            uint64_t downstream_lcm_nitems,
+                                           uint32_t downstream_max_out_mult,
                                            block_sptr link)
-    : buffer(BufferMappingType::DoubleMapped,
+    : buffer(buffer_mapping_type::double_mapped,
              nitems,
              sizeof_item,
              downstream_lcm_nitems,
+             downstream_max_out_mult,
              link)
 {
     gr::configure_default_loggers(d_logger, d_debug_logger, "buffer_double_mapped");
-    if (!allocate_buffer(nitems, sizeof_item))
+    if (!allocate_buffer(nitems))
         throw std::bad_alloc();
 
 #ifdef BUFFER_DEBUG
-    // BUFFER DEBUG
     {
         std::ostringstream msg;
         msg << "[" << this << "] "
@@ -62,13 +64,18 @@ buffer_double_mapped::buffer_double_mapped(int nitems,
 #endif
 }
 
+// NB: Added the extra 'block_sptr unused' parameter so that the
+// call signature matches the other factory-like functions used to create
+// the buffer_single_mapped subclasses
 buffer_sptr make_buffer_double_mapped(int nitems,
                                       size_t sizeof_item,
                                       uint64_t downstream_lcm_nitems,
-                                      block_sptr link)
+                                      uint32_t downstream_max_out_mult,
+                                      block_sptr link,
+                                      block_sptr unused)
 {
-    return buffer_sptr(
-        new buffer_double_mapped(nitems, sizeof_item, downstream_lcm_nitems, link));
+    return buffer_sptr(new buffer_double_mapped(
+        nitems, sizeof_item, downstream_lcm_nitems, downstream_max_out_mult, link));
 }
 
 buffer_double_mapped::~buffer_double_mapped() {}
@@ -77,13 +84,13 @@ buffer_double_mapped::~buffer_double_mapped() {}
  * sets d_vmcircbuf, d_base, d_bufsize.
  * returns true iff successful.
  */
-bool buffer_double_mapped::allocate_buffer(int nitems, size_t sizeof_item)
+bool buffer_double_mapped::allocate_buffer(int nitems)
 {
     int orig_nitems = nitems;
 
     // Any buffer size we come up with must be a multiple of min_nitems.
     int granularity = gr::vmcircbuf_sysconfig::granularity();
-    int min_nitems = minimum_buffer_items(sizeof_item, granularity);
+    int min_nitems = minimum_buffer_items(d_sizeof_item, granularity);
 
     // Round-up nitems to a multiple of min_nitems.
     if (nitems % min_nitems != 0)
@@ -91,7 +98,7 @@ bool buffer_double_mapped::allocate_buffer(int nitems, size_t sizeof_item)
 
     // If we rounded-up a whole bunch, give the user a heads up.
     // This only happens if sizeof_item is not a power of two.
-    if (nitems > 2 * orig_nitems && nitems * (int)sizeof_item > granularity) {
+    if (nitems > 2 * orig_nitems && nitems * (int)d_sizeof_item > granularity) {
         auto msg =
             str(boost::format(
                     "allocate_buffer: tried to allocate"
@@ -99,7 +106,7 @@ bool buffer_double_mapped::allocate_buffer(int nitems, size_t sizeof_item)
                     "   %d were allocated.  If this isn't OK, consider padding"
                     "   your structure to a power-of-two bytes."
                     "   On this platform, our allocation granularity is %d bytes.") %
-                orig_nitems % sizeof_item % nitems % granularity);
+                orig_nitems % d_sizeof_item % nitems % granularity);
         GR_LOG_WARN(d_logger, msg.c_str());
     }
 
@@ -138,7 +145,6 @@ int buffer_double_mapped::space_available()
         }
 
 #ifdef BUFFER_DEBUG
-        // BUFFER DEBUG
         std::ostringstream msg;
         msg << "[" << this << "] "
             << "space_available() called  d_write_index: " << d_write_index

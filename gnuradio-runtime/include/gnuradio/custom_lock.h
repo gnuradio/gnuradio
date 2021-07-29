@@ -19,7 +19,9 @@ namespace gr {
 
 /*!
  * Custom lock interface. Objects should implement this interface in order to
- * use the custom_lock object below.
+ * use the custom_lock object below. The interface defines two functions that,
+ * as their names suggest, are called when the lock is locked and unlocked
+ * respectively.
  */
 class custom_lock_if
 {
@@ -36,7 +38,11 @@ public:
 };
 
 /*!
- * Write me!
+ * Class that defines a lock using a mutex and a "locker" that implements the
+ * custom_lock_if interface. The interface defines an on_lock() function that
+ * is executed when the lock is locked and an on_unlock() function that the
+ * is called when the lock is unlocked. Calls to these two functions are
+ * delegated to the locker object.
  */
 class custom_lock
 {

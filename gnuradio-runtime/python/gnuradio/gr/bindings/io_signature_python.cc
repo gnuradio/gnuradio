@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(io_signature.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(aa246441b45c1a5b872509ed410615ae)                     */
+/* BINDTOOL_HEADER_FILE_HASH(baf27e696237b6542ec62a4c5627ea1d)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -40,6 +40,7 @@ void bind_io_signature(py::module& m)
              py::arg("min_streams"),
              py::arg("max_streams"),
              py::arg("sizeof_stream_item"),
+             py::arg("buftype") = gr::buffer_double_mapped::type,
              D(io_signature, make))
 
 
@@ -49,6 +50,8 @@ void bind_io_signature(py::module& m)
                     py::arg("max_streams"),
                     py::arg("sizeof_stream_item1"),
                     py::arg("sizeof_stream_item2"),
+                    py::arg("buftype1") = gr::buffer_double_mapped::type,
+                    py::arg("buftype2") = gr::buffer_double_mapped::type,
                     D(io_signature, make2))
 
 
@@ -59,14 +62,28 @@ void bind_io_signature(py::module& m)
                     py::arg("sizeof_stream_item1"),
                     py::arg("sizeof_stream_item2"),
                     py::arg("sizeof_stream_item3"),
+                    py::arg("buftype1") = gr::buffer_double_mapped::type,
+                    py::arg("buftype2") = gr::buffer_double_mapped::type,
+                    py::arg("buftype3") = gr::buffer_double_mapped::type,
                     D(io_signature, make3))
 
+        .def_static(
+            "makev",
+            py::overload_cast<int, int, const std::vector<int>&>(&io_signature::makev),
+            py::arg("min_streams"),
+            py::arg("max_streams"),
+            py::arg("sizeof_stream_items"),
+            D(io_signature, makev))
 
         .def_static("makev",
-                    &io_signature::makev,
+                    py::overload_cast<int,
+                                      int,
+                                      const std::vector<int>&,
+                                      gr::gr_vector_buffer_type>(&io_signature::makev),
                     py::arg("min_streams"),
                     py::arg("max_streams"),
                     py::arg("sizeof_stream_items"),
+                    py::arg("buftypes"),
                     D(io_signature, makev))
 
 

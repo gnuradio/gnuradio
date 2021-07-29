@@ -65,7 +65,7 @@ void portaudio_source::create_ringbuffer(void)
 
     // FYI, the buffer indices are in units of samples.
     d_writer = gr::make_buffer(
-        N_BUFFERS * bufsize_samples, sizeof(sample_t), N_BUFFERS * bufsize_samples);
+        N_BUFFERS * bufsize_samples, sizeof(sample_t), N_BUFFERS * bufsize_samples, 1);
     d_reader = gr::buffer_add_reader(d_writer, 0);
 }
 

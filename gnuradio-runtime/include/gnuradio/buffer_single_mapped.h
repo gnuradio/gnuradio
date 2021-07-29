@@ -11,20 +11,20 @@
 #ifndef INCLUDED_GR_RUNTIME_BUFFER_SINGLE_MAPPED_H
 #define INCLUDED_GR_RUNTIME_BUFFER_SINGLE_MAPPED_H
 
+#include <cstddef>
 #include <functional>
 
 #include <gnuradio/api.h>
-#include <gnuradio/block.h>
 #include <gnuradio/buffer.h>
+#include <gnuradio/buffer_reader.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/runtime_types.h>
 
 namespace gr {
 
 /*!
- * TODO: update this
- *
- * \brief Single writer, multiple reader fifo.
+ * \brief A single mapped buffer where wrapping conditions are handled explicitly
+ * via input/output_blocked_callback functions called from block_executor.
  * \ingroup internal
  */
 class GR_RUNTIME_API buffer_single_mapped : public buffer
@@ -45,43 +45,20 @@ public:
      */
     virtual int space_available();
 
-    virtual void update_reader_block_history(unsigned history, int delay)
-    {
-        unsigned old_max = d_max_reader_history;
-        d_max_reader_history = std::max(d_max_reader_history, history);
-        if (d_max_reader_history != old_max) {
-            d_write_index = d_max_reader_history - 1;
+    virtual void update_reader_block_history(unsigned history, int delay);
 
-#ifdef BUFFER_DEBUG
-            std::ostringstream msg;
-            msg << "[" << this << "] "
-                << "buffer_single_mapped constructor -- set wr index to: "
-                << d_write_index;
-            GR_LOG_DEBUG(d_logger, msg.str());
-#endif
+    /*!
+     * \brief Return true if thread is ready to call input_blocked_callback,
+     * false otherwise
+     */
+    virtual bool input_blkd_cb_ready(int items_required, unsigned read_index);
 
-            // Reset the reader's read index if the buffer's write index has changed.
-            // Note that "history - 1" is the nzero_preload value passed to
-            // buffer_add_reader.
-            for (auto reader : d_readers) {
-                reader->d_read_index = d_write_index - (reader->link()->history() - 1);
-            }
-        }
-
-        // Only attempt to set has history flag if it is not already set
-        if (!d_has_history) {
-            // Blocks that set delay may set history to delay + 1 but this is
-            // not "real" history
-            d_has_history = ((static_cast<int>(history) - 1) != delay);
-        }
-    }
-
-    void deleter(char* ptr)
-    {
-        // Delegate free of the underlying buffer to the block that owns it
-        if (ptr != nullptr)
-            buf_owner()->free_custom_buffer(ptr);
-    }
+    /*!
+     * \brief Callback function that the scheduler will call when it determines
+     * that the input is blocked. Override this function if needed.
+     */
+    virtual bool
+    input_blocked_callback(int items_required, int items_avail, unsigned read_index) = 0;
 
     /*!
      * \brief Return true if thread is ready to call the callback, false otherwise
@@ -92,14 +69,21 @@ public:
      * \brief Callback function that the scheduler will call when it determines
      * that the output is blocked
      */
-    virtual bool output_blocked_callback(int output_multiple, bool force);
+    virtual bool output_blocked_callback(int output_multiple, bool force) = 0;
 
 protected:
     /*!
-     * sets d_base, d_bufsize.
-     * returns true iff successful.
+     * \brief Make reasonable attempt to adjust nitems based on read/write
+     * granularity then delegate actual allocation to do_allocate_buffer().
+     * @return true iff successful.
      */
-    bool allocate_buffer(int nitems, size_t sizeof_item, uint64_t downstream_lcm_nitems);
+    virtual bool allocate_buffer(int nitems);
+
+    /*!
+     * \brief Do actual buffer allocation. This is intended (required) to be
+     * handled by the derived class.
+     */
+    virtual bool do_allocate_buffer(size_t final_nitems, size_t sizeof_item) = 0;
 
     virtual unsigned index_add(unsigned a, unsigned b)
     {
@@ -124,7 +108,7 @@ protected:
         return s;
     }
 
-private:
+
     friend class buffer_reader;
 
     friend GR_RUNTIME_API buffer_sptr make_buffer(int nitems,
@@ -135,7 +119,7 @@ private:
 
     block_sptr d_buf_owner; // block that "owns" this buffer
 
-    std::unique_ptr<char, std::function<void(char*)>> d_buffer;
+    std::unique_ptr<char> d_buffer;
 
     /*!
      * \brief constructor is private.  Use gr_make_buffer to create instances.
@@ -157,8 +141,70 @@ private:
     buffer_single_mapped(int nitems,
                          size_t sizeof_item,
                          uint64_t downstream_lcm_nitems,
+                         uint32_t downstream_max_out_mult,
                          block_sptr link,
                          block_sptr buf_owner);
+
+    /*!
+     * \brief Abstracted logic for the input blocked callback function.
+     *
+     * This function contains the logic for the input blocked callback however
+     * the data adjustment portion of the callback has been abstracted to allow
+     * the caller to pass in the desired buffer and corresponding buffer
+     * manipulation functions (memcpy and memmove).
+     *
+     * The input blocked callback is called when a reader needs to read more
+     * data than is available in a buffer and the available data is located at
+     * the end of the buffer. The input blocked callback will attempt to move
+     * any data located at the beginning of the buffer "down", and will then
+     * attempt to copy from the end of the buffer back to the beginning of the
+     * buffer. This process explicitly handles wrapping for a single mapped
+     * buffer and will realign the data at the beginning of the buffer such
+     * that the reader is able to read the available data and becomes unblocked.
+     *
+     * \param items_required is the number of items required by the reader
+     * \param items_avail is the number of items available
+     * \param read_index is the current read index of the buffer reader caller
+     * \param buffer_ptr is the pointer to the desired buffer
+     * \param memcpy_func is a pointer to a memcpy function appropriate for the
+     *                    the passed in buffer
+     * \param memmove_func is a pointer to a memmove function appropriate for
+     *                     the passed in buffer
+     */
+    virtual bool input_blocked_callback_logic(int items_required,
+                                              int items_avail,
+                                              unsigned read_index,
+                                              char* buffer_ptr,
+                                              memcpy_func_t memcpy_func,
+                                              memmove_func_t memmove_func);
+
+    /*!
+     * \brief Abstracted logic for the output blocked callback function.
+     *
+     * This function contains the logic for the output blocked callback however
+     * the data adjustment portion of the callback has been abstracted to allow
+     * the caller to pass in the desired buffer and corresponding buffer
+     * manipulation functions (memcpy and memmove).
+     *
+     * The output blocked callback is called when a block needs to write data
+     * to the end of a single mapped buffer but not enough free space exists to
+     * write the data before the end of the buffer is reached. The output blocked
+     * callback will attempt to copy data located towards the end of a single
+     * mapped buffer back to the beginning of the buffer. This process explicitly
+     * handles wrapping for a single mapped buffer and will realign data located
+     * at the end of a buffer back to the beginning of the buffer such that the
+     * writing block can write its output into the buffer after the existing data.
+     *
+     * \param output_multiple
+     * \param force run the callback disregarding the internal checks
+     * \param buffer_ptr is the pointer to the desired buffer
+     * \param memmove_func is a pointer to a memmove function appropriate for
+     *                     the passed in buffer
+     */
+    virtual bool output_blocked_callback_logic(int output_multiple,
+                                               bool force,
+                                               char* buffer_ptr,
+                                               memmove_func_t memmove_func);
 };
 
 } /* namespace gr */

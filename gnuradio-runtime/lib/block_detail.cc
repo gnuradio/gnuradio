@@ -114,6 +114,7 @@ void block_detail::consume_each(int how_many_items)
 void block_detail::produce(int which_output, int how_many_items)
 {
     if (how_many_items > 0) {
+        d_output[which_output]->post_work(how_many_items);
         d_output[which_output]->update_write_pointer(how_many_items);
         d_produce_or |= how_many_items;
     }
@@ -123,6 +124,7 @@ void block_detail::produce_each(int how_many_items)
 {
     if (how_many_items > 0) {
         for (int i = 0; i < noutputs(); i++) {
+            d_output[i]->post_work(how_many_items);
             d_output[i]->update_write_pointer(how_many_items);
         }
         d_produce_or |= how_many_items;

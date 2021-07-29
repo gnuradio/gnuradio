@@ -15,6 +15,7 @@
 #include "flat_flowgraph.h"
 #include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
+#include <gnuradio/buffer_double_mapped.h>
 #include <gnuradio/buffer_reader.h>
 #include <gnuradio/buffer_type.h>
 #include <gnuradio/integer_math.h>
@@ -87,6 +88,7 @@ void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
     // Determine the downstream max per output port
     std::vector<int> downstream_max_nitems(noutputs, 0);
     std::vector<uint64_t> downstream_lcm_nitems(noutputs, 1);
+    std::vector<uint32_t> downstream_max_out_mult(noutputs, 1);
 
 #ifdef BUFFER_DEBUG
     std::ostringstream msg;
@@ -96,6 +98,7 @@ void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
     for (int i = 0; i < noutputs; i++) {
         int nitems = 0;
         uint64_t lcm_nitems = 1;
+        uint32_t max_out_multiple = 1;
         basic_block_vector_t downstream_blocks = calc_downstream_blocks(grblock, i);
         for (basic_block_viter_t blk = downstream_blocks.begin();
              blk != downstream_blocks.end();
@@ -116,8 +119,8 @@ void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
             double decimation = (1.0 / dgrblock->relative_rate());
             int multiple = dgrblock->output_multiple();
             int history = dgrblock->history();
-            nitems =
-                std::max(nitems, static_cast<int>(2 * (decimation * multiple + history)));
+            nitems = std::max(
+                nitems, static_cast<int>(2 * (decimation * multiple + (history - 1))));
 
             // Calculate the LCM of downstream reader nitems
 #ifdef BUFFER_DEBUG
@@ -131,6 +134,7 @@ void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
                                     (uint64_t)(dgrblock->fixed_rate_noutput_to_ninput(1) -
                                                (dgrblock->history() - 1)));
             }
+
             if (dgrblock->relative_rate() != 1.0) {
                 // Relative rate
                 lcm_nitems = GR_LCM(lcm_nitems, dgrblock->relative_rate_d());
@@ -139,6 +143,10 @@ void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
             // Sanity check, make sure lcm_nitems is at least 1
             if (lcm_nitems < 1) {
                 lcm_nitems = 1;
+            }
+
+            if (static_cast<uint32_t>(multiple) > max_out_multiple) {
+                max_out_multiple = multiple;
             }
 
 #ifdef BUFFER_DEBUG
@@ -161,11 +169,15 @@ void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
         }
         downstream_max_nitems[i] = nitems;
         downstream_lcm_nitems[i] = lcm_nitems;
+        downstream_max_out_mult[i] = max_out_multiple;
     }
 
     // Allocate the block detail and necessary buffers
-    grblock->allocate_detail(
-        ninputs, noutputs, downstream_max_nitems, downstream_lcm_nitems);
+    grblock->allocate_detail(ninputs,
+                             noutputs,
+                             downstream_max_nitems,
+                             downstream_lcm_nitems,
+                             downstream_max_out_mult);
 }
 
 void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
@@ -189,26 +201,46 @@ void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
         if (!src_grblock)
             throw std::runtime_error("connect_block_inputs found non-gr::block");
 
+        // In order to determine the buffer context, we need to examine both
+        // the upstream and the downstream buffer_types
+        buffer_type src_buf_type =
+            src_grblock->output_signature()->stream_buffer_type(src_port);
+        buffer_type dest_buf_type =
+            grblock->input_signature()->stream_buffer_type(dst_port);
+
+        buffer_context context;
+        if (src_buf_type == buffer_double_mapped::type &&
+            dest_buf_type == buffer_double_mapped::type) {
+            context = buffer_context::HOST_TO_HOST;
+        } else if (src_buf_type != buffer_double_mapped::type &&
+                   dest_buf_type == buffer_double_mapped::type) {
+            context = buffer_context::DEVICE_TO_HOST;
+        } else if (src_buf_type == buffer_double_mapped::type &&
+                   dest_buf_type != buffer_double_mapped::type) {
+            context = buffer_context::HOST_TO_DEVICE;
+        } else if (src_buf_type != buffer_double_mapped::type &&
+                   dest_buf_type != buffer_double_mapped::type) {
+            context = buffer_context::DEVICE_TO_DEVICE;
+        }
+
         buffer_sptr src_buffer;
-        buffer_type_t src_buf_type = src_grblock->get_buffer_type();
-        buffer_type_t dest_buf_type = grblock->get_buffer_type();
-        if (dest_buf_type == buftype_DEFAULT_NON_CUSTOM::get() ||
+        if (dest_buf_type == buffer_double_mapped::type ||
             dest_buf_type == src_buf_type) {
             // The block is not using a custom buffer OR the block and the upstream
             // block both use the same kind of custom buffer
             src_buffer = src_grblock->detail()->output(src_port);
         } else {
-            if (dest_buf_type != buftype_DEFAULT_NON_CUSTOM::get() &&
-                src_buf_type == buftype_DEFAULT_NON_CUSTOM::get()) {
+            if (dest_buf_type != buffer_double_mapped::type &&
+                src_buf_type == buffer_double_mapped::type) {
                 // The block uses a custom buffer but the upstream block does not
                 // therefore the upstream block's buffer can be replaced with the
                 // type of buffer that the block needs
                 std::ostringstream msg;
                 msg << "Block: " << grblock->identifier()
-                    << "replacing upstream block: " << src_grblock->identifier()
+                    << " replacing upstream block: " << src_grblock->identifier()
                     << " buffer with a custom buffer";
-                GR_LOG_DEBUG(d_debug_logger, msg.str());
-                src_buffer = src_grblock->replace_buffer(src_port, grblock);
+                GR_LOG_DEBUG(d_logger, msg.str());
+                src_buffer = src_grblock->replace_buffer(src_port, dst_port, grblock);
             } else {
                 // Both the block and upstream block use incompatible buffer types
                 // which is not currently allowed
@@ -223,9 +255,13 @@ void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
             }
         }
 
-        GR_LOG_DEBUG(d_debug_logger,
-                     "Setting input " + std::to_string(dst_port) + " from edge " +
-                         (*e).identifier());
+        // Set buffer's context
+        src_buffer->set_context(context);
+
+        std::ostringstream msg;
+        msg << "Setting input " << dst_port << " from edge " << (*e).identifier()
+            << " context: " << context;
+        GR_LOG_DEBUG(d_debug_logger, msg.str());
 
         detail->set_input(dst_port,
                           buffer_add_reader(src_buffer,
@@ -341,7 +377,6 @@ void flat_flowgraph::merge_connections(flat_flowgraph_sptr old_ffg)
         // Now deal with the fact that the block details might have
         // changed numbers of inputs and outputs vs. in the old
         // flowgraph.
-
         block->detail()->reset_nitem_counters();
         block->detail()->clear_tags();
     }
