@@ -34,11 +34,11 @@ buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay
 
     buffer_reader_sptr r;
 
-    if (buf->get_mapping_type() == BufferMappingType::DoubleMapped) {
+    if (buf->get_mapping_type() == buffer_mapping_type::double_mapped) {
         r.reset(new buffer_reader(
             buf, buf->index_sub(buf->d_write_index, nzero_preload), link));
         r->declare_sample_delay(delay);
-    } else if (buf->get_mapping_type() == BufferMappingType::SingleMapped) {
+    } else if (buf->get_mapping_type() == buffer_mapping_type::single_mapped) {
         r.reset(new buffer_reader_sm(
             buf, buf->index_sub(buf->d_write_index, nzero_preload), link));
         r->declare_sample_delay(delay);
@@ -51,11 +51,15 @@ buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay
     buf->d_readers.push_back(r.get());
 
 #ifdef BUFFER_DEBUG
-    // BUFFER DEBUG
-    std::cerr << " [" << buf.get() << ";" << r.get()
-              << "] buffer_add_reader() nzero_preload " << nzero_preload
-              << " -- delay: " << delay << " -- history: " << link->history()
-              << " -- RD_idx: " << r->d_read_index << std::endl;
+    gr::logger_ptr logger;
+    gr::logger_ptr debug_logger;
+    gr::configure_default_loggers(logger, debug_logger, "buffer_add_reader");
+
+    std::ostringstream msg;
+    msg << " [" << buf.get() << ";" << r.get() << "] buffer_add_reader() nzero_preload "
+        << nzero_preload << " -- delay: " << delay << " -- history: " << link->history()
+        << " -- RD_idx: " << r->d_read_index;
+    GR_LOG_DEBUG(debug_logger, msg.str());
 #endif
 
     return r;
@@ -89,12 +93,11 @@ void buffer_reader::declare_sample_delay(unsigned delay)
 
 unsigned buffer_reader::sample_delay() const { return d_attr_delay; }
 
-int buffer_reader::items_available() // const
+int buffer_reader::items_available() const
 {
     int available = d_buffer->index_sub(d_buffer->d_write_index, d_read_index);
 
 #ifdef BUFFER_DEBUG
-    // BUFFER DEBUG
     std::ostringstream msg;
     msg << "[" << d_buffer << ";" << this << "] "
         << "items_available() WR_idx: " << d_buffer->d_write_index
@@ -109,7 +112,8 @@ int buffer_reader::items_available() // const
 
 const void* buffer_reader::read_pointer()
 {
-    return &d_buffer->d_base[d_read_index * d_buffer->d_sizeof_item];
+    // Delegate to buffer subclass
+    return d_buffer->_read_pointer(d_read_index);
 }
 
 void buffer_reader::update_read_pointer(int nitems)
@@ -117,7 +121,6 @@ void buffer_reader::update_read_pointer(int nitems)
     gr::thread::scoped_lock guard(*mutex());
 
 #ifdef BUFFER_DEBUG
-    // BUFFER DEBUG
     unsigned orig_rd_idx = d_read_index;
 #endif
 
@@ -125,7 +128,6 @@ void buffer_reader::update_read_pointer(int nitems)
     d_abs_read_offset += nitems;
 
 #ifdef BUFFER_DEBUG
-    // BUFFER DEBUG
     std::ostringstream msg;
     msg << "[" << d_buffer << ";" << this
         << "] update_read_pointer -- orig d_read_index: " << orig_rd_idx

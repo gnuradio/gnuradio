@@ -384,7 +384,8 @@ void block::set_min_output_buffer(int port, long min_output_buffer)
 void block::allocate_detail(int ninputs,
                             int noutputs,
                             const std::vector<int>& downstream_max_nitems_vec,
-                            const std::vector<uint64_t>& downstream_lcm_nitems_vec)
+                            const std::vector<uint64_t>& downstream_lcm_nitems_vec,
+                            const std::vector<uint32_t>& downstream_max_out_mult_vec)
 {
     block_detail_sptr detail = make_block_detail(ninputs, noutputs);
 
@@ -393,8 +394,10 @@ void block::allocate_detail(int ninputs,
     for (int i = 0; i < noutputs; i++) {
         expand_minmax_buffer(i);
 
-        buffer_sptr buffer = allocate_buffer(
-            i, downstream_max_nitems_vec[i], downstream_lcm_nitems_vec[i]);
+        buffer_sptr buffer = allocate_buffer(i,
+                                             downstream_max_nitems_vec[i],
+                                             downstream_lcm_nitems_vec[i],
+                                             downstream_max_out_mult_vec[i]);
         GR_LOG_DEBUG(d_debug_logger,
                      "Allocated buffer for output " + identifier() + " " +
                          std::to_string(i));
@@ -413,19 +416,24 @@ void block::allocate_detail(int ninputs,
     set_detail(detail);
 }
 
-buffer_sptr block::replace_buffer(uint32_t out_port, block_sptr block_owner)
+buffer_sptr
+block::replace_buffer(uint32_t src_port, uint32_t dst_port, block_sptr block_owner)
 {
     block_detail_sptr detail_ = detail();
-    buffer_sptr orig_buffer = detail_->output(out_port);
+    buffer_sptr orig_buffer = detail_->output(src_port);
+
+    buffer_type buftype = block_owner->output_signature()->stream_buffer_type(dst_port);
 
     // Make a new buffer but this time use the passed in block as the owner
-    buffer_sptr new_buffer = make_buffer(orig_buffer->bufsize(),
-                                         orig_buffer->get_sizeof_item(),
-                                         orig_buffer->get_downstream_lcm_nitems(),
-                                         shared_from_base<block>(),
-                                         block_owner);
+    buffer_sptr new_buffer =
+        buftype.make_buffer(orig_buffer->bufsize(),
+                            orig_buffer->get_sizeof_item(),
+                            orig_buffer->get_downstream_lcm_nitems(),
+                            orig_buffer->get_max_reader_output_multiple(),
+                            shared_from_base<block>(),
+                            block_owner);
 
-    detail_->set_output(out_port, new_buffer);
+    detail_->set_output(src_port, new_buffer);
     return new_buffer;
 }
 
@@ -435,7 +443,8 @@ void block::enable_update_rate(bool en) { d_update_rate = en; }
 
 buffer_sptr block::allocate_buffer(int port,
                                    int downstream_max_nitems,
-                                   uint64_t downstream_lcm_nitems)
+                                   uint64_t downstream_lcm_nitems,
+                                   uint32_t downstream_max_out_mult)
 {
     int item_size = output_signature()->sizeof_stream_item(port);
 
@@ -473,14 +482,16 @@ buffer_sptr block::allocate_buffer(int port,
     buffer_sptr buf;
 
 #ifdef BUFFER_DEBUG
-    // BUFFER DEBUG
     GR_LOG_DEBUG(d_logger,
                  "Block: " + name() + " allocated buffer for output " + identifier());
 #endif
 
+    // Grab the buffer type associated with the output port and use it to
+    // create the specified type of buffer
+    buffer_type buftype = output_signature()->stream_buffer_type(port);
+
     try {
 #ifdef BUFFER_DEBUG
-        // BUFFER DEBUG
         std::ostringstream msg;
         msg << "downstream_max_nitems: " << downstream_max_nitems
             << " -- downstream_lcm_nitems: " << downstream_lcm_nitems
@@ -498,18 +509,20 @@ buffer_sptr block::allocate_buffer(int port,
         }
         GR_LOG_DEBUG(d_logger, msg.str());
 #endif
-        buf = make_buffer(nitems,
-                          item_size,
-                          downstream_lcm_nitems,
-                          shared_from_base<block>(),
-                          shared_from_base<block>());
+        buf = buftype.make_buffer(nitems,
+                                  item_size,
+                                  downstream_lcm_nitems,
+                                  downstream_max_out_mult,
+                                  shared_from_base<block>(),
+                                  shared_from_base<block>());
 
     } catch (std::bad_alloc&) {
-        buf = make_buffer(nitems,
-                          item_size,
-                          downstream_lcm_nitems,
-                          shared_from_base<block>(),
-                          shared_from_base<block>());
+        buf = buftype.make_buffer(nitems,
+                                  item_size,
+                                  downstream_lcm_nitems,
+                                  downstream_max_out_mult,
+                                  shared_from_base<block>(),
+                                  shared_from_base<block>());
     }
 
     // Set the max noutput items size here to make sure it's always

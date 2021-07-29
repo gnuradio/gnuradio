@@ -13,6 +13,7 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/buffer.h>
+#include <gnuradio/buffer_type.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/runtime_types.h>
 
@@ -28,7 +29,11 @@ class vmcircbuf;
 GR_RUNTIME_API buffer_sptr make_buffer_double_mapped(int nitems,
                                                      size_t sizeof_item,
                                                      uint64_t downstream_lcm_nitems,
-                                                     block_sptr link = block_sptr());
+                                                     uint32_t downstream_max_out_mult,
+                                                     block_sptr link = block_sptr(),
+                                                     block_sptr buf_owner = block_sptr());
+
+MAKE_CUSTOM_BUFFER_TYPE(DEFAULT_NON_CUSTOM, make_buffer_double_mapped);
 
 /*!
  * \brief Single writer, multiple reader fifo.
@@ -37,6 +42,8 @@ GR_RUNTIME_API buffer_sptr make_buffer_double_mapped(int nitems,
 class GR_RUNTIME_API buffer_double_mapped : public buffer
 {
 public:
+    static buffer_type type;
+
     gr::logger_ptr d_logger;
     gr::logger_ptr d_debug_logger;
 
@@ -47,12 +54,18 @@ public:
      */
     virtual int space_available();
 
+    /*!
+     * Inherited from buffer class.
+     * @param nitems is the number of items produced by the general_work() function.
+     */
+    virtual void post_work(int nitems) {}
+
 protected:
     /*!
      * sets d_vmcircbuf, d_base, d_bufsize.
      * returns true iff successful.
      */
-    bool allocate_buffer(int nitems, size_t sizeof_item);
+    bool allocate_buffer(int nitems);
 
     virtual unsigned index_add(unsigned a, unsigned b)
     {
@@ -84,8 +97,13 @@ private:
                                                   uint64_t downstream_lcm_nitems,
                                                   block_sptr link,
                                                   block_sptr buf_owner);
-    friend GR_RUNTIME_API buffer_sptr make_buffer_double_mapped(
-        int nitems, size_t sizeof_item, uint64_t downstream_lcm_nitems, block_sptr link);
+    friend GR_RUNTIME_API buffer_sptr
+    make_buffer_double_mapped(int nitems,
+                              size_t sizeof_item,
+                              uint64_t downstream_lcm_nitems,
+                              uint32_t downstream_max_out_mult,
+                              block_sptr link,
+                              block_sptr buf_owner);
 
     std::unique_ptr<gr::vmcircbuf> d_vmcircbuf;
 
@@ -107,6 +125,7 @@ private:
     buffer_double_mapped(int nitems,
                          size_t sizeof_item,
                          uint64_t downstream_lcm_nitems,
+                         uint32_t downstream_max_out_mult,
                          block_sptr link);
 };
 

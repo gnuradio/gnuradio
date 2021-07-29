@@ -12,6 +12,7 @@
 #include "config.h"
 #endif
 #include "vmcircbuf.h"
+#include <gnuradio/block.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/buffer_double_mapped.h>
 #include <gnuradio/buffer_reader.h>
@@ -56,10 +57,11 @@ static long s_buffer_count = 0; // counts for debugging storage mgmt
  ---------------------------------------------------------------------------- */
 
 
-buffer::buffer(BufferMappingType buf_type,
+buffer::buffer(buffer_mapping_type buf_type,
                int nitems,
                size_t sizeof_item,
                uint64_t downstream_lcm_nitems,
+               uint32_t downstream_max_out_mult,
                block_sptr link)
     : d_base(0),
       d_bufsize(0),
@@ -76,7 +78,9 @@ buffer::buffer(BufferMappingType buf_type,
       d_callback_flag(false),
       d_active_pointer_counter(0),
       d_downstream_lcm_nitems(downstream_lcm_nitems),
-      d_write_multiple(0)
+      d_write_multiple(0),
+      d_max_reader_output_multiple(downstream_max_out_mult),
+      d_context(buffer_context::DEFAULT_INVALID)
 {
     gr::configure_default_loggers(d_logger, d_debug_logger, "buffer");
 
@@ -86,44 +90,27 @@ buffer::buffer(BufferMappingType buf_type,
 buffer_sptr make_buffer(int nitems,
                         size_t sizeof_item,
                         uint64_t downstream_lcm_nitems,
+                        uint32_t downstream_max_out_mult,
                         block_sptr link,
                         block_sptr buf_owner)
 {
 #ifdef BUFFER_DEBUG
-    // BUFFER DEBUG
     gr::logger_ptr logger;
     gr::logger_ptr debug_logger;
     gr::configure_default_loggers(logger, debug_logger, "make_buffer");
     std::ostringstream msg;
 #endif
 
-#if DEBUG_SINGLE_MAPPED
-    if (1) {
-#else
-    if (buf_owner->get_buffer_type() != buftype_DEFAULT_NON_CUSTOM::get()) {
-#endif
-        // Buffer type is NOT the default non custom variety so allocate a
-        // buffer_single_mapped instance
-#ifdef BUFFER_DEBUG
-        msg << "buffer_single_mapped nitems: " << nitems
-            << " -- sizeof_item: " << sizeof_item;
-        GR_LOG_DEBUG(logger, msg.str());
-#endif
-
-        return buffer_sptr(new buffer_single_mapped(
-            nitems, sizeof_item, downstream_lcm_nitems, link, buf_owner));
-
-    } else {
-        // Default to allocating a buffer_double_mapped instance
-#ifdef BUFFER_DEBUG
-        msg << "buffer_double_mapped nitems: " << nitems
-            << " -- sizeof_item: " << sizeof_item;
-        GR_LOG_DEBUG(logger, msg.str());
-#endif
-
-        return buffer_sptr(
-            new buffer_double_mapped(nitems, sizeof_item, downstream_lcm_nitems, link));
-    }
+    // NOTE: This function is no longer called by flat_flowgraph functions and
+    // therefore is somewhat deprecated. It will create and return a
+    // buffer_double_mapped subclass by default.
+    buffer_type buftype = buffer_double_mapped::type;
+    return buftype.make_buffer(nitems,
+                               sizeof_item,
+                               downstream_lcm_nitems,
+                               downstream_max_out_mult,
+                               link,
+                               buf_owner);
 }
 
 buffer::~buffer()
@@ -134,12 +121,16 @@ buffer::~buffer()
 
 void* buffer::write_pointer() { return &d_base[d_write_index * d_sizeof_item]; }
 
+const void* buffer::_read_pointer(unsigned int read_index)
+{
+    return &d_base[read_index * d_sizeof_item];
+}
+
 void buffer::update_write_pointer(int nitems)
 {
     gr::thread::scoped_lock guard(*mutex());
 
 #ifdef BUFFER_DEBUG
-    // BUFFER DEBUG
     unsigned orig_wr_idx = d_write_index;
 #endif
 
@@ -147,7 +138,6 @@ void buffer::update_write_pointer(int nitems)
     d_abs_write_offset += nitems;
 
 #ifdef BUFFER_DEBUG
-    // BUFFER DEBUG
     std::ostringstream msg;
     msg << "[" << this << "] update_write_pointer -- orig d_write_index: " << orig_wr_idx
         << " -- nitems: " << nitems << " -- d_write_index: " << d_write_index;
@@ -264,6 +254,23 @@ std::ostream& operator<<(std::ostream& os, const buffer& buf)
            << std::endl;
     }
     return os;
+}
+
+void buffer::set_context(const buffer_context& context)
+{
+    if ((d_context == buffer_context::DEFAULT_INVALID) || (d_context == context)) {
+        // Set the context if the existing value is the default or if it is the
+        // same as what's already been set
+        d_context = context;
+    } else {
+        // Otherwise error out as the context value cannot be changed after
+        // it is set
+        std::ostringstream msg;
+        msg << "Block: " << link()->identifier() << " has context " << d_context
+            << " assigned. Cannot change to context " << context << ".";
+        GR_LOG_ERROR(d_logger, msg.str());
+        throw std::runtime_error(msg.str());
+    }
 }
 
 } /* namespace gr */

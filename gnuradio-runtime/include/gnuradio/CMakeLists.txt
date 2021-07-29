@@ -20,12 +20,14 @@ install(FILES
   block_gateway.h
   block_registry.h
   buffer.h
+  buffer_context.h
   buffer_double_mapped.h
   buffer_reader.h
   buffer_reader_sm.h
   buffer_single_mapped.h
-  constants.h
   buffer_type.h
+  constants.h
+  custom_lock.h
   endianness.h
   expj.h
   flowgraph.h
@@ -35,6 +37,7 @@ install(FILES
   gr_complex.h
   hier_block2.h
   high_res_timer.h
+  host_buffer.h
   integer_math.h
   io_signature.h
   logger.h
