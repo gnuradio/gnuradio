@@ -75,7 +75,7 @@ cpp_templates:
     make: |-
         this->${id} = filter::${type}::make(
             ${ interp if str(type).startswith('interp') else decim },
-            firdes.${type.fcn}(
+            firdes::root_raised_cosine(
                 ${gain},
                 ${samp_rate},
                 ${sym_rate},
