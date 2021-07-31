@@ -148,6 +148,15 @@ class FlowGraphProxy(object):  # TODO: move this in a refactored Generator
         """
         return [block.cpp_templates.render('link') for block in self.iter_enabled_blocks() if not (block.is_virtual_sink() or block.is_virtual_source())]
 
+    def packages(self):
+        """
+        Get a set of all packages  to find (C++) ( especially for oot modules ) in this flow graph namespace.
+
+        Returns:
+            a list of required packages
+        """
+        return [block.cpp_templates.render('packages') for block in self.iter_enabled_blocks() if not (block.is_virtual_sink() or block.is_virtual_source())]
+
 def get_hier_block_io(flow_graph, direction, domain=None):
     """
     Get a list of io ports for this flow graph.
