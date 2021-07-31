@@ -42,6 +42,7 @@ CPP_TEMPLATES_SCHEME = expand(
     var_make=str,
     callbacks=list,
     link=list,
+    packages=list,
     translations=dict,
 )
 BLOCK_SCHEME = expand(
