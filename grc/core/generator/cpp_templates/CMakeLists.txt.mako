@@ -22,7 +22,6 @@ set(CMAKE_CXX_STANDARD 14)
 
 project(${class_name})
 
-
 find_package(Gnuradio "${short_version}" COMPONENTS
     % for component in config.enabled_components.split(";"):
     % if component.startswith("gr-"):
@@ -50,6 +49,11 @@ set(CMAKE_EXE_LINKER_FLAGS " -static")
 set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 % endif
 
+% for package in packages:
+% if package:
+find_package(${package})
+% endif
+% endfor
 add_executable(${class_name} ${class_name}.cpp)
 target_link_libraries(${class_name}
     gnuradio::gnuradio-blocks

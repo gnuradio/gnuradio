@@ -57,6 +57,7 @@ def build(id, label='', category='', flags='', documentation='',
         callbacks=cpp_templates.get('callbacks', []),
         var_make=cpp_templates.get('var_make', ''),
         link=cpp_templates.get('link', []),
+        packages=cpp_templates.get('packages', []),
         translations=cpp_templates.get('translations', []),
         declarations=cpp_templates.get('declarations', ''),
     )
