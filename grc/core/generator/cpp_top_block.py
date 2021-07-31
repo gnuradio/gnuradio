@@ -175,6 +175,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
             connections=self._connections(),
             links=self._links(),
             cmake_tuples=cmake_tuples,
+            packages=self._packages(),
             **self.namespace
         )
         # strip trailing white-space
@@ -187,12 +188,23 @@ class CppTopBlockGenerator(TopBlockGenerator):
         fg = self._flow_graph
         links = fg.links()
         seen = set()
-        output = []
 
         for link_list in links:
             if link_list:
                 for link in link_list:
                     seen.add(link)
+
+        return list(seen)
+
+    def _packages(self):
+        fg = self._flow_graph
+        packages = fg.packages()
+        seen = set()
+
+        for package_list in packages:
+            if package_list:
+                for package in package_list:
+                    seen.add(package)
 
         return list(seen)
 
