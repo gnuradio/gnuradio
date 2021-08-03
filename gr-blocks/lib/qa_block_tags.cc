@@ -25,6 +25,7 @@
 #include <boost/format.hpp>
 #include <boost/test/unit_test.hpp>
 
+#include <memory>
 
 // ----------------------------------------------------------------
 
@@ -114,7 +115,7 @@ BOOST_AUTO_TEST_CASE(t1)
     BOOST_REQUIRE_EQUAL(tags4.size(), (size_t)8);
 
 #if QA_TAGS_DEBUG
-    GR_LOG_GET_CONFIGURED_LOGGER(logger, "qa_block_tags::t1");
+    auto logger = std::make_shared<gr::logger>("qa_block_tags::t1");
 
     // Kludge together the tags that we know should result from the above graph
     std::stringstream str0, str1, str2;
@@ -213,7 +214,7 @@ BOOST_AUTO_TEST_CASE(t2)
 
 
 #if QA_TAGS_DEBUG
-    GR_LOG_GET_CONFIGURED_LOGGER(logger, "qa_block_tags::t2");
+    auto logger = std::make_shared<gr::logger>("qa_block_tags::t2");
 
     // Kludge together the tags that we know should result from the above graph
     std::stringstream str0, str1;
@@ -314,7 +315,7 @@ BOOST_AUTO_TEST_CASE(t3)
     BOOST_REQUIRE_EQUAL(tags4.size(), (size_t)8);
 
 #if QA_TAGS_DEBUG
-    GR_LOG_GET_CONFIGURED_LOGGER(logger, "qa_block_tags::t3");
+    auto logger = std::make_shared<gr::logger>("qa_block_tags::t3");
 
     // Kludge together the tags that we know should result from the above graph
     std::stringstream str0, str1, str2;
@@ -377,7 +378,7 @@ BOOST_AUTO_TEST_CASE(t4)
     gr::block_sptr snk0(gr::blocks::null_sink::make(sizeof(int)));
     gr::block_sptr snk1(gr::blocks::null_sink::make(sizeof(int)));
 
-    GR_LOG_GET_CONFIGURED_LOGGER(logger, "qa_block_tags::t4");
+    auto logger = std::make_shared<gr::logger>("qa_block_tags::t4");
 
     // using 1-to-1 tag propagation without having equal number of
     // ins and outs. Make sure this works; will just exit run early.
@@ -432,7 +433,7 @@ BOOST_AUTO_TEST_CASE(t5)
 
 
 #if QA_TAGS_DEBUG
-    GR_LOG_GET_CONFIGURED_LOGGER(logger, "qa_block_tags::t5");
+    auto logger = std::make_shared<gr::logger>("qa_block_tags::t5");
 
     // Kludge together the tags that we know should result from the above graph
     std::stringstream str0, str1, str2;

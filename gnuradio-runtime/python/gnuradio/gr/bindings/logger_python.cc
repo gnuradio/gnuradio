@@ -1,5 +1,6 @@
 /*
  * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2021 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -14,152 +15,127 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(logger.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(6a082fd5563025225373d3f117d2134c)                     */
+/* BINDTOOL_HEADER_FILE_HASH(7f3cbb9463e52829b27c58d9dd41b422)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <spdlog/common.h>
 
 namespace py = pybind11;
 
 #include <gnuradio/logger.h>
+#include <logger_pydoc.h>
 
 void bind_logger(py::module& m)
 {
+    py::enum_<spdlog::level::level_enum>(m, "level_enum")
+        // Values directly from spdlog/common.h
+        .value("trace", spdlog::level::trace)
+        .value("debug", spdlog::level::debug)
+        .value("info", spdlog::level::info)
+        .value("warn", spdlog::level::warn)
+        .value("err", spdlog::level::err)
+        .value("critical", spdlog::level::critical)
+        .value("off", spdlog::level::off);
+
     using logger = gr::logger;
-    using logger_config = gr::logger_config;
 
+    py::class_<logger, std::shared_ptr<logger>>(m, "logger", D(logger))
 
-    py::class_<logger, std::shared_ptr<logger>>(m, "logger")
-
-        .def(py::init<std::string>(), py::arg("logger_name"))
+        .def(py::init<std::string>(), py::arg("logger_name"), D(logger, logger))
         .def(py::init<gr::logger const&>(), py::arg("arg0"))
 
-        .def("set_level", &logger::set_level, py::arg("level"))
-        .def("get_level", &logger::get_level, py::arg("level"))
-        .def("debug", &logger::debug, py::arg("msg"))
-        .def("info", &logger::info, py::arg("msg"))
-        .def("notice", &logger::notice, py::arg("msg"))
-        .def("warn", &logger::warn, py::arg("msg"))
-        .def("error", &logger::error, py::arg("msg"))
-        .def("crit", &logger::crit, py::arg("msg"))
-        .def("alert", &logger::alert, py::arg("msg"))
-        .def("fatal", &logger::fatal, py::arg("msg"))
-        .def("emerg", &logger::emerg, py::arg("msg"))
-        .def("errorIF", &logger::errorIF, py::arg("cond"), py::arg("msg"))
-        .def("log_assert", &logger::log_assert, py::arg("cond"), py::arg("msg"))
-        .def("add_console_appender",
-             &logger::add_console_appender,
-             py::arg("target"),
-             py::arg("pattern"))
-        .def("set_console_appender",
-             &logger::set_console_appender,
-             py::arg("target"),
-             py::arg("pattern"))
-        .def("add_file_appender",
-             &logger::add_file_appender,
-             py::arg("filename"),
-             py::arg("append"),
-             py::arg("pattern"))
-        .def("set_file_appender",
-             &logger::set_file_appender,
-             py::arg("filename"),
-             py::arg("append"),
-             py::arg("pattern"))
-        .def("add_rollingfile_appender",
-             &logger::add_rollingfile_appender,
-             py::arg("filename"),
-             py::arg("filesize"),
-             py::arg("bkup_index"),
-             py::arg("append"),
-             py::arg("mode"),
-             py::arg("pattern"));
+        .def("set_level",
+             py::overload_cast<const std::string&>(&logger::set_level),
+             py::arg("level"),
+             D(logger, set_level))
+        .def("set_level",
+             py::overload_cast<const gr::log_level>(&logger::set_level),
+             py::arg("level"),
+             D(logger, set_level))
+        .def("get_level",
+             py::overload_cast<std::string&>(&logger::get_level, py::const_),
+             py::arg("level"),
+             D(logger, get_level))
+        .def("get_string_level", &logger::get_string_level, D(logger, get_string_level))
+        .def(
+            "trace",
+            [](logger& log, const std::string& msg) { log.trace(msg); },
+            py::arg("msg"),
+            D(logger, trace))
+        .def(
+            "debug",
+            [](logger& log, const std::string& msg) { log.debug(msg); },
+            py::arg("msg"),
+            D(logger, debug))
+        .def(
+            "info",
+            [](logger& log, const std::string& msg) { log.info(msg); },
+            py::arg("msg"),
+            D(logger, info))
+        .def(
+            "notice",
+            [](logger& log, const std::string& msg) { log.notice(msg); },
+            py::arg("msg"),
+            D(logger, notice))
+        .def(
+            "warn",
+            [](logger& log, const std::string& msg) { log.warn(msg); },
+            py::arg("msg"),
+            D(logger, warn))
+        .def(
+            "error",
+            [](logger& log, const std::string& msg) { log.error(msg); },
+            py::arg("msg"),
+            D(logger, error))
+        .def(
+            "crit",
+            [](logger& log, const std::string& msg) { log.crit(msg); },
+            py::arg("msg"),
+            D(logger, crit))
+        .def(
+            "alert",
+            [](logger& log, const std::string& msg) { log.alert(msg); },
+            py::arg("msg"),
+            D(logger, alert))
+        .def(
+            "fatal",
+            [](logger& log, const std::string& msg) { log.fatal(msg); },
+            py::arg("msg"),
+            D(logger, fatal))
+        .def(
+            "emerg",
+            [](logger& log, const std::string& msg) { log.emerg(msg); },
+            py::arg("msg"),
+            D(logger, emerg));
 
+    using logging = gr::logging;
 
-    py::class_<logger_config, std::shared_ptr<logger_config>>(m, "logger_config")
-
-
-        .def_static("get_filename", &logger_config::get_filename)
-        .def_static("get_watch_period", &logger_config::get_watch_period)
-        .def_static("load_config",
-                    &logger_config::load_config,
-                    py::arg("filename"),
-                    py::arg("watch_period") = 0)
-        .def_static("stop_watch", &logger_config::stop_watch)
-        .def_static("reset_config", &logger_config::reset_config);
-
-
-    // m.def("configure_default_loggers",&gr::configure_default_loggers,
-    //     py::arg("l"),
-    //     py::arg("d"),
-    //     py::arg("name")
-    // );
-    m.def("update_logger_alias",
-          &gr::update_logger_alias,
-          py::arg("name"),
-          py::arg("alias"));
-    m.def("logger_get_logger", &gr::logger_get_logger, py::arg("name"));
-    m.def("logger_get_configured_logger",
-          &gr::logger_get_configured_logger,
-          py::arg("name"));
-    m.def("logger_load_config", &gr::logger_load_config, py::arg("config_filename") = "");
-    m.def("gr_logger_reset_config", &gr_logger_reset_config);
-    m.def("logger_set_level",
-          (void (*)(gr::logger_ptr, std::string const&)) & gr::logger_set_level,
-          py::arg("logger"),
-          py::arg("level"));
-    m.def("logger_set_level",
-          (void (*)(gr::logger_ptr, log4cpp::Priority::Value)) & gr::logger_set_level,
-          py::arg("logger"),
-          py::arg("level"));
-    m.def("logger_get_level",
-          (void (*)(gr::logger_ptr, std::string&)) & gr::logger_get_level,
-          py::arg("logger"),
-          py::arg("level"));
-    // m.def("logger_get_level",(void (*)(gr::logger_ptr, log4cpp::Priority::Value
-    // &))&gr::logger_get_level,
-    //     py::arg("logger"),
-    //     py::arg("level")
-    // );
-    // m.def("logger_add_appender",&gr::logger_add_appender,
-    //     py::arg("logger"),
-    //     py::arg("appender")
-    // ); // Not Implemented
-    // m.def("logger_set_appender",&gr::logger_set_appender,
-    //     py::arg("logger"),
-    //     py::arg("appender")
-    // ); // Not Implemented
-    m.def("logger_add_console_appender",
-          &gr::logger_add_console_appender,
-          py::arg("logger"),
-          py::arg("target"),
-          py::arg("pattern"));
-    m.def("logger_set_console_appender",
-          &gr::logger_set_console_appender,
-          py::arg("logger"),
-          py::arg("target"),
-          py::arg("pattern"));
-    m.def("logger_add_file_appender",
-          &gr::logger_add_file_appender,
-          py::arg("logger"),
-          py::arg("filename"),
-          py::arg("append"),
-          py::arg("pattern"));
-    m.def("logger_set_file_appender",
-          &gr::logger_set_file_appender,
-          py::arg("logger"),
-          py::arg("filename"),
-          py::arg("append"),
-          py::arg("pattern"));
-    m.def("logger_add_rollingfile_appender",
-          &gr::logger_add_rollingfile_appender,
-          py::arg("logger"),
-          py::arg("filename"),
-          py::arg("filesize"),
-          py::arg("bkup_index"),
-          py::arg("append"),
-          py::arg("mode"),
-          py::arg("pattern"));
-    m.def("logger_get_logger_names", &gr::logger_get_logger_names);
+    py::class_<logging, std::unique_ptr<logging, py::nodelete>>(m, "logging")
+        .def(py::init([]() {
+                 return std::unique_ptr<logging, py::nodelete>(&logging::singleton());
+             }),
+             D(logging, singleton))
+        .def("default_level", &logging::default_level, D(logging, default_level))
+        .def("debug_level", &logging::debug_level, D(logging, debug_level))
+        .def("add_default_sink",
+             &logging::add_default_sink,
+             py::arg("sink"),
+             D(logging, add_default_sink))
+        .def("add_debug_sink",
+             &logging::add_debug_sink,
+             py::arg("sink"),
+             D(logging, add_debug_sink))
+        .def("add_default_console_sink",
+             &logging::add_default_console_sink,
+             D(logging, add_default_console_sink))
+        .def("add_debug_console_sink",
+             &logging::add_debug_console_sink,
+             D(logging, add_debug_console_sink))
+        .def_property_readonly_static(
+            "default_pattern",
+            [](py::object) { return logging::default_pattern; },
+            D(logging, default_pattern));
 }

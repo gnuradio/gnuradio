@@ -8,6 +8,7 @@
  *
  */
 
+#include <sstream>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -213,7 +214,12 @@ void socket_pdu_impl::handle_tcp_accept(tcp_connection::sptr new_connection,
         d_tcp_connections.push_back(new_connection);
         start_tcp_accept();
     } else {
-        GR_LOG_ERROR(d_logger, error);
+        // need to convert error to printable string;
+        // can't do (std::stringstream() << error).str() since
+        // under some compilers, << yields an ostream and that has no .str()
+        std::stringstream ss;
+        ss << error;
+        GR_LOG_ERROR(d_logger, ss.str());
     }
 }
 
