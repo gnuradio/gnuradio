@@ -19,7 +19,7 @@ namespace iio {
 
 std::string get_pluto_uri()
 {
-    GR_LOG_GET_CONFIGURED_LOGGER(d_logger, "pluto_utils::get_pluto_uri");
+    auto logger = gr::logger("pluto_utils::get_pluto_uri");
     iio_scan_context* ctx = iio_create_scan_context("usb", 0);
     if (!ctx)
         throw std::runtime_error("Unable to create scan context");
@@ -38,16 +38,16 @@ std::string get_pluto_uri()
     }
 
     if (ret > 1) {
-        GR_LOG_INFO(d_logger, "More than one Pluto found:");
+        logger.info("More than one Pluto found:");
 
         for (unsigned int i = 0; i < (size_t)ret; i++) {
-            GR_LOG_INFO(d_logger,
-                        boost::format("\t%d: %s [%s]") % i %
-                            iio_context_info_get_description(info[i]) %
-                            iio_context_info_get_uri(info[i]));
+            logger.info((boost::format("\t%d: %s [%s]") % i %
+                         iio_context_info_get_description(info[i]) %
+                         iio_context_info_get_uri(info[i]))
+                            .str());
         }
 
-        GR_LOG_INFO(d_logger, "We will use the first one.");
+        logger.info("We will use the first one.");
     }
 
     std::string uri(iio_context_info_get_uri(info[0]));

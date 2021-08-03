@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
 # Copyright 2016 Free Software Foundation, Inc.
+# Copyright 2021 Marcus Müller
 #
 # This file is part of GNU Radio
 #
@@ -20,31 +21,30 @@ class test_logger (gr_unittest.TestCase):
     def tearDown(self):
         pass
 
-    def set_and_assert_log_level(self, block, level):
+    def set_and_assert_log_level(self, block, level, ref=None):
+        if ref is None:
+            ref = level
         block.set_log_level(level)
-        self.assertEqual(block.log_level(), level)
+        self.assertEqual(block.log_level(), ref)
 
     def test_log_level_for_block(self):
         # Test the python API for getting and setting log levels of individual block
         # go through all of the documented log_levels
         ns = blocks.null_source(1)
-        self.set_and_assert_log_level(ns, "notset")
         self.set_and_assert_log_level(ns, "debug")
         self.set_and_assert_log_level(ns, "info")
-        self.set_and_assert_log_level(ns, "notice")
-        self.set_and_assert_log_level(ns, "warn")
+        self.set_and_assert_log_level(ns, "notice", "info")
+        self.set_and_assert_log_level(ns, "warn", "warning")
+        self.set_and_assert_log_level(ns, "warning")
         self.set_and_assert_log_level(ns, "error")
-        self.set_and_assert_log_level(ns, "crit")
-        self.set_and_assert_log_level(ns, "alert")
-        self.set_and_assert_log_level(ns, "emerg")
+        self.set_and_assert_log_level(ns, "crit", "critical")
+        self.set_and_assert_log_level(ns, "critical")
+        self.set_and_assert_log_level(ns, "alert", "critical")
+        self.set_and_assert_log_level(ns, "emerg", "critical")
         # There's a couple of special cases. "off" == "notset" (specific to gr)
         # and "fatal" == "emerg" (built in to log4cpp)
         ns.set_log_level("off")
-        self.assertEqual(ns.log_level(), "notset")
-        ns.set_log_level("fatal")
-        self.assertEqual(ns.log_level(), "emerg")
-        # Make sure exception is throw on bogus data
-        self.assertRaises(RuntimeError, ns.set_log_level, "11")
+        self.assertEqual(ns.log_level(), "off")
 
     def test_log_level_for_tb(self):
         # Test the python API for getting and setting log levels for a
@@ -59,10 +59,10 @@ class test_logger (gr_unittest.TestCase):
         # confirm that the tb has log_level of first block
         self.assertEqual(tb.log_level(), "debug")
         # confirm that changing tb log_level propagates to connected blocks
-        tb.set_log_level("alert")
-        self.assertEqual(tb.log_level(), "alert")
-        self.assertEqual(nsrc.log_level(), "alert")
-        self.assertEqual(nsnk.log_level(), "alert")
+        tb.set_log_level("critical")
+        self.assertEqual(tb.log_level(), "critical")
+        self.assertEqual(nsrc.log_level(), "critical")
+        self.assertEqual(nsnk.log_level(), "critical")
 
     def test_log_level_for_hier_block(self):
         # Test the python API for getting and setting log levels for hier
@@ -78,11 +78,11 @@ class test_logger (gr_unittest.TestCase):
         self.assertEqual(nsrc.log_level(), "debug")
         self.assertEqual(nsnk.log_level(), "debug")
         self.assertEqual(b.one_in_n.log_level(), "debug")
-        tb.set_log_level("alert")
-        self.assertEqual(tb.log_level(), "alert")
-        self.assertEqual(nsrc.log_level(), "alert")
-        self.assertEqual(nsnk.log_level(), "alert")
-        self.assertEqual(b.one_in_n.log_level(), "alert")
+        tb.set_log_level("critical")
+        self.assertEqual(tb.log_level(), "critical")
+        self.assertEqual(nsrc.log_level(), "critical")
+        self.assertEqual(nsnk.log_level(), "critical")
+        self.assertEqual(b.one_in_n.log_level(), "critical")
 
 
 if __name__ == '__main__':

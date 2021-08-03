@@ -14,6 +14,7 @@
 
 #include <gnuradio/fec/generic_encoder.h>
 #include <boost/format.hpp>
+#include <memory>
 
 namespace gr {
 namespace fec {
@@ -22,8 +23,7 @@ generic_encoder::generic_encoder(std::string name)
 {
     d_name = name;
     my_id = base_unique_id++;
-
-    GR_LOG_ASSIGN_CONFIGURED_LOGPTR(d_logger, alias());
+    d_logger = std::make_shared<gr::logger>(alias());
 }
 
 generic_encoder::~generic_encoder() {}
