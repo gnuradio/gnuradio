@@ -49,23 +49,9 @@ tpb_thread_body::tpb_thread_body(block_sptr block,
     prefs* p = prefs::singleton();
     size_t max_nmsgs = static_cast<size_t>(p->get_long("DEFAULT", "max_messages", 100));
 
-// Setup the logger for the scheduler
-#undef LOG
-    std::string config_file = p->get_string("LOG", "log_config", "");
-    std::string log_level = p->get_string("LOG", "log_level", "off");
-    std::string log_file = p->get_string("LOG", "log_file", "");
-    GR_LOG_GETLOGGER(LOG, "gr_log.tpb_thread_body");
-    GR_LOG_SET_LEVEL(LOG, log_level);
-    GR_CONFIG_LOGGER(config_file);
-    if (!log_file.empty()) {
-        if (log_file == "stdout") {
-            GR_LOG_SET_CONSOLE_APPENDER(LOG, "stdout", "gr::log :%p: %c{1} - %m%n");
-        } else if (log_file == "stderr") {
-            GR_LOG_SET_CONSOLE_APPENDER(LOG, "stderr", "gr::log :%p: %c{1} - %m%n");
-        } else {
-            GR_LOG_SET_FILE_APPENDER(LOG, log_file, true, "%r :%p: %c{1} - %m%n");
-        }
-    }
+    // Set up logging
+    auto logger = gr::logger("tpb_thread_body");
+
 
     // Set thread affinity if it was set before fg was started.
     if (!block->processor_affinity().empty()) {
@@ -99,8 +85,8 @@ tpb_thread_body::tpb_thread_body(block_sptr block,
                 // If we don't have a handler but are building up messages,
                 // prune the queue from the front to keep memory in check.
                 if (block->nmsgs(i.first) > max_nmsgs) {
-                    GR_LOG_WARN(
-                        LOG, "asynchronous message buffer overflowing, dropping message");
+                    logger.warn(
+                        "asynchronous message buffer overflowing, dropping message");
                     msg = block->delete_head_nowait(i.first);
                 }
             }

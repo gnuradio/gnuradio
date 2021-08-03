@@ -16,7 +16,7 @@ add_library(gnuradio-pmt
 target_link_libraries(gnuradio-pmt
   Boost::boost
   Boost::thread
-  Log4Cpp::log4cpp
+  spdlog::spdlog
   Volk::volk
 )
 

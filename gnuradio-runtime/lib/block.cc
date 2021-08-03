@@ -762,12 +762,12 @@ void block::system_handler(pmt::pmt_t msg)
     }
 }
 
-void block::set_log_level(std::string level) { logger_set_level(d_logger, level); }
+void block::set_log_level(std::string level) { d_logger->set_level(level); }
 
 std::string block::log_level()
 {
     std::string level;
-    logger_get_level(d_logger, level);
+    d_logger->get_level(level);
     return level;
 }
 
