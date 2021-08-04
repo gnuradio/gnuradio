@@ -28,6 +28,7 @@ _def_samples_per_symbol = 2
 _def_bt = 0.35
 _def_verbose = False
 _def_log = False
+_def_do_unpack = True
 
 _def_gain_mu = None
 _def_mu = 0.5
@@ -62,7 +63,8 @@ class gmsk_mod(gr.hier_block2):
                  samples_per_symbol=_def_samples_per_symbol,
                  bt=_def_bt,
                  verbose=_def_verbose,
-                 log=_def_log):
+                 log=_def_log,
+                 do_unpack=_def_do_unpack):
 
         gr.hier_block2.__init__(self, "gmsk_mod",
                                 gr.io_signature(1, 1, gr.sizeof_char),       # Input signature
@@ -81,7 +83,6 @@ class gmsk_mod(gr.hier_block2):
 
         # Turn it into NRZ data.
         #self.nrz = digital.bytes_to_syms()
-        self.unpack = blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST)
         self.nrz = digital.chunks_to_symbols_bf([-1, 1], 1)
 
         # Form Gaussian filter
@@ -107,7 +108,11 @@ class gmsk_mod(gr.hier_block2):
             self._setup_logging()
 
         # Connect & Initialize base class
-        self.connect(self, self.unpack, self.nrz, self.gaussian_filter, self.fmmod, self)
+        if do_unpack:
+            self.unpack = blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST)
+            self.connect(self, self.unpack, self.nrz, self.gaussian_filter, self.fmmod, self)
+        else:
+            self.connect(self, self.nrz, self.gaussian_filter, self.fmmod, self)
 
     def samples_per_symbol(self):
         return self._samples_per_symbol
