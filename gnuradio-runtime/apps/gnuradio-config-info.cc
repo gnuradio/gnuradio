@@ -21,12 +21,11 @@
 #include <iostream>
 
 namespace po = boost::program_options;
-using boost::format;
 
 int main(int argc, char** argv)
 {
     po::options_description desc(
-        (format("Program options: %1% [options]") % argv[0]).str());
+        (boost::format("Program options: %1% [options]") % argv[0]).str());
     po::variables_map vm;
 
     // clang-format off
