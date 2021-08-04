@@ -157,7 +157,7 @@ class FlowGraph(gr.top_block):
     def __init__(self, args):
         gr.top_block.__init__(self)
         if args.input_file is not None:
-            src = blocks.file_source(gr.sizeof_gr_complex, args.filename, repeat=True)
+            src = blocks.file_source(gr.sizeof_gr_complex, args.input_file, repeat=True)
         else:
             src = blocks.vector_source_c((.5,) * int(1e6) * 2, repeat=True)
         # Setup USRP
