@@ -25,6 +25,13 @@ parameters:
     options: ['True', 'False']
     option_labels: ['On', 'Off']
     hide: ${ ('part' if str(log) == 'False' else 'none') }
+-   id: do_unpack
+    label: Unpack
+    dtype: bool
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+    hide: ${ ('part' if do_unpack else 'none') }
 
 inputs:
 -   domain: stream
@@ -41,6 +48,7 @@ templates:
             samples_per_symbol=${samples_per_symbol},
             bt=${bt},
             verbose=${verbose},
-            log=${log})
+            log=${log},
+            do_unpack=${do_unpack})
 
 file_format: 1
