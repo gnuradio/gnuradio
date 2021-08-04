@@ -91,7 +91,7 @@ class CppHierBlockGenerator(CppTopBlockGenerator):
             p['dtype'] = param_block.params['value'].dtype
             p['default'] = param_block.params['value'].get_value()
             p['hide'] = param_block.params['hide'].get_value()
-            data['param'].append(p)
+            data['parameters'].append(p)
 
         # Ports
         for direction in ('inputs', 'outputs'):
@@ -119,7 +119,7 @@ class CppHierBlockGenerator(CppTopBlockGenerator):
             t['make'] = '{cls}(\n    {kwargs},\n)'.format(
                 cls=block_id,
                 kwargs=',\n    '.join(
-                    '{key}=${key}'.format(key=param.name) for param in parameters
+                    '{key}=${{ {key} }}'.format(key=param.name) for param in parameters
                 ),
             )
         else:
@@ -130,7 +130,7 @@ class CppHierBlockGenerator(CppTopBlockGenerator):
 
         # Callback data
         t['callbacks'] = [
-            'set_{key}(${key})'.format(key=param_block.name) for param_block in parameters
+            'set_{key}(${{ {key} }})'.format(key=param_block.name) for param_block in parameters
         ]
 
         t_cpp = data['cpp_templates'] = collections.OrderedDict()
@@ -143,7 +143,7 @@ class CppHierBlockGenerator(CppTopBlockGenerator):
             t_cpp['make'] = '{cls}(\n    {kwargs},\n)'.format(
                 cls=block_id,
                 kwargs=',\n    '.join(
-                    '{key}=${key}'.format(key=param.name) for param in parameters
+                    '{key}=${{ {key} }}'.format(key=param.name) for param in parameters
                 ),
             )
         else:
@@ -152,7 +152,7 @@ class CppHierBlockGenerator(CppTopBlockGenerator):
 
         # Callback data
         t_cpp['callbacks'] = [
-            'set_{key}(${key})'.format(key=param_block.name) for param_block in parameters
+            'set_{key}(${{ {key} }})'.format(key=param_block.name) for param_block in parameters
         ]
 
         # Documentation
