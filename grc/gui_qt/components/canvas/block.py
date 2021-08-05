@@ -12,6 +12,27 @@ log = logging.getLogger(__name__)
 ARC        = 10  # arc radius for block corners
 LONG_VALUE = 20  # maximum length of a param string.
                  # if exceeded, '...' will be displayed
+
+#TODO: Move this to a separate file
+class PropsDialog(QtWidgets.QDialog):
+    def __init__(self, parent_block):
+        super().__init__()
+        self._block = parent_block
+
+        self.setWindowTitle(f"Properties: {self._block.label}")
+
+        buttons = QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel
+        self.buttonBox = QtWidgets.QDialogButtonBox(buttons)
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+        self.layout = QtWidgets.QVBoxLayout()
+        message = QtWidgets.QLabel("Parameters go here")
+        self.layout.addWidget(message)
+        self.layout.addWidget(self.buttonBox)
+        self.setLayout(self.layout)
+        categories = (p.category for p in self._block.params.values())
+
+
 '''
 class BlockTitle(QtWidgets.QLabel):
     def __init__(self, block_key):
@@ -267,8 +288,13 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         super(self.__class__, self).mousePressEvent(e)
 
     def mouseDoubleClickEvent(self, e):
-        print("DETECTED DOUBLE CLICK!")
+        log.debug(f"Detected double click on block {self.name}, opening PropsDialog")
         super(self.__class__, self).mouseDoubleClickEvent(e)
+        props = PropsDialog(self)
+        if props.exec():
+            log.debug(f"Pressed Ok on block {self.name}'s PropsDialog")
+        else:
+            log.debug(f"Pressed Cancel on block {self.name}'s PropsDialog")
 
     def import_data(self, name, states, parameters, **_):
         CoreBlock.import_data(self, name, states, parameters, **_)
