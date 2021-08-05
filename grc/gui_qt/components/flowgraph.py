@@ -189,7 +189,6 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             super(FlowgraphScene, self).mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
-        print("droppedscene")
         if self.newConnection:
             item = self.itemAt(event.scenePos(), QtGui.QTransform())
             if item:

@@ -1,8 +1,13 @@
+import logging
+
 # third-party modules
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtCore import Qt
 
 from ....core.blocks.block import Block as CoreBlock
+
+# Logging
+log = logging.getLogger(__name__)
 
 ARC        = 10  # arc radius for block corners
 LONG_VALUE = 20  # maximum length of a param string.
