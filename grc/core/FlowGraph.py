@@ -239,7 +239,6 @@ class FlowGraph(Element):
 
     def renew_namespace(self):
         namespace = {}
-        self.namespace.clear()
         # Load imports
         for expr in self.imports():
             try:
