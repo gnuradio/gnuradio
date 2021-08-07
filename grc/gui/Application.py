@@ -130,6 +130,7 @@ class Application(Gtk.Application):
 
         def flow_graph_update(fg=flow_graph):
             main.vars.update_gui(fg.blocks)
+            fg.namespace.clear()
             fg.update()
 
         ##################################################
