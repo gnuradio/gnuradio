@@ -103,7 +103,7 @@ sink_s_impl::sink_s_impl(double framerate,
 
     /* Initialize and create the YUV Overlay used for video out */
     if (!(d_image =
-              SDL_CreateYUVOverlay(d_width, d_height, SDL_YV12_OVERLAY, d_screen))) {
+              SDL_CreateYUVOverlay(d_width, d_height, SDL_IYUV_OVERLAY, d_screen))) {
         std::ostringstream msg;
         msg << "Couldn't create a YUV overlay: " << SDL_GetError();
         GR_LOG_ERROR(d_logger, msg.str());
