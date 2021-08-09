@@ -279,7 +279,7 @@ templates:
             self.${id}.set_factor(i, factor[i])
 
         self.${id}.enable_autoscale(${autoscale})
-        ${win} = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)
+        ${win} = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
         ${gui_hint() % win}
 
 cpp_templates:

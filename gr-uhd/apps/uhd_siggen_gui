@@ -327,7 +327,7 @@ class uhd_siggen_gui(Qt.QWidget):
             self.qtgui_freq_sink_x_0.set_line_width(0, 1)
             self.qtgui_freq_sink_x_0.set_line_color(0, "blue")
             self.qtgui_freq_sink_x_0.set_line_alpha(0, 1.0)
-            self._qtgui_freq_sink_x_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_0.pyqwidget(), Qt.QWidget)
+            self._qtgui_freq_sink_x_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_0.qwidget(), Qt.QWidget)
             self.top_grid_layout.addWidget(self._qtgui_freq_sink_x_0_win, 9, 0, 2, 5)
             # Reconnect:
             self._sg.extra_sink = self.qtgui_freq_sink_x_0

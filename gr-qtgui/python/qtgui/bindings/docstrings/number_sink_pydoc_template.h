@@ -33,9 +33,6 @@ static const char* __doc_gr_qtgui_number_sink_exec_ = R"doc()doc";
 static const char* __doc_gr_qtgui_number_sink_qwidget = R"doc()doc";
 
 
-static const char* __doc_gr_qtgui_number_sink_pyqwidget = R"doc()doc";
-
-
 static const char* __doc_gr_qtgui_number_sink_set_update_time = R"doc()doc";
 
 

@@ -57,20 +57,10 @@ void bind_number_sink(py::module& m)
         .def("exec_", &number_sink::exec_, D(number_sink, exec_))
 
 
-        .def("qwidget", &number_sink::qwidget, D(number_sink, qwidget))
-
-
-        // .def("pyqwidget",&number_sink::pyqwidget,
-        //     D(number_sink,pyqwidget)
-        // )
-        // For the sip conversion to python to work, the widget object
-        // needs to be explicitly converted to long long.
         .def(
-            "pyqwidget",
-            [](std::shared_ptr<number_sink> p) {
-                return PyLong_AsLongLong(p->pyqwidget());
-            },
-            D(number_sink, pyqwidget))
+            "qwidget",
+            [](number_sink& self) { return reinterpret_cast<uintptr_t>(self.qwidget()); },
+            D(number_sink, qwidget))
 
 
         .def("set_update_time",

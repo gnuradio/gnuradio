@@ -293,7 +293,7 @@ templates:
             self.${id}.set_color_map(i, colors[i])
             self.${id}.set_line_alpha(i, alphas[i])
 
-        ${win} = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)
+        ${win} = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
         ${gui_hint() % win}
 
 documentation: |-

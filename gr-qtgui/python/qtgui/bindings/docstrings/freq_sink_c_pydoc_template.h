@@ -33,9 +33,6 @@ static const char* __doc_gr_qtgui_freq_sink_c_exec_ = R"doc()doc";
 static const char* __doc_gr_qtgui_freq_sink_c_qwidget = R"doc()doc";
 
 
-static const char* __doc_gr_qtgui_freq_sink_c_pyqwidget = R"doc()doc";
-
-
 static const char* __doc_gr_qtgui_freq_sink_c_set_fft_size = R"doc()doc";
 
 
