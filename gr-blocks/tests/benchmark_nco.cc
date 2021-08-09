@@ -22,6 +22,7 @@
 #include <sys/resource.h>
 #endif
 
+#include <sys/time.h>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -100,7 +101,7 @@ static void benchmark(void test(float* x, float* y), const char* implementation_
 
 void basic_sincos_vec(float* x, float* y)
 {
-    gr::blocks::nco<float, float> nco;
+    gr::nco<float, float> nco;
 
     nco.set_freq(2 * GR_M_PI / FREQ);
 
@@ -114,7 +115,7 @@ void basic_sincos_vec(float* x, float* y)
 
 void native_sincos_vec(float* x, float* y)
 {
-    gr::blocks::nco<float, float> nco;
+    gr::nco<float, float> nco;
 
     nco.set_freq(2 * GR_M_PI / FREQ);
 
@@ -125,7 +126,7 @@ void native_sincos_vec(float* x, float* y)
 
 void fxpt_sincos_vec(float* x, float* y)
 {
-    gr::blocks::fxpt_nco nco;
+    gr::fxpt_nco nco;
 
     nco.set_freq(2 * GR_M_PI / FREQ);
 
@@ -138,7 +139,7 @@ void fxpt_sincos_vec(float* x, float* y)
 
 void native_sincos(float* x, float* y)
 {
-    gr::blocks::nco<float, float> nco;
+    gr::nco<float, float> nco;
 
     nco.set_freq(2 * GR_M_PI / FREQ);
 
@@ -150,7 +151,7 @@ void native_sincos(float* x, float* y)
 
 void fxpt_sincos(float* x, float* y)
 {
-    gr::blocks::fxpt_nco nco;
+    gr::fxpt_nco nco;
 
     nco.set_freq(2 * GR_M_PI / FREQ);
 
@@ -164,7 +165,7 @@ void fxpt_sincos(float* x, float* y)
 
 void native_sin(float* x, float* y)
 {
-    gr::blocks::nco<float, float> nco;
+    gr::nco<float, float> nco;
 
     nco.set_freq(2 * GR_M_PI / FREQ);
 
@@ -176,7 +177,7 @@ void native_sin(float* x, float* y)
 
 void fxpt_sin(float* x, float* y)
 {
-    gr::blocks::fxpt_nco nco;
+    gr::fxpt_nco nco;
 
     nco.set_freq(2 * GR_M_PI / FREQ);
 
