@@ -70,7 +70,7 @@ class my_top_block(gr.top_block):
         self.connect(src,  channel, thr, self.filt, (self.snk1, 0))
 
         # Get the reference pointer to the SpectrumDisplayForm QWidget
-        pyQt  = self.snk1.pyqwidget()
+        pyQt  = self.snk1.qwidget()
 
         # Wrap the pointer as a PyQt SIP object
         # This can now be manipulated as a PyQt5.QtGui.QWidget

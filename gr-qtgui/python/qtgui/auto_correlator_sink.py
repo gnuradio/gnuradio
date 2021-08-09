@@ -129,4 +129,4 @@ class AutoCorrelatorSink(gr.hier_block2):
 
 
     def getWidget(self):
-        return sip.wrapinstance(self.timeSink.pyqwidget(), QWidget)
+        return sip.wrapinstance(self.timeSink.qwidget(), QWidget)

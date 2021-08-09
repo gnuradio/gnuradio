@@ -56,20 +56,12 @@ void bind_const_sink_c(py::module& m)
         .def("exec_", &const_sink_c::exec_, D(const_sink_c, exec_))
 
 
-        .def("qwidget", &const_sink_c::qwidget, D(const_sink_c, qwidget))
-
-
-        // .def("pyqwidget",&const_sink_c::pyqwidget,
-        //     D(const_sink_c,pyqwidget)
-        // )
-        // For the sip conversion to python to work, the widget object
-        // needs to be explicitly converted to long long.
         .def(
-            "pyqwidget",
-            [](std::shared_ptr<const_sink_c> p) {
-                return PyLong_AsLongLong(p->pyqwidget());
+            "qwidget",
+            [](const_sink_c& self) {
+                return reinterpret_cast<uintptr_t>(self.qwidget());
             },
-            D(const_sink_c, pyqwidget))
+            D(const_sink_c, qwidget))
 
 
         .def("set_y_axis",

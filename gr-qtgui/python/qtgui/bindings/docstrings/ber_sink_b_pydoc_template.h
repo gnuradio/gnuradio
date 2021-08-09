@@ -30,9 +30,6 @@ static const char* __doc_gr_qtgui_ber_sink_b_make = R"doc()doc";
 static const char* __doc_gr_qtgui_ber_sink_b_exec_ = R"doc()doc";
 
 
-static const char* __doc_gr_qtgui_ber_sink_b_pyqwidget = R"doc()doc";
-
-
 static const char* __doc_gr_qtgui_ber_sink_b_set_y_axis = R"doc()doc";
 
 

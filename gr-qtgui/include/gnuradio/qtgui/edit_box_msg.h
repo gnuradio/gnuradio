@@ -124,12 +124,6 @@ public:
     virtual void exec_() = 0;
     virtual QWidget* qwidget() = 0;
 
-#ifdef ENABLE_PYTHON
-    virtual PyObject* pyqwidget() = 0;
-#else
-    virtual void* pyqwidget() = 0;
-#endif
-
     QApplication* d_qApplication;
 };
 

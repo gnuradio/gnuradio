@@ -38,12 +38,6 @@ public:
 
     virtual void exec_() = 0;
 
-#ifdef ENABLE_PYTHON
-    virtual PyObject* pyqwidget() = 0;
-#else
-    virtual void* pyqwidget() = 0;
-#endif
-
     virtual void set_y_axis(double min, double max) = 0;
     virtual void set_x_axis(double min, double max) = 0;
 

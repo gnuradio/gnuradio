@@ -127,7 +127,7 @@ templates:
             None # parent
         )
         self.${id}.set_update_time(1.0/${rate})
-        ${win} = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)
+        ${win} = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
 
         self.${id}.enable_rf_freq(${showrf})
 

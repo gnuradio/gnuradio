@@ -75,7 +75,7 @@ class GrDataPlotParent(gr.top_block, Qt.QWidget):
             else:
                 self.connect(self.src[n], (self.snk,n))
 
-        self.py_window = sip.wrapinstance(self.snk.pyqwidget(), Qt.QWidget)
+        self.py_window = sip.wrapinstance(self.snk.qwidget(), Qt.QWidget)
 
         self.layout.addWidget(self.py_window)
 

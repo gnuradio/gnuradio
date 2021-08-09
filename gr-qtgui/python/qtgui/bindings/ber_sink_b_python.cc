@@ -55,19 +55,6 @@ void bind_ber_sink_b(py::module& m)
         .def("exec_", &ber_sink_b::exec_, D(ber_sink_b, exec_))
 
 
-        // .def("pyqwidget",&ber_sink_b::pyqwidget,
-        //     D(ber_sink_b,pyqwidget)
-        // )
-        // For the sip conversion to python to work, the widget object
-        // needs to be explicitly converted to long long.
-        .def(
-            "pyqwidget",
-            [](std::shared_ptr<ber_sink_b> p) {
-                return PyLong_AsLongLong(p->pyqwidget());
-            },
-            D(ber_sink_b, pyqwidget))
-
-
         .def("set_y_axis",
              &ber_sink_b::set_y_axis,
              py::arg("min"),

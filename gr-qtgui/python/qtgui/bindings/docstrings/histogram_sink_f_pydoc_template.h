@@ -33,9 +33,6 @@ static const char* __doc_gr_qtgui_histogram_sink_f_exec_ = R"doc()doc";
 static const char* __doc_gr_qtgui_histogram_sink_f_qwidget = R"doc()doc";
 
 
-static const char* __doc_gr_qtgui_histogram_sink_f_pyqwidget = R"doc()doc";
-
-
 static const char* __doc_gr_qtgui_histogram_sink_f_title = R"doc()doc";
 
 
