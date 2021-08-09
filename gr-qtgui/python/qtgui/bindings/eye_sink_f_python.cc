@@ -56,20 +56,11 @@ void bind_eye_sink_f(py::module& m)
         .def("exec_", &eye_sink_f::exec_, D(eye_sink_f, exec_))
 
 
-        .def("qwidget", &eye_sink_f::qwidget, D(eye_sink_f, qwidget))
-
-
-        // .def("pyqwidget",&eye_sink_f::pyqwidget,
-        //     D(eye_sink_f,pyqwidget)
-        // )
-        // For the sip conversion to python to work, the widget object
-        // needs to be explicitly converted to long long.
         .def(
-            "pyqwidget",
-            [](std::shared_ptr<eye_sink_f> p) {
-                return PyLong_AsLongLong(p->pyqwidget());
-            },
-            D(eye_sink_f, pyqwidget))
+            "qwidget",
+            [](eye_sink_f& self) { return reinterpret_cast<uintptr_t>(self.qwidget()); },
+            D(eye_sink_f, qwidget))
+
 
         .def("set_y_axis",
              &eye_sink_f::set_y_axis,

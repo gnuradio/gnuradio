@@ -68,12 +68,6 @@ public:
     void exec_() override;
     QWidget* qwidget() override;
 
-#ifdef ENABLE_PYTHON
-    PyObject* pyqwidget() override;
-#else
-    void* pyqwidget();
-#endif
-
     void set_value(pmt::pmt_t val);
 
 public slots:

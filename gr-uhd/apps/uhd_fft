@@ -255,7 +255,7 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
             self.qtgui_waterfall_sink_x_0.set_line_alpha(i, alpha)
         self.qtgui_waterfall_sink_x_0.set_intensity_range(-90, 10)
         self._qtgui_waterfall_sink_x_0_win = sip.wrapinstance(
-            self.qtgui_waterfall_sink_x_0.pyqwidget(), Qt.QWidget)
+            self.qtgui_waterfall_sink_x_0.qwidget(), Qt.QWidget)
         self.display_grid_layout_1.addWidget(self._qtgui_waterfall_sink_x_0_win, 0, 0, 1, 4)
         self.qtgui_time_sink_x_0 = qtgui.time_sink_c(
             1024, #size
@@ -285,7 +285,7 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
             self.qtgui_time_sink_x_0.set_line_marker(i, markers[i])
             self.qtgui_time_sink_x_0.set_line_alpha(i, alphas[i])
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(
-            self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
+            self.qtgui_time_sink_x_0.qwidget(), Qt.QWidget)
         self.display_grid_layout_2.addWidget(self._qtgui_time_sink_x_0_win, 0, 0, 1, 4)
         self.qtgui_freq_sink_x_0 = qtgui.freq_sink_c(
             self.fft_size, #size
@@ -317,7 +317,7 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
             self.qtgui_freq_sink_x_0.set_line_color(i, colors[i])
             self.qtgui_freq_sink_x_0.set_line_alpha(i, alphas[i])
         self._qtgui_freq_sink_x_0_win = sip.wrapinstance(
-            self.qtgui_freq_sink_x_0.pyqwidget(), Qt.QWidget)
+            self.qtgui_freq_sink_x_0.qwidget(), Qt.QWidget)
         self.display_grid_layout_0.addWidget(self._qtgui_freq_sink_x_0_win, 0, 0, 1, 4)
         def _freeze_scaling(widget, sleep_time):
             time.sleep(sleep_time)
@@ -363,7 +363,7 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
                 self.qtgui_phase_plot.set_line_marker(i, markers[i])
                 self.qtgui_phase_plot.set_line_alpha(i, alphas[i])
             self._qtgui_phase_plot_win = sip.wrapinstance(
-                self.qtgui_phase_plot.pyqwidget(), Qt.QWidget)
+                self.qtgui_phase_plot.qwidget(), Qt.QWidget)
             self.display_grid_layout_phase.addWidget(self._qtgui_phase_plot_win, 0, 0, 1, 4)
         ### Other widgets ###################################################
         self._lo_locked_probe_tool_bar = Qt.QToolBar(self)

@@ -99,12 +99,6 @@ public:
     void exec_() override;
     QWidget* qwidget() override;
 
-#ifdef ENABLE_PYTHON
-    PyObject* pyqwidget() override;
-#else
-    void* pyqwidget();
-#endif
-
     void clear_data() override;
 
     void set_fft_size(const int fftsize) override;

@@ -60,20 +60,12 @@ void bind_histogram_sink_f(py::module& m)
         .def("exec_", &histogram_sink_f::exec_, D(histogram_sink_f, exec_))
 
 
-        .def("qwidget", &histogram_sink_f::qwidget, D(histogram_sink_f, qwidget))
-
-
-        // .def("pyqwidget",&histogram_sink_f::pyqwidget,
-        //     D(histogram_sink_f,pyqwidget)
-        // )
-        // For the sip conversion to python to work, the widget object
-        // needs to be explicitly converted to long long.
         .def(
-            "pyqwidget",
-            [](std::shared_ptr<histogram_sink_f> p) {
-                return PyLong_AsLongLong(p->pyqwidget());
+            "qwidget",
+            [](histogram_sink_f& self) {
+                return reinterpret_cast<uintptr_t>(self.qwidget());
             },
-            D(histogram_sink_f, pyqwidget))
+            D(histogram_sink_f, qwidget))
 
 
         .def("title", &histogram_sink_f::title, D(histogram_sink_f, title))

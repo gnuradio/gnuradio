@@ -207,7 +207,7 @@ class my_top_block(gr.top_block):
         # Get the reference pointer to the SpectrumDisplayForm QWidget
         # Wrap the pointer as a PyQt SIP object
         #     This can now be manipulated as a PyQt5.QtGui.QWidget
-        self.pysink = sip.wrapinstance(self.snk.pyqwidget(), QtGui.QWidget)
+        self.pysink = sip.wrapinstance(self.snk.qwidget(), QtGui.QWidget)
 
         self.main_win = main_window(self.pysink, self)
 

@@ -140,17 +140,6 @@ void ber_sink_b_impl::exec_() { d_qApplication->exec(); }
 
 QWidget* ber_sink_b_impl::qwidget() { return d_main_gui; }
 
-#ifdef ENABLE_PYTHON
-PyObject* ber_sink_b_impl::pyqwidget()
-{
-    PyObject* w = PyLong_FromVoidPtr((void*)d_main_gui);
-    PyObject* retarg = Py_BuildValue("N", w);
-    return retarg;
-}
-#else
-void* ber_sink_b_impl::pyqwidget() { return NULL; }
-#endif
-
 void ber_sink_b_impl::set_y_axis(double min, double max)
 {
     d_main_gui->setYaxis(min, max);

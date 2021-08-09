@@ -33,9 +33,6 @@ static const char* __doc_gr_qtgui_waterfall_sink_f_exec_ = R"doc()doc";
 static const char* __doc_gr_qtgui_waterfall_sink_f_qwidget = R"doc()doc";
 
 
-static const char* __doc_gr_qtgui_waterfall_sink_f_pyqwidget = R"doc()doc";
-
-
 static const char* __doc_gr_qtgui_waterfall_sink_f_clear_data = R"doc()doc";
 
 

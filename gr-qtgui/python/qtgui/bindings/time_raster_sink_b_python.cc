@@ -61,20 +61,13 @@ void bind_time_raster_sink_b(py::module& m)
         .def("exec_", &time_raster_sink_b::exec_, D(time_raster_sink_b, exec_))
 
 
-        .def("qwidget", &time_raster_sink_b::qwidget, D(time_raster_sink_b, qwidget))
-
-
-        // .def("pyqwidget",&time_raster_sink_b::pyqwidget,
-        //     D(time_raster_sink_b,pyqwidget)
-        // )
-        // For the sip conversion to python to work, the widget object
-        // needs to be explicitly converted to long long.
         .def(
-            "pyqwidget",
-            [](std::shared_ptr<time_raster_sink_b> p) {
-                return PyLong_AsLongLong(p->pyqwidget());
+            "qwidget",
+            [](time_raster_sink_b& self) {
+                return reinterpret_cast<uintptr_t>(self.qwidget());
             },
-            D(time_raster_sink_b, pyqwidget))
+            D(time_raster_sink_b, qwidget))
+
 
         .def("set_x_range",
              &time_raster_sink_b::set_x_range,

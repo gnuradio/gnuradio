@@ -117,17 +117,6 @@ void vector_sink_f_impl::exec_() { d_qApplication->exec(); }
 
 QWidget* vector_sink_f_impl::qwidget() { return d_main_gui; }
 
-#ifdef ENABLE_PYTHON
-PyObject* vector_sink_f_impl::pyqwidget()
-{
-    PyObject* w = PyLong_FromVoidPtr((void*)d_main_gui);
-    PyObject* retarg = Py_BuildValue("N", w);
-    return retarg;
-}
-#else
-void* vector_sink_f_impl::pyqwidget() { return NULL; }
-#endif
-
 unsigned int vector_sink_f_impl::vlen() const { return d_vlen; }
 
 void vector_sink_f_impl::set_vec_average(const float avg)

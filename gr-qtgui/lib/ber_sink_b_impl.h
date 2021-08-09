@@ -62,12 +62,6 @@ public:
     void exec_() override;
     QWidget* qwidget();
 
-#ifdef ENABLE_PYTHON
-    PyObject* pyqwidget() override;
-#else
-    void* pyqwidget();
-#endif
-
     void set_y_axis(double min, double max) override;
     void set_x_axis(double min, double max) override;
 

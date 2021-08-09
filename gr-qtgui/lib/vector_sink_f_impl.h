@@ -82,12 +82,6 @@ public:
     void exec_() override;
     QWidget* qwidget() override;
 
-#ifdef ENABLE_PYTHON
-    PyObject* pyqwidget() override;
-#else
-    void* pyqwidget();
-#endif
-
     unsigned int vlen() const override;
     void set_vec_average(const float avg) override;
     float vec_average() const override;

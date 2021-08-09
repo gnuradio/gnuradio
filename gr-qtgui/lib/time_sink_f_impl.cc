@@ -125,17 +125,6 @@ void time_sink_f_impl::exec_() { d_qApplication->exec(); }
 
 QWidget* time_sink_f_impl::qwidget() { return d_main_gui; }
 
-#ifdef ENABLE_PYTHON
-PyObject* time_sink_f_impl::pyqwidget()
-{
-    PyObject* w = PyLong_FromVoidPtr((void*)d_main_gui);
-    PyObject* retarg = Py_BuildValue("N", w);
-    return retarg;
-}
-#else
-void* time_sink_f_impl::pyqwidget() { return NULL; }
-#endif
-
 void time_sink_f_impl::set_y_axis(double min, double max)
 {
     d_main_gui->setYaxis(min, max);

@@ -301,7 +301,7 @@ templates:
 
         self.${id}.set_intensity_range(${int_min}, ${int_max})
 
-        ${win} = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)
+        ${win} = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
 
         ${gui_hint() % win}
 

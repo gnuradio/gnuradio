@@ -170,17 +170,6 @@ void edit_box_msg_impl::exec_() { d_qApplication->exec(); }
 
 QWidget* edit_box_msg_impl::qwidget() { return (QWidget*)d_group; }
 
-#ifdef ENABLE_PYTHON
-PyObject* edit_box_msg_impl::pyqwidget()
-{
-    PyObject* w = PyLong_FromVoidPtr((void*)d_group);
-    PyObject* retarg = Py_BuildValue("N", w);
-    return retarg;
-}
-#else
-void* edit_box_msg_impl::pyqwidget() { return NULL; }
-#endif
-
 void edit_box_msg_impl::set_type(int type) { set_type(static_cast<data_type_t>(type)); }
 
 void edit_box_msg_impl::set_type(gr::qtgui::data_type_t type)

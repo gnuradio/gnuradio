@@ -69,12 +69,6 @@ public:
     void exec_() override;
     QWidget* qwidget() override;
 
-#ifdef ENABLE_PYTHON
-    PyObject* pyqwidget() override;
-#else
-    void* pyqwidget();
-#endif
-
     void set_update_time(double t) override;
     void set_average(const float avg) override;
     void set_graph_type(const graph_t type) override;
