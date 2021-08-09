@@ -88,12 +88,6 @@ public:
     virtual void exec_() = 0;
     virtual QWidget* qwidget() = 0;
 
-#ifdef ENABLE_PYTHON
-    virtual PyObject* pyqwidget() = 0;
-#else
-    virtual void* pyqwidget() = 0;
-#endif
-
 public:
     virtual std::string title() = 0;
     virtual std::string line_label(unsigned int which) = 0;

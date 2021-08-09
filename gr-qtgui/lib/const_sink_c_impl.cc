@@ -104,17 +104,6 @@ void const_sink_c_impl::exec_() { d_qApplication->exec(); }
 
 QWidget* const_sink_c_impl::qwidget() { return d_main_gui; }
 
-#ifdef ENABLE_PYTHON
-PyObject* const_sink_c_impl::pyqwidget()
-{
-    PyObject* w = PyLong_FromVoidPtr((void*)d_main_gui);
-    PyObject* retarg = Py_BuildValue("N", w);
-    return retarg;
-}
-#else
-void* const_sink_c_impl::pyqwidget() { return NULL; }
-#endif
-
 void const_sink_c_impl::set_y_axis(double min, double max)
 {
     d_main_gui->setYaxis(min, max);

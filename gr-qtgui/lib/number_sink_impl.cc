@@ -93,17 +93,6 @@ void number_sink_impl::exec_() { d_qApplication->exec(); }
 
 QWidget* number_sink_impl::qwidget() { return d_main_gui; }
 
-#ifdef ENABLE_PYTHON
-PyObject* number_sink_impl::pyqwidget()
-{
-    PyObject* w = PyLong_FromVoidPtr((void*)d_main_gui);
-    PyObject* retarg = Py_BuildValue("N", w);
-    return retarg;
-}
-#else
-void* number_sink_impl::pyqwidget() { return NULL; }
-#endif
-
 void number_sink_impl::set_update_time(double t)
 {
     // convert update time to ticks

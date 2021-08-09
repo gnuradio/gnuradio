@@ -78,12 +78,6 @@ public:
     virtual void exec_() = 0;
     virtual QWidget* qwidget() = 0;
 
-#ifdef ENABLE_PYTHON
-    virtual PyObject* pyqwidget() = 0;
-#else
-    virtual void* pyqwidget() = 0;
-#endif
-
     virtual void set_x_label(const std::string& label) = 0;
     virtual void set_x_range(double start, double end) = 0;
     virtual void set_y_label(const std::string& label) = 0;

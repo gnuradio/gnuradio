@@ -138,17 +138,6 @@ void waterfall_sink_c_impl::exec_() { d_qApplication->exec(); }
 
 QWidget* waterfall_sink_c_impl::qwidget() { return d_main_gui; }
 
-#ifdef ENABLE_PYTHON
-PyObject* waterfall_sink_c_impl::pyqwidget()
-{
-    PyObject* w = PyLong_FromVoidPtr((void*)d_main_gui);
-    PyObject* retarg = Py_BuildValue("N", w);
-    return retarg;
-}
-#else
-void* waterfall_sink_c_impl::pyqwidget() { return NULL; }
-#endif
-
 void waterfall_sink_c_impl::clear_data() { d_main_gui->clearData(); }
 
 void waterfall_sink_c_impl::set_fft_size(const int fftsize)

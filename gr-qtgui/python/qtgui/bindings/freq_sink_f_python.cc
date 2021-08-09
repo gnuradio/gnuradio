@@ -59,20 +59,10 @@ void bind_freq_sink_f(py::module& m)
         .def("exec_", &freq_sink_f::exec_, D(freq_sink_f, exec_))
 
 
-        .def("qwidget", &freq_sink_f::qwidget, D(freq_sink_f, qwidget))
-
-
-        // .def("pyqwidget",&freq_sink_f::pyqwidget,
-        //     D(freq_sink_f,pyqwidget)
-        // )
-        // For the sip conversion to python to work, the widget object
-        // needs to be explicitly converted to long long.
         .def(
-            "pyqwidget",
-            [](std::shared_ptr<freq_sink_f> p) {
-                return PyLong_AsLongLong(p->pyqwidget());
-            },
-            D(freq_sink_f, pyqwidget))
+            "qwidget",
+            [](freq_sink_f& self) { return reinterpret_cast<uintptr_t>(self.qwidget()); },
+            D(freq_sink_f, qwidget))
 
 
         .def("set_fft_size",

@@ -139,17 +139,6 @@ void freq_sink_c_impl::exec_() { d_qApplication->exec(); }
 
 QWidget* freq_sink_c_impl::qwidget() { return d_main_gui; }
 
-#ifdef ENABLE_PYTHON
-PyObject* freq_sink_c_impl::pyqwidget()
-{
-    PyObject* w = PyLong_FromVoidPtr((void*)d_main_gui);
-    PyObject* retarg = Py_BuildValue("N", w);
-    return retarg;
-}
-#else
-void* freq_sink_c_impl::pyqwidget() { return NULL; }
-#endif
-
 void freq_sink_c_impl::set_fft_size(const int fftsize)
 {
     if ((fftsize > 16) && (fftsize < 16384))

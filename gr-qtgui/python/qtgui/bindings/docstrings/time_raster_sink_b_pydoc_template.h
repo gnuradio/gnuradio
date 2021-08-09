@@ -33,9 +33,6 @@ static const char* __doc_gr_qtgui_time_raster_sink_b_exec_ = R"doc()doc";
 static const char* __doc_gr_qtgui_time_raster_sink_b_qwidget = R"doc()doc";
 
 
-static const char* __doc_gr_qtgui_time_raster_sink_b_pyqwidget = R"doc()doc";
-
-
 static const char* __doc_gr_qtgui_time_raster_sink_b_set_x_label = R"doc()doc";
 
 

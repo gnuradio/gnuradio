@@ -75,12 +75,6 @@ public:
     void exec_() override;
     QWidget* qwidget() override;
 
-#ifdef ENABLE_PYTHON
-    PyObject* pyqwidget() override;
-#else
-    void* pyqwidget();
-#endif
-
     void set_x_label(const std::string& label) override;
     void set_x_range(double start, double end) override;
     void set_y_label(const std::string& label) override;

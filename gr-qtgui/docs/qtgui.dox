@@ -161,7 +161,7 @@ class grclass(gr.top_block):
     	       		    samp_rate,      #bw
 			    "QT GUI Plot")  #name
 
-    self.snk_win = sip.wrapinstance(self.snk.pyqwidget(), Qt.QWidget)
+    self.snk_win = sip.wrapinstance(self.snk.qwidget(), Qt.QWidget)
     self.snk_win.show()
 
 def main():

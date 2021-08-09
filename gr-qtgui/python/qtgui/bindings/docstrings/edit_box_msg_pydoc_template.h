@@ -31,6 +31,3 @@ static const char* __doc_gr_qtgui_edit_box_msg_exec_ = R"doc()doc";
 
 
 static const char* __doc_gr_qtgui_edit_box_msg_qwidget = R"doc()doc";
-
-
-static const char* __doc_gr_qtgui_edit_box_msg_pyqwidget = R"doc()doc";

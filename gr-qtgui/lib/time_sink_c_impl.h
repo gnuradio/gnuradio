@@ -83,12 +83,6 @@ public:
     void exec_() override;
     QWidget* qwidget() override;
 
-#ifdef ENABLE_PYTHON
-    PyObject* pyqwidget() override;
-#else
-    void* pyqwidget();
-#endif
-
     void set_y_axis(double min, double max) override;
     void set_y_label(const std::string& label, const std::string& unit = "") override;
     void set_update_time(double t) override;

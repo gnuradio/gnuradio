@@ -1008,7 +1008,7 @@ templates:
             self.${id}.set_line_alpha(i, alphas[i])
         % endif
 
-        ${win} = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)
+        ${win} = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
         ${gui_hint() % win}
 
 documentation: |-

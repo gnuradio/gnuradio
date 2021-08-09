@@ -60,20 +60,12 @@ void bind_vector_sink_f(py::module& m)
         .def("exec_", &vector_sink_f::exec_, D(vector_sink_f, exec_))
 
 
-        .def("qwidget", &vector_sink_f::qwidget, D(vector_sink_f, qwidget))
-
-
-        // .def("pyqwidget",&time_sink_c::pyqwidget,
-        //     D(vector_sink_f,pyqwidget)
-        // )
-        // For the sip conversion to python to work, the widget object
-        // needs to be explicitly converted to long long.
         .def(
-            "pyqwidget",
-            [](std::shared_ptr<vector_sink_f> p) {
-                return PyLong_AsLongLong(p->pyqwidget());
+            "qwidget",
+            [](vector_sink_f& self) {
+                return reinterpret_cast<uintptr_t>(self.qwidget());
             },
-            D(vector_sink_f, pyqwidget))
+            D(vector_sink_f, qwidget))
 
 
         .def("vlen", &vector_sink_f::vlen, D(vector_sink_f, vlen))
