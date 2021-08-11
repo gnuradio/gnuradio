@@ -15,6 +15,11 @@ parameters:
     option_labels: ['No', 'Yes']
     option_attributes:
         vlen: [1, 2]
+-   id: input_type
+    label: Input type
+    dtype: enum
+    default: 'short'
+    options: [short, sc16]
 -   id: swap
     label: Swap
     dtype: enum
@@ -25,7 +30,7 @@ parameters:
 
 inputs:
 -   domain: stream
-    dtype: short
+    dtype: ${input_type}
     vlen: ${ vector_input.vlen }
 
 outputs:
