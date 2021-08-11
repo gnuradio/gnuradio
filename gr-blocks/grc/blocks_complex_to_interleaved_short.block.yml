@@ -7,6 +7,11 @@ parameters:
     label: Scale Factor
     dtype: float
     default: '1.0'
+-   id: output_type
+    label: Output type
+    dtype: enum
+    default: 'short'
+    options: [short, sc16]
 -   id: vector_output
     label: Vector Output
     dtype: enum
@@ -15,6 +20,7 @@ parameters:
     option_labels: ['No', 'Yes']
     option_attributes:
         vlen: [1, 2]
+    hide: ${ 'all' if output_type == 'sc16' else 'none' }
 
 inputs:
 -   domain: stream
@@ -22,19 +28,19 @@ inputs:
 
 outputs:
 -   domain: stream
-    dtype: short
-    vlen: ${ vector_output.vlen }
+    dtype: ${output_type}
+    vlen: ${ 1 if output_type == 'sc16' else vector_output.vlen }
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.complex_to_interleaved_short(${vector_output},${scale_factor})
+    make: blocks.complex_to_interleaved_short(${output_type == 'sc16' or vector_output},${scale_factor})
     callbacks:
     - set_scale_factor(${scale_factor})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/complex_to_interleaved_short.h>']
     declarations: 'blocks::complex_to_interleaved_short::sptr ${id};'
-    make: 'this->${id} = blocks::complex_to_interleaved_short::make(${vector_output});'
+    make: 'this->${id} = blocks::complex_to_interleaved_short::make(${output_type == "sc16" or vector_output});'
     callbacks:
     - set_scale_factor(${scale_factor})
     translations:

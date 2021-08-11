@@ -7,6 +7,11 @@ parameters:
     label: Scale Factor
     dtype: float
     default: '1.0'
+-   id: input_type
+    label: Input type
+    dtype: enum
+    default: 'byte'
+    options: [byte, sc8]
 -   id: vector_input
     label: Vector Input
     dtype: enum
@@ -15,11 +20,12 @@ parameters:
     option_labels: ['No', 'Yes']
     option_attributes:
         vlen: [1, 2]
+    hide: ${ 'all' if input_type == 'sc8' else 'none' }
 
 inputs:
 -   domain: stream
-    dtype: byte
-    vlen: ${ vector_input.vlen }
+    dtype: ${input_type}
+    vlen: ${ 1 if input_type == 'sc8' else vector_input.vlen }
 
 outputs:
 -   domain: stream
@@ -27,14 +33,14 @@ outputs:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.interleaved_char_to_complex(${vector_input},${scale_factor})
+    make: blocks.interleaved_char_to_complex(${input_type == 'sc8' or vector_input},${scale_factor})
     callbacks:
     - set_scale_factor(${scale_factor})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/interleaved_char_to_complex.h>']
     declarations: 'blocks::interleaved_char_to_complex::sptr ${id};'
-    make: 'this->${id} = blocks::interleaved_char_to_complex::make(${vector_input});'
+    make: 'this->${id} = blocks::interleaved_char_to_complex::make(${input_type == "sc8" or vector_input});'
     callbacks:
     - set_scale_factor(${scale_factor})
     translations:
