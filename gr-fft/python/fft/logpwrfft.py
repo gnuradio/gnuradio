@@ -26,7 +26,7 @@ class _logpwrfft_base(gr.hier_block2):
     Create a log10(abs(fft)) stream chain, with real or complex input.
     """
 
-    def __init__(self, sample_rate, fft_size, ref_scale, frame_rate, avg_alpha, average, win=None):
+    def __init__(self, sample_rate, fft_size, ref_scale, frame_rate, avg_alpha, average, win=None, shift=False):
         """
         Create an log10(abs(fft)) stream chain.
         Provide access to the setting the filter and sample rate.
@@ -39,6 +39,7 @@ class _logpwrfft_base(gr.hier_block2):
             avg_alpha: FFT averaging (over time) constant [0.0-1.0]
             average: Whether to average [True, False]
             win: the window taps generation function
+            shift: shift zero-frequency component to center of spectrum
         """
         gr.hier_block2.__init__(self, self._name,
                                 gr.io_signature(1, 1, self._item_size),          # Input signature
@@ -48,10 +49,9 @@ class _logpwrfft_base(gr.hier_block2):
                                                      sample_rate=sample_rate,
                                                      vec_rate=frame_rate,
                                                      vec_len=fft_size)
-
         if win is None: win = window.blackmanharris
         fft_window = win(fft_size)
-        fft = self._fft_block[0](fft_size, True, fft_window)
+        fft = self._fft_block[0](fft_size, True, fft_window, shift=shift)
         window_power = sum([x*x for x in fft_window])
 
         c2magsq = blocks.complex_to_mag_squared(fft_size)
