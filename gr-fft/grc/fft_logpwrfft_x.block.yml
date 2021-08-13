@@ -36,6 +36,12 @@ parameters:
     label: Average Alpha
     dtype: real
     default: '1.0'
+-   id: shift
+    label: FFT Shift
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
 
 inputs:
 -   domain: stream
@@ -55,7 +61,8 @@ templates:
             ref_scale=${ref_scale},
             frame_rate=${frame_rate},
             avg_alpha=${avg_alpha},
-            average=${average})
+            average=${average},
+            shift=${shift})
     callbacks:
     - set_sample_rate(${sample_rate})
     - set_avg_alpha(${avg_alpha})
