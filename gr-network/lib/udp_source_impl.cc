@@ -14,6 +14,7 @@
 
 #include "udp_source_impl.h"
 #include <gnuradio/io_signature.h>
+#include <iostream>
 #include <sstream>
 
 namespace gr {
