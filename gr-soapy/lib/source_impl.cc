@@ -13,6 +13,7 @@
 #include "source_impl.h"
 #include <SoapySDR/Errors.hpp>
 #include <boost/format.hpp>
+#include <iostream>
 
 namespace gr {
 namespace soapy {
