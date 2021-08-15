@@ -140,7 +140,10 @@ std::vector<int> hier_block2::processor_affinity()
     return d_detail->processor_affinity();
 }
 
-void hier_block2::set_log_level(std::string level) { d_detail->set_log_level(level); }
+void hier_block2::set_log_level(const std::string& level)
+{
+    d_detail->set_log_level(level);
+}
 
 std::string hier_block2::log_level() { return d_detail->log_level(); }
 

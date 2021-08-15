@@ -399,7 +399,7 @@ public:
 
     virtual std::vector<int> processor_affinity() = 0;
 
-    virtual void set_log_level(std::string level) = 0;
+    virtual void set_log_level(const std::string& level) = 0;
 
     virtual std::string log_level() = 0;
 };
