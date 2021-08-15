@@ -37,8 +37,8 @@ basic_block::basic_block(const std::string& name,
       d_symbol_name(global_block_registry.register_symbolic_name(this)),
       d_color(WHITE),
       d_rpc_set(false),
-      d_logger(std::make_shared<logger_ptr::element_type>(name)),
-      d_debug_logger(std::make_shared<logger_ptr::element_type>(name)),
+      d_logger(std::make_shared<gr::logger>(name)),
+      d_debug_logger(std::make_shared<logger_ptr::element_type>(name + " (debug)")),
       d_message_subscribers(pmt::make_dict())
 {
     d_logger->set_level(logging::singleton().default_level());
@@ -67,7 +67,7 @@ void basic_block::set_block_alias(std::string name)
     // set the block's alias
     d_symbol_alias = name;
     d_logger->set_name(name);
-    d_debug_logger->set_name(name);
+    d_debug_logger->set_name(name + " (debug)");
 }
 
 // ** Message passing interface **

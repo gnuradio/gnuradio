@@ -97,7 +97,7 @@ logger::logger(const std::string& logger_name)
     d_logger->set_level(logging::singleton().default_level());
     // gr::log :%p: %c{1} - %m%n
     //         :level: block alias - message
-    d_logger->set_pattern(fmt::format(logging::default_pattern, _name));
+    d_logger->set_pattern(logging::default_pattern);
 }
 
 log_level logger::get_level() const { return d_logger->level(); }
@@ -132,7 +132,7 @@ const std::string& logger::name() const { return _name; }
 void logger::set_name(const std::string& name)
 {
     _name = name;
-    d_logger->set_pattern(fmt::format(logging::default_pattern, name));
+    d_logger->set_pattern(logging::default_pattern);
 }
 
 bool configure_default_loggers(gr::logger_ptr& l,

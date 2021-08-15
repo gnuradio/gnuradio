@@ -15,7 +15,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(logger.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(e07c56c77329c60739166edad7f51c2b)                     */
+/* BINDTOOL_HEADER_FILE_HASH(7f3cbb9463e52829b27c58d9dd41b422)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -60,16 +60,56 @@ void bind_logger(py::module& m)
              py::arg("level"),
              D(logger, get_level))
         .def("get_string_level", &logger::get_string_level, D(logger, get_string_level))
-        .def("trace", &logger::debug, py::arg("msg"), D(logger, trace))
-        .def("debug", &logger::debug, py::arg("msg"), D(logger, debug))
-        .def("info", &logger::info, py::arg("msg"), D(logger, info))
-        .def("notice", &logger::notice, py::arg("msg"), D(logger, notice))
-        .def("warn", &logger::warn, py::arg("msg"), D(logger, warn))
-        .def("error", &logger::error, py::arg("msg"), D(logger, error))
-        .def("crit", &logger::crit, py::arg("msg"), D(logger, crit))
-        .def("alert", &logger::alert, py::arg("msg"), D(logger, alert))
-        .def("fatal", &logger::fatal, py::arg("msg"), D(logger, fatal))
-        .def("emerg", &logger::emerg, py::arg("msg"), D(logger, emerg));
+        .def(
+            "trace",
+            [](logger& log, const std::string& msg) { log.trace(msg); },
+            py::arg("msg"),
+            D(logger, trace))
+        .def(
+            "debug",
+            [](logger& log, const std::string& msg) { log.debug(msg); },
+            py::arg("msg"),
+            D(logger, debug))
+        .def(
+            "info",
+            [](logger& log, const std::string& msg) { log.info(msg); },
+            py::arg("msg"),
+            D(logger, info))
+        .def(
+            "notice",
+            [](logger& log, const std::string& msg) { log.notice(msg); },
+            py::arg("msg"),
+            D(logger, notice))
+        .def(
+            "warn",
+            [](logger& log, const std::string& msg) { log.warn(msg); },
+            py::arg("msg"),
+            D(logger, warn))
+        .def(
+            "error",
+            [](logger& log, const std::string& msg) { log.error(msg); },
+            py::arg("msg"),
+            D(logger, error))
+        .def(
+            "crit",
+            [](logger& log, const std::string& msg) { log.crit(msg); },
+            py::arg("msg"),
+            D(logger, crit))
+        .def(
+            "alert",
+            [](logger& log, const std::string& msg) { log.alert(msg); },
+            py::arg("msg"),
+            D(logger, alert))
+        .def(
+            "fatal",
+            [](logger& log, const std::string& msg) { log.fatal(msg); },
+            py::arg("msg"),
+            D(logger, fatal))
+        .def(
+            "emerg",
+            [](logger& log, const std::string& msg) { log.emerg(msg); },
+            py::arg("msg"),
+            D(logger, emerg));
 
     using logging = gr::logging;
 

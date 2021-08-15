@@ -7,6 +7,7 @@
  *
  */
 
+#include <fmt/core.h>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -59,8 +60,7 @@ device_source::sptr device_source::make_from(iio_context* ctx,
 void device_source_impl::set_params(iio_device* phy,
                                     const std::vector<std::string>& params)
 {
-    static GR_LOG_GET_CONFIGURED_LOGGER(logger, "iio::device::set_params");
-
+    static gr::logger logger("device_source_impl::set_params");
     for (std::vector<std::string>::const_iterator it = params.begin(); it != params.end();
          ++it) {
         iio_channel* chn = NULL;
@@ -70,8 +70,8 @@ void device_source_impl::set_params(iio_device* phy,
 
         pos = it->find('=');
         if (pos == std::string::npos) {
-            GR_LOG_WARN(logger,
-                        boost::format("Malformed parameter update line: %s") % *it);
+            logger.warn(
+                fmt::format("set_params: Malformed parameter update line: {}", *it));
             continue;
         }
 
@@ -80,7 +80,7 @@ void device_source_impl::set_params(iio_device* phy,
 
         ret = iio_device_identify_filename(phy, key.c_str(), &chn, &attr);
         if (ret) {
-            GR_LOG_WARN(logger, boost::format("Parameter not recognized: %s") % key);
+            logger.warn(fmt::format("set_params: Parameter not recognized: {}", key));
             continue;
         }
 
@@ -91,9 +91,8 @@ void device_source_impl::set_params(iio_device* phy,
         else
             ret = iio_device_debug_attr_write(phy, attr, val.c_str());
         if (ret < 0) {
-            GR_LOG_WARN(logger,
-                        boost::format("Unable to write attribute %s: %d %s") % key % ret %
-                            val);
+            logger.warn(fmt::format(
+                "set_params: Unable to write attribute {:s}: {:d} {:s}", key, ret, val));
         }
     }
 }
@@ -292,7 +291,7 @@ int device_source_impl::work(int noutput_items,
                 char buf[256];
                 iio_strerror(-ret, buf, sizeof(buf));
 
-                GR_LOG_WARN(d_logger, boost::format("Unable to refill buffer: %s") % buf);
+                d_logger->warn(fmt::format("Unable to refill buffer: {:s}", buf));
             }
             return -1;
         }
@@ -399,12 +398,11 @@ int device_source_impl::handle_decimation_interpolation(unsigned long samplerate
                                                         bool disable_dec,
                                                         bool output_chan)
 {
+    static gr::logger log("device_source_impl::handle_decimation_interpolation");
     int ret;
     iio_channel* chan;
     char buff[128];
     unsigned long long min, max;
-
-    static GR_LOG_GET_CONFIGURED_LOGGER(logger, "iio::device::handle_decint");
 
     std::string an(attr_name);
     an.append("_available");
@@ -425,8 +423,9 @@ int device_source_impl::handle_decimation_interpolation(unsigned long samplerate
         min = max;
 
     ret = iio_channel_attr_write_longlong(chan, "sampling_frequency", min);
-    if (ret < 0)
-        GR_LOG_WARN(logger, "Unable to write attribute sampling_frequency!");
+    if (ret < 0) {
+        log.warn("Unable to write attribute sampling_frequency!");
+    }
 
     return ret;
 }

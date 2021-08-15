@@ -14,6 +14,8 @@
 
 #include <gnuradio/fec/generic_decoder.h>
 
+#include <memory>
+
 namespace gr {
 namespace fec {
 
@@ -21,8 +23,7 @@ generic_decoder::generic_decoder(std::string name)
 {
     d_name = name;
     my_id = base_unique_id++;
-
-    GR_LOG_ASSIGN_CONFIGURED_LOGPTR(d_logger, alias());
+    d_logger = std::make_shared<gr::logger>(alias());
 }
 
 generic_decoder::~generic_decoder() {}
