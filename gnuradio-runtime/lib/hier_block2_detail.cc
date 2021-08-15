@@ -912,7 +912,7 @@ std::vector<int> hier_block2_detail::processor_affinity()
     return tmp[0]->processor_affinity();
 }
 
-void hier_block2_detail::set_log_level(std::string level)
+void hier_block2_detail::set_log_level(const std::string& level)
 {
     basic_block_vector_t tmp = d_fg->calc_used_blocks();
     for (basic_block_viter_t p = tmp.begin(); p != tmp.end(); p++) {
