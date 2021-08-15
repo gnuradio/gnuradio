@@ -5,7 +5,7 @@ flags: [ python ]
 parameters:
 -   id: addr
     label: Address
-    dtype: raw
+    dtype: string
     default: localhost
 -   id: port
     label: Port
@@ -14,18 +14,18 @@ parameters:
 -   id: callback
     label: Callback
     dtype: raw
-    default: set_
+    default: None
 -   id: variable
     label: Variable
     dtype: raw
 
 templates:
     imports: from xmlrpc.client import ServerProxy
-    make: ServerProxy('http://${addr}:${port}')
+    make: ServerProxy('http://'+${addr}+':${port}')
     callbacks:
-    - ${callback}(${variable})
+    - set_${(callback)}(${variable})
 
 documentation: |-
-    This block will create an XMLRPC client. The client will execute the callback on the server when the variable is changed. The callback should be a the name of a function registered on the server. The variable should be an expression containing a the name of a variable in flow graph.
+    This block will create an XMLRPC client. The client will execute the callback on the server when the variable is changed. The callback and variable should be the name of a function registered on the server. Note that this executes a 'set' command on the server function and the 'set_<variable name>' syntax is already handled in the block.
 
 file_format: 1
