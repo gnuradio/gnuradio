@@ -148,7 +148,7 @@ bool jack_sink::check_topology(int ninputs, int noutputs)
 
     // Create ports and ringbuffers
     for (int i = 0; i < d_portcount; i++) {
-        std::string portname("out" + boost::to_string(i));
+        std::string portname("out" + std::to_string(i));
 
         d_jack_output_port[i] = jack_port_register(d_jack_client,
                                                    portname.c_str(),
