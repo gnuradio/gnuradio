@@ -674,7 +674,7 @@ public:
      * \brief Checks if this block is already exporting perf. counters
      * to ControlPort.
      */
-    bool is_pc_rpc_set() { return d_pc_rpc_set; }
+    bool is_pc_rpc_set() const { return d_pc_rpc_set; }
 
     /*!
      * \brief If the block calls this in its constructor, it's
@@ -744,7 +744,7 @@ public:
      * \li fatal
      * \li emerg
      */
-    void set_log_level(std::string level) override;
+    void set_log_level(const std::string& level) override;
 
     /*!
      * \brief Get the logger's output level
