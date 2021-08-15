@@ -149,7 +149,7 @@ bool jack_source::check_topology(int ninputs, int noutputs)
 
     // Create ports and ringbuffers
     for (int i = 0; i < d_portcount; i++) {
-        std::string portname("in" + boost::to_string(i));
+        std::string portname("in" + std::to_string(i));
 
         d_jack_input_port[i] = jack_port_register(
             d_jack_client, portname.c_str(), JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
