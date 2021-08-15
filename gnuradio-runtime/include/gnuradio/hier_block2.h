@@ -289,7 +289,7 @@ public:
      * \li fatal
      * \li emerg
      */
-    void set_log_level(std::string level) override;
+    void set_log_level(const std::string& level) override;
 
     /*!
      * \brief Get the logger's output level
