@@ -14,6 +14,16 @@ from mako.exceptions import SyntaxException
 
 from ..errors import TemplateError
 
+# The utils dict contains convenience functions
+# that can be called from any template
+def no_quotes(string, fallback=None):
+    if len(string) > 2:
+        if str(string)[0] + str(string)[-1] in ("''", '""'):
+            return str(string)[1:-1]
+    return str(fallback if fallback else string)
+
+utils = {'no_quotes': no_quotes}
+
 
 class MakoTemplates(dict):
 
@@ -53,6 +63,7 @@ class MakoTemplates(dict):
         if not text:
             return ''
         namespace = self.instance.namespace_templates
+        namespace = {**namespace, **utils}
 
         try:
             if isinstance(text, list):
