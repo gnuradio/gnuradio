@@ -295,13 +295,12 @@ class FlowGraph(Element):
         # Evaluate
         if not expr:
             raise Exception('Cannot evaluate empty statement.')
-        if not self.view_only:
-            if namespace is not None:
-                return eval(expr, namespace, local_namespace)
-            else:
-                return self._eval_cache.setdefault(expr, eval(expr, self.namespace, local_namespace))
+        if self.view_only:
+            return
+        if namespace is not None:
+            return eval(expr, namespace, local_namespace)
         else:
-            return None
+            return self._eval_cache.setdefault(expr, eval(expr, self.namespace, local_namespace))
 
     ##############################################
     # Add/remove stuff

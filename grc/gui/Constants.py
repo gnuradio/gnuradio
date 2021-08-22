@@ -105,12 +105,12 @@ GTK_INI_PREFER_DARK_KEY = 'gtk-application-prefer-dark-theme'
 GTK_INI_THEME_NAME_KEY = 'gtk-theme-name'
 
 TRUST_PROMPT_ACTION_MESSAGE = """\
-This action cannot be performed while in View-Only Mode. \
+This action cannot be performed while in View Only-Mode. \
 To perform the action you will need to trust this flow graph first.\
 \n\nOnly trust the flow graph if you are sure its expressions don\'t contain malicious code!"""
 
 TRUST_PROMPT_MISSING_VALUES = """\
-This flow graph file is missing the values needed to open it in view only mode. \
+This flow graph file is missing the values needed to open it in View Only-mode. \
 To open this flow graph you will need to trust it first.\
 \n\nOnly trust the flow graph if you are sure its expressions don\'t contain malicious code!"""
 

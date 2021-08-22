@@ -51,7 +51,7 @@ class Param(Element):
 
         # the evaluated value stored in grc-file
         self._saved_evaluated = None
-        self._using_saved = True
+        self.using_saved = True
 
         self._stringify_flag = False
         self._lisitify_flag = False
@@ -268,7 +268,7 @@ class Param(Element):
         scale_factor = self.scale_factor
 
         if self.parent_flowgraph.view_only:
-            if not self._using_saved:
+            if not self.using_saved:
                 self.parent_flowgraph.trigger_trust_prompt = True
             self._evaluated = self._saved_evaluated
             return self._saved_evaluated

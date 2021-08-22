@@ -263,8 +263,8 @@ class MainWindow(Gtk.ApplicationWindow):
                     flow_graph,
                     Constants.TRUST_PROMPT_MISSING_VALUES)
                 if flow_graph.view_only:
-                    self.current_page = page
-                    self.close_page()
+                    if self.notebook.get_n_pages() == 0:
+                        self.new_page() #no pages, make a new one
                     return
                 else:
                     flow_graph.reset_to_initial_state()

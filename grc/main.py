@@ -28,27 +28,7 @@ LOG_LEVELS = {
     'critical': logging.CRITICAL,
 }
 
-#DEBUG
-import sys
-import inspect
-
-def audit(event, args):
-    global EVALUATED, EVALUATED_PATH
-
-    if event == 'exec':
-        stack = inspect.stack()
-        path = stack[1].filename
-        #print(*stack, sep="\n")
-
-        #if "/grc/core" in path:
-        if "/grc/" in path:
-            print("IN GRC")
-            print(*stack, sep="\n")
-
-
 def main():
-    #sys.addaudithook(audit)
-
     from gnuradio import gr
     parser = argparse.ArgumentParser(
         description=VERSION_AND_DISCLAIMER_TEMPLATE % gr.version())

@@ -471,8 +471,16 @@ def trust_prompt(parent, config, flowgraph, message):
         files = config.get_trusted_files()
         files.append(flowgraph.grc_file_path)
         config.set_trusted_files(files)
+        config.save()
 
     return not response in (TrustAnswer.TRUST_ONCE, TrustAnswer.TRUST_FOREVER)
+
+def is_literal(value):
+    try:
+        ast.literal_eval(value)
+        return True
+    except Exception:
+        return False
 
 class TrustPrompt(Gtk.Dialog):
     """ Prompt the user to trust the flow graph (once or forever)."""
@@ -509,13 +517,15 @@ class TrustPrompt(Gtk.Dialog):
         # show first so Gtk sets dialog width and wraps text accordingly
         self.show_all()
 
-        message_label = Gtk.Label(message)
+        message_label = Gtk.Label(label=message)
         message_label.set_line_wrap(True)
 
         href = 'https://wiki.gnuradio.org/index.php/GRC:_View-Only_Mode'
         wiki_link = f'<a href="{href}">More information</a>'
         wiki_link_label = Gtk.Label(use_markup=True)
         wiki_link_label.set_markup(wiki_link)
+
+        self.data = {}
 
         self.store = Gtk.ListStore(str, str, str)
         self.treeview = Gtk.TreeView(model=self.store)
@@ -540,9 +550,17 @@ class TrustPrompt(Gtk.Dialog):
         self.counter_label = Gtk.Label()
         self.counter_label.set_xalign(0.0)
 
+        self.checkbox = Gtk.CheckButton("Show expressions from block definition")
+        self.checkbox.set_active(True)
+        self.checkbox.connect('toggled', self.show_overview)
+
+        self.overview_toolbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.overview_toolbox.pack_start(self.counter_label, True, True, 0)
+        self.overview_toolbox.pack_end(self.checkbox, False, True, 0)
+
         self.overview_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.overview_box.pack_start(self.scrollable, True, True, 0)
-        self.overview_box.pack_start(self.counter_label, False, True, 10)
+        self.overview_box.pack_start(self.overview_toolbox, False, True, 10)
 
         self.expander = Gtk.Expander(label="Expression Overview")
         self.expander.add(self.overview_box)
@@ -554,19 +572,8 @@ class TrustPrompt(Gtk.Dialog):
 
         self.show_all()
 
-    def is_literal(self, value):
-        try:
-            ast.literal_eval(value)
-            return True
-        except Exception:
-            return False
 
-    def show_overview(self, widget):
-        """ Fill the prompt's expression overview with values fetched from the flowgraph """
-        self.set_size_request(Constants.MIN_DIALOG_WIDTH, 500)
-        self.store.clear()
-        self.counter = 0
-
+    def gather_data(self):
         params = []
         imports = []
         blocks = []
@@ -578,12 +585,12 @@ class TrustPrompt(Gtk.Dialog):
 
             if block._eval_cache:
                 for expr in block._eval_cache.keys():
-                    if expr and not self.is_literal(expr):
+                    if expr and not (expr.isidentifier() or is_literal(expr)):
                         blocks += [(expr, block.name)]
 
-            for _, param in block.params.items():
+            for param in block.params.values():
                 value = param.to_code()
-                if value and not self.is_literal(value):
+                if value and not (value.isidentifier() or is_literal(value)):
                     # surround non-code with quotes
                     try:
                         ast.parse(value)
@@ -593,14 +600,25 @@ class TrustPrompt(Gtk.Dialog):
                     name = block.name + "." + param.name
                     params += [(value, name)]
 
-        for value, name in params:
-            self.store.append([value, "FLOW GRAPH", name])
-        for value, name in imports:
-            self.store.append([value, "BLOCK DEFINITION", name])
-        for value, name in blocks:
-            self.store.append([value, "BLOCK DEFINITION", name])
+        return {"FLOW GRAPH": params, "BLOCK DEFINITION": imports + blocks}
 
-        self.counter = len(params) + len(imports) + len(blocks)
+    def show_overview(self, widget):
+        """ Fill the prompt's expression overview with values fetched from the flowgraph """
+        self.set_size_request(Constants.MIN_DIALOG_WIDTH, 500)
+
+        if not len(self.store):
+            self.data = self.gather_data()
+
+        self.store.clear()
+        self.counter = 0
+
+        for origin, expressions in self.data.items():
+            if not self.checkbox.get_active() and origin == "BLOCK DEFINITION":
+                continue
+            for value, name in expressions:
+                self.store.append([value, origin, name])
+
+        self.counter = len(self.store)
         self.counter_label.set_text(f"Number of expressions: {self.counter}")
 
     def run_and_destroy(self):

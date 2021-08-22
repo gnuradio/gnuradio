@@ -538,6 +538,7 @@ class Application(Gtk.Application):
 
         elif action == Actions.TOGGLE_VIEW_ONLY_MODE:
             action.set_active(not action.get_active())
+            self.platform.view_only_mode = action.get_active()
             action.save_to_preferences()
         elif action == Actions.MANAGE_TRUST:
             Dialogs.TrustManagerDialog(main, self.config, self.platform).run_and_destroy()

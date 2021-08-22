@@ -137,17 +137,18 @@ class Block(Element):
         # namespaces may have changed, update them
         self.block_namespace.clear()
         imports = ""
-        if not self.parent_flowgraph.view_only:
-            try:
-                imports = self.templates.render('imports')
-                exec(imports, self.block_namespace)
-            except ImportError:
-                # We do not have a good way right now to determine if an import is for a
-                # hier block, these imports will fail as they are not in the search path
-                # this is ok behavior, unfortunately we could be hiding other import bugs
-                pass
-            except Exception:
-                self.add_error_message(f'Failed to evaluate import expression {imports!r}')
+        if self.parent_flowgraph.view_only:
+            return
+        try:
+            imports = self.templates.render('imports')
+            exec(imports, self.block_namespace)
+        except ImportError:
+            # We do not have a good way right now to determine if an import is for a
+            # hier block, these imports will fail as they are not in the search path
+            # this is ok behavior, unfortunately we could be hiding other import bugs
+            pass
+        except Exception:
+            self.add_error_message(f'Failed to evaluate import expression {imports!r}')
 
     def update_bus_logic(self):
         ###############################
@@ -632,7 +633,11 @@ class Block(Element):
 
     def evaluate(self, expr):
         if not self.parent_flowgraph.view_only:
-            self._eval_cache[expr] = self.parent_flowgraph.evaluate(expr, self.namespace)
+            try:
+                self._eval_cache[expr] = self.parent_flowgraph.evaluate(expr, self.namespace)
+            except Exception as e:
+                self._eval_cache.pop(expr, None)
+                raise
 
         try:
             return self._eval_cache[expr]
@@ -707,7 +712,7 @@ class Block(Element):
                         try:
                             self.params[key]._saved_evaluated = evaluated[key]
                         except KeyError:
-                            self.params[key]._using_saved = False
+                            self.params[key].using_saved = False
                 except KeyError:
                     continue
             # Store hash and call rewrite
