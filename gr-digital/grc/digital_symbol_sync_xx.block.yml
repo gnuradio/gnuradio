@@ -21,8 +21,8 @@ parameters:
         digital.TED_MENGALI_AND_DANDREA_GMSK, digital.TED_SIGNAL_TIMES_SLOPE_ML, digital.TED_SIGNUM_TIMES_SLOPE_ML]
     option_labels: ["Mueller and Mueller", "Modified Mueller and Mueller", Zero
             Crossing, Gardner, Early-Late, D'Andrea and Mengali Gen MSK, Mengali and
-            D'Andrea GMSK, 'y[n]y''[n] Maximum Likelyhood', 'sgn(y[n])y''[n] Maximum
-            Likelyhood']
+            D'Andrea GMSK, 'y[n]y''[n] Maximum likelihood', 'sgn(y[n])y''[n] Maximum
+            likelihood']
     option_attributes:
         hide_constellation: [part, part, part, all, all, all, all, all, all]
 -   id: constellation
