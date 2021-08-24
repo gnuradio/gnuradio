@@ -32,12 +32,8 @@ public:
     // gr::video_sdl::sink_uc::sptr
     typedef std::shared_ptr<sink_uc> sptr;
 
-    static sptr make(double framerate,
-                     int width,
-                     int height,
-                     unsigned int format,
-                     int dst_width,
-                     int dst_height);
+    static sptr
+    make(double framerate, int width, int height, int dst_width, int dst_height);
 };
 
 } /* namespace video_sdl */

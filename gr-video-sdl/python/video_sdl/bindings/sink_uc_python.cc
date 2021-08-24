@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(sink_uc.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(49c2aee2770a14d64b019ea2a551e7c7)                     */
+/* BINDTOOL_HEADER_FILE_HASH(feb95c3f7af87f7f5bfc2d1b45835a1a)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -43,7 +43,6 @@ void bind_sink_uc(py::module& m)
              py::arg("framerate"),
              py::arg("width"),
              py::arg("height"),
-             py::arg("format"),
              py::arg("dst_width"),
              py::arg("dst_height"),
              D(sink_uc, make))
