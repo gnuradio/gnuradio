@@ -265,28 +265,15 @@ int sink_uc_impl::work(int noutput_items,
         }
         break;
     case 2:
-        if (1) { // if(pixel_interleaved_uv)
-            // first channel=Y, second channel is alternating pixels U and V
-            src_pixels_0 = (unsigned char*)input_items[0];
-            src_pixels_1 = (unsigned char*)input_items[1];
-            for (int i = 0; i < noutput_items; i += d_chunk_size) {
-                copy_plane_to_surface(12, d_chunk_size / 2, src_pixels_1);
-                noutput_items_produced +=
-                    copy_plane_to_surface(0, d_chunk_size, src_pixels_0);
-                src_pixels_0 += d_chunk_size;
-                src_pixels_1 += d_chunk_size;
-            }
-        } else {
-            // first channel=Y, second channel is alternating lines U and V
-            src_pixels_0 = (unsigned char*)input_items[0];
-            src_pixels_1 = (unsigned char*)input_items[1];
-            for (int i = 0; i < noutput_items; i += d_chunk_size) {
-                copy_plane_to_surface(1222, d_chunk_size / 2, src_pixels_1);
-                noutput_items_produced +=
-                    copy_plane_to_surface(0, d_chunk_size, src_pixels_0);
-                src_pixels_0 += d_chunk_size;
-                src_pixels_1 += d_chunk_size;
-            }
+        // first channel=Y, second channel is alternating pixels U and V
+        src_pixels_0 = (unsigned char*)input_items[0];
+        src_pixels_1 = (unsigned char*)input_items[1];
+        for (int i = 0; i < noutput_items; i += d_chunk_size) {
+            copy_plane_to_surface(12, d_chunk_size / 2, src_pixels_1);
+            noutput_items_produced +=
+                copy_plane_to_surface(0, d_chunk_size, src_pixels_0);
+            src_pixels_0 += d_chunk_size;
+            src_pixels_1 += d_chunk_size;
         }
         break;
     case 1: // grey (Y) input
