@@ -26,23 +26,15 @@
 namespace gr {
 namespace video_sdl {
 
-sink_uc::sptr sink_uc::make(double framerate,
-                            int width,
-                            int height,
-                            unsigned int format,
-                            int dst_width,
-                            int dst_height)
+sink_uc::sptr
+sink_uc::make(double framerate, int width, int height, int dst_width, int dst_height)
 {
     return gnuradio::make_block_sptr<sink_uc_impl>(
-        framerate, width, height, format, dst_width, dst_height);
+        framerate, width, height, dst_width, dst_height);
 }
 
-sink_uc_impl::sink_uc_impl(double framerate,
-                           int width,
-                           int height,
-                           unsigned int format,
-                           int dst_width,
-                           int dst_height)
+sink_uc_impl::sink_uc_impl(
+    double framerate, int width, int height, int dst_width, int dst_height)
     : sync_block("video_sdl_sink_uc",
                  io_signature::make(1, 3, sizeof(unsigned char)),
                  io_signature::make(0, 0, 0)),
@@ -53,7 +45,6 @@ sink_uc_impl::sink_uc_impl(double framerate,
       d_height(height),
       d_dst_width(dst_width),
       d_dst_height(dst_height),
-      d_format(format),
       d_current_line(0),
       d_screen(NULL),
       d_image(NULL),
@@ -70,9 +61,6 @@ sink_uc_impl::sink_uc_impl(double framerate,
 
     if (dst_height < 0)
         d_dst_height = d_height;
-
-    if (0 == format)
-        d_format = IMGFMT_YV12;
 
     atexit(SDL_Quit); // check if this is the way to do this
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {

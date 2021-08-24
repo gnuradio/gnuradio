@@ -52,7 +52,6 @@ protected:
     int d_height;
     int d_dst_width;
     int d_dst_height;
-    int d_format;
     int d_current_line;
     SDL_Surface* d_screen;
     SDL_Overlay* d_image;
@@ -61,12 +60,7 @@ protected:
     unsigned int d_wanted_ticks;
 
 public:
-    sink_uc_impl(double framerate,
-                 int width,
-                 int height,
-                 unsigned int format,
-                 int dst_width,
-                 int dst_height);
+    sink_uc_impl(double framerate, int width, int height, int dst_width, int dst_height);
     ~sink_uc_impl() override;
 
     int work(int noutput_items,
