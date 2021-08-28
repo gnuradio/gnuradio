@@ -14,7 +14,7 @@ import copy
 
 import re
 
-import ast
+from asteval import Interpreter
 
 from ._templates import MakoTemplates
 from ._flags import Flags
@@ -53,6 +53,8 @@ class Block(Element):
 
     extra_data = {}
     loaded_from = '(unknown)'
+
+    aeval = Interpreter()
 
     def __init__(self, parent):
         """Make a new block from nested data."""
@@ -433,7 +435,7 @@ class Block(Element):
         def get_type(element, _vtype):
             evaluated = None
             try:
-                evaluated = ast.literal_eval(element)
+                evaluated = self.aeval(element)
                 if _vtype == None:
                     _vtype = type(evaluated)
             except ValueError or SyntaxError as excp:
@@ -479,7 +481,7 @@ class Block(Element):
 
         # The r-value for these types must be transformed to create legal C++ syntax.
         if self.vtype in ['bool', 'gr_complex'] or 'std::map' in self.vtype or 'std::vector' in self.vtype:
-            evaluated = ast.literal_eval(value)
+            evaluated = self.aeval(value)
             self.cpp_templates['var_make'] = self.cpp_templates['var_make'].replace('${value}', self.get_cpp_value(evaluated))
 
         if 'string' in self.vtype:
@@ -504,7 +506,7 @@ class Block(Element):
 
         elif type(pyval) == complex:
             self.cpp_templates['includes'].append('#include <gnuradio/gr_complex.h>')
-            evaluated = ast.literal_eval(str(pyval).strip())
+            evaluated = self.aeval(str(pyval).strip())
             return '{' + str(evaluated.real) + ', ' + str(evaluated.imag) + '}'
 
         elif type(pyval) == list:

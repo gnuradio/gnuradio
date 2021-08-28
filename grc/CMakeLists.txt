@@ -56,6 +56,12 @@ GR_PYTHON_CHECK_MODULE_RAW(
     NUMPY_FOUND
 )
 
+GR_PYTHON_CHECK_MODULE_RAW(
+    "asteval"
+    "import asteval"
+    ASTEVAL_FOUND
+)
+
 ########################################################################
 # Register component
 ########################################################################
@@ -69,6 +75,7 @@ if(NOT CMAKE_CROSSCOMPILING)
         CAIRO_GI_FOUND
         PANGOCAIRO_GI_FOUND
         NUMPY_FOUND
+        ASTEVAL_FOUND
     )
 endif(NOT CMAKE_CROSSCOMPILING)
 
