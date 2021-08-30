@@ -214,7 +214,7 @@ class Param(Element):
                 except Exception as e:
                     raise Exception('Value "{}" cannot be evaluated:\n{}'.format(expr, e))
             else:
-                value = 0
+                value = None   # No parameter value provided
             if dtype == 'hex':
                 value = hex(value)
             elif dtype == 'bool':
