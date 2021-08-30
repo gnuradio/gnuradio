@@ -175,8 +175,8 @@ protected:
                                               int items_avail,
                                               unsigned read_index,
                                               char* buffer_ptr,
-                                              memcpy_func_t memcpy_func,
-                                              memmove_func_t memmove_func);
+                                              mem_func_t const& memcpy_func,
+                                              mem_func_t const& memmove_func);
 
     /*!
      * \brief Abstracted logic for the output blocked callback function.
@@ -204,7 +204,7 @@ protected:
     virtual bool output_blocked_callback_logic(int output_multiple,
                                                bool force,
                                                char* buffer_ptr,
-                                               memmove_func_t memmove_func);
+                                               mem_func_t const& memmove_func);
 };
 
 } /* namespace gr */

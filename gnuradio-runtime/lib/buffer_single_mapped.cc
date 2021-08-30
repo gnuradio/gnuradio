@@ -269,8 +269,8 @@ bool buffer_single_mapped::input_blocked_callback_logic(int items_required,
                                                         int items_avail,
                                                         unsigned read_index,
                                                         char* buffer_ptr,
-                                                        memcpy_func_t memcpy_func,
-                                                        memmove_func_t memmove_func)
+                                                        mem_func_t const& memcpy_func,
+                                                        mem_func_t const& memmove_func)
 {
 #ifdef BUFFER_DEBUG
     std::ostringstream msg;
@@ -357,7 +357,7 @@ bool buffer_single_mapped::input_blocked_callback_logic(int items_required,
 bool buffer_single_mapped::output_blocked_callback_logic(int output_multiple,
                                                          bool force,
                                                          char* buffer_ptr,
-                                                         memmove_func_t memmove_func)
+                                                         mem_func_t const& memmove_func)
 {
     uint32_t space_avail = space_available();
 
