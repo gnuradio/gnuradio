@@ -44,7 +44,7 @@ param_str = ", ".join((param.vtype + " " + param.name) for param in parameters)
 
 % if generate_options.startswith('hb'):
 class ${class_name};
-typedef boost::shared_ptr<${class_name}> ${class_name}_sptr;
+typedef std::shared_ptr<${class_name}> ${class_name}_sptr;
 ${class_name}_sptr make_${class_name}();
 % endif
 
