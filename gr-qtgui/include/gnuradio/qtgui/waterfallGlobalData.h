@@ -15,8 +15,9 @@
 #include <cinttypes>
 
 #if QWT_VERSION >= 0x060000
-#include <qwt_compat.h>
-#include <qwt_point_3d.h> // doesn't seem necessary, but is...
+#include <qwt_interval.h>
+
+typedef QwtInterval QwtDoubleInterval;
 #endif
 
 class WaterfallData : public QwtRasterData
@@ -36,6 +37,9 @@ public:
 #if QWT_VERSION < 0x060000
     virtual QwtDoubleInterval range() const;
     virtual void setRange(const QwtDoubleInterval&);
+#elif QWT_VERSION >= 0x060200
+    virtual QwtInterval interval(Qt::Axis) const;
+    void setInterval(Qt::Axis, const QwtInterval&);
 #endif
 
     double value(double x, double y) const override;
@@ -60,6 +64,10 @@ protected:
     QwtDoubleInterval _intensityRange;
 #else
     QwtInterval _intensityRange;
+#endif
+
+#if QWT_VERSION >= 0x060200
+    QwtInterval d_intervals[3];
 #endif
 
 private:
