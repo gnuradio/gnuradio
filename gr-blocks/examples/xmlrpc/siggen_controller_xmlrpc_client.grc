@@ -70,7 +70,7 @@ blocks:
   parameters:
     addr: localhost
     alias: ''
-    callback: rmt_freq
+    callback: set_rmt_freq
     comment: "The value used in the 'callback' field maps to a variable name in an\n\
       \ XMLRPC Server or XMLRPC Server Flowgraph\nex: 'siggen_xmlrpc_server.grc' \n\
       \nThe value used in the 'variable' field is a local variable in this \nflowgraph.\
@@ -84,7 +84,7 @@ blocks:
     bus_structure: null
     coordinate: [384, 4.0]
     rotation: 0
-    state: true
+    state: enabled
 connections: []
 
 metadata:

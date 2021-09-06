@@ -14,7 +14,7 @@ parameters:
 -   id: callback
     label: Callback
     dtype: string
-    default: None
+    default: set_
 -   id: variable
     label: Variable
     dtype: raw
@@ -23,7 +23,7 @@ templates:
     imports: from xmlrpc.client import ServerProxy
     make: ServerProxy('http://'+${addr}+':${port}')
     callbacks:
-    - set_${no_quotes(callback)}(${variable})
+    - ${no_quotes(callback)}(${variable})
 
 documentation: |-
     This block will create an XMLRPC client. The client will execute the callback on the server when the variable is changed. The callback should be the name of a function registered on the server. The variable should be an expression containing the name of a variable in the flowgraph.
