@@ -9,9 +9,7 @@
 # Check for system libcodec2 #
 ##############################
 
-if(NOT PKG_CONFIG_FOUND)
-  INCLUDE(FindPkgConfig)
-endif()
+find_package(PkgConfig)
 INCLUDE(FindPackageHandleStandardArgs)
 
 pkg_check_modules(LIBCODEC2_PKG QUIET codec2)

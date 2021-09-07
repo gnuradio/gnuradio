@@ -53,9 +53,7 @@ if(NOT "$ENV{UHD_CONFIG_VERSION_USED}" STREQUAL "TRUE")
 
   # Not used; try the "old" method (not as robust)
 
-  if(NOT PKG_CONFIG_FOUND)
-      include(FindPkgConfig)
-  endif(NOT PKG_CONFIG_FOUND)
+  find_package(PkgConfig)
   pkg_check_modules(PC_UHD uhd)
 
   find_path(
