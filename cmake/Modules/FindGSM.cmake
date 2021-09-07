@@ -9,9 +9,7 @@
 # Check for system libgsm #
 ###########################
 
-if(NOT PKG_CONFIG_FOUND)
-  INCLUDE(FindPkgConfig)
-endif()
+find_package(PkgConfig)
 INCLUDE(FindPackageHandleStandardArgs)
 
 pkg_check_modules(LIBGSM_PKG QUIET gsm)

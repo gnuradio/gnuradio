@@ -1,6 +1,4 @@
-if(NOT PKG_CONFIG_FOUND)
-  INCLUDE(FindPkgConfig)
-endif()
+find_package(PkgConfig)
 PKG_CHECK_MODULES(PC_THRIFT thrift)
 
 set(THRIFT_REQ_VERSION ${THRIFT_FIND_VERSION})

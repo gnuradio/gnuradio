@@ -1,6 +1,4 @@
-if(NOT PKG_CONFIG_FOUND)
-    include(FindPkgConfig)
-endif()
+find_package(PkgConfig)
 pkg_check_modules(PC_MPIR "mpir >= 3.0")
 
 set(MPIR_DEFINITIONS ${PC_MPIR_CFLAGS_OTHER})
