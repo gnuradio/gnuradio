@@ -13,6 +13,14 @@ ARC        = 10  # arc radius for block corners
 LONG_VALUE = 20  # maximum length of a param string.
                  # if exceeded, '...' will be displayed
 
+class ParameterEdit(QtWidgets.QWidget):
+    def __init__(self, label, value):
+        super().__init__()
+        self.layout = QtWidgets.QHBoxLayout(self)
+        self.layout.addWidget(QtWidgets.QLabel(label))
+        self.layout.addWidget(QtWidgets.QLineEdit(value))
+
+
 #TODO: Move this to a separate file
 class PropsDialog(QtWidgets.QDialog):
     def __init__(self, parent_block):
@@ -21,17 +29,30 @@ class PropsDialog(QtWidgets.QDialog):
 
         self.setWindowTitle(f"Properties: {self._block.label}")
 
+        categories = set(p.category for p in self._block.params.values())
+
+
+        self.tabs = QtWidgets.QTabWidget()
+        for cat in categories:
+            qvb = QtWidgets.QVBoxLayout()
+            qvb.setAlignment(QtCore.Qt.AlignTop)
+            qvb.setSpacing(0)
+            for param in self._block.params.values():
+                if param.category == cat and param.hide != 'all':
+                    qvb.addWidget(ParameterEdit(param.name, param.value))
+            tab = QtWidgets.QWidget()
+            tab.setLayout(qvb)
+            self.tabs.addTab(tab, cat)
+
         buttons = QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel
         self.buttonBox = QtWidgets.QDialogButtonBox(buttons)
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
         self.layout = QtWidgets.QVBoxLayout()
-        message = QtWidgets.QLabel("Parameters go here")
-        self.layout.addWidget(message)
+        self.layout.addWidget(self.tabs)
         self.layout.addWidget(self.buttonBox)
-        self.setLayout(self.layout)
-        categories = (p.category for p in self._block.params.values())
 
+        self.setLayout(self.layout)
 
 '''
 class BlockTitle(QtWidgets.QLabel):
