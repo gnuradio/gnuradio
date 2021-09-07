@@ -1,6 +1,4 @@
-if(NOT PKG_CONFIG_FOUND)
-    INCLUDE(FindPkgConfig)
-endif()
+find_package(PkgConfig)
 PKG_CHECK_MODULES(PC_ZEROMQ "libzmq")
 
 FIND_PATH(ZEROMQ_INCLUDE_DIRS
