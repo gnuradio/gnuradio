@@ -1,6 +1,5 @@
-if(NOT PKG_CONFIG_FOUND)
-    INCLUDE(FindPkgConfig)
-endif()
+find_package(PkgConfig)
+
 PKG_CHECK_MODULES(PC_HOWTO howto)
 
 FIND_PATH(

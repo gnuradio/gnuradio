@@ -3,9 +3,7 @@
 
 # Find single-precision (float) version of FFTW3
 
-if(NOT PKG_CONFIG_FOUND)
-    INCLUDE(FindPkgConfig)
-endif()
+find_package(PkgConfig)
 PKG_CHECK_MODULES(PC_FFTW3f "fftw3f >= 3.0")
 
 FIND_PATH(
