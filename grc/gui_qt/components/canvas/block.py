@@ -18,13 +18,14 @@ class ParameterEdit(QtWidgets.QWidget):
         super().__init__()
         self.layout = QtWidgets.QHBoxLayout(self)
         self.layout.addWidget(QtWidgets.QLabel(label))
-        self.layout.addWidget(QtWidgets.QLineEdit(value))
-
+        edit = QtWidgets.QLineEdit(value)
+        self.layout.addWidget(edit)
 
 #TODO: Move this to a separate file
 class PropsDialog(QtWidgets.QDialog):
     def __init__(self, parent_block):
         super().__init__()
+        self.setMinimumSize(600, 400)
         self._block = parent_block
 
         self.setWindowTitle(f"Properties: {self._block.label}")
@@ -34,12 +35,17 @@ class PropsDialog(QtWidgets.QDialog):
 
         self.tabs = QtWidgets.QTabWidget()
         for cat in categories:
-            qvb = QtWidgets.QVBoxLayout()
+            qvb = QtWidgets.QGridLayout()
             qvb.setAlignment(QtCore.Qt.AlignTop)
-            qvb.setSpacing(0)
+            qvb.setVerticalSpacing(5.0)
+            qvb.setHorizontalSpacing(20.0)
+            i = 0
             for param in self._block.params.values():
                 if param.category == cat and param.hide != 'all':
-                    qvb.addWidget(ParameterEdit(param.name, param.value))
+                    qvb.addWidget(QtWidgets.QLabel(param.name), i, 0)
+                    qvb.addWidget(QtWidgets.QLineEdit(param.value), i, 1)
+                    qvb.addWidget(QtWidgets.QLabel("unit"), i, 2)
+                i+=1
             tab = QtWidgets.QWidget()
             tab.setLayout(qvb)
             self.tabs.addTab(tab, cat)
