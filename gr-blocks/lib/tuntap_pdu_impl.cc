@@ -53,22 +53,13 @@ tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU, bool istunflag)
     strncpy(dev_cstr, dev.c_str(), IFNAMSIZ);
     dev_cstr[IFNAMSIZ - 1] = '\0';
 
+
     bool istun = d_istunflag;
-
-#if defined(__GNUG__) && !defined(__clang__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-truncation"
-#endif
-
     if (istun) {
         d_fd = tun_alloc(dev_cstr, (IFF_TUN | IFF_NO_PI));
     } else {
         d_fd = tun_alloc(dev_cstr, (IFF_TAP | IFF_NO_PI));
     }
-
-#if defined(__GNUG__) && !defined(__clang__)
-#pragma GCC diagnostic pop
-#endif
 
     if (d_fd <= 0)
         throw std::runtime_error(
@@ -127,10 +118,21 @@ int tuntap_pdu_impl::tun_alloc(char* dev, int flags)
      * the kernel will try to allocate the "next" device of the
      * specified type
      */
+
+#if defined(__GNUG__) && !defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
+#endif
+
     if (*dev) {
         // copy at most IFNAMSIZ - 1: If everything went well, the last byte is 0 anyway
         strncpy(ifr.ifr_name, dev, IFNAMSIZ - 1);
     }
+
+#if defined(__GNUG__) && !defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
+
     /* try to create the device */
     if ((err = ioctl(fd, TUNSETIFF, (void*)&ifr)) < 0) {
         close(fd);
