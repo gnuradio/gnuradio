@@ -40,14 +40,6 @@ string(TIMESTAMP BUILD_DATE_SHORT "%Y-%m-%d" UTC)
 message(STATUS "Build date set to ${BUILD_DATE}.")
 
 include(GrComponent)
-########################################################################
-# Setup Boost for global use (within this build)
-# Do this before enabling testing support, as it depends
-# on unit_test_framework
-########################################################################
-include(GrBoost)
-GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING
-         Boost_UNIT_TEST_FRAMEWORK_FOUND )
 
 # Set the version information here
 SET(VERSION_MAJOR 3)
@@ -69,6 +61,15 @@ set(MSVC_MIN_VERSION "1914")          ## VS2017 15.7, for full-ish C++17 support
 set(VOLK_MIN_VERSION "2.4.1")         ## first version with CPU features
 set(PYBIND11_MIN_VERSION "2.4")       # pybind11 sets versions like 2.4.dev4, which compares < 2.4.3
 set(GR_THRIFT_MIN_VERSION "0.13")
+
+########################################################################
+# Setup Boost for global use (within this build)
+# Do this before enabling testing support, as it depends
+# on unit_test_framework
+########################################################################
+include(GrBoost)
+GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING
+         Boost_UNIT_TEST_FRAMEWORK_FOUND )
 
 # Enable generation of compile_commands.json for code completion engines
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
