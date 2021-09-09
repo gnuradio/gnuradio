@@ -29,7 +29,7 @@ import time
 
 # this tests only the store port and the message retrival methods of the debug block
 # print() and print_pdu() were omitted as they print to stdout
-class qa_message_strobe(gr_unittest.TestCase):
+class qa_message_debug(gr_unittest.TestCase):
 
     def setUp(self):
         self.tb = gr.top_block()
