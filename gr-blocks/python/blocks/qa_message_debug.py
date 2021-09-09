@@ -25,9 +25,10 @@ import pmt
 import time
 
 # this test tests message strobe and message debug blocks against each other
-# similar tests contained in message_debug class
+# similar tests contained in message_strobe class
 
-# this tests the periodic message output and the input port to change the message
+# this tests only the store port and the message retrival methods of the debug block
+# print() and print_pdu() were omitted as they print to stdout
 class qa_message_strobe(gr_unittest.TestCase):
 
     def setUp(self):
@@ -65,4 +66,4 @@ class qa_message_strobe(gr_unittest.TestCase):
         self.assertEqual(pmt.to_python(msg_debug.get_message(no_msgs - 1)), new_msg, "failed to update string")
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_message_strobe)
+    gr_unittest.run(qa_message_debug)
