@@ -12,9 +12,9 @@ parameters:
     label: Input Type
     category: General
     dtype: enum
-    options: [float, int, short, byte]
+    options: [float, short, byte]
     option_attributes:
-        size: [gr.sizeof_float, gr.sizeof_int, gr.sizeof_short, gr.sizeof_char]
+        size: [gr.sizeof_float, gr.sizeof_short, gr.sizeof_char]
     hide: part
 -   id: autoscale
     label: Autoscale
