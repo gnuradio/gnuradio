@@ -72,7 +72,7 @@ templates:
         %>\
         self._${id}_choices = {'Pressed': ${pressed}, 'Released': ${released}}
         	
-        ${win} = qtgui.MsgCheckBox(${ 'self.set_' + context.get('id')() }, ${(label if (len(label) - 2 > 0) else repr(id))}, self._${id}_choices, ${initPressed}, ${cellalignment}, ${verticalalignment},"${outputmsgname}".replace("'",""))
+        ${win} = qtgui.MsgCheckBox(${ 'self.set_' + context.get('id')() }, '${no_quotes(label,repr(id))}', self._${id}_choices, ${initPressed}, ${cellalignment}, ${verticalalignment},"${outputmsgname}".replace("'",""))
         self.${id} = ${win}
 
         ${gui_hint() % win}
