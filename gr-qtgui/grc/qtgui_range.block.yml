@@ -76,7 +76,7 @@ templates:
             range = 'self._%s_range'%id
         %>\
         ${range} = Range(${start}, ${stop}, ${step}, ${value}, ${min_len})
-        ${win} = RangeWidget(${range}, self.set_${id}, ${(label if (len(label) - 2 > 0) else repr(id))}, "${widget}", ${rangeType}, ${orient})
+        ${win} = RangeWidget(${range}, self.set_${id}, "${no_quotes(label,repr(id))}", "${widget}", ${rangeType}, ${orient})
         ${gui_hint() % win}
 
 documentation: |-

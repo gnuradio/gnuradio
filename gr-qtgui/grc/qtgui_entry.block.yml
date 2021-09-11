@@ -41,7 +41,7 @@ templates:
             win = 'self._%s_tool_bar'%id
         %>
         ${win} = Qt.QToolBar(self)
-        ${win}.addWidget(Qt.QLabel(${(label if (len(label) - 2 > 0) else repr(id))} + ": "))
+        ${win}.addWidget(Qt.QLabel("${no_quotes(label,repr(id))}" + ": "))
         self._${id}_line_edit = Qt.QLineEdit(str(self.${id}))
         self._${id}_tool_bar.addWidget(self._${id}_line_edit)
         self._${id}_line_edit.returnPressed.connect(
@@ -65,7 +65,7 @@ cpp_templates:
             win = 'this->_%s_tool_bar'%id
         %>
         this->_${id}_tool_bar = new QToolBar();
-        this->_${id}_label = new QLabel(QString::fromStdString(std::string("${label.strip("'")}")+ std::string(":")));
+        this->_${id}_label = new QLabel(QString::fromStdString(std::string("${no_quotes(label,repr(id))}")+ std::string(": ")));
         this->_${id}_tool_bar->addWidget(_${id}_label);
         this->_${id}_line_edit = new QLineEdit(QString::number(this->${id}));
         this->_${id}_tool_bar->addWidget(this->_${id}_line_edit);

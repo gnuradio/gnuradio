@@ -48,7 +48,7 @@ templates:
         <%
             win = '_%s_check_box'%id
         %>
-        ${win} = Qt.QCheckBox(${(label if (len(label) - 2 > 0) else repr(id))})
+        ${win} = Qt.QCheckBox("${no_quotes(label,repr(id))}")
         self._${id}_choices = {True: ${true}, False: ${false}}
         self._${id}_choices_inv = dict((v,k) for k,v in self._${id}_choices.items())
         self._${id}_callback = lambda i: Qt.QMetaObject.invokeMethod(${win}, "setChecked", Qt.Q_ARG("bool", self._${id}_choices_inv[i]))
@@ -69,7 +69,7 @@ cpp_templates:
       <%
           win = '_%s'%id
       %>
-      ${win} = new QCheckBox("${(label.strip("'") if (len(label) - 2 > 0) else repr(id))}");
+      ${win} = new QCheckBox("${no_quotes(label,repr(id))}");
       if ( ${value} == ${true} ) {
           ${win}->setCheckState(Qt::Checked);
       }
