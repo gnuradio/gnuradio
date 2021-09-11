@@ -150,11 +150,7 @@ templates:
             win = 'self._%s_tool_bar'%id
         %>\
         ${win} = Qt.QToolBar(self)
-        % if len(label) - 2 > 0:
-        ${win}.addWidget(Qt.QLabel(${label} + ": "))
-        % else:
-        ${win}.addWidget(Qt.QLabel("${id}: "))
-        % endif
+        ${win}.addWidget(Qt.QLabel("${no_quotes(label,repr(id))}" + ": "))
         self._${id}_combo_box = Qt.QComboBox()
         ${win}.addWidget(self._${id}_combo_box)
         for _label in self._${id}_labels: self._${id}_combo_box.addItem(_label)
@@ -168,7 +164,7 @@ templates:
         <%
             win = 'self._%s_group_box'%id
         %>\
-        ${win} = Qt.QGroupBox(${(label if (len(label) - 2 > 0) else repr(id))} + ": ")
+        ${win} = Qt.QGroupBox("${no_quotes(label,repr(id))}" + ": ")
         self._${id}_box = ${orient}()
         class variable_chooser_button_group(Qt.QButtonGroup):
             def __init__(self, parent=None):
