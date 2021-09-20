@@ -61,10 +61,8 @@ jobs:
             containerid: 'ghcr.io/gnuradio/ci:fedora-34-3.9'
             cxxflags: ''
           - distro: 'CentOS 8.3'
-            # FIXME -- We're pulling this from Docker Hub, because somehow that works
-            # Should be from ghcr.io like the rest
-            containerid: 'gnuradio/ci:centos-8.3-3.9'
-            cxxflags: -Werror -Wno-error=invalid-pch
+            containerid: 'ghcr.io/gnuradio/ci:centos-8.3-3.9'
+            cxxflags: ''
           - distro: 'Debian 10'
             containerid: 'ghcr.io/gnuradio/ci:debian-10-3.9'
             cxxflags: -Werror
