@@ -65,7 +65,10 @@ jobs:
             cxxflags: ''
           - distro: 'Debian 10'
             containerid: 'ghcr.io/gnuradio/ci:debian-10-3.9'
-            cxxflags: -Werror
+            cxxflags: -Werror -Wno-error=invalid-pch
+          - distro: 'Debian 11'
+            containerid: 'gnuradio/ci:debian-11-3.10'
+            cxxflags: -Werror -Wno-error=invalid-pch
     name: ${{ matrix.distro }}
     container:
       image: ${{ matrix.containerid }}
