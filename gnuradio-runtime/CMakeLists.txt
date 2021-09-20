@@ -58,6 +58,13 @@ if(ENABLE_COMMON_PCH)
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
     )
 
+  if(MSVC)
+    target_compile_definitions(common-precompiled-headers PUBLIC
+      # disables stupidity and enables std::min and std::max
+      -DNOMINMAX
+    )
+  endif(MSVC)
+
   target_precompile_headers(
     common-precompiled-headers
     PUBLIC
