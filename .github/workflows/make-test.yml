@@ -14,7 +14,24 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
+      name: Checkout Project for Formatting Check
+      with:
+        fetch-depth: 2
+    - name: Filter changeset for C++ source code
+      id: changed-files-cxx
+      uses: tj-actions/changed-files@v1.1.2
+      with:
+        files: |
+          *.cc
+          *.h
+          *.h.in
+          *.hpp
+          *.cpp
+          *.cc.in
+          .clang-format
     - uses: gnuradio/clang-format-lint-action@v0.5-4
+      name: Run clang-format
+      if: steps.changed-files-cxx.any_changed == 'true'
       with:
         source: '.'
         exclude: './volk'
@@ -30,9 +47,22 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       name: Checkout Project
+      with:
+        fetch-depth: 2
+    - name: Filter changeset for Docmentation Changes
+      id: changed-files-doxy
+      uses: tj-actions/changed-files@v1.1.2
+      with:
+        files: |
+          *.h
+          *.hpp
+          *.dox
+          ^docs/doxygen
     - name: CMake
+      if: steps.changed-files-doxy.any_changed == 'true'
       run: 'cd /build && cmake ${GITHUB_WORKSPACE}'
     - name: Make Docs
+      if: steps.changed-files-doxy.any_changed == 'true'
       run: 'cd /build && make doxygen_target'
   linux-docker:
   # All of these shall depend on the formatting check (needs: check-formatting)
