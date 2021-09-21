@@ -35,11 +35,12 @@ flat_fader_impl::flat_fader_impl(uint32_t N, float fDTs, bool LOS, float K, uint
       scale_los(sqrtf(d_K) / sqrtf(d_K + 1)),
       scale_nlos(1 / sqrtf(d_K + 1))
 {
+    rng_1 = std::mt19937(seed);
+    rng_2 = std::mt19937(seed + 1);
+
     d_theta = dist_1(rng_1);
     d_theta_los = dist_1(rng_1);
 
-    rng_1 = std::mt19937(seed);
-    rng_2 = std::mt19937(seed + 1);
 
     // generate initial phase values
     for (int i = 0; i < d_N + 1; i++) {
