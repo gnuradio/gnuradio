@@ -20,7 +20,7 @@ flat_fader_impl::flat_fader_impl(uint32_t N, float fDTs, bool LOS, float K, uint
 
       d_N(N),
       d_fDTs(fDTs),
-      
+
       d_step(powf(0.00125 * fDTs, 1.1)), // max step size approximated from Table 2
       d_m(0),
       d_K(K),
