@@ -157,6 +157,8 @@ void tags_to_pdu_impl<T>::publish_message()
         pmt::make_tuple(pmt::from_uint64(int_seconds), pmt::from_double(frac_seconds));
     d_meta_dict = pmt::dict_add(d_meta_dict, metadata_keys::rx_time(), time_tuple);
     d_meta_dict = pmt::dict_add(
+        d_meta_dict, metadata_keys::sample_rate(), pmt::from_double(d_samp_rate));
+    d_meta_dict = pmt::dict_add(
         d_meta_dict, metadata_keys::pdu_num(), pmt::from_uint64(d_burst_counter));
     if (d_wall_clock_time) {
         double t_now((boost::get_system_time() - d_epoch).total_microseconds() /

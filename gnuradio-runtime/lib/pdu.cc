@@ -27,6 +27,11 @@ const pmt::pmt_t rx_time()
     static const pmt::pmt_t val = pmt::mp("rx_time");
     return val;
 }
+const pmt::pmt_t sample_rate()
+{
+    static const pmt::pmt_t val = pmt::mp("sample_rate");
+    return val;
+}
 const pmt::pmt_t sys_time()
 {
     static const pmt::pmt_t val = pmt::mp("sys_time");
