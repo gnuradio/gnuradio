@@ -19,6 +19,7 @@ namespace gr {
 namespace metadata_keys {
 GR_RUNTIME_API const pmt::pmt_t pdu_num();
 GR_RUNTIME_API const pmt::pmt_t rx_time();
+GR_RUNTIME_API const pmt::pmt_t sample_rate();
 GR_RUNTIME_API const pmt::pmt_t sys_time();
 GR_RUNTIME_API const pmt::pmt_t tx_eob();
 GR_RUNTIME_API const pmt::pmt_t tx_time();

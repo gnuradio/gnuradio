@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pdu.h)                                                     */
-/* BINDTOOL_HEADER_FILE_HASH(6772caeddffe60c0c16148f68d21654f)                     */
+/* BINDTOOL_HEADER_FILE_HASH(a347d61f9dff47c4bfcc26d89ad69a0c)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -50,6 +50,9 @@ void bind_pdu(py::module& m)
 
     m_metadata_keys.def(
         "rx_time", &::gr::metadata_keys::rx_time, D(metadata_keys, rx_time));
+
+    m_metadata_keys.def(
+        "sample_rate", &::gr::metadata_keys::sample_rate, D(metadata_keys, sample_rate));
 
     m_metadata_keys.def(
         "sys_time", &::gr::metadata_keys::sys_time, D(metadata_keys, sys_time));

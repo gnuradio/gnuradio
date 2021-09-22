@@ -21,6 +21,9 @@ static const char* __doc_gr_metadata_keys_pdu_num = R"doc()doc";
 static const char* __doc_gr_metadata_keys_rx_time = R"doc()doc";
 
 
+static const char* __doc_gr_metadata_keys_sample_rate = R"doc()doc";
+
+
 static const char* __doc_gr_metadata_keys_sys_time = R"doc()doc";
 
 
