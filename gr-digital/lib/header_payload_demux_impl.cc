@@ -95,6 +95,7 @@ header_payload_demux_impl::header_payload_demux_impl(
             io_signature::make2(1, 2, itemsize, sizeof(char)),
             io_signature::make(
                 2, 2, (output_symbols ? itemsize * items_per_symbol : itemsize))),
+      d_next_trigger_offset(0),
       d_header_len(header_len),
       d_header_padding_symbols(header_padding / items_per_symbol),
       d_header_padding_items(header_padding % items_per_symbol),
@@ -339,10 +340,29 @@ int header_payload_demux_impl::general_work(int noutput_items,
             // at least the padding value. We'll use a minimum padding of 1
             // item here.
             const int items_padding = std::max(d_header_padding_total_items, 1);
+
+            // Calculate whether the current frame consumes the trigger signal of the next frame data
+            // If yes, then make corrections
+            int consume_compensation = 0;
+            int consume_nums = 0;
+            // Calculate total consumption
+            consume_nums = (d_curr_payload_len + d_header_len) * (d_items_per_symbol + d_gi) + 
+                            d_header_padding_total_items + 
+                            d_curr_payload_offset - 
+                            items_padding ;
+            // make a decision
+            if(d_next_trigger_offset <= consume_nums) {
+                consume_compensation = consume_nums - d_next_trigger_offset + 1;
+            }
+            else {
+                consume_compensation = 0;
+            }
+            // add the corrections
             const int items_to_consume =
-                d_curr_payload_len * (d_items_per_symbol + d_gi) - items_padding;
+                d_curr_payload_len * (d_items_per_symbol + d_gi) - items_padding - consume_compensation;
             CONSUME_ITEMS(items_to_consume);
             set_min_noutput_items(d_output_symbols ? 1 : (d_items_per_symbol + d_gi));
+            d_next_trigger_offset = 0;
             d_state = STATE_FIND_TRIGGER;
         }
         break;
@@ -361,14 +381,24 @@ int header_payload_demux_impl::find_trigger_signal(int skip_items,
                                                    const unsigned char* in_trigger)
 {
     int rel_offset = max_rel_offset;
+    int trigger_nums = 0;
     if (max_rel_offset < skip_items) {
         return rel_offset;
     }
     if (in_trigger) {
         for (int i = skip_items; i < max_rel_offset; i++) {
+        for (int i = skip_items; i < max_rel_offset; i++) {
             if (in_trigger[i]) {
-                rel_offset = i;
-                break;
+                trigger_nums++;
+                // record location of the first trigger
+                if(trigger_nums == 1) {
+                    rel_offset = i;
+                }
+                // If there is a second trigger signal,record offset of between the first and second trigger
+                else if (trigger_nums == 2) {
+                    d_next_trigger_offset = i - rel_offset;
+                    break;
+                }
             }
         }
     }

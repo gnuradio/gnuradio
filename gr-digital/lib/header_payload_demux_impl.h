@@ -18,6 +18,7 @@ namespace digital {
 class header_payload_demux_impl : public header_payload_demux
 {
 private:
+    int d_next_trigger_offset;              //!< The interval between two adjacent trigger signals
     int d_header_len;                       //!< Number of bytes per header
     const int d_header_padding_symbols;     //!< Symbols header padding
     const int d_header_padding_items;       //!< Items header padding
