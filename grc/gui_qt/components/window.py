@@ -21,6 +21,7 @@ from __future__ import absolute_import, print_function
 import logging
 import os
 import sys
+import subprocess
 
 # Third-party  modules
 import six
@@ -479,6 +480,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         if filename:
             try:
+                self.file_path = filename
                 self.platform.save_flow_graph(filename, self.flowgraph)
             except IOError:
                 log.error('Save failed')
@@ -555,9 +557,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def execute_triggered(self):
         log.debug('execute')
+        py_path = self.file_path[0:-3] + 'py'
+        subprocess.Popen(f'/usr/bin/python {py_path}', shell=True)
 
     def generate_triggered(self):
         log.debug('generate')
+        generator = self.platform.Generator(self.flowgraph.scene, os.path.dirname(self.file_path))
+        generator.write()
 
     def types_triggered(self):
         log.debug('types')
