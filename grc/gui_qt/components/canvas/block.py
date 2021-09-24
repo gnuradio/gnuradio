@@ -32,6 +32,7 @@ class PropsDialog(QtWidgets.QDialog):
 
         categories = set(p.category for p in self._block.params.values())
 
+        self.edit_params = []
 
         self.tabs = QtWidgets.QTabWidget()
         for cat in categories:
@@ -45,17 +46,24 @@ class PropsDialog(QtWidgets.QDialog):
                     qvb.addWidget(QtWidgets.QLabel(param.name), i, 0)
                     if param.dtype == "enum":
                         dropdown = QtWidgets.QComboBox()
+                        dropdown.param = param
                         for opt in param.options.values():
                             dropdown.addItem(opt)
                         qvb.addWidget(dropdown, i, 1)
+                        self.edit_params.append(dropdown)
                     elif param.options:
                         dropdown = QtWidgets.QComboBox()
+                        dropdown.param = param
                         for opt in param.options.values():
                             dropdown.addItem(opt)
                         dropdown.setEditable(True)
                         qvb.addWidget(dropdown, i, 1)
+                        self.edit_params.append(dropdown)
                     else:
-                        qvb.addWidget(QtWidgets.QLineEdit(param.value), i, 1)
+                        line_edit = QtWidgets.QLineEdit(param.value)
+                        line_edit.param = param
+                        qvb.addWidget(line_edit, i, 1)
+                        self.edit_params.append(line_edit)
                     qvb.addWidget(QtWidgets.QLabel("unit"), i, 2)
                 i+=1
             tab = QtWidgets.QWidget()
@@ -71,6 +79,17 @@ class PropsDialog(QtWidgets.QDialog):
         self.layout.addWidget(self.buttonBox)
 
         self.setLayout(self.layout)
+
+    def accept(self):
+        super().accept()
+        for par in self.edit_params:
+            if isinstance(par, QtWidgets.QLineEdit):
+                par.param.set_value(par.text())
+            else: # Dropdown/ComboBox
+                for key, val in par.param.options.items():
+                    if val == par.currentText():
+                        par.param.set_value(key)
+
 
 '''
 class BlockTitle(QtWidgets.QLabel):
