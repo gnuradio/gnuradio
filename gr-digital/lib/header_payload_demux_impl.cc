@@ -387,7 +387,6 @@ int header_payload_demux_impl::find_trigger_signal(int skip_items,
     }
     if (in_trigger) {
         for (int i = skip_items; i < max_rel_offset; i++) {
-        for (int i = skip_items; i < max_rel_offset; i++) {
             if (in_trigger[i]) {
                 trigger_nums++;
                 // record location of the first trigger
