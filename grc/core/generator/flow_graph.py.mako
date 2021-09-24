@@ -215,12 +215,13 @@ gr.io_signature.makev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}
         % if 'affinity' in blk.params and blk.params['affinity'].get_evaluated():
         self.${blk.name}.set_processor_affinity(${blk.params['affinity'].to_code()})
         % endif
-        % if len(blk.sources) > 0 and 'minoutbuf' in blk.params and int(blk.params['minoutbuf'].get_evaluated()) > 0:
-        self.${blk.name}.set_min_output_buffer(${blk.params['minoutbuf'].to_code()})
-        % endif
-        % if len(blk.sources) > 0 and 'maxoutbuf' in blk.params and int(blk.params['maxoutbuf'].get_evaluated()) > 0:
-        self.${blk.name}.set_max_output_buffer(${blk.params['maxoutbuf'].to_code()})
-        % endif
+## TODO: Add this back in
+##        % if len(blk.sources) > 0 and 'minoutbuf' in blk.params and int(blk.params['minoutbuf'].get_evaluated()) > 0:
+##        self.${blk.name}.set_min_output_buffer(${blk.params['minoutbuf'].to_code()})
+##        % endif
+##        % if len(blk.sources) > 0 and 'maxoutbuf' in blk.params and int(blk.params['maxoutbuf'].get_evaluated()) > 0:
+##        self.${blk.name}.set_max_output_buffer(${blk.params['maxoutbuf'].to_code()})
+##        % endif
         % endfor
 
         % if connections:
