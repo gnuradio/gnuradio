@@ -153,7 +153,7 @@ class BlockTreeWindow(Gtk.VBox):
                 iter_ = treestore.insert_before(categories[parent_category[:-1]], None)
                 treestore.set_value(iter_, NAME_INDEX, parent_cat_name)
                 treestore.set_value(iter_, KEY_INDEX, '')
-                treestore.set_value(iter_, DOC_INDEX, _format_cat_tooltip(parent_cat_name))
+                treestore.set_value(iter_, DOC_INDEX, _format_cat_tooltip(parent_category))
                 categories[parent_category] = iter_
         # add block
         iter_ = treestore.insert_before(categories[category], None)
