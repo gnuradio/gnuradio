@@ -15,14 +15,14 @@ from .cpp_hier_block import CppHierBlockGenerator
 class Generator(object):
     """Adaptor for various generators (uses generate_options)"""
 
-    def __init__(self, flow_graph, file_path):
+    def __init__(self, flow_graph, output_dir):
         """
         Initialize the generator object.
         Determine the file to generate.
 
         Args:
             flow_graph: the flow graph object
-            file_path: the path to the grc file
+            output_dir: the output path for generated files
         """
         self.generate_options = flow_graph.get_option('generate_options')
         self.output_language = flow_graph.get_option('output_language')
@@ -45,7 +45,7 @@ class Generator(object):
             else:
                 generator_cls = CppTopBlockGenerator
 
-        self._generator = generator_cls(flow_graph, file_path)
+        self._generator = generator_cls(flow_graph, output_dir)
 
     def __getattr__(self, item):
         """get all other attrib from actual generator object"""

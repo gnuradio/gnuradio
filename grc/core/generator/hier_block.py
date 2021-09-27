@@ -12,15 +12,17 @@ from ..io import yaml
 class HierBlockGenerator(TopBlockGenerator):
     """Extends the top block generator to also generate a block YML file"""
 
-    def __init__(self, flow_graph, _):
+    def __init__(self, flow_graph, output_dir=None):
         """
         Initialize the hier block generator object.
 
         Args:
             flow_graph: the flow graph object
+            output_dir: the path for written files
         """
-        platform = flow_graph.parent
-        output_dir = platform.config.hier_block_lib_dir
+        if output_dir is None:
+            platform = flow_graph.parent
+            output_dir = platform.config.hier_block_lib_dir
         if not os.path.exists(output_dir):
             os.mkdir(output_dir)
 

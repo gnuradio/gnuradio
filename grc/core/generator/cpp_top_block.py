@@ -26,16 +26,15 @@ source_template = Template(filename=SOURCE_TEMPLATE)
 cmake_template = Template(filename=CMAKE_TEMPLATE)
 
 
-class CppTopBlockGenerator(TopBlockGenerator):
+class CppTopBlockGenerator(object):
 
-    def __init__(self, flow_graph, file_path):
+    def __init__(self, flow_graph, output_dir):
         """
-        Initialize the C++ top block generator object.
+        Initialize the top block generator object.
 
         Args:
             flow_graph: the flow graph object
-            file_path: the path where we want to create
-                a new directory with C++ files
+            output_dir: the path for written files
         """
 
         self._flow_graph = FlowGraphProxy(flow_graph)
@@ -44,14 +43,32 @@ class CppTopBlockGenerator(TopBlockGenerator):
         self._mode = TOP_BLOCK_FILE_MODE
         # Handle the case where the directory is read-only
         # In this case, use the system's temp directory
-        if not os.access(file_path, os.W_OK):
-            file_path = tempfile.gettempdir()
-
-        # When generating C++ code, we create a new directory
-        # (file_path) and generate the files inside that directory
+        if not os.access(output_dir, os.W_OK):
+            output_dir = tempfile.gettempdir()
         filename = self._flow_graph.get_option('id')
-        self.file_path = os.path.join(file_path, filename)
-        self._dirname = file_path
+        self.file_path = os.path.join(output_dir, filename)
+        self.output_dir = output_dir
+        
+    def _warnings(self):
+        throttling_blocks = [b for b in self._flow_graph.get_enabled_blocks()
+                                if b.flags.throttle]
+        if not throttling_blocks and not self._generate_options.startswith('hb'):
+            Messages.send_warning("This flow graph may not have flow control: "
+                                    "no audio or RF hardware blocks found. "
+                                    "Add a Misc->Throttle block to your flow "
+                                    "graph to avoid CPU congestion.")
+        if len(throttling_blocks) > 1:
+            keys = set([b.key for b in throttling_blocks])
+            if len(keys) > 1 and 'blocks_throttle' in keys:
+                Messages.send_warning("This flow graph contains a throttle "
+                                        "block and another rate limiting block, "
+                                        "e.g. a hardware source or sink. "
+                                        "This is usually undesired. Consider "
+                                        "removing the throttle block.")
+
+        deprecated_block_keys = {b.name for b in self._flow_graph.get_enabled_blocks() if b.flags.deprecated}
+        for key in deprecated_block_keys:
+            Messages.send_warning("The block {!r} is deprecated.".format(key))
 
     def write(self):
         """create directory, generate output and write it to files"""
