@@ -15,15 +15,12 @@ namespace gr {
 namespace channels {
 
 flat_fader_impl::flat_fader_impl(uint32_t N, float fDTs, bool LOS, float K, uint32_t seed)
-    : rng_1(seed),
-      dist_1(-GR_M_PI, GR_M_PI),
-      rng_2(seed + 1),
+    : dist_1(-GR_M_PI, GR_M_PI),
       dist_2(0, 1),
 
       d_N(N),
       d_fDTs(fDTs),
-      d_theta(dist_1(rng_1)),
-      d_theta_los(dist_1(rng_1)),
+
       d_step(powf(0.00125 * fDTs, 1.1)), // max step size approximated from Table 2
       d_m(0),
       d_K(K),
@@ -38,6 +35,13 @@ flat_fader_impl::flat_fader_impl(uint32_t N, float fDTs, bool LOS, float K, uint
       scale_los(sqrtf(d_K) / sqrtf(d_K + 1)),
       scale_nlos(1 / sqrtf(d_K + 1))
 {
+    rng_1 = std::mt19937(seed);
+    rng_2 = std::mt19937(seed + 1);
+
+    d_theta = dist_1(rng_1);
+    d_theta_los = dist_1(rng_1);
+
+
     // generate initial phase values
     for (int i = 0; i < d_N + 1; i++) {
         d_psi[i] = dist_1(rng_1);
