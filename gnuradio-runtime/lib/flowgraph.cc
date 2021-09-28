@@ -22,13 +22,14 @@
 
 namespace gr {
 
-constexpr bool FLOWGRAPH_DEBUG = false;
-
 edge::~edge() {}
 
 flowgraph_sptr make_flowgraph() { return flowgraph_sptr(new flowgraph()); }
 
-flowgraph::flowgraph() {}
+flowgraph::flowgraph()
+{
+    configure_default_loggers(d_logger, d_debug_logger, "flowgraph");
+}
 
 flowgraph::~flowgraph() {}
 
@@ -76,8 +77,7 @@ void flowgraph::validate()
         std::vector<int> used_ports;
         int ninputs, noutputs;
 
-        if (FLOWGRAPH_DEBUG)
-            std::cout << "Validating block: " << (*p) << std::endl;
+        GR_LOG_DEBUG(d_debug_logger, boost::format("Validating block: %s") % *p);
 
         used_ports = calc_used_ports(*p, true); // inputs
         ninputs = used_ports.size();
@@ -125,17 +125,16 @@ void flowgraph::check_valid_port(gr::io_signature::sptr sig, int port)
 
 void flowgraph::check_valid_port(const msg_endpoint& e)
 {
-    if (FLOWGRAPH_DEBUG)
-        std::cout << "check_valid_port( " << e.block() << ", " << e.port() << ")\n";
+    GR_LOG_DEBUG(d_debug_logger,
+                 boost::format("check_valid_port(%s, %s)") % e.block() % e.port());
 
     if (!e.block()->has_msg_port(e.port())) {
         const gr::basic_block::msg_queue_map_t& msg_map = e.block()->get_msg_map();
-        std::cout << "Could not find port: " << e.port() << " in:" << std::endl;
+        GR_LOG_WARN(d_logger, boost::format("Could not find port %s in:") % e.port());
         for (gr::basic_block::msg_queue_map_t::const_iterator it = msg_map.begin();
              it != msg_map.end();
              ++it)
-            std::cout << it->first << std::endl;
-        std::cout << std::endl;
+            GR_LOG_WARN(d_logger, boost::format("  %s") % it->first);
         throw std::invalid_argument("invalid msg port in connect() or disconnect()");
     }
 }

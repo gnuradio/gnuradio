@@ -13,6 +13,8 @@
 #include <boost/format.hpp>
 #include <iostream>
 
+#include <iostream>
+
 enum pyport_t { PYPORT_STRING, PYPORT_FLOAT };
 
 int pycallback_object_count = 500;
@@ -71,7 +73,9 @@ public:
     {
         myType rVal = d_deflt;
         if (d_callback == NULL) {
-            printf("WARNING: pycallback_object get() called without py callback set!\n");
+            std::cerr
+                << "WARNING: pycallback_object get() called without py callback set!"
+                << std::endl;
             return rVal;
         } else {
             // obtain  PyGIL
@@ -131,7 +135,7 @@ private:
      * something. */
     myType pyCast(PyObject* obj)
     {
-        printf("TYPE NOT IMPLEMENTED!\n");
+        std::cerr << "TYPE NOT IMPLEMENTED!" << std::endl;
         assert(0);
         // the following is to make compilers happy only.
         myType dummy;
