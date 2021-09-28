@@ -16,7 +16,9 @@
 #include <gnuradio/block_detail.h>
 #include <gnuradio/block_registry.h>
 #include <gnuradio/buffer.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
+#include <boost/format.hpp>
 #include <iostream>
 #include <stdexcept>
 
@@ -357,8 +359,9 @@ long block::min_output_buffer(size_t i)
 
 void block::set_min_output_buffer(long min_output_buffer)
 {
-    std::cout << "set_min_output_buffer on block " << unique_id() << " to "
-              << min_output_buffer << std::endl;
+    GR_LOG_INFO(d_logger,
+                boost::format("set_min_output_buffer on block %s to %d") % unique_id() %
+                    min_output_buffer);
     for (int i = 0; i < output_signature()->max_streams(); i++) {
         set_min_output_buffer(i, min_output_buffer);
     }
@@ -594,13 +597,13 @@ void block::reset_perf_counters()
 
 void block::system_handler(pmt::pmt_t msg)
 {
-    // std::cout << "system_handler " << msg << "\n";
+    // GR_LOG_INFO(d_logger, boost::format("system handler %s") % msg);
     pmt::pmt_t op = pmt::car(msg);
     if (pmt::eqv(op, d_pmt_done)) {
         d_finished = pmt::to_long(pmt::cdr(msg));
         global_block_registry.notify_blk(d_symbol_name);
     } else {
-        std::cout << "WARNING: bad message op on system port!\n";
+        GR_LOG_WARN(d_logger, "bad message op on system port!");
         pmt::print(msg);
     }
 }

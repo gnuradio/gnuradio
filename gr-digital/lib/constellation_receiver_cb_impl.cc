@@ -18,6 +18,9 @@
 #include <gnuradio/expj.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
+
+#include <boost/format.hpp>
+
 #include <stdexcept>
 
 namespace gr {
@@ -68,15 +71,12 @@ void constellation_receiver_cb_impl::phase_error_tracking(float phase_error)
     frequency_limit();
 
 #if VERBOSE_COSTAS
-    printf("cl: phase_error: %f  phase: %f  freq: %f  sample: %f+j%f  constellation: "
-           "%f+j%f\n",
-           phase_error,
-           d_phase,
-           d_freq,
-           sample.real(),
-           sample.imag(),
-           d_constellation->points()[d_current_const_point].real(),
-           d_constellation->points()[d_current_const_point].imag());
+    GR_LOG_DEBUG(d_debug_logger,
+                 boost::format("cl: phase_error: %f  phase: %f  freq: %f  sample: %f+j%f "
+                               " constellation: %f+j%f") %
+                     phase_error % d_phase % d_freq % sample.real() % sample.imag() %
+                     d_constellation->points()[d_current_const_point].real() %
+                     d_constellation->points()[d_current_const_point].imag());
 #endif
 }
 

@@ -90,9 +90,6 @@ private:
      * start and restarts.
      */
     void setup_buffer_alignment(block_sptr block);
-
-    gr::logger_ptr d_logger;
-    gr::logger_ptr d_debug_logger;
 };
 
 } /* namespace gr */
