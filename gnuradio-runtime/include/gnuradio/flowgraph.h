@@ -251,6 +251,8 @@ protected:
     basic_block_vector_t d_blocks;
     edge_vector_t d_edges;
     msg_edge_vector_t d_msg_edges;
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
     flowgraph();
     std::vector<int> calc_used_ports(basic_block_sptr block, bool check_inputs);

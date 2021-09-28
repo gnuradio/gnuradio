@@ -13,6 +13,7 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/hier_block2.h>
+#include <gnuradio/logger.h>
 #include <flat_flowgraph.h>
 #include <boost/core/noncopyable.hpp>
 
@@ -64,6 +65,9 @@ private:
         d_inputs;                // Multiple internal endpoints per external input
     endpoint_vector_t d_outputs; // Single internal endpoint per external output
     basic_block_vector_t d_blocks;
+
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
     void refresh_io_signature();
     void connect_input(int my_port, int port, basic_block_sptr block);

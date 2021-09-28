@@ -83,7 +83,7 @@ void logger_config::watch_file(std::string filename, unsigned int watch_period)
             boost::this_thread::sleep(
                 boost::posix_time::time_duration(0, 0, watch_period, 0));
         } catch (const boost::thread_interrupted&) {
-            std::cout << "GNURadio leaving logger config file watch." << std::endl;
+            std::cerr << "GNURadio leaving logger config file watch." << std::endl;
             break;
         }
     }

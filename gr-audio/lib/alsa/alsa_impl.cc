@@ -157,12 +157,10 @@ bool gri_alsa_pick_acceptable_format(snd_pcm_t* pcm,
                                  error_msg_tag % snd_pcm_name(pcm) % snd_strerror(err));
                 return false;
             }
-            if (verbose)
-                fprintf(stdout,
-                        "%s[%s]: using %s",
-                        error_msg_tag,
-                        snd_pcm_name(pcm),
-                        snd_pcm_format_name(acceptable_formats[i]));
+            GR_LOG_INFO(debug_logger,
+                        boost::format("%s[%s]: using %s") % error_msg_tag %
+                            snd_pcm_name(pcm) %
+                            snd_pcm_format_name(acceptable_formats[i]));
             *selected_format = acceptable_formats[i];
             return true;
         }

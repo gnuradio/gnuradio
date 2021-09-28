@@ -14,8 +14,10 @@
 
 #include "async_encoder_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/logger.h>
 #include <volk/volk.h>
-#include <cstdio>
+
+#include <boost/format.hpp>
 
 namespace gr {
 namespace fec {
@@ -94,10 +96,10 @@ void async_encoder_impl::encode_unpacked(pmt::pmt_t msg)
     } else {
         nblocks = nbits_in / d_encoder->get_input_size();
         if (nblocks * d_encoder->get_input_size() != nbits_in) {
-            printf("nblocks: %u, in_block_size: %d, got_input_size: %d\n",
-                   nblocks,
-                   d_encoder->get_input_size(),
-                   nbits_in);
+            GR_LOG_ERROR(
+                d_logger,
+                boost::format("nblocks: %u, in_block_size: %d, got_input_size: %d") %
+                    nblocks % d_encoder->get_input_size() % nbits_in);
             throw std::runtime_error("input does not divide into code block size!");
         }
         nbits_out = nblocks * d_encoder->get_output_size();
