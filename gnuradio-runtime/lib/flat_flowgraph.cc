@@ -35,10 +35,7 @@ flat_flowgraph_sptr make_flat_flowgraph()
     return flat_flowgraph_sptr(new flat_flowgraph());
 }
 
-flat_flowgraph::flat_flowgraph()
-{
-    configure_default_loggers(d_logger, d_debug_logger, "flat_flowgraph");
-}
+flat_flowgraph::flat_flowgraph() {}
 
 flat_flowgraph::~flat_flowgraph() {}
 
@@ -130,8 +127,8 @@ buffer_sptr flat_flowgraph::allocate_buffer(basic_block_sptr block, int port)
 
     // limit buffer size if indicated
     if (grblock->max_output_buffer(port) > 0) {
-        // std::cout << "constraining output items to " << block->max_output_buffer(port)
-        // << "\n";
+        // GR_LOG_INFO(d_debug_logger, boost::format("constraining output items to %d")
+        //         % block->max_output_buffer(port));
         nitems = std::min((long)nitems, (long)grblock->max_output_buffer(port));
         nitems -= nitems % grblock->output_multiple();
         if (nitems < 1)
@@ -371,24 +368,25 @@ std::string flat_flowgraph::msg_edge_list()
 void flat_flowgraph::dump()
 {
     for (edge_viter_t e = d_edges.begin(); e != d_edges.end(); e++)
-        std::cout << " edge: " << (*e) << std::endl;
+        GR_LOG_INFO(d_logger, boost::format(" edge: %s") % *e);
 
     for (basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
-        std::cout << " block: " << (*p) << std::endl;
+        GR_LOG_INFO(d_logger, boost::format(" block: %s") % *p);
         block_detail_sptr detail = cast_to_block_sptr(*p)->detail();
-        std::cout << "  detail @" << detail << ":" << std::endl;
+        GR_LOG_INFO(d_logger, boost::format(" detail @%s:") % detail);
 
         int ni = detail->ninputs();
         int no = detail->noutputs();
         for (int i = 0; i < no; i++) {
             buffer_sptr buffer = detail->output(i);
-            std::cout << "   output " << i << ": " << buffer << std::endl;
+            GR_LOG_INFO(d_logger, boost::format("   output %d: %s") % i % buffer);
         }
 
         for (int i = 0; i < ni; i++) {
             buffer_reader_sptr reader = detail->input(i);
-            std::cout << "   reader " << i << ": " << reader
-                      << " reading from buffer=" << reader->buffer() << std::endl;
+            GR_LOG_INFO(d_logger,
+                        boost::format("   reader %d: %s reading from buffer=%s") % i %
+                            reader % reader->buffer());
         }
     }
 }

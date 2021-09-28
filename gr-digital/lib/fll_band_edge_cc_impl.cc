@@ -17,6 +17,7 @@
 #include <gnuradio/io_signature.h>
 #include <cstdio>
 #include <memory>
+#include <sstream>
 
 namespace gr {
 namespace digital {
@@ -171,17 +172,18 @@ void fll_band_edge_cc_impl::design_filter(float samps_per_sym,
 
 void fll_band_edge_cc_impl::print_taps()
 {
-    printf("Upper Band-edge: [");
-    for (const auto& tap : d_taps_upper) {
-        printf(" %.4e + %.4ej,", tap.real(), tap.imag());
-    }
-    printf("]\n\n");
+    std::stringstream ss;
+    ss << "Upper Band-edge: [";
+    for (const auto& tap : d_taps_upper)
+        ss << boost::format(" %.4e + %.4ej,") % tap.real() % tap.imag();
+    ss << "]\n\n";
 
-    printf("Lower Band-edge: [");
-    for (const auto& tap : d_taps_lower) {
-        printf(" %.4e + %.4ej,", tap.real(), tap.imag());
-    }
-    printf("]\n\n");
+    ss << "Lower Band-edge: [";
+    for (const auto& tap : d_taps_lower)
+        ss << boost::format(" %.4e + %.4ej,") % tap.real() % tap.imag();
+    ss << "]\n";
+
+    GR_LOG_INFO(d_logger, ss.str());
 }
 
 int fll_band_edge_cc_impl::work(int noutput_items,
