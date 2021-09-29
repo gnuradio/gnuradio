@@ -67,7 +67,7 @@ void bind_block_gateway(py::module& m)
         .def(
             "get_tags_in_window",
             (std::vector<gr::tag_t>(block_gateway::*)(unsigned int, uint64_t, uint64_t)) &
-                block_gateway::_get_tags_in_range,
+                block_gateway::_get_tags_in_window,
             py::arg("which_input"),
             py::arg("rel_start"),
             py::arg("rel_end"))
@@ -75,7 +75,7 @@ void bind_block_gateway(py::module& m)
         .def("get_tags_in_window",
              (std::vector<gr::tag_t>(block_gateway::*)(
                  unsigned int, uint64_t, uint64_t, const pmt::pmt_t&)) &
-                 block_gateway::_get_tags_in_range,
+                 block_gateway::_get_tags_in_window,
              py::arg("which_input"),
              py::arg("rel_start"),
              py::arg("rel_end"),

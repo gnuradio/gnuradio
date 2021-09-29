@@ -122,7 +122,10 @@ class tag_source(gr.sync_block):
         num_output_items = len(output_items[0])
 
         # put code here to fill the output items...
-
+        if self.nitems_written(0) == 0:
+            # skip tagging in the first work block
+            return num_output_items
+            
         # make a new tag on the middle element every time work is called
         count = self.nitems_written(0) + num_output_items // 2
         key = pmt.string_to_symbol("example_key")
