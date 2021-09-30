@@ -76,7 +76,7 @@ freq_sink_f_impl::freq_sink_f_impl(int fftsize,
     message_port_register_in(pmt::mp("in"));
     set_msg_handler(pmt::mp("in"), [this](pmt::pmt_t msg) { this->handle_pdus(msg); });
 
-    d_fft = std::make_unique<fft::fft_complex_fwd>(d_fftsize, true);
+    d_fft = std::make_unique<fft::fft_complex_fwd>(d_fftsize);
     d_fbuf.resize(d_fftsize);
 
     // save the last "connection" for the PDU memory
