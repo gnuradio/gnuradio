@@ -1,0 +1,49 @@
+boost_cpp:
+- 1.74.0
+c_compiler:
+- vs2017
+channel_sources:
+- conda-forge
+channel_targets:
+- gnuradio main
+cxx_compiler:
+- vs2017
+fftw:
+- '3'
+gsl:
+- '2.6'
+libiio:
+- '0.21'
+numpy:
+- '1.18'
+pin_run_as_build:
+  boost-cpp:
+    max_pin: x.x.x
+  fftw:
+    max_pin: x
+  python:
+    min_pin: x.x
+    max_pin: x.x
+  qt:
+    max_pin: x.x
+  zeromq:
+    max_pin: x.x.x
+pybind11_abi:
+- '4'
+python:
+- 3.8.* *_cpython
+qt:
+- '5.12'
+soapysdr:
+- '0.8'
+target_platform:
+- win-64
+uhd:
+- 4.1.0
+volk:
+- '2.5'
+zeromq:
+- 4.3.4
+zip_keys:
+- - python
+  - numpy

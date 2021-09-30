@@ -1,0 +1,164 @@
+# This file was generated automatically from conda-smithy. To update this configuration,
+# update the conda-forge.yml and/or the recipe/meta.yaml.
+# -*- mode: yaml -*-
+
+name: Build conda package
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: ${{ matrix.CONFIG }}
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - CONFIG: linux_64_numpy1.18python3.8.____cpython
+            SHORT_CONFIG: linux_64_numpy1.18python3.8.____cpython
+            UPLOAD_PACKAGES: True
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-comp7
+            os: ubuntu
+          - CONFIG: win_64_numpy1.18python3.8.____cpython
+            SHORT_CONFIG: win_64_numpy1.18python3.8.____cpython
+            UPLOAD_PACKAGES: True
+            os: windows
+          - CONFIG: osx_64_numpy1.18python3.8.____cpython
+            SHORT_CONFIG: osx_64_numpy1.18python3.8.____cpython
+            UPLOAD_PACKAGES: True
+            os: macos
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Build on Linux
+      if: matrix.os == 'ubuntu'
+      env:
+        CONFIG: ${{ matrix.CONFIG }}
+        UPLOAD_PACKAGES: ${{ matrix.UPLOAD_PACKAGES }}
+        DOCKERIMAGE: ${{ matrix.DOCKERIMAGE }}
+        CI: github_actions
+        UPLOAD_ON_BRANCH: master
+        BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
+      shell: bash
+      run: |
+        echo "::group::Configure binfmt_misc"
+        docker run --rm --privileged multiarch/qemu-user-static:register --reset --credential yes
+        export FEEDSTOCK_NAME="$(basename $GITHUB_REPOSITORY)"
+        export GIT_BRANCH="$(basename $GITHUB_REF)"
+        if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+          export IS_PR_BUILD="True"
+        else
+          export IS_PR_BUILD="False"
+        fi
+        echo "::endgroup::"
+        ./.scripts/run_docker_build.sh
+
+    - name: Build on macOS
+      if: matrix.os == 'macos'
+      env:
+        CONFIG: ${{ matrix.CONFIG }}
+        UPLOAD_PACKAGES: ${{ matrix.UPLOAD_PACKAGES }}
+        CI: github_actions
+        UPLOAD_ON_BRANCH: master
+        BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
+      shell: bash
+      run: |
+        export FEEDSTOCK_NAME="$(basename $GITHUB_REPOSITORY)"
+        export GIT_BRANCH="$(basename $GITHUB_REF)"
+        if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+          export IS_PR_BUILD="True"
+        else
+          export IS_PR_BUILD="False"
+        fi
+        ./.scripts/run_osx_build.sh
+
+    - name: Install Miniconda for windows
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        miniconda-version: latest
+      if: matrix.os == 'windows'
+
+    - name: Build on windows
+      shell: cmd
+      run: |
+        call activate base
+        conda.exe install -c conda-forge 'python=3.6' conda-build conda "conda-forge-ci-setup=3" pip boa
+        if errorlevel 1 exit 1
+        setup_conda_rc .\ ".\.packaging/conda_recipe" .\.ci_support\%CONFIG%.yaml
+        if errorlevel 1 exit 1
+        
+        conda.exe mambabuild ".packaging/conda_recipe" -m .ci_support\%CONFIG%.yaml
+        if errorlevel 1 exit 1
+        set "FEEDSTOCK_NAME=%GITHUB_REPOSITORY:*/=%"
+        set "GIT_BRANCH=%GITHUB_REF:refs/heads/=%"
+        if /i "%GITHUB_EVENT_NAME%" == "pull_request" (
+          set "IS_PR_BUILD=True"
+        ) else (
+          set "IS_PR_BUILD=False"
+        )
+        if /i "%UPLOAD_PACKAGES%" == "true" (
+          if /i "%IS_PR_BUILD%" == "false" (
+            upload_package  .\ ".\.packaging/conda_recipe" .ci_support\%CONFIG%.yaml
+          )
+        )
+      env:
+        PYTHONUNBUFFERED: 1
+        CONFIG: ${{ matrix.CONFIG }}
+        CI: github_actions
+        UPLOAD_PACKAGES: ${{ matrix.UPLOAD_PACKAGES }}
+        UPLOAD_ON_BRANCH: master
+        BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
+      if: matrix.os == 'windows'
+    - name: Prepare conda build artifacts
+      id: prepare-artifacts
+      shell: bash
+      if: ${{ always() }}
+      env:
+        CONFIG: ${{ matrix.CONFIG }}
+        SHORT_CONFIG: ${{ matrix.SHORT_CONFIG }}
+        OS: ${{ matrix.os }}
+      run: |
+        export CI=github_actions
+        export CI_RUN_ID=$GITHUB_RUN_ID
+        export FEEDSTOCK_NAME="$(basename $GITHUB_REPOSITORY)"
+        export ARTIFACT_STAGING_DIR="$GITHUB_WORKSPACE"
+        if [ $OS == "macos" ]; then
+          export CONDA_BLD_DIR="${MINIFORGE_HOME:-${HOME}/miniforge3}/conda-bld"
+        elif [ $OS == "windows" ]; then
+          export CONDA_BLD_DIR="${CONDA//\\//}/conda-bld"
+        else
+          export CONDA_BLD_DIR="build_artifacts"
+        fi
+        # Archive everything in CONDA_BLD_DIR except environments
+        # Archive the CONDA_BLD_DIR environments only when the job fails
+        # Use different prefix for successful and failed build artifacts
+        # so random failures don't prevent rebuilds from creating artifacts.
+        JOB_STATUS="${{ job.status }}"
+        if [ $JOB_STATUS == "failure" ]; then
+          export BLD_ARTIFACT_PREFIX="conda_artifacts"
+          export ENV_ARTIFACT_PREFIX="conda_envs"
+        else
+          export BLD_ARTIFACT_PREFIX="conda_pkgs"
+        fi
+        ./.scripts/create_conda_build_artifacts.sh
+      continue-on-error: true
+
+    - name: Store conda build artifacts
+      uses: actions/upload-artifact@v2
+      if: ${{ always() && steps.prepare-artifacts.outcome == 'success' }}
+      with:
+        name: ${{ steps.prepare-artifacts.outputs.BLD_ARTIFACT_NAME }}
+        path: ${{ steps.prepare-artifacts.outputs.BLD_ARTIFACT_PATH }}
+        retention-days: 14
+      continue-on-error: true
+
+    - name: Store conda build environment artifacts
+      uses: actions/upload-artifact@v2
+      if: ${{ failure() && steps.prepare-artifacts.outcome == 'success' }}
+      with:
+        name: ${{ steps.prepare-artifacts.outputs.ENV_ARTIFACT_NAME }}
+        path: ${{ steps.prepare-artifacts.outputs.ENV_ARTIFACT_PATH }}
+        retention-days: 14
+      continue-on-error: true
