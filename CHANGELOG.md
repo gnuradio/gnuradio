@@ -7,7 +7,7 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
-## [3.9.3.0] - 2021-09-12
+## [3.9.3.0] - 2021-09-30
 
 This is an API compatible update to GNU Radio 3.9. Code written for 3.9.X versions should
 compile and link without modification. The ABI is not guaranteed to be compatible, so
