@@ -7,7 +7,7 @@ starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
-## [3.8.4.0] - 2021-09-12
+## [3.8.4.0] - 2021-09-30
 
 API is compatible with C++ code written against previous v3.8 releases.
 
