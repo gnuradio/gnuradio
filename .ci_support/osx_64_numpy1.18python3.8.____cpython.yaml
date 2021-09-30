@@ -1,0 +1,67 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '10.15'
+MACOSX_SDK_VERSION:
+- '10.15'
+boost_cpp:
+- 1.74.0
+c_compiler:
+- clang
+c_compiler_version:
+- '11'
+channel_sources:
+- conda-forge
+channel_targets:
+- gnuradio main
+cxx_compiler:
+- clangxx
+cxx_compiler_version:
+- '11'
+fftw:
+- '3'
+gmp:
+- '6'
+gsl:
+- '2.6'
+libiio:
+- '0.21'
+libthrift:
+- 0.15.0
+macos_machine:
+- x86_64-apple-darwin13.4.0
+numpy:
+- '1.18'
+pin_run_as_build:
+  boost-cpp:
+    max_pin: x.x.x
+  fftw:
+    max_pin: x
+  gmp:
+    max_pin: x
+  python:
+    min_pin: x.x
+    max_pin: x.x
+  qt:
+    max_pin: x.x
+  zeromq:
+    max_pin: x.x
+pybind11_abi:
+- '4'
+python:
+- 3.8.* *_cpython
+qt:
+- '5.12'
+soapysdr:
+- '0.8'
+target_platform:
+- osx-64
+uhd:
+- 4.1.0
+volk:
+- '2.5'
+zeromq:
+- 4.3.4
+zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
+- - python
+  - numpy
