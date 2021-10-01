@@ -121,14 +121,18 @@ ALIAS_OF = {
     'float': 'f32',
     'int': 's32',
     'short': 's16',
+    'short': 'sc16',
     'byte': 's8',
+    'byte': 'sc8',
     'bits': 'bit',
 
     'fc32': 'complex',
     'f32': 'float',
     's32': 'int',
     's16': 'short',
+    'sc16': 'short',
     's8': 'byte',
+    'sc8': 'byte',
     'bit': 'bits',
 }
 
