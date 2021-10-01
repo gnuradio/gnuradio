@@ -340,25 +340,29 @@ class Flowgraph(QtWidgets.QGraphicsView, base.Component): # added base.Component
         self.setSceneRect(0,0,DEFAULT_MAX_X, DEFAULT_MAX_Y)
 
     def wheelEvent(self,  event):
-        factor = 1.1
+        # TODO: Support multi touch drag and drop for scrolling through the view
+        if event.modifiers() == Qt.ControlModifier:
+            factor = 1.1
 
-        if event.angleDelta().y() < 0:
-            factor = 1.0 / factor
+            if event.angleDelta().y() < 0:
+                factor = 1.0 / factor
 
-        new_scalefactor = self.scalefactor * factor
+            new_scalefactor = self.scalefactor * factor
 
-        if new_scalefactor > 0.25 and new_scalefactor < 2.5:
-            self.scalefactor = new_scalefactor
-            self.setTransformationAnchor(QtWidgets.QGraphicsView.NoAnchor)
-            self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)
+            if new_scalefactor > 0.25 and new_scalefactor < 2.5:
+                self.scalefactor = new_scalefactor
+                self.setTransformationAnchor(QtWidgets.QGraphicsView.NoAnchor)
+                self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)
 
-            oldPos = self.mapToScene(event.pos())
+                oldPos = self.mapToScene(event.pos())
 
-            self.scale(factor, factor)
-            newPos = self.mapToScene(event.pos())
+                self.scale(factor, factor)
+                newPos = self.mapToScene(event.pos())
 
-            delta = newPos - oldPos
-            self.translate(delta.x(), delta.y())
+                delta = newPos - oldPos
+                self.translate(delta.x(), delta.y())
+        else:
+            QtWidgets.QGraphicsView.wheelEvent(self, event)
 
     def mousePressEvent(self,  event):
         if event.button() == Qt.LeftButton:
@@ -418,16 +422,6 @@ class Flowgraph(QtWidgets.QGraphicsView, base.Component): # added base.Component
 
 
     '''
-    def wheelEvent(self, event):
-        # TODO: Support multi touch drag and drop for scrolling through the view
-        if event.modifiers() == Qt.ControlModifier:
-            factor = 1.2
-            if event.delta() < 0 :
-                factor = 1.0 / factor
-            self.scale(factor, factor)
-        else:
-            QGraphicsView.wheelEvent(self, event)
-
     def dragEnterEvent(self, event):
         key = event.mimeData().text()
         self._dragged_block = self._flow_graph.add_new_block(
