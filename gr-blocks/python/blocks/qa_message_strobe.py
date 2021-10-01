@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright 2021 Free Software Foundation, Inc.
+# Copyright 2021 Malte Lenhart.
 #
 # This is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,30 +39,34 @@ class qa_message_strobe(gr_unittest.TestCase):
     def test_001_t(self):
         test_str = "test_msg"
         new_msg = "new_msg"
-        period_ms = 100
-        msg_strobe = blocks.message_strobe(pmt.intern(test_str), period_ms)
+        message_period_ms = 100
+        msg_strobe = blocks.message_strobe(pmt.intern(test_str), message_period_ms)
         msg_debug = blocks.message_debug()
 
         self.tb.msg_connect(msg_strobe, "strobe", msg_debug, "store")
 
         self.tb.start()
 
-        self.assertEqual(msg_debug.num_messages(), 0) # 1st call, expect 0
-        time.sleep(0.16) # floor(160/100) = 1
-        self.assertAlmostEqual(msg_debug.num_messages(), 1, delta=1) # 2nd call == 1
-        time.sleep(0.2) # floor(360/100) = 3
-        self.assertAlmostEqual(msg_debug.num_messages(), 3, delta=1) # 3th call == 3
+        self.assertAlmostEqual(msg_debug.num_messages(), 0, delta=2) # 1st call, expect 0
+        time.sleep(1) # floor(1000/100) = 10
+        self.assertAlmostEqual(msg_debug.num_messages(), 10, delta=3) # 2nd call == 1
+        time.sleep(1) # floor(2000/100) = 15
+        self.assertAlmostEqual(msg_debug.num_messages(), 20, delta=3) # 3th call == 3
+
+        # change test message
         msg_strobe.to_basic_block()._post(pmt.intern("set_msg"), pmt.intern(new_msg))
-        time.sleep(0.1) # floor(460/100) = 4 messages
+        time.sleep(1)
 
         self.tb.stop()
         self.tb.wait()
 
         # check data
+        # first received message matchs initial test message
+        self.assertAlmostEqual(pmt.to_python(msg_debug.get_message(0)), test_str, "mismatch initial test string")
+
+        # last message matches changed test message
         no_msgs = msg_debug.num_messages()
-        self.assertAlmostEqual(no_msgs, 4, delta=1) # 4th call
-        self.assertEqual(pmt.to_python(msg_debug.get_message(0)), test_str, "mismatch initial test string")
-        self.assertEqual(pmt.to_python(msg_debug.get_message(no_msgs - 1)), new_msg, "failed to update string")
+        self.assertAlmostEqual(pmt.to_python(msg_debug.get_message(no_msgs - 1)), new_msg, "failed to update string")
 
 if __name__ == '__main__':
     gr_unittest.run(qa_message_strobe)
