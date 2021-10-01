@@ -322,6 +322,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         for key, item in self.params.items():
             name = item.name
             value = item.value
+            value_label = item.options[value] if item.options else value
             if value is not None and item.hide == 'none':
                 if len(value) > LONG_VALUE:
                     value = value[:LONG_VALUE-3] + '...'
@@ -330,7 +331,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                 painter.drawText(QtCore.QRectF(0 - self.width/2, 0 + y_offset, self.width, self.height), Qt.AlignRight, name + ': ')
                 font.setBold(False)
                 painter.setFont(font)
-                painter.drawText(QtCore.QRectF(0 + self.width/2, 0 + y_offset, self.width, self.height), Qt.AlignLeft, value)
+                painter.drawText(QtCore.QRectF(0 + self.width/2, 0 + y_offset, self.width, self.height), Qt.AlignLeft, value_label)
                 y_offset += 20
 
     def boundingRect(self): # required to have
