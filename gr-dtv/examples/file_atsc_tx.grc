@@ -361,8 +361,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     stream_id: mod-rot
   states:
     coordinate: [336, 276.0]

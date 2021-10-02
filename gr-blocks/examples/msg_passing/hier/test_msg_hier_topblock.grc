@@ -45,8 +45,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     msg: pmt.intern("UPDATED")
     period: '2000'
   states:
@@ -59,8 +59,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     msg: pmt.intern("UPDATED2")
     period: '3000'
   states:
@@ -73,8 +73,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
   states:
     coordinate: [400, 200.0]
     rotation: 0

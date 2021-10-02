@@ -55,8 +55,8 @@ blocks:
     amp: '1'
     comment: ''
     freq: samp_rate/10
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     offset: '0'
     samp_rate: samp_rate
     type: complex
@@ -72,8 +72,8 @@ blocks:
     alias: ''
     comment: ''
     ignoretag: 'True'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     samples_per_second: samp_rate
     type: complex
     vlen: '1'
@@ -90,8 +90,8 @@ blocks:
     comment: ''
     epsilon: '1.0'
     freq_offset: '0.0'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     noise_voltage: '0.1'
     seed: '0'
     taps: '[1,]'
@@ -105,8 +105,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     phase_shift: '0'
     resamp_ratio: resamp_rate
     type: complex
@@ -121,8 +121,8 @@ blocks:
     alias: ''
     atten: '60'
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     nfilts: '32'
     rrate: resamp_rate
     samp_delay: '0'

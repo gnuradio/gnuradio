@@ -97,8 +97,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     num_inputs: '2'
     type: float
     vlen: '1'
@@ -127,8 +127,8 @@ blocks:
     alias: ''
     comment: ''
     const: 0.0 if play_encoded  else 1.0
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     type: float
     vlen: '1'
   states:
@@ -142,8 +142,8 @@ blocks:
     alias: ''
     comment: ''
     const: 1.0 if play_encoded  else 0.0
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     type: float
     vlen: '1'
   states:
@@ -502,8 +502,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     stream_id: Encoded Speech
   states:
     coordinate: [0, 292.0]
@@ -515,8 +515,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     stream_id: Raw Audio
   states:
     coordinate: [-1, 389]
@@ -528,8 +528,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     stream_id: Decoded Speech
   states:
     coordinate: [3, 449]

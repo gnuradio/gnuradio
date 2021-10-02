@@ -64,8 +64,8 @@ blocks:
     amp: '1'
     comment: ''
     freq: '1000'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     offset: '0'
     samp_rate: samp_rate
     type: complex
@@ -99,8 +99,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     num_items: '20000000'
     type: complex
     vlen: '1'
@@ -391,8 +391,8 @@ blocks:
     lo_source7: internal
     lo_source8: internal
     lo_source9: internal
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     nchan: '1'
     norm_gain0: 'False'
     norm_gain1: 'False'

@@ -248,7 +248,7 @@ blocks:
     alias: ''
     amp: '.00001'
     comment: ''
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     noise_type: analog.GR_GAUSSIAN
     seed: '42'
@@ -265,7 +265,7 @@ blocks:
     amp: pow(10,sig_amp/20.0)*twotones
     comment: ''
     freq: f2
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
     samp_rate: samp_rate
@@ -283,7 +283,7 @@ blocks:
     amp: pow(10,sig_amp/20.0)
     comment: ''
     freq: f1
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
     samp_rate: samp_rate
@@ -299,7 +299,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     num_inputs: '3'
     type: complex
@@ -315,7 +315,7 @@ blocks:
     alias: ''
     comment: ''
     ignoretag: 'True'
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: complex
@@ -331,7 +331,7 @@ blocks:
     alias: ''
     alpha: '0.0001'
     comment: ''
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
   states:
     coordinate: [848, 396.0]
@@ -348,7 +348,7 @@ blocks:
     gamma: gamma
     i_ofs: i_ofs
     magbal: magbal
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     phase_noise_mag: phase_noise_mag
     phasebal: '0'
@@ -364,7 +364,7 @@ blocks:
     alias: ''
     alpha: '0.00001'
     comment: ''
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
   states:
     coordinate: [856, 340.0]
@@ -428,8 +428,8 @@ blocks:
     label8: ''''''
     label9: ''''''
     legend: 'True'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     name: QT GUI Plot
     nconnections: '1'
     showports: 'True'
