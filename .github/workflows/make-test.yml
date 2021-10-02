@@ -55,26 +55,32 @@ jobs:
             containerid: 'gnuradio/ci:ubuntu-20.04-3.9'
             cxxflags: -Werror -Wno-error=invalid-pch
             ctest_args: '-E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui|metainfo_test"'
+            ldpath:
           - distro: 'Fedora 33'
             containerid: 'gnuradio/ci:fedora-33-3.9'
             cxxflags: ''
             ctest_args: '-E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
+            ldpath: /usr/local/lib64/
           - distro: 'Fedora 34'
             containerid: 'gnuradio/ci:fedora-34-3.9'
             cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
             ctest_args: '-E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
+            ldpath: /usr/local/lib64/
           - distro: 'CentOS 8.3'
             containerid: 'gnuradio/ci:centos-8.3-3.9'
             cxxflags: ''
             ctest_args: '-E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
+            ldpath: /usr/local/lib64/
           - distro: 'Debian 10'
             containerid: 'gnuradio/ci:debian-10-3.9'
             cxxflags: -Werror -Wno-error=invalid-pch
             ctest_args: '-E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
+            ldpath:
           - distro: 'Debian 11'
             containerid: 'gnuradio/ci:debian-11-3.10'
             cxxflags: -Werror -Wno-error=invalid-pch
             ctest_args: '-E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui|qa_polar_..coder_(sc_)?systematic"'
+            ldpath:
     name: ${{ matrix.distro }}
     container:
       image: ${{ matrix.containerid }}
@@ -92,3 +98,11 @@ jobs:
       run: 'cd /build && make -j2 -k'
     - name: Make Test
       run: 'cd /build && ctest --output-on-failure ${{ matrix.ctest_args }}'
+    - name: Make Install
+      run: |
+       cd /build
+       su -c "make install"
+       su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
+       su -c ldconfig
+    - name: Test Python3
+      run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
