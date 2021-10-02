@@ -47,8 +47,8 @@ blocks:
     detached: 'True'
     file: /tmp/metadat_vector.out
     hdr_file: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     repeat: 'False'
     type: complex
     vlen: '10'
@@ -94,8 +94,8 @@ blocks:
     alias: ''
     comment: ''
     ignoretag: 'True'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     samples_per_second: samp_rate
     type: complex
     vlen: '10'
@@ -109,8 +109,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     num_items: '10'
     type: complex
     vlen: '1'

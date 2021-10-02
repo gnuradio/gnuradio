@@ -38,8 +38,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     msg: pmt.cons(pmt.PMT_NIL, pmt.make_u8vector(16,0x77))
     period: '200'
   states:
@@ -55,8 +55,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     msg: pmt.intern("OUTPUT2")
     period: '100'
   states:
@@ -109,8 +109,8 @@ blocks:
     alias: ''
     comment: ''
     label: TEST_PORT2
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     num_streams: '1'
     optional: 'False'
     type: message
@@ -129,8 +129,8 @@ blocks:
     alias: ''
     comment: ''
     label: TEST_PORT1
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     num_streams: '1'
     optional: 'False'
     type: message

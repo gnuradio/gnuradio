@@ -180,7 +180,7 @@ blocks:
     alias: ''
     comment: ''
     gain: '1.0'
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
   states:
     coordinate: [864, 228.0]
@@ -193,7 +193,7 @@ blocks:
     alias: ''
     comment: ''
     max: '256'
-    maxoutbuf: ''
+    maxoutbuf: '0'
     min: '0'
     minoutbuf: '0'
     num_samps: '100000'
@@ -210,7 +210,7 @@ blocks:
     alias: ''
     comment: ''
     ignoretag: 'True'
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: complex
@@ -230,7 +230,7 @@ blocks:
     gamma: '0'
     i_ofs: i_ofs
     magbal: magbal
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     phase_noise_mag: phase_noise_mag
     phasebal: phasebal
@@ -247,7 +247,7 @@ blocks:
     bt: '0.3'
     comment: ''
     log: 'False'
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_symbol: '10'
     verbose: 'False'

@@ -552,8 +552,8 @@ blocks:
     lo_source7: internal
     lo_source8: internal
     lo_source9: internal
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     nchan: '1'
     num_mboards: '1'
     otw: ''

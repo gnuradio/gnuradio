@@ -48,8 +48,8 @@ blocks:
     decay_rate: 1e-2
     gain: '1.0'
     max_gain: '0.0'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     reference: '1.0'
     type: complex
   states:
@@ -65,8 +65,8 @@ blocks:
     detached: 'True'
     file: /tmp/metadat_file.out
     hdr_file: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     repeat: 'False'
     type: complex
     vlen: '1'
@@ -112,8 +112,8 @@ blocks:
     alias: ''
     comment: ''
     ignoretag: 'True'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     samples_per_second: samp_rate
     type: complex
     vlen: '1'

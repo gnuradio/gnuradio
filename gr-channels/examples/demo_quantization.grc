@@ -161,7 +161,7 @@ blocks:
     alias: ''
     amp: pow(10.0,noise_amp/20.0)
     comment: ''
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     noise_type: analog.GR_GAUSSIAN
     seed: '42'
@@ -178,7 +178,7 @@ blocks:
     amp: pow(10.0,signal_amp/20.0)
     comment: ''
     freq: sigfreq
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
     samp_rate: samp_rate
@@ -200,7 +200,7 @@ blocks:
     high_cutoff_freq: min(samp_rate/2.0-bw/15.0,center+bw/2.0)
     interp: '1'
     low_cutoff_freq: max(bw/15.0,center-bw/2.0)
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     samp_rate: samp_rate
     type: fir_filter_fff
@@ -216,7 +216,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     num_inputs: '2'
     type: float
@@ -232,7 +232,7 @@ blocks:
     alias: ''
     comment: ''
     const: pow(2,bits-1)
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     type: float
     vlen: '1'
@@ -247,7 +247,7 @@ blocks:
     alias: ''
     comment: ''
     ignoretag: 'True'
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: float
@@ -263,7 +263,7 @@ blocks:
     alias: ''
     bits: bits
     comment: ''
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
   states:
     coordinate: [664, 268.0]
@@ -327,8 +327,8 @@ blocks:
     label8: ''''''
     label9: ''''''
     legend: 'True'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     name: ''
     nconnections: '1'
     showports: 'True'
