@@ -63,8 +63,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     num_items: '10010000'
     type: complex
     vlen: '10'
@@ -78,8 +78,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     repeat: 'True'
     tags: '[]'
     type: complex
