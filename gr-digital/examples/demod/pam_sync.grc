@@ -432,8 +432,8 @@ blocks:
     label8: ''
     label9: ''
     legend: 'True'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     name: Post-sync Spectrum
     nconnections: '1'
     showports: 'True'
@@ -509,8 +509,8 @@ blocks:
     label8: ''
     label9: ''
     legend: 'True'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     name: Received Spectrum
     nconnections: '1'
     showports: 'True'

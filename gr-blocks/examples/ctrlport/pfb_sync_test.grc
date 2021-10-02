@@ -128,8 +128,8 @@ blocks:
     bits_per_chunk: '8'
     comment: ''
     endianness: gr.GR_MSB_FIRST
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     num_ports: '1'
     type: byte
   states:
@@ -143,8 +143,8 @@ blocks:
     alias: ''
     comment: ''
     ignoretag: 'True'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     samples_per_second: samp_rate
     type: byte
     vlen: '1'
@@ -158,8 +158,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     repeat: 'True'
     tags: '[]'
     type: byte
@@ -178,8 +178,8 @@ blocks:
     comment: ''
     epsilon: '1.0'
     freq_offset: '0.0'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     noise_voltage: noise
     seed: '0'
     taps: cmath.exp(1j*phase)
@@ -193,8 +193,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     order: '4'
     use_snr: 'False'
     w: 6.28/100.0
@@ -212,8 +212,8 @@ blocks:
     init_phase: nfilts/2
     loop_bw: 2*3.14/100.0
     max_dev: '1.5'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     osps: '1'
     sps: sps
     taps: firdes.root_raised_cosine(nfilts, nfilts,1.0/sps, 0.35, int(22*sps*nfilts))
@@ -232,8 +232,8 @@ blocks:
     differential: 'True'
     excess_bw: '0.35'
     log: 'False'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     mod_code: '"gray"'
     samples_per_symbol: sps
     verbose: 'False'

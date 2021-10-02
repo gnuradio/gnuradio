@@ -221,8 +221,8 @@ blocks:
     label8: ''
     label9: ''
     legend: 'True'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     name: Original Spectrum
     nconnections: '1'
     showports: 'True'
@@ -298,8 +298,8 @@ blocks:
     label8: ''
     label9: ''
     legend: 'True'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     name: Encoded Spectrum
     nconnections: '1'
     showports: 'True'
@@ -375,8 +375,8 @@ blocks:
     label8: ''
     label9: ''
     legend: 'True'
-    maxoutbuf: ''
-    minoutbuf: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     name: Decoded Spectrum
     nconnections: '1'
     showports: 'True'

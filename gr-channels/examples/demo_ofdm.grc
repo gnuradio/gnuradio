@@ -198,7 +198,7 @@ blocks:
     alias: ''
     comment: ''
     max: int(k)
-    maxoutbuf: ''
+    maxoutbuf: '0'
     min: '0'
     minoutbuf: '0'
     num_samps: '10000'
@@ -215,7 +215,7 @@ blocks:
     alias: ''
     comment: ''
     max: int(k)
-    maxoutbuf: ''
+    maxoutbuf: '0'
     min: '0'
     minoutbuf: '0'
     num_samps: '10000'
@@ -232,7 +232,7 @@ blocks:
     alias: ''
     comment: ''
     const: (-1-1j)/2
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     type: complex
     vlen: '1'
@@ -246,7 +246,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     vlen: '1'
   states:
@@ -259,7 +259,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     scale: k-1
     vlen: '1'
@@ -273,7 +273,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     scale: k-1
     vlen: '1'
@@ -287,7 +287,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     num_items: fft_size
     type: complex
@@ -302,7 +302,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     num_items: fft_size
     type: complex
@@ -318,7 +318,7 @@ blocks:
     alias: ''
     comment: ''
     ignoretag: 'True'
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: complex
@@ -333,7 +333,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     num_items: fft_size
     type: complex
@@ -348,7 +348,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     num_items: fft_size
     type: complex
@@ -368,7 +368,7 @@ blocks:
     gamma: '0'
     i_ofs: i_ofs
     magbal: magbal
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     phase_noise_mag: phase_noise_mag
     phasebal: phasebal
@@ -385,7 +385,7 @@ blocks:
     comment: ''
     fft_size: fft_size
     forward: 'False'
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     nthreads: '1'
     shift: 'False'
@@ -403,7 +403,7 @@ blocks:
     comment: ''
     fft_size: fft_size
     forward: 'True'
-    maxoutbuf: ''
+    maxoutbuf: '0'
     minoutbuf: '0'
     nthreads: '1'
     shift: 'False'
