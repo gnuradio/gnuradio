@@ -89,6 +89,7 @@ class PropsDialog(QtWidgets.QDialog):
                 for key, val in par.param.options.items():
                     if val == par.currentText():
                         par.param.set_value(key)
+        self._block.create_shapes_and_labels()
 
 
 '''
@@ -196,32 +197,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         namespace = cls.__dict__.copy()
         return type(name, bases, namespace)
 
-    #def __init__(self, block_key, block_label, attrib, params, parent):
-    def __init__(self, parent, **n):
-        #super(self.__class__, self).__init__(parent, **n)
-        CoreBlock.__init__(self, parent)
-        QtWidgets.QGraphicsItem.__init__(self)
-
-
-        #self.__dict__.update(attrib)
-        #self.params = params
-        #self.x = attrib['_coordinate'][0]
-        #self.y = attrib['_coordinate'][1]
-        #self.x = 500
-        #self.y = 300
-        try:
-            self.coordinate = tuple(self.states['coordinate'])
-        except KeyError:
-            self.coordinate = (500,300)
-        self.width = 300 # default shouldnt matter, it will change immedaitely after the first paint
-        #self.block_key = block_key
-        #self.block_label = block_label
-        self.block_label = self.key
-
-
-        x,y = self.coordinate
-        self.setPos(x, y)
-
+    def create_shapes_and_labels(self):
         offset = 0
         for source in self.sources:
             source.y_offset += offset
@@ -272,6 +248,35 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         for source in self.sources:
             source.moveBy(0, 15+offset)
             offset += 20
+
+
+    #def __init__(self, block_key, block_label, attrib, params, parent):
+    def __init__(self, parent, **n):
+        #super(self.__class__, self).__init__(parent, **n)
+        CoreBlock.__init__(self, parent)
+        QtWidgets.QGraphicsItem.__init__(self)
+
+
+        #self.__dict__.update(attrib)
+        #self.params = params
+        #self.x = attrib['_coordinate'][0]
+        #self.y = attrib['_coordinate'][1]
+        #self.x = 500
+        #self.y = 300
+        try:
+            self.coordinate = tuple(self.states['coordinate'])
+        except KeyError:
+            self.coordinate = (500,300)
+        self.width = 300 # default shouldnt matter, it will change immedaitely after the first paint
+        #self.block_key = block_key
+        #self.block_label = block_label
+        self.block_label = self.key
+
+
+        x,y = self.coordinate
+        self.setPos(x, y)
+
+        self.create_shapes_and_labels()
 
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
@@ -357,6 +362,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
     def import_data(self, name, states, parameters, **_):
         CoreBlock.import_data(self, name, states, parameters, **_)
+        self.create_shapes_and_labels()
         x,y = tuple(states['coordinate'])
         self.setPos(x, y)
 
