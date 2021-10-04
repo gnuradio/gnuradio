@@ -30,7 +30,6 @@
 #include <boost/thread.hpp>
 
 #include <algorithm>
-#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
