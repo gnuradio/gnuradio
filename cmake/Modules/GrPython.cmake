@@ -97,8 +97,8 @@ set(Python_NumPy_INCLUDE_DIRS ${Python_NumPy_INCLUDE_DIR})
 add_library(Python::NumPy INTERFACE IMPORTED)
 set_target_properties(Python::NumPy PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${Python_NumPy_INCLUDE_DIRS}"
+    INTERFACE_LINK_LIBRARIES Python::Module
 )
-target_link_libraries(Python::NumPy INTERFACE Python::Module)
 
 
 ########################################################################
