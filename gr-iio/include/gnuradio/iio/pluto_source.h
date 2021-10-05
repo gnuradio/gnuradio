@@ -13,6 +13,7 @@
 
 #include <gnuradio/hier_block2.h>
 #include <gnuradio/iio/api.h>
+#include <gnuradio/iio/fmcomms2_source.h>
 
 namespace gr {
 namespace iio {
@@ -21,29 +22,13 @@ namespace iio {
  * \ingroup iio
  *
  */
-class IIO_API pluto_source : virtual public gr::hier_block2
+class IIO_API pluto_source : virtual public fmcomms2_source<gr_complex>
 {
 public:
     typedef std::shared_ptr<pluto_source> sptr;
 
     static sptr make(const std::string& uri, unsigned long buffer_size);
 
-    /*!
-     * \brief Key of the packet length tag. If empty no tag will be emitted
-     */
-    virtual void set_len_tag_key(const std::string& val) = 0;
-
-    virtual void set_frequency(unsigned long long frequency) = 0;
-    virtual void set_samplerate(unsigned long samplerate) = 0;
-    virtual void set_gain_mode(const std::string& mode) = 0;
-    virtual void set_gain(double gain) = 0;
-    virtual void set_quadrature(bool quadrature) = 0;
-    virtual void set_rfdc(bool rfdc) = 0;
-    virtual void set_bbdc(bool bbdc) = 0;
-    virtual void set_filter_params(const std::string& filter_source,
-                                   const std::string& filter_filename = "",
-                                   float fpass = 0.0,
-                                   float fstop = 0.0) = 0;
 };
 } // namespace iio
 } // namespace gr

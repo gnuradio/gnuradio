@@ -18,10 +18,13 @@
 #include <thread>
 #include <vector>
 
+#include <volk/volk_alloc.hh>
+
 namespace gr {
 namespace iio {
 
-class fmcomms2_sink_impl : public fmcomms2_sink, public device_sink_impl
+template <class T>
+class fmcomms2_sink_impl : public fmcomms2_sink<T>, public device_sink_impl
 {
 private:
     bool cyclic, stop_thread;
@@ -33,6 +36,8 @@ private:
     get_channels_vector(bool ch1_en, bool ch2_en, bool ch3_en, bool ch4_en);
     std::vector<std::string> get_channels_vector(const std::vector<bool>& ch_en);
     void check_underflow(void);
+
+    std::vector<volk::vector<short>> d_device_bufs;
 
 public:
     fmcomms2_sink_impl(iio_context* ctx,

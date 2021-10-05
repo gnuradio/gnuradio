@@ -18,10 +18,8 @@ namespace iio {
 
 pluto_source::sptr pluto_source::make(const std::string& uri, unsigned long buffer_size)
 {
-    fmcomms2_source::sptr block = fmcomms2_source::make(
-        uri.empty() ? pluto_source_impl::get_uri() : uri, { true, true }, buffer_size);
-
-    return gnuradio::make_block_sptr<pluto_source_impl>(block);
+    return gnuradio::make_block_sptr<pluto_source_impl>(
+        uri.empty() ? pluto_source_impl::get_uri() : uri, buffer_size);
     // return gnuradio::get_initial_sptr(new pluto_source_impl(block));
 }
 
@@ -64,55 +62,47 @@ std::string pluto_source_impl::get_uri()
     return uri;
 }
 
-pluto_source_impl::pluto_source_impl(fmcomms2_source::sptr block)
-    : hier_block2("pluto_source",
-                  io_signature::make(0, 0, 0),
-                  io_signature::make(1, 1, sizeof(gr_complex))),
-      fmcomms2_source_f32c(true, false, block)
+pluto_source_impl::pluto_source_impl(const std::string& uri, unsigned long buffer_size)
+    : fmcomms2_source_impl(device_source_impl::get_context(uri),
+                           { true, false, false, false },
+                           buffer_size)
 {
 }
 
 void pluto_source_impl::set_len_tag_key(const std::string& len_tag_key)
 {
-    fmcomms2_source_f32c::set_len_tag_key(len_tag_key);
+    fmcomms2_source_impl::set_len_tag_key(len_tag_key);
 }
 void pluto_source_impl::set_frequency(unsigned long long frequency)
 {
-    fmcomms2_source_f32c::set_frequency(frequency);
+    fmcomms2_source_impl::set_frequency(frequency);
 }
-
 void pluto_source_impl::set_samplerate(unsigned long samplerate)
 {
-    fmcomms2_source_f32c::set_samplerate(samplerate);
+    fmcomms2_source_impl::set_samplerate(samplerate);
 }
-
-void pluto_source_impl::set_gain_mode(const std::string& mode)
+void pluto_source_impl::set_gain_mode(size_t chan, const std::string& mode)
 {
-    fmcomms2_source_f32c::set_gain_mode(0, mode);
+    fmcomms2_source_impl::set_gain_mode(chan, mode);
 }
-
-void pluto_source_impl::set_gain(double gain) { fmcomms2_source_f32c::set_gain(0, gain); }
-
+void pluto_source_impl::set_gain(size_t chan, double gain_value)
+{
+    fmcomms2_source_impl::set_gain(chan, gain_value);
+}
 void pluto_source_impl::set_quadrature(bool quadrature)
 {
-    fmcomms2_source_f32c::set_quadrature(quadrature);
+    fmcomms2_source_impl::set_quadrature(quadrature);
 }
-void pluto_source_impl::set_rfdc(bool rfdc)
-{
-    fmcomms2_source_f32c::set_quadrature(rfdc);
-}
-void pluto_source_impl::set_bbdc(bool bbdc)
-{
-    fmcomms2_source_f32c::set_quadrature(bbdc);
-}
-
+void pluto_source_impl::set_rfdc(bool rfdc) { fmcomms2_source_impl::set_rfdc(rfdc); }
+void pluto_source_impl::set_bbdc(bool bbdc) { fmcomms2_source_impl::set_bbdc(bbdc); }
 void pluto_source_impl::set_filter_params(const std::string& filter_source,
                                           const std::string& filter_filename,
                                           float fpass,
                                           float fstop)
 {
-    fmcomms2_source_f32c::set_filter_params(filter_source, filter_filename, fpass, fstop);
-};
+    fmcomms2_source_impl::set_filter_params(filter_source, filter_filename, fpass, fstop);
+}
+
 
 } // namespace iio
 } // namespace gr

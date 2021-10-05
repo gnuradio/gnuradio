@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(fmcomms2_source.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(79999a9f1335aa4bc5043ddf033a0e38)                     */
+/* BINDTOOL_HEADER_FILE_HASH(75e5f2272acc03f050066a246ed6c05e)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -44,6 +44,14 @@ void bind_fmcomms2_source(py::module& m)
              py::arg("ch_en"),
              py::arg("buffer_size"),
              D(fmcomms2_source, make))
-
+        .def("set_frequency", &pluto_source::set_frequency, py::arg("longfrequency"))
+        .def("set_samplerate", &pluto_source::set_samplerate, py::arg("samplerate"))
+        .def("set_gain_mode", &pluto_source::set_gain_mode, py::arg("mode"))
+        .def("set_gain", &pluto_source::set_gain, py::arg("gain_value"))
+        .def("set_quadrature", &pluto_source::set_quadrature, py::arg("quadrature"))
+        .def("set_rfdc", &pluto_source::set_rfdc, py::arg("rfdc"))
+        .def("set_bbdc", &pluto_source::set_bbdc, py::arg("bbdc"))
+        .def("set_filter_params", &pluto_source::set_filter_params)
+        .def("set_len_tag_key", &pluto_source::set_len_tag_key, py::arg("len_tag_key"));
         ;
 }

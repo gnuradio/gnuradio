@@ -26,15 +26,17 @@
 namespace gr {
 namespace iio {
 
-fmcomms2_source::sptr fmcomms2_source::make(const std::string& uri,
+template <typename T>
+typename fmcomms2_source<T>::sptr fmcomms2_source<T>::make(const std::string& uri,
                                             const std::vector<bool>& ch_en,
                                             unsigned long buffer_size)
 {
-    return gnuradio::make_block_sptr<fmcomms2_source_impl>(
+    return gnuradio::make_block_sptr<fmcomms2_source_impl<T>>(
         device_source_impl::get_context(uri), ch_en, buffer_size);
 }
 
-std::vector<std::string> fmcomms2_source_impl::get_channels_vector(bool ch1_en,
+template <typename T>
+std::vector<std::string> fmcomms2_source_impl<T>::get_channels_vector(bool ch1_en,
                                                                    bool ch2_en,
                                                                    bool ch3_en,
                                                                    bool ch4_en)
@@ -51,8 +53,9 @@ std::vector<std::string> fmcomms2_source_impl::get_channels_vector(bool ch1_en,
     return channels;
 }
 
+template <typename T>
 std::vector<std::string>
-fmcomms2_source_impl::get_channels_vector(const std::vector<bool>& ch_en)
+fmcomms2_source_impl<T>::get_channels_vector(const std::vector<bool>& ch_en)
 {
     std::vector<std::string> channels;
     int idx = 0;
@@ -66,8 +69,8 @@ fmcomms2_source_impl::get_channels_vector(const std::vector<bool>& ch_en)
     return channels;
 }
 
-
-fmcomms2_source_impl::fmcomms2_source_impl(iio_context* ctx,
+template <typename T>
+fmcomms2_source_impl<T>::fmcomms2_source_impl(iio_context* ctx,
                                            const std::vector<bool>& ch_en,
                                            unsigned long buffer_size)
     : gr::sync_block("fmcomms2_source",
@@ -82,12 +85,14 @@ fmcomms2_source_impl::fmcomms2_source_impl(iio_context* ctx,
                          buffer_size,
                          0)
 {
-    overflow_thd = std::thread(&fmcomms2_source_impl::check_overflow, this);
+    overflow_thd = std::thread(&fmcomms2_source_impl<T>::check_overflow, this);
 }
 
-fmcomms2_source_impl::~fmcomms2_source_impl() { overflow_thd.join(); }
+template <typename T>
+fmcomms2_source_impl<T>::~fmcomms2_source_impl() { overflow_thd.join(); }
 
-void fmcomms2_source_impl::check_overflow(void)
+template <typename T>
+void fmcomms2_source_impl<T>::check_overflow(void)
 {
     uint32_t status;
     int ret;
@@ -126,7 +131,8 @@ void fmcomms2_source_impl::check_overflow(void)
     }
 }
 
-void fmcomms2_source_impl::update_dependent_params()
+template <typename T>
+void fmcomms2_source_impl<T>::update_dependent_params()
 {
     std::vector<std::string> params;
     // Set rate configuration
@@ -162,19 +168,22 @@ void fmcomms2_source_impl::update_dependent_params()
     }
 }
 
-void fmcomms2_source_impl::set_len_tag_key(const std::string& len_tag_key)
+template <typename T>
+void fmcomms2_source_impl<T>::set_len_tag_key(const std::string& len_tag_key)
 {
     device_source_impl::set_len_tag_key(len_tag_key);
 }
 
-void fmcomms2_source_impl::set_frequency(unsigned long long frequency)
+template <typename T>
+void fmcomms2_source_impl<T>::set_frequency(unsigned long long frequency)
 {
     std::vector<std::string> params;
     params.push_back("out_altvoltage0_RX_LO_frequency=" + std::to_string(frequency));
     device_source_impl::set_params(params);
 }
 
-void fmcomms2_source_impl::set_samplerate(unsigned long samplerate)
+template <typename T>
+void fmcomms2_source_impl<T>::set_samplerate(unsigned long samplerate)
 {
     std::vector<std::string> params;
     if (samplerate < MIN_RATE) {
@@ -195,7 +204,8 @@ void fmcomms2_source_impl::set_samplerate(unsigned long samplerate)
     update_dependent_params();
 }
 
-void fmcomms2_source_impl::set_gain_mode(size_t chan, const std::string& mode)
+template <typename T>
+void fmcomms2_source_impl<T>::set_gain_mode(size_t chan, const std::string& mode)
 {
     bool is_fmcomms4 = !iio_device_find_channel(phy, "voltage1", false);
     if ((!is_fmcomms4 && chan > 0) || chan > 1) {
@@ -210,8 +220,8 @@ void fmcomms2_source_impl::set_gain_mode(size_t chan, const std::string& mode)
     d_gain_mode[chan] = mode;
 }
 
-
-void fmcomms2_source_impl::set_gain(size_t chan, double gain_value)
+template <typename T>
+void fmcomms2_source_impl<T>::set_gain(size_t chan, double gain_value)
 {
     bool is_fmcomms4 = !iio_device_find_channel(phy, "voltage1", false);
     if ((!is_fmcomms4 && chan > 0) || chan > 1) {
@@ -231,21 +241,26 @@ void fmcomms2_source_impl::set_gain(size_t chan, double gain_value)
     d_gain_value[chan] = gain_value;
 }
 
-void fmcomms2_source_impl::set_quadrature(bool quadrature)
+template <typename T>
+void fmcomms2_source_impl<T>::set_quadrature(bool quadrature)
 {
     std::vector<std::string> params;
     params.push_back("in_voltage_quadrature_tracking_en=" + std::to_string(quadrature));
     device_source_impl::set_params(params);
     d_quadrature = quadrature;
 }
-void fmcomms2_source_impl::set_rfdc(bool rfdc)
+
+template <typename T>
+void fmcomms2_source_impl<T>::set_rfdc(bool rfdc)
 {
     std::vector<std::string> params;
     params.push_back("in_voltage_rf_dc_offset_tracking_en=" + std::to_string(rfdc));
     device_source_impl::set_params(params);
     d_rfdc = rfdc;
 }
-void fmcomms2_source_impl::set_bbdc(bool bbdc)
+
+template <typename T>
+void fmcomms2_source_impl<T>::set_bbdc(bool bbdc)
 {
     std::vector<std::string> params;
     params.push_back("in_voltage_bb_dc_offset_tracking_en=" + std::to_string(bbdc));
@@ -253,7 +268,8 @@ void fmcomms2_source_impl::set_bbdc(bool bbdc)
     d_bbdc = bbdc;
 }
 
-void fmcomms2_source_impl::set_filter_params(const std::string& filter_source,
+template <typename T>
+void fmcomms2_source_impl<T>::set_filter_params(const std::string& filter_source,
                                              const std::string& filter_filename,
                                              float fpass,
                                              float fstop)
@@ -265,6 +281,9 @@ void fmcomms2_source_impl::set_filter_params(const std::string& filter_source,
 
     update_dependent_params();
 }
+
+template class fmcomms2_source_impl<std::int16_t>;
+template class fmcomms2_source_impl<gr_complex>;
 
 } /* namespace iio */
 } /* namespace gr */

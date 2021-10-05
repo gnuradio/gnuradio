@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pluto_sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(4315d0abebcaff67b262aee785fb2c49)                     */
+/* BINDTOOL_HEADER_FILE_HASH(1c8d61bd2f8edfebce6d1996ea984732)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -24,6 +24,7 @@
 namespace py = pybind11;
 
 #include <gnuradio/iio/pluto_sink.h>
+#include <gnuradio/iio/fmcomms2_sink.h>
 // pydoc.h is automatically generated in the build directory
 #include <pluto_sink_pydoc.h>
 
@@ -32,20 +33,22 @@ void bind_pluto_sink(py::module& m)
 
     using pluto_sink = gr::iio::pluto_sink;
 
-    py::class_<pluto_sink, gr::hier_block2, gr::basic_block, std::shared_ptr<pluto_sink>>(
+    // gr::iio::fmcomms2_sink,
+    // gr::basic_block, 
+    py::class_<pluto_sink, gr::iio::fmcomms2_sink<gr_complex>, gr::basic_block,  std::shared_ptr<pluto_sink>>(
         m, "pluto_sink", D(pluto_sink))
 
         .def(py::init(&pluto_sink::make),
              py::arg("uri"),
              py::arg("buffer_size"),
              py::arg("cyclic"),
-             D(pluto_sink, make))
+             D(pluto_sink, make));
 
-        .def("set_bandwidth", &pluto_sink::set_bandwidth, py::arg("longbandwidth"))
-        .def("set_frequency", &pluto_sink::set_frequency, py::arg("longfrequency"))
-        .def("set_samplerate", &pluto_sink::set_samplerate, py::arg("samplerate"))
-        .def("set_attenuation", &pluto_sink::set_attenuation, py::arg("attenuation"))
-        .def("set_filter_params", &pluto_sink::set_filter_params)
-        .def(
-            "set_len_tag_key", &pluto_sink::set_len_tag_key, py::arg("len_tag_key") = "");
+        // .def("set_bandwidth", &pluto_sink::set_bandwidth, py::arg("longbandwidth"))
+        // .def("set_frequency", &pluto_sink::set_frequency, py::arg("longfrequency"))
+        // .def("set_samplerate", &pluto_sink::set_samplerate, py::arg("samplerate"))
+        // .def("set_attenuation", &pluto_sink::set_attenuation, py::arg("attenuation"))
+        // .def("set_filter_params", &pluto_sink::set_filter_params)
+        // .def(
+        //     "set_len_tag_key", &pluto_sink::set_len_tag_key, py::arg("len_tag_key") = "");
 }
