@@ -18,10 +18,13 @@
 #include <thread>
 #include <vector>
 
+#include <volk/volk_alloc.hh>
+
 namespace gr {
 namespace iio {
 
-class fmcomms2_sink_impl : public fmcomms2_sink, public device_sink_impl
+template <class T>
+class fmcomms2_sink_impl : public fmcomms2_sink<T>, public device_sink_impl
 {
 private:
     bool cyclic, stop_thread;
@@ -34,6 +37,17 @@ private:
     std::vector<std::string> get_channels_vector(const std::vector<bool>& ch_en);
     void check_underflow(void);
 
+    const static int s_initial_device_buf_size = 8192;
+
+    std::vector<volk::vector<short>> d_device_bufs;
+    gr_vector_const_void_star d_device_item_ptrs;
+    volk::vector<float> d_float_r;
+    volk::vector<float> d_float_i;
+
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+
 public:
     fmcomms2_sink_impl(iio_context* ctx,
                        const std::vector<bool>& ch_en,
@@ -41,10 +55,6 @@ public:
                        bool cyclic);
 
     ~fmcomms2_sink_impl();
-
-    int work(int noutput_items,
-             gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
 
     void update_dependent_params();
     virtual void set_len_tag_key(const std::string& len_tag_key);

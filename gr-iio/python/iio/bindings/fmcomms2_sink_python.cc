@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(fmcomms2_sink.h)                                           */
-/* BINDTOOL_HEADER_FILE_HASH(1ca54fa74c12834cae56b0832dd5c3f3)                     */
+/* BINDTOOL_HEADER_FILE_HASH(0cc01ab33946f58b5c4056a61d6043c4)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -27,51 +27,48 @@ namespace py = pybind11;
 // pydoc.h is automatically generated in the build directory
 #include <fmcomms2_sink_pydoc.h>
 
-void bind_fmcomms2_sink(py::module& m)
+
+template <typename T>
+void bind_fmcomms2_sink_template(py::module& m, const char* classname)
 {
 
-    using fmcomms2_sink = gr::iio::fmcomms2_sink;
+    using fmcomms2_sink = gr::iio::fmcomms2_sink<T>;
 
 
     py::class_<fmcomms2_sink,
                gr::sync_block,
                gr::block,
                gr::basic_block,
-               std::shared_ptr<fmcomms2_sink>>(m, "fmcomms2_sink", D(fmcomms2_sink))
+               std::shared_ptr<fmcomms2_sink>>(m, classname, D(fmcomms2_sink))
+
 
         .def(py::init(&fmcomms2_sink::make),
              py::arg("uri"),
-             py::arg("longfrequency"),
-             py::arg("samplerate"),
-             py::arg("bandwidth"),
-             py::arg("ch1_en"),
-             py::arg("ch2_en"),
-             py::arg("ch3_en"),
-             py::arg("ch4_en"),
+             py::arg("ch_en"),
              py::arg("buffer_size"),
              py::arg("cyclic"),
-             py::arg("rf_port_select"),
-             py::arg("attenuation1"),
-             py::arg("attenuation2"),
-             py::arg("filter_source") = "",
-             py::arg("filter_filename") = "",
-             py::arg("Fpass") = 0.0,
-             py::arg("Fstop") = 0.0,
              D(fmcomms2_sink, make))
-
-        .def("set_params",
-             &fmcomms2_sink::set_params,
-             py::arg("longfrequency"),
-             py::arg("samplerate"),
-             py::arg("bandwidth"),
-             py::arg("rf_port_select"),
-             py::arg("attenuation1"),
-             py::arg("attenuation2"),
-             py::arg("filter_source") = "",
+        .def("set_bandwidth", &fmcomms2_sink::set_bandwidth, py::arg("longbandwidth"))
+        .def("set_frequency", &fmcomms2_sink::set_frequency, py::arg("longfrequency"))
+        .def("set_samplerate", &fmcomms2_sink::set_samplerate, py::arg("samplerate"))
+        .def("set_attenuation",
+             &fmcomms2_sink::set_attenuation,
+             py::arg("chan"),
+             py::arg("attenuation"))
+        .def("set_filter_params",
+             &fmcomms2_sink::set_filter_params,
+             py::arg("filter_source"),
              py::arg("filter_filename") = "",
-             py::arg("Fpass") = 0.0,
-             py::arg("Fstop") = 0.0,
-             D(fmcomms2_sink, set_params))
+             py::arg("fpass") = 0.0,
+             py::arg("fstop") = 0.0)
+        .def("set_len_tag_key",
+             &fmcomms2_sink::set_len_tag_key,
+             py::arg("len_tag_key") = "");
+}
 
-        ;
+void bind_fmcomms2_sink(py::module& m)
+{
+    bind_fmcomms2_sink_template<int16_t>(m, "fmcomms2_sink_s");
+    bind_fmcomms2_sink_template<std::complex<int16_t>>(m, "fmcomms2_sink_sc16");
+    bind_fmcomms2_sink_template<gr_complex>(m, "fmcomms2_sink_fc32");
 }

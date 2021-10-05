@@ -17,10 +17,13 @@
 #include <thread>
 #include <vector>
 
+#include <volk/volk_alloc.hh>
+
 namespace gr {
 namespace iio {
 
-class fmcomms2_source_impl : public fmcomms2_source, public device_source_impl
+template <typename T>
+class fmcomms2_source_impl : public fmcomms2_source<T>, public device_source_impl
 {
 private:
     std::vector<std::string>
@@ -28,6 +31,17 @@ private:
     std::vector<std::string> get_channels_vector(const std::vector<bool>& ch_en);
     std::thread overflow_thd;
     void check_overflow(void);
+
+    const static int s_initial_device_buf_size = 8192;
+    std::vector<volk::vector<short>> d_device_bufs;
+    gr_vector_void_star d_device_item_ptrs;
+    volk::vector<float> d_float_rvec;
+    volk::vector<float> d_float_ivec;
+
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+
 
 public:
     fmcomms2_source_impl(iio_context* ctx,

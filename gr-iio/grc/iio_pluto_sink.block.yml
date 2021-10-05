@@ -3,6 +3,15 @@ label: PlutoSDR Sink
 flags: [ python, throttle ]
 
 parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [fc32, sc16]
+    option_labels: [Complex float32, Complex int16]
+    option_attributes:
+        type: [fc32, sc16]
+    hide: part
+
 -   id: uri
     label: IIO context URI
     dtype: string
@@ -78,7 +87,7 @@ parameters:
 
 inputs:
 -   domain: stream
-    dtype: complex
+    dtype: ${type.type}
 
 asserts:
 - ${ ((samplerate>=2084000) or (filter_source!="'Off'")) }
@@ -93,12 +102,12 @@ asserts:
 templates:
     imports: from gnuradio import iio
     make: |
-        iio.pluto_sink(${uri}, ${buffer_size}, ${cyclic})
+        iio.fmcomms2_sink_${type.type}(${uri} if ${uri} else iio.get_pluto_uri(), [True, True], ${buffer_size}, ${cyclic})
         self.${id}.set_len_tag_key(${len_tag_key})
         self.${id}.set_bandwidth(${bandwidth})
         self.${id}.set_frequency(${frequency})
         self.${id}.set_samplerate(${samplerate})
-        self.${id}.set_attenuation(${attenuation1})
+        self.${id}.set_attenuation(0, ${attenuation1})
         self.${id}.set_filter_params(${filter_source}, ${filter}, ${fpass}, ${fstop})
     callbacks:
         - set_bandwidth(${bandwidth})

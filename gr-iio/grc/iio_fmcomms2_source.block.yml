@@ -3,6 +3,15 @@ label: FMComms2/3/4 Source
 flags: [ python, throttle ]
 
 parameters:
+-   id: type
+    label: Output Type
+    dtype: enum
+    options: [fc32, sc16]
+    option_labels: [int16, Complex float32, Complex int16]
+    option_attributes:
+        type: [fc32, sc16]
+    hide: part
+
 -   id: uri
     label: IIO context URI
     dtype: string
@@ -131,7 +140,7 @@ parameters:
 
 outputs:
 -   domain: stream
-    dtype: complex
+    dtype: ${type.type}
     multiplicity: ${ sum([rx1_en, rx2_en]) }
 
 asserts:
@@ -147,8 +156,28 @@ asserts:
 
 templates:
     imports: from gnuradio import iio
-    make: iio.fmcomms2_source_f32c(${uri}, ${frequency}, ${samplerate}, ${bandwidth}, ${rx1_en}, ${rx2_en}, ${buffer_size}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${gain2}, ${manual_gain2}, ${rf_port_select}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
+    make: |
+        iio.fmcomms2_source_${type.type}(${uri}, [rx1_en, rx2_en], ${buffer_size})
+        self.${id}.set_len_tag_key(${len_tag_key})
+        self.${id}.set_frequency(${frequency})
+        self.${id}.set_samplerate(${samplerate})
+        self.${id}.set_gain_mode(0, ${gain1})
+        self.${id}.set_gain(0, ${manual_gain1})
+        self.${id}.set_gain_mode(1, ${gain2})
+        self.${id}.set_gain(1, ${manual_gain2})
+        self.${id}.set_quadrature(${quadrature})
+        self.${id}.set_rfdc(${rfdc})
+        self.${id}.set_bbdc(${bbdc})
+        self.${id}.set_filter_params(${filter_source}, ${filter}, ${fpass}, ${fstop})
     callbacks:
-      - set_params(${frequency}, ${samplerate}, ${bandwidth}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${gain2}, ${manual_gain2}, ${rf_port_select}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
-
+        - set_frequency(${frequency})
+        - set_samplerate(${samplerate})
+        - set_gain_mode(0, ${gain1})
+        - set_gain(0, ${manual_gain1})
+        - set_gain_mode(1, ${gain1})
+        - set_gain(1, ${manual_gain1})
+        - set_quadrature(${quadrature})
+        - set_rfdc(${rfdc})
+        - set_bbdc(${bbdc})
+        - set_filter_params(${filter_source}, ${filter}, ${fpass}, ${fstop})
 file_format: 1

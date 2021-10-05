@@ -29,6 +29,7 @@ namespace iio {
  * cards. However, it should support any AD936x based device using an IIO
  * driver.
  */
+template <typename T>
 class IIO_API fmcomms2_source : virtual public gr::sync_block
 {
 public:
@@ -55,6 +56,10 @@ public:
                                    float fpass = 0.0,
                                    float fstop = 0.0) = 0;
 };
+
+typedef fmcomms2_source<int16_t> fmcomms2_source_s;
+typedef fmcomms2_source<std::complex<int16_t>> fmcomms2_source_sc16;
+typedef fmcomms2_source<gr_complex> fmcomms2_source_fc32;
 
 } // namespace iio
 } // namespace gr

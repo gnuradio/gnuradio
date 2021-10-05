@@ -36,10 +36,7 @@ if(libad9361_SUFFICIENT)
   target_sources(gnuradio-iio PRIVATE
     fmcomms2_sink_impl.cc
     fmcomms2_source_impl.cc
-    fmcomms2_sink_fc32_impl.cc
-    fmcomms2_source_fc32_impl.cc
-    pluto_sink_impl.cc
-    pluto_source_impl.cc
+    pluto_utils.cc
   )
   target_link_libraries(gnuradio-iio PUBLIC libad9361::ad9361)
   target_compile_definitions(gnuradio-iio PUBLIC -DGR_IIO_LIBAD9361)
