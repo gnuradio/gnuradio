@@ -22,8 +22,6 @@ install(FILES
 )
 if(libad9361_SUFFICIENT)
   install(FILES
-    pluto_sink.h
-    pluto_source.h
     fmcomms2_sink.h
     fmcomms2_source.h
     # fmcomms5_sink.h

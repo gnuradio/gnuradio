@@ -3,6 +3,15 @@ label: FMComms2/3/4 Sink
 flags: [ python, throttle ]
 
 parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [fc32, sc16]
+    option_labels: [int16, Complex float32, Complex int16]
+    option_attributes:
+        type: [fc32, sc16]
+    hide: part
+
 -   id: uri
     label: IIO context URI
     dtype: string
@@ -106,7 +115,7 @@ parameters:
 
 inputs:
 -   domain: stream
-    dtype: complex
+    dtype: ${type.type}
     multiplicity: ${ sum([tx1_en, tx2_en]) }
 
 asserts:
@@ -122,8 +131,18 @@ asserts:
 
 templates:
     imports: from gnuradio import iio
-    make: iio.fmcomms2_sink_f32c(${uri}, ${frequency}, ${samplerate}, ${bandwidth}, ${tx1_en}, ${tx2_en}, ${buffer_size}, ${cyclic}, ${rf_port_select}, ${attenuation1}, ${attenuation2}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
+    make: |
+        iio.fmcomms2_sink_${type.type}(${uri}, [tx1_en, tx2_en], ${buffer_size}, ${cyclic})
+        self.${id}.set_len_tag_key(${len_tag_key})
+        self.${id}.set_bandwidth(${bandwidth})
+        self.${id}.set_frequency(${frequency})
+        self.${id}.set_samplerate(${samplerate})
+        self.${id}.set_attenuation(0, ${attenuation1})
+        self.${id}.set_filter_params(${filter_source}, ${filter}, ${fpass}, ${fstop})
     callbacks:
-      - set_params(${frequency}, ${samplerate}, ${bandwidth}, ${rf_port_select}, ${attenuation1}, ${attenuation2}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
-
+        - set_bandwidth(${bandwidth})
+        - set_frequency(${frequency})
+        - set_samplerate(${samplerate})
+        - set_attenuation(${attenuation1})
+        - set_filter_params(${filter_source}, ${filter}, ${fpass}, ${fstop})
 file_format: 1
