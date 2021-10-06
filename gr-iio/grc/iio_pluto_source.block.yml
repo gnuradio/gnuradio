@@ -116,7 +116,7 @@ asserts:
 templates:
     imports: from gnuradio import iio
     make: |
-        iio.fmcomms2_source(${uri}, [True,], ${buffer_size})
+        iio.fmcomms2_source_c(${uri}, [True,], ${buffer_size})
         self.${id}.set_len_tag_key(${len_tag_key})
         self.${id}.set_frequency(${frequency})
         self.${id}.set_samplerate(${samplerate})
@@ -129,8 +129,8 @@ templates:
     callbacks:
         - set_frequency(${frequency})
         - set_samplerate(${samplerate})
-        - set_gain_mode(${gain1})
-        - set_gain(${manual_gain1})
+        - set_gain_mode(0, ${gain1})
+        - set_gain(0, ${manual_gain1})
         - set_quadrature(${quadrature})
         - set_rfdc(${rfdc})
         - set_bbdc(${bbdc})

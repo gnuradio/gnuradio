@@ -39,6 +39,10 @@ private:
 
     std::vector<volk::vector<short>> d_device_bufs;
 
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+
 public:
     fmcomms2_sink_impl(iio_context* ctx,
                        const std::vector<bool>& ch_en,
@@ -46,10 +50,6 @@ public:
                        bool cyclic);
 
     ~fmcomms2_sink_impl();
-
-    int work(int noutput_items,
-             gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
 
     void update_dependent_params();
     virtual void set_len_tag_key(const std::string& len_tag_key);

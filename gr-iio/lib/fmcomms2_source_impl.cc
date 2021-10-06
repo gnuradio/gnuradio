@@ -28,8 +28,8 @@ namespace iio {
 
 template <typename T>
 typename fmcomms2_source<T>::sptr fmcomms2_source<T>::make(const std::string& uri,
-                                            const std::vector<bool>& ch_en,
-                                            unsigned long buffer_size)
+                                                           const std::vector<bool>& ch_en,
+                                                           unsigned long buffer_size)
 {
     return gnuradio::make_block_sptr<fmcomms2_source_impl<T>>(
         device_source_impl::get_context(uri), ch_en, buffer_size);
@@ -37,9 +37,9 @@ typename fmcomms2_source<T>::sptr fmcomms2_source<T>::make(const std::string& ur
 
 template <typename T>
 std::vector<std::string> fmcomms2_source_impl<T>::get_channels_vector(bool ch1_en,
-                                                                   bool ch2_en,
-                                                                   bool ch3_en,
-                                                                   bool ch4_en)
+                                                                      bool ch2_en,
+                                                                      bool ch3_en,
+                                                                      bool ch4_en)
 {
     std::vector<std::string> channels;
     if (ch1_en)
@@ -71,11 +71,11 @@ fmcomms2_source_impl<T>::get_channels_vector(const std::vector<bool>& ch_en)
 
 template <typename T>
 fmcomms2_source_impl<T>::fmcomms2_source_impl(iio_context* ctx,
-                                           const std::vector<bool>& ch_en,
-                                           unsigned long buffer_size)
+                                              const std::vector<bool>& ch_en,
+                                              unsigned long buffer_size)
     : gr::sync_block("fmcomms2_source",
                      gr::io_signature::make(0, 0, 0),
-                     gr::io_signature::make(1, -1, sizeof(short))),
+                     gr::io_signature::make(1, -1, sizeof(T))),
       device_source_impl(ctx,
                          true,
                          "cf-ad9361-lpc",
@@ -86,10 +86,19 @@ fmcomms2_source_impl<T>::fmcomms2_source_impl(iio_context* ctx,
                          0)
 {
     overflow_thd = std::thread(&fmcomms2_source_impl<T>::check_overflow, this);
+
+    // Device Buffers are always presented as short from device_sink
+    d_device_bufs.resize(get_channels_vector(ch_en).size());
+    for (size_t i = 0; i < d_device_bufs.size(); i++) {
+        d_device_bufs[i].resize(s_initial_device_buf_size);
+    }
 }
 
 template <typename T>
-fmcomms2_source_impl<T>::~fmcomms2_source_impl() { overflow_thd.join(); }
+fmcomms2_source_impl<T>::~fmcomms2_source_impl()
+{
+    overflow_thd.join();
+}
 
 template <typename T>
 void fmcomms2_source_impl<T>::check_overflow(void)
@@ -128,6 +137,53 @@ void fmcomms2_source_impl<T>::check_overflow(void)
 #else
         usleep(OVERFLOW_CHECK_PERIOD_MS * 1000);
 #endif
+    }
+}
+
+
+template <>
+int fmcomms2_source_impl<std::int16_t>::work(int noutput_items,
+                                             gr_vector_const_void_star& input_items,
+                                             gr_vector_void_star& output_items)
+{
+    // Since device_source returns shorts, we can just pass off the work
+    return device_source_impl::work(noutput_items, input_items, output_items);
+}
+
+
+template <typename T>
+int fmcomms2_source_impl<T>::work(int noutput_items,
+                                  gr_vector_const_void_star& input_items,
+                                  gr_vector_void_star& output_items)
+{
+    static gr_vector_void_star tmp_output_items;
+    if (output_items.size() > tmp_output_items.size()) {
+        tmp_output_items.resize(output_items.size());
+    }
+    for (size_t i = 0; i < output_items.size(); i++) {
+        if (2 * noutput_items > (int)d_device_bufs[i].size()) {
+            d_device_bufs[i].resize(2 * noutput_items);
+        }
+        tmp_output_items[i] = static_cast<void*>(d_device_bufs[i].data());
+    }
+
+    int ret = device_source_impl::work(2 * noutput_items, input_items, tmp_output_items);
+
+    // Do the conversion from shorts to gr_complex
+    for (size_t i = 0; i < output_items.size(); i++) {
+        gr_complex* out = (gr_complex*)output_items[i];
+        // TODO: use volk
+        for (int n = 0; n < noutput_items; n++) {
+
+            out[n] = gr_complex(float(d_device_bufs[i][2 * n]) / 2048.0,
+                                float(d_device_bufs[i][2 * n + 1]) / 2048.0);
+        }
+    }
+
+    if (ret > 0) {
+        return ret / 2;
+    } else {
+        return ret;
     }
 }
 
@@ -270,9 +326,9 @@ void fmcomms2_source_impl<T>::set_bbdc(bool bbdc)
 
 template <typename T>
 void fmcomms2_source_impl<T>::set_filter_params(const std::string& filter_source,
-                                             const std::string& filter_filename,
-                                             float fpass,
-                                             float fstop)
+                                                const std::string& filter_filename,
+                                                float fpass,
+                                                float fstop)
 {
     d_filter_source = filter_source;
     d_filter_filename = filter_filename;
@@ -282,8 +338,8 @@ void fmcomms2_source_impl<T>::set_filter_params(const std::string& filter_source
     update_dependent_params();
 }
 
-template class fmcomms2_source_impl<std::int16_t>;
-template class fmcomms2_source_impl<gr_complex>;
+template class fmcomms2_source<std::int16_t>;
+template class fmcomms2_source<gr_complex>;
 
 } /* namespace iio */
 } /* namespace gr */
