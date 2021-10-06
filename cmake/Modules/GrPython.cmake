@@ -139,27 +139,33 @@ endmacro(GR_PYTHON_CHECK_MODULE)
 
 ########################################################################
 # Sets the python installation directory GR_PYTHON_DIR
+# From https://github.com/pothosware/SoapySDR/tree/master/python
+# https://github.com/pothosware/SoapySDR/blob/master/LICENSE_1_0.txt
 ########################################################################
 if(NOT DEFINED GR_PYTHON_DIR)
-execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "
-from distutils import sysconfig
-print(sysconfig.get_python_lib(plat_specific=True, prefix=''))
-" OUTPUT_VARIABLE GR_PYTHON_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
+execute_process(
+    COMMAND ${PYTHON_EXECUTABLE} -c "import os
+import site
+from distutils.sysconfig import get_python_lib
+
+prefix = '${CMAKE_INSTALL_PREFIX}'
+
+#ask distutils where to install the python module
+install_dir = get_python_lib(plat_specific=True, prefix=prefix)
+
+#use sites when the prefix is already recognized
+try:
+  paths = [p for p in site.getsitepackages() if p.startswith(prefix)]
+  if len(paths) == 1: install_dir = paths[0]
+except AttributeError: pass
+
+#strip the prefix to return a relative path
+print(os.path.relpath(install_dir, prefix))"
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    OUTPUT_VARIABLE GR_PYTHON_DIR
 )
 endif()
 file(TO_CMAKE_PATH ${GR_PYTHON_DIR} GR_PYTHON_DIR)
-
-########################################################################
-# Sets the python relative installation directory GR_PYTHON_RELATIVE
-########################################################################
-if(NOT DEFINED GR_PYTHON_RELATIVE)
-execute_process(COMMAND "${PYTHON_EXECUTABLE}" -c "
-from distutils import sysconfig as sc
-print(sc.get_python_lib(prefix='', plat_specific=True))
-"
-  OUTPUT_VARIABLE GR_PYTHON_RELATIVE  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-endif()
 
 
 ########################################################################
