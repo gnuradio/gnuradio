@@ -28,7 +28,7 @@ namespace py = pybind11;
 #include <fmcomms2_source_pydoc.h>
 
 template <typename T>
-void bind_fmcomms2_source_template(py::module& m, const char *classname)
+void bind_fmcomms2_source_template(py::module& m, const char* classname)
 {
 
     using fmcomms2_source = gr::iio::fmcomms2_source<T>;
@@ -47,14 +47,21 @@ void bind_fmcomms2_source_template(py::module& m, const char *classname)
              D(fmcomms2_source, make))
         .def("set_frequency", &fmcomms2_source::set_frequency, py::arg("longfrequency"))
         .def("set_samplerate", &fmcomms2_source::set_samplerate, py::arg("samplerate"))
-        .def("set_gain_mode", &fmcomms2_source::set_gain_mode, py::arg("chan"), py::arg("mode"))
-        .def("set_gain", &fmcomms2_source::set_gain, py::arg("chan"), py::arg("gain_value"))
+        .def("set_gain_mode",
+             &fmcomms2_source::set_gain_mode,
+             py::arg("chan"),
+             py::arg("mode"))
+        .def("set_gain",
+             &fmcomms2_source::set_gain,
+             py::arg("chan"),
+             py::arg("gain_value"))
         .def("set_quadrature", &fmcomms2_source::set_quadrature, py::arg("quadrature"))
         .def("set_rfdc", &fmcomms2_source::set_rfdc, py::arg("rfdc"))
         .def("set_bbdc", &fmcomms2_source::set_bbdc, py::arg("bbdc"))
         .def("set_filter_params", &fmcomms2_source::set_filter_params)
-        .def("set_len_tag_key", &fmcomms2_source::set_len_tag_key, py::arg("len_tag_key"));
-        ;
+        .def(
+            "set_len_tag_key", &fmcomms2_source::set_len_tag_key, py::arg("len_tag_key"));
+    ;
 }
 
 void bind_fmcomms2_source(py::module& m)

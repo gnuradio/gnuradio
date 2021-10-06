@@ -41,8 +41,7 @@ private:
              gr_vector_const_void_star& input_items,
              gr_vector_void_star& output_items);
 
-    
-             
+
 public:
     fmcomms2_source_impl(iio_context* ctx,
                          const std::vector<bool>& ch_en,

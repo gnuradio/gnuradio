@@ -51,7 +51,10 @@ void bind_fmcomms2_sink_template(py::module& m, const char* classname)
         .def("set_bandwidth", &fmcomms2_sink::set_bandwidth, py::arg("longbandwidth"))
         .def("set_frequency", &fmcomms2_sink::set_frequency, py::arg("longfrequency"))
         .def("set_samplerate", &fmcomms2_sink::set_samplerate, py::arg("samplerate"))
-        .def("set_attenuation", &fmcomms2_sink::set_attenuation, py::arg("chan"), py::arg("attenuation"))
+        .def("set_attenuation",
+             &fmcomms2_sink::set_attenuation,
+             py::arg("chan"),
+             py::arg("attenuation"))
         .def("set_filter_params",
              &fmcomms2_sink::set_filter_params,
              py::arg("filter_source"),

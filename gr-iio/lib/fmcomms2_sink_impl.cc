@@ -30,9 +30,9 @@ namespace iio {
 
 template <typename T>
 typename fmcomms2_sink<T>::sptr fmcomms2_sink<T>::make(const std::string& uri,
-                                        const std::vector<bool>& ch_en,
-                                        unsigned long buffer_size,
-                                        bool cyclic)
+                                                       const std::vector<bool>& ch_en,
+                                                       unsigned long buffer_size,
+                                                       bool cyclic)
 {
     return gnuradio::get_initial_sptr(new fmcomms2_sink_impl<T>(
         device_source_impl::get_context(uri), ch_en, buffer_size, cyclic));
@@ -40,9 +40,9 @@ typename fmcomms2_sink<T>::sptr fmcomms2_sink<T>::make(const std::string& uri,
 
 template <typename T>
 std::vector<std::string> fmcomms2_sink_impl<T>::get_channels_vector(bool ch1_en,
-                                                                 bool ch2_en,
-                                                                 bool ch3_en,
-                                                                 bool ch4_en)
+                                                                    bool ch2_en,
+                                                                    bool ch3_en,
+                                                                    bool ch4_en)
 {
     std::vector<std::string> channels;
     if (ch1_en)
@@ -74,9 +74,9 @@ fmcomms2_sink_impl<T>::get_channels_vector(const std::vector<bool>& ch_en)
 
 template <typename T>
 fmcomms2_sink_impl<T>::fmcomms2_sink_impl(iio_context* ctx,
-                                       const std::vector<bool>& ch_en,
-                                       unsigned long buffer_size,
-                                       bool cyclic)
+                                          const std::vector<bool>& ch_en,
+                                          unsigned long buffer_size,
+                                          bool cyclic)
     : gr::sync_block("fmcomms2_sink",
                      gr::io_signature::make(1, -1, sizeof(T)),
                      gr::io_signature::make(0, 0, 0)),
@@ -96,8 +96,7 @@ fmcomms2_sink_impl<T>::fmcomms2_sink_impl(iio_context* ctx,
 
     // Device Buffers are always presented as short from device_sink
     d_device_bufs.resize(get_channels_vector(ch_en).size());
-    for (size_t i = 0; i<d_device_bufs.size(); i++)
-    {
+    for (size_t i = 0; i < d_device_bufs.size(); i++) {
         d_device_bufs[i].resize(16384);
     }
 }
@@ -258,9 +257,9 @@ void fmcomms2_sink_impl<T>::update_dependent_params()
 
 template <typename T>
 void fmcomms2_sink_impl<T>::set_filter_params(const std::string& filter_source,
-                                           const std::string& filter_filename,
-                                           float fpass,
-                                           float fstop)
+                                              const std::string& filter_filename,
+                                              float fpass,
+                                              float fstop)
 {
     d_filter_source = filter_source;
     d_filter_filename = filter_filename;
@@ -271,17 +270,15 @@ void fmcomms2_sink_impl<T>::set_filter_params(const std::string& filter_source,
 
 template <typename T>
 int fmcomms2_sink_impl<T>::work(int noutput_items,
-                             gr_vector_const_void_star& input_items,
-                             gr_vector_void_star& output_items)
+                                gr_vector_const_void_star& input_items,
+                                gr_vector_void_star& output_items)
 {
     static gr_vector_const_void_star tmp_input_items;
-    for (size_t i = 0; i<input_items.size(); i++)
-    {
-        if (noutput_items > d_device_bufs[i].size())
-        {
+    for (size_t i = 0; i < input_items.size(); i++) {
+        if (noutput_items > d_device_bufs[i].size()) {
             d_device_bufs.resize(noutput_items);
         }
-        tmp_input_items[i] = static_cast<const void *>(d_device_bufs[i].data());
+        tmp_input_items[i] = static_cast<const void*>(d_device_bufs[i].data());
     }
 
 
