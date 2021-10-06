@@ -19,6 +19,8 @@
 #include <thread>
 #include <vector>
 
+#include <volk/volk.h>
+
 #define MIN_RATE 520333
 #define DECINT_RATIO 8
 #define OVERFLOW_CHECK_PERIOD_MS 1000
@@ -92,6 +94,8 @@ fmcomms2_source_impl<T>::fmcomms2_source_impl(iio_context* ctx,
     for (size_t i = 0; i < d_device_bufs.size(); i++) {
         d_device_bufs[i].resize(s_initial_device_buf_size);
     }
+    d_float_ivec.resize(s_initial_device_buf_size);
+    d_float_rvec.resize(s_initial_device_buf_size);
 }
 
 template <typename T>
@@ -157,34 +161,46 @@ int fmcomms2_source_impl<T>::work(int noutput_items,
                                   gr_vector_void_star& output_items)
 {
     static gr_vector_void_star tmp_output_items;
-    if (output_items.size() > tmp_output_items.size()) {
-        tmp_output_items.resize(output_items.size());
+    if (2 * output_items.size() > tmp_output_items.size()) {
+        tmp_output_items.resize(2 * output_items.size());
     }
-    for (size_t i = 0; i < output_items.size(); i++) {
-        if (2 * noutput_items > (int)d_device_bufs[i].size()) {
-            d_device_bufs[i].resize(2 * noutput_items);
+    if (noutput_items > (int)d_float_rvec.size()) {
+        d_float_rvec.resize(noutput_items);
+        d_float_ivec.resize(noutput_items);
+    }
+    for (size_t i = 0; i < 2 * output_items.size(); i += 2) {
+        if (noutput_items > (int)d_device_bufs[i].size()) {
+            d_device_bufs[i].resize(noutput_items);
+            d_device_bufs[i + 1].resize(noutput_items);
         }
         tmp_output_items[i] = static_cast<void*>(d_device_bufs[i].data());
+        tmp_output_items[i + 1] = static_cast<void*>(d_device_bufs[i + 1].data());
     }
 
-    int ret = device_source_impl::work(2 * noutput_items, input_items, tmp_output_items);
-
-    // Do the conversion from shorts to gr_complex
-    for (size_t i = 0; i < output_items.size(); i++) {
-        gr_complex* out = (gr_complex*)output_items[i];
-        // TODO: use volk
-        for (int n = 0; n < noutput_items; n++) {
-
-            out[n] = gr_complex(float(d_device_bufs[i][2 * n]) / 2048.0,
-                                float(d_device_bufs[i][2 * n + 1]) / 2048.0);
-        }
-    }
-
-    if (ret > 0) {
-        return ret / 2;
-    } else {
+    int ret = device_source_impl::work(noutput_items, input_items, tmp_output_items);
+    if (ret <= 0) {
         return ret;
     }
+
+    // Do the conversion from shorts to gr_complex
+    for (size_t i = 0; i < output_items.size(); i += 2) {
+        auto out = static_cast<gr_complex*>(output_items[i]);
+
+        // for (int n = 0; n < noutput_items; n++) {
+        //     out[n] = gr_complex(float(d_device_bufs[i][n]) / 2048.0,
+        //                         float(d_device_bufs[i+1][n]) / 2048.0);
+        // }
+
+        volk_16i_s32f_convert_32f(
+            d_float_rvec.data(), d_device_bufs[i].data(), 2048.0, noutput_items);
+        volk_16i_s32f_convert_32f(
+            d_float_ivec.data(), d_device_bufs[i + 1].data(), 2048.0, noutput_items);
+
+        volk_32f_x2_interleave_32fc(
+            out, d_float_rvec.data(), d_float_ivec.data(), noutput_items);
+    }
+
+    return ret;
 }
 
 template <typename T>

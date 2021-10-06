@@ -32,8 +32,10 @@ private:
     std::thread overflow_thd;
     void check_overflow(void);
 
-    const static int s_initial_device_buf_size = 16384;
+    const static int s_initial_device_buf_size = 8192;
     std::vector<volk::vector<short>> d_device_bufs;
+    volk::vector<float> d_float_rvec;
+    volk::vector<float> d_float_ivec;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
