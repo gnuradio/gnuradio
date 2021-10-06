@@ -116,12 +116,12 @@ asserts:
 templates:
     imports: from gnuradio import iio
     make: |
-        iio.pluto_source(${uri}, ${buffer_size})
+        iio.fmcomms2_source(${uri}, [True,], ${buffer_size})
         self.${id}.set_len_tag_key(${len_tag_key})
         self.${id}.set_frequency(${frequency})
         self.${id}.set_samplerate(${samplerate})
-        self.${id}.set_gain_mode(${gain1})
-        self.${id}.set_gain(${manual_gain1})
+        self.${id}.set_gain_mode(0, ${gain1})
+        self.${id}.set_gain(0, ${manual_gain1})
         self.${id}.set_quadrature(${quadrature})
         self.${id}.set_rfdc(${rfdc})
         self.${id}.set_bbdc(${bbdc})
