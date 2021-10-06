@@ -10,11 +10,16 @@ if(DEFINED __INCLUDED_GR_VERSION_CMAKE)
 endif()
 set(__INCLUDED_GR_VERSION_CMAKE TRUE)
 
+# always have a value for VERSION_PATCH, even if unset (e.g. some OOTs)
+if(NOT DEFINED VERSION_PATCH)
+    set(VERSION_PATCH "0")
+endif()
+
 #eventually, replace version.sh and fill in the variables below
-set(MAJOR_VERSION ${VERSION_MAJOR})
-set(API_COMPAT    ${VERSION_API})
-set(MINOR_VERSION ${VERSION_ABI})
-set(MAINT_VERSION ${VERSION_PATCH})
+set(MAJOR_VERSION "${VERSION_MAJOR}")
+set(API_COMPAT    "${VERSION_API}")
+set(MINOR_VERSION "${VERSION_ABI}")
+set(MAINT_VERSION "${VERSION_PATCH}")
 
 ########################################################################
 # Extract the version string from git describe.
@@ -75,6 +80,6 @@ else()
     set(DOCVER "${VERSION}")
     set(LIBVER "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}")
     # ensure only numeric values are set for RC_ version parts
-    string(REGEX REPLACE "^([0-9]+).*$" "\\1" RC_MINOR_VERSION ${MINOR_VERSION})
-    string(REGEX REPLACE "^([0-9]+).*$" "\\1" RC_MAINT_VERSION ${MAINT_VERSION})
+    string(REGEX REPLACE "^([0-9]+).*$" "\\1" RC_MINOR_VERSION "${MINOR_VERSION}")
+    string(REGEX REPLACE "^([0-9]+).*$" "\\1" RC_MAINT_VERSION "${MAINT_VERSION}")
 endif()
