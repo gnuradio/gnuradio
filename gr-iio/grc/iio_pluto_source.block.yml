@@ -116,7 +116,7 @@ asserts:
 templates:
     imports: from gnuradio import iio
     make: |
-        iio.fmcomms2_source_c(${uri} if ${uri} else iio.get_pluto_uri(), ${buffer_size})
+        iio.fmcomms2_source_c(${uri} if ${uri} else iio.get_pluto_uri(), [True, True], ${buffer_size})
         self.${id}.set_len_tag_key(${len_tag_key})
         self.${id}.set_frequency(${frequency})
         self.${id}.set_samplerate(${samplerate})

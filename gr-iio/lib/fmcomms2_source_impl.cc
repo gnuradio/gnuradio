@@ -160,9 +160,8 @@ int fmcomms2_source_impl<gr_complex>::work(int noutput_items,
                                            gr_vector_const_void_star& input_items,
                                            gr_vector_void_star& output_items)
 {
-    static gr_vector_void_star tmp_output_items;
-    if (2 * output_items.size() > tmp_output_items.size()) {
-        tmp_output_items.resize(2 * output_items.size());
+    if (2 * output_items.size() > d_device_item_ptrs.size()) {
+        d_device_item_ptrs.resize(2 * output_items.size());
     }
     if (noutput_items > (int)d_float_rvec.size()) {
         d_float_rvec.resize(noutput_items);
@@ -173,11 +172,11 @@ int fmcomms2_source_impl<gr_complex>::work(int noutput_items,
             d_device_bufs[i].resize(noutput_items);
             d_device_bufs[i + 1].resize(noutput_items);
         }
-        tmp_output_items[i] = static_cast<void*>(d_device_bufs[i].data());
-        tmp_output_items[i + 1] = static_cast<void*>(d_device_bufs[i + 1].data());
+        d_device_item_ptrs[i] = static_cast<void*>(d_device_bufs[i].data());
+        d_device_item_ptrs[i + 1] = static_cast<void*>(d_device_bufs[i + 1].data());
     }
 
-    int ret = device_source_impl::work(noutput_items, input_items, tmp_output_items);
+    int ret = device_source_impl::work(noutput_items, input_items, d_device_item_ptrs);
     if (ret <= 0) {
         return ret;
     }

@@ -57,6 +57,9 @@ public:
                                    float fstop = 0.0) = 0;
 };
 
+typedef fmcomms2_source<std::int16_t> fmcomms2_source_s;
+typedef fmcomms2_source<gr_complex> fmcomms2_source_c;
+
 } // namespace iio
 } // namespace gr
 

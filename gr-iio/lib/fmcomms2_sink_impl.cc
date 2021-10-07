@@ -95,10 +95,14 @@ fmcomms2_sink_impl<T>::fmcomms2_sink_impl(iio_context* ctx,
     underflow_thd = std::thread(&fmcomms2_sink_impl<T>::check_underflow, this);
 
     // Device Buffers are always presented as short from device_sink
-    d_device_bufs.resize(get_channels_vector(ch_en).size());
+    auto nchans = get_channels_vector(ch_en).size();
+    d_device_bufs.resize(nchans);
+    d_device_item_ptrs.resize(nchans);
     for (size_t i = 0; i < d_device_bufs.size(); i++) {
-        d_device_bufs[i].resize(16384);
+        d_device_bufs[i].resize(s_initial_device_buf_size);
     }
+    d_float_r.resize(s_initial_device_buf_size);
+    d_float_i.resize(s_initial_device_buf_size);
 }
 
 template <typename T>
@@ -268,21 +272,50 @@ void fmcomms2_sink_impl<T>::set_filter_params(const std::string& filter_source,
     update_dependent_params();
 }
 
-template <typename T>
-int fmcomms2_sink_impl<T>::work(int noutput_items,
-                                gr_vector_const_void_star& input_items,
-                                gr_vector_void_star& output_items)
+template <>
+int fmcomms2_sink_impl<std::int16_t>::work(int noutput_items,
+                                           gr_vector_const_void_star& input_items,
+                                           gr_vector_void_star& output_items)
 {
-    static gr_vector_const_void_star tmp_input_items;
+    int ret = device_sink_impl::work(noutput_items, input_items, output_items);
+    if (ret < 0 || !cyclic)
+        return ret;
+    else
+        return WORK_DONE;
+}
+
+template <>
+int fmcomms2_sink_impl<gr_complex>::work(int noutput_items,
+                                         gr_vector_const_void_star& input_items,
+                                         gr_vector_void_star& output_items)
+{
+    // For gr_complex ports, each gr_complex port gets mapped into 2 device channels
+    if (2 * input_items.size() > d_device_item_ptrs.size()) {
+        d_device_item_ptrs.resize(2 * input_items.size());
+        d_device_bufs.resize(2*input_items.size());
+    }
+
     for (size_t i = 0; i < input_items.size(); i++) {
+        auto in = static_cast<const gr_complex *>(input_items[i]);
         if (noutput_items > (int)d_device_bufs[i].size()) {
-            d_device_bufs.resize(noutput_items);
+            d_device_bufs[2*i].resize(noutput_items);
+            d_device_bufs[2*i+1].resize(noutput_items);
+            d_float_r.resize(noutput_items);
+            d_float_i.resize(noutput_items);
         }
-        tmp_input_items[i] = static_cast<const void*>(d_device_bufs[i].data());
+        d_device_item_ptrs[2*i] = static_cast<const void*>(d_device_bufs[2*i].data());
+        d_device_item_ptrs[2*i+1] = static_cast<const void*>(d_device_bufs[2*i+1].data());
+
+
+        // deinterleave complex to float
+        volk_32fc_deinterleave_32f_x2(d_float_r.data(),  d_float_i.data(), in, noutput_items);
+        // float to short
+        volk_32f_s32f_convert_16i(d_device_bufs[2*i].data(), d_float_r.data(), 2048.0, noutput_items);
+        volk_32f_s32f_convert_16i(d_device_bufs[2*i+1].data(), d_float_i.data(), 2048.0, noutput_items);
     }
 
 
-    int ret = device_sink_impl::work(noutput_items, tmp_input_items, output_items);
+    int ret = device_sink_impl::work(noutput_items, d_device_item_ptrs, output_items);
     if (ret < 0 || !cyclic)
         return ret;
     else

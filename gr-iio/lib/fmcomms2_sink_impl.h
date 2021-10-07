@@ -37,7 +37,12 @@ private:
     std::vector<std::string> get_channels_vector(const std::vector<bool>& ch_en);
     void check_underflow(void);
 
+    const static int s_initial_device_buf_size = 8192;
+    
     std::vector<volk::vector<short>> d_device_bufs;
+    gr_vector_const_void_star d_device_item_ptrs;
+    volk::vector<float> d_float_r;
+    volk::vector<float> d_float_i;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

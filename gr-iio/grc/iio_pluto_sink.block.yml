@@ -93,12 +93,12 @@ asserts:
 templates:
     imports: from gnuradio import iio
     make: |
-        iio.fmcomms2_sink(${uri}, ${buffer_size}, ${cyclic})
+        iio.fmcomms2_sink_c(${uri} if ${uri} else iio.get_pluto_uri(), [True, True], ${buffer_size}, ${cyclic})
         self.${id}.set_len_tag_key(${len_tag_key})
         self.${id}.set_bandwidth(${bandwidth})
         self.${id}.set_frequency(${frequency})
         self.${id}.set_samplerate(${samplerate})
-        self.${id}.set_attenuation(${attenuation1})
+        self.${id}.set_attenuation(0, ${attenuation1})
         self.${id}.set_filter_params(${filter_source}, ${filter}, ${fpass}, ${fstop})
     callbacks:
         - set_bandwidth(${bandwidth})
