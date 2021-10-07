@@ -38,7 +38,7 @@ private:
     void check_underflow(void);
 
     const static int s_initial_device_buf_size = 8192;
-    
+
     std::vector<volk::vector<short>> d_device_bufs;
     gr_vector_const_void_star d_device_item_ptrs;
     volk::vector<float> d_float_r;

@@ -63,8 +63,7 @@ void bind_fmcomms2_sink_template(py::module& m, const char* classname)
              py::arg("fstop") = 0.0)
         .def("set_len_tag_key",
              &fmcomms2_sink::set_len_tag_key,
-             py::arg("len_tag_key") = "")
-        ;
+             py::arg("len_tag_key") = "");
 }
 
 void bind_fmcomms2_sink(py::module& m)

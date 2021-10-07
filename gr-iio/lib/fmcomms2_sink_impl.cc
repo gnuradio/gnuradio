@@ -292,26 +292,30 @@ int fmcomms2_sink_impl<gr_complex>::work(int noutput_items,
     // For gr_complex ports, each gr_complex port gets mapped into 2 device channels
     if (2 * input_items.size() > d_device_item_ptrs.size()) {
         d_device_item_ptrs.resize(2 * input_items.size());
-        d_device_bufs.resize(2*input_items.size());
+        d_device_bufs.resize(2 * input_items.size());
     }
 
     for (size_t i = 0; i < input_items.size(); i++) {
-        auto in = static_cast<const gr_complex *>(input_items[i]);
+        auto in = static_cast<const gr_complex*>(input_items[i]);
         if (noutput_items > (int)d_device_bufs[i].size()) {
-            d_device_bufs[2*i].resize(noutput_items);
-            d_device_bufs[2*i+1].resize(noutput_items);
+            d_device_bufs[2 * i].resize(noutput_items);
+            d_device_bufs[2 * i + 1].resize(noutput_items);
             d_float_r.resize(noutput_items);
             d_float_i.resize(noutput_items);
         }
-        d_device_item_ptrs[2*i] = static_cast<const void*>(d_device_bufs[2*i].data());
-        d_device_item_ptrs[2*i+1] = static_cast<const void*>(d_device_bufs[2*i+1].data());
+        d_device_item_ptrs[2 * i] = static_cast<const void*>(d_device_bufs[2 * i].data());
+        d_device_item_ptrs[2 * i + 1] =
+            static_cast<const void*>(d_device_bufs[2 * i + 1].data());
 
 
         // deinterleave complex to float
-        volk_32fc_deinterleave_32f_x2(d_float_r.data(),  d_float_i.data(), in, noutput_items);
+        volk_32fc_deinterleave_32f_x2(
+            d_float_r.data(), d_float_i.data(), in, noutput_items);
         // float to short
-        volk_32f_s32f_convert_16i(d_device_bufs[2*i].data(), d_float_r.data(), 2048.0, noutput_items);
-        volk_32f_s32f_convert_16i(d_device_bufs[2*i+1].data(), d_float_i.data(), 2048.0, noutput_items);
+        volk_32f_s32f_convert_16i(
+            d_device_bufs[2 * i].data(), d_float_r.data(), 2048.0, noutput_items);
+        volk_32f_s32f_convert_16i(
+            d_device_bufs[2 * i + 1].data(), d_float_i.data(), 2048.0, noutput_items);
     }
 
 
