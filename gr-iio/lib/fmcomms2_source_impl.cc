@@ -155,8 +155,8 @@ int fmcomms2_source_impl<std::int16_t>::work(int noutput_items,
 }
 
 
-template <typename T>
-int fmcomms2_source_impl<T>::work(int noutput_items,
+template <>
+int fmcomms2_source_impl<gr_complex>::work(int noutput_items,
                                   gr_vector_const_void_star& input_items,
                                   gr_vector_void_star& output_items)
 {
@@ -202,6 +202,14 @@ int fmcomms2_source_impl<T>::work(int noutput_items,
 
     return ret;
 }
+
+// template <typename T>
+// int fmcomms2_source_impl<T>::work(int noutput_items,
+//                                   gr_vector_const_void_star& input_items,
+//                                   gr_vector_void_star& output_items)
+// {
+//     static_assert(false, "work() function not defined for fmcomms2_source [only int16_t and gr_complex defined]");
+// }
 
 template <typename T>
 void fmcomms2_source_impl<T>::update_dependent_params()
