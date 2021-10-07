@@ -28,6 +28,7 @@ void bind_fmcomms2_sink(py::module& m);
 void bind_fmcomms2_source(py::module& m);
 // void bind_fmcomms5_source(py::module& m);
 // void bind_fmcomms5_source_f32c(py::module& m);
+void bind_pluto_utils(py::module& m);
 #endif
 
 // We need this hack because import_array() returns NULL
@@ -63,5 +64,6 @@ PYBIND11_MODULE(iio_python, m)
     bind_fmcomms2_source(m);
     // bind_fmcomms5_source(m);
     // bind_fmcomms5_source_f32c(m);
+    bind_pluto_utils(m);
 #endif
 }

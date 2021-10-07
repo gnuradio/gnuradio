@@ -157,8 +157,8 @@ int fmcomms2_source_impl<std::int16_t>::work(int noutput_items,
 
 template <>
 int fmcomms2_source_impl<gr_complex>::work(int noutput_items,
-                                  gr_vector_const_void_star& input_items,
-                                  gr_vector_void_star& output_items)
+                                           gr_vector_const_void_star& input_items,
+                                           gr_vector_void_star& output_items)
 {
     static gr_vector_void_star tmp_output_items;
     if (2 * output_items.size() > tmp_output_items.size()) {
@@ -208,7 +208,8 @@ int fmcomms2_source_impl<gr_complex>::work(int noutput_items,
 //                                   gr_vector_const_void_star& input_items,
 //                                   gr_vector_void_star& output_items)
 // {
-//     static_assert(false, "work() function not defined for fmcomms2_source [only int16_t and gr_complex defined]");
+//     static_assert(false, "work() function not defined for fmcomms2_source [only int16_t
+//     and gr_complex defined]");
 // }
 
 template <typename T>

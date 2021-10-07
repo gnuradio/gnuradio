@@ -275,7 +275,7 @@ int fmcomms2_sink_impl<T>::work(int noutput_items,
 {
     static gr_vector_const_void_star tmp_input_items;
     for (size_t i = 0; i < input_items.size(); i++) {
-        if (noutput_items > d_device_bufs[i].size()) {
+        if (noutput_items > (int)d_device_bufs[i].size()) {
             d_device_bufs.resize(noutput_items);
         }
         tmp_input_items[i] = static_cast<const void*>(d_device_bufs[i].data());
