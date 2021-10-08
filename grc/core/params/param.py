@@ -34,7 +34,7 @@ class Param(Element):
         """Make a new param from nested data"""
         super(Param, self).__init__(parent)
         self.key = id
-        self.name = label.strip() or id.title()
+        self.name = 'ID' if id == 'id' else (label.strip() or id.title())
         self.category = category or Constants.DEFAULT_PARAM_TAB
 
         self.dtype = dtype
