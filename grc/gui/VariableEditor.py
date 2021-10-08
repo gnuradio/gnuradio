@@ -99,7 +99,7 @@ class VariableEditor(Gtk.VBox):
         # Block Name or Category
         self.id_cell = Gtk.CellRendererText()
         self.id_cell.connect('edited', self._handle_name_edited_cb)
-        id_column = Gtk.TreeViewColumn("Id", self.id_cell, text=ID_INDEX)
+        id_column = Gtk.TreeViewColumn("ID", self.id_cell, text=ID_INDEX)
         id_column.set_name("id")
         id_column.set_resizable(True)
         id_column.set_max_width(Utils.scale_scalar(300))
