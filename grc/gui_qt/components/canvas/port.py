@@ -82,6 +82,9 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         """
         Draw the socket with a label.
         """
+        if self.hidden:
+            return
+
         x, y = tuple(self.parent.states['coordinate'])
         pen = QtGui.QPen(1)
         painter.setPen(pen)
