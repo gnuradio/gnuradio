@@ -89,6 +89,7 @@ class PropsDialog(QtWidgets.QDialog):
                 for key, val in par.param.options.items():
                     if val == par.currentText():
                         par.param.set_value(key)
+        self._block.rewrite()
         self._block.create_shapes_and_labels()
 
 
@@ -362,6 +363,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
     def import_data(self, name, states, parameters, **_):
         CoreBlock.import_data(self, name, states, parameters, **_)
+        self.rewrite()
         self.create_shapes_and_labels()
         x,y = tuple(states['coordinate'])
         self.setPos(x, y)
