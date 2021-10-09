@@ -2,12 +2,13 @@ import argparse
 import os
 from gnuradio.bindtool import BindingGenerator
 import pathlib
+import tempfile
 
 parser = argparse.ArgumentParser(description='Bind a GR In-Tree Module')
 parser.add_argument('names', type=str, nargs='+',
                     help='Names of gr modules to bind (e.g. fft digital analog)')
 
-parser.add_argument('--output_dir', default='/tmp',
+parser.add_argument('--output_dir', default=tempfile.gettempdir(),
                     help='Output directory of generated bindings')
 parser.add_argument('--prefix', help='Prefix of Installed GNU Radio')
 parser.add_argument('--src', help='Directory of gnuradio source tree',
