@@ -11,7 +11,7 @@ jobs:
   # can't use clang-format.
   check-formatting:
     name: Check C++ Formatting
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - uses: gnuradio/clang-format-lint-action@v0.5-4
@@ -22,9 +22,9 @@ jobs:
   # Doxygen gets built separately. It has a lot of output and its own weirdness.
   doxygen:
     name: Doxygen
-    runs-on: ubuntu-20.04 # This can run on whatever
+    runs-on: ubuntu-latest # This can run on whatever
     container:
-      image: 'gnuradio/ci-ubuntu-20.04-3.9:0.3'
+      image: 'gnuradio/ci:ubuntu-20.04-3.9'
       volumes:
         - build_data:/build
     steps:
@@ -37,7 +37,7 @@ jobs:
   linux-docker:
   # All of these shall depend on the formatting check (needs: check-formatting)
     needs: check-formatting
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     # The GH default is 360 minutes (it's also the max as of Feb-2021). However
     # we should fail sooner. The only reason to exceed this time is if a test
     # hangs.
@@ -53,16 +53,28 @@ jobs:
         include:
           - distro: 'Ubuntu 20.04'
             containerid: 'gnuradio/ci:ubuntu-20.04-3.9'
-            cxxflags: -Werror -Wno-error=deprecated-declarations
+            cxxflags: -Werror -Wno-error=deprecated-declarations -Wno-error=invalid-pch
+            ctest_args: '-E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
           - distro: 'Fedora 33'
             containerid: 'gnuradio/ci:fedora-33-3.9'
-            cxxflags: -Werror -Wno-error=deprecated-declarations
+            cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
+            ctest_args: '-E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
+          - distro: 'Fedora 34'
+            containerid: 'gnuradio/ci:fedora-34-3.9'
+            cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
+            ctest_args: '-E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
           - distro: 'CentOS 8.3'
             containerid: 'gnuradio/ci:centos-8.3-3.9'
-            cxxflags: -Werror -Wno-error=deprecated-declarations
+            cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
+            ctest_args: '-E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
           - distro: 'Debian 10'
-            containerid: 'gnuradio/ci-debian-10-3.9:1.0'
-            cxxflags: -Werror -Wno-error=deprecated-declarations
+            containerid: 'gnuradio/ci:debian-10-3.9'
+            cxxflags: -Werror -Wno-error=deprecated-declarations -Wno-error=invalid-pch
+            ctest_args: '-E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
+          - distro: 'Debian 11'
+            containerid: 'gnuradio/ci:debian-11-3.10'
+            cxxflags: -Werror -Wno-error=deprecated-declarations -Wno-error=invalid-pch
+            ctest_args: '-E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui|qa_polar_..coder_(sc_)?systematic"'
     name: ${{ matrix.distro }}
     container:
       image: ${{ matrix.containerid }}
@@ -79,4 +91,4 @@ jobs:
     - name: Make
       run: 'cd /build && make -j2 -k'
     - name: Make Test
-      run: 'cd /build && ctest --output-on-failure -E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
+      run: 'cd /build && ctest --output-on-failure ${{ matrix.ctest_args }}'
