@@ -54,7 +54,7 @@ jobs:
           - distro: 'Ubuntu 20.04'
             containerid: 'gnuradio/ci:ubuntu-20.04-3.9'
             cxxflags: -Werror -Wno-error=invalid-pch
-            ctest_args: '-E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
+            ctest_args: '-E "qa_agc|qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui|metainfo_test"'
           - distro: 'Fedora 33'
             containerid: 'gnuradio/ci:fedora-33-3.9'
             cxxflags: ''
