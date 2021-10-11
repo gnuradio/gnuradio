@@ -18,6 +18,9 @@
 static const char* __doc_gr_qtgui_ber_sink_b = R"doc()doc";
 
 
+static const char* __doc_gr_qtgui_ber_sink_b_qwidget = R"doc()doc";
+
+
 static const char* __doc_gr_qtgui_ber_sink_b_ber_sink_b_0 = R"doc()doc";
 
 
