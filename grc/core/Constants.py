@@ -116,24 +116,22 @@ ALIAS_TYPES = {
     'bits':    (1, GRC_COLOR_PURPLE_A100),
 }
 
-ALIAS_OF = {
-    'complex': 'fc32',
-    'float': 'f32',
-    'int': 's32',
-    'short': 's16',
-    'short': 'sc16',
-    'byte': 's8',
-    'byte': 'sc8',
-    'bits': 'bit',
+ALIASES_OF = {
+    'complex': {'fc32'},
+    'float': {'f32'},
+    'int': {'s32'},
+    'short': {'s16', 'sc16'},
+    'byte': {'s8', 'sc8'},
+    'bits': {'bit'},
 
-    'fc32': 'complex',
-    'f32': 'float',
-    's32': 'int',
-    's16': 'short',
-    'sc16': 'short',
-    's8': 'byte',
-    'sc8': 'byte',
-    'bit': 'bits',
+    'fc32': {'complex'},
+    'f32': {'float'},
+    's32': {'int'},
+    's16': {'short'},
+    'sc16': {'short'},
+    's8': {'byte'},
+    'sc8': {'byte'},
+    'bit': {'bits'},
 }
 
 TYPE_TO_SIZEOF = {key: sizeof for name, key, sizeof, color in CORE_TYPES}
