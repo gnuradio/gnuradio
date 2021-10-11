@@ -14,7 +14,6 @@
 
 #include "linear_equalizer_impl.h"
 #include <gnuradio/io_signature.h>
-#include <gnuradio/misc.h>
 #include <volk/volk.h>
 #include <memory>
 #include <vector>
