@@ -5,6 +5,7 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtCore import Qt
 
 from . import colors
+from ... import Constants
 from ....core.blocks.block import Block as CoreBlock
 
 # Logging
@@ -198,15 +199,29 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         return type(name, bases, namespace)
 
     def create_shapes_and_labels(self):
-        offset = 0
-        for source in self.sources:
-            source.y_offset += offset
-            offset += 20
+        bussified = self.current_bus_structure['source'], self.current_bus_structure['sink']
+        for ports, has_busses in zip((self.active_sources, self.active_sinks), bussified):
+            if not ports:
+                continue
+            port_separation = Constants.PORT_SEPARATION if not has_busses else ports[0].height + Constants.PORT_SPACING
+            offset = (self.height - (len(ports) - 1) * port_separation - ports[0].height) / 2
+            for port in ports:
+                port.create_shapes_and_labels()
+                '''
+                port.coordinate = {
+                    0: (+self.width, offset),
+                    90: (offset, -port.width),
+                    180: (-port.width, offset),
+                    270: (offset, +self.width),
+                }[port.connector_direction]
+                '''
+                if port._dir == "sink":
+                    port.setPos(-15, offset)
+                else:
+                    port.setPos(self.width, offset)
 
-        offset = 0
-        for sink in self.sinks:
-            sink.y_offset += offset
-            offset += 20
+                offset += Constants.PORT_SEPARATION if not has_busses else port.height + Constants.PORT_SPACING
+
 
         # figure out height of block based on how many params there are
         i = 30
@@ -235,16 +250,6 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                     largest_width = fm.width(name + ': ') # the keys need a little more margin
         self.width = largest_width*2 + 15 # the *2 is because we only measured half the width, the + 15 is margin
 
-
-        offset = 0
-        for sink in self.sinks:
-            sink.moveBy(0, 15+offset)
-            offset += 20
-        offset = 0
-
-        for source in self.sources:
-            source.moveBy(0, 15+offset)
-            offset += 20
 
         self._update_colors()
         self.create_port_labels()
