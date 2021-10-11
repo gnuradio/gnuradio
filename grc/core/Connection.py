@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from __future__ import absolute_import
 
 from .base import Element
-from .Constants import ALIAS_OF
+from .Constants import ALIASES_OF
 from .utils.descriptors import lazy_property
 
 
@@ -105,7 +105,7 @@ class Connection(Element):
 
         source_dtype = self.source_port.dtype
         sink_dtype = self.sink_port.dtype
-        if source_dtype != sink_dtype and source_dtype != ALIAS_OF.get(sink_dtype):
+        if source_dtype != sink_dtype and source_dtype not in ALIASES_OF.get(sink_dtype):
             self.add_error_message('Source IO type "{}" does not match sink IO type "{}".'.format(source_dtype, sink_dtype))
 
         source_size = self.source_port.item_size
