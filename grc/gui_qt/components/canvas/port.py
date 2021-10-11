@@ -111,7 +111,6 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         """
         Draw the socket with a label.
         """
-        print("painting")
         if self.hidden:
             return
 
