@@ -44,21 +44,19 @@ class PropsDialog(QtWidgets.QDialog):
             for param in self._block.params.values():
                 if param.category == cat and param.hide != 'all':
                     qvb.addWidget(QtWidgets.QLabel(param.name), i, 0)
-                    if param.dtype == "enum":
+                    if param.dtype == "enum" or param.options:
                         dropdown = QtWidgets.QComboBox()
-                        dropdown.param = param
                         for opt in param.options.values():
                             dropdown.addItem(opt)
-                        qvb.addWidget(dropdown, i, 1)
-                        self.edit_params.append(dropdown)
-                    elif param.options:
-                        dropdown = QtWidgets.QComboBox()
+                        dropdown.param_values = list(param.options)
                         dropdown.param = param
-                        for opt in param.options.values():
-                            dropdown.addItem(opt)
-                        dropdown.setEditable(True)
                         qvb.addWidget(dropdown, i, 1)
                         self.edit_params.append(dropdown)
+                        if param.dtype == "enum":
+                            dropdown.setCurrentIndex(dropdown.param_values.index(param.get_value()))
+                        else:
+                            dropdown.setEditable(True)
+                            dropdown.setCurrentText(param.value)
                     else:
                         line_edit = QtWidgets.QLineEdit(param.value)
                         line_edit.param = param
