@@ -55,6 +55,12 @@ void bind_ber_sink_b(py::module& m)
         .def("exec_", &ber_sink_b::exec_, D(ber_sink_b, exec_))
 
 
+        .def(
+            "qwidget",
+            [](ber_sink_b& self) { return reinterpret_cast<uintptr_t>(self.qwidget()); },
+            D(ber_sink_b, qwidget))
+
+
         .def("set_y_axis",
              &ber_sink_b::set_y_axis,
              py::arg("min"),
