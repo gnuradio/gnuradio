@@ -66,6 +66,12 @@ void bind_time_sink_c(py::module& m)
             D(time_sink_c, qwidget))
 
 
+        .def(
+            "pyqwidget",
+            [](time_sink_c& self) { return reinterpret_cast<uintptr_t>(self.qwidget()); },
+            D(time_sink_c, qwidget))
+
+
         .def("set_y_axis",
              &time_sink_c::set_y_axis,
              py::arg("min"),

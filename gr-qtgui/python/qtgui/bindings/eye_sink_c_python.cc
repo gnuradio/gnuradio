@@ -65,6 +65,12 @@ void bind_eye_sink_c(py::module& m)
             D(eye_sink_c, qwidget))
 
 
+        .def(
+            "pyqwidget",
+            [](eye_sink_c& self) { return reinterpret_cast<uintptr_t>(self.qwidget()); },
+            D(eye_sink_c, qwidget))
+
+
         .def("set_y_axis",
              &eye_sink_c::set_y_axis,
              py::arg("min"),

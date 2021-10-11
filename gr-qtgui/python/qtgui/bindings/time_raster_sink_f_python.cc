@@ -69,6 +69,14 @@ void bind_time_raster_sink_f(py::module& m)
             D(time_raster_sink_f, qwidget))
 
 
+        .def(
+            "pyqwidget",
+            [](time_raster_sink_f& self) {
+                return reinterpret_cast<uintptr_t>(self.qwidget());
+            },
+            D(time_raster_sink_f, qwidget))
+
+
         .def("set_x_range",
              &time_raster_sink_f::set_x_range,
              py::arg("min"),

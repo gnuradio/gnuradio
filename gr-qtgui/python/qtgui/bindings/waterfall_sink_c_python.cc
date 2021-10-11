@@ -68,6 +68,14 @@ void bind_waterfall_sink_c(py::module& m)
             D(waterfall_sink_c, qwidget))
 
 
+        .def(
+            "pyqwidget",
+            [](waterfall_sink_c& self) {
+                return reinterpret_cast<uintptr_t>(self.qwidget());
+            },
+            D(waterfall_sink_c, qwidget))
+
+
         .def("clear_data", &waterfall_sink_c::clear_data, D(waterfall_sink_c, clear_data))
 
 
