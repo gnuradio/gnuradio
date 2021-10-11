@@ -28,8 +28,8 @@ dds_control::sptr dds_control::make(const std::string& uri,
                                     std::vector<float> phases,
                                     std::vector<float> scales)
 {
-    return gnuradio::get_initial_sptr(
-        new dds_control_impl(uri, enabled, frequencies, phases, scales));
+    return gnuradio::make_block_sptr<dds_control_impl>(
+        uri, enabled, frequencies, phases, scales);
 }
 
 /*

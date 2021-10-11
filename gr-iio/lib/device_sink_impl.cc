@@ -53,15 +53,15 @@ device_sink::sptr device_sink::make_from(iio_context* ctx,
                                          unsigned int interpolation,
                                          bool cyclic)
 {
-    return gnuradio::get_initial_sptr(new device_sink_impl(ctx,
-                                                           false,
-                                                           device,
-                                                           channels,
-                                                           device_phy,
-                                                           params,
-                                                           buffer_size,
-                                                           interpolation,
-                                                           cyclic));
+    return gnuradio::make_block_sptr<device_sink_impl>(ctx,
+                                                       false,
+                                                       device,
+                                                       channels,
+                                                       device_phy,
+                                                       params,
+                                                       buffer_size,
+                                                       interpolation,
+                                                       cyclic);
 }
 
 void device_sink_impl::set_params(const std::vector<std::string>& params)

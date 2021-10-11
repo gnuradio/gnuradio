@@ -25,8 +25,7 @@ attr_updater::sptr attr_updater::make(const std::string attribute,
                                       const std::string value,
                                       unsigned int interval_ms)
 {
-    return gnuradio::get_initial_sptr(
-        new attr_updater_impl(attribute, value, interval_ms));
+    return gnuradio::make_block_sptr<attr_updater_impl>(attribute, value, interval_ms);
 }
 
 /*
