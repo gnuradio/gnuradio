@@ -26,8 +26,7 @@ attr_sink::sptr attr_sink::make(const std::string& uri,
                                 attr_type_t type,
                                 bool output)
 {
-    return gnuradio::get_initial_sptr(
-        new attr_sink_impl(uri, device, channel, type, output));
+    return gnuradio::make_block_sptr<attr_sink_impl>(uri, device, channel, type, output);
 }
 
 /*

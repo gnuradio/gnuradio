@@ -34,8 +34,8 @@ typename fmcomms2_sink<T>::sptr fmcomms2_sink<T>::make(const std::string& uri,
                                                        unsigned long buffer_size,
                                                        bool cyclic)
 {
-    return gnuradio::get_initial_sptr(new fmcomms2_sink_impl<T>(
-        device_source_impl::get_context(uri), ch_en, buffer_size, cyclic));
+    return gnuradio::make_block_sptr<fmcomms2_sink_impl<T>>(
+        device_source_impl::get_context(uri), ch_en, buffer_size, cyclic);
 }
 
 template <typename T>

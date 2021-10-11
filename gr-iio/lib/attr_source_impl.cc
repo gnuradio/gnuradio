@@ -35,16 +35,16 @@ attr_source::sptr attr_source::make(const std::string& uri,
                                     bool output,
                                     uint32_t address)
 {
-    return gnuradio::get_initial_sptr(new attr_source_impl(uri,
-                                                           device,
-                                                           channel,
-                                                           attribute,
-                                                           update_interval_ms,
-                                                           samples_per_update,
-                                                           data_type,
-                                                           attr_type,
-                                                           output,
-                                                           address));
+    return gnuradio::make_block_sptr<attr_source_impl>(uri,
+                                                       device,
+                                                       channel,
+                                                       attribute,
+                                                       update_interval_ms,
+                                                       samples_per_update,
+                                                       data_type,
+                                                       attr_type,
+                                                       output,
+                                                       address);
 }
 
 size_t attr_source_impl::type_sizeof(data_type_t data_type, attr_type_t attr_type)
