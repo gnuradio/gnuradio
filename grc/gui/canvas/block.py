@@ -15,10 +15,6 @@ from gi.repository import Gtk, Pango, PangoCairo
 from . import colors
 from .drawable import Drawable
 from .. import Actions, Utils, Constants
-from ..Constants import (
-    BLOCK_LABEL_PADDING, PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
-    PORT_BORDER_SEPARATION, BLOCK_FONT, PARAM_FONT
-)
 from ...core import utils
 from ...core.blocks import Block as CoreBlock
 
@@ -141,7 +137,7 @@ class Block(CoreBlock, Drawable):
         for ports, has_busses in zip((self.active_sources, self.active_sinks), bussified):
             if not ports:
                 continue
-            port_separation = PORT_SEPARATION if not has_busses else ports[0].height + PORT_SPACING
+            port_separation = Constants.PORT_SEPARATION if not has_busses else ports[0].height + Constants.PORT_SPACING
             offset = (self.height - (len(ports) - 1) * port_separation - ports[0].height) / 2
             for port in ports:
                 port.create_shapes()
@@ -152,7 +148,7 @@ class Block(CoreBlock, Drawable):
                     270: (offset, +self.width),
                 }[port.connector_direction]
 
-                offset += PORT_SEPARATION if not has_busses else port.height + PORT_SPACING
+                offset += Constants.PORT_SEPARATION if not has_busses else port.height + Constants.PORT_SPACING
 
     def create_labels(self, cr=None):
         """Create the labels for the signal block."""
@@ -169,7 +165,7 @@ class Block(CoreBlock, Drawable):
 
         title_layout.set_markup(
             '<span {foreground} font_desc="{font}"><b>{label}</b></span>'.format(
-                foreground='foreground="red"' if not self.is_valid() else '', font=BLOCK_FONT,
+                foreground='foreground="red"' if not self.is_valid() else '', font=Constants.BLOCK_FONT,
                 label=Utils.encode(self.label)
             )
         )
@@ -182,31 +178,31 @@ class Block(CoreBlock, Drawable):
             markups = [param.format_block_surface_markup()
                        for param in self.params.values() if (param.hide not in ('all', 'part') or (param.dtype == 'id' and force_show_id))]
         else:
-            markups = ['<span font_desc="{font}"><b>key: </b>{key}</span>'.format(font=PARAM_FONT, key=self.key)]
+            markups = ['<span font_desc="{font}"><b>key: </b>{key}</span>'.format(font=Constants.PARAM_FONT, key=self.key)]
 
-        params_layout.set_spacing(LABEL_SEPARATION * Pango.SCALE)
+        params_layout.set_spacing(Constants.LABEL_SEPARATION * Pango.SCALE)
         params_layout.set_markup('\n'.join(markups))
         params_width, params_height = params_layout.get_size() if markups else (0, 0)
 
         label_width = max(title_width, params_width) / Pango.SCALE
         label_height = title_height / Pango.SCALE
         if markups:
-            label_height += LABEL_SEPARATION + params_height / Pango.SCALE
+            label_height += Constants.LABEL_SEPARATION + params_height / Pango.SCALE
 
         # calculate width and height needed
-        width = label_width + 2 * BLOCK_LABEL_PADDING
-        height = label_height + 2 * BLOCK_LABEL_PADDING
+        width = label_width + 2 * Constants.BLOCK_LABEL_PADDING
+        height = label_height + 2 * Constants.BLOCK_LABEL_PADDING
 
         self._update_colors()
         self.create_port_labels()
 
         def get_min_height_for_ports(ports):
-            min_height = 2 * PORT_BORDER_SEPARATION + len(ports) * PORT_SEPARATION
+            min_height = 2 * Constants.PORT_BORDER_SEPARATION + len(ports) * Constants.PORT_SEPARATION
             # If any of the ports are bus ports - make the min height larger
             if any([p.dtype == 'bus' for p in ports]):
-                min_height = 2 * PORT_BORDER_SEPARATION + sum(
-                    port.height + PORT_SPACING for port in ports if port.dtype == 'bus'
-                    ) - PORT_SPACING
+                min_height = 2 * Constants.PORT_BORDER_SEPARATION + sum(
+                    port.height + Constants.PORT_SPACING for port in ports if port.dtype == 'bus'
+                    ) - Constants.PORT_SPACING
 
             else:
                 if ports:
@@ -221,7 +217,7 @@ class Block(CoreBlock, Drawable):
 
         self._surface_layouts_offsets = [
             (0, (height - label_height) / 2.0),
-            (0, (height - label_height) / 2.0 + LABEL_SEPARATION + title_height / Pango.SCALE)
+            (0, (height - label_height) / 2.0 + Constants.LABEL_SEPARATION + title_height / Pango.SCALE)
         ]
 
         title_layout.set_width(width * Pango.SCALE)
@@ -247,7 +243,7 @@ class Block(CoreBlock, Drawable):
             complexity = utils.flow_graph_complexity.calculate(self.parent)
             markups.append(
                 '<span foreground="#444" size="medium" font_desc="{font}">'
-                '<b>Complexity: {num}bal</b></span>'.format(num=Utils.num_to_str(complexity), font=BLOCK_FONT)
+                '<b>Complexity: {num}bal</b></span>'.format(num=Utils.num_to_str(complexity), font=Constants.BLOCK_FONT)
             )
         comment = self.comment  # Returns None if there are no comments
         if comment:
@@ -255,7 +251,7 @@ class Block(CoreBlock, Drawable):
                 markups.append('<span></span>')
 
             markups.append('<span foreground="{foreground}" font_desc="{font}">{comment}</span>'.format(
-                foreground='#444' if self.enabled else '#888', font=BLOCK_FONT, comment=Utils.encode(comment)
+                foreground='#444' if self.enabled else '#888', font=Constants.BLOCK_FONT, comment=Utils.encode(comment)
             ))
         if markups:
             layout = self._comment_layout = Gtk.DrawingArea().create_pango_layout('')
@@ -319,9 +315,9 @@ class Block(CoreBlock, Drawable):
         x, y = self.coordinate
 
         if self.is_horizontal():
-            y += self.height + BLOCK_LABEL_PADDING
+            y += self.height + Constants.BLOCK_LABEL_PADDING
         else:
-            x += self.height + BLOCK_LABEL_PADDING
+            x += self.height + Constants.BLOCK_LABEL_PADDING
 
         cr.save()
         cr.translate(x, y)
@@ -343,9 +339,9 @@ class Block(CoreBlock, Drawable):
         if not self._comment_layout:
             return x, y, x, y
         if self.is_horizontal():
-            y += self.height + BLOCK_LABEL_PADDING
+            y += self.height + Constants.BLOCK_LABEL_PADDING
         else:
-            x += self.height + BLOCK_LABEL_PADDING
+            x += self.height + Constants.BLOCK_LABEL_PADDING
         w, h = self._comment_layout.get_pixel_size()
         return x, y, x + w, y + h
 
