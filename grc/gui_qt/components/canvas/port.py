@@ -34,9 +34,11 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         Create list of connector coordinates.
         """
         self._parent = parent
-        CorePort.__init__(self, parent, direction, **n)
+        super(self.__class__, self).__init__(parent, direction, **n)
+        #CorePort.__init__(self, parent, direction, **n)
         QtWidgets.QGraphicsItem.__init__(self)
         self.y_offset = 0
+        self.height = 15.0
         self.setZValue(100)
         """
         if self._dir == "sink":
@@ -66,10 +68,7 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
 
     def create_shapes(self):
         """Create new areas and labels for the port."""
-        if self._dir == "sink":
-            self.setPos(-15, 15.0)
-        else:
-            self.setPos(self.parent_block.width, 15.0)
+        pass
 
     def create_labels(self, cr=None):
         """Create the labels for the socket."""
