@@ -59,6 +59,19 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         self.newConnection = None
         self.startPort = None
 
+    def update(self):
+        """
+        Call the top level rewrite and validate.
+        Call the top level create labels and shapes.  
+        """
+        self.rewrite()
+        self.validate()
+        for block in self.blocks:
+            block.create_shapes_and_labels()
+        #self.update_elements_to_draw()
+        #self.create_labels()
+        #self.create_shapes()
+
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls:
             event.setDropAction(Qt.CopyAction)
@@ -140,6 +153,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 block.params['id'].set_value(id)
                 self.addItem(block)
                 block.moveToTop()
+                self.update()
 
                 event.setDropAction(Qt.CopyAction)
                 event.accept()
