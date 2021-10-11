@@ -60,7 +60,7 @@ public:
     bool check_topology(int ninputs, int noutputs) override;
 
     void exec_() override;
-    QWidget* qwidget();
+    QWidget* qwidget() override;
 
     void set_y_axis(double min, double max) override;
     void set_x_axis(double min, double max) override;
