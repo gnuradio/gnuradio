@@ -68,6 +68,14 @@ void bind_vector_sink_f(py::module& m)
             D(vector_sink_f, qwidget))
 
 
+        .def(
+            "pyqwidget",
+            [](vector_sink_f& self) {
+                return reinterpret_cast<uintptr_t>(self.qwidget());
+            },
+            D(vector_sink_f, qwidget))
+
+
         .def("vlen", &vector_sink_f::vlen, D(vector_sink_f, vlen))
 
 

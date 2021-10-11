@@ -61,5 +61,13 @@ void bind_edit_box_msg(py::module& m)
             [](edit_box_msg& self) {
                 return reinterpret_cast<uintptr_t>(self.qwidget());
             },
+            D(edit_box_msg, qwidget))
+
+
+        .def(
+            "pyqwidget",
+            [](edit_box_msg& self) {
+                return reinterpret_cast<uintptr_t>(self.qwidget());
+            },
             D(edit_box_msg, qwidget));
 }

@@ -63,6 +63,12 @@ void bind_number_sink(py::module& m)
             D(number_sink, qwidget))
 
 
+        .def(
+            "pyqwidget",
+            [](number_sink& self) { return reinterpret_cast<uintptr_t>(self.qwidget()); },
+            D(number_sink, qwidget))
+
+
         .def("set_update_time",
              &number_sink::set_update_time,
              py::arg("t"),

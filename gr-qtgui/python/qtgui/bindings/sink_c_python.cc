@@ -65,6 +65,12 @@ void bind_sink_c(py::module& m)
             D(sink_c, qwidget))
 
 
+        .def(
+            "pyqwidget",
+            [](sink_c& self) { return reinterpret_cast<uintptr_t>(self.qwidget()); },
+            D(sink_c, qwidget))
+
+
         .def("set_fft_size",
              &sink_c::set_fft_size,
              py::arg("fftsize"),

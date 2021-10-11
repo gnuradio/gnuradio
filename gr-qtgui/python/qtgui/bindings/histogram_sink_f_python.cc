@@ -68,6 +68,14 @@ void bind_histogram_sink_f(py::module& m)
             D(histogram_sink_f, qwidget))
 
 
+        .def(
+            "pyqwidget",
+            [](histogram_sink_f& self) {
+                return reinterpret_cast<uintptr_t>(self.qwidget());
+            },
+            D(histogram_sink_f, qwidget))
+
+
         .def("title", &histogram_sink_f::title, D(histogram_sink_f, title))
 
 
