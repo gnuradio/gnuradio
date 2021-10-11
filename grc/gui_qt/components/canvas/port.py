@@ -12,6 +12,8 @@ import math
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtCore import Qt
 
+from . import colors
+from ... import Constants
 from ....core.utils.descriptors import nop_write
 from ....core.ports import Port as CorePort
 
@@ -31,14 +33,17 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         Port constructor.
         Create list of connector coordinates.
         """
+        self._parent = parent
         CorePort.__init__(self, parent, direction, **n)
-        QtWidgets.QGraphicsItem.__init__(self, parent)
+        QtWidgets.QGraphicsItem.__init__(self)
         self.y_offset = 0
         self.setZValue(100)
+        """
         if self._dir == "sink":
             self.setPos(-15, 0)
         else:
             self.setPos(parent.width, 0)
+        """
 
         if self._dir == "sink":
             self.connection_point = self.scenePos() + QtCore.QPointF(0.0, 15.0 / 2.0)
@@ -47,15 +52,8 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
 
         self.setFlag(QtWidgets.QGraphicsItem.ItemSendsScenePositionChanges)
 
-    def _update_colors(self):
-        """
-        Get the color that represents this port's type.
-        Codes differ for ports where the vec length is 1 or greater than 1.
-
-        Returns:
-            a hex color code.
-        """
-        pass
+        self._border_color = self._bg_color = colors.BLOCK_ENABLED_COLOR
+        self.parent_block.parent.addItem(self)
 
     def itemChange(self, change, value):
         if self._dir == "sink":
@@ -68,11 +66,42 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
 
     def create_shapes(self):
         """Create new areas and labels for the port."""
-        pass
+        if self._dir == "sink":
+            self.setPos(-15, 15.0)
+        else:
+            self.setPos(self.parent_block.width, 15.0)
 
     def create_labels(self, cr=None):
         """Create the labels for the socket."""
         pass
+
+    def create_shapes_and_labels(self):
+        self.create_shapes()
+        self._update_colors()
+
+    def _update_colors(self):
+        """
+        Get the color that represents this port's type.
+        Codes differ for ports where the vec length is 1 or greater than 1.
+        Returns:
+            a hex color code.
+        """
+        if not self.parent.enabled:
+            #self._font_color[-1] = 0.4
+            color = colors.BLOCK_DISABLED_COLOR
+        elif self.domain == Constants.GR_MESSAGE_DOMAIN:
+            color = colors.PORT_TYPE_TO_COLOR.get('message')
+        else:
+            #self._font_color[-1] = 1.0
+            color = colors.PORT_TYPE_TO_COLOR.get(self.dtype) or colors.PORT_TYPE_TO_COLOR.get('')
+            print(f"color: {color.red()} {color.green()} {color.blue()}")
+            print(f"dtype: {self.dtype}")
+            if self.vlen > 1:
+                dark = (0, 0, 30 / 255.0, 50 / 255.0, 70 / 255.0)[min(4, self.vlen)]
+                #color = tuple(max(c - dark, 0) for c in color)
+        self._bg_color = color
+        self._border_color = color
+        #self._border_color = tuple(max(c - 0.3, 0) for c in color)
 
     def boundingRect(self):
         x, y = tuple(self.parent.states['coordinate'])
@@ -82,13 +111,14 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         """
         Draw the socket with a label.
         """
+        print("painting")
         if self.hidden:
             return
 
         x, y = tuple(self.parent.states['coordinate'])
-        pen = QtGui.QPen(1)
+        pen = QtGui.QPen(self._border_color)
         painter.setPen(pen)
-        painter.setBrush(QtGui.QBrush(QtGui.QColor(0x03, 0xFC, 0xF8)))
+        painter.setBrush(QtGui.QBrush(self._bg_color))
 
         rect = QtCore.QRectF(0, 0, 15, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
         painter.drawRect(rect)

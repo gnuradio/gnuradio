@@ -4,6 +4,7 @@ import logging
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtCore import Qt
 
+from . import colors
 from ....core.blocks.block import Block as CoreBlock
 
 # Logging
@@ -225,7 +226,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         for key, item in self.params.items():
             name = item.name
             value = item.value
-            if value is not None:
+            if value is not None and item.hide == 'none':
                 if len(value) > LONG_VALUE:
                     value = value[:LONG_VALUE-3] + '...'
                 if fm.width(value) > largest_width:
@@ -234,9 +235,6 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                     largest_width = fm.width(name + ': ') # the keys need a little more margin
         self.width = largest_width*2 + 15 # the *2 is because we only measured half the width, the + 15 is margin
 
-        port_factory = self.parent.platform.make_port
-        self.sinks = [port_factory(parent=self, **params) for params in self.inputs_data]
-        self.sources = [port_factory(parent=self, **params) for params in self.outputs_data]
 
         offset = 0
         for sink in self.sinks:
@@ -248,12 +246,29 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
             source.moveBy(0, 15+offset)
             offset += 20
 
+        self._update_colors()
+        self.create_port_labels()
+
+    def create_port_labels(self):
+        for ports in (self.active_sinks, self.active_sources):
+            max_width = 0
+            for port in ports:
+                port.create_shapes_and_labels()
+                #max_width = max(max_width, port.width_with_label)
+            #for port in ports:
+            #    port.width = max_width
+
 
     #def __init__(self, block_key, block_label, attrib, params, parent):
     def __init__(self, parent, **n):
         #super(self.__class__, self).__init__(parent, **n)
         CoreBlock.__init__(self, parent)
         QtWidgets.QGraphicsItem.__init__(self)
+
+        for sink in self.sinks:
+            sink.setParentItem(self)
+        for source in self.sources:
+            source.setParentItem(self)
 
 
         #self.__dict__.update(attrib)
@@ -280,6 +295,39 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
 
+    def _update_colors(self):
+        def get_bg():
+            """
+            Get the background color for this block
+            Explicit is better than a chain of if/else expressions,
+            so this was extracted into a nested function.
+            """
+            if self.is_dummy_block:
+                return colors.MISSING_BLOCK_BACKGROUND_COLOR
+            if self.state == 'bypassed':
+                return colors.BLOCK_BYPASSED_COLOR
+            if self.state == 'enabled':
+                if self.deprecated:
+                    return colors.BLOCK_DEPRECATED_BACKGROUND_COLOR
+                return colors.BLOCK_ENABLED_COLOR
+            return colors.BLOCK_DISABLED_COLOR
+
+        def get_border():
+            """
+            Get the border color for this block
+            """
+            if self.is_dummy_block:
+                return colors.MISSING_BLOCK_BORDER_COLOR
+            if self.deprecated:
+                return colors.BLOCK_DEPRECATED_BORDER_COLOR
+            if self.state == 'enabled':
+                return colors.BORDER_COLOR
+            return colors.BORDER_COLOR_DISABLED
+
+        self._bg_color = get_bg()
+        #self._font_color[-1] = 1.0 if self.state == 'enabled' else 0.4
+        self._border_color = get_border()
+
     def paint(self, painter, option, widget):
         x,y = (self.x(), self.y())
         self.states['coordinate'] = (x,y)
@@ -291,27 +339,16 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         painter.setRenderHint(QtGui.QPainter.Antialiasing)
 
         # Draw main rectangle
-        if self.isSelected():
-            painter.setPen(QtGui.QPen(QtGui.QColor(0x42, 0xD4, 0xF5)))
-        else:
-            painter.setPen(QtGui.QPen(QtGui.QColor(0x00, 0x00, 0x00)))
-        painter.setBrush(QtGui.QBrush(QtGui.QColor(0xFA, 0xF8, 0xE0)))
-
         pen = QtGui.QPen(1)
         if self.isSelected():
-            pen = QtGui.QPen(QtGui.QColor(0x00, 0x00, 0xFF))
+            pen = QtGui.QPen(colors.HIGHLIGHT_COLOR)
         else:
-            pen = QtGui.QPen(QtGui.QColor(0x61, 0x61, 0x61))
+            pen = QtGui.QPen(self._border_color)
 
         pen.setWidth(3)
         painter.setPen(pen)
 
-        if self.state == 'enabled':
-            painter.setBrush(QtGui.QBrush(QtGui.QColor(0xF1, 0xEC, 0xFF)))
-        elif self.state == 'bypassed':
-            painter.setBrush(QtGui.QBrush(QtGui.QColor(0xF4, 0xFF, 0x81)))
-        else: # disabled
-            painter.setBrush(QtGui.QBrush(QtGui.QColor(0xCC, 0xCC, 0xCC)))
+        painter.setBrush(QtGui.QBrush(self._bg_color))
 
         ARC = 10
         painter.drawRoundedRect(0, 0, self.width, self.height, ARC, ARC);
