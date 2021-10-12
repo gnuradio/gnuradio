@@ -199,29 +199,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         return type(name, bases, namespace)
 
     def create_shapes_and_labels(self):
-        bussified = self.current_bus_structure['source'], self.current_bus_structure['sink']
-        for ports, has_busses in zip((self.active_sources, self.active_sinks), bussified):
-            if not ports:
-                continue
-            port_separation = Constants.PORT_SEPARATION if not has_busses else ports[0].height + Constants.PORT_SPACING
-            offset = (self.height - (len(ports) - 1) * port_separation - ports[0].height) / 2
-            for port in ports:
-                port.create_shapes_and_labels()
-                '''
-                port.coordinate = {
-                    0: (+self.width, offset),
-                    90: (offset, -port.width),
-                    180: (-port.width, offset),
-                    270: (offset, +self.width),
-                }[port.connector_direction]
-                '''
-                if port._dir == "sink":
-                    port.setPos(-15, offset)
-                else:
-                    port.setPos(self.width, offset)
-
-                offset += Constants.PORT_SEPARATION if not has_busses else port.height + Constants.PORT_SPACING
-
+        self.prepareGeometryChange()
 
         # figure out height of block based on how many params there are
         i = 30
@@ -233,8 +211,22 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
         self.height = i
 
+        def get_min_height_for_ports(ports):
+            min_height = 2 * Constants.PORT_BORDER_SEPARATION + len(ports) * Constants.PORT_SEPARATION
+            # If any of the ports are bus ports - make the min height larger
+            if any([p.dtype == 'bus' for p in ports]):
+                min_height = 2 * Constants.PORT_BORDER_SEPARATION + sum(
+                    port.height + Constants.PORT_SPACING for port in ports if port.dtype == 'bus'
+                    ) - Constants.PORT_SPACING
 
+            else:
+                if ports:
+                    min_height -= ports[-1].height
+            return min_height
 
+        self.height = max(self.height,
+                     get_min_height_for_ports(self.active_sinks),
+                     get_min_height_for_ports(self.active_sources))
         # figure out width of block based on widest line of text
         fm = QtGui.QFontMetrics(QtGui.QFont('Helvetica', 10))
         largest_width = fm.width(self.label)/1.5
@@ -250,6 +242,28 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                     largest_width = fm.width(name + ': ') # the keys need a little more margin
         self.width = largest_width*2 + 15 # the *2 is because we only measured half the width, the + 15 is margin
 
+        bussified = self.current_bus_structure['source'], self.current_bus_structure['sink']
+        for ports, has_busses in zip((self.active_sources, self.active_sinks), bussified):
+            if not ports:
+                continue
+            port_separation = Constants.PORT_SEPARATION if not has_busses else ports[0].height + Constants.PORT_SPACING
+            offset = (self.height - (len(ports) - 1) * port_separation - ports[0].height) / 2
+            for port in ports:
+                if port._dir == "sink":
+                    port.setPos(-15, offset)
+                else:
+                    port.setPos(self.width, offset)
+                port.create_shapes_and_labels()
+                '''
+                port.coordinate = {
+                    0: (+self.width, offset),
+                    90: (offset, -port.width),
+                    180: (-port.width, offset),
+                    270: (offset, +self.width),
+                }[port.connector_direction]
+                '''
+
+                offset += Constants.PORT_SEPARATION if not has_busses else port.height + Constants.PORT_SPACING
 
         self._update_colors()
         self.create_port_labels()

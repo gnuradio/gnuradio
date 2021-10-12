@@ -75,6 +75,8 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         pass
 
     def create_shapes_and_labels(self):
+        if not self.parentItem():
+            self.setParentItem(self.parent_block)
         self.create_shapes()
         self._update_colors()
 
