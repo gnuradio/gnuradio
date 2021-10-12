@@ -370,7 +370,7 @@ class FlowGraph(Element):
 
         if element in self.blocks:
             # Remove block, remove all involved connections
-            self.disconnect(*element.ports())
+            self.disconnect_ports(*element.ports())
             self.blocks.remove(element)
 
         elif element in self.connections:
