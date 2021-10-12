@@ -201,6 +201,7 @@ class Port(Element):
         Remove the index 0 of the master port name (and key9 if there are no more clones left
         """
         self.clones.remove(port)
+        self.parent_flowgraph.remove_element(port)
         # Remove index from master port name if there are no more clones
         if not self.clones:
             self.name = self._base_name

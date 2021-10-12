@@ -258,6 +258,10 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
              z_values.append(block.zValue())
         return max(z_values)
 
+    def remove_element(self, element):
+        self.removeItem(element)
+        super(FlowgraphScene, self).remove_element(element)
+
 
 class Flowgraph(QtWidgets.QGraphicsView, base.Component): # added base.Component so it can see platform
     def __init__(self, parent, filename=None):

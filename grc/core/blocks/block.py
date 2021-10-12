@@ -222,7 +222,7 @@ class Block(Element):
             nports = port.multiplicity
             for clone in port.clones[nports - 1:]:
                 # Remove excess connections
-                self.parent_flowgraph.disconnect(clone)
+                self.parent_flowgraph.disconnect_ports(clone)
                 port.remove_clone(clone)
                 ports.remove(clone)
             # Add more cloned ports
