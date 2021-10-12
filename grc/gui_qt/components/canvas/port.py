@@ -95,8 +95,6 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         else:
             #self._font_color[-1] = 1.0
             color = colors.PORT_TYPE_TO_COLOR.get(self.dtype) or colors.PORT_TYPE_TO_COLOR.get('')
-            print(f"color: {color.red()} {color.green()} {color.blue()}")
-            print(f"dtype: {self.dtype}")
             if self.vlen > 1:
                 dark = (0, 0, 30 / 255.0, 50 / 255.0, 70 / 255.0)[min(4, self.vlen)]
                 #color = tuple(max(c - dark, 0) for c in color)
