@@ -39,6 +39,7 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         QtWidgets.QGraphicsItem.__init__(self)
         self.y_offset = 0
         self.height = 15.0
+        self.width = 15.0
         self.setZValue(100)
         """
         if self._dir == "sink":
@@ -48,9 +49,9 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         """
 
         if self._dir == "sink":
-            self.connection_point = self.scenePos() + QtCore.QPointF(0.0, 15.0 / 2.0)
+            self.connection_point = self.scenePos() + QtCore.QPointF(0.0, self.height / 2.0)
         else:
-            self.connection_point = self.scenePos() + QtCore.QPointF(15.0, 15.0 / 2.0)
+            self.connection_point = self.scenePos() + QtCore.QPointF(15.0, self.height / 2.0)
 
         self.setFlag(QtWidgets.QGraphicsItem.ItemSendsScenePositionChanges)
 
@@ -59,20 +60,22 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
 
     def itemChange(self, change, value):
         if self._dir == "sink":
-            self.connection_point = self.scenePos() + QtCore.QPointF(0.0, 15.0 / 2.0)
+            self.connection_point = self.scenePos() + QtCore.QPointF(0.0, self.height / 2.0)
         else:
-            self.connection_point = self.scenePos() + QtCore.QPointF(15.0, 15.0 / 2.0)
+            self.connection_point = self.scenePos() + QtCore.QPointF(15.0, self.height / 2.0)
         for conn in self.connections():
             conn.updateLine()
         return QtWidgets.QGraphicsLineItem.itemChange(self, change, value)
 
     def create_shapes(self):
         """Create new areas and labels for the port."""
-        pass
+        fm = QtGui.QFontMetrics(QtGui.QFont('Helvetica', 8))
+        self.width = max(15, fm.width(self.name) * 1.5)
 
     def create_labels(self, cr=None):
         """Create the labels for the socket."""
         pass
+
 
     def create_shapes_and_labels(self):
         if not self.parentItem():
@@ -104,7 +107,7 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
 
     def boundingRect(self):
         x, y = tuple(self.parent.states['coordinate'])
-        return QtCore.QRectF(0, 0, 15, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
+        return QtCore.QRectF(0, 0, self.width, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
 
     def paint(self, painter, option, widget):
         """
@@ -112,12 +115,17 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         """
         if self.hidden:
             return
+        painter.setRenderHint(QtGui.QPainter.Antialiasing)
 
         x, y = tuple(self.parent.states['coordinate'])
         pen = QtGui.QPen(self._border_color)
         painter.setPen(pen)
         painter.setBrush(QtGui.QBrush(self._bg_color))
 
-        rect = QtCore.QRectF(0, 0, 15, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
+        rect = QtCore.QRectF(0, 0, self.width, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
         painter.drawRect(rect)
 
+        painter.setPen(QtGui.QPen(1))
+        font = QtGui.QFont('Helvetica', 8)
+        painter.setFont(font)
+        painter.drawText(QtCore.QRectF(0, 0, self.width, 15), Qt.AlignCenter, self.name)
