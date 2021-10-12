@@ -69,6 +69,11 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         library.setDragDropMode(QtWidgets.QAbstractItemView.DragOnly)
         #library.setColumnCount(1)
         library.setHeaderHidden(True)
+        # Expand categories with a single click
+        library.clicked.connect(lambda x:
+                library.collapse(library.currentIndex())
+                if library.isExpanded(library.currentIndex())
+                else library.expand(library.currentIndex()))
         #library.headerItem().setText(0, "Blocks")
         self._library = library
 
@@ -208,11 +213,11 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
             for name, obj in sorted(blocks.items()):
                 child_item = QtGui.QStandardItem()
                 child_item.setEditable(False)
-                if type(obj) is dict:
+                if type(obj) is dict: # It's a category
                     child_item.setText(name)
                     child_item.setDragEnabled(False) # categories should not be draggable
                     _populate(obj, child_item)
-                else:
+                else: # It's a block
                     child_item.setText(obj.label)
                     child_item.setDragEnabled(True)
                     child_item.setSelectable(True)
