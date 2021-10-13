@@ -272,8 +272,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions['copy'].setEnabled(False)
         actions['paste'].setEnabled(False)
         actions['delete'].setEnabled(False)
-        actions['rotate_ccw'].setEnabled(False)
-        actions['rotate_cw'].setEnabled(False)
         actions['errors'].setEnabled(False)
 
     def createMenus(self, actions, menus):
@@ -519,9 +517,11 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def rotate_ccw_triggered(self):
         log.debug('rotate_ccw')
+        self.flowgraph.scene.rotate_selected(-90)
 
     def rotate_cw_triggered(self):
         log.debug('rotate_cw')
+        self.flowgraph.scene.rotate_selected(90)
 
     def errors_triggered(self):
         log.debug('errors')
@@ -543,15 +543,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def enable_triggered(self):
         log.debug('enable')
-        for block in self.flowgraph.scene.selectedItems():
-            # TODO: Don't enable connections
+        for block in self.selected_blocks():
             block.state = 'enabled'
             block.update()
 
     def disable_triggered(self):
         log.debug('disable')
-        for block in self.flowgraph.scene.selectedItems():
-            # TODO: Don't disable connections
+        for block in self.selected_blocks():
             block.state = 'disabled'
             block.update()
 
