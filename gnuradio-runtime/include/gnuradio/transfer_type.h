@@ -8,15 +8,15 @@
  *
  */
 
-#ifndef INCLUDED_GR_RUNTIME_BUFFER_CONTEXT_H
-#define INCLUDED_GR_RUNTIME_BUFFER_CONTEXT_H
+#ifndef INCLUDED_GR_RUNTIME_TRANSFER_TYPE_H
+#define INCLUDED_GR_RUNTIME_TRANSFER_TYPE_H
 
 #include <gnuradio/api.h>
 #include <ostream>
 
 namespace gr {
 
-enum class buffer_context {
+enum class transfer_type {
     DEFAULT_INVALID,
     HOST_TO_DEVICE,
     DEVICE_TO_HOST,
@@ -24,7 +24,7 @@ enum class buffer_context {
     DEVICE_TO_DEVICE
 };
 
-GR_RUNTIME_API std::ostream& operator<<(std::ostream& os, const buffer_context& context);
+GR_RUNTIME_API std::ostream& operator<<(std::ostream& os, const transfer_type& type);
 } // namespace gr
 
 #endif

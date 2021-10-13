@@ -201,26 +201,26 @@ void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
         if (!src_grblock)
             throw std::runtime_error("connect_block_inputs found non-gr::block");
 
-        // In order to determine the buffer context, we need to examine both
+        // In order to determine the buffer's transfer type, we need to examine both
         // the upstream and the downstream buffer_types
         buffer_type src_buf_type =
             src_grblock->output_signature()->stream_buffer_type(src_port);
         buffer_type dest_buf_type =
             grblock->input_signature()->stream_buffer_type(dst_port);
 
-        buffer_context context;
+        transfer_type buf_xfer_type;
         if (src_buf_type == buffer_double_mapped::type &&
             dest_buf_type == buffer_double_mapped::type) {
-            context = buffer_context::HOST_TO_HOST;
+            buf_xfer_type = transfer_type::HOST_TO_HOST;
         } else if (src_buf_type != buffer_double_mapped::type &&
                    dest_buf_type == buffer_double_mapped::type) {
-            context = buffer_context::DEVICE_TO_HOST;
+            buf_xfer_type = transfer_type::DEVICE_TO_HOST;
         } else if (src_buf_type == buffer_double_mapped::type &&
                    dest_buf_type != buffer_double_mapped::type) {
-            context = buffer_context::HOST_TO_DEVICE;
+            buf_xfer_type = transfer_type::HOST_TO_DEVICE;
         } else if (src_buf_type != buffer_double_mapped::type &&
                    dest_buf_type != buffer_double_mapped::type) {
-            context = buffer_context::DEVICE_TO_DEVICE;
+            buf_xfer_type = transfer_type::DEVICE_TO_DEVICE;
         }
 
         buffer_sptr src_buffer;
@@ -255,12 +255,12 @@ void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
             }
         }
 
-        // Set buffer's context
-        src_buffer->set_context(context);
+        // Set buffer's transfer type
+        src_buffer->set_transfer_type(buf_xfer_type);
 
         std::ostringstream msg;
         msg << "Setting input " << dst_port << " from edge " << (*e).identifier()
-            << " context: " << context;
+            << " transfer type: " << buf_xfer_type;
         GR_LOG_DEBUG(d_debug_logger, msg.str());
 
         detail->set_input(dst_port,

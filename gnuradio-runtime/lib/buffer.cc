@@ -80,7 +80,7 @@ buffer::buffer(buffer_mapping_type buf_type,
       d_downstream_lcm_nitems(downstream_lcm_nitems),
       d_write_multiple(0),
       d_max_reader_output_multiple(downstream_max_out_mult),
-      d_context(buffer_context::DEFAULT_INVALID)
+      d_transfer_type(transfer_type::DEFAULT_INVALID)
 {
     gr::configure_default_loggers(d_logger, d_debug_logger, "buffer");
 
@@ -256,18 +256,20 @@ std::ostream& operator<<(std::ostream& os, const buffer& buf)
     return os;
 }
 
-void buffer::set_context(const buffer_context& context)
+void buffer::set_transfer_type(const transfer_type& type)
 {
-    if ((d_context == buffer_context::DEFAULT_INVALID) || (d_context == context)) {
-        // Set the context if the existing value is the default or if it is the
+    if ((d_transfer_type == transfer_type::DEFAULT_INVALID) ||
+        (d_transfer_type == type)) {
+        // Set the transfer type if the existing value is the default or if it is the
         // same as what's already been set
-        d_context = context;
+        d_transfer_type = type;
     } else {
-        // Otherwise error out as the context value cannot be changed after
+        // Otherwise error out as the transfer type value cannot be changed after
         // it is set
         std::ostringstream msg;
-        msg << "Block: " << link()->identifier() << " has context " << d_context
-            << " assigned. Cannot change to context " << context << ".";
+        msg << "Block: " << link()->identifier() << " has transfer type "
+            << d_transfer_type << " assigned. Cannot change to transfer type " << type
+            << ".";
         GR_LOG_ERROR(d_logger, msg.str());
         throw std::runtime_error(msg.str());
     }

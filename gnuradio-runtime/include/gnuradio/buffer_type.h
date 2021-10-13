@@ -106,7 +106,7 @@ protected:
 typedef const buffer_type_base& buffer_type;
 typedef std::vector<std::reference_wrapper<const buffer_type_base>> gr_vector_buffer_type;
 
-#define MAKE_CUSTOM_BUFFER_TYPE(CLASSNAME, FACTORY_FUNC_PTR)                      \
+#define DEFINE_CUSTOM_BUFFER_TYPE(CLASSNAME, FACTORY_FUNC_PTR)                    \
     class GR_RUNTIME_API buftype_##CLASSNAME : public buffer_type_base            \
     {                                                                             \
     public:                                                                       \

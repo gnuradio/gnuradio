@@ -49,7 +49,6 @@ public:
 
 private:
     friend class buffer;
-    friend class buffer_double_mapped;
     friend class buffer_single_mapped;
 
     friend GR_RUNTIME_API buffer_reader_sptr buffer_add_reader(buffer_sptr buf,
