@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -22,7 +23,6 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: ''
-    window_size: ''
   states:
     bus_sink: false
     bus_source: false
@@ -50,6 +50,7 @@ blocks:
     comment: ''
     const_points: digital.psk_2()[0]
     dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
     precision: '8'
     rot_sym: '2'
     soft_dec_lut: '''auto'''
@@ -95,6 +96,7 @@ blocks:
     comment: ''
     const_points: digital.psk_2()[0]
     dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
     precision: '8'
     rot_sym: '2'
     soft_dec_lut: '''auto'''
@@ -134,59 +136,6 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [24, 99]
-    rotation: 0
-    state: enabled
-- name: pdu_pdu_to_tagged_stream_0
-  id: pdu_pdu_to_tagged_stream
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    tag: packet_len
-    type: byte
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [312, 292.0]
-    rotation: 0
-    state: enabled
-- name: pdu_pdu_to_tagged_stream_0_0
-  id: pdu_pdu_to_tagged_stream
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    tag: packet_len
-    type: byte
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [312, 220.0]
-    rotation: 0
-    state: enabled
-- name: pdu_random_pdu_0
-  id: pdu_random_pdu
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    length_modulo: '1'
-    mask: '0xff'
-    maxoutbuf: '0'
-    maxsize: '50'
-    minoutbuf: '0'
-    minsize: '15'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [208, 83]
     rotation: 0
     state: enabled
 - name: blocks_repack_bits_bb_0
@@ -253,7 +202,7 @@ blocks:
   id: digital_burst_shaper_xx
   parameters:
     affinity: ''
-    alias: burst_shaper0
+    alias: ''
     comment: ''
     insert_phasing: 'True'
     length_tag_name: packet_len
@@ -400,6 +349,59 @@ blocks:
     coordinate: [1040, 292.0]
     rotation: 0
     state: enabled
+- name: pdu_pdu_to_tagged_stream_0
+  id: pdu_pdu_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: packet_len
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 292.0]
+    rotation: 0
+    state: enabled
+- name: pdu_pdu_to_tagged_stream_0_0
+  id: pdu_pdu_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: packet_len
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 220.0]
+    rotation: 0
+    state: enabled
+- name: pdu_random_pdu_0
+  id: pdu_random_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    length_modulo: '1'
+    mask: '0xff'
+    maxoutbuf: '0'
+    maxsize: '50'
+    minoutbuf: '0'
+    minsize: '15'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [208, 83]
+    rotation: 0
+    state: enabled
 - name: qtgui_freq_sink_x_0
   id: qtgui_freq_sink_x
   parameters:
@@ -452,6 +454,7 @@ blocks:
     minoutbuf: '0'
     name: '""'
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -497,16 +500,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -640,9 +643,6 @@ blocks:
 
 connections:
 - [blocks_message_strobe_0, strobe, pdu_random_pdu_0, generate]
-- [pdu_pdu_to_tagged_stream_0, '0', blocks_repack_bits_bb_0_0, '0']
-- [pdu_pdu_to_tagged_stream_0_0, '0', blocks_repack_bits_bb_0, '0']
-- [pdu_random_pdu_0, pdus, digital_crc32_async_bb_1, in]
 - [blocks_repack_bits_bb_0, '0', digital_map_bb_1, '0']
 - [blocks_repack_bits_bb_0_0, '0', digital_map_bb_1_0, '0']
 - [blocks_tagged_stream_mux_0, '0', digital_burst_shaper_xx_0, '0']
@@ -655,6 +655,9 @@ connections:
 - [digital_map_bb_1_0, '0', digital_chunks_to_symbols_xx_0_0, '0']
 - [digital_protocol_formatter_async_0, header, pdu_pdu_to_tagged_stream_0_0, pdus]
 - [digital_protocol_formatter_async_0, payload, pdu_pdu_to_tagged_stream_0, pdus]
+- [pdu_pdu_to_tagged_stream_0, '0', blocks_repack_bits_bb_0_0, '0']
+- [pdu_pdu_to_tagged_stream_0_0, '0', blocks_repack_bits_bb_0, '0']
+- [pdu_random_pdu_0, pdus, digital_crc32_async_bb_1, in]
 - [rx_mod_header, '0', blocks_tagged_stream_mux_0, '0']
 - [rx_mod_payload, '0', blocks_tagged_stream_mux_0, '1']
 
