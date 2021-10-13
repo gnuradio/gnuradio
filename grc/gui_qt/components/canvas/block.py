@@ -267,6 +267,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
         self._update_colors()
         self.create_port_labels()
+        self.setTransformOriginPoint(self.width / 2, self.height / 2)
 
     def create_port_labels(self):
         for ports in (self.active_sinks, self.active_sources):
@@ -421,6 +422,10 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         self.create_shapes_and_labels()
         x,y = tuple(states['coordinate'])
         self.setPos(x, y)
+
+    def rotate(self, rotation):
+        log.debug(f"Rotating {self.name}")
+        self.setRotation(self.rotation() + rotation)
 
     def moveToTop(self):
         # TODO: Is there a simpler way to do this?

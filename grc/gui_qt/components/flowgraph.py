@@ -38,6 +38,7 @@ from .canvas.port import Port
 from .canvas.connection import Connection
 from .. import base
 from ...core.FlowGraph import FlowGraph as CoreFlowgraph
+from .. import Utils
 
 # Logging
 log = logging.getLogger(__name__)
@@ -161,6 +162,43 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 return QtGui.QStandardItemModel.dropMimeData(self, data, action, row, column, parent)
         else:
             event.ignore()
+
+    def selected_blocks(self):
+        blocks = []
+        for item in self.selectedItems():
+            if item.is_block:
+                blocks.append(item)
+        return blocks
+
+    def rotate_selected(self, rotation):
+        """
+        Rotate the selected blocks by multiples of 90 degrees.
+        Args:
+            rotation: the rotation in degrees
+        Returns:
+            true if changed, otherwise false.
+        """
+        selected_blocks = self.selected_blocks()
+        if not any(selected_blocks):
+            return False
+        #initialize min and max coordinates
+        min_x, min_y = max_x, max_y = selected_blocks[0].x(),selected_blocks[0].y()
+        # rotate each selected block, and find min/max coordinate
+        for selected_block in selected_blocks:
+            selected_block.rotate(rotation)
+            #update the min/max coordinate
+            x, y = selected_block.x(),selected_block.y()
+            min_x, min_y = min(min_x, x), min(min_y, y)
+            max_x, max_y = max(max_x, x), max(max_y, y)
+        #calculate center point of selected blocks
+        ctr_x, ctr_y = (max_x + min_x)/2, (max_y + min_y)/2
+        #rotate the blocks around the center point
+        for selected_block in selected_blocks:
+            x, y = selected_block.x(),selected_block.y()
+            x, y = Utils.get_rotated_coordinate((x - ctr_x, y - ctr_y), rotation)
+            selected_block.setPos(x + ctr_x, y + ctr_y)
+        return True
+
 
     def mousePressEvent(self,  event):
         item = self.itemAt(event.scenePos(), QtGui.QTransform())
