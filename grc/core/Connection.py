@@ -93,7 +93,9 @@ class Connection(Element):
 
         source_dtype = self.source_port.dtype
         sink_dtype = self.sink_port.dtype
-        if source_dtype != sink_dtype and source_dtype not in ALIASES_OF.get(sink_dtype):
+        if source_dtype != sink_dtype and source_dtype not in ALIASES_OF.get(
+            sink_dtype, default=set()
+        ):
             self.add_error_message('Source IO type "{}" does not match sink IO type "{}".'.format(source_dtype, sink_dtype))
 
         source_size = self.source_port.item_size
