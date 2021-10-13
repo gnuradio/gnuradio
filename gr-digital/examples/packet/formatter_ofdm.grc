@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -22,8 +23,10 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: ''
-    window_size: ''
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 13]
     rotation: 0
     state: enabled
@@ -35,6 +38,9 @@ blocks:
     comment: ''
     value: '"frame_len"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [584, 13]
     rotation: 0
     state: enabled
@@ -45,6 +51,9 @@ blocks:
     value: digital.header_format_ofdm(occupied_carriers, 1, len_key, frame_key, num_key,
       header_mod.bits_per_symbol(), payload_mod.bits_per_symbol(), scramble)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [192, 12.0]
     rotation: 0
     state: enabled
@@ -57,6 +66,9 @@ blocks:
     value: digital.header_format_ofdm(occupied_carriers, 1, len_key, frame_key, num_key,
       header_mod.bits_per_symbol(), payload_mod.bits_per_symbol(), scramble)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [296, 477]
     rotation: 0
     state: enabled
@@ -74,6 +86,9 @@ blocks:
     w_imag_sect: '1'
     w_real_sect: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [944, 11]
     rotation: 0
     state: enabled
@@ -83,6 +98,9 @@ blocks:
     comment: ''
     value: '"packet_len"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [352, 13]
     rotation: 0
     state: enabled
@@ -92,6 +110,9 @@ blocks:
     comment: ''
     value: '"packet_num"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [464, 13]
     rotation: 0
     state: enabled
@@ -99,9 +120,12 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: (range(-26, -21) + range(-20, -7) + range(-6, 0) + range(1, 7) + range(8,
-      21) + range(22, 27),)
+    value: (list(range(-26, -21)) + list(range(-20, -7)) + list(range(-6, 0)) + list(range(1,
+      7)) + list(range(8, 21)) + list(range(22, 27)),)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [784, 13]
     rotation: 0
     state: enabled
@@ -119,6 +143,9 @@ blocks:
     w_imag_sect: '1'
     w_real_sect: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1128, 11]
     rotation: 0
     state: enabled
@@ -128,6 +155,9 @@ blocks:
     comment: ''
     value: 'False'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [696, 13]
     rotation: 0
     state: enabled
@@ -137,7 +167,11 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
+    en_uvec: 'True'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [952, 225]
     rotation: 0
     state: disabled
@@ -147,7 +181,11 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
+    en_uvec: 'True'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [760, 105]
     rotation: 0
     state: enabled
@@ -157,7 +195,11 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
+    en_uvec: 'True'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [992, 425]
     rotation: 0
     state: enabled
@@ -172,51 +214,10 @@ blocks:
     msg: pmt.PMT_T
     period: '2000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [24, 293]
-    rotation: 0
-    state: enabled
-- name: pdu_pdu_to_tagged_stream_0
-  id: pdu_pdu_to_tagged_stream
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    tag: len_key
-    type: byte
-  states:
-    coordinate: [56, 132]
-    rotation: 0
-    state: enabled
-- name: pdu_pdu_to_tagged_stream_0_0
-  id: pdu_pdu_to_tagged_stream
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    tag: len_key
-    type: byte
-  states:
-    coordinate: [64, 420]
-    rotation: 0
-    state: enabled
-- name: pdu_random_pdu_0
-  id: pdu_random_pdu
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    length_modulo: '1'
-    mask: '0xff'
-    maxoutbuf: '0'
-    maxsize: '50'
-    minoutbuf: '0'
-    minsize: '50'
-  states:
-    coordinate: [200, 279]
     rotation: 0
     state: enabled
 - name: blocks_repack_bits_bb_0
@@ -233,6 +234,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [288, 125]
     rotation: 0
     state: enabled
@@ -250,6 +254,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [544, 413]
     rotation: 0
     state: enabled
@@ -266,6 +273,9 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [752, 502]
     rotation: 0
     state: disabled
@@ -279,6 +289,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [424, 300]
     rotation: 0
     state: enabled
@@ -292,6 +305,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [616, 289]
     rotation: 0
     state: enabled
@@ -306,6 +322,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [296, 413]
     rotation: 0
     state: enabled
@@ -319,6 +338,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [496, 132]
     rotation: 0
     state: enabled
@@ -332,25 +354,81 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [752, 420]
+    rotation: 0
+    state: enabled
+- name: pdu_pdu_to_tagged_stream_0
+  id: pdu_pdu_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: len_key
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [56, 132]
+    rotation: 0
+    state: enabled
+- name: pdu_pdu_to_tagged_stream_0_0
+  id: pdu_pdu_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: len_key
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [64, 420]
+    rotation: 0
+    state: enabled
+- name: pdu_random_pdu_0
+  id: pdu_random_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    length_modulo: '1'
+    mask: '0xff'
+    maxoutbuf: '0'
+    maxsize: '50'
+    minoutbuf: '0'
+    minsize: '50'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [200, 279]
     rotation: 0
     state: enabled
 
 connections:
 - [blocks_message_strobe_0, strobe, pdu_random_pdu_0, generate]
-- [pdu_pdu_to_tagged_stream_0, '0', blocks_repack_bits_bb_0, '0']
-- [pdu_pdu_to_tagged_stream_0_0, '0', digital_protocol_formatter_bb_0, '0']
-- [pdu_random_pdu_0, pdus, digital_crc32_async_bb_1, in]
 - [blocks_repack_bits_bb_0, '0', digital_protocol_parser_b_0, '0']
 - [blocks_repack_bits_bb_0_0, '0', blocks_tag_debug_0, '0']
 - [blocks_repack_bits_bb_0_0, '0', digital_protocol_parser_b_0_0, '0']
-- [digital_crc32_async_bb_1, out, pdu_pdu_to_tagged_stream_0_0, pdus]
 - [digital_crc32_async_bb_1, out, digital_protocol_formatter_async_0, in]
+- [digital_crc32_async_bb_1, out, pdu_pdu_to_tagged_stream_0_0, pdus]
 - [digital_protocol_formatter_async_0, header, blocks_message_debug_0, print_pdu]
 - [digital_protocol_formatter_async_0, header, pdu_pdu_to_tagged_stream_0, pdus]
 - [digital_protocol_formatter_bb_0, '0', blocks_repack_bits_bb_0_0, '0']
 - [digital_protocol_parser_b_0, info, blocks_message_debug_0_0, print]
 - [digital_protocol_parser_b_0_0, info, blocks_message_debug_0_0_0, print]
+- [pdu_pdu_to_tagged_stream_0, '0', blocks_repack_bits_bb_0, '0']
+- [pdu_pdu_to_tagged_stream_0_0, '0', digital_protocol_formatter_bb_0, '0']
+- [pdu_random_pdu_0, pdus, digital_crc32_async_bb_1, in]
 
 metadata:
   file_format: 1
