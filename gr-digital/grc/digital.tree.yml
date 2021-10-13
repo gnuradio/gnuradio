@@ -67,5 +67,6 @@
   - digital_pn_correlator_cc
   - digital_symbol_sync_xx
   - digital_corr_est_cc
+  - digital_pfb_clock_sync_xxx
 - Waveform Generators:
   - digital_glfsr_source_x
