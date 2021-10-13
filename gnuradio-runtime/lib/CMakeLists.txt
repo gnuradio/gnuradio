@@ -55,7 +55,6 @@ add_library(gnuradio-runtime
   block_gateway_impl.cc
   block_registry.cc
   buffer.cc
-  buffer_context.cc
   buffer_double_mapped.cc
   buffer_reader.cc
   buffer_reader_sm.cc
@@ -92,6 +91,7 @@ add_library(gnuradio-runtime
   top_block_impl.cc
   tpb_detail.cc
   tpb_thread_body.cc
+  transfer_type.cc
   vmcircbuf.cc
   vmcircbuf_createfilemapping.cc
   vmcircbuf_mmap_shm_open.cc

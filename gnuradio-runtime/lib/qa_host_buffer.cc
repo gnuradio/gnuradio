@@ -13,10 +13,10 @@
 #endif
 
 #include <gnuradio/block.h>
-#include <gnuradio/buffer_context.h>
 #include <gnuradio/buffer_reader.h>
 #include <gnuradio/host_buffer.h>
 #include <gnuradio/random.h>
+#include <gnuradio/transfer_type.h>
 #include <boost/test/unit_test.hpp>
 #include <cstdlib>
 #include <iostream>
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(t0)
 
     gr::buffer_sptr buf(
         gr::host_buffer::make_host_buffer(nitems, sizeof(int), nitems, 1, nop, nop));
-    buf->set_context(gr::buffer_context::HOST_TO_HOST);
+    buf->set_transfer_type(gr::transfer_type::HOST_TO_HOST);
 
     gr::buffer_reader_sptr rdr1(gr::buffer_add_reader(buf, 0, nop));
 
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(t1)
 
     gr::buffer_sptr buf(
         gr::host_buffer::make_host_buffer(nitems, sizeof(int), nitems, 1, nop, nop));
-    buf->set_context(gr::buffer_context::HOST_TO_HOST);
+    buf->set_transfer_type(gr::transfer_type::HOST_TO_HOST);
 
     gr::buffer_reader_sptr rdr1(gr::buffer_add_reader(buf, 0, nop));
 
@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE(t2)
 
     gr::buffer_sptr buf(
         gr::host_buffer::make_host_buffer(nitems, sizeof(int), nitems, 1, nop, nop));
-    buf->set_context(gr::buffer_context::HOST_TO_HOST);
+    buf->set_transfer_type(gr::transfer_type::HOST_TO_HOST);
 
     gr::buffer_reader_sptr rdr1(gr::buffer_add_reader(buf, 0, nop));
 
@@ -198,7 +198,7 @@ BOOST_AUTO_TEST_CASE(t3)
 
     gr::buffer_sptr buf(
         gr::host_buffer::make_host_buffer(nitems, sizeof(int), nitems, 1, nop, nop));
-    buf->set_context(gr::buffer_context::HOST_TO_HOST);
+    buf->set_transfer_type(gr::transfer_type::HOST_TO_HOST);
 
     gr::buffer_reader_sptr rdr1(gr::buffer_add_reader(buf, 0, nop));
     gr::buffer_reader_sptr rdr2(gr::buffer_add_reader(buf, 0, nop));
@@ -249,7 +249,7 @@ BOOST_AUTO_TEST_CASE(t4)
 
     gr::buffer_sptr buf(
         gr::host_buffer::make_host_buffer(nitems, sizeof(int), nitems, 1, nop, nop));
-    buf->set_context(gr::buffer_context::HOST_TO_HOST);
+    buf->set_transfer_type(gr::transfer_type::HOST_TO_HOST);
 
     gr::buffer_reader_sptr rdr1(gr::buffer_add_reader(buf, 0, nop));
 
@@ -298,7 +298,7 @@ BOOST_AUTO_TEST_CASE(t5)
 
     gr::buffer_sptr buf(
         gr::host_buffer::make_host_buffer(nitems, sizeof(int), nitems, 1, nop, nop));
-    buf->set_context(gr::buffer_context::HOST_TO_HOST);
+    buf->set_transfer_type(gr::transfer_type::HOST_TO_HOST);
 
     gr::buffer_reader_sptr rdr1(gr::buffer_add_reader(buf, 0, nop));
 

@@ -12,12 +12,12 @@
 #define INCLUDED_GR_RUNTIME_BUFFER_H
 
 #include <gnuradio/api.h>
-#include <gnuradio/buffer_context.h>
 #include <gnuradio/custom_lock.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/tags.h>
 #include <gnuradio/thread/thread.h>
+#include <gnuradio/transfer_type.h>
 
 #include <boost/weak_ptr.hpp>
 #include <functional>
@@ -139,7 +139,7 @@ public:
 
     uint32_t get_max_reader_output_multiple() { return d_max_reader_output_multiple; }
 
-    virtual void update_reader_block_history(unsigned history, int delay)
+    virtual void update_reader_block_history(unsigned history, [[maybe_unused]] int delay)
     {
         d_max_reader_history = std::max(d_max_reader_history, history);
         d_has_history = (d_max_reader_history > 1);
@@ -198,7 +198,8 @@ public:
      * false otherwise. Note if input_blocked_callback is overridden then this
      * function should also be overridden.
      */
-    virtual bool input_blkd_cb_ready(int items_required, unsigned read_index)
+    virtual bool input_blkd_cb_ready([[maybe_unused]] int items_required,
+                                     [[maybe_unused]] unsigned read_index)
     {
         return false;
     }
@@ -207,8 +208,9 @@ public:
      * \brief Callback function that the scheduler will call when it determines
      * that the input is blocked. Override this function if needed.
      */
-    virtual bool
-    input_blocked_callback(int items_required, int items_avail, unsigned read_index)
+    virtual bool input_blocked_callback([[maybe_unused]] int items_required,
+                                        [[maybe_unused]] int items_avail,
+                                        [[maybe_unused]] unsigned read_index)
     {
         return false;
     }
@@ -219,13 +221,17 @@ public:
      * output_blocked_callback is overridden this function should also be
      * overridden.
      */
-    virtual bool output_blkd_cb_ready(int output_multiple) { return false; }
+    virtual bool output_blkd_cb_ready([[maybe_unused]] int output_multiple)
+    {
+        return false;
+    }
 
     /*!
      * \brief Callback function that the scheduler will call when it determines
      * that the output is blocked. Override this function if needed.
      */
-    virtual bool output_blocked_callback(int output_multiple, bool force = false)
+    virtual bool output_blocked_callback([[maybe_unused]] int output_multiple,
+                                         [[maybe_unused]] bool force = false)
     {
         return false;
     }
@@ -268,9 +274,9 @@ public:
     // -------------------------------------------------------------------------
 
     /*!
-     * \brief Assign buffer context
+     * \brief Assign buffer's transfer_type
      */
-    void set_context(const buffer_context& context);
+    void set_transfer_type(const transfer_type& type);
 
 private:
     friend class buffer_reader;
@@ -324,7 +330,7 @@ protected:
     uint64_t d_write_multiple;
     uint32_t d_max_reader_output_multiple;
 
-    buffer_context d_context;
+    transfer_type d_transfer_type;
 
     /*!
      * \brief  Increment read or write index for this buffer
@@ -336,7 +342,7 @@ protected:
      */
     virtual unsigned index_sub(unsigned a, unsigned b) = 0;
 
-    virtual bool allocate_buffer(int nitems) { return false; };
+    virtual bool allocate_buffer([[maybe_unused]] int nitems) { return false; };
 
     /*!
      * \brief constructor is private.  Use gr_make_buffer to create instances.

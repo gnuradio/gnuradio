@@ -33,7 +33,7 @@ GR_RUNTIME_API buffer_sptr make_buffer_double_mapped(int nitems,
                                                      block_sptr link = block_sptr(),
                                                      block_sptr buf_owner = block_sptr());
 
-MAKE_CUSTOM_BUFFER_TYPE(DEFAULT_NON_CUSTOM, make_buffer_double_mapped);
+DEFINE_CUSTOM_BUFFER_TYPE(DEFAULT_NON_CUSTOM, make_buffer_double_mapped);
 
 /*!
  * \brief Single writer, multiple reader fifo.
@@ -58,7 +58,7 @@ public:
      * Inherited from buffer class.
      * @param nitems is the number of items produced by the general_work() function.
      */
-    virtual void post_work(int nitems) {}
+    virtual void post_work([[maybe_unused]] int nitems) {}
 
 protected:
     /*!

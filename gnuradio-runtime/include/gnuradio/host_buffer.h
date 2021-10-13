@@ -119,7 +119,7 @@ private:
 
 // See buffer_type.h for details on this macro. It is used here to generate
 // compile-time class representing the host_buffer classes "type".
-MAKE_CUSTOM_BUFFER_TYPE(HOST_BUFFER, &host_buffer::make_host_buffer);
+DEFINE_CUSTOM_BUFFER_TYPE(HOST_BUFFER, &host_buffer::make_host_buffer);
 
 } // namespace gr
 
