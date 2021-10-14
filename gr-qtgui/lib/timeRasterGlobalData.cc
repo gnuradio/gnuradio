@@ -132,13 +132,6 @@ void TimeRasterData::setRange(const QwtDoubleInterval& newRange)
 {
     d_intensityRange = newRange;
 }
-#else
-void TimeRasterData::setInterval(Qt::Axis axis, const QwtInterval& interval)
-{
-    d_intervals[axis] = interval;
-}
-
-QwtInterval TimeRasterData::interval(Qt::Axis a) const { return d_intervals[a]; }
 
 #endif
 

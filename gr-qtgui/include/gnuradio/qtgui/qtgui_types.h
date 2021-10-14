@@ -14,7 +14,6 @@
 #include <gnuradio/high_res_timer.h>
 #include <qwt_color_map.h>
 #include <qwt_scale_draw.h>
-#include <qwt_text.h>
 
 namespace gr {
 namespace qtgui {

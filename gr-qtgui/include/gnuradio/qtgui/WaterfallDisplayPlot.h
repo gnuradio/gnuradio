@@ -22,9 +22,7 @@
 #if QWT_VERSION < 0x060000
 #include <gnuradio/qtgui/plot_waterfall.h>
 #else
-#include <qwt_interval.h>
-
-typedef QwtInterval QwtDoubleInterval;
+#include <qwt_compat.h>
 #endif
 
 /*!
