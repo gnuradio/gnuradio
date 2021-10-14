@@ -7,4 +7,3 @@
 
 add_subdirectory(mp-sched)
 add_subdirectory(network)
-add_subdirectory(volk_benchmark)
