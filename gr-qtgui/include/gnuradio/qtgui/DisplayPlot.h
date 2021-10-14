@@ -29,10 +29,7 @@
 #include <vector>
 
 #if QWT_VERSION >= 0x060000
-typedef QPointF QwtDoublePoint;
-typedef QRectF QwtDoubleRect;
-
-typedef QwtInterval QwtDoubleInterval;
+#include <qwt_compat.h>
 #endif
 
 typedef QList<QColor> QColorList;
