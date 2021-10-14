@@ -126,13 +126,7 @@ class Platform(Element):
         self.connection_templates.clear()
         self.cpp_connection_templates.clear()
         self._block_categories.clear()
-
-        # # FIXME: remove this as soon as converter is stable
-        # from ..converter import Converter
-        # converter = Converter(self.config.block_paths, self.config.yml_block_cache)
-        # converter.run()
-        # logging.info('XML converter done.')
-
+        
         with Cache(Constants.CACHE_FILE, version = self.config.version) as cache:
             for file_path in self._iter_files_in_block_path(path):
 
