@@ -17,6 +17,7 @@ target_link_libraries(gnuradio-pmt
   Boost::boost
   Boost::thread
   Log4Cpp::log4cpp
+  Volk::volk
 )
 
 target_include_directories(gnuradio-pmt
