@@ -13,6 +13,8 @@
 
 #include "pmt_int.h"
 
+#include <volk/volk_alloc.hh>
+
 #include <cstdint>
 #include <vector>
 
@@ -22,7 +24,7 @@ namespace pmt {
 ////////////////////////////////////////////////////////////////////////////
 class PMT_API pmt_u8vector : public pmt_uniform_vector
 {
-    std::vector<uint8_t> d_v;
+    volk::vector<uint8_t> d_v;
 
 public:
     pmt_u8vector(size_t k, uint8_t fill);
@@ -47,7 +49,7 @@ public:
 
 class pmt_s8vector : public pmt_uniform_vector
 {
-    std::vector<int8_t> d_v;
+    volk::vector<int8_t> d_v;
 
 public:
     pmt_s8vector(size_t k, int8_t fill);
@@ -72,7 +74,7 @@ public:
 
 class pmt_u16vector : public pmt_uniform_vector
 {
-    std::vector<uint16_t> d_v;
+    volk::vector<uint16_t> d_v;
 
 public:
     pmt_u16vector(size_t k, uint16_t fill);
@@ -97,7 +99,7 @@ public:
 
 class pmt_s16vector : public pmt_uniform_vector
 {
-    std::vector<int16_t> d_v;
+    volk::vector<int16_t> d_v;
 
 public:
     pmt_s16vector(size_t k, int16_t fill);
@@ -122,7 +124,7 @@ public:
 
 class pmt_u32vector : public pmt_uniform_vector
 {
-    std::vector<uint32_t> d_v;
+    volk::vector<uint32_t> d_v;
 
 public:
     pmt_u32vector(size_t k, uint32_t fill);
@@ -147,7 +149,7 @@ public:
 
 class pmt_s32vector : public pmt_uniform_vector
 {
-    std::vector<int32_t> d_v;
+    volk::vector<int32_t> d_v;
 
 public:
     pmt_s32vector(size_t k, int32_t fill);
@@ -172,7 +174,7 @@ public:
 
 class pmt_u64vector : public pmt_uniform_vector
 {
-    std::vector<uint64_t> d_v;
+    volk::vector<uint64_t> d_v;
 
 public:
     pmt_u64vector(size_t k, uint64_t fill);
@@ -197,7 +199,7 @@ public:
 
 class pmt_s64vector : public pmt_uniform_vector
 {
-    std::vector<int64_t> d_v;
+    volk::vector<int64_t> d_v;
 
 public:
     pmt_s64vector(size_t k, int64_t fill);
@@ -222,7 +224,7 @@ public:
 
 class pmt_f32vector : public pmt_uniform_vector
 {
-    std::vector<float> d_v;
+    volk::vector<float> d_v;
 
 public:
     pmt_f32vector(size_t k, float fill);
@@ -247,7 +249,7 @@ public:
 
 class pmt_f64vector : public pmt_uniform_vector
 {
-    std::vector<double> d_v;
+    volk::vector<double> d_v;
 
 public:
     pmt_f64vector(size_t k, double fill);
@@ -272,7 +274,7 @@ public:
 
 class pmt_c32vector : public pmt_uniform_vector
 {
-    std::vector<std::complex<float>> d_v;
+    volk::vector<std::complex<float>> d_v;
 
 public:
     pmt_c32vector(size_t k, std::complex<float> fill);
@@ -297,7 +299,7 @@ public:
 
 class pmt_c64vector : public pmt_uniform_vector
 {
-    std::vector<std::complex<double>> d_v;
+    volk::vector<std::complex<double>> d_v;
 
 public:
     pmt_c64vector(size_t k, std::complex<double> fill);
