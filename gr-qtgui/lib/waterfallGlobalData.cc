@@ -139,13 +139,7 @@ void WaterfallData::setRange(const QwtDoubleInterval& newRange)
 {
     _intensityRange = newRange;
 }
-#else
-void WaterfallData::setInterval(Qt::Axis axis, const QwtInterval& interval)
-{
-    d_intervals[axis] = interval;
-}
 
-QwtInterval WaterfallData::interval(Qt::Axis a) const { return d_intervals[a]; }
 #endif
 
 

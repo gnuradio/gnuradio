@@ -69,6 +69,7 @@ class MainWindow(Gtk.ApplicationWindow):
             self.set_icon(icon.load_icon())
 
         # Create the menu bar and toolbar
+        log.debug("Creating menu")
         generate_modes = platform.get_generate_options()
 
         # This needs to be replaced
