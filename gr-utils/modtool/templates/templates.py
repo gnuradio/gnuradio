@@ -186,10 +186,10 @@ namespace gr {
                        gr_vector_void_star &output_items)
     {
     % if blocktype != 'source':
-      const input_type *in = reinterpret_cast<const input_type*>(input_items[0]);
+      auto in = static_cast<const input_type*>(input_items[0]);
     % endif
     % if blocktype != 'sink':
-      output_type *out = reinterpret_cast<output_type*>(output_items[0]);
+      auto out = static_cast<output_type*>(output_items[0]);
     % endif
 
       #pragma message("Implement the signal processing in your block and remove this warning")
@@ -217,10 +217,10 @@ namespace gr {
                        gr_vector_void_star &output_items)
     {
     % if blocktype != 'source':
-      const input_type *in = reinterpret_cast<const input_type*>(input_items[0]);
+      auto in = static_cast<const input_type*>(input_items[0]);
     % endif
     % if blocktype != 'sink':
-      output_type *out = reinterpret_cast<output_type*>(output_items[0]);
+      auto out = static_cast<output_type*>(output_items[0]);
     % endif
 
       #pragma message("Implement the signal processing in your block and remove this warning")
@@ -237,10 +237,10 @@ namespace gr {
         gr_vector_void_star &output_items)
     {
     % if blocktype != 'source':
-      const input_type *in = reinterpret_cast<const input_type*>(input_items[0]);
+      auto in = static_cast<const input_type*>(input_items[0]);
     % endif
     % if blocktype != 'sink':
-      output_type *out = reinterpret_cast<output_type*>(output_items[0]);
+      auto out = static_cast<output_type*>(output_items[0]);
     % endif
 
       #pragma message("Implement the signal processing in your block and remove this warning")
