@@ -14,8 +14,6 @@
 
 namespace gr {
 
-buffer_type host_buffer::type(buftype_HOST_BUFFER{});
-
 void* host_buffer::device_memcpy(void* dest, const void* src, std::size_t count)
 {
     // There is no spoon...er... device so fake it out using regular memcpy
@@ -28,6 +26,22 @@ void* host_buffer::device_memmove(void* dest, const void* src, std::size_t count
     return std::memmove(dest, src, count);
 }
 
+buffer_type host_buffer::type(buftype<host_buffer, host_buffer>{});
+
+buffer_sptr host_buffer::make_buffer(int nitems,
+                                     size_t sizeof_item,
+                                     uint64_t downstream_lcm_nitems,
+                                     uint32_t downstream_max_out_mult,
+                                     block_sptr link,
+                                     block_sptr buf_owner)
+{
+    return buffer_sptr(new host_buffer(nitems,
+                                       sizeof_item,
+                                       downstream_lcm_nitems,
+                                       downstream_max_out_mult,
+                                       link,
+                                       buf_owner));
+}
 
 host_buffer::host_buffer(int nitems,
                          size_t sizeof_item,

@@ -123,7 +123,8 @@ public:
      *
      * \param min_streams  specify minimum number of streams (>= 0)
      * \param max_streams  specify maximum number of streams (>= min_streams or -1 ->
-     * infinite) \param sizeof_stream_items specify the size of the items in the streams
+     * infinite)
+     * \param sizeof_stream_items specify the size of the items in the streams
      * \param buftypes  the type of buffer each stream will should use
      *
      * If there are more streams than there are entries in

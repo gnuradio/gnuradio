@@ -417,7 +417,7 @@ void block::allocate_detail(int ninputs,
 }
 
 buffer_sptr
-block::replace_buffer(uint32_t src_port, uint32_t dst_port, block_sptr block_owner)
+block::replace_buffer(size_t src_port, size_t dst_port, block_sptr block_owner)
 {
     block_detail_sptr detail_ = detail();
     buffer_sptr orig_buffer = detail_->output(src_port);
@@ -441,7 +441,7 @@ bool block::update_rate() const { return d_update_rate; }
 
 void block::enable_update_rate(bool en) { d_update_rate = en; }
 
-buffer_sptr block::allocate_buffer(int port,
+buffer_sptr block::allocate_buffer(size_t port,
                                    int downstream_max_nitems,
                                    uint64_t downstream_lcm_nitems,
                                    uint32_t downstream_max_out_mult)

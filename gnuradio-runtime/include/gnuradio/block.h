@@ -540,8 +540,7 @@ public:
      * that is incompatible with the default buffer type created by this block.
      *
      */
-    buffer_sptr
-    replace_buffer(uint32_t src_port, uint32_t dst_port, block_sptr block_owner);
+    buffer_sptr replace_buffer(size_t src_port, size_t dst_port, block_sptr block_owner);
 
     // --------------- Performance counter functions -------------
 
@@ -943,7 +942,7 @@ protected:
      * that the downstream max number of items must be passed in to this
      * function for consideration.
      */
-    buffer_sptr allocate_buffer(int port,
+    buffer_sptr allocate_buffer(size_t port,
                                 int downstream_max_nitems,
                                 uint64_t downstream_lcm_nitems,
                                 uint32_t downstream_max_out_mult);

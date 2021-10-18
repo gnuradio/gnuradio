@@ -42,8 +42,8 @@ static void t0_body()
     int nitems = 4000 / sizeof(int);
     int counter = 0;
 
-    gr::buffer_sptr buf(
-        gr::make_buffer_double_mapped(nitems, sizeof(int), nitems, 1, gr::block_sptr()));
+    gr::buffer_sptr buf(gr::buffer_double_mapped::make_buffer(
+        nitems, sizeof(int), nitems, 1, gr::block_sptr()));
 
     int last_sa;
     int sa;
@@ -77,8 +77,8 @@ static void t1_body()
     int write_counter = 0;
     int read_counter = 0;
 
-    gr::buffer_sptr buf(
-        gr::make_buffer_double_mapped(nitems, sizeof(int), nitems, 1, gr::block_sptr()));
+    gr::buffer_sptr buf(gr::buffer_double_mapped::make_buffer(
+        nitems, sizeof(int), nitems, 1, gr::block_sptr()));
     gr::buffer_reader_sptr r1(gr::buffer_add_reader(buf, 0, gr::block_sptr()));
 
     int sa;
@@ -149,8 +149,8 @@ static void t2_body()
 
     int nitems = (64 * (1L << 10)) / sizeof(int); // 64K worth of ints
 
-    gr::buffer_sptr buf(
-        gr::make_buffer_double_mapped(nitems, sizeof(int), nitems, 1, gr::block_sptr()));
+    gr::buffer_sptr buf(gr::buffer_double_mapped::make_buffer(
+        nitems, sizeof(int), nitems, 1, gr::block_sptr()));
     gr::buffer_reader_sptr r1(gr::buffer_add_reader(buf, 0, gr::block_sptr()));
 
     int read_counter = 0;
@@ -215,8 +215,8 @@ static void t3_body()
     int nitems = (64 * (1L << 10)) / sizeof(int);
 
     static const int N = 5;
-    gr::buffer_sptr buf(
-        gr::make_buffer_double_mapped(nitems, sizeof(int), nitems, 1, gr::block_sptr()));
+    gr::buffer_sptr buf(gr::buffer_double_mapped::make_buffer(
+        nitems, sizeof(int), nitems, 1, gr::block_sptr()));
     gr::buffer_reader_sptr reader[N];
     int read_counter[N];
     int write_counter = 0;

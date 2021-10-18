@@ -18,19 +18,10 @@
 #include <functional>
 #include <mutex>
 #include <string>
+#include <typeinfo>
 #include <vector>
 
 namespace gr {
-
-// This is the function pointer declaration for the factory-like functions
-// used to create buffer subclasses
-typedef buffer_sptr (*factory_func_ptr)(int nitems,
-                                        size_t sizeof_item,
-                                        uint64_t downstrea_lcm_nitems,
-                                        uint32_t downstream_max_out_mult,
-                                        block_sptr link,
-                                        block_sptr buf_owner);
-
 
 /*!
  * \brief Base class for describing a buffer's type.
@@ -45,10 +36,7 @@ public:
 
     // Temporarily define copy constructor to work around pybind issue with
     // default non-copyable function argument
-    buffer_type_base(buffer_type_base const& other)
-        : d_name(other.d_name), d_factory(other.d_factory)
-    {
-    }
+    buffer_type_base(buffer_type_base const& other) : d_name(other.d_name) {}
 
     void operator=(buffer_type_base const&) = delete;
 
@@ -76,42 +64,55 @@ public:
     /*!
      * \brief Make and return a buffer subclass of the corresponding type
      */
-    inline buffer_sptr make_buffer(int nitems,
-                                   size_t sizeof_item,
-                                   uint64_t downstream_lcm_nitems,
-                                   uint32_t downstream_max_out_mult,
-                                   block_sptr link,
-                                   block_sptr buf_owner) const
+    virtual buffer_sptr
+    make_buffer([[maybe_unused]] int nitems,
+                [[maybe_unused]] size_t sizeof_item,
+                [[maybe_unused]] uint64_t downstream_lcm_nitems,
+                [[maybe_unused]] uint32_t downstream_max_out_mult,
+                [[maybe_unused]] block_sptr link = block_sptr(),
+                [[maybe_unused]] block_sptr buf_owner = block_sptr()) const
     {
-        // Delegate call to factory function
-        return d_factory(nitems,
-                         sizeof_item,
-                         downstream_lcm_nitems,
-                         downstream_max_out_mult,
-                         link,
-                         buf_owner);
+        // NOTE: this is *never* intended to be called directly, instead the overridden
+        // version from a derived class (created from the template below) will be
+        // called.
+        return nullptr;
     }
 
 protected:
     const std::string d_name;
-    factory_func_ptr d_factory;
 
-    // Protected constructor
-    buffer_type_base(const char* name, factory_func_ptr factory_func)
-        : d_name(name), d_factory(factory_func)
-    {
-    }
+    buffer_type_base(const std::string name) : d_name(name) {}
 };
 
 typedef const buffer_type_base& buffer_type;
 typedef std::vector<std::reference_wrapper<const buffer_type_base>> gr_vector_buffer_type;
 
-#define DEFINE_CUSTOM_BUFFER_TYPE(CLASSNAME, FACTORY_FUNC_PTR)                    \
-    class GR_RUNTIME_API buftype_##CLASSNAME : public buffer_type_base            \
-    {                                                                             \
-    public:                                                                       \
-        buftype_##CLASSNAME() : buffer_type_base(#CLASSNAME, FACTORY_FUNC_PTR) {} \
-    };
+/*!
+ * \brief Template used to create buffer types. Note that the factory_class parameter
+ * must contain a static function make_buffer() that matches the signature below
+ * and will be used to create instances of the corresponding buffer type.
+ */
+template <typename classname, typename factory_class>
+struct buftype : public buffer_type_base {
+public:
+    using factory = factory_class;
+    buffer_sptr make_buffer(int nitems,
+                            size_t sizeof_item,
+                            uint64_t downstream_lcm_nitems,
+                            uint32_t downstream_max_out_mult,
+                            block_sptr link = block_sptr(),
+                            block_sptr buf_owner = block_sptr()) const override
+    {
+        return factory::make_buffer(nitems,
+                                    sizeof_item,
+                                    downstream_lcm_nitems,
+                                    downstream_max_out_mult,
+                                    link,
+                                    buf_owner);
+    }
+
+    buftype<classname, factory_class>() : buffer_type_base(typeid(classname).name()) {}
+};
 
 } // namespace gr
 
