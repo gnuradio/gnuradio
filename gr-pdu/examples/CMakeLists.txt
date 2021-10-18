@@ -7,7 +7,11 @@
 
 install(
   FILES
+  pdu_lambda_chirp_demo.grc
+  pdu_lambda_example.grc
   pdu_tools_demo.grc
-  DESTINATION ${GR_PKG_DATA_DIR}/examples/pdu
+  simple_pdu_to_stream_example.grc
+  tags_to_pdu_example.grc
+  take_skip_to_pdu_example.grc
+  DESTINATION ${GR_PKG_PDU_EXAMPLES_DIR}
 )
-

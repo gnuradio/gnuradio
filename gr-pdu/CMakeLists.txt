@@ -21,6 +21,8 @@ GR_REGISTER_COMPONENT("gr-pdu" ENABLE_GR_PDU
     ENABLE_GR_FILTER
     )
 
+SET(GR_PKG_PDU_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/pdu)
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################
