@@ -23,6 +23,13 @@ public:
 
     static buffer_type type;
 
+    static buffer_sptr make_buffer(int nitems,
+                                   size_t sizeof_item,
+                                   uint64_t downstream_lcm_nitems,
+                                   uint32_t downstream_max_out_mult,
+                                   block_sptr link = block_sptr(),
+                                   block_sptr buf_owner = block_sptr());
+
     virtual ~host_buffer();
 
     /*!
@@ -116,10 +123,6 @@ private:
                 block_sptr link,
                 block_sptr buf_owner);
 };
-
-// See buffer_type.h for details on this macro. It is used here to generate
-// compile-time class representing the host_buffer classes "type".
-DEFINE_CUSTOM_BUFFER_TYPE(HOST_BUFFER, &host_buffer::make_host_buffer);
 
 } // namespace gr
 

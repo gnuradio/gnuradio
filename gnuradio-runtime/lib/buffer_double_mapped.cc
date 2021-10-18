@@ -31,12 +31,13 @@ namespace gr {
  *
  *     type_size * nitems == k * page_size
  */
-static inline long minimum_buffer_items(long type_size, long page_size)
+static inline long minimum_buffer_items(size_t type_size, size_t page_size)
 {
     return page_size / GR_GCD(type_size, page_size);
 }
 
-buffer_type buffer_double_mapped::type(buftype_DEFAULT_NON_CUSTOM{});
+buffer_type
+    buffer_double_mapped::type(buftype<buffer_double_mapped, buffer_double_mapped>{});
 
 buffer_double_mapped::buffer_double_mapped(int nitems,
                                            size_t sizeof_item,
@@ -67,12 +68,12 @@ buffer_double_mapped::buffer_double_mapped(int nitems,
 // NB: Added the extra 'block_sptr unused' parameter so that the
 // call signature matches the other factory-like functions used to create
 // the buffer_single_mapped subclasses
-buffer_sptr make_buffer_double_mapped(int nitems,
-                                      size_t sizeof_item,
-                                      uint64_t downstream_lcm_nitems,
-                                      uint32_t downstream_max_out_mult,
-                                      block_sptr link,
-                                      block_sptr unused)
+buffer_sptr buffer_double_mapped::make_buffer(int nitems,
+                                              size_t sizeof_item,
+                                              uint64_t downstream_lcm_nitems,
+                                              uint32_t downstream_max_out_mult,
+                                              block_sptr link,
+                                              block_sptr unused)
 {
     return buffer_sptr(new buffer_double_mapped(
         nitems, sizeof_item, downstream_lcm_nitems, downstream_max_out_mult, link));
