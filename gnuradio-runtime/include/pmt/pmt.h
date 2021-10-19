@@ -12,8 +12,8 @@
 #define INCLUDED_PMT_H
 
 #include <pmt/api.h>
-#include <boost/any.hpp>
 #include <boost/noncopyable.hpp>
+#include <any>
 #include <complex>
 #include <cstdint>
 #include <iosfwd>
@@ -664,10 +664,9 @@ PMT_API pmt_t dict_values(pmt_t dict);
 
 /*
  * ------------------------------------------------------------------------
- *   Any (wraps boost::any -- can be used to wrap pretty much anything)
+ *   Any (wraps std::any -- can be used to wrap pretty much anything)
  *
  * Cannot be serialized or used across process boundaries.
- * See http://www.boost.org/doc/html/any.html
  * ------------------------------------------------------------------------
  */
 
@@ -675,13 +674,13 @@ PMT_API pmt_t dict_values(pmt_t dict);
 PMT_API bool is_any(pmt_t obj);
 
 //! make an any
-PMT_API pmt_t make_any(const boost::any& any);
+PMT_API pmt_t make_any(const std::any& any);
 
-//! Return underlying boost::any
-PMT_API boost::any any_ref(pmt_t obj);
+//! Return underlying std::any
+PMT_API std::any any_ref(pmt_t obj);
 
 //! Store \p any in \p obj
-PMT_API void any_set(pmt_t obj, const boost::any& any);
+PMT_API void any_set(pmt_t obj, const std::any& any);
 
 
 /*
