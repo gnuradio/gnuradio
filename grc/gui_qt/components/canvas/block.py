@@ -387,8 +387,11 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
             value = item.value
             value_label = item.options[value] if item.options else value
             if value is not None and item.hide == 'none':
-                if len(value) > LONG_VALUE:
-                    value = value[:LONG_VALUE-3] + '...'
+                if self.is_valid():
+                    painter.setPen(QtGui.QPen(1))
+                else:
+                    painter.setPen(Qt.red)
+
                 font.setBold(True)
                 painter.setFont(font)
                 painter.drawText(QtCore.QRectF(7.5, 0 + y_offset, self.width, self.height), Qt.AlignLeft, name + ': ')
