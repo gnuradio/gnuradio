@@ -37,10 +37,16 @@ def die(error, message):
         )
         d.set_title(type(error).__name__)
         d.run()
-        exit(1)
+        sys.exit(1)
     except ImportError:
-        exit(type(error).__name__ + '\n\n' + msg)
-
+        sys.exit(type(error).__name__ + '\n\n' + msg)
+    except Exception as _exception:
+        print(
+            "While trying to display an error message, another error occurred",
+            file=sys.stderr)
+        print(_exception, file=sys.stderr)
+        print("The original error message follows.", file=sys.stderr)
+        sys.exit(type(error).__name__ + '\n\n' + msg)
 
 def check_gtk():
     try:
@@ -82,7 +88,7 @@ def run_main():
         print("Running from source tree")
         sys.path.insert(1, script_path[:-len(source_tree_subpath)])
         from grc.main import main
-    exit(main())
+    sys.exit(main())
 
 
 if __name__ == '__main__':
