@@ -7,7 +7,6 @@
 
 import os
 import sys
-import warnings
 
 
 GR_IMPORT_ERROR_MESSAGE = """\
@@ -50,15 +49,20 @@ def die(error, message):
 
 def check_gtk():
     try:
-        warnings.filterwarnings("error")
         import gi
         gi.require_version('Gtk', '3.0')
         gi.require_version('PangoCairo', '1.0')
         gi.require_foreign('cairo', 'Context')
 
         from gi.repository import Gtk
-        Gtk.init_check()
-        warnings.filterwarnings("always")
+        success = Gtk.init_check()[0]
+        if not success:
+            # Don't display a warning dialogue. This seems to be a Gtk bug. If it
+            # still can display warning dialogues, it does probably work!
+            print(
+                "Gtk init_check failed. GRC might not be able to start a GUI.",
+                file=sys.stderr)
+
     except Exception as err:
         die(err, "Failed to initialize GTK. If you are running over ssh, "
                  "did you enable X forwarding and start ssh with -X?")
