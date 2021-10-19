@@ -18,9 +18,7 @@
 #include <gnuradio/expj.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
-
-#include <boost/format.hpp>
-
+#include <any>
 #include <stdexcept>
 
 namespace gr {
@@ -90,9 +88,9 @@ void constellation_receiver_cb_impl::handle_set_constellation(
     pmt::pmt_t constellation_pmt)
 {
     if (pmt::is_any(constellation_pmt)) {
-        boost::any constellation_any = pmt::any_ref(constellation_pmt);
+        std::any constellation_any = pmt::any_ref(constellation_pmt);
         constellation_sptr constellation =
-            boost::any_cast<constellation_sptr>(constellation_any);
+            std::any_cast<constellation_sptr>(constellation_any);
         set_constellation(constellation);
     } else {
         GR_LOG_ERROR(d_logger, "Received constellation that is not a PMT any; skipping.");
