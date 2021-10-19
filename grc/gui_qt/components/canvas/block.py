@@ -228,19 +228,21 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                      get_min_height_for_ports(self.active_sinks),
                      get_min_height_for_ports(self.active_sources))
         # figure out width of block based on widest line of text
-        fm = QtGui.QFontMetrics(QtGui.QFont('Helvetica', 10))
+        fm = QtGui.QFontMetrics(QtGui.QFont('Helvetica Bold', 10))
         largest_width = fm.width(self.label)/1.5
         for key, item in self.params.items():
             name = item.name
             value = item.value
+            value_label = item.options[value] if item.options else value
             if value is not None and item.hide == 'none':
+                full_line = name + ": " + value_label
+                '''
                 if len(value) > LONG_VALUE:
                     value = value[:LONG_VALUE-3] + '...'
-                if fm.width(value) > largest_width:
-                    largest_width = fm.width(value)
-                if fm.width(name + ': ') > largest_width:
-                    largest_width = fm.width(name + ': ') # the keys need a little more margin
-        self.width = largest_width*2 + 15 # the *2 is because we only measured half the width, the + 15 is margin
+                '''
+                if fm.width(full_line) > largest_width:
+                    largest_width = fm.width(full_line)
+        self.width = largest_width + 15
 
         bussified = self.current_bus_structure['source'], self.current_bus_structure['sink']
         for ports, has_busses in zip((self.active_sources, self.active_sinks), bussified):
@@ -389,10 +391,11 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                     value = value[:LONG_VALUE-3] + '...'
                 font.setBold(True)
                 painter.setFont(font)
-                painter.drawText(QtCore.QRectF(0 - self.width/2, 0 + y_offset, self.width, self.height), Qt.AlignRight, name + ': ')
+                painter.drawText(QtCore.QRectF(7.5, 0 + y_offset, self.width, self.height), Qt.AlignLeft, name + ': ')
                 font.setBold(False)
                 painter.setFont(font)
-                painter.drawText(QtCore.QRectF(0 + self.width/2, 0 + y_offset, self.width, self.height), Qt.AlignLeft, value_label)
+                fm = QtGui.QFontMetrics(QtGui.QFont('Helvetica Bold', 10))
+                painter.drawText(QtCore.QRectF(7.5 + fm.width(name + ": "), 0 + y_offset, self.width, self.height), Qt.AlignLeft, value_label)
                 y_offset += 20
 
     def boundingRect(self): # required to have
