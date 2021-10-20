@@ -19,7 +19,7 @@ from .base import Element
 from .utils import expr_utils
 from .utils.backports import shlex
 
-log = logging.getLogger(__name__)
+log = logging.getLogger(f"grc.{__name__}")
 
 
 class FlowGraph(Element):

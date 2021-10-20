@@ -14,7 +14,7 @@ from gi.repository import Gtk, GObject, Gio, GLib
 from . import Actions
 
 
-log = logging.getLogger(__name__)
+log = logging.getLogger(f"grc.{__name__}")
 
 
 '''

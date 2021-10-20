@@ -25,7 +25,7 @@ from .generator import Generator
 from .FlowGraph import FlowGraph
 from .Connection import Connection
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(f"grc.{__name__}")
 
 
 class Platform(Element):

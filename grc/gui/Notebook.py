@@ -17,7 +17,7 @@ from .Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT
 from .DrawingArea import DrawingArea
 
 
-log = logging.getLogger(__name__)
+log = logging.getLogger(f"grc.{__name__}")
 
 
 class Notebook(Gtk.Notebook):

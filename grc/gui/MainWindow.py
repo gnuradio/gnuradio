@@ -24,7 +24,7 @@ from .Notebook import Notebook, Page
 from ..core import Messages
 
 
-log = logging.getLogger(__name__)
+log = logging.getLogger(f"grc.{__name__}")
 
 
 ############################################################

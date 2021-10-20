@@ -13,7 +13,7 @@ from gi.repository import Gtk, Gdk, Gio, GLib, GObject
 
 from . import Utils
 
-log = logging.getLogger(__name__)
+log = logging.getLogger(f"grc.{__name__}")
 
 
 def filter_from_dict(vars):

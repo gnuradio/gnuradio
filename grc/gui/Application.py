@@ -24,7 +24,7 @@ from .PropsDialog import PropsDialog
 from ..core import Messages
 
 
-log = logging.getLogger(__name__)
+log = logging.getLogger(f"grc.{__name__}")
 
 
 class Application(Gtk.Application):

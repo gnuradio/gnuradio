@@ -20,7 +20,7 @@ from .Dialogs import TextDisplay, MessageDialogWrapper
 from ..core import Messages
 
 
-log = logging.getLogger(__name__)
+log = logging.getLogger(f"grc.{__name__}")
 
 
 class Console(Gtk.ScrolledWindow):

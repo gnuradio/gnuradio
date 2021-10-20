@@ -13,7 +13,7 @@ import os
 from . import block_tree, block
 
 path = os.path
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(f"grc.{__name__}")
 
 excludes = [
     'qtgui_',

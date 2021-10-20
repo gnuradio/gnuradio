@@ -11,7 +11,7 @@ import time
 
 from .io import yaml
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(f"grc.{__name__}")
 
 
 class Cache(object):
