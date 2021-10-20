@@ -389,10 +389,12 @@ class ${blockname}(${parenttype}):
 
 % if blocktype == 'general':
     def forecast(self, noutput_items, ninputs):
+        # ninputs is the number of input connections
         # setup size of input_items[i] for work call
-        ninput_items_required = [0] * ninputs
-        for i in range(ninputs):
-            ninput_items_required[i] = noutput_items
+        # the required number of input items is returned
+        #   in a list where each element represents the 
+        #   number of required items for each input
+        ninput_items_required = [noutput_items] * ninputs
         return ninput_items_required
 
     def general_work(self, input_items, output_items):
