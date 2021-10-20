@@ -229,7 +229,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                      get_min_height_for_ports(self.active_sources))
         # figure out width of block based on widest line of text
         fm = QtGui.QFontMetrics(QtGui.QFont('Helvetica Bold', 10))
-        largest_width = fm.width(self.label)/1.5
+        largest_width = fm.width(self.label)
         for key, item in self.params.items():
             name = item.name
             value = item.value
