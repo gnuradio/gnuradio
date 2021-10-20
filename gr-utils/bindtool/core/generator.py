@@ -145,7 +145,6 @@ class BindingGenerator:
             buf = file_in.read()
             hasher.update(buf)
         newhash = hasher.hexdigest()
-        print(newhash)
 
         binding_pathname_cc = os.path.join(
             output_dir, '{}_python.cc'.format(base_name))
@@ -156,6 +155,9 @@ class BindingGenerator:
                 f"BINDTOOL_HEADER_FILE_HASH({newhash})", file_contents)
             with open(binding_pathname_cc, 'w') as updated_f:
                 updated_f.write(new_file_contents)
+
+            print(f"Update hash in {binding_pathname_cc} to {newhash}")
+
 
     def gen_file_binding(self, file_to_process):
         """Produce the blockname_python.cc python bindings"""
