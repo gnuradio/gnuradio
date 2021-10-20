@@ -209,8 +209,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                                       shortcut=Keys.MoveToNextChar,
                                       statusTip=_("rotate_cw-tooltip"))
 
-        actions['enable'] = Action("Enable", self)
-        actions['disable'] = Action("Disable", self)
+        actions['enable'] = Action("Enable", self,
+                                   shortcut="E")
+        actions['disable'] = Action("Disable", self,
+                                   shortcut="D")
         actions['bypass'] = Action("Bypass", self)
 
         actions['vertical_align_top'] = Action("Vertical Align Top", self)
@@ -543,15 +545,15 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def enable_triggered(self):
         log.debug('enable')
-        for block in self.selected_blocks():
+        for block in self.flowgraph.scene.selected_blocks():
             block.state = 'enabled'
-            block.update()
+            block.create_shapes_and_labels()
 
     def disable_triggered(self):
         log.debug('disable')
-        for block in self.selected_blocks():
+        for block in self.flowgraph.scene.selected_blocks():
             block.state = 'disabled'
-            block.update()
+            block.create_shapes_and_labels()
 
     def execute_triggered(self):
         log.debug('execute')
