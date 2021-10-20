@@ -52,7 +52,7 @@ Each block binding file contains an automatically generated and maintained comme
 
 `BINDTOOL_HEADER_FILE`: The header file that bindings are based on, filename only
 
-`BINDTOOL_HEADER_FILE_HASH`: The MD5 hash of the header file that the bindings are based on.  If minor changes are made to the header file that don't require regeneration of the bindings, this hash can just be updated as the value returned from `md5hash [header_filename].h`
+`BINDTOOL_HEADER_FILE_HASH`: The MD5 hash of the header file that the bindings are based on.  If minor changes are made to the header file that don't require regeneration of the bindings, this hash can just be updated as the value returned from `md5sum [header_filename].h`
 
 ## Workflow
 
