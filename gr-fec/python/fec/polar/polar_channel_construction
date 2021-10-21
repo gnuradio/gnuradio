@@ -32,13 +32,13 @@ def setup_parser():
 
 def main():
     """ Here we go. Parse command, choose class and run. """
-    print 'POLAR code channel constructor commandline tool'
+    print('POLAR code channel constructor commandline tool')
     parser = setup_parser()
     args = parser.parse_args()
 
     z_params = cc.get_z_params(False, args.channel, args.block_size,
             args.design_snr, args.mu)
-    print z_params
+    print(z_params)
 
 
 if __name__ == '__main__':
