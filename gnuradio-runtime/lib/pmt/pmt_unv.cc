@@ -17,6 +17,7 @@
 #include "pmt_int.h"
 #include "pmt_unv_int.h"
 #include <pmt/pmt.h>
+#include <cstring>
 #include <iomanip>
 #include <sstream>
 #include <string>
@@ -38,9 +39,11 @@ pmt_u8vector::pmt_u8vector(size_t k, uint8_t fill) : d_v(k)
 
 pmt_u8vector::pmt_u8vector(size_t k, const uint8_t* data) : d_v(k)
 {
-    if (k)
-        memcpy(&d_v[0], data, k * sizeof(uint8_t));
+    if (k) {
+        std::memcpy(d_v.data(), data, k * sizeof(uint8_t));
+    }
 }
+
 
 uint8_t pmt_u8vector::ref(size_t k) const
 {
@@ -59,25 +62,25 @@ void pmt_u8vector::set(size_t k, uint8_t x)
 const uint8_t* pmt_u8vector::elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 uint8_t* pmt_u8vector::writable_elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 const void* pmt_u8vector::uniform_elements(size_t& len)
 {
     len = length() * sizeof(uint8_t);
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 void* pmt_u8vector::uniform_writable_elements(size_t& len)
 {
     len = length() * sizeof(uint8_t);
-    return len ? (&d_v[0]) : nullptr;
+    return len ? (d_v.data()) : nullptr;
 }
 
 bool is_u8vector(pmt_t obj) { return obj->is_u8vector(); }
@@ -162,7 +165,7 @@ pmt_s8vector::pmt_s8vector(size_t k, int8_t fill) : d_v(k)
 pmt_s8vector::pmt_s8vector(size_t k, const int8_t* data) : d_v(k)
 {
     if (k)
-        memcpy(&d_v[0], data, k * sizeof(int8_t));
+        std::memcpy(d_v.data(), data, k * sizeof(int8_t));
 }
 
 int8_t pmt_s8vector::ref(size_t k) const
@@ -182,25 +185,25 @@ void pmt_s8vector::set(size_t k, int8_t x)
 const int8_t* pmt_s8vector::elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 int8_t* pmt_s8vector::writable_elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 const void* pmt_s8vector::uniform_elements(size_t& len)
 {
     len = length() * sizeof(int8_t);
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 void* pmt_s8vector::uniform_writable_elements(size_t& len)
 {
     len = length() * sizeof(int8_t);
-    return len ? (&d_v[0]) : nullptr;
+    return len ? (d_v.data()) : nullptr;
 }
 
 bool is_s8vector(pmt_t obj) { return obj->is_s8vector(); }
@@ -288,7 +291,7 @@ pmt_u16vector::pmt_u16vector(size_t k, uint16_t fill) : d_v(k)
 pmt_u16vector::pmt_u16vector(size_t k, const uint16_t* data) : d_v(k)
 {
     if (k)
-        memcpy(&d_v[0], data, k * sizeof(uint16_t));
+        std::memcpy(d_v.data(), data, k * sizeof(uint16_t));
 }
 
 uint16_t pmt_u16vector::ref(size_t k) const
@@ -308,25 +311,25 @@ void pmt_u16vector::set(size_t k, uint16_t x)
 const uint16_t* pmt_u16vector::elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 uint16_t* pmt_u16vector::writable_elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 const void* pmt_u16vector::uniform_elements(size_t& len)
 {
     len = length() * sizeof(uint16_t);
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 void* pmt_u16vector::uniform_writable_elements(size_t& len)
 {
     len = length() * sizeof(uint16_t);
-    return len ? (&d_v[0]) : nullptr;
+    return len ? (d_v.data()) : nullptr;
 }
 
 bool is_u16vector(pmt_t obj) { return obj->is_u16vector(); }
@@ -416,7 +419,7 @@ pmt_s16vector::pmt_s16vector(size_t k, int16_t fill) : d_v(k)
 pmt_s16vector::pmt_s16vector(size_t k, const int16_t* data) : d_v(k)
 {
     if (k)
-        memcpy(&d_v[0], data, k * sizeof(int16_t));
+        std::memcpy(d_v.data(), data, k * sizeof(int16_t));
 }
 
 int16_t pmt_s16vector::ref(size_t k) const
@@ -436,25 +439,25 @@ void pmt_s16vector::set(size_t k, int16_t x)
 const int16_t* pmt_s16vector::elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 int16_t* pmt_s16vector::writable_elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 const void* pmt_s16vector::uniform_elements(size_t& len)
 {
     len = length() * sizeof(int16_t);
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 void* pmt_s16vector::uniform_writable_elements(size_t& len)
 {
     len = length() * sizeof(int16_t);
-    return len ? (&d_v[0]) : nullptr;
+    return len ? (d_v.data()) : nullptr;
 }
 
 bool is_s16vector(pmt_t obj) { return obj->is_s16vector(); }
@@ -541,7 +544,7 @@ pmt_u32vector::pmt_u32vector(size_t k, uint32_t fill) : d_v(k)
 pmt_u32vector::pmt_u32vector(size_t k, const uint32_t* data) : d_v(k)
 {
     if (k)
-        memcpy(&d_v[0], data, k * sizeof(uint32_t));
+        std::memcpy(d_v.data(), data, k * sizeof(uint32_t));
 }
 
 uint32_t pmt_u32vector::ref(size_t k) const
@@ -561,25 +564,25 @@ void pmt_u32vector::set(size_t k, uint32_t x)
 const uint32_t* pmt_u32vector::elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 uint32_t* pmt_u32vector::writable_elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 const void* pmt_u32vector::uniform_elements(size_t& len)
 {
     len = length() * sizeof(uint32_t);
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 void* pmt_u32vector::uniform_writable_elements(size_t& len)
 {
     len = length() * sizeof(uint32_t);
-    return len ? (&d_v[0]) : nullptr;
+    return len ? (d_v.data()) : nullptr;
 }
 
 bool is_u32vector(pmt_t obj) { return obj->is_u32vector(); }
@@ -669,7 +672,7 @@ pmt_s32vector::pmt_s32vector(size_t k, int32_t fill) : d_v(k)
 pmt_s32vector::pmt_s32vector(size_t k, const int32_t* data) : d_v(k)
 {
     if (k)
-        memcpy(&d_v[0], data, k * sizeof(int32_t));
+        std::memcpy(d_v.data(), data, k * sizeof(int32_t));
 }
 
 int32_t pmt_s32vector::ref(size_t k) const
@@ -689,25 +692,25 @@ void pmt_s32vector::set(size_t k, int32_t x)
 const int32_t* pmt_s32vector::elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 int32_t* pmt_s32vector::writable_elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 const void* pmt_s32vector::uniform_elements(size_t& len)
 {
     len = length() * sizeof(int32_t);
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 void* pmt_s32vector::uniform_writable_elements(size_t& len)
 {
     len = length() * sizeof(int32_t);
-    return len ? (&d_v[0]) : nullptr;
+    return len ? (d_v.data()) : nullptr;
 }
 
 bool is_s32vector(pmt_t obj) { return obj->is_s32vector(); }
@@ -794,7 +797,7 @@ pmt_u64vector::pmt_u64vector(size_t k, uint64_t fill) : d_v(k)
 pmt_u64vector::pmt_u64vector(size_t k, const uint64_t* data) : d_v(k)
 {
     if (k)
-        memcpy(&d_v[0], data, k * sizeof(uint64_t));
+        std::memcpy(d_v.data(), data, k * sizeof(uint64_t));
 }
 
 uint64_t pmt_u64vector::ref(size_t k) const
@@ -814,25 +817,25 @@ void pmt_u64vector::set(size_t k, uint64_t x)
 const uint64_t* pmt_u64vector::elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 uint64_t* pmt_u64vector::writable_elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 const void* pmt_u64vector::uniform_elements(size_t& len)
 {
     len = length() * sizeof(uint64_t);
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 void* pmt_u64vector::uniform_writable_elements(size_t& len)
 {
     len = length() * sizeof(uint64_t);
-    return len ? (&d_v[0]) : nullptr;
+    return len ? (d_v.data()) : nullptr;
 }
 
 bool is_u64vector(pmt_t obj) { return obj->is_u64vector(); }
@@ -922,7 +925,7 @@ pmt_s64vector::pmt_s64vector(size_t k, int64_t fill) : d_v(k)
 pmt_s64vector::pmt_s64vector(size_t k, const int64_t* data) : d_v(k)
 {
     if (k)
-        memcpy(&d_v[0], data, k * sizeof(int64_t));
+        std::memcpy(d_v.data(), data, k * sizeof(int64_t));
 }
 
 int64_t pmt_s64vector::ref(size_t k) const
@@ -942,25 +945,25 @@ void pmt_s64vector::set(size_t k, int64_t x)
 const int64_t* pmt_s64vector::elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 int64_t* pmt_s64vector::writable_elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 const void* pmt_s64vector::uniform_elements(size_t& len)
 {
     len = length() * sizeof(int64_t);
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 void* pmt_s64vector::uniform_writable_elements(size_t& len)
 {
     len = length() * sizeof(int64_t);
-    return len ? (&d_v[0]) : nullptr;
+    return len ? (d_v.data()) : nullptr;
 }
 
 bool is_s64vector(pmt_t obj) { return obj->is_s64vector(); }
@@ -1047,7 +1050,7 @@ pmt_f32vector::pmt_f32vector(size_t k, float fill) : d_v(k)
 pmt_f32vector::pmt_f32vector(size_t k, const float* data) : d_v(k)
 {
     if (k)
-        memcpy(&d_v[0], data, k * sizeof(float));
+        std::memcpy(d_v.data(), data, k * sizeof(float));
 }
 
 float pmt_f32vector::ref(size_t k) const
@@ -1067,25 +1070,25 @@ void pmt_f32vector::set(size_t k, float x)
 const float* pmt_f32vector::elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 float* pmt_f32vector::writable_elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 const void* pmt_f32vector::uniform_elements(size_t& len)
 {
     len = length() * sizeof(float);
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 void* pmt_f32vector::uniform_writable_elements(size_t& len)
 {
     len = length() * sizeof(float);
-    return len ? (&d_v[0]) : nullptr;
+    return len ? (d_v.data()) : nullptr;
 }
 
 bool is_f32vector(pmt_t obj) { return obj->is_f32vector(); }
@@ -1174,7 +1177,7 @@ pmt_f64vector::pmt_f64vector(size_t k, double fill) : d_v(k)
 pmt_f64vector::pmt_f64vector(size_t k, const double* data) : d_v(k)
 {
     if (k)
-        memcpy(&d_v[0], data, k * sizeof(double));
+        std::memcpy(d_v.data(), data, k * sizeof(double));
 }
 
 double pmt_f64vector::ref(size_t k) const
@@ -1194,25 +1197,25 @@ void pmt_f64vector::set(size_t k, double x)
 const double* pmt_f64vector::elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 double* pmt_f64vector::writable_elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 const void* pmt_f64vector::uniform_elements(size_t& len)
 {
     len = length() * sizeof(double);
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 void* pmt_f64vector::uniform_writable_elements(size_t& len)
 {
     len = length() * sizeof(double);
-    return len ? (&d_v[0]) : nullptr;
+    return len ? (d_v.data()) : nullptr;
 }
 
 bool is_f64vector(pmt_t obj) { return obj->is_f64vector(); }
@@ -1302,7 +1305,7 @@ pmt_c32vector::pmt_c32vector(size_t k, std::complex<float> fill) : d_v(k)
 pmt_c32vector::pmt_c32vector(size_t k, const std::complex<float>* data) : d_v(k)
 {
     if (k)
-        memcpy(&d_v[0], data, k * sizeof(std::complex<float>));
+        std::memcpy(d_v.data(), data, k * sizeof(std::complex<float>));
 }
 
 std::complex<float> pmt_c32vector::ref(size_t k) const
@@ -1322,25 +1325,25 @@ void pmt_c32vector::set(size_t k, std::complex<float> x)
 const std::complex<float>* pmt_c32vector::elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 std::complex<float>* pmt_c32vector::writable_elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 const void* pmt_c32vector::uniform_elements(size_t& len)
 {
     len = length() * sizeof(std::complex<float>);
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 void* pmt_c32vector::uniform_writable_elements(size_t& len)
 {
     len = length() * sizeof(std::complex<float>);
-    return len ? (&d_v[0]) : nullptr;
+    return len ? (d_v.data()) : nullptr;
 }
 
 bool is_c32vector(pmt_t obj) { return obj->is_c32vector(); }
@@ -1432,7 +1435,7 @@ pmt_c64vector::pmt_c64vector(size_t k, std::complex<double> fill) : d_v(k)
 pmt_c64vector::pmt_c64vector(size_t k, const std::complex<double>* data) : d_v(k)
 {
     if (k)
-        memcpy(&d_v[0], data, k * sizeof(std::complex<double>));
+        std::memcpy(d_v.data(), data, k * sizeof(std::complex<double>));
 }
 
 std::complex<double> pmt_c64vector::ref(size_t k) const
@@ -1452,25 +1455,25 @@ void pmt_c64vector::set(size_t k, std::complex<double> x)
 const std::complex<double>* pmt_c64vector::elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 std::complex<double>* pmt_c64vector::writable_elements(size_t& len)
 {
     len = length();
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 const void* pmt_c64vector::uniform_elements(size_t& len)
 {
     len = length() * sizeof(std::complex<double>);
-    return len ? &d_v[0] : nullptr;
+    return len ? d_v.data() : nullptr;
 }
 
 void* pmt_c64vector::uniform_writable_elements(size_t& len)
 {
     len = length() * sizeof(std::complex<double>);
-    return len ? (&d_v[0]) : nullptr;
+    return len ? (d_v.data()) : nullptr;
 }
 
 bool is_c64vector(pmt_t obj) { return obj->is_c64vector(); }
