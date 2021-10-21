@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Packet Operators
     cmake_opt: ''
     comment: ''
@@ -22,7 +23,6 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: ''
-    window_size: ''
   states:
     bus_sink: false
     bus_source: false
@@ -319,7 +319,7 @@ blocks:
     minoutbuf: '0'
     output_symbols: 'True'
     samp_rate: '1'
-    special_tags: '""'
+    special_tags: '[]'
     timing_tag_key: '"rx_time"'
     trigger_tag_key: '"time_est"'
     type: complex

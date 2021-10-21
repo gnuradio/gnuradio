@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Packet Operators
     cmake_opt: ''
     comment: ''
@@ -22,7 +23,6 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: ''
-    window_size: ''
   states:
     bus_sink: false
     bus_source: false
@@ -185,7 +185,7 @@ blocks:
   id: digital_burst_shaper_xx
   parameters:
     affinity: ''
-    alias: burst_shaper0
+    alias: ''
     comment: ''
     insert_phasing: 'True'
     length_tag_name: packet_len

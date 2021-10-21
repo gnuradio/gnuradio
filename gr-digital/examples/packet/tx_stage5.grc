@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -22,7 +23,6 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: ''
-    window_size: ''
   states:
     bus_sink: false
     bus_source: false
@@ -50,6 +50,7 @@ blocks:
     comment: ''
     const_points: digital.psk_2()[0]
     dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
     precision: '8'
     rot_sym: '2'
     soft_dec_lut: '''auto'''
@@ -95,6 +96,7 @@ blocks:
     comment: ''
     const_points: digital.psk_2()[0]
     dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
     precision: '8'
     rot_sym: '2'
     soft_dec_lut: '''auto'''
@@ -253,7 +255,7 @@ blocks:
   id: digital_burst_shaper_xx
   parameters:
     affinity: ''
-    alias: burst_shaper0
+    alias: ''
     comment: ''
     insert_phasing: 'True'
     length_tag_name: packet_len
@@ -452,6 +454,7 @@ blocks:
     minoutbuf: '0'
     name: '""'
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -497,16 +500,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
