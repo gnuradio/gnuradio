@@ -41,8 +41,15 @@ def main():
     args = parser.parse_args()
 
     # Enable logging
-    # Note: All other modules need to use the 'grc.<module>' convention
-    log = logging.getLogger('grc')
+    # Note: All other modules need to use the same '<prefix>.<module>' convention.
+    # This should automatically be handled by logging.getLogger(__name__), but
+    # the prefix can change depending on how grc is launched (either by calling
+    # gnuradio-companion once installed or python -m grc). The prefix for main.py
+    # should be the same as other modules, so use that dynamically.
+    # Strip '.main' from the module name to get the prefix
+    logger_prefix = __name__[0:__name__.rindex('.')]
+    log = logging.getLogger(logger_prefix)
+
     # NOTE: This sets the log level to what was requested for the logger on the
     # command line, but this may not be the correct approach if multiple handlers
     # are intended to be used. The logger level shown here indicates all the log
