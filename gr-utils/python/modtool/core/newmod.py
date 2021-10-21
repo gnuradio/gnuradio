@@ -78,7 +78,9 @@ class ModToolNewModule(ModTool):
         self._setup_scm(mode='new')
         logger.info("Creating out-of-tree module in {}...".format(self.dir))
         try:
-            shutil.copytree(self.srcdir, self.dir)
+            # https://stackoverflow.com/a/17022146/4935114
+            shutil.copystat = lambda x, y: x
+            shutil.copytree(self.srcdir, self.dir, copy_function=shutil.copyfile)
             os.chdir(self.dir)
         except OSError:
             raise ModToolException('Could not create directory {}.'.format(self.dir))
