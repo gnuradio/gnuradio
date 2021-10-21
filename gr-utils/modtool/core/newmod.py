@@ -11,6 +11,7 @@
 
 import shutil
 import os
+import stat
 import re
 import logging
 
@@ -19,6 +20,45 @@ from ..tools import SCMRepoFactory
 from .base import ModTool, ModToolException, validate_name
 
 logger = logging.getLogger(__name__)
+
+# shutil provides a `copytree` function that runs `shutil.copystat` on the
+# destination directory unconditionally. This causes issues in systems such as
+# NixOS and Guix were were we want to copy the gr-newmod template tree and it
+# is a readonly source tree. This is a simpler, mostly copied version of
+# shutil.copytree, that doesn't run copystat.
+def copytree(src, dst):
+    with os.scandir(src) as itr:
+        entries = list(itr)
+    os.makedirs(dst, exist_ok=dirs_exist_ok)
+    errors = []
+    for srcentry in entries:
+        srcobj = os.path.join(src, srcentry.name)
+        dstname = os.path.join(dst, srcentry.name)
+        try:
+            is_symlink = srcentry.is_symlink()
+            if is_symlink and os.name == 'nt':
+                # Special check for directory junctions, which appear as
+                # symlinks but we want to recurse.
+                lstat = srcentry.stat(follow_symlinks=False)
+                if lstat.st_reparse_tag == stat.IO_REPARSE_TAG_MOUNT_POINT:
+                    is_symlink = False
+            if is_symlink:
+                linkto = os.readlink(srcname)
+                if srcentry.is_dir():
+                    copytree(srcobj, dstname)
+                else:
+                    shutil.copyfile(srcobj, dstname)
+            elif srcentry.is_dir():
+                copytree(srcobj, dstname)
+            else:
+                shutil.copyfile(srcobj, dstname)
+        except Error as err:
+            errors.extend(err.args[0])
+        except OSError as why:
+            errors.append((srcname, dstname, str(why)))
+    if errors:
+        raise Error(errors)
+    return dst
 
 class ModToolNewModule(ModTool):
     """ Create a new out-of-tree module """
@@ -62,7 +102,7 @@ class ModToolNewModule(ModTool):
         self._setup_scm(mode='new')
         logger.info(f"Creating out-of-tree module in {self.dir}...")
         try:
-            shutil.copytree(self.srcdir, self.dir)
+            copytree(self.srcdir, self.dir)
             try:
               shutil.copyfile(os.path.join(gr.prefix(), 'share', 'gnuradio', 'clang-format.conf'),
                               os.path.join(self.dir, '.clang-format'))
