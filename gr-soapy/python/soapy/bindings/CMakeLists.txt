@@ -27,4 +27,6 @@ GR_PYBIND_MAKE_CHECK_HASH(soapy
    gr::soapy
    "${soapy_python_files}")
 
+target_compile_features(soapy_python PRIVATE ${GR_CXX_VERSION_FEATURE})
+
 install(TARGETS soapy_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/soapy COMPONENT pythonapi)

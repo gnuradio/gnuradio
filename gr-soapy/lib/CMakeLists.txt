@@ -15,6 +15,8 @@ add_library(gnuradio-soapy
   sink_impl.cc
 )
 
+target_compile_features(gnuradio-soapy PRIVATE ${GR_CXX_VERSION_FEATURE})
+
 target_link_libraries(gnuradio-soapy PUBLIC
     gnuradio-runtime
     ${SoapySDR_LIBRARIES}
