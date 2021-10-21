@@ -16,7 +16,9 @@
 #include <SoapySDR/Formats.h>
 #include <SoapySDR/Version.hpp>
 #include <boost/format.hpp>
+#include <algorithm>
 #include <cmath>
+#include <mutex>
 #include <numeric>
 
 namespace gr {

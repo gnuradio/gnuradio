@@ -58,7 +58,7 @@ if(ENABLE_TESTING)
   list(APPEND test_soapy_sources)
 
   # Anything we need to link to for the unit tests go here
-  list(APPEND GR_TEST_TARGET_DEPS gnuradio-soapy ${Boost_LIBRARIES})
+  list(APPEND GR_TEST_TARGET_DEPS gnuradio-soapy)
 
   if(NOT test_soapy_sources)
     MESSAGE(STATUS "No C++ unit tests... skipping")
