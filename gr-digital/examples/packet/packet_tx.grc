@@ -185,7 +185,7 @@ blocks:
   id: digital_burst_shaper_xx
   parameters:
     affinity: ''
-    alias: burst_shaper0
+    alias: ''
     comment: ''
     insert_phasing: 'True'
     length_tag_name: packet_len
