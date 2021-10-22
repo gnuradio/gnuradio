@@ -16,13 +16,13 @@ import json
 from mako.template import Template
 from datetime import datetime
 import hashlib
-
+import re
 
 class BindingGenerator:
 
     def __init__(self, prefix, namespace, prefix_include_root, output_dir="", define_symbols=None, addl_includes= None, 
                     match_include_structure=False, catch_exceptions=True, write_json_output=False, status_output=None,
-                    flag_automatic=False, flag_pygccxml=False):
+                    flag_automatic=False, flag_pygccxml=False, fix_hash=False):
         """Initialize BindingGenerator
         prefix -- path to installed gnuradio prefix (use gr.prefix() if unsure)
         namespace -- desired namespace to parse e.g. ['gr','module_name']
@@ -36,6 +36,7 @@ class BindingGenerator:
         match_include_structure -- 
             If set to False, a bindings/ dir will be placed directly under the specified output_dir
             If set to True, the directory structure under include/ will be mirrored
+        fix_hash -- If set to true, only update the hash in the pybind 
         """
 
         self.header_extensions = ['.h', '.hh', '.hpp']
@@ -52,6 +53,7 @@ class BindingGenerator:
         self.status_output = status_output
         self.flag_automatic = flag_automatic
         self.flag_pygccxml = flag_pygccxml
+        self.fix_hash = fix_hash
 
         pass
 
@@ -131,6 +133,31 @@ class BindingGenerator:
         with open(pathname, 'r') as fp:
             header_info = json.load(fp)
         return header_info
+
+    def fix_file_hash(self, file_to_process):              
+        """Update the hash in blockname_python.cc python bindings"""
+
+        output_dir = self.get_output_dir(file_to_process)
+        base_name = os.path.splitext(os.path.basename(file_to_process))[0]
+
+        hasher = hashlib.md5()
+        with open(file_to_process, 'rb') as file_in:
+            buf = file_in.read()
+            hasher.update(buf)
+        newhash = hasher.hexdigest()
+
+        binding_pathname_cc = os.path.join(
+            output_dir, '{}_python.cc'.format(base_name))
+
+        with open(binding_pathname_cc, 'r') as f:
+            file_contents = f.read()
+            new_file_contents = re.sub(r'BINDTOOL_HEADER_FILE_HASH\([a-zA-Z0-9]+\)', 
+                f"BINDTOOL_HEADER_FILE_HASH({newhash})", file_contents)
+            with open(binding_pathname_cc, 'w') as updated_f:
+                updated_f.write(new_file_contents)
+
+            print(f"Update hash in {binding_pathname_cc} to {newhash}")
+
 
     def gen_file_binding(self, file_to_process):
         """Produce the blockname_python.cc python bindings"""
