@@ -95,7 +95,7 @@ public:
 
 private:
     // This is the simulated device buffer
-    std::unique_ptr<char> d_device_buf;
+    std::unique_ptr<char[]> d_device_buf;
     char* d_device_base;
 
     /*!
