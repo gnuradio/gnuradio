@@ -50,7 +50,7 @@ parameters:
     default: '"rx_time"'
 -   id: samp_rate
     label: Sampling Rate
-    dtype: int
+    dtype: real
     default: samp_rate
 -   id: special_tags
     label: Special Tag Keys
