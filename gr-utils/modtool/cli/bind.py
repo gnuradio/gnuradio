@@ -32,6 +32,9 @@ from .base import common_params, block_name, run, cli_input
               help = 'Comma separated list of additional include directories (default None)')
 @click.option('-D', '--define_symbols', multiple=True, default=None,
               help = 'Set precompiler defines')
+@click.option('-u', '--update-hash-only', is_flag = True,
+              help = 'If given, only the hash in the binding will be updated')
+              
 @common_params
 @block_name
 def cli(**kwargs):
