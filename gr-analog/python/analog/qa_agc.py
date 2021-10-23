@@ -454,7 +454,9 @@ class test_agc(gr_unittest.TestCase):
         tb = self.tb
 
         sampling_freq = 100
-        N = int(5 * sampling_freq)
+        # N must by a multiple of the volk_alignment of the system for this test to work.
+        # For a machine with 512-bit registers, that would be 8 complex-floats.
+        N = int(8 * sampling_freq)
         src1 = analog.sig_source_c(sampling_freq, analog.GR_SIN_WAVE,
                                    sampling_freq * 0.10, 100)
         dst1 = blocks.vector_sink_c()
