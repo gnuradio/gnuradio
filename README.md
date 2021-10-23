@@ -2,7 +2,7 @@
 <img src="https://github.com/gnuradio/gnuradio/blob/master/docs/gnuradio.png" width="75%" />
 </p>
 
-[![Build](https://shield.lwan.ws/img/p5UKbS/weekly_runner)](https://ci.gnuradio.org/buildbot/#/)
+[![Make Test](https://github.com/gnuradio/gnuradio/actions/workflows/make-test.yml/badge.svg?branch=master)](https://github.com/gnuradio/gnuradio/actions/workflows/make-test.yml)
 ![Version](https://img.shields.io/github/tag/gnuradio/gnuradio.svg)
 [![AUR](https://img.shields.io/github/license/gnuradio/gnuradio)](https://github.com/gnuradio/gnuradio/blob/master/COPYING)
 [![Docs](https://img.shields.io/badge/docs-doxygen-orange.svg)](https://www.gnuradio.org/doc/doxygen/)
