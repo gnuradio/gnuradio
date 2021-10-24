@@ -74,4 +74,3 @@ def parse(inFilename):
     rootObj.build(rootNode)
 
     return rootObj
-
