@@ -83,7 +83,6 @@ namespace gr {
 } // namespace gr
 
 #endif /* INCLUDED_${modname.upper()}_${blockname.upper()}_IMPL_H */
-
 '''
 
 # C++ file of a GR block
@@ -254,7 +253,6 @@ namespace gr {
 
   } /* namespace ${modname} */
 } /* namespace gr */
-
 '''
 
 # Block definition header file (for include/)
@@ -310,7 +308,6 @@ namespace gr {
 } // namespace gr
 
 #endif /* INCLUDED_${modname.upper()}_${blockname.upper()}_H */
-
 '''
 
 # Python block
@@ -425,7 +422,6 @@ class ${blockname}(${parenttype}):
         out[:] = whatever
         return len(output_items[0])
 % endif
-
 '''
 
 # C++ file for QA (Boost UTF style)
@@ -466,7 +462,6 @@ namespace gr {
 
   } /* namespace ${modname} */
 } /* namespace gr */
-
 '''
 
 # Header file for QA
@@ -496,7 +491,6 @@ namespace gr {
 } /* namespace gr */
 
 #endif /* _QA_${blockname.upper()}_H_ */
-
 '''
 
 # Python QA code
@@ -704,7 +698,6 @@ ${modname}_${blockname}::work(int noutput_items,
   return noutput_items;
 }
 % endif
-
 '''
 
 # Block definition header file (for include/)
@@ -765,5 +758,4 @@ class ${modname.upper()}_API ${modname}_${blockname} : public gr_${grblocktype}
 % endif
 
 #endif /* INCLUDED_${modname.upper()}_${blockname.upper()}_H */
-
 '''
