@@ -31,7 +31,7 @@ include(GrPybind)
 list(APPEND howto_python_files
     python_bindings.cc)
 
-GR_PYBIND_MAKE_OOT(howto 
+GR_PYBIND_MAKE_OOT(howto
    ../..
    gr::howto
    "${howto_python_files}")
