@@ -129,7 +129,6 @@ install(FILES
     DESTINATION ${GR_PREFSDIR}
 )
 
-set(PC_ADD_LIBS "${MPLIB_PC_ADD_LIBS} ${PC_ADD_LIBS}")
 set(PC_ADD_CFLAGS ${MPLIB_PC_ADD_CFLAGS})
 
 ########################################################################
