@@ -39,7 +39,6 @@ find_library(
           /usr/lib64
 )
 set(MPIR_LIBRARIES ${MPIRXX_LIBRARY} ${MPIR_LIBRARY})
-set(MPIR_PC_ADD_LIBS "-lmpirxx -lmpir")
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(MPIR DEFAULT_MSG MPIRXX_LIBRARY MPIR_LIBRARY MPIR_INCLUDE_DIR)
