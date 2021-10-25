@@ -388,16 +388,23 @@ class ${blockname}(${parenttype}):
 % endif
 
 % if blocktype == 'general':
-    def forecast(self, noutput_items, ninput_items_required):
-        #setup size of input_items[i] for work call
-        for i in range(len(ninput_items_required)):
-            ninput_items_required[i] = noutput_items
+    def forecast(self, noutput_items, ninputs):
+        # ninputs is the number of input connections
+        # setup size of input_items[i] for work call
+        # the required number of input items is returned
+        #   in a list where each element represents the 
+        #   number of required items for each input
+        ninput_items_required = [noutput_items] * ninputs
+        return ninput_items_required
 
     def general_work(self, input_items, output_items):
-        output_items[0][:] = input_items[0]
-        consume(0, len(input_items[0]))\
-        #self.consume_each(len(input_items[0]))
-        return len(output_items[0])
+        # For this sample code, the general block is made to behave like a sync block
+        ninput_items = min([len(items) for items in input_items])
+        noutput_items = min(len(output_items[0]), ninput_items)
+        output_items[0][:noutput_items] = input_items[0][:noutput_items]
+        self.consume_each(noutput_items)
+        return noutput_items
+
 <% return %>
 % endif
 
