@@ -76,6 +76,12 @@ GR_RUNTIME_API const std::string compiler_flags();
  */
 GR_RUNTIME_API const std::string build_time_enabled_components();
 
+/*!
+ * \brief return the pybind11 version used to build this version of GNU Radio
+ */
+GR_RUNTIME_API const std::string pybind_version();
+
+
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_CONSTANTS_H */
