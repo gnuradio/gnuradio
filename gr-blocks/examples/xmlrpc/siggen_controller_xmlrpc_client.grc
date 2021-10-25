@@ -1,0 +1,91 @@
+options:
+  parameters:
+    author: muaddib
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: siggen_controller_xmlrcp_client
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: SIGGEN Controller XMLRPC Client
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: freq
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Frequency
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '1'
+    step: '100'
+    stop: samp_rate/2
+    value: '1000'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [264, 4.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 1e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [176, 4.0]
+    rotation: 0
+    state: enabled
+- name: xmlrpc_client_0
+  id: xmlrpc_client
+  parameters:
+    addr: localhost
+    alias: ''
+    callback: set_rmt_freq
+    comment: "The value used in the 'callback' field maps to a variable name in an\n\
+      \ XMLRPC Server or XMLRPC Server Flowgraph\nex: 'siggen_xmlrpc_server.grc' \n\
+      \nThe value used in the 'variable' field is a local variable in this \nflowgraph.\
+      \ Local changes to this variable will change the \nserver variable's value as\
+      \ well."
+    port: '8000'
+    variable: freq
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [384, 4.0]
+    rotation: 0
+    state: enabled
+connections: []
+
+metadata:
+  file_format: 1
