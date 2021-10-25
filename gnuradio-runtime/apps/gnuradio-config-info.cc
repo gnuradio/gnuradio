@@ -41,7 +41,8 @@ int main(int argc, char** argv)
         "enabled-components", "print GNU Radio build time enabled components")(
         "cc", "print GNU Radio C compiler version")(
         "cxx", "print GNU Radio C++ compiler version")(
-        "cflags", "print GNU Radio CFLAGS")("version,v", "print GNU Radio version");
+        "cflags", "print GNU Radio CFLAGS")("version,v", "print GNU Radio version")(
+        "pybind", "print pybind11 version used in this build");
     // clang-format on
 
     try {
@@ -94,6 +95,9 @@ int main(int argc, char** argv)
 
     if (vm.count("cflags") || print_all)
         std::cout << gr::compiler_flags() << std::endl;
+
+    if (vm.count("pybind") || print_all)
+        std::cout << gr::pybind_version() << std::endl;
 
     return 0;
 }
