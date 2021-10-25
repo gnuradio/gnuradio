@@ -355,6 +355,32 @@ block_executor::state block_executor::run_one_iteration()
                 goto were_done;
 
             max_items_avail = std::max(max_items_avail, d_ninput_items[i]);
+
+            // Estimate if we are going to be blocked so we can call the input blocked
+            // callback on the offending input
+            int tmp_noutput_items = (int)(max_items_avail * m->relative_rate());
+            tmp_noutput_items = round_down(tmp_noutput_items, m->output_multiple());
+            tmp_noutput_items = std::min(tmp_noutput_items, max_noutput_items);
+            if (tmp_noutput_items == 0) {
+                // NOTE: normally input_blkd_cb_ready() and input_blocked_callback()
+                // need "ninput_items_required" but it hasn't been calculated
+                // yet, so instead guesstimate input required is one more than currently
+                // available and see if that unblocks the input.
+                buffer_reader_sptr in_buf = d->input(i);
+                if (in_buf->input_blkd_cb_ready(d_ninput_items[i] + 1)) {
+                    gr::custom_lock lock(std::ref(*in_buf->mutex()), in_buf->buffer());
+                    if (in_buf->input_blocked_callback(d_ninput_items[i] + 1,
+                                                       d_ninput_items[i])) {
+                        LOG(std::ostringstream msg; msg << m << " -- BLKD_IN";
+                            GR_LOG_INFO(d_logger, msg.str()));
+                        return BLKD_IN;
+                    }
+
+                    // Recalculate after successfully executing the input blocked callback
+                    d_ninput_items[i] = in_buf->items_available();
+                    max_items_avail = std::max(max_items_avail, d_ninput_items[i]);
+                }
+            }
         }
 
         // take a swag at how much output we can sink
