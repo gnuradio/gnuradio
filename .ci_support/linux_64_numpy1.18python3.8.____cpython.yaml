@@ -54,6 +54,8 @@ qt:
 - '5.12'
 soapysdr:
 - '0.8'
+spdlog:
+- '1.9.2'
 target_platform:
 - linux-64
 uhd:
