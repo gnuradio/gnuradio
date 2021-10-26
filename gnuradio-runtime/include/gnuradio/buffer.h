@@ -19,7 +19,6 @@
 #include <gnuradio/thread/thread.h>
 #include <gnuradio/transfer_type.h>
 
-#include <boost/weak_ptr.hpp>
 #include <functional>
 #include <iostream>
 #include <map>
