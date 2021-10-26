@@ -16,10 +16,8 @@
 #include <gnuradio/logger.h>
 #include <gnuradio/rpcpmtconverters_thrift.h>
 #include <gnuradio/rpcserver_base.h>
-#include <boost/format.hpp>
 #include <boost/thread/mutex.hpp>
 #include <map>
-#include <sstream>
 #include <string>
 
 #define S(x) #x

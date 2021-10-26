@@ -14,7 +14,6 @@
 #include <gnuradio/block.h>
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/generic_decoder.h>
-#include <boost/format.hpp>
 #include <boost/shared_array.hpp>
 #include <memory>
 
