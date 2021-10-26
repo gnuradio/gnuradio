@@ -50,7 +50,7 @@ class custom_lock
 {
 public:
     explicit custom_lock(gr::thread::mutex& mutex, std::shared_ptr<custom_lock_if> locker)
-        : d_mutex(mutex), d_lock(mutex), d_locker(locker)
+        : d_lock(mutex), d_locker(locker)
     {
         d_locker->on_lock(d_lock);
     }
@@ -62,7 +62,6 @@ public:
     custom_lock& operator=(custom_lock const&) = delete;
 
 private:
-    gr::thread::mutex& d_mutex;
     gr::thread::scoped_lock d_lock;
     std::shared_ptr<custom_lock_if> d_locker;
 };
