@@ -10,6 +10,8 @@ cxx_compiler:
 - vs2017
 fftw:
 - '3'
+fmt:
+- '8'
 gsl:
 - '2.6'
 libiio:
@@ -26,6 +28,8 @@ pin_run_as_build:
     max_pin: x.x
   qt:
     max_pin: x.x
+  spdlog:
+    max_pin: x.x
   zeromq:
     max_pin: x.x.x
 pybind11_abi:
@@ -36,6 +40,8 @@ qt:
 - '5.12'
 soapysdr:
 - '0.8'
+spdlog:
+- '1.8'
 target_platform:
 - win-64
 uhd:

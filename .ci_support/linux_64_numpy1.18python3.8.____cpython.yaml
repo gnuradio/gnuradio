@@ -20,6 +20,8 @@ docker_image:
 - quay.io/condaforge/linux-anvil-comp7
 fftw:
 - '3'
+fmt:
+- '8'
 gmp:
 - '6'
 gsl:
@@ -44,6 +46,8 @@ pin_run_as_build:
     max_pin: x.x
   qt:
     max_pin: x.x
+  spdlog:
+    max_pin: x.x
   zeromq:
     max_pin: x.x
 pybind11_abi:
@@ -54,6 +58,8 @@ qt:
 - '5.12'
 soapysdr:
 - '0.8'
+spdlog:
+- '1.8'
 target_platform:
 - linux-64
 uhd:
