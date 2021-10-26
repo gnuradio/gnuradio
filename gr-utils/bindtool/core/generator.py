@@ -22,7 +22,7 @@ class BindingGenerator:
 
     def __init__(self, prefix, namespace, prefix_include_root, output_dir="", define_symbols=None, addl_includes= None, 
                     match_include_structure=False, catch_exceptions=True, write_json_output=False, status_output=None,
-                    flag_automatic=False, flag_pygccxml=False, fix_hash=False):
+                    flag_automatic=False, flag_pygccxml=False, update_hash_only=False):
         """Initialize BindingGenerator
         prefix -- path to installed gnuradio prefix (use gr.prefix() if unsure)
         namespace -- desired namespace to parse e.g. ['gr','module_name']
@@ -36,7 +36,7 @@ class BindingGenerator:
         match_include_structure -- 
             If set to False, a bindings/ dir will be placed directly under the specified output_dir
             If set to True, the directory structure under include/ will be mirrored
-        fix_hash -- If set to true, only update the hash in the pybind 
+        update_hash_only -- If set to true, only update the hash in the pybind 
         """
 
         self.header_extensions = ['.h', '.hh', '.hpp']
@@ -53,7 +53,7 @@ class BindingGenerator:
         self.status_output = status_output
         self.flag_automatic = flag_automatic
         self.flag_pygccxml = flag_pygccxml
-        self.fix_hash = fix_hash
+        self.update_hash_only = update_hash_only
 
         pass
 
