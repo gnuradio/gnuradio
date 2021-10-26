@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2003,2008,2011,2012,2020 Free Software Foundation, Inc.
+ * Copyright 2021 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -12,7 +13,6 @@
 #include <gnuradio/gr_complex.h>
 #include <gnuradio/sys_paths.h>
 #include <fftw3.h>
-#include <boost/format.hpp>
 
 #ifdef _WIN32 // http://www.fftw.org/install/windows.html#DLLwisdom
 static void my_fftw_write_char(char c, void* f) { fputc(c, (FILE*)f); }
@@ -32,9 +32,6 @@ static int my_fftw_read_char(void* f) { return fgetc((FILE*)f); }
 #define O_NONBLOCK 0
 #endif //_WIN32
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
 #include <filesystem>
 #include <stdexcept>
 
@@ -101,10 +98,8 @@ static void import_wisdom()
         int r = fftwf_import_wisdom_from_file(fp);
         fclose(fp);
         if (!r) {
-            gr::logger_ptr logger, debug_logger;
-            gr::configure_default_loggers(logger, debug_logger, "fft::import_wisdom");
-            GR_LOG_ERROR(logger,
-                         boost::format("can't import wisdom from %s") % filename.c_str());
+            auto logger = gr::logger("fft::import_wisdom");
+            logger.error("can't import wisdom from {:s}", filename.c_str());
         }
     }
 }
@@ -131,10 +126,8 @@ static void export_wisdom()
         fftwf_export_wisdom_to_file(fp);
         fclose(fp);
     } else {
-        gr::logger_ptr logger, debug_logger;
-        gr::configure_default_loggers(logger, debug_logger, "fft::export_wisdom");
-        GR_LOG_ERROR(logger,
-                     boost::format("%s: %s") % filename.c_str() % strerror(errno));
+        auto logger = gr::logger("fft::export_wisdom");
+        logger.error("{:s}: {:s}", filename.c_str(), strerror(errno));
     }
 }
 
@@ -143,9 +136,8 @@ static void export_wisdom()
 
 template <class T, bool forward>
 fft<T, forward>::fft(int fft_size, int nthreads)
-    : d_nthreads(nthreads), d_inbuf(fft_size), d_outbuf(fft_size)
+    : d_nthreads(nthreads), d_inbuf(fft_size), d_outbuf(fft_size), d_logger("fft_complex")
 {
-    gr::configure_default_loggers(d_logger, d_debug_logger, "fft_complex");
     // Hold global mutex during plan construction and destruction.
     planner::scoped_lock lock(planner::mutex());
 
@@ -162,7 +154,7 @@ fft<T, forward>::fft(int fft_size, int nthreads)
 
     initialize_plan(fft_size);
     if (d_plan == NULL) {
-        GR_LOG_ERROR(d_logger, "creating plan failed");
+        d_logger.error("creating plan failed");
         throw std::runtime_error("Creating fftw plan failed");
     }
     export_wisdom(); // store new wisdom to disk
