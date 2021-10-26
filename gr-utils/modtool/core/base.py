@@ -113,6 +113,8 @@ class ModTool(object):
             self.info['version'] = '37'
         if not os.path.isfile(os.path.join('cmake', 'Modules', 'FindCppUnit.cmake')):
             self.info['version'] = '38'
+            if os.path.isdir(os.path.join('include','gnuradio', self.info['modname'])):
+                self.info['version'] = '310'
         if self.skip_subdirs['lib'] or not self.has_subdirs['lib']:
             self.skip_subdirs['lib'] = True
         if not self.has_subdirs['python']:
@@ -141,6 +143,8 @@ class ModTool(object):
             self.info['includedir'] = os.path.join('include', 'gnuradio', self.info['modname'])
         elif self.info['version'] in ('37', '38'):
             self.info['includedir'] = os.path.join('include', self.info['modname'])
+        elif self.info['version'] in ('310'):
+            self.info['includedir'] = os.path.join('include', 'gnuradio', self.info['modname'])
         else:
             self.info['includedir'] = 'include'
         self._file['cminclude'] = os.path.join(self.info['includedir'], 'CMakeLists.txt')

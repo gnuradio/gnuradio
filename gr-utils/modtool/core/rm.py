@@ -63,7 +63,7 @@ class ModToolRemove(ModTool):
                                     r'\$\{CMAKE_CURRENT_SOURCE_DIR\}/%s' % filename,
                                     to_ignore_start=f'APPEND test_{modname_}_sources')
                     self.scm.mark_file_updated(ed.filename)
-            elif self.info['version'] == '38':
+            elif self.info['version'] in ['38','310']:
                 (base, ext) = os.path.splitext(filename)
                 if ext == '.cc':
                     ed.remove_value(

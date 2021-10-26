@@ -11,5 +11,5 @@
 ########################################################################
 install(FILES
     api.h
-    DESTINATION include/howto
+    DESTINATION include/gnuradio/howto
 )

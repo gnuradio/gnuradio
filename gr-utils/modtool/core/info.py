@@ -44,6 +44,8 @@ class ModToolInfo(ModTool):
             self.info['version'] = '37'
         if not os.path.isfile(os.path.join('cmake', 'Modules', 'FindCppUnit.cmake')):
             self.info['version'] = '38'
+            if os.path.isdir(os.path.join('include','gnuradio', self.info['modname'])):
+                self.info['version'] = '310'
         mod_info['version'] = self.info['version']
         if 'is_component' in list(self.info.keys()) and self.info['is_component']:
             mod_info['is_component'] = True
@@ -123,6 +125,7 @@ class ModToolInfo(ModTool):
                         '36': 'pre-3.7',
                         '37': 'post-3.7',
                         '38': 'post-3.8',
+                        '310': 'post-3.10',
                         'autofoo': 'Autotools (pre-3.5)'
                         }[mod_info['version']]
                 print(f"        API version: {version}")

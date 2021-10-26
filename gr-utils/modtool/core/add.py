@@ -206,7 +206,7 @@ class ModToolAdd(ModTool):
         """
         fname_cc = None
         fname_h = None
-        if self.info['version'] in ('37', '38'):
+        if self.info['version'] in ('37', '38', '310'):
             fname_h = self.info['blockname'] + '.h'
             fname_cc = self.info['blockname'] + '.cc'
             if self.info['blocktype'] in ('source', 'sink', 'sync', 'decimator',
@@ -221,7 +221,7 @@ class ModToolAdd(ModTool):
             self._write_tpl('block_h36',   self.info['includedir'], fname_h)
             self._write_tpl('block_cpp36', 'lib',                    fname_cc)
         if self.add_cc_qa:
-            if self.info['version'] == '38':
+            if self.info['version'] in ['38','310']:
                 self._run_cc_qa_boostutf()
             elif self.info['version'] == '37':
                 self._run_cc_qa()
@@ -246,6 +246,8 @@ class ModToolAdd(ModTool):
         - add reference and call to bind_blockname()
         - include them into CMakeLists.txt
         """
+        
+        bindings_dir = os.path.join(self.info['pydir'],'bindings')    
 
         # Generate bindings cc file
         fname_cc = self.info['blockname'] + '_python.cc'
@@ -261,7 +263,12 @@ class ModToolAdd(ModTool):
 
         self.scm.mark_files_updated((self._file['ccpybind']))
 
-        bg = BindingGenerator(prefix=gr.prefix(), namespace=['gr',self.info['modname']], prefix_include_root=self.info['modname'])
+        if self.info['version'] in ['310']:
+            prefix_include_root = '/'.join(('gnuradio',self.info['modname']))
+        else:
+            prefix_include_root = self.info['modname']
+
+        bg = BindingGenerator(prefix=gr.prefix(), namespace=['gr',self.info['modname']], prefix_include_root=prefix_include_root)
         block_base = ""
         if self.info['blocktype'] in ('source', 'sink', 'sync', 'decimator',
                                         'interpolator', 'general', 'hier', 'tagged_stream'):
@@ -313,14 +320,14 @@ class ModToolAdd(ModTool):
         }
         # def gen_pybind_cc(self, header_info, base_name):
         pydoc_txt = bg.gen_pydoc_h(header_info,self.info['blockname'])
-        path_to_file = os.path.join('python','bindings', fname_pydoc_h)
+        path_to_file = os.path.join(bindings_dir, fname_pydoc_h)    
         logger.info("Adding file '{}'...".format(path_to_file))
         with open(path_to_file, 'w') as f:
             f.write(pydoc_txt)
         self.scm.add_files((path_to_file,))
 
         cc_txt = bg.gen_pybind_cc(header_info,self.info['blockname'])
-        path_to_file = os.path.join('python','bindings', fname_cc)
+        path_to_file = os.path.join(bindings_dir, fname_cc)
         logger.info("Adding file '{}'...".format(path_to_file))
         with open(path_to_file, 'w') as f:
             f.write(cc_txt)
