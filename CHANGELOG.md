@@ -23,7 +23,7 @@ This is an API compatible update to GNU Radio 3.9. Code written for 3.9.X versio
 - GRC now runs on Fedora 35 ... Gtk initialization checks were too strict
 - Add keyboard shortcuts for zoom
 - Account for scale factor when computing drawing area size
-- Use fonts size from config for block comments
+- Use font size from config for block comments
 - Change type aliasing to allow interleaved short/byte to be connected to vectors of short/byte. Stricter type checking was added previously and caused some blocks to be unconnectable when using these types.
 - Required params no longer default to `0` when left empty. This caused hard-to-find errors. Older flowgraphs that have empty required fields will need to be fixed.
 - Tooltips fixed for categories and modules
@@ -32,12 +32,13 @@ This is an API compatible update to GNU Radio 3.9. Code written for 3.9.X versio
 
 - PMT uses the VOLK allocator for vectors
 - `get_tags_in_window()` Python wrapper calls the correct function
+- Add `--pybind` option to `gnuradio-config-info` to get PyBind11 version
 
 #### gr-blocks
 
 - Add example for XMLRPC
 - Add a unit test for Message Strobe
-- Fix C++ support for Unpacked to Packet
+- Fix C++ support for Unpacked to Packed
 
 #### gr-channels
 
@@ -58,7 +59,7 @@ This is an API compatible update to GNU Radio 3.9. Code written for 3.9.X versio
 
 #### modtool
 
-- Hashes can be fixed using modtool
+- Hashes can be fixed using modtool using `--update-hash-only`
 - Use `tempfile()` instead of `/tmp` in bindtool and modtool
 - Use `static_cast` instead of `reinterpret_cast` in templates
 - Correct broken Python general block template
@@ -67,16 +68,19 @@ This is an API compatible update to GNU Radio 3.9. Code written for 3.9.X versio
 
 - Better check for Boost version
 - Determine the Python prefix more reliably
-- Use GR-specified compiler standard (C++14) in gr-soapy, instead of the SoapySDR standard (C++11).
+- Use GR-specified compiler standard (C++14) in gr-soapy, instead of the SoapySDR standard (C++11)
+- GrPython.cmake is compatible with older cmake
 
 #### Documentation
 
 - Man pages are in-tree
 - Repair many examples, especially in gr-digital
+- Allow UTF-8 in pydoc templates
 
 #### CI
 
 - Execute `make install` during test
+- Add Ubuntu 18.04 test target
 
 ## [3.9.3.0] - 2021-09-30
 
