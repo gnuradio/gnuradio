@@ -20,7 +20,6 @@
 #include <gnuradio/buffer_type.h>
 #include <gnuradio/integer_math.h>
 #include <gnuradio/math.h>
-#include <boost/format.hpp>
 #include <algorithm>
 #include <cassert>
 #include <stdexcept>
