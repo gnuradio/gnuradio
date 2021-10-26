@@ -57,19 +57,21 @@ selector_impl::~selector_impl() {}
 void selector_impl::set_input_index(unsigned int input_index)
 {
     gr::thread::scoped_lock l(d_mutex);
-    if (input_index < d_num_inputs)
+    if (input_index < d_num_inputs) {
         d_input_index = input_index;
-    else
+    } else {
         throw std::out_of_range("input_index must be < ninputs");
+    }
 }
 
 void selector_impl::set_output_index(unsigned int output_index)
 {
     gr::thread::scoped_lock l(d_mutex);
-    if (output_index < d_num_outputs)
+    if (output_index < d_num_outputs) {
         d_output_index = output_index;
-    else
+    } else {
         throw std::out_of_range("output_index must be < noutputs");
+    }
 }
 
 void selector_impl::handle_msg_input_index(pmt::pmt_t msg)
@@ -79,16 +81,18 @@ void selector_impl::handle_msg_input_index(pmt::pmt_t msg)
     if (pmt::is_integer(data)) {
         const unsigned int new_port = pmt::to_long(data);
 
-        if (new_port < d_num_inputs)
+        if (new_port < d_num_inputs) {
             set_input_index(new_port);
-        else
-            GR_LOG_WARN(
-                d_logger,
-                "handle_msg_input_index: port index greater than available ports.");
-    } else
-        GR_LOG_WARN(
-            d_logger,
+        } else {
+            d_logger->warn("handle_msg_input_index: port index {:d} greater than "
+                           "available ports {:d}.",
+                           new_port,
+                           d_num_inputs);
+        }
+    } else {
+        d_logger->warn(
             "handle_msg_input_index: Non-PMT type received, expecting integer PMT");
+    }
 }
 
 void selector_impl::handle_msg_output_index(pmt::pmt_t msg)
@@ -97,16 +101,18 @@ void selector_impl::handle_msg_output_index(pmt::pmt_t msg)
 
     if (pmt::is_integer(data)) {
         const unsigned int new_port = pmt::to_long(data);
-        if (new_port < d_num_outputs)
+        if (new_port < d_num_outputs) {
             set_output_index(new_port);
-        else
-            GR_LOG_WARN(
-                d_logger,
-                "handle_msg_output_index: port index greater than available ports.");
-    } else
-        GR_LOG_WARN(
-            d_logger,
+        } else {
+            d_logger->warn("handle_msg_input_index: port index {:d} greater than "
+                           "available ports {:d}.",
+                           new_port,
+                           d_num_inputs);
+        }
+    } else {
+        d_logger->warn(
             "handle_msg_output_index: Non-PMT type received, expecting integer PMT");
+    }
 }
 
 
@@ -117,8 +123,7 @@ void selector_impl::handle_enable(pmt::pmt_t msg)
         gr::thread::scoped_lock l(d_mutex);
         d_enabled = en;
     } else {
-        GR_LOG_WARN(d_logger,
-                    "handle_enable: Non-PMT type received, expecting Boolean PMT");
+        d_logger->warn("handle_enable: Non-PMT type received, expecting Boolean PMT");
     }
 }
 
@@ -137,11 +142,9 @@ bool selector_impl::check_topology(int ninputs, int noutputs)
         d_num_inputs = (unsigned int)ninputs;
         d_num_outputs = (unsigned int)noutputs;
         return true;
-    } else {
-        GR_LOG_WARN(d_logger,
-                    "check_topology: Input or Output index greater than number of ports");
-        return false;
     }
+    d_logger->warn("check_topology: Input or Output index greater than number of ports");
+    return false;
 }
 
 int selector_impl::general_work(int noutput_items,

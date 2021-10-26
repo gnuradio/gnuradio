@@ -18,7 +18,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <boost/format.hpp>
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
@@ -100,10 +99,9 @@ sink_uc_impl::sink_uc_impl(
         throw std::runtime_error("video_sdl::sink_uc");
     }
 
-    GR_LOG_INFO(d_debug_logger,
-                boost::format("SDL screen_mode %d bits-per-pixel") %
-                    d_screen->format->BitsPerPixel);
-    GR_LOG_INFO(d_debug_logger, boost::format("SDL overlay_mode %i ") % d_image->format);
+    d_debug_logger->info("SDL screen_mode {:d} bits-per-pixel",
+                         d_screen->format->BitsPerPixel);
+    d_debug_logger->info("SDL overlay_mode {:d} ", d_image->format);
 
     d_chunk_size = std::min(1, 16384 / width); // width*16;
     d_chunk_size = d_chunk_size * width;

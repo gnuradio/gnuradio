@@ -15,7 +15,6 @@
 
 #include "packed_to_unpacked_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/format.hpp>
 #include <stdexcept>
 
 namespace gr {
@@ -40,9 +39,9 @@ packed_to_unpacked_impl<T>::packed_to_unpacked_impl(unsigned int bits_per_chunk,
       d_index(0)
 {
     if (bits_per_chunk > d_bits_per_type) {
-        GR_LOG_ERROR(this->d_logger,
-                     boost::format("Requested to get %d out of a %d bit chunk") %
-                         bits_per_chunk % d_bits_per_type);
+        this->d_logger->error("Requested to get {:d} out of a {:d} bit chunk",
+                              bits_per_chunk,
+                              d_bits_per_type);
         throw std::domain_error("can't have more bits in chunk than in output type");
     }
 
@@ -138,7 +137,7 @@ int packed_to_unpacked_impl<T>::general_work(int noutput_items,
             break;
 
         default:
-            GR_LOG_ERROR(this->d_logger, "unknown endianness");
+            this->d_logger->error("unknown endianness");
             throw std::runtime_error("unknown endianness");
         }
     }
