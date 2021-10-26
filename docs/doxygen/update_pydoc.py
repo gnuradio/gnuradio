@@ -301,9 +301,9 @@ def sub_docstring_in_pydoc_h(pydoc_files, docstrings_dict, output_dir, filter_st
 def copy_docstring_templates(pydoc_files, output_dir):
     with open(os.path.join(output_dir,'docstring_status'),'w') as status_file:
         for pydoc_file in pydoc_files:
-            file_in = open(pydoc_file,'r').read()
+            file_in = open(pydoc_file,'r', encoding='utf-8').read()
             output_pathname = os.path.join(output_dir, os.path.basename(pydoc_file).replace('_template.h','.h'))
-            with open(output_pathname,'w') as file_out:
+            with open(output_pathname,'w', encoding='utf-8') as file_out:
                 file_out.write(file_in)
         status_file.write("DONE")
 
