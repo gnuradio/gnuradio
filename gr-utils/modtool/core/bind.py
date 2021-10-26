@@ -76,7 +76,7 @@ class ModToolGenBindings(ModTool):
 
             files_to_process = [os.path.join(self.dir, self.info['includedir'], f'{blockname}.h') for blockname in blocknames_to_process]
             bg = BindingGenerator(prefix=gr.prefix(), namespace=[
-                                'gr', self.info['modname']], prefix_include_root=prefix_include_root, output_dir=os.path.join(self.dir, 'python'),
+                                'gr', self.info['modname']], prefix_include_root=prefix_include_root, output_dir=self.info['pydir'],
                                 define_symbols=self.info['define_symbols'], addl_includes=self.info['addl_includes'], update_hash_only=self.info['update_hash_only'])
             for file_to_process in files_to_process:
                 if self.info['update_hash_only']:
