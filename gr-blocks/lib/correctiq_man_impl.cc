@@ -92,7 +92,7 @@ void correctiq_man_impl::handle_real(pmt::pmt_t msg)
 
             set_real(new_value);
         } else {
-            GR_LOG_WARN(d_logger, "Non-float real value received.  Ignoring.");
+            d_logger->warn("Non-float real value received.  Ignoring. (In PMT pair.)");
         }
     } else {
         if (pmt::is_real(msg)) {
@@ -100,7 +100,7 @@ void correctiq_man_impl::handle_real(pmt::pmt_t msg)
 
             set_real(new_value);
         } else {
-            GR_LOG_WARN(d_logger, "Non-float real value received.  Ignoring.");
+            d_logger->warn("Non-float real value received.  Ignoring.");
         }
     }
 }
@@ -114,7 +114,7 @@ void correctiq_man_impl::handle_imag(pmt::pmt_t msg)
 
             set_imag(new_value);
         } else {
-            GR_LOG_WARN(d_logger, "Non-float imag value received.  Ignoring.");
+            d_logger->warn("Non-float imag value received.  Ignoring. (In PMT pair.)");
         }
     } else {
         if (pmt::is_real(msg)) {
@@ -122,7 +122,7 @@ void correctiq_man_impl::handle_imag(pmt::pmt_t msg)
 
             set_imag(new_value);
         } else {
-            GR_LOG_WARN(d_logger, "Non-float imag value received.  Ignoring.");
+            d_logger->warn("Non-float imag value received.  Ignoring.");
         }
     }
 }

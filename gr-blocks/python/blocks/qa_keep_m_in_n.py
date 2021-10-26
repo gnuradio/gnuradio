@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2010,2012,2013,2018 Free Software Foundation, Inc.
+# Copyright 2008,2010,2012,2013,2018,2022 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -70,24 +70,24 @@ class test_keep_m_in_n(gr_unittest.TestCase):
     def test_003(self):
         with self.assertRaises(RuntimeError) as cm:
             blocks.keep_m_in_n(8, 0, 5, 0)
-        self.assertEqual(str(cm.exception), 'keep_m_in_n: m=0 but must be > 0')
+        self.assertEqual(str(cm.exception), 'm=0 but must be > 0')
 
         with self.assertRaises(RuntimeError) as cm:
             blocks.keep_m_in_n(8, 5, 0, 0)
-        self.assertEqual(str(cm.exception), 'keep_m_in_n: n=0 but must be > 0')
+        self.assertEqual(str(cm.exception), 'n=0 but must be > 0')
 
         with self.assertRaises(RuntimeError) as cm:
             blocks.keep_m_in_n(8, 6, 5, 0)
-        self.assertEqual(str(cm.exception), 'keep_m_in_n: m (6) <= n 5')
+        self.assertEqual(str(cm.exception), 'm = 6 ≤ 5 = n')
 
         with self.assertRaises(RuntimeError) as cm:
             blocks.keep_m_in_n(8, 2, 5, -1)
         self.assertEqual(str(cm.exception),
-                         'keep_m_in_n: offset (-1) must be >= 0')
+                         'offset -1 but must be >= 0')
 
         with self.assertRaises(RuntimeError) as cm:
             blocks.keep_m_in_n(8, 2, 5, 5)
-        self.assertEqual(str(cm.exception), 'keep_m_in_n: offset (5) < n (5)')
+        self.assertEqual(str(cm.exception), 'offset = 5 < 5 = n')
 
 
 if __name__ == '__main__':

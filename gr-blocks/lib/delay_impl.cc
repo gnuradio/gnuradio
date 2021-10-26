@@ -76,8 +76,7 @@ void delay_impl::handle_msg(pmt::pmt_t msg)
                 int value = pmt::to_long(data);
                 set_dly(value);
             } else
-                GR_LOG_WARN(
-                    d_logger,
+                d_logger->warn(
                     "Delay message must be a number or a number pair.  Ignoring value.");
         }
     }

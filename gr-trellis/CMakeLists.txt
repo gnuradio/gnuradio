@@ -8,14 +8,13 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-include(GrBoost)
+# ↺↺↺↺↺↺↺ (Tumbleweed)
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-trellis" ENABLE_GR_TRELLIS
-    Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_ANALOG
     ENABLE_GR_BLOCKS
