@@ -119,7 +119,7 @@ int tuntap_pdu_impl::tun_alloc(char* dev, int flags)
      * specified type
      */
 
-#if defined(__GNUG__) && !defined(__clang__)
+#if defined(__GNUG__) && !defined(__clang__) && (__GNUC__ >= 8)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstringop-truncation"
 #endif
@@ -129,7 +129,7 @@ int tuntap_pdu_impl::tun_alloc(char* dev, int flags)
         strncpy(ifr.ifr_name, dev, IFNAMSIZ - 1);
     }
 
-#if defined(__GNUG__) && !defined(__clang__)
+#if defined(__GNUG__) && !defined(__clang__) && (__GNUC__ >= 8)
 #pragma GCC diagnostic pop
 #endif
 
