@@ -17,7 +17,6 @@
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/integer_math.h>
 #include <gnuradio/io_signature.h>
-#include <boost/format.hpp>
 #include <stdexcept>
 
 namespace gr {
@@ -121,13 +120,13 @@ rational_resampler_impl<IN_T, OUT_T, TAP_T>::rational_resampler_impl(
     auto d = GR_GCD(interpolation, decimation);
 
     if (!taps.empty() && (d > 1)) {
-        GR_LOG_INFO(
-            d_logger,
-            boost::format(
-                "Rational resampler has user-provided taps but interpolation (%1%) and "
-                "decimation (%2%) have a GCD of %3%, which increases the complexity of "
-                "the filterbank. Consider reducing these values by the GCD.") %
-                interpolation % decimation % d);
+        d_logger->info(
+            "Rational resampler has user-provided taps but interpolation ({:d}) and "
+            "decimation ({:d}) have a GCD of {:d}, which increases the complexity of "
+            "the filterbank. Consider reducing these values by the GCD.",
+            interpolation,
+            decimation,
+            d);
     }
 
     std::vector<TAP_T> staps;

@@ -15,7 +15,6 @@
 #include "wavfile_sink_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/thread/thread.h>
-#include <boost/format.hpp>
 #include <cstring>
 #include <stdexcept>
 
@@ -111,21 +110,18 @@ bool wavfile_sink_impl::open(const char* filename)
         // We are appending to an existing file, be extra careful here.
         sfinfo.format = 0;
         if (!(d_new_fp = sf_open(filename, SFM_RDWR, &sfinfo))) {
-            GR_LOG_ERROR(d_logger,
-                         boost::format("sf_open failed: %s: %s") % filename %
-                             strerror(errno));
+            d_logger->error("sf_open(1) failed: {:s}: {:s}", filename, strerror(errno));
             return false;
         }
         if (d_h.sample_rate != sfinfo.samplerate || d_h.nchans != sfinfo.channels ||
             d_h.format != (sfinfo.format & SF_FORMAT_TYPEMASK) ||
             d_h.subformat != (sfinfo.format & SF_FORMAT_SUBMASK)) {
-            GR_LOG_ERROR(d_logger,
-                         "Existing WAV file is incompatible with configured options.");
+            d_logger->error("Existing WAV file is incompatible with configured options.");
             sf_close(d_new_fp);
             return false;
         }
         if (sf_seek(d_new_fp, 0, SEEK_END) == -1) {
-            GR_LOG_ERROR(d_logger, "Seek error.");
+            d_logger->error("Seek error.");
             return false; // This can only happen if the file disappears under our feet.
         }
     } else {
@@ -199,9 +195,7 @@ bool wavfile_sink_impl::open(const char* filename)
             break;
         }
         if (!(d_new_fp = sf_open(filename, SFM_WRITE, &sfinfo))) {
-            GR_LOG_ERROR(d_logger,
-                         boost::format("sf_open failed: %s: %s") % filename %
-                             strerror(errno));
+            d_logger->error("sf_open(2) failed: {:s}: {:s}", filename, strerror(errno));
             return false;
         }
     }
@@ -272,7 +266,7 @@ int wavfile_sink_impl::work(int noutput_items,
 
     errnum = sf_error(d_fp);
     if (errnum) {
-        GR_LOG_ERROR(d_logger, boost::format("sf_error: %s") % sf_error_number(errnum));
+        d_logger->error("sf_error: {:s}", sf_error_number(errnum));
         close();
         throw std::runtime_error("File I/O error.");
     }

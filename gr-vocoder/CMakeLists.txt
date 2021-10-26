@@ -8,14 +8,13 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-include(GrBoost)
+# ---- crickets
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-vocoder" ENABLE_GR_VOCODER
-    Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_FFT
     ENABLE_GR_BLOCKS

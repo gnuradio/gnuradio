@@ -93,9 +93,8 @@ int throttle_impl::work(int noutput_items,
         auto limit_duration =
             std::chrono::duration<double>(std::numeric_limits<long>::max());
         if (expected_time - now > limit_duration) {
-            GR_LOG_ALERT(d_logger,
-                         "WARNING: Throttle sleep time overflow! You "
-                         "are probably using a very low sample rate.");
+            d_logger->error("WARNING: Throttle sleep time overflow! You are probably "
+                            "using a very low sample rate.");
         }
         std::this_thread::sleep_until(expected_time);
     }
