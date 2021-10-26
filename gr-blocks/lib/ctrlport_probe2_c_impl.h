@@ -14,7 +14,6 @@
 #include <gnuradio/blocks/ctrlport_probe2_c.h>
 #include <gnuradio/rpcbufferedget.h>
 #include <gnuradio/rpcregisterhelpers.h>
-#include <boost/format.hpp>
 
 namespace gr {
 namespace blocks {
