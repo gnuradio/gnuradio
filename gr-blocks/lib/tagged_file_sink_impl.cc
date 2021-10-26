@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010,2013 Free Software Foundation, Inc.
+ * Copyright 2010,2013 Free Software Foundation, Inc.a
+ * Copyright 2021 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -14,13 +15,10 @@
 
 #include "tagged_file_sink_impl.h"
 #include <gnuradio/io_signature.h>
+
 #include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <boost/format.hpp>
 #include <cerrno>
-#include <iostream>
-#include <stdexcept>
+#include <cstdint>
 
 #ifdef HAVE_IO_H
 #include <io.h>
@@ -92,14 +90,15 @@ int tagged_file_sink_impl::work(int noutput_items,
         d_last_N = offset;
     }
 
-    int idx = 0, idx_stop = 0;
-    while (idx < noutput_items) {
+    uint64_t idx = 0;
+    uint64_t idx_stop = 0;
+    while (idx < (unsigned int)noutput_items) {
         if (d_state == state_t::NOT_IN_BURST) {
             while (vitr != all_tags.end()) {
                 if ((pmt::eqv((*vitr).key, bkey)) && pmt::is_true((*vitr).value)) {
 
-                    uint64_t N = (*vitr).offset;
-                    idx = (int)(N - start_N);
+                    auto N = (*vitr).offset;
+                    idx = (N - start_N);
 
                     // std::cout << std::endl << "Found start of burst: "
                     //	    << idx << ", " << N << std::endl;
@@ -139,30 +138,24 @@ int tagged_file_sink_impl::work(int noutput_items,
                     }
                     d_last_N = N;
 
-                    std::stringstream filename;
-                    filename.setf(std::ios::fixed, std::ios::floatfield);
-                    filename.precision(8);
-                    filename << "file" << unique_id() << "_" << d_n << "_" << d_timeval
-                             << ".dat";
+                    std::string filename = fmt::format(
+                        "file{:d}_{:d}_{:.8f}.dat", unique_id(), d_n, d_timeval);
+                    d_logger->trace("New filename '{:s}'", filename);
                     d_n++;
 
                     int fd;
-                    if ((fd = ::open(filename.str().c_str(),
+                    if ((fd = ::open(filename.c_str(),
                                      O_WRONLY | O_CREAT | O_TRUNC | OUR_O_LARGEFILE |
                                          OUR_O_BINARY,
                                      0664)) < 0) {
-                        GR_LOG_ERROR(d_logger,
-                                     boost::format("::open %s: %s") % filename.str() %
-                                         strerror(errno));
+                        d_logger->error("::open {:s}:{:s}", filename, strerror(errno));
                         return -1;
                     }
 
                     // FIXME:
                     // if((d_handle = fdopen (fd, d_is_binary ? "wb" : "w")) == NULL) {
                     if ((d_handle = fdopen(fd, "wb")) == NULL) {
-                        GR_LOG_ERROR(d_logger,
-                                     boost::format("fdopen %s: %s") % filename.str() %
-                                         strerror(errno));
+                        d_logger->error("fdopen {:s}:{:s", filename, strerror(errno));
                         ::close(fd); // don't leak file descriptor if fdopen fails.
                     }
 
@@ -179,8 +172,8 @@ int tagged_file_sink_impl::work(int noutput_items,
         } else { // In burst
             while (vitr != all_tags.end()) {
                 if ((pmt::eqv((*vitr).key, bkey)) && pmt::is_false((*vitr).value)) {
-                    uint64_t N = (*vitr).offset;
-                    idx_stop = (int)N - start_N;
+                    auto N = (*vitr).offset;
+                    idx_stop = N - start_N;
 
                     // std::cout << "Found end of burst: "
                     //	    << idx_stop << ", " << N << std::endl;
@@ -189,9 +182,7 @@ int tagged_file_sink_impl::work(int noutput_items,
                         &inbuf[d_itemsize * idx], d_itemsize, idx_stop - idx, d_handle);
                     if (count == 0) {
                         if (ferror(d_handle)) {
-                            GR_LOG_ERROR(d_logger,
-                                         boost::format("writing file(1): %s") %
-                                             strerror(errno));
+                            d_logger->error("writing file(1): {:s}", strerror(errno));
                         }
                     }
                     idx = idx_stop;
@@ -208,9 +199,7 @@ int tagged_file_sink_impl::work(int noutput_items,
                     &inbuf[d_itemsize * idx], d_itemsize, noutput_items - idx, d_handle);
                 if (count == 0) {
                     if (ferror(d_handle)) {
-                        GR_LOG_ERROR(d_logger,
-                                     boost::format("writing file(2): %s") %
-                                         strerror(errno));
+                        d_logger->error("writing file(2): {:s}", strerror(errno));
                     }
                 }
                 idx = noutput_items;

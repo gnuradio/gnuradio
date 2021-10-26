@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012,2018 Free Software Foundation, Inc.
+ * Copyright 2012,2018,2022 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -8,13 +8,9 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "keep_m_in_n_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/format.hpp>
+#include <spdlog/fmt/fmt.h>
 
 namespace gr {
 namespace blocks {
@@ -35,29 +31,19 @@ keep_m_in_n_impl::keep_m_in_n_impl(size_t itemsize, int m, int n, int offset)
 {
     // sanity checking
     if (d_m <= 0) {
-        std::string s =
-            boost::str(boost::format("keep_m_in_n: m=%1% but must be > 0") % d_m);
-        throw std::runtime_error(s);
+        throw std::runtime_error(fmt::format("m={:d} but must be > 0", d_m));
     }
     if (d_n <= 0) {
-        std::string s =
-            boost::str(boost::format("keep_m_in_n: n=%1% but must be > 0") % d_n);
-        throw std::runtime_error(s);
+        throw std::runtime_error(fmt::format("n={:d} but must be > 0", d_n));
     }
     if (d_m > d_n) {
-        std::string s =
-            boost::str(boost::format("keep_m_in_n: m (%1%) <= n %2%") % d_m % d_n);
-        throw std::runtime_error(s);
+        throw std::runtime_error(fmt::format("m = {:d} ≤ {:d} = n", d_m, d_n));
     }
     if (d_offset < 0) {
-        std::string s = boost::str(
-            boost::format("keep_m_in_n: offset (%1%) must be >= 0") % d_offset);
-        throw std::runtime_error(s);
+        throw std::runtime_error(fmt::format("offset {:d} but must be >= 0", d_offset));
     }
     if (d_offset >= d_n) {
-        std::string s = boost::str(boost::format("keep_m_in_n: offset (%1%) < n (%2%)") %
-                                   d_offset % d_n);
-        throw std::runtime_error(s);
+        throw std::runtime_error(fmt::format("offset = {:d} < {:d} = n", d_offset, d_n));
     }
 
     set_output_multiple(m);

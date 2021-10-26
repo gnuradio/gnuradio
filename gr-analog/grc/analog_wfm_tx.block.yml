@@ -39,9 +39,9 @@ templates:
         \ttau=${tau},\n\tmax_dev=${max_dev},\n\tfh=${fh},\n)"
 
 cpp_templates:
-    includes: [ '#include <gnuradio/analog/frequency_modulator_fc.h>', '#include <boost/math/constants/constants.hpp>' ]
+    includes: [ '#include <gnuradio/analog/frequency_modulator_fc.h>', '#include <gnuradio/math.h>' ]
     declarations: gr::analog::frequency_modulator_fc::sptr ${id};
-    make: this->${id} = gr::analog::frequency_modulator_fc::make(2 * boost::math::constants::pi<double>() * ${max_dev} / ${quad_rate});
+    make: this->${id} = gr::analog::frequency_modulator_fc::make(2 * (GR_M_PI) * ${max_dev} / ${quad_rate});
     link: ['gnuradio::gnuradio-analog']          
       
 file_format: 1

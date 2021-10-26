@@ -15,7 +15,6 @@
 #include "correctiq_auto_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
-#include <boost/format.hpp>
 
 namespace gr {
 namespace blocks {
@@ -57,16 +56,15 @@ correctiq_auto_impl::correctiq_auto_impl(double samp_rate,
     message_port_register_out(pmt::mp("sync_start"));
     message_port_register_out(pmt::mp("offsets"));
 
-    GR_LOG_INFO(d_logger, "Block start.  Auto Synchronizing...");
+    d_logger->info("Block start.  Auto Synchronizing...");
 }
 
 void correctiq_auto_impl::trigger_resync(std::string reason)
 {
     gr::thread::scoped_lock guard(d_setlock);
 
-    std::string d_resync_msg = reason + ".  Auto Synchronizing...";
+    d_logger->info("{:s}.  Auto Synchronizing...", reason);
 
-    GR_LOG_INFO(d_logger, d_resync_msg);
     d_synchronized = false;
     d_sync_counter = 0;
 
@@ -171,12 +169,11 @@ int correctiq_auto_impl::work(int noutput_items,
         d_k = gr_complex(d_avg_real, d_avg_img);
         fill_const_buffer();
 
-        GR_LOG_INFO(d_logger, "Auto offset now synchronized.");
-        GR_LOG_INFO(
-            d_logger,
-            boost::format{ "Applying these offsets (real-real_offset, "
-                           "imag-imag_offset)... real_offset: %.6f, imag_offset: %.6f" } %
-                d_avg_real % d_avg_img);
+        d_logger->info("Auto offset now synchronized.");
+        d_logger->info("Applying these offsets (real-real_offset, imag-imag_offset)... "
+                       "real_offset: {:.6f}, imag_offset: {:6f}",
+                       d_avg_real,
+                       d_avg_img);
 
         send_sync_values();
     }

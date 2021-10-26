@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2005,2010,2012-2013 Free Software Foundation, Inc.
+ * Copyright 2021 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -14,12 +15,14 @@
 
 #include "message_debug_impl.h"
 #include <gnuradio/io_signature.h>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
+#include <spdlog/fmt/fmt.h>
 
 namespace gr {
 namespace blocks {
+
+// Original code was inconsistent about line lengths, but 36 comes close to the average
+// old *** HEADING *** line length.
+constexpr unsigned int PRINT_LINE_LENGTH = 36;
 
 message_debug::sptr message_debug::make(bool en_uvec)
 {
@@ -47,42 +50,44 @@ message_debug_impl::~message_debug_impl() {}
 
 void message_debug_impl::print(const pmt::pmt_t& msg)
 {
-    std::stringstream sout;
-
     if (pmt::is_pdu(msg)) {
         const auto& meta = pmt::car(msg);
         const auto& vector = pmt::cdr(msg);
 
-        sout << "***** VERBOSE PDU DEBUG PRINT ******" << std::endl
-             << pmt::write_string(meta) << std::endl;
+        fmt::print("{:*^{}}\n"
+                   "{:s}\n",
+                   " VERBOSE PDU DEBUG PRINT ",
+                   PRINT_LINE_LENGTH,
+                   pmt::write_string(meta));
 
         size_t len = pmt::blob_length(vector);
         if (d_en_uvec) {
-            sout << "pdu length = " << len << " bytes" << std::endl
-                 << "pdu vector contents = " << std::endl;
+            fmt::print("pdu length = {:10d} bytes\n"
+                       "pdu vector contents = \n",
+                       len);
             size_t offset(0);
             const uint8_t* d =
                 (const uint8_t*)pmt::uniform_vector_elements(vector, offset);
             for (size_t i = 0; i < len; i += 16) {
-                sout << std::hex << std::setw(4) << std::setfill('0')
-                     << static_cast<unsigned int>(i) << ": ";
+                fmt::print("{:04x}: ", static_cast<unsigned int>(i));
                 for (size_t j = i; j < std::min(i + 16, len); j++) {
-                    sout << std::hex << std::setw(2) << std::setfill('0')
-                         << static_cast<unsigned int>(d[j]) << " ";
+                    fmt::print("{:02x} ", d[j]);
                 }
-                sout << std::endl;
+                fmt::print("\n");
             }
         } else {
-            sout << "pdu length = " << len << " bytes (printing disabled)" << std::endl;
+            fmt::print("pdu length = {:10d} bytes (printing disabled)\n", len);
         }
 
     } else {
-        sout << "******* MESSAGE DEBUG PRINT ********" << std::endl
-             << pmt::write_string(msg) << std::endl;
+        fmt::print("{:*^{}}\n"
+                   "{:s}\n",
+                   " MESSAGE DEBUG PRINT ",
+                   PRINT_LINE_LENGTH,
+                   pmt::write_string(msg));
     }
 
-    sout << "************************************" << std::endl;
-    std::cout << sout.str();
+    fmt::print("{:*^{}}\n", "", PRINT_LINE_LENGTH);
 }
 
 void message_debug_impl::store(const pmt::pmt_t& msg)
@@ -95,13 +100,12 @@ void message_debug_impl::store(const pmt::pmt_t& msg)
 void message_debug_impl::print_pdu(const pmt::pmt_t& pdu)
 {
     if (pmt::is_pdu(pdu)) {
-        GR_LOG_INFO(d_logger,
-                    "The `print_pdu` port is deprecated and will be removed; forwarding "
-                    "to `print`.");
+        d_logger->info("The `print_pdu` port is deprecated and will be removed; "
+                       "forwarding to `print`.");
         this->print(pdu);
     } else {
-        GR_LOG_INFO(d_logger, "The `print_pdu` port is deprecated and will be removed.");
-        GR_LOG_WARN(d_logger, "Non PDU type message received. Dropping.");
+        d_logger->info("The `print_pdu` port is deprecated and will be removed.");
+        d_logger->warn("Non PDU type message received. Dropping.");
     }
 }
 

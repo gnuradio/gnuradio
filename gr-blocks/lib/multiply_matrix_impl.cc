@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2014,2017,2018 Free Software Foundation, Inc.
+ * Copyright 2021 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -46,12 +47,15 @@ bool multiply_matrix_impl<gr_complex>::set_A(
     const std::vector<std::vector<gr_complex>>& new_A)
 {
     if (d_A.size() != new_A.size()) {
-        GR_LOG_ALERT(d_logger, "Attempted to set matrix with invalid dimensions.");
+        d_logger->error("Attempted to set matrix with invalid dimensions. (Old and new "
+                        "number of rows different)");
         return false;
     }
     for (size_t i = 0; i < d_A.size(); i++) {
         if (d_A[i].size() != new_A[i].size()) {
-            GR_LOG_ALERT(d_logger, "Attempted to set matrix with invalid dimensions.");
+            d_logger->error("Attempted to set matrix with invalid dimensions. (Old and "
+                            "new number of columns different in row {:d})",
+                            i);
             return false;
         }
     }
@@ -63,11 +67,11 @@ template <>
 void multiply_matrix_impl<gr_complex>::msg_handler_A(pmt::pmt_t A)
 {
     if (!pmt::is_vector(A) && !pmt::is_tuple(A)) {
-        GR_LOG_ALERT(d_logger, "Invalid message to set A (wrong type).");
+        d_logger->error("Invalid message to set A (wrong type).");
         return;
     }
     if (pmt::length(A) != d_A.size()) {
-        GR_LOG_ALERT(d_logger, "Invalid message to set A (wrong size).");
+        d_logger->error("Invalid message to set A (wrong size).");
         return;
     }
 
@@ -81,8 +85,7 @@ void multiply_matrix_impl<gr_complex>::msg_handler_A(pmt::pmt_t A)
         }
         if (pmt::is_vector(row) || pmt::is_tuple(row)) {
             if (pmt::length(row) != d_A[0].size()) {
-                GR_LOG_ALERT(d_logger,
-                             "Invalid message to set A (wrong number of columns).");
+                d_logger->error("Invalid message to set A (wrong number of columns).");
                 return;
             }
             for (size_t k = 0; k < pmt::length(row); k++) {
@@ -94,8 +97,7 @@ void multiply_matrix_impl<gr_complex>::msg_handler_A(pmt::pmt_t A)
             size_t row_len = 0;
             const gr_complex* elements = pmt::c32vector_elements(row, row_len);
             if (row_len != d_A[0].size()) {
-                GR_LOG_ALERT(d_logger,
-                             "Invalid message to set A (wrong number of columns).");
+                d_logger->error("Invalid message to set A (wrong number of columns).");
                 return;
             }
             new_A[i].assign(elements, elements + row_len);
@@ -103,7 +105,7 @@ void multiply_matrix_impl<gr_complex>::msg_handler_A(pmt::pmt_t A)
     }
 
     if (!set_A(new_A)) {
-        GR_LOG_ALERT(d_logger, "Invalid message to set A.");
+        d_logger->error("Invalid message to set A.");
     }
 }
 
@@ -133,12 +135,15 @@ template <>
 bool multiply_matrix_impl<float>::set_A(const std::vector<std::vector<float>>& new_A)
 {
     if (d_A.size() != new_A.size()) {
-        GR_LOG_ALERT(d_logger, "Attempted to set matrix with invalid dimensions.");
+        d_logger->error("Attempted to set matrix with invalid dimensions. (Old and new "
+                        "number of rows different)");
         return false;
     }
     for (size_t i = 0; i < d_A.size(); i++) {
         if (d_A[i].size() != new_A[i].size()) {
-            GR_LOG_ALERT(d_logger, "Attempted to set matrix with invalid dimensions.");
+            d_logger->error("Attempted to set matrix with invalid dimensions. (Old and "
+                            "new number of columns different in row {:d})",
+                            i);
             return false;
         }
     }
@@ -150,11 +155,11 @@ template <>
 void multiply_matrix_impl<float>::msg_handler_A(pmt::pmt_t A)
 {
     if (!pmt::is_vector(A) && !pmt::is_tuple(A)) {
-        GR_LOG_ALERT(d_logger, "Invalid message to set A (wrong type).");
+        d_logger->error("Invalid message to set A (wrong type).");
         return;
     }
     if (pmt::length(A) != d_A.size()) {
-        GR_LOG_ALERT(d_logger, "Invalid message to set A (wrong size).");
+        d_logger->error("Invalid message to set A (wrong size).");
         return;
     }
 
@@ -168,8 +173,7 @@ void multiply_matrix_impl<float>::msg_handler_A(pmt::pmt_t A)
         }
         if (pmt::is_vector(row) || pmt::is_tuple(row)) {
             if (pmt::length(row) != d_A[0].size()) {
-                GR_LOG_ALERT(d_logger,
-                             "Invalid message to set A (wrong number of columns).");
+                d_logger->error("Invalid message to set A (wrong number of columns).");
                 return;
             }
             for (size_t k = 0; k < pmt::length(row); k++) {
@@ -181,8 +185,7 @@ void multiply_matrix_impl<float>::msg_handler_A(pmt::pmt_t A)
             size_t row_len = 0;
             const float* elements = pmt::f32vector_elements(row, row_len);
             if (row_len != d_A[0].size()) {
-                GR_LOG_ALERT(d_logger,
-                             "Invalid message to set A (wrong number of columns).");
+                d_logger->error("Invalid message to set A (wrong number of columns).");
                 return;
             }
             new_A[i].assign(elements, elements + row_len);
@@ -190,7 +193,7 @@ void multiply_matrix_impl<float>::msg_handler_A(pmt::pmt_t A)
     }
 
     if (!set_A(new_A)) {
-        GR_LOG_ALERT(d_logger, "Invalid message to set A.");
+        d_logger->error("Invalid message to set A.");
     }
 }
 

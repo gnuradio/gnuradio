@@ -11,7 +11,6 @@
 #include <gnuradio/logger.h>
 #include <gnuradio/trellis/base.h>
 #include <gnuradio/trellis/fsm.h>
-#include <boost/format.hpp>
 #include <cmath>
 #include <cstdlib>
 #include <fstream>
@@ -419,8 +418,7 @@ void fsm::generate_PS_PI()
 //######################################################################
 void fsm::generate_TM()
 {
-    gr::logger_ptr logger, debug_logger;
-    gr::configure_default_loggers(logger, debug_logger, "gnuradio-config-info.cc");
+    gr::logger logger("gnuradio-config-info.cc");
     d_TMi.resize(d_S * d_S);
     d_TMl.resize(d_S * d_S);
 
@@ -442,11 +440,9 @@ void fsm::generate_TM()
             // throw std::runtime_error ("fsm::generate_TM(): FSM appears to be
             // disconnected");
 
-            GR_LOG_ERROR(
-                logger,
-                (boost::format("fsm::generate_TM(): FSM appears to be disconnected"
-                               "state %d cannot be reached from all other states") %
-                 s));
+            logger.error("fsm::generate_TM(): FSM appears to be disconnected; state "
+                         "{:d} cannot be reached from all other states",
+                         s);
         }
     }
 }

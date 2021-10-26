@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2021 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -15,7 +16,6 @@
 #include "test_tag_variable_rate_ff_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/xoroshiro128p.h>
-#include <boost/format.hpp>
 #include <cstdint>
 
 using namespace pmt;
@@ -59,9 +59,10 @@ int test_tag_variable_rate_ff_impl::general_work(int noutput_items,
     const float* in = (const float*)input_items[0];
     float* out = (float*)output_items[0];
 
-    GR_LOG_DEBUG(d_logger, "\n");
-    GR_LOG_DEBUG(d_logger, boost::format("ninput_items:  %1%") % ninput_items[0]);
-    GR_LOG_DEBUG(d_logger, boost::format("noutput_items: %1%") % noutput_items);
+    d_logger->debug("ninput_items:  {:10d}\n"
+                    "noutput_items: {:10d}",
+                    ninput_items[0],
+                    noutput_items);
 
     if (d_update_once) {
         if (xoroshiro128p_next(d_rng_state) > (UINT64_MAX / 2)) {
@@ -110,9 +111,8 @@ int test_tag_variable_rate_ff_impl::general_work(int noutput_items,
         i++;
     }
 
-    GR_LOG_DEBUG(d_logger, boost::format("consuming: %1%") % i);
-    GR_LOG_DEBUG(d_logger, boost::format("producing: %1%") % j);
-    GR_LOG_DEBUG(d_logger, boost::format("block's rel rate:  %1%") % d_rrate);
+    d_logger->debug(
+        "consuming {:10d}, producing {:10d}, block's rel rate {:10f}", i, j, d_rrate);
 
     consume_each(i);
     return j;

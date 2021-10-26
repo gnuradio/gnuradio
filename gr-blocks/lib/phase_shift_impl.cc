@@ -57,8 +57,7 @@ void phase_shift_impl::handle_msg_in(pmt::pmt_t msg)
             if (pmt::is_number(data)) {
                 set_shift(pmt::to_float(data));
             } else
-                GR_LOG_WARN(
-                    d_logger,
+                d_logger->warn(
                     "Phase message must be a number or a number pair.  Ignoring value.");
         }
     }

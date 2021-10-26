@@ -17,7 +17,6 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <boost/format.hpp>
 #include <cstdio>
 #include <stdexcept>
 
@@ -263,7 +262,7 @@ bool file_meta_source_impl::_open(FILE** fp, const char* filename)
     int fd;
 
     if ((fd = ::open(filename, O_RDONLY | OUR_O_LARGEFILE | OUR_O_BINARY)) < 0) {
-        GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
+        d_logger->error("[::open] {:s}: {:s}", filename, strerror(errno));
         return false;
     }
 
@@ -273,7 +272,7 @@ bool file_meta_source_impl::_open(FILE** fp, const char* filename)
     }
 
     if ((*fp = fdopen(fd, "rb")) == NULL) {
-        GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
+        d_logger->error("[fdopen] {:s}: {:s}", filename, strerror(errno));
         ::close(fd); // don't leak file descriptor if fdopen fails.
     }
 

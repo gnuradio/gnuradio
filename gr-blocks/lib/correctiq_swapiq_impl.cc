@@ -83,7 +83,7 @@ int swap_iq_impl::work(int noutput_items,
         }
     } break;
     default: {
-        GR_LOG_ERROR(d_logger, "Unknown data type.  Bytes not swapped.");
+        d_logger->error("Unknown data type.  Bytes not swapped.");
         return WORK_DONE;
     }
     }

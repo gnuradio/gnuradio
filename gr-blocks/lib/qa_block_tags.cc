@@ -22,7 +22,6 @@
 #include <gnuradio/logger.h>
 #include <gnuradio/top_block.h>
 
-#include <boost/format.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <memory>
@@ -145,18 +144,13 @@ BOOST_AUTO_TEST_CASE(t1)
 
     // For annotator 3, we know it gets tags from ann0 and ann1, test this
     for (size_t i = 0; i < tags3.size(); i++) {
-        GR_LOG_INFO(logger,
-                    boost::format("tags3[%d] = %s\t\t%s") % i % tags3[i] %
-                        expected_tags3[i]);
+        logger->info("tags3[{:d}] = {:16s}{:16s}", i, tags3[i], expected_tags3[i]);
         BOOST_REQUIRE_EQUAL(tags3[i], expected_tags3[i]);
     }
 
     // For annotator 4, we know it gets tags from ann0 and ann2, test this
-    GR_LOG_INFO(logger, "");
     for (size_t i = 0; i < tags4.size(); i++) {
-        GR_LOG_INFO(logger,
-                    boost::format("tags4[%d] = %s\t\t%s") % i % tags4[i] %
-                        expected_tags4);
+        logger->info("tags4[{:d}] = {:16s}{:16s}", i, tags4[i], expected_tags4[i]);
         BOOST_REQUIRE_EQUAL(tags4[i], expected_tags4[i]);
     }
 #endif
@@ -254,17 +248,12 @@ BOOST_AUTO_TEST_CASE(t2)
     // Just testing ann2 and ann4; if they are correct it would be
     // inconceivable for ann3 to have it wrong.
     for (size_t i = 0; i < tags2.size(); i++) {
-        GR_LOG_INFO(logger,
-                    boost::format("tags2[%d] = %s\t\t%s") % i % tags2[i] %
-                        expected_tags2[i]);
+        logger->info("tags2[{:d}] = {:16s}{:16s}", i, tags2[i], expected_tags2[i]);
         BOOST_REQUIRE_EQUAL(tags2[i], expected_tags2[i]);
     }
 
-    GR_LOG_INFO(logger, "");
     for (size_t i = 0; i < tags4.size(); i++) {
-        GR_LOG_INFO(logger,
-                    boost::format("tags4[%d] = %s\t\t%s") % i % tags4[i] %
-                        expected_tags4[i]);
+        logger->info("tags4[{:d}] = {:16s}{:16s}", i, tags4[i], expected_tags4[i]);
         BOOST_REQUIRE_EQUAL(tags4[i], expected_tags4[i]);
     }
 #endif
@@ -345,18 +334,13 @@ BOOST_AUTO_TEST_CASE(t3)
 
     // For annotator 3, we know it gets tags from ann0 and ann1, test this
     for (size_t i = 0; i < tags3.size(); i++) {
-        GR_LOG_INFO(logger,
-                    boost::format("tags3[%d] = %s\t\t%s") % i % tags3[i] %
-                        expected_tags3[i]);
+        logger->info("tags4[{:d}] = {:16s}{:16s}", i, tags4[i], expected_tags4[i]);
         BOOST_REQUIRE_EQUAL(tags3[i], expected_tags3[i]);
     }
 
     // For annotator 4, we know it gets tags from ann0 and ann2, test this
-    GR_LOG_INFO(logger, "");
     for (size_t i = 0; i < tags4.size(); i++) {
-        GR_LOG_INFO(logger,
-                    boost::format("tags4[%d] = %s\t\t%s") % i % tags4[i] %
-                        expected_tags4[i]);
+        logger->info("tags4[{:d}] = {:16s}{:16s}", i, tags4[i], expected_tags4[i]);
         BOOST_REQUIRE_EQUAL(tags4[i], expected_tags4[i]);
     }
 #endif
@@ -389,8 +373,7 @@ BOOST_AUTO_TEST_CASE(t4)
     tb->connect(ann1, 0, snk0, 0);
     tb->connect(ann2, 0, snk1, 0);
 
-    GR_LOG_INFO(logger,
-                "NOTE: This is supposed to produce an error from block_executor!");
+    logger->info("NOTE: This is supposed to produce an error from block_executor!");
     tb->run();
 }
 
@@ -459,23 +442,18 @@ BOOST_AUTO_TEST_CASE(t5)
     expected_tags2[8] = make_tag(4000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(4));
     expected_tags2[9] = make_tag(4000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(4));
 
-    GR_LOG_INFO(logger, boost::format("tags1.size(): %d") % tags1.size());
+    logger->info("tags1.size(): {:d}", tags1.size);
 
     // annotator 1 gets tags from annotator 0
     for (size_t i = 0; i < tags1.size(); i++) {
-        GR_LOG_INFO(logger,
-                    boost::format("tags1[%d] = %s\t\t%s") % i % tags1[i] %
-                        expected_tags1[i]);
+        logger->info("tags1[{:d}] = {:16s}{:16s}", i, tags1[i], expected_tags1[i]);
         BOOST_REQUIRE_EQUAL(tags1[i], expected_tags1[i]);
     }
 
     // annotator 2 gets tags from annotators 0 and 1
-    GR_LOG_INFO(logger, "");
-    GR_LOG_INFO(logger, boost::format("tags2.size(): %d") % tags2.size());
+    logger->info("tags2.size(): {:d}", tags2.size);
     for (size_t i = 0; i < tags2.size(); i++) {
-        GR_LOG_INFO(logger,
-                    boost::format("tags2[%d] = %s\t\t%s") % i % tags2[i] %
-                        expected_tags2[i]);
+        logger->info("tags2[{:d}] = {:16s}{:16s}", i, tags2[i], expected_tags2[i]);
         BOOST_REQUIRE_EQUAL(tags2[i], expected_tags2[i]);
     }
 #endif

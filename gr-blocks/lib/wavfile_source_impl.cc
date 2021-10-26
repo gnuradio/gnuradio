@@ -8,6 +8,7 @@
  *
  */
 
+#include <cstring>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -15,7 +16,6 @@
 #include "wavfile_source_impl.h"
 #include <gnuradio/io_signature.h>
 #include <sys/types.h>
-#include <boost/format.hpp>
 #include <stdexcept>
 
 namespace gr {
@@ -39,9 +39,7 @@ wavfile_source_impl::wavfile_source_impl(const char* filename, bool repeat)
 
     sfinfo.format = 0;
     if (!(d_fp = sf_open(filename, SFM_READ, &sfinfo))) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("sf_open failed: %s: %s") % filename %
-                         strerror(errno));
+        d_logger->error("sf_open failed: {:s}: {:s}", filename, strerror(errno));
         throw std::runtime_error("Can't open WAV file.");
     }
 
@@ -109,8 +107,7 @@ int wavfile_source_impl::work(int noutput_items,
             }
 
             if (sf_seek(d_fp, 0, SEEK_SET) == -1) {
-                GR_LOG_ERROR(d_logger,
-                             boost::format("sf_seek failed: %s") % strerror(errno));
+                d_logger->error("sf_seek failed: {:s}", strerror(errno));
                 throw std::runtime_error("Seek error.");
             }
 
@@ -137,10 +134,8 @@ int wavfile_source_impl::work(int noutput_items,
         errnum = sf_error(d_fp);
         if (errnum) {
             if (items == 0) {
-                GR_LOG_ERROR(
-                    d_logger,
-                    boost::format("WAV file has corrupted header or I/O error, %s") %
-                        sf_error_number(errnum));
+                d_logger->error("WAV file has corrupted header or I/O error, {:s}",
+                                sf_error_number(errnum));
                 return -1;
             }
             return produced;
