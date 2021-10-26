@@ -14,8 +14,6 @@
 
 #include "check_lfsr_32k_s_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cstdio>
-#include <cstdlib>
 
 static constexpr bool CHECK_LFSR_DEBUG = false;
 
@@ -115,10 +113,9 @@ void check_lfsr_32k_s_impl::enter_SEARCHING()
     d_index = 0; // reset LFSR to beginning
 
     if (CHECK_LFSR_DEBUG)
-        GR_LOG_DEBUG(
-            d_debug_logger,
-            boost::format("check_lfsr_32k: enter_SEARCHING at offset %8ld (0x%08lx)") %
-                d_ntotal % d_ntotal);
+        d_debug_logger->debug("check_lfsr_32k: enter_SEARCHING at offset {:8d} ({:#08x})",
+                              d_ntotal,
+                              d_ntotal);
 
     enter_MATCH0();
 }
@@ -139,20 +136,21 @@ void check_lfsr_32k_s_impl::enter_LOCKED()
     d_index = 3; // already matched first 3 items
 
     if (CHECK_LFSR_DEBUG)
-        GR_LOG_DEBUG(
-            d_debug_logger,
-            boost::format("check_lfsr_32k: enter_LOCKED at offset %8ld (0x%08lx)") %
-                d_ntotal % d_ntotal);
+        d_debug_logger->debug(
+            "check_lfsr_32k: enter_LOCKED at offset {:8d} ({:#08x})", d_ntotal, d_ntotal);
 }
 
 void check_lfsr_32k_s_impl::log_error(unsigned short expected, unsigned short actual)
 {
     if (CHECK_LFSR_DEBUG)
-        GR_LOG_DEBUG(
-            d_debug_logger,
-            boost::format("check_lfsr_32k: expected %5d (0x%04x) got %5d (0x%04x) "
-                          "offset %8ld (0x%08lx)") %
-                expected % expected % actual % actual % d_ntotal % d_ntotal);
+        d_debug_logger->debug("check_lfsr_32k: expected {:5d} ({:#04x}) got {:5d} "
+                              "({:#04x}) offset {:8d} ({:#08x})",
+                              expected,
+                              expected,
+                              actual,
+                              actual,
+                              d_ntotal,
+                              d_ntotal);
 }
 
 } /* namespace blocks */

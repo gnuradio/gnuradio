@@ -15,7 +15,6 @@
 #include "multiply_by_tag_value_cc_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
-#include <boost/format.hpp>
 
 namespace gr {
 namespace blocks {
@@ -70,9 +69,9 @@ int multiply_by_tag_value_cc_impl::work(int noutput_items,
         } else if (pmt::is_number(k)) {
             d_k = gr_complex(pmt::to_double(k), 0);
         } else {
-            GR_LOG_WARN(d_logger,
-                        boost::format("Got key '%1%' with incompatible value of '%2%'") %
-                            pmt::write_string(d_tag_key) % pmt::write_string(k));
+            d_logger->warn("Got key '{:s}' with incompatible value of '{:s}'",
+                           pmt::write_string(d_tag_key),
+                           pmt::write_string(k));
         }
     }
 

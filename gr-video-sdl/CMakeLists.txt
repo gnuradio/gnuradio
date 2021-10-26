@@ -8,8 +8,6 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-include(GrBoost)
-
 find_package(SDL)
 
 ########################################################################
@@ -18,7 +16,6 @@ find_package(SDL)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-video-sdl" ENABLE_GR_VIDEO_SDL
     SDL_FOUND
-    Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
 )
 

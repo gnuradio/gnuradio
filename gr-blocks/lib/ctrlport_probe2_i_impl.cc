@@ -14,7 +14,6 @@
 
 #include "ctrlport_probe2_i_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/format.hpp>
 
 namespace gr {
 namespace blocks {
@@ -59,10 +58,7 @@ void ctrlport_probe2_i_impl::set_length(int len)
     gr::thread::scoped_lock guard(d_setlock);
 
     if (len > 8191) {
-        GR_LOG_WARN(d_logger,
-                    boost::format("probe2_i: length %1% exceeds maximum"
-                                  " buffer size of 8191") %
-                        len);
+        d_logger->warn("length {:d} exceeds maximum buffer size of 8191", len);
         len = 8191;
     }
 

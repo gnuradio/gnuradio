@@ -32,13 +32,13 @@ protected:
     boost::mutex d_mutex;
     bool d_unbuffered;
     bool d_append;
-    gr::logger_ptr d_logger, d_debug_logger;
+    gr::logger d_base_logger;
 
 protected:
     file_sink_base(const char* filename, bool is_binary, bool append);
 
 public:
-    file_sink_base() {}
+    file_sink_base() : d_base_logger("unitialized file_sink_base") {}
     ~file_sink_base();
 
     /*!
