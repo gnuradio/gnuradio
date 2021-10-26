@@ -58,13 +58,13 @@ requirements:
     # use codec2 1.0.0 because 1.0.1 has header which fails on Windows (complex.h)
     - codec2 1.0.0*
     - fftw
+    - fmt
     - gmp  # [not win]
     - gsl
     # blas needed to link with gsl
     - libcblas  # [linux]
     - libsndfile
     - libthrift  # [not win]
-    - log4cpp
     - mako
     - mpir  # [win]
     - numpy
@@ -72,6 +72,7 @@ requirements:
     - pybind11
     - pybind11-abi
     - python
+    - spdlog
     - thrift  # [not win]
     - volk
   # gnuradio.audio
