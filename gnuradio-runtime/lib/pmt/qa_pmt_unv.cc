@@ -11,11 +11,7 @@
 #include <gnuradio/messages/msg_passing.h>
 #include <pmt/api.h> //reason: suppress warnings
 #include <pmt/pmt.h>
-#include <boost/format.hpp>
 #include <boost/test/unit_test.hpp>
-#include <cstring>
-#include <sstream>
-
 
 using namespace pmt;
 BOOST_AUTO_TEST_CASE(test_u8vector)
