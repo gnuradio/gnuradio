@@ -60,7 +60,7 @@ public:
     virtual void set_len_tag_key(const std::string& len_tag_key);
     virtual void set_bandwidth(unsigned long bandwidth);
     virtual void set_rf_port_select(const std::string& rf_port_select);
-    virtual void set_frequency(unsigned long long frequency);
+    virtual void set_frequency(double frequency);
     virtual void set_samplerate(unsigned long samplerate);
     virtual void set_attenuation(size_t chan, double gain);
     virtual void set_filter_params(const std::string& filter_source,
