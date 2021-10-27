@@ -26,6 +26,8 @@ namespace gr {
 class custom_lock_if
 {
 public:
+    virtual ~custom_lock_if(){};
+
     /*!
      * This function will be executed on construction of the custom lock.
      */
