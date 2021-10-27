@@ -51,7 +51,7 @@ public:
     ~fmcomms2_source_impl();
 
     virtual void set_len_tag_key(const std::string& len_tag_key);
-    virtual void set_frequency(unsigned long long frequency);
+    virtual void set_frequency(double frequency);
     virtual void set_samplerate(unsigned long samplerate);
     virtual void set_gain_mode(size_t chan, const std::string& mode);
     virtual void set_gain(size_t chan, double gain_value);

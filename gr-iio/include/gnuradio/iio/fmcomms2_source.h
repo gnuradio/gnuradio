@@ -44,7 +44,7 @@ public:
      */
     virtual void set_len_tag_key(const std::string& len_tag_key = "packet_len") = 0;
 
-    virtual void set_frequency(unsigned long long frequency) = 0;
+    virtual void set_frequency(double frequency) = 0;
     virtual void set_samplerate(unsigned long samplerate) = 0;
     virtual void set_gain_mode(size_t chan, const std::string& mode) = 0;
     virtual void set_gain(size_t chan, double gain) = 0;

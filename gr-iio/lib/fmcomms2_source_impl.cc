@@ -302,10 +302,11 @@ void fmcomms2_source_impl<T>::set_len_tag_key(const std::string& len_tag_key)
 }
 
 template <typename T>
-void fmcomms2_source_impl<T>::set_frequency(unsigned long long frequency)
+void fmcomms2_source_impl<T>::set_frequency(double frequency)
 {
     iio_param_vec_t params;
-    params.emplace_back("out_altvoltage0_RX_LO_frequency", frequency);
+    params.emplace_back("out_altvoltage0_RX_LO_frequency",
+                        static_cast<unsigned long long>(frequency));
     device_source_impl::set_params(params);
 }
 

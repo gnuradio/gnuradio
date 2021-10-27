@@ -194,10 +194,11 @@ void fmcomms2_sink_impl<T>::set_rf_port_select(const std::string& rf_port_select
 }
 
 template <typename T>
-void fmcomms2_sink_impl<T>::set_frequency(unsigned long long frequency)
+void fmcomms2_sink_impl<T>::set_frequency(double frequency)
 {
     iio_param_vec_t params;
-    params.emplace_back("out_altvoltage1_TX_LO_frequency", frequency);
+    params.emplace_back("out_altvoltage1_TX_LO_frequency",
+                        static_cast<unsigned long long>(frequency));
     device_source_impl::set_params(this->phy, params);
     d_frequency = frequency;
 }

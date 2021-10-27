@@ -55,7 +55,7 @@ public:
 
     virtual void set_bandwidth(unsigned long bandwidth) = 0;
     virtual void set_rf_port_select(const std::string& rf_port_select) = 0;
-    virtual void set_frequency(unsigned long long frequency) = 0;
+    virtual void set_frequency(double frequency) = 0;
     virtual void set_samplerate(unsigned long samplerate) = 0;
     virtual void set_attenuation(size_t chan, double gain) = 0;
     virtual void set_filter_params(const std::string& filter_source,
