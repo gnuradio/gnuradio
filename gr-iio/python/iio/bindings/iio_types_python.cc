@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(iio_types.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(c42dd62276a1716a7672f12704dabd08)                     */
+/* BINDTOOL_HEADER_FILE_HASH(2e0a29b6c915504e7bac45fa7fa47949)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -45,4 +45,11 @@ void bind_iio_types(py::module& m)
 
     py::implicitly_convertible<int, gr::iio::data_type_t>();
     py::implicitly_convertible<int, gr::iio::attr_type_t>();
+
+    py::class_<gr::iio::iio_param_t, std::shared_ptr<gr::iio::iio_param_t>>(m,
+                                                                            "iio_param_t")
+        .def(py::init<const std::string&>())
+        .def(py::init<const std::string&, gr::iio::iio_param_value_t>());
+
+    py::implicitly_convertible<std::string, gr::iio::iio_param_t>();
 }

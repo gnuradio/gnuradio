@@ -6,6 +6,16 @@
  *
  */
 
+#ifndef _INCLUDED_IIO_TYPES_H
+#define _INCLUDED_IIO_TYPES_H
+
+#include <gnuradio/iio/api.h>
+#include <boost/tokenizer.hpp>
+#include <charconv>
+#include <string>
+#include <variant>
+#include <vector>
+
 namespace gr {
 namespace iio {
 
@@ -19,5 +29,25 @@ enum class attr_type_t {
     DIRECT_REGISTER_ACCESS = 4
 };
 
+typedef std::variant<long long unsigned int, long unsigned int, int, double, std::string>
+    iio_param_value_t;
+
+#define tokenizer(inp, sep) \
+    boost::tokenizer<boost::char_separator<char>>(inp, boost::char_separator<char>(sep))
+
+class IIO_API iio_param_t : public std::pair<std::string, std::string>
+{
+public:
+    iio_param_t(const std::string& key, iio_param_value_t value);
+    iio_param_t(const std::string& kvpair);
+    ~iio_param_t() {}
+
+    static std::string to_string(iio_param_value_t value);
+};
+
+typedef std::vector<iio_param_t> iio_param_vec_t;
+
 } // namespace iio
 } // namespace gr
+
+#endif

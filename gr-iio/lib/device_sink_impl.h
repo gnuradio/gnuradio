@@ -41,14 +41,14 @@ public:
                      const std::string& device,
                      const std::vector<std::string>& channels,
                      const std::string& device_phy,
-                     const std::vector<std::string>& params,
+                     const iio_param_vec_t& params,
                      unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
                      unsigned int interpolation = 0,
                      bool cyclic = false);
 
     ~device_sink_impl();
 
-    void set_params(const std::vector<std::string>& params);
+    void set_params(const iio_param_vec_t& params);
 
     void set_len_tag_key(const std::string& len_tag_key) override;
 

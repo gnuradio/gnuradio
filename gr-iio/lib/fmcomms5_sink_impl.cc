@@ -259,21 +259,21 @@ void fmcomms5_sink_impl::set_params(iio_device* phy_device,
                                     float Fpass,
                                     float Fstop)
 {
-    std::vector<std::string> params;
+    iio_param_vec_t params;
     int ret;
 
-    params.push_back("out_altvoltage1_TX_LO_frequency=" + std::to_string(frequency));
-    params.push_back("out_voltage0_rf_port_select=" + std::to_string(rf_port_select));
-    params.push_back("out_voltage0_hardwaregain=" + std::to_string(-attenuation1));
-    params.push_back("out_voltage1_hardwaregain=" + std::to_string(-attenuation2));
+    params.emplace_back("out_altvoltage1_TX_LO_frequency", frequency);
+    params.emplace_back("out_voltage0_rf_port_select", rf_port_select);
+    params.emplace_back("out_voltage0_hardwaregain", -attenuation1);
+    params.emplace_back("out_voltage1_hardwaregain", -attenuation2);
 
     // Set rate configuration
     std::string filt_config(filter_source);
     if (filt_config.compare("Off") == 0) {
-        params.push_back("in_voltage_sampling_frequency=" + std::to_string(samplerate));
-        params.push_back("in_voltage_rf_bandwidth=" + std::to_string(bandwidth));
+        params.emplace_back("in_voltage_sampling_frequency", samplerate);
+        params.emplace_back("in_voltage_rf_bandwidth", bandwidth);
     } else if (filt_config.compare("Auto") == 0) {
-        params.push_back("in_voltage_rf_bandwidth=" + std::to_string(bandwidth));
+        params.emplace_back("in_voltage_rf_bandwidth", bandwidth);
         ret = ad9361_set_bb_rate(phy_device, samplerate);
         if (ret)
             throw std::runtime_error("Unable to set BB rate");

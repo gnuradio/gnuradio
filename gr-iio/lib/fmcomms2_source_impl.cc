@@ -83,7 +83,7 @@ fmcomms2_source_impl<int16_t>::fmcomms2_source_impl(iio_context* ctx,
                          "cf-ad9361-lpc",
                          get_channels_vector(ch_en),
                          "ad9361-phy",
-                         std::vector<std::string>(),
+                         iio_param_vec_t(),
                          buffer_size,
                          0)
 {
@@ -102,7 +102,7 @@ fmcomms2_source_impl<T>::fmcomms2_source_impl(iio_context* ctx,
                          "cf-ad9361-lpc",
                          get_channels_vector(ch_en),
                          "ad9361-phy",
-                         std::vector<std::string>(),
+                         iio_param_vec_t(),
                          buffer_size,
                          0)
 {
@@ -261,16 +261,16 @@ int fmcomms2_source_impl<T>::work(int noutput_items,
 template <typename T>
 void fmcomms2_source_impl<T>::update_dependent_params()
 {
-    std::vector<std::string> params;
+    iio_param_vec_t params;
     // Set rate configuration
     if (d_filter_source.compare("Off") == 0) {
-        params.push_back("in_voltage_sampling_frequency=" + std::to_string(d_samplerate));
-        params.push_back("in_voltage_rf_bandwidth=" + std::to_string(d_bandwidth));
+        params.emplace_back("in_voltage_sampling_frequency", d_samplerate);
+        params.emplace_back("in_voltage_rf_bandwidth", d_bandwidth);
     } else if (d_filter_source.compare("Auto") == 0) {
         int ret = ad9361_set_bb_rate(phy, d_samplerate);
         if (ret) {
             throw std::runtime_error("Unable to set BB rate");
-            params.push_back("in_voltage_rf_bandwidth=" + std::to_string(d_bandwidth));
+            params.emplace_back("in_voltage_rf_bandwidth", d_bandwidth);
         }
     } else if (d_filter_source.compare("File") == 0) {
         std::string filt(d_filter_filename);
@@ -304,15 +304,14 @@ void fmcomms2_source_impl<T>::set_len_tag_key(const std::string& len_tag_key)
 template <typename T>
 void fmcomms2_source_impl<T>::set_frequency(unsigned long long frequency)
 {
-    std::vector<std::string> params;
-    params.push_back("out_altvoltage0_RX_LO_frequency=" + std::to_string(frequency));
+    iio_param_vec_t params;
+    params.emplace_back("out_altvoltage0_RX_LO_frequency", frequency);
     device_source_impl::set_params(params);
 }
 
 template <typename T>
 void fmcomms2_source_impl<T>::set_samplerate(unsigned long samplerate)
 {
-    std::vector<std::string> params;
     if (samplerate < MIN_RATE) {
         int ret;
         samplerate = samplerate * DECINT_RATIO;
@@ -326,7 +325,6 @@ void fmcomms2_source_impl<T>::set_samplerate(unsigned long samplerate)
             samplerate, "voltage0", "sampling_frequency", dev, true, false);
     }
 
-    device_source_impl::set_params(params);
     d_samplerate = samplerate;
     update_dependent_params();
 }
@@ -338,10 +336,10 @@ void fmcomms2_source_impl<T>::set_gain_mode(size_t chan, const std::string& mode
     if ((!is_fmcomms4 && chan > 0) || chan > 1) {
         throw std::runtime_error("Channel out of range for this device");
     }
-    std::vector<std::string> params;
+    iio_param_vec_t params;
 
-    params.push_back("in_voltage" + std::to_string(chan) +
-                     "_gain_control_mode=" + d_gain_mode[chan]);
+    params.emplace_back("in_voltage" + std::to_string(chan) +
+                        "_gain_control_mode=" + d_gain_mode[chan]);
 
     device_source_impl::set_params(params);
     d_gain_mode[chan] = mode;
@@ -354,15 +352,11 @@ void fmcomms2_source_impl<T>::set_gain(size_t chan, double gain_value)
     if ((!is_fmcomms4 && chan > 0) || chan > 1) {
         throw std::runtime_error("Channel out of range for this device");
     }
-    std::vector<std::string> params;
+    iio_param_vec_t params;
 
     if (d_gain_mode[chan].compare("manual") == 0) {
-        std::string gain_string = std::to_string(gain_value);
-        std::string::size_type idx = gain_string.find(',');
-        if (idx != std::string::npos) // found , as decimal separator, so change to .
-            gain_string.replace(idx, 1, ".");
-        params.push_back("in_voltage" + std::to_string(chan) +
-                         "_hardwaregain=" + gain_string);
+        params.emplace_back("in_voltage" + std::to_string(chan) + "_hardwaregain",
+                            gain_value);
     }
     device_source_impl::set_params(params);
     d_gain_value[chan] = gain_value;
@@ -371,8 +365,8 @@ void fmcomms2_source_impl<T>::set_gain(size_t chan, double gain_value)
 template <typename T>
 void fmcomms2_source_impl<T>::set_quadrature(bool quadrature)
 {
-    std::vector<std::string> params;
-    params.push_back("in_voltage_quadrature_tracking_en=" + std::to_string(quadrature));
+    iio_param_vec_t params;
+    params.emplace_back("in_voltage_quadrature_tracking_en", quadrature);
     device_source_impl::set_params(params);
     d_quadrature = quadrature;
 }
@@ -380,8 +374,8 @@ void fmcomms2_source_impl<T>::set_quadrature(bool quadrature)
 template <typename T>
 void fmcomms2_source_impl<T>::set_rfdc(bool rfdc)
 {
-    std::vector<std::string> params;
-    params.push_back("in_voltage_rf_dc_offset_tracking_en=" + std::to_string(rfdc));
+    iio_param_vec_t params;
+    params.emplace_back("in_voltage_rf_dc_offset_tracking_en", rfdc);
     device_source_impl::set_params(params);
     d_rfdc = rfdc;
 }
@@ -389,8 +383,8 @@ void fmcomms2_source_impl<T>::set_rfdc(bool rfdc)
 template <typename T>
 void fmcomms2_source_impl<T>::set_bbdc(bool bbdc)
 {
-    std::vector<std::string> params;
-    params.push_back("in_voltage_bb_dc_offset_tracking_en=" + std::to_string(bbdc));
+    iio_param_vec_t params;
+    params.emplace_back("in_voltage_bb_dc_offset_tracking_en", bbdc);
     device_source_impl::set_params(params);
     d_bbdc = bbdc;
 }

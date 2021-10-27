@@ -27,7 +27,7 @@ device_sink::sptr device_sink::make(const std::string& uri,
                                     const std::string& device,
                                     const std::vector<std::string>& channels,
                                     const std::string& device_phy,
-                                    const std::vector<std::string>& params,
+                                    const iio_param_vec_t& params,
                                     unsigned int buffer_size,
                                     unsigned int interpolation,
                                     bool cyclic)
@@ -48,7 +48,7 @@ device_sink::sptr device_sink::make_from(iio_context* ctx,
                                          const std::string& device,
                                          const std::vector<std::string>& channels,
                                          const std::string& device_phy,
-                                         const std::vector<std::string>& params,
+                                         const iio_param_vec_t& params,
                                          unsigned int buffer_size,
                                          unsigned int interpolation,
                                          bool cyclic)
@@ -64,7 +64,7 @@ device_sink::sptr device_sink::make_from(iio_context* ctx,
                                                        cyclic);
 }
 
-void device_sink_impl::set_params(const std::vector<std::string>& params)
+void device_sink_impl::set_params(const iio_param_vec_t& params)
 {
     device_source_impl::set_params(this->phy, params);
 }
@@ -77,7 +77,7 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
                                    const std::string& device,
                                    const std::vector<std::string>& channels,
                                    const std::string& device_phy,
-                                   const std::vector<std::string>& params,
+                                   const iio_param_vec_t& params,
                                    unsigned int buffer_size,
                                    unsigned int interpolation,
                                    bool cyclic)
