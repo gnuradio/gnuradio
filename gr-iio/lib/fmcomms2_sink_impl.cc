@@ -85,7 +85,7 @@ fmcomms2_sink_impl<int16_t>::fmcomms2_sink_impl(iio_context* ctx,
                        "cf-ad9361-dds-core-lpc",
                        get_channels_vector(ch_en),
                        "ad9361-phy",
-                       std::vector<std::string>(),
+                       iio_param_vec_t(),
                        buffer_size,
                        0,
                        cyclic),
@@ -108,7 +108,7 @@ fmcomms2_sink_impl<T>::fmcomms2_sink_impl(iio_context* ctx,
                        "cf-ad9361-dds-core-lpc",
                        get_channels_vector(ch_en),
                        "ad9361-phy",
-                       std::vector<std::string>(),
+                       iio_param_vec_t(),
                        buffer_size,
                        0,
                        cyclic),
@@ -178,8 +178,8 @@ void fmcomms2_sink_impl<T>::check_underflow(void)
 template <typename T>
 void fmcomms2_sink_impl<T>::set_bandwidth(unsigned long bandwidth)
 {
-    std::vector<std::string> params;
-    params.push_back("out_voltage_rf_bandwidth=" + std::to_string(bandwidth));
+    iio_param_vec_t params;
+    params.emplace_back("out_voltage_rf_bandwidth", bandwidth);
     device_source_impl::set_params(this->phy, params);
     d_bandwidth = bandwidth;
 }
@@ -187,8 +187,8 @@ void fmcomms2_sink_impl<T>::set_bandwidth(unsigned long bandwidth)
 template <typename T>
 void fmcomms2_sink_impl<T>::set_rf_port_select(const std::string& rf_port_select)
 {
-    std::vector<std::string> params;
-    params.push_back("out_voltage0_rf_port_select=" + rf_port_select);
+    iio_param_vec_t params;
+    params.emplace_back("out_voltage0_rf_port_select", rf_port_select);
     device_source_impl::set_params(this->phy, params);
     d_rf_port_select = rf_port_select;
 }
@@ -196,8 +196,8 @@ void fmcomms2_sink_impl<T>::set_rf_port_select(const std::string& rf_port_select
 template <typename T>
 void fmcomms2_sink_impl<T>::set_frequency(unsigned long long frequency)
 {
-    std::vector<std::string> params;
-    params.push_back("out_altvoltage1_TX_LO_frequency=" + std::to_string(frequency));
+    iio_param_vec_t params;
+    params.emplace_back("out_altvoltage1_TX_LO_frequency", frequency);
     device_source_impl::set_params(this->phy, params);
     d_frequency = frequency;
 }
@@ -205,7 +205,7 @@ void fmcomms2_sink_impl<T>::set_frequency(unsigned long long frequency)
 template <typename T>
 void fmcomms2_sink_impl<T>::set_samplerate(unsigned long samplerate)
 {
-    std::vector<std::string> params;
+    iio_param_vec_t params;
     if (samplerate < MIN_RATE) {
         int ret;
         samplerate = samplerate * DECINT_RATIO;
@@ -231,14 +231,9 @@ void fmcomms2_sink_impl<T>::set_attenuation(size_t chan, double attenuation)
     if ((!is_fmcomms4 && chan > 0) || chan > 1) {
         throw std::runtime_error("Channel out of range for this device");
     }
-    std::vector<std::string> params;
-    std::string att_value = std::to_string(-attenuation);
-    std::string::size_type idx = att_value.find(',');
-    if (idx != std::string::npos) // found , as decimal separator, so change to .
-        att_value.replace(idx, 1, ".");
-    params.push_back("out_voltage" + std::to_string(chan) + "_hardwaregain=" + att_value);
-
-
+    iio_param_vec_t params;
+    params.emplace_back("out_voltage" + std::to_string(chan) + "_hardwaregain",
+                        -attenuation);
     device_source_impl::set_params(this->phy, params);
 
     d_attenuation[chan] = attenuation;
@@ -247,17 +242,16 @@ void fmcomms2_sink_impl<T>::set_attenuation(size_t chan, double attenuation)
 template <typename T>
 void fmcomms2_sink_impl<T>::update_dependent_params()
 {
-    std::vector<std::string> params;
+    iio_param_vec_t params;
     // Set rate configuration
     if (d_filter_source.compare("Off") == 0) {
-        params.push_back("out_voltage_sampling_frequency=" +
-                         std::to_string(d_samplerate));
-        params.push_back("out_voltage_rf_bandwidth=" + std::to_string(d_bandwidth));
+        params.emplace_back("out_voltage_sampling_frequency", d_samplerate);
+        params.emplace_back("out_voltage_rf_bandwidth", d_bandwidth);
     } else if (d_filter_source.compare("Auto") == 0) {
         int ret = ad9361_set_bb_rate(phy, d_samplerate);
         if (ret) {
             throw std::runtime_error("Unable to set BB rate");
-            params.push_back("out_voltage_rf_bandwidth=" + std::to_string(d_bandwidth));
+            params.emplace_back("out_voltage_rf_bandwidth", d_bandwidth);
         }
     } else if (d_filter_source.compare("File") == 0) {
         std::string filt(d_filter_filename);

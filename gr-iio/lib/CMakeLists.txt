@@ -16,6 +16,7 @@ add_library(gnuradio-iio
   dds_control_impl.cc
   device_sink_impl.cc
   device_source_impl.cc
+  iio_types.cc
 )
 
 target_include_directories(gnuradio-iio

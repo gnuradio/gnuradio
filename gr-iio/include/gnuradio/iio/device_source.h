@@ -12,7 +12,9 @@
 #define INCLUDED_IIO_DEVICE_SOURCE_H
 
 #include <gnuradio/iio/api.h>
+#include <gnuradio/iio/iio_types.h>
 #include <gnuradio/sync_block.h>
+
 
 #define DEFAULT_BUFFER_SIZE 0x8000
 
@@ -55,7 +57,7 @@ public:
                      const std::string& device,
                      const std::vector<std::string>& channels,
                      const std::string& device_phy,
-                     const std::vector<std::string>& params,
+                     const iio_param_vec_t& params,
                      unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
                      unsigned int decimation = 0);
 
@@ -63,7 +65,7 @@ public:
                           const std::string& device,
                           const std::vector<std::string>& channels,
                           const std::string& device_phy,
-                          const std::vector<std::string>& params,
+                          const iio_param_vec_t& params,
                           unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
                           unsigned int decimation = 0);
 

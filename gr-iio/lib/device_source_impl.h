@@ -70,17 +70,17 @@ public:
                        const std::string& device,
                        const std::vector<std::string>& channels,
                        const std::string& device_phy,
-                       const std::vector<std::string>& params,
+                       const iio_param_vec_t& params,
                        unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
                        unsigned int decimation = 0);
 
     ~device_source_impl();
 
-    static void set_params(iio_device* phy, const std::vector<std::string>& params);
+    static void set_params(iio_device* phy, const iio_param_vec_t& params);
 
     void set_len_tag_key(const std::string& len_tag_key) override;
 
-    void set_params(const std::vector<std::string>& params);
+    void set_params(const iio_param_vec_t& params);
     void set_buffer_size(unsigned int buffer_size);
     void set_timeout_ms(unsigned long timeout);
 

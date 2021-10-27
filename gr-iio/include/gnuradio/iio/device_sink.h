@@ -12,6 +12,7 @@
 #define INCLUDED_IIO_DEVICE_SINK_H
 
 #include <gnuradio/iio/api.h>
+#include <gnuradio/iio/iio_types.h>
 #include <gnuradio/sync_block.h>
 
 #include <string>
@@ -60,7 +61,7 @@ public:
                      const std::string& device,
                      const std::vector<std::string>& channels,
                      const std::string& device_phy,
-                     const std::vector<std::string>& params,
+                     const iio_param_vec_t& params,
                      unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
                      unsigned int interpolation = 0,
                      bool cyclic = false);
@@ -69,7 +70,7 @@ public:
                           const std::string& device,
                           const std::vector<std::string>& channels,
                           const std::string& device_phy,
-                          const std::vector<std::string>& params,
+                          const iio_param_vec_t& params,
                           unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
                           unsigned int interpolation = 0,
                           bool cyclic = false);

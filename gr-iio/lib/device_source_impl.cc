@@ -29,7 +29,7 @@ device_source::sptr device_source::make(const std::string& uri,
                                         const std::string& device,
                                         const std::vector<std::string>& channels,
                                         const std::string& device_phy,
-                                        const std::vector<std::string>& params,
+                                        const iio_param_vec_t& params,
                                         unsigned int buffer_size,
                                         unsigned int decimation)
 {
@@ -48,7 +48,7 @@ device_source::sptr device_source::make_from(iio_context* ctx,
                                              const std::string& device,
                                              const std::vector<std::string>& channels,
                                              const std::string& device_phy,
-                                             const std::vector<std::string>& params,
+                                             const iio_param_vec_t& params,
                                              unsigned int buffer_size,
                                              unsigned int decimation)
 {
@@ -56,27 +56,17 @@ device_source::sptr device_source::make_from(iio_context* ctx,
         ctx, false, device, channels, device_phy, params, buffer_size, decimation);
 }
 
-void device_source_impl::set_params(iio_device* phy,
-                                    const std::vector<std::string>& params)
+void device_source_impl::set_params(iio_device* phy, const iio_param_vec_t& params)
 {
     static GR_LOG_GET_CONFIGURED_LOGGER(logger, "iio::device::set_params");
 
-    for (std::vector<std::string>::const_iterator it = params.begin(); it != params.end();
-         ++it) {
+    for (auto& param : params) {
         iio_channel* chn = NULL;
         const char* attr = NULL;
-        size_t pos;
         int ret;
 
-        pos = it->find('=');
-        if (pos == std::string::npos) {
-            GR_LOG_WARN(logger,
-                        boost::format("Malformed parameter update line: %s") % *it);
-            continue;
-        }
-
-        std::string key = it->substr(0, pos);
-        std::string val = it->substr(pos + 1, std::string::npos);
+        std::string key = param.first;
+        std::string val = param.second;
 
         ret = iio_device_identify_filename(phy, key.c_str(), &chn, &attr);
         if (ret) {
@@ -98,7 +88,7 @@ void device_source_impl::set_params(iio_device* phy,
     }
 }
 
-void device_source_impl::set_params(const std::vector<std::string>& params)
+void device_source_impl::set_params(const iio_param_vec_t& params)
 {
     set_params(this->phy, params);
 }
@@ -173,7 +163,7 @@ device_source_impl::device_source_impl(iio_context* ctx,
                                        const std::string& device,
                                        const std::vector<std::string>& channels,
                                        const std::string& device_phy,
-                                       const std::vector<std::string>& params,
+                                       const iio_param_vec_t& params,
                                        unsigned int buffer_size,
                                        unsigned int decimation)
     : gr::sync_block("device_source",
