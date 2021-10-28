@@ -77,7 +77,7 @@ burst_shaper_impl<T>::~burst_shaper_impl()
 
 template <class T>
 void burst_shaper_impl<T>::forecast(int noutput_items,
-                                    gr_vector_int& ninput_items_required)
+                                    gr_vector_int& ninput_items_required) const
 {
     switch (d_state) {
     case (STATE_RAMPDOWN):

@@ -43,7 +43,7 @@ public:
     }
 
     // gr::sync_decimator overrides these to assist work
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
@@ -51,8 +51,8 @@ public:
 
     // derived classes should override work
 
-    int fixed_rate_ninput_to_noutput(int ninput) override;
-    int fixed_rate_noutput_to_ninput(int noutput) override;
+    int fixed_rate_ninput_to_noutput(int ninput) const override;
+    int fixed_rate_noutput_to_ninput(int noutput) const override;
 };
 
 } /* namespace gr */

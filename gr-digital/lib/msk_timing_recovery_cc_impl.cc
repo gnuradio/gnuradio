@@ -80,7 +80,7 @@ void msk_timing_recovery_cc_impl::set_limit(float limit) { d_limit = limit; }
 float msk_timing_recovery_cc_impl::get_limit(void) { return d_limit; }
 
 void msk_timing_recovery_cc_impl::forecast(int noutput_items,
-                                           gr_vector_int& ninput_items_required)
+                                           gr_vector_int& ninput_items_required) const
 {
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++) {

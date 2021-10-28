@@ -662,7 +662,7 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
 dvbs2_physical_cc_impl::~dvbs2_physical_cc_impl() {}
 
 void dvbs2_physical_cc_impl::forecast(int noutput_items,
-                                      gr_vector_int& ninput_items_required)
+                                      gr_vector_int& ninput_items_required) const
 {
     if (vlsnr_set == VLSNR_OFF) {
         ninput_items_required[0] =

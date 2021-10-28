@@ -25,7 +25,7 @@ namespace qtgui {
 class QTGUI_API sink_f_impl : public sink_f
 {
 private:
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     void initialize();
 

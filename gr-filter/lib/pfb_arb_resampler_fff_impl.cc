@@ -46,7 +46,7 @@ pfb_arb_resampler_fff_impl::pfb_arb_resampler_fff_impl(float rate,
 }
 
 void pfb_arb_resampler_fff_impl::forecast(int noutput_items,
-                                          gr_vector_int& ninput_items_required)
+                                          gr_vector_int& ninput_items_required) const
 {
     unsigned ninputs = ninput_items_required.size();
     if (noutput_items / relative_rate() < 1) {

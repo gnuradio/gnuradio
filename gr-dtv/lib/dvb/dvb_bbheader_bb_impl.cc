@@ -298,7 +298,7 @@ dvb_bbheader_bb_impl::dvb_bbheader_bb_impl(dvb_standard_t standard,
 dvb_bbheader_bb_impl::~dvb_bbheader_bb_impl() {}
 
 void dvb_bbheader_bb_impl::forecast(int noutput_items,
-                                    gr_vector_int& ninput_items_required)
+                                    gr_vector_int& ninput_items_required) const
 {
     if (input_mode == INPUTMODE_NORMAL) {
         if (frame_size != FECFRAME_MEDIUM) {

@@ -73,7 +73,7 @@ public:
         int blocks, int fft_length, int occupied_tones, int cp_length, float snr);
     ~dvbt_ofdm_sym_acquisition_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

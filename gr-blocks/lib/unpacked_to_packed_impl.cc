@@ -57,7 +57,7 @@ unpacked_to_packed_impl<T>::~unpacked_to_packed_impl()
 
 template <class T>
 void unpacked_to_packed_impl<T>::forecast(int noutput_items,
-                                          gr_vector_int& ninput_items_required)
+                                          gr_vector_int& ninput_items_required) const
 {
     const int input_required =
         (int)ceil((d_index + noutput_items * 1.0 * d_bits_per_type) / d_bits_per_chunk);

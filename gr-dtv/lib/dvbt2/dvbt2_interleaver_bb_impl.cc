@@ -345,7 +345,7 @@ void dvbt2_interleaver_bb_impl::generate_lookup()
 dvbt2_interleaver_bb_impl::~dvbt2_interleaver_bb_impl() {}
 
 void dvbt2_interleaver_bb_impl::forecast(int noutput_items,
-                                         gr_vector_int& ninput_items_required)
+                                         gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = noutput_items * mod;
 }

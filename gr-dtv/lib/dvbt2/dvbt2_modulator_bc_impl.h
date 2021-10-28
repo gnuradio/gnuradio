@@ -33,7 +33,7 @@ public:
                             dvbt2_rotation_t rotation);
     ~dvbt2_modulator_bc_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

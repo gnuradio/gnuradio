@@ -81,7 +81,7 @@ sccc_decoder_blk_impl<T>::~sccc_decoder_blk_impl()
 
 template <class T>
 void sccc_decoder_blk_impl<T>::forecast(int noutput_items,
-                                        gr_vector_int& ninput_items_required)
+                                        gr_vector_int& ninput_items_required) const
 {
     int input_required = d_FSMi.O() * noutput_items;
     ninput_items_required[0] = input_required;

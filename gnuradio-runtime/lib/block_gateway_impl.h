@@ -29,7 +29,7 @@ public:
     /*******************************************************************
      * Overloads for various scheduler-called functions
      ******************************************************************/
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

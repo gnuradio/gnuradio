@@ -47,7 +47,7 @@ catv_frame_sync_enc_bb_impl::catv_frame_sync_enc_bb_impl(
 catv_frame_sync_enc_bb_impl::~catv_frame_sync_enc_bb_impl() {}
 
 void catv_frame_sync_enc_bb_impl::forecast(int noutput_items,
-                                           gr_vector_int& ninput_items_required)
+                                           gr_vector_int& ninput_items_required) const
 {
     if (signal_constellation == CATV_MOD_64QAM) {
         ninput_items_required[0] = noutput_items / ((60 * 128 * 7) + 42) * (60 * 128);

@@ -86,8 +86,8 @@ protected:
 public:
     /*! \brief Don't override this.
      */
-    void /* final */ forecast(int noutput_items,
-                              gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items,
+                              gr_vector_int& ninput_items_required) const final override;
 
     bool check_topology(int ninputs, int /* noutputs */) override;
 

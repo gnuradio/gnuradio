@@ -69,7 +69,7 @@ public:
     float scaling() const override { return d_scaling; }
     void set_scaling(float scaling) override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

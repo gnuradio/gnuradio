@@ -89,7 +89,7 @@ unsigned block::sample_delay(int which) const { return d_attr_delay; }
 
 // stub implementation:  1:1
 
-void block::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void block::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++)
@@ -182,12 +182,12 @@ void block::produce(int which_output, int how_many_items)
     d_detail->produce(which_output, how_many_items);
 }
 
-int block::fixed_rate_ninput_to_noutput(int ninput)
+int block::fixed_rate_ninput_to_noutput(int ninput) const
 {
     throw std::runtime_error("Unimplemented");
 }
 
-int block::fixed_rate_noutput_to_ninput(int noutput)
+int block::fixed_rate_noutput_to_ninput(int noutput) const
 {
     throw std::runtime_error("Unimplemented");
 }

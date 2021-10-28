@@ -31,7 +31,7 @@ block_gateway_impl::block_gateway_impl(const py::handle& p,
     _py_handle = p;
 }
 
-void block_gateway_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void block_gateway_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     py::gil_scoped_acquire acquire;
 

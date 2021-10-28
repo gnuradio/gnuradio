@@ -105,7 +105,7 @@ void catv_reed_solomon_enc_bb_impl::reed_solomon_enc(const unsigned char* messag
 }
 
 void catv_reed_solomon_enc_bb_impl::forecast(int noutput_items,
-                                             gr_vector_int& ninput_items_required)
+                                             gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = (noutput_items / 128) * 122;
 }

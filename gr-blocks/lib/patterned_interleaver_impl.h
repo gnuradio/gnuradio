@@ -35,7 +35,7 @@ public:
         return *std::max_element(pattern.begin(), pattern.end());
     }
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     std::vector<int> d_pattern;
     std::vector<int> d_counts;

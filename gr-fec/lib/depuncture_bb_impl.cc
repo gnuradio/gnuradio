@@ -71,17 +71,17 @@ depuncture_bb_impl::depuncture_bb_impl(int puncsize,
 
 depuncture_bb_impl::~depuncture_bb_impl() {}
 
-int depuncture_bb_impl::fixed_rate_ninput_to_noutput(int ninput)
+int depuncture_bb_impl::fixed_rate_ninput_to_noutput(int ninput) const
 {
     return std::lround((d_puncsize / (double)(d_puncsize - d_puncholes)) * ninput);
 }
 
-int depuncture_bb_impl::fixed_rate_noutput_to_ninput(int noutput)
+int depuncture_bb_impl::fixed_rate_noutput_to_ninput(int noutput) const
 {
     return std::lround(((d_puncsize - d_puncholes) / (double)(d_puncsize)) * noutput);
 }
 
-void depuncture_bb_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void depuncture_bb_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] =
         std::lround(((d_puncsize - d_puncholes) / (double)(d_puncsize)) * noutput_items);

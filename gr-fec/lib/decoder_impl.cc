@@ -49,17 +49,17 @@ decoder_impl::decoder_impl(generic_decoder::sptr my_decoder,
     d_decoder = my_decoder;
 }
 
-int decoder_impl::fixed_rate_ninput_to_noutput(int ninput)
+int decoder_impl::fixed_rate_ninput_to_noutput(int ninput) const
 {
     return std::lround(ninput * relative_rate());
 }
 
-int decoder_impl::fixed_rate_noutput_to_ninput(int noutput)
+int decoder_impl::fixed_rate_noutput_to_ninput(int noutput) const
 {
     return std::lround(noutput / relative_rate());
 }
 
-void decoder_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void decoder_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = std::lround(fixed_rate_noutput_to_ninput(noutput_items));
 }

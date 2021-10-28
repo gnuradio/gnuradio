@@ -53,7 +53,7 @@ stream_demux_impl::stream_demux_impl(size_t itemsize, const std::vector<int>& le
     set_tag_propagation_policy(TPP_DONT);
 }
 
-void stream_demux_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void stream_demux_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     std::fill(ninput_items_required.begin(), ninput_items_required.end(), 1);
 }

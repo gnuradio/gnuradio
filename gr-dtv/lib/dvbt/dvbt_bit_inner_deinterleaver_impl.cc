@@ -79,7 +79,7 @@ dvbt_bit_inner_deinterleaver_impl::dvbt_bit_inner_deinterleaver_impl(
 dvbt_bit_inner_deinterleaver_impl::~dvbt_bit_inner_deinterleaver_impl() {}
 
 void dvbt_bit_inner_deinterleaver_impl::forecast(int noutput_items,
-                                                 gr_vector_int& ninput_items_required)
+                                                 gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = noutput_items;
 }

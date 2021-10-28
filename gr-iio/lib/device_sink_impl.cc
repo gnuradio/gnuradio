@@ -226,7 +226,7 @@ int device_sink_impl::work(int noutput_items,
     return 0;
 }
 
-void device_sink_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void device_sink_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     for (unsigned int i = 0; i < ninput_items_required.size(); i++)
         ninput_items_required[i] = noutput_items;

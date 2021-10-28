@@ -127,7 +127,7 @@ ofdm_chanest_vcvc_impl::ofdm_chanest_vcvc_impl(
 ofdm_chanest_vcvc_impl::~ofdm_chanest_vcvc_impl() {}
 
 void ofdm_chanest_vcvc_impl::forecast(int noutput_items,
-                                      gr_vector_int& ninput_items_required)
+                                      gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] =
         (noutput_items / d_n_data_syms) * (d_n_data_syms + d_n_sync_syms);

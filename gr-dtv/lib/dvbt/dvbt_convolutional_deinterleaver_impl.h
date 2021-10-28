@@ -30,7 +30,7 @@ public:
     dvbt_convolutional_deinterleaver_impl(int nsize, int I, int M);
     ~dvbt_convolutional_deinterleaver_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

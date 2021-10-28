@@ -151,7 +151,7 @@ public:
      * number of data items required on each input stream.  The
      * estimate doesn't have to be exact, but should be close.
      */
-    virtual void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    virtual void forecast(int noutput_items, gr_vector_int& ninput_items_required) const;
 
     /*!
      * \brief compute output items from input items
@@ -340,14 +340,14 @@ public:
      * N.B. this is only defined if fixed_rate returns true.
      * Generally speaking, you don't need to override this.
      */
-    virtual int fixed_rate_ninput_to_noutput(int ninput);
+    virtual int fixed_rate_ninput_to_noutput(int ninput) const;
 
     /*!
      * \brief Given noutput samples, return number of input samples required to produce
      * noutput. N.B. this is only defined if fixed_rate returns true. Generally speaking,
      * you don't need to override this.
      */
-    virtual int fixed_rate_noutput_to_ninput(int noutput);
+    virtual int fixed_rate_noutput_to_ninput(int noutput) const;
 
     /*!
      * \brief Return the number of items read on input stream which_input

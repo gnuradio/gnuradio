@@ -34,7 +34,7 @@ plateau_detector_fb_impl::plateau_detector_fb_impl(int max_len, float threshold)
 
 plateau_detector_fb_impl::~plateau_detector_fb_impl() {}
 
-void plateau_detector_fb_impl::forecast(int, gr_vector_int& ninput_items_required)
+void plateau_detector_fb_impl::forecast(int, gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = 2 * d_max_len;
 }

@@ -929,7 +929,7 @@ dvbt2_framemapper_cc_impl::~dvbt2_framemapper_cc_impl()
 }
 
 void dvbt2_framemapper_cc_impl::forecast(int noutput_items,
-                                         gr_vector_int& ninput_items_required)
+                                         gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = stream_items * (noutput_items / mapped_items);
 }

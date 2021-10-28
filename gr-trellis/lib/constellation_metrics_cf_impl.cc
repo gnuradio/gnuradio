@@ -44,7 +44,7 @@ constellation_metrics_cf_impl::constellation_metrics_cf_impl(
 constellation_metrics_cf_impl::~constellation_metrics_cf_impl() {}
 
 void constellation_metrics_cf_impl::forecast(int noutput_items,
-                                             gr_vector_int& ninput_items_required)
+                                             gr_vector_int& ninput_items_required) const
 {
     assert(noutput_items % d_O == 0);
 

@@ -105,7 +105,7 @@ void sccc_decoder_combined_blk_impl<IN_T, OUT_T>::set_scaling(float scaling)
 
 template <class IN_T, class OUT_T>
 void sccc_decoder_combined_blk_impl<IN_T, OUT_T>::forecast(
-    int noutput_items, gr_vector_int& ninput_items_required)
+    int noutput_items, gr_vector_int& ninput_items_required) const
 {
     int input_required = d_D * noutput_items;
     ninput_items_required[0] = input_required;

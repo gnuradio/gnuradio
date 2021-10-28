@@ -122,7 +122,7 @@ void selector_impl::handle_enable(pmt::pmt_t msg)
     }
 }
 
-void selector_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void selector_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++) {

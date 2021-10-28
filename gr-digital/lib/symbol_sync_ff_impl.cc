@@ -366,7 +366,7 @@ void symbol_sync_ff_impl::emit_optional_output(int oidx,
 }
 
 void symbol_sync_ff_impl::forecast(int noutput_items,
-                                   gr_vector_int& ninput_items_required)
+                                   gr_vector_int& ninput_items_required) const
 {
     const unsigned ninputs = ninput_items_required.size();
 

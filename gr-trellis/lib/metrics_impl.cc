@@ -84,7 +84,7 @@ metrics_impl<T>::~metrics_impl()
 
 
 template <class T>
-void metrics_impl<T>::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void metrics_impl<T>::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     int input_required = d_D * noutput_items / d_O;
     unsigned ninputs = ninput_items_required.size();

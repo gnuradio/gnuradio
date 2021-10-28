@@ -67,7 +67,7 @@ void atsc_sync_impl::reset()
 
 atsc_sync_impl::~atsc_sync_impl() {}
 
-void atsc_sync_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void atsc_sync_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++)

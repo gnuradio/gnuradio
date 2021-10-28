@@ -154,7 +154,7 @@ header_payload_demux_impl::~header_payload_demux_impl() {}
 // - Otherwise, pretend this is a sync block with a decimation/interpolation
 //   depending on symbol size and if we output symbols or items
 void header_payload_demux_impl::forecast(int noutput_items,
-                                         gr_vector_int& ninput_items_required)
+                                         gr_vector_int& ninput_items_required) const
 {
     int n_items_reqd = 0;
     if (d_state == STATE_HEADER) {

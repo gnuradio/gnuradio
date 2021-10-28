@@ -25,7 +25,7 @@ namespace qtgui {
 class QTGUI_API waterfall_sink_f_impl : public waterfall_sink_f
 {
 private:
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     void initialize();
 

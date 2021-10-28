@@ -24,7 +24,7 @@ private:
     int d_residual{ 0 };           // number of items left to put into current stream
     const gr_vector_int d_lengths; // number of items to pack per stream
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
 public:
     stream_mux_impl(size_t itemsize, const std::vector<int>& lengths);

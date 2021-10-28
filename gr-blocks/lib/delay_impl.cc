@@ -42,7 +42,7 @@ delay_impl::delay_impl(size_t itemsize, int delay)
 
 delay_impl::~delay_impl() {}
 
-void delay_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void delay_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     // make sure all inputs have noutput_items available
     unsigned ninputs = ninput_items_required.size();

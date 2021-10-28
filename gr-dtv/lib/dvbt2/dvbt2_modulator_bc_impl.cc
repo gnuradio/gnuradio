@@ -176,7 +176,7 @@ dvbt2_modulator_bc_impl::dvbt2_modulator_bc_impl(dvb_framesize_t framesize,
 dvbt2_modulator_bc_impl::~dvbt2_modulator_bc_impl() {}
 
 void dvbt2_modulator_bc_impl::forecast(int noutput_items,
-                                       gr_vector_int& ninput_items_required)
+                                       gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = noutput_items;
 }

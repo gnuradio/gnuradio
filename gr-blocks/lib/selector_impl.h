@@ -32,7 +32,7 @@ public:
     selector_impl(size_t itemsize, unsigned int input_index, unsigned int output_index);
     ~selector_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
     bool check_topology(int ninputs, int noutputs) override;
     void setup_rpc() override;
     void handle_msg_input_index(pmt::pmt_t msg);

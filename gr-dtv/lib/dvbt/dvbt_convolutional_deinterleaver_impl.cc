@@ -58,7 +58,7 @@ dvbt_convolutional_deinterleaver_impl::dvbt_convolutional_deinterleaver_impl(int
 dvbt_convolutional_deinterleaver_impl::~dvbt_convolutional_deinterleaver_impl() {}
 
 void dvbt_convolutional_deinterleaver_impl::forecast(int noutput_items,
-                                                     gr_vector_int& ninput_items_required)
+                                                     gr_vector_int& ninput_items_required) const
 {
     int ninputs = ninput_items_required.size();
 

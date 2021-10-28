@@ -256,7 +256,7 @@ dvbt_ofdm_sym_acquisition_impl::dvbt_ofdm_sym_acquisition_impl(
 dvbt_ofdm_sym_acquisition_impl::~dvbt_ofdm_sym_acquisition_impl() {}
 
 void dvbt_ofdm_sym_acquisition_impl::forecast(int noutput_items,
-                                              gr_vector_int& ninput_items_required)
+                                              gr_vector_int& ninput_items_required) const
 {
     int ninputs = ninput_items_required.size();
 

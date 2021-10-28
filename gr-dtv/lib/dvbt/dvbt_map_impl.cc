@@ -111,7 +111,7 @@ gr_complex dvbt_map_impl::find_constellation_point(int val)
     return d_constellation_points[val];
 }
 
-void dvbt_map_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void dvbt_map_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = noutput_items;
 }

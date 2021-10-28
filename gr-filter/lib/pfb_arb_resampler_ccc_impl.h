@@ -31,7 +31,7 @@ public:
                                const std::vector<gr_complex>& taps,
                                unsigned int filter_size);
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     void set_taps(const std::vector<gr_complex>& taps) override;
     std::vector<std::vector<gr_complex>> taps() const override;

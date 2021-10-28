@@ -35,7 +35,7 @@ deinterleave_impl::deinterleave_impl(size_t itemsize, unsigned int blocksize)
     set_output_multiple(blocksize);
 }
 
-void deinterleave_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void deinterleave_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = noutput_items * d_noutputs;
 }

@@ -39,7 +39,7 @@ private:
 public:
     stream_demux_impl(size_t itemsize, const std::vector<int>& lengths);
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

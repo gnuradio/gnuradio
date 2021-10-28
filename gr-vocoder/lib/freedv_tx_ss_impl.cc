@@ -88,7 +88,7 @@ void freedv_tx_ss_impl::set_tx_bpf(bool val)
         freedv_tx_ss_impl::set_tx_bpf(0);
 }
 
-void freedv_tx_ss_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void freedv_tx_ss_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = (noutput_items / d_nom_modem_samples) * d_speech_samples;
 }

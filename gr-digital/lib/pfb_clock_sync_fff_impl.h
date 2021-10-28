@@ -65,7 +65,7 @@ public:
 
     void update_gains() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     void update_taps(const std::vector<float>& taps) override;
 

@@ -115,7 +115,7 @@ viterbi_combined_impl<IN_T, OUT_T>::~viterbi_combined_impl()
 
 template <class IN_T, class OUT_T>
 void viterbi_combined_impl<IN_T, OUT_T>::forecast(int noutput_items,
-                                                  gr_vector_int& ninput_items_required)
+                                                  gr_vector_int& ninput_items_required) const
 {
     int input_required = d_D * noutput_items;
     unsigned ninputs = ninput_items_required.size();

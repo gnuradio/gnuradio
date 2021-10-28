@@ -453,7 +453,7 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
 dvbs2_interleaver_bb_impl::~dvbs2_interleaver_bb_impl() {}
 
 void dvbs2_interleaver_bb_impl::forecast(int noutput_items,
-                                         gr_vector_int& ninput_items_required)
+                                         gr_vector_int& ninput_items_required) const
 {
     if (signal_constellation == MOD_128APSK) {
         ninput_items_required[0] = ((noutput_items / 9270) * 9258) * mod;

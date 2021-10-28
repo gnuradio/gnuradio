@@ -39,7 +39,7 @@ public:
 
     void setup_rpc() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     std::vector<signed char> get() override;
 

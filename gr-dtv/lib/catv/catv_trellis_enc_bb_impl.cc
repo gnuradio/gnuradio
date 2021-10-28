@@ -50,7 +50,7 @@ catv_trellis_enc_bb_impl::catv_trellis_enc_bb_impl(catv_constellation_t constell
 catv_trellis_enc_bb_impl::~catv_trellis_enc_bb_impl() {}
 
 void catv_trellis_enc_bb_impl::forecast(int noutput_items,
-                                        gr_vector_int& ninput_items_required)
+                                        gr_vector_int& ninput_items_required) const
 {
     if (signal_constellation == CATV_MOD_64QAM) {
         ninput_items_required[0] = noutput_items / 5 * 28;

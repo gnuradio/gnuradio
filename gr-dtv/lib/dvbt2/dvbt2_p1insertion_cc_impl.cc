@@ -202,7 +202,7 @@ void dvbt2_p1insertion_cc_impl::init_p1_randomizer(void)
 dvbt2_p1insertion_cc_impl::~dvbt2_p1insertion_cc_impl() {}
 
 void dvbt2_p1insertion_cc_impl::forecast(int noutput_items,
-                                         gr_vector_int& ninput_items_required)
+                                         gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = frame_items * (noutput_items / insertion_items);
 }

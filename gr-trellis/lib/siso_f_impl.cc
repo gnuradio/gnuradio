@@ -119,7 +119,7 @@ void siso_f_impl::set_SISO_TYPE(trellis::siso_type_t type)
 
 siso_f_impl::~siso_f_impl() {}
 
-void siso_f_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void siso_f_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     int multiple;
     if (d_POSTI && d_POSTO)

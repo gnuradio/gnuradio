@@ -386,7 +386,7 @@ dvb_bch_bb_impl::dvb_bch_bb_impl(dvb_standard_t standard,
  */
 dvb_bch_bb_impl::~dvb_bch_bb_impl() {}
 
-void dvb_bch_bb_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void dvb_bch_bb_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = (noutput_items / nbch) * kbch;
 }

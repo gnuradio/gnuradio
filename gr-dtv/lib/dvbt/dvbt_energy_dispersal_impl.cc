@@ -61,7 +61,7 @@ dvbt_energy_dispersal_impl::dvbt_energy_dispersal_impl(int nblocks)
 dvbt_energy_dispersal_impl::~dvbt_energy_dispersal_impl() {}
 
 void dvbt_energy_dispersal_impl::forecast(int noutput_items,
-                                          gr_vector_int& ninput_items_required)
+                                          gr_vector_int& ninput_items_required) const
 {
     // Add one block size for SYNC search
     ninput_items_required[0] = d_npacks * (d_psize + 1) * d_nblocks * noutput_items;

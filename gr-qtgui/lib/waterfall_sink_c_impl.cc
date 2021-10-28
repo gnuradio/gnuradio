@@ -98,7 +98,7 @@ bool waterfall_sink_c_impl::check_topology(int ninputs, int noutputs)
 }
 
 void waterfall_sink_c_impl::forecast(int noutput_items,
-                                     gr_vector_int& ninput_items_required)
+                                     gr_vector_int& ninput_items_required) const
 {
     unsigned int ninputs = ninput_items_required.size();
     for (unsigned int i = 0; i < ninputs; i++) {

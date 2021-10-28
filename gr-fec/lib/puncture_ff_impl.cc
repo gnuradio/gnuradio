@@ -65,17 +65,17 @@ puncture_ff_impl::puncture_ff_impl(int puncsize, int puncpat, int delay)
 
 puncture_ff_impl::~puncture_ff_impl() {}
 
-int puncture_ff_impl::fixed_rate_ninput_to_noutput(int ninput)
+int puncture_ff_impl::fixed_rate_ninput_to_noutput(int ninput) const
 {
     return std::lround(((d_puncsize - d_puncholes) / (double)(d_puncsize)) * ninput);
 }
 
-int puncture_ff_impl::fixed_rate_noutput_to_ninput(int noutput)
+int puncture_ff_impl::fixed_rate_noutput_to_ninput(int noutput) const
 {
     return std::lround((d_puncsize / (double)(d_puncsize - d_puncholes)) * noutput);
 }
 
-void puncture_ff_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void puncture_ff_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] =
         std::lround((d_puncsize / (double)(d_puncsize - d_puncholes)) * noutput_items);

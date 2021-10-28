@@ -25,19 +25,19 @@ sync_decimator::sync_decimator(const std::string& name,
     set_decimation(decimation);
 }
 
-void sync_decimator::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void sync_decimator::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++)
         ninput_items_required[i] = fixed_rate_noutput_to_ninput(noutput_items);
 }
 
-int sync_decimator::fixed_rate_noutput_to_ninput(int noutput_items)
+int sync_decimator::fixed_rate_noutput_to_ninput(int noutput_items) const
 {
     return noutput_items * decimation() + history() - 1;
 }
 
-int sync_decimator::fixed_rate_ninput_to_noutput(int ninput_items)
+int sync_decimator::fixed_rate_ninput_to_noutput(int ninput_items) const
 {
     return std::max(0, ninput_items - (int)history() + 1) / decimation();
 }

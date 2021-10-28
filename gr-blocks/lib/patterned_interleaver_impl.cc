@@ -69,7 +69,7 @@ int patterned_interleaver_impl::general_work(int noutput_items,
 }
 
 void patterned_interleaver_impl::forecast(int noutput_items,
-                                          gr_vector_int& ninput_items_required)
+                                          gr_vector_int& ninput_items_required) const
 {
     int nblks = noutput_items / d_pattern.size();
     for (size_t i = 0; i < ninput_items_required.size(); i++) {

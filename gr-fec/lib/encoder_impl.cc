@@ -48,17 +48,17 @@ encoder_impl::encoder_impl(generic_encoder::sptr my_encoder,
 
 encoder_impl::~encoder_impl() {}
 
-int encoder_impl::fixed_rate_ninput_to_noutput(int ninput)
+int encoder_impl::fixed_rate_ninput_to_noutput(int ninput) const
 {
     return std::lround(ninput * relative_rate());
 }
 
-int encoder_impl::fixed_rate_noutput_to_ninput(int noutput)
+int encoder_impl::fixed_rate_noutput_to_ninput(int noutput) const
 {
     return std::lround(noutput / relative_rate());
 }
 
-void encoder_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void encoder_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = fixed_rate_noutput_to_ninput(noutput_items);
 }

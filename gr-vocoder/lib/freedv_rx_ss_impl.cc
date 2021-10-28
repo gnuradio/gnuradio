@@ -75,7 +75,7 @@ freedv_rx_ss_impl::~freedv_rx_ss_impl()
     freedv_close(d_freedv);
 }
 
-void freedv_rx_ss_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void freedv_rx_ss_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++)

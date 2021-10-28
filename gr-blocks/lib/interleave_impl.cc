@@ -43,17 +43,17 @@ bool interleave_impl::check_topology(int ninputs, int noutputs)
 }
 
 
-int interleave_impl::fixed_rate_ninput_to_noutput(int ninput)
+int interleave_impl::fixed_rate_ninput_to_noutput(int ninput) const
 {
     return ninput * d_ninputs;
 }
 
-int interleave_impl::fixed_rate_noutput_to_ninput(int noutput)
+int interleave_impl::fixed_rate_noutput_to_ninput(int noutput) const
 {
     return (noutput / d_ninputs);
 }
 
-void interleave_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void interleave_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     for (unsigned int i = 0; i < ninput_items_required.size(); ++i) {
         ninput_items_required[i] = noutput_items / ninput_items_required.size();

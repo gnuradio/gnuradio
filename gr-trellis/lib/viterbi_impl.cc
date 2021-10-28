@@ -76,7 +76,7 @@ viterbi_impl<T>::~viterbi_impl()
 }
 
 template <class T>
-void viterbi_impl<T>::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void viterbi_impl<T>::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     int input_required = d_FSM.O() * noutput_items;
     unsigned ninputs = ninput_items_required.size();

@@ -74,7 +74,7 @@ public:
      * number of data items required on each input stream. The
      * estimate doesn't have to be exact, but should be close.
      */
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override
     {
         unsigned ninputs = ninput_items_required.size();
         for (unsigned i = 0; i < ninputs; i++)
@@ -119,7 +119,7 @@ public:
      * returns true.  Generally speaking, you don't need to override
      * this.
      */
-    int fixed_rate_ninput_to_noutput(int ninput) override
+    int fixed_rate_ninput_to_noutput(int ninput) const override
     {
         return (int)((double)ninput / relative_rate());
     }
@@ -129,7 +129,7 @@ public:
      * required to produce noutput. N.B. this is only defined if
      * fixed_rate returns true.
      */
-    int fixed_rate_noutput_to_ninput(int noutput) override
+    int fixed_rate_noutput_to_ninput(int noutput) const override
     {
         return (int)((double)noutput * relative_rate());
     }

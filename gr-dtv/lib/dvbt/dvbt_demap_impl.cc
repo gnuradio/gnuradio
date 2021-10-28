@@ -125,7 +125,7 @@ int dvbt_demap_impl::find_constellation_value(gr_complex val)
 
 int dvbt_demap_impl::bin_to_gray(int val) { return (val >> 1) ^ val; }
 
-void dvbt_demap_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void dvbt_demap_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = noutput_items;
 }

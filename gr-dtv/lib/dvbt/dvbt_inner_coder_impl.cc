@@ -164,7 +164,7 @@ dvbt_inner_coder_impl::dvbt_inner_coder_impl(int ninput,
 dvbt_inner_coder_impl::~dvbt_inner_coder_impl() {}
 
 void dvbt_inner_coder_impl::forecast(int noutput_items,
-                                     gr_vector_int& ninput_items_required)
+                                     gr_vector_int& ninput_items_required) const
 {
     int input_required = noutput_items * d_noutput * d_k * d_m / (d_ninput * 8 * d_n);
 

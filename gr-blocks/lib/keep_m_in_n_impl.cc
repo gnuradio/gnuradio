@@ -64,7 +64,7 @@ keep_m_in_n_impl::keep_m_in_n_impl(size_t itemsize, int m, int n, int offset)
     set_relative_rate(static_cast<uint64_t>(d_m), static_cast<uint64_t>(d_n));
 }
 
-void keep_m_in_n_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void keep_m_in_n_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = d_n * (noutput_items / d_m);
 }

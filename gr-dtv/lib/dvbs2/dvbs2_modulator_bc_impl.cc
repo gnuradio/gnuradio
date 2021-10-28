@@ -2680,7 +2680,7 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
 dvbs2_modulator_bc_impl::~dvbs2_modulator_bc_impl() {}
 
 void dvbs2_modulator_bc_impl::forecast(int noutput_items,
-                                       gr_vector_int& ninput_items_required)
+                                       gr_vector_int& ninput_items_required) const
 {
     if (signal_interpolation == INTERPOLATION_OFF) {
         ninput_items_required[0] = noutput_items;

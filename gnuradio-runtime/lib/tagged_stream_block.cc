@@ -31,7 +31,7 @@ tagged_stream_block::tagged_stream_block(const std::string& name,
 // This is evil hackery: We trick the scheduler into creating the right number of input
 // items
 void tagged_stream_block::forecast(int noutput_items,
-                                   gr_vector_int& ninput_items_required)
+                                   gr_vector_int& ninput_items_required) const
 {
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++) {

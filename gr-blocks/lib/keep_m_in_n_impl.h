@@ -23,7 +23,7 @@ class BLOCKS_API keep_m_in_n_impl : public keep_m_in_n
     int d_offset;
     const int d_itemsize;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
 public:
     keep_m_in_n_impl(size_t itemsize, int m, int n, int offset);

@@ -38,7 +38,7 @@ constellation_decoder_cb_impl::constellation_decoder_cb_impl(
 constellation_decoder_cb_impl::~constellation_decoder_cb_impl() {}
 
 void constellation_decoder_cb_impl::forecast(int noutput_items,
-                                             gr_vector_int& ninput_items_required)
+                                             gr_vector_int& ninput_items_required) const
 {
     const unsigned int input_required = noutput_items * d_dim;
 

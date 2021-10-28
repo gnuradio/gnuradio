@@ -60,7 +60,7 @@ public:
     void set_POSTO(bool POSTO) override;
     void set_SISO_TYPE(trellis::siso_type_t type) override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

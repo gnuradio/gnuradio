@@ -45,7 +45,7 @@ public:
     void set_squelch_en(bool squelch_enabled) override;
 
     // Where all the action really happens
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

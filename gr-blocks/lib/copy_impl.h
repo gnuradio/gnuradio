@@ -26,7 +26,7 @@ public:
     copy_impl(size_t itemsize);
     ~copy_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
     bool check_topology(int ninputs, int noutputs) override;
 
     void handle_enable(pmt::pmt_t msg);

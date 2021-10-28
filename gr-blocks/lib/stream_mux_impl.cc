@@ -41,7 +41,7 @@ stream_mux_impl::stream_mux_impl(size_t itemsize, const std::vector<int>& length
     set_tag_propagation_policy(TPP_DONT);
 }
 
-void stream_mux_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void stream_mux_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++) {

@@ -81,7 +81,7 @@ pccc_decoder_blk_impl<T>::~pccc_decoder_blk_impl()
 
 template <class T>
 void pccc_decoder_blk_impl<T>::forecast(int noutput_items,
-                                        gr_vector_int& ninput_items_required)
+                                        gr_vector_int& ninput_items_required) const
 {
     int input_required = d_FSM1.O() * d_FSM2.O() * noutput_items;
     ninput_items_required[0] = input_required;

@@ -88,7 +88,7 @@ dvbt_demod_reference_signals_impl::dvbt_demod_reference_signals_impl(
 dvbt_demod_reference_signals_impl::~dvbt_demod_reference_signals_impl() {}
 
 void dvbt_demod_reference_signals_impl::forecast(int noutput_items,
-                                                 gr_vector_int& ninput_items_required)
+                                                 gr_vector_int& ninput_items_required) const
 {
     int ninputs = ninput_items_required.size();
 

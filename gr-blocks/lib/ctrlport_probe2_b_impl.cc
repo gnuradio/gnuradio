@@ -45,7 +45,7 @@ ctrlport_probe2_b_impl::ctrlport_probe2_b_impl(const std::string& id,
 ctrlport_probe2_b_impl::~ctrlport_probe2_b_impl() {}
 
 void ctrlport_probe2_b_impl::forecast(int noutput_items,
-                                      gr_vector_int& ninput_items_required)
+                                      gr_vector_int& ninput_items_required) const
 {
     // make sure all inputs have noutput_items available
     unsigned ninputs = ninput_items_required.size();

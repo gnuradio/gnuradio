@@ -70,7 +70,7 @@ dvbt_energy_descramble_impl::dvbt_energy_descramble_impl(int nblocks)
 dvbt_energy_descramble_impl::~dvbt_energy_descramble_impl() {}
 
 void dvbt_energy_descramble_impl::forecast(int noutput_items,
-                                           gr_vector_int& ninput_items_required)
+                                           gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = 4 * (noutput_items / (d_nblocks * d_bsize));
 }

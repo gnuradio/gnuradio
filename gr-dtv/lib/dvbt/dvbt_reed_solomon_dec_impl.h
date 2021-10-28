@@ -38,7 +38,7 @@ public:
         int p, int m, int gfpoly, int n, int k, int t, int s, int blocks);
     ~dvbt_reed_solomon_dec_impl() override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

@@ -172,7 +172,7 @@ public:
     dvb_ldpc_bb_impl& operator=(const dvb_ldpc_bb_impl&) = delete;
     dvb_ldpc_bb_impl& operator=(dvb_ldpc_bb_impl&&) = delete;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

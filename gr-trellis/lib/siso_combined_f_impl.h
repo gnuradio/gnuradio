@@ -68,7 +68,7 @@ public:
     void set_TABLE(const std::vector<float>& table) override;
     void set_TYPE(digital::trellis_metric_type_t type) override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

@@ -158,7 +158,7 @@ void siso_combined_f_impl::set_TYPE(digital::trellis_metric_type_t type)
 siso_combined_f_impl::~siso_combined_f_impl() {}
 
 void siso_combined_f_impl::forecast(int noutput_items,
-                                    gr_vector_int& ninput_items_required)
+                                    gr_vector_int& ninput_items_required) const
 {
     int multiple;
     if (d_POSTI && d_POSTO)

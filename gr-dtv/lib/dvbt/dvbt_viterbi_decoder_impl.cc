@@ -574,7 +574,7 @@ dvbt_viterbi_decoder_impl::dvbt_viterbi_decoder_impl(dvb_constellation_t constel
 dvbt_viterbi_decoder_impl::~dvbt_viterbi_decoder_impl() {}
 
 void dvbt_viterbi_decoder_impl::forecast(int noutput_items,
-                                         gr_vector_int& ninput_items_required)
+                                         gr_vector_int& ninput_items_required) const
 {
     int input_required = noutput_items * 8 * d_n / (d_k * d_m);
 

@@ -66,7 +66,7 @@ dvbt_reed_solomon_enc_impl::~dvbt_reed_solomon_enc_impl()
 }
 
 void dvbt_reed_solomon_enc_impl::forecast(int noutput_items,
-                                          gr_vector_int& ninput_items_required)
+                                          gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = noutput_items;
 }

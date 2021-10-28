@@ -51,7 +51,7 @@ sro_model_impl::sro_model_impl(double sample_rate_hz,
 
 sro_model_impl::~sro_model_impl() {}
 
-void sro_model_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void sro_model_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required) const
 {
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++) {

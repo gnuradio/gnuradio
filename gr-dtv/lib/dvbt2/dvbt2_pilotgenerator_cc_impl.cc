@@ -1150,7 +1150,7 @@ dvbt2_pilotgenerator_cc_impl::dvbt2_pilotgenerator_cc_impl(
 dvbt2_pilotgenerator_cc_impl::~dvbt2_pilotgenerator_cc_impl() {}
 
 void dvbt2_pilotgenerator_cc_impl::forecast(int noutput_items,
-                                            gr_vector_int& ninput_items_required)
+                                            gr_vector_int& ninput_items_required) const
 {
     ninput_items_required[0] = active_items * (noutput_items / num_symbols);
 }

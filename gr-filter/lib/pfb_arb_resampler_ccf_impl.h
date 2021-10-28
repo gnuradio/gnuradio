@@ -31,7 +31,7 @@ public:
                                const std::vector<float>& taps,
                                unsigned int filter_size);
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) const override;
 
     void set_taps(const std::vector<float>& taps) override;
     std::vector<std::vector<float>> taps() const override;
