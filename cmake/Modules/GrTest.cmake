@@ -61,6 +61,10 @@ function(GR_ADD_TEST test_name)
     # Keep the original path conversion for pypath - the above commented line breaks CI tests
     file(TO_NATIVE_PATH "${GR_TEST_PYTHON_DIRS}" pypath) #ok to use on dir list?
 
+    # add test module directory to PYTHONPATH to allow CTest to find QA test modules.
+    # We add it to the beginning of the list to use locally-built modules before installed ones.
+    list(INSERT pypath 0 "${CMAKE_BINARY_DIR}/test_modules")
+
     set(environs "VOLK_GENERIC=1" "GR_DONT_LOAD_PREFS=1" "srcdir=${srcdir}"
         "GR_CONF_CONTROLPORT_ON=False")
     list(APPEND environs ${GR_TEST_ENVIRONS})
