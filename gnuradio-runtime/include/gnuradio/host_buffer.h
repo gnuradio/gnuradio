@@ -79,6 +79,7 @@ public:
      * \param nitems
      * \param sizeof_item
      * \param downstream_lcm_nitems
+     * \param downstream_max_out_mult
      * \param link
      * \param buf_owner
      *
