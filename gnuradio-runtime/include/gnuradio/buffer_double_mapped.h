@@ -109,6 +109,8 @@ private:
      * \param sizeof_item is the size of an item in bytes.
      * \param downstream_lcm_nitems is the least common multiple of the items to
      *                              read by downstream blocks
+     * \param downstream_max_out_mult is the maximum output multiple of all
+     *                                downstream blocks
      * \param link is the block that writes to this buffer.
      *
      * The total size of the buffer will be rounded up to a system
