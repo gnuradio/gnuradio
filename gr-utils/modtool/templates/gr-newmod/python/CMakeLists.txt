@@ -31,3 +31,14 @@ GR_PYTHON_INSTALL(
 include(GrTest)
 
 set(GR_TEST_TARGET_DEPS gnuradio-howto)
+
+# Create a module directory that tests can import. It includes everything
+# from `python/` and the built bindings shared lib.
+add_custom_target(
+  copy_module_for_tests ALL
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}
+          ${CMAKE_BINARY_DIR}/test_modules/howto/
+  COMMAND
+    ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/bindings/
+    ${CMAKE_BINARY_DIR}/test_modules/howto/
+  DEPENDS howto_python)
