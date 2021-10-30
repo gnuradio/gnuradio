@@ -26,7 +26,11 @@
 #include <inttypes.h>
 #include <qwt_raster_data.h>
 
-#if QWT_VERSION >= 0x060000
+#if QWT_VERSION >= 0x060200
+#include "qwt_interval.h"
+
+typedef QwtInterval QwtDoubleInterval;
+#elif QWT_VERSION >= 0x060000
 #include <qwt_compat.h>
 #include <qwt_point_3d.h> // doesn't seem necessary, but is...
 #endif
@@ -62,6 +66,11 @@ public:
     virtual void setNumLinesToUpdate(const int);
     virtual void incrementNumLinesToUpdate();
 
+#if QWT_VERSION >= 0x060200
+    virtual QwtInterval interval(Qt::Axis) const;
+    void setInterval(Qt::Axis, const QwtInterval&);
+#endif
+
 protected:
     double* _spectrumData;
     uint64_t _fftPoints;
@@ -72,6 +81,10 @@ protected:
     QwtDoubleInterval _intensityRange;
 #else
     QwtInterval _intensityRange;
+#endif
+
+#if QWT_VERSION >= 0x060200
+    QwtInterval d_intervals[3];
 #endif
 
 private:

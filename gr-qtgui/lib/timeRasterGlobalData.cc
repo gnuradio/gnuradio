@@ -60,6 +60,15 @@ TimeRasterData::TimeRasterData(const double rows, const double cols)
 
 TimeRasterData::~TimeRasterData() { delete[] d_data; }
 
+#if QWT_VERSION >= 0x060200
+void TimeRasterData::setInterval(Qt::Axis axis, const QwtInterval& interval)
+{
+    d_intervals[axis] = interval;
+}
+
+QwtInterval TimeRasterData::interval(Qt::Axis a) const { return d_intervals[a]; }
+#endif
+
 void TimeRasterData::reset()
 {
     d_resid = 0;
