@@ -14,7 +14,11 @@
 #include <qwt_raster_data.h>
 #include <cinttypes>
 
-#if QWT_VERSION >= 0x060000
+#if QWT_VERSION >= 0x060200
+#include "qwt_interval.h"
+
+typedef QwtInterval QwtDoubleInterval;
+#elif QWT_VERSION >= 0x060000
 #include <qwt_compat.h>
 #include <qwt_point_3d.h> // doesn't seem necessary, but is...
 #endif
@@ -46,6 +50,11 @@ public:
 
     void incrementResidual();
 
+#if QWT_VERSION >= 0x060200
+    virtual QwtInterval interval(Qt::Axis) const;
+    void setInterval(Qt::Axis, const QwtInterval&);
+#endif
+
 protected:
     double* d_data;
     double d_rows, d_cols;
@@ -56,6 +65,10 @@ protected:
     QwtDoubleInterval d_intensityRange;
 #else
     QwtInterval d_intensityRange;
+#endif
+
+#if QWT_VERSION >= 0x060200
+    QwtInterval d_intervals[3];
 #endif
 
 private:

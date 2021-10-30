@@ -53,6 +53,15 @@ void WaterfallData::reset()
     _numLinesToUpdate = -1;
 }
 
+#if QWT_VERSION >= 0x060200
+void WaterfallData::setInterval(Qt::Axis axis, const QwtInterval& interval)
+{
+    d_intervals[axis] = interval;
+}
+
+QwtInterval WaterfallData::interval(Qt::Axis a) const { return d_intervals[a]; }
+#endif
+
 void WaterfallData::copy(const WaterfallData* rhs)
 {
 #if QWT_VERSION < 0x060000

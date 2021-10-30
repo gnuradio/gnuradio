@@ -240,7 +240,11 @@ QImage PlotWaterfall::renderImage(const QwtScaleMap& xMap,
             }
         }
     } else if (d_data->colorMap->format() == QwtColorMap::Indexed) {
+#if QWT_VERSION >= 0x060200
+        image.setColorTable(d_data->colorMap->colorTable(256));
+#else
         image.setColorTable(d_data->colorMap->colorTable(intensityRange));
+#endif
 
         for (int y = rect.top(); y <= rect.bottom(); y++) {
             const double ty = yyMap.invTransform(y);
@@ -249,8 +253,13 @@ QImage PlotWaterfall::renderImage(const QwtScaleMap& xMap,
             for (int x = rect.left(); x <= rect.right(); x++) {
                 const double tx = xxMap.invTransform(x);
 
+#if QWT_VERSION >= 0x060200
+                *line++ = d_data->colorMap->colorIndex(
+                    256, intensityRange, d_data->data->value(tx, ty));
+#else
                 *line++ = d_data->colorMap->colorIndex(intensityRange,
                                                        d_data->data->value(tx, ty));
+#endif
             }
         }
     }

@@ -15,7 +15,12 @@
 #include <qglobal.h>
 #include <qwt_plot_rasteritem.h>
 
-#if QWT_VERSION >= 0x060000
+#if QWT_VERSION >= 0x060200
+#include "qwt_interval.h"
+#include <qsize.h>
+
+typedef QwtInterval QwtDoubleInterval;
+#elif QWT_VERSION >= 0x060000
 #include <qwt_compat.h>
 #include <qwt_point_3d.h> // doesn't seem necessary, but is...
 #endif

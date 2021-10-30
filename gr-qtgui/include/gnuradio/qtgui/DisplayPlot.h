@@ -28,7 +28,12 @@
 #include <cstdio>
 #include <vector>
 
-#if QWT_VERSION >= 0x060000
+#if QWT_VERSION >= 0x060200
+typedef QPointF QwtDoublePoint;
+typedef QRectF QwtDoubleRect;
+
+typedef QwtInterval QwtDoubleInterval;
+#elif QWT_VERSION >= 0x060000
 #include <qwt_compat.h>
 #endif
 
