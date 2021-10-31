@@ -1,0 +1,25 @@
+#compdef gr_modtool
+#autoload
+
+# SPDX-License-Identifier: LGPL-3.0-or-later
+# Copyright 2021 Marcus Müller
+# This module offers tab-completion for ZSH
+# It's rudimentary.
+
+local -a subcmds
+subcmds=(
+    'add:Adds a block to the out-of-tree module.'
+    'bind:Generate Python bindings for GR block'
+    'disable:Disable selected block in module.'
+    'info:Return information about a given module'
+    'makeyaml:Generate YAML files for GRC block bindings.'
+    'newmod:Create new empty module, use add to add blocks.'
+    'rename:Rename a block inside a module.'
+    'rm:Remove a block from a module.'
+    'update:Update the grc bindings for a block'
+)
+_describe 'command' subcmds
+if (( CURRENT == 2 )); then
+    _describe -t commands 'subcommands' subcmds
+fi
+return 0

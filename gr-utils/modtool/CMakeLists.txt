@@ -28,6 +28,10 @@ install(
     DESTINATION ${GR_PREFSDIR}
 )
 
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/support/_gr_modtool
+  DESTINATION ${GR_DATA_DIR}/zsh/site-functions
+)
+
 GR_PYTHON_INSTALL(
     PROGRAMS    gr_modtool
     DESTINATION ${GR_RUNTIME_DIR}
