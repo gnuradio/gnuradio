@@ -3,6 +3,7 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtCore import Qt
 
 from ....core.Connection import Connection as CoreConnection
+from . import colors
 
 class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
 
@@ -45,9 +46,14 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
         painter.setRenderHint(QtGui.QPainter.Antialiasing)
 
         if self.isSelected():
-            pen = QtGui.QPen(QtGui.QColor(0x00, 0x00, 0xFF))
+            pen = QtGui.QPen(colors.HIGHLIGHT_COLOR)
+        elif not self.enabled:
+            pen = QtGui.QPen(colors.CONNECTION_DISABLED_COLOR)
+        elif not self.is_valid():
+            pen = QtGui.QPen(colors.CONNECTION_ERROR_COLOR)
         else:
             pen = QtGui.QPen(QtGui.QColor(0x61, 0x61, 0x61))
+
         pen.setWidth(2)
         painter.setPen(pen)
         painter.drawPath(self._line)
