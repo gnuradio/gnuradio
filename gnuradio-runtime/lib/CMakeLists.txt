@@ -86,7 +86,6 @@ add_library(gnuradio-runtime
   sys_paths.cc
   tagged_stream_block.cc
   terminate_handler.cc
-  test.cc
   top_block.cc
   top_block_impl.cc
   tpb_detail.cc
