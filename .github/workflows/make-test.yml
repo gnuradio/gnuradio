@@ -74,13 +74,13 @@ jobs:
             cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
             ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
             ldpath: /usr/local/lib64/
-          - distro: 'CentOS 8.3'
-            containerid: 'gnuradio/ci:centos-8.3-3.9'
+          - distro: 'CentOS 8.4'
+            containerid: 'gnuradio/ci:centos-8.4-3.10'
             cxxflags: ''
             ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
             ldpath: /usr/local/lib64/
           - distro: 'Debian 10'
-            containerid: 'gnuradio/ci:debian-10-3.9'
+            containerid: 'gnuradio/ci:debian-10-3.10'
             cxxflags: -Werror -Wno-error=invalid-pch
             ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
             ldpath:
