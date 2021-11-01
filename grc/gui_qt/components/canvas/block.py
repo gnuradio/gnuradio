@@ -32,12 +32,22 @@ class PropsDialog(QtWidgets.QDialog):
 
         self.setWindowTitle(f"Properties: {self._block.label}")
 
-        categories = set(p.category for p in self._block.params.values())
+        categories = (p.category for p in self._block.params.values())
+
+        def unique_categories():
+            seen = {Constants.DEFAULT_PARAM_TAB}
+            yield Constants.DEFAULT_PARAM_TAB
+            for cat in categories:
+                if cat in seen:
+                    continue
+                yield cat
+                seen.add(cat)
+
 
         self.edit_params = []
 
         self.tabs = QtWidgets.QTabWidget()
-        for cat in categories:
+        for cat in unique_categories():
             qvb = QtWidgets.QGridLayout()
             qvb.setAlignment(QtCore.Qt.AlignTop)
             qvb.setVerticalSpacing(5.0)
@@ -62,6 +72,8 @@ class PropsDialog(QtWidgets.QDialog):
                     else:
                         line_edit = QtWidgets.QLineEdit(param.value)
                         line_edit.param = param
+                        if f'dtype_{param.dtype}' in colors.LIGHT_THEME_STYLES:
+                            line_edit.setStyleSheet(colors.LIGHT_THEME_STYLES[f'dtype_{param.dtype}'])
                         qvb.addWidget(line_edit, i, 1)
                         self.edit_params.append(line_edit)
                     qvb.addWidget(QtWidgets.QLabel("unit"), i, 2)
