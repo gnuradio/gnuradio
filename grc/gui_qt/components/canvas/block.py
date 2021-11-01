@@ -68,7 +68,8 @@ class PropsDialog(QtWidgets.QDialog):
                             dropdown.setCurrentIndex(dropdown.param_values.index(param.get_value()))
                         else:
                             dropdown.setEditable(True)
-                            dropdown.setCurrentText(param.value)
+                            value_label = param.options[param.value] if param.value in param.options else param.value
+                            dropdown.setCurrentText(value_label)
                     else:
                         line_edit = QtWidgets.QLineEdit(param.value)
                         line_edit.param = param
@@ -245,7 +246,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         for key, item in self.params.items():
             name = item.name
             value = item.value
-            value_label = item.options[value] if item.options else value
+            value_label = item.options[value] if value in item.options else value
             if value is not None and item.hide == 'none':
                 full_line = name + ": " + value_label
                 '''
@@ -401,7 +402,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         for key, item in self.params.items():
             name = item.name
             value = item.value
-            value_label = item.options[value] if item.options else value
+            value_label = item.options[value] if value in item.options else value
             if value is not None and item.hide == 'none':
                 if self.is_valid():
                     painter.setPen(QtGui.QPen(1))
