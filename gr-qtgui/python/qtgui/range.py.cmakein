@@ -142,7 +142,7 @@ class RangeWidget(QtWidgets.QWidget):
             self.rangeType = rangeType
 
             # Setup the dial
-            self.setRange(0, ranges.nsteps-1)
+            self.setRange(0, int(ranges.nsteps-1))
             self.setSingleStep(1)
             self.setNotchesVisible(True)
             self.range = ranges
@@ -169,7 +169,7 @@ class RangeWidget(QtWidgets.QWidget):
 
             # Setup the slider
             #self.setFocusPolicy(QtCore.Qt.NoFocus)
-            self.setRange(0, ranges.nsteps - 1)
+            self.setRange(0, int(ranges.nsteps - 1))
             self.setTickPosition(2)
             self.setSingleStep(1)
             self.range = ranges
@@ -198,7 +198,7 @@ class RangeWidget(QtWidgets.QWidget):
         def mousePressEvent(self, event):
             if((event.button() == QtCore.Qt.LeftButton)):
                 new = self.minimum() + ((self.maximum()-self.minimum()) * event.x()) / self.width()
-                self.setValue(new)
+                self.setValue(int(new))
                 event.accept()
             # Use repaint rather than calling the super mousePressEvent.
             # Calling super causes issue where slider jumps to wrong value.
@@ -206,7 +206,7 @@ class RangeWidget(QtWidgets.QWidget):
 
         def mouseMoveEvent(self, event):
             new = self.minimum() + ((self.maximum()-self.minimum()) * event.x()) / self.width()
-            self.setValue(new)
+            self.setValue(int(new))
             event.accept()
             QtWidgets.QSlider.repaint(self)
 
