@@ -54,6 +54,7 @@ set(GR_CMAKE_MIN_VERSION "3.10.2")    ## Version in Ubuntu 18.04LTS
 set(GR_MAKO_MIN_VERSION "1.0.7")      ## debian buster, 18.04LTS
 set(GR_PYTHON_MIN_VERSION "3.6.5")    ## Version in Ubuntu 18.04LTS
 set(GR_NUMPY_MIN_VERSION "1.13.3")    ## Version in Ubuntu 18.04LTS
+set(GR_PYGCCXML_MIN_VERSION "2.0.0")  ## Version to support c++17 (in pip)
 set(GCC_MIN_VERSION "8.3.0")          ## debian buster
 set(CLANG_MIN_VERSION "11.0.0")       ## debian bullseye, Fedora 33
 set(APPLECLANG_MIN_VERSION "1100")    ## same as clang 11.0.0, in Xcode11
@@ -324,12 +325,20 @@ GR_PYTHON_CHECK_MODULE(
     "LooseVersion(numpy.__version__) >= LooseVersion('${GR_NUMPY_MIN_VERSION}')"
     NUMPY_FOUND)
 # Needed for automatic regeneration of some bindings
-GR_PYTHON_CHECK_MODULE_RAW(
+GR_PYTHON_CHECK_MODULE(
     "pygccxml"
-    "import pygccxml"
+    pygccxml
+    "LooseVersion(pygccxml.__version__) >= LooseVersion('${GR_PYGCCXML_MIN_VERSION}')"
     PYGCCXML_FOUND
     )
-
+if(NOT PYGCCXML_FOUND)
+    message(STATUS "")
+    message(STATUS "***************************** WARNING!!! *************************")
+    message(STATUS "pygccxml is highly recommended for using gr_modtool")
+    message(STATUS "and is either not present or below the minimum version " ${GR_PYGCCXML_MIN_VERSION})
+    message(STATUS "Only trivial bindings will be generated using gr_modtool bind ")
+    message(STATUS "******************************************************************")
+endif()
 
 find_package(pybind11 REQUIRED)
 IF(${pybind11_VERSION} VERSION_LESS ${PYBIND11_MIN_VERSION})
