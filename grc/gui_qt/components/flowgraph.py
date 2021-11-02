@@ -208,7 +208,6 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 self.newConnection = QtWidgets.QGraphicsLineItem(QtCore.QLineF(event.scenePos(), event.scenePos()))
                 self.newConnection.setPen(QtGui.QPen(1))
                 self.addItem(self.newConnection)
-                # TODO: Create new connection
                 print("clicked a port")
         if event.button() == Qt.LeftButton:
             self.mousePressed = True
@@ -221,7 +220,6 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
 
     def mouseMoveEvent(self, event):
         if self.newConnection:
-            print(self.newConnection)
             newConnection_ = QtCore.QLineF(self.newConnection.line().p1(), event.scenePos())
             self.newConnection.setLine(newConnection_)
 
@@ -247,7 +245,6 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 if item.is_port:
                     print("Connected two ports together!")
                     self.connections.add(Connection(self, self.startPort, item))
-                    # TODO: draw the line
             self.removeItem(self.newConnection)
             self.newConnection = None
 
