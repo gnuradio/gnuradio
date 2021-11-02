@@ -40,27 +40,27 @@ public:
     gr::logger_ptr d_logger;
     gr::logger_ptr d_debug_logger;
 
-    virtual ~buffer_double_mapped();
+    ~buffer_double_mapped() override;
 
     /*!
      * \brief return number of items worth of space available for writing
      */
-    virtual int space_available();
+    int space_available() override;
 
     /*!
      * Inherited from buffer class.
      * @param nitems is the number of items produced by the general_work() function.
      */
-    virtual void post_work([[maybe_unused]] int nitems) {}
+    void post_work([[maybe_unused]] int nitems) override {}
 
 protected:
     /*!
      * sets d_vmcircbuf, d_base, d_bufsize.
      * returns true iff successful.
      */
-    bool allocate_buffer(int nitems);
+    bool allocate_buffer(int nitems) override;
 
-    virtual unsigned index_add(unsigned a, unsigned b)
+    unsigned index_add(unsigned a, unsigned b) override
     {
         unsigned s = a + b;
 
@@ -71,7 +71,7 @@ protected:
         return s;
     }
 
-    virtual unsigned index_sub(unsigned a, unsigned b)
+    unsigned index_sub(unsigned a, unsigned b) override
     {
         int s = a - b;
 

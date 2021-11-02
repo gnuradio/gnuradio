@@ -33,7 +33,7 @@ public:
     gr::logger_ptr d_logger;
     gr::logger_ptr d_debug_logger;
 
-    virtual ~buffer_single_mapped();
+    ~buffer_single_mapped() override;
 
     /*!
      * \brief Return the block that owns this buffer.
@@ -43,33 +43,34 @@ public:
     /*!
      * \brief return number of items worth of space available for writing
      */
-    virtual int space_available();
+    int space_available() override;
 
-    virtual void update_reader_block_history(unsigned history, int delay);
+    void update_reader_block_history(unsigned history, int delay) override;
 
     /*!
      * \brief Return true if thread is ready to call input_blocked_callback,
      * false otherwise
      */
-    virtual bool input_blkd_cb_ready(int items_required, unsigned read_index);
+    bool input_blkd_cb_ready(int items_required, unsigned read_index) override;
 
     /*!
      * \brief Callback function that the scheduler will call when it determines
      * that the input is blocked. Override this function if needed.
      */
-    virtual bool
-    input_blocked_callback(int items_required, int items_avail, unsigned read_index) = 0;
+    bool input_blocked_callback(int items_required,
+                                int items_avail,
+                                unsigned read_index) override = 0;
 
     /*!
      * \brief Return true if thread is ready to call the callback, false otherwise
      */
-    virtual bool output_blkd_cb_ready(int output_multiple);
+    bool output_blkd_cb_ready(int output_multiple) override;
 
     /*!
      * \brief Callback function that the scheduler will call when it determines
      * that the output is blocked
      */
-    virtual bool output_blocked_callback(int output_multiple, bool force) = 0;
+    bool output_blocked_callback(int output_multiple, bool force) override = 0;
 
 protected:
     /*!
@@ -77,7 +78,7 @@ protected:
      * granularity then delegate actual allocation to do_allocate_buffer().
      * @return true iff successful.
      */
-    virtual bool allocate_buffer(int nitems);
+    bool allocate_buffer(int nitems) override;
 
     /*!
      * \brief Do actual buffer allocation. This is intended (required) to be
@@ -85,7 +86,7 @@ protected:
      */
     virtual bool do_allocate_buffer(size_t final_nitems, size_t sizeof_item) = 0;
 
-    virtual unsigned index_add(unsigned a, unsigned b)
+    unsigned index_add(unsigned a, unsigned b) override
     {
         unsigned s = a + b;
 
@@ -96,7 +97,7 @@ protected:
         return s;
     }
 
-    virtual unsigned index_sub(unsigned a, unsigned b)
+    unsigned index_sub(unsigned a, unsigned b) override
     {
         // NOTE: a is writer ptr and b is read ptr
         int s = a - b;
