@@ -30,7 +30,7 @@ public:
                                    block_sptr link = block_sptr(),
                                    block_sptr buf_owner = block_sptr());
 
-    virtual ~host_buffer();
+    ~host_buffer() override;
 
     /*!
      * \brief Handles post-general_work() cleanup and data transfer
@@ -41,37 +41,38 @@ public:
      *
      * \param nitems is the number of items produced by the general_work() function.
      */
-    void post_work(int nitems);
+    void post_work(int nitems) override;
 
     /*!
      * \brief Do actual buffer allocation. Inherited from buffer_single_mapped.
      */
-    bool do_allocate_buffer(size_t final_nitems, size_t sizeof_item);
+    bool do_allocate_buffer(size_t final_nitems, size_t sizeof_item) override;
 
     /*!
      * \brief Return a pointer to the write buffer depending on the context
      */
-    virtual void* write_pointer();
+    void* write_pointer() override;
 
     /*!
      * \brief return pointer to read buffer depending on the context
      *
      * The return value points to at least items_available() items.
      */
-    virtual const void* _read_pointer(unsigned int read_index);
+    const void* _read_pointer(unsigned int read_index) override;
 
     /*!
      * \brief Callback function that the scheduler will call when it determines
      * that the input is blocked. Override this function if needed.
      */
-    virtual bool
-    input_blocked_callback(int items_required, int items_avail, unsigned read_index);
+    bool input_blocked_callback(int items_required,
+                                int items_avail,
+                                unsigned read_index) override;
 
     /*!
      * \brief Callback function that the scheduler will call when it determines
      * that the output is blocked
      */
-    virtual bool output_blocked_callback(int output_multiple, bool force);
+    bool output_blocked_callback(int output_multiple, bool force) override;
 
     /*!
      * \brief Creates a new host_buffer object
