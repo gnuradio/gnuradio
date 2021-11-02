@@ -211,12 +211,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 print("clicked a port")
         if event.button() == Qt.LeftButton:
             self.mousePressed = True
-            if self.isPanning:
-                #self.setCursor(Qt.ClosedHandCursor)
-                self.dragPos = event.pos()
-                event.accept()
-            else:
-                super(FlowgraphScene, self).mousePressEvent(event)
+            super(FlowgraphScene, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
         if self.newConnection:
@@ -247,7 +242,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                     self.connections.add(Connection(self, self.startPort, item))
             self.removeItem(self.newConnection)
             self.newConnection = None
-
+        '''
         if event.button() == Qt.LeftButton:
             if event.modifiers() & Qt.ControlModifier:
                 #self.setCursor(Qt.OpenHandCursor)
@@ -256,6 +251,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 self.isPanning = False
                 #self.setCursor(Qt.ArrowCursor)
             self.mousePressed = False
+        '''
         super(FlowgraphScene, self).mouseReleaseEvent(event)
 
     def mouseDoubleClickEvent(self, event): # Will be used to open up dialog box of a block
@@ -394,7 +390,8 @@ class Flowgraph(QtWidgets.QGraphicsView, base.Component): # added base.Component
 
     def wheelEvent(self,  event):
         # TODO: Support multi touch drag and drop for scrolling through the view
-        if event.modifiers() == Qt.ControlModifier:
+        #if event.modifiers() == Qt.ControlModifier:
+        if False:
             factor = 1.1
 
             if event.angleDelta().y() < 0:
@@ -420,13 +417,8 @@ class Flowgraph(QtWidgets.QGraphicsView, base.Component): # added base.Component
     def mousePressEvent(self,  event):
         if event.button() == Qt.LeftButton:
             self.mousePressed = True
-            if self.isPanning:
-                self.setCursor(Qt.ClosedHandCursor)
-                self.dragPos = event.pos()
-                event.accept()
-            else:
-                # This will pass the mouse move event to the scene
-                super(Flowgraph, self).mousePressEvent(event)
+            # This will pass the mouse move event to the scene
+            super(Flowgraph, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
         if self.mousePressed and self.isPanning:
@@ -442,12 +434,14 @@ class Flowgraph(QtWidgets.QGraphicsView, base.Component): # added base.Component
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
+            '''
             if event.modifiers() & Qt.ControlModifier:
                 self.setCursor(Qt.OpenHandCursor)
                 pass
             else:
                 self.isPanning = False
                 self.setCursor(Qt.ArrowCursor)
+            '''
             self.mousePressed = False
         super(Flowgraph, self).mouseReleaseEvent(event)
 
@@ -455,19 +449,10 @@ class Flowgraph(QtWidgets.QGraphicsView, base.Component): # added base.Component
         pass
 
     def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Control and not self.mousePressed:
-            self.isPanning = True
-            self.setCursor(Qt.OpenHandCursor)
-        else:
-            super(Flowgraph, self).keyPressEvent(event)
+        super(Flowgraph, self).keyPressEvent(event)
 
     def keyReleaseEvent(self, event):
-        if event.key() == Qt.Key_Control:
-            if not self.mousePressed:
-                self.isPanning = False
-                self.setCursor(Qt.ArrowCursor)
-        else:
-            super(Flowgraph, self).keyPressEvent(event)
+        super(Flowgraph, self).keyPressEvent(event)
 
     def mouseDoubleClickEvent(self, event):
         # This will pass the double click event to the scene
