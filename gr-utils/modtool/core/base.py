@@ -144,7 +144,6 @@ class ModTool(object):
         else:
             self.info['includedir'] = 'include'
         self._file['cminclude'] = os.path.join(self.info['includedir'], 'CMakeLists.txt')
-        self._file['cmfind'] = os.path.join('cmake', 'Modules', 'howtoConfig.cmake')
 
 
     def _setup_scm(self, mode='active'):
