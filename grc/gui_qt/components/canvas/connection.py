@@ -4,6 +4,10 @@ from PyQt5.QtCore import Qt
 
 from ....core.Connection import Connection as CoreConnection
 from . import colors
+from ...Constants import (
+    CONNECTOR_ARROW_BASE,
+    CONNECTOR_ARROW_HEIGHT
+)
 
 class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
 
@@ -17,11 +21,9 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
 
         #self._line = QtCore.QLineF(source.scenePos(), sink.scenePos())
         self._line = QtGui.QPainterPath()
-        self._line.moveTo(source.connection_point)
-        c1 = source.connection_point + QtCore.QPointF(200, 0)
-        c2 = sink.connection_point - QtCore.QPointF(200, 0)
-        self._line.cubicTo(c1, c2, sink.connection_point)
-        self.setPath(self._line)
+        self._arrowhead = QtGui.QPainterPath()
+        self._path = QtGui.QPainterPath()
+        self.updateLine()
 
         self._line_width_factor = 1.0
         self._color1 = self._color2 = None
@@ -40,7 +42,17 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
         c1 = self.source.connection_point + QtCore.QPointF(200, 0)
         c2 = self.sink.connection_point - QtCore.QPointF(200, 0)
         self._line.cubicTo(c1, c2, self.sink.connection_point)
-        self.setPath(self._line)
+
+        self._arrowhead.clear()
+        self._arrowhead.moveTo(self.sink.connection_point)
+        self._arrowhead.lineTo(self.sink.connection_point + QtCore.QPointF(-CONNECTOR_ARROW_HEIGHT, -CONNECTOR_ARROW_BASE/2))
+        self._arrowhead.lineTo(self.sink.connection_point + QtCore.QPointF(-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE/2))
+        self._arrowhead.lineTo(self.sink.connection_point)
+
+        self._path.clear()
+        self._path.addPath(self._line)
+        self._path.addPath(self._arrowhead)
+        self.setPath(self._path)
 
     def paint(self, painter, option, widget):
         painter.setRenderHint(QtGui.QPainter.Antialiasing)
@@ -57,6 +69,17 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
         pen.setWidth(2)
         painter.setPen(pen)
         painter.drawPath(self._line)
+
+        if self.isSelected():
+            painter.setBrush(color.HIGHLIGHT_COLOR)
+        elif not self.enabled:
+            painter.setBrush(colors.CONNECTION_DISABLED_COLOR)
+        elif not self.is_valid():
+            painter.setBrush(color.CONNECTION_ERROR_COLOR)
+        else:
+            painter.setBrush(QtGui.QColor(0x61, 0x61, 0x61))
+
+        painter.drawPath(self._arrowhead)
 
     def mouseDoubleClickEvent(self, e):
         self.parent.connections.remove(self)
