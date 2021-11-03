@@ -405,7 +405,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
             value = item.value
             value_label = item.options[value] if value in item.options else value
             if value is not None and item.hide == 'none':
-                if self.is_valid():
+                if item.is_valid():
                     painter.setPen(QtGui.QPen(1))
                 else:
                     painter.setPen(Qt.red)
