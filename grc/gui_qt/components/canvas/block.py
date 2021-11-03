@@ -103,6 +103,7 @@ class PropsDialog(QtWidgets.QDialog):
                     if val == par.currentText():
                         par.param.set_value(key)
         self._block.rewrite()
+        self._block.validate()
         self._block.create_shapes_and_labels()
 
 
