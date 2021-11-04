@@ -167,7 +167,7 @@ LINE_PARAMS = """
     hide: ${{ ('part' if (
             int(nconnections) >= {i}
             or (type == "complex" and int(nconnections) >= {i_cplx})
-            or (type == "msg_complex" and {i_cplx} <= 1) 
+            or (type == "msg_complex" and {i_cplx} <= 1)
             or (type == "msg_float" and {i} <= 1))
         else 'all')
         }}
@@ -179,7 +179,7 @@ LINE_PARAMS = """
     hide: ${{ ('part' if (
             int(nconnections) >= {i}
             or (type == "complex" and int(nconnections) >= {i_cplx})
-            or (type == "msg_complex" and {i_cplx} <= 1) 
+            or (type == "msg_complex" and {i_cplx} <= 1)
             or (type == "msg_float" and {i} <= 1))
         else 'all')
         }}
@@ -194,7 +194,7 @@ LINE_PARAMS = """
     hide: ${{ ('part' if (
             int(nconnections) >= {i}
             or (type == "complex" and int(nconnections) >= {i_cplx})
-            or (type == "msg_complex" and {i_cplx} <= 1) 
+            or (type == "msg_complex" and {i_cplx} <= 1)
             or (type == "msg_float" and {i} <= 1))
         else 'all')
         }}
@@ -209,7 +209,7 @@ LINE_PARAMS = """
     hide: ${{ ('part' if (
             int(nconnections) >= {i}
             or (type == "complex" and int(nconnections) >= {i_cplx})
-            or (type == "msg_complex" and {i_cplx} <= 1) 
+            or (type == "msg_complex" and {i_cplx} <= 1)
             or (type == "msg_float" and {i} <= 1))
         else 'all')
         }}
@@ -224,7 +224,7 @@ LINE_PARAMS = """
     hide: ${{ ('part' if (
             int(nconnections) >= {i}
             or (type == "complex" and int(nconnections) >= {i_cplx})
-            or (type == "msg_complex" and {i_cplx} <= 1) 
+            or (type == "msg_complex" and {i_cplx} <= 1)
             or (type == "msg_float" and {i} <= 1))
         else 'all')
         }}
@@ -237,7 +237,7 @@ LINE_PARAMS = """
     hide: ${{ ('part' if (
             int(nconnections) >= {i}
             or (type == "complex" and int(nconnections) >= {i_cplx})
-            or (type == "msg_complex" and {i_cplx} <= 1) 
+            or (type == "msg_complex" and {i_cplx} <= 1)
             or (type == "msg_float" and {i} <= 1))
         else 'all')
         }}
@@ -345,19 +345,21 @@ documentation: |-
 file_format: 1
 """
 
+
 def make_yml():
     """Return the YML file as a string"""
     default_colors = [
         'blue', 'red', 'green', 'black', 'cyan', 'magenta', 'yellow',
         'dark red', 'dark green', 'dark blue'
     ]
-    line_params_1 = LINE_PARAMS.format(i=1, i_cplx=1, i_color=default_colors[0])
+    line_params_1 = LINE_PARAMS.format(
+        i=1, i_cplx=1, i_color=default_colors[0])
     line_params_1 = re.sub(r'    base_key:.*\n', '', line_params_1)
     line_params_n = ''.join([
         LINE_PARAMS.format(
             i=i,
-            i_cplx=int(math.ceil(float(i)/2)),
-            i_color=default_colors[(i-1) % len(default_colors)],
+            i_cplx=int(math.ceil(float(i) / 2)),
+            i_color=default_colors[(i - 1) % len(default_colors)],
         )
         for i in range(2, 11)
     ])
@@ -378,4 +380,3 @@ if __name__ == '__main__':
     data = make_yml()
     with open(filename, 'wb') as fp:
         fp.write(data.encode())
-

@@ -15,9 +15,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-    
+
 from gnuradio import gr
 import pmt
+
 
 class DistanceRadar(gr.sync_block, FigureCanvas):
     """
@@ -28,9 +29,11 @@ class DistanceRadar(gr.sync_block, FigureCanvas):
     Note: Incoming values should range between 0 (center bullseye) and
     100 (all the way out)
     """
+
     def __init__(self, lbl, ticklabels, backgroundColor, fontColor, ringColor, Parent=None,
                  width=4, height=4, dpi=100):
-        gr.sync_block.__init__(self, name="distanceradar", in_sig=None, out_sig=None)
+        gr.sync_block.__init__(self, name="distanceradar",
+                               in_sig=None, out_sig=None)
 
         self.lbl = lbl
 
@@ -43,15 +46,16 @@ class DistanceRadar(gr.sync_block, FigureCanvas):
 
         self.fig = Figure(figsize=(width, height), dpi=dpi)
         self.fig.patch.set_facecolor(self.backgroundColor)
-        self.axes = self.fig.add_subplot(111, polar=True, facecolor=self.backgroundColor)
+        self.axes = self.fig.add_subplot(
+            111, polar=True, facecolor=self.backgroundColor)
 
         # Create an "invisible" line at 100 to set the max for the plot
-        self.axes.plot(np.linspace(0, 2*np.pi, 100), np.ones(100)*100, color=self.fontColor,
+        self.axes.plot(np.linspace(0, 2 * np.pi, 100), np.ones(100) * 100, color=self.fontColor,
                        linestyle='')
 
         # Plot line: Initialize out to 100 and blank
         radius = 100
-        self.blackline = self.axes.plot(np.linspace(0, 2*np.pi, 100), np.ones(100)*radius,
+        self.blackline = self.axes.plot(np.linspace(0, 2 * np.pi, 100), np.ones(100) * radius,
                                         color=self.fontColor, linestyle='-')
         self.redline = None
 
@@ -70,9 +74,8 @@ class DistanceRadar(gr.sync_block, FigureCanvas):
         FigureCanvas.__init__(self, self.fig)
         self.setParent(Parent)
 
-
         self.title = self.fig.suptitle(self.lbl, fontsize=8, fontweight='bold',
-                                        color=self.fontColor)
+                                       color=self.fontColor)
 
         FigureCanvas.setSizePolicy(self,
                                    QtWidgets.QSizePolicy.Expanding,
@@ -87,7 +90,7 @@ class DistanceRadar(gr.sync_block, FigureCanvas):
                 self.updateData(new_val)
             else:
                 gr.log.error("Value received was not an int or a "
-                      "float: %s" % str(type(new_val)))
+                             "float: %s" % str(type(new_val)))
 
         except Exception as e:
             gr.log.error("Error with message conversion: %s" % str(e))
@@ -95,7 +98,7 @@ class DistanceRadar(gr.sync_block, FigureCanvas):
     def updateData(self, radius):
         if self.redline is not None:
             self.redline.pop(0).remove()
-        self.redline = self.axes.plot(np.linspace(0, 2*np.pi, 100), np.ones(100)*radius,
+        self.redline = self.axes.plot(np.linspace(0, 2 * np.pi, 100), np.ones(100) * radius,
                                       color='r', linestyle='-')
 
         if self.filledcircle:
@@ -111,4 +114,3 @@ class DistanceRadar(gr.sync_block, FigureCanvas):
         self.bullseye = self.axes.add_artist(circle)
 
         self.draw()
-

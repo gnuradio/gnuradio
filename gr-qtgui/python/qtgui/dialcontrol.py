@@ -16,6 +16,7 @@ from PyQt5.QtCore import QSize
 from gnuradio import gr
 import pmt
 
+
 class LabeledDialControl(QFrame):
     def __init__(self, lbl='', parent=None, minimum=0, maximum=100, defaultvalue=0,
                  backgroundColor='default', changedCallback=None,
@@ -36,7 +37,7 @@ class LabeledDialControl(QFrame):
         self.lblcontrol.setAlignment(Qtc.AlignCenter)
 
         if self.showvalue:
-            textstr = self.buildTextStr(defaultvalue*self.scaleFactor)
+            textstr = self.buildTextStr(defaultvalue * self.scaleFactor)
             self.lblcontrol.setText(textstr)
 
         if len or self.showvalue:
@@ -73,6 +74,7 @@ class LabeledDialControl(QFrame):
         textstr = self.buildTextStr(new_value)
         self.lblcontrol.setText(textstr)
 
+
 class DialControl(Qt.QDial):
     def __init__(self, minimum=0, maximum=100, defaultvalue=0, backgroundColor='default',
                  lablelCallback=None, changedCallback=None, minsize=100):
@@ -99,6 +101,7 @@ class DialControl(Qt.QDial):
         if self.lablelCallback is not None:
             self.lablelCallback(self.value())
 
+
 class GrDialControl(gr.sync_block, LabeledDialControl):
     """
     This block creates a dial control. The control does control a
@@ -112,10 +115,12 @@ class GrDialControl(gr.sync_block, LabeledDialControl):
     the desired range.  Think of the min/max as the increments,
     and the scale factor as the adjustment to get the values you want.
     """
+
     def __init__(self, lbl, parent, minimum, maximum, defaultvalue, backgroundColor='default',
                  varCallback=None, isFloat=False,
                  scaleFactor=1, minsize=100, showvalue=False, outputmsgname='value'):
-        gr.sync_block.__init__(self, name="GrDialControl", in_sig=None, out_sig=None)
+        gr.sync_block.__init__(self, name="GrDialControl",
+                               in_sig=None, out_sig=None)
         LabeledDialControl.__init__(self, lbl, parent, minimum, maximum, defaultvalue,
                                     backgroundColor, self.valueChanged, minsize, isFloat,
                                     scaleFactor, showvalue)
@@ -139,4 +144,3 @@ class GrDialControl(gr.sync_block, LabeledDialControl):
         else:
             self.message_port_pub(pmt.intern("value"), pmt.cons(pmt.intern(self.outputmsgname),
                                                                 pmt.from_long(new_value)))
-
