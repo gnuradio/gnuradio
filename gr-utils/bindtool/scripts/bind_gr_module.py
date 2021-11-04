@@ -12,7 +12,7 @@ parser.add_argument('--output_dir', default=tempfile.gettempdir(),
                     help='Output directory of generated bindings')
 parser.add_argument('--prefix', help='Prefix of Installed GNU Radio')
 parser.add_argument('--src', help='Directory of gnuradio source tree',
-                    default=os.path.dirname(os.path.abspath(__file__))+'/../../..')
+                    default=os.path.dirname(os.path.abspath(__file__)) + '/../../..')
 parser.add_argument(
     '--include', help='Additional Include Dirs, comma separated', default='')
 args = parser.parse_args()
@@ -24,9 +24,9 @@ args = parser.parse_args()
 #   /usr/include/x86_64-linux-gnu/qt5/QtCore,/usr/include/x86_64-linux-gnu/qt5/QtWidgets,/usr/include/qwt qtgui
 
 # To generate UHD requires adding the UHD headers, e.g.
-# python3 /share/gnuradio/grpybind/src/gnuradio/gr-utils/python/bindtool/scripts/bind_gr_module.py 
-#   --prefix /share/gnuradio/grpybind 
-#   --include $UHD_PATH,$UHD_PATH/utils,$UHD_PATH/types,$UHD_PATH/transport,$UHD_PATH/usrp_clock,$UHD_PATH/rfnoc 
+# python3 /share/gnuradio/grpybind/src/gnuradio/gr-utils/python/bindtool/scripts/bind_gr_module.py
+#   --prefix /share/gnuradio/grpybind
+#   --include $UHD_PATH,$UHD_PATH/utils,$UHD_PATH/types,$UHD_PATH/transport,$UHD_PATH/usrp_clock,$UHD_PATH/rfnoc
 #   --output_dir /share/tmp/take5 uhd
 
 
@@ -38,10 +38,10 @@ output_dir = args.output_dir
 includes = args.include
 for name in args.names:
     if name not in ['gr', 'pmt']:
-        namespace = ['gr', name.replace("-","_")]
+        namespace = ['gr', name.replace("-", "_")]
         module_dir = os.path.abspath(
-            os.path.join(args.src, 'gr-'+name, 'include'))
-        prefix_include_root = 'gnuradio/'+name  # pmt, gnuradio/digital, etc.
+            os.path.join(args.src, 'gr-' + name, 'include'))
+        prefix_include_root = 'gnuradio/' + name  # pmt, gnuradio/digital, etc.
     else:
         namespace = [name]
         module_dir = os.path.abspath(os.path.join(

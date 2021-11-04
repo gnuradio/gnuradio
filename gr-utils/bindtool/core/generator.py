@@ -18,11 +18,12 @@ from datetime import datetime
 import hashlib
 import re
 
+
 class BindingGenerator:
 
-    def __init__(self, prefix, namespace, prefix_include_root, output_dir="", define_symbols=None, addl_includes= None, 
-                    match_include_structure=False, catch_exceptions=True, write_json_output=False, status_output=None,
-                    flag_automatic=False, flag_pygccxml=False, update_hash_only=False):
+    def __init__(self, prefix, namespace, prefix_include_root, output_dir="", define_symbols=None, addl_includes=None,
+                 match_include_structure=False, catch_exceptions=True, write_json_output=False, status_output=None,
+                 flag_automatic=False, flag_pygccxml=False, update_hash_only=False):
         """Initialize BindingGenerator
         prefix -- path to installed gnuradio prefix (use gr.prefix() if unsure)
         namespace -- desired namespace to parse e.g. ['gr','module_name']
@@ -33,14 +34,14 @@ class BindingGenerator:
         output_dir -- path where bindings will be placed
         define_symbols -- comma separated tuple of defines
         addl_includes -- comma separated list of additional include directories (default "")
-        match_include_structure -- 
+        match_include_structure --
             If set to False, a bindings/ dir will be placed directly under the specified output_dir
             If set to True, the directory structure under include/ will be mirrored
-        update_hash_only -- If set to true, only update the hash in the pybind 
+        update_hash_only -- If set to true, only update the hash in the pybind
         """
 
         self.header_extensions = ['.h', '.hh', '.hpp']
-        self.define_symbols=define_symbols
+        self.define_symbols = define_symbols
         self.addl_include = addl_includes
         self.prefix = prefix
         self.namespace = namespace
@@ -80,7 +81,6 @@ class BindingGenerator:
 
         tpl = Template(filename=os.path.join(current_path, '..',
                                              'templates', 'generic_python_cc.mako'))
-
 
         return tpl.render(
             license=license,
@@ -134,7 +134,7 @@ class BindingGenerator:
             header_info = json.load(fp)
         return header_info
 
-    def fix_file_hash(self, file_to_process):              
+    def fix_file_hash(self, file_to_process):
         """Update the hash in blockname_python.cc python bindings"""
 
         output_dir = self.get_output_dir(file_to_process)
@@ -151,13 +151,12 @@ class BindingGenerator:
 
         with open(binding_pathname_cc, 'r') as f:
             file_contents = f.read()
-            new_file_contents = re.sub(r'BINDTOOL_HEADER_FILE_HASH\([a-zA-Z0-9]+\)', 
-                f"BINDTOOL_HEADER_FILE_HASH({newhash})", file_contents)
+            new_file_contents = re.sub(r'BINDTOOL_HEADER_FILE_HASH\([a-zA-Z0-9]+\)',
+                                       f"BINDTOOL_HEADER_FILE_HASH({newhash})", file_contents)
             with open(binding_pathname_cc, 'w') as updated_f:
                 updated_f.write(new_file_contents)
 
             print(f"Update hash in {binding_pathname_cc} to {newhash}")
-
 
     def gen_file_binding(self, file_to_process):
         """Produce the blockname_python.cc python bindings"""
@@ -166,7 +165,7 @@ class BindingGenerator:
         base_name = os.path.splitext(os.path.basename(file_to_process))[0]
         module_include_path = os.path.abspath(os.path.dirname(file_to_process))
         top_include_path = os.path.join(
-            module_include_path.split('include'+os.path.sep)[0], 'include')
+            module_include_path.split('include' + os.path.sep)[0], 'include')
 
         include_paths = ','.join(
             (module_include_path, top_include_path))
@@ -180,10 +179,10 @@ class BindingGenerator:
             include_paths = ','.join((include_paths, self.addl_include))
 
         parser = GenericHeaderParser(
-            define_symbols = self.define_symbols, include_paths=include_paths, file_path=file_to_process)
+            define_symbols=self.define_symbols, include_paths=include_paths, file_path=file_to_process)
         try:
             header_info = parser.get_header_info(self.namespace)
-            
+
             if self.write_json_output:
                 self.write_json(header_info, base_name, output_dir)
             self.write_pybind_cc(header_info, base_name, output_dir)
@@ -211,9 +210,9 @@ class BindingGenerator:
         output_dir = self.output_dir
         rel_path_after_include = ""
         if self.match_include_structure:
-            if 'include'+os.path.sep in filename:
+            if 'include' + os.path.sep in filename:
                 rel_path_after_include = os.path.split(
-                    filename.split('include'+os.path.sep)[-1])[0]
+                    filename.split('include' + os.path.sep)[-1])[0]
 
         output_dir = os.path.join(
             self.output_dir, rel_path_after_include, 'bindings')
@@ -301,7 +300,7 @@ class BindingGenerator:
     def gen_bindings(self, module_dir):
         """Generate bindings for an entire GR module
 
-        Produces CMakeLists.txt, python_bindings.cc, and blockname_python.cc 
+        Produces CMakeLists.txt, python_bindings.cc, and blockname_python.cc
             for each block in the module
 
         module_dir -- path to the include directory where the public headers live

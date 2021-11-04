@@ -14,6 +14,7 @@ from argparse import ArgumentParser
 import pmt
 from gnuradio.blocks import parse_file_metadata
 
+
 def main(filename, detached=False):
     handle = open(filename, "rb")
 
@@ -30,7 +31,8 @@ def main(filename, detached=False):
         try:
             header = pmt.deserialize_str(header_str)
         except RuntimeError:
-            sys.stderr.write("Could not deserialize header: invalid or corrupt data file.\n")
+            sys.stderr.write(
+                "Could not deserialize header: invalid or corrupt data file.\n")
             sys.exit(1)
 
         print("HEADER {0}".format(nheaders))
@@ -44,11 +46,13 @@ def main(filename, detached=False):
             try:
                 extra = pmt.deserialize_str(extra_str)
             except RuntimeError:
-                sys.stderr.write("Could not deserialize extras: invalid or corrupt data file.\n")
+                sys.stderr.write(
+                    "Could not deserialize extras: invalid or corrupt data file.\n")
                 sys.exit(1)
 
             print("\nExtra Header:")
-            extra_info = parse_file_metadata.parse_extra_dict(extra, info, True)
+            extra_info = parse_file_metadata.parse_extra_dict(
+                extra, info, True)
 
         nheaders += 1
         nread += parse_file_metadata.HEADER_LENGTH + info["extra_len"]
@@ -61,11 +65,12 @@ def main(filename, detached=False):
 if __name__ == "__main__":
     description = "Read in a GNU Radio file with meta data, extracts the header and prints it."
 
-    parser = ArgumentParser(conflict_handler="resolve", description=description)
+    parser = ArgumentParser(conflict_handler="resolve",
+                            description=description)
     parser.add_argument("-D", "--detached", action="store_true",
-                      help="Used if header is detached.")
+                        help="Used if header is detached.")
     parser.add_argument("file", metavar="FILE",
-                      help="Input file");
+                        help="Input file")
     args = parser.parse_args()
 
     main(args.file, args.detached)

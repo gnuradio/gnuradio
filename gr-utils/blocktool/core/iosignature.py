@@ -57,10 +57,10 @@ def io_signature(impl_file):
     for signature in Constants.SIGNATURE_LIST:
         if signature in io_func[0] and parsed_io['input']['signature'] is None:
             parsed_io['input']['signature'] = signature
-            io_func[0] = io_func[0].lstrip(signature+' (')
+            io_func[0] = io_func[0].lstrip(signature + ' (')
         if signature in io_func[1] and parsed_io['output']['signature'] is None:
             parsed_io['output']['signature'] = signature
-            io_func[1] = io_func[1].lstrip(signature+' (')
+            io_func[1] = io_func[1].lstrip(signature + ' (')
     io_elements = []
     for _io in io_func:
         _io = _io.split(',')
@@ -151,7 +151,7 @@ def message_port(impl_file):
                 if re.findall(r'"([^"]*)"', port)[0]:
                     input_port.append(re.findall(r'"([^"]*)"', port)[0])
             else:
-                input_port.append(port[port.find('(')+1:port.rfind(')')])
+                input_port.append(port[port.find('(') + 1:port.rfind(')')])
                 _temp_port = ''.join(map(str, input_port))
                 input_port.clear()
                 input_port.append(_temp_port)
@@ -164,7 +164,7 @@ def message_port(impl_file):
                 if re.findall(r'"([^"]*)"', port)[0]:
                     output_port.append(re.findall(r'"([^"]*)"', port)[0])
             else:
-                output_port.append(port[port.find('(')+1:port.rfind(')')])
+                output_port.append(port[port.find('(') + 1:port.rfind(')')])
                 _temp_port = ''.join(map(str, output_port))
                 output_port.clear()
                 output_port.append(_temp_port)
