@@ -13,6 +13,7 @@ import numpy
 
 from .fec_test import fec_test
 
+
 class bercurve_generator(gr.hier_block2):
 
     def __init__(self, encoder_list, decoder_list, esno=numpy.arange(0.0, 3.0, .25),
@@ -20,7 +21,7 @@ class bercurve_generator(gr.hier_block2):
         gr.hier_block2.__init__(
             self, "ber_curve_generator",
             gr.io_signature(0, 0, 0),
-            gr.io_signature(len(esno) * 2, len(esno) * 2, gr.sizeof_char*1))
+            gr.io_signature(len(esno) * 2, len(esno) * 2, gr.sizeof_char * 1))
 
         self.esno = esno
         self.samp_rate = samp_rate
@@ -28,8 +29,9 @@ class bercurve_generator(gr.hier_block2):
         self.decoder_list = decoder_list
         self.puncpat = puncpat
 
-        self.random_gen_b_0 = blocks.vector_source_b(list(map(int, numpy.random.randint(0, 256, 100000))), True)
-        self.deinterleave = blocks.deinterleave(gr.sizeof_char*1)
+        self.random_gen_b_0 = blocks.vector_source_b(
+            list(map(int, numpy.random.randint(0, 256, 100000))), True)
+        self.deinterleave = blocks.deinterleave(gr.sizeof_char * 1)
         self.connect(self.random_gen_b_0, self.deinterleave)
         self.ber_generators = []
 
@@ -47,12 +49,12 @@ class bercurve_generator(gr.hier_block2):
                 threading=threading,
                 puncpat=puncpat,
                 seed=seed)
-            self.ber_generators.append(ber_generator_temp);
+            self.ber_generators.append(ber_generator_temp)
 
         for i in range(0, len(esno)):
             self.connect((self.deinterleave, i), (self.ber_generators[i]))
-            self.connect((self.ber_generators[i], 0), (self, i*2));
-            self.connect((self.ber_generators[i], 1), (self, i*2 + 1));
+            self.connect((self.ber_generators[i], 0), (self, i * 2))
+            self.connect((self.ber_generators[i], 1), (self, i * 2 + 1))
 
     def get_esno(self):
         return self.esno

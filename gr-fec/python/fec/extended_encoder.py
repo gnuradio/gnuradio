@@ -23,8 +23,8 @@ class extended_encoder(gr.hier_block2):
                                 gr.io_signature(1, 1, gr.sizeof_char),
                                 gr.io_signature(1, 1, gr.sizeof_char))
 
-        self.blocks=[]
-        self.puncpat=puncpat
+        self.blocks = []
+        self.puncpat = puncpat
 
         if (type(encoder_obj_list) == list):
             if (type(encoder_obj_list[0]) == list):
@@ -32,7 +32,7 @@ class extended_encoder(gr.hier_block2):
                 raise AttributeError
         else:
             # If it has parallelism of 0, force it into a list of 1
-            encoder_obj_list = [encoder_obj_list,]
+            encoder_obj_list = [encoder_obj_list, ]
 
         if fec.get_encoder_input_conversion(encoder_obj_list[0]) == "pack":
             self.blocks.append(blocks.pack_k_bits_bb(8))
@@ -51,17 +51,19 @@ class extended_encoder(gr.hier_block2):
                                            gr.sizeof_char))
 
         if fec.get_encoder_output_conversion(encoder_obj_list[0]) == "packed_bits":
-            self.blocks.append(blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST))
+            self.blocks.append(
+                blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST))
 
         if self.puncpat != '11':
-            self.blocks.append(fec.puncture_bb(len(puncpat), read_bitlist(puncpat), 0))
+            self.blocks.append(fec.puncture_bb(
+                len(puncpat), read_bitlist(puncpat), 0))
 
         # Connect the input to the encoder and the output to the
         # puncture if used or the encoder if not.
-        self.connect((self, 0), (self.blocks[0], 0));
-        self.connect((self.blocks[-1], 0), (self, 0));
+        self.connect((self, 0), (self.blocks[0], 0))
+        self.connect((self.blocks[-1], 0), (self, 0))
 
         # If using the puncture block, add it into the flowgraph after
         # the encoder.
         for i in range(len(self.blocks) - 1):
-            self.connect((self.blocks[i], 0), (self.blocks[i+1], 0));
+            self.connect((self.blocks[i], 0), (self.blocks[i + 1], 0))

@@ -95,9 +95,9 @@ def discretize_awgn(mu, design_snr):
 
 def instant_capacity_delta_callable():
     return (
-        lambda a, b: -1.0 * (a + b) * np.log2((a + b) / 2)
-        + a * np.log2(a)
-        + b * np.log2(b)
+        lambda a, b: -1.0 * (a + b) * np.log2((a + b) / 2) +
+        a * np.log2(a) +
+        b * np.log2(b)
     )
 
 
@@ -114,16 +114,19 @@ def quantize_to_size(tpm, mu):
         print("WARNING: This channel gets too small!")
 
     # lambda works on vectors just fine. Use Numpy vector awesomeness.
-    delta_i_vec = calculate_delta_I(tpm[0, 0:-1], tpm[1, 0:-1], tpm[0, 1:], tpm[1, 1:])
+    delta_i_vec = calculate_delta_I(
+        tpm[0, 0:-1], tpm[1, 0:-1], tpm[0, 1:], tpm[1, 1:])
 
     for i in range(L - mu):
         d = np.argmin(delta_i_vec)
         ap = tpm[0, d] + tpm[0, d + 1]
         bp = tpm[1, d] + tpm[1, d + 1]
         if d > 0:
-            delta_i_vec[d - 1] = calculate_delta_I(tpm[0, d - 1], tpm[1, d - 1], ap, bp)
+            delta_i_vec[d -
+                        1] = calculate_delta_I(tpm[0, d - 1], tpm[1, d - 1], ap, bp)
         if d < delta_i_vec.size - 1:
-            delta_i_vec[d + 1] = calculate_delta_I(ap, bp, tpm[0, d + 1], tpm[1, d + 1])
+            delta_i_vec[d +
+                        1] = calculate_delta_I(ap, bp, tpm[0, d + 1], tpm[1, d + 1])
         delta_i_vec = np.delete(delta_i_vec, d)
         tpm = np.delete(tpm, d, axis=1)
         tpm[0, d] = ap
@@ -174,7 +177,8 @@ def tal_vardy_tpm_algorithm(block_size, design_snr, mu):
 
 def merge_lr_based(q, mu):
     lrs = q[0] / q[1]
-    vals, indices, inv_indices = np.unique(lrs, return_index=True, return_inverse=True)
+    vals, indices, inv_indices = np.unique(
+        lrs, return_index=True, return_inverse=True)
     # compare [1] (20). Ordering of representatives according to LRs.
     temp = np.zeros((2, len(indices)), dtype=float)
     if vals.size < mu:

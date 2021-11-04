@@ -19,8 +19,10 @@ class PolarDecoder(PolarCommon):
     def __init__(self, n, k, frozen_bit_position, frozenbits=None):
         PolarCommon.__init__(self, n, k, frozen_bit_position, frozenbits)
 
-        self.error_probability = 0.1  # this is kind of a dummy value. usually chosen individually.
-        self.lrs = ((1 - self.error_probability) / self.error_probability, self.error_probability / (1 - self.error_probability))
+        # this is kind of a dummy value. usually chosen individually.
+        self.error_probability = 0.1
+        self.lrs = ((1 - self.error_probability) / self.error_probability,
+                    self.error_probability / (1 - self.error_probability))
         self.llrs = np.log(self.lrs)
 
     def _llr_bit(self, bit):
@@ -77,8 +79,8 @@ class PolarDecoder(PolarCommon):
     def _calculate_lrs(self, y, u):
         ue = self._get_even_indices_values(u)
         uo = self._get_odd_indices_values(u)
-        ya = y[0:y.size//2]
-        yb = y[(y.size//2):]
+        ya = y[0:y.size // 2]
+        yb = y[(y.size // 2):]
         la = self._lr_decision_element(ya, (ue + uo) % 2)
         lb = self._lr_decision_element(yb, ue)
         return la, lb
@@ -140,7 +142,8 @@ class PolarDecoder(PolarCommon):
         for i in range(self.N):
             graph[i][self.power] = self._llr_bit(y[i])
         decode_order = self._vector_bit_reversed(np.arange(self.N), self.power)
-        decode_order = np.delete(decode_order, np.where(decode_order >= self.N // 2))
+        decode_order = np.delete(
+            decode_order, np.where(decode_order >= self.N // 2))
         u = np.array([], dtype=int)
         for pos in decode_order:
             graph = self._butterfly(pos, 0, graph, u)
@@ -171,7 +174,8 @@ class PolarDecoder(PolarCommon):
         # activate right side butterflies
         u_even = self._get_even_indices_values(u)
         u_odd = self._get_odd_indices_values(u)
-        graph = self._butterfly(bf_entry_row, stage + 1, graph, (u_even + u_odd) % 2)
+        graph = self._butterfly(bf_entry_row, stage + 1,
+                                graph, (u_even + u_odd) % 2)
         lower_right = bf_entry_row + self.N // (2 ** (stage + 1))
         graph = self._butterfly(lower_right, stage + 1, graph, u_even)
 
@@ -182,7 +186,8 @@ class PolarDecoder(PolarCommon):
 
     def decode(self, data, is_packed=False):
         if not len(data) == self.N:
-            raise ValueError("len(data)={0} is not equal to n={1}!".format(len(data), self.N))
+            raise ValueError(
+                "len(data)={0} is not equal to n={1}!".format(len(data), self.N))
         if is_packed:
             data = np.unpackbits(data)
         data = self._lr_sc_decoder_efficient(data)
@@ -192,12 +197,14 @@ class PolarDecoder(PolarCommon):
         return data
 
     def _extract_info_bits_reversed(self, y):
-        info_bit_positions_reversed = self._vector_bit_reversed(self.info_bit_position, self.power)
+        info_bit_positions_reversed = self._vector_bit_reversed(
+            self.info_bit_position, self.power)
         return y[info_bit_positions_reversed]
 
     def decode_systematic(self, data):
         if not len(data) == self.N:
-            raise ValueError("len(data)={0} is not equal to n={1}!".format(len(data), self.N))
+            raise ValueError(
+                "len(data)={0} is not equal to n={1}!".format(len(data), self.N))
         # data = self._reverse_bits(data)
         data = self._lr_sc_decoder_efficient(data)
         data = self._encode_natural_order(data)
