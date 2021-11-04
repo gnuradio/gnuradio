@@ -19,6 +19,7 @@ except ImportError:
     sys.stderr.write("Error: Program requires gr-analog.\n")
     sys.exit(1)
 
+
 class my_top_block(gr.top_block):
 
     def __init__(self):
@@ -26,9 +27,9 @@ class my_top_block(gr.top_block):
 
         parser = ArgumentParser()
         parser.add_argument("-O", "--audio-output", default="",
-                          help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
+                            help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
         parser.add_argument("-r", "--sample-rate", type=eng_float, default=48000,
-                          help="set sample rate, default=%(default)s")
+                            help="set sample rate, default=%(default)s")
         args = parser.parse_args()
 
         sample_rate = int(args.sample_rate)
@@ -39,6 +40,7 @@ class my_top_block(gr.top_block):
         dst = audio.sink(sample_rate, args.audio_output)
         self.connect(src0, (dst, 0))
         self.connect(src1, (dst, 1))
+
 
 if __name__ == '__main__':
     try:

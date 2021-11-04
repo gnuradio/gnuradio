@@ -27,6 +27,7 @@ except ImportError:
     sys.stderr.write("Error: Program requires gr-blocks.\n")
     sys.exit(1)
 
+
 class my_top_block(gr.top_block):
 
     def __init__(self):
@@ -34,11 +35,11 @@ class my_top_block(gr.top_block):
 
         parser = ArgumentParser()
         parser.add_argument("-O", "--audio-output", default="",
-                          help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
+                            help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
         parser.add_argument("-i", "--input-rate", type=eng_float, default=8000,
-                          help="set input sample rate to RATE %(default)r")
+                            help="set input sample rate to RATE %(default)r")
         parser.add_argument("-o", "--output-rate", type=eng_float, default=48000,
-                          help="set output sample rate to RATE %(default)r")
+                            help="set output sample rate to RATE %(default)r")
         args = parser.parse_args()
         input_rate = int(args.input_rate)
         output_rate = int(args.output_rate)
@@ -54,6 +55,7 @@ class my_top_block(gr.top_block):
         rr = filter.rational_resampler_fff(interp, decim)
         dst = audio.sink(output_rate, args.audio_output)
         self.connect(src0, rr, (dst, 0))
+
 
 if __name__ == '__main__':
     try:
