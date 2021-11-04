@@ -22,17 +22,19 @@
 from gnuradio import gr, filter, analog
 from .atsc_rx_filter import *
 
+
 class atsc_rx(gr.hier_block2):
     def __init__(self, input_rate, sps):
         gr.hier_block2.__init__(self, "atsc_rx",
-                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+                                # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex),
                                 gr.io_signature(1, 1, gr.sizeof_char))       # Output signature
 
         # ATSC receiver filter/interpolator
         rx_filt = atsc_rx_filter(input_rate, sps)
 
         # Lock on to pilot tone, shift to DC, then discard Q channel
-        output_rate = ATSC_SYMBOL_RATE*sps
+        output_rate = ATSC_SYMBOL_RATE * sps
         pll = dtv.atsc_fpll(output_rate)
 
         # Remove pilot tone now at DC
