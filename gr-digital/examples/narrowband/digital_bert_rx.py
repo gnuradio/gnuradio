@@ -13,7 +13,9 @@ from gnuradio import gr, eng_notation
 from optparse import OptionParser
 from gnuradio.eng_option import eng_option
 import threading
-import sys, time, math
+import sys
+import time
+import math
 
 from gnuradio import digital
 from gnuradio import blocks
@@ -22,6 +24,7 @@ from gnuradio import blocks
 from uhd_interface import uhd_receiver
 
 n2s = eng_notation.num_to_str
+
 
 class status_thread(threading.Thread):
     def __init__(self, tb):
@@ -34,12 +37,11 @@ class status_thread(threading.Thread):
     def run(self):
         while not self.done:
             print("Freq. Offset: {0:5.0f} Hz  Timing Offset: {1:10.1f} ppm  Estimated SNR: {2:4.1f} dB  BER: {3:g}".format(
-                tb.frequency_offset(), tb.timing_offset()*1e6, tb.snr(), tb.ber()))
+                tb.frequency_offset(), tb.timing_offset() * 1e6, tb.snr(), tb.ber()))
             try:
                 time.sleep(1.0)
             except KeyboardInterrupt:
                 self.done = True
-
 
 
 class bert_receiver(gr.hier_block2):
@@ -50,7 +52,8 @@ class bert_receiver(gr.hier_block2):
                  verbose, log):
 
         gr.hier_block2.__init__(self, "bert_receive",
-                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+                                # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex),
                                 gr.io_signature(0, 0, 0))                    # Output signature
 
         self._bitrate = bitrate
@@ -70,7 +73,8 @@ class bert_receiver(gr.hier_block2):
         self.connect(self._demod.time_recov, self._snr_probe)
 
         # Descramble BERT sequence.  A channel error will create 3 incorrect bits
-        self._descrambler = digital.descrambler_bb(0x8A, 0x7F, 7) # CCSDS 7-bit descrambler
+        self._descrambler = digital.descrambler_bb(
+            0x8A, 0x7F, 7)  # CCSDS 7-bit descrambler
 
         # Measure BER by the density of 0s in the stream
         self._ber = digital.probe_density_b(1.0 / self._symbol_rate)
@@ -78,7 +82,7 @@ class bert_receiver(gr.hier_block2):
         self.connect(self, self._demod, self._descrambler, self._ber)
 
     def frequency_offset(self):
-        return self._demod.freq_recov.get_frequency()*self._sample_rate/(2*math.pi)
+        return self._demod.freq_recov.get_frequency() * self._sample_rate / (2 * math.pi)
 
     def timing_offset(self):
         return self._demod.time_recov.clock_rate()
@@ -87,8 +91,7 @@ class bert_receiver(gr.hier_block2):
         return self._snr_probe.snr()
 
     def ber(self):
-        return (1.0-self._ber.density()) / 3.0
-
+        return (1.0 - self._ber.density()) / 3.0
 
 
 class rx_psk_block(gr.top_block):
@@ -99,7 +102,8 @@ class rx_psk_block(gr.top_block):
         self._demodulator_class = demod
 
         # Get demod_kwargs
-        demod_kwargs = self._demodulator_class.extract_kwargs_from_options(options)
+        demod_kwargs = self._demodulator_class.extract_kwargs_from_options(
+            options)
 
         # demodulator
         self._demodulator = self._demodulator_class(**demod_kwargs)
@@ -114,7 +118,8 @@ class rx_psk_block(gr.top_block):
             options.samples_per_symbol = self._source._sps
 
         elif(options.from_file is not None):
-            self._source = blocks.file_source(gr.sizeof_gr_complex, options.from_file)
+            self._source = blocks.file_source(
+                gr.sizeof_gr_complex, options.from_file)
         else:
             self._source = blocks.null_source(gr.sizeof_gr_complex)
 
@@ -154,7 +159,7 @@ class rx_psk_block(gr.top_block):
 
 def get_options(demods):
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
-    parser.add_option("","--from-file", default=None,
+    parser.add_option("", "--from-file", default=None,
                       help="input file of samples to demod")
     parser.add_option("-m", "--modulation", type="choice", choices=list(demods.keys()),
                       default='psk',
@@ -165,10 +170,11 @@ def get_options(demods):
     parser.add_option("-S", "--samples-per-symbol", type="float", default=2,
                       help="set samples/symbol [default=%default]")
     if not parser.has_option("--verbose"):
-        parser.add_option("-v", "--verbose", action="store_true", default=False)
+        parser.add_option("-v", "--verbose",
+                          action="store_true", default=False)
     if not parser.has_option("--log"):
         parser.add_option("", "--log", action="store_true", default=False,
-                      help="Log all parts of flow graph to files (CAUTION: lots of data)")
+                          help="Log all parts of flow graph to files (CAUTION: lots of data)")
 
     uhd_receiver.add_options(parser)
 
@@ -185,7 +191,7 @@ def get_options(demods):
 
 
 if __name__ == "__main__":
-    print ("""Warning: this example in its current shape is deprecated and
+    print("""Warning: this example in its current shape is deprecated and
             will be removed or fundamentally reworked in a coming GNU Radio
             release.""")
     demods = digital.modulation_utils.type_1_demods()

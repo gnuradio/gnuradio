@@ -1,8 +1,8 @@
 #
 # Copyright 2010 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
@@ -17,8 +17,10 @@ import inspect
 # Type 1 modulators accept a stream of bytes on their input and produce complex baseband output
 _type_1_modulators = {}
 
+
 def type_1_mods():
     return _type_1_modulators
+
 
 def add_type_1_mod(name, mod_class):
     _type_1_modulators[name] = mod_class
@@ -29,17 +31,22 @@ def add_type_1_mod(name, mod_class):
 # to resolve phase or polarity ambiguities.
 _type_1_demodulators = {}
 
+
 def type_1_demods():
     return _type_1_demodulators
+
 
 def add_type_1_demod(name, demod_class):
     _type_1_demodulators[name] = demod_class
 
+
 # Also record the constellation making functions of the modulations
 _type_1_constellations = {}
 
+
 def type_1_constellations():
     return _type_1_constellations
+
 
 def add_type_1_constellation(name, constellation):
     _type_1_constellations[name] = constellation
@@ -67,7 +74,7 @@ def extract_kwargs_from_options(function, excluded_args, options):
         excluded_args: function arguments that are NOT to be added to the dictionary (sequence of strings)
         options: result of command argument parsing (optparse.Values)
     """
-    
+
     # Try this in C++ ;)
     spec = inspect.getfullargspec(function)
     d = {}
@@ -76,6 +83,7 @@ def extract_kwargs_from_options(function, excluded_args, options):
             if getattr(options, kw) is not None:
                 d[kw] = getattr(options, kw)
     return d
+
 
 def extract_kwargs_from_options_for_class(cls, options):
     """

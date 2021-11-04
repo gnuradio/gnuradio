@@ -230,7 +230,6 @@ class test_constellation(gr_unittest.TestCase):
                                      data[first:],
                                      msg=msg)
 
-
     def test_soft_qpsk_gen(self):
         prec = 8
         constel, code = digital.psk_4_0()

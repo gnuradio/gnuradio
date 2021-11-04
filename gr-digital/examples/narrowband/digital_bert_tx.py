@@ -21,25 +21,30 @@ from uhd_interface import uhd_transmitter
 
 n2s = eng_notation.num_to_str
 
+
 class bert_transmit(gr.hier_block2):
     def __init__(self, constellation, samples_per_symbol,
                  differential, excess_bw, gray_coded,
                  verbose, log):
 
         gr.hier_block2.__init__(self, "bert_transmit",
-                                gr.io_signature(0, 0, 0),                    # Output signature
-                                gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Input signature
+                                # Output signature
+                                gr.io_signature(0, 0, 0),
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex))  # Input signature
 
         # Create BERT data bit stream
-        self._bits = blocks.vector_source_b([1,], True)      # Infinite stream of ones
-        self._scrambler = digital.scrambler_bb(0x8A, 0x7F, 7) # CCSDS 7-bit scrambler
+        self._bits = blocks.vector_source_b(
+            [1, ], True)      # Infinite stream of ones
+        self._scrambler = digital.scrambler_bb(
+            0x8A, 0x7F, 7)  # CCSDS 7-bit scrambler
 
         self._mod = digital.generic_mod(constellation, differential,
                                         samples_per_symbol,
                                         gray_coded, excess_bw,
                                         verbose, log)
 
-        self._pack = blocks.unpacked_to_packed_bb(self._mod.bits_per_symbol(), gr.GR_MSB_FIRST)
+        self._pack = blocks.unpacked_to_packed_bb(
+            self._mod.bits_per_symbol(), gr.GR_MSB_FIRST)
 
         self.connect(self._bits, self._scrambler, self._pack, self._mod, self)
 
@@ -66,10 +71,10 @@ class tx_psk_block(gr.top_block):
             options.samples_per_symbol = self._sink._sps
 
         elif(options.to_file is not None):
-            self._sink = blocks.file_sink(gr.sizeof_gr_complex, options.to_file)
+            self._sink = blocks.file_sink(
+                gr.sizeof_gr_complex, options.to_file)
         else:
             self._sink = blocks.null_sink(gr.sizeof_gr_complex)
-
 
         self._transmitter = bert_transmit(self._modulator._constellation,
                                           options.samples_per_symbol,
@@ -95,10 +100,11 @@ def get_options(mods):
                       help="Select modulation bit rate (default=%default)")
     parser.add_option("-S", "--samples-per-symbol", type="float", default=2,
                       help="set samples/symbol [default=%default]")
-    parser.add_option("","--to-file", default=None,
+    parser.add_option("", "--to-file", default=None,
                       help="Output file for modulated samples")
     if not parser.has_option("--verbose"):
-        parser.add_option("-v", "--verbose", action="store_true", default=False)
+        parser.add_option("-v", "--verbose",
+                          action="store_true", default=False)
     if not parser.has_option("--log"):
         parser.add_option("", "--log", action="store_true", default=False)
 
@@ -114,8 +120,9 @@ def get_options(mods):
 
     return (options, args)
 
+
 if __name__ == "__main__":
-    print ("""Warning: this example in its current shape is deprecated and
+    print("""Warning: this example in its current shape is deprecated and
             will be removed or fundamentally reworked in a coming GNU Radio
             release.""")
     mods = digital.modulation_utils.type_1_mods()

@@ -21,7 +21,6 @@ magnitude below what you chose for N_BITS.
 """
 
 
-
 import math
 import numpy
 from gnuradio import gr, digital
@@ -45,9 +44,11 @@ except ImportError:
 N_BITS = 1e7
 RAND_SEED = 42
 
+
 def berawgn(EbN0):
     """ Calculates theoretical bit error rate in AWGN (for BPSK and given Eb/N0) """
     return 0.5 * erfc(math.sqrt(10**(float(EbN0) / 10)))
+
 
 class BitErrors(gr.hier_block2):
     """ Two inputs: true and received bits. We compare them and
@@ -55,10 +56,11 @@ class BitErrors(gr.hier_block2):
     can only add up a certain number of values, the output is
     not a scalar, but a sequence of values, the sum of which is
     the BER. """
+
     def __init__(self, bits_per_byte):
         gr.hier_block2.__init__(self, "BitErrors",
-                gr.io_signature(2, 2, gr.sizeof_char),
-                gr.io_signature(1, 1, gr.sizeof_int))
+                                gr.io_signature(2, 2, gr.sizeof_char),
+                                gr.io_signature(1, 1, gr.sizeof_int))
 
         # Bit comparison
         comp = blocks.xor_bb()
@@ -74,29 +76,32 @@ class BitErrors(gr.hier_block2):
                      self)
         self.connect((self, 1), (comp, 1))
 
+
 class BERAWGNSimu(gr.top_block):
     " This contains the simulation flow graph "
+
     def __init__(self, EbN0):
         gr.top_block.__init__(self)
         self.const = digital.qpsk_constellation()
         # Source is N_BITS bits, non-repeated
-        data = list(map(int, numpy.random.randint(0, self.const.arity(), N_BITS / self.const.bits_per_symbol())))
-        src   = blocks.vector_source_b(data, False)
-        mod   = digital.chunks_to_symbols_bc((self.const.points()), 1)
-        add   = blocks.add_vcc()
+        data = list(map(int, numpy.random.randint(
+            0, self.const.arity(), N_BITS / self.const.bits_per_symbol())))
+        src = blocks.vector_source_b(data, False)
+        mod = digital.chunks_to_symbols_bc((self.const.points()), 1)
+        add = blocks.add_vcc()
         noise = analog.noise_source_c(analog.GR_GAUSSIAN,
                                       self.EbN0_to_noise_voltage(EbN0),
                                       RAND_SEED)
         demod = digital.constellation_decoder_cb(self.const.base())
-        ber   = BitErrors(self.const.bits_per_symbol())
-        self.sink  = blocks.vector_sink_f()
+        ber = BitErrors(self.const.bits_per_symbol())
+        self.sink = blocks.vector_sink_f()
         self.connect(src, mod, add, demod, ber, self.sink)
         self.connect(noise, (add, 1))
         self.connect(src, (ber, 1))
 
     def EbN0_to_noise_voltage(self, EbN0):
         """ Converts Eb/N0 to a complex noise voltage (assuming unit symbol power) """
-        return 1.0 / math.sqrt(self.const.bits_per_symbol( * 10**(float(EbN0) / 10)))
+        return 1.0 / math.sqrt(self.const.bits_per_symbol(* 10**(float(EbN0) / 10)))
 
 
 def simulate_ber(EbN0):
@@ -106,16 +111,17 @@ def simulate_ber(EbN0):
     fg.run()
     return numpy.sum(fg.sink.data())
 
+
 if __name__ == "__main__":
     EbN0_min = 0
     EbN0_max = 15
-    EbN0_range = list(range(EbN0_min, EbN0_max+1))
-    ber_theory = [berawgn(x)      for x in EbN0_range]
+    EbN0_range = list(range(EbN0_min, EbN0_max + 1))
+    ber_theory = [berawgn(x) for x in EbN0_range]
     print("Simulating...")
-    ber_simu   = [simulate_ber(x) for x in EbN0_range]
+    ber_simu = [simulate_ber(x) for x in EbN0_range]
 
     f = pyplot.figure()
-    s = f.add_subplot(1,1,1)
+    s = f.add_subplot(1, 1, 1)
     s.semilogy(EbN0_range, ber_theory, 'g-.', label="Theoretical")
     s.semilogy(EbN0_range, ber_simu, 'b-o', label="Simulated")
     s.set_title('BER Simulation')

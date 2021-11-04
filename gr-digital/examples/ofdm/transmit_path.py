@@ -20,6 +20,7 @@ import sys
 #                              transmit path
 # /////////////////////////////////////////////////////////////////////////////
 
+
 class transmit_path(gr.hier_block2):
     def __init__(self, options):
         '''
@@ -30,10 +31,11 @@ class transmit_path(gr.hier_block2):
                                 gr.io_signature(0, 0, 0),
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex))
 
-        options = copy.copy(options)    # make a copy so we can destructively modify
+        # make a copy so we can destructively modify
+        options = copy.copy(options)
 
-        self._verbose      = options.verbose      # turn verbose mode on/off
-        self._tx_amplitude = options.tx_amplitude # digital amp sent to radio
+        self._verbose = options.verbose      # turn verbose mode on/off
+        self._tx_amplitude = options.tx_amplitude  # digital amp sent to radio
 
         self.ofdm_tx = digital.ofdm_mod(options,
                                         msgq_limit=4,
@@ -87,4 +89,3 @@ class transmit_path(gr.hier_block2):
         Prints information about the transmit path
         """
         print("Tx amplitude     %s" % (self._tx_amplitude))
-

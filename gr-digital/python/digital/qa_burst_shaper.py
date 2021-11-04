@@ -85,7 +85,8 @@ class qa_burst_shaper (gr_unittest.TestCase):
                                  -4.0 * np.ones(5, dtype=complex)))
         tags = (make_length_tag(0, length),)
         expected = np.concatenate((np.zeros(prepad, dtype=complex), window[0:5],
-                                   np.ones(length - len(window), dtype=complex),
+                                   np.ones(length - len(window),
+                                           dtype=complex),
                                    window[5:10], np.zeros(postpad,
                                                           dtype=complex)))
         etag = make_length_tag(0, length + prepad + postpad)
@@ -239,8 +240,10 @@ class qa_burst_shaper (gr_unittest.TestCase):
         window = np.concatenate((-2.0 * np.ones(5), -4.0 * np.ones(5)))
         tags = (make_length_tag(0, length1), make_length_tag(length1, length2))
         expected = np.concatenate((np.zeros(prepad), window[0:5],
-                                   np.ones(length1 - len(window)), window[5:10],
-                                   np.zeros(postpad + prepad), -1.0 * window[0:5],
+                                   np.ones(length1 - len(window)
+                                           ), window[5:10],
+                                   np.zeros(postpad + prepad), -
+                                   1.0 * window[0:5],
                                    -1.0 * np.ones(length2 - len(window)),
                                    -1.0 * window[5:10], np.zeros(postpad)))
         etags = (make_length_tag(0, length1 + prepad + postpad),
@@ -335,8 +338,10 @@ class qa_burst_shaper (gr_unittest.TestCase):
                 make_tag(tag4_offset, 'body', pmt.intern('tag4')),
                 make_tag(tag5_offset, 'body', pmt.intern('tag5')))
         expected = np.concatenate((np.zeros(prepad), window[0:5],
-                                   np.ones(length1 - len(window)), window[5:10],
-                                   np.zeros(postpad + prepad), -1.0 * window[0:5],
+                                   np.ones(length1 - len(window)
+                                           ), window[5:10],
+                                   np.zeros(postpad + prepad), -
+                                   1.0 * window[0:5],
                                    -1.0 * np.ones(length2 - len(window)),
                                    -1.0 * window[5:10], np.zeros(postpad)))
         elentag1_offset = 0

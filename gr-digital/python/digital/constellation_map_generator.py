@@ -35,7 +35,7 @@ def constellation_map_generator(basis_cpoints, basis_symbols, k, pi):
     symbols = list()
     for s_i in s:
         tmp = 0
-        for i,p in enumerate(pi):
+        for i, p in enumerate(pi):
             bit = (s_i >> i) & 0x1
             tmp |= bit << p
         symbols.append(tmp ^ k)
