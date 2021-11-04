@@ -18,6 +18,7 @@ from gnuradio import gr
 from ..core import ModToolNewModule, validate_name
 from .base import common_params, run, cli_input, ModToolException
 
+
 @click.command('newmod', short_help=ModToolNewModule.description)
 @click.option('--srcdir',
               help="Source directory for the module template.")
@@ -37,14 +38,16 @@ def cli(**kwargs):
     try:
         os.stat(self.dir)
     except OSError:
-        pass # This is what should happen
+        pass  # This is what should happen
     else:
         raise ModToolException('The given directory exists.')
     if self.srcdir is None:
-        self.srcdir = os.path.join(gr.prefix(),'share','gnuradio','modtool','templates','gr-newmod')
+        self.srcdir = os.path.join(
+            gr.prefix(), 'share', 'gnuradio', 'modtool', 'templates', 'gr-newmod')
     if not os.path.isdir(self.srcdir):
         raise ModToolException('Could not find gr-newmod source dir.')
     run(self)
+
 
 def get_modname(self):
     """ Get the name of the new module to be added """

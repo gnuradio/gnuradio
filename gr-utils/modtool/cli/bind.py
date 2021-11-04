@@ -27,14 +27,13 @@ from .base import common_params, block_name, run, cli_input
 
 @click.command('bind', short_help=ModToolGenBindings.description)
 @click.option('-o', '--output', is_flag=True,
-              help = 'If given, a file with desired output format will be generated')
-@click.option('--addl_includes', default = None,
-              help = 'Comma separated list of additional include directories (default None)')
+              help='If given, a file with desired output format will be generated')
+@click.option('--addl_includes', default=None,
+              help='Comma separated list of additional include directories (default None)')
 @click.option('-D', '--define_symbols', multiple=True, default=None,
-              help = 'Set precompiler defines')
-@click.option('-u', '--update-hash-only', is_flag = True,
-              help = 'If given, only the hash in the binding will be updated')
-              
+              help='Set precompiler defines')
+@click.option('-u', '--update-hash-only', is_flag=True,
+              help='If given, only the hash in the binding will be updated')
 @common_params
 @block_name
 def cli(**kwargs):
@@ -44,15 +43,18 @@ def cli(**kwargs):
     """
     kwargs['cli'] = True
     self = ModToolGenBindings(**kwargs)
-    click.secho("GNU Radio module name identified: " + self.info['modname'], fg='green')
+    click.secho("GNU Radio module name identified: " +
+                self.info['modname'], fg='green')
     get_pattern(self)
     run(self)
+
 
 def get_pattern(self):
     """ Get the regex pattern for block(s) to be parsed """
     if self.info['pattern'] is None:
         block_candidates = get_block_candidates()
         with SequenceCompleter(block_candidates):
-            self.info['pattern'] = cli_input('Which blocks do you want to parse? (Regex): ')
+            self.info['pattern'] = cli_input(
+                'Which blocks do you want to parse? (Regex): ')
     if not self.info['pattern'] or self.info['pattern'].isspace():
         self.info['pattern'] = '.'
