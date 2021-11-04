@@ -17,6 +17,7 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/thread/thread.h>
+#include <boost/any.hpp>
 #include <boost/core/noncopyable.hpp>
 #include <boost/function.hpp>
 #include <boost/thread/shared_mutex.hpp>

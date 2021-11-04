@@ -16,7 +16,6 @@
 #include <gnuradio/messages/msg_accepter.h>
 #include <pmt/pmt.h>
 #include <pmt/pmt_pool.h>
-#include <any>
 #include <cstdio>
 #include <cstring>
 #include <vector>
@@ -742,20 +741,20 @@ pmt_t dict_values(pmt_t dict)
 //                                 Any
 ////////////////////////////////////////////////////////////////////////////
 
-pmt_any::pmt_any(const std::any& any) : d_any(any) {}
+pmt_any::pmt_any(const boost::any& any) : d_any(any) {}
 
 bool is_any(pmt_t obj) { return obj->is_any(); }
 
-pmt_t make_any(const std::any& any) { return pmt_t(new pmt_any(any)); }
+pmt_t make_any(const boost::any& any) { return pmt_t(new pmt_any(any)); }
 
-std::any any_ref(pmt_t obj)
+boost::any any_ref(pmt_t obj)
 {
     if (!obj->is_any())
         throw wrong_type("pmt_any_ref", obj);
     return _any(obj)->ref();
 }
 
-void any_set(pmt_t obj, const std::any& any)
+void any_set(pmt_t obj, const boost::any& any)
 {
     if (!obj->is_any())
         throw wrong_type("pmt_any_set", obj);
@@ -771,8 +770,8 @@ bool is_msg_accepter(const pmt_t& obj)
     if (!is_any(obj))
         return false;
 
-    std::any r = any_ref(obj);
-    return std::any_cast<gr::messages::msg_accepter_sptr>(&r) != 0;
+    boost::any r = any_ref(obj);
+    return boost::any_cast<gr::messages::msg_accepter_sptr>(&r) != 0;
 }
 
 //! make a msg_accepter
@@ -782,8 +781,8 @@ pmt_t make_msg_accepter(gr::messages::msg_accepter_sptr ma) { return make_any(ma
 gr::messages::msg_accepter_sptr msg_accepter_ref(const pmt_t& obj)
 {
     try {
-        return std::any_cast<gr::messages::msg_accepter_sptr>(any_ref(obj));
-    } catch (std::bad_any_cast& e) {
+        return boost::any_cast<gr::messages::msg_accepter_sptr>(any_ref(obj));
+    } catch (boost::bad_any_cast& e) {
         throw wrong_type("pmt_msg_accepter_ref", obj);
     }
 }
