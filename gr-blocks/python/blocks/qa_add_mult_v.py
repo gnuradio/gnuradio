@@ -344,8 +344,8 @@ class test_add_mult_v(gr_unittest.TestCase):
             25.0 + 26.0j,
             27.0 + 28.0j,
             29.0 + 30.0j]
-        expected_result = [-1021.0 + 428.0j, -2647.0 + 1754.0j, - \
-            4945.0 + 3704.0j, -8011.0 + 6374.0j, -11941.0 + 9860.0j]
+        expected_result = [-1021.0 + 428.0j, -2647.0 + 1754.0j, -
+                           4945.0 + 3704.0j, -8011.0 + 6374.0j, -11941.0 + 9860.0j]
         op = blocks.multiply_cc(5)
         self.help_cc(5, (src1_data, src2_data, src3_data), expected_result, op)
 

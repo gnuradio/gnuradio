@@ -10,6 +10,7 @@
 
 from gnuradio import gr, blocks
 
+
 class matrix_interleaver(gr.hier_block2):
     """
     Block interleaver writes inputs into conceptual rows of the matrix
@@ -21,8 +22,8 @@ class matrix_interleaver(gr.hier_block2):
     def __init__(self, itemsize, rows=1, cols=1, deint=False):
         gr.hier_block2.__init__(
             self, "Matrix Interleaver",
-                gr.io_signature(1, 1, itemsize),
-                gr.io_signature(1, 1, itemsize),
+            gr.io_signature(1, 1, itemsize),
+            gr.io_signature(1, 1, itemsize),
         )
 
         self.itemsize = itemsize
@@ -47,12 +48,14 @@ class matrix_interleaver(gr.hier_block2):
         ##################################################
         # short circuit for unitary rows / columns
         if rows == 1 or cols == 1:
-          self.passthrough = blocks.copy(self.itemsize)
-          self.connect((self, 0), (self.passthrough, 0), (self, 0))
-          return
+            self.passthrough = blocks.copy(self.itemsize)
+            self.connect((self, 0), (self.passthrough, 0), (self, 0))
+            return
 
-        self.deinterleaver = blocks.deinterleave(self.itemsize, 1 if deint else cols)
-        self.interleaver = blocks.interleave(self.itemsize, cols if deint else 1)
+        self.deinterleaver = blocks.deinterleave(
+            self.itemsize, 1 if deint else cols)
+        self.interleaver = blocks.interleave(
+            self.itemsize, cols if deint else 1)
 
         ##################################################
         # Connections
