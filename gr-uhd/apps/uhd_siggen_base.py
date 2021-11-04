@@ -41,13 +41,14 @@ FREQ_RANGE_KEY = 'freq_range'
 TYPE_KEY = 'type'
 
 WAVEFORMS = {
-    analog.GR_CONST_WAVE : "Constant",
-    analog.GR_SIN_WAVE   : "Complex Sinusoid",
-    analog.GR_GAUSSIAN   : "Gaussian Noise",
-    analog.GR_UNIFORM    : "Uniform Noise",
-    "2tone"              : "Two Tone",
-    "sweep"              : "Sweep",
+    analog.GR_CONST_WAVE: "Constant",
+    analog.GR_SIN_WAVE: "Complex Sinusoid",
+    analog.GR_GAUSSIAN: "Gaussian Noise",
+    analog.GR_UNIFORM: "Uniform Noise",
+    "2tone": "Two Tone",
+    "sweep": "Sweep",
 }
+
 
 class USRPSiggen(gr.top_block, pubsub, UHDApp):
     """
@@ -87,15 +88,18 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
             args=args,
         )
         print("[UHD-SIGGEN] UHD Signal Generator")
-        print("[UHD-SIGGEN] UHD Version: {ver}".format(ver=uhd.get_version_string()))
+        print(
+            "[UHD-SIGGEN] UHD Version: {ver}".format(ver=uhd.get_version_string()))
         print("[UHD-SIGGEN] Using USRP configuration:")
         print(self.get_usrp_info_string(tx_or_rx="tx"))
-        self.usrp_description = self.get_usrp_info_string(tx_or_rx="tx", compact=True)
+        self.usrp_description = self.get_usrp_info_string(
+            tx_or_rx="tx", compact=True)
 
-        ### Set subscribers and publishers:
+        # Set subscribers and publishers:
         self.publish(SAMP_RATE_KEY, lambda: self.usrp.get_samp_rate())
         self.publish(DESC_KEY, lambda: self.usrp_description)
-        self.publish(FREQ_RANGE_KEY, lambda: self.usrp.get_freq_range(self.channels[0]))
+        self.publish(FREQ_RANGE_KEY,
+                     lambda: self.usrp.get_freq_range(self.channels[0]))
         self.publish(GAIN_KEY, lambda: self.get_gain_or_power())
 
         self[SAMP_RATE_KEY] = args.samp_rate
@@ -107,7 +111,7 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
         self[DSP_FREQ_KEY] = 0
         self[RF_FREQ_KEY] = 0
 
-        #subscribe set methods
+        # subscribe set methods
         self.subscribe(SAMP_RATE_KEY, self.set_samp_rate)
         self.subscribe(GAIN_KEY, self.set_gain_or_power)
         self.subscribe(TX_FREQ_KEY, self.set_freq)
@@ -117,18 +121,19 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
         self.subscribe(TYPE_KEY, self.set_waveform)
         self.subscribe(RF_FREQ_KEY, self.update_gain_range)
 
-        #force update on pubsub keys
+        # force update on pubsub keys
         for key in (SAMP_RATE_KEY, GAIN_KEY, TX_FREQ_KEY,
                     AMPLITUDE_KEY, WAVEFORM_FREQ_KEY,
                     WAVEFORM_OFFSET_KEY, WAVEFORM2_FREQ_KEY):
             self[key] = self[key]
-        self[TYPE_KEY] = args.type #set type last
+        self[TYPE_KEY] = args.type  # set type last
 
     def set_samp_rate(self, samp_rate):
         """
         When sampling rate is updated, also update the signal sources.
         """
-        self.vprint("Setting sampling rate to: {rate} Msps".format(rate=samp_rate / 1e6))
+        self.vprint("Setting sampling rate to: {rate} Msps".format(
+            rate=samp_rate / 1e6))
         self.usrp.set_samp_rate(samp_rate)
         samp_rate = self.usrp.get_samp_rate()
         if self[TYPE_KEY] in (analog.GR_SIN_WAVE, analog.GR_CONST_WAVE):
@@ -138,10 +143,12 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
             self._src2.set_sampling_freq(self[SAMP_RATE_KEY])
         elif self[TYPE_KEY] == "sweep":
             self._src1.set_sampling_freq(self[SAMP_RATE_KEY])
-            self._src2.set_sampling_freq(self[WAVEFORM_FREQ_KEY]*2*math.pi/self[SAMP_RATE_KEY])
+            self._src2.set_sampling_freq(
+                self[WAVEFORM_FREQ_KEY] * 2 * math.pi / self[SAMP_RATE_KEY])
         else:
-            return True # Waveform not yet set
-        self.vprint("Set sample rate to: {rate} Msps".format(rate=samp_rate / 1e6))
+            return True  # Waveform not yet set
+        self.vprint("Set sample rate to: {rate} Msps".format(
+            rate=samp_rate / 1e6))
         return True
 
     def set_waveform_freq(self, freq):
@@ -151,7 +158,7 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
         elif self[TYPE_KEY] == "2tone":
             self._src1.set_frequency(freq)
         elif self[TYPE_KEY] == 'sweep':
-            #there is no set sensitivity, redo fg
+            # there is no set sensitivity, redo fg
             self[TYPE_KEY] = self[TYPE_KEY]
         return True
 
@@ -178,11 +185,14 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
         if waveform_type in (analog.GR_SIN_WAVE, analog.GR_CONST_WAVE):
             self._src = analog.sig_source_c(self[SAMP_RATE_KEY],       # Sample rate
                                             waveform_type,             # Waveform waveform_type
-                                            self[WAVEFORM_FREQ_KEY],   # Waveform frequency
-                                            self[AMPLITUDE_KEY],       # Waveform amplitude
-                                            self[WAVEFORM_OFFSET_KEY]) # Waveform offset
+                                            # Waveform frequency
+                                            self[WAVEFORM_FREQ_KEY],
+                                            # Waveform amplitude
+                                            self[AMPLITUDE_KEY],
+                                            self[WAVEFORM_OFFSET_KEY])  # Waveform offset
         elif waveform_type in (analog.GR_GAUSSIAN, analog.GR_UNIFORM):
-            self._src = analog.noise_source_c(waveform_type, self[AMPLITUDE_KEY])
+            self._src = analog.noise_source_c(
+                waveform_type, self[AMPLITUDE_KEY])
         elif waveform_type == "2tone":
             self._src1 = analog.sig_source_c(self[SAMP_RATE_KEY],
                                              analog.GR_SIN_WAVE,
@@ -211,7 +221,8 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
                                              self[WAVEFORM2_FREQ_KEY],
                                              1.0,
                                              -0.5)
-            self._src2 = analog.frequency_modulator_fc(self[WAVEFORM_FREQ_KEY]*2*math.pi/self[SAMP_RATE_KEY])
+            self._src2 = analog.frequency_modulator_fc(
+                self[WAVEFORM_FREQ_KEY] * 2 * math.pi / self[SAMP_RATE_KEY])
             self._src = blocks.multiply_const_cc(self[AMPLITUDE_KEY])
             self.connect(self._src1, self._src2, self._src)
         else:
@@ -224,7 +235,8 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
         self.vprint("Set baseband modulation to:", WAVEFORMS[waveform_type])
         n2s = eng_notation.num_to_str
         if waveform_type == analog.GR_SIN_WAVE:
-            self.vprint("Modulation frequency: %sHz" % (n2s(self[WAVEFORM_FREQ_KEY]),))
+            self.vprint("Modulation frequency: %sHz" %
+                        (n2s(self[WAVEFORM_FREQ_KEY]),))
             self.vprint("Initial phase:", self[WAVEFORM_OFFSET_KEY])
         elif waveform_type == "2tone":
             self.vprint("Tone 1: %sHz" % (n2s(self[WAVEFORM_FREQ_KEY]),))
@@ -250,7 +262,7 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
         elif self[TYPE_KEY] == "sweep":
             self._src.set_k(amplitude)
         else:
-            return True # Waveform not yet set
+            return True  # Waveform not yet set
         self.vprint("Set amplitude to:", amplitude)
         self.update_gain_range()
         return True
@@ -262,7 +274,7 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
         if self.gain_type == self.GAIN_TYPE_GAIN:
             return self.usrp.get_gain(self.channels[0])
         return self.usrp.get_power_reference(self.channels[0]) \
-                    + 20 * math.log10(self[AMPLITUDE_KEY])
+            + 20 * math.log10(self[AMPLITUDE_KEY])
 
     def set_gain_or_power(self, gain_or_power):
         """
@@ -333,6 +345,7 @@ def setup_argparser():
                        help="Generate a swept sine wave")
     return parser
 
+
 def main():
     " Go, go, go! "
     if gr.enable_realtime_scheduling() != gr.RT_OK:
@@ -349,6 +362,7 @@ def main():
     input('[UHD-SIGGEN] Press Enter to quit:\n')
     tb.stop()
     tb.wait()
+
 
 if __name__ == "__main__":
     main()

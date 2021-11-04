@@ -60,10 +60,11 @@ from gnuradio.eng_option import eng_option
 
 # (device_rate, channel_rate, audio_rate, channel_pass, channel_stop, demod)
 DEMOD_PARAMS = {
-                'AM'  : (256000,  16000, 16000,  5000,   8000, analog.demod_10k0a3e_cf),
-                'FM'  : (256000,  32000,  8000,  8000,   9000, analog.demod_20k0f3e_cf),
-                'WFM' : (320000, 320000, 32000, 80000, 115000, analog.demod_200kf3e_cf)
-               }
+    'AM': (256000, 16000, 16000, 5000, 8000, analog.demod_10k0a3e_cf),
+    'FM': (256000, 32000, 8000, 8000, 9000, analog.demod_20k0f3e_cf),
+    'WFM': (320000, 320000, 32000, 80000, 115000, analog.demod_200kf3e_cf)
+}
+
 
 class uhd_src(gr.hier_block2):
     """
@@ -74,14 +75,16 @@ class uhd_src(gr.hier_block2):
     Calibration value is the offset from the tuned frequency to
     the actual frequency.
     """
+
     def __init__(self, args, spec, antenna, samp_rate, gain=None, calibration=0.0):
         gr.hier_block2.__init__(
             self, "uhd_src",
             gr.io_signature(0, 0, 0),                    # Input signature
-            gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
+            gr.io_signature(1, 1, gr.sizeof_gr_complex))  # Output signature
 
         self._src = \
-            uhd.usrp_source(device_addr=args, stream_args=uhd.stream_args('fc32'))
+            uhd.usrp_source(device_addr=args,
+                            stream_args=uhd.stream_args('fc32'))
 
         # Set the subdevice spec
         if spec:
@@ -102,7 +105,7 @@ class uhd_src(gr.hier_block2):
         # If no gain specified, set to midrange
         gain_range = self._src.get_gain_range()
         if gain is None:
-            gain = (gain_range.start()+gain_range.stop())/2.0
+            gain = (gain_range.start() + gain_range.stop()) / 2.0
             print("Using gain: ", gain)
         self._src.set_gain(gain)
 
@@ -116,6 +119,7 @@ class uhd_src(gr.hier_block2):
     def rate(self):
         """ Set sampling rate """
         return self._samp_rate
+
 
 class app_top_block(gr.top_block):
     def __init__(self, options):
@@ -139,24 +143,24 @@ class app_top_block(gr.top_block):
 
         chan_taps = filter.optfir.low_pass(1.0,          # Filter gain
                                            if_rate,      # Sample rate
-                                           channel_pass, # One sided modulation bandwidth
-                                           channel_stop, # One sided channel bandwidth
+                                           channel_pass,  # One sided modulation bandwidth
+                                           channel_stop,  # One sided channel bandwidth
                                            0.1,          # Passband ripple
                                            60)           # Stopband attenuation
 
         chan = filter.freq_xlating_fir_filter_ccf(
-            channel_decim, # Decimation rate
+            channel_decim,  # Decimation rate
             chan_taps,     # Filter taps
             0.0,           # Offset frequency
             if_rate)       # Sample rate
 
         rfsql = analog.pwr_squelch_cc(
             options.rf_squelch,    # Power threshold
-            125.0/channel_rate,    # Time constant
-            int(channel_rate/20),  # 50ms rise/fall
+            125.0 / channel_rate,    # Time constant
+            int(channel_rate / 20),  # 50ms rise/fall
             False)                 # Zero, not gate output
 
-        agc = analog.agc_cc(1.0/channel_rate,  # Time constant
+        agc = analog.agc_cc(1.0 / channel_rate,  # Time constant
                             1.0,               # Reference power
                             1.0)               # Gain
 
@@ -170,7 +174,7 @@ class app_top_block(gr.top_block):
         tail = demod
         if options.ctcss != None and options.ctcss > 60.0:
             ctcss = analog.ctcss_squelch_ff(audio_rate,    # Sample rate
-                                            options.ctcss) # Squelch tone
+                                            options.ctcss)  # Squelch tone
             self.connect(demod, ctcss)
             tail = ctcss
 
@@ -191,7 +195,8 @@ class app_top_block(gr.top_block):
         if self.options.show_async_msg:
             self.async_msgq = gr.msg_queue(0)
             self.async_src = uhd.amsg_source("", self.async_msgq)
-            self.async_rcv = uhd.msgq_runner(self.async_msgq, self.async_callback)
+            self.async_rcv = uhd.msgq_runner(
+                self.async_msgq, self.async_callback)
 
     def async_callback(self, msg):
         """ Callback for processing async messages """
@@ -251,6 +256,7 @@ def main():
         tb.run()
     except KeyboardInterrupt:
         pass
+
 
 if __name__ == "__main__":
     main()

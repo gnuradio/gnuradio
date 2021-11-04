@@ -19,6 +19,7 @@ from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import uhd
 
+
 def setup_parser():
     """ Setup the parser for the frequency hopper. """
     parser = argparse.ArgumentParser(
@@ -77,31 +78,34 @@ def setup_parser():
 
 class FrequencyHopperSrc(gr.hier_block2):
     """ Provides tags for frequency hopping """
+
     def __init__(
-            self,
-            n_bursts, n_channels,
-            freq_delta, base_freq, dsp_tuning,
-            burst_length, base_time, hop_time,
-            post_tuning=False,
-            tx_gain=0,
-            verbose=False
-        ):
+        self,
+        n_bursts, n_channels,
+        freq_delta, base_freq, dsp_tuning,
+        burst_length, base_time, hop_time,
+        post_tuning=False,
+        tx_gain=0,
+        verbose=False
+    ):
         gr.hier_block2.__init__(
             self, "FrequencyHopperSrc",
             gr.io_signature(1, 1, gr.sizeof_gr_complex),
             gr.io_signature(1, 1, gr.sizeof_gr_complex),
         )
         n_samples_total = n_bursts * burst_length
-        lowest_frequency = base_freq - numpy.floor(n_channels/2) * freq_delta
-        self.hop_sequence = [lowest_frequency + n * freq_delta for n in range(n_channels)]
+        lowest_frequency = base_freq - numpy.floor(n_channels / 2) * freq_delta
+        self.hop_sequence = [lowest_frequency + n *
+                             freq_delta for n in range(n_channels)]
         numpy.random.shuffle(self.hop_sequence)
         # Repeat that:
-        self.hop_sequence = [self.hop_sequence[x % n_channels] for x in range(n_bursts)]
+        self.hop_sequence = [self.hop_sequence[x % n_channels]
+                             for x in range(n_bursts)]
         if verbose:
             print("Hop Frequencies  | Hop Pattern")
             print("=================|================================")
             for f in self.hop_sequence:
-                print("{:6.3f} MHz      |  ".format(f/1e6), end='')
+                print("{:6.3f} MHz      |  ".format(f / 1e6), end='')
                 if n_channels < 50:
                     print(" " * int((f - base_freq) / freq_delta) + "#")
                 else:
@@ -113,25 +117,28 @@ class FrequencyHopperSrc(gr.hier_block2):
         gain_tag.offset = 0
         gain_tag.key = pmt.string_to_symbol('tx_command')
         gain_tag.value = pmt.to_pmt({'gain': tx_gain})
-        tag_list = [gain_tag,]
+        tag_list = [gain_tag, ]
         for i in range(len(self.hop_sequence)):
             time = pmt.cons(
-                pmt.from_uint64(int(base_time + i * hop_time+0.01)),
-                pmt.from_double((base_time + i * hop_time+0.01) % 1),
+                pmt.from_uint64(int(base_time + i * hop_time + 0.01)),
+                pmt.from_double((base_time + i * hop_time + 0.01) % 1),
             )
             tune_tag = gr.tag_t()
             tune_tag.offset = i * burst_length
             # TODO dsp_tuning should also be able to do post_tuning
             if i > 0 and post_tuning and not dsp_tuning:
-                tune_tag.offset -= 1 # Move it to last sample of previous burst
+                tune_tag.offset -= 1  # Move it to last sample of previous burst
             if dsp_tuning:
                 tune_tag.key = pmt.string_to_symbol('tx_command')
-                tune_tag.value = pmt.to_pmt({'lo_freq': base_freq, 'dsp_freq': base_freq - self.hop_sequence[i]})
-                tune_tag.value = pmt.dict_add(tune_tag.value, pmt.intern("time"),time)
+                tune_tag.value = pmt.to_pmt(
+                    {'lo_freq': base_freq, 'dsp_freq': base_freq - self.hop_sequence[i]})
+                tune_tag.value = pmt.dict_add(
+                    tune_tag.value, pmt.intern("time"), time)
             else:
                 tune_tag.key = pmt.string_to_symbol('tx_command')
                 tune_tag.value = pmt.to_pmt({'freq': self.hop_sequence[i]})
-                tune_tag.value = pmt.dict_add(tune_tag.value, pmt.intern('time'), time)
+                tune_tag.value = pmt.dict_add(
+                    tune_tag.value, pmt.intern('time'), time)
             tag_list.append(tune_tag)
             length_tag = gr.tag_t()
             length_tag.offset = i * burst_length
@@ -142,11 +149,12 @@ class FrequencyHopperSrc(gr.hier_block2):
             time_tag.offset = i * burst_length
             time_tag.key = pmt.string_to_symbol('tx_time')
             time_tag.value = pmt.make_tuple(
-                    pmt.car(time),
-                    pmt.cdr(time)
+                pmt.car(time),
+                pmt.cdr(time)
             )
             tag_list.append(time_tag)
-        tag_source = blocks.vector_source_c((1.0,) * n_samples_total, repeat=False, tags=tag_list)
+        tag_source = blocks.vector_source_c(
+            (1.0,) * n_samples_total, repeat=False, tags=tag_list)
         mult = blocks.multiply_cc()
         self.connect(self, mult, self)
         self.connect(tag_source, (mult, 1))
@@ -154,10 +162,12 @@ class FrequencyHopperSrc(gr.hier_block2):
 
 class FlowGraph(gr.top_block):
     """ Flow graph that does the frequency hopping. """
+
     def __init__(self, args):
         gr.top_block.__init__(self)
         if args.input_file is not None:
-            src = blocks.file_source(gr.sizeof_gr_complex, args.input_file, repeat=True)
+            src = blocks.file_source(
+                gr.sizeof_gr_complex, args.input_file, repeat=True)
         else:
             src = blocks.vector_source_c((.5,) * int(1e6) * 2, repeat=True)
         # Setup USRP
@@ -189,6 +199,7 @@ class FlowGraph(gr.top_block):
         )
         self.connect(src, hopper_block, self.usrp)
 
+
 def print_hopper_stats(args):
     """ Nothing to do with Grace Hopper """
     print("""
@@ -205,14 +216,16 @@ Transmit Gain      | {gain} dB
 ===================+=========================
     """.format(
         hop_time=args.hop_time,
-        hop_duration=1000.0/args.rate*args.samp_per_burst,
+        hop_duration=1000.0 / args.rate * args.samp_per_burst,
         gain=args.gain if args.gain else "(midpoint)",
-        lowest_freq=args.freq/1e6,
-        highest_freq=(args.freq + (args.num_channels-1) * args.freq_delta)/1e6,
-        freq_delta=args.freq_delta/1e6,
+        lowest_freq=args.freq / 1e6,
+        highest_freq=(args.freq + (args.num_channels - 1) *
+                      args.freq_delta) / 1e6,
+        freq_delta=args.freq_delta / 1e6,
         num_channels=args.num_channels,
-        rate=args.rate/1e6,
-        ))
+        rate=args.rate / 1e6,
+    ))
+
 
 def main():
     """ Go, go, go! """
@@ -226,6 +239,7 @@ def main():
     print("Starting to hop, skip and jump... press Ctrl+C to exit.")
     top_block.usrp.set_time_now(uhd.time_spec(0.0))
     top_block.run()
+
 
 if __name__ == '__main__':
     try:
