@@ -17,7 +17,7 @@ from .fm_emph import fm_deemph
 
 
 class wfm_rcv(gr.hier_block2):
-    def __init__ (self, quad_rate, audio_decimation):
+    def __init__(self, quad_rate, audio_decimation):
         """
         Hierarchical block for demodulating a broadcast FM signal.
 
@@ -29,7 +29,8 @@ class wfm_rcv(gr.hier_block2):
             audio_decimation: how much to decimate quad_rate to get to audio. (integer)
         """
         gr.hier_block2.__init__(self, "wfm_rcv",
-                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+                                # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex),
                                 gr.io_signature(1, 1, gr.sizeof_float))      # Output signature
         if audio_decimation != int(audio_decimation):
             raise ValueError("audio_decimation needs to be an integer")
@@ -38,9 +39,8 @@ class wfm_rcv(gr.hier_block2):
         volume = 20.
 
         max_dev = 75e3
-        fm_demod_gain = quad_rate / (2*math.pi*max_dev)
+        fm_demod_gain = quad_rate / (2 * math.pi * max_dev)
         audio_rate = quad_rate / audio_decimation
-
 
         # We assign to self so that outsiders can grab the demodulator
         # if they need to.  E.g., to plot its output.
@@ -59,6 +59,7 @@ class wfm_rcv(gr.hier_block2):
                                               width_of_transition_band,
                                               fft.window.WIN_HAMMING)
         # input: float; output: float
-        self.audio_filter = filter.fir_filter_fff(audio_decimation, audio_coeffs)
+        self.audio_filter = filter.fir_filter_fff(
+            audio_decimation, audio_coeffs)
 
-        self.connect (self, self.fm_demod, self.audio_filter, self.deemph, self)
+        self.connect(self, self.fm_demod, self.audio_filter, self.deemph, self)
