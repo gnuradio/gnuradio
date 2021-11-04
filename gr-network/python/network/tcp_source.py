@@ -23,6 +23,7 @@ import socket
 import os
 from gnuradio import gr, blocks
 
+
 def _get_sock_fd(addr, port, server):
     """
     Get the file descriptor for the socket.
@@ -74,9 +75,10 @@ def _get_sock_fd(addr, port, server):
         sock.connect((addr, port))
         return os.dup(sock.fileno())
 
+
 class tcp_source(gr.hier_block2):
     def __init__(self, itemsize, addr, port, server=True):
-        #init hier block
+        # init hier block
         gr.hier_block2.__init__(
             self, 'tcp_source',
             gr.io_signature(0, 0, 0),
