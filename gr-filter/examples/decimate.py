@@ -12,7 +12,8 @@ from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
 from gnuradio.fft import window
-import sys, time
+import sys
+import time
 import numpy
 
 try:
@@ -26,8 +27,10 @@ try:
     from matplotlib import pyplot
     from matplotlib import pyplot as mlab
 except ImportError:
-    sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
+    sys.stderr.write(
+        "Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
+
 
 class pfb_top_block(gr.top_block):
     def __init__(self):
@@ -56,8 +59,9 @@ class pfb_top_block(gr.top_block):
         self.add = blocks.add_cc()
         freqs = [10, 20, 2040]
         for i in range(len(freqs)):
-            self.signals.append(analog.sig_source_c(self._fs, analog.GR_SIN_WAVE, freqs[i], 1))
-            self.connect(self.signals[i], (self.add,i))
+            self.signals.append(analog.sig_source_c(
+                self._fs, analog.GR_SIN_WAVE, freqs[i], 1))
+            self.connect(self.signals[i], (self.add, i))
 
         self.head = blocks.head(gr.sizeof_gr_complex, self._N)
 
@@ -87,8 +91,8 @@ def main():
     print("Run time: %f" % (tend - tstart))
 
     if 1:
-        fig1 = pyplot.figure(1, figsize=(16,9))
-        fig2 = pyplot.figure(2, figsize=(16,9))
+        fig1 = pyplot.figure(1, figsize=(16, 9))
+        fig2 = pyplot.figure(2, figsize=(16, 9))
 
         Ns = 10000
         Ne = 10000
@@ -99,16 +103,16 @@ def main():
 
         # Plot the input to the decimator
 
-        d = tb.snk_i.data()[Ns:Ns+Ne]
+        d = tb.snk_i.data()[Ns:Ns + Ne]
         sp1_f = fig1.add_subplot(2, 1, 1)
 
-        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
-                          window = lambda d: d*winfunc(fftlen),
-                          scale_by_freq=True)
-        X_in = 10.0*numpy.log10(abs(numpy.fft.fftshift(X)))
+        X, freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
+                           window=lambda d: d * winfunc(fftlen),
+                           scale_by_freq=True)
+        X_in = 10.0 * numpy.log10(abs(numpy.fft.fftshift(X)))
         f_in = numpy.arange(-fs / 2.0, fs / 2.0, fs / float(X_in.size))
         p1_f = sp1_f.plot(f_in, X_in, "b")
-        sp1_f.set_xlim([min(f_in), max(f_in)+1])
+        sp1_f.set_xlim([min(f_in), max(f_in) + 1])
         sp1_f.set_ylim([-200.0, 50.0])
 
         sp1_f.set_title("Input Signal", weight="bold")
@@ -116,40 +120,38 @@ def main():
         sp1_f.set_ylabel("Power (dBW)")
 
         Ts = 1.0 / fs
-        Tmax = len(d)*Ts
+        Tmax = len(d) * Ts
 
         t_in = numpy.arange(0, Tmax, Ts)
         x_in = numpy.array(d)
         sp1_t = fig1.add_subplot(2, 1, 2)
         p1_t = sp1_t.plot(t_in, x_in.real, "b")
         p1_t = sp1_t.plot(t_in, x_in.imag, "r")
-        sp1_t.set_ylim([-tb._decim*1.1, tb._decim*1.1])
+        sp1_t.set_ylim([-tb._decim * 1.1, tb._decim * 1.1])
 
         sp1_t.set_xlabel("Time (s)")
         sp1_t.set_ylabel("Amplitude")
-
 
         # Plot the output of the decimator
         fs_o = tb._fs / tb._decim
 
         sp2_f = fig2.add_subplot(2, 1, 1)
-        d = tb.snk.data()[Ns:Ns+Ne]
-        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs_o,
-                          window = lambda d: d*winfunc(fftlen),
-                          scale_by_freq=True)
-        X_o = 10.0*numpy.log10(abs(numpy.fft.fftshift(X)))
+        d = tb.snk.data()[Ns:Ns + Ne]
+        X, freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs_o,
+                           window=lambda d: d * winfunc(fftlen),
+                           scale_by_freq=True)
+        X_o = 10.0 * numpy.log10(abs(numpy.fft.fftshift(X)))
         f_o = numpy.arange(-fs_o / 2.0, fs_o / 2.0, fs_o / float(X_o.size))
         p2_f = sp2_f.plot(f_o, X_o, "b")
-        sp2_f.set_xlim([min(f_o), max(f_o)+1])
+        sp2_f.set_xlim([min(f_o), max(f_o) + 1])
         sp2_f.set_ylim([-200.0, 50.0])
 
         sp2_f.set_title("PFB Decimated Signal", weight="bold")
         sp2_f.set_xlabel("Frequency (Hz)")
         sp2_f.set_ylabel("Power (dBW)")
 
-
         Ts_o = 1.0 / fs_o
-        Tmax_o = len(d)*Ts_o
+        Tmax_o = len(d) * Ts_o
 
         x_o = numpy.array(d)
         t_o = numpy.arange(0, Tmax_o, Ts_o)
@@ -169,4 +171,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-
