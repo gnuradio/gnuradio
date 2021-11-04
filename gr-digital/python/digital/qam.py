@@ -243,8 +243,8 @@ def large_ampls_to_corners_mapping(side, points, width):
             # use the center point.
             c = ((real_x - side / 2.0 + 0.5) * width +
                  (imag_x - side / 2.0 + 0.5) * width * 1j)
-            if (real_x >= extra_layers and real_x < side - extra_layers
-                    and imag_x >= extra_layers and imag_x < side - extra_layers):
+            if (real_x >= extra_layers and real_x < side - extra_layers and
+                    imag_x >= extra_layers and imag_x < side - extra_layers):
                 # This is not an edge row/column.  Find closest point.
                 index = find_closest_point(c, points)
             else:

@@ -9,12 +9,14 @@
 #
 
 
-import numpy, sys
+import numpy
+import sys
 from matplotlib import pyplot
 from gnuradio import digital
 from .soft_dec_lut_gen import soft_dec_table, calc_soft_dec_from_table, calc_soft_dec
 from .psk_constellations import psk_4_0, psk_4_1, psk_4_2, psk_4_3, psk_4_4, psk_4_5, psk_4_6, psk_4_7, sd_psk_4_0, sd_psk_4_1, sd_psk_4_2, sd_psk_4_3, sd_psk_4_4, sd_psk_4_5, sd_psk_4_6, sd_psk_4_7
 from .qam_constellations import qam_16_0, sd_qam_16_0
+
 
 def test_qpsk(i, sample, prec):
     qpsk_const_list = [psk_4_0, psk_4_1, psk_4_2, psk_4_3,
@@ -33,7 +35,8 @@ def test_qpsk(i, sample, prec):
 
     # Get max energy/symbol in constellation
     constel = c.points()
-    Es = max([numpy.sqrt(constel_i.real**2 + constel_i.imag**2) for constel_i in constel])
+    Es = max([numpy.sqrt(constel_i.real**2 + constel_i.imag**2)
+             for constel_i in constel])
 
     #table = soft_dec_table_generator(qpsk_lut_gen, prec, Es)
     table = soft_dec_table(constel, code, prec)
@@ -49,6 +52,7 @@ def test_qpsk(i, sample, prec):
 
     return (y_python_gen_calc, y_python_table, y_python_raw_calc,
             y_cpp_table, y_cpp_raw_calc, constel, code, c)
+
 
 def test_qam16(i, sample, prec):
     sample = sample / 1
@@ -71,7 +75,7 @@ def test_qam16(i, sample, prec):
     #table = soft_dec_table_generator(qam_lut_gen, prec, Es)
     table = soft_dec_table(constel, code, prec, 1)
 
-    #c.gen_soft_dec_lut(prec)
+    # c.gen_soft_dec_lut(prec)
     c.set_soft_dec_lut(table, prec)
 
     y_python_gen_calc = qam_lut_gen(sample, Es)
@@ -83,14 +87,15 @@ def test_qam16(i, sample, prec):
     return (y_python_gen_calc, y_python_table, y_python_raw_calc,
             y_cpp_table, y_cpp_raw_calc, constel, code, c)
 
+
 if __name__ == "__main__":
 
     index = 0
     prec = 8
 
-    x_re = 2*numpy.random.random()-1
-    x_im = 2*numpy.random.random()-1
-    x = x_re + x_im*1j
+    x_re = 2 * numpy.random.random() - 1
+    x_im = 2 * numpy.random.random() - 1
+    x = x_re + x_im * 1j
     #x = -1 + -0.j
 
     if 1:
@@ -112,14 +117,14 @@ if __name__ == "__main__":
     print("C++ Raw calc:                ", (y_cpp_raw_calc))
 
     fig = pyplot.figure(1)
-    sp1 = fig.add_subplot(1,1,1)
+    sp1 = fig.add_subplot(1, 1, 1)
     sp1.plot([c.real for c in constel],
              [c.imag for c in constel], 'bo')
     sp1.plot(x.real, x.imag, 'ro')
     sp1.set_xlim([-1.5, 1.5])
     sp1.set_ylim([-1.5, 1.5])
     fill = int(numpy.log2(len(constel)))
-    for i,c in enumerate(constel):
-        sp1.text(1.2*c.real, 1.2*c.imag, bin(code[i])[2:].zfill(fill),
+    for i, c in enumerate(constel):
+        sp1.text(1.2 * c.real, 1.2 * c.imag, bin(code[i])[2:].zfill(fill),
                  ha='center', va='center', size=18)
     pyplot.show()

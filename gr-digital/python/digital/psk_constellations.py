@@ -52,6 +52,7 @@ rotations are based off of.
 
 # BPSK Constellation Mappings
 
+
 def psk_2_0x0():
     '''
     0 | 1
@@ -59,8 +60,11 @@ def psk_2_0x0():
     const_points = [-1, 1]
     symbols = [0, 1]
     return (const_points, symbols)
+
+
 psk_2 = psk_2_0x0  # Basic BPSK rotation
 psk_2_0 = psk_2    # First ID for BPSK rotations
+
 
 def psk_2_0x1():
     '''
@@ -69,6 +73,8 @@ def psk_2_0x1():
     const_points = [-1, 1]
     symbols = [1, 0]
     return (const_points, symbols)
+
+
 psk_2_1 = psk_2_0x1
 
 
@@ -81,18 +87,23 @@ def sd_psk_2_0x0(x, Es=1):
     0 | 1
     '''
     x_re = x.real
-    dist = Es*numpy.sqrt(2)
-    return [dist*x_re,]
+    dist = Es * numpy.sqrt(2)
+    return [dist * x_re, ]
+
+
 sd_psk_2 = sd_psk_2_0x0  # Basic BPSK rotation
 sd_psk_2_0 = sd_psk_2    # First ID for BPSK rotations
+
 
 def sd_psk_2_0x1(x, Es=1):
     '''
     1 | 0
     '''
-    x_re = [x.real,]
-    dist = Es*numpy.sqrt(2)
-    return -dist*x_re
+    x_re = [x.real, ]
+    dist = Es * numpy.sqrt(2)
+    return -dist * x_re
+
+
 sd_psk_2_1 = sd_psk_2_0x1
 
 
@@ -106,12 +117,15 @@ def psk_4_0x0_0_1():
     | -------
     | 00 | 01
     '''
-    const_points = [-1-1j, 1-1j,
-                    -1+1j, 1+1j]
+    const_points = [-1 - 1j, 1 - 1j,
+                    -1 + 1j, 1 + 1j]
     symbols = [0, 1, 2, 3]
     return (const_points, symbols)
+
+
 psk_4 = psk_4_0x0_0_1
 psk_4_0 = psk_4
+
 
 def psk_4_0x1_0_1():
     '''
@@ -122,7 +136,10 @@ def psk_4_0x1_0_1():
     k = 0x1
     pi = [0, 1]
     return constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+
+
 psk_4_1 = psk_4_0x1_0_1
+
 
 def psk_4_0x2_0_1():
     '''
@@ -133,7 +150,10 @@ def psk_4_0x2_0_1():
     k = 0x2
     pi = [0, 1]
     return constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+
+
 psk_4_2 = psk_4_0x2_0_1
+
 
 def psk_4_0x3_0_1():
     '''
@@ -144,7 +164,10 @@ def psk_4_0x3_0_1():
     k = 0x3
     pi = [0, 1]
     return constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+
+
 psk_4_3 = psk_4_0x3_0_1
+
 
 def psk_4_0x0_1_0():
     '''
@@ -155,7 +178,10 @@ def psk_4_0x0_1_0():
     k = 0x0
     pi = [1, 0]
     return constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+
+
 psk_4_4 = psk_4_0x0_1_0
+
 
 def psk_4_0x1_1_0():
     '''
@@ -166,7 +192,10 @@ def psk_4_0x1_1_0():
     k = 0x1
     pi = [1, 0]
     return constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+
+
 psk_4_5 = psk_4_0x1_1_0
+
 
 def psk_4_0x2_1_0():
     '''
@@ -177,7 +206,10 @@ def psk_4_0x2_1_0():
     k = 0x2
     pi = [1, 0]
     return constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+
+
 psk_4_6 = psk_4_0x2_1_0
+
 
 def psk_4_0x3_1_0():
     '''
@@ -188,8 +220,9 @@ def psk_4_0x3_1_0():
     k = 0x3
     pi = [1, 0]
     return constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
-psk_4_7 = psk_4_0x3_1_0
 
+
+psk_4_7 = psk_4_0x3_1_0
 
 
 ############################################################
@@ -204,10 +237,13 @@ def sd_psk_4_0x0_0_1(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es*numpy.sqrt(2)
-    return [dist*x_im, dist*x_re]
+    dist = Es * numpy.sqrt(2)
+    return [dist * x_im, dist * x_re]
+
+
 sd_psk_4 = sd_psk_4_0x0_0_1
 sd_psk_4_0 = sd_psk_4
+
 
 def sd_psk_4_0x1_0_1(x, Es=1):
     '''
@@ -217,9 +253,12 @@ def sd_psk_4_0x1_0_1(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es*numpy.sqrt(2)
-    return [dist*x_im, -dist*x_re]
+    dist = Es * numpy.sqrt(2)
+    return [dist * x_im, -dist * x_re]
+
+
 sd_psk_4_1 = sd_psk_4_0x1_0_1
+
 
 def sd_psk_4_0x2_0_1(x, Es=1):
     '''
@@ -229,9 +268,12 @@ def sd_psk_4_0x2_0_1(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es*numpy.sqrt(2)
-    return [-dist*x_im, dist*x_re]
+    dist = Es * numpy.sqrt(2)
+    return [-dist * x_im, dist * x_re]
+
+
 sd_psk_4_2 = sd_psk_4_0x2_0_1
+
 
 def sd_psk_4_0x3_0_1(x, Es=1):
     '''
@@ -241,9 +283,12 @@ def sd_psk_4_0x3_0_1(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es*numpy.sqrt(2)
-    return [-dist*x_im, -dist*x_re]
+    dist = Es * numpy.sqrt(2)
+    return [-dist * x_im, -dist * x_re]
+
+
 sd_psk_4_3 = sd_psk_4_0x3_0_1
+
 
 def sd_psk_4_0x0_1_0(x, Es=1):
     '''
@@ -253,9 +298,12 @@ def sd_psk_4_0x0_1_0(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es*numpy.sqrt(2)
-    return [dist*x_re, dist*x_im]
+    dist = Es * numpy.sqrt(2)
+    return [dist * x_re, dist * x_im]
+
+
 sd_psk_4_4 = sd_psk_4_0x0_1_0
+
 
 def sd_psk_4_0x1_1_0(x, Es=1):
     '''
@@ -265,8 +313,10 @@ def sd_psk_4_0x1_1_0(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es*numpy.sqrt(2)
-    return [dist*x_re, -dist*x_im]
+    dist = Es * numpy.sqrt(2)
+    return [dist * x_re, -dist * x_im]
+
+
 sd_psk_4_5 = sd_psk_4_0x1_1_0
 
 
@@ -278,9 +328,12 @@ def sd_psk_4_0x2_1_0(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es*numpy.sqrt(2)
-    return [-dist*x_re, dist*x_im]
+    dist = Es * numpy.sqrt(2)
+    return [-dist * x_re, dist * x_im]
+
+
 sd_psk_4_6 = sd_psk_4_0x2_1_0
+
 
 def sd_psk_4_0x3_1_0(x, Es=1):
     '''
@@ -290,6 +343,8 @@ def sd_psk_4_0x3_1_0(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es*numpy.sqrt(2)
-    return [-dist*x_re, -dist*x_im]
+    dist = Es * numpy.sqrt(2)
+    return [-dist * x_re, -dist * x_im]
+
+
 sd_psk_4_7 = sd_psk_4_0x3_1_0

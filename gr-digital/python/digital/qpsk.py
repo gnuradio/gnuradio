@@ -27,22 +27,27 @@ _def_mod_code = mod_codes.GRAY_CODE
 #                           QPSK constellation
 # /////////////////////////////////////////////////////////////////////////////
 
+
 def qpsk_constellation(mod_code=_def_mod_code):
     """
     Creates a QPSK constellation.
     """
     if mod_code != mod_codes.GRAY_CODE:
-        raise ValueError("This QPSK mod/demod works only for gray-coded constellations.")
+        raise ValueError(
+            "This QPSK mod/demod works only for gray-coded constellations.")
     return digital.constellation_qpsk()
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           DQPSK constellation
 # /////////////////////////////////////////////////////////////////////////////
 
+
 def dqpsk_constellation(mod_code=_def_mod_code):
     if mod_code != mod_codes.GRAY_CODE:
-        raise ValueError("The DQPSK constellation is only generated for gray_coding.  But it can be used for non-grayed coded modulation if one doesn't use the pre-differential code.")
+        raise ValueError(
+            "The DQPSK constellation is only generated for gray_coding.  But it can be used for non-grayed coded modulation if one doesn't use the pre-differential code.")
     return digital.constellation_dqpsk()
+
 
 #
 # Add these to the mod/demod registry

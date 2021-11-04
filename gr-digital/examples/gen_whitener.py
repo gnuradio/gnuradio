@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 #
 # Copyright 2011,2013 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# 
+#
 
 from gnuradio import gr
 from gnuradio import blocks
 from argparse import ArgumentParser
 import sys
+
 
 class my_graph(gr.top_block):
 
@@ -25,6 +26,7 @@ class my_graph(gr.top_block):
         self.dst = blocks.vector_sink_s()
         self.connect(src, head, self.dst)
 
+
 if __name__ == '__main__':
     try:
         tb = my_graph()
@@ -34,10 +36,9 @@ if __name__ == '__main__':
         for s in tb.dst.data():
             f.write("%3d, " % (s & 0xff,))
             f.write("%3d, " % ((s >> 8) & 0xff,))
-            i = i+2
+            i = i + 2
             if i % 16 == 0:
                 f.write('\n')
 
     except KeyboardInterrupt:
         pass
-
