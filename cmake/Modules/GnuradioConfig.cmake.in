@@ -97,7 +97,11 @@ set(GR_COMPONENTS
   )
 
 foreach(target ${GR_COMPONENTS})
-  if (${target} IN_LIST Gnuradio_FIND_COMPONENTS)
-    include("${CMAKE_CURRENT_LIST_DIR}/gnuradio-${target}Config.cmake")
+  set(GR_COMPONENT_INCLUDE_FILE
+      "${CMAKE_CURRENT_LIST_DIR}/gnuradio-${target}Config.cmake")
+  if(${target} IN_LIST Gnuradio_FIND_COMPONENTS
+     AND (EXISTS ${GR_COMPONENT_INCLUDE_FILE}
+          OR "${Gnuradio_FIND_REQUIRED_${target}}"))
+    include(${GR_COMPONENT_INCLUDE_FILE})
   endif()
 endforeach(target)
