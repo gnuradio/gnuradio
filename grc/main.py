@@ -4,12 +4,14 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
 
-import argparse, logging, sys
+from gi.repository import Gtk
+import argparse
+import logging
+import sys
 
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
-from gi.repository import Gtk
 
 
 VERSION_AND_DISCLAIMER_TEMPLATE = """\
@@ -34,7 +36,8 @@ def main():
     parser = argparse.ArgumentParser(
         description=VERSION_AND_DISCLAIMER_TEMPLATE % gr.version())
     parser.add_argument('flow_graphs', nargs='*')
-    parser.add_argument('--log', choices=['debug', 'info', 'warning', 'error', 'critical'], default='warning')
+    parser.add_argument(
+        '--log', choices=['debug', 'info', 'warning', 'error', 'critical'], default='warning')
     args = parser.parse_args()
 
     # Enable logging
@@ -73,7 +76,8 @@ def main():
     log.debug("Loading platform")
     platform = Platform(
         version=gr.version(),
-        version_parts=(gr.major_version(), gr.api_version(), gr.minor_version()),
+        version_parts=(gr.major_version(), gr.api_version(),
+                       gr.minor_version()),
         prefs=gr.prefs(),
         install_prefix=gr.prefix()
     )

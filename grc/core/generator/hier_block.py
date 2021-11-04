@@ -128,7 +128,6 @@ class HierBlockGenerator(TopBlockGenerator):
             'set_{key}(${{ {key} }})'.format(key=param_block.name) for param_block in parameters
         ]
 
-
         # Documentation
         data['documentation'] = "\n".join(field for field in (
             self._flow_graph.get_option('author'),
@@ -178,7 +177,8 @@ def get_hier_block_io(flow_graph, direction, domain=None):
 
     Returns a list of blocks
     """
-    pads = flow_graph.get_pad_sources() if direction == 'inputs' else flow_graph.get_pad_sinks()
+    pads = flow_graph.get_pad_sources(
+    ) if direction == 'inputs' else flow_graph.get_pad_sinks()
 
     for pad in pads:
         for port in (pad.sources if direction == 'inputs' else pad.sinks):

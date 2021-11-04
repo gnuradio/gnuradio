@@ -47,6 +47,7 @@ def die(error, message):
         print("The original error message follows.", file=sys.stderr)
         sys.exit(type(error).__name__ + '\n\n' + msg)
 
+
 def check_gtk():
     try:
         import gi

@@ -25,6 +25,7 @@ def get_color(color_code):
 # fg colors
 #################################################################################
 
+
 HIGHLIGHT_COLOR = get_color('#00FFFF')
 BORDER_COLOR = get_color('#616161')
 BORDER_COLOR_DISABLED = get_color('#888888')
@@ -62,8 +63,10 @@ DEFAULT_DOMAIN_COLOR = get_color('#777777')
 # port colors
 #################################################################################
 
-PORT_TYPE_TO_COLOR = {key: get_color(color) for name, key, sizeof, color in Constants.CORE_TYPES}
-PORT_TYPE_TO_COLOR.update((key, get_color(color)) for key, (_, color) in Constants.ALIAS_TYPES.items())
+PORT_TYPE_TO_COLOR = {key: get_color(
+    color) for name, key, sizeof, color in Constants.CORE_TYPES}
+PORT_TYPE_TO_COLOR.update((key, get_color(color))
+                          for key, (_, color) in Constants.ALIAS_TYPES.items())
 
 
 #################################################################################
@@ -109,4 +112,3 @@ LIGHT_THEME_STYLES = b"""
 
                         #enum_custom           { background-color: #EEEEEE; }
                     """
-

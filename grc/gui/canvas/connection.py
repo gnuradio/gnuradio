@@ -73,11 +73,13 @@ class Connection(CoreConnection, Drawable):
 
         # first two components relative to source connector, rest relative to sink connector
         self._rel_points = [
-            rotate((15, 0), source.rotation),  # line from 0,0 to here, bezier curve start
+            # line from 0,0 to here, bezier curve start
+            rotate((15, 0), source.rotation),
             rotate((50, 0), source.rotation),  # bezier curve control point 1
             rotate((-50, 0), sink.rotation),  # bezier curve control point 2
             rotate((-15, 0), sink.rotation),  # bezier curve end
-            rotate((-CONNECTOR_ARROW_HEIGHT, 0), sink.rotation),  # line to arrow head
+            rotate((-CONNECTOR_ARROW_HEIGHT, 0),
+                   sink.rotation),  # line to arrow head
         ]
         self._current_coordinates = None  # triggers _make_path()
 
@@ -110,7 +112,8 @@ class Connection(CoreConnection, Drawable):
 
         # make rel_point all relative to source connector
         p0 = 0, 0  # x_start - x_pos, y_start - y_pos
-        p1, p2, (dx_e1, dy_e1), (dx_e2, dy_e2), (dx_e3, dy_e3) = self._rel_points
+        p1, p2, (dx_e1, dy_e1), (dx_e2, dy_e2), (dx_e3,
+                                                 dy_e3) = self._rel_points
         p3 = x_e + dx_e1, y_e + dy_e1
         p4 = x_e + dx_e2, y_e + dy_e2
         p5 = x_e + dx_e3, y_e + dy_e3
@@ -137,7 +140,8 @@ class Connection(CoreConnection, Drawable):
             self.create_shapes()  # triggers _make_path() call below
             self._current_port_rotations = port_rotations
 
-        new_coordinates = (source.parent_block.coordinate, sink.parent_block.coordinate)
+        new_coordinates = (source.parent_block.coordinate,
+                           sink.parent_block.coordinate)
         if self._current_coordinates != new_coordinates:
             self._make_path(cr)
             self._current_coordinates = new_coordinates
@@ -175,7 +179,7 @@ class Connection(CoreConnection, Drawable):
         cr.set_source_rgba(*color2)
         cr.rotate(self._arrow_rotation)
         cr.rel_move_to(CONNECTOR_ARROW_HEIGHT, 0)
-        cr.rel_line_to(-CONNECTOR_ARROW_HEIGHT, -CONNECTOR_ARROW_BASE/2)
+        cr.rel_line_to(-CONNECTOR_ARROW_HEIGHT, -CONNECTOR_ARROW_BASE / 2)
         cr.rel_line_to(0, CONNECTOR_ARROW_BASE)
         cr.close_path()
         cr.fill()
@@ -237,5 +241,6 @@ class DummyCoreConnection(object):
     @property
     def has_real_sink(self):
         return self.sink_port is not self._dummy_port
+
 
 DummyConnection = Connection.make_cls_with_base(DummyCoreConnection)

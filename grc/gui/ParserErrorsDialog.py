@@ -24,7 +24,8 @@ class ParserErrorsDialog(Gtk.Dialog):
         Args:
             block: a block instance
         """
-        GObject.GObject.__init__(self, title='Parser Errors', buttons=(Gtk.STOCK_CLOSE, Gtk.ResponseType.ACCEPT))
+        GObject.GObject.__init__(self, title='Parser Errors', buttons=(
+            Gtk.STOCK_CLOSE, Gtk.ResponseType.ACCEPT))
 
         self._error_logs = None
         self.tree_store = Gtk.TreeStore(str)
@@ -48,11 +49,12 @@ class ParserErrorsDialog(Gtk.Dialog):
             tree_view.expand_row(row.path, False)
 
         scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.set_policy(
+            Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         scrolled_window.add(tree_view)
 
         self.vbox.pack_start(scrolled_window, True)
-        self.set_size_request(2*MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
+        self.set_size_request(2 * MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
         self.show_all()
 
     def update_tree_store(self, error_logs):
@@ -68,7 +70,8 @@ class ParserErrorsDialog(Gtk.Dialog):
                 code = None
             for error in errors:
                 # http://lxml.de/api/lxml.etree._LogEntry-class.html
-                em = self.tree_store.append(parent, ["Line {e.line}: {e.message}".format(e=error)])
+                em = self.tree_store.append(
+                    parent, ["Line {e.line}: {e.message}".format(e=error)])
                 if code:
                     self.tree_store.append(em, ["\n".join(
                         "{} {}{}".format(line, code[line - 1].replace("\t", "    ").strip("\n"),

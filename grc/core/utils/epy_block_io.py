@@ -12,7 +12,8 @@ TYPE_MAP = {
     'int8': 'byte', 'uint8': 'byte',
 }
 
-BlockIO = collections.namedtuple('BlockIO', 'name cls params sinks sources doc callbacks')
+BlockIO = collections.namedtuple(
+    'BlockIO', 'name cls params sinks sources doc callbacks')
 
 
 def _ports(sigs, msgs):
@@ -72,11 +73,13 @@ def extract(cls):
 
     def settable(attr):
         try:
-            return callable(getattr(cls, attr).fset)  # check for a property with setter
+            # check for a property with setter
+            return callable(getattr(cls, attr).fset)
         except AttributeError:
             return attr in instance.__dict__  # not dir() - only the instance attribs
 
-    callbacks = [attr for attr in dir(instance) if attr in init_args and settable(attr)]
+    callbacks = [attr for attr in dir(
+        instance) if attr in init_args and settable(attr)]
 
     sinks = _ports(instance.in_sig(),
                    pmt.to_python(instance.message_ports_in()))

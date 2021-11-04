@@ -37,9 +37,11 @@ def test_list():
 
 def test_parse_error():
     with pytest.raises(TemplateError):
-        MakoTemplates(_bind_to=Block(num='123'), test='abc${num NOT CLOSING').render('test')
+        MakoTemplates(_bind_to=Block(num='123'),
+                      test='abc${num NOT CLOSING').render('test')
 
 
 def test_parse_error2():
     with pytest.raises(TemplateError):
-        MakoTemplates(_bind_to=Block(num='123'), test='abc${ WRONG_VAR }').render('test')
+        MakoTemplates(_bind_to=Block(num='123'),
+                      test='abc${ WRONG_VAR }').render('test')

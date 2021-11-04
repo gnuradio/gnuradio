@@ -91,7 +91,8 @@ and kindly ask to update their GRC Block Descriptions or Block Tree to include a
 # _SCREEN = Gdk.Screen.get_default()
 # _SCREEN_RESOLUTION = _SCREEN.get_resolution() if _SCREEN else -1
 # DPI_SCALING = _SCREEN_RESOLUTION / 96.0 if _SCREEN_RESOLUTION > 0 else 1.0
-DPI_SCALING = 1.0  # todo: figure out the GTK3 way (maybe cairo does this for us
+# todo: figure out the GTK3 way (maybe cairo does this for us
+DPI_SCALING = 1.0
 
 # Gtk-themes classified as dark
 GTK_DARK_THEMES = [
@@ -113,7 +114,10 @@ def update_font_size(font_size):
     PORT_FONT = BLOCK_FONT
     PARAM_FONT = "%s %f" % (FONT_FAMILY, font_size - 0.5)
 
-    PORT_SEPARATION = PORT_SPACING + 2 * PORT_LABEL_PADDING + int(1.5 * font_size)
-    PORT_SEPARATION += -PORT_SEPARATION % (2 * CANVAS_GRID_SIZE)  # even multiple
+    PORT_SEPARATION = PORT_SPACING + 2 * \
+        PORT_LABEL_PADDING + int(1.5 * font_size)
+    PORT_SEPARATION += - \
+        PORT_SEPARATION % (2 * CANVAS_GRID_SIZE)  # even multiple
+
 
 update_font_size(DEFAULT_FONT_SIZE)

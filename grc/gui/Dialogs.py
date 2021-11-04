@@ -237,7 +237,8 @@ class ErrorsDialog(Gtk.Dialog):
                 aspect = "Connection to '{}'".format(element.sink_block.name)
             elif element.is_port:
                 src = element.parent_block.name
-                aspect = "{} '{}'".format('Sink' if element.is_sink else 'Source', element.name)
+                aspect = "{} '{}'".format(
+                    'Sink' if element.is_sink else 'Source', element.name)
             elif element.is_param:
                 src = element.parent_block.name
                 aspect = "Param '{}'".format(element.name)
@@ -279,7 +280,7 @@ def show_about(parent, config):
     except GLib.Error:
         Messages.send("Failed to set window logo\n")
 
-    #ad.set_comments("")
+    # ad.set_comments("")
     ad.set_copyright(config.license.splitlines()[0])
     ad.set_website(config.website)
 
@@ -310,6 +311,7 @@ def show_help(parent):
     MessageDialogWrapper(
         parent, Gtk.MessageType.INFO, Gtk.ButtonsType.CLOSE, title='Help', markup=markup
     ).run_and_destroy()
+
 
 def show_keyboard_shortcuts(parent):
     """ Display keyboard shortcut-keys. """
@@ -371,7 +373,8 @@ def show_get_involved(parent):
 
 def show_types(parent):
     """ Display information about standard data types. """
-    colors = [(name, color) for name, key, sizeof, color in Constants.CORE_TYPES]
+    colors = [(name, color)
+              for name, key, sizeof, color in Constants.CORE_TYPES]
     max_len = 10 + max(len(name) for name, code in colors)
 
     message = '\n'.join(
@@ -424,7 +427,8 @@ def choose_editor(parent, config):
         file_dialog = Gtk.FileChooserDialog(
             'Select an Editor...', None,
             Gtk.FileChooserAction.OPEN,
-            ('gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-open', Gtk.ResponseType.OK),
+            ('gtk-cancel', Gtk.ResponseType.CANCEL,
+             'gtk-open', Gtk.ResponseType.OK),
             transient_for=parent
         )
         file_dialog.set_select_multiple(False)
@@ -449,7 +453,8 @@ def choose_editor(parent, config):
             # Save
             editor = config.editor = process
         except Exception:
-            Messages.send('>>> Unable to load the default editor. Please choose an editor.\n')
+            Messages.send(
+                '>>> Unable to load the default editor. Please choose an editor.\n')
 
     if editor == '':
         Messages.send('>>> No editor selected.\n')
