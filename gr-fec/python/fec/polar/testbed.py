@@ -52,7 +52,8 @@ def is_equal(first, second):
         result = first == second
         for i in range(len(result)):
             print(
-                "{0:4}: {1:2} == {2:1} = {3}".format(i, first[i], second[i], result[i])
+                "{0:4}: {1:2} == {2:1} = {3}".format(
+                    i, first[i], second[i], result[i])
             )
         return False
     return True
@@ -132,7 +133,8 @@ def channel_analysis():
     channel_counter = np.load(filename)
     print(np.min(channel_counter), np.max(channel_counter))
     channel_counter[0] = np.min(channel_counter)
-    good_indices = find_good_indices(channel_counter, channel_counter.size // 2)
+    good_indices = find_good_indices(
+        channel_counter, channel_counter.size // 2)
     info_bit_positions = np.where(good_indices > 0)
     print(info_bit_positions)
     frozen_bit_positions = np.delete(
@@ -303,7 +305,8 @@ def find_decoder_subframes(frozen_mask):
             print("--------------------------")
         ll = l
         sub_t = sub_mask[i]
-        print("{0:4} lock {1:4} value: {2} in sub {3}".format(i, 2 ** (l + 1), v, t))
+        print("{0:4} lock {1:4} value: {2} in sub {3}".format(
+            i, 2 ** (l + 1), v, t))
 
 
 def systematic_encoder_decoder_chain_test():

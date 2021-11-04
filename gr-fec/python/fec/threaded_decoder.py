@@ -16,8 +16,8 @@ class threaded_decoder(gr.hier_block2):
     def __init__(self, decoder_list_0, input_size, output_size):
         gr.hier_block2.__init__(
             self, "Threaded Decoder",
-            gr.io_signature(1, 1, input_size*1),
-            gr.io_signature(1, 1, output_size*1))
+            gr.io_signature(1, 1, input_size * 1),
+            gr.io_signature(1, 1, output_size * 1))
 
         self.decoder_list_0 = decoder_list_0
 
@@ -33,11 +33,12 @@ class threaded_decoder(gr.hier_block2):
                                               fec.get_decoder_output_size(decoder_list_0[0]))
 
         for i in range(len(decoder_list_0)):
-            self.connect((self.deinterleave_0, i), (self.generic_decoders_0[i], 0))
+            self.connect((self.deinterleave_0, i),
+                         (self.generic_decoders_0[i], 0))
 
         for i in range(len(decoder_list_0)):
-            self.connect((self.generic_decoders_0[i], 0), (self.interleave_0, i))
-
+            self.connect(
+                (self.generic_decoders_0[i], 0), (self.interleave_0, i))
 
         self.connect((self, 0), (self.deinterleave_0, 0))
         self.connect((self.interleave_0, 0), (self, 0))
