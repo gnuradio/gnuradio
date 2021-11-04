@@ -27,14 +27,15 @@ class extended_async_encoder(gr.hier_block2):
         self.message_port_register_hier_in('in')
         self.message_port_register_hier_out('out')
 
-        self.puncpat=puncpat
+        self.puncpat = puncpat
 
         # If it's a list of encoders, take the first one, unless it's
         # a list of lists of encoders.
         if(type(encoder_obj_list) == list):
             # This block doesn't handle parallelism of > 1
             if(type(encoder_obj_list[0]) == list):
-                gr.log.info("fec.extended_encoder: Parallelism must be 0 or 1.")
+                gr.log.info(
+                    "fec.extended_encoder: Parallelism must be 0 or 1.")
                 raise AttributeError
 
             encoder_obj = encoder_obj_list[0]
@@ -46,14 +47,14 @@ class extended_async_encoder(gr.hier_block2):
         self.encoder = fec.async_encoder(encoder_obj)
 
         #self.puncture = None
-        #if self.puncpat != '11':
+        # if self.puncpat != '11':
         #    self.puncture = fec.puncture_bb(len(puncpat), read_bitlist(puncpat), 0)
 
         self.msg_connect(weakref.proxy(self), "in", self.encoder, "in")
 
-        #if(self.puncture):
+        # if(self.puncture):
         #    self.msg_connect(self.encoder, "out", self.puncture, "in")
         #    self.msg_connect(self.puncture, "out", weakref.proxy(self), "out")
-        #else:
+        # else:
         #    self.msg_connect(self.encoder, "out", weakref.proxy(self), "out")
         self.msg_connect(self.encoder, "out", weakref.proxy(self), "out")

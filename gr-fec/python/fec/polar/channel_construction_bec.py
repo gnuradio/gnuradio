@@ -41,7 +41,7 @@ def calc_one_recursion(iw0):
 
 
 def calculate_bec_channel_capacities_loop(initial_channel, block_power):
-        # compare [0, Arikan] eq. 6
+    # compare [0, Arikan] eq. 6
     iw = np.array([initial_channel, ], dtype=float)
     for i in range(block_power):
         iw = calc_one_recursion(iw)
@@ -136,7 +136,7 @@ def plot_channel_capacities(capacity, save_file=None):
 
 
 def plot_average_channel_distance(save_file=None):
-    eta = 0.5 #  design_snr_to_bec_eta(-1.5917)
+    eta = 0.5  # design_snr_to_bec_eta(-1.5917)
     powers = np.arange(4, 26)
 
     try:
@@ -218,6 +218,7 @@ def main():
     # capacity = calculate_bec_channel_capacities(eta, block_size)
     # plot_average_channel_distance()
     calculate_bec_channel_z_parameters(eta, block_size)
+
 
 if __name__ == '__main__':
     main()

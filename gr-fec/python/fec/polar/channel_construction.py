@@ -69,7 +69,8 @@ def frozen_bit_positions(block_size, info_size, design_snr=0.0):
 
 def generate_filename(block_size, design_snr, mu):
     filename = "polar_code_z_parameters_N" + str(int(block_size))
-    filename += "_SNR" + str(float(design_snr)) + "_MU" + str(int(mu)) + ".polar"
+    filename += "_SNR" + str(float(design_snr)) + \
+        "_MU" + str(int(mu)) + ".polar"
     return filename
 
 

@@ -46,7 +46,8 @@ class PolarCommon(object):
         self.K = k
         self.frozenbits = frozenbits
         self.frozen_bit_position = frozen_bit_position
-        self.info_bit_position = np.delete(np.arange(self.N), self.frozen_bit_position)
+        self.info_bit_position = np.delete(
+            np.arange(self.N), self.frozen_bit_position)
 
     def _insert_frozen_bits(self, u):
         prototype = np.empty(self.N, dtype=int)
