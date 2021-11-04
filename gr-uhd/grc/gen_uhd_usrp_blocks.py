@@ -594,14 +594,16 @@ ${'$'}{len_tag_name},
 ${'%'} endif
 """
 
+
 def parse_tmpl(_tmpl, **kwargs):
     """ Render _tmpl using the kwargs. """
     from mako.template import Template
     block_template = Template(_tmpl)
     return str(block_template.render(**kwargs))
 
+
 MAX_NUM_MBOARDS = 8
-MAX_NUM_CHANNELS = MAX_NUM_MBOARDS*4
+MAX_NUM_CHANNELS = MAX_NUM_MBOARDS * 4
 
 if __name__ == '__main__':
     for file in sys.argv[1:]:
@@ -612,7 +614,7 @@ if __name__ == '__main__':
             sourk = 'sink'
             direction = 'in'
         else:
-            raise Exception('is % a source or sink?'%file)
+            raise Exception('is % a source or sink?' % file)
         params = ''.join([
             parse_tmpl(PARAMS_TMPL, n=n, sourk=sourk)
             for n in range(MAX_NUM_CHANNELS)

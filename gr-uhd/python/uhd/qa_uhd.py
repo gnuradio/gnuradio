@@ -12,6 +12,7 @@ gr-uhd sanity checking
 
 from gnuradio import gr, gr_unittest, uhd
 
+
 class test_uhd(gr_unittest.TestCase):
 
     def setUp(self):
