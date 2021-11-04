@@ -10,7 +10,7 @@ jobs:
   # We start with checking C++ formatting. No one gets free CPU cycles if they
   # can't use clang-format.
   check-formatting:
-    name: Check C++ Formatting
+    name: Check C++/Python Formatting
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -19,6 +19,9 @@ jobs:
         source: '.'
         exclude: './volk'
         extensions: 'h,hpp,cpp,cc,cc.in'
+    - uses: quentinguidee/pep8-action@v1
+      with:
+        arguments: '--max-line-length=120 --ignore E265,E266,E402,E501,E704,E712,E713,E714,E711,E722,E741,W504,W605 --exclude *.yml.py'
   # Doxygen gets built separately. It has a lot of output and its own weirdness.
   doxygen:
     name: Doxygen
