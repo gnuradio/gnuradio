@@ -15,9 +15,12 @@ from gnuradio import analog
 from gnuradio import audio
 from gnuradio.filter import firdes
 from gnuradio.fft import window
-import sys, math
+import sys
+import math
 
 # Create a top_block
+
+
 class build_graph(gr.top_block):
     def __init__(self):
         gr.top_block.__init__(self)
@@ -35,7 +38,7 @@ class build_graph(gr.top_block):
 
         # Set the demodulator using the same deviation as the receiver.
         max_dev = 75e3
-        fm_demod_gain = input_rate / (2*math.pi*max_dev/8.0)
+        fm_demod_gain = input_rate / (2 * math.pi * max_dev / 8.0)
         fm_demod = analog.quadrature_demod_cf(fm_demod_gain)
 
         # Create a filter for the resampler and filter the audio
@@ -45,8 +48,8 @@ class build_graph(gr.top_block):
         # building the filter.
         volume = 0.20
         nfilts = 32
-        resamp_taps = firdes.low_pass_2(volume*nfilts,      # gain
-                                        nfilts*input_rate,  # sampling rate
+        resamp_taps = firdes.low_pass_2(volume * nfilts,      # gain
+                                        nfilts * input_rate,  # sampling rate
                                         15e3,               # low pass cutoff freq
                                         1e3,                # width of trans. band
                                         60,                 # stop band attenuaton
@@ -64,7 +67,8 @@ class build_graph(gr.top_block):
         # now wire it all together
         self.connect(src, fm_demod)
         self.connect(fm_demod, resamp_filter)
-        self.connect(resamp_filter, (audio_sink,0))
+        self.connect(resamp_filter, (audio_sink, 0))
+
 
 def main(args):
     tb = build_graph()
@@ -72,7 +76,6 @@ def main(args):
     input('Press Enter to quit: ')
     tb.stop()
 
+
 if __name__ == '__main__':
     main(sys.argv[1:])
-
-

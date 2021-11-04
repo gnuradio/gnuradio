@@ -34,13 +34,15 @@ class fm_demod_cf(gr.hier_block2):
         gain: gain applied to audio output (default = 1.0) (float)
         tau: deemphasis time constant (default = 75e-6), specify tau=0.0 to prevent deemphasis (float)
     """
+
     def __init__(self, channel_rate, audio_decim, deviation,
                  audio_pass, audio_stop, gain=1.0, tau=75e-6):
         gr.hier_block2.__init__(self, "fm_demod_cf",
-                                gr.io_signature(1, 1, gr.sizeof_gr_complex),  # Input signature
+                                # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex),
                                 gr.io_signature(1, 1, gr.sizeof_float))       # Output signature
 
-        k = channel_rate / (2*pi*deviation)
+        k = channel_rate / (2 * pi * deviation)
         QUAD = analog.quadrature_demod_cf(k)
 
         audio_taps = filter.optfir.low_pass(
@@ -72,6 +74,7 @@ class demod_20k0f3e_cf(fm_demod_cf):
         sample_rate: incoming sample rate of the FM baseband (integer)
         audio_decim: input to output decimation rate (integer)
     """
+
     def __init__(self, channel_rate, audio_decim):
         fm_demod_cf.__init__(self, channel_rate, audio_decim,
                              5000,  # Deviation
@@ -91,6 +94,7 @@ class demod_200kf3e_cf(fm_demod_cf):
         sample_rate: incoming sample rate of the FM baseband (integer)
         audio_decim: input to output decimation rate (integer)
     """
+
     def __init__(self, channel_rate, audio_decim):
         fm_demod_cf.__init__(self, channel_rate, audio_decim,
                              75000,  # Deviation
