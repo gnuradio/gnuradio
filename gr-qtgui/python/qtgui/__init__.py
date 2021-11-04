@@ -23,12 +23,12 @@ except ImportError:
     from .qtgui_python import *
 
 try:
-	import matplotlib.pyplot as plt
-	from .distanceradar import DistanceRadar
-	from .azelplot import AzElPlot
+    import matplotlib.pyplot as plt
+    from .distanceradar import DistanceRadar
+    from .azelplot import AzElPlot
 except ImportError:
-	from gnuradio import gr
-	gr.log.warn("Matplotlib is a required dependency to use DistanceRadar and AzElPlot."
+    from gnuradio import gr
+    gr.log.warn("Matplotlib is a required dependency to use DistanceRadar and AzElPlot."
                 "  Please install matplotlib to use these blocks (https://matplotlib.org/)")
 
 from .range import Range, RangeWidget
@@ -49,4 +49,3 @@ from .graphicoverlay import GrGraphicOverlay
 from .auto_correlator_sink import AutoCorrelatorSink
 from .auto_correlator_sink import AutoCorrelator
 from .auto_correlator_sink import Normalize
-

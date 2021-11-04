@@ -17,13 +17,14 @@ from PyQt5.QtGui import QPainter, QBrush, QColor, QPen, QFontMetricsF
 from PyQt5.QtCore import Qt as Qtc
 from PyQt5.QtCore import QRect
 
+
 class LabeledToggleSwitch(QFrame):
     # Positions: 1 = above, 2=below, 3=left, 4=right
     def __init__(self, lbl='', onColor='green', offColor='red', initialState=False,
                  maxSize=50, position=1, parent=None, callback=None, alignment=1, valignment=1):
         QFrame.__init__(self, parent)
         self.numberControl = ToggleSwitch(onColor, offColor, initialState, maxSize,
-                                           parent, callback)
+                                          parent, callback)
 
         if position < 3:
             layout = QVBoxLayout()
@@ -33,9 +34,9 @@ class LabeledToggleSwitch(QFrame):
         self.lbl = lbl
         self.lblcontrol = QLabel(lbl, self)
 
-        if position == 3: # left of switch
+        if position == 3:  # left of switch
             self.lblcontrol.setAlignment(Qtc.AlignRight)
-        elif position == 4: # right of switch
+        elif position == 4:  # right of switch
             self.lblcontrol.setAlignment(Qtc.AlignLeft)
         else:
             # Above or below
@@ -74,8 +75,9 @@ class LabeledToggleSwitch(QFrame):
         textfont = self.lblcontrol.font()
         metrics = QFontMetricsF(textfont)
 
-        maxWidth = max((maxSize+4), (maxSize*2 + metrics.width(lbl)))
-        maxHeight = max((maxSize/2+4), (maxSize/2 + metrics.height()+2))
+        maxWidth = max((maxSize + 4), (maxSize * 2 + metrics.width(lbl)))
+        maxHeight = max((maxSize / 2 + 4),
+                        (maxSize / 2 + metrics.height() + 2))
 
         self.setMinimumSize(int(maxWidth), int(maxHeight))
 
@@ -83,6 +85,7 @@ class LabeledToggleSwitch(QFrame):
 
     def setState(self, on_off):
         self.numberControl.setState(on_off)
+
 
 class ToggleSwitch(QFrame):
     def __init__(self, onColor='green', offColor='red', initialState=False, maxSize=50,
@@ -94,8 +97,8 @@ class ToggleSwitch(QFrame):
         self.onColor = QColor(onColor)
         self.offColor = QColor(offColor)
         self.callback = callback
-        self.setMinimumSize(maxSize, maxSize/2)
-        self.setMaximumSize(maxSize, maxSize/2)
+        self.setMinimumSize(maxSize, maxSize / 2)
+        self.setMaximumSize(maxSize, maxSize / 2)
 
     def setState(self, on_off):
         self.curState = on_off
@@ -113,7 +116,7 @@ class ToggleSwitch(QFrame):
         size = self.size()
         brush = QBrush()
 
-        center_x = size.width()/2
+        center_x = size.width() / 2
 
         if self.curState:
             brush.setColor(self.onColor)
@@ -126,27 +129,30 @@ class ToggleSwitch(QFrame):
         painter.setBrush(brush)
 
         # Draw the switch background
-        centerRect = QRect(size.width()/4, 0, size.width()/2-4, size.height())
+        centerRect = QRect(size.width() / 4, 0,
+                           size.width() / 2 - 4, size.height())
         painter.drawRect(centerRect)
         painter.drawEllipse(0, 0, size.height(), size.height())
-        painter.drawEllipse(size.width()/2, 0, size.height(), size.height())
+        painter.drawEllipse(size.width() / 2, 0, size.height(), size.height())
 
         # Draw the switch itself
         brush.setColor(QColor('white'))
         painter.setBrush(brush)
         painter.setPen(QPen(QColor('white'), 0))
         if self.curState:
-            painter.drawEllipse(center_x+2, 2, size.height() - 4, size.height() - 4)
+            painter.drawEllipse(
+                center_x + 2, 2, size.height() - 4, size.height() - 4)
         else:
             painter.drawEllipse(2, 2, size.height() - 4, size.height() - 4)
 
     def mousePressEvent(self, event):
-        if event.x() <= self.size().width()/2:
+        if event.x() <= self.size().width() / 2:
             self.setState(False)
         else:
             self.setState(True)
 
         super().update()
+
 
 class GrToggleSwitch(gr.sync_block, LabeledToggleSwitch):
     """
@@ -154,10 +160,12 @@ class GrToggleSwitch(gr.sync_block, LabeledToggleSwitch):
     on one value or the other as set in the dialog. This button will
     also produce a state message matching the set values.
     """
+
     def __init__(self, callback, lbl, pressedReleasedDict, initialState=False,
                  onColor='green', offColor='silver', position=3, maxSize=50,
                  alignment=1, valignment=1, parent=None, outputmsgname='value'):
-        gr.sync_block.__init__(self, name="ToggleSwitch", in_sig=None, out_sig=None)
+        gr.sync_block.__init__(self, name="ToggleSwitch",
+                               in_sig=None, out_sig=None)
         LabeledToggleSwitch.__init__(self, lbl, onColor, offColor, initialState,
                                      maxSize, position, parent, self.notifyUpdate,
                                      alignment, valignment)
@@ -177,34 +185,34 @@ class GrToggleSwitch(gr.sync_block, LabeledToggleSwitch):
         if new_val:
             if type(self.pressReleasedDict['Pressed']) == bool:
                 self.message_port_pub(pmt.intern("state"),
-                            pmt.cons(pmt.intern(self.outputmsgname),
-                            pmt.from_bool(self.pressReleasedDict['Pressed'])))
+                                      pmt.cons(pmt.intern(self.outputmsgname),
+                                               pmt.from_bool(self.pressReleasedDict['Pressed'])))
             elif type(self.pressReleasedDict['Pressed']) == int:
                 self.message_port_pub(pmt.intern("state"),
-                            pmt.cons(pmt.intern(self.outputmsgname),
-                            pmt.from_long(self.pressReleasedDict['Pressed'])))
+                                      pmt.cons(pmt.intern(self.outputmsgname),
+                                               pmt.from_long(self.pressReleasedDict['Pressed'])))
             elif type(self.pressReleasedDict['Pressed']) == float:
                 self.message_port_pub(pmt.intern("state"),
-                            pmt.cons(pmt.intern(self.outputmsgname),
-                            pmt.from_double(self.pressReleasedDict['Pressed'])))
+                                      pmt.cons(pmt.intern(self.outputmsgname),
+                                               pmt.from_double(self.pressReleasedDict['Pressed'])))
             else:
                 self.message_port_pub(pmt.intern("state"),
-                            pmt.cons(pmt.intern(self.outputmsgname),
-                            pmt.intern(self.pressReleasedDict['Pressed'])))
+                                      pmt.cons(pmt.intern(self.outputmsgname),
+                                               pmt.intern(self.pressReleasedDict['Pressed'])))
         else:
             if type(self.pressReleasedDict['Released']) == bool:
                 self.message_port_pub(pmt.intern("state"),
-                            pmt.cons(pmt.intern(self.outputmsgname),
-                            pmt.from_bool(self.pressReleasedDict['Released'])))
+                                      pmt.cons(pmt.intern(self.outputmsgname),
+                                               pmt.from_bool(self.pressReleasedDict['Released'])))
             elif type(self.pressReleasedDict['Released']) == int:
                 self.message_port_pub(pmt.intern("state"),
-                            pmt.cons(pmt.intern(self.outputmsgname),
-                            pmt.from_long(self.pressReleasedDict['Released'])))
+                                      pmt.cons(pmt.intern(self.outputmsgname),
+                                               pmt.from_long(self.pressReleasedDict['Released'])))
             elif type(self.pressReleasedDict['Released']) == float:
                 self.message_port_pub(pmt.intern("state"),
-                            pmt.cons(pmt.intern(self.outputmsgname),
-                            pmt.from_double(self.pressReleasedDict['Released'])))
+                                      pmt.cons(pmt.intern(self.outputmsgname),
+                                               pmt.from_double(self.pressReleasedDict['Released'])))
             else:
                 self.message_port_pub(pmt.intern("state"),
-                            pmt.cons(pmt.intern(self.outputmsgname),
-                            pmt.intern(self.pressReleasedDict['Released'])))
+                                      pmt.cons(pmt.intern(self.outputmsgname),
+                                               pmt.intern(self.pressReleasedDict['Released'])))

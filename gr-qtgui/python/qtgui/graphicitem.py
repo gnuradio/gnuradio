@@ -20,6 +20,7 @@ import sys
 from gnuradio import gr
 import pmt
 
+
 class GrGraphicItem(gr.sync_block, QLabel):
     """
     This block displays the selected graphic item.  You can pass a
@@ -32,8 +33,10 @@ class GrGraphicItem(gr.sync_block, QLabel):
     Otherwise items are indexed by filename and can be animated
     throughout the background image.
     """
+
     def __init__(self, image_file, scaleImage=True, fixedSize=False, setWidth=0, setHeight=0):
-        gr.sync_block.__init__(self, name="GrGraphicsItem", in_sig=None, out_sig=None)
+        gr.sync_block.__init__(self, name="GrGraphicsItem",
+                               in_sig=None, out_sig=None)
         QLabel.__init__(self)
 
         if not os.path.isfile(image_file):
@@ -67,9 +70,9 @@ class GrGraphicItem(gr.sync_block, QLabel):
             overlayitem = pmt.to_python(pmt.car(msg))
             if overlayitem is None:
                 gr.log.error('Overlay message contains None in the car portion '
-                'of the message.  Please pass in a dictionary or list of dictionaries in this '
-                'portion of the message.  Each dictionary should have the following keys: '
-                'filename,x,y.  Use x=y=-1 to remove an overlay item.')
+                             'of the message.  Please pass in a dictionary or list of dictionaries in this '
+                             'portion of the message.  Each dictionary should have the following keys: '
+                             'filename,x,y.  Use x=y=-1 to remove an overlay item.')
                 return
 
             if type(overlayitem) is dict:
@@ -79,41 +82,43 @@ class GrGraphicItem(gr.sync_block, QLabel):
                 itemlist = overlayitem
             else:
                 gr.log.error("Overlay message type is not correct.  Please pass in "
-                      "a dictionary or list of dictionaries in this portion of the message.  Each "
-                      "dictionary should have the following keys: filename,x,y.  Use x=y=-1 to "
-                      "remove an overlay item.")
+                             "a dictionary or list of dictionaries in this portion of the message.  Each "
+                             "dictionary should have the following keys: filename,x,y.  Use x=y=-1 to "
+                             "remove an overlay item.")
                 return
 
             # Check each dict item to make sure it's valid.
             for curitem in itemlist:
                 if type(curitem) == dict:
                     if 'filename' not in curitem:
-                        gr.log.error("Dictionary item did not contain the 'filename' key.")
+                        gr.log.error(
+                            "Dictionary item did not contain the 'filename' key.")
                         gr.log.error("Received " + str(curitem))
                         continue
 
                     if 'x' not in curitem:
                         gr.log.error("The dictionary for filename " +
-                              curitem['filename'] + " did not contain an 'x' key.")
+                                     curitem['filename'] + " did not contain an 'x' key.")
                         gr.log.error("Received " + str(curitem))
                         continue
 
                     if 'y' not in curitem:
                         gr.log.error("The dictionary for filename " +
-                              curitem['filename'] + " did not contain an 'y' key.")
+                                     curitem['filename'] + " did not contain an 'y' key.")
                         gr.log.error("Received " + str(curitem))
                         continue
 
                     if not os.path.isfile(curitem['filename']):
                         gr.log.error("Unable to find overlay file " +
-                              curitem['filename'])
+                                     curitem['filename'])
                         gr.log.error("Received " + str(curitem))
                         continue
 
                     # Now either add/update our list or remove the item.
                     if curitem['x'] == -1 and curitem['y'] == -1:
                         try:
-                            del self.overlays[curitem['filename']]  # remove item
+                            # remove item
+                            del self.overlays[curitem['filename']]
                         except:
                             pass
                     else:
@@ -142,9 +147,10 @@ class GrGraphicItem(gr.sync_block, QLabel):
                         scale = curOverlay['scalefactor']
                         w = newOverlay.width()
                         h = newOverlay.height()
-                        newOverlay = newOverlay.scaled(int(w*scale), int(h*scale),
+                        newOverlay = newOverlay.scaled(int(w * scale), int(h * scale),
                                                        Qtc.KeepAspectRatio)
-                    painter.drawPixmap(curOverlay['x'], curOverlay['y'], newOverlay)
+                    painter.drawPixmap(
+                        curOverlay['x'], curOverlay['y'], newOverlay)
                 except Exception as e:
                     gr.log.error("Error adding overlay: %s" % str(e))
                     return
@@ -172,13 +178,13 @@ class GrGraphicItem(gr.sync_block, QLabel):
                 self.updateGraphic()
             else:
                 gr.log.error("Value received was not an int or "
-                      "a bool: %s" % str(type(new_val)))
+                             "a bool: %s" % str(type(new_val)))
 
         except Exception as e:
             gr.log.error("Error with message conversion: %s" % str(e))
 
     def minimumSizeHint(self):
-        return QSize(self.pixmap.width(),self.pixmap.height())
+        return QSize(self.pixmap.width(), self.pixmap.height())
 
     def resizeEvent(self, event):
         if self.scaleImage:
@@ -191,4 +197,3 @@ class GrGraphicItem(gr.sync_block, QLabel):
                                                      Qtc.KeepAspectRatio)
 
         self.updateGraphic()
-

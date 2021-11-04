@@ -21,6 +21,7 @@ from PyQt5.QtGui import QPalette
 from gnuradio import gr
 import pmt
 
+
 class LabeledLevelGauge(QFrame):
     # Positions: 1 = above, 2=below, 3=left, 4=right
     def __init__(self, lbl='', barColor='blue', backgroundColor='white', fontColor='black',
@@ -48,11 +49,12 @@ class LabeledLevelGauge(QFrame):
         # For whatever reason, the progressbar doesn't show the number in the bar if it's
         # vertical, only if it's horizontal
         if self.showvalue and (isFloat or self.isVertical):
-            textstr = self.buildTextStr(minValue/self.scaleFactor)
+            textstr = self.buildTextStr(minValue / self.scaleFactor)
             self.lblcontrol.setText(textstr)
 
         if fontColor != 'default':
-            self.lblcontrol.setStyleSheet("QLabel { color : " + fontColor + "; }")
+            self.lblcontrol.setStyleSheet(
+                "QLabel { color : " + fontColor + "; }")
 
         # add top or left
         if len:
@@ -101,6 +103,7 @@ class LabeledLevelGauge(QFrame):
             new_value = int(new_value * self.scaleFactor)
 
         self.numberControl.setValue(new_value)
+
 
 class LevelGauge(QProgressBar):
     # Notifies to avoid thread conflicts on paints
@@ -170,6 +173,7 @@ class LevelGauge(QProgressBar):
         else:
             self.updateFloat.emit(new_value)
 
+
 class GrLevelGauge(gr.sync_block, LabeledLevelGauge):
     """
     This block creates a level gauge. The value can be set either
@@ -182,10 +186,12 @@ class GrLevelGauge(gr.sync_block, LabeledLevelGauge):
     are 0-100 but your incoming values are 0.0-1.0, you will need
     to set a scalefactor of 100.
     """
+
     def __init__(self, lbl='', barColor='blue', backgroundColor='white', fontColor='black',
                  minValue=0, maxValue=100, maxSize=80, isVertical=True, position=1,
                  isFloat=False, scaleFactor=1, showValue=False, parent=None):
-        gr.sync_block.__init__(self, name="LevelGauge", in_sig=None, out_sig=None)
+        gr.sync_block.__init__(self, name="LevelGauge",
+                               in_sig=None, out_sig=None)
         LabeledLevelGauge.__init__(self, lbl, barColor, backgroundColor, fontColor, minValue,
                                    maxValue, maxSize, position, isVertical, isFloat,
                                    scaleFactor, showValue, parent)
@@ -205,7 +211,8 @@ class GrLevelGauge(gr.sync_block, LabeledLevelGauge):
             if type(new_val) == float or type(new_val) == int:
                 super().setValue(new_val)
             else:
-                gr.log.error("Value received was not an int or a float: %s" % str(type(new_val)))
+                gr.log.error(
+                    "Value received was not an int or a float: %s" % str(type(new_val)))
 
         except Exception as e:
             gr.log.error("Error with message conversion: %s" % str(e))

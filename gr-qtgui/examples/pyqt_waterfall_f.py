@@ -27,16 +27,19 @@ except ImportError:
     sys.stderr.write("Error: Program requires gr-analog.\n")
     sys.exit(1)
 
+
 class dialog_box(QtWidgets.QWidget):
     def __init__(self, display, control):
         QtWidgets.QWidget.__init__(self, None)
         self.setWindowTitle('PyQt Test GUI')
 
-        self.boxlayout = QtWidgets.QBoxLayout(QtWidgets.QBoxLayout.LeftToRight, self)
+        self.boxlayout = QtWidgets.QBoxLayout(
+            QtWidgets.QBoxLayout.LeftToRight, self)
         self.boxlayout.addWidget(display, 1)
         self.boxlayout.addWidget(control)
 
         self.resize(800, 500)
+
 
 class control_box(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -59,13 +62,11 @@ class control_box(QtWidgets.QWidget):
         self.layout.addRow("Signal 1 Amplitude:", self.amp1Edit)
         self.amp1Edit.editingFinished.connect(self.amp1EditText)
 
-
         # Control the second signal
         self.freq2Edit = QtWidgets.QLineEdit(self)
         self.freq2Edit.setMinimumWidth(100)
         self.layout.addRow("Signal 2 Frequency:", self.freq2Edit)
         self.freq2Edit.editingFinished.connect(self.freq2EditText)
-
 
         self.amp2Edit = QtWidgets.QLineEdit(self)
         self.amp2Edit.setMinimumWidth(100)
@@ -102,7 +103,6 @@ class control_box(QtWidgets.QWidget):
         except ValueError:
             print("Bad amplitude value entered")
 
-
     def freq2EditText(self):
         try:
             newfreq = float(self.freq2Edit.text())
@@ -132,17 +132,17 @@ class my_top_block(gr.top_block):
 
         src1 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f1, 0.1, 0)
         src2 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f2, 0.1, 0)
-        src  = blocks.add_ff()
-        thr = blocks.throttle(gr.sizeof_float, 100*npts)
+        src = blocks.add_ff()
+        thr = blocks.throttle(gr.sizeof_float, 100 * npts)
         self.snk1 = qtgui.waterfall_sink_f(npts, window.WIN_BLACKMAN_hARRIS,
                                            0, Rs,
                                            "Real Waterfall Example", 2, None)
         self.snk1.set_color_map(0, qtgui.INTENSITY_COLOR_MAP_TYPE_COOL)
         self.snk1.set_color_map(1, qtgui.INTENSITY_COLOR_MAP_TYPE_COOL)
 
-        self.connect(src1, (src,0))
-        self.connect(src2, (src,1))
-        self.connect(src,  thr, (self.snk1, 0))
+        self.connect(src1, (src, 0))
+        self.connect(src2, (src, 1))
+        self.connect(src, thr, (self.snk1, 0))
         self.connect(src1, (self.snk1, 1))
 
         self.ctrl_win = control_box()
@@ -150,18 +150,19 @@ class my_top_block(gr.top_block):
         self.ctrl_win.attach_signal2(src2)
 
         # Get the reference pointer to the SpectrumDisplayForm QWidget
-        pyQt  = self.snk1.qwidget()
+        pyQt = self.snk1.qwidget()
 
         # Wrap the pointer as a PyQt SIP object
         # This can now be manipulated as a PyQt5.QtWidgets.QWidget
         pyWin = sip.wrapinstance(pyQt, QtWidgets.QWidget)
 
-        #pyWin.show()
+        # pyWin.show()
         self.main_box = dialog_box(pyWin, self.ctrl_win)
         self.main_box.show()
 
+
 if __name__ == "__main__":
-    tb = my_top_block();
+    tb = my_top_block()
     tb.start()
     tb.qapp.exec_()
     tb.stop()

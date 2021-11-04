@@ -18,39 +18,42 @@ import pmt
 
 # This thread just gets us out of the sync_block's init function so the messaging
 # system and scheduler are active.
+
+
 class offloadThread(threading.Thread):
-  def __init__(self, callback, overlayList, listDelay, repeat):
-    threading.Thread.__init__(self)
-    self.callback = callback
-    self.overlayList = overlayList
-    self.listDelay = listDelay
-    self.threadRunning = False
-    self.stopThread = False
-    self.repeat = repeat
+    def __init__(self, callback, overlayList, listDelay, repeat):
+        threading.Thread.__init__(self)
+        self.callback = callback
+        self.overlayList = overlayList
+        self.listDelay = listDelay
+        self.threadRunning = False
+        self.stopThread = False
+        self.repeat = repeat
 
-  def run(self):
-    self.stopThread = False
-    self.threadRunning = True
+    def run(self):
+        self.stopThread = False
+        self.threadRunning = True
 
-    # Wait for main __init__ to finish
-    time.sleep(0.5)
+        # Wait for main __init__ to finish
+        time.sleep(0.5)
 
-    if (type(self.overlayList) == list and self.listDelay > 0.0):
-        while self.repeat and not self.stopThread:
-            for curItem in self.overlayList:
-                self.callback(curItem)
+        if (type(self.overlayList) == list and self.listDelay > 0.0):
+            while self.repeat and not self.stopThread:
+                for curItem in self.overlayList:
+                    self.callback(curItem)
 
-                if self.stopThread:
-                    break
+                    if self.stopThread:
+                        break
 
-                time.sleep(self.listDelay)
+                    time.sleep(self.listDelay)
 
-                if self.stopThread:
-                    break
-    else:
-        self.callback(self.overlayList)
+                    if self.stopThread:
+                        break
+        else:
+            self.callback(self.overlayList)
 
-    self.threadRunning = False
+        self.threadRunning = False
+
 
 class GrGraphicOverlay(gr.sync_block):
     """
@@ -69,6 +72,7 @@ class GrGraphicOverlay(gr.sync_block):
     you can use a list with the same file but different coordinates and
     use the update delay > 0.0 to animate it.
     """
+
     def __init__(self, overlayList, listDelay, repeat):
         gr.sync_block.__init__(self, name="GrGraphicsOverlay", in_sig=None,
                                out_sig=None)
@@ -77,8 +81,8 @@ class GrGraphicOverlay(gr.sync_block):
         self.listDelay = listDelay
         if type(self.overlayList) is not dict and type(self.overlayList) is not list:
             gr.log.error("The specified input is not valid.  "
-                  "Please specify either a dictionary item with the following keys: "
-                  "'filename','x','y'[,'scalefactor'] or a list of dictionary items.")
+                         "Please specify either a dictionary item with the following keys: "
+                         "'filename','x','y'[,'scalefactor'] or a list of dictionary items.")
             sys.exit(1)
 
         self.message_port_register_out(pmt.intern("overlay"))
@@ -100,4 +104,3 @@ class GrGraphicOverlay(gr.sync_block):
             time.sleep(0.1)
 
         return True
-
