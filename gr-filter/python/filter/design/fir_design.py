@@ -27,7 +27,7 @@ def design_win_lpf(fs, gain, wintype, mainwin):
         try:
             taps = filter.firdes.low_pass_2(gain, fs, pb, tb,
                                             atten, wintype)
-        except (RuntimeError, IndexError)  as e:
+        except (RuntimeError, IndexError) as e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
                                                   e.args[0], QtGui.QMessageBox.Ok)
             return ([], [], ret)
@@ -169,7 +169,8 @@ def design_win_hb(fs, gain, wintype, mainwin):
         return ([], [], False)
 
     if(ret):
-        taps = scipy.signal.firwin(int(filtord)+1, 0.5, window=filtwin[wintype])
+        taps = scipy.signal.firwin(
+            int(filtord) + 1, 0.5, window=filtwin[wintype])
         taps[abs(taps) <= 1e-6] = 0.
         params = {"fs": fs, "gain": gain, "wintype": wintype,
                   "filttype": "hb", "ntaps": len(taps)}
@@ -371,8 +372,8 @@ def design_opt_hb(fs, gain, mainwin):
 
     if(ret):
         try:
-            bands = [0, .25 - (trwidth/fs), .25 + (trwidth/fs), 0.5]
-            taps = scipy.signal.remez(int(filtord)+1, bands, [1, 0], [1, 1])
+            bands = [0, .25 - (trwidth / fs), .25 + (trwidth / fs), 0.5]
+            taps = scipy.signal.remez(int(filtord) + 1, bands, [1, 0], [1, 1])
             taps[abs(taps) <= 1e-6] = 0.
         except RuntimeError as e:
             reply = QtGui.QMessageBox.information(mainwin, "Filter Design Error",

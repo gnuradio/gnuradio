@@ -12,7 +12,8 @@ from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
 from gnuradio.fft import window
-import sys, time
+import sys
+import time
 import numpy
 
 try:
@@ -25,8 +26,10 @@ try:
     import pylab
     from pylab import mlab
 except ImportError:
-    sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
+    sys.stderr.write(
+        "Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
+
 
 class pfb_top_block(gr.top_block):
     def __init__(self):
@@ -44,8 +47,8 @@ class pfb_top_block(gr.top_block):
         # Create a set of taps for the PFB interpolator
         # This is based on the post-interpolation sample rate
         self._taps = filter.firdes.low_pass_2(self._interp,
-                                              self._interp*self._fs,
-                                              freq2+50, 50,
+                                              self._interp * self._fs,
+                                              freq2 + 50, 50,
                                               attenuation_dB=120,
                                               window=window.WIN_BLACKMAN_hARRIS)
 
@@ -56,8 +59,8 @@ class pfb_top_block(gr.top_block):
         # internally as an interpolator.
         flt_size = 32
         self._taps2 = filter.firdes.low_pass_2(flt_size,
-                                               flt_size*self._fs,
-                                               freq2+50, 150,
+                                               flt_size * self._fs,
+                                               freq2 + 50, 150,
                                                attenuation_dB=120,
                                                window=window.WIN_BLACKMAN_hARRIS)
 
@@ -68,8 +71,10 @@ class pfb_top_block(gr.top_block):
         print("Taps per channel:   ", tpc)
 
         # Create a couple of signals at different frequencies
-        self.signal1 = analog.sig_source_c(self._fs, analog.GR_SIN_WAVE, freq1, 0.5)
-        self.signal2 = analog.sig_source_c(self._fs, analog.GR_SIN_WAVE, freq2, 0.5)
+        self.signal1 = analog.sig_source_c(
+            self._fs, analog.GR_SIN_WAVE, freq1, 0.5)
+        self.signal2 = analog.sig_source_c(
+            self._fs, analog.GR_SIN_WAVE, freq2, 0.5)
         self.signal = blocks.add_cc()
 
         self.head = blocks.head(gr.sizeof_gr_complex, self._N)
@@ -78,15 +83,16 @@ class pfb_top_block(gr.top_block):
         self.pfb = filter.pfb.interpolator_ccf(self._interp, self._taps)
 
         # Construct the PFB arbitrary resampler filter
-        self.pfb_ar = filter.pfb.arb_resampler_ccf(self._ainterp, self._taps2, flt_size)
+        self.pfb_ar = filter.pfb.arb_resampler_ccf(
+            self._ainterp, self._taps2, flt_size)
         self.snk_i = blocks.vector_sink_c()
 
-        #self.pfb_ar.pfb.print_taps()
-        #self.pfb.pfb.print_taps()
+        # self.pfb_ar.pfb.print_taps()
+        # self.pfb.pfb.print_taps()
 
         # Connect the blocks
-        self.connect(self.signal1, self.head, (self.signal,0))
-        self.connect(self.signal2, (self.signal,1))
+        self.connect(self.signal1, self.head, (self.signal, 0))
+        self.connect(self.signal2, (self.signal, 1))
         self.connect(self.signal, self.pfb)
         self.connect(self.signal, self.pfb_ar)
         self.connect(self.signal, self.snk_i)
@@ -106,11 +112,10 @@ def main():
     tend = time.time()
     print("Run time: %f" % (tend - tstart))
 
-
     if 1:
-        fig1 = pylab.figure(1, figsize=(12,10), facecolor="w")
-        fig2 = pylab.figure(2, figsize=(12,10), facecolor="w")
-        fig3 = pylab.figure(3, figsize=(12,10), facecolor="w")
+        fig1 = pylab.figure(1, figsize=(12, 10), facecolor="w")
+        fig2 = pylab.figure(2, figsize=(12, 10), facecolor="w")
+        fig3 = pylab.figure(3, figsize=(12, 10), facecolor="w")
 
         Ns = 10000
         Ne = 10000
@@ -121,25 +126,24 @@ def main():
         # Plot input signal
         fs = tb._fs
 
-        d = tb.snk_i.data()[Ns:Ns+Ne]
+        d = tb.snk_i.data()[Ns:Ns + Ne]
         sp1_f = fig1.add_subplot(2, 1, 1)
 
-        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
-                          window = lambda d: d*winfunc(fftlen),
-                          scale_by_freq=True)
-        X_in = 10.0*numpy.log10(abs(numpy.fft.fftshift(X)))
+        X, freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
+                           window=lambda d: d * winfunc(fftlen),
+                           scale_by_freq=True)
+        X_in = 10.0 * numpy.log10(abs(numpy.fft.fftshift(X)))
         f_in = numpy.arange(-fs / 2.0, fs / 2.0, fs / float(X_in.size))
         p1_f = sp1_f.plot(f_in, X_in, "b")
-        sp1_f.set_xlim([min(f_in), max(f_in)+1])
+        sp1_f.set_xlim([min(f_in), max(f_in) + 1])
         sp1_f.set_ylim([-200.0, 50.0])
-
 
         sp1_f.set_title("Input Signal", weight="bold")
         sp1_f.set_xlabel("Frequency (Hz)")
         sp1_f.set_ylabel("Power (dBW)")
 
         Ts = 1.0 / fs
-        Tmax = len(d)*Ts
+        Tmax = len(d) * Ts
 
         t_in = numpy.arange(0, Tmax, Ts)
         x_in = numpy.array(d)
@@ -152,19 +156,19 @@ def main():
         sp1_t.set_xlabel("Time (s)")
         sp1_t.set_ylabel("Amplitude")
 
-
         # Plot output of PFB interpolator
-        fs_int = tb._fs*tb._interp
+        fs_int = tb._fs * tb._interp
 
         sp2_f = fig2.add_subplot(2, 1, 1)
-        d = tb.snk1.data()[Ns:Ns+(tb._interp*Ne)]
-        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
-                          window = lambda d: d*winfunc(fftlen),
-                          scale_by_freq=True)
-        X_o = 10.0*numpy.log10(abs(numpy.fft.fftshift(X)))
-        f_o = numpy.arange(-fs_int / 2.0, fs_int / 2.0, fs_int / float(X_o.size))
+        d = tb.snk1.data()[Ns:Ns + (tb._interp * Ne)]
+        X, freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
+                           window=lambda d: d * winfunc(fftlen),
+                           scale_by_freq=True)
+        X_o = 10.0 * numpy.log10(abs(numpy.fft.fftshift(X)))
+        f_o = numpy.arange(-fs_int / 2.0, fs_int / 2.0,
+                           fs_int / float(X_o.size))
         p2_f = sp2_f.plot(f_o, X_o, "b")
-        sp2_f.set_xlim([min(f_o), max(f_o)+1])
+        sp2_f.set_xlim([min(f_o), max(f_o) + 1])
         sp2_f.set_ylim([-200.0, 50.0])
 
         sp2_f.set_title("Output Signal from PFB Interpolator", weight="bold")
@@ -172,7 +176,7 @@ def main():
         sp2_f.set_ylabel("Power (dBW)")
 
         Ts_int = 1.0 / fs_int
-        Tmax = len(d)*Ts_int
+        Tmax = len(d) * Ts_int
 
         t_o = numpy.arange(0, Tmax, Ts_int)
         x_o1 = numpy.array(d)
@@ -185,27 +189,28 @@ def main():
         sp2_t.set_xlabel("Time (s)")
         sp2_t.set_ylabel("Amplitude")
 
-
         # Plot output of PFB arbitrary resampler
         fs_aint = tb._fs * tb._ainterp
 
         sp3_f = fig3.add_subplot(2, 1, 1)
-        d = tb.snk2.data()[Ns:Ns+(tb._interp*Ne)]
-        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
-                          window = lambda d: d*winfunc(fftlen),
-                          scale_by_freq=True)
-        X_o = 10.0*numpy.log10(abs(numpy.fft.fftshift(X)))
-        f_o = numpy.arange(-fs_aint / 2.0, fs_aint / 2.0, fs_aint / float(X_o.size))
+        d = tb.snk2.data()[Ns:Ns + (tb._interp * Ne)]
+        X, freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
+                           window=lambda d: d * winfunc(fftlen),
+                           scale_by_freq=True)
+        X_o = 10.0 * numpy.log10(abs(numpy.fft.fftshift(X)))
+        f_o = numpy.arange(-fs_aint / 2.0, fs_aint / 2.0,
+                           fs_aint / float(X_o.size))
         p3_f = sp3_f.plot(f_o, X_o, "b")
-        sp3_f.set_xlim([min(f_o), max(f_o)+1])
+        sp3_f.set_xlim([min(f_o), max(f_o) + 1])
         sp3_f.set_ylim([-200.0, 50.0])
 
-        sp3_f.set_title("Output Signal from PFB Arbitrary Resampler", weight="bold")
+        sp3_f.set_title(
+            "Output Signal from PFB Arbitrary Resampler", weight="bold")
         sp3_f.set_xlabel("Frequency (Hz)")
         sp3_f.set_ylabel("Power (dBW)")
 
         Ts_aint = 1.0 / fs_aint
-        Tmax = len(d)*Ts_aint
+        Tmax = len(d) * Ts_aint
 
         t_o = numpy.arange(0, Tmax, Ts_aint)
         x_o2 = numpy.array(d)
@@ -215,7 +220,8 @@ def main():
         #p3_f = sp3_f.plot(t_o, x_o2.imag, "r-o")
         sp3_f.set_ylim([-2.5, 2.5])
 
-        sp3_f.set_title("Output Signal from PFB Arbitrary Resampler", weight="bold")
+        sp3_f.set_title(
+            "Output Signal from PFB Arbitrary Resampler", weight="bold")
         sp3_f.set_xlabel("Time (s)")
         sp3_f.set_ylabel("Amplitude")
 
@@ -227,4 +233,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-
