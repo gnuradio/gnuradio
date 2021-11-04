@@ -40,7 +40,8 @@ class top_block(gr.top_block):
         self.samp_rate = samp_rate = 48200
 
         # blocks
-        self.gr_sig_source = analog.sig_source_f(samp_rate, analog.GR_SIN_WAVE , 1000, 1, 0)
+        self.gr_sig_source = analog.sig_source_f(
+            samp_rate, analog.GR_SIN_WAVE, 1000, 1, 0)
         self.throttle = blocks.throttle(gr.sizeof_float, samp_rate)
         self.mult = blocks.multiply_const_ff(1)
         #self.zmq_sink = zeromq.rep_sink(gr.sizeof_float, 1, sink_adr)
@@ -51,17 +52,19 @@ class top_block(gr.top_block):
         #self.null_sink = blocks.null_sink(gr.sizeof_float)
 
         # connects
-        self.connect(self.gr_sig_source, self.mult, self.throttle, self.zmq_sink)
+        self.connect(self.gr_sig_source, self.mult,
+                     self.throttle, self.zmq_sink)
         self.connect(self.throttle, self.zmq_probe)
 
         # ZeroMQ
         self.rpc_manager = zeromq.rpc_manager()
         self.rpc_manager.set_reply_socket(rpc_adr)
-        self.rpc_manager.add_interface("start_fg",self.start_fg)
-        self.rpc_manager.add_interface("stop_fg",self.stop_fg)
-        self.rpc_manager.add_interface("set_waveform",self.set_waveform)
-        self.rpc_manager.add_interface("set_k",self.mult.set_k)
-        self.rpc_manager.add_interface("get_sample_rate",self.throttle.sample_rate)
+        self.rpc_manager.add_interface("start_fg", self.start_fg)
+        self.rpc_manager.add_interface("stop_fg", self.stop_fg)
+        self.rpc_manager.add_interface("set_waveform", self.set_waveform)
+        self.rpc_manager.add_interface("set_k", self.mult.set_k)
+        self.rpc_manager.add_interface(
+            "get_sample_rate", self.throttle.sample_rate)
         self.rpc_manager.start_watcher()
 
     def start_fg(self):
@@ -77,22 +80,25 @@ class top_block(gr.top_block):
         self.wait()
 
     def set_waveform(self, waveform_str):
-        waveform = {'Constant' : analog.GR_CONST_WAVE,
-                    'Sine' : analog.GR_SIN_WAVE,
-                    'Cosine' : analog.GR_COS_WAVE,
-                    'Square' : analog.GR_SQR_WAVE,
-                    'Triangle' : analog.GR_TRI_WAVE,
-                    'Saw Tooth' : analog.GR_SAW_WAVE}[waveform_str]
+        waveform = {'Constant': analog.GR_CONST_WAVE,
+                    'Sine': analog.GR_SIN_WAVE,
+                    'Cosine': analog.GR_COS_WAVE,
+                    'Square': analog.GR_SQR_WAVE,
+                    'Triangle': analog.GR_TRI_WAVE,
+                    'Saw Tooth': analog.GR_SAW_WAVE}[waveform_str]
         self.gr_sig_source.set_waveform(waveform)
 
 ###############################################################################
 # Options Parser
 ###############################################################################
+
+
 def parse_args():
     """Argument parser."""
     parser = ArgumentParser()
     args = parser.parse_args()
     return args
+
 
 ###############################################################################
 # Main

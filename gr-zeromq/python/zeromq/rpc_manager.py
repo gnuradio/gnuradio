@@ -58,7 +58,7 @@ class rpc_manager(object):
                 self.rep_socket.send(pmt.serialize_str(pmt.to_pmt(reply)))
 
     def start_watcher(self):
-        self.watcher_thread = threading.Thread(target=self.watcher,args=())
+        self.watcher_thread = threading.Thread(target=self.watcher, args=())
         self.watcher_thread.daemon = True
         self.watcher_thread.start()
 
@@ -69,7 +69,7 @@ class rpc_manager(object):
     def request(self, id_str, args=None):
         socks = dict(self.poller_req_out.poll(10))
         if socks.get(self.req_socket) == zmq.POLLOUT:
-            self.req_socket.send(pmt.serialize_str(pmt.to_pmt((id_str,args))))
+            self.req_socket.send(pmt.serialize_str(pmt.to_pmt((id_str, args))))
         socks = dict(self.poller_req_in.poll(10))
         if socks.get(self.req_socket) == zmq.POLLIN:
             reply = pmt.to_python(pmt.deserialize_str(self.req_socket.recv()))
