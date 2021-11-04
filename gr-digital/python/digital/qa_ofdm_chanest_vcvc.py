@@ -303,7 +303,8 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
                 for x in range(fft_len)]
             src = blocks.vector_source_c(tx_data, False, fft_len)
             chan = blocks.multiply_const_vcc(channel)
-            noise = blocks.vector_source_c(numpy.random.normal(0,wgn_amplitude,(len(tx_data),)), False, fft_len)
+            noise = blocks.vector_source_c(numpy.random.normal(
+                0, wgn_amplitude, (len(tx_data),)), False, fft_len)
             add = blocks.add_cc(fft_len)
             chanest = digital.ofdm_chanest_vcvc(sync_sym1, sync_sym2, 1)
             sink = blocks.vector_sink_c(fft_len)
@@ -325,7 +326,8 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
             shifted_carrier_mask = shift_tuple(carrier_mask, carr_offset)
             for i in range(fft_len):
                 if shifted_carrier_mask[i] and channel_est[i]:
-                    self.assertAlmostEqual(channel[i], channel_est[i], places=0)
+                    self.assertAlmostEqual(
+                        channel[i], channel_est[i], places=0)
                     rx_sym_est[i] = (sink.data()[i] / channel_est[i]).real
             return carr_offset, list(shift_tuple(rx_sym_est, -carr_offset_hat))
         bit_errors = 0

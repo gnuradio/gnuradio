@@ -15,7 +15,10 @@ from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-import random, math, sys
+import random
+import math
+import sys
+
 
 class my_top_block(gr.top_block):
     def __init__(self, ifile, ofile, options):
@@ -24,7 +27,7 @@ class my_top_block(gr.top_block):
         SNR = 10.0**(options.snr / 10.0)
         frequency_offset = options.frequency_offset
         time_offset = options.time_offset
-        phase_offset = options.phase_offset*(math.pi / 180.0)
+        phase_offset = options.phase_offset * (math.pi / 180.0)
 
         # calculate noise voltage from SNR
         power_in_signal = abs(options.tx_amplitude)**2
@@ -35,9 +38,9 @@ class my_top_block(gr.top_block):
         #self.throttle = blocks.throttle(gr.sizeof_gr_complex, options.sample_rate)
 
         self.channel = channels.channel_model(noise_voltage, frequency_offset,
-                                            time_offset, noise_seed=-random.randint(0,100000))
+                                              time_offset, noise_seed=-random.randint(0, 100000))
         self.phase = blocks.multiply_const_cc(complex(math.cos(phase_offset),
-                                                  math.sin(phase_offset)))
+                                                      math.sin(phase_offset)))
         self.snk = blocks.file_sink(gr.sizeof_gr_complex, ofile)
 
         self.connect(self.src, self.channel, self.phase, self.snk)
@@ -50,7 +53,8 @@ class my_top_block(gr.top_block):
 def main():
     # Create Options Parser:
     usage = "benchmack_add_channel.py [options] <input file> <output file>"
-    parser = OptionParser (usage=usage, option_class=eng_option, conflict_handler="resolve")
+    parser = OptionParser(
+        usage=usage, option_class=eng_option, conflict_handler="resolve")
     parser.add_option("-n", "--snr", type="eng_float", default=30,
                       help="set the SNR of the channel in dB [default=%default]")
     parser.add_option("", "--seed", action="store_true", default=False,
@@ -67,7 +71,7 @@ def main():
                       default=1.0,
                       help="tell the simulator the signal amplitude [default=%default]")
 
-    (options, args) = parser.parse_args ()
+    (options, args) = parser.parse_args()
 
     if len(args) != 2:
         parser.print_help(sys.stderr)
@@ -85,6 +89,7 @@ def main():
 
     tb.start()        # start flow graph
     tb.wait()         # wait for it to finish
+
 
 if __name__ == '__main__':
     try:
