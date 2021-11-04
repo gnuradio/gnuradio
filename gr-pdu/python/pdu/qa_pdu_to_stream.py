@@ -13,31 +13,37 @@ import numpy as np
 import pmt
 import time
 
+
 class qa_pdu_to_bursts (gr_unittest.TestCase):
 
-    def setUp (self):
+    def setUp(self):
         self.tb = gr.top_block()
         self.p2s = pdu.pdu_to_stream_c(pdu.EARLY_BURST_APPEND, 64)
         self.vs = blocks.vector_sink_c(1)
-        self.tag_debug = blocks.tag_debug(gr.sizeof_gr_complex*1, '', "")
+        self.tag_debug = blocks.tag_debug(gr.sizeof_gr_complex * 1, '', "")
         self.tag_debug.set_display(True)
 
         self.tb.connect((self.p2s, 0), (self.vs, 0))
         self.tb.connect((self.p2s, 0), (self.tag_debug, 0))
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-    def test_001_basic (self):
-        in_data = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1]
-        in_pdu = pmt.cons(pmt.make_dict(), pmt.init_c32vector(len(in_data), in_data))
-        e_tag_0 = gr.tag_utils.python_to_tag((0, pmt.intern("tx_sob"), pmt.PMT_T, pmt.PMT_NIL))
-        e_tag_1 = gr.tag_utils.python_to_tag((len(in_data)-1, pmt.intern("tx_eob"), pmt.PMT_T, pmt.PMT_NIL))
+    def test_001_basic(self):
+        in_data = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,
+                   1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1]
+        in_pdu = pmt.cons(
+            pmt.make_dict(), pmt.init_c32vector(len(in_data), in_data))
+        e_tag_0 = gr.tag_utils.python_to_tag(
+            (0, pmt.intern("tx_sob"), pmt.PMT_T, pmt.PMT_NIL))
+        e_tag_1 = gr.tag_utils.python_to_tag(
+            (len(in_data) - 1, pmt.intern("tx_eob"), pmt.PMT_T, pmt.PMT_NIL))
 
         self.tb.start()
         self.p2s.to_basic_block()._post(pmt.intern("pdus"), pmt.intern("MALFORMED PDU"))
         self.p2s.to_basic_block()._post(pmt.intern("pdus"), in_pdu)
-        self.waitFor(lambda: len(self.vs.tags()) == 2, timeout=1.0, poll_interval=0.01)
+        self.waitFor(lambda: len(self.vs.tags()) == 2,
+                     timeout=1.0, poll_interval=0.01)
         self.tb.stop()
         self.tb.wait()
 
@@ -51,19 +57,26 @@ class qa_pdu_to_bursts (gr_unittest.TestCase):
         self.assertTrue(pmt.equal(tags[1].value, e_tag_1.value))
         self.assertTrue((in_data == np.real(self.vs.data())).all())
 
-    def test_002_timed (self):
-        in_data = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1]
-        tag_time = pmt.make_tuple(pmt.from_uint64(11), pmt.from_double(0.123456))
-        in_dict = pmt.dict_add(pmt.make_dict(), pmt.intern("tx_time"), tag_time)
+    def test_002_timed(self):
+        in_data = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,
+                   1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1]
+        tag_time = pmt.make_tuple(
+            pmt.from_uint64(11), pmt.from_double(0.123456))
+        in_dict = pmt.dict_add(
+            pmt.make_dict(), pmt.intern("tx_time"), tag_time)
         in_pdu = pmt.cons(in_dict, pmt.init_c32vector(len(in_data), in_data))
-        e_tag_0 = gr.tag_utils.python_to_tag((0, pmt.intern("tx_sob"), pmt.PMT_T, pmt.PMT_NIL))
-        e_tag_1 = gr.tag_utils.python_to_tag((0, pmt.intern("tx_time"), tag_time, pmt.PMT_NIL))
-        e_tag_2 = gr.tag_utils.python_to_tag((len(in_data)-1, pmt.intern("tx_eob"), pmt.PMT_T, pmt.PMT_NIL))
+        e_tag_0 = gr.tag_utils.python_to_tag(
+            (0, pmt.intern("tx_sob"), pmt.PMT_T, pmt.PMT_NIL))
+        e_tag_1 = gr.tag_utils.python_to_tag(
+            (0, pmt.intern("tx_time"), tag_time, pmt.PMT_NIL))
+        e_tag_2 = gr.tag_utils.python_to_tag(
+            (len(in_data) - 1, pmt.intern("tx_eob"), pmt.PMT_T, pmt.PMT_NIL))
 
         self.tb.start()
         self.p2s.to_basic_block()._post(pmt.intern("pdus"), pmt.intern("MALFORMED PDU"))
         self.p2s.to_basic_block()._post(pmt.intern("pdus"), in_pdu)
-        self.waitFor(lambda: len(self.vs.tags()) == 3, timeout=1.0, poll_interval=0.01)
+        self.waitFor(lambda: len(self.vs.tags()) == 3,
+                     timeout=1.0, poll_interval=0.01)
         self.tb.stop()
         self.tb.wait()
 
@@ -80,19 +93,25 @@ class qa_pdu_to_bursts (gr_unittest.TestCase):
         self.assertTrue(pmt.equal(tags[2].value, e_tag_2.value))
         self.assertTrue((in_data == np.real(self.vs.data())).all())
 
-    def test_003_timed_long (self):
+    def test_003_timed_long(self):
         in_data = np.arange(25000).tolist()
-        tag_time = pmt.make_tuple(pmt.from_uint64(11), pmt.from_double(0.123456))
-        in_dict = pmt.dict_add(pmt.make_dict(), pmt.intern("tx_time"), tag_time)
+        tag_time = pmt.make_tuple(
+            pmt.from_uint64(11), pmt.from_double(0.123456))
+        in_dict = pmt.dict_add(
+            pmt.make_dict(), pmt.intern("tx_time"), tag_time)
         in_pdu = pmt.cons(in_dict, pmt.init_c32vector(len(in_data), in_data))
-        e_tag_0 = gr.tag_utils.python_to_tag((0, pmt.intern("tx_sob"), pmt.PMT_T, pmt.PMT_NIL))
-        e_tag_1 = gr.tag_utils.python_to_tag((0, pmt.intern("tx_time"), tag_time, pmt.PMT_NIL))
-        e_tag_2 = gr.tag_utils.python_to_tag((len(in_data)-1, pmt.intern("tx_eob"), pmt.PMT_T, pmt.PMT_NIL))
+        e_tag_0 = gr.tag_utils.python_to_tag(
+            (0, pmt.intern("tx_sob"), pmt.PMT_T, pmt.PMT_NIL))
+        e_tag_1 = gr.tag_utils.python_to_tag(
+            (0, pmt.intern("tx_time"), tag_time, pmt.PMT_NIL))
+        e_tag_2 = gr.tag_utils.python_to_tag(
+            (len(in_data) - 1, pmt.intern("tx_eob"), pmt.PMT_T, pmt.PMT_NIL))
 
         self.tb.start()
         self.p2s.to_basic_block()._post(pmt.intern("pdus"), pmt.intern("MALFORMED PDU"))
         self.p2s.to_basic_block()._post(pmt.intern("pdus"), in_pdu)
-        self.waitFor(lambda: len(self.vs.tags()) == 3, timeout=1.0, poll_interval=0.01)
+        self.waitFor(lambda: len(self.vs.tags()) == 3,
+                     timeout=1.0, poll_interval=0.01)
         self.tb.stop()
         self.tb.wait()
 

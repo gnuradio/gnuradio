@@ -10,7 +10,9 @@
 
 from gnuradio import gr
 import numpy as np
-import math, pmt, time
+import math
+import pmt
+import time
 
 
 class pdu_lambda(gr.basic_block):
@@ -40,8 +42,8 @@ class pdu_lambda(gr.basic_block):
 
     def __init__(self, fn, metadict, key=pmt.PMT_NIL):
         gr.basic_block.__init__(self,
-            name="pdu_lambda",
-            in_sig=[],out_sig=[])
+                                name="pdu_lambda",
+                                in_sig=[], out_sig=[])
         self.set_fn(fn)
         self.set_key(key)
         self.metadict_mode = metadict
@@ -61,7 +63,7 @@ class pdu_lambda(gr.basic_block):
                 print(e)
                 pass
             self.message_port_pub(pmt.intern("pdu"),
-                pmt.cons(meta, pmt.cdr(pdu)));
+                                  pmt.cons(meta, pmt.cdr(pdu)))
 
         elif self.metadict_mode == "UVEC":
             vec = pmt.cdr(pdu)
@@ -72,8 +74,8 @@ class pdu_lambda(gr.basic_block):
                 pass
 
             self.message_port_pub(pmt.intern("pdu"),
-                pmt.cons(pmt.car(pdu), vec));
-        
+                                  pmt.cons(pmt.car(pdu), vec))
+
         elif self.metadict_mode == "RAW":
             # TODO: This is more of a "message lambda" block, in the future it should be
             # a separate block outside the PDU namespace
@@ -83,14 +85,14 @@ class pdu_lambda(gr.basic_block):
                 print(e)
                 pass
             self.message_port_pub(pmt.intern("pdu"), pdu)
-        
-        else:
-            raise ValueError("pdu_lambda block instantiated in unknown mode " + repr(self.metadict_mode))
-            pass
-            
 
-    def set_fn(self,fn):
+        else:
+            raise ValueError(
+                "pdu_lambda block instantiated in unknown mode " + repr(self.metadict_mode))
+            pass
+
+    def set_fn(self, fn):
         self.fn = fn
 
-    def set_key(self,key):
+    def set_key(self, key):
         self.key = key
