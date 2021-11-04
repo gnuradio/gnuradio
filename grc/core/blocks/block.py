@@ -22,6 +22,7 @@ from ._flags import Flags
 from ..base import Element
 from ..utils.descriptors import lazy_property
 
+
 def _get_elem(iterable, key):
     items = list(iterable)
     for item in items:
@@ -39,7 +40,7 @@ class Block(Element):
     key = ''
     label = ''
     category = []
-    vtype = '' # This is only used for variables when we want C++ output
+    vtype = ''  # This is only used for variables when we want C++ output
     flags = Flags('')
     documentation = {'': ''}
 
@@ -67,13 +68,16 @@ class Block(Element):
         if self.key == 'options':
             self.params['id'].hide = 'part'
 
-        self.sinks = [port_factory(parent=self, **params) for params in self.inputs_data]
-        self.sources = [port_factory(parent=self, **params) for params in self.outputs_data]
+        self.sinks = [port_factory(parent=self, **params)
+                      for params in self.inputs_data]
+        self.sources = [port_factory(parent=self, **params)
+                        for params in self.outputs_data]
 
         self.active_sources = []  # on rewrite
         self.active_sinks = []  # on rewrite
 
-        self.states = {'state': True, 'bus_source': False, 'bus_sink': False, 'bus_structure': None}
+        self.states = {'state': True, 'bus_source': False,
+                       'bus_sink': False, 'bus_structure': None}
         self.block_namespace = {}
         self.deprecated = self.is_deprecated()
 
@@ -81,7 +85,8 @@ class Block(Element):
             # This is a workaround to allow embedded python blocks/modules to load as there is
             # currently 'cpp' in the flags by default caused by the other built-in blocks
             if hasattr(self, 'cpp_templates'):
-                self.orig_cpp_templates = self.cpp_templates # The original template, in case we have to edit it when transpiling to C++
+                # The original template, in case we have to edit it when transpiling to C++
+                self.orig_cpp_templates = self.cpp_templates
 
         self.current_bus_structure = {'source': None, 'sink': None}
 
@@ -100,8 +105,8 @@ class Block(Element):
         except:
             return None
 
-
     # region Rewrite_and_Validation
+
     def rewrite(self):
         """
         Add and remove ports to adjust for the nports.
@@ -125,7 +130,8 @@ class Block(Element):
 
         self.update_bus_logic()
         # disconnect hidden ports
-        self.parent_flowgraph.disconnect(*[p for p in self.ports() if p.hidden])
+        self.parent_flowgraph.disconnect(
+            *[p for p in self.ports() if p.hidden])
 
         self.active_sources = [p for p in self.sources if not p.hidden]
         self.active_sinks = [p for p in self.sinks if not p.hidden]
@@ -142,11 +148,12 @@ class Block(Element):
             # this is ok behavior, unfortunately we could be hiding other import bugs
             pass
         except Exception:
-            self.add_error_message(f'Failed to evaluate import expression {imports!r}')
+            self.add_error_message(
+                f'Failed to evaluate import expression {imports!r}')
 
     def update_bus_logic(self):
         ###############################
-        ## Bus Logic
+        # Bus Logic
         ###############################
 
         for direc in {'source', 'sink'}:
@@ -170,13 +177,12 @@ class Block(Element):
                             removed_bus_connections.append(c)
                     ports.remove(port)
 
-
             if (bus_state):
                 struct = self.form_bus_structure(direc)
                 self.current_bus_structure[direc] = struct
 
                 # Hide ports that are not part of the bus structure
-                #TODO: Blocks where it is desired to only have a subset
+                # TODO: Blocks where it is desired to only have a subset
                 # of ports included in the bus still has some issues
                 for idx, port in enumerate(ports):
                     if any([idx in bus for bus in self.current_bus_structure[direc]]):
@@ -187,18 +193,19 @@ class Block(Element):
                 # Add the Bus Ports to the list of ports
                 for i in range(len(struct)):
                     # self.sinks = [port_factory(parent=self, **params) for params in self.inputs_data]
-                    port = self.parent.parent.make_port(self, direction=direc, id=str(len(ports)), label='bus', dtype='bus', bus_struct=struct[i])
+                    port = self.parent.parent.make_port(self, direction=direc, id=str(
+                        len(ports)), label='bus', dtype='bus', bus_struct=struct[i])
                     ports.append(port)
 
                     for (saved_port, connection) in zip(removed_bus_ports, removed_bus_connections):
                         if port.key == saved_port.key:
-                            self.parent_flowgraph.connections.remove(connection)
+                            self.parent_flowgraph.connections.remove(
+                                connection)
                             if saved_port.is_source:
                                 connection.source_port = port
                             if saved_port.is_sink:
                                 connection.sink_port = port
                             self.parent_flowgraph.connections.add(connection)
-
 
             else:
                 self.current_bus_structure[direc] = None
@@ -209,8 +216,6 @@ class Block(Element):
                         port.hidden = port.stored_hidden_state
                         port.stored_hidden_state = None
 
-
-
     def _rewrite_nports(self, ports):
         for port in ports:
             if hasattr(port, 'master_port'):  # Not a master port and no left-over clones
@@ -218,7 +223,7 @@ class Block(Element):
                 port.vlen = port.master_port.vlen
                 continue
             nports = port.multiplicity
-            for clone in port.clones[nports-1:]:
+            for clone in port.clones[nports - 1:]:
                 # Remove excess connections
                 self.parent_flowgraph.disconnect(clone)
                 port.remove_clone(clone)
@@ -245,9 +250,11 @@ class Block(Element):
         for expr in self.asserts:
             try:
                 if not self.evaluate(expr):
-                    self.add_error_message('Assertion "{}" failed.'.format(expr))
+                    self.add_error_message(
+                        'Assertion "{}" failed.'.format(expr))
             except Exception:
-                self.add_error_message('Assertion "{}" did not evaluate.'.format(expr))
+                self.add_error_message(
+                    'Assertion "{}" did not evaluate.'.format(expr))
 
     def _validate_generate_mode_compat(self):
         """check if this is a GUI block and matches the selected generate option"""
@@ -261,7 +268,8 @@ class Block(Element):
                 self.add_error_message("Can't generate this block in mode: {} ".format(
                     repr(current_generate_option)))
 
-        check_generate_mode('QT GUI', Flags.NEED_QT_GUI, ('qt_gui', 'hb_qt_gui'))
+        check_generate_mode('QT GUI', Flags.NEED_QT_GUI,
+                            ('qt_gui', 'hb_qt_gui'))
 
     def _validate_output_language_compat(self):
         """check if this block supports the selected output language"""
@@ -269,19 +277,23 @@ class Block(Element):
 
         if current_output_language == 'cpp':
             if 'cpp' not in self.flags:
-                self.add_error_message("This block does not support C++ output.")
+                self.add_error_message(
+                    "This block does not support C++ output.")
 
             if self.key == 'parameter':
                 if not self.params['type'].value:
-                    self.add_error_message("C++ output requires you to choose a parameter type.")
+                    self.add_error_message(
+                        "C++ output requires you to choose a parameter type.")
 
     def _validate_var_value(self):
         """or variables check the value (only if var_value is used)"""
         if self.is_variable and self.value != 'value':
             try:
-                self.parent_flowgraph.evaluate(self.value, local_namespace=self.namespace)
+                self.parent_flowgraph.evaluate(
+                    self.value, local_namespace=self.namespace)
             except Exception as err:
-                self.add_error_message('Value "{}" cannot be evaluated:\n{}'.format(self.value, err))
+                self.add_error_message(
+                    'Value "{}" cannot be evaluated:\n{}'.format(self.value, err))
     # endregion
 
     # region Properties
@@ -458,7 +470,7 @@ class Block(Element):
                         # For container types we must also determine the type of the template parameter(s)
                         return 'std::vector<' + get_type(str(evaluated[0]), type(evaluated[0])) + '>'
 
-                    except IndexError: # empty list
+                    except IndexError:  # empty list
                         return 'std::vector<std::string>'
 
                 if _vtype == dict:
@@ -466,9 +478,9 @@ class Block(Element):
                         # For container types we must also determine the type of the template parameter(s)
                         key = list(evaluated)[0]
                         val = list(evaluated.values())[0]
-                        return 'std::map<' + get_type(str(key), type(key)) + ', ' + get_type(str(val), type(val)) +'>'
+                        return 'std::map<' + get_type(str(key), type(key)) + ', ' + get_type(str(val), type(val)) + '>'
 
-                    except IndexError: # empty dict
+                    except IndexError:  # empty dict
                         return 'std::map<std::string, std::string>'
 
                 else:
@@ -480,11 +492,11 @@ class Block(Element):
         # The r-value for these types must be transformed to create legal C++ syntax.
         if self.vtype in ['bool', 'gr_complex'] or 'std::map' in self.vtype or 'std::vector' in self.vtype:
             evaluated = ast.literal_eval(value)
-            self.cpp_templates['var_make'] = self.cpp_templates['var_make'].replace('${value}', self.get_cpp_value(evaluated))
+            self.cpp_templates['var_make'] = self.cpp_templates['var_make'].replace(
+                '${value}', self.get_cpp_value(evaluated))
 
         if 'string' in self.vtype:
             self.cpp_templates['includes'].append('#include <string>')
-
 
     def get_cpp_value(self, pyval):
 
@@ -494,8 +506,10 @@ class Block(Element):
             # Check for PI and replace with C++ constant
             pi_re = r'^(math|numpy|np|scipy|sp)\.pi$'
             if re.match(pi_re, str(pyval)):
-                val_str = re.sub(pi_re, 'boost::math::constants::pi<double>()', val_str)
-                self.cpp_templates['includes'].append('#include <boost/math/constants/constants.hpp>')
+                val_str = re.sub(
+                    pi_re, 'boost::math::constants::pi<double>()', val_str)
+                self.cpp_templates['includes'].append(
+                    '#include <boost/math/constants/constants.hpp>')
 
             return str(pyval)
 
@@ -503,7 +517,8 @@ class Block(Element):
             return str(pyval)[0].lower() + str(pyval)[1:]
 
         elif type(pyval) == complex:
-            self.cpp_templates['includes'].append('#include <gnuradio/gr_complex.h>')
+            self.cpp_templates['includes'].append(
+                '#include <gnuradio/gr_complex.h>')
             evaluated = ast.literal_eval(str(pyval).strip())
             return '{' + str(evaluated.real) + ', ' + str(evaluated.imag) + '}'
 
@@ -523,7 +538,8 @@ class Block(Element):
             self.cpp_templates['includes'].append('#include <map>')
             val_str = '{'
             for key in pyval:
-                val_str += '{' + self.get_cpp_value(key) + ', ' + self.get_cpp_value(pyval[key]) + '}, '
+                val_str += '{' + self.get_cpp_value(key) + \
+                    ', ' + self.get_cpp_value(pyval[key]) + '}, '
 
             if len(val_str) > 1:
                 # truncate to trim superfluous ', ' from the end
@@ -534,7 +550,6 @@ class Block(Element):
         if type(self.vtype) == str:
             self.cpp_templates['includes'].append('#include <string>')
             return '"' + pyval + '"'
-
 
     def is_virtual_sink(self):
         return self.key == 'virtual_sink'
@@ -561,8 +576,8 @@ class Block(Element):
             print(exception.message)
         return False
 
-
     # Block bypassing
+
     def get_bypassed(self):
         """
         Check if the block is bypassed
@@ -618,7 +633,8 @@ class Block(Element):
     @property
     def namespace(self):
         # update block namespace
-        self.block_namespace.update({key:param.get_evaluated() for key, param in self.params.items()})
+        self.block_namespace.update(
+            {key: param.get_evaluated() for key, param in self.params.items()})
         return self.block_namespace
 
     @property
@@ -721,7 +737,7 @@ class Block(Element):
 
         struct = [range(len(ports))]
         # struct = list(range(len(ports)))
-        #TODO for more complicated port structures, this code is needed but not working yet
+        # TODO for more complicated port structures, this code is needed but not working yet
         if any([p.multiplicity for p in ports]):
             structlet = []
             last = 0
@@ -736,8 +752,8 @@ class Block(Element):
                     continue
 
                 if p.multiplicity > 1:
-                    cnt = p.multiplicity-1
-                    structlet.append([idx+j for j in range(p.multiplicity)])
+                    cnt = p.multiplicity - 1
+                    structlet.append([idx + j for j in range(p.multiplicity)])
                 else:
                     structlet.append([idx])
 

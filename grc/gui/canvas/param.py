@@ -86,20 +86,20 @@ class Param(CoreParam):
             tooltip_lines.extend(' * ' + msg for msg in errors)
         return '\n'.join(tooltip_lines)
 
-
-
     ##################################################
     # Truncate helper method
     ##################################################
+
     def truncate(self, string, style=0):
         max_len = max(27 - len(self.name), 3)
         if len(string) > max_len:
             if style < 0:  # Front truncate
-                string = '...' + string[3-max_len:]
+                string = '...' + string[3 - max_len:]
             elif style == 0:  # Center truncate
-                string = string[:max_len//2 - 3] + '...' + string[-max_len//2:]
+                string = string[:max_len // 2 - 3] + \
+                    '...' + string[-max_len // 2:]
             elif style > 0:  # Rear truncate
-                string = string[:max_len-3] + '...'
+                string = string[:max_len - 3] + '...'
         return string
 
     def pretty_print(self):
@@ -183,5 +183,5 @@ class Param(CoreParam):
                 display_value = expr_string
 
         return '<span {foreground} font_desc="{font}"><b>{label}:</b> {value}</span>'.format(
-             foreground='foreground="red"' if not self.is_valid() else '', font=Constants.PARAM_FONT,
+            foreground='foreground="red"' if not self.is_valid() else '', font=Constants.PARAM_FONT,
             label=Utils.encode(self.name), value=display_value)

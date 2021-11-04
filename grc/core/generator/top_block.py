@@ -30,7 +30,8 @@ class TopBlockGenerator(object):
         """
 
         self._flow_graph = FlowGraphProxy(flow_graph)
-        self._generate_options = self._flow_graph.get_option('generate_options')
+        self._generate_options = self._flow_graph.get_option(
+            'generate_options')
 
         self._mode = TOP_BLOCK_FILE_MODE
         # Handle the case where the directory is read-only
@@ -58,7 +59,8 @@ class TopBlockGenerator(object):
                                       "This is usually undesired. Consider "
                                       "removing the throttle block.")
 
-        deprecated_block_keys = {b.name for b in self._flow_graph.get_enabled_blocks() if b.flags.deprecated}
+        deprecated_block_keys = {
+            b.name for b in self._flow_graph.get_enabled_blocks() if b.flags.deprecated}
         for key in deprecated_block_keys:
             Messages.send_warning("The block {!r} is deprecated.".format(key))
 
@@ -67,7 +69,8 @@ class TopBlockGenerator(object):
         self._warnings()
 
         fg = self._flow_graph
-        self.title = fg.get_option('title') or fg.get_option('id').replace('_', ' ').title()
+        self.title = fg.get_option('title') or fg.get_option(
+            'id').replace('_', ' ').title()
         variables = fg.get_variables()
         parameters = fg.get_parameters()
         monitors = fg.get_monitors()
@@ -97,7 +100,8 @@ class TopBlockGenerator(object):
 
         fg = self._flow_graph
         platform = fg.parent
-        title = fg.get_option('title') or fg.get_option('id').replace('_', ' ').title()
+        title = fg.get_option('title') or fg.get_option(
+            'id').replace('_', ' ').title()
         variables = fg.get_variables()
         parameters = fg.get_parameters()
         monitors = fg.get_monitors()
@@ -110,7 +114,8 @@ class TopBlockGenerator(object):
             else:
                 continue
 
-            file_path = os.path.join(self.output_dir, block.module_name + ".py")
+            file_path = os.path.join(
+                self.output_dir, block.module_name + ".py")
             output.append((file_path, src))
 
         self.namespace = {
@@ -131,7 +136,8 @@ class TopBlockGenerator(object):
             **self.namespace
         )
         # strip trailing white-space
-        flow_graph_code = "\n".join(line.rstrip() for line in flow_graph_code.split("\n"))
+        flow_graph_code = "\n".join(line.rstrip()
+                                    for line in flow_graph_code.split("\n"))
         output.append((self.file_path, flow_graph_code))
 
         return output
@@ -142,7 +148,8 @@ class TopBlockGenerator(object):
         seen = set()
         output = []
 
-        need_path_hack = any(imp.endswith("# grc-generated hier_block") for imp in imports)
+        need_path_hack = any(imp.endswith(
+            "# grc-generated hier_block") for imp in imports)
         if need_path_hack:
             output.insert(0, textwrap.dedent("""\
                 import os
@@ -184,7 +191,8 @@ class TopBlockGenerator(object):
         def _get_block_sort_text(block):
             code = block.templates.render('make').replace(block.name, ' ')
             try:
-                code += block.params['gui_hint'].get_value()  # Newer gui markup w/ qtgui
+                # Newer gui markup w/ qtgui
+                code += block.params['gui_hint'].get_value()
             except KeyError:
                 # No gui hint
                 pass
@@ -195,7 +203,8 @@ class TopBlockGenerator(object):
             if b.enabled and not (b.get_bypassed() or b.is_import or b.is_snippet or b in parameters or b.key == 'options')
         ]
 
-        blocks = expr_utils.sort_objects(blocks, operator.attrgetter('name'), _get_block_sort_text)
+        blocks = expr_utils.sort_objects(
+            blocks, operator.attrgetter('name'), _get_block_sort_text)
         blocks_make = []
         for block in blocks:
             make = block.templates.render('make')
@@ -217,16 +226,19 @@ class TopBlockGenerator(object):
 
         callbacks_all = []
         for block in fg.iter_enabled_blocks():
-            callbacks_all.extend(expr_utils.expr_replace(cb, replace_dict) for cb in block.get_callbacks())
+            callbacks_all.extend(expr_utils.expr_replace(
+                cb, replace_dict) for cb in block.get_callbacks())
 
         # Map var id to callbacks
         def uses_var_id(callback):
             used = expr_utils.get_variable_dependencies(callback, [var_id])
-            return used and (('self.' + var_id in callback) or ('this->' + var_id in callback))  # callback might contain var_id itself
+            # callback might contain var_id itself
+            return used and (('self.' + var_id in callback) or ('this->' + var_id in callback))
 
         callbacks = {}
         for var_id in var_ids:
-            callbacks[var_id] = [callback for callback in callbacks_all if uses_var_id(callback)]
+            callbacks[var_id] = [
+                callback for callback in callbacks_all if uses_var_id(callback)]
 
         return callbacks
 
@@ -253,14 +265,17 @@ class TopBlockGenerator(object):
 
         # Get the virtual blocks and resolve their connections
         connection_factory = fg.parent_platform.Connection
-        virtual_source_connections = [c for c in connections if isinstance(c.source_block, blocks.VirtualSource)]
+        virtual_source_connections = [c for c in connections if isinstance(
+            c.source_block, blocks.VirtualSource)]
         for connection in virtual_source_connections:
             sink = connection.sink_port
             for source in connection.source_port.resolve_virtual_source():
-                resolved = connection_factory(fg.orignal_flowgraph, source, sink)
+                resolved = connection_factory(
+                    fg.orignal_flowgraph, source, sink)
                 connections.append(resolved)
 
-        virtual_connections = [c for c in connections if (isinstance(c.source_block, blocks.VirtualSource) or isinstance(c.sink_block, blocks.VirtualSink))]
+        virtual_connections = [c for c in connections if (isinstance(
+            c.source_block, blocks.VirtualSource) or isinstance(c.sink_block, blocks.VirtualSink))]
         for connection in virtual_connections:
             # Remove the virtual connection
             connections.remove(connection)
@@ -274,7 +289,8 @@ class TopBlockGenerator(object):
         for block in bypassed_blocks:
             # Get the upstream connection (off of the sink ports)
             # Use *connections* not get_connections()
-            source_connection = [c for c in connections if c.sink_port == block.sinks[0]]
+            source_connection = [
+                c for c in connections if c.sink_port == block.sinks[0]]
             # The source connection should never have more than one element.
             assert (len(source_connection) == 1)
 
@@ -286,7 +302,8 @@ class TopBlockGenerator(object):
                 if not sink.enabled:
                     # Ignore disabled connections
                     continue
-                connection = connection_factory(fg.orignal_flowgraph, source_port, sink.sink_port)
+                connection = connection_factory(
+                    fg.orignal_flowgraph, source_port, sink.sink_port)
                 connections.append(connection)
                 # Remove this sink connection
                 connections.remove(sink)
@@ -301,7 +318,8 @@ class TopBlockGenerator(object):
         for con in sorted(connections, key=by_domain_and_blocks):
             template = templates[con.type]
             if con.source_port.dtype != 'bus':
-                code = template.render(make_port_sig=make_port_sig, source=con.source_port, sink=con.sink_port)
+                code = template.render(
+                    make_port_sig=make_port_sig, source=con.source_port, sink=con.sink_port)
                 rendered.append(code)
             else:
                 # Bus ports need to iterate over the underlying connections and then render
@@ -318,10 +336,8 @@ class TopBlockGenerator(object):
                             hidden_portb = portb.parent.sinks[port_num_b]
                             connection = fg.parent_platform.Connection(
                                 parent=self, source=hidden_porta, sink=hidden_portb)
-                            code = template.render(make_port_sig=make_port_sig, source=hidden_porta, sink=hidden_portb)
+                            code = template.render(
+                                make_port_sig=make_port_sig, source=hidden_porta, sink=hidden_portb)
                             rendered.append(code)
-
-
-
 
         return rendered

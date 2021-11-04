@@ -30,16 +30,19 @@ class ChainMap(MutableMapping):
     def __getitem__(self, key):
         for mapping in self.maps:
             try:
-                return mapping[key]             # can't use 'key in mapping' with defaultdict
+                # can't use 'key in mapping' with defaultdict
+                return mapping[key]
             except KeyError:
                 pass
-        return self.__missing__(key)            # support subclasses that define __missing__
+        # support subclasses that define __missing__
+        return self.__missing__(key)
 
     def get(self, key, default=None):
         return self[key] if key in self else default
 
     def __len__(self):
-        return len(set().union(*self.maps))     # reuses stored hash values if possible
+        # reuses stored hash values if possible
+        return len(set().union(*self.maps))
 
     def __iter__(self):
         return iter(set().union(*self.maps))
@@ -85,7 +88,8 @@ class ChainMap(MutableMapping):
         try:
             del self.maps[0][key]
         except KeyError:
-            raise KeyError('Key not found in the first mapping: {!r}'.format(key))
+            raise KeyError(
+                'Key not found in the first mapping: {!r}'.format(key))
 
     def popitem(self):
         """Remove and return an item pair from maps[0]. Raise KeyError is maps[0] is empty."""
@@ -99,7 +103,8 @@ class ChainMap(MutableMapping):
         try:
             return self.maps[0].pop(key, *args)
         except KeyError:
-            raise KeyError('Key not found in the first mapping: {!r}'.format(key))
+            raise KeyError(
+                'Key not found in the first mapping: {!r}'.format(key))
 
     def clear(self):
         """Clear maps[0], leaving maps[1:] intact."""

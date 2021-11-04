@@ -80,7 +80,8 @@ class ExecFlowGraphThread(threading.Thread):
         Execute this C++ flow graph after generating and compiling it.
         """
         generator = self.page.get_generator()
-        run_command = generator.file_path + '/build/' + self.flow_graph.get_option('id')
+        run_command = generator.file_path + \
+            '/build/' + self.flow_graph.get_option('id')
 
         dirname = generator.file_path
         builddir = os.path.join(dirname, 'build')

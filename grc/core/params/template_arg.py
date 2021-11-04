@@ -5,7 +5,6 @@
 #
 
 
-
 class TemplateArg(str):
     """
     A cheetah template argument created from a param.

@@ -5,7 +5,6 @@
 #
 
 
-
 class GRCError(Exception):
     """Generic error class"""
 

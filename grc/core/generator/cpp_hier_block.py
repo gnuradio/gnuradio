@@ -8,6 +8,7 @@ from .cpp_top_block import CppTopBlockGenerator
 from .. import Constants
 from ..io import yaml
 
+
 class CppHierBlockGenerator(CppTopBlockGenerator):
     """Extends the top block generator to also generate a block YML file"""
 
@@ -27,7 +28,8 @@ class CppHierBlockGenerator(CppTopBlockGenerator):
             os.mkdir(hier_block_lib_dir)
 
         self._mode = Constants.HIER_BLOCK_FILE_MODE
-        self.file_path = os.path.join(hier_block_lib_dir, self._flow_graph.get_option('id'))
+        self.file_path = os.path.join(
+            hier_block_lib_dir, self._flow_graph.get_option('id'))
         self.file_path_yml = self.file_path + '.block.yml'
 
     def write(self):
@@ -54,7 +56,6 @@ class CppHierBlockGenerator(CppTopBlockGenerator):
 
         # Windows only supports S_IREAD and S_IWRITE, other flags are ignored
         os.chmod(self.file_path_yml, self._mode)
-
 
     def _build_block_n_from_flow_graph_io(self):
         """
@@ -136,7 +137,8 @@ class CppHierBlockGenerator(CppTopBlockGenerator):
         t_cpp = data['cpp_templates'] = collections.OrderedDict()
 
         t_cpp['includes'] = []
-        t_cpp['includes'].append('#include "{id}/{id}.hpp"'.format(id=self._flow_graph.get_option('id')))
+        t_cpp['includes'].append(
+            '#include "{id}/{id}.hpp"'.format(id=self._flow_graph.get_option('id')))
 
         # Make data
         if parameters:
@@ -147,7 +149,8 @@ class CppHierBlockGenerator(CppTopBlockGenerator):
                 ),
             )
         else:
-            t_cpp['make'] = 'this->${{id}} = {cls}_sptr(make_{cls}());'.format(cls=block_id)
+            t_cpp['make'] = 'this->${{id}} = {cls}_sptr(make_{cls}());'.format(
+                cls=block_id)
             t_cpp['declarations'] = '{cls}_sptr ${{id}};'.format(cls=block_id)
 
         # Callback data
@@ -206,7 +209,8 @@ def get_hier_block_io(flow_graph, direction, domain=None):
 
     Returns a list of dicts with: type, label, vlen, size, optional
     """
-    pads = flow_graph.get_pad_sources() if direction == 'inputs' else flow_graph.get_pad_sinks()
+    pads = flow_graph.get_pad_sources(
+    ) if direction == 'inputs' else flow_graph.get_pad_sinks()
 
     for pad in pads:
         for port in (pad.sources if direction == 'inputs' else pad.sinks):

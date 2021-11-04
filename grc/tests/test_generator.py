@@ -15,7 +15,8 @@ from grc.core.platform import Platform
 
 def test_generator():
     # c&p form compiler code.
-    grc_file = path.join(path.dirname(__file__), 'resources', 'test_compiler.grc')
+    grc_file = path.join(path.dirname(__file__),
+                         'resources', 'test_compiler.grc')
     out_dir = tempfile.gettempdir()
     block_paths = [
         path.join(path.dirname(__file__), '../../grc/blocks'),
@@ -35,5 +36,6 @@ def test_generator():
 
     assert flow_graph.is_valid()
 
-    generator = platform.Generator(flow_graph, path.join(path.dirname(__file__), 'resources'))
+    generator = platform.Generator(
+        flow_graph, path.join(path.dirname(__file__), 'resources'))
     generator.write()
