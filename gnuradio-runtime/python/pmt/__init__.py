@@ -24,7 +24,7 @@ more flexible.
 
 The PMT library supports the following major types:
 bool, symbol (string), integer, real, complex, null, pair, list,
-vector, dict, uniform_vector, any (std::any cast)
+vector, dict, uniform_vector, any (boost::any cast)
 '''
 
 

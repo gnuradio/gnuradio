@@ -15,7 +15,7 @@
 #include <gnuradio/digital/metric_type.h>
 #include <gnuradio/gr_complex.h>
 #include <pmt/pmt.h>
-#include <any>
+#include <boost/any.hpp>
 #include <vector>
 
 namespace gr {
@@ -113,7 +113,7 @@ public:
 
     constellation_sptr base() { return shared_from_this(); }
 
-    pmt::pmt_t as_pmt() { return pmt::make_any(std::any(base())); }
+    pmt::pmt_t as_pmt() { return pmt::make_any(boost::any(base())); }
 
     /*! \brief Generates the soft decision LUT based on
      *         constellation and symbol map.
