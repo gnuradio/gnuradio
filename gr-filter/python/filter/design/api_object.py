@@ -12,15 +12,17 @@ class ApiObject(object):
         return multiple filter parameters in future
         e.g Cascaded Filters
     '''
-    def __init__(self, filtcount = 1):
+
+    def __init__(self, filtcount=1):
         self.filtercount = filtcount
         self.restype = [''] * self.filtercount
-        self.params   = [''] * self.filtercount
-        self.taps     = [''] * self.filtercount
+        self.params = [''] * self.filtercount
+        self.taps = [''] * self.filtercount
 
     '''
         Updates params dictionary for the given filter number
     '''
+
     def update_params(self, params, filtno):
         if (filtno <= self.filtercount):
             self.params[filtno - 1] = params
@@ -28,16 +30,17 @@ class ApiObject(object):
     '''
         Updates filter type  for the given filter number
     '''
+
     def update_filttype(self, filttype, filtno):
         if (filtno <= self.filtercount):
             self.filttype[filtno - 1] = filttype
-
 
     '''
         updates taps for the given filter number. taps will
         contain a list of coefficients in the case of fir design
         and (b,a) tuple in the case of iir design
     '''
+
     def update_taps(self, taps, filtno):
         if (filtno <= self.filtercount):
             self.taps[filtno - 1] = taps
@@ -45,6 +48,7 @@ class ApiObject(object):
     '''
         updates  all of them in a single call
     '''
+
     def update_all(self, filttype, params, taps, filtno):
         if (filtno <= self.filtercount):
             self.taps[filtno - 1] = taps

@@ -18,7 +18,7 @@ import sys
 def random_floats(n):
     r = []
     for x in range(n):
-       # r.append(float(random.randint(-32768, 32768)))
+        # r.append(float(random.randint(-32768, 32768)))
         r.append(float(random.random()))
     return tuple(r)
 

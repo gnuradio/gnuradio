@@ -16,10 +16,12 @@ import os
 import numpy as np
 from gnuradio import gr
 
+
 class file_taps_loader(gr.basic_block):
     """
     Block to make filter taps created by the filter design tool available in grc.
     """
+
     def __init__(self, fpath, verbose):
         gr.basic_block.__init__(
             self,
@@ -38,35 +40,40 @@ class file_taps_loader(gr.basic_block):
         Load a file that was generated with the filter design tool
         """
         if not os.path.isfile(self.fpath):
-            raise RuntimeError(self.name() + ": Can not open " + "\"" + fpath + "\"" + ".")
+            raise RuntimeError(
+                self.name() + ": Can not open " + "\"" + fpath + "\"" + ".")
         with open(fpath) as csvfile:
             readcsv = csv.reader(csvfile, delimiter=',')
             for row in readcsv:
                 if row[0] == "taps":
                     regex = re.findall(r"[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
-                    if regex: # it's a complex
+                    if regex:  # it's a complex
                         # string to complex so numpy eats the taps
                         cpx_row = [complex(x) for x in row[1:]]
                         self.taps = tuple(np.array(cpx_row, dtype=complex))
-                        self.print_if(self.name() + ": Found complex taps in the file provided.\n")
+                        self.print_if(
+                            self.name() + ": Found complex taps in the file provided.\n")
                     else:
                         self.taps = tuple(np.array(row[1:], dtype=float))
-                        self.print_if(self.name() + ": Found real taps in the file provided.\n")
+                        self.print_if(
+                            self.name() + ": Found real taps in the file provided.\n")
                 else:
                     regex = re.findall(r"[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[0])
-                    if regex: # it's a complex
+                    if regex:  # it's a complex
                         # string to complex so numpy eats the taps
                         cpx_row = [complex(x) for x in row[0:]]
                         self.taps = tuple(np.array(cpx_row, dtype=complex))
-                        self.print_if(self.name() + ": Found complex taps in the file provided.\n")
+                        self.print_if(
+                            self.name() + ": Found complex taps in the file provided.\n")
                     else:
                         try:
                             self.taps = tuple(np.array(row[0:], dtype=float))
-                            self.print_if(self.name() + ": Found real taps in the file provided.\n")
+                            self.print_if(
+                                self.name() + ": Found real taps in the file provided.\n")
                         except ValueError:
                             self.params.append(row)
         self.print_if(
-            self.name() + \
+            self.name() +
             ": Loaded a filter with the following parameters (gr_filter_design format): \n")
         for param in self.params:
             self.print_if(param[0], ' ', param[1], '\n')

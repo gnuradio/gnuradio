@@ -6,7 +6,12 @@
 #
 # WARNING! All changes made in this file will be lost!
 
+from .GrFilterPlotWidget import GrFilterPlotWidget
+from . import icons_rc
+from .polezero_plot import PzPlot
+from .bandgraphicsview import BandGraphicsView
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -17,36 +22,44 @@ class Ui_MainWindow(object):
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
         self.stackedWindows = QtWidgets.QStackedWidget(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.stackedWindows.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.stackedWindows.sizePolicy().hasHeightForWidth())
         self.stackedWindows.setSizePolicy(sizePolicy)
         self.stackedWindows.setObjectName("stackedWindows")
         self.classic = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.classic.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.classic.sizePolicy().hasHeightForWidth())
         self.classic.setSizePolicy(sizePolicy)
         self.classic.setObjectName("classic")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.classic)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.splitter = QtWidgets.QSplitter(self.classic)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(1)
-        sizePolicy.setHeightForWidth(self.splitter.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.splitter.sizePolicy().hasHeightForWidth())
         self.splitter.setSizePolicy(sizePolicy)
         self.splitter.setMinimumSize(QtCore.QSize(600, 0))
         self.splitter.setOrientation(QtCore.Qt.Vertical)
         self.splitter.setObjectName("splitter")
         self.tabGroup = QtWidgets.QTabWidget(self.splitter)
         self.tabGroup.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(1)
-        sizePolicy.setHeightForWidth(self.tabGroup.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.tabGroup.sizePolicy().hasHeightForWidth())
         self.tabGroup.setSizePolicy(sizePolicy)
         self.tabGroup.setTabsClosable(False)
         self.tabGroup.setMovable(False)
@@ -116,10 +129,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_17.addWidget(self.pdelayPlot)
         self.tabGroup.addTab(self.pdelayTab, "")
         self.filterspecView = QtWidgets.QTabWidget(self.splitter)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.filterspecView.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.filterspecView.sizePolicy().hasHeightForWidth())
         self.filterspecView.setSizePolicy(sizePolicy)
         self.filterspecView.setMinimumSize(QtCore.QSize(613, 250))
         self.filterspecView.setBaseSize(QtCore.QSize(0, 100))
@@ -127,19 +142,23 @@ class Ui_MainWindow(object):
         self.filterspecView.setTabsClosable(False)
         self.filterspecView.setObjectName("filterspecView")
         self.bandDiagram = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.bandDiagram.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.bandDiagram.sizePolicy().hasHeightForWidth())
         self.bandDiagram.setSizePolicy(sizePolicy)
         self.bandDiagram.setObjectName("bandDiagram")
         self.horizontalLayout_13 = QtWidgets.QHBoxLayout(self.bandDiagram)
         self.horizontalLayout_13.setObjectName("horizontalLayout_13")
         self.bandView = BandGraphicsView(self.bandDiagram)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(1)
-        sizePolicy.setHeightForWidth(self.bandView.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.bandView.sizePolicy().hasHeightForWidth())
         self.bandView.setSizePolicy(sizePolicy)
         self.bandView.setMinimumSize(QtCore.QSize(525, 249))
         self.bandView.setObjectName("bandView")
@@ -163,7 +182,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.addzeroPush = QtWidgets.QToolButton(self.pzgroupBox)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/icons/add_zero.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/icons/add_zero.svg"),
+                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.addzeroPush.setIcon(icon)
         self.addzeroPush.setIconSize(QtCore.QSize(16, 16))
         self.addzeroPush.setCheckable(True)
@@ -171,21 +191,24 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.addzeroPush)
         self.addpolePush = QtWidgets.QToolButton(self.pzgroupBox)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/icons/add_pole.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/icons/add_pole.svg"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.addpolePush.setIcon(icon1)
         self.addpolePush.setCheckable(True)
         self.addpolePush.setObjectName("addpolePush")
         self.verticalLayout_3.addWidget(self.addpolePush)
         self.delPush = QtWidgets.QToolButton(self.pzgroupBox)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/icons/remove_red.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/icons/remove_red.svg"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.delPush.setIcon(icon2)
         self.delPush.setCheckable(True)
         self.delPush.setObjectName("delPush")
         self.verticalLayout_3.addWidget(self.delPush)
         self.conjPush = QtWidgets.QToolButton(self.pzgroupBox)
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/icons/conjugate.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/icons/conjugate.svg"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.conjPush.setIcon(icon3)
         self.conjPush.setIconSize(QtCore.QSize(16, 16))
         self.conjPush.setCheckable(True)
@@ -193,10 +216,12 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.conjPush)
         self.gridLayout_2.addWidget(self.pzgroupBox, 0, 2, 1, 1)
         self.pzPlot = PzPlot(self.poleZero)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pzPlot.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.pzPlot.sizePolicy().hasHeightForWidth())
         self.pzPlot.setSizePolicy(sizePolicy)
         self.pzPlot.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.pzPlot.setFrameShadow(QtWidgets.QFrame.Sunken)
@@ -263,34 +288,41 @@ class Ui_MainWindow(object):
         self.sysParamsBox.setGeometry(QtCore.QRect(10, 390, 161, 91))
         self.sysParamsBox.setObjectName("sysParamsBox")
         self.formLayout_4 = QtWidgets.QFormLayout(self.sysParamsBox)
-        self.formLayout_4.setFieldGrowthPolicy(QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_4.setFieldGrowthPolicy(
+            QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout_4.setObjectName("formLayout_4")
         self.nfftLabel = QtWidgets.QLabel(self.sysParamsBox)
         self.nfftLabel.setMinimumSize(QtCore.QSize(150, 0))
         self.nfftLabel.setObjectName("nfftLabel")
-        self.formLayout_4.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.nfftLabel)
+        self.formLayout_4.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.nfftLabel)
         self.nfftEdit = QtWidgets.QLineEdit(self.sysParamsBox)
         self.nfftEdit.setObjectName("nfftEdit")
-        self.formLayout_4.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.nfftEdit)
+        self.formLayout_4.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.nfftEdit)
         self.groupSpecs.raise_()
         self.responseBox.raise_()
         self.sysParamsBox.raise_()
         self.horizontalLayout.addWidget(self.quickFrame)
         self.stackedWindows.addWidget(self.classic)
         self.modern = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.modern.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.modern.sizePolicy().hasHeightForWidth())
         self.modern.setSizePolicy(sizePolicy)
         self.modern.setObjectName("modern")
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.modern)
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.splitter_3 = QtWidgets.QSplitter(self.modern)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.splitter_3.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.splitter_3.sizePolicy().hasHeightForWidth())
         self.splitter_3.setSizePolicy(sizePolicy)
         self.splitter_3.setOrientation(QtCore.Qt.Vertical)
         self.splitter_3.setObjectName("splitter_3")
@@ -301,10 +333,12 @@ class Ui_MainWindow(object):
         self.mfreqTabgroup.setTabsClosable(False)
         self.mfreqTabgroup.setObjectName("mfreqTabgroup")
         self.mfreqTab = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.mfreqTab.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.mfreqTab.sizePolicy().hasHeightForWidth())
         self.mfreqTab.setSizePolicy(sizePolicy)
         self.mfreqTab.setObjectName("mfreqTab")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.mfreqTab)
@@ -322,7 +356,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.mfmagPush = QtWidgets.QToolButton(self.mfgroupBox)
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/icons/mag_response.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/icons/mag_response.svg"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mfmagPush.setIcon(icon4)
         self.mfmagPush.setIconSize(QtCore.QSize(16, 16))
         self.mfmagPush.setCheckable(False)
@@ -330,7 +365,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.mfmagPush)
         self.mfphasePush = QtWidgets.QToolButton(self.mfgroupBox)
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/icons/phase_response.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(":/icons/phase_response.svg"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mfphasePush.setIcon(icon5)
         self.mfphasePush.setIconSize(QtCore.QSize(16, 16))
         self.mfphasePush.setCheckable(False)
@@ -338,7 +374,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.mfphasePush)
         self.mfgpdlyPush = QtWidgets.QToolButton(self.mfgroupBox)
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/icons/group_delay.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(":/icons/group_delay.svg"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mfgpdlyPush.setIcon(icon6)
         self.mfgpdlyPush.setIconSize(QtCore.QSize(16, 16))
         self.mfgpdlyPush.setCheckable(False)
@@ -346,7 +383,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.mfgpdlyPush)
         self.mfphdlyPush = QtWidgets.QToolButton(self.mfgroupBox)
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(":/icons/phase_delay.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon7.addPixmap(QtGui.QPixmap(":/icons/phase_delay.svg"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mfphdlyPush.setIcon(icon7)
         self.mfphdlyPush.setIconSize(QtCore.QSize(16, 16))
         self.mfphdlyPush.setCheckable(False)
@@ -354,7 +392,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.mfphdlyPush)
         self.mfoverlayPush = QtWidgets.QToolButton(self.mfgroupBox)
         icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(":/icons/overlay.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon8.addPixmap(QtGui.QPixmap(":/icons/overlay.svg"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mfoverlayPush.setIcon(icon8)
         self.mfoverlayPush.setIconSize(QtCore.QSize(16, 16))
         self.mfoverlayPush.setCheckable(True)
@@ -365,10 +404,12 @@ class Ui_MainWindow(object):
         self.mtimeTabgroup = QtWidgets.QTabWidget(self.splitter_2)
         self.mtimeTabgroup.setObjectName("mtimeTabgroup")
         self.mtimeTab = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.mtimeTab.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.mtimeTab.sizePolicy().hasHeightForWidth())
         self.mtimeTab.setSizePolicy(sizePolicy)
         self.mtimeTab.setObjectName("mtimeTab")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.mtimeTab)
@@ -386,7 +427,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.mttapsPush = QtWidgets.QToolButton(self.mtgroupBox)
         icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap(":/icons/filtr_taps.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon9.addPixmap(QtGui.QPixmap(":/icons/filtr_taps.svg"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mttapsPush.setIcon(icon9)
         self.mttapsPush.setIconSize(QtCore.QSize(16, 16))
         self.mttapsPush.setCheckable(False)
@@ -394,7 +436,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.addWidget(self.mttapsPush)
         self.mtstepPush = QtWidgets.QToolButton(self.mtgroupBox)
         icon10 = QtGui.QIcon()
-        icon10.addPixmap(QtGui.QPixmap(":/icons/step_response.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon10.addPixmap(QtGui.QPixmap(":/icons/step_response.svg"),
+                         QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mtstepPush.setIcon(icon10)
         self.mtstepPush.setIconSize(QtCore.QSize(16, 16))
         self.mtstepPush.setCheckable(False)
@@ -402,7 +445,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.addWidget(self.mtstepPush)
         self.mtimpPush = QtWidgets.QToolButton(self.mtgroupBox)
         icon11 = QtGui.QIcon()
-        icon11.addPixmap(QtGui.QPixmap(":/icons/impulse.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon11.addPixmap(QtGui.QPixmap(":/icons/impulse.svg"),
+                         QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mtimpPush.setIcon(icon11)
         self.mtimpPush.setIconSize(QtCore.QSize(16, 16))
         self.mtimpPush.setCheckable(False)
@@ -411,10 +455,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addWidget(self.mtgroupBox)
         self.mtimeTabgroup.addTab(self.mtimeTab, "")
         self.mfilterspecView = QtWidgets.QTabWidget(self.splitter_3)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.mfilterspecView.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.mfilterspecView.sizePolicy().hasHeightForWidth())
         self.mfilterspecView.setSizePolicy(sizePolicy)
         self.mfilterspecView.setMinimumSize(QtCore.QSize(0, 100))
         self.mfilterspecView.setBaseSize(QtCore.QSize(0, 100))
@@ -422,19 +468,23 @@ class Ui_MainWindow(object):
         self.mfilterspecView.setTabsClosable(False)
         self.mfilterspecView.setObjectName("mfilterspecView")
         self.mbandDiagram = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.mbandDiagram.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.mbandDiagram.sizePolicy().hasHeightForWidth())
         self.mbandDiagram.setSizePolicy(sizePolicy)
         self.mbandDiagram.setObjectName("mbandDiagram")
         self.horizontalLayout_15 = QtWidgets.QHBoxLayout(self.mbandDiagram)
         self.horizontalLayout_15.setObjectName("horizontalLayout_15")
         self.mbandView = BandGraphicsView(self.mbandDiagram)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(1)
-        sizePolicy.setHeightForWidth(self.mbandView.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.mbandView.sizePolicy().hasHeightForWidth())
         self.mbandView.setSizePolicy(sizePolicy)
         self.mbandView.setMinimumSize(QtCore.QSize(525, 249))
         self.mbandView.setObjectName("mbandView")
@@ -479,10 +529,12 @@ class Ui_MainWindow(object):
         self.mpzstatusBar.setObjectName("mpzstatusBar")
         self.gridLayout_3.addWidget(self.mpzstatusBar, 1, 0, 1, 3)
         self.mpzPlot = PzPlot(self.mpoleZero)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.mpzPlot.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.mpzPlot.sizePolicy().hasHeightForWidth())
         self.mpzPlot.setSizePolicy(sizePolicy)
         self.mpzPlot.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.mpzPlot.setFrameShadow(QtWidgets.QFrame.Sunken)
@@ -561,54 +613,68 @@ class Ui_MainWindow(object):
         self.globalParamsBox.setTitle("")
         self.globalParamsBox.setObjectName("globalParamsBox")
         self.formLayout_12 = QtWidgets.QFormLayout(self.globalParamsBox)
-        self.formLayout_12.setFieldGrowthPolicy(QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_12.setFieldGrowthPolicy(
+            QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout_12.setObjectName("formLayout_12")
         self.sampleRateLabel = QtWidgets.QLabel(self.globalParamsBox)
         self.sampleRateLabel.setMaximumSize(QtCore.QSize(16777215, 30))
         self.sampleRateLabel.setObjectName("sampleRateLabel")
-        self.formLayout_12.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.sampleRateLabel)
+        self.formLayout_12.setWidget(
+            0, QtWidgets.QFormLayout.LabelRole, self.sampleRateLabel)
         self.sampleRateEdit = QtWidgets.QLineEdit(self.globalParamsBox)
         self.sampleRateEdit.setMaximumSize(QtCore.QSize(16777215, 30))
         self.sampleRateEdit.setObjectName("sampleRateEdit")
-        self.formLayout_12.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.sampleRateEdit)
+        self.formLayout_12.setWidget(
+            0, QtWidgets.QFormLayout.FieldRole, self.sampleRateEdit)
         self.filterGainLabel = QtWidgets.QLabel(self.globalParamsBox)
         self.filterGainLabel.setObjectName("filterGainLabel")
-        self.formLayout_12.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.filterGainLabel)
+        self.formLayout_12.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.filterGainLabel)
         self.filterGainEdit = QtWidgets.QLineEdit(self.globalParamsBox)
         self.filterGainEdit.setObjectName("filterGainEdit")
-        self.formLayout_12.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.filterGainEdit)
+        self.formLayout_12.setWidget(
+            1, QtWidgets.QFormLayout.FieldRole, self.filterGainEdit)
         self.verticalLayout.addWidget(self.globalParamsBox)
         self.filterTypeWidget = QtWidgets.QStackedWidget(self.filterFrame)
         self.filterTypeWidget.setObjectName("filterTypeWidget")
         self.firlpfPage = QtWidgets.QWidget()
         self.firlpfPage.setObjectName("firlpfPage")
         self.formLayout = QtWidgets.QFormLayout(self.firlpfPage)
-        self.formLayout.setFieldGrowthPolicy(QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout.setFieldGrowthPolicy(
+            QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout.setObjectName("formLayout")
         self.endofLpfPassBandLabel = QtWidgets.QLabel(self.firlpfPage)
         self.endofLpfPassBandLabel.setObjectName("endofLpfPassBandLabel")
-        self.formLayout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.endofLpfPassBandLabel)
+        self.formLayout.setWidget(
+            0, QtWidgets.QFormLayout.LabelRole, self.endofLpfPassBandLabel)
         self.endofLpfPassBandEdit = QtWidgets.QLineEdit(self.firlpfPage)
         self.endofLpfPassBandEdit.setObjectName("endofLpfPassBandEdit")
-        self.formLayout.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.endofLpfPassBandEdit)
+        self.formLayout.setWidget(
+            0, QtWidgets.QFormLayout.FieldRole, self.endofLpfPassBandEdit)
         self.startofLpfStopBandLabel = QtWidgets.QLabel(self.firlpfPage)
         self.startofLpfStopBandLabel.setObjectName("startofLpfStopBandLabel")
-        self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.startofLpfStopBandLabel)
+        self.formLayout.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.startofLpfStopBandLabel)
         self.startofLpfStopBandEdit = QtWidgets.QLineEdit(self.firlpfPage)
         self.startofLpfStopBandEdit.setObjectName("startofLpfStopBandEdit")
-        self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.startofLpfStopBandEdit)
+        self.formLayout.setWidget(
+            1, QtWidgets.QFormLayout.FieldRole, self.startofLpfStopBandEdit)
         self.lpfStopBandAttenLabel = QtWidgets.QLabel(self.firlpfPage)
         self.lpfStopBandAttenLabel.setObjectName("lpfStopBandAttenLabel")
-        self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lpfStopBandAttenLabel)
+        self.formLayout.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.lpfStopBandAttenLabel)
         self.lpfStopBandAttenEdit = QtWidgets.QLineEdit(self.firlpfPage)
         self.lpfStopBandAttenEdit.setObjectName("lpfStopBandAttenEdit")
-        self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.lpfStopBandAttenEdit)
+        self.formLayout.setWidget(
+            2, QtWidgets.QFormLayout.FieldRole, self.lpfStopBandAttenEdit)
         self.lpfPassBandRippleLabel = QtWidgets.QLabel(self.firlpfPage)
         self.lpfPassBandRippleLabel.setObjectName("lpfPassBandRippleLabel")
-        self.formLayout.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.lpfPassBandRippleLabel)
+        self.formLayout.setWidget(
+            3, QtWidgets.QFormLayout.LabelRole, self.lpfPassBandRippleLabel)
         self.lpfPassBandRippleEdit = QtWidgets.QLineEdit(self.firlpfPage)
         self.lpfPassBandRippleEdit.setObjectName("lpfPassBandRippleEdit")
-        self.formLayout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.lpfPassBandRippleEdit)
+        self.formLayout.setWidget(
+            3, QtWidgets.QFormLayout.FieldRole, self.lpfPassBandRippleEdit)
         self.filterTypeWidget.addWidget(self.firlpfPage)
         self.firbpfPage = QtWidgets.QWidget()
         self.firbpfPage.setObjectName("firbpfPage")
@@ -616,100 +682,130 @@ class Ui_MainWindow(object):
         self.formLayout_2.setObjectName("formLayout_2")
         self.startofBpfPassBandLabel = QtWidgets.QLabel(self.firbpfPage)
         self.startofBpfPassBandLabel.setObjectName("startofBpfPassBandLabel")
-        self.formLayout_2.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.startofBpfPassBandLabel)
+        self.formLayout_2.setWidget(
+            0, QtWidgets.QFormLayout.LabelRole, self.startofBpfPassBandLabel)
         self.startofBpfPassBandEdit = QtWidgets.QLineEdit(self.firbpfPage)
         self.startofBpfPassBandEdit.setObjectName("startofBpfPassBandEdit")
-        self.formLayout_2.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.startofBpfPassBandEdit)
+        self.formLayout_2.setWidget(
+            0, QtWidgets.QFormLayout.FieldRole, self.startofBpfPassBandEdit)
         self.endofBpfPassBandLabel = QtWidgets.QLabel(self.firbpfPage)
         self.endofBpfPassBandLabel.setObjectName("endofBpfPassBandLabel")
-        self.formLayout_2.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.endofBpfPassBandLabel)
+        self.formLayout_2.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.endofBpfPassBandLabel)
         self.endofBpfPassBandEdit = QtWidgets.QLineEdit(self.firbpfPage)
         self.endofBpfPassBandEdit.setObjectName("endofBpfPassBandEdit")
-        self.formLayout_2.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.endofBpfPassBandEdit)
+        self.formLayout_2.setWidget(
+            1, QtWidgets.QFormLayout.FieldRole, self.endofBpfPassBandEdit)
         self.bpfStopBandAttenEdit = QtWidgets.QLineEdit(self.firbpfPage)
         self.bpfStopBandAttenEdit.setObjectName("bpfStopBandAttenEdit")
-        self.formLayout_2.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.bpfStopBandAttenEdit)
+        self.formLayout_2.setWidget(
+            3, QtWidgets.QFormLayout.FieldRole, self.bpfStopBandAttenEdit)
         self.bpfStopBandAttenLabel = QtWidgets.QLabel(self.firbpfPage)
         self.bpfStopBandAttenLabel.setObjectName("bpfStopBandAttenLabel")
-        self.formLayout_2.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.bpfStopBandAttenLabel)
+        self.formLayout_2.setWidget(
+            3, QtWidgets.QFormLayout.LabelRole, self.bpfStopBandAttenLabel)
         self.bpfTransitionLabel = QtWidgets.QLabel(self.firbpfPage)
         self.bpfTransitionLabel.setObjectName("bpfTransitionLabel")
-        self.formLayout_2.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.bpfTransitionLabel)
+        self.formLayout_2.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.bpfTransitionLabel)
         self.bpfTransitionEdit = QtWidgets.QLineEdit(self.firbpfPage)
         self.bpfTransitionEdit.setObjectName("bpfTransitionEdit")
-        self.formLayout_2.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.bpfTransitionEdit)
+        self.formLayout_2.setWidget(
+            2, QtWidgets.QFormLayout.FieldRole, self.bpfTransitionEdit)
         self.bpfPassBandRippleEdit = QtWidgets.QLineEdit(self.firbpfPage)
         self.bpfPassBandRippleEdit.setObjectName("bpfPassBandRippleEdit")
-        self.formLayout_2.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.bpfPassBandRippleEdit)
+        self.formLayout_2.setWidget(
+            4, QtWidgets.QFormLayout.FieldRole, self.bpfPassBandRippleEdit)
         self.bpfPassBandRippleLabel = QtWidgets.QLabel(self.firbpfPage)
         self.bpfPassBandRippleLabel.setObjectName("bpfPassBandRippleLabel")
-        self.formLayout_2.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.bpfPassBandRippleLabel)
+        self.formLayout_2.setWidget(
+            4, QtWidgets.QFormLayout.LabelRole, self.bpfPassBandRippleLabel)
         self.filterTypeWidget.addWidget(self.firbpfPage)
         self.firbnfPage = QtWidgets.QWidget()
         self.firbnfPage.setObjectName("firbnfPage")
         self.formLayout_5 = QtWidgets.QFormLayout(self.firbnfPage)
-        self.formLayout_5.setFieldGrowthPolicy(QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_5.setFieldGrowthPolicy(
+            QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout_5.setObjectName("formLayout_5")
         self.startofBnfStopBandLabel = QtWidgets.QLabel(self.firbnfPage)
         self.startofBnfStopBandLabel.setObjectName("startofBnfStopBandLabel")
-        self.formLayout_5.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.startofBnfStopBandLabel)
+        self.formLayout_5.setWidget(
+            0, QtWidgets.QFormLayout.LabelRole, self.startofBnfStopBandLabel)
         self.startofBnfStopBandEdit = QtWidgets.QLineEdit(self.firbnfPage)
         self.startofBnfStopBandEdit.setObjectName("startofBnfStopBandEdit")
-        self.formLayout_5.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.startofBnfStopBandEdit)
+        self.formLayout_5.setWidget(
+            0, QtWidgets.QFormLayout.FieldRole, self.startofBnfStopBandEdit)
         self.endofBnfStopBandLabel = QtWidgets.QLabel(self.firbnfPage)
         self.endofBnfStopBandLabel.setObjectName("endofBnfStopBandLabel")
-        self.formLayout_5.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.endofBnfStopBandLabel)
+        self.formLayout_5.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.endofBnfStopBandLabel)
         self.endofBnfStopBandEdit = QtWidgets.QLineEdit(self.firbnfPage)
         self.endofBnfStopBandEdit.setObjectName("endofBnfStopBandEdit")
-        self.formLayout_5.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.endofBnfStopBandEdit)
+        self.formLayout_5.setWidget(
+            1, QtWidgets.QFormLayout.FieldRole, self.endofBnfStopBandEdit)
         self.bnfTransitionLabel = QtWidgets.QLabel(self.firbnfPage)
         self.bnfTransitionLabel.setObjectName("bnfTransitionLabel")
-        self.formLayout_5.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.bnfTransitionLabel)
+        self.formLayout_5.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.bnfTransitionLabel)
         self.bnfTransitionEdit = QtWidgets.QLineEdit(self.firbnfPage)
         self.bnfTransitionEdit.setObjectName("bnfTransitionEdit")
-        self.formLayout_5.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.bnfTransitionEdit)
+        self.formLayout_5.setWidget(
+            2, QtWidgets.QFormLayout.FieldRole, self.bnfTransitionEdit)
         self.bnfStopBandAttenLabel = QtWidgets.QLabel(self.firbnfPage)
         self.bnfStopBandAttenLabel.setObjectName("bnfStopBandAttenLabel")
-        self.formLayout_5.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.bnfStopBandAttenLabel)
+        self.formLayout_5.setWidget(
+            3, QtWidgets.QFormLayout.LabelRole, self.bnfStopBandAttenLabel)
         self.bnfStopBandAttenEdit = QtWidgets.QLineEdit(self.firbnfPage)
         self.bnfStopBandAttenEdit.setObjectName("bnfStopBandAttenEdit")
-        self.formLayout_5.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.bnfStopBandAttenEdit)
+        self.formLayout_5.setWidget(
+            3, QtWidgets.QFormLayout.FieldRole, self.bnfStopBandAttenEdit)
         self.bnfPassBandRippleLabel = QtWidgets.QLabel(self.firbnfPage)
         self.bnfPassBandRippleLabel.setObjectName("bnfPassBandRippleLabel")
-        self.formLayout_5.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.bnfPassBandRippleLabel)
+        self.formLayout_5.setWidget(
+            4, QtWidgets.QFormLayout.LabelRole, self.bnfPassBandRippleLabel)
         self.bnfPassBandRippleEdit = QtWidgets.QLineEdit(self.firbnfPage)
         self.bnfPassBandRippleEdit.setObjectName("bnfPassBandRippleEdit")
-        self.formLayout_5.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.bnfPassBandRippleEdit)
+        self.formLayout_5.setWidget(
+            4, QtWidgets.QFormLayout.FieldRole, self.bnfPassBandRippleEdit)
         self.filterTypeWidget.addWidget(self.firbnfPage)
         self.firhpfPage = QtWidgets.QWidget()
         self.firhpfPage.setObjectName("firhpfPage")
         self.formLayout_3 = QtWidgets.QFormLayout(self.firhpfPage)
-        self.formLayout_3.setFieldGrowthPolicy(QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_3.setFieldGrowthPolicy(
+            QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout_3.setObjectName("formLayout_3")
         self.endofHpfStopBandLabel = QtWidgets.QLabel(self.firhpfPage)
         self.endofHpfStopBandLabel.setObjectName("endofHpfStopBandLabel")
-        self.formLayout_3.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.endofHpfStopBandLabel)
+        self.formLayout_3.setWidget(
+            0, QtWidgets.QFormLayout.LabelRole, self.endofHpfStopBandLabel)
         self.endofHpfStopBandEdit = QtWidgets.QLineEdit(self.firhpfPage)
         self.endofHpfStopBandEdit.setObjectName("endofHpfStopBandEdit")
-        self.formLayout_3.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.endofHpfStopBandEdit)
+        self.formLayout_3.setWidget(
+            0, QtWidgets.QFormLayout.FieldRole, self.endofHpfStopBandEdit)
         self.startofHpfPassBandLabel = QtWidgets.QLabel(self.firhpfPage)
         self.startofHpfPassBandLabel.setObjectName("startofHpfPassBandLabel")
-        self.formLayout_3.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.startofHpfPassBandLabel)
+        self.formLayout_3.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.startofHpfPassBandLabel)
         self.startofHpfPassBandEdit = QtWidgets.QLineEdit(self.firhpfPage)
         self.startofHpfPassBandEdit.setObjectName("startofHpfPassBandEdit")
-        self.formLayout_3.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.startofHpfPassBandEdit)
+        self.formLayout_3.setWidget(
+            1, QtWidgets.QFormLayout.FieldRole, self.startofHpfPassBandEdit)
         self.hpfStopBandAttenLabel = QtWidgets.QLabel(self.firhpfPage)
         self.hpfStopBandAttenLabel.setObjectName("hpfStopBandAttenLabel")
-        self.formLayout_3.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.hpfStopBandAttenLabel)
+        self.formLayout_3.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.hpfStopBandAttenLabel)
         self.hpfStopBandAttenEdit = QtWidgets.QLineEdit(self.firhpfPage)
         self.hpfStopBandAttenEdit.setObjectName("hpfStopBandAttenEdit")
-        self.formLayout_3.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.hpfStopBandAttenEdit)
+        self.formLayout_3.setWidget(
+            2, QtWidgets.QFormLayout.FieldRole, self.hpfStopBandAttenEdit)
         self.hpfPassBandRippleLabel = QtWidgets.QLabel(self.firhpfPage)
         self.hpfPassBandRippleLabel.setObjectName("hpfPassBandRippleLabel")
-        self.formLayout_3.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.hpfPassBandRippleLabel)
+        self.formLayout_3.setWidget(
+            3, QtWidgets.QFormLayout.LabelRole, self.hpfPassBandRippleLabel)
         self.hpfPassBandRippleEdit = QtWidgets.QLineEdit(self.firhpfPage)
         self.hpfPassBandRippleEdit.setObjectName("hpfPassBandRippleEdit")
-        self.formLayout_3.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.hpfPassBandRippleEdit)
+        self.formLayout_3.setWidget(
+            3, QtWidgets.QFormLayout.FieldRole, self.hpfPassBandRippleEdit)
         self.filterTypeWidget.addWidget(self.firhpfPage)
         self.rrcPage = QtWidgets.QWidget()
         self.rrcPage.setObjectName("rrcPage")
@@ -717,22 +813,28 @@ class Ui_MainWindow(object):
         self.formLayout_6.setObjectName("formLayout_6")
         self.rrcSymbolRateLabel = QtWidgets.QLabel(self.rrcPage)
         self.rrcSymbolRateLabel.setObjectName("rrcSymbolRateLabel")
-        self.formLayout_6.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.rrcSymbolRateLabel)
+        self.formLayout_6.setWidget(
+            0, QtWidgets.QFormLayout.LabelRole, self.rrcSymbolRateLabel)
         self.rrcAlphaLabel = QtWidgets.QLabel(self.rrcPage)
         self.rrcAlphaLabel.setObjectName("rrcAlphaLabel")
-        self.formLayout_6.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.rrcAlphaLabel)
+        self.formLayout_6.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.rrcAlphaLabel)
         self.rrcNumTapsLabel = QtWidgets.QLabel(self.rrcPage)
         self.rrcNumTapsLabel.setObjectName("rrcNumTapsLabel")
-        self.formLayout_6.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.rrcNumTapsLabel)
+        self.formLayout_6.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.rrcNumTapsLabel)
         self.rrcSymbolRateEdit = QtWidgets.QLineEdit(self.rrcPage)
         self.rrcSymbolRateEdit.setObjectName("rrcSymbolRateEdit")
-        self.formLayout_6.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.rrcSymbolRateEdit)
+        self.formLayout_6.setWidget(
+            0, QtWidgets.QFormLayout.FieldRole, self.rrcSymbolRateEdit)
         self.rrcAlphaEdit = QtWidgets.QLineEdit(self.rrcPage)
         self.rrcAlphaEdit.setObjectName("rrcAlphaEdit")
-        self.formLayout_6.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.rrcAlphaEdit)
+        self.formLayout_6.setWidget(
+            1, QtWidgets.QFormLayout.FieldRole, self.rrcAlphaEdit)
         self.rrcNumTapsEdit = QtWidgets.QLineEdit(self.rrcPage)
         self.rrcNumTapsEdit.setObjectName("rrcNumTapsEdit")
-        self.formLayout_6.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.rrcNumTapsEdit)
+        self.formLayout_6.setWidget(
+            2, QtWidgets.QFormLayout.FieldRole, self.rrcNumTapsEdit)
         self.filterTypeWidget.addWidget(self.rrcPage)
         self.gausPage = QtWidgets.QWidget()
         self.gausPage.setObjectName("gausPage")
@@ -740,22 +842,28 @@ class Ui_MainWindow(object):
         self.formLayout_7.setObjectName("formLayout_7")
         self.gausSymbolRateLabel = QtWidgets.QLabel(self.gausPage)
         self.gausSymbolRateLabel.setObjectName("gausSymbolRateLabel")
-        self.formLayout_7.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.gausSymbolRateLabel)
+        self.formLayout_7.setWidget(
+            0, QtWidgets.QFormLayout.LabelRole, self.gausSymbolRateLabel)
         self.gausSymbolRateEdit = QtWidgets.QLineEdit(self.gausPage)
         self.gausSymbolRateEdit.setObjectName("gausSymbolRateEdit")
-        self.formLayout_7.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.gausSymbolRateEdit)
+        self.formLayout_7.setWidget(
+            0, QtWidgets.QFormLayout.FieldRole, self.gausSymbolRateEdit)
         self.gausBTLabel = QtWidgets.QLabel(self.gausPage)
         self.gausBTLabel.setObjectName("gausBTLabel")
-        self.formLayout_7.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.gausBTLabel)
+        self.formLayout_7.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.gausBTLabel)
         self.gausBTEdit = QtWidgets.QLineEdit(self.gausPage)
         self.gausBTEdit.setObjectName("gausBTEdit")
-        self.formLayout_7.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.gausBTEdit)
+        self.formLayout_7.setWidget(
+            1, QtWidgets.QFormLayout.FieldRole, self.gausBTEdit)
         self.gausNumTapsLabel = QtWidgets.QLabel(self.gausPage)
         self.gausNumTapsLabel.setObjectName("gausNumTapsLabel")
-        self.formLayout_7.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.gausNumTapsLabel)
+        self.formLayout_7.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.gausNumTapsLabel)
         self.gausNumTapsEdit = QtWidgets.QLineEdit(self.gausPage)
         self.gausNumTapsEdit.setObjectName("gausNumTapsEdit")
-        self.formLayout_7.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.gausNumTapsEdit)
+        self.formLayout_7.setWidget(
+            2, QtWidgets.QFormLayout.FieldRole, self.gausNumTapsEdit)
         self.filterTypeWidget.addWidget(self.gausPage)
         self.iirlpfPage = QtWidgets.QWidget()
         self.iirlpfPage.setObjectName("iirlpfPage")
@@ -763,28 +871,39 @@ class Ui_MainWindow(object):
         self.formLayout_15.setObjectName("formLayout_15")
         self.iirendofLpfPassBandLabel = QtWidgets.QLabel(self.iirlpfPage)
         self.iirendofLpfPassBandLabel.setObjectName("iirendofLpfPassBandLabel")
-        self.formLayout_15.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.iirendofLpfPassBandLabel)
+        self.formLayout_15.setWidget(
+            0, QtWidgets.QFormLayout.LabelRole, self.iirendofLpfPassBandLabel)
         self.iirendofLpfPassBandEdit = QtWidgets.QLineEdit(self.iirlpfPage)
         self.iirendofLpfPassBandEdit.setObjectName("iirendofLpfPassBandEdit")
-        self.formLayout_15.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.iirendofLpfPassBandEdit)
+        self.formLayout_15.setWidget(
+            0, QtWidgets.QFormLayout.FieldRole, self.iirendofLpfPassBandEdit)
         self.iirstartofLpfStopBandLabel = QtWidgets.QLabel(self.iirlpfPage)
-        self.iirstartofLpfStopBandLabel.setObjectName("iirstartofLpfStopBandLabel")
-        self.formLayout_15.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.iirstartofLpfStopBandLabel)
+        self.iirstartofLpfStopBandLabel.setObjectName(
+            "iirstartofLpfStopBandLabel")
+        self.formLayout_15.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.iirstartofLpfStopBandLabel)
         self.iirstartofLpfStopBandEdit = QtWidgets.QLineEdit(self.iirlpfPage)
-        self.iirstartofLpfStopBandEdit.setObjectName("iirstartofLpfStopBandEdit")
-        self.formLayout_15.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.iirstartofLpfStopBandEdit)
+        self.iirstartofLpfStopBandEdit.setObjectName(
+            "iirstartofLpfStopBandEdit")
+        self.formLayout_15.setWidget(
+            1, QtWidgets.QFormLayout.FieldRole, self.iirstartofLpfStopBandEdit)
         self.iirLpfPassBandAttenLabel = QtWidgets.QLabel(self.iirlpfPage)
         self.iirLpfPassBandAttenLabel.setObjectName("iirLpfPassBandAttenLabel")
-        self.formLayout_15.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.iirLpfPassBandAttenLabel)
+        self.formLayout_15.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.iirLpfPassBandAttenLabel)
         self.iirLpfPassBandAttenEdit = QtWidgets.QLineEdit(self.iirlpfPage)
         self.iirLpfPassBandAttenEdit.setObjectName("iirLpfPassBandAttenEdit")
-        self.formLayout_15.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.iirLpfPassBandAttenEdit)
+        self.formLayout_15.setWidget(
+            2, QtWidgets.QFormLayout.FieldRole, self.iirLpfPassBandAttenEdit)
         self.iirLpfStopBandRippleLabel = QtWidgets.QLabel(self.iirlpfPage)
-        self.iirLpfStopBandRippleLabel.setObjectName("iirLpfStopBandRippleLabel")
-        self.formLayout_15.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.iirLpfStopBandRippleLabel)
+        self.iirLpfStopBandRippleLabel.setObjectName(
+            "iirLpfStopBandRippleLabel")
+        self.formLayout_15.setWidget(
+            3, QtWidgets.QFormLayout.LabelRole, self.iirLpfStopBandRippleLabel)
         self.iirLpfStopBandRippleEdit = QtWidgets.QLineEdit(self.iirlpfPage)
         self.iirLpfStopBandRippleEdit.setObjectName("iirLpfStopBandRippleEdit")
-        self.formLayout_15.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.iirLpfStopBandRippleEdit)
+        self.formLayout_15.setWidget(
+            3, QtWidgets.QFormLayout.FieldRole, self.iirLpfStopBandRippleEdit)
         self.filterTypeWidget.addWidget(self.iirlpfPage)
         self.iirhpfPage = QtWidgets.QWidget()
         self.iirhpfPage.setObjectName("iirhpfPage")
@@ -792,170 +911,232 @@ class Ui_MainWindow(object):
         self.formLayout_9.setObjectName("formLayout_9")
         self.iirendofHpfStopBandLabel = QtWidgets.QLabel(self.iirhpfPage)
         self.iirendofHpfStopBandLabel.setObjectName("iirendofHpfStopBandLabel")
-        self.formLayout_9.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.iirendofHpfStopBandLabel)
+        self.formLayout_9.setWidget(
+            0, QtWidgets.QFormLayout.LabelRole, self.iirendofHpfStopBandLabel)
         self.iirendofHpfStopBandEdit = QtWidgets.QLineEdit(self.iirhpfPage)
         self.iirendofHpfStopBandEdit.setObjectName("iirendofHpfStopBandEdit")
-        self.formLayout_9.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.iirendofHpfStopBandEdit)
+        self.formLayout_9.setWidget(
+            0, QtWidgets.QFormLayout.FieldRole, self.iirendofHpfStopBandEdit)
         self.iirstartofHpfPassBandLabel = QtWidgets.QLabel(self.iirhpfPage)
-        self.iirstartofHpfPassBandLabel.setObjectName("iirstartofHpfPassBandLabel")
-        self.formLayout_9.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.iirstartofHpfPassBandLabel)
+        self.iirstartofHpfPassBandLabel.setObjectName(
+            "iirstartofHpfPassBandLabel")
+        self.formLayout_9.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.iirstartofHpfPassBandLabel)
         self.iirstartofHpfPassBandEdit = QtWidgets.QLineEdit(self.iirhpfPage)
-        self.iirstartofHpfPassBandEdit.setObjectName("iirstartofHpfPassBandEdit")
-        self.formLayout_9.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.iirstartofHpfPassBandEdit)
+        self.iirstartofHpfPassBandEdit.setObjectName(
+            "iirstartofHpfPassBandEdit")
+        self.formLayout_9.setWidget(
+            1, QtWidgets.QFormLayout.FieldRole, self.iirstartofHpfPassBandEdit)
         self.iirHpfPassBandAttenLabel = QtWidgets.QLabel(self.iirhpfPage)
         self.iirHpfPassBandAttenLabel.setObjectName("iirHpfPassBandAttenLabel")
-        self.formLayout_9.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.iirHpfPassBandAttenLabel)
+        self.formLayout_9.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.iirHpfPassBandAttenLabel)
         self.iirHpfPassBandAttenEdit = QtWidgets.QLineEdit(self.iirhpfPage)
         self.iirHpfPassBandAttenEdit.setObjectName("iirHpfPassBandAttenEdit")
-        self.formLayout_9.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.iirHpfPassBandAttenEdit)
+        self.formLayout_9.setWidget(
+            2, QtWidgets.QFormLayout.FieldRole, self.iirHpfPassBandAttenEdit)
         self.iirHpfStopBandRippleLabel = QtWidgets.QLabel(self.iirhpfPage)
-        self.iirHpfStopBandRippleLabel.setObjectName("iirHpfStopBandRippleLabel")
-        self.formLayout_9.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.iirHpfStopBandRippleLabel)
+        self.iirHpfStopBandRippleLabel.setObjectName(
+            "iirHpfStopBandRippleLabel")
+        self.formLayout_9.setWidget(
+            3, QtWidgets.QFormLayout.LabelRole, self.iirHpfStopBandRippleLabel)
         self.iirHpfStopBandRippleEdit = QtWidgets.QLineEdit(self.iirhpfPage)
         self.iirHpfStopBandRippleEdit.setObjectName("iirHpfStopBandRippleEdit")
-        self.formLayout_9.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.iirHpfStopBandRippleEdit)
+        self.formLayout_9.setWidget(
+            3, QtWidgets.QFormLayout.FieldRole, self.iirHpfStopBandRippleEdit)
         self.filterTypeWidget.addWidget(self.iirhpfPage)
         self.iirbpfPage = QtWidgets.QWidget()
         self.iirbpfPage.setObjectName("iirbpfPage")
         self.formLayout_10 = QtWidgets.QFormLayout(self.iirbpfPage)
         self.formLayout_10.setObjectName("formLayout_10")
         self.iirendofBpfStopBandLabel1 = QtWidgets.QLabel(self.iirbpfPage)
-        self.iirendofBpfStopBandLabel1.setObjectName("iirendofBpfStopBandLabel1")
-        self.formLayout_10.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.iirendofBpfStopBandLabel1)
+        self.iirendofBpfStopBandLabel1.setObjectName(
+            "iirendofBpfStopBandLabel1")
+        self.formLayout_10.setWidget(
+            0, QtWidgets.QFormLayout.LabelRole, self.iirendofBpfStopBandLabel1)
         self.iirendofBpfStopBandEdit1 = QtWidgets.QLineEdit(self.iirbpfPage)
         self.iirendofBpfStopBandEdit1.setObjectName("iirendofBpfStopBandEdit1")
-        self.formLayout_10.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.iirendofBpfStopBandEdit1)
+        self.formLayout_10.setWidget(
+            0, QtWidgets.QFormLayout.FieldRole, self.iirendofBpfStopBandEdit1)
         self.iirstartofBpfPassBandLabel = QtWidgets.QLabel(self.iirbpfPage)
-        self.iirstartofBpfPassBandLabel.setObjectName("iirstartofBpfPassBandLabel")
-        self.formLayout_10.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.iirstartofBpfPassBandLabel)
+        self.iirstartofBpfPassBandLabel.setObjectName(
+            "iirstartofBpfPassBandLabel")
+        self.formLayout_10.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.iirstartofBpfPassBandLabel)
         self.iirstartofBpfPassBandEdit = QtWidgets.QLineEdit(self.iirbpfPage)
-        self.iirstartofBpfPassBandEdit.setObjectName("iirstartofBpfPassBandEdit")
-        self.formLayout_10.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.iirstartofBpfPassBandEdit)
+        self.iirstartofBpfPassBandEdit.setObjectName(
+            "iirstartofBpfPassBandEdit")
+        self.formLayout_10.setWidget(
+            1, QtWidgets.QFormLayout.FieldRole, self.iirstartofBpfPassBandEdit)
         self.iirendofBpfPassBandLabel = QtWidgets.QLabel(self.iirbpfPage)
         self.iirendofBpfPassBandLabel.setObjectName("iirendofBpfPassBandLabel")
-        self.formLayout_10.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.iirendofBpfPassBandLabel)
+        self.formLayout_10.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.iirendofBpfPassBandLabel)
         self.iirendofBpfPassBandEdit = QtWidgets.QLineEdit(self.iirbpfPage)
         self.iirendofBpfPassBandEdit.setObjectName("iirendofBpfPassBandEdit")
-        self.formLayout_10.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.iirendofBpfPassBandEdit)
+        self.formLayout_10.setWidget(
+            2, QtWidgets.QFormLayout.FieldRole, self.iirendofBpfPassBandEdit)
         self.iirstartofBpfStopBandLabel2 = QtWidgets.QLabel(self.iirbpfPage)
-        self.iirstartofBpfStopBandLabel2.setObjectName("iirstartofBpfStopBandLabel2")
-        self.formLayout_10.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.iirstartofBpfStopBandLabel2)
+        self.iirstartofBpfStopBandLabel2.setObjectName(
+            "iirstartofBpfStopBandLabel2")
+        self.formLayout_10.setWidget(
+            3, QtWidgets.QFormLayout.LabelRole, self.iirstartofBpfStopBandLabel2)
         self.iirstartofBpfStopBandEdit2 = QtWidgets.QLineEdit(self.iirbpfPage)
-        self.iirstartofBpfStopBandEdit2.setObjectName("iirstartofBpfStopBandEdit2")
-        self.formLayout_10.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.iirstartofBpfStopBandEdit2)
+        self.iirstartofBpfStopBandEdit2.setObjectName(
+            "iirstartofBpfStopBandEdit2")
+        self.formLayout_10.setWidget(
+            3, QtWidgets.QFormLayout.FieldRole, self.iirstartofBpfStopBandEdit2)
         self.iirBpfPassBandAttenLabel = QtWidgets.QLabel(self.iirbpfPage)
         self.iirBpfPassBandAttenLabel.setObjectName("iirBpfPassBandAttenLabel")
-        self.formLayout_10.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.iirBpfPassBandAttenLabel)
+        self.formLayout_10.setWidget(
+            4, QtWidgets.QFormLayout.LabelRole, self.iirBpfPassBandAttenLabel)
         self.iirBpfPassBandAttenEdit = QtWidgets.QLineEdit(self.iirbpfPage)
         self.iirBpfPassBandAttenEdit.setObjectName("iirBpfPassBandAttenEdit")
-        self.formLayout_10.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.iirBpfPassBandAttenEdit)
+        self.formLayout_10.setWidget(
+            4, QtWidgets.QFormLayout.FieldRole, self.iirBpfPassBandAttenEdit)
         self.iirBpfStopBandRippleLabel = QtWidgets.QLabel(self.iirbpfPage)
-        self.iirBpfStopBandRippleLabel.setObjectName("iirBpfStopBandRippleLabel")
-        self.formLayout_10.setWidget(5, QtWidgets.QFormLayout.LabelRole, self.iirBpfStopBandRippleLabel)
+        self.iirBpfStopBandRippleLabel.setObjectName(
+            "iirBpfStopBandRippleLabel")
+        self.formLayout_10.setWidget(
+            5, QtWidgets.QFormLayout.LabelRole, self.iirBpfStopBandRippleLabel)
         self.iirBpfStopBandRippleEdit = QtWidgets.QLineEdit(self.iirbpfPage)
         self.iirBpfStopBandRippleEdit.setObjectName("iirBpfStopBandRippleEdit")
-        self.formLayout_10.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.iirBpfStopBandRippleEdit)
+        self.formLayout_10.setWidget(
+            5, QtWidgets.QFormLayout.FieldRole, self.iirBpfStopBandRippleEdit)
         self.filterTypeWidget.addWidget(self.iirbpfPage)
         self.iirbsfPage = QtWidgets.QWidget()
         self.iirbsfPage.setObjectName("iirbsfPage")
         self.formLayout_11 = QtWidgets.QFormLayout(self.iirbsfPage)
         self.formLayout_11.setObjectName("formLayout_11")
         self.iirendofBsfPassBandLabel1 = QtWidgets.QLabel(self.iirbsfPage)
-        self.iirendofBsfPassBandLabel1.setObjectName("iirendofBsfPassBandLabel1")
-        self.formLayout_11.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.iirendofBsfPassBandLabel1)
+        self.iirendofBsfPassBandLabel1.setObjectName(
+            "iirendofBsfPassBandLabel1")
+        self.formLayout_11.setWidget(
+            0, QtWidgets.QFormLayout.LabelRole, self.iirendofBsfPassBandLabel1)
         self.iirendofBsfPassBandEdit1 = QtWidgets.QLineEdit(self.iirbsfPage)
         self.iirendofBsfPassBandEdit1.setObjectName("iirendofBsfPassBandEdit1")
-        self.formLayout_11.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.iirendofBsfPassBandEdit1)
+        self.formLayout_11.setWidget(
+            0, QtWidgets.QFormLayout.FieldRole, self.iirendofBsfPassBandEdit1)
         self.iirstartofBsfStopBandLabel = QtWidgets.QLabel(self.iirbsfPage)
-        self.iirstartofBsfStopBandLabel.setObjectName("iirstartofBsfStopBandLabel")
-        self.formLayout_11.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.iirstartofBsfStopBandLabel)
+        self.iirstartofBsfStopBandLabel.setObjectName(
+            "iirstartofBsfStopBandLabel")
+        self.formLayout_11.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.iirstartofBsfStopBandLabel)
         self.iirstartofBsfStopBandEdit = QtWidgets.QLineEdit(self.iirbsfPage)
-        self.iirstartofBsfStopBandEdit.setObjectName("iirstartofBsfStopBandEdit")
-        self.formLayout_11.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.iirstartofBsfStopBandEdit)
+        self.iirstartofBsfStopBandEdit.setObjectName(
+            "iirstartofBsfStopBandEdit")
+        self.formLayout_11.setWidget(
+            1, QtWidgets.QFormLayout.FieldRole, self.iirstartofBsfStopBandEdit)
         self.iirendofBsfStopBandLabel = QtWidgets.QLabel(self.iirbsfPage)
         self.iirendofBsfStopBandLabel.setObjectName("iirendofBsfStopBandLabel")
-        self.formLayout_11.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.iirendofBsfStopBandLabel)
+        self.formLayout_11.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.iirendofBsfStopBandLabel)
         self.iirendofBsfStopBandEdit = QtWidgets.QLineEdit(self.iirbsfPage)
         self.iirendofBsfStopBandEdit.setObjectName("iirendofBsfStopBandEdit")
-        self.formLayout_11.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.iirendofBsfStopBandEdit)
+        self.formLayout_11.setWidget(
+            2, QtWidgets.QFormLayout.FieldRole, self.iirendofBsfStopBandEdit)
         self.iirstartofBsfPassBandLabel2 = QtWidgets.QLabel(self.iirbsfPage)
-        self.iirstartofBsfPassBandLabel2.setObjectName("iirstartofBsfPassBandLabel2")
-        self.formLayout_11.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.iirstartofBsfPassBandLabel2)
+        self.iirstartofBsfPassBandLabel2.setObjectName(
+            "iirstartofBsfPassBandLabel2")
+        self.formLayout_11.setWidget(
+            3, QtWidgets.QFormLayout.LabelRole, self.iirstartofBsfPassBandLabel2)
         self.iirstartofBsfPassBandEdit2 = QtWidgets.QLineEdit(self.iirbsfPage)
-        self.iirstartofBsfPassBandEdit2.setObjectName("iirstartofBsfPassBandEdit2")
-        self.formLayout_11.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.iirstartofBsfPassBandEdit2)
+        self.iirstartofBsfPassBandEdit2.setObjectName(
+            "iirstartofBsfPassBandEdit2")
+        self.formLayout_11.setWidget(
+            3, QtWidgets.QFormLayout.FieldRole, self.iirstartofBsfPassBandEdit2)
         self.iirBsfPassBandAttenLabel = QtWidgets.QLabel(self.iirbsfPage)
         self.iirBsfPassBandAttenLabel.setObjectName("iirBsfPassBandAttenLabel")
-        self.formLayout_11.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.iirBsfPassBandAttenLabel)
+        self.formLayout_11.setWidget(
+            4, QtWidgets.QFormLayout.LabelRole, self.iirBsfPassBandAttenLabel)
         self.iirBsfPassBandAttenEdit = QtWidgets.QLineEdit(self.iirbsfPage)
         self.iirBsfPassBandAttenEdit.setObjectName("iirBsfPassBandAttenEdit")
-        self.formLayout_11.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.iirBsfPassBandAttenEdit)
+        self.formLayout_11.setWidget(
+            4, QtWidgets.QFormLayout.FieldRole, self.iirBsfPassBandAttenEdit)
         self.iirBsfStopBandRippleLabel = QtWidgets.QLabel(self.iirbsfPage)
-        self.iirBsfStopBandRippleLabel.setObjectName("iirBsfStopBandRippleLabel")
-        self.formLayout_11.setWidget(5, QtWidgets.QFormLayout.LabelRole, self.iirBsfStopBandRippleLabel)
+        self.iirBsfStopBandRippleLabel.setObjectName(
+            "iirBsfStopBandRippleLabel")
+        self.formLayout_11.setWidget(
+            5, QtWidgets.QFormLayout.LabelRole, self.iirBsfStopBandRippleLabel)
         self.iirBsfStopBandRippleEdit = QtWidgets.QLineEdit(self.iirbsfPage)
         self.iirBsfStopBandRippleEdit.setObjectName("iirBsfStopBandRippleEdit")
-        self.formLayout_11.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.iirBsfStopBandRippleEdit)
+        self.formLayout_11.setWidget(
+            5, QtWidgets.QFormLayout.FieldRole, self.iirBsfStopBandRippleEdit)
         self.filterTypeWidget.addWidget(self.iirbsfPage)
         self.iirbesselPage = QtWidgets.QWidget()
         self.iirbesselPage.setObjectName("iirbesselPage")
         self.formLayout_13 = QtWidgets.QFormLayout(self.iirbesselPage)
-        self.formLayout_13.setFieldGrowthPolicy(QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_13.setFieldGrowthPolicy(
+            QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout_13.setObjectName("formLayout_13")
         self.besselordLabel = QtWidgets.QLabel(self.iirbesselPage)
         self.besselordLabel.setObjectName("besselordLabel")
-        self.formLayout_13.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.besselordLabel)
+        self.formLayout_13.setWidget(
+            0, QtWidgets.QFormLayout.LabelRole, self.besselordLabel)
         self.besselordEdit = QtWidgets.QLineEdit(self.iirbesselPage)
         self.besselordEdit.setObjectName("besselordEdit")
-        self.formLayout_13.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.besselordEdit)
+        self.formLayout_13.setWidget(
+            0, QtWidgets.QFormLayout.FieldRole, self.besselordEdit)
         self.iirbesselcritLabel1 = QtWidgets.QLabel(self.iirbesselPage)
         self.iirbesselcritLabel1.setObjectName("iirbesselcritLabel1")
-        self.formLayout_13.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.iirbesselcritLabel1)
+        self.formLayout_13.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.iirbesselcritLabel1)
         self.iirbesselcritEdit1 = QtWidgets.QLineEdit(self.iirbesselPage)
         self.iirbesselcritEdit1.setObjectName("iirbesselcritEdit1")
-        self.formLayout_13.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.iirbesselcritEdit1)
+        self.formLayout_13.setWidget(
+            1, QtWidgets.QFormLayout.FieldRole, self.iirbesselcritEdit1)
         self.iirbesselcritEdit2 = QtWidgets.QLineEdit(self.iirbesselPage)
         self.iirbesselcritEdit2.setObjectName("iirbesselcritEdit2")
-        self.formLayout_13.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.iirbesselcritEdit2)
+        self.formLayout_13.setWidget(
+            2, QtWidgets.QFormLayout.FieldRole, self.iirbesselcritEdit2)
         self.iirbesselcritLabel2 = QtWidgets.QLabel(self.iirbesselPage)
         self.iirbesselcritLabel2.setObjectName("iirbesselcritLabel2")
-        self.formLayout_13.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.iirbesselcritLabel2)
+        self.formLayout_13.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.iirbesselcritLabel2)
         self.filterTypeWidget.addWidget(self.iirbesselPage)
         self.firhbPage = QtWidgets.QWidget()
         self.firhbPage.setObjectName("firhbPage")
         self.formLayout_14 = QtWidgets.QFormLayout(self.firhbPage)
-        self.formLayout_14.setFieldGrowthPolicy(QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_14.setFieldGrowthPolicy(
+            QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout_14.setObjectName("formLayout_14")
         self.firhbordLabel = QtWidgets.QLabel(self.firhbPage)
         self.firhbordLabel.setObjectName("firhbordLabel")
-        self.formLayout_14.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.firhbordLabel)
+        self.formLayout_14.setWidget(
+            0, QtWidgets.QFormLayout.LabelRole, self.firhbordLabel)
         self.firhbordEdit = QtWidgets.QLineEdit(self.firhbPage)
         self.firhbordEdit.setObjectName("firhbordEdit")
-        self.formLayout_14.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.firhbordEdit)
+        self.formLayout_14.setWidget(
+            0, QtWidgets.QFormLayout.FieldRole, self.firhbordEdit)
         self.firhbtrEditLabel2 = QtWidgets.QLabel(self.firhbPage)
         self.firhbtrEditLabel2.setObjectName("firhbtrEditLabel2")
-        self.formLayout_14.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.firhbtrEditLabel2)
+        self.formLayout_14.setWidget(
+            2, QtWidgets.QFormLayout.LabelRole, self.firhbtrEditLabel2)
         self.firhbtrEdit = QtWidgets.QLineEdit(self.firhbPage)
         self.firhbtrEdit.setObjectName("firhbtrEdit")
-        self.formLayout_14.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.firhbtrEdit)
+        self.formLayout_14.setWidget(
+            2, QtWidgets.QFormLayout.FieldRole, self.firhbtrEdit)
         self.filterTypeWidget.addWidget(self.firhbPage)
         self.verticalLayout.addWidget(self.filterTypeWidget)
         self.filterPropsBox = QtWidgets.QGroupBox(self.filterFrame)
         self.filterPropsBox.setObjectName("filterPropsBox")
         self.formLayout_8 = QtWidgets.QFormLayout(self.filterPropsBox)
-        self.formLayout_8.setFieldGrowthPolicy(QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_8.setFieldGrowthPolicy(
+            QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout_8.setObjectName("formLayout_8")
         self.nTapsLabel = QtWidgets.QLabel(self.filterPropsBox)
         self.nTapsLabel.setMinimumSize(QtCore.QSize(150, 0))
         self.nTapsLabel.setObjectName("nTapsLabel")
-        self.formLayout_8.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.nTapsLabel)
+        self.formLayout_8.setWidget(
+            1, QtWidgets.QFormLayout.LabelRole, self.nTapsLabel)
         self.nTapsEdit = QtWidgets.QLabel(self.filterPropsBox)
         self.nTapsEdit.setMaximumSize(QtCore.QSize(100, 16777215))
         self.nTapsEdit.setFrameShape(QtWidgets.QFrame.Box)
         self.nTapsEdit.setFrameShadow(QtWidgets.QFrame.Raised)
         self.nTapsEdit.setText("")
         self.nTapsEdit.setObjectName("nTapsEdit")
-        self.formLayout_8.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.nTapsEdit)
+        self.formLayout_8.setWidget(
+            1, QtWidgets.QFormLayout.FieldRole, self.nTapsEdit)
         self.verticalLayout.addWidget(self.filterPropsBox)
         self.designButton = QtWidgets.QPushButton(self.filterFrame)
         self.designButton.setMinimumSize(QtCore.QSize(0, 0))
@@ -1049,7 +1230,8 @@ class Ui_MainWindow(object):
         self.actionFilter_Coefficients = QtWidgets.QAction(MainWindow)
         self.actionFilter_Coefficients.setCheckable(True)
         self.actionFilter_Coefficients.setChecked(True)
-        self.actionFilter_Coefficients.setObjectName("actionFilter_Coefficients")
+        self.actionFilter_Coefficients.setObjectName(
+            "actionFilter_Coefficients")
         self.actionDesign_widget = QtWidgets.QAction(MainWindow)
         self.actionDesign_widget.setCheckable(True)
         self.actionDesign_widget.setChecked(True)
@@ -1136,26 +1318,46 @@ class Ui_MainWindow(object):
         self.filterTypeWidget.setCurrentIndex(11)
         self.action_exit.triggered.connect(MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        MainWindow.setTabOrder(self.filterTypeComboBox, self.filterDesignTypeComboBox)
-        MainWindow.setTabOrder(self.filterDesignTypeComboBox, self.endofLpfPassBandEdit)
-        MainWindow.setTabOrder(self.endofLpfPassBandEdit, self.startofLpfStopBandEdit)
-        MainWindow.setTabOrder(self.startofLpfStopBandEdit, self.lpfStopBandAttenEdit)
-        MainWindow.setTabOrder(self.lpfStopBandAttenEdit, self.lpfPassBandRippleEdit)
-        MainWindow.setTabOrder(self.lpfPassBandRippleEdit, self.startofBpfPassBandEdit)
-        MainWindow.setTabOrder(self.startofBpfPassBandEdit, self.endofBpfPassBandEdit)
-        MainWindow.setTabOrder(self.endofBpfPassBandEdit, self.bpfTransitionEdit)
-        MainWindow.setTabOrder(self.bpfTransitionEdit, self.bpfStopBandAttenEdit)
-        MainWindow.setTabOrder(self.bpfStopBandAttenEdit, self.bpfPassBandRippleEdit)
-        MainWindow.setTabOrder(self.bpfPassBandRippleEdit, self.startofBnfStopBandEdit)
-        MainWindow.setTabOrder(self.startofBnfStopBandEdit, self.endofBnfStopBandEdit)
-        MainWindow.setTabOrder(self.endofBnfStopBandEdit, self.bnfTransitionEdit)
-        MainWindow.setTabOrder(self.bnfTransitionEdit, self.bnfStopBandAttenEdit)
-        MainWindow.setTabOrder(self.bnfStopBandAttenEdit, self.bnfPassBandRippleEdit)
-        MainWindow.setTabOrder(self.bnfPassBandRippleEdit, self.endofHpfStopBandEdit)
-        MainWindow.setTabOrder(self.endofHpfStopBandEdit, self.startofHpfPassBandEdit)
-        MainWindow.setTabOrder(self.startofHpfPassBandEdit, self.hpfStopBandAttenEdit)
-        MainWindow.setTabOrder(self.hpfStopBandAttenEdit, self.hpfPassBandRippleEdit)
-        MainWindow.setTabOrder(self.hpfPassBandRippleEdit, self.rrcSymbolRateEdit)
+        MainWindow.setTabOrder(self.filterTypeComboBox,
+                               self.filterDesignTypeComboBox)
+        MainWindow.setTabOrder(
+            self.filterDesignTypeComboBox, self.endofLpfPassBandEdit)
+        MainWindow.setTabOrder(self.endofLpfPassBandEdit,
+                               self.startofLpfStopBandEdit)
+        MainWindow.setTabOrder(self.startofLpfStopBandEdit,
+                               self.lpfStopBandAttenEdit)
+        MainWindow.setTabOrder(self.lpfStopBandAttenEdit,
+                               self.lpfPassBandRippleEdit)
+        MainWindow.setTabOrder(self.lpfPassBandRippleEdit,
+                               self.startofBpfPassBandEdit)
+        MainWindow.setTabOrder(self.startofBpfPassBandEdit,
+                               self.endofBpfPassBandEdit)
+        MainWindow.setTabOrder(self.endofBpfPassBandEdit,
+                               self.bpfTransitionEdit)
+        MainWindow.setTabOrder(self.bpfTransitionEdit,
+                               self.bpfStopBandAttenEdit)
+        MainWindow.setTabOrder(self.bpfStopBandAttenEdit,
+                               self.bpfPassBandRippleEdit)
+        MainWindow.setTabOrder(self.bpfPassBandRippleEdit,
+                               self.startofBnfStopBandEdit)
+        MainWindow.setTabOrder(self.startofBnfStopBandEdit,
+                               self.endofBnfStopBandEdit)
+        MainWindow.setTabOrder(self.endofBnfStopBandEdit,
+                               self.bnfTransitionEdit)
+        MainWindow.setTabOrder(self.bnfTransitionEdit,
+                               self.bnfStopBandAttenEdit)
+        MainWindow.setTabOrder(self.bnfStopBandAttenEdit,
+                               self.bnfPassBandRippleEdit)
+        MainWindow.setTabOrder(self.bnfPassBandRippleEdit,
+                               self.endofHpfStopBandEdit)
+        MainWindow.setTabOrder(self.endofHpfStopBandEdit,
+                               self.startofHpfPassBandEdit)
+        MainWindow.setTabOrder(self.startofHpfPassBandEdit,
+                               self.hpfStopBandAttenEdit)
+        MainWindow.setTabOrder(self.hpfStopBandAttenEdit,
+                               self.hpfPassBandRippleEdit)
+        MainWindow.setTabOrder(
+            self.hpfPassBandRippleEdit, self.rrcSymbolRateEdit)
         MainWindow.setTabOrder(self.rrcSymbolRateEdit, self.rrcAlphaEdit)
         MainWindow.setTabOrder(self.rrcAlphaEdit, self.rrcNumTapsEdit)
         MainWindow.setTabOrder(self.rrcNumTapsEdit, self.gausSymbolRateEdit)
@@ -1165,16 +1367,26 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "GNU Radio Filter Design Tool"))
-        self.tabGroup.setTabText(self.tabGroup.indexOf(self.freqTab), _translate("MainWindow", "Magnitude Response"))
-        self.tabGroup.setTabText(self.tabGroup.indexOf(self.timeTab), _translate("MainWindow", "Filter Taps"))
-        self.tabGroup.setTabText(self.tabGroup.indexOf(self.phaseTab), _translate("MainWindow", "Phase Response"))
-        self.tabGroup.setTabText(self.tabGroup.indexOf(self.groupTab), _translate("MainWindow", "Group Delay"))
-        self.tabGroup.setTabText(self.tabGroup.indexOf(self.fcTab), _translate("MainWindow", "Filter Coefficients"))
-        self.tabGroup.setTabText(self.tabGroup.indexOf(self.impresTab), _translate("MainWindow", "Impulse Response"))
-        self.tabGroup.setTabText(self.tabGroup.indexOf(self.stepresTab), _translate("MainWindow", "Step Response"))
-        self.tabGroup.setTabText(self.tabGroup.indexOf(self.pdelayTab), _translate("MainWindow", "Phase Delay"))
-        self.filterspecView.setTabText(self.filterspecView.indexOf(self.bandDiagram), _translate("MainWindow", "Band Diagram"))
+        MainWindow.setWindowTitle(_translate(
+            "MainWindow", "GNU Radio Filter Design Tool"))
+        self.tabGroup.setTabText(self.tabGroup.indexOf(
+            self.freqTab), _translate("MainWindow", "Magnitude Response"))
+        self.tabGroup.setTabText(self.tabGroup.indexOf(
+            self.timeTab), _translate("MainWindow", "Filter Taps"))
+        self.tabGroup.setTabText(self.tabGroup.indexOf(
+            self.phaseTab), _translate("MainWindow", "Phase Response"))
+        self.tabGroup.setTabText(self.tabGroup.indexOf(
+            self.groupTab), _translate("MainWindow", "Group Delay"))
+        self.tabGroup.setTabText(self.tabGroup.indexOf(
+            self.fcTab), _translate("MainWindow", "Filter Coefficients"))
+        self.tabGroup.setTabText(self.tabGroup.indexOf(
+            self.impresTab), _translate("MainWindow", "Impulse Response"))
+        self.tabGroup.setTabText(self.tabGroup.indexOf(
+            self.stepresTab), _translate("MainWindow", "Step Response"))
+        self.tabGroup.setTabText(self.tabGroup.indexOf(
+            self.pdelayTab), _translate("MainWindow", "Phase Delay"))
+        self.filterspecView.setTabText(self.filterspecView.indexOf(
+            self.bandDiagram), _translate("MainWindow", "Band Diagram"))
         self.addzeroPush.setToolTip(_translate("MainWindow", "Add zero"))
         self.addzeroPush.setText(_translate("MainWindow", "..."))
         self.addpolePush.setToolTip(_translate("MainWindow", "Add pole"))
@@ -1183,23 +1395,28 @@ class Ui_MainWindow(object):
         self.delPush.setText(_translate("MainWindow", "..."))
         self.conjPush.setToolTip(_translate("MainWindow", "Conjugate"))
         self.conjPush.setText(_translate("MainWindow", "..."))
-        self.filterspecView.setTabText(self.filterspecView.indexOf(self.poleZero), _translate("MainWindow", "Pole-Zero Plot"))
+        self.filterspecView.setTabText(self.filterspecView.indexOf(
+            self.poleZero), _translate("MainWindow", "Pole-Zero Plot"))
         self.responseBox.setTitle(_translate("MainWindow", "Filter Responses"))
-        self.checkMagres.setText(_translate("MainWindow", "Magnitude Response"))
+        self.checkMagres.setText(_translate(
+            "MainWindow", "Magnitude Response"))
         self.checkPhase.setText(_translate("MainWindow", "Phase Response"))
         self.checkGdelay.setText(_translate("MainWindow", "Group Delay"))
         self.checkPdelay.setText(_translate("MainWindow", "Phase Delay"))
         self.checkImpulse.setText(_translate("MainWindow", "Impulse Response"))
         self.checkStep.setText(_translate("MainWindow", "Step Response"))
         self.checkGrid.setText(_translate("MainWindow", "Grid"))
-        self.checkFcoeff.setText(_translate("MainWindow", "Filter Coefficients"))
-        self.checkKeepcur.setText(_translate("MainWindow", "Buffer current plots"))
+        self.checkFcoeff.setText(_translate(
+            "MainWindow", "Filter Coefficients"))
+        self.checkKeepcur.setText(_translate(
+            "MainWindow", "Buffer current plots"))
         self.groupSpecs.setTitle(_translate("MainWindow", "Filter Specs"))
         self.checkBand.setText(_translate("MainWindow", "Band Diagram"))
         self.checkPzplot.setText(_translate("MainWindow", "Pole-Zero Plot"))
         self.sysParamsBox.setTitle(_translate("MainWindow", "Plot Parameter"))
         self.nfftLabel.setText(_translate("MainWindow", "Num FFT points"))
-        self.mfmagPush.setToolTip(_translate("MainWindow", "Magnitude Response"))
+        self.mfmagPush.setToolTip(_translate(
+            "MainWindow", "Magnitude Response"))
         self.mfmagPush.setText(_translate("MainWindow", "..."))
         self.mfphasePush.setToolTip(_translate("MainWindow", "Phase Response"))
         self.mfphasePush.setText(_translate("MainWindow", "..."))
@@ -1209,15 +1426,18 @@ class Ui_MainWindow(object):
         self.mfphdlyPush.setText(_translate("MainWindow", "..."))
         self.mfoverlayPush.setToolTip(_translate("MainWindow", "Overlay"))
         self.mfoverlayPush.setText(_translate("MainWindow", "..."))
-        self.mfreqTabgroup.setTabText(self.mfreqTabgroup.indexOf(self.mfreqTab), _translate("MainWindow", "Frequency Response"))
+        self.mfreqTabgroup.setTabText(self.mfreqTabgroup.indexOf(
+            self.mfreqTab), _translate("MainWindow", "Frequency Response"))
         self.mttapsPush.setToolTip(_translate("MainWindow", "Filter Taps"))
         self.mttapsPush.setText(_translate("MainWindow", "..."))
         self.mtstepPush.setToolTip(_translate("MainWindow", "Step Response"))
         self.mtstepPush.setText(_translate("MainWindow", "..."))
         self.mtimpPush.setToolTip(_translate("MainWindow", "Impulse Response"))
         self.mtimpPush.setText(_translate("MainWindow", "..."))
-        self.mtimeTabgroup.setTabText(self.mtimeTabgroup.indexOf(self.mtimeTab), _translate("MainWindow", "Time responses"))
-        self.mfilterspecView.setTabText(self.mfilterspecView.indexOf(self.mbandDiagram), _translate("MainWindow", "Ideal Band"))
+        self.mtimeTabgroup.setTabText(self.mtimeTabgroup.indexOf(
+            self.mtimeTab), _translate("MainWindow", "Time responses"))
+        self.mfilterspecView.setTabText(self.mfilterspecView.indexOf(
+            self.mbandDiagram), _translate("MainWindow", "Ideal Band"))
         self.maddzeroPush.setToolTip(_translate("MainWindow", "Add zero"))
         self.maddzeroPush.setText(_translate("MainWindow", "..."))
         self.maddpolePush.setToolTip(_translate("MainWindow", "Add pole"))
@@ -1226,140 +1446,216 @@ class Ui_MainWindow(object):
         self.mdelPush.setText(_translate("MainWindow", "..."))
         self.mconjPush.setToolTip(_translate("MainWindow", "Conjugate"))
         self.mconjPush.setText(_translate("MainWindow", "..."))
-        self.mfilterspecView.setTabText(self.mfilterspecView.indexOf(self.mpoleZero), _translate("MainWindow", "Pole-Zero Plot"))
-        self.mfilterspecView.setTabText(self.mfilterspecView.indexOf(self.mfcTab), _translate("MainWindow", "Filter Coefficients"))
+        self.mfilterspecView.setTabText(self.mfilterspecView.indexOf(
+            self.mpoleZero), _translate("MainWindow", "Pole-Zero Plot"))
+        self.mfilterspecView.setTabText(self.mfilterspecView.indexOf(
+            self.mfcTab), _translate("MainWindow", "Filter Coefficients"))
         self.fselectComboBox.setItemText(0, _translate("MainWindow", "FIR"))
         self.fselectComboBox.setItemText(1, _translate("MainWindow", "IIR"))
-        self.filterTypeComboBox.setItemText(0, _translate("MainWindow", "Low Pass"))
-        self.filterTypeComboBox.setItemText(1, _translate("MainWindow", "High Pass"))
-        self.filterTypeComboBox.setItemText(2, _translate("MainWindow", "Band Pass"))
-        self.filterTypeComboBox.setItemText(3, _translate("MainWindow", "Complex Band Pass"))
-        self.filterTypeComboBox.setItemText(4, _translate("MainWindow", "Band Notch"))
-        self.filterTypeComboBox.setItemText(5, _translate("MainWindow", "Root Raised Cosine"))
-        self.filterTypeComboBox.setItemText(6, _translate("MainWindow", "Gaussian"))
-        self.filterTypeComboBox.setItemText(7, _translate("MainWindow", "Half Band"))
-        self.iirfilterBandComboBox.setItemText(0, _translate("MainWindow", "Low Pass"))
-        self.iirfilterBandComboBox.setItemText(1, _translate("MainWindow", "Band Pass"))
-        self.iirfilterBandComboBox.setItemText(2, _translate("MainWindow", "Band Stop"))
-        self.iirfilterBandComboBox.setItemText(3, _translate("MainWindow", "High Pass"))
-        self.adComboBox.setItemText(0, _translate("MainWindow", "Digital (normalized 0-1)"))
-        self.adComboBox.setItemText(1, _translate("MainWindow", "Analog (rad/second)"))
-        self.filterDesignTypeComboBox.setItemText(0, _translate("MainWindow", "Hamming Window"))
-        self.filterDesignTypeComboBox.setItemText(1, _translate("MainWindow", "Hann Window"))
-        self.filterDesignTypeComboBox.setItemText(2, _translate("MainWindow", "Blackman Window"))
-        self.filterDesignTypeComboBox.setItemText(3, _translate("MainWindow", "Rectangular Window"))
-        self.filterDesignTypeComboBox.setItemText(4, _translate("MainWindow", "Kaiser Window"))
-        self.filterDesignTypeComboBox.setItemText(5, _translate("MainWindow", "Blackman-harris Window"))
-        self.filterDesignTypeComboBox.setItemText(6, _translate("MainWindow", "Equiripple"))
-        self.iirfilterTypeComboBox.setItemText(0, _translate("MainWindow", "Elliptic"))
-        self.iirfilterTypeComboBox.setItemText(1, _translate("MainWindow", "Butterworth"))
-        self.iirfilterTypeComboBox.setItemText(2, _translate("MainWindow", "Chebyshev-1"))
-        self.iirfilterTypeComboBox.setItemText(3, _translate("MainWindow", "Chebyshev-2"))
-        self.iirfilterTypeComboBox.setItemText(4, _translate("MainWindow", "Bessel"))
-        self.sampleRateLabel.setText(_translate("MainWindow", "Sample Rate (sps)"))
+        self.filterTypeComboBox.setItemText(
+            0, _translate("MainWindow", "Low Pass"))
+        self.filterTypeComboBox.setItemText(
+            1, _translate("MainWindow", "High Pass"))
+        self.filterTypeComboBox.setItemText(
+            2, _translate("MainWindow", "Band Pass"))
+        self.filterTypeComboBox.setItemText(
+            3, _translate("MainWindow", "Complex Band Pass"))
+        self.filterTypeComboBox.setItemText(
+            4, _translate("MainWindow", "Band Notch"))
+        self.filterTypeComboBox.setItemText(
+            5, _translate("MainWindow", "Root Raised Cosine"))
+        self.filterTypeComboBox.setItemText(
+            6, _translate("MainWindow", "Gaussian"))
+        self.filterTypeComboBox.setItemText(
+            7, _translate("MainWindow", "Half Band"))
+        self.iirfilterBandComboBox.setItemText(
+            0, _translate("MainWindow", "Low Pass"))
+        self.iirfilterBandComboBox.setItemText(
+            1, _translate("MainWindow", "Band Pass"))
+        self.iirfilterBandComboBox.setItemText(
+            2, _translate("MainWindow", "Band Stop"))
+        self.iirfilterBandComboBox.setItemText(
+            3, _translate("MainWindow", "High Pass"))
+        self.adComboBox.setItemText(0, _translate(
+            "MainWindow", "Digital (normalized 0-1)"))
+        self.adComboBox.setItemText(1, _translate(
+            "MainWindow", "Analog (rad/second)"))
+        self.filterDesignTypeComboBox.setItemText(
+            0, _translate("MainWindow", "Hamming Window"))
+        self.filterDesignTypeComboBox.setItemText(
+            1, _translate("MainWindow", "Hann Window"))
+        self.filterDesignTypeComboBox.setItemText(
+            2, _translate("MainWindow", "Blackman Window"))
+        self.filterDesignTypeComboBox.setItemText(
+            3, _translate("MainWindow", "Rectangular Window"))
+        self.filterDesignTypeComboBox.setItemText(
+            4, _translate("MainWindow", "Kaiser Window"))
+        self.filterDesignTypeComboBox.setItemText(
+            5, _translate("MainWindow", "Blackman-harris Window"))
+        self.filterDesignTypeComboBox.setItemText(
+            6, _translate("MainWindow", "Equiripple"))
+        self.iirfilterTypeComboBox.setItemText(
+            0, _translate("MainWindow", "Elliptic"))
+        self.iirfilterTypeComboBox.setItemText(
+            1, _translate("MainWindow", "Butterworth"))
+        self.iirfilterTypeComboBox.setItemText(
+            2, _translate("MainWindow", "Chebyshev-1"))
+        self.iirfilterTypeComboBox.setItemText(
+            3, _translate("MainWindow", "Chebyshev-2"))
+        self.iirfilterTypeComboBox.setItemText(
+            4, _translate("MainWindow", "Bessel"))
+        self.sampleRateLabel.setText(
+            _translate("MainWindow", "Sample Rate (sps)"))
         self.sampleRateEdit.setText(_translate("MainWindow", "320000"))
         self.filterGainLabel.setText(_translate("MainWindow", "Filter Gain"))
         self.filterGainEdit.setText(_translate("MainWindow", "2"))
-        self.endofLpfPassBandLabel.setText(_translate("MainWindow", "End of Pass Band (Hz)"))
+        self.endofLpfPassBandLabel.setText(
+            _translate("MainWindow", "End of Pass Band (Hz)"))
         self.endofLpfPassBandEdit.setText(_translate("MainWindow", "50000"))
-        self.startofLpfStopBandLabel.setText(_translate("MainWindow", "Start of Stop Band (Hz)"))
+        self.startofLpfStopBandLabel.setText(
+            _translate("MainWindow", "Start of Stop Band (Hz)"))
         self.startofLpfStopBandEdit.setText(_translate("MainWindow", "60000"))
-        self.lpfStopBandAttenLabel.setText(_translate("MainWindow", "Stop Band Attenuation (dB)"))
+        self.lpfStopBandAttenLabel.setText(_translate(
+            "MainWindow", "Stop Band Attenuation (dB)"))
         self.lpfStopBandAttenEdit.setText(_translate("MainWindow", "40"))
-        self.lpfPassBandRippleLabel.setText(_translate("MainWindow", "Pass Band Ripple (dB)"))
+        self.lpfPassBandRippleLabel.setText(
+            _translate("MainWindow", "Pass Band Ripple (dB)"))
         self.lpfPassBandRippleEdit.setText(_translate("MainWindow", "1"))
-        self.startofBpfPassBandLabel.setText(_translate("MainWindow", "Start of Pass Band (Hz)"))
+        self.startofBpfPassBandLabel.setText(
+            _translate("MainWindow", "Start of Pass Band (Hz)"))
         self.startofBpfPassBandEdit.setText(_translate("MainWindow", "50000"))
-        self.endofBpfPassBandLabel.setText(_translate("MainWindow", "End of Pass Band (Hz)"))
+        self.endofBpfPassBandLabel.setText(
+            _translate("MainWindow", "End of Pass Band (Hz)"))
         self.endofBpfPassBandEdit.setText(_translate("MainWindow", "80000"))
         self.bpfStopBandAttenEdit.setText(_translate("MainWindow", "40"))
-        self.bpfStopBandAttenLabel.setText(_translate("MainWindow", "Stop Band Attenuation (dB)"))
-        self.bpfTransitionLabel.setText(_translate("MainWindow", "Transition Width (Hz)"))
+        self.bpfStopBandAttenLabel.setText(_translate(
+            "MainWindow", "Stop Band Attenuation (dB)"))
+        self.bpfTransitionLabel.setText(_translate(
+            "MainWindow", "Transition Width (Hz)"))
         self.bpfTransitionEdit.setText(_translate("MainWindow", "10000"))
         self.bpfPassBandRippleEdit.setText(_translate("MainWindow", "1"))
-        self.bpfPassBandRippleLabel.setText(_translate("MainWindow", "Pass Band Ripple (dB)"))
-        self.startofBnfStopBandLabel.setText(_translate("MainWindow", "Start of Stop Band (Hz)"))
+        self.bpfPassBandRippleLabel.setText(
+            _translate("MainWindow", "Pass Band Ripple (dB)"))
+        self.startofBnfStopBandLabel.setText(
+            _translate("MainWindow", "Start of Stop Band (Hz)"))
         self.startofBnfStopBandEdit.setText(_translate("MainWindow", "50000"))
-        self.endofBnfStopBandLabel.setText(_translate("MainWindow", "End of Stop Band (Hz)"))
+        self.endofBnfStopBandLabel.setText(
+            _translate("MainWindow", "End of Stop Band (Hz)"))
         self.endofBnfStopBandEdit.setText(_translate("MainWindow", "80000"))
-        self.bnfTransitionLabel.setText(_translate("MainWindow", "Transition Width (Hz)"))
+        self.bnfTransitionLabel.setText(_translate(
+            "MainWindow", "Transition Width (Hz)"))
         self.bnfTransitionEdit.setText(_translate("MainWindow", "10000"))
-        self.bnfStopBandAttenLabel.setText(_translate("MainWindow", "Stop Band Attenuation (dB)"))
+        self.bnfStopBandAttenLabel.setText(_translate(
+            "MainWindow", "Stop Band Attenuation (dB)"))
         self.bnfStopBandAttenEdit.setText(_translate("MainWindow", "48"))
-        self.bnfPassBandRippleLabel.setText(_translate("MainWindow", "Pass Band Ripple (dB)"))
+        self.bnfPassBandRippleLabel.setText(
+            _translate("MainWindow", "Pass Band Ripple (dB)"))
         self.bnfPassBandRippleEdit.setText(_translate("MainWindow", "1"))
-        self.endofHpfStopBandLabel.setText(_translate("MainWindow", "End of Stop Band (Hz)"))
+        self.endofHpfStopBandLabel.setText(
+            _translate("MainWindow", "End of Stop Band (Hz)"))
         self.endofHpfStopBandEdit.setText(_translate("MainWindow", "50000"))
-        self.startofHpfPassBandLabel.setText(_translate("MainWindow", "Start of Pass Band (Hz)"))
+        self.startofHpfPassBandLabel.setText(
+            _translate("MainWindow", "Start of Pass Band (Hz)"))
         self.startofHpfPassBandEdit.setText(_translate("MainWindow", "55000"))
-        self.hpfStopBandAttenLabel.setText(_translate("MainWindow", "Stop Band Attenuation (dB)"))
+        self.hpfStopBandAttenLabel.setText(_translate(
+            "MainWindow", "Stop Band Attenuation (dB)"))
         self.hpfStopBandAttenEdit.setText(_translate("MainWindow", "48"))
-        self.hpfPassBandRippleLabel.setText(_translate("MainWindow", "Pass Band Ripple (dB)"))
+        self.hpfPassBandRippleLabel.setText(
+            _translate("MainWindow", "Pass Band Ripple (dB)"))
         self.hpfPassBandRippleEdit.setText(_translate("MainWindow", "1"))
-        self.rrcSymbolRateLabel.setText(_translate("MainWindow", "Symbol Rate (sps)"))
+        self.rrcSymbolRateLabel.setText(
+            _translate("MainWindow", "Symbol Rate (sps)"))
         self.rrcAlphaLabel.setText(_translate("MainWindow", "Roll-off Factor"))
-        self.rrcNumTapsLabel.setText(_translate("MainWindow", "Number of Taps"))
+        self.rrcNumTapsLabel.setText(
+            _translate("MainWindow", "Number of Taps"))
         self.rrcSymbolRateEdit.setText(_translate("MainWindow", "3200"))
         self.rrcAlphaEdit.setText(_translate("MainWindow", "15"))
         self.rrcNumTapsEdit.setText(_translate("MainWindow", "50"))
-        self.gausSymbolRateLabel.setText(_translate("MainWindow", "Symbol Rate (sps)"))
+        self.gausSymbolRateLabel.setText(
+            _translate("MainWindow", "Symbol Rate (sps)"))
         self.gausSymbolRateEdit.setText(_translate("MainWindow", "5000"))
         self.gausBTLabel.setText(_translate("MainWindow", "Roll-off Factor"))
         self.gausBTEdit.setText(_translate("MainWindow", "0.5"))
-        self.gausNumTapsLabel.setText(_translate("MainWindow", "Number of Taps"))
+        self.gausNumTapsLabel.setText(
+            _translate("MainWindow", "Number of Taps"))
         self.gausNumTapsEdit.setText(_translate("MainWindow", "30"))
-        self.iirendofLpfPassBandLabel.setText(_translate("MainWindow", "End of Pass Band"))
+        self.iirendofLpfPassBandLabel.setText(
+            _translate("MainWindow", "End of Pass Band"))
         self.iirendofLpfPassBandEdit.setText(_translate("MainWindow", "0.3"))
-        self.iirstartofLpfStopBandLabel.setText(_translate("MainWindow", "Start of Stop Band "))
+        self.iirstartofLpfStopBandLabel.setText(
+            _translate("MainWindow", "Start of Stop Band "))
         self.iirstartofLpfStopBandEdit.setText(_translate("MainWindow", "0.5"))
-        self.iirLpfPassBandAttenLabel.setText(_translate("MainWindow", "Max loss in Pass Band (dB)"))
+        self.iirLpfPassBandAttenLabel.setText(
+            _translate("MainWindow", "Max loss in Pass Band (dB)"))
         self.iirLpfPassBandAttenEdit.setText(_translate("MainWindow", "1"))
-        self.iirLpfStopBandRippleLabel.setText(_translate("MainWindow", "Min atten in Stop Band (dB)"))
+        self.iirLpfStopBandRippleLabel.setText(
+            _translate("MainWindow", "Min atten in Stop Band (dB)"))
         self.iirLpfStopBandRippleEdit.setText(_translate("MainWindow", "60"))
-        self.iirendofHpfStopBandLabel.setText(_translate("MainWindow", "End of Stop Band"))
+        self.iirendofHpfStopBandLabel.setText(
+            _translate("MainWindow", "End of Stop Band"))
         self.iirendofHpfStopBandEdit.setText(_translate("MainWindow", "0.3"))
-        self.iirstartofHpfPassBandLabel.setText(_translate("MainWindow", "Start of Pass Band "))
+        self.iirstartofHpfPassBandLabel.setText(
+            _translate("MainWindow", "Start of Pass Band "))
         self.iirstartofHpfPassBandEdit.setText(_translate("MainWindow", "0.5"))
-        self.iirHpfPassBandAttenLabel.setText(_translate("MainWindow", "Max loss in Pass Band (dB)"))
+        self.iirHpfPassBandAttenLabel.setText(
+            _translate("MainWindow", "Max loss in Pass Band (dB)"))
         self.iirHpfPassBandAttenEdit.setText(_translate("MainWindow", "1"))
-        self.iirHpfStopBandRippleLabel.setText(_translate("MainWindow", "Min atten in Stop Band (dB)"))
+        self.iirHpfStopBandRippleLabel.setText(
+            _translate("MainWindow", "Min atten in Stop Band (dB)"))
         self.iirHpfStopBandRippleEdit.setText(_translate("MainWindow", "60"))
-        self.iirendofBpfStopBandLabel1.setText(_translate("MainWindow", "End of Stop Band-1"))
+        self.iirendofBpfStopBandLabel1.setText(
+            _translate("MainWindow", "End of Stop Band-1"))
         self.iirendofBpfStopBandEdit1.setText(_translate("MainWindow", "0.2"))
-        self.iirstartofBpfPassBandLabel.setText(_translate("MainWindow", "Start of Pass Band "))
+        self.iirstartofBpfPassBandLabel.setText(
+            _translate("MainWindow", "Start of Pass Band "))
         self.iirstartofBpfPassBandEdit.setText(_translate("MainWindow", "0.3"))
-        self.iirendofBpfPassBandLabel.setText(_translate("MainWindow", "End of Pass Band "))
+        self.iirendofBpfPassBandLabel.setText(
+            _translate("MainWindow", "End of Pass Band "))
         self.iirendofBpfPassBandEdit.setText(_translate("MainWindow", "0.5"))
-        self.iirstartofBpfStopBandLabel2.setText(_translate("MainWindow", "Start of Stop Band-2"))
-        self.iirstartofBpfStopBandEdit2.setText(_translate("MainWindow", "0.6"))
-        self.iirBpfPassBandAttenLabel.setText(_translate("MainWindow", "Max loss in Pass Band (dB)"))
+        self.iirstartofBpfStopBandLabel2.setText(
+            _translate("MainWindow", "Start of Stop Band-2"))
+        self.iirstartofBpfStopBandEdit2.setText(
+            _translate("MainWindow", "0.6"))
+        self.iirBpfPassBandAttenLabel.setText(
+            _translate("MainWindow", "Max loss in Pass Band (dB)"))
         self.iirBpfPassBandAttenEdit.setText(_translate("MainWindow", "1"))
-        self.iirBpfStopBandRippleLabel.setText(_translate("MainWindow", "Min atten in Stop Band (dB)"))
+        self.iirBpfStopBandRippleLabel.setText(
+            _translate("MainWindow", "Min atten in Stop Band (dB)"))
         self.iirBpfStopBandRippleEdit.setText(_translate("MainWindow", "60"))
-        self.iirendofBsfPassBandLabel1.setText(_translate("MainWindow", "End of Pass Band-1"))
+        self.iirendofBsfPassBandLabel1.setText(
+            _translate("MainWindow", "End of Pass Band-1"))
         self.iirendofBsfPassBandEdit1.setText(_translate("MainWindow", "0.2"))
-        self.iirstartofBsfStopBandLabel.setText(_translate("MainWindow", "Start of Stop Band "))
+        self.iirstartofBsfStopBandLabel.setText(
+            _translate("MainWindow", "Start of Stop Band "))
         self.iirstartofBsfStopBandEdit.setText(_translate("MainWindow", "0.3"))
-        self.iirendofBsfStopBandLabel.setText(_translate("MainWindow", "End of Stop Band "))
+        self.iirendofBsfStopBandLabel.setText(
+            _translate("MainWindow", "End of Stop Band "))
         self.iirendofBsfStopBandEdit.setText(_translate("MainWindow", "0.6"))
-        self.iirstartofBsfPassBandLabel2.setText(_translate("MainWindow", "Start of Pass Band-2"))
-        self.iirstartofBsfPassBandEdit2.setText(_translate("MainWindow", "0.7"))
-        self.iirBsfPassBandAttenLabel.setText(_translate("MainWindow", "Max loss in Pass Band (dB)"))
+        self.iirstartofBsfPassBandLabel2.setText(
+            _translate("MainWindow", "Start of Pass Band-2"))
+        self.iirstartofBsfPassBandEdit2.setText(
+            _translate("MainWindow", "0.7"))
+        self.iirBsfPassBandAttenLabel.setText(
+            _translate("MainWindow", "Max loss in Pass Band (dB)"))
         self.iirBsfPassBandAttenEdit.setText(_translate("MainWindow", "1"))
-        self.iirBsfStopBandRippleLabel.setText(_translate("MainWindow", "Min atten in Stop Band (dB)"))
+        self.iirBsfStopBandRippleLabel.setText(
+            _translate("MainWindow", "Min atten in Stop Band (dB)"))
         self.iirBsfStopBandRippleEdit.setText(_translate("MainWindow", "60"))
         self.besselordLabel.setText(_translate("MainWindow", "Filter Order"))
         self.besselordEdit.setText(_translate("MainWindow", "10"))
-        self.iirbesselcritLabel1.setText(_translate("MainWindow", "Critical point-1"))
+        self.iirbesselcritLabel1.setText(
+            _translate("MainWindow", "Critical point-1"))
         self.iirbesselcritEdit1.setText(_translate("MainWindow", "0.2"))
         self.iirbesselcritEdit2.setText(_translate("MainWindow", "0.5"))
-        self.iirbesselcritLabel2.setText(_translate("MainWindow", "Critical point-2"))
+        self.iirbesselcritLabel2.setText(
+            _translate("MainWindow", "Critical point-2"))
         self.firhbordLabel.setText(_translate("MainWindow", "Filter Order"))
         self.firhbordEdit.setText(_translate("MainWindow", "34"))
         self.firhbtrEditLabel2.setText(_translate("MainWindow", "Transition width\n"
-" (from fs/4)"))
+                                                  " (from fs/4)"))
         self.firhbtrEdit.setText(_translate("MainWindow", "10000"))
-        self.filterPropsBox.setTitle(_translate("MainWindow", "Filter Properties"))
+        self.filterPropsBox.setTitle(
+            _translate("MainWindow", "Filter Properties"))
         self.nTapsLabel.setText(_translate("MainWindow", "Number of Taps:"))
         self.designButton.setText(_translate("MainWindow", "Design"))
         self.menu_File.setTitle(_translate("MainWindow", "&File"))
@@ -1370,42 +1666,60 @@ class Ui_MainWindow(object):
         self.action_save.setShortcut(_translate("MainWindow", "Ctrl+S"))
         self.action_open.setText(_translate("MainWindow", "&Open"))
         self.action_open.setShortcut(_translate("MainWindow", "Ctrl+O"))
-        self.actionMagnitude_Response.setText(_translate("MainWindow", "&Magnitude Response"))
-        self.actionPhase_Respone.setText(_translate("MainWindow", "&Phase Respone"))
-        self.actionGroup_Delay.setText(_translate("MainWindow", "&Group Delay"))
-        self.actionPhase_Delay.setText(_translate("MainWindow", "P&hase Delay"))
-        self.actionImpulse_Response.setText(_translate("MainWindow", "&Impulse Response"))
-        self.actionStep_Response.setText(_translate("MainWindow", "&Step Response"))
-        self.actionPole_Zero_Plot.setText(_translate("MainWindow", "Pole-Zero Plot"))
+        self.actionMagnitude_Response.setText(
+            _translate("MainWindow", "&Magnitude Response"))
+        self.actionPhase_Respone.setText(
+            _translate("MainWindow", "&Phase Respone"))
+        self.actionGroup_Delay.setText(
+            _translate("MainWindow", "&Group Delay"))
+        self.actionPhase_Delay.setText(
+            _translate("MainWindow", "P&hase Delay"))
+        self.actionImpulse_Response.setText(
+            _translate("MainWindow", "&Impulse Response"))
+        self.actionStep_Response.setText(
+            _translate("MainWindow", "&Step Response"))
+        self.actionPole_Zero_Plot.setText(
+            _translate("MainWindow", "Pole-Zero Plot"))
         self.actionGrid.setText(_translate("MainWindow", "Grid"))
-        self.actionPole_Zero_Plot_2.setText(_translate("MainWindow", "Pole &Zero Plot"))
+        self.actionPole_Zero_Plot_2.setText(
+            _translate("MainWindow", "Pole &Zero Plot"))
         self.actionIdeal_Band.setText(_translate("MainWindow", "Id&eal Band"))
         self.actionGrid_2.setText(_translate("MainWindow", "Grid"))
         self.actionGrid_3.setText(_translate("MainWindow", "Grid"))
         self.actionTabbed.setText(_translate("MainWindow", "Tabbed"))
         self.actionOverlay.setText(_translate("MainWindow", "Overlay"))
-        self.actionResponse_widget.setText(_translate("MainWindow", "Response widget"))
+        self.actionResponse_widget.setText(
+            _translate("MainWindow", "Response widget"))
         self.actionSpec_widget.setText(_translate("MainWindow", "Spec widget"))
-        self.actionQuick_access.setText(_translate("MainWindow", "Quick access"))
-        self.actionFilter_Coefficients.setText(_translate("MainWindow", "&Filter Coefficients"))
-        self.actionDesign_widget.setText(_translate("MainWindow", "Design widget"))
+        self.actionQuick_access.setText(
+            _translate("MainWindow", "Quick access"))
+        self.actionFilter_Coefficients.setText(
+            _translate("MainWindow", "&Filter Coefficients"))
+        self.actionDesign_widget.setText(
+            _translate("MainWindow", "Design widget"))
         self.actionOverlay_2.setText(_translate("MainWindow", "Overlay"))
         self.actionGridview.setText(_translate("MainWindow", "&Gridview"))
-        self.actionDesign_widget_2.setText(_translate("MainWindow", "Design widget"))
-        self.actionQuick_access_2.setText(_translate("MainWindow", "Quick access"))
-        self.actionSpec_widget_2.setText(_translate("MainWindow", "Spec widget"))
-        self.actionResponse_widget_2.setText(_translate("MainWindow", "Response widget"))
-        self.actionDesign_Widget.setText(_translate("MainWindow", "&Design Widget"))
-        self.actionQuick_Access.setText(_translate("MainWindow", "&Quick Access"))
-        self.actionSpec_Widget.setText(_translate("MainWindow", "Spec &Widget"))
-        self.actionResponse_Widget.setText(_translate("MainWindow", "&Response Widget"))
+        self.actionDesign_widget_2.setText(
+            _translate("MainWindow", "Design widget"))
+        self.actionQuick_access_2.setText(
+            _translate("MainWindow", "Quick access"))
+        self.actionSpec_widget_2.setText(
+            _translate("MainWindow", "Spec widget"))
+        self.actionResponse_widget_2.setText(
+            _translate("MainWindow", "Response widget"))
+        self.actionDesign_Widget.setText(
+            _translate("MainWindow", "&Design Widget"))
+        self.actionQuick_Access.setText(
+            _translate("MainWindow", "&Quick Access"))
+        self.actionSpec_Widget.setText(
+            _translate("MainWindow", "Spec &Widget"))
+        self.actionResponse_Widget.setText(
+            _translate("MainWindow", "&Response Widget"))
         self.actionTabview_2.setText(_translate("MainWindow", "Tabview"))
-        self.actionPlot_select.setText(_translate("MainWindow", "&Plot select"))
-        self.actionBand_Diagram.setText(_translate("MainWindow", "&Band Diagram"))
+        self.actionPlot_select.setText(
+            _translate("MainWindow", "&Plot select"))
+        self.actionBand_Diagram.setText(
+            _translate("MainWindow", "&Band Diagram"))
         self.actionCheck.setText(_translate("MainWindow", "check"))
-        self.actionPlot_FFT_points.setText(_translate("MainWindow", "Plot FFT points"))
-
-from .GrFilterPlotWidget import GrFilterPlotWidget
-from .bandgraphicsview import BandGraphicsView
-from .polezero_plot import PzPlot
-from . import icons_rc
+        self.actionPlot_FFT_points.setText(
+            _translate("MainWindow", "Plot FFT points"))
