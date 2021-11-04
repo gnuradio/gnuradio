@@ -22,12 +22,12 @@ class my_top_block(gr.top_block):
 
         parser = ArgumentParser()
         parser.add_argument("-F", "--filename", default="audio.dat",
-                          help="read input from FILENAME default=%(default)r")
+                            help="read input from FILENAME default=%(default)r")
         parser.add_argument("-r", "--sample-rate", type=eng_float, default=48000,
-                          help="set sample rate (default=%(default)r)")
+                            help="set sample rate (default=%(default)r)")
         parser.add_argument("-R", "--repeat", action="store_true")
         parser.add_argument("-O", "--audio-output", default="",
-                          help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
+                            help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
         args = parser.parse_args()
         sample_rate = int(args.sample_rate)
         src = blocks.file_source(gr.sizeof_float, args.filename, args.repeat)

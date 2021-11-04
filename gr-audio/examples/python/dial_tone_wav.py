@@ -21,6 +21,7 @@ except ImportError:
     sys.stderr.write("Error: Program requires gr-analog.\n")
     sys.exit(1)
 
+
 class my_top_block(gr.top_block):
 
     def __init__(self):
@@ -28,11 +29,11 @@ class my_top_block(gr.top_block):
 
         parser = ArgumentParser()
         parser.add_argument("-r", "--sample-rate", type=eng_float, default=48000,
-                          help="set sample rate to RATE (%(default)r)")
+                            help="set sample rate to RATE (%(default)r)")
         parser.add_argument("-N", "--samples", type=eng_float, required=True,
-                          help="number of samples to record")
+                            help="number of samples to record")
         parser.add_argument('file_name', metavar='WAV-FILE',
-                          help='Output WAV file name', nargs=1)
+                            help='Output WAV file name', nargs=1)
         args = parser.parse_args()
 
         sample_rate = int(args.sample_rate)
@@ -47,6 +48,7 @@ class my_top_block(gr.top_block):
 
         self.connect(src0, head0, (dst, 0))
         self.connect(src1, head1, (dst, 1))
+
 
 if __name__ == '__main__':
     try:

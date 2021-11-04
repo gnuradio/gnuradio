@@ -14,6 +14,7 @@ from gnuradio import blocks
 from gnuradio.eng_arg import eng_float
 from argparse import ArgumentParser
 
+
 class my_top_block(gr.top_block):
 
     def __init__(self):
@@ -21,13 +22,13 @@ class my_top_block(gr.top_block):
 
         parser = ArgumentParser()
         parser.add_argument("-I", "--audio-input", default="",
-                          help="pcm input device name.  E.g., hw:0,0 or /dev/dsp")
+                            help="pcm input device name.  E.g., hw:0,0 or /dev/dsp")
         parser.add_argument("-r", "--sample-rate", type=eng_float, default=48000,
-                          help="set sample rate to RATE (%(default)r)")
+                            help="set sample rate to RATE (%(default)r)")
         parser.add_argument("-N", "--nsamples", type=eng_float,
-                          help="number of samples to collect [default=+inf]")
+                            help="number of samples to collect [default=+inf]")
         parser.add_argument('file_name', metavar='FILE-NAME',
-                          help="Output file path")
+                            help="Output file path")
 
         args = parser.parse_args()
 
