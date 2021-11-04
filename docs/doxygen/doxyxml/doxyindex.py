@@ -17,6 +17,7 @@ from .generated import index
 from .base import Base
 from .text import description
 
+
 class DoxyIndex(Base):
     """
     Parses a doxygen xml directory.
@@ -46,7 +47,6 @@ class DoxyIndex(Base):
 
 
 class DoxyCompMem(Base):
-
 
     kind = None
 
@@ -83,8 +83,10 @@ class DoxyCompMem(Base):
 class DoxyCompound(DoxyCompMem):
     pass
 
+
 class DoxyMember(DoxyCompMem):
     pass
+
 
 class DoxyFunction(DoxyMember):
 
@@ -106,8 +108,10 @@ class DoxyFunction(DoxyMember):
                 self._data['params'].append(DoxyParam(prm))
 
     brief_description = property(lambda self: self.data()['brief_description'])
-    detailed_description = property(lambda self: self.data()['detailed_description'])
+    detailed_description = property(
+        lambda self: self.data()['detailed_description'])
     params = property(lambda self: self.data()['params'])
+
 
 Base.mem_classes.append(DoxyFunction)
 
@@ -133,8 +137,10 @@ class DoxyParam(DoxyMember):
         return '\n\n'.join(descriptions)
 
     brief_description = property(lambda self: self.data()['brief_description'])
-    detailed_description = property(lambda self: self.data()['detailed_description'])
+    detailed_description = property(
+        lambda self: self.data()['detailed_description'])
     name = property(lambda self: self.data()['declname'])
+
 
 class DoxyParameterItem(DoxyMember):
     """A different representation of a parameter in Doxygen."""
@@ -177,8 +183,10 @@ class DoxyClass(DoxyCompound):
         self.process_memberdefs()
 
     brief_description = property(lambda self: self.data()['brief_description'])
-    detailed_description = property(lambda self: self.data()['detailed_description'])
+    detailed_description = property(
+        lambda self: self.data()['detailed_description'])
     params = property(lambda self: self.data()['params'])
+
 
 Base.mem_classes.append(DoxyClass)
 
@@ -200,7 +208,9 @@ class DoxyFile(DoxyCompound):
         self.process_memberdefs()
 
     brief_description = property(lambda self: self.data()['brief_description'])
-    detailed_description = property(lambda self: self.data()['detailed_description'])
+    detailed_description = property(
+        lambda self: self.data()['detailed_description'])
+
 
 Base.mem_classes.append(DoxyFile)
 
@@ -220,6 +230,7 @@ class DoxyNamespace(DoxyCompound):
         if self._error:
             return
         self.process_memberdefs()
+
 
 Base.mem_classes.append(DoxyNamespace)
 
@@ -264,6 +275,7 @@ class DoxyFriend(DoxyMember):
 
     kind = 'friend'
 
+
 Base.mem_classes.append(DoxyFriend)
 
 
@@ -277,5 +289,6 @@ class DoxyOther(Base):
     @classmethod
     def can_parse(cls, obj):
         return obj.kind in cls.kinds
+
 
 Base.mem_classes.append(DoxyOther)
