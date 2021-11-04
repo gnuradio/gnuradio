@@ -7,11 +7,11 @@ from argparse import ArgumentParser
 
 parser = ArgumentParser()
 parser.add_argument("-H", "--host", default="localhost",
-                  help="Hostname to connect to (default=%(default)r)")
+                    help="Hostname to connect to (default=%(default)r)")
 parser.add_argument("-p", "--port", type=int, default=9090,
-                  help="Port of Controlport instance on host (default=%(default)r)")
+                    help="Port of Controlport instance on host (default=%(default)r)")
 parser.add_argument("-a", "--alias", default="gr uhd usrp sink0",
-                  help="The UHD block's alias to control (default=%(default)r)")
+                    help="The UHD block's alias to control (default=%(default)r)")
 parser.add_argument("command", metavar="COMMAND")
 parser.add_argument("value", metavar="VALUE")
 args = parser.parse_args()
@@ -29,7 +29,8 @@ elif(cmd == "antenna"):
 else:
     val = pmt.from_double(float(val))
 
-radiosys = GNURadioControlPortClient(host=args.host, port=args.port, rpcmethod='thrift')
+radiosys = GNURadioControlPortClient(
+    host=args.host, port=args.port, rpcmethod='thrift')
 radio = radiosys.client
 
 radio.postMessage(args.alias, port, pmt.cons(pmt.intern(cmd), val))

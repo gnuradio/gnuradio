@@ -11,6 +11,7 @@
 from gnuradio import gr
 import pmt
 
+
 class meta_to_pair(gr.sync_block):
     """
     This block converts a metadata dictionary item to a pmt pair that is
@@ -18,8 +19,10 @@ class meta_to_pair(gr.sync_block):
     which item in the incoming metadata to output as a pair and what
     the pair name is.
     """
+
     def __init__(self, incomingKeyName, outgoingPairName):
-        gr.sync_block.__init__(self, name="meta_to_pair", in_sig=None, out_sig=None)
+        gr.sync_block.__init__(self, name="meta_to_pair",
+                               in_sig=None, out_sig=None)
 
         self.incomingKeyName = str(incomingKeyName)
         self.outgoingPairName = str(outgoingPairName)
@@ -51,7 +54,8 @@ class meta_to_pair(gr.sync_block):
         new_pair = None
 
         try:
-            new_pair = pmt.cons(pmt.intern(self.outgoingPairName), pmt.to_pmt(incomingVal))
+            new_pair = pmt.cons(pmt.intern(
+                self.outgoingPairName), pmt.to_pmt(incomingVal))
         except Exception as e:
             gr.log.error("Cannot construct new message: %s" % str(e))
             return

@@ -28,7 +28,7 @@ from .var_to_msg import var_to_msg_pair
 from .matrix_interleaver import *
 from .parse_file_metadata import parse_header, parse_extra_dict
 
-#alias old add_vXX and multiply_vXX
+# alias old add_vXX and multiply_vXX
 add_vcc = add_cc
 add_vff = add_ff
 add_vii = add_ii

@@ -25,7 +25,7 @@ class qa_matrix_interleaver(gr_unittest.TestCase):
 
         # set up fg
         cols, rows = 4, 10
-        vec = sum((cols * [x,] for x in range(rows)), [])
+        vec = sum((cols * [x, ] for x in range(rows)), [])
         expected = cols * list(range(rows))
 
         src = blocks.vector_source_f(vec, False)
@@ -44,7 +44,7 @@ class qa_matrix_interleaver(gr_unittest.TestCase):
 
         # set up fg
         cols, rows = 4, 10
-        vec = sum((rows * [x,] for x in range(cols)), [])
+        vec = sum((rows * [x, ] for x in range(cols)), [])
         expected = rows * list(range(cols))
 
         src = blocks.vector_source_f(vec, False)
@@ -58,6 +58,7 @@ class qa_matrix_interleaver(gr_unittest.TestCase):
 
         # check data
         self.assertFloatTuplesAlmostEqual(expected, result)
+
 
 if __name__ == '__main__':
     gr_unittest.run(qa_matrix_interleaver)
