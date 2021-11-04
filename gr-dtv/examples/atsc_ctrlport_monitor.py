@@ -6,15 +6,15 @@
 #
 
 
-import sys
-import matplotlib
-matplotlib.use("QT4Agg")
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
+import numpy
 from gnuradio.ctrlport.GNURadioControlPortClient import (
     GNURadioControlPortClient, TTransportException,
 )
-import numpy
+import matplotlib.animation as animation
+import matplotlib.pyplot as plt
+import sys
+import matplotlib
+matplotlib.use("QT4Agg")
 
 """
 If a host is running the ATSC receiver chain with ControlPort
@@ -26,6 +26,7 @@ the link quality. This also gets the equalizer taps of the receiver
 and displays the frequency response.
 """
 
+
 class atsc_ctrlport_monitor(object):
     def __init__(self, host, port):
         argv = [None, host, port]
@@ -33,31 +34,31 @@ class atsc_ctrlport_monitor(object):
         self.radio = radiosys.client
         print(self.radio)
 
-
         vt_init_key = 'dtv_atsc_viterbi_decoder0::decoder_metrics'
         data = self.radio.getKnobs([vt_init_key])[vt_init_key]
         init_metric = numpy.mean(data.value)
-        self._viterbi_metric = 100*[init_metric,]
+        self._viterbi_metric = 100 * [init_metric, ]
 
         table_col_labels = ('Num Packets', 'Error Rate', 'Packet Error Rate',
                             'Viterbi Metric', 'SNR')
 
-        self._fig = plt.figure(1, figsize=(12,12), facecolor='w')
-        self._sp0 = self._fig.add_subplot(4,1,1)
-        self._sp1 = self._fig.add_subplot(4,1,2)
-        self._sp2 = self._fig.add_subplot(4,1,3)
+        self._fig = plt.figure(1, figsize=(12, 12), facecolor='w')
+        self._sp0 = self._fig.add_subplot(4, 1, 1)
+        self._sp1 = self._fig.add_subplot(4, 1, 2)
+        self._sp2 = self._fig.add_subplot(4, 1, 3)
         self._plot_taps = self._sp0.plot([], [], 'k', linewidth=2)
-        self._plot_psd  = self._sp1.plot([], [], 'k', linewidth=2)
-        self._plot_data = self._sp2.plot([], [], 'ok', linewidth=2, markersize=4, alpha=0.05)
+        self._plot_psd = self._sp1.plot([], [], 'k', linewidth=2)
+        self._plot_data = self._sp2.plot(
+            [], [], 'ok', linewidth=2, markersize=4, alpha=0.05)
 
-        self._ax2 = self._fig.add_subplot(4,1,4)
-        self._table = self._ax2.table(cellText=[len(table_col_labels)*['0']],
+        self._ax2 = self._fig.add_subplot(4, 1, 4)
+        self._table = self._ax2.table(cellText=[len(table_col_labels) * ['0']],
                                       colLabels=table_col_labels,
                                       loc='center')
         self._ax2.axis('off')
         cells = self._table.properties()['child_artists']
         for c in cells:
-            c.set_lw(0.1) # set's line width
+            c.set_lw(0.1)  # set's line width
             c.set_ls('solid')
             c.set_height(0.2)
 
@@ -104,7 +105,7 @@ class atsc_ctrlport_monitor(object):
         fs = 6.25e6
         freq = numpy.linspace(-fs / 2, fs / 2, 10000)
         H = numpy.fft.fftshift(numpy.fft.fft(eqdata.value, 10000))
-        HdB = 20.0*numpy.log10(abs(H))
+        HdB = 20.0 * numpy.log10(abs(H))
         psd.set_ydata(HdB)
         psd.set_xdata(freq)
         self._sp1.set_xlim(0, fs / 2)
@@ -114,23 +115,26 @@ class atsc_ctrlport_monitor(object):
 
         nsyms = len(symdata.value)
         syms.set_ydata(symdata.value)
-        syms.set_xdata(nsyms*[0,])
+        syms.set_xdata(nsyms * [0, ])
         self._sp2.set_xlim([-1, 1])
         self._sp2.set_ylim([-10, 10])
 
         per = float(rs_num_bad_packets.value) / float(rs_num_packets.value)
-        ber = float(rs_num_errors_corrected.value) / float(187*rs_num_packets.value)
+        ber = float(rs_num_errors_corrected.value) / \
+            float(187 * rs_num_packets.value)
 
-        table._cells[(1,0)]._text.set_text("{0}".format(rs_num_packets.value))
-        table._cells[(1,1)]._text.set_text("{0:.2g}".format(ber))
-        table._cells[(1,2)]._text.set_text("{0:.2g}".format(per))
-        table._cells[(1,3)]._text.set_text("{0:.1f}".format(numpy.mean(self._viterbi_metric)))
-        table._cells[(1,4)]._text.set_text("{0:.4f}".format(snr_est.value[0]))
+        table._cells[(1, 0)]._text.set_text("{0}".format(rs_num_packets.value))
+        table._cells[(1, 1)]._text.set_text("{0:.2g}".format(ber))
+        table._cells[(1, 2)]._text.set_text("{0:.2g}".format(per))
+        table._cells[(1, 3)]._text.set_text(
+            "{0:.1f}".format(numpy.mean(self._viterbi_metric)))
+        table._cells[(1, 4)]._text.set_text("{0:.4f}".format(snr_est.value[0]))
 
         return (taps, psd, syms, table)
 
     def init_function(self):
         return self._plot_taps + self._plot_psd + self._plot_data
+
 
 if __name__ == "__main__":
     host = sys.argv[1]
