@@ -64,7 +64,8 @@ class PropsDialog(Gtk.Dialog):
         self._docs_text_display = doc_view = SimpleTextDisplay()
         doc_view.get_buffer().create_tag('b', weight=Pango.Weight.BOLD)
         self._docs_box = Gtk.ScrolledWindow()
-        self._docs_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        self._docs_box.set_policy(
+            Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self._docs_vbox = Gtk.VBox(homogeneous=False, spacing=0)
         self._docs_box.add(self._docs_vbox)
         self._docs_link = Gtk.Label(use_markup=True)
@@ -81,7 +82,8 @@ class PropsDialog(Gtk.Dialog):
             # todo: set font size in non-deprecated way
             # code_view.override_font(Pango.FontDescription('monospace %d' % Constants.FONT_SIZE))
             code_box = Gtk.ScrolledWindow()
-            code_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+            code_box.set_policy(Gtk.PolicyType.AUTOMATIC,
+                                Gtk.PolicyType.AUTOMATIC)
             code_box.add(self._code_text_display)
             notebook.append_page(code_box, Gtk.Label(label="Generated Code"))
         else:
@@ -90,7 +92,8 @@ class PropsDialog(Gtk.Dialog):
         # Error Messages for the block
         self._error_messages_text_display = SimpleTextDisplay()
         self._error_box = Gtk.ScrolledWindow()
-        self._error_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        self._error_box.set_policy(
+            Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self._error_box.add(self._error_messages_text_display)
         vpaned.pack2(self._error_box)
         vpaned.set_position(int(0.65 * Constants.MIN_DIALOG_HEIGHT))
@@ -117,7 +120,8 @@ class PropsDialog(Gtk.Dialog):
             label = Gtk.Label()
             vbox = Gtk.VBox()
             scroll_box = Gtk.ScrolledWindow()
-            scroll_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+            scroll_box.set_policy(Gtk.PolicyType.AUTOMATIC,
+                                  Gtk.PolicyType.AUTOMATIC)
             scroll_box.add(vbox)
             self.notebook.append_page(scroll_box, label)
             self._params_boxes.append((category, label, vbox))
@@ -232,7 +236,8 @@ class PropsDialog(Gtk.Dialog):
             buf.insert(pos, '\n')
 
         # if given the current parameters an exact match can be made
-        block_constructor = self._block.templates.render('make').rsplit('.', 2)[-1]
+        block_constructor = self._block.templates.render(
+            'make').rsplit('.', 2)[-1]
         block_class = block_constructor.partition('(')[0].strip()
         if block_class in docstrings:
             docstrings = {block_class: docstrings[block_class]}

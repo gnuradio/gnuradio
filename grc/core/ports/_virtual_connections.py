@@ -2,7 +2,7 @@
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
-# 
+#
 
 
 from itertools import chain
@@ -28,10 +28,12 @@ def _sources_from_virtual_sink_port(sink_port, _traversed=None):
     """
     source_ports_per_virtual_connection = (
         # there can be multiple ports per virtual connection
-        _sources_from_virtual_source_port(c.source_port, _traversed)  # type: list
+        _sources_from_virtual_source_port(
+            c.source_port, _traversed)  # type: list
         for c in sink_port.connections(enabled=True)
     )
-    return list(chain(*source_ports_per_virtual_connection))  # concatenate generated lists of ports
+    # concatenate generated lists of ports
+    return list(chain(*source_ports_per_virtual_connection))
 
 
 def _sources_from_virtual_source_port(source_port, _traversed=None):
@@ -62,7 +64,8 @@ def _sources_from_virtual_source_port(source_port, _traversed=None):
         _sources_from_virtual_sink_port(b.sinks[0], _traversed)  # type: list
         for b in connected_virtual_sink_blocks
     )
-    return list(chain(*source_ports_per_virtual_connection))  # concatenate generated lists of ports
+    # concatenate generated lists of ports
+    return list(chain(*source_ports_per_virtual_connection))
 
 
 def downstream_ports(port):
@@ -82,7 +85,8 @@ def _sinks_from_virtual_source_port(source_port, _traversed=None):
         _sinks_from_virtual_sink_port(c.sink_port, _traversed)  # type: list
         for c in source_port.connections(enabled=True)
     )
-    return list(chain(*sink_ports_per_virtual_connection))  # concatenate generated lists of ports
+    # concatenate generated lists of ports
+    return list(chain(*sink_ports_per_virtual_connection))
 
 
 def _sinks_from_virtual_sink_port(sink_port, _traversed=None):
@@ -111,4 +115,5 @@ def _sinks_from_virtual_sink_port(sink_port, _traversed=None):
         _sinks_from_virtual_source_port(b.sources[0], _traversed)  # type: list
         for b in connected_virtual_source_blocks
     )
-    return list(chain(*sink_ports_per_virtual_connection))  # concatenate generated lists of ports
+    # concatenate generated lists of ports
+    return list(chain(*sink_ports_per_virtual_connection))

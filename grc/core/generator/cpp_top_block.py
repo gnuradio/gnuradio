@@ -39,7 +39,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
         """
 
         self._flow_graph = FlowGraphProxy(flow_graph)
-        self._generate_options = self._flow_graph.get_option('generate_options')
+        self._generate_options = self._flow_graph.get_option(
+            'generate_options')
 
         self._mode = TOP_BLOCK_FILE_MODE
         # Handle the case where the directory is read-only
@@ -59,7 +60,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
 
         fg = self._flow_graph
         platform = fg.parent
-        self.title = fg.get_option('title') or fg.get_option('id').replace('_', ' ').title()
+        self.title = fg.get_option('title') or fg.get_option(
+            'id').replace('_', ' ').title()
         variables = fg.get_cpp_variables()
         parameters = fg.get_parameters()
         monitors = fg.get_monitors()
@@ -102,7 +104,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
         Returns:
             a string of C++ code
         """
-        file_path = self.file_path + '/' + self._flow_graph.get_option('id') + '.cpp'
+        file_path = self.file_path + '/' + \
+            self._flow_graph.get_option('id') + '.cpp'
 
         output = []
 
@@ -115,11 +118,11 @@ class CppTopBlockGenerator(TopBlockGenerator):
             **self.namespace
         )
         # strip trailing white-space
-        flow_graph_code = "\n".join(line.rstrip() for line in flow_graph_code.split("\n"))
+        flow_graph_code = "\n".join(line.rstrip()
+                                    for line in flow_graph_code.split("\n"))
         output.append((file_path, flow_graph_code))
 
         return output
-
 
     def _build_cpp_header_code_from_template(self):
         """
@@ -128,7 +131,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
         Returns:
             a string of C++ code
         """
-        file_path = self.file_path + '/' + self._flow_graph.get_option('id') + '.hpp'
+        file_path = self.file_path + '/' + \
+            self._flow_graph.get_option('id') + '.hpp'
 
         output = []
 
@@ -141,7 +145,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
             **self.namespace
         )
         # strip trailing white-space
-        flow_graph_code = "\n".join(line.rstrip() for line in flow_graph_code.split("\n"))
+        flow_graph_code = "\n".join(line.rstrip()
+                                    for line in flow_graph_code.split("\n"))
         output.append((file_path, flow_graph_code))
 
         return output
@@ -158,7 +163,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
 
         cmake_tuples = []
         cmake_opt = self._flow_graph.get_option("cmake_opt")
-        cmake_opt = " " + cmake_opt # To make sure we get rid of the "-D"s when splitting
+        cmake_opt = " " + cmake_opt  # To make sure we get rid of the "-D"s when splitting
 
         for opt_string in cmake_opt.split(" -D"):
             opt_string = opt_string.strip()
@@ -179,7 +184,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
             **self.namespace
         )
         # strip trailing white-space
-        flow_graph_code = "\n".join(line.rstrip() for line in flow_graph_code.split("\n"))
+        flow_graph_code = "\n".join(line.rstrip()
+                                    for line in flow_graph_code.split("\n"))
         output.append((file_path, flow_graph_code))
 
         return output
@@ -238,7 +244,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
         def _get_block_sort_text(block):
             code = block.cpp_templates.render('declarations')
             try:
-                code += block.params['gui_hint'].get_value()  # Newer gui markup w/ qtgui
+                # Newer gui markup w/ qtgui
+                code += block.params['gui_hint'].get_value()
             except:
                 pass
             return code
@@ -248,7 +255,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
             if b.enabled and not (b.get_bypassed() or b.is_import or b in parameters or b.key == 'options' or b.is_virtual_source() or b.is_virtual_sink())
         ]
 
-        blocks = expr_utils.sort_objects(blocks, operator.attrgetter('name'), _get_block_sort_text)
+        blocks = expr_utils.sort_objects(
+            blocks, operator.attrgetter('name'), _get_block_sort_text)
         blocks_make = []
         for block in blocks:
             translations = block.cpp_templates.render('translations')
@@ -262,7 +270,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
                 {r"gr\.sizeof_([\w_]+)": r"sizeof(\1)"}
             )
             for key in translations:
-                make = re.sub(key.replace("\\\\", "\\"), translations[key], make)
+                make = re.sub(key.replace("\\\\", "\\"),
+                              translations[key], make)
                 declarations = declarations.replace(key, translations[key])
             if make:
                 blocks_make.append((block, make, declarations))
@@ -276,7 +285,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
         fg = self._flow_graph
         variables = fg.get_cpp_variables()
 
-        type_translation = {'complex': 'gr_complex', 'real': 'double', 'float': 'float', 'int': 'int', 'complex_vector': 'std::vector<gr_complex>', 'real_vector': 'std::vector<double>', 'float_vector': 'std::vector<float>', 'int_vector': 'std::vector<int>', 'string': 'std::string', 'bool': 'bool'}
+        type_translation = {'complex': 'gr_complex', 'real': 'double', 'float': 'float', 'int': 'int', 'complex_vector': 'std::vector<gr_complex>',
+                            'real_vector': 'std::vector<double>', 'float_vector': 'std::vector<float>', 'int_vector': 'std::vector<int>', 'string': 'std::string', 'bool': 'bool'}
         # If the type is explcitly specified, translate to the corresponding C++ type
         for var in list(variables):
             if var.params['value'].dtype != 'raw':
@@ -287,26 +297,28 @@ class CppTopBlockGenerator(TopBlockGenerator):
         # Create an executable fragment of code containing all 'raw' variables in
         # order to infer the lvalue types.
         #
-        # Note that this differs from using ast.literal_eval() as literal_eval evaluates one 
-        # variable at a time. The code fragment below evaluates all variables together which 
+        # Note that this differs from using ast.literal_eval() as literal_eval evaluates one
+        # variable at a time. The code fragment below evaluates all variables together which
         # allows the variables to reference each other (i.e. a = b * c).
         prog = 'def get_decl_types():\n'
         prog += '\tvar_types = {}\n'
         for var in variables:
-            prog += '\t' + str(var.params['id'].value) + '=' + str(var.params['value'].value) + '\n'
-        prog += '\tvar_types = {}\n';
+            prog += '\t' + str(var.params['id'].value) + \
+                '=' + str(var.params['value'].value) + '\n'
+        prog += '\tvar_types = {}\n'
         for var in variables:
-            prog += '\tvar_types[\'' +  str(var.params['id'].value) + '\'] = type(' + str(var.params['id'].value) + ')\n'
+            prog += '\tvar_types[\'' + str(var.params['id'].value) + \
+                '\'] = type(' + str(var.params['id'].value) + ')\n'
         prog += '\treturn var_types'
 
         # Execute the code fragment in a separate namespace and retrieve the lvalue types
         var_types = {}
         namespace = {}
         try:
-          exec(prog, namespace)
-          var_types = namespace['get_decl_types']()
+            exec(prog, namespace)
+            var_types = namespace['get_decl_types']()
         except Exception as excp:
-          print('Failed to get parameter lvalue types: %s' %(excp))
+            print('Failed to get parameter lvalue types: %s' % (excp))
 
         # Format the rvalue of each variable expression
         for var in variables:
@@ -317,19 +329,21 @@ class CppTopBlockGenerator(TopBlockGenerator):
         parameters = fg.get_parameters()
 
         for param in parameters:
-            type_translation = {'eng_float' : 'double', 'intx' : 'int', 'str' : 'std::string', 'complex': 'gr_complex'};
+            type_translation = {'eng_float': 'double', 'intx': 'int',
+                                'str': 'std::string', 'complex': 'gr_complex'}
             param.vtype = type_translation[param.params['type'].value]
 
             if param.vtype == 'gr_complex':
-                evaluated = ast.literal_eval(param.params['value'].value.strip())
-                cpp_cmplx = '{' + str(evaluated.real) + ', ' + str(evaluated.imag) + '}'
+                evaluated = ast.literal_eval(
+                    param.params['value'].value.strip())
+                cpp_cmplx = '{' + str(evaluated.real) + \
+                    ', ' + str(evaluated.imag) + '}'
 
                 # Update the 'var_make' entry in the cpp_templates dictionary
                 d = param.cpp_templates
                 cpp_expr = d['var_make'].replace('${value}', cpp_cmplx)
-                d.update({'var_make':cpp_expr})
+                d.update({'var_make': cpp_expr})
                 param.cpp_templates = d
-
 
     def _callbacks(self):
         fg = self._flow_graph
@@ -344,16 +358,19 @@ class CppTopBlockGenerator(TopBlockGenerator):
         callbacks_all = []
         for block in fg.iter_enabled_blocks():
             if not (block.is_virtual_sink() or block.is_virtual_source()):
-            	callbacks_all.extend(expr_utils.expr_replace(cb, replace_dict) for cb in block.get_cpp_callbacks())
+                callbacks_all.extend(expr_utils.expr_replace(
+                    cb, replace_dict) for cb in block.get_cpp_callbacks())
 
         # Map var id to callbacks
         def uses_var_id(callback):
             used = expr_utils.get_variable_dependencies(callback, [var_id])
-            return used and ('this->' + var_id in callback)  # callback might contain var_id itself
+            # callback might contain var_id itself
+            return used and ('this->' + var_id in callback)
 
         callbacks = {}
         for var_id in var_ids:
-            callbacks[var_id] = [callback for callback in callbacks_all if uses_var_id(callback)]
+            callbacks[var_id] = [
+                callback for callback in callbacks_all if uses_var_id(callback)]
 
         return callbacks
 
@@ -385,14 +402,17 @@ class CppTopBlockGenerator(TopBlockGenerator):
 
         # Get the virtual blocks and resolve their connections
         connection_factory = fg.parent_platform.Connection
-        virtual_source_connections = [c for c in connections if isinstance(c.source_block, blocks.VirtualSource)]
+        virtual_source_connections = [c for c in connections if isinstance(
+            c.source_block, blocks.VirtualSource)]
         for connection in virtual_source_connections:
             sink = connection.sink_port
             for source in connection.source_port.resolve_virtual_source():
-                resolved = connection_factory(fg.orignal_flowgraph, source, sink)
+                resolved = connection_factory(
+                    fg.orignal_flowgraph, source, sink)
                 connections.append(resolved)
 
-        virtual_connections = [c for c in connections if (isinstance(c.source_block, blocks.VirtualSource) or isinstance(c.sink_block, blocks.VirtualSink))]
+        virtual_connections = [c for c in connections if (isinstance(
+            c.source_block, blocks.VirtualSource) or isinstance(c.sink_block, blocks.VirtualSink))]
         for connection in virtual_connections:
             # Remove the virtual connection
             connections.remove(connection)
@@ -406,7 +426,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
         for block in bypassed_blocks:
             # Get the upstream connection (off of the sink ports)
             # Use *connections* not get_connections()
-            source_connection = [c for c in connections if c.sink_port == block.sinks[0]]
+            source_connection = [
+                c for c in connections if c.sink_port == block.sinks[0]]
             # The source connection should never have more than one element.
             assert (len(source_connection) == 1)
 
@@ -418,7 +439,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
                 if not sink.enabled:
                     # Ignore disabled connections
                     continue
-                connection = connection_factory(fg.orignal_flowgraph, source_port, sink.sink_port)
+                connection = connection_factory(
+                    fg.orignal_flowgraph, source_port, sink.sink_port)
                 connections.append(connection)
                 # Remove this sink connection
                 connections.remove(sink)
@@ -434,7 +456,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
             template = templates[con.type]
 
             if con.source_port.dtype != 'bus':
-                code = template.render(make_port_sig=make_port_sig, source=con.source_port, sink=con.sink_port)
+                code = template.render(
+                    make_port_sig=make_port_sig, source=con.source_port, sink=con.sink_port)
                 if not self._generate_options.startswith('hb'):
                     code = 'this->tb->' + code
                 rendered.append(code)
@@ -453,7 +476,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
                             hidden_portb = portb.parent.sinks[port_num]
                             connection = fg.parent_platform.Connection(
                                 parent=self, source=hidden_porta, sink=hidden_portb)
-                            code = template.render(make_port_sig=make_port_sig, source=hidden_porta, sink=hidden_portb)
+                            code = template.render(
+                                make_port_sig=make_port_sig, source=hidden_porta, sink=hidden_portb)
                             if not self._generate_options.startswith('hb'):
                                 code = 'this->tb->' + code
                             rendered.append(code)

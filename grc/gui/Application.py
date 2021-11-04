@@ -7,7 +7,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 
-
 import logging
 import os
 import subprocess
@@ -65,7 +64,8 @@ class Application(Gtk.Application):
                 self.set_accels_for_action(x, keypress)
 
         # Initialize
-        self.init_file_paths = [os.path.abspath(file_path) for file_path in file_paths]
+        self.init_file_paths = [os.path.abspath(
+            file_path) for file_path in file_paths]
         self.init = False
 
     def do_startup(self):
@@ -80,7 +80,7 @@ class Application(Gtk.Application):
         self.main_window.connect('delete-event', self._quit)
         self.get_focus_flag = self.main_window.get_focus_flag
 
-        #setup the messages
+        # setup the messages
         Messages.register_messenger(self.main_window.add_console_line)
         Messages.send_init(self.platform)
 
@@ -117,7 +117,8 @@ class Application(Gtk.Application):
             file_path_to_show = self.config.file_open()
             for file_path in (self.init_file_paths or self.config.get_open_files()):
                 if os.path.exists(file_path):
-                    main.new_page(file_path, show=file_path_to_show == file_path)
+                    main.new_page(
+                        file_path, show=file_path_to_show == file_path)
             if not main.current_page:
                 main.new_page()  # ensure that at least a blank page exists
 
@@ -190,9 +191,12 @@ class Application(Gtk.Application):
                     action.load_from_preferences()
 
             # Hide the panels *IF* it's saved in preferences
-            main.update_panel_visibility(main.BLOCKS, Actions.TOGGLE_BLOCKS_WINDOW.get_active())
-            main.update_panel_visibility(main.CONSOLE, Actions.TOGGLE_CONSOLE_WINDOW.get_active())
-            main.update_panel_visibility(main.VARIABLES, Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR.get_active())
+            main.update_panel_visibility(
+                main.BLOCKS, Actions.TOGGLE_BLOCKS_WINDOW.get_active())
+            main.update_panel_visibility(
+                main.CONSOLE, Actions.TOGGLE_CONSOLE_WINDOW.get_active())
+            main.update_panel_visibility(
+                main.VARIABLES, Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR.get_active())
 
             # Force an update on the current page to match loaded preferences.
             # In the future, change the __init__ order to load preferences first
@@ -210,7 +214,7 @@ class Application(Gtk.Application):
         # Selections
         ##################################################
         elif action == Actions.ELEMENT_SELECT:
-            pass #do nothing, update routines below
+            pass  # do nothing, update routines below
         elif action == Actions.NOTHING_SELECT:
             flow_graph.unselect()
         elif action == Actions.SELECT_ALL:
@@ -271,7 +275,6 @@ class Application(Gtk.Application):
             x_min = min(block.coordinate[0] for block in selected_blocks)
             y_min = min(block.coordinate[1] for block in selected_blocks)
 
-
             for connection in flow_graph.connections:
 
                 # Get id of connected blocks
@@ -283,7 +286,8 @@ class Application(Gtk.Application):
                     pads.append({
                         'key': connection.sink_port.key,
                         'coord': source.coordinate,
-                        'block_index': selected_blocks.index(sink) + 1, # Ignore the options block
+                        # Ignore the options block
+                        'block_index': selected_blocks.index(sink) + 1,
                         'direction': 'source'
                     })
 
@@ -292,7 +296,8 @@ class Application(Gtk.Application):
                     pads.append({
                         'key': connection.source_port.key,
                         'coord': sink.coordinate,
-                        'block_index': selected_blocks.index(source) + 1, # Ignore the options block
+                        # Ignore the options block
+                        'block_index': selected_blocks.index(source) + 1,
                         'direction': 'sink'
                     })
 
@@ -335,7 +340,8 @@ class Application(Gtk.Application):
                     pad_block = flow_graph.get_block(pad_id)
                     pad_sink = pad_block.sinks[0]
 
-                    source_block = flow_graph.get_block(flow_graph.blocks[pad['block_index']].name)
+                    source_block = flow_graph.get_block(
+                        flow_graph.blocks[pad['block_index']].name)
                     source = source_block.get_source(pad['key'])
 
                     # ensure the port types match
@@ -350,13 +356,15 @@ class Application(Gtk.Application):
                     new_connection = flow_graph.connect(source, pad_sink)
 
                 elif pad['direction'] == 'source':
-                    pad_id = flow_graph.add_new_block('pad_source', pad['coord'])
+                    pad_id = flow_graph.add_new_block(
+                        'pad_source', pad['coord'])
 
                     # setup the references to the sink and source
                     pad_block = flow_graph.get_block(pad_id)
                     pad_source = pad_block.sources[0]
 
-                    sink_block = flow_graph.get_block(flow_graph.blocks[pad['block_index']].name)
+                    sink_block = flow_graph.get_block(
+                        flow_graph.blocks[pad['block_index']].name)
                     sink = sink_block.get_sink(pad['key'])
 
                     # ensure the port types match
@@ -496,7 +504,8 @@ class Application(Gtk.Application):
             # to be visible.
             varedit = Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR
             if active:
-                log.debug("Variables are hidden. Forcing the variable panel to be visible.")
+                log.debug(
+                    "Variables are hidden. Forcing the variable panel to be visible.")
                 varedit.disable()
             else:
                 varedit.enable()
@@ -548,8 +557,9 @@ class Application(Gtk.Application):
                 while response == Gtk.ResponseType.APPLY:  # rerun the dialog if Apply was hit
                     response = self.dialog.run()
                     if response in (Gtk.ResponseType.APPLY, Gtk.ResponseType.ACCEPT):
-                        page.state_cache.save_new_state(flow_graph.export_data())
-                        ### Following line forces a complete update of io ports
+                        page.state_cache.save_new_state(
+                            flow_graph.export_data())
+                        # Following line forces a complete update of io ports
                         flow_graph_update()
                         page.saved = False
                     if response in (Gtk.ResponseType.REJECT, Gtk.ResponseType.ACCEPT):
@@ -600,18 +610,21 @@ class Application(Gtk.Application):
             main.new_page()
             args = (GLib.Variant('s', 'qt_gui'),)
             flow_graph = main.current_page.flow_graph
-            flow_graph.options_block.params['generate_options'].set_value(str(args[0])[1:-1])
+            flow_graph.options_block.params['generate_options'].set_value(str(args[0])[
+                                                                          1:-1])
             flow_graph.options_block.params['author'].set_value(getuser())
             flow_graph_update(flow_graph)
         elif action == Actions.FLOW_GRAPH_NEW_TYPE:
             main.new_page()
             if args:
                 flow_graph = main.current_page.flow_graph
-                flow_graph.options_block.params['generate_options'].set_value(str(args[0])[1:-1])
+                flow_graph.options_block.params['generate_options'].set_value(str(args[0])[
+                                                                              1:-1])
                 flow_graph_update(flow_graph)
         elif action == Actions.FLOW_GRAPH_OPEN:
-            file_paths = args[0] if args[0] else FileDialogs.OpenFlowGraph(main, page.file_path).run()
-            if file_paths: # Open a new page for each file, show only the first
+            file_paths = args[0] if args[0] else FileDialogs.OpenFlowGraph(
+                main, page.file_path).run()
+            if file_paths:  # Open a new page for each file, show only the first
                 for i, file_path in enumerate(file_paths):
                     main.new_page(file_path, show=(i == 0))
                     self.config.add_recent_file(file_path)
@@ -631,10 +644,10 @@ class Application(Gtk.Application):
             main.tool_bar.refresh_submenus()
             main.menu.refresh_submenus()
         elif action == Actions.FLOW_GRAPH_SAVE:
-            #read-only or undefined file path, do save-as
+            # read-only or undefined file path, do save-as
             if page.get_read_only() or not page.file_path:
                 Actions.FLOW_GRAPH_SAVE_AS()
-            #otherwise try to save
+            # otherwise try to save
             else:
                 try:
                     self.platform.save_flow_graph(page.file_path, flow_graph)
@@ -670,18 +683,25 @@ class Application(Gtk.Application):
                     Actions.FLOW_GRAPH_SAVE_AS()
                 else:
                     dup_file_path = page.file_path
-                    dup_file_name = '.'.join(dup_file_path.split('.')[:-1]) + "_copy" # Assuming .grc extension at the end of file_path
+                    # Assuming .grc extension at the end of file_path
+                    dup_file_name = '.'.join(
+                        dup_file_path.split('.')[:-1]) + "_copy"
                     dup_file_path_temp = dup_file_name + Constants.FILE_EXTENSION
                     count = 1
                     while os.path.exists(dup_file_path_temp):
-                        dup_file_path_temp = '{}({}){}'.format(dup_file_name, count, Constants.FILE_EXTENSION)
+                        dup_file_path_temp = '{}({}){}'.format(
+                            dup_file_name, count, Constants.FILE_EXTENSION)
                         count += 1
-                    dup_file_path_user = FileDialogs.SaveFlowGraph(main, dup_file_path_temp).run()
+                    dup_file_path_user = FileDialogs.SaveFlowGraph(
+                        main, dup_file_path_temp).run()
                     if dup_file_path_user is not None:
-                        self.platform.save_flow_graph(dup_file_path_user, flow_graph)
-                        Messages.send('Saved Copy to: "' + dup_file_path_user + '"\n')
+                        self.platform.save_flow_graph(
+                            dup_file_path_user, flow_graph)
+                        Messages.send('Saved Copy to: "' +
+                                      dup_file_path_user + '"\n')
             except IOError:
-                Messages.send_fail_save("Can not create a copy of the flowgraph\n")
+                Messages.send_fail_save(
+                    "Can not create a copy of the flowgraph\n")
         elif action == Actions.FLOW_GRAPH_DUPLICATE:
             previous = flow_graph
             # Create a new page
@@ -694,10 +714,12 @@ class Application(Gtk.Application):
             page.state_cache.save_new_state(new_flow_graph.export_data())
             page.saved = False
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
-            file_path, background_transparent = FileDialogs.SaveScreenShot(main, page.file_path).run()
+            file_path, background_transparent = FileDialogs.SaveScreenShot(
+                main, page.file_path).run()
             if file_path is not None:
                 try:
-                    Utils.make_screenshot(flow_graph, file_path, background_transparent)
+                    Utils.make_screenshot(
+                        flow_graph, file_path, background_transparent)
                 except ValueError:
                     Messages.send('Failed to generate screen shot\n')
         ##################################################
@@ -717,7 +739,6 @@ class Application(Gtk.Application):
                     except Exception as e:
                         Messages.send_fail_gen(e)
 
-
         elif action == Actions.FLOW_GRAPH_EXEC:
             if not page.process:
                 Actions.FLOW_GRAPH_GEN()
@@ -734,7 +755,7 @@ class Application(Gtk.Application):
                             flow_graph_page=page,
                             xterm_executable=xterm,
                             callback=self.update_exec_stop
-                    )
+                        )
         elif action == Actions.FLOW_GRAPH_KILL:
             if page.process:
                 try:
@@ -748,7 +769,7 @@ class Application(Gtk.Application):
             self.platform.build_library()
             main.btwin.repopulate()
 
-            #todo: implement parser error dialog for YAML
+            # todo: implement parser error dialog for YAML
 
             # Force a redraw of the graph, by getting the current state and re-importing it
             main.update_pages()
@@ -791,21 +812,21 @@ class Application(Gtk.Application):
         selected_blocks = list(flow_graph.selected_blocks())
         selected_block = selected_blocks[0] if selected_blocks else None
 
-        #update general buttons
+        # update general buttons
         Actions.ERRORS_WINDOW_DISPLAY.set_enabled(not flow_graph.is_valid())
         Actions.ELEMENT_DELETE.set_enabled(bool(flow_graph.selected_elements))
         Actions.BLOCK_PARAM_MODIFY.set_enabled(bool(selected_block))
         Actions.BLOCK_ROTATE_CCW.set_enabled(bool(selected_blocks))
         Actions.BLOCK_ROTATE_CW.set_enabled(bool(selected_blocks))
-        #update alignment options
+        # update alignment options
         for act in Actions.BLOCK_ALIGNMENTS:
             if act:
                 act.set_enabled(len(selected_blocks) > 1)
-        #update cut/copy/paste
+        # update cut/copy/paste
         Actions.BLOCK_CUT.set_enabled(bool(selected_blocks))
         Actions.BLOCK_COPY.set_enabled(bool(selected_blocks))
         Actions.BLOCK_PASTE.set_enabled(bool(self.clipboard))
-        #update enable/disable/bypass
+        # update enable/disable/bypass
         can_enable = any(block.state != 'enabled'
                          for block in selected_blocks)
         can_disable = any(block.state != 'disabled'

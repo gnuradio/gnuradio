@@ -142,7 +142,8 @@ class Config(CoreConfig):
 
     def get_recent_files(self):
         """ Gets recent files, removes any that do not exist and re-saves it """
-        files = list(filter(os.path.exists, self.get_file_list('files_recent')))
+        files = list(
+            filter(os.path.exists, self.get_file_list('files_recent')))
         self.set_recent_files(files)
         return files
 
@@ -168,9 +169,9 @@ class Config(CoreConfig):
         # Figure out default
         if sidebar:
             _, h = self.main_window_size()
-            return self.entry('variable_editor_sidebar_position', pos, default=int(h*0.7))
+            return self.entry('variable_editor_sidebar_position', pos, default=int(h * 0.7))
         else:
-            return self.entry('variable_editor_position', pos, default=int(self.blocks_window_position()*0.5))
+            return self.entry('variable_editor_position', pos, default=int(self.blocks_window_position() * 0.5))
 
     def variable_editor_sidebar(self, pos=None):
         return self.entry('variable_editor_sidebar', pos, default=False)

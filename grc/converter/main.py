@@ -50,7 +50,8 @@ class Converter(object):
         self._force = force
 
         try:
-            logger.debug("Loading block cache from: {}".format(self.cache_file))
+            logger.debug(
+                "Loading block cache from: {}".format(self.cache_file))
             with open(self.cache_file, encoding='utf-8') as cache_file:
                 self.cache = byteify(json.load(cache_file))
         except (IOError, ValueError):
@@ -108,7 +109,8 @@ class Converter(object):
 
     def load_category_tree_xml(self, xml_file):
         """Validate and parse category tree file and add it to list"""
-        module_name = path.basename(xml_file)[:-len('block_tree.xml')].rstrip('._-')
+        module_name = path.basename(
+            xml_file)[:-len('block_tree.xml')].rstrip('._-')
         yml_file = path.join(self.output_dir, module_name + '.tree.yml')
 
         if not self.needs_conversion(xml_file, yml_file):
@@ -142,7 +144,8 @@ class Converter(object):
                         if name.endswith(suffix):
                             yield path.join(root, name)
             else:
-                logger.warning('Invalid entry in search path: {}'.format(block_path))
+                logger.warning(
+                    'Invalid entry in search path: {}'.format(block_path))
 
 
 def byteify(data):

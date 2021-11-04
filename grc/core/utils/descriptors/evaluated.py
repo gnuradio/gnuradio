@@ -23,7 +23,8 @@ class Evaluated(object):
             value = instance.parent_block.evaluate(raw)
         except Exception as error:
             if raw:
-                instance.add_error_message("Failed to eval '{}': {}".format(raw, error))
+                instance.add_error_message(
+                    "Failed to eval '{}': {}".format(raw, error))
             return self.default
 
         if not isinstance(value, self.expected_type):
@@ -68,13 +69,15 @@ class EvaluatedEnum(Evaluated):
         if isinstance(allowed_values, str):
             allowed_values = set(allowed_values.split())
         self.allowed_values = allowed_values
-        default = default if default is not None else next(iter(self.allowed_values))
+        default = default if default is not None else next(
+            iter(self.allowed_values))
         super(EvaluatedEnum, self).__init__(str, default, name)
 
     def default_eval_func(self, instance):
         value = super(EvaluatedEnum, self).default_eval_func(instance)
         if value not in self.allowed_values:
-            instance.add_error_message("Value '{}' not in allowed values".format(value))
+            instance.add_error_message(
+                "Value '{}' not in allowed values".format(value))
             return self.default
         return value
 

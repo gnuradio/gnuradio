@@ -42,6 +42,7 @@ def have_dark_theme():
         return False
     return is_dark_theme(theme)
 
+
 def add_style_provider():
     """
     Load GTK styles
@@ -55,6 +56,8 @@ def add_style_provider():
         style_provider,
         Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
     )
+
+
 add_style_provider()
 
 
@@ -93,7 +96,8 @@ class InputParam(Gtk.HBox):
         """
         Set the markup, color, tooltip, show/hide.
         """
-        self.label.set_markup(self.param.format_label_markup(self._have_pending_changes))
+        self.label.set_markup(
+            self.param.format_label_markup(self._have_pending_changes))
         self.set_color('dtype_' + self.param.dtype)
 
         self.set_tooltip_text(self.param.format_tooltip_text())
@@ -117,14 +121,14 @@ class InputParam(Gtk.HBox):
         Handle a gui change by setting the new param value,
         calling the callback (if applicable), and updating.
         """
-        #set the new value
+        # set the new value
         self.param.set_value(self.get_text())
-        #call the callback
+        # call the callback
         if self._changed_callback:
             self._changed_callback(self, None)
         else:
             self.param.validate()
-        #gui update
+        # gui update
         self._have_pending_changes = False
         self._update_gui()
 
@@ -205,7 +209,8 @@ class PythonEditorParam(InputParam):
         self.pack_start(button, True, True, True)
 
     def open_editor(self, widget=None):
-        self.param.parent_flowgraph.install_external_editor(self.param, parent=self._transient_for)
+        self.param.parent_flowgraph.install_external_editor(
+            self.param, parent=self._transient_for)
 
     def get_text(self):
         pass  # we never update the value from here
@@ -297,13 +302,15 @@ class FileParam(EntryParam):
         """
         # get the paths
         file_path = self.param.is_valid() and self.param.get_evaluated() or ''
-        (dirname, basename) = os.path.isfile(file_path) and os.path.split(file_path) or (file_path, '')
+        (dirname, basename) = os.path.isfile(
+            file_path) and os.path.split(file_path) or (file_path, '')
         # check for qss theme default directory
         if self.param.key == 'qt_qss_theme':
             dirname = os.path.dirname(dirname)  # trim filename
             if not os.path.exists(dirname):
-               config = self.param.parent_platform.config
-               dirname = os.path.join(config.install_prefix, '/share/gnuradio/themes')
+                config = self.param.parent_platform.config
+                dirname = os.path.join(
+                    config.install_prefix, '/share/gnuradio/themes')
         if not os.path.exists(dirname):
             dirname = os.getcwd()  # fix bad paths
 
@@ -313,17 +320,20 @@ class FileParam(EntryParam):
                 title='Open a Data File...', action=Gtk.FileChooserAction.OPEN,
                 transient_for=self._transient_for,
             )
-            file_dialog.add_buttons('gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-open', Gtk.ResponseType.OK)
+            file_dialog.add_buttons(
+                'gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-open', Gtk.ResponseType.OK)
         elif self.param.dtype == 'file_save':
             file_dialog = Gtk.FileChooserDialog(
                 title='Save a Data File...', action=Gtk.FileChooserAction.SAVE,
                 transient_for=self._transient_for,
             )
-            file_dialog.add_buttons('gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-save', Gtk.ResponseType.OK)
+            file_dialog.add_buttons(
+                'gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-save', Gtk.ResponseType.OK)
             file_dialog.set_do_overwrite_confirmation(True)
             file_dialog.set_current_name(basename)  # show the current filename
         else:
-            raise ValueError("Can't open file chooser dialog for type " + repr(self.param.dtype))
+            raise ValueError(
+                "Can't open file chooser dialog for type " + repr(self.param.dtype))
         file_dialog.set_current_folder(dirname)  # current directory
         file_dialog.set_select_multiple(False)
         file_dialog.set_local_only(True)
@@ -333,6 +343,7 @@ class FileParam(EntryParam):
             self._editing_callback()
             self._apply_change()
         file_dialog.destroy()  # destroy the dialog
+
 
 class DirectoryParam(FileParam):
     """Provide an entry box for a directory and a button to browse for it."""
@@ -344,23 +355,26 @@ class DirectoryParam(FileParam):
         """
         dirname = self.param.get_evaluated() if self.param.is_valid() else ''
 
-        if not os.path.isdir(dirname): # Check if directory exists, if not fall back to workdir
+        # Check if directory exists, if not fall back to workdir
+        if not os.path.isdir(dirname):
             dirname = os.getcwd()
 
-        if self.param.dtype == "dir_select": # Setup directory selection dialog, and fail for unexpected dtype
+        if self.param.dtype == "dir_select":  # Setup directory selection dialog, and fail for unexpected dtype
             dir_dialog = Gtk.FileChooserDialog(
                 title='Select a Directory...', action=Gtk.FileChooserAction.SELECT_FOLDER,
                 transient_for=self._transient_for
             )
         else:
-            raise ValueError("Can't open directory chooser dialog for type " + repr(self.param.dtype))
+            raise ValueError(
+                "Can't open directory chooser dialog for type " + repr(self.param.dtype))
 
         # Set dialog properties
-        dir_dialog.add_buttons('gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-open', Gtk.ResponseType.OK)
+        dir_dialog.add_buttons(
+            'gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-open', Gtk.ResponseType.OK)
         dir_dialog.set_current_folder(dirname)
         dir_dialog.set_local_only(True)
         dir_dialog.set_select_multiple(False)
-        
+
         # Show dialog and update parameter on success
         if Gtk.ResponseType.OK == dir_dialog.run():
             path = dir_dialog.get_filename()

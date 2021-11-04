@@ -23,6 +23,7 @@ class lazy_property(object):
 
 def nop_write(prop):
     """Make this a property with a nop setter"""
+
     def nop(self, value):
         pass
     return prop.setter(nop)

@@ -55,7 +55,8 @@ def docstring_guess_from_key(key):
     else:
         return doc_strings
 
-    pattern = re.compile('^' + init_name.replace('_', '_*').replace('x', r'\w') + r'\w*$')
+    pattern = re.compile(
+        '^' + init_name.replace('_', '_*').replace('x', r'\w') + r'\w*$')
     for match in filter(pattern.match, dir(module)):
         try:
             doc_strings[match] = getattr(module, match).__doc__
@@ -135,7 +136,8 @@ class SubprocessLoader(object):
                 break
             try:
                 self._worker = subprocess.Popen(
-                    args=(sys.executable, '-uc', self.BOOTSTRAP.format(__file__)),
+                    args=(sys.executable, '-uc',
+                          self.BOOTSTRAP.format(__file__)),
                     stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE
                 )
@@ -286,7 +288,8 @@ elif __name__ == '__main__':
     # r.query('uhd_source')
     r.query('expr_utils_graph')
     r.query('blocks_add_cc')
-    r.query('blocks_add_cc', ['import gnuradio.blocks'], 'gnuradio.blocks.add_cc(')
+    r.query('blocks_add_cc', ['import gnuradio.blocks'],
+            'gnuradio.blocks.add_cc(')
     # r.query('analog_feedforward_agc_cc')
     # r.query('uhd_source')
     # r.query('uhd_source')
