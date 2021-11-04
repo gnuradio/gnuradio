@@ -27,26 +27,31 @@ from optparse import OptionParser
 n2s = eng_notation.num_to_str
 COMMAND_DELAY = .2
 
+
 class rx_cfile_block(gr.top_block):
     """
     Simple flowgraph that streams from USRP source to file.
     """
+
     def __init__(self, options, filename):
         gr.top_block.__init__(self)
         # Dissect the channel list:
         try:
-            self.channels = [int(x.strip()) for x in options.channels.split(",")]
+            self.channels = [int(x.strip())
+                             for x in options.channels.split(",")]
         except ValueError:
-            sys.stderr.write("[UHD_RX] [ERROR] Invalid channel list: {}".format(options.channels))
+            sys.stderr.write(
+                "[UHD_RX] [ERROR] Invalid channel list: {}".format(options.channels))
             exit(1)
         # Create file names:
         if len(self.channels) == 1:
-            self.filenames = [filename,]
+            self.filenames = [filename, ]
         else:
             base, ext = os.path.splitext(filename)
             self.filenames = []
             for i in range(len(self.channels)):
-                self.filenames.append("{base}.{num}{ext}".format(base=base, num=i, ext=ext))
+                self.filenames.append(
+                    "{base}.{num}{ext}".format(base=base, num=i, ext=ext))
         # Check CPU format:
         self.cpu_format = 'fc32'
         self.item_size = gr.sizeof_gr_complex
@@ -78,7 +83,7 @@ class rx_cfile_block(gr.top_block):
                 ))
                 exit(1)
             if len(self.antenna) == 1 and len(self.channels) > 1:
-                self.antenna = [self.antenna[0],] * len(self.channels)
+                self.antenna = [self.antenna[0], ] * len(self.channels)
             for i, chan in enumerate(self.channels):
                 self._u.set_antenna(self.antenna[i], chan)
                 if options.verbose:
@@ -93,7 +98,8 @@ class rx_cfile_block(gr.top_block):
             print("[UHD_RX] Defaulting to mid-point gains:")
             for chan in self.channels:
                 self._u.set_normalized_gain(.5, chan)
-                print("[UHD_RX] Channel {chan} gain: {g} dB".format(chan=chan, g=self._u.get_gain(chan)))
+                print("[UHD_RX] Channel {chan} gain: {g} dB".format(
+                    chan=chan, g=self._u.get_gain(chan)))
         else:
             for chan in self.channels:
                 if options.normalized_gain:
@@ -117,11 +123,13 @@ class rx_cfile_block(gr.top_block):
                     self._u.set_command_time(cmd_time, mb_idx)
                 command_time_set = True
             except RuntimeError:
-                sys.stderr.write('[UHD_RX] [WARNING] Failed to set command times.\n')
+                sys.stderr.write(
+                    '[UHD_RX] [WARNING] Failed to set command times.\n')
         for chan in self.channels:
             tr = self._u.set_center_freq(treq, chan)
             if tr == None:
-                sys.stderr.write('[UHD_RX] [ERROR] Failed to set center frequency on channel {chan}\n'.format(chan=chan))
+                sys.stderr.write(
+                    '[UHD_RX] [ERROR] Failed to set center frequency on channel {chan}\n'.format(chan=chan))
                 exit(1)
         if command_time_set:
             for mb_idx in range(self._u.get_num_mboards()):
@@ -135,16 +143,18 @@ class rx_cfile_block(gr.top_block):
             if options.metafile:
                 # store additional metadata
                 extras = pmt.make_dict()
-                extras = pmt.dict_add(extras, pmt.intern("rx_gain"), pmt.from_double(gain))
+                extras = pmt.dict_add(extras, pmt.intern(
+                    "rx_gain"), pmt.from_double(gain))
                 extras_str = pmt.serialize_str(extras)
                 self._sink.append(blocks.file_meta_sink(
-                        self.item_size, self.filenames[i],
-                        samp_rate, 1,
-                        self.meta_file_type, True,
-                        1000000, extras_str, False
+                    self.item_size, self.filenames[i],
+                    samp_rate, 1,
+                    self.meta_file_type, True,
+                    1000000, extras_str, False
                 ))
             else:
-                self._sink.append(blocks.file_sink(self.item_size, self.filenames[i]))
+                self._sink.append(blocks.file_sink(
+                    self.item_size, self.filenames[i]))
             # Create head block if needed and wire it up:
             if options.nsamples is None:
                 self.connect((self._u, i), self._sink[i])
@@ -167,40 +177,51 @@ class rx_cfile_block(gr.top_block):
                     rx_serial = info["rx_serial"]
                 rx_antenna = info["rx_antenna"]
                 rx_subdev_spec = info["rx_subdev_spec"]
-                print("[UHD_RX] Motherboard: %s (%s)" % (mboard_id, mboard_serial))
+                print("[UHD_RX] Motherboard: %s (%s)" %
+                      (mboard_id, mboard_serial))
                 if "B200" in mboard_id or "B210" in mboard_id or "E310" in mboard_id:
-                    print("[UHD_RX] Daughterboard: %s (%s, %s)" % (mboard_id, rx_antenna, rx_subdev_spec))
+                    print("[UHD_RX] Daughterboard: %s (%s, %s)" %
+                          (mboard_id, rx_antenna, rx_subdev_spec))
                 else:
-                    print("[UHD_RX] Daughterboard: %s (%s, %s, %s)" % (rx_id, rx_serial, rx_antenna, rx_subdev_spec))
+                    print("[UHD_RX] Daughterboard: %s (%s, %s, %s)" %
+                          (rx_id, rx_serial, rx_antenna, rx_subdev_spec))
             except KeyError:
                 print("[UHD_RX] Args: ", options.args)
             print("[UHD_RX] Receiving on {} channels.".format(len(self.channels)))
             print("[UHD_RX] Rx gain:               {gain}".format(gain=gain))
             print("[UHD_RX] Rx frequency:          {freq}".format(freq=freq))
-            print("[UHD_RX] Rx baseband frequency: {actual}".format(actual=n2s(tr.actual_rf_freq)))
-            print("[UHD_RX] Rx DDC frequency:      {dsp}".format(dsp=n2s(tr.actual_dsp_freq)))
-            print("[UHD_RX] Rx Sample Rate:        {rate}".format(rate=n2s(samp_rate)))
+            print("[UHD_RX] Rx baseband frequency: {actual}".format(
+                actual=n2s(tr.actual_rf_freq)))
+            print("[UHD_RX] Rx DDC frequency:      {dsp}".format(
+                dsp=n2s(tr.actual_dsp_freq)))
+            print("[UHD_RX] Rx Sample Rate:        {rate}".format(
+                rate=n2s(samp_rate)))
             if options.nsamples is None:
                 print("[UHD_RX] Receiving samples until Ctrl-C")
             else:
-                print("[UHD_RX] Receiving {n} samples.".format(n=n2s(options.nsamples)))
+                print("[UHD_RX] Receiving {n} samples.".format(
+                    n=n2s(options.nsamples)))
             if options.output_shorts:
                 print("[UHD_RX] Writing 16-bit complex shorts")
             else:
                 print("[UHD_RX] Writing 32-bit complex floats")
-            print("[UHD_RX] Output file(s): {files}".format(files=", ".join(self.filenames)))
+            print("[UHD_RX] Output file(s): {files}".format(
+                files=", ".join(self.filenames)))
         # Direct asynchronous notifications to callback function:
         if options.show_async_msg:
             self.async_msgq = gr.msg_queue(0)
             self.async_src = uhd.amsg_source("", self.async_msgq)
-            self.async_rcv = uhd.msgq_runner(self.async_msgq, self.async_callback)
+            self.async_rcv = uhd.msgq_runner(
+                self.async_msgq, self.async_callback)
 
     def async_callback(self, msg):
         md = self.async_src.msg_to_async_metadata_t(msg)
-        print("[UHD_RX] Channel: %i Time: %f Event: %i" % (md.channel, md.time_spec.get_real_secs(), md.event_code))
+        print("[UHD_RX] Channel: %i Time: %f Event: %i" %
+              (md.channel, md.time_spec.get_real_secs(), md.event_code))
+
 
 def get_options():
-    usage="%prog: [options] output_filename"
+    usage = "%prog: [options] output_filename"
     parser = OptionParser(option_class=eng_option, usage=usage)
     parser.add_option("-a", "--args", type="string", default="",
                       help="UHD device address args , [default=%default]")
@@ -220,9 +241,9 @@ def get_options():
                       help="Set gain in dB (default is midpoint)")
     parser.add_option("--normalized-gain", action="store_true",
                       help="Specify gain as normalized value (in [0, 1])")
-    parser.add_option( "-m","--metafile", action="store_true", default=False,
+    parser.add_option("-m", "--metafile", action="store_true", default=False,
                       help="output metadata to file [default=%default]")
-    parser.add_option( "-s","--output-shorts", action="store_true", default=False,
+    parser.add_option("-s", "--output-shorts", action="store_true", default=False,
                       help="Output interleaved shorts instead of complex floats")
     parser.add_option("-N", "--nsamples", type="eng_float", default=None,
                       help="Number of samples to collect [default=+inf]")
@@ -245,6 +266,7 @@ def get_options():
         sys.stderr.write('You must specify the frequency with -f FREQ\n')
         exit(1)
     return (options, args[0])
+
 
 if __name__ == '__main__':
     (options, filename) = get_options()
