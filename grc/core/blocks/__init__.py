@@ -21,6 +21,7 @@ def register_build_in(cls):
     build_ins[cls.key] = cls
     return cls
 
+
 from .dummy import DummyBlock
 from .embedded_python import EPyBlock, EPyModule
 from .virtual import VirtualSink, VirtualSource
