@@ -12,13 +12,14 @@ from gnuradio import filter
 from gnuradio import gr
 from gnuradio.filter import firdes
 
+
 class conj_fs_iqcorr(gr.hier_block2):
 
     def __init__(self, delay=0, taps=[]):
         gr.hier_block2.__init__(
             self, "Conj FS IQBal",
-            gr.io_signature(1, 1, gr.sizeof_gr_complex*1),
-            gr.io_signature(1, 1, gr.sizeof_gr_complex*1),
+            gr.io_signature(1, 1, gr.sizeof_gr_complex * 1),
+            gr.io_signature(1, 1, gr.sizeof_gr_complex * 1),
         )
 
         ##################################################
@@ -31,7 +32,7 @@ class conj_fs_iqcorr(gr.hier_block2):
         # Blocks
         ##################################################
         self.filter_fir_filter_xxx_0 = filter.fir_filter_ccc(1, (taps))
-        self.delay_0 = blocks.delay(gr.sizeof_gr_complex*1, delay)
+        self.delay_0 = blocks.delay(gr.sizeof_gr_complex * 1, delay)
         self.blocks_conjugate_cc_0 = blocks.conjugate_cc()
         self.blocks_add_xx_0 = blocks.add_vcc(1)
 
@@ -40,13 +41,12 @@ class conj_fs_iqcorr(gr.hier_block2):
         ##################################################
         self.connect((self.blocks_add_xx_0, 0), (self, 0))
         self.connect((self, 0), (self.blocks_conjugate_cc_0, 0))
-        self.connect((self.filter_fir_filter_xxx_0, 0), (self.blocks_add_xx_0, 1))
-        self.connect((self.blocks_conjugate_cc_0, 0), (self.filter_fir_filter_xxx_0, 0))
+        self.connect((self.filter_fir_filter_xxx_0, 0),
+                     (self.blocks_add_xx_0, 1))
+        self.connect((self.blocks_conjugate_cc_0, 0),
+                     (self.filter_fir_filter_xxx_0, 0))
         self.connect((self, 0), (self.delay_0, 0))
         self.connect((self.delay_0, 0), (self.blocks_add_xx_0, 0))
-
-
-# QT sink close method reimplementation
 
     def get_delay(self):
         return self.delay
@@ -61,5 +61,3 @@ class conj_fs_iqcorr(gr.hier_block2):
     def set_taps(self, taps):
         self.taps = taps
         self.filter_fir_filter_xxx_0.set_taps((self.taps))
-
-
