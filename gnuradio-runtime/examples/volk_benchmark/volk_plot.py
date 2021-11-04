@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-import sys, math
+import sys
+import math
 import argparse
 from volk_test_funcs import (create_connection, list_tables, get_results,
                              helper, timeit, format_results)
@@ -9,11 +10,13 @@ try:
     import matplotlib
     import matplotlib.pyplot as plt
 except ImportError:
-    sys.stderr.write("Could not import Matplotlib (http://matplotlib.sourceforge.net/)\n")
+    sys.stderr.write(
+        "Could not import Matplotlib (http://matplotlib.sourceforge.net/)\n")
     sys.exit(1)
 
+
 def main():
-    desc='Plot Volk performance results from a SQLite database. ' + \
+    desc = 'Plot Volk performance results from a SQLite database. ' + \
         'Run one of the volk tests first (e.g, volk_math.py)'
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('-D', '--database', type=str,
@@ -49,8 +52,8 @@ def main():
     colors = ['b', 'r', 'g', 'm', 'k']
 
     # Set up figure for plotting
-    f0 = plt.figure(0, facecolor='w', figsize=(14,10))
-    s0 = f0.add_subplot(1,1,1)
+    f0 = plt.figure(0, facecolor='w', figsize=(14, 10))
+    s0 = f0.add_subplot(1, 1, 1)
 
     # Create a register of names that exist in all tables
     tmp_regs = []
@@ -77,7 +80,7 @@ def main():
     # This ensures there is no sorting issue with the data in the
     # dictionary, so the kernels are plotted against each other.
     table_data = dict()
-    for i,table in enumerate(tables):
+    for i, table in enumerate(tables):
         # Get results from the next table
         res = get_results(conn, table[0])
 
@@ -88,7 +91,7 @@ def main():
         table_data[table[0]] = data
 
     if args.percent is not None:
-        for i,t in enumerate(table_data):
+        for i, t in enumerate(table_data):
             if args.percent == t:
                 norm_data = []
                 for name in name_reg:
@@ -98,7 +101,6 @@ def main():
                         norm_data.append(table_data[t][name]['min'])
                     elif(args.plot == 'mean'):
                         norm_data.append(table_data[t][name]['avg'])
-
 
     # Plot the results
     x0 = list(range(len(name_reg)))
@@ -116,36 +118,36 @@ def main():
                 ydata.append(table_data[t][name]['avg'])
 
         if args.percent is not None:
-            ydata = [-100*(y-n)/y for y,n in zip(ydata,norm_data)]
+            ydata = [-100 * (y - n) / y for y, n in zip(ydata, norm_data)]
             if(args.percent != t):
                 # makes x values for this data set placement
                 # width of bars depends on number of comparisons
-                wdth = 0.80 / (M-1)
-                x1 = [x + i*wdth for x in x0]
+                wdth = 0.80 / (M - 1)
+                x1 = [x + i * wdth for x in x0]
                 i += 1
 
                 s0.bar(x1, ydata, width=wdth,
-                       color=colors[(i-1)%M], label=t,
+                       color=colors[(i - 1) % M], label=t,
                        edgecolor='k', linewidth=2)
 
         else:
             # makes x values for this data set placement
             # width of bars depends on number of comparisons
             wdth = 0.80 / M
-            x1 = [x + i*wdth for x in x0]
+            x1 = [x + i * wdth for x in x0]
             i += 1
 
             if(args.errorbars is False):
                 s0.bar(x1, ydata, width=wdth,
-                       color=colors[(i-1)%M], label=t,
+                       color=colors[(i - 1) % M], label=t,
                        edgecolor='k', linewidth=2)
             else:
                 s0.bar(x1, ydata, width=wdth,
                        yerr=stds,
-                       color=colors[i%M], label=t,
+                       color=colors[i % M], label=t,
                        edgecolor='k', linewidth=2,
-                       error_kw={"ecolor": 'k', "capsize":5,
-                                 "linewidth":2})
+                       error_kw={"ecolor": 'k', "capsize": 5,
+                                 "linewidth": 2})
 
     nitems = res[0]['nitems']
     if args.percent is None:
@@ -154,8 +156,8 @@ def main():
                       horizontalalignment='center')
     else:
         s0.set_ylabel("% Improvement over {0} [{1:G} items]".format(
-                args.percent, nitems),
-                      fontsize=22, fontweight='bold')
+            args.percent, nitems),
+            fontsize=22, fontweight='bold')
 
     s0.legend()
     s0.set_xticks(x0)
@@ -165,6 +167,7 @@ def main():
         label.set_fontsize(16)
 
     plt.show()
+
 
 if __name__ == "__main__":
     main()

@@ -8,7 +8,6 @@
 #
 
 
-
 import numpy
 import ctypes
 
@@ -80,7 +79,7 @@ class py_io_signature(object):
             return ()
         if nports <= ntypes:
             return self.__types[:nports]
-        return self.__types + [self.__types[-1]]*(nports-ntypes)
+        return self.__types + [self.__types[-1]] * (nports - ntypes)
 
     def __iter__(self):
         """
@@ -106,7 +105,7 @@ class gateway_block(object):
         # Normalize the many Python ways of saying 'nothing' to '()'
         in_sig = in_sig or ()
         out_sig = out_sig or ()
-        
+
         # Backward compatibility: array of type strings -> py_io_signature
         if type(in_sig) is py_io_signature:
             self.__in_sig = in_sig
@@ -138,17 +137,17 @@ class gateway_block(object):
         Makes this block connectable by hier/top block python
         """
         return self.gateway.to_basic_block()
-    
+
     def fixed_rate_noutput_to_ninput(self, noutput_items):
         return int((noutput_items * self._decim / self._interp) + self.gateway.history() - 1)
 
     def handle_forecast(self, noutput_items, ninputs):
         """
-        This is the handler function for forecast calls from 
+        This is the handler function for forecast calls from
         block_gateway in c++ across pybind11 wrappers
         """
         return self.forecast(noutput_items, ninputs)
-        
+
         # return ninput_items_required
 
     def forecast(self, noutput_items, ninputs):
@@ -156,50 +155,51 @@ class gateway_block(object):
         forecast is only called from a general block
         this is the default implementation
         """
-        ninput_items_required = [0]*ninputs
+        ninput_items_required = [0] * ninputs
         for i in range(ninputs):
-            ninput_items_required[i] = noutput_items + self.gateway.history() - 1
+            ninput_items_required[i] = noutput_items + \
+                self.gateway.history() - 1
 
         return ninput_items_required
 
-    def handle_general_work(self, noutput_items, 
-                     ninput_items,
-                     input_items,
-                     output_items):
+    def handle_general_work(self, noutput_items,
+                            ninput_items,
+                            input_items,
+                            output_items):
 
         ninputs = len(input_items)
         noutputs = len(output_items)
         in_types = self.in_sig().port_types(ninputs)
         out_types = self.out_sig().port_types(noutputs)
 
-        
         ctypes.pythonapi.PyCapsule_GetPointer.restype = ctypes.c_void_p
-        ctypes.pythonapi.PyCapsule_GetPointer.argtypes = [ctypes.py_object, ctypes.c_char_p]
+        ctypes.pythonapi.PyCapsule_GetPointer.argtypes = [
+            ctypes.py_object, ctypes.c_char_p]
 
         if self._block_type != gr.GW_BLOCK_GENERAL:
-            ii=[pointer_to_ndarray(
-                ctypes.pythonapi.PyCapsule_GetPointer(input_items[i],None),
+            ii = [pointer_to_ndarray(
+                ctypes.pythonapi.PyCapsule_GetPointer(input_items[i], None),
                 in_types[i],
                 self.fixed_rate_noutput_to_ninput(noutput_items)
             ) for i in range(ninputs)]
         else:
-            ii=[pointer_to_ndarray(
-                ctypes.pythonapi.PyCapsule_GetPointer(input_items[i],None),
+            ii = [pointer_to_ndarray(
+                ctypes.pythonapi.PyCapsule_GetPointer(input_items[i], None),
                 in_types[i],
                 ninput_items[i]
             ) for i in range(ninputs)]
 
-        oo=[pointer_to_ndarray(
-            ctypes.pythonapi.PyCapsule_GetPointer(output_items[i],None),
+        oo = [pointer_to_ndarray(
+            ctypes.pythonapi.PyCapsule_GetPointer(output_items[i], None),
             out_types[i],
             noutput_items
-        ) for i in range(noutputs)]   
+        ) for i in range(noutputs)]
 
         if self._block_type != gr.GW_BLOCK_GENERAL:
-            r = self.work(ii,oo)
+            r = self.work(ii, oo)
             self.consume_items(r)
         else:
-            r = self.general_work(ii,oo)
+            r = self.general_work(ii, oo)
 
         return r
 
@@ -224,7 +224,8 @@ class gateway_block(object):
         return self.__out_sig
 
     def set_msg_handler(self, which_port, handler_function):
-        self.gateway.set_msg_handler_pybind(which_port, handler_function.__name__)
+        self.gateway.set_msg_handler_pybind(
+            which_port, handler_function.__name__)
         # Save handler object in class so it's not garbage collected
         self.msg_handlers[which_port] = handler_function
 
@@ -247,11 +248,10 @@ class gateway_block(object):
     #     return self.gateway.produce(which_output, how_many_items)
 
 
-
 ########################################################################
 # Wrappers for the user to inherit from
 ########################################################################
-class basic_block(gateway_block):   
+class basic_block(gateway_block):
     """
     Args:
     name (str): block name
@@ -263,6 +263,7 @@ class basic_block(gateway_block):
     For backward compatibility, a sequence of numpy type names is also
     accepted as an io signature.
     """
+
     def __init__(self, name, in_sig, out_sig):
         gateway_block.__init__(self,
                                name=name,
@@ -271,10 +272,11 @@ class basic_block(gateway_block):
                                block_type=gr.GW_BLOCK_GENERAL
                                )
 
-    def consume_items(self, nitems ):
+    def consume_items(self, nitems):
         pass
 
-class sync_block(gateway_block):   
+
+class sync_block(gateway_block):
     """
     Args:
     name (str): block name
@@ -286,6 +288,7 @@ class sync_block(gateway_block):
     For backward compatibility, a sequence of numpy type names is also
     accepted as an io signature.
     """
+
     def __init__(self, name, in_sig, out_sig):
         gateway_block.__init__(self,
                                name=name,
@@ -296,7 +299,7 @@ class sync_block(gateway_block):
         self._decim = 1
         self._interp = 1
 
-    def consume_items(self, nitems ):
+    def consume_items(self, nitems):
         if (nitems > 0):
             self.gateway.consume_each(nitems)
 
@@ -313,6 +316,7 @@ class decim_block(gateway_block):
     For backward compatibility, a sequence of numpy type names is also
     accepted as an io signature.
     """
+
     def __init__(self, name, in_sig, out_sig, decim):
         gateway_block.__init__(self,
                                name=name,
@@ -325,13 +329,12 @@ class decim_block(gateway_block):
         self.gateway.set_relative_rate(self._interp, self._decim)
         self.gateway.set_output_multiple(self._interp)
 
-    def consume_items(self, nitems ):
+    def consume_items(self, nitems):
         if (nitems > 0):
             self.gateway.consume_each(int(nitems * self._decim))
 
     def forecast(self, noutput_items, ninputs):
         return [self.fixed_rate_noutput_to_ninput(noutput_items) for ii in range(ninputs)]
-
 
 
 class interp_block(gateway_block):
@@ -346,6 +349,7 @@ class interp_block(gateway_block):
     For backward compatibility, a sequence of numpy type names is also
     accepted as an io signature.
     """
+
     def __init__(self, name, in_sig, out_sig, interp):
         gateway_block.__init__(self,
                                name=name,
@@ -358,8 +362,7 @@ class interp_block(gateway_block):
         self.gateway.set_relative_rate(self._interp, self._decim)
         self.gateway.set_output_multiple(self._interp)
 
-
-    def consume_items(self, nitems ):
+    def consume_items(self, nitems):
         if (nitems > 0):
             self.gateway.consume_each(int(nitems / self._interp))
 

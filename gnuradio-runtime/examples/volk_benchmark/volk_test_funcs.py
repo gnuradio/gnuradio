@@ -2,7 +2,10 @@
 
 from gnuradio import gr
 from gnuradio import blocks
-import math, sys, os, time
+import math
+import sys
+import os
+import time
 import numpy
 
 try:
@@ -10,6 +13,7 @@ try:
 except ImportError:
     sys.stderr.write("Unable to import sqlite3: requires Python 2.5\n")
     sys.exit(1)
+
 
 def execute(conn, cmd):
     '''
@@ -20,11 +24,13 @@ def execute(conn, cmd):
     conn.commit()
     c.close()
 
+
 def create_connection(database):
     '''
     Returns a connection object to the SQLite database.
     '''
     return sqlite3.connect(database)
+
 
 def new_table(conn, tablename):
     '''
@@ -37,6 +43,7 @@ def new_table(conn, tablename):
         tablename, cols)
     execute(conn, cmd)
 
+
 def replace_results(conn, tablename, nitems, iters, res):
     '''
     Inserts or replaces the results 'res' dictionary values into the table.
@@ -45,6 +52,7 @@ def replace_results(conn, tablename, nitems, iters, res):
     cmd = "DELETE FROM {0} where kernel='{1}'".format(tablename, res["kernel"])
     execute(conn, cmd)
     insert_results(conn, tablename, nitems, iters, res)
+
 
 def insert_results(conn, tablename, nitems, iters, res):
     '''
@@ -55,6 +63,7 @@ def insert_results(conn, tablename, nitems, iters, res):
         tablename, cols, res["kernel"], nitems, iters,
         res["avg"], res["var"], res["max"], res["min"])
     execute(conn, cmd)
+
 
 def list_tables(conn):
     '''
@@ -67,6 +76,7 @@ def list_tables(conn):
     c.close()
 
     return t
+
 
 def get_results(conn, tablename):
     '''
@@ -83,7 +93,7 @@ def get_results(conn, tablename):
         r = dict()
         r['kernel'] = f[0]
         r['nitems'] = f[1]
-        r['iters']  = f[2]
+        r['iters'] = f[2]
         r['avg'] = f[3]
         r['var'] = f[4]
         r['min'] = f[5]
@@ -106,6 +116,7 @@ class helper(gr.top_block):
     This function can only handle blocks where all inputs are the same
     datatype and all outputs are the same data type
     '''
+
     def __init__(self, N, op,
                  isizeof=gr.sizeof_gr_complex,
                  osizeof=gr.sizeof_gr_complex,
@@ -123,13 +134,14 @@ class helper(gr.top_block):
         for n in range(nsnks):
             self.snks.append(blocks.null_sink(osizeof))
 
-        self.connect(self.srcs[0], self.head, (self.op,0))
+        self.connect(self.srcs[0], self.head, (self.op, 0))
 
         for n in range(1, nsrcs):
-            self.connect(self.srcs[n], (self.op,n))
+            self.connect(self.srcs[n], (self.op, n))
 
         for n in range(nsnks):
-            self.connect((self.op,n), self.snks[n])
+            self.connect((self.op, n), self.snks[n])
+
 
 def timeit(tb, iterations):
     '''
@@ -151,6 +163,7 @@ def timeit(tb, iterations):
 
     return times
 
+
 def format_results(kernel, times):
     '''
     Convenience function to convert the results of the timeit function
@@ -163,5 +176,3 @@ def format_results(kernel, times):
     res["max"] = max(times)
     res["min"] = min(times)
     return res
-
-

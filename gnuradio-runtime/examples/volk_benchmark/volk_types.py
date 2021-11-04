@@ -8,12 +8,14 @@ from volk_test_funcs import (create_connection, new_table, replace_results,
 
 ######################################################################
 
+
 def float_to_char(N):
     op = blocks.float_to_char()
     tb = helper(N, op, gr.sizeof_float, gr.sizeof_char, 1, 1)
     return tb
 
 ######################################################################
+
 
 def float_to_int(N):
     op = blocks.float_to_int()
@@ -22,12 +24,14 @@ def float_to_int(N):
 
 ######################################################################
 
+
 def float_to_short(N):
     op = blocks.float_to_short()
     tb = helper(N, op, gr.sizeof_float, gr.sizeof_short, 1, 1)
     return tb
 
 ######################################################################
+
 
 def short_to_float(N):
     op = blocks.short_to_float()
@@ -36,6 +40,7 @@ def short_to_float(N):
 
 ######################################################################
 
+
 def short_to_char(N):
     op = blocks.short_to_char()
     tb = helper(N, op, gr.sizeof_short, gr.sizeof_char, 1, 1)
@@ -43,17 +48,20 @@ def short_to_char(N):
 
 ######################################################################
 
+
 def char_to_short(N):
     op = blocks.char_to_short()
     tb = helper(N, op, gr.sizeof_char, gr.sizeof_short, 1, 1)
 
 ######################################################################
 
+
 def char_to_float(N):
     op = blocks.char_to_float()
     tb = helper(N, op, gr.sizeof_char, gr.sizeof_float, 1, 1)
 
 #####################################################################
+
 
 def int_to_float(N):
     op = blocks.int_to_float()
@@ -62,12 +70,14 @@ def int_to_float(N):
 
 ######################################################################
 
+
 def complex_to_float(N):
     op = blocks.complex_to_float()
     tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_float, 1, 2)
     return tb
 
 ######################################################################
+
 
 def complex_to_real(N):
     op = blocks.complex_to_real()
@@ -76,6 +86,7 @@ def complex_to_real(N):
 
 ######################################################################
 
+
 def complex_to_imag(N):
     op = blocks.complex_to_imag()
     tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_float, 1, 1)
@@ -83,12 +94,14 @@ def complex_to_imag(N):
 
 ######################################################################
 
+
 def complex_to_mag(N):
     op = blocks.complex_to_mag()
     tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_float, 1, 1)
     return tb
 
 ######################################################################
+
 
 def complex_to_mag_squared(N):
     op = blocks.complex_to_mag_squared()
@@ -109,6 +122,7 @@ def run_tests(func, N, iters):
         print("\tCould not run test. Skipping.")
         return None
 
+
 def main():
     avail_tests = [float_to_char,
                    float_to_int,
@@ -124,7 +138,7 @@ def main():
                    complex_to_mag,
                    complex_to_mag_squared]
 
-    desc='Time an operation to compare with other implementations. \
+    desc = 'Time an operation to compare with other implementations. \
           This program runs a simple GNU Radio flowgraph to test a \
           particular math function, mostly to compare the  \
           Volk-optimized implementation versus a regular \
@@ -155,7 +169,8 @@ def main():
 
     if(args.list):
         print("Available Tests to Run:")
-        print("\n".join(["\t{0}: {1}".format(i,f.__name__) for i,f in enumerate(avail_tests)]))
+        print("\n".join(["\t{0}: {1}".format(i, f.__name__)
+              for i, f in enumerate(avail_tests)]))
         sys.exit(0)
 
     N = int(args.nitems)
@@ -174,6 +189,7 @@ def main():
         res = run_tests(avail_tests[test], N, iters)
         if res is not None:
             replace_results(conn, label, N, iters, res)
+
 
 if __name__ == "__main__":
     try:

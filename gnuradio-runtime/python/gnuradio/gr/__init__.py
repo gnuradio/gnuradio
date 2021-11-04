@@ -19,7 +19,8 @@ Core contents.
 # If gnuradio is installed then the pybind output will be in this directory.
 # Otherwise it will reside in bindings/.
 
-import os, sys
+import os
+import sys
 
 try:
     from .gr_python import *
@@ -39,7 +40,7 @@ from .gateway import basic_block, sync_block, decim_block, interp_block, py_io_s
 
 log = gr.logger("log")
 log.set_level(prefs().get_string("LOG", "log_level", "notset"))
-log_file = gr.prefs().get_string("LOG", "log_file", "");
+log_file = gr.prefs().get_string("LOG", "log_file", "")
 if(log_file == "stderr" or log_file == "stdout"):
     log.add_console_appender(log_file, "gr::log %d :%p: %m%n")
 else:
@@ -47,7 +48,7 @@ else:
 
 log_debug = gr.logger("log_debug")
 log_debug.set_level(prefs().get_string("LOG", "debug_level", "notset"))
-log_debug_file = gr.prefs().get_string("LOG", "debug_file", "");
+log_debug_file = gr.prefs().get_string("LOG", "debug_file", "")
 if(log_debug_file == "stderr" or log_file == "stdout"):
     log_debug.add_console_appender(log_debug_file, "gr::log %d :%p: %m%n")
 else:
