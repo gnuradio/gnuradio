@@ -18,8 +18,8 @@ Args:
 
 
 RPCMethods = {'thrift': 'Apache Thrift',
-             #'ice': 'Zeroc ICE'
-             }
+              # 'ice': 'Zeroc ICE'
+              }
 
 
 """
@@ -62,14 +62,17 @@ Args:
     host: hostname of the connection
 """
 
+
 class RPCConnection(object):
     def __init__(self, method, port, host=None):
         (self.method, self.port) = (method, port)
-        if host is None: self.host = '127.0.0.1'
-        else: self.host = host
+        if host is None:
+            self.host = '127.0.0.1'
+        else:
+            self.host = host
 
     def __str__(self):
-        return "%s connection on %s:%s"%(self.getName(), self.getHost(), self.getPort())
+        return "%s connection on %s:%s" % (self.getName(), self.getHost(), self.getPort())
 
     def getName(self):
         return RPCMethods[self.method]
@@ -89,13 +92,13 @@ class RPCConnection(object):
     def getKnobs(self, *args):
         raise NotImplementedError()
 
-    def getRe(self,*args):
+    def getRe(self, *args):
         raise NotImplementedError()
 
-    def postMessage(self,*args):
+    def postMessage(self, *args):
         raise NotImplementedError()
 
-    def setKnobs(self,*args):
+    def setKnobs(self, *args):
         raise NotImplementedError()
 
     def shutdown(self):

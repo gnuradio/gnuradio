@@ -17,9 +17,9 @@ This is a proof of concept implementation, will likely change significantly.
 
 class pubsub(dict):
     def __init__(self):
-        self._publishers = { }
-        self._subscribers = { }
-        self._proxies = { }
+        self._publishers = {}
+        self._subscribers = {}
+        self._proxies = {}
 
     def __missing__(self, key, value=None):
         dict.__setitem__(self, key, value)
@@ -41,7 +41,8 @@ class pubsub(dict):
             sub(val)
 
     def __getitem__(self, key):
-        if key not in self: self.__missing__(key)
+        if key not in self:
+            self.__missing__(key)
         if self._proxies[key] is not None:
             (p, newkey) = self._proxies[key]
             return p[newkey]
@@ -51,7 +52,8 @@ class pubsub(dict):
             return dict.__getitem__(self, key)
 
     def publish(self, key, publisher):
-        if key not in self: self.__missing__(key)
+        if key not in self:
+            self.__missing__(key)
         if self._proxies[key] is not None:
             (p, newkey) = self._proxies[key]
             p.publish(newkey, publisher)
@@ -59,7 +61,8 @@ class pubsub(dict):
             self._publishers[key] = publisher
 
     def subscribe(self, key, subscriber):
-        if key not in self: self.__missing__(key)
+        if key not in self:
+            self.__missing__(key)
         if self._proxies[key] is not None:
             (p, newkey) = self._proxies[key]
             p.subscribe(newkey, subscriber)
@@ -81,12 +84,15 @@ class pubsub(dict):
             self._subscribers[key].remove(subscriber)
 
     def proxy(self, key, p, newkey=None):
-        if key not in self: self.__missing__(key)
-        if newkey is None: newkey = key
+        if key not in self:
+            self.__missing__(key)
+        if newkey is None:
+            newkey = key
         self._proxies[key] = (p, newkey)
 
     def unproxy(self, key):
         self._proxies[key] = None
+
 
 # Test code
 if __name__ == "__main__":
@@ -106,27 +112,28 @@ if __name__ == "__main__":
     class subber(object):
         def __init__(self, param):
             self._param = param
+
         def printer(self, x):
             print(self._param, repr(x))
     s = subber('param')
     o.subscribe('foo', s.printer)
 
     # The third is a lambda function
-    o.subscribe('foo', lambda x: sys.stdout.write('val='+repr(x)+'\n'))
+    o.subscribe('foo', lambda x: sys.stdout.write('val=' + repr(x) + '\n'))
 
     # Update key 'foo', will notify subscribers
     print("Updating 'foo' with three subscribers:")
-    o['foo'] = 'bar';
+    o['foo'] = 'bar'
 
     # Remove first subscriber
     o.unsubscribe('foo', print_len)
 
     # Update now will only trigger second and third subscriber
     print("Updating 'foo' after removing a subscriber:")
-    o['foo'] = 'bar2';
+    o['foo'] = 'bar2'
 
     # Publish a key as a function, in this case, a lambda function
-    o.publish('baz', lambda : 42)
+    o.publish('baz', lambda: 42)
     print("Published value of 'baz':", o['baz'])
 
     # Unpublish the key
