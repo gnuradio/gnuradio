@@ -28,9 +28,10 @@ extensions_to_ignore = ('.o', '.lo',
                         '.png', '.jpg', '.jpeg', '.bmp',
                         '.dat', '.ihx',
                         '.diff',
-                        '.lib', '.lst', '.rel', '.sym', '.asm', '.rst', 'mem', '.map', # sdcc output
+                        '.lib', '.lst', '.rel', '.sym', '.asm', '.rst', 'mem', '.map',  # sdcc output
                         '.rbf', '.esf', '.qpf', '.psf', '.quartus', '.bsf', '.cmp'     # quartus
                         )
+
 
 def destructively_remove(list, predicate):
     """
@@ -50,6 +51,7 @@ def expunge_unwanted_dirnames(dirnames):
     """
     destructively_remove(dirnames, lambda d: d in dirs_to_ignore)
 
+
 def expunge_unwanted_filenames(filenames):
     """
     Destructively remove filenames that we don't want to visit.
@@ -67,10 +69,12 @@ def walk_directory(dirname):
             update_one(os.path.join(dirpath, f))
 
 
-addr_pattern = re.compile(r'\b59 Temple Place(,| *-) *Suite 330\b', re.IGNORECASE)
+addr_pattern = re.compile(
+    r'\b59 Temple Place(,| *-) *Suite 330\b', re.IGNORECASE)
 addr_replacement = '51 Franklin Street'
-zip_pattern  = re.compile(r'\b02111-1307\b')
+zip_pattern = re.compile(r'\b02111-1307\b')
 zip_replacement = '02110-1301'
+
 
 def update_one(filename):
     f = open(filename, 'r')
@@ -100,9 +104,9 @@ def main():
 
     parser = ArgumentParser()
     parser.add_argument('-l', '--list-modified-files', action='store_true',
-                      help='List modified files to stdout')
+                        help='List modified files to stdout')
     parser.add_argument('--dry-run', action='store_true',
-                      help="Don't modify any files, just report what would be modified")
+                        help="Don't modify any files, just report what would be modified")
     parser.add_argument('file_or_dir', metavar='FILE-OR-DIR', nargs='*')
     args = parser.parse_args()
 
@@ -120,4 +124,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
