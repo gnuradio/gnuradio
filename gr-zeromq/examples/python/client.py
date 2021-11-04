@@ -25,6 +25,8 @@ import time
 ###############################################################################
 # GNU Radio top_block
 ###############################################################################
+
+
 class top_block(gr.top_block):
     def __init__(self, options):
         gr.top_block.__init__(self)
@@ -34,7 +36,7 @@ class top_block(gr.top_block):
         # socket addresses
         rpc_adr = "tcp://*:6667"
         probe_adr = "tcp://*:5557"
-        source_adr = "tcp://"+self.options.servername+":5555"
+        source_adr = "tcp://" + self.options.servername + ":5555"
 
         # blocks
         #self.zmq_source = zeromq.req_source(gr.sizeof_float, 1, source_adr)
@@ -49,8 +51,8 @@ class top_block(gr.top_block):
         # ZeroMQ
         self.rpc_manager = zeromq.rpc_manager()
         self.rpc_manager.set_reply_socket(rpc_adr)
-        self.rpc_manager.add_interface("start_fg",self.start_fg)
-        self.rpc_manager.add_interface("stop_fg",self.stop_fg)
+        self.rpc_manager.add_interface("start_fg", self.start_fg)
+        self.rpc_manager.add_interface("stop_fg", self.stop_fg)
         self.rpc_manager.start_watcher()
 
     def start_fg(self):
@@ -68,22 +70,28 @@ class top_block(gr.top_block):
 ###############################################################################
 # Options Parser
 ###############################################################################
+
+
 def parse_args():
     """Argument parser."""
     parser = ArgumentParser()
     parser.add_argument("-s", "--servername", default="localhost",
-                      help="Server hostname")
+                        help="Server hostname")
     args = parser.parse_args()
     return args
 
 ###############################################################################
 # Waiter Thread
 ###############################################################################
+
+
 class waiter(Thread):
     """ To keep the program alive when flowgraph is stopped. """
+
     def run(self):
         while keep_running:
             time.sleep(1)
+
 
 ###############################################################################
 # Main

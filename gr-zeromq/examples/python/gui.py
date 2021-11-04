@@ -19,6 +19,7 @@ import PyQt5.Qwt5 as Qwt
 from gnuradio import zeromq
 import signal
 
+
 class gui(QtGui.QMainWindow):
     def __init__(self, window_name, options, parent=None):
         QtGui.QMainWindow.__init__(self, parent)
@@ -26,20 +27,23 @@ class gui(QtGui.QMainWindow):
         # give Ctrl+C back to system
         signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-        self.gui = uic.loadUi(os.path.join(os.path.dirname(__file__),'main_window.ui'), self)
+        self.gui = uic.loadUi(os.path.join(
+            os.path.dirname(__file__), 'main_window.ui'), self)
 
         self.update_timer = Qt.QTimer()
 
         # socket addresses
-        rpc_adr_server = "tcp://"+options.servername+":6666"
-        rpc_adr_client = "tcp://"+options.clientname+":6667"
-        probe_adr_server = "tcp://"+options.servername+":5556"
-        probe_adr_client = "tcp://"+options.clientname+":5557"
+        rpc_adr_server = "tcp://" + options.servername + ":6666"
+        rpc_adr_client = "tcp://" + options.clientname + ":6667"
+        probe_adr_server = "tcp://" + options.servername + ":5556"
+        probe_adr_client = "tcp://" + options.clientname + ":5557"
 
         # ZeroMQ
         self.probe_manager = zeromq.probe_manager()
-        self.probe_manager.add_socket(probe_adr_server, 'float32', self.plot_data_server)
-        self.probe_manager.add_socket(probe_adr_client, 'float32', self.plot_data_client)
+        self.probe_manager.add_socket(
+            probe_adr_server, 'float32', self.plot_data_server)
+        self.probe_manager.add_socket(
+            probe_adr_client, 'float32', self.plot_data_client)
 
         self.rpc_mgr_server = zeromq.rpc_manager()
         self.rpc_mgr_server.set_request_socket(rpc_adr_server)
@@ -69,18 +73,29 @@ class gui(QtGui.QMainWindow):
         grid_server.attach(self.gui.qwtPlotServer)
         grid_client.attach(self.gui.qwtPlotClient)
 
-        #Signals
-        self.connect(self.update_timer, QtCore.SIGNAL("timeout()"), self.probe_manager.watcher)
-        self.connect(self.gui.pushButtonRunServer, QtCore.SIGNAL("clicked()"), self.start_fg_server)
-        self.connect(self.gui.pushButtonStopServer, QtCore.SIGNAL("clicked()"), self.stop_fg_server)
-        self.connect(self.gui.pushButtonRunClient, QtCore.SIGNAL("clicked()"), self.start_fg_client)
-        self.connect(self.gui.pushButtonStopClient, QtCore.SIGNAL("clicked()"), self.stop_fg_client)
-        self.connect(self.gui.comboBox, QtCore.SIGNAL("currentIndexChanged(QString)"), self.set_waveform)
-        self.connect(self.gui.spinBox, QtCore.SIGNAL("valueChanged(int)"), self.set_gain)
-        self.shortcut_start = QtGui.QShortcut(Qt.QKeySequence("Ctrl+S"), self.gui)
-        self.shortcut_stop = QtGui.QShortcut(Qt.QKeySequence("Ctrl+C"), self.gui)
-        self.shortcut_exit = QtGui.QShortcut(Qt.QKeySequence("Ctrl+D"), self.gui)
-        self.connect(self.shortcut_exit, QtCore.SIGNAL("activated()"), self.gui.close)
+        # Signals
+        self.connect(self.update_timer, QtCore.SIGNAL(
+            "timeout()"), self.probe_manager.watcher)
+        self.connect(self.gui.pushButtonRunServer, QtCore.SIGNAL(
+            "clicked()"), self.start_fg_server)
+        self.connect(self.gui.pushButtonStopServer,
+                     QtCore.SIGNAL("clicked()"), self.stop_fg_server)
+        self.connect(self.gui.pushButtonRunClient, QtCore.SIGNAL(
+            "clicked()"), self.start_fg_client)
+        self.connect(self.gui.pushButtonStopClient,
+                     QtCore.SIGNAL("clicked()"), self.stop_fg_client)
+        self.connect(self.gui.comboBox, QtCore.SIGNAL(
+            "currentIndexChanged(QString)"), self.set_waveform)
+        self.connect(self.gui.spinBox, QtCore.SIGNAL(
+            "valueChanged(int)"), self.set_gain)
+        self.shortcut_start = QtGui.QShortcut(
+            Qt.QKeySequence("Ctrl+S"), self.gui)
+        self.shortcut_stop = QtGui.QShortcut(
+            Qt.QKeySequence("Ctrl+C"), self.gui)
+        self.shortcut_exit = QtGui.QShortcut(
+            Qt.QKeySequence("Ctrl+D"), self.gui)
+        self.connect(self.shortcut_exit, QtCore.SIGNAL(
+            "activated()"), self.gui.close)
 
         # start update timer
         self.update_timer.start(30)
@@ -99,7 +114,7 @@ class gui(QtGui.QMainWindow):
 
     # plot the data from the queues
     def plot_data(self, plot, samples):
-        self.x = list(range(0,len(samples),1))
+        self.x = list(range(0, len(samples), 1))
         self.y = samples
         # clear the previous points from the plot
         plot.clear()
@@ -117,24 +132,26 @@ class gui(QtGui.QMainWindow):
         self.plot_data(self.gui.qwtPlotClient, samples)
 
     def set_waveform(self, waveform_str):
-        self.rpc_mgr_server.request("set_waveform",[str(waveform_str)])
+        self.rpc_mgr_server.request("set_waveform", [str(waveform_str)])
 
     def set_gain(self, gain):
         self.rpc_set_gain(gain)
 
     def rpc_set_gain(self, gain):
-        self.rpc_mgr_server.request("set_k",[gain])
+        self.rpc_mgr_server.request("set_k", [gain])
 
 ###############################################################################
 # Options Parser
 ###############################################################################
+
+
 def parse_args():
     """Options parser."""
     parser = ArgumentParser()
     parser.add_argument("-s", "--servername", default="localhost",
-                      help="Server hostname")
+                        help="Server hostname")
     parser.add_argument("-c", "--clientname", default="localhost",
-                      help="Server hostname")
+                        help="Server hostname")
     args = parser.parse_args()
     return args
 
@@ -148,4 +165,3 @@ if __name__ == "__main__":
     qapp.main_window = gui("Remote GNU Radio GUI", args)
     qapp.main_window.show()
     qapp.exec_()
-
