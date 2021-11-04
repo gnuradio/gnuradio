@@ -24,7 +24,8 @@ scale_factor['p'] = 1e-12
 scale_factor['f'] = 1e-15
 scale_factor['a'] = 1e-18
 
-def num_to_str (n, precision=6):
+
+def num_to_str(n, precision=6):
     '''Convert a number to a string in engineering notation.  E.g., 5e-9 -> 5n'''
     m = abs(n)
     format_spec = '%.' + repr(int(precision)) + 'g'
@@ -50,7 +51,7 @@ def num_to_str (n, precision=6):
         return '%s' % float(format_spec % (n))
 
 
-def str_to_num (value):
+def str_to_num(value):
     '''Convert a string in engineering notation to a number.  E.g., '15m' -> 15e-3'''
     try:
         if not isinstance(value, str):
@@ -58,8 +59,8 @@ def str_to_num (value):
         scale = 1.0
         suffix = value[-1]
         if suffix in scale_factor:
-            return float (value[0:-1]) * scale_factor[suffix]
-        return float (value)
+            return float(value[0:-1]) * scale_factor[suffix]
+        return float(value)
     except (TypeError, KeyError, ValueError):
-        raise ValueError (
+        raise ValueError(
             "Invalid engineering notation value: %r" % (value,))
