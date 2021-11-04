@@ -18,12 +18,14 @@ from PyQt5.QtGui import QRadialGradient
 from gnuradio import gr
 import pmt
 
+
 class LabeledLEDIndicator(QFrame):
     # Positions: 1 = above, 2=below, 3=left, 4=right
     def __init__(self, lbl='', onColor='green', offColor='red', initialState=False, maxSize=80,
                  position=1, alignment=1, valignment=1, parent=None):
         QFrame.__init__(self, parent)
-        self.numberControl = LEDIndicator(onColor, offColor, initialState, maxSize, parent)
+        self.numberControl = LEDIndicator(
+            onColor, offColor, initialState, maxSize, parent)
 
         if position < 3:
             layout = QVBoxLayout()
@@ -72,16 +74,17 @@ class LabeledLEDIndicator(QFrame):
             textfont = self.lblcontrol.font()
             metrics = QFontMetricsF(textfont)
 
-            maxWidth = max((maxSize+30), (maxSize + metrics.width(lbl)+4))
-            maxHeight = max((maxSize+35), (maxSize + metrics.height()+2))
+            maxWidth = max((maxSize + 30), (maxSize + metrics.width(lbl) + 4))
+            maxHeight = max((maxSize + 35), (maxSize + metrics.height() + 2))
             self.setMinimumSize(maxWidth, maxHeight)
         else:
-            self.setMinimumSize(maxSize+2, maxSize+2)
+            self.setMinimumSize(maxSize + 2, maxSize + 2)
 
         self.show()
 
     def setState(self, on_off):
         self.numberControl.setState(on_off)
+
 
 class LEDIndicator(QFrame):
     def __init__(self, onColor='green', offColor='red', initialState=False, maxSize=80,
@@ -112,11 +115,11 @@ class LEDIndicator(QFrame):
         if smallest_dim > size.height():
             smallest_dim = size.height()
 
-        smallest_dim = smallest_dim/2
+        smallest_dim = smallest_dim / 2
         smallest_dim -= 2
 
-        center_x = size.width()/2
-        center_y = size.height()/2
+        center_x = size.width() / 2
+        center_y = size.height() / 2
         centerpoint = QPoint(center_x, center_y)
 
         radius = smallest_dim
@@ -124,14 +127,14 @@ class LEDIndicator(QFrame):
         painter.setPen(QPen(QColor('lightgray'), 0))
         brush.setStyle(Qtc.SolidPattern)
 
-        radial = QRadialGradient(center_x, center_y/2, radius)
+        radial = QRadialGradient(center_x, center_y / 2, radius)
         radial.setColorAt(0, Qtc.white)
         radial.setColorAt(0.8, Qtc.darkGray)
         painter.setBrush(QBrush(radial))
         painter.drawEllipse(centerpoint, radius, radius)
 
         # Draw the colored center
-        radial = QRadialGradient(center_x, center_y/2, radius)
+        radial = QRadialGradient(center_x, center_y / 2, radius)
         radial.setColorAt(0, Qtc.white)
 
         if self.curState:
@@ -159,20 +162,22 @@ class LEDIndicator(QFrame):
             radius = radius - 9
         painter.drawEllipse(centerpoint, radius, radius)
 
+
 class GrLEDIndicator(gr.sync_block, LabeledLEDIndicator):
     """
     This block makes a basic LED indicator
     """
+
     def __init__(self, lbl='', onColor='green', offColor='red', initialState=False,
                  maxSize=80, position=1, alignment=1, valignment=1, parent=None):
-        gr.sync_block.__init__(self, name="LEDIndicator", in_sig=None, out_sig=None)
+        gr.sync_block.__init__(self, name="LEDIndicator",
+                               in_sig=None, out_sig=None)
         LabeledLEDIndicator.__init__(self, lbl, onColor, offColor, initialState,
                                      maxSize, position, alignment, valignment, parent)
         self.lbl = lbl
 
         self.message_port_register_in(pmt.intern("state"))
         self.set_msg_handler(pmt.intern("state"), self.msgHandler)
-
 
     def msgHandler(self, msg):
         try:
@@ -187,11 +192,11 @@ class GrLEDIndicator(gr.sync_block, LabeledLEDIndicator):
                     else:
                         super().setState(False)
             else:
-                gr.log.error("Value received was not an int or a bool: %s" % str(type(new_val)))
+                gr.log.error(
+                    "Value received was not an int or a bool: %s" % str(type(new_val)))
 
         except Exception as e:
             gr.log.error("Error with message conversion: %s" % str(e))
 
     def setState(self, on_off):
         super().setState(on_off)
-
