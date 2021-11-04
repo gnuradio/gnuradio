@@ -167,7 +167,7 @@ LINE_PARAMS = """
     hide: ${{ ('part' if (
             int(nconnections) >= {i}
             or (type == "complex" and int(nconnections) >= {i_cplx})
-            or (type == "msg_complex" and {i_cplx} <= 1) 
+            or (type == "msg_complex" and {i_cplx} <= 1)
             or (type == "msg_float" and {i} <= 1))
         else 'all')
         }}
@@ -179,7 +179,7 @@ LINE_PARAMS = """
     hide: ${{ ('part' if (
             int(nconnections) >= {i}
             or (type == "complex" and int(nconnections) >= {i_cplx})
-            or (type == "msg_complex" and {i_cplx} <= 1) 
+            or (type == "msg_complex" and {i_cplx} <= 1)
             or (type == "msg_float" and {i} <= 1))
         else 'all')
         }}
@@ -194,7 +194,7 @@ LINE_PARAMS = """
     hide: ${{ ('part' if (
             int(nconnections) >= {i}
             or (type == "complex" and int(nconnections) >= {i_cplx})
-            or (type == "msg_complex" and {i_cplx} <= 1) 
+            or (type == "msg_complex" and {i_cplx} <= 1)
             or (type == "msg_float" and {i} <= 1))
         else 'all')
         }}
@@ -209,7 +209,7 @@ LINE_PARAMS = """
     hide: ${{ ('part' if (
             int(nconnections) >= {i}
             or (type == "complex" and int(nconnections) >= {i_cplx})
-            or (type == "msg_complex" and {i_cplx} <= 1) 
+            or (type == "msg_complex" and {i_cplx} <= 1)
             or (type == "msg_float" and {i} <= 1))
         else 'all')
         }}
@@ -224,7 +224,7 @@ LINE_PARAMS = """
     hide: ${{ ('part' if (
             int(nconnections) >= {i}
             or (type == "complex" and int(nconnections) >= {i_cplx})
-            or (type == "msg_complex" and {i_cplx} <= 1) 
+            or (type == "msg_complex" and {i_cplx} <= 1)
             or (type == "msg_float" and {i} <= 1))
         else 'all')
         }}
@@ -237,7 +237,7 @@ LINE_PARAMS = """
     hide: ${{ ('part' if (
             int(nconnections) >= {i}
             or (type == "complex" and int(nconnections) >= {i_cplx})
-            or (type == "msg_complex" and {i_cplx} <= 1) 
+            or (type == "msg_complex" and {i_cplx} <= 1)
             or (type == "msg_float" and {i} <= 1))
         else 'all')
         }}
