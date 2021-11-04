@@ -38,9 +38,11 @@ class nbfm_rx(gr.hier_block2):
       deemph
       audio_filter
     """
+
     def __init__(self, audio_rate, quad_rate, tau=75e-6, max_dev=5e3):
         gr.hier_block2.__init__(self, "nbfm_rx",
-                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+                                # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex),
                                 gr.io_signature(1, 1, gr.sizeof_float))      # Output signature
 
         # FIXME audio_rate and quad_rate ought to be exact rationals
@@ -48,13 +50,14 @@ class nbfm_rx(gr.hier_block2):
         self._quad_rate = quad_rate = int(quad_rate)
 
         if quad_rate % audio_rate != 0:
-            raise ValueError("quad_rate is not an integer multiple of audio_rate")
+            raise ValueError(
+                "quad_rate is not an integer multiple of audio_rate")
 
         squelch_threshold = 20        # dB
         #self.squelch = analog.simple_squelch_cc(squelch_threshold, 0.001)
 
         # FM Demodulator  input: complex; output: float
-        k = quad_rate / (2*math.pi*max_dev)
+        k = quad_rate / (2 * math.pi * max_dev)
         self.quad_demod = analog.quadrature_demod_cf(k)
 
         # FM Deemphasis IIR filter
@@ -74,8 +77,9 @@ class nbfm_rx(gr.hier_block2):
         # input: float; output: float; taps: float
         self.audio_filter = filter.fir_filter_fff(audio_decim, audio_taps)
 
-        self.connect(self, self.quad_demod, self.deemph, self.audio_filter, self)
+        self.connect(self, self.quad_demod, self.deemph,
+                     self.audio_filter, self)
 
     def set_max_deviation(self, max_dev):
-        k = self._quad_rate / (2*math.pi*max_dev)
+        k = self._quad_rate / (2 * math.pi * max_dev)
         self.quad_demod.set_gain(k)
