@@ -26,7 +26,8 @@ from gnuradio import gr
 
 class ModToolException(ClickException):
     """ Exception class for enhanced CLI interface """
-    def show(self, file = None):
+
+    def show(self, file=None):
         """ displays the colored message """
         click.secho(f'ModToolException: {self.format_message()}', fg='red')
 
@@ -71,6 +72,7 @@ class ClickHandler(StreamHandler):
     StreamHandler which overrides some of its functional
     definitions to add colors to the stream output
     """
+
     def emit(self, record):
         """ Writes message to the stream """
         colormap = {
@@ -134,7 +136,8 @@ def common_params(func):
     return wrapper
 
 
-block_name = click.argument('blockname', nargs=1, required=False, metavar="BLOCK_NAME")
+block_name = click.argument(
+    'blockname', nargs=1, required=False, metavar="BLOCK_NAME")
 
 
 @with_plugins(iter_entry_points('gnuradio.modtool.cli.plugins'))

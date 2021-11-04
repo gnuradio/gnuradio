@@ -26,9 +26,11 @@ def cli(**kwargs):
     """ Update the XML bindings to YAML bindings """
     kwargs['cli'] = True
     self = ModToolUpdate(**kwargs)
-    click.secho("GNU Radio module name identified: " + self.info['modname'], fg='green')
+    click.secho("GNU Radio module name identified: " +
+                self.info['modname'], fg='green')
     get_blockname(self)
     run(self)
+
 
 def get_blockname(self):
     """ Returns the blockname for block to be updated """
@@ -37,11 +39,12 @@ def get_blockname(self):
     block_candidates = get_xml_candidates()
     if self.info['blockname'] is None:
         with SequenceCompleter(block_candidates):
-            self.info['blockname'] = cli_input('Which block do you wish to update? : ')
+            self.info['blockname'] = cli_input(
+                'Which block do you wish to update? : ')
     if not self.info['blockname'] or self.info['blockname'].isspace():
         raise ModToolException('Block name not specified!')
     if self.info['blockname'] not in block_candidates:
         choices = [x for x in block_candidates if self.info['blockname'] in x]
         if len(choices) > 0:
-            click.secho("Suggested alternatives: "+str(choices), fg='yellow')
+            click.secho("Suggested alternatives: " + str(choices), fg='yellow')
         raise ModToolException("The XML bindings does not exists!")

@@ -90,7 +90,7 @@ def read_comments(self):
                 _index = lines.index(line)
 
     if _index is not None:
-        _index = _index+1
+        _index = _index + 1
         for num in range(_index, len(lines)):
             if Constants.END_BLOCKTOOL in lines[num]:
                 break
@@ -192,7 +192,7 @@ def add_comments(self):
     if _index is None:
         with open(self.target_file, 'a') as header:
             header.write('\n')
-            header.write('/* '+Constants.BLOCKTOOL + '\n')
+            header.write('/* ' + Constants.BLOCKTOOL + '\n')
             header.write('input_signature: ' +
                          parsed_io['input']['signature'] + '\n')
             header.write('input_min_streams: ' +

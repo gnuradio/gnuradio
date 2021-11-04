@@ -42,7 +42,6 @@ class ModToolUpdate(ModTool):
         self.info['complete'] = complete
         self.info['include_blacklisted'] = include_blacklisted
 
-
     def validate(self):
         """ Validates the arguments """
         ModTool._validate(self)
@@ -52,16 +51,18 @@ class ModToolUpdate(ModTool):
             raise ModToolException('Block name not specified!')
         block_candidates = get_xml_candidates()
         if self.info['blockname'] not in block_candidates:
-            choices = [x for x in block_candidates if self.info['blockname'] in x]
+            choices = [
+                x for x in block_candidates if self.info['blockname'] in x]
             if len(choices) > 0:
-                print("Suggested alternatives: "+str(choices))
+                print("Suggested alternatives: " + str(choices))
             raise ModToolException("The XML bindings does not exists!")
 
     def run(self):
         from gnuradio.grc.converter import Converter
         if not self.cli:
             self.validate()
-        logger.warning("Warning: This is an experimental feature. Please verify the bindings.")
+        logger.warning(
+            "Warning: This is an experimental feature. Please verify the bindings.")
         module_name = self.info['modname']
         path = './grc/'
         conv = Converter(path, path)
@@ -72,10 +73,10 @@ class ModToolUpdate(ModTool):
         for blockname in blocks:
             xml_file = f"{module_name}_{blockname}.xml"
             yml_file = f"{module_name}_{blockname}.block.yml"
-            if not conv.load_block_xml(path+xml_file, self.info["include_blacklisted"]):
+            if not conv.load_block_xml(path + xml_file, self.info["include_blacklisted"]):
                 continue
             logger.info(f"Converted {xml_file} to {yml_file}")
-            os.remove(path+xml_file)
+            os.remove(path + xml_file)
             nsubs = self._run_cmakelists(xml_file, yml_file)
             if nsubs > 1:
                 logger.warning("Changed more than expected for the block '%s' in the CMakeLists.txt. "

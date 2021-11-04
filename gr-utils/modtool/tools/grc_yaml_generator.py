@@ -23,6 +23,7 @@ from .util_functions import is_number
 ## setup dumper for dumping OrderedDict ##
 _mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
 
+
 def dict_representer(dumper, data):
     """ Representer to represent special OrderedDict """
     return dumper.represent_dict(data.items())
@@ -32,24 +33,27 @@ def dict_constructor(loader, node):
     """ Construct an OrderedDict for dumping """
     return OrderedDict(loader.construct_pairs(node))
 
+
 Dumper.add_representer(OrderedDict, dict_representer)
 Loader.add_constructor(_mapping_tag, dict_constructor)
 
 
 class GRCYAMLGenerator(object):
     """ Create and write the YAML bindings for a GRC block. """
+
     def __init__(self, modname=None, blockname=None, doc=None, params=None, iosig=None):
         """docstring for __init__"""
-        params_list = ['${'+s['key']+'}' for s in params if s['in_constructor']]
+        params_list = [
+            '${' + s['key'] + '}' for s in params if s['in_constructor']]
         # Can't make a dict 'cause order matters
         str_ = ', '.join(params_list)
         self._header = (('id', f'{modname}_{blockname}'),
                         ('label', blockname.replace('_', ' ')),
                         (f'category', f'[{modname.capitalize()}]')
-                       )
+                        )
         self._templates = (('imports', f'import {modname}'),
                            ('make', f'{modname}.{blockname}({str_})')
-                          )
+                           )
         self.params = params
         self.iosig = iosig
         self.doc = doc
@@ -97,13 +101,13 @@ class GRCYAMLGenerator(object):
                     if is_number(vlen):
                         s_obj['vlen'] = vlen
                     else:
-                        s_obj['vlen'] = '${ '+vlen+' }'
-                if i == len(iosig[inout]['type'])-1:
+                        s_obj['vlen'] = '${ ' + vlen + ' }'
+                if i == len(iosig[inout]['type']) - 1:
                     if not is_number(iosig[inout]['max_ports']):
                         s_obj['multiplicity'] = iosig[inout]['max_ports']
                     elif len(iosig[inout]['type']) < int(iosig[inout]['max_ports']):
                         s_obj['multiplicity'] = str(int(iosig[inout]['max_ports']) -
-                                                    len(iosig[inout]['type'])+1)
+                                                    len(iosig[inout]['type']) + 1)
                 if s_type == 'input':
                     inputs.append(s_obj)
                 elif s_type == 'output':
