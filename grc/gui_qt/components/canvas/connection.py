@@ -71,11 +71,11 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
         painter.drawPath(self._line)
 
         if self.isSelected():
-            painter.setBrush(color.HIGHLIGHT_COLOR)
+            painter.setBrush(colors.HIGHLIGHT_COLOR)
         elif not self.enabled:
             painter.setBrush(colors.CONNECTION_DISABLED_COLOR)
         elif not self.is_valid():
-            painter.setBrush(color.CONNECTION_ERROR_COLOR)
+            painter.setBrush(colors.CONNECTION_ERROR_COLOR)
         else:
             painter.setBrush(QtGui.QColor(0x61, 0x61, 0x61))
 
