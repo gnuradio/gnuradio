@@ -32,6 +32,19 @@ from .. import base
 # Logging
 log = logging.getLogger(__name__)
 
+class BlockSearchBar(QtWidgets.QLineEdit):
+    def __init__(self, parent):
+        self.parent = parent
+        QtWidgets.QLineEdit.__init__(self)
+        self.returnPressed.connect(self.add_block)
+
+    def add_block(self):
+        label = self.text()
+        if label in self.parent._block_tree_flat:
+            log.info(f'Adding {label}')
+            self.setText('')
+        else:
+            log.info(f'No block named {label}')
 
 class BlockLibrary(QtWidgets.QDockWidget, base.Component):
 
@@ -77,8 +90,7 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         #library.headerItem().setText(0, "Blocks")
         self._library = library
 
-        # TODO: Needs to be subclassed
-        search_bar = QtWidgets.QLineEdit()
+        search_bar = BlockSearchBar(self)
         search_bar.setPlaceholderText("Find a block")
         self._search_bar = search_bar
 
@@ -100,12 +112,12 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         ### Loading blocks
 
         # Keep as a separate function so it can be called at a later point (Reloading blocks)
-        self._block_labels = []
-        self._block_tree = self.load_blocks()
+        self._block_tree_flat = {}
+        self.load_blocks()
         self.populate_tree(self._block_tree)
 
-        # TODO: The completer must probably be subclassed to work with the TreeView
-        completer = QtWidgets.QCompleter(self._block_labels)
+        completer = QtWidgets.QCompleter(self._block_tree_flat.keys())
+        completer.setCompletionMode(QtWidgets.QCompleter.InlineCompletion)
         completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
         completer.setFilterMode(QtCore.Qt.MatchContains)
         self._search_bar.setCompleter(completer)
@@ -198,10 +210,10 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
                 # Sub_tree should now point at the final node of the block_tree that contains the block
                 # Add a reference to the block object to the proper subtree
                 sub_tree[block.label] = block
-                self._block_labels.append(block.label)
+                self._block_tree_flat[block.label] = block
         # Save a reference to the block tree in case it is needed later
         self._block_tree = block_tree
-        return block_tree
+        return
 
     def populate_tree(self, block_tree):
         ''' Populate the item model and tree view with the hierarchical block tree. '''
