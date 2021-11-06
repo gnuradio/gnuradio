@@ -43,8 +43,16 @@ class BlockSearchBar(QtWidgets.QLineEdit):
         if label in self.parent._block_tree_flat:
             log.info(f'Adding {label}')
             self.setText('')
+            self.parent.populate_tree(self.parent._block_tree)
         else:
             log.info(f'No block named {label}')
+
+def get_items(model):
+    items = []
+    for i in range(0, model.rowCount()):
+        index = model.index(i, 0)
+        items.append(model.data(index))
+    return items
 
 class BlockLibrary(QtWidgets.QDockWidget, base.Component):
 
@@ -121,6 +129,8 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
         completer.setFilterMode(QtCore.Qt.MatchContains)
         self._search_bar.setCompleter(completer)
+
+        self._search_bar.textChanged.connect(lambda x: self.populate_tree(self._block_tree, get_items(completer.completionModel())))
 
         # TODO: Move to the base controller and set actions as class attributes
         # Automatically create the actions, menus and toolbars.
@@ -213,29 +223,40 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
                 self._block_tree_flat[block.label] = block
         # Save a reference to the block tree in case it is needed later
         self._block_tree = block_tree
-        return
 
-    def populate_tree(self, block_tree):
+    def populate_tree(self, block_tree, v_blocks=None):
         ''' Populate the item model and tree view with the hierarchical block tree. '''
         # Recursive method of populating the QStandardItemModel
         # Since the _model.invisibleRootItem is the initial parent, this will populate
         # the model which is used for the TreeView.
+        self._model.removeRows(0, self._model.rowCount())
 
         def _populate(blocks, parent):
+            found = False
             for name, obj in sorted(blocks.items()):
                 child_item = QtGui.QStandardItem()
                 child_item.setEditable(False)
                 if type(obj) is dict: # It's a category
                     child_item.setText(name)
                     child_item.setDragEnabled(False) # categories should not be draggable
-                    _populate(obj, child_item)
+                    if not _populate(obj, child_item):
+                        continue
+                    else:
+                        found = True
                 else: # It's a block
+                    if v_blocks and not name in v_blocks:
+                        continue
+                    else:
+                        found = True
                     child_item.setText(obj.label)
                     child_item.setDragEnabled(True)
                     child_item.setSelectable(True)
                     child_item.setData(QtCore.QVariant(obj.key), role=QtCore.Qt.UserRole,)
                 parent.appendRow(child_item)
+            return found
 
         # Call the nested function recursively to populate the block tree
         log.debug("Populating the treeview")
         _populate(block_tree, self._model.invisibleRootItem())
+        if v_blocks:
+            self._library.expandAll()
