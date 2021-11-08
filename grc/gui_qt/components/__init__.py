@@ -1,5 +1,6 @@
 
 from .block_library import BlockLibrary
+from .documentation_tab import DocumentationTab
 from .console import Console
 from .flowgraph import Flowgraph
 from .project_manager import ProjectManager

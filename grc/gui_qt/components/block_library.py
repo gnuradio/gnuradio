@@ -61,6 +61,20 @@ def get_items(model):
         items.append(model.data(index))
     return items
 
+class LibraryView(QtWidgets.QTreeView):
+    # TODO: Use selectionChanged() or something instead
+    # so we can use arrow keys too
+    def handle_clicked(self):
+        if self.isExpanded(self.currentIndex()):
+            self.collapse(self.currentIndex())
+        else:
+            self.expand(self.currentIndex())
+        label = self.model().data(self.currentIndex())
+        if label in self.parent().parent()._block_tree_flat:
+            block_key = self.parent().parent()._block_tree_flat[label].key
+            self.parent().parent().app.DocumentationTab.setText(self.parent().parent()._block_tree_flat[label].documentation[block_key])
+
+
 class BlockLibrary(QtWidgets.QDockWidget, base.Component):
 
     def __init__(self):
@@ -90,7 +104,7 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         # Setup the model for holding block data
         self._model = QtGui.QStandardItemModel()
 
-        library = QtWidgets.QTreeView(container)
+        library = LibraryView(container)
         library.setObjectName('block_library::library')
         library.setModel(self._model)
         library.setDragEnabled(True)
@@ -98,10 +112,7 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         #library.setColumnCount(1)
         library.setHeaderHidden(True)
         # Expand categories with a single click
-        library.clicked.connect(lambda x:
-                library.collapse(library.currentIndex())
-                if library.isExpanded(library.currentIndex())
-                else library.expand(library.currentIndex()))
+        library.clicked.connect(library.handle_clicked)
         #library.headerItem().setText(0, "Blocks")
         self._library = library
 
