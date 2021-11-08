@@ -102,6 +102,7 @@ class Window(object):
 
     REPORTS_DOCK_LOCATION = 8
     BLOCK_LIBRARY_DOCK_LOCATION = 1
+    DOCUMENTATION_TAB_DOCK_LOCATION = 2
 
     # Define the top level menus.
     # This does not actually define the menus; it simply defines a list of constants that
