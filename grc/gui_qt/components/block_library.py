@@ -27,6 +27,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QStandardItemModel
 
 # Custom modules
+from .canvas.block import Block
 from .. import base
 
 # Logging
@@ -34,14 +35,20 @@ log = logging.getLogger(__name__)
 
 class BlockSearchBar(QtWidgets.QLineEdit):
     def __init__(self, parent):
-        self.parent = parent
         QtWidgets.QLineEdit.__init__(self)
+        self.parent = parent
+        self.setObjectName('block_library::search_bar')
         self.returnPressed.connect(self.add_block)
 
     def add_block(self):
         label = self.text()
         if label in self.parent._block_tree_flat:
-            log.info(f'Adding {label}')
+            scene = self.parent.app.MainWindow.flowgraph.scene
+            block = scene.new_block(self.parent._block_tree_flat[label].key)
+            scene.addItem(block)
+            block.moveToTop()
+            scene.update()
+            # TODO: Move it to the middle of the view
             self.setText('')
             self.parent.populate_tree(self.parent._block_tree)
         else:
