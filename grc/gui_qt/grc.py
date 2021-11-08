@@ -70,11 +70,14 @@ class Application(QtWidgets.QApplication):
         stopwatch.lap('console')
         self.BlockLibrary = components.BlockLibrary()
         stopwatch.lap('blocklibrary')
+        self.DocumentationTab = components.DocumentationTab()
+        stopwatch.lap('documentationtab')
 
         # Debug times
         log.debug("Loaded MainWindow controller - {:.4f}s".format(stopwatch.elapsed("mainwindow")))
         log.debug("Loaded Console component - {:.4f}s".format(stopwatch.elapsed("console")))
         log.debug("Loaded BlockLibrary component - {:.4}s".format(stopwatch.elapsed("blocklibrary")))
+        log.debug("Loaded DocumentationTab component - {:.4}s".format(stopwatch.elapsed("documentationtab")))
 
         # Print Startup information once everything has loaded
         log.critical("TODO: Change welcome message.")
