@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-30 21:35-0500\n"
+"POT-Creation-Date: 2021-11-09 12:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,222 +17,242 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: companion/views/main.py:25
-msgid "window-title"
-msgstr ""
-
-#: companion/views/main.py:64
-msgid "new"
-msgstr ""
-
-#: companion/views/main.py:66
-msgid "new-tooltip"
-msgstr ""
-
-#: companion/views/main.py:69
-msgid "open"
-msgstr ""
-
-#: companion/views/main.py:71
-msgid "open-tooltip"
-msgstr ""
-
-#: companion/views/main.py:74
-msgid "close"
-msgstr ""
-
-#: companion/views/main.py:76
-msgid "close-tooltip"
-msgstr ""
-
-#: companion/views/main.py:79
-msgid "close_all"
-msgstr ""
-
-#: companion/views/main.py:81
-msgid "close_all-tooltip"
-msgstr ""
-
-#: companion/views/main.py:84
+#: components/console.py:167 components/window.py:167
 msgid "save"
 msgstr ""
 
-#: companion/views/main.py:86
+#: components/console.py:168 components/window.py:168
 msgid "save-tooltip"
 msgstr ""
 
-#: companion/views/main.py:89
+#: components/console.py:169
+msgid "clear"
+msgstr ""
+
+#: components/console.py:170
+msgid "clear-tooltip"
+msgstr ""
+
+#: components/console.py:171
+msgid "show-level"
+msgstr ""
+
+#: components/window.py:56
+msgid "window-title"
+msgstr ""
+
+#: components/window.py:156
+msgid "new"
+msgstr ""
+
+#: components/window.py:157
+msgid "new-tooltip"
+msgstr ""
+
+#: components/window.py:159
+msgid "open"
+msgstr ""
+
+#: components/window.py:160
+msgid "open-tooltip"
+msgstr ""
+
+#: components/window.py:162
+msgid "close"
+msgstr ""
+
+#: components/window.py:163
+msgid "close-tooltip"
+msgstr ""
+
+#: components/window.py:165
+msgid "close_all"
+msgstr ""
+
+#: components/window.py:166
+msgid "close_all-tooltip"
+msgstr ""
+
+#: components/window.py:170
 msgid "save_as"
 msgstr ""
 
-#: companion/views/main.py:91
+#: components/window.py:171
 msgid "save_as-tooltip"
 msgstr ""
 
-#: companion/views/main.py:94
+#: components/window.py:173
 msgid "print"
 msgstr ""
 
-#: companion/views/main.py:96
+#: components/window.py:174
 msgid "print-tooltip"
 msgstr ""
 
-#: companion/views/main.py:99
+#: components/window.py:176
 msgid "screen_capture"
 msgstr ""
 
-#: companion/views/main.py:101
+#: components/window.py:177
 msgid "screen_capture-tooltip"
 msgstr ""
 
-#: companion/views/main.py:104
+#: components/window.py:179
 msgid "exit"
 msgstr ""
 
-#: companion/views/main.py:106
+#: components/window.py:180
 msgid "exit-tooltip"
 msgstr ""
 
-#: companion/views/main.py:110
+#: components/window.py:183
 msgid "undo"
 msgstr ""
 
-#: companion/views/main.py:112
+#: components/window.py:184
 msgid "undo-tooltip"
 msgstr ""
 
-#: companion/views/main.py:115
+#: components/window.py:186
 msgid "redo"
 msgstr ""
 
-#: companion/views/main.py:117
+#: components/window.py:187
 msgid "redo-tooltip"
 msgstr ""
 
-#: companion/views/main.py:120
+#: components/window.py:189
 msgid "cut"
 msgstr ""
 
-#: companion/views/main.py:122
+#: components/window.py:190
 msgid "cut-tooltip"
 msgstr ""
 
-#: companion/views/main.py:125
+#: components/window.py:192
 msgid "copy"
 msgstr ""
 
-#: companion/views/main.py:127
+#: components/window.py:193
 msgid "copy-tooltip"
 msgstr ""
 
-#: companion/views/main.py:130
+#: components/window.py:195
 msgid "paste"
 msgstr ""
 
-#: companion/views/main.py:132
+#: components/window.py:196
 msgid "paste-tooltip"
 msgstr ""
 
-#: companion/views/main.py:135
+#: components/window.py:198
 msgid "delete"
 msgstr ""
 
-#: companion/views/main.py:137
+#: components/window.py:199
 msgid "delete-tooltip"
 msgstr ""
 
-#: companion/views/main.py:140
+#: components/window.py:201
+msgid "select_all"
+msgstr ""
+
+#: components/window.py:202
+msgid "select_all-tooltip"
+msgstr ""
+
+#: components/window.py:204
 msgid "rotate_ccw"
 msgstr ""
 
-#: companion/views/main.py:142
+#: components/window.py:206
 msgid "rotate_ccw-tooltip"
 msgstr ""
 
-#: companion/views/main.py:145
+#: components/window.py:208
 msgid "rotate_cw"
 msgstr ""
 
-#: companion/views/main.py:147
+#: components/window.py:210
 msgid "rotate_cw-tooltip"
 msgstr ""
 
-#: companion/views/main.py:151
-msgid "errors"
+#: components/window.py:231
+msgid "flowgraph-properties"
 msgstr ""
 
-#: companion/views/main.py:153
-msgid "errors-tooltip"
-msgstr ""
-
-#: companion/views/main.py:156
-msgid "find"
-msgstr ""
-
-#: companion/views/main.py:158
-msgid "find-tooltip"
-msgstr ""
-
-#: companion/views/main.py:162
-msgid "about"
-msgstr ""
-
-#: companion/views/main.py:163
-msgid "about-tooltip"
-msgstr ""
-
-#: companion/views/main.py:166
-msgid "process-generate"
-msgstr ""
-
-#: companion/views/main.py:168
-msgid "process-generate-tooltip"
-msgstr ""
-
-#: companion/views/main.py:171
-msgid "process-execute"
-msgstr ""
-
-#: companion/views/main.py:173
-msgid "process-execute-tooltip"
-msgstr ""
-
-#: companion/views/main.py:176
-msgid "process-stop"
-msgstr ""
-
-#: companion/views/main.py:178
-msgid "process-stop-tooltip"
-msgstr ""
-
-#: companion/views/main.py:181
-msgid "help"
-msgstr ""
-
-#: companion/views/main.py:183
-msgid "help-tooltip"
-msgstr ""
-
-#: companion/views/main.py:189
-msgid "block-library-toolbar"
-msgstr ""
-
-#: companion/views/main.py:196
-msgid "properties"
-msgstr ""
-
-#: companion/views/main.py:198
+#: components/window.py:232
 msgid "flowgraph-properties-tooltip"
 msgstr ""
 
-#: companion/views/main.py:201
+#: components/window.py:235
+msgid "errors"
+msgstr ""
+
+#: components/window.py:236
+msgid "errors-tooltip"
+msgstr ""
+
+#: components/window.py:238
+msgid "find"
+msgstr ""
+
+#: components/window.py:240
+msgid "find-tooltip"
+msgstr ""
+
+#: components/window.py:243
+msgid "about"
+msgstr ""
+
+#: components/window.py:244 components/window.py:247
+msgid "about-tooltip"
+msgstr ""
+
+#: components/window.py:246
+msgid "about-qt"
+msgstr ""
+
+#: components/window.py:249
+msgid "process-generate"
+msgstr ""
+
+#: components/window.py:250
+msgid "process-generate-tooltip"
+msgstr ""
+
+#: components/window.py:252
+msgid "process-execute"
+msgstr ""
+
+#: components/window.py:254
+msgid "process-execute-tooltip"
+msgstr ""
+
+#: components/window.py:256
+msgid "process-kill"
+msgstr ""
+
+#: components/window.py:257
+msgid "process-kill-tooltip"
+msgstr ""
+
+#: components/window.py:259
+msgid "help"
+msgstr ""
+
+#: components/window.py:260
+msgid "help-tooltip"
+msgstr ""
+
+#: components/window.py:266
 msgid "preferences"
 msgstr ""
 
-#: companion/views/main.py:203
+#: components/window.py:267
 msgid "preferences-tooltip"
 msgstr ""
 
-#: companion/views/main.py:320
+#: components/window.py:410
 msgid "ready-message"
 msgstr ""
