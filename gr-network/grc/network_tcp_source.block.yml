@@ -1,6 +1,7 @@
 id: network_tcp_source
 label: TCP Source
 category: '[Core]/Networking Tools'
+flags: [ throttle ]
 
 parameters:
 -   id: type
