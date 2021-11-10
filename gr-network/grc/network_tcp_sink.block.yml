@@ -1,6 +1,7 @@
 id: network_tcp_sink
 label: TCP Sink
 category: '[Core]/Networking Tools'
+flags: [ throttle ]
 
 parameters:
 -   id: type
