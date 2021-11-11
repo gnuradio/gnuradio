@@ -47,6 +47,7 @@ source run_conda_forge_build_setup
 make_build_number "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
 
+
 ( endgroup "Configuring conda" ) 2> /dev/null
 
 if [[ "${BUILD_WITH_CONDA_DEBUG:-0}" == 1 ]]; then
