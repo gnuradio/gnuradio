@@ -64,6 +64,7 @@ class gr::block : public gr::basic_block
   bool is_set_max_noutput_items();
   void set_min_noutput_items(int m);
   int min_noutput_items() const;
+  void set_output_multiple(int multiple);
 
   // Methods to manage block's min/max buffer sizes.
   long max_output_buffer(int i);

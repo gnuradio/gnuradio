@@ -56,6 +56,7 @@ fractional_resampler_cc_impl::fractional_resampler_cc_impl(float phase_shift,
     message_port_register_in(pmt::intern("msg_in"));
     set_msg_handler(pmt::intern("msg_in"),
                     boost::bind(&fractional_resampler_cc_impl::handle_msg, this, _1));
+    set_tag_propagation_policy(gr::block::TPP_DONT);  // propagate manually
 }
 
 fractional_resampler_cc_impl::~fractional_resampler_cc_impl() { delete d_resamp; }
@@ -96,14 +97,39 @@ int fractional_resampler_cc_impl::general_work(int noutput_items,
     int ii = 0; // input index
     int oo = 0; // output index
 
+    std::vector<tag_t> tags;
+    unsigned tag_idx = 0;
+    get_tags_in_window(tags, 0, 0, ninput_items[0]);
+    int next_tag_offset = -1;
+    // Get the tag offset relative to start of this input chunk
+    if (tags.size() != 0)
+        next_tag_offset = tags[0].offset - nitems_read(0);
+
     if (ninput_items.size() == 1) {
         while (oo < noutput_items) {
-            out[oo++] = d_resamp->interpolate(&in[ii], d_mu);
+            out[oo] = d_resamp->interpolate(&in[ii], d_mu);
 
             double s = d_mu + d_mu_inc;
             double f = floor(s);
             int incr = (int)f;
             d_mu = s - f;
+            // Check if we have a tag between the current ii and the next ii
+            // NOTE: there may be multiple tags on the same offset!
+            // There may be multiple tags in the range ii, ii+incr
+            // or even multiple tags on the same item
+            while (next_tag_offset != -1 && next_tag_offset >= ii && next_tag_offset < ii+incr) {
+                // Modify the offset of this tag
+                tags[tag_idx].offset = oo + nitems_written(0);
+                add_item_tag(0, tags[tag_idx]);
+                if (tag_idx < tags.size() -1) {
+                    tag_idx ++;
+                    next_tag_offset = tags[tag_idx].offset - nitems_read(0);
+                } else {
+                    next_tag_offset = -1;
+                }
+            }
+
+            oo ++;
             ii += incr;
         }
 

@@ -162,6 +162,7 @@ private:
 protected:
     char* d_base;           // base address of buffer
     unsigned int d_bufsize; // in items
+    unsigned int d_orig_bufsize; // in items
 
     // Keep track of maximum sample delay of any reader; Only prune tags past this.
     unsigned d_max_reader_delay;

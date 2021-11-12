@@ -114,6 +114,7 @@ buffer::~buffer()
 bool buffer::allocate_buffer(int nitems, size_t sizeof_item)
 {
     int orig_nitems = nitems;
+    d_orig_bufsize = nitems;
 
     // Any buffersize we come up with must be a multiple of min_nitems.
     int granularity = gr::vmcircbuf_sysconfig::granularity();
@@ -171,7 +172,7 @@ int buffer::space_available()
 
         // The -1 ensures that the case d_write_index == d_read_index is
         // unambiguous.  It indicates that there is no data for the reader
-        return d_bufsize - most_data - 1;
+        return d_orig_bufsize - most_data - 1;
     }
 }
 
