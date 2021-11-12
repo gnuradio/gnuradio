@@ -54,7 +54,7 @@ def main():
     rrc_taps = filter.firdes.root_raised_cosine(1, 2, 1, 0.35, 41)
 
     src = blocks.vector_source_b(data.astype(numpy.uint8).tolist(), False)
-    mod = digital.bpsk_mod(samples_per_symbol=2)
+    mod = digital.psk_mod(samples_per_symbol=2)
     chan = channels.channel_model(npwr)
     rrc = filter.fft_filter_ccc(1, rrc_taps)
 
