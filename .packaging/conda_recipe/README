@@ -16,4 +16,6 @@ to the recipe should be accompanied by running
 
 so that the generated build scripts are updated when necessary.
 
+You can also re-render from a pull request by starting a comment with "/rerender", which will trigger a Github workflow to perform the above steps.
+
 Consult the .conda-forge.yml file for additional documentation.

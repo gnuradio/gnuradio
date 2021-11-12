@@ -13,6 +13,9 @@
 #
 # which will automatically commit any changes.
 # ***** RUN THE ABOVE TO CHECK FOR UPDATES WHENEVER EDITS ARE MADE HERE *****
+#
+# You can also re-render from a pull request by starting a comment with
+# "/rerender", which will trigger a Github workflow to perform the above steps.
 
 # The CI will build conda packages for commits and pull requests, and it will
 # upload the packages to Anaconda Cloud on commits to the branch specified
