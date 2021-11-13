@@ -86,16 +86,11 @@ class hier_block2(object):
         """
         Pass-through member requests to the C++ object.
         """
-        
-        try:
-            object.__getattribute__(self, "_impl")
-        except AttributeError as exception:
+        if not hasattr(self, "_impl"):
             raise RuntimeError(
                 "{0}: invalid state -- did you forget to call {0}.__init__ in "
-                "a derived class?".format(object.__getattribute__(self.__class__, "__name__"))) from exception
-
+                "a derived class?".format(self.__class__.__name__))
         return getattr(self._impl, name)
-        
 
     # FIXME: these should really be implemented
     # in the original C++ class (gr_hier_block2), then they would all be inherited here
