@@ -150,3 +150,11 @@ if(ENABLE_PYTHON)
 else(ENABLE_PYTHON)
   message(STATUS "PYTHON and GRC components are disabled")
 endif(ENABLE_PYTHON)
+
+########################################################################
+# Install cmake search helper for this library
+########################################################################
+
+install(FILES cmake/Modules/gnuradio-howtoConfig.cmake
+    DESTINATION ${CMAKE_MODULES_DIR}/gnuradio
+)
