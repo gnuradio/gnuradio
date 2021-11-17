@@ -73,7 +73,7 @@ ENDIF()
 ########################################################################
 # Install directories
 ########################################################################
-find_package(Gnuradio "3.9" REQUIRED)
+find_package(Gnuradio "3.10" REQUIRED)
 include(GrVersion)
 
 include(GrPlatform) #define LIB_SUFFIX
@@ -82,7 +82,7 @@ if(NOT CMAKE_MODULES_DIR)
   set(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake)
 endif(NOT CMAKE_MODULES_DIR)
 
-set(GR_INCLUDE_DIR      include/howto)
+set(GR_INCLUDE_DIR      include/gnuradio/howto)
 set(GR_CMAKE_DIR        ${CMAKE_MODULES_DIR}/gnuradio-howto)
 set(GR_PKG_DATA_DIR     ${GR_DATA_DIR}/${CMAKE_PROJECT_NAME})
 set(GR_PKG_DOC_DIR      ${GR_DOC_DIR}/${CMAKE_PROJECT_NAME})
@@ -156,5 +156,11 @@ endif(ENABLE_PYTHON)
 ########################################################################
 
 install(FILES cmake/Modules/gnuradio-howtoConfig.cmake
-    DESTINATION ${CMAKE_MODULES_DIR}/gnuradio
+    DESTINATION ${GR_CMAKE_DIR}
+)
+
+configure_package_config_file(
+    ${PROJECT_SOURCE_DIR}/cmake/Modules/targetConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${target}Config.cmake
+    INSTALL_DESTINATION ${GR_CMAKE_DIR}
 )
