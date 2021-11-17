@@ -64,13 +64,13 @@ jobs:
             cxxflags: -Werror -Wno-error=invalid-pch
             ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui|metainfo_test"'
             ldpath:
-          - distro: 'Fedora 33'
-            containerid: 'gnuradio/ci:fedora-33-3.9'
-            cxxflags: ''
-            ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
-            ldpath: /usr/local/lib64/
           - distro: 'Fedora 34'
             containerid: 'gnuradio/ci:fedora-34-3.9'
+            cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
+            ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
+            ldpath: /usr/local/lib64/
+          - distro: 'Fedora 35'
+            containerid: 'gnuradio/ci:fedora-35-3.9'
             cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
             ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
             ldpath: /usr/local/lib64/
@@ -79,11 +79,6 @@ jobs:
             cxxflags: ''
             ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
             ldpath: /usr/local/lib64/
-          - distro: 'Debian 10'
-            containerid: 'gnuradio/ci:debian-10-3.10'
-            cxxflags: -Werror -Wno-error=invalid-pch
-            ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
-            ldpath:
           - distro: 'Debian 11'
             containerid: 'gnuradio/ci:debian-11-3.10'
             cxxflags: -Werror -Wno-error=invalid-pch
