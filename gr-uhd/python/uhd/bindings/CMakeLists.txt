@@ -18,7 +18,9 @@ if(ENABLE_UHD_RFNOC)
   list(APPEND uhd_python_files
     rfnoc_block_python.cc
     rfnoc_graph_python.cc
+    rfnoc_rx_radio_python.cc
     rfnoc_rx_streamer_python.cc
+    rfnoc_tx_radio_python.cc
     rfnoc_tx_streamer_python.cc
     )
 endif()
