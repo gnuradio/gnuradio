@@ -30,7 +30,7 @@ namespace py = pybind11;
 
 void bind_logger(py::module& m)
 {
-    py::enum_<spdlog::level::level_enum>(m, "level_enum")
+    py::enum_<spdlog::level::level_enum>(m, "log_levels")
         // Values directly from spdlog/common.h
         .value("trace", spdlog::level::trace)
         .value("debug", spdlog::level::debug)
