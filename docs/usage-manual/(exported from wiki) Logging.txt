@@ -3,16 +3,16 @@
     <ns>0</ns>
     <id>3484</id>
     <revision>
-      <id>4871</id>
-      <parentid>4183</parentid>
-      <timestamp>2019-03-12T22:43:41Z</timestamp>
+      <id>8632</id>
+      <parentid>8605</parentid>
+      <timestamp>2021-05-31T14:39:04Z</timestamp>
       <contributor>
-        <username>777arc</username>
-        <id>632</id>
+        <ip>172.18.0.3</ip>
       </contributor>
+      <comment>/* Logging from Python */  small typo fix</comment>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="9393">[[Category:Usage Manual]]
+      <text xml:space="preserve" bytes="10203">[[Category:Usage Manual]]
 GNU Radio has a logging interface to enable various levels of logging
 information to be printed to the console or a file. The logger derives
 from [http://log4cpp.sourceforge.net log4cpp] which is readily
@@ -38,8 +38,8 @@ to disable a logger.
 
 === Logging Configuration ===
 
-The logging configuration can be found in the gnuradio-runtime.conf file
-under the [LOG] section. This allows us fairly complete control over
+The logging configuration can be found in the '''<prefix>/etc/gnuradio/conf.d/gnuradio-runtime.conf''' file
+under the '''[LOG]''' section. This allows us fairly complete control over
 the logging facilities. The main configuration functions are to set up
 the level of the loggers and set the default output behavior of the
 loggers.
@@ -148,27 +148,27 @@ For the following examples, we will assume that our local
  debug_level = Off
 
 Inside of the default configuration file, we define the parameters
-for the two logger's, the standard logger the separate debug logger.
+for the two loggers, the standard logger and the separate debug logger.
 
 If the levels of the two loggers are specified in our configuration
 file, as in the above example, these levels override any levels
-specified in the XML file. Here, we have turned on the standard logger
+specified in the log_config file. Here, we have turned on the standard logger
 (d_logger) to all levels and turned off the debug logger
 (d_debug_logger). So even if the debug logger is used in the code, it
 will not actually output any information. Conversely, any level of
 output passed to the standard logger will output because we have
 turned this value to the lowest level "debug."
 
-If both an XML configuration file is set and the "log_file" or
+If both an log_config configuration file is set and the "log_file" or
 "debug_file" options are set at the same time, both systems are
 actually used. So you can configure file access and the pattern
-through the XML file while also still outputting to stdout or stderr.
+through the log_config file while also still outputting to stdout or stderr.
 
 == Advanced Usage ==
 
 The description above for using the logging facilities is specific to
 GNU Radio blocks. We have put the code necessary to access the
-debugger into the gr_block parent class to simplify access and make
+logger into the gr_block parent class to simplify access and make
 sure all blocks have the ability to quickly and easily use the logger.
 
 For non gr_block-based code, we have to get some information about the
@@ -208,9 +208,29 @@ directory of the OOT module.
 Once these CMake changes are made, the  GR logging interface will function
 as documented on this page.
 
+
+
+==== Current GNU Radio 3.9 March 2020 ====
+With the current ''master'' branch, logging got way easier. In your OOT module, just write:
+<syntaxhighlight lang="c++">
+GR_LOG_INFO(this->d_logger, "My INFO message");
+</syntaxhighlight>
+for logging to the standard logger with level 'INFO'. More generally, we'd use:
+<syntaxhighlight lang="c++">
+GR_LOG_<LOGLEVEL>(this->d_logger, "My <LOGLEVEL> message");
+</syntaxhighlight>
+
+It is not necessary to apply any CMake changes or to include additional headers.
+Be aware that 
+<syntaxhighlight lang="c++" inline>
+this->d_logger
+</syntaxhighlight>
+implies that you call the logger within a class inherited from 
+<syntaxhighlight lang="c++" inline>gr::block</syntaxhighlight>.
+
 == Logging from Python ==
 
-The logging capability has been brought out python via swig. The configuration
+The logging capability has been brought out python via swig (<=v3.8) or pybind11 (>=v3.9). The configuration
 of the logger can be manipulated via the following calls:
 
  from gnuradio import gr
@@ -219,13 +239,13 @@ of the logger can be manipulated via the following calls:
  gr.logger_reset_config()   # Resets logger config by removing all appenders
 
 Once the logger is configured you can manipulate a logger via a wrapper class gr.logger().
-You can isntantiate this by the following.  (Reference logger.h for list of methods)
+You can instantiate this by the following.  (Reference logger.h for list of methods)
 
  from gnuradio import gr
  log=gr.logger("nameOfLogger")
  log.debug("Log a debug message")
  log.set_level("INFO");</text>
-      <sha1>iihlmg3bam2b9a6q1yy1inpzt8az1ve</sha1>
+      <sha1>s1zlqhtu3momfl66ryql76uguo9567g</sha1>
     </revision>
   </page>
 </mediawiki>

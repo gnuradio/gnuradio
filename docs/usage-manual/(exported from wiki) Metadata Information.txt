@@ -3,16 +3,18 @@
     <ns>0</ns>
     <id>3479</id>
     <revision>
-      <id>4867</id>
-      <parentid>4293</parentid>
-      <timestamp>2019-03-12T22:43:19Z</timestamp>
+      <id>7025</id>
+      <parentid>4867</parentid>
+      <timestamp>2020-05-11T23:07:18Z</timestamp>
       <contributor>
-        <username>777arc</username>
-        <id>632</id>
+        <username>L0uisc</username>
+        <id>891</id>
       </contributor>
+      <minor/>
+      <comment>fixed "extra_str" in call to blocks.file_meta_sink() in final code block to read "extras_str"</comment>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="14484">[[Category:Usage Manual]]
+      <text xml:space="preserve" bytes="14485">[[Category:Usage Manual]]
 == Introduction ==
 
 Metadata files have extra information in the form of headers that
@@ -336,9 +338,9 @@ encoded as a vector of uint16 with [day, month, year].
                                    "/tmp/metadat_file.out",
                                    samp_rate, 1,
                                    blocks.GR_FILE_FLOAT, True,
-                                   1000000, extra_str, False)
+                                   1000000, extras_str, False)
 </syntaxhighlight></text>
-      <sha1>swg5klnvnjj6ehkn82c6078mgq3mnaz</sha1>
+      <sha1>79bbsfgjz078sumck0ea80hkoe1kuow</sha1>
     </revision>
   </page>
 </mediawiki>

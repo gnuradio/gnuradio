@@ -1,12 +1,17 @@
-from selenium import webdriver
+# pip install selenium
+# I had to also do pip install --upgrade requests
+# Download geckodriver from here https://github.com/mozilla/geckodriver/releases and put it in Downloads
+# sudo chmod +x geckodriver
+# export PATH=$PATH:/home/marc/Downloads (or wherever you put it)
+
+from selenium import webdriver 
 from selenium.webdriver.common.keys import Keys
 import time
-import HTMLParser
+from html.parser import HTMLParser
 import os
 
 # Settings
-pages_to_save = ['GNURadioCompanion',
-                 'Handling Flowgraphs',
+pages_to_save = ['Handling Flowgraphs',
                  'Types of Blocks',
                  'Metadata Information',
                  'Stream Tags',
@@ -22,8 +27,10 @@ pages_to_save = ['GNURadioCompanion',
                  'Polyphase Filterbanks']
 
 # set up web driver
-driver = webdriver.Firefox()
+driver = webdriver.Firefox('/home/marc/Downloads/geckodriver') # dir that contains geckodriver
+print("STARTING")
 for page_name in pages_to_save:
+    print("Processing", page_name)
     driver.get("https://wiki.gnuradio.org/index.php/Special:Export")
 
     # fill in text box
@@ -44,10 +51,11 @@ for page_name in pages_to_save:
     cropped_html = raw_html[start_index:]
 
     # save text to file
-    h = HTMLParser.HTMLParser()
+    h = HTMLParser()
     cropped_html_text = h.unescape(cropped_html) # makes it so stuff like &gt shows up as a greater than sign
     text_file = open("(exported from wiki) " + page_name + ".txt", "w")
     text_file.write(cropped_html_text)
     text_file.close()
 
 driver.close()
+print("DONE")
