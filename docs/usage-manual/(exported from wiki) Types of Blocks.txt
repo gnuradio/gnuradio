@@ -3,18 +3,17 @@
     <ns>0</ns>
     <id>3495</id>
     <revision>
-      <id>6500</id>
-      <parentid>4864</parentid>
-      <timestamp>2020-01-05T18:46:42Z</timestamp>
+      <id>9094</id>
+      <parentid>8843</parentid>
+      <timestamp>2021-11-17T16:00:00Z</timestamp>
       <contributor>
-        <username>Duggabe</username>
-        <id>846</id>
+        <username>777arc</username>
+        <id>632</id>
       </contributor>
-      <minor/>
-      <comment>correct Python examples</comment>
+      <comment>/* Basic Block */</comment>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="8123">[[Category:Usage Manual]]
+      <text xml:space="preserve" bytes="8027">[[Category:Usage Manual]]
 == Introduction ==
 
 To take advantage of the gnuradio framework, users will create various blocks to implement the desired data processing. There are several types of blocks to choose from:
@@ -121,14 +120,18 @@ An example decimation block in Python:
 
 <syntaxhighlight lang="python">
 class my_decim_block(gr.decim_block):
-    def __init__(self, args):
+    def __init__(self, decim_rate):
         gr.decim_block.__init__(self,
             name="my block",
             in_sig=[numpy.float32],
-            out_sig=[numpy.float32])
-        self.set_relative_rate(1.0/decimation)
+            out_sig=[numpy.float32],
+            decim = decim_rate)
+        self.set_relative_rate(1.0/decim_rate)
+        self.decimation = decim_rate
 
-    #work function here...
+    def work(self, input_items, output_items):
+        output_items[0][:] = input_items[0][0::self.decimation]
+        return len(output_items[0])
 </syntaxhighlight>
 
 Some observations:
@@ -233,28 +236,22 @@ Some observations:
 ** ninput_items is a vector describing the length of each input buffer
 * Before return, general_work must manually consume the used inputs
 * The number of items in the input buffers is assumed to be noutput_items
-** Users may alter this behaviour by overloading the forecast() method
+** This behaviour can be altered by overloading the forecast() method but is not mandatory
 
 The adder revisited as a basic block in Python:
 
 <syntaxhighlight lang="python">
+import numpy as np
 from gnuradio import gr
-import gnuradio.extras
 
 class my_basic_adder_block(gr.basic_block):
-    def __init__(self, args):
+    def __init__(self):
         gr.basic_block.__init__(self,
             name="another_adder_block",
-            in_sig=[...],
-            out_sig=[...])
-        self.set_auto_consume(False)
+            in_sig=[np.float32, np.float32],
+            out_sig=[np.float32])
 
-    def forecast(self, noutput_items, ninput_items_required):
-        #setup size of input_items[i] for work call
-        for i in range(len(ninput_items_required)):
-            ninput_items_required[i] = noutput_items
-
-    def work(self, input_items, output_items):
+    def general_work(self, input_items, output_items):
         #buffer references
         in0 = input_items[0][:len(output_items[0])]
         in1 = input_items[1][:len(output_items[0])]
@@ -263,15 +260,15 @@ class my_basic_adder_block(gr.basic_block):
         #process data
         out[:] = in0 + in1
 
-        //consume the inputs
-        self.consume(0, len(in0)) //consume port 0 input
-        self.consume(1, len(in1)) //consume port 1 input
-        #self.consume_each(len(out)) //or shortcut to consume on all inputs
+        #consume the inputs
+        self.consume(0, len(in0)) #consume port 0 input
+        self.consume(1, len(in1)) #consume port 1 input
+
 
         #return produced
         return len(out)
 </syntaxhighlight></text>
-      <sha1>45ab6553658lbupm4hdgnjnvx9bl7dj</sha1>
+      <sha1>jlgt0ofen1ui79z2lk7vhsyffax6jr5</sha1>
     </revision>
   </page>
 </mediawiki>

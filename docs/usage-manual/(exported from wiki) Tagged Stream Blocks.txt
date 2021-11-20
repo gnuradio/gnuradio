@@ -3,28 +3,28 @@
     <ns>0</ns>
     <id>3483</id>
     <revision>
-      <id>4870</id>
-      <parentid>4295</parentid>
-      <timestamp>2019-03-12T22:43:37Z</timestamp>
+      <id>8735</id>
+      <parentid>8603</parentid>
+      <timestamp>2021-07-23T15:10:11Z</timestamp>
       <contributor>
-        <username>777arc</username>
-        <id>632</id>
+        <ip>172.18.0.3</ip>
       </contributor>
+      <comment>/* CRC32 */ github changed the method to access the actual file content. url with 'blob' now goes to decorated file listing (cut-n-paste no bueno) not the bare file content (cut-n-paste ready!)</comment>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="13379">[[Category:Usage Manual]]
+      <text xml:space="preserve" bytes="13506">[[Category:Usage Manual]]
 == Introduction ==
 
 A tagged stream block is a block that works on streamed, but packetized input data.
 Think of packet data transmission: A data packet consists of N bytes. However, in
 traditional GNU Radio blocks, if we stream N bytes into a block, there's no way of
 knowing the packet boundary. This might be relevant: Perhaps the modulator has to
-prepend a synchronisation word before every packet, or append a CRC. So while some
+prepend a synchronization word before every packet or append a CRC. So while some
 blocks don't care about packet boundaries, other blocks do: These are tagged
 stream blocks.
 
 These blocks are different from all the other GNU Radio block types (gr::block,
-gr::sync_block etc.) in that they are driven by the input: The PDU length tag tells the block how to operate, whereas other blocks are output-driven (the scheduler tries to fill up the output buffer are much as possible).
+gr::sync_block etc.) in that they are driven by the input: The PDU length tag tells the block how to operate, whereas other blocks are output-driven (the scheduler tries to fill up the output buffer as much as possible).
 
 === How do they work? ===
 
@@ -276,30 +276,30 @@ of the PDU.
 
 === CRC32 ===
 
-Block: [https://github.com/gnuradio/gnuradio/blob/master/gr-digital/lib/crc32_bb_impl.cc crc32_bb]
+Block: [https://raw.githubusercontent.com/gnuradio/gnuradio/master/gr-digital/lib/crc32_bb_impl.cc gr-digital/lib/crc32_bb_impl.cc]
 
 This is a very simple block, and a good example to start with.
 
 === OFDM Frame Equalizer ===
 
-Block: [https://github.com/gnuradio/gnuradio/blob/master/gr-digital/lib/ofdm_frame_equalizer_vcvc_impl.cc ofdm_frame_equalizer_vcvc]
+Block: [https://raw.githubusercontent.com/gnuradio/gnuradio/master/gr-digital/lib/ofdm_frame_equalizer_vcvc_impl.cc gr-digital/lib/ofdm_frame_equalizer_vcvc_impl.cc]
 
 This block would be a sync block if tagged stream blocks didn't exist. It also uses more
 than one tag to determine the output.
 
 === Tagged Stream Muxer ===
 
-Block: [https://github.com/gnuradio/gnuradio/blob/master/gr-blocks/lib/tagged_stream_mux_impl.cc tagged_stream_mux]
+Block: [https://raw.githubusercontent.com/gnuradio/gnuradio/master/gr-blocks/lib/tagged_stream_mux_impl.cc gr-blocks/lib/tagged_stream_mux_impl.cc]
 
 Use this to multiplex any number of tagged streams.
 
 === Cyclic Prefixer (OFDM) ===
 
-Block: [https://github.com/gnuradio/gnuradio/blob/master/gr-digital/lib/ofdm_cyclic_prefixer_impl.cc ofdm_cyclic_prefixer]
+Block: [https://raw.githubusercontent.com/gnuradio/gnuradio/master/gr-digital/lib/ofdm_cyclic_prefixer_impl.cc gr-digital/lib/ofdm_cyclic_prefixer_impl.cc]
 
 This block uses the gr::block behavior fallback.
 
-=== Troubleshooting ===
+== Troubleshooting ==
 
 '''My flow graph crashes with the error message "Missing length tag".'''
 
@@ -307,7 +307,7 @@ This means the input of a tagged stream block was not correctly tagged.
 The most common cause is when connecting a regular streaming block to a tagged
 stream block. You can check the log output for the item number and port where
 this happened.</text>
-      <sha1>79nex80832w5rj7e2dnhz7i9le1fono</sha1>
+      <sha1>7zjm0zyisjndz7o8pih62qwhn0r6ctg</sha1>
     </revision>
   </page>
 </mediawiki>
