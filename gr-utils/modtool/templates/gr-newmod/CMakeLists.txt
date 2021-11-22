@@ -159,6 +159,7 @@ install(FILES cmake/Modules/gnuradio-howtoConfig.cmake
     DESTINATION ${GR_CMAKE_DIR}
 )
 
+include(CMakePackageConfigHelpers)
 configure_package_config_file(
     ${PROJECT_SOURCE_DIR}/cmake/Modules/targetConfig.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${target}Config.cmake
