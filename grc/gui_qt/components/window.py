@@ -138,6 +138,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.tabWidget.tabCloseRequested.connect(lambda index: self.tabWidget.removeTab(index))
         self.tabWidget.addTab(self.flowgraph, "Untitled")
         self.setCentralWidget(self.tabWidget)
+        #TODO: Do this for all scenes
+        self.flowgraph.scene.selectionChanged.connect(self.updateActions)
         #self.new_tab(self.flowgraph)
 
     '''def show(self):
@@ -275,6 +277,43 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions['paste'].setEnabled(False)
         actions['delete'].setEnabled(False)
         actions['errors'].setEnabled(False)
+        actions['rotate_cw'].setEnabled(False)
+        actions['rotate_ccw'].setEnabled(False)
+
+    def updateActions(self):
+        ''' Update the available actions based on what is selected '''
+
+        def there_are_blocks_in(selection):
+            for element in selection:
+                if element.is_block:
+                    return True
+            return False
+
+        def there_are_connections_in(selection):
+            for element in selection:
+                if element.is_connection:
+                    return True
+            return False
+
+        selected_elements = self.flowgraph.scene.selectedItems()
+
+        self.actions['cut'].setEnabled(False)
+        self.actions['copy'].setEnabled(False)
+        self.actions['paste'].setEnabled(False)
+        self.actions['delete'].setEnabled(False)
+        self.actions['rotate_cw'].setEnabled(False)
+        self.actions['rotate_ccw'].setEnabled(False)
+
+        if there_are_connections_in(selected_elements):
+            self.actions['delete'].setEnabled(True)
+
+        if there_are_blocks_in(selected_elements):
+            self.actions['cut'].setEnabled(True)
+            self.actions['copy'].setEnabled(True)
+            self.actions['paste'].setEnabled(True)
+            self.actions['delete'].setEnabled(True)
+            self.actions['rotate_cw'].setEnabled(True)
+            self.actions['rotate_ccw'].setEnabled(True)
 
     def createMenus(self, actions, menus):
         ''' Setup the main menubar for the application '''
