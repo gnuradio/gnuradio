@@ -12,6 +12,10 @@ max_messages = 8192
 # Block output buffer size in bytes.
 #buffer_size = 32768
 
+# The time to wait before continuing the block thread when input
+# is blocked
+input_blocked_retry_time_ms = 250
+
 [LOG]
 # Levels can be (case insensitive):
 #       DEBUG, INFO, WARN, TRACE, ERROR, ALERT, CRIT, FATAL, EMERG

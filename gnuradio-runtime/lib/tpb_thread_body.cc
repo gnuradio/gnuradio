@@ -48,6 +48,8 @@ tpb_thread_body::tpb_thread_body(block_sptr block,
 
     prefs* p = prefs::singleton();
     size_t max_nmsgs = static_cast<size_t>(p->get_long("DEFAULT", "max_messages", 100));
+    unsigned int input_blocked_retry_time_ms =
+        static_cast<int>(p->get_long("DEFAULT", "input_blocked_retry_time_ms", 250));
 
     // Set up logging
     auto logger = gr::logger("tpb_thread_body");
@@ -132,7 +134,8 @@ tpb_thread_body::tpb_thread_body(block_sptr block,
 
             if (!d->d_tpb.input_changed) {
                 boost::system_time const timeout =
-                    boost::get_system_time() + boost::posix_time::milliseconds(250);
+                    boost::get_system_time() +
+                    boost::posix_time::milliseconds(input_blocked_retry_time_ms);
                 d->d_tpb.input_cond.timed_wait(guard, timeout);
             }
         } break;
