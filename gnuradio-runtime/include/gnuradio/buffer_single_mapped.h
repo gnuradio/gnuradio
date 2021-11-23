@@ -120,7 +120,7 @@ protected:
 
     block_sptr d_buf_owner; // block that "owns" this buffer
 
-    std::unique_ptr<char> d_buffer;
+    std::unique_ptr<char[]> d_buffer;
 
     /*!
      * \brief constructor is private.  Use gr_make_buffer to create instances.
