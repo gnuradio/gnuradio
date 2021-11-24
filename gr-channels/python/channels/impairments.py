@@ -12,11 +12,12 @@ from gnuradio import blocks
 from gnuradio import gr
 from gnuradio.filter import firdes
 
-#Import locally
+# Import locally
 from .phase_noise_gen import phase_noise_gen
 from .iqbal_gen import iqbal_gen
 from .distortion_2_gen import distortion_2_gen
 from .distortion_3_gen import distortion_3_gen
+
 
 class impairments(gr.hier_block2):
 
@@ -31,8 +32,8 @@ class impairments(gr.hier_block2):
                  beta=0):
         gr.hier_block2.__init__(
             self, "Radio Impairments Model",
-            gr.io_signature(1, 1, gr.sizeof_gr_complex*1),
-            gr.io_signature(1, 1, gr.sizeof_gr_complex*1),
+            gr.io_signature(1, 1, gr.sizeof_gr_complex * 1),
+            gr.io_signature(1, 1, gr.sizeof_gr_complex * 1),
         )
 
         ##################################################
@@ -55,10 +56,11 @@ class impairments(gr.hier_block2):
         self.channels_distortion_3_gen_0 = distortion_3_gen(beta)
         self.channels_distortion_2_gen_0 = distortion_2_gen(gamma)
         self.freq_modulator = blocks.multiply_cc()
-        self.freq_offset_gen = analog.sig_source_c(1.0, analog.GR_COS_WAVE, freq_offset, 1, 0)
+        self.freq_offset_gen = analog.sig_source_c(
+            1.0, analog.GR_COS_WAVE, freq_offset, 1, 0)
         self.freq_modulator_dcoffs = blocks.multiply_cc()
         self.freq_offset_conj = blocks.conjugate_cc()
-        self.dc_offset = blocks.add_const_vcc((i_ofs + q_ofs* 1j, ))
+        self.dc_offset = blocks.add_const_vcc((i_ofs + q_ofs * 1j, ))
 
         ##################################################
         # Frequency offset
@@ -75,12 +77,10 @@ class impairments(gr.hier_block2):
             (self.dc_offset, 0),
         )
         # Frequency offset again
-        self.connect((self.freq_offset_gen, 0), (self.freq_modulator_dcoffs, 0))
+        self.connect((self.freq_offset_gen, 0),
+                     (self.freq_modulator_dcoffs, 0))
         self.connect((self.dc_offset, 0), (self.freq_modulator_dcoffs, 1))
         self.connect((self.freq_modulator_dcoffs, 0), (self, 0))
-
-
-# QT sink close method reimplementation
 
     def get_phase_noise_mag(self):
         return self.phase_noise_mag
@@ -108,7 +108,7 @@ class impairments(gr.hier_block2):
 
     def set_q_ofs(self, q_ofs):
         self.q_ofs = q_ofs
-        self.dc_offset.set_k((self.i_ofs + self.q_ofs* 1j, ))
+        self.dc_offset.set_k((self.i_ofs + self.q_ofs * 1j, ))
 
     def get_i_ofs(self):
         return self.i_ofs
@@ -116,7 +116,7 @@ class impairments(gr.hier_block2):
     def set_i_ofs(self, i_ofs):
         """Set inphase part of DC offset"""
         self.i_ofs = i_ofs
-        self.dc_offset.set_k((self.i_ofs + self.q_ofs* 1j, ))
+        self.dc_offset.set_k((self.i_ofs + self.q_ofs * 1j, ))
 
     def get_freq_offset(self):
         """Return frequency offset (normalized to 1.0)"""
