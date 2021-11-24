@@ -66,6 +66,11 @@ parameters:
     dtype: int_vector
     default: (0,0)
     hide: ${ ('part' if generate_options == 'bokeh_gui' else 'all') }
+-   id: window_size
+    label: Window size
+    dtype: int_vector
+    default: (1000,1000)
+    hide: ${ ('part' if generate_options == 'bokeh_gui' else 'all') }
 -   id: sizing_mode
     label: Sizing Mode
     dtype: enum
@@ -140,12 +145,6 @@ templates:
         import signal
         % if generate_options == 'qt_gui':
         from PyQt5 import Qt
-        % endif
-        % if generate_options == 'bokeh_gui':
-        import time
-        import functools
-        from bokeh.client import push_session
-        from bokeh.plotting import curdoc
         % endif
         % if not generate_options.startswith('hb'):
         from argparse import ArgumentParser
