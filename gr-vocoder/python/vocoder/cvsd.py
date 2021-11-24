@@ -29,14 +29,15 @@ class cvsd_encode_fb(gr.hier_block2):
         '''
 
         gr.hier_block2.__init__(self, "cvsd_encode",
-                                gr.io_signature(1, 1, gr.sizeof_float), # Input signature
+                                # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_float),
                                 gr.io_signature(1, 1, gr.sizeof_char))  # Output signature
 
         scale_factor = 32000.0
         self.interp = resample
 
         src_scale = blocks.multiply_const_ff(scale_factor)
-        taps = filter.firdes.low_pass(self.interp, self.interp, bw, 2*bw)
+        taps = filter.firdes.low_pass(self.interp, self.interp, bw, 2 * bw)
         interp = filter.interp_fir_filter_fff(self.interp, taps)
         f2s = blocks.float_to_short()
         enc = vocoder_python.cvsd_encode_sb()
@@ -60,15 +61,16 @@ class cvsd_decode_bf(gr.hier_block2):
         from 1 to 8. A rate of 8k with a resampling rate of 8 provides a good quality signal.
         '''
         gr.hier_block2.__init__(self, "cvsd_decode",
-                                gr.io_signature(1, 1, gr.sizeof_char),  # Input signature
-                                gr.io_signature(1, 1, gr.sizeof_float)) # Output signature
+                                # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_char),
+                                gr.io_signature(1, 1, gr.sizeof_float))  # Output signature
 
         scale_factor = 32000.0
         self.decim = resample
 
         dec = vocoder_python.cvsd_decode_bs()
         s2f = blocks.short_to_float()
-        taps = filter.firdes.low_pass(1, 1, bw, 2*bw)
+        taps = filter.firdes.low_pass(1, 1, bw, 2 * bw)
         decim = filter.fir_filter_fff(self.decim, taps)
         sink_scale = blocks.multiply_const_ff(1.0 / scale_factor)
 

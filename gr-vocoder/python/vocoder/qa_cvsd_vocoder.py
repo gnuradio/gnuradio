@@ -104,7 +104,7 @@ class test_cvsd_vocoder (gr_unittest.TestCase):
         self.tb.connect(src, src_scale, interp, f2s, enc)
         self.tb.connect(enc, dec, s2f, decim, sink_scale, head, sink)
         self.tb.run()
-	print sink.data()
+        print(sink.data())
 
         self.assertFloatTuplesAlmostEqual (expected_data, sink.data(), 5)
     """
