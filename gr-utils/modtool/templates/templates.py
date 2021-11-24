@@ -502,7 +502,7 @@ from gnuradio import gr, gr_unittest
 % if lang == 'cpp':
 try:
 % if version in ['310']:
-    from gnuradio.${modname} import ${blockname}
+  from gnuradio.${modname} import ${blockname}
 % else:
     from ${modname} import ${blockname}
 % endif
@@ -518,9 +518,9 @@ except ImportError:
 % endif
 % else:
 % if version in ['310']:
-  from gnuradio.${blockname} import ${blockname}
+from gnuradio.${modname} import ${blockname}
 % else:
-  from ${blockname} import ${blockname}
+from ${blockname} import ${blockname}
 % endif
 % endif
 
