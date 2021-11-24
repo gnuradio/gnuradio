@@ -12,7 +12,8 @@ PARAM_SCHEME = expand(
 
     options=list,
     option_labels=list,
-    option_attributes=Spec(types=dict, required=False, item_scheme=(str, list)),
+    option_attributes=Spec(types=dict, required=False,
+                           item_scheme=(str, list)),
 
     hide=str,
 )
@@ -59,7 +60,8 @@ BLOCK_SCHEME = expand(
     value=str,
 
     templates=Spec(types=dict, required=False, item_scheme=TEMPLATES_SCHEME),
-    cpp_templates=Spec(types=dict, required=False, item_scheme=CPP_TEMPLATES_SCHEME),
+    cpp_templates=Spec(types=dict, required=False,
+                       item_scheme=CPP_TEMPLATES_SCHEME),
 
     documentation=str,
     grc_source=str,

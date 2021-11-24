@@ -94,7 +94,8 @@ def convert_block_xml(node):
     data['asserts'] = [converter.to_python_dec(check_node.text)
                        for check_node in node.iterfind('check')] or no_value
 
-    data['templates'] = convert_templates(node, converter.to_mako, block_id) or no_value
+    data['templates'] = convert_templates(
+        node, converter.to_mako, block_id) or no_value
 
     docs = node.findtext('doc')
     if docs:
@@ -103,7 +104,8 @@ def convert_block_xml(node):
 
     data['file_format'] = current_file_format
 
-    data = OrderedDict((key, value) for key, value in data.items() if value is not no_value)
+    data = OrderedDict((key, value)
+                       for key, value in data.items() if value is not no_value)
     auto_hide_params_for_item_sizes(data)
 
     return data
@@ -116,8 +118,10 @@ def auto_hide_params_for_item_sizes(data):
         for key in ['dtype', 'multiplicity']:
             item_size_templates.append(str(port.get(key, '')))
         vlen_templates.append(str(port.get('vlen', '')))
-    item_size_templates = ' '.join(value for value in item_size_templates if '${' in value)
-    vlen_templates = ' '.join(value for value in vlen_templates if '${' in value)
+    item_size_templates = ' '.join(
+        value for value in item_size_templates if '${' in value)
+    vlen_templates = ' '.join(
+        value for value in vlen_templates if '${' in value)
 
     for param in data.get('parameters', []):
         if param['id'] in item_size_templates:
@@ -135,7 +139,8 @@ def convert_templates(node, convert, block_id=''):
         imports = yaml.MultiLineString(imports)
     templates['imports'] = imports or no_value
 
-    templates['var_make'] = convert(node.findtext('var_make') or '') or no_value
+    templates['var_make'] = convert(
+        node.findtext('var_make') or '') or no_value
 
     make = convert(node.findtext('make') or '')
     if make:
@@ -160,8 +165,10 @@ def convert_param_xml(node, convert):
     param['dtype'] = convert(node.findtext('type') or '')
     param['default'] = node.findtext('value') or no_value
 
-    options = yaml.ListFlowing(on.findtext('key') for on in node.iterfind('option'))
-    option_labels = yaml.ListFlowing(on.findtext('name') for on in node.iterfind('option'))
+    options = yaml.ListFlowing(on.findtext('key')
+                               for on in node.iterfind('option'))
+    option_labels = yaml.ListFlowing(on.findtext(
+        'name') for on in node.iterfind('option'))
     param['options'] = options or no_value
     if not all(str(o).title() == l for o, l in zip(options, option_labels)):
         param['option_labels'] = option_labels
@@ -192,7 +199,8 @@ def convert_port_xml(node, convert):
     else:
         port['dtype'] = dtype
         vlen = node.findtext('vlen')
-        port['vlen'] = int(vlen) if vlen and vlen.isdigit() else convert(vlen) or no_value
+        port['vlen'] = int(vlen) if vlen and vlen.isdigit(
+        ) else convert(vlen) or no_value
 
     port['multiplicity'] = convert(node.findtext('nports')) or no_value
     port['optional'] = bool(node.findtext('optional')) or no_value
@@ -207,4 +215,5 @@ def check_mako_template(block_id, expr):
     try:
         Template(expr)
     except Exception as error:
-        print(block_id, expr, type(error), error, '', sep='\n', file=sys.stderr)
+        print(block_id, expr, type(error), error,
+              '', sep='\n', file=sys.stderr)

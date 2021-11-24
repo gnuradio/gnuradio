@@ -64,7 +64,8 @@ class Block(CoreBlock, Drawable):
         """
         coor = Utils.scale(coor, reverse=True)
         if Actions.TOGGLE_SNAP_TO_GRID.get_active():
-            offset_x, offset_y = (0, self.height / 2) if self.is_horizontal() else (self.height / 2, 0)
+            offset_x, offset_y = (
+                0, self.height / 2) if self.is_horizontal() else (self.height / 2, 0)
             coor = (
                 Utils.align_to_grid(coor[0] + offset_x) - offset_x,
                 Utils.align_to_grid(coor[1] + offset_y) - offset_y
@@ -137,8 +138,10 @@ class Block(CoreBlock, Drawable):
         for ports, has_busses in zip((self.active_sources, self.active_sinks), bussified):
             if not ports:
                 continue
-            port_separation = Constants.PORT_SEPARATION if not has_busses else ports[0].height + Constants.PORT_SPACING
-            offset = (self.height - (len(ports) - 1) * port_separation - ports[0].height) / 2
+            port_separation = Constants.PORT_SEPARATION if not has_busses else ports[
+                0].height + Constants.PORT_SPACING
+            offset = (self.height - (len(ports) - 1) *
+                      port_separation - ports[0].height) / 2
             for port in ports:
                 port.create_shapes()
                 port.coordinate = {
@@ -148,7 +151,8 @@ class Block(CoreBlock, Drawable):
                     270: (offset, +self.width),
                 }[port.connector_direction]
 
-                offset += Constants.PORT_SEPARATION if not has_busses else port.height + Constants.PORT_SPACING
+                offset += Constants.PORT_SEPARATION if not has_busses else port.height + \
+                    Constants.PORT_SPACING
 
     def create_labels(self, cr=None):
         """Create the labels for the signal block."""
@@ -178,7 +182,8 @@ class Block(CoreBlock, Drawable):
             markups = [param.format_block_surface_markup()
                        for param in self.params.values() if (param.hide not in ('all', 'part') or (param.dtype == 'id' and force_show_id))]
         else:
-            markups = ['<span font_desc="{font}"><b>key: </b>{key}</span>'.format(font=Constants.PARAM_FONT, key=self.key)]
+            markups = ['<span font_desc="{font}"><b>key: </b>{key}</span>'.format(
+                font=Constants.PARAM_FONT, key=self.key)]
 
         params_layout.set_spacing(Constants.LABEL_SEPARATION * Pango.SCALE)
         params_layout.set_markup('\n'.join(markups))
@@ -197,12 +202,13 @@ class Block(CoreBlock, Drawable):
         self.create_port_labels()
 
         def get_min_height_for_ports(ports):
-            min_height = 2 * Constants.PORT_BORDER_SEPARATION + len(ports) * Constants.PORT_SEPARATION
+            min_height = 2 * Constants.PORT_BORDER_SEPARATION + \
+                len(ports) * Constants.PORT_SEPARATION
             # If any of the ports are bus ports - make the min height larger
             if any([p.dtype == 'bus' for p in ports]):
                 min_height = 2 * Constants.PORT_BORDER_SEPARATION + sum(
                     port.height + Constants.PORT_SPACING for port in ports if port.dtype == 'bus'
-                    ) - Constants.PORT_SPACING
+                ) - Constants.PORT_SPACING
 
             else:
                 if ports:
@@ -213,11 +219,13 @@ class Block(CoreBlock, Drawable):
                      get_min_height_for_ports(self.active_sinks),
                      get_min_height_for_ports(self.active_sources))
 
-        self.width, self.height = width, height = Utils.align_to_grid((width, height))
+        self.width, self.height = width, height = Utils.align_to_grid(
+            (width, height))
 
         self._surface_layouts_offsets = [
             (0, (height - label_height) / 2.0),
-            (0, (height - label_height) / 2.0 + Constants.LABEL_SEPARATION + title_height / Pango.SCALE)
+            (0, (height - label_height) / 2.0 +
+             Constants.LABEL_SEPARATION + title_height / Pango.SCALE)
         ]
 
         title_layout.set_width(width * Pango.SCALE)
@@ -243,7 +251,8 @@ class Block(CoreBlock, Drawable):
             complexity = utils.flow_graph_complexity.calculate(self.parent)
             markups.append(
                 '<span foreground="#444" size="medium" font_desc="{font}">'
-                '<b>Complexity: {num}bal</b></span>'.format(num=Utils.num_to_str(complexity), font=Constants.BLOCK_FONT)
+                '<b>Complexity: {num}bal</b></span>'.format(
+                    num=Utils.num_to_str(complexity), font=Constants.BLOCK_FONT)
             )
         comment = self.comment  # Returns None if there are no comments
         if comment:
@@ -303,7 +312,8 @@ class Block(CoreBlock, Drawable):
         for port in self.active_ports():
             port_selected = port.what_is_selected(
                 coor=[a - b for a, b in zip(coor, self.coordinate)],
-                coor_m=[a - b for a, b in zip(coor, self.coordinate)] if coor_m is not None else None
+                coor_m=[
+                    a - b for a, b in zip(coor, self.coordinate)] if coor_m is not None else None
             )
             if port_selected:
                 return port_selected
@@ -359,7 +369,8 @@ class Block(CoreBlock, Drawable):
             true for change
         """
         type_templates = ' '.join(p.dtype for p in self.params.values()) + ' '
-        type_templates += ' '.join(p.get_raw('dtype') for p in (self.sinks + self.sources))
+        type_templates += ' '.join(p.get_raw('dtype')
+                                   for p in (self.sinks + self.sources))
         type_param = None
         for key, param in self.params.items():
             if not param.is_enum():
@@ -396,7 +407,8 @@ class Block(CoreBlock, Drawable):
         """
         changed = False
         # Concat the nports string from the private nports settings of all ports
-        nports_str = ' '.join(str(port.get_raw('multiplicity')) for port in self.ports())
+        nports_str = ' '.join(str(port.get_raw('multiplicity'))
+                              for port in self.ports())
         # Modify all params whose keys appear in the nports string
         for key, param in self.params.items():
             if param.is_enum() or param.key not in nports_str:

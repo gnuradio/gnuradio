@@ -8,6 +8,7 @@
 from ..utils import expr_utils
 from operator import methodcaller, attrgetter
 
+
 class FlowGraphProxy(object):  # TODO: move this in a refactored Generator
 
     def __init__(self, fg):
@@ -59,8 +60,8 @@ class FlowGraphProxy(object):  # TODO: move this in a refactored Generator
                 'label': str(pad.params['label'].get_evaluated()),
                 'type': str(pad.params['type'].get_evaluated()),
                 'vlen': str(pad.params['vlen'].get_value()),
-                'size':  type_param.options.attributes[type_param.get_value()]['size'],
-                'cpp_size':  type_param.options.attributes[type_param.get_value()]['cpp_size'],
+                'size': type_param.options.attributes[type_param.get_value()]['size'],
+                'cpp_size': type_param.options.attributes[type_param.get_value()]['cpp_size'],
                 'optional': bool(pad.params['optional'].get_evaluated()),
             }
             num_ports = pad.params['num_streams'].get_evaluated()
@@ -127,7 +128,8 @@ class FlowGraphProxy(object):  # TODO: move this in a refactored Generator
         Returns:
             a sorted list of variable blocks in order of dependency (indep -> dep)
         """
-        variables = [block for block in self.iter_enabled_blocks() if block.is_variable]
+        variables = [block for block in self.iter_enabled_blocks()
+                     if block.is_variable]
         return expr_utils.sort_objects(variables, attrgetter('name'), methodcaller('get_cpp_var_make'))
 
     def includes(self):
@@ -157,6 +159,7 @@ class FlowGraphProxy(object):  # TODO: move this in a refactored Generator
         """
         return [block.cpp_templates.render('packages') for block in self.iter_enabled_blocks() if not (block.is_virtual_sink() or block.is_virtual_source())]
 
+
 def get_hier_block_io(flow_graph, direction, domain=None):
     """
     Get a list of io ports for this flow graph.
@@ -172,7 +175,7 @@ def get_hier_block_io(flow_graph, direction, domain=None):
             'label': str(pad.params['label'].get_evaluated()),
             'type': str(pad.params['type'].get_evaluated()),
             'vlen': str(pad.params['vlen'].get_value()),
-            'size':  type_param.options.attributes[type_param.get_value()]['size'],
+            'size': type_param.options.attributes[type_param.get_value()]['size'],
             'optional': bool(pad.params['optional'].get_evaluated()),
         }
         num_ports = pad.params['num_streams'].get_evaluated()

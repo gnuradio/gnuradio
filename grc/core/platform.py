@@ -36,7 +36,8 @@ class Platform(Element):
 
         self.config = self.Config(*args, **kwargs)
         self.block_docstrings = {}
-        self.block_docstrings_loaded_callback = lambda: None  # dummy to be replaced by BlockTreeWindow
+        # dummy to be replaced by BlockTreeWindow
+        self.block_docstrings_loaded_callback = lambda: None
 
         self._docstring_extractor = utils.extract_docs.SubprocessLoader(
             callback_query_result=self._save_docstring_extraction_result,
@@ -108,7 +109,8 @@ class Platform(Element):
             Messages.send('>>> Generating: {}\n'.format(generator.file_path))
             generator.write()
         except Exception as e:
-            Messages.send('>>> Generate Error: {}: {}\n'.format(file_path, str(e)))
+            Messages.send(
+                '>>> Generate Error: {}: {}\n'.format(file_path, str(e)))
             return None, None
 
         return flow_graph, generator.file_path
@@ -126,8 +128,8 @@ class Platform(Element):
         self.connection_templates.clear()
         self.cpp_connection_templates.clear()
         self._block_categories.clear()
-        
-        with Cache(Constants.CACHE_FILE, version = self.config.version) as cache:
+
+        with Cache(Constants.CACHE_FILE, version=self.config.version) as cache:
             for file_path in self._iter_files_in_block_path(path):
 
                 if file_path.endswith('.block.yml'):
@@ -147,9 +149,11 @@ class Platform(Element):
                     data = cache.get_or_load(file_path)
                     passed = checker.run(data)
                     for msg in checker.messages:
-                        logger.warning('{:<40s} {}'.format(os.path.basename(file_path), msg))
+                        logger.warning('{:<40s} {}'.format(
+                            os.path.basename(file_path), msg))
                     if not passed:
-                        logger.info('YAML schema check failed for: ' + file_path)
+                        logger.info(
+                            'YAML schema check failed for: ' + file_path)
 
                     loader(data, file_path)
                 except Exception as error:
@@ -184,8 +188,8 @@ class Platform(Element):
             raise RuntimeError(errstr)
         else:
             # might have some cleanup to do on the options block in particular
-            utils.hide_bokeh_gui_options_if_not_installed(self.blocks['options'])
-
+            utils.hide_bokeh_gui_options_if_not_installed(
+                self.blocks['options'])
 
     def _iter_files_in_block_path(self, path=None, ext='yml'):
         """Iterator for block descriptions and category trees"""
@@ -220,13 +224,15 @@ class Platform(Element):
         # don't load future block format versions
         file_format = data['file_format']
         if file_format < 1 or file_format > Constants.BLOCK_DESCRIPTION_FILE_FORMAT_VERSION:
-            log.error('Unknown format version %d in %s', file_format, file_path)
+            log.error('Unknown format version %d in %s',
+                      file_format, file_path)
             return
 
         block_id = data['id'] = data['id'].rstrip('_')
 
         if block_id in self.block_classes_build_in:
-            log.warning('Not overwriting build-in block %s with %s', block_id, file_path)
+            log.warning('Not overwriting build-in block %s with %s',
+                        block_id, file_path)
             return
         if block_id in self.blocks:
             log.warning('Block with id "%s" loaded from\n  %s\noverwritten by\n  %s',
@@ -256,7 +262,8 @@ class Platform(Element):
             try:
                 tuple(int(color[o:o + 2], 16) / 255.0 for o in range(1, 6, 2))
             except ValueError:
-                log.warning('Cannot parse color code "%s" in %s', color, file_path)
+                log.warning('Cannot parse color code "%s" in %s',
+                            color, file_path)
                 return
 
         self.domains[domain_id] = self.Domain(
@@ -272,8 +279,10 @@ class Platform(Element):
                 log.warn('Invalid connection template.')
                 continue
             connection_id = str(source_id), str(sink_id)
-            self.connection_templates[connection_id] = connection.get('connect', '')
-            self.cpp_connection_templates[connection_id] = connection.get('cpp_connect', '')
+            self.connection_templates[connection_id] = connection.get(
+                'connect', '')
+            self.cpp_connection_templates[connection_id] = connection.get(
+                'cpp_connect', '')
 
     def load_category_tree_description(self, data, file_path):
         """Parse category tree file and add it to list"""
@@ -326,7 +335,8 @@ class Platform(Element):
             # todo: try
             if not is_xml:
                 data = yaml.safe_load(fp)
-                validator = schema_checker.Validator(schema_checker.FLOW_GRAPH_SCHEME)
+                validator = schema_checker.Validator(
+                    schema_checker.FLOW_GRAPH_SCHEME)
                 validator.run(data)
 
         if is_xml:
@@ -340,13 +350,15 @@ class Platform(Element):
         data = flow_graph.export_data()
 
         try:
-            data['connections'] = [yaml.ListFlowing(i) for i in data['connections']]
+            data['connections'] = [yaml.ListFlowing(
+                i) for i in data['connections']]
         except KeyError:
             pass
 
         try:
             for d in chain([data['options']], data['blocks']):
-                d['states']['coordinate'] = yaml.ListFlowing(d['states']['coordinate'])
+                d['states']['coordinate'] = yaml.ListFlowing(
+                    d['states']['coordinate'])
         except KeyError:
             pass
 
@@ -393,7 +405,8 @@ class Platform(Element):
     Connection = Connection
 
     block_classes_build_in = blocks.build_ins
-    block_classes = utils.backports.ChainMap({}, block_classes_build_in)  # separates build-in from loaded blocks)
+    # separates build-in from loaded blocks)
+    block_classes = utils.backports.ChainMap({}, block_classes_build_in)
 
     port_classes = {
         None: ports.Port,  # default

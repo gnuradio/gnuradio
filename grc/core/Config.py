@@ -17,13 +17,16 @@ class Config(object):
     license = __doc__.strip()
     website = 'https://www.gnuradio.org/'
 
-    hier_block_lib_dir = os.environ.get('GRC_HIER_PATH', Constants.DEFAULT_HIER_BLOCK_LIB_DIR)
+    hier_block_lib_dir = os.environ.get(
+        'GRC_HIER_PATH', Constants.DEFAULT_HIER_BLOCK_LIB_DIR)
 
     def __init__(self, version, version_parts=None, name=None, prefs=None):
         self._gr_prefs = prefs if prefs else DummyPrefs()
         self.version = version
-        self.version_parts = version_parts or version[1:].split('-', 1)[0].split('.')[:3]
-        self.enabled_components = self._gr_prefs.get_string('grc', 'enabled_components', '')
+        self.version_parts = version_parts or version[1:].split(
+            '-', 1)[0].split('.')[:3]
+        self.enabled_components = self._gr_prefs.get_string(
+            'grc', 'enabled_components', '')
         if name:
             self.name = name
 

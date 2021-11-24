@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 class Cache(object):
 
-    def __init__(self, filename, version = None):
+    def __init__(self, filename, version=None):
         self.cache_file = filename
         self.version = version
         self.cache = {}
@@ -57,7 +57,7 @@ class Cache(object):
         if modtime <= self._converter_mtime:
             try:
                 cached = self.cache[filename]
-                if int(cached["cached-at"]+0.5) >= modtime:
+                if int(cached["cached-at"] + 0.5) >= modtime:
                     return cached["data"]
                 logger.info(f"Cache for {filename} outdated, loading yaml")
             except KeyError:

@@ -14,11 +14,13 @@ except FileExistsError:
 # Gather blocks
 BLOCK_PATHS = []
 ROOT = path.join(path.dirname(__file__), '../..')
-BLOCK_PATHS = [path.join(path.dirname(__file__), '../../grc/blocks'), '../../build/gr-uhd/grc']
+BLOCK_PATHS = [path.join(path.dirname(
+    __file__), '../../grc/blocks'), '../../build/gr-uhd/grc']
 for file_dir in os.scandir(ROOT):
     # If it is a module
     if path.isdir(file_dir) and file_dir.name.startswith("gr-"):
         BLOCK_PATHS.append(path.join(file_dir, "grc"))
+
 
 def gather_examples():
     global ROOT
@@ -39,10 +41,12 @@ def gather_examples():
                 continue
     return example_paths
 
+
 def print_proper(element):
     if element.is_block:
         return element.name
     return f"{element.parent.name} - {element}"
+
 
 @pytest.mark.examples
 @pytest.mark.parametrize("example", gather_examples())
@@ -62,7 +66,9 @@ def test_all_examples(example):
     flow_graph.rewrite()
     flow_graph.validate()
 
-    assert flow_graph.is_valid(), (example.name, [f"{print_proper(elem)}: {msg}" for elem, msg in flow_graph.iter_error_messages()])
+    assert flow_graph.is_valid(), (example.name, [
+        f"{print_proper(elem)}: {msg}" for elem, msg in flow_graph.iter_error_messages()])
 
-    generator = platform.Generator(flow_graph, path.join(path.dirname(__file__), 'resources/tests'))
+    generator = platform.Generator(flow_graph, path.join(
+        path.dirname(__file__), 'resources/tests'))
     generator.write()

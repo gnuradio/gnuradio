@@ -34,7 +34,8 @@ def _format_doc(doc):
 
 
 def _format_cat_tooltip(category):
-    tooltip = '{}: {}'.format('Category' if len(category) > 1 else 'Module', category[-1])
+    tooltip = '{}: {}'.format('Category' if len(
+        category) > 1 else 'Module', category[-1])
 
     if category == ('Core',):
         tooltip += '\n\nThis subtree is meant for blocks included with GNU Radio (in-tree).'
@@ -68,26 +69,33 @@ class BlockTreeWindow(Gtk.VBox):
         # search entry
         self.search_entry = Gtk.Entry()
         try:
-            self.search_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, 'edit-find')
-            self.search_entry.set_icon_activatable(Gtk.EntryIconPosition.PRIMARY, False)
-            self.search_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, 'window-close')
+            self.search_entry.set_icon_from_icon_name(
+                Gtk.EntryIconPosition.PRIMARY, 'edit-find')
+            self.search_entry.set_icon_activatable(
+                Gtk.EntryIconPosition.PRIMARY, False)
+            self.search_entry.set_icon_from_icon_name(
+                Gtk.EntryIconPosition.SECONDARY, 'window-close')
             self.search_entry.connect('icon-release', self._handle_icon_event)
         except AttributeError:
             pass  # no icon for old pygtk
         self.search_entry.connect('changed', self._update_search_tree)
-        self.search_entry.connect('key-press-event', self._handle_search_key_press)
+        self.search_entry.connect(
+            'key-press-event', self._handle_search_key_press)
         self.pack_start(self.search_entry, False, False, 0)
 
         # make the tree model for holding blocks and a temporary one for search results
-        self.treestore = Gtk.TreeStore(GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
-        self.treestore_search = Gtk.TreeStore(GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
+        self.treestore = Gtk.TreeStore(
+            GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
+        self.treestore_search = Gtk.TreeStore(
+            GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
 
         self.treeview = Gtk.TreeView(model=self.treestore)
         self.treeview.set_enable_search(False)  # disable pop up search box
         self.treeview.set_search_column(-1)  # really disable search
         self.treeview.set_headers_visible(False)
         self.treeview.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
-        self.treeview.connect('button-press-event', self._handle_mouse_button_press)
+        self.treeview.connect('button-press-event',
+                              self._handle_mouse_button_press)
         self.treeview.connect('key-press-event', self._handle_search_key_press)
 
         self.treeview.get_selection().set_mode(Gtk.SelectionMode.SINGLE)
@@ -99,13 +107,16 @@ class BlockTreeWindow(Gtk.VBox):
         column.set_sort_column_id(0)
         self.treestore.set_sort_column_id(0, Gtk.SortType.ASCENDING)
         # setup drag and drop
-        self.treeview.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK, Constants.DND_TARGETS, Gdk.DragAction.COPY)
+        self.treeview.enable_model_drag_source(
+            Gdk.ModifierType.BUTTON1_MASK, Constants.DND_TARGETS, Gdk.DragAction.COPY)
         self.treeview.connect('drag-data-get', self._handle_drag_get_data)
         # make the scrolled window to hold the tree view
         scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.set_policy(
+            Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         scrolled_window.add(self.treeview)
-        scrolled_window.set_size_request(Constants.DEFAULT_BLOCKS_WINDOW_WIDTH, -1)
+        scrolled_window.set_size_request(
+            Constants.DEFAULT_BLOCKS_WINDOW_WIDTH, -1)
         self.pack_start(scrolled_window, True, True, 0)
         # map categories to iters, automatic mapping for root
         self._categories = {tuple(): None}
@@ -128,10 +139,11 @@ class BlockTreeWindow(Gtk.VBox):
         self.treeview.collapse_all()
         core_module_iter = self._categories.get((module_name,))
         if core_module_iter:
-            self.treeview.expand_row(self.treestore.get_path(core_module_iter), False)
+            self.treeview.expand_row(
+                self.treestore.get_path(core_module_iter), False)
 
     ############################################################
-    ## Block Tree Methods
+    # Block Tree Methods
     ############################################################
     def add_block(self, block, treestore=None, categories=None):
         """
@@ -144,16 +156,19 @@ class BlockTreeWindow(Gtk.VBox):
         treestore = treestore or self.treestore
         categories = categories or self._categories
 
-        category = tuple(filter(str, block.category))  # tuple is hashable, remove empty cats
+        # tuple is hashable, remove empty cats
+        category = tuple(filter(str, block.category))
 
         # add category and all sub categories
         for level, parent_cat_name in enumerate(category, 1):
             parent_category = category[:level]
             if parent_category not in categories:
-                iter_ = treestore.insert_before(categories[parent_category[:-1]], None)
+                iter_ = treestore.insert_before(
+                    categories[parent_category[:-1]], None)
                 treestore.set_value(iter_, NAME_INDEX, parent_cat_name)
                 treestore.set_value(iter_, KEY_INDEX, '')
-                treestore.set_value(iter_, DOC_INDEX, _format_cat_tooltip(parent_category))
+                treestore.set_value(
+                    iter_, DOC_INDEX, _format_cat_tooltip(parent_category))
                 categories[parent_category] = iter_
         # add block
         iter_ = treestore.insert_before(categories[category], None)
@@ -175,7 +190,7 @@ class BlockTreeWindow(Gtk.VBox):
         self.treestore_search.foreach(update_doc)
 
     ############################################################
-    ## Helper Methods
+    # Helper Methods
     ############################################################
     def _get_selected_block_key(self):
         """
@@ -195,7 +210,7 @@ class BlockTreeWindow(Gtk.VBox):
             self.treeview.expand_to_path(path)
 
     ############################################################
-    ## Event Handlers
+    # Event Handlers
     ############################################################
     def _handle_icon_event(self, widget, icon, event):
         if icon == Gtk.EntryIconPosition.PRIMARY:
@@ -216,7 +231,8 @@ class BlockTreeWindow(Gtk.VBox):
             self.treestore_search.clear()
             self._categories_search = {tuple(): None}
             for block in matching_blocks:
-                self.add_block(block, self.treestore_search, self._categories_search)
+                self.add_block(block, self.treestore_search,
+                               self._categories_search)
             self.treeview.set_model(self.treestore_search)
             self.treeview.expand_all()
 
@@ -232,7 +248,8 @@ class BlockTreeWindow(Gtk.VBox):
                     selected = self.treestore_search.iter_children(selected)
                 if selected is not None:
                     key = self.treestore_search.get_value(selected, KEY_INDEX)
-                    if key: self.emit('create_new_block', key)
+                    if key:
+                        self.emit('create_new_block', key)
             elif widget == self.treeview:
                 key = self._get_selected_block_key()
                 if key:
@@ -248,7 +265,7 @@ class BlockTreeWindow(Gtk.VBox):
             self.search_entry.hide()
 
         elif (event.get_state() & Gdk.ModifierType.CONTROL_MASK and event.keyval == Gdk.KEY_f) \
-              or event.keyval == Gdk.KEY_slash:
+                or event.keyval == Gdk.KEY_slash:
             # propagation doesn't work although treeview search is disabled =(
             # manually trigger action...
             Actions.FIND_BLOCKS.activate()
@@ -258,7 +275,7 @@ class BlockTreeWindow(Gtk.VBox):
             Actions.TOGGLE_BLOCKS_WINDOW.activate()
 
         else:
-            return False # propagate event
+            return False  # propagate event
 
         return True
 

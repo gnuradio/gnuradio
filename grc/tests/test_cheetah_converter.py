@@ -39,7 +39,8 @@ def test_conditional():
 
 
 def test_simple_format_string():
-    convert = functools.partial(parser.Converter(names={'abc'}).convert_simple, spec=parser.FormatString)
+    convert = functools.partial(parser.Converter(
+        names={'abc'}).convert_simple, spec=parser.FormatString)
     assert '{abc}' == convert('$abc')
     assert '{abc:eval}' == convert('$abc()')
     assert '{abc}' == convert('$(abc)')
@@ -50,7 +51,8 @@ def test_simple_format_string():
 
 def test_hard_format_string():
     names = {'abc': {'ff'}, 'param1': {}, 'param2': {}}
-    convert = functools.partial(parser.Converter(names).convert_hard, spec=parser.FormatString)
+    convert = functools.partial(parser.Converter(
+        names).convert_hard, spec=parser.FormatString)
     assert 'make_a_cool_block_{abc.ff}({param1}, {param2})' == \
            convert('make_a_cool_block_${abc.ff}($param1, $param2)')
 
@@ -66,7 +68,8 @@ def test_opts():
 
 
 def test_nested():
-    assert 'abc(abc) abc + abc abc[abc]' == c2p('$abc($abc) $(abc + $abc) ${abc[$abc]}')
+    assert 'abc(abc) abc + abc abc[abc]' == c2p(
+        '$abc($abc) $(abc + $abc) ${abc[$abc]}')
     assert '(abc_abc_)' == c2p('(abc_$(abc)_)')
 
 

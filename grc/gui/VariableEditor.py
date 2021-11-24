@@ -22,29 +22,35 @@ class VariableEditorContextMenu(Gtk.Menu):
         Gtk.Menu.__init__(self)
 
         self.imports = Gtk.MenuItem(label="Add _Import")
-        self.imports.connect('activate', var_edit.handle_action, var_edit.ADD_IMPORT)
+        self.imports.connect(
+            'activate', var_edit.handle_action, var_edit.ADD_IMPORT)
         self.add(self.imports)
 
         self.variables = Gtk.MenuItem(label="Add _Variable")
-        self.variables.connect('activate', var_edit.handle_action, var_edit.ADD_VARIABLE)
+        self.variables.connect(
+            'activate', var_edit.handle_action, var_edit.ADD_VARIABLE)
         self.add(self.variables)
         self.add(Gtk.SeparatorMenuItem())
 
         self.enable = Gtk.MenuItem(label="_Enable")
-        self.enable.connect('activate', var_edit.handle_action, var_edit.ENABLE_BLOCK)
+        self.enable.connect(
+            'activate', var_edit.handle_action, var_edit.ENABLE_BLOCK)
         self.disable = Gtk.MenuItem(label="_Disable")
-        self.disable.connect('activate', var_edit.handle_action, var_edit.DISABLE_BLOCK)
+        self.disable.connect(
+            'activate', var_edit.handle_action, var_edit.DISABLE_BLOCK)
         self.add(self.enable)
         self.add(self.disable)
         self.add(Gtk.SeparatorMenuItem())
 
         self.delete = Gtk.MenuItem(label="_Delete")
-        self.delete.connect('activate', var_edit.handle_action, var_edit.DELETE_BLOCK)
+        self.delete.connect(
+            'activate', var_edit.handle_action, var_edit.DELETE_BLOCK)
         self.add(self.delete)
         self.add(Gtk.SeparatorMenuItem())
 
         self.properties = Gtk.MenuItem(label="_Properties...")
-        self.properties.connect('activate', var_edit.handle_action, var_edit.OPEN_PROPERTIES)
+        self.properties.connect(
+            'activate', var_edit.handle_action, var_edit.OPEN_PROPERTIES)
         self.add(self.properties)
         self.show_all()
 
@@ -87,13 +93,16 @@ class VariableEditor(Gtk.VBox):
         self.treeview = Gtk.TreeView(model=self.treestore)
         self.treeview.set_enable_search(False)
         self.treeview.set_search_column(-1)
-        #self.treeview.set_enable_search(True)
-        #self.treeview.set_search_column(ID_INDEX)
+        # self.treeview.set_enable_search(True)
+        # self.treeview.set_search_column(ID_INDEX)
         self.treeview.get_selection().set_mode(Gtk.SelectionMode.SINGLE)
         self.treeview.set_headers_visible(True)
-        self.treeview.connect('button-press-event', self._handle_mouse_button_press)
-        self.treeview.connect('button-release-event', self._handle_mouse_button_release)
-        self.treeview.connect('motion-notify-event', self._handle_motion_notify)
+        self.treeview.connect('button-press-event',
+                              self._handle_mouse_button_press)
+        self.treeview.connect('button-release-event',
+                              self._handle_mouse_button_release)
+        self.treeview.connect('motion-notify-event',
+                              self._handle_motion_notify)
         self.treeview.connect('key-press-event', self._handle_key_button_press)
 
         # Block Name or Category
@@ -133,9 +142,11 @@ class VariableEditor(Gtk.VBox):
 
         # Make the scrolled window to hold the tree view
         scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.set_policy(
+            Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         scrolled_window.add(self.treeview)
-        scrolled_window.set_size_request(Constants.DEFAULT_BLOCKS_WINDOW_WIDTH, -1)
+        scrolled_window.set_size_request(
+            Constants.DEFAULT_BLOCKS_WINDOW_WIDTH, -1)
         self.pack_start(scrolled_window, True, True, 0)
 
         # Context menus
@@ -215,9 +226,11 @@ class VariableEditor(Gtk.VBox):
         imports = self.treestore.append(None, [None, 'Imports'])
         variables = self.treestore.append(None, [None, 'Variables'])
         for block in self._imports:
-            self.treestore.append(imports, [block, block.params['id'].get_value()])
+            self.treestore.append(
+                imports, [block, block.params['id'].get_value()])
         for block in sorted(self._variables, key=lambda v: v.name):
-            self.treestore.append(variables, [block, block.params['id'].get_value()])
+            self.treestore.append(
+                variables, [block, block.params['id'].get_value()])
 
     def _handle_name_edited_cb(self, cell, path, new_text):
         block = self.treestore[path][BLOCK_INDEX]
@@ -243,7 +256,7 @@ class VariableEditor(Gtk.VBox):
             self.emit('create_new_block', 'variable')
         elif key == self.OPEN_PROPERTIES:
             # TODO: This probably isn't working because the action doesn't expect a parameter
-            #Actions.BLOCK_PARAM_MODIFY()
+            # Actions.BLOCK_PARAM_MODIFY()
             pass
         elif key == self.DELETE_BLOCK:
             self.emit('remove_block', self._block.name)
@@ -251,12 +264,15 @@ class VariableEditor(Gtk.VBox):
             if self._confirm_delete:
                 # Create a context menu to confirm the delete operation
                 confirmation_menu = Gtk.Menu()
-                block_id = self._block.params['id'].get_value().replace("_", "__")
+                block_id = self._block.params['id'].get_value().replace(
+                    "_", "__")
                 confirm = Gtk.MenuItem(label="Delete {}".format(block_id))
-                confirm.connect('activate', self.handle_action, self.DELETE_BLOCK)
+                confirm.connect('activate', self.handle_action,
+                                self.DELETE_BLOCK)
                 confirmation_menu.add(confirm)
                 confirmation_menu.show_all()
-                confirmation_menu.popup(None, None, None, None, event.button, event.time)
+                confirmation_menu.popup(
+                    None, None, None, None, event.button, event.time)
             else:
                 self.handle_action(None, self.DELETE_BLOCK, None)
         elif key == self.ENABLE_BLOCK:
@@ -287,7 +303,8 @@ class VariableEditor(Gtk.VBox):
                 if self._block and event.type == Gdk.EventType._2BUTTON_PRESS:
                     # Open the advanced dialog if it is a gui variable
                     if self._block.key not in ("variable", "import"):
-                        self.handle_action(None, self.OPEN_PROPERTIES, event=event)
+                        self.handle_action(
+                            None, self.OPEN_PROPERTIES, event=event)
                         return True
                 if event.type == Gdk.EventType.BUTTON_PRESS:
                     # User is adding/removing blocks
@@ -295,19 +312,24 @@ class VariableEditor(Gtk.VBox):
                     if path[2] > col.cell_get_position(self.action_cell)[0]:
                         if row[1] == "Imports":
                             # Add a new import block.
-                            self.handle_action(None, self.ADD_IMPORT, event=event)
+                            self.handle_action(
+                                None, self.ADD_IMPORT, event=event)
                         elif row[1] == "Variables":
                             # Add a new variable block
-                            self.handle_action(None, self.ADD_VARIABLE, event=event)
+                            self.handle_action(
+                                None, self.ADD_VARIABLE, event=event)
                         else:
-                            self.handle_action(None, self.DELETE_CONFIRM, event=event)
+                            self.handle_action(
+                                None, self.DELETE_CONFIRM, event=event)
                         return True
             elif event.button == 3 and event.type == Gdk.EventType.BUTTON_PRESS:
                 if self._block:
-                    self._context_menu.update_sensitive(True, enabled=self._block.enabled)
+                    self._context_menu.update_sensitive(
+                        True, enabled=self._block.enabled)
                 else:
                     self._context_menu.update_sensitive(False)
-                self._context_menu.popup(None, None, None, None, event.button, event.time)
+                self._context_menu.popup(
+                    None, None, None, None, event.button, event.time)
 
             # Null handler. Stops the treeview from handling double click events.
             if event.type == Gdk.EventType._2BUTTON_PRESS:

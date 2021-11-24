@@ -32,7 +32,7 @@ def get_rotated_coordinate(coor, rotation):
     # handles negative angles
     rotation = (rotation + 360) % 360
     if rotation not in Constants.POSSIBLE_ROTATIONS:
-        raise ValueError('unusable rotation angle "%s"'%str(rotation))
+        raise ValueError('unusable rotation angle "%s"' % str(rotation))
     # determine the number of degrees to rotate
     cos_r, sin_r = {
         0: (1, 0), 90: (0, 1), 180: (-1, 0), 270: (0, -1),
@@ -76,7 +76,7 @@ def num_to_str(num):
         """Convert a number to a string in engineering notation.  E.g., 5e-9 -> 5n"""
         template = '{:' + fmt + '}{}'
         magnitude = abs(value)
-        for exp, symbol in zip(range(9, -15-1, -3), 'GMk munpf'):
+        for exp, symbol in zip(range(9, -15 - 1, -3), 'GMk munpf'):
             factor = 10 ** exp
             if magnitude >= factor:
                 return template.format(value / factor, symbol.strip())
@@ -87,7 +87,8 @@ def num_to_str(num):
         if num == 0:
             return '0'
         output = eng_notation(num.real) if num.real else ''
-        output += eng_notation(num.imag, '+g' if output else 'g') + 'j' if num.imag else ''
+        output += eng_notation(num.imag, '+g' if output else 'g') + \
+            'j' if num.imag else ''
         return output
     else:
         return str(num)
@@ -144,6 +145,7 @@ def scale_scalar(coor, reverse=False):
     factor = Constants.DPI_SCALING if not reverse else 1 / Constants.DPI_SCALING
     return int(coor * factor)
 
+
 def get_modifier_key(angle_brackets=False):
     """
     Get the modifier key based on platform.
@@ -167,9 +169,11 @@ def get_modifier_key(angle_brackets=False):
 
 
 _nproc = None
+
+
 def get_cmake_nproc():
     """ Get number of cmake processes for C++ flowgraphs """
-    global _nproc # Cached result
+    global _nproc  # Cached result
     if _nproc:
         return _nproc
     try:
@@ -180,5 +184,5 @@ def get_cmake_nproc():
     if not _nproc:
         _nproc = 1
 
-    _nproc = max(_nproc//2 - 1, 1)
+    _nproc = max(_nproc // 2 - 1, 1)
     return _nproc

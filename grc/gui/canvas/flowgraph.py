@@ -125,7 +125,8 @@ class FlowGraph(CoreFlowgraph, Drawable):
             editor.open_editor()
         except Exception as e:
             # Problem launching the editor. Need to select a new editor.
-            Messages.send('>>> Error opening an external editor. Please select a different editor.\n')
+            Messages.send(
+                '>>> Error opening an external editor. Please select a different editor.\n')
             # Reset the editor to force the user to select a new one.
             self.parent_platform.config.editor = ''
 
@@ -153,10 +154,13 @@ class FlowGraph(CoreFlowgraph, Drawable):
         # calculate the position coordinate
         h_adj = scroll_pane.get_hadjustment()
         v_adj = scroll_pane.get_vadjustment()
-        if coor is None: coor = (
-            int(random.uniform(.25, .75)*h_adj.get_page_size() + h_adj.get_value()),
-            int(random.uniform(.25, .75)*v_adj.get_page_size() + v_adj.get_value()),
-        )
+        if coor is None:
+            coor = (
+                int(random.uniform(.25, .75) *
+                    h_adj.get_page_size() + h_adj.get_value()),
+                int(random.uniform(.25, .75) *
+                    v_adj.get_page_size() + v_adj.get_value()),
+            )
         # get the new block
         block = self.new_block(key)
         block.coordinate = coor
@@ -218,17 +222,17 @@ class FlowGraph(CoreFlowgraph, Drawable):
         Returns:
             the clipboard
         """
-        #get selected blocks
+        # get selected blocks
         blocks = list(self.selected_blocks())
         if not blocks:
             return None
-        #calc x and y min
+        # calc x and y min
         x_min, y_min = blocks[0].coordinate
         for block in blocks:
             x, y = block.coordinate
             x_min = min(x, x_min)
             y_min = min(y, y_min)
-        #get connections between selected blocks
+        # get connections between selected blocks
         connections = list(filter(
             lambda c: c.source_block in blocks and c.sink_block in blocks,
             self.connections,
@@ -281,7 +285,8 @@ class FlowGraph(CoreFlowgraph, Drawable):
             block.move((x_off, y_off))
             while any(Utils.align_to_grid(block.coordinate) == Utils.align_to_grid(other.coordinate)
                       for other in self.blocks if other is not block):
-                block.move((Constants.CANVAS_GRID_SIZE, Constants.CANVAS_GRID_SIZE))
+                block.move((Constants.CANVAS_GRID_SIZE,
+                           Constants.CANVAS_GRID_SIZE))
                 # shift all following blocks
                 x_off += Constants.CANVAS_GRID_SIZE
                 y_off += Constants.CANVAS_GRID_SIZE
@@ -353,15 +358,16 @@ class FlowGraph(CoreFlowgraph, Drawable):
         if not blocks:
             return
 
-        min_x, min_y  = self.selected_block.coordinate
+        min_x, min_y = self.selected_block.coordinate
         for selected_block in blocks:
             x, y = selected_block.coordinate
             min_x, min_y = min(min_x, x), min(min_y, y)
 
         # Sanitize delta_coordinate so that blocks don't move to negative coordinate
-        delta_coordinate = max(delta_coordinate[0],-min_x), max(delta_coordinate[1], -min_y)
+        delta_coordinate = max(
+            delta_coordinate[0], -min_x), max(delta_coordinate[1], -min_y)
 
-        # Move selected blocks     
+        # Move selected blocks
         for selected_block in blocks:
             selected_block.move(delta_coordinate)
             self.element_moved = True
@@ -388,15 +394,15 @@ class FlowGraph(CoreFlowgraph, Drawable):
             x += selected_block.width
             y += selected_block.height
             max_x, max_y = max(max_x, x), max(max_y, y)
-        ctr_x, ctr_y = (max_x + min_x)/2, (max_y + min_y)/2
+        ctr_x, ctr_y = (max_x + min_x) / 2, (max_y + min_y) / 2
 
         # align the blocks as requested
         transform = {
             Actions.BLOCK_VALIGN_TOP: lambda x, y, w, h: (x, min_y),
-            Actions.BLOCK_VALIGN_MIDDLE: lambda x, y, w, h: (x, ctr_y - h/2),
+            Actions.BLOCK_VALIGN_MIDDLE: lambda x, y, w, h: (x, ctr_y - h / 2),
             Actions.BLOCK_VALIGN_BOTTOM: lambda x, y, w, h: (x, max_y - h),
             Actions.BLOCK_HALIGN_LEFT: lambda x, y, w, h: (min_x, y),
-            Actions.BLOCK_HALIGN_CENTER: lambda x, y, w, h: (ctr_x-w/2, y),
+            Actions.BLOCK_HALIGN_CENTER: lambda x, y, w, h: (ctr_x - w / 2, y),
             Actions.BLOCK_HALIGN_RIGHT: lambda x, y, w, h: (max_x - w, y),
         }.get(calling_action, lambda *args: args)
 
@@ -419,21 +425,22 @@ class FlowGraph(CoreFlowgraph, Drawable):
         """
         if not any(self.selected_blocks()):
             return False
-        #initialize min and max coordinates
+        # initialize min and max coordinates
         min_x, min_y = max_x, max_y = self.selected_block.coordinate
         # rotate each selected block, and find min/max coordinate
         for selected_block in self.selected_blocks():
             selected_block.rotate(rotation)
-            #update the min/max coordinate
+            # update the min/max coordinate
             x, y = selected_block.coordinate
             min_x, min_y = min(min_x, x), min(min_y, y)
             max_x, max_y = max(max_x, x), max(max_y, y)
-        #calculate center point of selected blocks
-        ctr_x, ctr_y = (max_x + min_x)/2, (max_y + min_y)/2
-        #rotate the blocks around the center point
+        # calculate center point of selected blocks
+        ctr_x, ctr_y = (max_x + min_x) / 2, (max_y + min_y) / 2
+        # rotate the blocks around the center point
         for selected_block in self.selected_blocks():
             x, y = selected_block.coordinate
-            x, y = Utils.get_rotated_coordinate((x - ctr_x, y - ctr_y), rotation)
+            x, y = Utils.get_rotated_coordinate(
+                (x - ctr_x, y - ctr_y), rotation)
             selected_block.coordinate = (x + ctr_x, y + ctr_y)
         return True
 
@@ -496,7 +503,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
             element.create_labels(cr)
 
     def create_shapes(self):
-        #TODO - this is a workaround for bus ports not having a proper coordinate
+        # TODO - this is a workaround for bus ports not having a proper coordinate
         # until the shape is drawn.  The workaround is to draw blocks before connections
 
         for element in filter(lambda x: x.is_block, self._elements_to_draw):
@@ -582,7 +589,8 @@ class FlowGraph(CoreFlowgraph, Drawable):
 
         else:  # called from a mouse release
             if not self.element_moved and (not self.selected_elements or self.drawing_area.ctrl_mask) and not self._new_connection:
-                selected_elements = self.what_is_selected(self.coordinate, self.press_coor)
+                selected_elements = self.what_is_selected(
+                    self.coordinate, self.press_coor)
 
         # this selection and the last were ports, try to connect them
         if self.make_connection():
@@ -635,7 +643,8 @@ class FlowGraph(CoreFlowgraph, Drawable):
 
         if selected_port and selected_port.is_source:
             selected.remove(selected_port.parent_block)
-            self._new_connection = DummyConnection(selected_port, coordinate=coor)
+            self._new_connection = DummyConnection(
+                selected_port, coordinate=coor)
             self.drawing_area.queue_draw()
         # update selected ports
         if selected_port is not self._new_selected_port:
@@ -806,19 +815,21 @@ class FlowGraph(CoreFlowgraph, Drawable):
             dX, dY = x - X, y - Y
 
             if Actions.TOGGLE_SNAP_TO_GRID.get_active() or self.drawing_area.mod1_mask:
-                dX, dY = int(round(dX / Constants.CANVAS_GRID_SIZE)), int(round(dY / Constants.CANVAS_GRID_SIZE))
+                dX, dY = int(round(dX / Constants.CANVAS_GRID_SIZE)
+                             ), int(round(dY / Constants.CANVAS_GRID_SIZE))
                 dX, dY = dX * Constants.CANVAS_GRID_SIZE, dY * Constants.CANVAS_GRID_SIZE
             else:
                 dX, dY = int(round(dX)), int(round(dY))
 
             if dX != 0 or dY != 0:
                 self.move_selected((dX, dY))
-                self.coordinate = (X+dX, Y+dY)
+                self.coordinate = (X + dX, Y + dY)
                 redraw = True
         return redraw
 
     def get_extents(self):
         show_comments = Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active()
+
         def sub_extents():
             for element in self._elements_to_draw:
                 yield element.get_extents()
@@ -828,5 +839,6 @@ class FlowGraph(CoreFlowgraph, Drawable):
         extent = 10000000, 10000000, 0, 0
         cmps = (min, min, max, max)
         for sub_extent in sub_extents():
-            extent = [cmp(xy, e_xy) for cmp, xy, e_xy in zip(cmps, extent, sub_extent)]
+            extent = [cmp(xy, e_xy)
+                      for cmp, xy, e_xy in zip(cmps, extent, sub_extent)]
         return tuple(extent)

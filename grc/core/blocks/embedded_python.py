@@ -122,7 +122,8 @@ class EPyBlock(Block):
         self.label = blk_io.name or blk_io.cls
         self.documentation = {'': blk_io.doc}
 
-        self.module_name = "{}_{}".format(self.parent_flowgraph.get_option("id"), self.name)
+        self.module_name = "{}_{}".format(
+            self.parent_flowgraph.get_option("id"), self.name)
         self.templates['imports'] = 'import {} as {}  # embedded python block'.format(
             self.module_name, self.name)
         self.templates['make'] = '{mod}.{cls}({args})'.format(
@@ -131,7 +132,7 @@ class EPyBlock(Block):
             args=', '.join('{0}=${{ {0} }}'.format(key) for key, _ in blk_io.params))
         self.templates['callbacks'] = [
             '{0} = ${{ {0} }}'.format(attr) for attr in blk_io.callbacks
-            ]
+        ]
 
         self._update_params(blk_io.params)
         self._update_ports('in', self.sinks, blk_io.sinks, 'sink')
@@ -195,7 +196,8 @@ class EPyBlock(Block):
     def validate(self):
         super(EPyBlock, self).validate()
         if self._epy_reload_error:
-            self.params['_source_code'].add_error_message(str(self._epy_reload_error))
+            self.params['_source_code'].add_error_message(
+                str(self._epy_reload_error))
 
 
 @register_build_in
@@ -240,6 +242,7 @@ class EPyModule(Block):
 
     def rewrite(self):
         super(EPyModule, self).rewrite()
-        self.module_name = "{}_{}".format(self.parent_flowgraph.get_option("id"), self.name)
+        self.module_name = "{}_{}".format(
+            self.parent_flowgraph.get_option("id"), self.name)
         self.templates['imports'] = 'import {} as {}  # embedded python module'.format(
             self.module_name, self.name)

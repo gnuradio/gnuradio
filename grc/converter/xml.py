@@ -53,7 +53,7 @@ def load_stdlib(filename, document_type_def=None):
     if isinstance(filename, str):
         with open(filename, 'rb') as xml_file:
             data = xml_file.read().decode('utf-8')
-    else: # Already opened
+    else:  # Already opened
         data = filename.read().decode('utf-8')
 
     try:

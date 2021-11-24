@@ -18,7 +18,8 @@ cheetah_substitution = re.compile(
     r'(?P<arg>[_a-zA-Z][_a-zA-Z0-9]*(?:\.[_a-zA-Z][_a-zA-Z0-9]*)?)(?P<eval>\(\))?'
     r'(?(d1)\)|(?(d2)\}|(?(d3)\]|)))$'
 )
-cheetah_inline_if = re.compile(r'#if (?P<cond>.*) then (?P<then>.*?) ?else (?P<else>.*?) ?(#|$)')
+cheetah_inline_if = re.compile(
+    r'#if (?P<cond>.*) then (?P<then>.*?) ?else (?P<else>.*?) ?(#|$)')
 
 
 class Python(object):
@@ -116,7 +117,8 @@ class Converter(object):
         return spec.type(out)
 
     def convert_hard(self, expr, spec=Python):
-        lines = '\n'.join(self.convert_hard_line(line, spec) for line in expr.split('\n'))
+        lines = '\n'.join(self.convert_hard_line(line, spec)
+                          for line in expr.split('\n'))
         if spec == Mako:
             # no line-continuation before a mako control structure
             lines = re.sub(r'\\\n(\s*%)', r'\n\1', lines)
@@ -220,7 +222,8 @@ class Converter(object):
                     out.append(char)
                 delim_to_find = False
 
-            elif delim_to_find and char in ')]}' and extra_close():  # end of substitution
+            # end of substitution
+            elif delim_to_find and char in ')]}' and extra_close():
                 out.append(spec.end)
                 out.append(char)
                 delim_to_find = False
@@ -235,7 +238,8 @@ class Converter(object):
 
         out = ''.join(out)
         # fix: eval stuff
-        out = re.sub(r'(?P<arg>' + r'|'.join(self.extended) + r')\(\)', r'\g<arg>', out)
+        out = re.sub(r'(?P<arg>' + r'|'.join(self.extended) +
+                     r')\(\)', r'\g<arg>', out)
 
         self.stats['hard'] += 1
         return spec.type(out)

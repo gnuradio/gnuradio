@@ -13,11 +13,13 @@ import tempfile
 
 from grc.compiler import main
 
+
 def test_cpp(capsys):
     args = Namespace(
         output=tempfile.gettempdir(),
         user_lib_dir=False,
-        grc_files=[path.join(path.dirname(__file__), 'resources', 'test_cpp.grc')],
+        grc_files=[path.join(path.dirname(__file__),
+                             'resources', 'test_cpp.grc')],
         run=True
     )
 

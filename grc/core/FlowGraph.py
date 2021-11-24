@@ -68,7 +68,8 @@ class FlowGraph(Element):
         Returns:
             a sorted list of variable blocks in order of dependency (indep -> dep)
         """
-        variables = [block for block in self.iter_enabled_blocks() if block.is_variable]
+        variables = [block for block in self.iter_enabled_blocks()
+                     if block.is_variable]
         return expr_utils.sort_objects(variables, attrgetter('name'), methodcaller('get_var_make'))
 
     def get_parameters(self):
@@ -78,7 +79,8 @@ class FlowGraph(Element):
         Returns:
             a list of parameterized variables
         """
-        parameters = [b for b in self.iter_enabled_blocks() if b.key == 'parameter']
+        parameters = [b for b in self.iter_enabled_blocks()
+                      if b.key == 'parameter']
         return parameters
 
     def get_snippets(self):
@@ -126,7 +128,8 @@ class FlowGraph(Element):
         """
         Get a list of all ControlPort monitors
         """
-        monitors = [b for b in self.iter_enabled_blocks() if 'ctrlport_monitor' in b.key]
+        monitors = [b for b in self.iter_enabled_blocks()
+                    if 'ctrlport_monitor' in b.key]
         return monitors
 
     def get_python_modules(self):
@@ -189,7 +192,8 @@ class FlowGraph(Element):
                 filename=shlex.quote(file_path))
             return shlex.split(run_command) if split else run_command
         except Exception as e:
-            raise ValueError("Can't parse run command {!r}: {}".format(run_command, e))
+            raise ValueError(
+                "Can't parse run command {!r}: {}".format(run_command, e))
 
     def get_imported_names(self):
         """
@@ -241,7 +245,8 @@ class FlowGraph(Element):
                 # this is ok behavior, unfortunately we could be hiding other import bugs
                 pass
             except Exception:
-                log.exception('Failed to evaluate import expression "{0}"'.format(expr), exc_info=True)
+                log.exception('Failed to evaluate import expression "{0}"'.format(
+                    expr), exc_info=True)
                 pass
 
         self.imported_names = list(namespace.keys())
@@ -252,17 +257,20 @@ class FlowGraph(Element):
                 exec(expr, module.__dict__)
                 namespace[id] = module
             except Exception:
-                log.exception('Failed to evaluate expression in module {0}'.format(id), exc_info=True)
+                log.exception(
+                    'Failed to evaluate expression in module {0}'.format(id), exc_info=True)
                 pass
 
         # Load parameters
         np = {}  # params don't know each other
         for parameter_block in self.get_parameters():
             try:
-                value = eval(parameter_block.params['value'].to_code(), namespace)
+                value = eval(
+                    parameter_block.params['value'].to_code(), namespace)
                 np[parameter_block.name] = value
             except Exception:
-                log.exception('Failed to evaluate parameter block {0}'.format(parameter_block.name), exc_info=True)
+                log.exception('Failed to evaluate parameter block {0}'.format(
+                    parameter_block.name), exc_info=True)
                 pass
         namespace.update(np)  # Merge param namespace
 
@@ -273,13 +281,16 @@ class FlowGraph(Element):
         for variable_block in self.get_variables():
             try:
                 variable_block.rewrite()
-                value = eval(variable_block.value, namespace, variable_block.namespace)
+                value = eval(variable_block.value, namespace,
+                             variable_block.namespace)
                 namespace[variable_block.name] = value
-                self.namespace.update(namespace) # rewrite on subsequent blocks depends on an updated self.namespace 
-            except TypeError: #Type Errors may happen, but that doesn't matter as they are displayed in the gui
+                # rewrite on subsequent blocks depends on an updated self.namespace
+                self.namespace.update(namespace)
+            except TypeError:  # Type Errors may happen, but that doesn't matter as they are displayed in the gui
                 pass
             except Exception:
-                log.exception('Failed to evaluate variable block {0}'.format(variable_block.name), exc_info=True)
+                log.exception('Failed to evaluate variable block {0}'.format(
+                    variable_block.name), exc_info=True)
                 pass
 
         self._eval_cache.clear()
@@ -397,7 +408,8 @@ class FlowGraph(Element):
             cwd=self.grc_file_path
         )
         if file_path:  # grc file found. load and get block
-            self.parent_platform.load_and_generate_flow_graph(file_path, hier_only=True)
+            self.parent_platform.load_and_generate_flow_graph(
+                file_path, hier_only=True)
             return self.new_block(block_id)  # can be None
 
     def import_data(self, data):
@@ -424,7 +436,8 @@ class FlowGraph(Element):
             block = (
                 self.new_block(block_id) or
                 self._build_depending_hier_block(block_id) or
-                self.new_block(block_id='_dummy', missing_block_id=block_id, **block_data)
+                self.new_block(block_id='_dummy',
+                               missing_block_id=block_id, **block_data)
             )
 
             block.import_data(**block_data)
@@ -443,7 +456,8 @@ class FlowGraph(Element):
                 if block.is_dummy_block:
                     port = block.add_missing_port(key, dir)
                 else:
-                    raise LookupError('%s key %r not in %s block keys' % (dir, key, dir))
+                    raise LookupError(
+                        '%s key %r not in %s block keys' % (dir, key, dir))
             return port
 
         had_connect_errors = False
@@ -461,8 +475,10 @@ class FlowGraph(Element):
                         src_port_id, snk_port_id, source_block, sink_block)
 
                 # build the connection
-                source_port = verify_and_get_port(src_port_id, source_block, 'source')
-                sink_port = verify_and_get_port(snk_port_id, sink_block, 'sink')
+                source_port = verify_and_get_port(
+                    src_port_id, source_block, 'source')
+                sink_port = verify_and_get_port(
+                    snk_port_id, sink_block, 'sink')
 
                 self.connect(source_port, sink_port)
 
@@ -478,7 +494,8 @@ class FlowGraph(Element):
                 # Flowgraph errors depending on disabled blocks are not displayed
                 # in the error dialog box
                 # So put a message into the Property window of the dummy block
-                block.add_error_message('Block id "{}" not found.'.format(block.key))
+                block.add_error_message(
+                    'Block id "{}" not found.'.format(block.key))
 
         self.rewrite()  # global rewrite
         return had_connect_errors
