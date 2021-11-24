@@ -138,14 +138,18 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.tabWidget.tabCloseRequested.connect(lambda index: self.tabWidget.removeTab(index))
         self.tabWidget.addTab(self.flowgraph, "Untitled")
         self.setCentralWidget(self.tabWidget)
-        #TODO: Do this for all scenes
-        self.flowgraph.scene.selectionChanged.connect(self.updateActions)
+        self.currentFlowgraph.selectionChanged.connect(self.updateActions)
         #self.new_tab(self.flowgraph)
 
     '''def show(self):
         log.debug("Showing main window")
         self.show()
     '''
+
+    @property
+    def currentFlowgraph(self):
+        return self.tabWidget.currentWidget().scene
+
 
     def createActions(self, actions):
         '''
@@ -295,7 +299,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                     return True
             return False
 
-        selected_elements = self.flowgraph.scene.selectedItems()
+        selected_elements = self.currentFlowgraph.selectedItems()
 
         self.actions['cut'].setEnabled(False)
         self.actions['copy'].setEnabled(False)
@@ -506,9 +510,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             log.info("Opening flowgraph ({0})".format(filename))
             new_flowgraph = Flowgraph(self)
             initial_state = self.platform.parse_flow_graph(filename)
-            new_flowgraph.scene.import_data(initial_state)
             self.tabWidget.addTab(new_flowgraph, "new")
             self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
+            self.currentFlowgraph.import_data(initial_state)
+            self.currentFlowgraph.selectionChanged.connect(self.updateActions)
 
     def save_triggered(self):
         log.debug('save')
@@ -558,11 +563,11 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def rotate_ccw_triggered(self):
         log.debug('rotate_ccw')
-        self.flowgraph.scene.rotate_selected(-90)
+        self.currentFlowgraph.rotate_selected(-90)
 
     def rotate_cw_triggered(self):
         log.debug('rotate_cw')
-        self.flowgraph.scene.rotate_selected(90)
+        self.currentFlowgraph.rotate_selected(90)
 
     def errors_triggered(self):
         log.debug('errors')
@@ -584,13 +589,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def enable_triggered(self):
         log.debug('enable')
-        for block in self.flowgraph.scene.selected_blocks():
+        for block in self.currentFlowgraph.selected_blocks():
             block.state = 'enabled'
             block.create_shapes_and_labels()
 
     def disable_triggered(self):
         log.debug('disable')
-        for block in self.flowgraph.scene.selected_blocks():
+        for block in self.currentFlowgraph.selected_blocks():
             block.state = 'disabled'
             block.create_shapes_and_labels()
 
@@ -601,7 +606,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def generate_triggered(self):
         log.debug('generate')
-        generator = self.platform.Generator(self.flowgraph.scene, os.path.dirname(self.file_path))
+        generator = self.platform.Generator(self.currentFlowgraph, os.path.dirname(self.file_path))
         generator.write()
 
     def types_triggered(self):
