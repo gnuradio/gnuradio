@@ -22,9 +22,12 @@ class PzPlot(pg.PlotWidget):
         pg.PlotWidget.__init__(self, *args)
 
         # Set Global pyqtgraph options
-        pg.setConfigOption('foreground', 'k')   # Default foreground color for text, lines, axes, etc.
-        pg.setConfigOption('background', None)  # Default background for GraphicsView.
-        pg.setConfigOptions(antialias=True)     # Draw lines with smooth edges at the cost of reduced performance.
+        # Default foreground color for text, lines, axes, etc.
+        pg.setConfigOption('foreground', 'k')
+        # Default background for GraphicsView.
+        pg.setConfigOption('background', None)
+        # Draw lines with smooth edges at the cost of reduced performance.
+        pg.setConfigOptions(antialias=True)
 
         self.ymax = 0
         self.xmax = 0
@@ -76,44 +79,45 @@ class PzPlot(pg.PlotWidget):
             if self.ymin >= -1:
                 self.ymin = -1.5
 
-            self.setRange(xRange=[self.xmin, self.xmax], yRange=[self.ymin, self.ymax])
+            self.setRange(xRange=[self.xmin, self.xmax],
+                          yRange=[self.ymin, self.ymax])
 
     def insertPoles(self, roots):
-            if len(roots):
-                self.__insertPole(Qt.Qt.black, roots.real, roots.imag)
-                ymax = max(roots.imag)
-                ymax = max(ymax, self.ymax)
-                ymin = min(roots.imag)
-                ymin = min(ymin, self.ymin)
-                xmax = max(roots.real)
-                xmax = max(xmax, self.xmax)
-                xmin = min(roots.real)
-                xmin = min(xmin, self.xmin)
+        if len(roots):
+            self.__insertPole(Qt.Qt.black, roots.real, roots.imag)
+            ymax = max(roots.imag)
+            ymax = max(ymax, self.ymax)
+            ymin = min(roots.imag)
+            ymin = min(ymin, self.ymin)
+            xmax = max(roots.real)
+            xmax = max(xmax, self.xmax)
+            xmin = min(roots.real)
+            xmin = min(xmin, self.xmin)
 
-                # To make the plot look good.
-                if xmax <= 1.3:
-                    xmax = 2
-                else:
-                    xmax = 1.2 * xmax
+            # To make the plot look good.
+            if xmax <= 1.3:
+                xmax = 2
+            else:
+                xmax = 1.2 * xmax
 
-                if xmin >= -1.3:
-                    xmin = -2
-                else:
-                    xmin = 1.2 * xmin
+            if xmin >= -1.3:
+                xmin = -2
+            else:
+                xmin = 1.2 * xmin
 
-                if ymax <= 1:
-                    ymax = 1.5
-                else:
-                    ymax = 1.2 * ymax
+            if ymax <= 1:
+                ymax = 1.5
+            else:
+                ymax = 1.2 * ymax
 
-                if ymin >= -1:
-                    ymin = -1.5
-                else:
-                    ymin = 1.2 * ymin
+            if ymin >= -1:
+                ymin = -1.5
+            else:
+                ymin = 1.2 * ymin
 
-                self.setRange(xRange=[xmin, xmax], yRange=[ymin, ymax])
-                self.drawUnitcircle()
-                self.replot()
+            self.setRange(xRange=[xmin, xmax], yRange=[ymin, ymax])
+            self.drawUnitcircle()
+            self.replot()
 
     def __insertZero(self, color, px, py):
         curve = self.plot(name="Zero")
@@ -135,8 +139,8 @@ class PzPlot(pg.PlotWidget):
 
     def removeallCurves(self):
         # TODO for curve in self.itemList():
-            # if isinstance(curve, Qwt.QwtPlotCurve):
-                # curve.detach()
+        # if isinstance(curve, Qwt.QwtPlotCurve):
+        # curve.detach()
         self.replot()
 
 
@@ -319,8 +323,8 @@ class CanvasPicker(Qt.QObject):
             yData = delete(yData, self.__selectedPoint)
         # One less to accommodate previous delete.
         if(self.__selectedcPoint != -1):
-            xData = delete(xData, self.__selectedcPoint-1)
-            yData = delete(yData, self.__selectedcPoint-1)
+            xData = delete(xData, self.__selectedcPoint - 1)
+            yData = delete(yData, self.__selectedcPoint - 1)
 
         curve.setData(xData, yData)
         self.__plot.replot()
@@ -330,7 +334,8 @@ class CanvasPicker(Qt.QObject):
             if isinstance(c, Qwt.QwtPlotCurve):
                 px.append([c.x(i) for i in range(c.dataSize())])
                 py.append([c.y(i) for i in range(c.dataSize())])
-        tp = (vectorize(complex)(px[0], py[0]), vectorize(complex)(px[1], py[1]))
+        tp = (vectorize(complex)(px[0], py[0]),
+              vectorize(complex)(px[1], py[1]))
         self.curveChanged.emit(tp)
 
     def __moveBy(self, dx, dy):
@@ -379,7 +384,8 @@ class CanvasPicker(Qt.QObject):
                 if isinstance(c, Qwt.QwtPlotCurve):
                     px.append([c.x(i) for i in range(c.dataSize())])
                     py.append([c.y(i) for i in range(c.dataSize())])
-            tp = (vectorize(complex)(px[0], py[0]), vectorize(complex)(px[1], py[1]))
+            tp = (vectorize(complex)(px[0], py[0]),
+                  vectorize(complex)(px[1], py[1]))
             self.curveChanged.emit(tp)
             self.__showCursor(True)
 
@@ -409,23 +415,23 @@ class CanvasPicker(Qt.QObject):
         else:
             extrapoints = 1
 
-        xData = zeros(editcurve.dataSize()+extrapoints, Float)
-        yData = zeros(editcurve.dataSize()+extrapoints, Float)
+        xData = zeros(editcurve.dataSize() + extrapoints, Float)
+        yData = zeros(editcurve.dataSize() + extrapoints, Float)
 
         for i in range(editcurve.dataSize()):
             xData[i] = editcurve.x(i)
             yData[i] = editcurve.y(i)
-        xData[i+1] = self.__plot.invTransform(editcurve.xAxis(), pos.x())
-        yData[i+1] = self.__plot.invTransform(editcurve.yAxis(), pos.y())
+        xData[i + 1] = self.__plot.invTransform(editcurve.xAxis(), pos.x())
+        yData[i + 1] = self.__plot.invTransform(editcurve.yAxis(), pos.y())
 
         if self.changeConjugate:
-            xData[i+2] = xData[i+1]
-            yData[i+2] = -yData[i+1]
-            self.__addedcZero = i+2
+            xData[i + 2] = xData[i + 1]
+            yData[i + 2] = -yData[i + 1]
+            self.__addedcZero = i + 2
 
         editcurve.setData(xData, yData)
 
-        self.__addedZero = i+1
+        self.__addedZero = i + 1
         symbol = Qwt.QwtSymbol(editcurve.symbol())
         newSymbol = Qwt.QwtSymbol(symbol)
         newSymbol.setPen(Qt.QPen(Qt.Qt.red))
@@ -446,7 +452,8 @@ class CanvasPicker(Qt.QObject):
             if isinstance(c, Qwt.QwtPlotCurve):
                 px.append([c.x(i) for i in range(c.dataSize())])
                 py.append([c.y(i) for i in range(c.dataSize())])
-        tp = (vectorize(complex)(px[0], py[0]), vectorize(complex)(px[1], py[1]))
+        tp = (vectorize(complex)(px[0], py[0]),
+              vectorize(complex)(px[1], py[1]))
         self.curveChanged.emit(tp)
         self.__showCursor(True)
 
