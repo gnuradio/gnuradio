@@ -14,9 +14,10 @@ from gnuradio import blocks
 import sys
 import numpy
 
+
 def main():
     data = numpy.arange(0, 32000, 1).tolist()
-    trig = 100*[0,] + 100*[1,]
+    trig = 100 * [0, ] + 100 * [1, ]
 
     src = blocks.vector_source_s(data, True)
     trigger = blocks.vector_source_s(trig, True)
@@ -33,6 +34,7 @@ def main():
     tb.connect(tagger, fsnk)
 
     tb.run()
+
 
 if __name__ == "__main__":
     main()

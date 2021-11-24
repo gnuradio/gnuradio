@@ -203,19 +203,19 @@ class test_stream_mux (gr_unittest.TestCase):
         N = 10  # Block length
         stream_sizes = [1, 2, 3]
 
-        expected_result = N * (stream_sizes[0] * [1, ]
-                               + stream_sizes[1] * [2, ]
-                               + stream_sizes[2] * [3, ])
+        expected_result = N * (stream_sizes[0] * [1, ] +
+                               stream_sizes[1] * [2, ] +
+                               stream_sizes[2] * [3, ])
         # check the data
         (result, tags) = self.help_stream_tag_propagation(N, stream_sizes)
         self.assertFloatTuplesAlmostEqual(expected_result, result, places=6)
 
         # check the tags
         expected_tag_offsets_src1 = [sum(stream_sizes) * i for i in range(N)]
-        expected_tag_offsets_src2 = [stream_sizes[0]
-                                     + sum(stream_sizes) * i for i in range(N)]
-        expected_tag_offsets_src3 = [stream_sizes[0] + stream_sizes[1]
-                                     + sum(stream_sizes) * i for i in range(N)]
+        expected_tag_offsets_src2 = [stream_sizes[0] +
+                                     sum(stream_sizes) * i for i in range(N)]
+        expected_tag_offsets_src3 = [stream_sizes[0] + stream_sizes[1] +
+                                     sum(stream_sizes) * i for i in range(N)]
         tags_src1 = [
             tag for tag in tags if pmt.eq(
                 tag.key, pmt.intern('src1'))]

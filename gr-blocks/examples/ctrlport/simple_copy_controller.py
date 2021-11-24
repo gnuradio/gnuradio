@@ -6,13 +6,15 @@ from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClien
 
 args = sys.argv
 if(len(args) < 4):
-    sys.stderr.write('Not enough arguments: simple_copy_controller.py <host> <port> [true|false]\n\n')
+    sys.stderr.write(
+        'Not enough arguments: simple_copy_controller.py <host> <port> [true|false]\n\n')
     sys.exit(1)
 
 hostname = args[1]
 portnum = int(args[2])
 msg = args[3].lower()
-radiosys = GNURadioControlPortClient(host=hostname, port=portnum, rpcmethod='thrift')
+radiosys = GNURadioControlPortClient(
+    host=hostname, port=portnum, rpcmethod='thrift')
 radio = radiosys.client
 
 if(msg == 'true'):
