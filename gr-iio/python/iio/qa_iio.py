@@ -13,6 +13,7 @@ from gnuradio import gr, gr_unittest, iio, blocks
 
 import pmt
 
+
 class test_iio(gr_unittest.TestCase):
 
     def test_import(self):
@@ -28,7 +29,7 @@ class test_iio(gr_unittest.TestCase):
         msg_dic = pmt.make_dict()
         msg_dic = pmt.dict_add(msg_dic, key0, val0)
 
-        src = iio.attr_updater(attr,val,500)
+        src = iio.attr_updater(attr, val, 500)
         snk = blocks.message_debug()
 
         tb = gr.top_block()
@@ -40,6 +41,7 @@ class test_iio(gr_unittest.TestCase):
 
         rec_msg = snk.get_message(0)
         self.assertTrue(pmt.equal(rec_msg, msg_dic))
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_iio, "test_iio.xml")
