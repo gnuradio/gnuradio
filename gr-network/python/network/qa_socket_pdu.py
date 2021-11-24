@@ -117,8 +117,10 @@ class qa_socket_pdu (gr_unittest.TestCase):
         pdu_msg = pmt.cons(pmt.PMT_NIL, data)
 
         self.pdu_source = blocks.message_strobe(pdu_msg, 500)
-        self.pdu_send = network.socket_pdu("TCP_SERVER", "localhost", port, mtu)
-        self.pdu_recv = network.socket_pdu("TCP_CLIENT", "localhost", port, mtu)
+        self.pdu_send = network.socket_pdu(
+            "TCP_SERVER", "localhost", port, mtu)
+        self.pdu_recv = network.socket_pdu(
+            "TCP_CLIENT", "localhost", port, mtu)
         self.pdu_sink = blocks.message_debug()
 
         self.tb.msg_connect(self.pdu_source, "strobe", self.pdu_send, "pdus")
