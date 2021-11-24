@@ -283,6 +283,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions['errors'].setEnabled(False)
         actions['rotate_cw'].setEnabled(False)
         actions['rotate_ccw'].setEnabled(False)
+        actions['enable'].setEnabled(False)
+        actions['disable'].setEnabled(False)
+        actions['bypass'].setEnabled(False)
+
 
     def updateActions(self):
         ''' Update the available actions based on what is selected '''
@@ -307,6 +311,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.actions['delete'].setEnabled(False)
         self.actions['rotate_cw'].setEnabled(False)
         self.actions['rotate_ccw'].setEnabled(False)
+        self.actions['enable'].setEnabled(False)
+        self.actions['disable'].setEnabled(False)
+        self.actions['bypass'].setEnabled(False)
 
         if there_are_connections_in(selected_elements):
             self.actions['delete'].setEnabled(True)
@@ -318,6 +325,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.actions['delete'].setEnabled(True)
             self.actions['rotate_cw'].setEnabled(True)
             self.actions['rotate_ccw'].setEnabled(True)
+            self.actions['enable'].setEnabled(True)
+            self.actions['disable'].setEnabled(True)
 
     def createMenus(self, actions, menus):
         ''' Setup the main menubar for the application '''
