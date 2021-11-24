@@ -106,7 +106,8 @@ class qa_ofdm_sync_sc_cfb (gr_unittest.TestCase):
         for _ in range(n_bursts):
             gap = [0, ] * random.randint(0, 2 * fft_len)
             tx_signal += gap + \
-                make_bpsk_burst(fft_len, cp_len, fft_len * random.randint(5, 23))
+                make_bpsk_burst(fft_len, cp_len, fft_len *
+                                random.randint(5, 23))
         # Very loose definition of SNR here
         snr = 20  # dB
         sigma = 10**(-snr / 10)

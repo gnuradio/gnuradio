@@ -11,6 +11,7 @@
 
 import numpy
 
+
 def soft_dec_table_generator(soft_dec_gen, prec, Es=1):
     '''
     | Builds a LUT that is a list of tuples. The tuple represents the
@@ -71,7 +72,7 @@ def soft_dec_table_generator(soft_dec_gen, prec, Es=1):
     '''
 
     npts = int(2.0**prec)
-    maxd = Es*numpy.sqrt(2.0)/2.0
+    maxd = Es * numpy.sqrt(2.0) / 2.0
     yrng = numpy.linspace(-maxd, maxd, npts)
     xrng = numpy.linspace(-maxd, maxd, npts)
 
@@ -82,6 +83,7 @@ def soft_dec_table_generator(soft_dec_gen, prec, Es=1):
             decs = soft_dec_gen(pt, Es)
             table.append(decs)
     return table
+
 
 def soft_dec_table(constel, symbols, prec, npwr=1):
     '''
@@ -120,6 +122,7 @@ def soft_dec_table(constel, symbols, prec, npwr=1):
             table.append(decs)
     return table
 
+
 def calc_soft_dec_from_table(sample, table, prec, Es=1.0):
     '''
     Takes in a complex sample and converts it from the coordinates
@@ -144,24 +147,25 @@ def calc_soft_dec_from_table(sample, table, prec, Es=1.0):
     constellation.
     '''
     lut_scale = 2.0**prec
-    maxd = Es*numpy.sqrt(2.0)/2.0
-    scale = (lut_scale) / (2.0*maxd)
+    maxd = Es * numpy.sqrt(2.0) / 2.0
+    scale = (lut_scale) / (2.0 * maxd)
 
-    alpha = 0.99 # to keep index within bounds
+    alpha = 0.99  # to keep index within bounds
     xre = sample.real
     xim = sample.imag
-    xre = ((maxd + min(alpha*maxd, max(-alpha*maxd, xre))) * scale)
-    xim = ((maxd + min(alpha*maxd, max(-alpha*maxd, xim))) * scale)
-    index = int(xre) + lut_scale*int(xim)
+    xre = ((maxd + min(alpha * maxd, max(-alpha * maxd, xre))) * scale)
+    xim = ((maxd + min(alpha * maxd, max(-alpha * maxd, xim))) * scale)
+    index = int(xre) + lut_scale * int(xim)
 
     max_index = lut_scale**2
 
     while(index >= max_index):
-        index -= lut_scale;
+        index -= lut_scale
     while(index < 0):
-        index += lut_scale;
+        index += lut_scale
 
     return table[int(index)]
+
 
 def calc_soft_dec(sample, constel, symbols, npwr=1):
     '''
@@ -186,8 +190,8 @@ def calc_soft_dec(sample, constel, symbols, npwr=1):
 
     M = len(constel)
     k = int(numpy.log2(M))
-    tmp = 2*k*[0]
-    s = k*[0]
+    tmp = 2 * k * [0]
+    s = k * [0]
 
     for i in range(M):
         # Calculate the distance between the sample and the current
@@ -200,21 +204,21 @@ def calc_soft_dec(sample, constel, symbols, npwr=1):
 
         for j in range(k):
             # Get the bit at the jth index
-            mask = 1<<j
+            mask = 1 << j
             bit = (symbols[i] & mask) >> j
 
             # If the bit is a 0, add to the probability of a zero
             if(bit == 0):
-                tmp[2*j+0] += d
+                tmp[2 * j + 0] += d
             # else, add to the probability of a one
             else:
-                tmp[2*j+1] += d
+                tmp[2 * j + 1] += d
 
     # Calculate the log-likelihood ratio for all bits based on the
     # probability of ones (tmp[2*i+1]) over the probability of a zero
     # (tmp[2*i+0]).
     for i in range(k):
-        s[k-1-i] = (numpy.log(tmp[2*i+1]) - numpy.log(tmp[2*i+0]))
+        s[k - 1 - i] = (numpy.log(tmp[2 * i + 1]) - numpy.log(tmp[2 * i + 0]))
 
     return s
 
@@ -225,19 +229,19 @@ def show_table(table):
     pp = ""
     subi = 1
     subj = 0
-    for i in reversed(list(range(prec+1))):
-        if(i == prec//2):
-            pp += "-----" + prec*((nbits*8)+3)*"-" + "\n"
+    for i in reversed(list(range(prec + 1))):
+        if(i == prec // 2):
+            pp += "-----" + prec * ((nbits * 8) + 3) * "-" + "\n"
             subi = 0
             continue
-        for j in range(prec+1):
-            if(j == prec//2):
+        for j in range(prec + 1):
+            if(j == prec // 2):
                 pp += "| "
                 subj = 1
             else:
-                item = table[prec*(i-subi) + (j-subj)]
+                item = table[prec * (i - subi) + (j - subj)]
                 pp += "( "
-                for t in range(nbits-1, -1, -1):
+                for t in range(nbits - 1, -1, -1):
                     pp += "{0: .4f} ".format(item[t])
                 pp += ") "
         pp += "\n"

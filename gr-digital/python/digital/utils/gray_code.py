@@ -41,14 +41,14 @@ class GrayCodeGenerator(object):
             else:
                 # if not we take advantage of the symmetry of all but the last bit
                 # around a power of two.
-                result = self.gcs[2*self.lp2-1-self.i] + self.lp2
+                result = self.gcs[2 * self.lp2 - 1 - self.i] + self.lp2
             self.gcs.append(result)
             self.i += 1
             if self.i == self.np2:
                 self.lp2 = self.i
-                self.np2 = self.i*2
+                self.np2 = self.i * 2
+
 
 _gray_code_generator = GrayCodeGenerator()
 
 gray_code = _gray_code_generator.get_gray_code
-

@@ -12,6 +12,7 @@
 from optparse import OptionParser
 import sys
 
+
 def main():
     parser = OptionParser()
     parser.add_option("-f", "--file", default=None,
@@ -33,7 +34,7 @@ def main():
     for ch in f.read():
         x = ord(ch)
         bytes = bytes + 1
-        for i in range(7,-1,-1):
+        for i in range(7, -1, -1):
             bits = bits + 1
             t = (x >> i) & 0x1
             if t == current:
@@ -42,29 +43,30 @@ def main():
                 if count > 0:
                     if len(runs) < count:
                         for j in range(count - len(runs)):
-                            runs.append(0);
-                    runs[count-1] = runs[count-1] + 1
+                            runs.append(0)
+                    runs[count - 1] = runs[count - 1] + 1
 
-                current = 1-current;
+                current = 1 - current
                 count = 1
 
     # Deal with last run at EOF
     if len(runs) < count and count > 0:
         for j in range(count - len(runs)):
-            runs.append(0);
-    runs[count-1] = runs[count-1] + 1
+            runs.append(0)
+    runs[count - 1] = runs[count - 1] + 1
 
     chk = 0
     print("Bytes read: ", bytes)
     print("Bits read:  ", bits)
     print()
     for i in range(len(runs)):
-        chk = chk + runs[i]*(i+1)
-        print("Runs of length", i+1, ":", runs[i])
+        chk = chk + runs[i] * (i + 1)
+        print("Runs of length", i + 1, ":", runs[i])
     print()
     print("Sum of runs:", chk, "bits")
     print()
     print("Maximum run length is", len(runs), "bits")
+
 
 if __name__ == "__main__":
     main()
