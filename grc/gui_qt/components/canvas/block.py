@@ -428,7 +428,11 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         super(self.__class__, self).mouseReleaseEvent(e)
 
     def mousePressEvent(self, e):
-        self.parent.app.DocumentationTab.setText(self.documentation[self.key])
+        try:
+            self.parent.app.DocumentationTab.setText(self.documentation[self.key])
+        except KeyError:
+            pass
+
         self.moveToTop()
         super(self.__class__, self).mousePressEvent(e)
 
