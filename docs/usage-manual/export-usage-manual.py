@@ -4,7 +4,7 @@
 # sudo chmod +x geckodriver
 # export PATH=$PATH:/home/marc/Downloads (or wherever you put it)
 
-from selenium import webdriver 
+from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 from html.parser import HTMLParser
@@ -27,7 +27,8 @@ pages_to_save = ['Handling Flowgraphs',
                  'Polyphase Filterbanks']
 
 # set up web driver
-driver = webdriver.Firefox('/home/marc/Downloads/geckodriver') # dir that contains geckodriver
+# dir that contains geckodriver
+driver = webdriver.Firefox('/home/marc/Downloads/geckodriver')
 print("STARTING")
 for page_name in pages_to_save:
     print("Processing", page_name)
@@ -43,7 +44,7 @@ for page_name in pages_to_save:
 
     # hit Export
     submit_button = driver.find_element_by_xpath("//*[@value='Export']")
-    submit_button.click() 
+    submit_button.click()
 
     # get HTML of new page
     raw_html = driver.page_source
@@ -52,7 +53,8 @@ for page_name in pages_to_save:
 
     # save text to file
     h = HTMLParser()
-    cropped_html_text = h.unescape(cropped_html) # makes it so stuff like &gt shows up as a greater than sign
+    # makes it so stuff like &gt shows up as a greater than sign
+    cropped_html_text = h.unescape(cropped_html)
     text_file = open("(exported from wiki) " + page_name + ".txt", "w")
     text_file.write(cropped_html_text)
     text_file.close()
