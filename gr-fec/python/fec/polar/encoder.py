@@ -32,7 +32,8 @@ class PolarEncoder(PolarCommon):
 
     def encode(self, data, is_packed=False):
         if not len(data) == self.K:
-            raise ValueError("len(data)={0} is not equal to k={1}!".format(len(data), self.K))
+            raise ValueError(
+                "len(data)={0} is not equal to k={1}!".format(len(data), self.K))
         if is_packed:
             data = np.unpackbits(data)
         if np.max(data) > 1 or np.min(data) < 0:
@@ -45,7 +46,8 @@ class PolarEncoder(PolarCommon):
 
     def encode_systematic(self, data):
         if not len(data) == self.K:
-            raise ValueError("len(data)={0} is not equal to k={1}!".format(len(data), self.K))
+            raise ValueError(
+                "len(data)={0} is not equal to k={1}!".format(len(data), self.K))
         if np.max(data) > 1 or np.min(data) < 0:
             raise ValueError("can only encode bits!")
 
@@ -102,7 +104,7 @@ def test_encoder_impls():
     # frozenbits = np.zeros(n - k)
     # frozenbitposition8 = np.array((0, 1, 2, 4), dtype=int)  # keep it!
     frozenbitposition = np.array((0, 1, 2, 3, 4, 5, 8, 9), dtype=int)
-    encoder = PolarEncoder(n, k, frozenbitposition)  #, frozenbits)
+    encoder = PolarEncoder(n, k, frozenbitposition)  # , frozenbits)
     print('result:', compare_results(encoder, ntests, k))
 
     print('Test rate-1 encoder/decoder chain results')

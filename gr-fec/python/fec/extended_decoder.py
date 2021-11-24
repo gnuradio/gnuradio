@@ -101,19 +101,22 @@ class extended_decoder(gr.hier_block2):
 
         # anything going through the annihilator needs shifted, uchar vals
         if (
-            fec.get_decoder_input_conversion(decoder_obj_list[0]) == "uchar"
-            or fec.get_decoder_input_conversion(decoder_obj_list[0]) == "packed_bits"
+            fec.get_decoder_input_conversion(decoder_obj_list[0]) == "uchar" or
+            fec.get_decoder_input_conversion(
+                decoder_obj_list[0]) == "packed_bits"
         ):
             self.blocks.append(blocks.multiply_const_ff(48.0))
 
         if fec.get_shift(decoder_obj_list[0]) != 0.0:
-            self.blocks.append(blocks.add_const_ff(fec.get_shift(decoder_obj_list[0])))
+            self.blocks.append(blocks.add_const_ff(
+                fec.get_shift(decoder_obj_list[0])))
         elif fec.get_decoder_input_conversion(decoder_obj_list[0]) == "packed_bits":
             self.blocks.append(blocks.add_const_ff(128.0))
 
         if (
-            fec.get_decoder_input_conversion(decoder_obj_list[0]) == "uchar"
-            or fec.get_decoder_input_conversion(decoder_obj_list[0]) == "packed_bits"
+            fec.get_decoder_input_conversion(decoder_obj_list[0]) == "uchar" or
+            fec.get_decoder_input_conversion(
+                decoder_obj_list[0]) == "packed_bits"
         ):
             self.blocks.append(blocks.float_to_uchar())
 
@@ -134,9 +137,9 @@ class extended_decoder(gr.hier_block2):
                 if 1.0 / self.ann.count("1") >= i:
                     synd_garble = self.garbletable[i]
             print(
-                "using syndrom garble threshold "
-                + str(synd_garble)
-                + "for conv_bit_corr_bb"
+                "using syndrom garble threshold " +
+                str(synd_garble) +
+                "for conv_bit_corr_bb"
             )
             print("ceiling: .0335 data garble rate")
             self.blocks.append(
@@ -196,7 +199,8 @@ class extended_decoder(gr.hier_block2):
             )
 
         if fec.get_decoder_output_conversion(decoder_obj_list[0]) == "unpack":
-            self.blocks.append(blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST))
+            self.blocks.append(
+                blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST))
 
         self.connect((self, 0), (self.blocks[0], 0))
         self.connect((self.blocks[-1], 0), (self, 0))
