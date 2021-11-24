@@ -10,7 +10,8 @@
 try:
     from PyQt5 import Qt, QtCore, QtGui, QtWidgets
 except ImportError:
-    raise SystemExit('Please install PyQt5 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)')
+    raise SystemExit(
+        'Please install PyQt5 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)')
 
 
 # Movable solid line for filter ideal-band diagram.
@@ -31,12 +32,12 @@ class filtermovlineItem(QtWidgets.QGraphicsObject):
     def paint(self, painter, option, widget):
         painter.setPen(QtGui.QPen(QtCore.Qt.black, 2, QtCore.Qt.SolidLine))
         painter.drawLine(self.x1, self.y1, self.x2, self.y2)
-        painter.drawLine(self.x1, self.y1, self.x1, self.y1-5)
-        painter.drawLine(self.x2, self.y2, self.x2, self.y2-5)
+        painter.drawLine(self.x1, self.y1, self.x1, self.y1 - 5)
+        painter.drawLine(self.x2, self.y2, self.x2, self.y2 - 5)
         if self.split:
             painter.drawLine(self.sx1, self.sy1, self.sx2, self.sy2)
-            painter.drawLine(self.sx1, self.sy1, self.sx1, self.sy1-5)
-            painter.drawLine(self.sx2, self.sy2, self.sx2, self.sy2-5)
+            painter.drawLine(self.sx1, self.sy1, self.sx1, self.sy1 - 5)
+            painter.drawLine(self.sx2, self.sy2, self.sx2, self.sy2 - 5)
 
     def boundingRect(self):
         return QtCore.QRectF(0, 0, 400, 400)
@@ -189,7 +190,8 @@ hpfItems[0].setFlags(QtWidgets.QGraphicsItem.ItemIsSelectable | QtWidgets.QGraph
 hpfItems.append(hpfsLines())
 
 # bpfitems list.
-bpfItems.append(filtermovlineItem(6, 175, 110, 175, 0, -60, True, 300, 175, 400, 175))
+bpfItems.append(filtermovlineItem(6, 175, 110, 175,
+                0, -60, True, 300, 175, 400, 175))
 bpfItems[0].setFlags(QtWidgets.QGraphicsItem.ItemIsSelectable | QtWidgets.QGraphicsItem.ItemIsMovable |
                      QtWidgets.QGraphicsItem.ItemSendsGeometryChanges)
 bpfItems.append(bpfsLines())

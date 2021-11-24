@@ -12,7 +12,8 @@ from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
 from gnuradio.fft import window
-import sys, time
+import sys
+import time
 import numpy
 
 try:
@@ -25,8 +26,10 @@ try:
     import pylab
     from pylab import mlab
 except ImportError:
-    sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
+    sys.stderr.write(
+        "Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
+
 
 class pfb_top_block(gr.top_block):
     def __init__(self):
@@ -35,7 +38,7 @@ class pfb_top_block(gr.top_block):
         self._N = 2000000        # number of samples to use
         self._fs = 1000          # initial sampling rate
         self._M = M = 9          # Number of channels to channelize
-        self._ifs = M*self._fs   # initial sampling rate
+        self._ifs = M * self._fs   # initial sampling rate
 
         # Create a set of taps for the PFB channelizer
         self._taps = filter.firdes.low_pass_2(1, self._ifs, 475.50, 50,
@@ -55,9 +58,10 @@ class pfb_top_block(gr.top_block):
         self.add = blocks.add_cc()
         freqs = [-70, -50, -30, -10, 10, 20, 40, 60, 80]
         for i in range(len(freqs)):
-            f = freqs[i] + (M / 2-M+i+1)*self._fs
-            self.signals.append(analog.sig_source_c(self._ifs, analog.GR_SIN_WAVE, f, 1))
-            self.connect(self.signals[i], (self.add,i))
+            f = freqs[i] + (M / 2 - M + i + 1) * self._fs
+            self.signals.append(analog.sig_source_c(
+                self._ifs, analog.GR_SIN_WAVE, f, 1))
+            self.connect(self.signals[i], (self.add, i))
 
         self.head = blocks.head(gr.sizeof_gr_complex, self._N)
 
@@ -72,7 +76,7 @@ class pfb_top_block(gr.top_block):
         self.connect(self.add, self.snk_i)
 
         # Use this to play with the channel mapping
-        #self.pfb.set_channel_map([5,6,7,8,0,1,2,3,4])
+        # self.pfb.set_channel_map([5,6,7,8,0,1,2,3,4])
 
         # Create a vector sink for each of M output channels of the filter and connect it
         self.snks = list()
@@ -91,9 +95,9 @@ def main():
     print("Run time: %f" % (tend - tstart))
 
     if 1:
-        fig_in = pylab.figure(1, figsize=(16,9), facecolor="w")
-        fig1 = pylab.figure(2, figsize=(16,9), facecolor="w")
-        fig2 = pylab.figure(3, figsize=(16,9), facecolor="w")
+        fig_in = pylab.figure(1, figsize=(16, 9), facecolor="w")
+        fig1 = pylab.figure(2, figsize=(16, 9), facecolor="w")
+        fig2 = pylab.figure(3, figsize=(16, 9), facecolor="w")
 
         Ns = 1000
         Ne = 10000
@@ -106,22 +110,21 @@ def main():
         d = tb.snk_i.data()[Ns:Ne]
         spin_f = fig_in.add_subplot(2, 1, 1)
 
-        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
-                          window = lambda d: d*winfunc(fftlen),
-                          scale_by_freq=True)
-        X_in = 10.0*numpy.log10(abs(X))
+        X, freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
+                           window=lambda d: d * winfunc(fftlen),
+                           scale_by_freq=True)
+        X_in = 10.0 * numpy.log10(abs(X))
         f_in = numpy.arange(-fs / 2.0, fs / 2.0, fs / float(X_in.size))
         pin_f = spin_f.plot(f_in, X_in, "b")
-        spin_f.set_xlim([min(f_in), max(f_in)+1])
+        spin_f.set_xlim([min(f_in), max(f_in) + 1])
         spin_f.set_ylim([-200.0, 50.0])
 
         spin_f.set_title("Input Signal", weight="bold")
         spin_f.set_xlabel("Frequency (Hz)")
         spin_f.set_ylabel("Power (dBW)")
 
-
         Ts = 1.0 / fs
-        Tmax = len(d)*Ts
+        Tmax = len(d) * Ts
 
         t_in = numpy.arange(0, Tmax, Ts)
         x_in = numpy.array(d)
@@ -141,21 +144,21 @@ def main():
         # time signals on Figure 3
         fs_o = tb._fs
         Ts_o = 1.0 / fs_o
-        Tmax_o = len(d)*Ts_o
+        Tmax_o = len(d) * Ts_o
         for i in range(len(tb.snks)):
             # remove issues with the transients at the beginning
             # also remove some corruption at the end of the stream
             #    this is a bug, probably due to the corner cases
             d = tb.snks[i].data()[Ns:Ne]
 
-            sp1_f = fig1.add_subplot(Nrows, Ncols, 1+i)
-            X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs_o,
-                              window = lambda d: d*winfunc(fftlen),
-                              scale_by_freq=True)
-            X_o = 10.0*numpy.log10(abs(X))
+            sp1_f = fig1.add_subplot(Nrows, Ncols, 1 + i)
+            X, freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs_o,
+                               window=lambda d: d * winfunc(fftlen),
+                               scale_by_freq=True)
+            X_o = 10.0 * numpy.log10(abs(X))
             f_o = numpy.arange(-fs_o / 2.0, fs_o / 2.0, fs_o / float(X_o.size))
             p2_f = sp1_f.plot(f_o, X_o, "b")
-            sp1_f.set_xlim([min(f_o), max(f_o)+1])
+            sp1_f.set_xlim([min(f_o), max(f_o) + 1])
             sp1_f.set_ylim([-200.0, 50.0])
 
             sp1_f.set_title(("Channel %d" % i), weight="bold")
@@ -164,10 +167,10 @@ def main():
 
             x_o = numpy.array(d)
             t_o = numpy.arange(0, Tmax_o, Ts_o)
-            sp2_o = fig2.add_subplot(Nrows, Ncols, 1+i)
+            sp2_o = fig2.add_subplot(Nrows, Ncols, 1 + i)
             p2_o = sp2_o.plot(t_o, x_o.real, "b")
             p2_o = sp2_o.plot(t_o, x_o.imag, "r")
-            sp2_o.set_xlim([min(t_o), max(t_o)+1])
+            sp2_o.set_xlim([min(t_o), max(t_o) + 1])
             sp2_o.set_ylim([-2, 2])
 
             sp2_o.set_title(("Channel %d" % i), weight="bold")
@@ -182,4 +185,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-

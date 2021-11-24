@@ -13,6 +13,7 @@ from gnuradio import fft
 from gnuradio import blocks
 from .filter_python import fft_filter_ccc
 
+
 def _generate_synthesis_taps(mpoints):
     return []   # FIXME
 
@@ -31,6 +32,7 @@ class synthesis_filterbank(gr.hier_block2):
 
     See http://cnx.org/content/m10424/latest
     """
+
     def __init__(self, mpoints, taps=None):
         """
         Takes M complex streams in, produces single complex stream out
@@ -75,9 +77,9 @@ class synthesis_filterbank(gr.hier_block2):
         """
         item_size = gr.sizeof_gr_complex
         gr.hier_block2.__init__(self, "synthesis_filterbank",
-                                gr.io_signature(mpoints, mpoints, item_size), # Input signature
+                                # Input signature
+                                gr.io_signature(mpoints, mpoints, item_size),
                                 gr.io_signature(1, 1, item_size))             # Output signature
-
 
         if taps is None:
             taps = _generate_synthesis_taps(mpoints)
@@ -109,12 +111,14 @@ class synthesis_filterbank(gr.hier_block2):
 
             self.connect(self.ss2s, self)
 
+
 class analysis_filterbank(gr.hier_block2):
     """
     Uniformly modulated polyphase DFT filter bank: analysis
 
     See http://cnx.org/content/m10424/latest
     """
+
     def __init__(self, mpoints, taps=None):
         """
         Takes 1 complex stream in, produces M complex streams out
@@ -128,8 +132,9 @@ class analysis_filterbank(gr.hier_block2):
         """
         item_size = gr.sizeof_gr_complex
         gr.hier_block2.__init__(self, "analysis_filterbank",
-                                gr.io_signature(1, 1, item_size),             # Input signature
-                                gr.io_signature(mpoints, mpoints, item_size)) # Output signature
+                                # Input signature
+                                gr.io_signature(1, 1, item_size),
+                                gr.io_signature(mpoints, mpoints, item_size))  # Output signature
 
         if taps is None:
             taps = _generate_synthesis_taps(mpoints)
@@ -154,7 +159,7 @@ class analysis_filterbank(gr.hier_block2):
 
         # build mpoints fir filters...
         for i in range(mpoints):
-            f = fft_filter_ccc(1, sub_taps[mpoints-i-1])
+            f = fft_filter_ccc(1, sub_taps[mpoints - i - 1])
             self.connect((self.s2ss, i), f)
             self.connect(f, (self.ss2v, i))
             self.connect((self.v2ss, i), (self, i))

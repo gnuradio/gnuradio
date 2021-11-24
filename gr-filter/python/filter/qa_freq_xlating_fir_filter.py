@@ -115,7 +115,7 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 1
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps) - 1)
         despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 
@@ -134,7 +134,7 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 4
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps) - 1)
         despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 
@@ -152,7 +152,7 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 1
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps) - 1)
         despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 
@@ -170,7 +170,7 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 4
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps) - 1)
         despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 
@@ -188,7 +188,7 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 1
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps) - 1)
         despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 
@@ -206,7 +206,7 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 4
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps) - 1)
         despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 
@@ -224,7 +224,7 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 1
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps) - 1)
         despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 
@@ -242,7 +242,7 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
         decim = 4
         lo = sig_source_c(self.fs, -self.fc, 1, len(self.src_data))
-        phase = -cmath.pi * self.fc / self.fs * (len(self.taps)-1)
+        phase = -cmath.pi * self.fc / self.fs * (len(self.taps) - 1)
         despun = mix(lo, self.src_data, phase=phase)
         expected_data = fir_filter(despun, self.taps, decim)
 

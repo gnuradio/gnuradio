@@ -23,15 +23,17 @@ except ImportError:
 try:
     from matplotlib import pyplot
 except ImportError:
-    sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
+    sys.stderr.write(
+        "Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
+
 
 class mytb(gr.top_block):
     def __init__(self, fs_in, fs_out, fc, N=10000):
         gr.top_block.__init__(self)
 
         rerate = float(fs_out) / float(fs_in)
-        print("Resampling from %f to %f by %f " %(fs_in, fs_out, rerate))
+        print("Resampling from %f to %f by %f " % (fs_in, fs_out, rerate))
 
         # Creating our own taps
         taps = filter.firdes.low_pass_2(32, 32, 0.25, 0.1, 80)
@@ -59,6 +61,7 @@ class mytb(gr.top_block):
         self.connect(self.head, self.resamp_0, self.snk_0)
         self.connect(self.head, self.resamp_1, self.snk_1)
 
+
 def main():
     fs_in = 8000
     fs_out = 20000
@@ -68,22 +71,21 @@ def main():
     tb = mytb(fs_in, fs_out, fc, N)
     tb.run()
 
-
     # Plot PSD of signals
     nfftsize = 2048
-    fig1 = pyplot.figure(1, figsize=(10,10), facecolor="w")
-    sp1 = fig1.add_subplot(2,1,1)
+    fig1 = pyplot.figure(1, figsize=(10, 10), facecolor="w")
+    sp1 = fig1.add_subplot(2, 1, 1)
     sp1.psd(tb.snk_in.data(), NFFT=nfftsize,
-            noverlap=nfftsize / 4, Fs = fs_in)
+            noverlap=nfftsize / 4, Fs=fs_in)
     sp1.set_title(("Input Signal at f_s=%.2f kHz" % (fs_in / 1000.0)))
     sp1.set_xlim([-fs_in / 2, fs_in / 2])
 
-    sp2 = fig1.add_subplot(2,1,2)
+    sp2 = fig1.add_subplot(2, 1, 2)
     sp2.psd(tb.snk_0.data(), NFFT=nfftsize,
-            noverlap=nfftsize / 4, Fs = fs_out,
+            noverlap=nfftsize / 4, Fs=fs_out,
             label="With our filter")
     sp2.psd(tb.snk_1.data(), NFFT=nfftsize,
-            noverlap=nfftsize / 4, Fs = fs_out,
+            noverlap=nfftsize / 4, Fs=fs_out,
             label="With auto-generated filter")
     sp2.set_title(("Output Signals at f_s=%.2f kHz" % (fs_out / 1000.0)))
     sp2.set_xlim([-fs_out / 2, fs_out / 2])
@@ -92,16 +94,16 @@ def main():
     # Plot signals in time
     Ts_in = 1.0 / fs_in
     Ts_out = 1.0 / fs_out
-    t_in = numpy.arange(0, len(tb.snk_in.data())*Ts_in, Ts_in)
-    t_out = numpy.arange(0, len(tb.snk_0.data())*Ts_out, Ts_out)
+    t_in = numpy.arange(0, len(tb.snk_in.data()) * Ts_in, Ts_in)
+    t_out = numpy.arange(0, len(tb.snk_0.data()) * Ts_out, Ts_out)
 
-    fig2 = pyplot.figure(2, figsize=(10,10), facecolor="w")
-    sp21 = fig2.add_subplot(2,1,1)
+    fig2 = pyplot.figure(2, figsize=(10, 10), facecolor="w")
+    sp21 = fig2.add_subplot(2, 1, 1)
     sp21.plot(t_in, tb.snk_in.data())
     sp21.set_title(("Input Signal at f_s=%.2f kHz" % (fs_in / 1000.0)))
     sp21.set_xlim([t_in[100], t_in[200]])
 
-    sp22 = fig2.add_subplot(2,1,2)
+    sp22 = fig2.add_subplot(2, 1, 2)
     sp22.plot(t_out, tb.snk_0.data(),
               label="With our filter")
     sp22.plot(t_out, tb.snk_1.data(),
@@ -113,6 +115,6 @@ def main():
 
     pyplot.show()
 
+
 if __name__ == "__main__":
     main()
-
