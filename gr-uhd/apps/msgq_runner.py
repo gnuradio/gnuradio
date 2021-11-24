@@ -32,6 +32,7 @@ To determine if the runner has exited, call exited() on the object.
 from gnuradio import gr
 import threading
 
+
 class msgq_runner(threading.Thread):
 
     def __init__(self, msgq, callback, exit_on_error=False):
