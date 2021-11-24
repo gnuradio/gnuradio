@@ -27,13 +27,14 @@ NeedleFull = 1
 NeedleIndicator = 0
 NeedleMirrored = 2
 
+
 class LabeledCompass(QFrame):
     def __init__(self, lbl, min_size, update_time, setDebug=False,
                  needleType=NeedleFull, position=1, backgroundColor='default'):
         # Positions: 1 = above, 2=below, 3=left, 4=right
         QFrame.__init__(self)
         self.numberControl = Compass(min_size, update_time, setDebug,
-                                      needleType, position, backgroundColor)
+                                     needleType, position, backgroundColor)
 
         if position < 3:
             layout = QVBoxLayout()
@@ -62,17 +63,20 @@ class LabeledCompass(QFrame):
         self.setLayout(layout)
 
         if lbl:
-            self.setMinimumSize(min_size+30, min_size+35)
+            self.setMinimumSize(min_size + 30, min_size + 35)
         else:
             self.setMinimumSize(min_size, min_size)
 
         self.show()
+
     def change_angle(self, angle):
         self.numberControl.change_angle(angle)
 
     def setColors(self, backgroundColor='default', needleTip='red', needleBody='black',
                   scaleColor='black'):
-        self.numberControl.setColors(backgroundColor, needleTip, needleBody, scaleColor)
+        self.numberControl.setColors(
+            backgroundColor, needleTip, needleBody, scaleColor)
+
 
 class Compass(QWidget):
     angleChanged = pyqtSignal(float)
@@ -116,16 +120,18 @@ class Compass(QWidget):
         painter.setRenderHint(QPainter.Antialiasing)
 
         if self.backgroundColor == 'default':
-            painter.fillRect(event.rect(), self.palette().brush(QPalette.Window))
+            painter.fillRect(
+                event.rect(), self.palette().brush(QPalette.Window))
         else:
             size = self.size()
-            center_x = size.width()/2
+            center_x = size.width() / 2
             diameter = size.height()
             brush = QBrush(QColor(self.backgroundColor), Qtc.SolidPattern)
             painter.setBrush(brush)
             painter.setPen(QPen(QColor(self.scaleColor), 2))
             painter.setRenderHint(QPainter.Antialiasing)
-            painter.drawEllipse(center_x-diameter/2+1, 1, diameter-4, diameter-4)
+            painter.drawEllipse(center_x - diameter / 2 + 1,
+                                1, diameter - 4, diameter - 4)
 
         self.drawMarkings(painter)
         self.drawNeedle(painter)
@@ -134,9 +140,9 @@ class Compass(QWidget):
 
     def drawMarkings(self, painter):
         painter.save()
-        painter.translate(self.width()/2, self.height()/2)
-        scale = min((self.width() - self._margins)/120.0,
-                    (self.height() - self._margins)/120.0)
+        painter.translate(self.width() / 2, self.height() / 2)
+        scale = min((self.width() - self._margins) / 120.0,
+                    (self.height() - self._margins) / 120.0)
         painter.scale(scale, scale)
 
         font = QFont(self.font())
@@ -151,7 +157,8 @@ class Compass(QWidget):
 
             if i % 45 == 0:
                 painter.drawLine(0, -40, 0, -50)
-                painter.drawText(-metrics.width(self._pointText[i])/2.0, -52, self._pointText[i])
+                painter.drawText(-metrics.width(
+                    self._pointText[i]) / 2.0, -52, self._pointText[i])
             else:
                 painter.drawLine(0, -45, 0, -50)
 
@@ -163,9 +170,9 @@ class Compass(QWidget):
     def drawNeedle(self, painter):
         painter.save()
         # Set up painter
-        painter.translate(self.width()/2, self.height()/2)
-        scale = min((self.width() - self._margins)/120.0,
-                    (self.height() - self._margins)/120.0)
+        painter.translate(self.width() / 2, self.height() / 2)
+        scale = min((self.width() - self._margins) / 120.0,
+                    (self.height() - self._margins) / 120.0)
         painter.scale(scale, scale)
         painter.setPen(QPen(Qtc.NoPen))
 
@@ -211,7 +218,7 @@ class Compass(QWidget):
             painter.drawPolygon(
                 QPolygon([QPoint(-3, -25), QPoint(0, -45), QPoint(3, -25),
                           QPoint(0, -30), QPoint(-3, -25)])
-                )
+            )
 
         painter.restore()
 
@@ -240,12 +247,15 @@ class GrCompass(gr.sync_block, LabeledCompass):
     and mirrored (mirrored is useful for direction-finding where an
     ambiguity exists in front/back detection angle).
     """
+
     def __init__(self, title, min_size, update_time, setDebug=False, needleType=NeedleFull,
                  usemsg=False, position=1, backgroundColor='default'):
         if usemsg:
-            gr.sync_block.__init__(self, name="QTCompass", in_sig=[], out_sig=[])
+            gr.sync_block.__init__(
+                self, name="QTCompass", in_sig=[], out_sig=[])
         else:
-            gr.sync_block.__init__(self, name="QTCompass", in_sig=[numpy.float32], out_sig=[])
+            gr.sync_block.__init__(self, name="QTCompass", in_sig=[
+                                   numpy.float32], out_sig=[])
 
         LabeledCompass.__init__(self, title, min_size, update_time, setDebug, needleType,
                                 position, backgroundColor)
@@ -266,7 +276,8 @@ class GrCompass(gr.sync_block, LabeledCompass):
             if type(new_val) == float or type(new_val) == int:
                 super().change_angle(float(new_val))
             else:
-                gr.log.error("Value received was not an int or a float: %s" % str(type(new_val)))
+                gr.log.error(
+                    "Value received was not an int or a float: %s" % str(type(new_val)))
 
         except Exception as e:
             gr.log.error("Error with message conversion: %s" % str(e))

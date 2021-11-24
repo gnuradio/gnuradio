@@ -82,8 +82,8 @@ class main_window(QtGui.QMainWindow):
             self.fg.start()
             self.gui.pauseButton.setText("Pause")
 
-
     # Functions to set the values in the GUI
+
     def set_frequency(self, freq):
         self.freq = freq
         sfreq = eng_notation.num_to_str(self.freq)
@@ -102,11 +102,12 @@ class main_window(QtGui.QMainWindow):
         self.amp = amp
         self.gui.amplifierEdit.setText(QtCore.QString("%1").arg(self.amp))
 
-
     # Functions called when signals are triggered in the GUI
+
     def frequencyEditText(self):
         try:
-            freq = eng_notation.str_to_num(self.gui.frequencyEdit.text().toAscii())
+            freq = eng_notation.str_to_num(
+                self.gui.frequencyEdit.text().toAscii())
             self.fg.set_frequency(freq)
             self.freq = freq
         except RuntimeError:
@@ -122,7 +123,8 @@ class main_window(QtGui.QMainWindow):
 
     def bandwidthEditText(self):
         try:
-            bw = eng_notation.str_to_num(self.gui.bandwidthEdit.text().toAscii())
+            bw = eng_notation.str_to_num(
+                self.gui.bandwidthEdit.text().toAscii())
             self.fg.set_bandwidth(bw)
             self.bw = bw
         except ValueError:
@@ -137,7 +139,8 @@ class main_window(QtGui.QMainWindow):
             pass
 
     def saveData(self):
-        fileName = QtGui.QFileDialog.getSaveFileName(self, "Save data to file", ".");
+        fileName = QtGui.QFileDialog.getSaveFileName(
+            self, "Save data to file", ".")
         if(len(fileName)):
             self.fg.save_to_file(str(fileName))
 
@@ -150,7 +153,6 @@ class main_window(QtGui.QMainWindow):
         self.fg.cancel_dc(state)
 
 
-
 class my_top_block(gr.top_block):
     def __init__(self, options):
         gr.top_block.__init__(self)
@@ -160,7 +162,8 @@ class my_top_block(gr.top_block):
 
         self.qapp = QtGui.QApplication(sys.argv)
 
-        self.u = uhd.usrp_source(device_addr=options.address, stream_args=uhd.stream_args('fc32'))
+        self.u = uhd.usrp_source(
+            device_addr=options.address, stream_args=uhd.stream_args('fc32'))
 
         if(options.antenna):
             self.u.set_antenna(options.antenna, 0)
@@ -170,13 +173,13 @@ class my_top_block(gr.top_block):
         if options.gain is None:
             # if no gain was specified, use the mid-point in dB
             g = self.u.get_gain_range()
-            options.gain = float(g.start()+g.stop()) / 2
+            options.gain = float(g.start() + g.stop()) / 2
         self.set_gain(options.gain)
 
         if options.freq is None:
             # if no freq was specified, use the mid-point
             r = self.u.get_freq_range()
-            options.freq = float(r.start()+r.stop()) / 2
+            options.freq = float(r.start() + r.stop()) / 2
         self.set_frequency(options.freq)
 
         self._fftsize = options.fft_size
@@ -217,7 +220,6 @@ class my_top_block(gr.top_block):
         self.main_win.set_amplifier(self._amp_value)
 
         self.main_win.show()
-
 
     def save_to_file(self, name):
         self.lock()
@@ -262,19 +264,20 @@ class my_top_block(gr.top_block):
 
         if(state):
             self.disconnect(self.u, self.amp)
-            self.connect(self.u, (self.dc_sub,0))
-            self.connect(self.u, self.dc, (self.dc_sub,1))
+            self.connect(self.u, (self.dc_sub, 0))
+            self.connect(self.u, self.dc, (self.dc_sub, 1))
             self.connect(self.dc_sub, self.amp)
         else:
             self.disconnect(self.dc_sub, self.amp)
-            self.disconnect(self.dc, (self.dc_sub,1))
+            self.disconnect(self.dc, (self.dc_sub, 1))
             self.disconnect(self.u, self.dc)
-            self.disconnect(self.u, (self.dc_sub,0))
+            self.disconnect(self.u, (self.dc_sub, 0))
             self.connect(self.u, self.amp)
 
         self.unlock()
 
-def main ():
+
+def main():
     parser = OptionParser(option_class=eng_option)
     parser.add_option("-a", "--address", type="string", default="addr=192.168.10.2",
                       help="Address of UHD device, [default=%default]")
@@ -296,11 +299,11 @@ def main ():
 
     tb = my_top_block(options)
     tb.start()
-    tb.snk.exec_();
+    tb.snk.exec_()
+
 
 if __name__ == '__main__':
     try:
-        main ()
+        main()
     except KeyboardInterrupt:
         pass
-

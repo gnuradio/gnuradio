@@ -26,16 +26,19 @@ except ImportError:
     sys.stderr.write("Error: Program requires gr-analog.\n")
     sys.exit(1)
 
+
 class dialog_box(QtWidgets.QWidget):
     def __init__(self, display, control):
         QtWidgets.QWidget.__init__(self, None)
         self.setWindowTitle('PyQt Test GUI')
 
-        self.boxlayout = QtWidgets.QBoxLayout(QtWidgets.QBoxLayout.LeftToRight, self)
+        self.boxlayout = QtWidgets.QBoxLayout(
+            QtWidgets.QBoxLayout.LeftToRight, self)
         self.boxlayout.addWidget(display, 1)
         self.boxlayout.addWidget(control)
 
         self.resize(800, 500)
+
 
 class control_box(QtWidgets.QWidget):
     def __init__(self, snk, parent=None):
@@ -58,7 +61,6 @@ class control_box(QtWidgets.QWidget):
         self.amp1Edit.setMinimumWidth(100)
         self.layout.addRow("Sine Amplitude:", self.amp1Edit)
         self.amp1Edit.editingFinished.connect(self.amp1EditText)
-
 
         # Control the second signal
         self.amp2Edit = QtWidgets.QLineEdit(self)
@@ -90,7 +92,6 @@ class control_box(QtWidgets.QWidget):
         self.layout.addWidget(self.quit)
 
         self.quit.clicked.connect(QtWidgets.qApp.quit)
-
 
     def attach_signal1(self, signal):
         self.signal1 = signal
@@ -149,14 +150,14 @@ class my_top_block(gr.top_block):
 
         src1 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f1, 0, 0)
         src2 = analog.noise_source_f(analog.GR_GAUSSIAN, 1)
-        src  = blocks.add_ff()
-        thr = blocks.throttle(gr.sizeof_float, 100*npts)
+        src = blocks.add_ff()
+        thr = blocks.throttle(gr.sizeof_float, 100 * npts)
         self.snk1 = qtgui.histogram_sink_f(npts, 200, -5, 5,
                                            "Histogram", 1, None)
         self.snk1.disable_legend()
 
-        self.connect(src1, (src,0))
-        self.connect(src2, (src,1))
+        self.connect(src1, (src, 0))
+        self.connect(src2, (src, 1))
         self.connect(src, thr, self.snk1)
 
         self.ctrl_win = control_box(self.snk1)
@@ -164,18 +165,19 @@ class my_top_block(gr.top_block):
         self.ctrl_win.attach_signal2(src2)
 
         # Get the reference pointer to the SpectrumDisplayForm QWidget
-        pyQt  = self.snk1.qwidget()
+        pyQt = self.snk1.qwidget()
 
         # Wrap the pointer as a PyQt SIP object
         # This can now be manipulated as a PyQt5.QtWidgets.QWidget
         pyWin = sip.wrapinstance(pyQt, QtWidgets.QWidget)
 
-        #pyWin.show()
+        # pyWin.show()
         self.main_box = dialog_box(pyWin, self.ctrl_win)
         self.main_box.show()
 
+
 if __name__ == "__main__":
-    tb = my_top_block();
+    tb = my_top_block()
     tb.start()
     tb.qapp.exec_()
     tb.stop()
