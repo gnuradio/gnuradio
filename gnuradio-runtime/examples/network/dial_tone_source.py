@@ -22,13 +22,16 @@ try:
 except ImportError:
     sys.stderr.write("This example requires gr-blocks.\n")
 
+
 class dial_tone_source(gr.top_block):
     def __init__(self, host, port, pkt_size, sample_rate, eof):
         gr.top_block.__init__(self, "dial_tone_source")
 
         amplitude = 0.3
-        src0 = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 350, amplitude)
-        src1 = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 440, amplitude)
+        src0 = analog.sig_source_f(
+            sample_rate, analog.GR_SIN_WAVE, 350, amplitude)
+        src1 = analog.sig_source_f(
+            sample_rate, analog.GR_SIN_WAVE, 440, amplitude)
         add = blocks.add_ff()
 
         # Throttle needed here to account for the other side's audio card sampling rate
@@ -38,18 +41,19 @@ class dial_tone_source(gr.top_block):
         self.connect(src1, (add, 1))
         self.connect(add, thr, sink)
 
+
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("--host", default="127.0.0.1",
-                      help="Remote host name (domain name or IP address")
+                        help="Remote host name (domain name or IP address")
     parser.add_argument("--port", type=int, default=65500,
-                      help="port number to connect to")
+                        help="port number to connect to")
     parser.add_argument("--packet-size", type=int, default=1472,
-                      help="packet size.")
+                        help="packet size.")
     parser.add_argument("-r", "--sample-rate", type=int, default=8000,
-                      help="audio signal sample rate [default=%(default)r]")
+                        help="audio signal sample rate [default=%(default)r]")
     parser.add_argument("--no-eof", action="store_true", default=False,
-                      help="don't send EOF on disconnect")
+                        help="don't send EOF on disconnect")
     args = parser.parse_args()
     # Create an instance of a hierarchical block
     top_block = dial_tone_source(args.host, args.port,

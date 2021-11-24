@@ -47,9 +47,11 @@ def parse_file(input_filename, output):
 
 
 def handle_file(input_filename):
-    cmd_file = tempfile.NamedTemporaryFile(mode='w+', prefix='pf', suffix='.cmd')
+    cmd_file = tempfile.NamedTemporaryFile(
+        mode='w+', prefix='pf', suffix='.cmd')
     cmd_file_name = cmd_file.name
-    data_file = tempfile.NamedTemporaryFile(mode='w+', prefix='pf', suffix='.dat')
+    data_file = tempfile.NamedTemporaryFile(
+        mode='w+', prefix='pf', suffix='.dat')
     data_file_name = data_file.name
     desc = parse_file(input_filename, data_file)
     if len(desc) > 0:
@@ -68,8 +70,8 @@ def handle_file(input_filename):
 
     os.system("gnuplot " + cmd_file_name + " -")
 
-    #sys.stdout.write(open(cmd_file_name,'r').read())
-    #sys.stdout.write(open(data_file_name,'r').read())
+    # sys.stdout.write(open(cmd_file_name,'r').read())
+    # sys.stdout.write(open(data_file_name,'r').read())
 
 
 def main():

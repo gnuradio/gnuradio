@@ -9,14 +9,15 @@
 
 
 from .gr_python import (top_block_pb,
-    top_block_wait_unlocked, top_block_run_unlocked,
-    top_block_start_unlocked, top_block_stop_unlocked,
-    top_block_unlock_unlocked) #, dot_graph_tb)
+                        top_block_wait_unlocked, top_block_run_unlocked,
+                        top_block_start_unlocked, top_block_stop_unlocked,
+                        top_block_unlock_unlocked)  # , dot_graph_tb)
 
 from .hier_block2 import hier_block2
 import threading
 
 from .hier_block2 import hier_block2
+
 
 class _top_block_waiter(threading.Thread):
     """
@@ -41,6 +42,7 @@ class _top_block_waiter(threading.Thread):
     See also top_block.wait (below), which uses this class to implement
     the interruptible wait.
     """
+
     def __init__(self, tb):
         threading.Thread.__init__(self)
         self.setDaemon(1)

@@ -2,13 +2,16 @@ import pmt
 
 from . import gr_python as gr
 
+
 class PythonTag(object):
     " Python container for tags "
+
     def __init__(self):
         self.offset = None
-        self.key    = None
-        self.value  = None
-        self.srcid  = False
+        self.key = None
+        self.value = None
+        self.srcid = False
+
 
 def tag_to_python(tag):
     """ Convert a stream tag to a Python-readable object """
@@ -18,6 +21,7 @@ def tag_to_python(tag):
     newtag.value = pmt.to_python(tag.value)
     newtag.srcid = pmt.to_python(tag.srcid)
     return newtag
+
 
 def python_to_tag(tag_struct):
     """
