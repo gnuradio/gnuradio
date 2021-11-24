@@ -11,13 +11,14 @@ from gnuradio import gr
 from gnuradio.filter import firdes
 import math
 
+
 class distortion_2_gen(gr.hier_block2):
 
     def __init__(self, beta=0):
         gr.hier_block2.__init__(
             self, "Second Order Distortion",
-            gr.io_signature(1, 1, gr.sizeof_gr_complex*1),
-            gr.io_signature(1, 1, gr.sizeof_gr_complex*1),
+            gr.io_signature(1, 1, gr.sizeof_gr_complex * 1),
+            gr.io_signature(1, 1, gr.sizeof_gr_complex * 1),
         )
 
         ##################################################
@@ -38,20 +39,22 @@ class distortion_2_gen(gr.hier_block2):
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_add_xx_0, 1))
+        self.connect((self.blocks_multiply_const_vxx_0, 0),
+                     (self.blocks_add_xx_0, 1))
         self.connect((self, 0), (self.blocks_multiply_xx_0, 0))
         self.connect((self, 0), (self.blocks_add_xx_0, 0))
         self.connect((self.blocks_add_xx_0, 0), (self, 0))
         self.connect((self, 0), (self.blocks_conjugate_cc_0, 0))
-        self.connect((self.blocks_conjugate_cc_0, 0), (self.blocks_multiply_xx_0_0, 1))
+        self.connect((self.blocks_conjugate_cc_0, 0),
+                     (self.blocks_multiply_xx_0_0, 1))
         self.connect((self, 0), (self.blocks_multiply_xx_0, 1))
         self.connect((self, 0), (self.blocks_multiply_xx_0_0, 0))
-        self.connect((self.blocks_multiply_xx_0_0, 0), (self.blocks_add_xx_0_0, 1))
-        self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_add_xx_0_0, 0))
-        self.connect((self.blocks_add_xx_0_0, 0), (self.blocks_multiply_const_vxx_0, 0))
-
-
-# QT sink close method reimplementation
+        self.connect((self.blocks_multiply_xx_0_0, 0),
+                     (self.blocks_add_xx_0_0, 1))
+        self.connect((self.blocks_multiply_xx_0, 0),
+                     (self.blocks_add_xx_0_0, 0))
+        self.connect((self.blocks_add_xx_0_0, 0),
+                     (self.blocks_multiply_const_vxx_0, 0))
 
     def get_beta(self):
         return self.beta
