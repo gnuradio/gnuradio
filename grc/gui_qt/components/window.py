@@ -215,24 +215,24 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                                       shortcut=Keys.MoveToNextChar,
                                       statusTip=_("rotate_cw-tooltip"))
 
-        actions['enable'] = Action("Enable", self,
+        actions['enable'] = Action(_("enable"), self,
                                    shortcut="E")
-        actions['disable'] = Action("Disable", self,
+        actions['disable'] = Action(_("disable"), self,
                                    shortcut="D")
-        actions['bypass'] = Action("Bypass", self)
+        actions['bypass'] = Action(_("bypass"), self)
 
-        actions['vertical_align_top'] = Action("Vertical Align Top", self)
-        actions['vertical_align_middle'] = Action("Vertical Align Middle", self)
-        actions['vertical_align_bottom'] = Action("Vertical Align Bottom", self)
+        actions['vertical_align_top'] = Action(_("vertical_align_top"), self)
+        actions['vertical_align_middle'] = Action(_("vertical_align_middle"), self)
+        actions['vertical_align_bottom'] = Action(_("vertical_align_bottom"), self)
 
-        actions['horizontal_align_left'] = Action("Horizontal Align Left", self)
-        actions['horizontal_align_center'] = Action("Horizontal Align Center", self)
-        actions['horizontal_align_right'] = Action("Horizontal Align Right", self)
+        actions['horizontal_align_left'] = Action(_("horizontal_align_left"), self)
+        actions['horizontal_align_center'] = Action(_("horizontal_align_center"), self)
+        actions['horizontal_align_right'] = Action(_("horizontal_align_right"), self)
 
-        actions['create_hier'] = Action("Create hier block", self)
-        actions['open_hier'] = Action("Open hier block", self)
-        actions['toggle_source_bus'] = Action("Toggle source bus", self)
-        actions['toggle_sink_bus'] = Action("Toggle sink bus", self)
+        actions['create_hier'] = Action(_("create_hier_block"), self)
+        actions['open_hier'] = Action(_("open_hier_block"), self)
+        actions['toggle_source_bus'] = Action(_("toggle_source_bus"), self)
+        actions['toggle_sink_bus'] = Action(_("toggle_sink_bus"), self)
 
         actions['properties'] = Action(Icons('document-properties'), _("flowgraph-properties"),
                                        self, statusTip=_("flowgraph-properties-tooltip"))
