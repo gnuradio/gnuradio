@@ -18,6 +18,7 @@ import math
 from gnuradio import gr
 import pmt
 
+
 class AzElPlot(gr.sync_block, FigureCanvas):
     """
     This block creates a polar plot with azimuth represented as the angle
@@ -27,10 +28,11 @@ class AzElPlot(gr.sync_block, FigureCanvas):
     elevation < 0 is provided, the marker will turn to an open circle
     on the perimeter at the specified azimuth angle.
     """
+
     def __init__(self, lbl, backgroundColor, dotColor, Parent=None,
                  width=4, height=4, dpi=90):
-        gr.sync_block.__init__(self, name = "MsgPushButton", in_sig = None,
-                               out_sig = None)
+        gr.sync_block.__init__(self, name="MsgPushButton", in_sig=None,
+                               out_sig=None)
 
         self.lbl = lbl
 
@@ -46,15 +48,16 @@ class AzElPlot(gr.sync_block, FigureCanvas):
         self.fig = Figure(figsize=(width, height), dpi=dpi)
         self.fig.patch.set_facecolor(self.backgroundColor)
 
-        self.axes = self.fig.add_subplot(111, polar=True, facecolor=self.backgroundColor)
+        self.axes = self.fig.add_subplot(
+            111, polar=True, facecolor=self.backgroundColor)
 
         # Create an "invisible" line at 90 to set the max for the plot
-        self.axes.plot(np.linspace(0, 2*np.pi, 90), np.ones(90)*90, color=self.scaleColor,
+        self.axes.plot(np.linspace(0, 2 * np.pi, 90), np.ones(90) * 90, color=self.scaleColor,
                        linestyle='')
 
         # Plot line: Initialize out to 90 and blank
         radius = 90
-        self.blackline = self.axes.plot(np.linspace(0, 2*np.pi, 90), np.ones(90)*radius,
+        self.blackline = self.axes.plot(np.linspace(0, 2 * np.pi, 90), np.ones(90) * radius,
                                         color=self.scaleColor, linestyle='-')
         self.reddot = None
 
@@ -71,7 +74,8 @@ class AzElPlot(gr.sync_block, FigureCanvas):
         FigureCanvas.__init__(self, self.fig)
         self.setParent(Parent)
 
-        self.title = self.fig.suptitle(self.lbl, fontsize=8, fontweight='bold', color='black')
+        self.title = self.fig.suptitle(
+            self.lbl, fontsize=8, fontweight='bold', color='black')
 
         FigureCanvas.setSizePolicy(self,
                                    QtWidgets.QSizePolicy.Expanding,
@@ -88,17 +92,20 @@ class AzElPlot(gr.sync_block, FigureCanvas):
             if new_val is not None:
                 if type(new_val) == dict:
                     if 'az' in new_val and 'el' in new_val:
-                        self.updateData(float(new_val['az']), float(new_val['el']))
+                        self.updateData(
+                            float(new_val['az']), float(new_val['el']))
                     else:
-                        gr.log.error("az and el keys were not found in the dictionary.")
+                        gr.log.error(
+                            "az and el keys were not found in the dictionary.")
                 else:
                     gr.log.error("Value received was not a dictionary.  Expecting a dictionary "
                                  "in the car message component with az and el keys.")
             else:
                 gr.log.error("The CAR section of the inbound message was None.  "
-                      "This part should contain the dictionary with 'az' and 'el' float keys.")
+                             "This part should contain the dictionary with 'az' and 'el' float keys.")
         except Exception as e:
-            gr.log.error("[AzElPlot] Error with message conversion: %s" % str(e))
+            gr.log.error(
+                "[AzElPlot] Error with message conversion: %s" % str(e))
             if new_val is not None:
                 gr.log.error(str(new_val))
 
@@ -116,13 +123,12 @@ class AzElPlot(gr.sync_block, FigureCanvas):
 
             convertedElevation = 90.0 - elevation
             # Note: +azimuth for the plot is measured counter-clockwise, so need to reverse it.
-            self.reddot = self.axes.plot(-azimuth * math.pi/180.0, convertedElevation, self.dotColor,
+            self.reddot = self.axes.plot(-azimuth * math.pi / 180.0, convertedElevation, self.dotColor,
                                          markersize=8)
         else:
             # It's below the horizon.  Show an open circle at the perimeter
             elevation = 0.0
-            self.reddot = self.axes.plot(-azimuth * math.pi/180.0, 89.0, self.dotColor,
+            self.reddot = self.axes.plot(-azimuth * math.pi / 180.0, 89.0, self.dotColor,
                                          markerfacecolor="None", markersize=16, fillstyle=None)
 
         self.draw()
-

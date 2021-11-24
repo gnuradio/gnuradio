@@ -13,6 +13,7 @@ from PyQt5 import Qt
 from gnuradio import gr
 import pmt
 
+
 class MsgPushButton(gr.sync_block, Qt.QPushButton):
     """
     This block creates a variable push button that creates a message
@@ -20,8 +21,10 @@ class MsgPushButton(gr.sync_block, Qt.QPushButton):
     the label. You can define both the output message pmt name as
     well as the value and value type.
     """
+
     def __init__(self, lbl, msgName, msgValue, relBackColor, relFontColor):
-        gr.sync_block.__init__(self, name="MsgPushButton", in_sig=None, out_sig=None)
+        gr.sync_block.__init__(self, name="MsgPushButton",
+                               in_sig=None, out_sig=None)
         Qt.QPushButton.__init__(self, lbl)
 
         self.lbl = lbl
@@ -44,13 +47,13 @@ class MsgPushButton(gr.sync_block, Qt.QPushButton):
     def onBtnClicked(self, pressed):
         if type(self.msgValue) == int:
             self.message_port_pub(pmt.intern("pressed"),
-                pmt.cons(pmt.intern(self.msgName), pmt.from_long(self.msgValue)))
+                                  pmt.cons(pmt.intern(self.msgName), pmt.from_long(self.msgValue)))
         elif type(self.msgValue) == float:
             self.message_port_pub(pmt.intern("pressed"),
-                pmt.cons(pmt.intern(self.msgName), pmt.from_double(self.msgValue)))
+                                  pmt.cons(pmt.intern(self.msgName), pmt.from_double(self.msgValue)))
         elif type(self.msgValue) == str:
             self.message_port_pub(pmt.intern("pressed"),
-                pmt.cons(pmt.intern(self.msgName), pmt.intern(self.msgValue)))
+                                  pmt.cons(pmt.intern(self.msgName), pmt.intern(self.msgValue)))
         elif type(self.msgValue) == bool:
             self.message_port_pub(pmt.intern("pressed"),
-                pmt.cons(pmt.intern(self.msgName), pmt.from_bool(self.msgValue)))
+                                  pmt.cons(pmt.intern(self.msgName), pmt.from_bool(self.msgValue)))
