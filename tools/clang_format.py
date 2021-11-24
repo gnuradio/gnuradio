@@ -126,8 +126,8 @@ class ClangFormat(object):
         if self.path is None or not os.path.isfile(
                 self.path) or not self._validate_version():
             print(
-                "ERROR:clang-format not found in $PATH, please install clang-format "
-                + CLANG_FORMAT_VERSION)
+                "ERROR:clang-format not found in $PATH, please install clang-format " +
+                CLANG_FORMAT_VERSION)
             raise NameError("No suitable clang-format found")
         self.print_lock = threading.Lock()
 
@@ -140,8 +140,8 @@ class ClangFormat(object):
             return True
 
         print(
-            "WARNING: clang-format found in path, but incorrect version found at "
-            + self.path + " with version: " + cf_version)
+            "WARNING: clang-format found in path, but incorrect version found at " +
+            self.path + " with version: " + cf_version)
 
         return False
 
@@ -636,9 +636,9 @@ def _reformat_branch(clang_format, commit_prior_to_reformat,
 
     if not repo.is_ancestor(commit_prior_to_reformat, commit_after_reformat):
         raise ValueError((
-            "Commit Prior to Reformat '%s' is not a valid ancestor of Commit After"
-            + " Reformat '%s' in this repo") % (commit_prior_to_reformat,
-                                                commit_after_reformat))
+            "Commit Prior to Reformat '%s' is not a valid ancestor of Commit After" +
+            " Reformat '%s' in this repo") % (commit_prior_to_reformat,
+                                              commit_after_reformat))
 
     # Validate the user is on a local branch that has the right merge base
     if repo.is_detached():
@@ -791,7 +791,8 @@ def parse_args():
         "--clang-format",
         default="clang-format",
         help="clang-format binary")
-    subparsers = parser.add_subparsers(help="clang-format action", dest="action")
+    subparsers = parser.add_subparsers(
+        help="clang-format action", dest="action")
     subparsers.required = True
     lint_parser = subparsers.add_parser(
         "lint", help="Lint-only (no modifications)")
