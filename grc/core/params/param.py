@@ -18,6 +18,7 @@ from .template_arg import TemplateArg
 
 attributed_str = type('attributed_str', (str,), {})
 
+
 @setup_names
 class Param(Element):
 
@@ -73,12 +74,14 @@ class Param(Element):
         options.attributes = collections.defaultdict(dict)
 
         padding = [''] * max(len(values), len(labels))
-        attributes = {key: value + padding for key, value in attributes.items()}
+        attributes = {key: value + padding for key,
+                      value in attributes.items()}
 
         for i, option in enumerate(values):
             # Test against repeated keys
             if option in options:
-                raise KeyError('Value "{}" already exists in options'.format(option))
+                raise KeyError(
+                    'Value "{}" already exists in options'.format(option))
             # get label
             try:
                 label = str(labels[i])
@@ -86,7 +89,8 @@ class Param(Element):
                 label = str(option)
             # Store the option
             options[option] = label
-            options.attributes[option] = {attrib: values[i] for attrib, values in attributes.items()}
+            options.attributes[option] = {attrib: values[i]
+                                          for attrib, values in attributes.items()}
 
         default = next(iter(options)) if options else ''
         if not self.value:
@@ -151,12 +155,13 @@ class Param(Element):
         """
         Element.validate(self)
         if self.dtype not in Constants.PARAM_TYPE_NAMES:
-            self.add_error_message('Type "{}" is not a possible type.'.format(self.dtype))
+            self.add_error_message(
+                'Type "{}" is not a possible type.'.format(self.dtype))
 
         validator = dtypes.validators.get(self.dtype, None)
         if self._init and validator:
             try:
-                validator(self,self.parent_flowgraph.get_imported_names())
+                validator(self, self.parent_flowgraph.get_imported_names())
             except dtypes.ValidateError as e:
                 self.add_error_message(str(e))
 
@@ -207,12 +212,14 @@ class Param(Element):
             if expr:
                 try:
                     if isinstance(expr, str) and self.is_float(expr[:-1]):
-                            scale_factor = expr[-1:]
-                            if scale_factor in self.scale:
-                                expr = str(float(expr[:-1])*self.scale[scale_factor])
+                        scale_factor = expr[-1:]
+                        if scale_factor in self.scale:
+                            expr = str(float(expr[:-1]) *
+                                       self.scale[scale_factor])
                     value = self.parent_flowgraph.evaluate(expr)
                 except Exception as e:
-                    raise Exception('Value "{}" cannot be evaluated:\n{}'.format(expr, e))
+                    raise Exception(
+                        'Value "{}" cannot be evaluated:\n{}'.format(expr, e))
             else:
                 value = None   # No parameter value provided
             if dtype == 'hex':
@@ -230,7 +237,8 @@ class Param(Element):
             try:
                 value = self.parent.parent.evaluate(expr)
             except Exception as value:
-                raise Exception('Value "{}" cannot be evaluated:\n{}'.format(expr, value))
+                raise Exception(
+                    'Value "{}" cannot be evaluated:\n{}'.format(expr, value))
             if not isinstance(value, Constants.VECTOR_TYPES):
                 self._lisitify_flag = True
                 value = [value]
@@ -339,7 +347,8 @@ class Param(Element):
             e = self.parent_flowgraph.evaluate(pos)
 
             if not isinstance(e, (list, tuple)) or len(e) not in (2, 4) or not all(isinstance(ei, int) for ei in e):
-                raise Exception('Invalid GUI Hint entered: {e!r} (Must be a list of {{2,4}} non-negative integers).'.format(e=e))
+                raise Exception(
+                    'Invalid GUI Hint entered: {e!r} (Must be a list of {{2,4}} non-negative integers).'.format(e=e))
 
             if len(e) == 2:
                 row, col = e
@@ -348,10 +357,12 @@ class Param(Element):
                 row, col, row_span, col_span = e
 
             if (row < 0) or (col < 0):
-                raise Exception('Invalid GUI Hint entered: {e!r} (non-negative integers only).'.format(e=e))
+                raise Exception(
+                    'Invalid GUI Hint entered: {e!r} (non-negative integers only).'.format(e=e))
 
             if (row_span < 1) or (col_span < 1):
-                raise Exception('Invalid GUI Hint entered: {e!r} (positive row/column span required).'.format(e=e))
+                raise Exception(
+                    'Invalid GUI Hint entered: {e!r} (positive row/column span required).'.format(e=e))
 
             return row, col, row_span, col_span
 
@@ -360,7 +371,8 @@ class Param(Element):
                     if block.key == 'qtgui_tab_widget' and block.name == tab)
             tab_block = next(iter(tabs), None)
             if not tab_block:
-                raise Exception('Invalid tab name entered: {tab} (Tab name not found).'.format(tab=tab))
+                raise Exception(
+                    'Invalid tab name entered: {tab} (Tab name not found).'.format(tab=tab))
 
             tab_index_size = int(tab_block.params['num_tabs'].value)
             if index >= tab_index_size:
@@ -369,7 +381,8 @@ class Param(Element):
 
         # Collision Detection
         def collision_detection(row, col, row_span, col_span):
-            my_parent = '{tab}@{index}'.format(tab=tab, index=index) if tab else 'main'
+            my_parent = '{tab}@{index}'.format(tab=tab,
+                                               index=index) if tab else 'main'
             # Calculate hostage cells
             for r in range(row, row + row_span):
                 for c in range(col, col + col_span):
@@ -378,7 +391,8 @@ class Param(Element):
             for other in self.get_all_params('gui_hint'):
                 if other is self:
                     continue
-                collision = next(iter(self.hostage_cells & other.hostage_cells), None)
+                collision = next(
+                    iter(self.hostage_cells & other.hostage_cells), None)
                 if collision:
                     raise Exception('Block {block!r} is also using parent {parent!r}, cell {cell!r}.'.format(
                         block=other.parent_block.name, parent=collision[0], cell=collision[1]
@@ -390,7 +404,8 @@ class Param(Element):
             if not pos:
                 layout = '{tab}_layout_{index}'.format(tab=tab, index=index)
             else:
-                layout = '{tab}_grid_layout_{index}'.format(tab=tab, index=index)
+                layout = '{tab}_grid_layout_{index}'.format(
+                    tab=tab, index=index)
         else:
             if not pos:
                 layout = 'top_layout'
@@ -412,8 +427,8 @@ class Param(Element):
                         self.{layout}.setColumnStretch(c, 1)
                 """.strip('\n')).format(
                     layout=layout, widget=widget,
-                    row=row, row_span=row_span, row_end=row+row_span,
-                    col=col, col_span=col_span, col_end=col+col_span,
+                    row=row, row_span=row_span, row_end=row + row_span,
+                    col=col, col_span=col_span, col_end=col + col_span,
                 )
             elif self.parent_flowgraph.get_option('output_language') == 'cpp':
                 widget_str = textwrap.dedent("""
@@ -424,17 +439,19 @@ class Param(Element):
                         {layout}->setColumnStretch(c, 1);
                 """.strip('\n')).format(
                     layout=layout, widget=widget,
-                    row=row, row_span=row_span, row_end=row+row_span,
-                    col=col, col_span=col_span, col_end=col+col_span,
+                    row=row, row_span=row_span, row_end=row + row_span,
+                    col=col, col_span=col_span, col_end=col + col_span,
                 )
             else:
                 widget_str = ''
 
         else:
             if self.parent_flowgraph.get_option('output_language') == 'python':
-                widget_str = 'self.{layout}.addWidget({widget})'.format(layout=layout, widget=widget)
+                widget_str = 'self.{layout}.addWidget({widget})'.format(
+                    layout=layout, widget=widget)
             elif self.parent_flowgraph.get_option('output_language') == 'cpp':
-                widget_str = '{layout}->addWidget({widget});'.format(layout=layout, widget=widget)
+                widget_str = '{layout}->addWidget({widget});'.format(
+                    layout=layout, widget=widget)
             else:
                 widget_str = ''
 

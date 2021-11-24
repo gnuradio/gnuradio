@@ -85,10 +85,10 @@ class Namespace(object):
             key = "{}.{}".format(prefix, name)
             if prefix == "app":
                 pass
-                #self.app.add_action(action)
+                # self.app.add_action(action)
             elif prefix == "win":
                 pass
-                #self.win.add_action(action)
+                # self.win.add_action(action)
 
         #log.debug("Registering action as '{}'".format(key))
         self._actions[key] = action
@@ -132,7 +132,7 @@ class Namespace(object):
 class Action(Gio.SimpleAction):
 
     # Change these to normal python properties.
-    #prefs_name
+    # prefs_name
 
     def __init__(self,
                  name,
@@ -295,7 +295,7 @@ FLOW_GRAPH_DUPLICATE = actions.register(
     "app.flowgraph.duplicate",
     label='_Duplicate',
     tooltip='Create a duplicate of current flow graph',
-    #stock_id=Gtk.STOCK_COPY,
+    # stock_id=Gtk.STOCK_COPY,
     keypresses=["<Ctrl><Shift>d"],
 )
 FLOW_GRAPH_CLOSE = actions.register(
@@ -433,26 +433,27 @@ BLOCK_BYPASS = actions.register(
     keypresses=["b"],
 )
 ZOOM_IN = actions.register("win.zoom_in",
-    label='Zoom In',
-    tooltip='Increase the canvas zoom level',
-    keypresses=["<Ctrl>plus","<Ctrl>equal","<Ctrl>KP_Add"],
-)
+                           label='Zoom In',
+                           tooltip='Increase the canvas zoom level',
+                           keypresses=["<Ctrl>plus",
+                                       "<Ctrl>equal", "<Ctrl>KP_Add"],
+                           )
 ZOOM_OUT = actions.register("win.zoom_out",
-    label='Zoom Out',
-    tooltip='Decrease the canvas zoom level',
-    keypresses=["<Ctrl>minus","<Ctrl>KP_Subtract"],
-)
+                            label='Zoom Out',
+                            tooltip='Decrease the canvas zoom level',
+                            keypresses=["<Ctrl>minus", "<Ctrl>KP_Subtract"],
+                            )
 ZOOM_RESET = actions.register("win.zoom_reset",
-    label='Reset Zoom',
-    tooltip='Reset the canvas zoom level',
-    keypresses=["<Ctrl>0","<Ctrl>KP_0"],
-)
+                              label='Reset Zoom',
+                              tooltip='Reset the canvas zoom level',
+                              keypresses=["<Ctrl>0", "<Ctrl>KP_0"],
+                              )
 TOGGLE_SNAP_TO_GRID = actions.register("win.snap_to_grid",
-    label='_Snap to grid',
-    tooltip='Snap blocks to a grid for an easier connection alignment',
-    preference_name='snap_to_grid',
-    default=True,
-)
+                                       label='_Snap to grid',
+                                       tooltip='Snap blocks to a grid for an easier connection alignment',
+                                       preference_name='snap_to_grid',
+                                       default=True,
+                                       )
 TOGGLE_HIDE_DISABLED_BLOCKS = actions.register(
     "win.hide_disabled",
     label='Hide _Disabled Blocks',
@@ -493,8 +494,7 @@ TOGGLE_SHOW_BLOCK_IDS = actions.register(
 TOGGLE_FLOW_GRAPH_VAR_EDITOR = actions.register(
     "win.toggle_variable_editor",
     label='Show _Variable Editor',
-    tooltip=
-    'Show the variable editor. Modify variables and imports in this flow graph',
+    tooltip='Show the variable editor. Modify variables and imports in this flow graph',
     icon_name='accessories-text-editor',
     default=True,
     keypresses=["<Ctrl>e"],

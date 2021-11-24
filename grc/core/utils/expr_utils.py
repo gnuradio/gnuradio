@@ -7,6 +7,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 
+import ast
 import string
 
 
@@ -64,12 +65,10 @@ def sort_objects(objects, get_id, get_expr):
     return [id2obj[id] for id in sorted_ids]
 
 
-import ast
-
-
 def dependencies(expr, names=None):
     node = ast.parse(expr, mode='eval')
-    used_ids = frozenset([n.id for n in ast.walk(node) if isinstance(n, ast.Name)])
+    used_ids = frozenset(
+        [n.id for n in ast.walk(node) if isinstance(n, ast.Name)])
     return used_ids & names if names else used_ids
 
 
@@ -91,8 +90,6 @@ def sort_objects2(objects, id_getter, expr_getter, check_circular=True):
             defined_ids.add(id_getter(obj))  # define this one
 
     return objects
-
-
 
 
 VAR_CHARS = string.ascii_letters + string.digits + '_'
@@ -205,7 +202,8 @@ def _sort_variables(exprs):
     # Determine dependency order
     while var_graph.get_nodes():
         # Get a list of nodes with no edges
-        indep_vars = [var for var in var_graph.get_nodes() if not var_graph.get_edges(var)]
+        indep_vars = [var for var in var_graph.get_nodes()
+                      if not var_graph.get_edges(var)]
         if not indep_vars:
             raise Exception('circular dependency caught in sort_variables')
         # Add the indep vars to the end of the list

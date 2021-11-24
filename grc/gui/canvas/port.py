@@ -68,9 +68,11 @@ class Port(CorePort, Drawable):
             color = colors.PORT_TYPE_TO_COLOR.get('message')
         else:
             self._font_color[-1] = 1.0
-            color = colors.PORT_TYPE_TO_COLOR.get(self.dtype) or colors.PORT_TYPE_TO_COLOR.get('')
+            color = colors.PORT_TYPE_TO_COLOR.get(
+                self.dtype) or colors.PORT_TYPE_TO_COLOR.get('')
             if self.vlen > 1:
-                dark = (0, 0, 30 / 255.0, 50 / 255.0, 70 / 255.0)[min(4, self.vlen)]
+                dark = (0, 0, 30 / 255.0, 50 / 255.0,
+                        70 / 255.0)[min(4, self.vlen)]
                 color = tuple(max(c - dark, 0) for c in color)
         self._bg_color = color
         self._border_color = tuple(max(c - 0.3, 0) for c in color)
@@ -84,8 +86,8 @@ class Port(CorePort, Drawable):
         self.bounds_from_area(self._area)
 
         self._connector_coordinate = {
-            0:   (self.width, self.height / 2),
-            90:  (self.height / 2, 0),
+            0: (self.width, self.height / 2),
+            90: (self.height / 2, 0),
             180: (0, self.height / 2),
             270: (self.height / 2, self.width)
         }[self.connector_direction]
@@ -112,7 +114,8 @@ class Port(CorePort, Drawable):
         label_width, label_height = self.label_layout.get_size()
 
         self.width = 2 * Constants.PORT_LABEL_PADDING + label_width / Pango.SCALE
-        self.height = (2 * Constants.PORT_LABEL_PADDING + label_height*(3 if self.dtype == 'bus' else 1)) / Pango.SCALE
+        self.height = (2 * Constants.PORT_LABEL_PADDING + label_height *
+                       (3 if self.dtype == 'bus' else 1)) / Pango.SCALE
         self._label_layout_offsets = [0, Constants.PORT_LABEL_PADDING]
 
         self.height += self.height % 2  # uneven height

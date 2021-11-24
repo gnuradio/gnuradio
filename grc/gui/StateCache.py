@@ -9,6 +9,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 from . import Actions
 from .Constants import STATE_CACHE_SIZE
 
+
 class StateCache(object):
     """
     The state cache is an interface to a list to record data/states and to revert to previous states.
@@ -23,7 +24,7 @@ class StateCache(object):
         Args:
             initial_state: the initial state (nested data)
         """
-        self.states = [None] * STATE_CACHE_SIZE #fill states
+        self.states = [None] * STATE_CACHE_SIZE  # fill states
         self.current_state_index = 0
         self.num_prev_states = 0
         self.num_next_states = 0
@@ -38,10 +39,12 @@ class StateCache(object):
         Args:
             state: the new state
         """
-        self.current_state_index = (self.current_state_index + 1)%STATE_CACHE_SIZE
+        self.current_state_index = (
+            self.current_state_index + 1) % STATE_CACHE_SIZE
         self.states[self.current_state_index] = state
         self.num_prev_states = self.num_prev_states + 1
-        if self.num_prev_states == STATE_CACHE_SIZE: self.num_prev_states = STATE_CACHE_SIZE - 1
+        if self.num_prev_states == STATE_CACHE_SIZE:
+            self.num_prev_states = STATE_CACHE_SIZE - 1
         self.num_next_states = 0
         self.update_actions()
 
@@ -63,7 +66,8 @@ class StateCache(object):
             the previous state or None
         """
         if self.num_prev_states > 0:
-            self.current_state_index = (self.current_state_index + STATE_CACHE_SIZE -1)%STATE_CACHE_SIZE
+            self.current_state_index = (
+                self.current_state_index + STATE_CACHE_SIZE - 1) % STATE_CACHE_SIZE
             self.num_next_states = self.num_next_states + 1
             self.num_prev_states = self.num_prev_states - 1
             return self.get_current_state()
@@ -77,7 +81,8 @@ class StateCache(object):
             the next state or None
         """
         if self.num_next_states > 0:
-            self.current_state_index = (self.current_state_index + 1)%STATE_CACHE_SIZE
+            self.current_state_index = (
+                self.current_state_index + 1) % STATE_CACHE_SIZE
             self.num_next_states = self.num_next_states - 1
             self.num_prev_states = self.num_prev_states + 1
             return self.get_current_state()

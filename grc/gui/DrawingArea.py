@@ -79,10 +79,10 @@ class DrawingArea(Gtk.DrawingArea):
         self.set_can_focus(True)
         self.connect('focus-out-event', self._handle_focus_lost_event)
 
-
     ##########################################################################
     # Handlers
     ##########################################################################
+
     def _handle_drag_data_received(self, widget, drag_context, x, y, selection_data, info, time):
         """
         Handle a drag and drop by adding a block at the given coordinate.
@@ -96,7 +96,7 @@ class DrawingArea(Gtk.DrawingArea):
         self._set_zoom_factor(zoom_factor)
 
     def zoom_out(self):
-        change = 1/1.2 
+        change = 1 / 1.2
         zoom_factor = max(self.zoom_factor * change, 0.1)
         self._set_zoom_factor(zoom_factor)
 

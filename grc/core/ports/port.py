@@ -34,17 +34,21 @@ class Port(Element):
         self._dir = direction
         self.key = id
         if not label:
-            label = id if not id.isdigit() else {'sink': 'in', 'source': 'out'}[direction]
+            label = id if not id.isdigit() else {'sink': 'in', 'source': 'out'}[
+                direction]
         if dtype == 'bus':
             # Look for existing busses to give proper index
-            busses = [p for p in self.parent.ports() if p._dir == self._dir and p.dtype == 'bus']
+            busses = [p for p in self.parent.ports() if p._dir ==
+                      self._dir and p.dtype == 'bus']
             bus_structure = self.parent.current_bus_structure[self._dir]
             bus_index = len(busses)
             if len(bus_structure) > bus_index:
-                number = str(len(busses)) + '#' + str(len(bus_structure[bus_index]))
+                number = str(len(busses)) + '#' + \
+                    str(len(bus_structure[bus_index]))
                 label = dtype + number
             else:
-                raise ValueError('Could not initialize bus port due to incompatible bus structure')
+                raise ValueError(
+                    'Could not initialize bus port due to incompatible bus structure')
 
         self.name = self._base_name = label
 
@@ -102,7 +106,8 @@ class Port(Element):
             self.add_error_message('Port is not connected.')
 
         if self.dtype not in Constants.TYPE_TO_SIZEOF.keys():
-            self.add_error_message('Type "{}" is not a possible type.'.format(self.dtype))
+            self.add_error_message(
+                'Type "{}" is not a possible type.'.format(self.dtype))
 
         try:
             domain = platform.domains[self.domain]
@@ -113,7 +118,8 @@ class Port(Element):
                 self.add_error_message('Domain "{}" can have only one downstream block'
                                        ''.format(self.domain))
         except KeyError:
-            self.add_error_message('Domain key "{}" is not registered.'.format(self.domain))
+            self.add_error_message(
+                'Domain key "{}" is not registered.'.format(self.domain))
 
     def rewrite(self):
         del self.vlen
@@ -150,9 +156,11 @@ class Port(Element):
 
         try:
             port = find_port(_virtual_connections.upstream_ports) or \
-                   find_port(_virtual_connections.downstream_ports)
-            self.set_evaluated('dtype', port.dtype)  # we don't want to override the template
-            self.set_evaluated('vlen', port.vlen)  # we don't want to override the template
+                find_port(_virtual_connections.downstream_ports)
+            # we don't want to override the template
+            self.set_evaluated('dtype', port.dtype)
+            # we don't want to override the template
+            self.set_evaluated('vlen', port.vlen)
             self.domain = port.domain
         except AttributeError:
             self.domain = Constants.DEFAULT_DOMAIN
@@ -206,7 +214,7 @@ class Port(Element):
         enabled: None for all, True for enabled only, False for disabled only
         """
         for con in self.parent_flowgraph.connections:
-            #TODO clean this up - but how to get past this validation
+            # TODO clean this up - but how to get past this validation
             # things don't compare simply with an x in y because
             # bus ports are created differently.
             port_in_con = False
@@ -242,5 +250,6 @@ class Port(Element):
             if bus_structure:
                 busses = [i for i in get_ports if i.dtype == 'bus']
                 bus_index = busses.index(self)
-                ports = filter(lambda a: ports.index(a) in bus_structure[bus_index], ports)
+                ports = filter(lambda a: ports.index(
+                    a) in bus_structure[bus_index], ports)
             return ports

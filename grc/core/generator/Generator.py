@@ -5,7 +5,6 @@
 #
 
 
-
 from .hier_block import HierBlockGenerator, QtHierBlockGenerator
 from .top_block import TopBlockGenerator
 from .cpp_top_block import CppTopBlockGenerator

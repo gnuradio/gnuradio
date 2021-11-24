@@ -79,7 +79,8 @@ def build_ports(ports_raw, direction):
 
         port_id = port.setdefault('id', str(next(stream_port_ids)))
         if port_id in port_ids:
-            raise Exception('Port id "{}" already exists in {}s'.format(port_id, direction))
+            raise Exception(
+                'Port id "{}" already exists in {}s'.format(port_id, direction))
         port_ids.add(port_id)
 
         ports.append(port)
@@ -137,16 +138,19 @@ def _single_mako_expr(value, block_id):
         return None
     value = value.strip()
     if not (value.startswith('${') and value.endswith('}')):
-        raise ValueError('{} is not a mako substitution in {}'.format(value, block_id))
+        raise ValueError(
+            '{} is not a mako substitution in {}'.format(value, block_id))
     return value[2:-1].strip()
 
 
 def _validate_option_attributes(param_data, block_id):
     if param_data['dtype'] != 'enum':
-        send_warning('{} - option_attributes are for enums only, ignoring'.format(block_id))
+        send_warning(
+            '{} - option_attributes are for enums only, ignoring'.format(block_id))
         del param_data['option_attributes']
     else:
         for key in list(param_data['option_attributes'].keys()):
             if key in dir(str):
                 del param_data['option_attributes'][key]
-                send_warning('{} - option_attribute "{}" overrides str, ignoring'.format(block_id, key))
+                send_warning(
+                    '{} - option_attribute "{}" overrides str, ignoring'.format(block_id, key))

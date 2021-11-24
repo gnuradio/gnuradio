@@ -41,7 +41,8 @@ class FileDialogHelper(Gtk.FileChooserDialog, object):
 
         Gtk.FileChooserDialog.__init__(self, title=self.title, action=self.action,
                                        transient_for=parent)
-        self.add_buttons('gtk-cancel', Gtk.ResponseType.CANCEL, ok_stock, Gtk.ResponseType.OK)
+        self.add_buttons('gtk-cancel', Gtk.ResponseType.CANCEL,
+                         ok_stock, Gtk.ResponseType.OK)
         self.set_select_multiple(False)
         self.set_local_only(True)
 
@@ -49,12 +50,14 @@ class FileDialogHelper(Gtk.FileChooserDialog, object):
         self.current_file_path = current_file_path or path.join(
             Constants.DEFAULT_FILE_PATH, Constants.NEW_FLOGRAPH_TITLE + Constants.FILE_EXTENSION)
 
-        self.set_current_folder(path.dirname(current_file_path))  # current directory
+        self.set_current_folder(path.dirname(
+            current_file_path))  # current directory
         self.setup_filters()
 
     def setup_filters(self, filters=None):
         set_default = True
-        filters = filters or ([(self.filter_label, self.filter_ext)] if self.filter_label else [])
+        filters = filters or (
+            [(self.filter_label, self.filter_ext)] if self.filter_label else [])
         filters.append(('All Files', ''))
         for label, ext in filters:
             if not label:
@@ -81,7 +84,8 @@ class SaveFileDialog(FileDialogHelper):
 
     def __init__(self, parent, current_file_path):
         super(SaveFileDialog, self).__init__(parent, current_file_path)
-        self.set_current_name(path.splitext(path.basename(self.current_file_path))[0] + self.filter_ext)
+        self.set_current_name(path.splitext(path.basename(
+            self.current_file_path))[0] + self.filter_ext)
         self.set_create_folders(True)
         self.set_do_overwrite_confirmation(True)
 
@@ -94,7 +98,8 @@ class OpenFileDialog(FileDialogHelper):
         Dialogs.MessageDialogWrapper(
             self.parent,
             Gtk.MessageType.WARNING, Gtk.ButtonsType.CLOSE, 'Cannot Open!',
-            'File <b>{filename}</b> Does not Exist!'.format(filename=Utils.encode(filename)),
+            'File <b>{filename}</b> Does not Exist!'.format(
+                filename=Utils.encode(filename)),
         ).run_and_destroy()
 
     def get_filename(self):
@@ -145,7 +150,8 @@ class SaveConsole(SaveFileDialog):
 
 class SaveScreenShot(SaveFileDialog):
     title = 'Save a Flow Graph Screen Shot...'
-    filters = [('PDF Files', '.pdf'), ('PNG Files', '.png'), ('SVG Files', '.svg')]
+    filters = [('PDF Files', '.pdf'), ('PNG Files', '.png'),
+               ('SVG Files', '.svg')]
     filter_ext = '.pdf'  # the default
 
     def __init__(self, parent, current_file_path=''):
@@ -154,7 +160,8 @@ class SaveScreenShot(SaveFileDialog):
         self.config = Gtk.Application.get_default().config
 
         self._button = button = Gtk.CheckButton(label='Background transparent')
-        self._button.set_active(self.config.screen_shot_background_transparent())
+        self._button.set_active(
+            self.config.screen_shot_background_transparent())
         self.set_extra_widget(button)
 
     def setup_filters(self, filters=None):
@@ -164,7 +171,8 @@ class SaveScreenShot(SaveFileDialog):
         Dialogs.MessageDialogWrapper(
             self.parent,
             Gtk.MessageType.ERROR, Gtk.ButtonsType.CLOSE, 'Can not Save!',
-            'File Extension of <b>{filename}</b> not supported!'.format(filename=Utils.encode(filename)),
+            'File Extension of <b>{filename}</b> not supported!'.format(
+                filename=Utils.encode(filename)),
         ).run_and_destroy()
 
     def run(self):
