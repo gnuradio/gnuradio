@@ -23,26 +23,29 @@ from gnuradio import gr, filter
 from . import dtv_python as dtv
 
 # FIXME move these into separate constants module
-ATSC_CHANNEL_BW   = 6.0e6
-ATSC_SYMBOL_RATE  = 4.5e6/286*684 # ~10.76 Mbaud
-ATSC_RRC_SYMS     = 8             # filter kernel extends over 2N+1 symbols
+ATSC_CHANNEL_BW = 6.0e6
+ATSC_SYMBOL_RATE = 4.5e6 / 286 * 684  # ~10.76 Mbaud
+ATSC_RRC_SYMS = 8             # filter kernel extends over 2N+1 symbols
+
 
 class atsc_rx_filter(gr.hier_block2):
     def __init__(self, input_rate, sps):
         gr.hier_block2.__init__(self, "atsc_rx_filter",
-                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-                                gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
+                                # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex),
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex))  # Output signature
 
         # Create matched RX filter with RRC response for fractional
         # interpolator.
         nfilts = 16
-        output_rate = ATSC_SYMBOL_RATE*sps # Desired oversampled sample rate
-        filter_rate = input_rate*nfilts
-        symbol_rate = ATSC_SYMBOL_RATE / 2.0 # One-sided bandwidth of sideband
-        excess_bw = 0.1152 #1.0-(0.5*ATSC_SYMBOL_RATE/ATSC_CHANNEL_BW) # ~10.3%
-        ntaps = int((2*ATSC_RRC_SYMS+1)*sps*nfilts)
+        output_rate = ATSC_SYMBOL_RATE * sps  # Desired oversampled sample rate
+        filter_rate = input_rate * nfilts
+        symbol_rate = ATSC_SYMBOL_RATE / 2.0  # One-sided bandwidth of sideband
+        # 1.0-(0.5*ATSC_SYMBOL_RATE/ATSC_CHANNEL_BW) # ~10.3%
+        excess_bw = 0.1152
+        ntaps = int((2 * ATSC_RRC_SYMS + 1) * sps * nfilts)
         interp = output_rate / input_rate
-        gain = nfilts*symbol_rate/filter_rate
+        gain = nfilts * symbol_rate / filter_rate
         rrc_taps = filter.firdes.root_raised_cosine(gain,             # Filter gain
                                                     filter_rate,      # PFB filter prototype rate
                                                     symbol_rate,      # ATSC symbol rate
