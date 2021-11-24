@@ -20,8 +20,9 @@ except ImportError:
     sys.exit(1)
 
 #import os
-#print os.getpid()
+# print os.getpid()
 #raw_input('Attach gdb and press Enter: ')
+
 
 class my_top_block(gr.top_block):
 
@@ -30,11 +31,11 @@ class my_top_block(gr.top_block):
 
         parser = ArgumentParser()
         parser.add_argument("-O", "--audio-output", default="",
-                          help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
+                            help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
         parser.add_argument("-r", "--sample-rate", type=eng_float, default=48000,
-                          help="set sample rate to RATE %(default)r)")
+                            help="set sample rate to RATE %(default)r)")
         parser.add_argument("-D", "--dont-block", action="store_false", default=True,
-                          dest="ok_to_block")
+                            dest="ok_to_block")
 
         args = parser.parse_args()
         sample_rate = int(args.sample_rate)
@@ -46,7 +47,7 @@ class my_top_block(gr.top_block):
                          args.audio_output,
                          args.ok_to_block)
 
-        self.connect (src0, (dst, 0))
+        self.connect(src0, (dst, 0))
 
 
 if __name__ == '__main__':
