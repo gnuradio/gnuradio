@@ -18,14 +18,14 @@ def setup_parser():
     override this and call the parent function. """
     parser = ArgumentParser()
     parser.add_argument("-c", "--channel", choices=('BEC', 'AWGN'),
-                      help="specify channel, currently BEC or AWGN (default='BEC')",
-                      default='BEC')
+                        help="specify channel, currently BEC or AWGN (default='BEC')",
+                        default='BEC')
     parser.add_argument("-b", "--blocksize", type=int, dest="block_size",
-                      help="specify block size of polar code (default=16)", default=16)
+                        help="specify block size of polar code (default=16)", default=16)
     parser.add_argument("-s", "--design-snr", type=float, dest="design_snr",
-                      help="specify design SNR of polar code (default=0.0)", default=0.0)
+                        help="specify design SNR of polar code (default=0.0)", default=0.0)
     parser.add_argument("-k", "--mu", type=int,
-                      help="specify block size of polar code (default=2)", default=2)
+                        help="specify block size of polar code (default=2)", default=2)
 
     return parser
 
@@ -37,7 +37,7 @@ def main():
     args = parser.parse_args()
 
     z_params = cc.get_z_params(False, args.channel, args.block_size,
-            args.design_snr, args.mu)
+                               args.design_snr, args.mu)
     print(z_params)
 
 

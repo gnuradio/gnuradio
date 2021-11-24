@@ -26,7 +26,7 @@ class test_fecapi_dummy(gr_unittest.TestCase):
 
     def tearDown(self):
         self.tb = None
-        
+
     def test_parallelism0_00(self):
         frame_size = 30
         enc = fec.dummy_encoder_make(frame_size * 8)
@@ -52,7 +52,7 @@ class test_fecapi_dummy(gr_unittest.TestCase):
 
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
-        
+
         self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism0_02(self):
@@ -66,7 +66,7 @@ class test_fecapi_dummy(gr_unittest.TestCase):
 
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
-        
+
         self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism1_00(self):
@@ -113,7 +113,7 @@ class test_fecapi_dummy(gr_unittest.TestCase):
         self.tb.run()
         data_in = self.test.snk_input.data()
         data_out = self.test.snk_output.data()
-        
+
         self.assertSequenceEqualGR(data_in, data_out)
 
     def test_parallelism1_03(self):

@@ -9,7 +9,6 @@
 #
 
 
-
 import numpy
 
 from gnuradio import gr, blocks
@@ -23,9 +22,9 @@ class map_bb(gr.sync_block):
     def __init__(self, bitmap):
         gr.sync_block.__init__(
             self,
-            name = "map_bb",
-            in_sig = [numpy.int8],
-            out_sig = [numpy.int8])
+            name="map_bb",
+            in_sig=[numpy.int8],
+            out_sig=[numpy.int8])
         self.bitmap = bitmap
 
     def work(self, input_items, output_items):
@@ -45,11 +44,13 @@ class _qa_helper(gr.top_block):
         self.data_size = data_size
         self.threading = threading
 
-        self.ext_encoder = extended_encoder(enc, threading=self.threading, puncpat=self.puncpat)
+        self.ext_encoder = extended_encoder(
+            enc, threading=self.threading, puncpat=self.puncpat)
         self.ext_decoder = extended_decoder(dec, threading=self.threading, ann=None,
                                             puncpat=self.puncpat, integration_period=10000)
 
-        self.src = blocks.vector_source_b(data_size*[0, 1, 2, 3, 5, 7, 9, 13, 15, 25, 31, 45, 63, 95, 127], False)
+        self.src = blocks.vector_source_b(
+            data_size * [0, 1, 2, 3, 5, 7, 9, 13, 15, 25, 31, 45, 63, 95, 127], False)
         self.unpack = blocks.unpack_k_bits_bb(8)
         self.map = map_bb([-1, 1])
         self.to_float = blocks.char_to_float(1)
@@ -62,18 +63,19 @@ class _qa_helper(gr.top_block):
         self.connect(self.unpack, self.snk_input)
         self.connect(self.ext_decoder, self.snk_output)
 
+
 if __name__ == '__main__':
     frame_size = 30
-    enc = fec.dummy_encoder_make(frame_size*8)
+    enc = fec.dummy_encoder_make(frame_size * 8)
     #enc = fec.repetition_encoder_make(frame_size*8, 3)
-    dec = fec.dummy_decoder.make(frame_size*8)
+    dec = fec.dummy_decoder.make(frame_size * 8)
 
-    tb = _qa_helper(10*frame_size, enc, dec, None)
+    tb = _qa_helper(10 * frame_size, enc, dec, None)
     tb.run()
 
     errs = 0
-    for i,o in zip(tb.snk_input.data(), tb.snk_output.data()):
-        if i-o != 0:
+    for i, o in zip(tb.snk_input.data(), tb.snk_output.data()):
+        if i - o != 0:
             errs += 1
 
     if errs == 0:

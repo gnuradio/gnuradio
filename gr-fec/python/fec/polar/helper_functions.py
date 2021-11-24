@@ -8,7 +8,8 @@
 
 
 import numpy as np
-import time, sys
+import time
+import sys
 import copy
 
 
@@ -125,8 +126,8 @@ def show_progress_bar(ndone, ntotal):
     percentage = 100. * fract
     ndone_chars = int(nchars * fract)
     nundone_chars = nchars - ndone_chars
-    sys.stdout.write('\r[{0}{1}] {2:5.2f}% ({3} / {4})'.format('=' * ndone_chars, ' ' * nundone_chars, percentage, ndone, ntotal))
-
+    sys.stdout.write('\r[{0}{1}] {2:5.2f}% ({3} / {4})'.format('=' *
+                     ndone_chars, ' ' * nundone_chars, percentage, ndone, ntotal))
 
 
 def mutual_information(w):
@@ -173,7 +174,6 @@ def main():
     n = 6
     m = 2 ** n
 
-
     pos = np.arange(m)
     rev_pos = bit_reverse_vector(pos, n)
     print(pos)
@@ -188,7 +188,6 @@ def main():
 
     a = np.sum(np.sqrt(e * f))
     print(a)
-
 
 
 if __name__ == '__main__':
