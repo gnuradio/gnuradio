@@ -43,6 +43,7 @@ class ModToolRemove(ModTool):
             self.validate()
         else:
             from ..cli import cli_input
+
         def _remove_cc_test_case(filename=None, ed=None):
             """ Special function that removes the occurrences of a qa*.cc file
             from the CMakeLists.txt. """
@@ -56,19 +57,19 @@ class ModToolRemove(ModTool):
                                              fr'^#include "{filename}"\s*$')
                     remove_pattern_from_file(self._file['qalib'],
                                              fr'^\s*s->addTest\(gr::{modname_}::{base}::suite\(\)\);\s*$'
-                                            )
+                                             )
                     self.scm.mark_file_updated(self._file['qalib'])
                 elif ext == '.cc':
                     ed.remove_value('list',
                                     r'\$\{CMAKE_CURRENT_SOURCE_DIR\}/%s' % filename,
                                     to_ignore_start=f'APPEND test_{modname_}_sources')
                     self.scm.mark_file_updated(ed.filename)
-            elif self.info['version'] in ['38','310']:
+            elif self.info['version'] in ['38', '310']:
                 (base, ext) = os.path.splitext(filename)
                 if ext == '.cc':
                     ed.remove_value(
                         'list', filename,
-                        to_ignore_start=f'APPEND test_{modname_}_sources' )
+                        to_ignore_start=f'APPEND test_{modname_}_sources')
                     self.scm.mark_file_updated(ed.filename)
             else:
                 filebase = os.path.splitext(filename)[0]
@@ -92,12 +93,16 @@ class ModToolRemove(ModTool):
             py_files_deleted = self._run_subdir(self.info['pydir'], ('*.py',), ('GR_PYTHON_INSTALL',),
                                                 cmakeedit_func=_remove_py_test_case)
             for f in py_files_deleted:
-                remove_pattern_from_file(self._file['pyinit'], fr'.*import\s+{f[:-3]}.*')
-                remove_pattern_from_file(self._file['pyinit'], fr'.*from\s+{f[:-3]}\s+import.*\n')
+                remove_pattern_from_file(
+                    self._file['pyinit'], fr'.*import\s+{f[:-3]}.*')
+                remove_pattern_from_file(
+                    self._file['pyinit'], fr'.*from\s+{f[:-3]}\s+import.*\n')
 
-            pb_files_deleted = self._run_subdir(os.path.join(self.info['pydir'],'bindings'), ('*.cc',), ('list',))
+            pb_files_deleted = self._run_subdir(os.path.join(
+                self.info['pydir'], 'bindings'), ('*.cc',), ('list',))
 
-            pbdoc_files_deleted = self._run_subdir(os.path.join(self.info['pydir'],'bindings','docstrings'), ('*.h',), ('',))
+            pbdoc_files_deleted = self._run_subdir(os.path.join(
+                self.info['pydir'], 'bindings', 'docstrings'), ('*.h',), ('',))
 
             # Update python_bindings.cc
             blocknames_to_delete = []
@@ -106,22 +111,24 @@ class ModToolRemove(ModTool):
                 blocknames_to_delete.append(self.info['blockname'])
             elif self.info['pattern']:
                 # A regex resembling one or several blocks were given
-                blocknames_to_delete = get_block_names(self.info['pattern'], self.info['modname']) 
+                blocknames_to_delete = get_block_names(
+                    self.info['pattern'], self.info['modname'])
             else:
                 raise ModToolException("No block name or regex was specified!")
             for blockname in blocknames_to_delete:
                 ed = CPPFileEditor(self._file['ccpybind'])
-                ed.remove_value('// BINDING_FUNCTION_PROTOTYPES(', '// ) END BINDING_FUNCTION_PROTOTYPES', 
-                    'void bind_' + blockname + '(py::module& m);')
-                ed.remove_value('// BINDING_FUNCTION_CALLS(', '// ) END BINDING_FUNCTION_CALLS', 
-                    'bind_' + blockname + '(m);')
+                ed.remove_value('// BINDING_FUNCTION_PROTOTYPES(', '// ) END BINDING_FUNCTION_PROTOTYPES',
+                                'void bind_' + blockname + '(py::module& m);')
+                ed.remove_value('// BINDING_FUNCTION_CALLS(', '// ) END BINDING_FUNCTION_CALLS',
+                                'bind_' + blockname + '(m);')
                 ed.write()
 
         if not self.skip_subdirs['lib']:
             self._run_subdir('lib', ('*.cc', '*.h'), ('add_library', 'list'),
                              cmakeedit_func=_remove_cc_test_case)
         if not self.skip_subdirs['include']:
-            incl_files_deleted = self._run_subdir(self.info['includedir'], ('*.h',), ('install',))
+            incl_files_deleted = self._run_subdir(
+                self.info['includedir'], ('*.h',), ('install',))
         if not self.skip_subdirs['grc']:
             self._run_subdir('grc', ('*.yml',), ('install',))
 
@@ -146,9 +153,9 @@ class ModToolRemove(ModTool):
             blockname_pattern = ''
             if path == self.info['pydir']:
                 blockname_pattern = f"^(qa_)?{self.info['blockname']}.py$"
-            elif path == os.path.join(self.info['pydir'],'bindings'):
+            elif path == os.path.join(self.info['pydir'], 'bindings'):
                 blockname_pattern = f"^{self.info['blockname']}_python.cc$"
-            elif path == os.path.join(self.info['pydir'],'bindings','docstrings'):
+            elif path == os.path.join(self.info['pydir'], 'bindings', 'docstrings'):
                 blockname_pattern = f"^{self.info['blockname']}_pydoc_template.h$"
             elif path == 'lib':
                 blockname_pattern = f"^{self.info['blockname']}_impl(\\.h|\\.cc)$"
@@ -173,7 +180,8 @@ class ModToolRemove(ModTool):
         for f in files_filt:
             b = os.path.basename(f)
             if not yes and self.cli:
-                ans = cli_input(f"Really delete {f}? [Y/n/a/q]: ").lower().strip()
+                ans = cli_input(
+                    f"Really delete {f}? [Y/n/a/q]: ").lower().strip()
                 if ans == 'a':
                     yes = True
                 if ans == 'q':
@@ -187,7 +195,8 @@ class ModToolRemove(ModTool):
 
             if (os.path.exists(f'{path}/CMakeLists.txt')):
                 ed = CMakeFileEditor(f'{path}/CMakeLists.txt')
-                logger.info(f"Deleting occurrences of {b} from {path}/CMakeLists.txt...")
+                logger.info(
+                    f"Deleting occurrences of {b} from {path}/CMakeLists.txt...")
                 for var in makefile_vars:
                     ed.remove_value(var, b)
                 if cmakeedit_func is not None:

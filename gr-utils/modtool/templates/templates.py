@@ -389,7 +389,7 @@ class ${blockname}(${parenttype}):
         # ninputs is the number of input connections
         # setup size of input_items[i] for work call
         # the required number of input items is returned
-        #   in a list where each element represents the 
+        #   in a list where each element represents the
         #   number of required items for each input
         ninput_items_required = [noutput_items] * ninputs
         return ninput_items_required
@@ -599,7 +599,7 @@ outputs:
 file_format: 1
 '''
 
-## Old stuff
+# Old stuff
 # C++ file of a GR block
 Templates['block_cpp36'] = '''/* -*- c++ -*- */
 ${str_to_fancyc_comment(license)}

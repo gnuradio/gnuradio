@@ -20,10 +20,12 @@ from .base import ModTool, ModToolException, validate_name
 
 logger = logging.getLogger(__name__)
 
+
 class ModToolNewModule(ModTool):
     """ Create a new out-of-tree module """
     name = 'newmod'
     description = 'Create new empty module, use add to add blocks.'
+
     def __init__(self, module_name=None, srcdir=None, **kwargs):
         ModTool.__init__(self, None, module_name, **kwargs)
         # Don't call ModTool._validate(), that assumes an existing module.
@@ -33,7 +35,8 @@ class ModToolNewModule(ModTool):
     def assign(self):
         self.dir = os.path.join(self.directory, f'gr-{self.info["modname"]}')
         if self.srcdir is None:
-            self.srcdir = os.path.join(gr.prefix(),'share','gnuradio','modtool','templates','gr-newmod')
+            self.srcdir = os.path.join(
+                gr.prefix(), 'share', 'gnuradio', 'modtool', 'templates', 'gr-newmod')
 
     def validate(self):
         """ Validates the arguments """
@@ -43,11 +46,12 @@ class ModToolNewModule(ModTool):
         try:
             os.stat(self.dir)
         except OSError:
-            pass # This is what should happen
+            pass  # This is what should happen
         else:
             raise ModToolException('The given directory exists.')
         if not os.path.isdir(self.srcdir):
-            raise ModToolException('Could not find gr-newmod source dir \'' + self.srcdir + '\'')
+            raise ModToolException(
+                'Could not find gr-newmod source dir \'' + self.srcdir + '\'')
 
     def run(self):
         """
@@ -64,10 +68,10 @@ class ModToolNewModule(ModTool):
         try:
             shutil.copytree(self.srcdir, self.dir)
             try:
-              shutil.copyfile(os.path.join(gr.prefix(), 'share', 'gnuradio', 'clang-format.conf'),
-                              os.path.join(self.dir, '.clang-format'))
+                shutil.copyfile(os.path.join(gr.prefix(), 'share', 'gnuradio', 'clang-format.conf'),
+                                os.path.join(self.dir, '.clang-format'))
             except FileNotFoundError as e:
-              logger.info(f'Failed to copy .clang-format: {e}')
+                logger.info(f'Failed to copy .clang-format: {e}')
             os.chdir(self.dir)
         except OSError:
             raise ModToolException(f'Could not create directory {self.dir}.')
@@ -87,11 +91,15 @@ class ModToolNewModule(ModTool):
             for filename in files:
                 f = os.path.join(root, filename)
                 if filename.find('howto') != -1:
-                    os.rename(f, os.path.join(root, filename.replace('howto', self.info['modname'])))
+                    os.rename(f, os.path.join(
+                        root, filename.replace('howto', self.info['modname'])))
             if os.path.basename(root) == 'howto':
-                os.rename(root, os.path.join(os.path.dirname(root), self.info['modname']))
+                os.rename(root, os.path.join(
+                    os.path.dirname(root), self.info['modname']))
 
         logger.info("Done.")
         if self.scm.init_repo(path_to_repo="."):
-            logger.info("Created repository... you might want to commit before continuing.")
-        logger.info("Use 'gr_modtool add' to add a new block to this currently empty module.")
+            logger.info(
+                "Created repository... you might want to commit before continuing.")
+        logger.info(
+            "Use 'gr_modtool add' to add a new block to this currently empty module.")

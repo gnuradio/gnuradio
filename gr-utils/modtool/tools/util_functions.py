@@ -15,6 +15,7 @@ import readline
 
 # None of these must depend on other modtool stuff!
 
+
 def append_re_line_sequence(filename, linepattern, newline):
     """ Detects the re 'linepattern' in the file. After its last occurrence,
     paste 'newline'. If the pattern does not exist, append the new line
@@ -31,6 +32,7 @@ def append_re_line_sequence(filename, linepattern, newline):
     with open(filename, 'w') as f:
         f.write(newfile)
 
+
 def remove_pattern_from_file(filename, pattern):
     """ Remove all occurrences of a given pattern from a file. """
     with open(filename, 'r') as f:
@@ -38,6 +40,7 @@ def remove_pattern_from_file(filename, pattern):
     pattern = re.compile(pattern, re.MULTILINE)
     with open(filename, 'w') as f:
         f.write(pattern.sub('', oldfile))
+
 
 def str_to_fancyc_comment(text):
     """ Return a string as a C formatted comment. """
@@ -54,6 +57,7 @@ def str_to_fancyc_comment(text):
     outstr += " */\n"
     return outstr
 
+
 def str_to_python_comment(text):
     """ Return a string as a Python formatted comment. """
     l_lines = text.splitlines()
@@ -69,9 +73,11 @@ def str_to_python_comment(text):
     outstr += "#\n"
     return outstr
 
+
 def strip_default_values(string):
     """ Strip default values from a C++ argument list. """
     return re.sub(' *=[^,)]*', '', string)
+
 
 def strip_arg_types(string):
     """"
@@ -83,8 +89,9 @@ def strip_arg_types(string):
     """
     string = strip_default_values(string)
     return ", ".join(
-                [part.strip().split(' ')[-1] for part in string.split(',')]
-            ).replace('*','').replace('&','')
+        [part.strip().split(' ')[-1] for part in string.split(',')]
+    ).replace('*', '').replace('&', '')
+
 
 def strip_arg_types_grc(string):
     """" Strip the argument types from a list of arguments for GRC make tag.
@@ -94,6 +101,7 @@ def strip_arg_types_grc(string):
     else:
         string = strip_default_values(string)
         return ", ".join(['${' + part.strip().split(' ')[-1] + '}' for part in string.split(',')])
+
 
 def get_modname():
     """ Grep the current module's name from gnuradio.project or CMakeLists.txt """
@@ -110,12 +118,14 @@ def get_modname():
         cmfile = f.read()
     regexp = r'(project\s*\(\s*|GR_REGISTER_COMPONENT\(")gr-(?P<modname>[a-zA-Z0-9-_]+)(\s*(CXX)?|" ENABLE)'
     try:
-        modname = re.search(regexp, cmfile, flags=re.MULTILINE).group('modname').strip()
+        modname = re.search(regexp, cmfile, flags=re.MULTILINE).group(
+            'modname').strip()
         if modname in list(modname_trans.keys()):
             modname = modname_trans[modname]
         return modname
     except AttributeError:
         return None
+
 
 def get_block_names(pattern, modname):
     """ Return a list of block names belonging to modname that matches the regex pattern. """
@@ -131,6 +141,7 @@ def get_block_names(pattern, modname):
                     blocknames.append(word.strip('.h'))
     return blocknames
 
+
 def is_number(s):
     """ Return True if the string s contains a number. """
     try:
@@ -138,6 +149,7 @@ def is_number(s):
         return True
     except ValueError:
         return False
+
 
 def ask_yes_no(question, default):
     """ Asks a binary question. Returns True for yes, False for no.
@@ -147,6 +159,7 @@ def ask_yes_no(question, default):
         return default
     else:
         return not default
+
 
 class SequenceCompleter(object):
     """ A simple completer function wrapper to be used with readline, e.g.
@@ -165,7 +178,8 @@ class SequenceCompleter(object):
         if not text and state < len(self._seq):
             return self._seq[state]
         if not state:
-            self._tmp_matches = [candidate for candidate in self._seq if candidate.startswith(text)]
+            self._tmp_matches = [
+                candidate for candidate in self._seq if candidate.startswith(text)]
         if state < len(self._tmp_matches):
             return self._tmp_matches[state]
 

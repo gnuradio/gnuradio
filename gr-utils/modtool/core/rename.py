@@ -37,15 +37,16 @@ class ModToolRename(ModTool):
         block_candidates = get_block_candidates()
         if self.info['oldname'] not in block_candidates:
             choices = [x for x in block_candidates if self.info['oldname'] in x]
-            if len(choices)>0:
-                print("Suggested alternatives: "+str(choices))
+            if len(choices) > 0:
+                print("Suggested alternatives: " + str(choices))
             raise ModToolException("Blockname for renaming does not exists!")
         if not self.info['newname']:
             raise ModToolException('New blockname (new_name) not specified.')
         validate_name('new block', self.info['newname'])
 
     def assign(self):
-        self.info['fullnewname'] = self.info['modname'] + '_' + self.info['newname']
+        self.info['fullnewname'] = self.info['modname'] + \
+            '_' + self.info['newname']
 
     def run(self):
         """ Go, go, go. """
@@ -56,7 +57,8 @@ class ModToolRename(ModTool):
         module = self.info['modname']
         oldname = self.info['oldname']
         newname = self.info['newname']
-        logger.info(f"In module '{module}' rename block '{oldname}' to '{newname}'")
+        logger.info(
+            f"In module '{module}' rename block '{oldname}' to '{newname}'")
         self._run_grc_rename(self.info['modname'], oldname, newname)
         self._run_python_qa(self.info['modname'], oldname, newname)
         self._run_python(self.info['modname'], oldname, newname)
@@ -72,7 +74,8 @@ class ModToolRename(ModTool):
         hfile = './lib/' + old + '_impl.h'
         self._run_file_replace(ccfile, old, new)
         self._run_file_replace(hfile, old, new)
-        self._run_file_replace(hfile, old.upper(), new.upper())  # take care of include guards
+        # take care of include guards
+        self._run_file_replace(hfile, old.upper(), new.upper())
         self._run_cmakelists('./lib/', old, new, '_impl.cc')
         self._run_cmakelists('./lib/', old, new, '_impl.h')
         self._run_file_rename('./lib/', old, new, '_impl.cc')
@@ -99,7 +102,8 @@ class ModToolRename(ModTool):
         path = self.info['includedir']
         filename = os.path.join(path, old + '.h')
         self._run_file_replace(filename, old, new)
-        self._run_file_replace(filename, old.upper(), new.upper())  # take care of include guards
+        # take care of include guards
+        self._run_file_replace(filename, old.upper(), new.upper())
         self._run_cmakelists(path, old, new, '.h')
         self._run_file_rename(path, old, new, '.h')
 
@@ -117,7 +121,7 @@ class ModToolRename(ModTool):
             logger.info("Not a Python block, nothing to do here...")
 
     def _run_pybind(self, module, old, new):
-        path = os.path.join(self.info['pydir'],'bindings')
+        path = os.path.join(self.info['pydir'], 'bindings')
         filename = os.path.join(path, old + '_python.cc')
         self._run_file_replace(filename, old, new)
         self._run_file_rename(path, old, new, '_python.cc')
@@ -125,7 +129,8 @@ class ModToolRename(ModTool):
         # update the hash in the new file
         import hashlib
         hasher = hashlib.md5()
-        header_filename = os.path.join(self.info['includedir'], new + '.h') # note this requires _run_pybind to be called after _run_include
+        # note this requires _run_pybind to be called after _run_include
+        header_filename = os.path.join(self.info['includedir'], new + '.h')
         with open(header_filename, 'rb') as file_in:
             buf = file_in.read()
             hasher.update(buf)
@@ -141,7 +146,8 @@ class ModToolRename(ModTool):
             f.write(file_txt)
 
         filename = path + 'python_bindings.cc'
-        self._run_file_replace(filename, ' bind_' + old + '\\(', ' bind_' + new + '(')
+        self._run_file_replace(filename, ' bind_' +
+                               old + '\\(', ' bind_' + new + '(')
 
         path = os.path.join(path, 'docstrings')
         filename = os.path.join(path, old + '_pydoc_template.h')
@@ -159,13 +165,16 @@ class ModToolRename(ModTool):
     def _run_grc_rename(self, module, old, new):
         grcfile = './grc/' + module + '_' + old + '.block.yml'
         self._run_file_replace(grcfile, old, new)
-        self._run_cmakelists('./grc/', module + '_' + old, module + '_' + new, '.block.yml')
-        self._run_file_rename('./grc/', module + '_' + old, module + '_' + new, '.block.yml')
+        self._run_cmakelists('./grc/', module + '_' + old,
+                             module + '_' + new, '.block.yml')
+        self._run_file_rename('./grc/', module + '_' + old,
+                              module + '_' + new, '.block.yml')
 
     def _run_cmakelists(self, path, first, second, suffix):
         filename = os.path.join(path, 'CMakeLists.txt')
         # space character and suffix ensures similiarly named blocks are not mixed up
-        nsubs = self._run_file_replace(filename, ' ' + first + suffix, ' ' + second + suffix)
+        nsubs = self._run_file_replace(
+            filename, ' ' + first + suffix, ' ' + second + suffix)
         if nsubs < 1:
             logger.info(f"'{first}' wasn't in '{filename}'.")
 
@@ -186,7 +195,8 @@ class ModToolRename(ModTool):
         if not os.path.isfile(filename):
             return False
         else:
-            logger.info(f"In '{filename}' renaming occurrences of '{old}' to '{new}'")
+            logger.info(
+                f"In '{filename}' renaming occurrences of '{old}' to '{new}'")
 
         with open(filename) as f:
             cfile = f.read()

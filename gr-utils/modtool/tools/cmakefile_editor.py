@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 class CMakeFileEditor(object):
     """A tool for editing CMakeLists.txt files. """
+
     def __init__(self, filename, separator='\n    ', indent='    '):
         self.filename = filename
         with open(filename, 'r') as f:
@@ -60,10 +61,10 @@ class CMakeFileEditor(object):
         else:
             regexp = r'^\s*({entry}\(\s*{to_ignore_start}[^()]*?\s+){value}\s*([^()]*{to_ignore_end}\s*\))'
         regexp = regexp.format(
-                entry=entry,
-                to_ignore_start=to_ignore_start,
-                value=value,
-                to_ignore_end=to_ignore_end,
+            entry=entry,
+            to_ignore_start=to_ignore_start,
+            value=value,
+            to_ignore_end=to_ignore_end,
         )
         regexp = re.compile(regexp, re.MULTILINE)
         (self.cfile, nsubs) = re.subn(regexp, r'\1\2', self.cfile, count=1)
@@ -83,7 +84,8 @@ class CMakeFileEditor(object):
 
     def remove_double_newlines(self):
         """Simply clear double newlines from the file buffer."""
-        self.cfile = re.compile('\n\n\n+', re.MULTILINE).sub('\n\n', self.cfile)
+        self.cfile = re.compile(
+            '\n\n\n+', re.MULTILINE).sub('\n\n', self.cfile)
 
     def find_filenames_match(self, regex):
         """ Find the filenames that match a certain regex
@@ -112,27 +114,30 @@ class CMakeFileEditor(object):
         for line in self.cfile.splitlines():
             if len(line.strip()) == 0 or line.strip()[0] == '#':
                 continue
-            if re.search(r'\b'+fname+r'\b', line):
+            if re.search(r'\b' + fname + r'\b', line):
                 if re.match(fname, line.lstrip()):
                     starts_line = True
                 break
         comment_out_re = r'#\1' + '\n' + self.indent
         if not starts_line:
             comment_out_re = r'\n' + self.indent + comment_out_re
-        (self.cfile, nsubs) = re.subn(r'(\b'+fname+r'\b)\s*', comment_out_re, self.cfile)
+        (self.cfile, nsubs) = re.subn(
+            r'(\b' + fname + r'\b)\s*', comment_out_re, self.cfile)
         if nsubs == 0:
-            logger.warning(f"Warning: A replacement failed when commenting out {fname}. Check the CMakeFile.txt manually.")
+            logger.warning(
+                f"Warning: A replacement failed when commenting out {fname}. Check the CMakeFile.txt manually.")
         elif nsubs > 1:
-            logger.warning(f"Warning: Replaced {fname} {nsubs} times (instead of once). Check the CMakeFile.txt manually.")
+            logger.warning(
+                f"Warning: Replaced {fname} {nsubs} times (instead of once). Check the CMakeFile.txt manually.")
 
     def comment_out_lines(self, pattern, comment_str='#'):
         """ Comments out all lines that match with pattern """
         for line in self.cfile.splitlines():
             if re.search(pattern, line):
-                self.cfile = self.cfile.replace(line, comment_str+line)
+                self.cfile = self.cfile.replace(line, comment_str + line)
 
     def check_for_glob(self, globstr):
         """ Returns true if a glob as in globstr is found in the cmake file """
         str_ = globstr.replace('*', r'\*')
         glob_re = fr'GLOB\s[a-z_]+\s"{str_}"'
-        return re.search(glob_re, self.cfile, flags=re.MULTILINE|re.IGNORECASE) is not None
+        return re.search(glob_re, self.cfile, flags=re.MULTILINE | re.IGNORECASE) is not None
