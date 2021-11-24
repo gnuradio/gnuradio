@@ -16,9 +16,9 @@ def main():
     args = parser.parse_args()
     plot_data(None, args.files, args)
 
+
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
         pass
-

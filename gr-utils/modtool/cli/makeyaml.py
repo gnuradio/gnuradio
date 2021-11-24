@@ -43,7 +43,8 @@ def cli(**kwargs):
     if kwargs['blocktool']:
         kwargs['modtool'] = True
         if kwargs['blockname'] is None:
-            raise BlockToolException('Missing argument FILE PATH with blocktool flag')
+            raise BlockToolException(
+                'Missing argument FILE PATH with blocktool flag')
         kwargs['file_path'] = os.path.abspath(kwargs['blockname'])
         if os.path.isfile(kwargs['file_path']):
             parse_yml = BlockHeaderParser(**kwargs)
@@ -55,15 +56,18 @@ def cli(**kwargs):
             raise BlockToolException('Invalid file path.')
     else:
         self = ModToolMakeYAML(**kwargs)
-        click.secho("GNU Radio module name identified: " + self.info['modname'], fg='green')
+        click.secho("GNU Radio module name identified: " +
+                    self.info['modname'], fg='green')
         get_pattern(self)
         run(self)
+
 
 def get_pattern(self):
     """ Get the regex pattern for block(s) to be parsed """
     if self.info['pattern'] is None:
         block_candidates = get_block_candidates()
         with SequenceCompleter(block_candidates):
-            self.info['pattern'] = cli_input('Which blocks do you want to parse? (Regex): ')
+            self.info['pattern'] = cli_input(
+                'Which blocks do you want to parse? (Regex): ')
     if not self.info['pattern'] or self.info['pattern'].isspace():
         self.info['pattern'] = '.'

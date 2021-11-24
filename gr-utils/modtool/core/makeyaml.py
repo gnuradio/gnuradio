@@ -73,7 +73,8 @@ class ModToolMakeYAML(ModTool):
         # This portion will be covered by the CLI
         if not self.cli:
             self.validate()
-        logger.warning("Warning: This is an experimental feature. Don't expect any magic.")
+        logger.warning(
+            "Warning: This is an experimental feature. Don't expect any magic.")
         # 1) Go through lib/
         if not self.skip_subdirs['lib']:
             if self.info['version'] in ('37', '38', '310'):
@@ -158,7 +159,8 @@ class ModToolMakeYAML(ModTool):
             ed = CMakeFileEditor(self._file['cmgrc'])
             if re.search(fname_yml, ed.cfile) is None and not ed.check_for_glob('*.yml'):
                 logger.info("Adding GRC bindings to grc/CMakeLists.txt...")
-                ed.append_value('install', fname_yml, to_ignore_end='DESTINATION[^()]+')
+                ed.append_value('install', fname_yml,
+                                to_ignore_end='DESTINATION[^()]+')
                 ed.write()
                 self.scm.mark_files_updated(self._file['cmgrc'])
 
@@ -186,26 +188,30 @@ class ModToolMakeYAML(ModTool):
 
         def _get_blockdata(fname_cc):
             """ Return the block name and the header file name from the .cc file name """
-            blockname = os.path.splitext(os.path.basename(fname_cc.replace('_impl.', '.')))[0]
+            blockname = os.path.splitext(os.path.basename(
+                fname_cc.replace('_impl.', '.')))[0]
             fname_h = (blockname + '.h').replace('_impl.', '.')
-            contains_modulename =  blockname.startswith(self.info['modname']+'_')
-            blockname = blockname.replace(self.info['modname']+'_', '', 1)
+            contains_modulename = blockname.startswith(
+                self.info['modname'] + '_')
+            blockname = blockname.replace(self.info['modname'] + '_', '', 1)
             return (blockname, fname_h, contains_modulename)
         # Go, go, go
         logger.info(f"Making GRC bindings for {fname_cc}...")
         (blockname, fname_h, contains_modulename) = _get_blockdata(fname_cc)
         try:
             parser = ParserCCBlock(fname_cc,
-                                   os.path.join(self.info['includedir'], fname_h),
+                                   os.path.join(
+                                       self.info['includedir'], fname_h),
                                    blockname,
                                    self.info['version'],
                                    _type_translate
                                    )
         except IOError:
-            raise ModToolException(f"Can't open some of the files necessary to parse {fname_cc}.")
+            raise ModToolException(
+                f"Can't open some of the files necessary to parse {fname_cc}.")
 
         if contains_modulename:
-            return (parser.read_params(), parser.read_io_signature(), self.info['modname']+'_'+blockname)
+            return (parser.read_params(), parser.read_io_signature(), self.info['modname'] + '_' + blockname)
         else:
             return (parser.read_params(), parser.read_io_signature(), blockname)
 
@@ -218,14 +224,14 @@ def yaml_generator(self, **kwargs):
     block = self.modname.split('-')[-1]
     label = header.split('_')
     del label[-1]
-    yml_file = os.path.join('.', block+'_'+header+'.block.yml')
+    yml_file = os.path.join('.', block + '_' + header + '.block.yml')
     _header = (('id', f'{block}_{ header}'),
                ('label', ' '.join(label).upper()),
                ('category', f'[{block.capitalize()}]'),
                ('flags', '[python, cpp]')
                )
     params_list = [
-        '${'+s['name']+'}' for s in self.parsed_data['properties'] if self.parsed_data['properties']]
+        '${' + s['name'] + '}' for s in self.parsed_data['properties'] if self.parsed_data['properties']]
     str_ = ', '.join(params_list)
     _templates = [('imports', f'from gnuradio import {block}'),
                   ('make', f'{block}.{ header}({str_})')
@@ -237,10 +243,10 @@ def yaml_generator(self, **kwargs):
             arguments = []
             for args in param['arguments_type']:
                 arguments.append(args['name'])
-            arg_list = ['${'+s+'}' for s in arguments if arguments]
+            arg_list = ['${' + s + '}' for s in arguments if arguments]
             arg_ = ', '.join(arg_list)
             list_callbacks.append(
-                param['name']+f'({arg_})')
+                param['name'] + f'({arg_})')
         callback_key = ('callbacks')
         callbacks = (callback_key, tuple(list_callbacks))
         _templates.append(callbacks)
@@ -277,11 +283,11 @@ def yaml_generator(self, **kwargs):
         elif i_sig is Constants.MAKE2:
             input_sig['domain'] = 'stream'
             input_sig['dtype'] = self.parsed_data['io_signature']['input']['sizeof_stream_item' +
-                                                                           str(port+1)]
+                                                                           str(port + 1)]
         elif i_sig is Constants.MAKE3:
             input_sig['domain'] = 'stream'
             input_sig['dtype'] = self.parsed_data['io_signature']['input']['sizeof_stream_item' +
-                                                                           str(port+1)]
+                                                                           str(port + 1)]
         elif i_sig is Constants.MAKEV:
             input_sig['domain'] = 'stream'
             input_sig['dtype'] = self.parsed_data['io_signature']['input']['sizeof_stream_items']
@@ -307,11 +313,11 @@ def yaml_generator(self, **kwargs):
         elif o_sig is Constants.MAKE2:
             output_sig['domain'] = 'stream'
             output_sig['dtype'] = self.parsed_data['io_signature']['output']['sizeof_stream_item' +
-                                                                             str(port+1)]
+                                                                             str(port + 1)]
         elif o_sig is Constants.MAKE3:
             output_sig['domain'] = 'stream'
             output_sig['dtype'] = self.parsed_data['io_signature']['output']['sizeof_stream_item' +
-                                                                             str(port+1)]
+                                                                             str(port + 1)]
         elif o_sig is Constants.MAKEV:
             output_sig['domain'] = 'stream'
             output_sig['dtype'] = self.parsed_data['io_signature']['output']['sizeof_stream_items']
@@ -325,11 +331,12 @@ def yaml_generator(self, **kwargs):
             output_signature.append(m_output_sig)
     if output_signature:
         data['outputs'] = output_signature
-     
+
     param_ = ', '.join(params_list)
     _cpp_templates = [('includes', '#include <gnuradio/{block}/{self.filename}>'),
                       ('declarations', '{block}::{ header}::sptr ${{id}}'),
-                      ('make', 'this->${{id}} = {block}::{ header}::make({param_})')
+                      ('make',
+                       'this->${{id}} = {block}::{ header}::make({param_})')
                       ]
 
     if self.parsed_data['methods']:
@@ -338,10 +345,10 @@ def yaml_generator(self, **kwargs):
             arguments = []
             for args in param['arguments_type']:
                 arguments.append(args['name'])
-            arg_list = ['${'+s+'}' for s in arguments if arguments]
+            arg_list = ['${' + s + '}' for s in arguments if arguments]
             arg_ = ', '.join(arg_list)
             list_callbacks.append(
-                param['name']+f'({arg_})')
+                param['name'] + f'({arg_})')
         callback_key = ('callbacks')
         callbacks = (callback_key, tuple(list_callbacks))
         _cpp_templates.append(callbacks)

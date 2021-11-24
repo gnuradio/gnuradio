@@ -32,19 +32,22 @@ class ModToolInfo(ModTool):
         mod_info = dict()
         mod_info['base_dir'] = self._get_base_dir(self._directory)
         if mod_info['base_dir'] is None:
-            raise ModToolException('{}' if self._python_readable else "No module found.")
+            raise ModToolException(
+                '{}' if self._python_readable else "No module found.")
         os.chdir(mod_info['base_dir'])
         mod_info['modname'] = get_modname()
         if mod_info['modname'] is None:
-            raise ModToolException('{}' if self._python_readable else "No module found.")
+            raise ModToolException(
+                '{}' if self._python_readable else "No module found.")
         if self.info['version'] == '36' and (
                 os.path.isdir(os.path.join('include', mod_info['modname'])) or
-                os.path.isdir(os.path.join('include', 'gnuradio', mod_info['modname']))
-                ):
+                os.path.isdir(os.path.join(
+                    'include', 'gnuradio', mod_info['modname']))
+        ):
             self.info['version'] = '37'
         if not os.path.isfile(os.path.join('cmake', 'Modules', 'FindCppUnit.cmake')):
             self.info['version'] = '38'
-            if os.path.isdir(os.path.join('include','gnuradio', self.info['modname'])):
+            if os.path.isdir(os.path.join('include', 'gnuradio', self.info['modname'])):
                 self.info['version'] = '310'
         mod_info['version'] = self.info['version']
         if 'is_component' in list(self.info.keys()) and self.info['is_component']:
@@ -52,7 +55,8 @@ class ModToolInfo(ModTool):
         mod_info['incdirs'] = []
         mod_incl_dir = os.path.join(mod_info['base_dir'], 'include')
         if os.path.isdir(os.path.join(mod_incl_dir, mod_info['modname'])):
-            mod_info['incdirs'].append(os.path.join(mod_incl_dir, mod_info['modname']))
+            mod_info['incdirs'].append(os.path.join(
+                mod_incl_dir, mod_info['modname']))
         else:
             mod_info['incdirs'].append(mod_incl_dir)
         build_dir = self._get_build_dir(mod_info)
@@ -102,32 +106,35 @@ class ModToolInfo(ModTool):
         path_or_internal = {True: 'INTERNAL',
                             False: 'PATH'}['is_component' in list(mod_info.keys())]
         try:
-            cmakecache_fid = open(os.path.join(mod_info['build_dir'], 'CMakeCache.txt'))
+            cmakecache_fid = open(os.path.join(
+                mod_info['build_dir'], 'CMakeCache.txt'))
             for line in cmakecache_fid:
                 if line.find(f'GNURADIO_RUNTIME_INCLUDE_DIRS:{path_or_internal}') != -1:
-                    inc_dirs += line.replace(f'GNURADIO_RUNTIME_INCLUDE_DIRS:{path_or_internal}=', '').strip().split(';')
+                    inc_dirs += line.replace(
+                        f'GNURADIO_RUNTIME_INCLUDE_DIRS:{path_or_internal}=', '').strip().split(';')
         except IOError:
             pass
         if not inc_dirs and self._suggested_dirs is not None:
-            inc_dirs = [os.path.normpath(path) for path in self._suggested_dirs.split(':') if os.path.isdir(path)]
+            inc_dirs = [os.path.normpath(path) for path in self._suggested_dirs.split(
+                ':') if os.path.isdir(path)]
         return inc_dirs
 
     def _pretty_print(elf, mod_info):
         """ Output the module info in human-readable format """
         index_names = {'base_dir': 'Base directory',
-                       'modname':  'Module name',
-                       'is_component':  'Is GR component',
+                       'modname': 'Module name',
+                       'is_component': 'Is GR component',
                        'build_dir': 'Build directory',
                        'incdirs': 'Include directories'}
         for key in list(mod_info.keys()):
             if key == 'version':
                 version = {
-                        '36': 'pre-3.7',
-                        '37': 'post-3.7',
-                        '38': 'post-3.8',
-                        '310': 'post-3.10',
-                        'autofoo': 'Autotools (pre-3.5)'
-                        }[mod_info['version']]
+                    '36': 'pre-3.7',
+                    '37': 'post-3.7',
+                    '38': 'post-3.8',
+                    '310': 'post-3.10',
+                    'autofoo': 'Autotools (pre-3.5)'
+                }[mod_info['version']]
                 print(f"        API version: {version}")
             else:
                 print('%19s: %s' % (index_names[key], mod_info[key]))

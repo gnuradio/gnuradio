@@ -25,15 +25,16 @@ logger = logging.getLogger(__name__)
 
 def clang_format(s):
     try:
-      p = subprocess.Popen(["clang-format"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-      out, err = p.communicate(s.encode('utf-8'))
-      if p.returncode != 0:
-        print("Failed to run clang-format: %s", err)
-        return s
-      return out.decode('utf-8')
+        p = subprocess.Popen(
+            ["clang-format"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        out, err = p.communicate(s.encode('utf-8'))
+        if p.returncode != 0:
+            print("Failed to run clang-format: %s", err)
+            return s
+        return out.decode('utf-8')
     except (RuntimeError, FileNotFoundError) as e:
-      print("Failed to run clang-format: %s", e)
-      return s
+        print("Failed to run clang-format: %s", e)
+        return s
 
 
 class ModToolAdd(ModTool):
@@ -41,7 +42,7 @@ class ModToolAdd(ModTool):
     name = 'add'
     description = 'Add new block into a module.'
     block_types = ('sink', 'source', 'sync', 'decimator', 'interpolator',
-                    'general', 'tagged_stream', 'hier', 'noblock')
+                   'general', 'tagged_stream', 'hier', 'noblock')
     language_candidates = ('cpp', 'python', 'c++')
 
     def __init__(self, blockname=None, block_type=None, lang=None, copyright=None,
@@ -69,24 +70,28 @@ class ModToolAdd(ModTool):
         if self.info['lang'] not in self.language_candidates:
             raise ModToolException('Invalid programming language.')
         if self.info['blocktype'] == 'tagged_stream' and self.info['lang'] == 'python':
-            raise ModToolException('Tagged Stream Blocks for Python currently unsupported')            
+            raise ModToolException(
+                'Tagged Stream Blocks for Python currently unsupported')
         if self.info['blockname'] is None:
             raise ModToolException('Blockname not specified.')
         validate_name('block', self.info['blockname'])
         if not isinstance(self.add_py_qa, bool):
-            raise ModToolException('Expected a boolean value for add_python_qa.')
+            raise ModToolException(
+                'Expected a boolean value for add_python_qa.')
         if not isinstance(self.add_cc_qa, bool):
             raise ModToolException('Expected a boolean value for add_cpp_qa.')
         if not isinstance(self.skip_cmakefiles, bool):
-            raise ModToolException('Expected a boolean value for skip_cmakefiles.')
+            raise ModToolException(
+                'Expected a boolean value for skip_cmakefiles.')
 
     def assign(self):
         if self.info['lang'] == 'c++':
             self.info['lang'] = 'cpp'
-        if ((self.skip_subdirs['lib'] and self.info['lang'] == 'cpp')
-                or (self.skip_subdirs['python'] and self.info['lang'] == 'python')):
+        if ((self.skip_subdirs['lib'] and self.info['lang'] == 'cpp') or
+                (self.skip_subdirs['python'] and self.info['lang'] == 'python')):
             raise ModToolException('Missing or skipping relevant subdir.')
-        self.info['fullblockname'] = self.info['modname'] + '_' + self.info['blockname']
+        self.info['fullblockname'] = self.info['modname'] + \
+            '_' + self.info['blockname']
         if not self.license_file:
             if self.info['copyrightholder'] is None:
                 self.info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
@@ -105,7 +110,7 @@ class ModToolAdd(ModTool):
            top directory
         3) The default license. """
         if self.license_file is not None \
-            and os.path.isfile(self.license_file):
+                and os.path.isfile(self.license_file):
             with open(self.license_file) as f:
                 return f.read()
         elif os.path.isfile('LICENSE'):
@@ -123,9 +128,9 @@ class ModToolAdd(ModTool):
         """ Shorthand for writing a substituted template to a file"""
         path_to_file = os.path.join(path, fname)
         logger.info(f"Adding file '{path_to_file}'...")
-        formatter = lambda x: x
+        def formatter(x): return x
         if fname.endswith('.cc') or fname.endswith('.h'):
-          formatter = clang_format
+            formatter = clang_format
         with open(path_to_file, 'w') as f:
             f.write(formatter(render_template(tpl, **self.info)))
         self.scm.add_files((path_to_file,))
@@ -138,14 +143,14 @@ class ModToolAdd(ModTool):
         self.assign()
 
         has_pybind = (
-                self.info['lang'] == 'cpp'
-                and not self.skip_subdirs['python']
+            self.info['lang'] == 'cpp' and
+            not self.skip_subdirs['python']
         )
         has_grc = False
         if self.info['lang'] == 'cpp':
             self._run_lib()
             has_grc = has_pybind
-        else: # Python
+        else:  # Python
             self._run_python()
             if self.info['blocktype'] != 'noblock':
                 has_grc = True
@@ -159,10 +164,10 @@ class ModToolAdd(ModTool):
     def _run_cc_qa(self):
         " Add C++ QA files for 3.7 API if intructed from _run_lib"
         blockname_ = self.info['blockname']
-        fname_qa_h  = f'qa_{blockname_}.h'
+        fname_qa_h = f'qa_{blockname_}.h'
         fname_qa_cc = f'qa_{blockname_}.cc'
         self._write_tpl('qa_cpp', 'lib', fname_qa_cc)
-        self._write_tpl('qa_h',   'lib', fname_qa_h)
+        self._write_tpl('qa_h', 'lib', fname_qa_h)
         modname_ = self.info['modname']
         if self.skip_cmakefiles:
             return
@@ -191,7 +196,7 @@ class ModToolAdd(ModTool):
             return
         try:
             append_re_line_sequence(self._file['cmlib'],
-                                   fr'list\(APPEND test_{modname_}_sources.*\n',
+                                    fr'list\(APPEND test_{modname_}_sources.*\n',
                                     f'qa_{blockname_}.cc')
             self.scm.mark_files_updated((self._file['cmlib'],))
         except IOError:
@@ -210,25 +215,28 @@ class ModToolAdd(ModTool):
             fname_h = self.info['blockname'] + '.h'
             fname_cc = self.info['blockname'] + '.cc'
             if self.info['blocktype'] in ('source', 'sink', 'sync', 'decimator',
-                                           'interpolator', 'general', 'hier', 'tagged_stream'):
+                                          'interpolator', 'general', 'hier', 'tagged_stream'):
                 fname_cc = self.info['blockname'] + '_impl.cc'
-                self._write_tpl('block_impl_h',   'lib', self.info['blockname'] + '_impl.h')
+                self._write_tpl('block_impl_h', 'lib',
+                                self.info['blockname'] + '_impl.h')
             self._write_tpl('block_impl_cpp', 'lib', fname_cc)
-            self._write_tpl('block_def_h',    self.info['includedir'], fname_h)
-        else: # Pre-3.7 or autotools
-            fname_h  = self.info['fullblockname'] + '.h'
+            self._write_tpl('block_def_h', self.info['includedir'], fname_h)
+        else:  # Pre-3.7 or autotools
+            fname_h = self.info['fullblockname'] + '.h'
             fname_cc = self.info['fullblockname'] + '.cc'
-            self._write_tpl('block_h36',   self.info['includedir'], fname_h)
-            self._write_tpl('block_cpp36', 'lib',                    fname_cc)
+            self._write_tpl('block_h36', self.info['includedir'], fname_h)
+            self._write_tpl('block_cpp36', 'lib', fname_cc)
         if self.add_cc_qa:
-            if self.info['version'] in ['38','310']:
+            if self.info['version'] in ['38', '310']:
                 self._run_cc_qa_boostutf()
             elif self.info['version'] == '37':
                 self._run_cc_qa()
             elif self.info['version'] == '36':
-                logger.warning("Warning: C++ QA files not supported for 3.6-style OOTs.")
+                logger.warning(
+                    "Warning: C++ QA files not supported for 3.6-style OOTs.")
             elif self.info['version'] == 'autofoo':
-                logger.warning("Warning: C++ QA files not supported for autotools.")
+                logger.warning(
+                    "Warning: C++ QA files not supported for autotools.")
         if not self.skip_cmakefiles:
             ed = CMakeFileEditor(self._file['cmlib'])
             cmake_list_var = '[a-z]*_?' + self.info['modname'] + '_sources'
@@ -236,42 +244,46 @@ class ModToolAdd(ModTool):
                 ed.append_value('add_library', fname_cc)
             ed.write()
             ed = CMakeFileEditor(self._file['cminclude'])
-            ed.append_value('install', fname_h, to_ignore_end='DESTINATION[^()]+')
+            ed.append_value('install', fname_h,
+                            to_ignore_end='DESTINATION[^()]+')
             ed.write()
-            self.scm.mark_files_updated((self._file['cminclude'], self._file['cmlib']))
+            self.scm.mark_files_updated(
+                (self._file['cminclude'], self._file['cmlib']))
 
     def _run_pybind(self):
         """ Do everything that needs doing in the python bindings subdir.
-        - add blockname_python.cc 
+        - add blockname_python.cc
         - add reference and call to bind_blockname()
         - include them into CMakeLists.txt
         """
-        
-        bindings_dir = os.path.join(self.info['pydir'],'bindings')    
+
+        bindings_dir = os.path.join(self.info['pydir'], 'bindings')
 
         # Generate bindings cc file
         fname_cc = self.info['blockname'] + '_python.cc'
-        fname_pydoc_h = os.path.join('docstrings',self.info['blockname'] + '_pydoc_template.h')
+        fname_pydoc_h = os.path.join(
+            'docstrings', self.info['blockname'] + '_pydoc_template.h')
 
         # Update python_bindings.cc
         ed = CPPFileEditor(self._file['ccpybind'])
-        ed.append_value('// BINDING_FUNCTION_PROTOTYPES(', '// ) END BINDING_FUNCTION_PROTOTYPES', 
-            'void bind_' + self.info['blockname'] + '(py::module& m);')
-        ed.append_value('// BINDING_FUNCTION_CALLS(', '// ) END BINDING_FUNCTION_CALLS', 
-            'bind_' + self.info['blockname'] + '(m);')
+        ed.append_value('// BINDING_FUNCTION_PROTOTYPES(', '// ) END BINDING_FUNCTION_PROTOTYPES',
+                        'void bind_' + self.info['blockname'] + '(py::module& m);')
+        ed.append_value('// BINDING_FUNCTION_CALLS(', '// ) END BINDING_FUNCTION_CALLS',
+                        'bind_' + self.info['blockname'] + '(m);')
         ed.write()
 
         self.scm.mark_files_updated((self._file['ccpybind']))
 
         if self.info['version'] in ['310']:
-            prefix_include_root = '/'.join(('gnuradio',self.info['modname']))
+            prefix_include_root = '/'.join(('gnuradio', self.info['modname']))
         else:
             prefix_include_root = self.info['modname']
 
-        bg = BindingGenerator(prefix=gr.prefix(), namespace=['gr',self.info['modname']], prefix_include_root=prefix_include_root)
+        bg = BindingGenerator(prefix=gr.prefix(), namespace=[
+                              'gr', self.info['modname']], prefix_include_root=prefix_include_root)
         block_base = ""
         if self.info['blocktype'] in ('source', 'sink', 'sync', 'decimator',
-                                        'interpolator', 'general', 'hier', 'tagged_stream'):
+                                      'interpolator', 'general', 'hier', 'tagged_stream'):
             block_base = code_generator.GRTYPELIST[self.info['blocktype']]
 
         import hashlib
@@ -296,7 +308,7 @@ class ModToolAdd(ModTool):
                         "member_functions": [
                             {
                                 "name": "make",
-                                "return_type": "::".join(("gr",self.info['modname'],self.info['blockname'],"sptr")),
+                                "return_type": "::".join(("gr", self.info['modname'], self.info['blockname'], "sptr")),
                                 "has_static": "1",
                                 "arguments": []
                             }
@@ -319,14 +331,14 @@ class ModToolAdd(ModTool):
             }
         }
         # def gen_pybind_cc(self, header_info, base_name):
-        pydoc_txt = bg.gen_pydoc_h(header_info,self.info['blockname'])
-        path_to_file = os.path.join(bindings_dir, fname_pydoc_h)    
+        pydoc_txt = bg.gen_pydoc_h(header_info, self.info['blockname'])
+        path_to_file = os.path.join(bindings_dir, fname_pydoc_h)
         logger.info("Adding file '{}'...".format(path_to_file))
         with open(path_to_file, 'w') as f:
             f.write(pydoc_txt)
         self.scm.add_files((path_to_file,))
 
-        cc_txt = bg.gen_pybind_cc(header_info,self.info['blockname'])
+        cc_txt = bg.gen_pybind_cc(header_info, self.info['blockname'])
         path_to_file = os.path.join(bindings_dir, fname_cc)
         logger.info("Adding file '{}'...".format(path_to_file))
         with open(path_to_file, 'w') as f:
@@ -335,8 +347,10 @@ class ModToolAdd(ModTool):
 
         if not self.skip_cmakefiles:
             ed = CMakeFileEditor(self._file['cmpybind'])
-            cmake_list_var = 'APPEND {}_python_files'.format(self.info['modname'])
-            ed.append_value('list', fname_cc, to_ignore_start=cmake_list_var, to_ignore_end='python_bindings.cc')
+            cmake_list_var = 'APPEND {}_python_files'.format(
+                self.info['modname'])
+            ed.append_value('list', fname_cc, to_ignore_start=cmake_list_var,
+                            to_ignore_end='python_bindings.cc')
             ed.write()
             self.scm.mark_files_updated((self._file['cmpybind']))
 
@@ -349,13 +363,14 @@ class ModToolAdd(ModTool):
         fname_py_qa = 'qa_' + self.info['blockname'] + '.py'
         self._write_tpl('qa_python', self.info['pydir'], fname_py_qa)
         os.chmod(os.path.join(self.info['pydir'], fname_py_qa), 0o755)
-        self.scm.mark_files_updated((os.path.join(self.info['pydir'], fname_py_qa),))
+        self.scm.mark_files_updated(
+            (os.path.join(self.info['pydir'], fname_py_qa),))
         if self.skip_cmakefiles or CMakeFileEditor(self._file['cmpython']).check_for_glob('qa_*.py'):
             return
         logger.info(f'Editing {self.info["pydir"]}/CMakeLists.txt...')
         with open(self._file['cmpython'], 'a') as f:
             f.write(
-                'GR_ADD_TEST(qa_%s ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/%s)\n' % \
+                'GR_ADD_TEST(qa_%s ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/%s)\n' %
                 (self.info['blockname'], fname_py_qa))
         self.scm.mark_files_updated((self._file['cmpython'],))
 
@@ -376,7 +391,8 @@ class ModToolAdd(ModTool):
         if self.skip_cmakefiles:
             return
         ed = CMakeFileEditor(self._file['cmpython'])
-        ed.append_value('GR_PYTHON_INSTALL', fname_py, to_ignore_end='DESTINATION[^()]+')
+        ed.append_value('GR_PYTHON_INSTALL', fname_py,
+                        to_ignore_end='DESTINATION[^()]+')
         ed.write()
         self.scm.mark_files_updated((self._file['cmpython'],))
 
@@ -392,6 +408,7 @@ class ModToolAdd(ModTool):
         if self.skip_cmakefiles or ed.check_for_glob('*.yml'):
             return
         logger.info("Editing grc/CMakeLists.txt...")
-        ed.append_value('install', fname_grc, to_ignore_end='DESTINATION[^()]+')
+        ed.append_value('install', fname_grc,
+                        to_ignore_end='DESTINATION[^()]+')
         ed.write()
         self.scm.mark_files_updated((self._file['cmgrc'],))

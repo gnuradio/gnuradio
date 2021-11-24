@@ -83,7 +83,7 @@ def json_generator(parser, **kwargs):
     header = parser.filename.split('.')[0]
     block = parser.modname.split('-')[-1]
     if kwargs['output']:
-        json_file = os.path.join('.', block+'_'+header + '.json')
+        json_file = os.path.join('.', block + '_' + header + '.json')
         with open(json_file, 'w') as _file:
             json.dump(parser.parsed_data, _file, indent=4)
     else:
@@ -117,7 +117,7 @@ def parse_directory(**kwargs):
                     json_generator(parse_dir, **kwargs)
             except:
                 logging.basicConfig(level=logging.DEBUG,
-                                    filename=os.path.join('.', dir_name+'_log.out'))
+                                    filename=os.path.join('.', dir_name + '_log.out'))
                 logging.exception(
                     'Log for Exception raised for the header: {}\n'.format(header))
                 click.secho('Parsing unsuccessful: {}'.format(

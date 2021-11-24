@@ -79,7 +79,8 @@ class draw_iq:
             [0.45, 0.01, 0.05, 0.05], frameon=True
         )
         self.button_left = Button(self.button_left_axes, "<")
-        self.button_left_callback = self.button_left.on_clicked(self.button_left_click)
+        self.button_left_callback = self.button_left.on_clicked(
+            self.button_left_click)
 
         self.button_right_axes = self.fig.add_axes(
             [0.50, 0.01, 0.05, 0.05], frameon=True
@@ -119,15 +120,18 @@ class draw_iq:
         self.get_data()
 
         # Subplot for real and imaginary parts of signal
-        self.sp_iq = self.fig.add_subplot(2, 1, 1, position=[0.075, 0.14, 0.85, 0.67])
-        self.sp_iq.set_title(("I&Q"), fontsize=self.title_font_size, fontweight="bold")
+        self.sp_iq = self.fig.add_subplot(
+            2, 1, 1, position=[0.075, 0.14, 0.85, 0.67])
+        self.sp_iq.set_title(
+            ("I&Q"), fontsize=self.title_font_size, fontweight="bold")
         self.sp_iq.set_xlabel(
             "Time (s)", fontsize=self.label_font_size, fontweight="bold"
         )
         self.sp_iq.set_ylabel(
             "Amplitude (V)", fontsize=self.label_font_size, fontweight="bold"
         )
-        self.plot_iq = plot(self.time, self.reals, "bo-", self.time, self.imags, "ro-")
+        self.plot_iq = plot(self.time, self.reals, "bo-",
+                            self.time, self.imags, "ro-")
         self.sp_iq.set_ylim(
             [
                 1.5 * min([self.reals.min(), self.imags.min()]),
@@ -189,7 +193,8 @@ def find(item_in, list_search):
 def main():
     description = "Takes a GNU Radio complex binary file and displays the I&Q data versus time. You can set the block size to specify how many points to read in at a time and the start position in the file. By default, the system assumes a sample rate of 1, so in time, each sample is plotted versus the sample number. To set a true time axis, set the sample rate (-R or --sample-rate) to the sample rate used when capturing the samples."
 
-    parser = ArgumentParser(conflict_handler="resolve", description=description)
+    parser = ArgumentParser(conflict_handler="resolve",
+                            description=description)
     parser.add_argument(
         "-B",
         "--block",
@@ -211,7 +216,8 @@ def main():
         default=1.0,
         help="Set the sampler rate of the data [default=%(default)r]",
     )
-    parser.add_argument("file", metavar="FILE", help="Input file with complex samples")
+    parser.add_argument("file", metavar="FILE",
+                        help="Input file with complex samples")
 
     args = parser.parse_args()
 

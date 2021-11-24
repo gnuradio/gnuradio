@@ -39,40 +39,50 @@ class ModToolDisable(ModTool):
         """ Go, go, go! """
         def _handle_py_qa(cmake, fname):
             """ Do stuff for py qa """
-            cmake.comment_out_lines('GR_ADD_TEST.*'+fname)
+            cmake.comment_out_lines('GR_ADD_TEST.*' + fname)
             self.scm.mark_file_updated(cmake.filename)
             return True
+
         def _handle_py_mod(cmake, fname):
             """ Do stuff for py extra files """
             try:
                 with open(self._file['pyinit']) as f:
                     initfile = f.read()
             except IOError:
-                logger.warning("Could not edit __init__.py, that might be a problem.")
+                logger.warning(
+                    "Could not edit __init__.py, that might be a problem.")
                 return False
             pymodname = os.path.splitext(fname)[0]
-            initfile = re.sub(r'((from|import)\s+\b'+pymodname+r'\b)', r'#\1', initfile)
+            initfile = re.sub(
+                r'((from|import)\s+\b' + pymodname + r'\b)', r'#\1', initfile)
             with open(self._file['pyinit'], 'w') as f:
                 f.write(initfile)
             self.scm.mark_file_updated(self._file['pyinit'])
             return False
+
         def _handle_cc_qa(cmake, fname):
             """ Do stuff for cc qa """
             if self.info['version'] == '37':
-                cmake.comment_out_lines(r'\$\{CMAKE_CURRENT_SOURCE_DIR\}/'+fname)
+                cmake.comment_out_lines(
+                    r'\$\{CMAKE_CURRENT_SOURCE_DIR\}/' + fname)
                 fname_base = os.path.splitext(fname)[0]
-                ed = CMakeFileEditor(self._file['qalib']) # Abusing the CMakeFileEditor...
-                ed.comment_out_lines(fr'#include\s+"{fname_base}.h"', comment_str='//')
-                ed.comment_out_lines(fr'{fname_base}::suite\(\)', comment_str='//')
+                # Abusing the CMakeFileEditor...
+                ed = CMakeFileEditor(self._file['qalib'])
+                ed.comment_out_lines(
+                    fr'#include\s+"{fname_base}.h"', comment_str='//')
+                ed.comment_out_lines(
+                    fr'{fname_base}::suite\(\)', comment_str='//')
                 ed.write()
                 self.scm.mark_file_updated(self._file['qalib'])
-            elif self.info['version'] in ['38','310']:
+            elif self.info['version'] in ['38', '310']:
                 fname_qa_cc = f'qa_{self.info["blockname"]}.cc'
                 cmake.comment_out_lines(fname_qa_cc)
             elif self.info['version'] == '36':
-                cmake.comment_out_lines('add_executable.*'+fname)
-                cmake.comment_out_lines('target_link_libraries.*'+os.path.splitext(fname)[0])
-                cmake.comment_out_lines('GR_ADD_TEST.*'+os.path.splitext(fname)[0])
+                cmake.comment_out_lines('add_executable.*' + fname)
+                cmake.comment_out_lines(
+                    'target_link_libraries.*' + os.path.splitext(fname)[0])
+                cmake.comment_out_lines(
+                    'GR_ADD_TEST.*' + os.path.splitext(fname)[0])
             self.scm.mark_file_updated(cmake.filename)
             return True
 
@@ -83,9 +93,9 @@ class ModToolDisable(ModTool):
             from ..cli import cli_input
         # List of special rules: 0: subdir, 1: filename re match, 2: callback
         special_treatments = (
-                ('python', r'qa.+py$', _handle_py_qa),
-                ('python', r'^(?!qa).+py$', _handle_py_mod),
-                ('lib', r'qa.+\.cc$', _handle_cc_qa)
+            ('python', r'qa.+py$', _handle_py_qa),
+            ('python', r'^(?!qa).+py$', _handle_py_mod),
+            ('lib', r'qa.+\.cc$', _handle_cc_qa)
         )
         for subdir in self._subdirs:
             if self.skip_subdirs[subdir]:
@@ -119,7 +129,8 @@ class ModToolDisable(ModTool):
             for fname in filenames:
                 file_disabled = False
                 if not yes:
-                    ans = cli_input(f"Really disable {fname}? [Y/n/a/q]: ").lower().strip()
+                    ans = cli_input(
+                        f"Really disable {fname}? [Y/n/a/q]: ").lower().strip()
                     if ans == 'a':
                         yes = True
                     if ans == 'q':
@@ -132,5 +143,7 @@ class ModToolDisable(ModTool):
                 if not file_disabled:
                     cmake.disable_file(fname)
             cmake.write()
-            self.scm.mark_files_updated((os.path.join(subdir, 'CMakeLists.txt'),))
-        logger.warning("Careful: 'gr_modtool disable' does not resolve dependencies.")
+            self.scm.mark_files_updated(
+                (os.path.join(subdir, 'CMakeLists.txt'),))
+        logger.warning(
+            "Careful: 'gr_modtool disable' does not resolve dependencies.")

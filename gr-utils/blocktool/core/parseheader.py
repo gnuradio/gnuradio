@@ -9,6 +9,11 @@
 """ Module to generate AST for the headers and parse it """
 
 
+from ..core import Constants
+from ..core.comments import read_comments, add_comments, exist_comments
+from ..core.iosignature import io_signature, message_port
+from ..core.base import BlockToolException, BlockTool
+import time
 import os
 import re
 import codecs
@@ -16,7 +21,6 @@ import logging
 
 PYGCCXML_AVAILABLE = False
 # ugly hack to make pygccxml work with Python >= 3.8
-import time
 try:
     time.clock
 except:
@@ -27,10 +31,6 @@ try:
 except:
     pass
 
-from ..core.base import BlockToolException, BlockTool
-from ..core.iosignature import io_signature, message_port
-from ..core.comments import read_comments, add_comments, exist_comments
-from ..core import Constants
 
 LOGGER = logging.getLogger(__name__)
 
@@ -79,7 +79,7 @@ class BlockHeaderParser(BlockTool):
                 if dirs.path.endswith('lib'):
                     self.impldir = dirs.path
         self.impl_file = os.path.join(self.impldir,
-                                      self.filename.split('.')[0]+'_impl.cc')
+                                      self.filename.split('.')[0] + '_impl.cc')
 
     def validate(self):
         """ Override the Blocktool validate function """
@@ -283,11 +283,11 @@ class BlockHeaderParser(BlockTool):
             self.parsed_data['member_functions'] = []
             query_methods = declarations.access_type_matcher_t('public')
             functions = main_class.member_functions(function=query_methods,
-                                                  allow_empty=True,
-                                                  header_file=self.target_file)
+                                                    allow_empty=True,
+                                                    header_file=self.target_file)
             if functions:
                 for fcn in functions:
-                    if str(fcn.name) not in [main_class.name, '~'+main_class.name, 'make']:
+                    if str(fcn.name) not in [main_class.name, '~' + main_class.name, 'make']:
                         fcn_args = {
                             "name": str(fcn.name),
                             "arguments": []
@@ -299,7 +299,8 @@ class BlockHeaderParser(BlockTool):
                                 "default": argument.default_value
                             }
                             fcn_args['arguments'].append(args.copy())
-                        self.parsed_data['member_functions'].append(fcn_args.copy())
+                        self.parsed_data['member_functions'].append(
+                            fcn_args.copy())
         except RuntimeError:
             self.parsed_data['member_functions'] = []
 

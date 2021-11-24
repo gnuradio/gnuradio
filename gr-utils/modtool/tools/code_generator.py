@@ -29,6 +29,7 @@ GRTYPELIST = {
     'noblock': ''
 }
 
+
 def render_template(tpl_id, **kwargs):
     """ Return the parsed and rendered template given by tpl_id """
     # Choose template
@@ -46,4 +47,3 @@ def render_template(tpl_id, **kwargs):
         kwargs['include_dir_prefix'] = kwargs['modname']
     # Render and return
     return tpl.render(**kwargs)
-

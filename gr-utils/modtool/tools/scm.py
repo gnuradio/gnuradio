@@ -22,15 +22,20 @@ except ImportError:
 # GitPython is a bit too unstable currently
 HAS_GITPYTHON = False
 
+
 class InvalidSCMError(Exception):
     """ Exception for when trying to access a repo of wrong type. """
+
     def __init__(self):
         Exception.__init__(self)
 
 ### Base class ###############################################################
+
+
 class SCMRepository(object):
     """ Base class to handle interactions with source code management systems. """
     handles_scm_type = '*'
+
     def __init__(self, path_to_repo, is_empty=False):
         self.path_to_repo = path_to_repo
         self.is_empty = is_empty
@@ -84,6 +89,7 @@ class SCMRepository(object):
 ### Git #####################################################################
 class GitManagerGitPython(object):
     """ Manage git through GitPython (preferred way). """
+
     def __init__(self, path_to_repo, init=False):
         if init:
             self.repo = git.Repo.init(path_to_repo, mkdir=False)
@@ -108,11 +114,13 @@ class GitManagerGitPython(object):
 
 class GitManagerShell(object):
     """ Call the git executable through a shell. """
+
     def __init__(self, path_to_repo, init=False, git_executable=None):
         self.path_to_repo = path_to_repo
         if git_executable is None:
             try:
-                self.git_executable = subprocess.check_output('which git', shell=True).strip()
+                self.git_executable = subprocess.check_output(
+                    'which git', shell=True).strip()
             except (OSError, subprocess.CalledProcessError):
                 raise InvalidSCMError
         try:
@@ -127,16 +135,19 @@ class GitManagerShell(object):
 
     def add_files(self, paths_to_files):
         """ Adds a tuple of files to the index of the current repository. Does not commit. """
-        subprocess.check_output([self.git_executable, 'add'] + list(paths_to_files))
+        subprocess.check_output(
+            [self.git_executable, 'add'] + list(paths_to_files))
 
     def remove_files(self, paths_to_files):
         """ Removes a tuple of files from the index of the current repository. Does not commit. """
-        subprocess.check_output([self.git_executable, 'rm', '--cached'] + list(paths_to_files))
+        subprocess.check_output(
+            [self.git_executable, 'rm', '--cached'] + list(paths_to_files))
 
 
 class GitRepository(SCMRepository):
     """ Specific to operating on git repositories. """
     handles_scm_type = 'git'
+
     def __init__(self, path_to_repo, is_empty=False):
         SCMRepository.__init__(self, path_to_repo, is_empty)
         if not is_empty:
@@ -155,7 +166,8 @@ class GitRepository(SCMRepository):
         If add_file is True, all files in this dir are added to the index. """
         SCMRepository.init_repo(self, path_to_repo, add_files)
         if HAS_GITPYTHON:
-            self.repo_manager = GitManagerGitPython(self.path_to_repo, init=True)
+            self.repo_manager = GitManagerGitPython(
+                self.path_to_repo, init=True)
         else:
             self.repo_manager = GitManagerShell(self.path_to_repo, init=True)
         if add_files:
@@ -182,6 +194,7 @@ class GitRepository(SCMRepository):
 ### Factory ##################################################################
 class SCMRepoFactory(object):
     """ Factory object to create the correct SCM class from the given options and dir. """
+
     def __init__(self, options, path_to_repo):
         self.path_to_repo = path_to_repo
         self.options = options
@@ -195,7 +208,8 @@ class SCMRepoFactory(object):
                 if issubclass(glbl, SCMRepository):
                     the_scm = glbl(self.path_to_repo)
                     if the_scm.is_active():
-                        logger.info('Found SCM of type:', the_scm.handles_scm_type)
+                        logger.info('Found SCM of type:',
+                                    the_scm.handles_scm_type)
                         return the_scm
             except (TypeError, AttributeError, InvalidSCMError):
                 pass
@@ -217,4 +231,3 @@ class SCMRepoFactory(object):
         if self.options == 'yes':
             return None
         return SCMRepository(self.path_to_repo)
-

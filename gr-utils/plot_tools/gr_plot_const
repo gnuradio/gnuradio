@@ -76,7 +76,8 @@ class draw_constellation:
             [0.45, 0.01, 0.05, 0.05], frameon=True
         )
         self.button_left = Button(self.button_left_axes, "<")
-        self.button_left_callback = self.button_left.on_clicked(self.button_left_click)
+        self.button_left_callback = self.button_left.on_clicked(
+            self.button_left_click)
 
         self.button_right_axes = self.fig.add_axes(
             [0.50, 0.01, 0.05, 0.05], frameon=True
@@ -112,7 +113,8 @@ class draw_constellation:
                 self.imags = numpy.array([i.imag for i in iq])
 
                 self.time = numpy.array(
-                    [i * (1 / self.sample_rate) for i in range(len(self.reals))]
+                    [i * (1 / self.sample_rate)
+                     for i in range(len(self.reals))]
                 )
                 return True
             else:
@@ -126,8 +128,10 @@ class draw_constellation:
         r = self.get_data()
 
         # Subplot for real and imaginary parts of signal
-        self.sp_iq = self.fig.add_subplot(2, 1, 1, position=[0.075, 0.2, 0.4, 0.6])
-        self.sp_iq.set_title(("I&Q"), fontsize=self.title_font_size, fontweight="bold")
+        self.sp_iq = self.fig.add_subplot(
+            2, 1, 1, position=[0.075, 0.2, 0.4, 0.6])
+        self.sp_iq.set_title(
+            ("I&Q"), fontsize=self.title_font_size, fontweight="bold")
         self.sp_iq.set_xlabel(
             "Time (s)", fontsize=self.label_font_size, fontweight="bold"
         )
@@ -139,7 +143,8 @@ class draw_constellation:
         )
 
         # Subplot for constellation plot
-        self.sp_const = self.fig.add_subplot(2, 2, 1, position=[0.575, 0.2, 0.4, 0.6])
+        self.sp_const = self.fig.add_subplot(
+            2, 2, 1, position=[0.575, 0.2, 0.4, 0.6])
         self.sp_const.set_title(
             ("Constellation"), fontsize=self.title_font_size, fontweight="bold"
         )
@@ -219,8 +224,8 @@ class draw_constellation:
         curxlim = numpy.array(self.xlim)
         if newxlim[0] != curxlim[0] or newxlim[1] != curxlim[1]:
             self.xlim = newxlim
-            r = self.reals[int(ceil(self.xlim[0])) : int(ceil(self.xlim[1]))]
-            i = self.imags[int(ceil(self.xlim[0])) : int(ceil(self.xlim[1]))]
+            r = self.reals[int(ceil(self.xlim[0])): int(ceil(self.xlim[1]))]
+            i = self.imags[int(ceil(self.xlim[0])): int(ceil(self.xlim[1]))]
 
             self.plot_const[0].set_data(r, i)
             self.sp_const.axis([-2, 2, -2, 2])
@@ -297,7 +302,8 @@ def find(item_in, list_search):
 def main():
     description = "Takes a GNU Radio complex binary file and displays the I&Q data versus time and the constellation plot (I vs. Q). You can set the block size to specify how many points to read in at a time and the start position in the file. By default, the system assumes a sample rate of 1, so in time, each sample is plotted versus the sample number. To set a true time axis, set the sample rate (-R or --sample-rate) to the sample rate used when capturing the samples."
 
-    parser = ArgumentParser(conflict_handler="resolve", description=description)
+    parser = ArgumentParser(conflict_handler="resolve",
+                            description=description)
     parser.add_argument(
         "-B",
         "--block",
@@ -319,7 +325,8 @@ def main():
         default=1.0,
         help="Set the sampler rate of the data [default=%(default)r]",
     )
-    parser.add_argument("file", metavar="FILE", help="Input file with complex samples")
+    parser.add_argument("file", metavar="FILE",
+                        help="Input file with complex samples")
     args = parser.parse_args()
 
     dc = draw_constellation(args.file, args)
