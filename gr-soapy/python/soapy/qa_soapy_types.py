@@ -9,6 +9,7 @@
 from gnuradio import gr, gr_unittest, blocks
 from gnuradio import soapy
 
+
 class test_soapy_types(gr_unittest.TestCase):
 
     def test_range(self):
@@ -46,7 +47,7 @@ class test_soapy_types(gr_unittest.TestCase):
             test_arginfo.type = val
             self.assertEqual(test_arginfo.type, val)
 
-        test_arginfo.range = soapy.range_t(1,2,0.5)
+        test_arginfo.range = soapy.range_t(1, 2, 0.5)
         self.assertAlmostEqual(test_arginfo.range.minimum(), 1, 9)
         self.assertAlmostEqual(test_arginfo.range.maximum(), 2, 9)
         self.assertAlmostEqual(test_arginfo.range.step(), 0.5, 9)
