@@ -66,7 +66,7 @@ class ModToolDisable(ModTool):
                 ed.comment_out_lines(fr'{fname_base}::suite\(\)', comment_str='//')
                 ed.write()
                 self.scm.mark_file_updated(self._file['qalib'])
-            elif self.info['version'] == '38':
+            elif self.info['version'] in ['38','310']:
                 fname_qa_cc = f'qa_{self.info["blockname"]}.cc'
                 cmake.comment_out_lines(fname_qa_cc)
             elif self.info['version'] == '36':

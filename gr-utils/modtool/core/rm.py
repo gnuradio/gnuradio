@@ -63,7 +63,7 @@ class ModToolRemove(ModTool):
                                     r'\$\{CMAKE_CURRENT_SOURCE_DIR\}/%s' % filename,
                                     to_ignore_start=f'APPEND test_{modname_}_sources')
                     self.scm.mark_file_updated(ed.filename)
-            elif self.info['version'] == '38':
+            elif self.info['version'] in ['38','310']:
                 (base, ext) = os.path.splitext(filename)
                 if ext == '.cc':
                     ed.remove_value(
@@ -89,15 +89,15 @@ class ModToolRemove(ModTool):
 
         # Go, go, go!
         if not self.skip_subdirs['python']:
-            py_files_deleted = self._run_subdir('python', ('*.py',), ('GR_PYTHON_INSTALL',),
+            py_files_deleted = self._run_subdir(self.info['pydir'], ('*.py',), ('GR_PYTHON_INSTALL',),
                                                 cmakeedit_func=_remove_py_test_case)
             for f in py_files_deleted:
                 remove_pattern_from_file(self._file['pyinit'], fr'.*import\s+{f[:-3]}.*')
                 remove_pattern_from_file(self._file['pyinit'], fr'.*from\s+{f[:-3]}\s+import.*\n')
 
-            pb_files_deleted = self._run_subdir('python/bindings', ('*.cc',), ('list',))
+            pb_files_deleted = self._run_subdir(os.path.join(self.info['pydir'],'bindings'), ('*.cc',), ('list',))
 
-            pbdoc_files_deleted = self._run_subdir('python/bindings/docstrings', ('*.h',), ('',))
+            pbdoc_files_deleted = self._run_subdir(os.path.join(self.info['pydir'],'bindings','docstrings'), ('*.h',), ('',))
 
             # Update python_bindings.cc
             blocknames_to_delete = []
@@ -144,11 +144,11 @@ class ModToolRemove(ModTool):
         if self.info['blockname']:
             # Ensure the blockname given is not confused with similarly named blocks
             blockname_pattern = ''
-            if path == 'python':
+            if path == self.info['pydir']:
                 blockname_pattern = f"^(qa_)?{self.info['blockname']}.py$"
-            elif path == 'python/bindings':
+            elif path == os.path.join(self.info['pydir'],'bindings'):
                 blockname_pattern = f"^{self.info['blockname']}_python.cc$"
-            elif path == 'python/bindings/docstrings':
+            elif path == os.path.join(self.info['pydir'],'bindings','docstrings'):
                 blockname_pattern = f"^{self.info['blockname']}_pydoc_template.h$"
             elif path == 'lib':
                 blockname_pattern = f"^{self.info['blockname']}_impl(\\.h|\\.cc)$"

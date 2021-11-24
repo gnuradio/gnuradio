@@ -80,10 +80,17 @@ class ModToolNewModule(ModTool):
                 s = s.replace('HOWTO', self.info['modname'].upper())
                 with open(f, 'w') as filetext:
                     filetext.write(s)
+
+        # Do the file renaming after the first pass of file content modification
+        #  In the same loop this creates unreachable file paths
+        for root, dirs, files in os.walk('.'):
+            for filename in files:
+                f = os.path.join(root, filename)
                 if filename.find('howto') != -1:
                     os.rename(f, os.path.join(root, filename.replace('howto', self.info['modname'])))
             if os.path.basename(root) == 'howto':
                 os.rename(root, os.path.join(os.path.dirname(root), self.info['modname']))
+
         logger.info("Done.")
         if self.scm.init_repo(path_to_repo="."):
             logger.info("Created repository... you might want to commit before continuing.")

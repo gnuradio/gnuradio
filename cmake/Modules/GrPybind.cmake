@@ -206,8 +206,12 @@ foreach(file ${files})
 
     # If no header filename is specified (set to empty or "None")
     #  OR If hash is set to 0, then ignore the check as well
-    if (NOT ${header_filename} STREQUAL "None" AND NOT ${header_file_hash} STREQUAL "0")  
+    if (NOT ${header_filename} STREQUAL "None" AND NOT ${header_file_hash} STREQUAL "0")
         set(header_full_path ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include/${name}/${header_filename})  # NOTE OOT version does not have gnuradio/ here
+        if(NOT EXISTS ${header_full_path})
+            set(header_full_path ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include/gnuradio/${name}/${header_filename})
+        ENDIF()
+        
         file(MD5 ${header_full_path} calc_hash)
         # message(STATUS ${ii} " " ${calc_hash} " " ${saved_hash})
         if (NOT ${calc_hash} STREQUAL ${header_file_hash})

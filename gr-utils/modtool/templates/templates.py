@@ -501,15 +501,27 @@ from gnuradio import gr, gr_unittest
 # from gnuradio import blocks
 % if lang == 'cpp':
 try:
+% if version in ['310']:
+  from gnuradio.${modname} import ${blockname}
+% else:
     from ${modname} import ${blockname}
+% endif
 except ImportError:
     import os
     import sys
     dirname, filename = os.path.split(os.path.abspath(__file__))
     sys.path.append(os.path.join(dirname, "bindings"))
+% if version in ['310']:
+    from gnuradio.${modname} import ${blockname}
+% else:
     from ${modname} import ${blockname}
+% endif
+% else:
+% if version in ['310']:
+from gnuradio.${modname} import ${blockname}
 % else:
 from ${blockname} import ${blockname}
+% endif
 % endif
 
 class qa_${blockname}(gr_unittest.TestCase):
@@ -539,7 +551,11 @@ label: ${blockname}
 category: '[${modname}]'
 
 templates:
+% if version in ['310']:
+  imports: from gnuradio import ${modname}
+% else:
   imports: import ${modname}
+% endif
   make: ${modname}.${blockname}(${strip_arg_types_grc(arglist)})
 
 #  Make one 'parameters' list entry for every parameter you want settable from the GUI.

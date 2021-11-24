@@ -76,7 +76,7 @@ class ModToolMakeYAML(ModTool):
         logger.warning("Warning: This is an experimental feature. Don't expect any magic.")
         # 1) Go through lib/
         if not self.skip_subdirs['lib']:
-            if self.info['version'] in ('37', '38'):
+            if self.info['version'] in ('37', '38', '310'):
                 files = self._search_files('lib', '*_impl.cc')
             else:
                 files = self._search_files('lib', '*.cc')

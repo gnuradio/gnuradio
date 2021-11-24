@@ -73,7 +73,7 @@ ENDIF()
 ########################################################################
 # Install directories
 ########################################################################
-find_package(Gnuradio "3.9" REQUIRED)
+find_package(Gnuradio "3.10" REQUIRED)
 include(GrVersion)
 
 include(GrPlatform) #define LIB_SUFFIX
@@ -82,7 +82,7 @@ if(NOT CMAKE_MODULES_DIR)
   set(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake)
 endif(NOT CMAKE_MODULES_DIR)
 
-set(GR_INCLUDE_DIR      include/howto)
+set(GR_INCLUDE_DIR      include/gnuradio/howto)
 set(GR_CMAKE_DIR        ${CMAKE_MODULES_DIR}/gnuradio-howto)
 set(GR_PKG_DATA_DIR     ${GR_DATA_DIR}/${CMAKE_PROJECT_NAME})
 set(GR_PKG_DOC_DIR      ${GR_DOC_DIR}/${CMAKE_PROJECT_NAME})
@@ -138,15 +138,30 @@ add_custom_target(uninstall
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/howto)
+add_subdirectory(include/gnuradio/howto)
 add_subdirectory(lib)
 add_subdirectory(apps)
 add_subdirectory(docs)
 # NOTE: manually update below to use GRC to generate C++ flowgraphs w/o python
 if(ENABLE_PYTHON)
   message(STATUS "PYTHON and GRC components are enabled")
-  add_subdirectory(python)
+  add_subdirectory(python/howto)
   add_subdirectory(grc)
 else(ENABLE_PYTHON)
   message(STATUS "PYTHON and GRC components are disabled")
 endif(ENABLE_PYTHON)
+
+########################################################################
+# Install cmake search helper for this library
+########################################################################
+
+install(FILES cmake/Modules/gnuradio-howtoConfig.cmake
+    DESTINATION ${GR_CMAKE_DIR}
+)
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    ${PROJECT_SOURCE_DIR}/cmake/Modules/targetConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${target}Config.cmake
+    INSTALL_DESTINATION ${GR_CMAKE_DIR}
+)

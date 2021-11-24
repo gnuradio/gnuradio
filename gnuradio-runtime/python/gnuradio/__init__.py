@@ -12,6 +12,14 @@ GNU Radio is licensed under the GNU General Public License (GPL) version 3. All 
 # The docstring will be associated with the top level of the package.
 
 import os
+from pkgutil import extend_path
+
+# Allow OOT modules to be installed elsewhere on the PYTHONPATH
+# For example, gnuradio might be installed to /usr/lib/python3.8/site-packages/gnuradio
+#  But an OOT might be installed to /some/other/directory/gnuradio/myoot
+#  As long as /some/other/directory/ is in PYTHONPATH, this init file should find it
+#  and `from gnuradio import myoot` will work as expected
+__path__ = extend_path(__path__, __name__)
 
 # python3.8 and up need to have the dll search path set
 # https://docs.python.org/3/whatsnew/3.8.html#bpo-36085-whatsnew

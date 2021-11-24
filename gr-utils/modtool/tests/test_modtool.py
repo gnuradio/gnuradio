@@ -129,7 +129,7 @@ class TestModToolCore(unittest.TestCase):
         """ Pylint tests for API function newmod """
         module_dir = path.join(self.test_dir, 'gr-test')
         ## pylint tests ##
-        python_dir = path.join(module_dir, 'python')
+        python_dir = path.join(module_dir, 'python', 'test')
         py_module = path.join(python_dir, 'mul_ff.py')
         (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only --disable=E0602', return_std=True)
         print(pylint_stdout.getvalue(), end='')
@@ -179,7 +179,7 @@ class TestModToolCore(unittest.TestCase):
         self.assertTrue(path.exists(path.join(module_dir, 'lib', 'qa_add_ff.cc')))
         self.assertTrue(path.exists(path.join(module_dir, 'lib', 'add_ff_impl.cc')))
         self.assertTrue(path.exists(path.join(module_dir, 'grc', 'howto_add_ff.block.yml')))
-        self.assertTrue(path.exists(path.join(module_dir, 'include', 'howto', 'add_ff.h')))
+        self.assertTrue(path.exists(path.join(module_dir, 'include', 'gnuradio', 'howto', 'add_ff.h')))
 
         ## The check for object instantiation ##
         test_obj = ModToolAdd()
@@ -193,8 +193,8 @@ class TestModToolCore(unittest.TestCase):
         test_obj.info['blockname'] = 'mul_ff'
         test_obj.add_py_qa = True
         test_obj.run()
-        self.assertTrue(path.exists(path.join(module_dir, 'python', 'mul_ff.py')))
-        self.assertTrue(path.exists(path.join(module_dir, 'python', 'qa_mul_ff.py')))
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'howto', 'mul_ff.py')))
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'howto', 'qa_mul_ff.py')))
         self.assertTrue(path.exists(path.join(module_dir, 'grc', 'howto_mul_ff.block.yml')))
 
     @unittest.skipIf(skip_pylint_test, 'pylint dependency missing, skip test')
@@ -217,11 +217,11 @@ class TestModToolCore(unittest.TestCase):
         test_obj.info['blockname'] = 'mul_ff'
         test_obj.add_py_qa = True
         test_obj.run()
-        self.assertTrue(path.exists(path.join(module_dir, 'python', 'mul_ff.py')))
-        self.assertTrue(path.exists(path.join(module_dir, 'python', 'qa_mul_ff.py')))
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'howto', 'mul_ff.py')))
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'howto', 'qa_mul_ff.py')))
 
         ## pylint tests ##
-        python_dir = path.join(module_dir, 'python')
+        python_dir = path.join(module_dir, 'python', 'howto')
         py_module = path.join(python_dir, 'mul_ff.py')
         (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only --disable=E0602', return_std=True)
         print(pylint_stdout.getvalue(), end='')
@@ -262,7 +262,7 @@ class TestModToolCore(unittest.TestCase):
         ModToolRename(**test_dict).run()
         self.assertTrue(path.exists(path.join(module_dir, 'lib', 'div_ff_impl.h')))
         self.assertTrue(path.exists(path.join(module_dir, 'lib', 'div_ff_impl.cc')))
-        self.assertTrue(path.exists(path.join(module_dir, 'python', 'qa_div_ff.py')))
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'howto', 'qa_div_ff.py')))       
         self.assertTrue(path.exists(path.join(module_dir, 'grc', 'howto_div_ff.block.yml')))
 
         ## The check for object instantiation ##
@@ -272,7 +272,7 @@ class TestModToolCore(unittest.TestCase):
         test_obj.run()
         self.assertTrue(path.exists(path.join(module_dir, 'lib', 'sub_ff_impl.h')))
         self.assertTrue(path.exists(path.join(module_dir, 'lib', 'sub_ff_impl.cc')))
-        self.assertTrue(path.exists(path.join(module_dir, 'python', 'qa_sub_ff.py')))
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'howto', 'qa_sub_ff.py')))
         self.assertTrue(path.exists(path.join(module_dir, 'grc', 'howto_sub_ff.block.yml')))
 
     def test_remove(self):
@@ -291,7 +291,7 @@ class TestModToolCore(unittest.TestCase):
         ModToolRemove(**test_dict).run()
         self.assertTrue(path.exists(path.join(module_dir, 'lib', 'square_ff_impl.h')))
         self.assertTrue(path.exists(path.join(module_dir, 'lib', 'square_ff_impl.cc')))
-        self.assertTrue(path.exists(path.join(module_dir, 'python', 'qa_square_ff.py')))
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'howto', 'qa_square_ff.py')))
         self.assertTrue(path.exists(path.join(module_dir, 'grc', 'howto_square_ff.block.yml')))
 
         ## Some tests for checking the non-existence of removed files ##
@@ -299,7 +299,7 @@ class TestModToolCore(unittest.TestCase):
         ModToolRemove(**test_dict).run()
         self.assertTrue(not path.exists(path.join(module_dir, 'lib', 'square_ff_impl.h')))
         self.assertTrue(not path.exists(path.join(module_dir, 'lib', 'square_ff_impl.cc')))
-        self.assertTrue(not path.exists(path.join(module_dir, 'python', 'qa_square_ff.py')))
+        self.assertTrue(not path.exists(path.join(module_dir, 'python', 'howto', 'qa_square_ff.py')))
         self.assertTrue(not path.exists(path.join(module_dir, 'grc', 'howto_square_ff.block.yml')))
 
     def test_makeyaml(self):

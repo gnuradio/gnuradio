@@ -40,7 +40,7 @@ def render_template(tpl_id, **kwargs):
     kwargs['strip_arg_types'] = strip_arg_types
     kwargs['strip_arg_types_grc'] = strip_arg_types_grc
     kwargs['grblocktype'] = GRTYPELIST[kwargs['blocktype']]
-    if kwargs['is_component']:
+    if kwargs['is_component'] or kwargs['version'] in ['310']:
         kwargs['include_dir_prefix'] = "gnuradio/" + kwargs['modname']
     else:
         kwargs['include_dir_prefix'] = kwargs['modname']
