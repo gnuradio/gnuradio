@@ -14,7 +14,9 @@ from gnuradio import filter
 from gnuradio.fft import window
 from gnuradio import analog
 from gnuradio import channels
-import sys, math, time
+import sys
+import math
+import time
 import numpy
 
 try:
@@ -32,11 +34,11 @@ class fmtx(gr.hier_block2):
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex))
 
         fmtx = analog.nbfm_tx(audio_rate, if_rate, max_dev=5e3,
-	                      tau=75e-6, fh=0.925*if_rate/2.0)
+                              tau=75e-6, fh=0.925 * if_rate / 2.0)
 
         # Local oscillator
         lo = analog.sig_source_c(if_rate,            # sample rate
-                                 analog.GR_SIN_WAVE, # waveform type
+                                 analog.GR_SIN_WAVE,  # waveform type
                                  lo_freq,            # frequency
                                  1.0,                # amplitude
                                  0)                  # DC Offset
@@ -45,6 +47,7 @@ class fmtx(gr.hier_block2):
         self.connect(self, fmtx, (mixer, 0))
         self.connect(lo, (mixer, 1))
         self.connect(mixer, self)
+
 
 class fmtest(gr.top_block):
     def __init__(self):
@@ -57,14 +60,16 @@ class fmtest(gr.top_block):
         self._N = 5
         chspacing = 16000
         freq = [10, 20, 30, 40, 50]
-        f_lo = [0, 1*chspacing, -1*chspacing, 2*chspacing, -2*chspacing]
+        f_lo = [0, 1 * chspacing, -1 * chspacing,
+                2 * chspacing, -2 * chspacing]
 
-        self._if_rate = 4*self._N*self._audio_rate
+        self._if_rate = 4 * self._N * self._audio_rate
 
         # Create a signal source and frequency modulate it
         self.sum = blocks.add_cc()
         for n in range(self._N):
-            sig = analog.sig_source_f(self._audio_rate, analog.GR_SIN_WAVE, freq[n], 0.5)
+            sig = analog.sig_source_f(
+                self._audio_rate, analog.GR_SIN_WAVE, freq[n], 0.5)
             fm = fmtx(f_lo[n], self._audio_rate, self._if_rate)
             self.connect(sig, fm)
             self.connect(fm, (self.sum, n))
@@ -74,7 +79,6 @@ class fmtest(gr.top_block):
         self.channel = channels.channel_model(0.1)
 
         self.connect(self.sum, self.head, self.channel, self.snk_tx)
-
 
         # Design the channlizer
         self._M = 10
@@ -99,16 +103,19 @@ class fmtest(gr.top_block):
         self.squelch = list()
         self.snks = list()
         for i in range(self._M):
-            self.fmdet.append(analog.nbfm_rx(self._audio_rate, self._chan_rate))
-            self.squelch.append(analog.standard_squelch(self._audio_rate*10))
+            self.fmdet.append(analog.nbfm_rx(
+                self._audio_rate, self._chan_rate))
+            self.squelch.append(analog.standard_squelch(self._audio_rate * 10))
             self.snks.append(blocks.vector_sink_f())
-            self.connect((self.pfb, i), self.fmdet[i], self.squelch[i], self.snks[i])
+            self.connect(
+                (self.pfb, i), self.fmdet[i], self.squelch[i], self.snks[i])
 
     def num_tx_channels(self):
         return self._N
 
     def num_rx_channels(self):
         return self._M
+
 
 def main():
 
@@ -119,9 +126,9 @@ def main():
     tend = time.time()
 
     if 1:
-        fig1 = pylab.figure(1, figsize=(12,10), facecolor="w")
-        fig2 = pylab.figure(2, figsize=(12,10), facecolor="w")
-        fig3 = pylab.figure(3, figsize=(12,10), facecolor="w")
+        fig1 = pylab.figure(1, figsize=(12, 10), facecolor="w")
+        fig2 = pylab.figure(2, figsize=(12, 10), facecolor="w")
+        fig3 = pylab.figure(3, figsize=(12, 10), facecolor="w")
 
         Ns = 10000
         Ne = 100000
@@ -132,16 +139,16 @@ def main():
         # Plot transmitted signal
         fs = fm._if_rate
 
-        d = fm.snk_tx.data()[Ns:Ns+Ne]
+        d = fm.snk_tx.data()[Ns:Ns + Ne]
         sp1_f = fig1.add_subplot(2, 1, 1)
 
-        X,freq = sp1_f.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
-                           window = lambda d: d*winfunc(fftlen),
-                           visible=False)
-        X_in = 10.0*numpy.log10(abs(numpy.fft.fftshift(X)))
+        X, freq = sp1_f.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
+                            window=lambda d: d * winfunc(fftlen),
+                            visible=False)
+        X_in = 10.0 * numpy.log10(abs(numpy.fft.fftshift(X)))
         f_in = numpy.arange(-fs / 2.0, fs / 2.0, fs / float(X_in.size))
         p1_f = sp1_f.plot(f_in, X_in, "b")
-        sp1_f.set_xlim([min(f_in), max(f_in)+1])
+        sp1_f.set_xlim([min(f_in), max(f_in) + 1])
         sp1_f.set_ylim([-120.0, 20.0])
 
         sp1_f.set_title("Input Signal", weight="bold")
@@ -149,7 +156,7 @@ def main():
         sp1_f.set_ylabel("Power (dBW)")
 
         Ts = 1.0 / fs
-        Tmax = len(d)*Ts
+        Tmax = len(d) * Ts
 
         t_in = numpy.arange(0, Tmax, Ts)
         x_in = numpy.array(d)
@@ -173,16 +180,16 @@ def main():
             #    this is a bug, probably due to the corner cases
             d = fm.snks[i].data()[Ns:Ne]
 
-            sp2_f = fig2.add_subplot(Nrows, Ncols, 1+i)
-            X,freq = sp2_f.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs_o,
-                               window = lambda d: d*winfunc(fftlen),
-                               visible=False)
+            sp2_f = fig2.add_subplot(Nrows, Ncols, 1 + i)
+            X, freq = sp2_f.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs_o,
+                                window=lambda d: d * winfunc(fftlen),
+                                visible=False)
             #X_o = 10.0*numpy.log10(abs(numpy.fft.fftshift(X)))
-            X_o = 10.0*numpy.log10(abs(X))
+            X_o = 10.0 * numpy.log10(abs(X))
             #f_o = numpy.arange(-fs_o/2.0, fs_o/2.0, fs_o/float(X_o.size))
-            f_o = numpy.arange(0, fs_o / 2.0, fs_o/2.0/float(X_o.size))
+            f_o = numpy.arange(0, fs_o / 2.0, fs_o / 2.0 / float(X_o.size))
             p2_f = sp2_f.plot(f_o, X_o, "b")
-            sp2_f.set_xlim([min(f_o), max(f_o)+0.1])
+            sp2_f.set_xlim([min(f_o), max(f_o) + 0.1])
             sp2_f.set_ylim([-120.0, 20.0])
             sp2_f.grid(True)
 
@@ -190,21 +197,19 @@ def main():
             sp2_f.set_xlabel("Frequency (kHz)")
             sp2_f.set_ylabel("Power (dBW)")
 
-
             Ts = 1.0 / fs_o
-            Tmax = len(d)*Ts
+            Tmax = len(d) * Ts
             t_o = numpy.arange(0, Tmax, Ts)
 
             x_t = numpy.array(d)
-            sp2_t = fig3.add_subplot(Nrows, Ncols, 1+i)
+            sp2_t = fig3.add_subplot(Nrows, Ncols, 1 + i)
             p2_t = sp2_t.plot(t_o, x_t.real, "b")
             p2_t = sp2_t.plot(t_o, x_t.imag, "r")
-            sp2_t.set_xlim([min(t_o), max(t_o)+1])
+            sp2_t.set_xlim([min(t_o), max(t_o) + 1])
             sp2_t.set_ylim([-1, 1])
 
             sp2_t.set_xlabel("Time (s)")
             sp2_t.set_ylabel("Amplitude")
-
 
         pylab.show()
 
