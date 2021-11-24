@@ -69,8 +69,8 @@ class qa_stream_demux(gr_unittest.TestCase):
         return (dst0.data(), dst1.data())
 
     def help_stream_tag_propagation(self, N, stream_sizes):
-        src_data = (stream_sizes[0] * [1, ] + stream_sizes[1]
-                    * [2, ] + stream_sizes[2] * [3, ]) * N
+        src_data = (stream_sizes[0] * [1, ] + stream_sizes[1] *
+                    [2, ] + stream_sizes[2] * [3, ]) * N
 
         src = blocks.vector_source_f(src_data, False)
 

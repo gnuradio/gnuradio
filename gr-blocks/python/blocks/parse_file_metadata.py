@@ -31,15 +31,16 @@ ftype_to_string = {blocks.GR_FILE_BYTE: "bytes",
                    blocks.GR_FILE_LONG: "long",
                    blocks.GR_FILE_LONG_LONG: "long long",
                    blocks.GR_FILE_FLOAT: "float",
-                   blocks.GR_FILE_DOUBLE: "double" }
+                   blocks.GR_FILE_DOUBLE: "double"}
 
 ftype_to_size = {blocks.GR_FILE_BYTE: gr.sizeof_char,
                  blocks.GR_FILE_SHORT: gr.sizeof_short,
                  blocks.GR_FILE_INT: gr.sizeof_int,
                  blocks.GR_FILE_LONG: gr.sizeof_int,
-                 blocks.GR_FILE_LONG_LONG: 2*gr.sizeof_int,
+                 blocks.GR_FILE_LONG_LONG: 2 * gr.sizeof_int,
                  blocks.GR_FILE_FLOAT: gr.sizeof_float,
                  blocks.GR_FILE_DOUBLE: gr.sizeof_double}
+
 
 def parse_header(p, VERBOSE=False):
     dump = pmt.PMT_NIL
@@ -47,7 +48,8 @@ def parse_header(p, VERBOSE=False):
     info = dict()
 
     if(pmt.is_dict(p) is False):
-        sys.stderr.write("Header is not a PMT dictionary: invalid or corrupt data file.\n")
+        sys.stderr.write(
+            "Header is not a PMT dictionary: invalid or corrupt data file.\n")
         sys.exit(1)
 
     # GET FILE FORMAT VERSION NUMBER
@@ -57,7 +59,8 @@ def parse_header(p, VERBOSE=False):
         if(VERBOSE):
             print("Version Number: {0}".format(version))
     else:
-        sys.stderr.write("Could not find key 'version': invalid or corrupt data file.\n")
+        sys.stderr.write(
+            "Could not find key 'version': invalid or corrupt data file.\n")
         sys.exit(1)
 
     # EXTRACT SAMPLE RATE
@@ -68,7 +71,8 @@ def parse_header(p, VERBOSE=False):
         if(VERBOSE):
             print("Sample Rate: {0:.2f} sps".format(samp_rate))
     else:
-        sys.stderr.write("Could not find key 'sr': invalid or corrupt data file.\n")
+        sys.stderr.write(
+            "Could not find key 'sr': invalid or corrupt data file.\n")
         sys.exit(1)
 
     # EXTRACT TIME STAMP
@@ -83,15 +87,16 @@ def parse_header(p, VERBOSE=False):
         info["rx_time_fracs"] = fracs
         info["rx_time"] = t
         if(VERBOSE):
-                # We need are going to print with ~1e-16 resolution,
-                # which is the precision we can expect in secs.
-                # The default value of precision for decimal
-                # is 28. The value of secs is not expected to be larger
-                # than 1e12, so this precision is enough.
-                s = decimal.Decimal(secs) + decimal.Decimal(fracs)
-                print("Seconds: {0:.16f}".format(s))
+            # We need are going to print with ~1e-16 resolution,
+            # which is the precision we can expect in secs.
+            # The default value of precision for decimal
+            # is 28. The value of secs is not expected to be larger
+            # than 1e12, so this precision is enough.
+            s = decimal.Decimal(secs) + decimal.Decimal(fracs)
+            print("Seconds: {0:.16f}".format(s))
     else:
-        sys.stderr.write("Could not find key 'time': invalid or corrupt data file.\n")
+        sys.stderr.write(
+            "Could not find key 'time': invalid or corrupt data file.\n")
         sys.exit(1)
 
     # EXTRACT ITEM SIZE
@@ -102,7 +107,8 @@ def parse_header(p, VERBOSE=False):
         if(VERBOSE):
             print("Item size: {0}".format(dsize))
     else:
-        sys.stderr.write("Could not find key 'size': invalid or corrupt data file.\n")
+        sys.stderr.write(
+            "Could not find key 'size': invalid or corrupt data file.\n")
         sys.exit(1)
 
     # EXTRACT DATA TYPE
@@ -114,7 +120,8 @@ def parse_header(p, VERBOSE=False):
         if(VERBOSE):
             print("Data Type: {0} ({1})".format(stype, dtype))
     else:
-        sys.stderr.write("Could not find key 'type': invalid or corrupt data file.\n")
+        sys.stderr.write(
+            "Could not find key 'type': invalid or corrupt data file.\n")
         sys.exit(1)
 
     # EXTRACT COMPLEX
@@ -125,7 +132,8 @@ def parse_header(p, VERBOSE=False):
         if(VERBOSE):
             print("Complex? {0}".format(cplx))
     else:
-        sys.stderr.write("Could not find key 'cplx': invalid or corrupt data file.\n")
+        sys.stderr.write(
+            "Could not find key 'cplx': invalid or corrupt data file.\n")
         sys.exit(1)
 
     # EXTRACT WHERE CURRENT SEGMENT STARTS
@@ -140,7 +148,8 @@ def parse_header(p, VERBOSE=False):
             print("Extra Length:  {0}".format((info["extra_len"])))
             print("Extra Header?  {0}".format(info["has_extra"]))
     else:
-        sys.stderr.write("Could not find key 'strt': invalid or corrupt data file.\n")
+        sys.stderr.write(
+            "Could not find key 'strt': invalid or corrupt data file.\n")
         sys.exit(1)
 
     # EXTRACT SIZE OF DATA
@@ -156,15 +165,19 @@ def parse_header(p, VERBOSE=False):
             print("Size of Data: {0} bytes".format(nbytes))
             print("              {0} items".format(nitems))
     else:
-        sys.stderr.write("Could not find key 'size': invalid or corrupt data file.\n")
+        sys.stderr.write(
+            "Could not find key 'size': invalid or corrupt data file.\n")
         sys.exit(1)
 
     return info
 
 # IF THERE IS EXTRA DATA, PULL OUT THE DICTIONARY AND PARSE IT
+
+
 def parse_extra_dict(p, info, VERBOSE=False):
     if(pmt.is_dict(p) is False):
-        sys.stderr.write("Extra header is not a PMT dictionary: invalid or corrupt data file.\n")
+        sys.stderr.write(
+            "Extra header is not a PMT dictionary: invalid or corrupt data file.\n")
         sys.exit(1)
 
     items = pmt.dict_items(p)
