@@ -7,7 +7,7 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
-## [3.10.0.0] - Unreleased
+## [3.10.0.0] - [UNRELEASED]
 
 ### Changed
 
@@ -19,12 +19,23 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
    - PDU vector types are accessible in gr::types
    - PDU functions are accessible in gr::pdu
    - Common msg port names are accessible in gr::ports
+- Logging Infrastructure changed to use spdlog
+   - +dependency spdlog, -dependency Log4CPP
+   - New, more convenient logging methods
+   - Modernized Interface
+   - Removed iostream and cstdio from logging statements
 
 #### Project Scope
 
 - C++17
   - requires MSVC 1914 (Microsoft VS 2017 15.7)
+  - replace boost::filesystem with std::filesystem
 - Windows build: removed unnecessary MSVC-specific system include overrides
+- Removed unused volk_benchmark
+- Use Pre-Compiled Headers - speeds up compilation time
+- Further replacements of boost::bind with lambda functions
+- Remove more manual memory management and general c++ modernization
+- PEP8 formatting applied and enforced on all Python files
 
 #### gr-blocks
 
@@ -46,19 +57,56 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
 - Remove deprecated simple_{correlator,framer}
 - Remove deprecated cma, lms, kurtotic equalizers; replaced in 3.9 by `linear_equalizer`
+- Un-deprecate pfb_clock_sync
+- Add header payload demux example 
+- Remove crc32 utility and most of packet_utils 
+
+#### gr-dtv
+
+- Refactor ATSC blocks to have separate metadata stream rather than passing structs
+
+#### gr-qtgui
+
+- Remove spurious volk includes
+- Fix segfaulting overflow in time_sink and waterfall
+- Support for Qwt 6.2
+
+#### gr-video-sdl
+
+- Clean up the SDL sinks:
+   -  Remove unused format parameter 
 
 #### gnuradio-runtime
 
 - `gr::random` uses xoroshiro128+ internally, takes `uint64_t` seed
+- Remove unused misc.cc/h
+- Accelerator Device Support
+    - Major changes to the runtime to support "custom buffers"
+    - Single Mapped Buffer abstraction that can be inherited out of tree
+- Remove Tag Checker
+- Explicitly convert path to string to fix MSVC build
+- size_t for vmcircbuf constructor and buffer factories
 
-### Added
+#### grc
 
-- New in-tree module gr-pdu
+- grcc --output switch for hierarchical blocks
+
+#### Testing
+
+- rm dependencies from disabled components in blocks/runtime tests
 
 #### Misc.
 
 - dtools: Added run-clang-tidy-on-codebase, which does what the name suggests,
   then updates all bindtool hashes, and commits everything appropriately
+- `gr_filter_design` 
+  - update to support PyQt5
+  - fix loading of previously saved .csv files
+
+### Added
+
+- New in-tree module gr-pdu
+- New in-tree module gr-iio
 
 ## [3.9.0.0] - 2020-01-17
 
