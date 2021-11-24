@@ -111,7 +111,7 @@ class qa_linear_equalizer(gr_unittest.TestCase):
             4,
             1,
             alg,
-            True, 
+            True,
             [],
             '')
         dst = blocks.vector_sink_c()

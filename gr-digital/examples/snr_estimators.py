@@ -38,6 +38,7 @@ For an explination of the online algorithms, see:
 http://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Higher-order_statistics
 '''
 
+
 def online_skewness(data):
     n = 0
     mean = 0
@@ -46,52 +47,57 @@ def online_skewness(data):
 
     for n in range(len(data)):
         delta = data[n] - mean
-        delta_n = delta / (n+1)
+        delta_n = delta / (n + 1)
         term1 = delta * delta_n * n
         mean = mean + delta_n
         M3 = M3 + term1 * delta_n * (n - 1) - 3 * delta_n * M2
         M2 = M2 + term1
 
-    return scipy.sqrt(len(data))*M3 / scipy.power(M2, 3.0 / 2.0);
+    return scipy.sqrt(len(data)) * M3 / scipy.power(M2, 3.0 / 2.0)
+
 
 def snr_est_simple(signal):
     s = scipy.mean(abs(signal)**2)
-    n = 2*scipy.var(abs(signal))
+    n = 2 * scipy.var(abs(signal))
     snr_rat = s / n
-    return 10.0*scipy.log10(snr_rat), snr_rat
+    return 10.0 * scipy.log10(snr_rat), snr_rat
+
 
 def snr_est_skew(signal):
     y1 = scipy.mean(abs(signal))
     y2 = scipy.mean(scipy.real(signal**2))
-    y3 = (y1*y1 - y2)
+    y3 = (y1 * y1 - y2)
     y4 = online_skewness(signal.real)
     #y4 = stats.skew(abs(signal.real))
 
-    skw = y4*y4 / (y2*y2*y2);
-    s = y1*y1
-    n = 2*(y3 + skw*s)
+    skw = y4 * y4 / (y2 * y2 * y2)
+    s = y1 * y1
+    n = 2 * (y3 + skw * s)
     snr_rat = s / n
-    return 10.0*scipy.log10(snr_rat), snr_rat
+    return 10.0 * scipy.log10(snr_rat), snr_rat
+
 
 def snr_est_m2m4(signal):
     M2 = scipy.mean(abs(signal)**2)
     M4 = scipy.mean(abs(signal)**4)
-    snr_rat = scipy.sqrt(2*M2*M2 - M4) / (M2 - scipy.sqrt(2*M2*M2 - M4))
-    return 10.0*scipy.log10(snr_rat), snr_rat
+    snr_rat = scipy.sqrt(2 * M2 * M2 - M4) / \
+        (M2 - scipy.sqrt(2 * M2 * M2 - M4))
+    return 10.0 * scipy.log10(snr_rat), snr_rat
+
 
 def snr_est_svr(signal):
     N = len(signal)
     ssum = 0
     msum = 0
     for i in range(1, N):
-        ssum += (abs(signal[i])**2)*(abs(signal[i-1])**2)
+        ssum += (abs(signal[i])**2) * (abs(signal[i - 1])**2)
         msum += (abs(signal[i])**4)
-    savg = (1.0 / (float(N-1.0)))*ssum
-    mavg = (1.0 / (float(N-1.0)))*msum
+    savg = (1.0 / (float(N - 1.0))) * ssum
+    mavg = (1.0 / (float(N - 1.0))) * msum
     beta = savg / (mavg - savg)
 
-    snr_rat = ((beta - 1) + scipy.sqrt(beta*(beta-1)))
-    return 10.0*scipy.log10(snr_rat), snr_rat
+    snr_rat = ((beta - 1) + scipy.sqrt(beta * (beta - 1)))
+    return 10.0 * scipy.log10(snr_rat), snr_rat
 
 
 def main():
@@ -103,7 +109,6 @@ def main():
                      "skew": snr_est_skew,
                      "m2m4": snr_est_m2m4,
                      "svr": snr_est_svr}
-
 
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
     parser.add_option("-N", "--nsamples", type="int", default=10000,
@@ -118,13 +123,13 @@ def main():
                       choices=list(gr_estimators.keys()), default="simple",
                       help="Estimator type {0} [default=%default]".format(
                             list(gr_estimators.keys())))
-    (options, args) = parser.parse_args ()
+    (options, args) = parser.parse_args()
 
     N = options.nsamples
     xx = scipy.random.randn(N)
     xy = scipy.random.randn(N)
-    bits =2*scipy.complex64(scipy.random.randint(0, 2, N)) - 1
-    #bits =(2*scipy.complex64(scipy.random.randint(0, 2, N)) - 1) + \
+    bits = 2 * scipy.complex64(scipy.random.randint(0, 2, N)) - 1
+    # bits =(2*scipy.complex64(scipy.random.randint(0, 2, N)) - 1) + \
     #    1j*(2*scipy.complex64(scipy.random.randint(0, 2, N)) - 1)
 
     snr_known = list()
@@ -134,7 +139,7 @@ def main():
     # when to issue an SNR tag; can be ignored in this example.
     ntag = 10000
 
-    n_cpx = xx + 1j*xy
+    n_cpx = xx + 1j * xy
 
     py_est = py_estimators[options.type]
     gr_est = gr_estimators[options.type]
@@ -142,17 +147,17 @@ def main():
     SNR_min = options.snr_min
     SNR_max = options.snr_max
     SNR_step = options.snr_step
-    SNR_dB = scipy.arange(SNR_min, SNR_max+SNR_step, SNR_step)
+    SNR_dB = scipy.arange(SNR_min, SNR_max + SNR_step, SNR_step)
     for snr in SNR_dB:
         SNR = 10.0**(snr / 10.0)
-        scale = scipy.sqrt(2*SNR)
+        scale = scipy.sqrt(2 * SNR)
         yy = bits + n_cpx / scale
         print("SNR: ", snr)
 
         Sknown = scipy.mean(yy**2)
         Nknown = scipy.var(n_cpx / scale)
         snr0 = Sknown / Nknown
-        snr0dB = 10.0*scipy.log10(snr0)
+        snr0dB = 10.0 * scipy.log10(snr0)
         snr_known.append(float(snr0dB))
 
         snrdB, snr = py_est(yy)
@@ -169,7 +174,7 @@ def main():
         snr_gr.append(gr_snr.snr())
 
     f1 = pyplot.figure(1)
-    s1 = f1.add_subplot(1,1,1)
+    s1 = f1.add_subplot(1, 1, 1)
     s1.plot(SNR_dB, snr_known, "k-o", linewidth=2, label="Known")
     s1.plot(SNR_dB, snr_python, "b-o", linewidth=2, label="Python")
     s1.plot(SNR_dB, snr_gr, "g-o", linewidth=2, label="GNU Radio")
@@ -180,7 +185,7 @@ def main():
     s1.legend()
 
     f2 = pyplot.figure(2)
-    s2 = f2.add_subplot(1,1,1)
+    s2 = f2.add_subplot(1, 1, 1)
     s2.plot(yy.real, yy.imag, 'o')
 
     pyplot.show()

@@ -29,7 +29,7 @@ _def_samples_per_symbol = 2
 _def_bits_per_symbol = 1
 _def_h_numerator = 1
 _def_h_denominator = 2
-_def_cpm_type = 0 # 0=CPFSK, 1=GMSK, 2=RC, 3=GENERAL
+_def_cpm_type = 0  # 0=CPFSK, 1=GMSK, 2=RC, 3=GENERAL
 _def_bt = 0.35
 _def_symbols_per_pulse = 1
 _def_generic_taps = numpy.empty(1)
@@ -80,62 +80,69 @@ class cpm_mod(gr.hier_block2):
                  log=_def_log):
 
         gr.hier_block2.__init__(self, "cpm_mod",
-                                gr.io_signature(1, 1, gr.sizeof_char),       # Input signature
-                                gr.io_signature(1, 1, gr.sizeof_gr_complex)) #  Output signature
+                                # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_char),
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex))  # Output signature
 
         self._samples_per_symbol = samples_per_symbol
         self._bits_per_symbol = bits_per_symbol
         self._h_numerator = h_numerator
         self._h_denominator = h_denominator
         self._cpm_type = cpm_type
-        self._bt=bt
-        if cpm_type == 0 or cpm_type == 2 or cpm_type == 3: # CPFSK, RC, Generic
+        self._bt = bt
+        if cpm_type == 0 or cpm_type == 2 or cpm_type == 3:  # CPFSK, RC, Generic
             self._symbols_per_pulse = symbols_per_pulse
-        elif cpm_type == 1: # GMSK
+        elif cpm_type == 1:  # GMSK
             self._symbols_per_pulse = 4
         else:
-            raise TypeError("cpm_type must be an integer in {0,1,2,3}, is %r" % (cpm_type,))
+            raise TypeError(
+                "cpm_type must be an integer in {0,1,2,3}, is %r" % (cpm_type,))
 
-        self._generic_taps=numpy.array(generic_taps)
+        self._generic_taps = numpy.array(generic_taps)
 
         if samples_per_symbol < 2:
-            raise TypeError("samples_per_symbol must be >= 2, is %r" % (samples_per_symbol,))
+            raise TypeError("samples_per_symbol must be >= 2, is %r" %
+                            (samples_per_symbol,))
 
         self.nsymbols = 2**bits_per_symbol
-        self.sym_alphabet = numpy.arange(-(self.nsymbols-1),self.nsymbols,2).tolist()
-
+        self.sym_alphabet = numpy.arange(-(self.nsymbols - 1),
+                                         self.nsymbols, 2).tolist()
 
         self.ntaps = int(self._symbols_per_pulse * samples_per_symbol)
         sensitivity = 2 * pi * h_numerator / h_denominator / samples_per_symbol
 
         # Unpack Bytes into bits_per_symbol groups
-        self.B2s = blocks.packed_to_unpacked_bb(bits_per_symbol,gr.GR_MSB_FIRST)
-
+        self.B2s = blocks.packed_to_unpacked_bb(
+            bits_per_symbol, gr.GR_MSB_FIRST)
 
         # Turn it into symmetric PAM data.
-        self.pam = digital_python.chunks_to_symbols_bf(self.sym_alphabet,1)
+        self.pam = digital_python.chunks_to_symbols_bf(self.sym_alphabet, 1)
 
         # Generate pulse (sum of taps = samples_per_symbol/2)
-        if cpm_type == 0: # CPFSK
-            self.taps= (1.0/self._symbols_per_pulse/2,) * self.ntaps
-        elif cpm_type == 1: # GMSK
+        if cpm_type == 0:  # CPFSK
+            self.taps = (1.0 / self._symbols_per_pulse / 2,) * self.ntaps
+        elif cpm_type == 1:  # GMSK
             gaussian_taps = filter.firdes.gaussian(
                 1.0 / 2,                     # gain
                 samples_per_symbol,    # symbol_rate
                 bt,                    # bandwidth * symbol time
                 self.ntaps                  # number of taps
-                )
+            )
             sqwave = (1,) * samples_per_symbol       # rectangular window
-            self.taps = numpy.convolve(numpy.array(gaussian_taps),numpy.array(sqwave))
-        elif cpm_type == 2: # Raised Cosine
+            self.taps = numpy.convolve(numpy.array(
+                gaussian_taps), numpy.array(sqwave))
+        elif cpm_type == 2:  # Raised Cosine
             # generalize it for arbitrary roll-off factor
-            self.taps = (1-numpy.cos(2*pi*numpy.arange(0 / self.ntaps/samples_per_symbol/self._symbols_per_pulse)),(2*self._symbols_per_pulse))
-        elif cpm_type == 3: # Generic CPM
+            self.taps = (1 - numpy.cos(2 * pi * numpy.arange(0 / self.ntaps /
+                         samples_per_symbol / self._symbols_per_pulse)), (2 * self._symbols_per_pulse))
+        elif cpm_type == 3:  # Generic CPM
             self.taps = generic_taps
         else:
-            raise TypeError("cpm_type must be an integer in {0,1,2,3}, is %r" % (cpm_type,))
+            raise TypeError(
+                "cpm_type must be an integer in {0,1,2,3}, is %r" % (cpm_type,))
 
-        self.filter = filter.pfb.arb_resampler_fff(samples_per_symbol, self.taps)
+        self.filter = filter.pfb.arb_resampler_fff(
+            samples_per_symbol, self.taps)
 
         # FM modulation
         self.fmmod = analog.frequency_modulator_fc(sensitivity)
@@ -170,19 +177,17 @@ class cpm_mod(gr.hier_block2):
     def symbols_per_pulse(self):
         return self._symbols_per_pulse
 
-
     def _print_verbage(self):
         print("Samples per symbol = %d" % self._samples_per_symbol)
         print("Bits per symbol = %d" % self._bits_per_symbol)
-        print("h = " , self._h_numerator , " / " ,  self._h_denominator)
-        print("Symbol alphabet = " , self.sym_alphabet)
+        print("h = ", self._h_numerator, " / ", self._h_denominator)
+        print("Symbol alphabet = ", self.sym_alphabet)
         print("Symbols per pulse = %d" % self._symbols_per_pulse)
-        print("taps = " , self.taps)
+        print("taps = ", self.taps)
 
         print("CPM type = %d" % self._cpm_type)
         if self._cpm_type == 1:
-             print("Gaussian filter BT = %.2f" % self._bt)
-
+            print("Gaussian filter BT = %.2f" % self._bt)
 
     def _setup_logging(self):
         print("Modulation logging turned on.")
@@ -209,8 +214,7 @@ class cpm_mod(gr.hier_block2):
         Given command line options, create dictionary suitable for passing to __init__
         """
         return modulation_utils.extract_kwargs_from_options(cpm_mod.__init__,
-                                                             ('self',), options)
-
+                                                            ('self',), options)
 
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -219,7 +223,6 @@ class cpm_mod(gr.hier_block2):
 #
 # Not yet implemented
 #
-
 #
 # Add these to the mod/demod registry
 #

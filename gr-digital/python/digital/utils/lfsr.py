@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 #
 # Copyright 2020 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# 
+#
 
 def lfsr_args(seed, *exp):
     """
@@ -18,4 +18,4 @@ def lfsr_args(seed, *exp):
     Creates an lfsr object with seed 0b11001, mask 0b1000011, K=6
     """
     from functools import reduce
-    return reduce(int.__xor__, map(lambda x:2**x, exp)), seed, max(exp)-1
+    return reduce(int.__xor__, map(lambda x: 2**x, exp)), seed, max(exp) - 1

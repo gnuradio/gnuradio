@@ -60,7 +60,7 @@ class test_glfsr_source(gr_unittest.TestCase):
                           lambda: digital.glfsr_source_f(0))
         self.assertRaises(RuntimeError,
                           lambda: digital.glfsr_source_f(65))
-        
+
     def test_005_correlation_f(self):
         for degree in range(
                 1, 11):                # Higher degrees take too long to correlate

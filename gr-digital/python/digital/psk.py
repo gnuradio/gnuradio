@@ -28,6 +28,7 @@ _def_mod_code = mod_codes.GRAY_CODE
 # Default use of differential encoding
 _def_differential = True
 
+
 def create_encodings(mod_code, arity, differential):
     post_diff_code = None
     if mod_code not in mod_codes.codes:
@@ -43,12 +44,14 @@ def create_encodings(mod_code, arity, differential):
         pre_diff_code = []
         post_diff_code = None
     else:
-        raise ValueError('That modulation code is not implemented for this constellation.')
+        raise ValueError(
+            'That modulation code is not implemented for this constellation.')
     return (pre_diff_code, post_diff_code)
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           PSK constellation
 # /////////////////////////////////////////////////////////////////////////////
+
 
 def psk_constellation(m=_def_constellation_points, mod_code=_def_mod_code,
                       differential=_def_differential):
@@ -57,8 +60,9 @@ def psk_constellation(m=_def_constellation_points, mod_code=_def_mod_code,
     """
     k = log(m) / log(2.0)
     if (k != int(k)):
-        raise Exception('Number of constellation points must be a power of two.')
-    points = [exp(2*pi*(0+1j)*i/m) for i in range(0,m)]
+        raise Exception(
+            'Number of constellation points must be a power of two.')
+    points = [exp(2 * pi * (0 + 1j) * i / m) for i in range(0, m)]
     pre_diff_code, post_diff_code = create_encodings(mod_code, m, differential)
     if post_diff_code is not None:
         inverse_post_diff_code = mod_codes.invert_code(post_diff_code)
@@ -69,6 +73,7 @@ def psk_constellation(m=_def_constellation_points, mod_code=_def_mod_code,
 # /////////////////////////////////////////////////////////////////////////////
 #                           PSK modulator
 # /////////////////////////////////////////////////////////////////////////////
+
 
 class psk_mod(generic_mod):
     """
@@ -95,13 +100,16 @@ class psk_mod(generic_mod):
                  mod_code=_def_mod_code,
                  differential=_def_differential,
                  *args, **kwargs):
-        constellation = psk_constellation(constellation_points, mod_code, differential)
-        super(psk_mod, self).__init__(constellation, differential, *args, **kwargs)
+        constellation = psk_constellation(
+            constellation_points, mod_code, differential)
+        super(psk_mod, self).__init__(
+            constellation, differential, *args, **kwargs)
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           PSK demodulator
 #
 # /////////////////////////////////////////////////////////////////////////////
+
 
 class psk_demod(generic_demod):
 
@@ -120,12 +128,16 @@ class psk_demod(generic_demod):
     """
     # See generic_mod for additional arguments
     __doc__ += shared_mod_args
+
     def __init__(self, constellation_points=_def_constellation_points,
                  mod_code=_def_mod_code,
                  differential=_def_differential,
                  *args, **kwargs):
-        constellation = psk_constellation(constellation_points, mod_code, differential)
-        super(psk_demod, self).__init__(constellation, differential, *args, **kwargs)
+        constellation = psk_constellation(
+            constellation_points, mod_code, differential)
+        super(psk_demod, self).__init__(
+            constellation, differential, *args, **kwargs)
+
 
 #
 # Add these to the mod/demod registry
