@@ -32,29 +32,35 @@ class qa_add_system_time(gr_unittest.TestCase):
     def test_001_basic_io(self):
         self.tb.start()
         # provide two non PDU inputs and one PDU input
-        self.add_sys_time.to_basic_block()._post(pmt.intern("pdu"), pmt.intern("BAD PDU"))
+        self.add_sys_time.to_basic_block()._post(
+            pmt.intern("pdu"), pmt.intern("BAD PDU"))
         self.add_sys_time.to_basic_block()._post(pmt.intern("pdu"),
                                                  pmt.cons(pmt.from_long(4), pmt.PMT_NIL))
         self.add_sys_time.to_basic_block()._post(pmt.intern("pdu"),
                                                  pmt.cons(pmt.make_dict(), pmt.init_f32vector(1, [0.0])))
-        self.waitFor(lambda: self.debug.num_messages() >= 1, timeout=1.0, poll_interval=0.01)
+        self.waitFor(lambda: self.debug.num_messages() >=
+                     1, timeout=1.0, poll_interval=0.01)
         self.tb.stop()
         self.tb.wait()
 
         # make sure we got one message and it has a systime key
         self.assertEqual(1, self.debug.num_messages())
-        self.assertTrue(pmt.dict_has_key(pmt.car(self.debug.get_message(0)), pmt.intern('systime')))
+        self.assertTrue(pmt.dict_has_key(
+            pmt.car(self.debug.get_message(0)), pmt.intern('systime')))
 
     def test_002_timing(self):
         self.tb.start()
 
-        self.add_sys_time.to_basic_block()._post(pmt.intern("pdu"), pmt.intern("BAD PDU"))
+        self.add_sys_time.to_basic_block()._post(
+            pmt.intern("pdu"), pmt.intern("BAD PDU"))
         self.add_sys_time.to_basic_block()._post(pmt.intern("pdu"),
                                                  pmt.cons(pmt.make_dict(), pmt.init_u8vector(1, [0])))
-        time.sleep(1.0) # wait for one second to provide a time difference between messages
+        # wait for one second to provide a time difference between messages
+        time.sleep(1.0)
         self.add_sys_time.to_basic_block()._post(pmt.intern("pdu"),
                                                  pmt.cons(pmt.make_dict(), pmt.init_u8vector(1, [0])))
-        self.waitFor(lambda: self.debug.num_messages() == 2, timeout=1.0, poll_interval=0.01)
+        self.waitFor(lambda: self.debug.num_messages() ==
+                     2, timeout=1.0, poll_interval=0.01)
         self.tb.stop()
         self.tb.wait()
 
@@ -64,7 +70,8 @@ class qa_add_system_time(gr_unittest.TestCase):
         t1 = pmt.to_double(pmt.dict_ref(pmt.car(self.debug.get_message(1)),
                                         pmt.intern("systime"),
                                         pmt.from_double(0.0)))
-        self.assertTrue(((t1 - t0) - 1) < 0.05) # should be sufficient tolerance
+        # should be sufficient tolerance
+        self.assertTrue(((t1 - t0) - 1) < 0.05)
 
 
 if __name__ == '__main__':

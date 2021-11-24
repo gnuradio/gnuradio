@@ -144,5 +144,6 @@ class test_pdu(gr_unittest.TestCase):
         data = pmt.u8vector_elements(pmt.cdr(dbg.get_message(0)))
         self.assertEqual([1, 2, 3], data)
 
+
 if __name__ == '__main__':
     gr_unittest.run(test_pdu)
