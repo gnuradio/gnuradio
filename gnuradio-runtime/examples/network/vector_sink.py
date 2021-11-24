@@ -13,6 +13,7 @@ from gnuradio import blocks
 from gnuradio.eng_arg import eng_float, intx
 from argparse import ArgumentParser
 
+
 class vector_sink(gr.top_block):
     def __init__(self, host, port, pkt_size, eof):
         gr.top_block.__init__(self, "vector_sink")
@@ -21,16 +22,17 @@ class vector_sink(gr.top_block):
         sink = blocks.file_sink(gr.sizeof_float, "received.dat")
         self.connect(udp, sink)
 
+
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-H", "--host", default="0.0.0.0",
-                      help="local host name (domain name or IP address)")
+                        help="local host name (domain name or IP address)")
     parser.add_argument("-p", "--port", type=int, default=65500,
-                      help="port value to listen to for connection")
+                        help="port value to listen to for connection")
     parser.add_argument("-s", "--packet-size", type=int, default=1471,
-                      help="packet size.")
+                        help="packet size.")
     parser.add_argument("--no-eof", action="store_true", default=False,
-                      help="don't send EOF on disconnect")
+                        help="don't send EOF on disconnect")
     args = parser.parse_args()
     # Create an instance of a hierarchical block
     top_block = vector_sink(args.host, args.port,
@@ -43,4 +45,3 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         # Ctrl-C exits
         pass
-

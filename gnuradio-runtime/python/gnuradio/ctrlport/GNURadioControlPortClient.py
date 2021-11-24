@@ -32,6 +32,7 @@ ControlPort client application for all transports.
 
 """
 
+
 class GNURadioControlPortClient(object):
     """
     Constructor for creating a ControlPort connection to a specified host / port
@@ -62,6 +63,7 @@ class GNURadioControlPortClient(object):
             such as QtGui.QApplication.exec_
 
     """
+
     def __init__(self, host=None, port=None, rpcmethod='thrift', callback=None, blockingcallback=None):
         self.client = None
 

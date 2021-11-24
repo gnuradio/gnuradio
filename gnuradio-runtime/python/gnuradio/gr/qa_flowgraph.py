@@ -25,5 +25,6 @@ class test_flowgraph (gr_unittest.TestCase):
         self.tb.start()
         self.tb.stop()
 
+
 if __name__ == '__main__':
     gr_unittest.run(test_flowgraph)

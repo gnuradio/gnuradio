@@ -14,6 +14,7 @@ Add support for engineering notation to argparse.ArgumentParser
 import argparse
 from gnuradio import eng_notation
 
+
 def intx(string):
     """
     Generic integer type, will interpret string as string literal.
@@ -25,6 +26,7 @@ def intx(string):
         raise argparse.ArgumentTypeError(
             "Invalid integer value: {}".format(string)
         )
+
 
 def eng_float(string):
     """
@@ -38,4 +40,3 @@ def eng_float(string):
         raise argparse.ArgumentTypeError(
             "Invalid engineering notation value: {}".format(string)
         )
-

@@ -17,6 +17,7 @@ import unittest
 # We allow snakeCase here for consistency with unittest
 # pylint: disable=invalid-name
 
+
 class TestCase(unittest.TestCase):
     """A subclass of unittest.TestCase that adds additional assertions
 
@@ -32,14 +33,13 @@ class TestCase(unittest.TestCase):
            Note that decimal places (from zero) is usually not the same
            as significant digits (measured from the most significant digit).
        """
-        if round(second.real-first.real, places) != 0:
+        if round(second.real - first.real, places) != 0:
             raise self.failureException(
                 msg or '%r != %r within %r places' % (first, second, places))
-        if round(second.imag-first.imag, places) != 0:
+        if round(second.imag - first.imag, places) != 0:
             raise self.failureException(
                 msg or '%r != %r within %r places' % (first, second, places)
             )
-
 
     def assertComplexAlmostEqual2(self, ref, x, abs_eps=1e-12, rel_eps=1e-6, msg=None):
         """
@@ -50,19 +50,18 @@ class TestCase(unittest.TestCase):
             return
 
         if abs(ref) > abs_eps:
-            if abs(ref-x) / abs(ref) > rel_eps:
+            if abs(ref - x) / abs(ref) > rel_eps:
                 raise self.failureException(
                     msg or '%r != %r rel_error = %r rel_limit = %r' % (
-                        ref, x, abs(ref-x) / abs(ref), rel_eps
+                        ref, x, abs(ref - x) / abs(ref), rel_eps
                     )
                 )
         else:
             raise self.failureException(
                 msg or '%r != %r rel_error = %r rel_limit = %r' % (
-                    ref, x, abs(ref-x) / abs(ref), rel_eps
+                    ref, x, abs(ref - x) / abs(ref), rel_eps
                 )
             )
-
 
     def assertComplexTuplesAlmostEqual(self, a, b, places=7, msg=None):
         """
@@ -76,7 +75,6 @@ class TestCase(unittest.TestCase):
             for (x, y) in zip(a, b)
         ])
 
-
     def assertComplexTuplesAlmostEqual2(self, a, b,
                                         abs_eps=1e-12, rel_eps=1e-6, msg=None):
         """
@@ -88,7 +86,6 @@ class TestCase(unittest.TestCase):
             self.assertComplexAlmostEqual2(x, y, abs_eps, rel_eps, msg)
             for (x, y) in zip(a, b)
         ])
-
 
     def assertFloatTuplesAlmostEqual(self, a, b, places=7, msg=None):
         """
@@ -102,7 +99,6 @@ class TestCase(unittest.TestCase):
             for (x, y) in zip(a, b)
         ])
 
-
     def assertFloatTuplesAlmostEqual2(self, a, b,
                                       abs_eps=1e-12, rel_eps=1e-6, msg=None):
         self.assertEqual(len(a), len(b))
@@ -110,25 +106,25 @@ class TestCase(unittest.TestCase):
             self.assertComplexAlmostEqual2(x, y, abs_eps, rel_eps, msg)
             for (x, y) in zip(a, b)
         ])
-        
-        
+
     def assertSequenceEqualGR(self, data_in, data_out):
-        """ 
+        """
         Note this function exists because of this bug: https://bugs.python.org/issue19217
         Calling self.assertEqual(seqA, seqB) can hang if seqA and seqB are not equal.
         """
         if len(data_in) != len(data_out):
-            print('Lengths do not match: {:d} -- {:d}'.format(len(data_in), len(data_out)))
+            print(
+                'Lengths do not match: {:d} -- {:d}'.format(len(data_in), len(data_out)))
         self.assertTrue(len(data_in) == len(data_out))
         total_miscompares = 0
         for idx, item in enumerate(zip(data_in, data_out)):
             if item[0] != item[1]:
                 total_miscompares += 1
-                print('Miscompare at: {:d} ({:d} -- {:d})'.format(idx, item[0], item[1]))
+                print(
+                    'Miscompare at: {:d} ({:d} -- {:d})'.format(idx, item[0], item[1]))
         if total_miscompares > 0:
             print('Total miscompares: {:d}'.format(total_miscompares))
         self.assertTrue(total_miscompares == 0)
-        
 
     def waitFor(
             self,

@@ -106,7 +106,7 @@ class test_hier_block2(gr_unittest.TestCase):
     def test_010_end_with_head(self):
         import math
         exp = 1j * 440 / 44100
-        src = blocks.vector_source_c([math.e**(exp*n) for n in range(10**6)])
+        src = blocks.vector_source_c([math.e**(exp * n) for n in range(10**6)])
         head = blocks.head(gr.sizeof_gr_complex, 1000)
         test = test_hblk([gr.sizeof_gr_complex], 0)
         tb = gr.top_block()
@@ -116,7 +116,7 @@ class test_hier_block2(gr_unittest.TestCase):
     def test_011_test_message_connect(self):
         import math
         exp = 1j * 440 / 44100
-        src = blocks.vector_source_c([math.e**(exp*n) for n in range(10**6)])
+        src = blocks.vector_source_c([math.e**(exp * n) for n in range(10**6)])
         strobe = blocks.message_strobe(pmt.PMT_NIL, 100)
         head = blocks.head(gr.sizeof_gr_complex, 1000)
         test = test_hblk([gr.sizeof_gr_complex], 1)
@@ -131,7 +131,7 @@ class test_hier_block2(gr_unittest.TestCase):
     def test_012(self):
         import math
         exp = 1j * 440 / 44100
-        src = blocks.vector_source_c([math.e**(exp*n) for n in range(10**6)])
+        src = blocks.vector_source_c([math.e**(exp * n) for n in range(10**6)])
         strobe = blocks.message_strobe(pmt.PMT_NIL, 100)
         head = blocks.head(gr.sizeof_gr_complex, 1000)
         test = test_hblk([gr.sizeof_gr_complex], 16)

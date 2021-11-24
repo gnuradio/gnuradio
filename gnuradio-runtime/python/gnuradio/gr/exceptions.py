@@ -10,6 +10,7 @@ class NotDAG (Exception):
     """Not a directed acyclic graph"""
     pass
 
+
 class CantHappen (Exception):
     """Can't happen"""
     pass

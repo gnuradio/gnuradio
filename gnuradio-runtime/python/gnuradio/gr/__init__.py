@@ -20,7 +20,7 @@ Core contents.
 # If gnuradio is installed then the pybind output will be in this directory.
 # Otherwise it will reside in bindings/.
 
-import os, sys
+import os
 
 try:
     from .gr_python import *

@@ -95,10 +95,11 @@ class test_random(gr_unittest.TestCase):
         N = 10**6
 
         self.assertEqual(gr.xoroshiro128p_prng.min(), 0)
-        self.assertEqual(gr.xoroshiro128p_prng.max(), 2**64-1)
+        self.assertEqual(gr.xoroshiro128p_prng.max(), 2**64 - 1)
         rng = gr.xoroshiro128p_prng(42)
         arr = all((0 <= rng() <= 2**64 - 1 for _ in range(N)))
         self.assertTrue(arr)
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_random)
