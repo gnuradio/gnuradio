@@ -135,7 +135,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.tabWidget = QtWidgets.QTabWidget()
         self.tabWidget.setTabsClosable(True)
         #TODO: Don't close if the tab has not been saved
-        self.tabWidget.tabCloseRequested.connect(lambda index: self.tabWidget.removeTab(index))
+        self.tabWidget.tabCloseRequested.connect(lambda index: self.close_triggered(index))
         self.tabWidget.addTab(self.flowgraph, "Untitled")
         self.setCentralWidget(self.tabWidget)
         self.currentFlowgraph.selectionChanged.connect(self.updateActions)
@@ -519,7 +519,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             log.info("Opening flowgraph ({0})".format(filename))
             new_flowgraph = Flowgraph(self)
             initial_state = self.platform.parse_flow_graph(filename)
-            self.tabWidget.addTab(new_flowgraph, "new")
+            self.tabWidget.addTab(new_flowgraph, os.path.basename(filename))
             self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
             self.currentFlowgraph.import_data(initial_state)
             self.currentFlowgraph.selectionChanged.connect(self.updateActions)
@@ -540,8 +540,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         log.info(filename)
 
-    def close_triggered(self):
+    def close_triggered(self, tab_index=None):
         log.debug('close')
+        if tab_index is None:
+            self.tabWidget.removeTab(self.tabWidget.currentIndex())
+        else:
+            # TODO: Only if saved
+            self.tabWidget.removeTab(tab_index)
 
     def close_all_triggered(self):
         log.debug('close')
