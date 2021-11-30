@@ -35,6 +35,7 @@ from itertools import count
 # Custom modules
 from .canvas.block import Block
 from .canvas.port import Port
+from ...core.base import Element
 from .canvas.connection import Connection
 from .. import base
 from ...core.FlowGraph import FlowGraph as CoreFlowgraph
@@ -236,9 +237,9 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
     def mouseReleaseEvent(self, event):
         if self.newConnection:
             item = self.itemAt(event.scenePos(), QtGui.QTransform())
-            if item:
-                if item.is_port:
-                    print("Connected two ports together!")
+            if isinstance(item, Element):
+                if item.is_port and item != self.startPort:
+                    log.debug("Connecting two ports")
                     self.connections.add(Connection(self, self.startPort, item))
             self.removeItem(self.newConnection)
             self.newConnection = None
