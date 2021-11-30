@@ -171,6 +171,10 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 blocks.append(item)
         return blocks
 
+    def delete_selected(self):
+        for item in self.selectedItems():
+            self.remove_element(item)
+
     def rotate_selected(self, rotation):
         """
         Rotate the selected blocks by multiples of 90 degrees.
