@@ -574,6 +574,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def delete_triggered(self):
         log.debug('delete')
+        self.currentFlowgraph.delete_selected()
 
     def rotate_ccw_triggered(self):
         log.debug('rotate_ccw')
