@@ -43,6 +43,7 @@ Menu = QtWidgets.QMenu
 Toolbar = QtWidgets.QToolBar
 Icons = QtGui.QIcon.fromTheme
 Keys = QtGui.QKeySequence
+QStyle = QtWidgets.QStyle
 
 
 class MainWindow(QtWidgets.QMainWindow, base.Component):
@@ -249,7 +250,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions['about'] = Action(Icons('help-about'), _("about"), self,
                                   statusTip=_("about-tooltip"))
 
-        actions['about_qt'] = Action(Icons('help-about'), _("about-qt"), self,
+        actions['about_qt'] = Action(self.style().standardIcon(QStyle.SP_TitleBarMenuButton), _("about-qt"), self,
                                      statusTip=_("about-tooltip"))
 
         actions['generate'] = Action(Icons('system-run'), _("process-generate"), self,
