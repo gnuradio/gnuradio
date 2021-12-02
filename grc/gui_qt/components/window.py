@@ -148,9 +148,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     '''
 
     @property
+    def currentView(self):
+        return self.tabWidget.currentWidget()
+
+    @property
     def currentFlowgraph(self):
         return self.tabWidget.currentWidget().flowgraph
-
 
     def createActions(self, actions):
         '''
@@ -305,7 +308,11 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             return False
 
         selected_elements = self.currentFlowgraph.selectedItems()
+        canUndo = self.currentView.undoStack.canUndo()
+        canRedo = self.currentView.undoStack.canRedo()
 
+        self.actions['undo'].setEnabled(canUndo)
+        self.actions['redo'].setEnabled(canRedo)
         self.actions['cut'].setEnabled(False)
         self.actions['copy'].setEnabled(False)
         self.actions['paste'].setEnabled(False)
@@ -442,6 +449,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         # Edit toolbar
         edit = Toolbar("Edit")
+        edit.addAction(actions['undo'])
+        edit.addAction(actions['redo'])
+        edit.addSeparator()
         edit.addAction(actions['cut'])
         edit.addAction(actions['copy'])
         edit.addAction(actions['paste'])

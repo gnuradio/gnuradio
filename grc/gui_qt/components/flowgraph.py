@@ -321,6 +321,8 @@ class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Compo
         self.isPanning    = False
         self.mousePressed = False
 
+        self.undoStack = QtWidgets.QUndoStack()
+
         '''
         QGraphicsView.__init__(self, flow_graph, parent)
         self._flow_graph = flow_graph
