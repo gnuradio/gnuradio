@@ -2,7 +2,7 @@
 from .block_library import BlockLibrary
 from .documentation_tab import DocumentationTab
 from .console import Console
-from .flowgraph import Flowgraph
+from .flowgraph import FlowgraphView
 from .project_manager import ProjectManager
 
 # Import last since there are dependencies

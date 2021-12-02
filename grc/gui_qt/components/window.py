@@ -31,7 +31,7 @@ from PyQt5.Qt import Qt
 from PyQt5.QtGui import QStandardItemModel
 
 # Custom modules
-from . import Flowgraph
+from . import FlowgraphView
 from .. import base
 
 # Logging
@@ -129,15 +129,15 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.registerToolBar(toolbars["run"])
 
         log.debug("Loading flowgraph model")
-        self.flowgraph = Flowgraph(self)
+        self.fg_view = FlowgraphView(self)
         initial_state = self.platform.parse_flow_graph("")
-        self.flowgraph.scene.import_data(initial_state)
+        self.fg_view.flowgraph.import_data(initial_state)
         log.debug("Adding flowgraph view")
         self.tabWidget = QtWidgets.QTabWidget()
         self.tabWidget.setTabsClosable(True)
         #TODO: Don't close if the tab has not been saved
         self.tabWidget.tabCloseRequested.connect(lambda index: self.close_triggered(index))
-        self.tabWidget.addTab(self.flowgraph, "Untitled")
+        self.tabWidget.addTab(self.fg_view, "Untitled")
         self.setCentralWidget(self.tabWidget)
         self.currentFlowgraph.selectionChanged.connect(self.updateActions)
         #self.new_tab(self.flowgraph)
@@ -149,7 +149,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     @property
     def currentFlowgraph(self):
-        return self.tabWidget.currentWidget().scene
+        return self.tabWidget.currentWidget().flowgraph
 
 
     def createActions(self, actions):
@@ -518,7 +518,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         if filename:
             log.info("Opening flowgraph ({0})".format(filename))
-            new_flowgraph = Flowgraph(self)
+            new_flowgraph = FlowgraphView(self)
             initial_state = self.platform.parse_flow_graph(filename)
             self.tabWidget.addTab(new_flowgraph, os.path.basename(filename))
             self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
@@ -535,7 +535,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if filename:
             try:
                 self.file_path = filename
-                self.platform.save_flow_graph(filename, self.flowgraph)
+                self.platform.save_flow_graph(filename, self.fg_view)
             except IOError:
                 log.error('Save failed')
 
@@ -634,6 +634,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def exit_triggered(self):
         log.debug('exit')
+        # TODO: Make sure all flowgraphs have been saved
         self.app.exit()
 
     def help_triggered(self):
