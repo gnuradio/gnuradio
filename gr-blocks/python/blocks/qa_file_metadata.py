@@ -15,6 +15,7 @@ import math
 from gnuradio import gr, gr_unittest, blocks
 import pmt
 
+
 def sig_source_c(samp_rate, freq, amp, N):
     t = [float(x) / samp_rate for x in range(N)]
     y = [amp * math.cos(2. * math.pi * freq * x) +
