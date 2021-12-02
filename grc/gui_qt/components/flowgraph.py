@@ -49,9 +49,9 @@ DEFAULT_MAX_Y = 1024
 
 
 # TODO: Combine the scene and view? Maybe the scene should be the controller?
-class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
+class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
     def __init__(self, *args, **kwargs):
-        super(FlowgraphScene, self).__init__()
+        super(Flowgraph, self).__init__()
         self.parent = self.platform
         self.parent_platform = self.platform
         CoreFlowgraph.__init__(self, self.platform)
@@ -216,7 +216,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 print("clicked a port")
         if event.button() == Qt.LeftButton:
             self.mousePressed = True
-            super(FlowgraphScene, self).mousePressEvent(event)
+            super(Flowgraph, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
         if self.newConnection:
@@ -236,7 +236,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 #~ print itemUnderMouse
                 pass
 
-            super(FlowgraphScene, self).mouseMoveEvent(event)
+            super(Flowgraph, self).mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
         if self.newConnection:
@@ -257,10 +257,10 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 #self.setCursor(Qt.ArrowCursor)
             self.mousePressed = False
         '''
-        super(FlowgraphScene, self).mouseReleaseEvent(event)
+        super(Flowgraph, self).mouseReleaseEvent(event)
 
     def mouseDoubleClickEvent(self, event): # Will be used to open up dialog box of a block
-        super(FlowgraphScene, self).mouseDoubleClickEvent(event)
+        super(Flowgraph, self).mouseDoubleClickEvent(event)
 
 
 
@@ -284,7 +284,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
 
 
     def import_data(self, data):
-        super(FlowgraphScene, self).import_data(data)
+        super(Flowgraph, self).import_data(data)
         for block in self.blocks:
             self.addItem(block)
 
@@ -296,16 +296,16 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
 
     def remove_element(self, element):
         self.removeItem(element)
-        super(FlowgraphScene, self).remove_element(element)
+        super(Flowgraph, self).remove_element(element)
 
 
-class Flowgraph(QtWidgets.QGraphicsView, base.Component): # added base.Component so it can see platform
+class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Component so it can see platform
     def __init__(self, parent, filename=None):
-        super(Flowgraph, self).__init__()
+        super(FlowgraphView, self).__init__()
         self.setParent(parent)
         self.setAlignment(Qt.AlignLeft|Qt.AlignTop)
 
-        self.scene = FlowgraphScene()
+        self.flowgraph = Flowgraph()
 
         self.scalefactor = 1.0
 
@@ -315,7 +315,7 @@ class Flowgraph(QtWidgets.QGraphicsView, base.Component): # added base.Component
         else:
             self.initEmpty()
 
-        self.setScene(self.scene)
+        self.setScene(self.flowgraph)
         self.setBackgroundBrush(QtGui.QBrush(Qt.white))
 
         self.isPanning    = False
@@ -423,7 +423,7 @@ class Flowgraph(QtWidgets.QGraphicsView, base.Component): # added base.Component
         if event.button() == Qt.LeftButton:
             self.mousePressed = True
             # This will pass the mouse move event to the scene
-            super(Flowgraph, self).mousePressEvent(event)
+            super(FlowgraphView, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
         if self.mousePressed and self.isPanning:
@@ -435,33 +435,25 @@ class Flowgraph(QtWidgets.QGraphicsView, base.Component): # added base.Component
             event.accept()
         else:
             # This will pass the mouse move event to the scene
-            super(Flowgraph, self).mouseMoveEvent(event)
+            super(FlowgraphView, self).mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
-            '''
-            if event.modifiers() & Qt.ControlModifier:
-                self.setCursor(Qt.OpenHandCursor)
-                pass
-            else:
-                self.isPanning = False
-                self.setCursor(Qt.ArrowCursor)
-            '''
             self.mousePressed = False
-        super(Flowgraph, self).mouseReleaseEvent(event)
+        super(FlowgraphView, self).mouseReleaseEvent(event)
 
     def mouseDoubleClickEvent(self, event): # Will be used to open up dialog box of a block
         pass
 
     def keyPressEvent(self, event):
-        super(Flowgraph, self).keyPressEvent(event)
+        super(FlowgraphView, self).keyPressEvent(event)
 
     def keyReleaseEvent(self, event):
-        super(Flowgraph, self).keyPressEvent(event)
+        super(FlowgraphView, self).keyPressEvent(event)
 
     def mouseDoubleClickEvent(self, event):
         # This will pass the double click event to the scene
-        super(Flowgraph, self).mouseDoubleClickEvent(event)
+        super(FlowgraphView, self).mouseDoubleClickEvent(event)
 
 
     '''
