@@ -11,6 +11,7 @@
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
 
+
 class qa_matrix_interleaver(gr_unittest.TestCase):
 
     def setUp(self):
