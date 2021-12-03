@@ -51,7 +51,12 @@ if(ENABLE_TESTING)
 
   foreach(py_qa_test_file ${py_qa_test_files})
     get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
-    GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${CMAKE_CURRENT_SOURCE_DIR}/${py_qa_test_file})
+    if (CMAKE_CROSSCOMPILING)
+        get_filename_component(py_qa_test_file ${py_qa_test_file} NAME)
+        GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${py_qa_test_file})
+    else()
+        GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${CMAKE_CURRENT_SOURCE_DIR}/${py_qa_test_file})
+    endif(CMAKE_CROSSCOMPILING)
   endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)
 
