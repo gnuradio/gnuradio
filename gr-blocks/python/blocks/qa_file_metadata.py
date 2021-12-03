@@ -15,8 +15,6 @@ import math
 from gnuradio import gr, gr_unittest, blocks
 import pmt
 
-import parse_file_metadata
-
 
 def sig_source_c(samp_rate, freq, amp, N):
     t = [float(x) / samp_rate for x in range(N)]
@@ -58,7 +56,7 @@ class test_file_metadata(gr_unittest.TestCase):
         fsnk.close()
 
         handle = open(outfile, "rb")
-        header_str = handle.read(parse_file_metadata.HEADER_LENGTH)
+        header_str = handle.read(blocks.parse_file_metadata.HEADER_LENGTH)
         if(len(header_str) == 0):
             self.assertFalse()
 
@@ -67,7 +65,7 @@ class test_file_metadata(gr_unittest.TestCase):
         except RuntimeError:
             self.assertFalse()
 
-        info = parse_file_metadata.parse_header(header, False)
+        info = blocks.parse_header(header, False)
 
         extra_str = handle.read(info["extra_len"])
         self.assertEqual(len(extra_str) > 0, True)
@@ -79,7 +77,7 @@ class test_file_metadata(gr_unittest.TestCase):
         except RuntimeError:
             self.assertFalse()
 
-        extra_info = parse_file_metadata.parse_extra_dict(extra, info, False)
+        extra_info = blocks.parse_extra_dict(extra, info, False)
 
         self.assertEqual(info['rx_rate'], samp_rate)
         self.assertEqual(pmt.to_double(extra_info['samp_rate']), samp_rate)
@@ -137,7 +135,7 @@ class test_file_metadata(gr_unittest.TestCase):
 
         # Open detached header for reading
         handle = open(outfile_hdr, "rb")
-        header_str = handle.read(parse_file_metadata.HEADER_LENGTH)
+        header_str = handle.read(blocks.parse_file_metadata.HEADER_LENGTH)
         if(len(header_str) == 0):
             self.assertFalse()
 
@@ -146,7 +144,7 @@ class test_file_metadata(gr_unittest.TestCase):
         except RuntimeError:
             self.assertFalse()
 
-        info = parse_file_metadata.parse_header(header, False)
+        info = blocks.parse_header(header, False)
 
         extra_str = handle.read(info["extra_len"])
 
@@ -159,7 +157,7 @@ class test_file_metadata(gr_unittest.TestCase):
         except RuntimeError:
             self.assertFalse()
 
-        extra_info = parse_file_metadata.parse_extra_dict(extra, info, False)
+        extra_info = blocks.parse_extra_dict(extra, info, False)
 
         self.assertEqual(info['rx_rate'], samp_rate)
         self.assertEqual(pmt.to_double(extra_info['samp_rate']), samp_rate)
