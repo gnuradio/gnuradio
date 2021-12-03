@@ -17,6 +17,17 @@
  * \brief GNU Radio logging wrapper
  *
  */
+#ifdef DISABLE_LOGGER_H
+// pygccxml as of v2.2.1 has a difficult time parsing headers that
+// include spdlog or format
+// Since it only needs the top level header info, this is a hack to not
+// transitively include anything logger related when parsing the
+// headers
+#include <memory>
+namespace gr {
+using logger_ptr = std::shared_ptr<void>;
+}
+#else
 
 // Since this file is included in *all* gr::blocks, please make sure this list of includes
 // keeps as short as possible; if anything is needed only by the implementation in
@@ -276,5 +287,7 @@ struct fmt::formatter<boost::format> : formatter<string_view> {
         return formatter<string_view>::format(bfmt.str(), ctx);
     }
 };
+
+#endif
 
 #endif /* INCLUDED_GR_LOGGER_H */
