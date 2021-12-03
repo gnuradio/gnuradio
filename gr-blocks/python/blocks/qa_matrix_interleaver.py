@@ -10,7 +10,6 @@
 
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
-from matrix_interleaver import matrix_interleaver
 
 class qa_matrix_interleaver(gr_unittest.TestCase):
 
@@ -29,7 +28,7 @@ class qa_matrix_interleaver(gr_unittest.TestCase):
         expected = cols * list(range(rows))
 
         src = blocks.vector_source_f(vec, False)
-        itlv = matrix_interleaver(gr.sizeof_float, rows=rows, cols=cols)
+        itlv = blocks.matrix_interleaver(gr.sizeof_float, rows=rows, cols=cols)
         snk = blocks.vector_sink_f()
 
         tb.connect(src, itlv, snk)
@@ -48,7 +47,8 @@ class qa_matrix_interleaver(gr_unittest.TestCase):
         expected = rows * list(range(cols))
 
         src = blocks.vector_source_f(vec, False)
-        itlv = matrix_interleaver(gr.sizeof_float, rows=rows, cols=cols, deint=True)
+        itlv = blocks.matrix_interleaver(
+            gr.sizeof_float, rows=rows, cols=cols, deint=True)
         snk = blocks.vector_sink_f()
 
         tb.connect(src, itlv, snk)
