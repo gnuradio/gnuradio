@@ -53,7 +53,7 @@ class GenericHeaderParser(BlockTool):
         BlockTool.__init__(self, **kwargs)
         self.parsed_data = {}
         self.addcomments = blocktool_comments
-        self.define_symbols = ('BOOST_ATOMIC_DETAIL_EXTRA_BACKEND_GENERIC',)
+        self.define_symbols = ('BOOST_ATOMIC_DETAIL_EXTRA_BACKEND_GENERIC', 'DISABLE_LOGGER_H')
         if(define_symbols):
             self.define_symbols += define_symbols
         self.include_paths = None
