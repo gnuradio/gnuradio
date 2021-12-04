@@ -229,6 +229,20 @@ add_custom_target(uninstall
 # Enable python component
 ########################################################################
 include(GrPython)
+GR_PYTHON_CHECK_MODULE_RAW(
+    "packaging"
+    "import packaging"
+    PACKAGING_FOUND
+)
+if(NOT PACKAGING_FOUND)
+    message(STATUS "")
+    message(STATUS "***************************** WARNING!!! *******")
+    message(STATUS "The python package packaging is missing")
+    message(STATUS "So some checks will fail")
+    message(STATUS "Please install python3-packaging")
+    message(STATUS "or run pip3 install packaging")
+    message(STATUS "************************************************")
+endif()
 GR_PYTHON_CHECK_MODULE(
     "numpy"
     numpy
@@ -258,6 +272,7 @@ ENDIF()
 include(GrComponent)
 GR_REGISTER_COMPONENT("python-support" ENABLE_PYTHON
     PYTHONLIBS_FOUND
+    PACKAGING_FOUND
     pybind11_FOUND
     NUMPY_FOUND
 )

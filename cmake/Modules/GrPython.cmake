@@ -127,7 +127,7 @@ macro(GR_PYTHON_CHECK_MODULE desc mod cmd have)
     GR_PYTHON_CHECK_MODULE_RAW(
         "${desc}" "
 #########################################
-from distutils.version import LooseVersion
+from packaging.version import Version as LooseVersion
 try:
     import ${mod}
     assert ${cmd}
@@ -145,19 +145,22 @@ endmacro(GR_PYTHON_CHECK_MODULE)
 if(NOT DEFINED GR_PYTHON_DIR)
 execute_process(
     COMMAND ${PYTHON_EXECUTABLE} -c "import os
+import sysconfig
 import site
-from distutils.sysconfig import get_python_lib
 
+install_dir = None
 prefix = '${CMAKE_INSTALL_PREFIX}'
-
-#ask distutils where to install the python module
-install_dir = get_python_lib(plat_specific=True, prefix=prefix)
 
 #use sites when the prefix is already recognized
 try:
   paths = [p for p in site.getsitepackages() if p.startswith(prefix)]
   if len(paths) == 1: install_dir = paths[0]
 except AttributeError: pass
+
+if not install_dir:
+    #find where to install the python module
+    install_dir = sysconfig.get_path('platlib')
+    prefix = sysconfig.get_config_var('prefix')
 
 #strip the prefix to return a relative path
 print(os.path.relpath(install_dir, prefix))"

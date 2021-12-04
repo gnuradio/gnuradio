@@ -31,7 +31,7 @@ from subprocess import check_output, CalledProcessError
 import sys
 import threading
 import time
-from distutils import spawn
+import shutil
 from argparse import ArgumentParser
 from multiprocessing import cpu_count
 
@@ -100,7 +100,7 @@ class ClangFormat(object):
                     programs[i] += '.exe'
 
             for program in programs:
-                self.path = spawn.find_executable(program)
+                self.path = shutil.which(program)
 
                 if self.path:
                     if not self._validate_version():
