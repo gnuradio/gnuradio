@@ -33,14 +33,10 @@ using logger_ptr = std::shared_ptr<void>;
 // keeps as short as possible; if anything is needed only by the implementation in
 // buffer.cc, then only include it there
 #include <gnuradio/api.h>
-#include <fmt/core.h>
-#include <fmt/format.h>
 #include <spdlog/common.h>
+#include <spdlog/fmt/fmt.h>
 #include <memory>
 
-#ifndef SPDLOG_FMT_EXTERNAL
-#define SPDLOG_FMT_EXTERNAL
-#endif
 #include <spdlog/spdlog.h>
 
 #include <spdlog/sinks/dist_sink.h>
