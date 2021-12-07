@@ -45,6 +45,8 @@ udp_sink_impl::udp_sink_impl(size_t itemsize,
     : gr::sync_block("udp_sink",
                      gr::io_signature::make(1, 1, itemsize * veclen),
                      gr::io_signature::make(0, 0, 0)),
+      d_host(host),
+      d_port(port),
       d_itemsize(itemsize),
       d_veclen(veclen),
       d_header_type(header_type),
@@ -61,10 +63,6 @@ udp_sink_impl::udp_sink_impl(size_t itemsize,
     // reassembled. Now for local nets that support jumbo frames, the max payload
     // size is 8972 (9000-the UDP 28-byte header) Same rules apply with
     // fragmentation.
-
-    d_port = port;
-
-    d_header_size = 0;
 
     switch (d_header_type) {
     case HEADERTYPE_SEQNUM:
@@ -94,13 +92,21 @@ udp_sink_impl::udp_sink_impl(size_t itemsize,
             "least 8 bytes once header/trailer adjustments are made.");
     }
 
-    d_seq_num = 0;
-
     d_block_size = d_itemsize * d_veclen;
 
     d_precomp_datasize = d_payloadsize - d_header_size;
     d_precomp_data_overitemsize = d_precomp_datasize / d_itemsize;
 
+    int out_multiple = (d_payloadsize - d_header_size) / d_block_size;
+
+    if (out_multiple == 1)
+        out_multiple = 2; // Ensure we get pairs, for instance complex -> ichar pairs
+
+    gr::block::set_output_multiple(out_multiple);
+}
+
+bool udp_sink_impl::start()
+{
     d_localbuffer = new char[d_payloadsize];
 
     long max_circ_buffer;
@@ -119,8 +125,8 @@ udp_sink_impl::udp_sink_impl(size_t itemsize,
 
     d_udpsocket = new boost::asio::ip::udp::socket(d_io_service);
 
-    std::string str_port = (boost::format("%d") % port).str();
-    std::string str_host = host.empty() ? std::string("localhost") : host;
+    std::string str_port = (boost::format("%d") % d_port).str();
+    std::string str_host = d_host.empty() ? std::string("localhost") : d_host;
     boost::asio::ip::udp::resolver resolver(d_io_service);
     boost::asio::ip::udp::resolver::query query(
         str_host, str_port, boost::asio::ip::resolver_query_base::passive);
@@ -133,7 +139,7 @@ udp_sink_impl::udp_sink_impl(size_t itemsize,
                                  err.message());
     }
 
-    if (host.find(":") != std::string::npos)
+    if (d_host.find(":") != std::string::npos)
         is_ipv6 = true;
     else {
         // This block supports a check that a name rather than an IP is provided.
@@ -150,12 +156,7 @@ udp_sink_impl::udp_sink_impl(size_t itemsize,
         d_udpsocket->open(boost::asio::ip::udp::v4());
     }
 
-    int out_multiple = (d_payloadsize - d_header_size) / d_block_size;
-
-    if (out_multiple == 1)
-        out_multiple = 2; // Ensure we get pairs, for instance complex -> ichar pairs
-
-    gr::block::set_output_multiple(out_multiple);
+    return true;
 }
 
 /*
