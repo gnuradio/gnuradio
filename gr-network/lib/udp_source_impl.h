@@ -69,6 +69,7 @@ public:
                     bool ipv6);
     ~udp_source_impl() override;
 
+    bool start() override;
     bool stop() override;
 
     size_t data_available();

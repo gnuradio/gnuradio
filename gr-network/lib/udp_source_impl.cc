@@ -103,6 +103,16 @@ udp_source_impl::udp_source_impl(size_t itemsize,
     d_precomp_data_size = d_payloadsize - d_header_size;
     d_precomp_data_over_item_size = d_precomp_data_size / d_itemsize;
 
+    int out_multiple = (d_payloadsize - d_header_size) / d_block_size;
+
+    if (out_multiple == 1)
+        out_multiple = 2; // Ensure we get pairs, for instance complex -> ichar pairs
+
+    gr::block::set_output_multiple(out_multiple);
+}
+
+bool udp_source_impl::start()
+{
     d_local_buffer = new char[d_payloadsize];
     long max_circ_buffer;
 
@@ -119,9 +129,9 @@ udp_source_impl::udp_source_impl(size_t itemsize,
     d_localqueue = new boost::circular_buffer<char>(max_circ_buffer);
 
     if (is_ipv6)
-        d_endpoint = boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v6(), port);
+        d_endpoint = boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v6(), d_port);
     else
-        d_endpoint = boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port);
+        d_endpoint = boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), d_port);
 
     try {
         d_udpsocket = new boost::asio::ip::udp::socket(d_io_service, d_endpoint);
@@ -130,16 +140,12 @@ udp_source_impl::udp_source_impl(size_t itemsize,
                                  ex.what());
     }
 
-    int out_multiple = (d_payloadsize - d_header_size) / d_block_size;
-
-    if (out_multiple == 1)
-        out_multiple = 2; // Ensure we get pairs, for instance complex -> ichar pairs
-
-    gr::block::set_output_multiple(out_multiple);
 
     std::stringstream msg_stream;
-    msg_stream << "Listening for data on UDP port " << port << ".";
+    msg_stream << "Listening for data on UDP port " << d_port << ".";
     GR_LOG_INFO(d_logger, msg_stream.str());
+
+    return true;
 }
 
 /*

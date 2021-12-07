@@ -50,19 +50,22 @@ tcp_sink_impl::tcp_sink_impl(
       d_initial_connection(true)
 {
     d_block_size = d_itemsize * d_veclen;
+}
 
+bool tcp_sink_impl::start()
+{
     if (d_sinkmode == TCPSINKMODE_CLIENT) {
         // In this mode, we're connecting to a remote TCP service listener
         // as a client.
         std::stringstream msg;
 
-        msg << "[TCP Sink] connecting to " << host << " on port " << port;
+        msg << "[TCP Sink] connecting to " << d_host << " on port " << d_port;
         GR_LOG_INFO(d_logger, msg.str());
 
         boost::system::error_code err;
         d_tcpsocket = new boost::asio::ip::tcp::socket(d_io_service);
 
-        std::string s_port = (boost::format("%d") % port).str();
+        std::string s_port = (boost::format("%d") % d_port).str();
         boost::asio::ip::tcp::resolver resolver(d_io_service);
         boost::asio::ip::tcp::resolver::query query(
             d_host, s_port, boost::asio::ip::resolver_query_base::passive);
@@ -101,6 +104,8 @@ tcp_sink_impl::tcp_sink_impl(
         d_start_new_listener = true;
         d_listener_thread = new boost::thread([this] { run_listener(); });
     }
+
+    return true;
 }
 
 void tcp_sink_impl::run_listener()
