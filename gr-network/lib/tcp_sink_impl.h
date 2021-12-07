@@ -57,6 +57,7 @@ public:
                   int sinkmode = TCPSINKMODE_CLIENT);
     ~tcp_sink_impl() override;
 
+    bool start() override;
     bool stop() override;
 
     void accept_handler(boost::asio::ip::tcp::socket* new_connection,

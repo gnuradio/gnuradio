@@ -24,6 +24,7 @@ namespace network {
 class NETWORK_API udp_sink_impl : public udp_sink
 {
 protected:
+    std::string d_host;
     int d_port;
     size_t d_itemsize;
     size_t d_veclen;
@@ -67,6 +68,7 @@ public:
                   bool send_eof = true);
     ~udp_sink_impl() override;
 
+    bool start() override;
     bool stop() override;
 
     int work(int noutput_items,
