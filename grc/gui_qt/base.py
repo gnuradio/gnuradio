@@ -54,9 +54,11 @@ class Component(object):
         self.actions = {}
         self.menus = {}
         self.toolbars = {}
+        '''
         self.createActions(self.actions)
         self.createMenus(self.actions, self.menus)
         self.createToolbars(self.actions, self.toolbars)
+        '''
 
         log.debug("Connecting signals")
         self.connectSlots()
