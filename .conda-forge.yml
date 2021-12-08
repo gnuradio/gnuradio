@@ -30,6 +30,8 @@
 clone_depth: 0
 github_actions:
   store_build_artifacts: true
+os_version:
+  linux_64: cos7
 provider:
   linux: github_actions
   osx: github_actions
