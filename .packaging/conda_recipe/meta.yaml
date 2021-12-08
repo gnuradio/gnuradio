@@ -10,7 +10,7 @@ source:
 
 build:
   number: 0
-  skip: true  # [py!=38]
+  skip: true  # [py!=39]
   entry_points:
     - gnuradio-companion = gnuradio.grc.main:main  # [win]
     - gr_filter_design = gnuradio.filter.filter_design:main  # [win]
@@ -27,15 +27,12 @@ requirements:
     - cmake >=3.8
     - ninja
     - pkg-config  # [not win]
+    - sysroot_linux-64 2.17  # [linux64]
     # cross-compilation requirements
     - python                              # [build_platform != target_platform]
     - cross-python_{{ target_platform }}  # [build_platform != target_platform]
     - pybind11                            # [build_platform != target_platform]
     - numpy                               # [build_platform != target_platform]
-    # libudev needed to link against libusb through uhd on linux
-    # libudev is on its own in CentOS 6, packaged with systemd in CentOS 7
-    - {{ cdt('libudev-devel') }}  # [linux and cdt_name=='cos6']
-    - {{ cdt('systemd-devel') }}  # [linux and cdt_name=='cos7']
    # below are needed to link with Qt for qtgui
     - {{ cdt('libice') }}  # [linux]
     - {{ cdt('libselinux') }}  # [linux]
@@ -58,7 +55,6 @@ requirements:
     # use codec2 1.0.0 because 1.0.1 has header which fails on Windows (complex.h)
     - codec2 1.0.0*
     - fftw
-    - fmt
     - gmp  # [not win]
     - gsl
     # blas needed to link with gsl
