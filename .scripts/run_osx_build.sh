@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# -*- mode: jinja-shell -*-
+
 source .scripts/logging_utils.sh
 
 set -xe
@@ -9,7 +11,7 @@ MINIFORGE_HOME=${MINIFORGE_HOME:-${HOME}/miniforge3}
 ( startgroup "Installing a fresh version of Miniforge" ) 2> /dev/null
 
 MINIFORGE_URL="https://github.com/conda-forge/miniforge/releases/latest/download"
-MINIFORGE_FILE="Miniforge3-MacOSX-$(uname -m).sh"
+MINIFORGE_FILE="Mambaforge-MacOSX-$(uname -m).sh"
 curl -L -O "${MINIFORGE_URL}/${MINIFORGE_FILE}"
 rm -rf ${MINIFORGE_HOME}
 bash $MINIFORGE_FILE -b -p ${MINIFORGE_HOME}
@@ -18,14 +20,12 @@ bash $MINIFORGE_FILE -b -p ${MINIFORGE_HOME}
 
 ( startgroup "Configuring conda" ) 2> /dev/null
 
-GET_BOA=boa
-BUILD_CMD=mambabuild
-
 source ${MINIFORGE_HOME}/etc/profile.d/conda.sh
 conda activate base
 
 echo -e "\n\nInstalling conda-forge-ci-setup=3 and conda-build."
-conda install -n base --quiet --yes "conda-forge-ci-setup=3" conda-build pip ${GET_BOA:-}
+mamba install -n base --update-specs --quiet --yes "conda-forge-ci-setup=3" conda-build pip boa
+mamba update -n base --update-specs --quiet --yes "conda-forge-ci-setup=3" conda-build pip boa
 
 
 
@@ -55,7 +55,7 @@ source run_conda_forge_build_setup
 echo -e "\n\nMaking the build clobber file"
 make_build_number ./ ./.packaging/conda_recipe ./.ci_support/${CONFIG}.yaml
 
-conda $BUILD_CMD ./.packaging/conda_recipe -m ./.ci_support/${CONFIG}.yaml --suppress-variables --clobber-file ./.ci_support/clobber_${CONFIG}.yaml ${EXTRA_CB_OPTIONS:-}
+conda mambabuild ./.packaging/conda_recipe -m ./.ci_support/${CONFIG}.yaml --suppress-variables --clobber-file ./.ci_support/clobber_${CONFIG}.yaml ${EXTRA_CB_OPTIONS:-}
 
 ( startgroup "Uploading packages" ) 2> /dev/null
 

@@ -1,67 +1,45 @@
-alsa_lib:
-- 1.2.3
 boost_cpp:
 - 1.74.0
 c_compiler:
-- gcc
-c_compiler_version:
-- '9'
-cdt_name:
-- cos6
+- vs2017
 channel_sources:
 - conda-forge
 channel_targets:
 - gnuradio main
 cxx_compiler:
-- gxx
-cxx_compiler_version:
-- '9'
-docker_image:
-- quay.io/condaforge/linux-anvil-comp7
+- vs2017
 fftw:
 - '3'
-fmt:
-- '8'
-gmp:
-- '6'
 gsl:
-- '2.6'
-libcblas:
-- 3.8 *netlib
+- '2.7'
 libiio:
-- '0.21'
-libthrift:
-- 0.15.0
+- '0'
 numpy:
-- '1.18'
+- '1.19'
 pin_run_as_build:
   boost-cpp:
     max_pin: x.x.x
   fftw:
-    max_pin: x
-  gmp:
     max_pin: x
   python:
     min_pin: x.x
     max_pin: x.x
   qt:
     max_pin: x.x
-  spdlog:
-    max_pin: x.x
   zeromq:
-    max_pin: x.x
+    max_pin: x.x.x
 pybind11_abi:
 - '4'
 python:
-- 3.8.* *_cpython
+- 3.9.* *_cpython
 qt:
 - '5.12'
 soapysdr:
 - '0.8'
 spdlog:
-- '1.8'
+- '1.9'
 target_platform:
-- linux-64
+- win-64
 uhd:
 - 4.1.0
 volk:
@@ -69,9 +47,5 @@ volk:
 zeromq:
 - 4.3.4
 zip_keys:
-- - c_compiler_version
-  - cxx_compiler_version
-- - cdt_name
-  - docker_image
 - - python
   - numpy

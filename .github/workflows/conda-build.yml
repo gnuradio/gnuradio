@@ -13,17 +13,17 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - CONFIG: linux_64_numpy1.18python3.8.____cpython
-            SHORT_CONFIG: linux_64_numpy1.18python3.8.____cpython
+          - CONFIG: linux_64_numpy1.19python3.9.____cpython
+            SHORT_CONFIG: linux_64_numpy1.19python3.9.____cpython
             UPLOAD_PACKAGES: True
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-comp7
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
             os: ubuntu
-          - CONFIG: win_64_numpy1.18python3.8.____cpython
-            SHORT_CONFIG: win_64_numpy1.18python3.8.____cpython
+          - CONFIG: win_64_numpy1.19python3.9.____cpython
+            SHORT_CONFIG: win_64_numpy1.19python3.9.____cpython
             UPLOAD_PACKAGES: True
             os: windows
-          - CONFIG: osx_64_numpy1.18python3.8.____cpython
-            SHORT_CONFIG: osx_64_numpy1.18python3.8.____cpython
+          - CONFIG: osx_64_numpy1.19python3.9.____cpython
+            SHORT_CONFIG: osx_64_numpy1.19python3.9.____cpython
             UPLOAD_PACKAGES: True
             os: macos
     steps:
@@ -37,7 +37,7 @@ jobs:
       env:
         CONFIG: ${{ matrix.CONFIG }}
         UPLOAD_PACKAGES: ${{ matrix.UPLOAD_PACKAGES }}
-        DOCKERIMAGE: ${{ matrix.DOCKERIMAGE }}
+        DOCKER_IMAGE: ${{ matrix.DOCKER_IMAGE }}
         CI: github_actions
         UPLOAD_ON_BRANCH: master
         BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
@@ -77,14 +77,15 @@ jobs:
     - name: Install Miniconda for windows
       uses: conda-incubator/setup-miniconda@v2
       with:
-        miniconda-version: latest
+        miniforge-version: latest
+        miniforge-variant: Mambaforge
       if: matrix.os == 'windows'
 
     - name: Build on windows
       shell: cmd
       run: |
         call activate base
-        conda.exe install -c conda-forge 'python=3.6' conda-build conda "conda-forge-ci-setup=3" pip boa
+        mamba.exe install -c conda-forge 'python=3.9' conda-build conda "conda-forge-ci-setup=3" pip boa
         if errorlevel 1 exit 1
         setup_conda_rc .\ ".\.packaging/conda_recipe" .\.ci_support\%CONFIG%.yaml
         if errorlevel 1 exit 1
