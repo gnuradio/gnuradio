@@ -1,37 +1,37 @@
-MACOSX_DEPLOYMENT_TARGET:
-- '10.15'
-MACOSX_SDK_VERSION:
-- '10.15'
+alsa_lib:
+- 1.2.3
 boost_cpp:
 - 1.74.0
 c_compiler:
-- clang
+- gcc
 c_compiler_version:
-- '11'
+- '9'
+cdt_name:
+- cos7
 channel_sources:
 - conda-forge
 channel_targets:
 - gnuradio main
 cxx_compiler:
-- clangxx
+- gxx
 cxx_compiler_version:
-- '11'
+- '9'
+docker_image:
+- quay.io/condaforge/linux-anvil-cos7-x86_64
 fftw:
 - '3'
-fmt:
-- '8'
 gmp:
 - '6'
 gsl:
-- '2.6'
+- '2.7'
+libcblas:
+- 3.8 *netlib
 libiio:
-- '0.21'
+- '0'
 libthrift:
 - 0.15.0
-macos_machine:
-- x86_64-apple-darwin13.4.0
 numpy:
-- '1.18'
+- '1.19'
 pin_run_as_build:
   boost-cpp:
     max_pin: x.x.x
@@ -44,22 +44,20 @@ pin_run_as_build:
     max_pin: x.x
   qt:
     max_pin: x.x
-  spdlog:
-    max_pin: x.x
   zeromq:
     max_pin: x.x
 pybind11_abi:
 - '4'
 python:
-- 3.8.* *_cpython
+- 3.9.* *_cpython
 qt:
 - '5.12'
 soapysdr:
 - '0.8'
 spdlog:
-- '1.8'
+- '1.9'
 target_platform:
-- osx-64
+- linux-64
 uhd:
 - 4.1.0
 volk:
