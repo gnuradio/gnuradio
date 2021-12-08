@@ -33,6 +33,7 @@ from PyQt5.QtGui import QStandardItemModel
 # Custom modules
 from . import FlowgraphView
 from .. import base
+from . import RotateCommand
 
 # Logging
 log = logging.getLogger(__name__)
@@ -308,8 +309,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             return False
 
         selected_elements = self.currentFlowgraph.selectedItems()
-        canUndo = self.currentView.undoStack.canUndo()
-        canRedo = self.currentView.undoStack.canRedo()
+        undoStack = self.currentView.undoStack
+        canUndo = undoStack.canUndo()
+        canRedo = undoStack.canRedo()
 
         self.actions['undo'].setEnabled(canUndo)
         self.actions['redo'].setEnabled(canRedo)
@@ -570,9 +572,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def undo_triggered(self):
         log.debug('undo')
+        self.currentView.undoStack.undo()
+        self.updateActions()
 
     def redo_triggered(self):
         log.debug('redo')
+        self.currentView.undoStack.redo()
+        self.updateActions()
 
     def cut_triggered(self):
         log.debug('cut')
@@ -589,11 +595,15 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def rotate_ccw_triggered(self):
         log.debug('rotate_ccw')
-        self.currentFlowgraph.rotate_selected(-90)
+        rotateCommand = RotateCommand(self.currentFlowgraph, -90)
+        self.currentView.undoStack.push(rotateCommand)
+        self.updateActions()
 
     def rotate_cw_triggered(self):
         log.debug('rotate_cw')
-        self.currentFlowgraph.rotate_selected(90)
+        rotateCommand = RotateCommand(self.currentFlowgraph, 90)
+        self.currentView.undoStack.push(rotateCommand)
+        self.updateActions()
 
     def errors_triggered(self):
         log.debug('errors')

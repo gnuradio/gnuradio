@@ -322,6 +322,8 @@ class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Compo
         self.mousePressed = False
 
         self.undoStack = QtWidgets.QUndoStack()
+        self.undoAction = self.undoStack.createUndoAction(self, "Undo")
+        self.redoAction = self.undoStack.createRedoAction(self, "Redo")
 
         '''
         QGraphicsView.__init__(self, flow_graph, parent)
