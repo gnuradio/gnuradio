@@ -44,7 +44,7 @@ public:
      *
      * The block will emit a tag with the key pmt::intern("squelch_sob")
      * with the value of pmt::PMT_NIL on the first item it passes, and with
-     * the key pmt::intern("squelch:eob") on the last item it passes.
+     * the key pmt::intern("squelch_eob") on the last item it passes.
      */
     static sptr make(double db, double alpha = 0.0001, int ramp = 0, bool gate = false);
 
