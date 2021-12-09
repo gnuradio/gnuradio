@@ -17,6 +17,14 @@
 
 static const char* __doc_gr_uhd_rfnoc_tx_streamer = R"doc()doc";
 
+
+static const char* __doc_gr_uhd_rfnoc_tx_streamer_rfnoc_tx_streamer_0 = R"doc()doc";
+
+
+static const char* __doc_gr_uhd_rfnoc_tx_streamer_rfnoc_tx_streamer_1 = R"doc()doc";
+
+
 static const char* __doc_gr_uhd_rfnoc_tx_streamer_make = R"doc()doc";
+
 
 static const char* __doc_gr_uhd_rfnoc_tx_streamer_get_unique_id = R"doc()doc";

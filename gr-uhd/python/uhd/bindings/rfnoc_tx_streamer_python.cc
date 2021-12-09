@@ -33,11 +33,24 @@ void bind_rfnoc_tx_streamer(py::module& m)
     using rfnoc_tx_streamer = ::gr::uhd::rfnoc_tx_streamer;
 
 
-    py::class_<rfnoc_tx_streamer, std::shared_ptr<rfnoc_tx_streamer>>(
+    py::class_<rfnoc_tx_streamer,
+               gr::sync_block,
+               gr::block,
+               gr::basic_block,
+               std::shared_ptr<rfnoc_tx_streamer>>(
         m, "rfnoc_tx_streamer", D(rfnoc_tx_streamer))
 
-        .def(py::init(&rfnoc_tx_streamer::make), D(rfnoc_tx_streamer, make))
+        .def(py::init(&rfnoc_tx_streamer::make),
+             py::arg("graph"),
+             py::arg("num_chans"),
+             py::arg("stream_args"),
+             py::arg("vlen") = 1,
+             D(rfnoc_tx_streamer, make))
+
+
         .def("get_unique_id",
              &rfnoc_tx_streamer::get_unique_id,
-             D(rfnoc_tx_streamer, get_unique_id));
+             D(rfnoc_tx_streamer, get_unique_id))
+
+        ;
 }
