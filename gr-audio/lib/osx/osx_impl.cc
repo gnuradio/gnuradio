@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include <locale>
+#include <memory>
 #include <stdexcept>
 
 std::ostream& operator<<(std::ostream& s, const AudioStreamBasicDescription& asbd)
@@ -68,7 +69,7 @@ static UInt32 _get_num_channels(AudioDeviceID ad_id, AudioObjectPropertyScope sc
     OSStatus err = noErr;
     if ((err = AudioObjectGetPropertyDataSize(ad_id, &ao_address, 0, NULL, &prop_size)) ==
         noErr) {
-        boost::scoped_array<AudioBufferList> buf_list(
+        std::unique_ptr<AudioBufferList[]> buf_list(
             reinterpret_cast<AudioBufferList*>(new char[prop_size]));
         if ((err = AudioObjectGetPropertyData(
                  ad_id, &ao_address, 0, NULL, &prop_size, buf_list.get())) == noErr) {
@@ -167,7 +168,7 @@ void find_audio_devices(const std::string& device_name,
 
     // retrieve all audio device ids
 
-    boost::scoped_array<AudioDeviceID> all_dev_ids(new AudioDeviceID[num_devices]);
+    std::unique_ptr<AudioDeviceID[]> all_dev_ids(new AudioDeviceID[num_devices]);
 
     if ((err = AudioObjectGetPropertyData(kAudioObjectSystemObject,
                                           &ao_address,
