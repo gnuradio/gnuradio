@@ -22,8 +22,13 @@ void bind_amsg_source(py::module&);
 void bind_usrp_block(py::module&);
 void bind_usrp_sink(py::module&);
 void bind_usrp_source(py::module&);
+void bind_rfnoc_block(py::module&);
+void bind_rfnoc_ddc(py::module&);
+void bind_rfnoc_duc(py::module&);
 void bind_rfnoc_graph(py::module&);
+void bind_rfnoc_rx_radio(py::module&);
 void bind_rfnoc_rx_streamer(py::module&);
+void bind_rfnoc_tx_radio(py::module&);
 void bind_rfnoc_tx_streamer(py::module&);
 
 // We need this hack because import_array() returns NULL
@@ -52,8 +57,13 @@ PYBIND11_MODULE(uhd_python, m)
     bind_usrp_source(m);
 
 #ifdef GR_ENABLE_UHD_RFNOC
+    bind_rfnoc_block(m);
+    bind_rfnoc_ddc(m);
+    bind_rfnoc_duc(m);
     bind_rfnoc_graph(m);
+    bind_rfnoc_rx_radio(m);
     bind_rfnoc_rx_streamer(m);
+    bind_rfnoc_tx_radio(m);
     bind_rfnoc_tx_streamer(m);
 #endif
 
