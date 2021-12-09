@@ -11,7 +11,7 @@ templates:
         uhd.device_addr(${block_args}),
         ${device_select},
         ${instance_index})
-    self.${id}.set_freq(${freq}, 0)
+    self.${id}.set_freq(${freq}, 0, uhd.time_spec(0.0))
     self.${id}.set_input_rate(${input_rate}, 0)
   callbacks:
   - set_freq(${freq}, 0)
