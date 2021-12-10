@@ -381,6 +381,13 @@ void block::set_min_output_buffer(int port, long min_output_buffer)
         d_min_output_buffer[port] = min_output_buffer;
 }
 
+void block::set_blkd_input_timer_value(unsigned int value)
+{
+    d_blkd_input_timer_value = value;
+}
+
+unsigned int block::blkd_input_timer_value() { return d_blkd_input_timer_value; }
+
 void block::allocate_detail(int ninputs,
                             int noutputs,
                             const std::vector<int>& downstream_max_nitems_vec,

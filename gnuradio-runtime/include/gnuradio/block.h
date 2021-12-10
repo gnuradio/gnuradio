@@ -518,6 +518,30 @@ public:
     void set_min_output_buffer(int port, long min_output_buffer);
 
     /*!
+     * \brief DEPRECATED Configure the timer set when input is blocked \p port.
+     *
+     * \details
+     * This is an advanced/experimental feature and might be removed in a future
+     * version. Calling this can affect some fundamental assumptions about the
+     * system behavior and
+     * performance.
+     *
+     * In the TPB scheduler, when a block has no work to do because there
+     * is no data at it inputs, it sets a timer and tries again after a
+     * period of time.  The default is 250 ms, but this can be configured
+     * differently per block when necessary
+     *
+     * \param timer_value_ms the timer value in milliseconds
+     */
+    void set_blkd_input_timer_value(unsigned int timer_value_ms);
+
+    /*!
+     * \brief DEPRECATED Returns timer value set when input is blocked
+     */
+    unsigned int blkd_input_timer_value();
+
+
+    /*!
      * \brief Allocate the block_detail and necessary output buffers for this
      * block.
      */
@@ -949,6 +973,8 @@ protected:
 
     std::vector<long> d_max_output_buffer;
     std::vector<long> d_min_output_buffer;
+
+    unsigned int d_blkd_input_timer_value = 250;
 
     /*! Used by block's setters and work functions to make
      * setting/resetting of parameters thread-safe.
