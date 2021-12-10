@@ -43,7 +43,7 @@ public:
      */
     virtual double set_freq(const double freq,
                             const size_t chan,
-                            const ::uhd::time_spec_t time = ::uhd::time_spec_t::ASAP) = 0;
+                            const ::uhd::time_spec_t time = 0.0) = 0;
 
     /*! Manually configure output rate
      *

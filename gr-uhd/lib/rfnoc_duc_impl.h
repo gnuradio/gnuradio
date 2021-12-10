@@ -22,9 +22,8 @@ public:
     ~rfnoc_duc_impl();
 
     /*** API *****************************************************************/
-    double set_freq(const double freq,
-                    const size_t chan,
-                    const ::uhd::time_spec_t time = ::uhd::time_spec_t::ASAP);
+    double
+    set_freq(const double freq, const size_t chan, const ::uhd::time_spec_t time = 0.0);
     double set_input_rate(const double rate, const size_t chan);
 
 private:
