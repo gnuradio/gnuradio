@@ -19,7 +19,7 @@ set(GR_NUMPY_MIN_VERSION "1.17.4")    ## Version in Ubuntu 20.04LTS
 set(GCC_MIN_VERSION "9.3.0")          ## Version in Ubuntu 20.04LTS
 set(CLANG_MIN_VERSION "11.0.0")       ## Version in Ubuntu 20.04LTS
 set(APPLECLANG_MIN_VERSION "1100")    ## same as clang 11.0.0, in Xcode11
-set(MSVC_MIN_VERSION "1920")          ## VS2019 release
+set(MSVC_MIN_VERSION "1916")          ## VS2017 (default in conda-forge)
 set(VOLK_MIN_VERSION "2.4.1")         ## first version with CPU features
 set(PYBIND11_MIN_VERSION "2.4")       # pybind11 sets versions like 2.4.dev4, which compares < 2.4.3
 set(GR_THRIFT_MIN_VERSION "0.13")
