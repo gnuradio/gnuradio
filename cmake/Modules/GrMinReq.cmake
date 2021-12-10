@@ -10,7 +10,7 @@ if(DEFINED __INCLUDED_GR_MIN_REQ_CMAKE)
 endif()
 set(__INCLUDED_GR_MIN_REQ_CMAKE TRUE)
 # Minimum dependency versions for central dependencies:
-set(GR_BOOST_MIN_VERSION "1.65")      ## Version in CentOS 8 (EPEL)
+set(GR_BOOST_MIN_VERSION "1.69")      ## Version in CentOS 8 (EPEL)
 set(GR_CMAKE_MIN_VERSION "3.16.3")    ## Version in Ubuntu 20.04LTS
 set(GR_MAKO_MIN_VERSION "1.1.0")      ## Version in Ubuntu 20.04LTS
 set(GR_PYTHON_MIN_VERSION "3.6.5")    ## Version in Ubuntu 18.04LTS
