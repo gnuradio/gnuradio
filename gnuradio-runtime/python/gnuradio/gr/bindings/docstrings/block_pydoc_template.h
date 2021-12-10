@@ -162,6 +162,12 @@ static const char* __doc_gr_block_set_min_output_buffer_0 = R"doc()doc";
 static const char* __doc_gr_block_set_min_output_buffer_1 = R"doc()doc";
 
 
+static const char* __doc_gr_block_set_blkd_input_timer_value = R"doc()doc";
+
+
+static const char* __doc_gr_block_blkd_input_timer_value = R"doc()doc";
+
+
 static const char* __doc_gr_block_pc_noutput_items = R"doc()doc";
 
 

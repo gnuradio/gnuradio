@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(block.h)                                                   */
-/* BINDTOOL_HEADER_FILE_HASH(ee5f3ad6384686a28dce290f2da34ceb)                     */
+/* BINDTOOL_HEADER_FILE_HASH(c8416d414680c7aa6fab4fdd471daa3e)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -279,6 +279,15 @@ void bind_block(py::module& m)
              py::arg("min_output_buffer"),
              D(block, set_min_output_buffer, 1))
 
+
+        .def("set_blkd_input_timer_value",
+             &block::set_blkd_input_timer_value,
+             py::arg("value"),
+             D(block, set_blkd_input_timer_value))
+
+        .def("blkd_input_timer_value",
+             &block::set_blkd_input_timer_value,
+             D(block, blkd_input_timer_value))
 
         .def("pc_noutput_items", &block::pc_noutput_items, D(block, pc_noutput_items))
 
