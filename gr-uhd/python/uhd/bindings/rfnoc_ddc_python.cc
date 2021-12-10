@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(rfnoc_ddc.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(0b41834dd8deb06ad7cbca294130abb3)                     */
+/* BINDTOOL_HEADER_FILE_HASH(ac3cf8feaf207d93442bba4972669714)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -51,7 +51,7 @@ void bind_rfnoc_ddc(py::module& m)
              &rfnoc_ddc::set_freq,
              py::arg("freq"),
              py::arg("chan"),
-             py::arg("time") = uhd::time_spec_t::ASAP,
+             py::arg("time") = 0.0,
              D(rfnoc_ddc, set_freq))
 
 
