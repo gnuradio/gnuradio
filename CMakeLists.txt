@@ -48,20 +48,8 @@ SET(VERSION_ABI   0)
 SET(VERSION_PATCH 0-rc1)
 include(GrVersion) #setup version info
 
-# Minimum dependency versions for central dependencies:
-set(GR_BOOST_MIN_VERSION "1.69")      ## Version in CentOS 8 (EPEL)
-set(GR_CMAKE_MIN_VERSION "3.16.3")    ## Version in Ubuntu 20.04LTS
-set(GR_MAKO_MIN_VERSION "1.1.0")      ## Version in Ubuntu 20.04LTS
-set(GR_PYTHON_MIN_VERSION "3.6.5")    ## Version in Ubuntu 18.04LTS
-set(GR_PYGCCXML_MIN_VERSION "2.0.0")  ## Version to support c++17 (in pip)
-set(GR_NUMPY_MIN_VERSION "1.17.4")    ## Version in Ubuntu 20.04LTS
-set(GCC_MIN_VERSION "9.3.0")          ## Version in Ubuntu 20.04LTS
-set(CLANG_MIN_VERSION "11.0.0")       ## Version in Ubuntu 20.04LTS
-set(APPLECLANG_MIN_VERSION "1100")    ## same as clang 11.0.0, in Xcode11
-set(MSVC_MIN_VERSION "1914")          ## VS2017 15.7, for full-ish C++17 support
-set(VOLK_MIN_VERSION "2.4.1")         ## first version with CPU features
-set(PYBIND11_MIN_VERSION "2.4")       # pybind11 sets versions like 2.4.dev4, which compares < 2.4.3
-set(GR_THRIFT_MIN_VERSION "0.13")
+#Set minimum version requirements
+include(GrMinReq)
 
 ########################################################################
 # Setup Boost for global use (within this build)
@@ -78,65 +66,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Set wiki block docs url prefix used in grc-docs.conf (block name gets appended to end of this string)
 set(GRC_DOCS_URL_PREFIX "https://wiki.gnuradio.org/index.php/")
 
-########################################################################
-# Compiler version setup
-########################################################################
-# Append -O2 optimization flag for Debug builds (Not on MSVC since conflicts with RTC1 flag)
-IF (NOT MSVC)
-    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
-    SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O2")
-ENDIF()
 
-# Check compiler version against our minimum
-IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    IF(DEFINED CMAKE_CXX_COMPILER_VERSION)
-        IF(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS ${GCC_MIN_VERSION})
-            MESSAGE(WARNING "\nThe compiler selected to build GNU Radio (GCC version ${CMAKE_CXX_COMPILER_VERSION} : ${CMAKE_CXX_COMPILER}) is older than that officially supported (${GCC_MIN_VERSION} minimum). This build may or not work. We highly recommend using a more recent GCC version.")
-        ENDIF()
-    ELSE()
-        MESSAGE(WARNING "\nCannot determine the version of the compiler selected to build GNU Radio (GCC : ${CMAKE_CXX_COMPILER}). This build may or not work. We highly recommend using GCC version ${GCC_MIN_VERSION} or more recent.")
-    ENDIF()
-ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    EXECUTE_PROCESS(COMMAND
-        ${CMAKE_CXX_COMPILER} -v
-        RESULT_VARIABLE _res ERROR_VARIABLE _err
-        ERROR_STRIP_TRAILING_WHITESPACE)
-    IF(${_res} STREQUAL "0")
-        # output is in error stream
-        STRING(REGEX MATCH "^Apple.*" IS_APPLE ${_err})
-        IF("${IS_APPLE}" STREQUAL "")
-            SET(MIN_VERSION ${CLANG_MIN_VERSION})
-            SET(APPLE_STR "")
-            # retrieve the compiler's version from it
-            STRING(REGEX MATCH "clang version [0-9.]+" CLANG_OTHER_VERSION ${_err})
-            STRING(REGEX MATCH "[0-9.]+" CLANG_VERSION ${CLANG_OTHER_VERSION})
-        ELSE()
-            SET(MIN_VERSION ${APPLECLANG_MIN_VERSION})
-            SET(APPLE_STR "Apple ")
-            # retrieve the compiler's version from it
-            STRING(REGEX MATCH "(clang-[0-9.]+)" CLANG_APPLE_VERSION ${_err})
-            STRING(REGEX MATCH "[0-9.]+" CLANG_VERSION ${CLANG_APPLE_VERSION})
-        ENDIF()
-        IF(${CLANG_VERSION} VERSION_LESS "${MIN_VERSION}")
-            MESSAGE(WARNING "\nThe compiler selected to build GNU Radio (${APPLE_STR}Clang version ${CLANG_VERSION} : ${CMAKE_CXX_COMPILER}) is older than that officially supported (${MIN_VERSION} minimum). This build may or not work. We highly recommend using Apple Clang version ${APPLECLANG_MIN_VERSION} or more recent, or Clang version ${CLANG_MIN_VERSION} or more recent.")
-        ENDIF()
-    ELSE()
-        MESSAGE(WARNING "\nCannot determine the version of the compiler selected to build GNU Radio (${APPLE_STR}Clang : ${CMAKE_CXX_COMPILER}). This build may or not work. We highly recommend using Apple Clang version ${APPLECLANG_MIN_VERSION} or more recent, or Clang version ${CLANG_MIN_VERSION} or more recent.")
-    ENDIF()
-ELSE()
-    MESSAGE(status "Skipping compiler version check.")
-ENDIF()
-
-# Configure C++ standard if not externally specified (will actually be
-# set after CppUnit check below). Use the variable CMAKE_CXX_STANDARD
-# since it will actually be used for this purposes starting in CMake 3.1.
-
-set(CMAKE_C_EXTENSIONS OFF)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_C_STANDARD 11)
-
-set(GR_CXX_VERSION_FEATURE cxx_std_${CMAKE_CXX_STANDARD})
 
 ########################################################################
 # Environment setup
@@ -164,30 +94,10 @@ file(WRITE ${EXPORT_FILE}) #blank the file (subdirs will append)
 include(CMakeOverloads)
 
 ########################################################################
-# Compiler specific setup
+# Compiler settings
 ########################################################################
-include(GrMiscUtils) #compiler flag check
 
-include(TestBigEndian)
-TEST_BIG_ENDIAN(GR_IS_BIG_ENDIAN)
-
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
-   CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    if(NOT WIN32)
-        #http://gcc.gnu.org/wiki/Visibility
-        GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE(-fvisibility=hidden HAVE_VISIBILITY_HIDDEN)
-    endif(NOT WIN32)
-    GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE(-Wsign-compare HAVE_WARN_SIGN_COMPARE)
-    GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE(-Wall HAVE_WARN_ALL)
-    GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE(-Wno-uninitialized HAVE_WARN_NO_UNINITIALIZED)
-endif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
-      CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-
-if(MSVC)
-    include_directories(${CMAKE_SOURCE_DIR}/cmake/msvc) #missing headers
-    add_compile_options(/MP) #build with multiple processors
-    add_compile_options(/bigobj) #allow for larger object files
-endif(MSVC)
+include(GrCompilerSettings)
 
 # Record Compiler Info for record
 STRING(TOUPPER ${CMAKE_BUILD_TYPE} GRCBTU)
