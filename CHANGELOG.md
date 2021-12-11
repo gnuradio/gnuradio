@@ -36,6 +36,21 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 - Further replacements of boost::bind with lambda functions
 - Remove more manual memory management and general c++ modernization
 - PEP8 formatting applied and enforced on all Python files
+- Centralized min dependency and compiler versions in one place for GR and modtool created OOTs
+- Update QA tests to work with OpenEmbedded cross compilations
+- Dependency versions:
+  - Python 3.6.5
+  - numpy 1.17.4
+  - VOLK 2.4.1
+  - CMake 3.16.3
+  - Boost 1.69
+  - Mako 1.1.0
+  - PyBind11 2.4.3
+  - pygccxml 2.0.0
+- Compiler options:
+  - GCC 9.3.0
+  - Clang 11.0.0 / Apple Clang 1100
+  - MSVC 1916 (Microsoft VS 2017 15.9)
 
 #### gr-blocks
 
@@ -60,16 +75,29 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 - Un-deprecate pfb_clock_sync
 - Add header payload demux example 
 - Remove crc32 utility and most of packet_utils 
+- Remove yml files for non-existent QAM mod/demod blocks
 
 #### gr-dtv
 
 - Refactor ATSC blocks to have separate metadata stream rather than passing structs
+
+#### gr-network
+
+- Fix segfaults when TCP and UDP are restarted
 
 #### gr-qtgui
 
 - Remove spurious volk includes
 - Fix segfaulting overflow in time_sink and waterfall
 - Support for Qwt 6.2
+
+#### gr-uhd
+
+- Python bindings for RFNoC blocks
+
+#### gr-utils
+
+- gr_modtool bind workaround for pygccxml incompatibility with spdlog
 
 #### gr-video-sdl
 
@@ -86,10 +114,12 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 - Remove Tag Checker
 - Explicitly convert path to string to fix MSVC build
 - size_t for vmcircbuf constructor and buffer factories
+- Reconfigurable timer value for input blocked condition (scheduler detail workaround)
 
 #### grc
 
 - grcc --output switch for hierarchical blocks
+- Clean up Bokeh server loop
 
 #### Testing
 
